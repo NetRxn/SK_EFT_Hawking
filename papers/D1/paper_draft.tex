@@ -13,10 +13,9 @@
 %% Bundle: D1 (tier 1, target PRD long article)
 %% Source manifest: papers/D1/source_manifest.md
 %% Change log: papers/D1/change_log.md
-%% Phase 7b sub-wave 7b.6 — D1 lift (skeleton + first-pass substantive draft)
-%% Sources: paper1+paper2+paper4+paper12+paper16_graphene_sk_eft
-%% E1 PRL (polariton) and E2 PRL (graphene) extracted Tier-4 letters
-%% already shipped GREEN (Phase 7b sub-wave 7b.4, commit ea1d944)
+%% 2026-08-15 Stage-10 FULL REDRAFT. The prior draft is superseded in its
+%% entirety. Every Lean identifier cited below was checked against its
+%% STATEMENT, not its name and not its docstring.
 
 \input{bundle_counts}
 
@@ -31,1034 +30,2190 @@
 \date{\today}
 
 \begin{abstract}
-We present a unified, formally verified treatment of analog Hawking
-radiation across three condensed-matter platforms: atomic
-Bose-Einstein condensates, exciton-polariton microcavities, and
-bilayer-graphene Dirac fluids. The Schwinger-Keldysh effective field
-theory (SK-EFT) framework is presented to all orders, with the
-transport-coefficient counting formula
-$\mathrm{count}(N) = \lfloor (N{+}1)/2\rfloor + 1$ proved by
-Aristotle (run \texttt{d61290fd}). Positivity at second order forces
-$\gamma_{2,1} + \gamma_{2,2} = 0$, reducing four free parameters to
-three; KMS optimality is closed by Aristotle
-(\texttt{SKDoubling.firstOrder\_KMS\_optimal}). The exact WKB connection
-formula reveals three non-perturbative phenomena absent at any
-finite order in perturbation theory: modified unitarity
-$|\alpha|^2 - |\beta|^2 = 1 - \delta_k$ with
-$\delta_k = 2\Gamma_H/\kappa$, an FDR-mandated noise floor
-$n_\text{noise} = \delta_k / 2$ that is mandatory by KMS even with
-zero Hawking radiation, and a platform-dependent spectral floor at
-$\omega_\times = T_H \ln(2/\delta_\text{diss})$ ($\approx 7\, T_H$ for
-Heidelberg-accessible BEC; $\approx 11\, T_H$ for Steinhauer-class)
-where the high-$\omega$ spectrum becomes power-law rather than
-thermal. The three platforms span ten
-orders of magnitude in Hawking temperature
-($T_H \sim \SI{0.35}{\nano\kelvin}$ for $^{87}$Rb BEC
-(Steinhauer/de~Nova),
-$T_H \sim \SI{85}{\milli\kelvin}$ for the LKB polariton smooth-horizon
-baseline, $T_H \approx \SI{2.4}{\kelvin}$ for the Dean bilayer
-graphene nozzle), yet share a large fraction of the Lean theorem
-infrastructure (\reuseTransferred{} of \reusePopulation{} 1+1D
-theorems, $\reusePercent\%$, apply unchanged to graphene's 2+1D
-Dirac-fluid setup with $c_s \to v_F/\sqrt{2}$; the
-$\reuseTransferred/\reusePopulation$ partition is a
-deterministic script output over \texttt{lean/SKEFTHawking/},
-\texttt{scripts/count\_theorem\_reuse.py}). The
-hierarchy of corrections is platform-dependent: at Heidelberg-class
-BEC the dissipative correction $\delta_\text{diss}$ exceeds the
-dispersive $\delta_\text{disp}$ by a factor $\sim 22$; at the LKB
-polariton smooth-horizon configuration $\delta_\text{disp}$ is
-$\approx -19\%$ and comparable to $\delta_\text{diss} \approx 14\%$,
-with dispersive leading; at the Dean graphene nozzle the two are
-again comparable but with the ordering reversed,
-$\delta_\text{diss} \approx +6.5\%$ against
-$\delta_\text{disp} \approx -2.8\%$, so the corrections partially
-cancel and $T_\text{eff}$ sits \emph{above} $T_H$.
-Each platform yields a distinct leading detection mode: BEC delivers
-the FDR noise floor and (at Heidelberg) the spectral-floor
-crossover; polariton delivers stimulated-Hawking gain
-$G(\omega) > 0.5$ at the universal frequency
-$\omega/\kappa = \ln(3)/(2\pi) \approx 0.175$ accessible at
-$N_\text{probe} \sim 100$ probe photons per mode (factor
-$10^3$--$10^6$ improvement over spontaneous-correlation detection);
-graphene delivers a closed-form noise spectrum
-$\Delta S_I(\omega) = 2\hbar\omega \sigma_Q \Gamma(\omega) n_H(\omega)$
-derived independently from Keldysh fluctuation-dissipation and
-Landauer-Büttiker scattering, cross-checked against the giant
-Wiedemann-Franz violation $L/L_0 > 200$ measured by Majumdar et al.
-The quantum-critical transport coefficients
-($\sigma_Q \approx 4e^2/h$, $L/L_0 > 200$) are adopted from
-Majumdar et al.'s monolayer-graphene Dirac-fluid characterization
-as a cross-device modeling assumption for the bilayer nozzle
-regime. End-to-end, \bundleTheorems{}~Lean theorems in this
-bundle's verified chain are machine-verified
-(\texttt{lake build} clean, zero \texttt{sorry},
-\aristotleproved{}~closed by the Aristotle automated prover). The substrate's first-order KMS structure
-is encoded as the \texttt{FirstOrderKMS} Prop record (with fields
-\texttt{fdr\_i1}, \texttt{fdr\_i2}, \texttt{i3\_zero} in
-\texttt{SKDoubling.lean}); the original Prop was reformulated after
-Aristotle's counterexample $c = (0,0,0,0,0,0,0,1,0)$ exposed that
-the prior formulation constrained only four of nine field components:
-a methodological showcase of the value of formal verification for
-EFT axiom design. Companion experimental letters E1 (Paris-LKB
-polariton) and E2 (Dean-Kim-Lucas graphene) carry the
-experimental-team-targeted implementations.
+We give a unified treatment of analog Hawking radiation on three
+condensed-matter platforms, atomic Bose--Einstein condensates,
+exciton-polariton microcavities and bilayer-graphene Dirac fluids, within
+one Schwinger--Keldysh effective field theory whose algebraic content is
+checked in the Lean~4 proof assistant. Normalisation, positivity and the
+Kubo--Martin--Schwinger condition reduce nine first-order couplings to
+two, giving the closed form
+$\delta_{\rm diss} = (\gamma_1+\gamma_2)\kappa/c_s^2$ for the leading
+dissipative shift of the Hawking temperature; the first-order condition
+is shown to be tight, in that positivity is equivalent to the
+non-negativity of exactly those two coefficients. At order $N$ the
+parity-graded coefficient index set has cardinality
+$\lfloor (N{+}1)/2\rfloor + 1$, and at second order positivity forces a
+linear relation among the new coefficients that holds at the gradient
+truncation used here. Beyond the temperature shift, dissipation moves the
+Wentzel--Kramers--Brillouin turning point off the real axis, the
+Bogoliubov relation acquires a deficit $\delta_k = 2\delta_{\rm diss}$,
+and the fluctuation--dissipation relation mandates a
+frequency-independent occupation floor $\delta_{\rm diss}$. The floor
+crosses the exponentially falling thermal term at
+$\omega_\times = T_{\rm eff}\ln(1+1/\delta_{\rm diss})$, which is
+$6.4\,T_{\rm eff}$ at the projected $^{39}$K parameters and
+$10.6\,T_{\rm eff}$ at the $^{87}$Rb parameters, in both cases well below
+the dispersive cutoff. Which correction dominates is platform-dependent,
+so each platform yields a different leading observable: the crossover for
+condensates, a closed-form current-noise excess whose feasibility is
+independent of the quantum-critical conductance for the Dirac fluid, and
+for the polariton fluid a machine-checked boundary showing that the
+perturbative dissipation treatment fails at nanocavity linewidths by more
+than two orders of magnitude. Across platforms,
+\reuseTransferred{} of \reusePopulation{} one-dimensional theorems apply
+unchanged under $c_s \to v_F/\sqrt{2}$. An appendix records, for every
+result cited, whether it is derived, conditional on a stated hypothesis,
+or a consistency check of a definition.
 \end{abstract}
 
 \maketitle
 
-%% ══════════════════════════════════════════════════════════════════
 \section{Introduction}
 \label{sec:intro}
 
-Analog Hawking radiation has been an experimental program for half
-a century~\cite{Unruh1981,Visser1998,Hawking1974}. Three independent
-platforms have now reached the regime in which a fluid horizon and
-its corresponding Hawking spectrum can be plausibly resolved: atomic
-$^{87}$Rb Bose-Einstein
-condensates~\cite{Steinhauer2016,deNova2019} (with $^{39}$K
-projected at the Heidelberg group for an as-yet-unrealised
-transonic-flow target), exciton-polariton
-microcavities~\cite{Falque2025,Giacobino2025}, and bilayer-graphene
-Dirac fluids in supersonic nozzle
-geometries~\cite{Geurs2025,Majumdar2025}. On the graphene platform
-the experimental record is geometric and transport-based rather
-than spectral: Geurs et al.~\cite{Geurs2025} demonstrate supersonic
-electron flow past the electronic sound barrier in a bilayer
-de~Laval nozzle (terminated by a viscous shock front), establishing
-the transonic transition that is the geometric prerequisite for an
-analog sonic horizon, while Majumdar et al.~\cite{Majumdar2025}
-characterize the quantum-critical Dirac-fluid transport (in
-ultra-clean monolayer graphene) that fixes the dissipative sector;
-the analog-Hawking interpretation and the spectrum prediction are
-the present work's theoretical application, not a finding of either
-experiment. The three platforms span a
-ten-order-of-magnitude window in Hawking temperature
-($\SI{0.35}{\nano\kelvin}$ to $\SI{2.4}{\kelvin}$) and use
-microscopic constituents that differ as profoundly as cold atoms
-versus driven exciton-photons versus relativistic fermions. The
-question this paper answers is: \emph{does the analog Hawking
-prediction depend on these microscopic differences, or is it a
-universal consequence of horizon kinematics in any fluid?}
+Analog gravity has been an experimental programme for four
+decades~\cite{Unruh1981,Visser1998}, and three platforms have now reached
+the regime in which a fluid horizon and something resembling its Hawking
+spectrum can be resolved. Atomic $^{87}$Rb Bose--Einstein condensates
+have produced the measurements that anchor the
+field~\cite{Steinhauer2016,deNova2019}. Exciton-polariton microcavities
+have produced horizons in a driven-dissipative fluid of
+light~\cite{Falque2025,Giacobino2025}. Bilayer-graphene Dirac fluids in
+supersonic nozzle geometries have produced transonic electron
+flow~\cite{Geurs2025}, which is the geometric prerequisite for an
+electronic sonic horizon.
 
-We make the universality claim quantitative through formal
-verification. We present an SK-EFT
-framework~\cite{CGL2017a,GloriosoLiu2018,Crossley2017II,Jana2020} for the
-three platforms and machine-check its predictions in Lean~4. The
-universality claim becomes the statement that \reuseTransferred{} of
-\reusePopulation{} BEC 1+1D
-Lean theorems apply unchanged to the graphene 2+1D Dirac-fluid
-setup with $c_s \to v_F/\sqrt{2}$, a $\reusePercent\%$ reuse fraction,
-determined deterministically by
-\texttt{scripts/count\_theorem\_reuse.py}. The
-remaining \reuseSpecific{} theorems, which do not reuse,
-comprise the explicit
-$2\times 2$ acoustic-metric matrix algebra (superseded in 2+1D by
-the $3\times 3$ block-diagonalisation) and the
-BEC-microphysics-specific statements (Bogoliubov superluminal
-dispersion, spin-sonic enhancement) that do not transfer to the
-Dirac fluid.
-This provides a quantitative test of analog-Hawking universality
-across distinct microscopic substrates.
+The evidential status of the three is not the same, and it is worth
+being precise about it at the outset. The condensate experiments report
+a spectrum. The polariton experiments report horizons, sound speeds and
+quasinormal-mode structure. The graphene experiments report supersonic
+flow past the electronic sound barrier, terminated by a viscous shock
+front, together with a characterisation of quantum-critical Dirac-fluid
+transport in a separate ultra-clean monolayer
+device~\cite{Majumdar2025}. The analog-Hawking reading of the graphene
+platform, and the spectrum predicted for it below, are this paper's
+theoretical application and are not findings of either experiment.
 
-The headline contributions of this paper are not any one platform's
-prediction in isolation: per-wave drafts of (BEC SK-EFT first
-order)~\cite{Roehm2026Wave1}, (BEC SK-EFT second
-order)~\cite{Roehm2026Wave2}, (exact WKB
-connection)~\cite{Roehm2026Wave4}, (polariton
-predictions)~\cite{Roehm2026Wave12}, and (graphene Dirac-fluid
-predictions)~\cite{Roehm2026Wave16} exist independently. What is new
-here is the unified architecture: same SK-EFT machine, three
-platforms, three distinct leading observables. The synthesis-level
-claim is the cross-platform universality itself, made quantitative
-through Lean-theorem reuse and made falsifiable through the three
-non-perturbative predictions of the exact-WKB connection formula.
+These three fluids have almost nothing in common microscopically. One is
+a dilute gas of neutral bosons near absolute zero, one is a driven
+population of hybridised exciton-photons with a finite cavity lifetime,
+one is a strongly interacting liquid of relativistic fermions at
+$150\,\mathrm{K}$. Their Hawking temperatures span ten orders of
+magnitude, from $0.35\,\mathrm{nK}$ to $2.4\,\mathrm{K}$. The question
+this paper asks is whether the analog Hawking prediction depends on
+those differences, or whether it is a consequence of horizon kinematics
+that any fluid would share.
 
-This paper is organised as follows. Section~\ref{sec:bec-first}
-presents the first-order SK-EFT in the BEC reference setting:
-Son's superfluid action, SK contour doubling, three axioms (Galilean
-invariance, gradient expansion, KMS positivity), two transport
-coefficients $(\gamma_1, \gamma_2)$, and the foundational closed
-form $\delta_\text{diss} = (\gamma_1 + \gamma_2)\kappa/c_s^2$.
-Section~\ref{sec:bec-second} extends to all orders via the counting
-formula $\mathrm{count}(N) = \lfloor (N{+}1)/2 \rfloor + 1$
-(Aristotle), shows that positivity-forced relations reduce
-$4 \to 3$ free parameters at second order, derives the CGL
-fluctuation-dissipation relation
-$K_N(\omega,k) = -\mathrm{i}\,[K_R(\omega) - K_R(-\omega)]/(\beta\omega)$
-from algebraic KMS, proves KMS optimality, and identifies the
-parity-asymmetry signature that separates dispersive and
-dissipative corrections experimentally.
-Section~\ref{sec:exact-wkb} is the workhorse: the exact-WKB
-connection formula and the three non-perturbative effects.
-Section~\ref{sec:hierarchy} closes the BEC chain with the
-hierarchy of corrections by platform.
-Section~\ref{sec:polariton} treats the polariton platform,
-including the reservoir-corrected sound speed, the
-stimulated-Hawking detection, and the universal threshold
-$\omega/\kappa = \ln(3)/(2\pi) \approx 0.175$ at $G(\omega) = 0.5$.
-Section~\ref{sec:graphene} treats the graphene Dirac-fluid platform:
-the 3$\times$3 metric block-diagonalisation, the cross-platform Lean
-theorem reuse claim, the closed-form noise spectrum from independent FDT
-and Landauer-Büttiker derivations, and the Wiedemann-Franz
-cross-check linking the SK-EFT noise prediction to a published
-transport measurement. Section~\ref{sec:synthesis} synthesises the
-cross-platform picture, recapitulates the Aristotle-counterexample
-sidebar as a methodology showcase, and sets up the open questions
-that the Phase-6+ programme will address.
+The kinematic half of the answer is old and secure: the leading spectrum
+depends on the background only through the surface gravity. The half
+that is neither old nor secure concerns the corrections. Every real
+fluid has an ultraviolet completion that modifies the dispersion
+relation, and every real fluid dissipates. Both effects shift the
+spectrum, and whether the shifts are universal is a question about the
+structure of the corrections rather than about the leading order. The
+answer developed here is that they are, in a specific sense: the
+dispersive correction depends on the ultraviolet completion only through
+one number, and the dissipative correction depends on the microscopic
+scattering only through the sum of two transport coefficients, which is
+what survives after the constraints of the Schwinger--Keldysh formalism
+are imposed.
 
-\textbf{Companion papers.} The experimental letters
-E1~\cite{Roehm2026E1} (Paris-LKB polariton) and
-E2~\cite{Roehm2026E2} (Dean-Kim-Lucas graphene) ship as Tier-4
-PRL/PRR letters paired with this deep paper. They contain the
-experimental-team-targeted predictions; this paper supplies the
-theory and Lean backbone. The methodology paper
-I1~\cite{Roehm2026I1} elaborates the verification pipeline.
+We develop this within one Schwinger--Keldysh effective field
+theory~\cite{CGL2017a,Crossley2017II,GloriosoLiu2018,Jana2020} and check
+its algebraic content in the Lean~4 proof assistant. The role of the
+formal layer is worth stating plainly, because it is easy to overstate
+and easier to under-use. It does not verify physics. It verifies that a
+stated set of constraints has the consequences claimed for it, and it is
+unforgiving about the difference between a constraint that is assumed
+and one that is derived. That distinction turned out to matter here more
+than any individual proof: one of the paper's constraints was
+reformulated after a proof attempt returned a counterexample showing
+that the original version constrained only four of nine coefficients
+(Sec.~\ref{sec:higher-optimal}).
 
-%% ══════════════════════════════════════════════════════════════════
-\section{First-order SK-EFT: the BEC reference}
-\label{sec:bec-first}
+Because the distinction matters, we tag every formal result in this
+paper with one of four statuses, and use the same vocabulary throughout.
+A result is \emph{derived} when its conclusion constrains something its
+hypotheses do not already assert; \emph{conditional} when the physical
+content sits in a hypothesis and the theorem propagates it;
+\emph{definitional} when the statement unfolds a definition or
+rearranges a structure field, so that its value is consistency checking
+rather than derivation; and a \emph{demarcation} when it is a
+kernel-checked statement that a model does not apply. The
+strongest results below are derived, several load-bearing ones are
+conditional, and a number of statements that would read as derivations
+from their names are definitional. Appendix~\ref{app:status} tags every
+result the body cites and lists the three load-bearing claims that have
+no formal representative at all.
 
-\subsection{Son's superfluid action and SK doubling}
+The cross-platform claim has a concrete form. The theorems that carry
+the horizon structure, \texttt{AcousticMetric.acousticMetric\_det},
+\texttt{acoustic\_metric\_lorentzian},
+\texttt{acousticMetric\_inv\_correct} and
+\texttt{HawkingUniversality.hawking\_universality}, apply unchanged to
+the two-dimensional Dirac fluid under the single substitution
+$c_s \to v_F/\sqrt{2}$, because none of their statements mentions
+anything specific to a condensate. That is the argument, and a reader
+can check it theorem by theorem. Mechanically,
+\reuseTransferred{} of the \reusePopulation{} theorems in the
+one-dimensional inventory transfer under that substitution, or
+$\reusePercent\%$; the \reuseSpecific{} that do not are the explicit
+$2\times2$ matrix algebra, superseded in the higher-dimensional setting,
+and the condensate-specific microphysics, which has no Dirac-fluid
+analogue.
 
-The starting point is Son's superfluid effective
-action~\cite{Son2002}, which captures the Goldstone mode $\phi$ of
-broken U(1) particle-number symmetry on the acoustic metric
-$g_{\mu\nu}^{\rm ac}$ produced by a transonic background flow.
-Promoting Son's action to the closed-time-path Schwinger-Keldysh
-contour~\cite{CGL2017a,GloriosoLiu2018} doubles each field
-$\phi \to (\phi_1, \phi_2)$ and adds a bilinear noise vertex.
-The SK action takes the Crossley-Glorioso-Liu (CGL)
-form~\cite{CGL2017a},
+The paper proceeds as follows. Section~\ref{sec:eft} constructs the
+effective field theory of a dissipative horizon and derives the leading
+dissipative correction $\delta_{\rm diss} = (\gamma_1+\gamma_2)\kappa/c_s^2$
+and the dispersive correction $\delta_{\rm disp} = -(\pi/6)D^2$.
+Section~\ref{sec:higher} takes the gradient expansion to higher order:
+the coefficient count, the parity grading, the second-order positivity
+constraint, the optimality of the first-order condition, and the
+fluctuation--dissipation relation on which the rest of the paper
+depends. Section~\ref{sec:wkb} is where the physics stops being a
+temperature shift: the turning point moves off the real axis, the
+Bogoliubov relation acquires a deficit, and a frequency-independent
+noise floor crosses the exponentially falling thermal term at a
+computable frequency. Sections~\ref{sec:hierarchy},
+\ref{sec:graphene} and~\ref{sec:polariton} evaluate all of this on the
+condensate, the Dirac fluid and the polariton fluid respectively, in
+that order: the condensate is where the framework is built, the Dirac
+fluid is where it transfers, and the polariton fluid is where it
+provably stops. Section~\ref{sec:synthesis} draws the three together.
+
+\textbf{Companion letters.} Two shorter papers carry the
+experiment-facing implementations, one for the Paris-LKB polariton
+apparatus~\cite{Roehm2026E1} and one for the graphene nozzle
+device~\cite{Roehm2026E2}. This paper supplies the theory and the
+formal backbone; the verification methodology is elaborated
+separately~\cite{Roehm2026I1}.
+
+\section{The effective field theory of a dissipative fluid horizon}
+\label{sec:eft}
+
+A sonic horizon in a barotropic superfluid radiates at a temperature
+fixed, to first order in the gradient expansion, by exactly two transport
+coefficients and one dimensionless ratio. This section states that theory
+in the form in which it is machine-checked: the acoustic geometry and its
+horizon, the closed-time-path action and the three constraints imposed on
+it, the reduction of the first-order action to two coefficients and the
+dissipative shift they produce, the dispersive shift, and the dressed
+temperature together with a precise reading of the word universality.
+Throughout, the distinction between a definition, a modelling hypothesis
+and a proved consequence is kept explicit, because the three carry very
+different evidential weight.
+
+\subsection{Acoustic metric, horizon, surface gravity}
+\label{sec:eft-metric}
+
+The background is a steady, barotropic, irrotational, inviscid flow in
+one spatial dimension, described by a flow velocity $v(x)$, a local sound
+speed $c_s(x) > 0$ and a density $\rho(x) > 0$ obeying continuity
+$\rho v = J$ (\texttt{SKEFTHawking.FluidBackground}). Linearised phonons
+on such a background propagate on the acoustic metric of Unruh and
+Visser. In Painlev\'e--Gullstrand form, and in the $1{+}1$-dimensional
+reduction used here,
 \begin{equation}
-S_\text{SK}[\phi_+, \phi_-]
-\;=\; \int dt\,d^d x \, \mathcal{L}_\text{SK}[\phi_+, \phi_-]
+\label{eq:pg-metric}
+g_{\mu\nu}(x) = \frac{\rho}{c_s}
+\begin{pmatrix}
+-(c_s^{2}-v^{2}) & -v \\[2pt]
+-v & 1
+\end{pmatrix},
 \end{equation}
-with $\phi_\pm = (\phi_1 \pm \phi_2)/\sqrt{2}$ Keldysh-rotated
-fields. The advantage of the CGL form is that the quadratic part
-splits cleanly into retarded ($K_R$) and noise ($K_N$) sectors,
-with the dynamical KMS condition imposing
-$K_N = -\mathrm{i}[K_R - K_R^*]/(\beta\omega)$ in the linear
-regime~\cite{Crossley2017II}.
+which is \texttt{SKEFTHawking.AcousticMetric.acousticMetric}. This is the
+$1{+}1$ reduction of Visser's Eq.~(28), including the conformal prefactor
+$\rho/c$ that appears there~\cite{Visser1998}.
 
-\subsection{Three SK-EFT axioms and two transport coefficients}
+Three statements about Eq.~\eqref{eq:pg-metric} are proved rather than
+posited. First, \texttt{AcousticMetric.acousticMetric\_det} gives
+$\det g = -\rho^{2}$ for $c_s \neq 0$: the determinant depends on the
+density alone, not on $v$ or $c_s$ separately, which is the $1{+}1$
+counterpart of Visser's $\det f^{\mu\nu} = -\rho_0^{4}/c^{2}$ and
+$\sqrt{-g} = \rho_0^{2}/c$. Second,
+\texttt{AcousticMetric.acoustic\_metric\_lorentzian} gives $\det g < 0$
+for $c_s > 0$ and $\rho > 0$. Its statement also carries a subsonic
+hypothesis $v^{2} < c_s^{2}$ that the proof does not use, and the
+conclusion is correspondingly stronger than the statement suggests: since
+$\det g = -\rho^{2}$, the signature is Lorentzian at every flow speed,
+subsonic or supersonic, and in particular at the horizon itself, where
+$c_s^{2}-v^{2}$ vanishes. Third,
+\texttt{AcousticMetric.acousticMetric\_inv\_correct} verifies
+$g_{\mu\alpha}g^{\alpha\nu} = \delta^{\nu}_{\mu}$ for $c_s \neq 0$ and
+$\rho \neq 0$, so the inverse metric entering the wave operator is the
+actual matrix inverse of Eq.~\eqref{eq:pg-metric} and not an
+independently postulated object.
 
-For analog gravity in non-relativistic superfluids, the SK-EFT is
-constrained by three axioms encoded in our Lean library: Galilean
-invariance of the underlying superfluid; gradient expansion in
-powers of $\partial/(c_s\, k_\text{UV})$; KMS positivity (the
-noise coefficients $\gamma_i$ are non-negative). The KMS structure is
-encoded as the \texttt{FirstOrderKMS} Prop record (defined in
-\texttt{SKDoubling.lean}) with fluctuation-dissipation fields
-\texttt{fdr\_i1}, \texttt{fdr\_i2}, \texttt{i3\_zero}; the original
-constraint was reformulated as this Prop bundle after the Aristotle
-counterexample (see~\S\ref{sec:synthesis}).
+The dynamics comes from Son's superfluid effective action. Son shows that
+the leading low-energy quantum effective action for the Goldstone phase
+is the pressure evaluated at the local chemical potential, and that
+expanding it in powers of $\partial_0\varphi$ and $(\partial_i\varphi)^2$
+generates every vertex of the effective theory~\cite{Son2002}. The sound
+speed follows from the equation of state alone: his Eq.~(25), rewritten
+in terms of derivatives with respect to $X = \mu^{2}$, is
+$c_s^{2} = P'/(P' + 2\mu^{2}P'')$. That expression is
+\texttt{SKEFTHawking.EquationOfState.soundSpeedSq}, and
+\texttt{AcousticMetric.soundSpeed\_from\_eos} proves it positive whenever
+$P' > 0$ and the denominator is positive. Son also delimits his own
+result: the derivative expansion omits higher-derivative terms and is
+restricted to energies below the gap scale, so the dispersion curve is no
+longer linear once the Goldstone energy becomes comparable to the gap.
+That restriction is the physical origin of the dispersive correction
+treated in Sec.~\ref{sec:eft-disp}.
 
-At first order in the gradient expansion there are exactly two
-positive transport coefficients $\gamma_1, \gamma_2$ (bulk and
-shear sound damping). The leading dissipative correction to the
-Hawking spectrum is
+The correspondence between the expanded action and the acoustic metric is
+a modelling input in this formalisation, and is recorded as such. The
+structure \texttt{AcousticMetric.PhononEOM} carries a coefficient matrix
+$A_{\mu\nu}(x)$ for the divergence-form phonon equation
+$\partial_t[A_{00}\partial_t\pi + A_{01}\partial_x\pi]
++ \partial_x[A_{10}\partial_t\pi + A_{11}\partial_x\pi] = 0$, together
+with a field \texttt{coeffMatrix\_eq\_metric} that \emph{asserts}
+$A(x) = \rho(x)\,g^{\mu\nu}(x)$. The step a reader performs by hand,
+expanding $P(X)$ to quadratic order in the fluctuation and matching
+coefficients, is therefore a hypothesis here, not a theorem; what is
+proved is what follows from it. The structure is inhabited, by
+\texttt{AcousticMetric.PhononEOM.acoustic}, so nothing downstream is
+vacuously quantified over an empty class. Its consequences are then
+genuine: \texttt{PhononEOM.coeffMatrix\_entries} evaluates the four
+entries in fluid variables;
+\texttt{PhononEOM.coeffMatrix\_mul\_acousticMetric} gives
+$A\,g = \rho\,\mathbb{1}$ against Eq.~\eqref{eq:pg-metric} itself rather
+than against its inverse;
+\texttt{AcousticMetric.eomOperator\_eq\_density\_mul\_dAlembertian}
+identifies the divergence-form operator with $\rho\,\Box_g$ pointwise;
+and, dividing by $\rho > 0$,
+\texttt{AcousticMetric.phonon\_eom\_iff\_klein\_gordon} gives the
+equation-level statement that a phonon field solves the equation of
+motion at a point exactly when $\Box_g\pi = 0$ there.
+
+A sonic horizon is a point $x_H$ with $v(x_H) = c_s(x_H)$
+(\texttt{SKEFTHawking.SonicHorizon}), at which the $tt$ component of
+Eq.~\eqref{eq:pg-metric} vanishes
+(\texttt{AcousticMetric.gtt\_vanishes\_at\_horizon}). The surface gravity
+requires care, and the formalisation is deliberately weak here. In
+\texttt{SonicHorizon}, $\kappa$ is a field of the structure carrying only
+a positivity constraint; there is no equation in the structure relating
+it to $dv/dx$ or $dc_s/dx$ at $x_H$. The physical identification is
+Visser's: for a static acoustic geometry he obtains
+$g_H = \tfrac{1}{2}\,\partial(c^{2}-v_\perp^{2})/\partial n
+= c\,\partial(c-v_\perp)/\partial n$, an acceleration, so that the
+inverse-time surface gravity entering $T_H = \hbar\kappa/2\pi k_B$ is the
+normal gradient of $c_s - v_\perp$ at the horizon; he also notes that the
+density drops out by the conformal invariance of the surface gravity, and
+that this expression differs from the earlier one in that it does not
+assume a position-independent sound speed~\cite{Visser1998}.
+% TODO: Unruh1981 is metadata-only in the local corpus (no full text held).
+% The surface-gravity formula is therefore attributed to Visser, who states
+% it, and no content claim is made about Unruh 1981 in the prose.
+Treating $\kappa$ as an independent positive parameter is the
+conservative reading rather than a convenience: Visser argues that in
+stationary but non-static acoustic geometries there is no analogue of the
+zeroth law of black-hole mechanics, no reason for an acoustic event
+horizon to be a Killing horizon, and that sufficiently convoluted
+supersonic flows can realise almost any pattern of surface gravity.
+
+The consequence must be stated plainly. Since $\kappa$ is a free
+parameter and $T_H$ is \emph{defined} by
+$\texttt{hawkingTemp}\ \kappa := \kappa/2\pi$, the statement
+\texttt{AcousticMetric.hawking\_temp\_from\_surface\_gravity}, namely
+$\mathrm{hawkingTemp}(\kappa) = \kappa/2\pi$, is closed by \texttt{rfl}:
+it is that definition unfolded. The relation
+$T_H = \hbar\kappa/2\pi k_B$ therefore enters this work as a definition,
+and the physics that identifies $\kappa$ with the horizon-crossing
+gradient of $c_s - v$ is standard, is cited to Visser above, and is not
+itself machine-checked here. Everything proved below is a statement about
+how $T_H$ is \emph{dressed}, conditional on that identification.
+Appendix~\ref{app:status} records the same distinction claim by claim.
+
+\subsection{Contour doubling and three constraints: normalisation,
+positivity, KMS}
+\label{sec:eft-sk}
+
+Dissipation is invisible to the construction of
+Sec.~\ref{sec:eft-metric}. Visser makes the point sharply by adding a
+kinematic viscosity to Euler's equation and repeating the linearisation:
+the wave equation acquires a right-hand side and is no longer the
+d'Alembertian of any metric~\cite{Visser1998}. A dissipative correction
+to the horizon temperature therefore cannot be obtained by deforming
+Eq.~\eqref{eq:pg-metric}; it has to be introduced at the level of the
+action, on a closed time path.
+
+The Schwinger--Keldysh construction doubles the field onto the two
+branches of the contour, $\psi \to (\psi_1,\psi_2)$, and works in the
+retarded/advanced basis
+$\psi_r = \tfrac{1}{2}(\psi_1+\psi_2)$, $\psi_a = \psi_1 - \psi_2$, which
+is the basis of Crossley, Glorioso and
+Liu~\cite{CGL2017a,Crossley2017II}. The local field content is
+\texttt{SKEFTHawking.SKDoubling.SKFields}, which carries $\psi_r$,
+$\psi_a$, their first derivatives, and the second derivatives of
+$\psi_r$, that being everything needed through first dissipative order.
+An action is a Lagrangian density on that field content,
+\texttt{SKDoubling.SKAction}, valued in $\mathbb{R}\times\mathbb{R}$ so
+that real and imaginary parts are tracked separately.
+
+Three constraints are imposed. The first is normalisation.
+\texttt{SKDoubling.satisfies\_normalization} requires the Lagrangian to
+vanish identically, in both components, whenever the advanced field and
+its first derivatives vanish. In Crossley, Glorioso and Liu this is the
+unitarity condition $W[g,A;g,A]=0$ on the generating functional,
+implemented on the action as $I[\chi_r,\chi_a=0;\phi_r,\phi_a=0]=0$; the
+consequence they draw is that every term in the action must contain at
+least one power of $\chi_a$.
+
+The second is positivity.
+\texttt{SKDoubling.satisfies\_positivity} requires the imaginary part of
+the Lagrangian to be non-negative at every field configuration. This is
+one of their symmetry principles, and they state precisely the role it
+plays here: it forces the noise distributions to decay exponentially and,
+combined with the local KMS conditions, yields the non-negativity of
+transport coefficients~\cite{Crossley2017II}.
+Sec.~\ref{sec:eft-first} is that mechanism made explicit in a single
+case.
+
+The third is the KMS condition. For a thermal density matrix, Crossley,
+Glorioso and Liu formulate it as a $\mathbb{Z}_2$ operation relating the
+generating functional to its time-reversed counterpart with an imaginary
+time shift; at quadratic order it reduces to the fluctuation--dissipation
+theorem $\mathrm{Im}\,G_R(k) = \tanh(\beta_0\omega/2)\,G_S(k)$. The
+operator appearing in the resulting emergent fermionic symmetry is
+$\Lambda = 2\tanh(i\beta_0\partial_t/2)$, whose leading term is
+$i\beta_0\partial_t$. That leading term is the familiar field-space form
+$\psi_a \to \psi_a + i\beta\,\partial_t\psi_r$, and it is what the
+structure \texttt{SKDoubling.KMSSymmetry} encodes.
+
+That transform is not the hypothesis used below, and the reason is worth
+recording. \texttt{KMSSymmetry} constrains only four of the nine
+components of \texttt{SKFields}, leaving the derivatives of $\psi_a$ and
+the second derivatives of $\psi_r$ free, and a coefficient set consisting
+of the single noise term $(\partial_t\psi_a)^{2}$ satisfies both it and
+positivity while not being of dissipative form for any
+$(\gamma_1,\gamma_2)$. Physically, the transform induces consistent
+shifts on \emph{all} derivatives, and invariance holds order by order in
+the derivative expansion; the correct first-order statement is the
+algebraic relation between noise and dissipative coefficients that this
+induces. Section~\ref{sec:higher-optimal} returns to how this was
+discovered and to why the algebraic form is not merely sufficient but
+tight.
+
+Making that concrete requires a parameterisation. At first derivative
+order the most general Lagrangian with at least one factor of $\psi_a$ is
+a linear combination of nine monomials, and
+\texttt{SKDoubling.FirstOrderCoeffs} is exactly that nine-parameter
+family: six real coefficients for $\psi_a\partial_t^{2}\psi_r$,
+$\psi_a\partial_x^{2}\psi_r$, $\psi_a\partial_t\partial_x\psi_r$,
+$\psi_a\partial_t\psi_r$, $\psi_a\partial_x\psi_r$ and $\psi_a\psi_r$
+(written $r_1,\dots,r_6$), and three for the noise monomials
+$\psi_a^{2}$, $(\partial_t\psi_a)^{2}$ and $(\partial_x\psi_a)^{2}$
+(written $i_1,i_2,i_3$). Normalisation is built into this list rather
+than imposed on it afterwards, since every monomial carries a factor of
+$\psi_a$. The corresponding action is
+\texttt{SKDoubling.firstOrderAction}.
+
+The KMS condition then takes the algebraic form
+\texttt{SKDoubling.FirstOrderKMS}, a record with seven fields:
 \begin{equation}
-\delta_\text{diss}(\omega) \;=\; \frac{(\gamma_1 + \gamma_2)\,\kappa}{c_s^2}
-\,\equiv\, \frac{\Gamma_H}{\kappa},
+\label{eq:fokms}
+\begin{aligned}
+&r_3 = r_4 = r_5 = r_6 = 0, \qquad i_3 = 0,\\
+&i_1\beta = -r_2, \qquad i_2\beta = r_1 + r_2 .
+\end{aligned}
+\end{equation}
+The first line removes the monomials that acquire no partner under the
+transformation at this order; the second is the fluctuation--dissipation
+relation, fixing the two surviving noise coefficients in terms of the
+dissipative ones and the inverse temperature. Two points about the status
+of Eq.~\eqref{eq:fokms} matter. It is a \texttt{structure \dots : Prop},
+an ordinary definition whose fields are equations between real numbers,
+and not an axiom: the library declares \axiomcount{} project-local
+axioms. And it is the first-order algebraic \emph{consequence} of the KMS
+transformation, not the transformation law itself.
+
+\subsection{First order: two transport coefficients}
+\label{sec:eft-first}
+
+The content of the first-order construction is a reduction from nine
+parameters to two, with the sign of both forced rather than assumed.
+Stated exactly, \texttt{SKDoubling.firstOrder\_uniqueness} says: for
+every $c : \texttt{FirstOrderCoeffs}$ and every $\beta > 0$, if
+\texttt{firstOrderAction}~$c$ satisfies positivity and $c$ satisfies
+\texttt{FirstOrderKMS}~$c$~$\beta$, then there exist
+\texttt{DissipativeCoeffs} whose associated action
+\texttt{firstOrderDissipativeAction} has the same Lagrangian at every
+field configuration. The witness is
+\begin{equation}
+\label{eq:gammas}
+\gamma_1 = -r_2, \qquad \gamma_2 = r_1 + r_2 ,
+\end{equation}
+so the nine coefficients collapse to two, and the collapse is an equality
+of Lagrangians pointwise in field space, not an agreement of some derived
+quantity.
+
+The sign structure is the part worth stating precisely.
+\texttt{SKEFTHawking.DissipativeCoeffs} carries
+\texttt{gamma\_1\_nonneg} and \texttt{gamma\_2\_nonneg} as fields of the
+structure, so exhibiting Eq.~\eqref{eq:gammas} as a witness
+\emph{discharges} $\gamma_1 \geq 0$ and $\gamma_2 \geq 0$; they are not
+hypotheses on the nine-parameter family. They are extracted by evaluating
+positivity at two specific field configurations, which bounds
+$i_1 \geq 0$ and $i_2 \geq 0$, and then reading Eq.~\eqref{eq:fokms}
+backwards with $\beta > 0$. This is the general mechanism described by
+Crossley, Glorioso and Liu, realised here in the one case the rest of the
+paper needs. The proof was closed by the automated prover (run
+\texttt{270e77a0}).
+
+The two coefficients enter the horizon problem through a damping rate. At
+the Hawking wavenumber $k_H = \kappa/c_s$, the effective damping rate on
+the phonon dispersion $\omega^{2} = c_s^{2}k^{2}$ is
+\texttt{SecondOrderSK.GammaH},
+$\Gamma_H = (\gamma_1+\gamma_2)(\kappa/c_s)^{2}$, non-negative for
+non-negative coefficients by \texttt{SecondOrderSK.gammaH\_nonneg}. The
+dissipative correction to the horizon temperature is $\Gamma_H/\kappa$
+(\texttt{SecondOrderSK.deltaDissFromTransport}), and
+\texttt{SecondOrderSK.deltaDissFromTransport\_eq} gives its closed form
+for $\kappa \neq 0$:
+\begin{equation}
 \label{eq:delta-diss}
+\delta_{\mathrm{diss}} \;=\; \frac{\Gamma_H}{\kappa}
+\;=\; \frac{(\gamma_1+\gamma_2)\,\kappa}{c_s^{2}} .
 \end{equation}
-where the Hawking damping rate $\Gamma_H = (\gamma_1+\gamma_2)\kappa^2/c_s^2$
-is the IR-dominant scale. This is captured at the Lean level in
-\texttt{SecondOrderSK.deltaDissFromTransport\_eq}.
+Units are worth pinning here, because the factor $k_H^{2}$ is the whole
+content of the identity: $\gamma_1,\gamma_2$ are in
+$\mathrm{m^{2}\,s^{-1}}$, $\kappa$ in $\mathrm{s^{-1}}$, $c_s$ in
+$\mathrm{m\,s^{-1}}$, so $\Gamma_H$ is in $\mathrm{s^{-1}}$ and
+Eq.~\eqref{eq:delta-diss} is dimensionless.
 
-\subsection{BEC platform numerics}
+Two further properties are proved.
+\texttt{SecondOrderSK.deltaDissFromTransport\_zero\_iff} gives, for
+$\kappa > 0$ and $c_s > 0$, that $\delta_{\mathrm{diss}} = 0$ if and only
+if $\gamma_1+\gamma_2 = 0$, which under the non-negativity established
+above means $\gamma_1 = \gamma_2 = 0$: the correction vanishes exactly in
+the dissipationless theory and in no other case. And
+Eq.~\eqref{eq:delta-diss} is \emph{linear} in $\kappa$ at fixed material
+properties, a fact recorded separately as
+\texttt{KappaScaling.kappa\_scaling\_dissipative\_linear}. The dispersive
+correction of Sec.~\ref{sec:eft-disp} is quadratic in $\kappa$; the
+mismatch of exponents is what makes the two separable in a sweep, and
+Sec.~\ref{sec:hierarchy} quantifies where each dominates.
 
-The hierarchy is platform-dependent and culminates in the
-Heidelberg $^{39}$K configuration, where
-$\delta_\text{diss} \sim 1.6\times10^{-3}$ dominates the dispersive
-correction (see~\S\ref{sec:hierarchy} for the full table). The canonical BEC
-parameter sets used for the numerics
-(\texttt{EXPERIMENTS['Steinhauer']}, \texttt{['Heidelberg']},
-\texttt{['Trento']} as registered in \texttt{src/core/constants.py})
-feed the formula chain rooted at \eqref{eq:delta-diss}; the
-Bogoliubov healing-length $\xi$ enters through the transport
-coefficients $\gamma_{1,2}$ and the bulk modulus $c_s$.
+\subsection{The dispersive correction}
+\label{sec:eft-disp}
 
-\subsection{Acoustic-metric infrastructure}
-
-Four Lean theorems comprise the acoustic-metric backbone:
-\texttt{AcousticMetric.acousticMetric\_det},
-\texttt{AcousticMetric.acoustic\_metric\_lorentzian},
-\texttt{AcousticMetric.acousticMetric\_inv\_correct}, and
-\texttt{hawking\_temp\_from\_surface\_gravity}. These are reused
-unchanged in the 2+1D graphene context (with $c_s \to v_F/\sqrt{2}$);
-they form the backbone of the cross-platform reuse claim of
-\S\ref{sec:graphene}.
-
-%% ══════════════════════════════════════════════════════════════════
-
-\figuredeferred{fig:d1-first-order-spectrum}{the BEC reference spectrum against the exact WKB result; the WKB pipeline emits the arrays but no figure function in \texttt{visualizations.py} pairs them}
-\section{Second-order SK-EFT: counting, KMS optimality, and parity}
-\label{sec:bec-second}
-
-\subsection{Transport coefficient counting}
-
-A central technical result is that the number of independent
-transport coefficients at order $N$ in the gradient expansion is
+Son's expansion is valid below a scale set by the microphysics, and in a
+condensate that scale is the inverse healing length. The control
+parameter is the ratio of the horizon scale to the cutoff,
+$D = \kappa/(c_s\Lambda)$, and under the identification
+$\Lambda = 1/\xi$ appropriate to a condensate, $D = \kappa\xi/c_s$. The
+dispersive shift of the horizon temperature is taken to be
 \begin{equation}
-\mathrm{count}(N) \;=\; \left\lfloor \frac{N+1}{2} \right\rfloor + 1,
+\label{eq:delta-disp}
+\delta_{\mathrm{disp}} \;=\; -\frac{\pi}{6}\,D^{2},
+\qquad D = \frac{\kappa}{c_s\Lambda}
+\;\xrightarrow{\;\Lambda = 1/\xi\;}\; \frac{\kappa\xi}{c_s},
+\end{equation}
+which is \texttt{KappaScaling.dispersiveCorrection}. It is negative, and
+quadratic in $\kappa$ at fixed material properties
+(\texttt{KappaScaling.kappa\_scaling\_dispersive\_quadratic}).
+
+The statement proved about Eq.~\eqref{eq:delta-disp} is
+\texttt{KappaScaling.dispersive\_correction\_bound}: for material
+parameters with $\xi > 0$, $c_s > 0$ and for $\kappa > 0$, the
+conjunction of $\delta_{\mathrm{disp}} = -(\pi/6)D^{2}$, of
+$|\delta_{\mathrm{disp}}| \leq (\pi/6)D^{2}$, and of
+$\delta_{\mathrm{disp}} \neq 0$. The second conjunct is saturated by the
+first, so the bound is sharp. Nothing in it is existentially quantified,
+and that is a design requirement rather than an incidental feature: a
+bound of the shape $\exists\,\delta\,\exists\,C > 0$ with
+$|\delta| \leq C D^{2}$ is satisfied by $\delta = 1$, $C = 1/D^{2}$ and
+constrains no physical quantity at all. Both this statement and its
+dissipative counterpart are written so that the quantity bounded is the
+defined correction and the constant is the explicit number $\pi/6$. The
+companion \texttt{KappaScaling.dissipative\_correction\_existence}
+characterises the zero set of Eq.~\eqref{eq:delta-diss} in the same
+style: for $\kappa > 0$, $\gamma_1 = \gamma_2 = 0$ implies
+$\delta_{\mathrm{diss}} = 0$, and $\gamma_1 > 0$ or $\gamma_2 > 0$
+implies $\delta_{\mathrm{diss}} > 0$, a strict shift rather than mere
+non-vanishing. Finally,
+\texttt{KappaScaling.universalEffectiveTemp\_corrections\_eq} closes the
+loop between the two correction definitions and the dressed temperature
+of Sec.~\ref{sec:eft-universality}.
+
+The relation of Eq.~\eqref{eq:delta-disp} to the dispersive-robustness
+literature must be stated carefully, and this paper does not claim more
+than the literature supports. Corley and Jacobson studied a
+two-dimensional black hole with the modified dispersion relation
+$F^{2}(k) = k^{2} - k^{4}/k_0^{2}$ and computed the created-particle
+spectrum numerically. For a smooth velocity profile they found relative
+deviations from the thermal flux at $\omega \simeq T_H$ of order
+$(T_H/k_0)^{3}$ at their lower temperature and $(T_H/k_0)^{2}$ at their
+higher one, and for kinked profiles a convergence at $\omega = T_H$
+fitting $(T_H/k_0)^{p}$ with $p = 1$ to within ten per
+cent~\cite{CorleyJacobson1996}. What that establishes is the robustness
+of the thermal spectrum against high-frequency dispersion, with the
+deviation controlled by a positive power of the ratio of the Hawking
+temperature to the dispersive scale. It does not establish a $D^{2}$ law
+with a universal coefficient. The coefficient $\pi/6$ in
+Eq.~\eqref{eq:delta-disp} is fixed here as part of the definition of
+$\delta_{\mathrm{disp}}$, and every statement about it in this paper is a
+statement about that definition.
+% TODO: no source in hand derives the coefficient pi/6. Corley & Jacobson
+% (PRD 54, 1568), read in full through Sec. 5.2 from the local corpus,
+% report numerically fitted powers of T_H/k_0 and no analytic coefficient.
+% Coutant-Parentani 2014 (PRD 89, 124004) is NOT cached; the cached
+% Coutant file is Coutant, Parentani & Finazzi (arXiv:1108.1821), which
+% supplies no such coefficient either. Either an additional source is
+% obtained, or pi/6 remains a definition throughout, which is how it is
+% presented here.
+
+The same cutoff supplies an upper frequency for the treatment. Above
+\begin{equation}
+\label{eq:omega-max}
+\omega_{\max} = \frac{\kappa}{D^{2/3}}
+\end{equation}
+the eikonal treatment of the horizon crossing fails, and modes are turned
+by the dispersive potential rather than transmitted.
+\texttt{WKBConnection.critical\_frequency\_pos} certifies that the
+right-hand side of Eq.~\eqref{eq:omega-max} is positive for
+$\kappa,\xi,c_s > 0$; that is a well-definedness statement about the
+expression, not a derivation of its form.
+Section~\ref{sec:hierarchy} spends Eq.~\eqref{eq:omega-max} as a bound on
+the frequency window available to an experiment.
+
+\subsection{The dressed temperature, and what universality means here}
+\label{sec:eft-universality}
+
+The dressed temperature of a sonic horizon is defined, not fitted. For a
+modified dispersion relation, first-order transport coefficients and a
+horizon $h$, \texttt{HawkingUniversality.universalEffectiveTemp} is the
+record with fields
+\begin{equation}
+\label{eq:teff-fields}
+\begin{aligned}
+T_H &= \frac{\kappa}{2\pi}, &
+\delta_{\mathrm{disp}} &= -\frac{\pi}{6}D^{2},\\
+\delta_{\mathrm{diss}} &= \frac{(\gamma_1+\gamma_2)\kappa}{c_s^{2}}, &
+\delta_{\mathrm{cross}} &= 0,
+\end{aligned}
+\end{equation}
+with $T_{\mathrm{eff}} = T_H(1 + \delta_{\mathrm{disp}}
++ \delta_{\mathrm{diss}} + \delta_{\mathrm{cross}})$. Every field is a
+defined expression in the parameters; none is an existential witness
+chosen to satisfy an inequality. The vanishing of
+$\delta_{\mathrm{cross}}$ is a choice at this order, not a proved
+cancellation, and is flagged as such in Appendix~\ref{app:status}.
+
+The theorem stated about Eq.~\eqref{eq:teff-fields} is
+\texttt{HawkingUniversality.hawking\_universality}. Its hypotheses are a
+modified dispersion relation, transport coefficients, a background, a
+horizon on that background, and the single inequality $D > 0$. Its
+conclusion is the conjunction
+\begin{align}
+&\delta_{\mathrm{disp}} < 0, \label{eq:univ-1}\\
+&|\delta_{\mathrm{disp}}| = \tfrac{\pi}{6}D^{2}, \label{eq:univ-2}\\
+&0 \leq \delta_{\mathrm{diss}}, \label{eq:univ-3}\\
+&\delta_{\mathrm{diss}} = 0 \iff \gamma_1 = 0 \wedge \gamma_2 = 0,
+   \label{eq:univ-4}\\
+&\big|T_{\mathrm{eff}} - T_H(1+\delta_{\mathrm{diss}})\big|
+   = T_H\,\tfrac{\pi}{6}\,D^{2}. \label{eq:univ-5}
+\end{align}
+No smallness assumption is required. An adiabaticity bound $D < 1$
+appears nowhere in the hypotheses, and the conclusions hold at every
+$D > 0$, which is strictly stronger than the same statement restricted to
+the adiabatic regime; only $D > 0$ is needed, since at $D = 0$ the
+dispersive correction vanishes and Eq.~\eqref{eq:univ-1} fails.
+
+Equation~\eqref{eq:univ-5} is the universality statement, and its force
+lies in what does not appear on the right. A modified dispersion relation
+carries a shape function $F$ with $F(0)=1$ and $F$ continuous, defining
+$\omega^{2} = c_s^{2}k^{2}F(k^{2}/\Lambda^{2})$; it may be subluminal or
+superluminal, the Bogoliubov case $F(x) = 1+x$ being an instance
+(\texttt{HawkingUniversality.bogoliubov\_superluminal}). The function $F$
+occurs nowhere on the right-hand side of any of
+Eqs.~\eqref{eq:univ-1}--\eqref{eq:univ-5}. Once dissipation is accounted
+for by the shift $T_H \to T_H(1+\delta_{\mathrm{diss}})$, the entire
+residual dependence of the dressed temperature on the ultraviolet
+completion is the single number $(\pi/6)D^{2}$, the same number for every
+admissible modified dispersion relation. That is the sense in which
+universality is used in this paper, and no other.
+
+The honest framing of what has been established is this. The definition
+Eq.~\eqref{eq:teff-fields} builds the $F$-independence in, by assigning
+$\delta_{\mathrm{disp}}$ a value that depends on the dispersion relation
+only through $c_s$ and $\Lambda$. What the theorem certifies is that the
+resulting structure has no hidden $F$-dependence and no existential
+escape: the corrections are the defined fields, the constant is explicit,
+the zero set of $\delta_{\mathrm{diss}}$ is characterised exactly, and
+the residual in Eq.~\eqref{eq:univ-5} is an equality rather than a bound
+that a witness could be chosen to satisfy. It does not establish
+$F$-independence by solving a mode equation with general $F$, and it is
+not offered as doing so. Read that way, the result is a consistency and
+closure statement about the correction structure of
+Eq.~\eqref{eq:teff-fields}, resting on the dispersive-robustness
+literature discussed in Sec.~\ref{sec:eft-disp} for the physical claim
+that a correction of this order is all there is.
+
+\section{Higher orders in the gradient expansion}
+\label{sec:higher}
+
+The first-order analysis of Sec.~\ref{sec:eft} is exhaustive: nine
+candidate monomials collapse to two coefficients, and the collapse is a
+theorem. Whether that economy survives is the question this section
+answers. Two things could go wrong. The count of independent
+coefficients could grow quickly enough with derivative order that the
+expansion loses predictive content, and the first-order constraint could
+be weaker than the physics requires, in which case parameters that look
+free are not. Neither happens, and the reasons are different in kind:
+the first is a combinatorial fact, the second is a statement about the
+constraint itself.
+
+\subsection{Counting the independent coefficients}
+\label{sec:higher-count}
+
+Order the monomials of the dissipative sector by their total derivative
+count. A monomial at gradient order $N$ carries derivative level
+$L = N+1$, distributed as $m$ temporal and $n$ spatial derivatives with
+$m + n = L$. Dynamical KMS pairs each dissipative retarded coefficient
+with a noise coefficient through an odd power of $\omega$, which in the
+monomial basis is the requirement that $m$ be even. The independent
+coefficients at order $N$ are therefore indexed by the pairs
+$(m,n) \in \mathbb{N}^2$ with $m + n = N+1$ and $m$ even.
+
+That index set has a closed cardinality:
+\begin{equation}
+\#\{(m,n) : m+n = N+1,\; m \text{ even}\}
+  \;=\; \left\lfloor \frac{N+1}{2} \right\rfloor + 1 .
 \label{eq:count-formula}
 \end{equation}
-giving $\mathrm{count}(1) = 2$, $\mathrm{count}(2) = 2$ (without
-parity asymmetry) or $\mathrm{count}(3) = 3$, etc. The proof, by
-explicit bijection to a parity-graded monomial set, is closed by
-the Aristotle automated prover (run \texttt{d61290fd}); the
-small-$N$ cases $N = 1, 2, 3$ are independently closed by
-\texttt{decide} (kernel-checked, not compiled-evaluated) in
-\texttt{SecondOrderSK.firstOrder\_count},
-\texttt{secondOrder\_count},
-\texttt{secondOrder\_count\_with\_parity},
-\texttt{thirdOrder\_count}.
+Equation~\eqref{eq:count-formula} is
+\texttt{SecondOrderSK.transport\_coefficient\_count}, proved for every
+$N$ by the Aristotle automated prover (run \texttt{d61290fd}) through an
+explicit bijection with $\{0, 2, \ldots, 2\lfloor L/2\rfloor\}$. The
+three cases the rest of this paper uses,
+\texttt{firstOrder\_count}, \texttt{secondOrder\_count} and
+\texttt{thirdOrder\_count}, are closed independently by
+\texttt{decide}, that is, by kernel-checked evaluation of the finite
+cardinality rather than by compiled evaluation outside the kernel. They
+give $2$, $2$ and $3$.
 
-\subsection{Positivity-forced relations}
+The scope of Eq.~\eqref{eq:count-formula} should be stated precisely,
+because the formal statement is narrower than the physical reading. What
+is proved is the cardinality of an explicitly described set of index
+pairs. The identification of that set with the independent transport
+coefficients of the Schwinger--Keldysh action at order $N$ rests on the
+monomial classification of the preceding paragraph, which is an argument
+in this paper and not a machine-checked one. At first order the
+identification is independently corroborated, because
+\texttt{SKDoubling.firstOrder\_uniqueness} reduces nine coefficients to
+two by a route that never mentions Eq.~\eqref{eq:count-formula}, and the
+two answers agree. At second and third order no such independent check
+exists, and the count should be read as a consequence of the
+classification rather than as a substitute for it.
 
-At second order, KMS positivity forces a single linear relation
-between the two new coefficients:
-\[
-\gamma_{2,1} + \gamma_{2,2} \;=\; 0.
-\]
-This reduces the apparent four free parameters
-$(\gamma_1, \gamma_2, \gamma_{2,1}, \gamma_{2,2})$ to three.
-The reduction is captured in
-\texttt{SecondOrderSK.fullSecondOrder\_uniqueness}. Both new
-second-order coefficients require broken spatial parity: under
-$x \to -x$ symmetry they vanish identically. This is the cleanest
-experimental signature separating dispersive corrections (which
-survive parity) from dissipative ones (which do not) at second
-order.
+The physical content is the growth rate. The number of new coefficients
+increases like $N/2$, so the cumulative parameter count through order
+$N$ grows quadratically while the accuracy of the expansion improves
+geometrically in the gradient ratio. The theory does not run out of
+predictive power at any finite order. It is also worth recording what
+the formula does not assert: it counts coefficients admitted by the
+grading, not coefficients that are nonzero on any particular background.
 
-\subsection{KMS optimality}
+\subsection{Parity grading and the second-order signature}
+\label{sec:higher-parity}
 
-The KMS positivity axiom is optimal in the sense that no further
-relations among the transport coefficients are imposed. Formally,
-positivity is equivalent to $i_1 \geq 0 \wedge i_2 \geq 0$ where
-$(i_1, i_2)$ are the eigenvalues of the spectral matrix; no hidden
-inequalities exist. This is closed by Aristotle in
-\texttt{SKDoubling.firstOrder\_KMS\_optimal}. The companion stress
-test \texttt{SKDoubling.firstOrder\_altSign\_uniqueness\_test} verifies
-the optimality numerically by exhibiting parameter-space points that
-fail when the axiom is relaxed.
+At derivative level $L = 3$ the surviving pairs are $(m,n) = (0,3)$ and
+$(2,1)$. Both have odd $n$. Every second-order dissipative coefficient
+therefore carries an odd number of spatial derivatives and vanishes
+identically under $x \to -x$. Imposing spatial parity as an additional
+grading, that is, requiring both $m$ and $n$ even, empties the index set
+at $L=3$: \texttt{SecondOrderSK.secondOrder\_count\_with\_parity}
+records that the parity-graded count is zero, which follows because
+$m+n=3$ is odd and cannot be a sum of two even numbers.
 
-\subsection{The CGL fluctuation-dissipation relation}
+This is the cleanest experimental discriminator the framework offers at
+second order. A homogeneous condensate has unbroken spatial parity and
+no second-order dissipative correction at all. A transonic background
+breaks parity by construction, since the flow profile $v(x)$ singles out
+a direction, so these coefficients switch on precisely when a horizon is
+present. Dispersive corrections, which enter through even powers of the
+adiabaticity parameter, survive parity and do not share this behaviour.
+Measuring a frequency-dependent deviation that turns off when the flow
+is made symmetric therefore separates the dissipative channel from the
+dispersive one without needing to know either coefficient.
 
-Combining algebraic KMS with the second-order action yields the
-master FDR
+We flag the formal status of the parity statement explicitly.
+\texttt{SecondOrderSK.secondOrder\_requires\_parity\_breaking} has the
+statement $(3 : \mathbb{N}) \bmod 2 = 1 \wedge (1 : \mathbb{N}) \bmod 2
+= 1$; its coefficient argument is unused. It records that the two
+surviving spatial-derivative counts are odd, and nothing else. The
+inference from oddness to the vanishing of the corresponding operators
+under $x \to -x$ is elementary and is made in this paper, not in the
+library.
+
+\subsection{Second order: positivity at the truncation used here}
+\label{sec:higher-positivity}
+
+Extending the first-order construction to level $3$ enlarges the
+coefficient space to fourteen real parameters, constrained by the
+second-order KMS record \texttt{SecondOrderSK.FullSecondOrderKMS}. That
+record inherits the first-order conditions and adds
+$s_2 = s_4 = 0$ together with a fluctuation--dissipation relation
+$j_{tx}\beta = s_1 + s_3$ for the mixed noise bilinear
+$(\partial_t \psi_a)(\partial_x \psi_a)$.
+
+\texttt{SecondOrderSK.fullSecondOrder\_uniqueness} then states that
+positivity and second-order KMS reduce the fourteen coefficients to
+four: for every such action there exist
+$(\gamma_1, \gamma_2, \gamma_{2,1}, \gamma_{2,2})$, with $\gamma_1$ and
+$\gamma_2$ non-negative, reproducing the Lagrangian on every field
+configuration. The construction is
+$\gamma_1 = -r_2$, $\gamma_2 = r_1 + r_2$, $\gamma_{2,1} = s_1$ and
+$\gamma_{2,2} = s_3$, and the theorem is closed by Aristotle
+(run \texttt{c4d73ca8}). Both second-order signs are unconstrained by
+this theorem.
+
+The reduction from four to three is a separate result, and it is worth
+following its logic because it is more interesting than a parameter
+count. At this truncation the noise sector contains
+$\psi_a^2$ and $(\partial_t \psi_a)^2$ but no $(\partial_x \psi_a)^2$
+term, so the imaginary part of the Lagrangian is
+\begin{equation}
+\mathrm{Im}\,\mathcal{L} \;=\;
+  \frac{\gamma_1}{\beta}\,\psi_a^2
+  + \frac{\gamma_2}{\beta}\,u^2
+  + \frac{\gamma_{2,1}+\gamma_{2,2}}{\beta}\,u\,v ,
+\label{eq:im-lagrangian}
+\end{equation}
+with $u = \partial_t \psi_a$ and $v = \partial_x \psi_a$. As a quadratic
+form in $(\psi_a, u, v)$ this has a vanishing $vv$ entry. A symmetric
+matrix with a zero diagonal entry is positive semidefinite only if the
+whole corresponding row vanishes, so positivity forces
+\begin{equation}
+\gamma_{2,1} + \gamma_{2,2} \;=\; 0 ,
+\label{eq:second-order-relation}
+\end{equation}
+and four second-order parameters become three. This is
+\texttt{SecondOrderSK.combined\_positivity\_constraint}, closed by
+Aristotle in the same run by exhibiting the field configuration
+$u = 1$, $v = -(\gamma_2+1)/(\gamma_{2,1}+\gamma_{2,2})$, which drives
+Eq.~\eqref{eq:im-lagrangian} negative whenever the sum is nonzero.
+
+Equation~\eqref{eq:second-order-relation} is a constraint of the
+truncation, not a prediction about nature, and presenting it otherwise
+would misstate what has been shown. The unpaired cross term in
+Eq.~\eqref{eq:im-lagrangian} is unpaired only because the noise sector
+was truncated before $(\partial_x \psi_a)^2$. Restoring that bilinear
+supplies the missing diagonal entry, and the positive-semidefiniteness
+condition relaxes from $\gamma_{2,1}+\gamma_{2,2} = 0$ to an inequality
+bounding the cross term by the geometric mean of the diagonal ones. So
+the honest statement is conditional and is still useful: within the
+gradient truncation carried here, positivity leaves three free
+second-order parameters rather than four, and any measurement resolving
+$\gamma_{2,1}+\gamma_{2,2} \neq 0$ would be evidence that the noise
+sector must be extended rather than evidence against
+Schwinger--Keldysh positivity. Both branches are informative, which is
+the property one wants of a constraint.
+
+\subsection{Optimality of the first-order condition, and the
+counterexample that produced it}
+\label{sec:higher-optimal}
+
+A reduction theorem is only as strong as the constraint it assumes. If
+the first-order KMS record were weaker than the physics, the two
+surviving coefficients would be an overcount and some region of the
+$(\gamma_1,\gamma_2)$ plane would be unphysical for reasons the
+formalism could not see. The relevant statement is
+\texttt{SKDoubling.firstOrder\_KMS\_optimal}: for every coefficient
+vector $c$ and every $\beta > 0$ satisfying the first-order KMS record,
+\begin{equation}
+\text{positivity of the action}
+  \;\Longleftrightarrow\;
+  i_1 \geq 0 \;\wedge\; i_2 \geq 0 ,
+\label{eq:kms-optimal}
+\end{equation}
+where $i_1$ and $i_2$ are the noise coefficients of $\psi_a^2$ and
+$(\partial_t \psi_a)^2$, equal under the fluctuation--dissipation
+conditions to $\gamma_1/\beta$ and $\gamma_2/\beta$. Both directions
+have content. The forward direction extracts the two inequalities by
+evaluating positivity at two specific field configurations. The reverse
+direction uses $i_3 = 0$, which is a KMS consequence, to reduce the
+imaginary part to a sum of two squares. Equation~\eqref{eq:kms-optimal}
+says there is no third inequality: the non-negativity of the two damping
+coefficients is the complete positivity content of the theory at first
+order, and the parameter space is exactly the closed quadrant. This was
+closed by Aristotle (run \texttt{3eedcabb}).
+
+The same run settled the companion question of whether the
+fluctuation--dissipation signs could have been chosen otherwise.
+Replacing $i_1\beta = -r_2$ by $i_1\beta = +r_2$ and leaving everything
+else in place gives a modified record under which the reduction theorem
+is not merely unproved but false:
+\texttt{SKDoubling.firstOrder\_altSign\_uniqueness\_test} is the
+kernel-checked \emph{negation} of the corresponding universally
+quantified statement, witnessed by
+$c = (1,1,0,0,0,0,1,2,0)$ at $\beta = 1$. That configuration satisfies
+the sign-flipped conditions and positivity, but forces
+$\gamma_1 = -r_2 = -1$, which no admissible coefficient set can
+accommodate. The sign in the fluctuation--dissipation relation is thus
+fixed by internal consistency rather than by convention.
+
+The first-order record itself has a history worth recording, because it
+bears on what formal verification contributes to effective field theory
+rather than to mathematics. The condition was originally written as a
+general KMS transformation property of the action. Submitted for
+proof, that formulation returned not a proof but a counterexample:
+$c = (0,0,0,0,0,0,0,1,0)$, a coefficient vector satisfying the stated
+condition while violating dynamical KMS. Inspection of the
+counterexample showed that the transformation constrained only four of
+the nine coefficients, leaving a five-dimensional unconstrained
+subspace in which the noise sector was free. The condition was
+reformulated as the algebraic record of Sec.~\ref{sec:eft-sk}, which
+constrains all nine, and Eq.~\eqref{eq:kms-optimal} is the statement
+that the reformulated version is not merely sufficient but tight. The
+error was in the statement of a physical assumption, not in a proof,
+and it is the class of error that a proof attempt surfaces and a
+consistency check does not. The reformulated condition remains a
+\texttt{Prop}-valued record rather than an axiom; the library declares
+\axiomcount{} project-local axioms.
+
+\subsection{The fluctuation--dissipation closure, and what it assumes}
+\label{sec:higher-fdr}
+
+Sec.~\ref{sec:wkb} will use the fact that dissipation cannot be
+introduced without noise. The relation that supplies this is the
+Crossley--Glorioso--Liu fluctuation--dissipation
+relation~\cite{CGL2017a,Crossley2017II}, which in the linear regime
+fixes the noise kernel from the retarded kernel,
 \begin{equation}
 K_N(\omega, \mathbf{k})
-\;=\; -\mathrm{i} \cdot \frac{K_R(\omega, \mathbf{k}) - K_R(-\omega, \mathbf{k})}{\beta\,\omega},
+  \;=\; -\mathrm{i}\,
+  \frac{K_R(\omega, \mathbf{k}) - K_R(-\omega, \mathbf{k})}{\beta\,\omega} .
 \label{eq:cgl-fdr}
 \end{equation}
-which connects the algebraic SK axioms to the dynamical-KMS
-microscopic principle of Crossley-Glorioso-Liu. The chain of
-implications (algebraic KMS $\Rightarrow$ Einstein relation
-$\Rightarrow$ CGL FDR $\Rightarrow$ second-order KMS) is closed
-in \texttt{CGLTransform.einstein\_relation},
-\texttt{cgl\_fdr\_general}, and
-\texttt{cgl\_implies\_secondOrderKMS}. The CGL FDR is what makes
-the KMS-mandated noise floor of \S\ref{sec:exact-wkb} a
-\emph{theorem}, not an assumption.
+In the monomial basis Eq.~\eqref{eq:cgl-fdr} becomes a family of
+coefficient identities: a dissipative retarded coefficient $b$ at
+derivative level $2j+1$ pairs with the noise coefficient of
+$(\partial_t^j \psi_a)^2$ through $\mathrm{noise} \cdot \beta = -b$. At
+$j = 0$ this is the Einstein relation $\sigma = \gamma T$.
 
-\subsection{Acoustic-shell vanishing of $\delta^{(2)}$}
+The formal layer records this structure conditionally, and the
+distinction matters enough to state without hedging.
+\texttt{CGLTransform.cgl\_fdr\_general} has the shape
+\begin{equation*}
+\beta > 0 ,\;\; \mathrm{noise}\cdot\beta = -b
+  \;\;\Longrightarrow\;\; \mathrm{noise} = -b/\beta ,
+\end{equation*}
+and \texttt{CGLTransform.einstein\_relation} is the same statement at
+$j = 0$. The fluctuation--dissipation identity is the hypothesis of
+these theorems, not their conclusion; what is machine-checked is that
+the identity may be solved for the noise coefficient. Likewise
+\texttt{CGLTransform.cgl\_implies\_secondOrderKMS} chains five
+equalities, the relation itself, two time-reversal conditions and two
+model identifications, into $j_{tx}\beta = s_1 + s_3$ by linear
+arithmetic. The chain is bookkeeping over assumed inputs, and it is
+valuable as bookkeeping, because it is exactly the place where a sign
+or an index slip would otherwise survive unnoticed. It is not a
+derivation of Eq.~\eqref{eq:cgl-fdr} from the microscopic dynamics.
 
-A key result of the second-order analysis: the second-order
-correction $\delta^{(2)}(\omega)$ vanishes identically on the
-acoustic shell ($\omega^2 = c_s^2 k^2$). It becomes nonzero only
-through Bogoliubov off-shell dispersion at order
-$\xi^2 k^2 / (c_s\, k_\text{UV})^2$. For all current BEC platforms,
-$\delta^{(2)}$ is at most $10^{-8}$--$10^{-12}$, below detection
-thresholds. This is captured in the second-order formal-claim
-infrastructure of \texttt{SecondOrderSK}.
+What follows for the rest of the paper is therefore conditional in a way
+that should be visible to the reader at the point of use rather than
+recovered from an appendix. Given Eq.~\eqref{eq:cgl-fdr}, the noise
+amplitude accompanying a given dissipative coefficient is not adjustable,
+and the floor of Sec.~\ref{sec:wkb-crossover} cannot be tuned away
+without abandoning the relation. Equation~\eqref{eq:cgl-fdr} is not
+established here; it is imported from the effective-field-theory
+literature~\cite{CGL2017a,Crossley2017II,GloriosoLiu2018}, where it
+follows from the dynamical KMS symmetry of the closed-time-path
+generating functional, and this paper checks that its consequences are
+carried consistently through both derivative orders. A reader who
+rejects Eq.~\eqref{eq:cgl-fdr} rejects the noise floor with it, and
+that is the correct dependency to advertise.
 
-%% ══════════════════════════════════════════════════════════════════
-\section{Exact WKB connection: three non-perturbative effects}
-\label{sec:exact-wkb}
+\section{The dissipative Bogoliubov connection and the crossover frequency}
+\label{sec:wkb}
 
-This section is the workhorse. The exact-WKB connection
-formula~\cite{Berry1989,Heading1962,CorleyJacobson1996,
-CoutantParentani2012,RobertsonParentani2015,BelgiornoCacciatori2024}
-provides three predictions absent at any finite order in
-perturbation theory.
+Everything so far is perturbative in the gradient expansion. The
+corrections of Secs.~\ref{sec:eft} and~\ref{sec:higher} shift the
+effective temperature, and a shifted temperature is still a temperature:
+the spectrum remains Planckian and the measurement remains a fit for one
+number. This section treats an effect of a different kind. Dissipation
+moves the Wentzel--Kramers--Brillouin turning point off the real axis,
+and the mode matching across a complex turning point does not preserve
+the Bogoliubov normalisation. The consequence is a spectrum that is not
+Planckian at any temperature, with a deviation that survives at every
+order in the gradient expansion because it is controlled by the ratio
+$\Gamma_H/\kappa$ rather than by the gradient ratio.
 
-\subsection{Complex turning-point shift}
+\subsection{The complex turning point}
+\label{sec:wkb-turning}
 
-The dissipative correction shifts the WKB turning point off the
-real axis by
+For a non-dissipative horizon the Hawking spectrum arises from the
+branch structure of the mode equation at a turning point on the
+imaginary axis, at $x_H \simeq -\mathrm{i}\,c_s/\kappa$ in the
+eikonal saddle-point treatment~\cite{Berry1989,Heading1962}. Dissipation
+adds an imaginary part to the local dispersion relation and perturbs the
+turning point by
 \begin{equation}
-\delta x_\text{imag} \;=\; \frac{c_s\, \Gamma_H}{2\,\kappa^2}.
+\delta x_{\rm imag} \;=\; \frac{c_s\, \Gamma_H}{2\,\kappa^2}
+  \;=\; \frac{c_s}{\kappa}\cdot\frac{\delta_{\rm diss}}{2} ,
 \label{eq:turning-point-shift}
 \end{equation}
-This is exact to all orders in the SK-EFT; the EFT order enters
-only through $\Gamma_H(\omega)$. The Lean
-\texttt{WKBConnection.turning\_point\_shift\_pos\_iff}
-formalises the equivalence of this shift to the dissipative
-correction being non-zero.
+so that $x_{\rm tp} = -\mathrm{i}(c_s/\kappa)(1 + \delta_{\rm diss}/2)$.
+The shift is a fraction $\delta_{\rm diss}/2$ of the Wentzel--Kramers--Brillouin
+localisation length $c_s/\kappa$, which is the natural comparison and
+the reason $\delta_{\rm diss}$ rather than $\Gamma_H$ is the controlling
+parameter. Dimensionally, $c_s$ carries $[L/T]$ and $\Gamma_H, \kappa$
+carry $[1/T]$, so Eq.~\eqref{eq:turning-point-shift} has units of
+length.
 
-\subsection{Modified Bogoliubov coefficients}
+The library carries Eq.~\eqref{eq:turning-point-shift} as the definition
+\texttt{WKBConnection.turningPointShift} together with its elementary
+properties: the shift is non-negative
+(\texttt{turning\_point\_shift\_nonneg}), it is strictly positive if and
+only if $\Gamma_H > 0$
+(\texttt{turning\_point\_shift\_pos\_iff}), it vanishes if and only if
+$\Gamma_H = 0$ (\texttt{turning\_point\_shift\_zero\_iff}), and it
+equals $c_s \delta_k/(4\kappa)$
+(\texttt{turning\_point\_shift\_eq\_decoherence}), which is the binding
+to the decoherence parameter of the next subsection. These are
+statements about a defined quantity. The physics that places the turning
+point where Eq.~\eqref{eq:turning-point-shift} says it is comes from the
+saddle-point analysis of the dissipative mode
+equation~\cite{RobertsonParentani2015,CoutantParentani2012} and is not
+itself machine-checked.
 
-Standing-wave matching across the complex turning point gives
+\subsection{The modified-unitarity ansatz and its one parameter}
+\label{sec:wkb-unitarity}
+
+Matching across the shifted turning point gives the Bogoliubov ratio in
+the familiar form with a dressed surface gravity,
 \begin{equation}
-\left| \frac{\beta(\omega)}{\alpha(\omega)} \right|^2
-\;=\; \exp\!\left( -\frac{2\pi\omega}{\kappa_\text{eff}(\omega)} \right),
+\left|\frac{\beta(\omega)}{\alpha(\omega)}\right|^2
+  = \exp\!\left(-\frac{2\pi\omega}{\kappa_{\rm eff}(\omega)}\right),
 \quad
-\kappa_\text{eff}(\omega) = \frac{\kappa}{1 + \delta_\text{disp} + \delta_\text{diss}(\omega)}.
+\kappa_{\rm eff}(\omega)
+  = \frac{\kappa}{1 + \delta_{\rm disp} + \delta_{\rm diss}(\omega)} ,
+\label{eq:bogo-ratio}
 \end{equation}
-The recovery of standard unitarity in the $\Gamma_H \to 0$ limit is
-captured by \texttt{WKBConnection.standard\_unitarity\_recovered}.
-
-\subsection{Non-perturbative effect 1: modified unitarity}
-
-Generalised across the dissipative SK contour, the standard
-relation $|\alpha|^2 - |\beta|^2 = 1$ is replaced by
+but it does not preserve the normalisation. A mode traversing the
+dissipative region can be absorbed by the environment, with probability
+proportional to the damping rate times the horizon-crossing time
+$\tau_{\rm cross} \sim 1/\kappa$. Counting both branches of the
+closed-time-path contour gives an absorption probability
 \begin{equation}
-|\alpha(\omega)|^2 - |\beta(\omega)|^2 \;=\; 1 - \delta_k,
-\qquad
-\delta_k \;=\; \frac{2\,\Gamma_H}{\kappa},
+\delta_k \;=\; \frac{2\,\Gamma_H}{\kappa} \;=\; 2\,\delta_{\rm diss} ,
+\label{eq:decoherence-param}
+\end{equation}
+and the Bogoliubov relation becomes
+\begin{equation}
+|\alpha(\omega)|^2 - |\beta(\omega)|^2 \;=\; 1 - \delta_k .
 \label{eq:modified-unitarity}
 \end{equation}
-where $\delta_k$ is the decoherence parameter. This is encoded in
-\texttt{WKBConnection.unitarity\_deficit\_eq\_decoherence};
-non-negativity in
-\texttt{WKBConnection.decoherence\_nonneg}; the
-$\Gamma_H \to 0$ recovery in
-\texttt{WKBConnection.decoherence\_zero\_iff}. Physically: the
-final state of the analog Hawking process is not a pure quantum
-state; environmental coupling forces a finite mixed-state weight.
+The relation between the two small parameters is worth stating once and
+explicitly, because both appear below: $\delta_{\rm diss} = \Gamma_H/\kappa$
+is the fractional temperature shift of Eq.~\eqref{eq:delta-diss},
+$\delta_k = 2\delta_{\rm diss}$ is the unitarity deficit, and the
+factor of two is the two contour traversals. In the library this
+identification is the definitional lemma
+\texttt{WKBConnection.decoherence\_double\_delta\_diss}.
 
-\subsection{Non-perturbative effect 2: FDR-mandated noise floor}
+Equation~\eqref{eq:modified-unitarity} is an ansatz, and the formal
+layer treats it as one. \texttt{WKBConnection.ModifiedBogoliubov} is a
+structure whose fields are $|\alpha|^2 \geq 0$, $|\beta|^2 \geq 0$ and
+Eq.~\eqref{eq:modified-unitarity} itself; the theorems of the module are
+consequences of inhabiting it.
+\texttt{unitarity\_deficit\_eq\_decoherence} rearranges the field to
+$1 - (|\alpha|^2 - |\beta|^2) = \delta_k$;
+\texttt{standard\_unitarity\_recovered} gives
+$|\alpha|^2 - |\beta|^2 = 1$ at $\Gamma_H = 0$;
+\texttt{decoherence\_nonneg} and \texttt{decoherence\_zero\_iff} give
+$\delta_k \geq 0$ with equality exactly at zero damping. What is
+machine-checked is that the ansatz is algebraically consistent, that it
+degenerates correctly in the closed-system limit, and that its one
+parameter is non-negative and vanishes only when dissipation does. That
+the correct open-system generalisation of the Bogoliubov relation is
+Eq.~\eqref{eq:modified-unitarity} with Eq.~\eqref{eq:decoherence-param}
+is physics input, argued from the absorption
+picture~\cite{RobertsonParentani2015} and consistent with the
+dissipative-decoherence literature, not a theorem of this work.
 
-Even with $|\beta|^2 = 0$ (no Hawking radiation), the FDR
-\eqref{eq:cgl-fdr} forces a residual
+The physical reading of $\delta_k > 0$ is that the outgoing state is not
+pure. In the closed-system treatment the Hawking pair is a two-mode
+squeezed vacuum, and its purity is what makes the entanglement
+measurements of Refs.~\cite{Steinhauer2016,deNova2019} meaningful.
+Coupling to the microscopic environment removes a fraction $\delta_k$ of
+the norm into unobserved degrees of freedom, so the reduced state of the
+outgoing mode carries a mixed-state weight that does not vanish at any
+order in the gradient expansion.
+
+\subsection{The crossover frequency}
+\label{sec:wkb-crossover}
+
+Absorption alone would be a loss. The fluctuation--dissipation relation
+of Sec.~\ref{sec:higher-fdr} forbids that reading: a channel that
+removes quanta at rate $\Gamma_H$ also injects them, and at zero
+environment temperature the injected occupation is
 \begin{equation}
-n_\text{noise} \;=\; \frac{\delta_k}{2} \;=\; \frac{\Gamma_H}{\kappa},
+n_{\rm noise} \;=\; \frac{\delta_k}{2} \;=\; \frac{\Gamma_H}{\kappa}
+  \;=\; \delta_{\rm diss} .
 \label{eq:noise-floor}
 \end{equation}
-encoded in \texttt{WKBConnection.noise\_floor\_nonneg} and
-\texttt{noise\_floor\_eq\_delta\_diss}. This is mandatory by KMS:
-the FDR cannot be turned off without violating algebraic axioms of
-the SK-EFT. The noise floor is observable as a flat baseline to
-which the Hawking spectrum sits as a Planckian increment.
+This is \texttt{WKBConnection.noiseFloor} with
+\texttt{noise\_floor\_eq\_delta\_diss}; non-negativity is
+\texttt{noise\_floor\_nonneg} and vanishing exactly at zero damping is
+\texttt{noise\_floor\_zero\_iff}. Both are unfoldings of the definition
+$n_{\rm noise} := \delta_k/2$, so what Eq.~\eqref{eq:noise-floor}
+contributes is not a proof but a bookkeeping identity: the same number
+that measures the unitarity deficit, divided by two, is the floor. Its
+force comes from Eq.~\eqref{eq:cgl-fdr}, and it is exactly as
+conditional as that relation.
 
-\subsection{Non-perturbative effect 3: spectral floor}
-
-Combining \eqref{eq:modified-unitarity} and \eqref{eq:noise-floor}
-gives the total occupation number
+The floor is a constant in $\omega$; the Hawking occupation is not.
+Writing $n_{\rm Hawking} = |\beta|^2/(1-\delta_k)$ for the occupation
+corrected for the fraction of modes that survive the crossing, and using
+Eqs.~\eqref{eq:bogo-ratio} and~\eqref{eq:modified-unitarity},
 \begin{equation}
-n(\omega) \;=\; |\beta(\omega)|^2 \;+\; \frac{\delta_k}{2}.
+n_{\rm Hawking}(\omega)
+  \;=\; \frac{1}{\exp(\omega/T_{\rm eff}) - 1} ,
+\label{eq:planck}
 \end{equation}
-Encoded in \texttt{WKBConnection.occupation\_reduces\_to\_beta\_sq}.
-The Hawking term decays as $\exp(-\omega/T_H)$ at high frequency,
-while the noise floor is constant. The crossover frequency, where
-\texttt{WKBConnection.noise\_dominates\_when\_beta\_small}, is at
-\[
-\omega_\times \;\approx\; T_H \cdot \ln(2 / \delta_\text{diss}),
-\]
-matching the abstract expression (using
-$\delta_\text{diss} = \Gamma_H/\kappa = \delta_k/2$).
-For Heidelberg-class BEC ($\delta_\text{diss} \approx 1.59\times10^{-3}$;
-Tab.~\ref{tab:hierarchy}), $\omega_\times \approx T_H \ln(2/1.59\times10^{-3})
-\approx 7.14\, T_H$, well below the dispersive UV cutoff
-($\omega_\text{max} \approx 121\, T_H$). The
-high-frequency spectrum becomes power-law ($\omega^{-1}$ correction)
-rather than exponentially suppressed. The predicted regime is one
-in which the spectrum is thermal at
-$\omega \lesssim T_H$, transitions to a Planckian floor at
-$\omega \sim T_H$, and bottoms out at the $\omega^{-1}$ spectral
-floor at $\omega \gtrsim 7\, T_H$, where the thermal Hawking flux
-$\exp(-\omega/T_H)$ has fallen to the FDR floor
-$\delta_\text{diss}/2 \approx 8\times10^{-4}$. (For Steinhauer-class
-$\delta_\text{diss} \approx 2.38\times10^{-5}$ the crossover sits at
-$\omega_\times \approx T_H \ln(2/2.38\times10^{-5}) \approx 11.3\, T_H$,
-still below the dispersive UV cutoff but where the floor
-$\delta_\text{diss}/2 \approx 1.2\times10^{-5}$ is nearly two orders of
-magnitude smaller than at Heidelberg.)
+the Planck distribution at the dressed temperature, with
+$T_{\rm eff} = \kappa_{\rm eff}/2\pi$. The total occupation is
+\begin{equation}
+n(\omega) \;=\; n_{\rm Hawking}(\omega) \;+\; n_{\rm noise} ,
+\label{eq:total-occupation}
+\end{equation}
+which reduces to $|\beta|^2$ in the zero-dissipation limit
+(\texttt{WKBConnection.occupation\_reduces\_to\_beta\_sq}) and is
+non-negative throughout the perturbative regime $\delta_k < 1$
+(\texttt{total\_occupation\_nonneg}).
 
-\subsection{Heidelberg as the unique BEC target}
+Equations~\eqref{eq:noise-floor} and~\eqref{eq:planck} cross. The
+Hawking term falls exponentially and the floor does not, so above some
+frequency the spectrum stops being thermal and flattens. The crossover
+is where the two terms of Eq.~\eqref{eq:total-occupation} are equal,
+$1/(e^{\omega/T_{\rm eff}} - 1) = \delta_{\rm diss}$, that is
+\begin{equation}
+\boxed{\;
+\omega_\times \;=\; T_{\rm eff}\,
+  \ln\!\left(1 + \frac{1}{\delta_{\rm diss}}\right)
+  \;\simeq\; T_{\rm eff}\,\ln\frac{1}{\delta_{\rm diss}} \; }
+\label{eq:crossover}
+\end{equation}
+for $\delta_{\rm diss} \ll 1$. The corresponding inequality is
+\texttt{WKBConnection.noise\_dominates\_when\_beta\_small}, which states
+that $|\beta|^2 < n_{\rm noise}(1-\delta_k)$ implies
+$n_{\rm Hawking} < n_{\rm noise}$; as a formal statement it is the
+rearrangement of a quotient inequality, and the content of
+Eq.~\eqref{eq:crossover} is arithmetic performed here.
 
-Among the three BEC platforms, Heidelberg is uniquely favourable:
-not because it is the only one whose spectral floor lies below the
-dispersive UV cutoff (all three crossovers, $\omega_\times \approx
-7$--$12\, T_H$, sit well below the cutoff $\omega_\text{max} \approx
-110$--$121\, T_H$), but because it is the only platform where
-dissipation dominates dispersion ($\delta_\text{diss}$ exceeds
-$|\delta_\text{disp}|$ by a factor $\sim 22$; Tab.~\ref{tab:hierarchy}).
-Its crossover $\omega_\times \approx 7.1\, T_H$ is the lowest of the
-three and its FDR floor $\delta_\text{diss}/2 \approx 8\times10^{-4}$ is
-the largest (roughly $70\times$ the Steinhauer floor and $110\times$
-the Trento floor), so the spectral floor is reached earliest along the
-thermal tail and appears as the largest fractional deviation. Steinhauer
-and Trento reach their floors only near $\omega_\times \approx
-11$--$12\, T_H$, where the corresponding floors
-($\delta_\text{diss}/2 \sim 10^{-5}$) demand occupation-number
-resolution roughly two orders of magnitude finer.
+Two features of Eq.~\eqref{eq:crossover} make it the most useful
+prediction in this paper. It depends on the dissipative sector only
+through the logarithm, so it is robust: an order-of-magnitude error in
+$\delta_{\rm diss}$ moves $\omega_\times$ by $\ln 10 \simeq 2.3$ in
+units of $T_{\rm eff}$. And it is a shape, not a scale. Measuring
+$\omega_\times$ requires resolving where the spectrum departs from
+exponential decay, which does not require absolute calibration of the
+occupation number and does not require knowing $\kappa$ independently.
+Numerically, at the benchmark condensate parameters tabulated in
+Sec.~\ref{sec:hierarchy}, $\delta_{\rm diss} = 1.59\times10^{-3}$ gives
+$\omega_\times \simeq 6.4\,T_{\rm eff}$, and
+$\delta_{\rm diss} = 2.38\times10^{-5}$ gives
+$\omega_\times \simeq 10.6\,T_{\rm eff}$. Above $\omega_\times$ the
+spectrum is the flat floor $\delta_{\rm diss}$ rather than an
+exponential tail, which for the first of these is an occupation of order
+$10^{-3}$ where the thermal prediction is of the same order and falling.
 
-\emph{Heidelberg projection caveat.} The Heidelberg numbers
-quoted in this paper (density, velocity, $\omega_\perp$, derived
-$T_H \sim 1$\,nK, $\delta_\text{diss} \approx 1.6\times10^{-3}$) are
-projections for a transonic-flow Hawking experiment that has not
-been performed. The Heidelberg (Oberthaler) group has published
-analog cosmology results using $^{39}$K~\cite{Viermann2022} but
-no analog-Hawking measurement. The numbers used here are
-catalogued in \texttt{src/core/provenance.py} as
-\texttt{tier: PROJECTED} with note ``Heidelberg has only
-published analog cosmology, not Hawking; no transonic flow
-experiment exists.''  We retain the projection because the
-$\delta_\text{diss} \sim 10^{-3}$ regime accessed by the
-projected parameters is the only dissipation-dominated BEC regime
-among the three benchmarks, and hence the most informative BEC target
-for the spectral-floor prediction.
+Two boundaries must be respected for Eq.~\eqref{eq:crossover} to be
+meaningful. The crossover must lie below the ultraviolet cutoff
+$\omega_{\rm max} = \kappa/D^{2/3}$ of Eq.~\eqref{eq:delta-disp}, above
+which the mode is reflected by the dispersive potential rather than
+transmitted, and the frequency must remain inside the regime where the
+gradient expansion controls $\kappa_{\rm eff}$. Section~\ref{sec:hierarchy}
+checks both at each benchmark.
 
-%% ══════════════════════════════════════════════════════════════════
+\figuredeferred{fig:d1-spectral-floor}{the total occupation of
+Eq.~\eqref{eq:total-occupation} against $\omega/T_{\rm eff}$ with the
+Planckian term, the constant floor and $\omega_\times$ marked, at the
+three condensate benchmarks; no figure function in
+\texttt{visualizations.py} pairs the Wentzel--Kramers--Brillouin arrays
+with the floor}
 
-\figuredeferred{fig:d1-three-nonperturbative}{the three non-perturbative effects on one axis; the Stokes-structure data is produced inside the notebook and is not exported to a stored artifact}
-\section{Hierarchy of corrections by platform}
+\section{The condensate platform and the hierarchy of corrections}
 \label{sec:hierarchy}
 
-The hierarchy of dispersive vs.~dissipative corrections varies
-strongly by platform. Table~\ref{tab:hierarchy} summarises.
+The atomic Bose--Einstein condensate is the platform on which analog
+Hawking radiation has actually been
+measured~\cite{Steinhauer2016,deNova2019}, and it is the reference
+setting for everything above: the acoustic metric of
+Sec.~\ref{sec:eft-metric}, the two transport coefficients of
+Sec.~\ref{sec:eft-first} and the gradient expansion of
+Sec.~\ref{sec:higher} were all written for a superfluid with a
+transonic flow profile. This section evaluates the two corrections at
+benchmark parameters, establishes which of them dominates where, and
+identifies the one configuration in which the crossover of
+Eq.~\eqref{eq:crossover} is within reach.
+
+\subsection{Benchmarks}
+\label{sec:hier-bench}
+
+Table~\ref{tab:hierarchy} collects the dispersive and dissipative
+corrections at three condensate configurations and, for orientation, at
+the two other platforms treated below. The three condensate rows are
+horizon-evaluated at $\omega = \kappa$ from the canonical numerical
+pipeline, which runs from the registered experimental parameters
+through the transonic background solver to the correction formulas of
+Sec.~\ref{sec:eft}, and they are regenerated rather than transcribed.
+The polariton and graphene rows are order-of-magnitude estimates from
+their platform-specific treatments and use a platform-appropriate
+reading of $\delta_{\rm diss}$; for the polariton row it is the cavity
+decay ratio $\Gamma_{\rm pol}/\kappa$ rather than a transport
+coefficient. The $T_H$ column gives the nominal experimental
+temperature scale, not the smooth-model surface gravity that feeds the
+correction columns.
 
 \begin{table*}[!t]
 \centering
-\caption{Hierarchy of corrections at benchmark platforms.
-$\delta_\text{disp}$ is the leading dispersive correction
-($-\pi D^2/6$ for sub-luminal dispersion) and
-$\delta_\text{diss}$ is the leading-order, frequency-independent
-dissipative floor of~\eqref{eq:delta-diss} ($\Gamma_H/\kappa$); both
-are dimensionless fractional shifts of $T_\text{eff}$. For the three
-BEC rows (Steinhauer, Heidelberg, Trento) these are horizon-evaluated
-($\omega = \kappa$) from the canonical pipeline
-(\texttt{constants.py}~$\to$~transonic solver~$\to$
-\texttt{formulas.py}) via
-\texttt{scripts/gen\_d1\_hierarchy\_table.py}, and are gate-enforced
-against this table by \texttt{validate.py --check d1\_hierarchy\_table}.
-The polariton and graphene rows are order-of-magnitude estimates from
-their platform-specific modules (\S\ref{sec:polariton};
-\texttt{src/dkm\_bootstrap/graphene\_mir.py}) and use a
-platform-appropriate $\delta_\text{diss}$ definition (cavity decay
-$\Gamma_\text{pol}/\kappa$ for polaritons). The $T_H$ column lists the
-nominal experimental temperature scale (Steinhauer $\kappa\approx290$
-\si{\per\second}~$\to$~\SI{0.35}{\nano\kelvin}), not the smooth-model
-surface gravity feeding the correction columns.}
+\caption{Dispersive and dissipative corrections at benchmark
+configurations. $\delta_{\rm disp} = -(\pi/6)D^2$ is the leading
+dispersive correction of Eq.~\eqref{eq:delta-disp} and
+$\delta_{\rm diss} = \Gamma_H/\kappa$ the leading dissipative
+correction of Eq.~\eqref{eq:delta-diss}; both are dimensionless
+fractional shifts of $T_{\rm eff}$ and are evaluated at $\omega=\kappa$
+for the condensate rows.}
 \label{tab:hierarchy}
 \begin{tabular}{lcccc}\toprule
 Platform & $T_H$ & $\delta_\text{disp}$ & $\delta_\text{diss}$ & dominance \\\midrule
 $^{87}$Rb BEC (Steinhauer/de~Nova) & $\sim 0.35$\,nK & $-8.53\times10^{-5}$ & $2.38\times10^{-5}$ & disp \\
 $^{39}$K BEC (Heidelberg, projected) & $\sim 1$\,nK & $-7.32\times10^{-5}$ & $1.59\times10^{-3}$ & \textbf{diss} \\
 spin-sonic BEC (Trento)    & $\sim 1$\,nK & $-9.89\times10^{-5}$ & $1.41\times10^{-5}$ & disp \\
-LKB polariton (smooth)     & $\sim 85$\,mK & $-19\%$ & $14\%$ & disp/comp \\
-LKB polariton (steep)      & $\sim 134$\,mK & $-46\%$ & $\sim 10\%$ & \textbf{disp} (LO only) \\
-graphene (Dean)            & $\sim 2.4$\,K & $-2.8\%$ & $+6.5\%$ & \textbf{diss} \\
+LKB polariton (smooth, $D=0.59$) & $\sim 85$\,mK & $-18\%$ & $180\%$ & \emph{neither} \\
+LKB polariton (steep, $D=0.94$)  & $\sim 134$\,mK & $-46\%$ & $110\%$ & \emph{neither} \\
+graphene (Dean, $D=0.23$)        & $\sim 2.4$\,K & $-2.8\%$ & $+6.5\%$ & \textbf{diss} \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-The hierarchy inversion at Heidelberg ($\delta_\text{diss}$ exceeds
-$\delta_\text{disp}$ by factor $\sim 22$) is the single most
-accessible BEC test of the SK-EFT framework. The platform-specific
-scaling $\Gamma_\text{Beliaev} \propto \kappa^2$ versus
-$\delta_\text{disp} \propto \kappa^2$ implies that the ratio
-$\delta_\text{diss}/\delta_\text{disp}$ is independent of $\kappa$
-within a fixed platform but varies by orders of magnitude between
-platforms. The most diagnostic experimental signature is therefore
-not the absolute value of $\delta_\text{diss}$ but its
-$\kappa$-scaling relative to $\delta_\text{disp}$, accessible at
-Heidelberg through Feshbach-tuned scattering-length sweeps.
+The two polariton rows are marked \emph{neither} rather than assigned a
+dominant correction, and the reason is not a tie. On that platform the
+dissipative entry is the cavity decay ratio $\Gamma_{\rm pol}/\kappa$
+rather than a transport coefficient, and at the cavity the horizons were
+actually built in, with $\hbar\gamma \approx 80\,\mu$eV, it is
+$\approx 1.8$ at the smooth horizon rather than the value a perturbative
+treatment would need. Both expansion parameters are of order unity there,
+so neither entry is the leading term of a converging series and the
+comparison the column is for does not apply. Section~\ref{sec:polariton}
+develops this, and it is why that platform's contribution to this paper
+is a scope boundary rather than a spectrum. A cavity with
+$\tau_{\rm cav} = 300$~ps would bring the ratio to $0.05$ and restore the
+perturbative reading; no such cavity has yet carried a programmed
+horizon.
 
-%% ══════════════════════════════════════════════════════════════════
+The condensate rows share a structure. Both corrections scale as
+$\kappa^2$ at fixed platform, $\delta_{\rm disp}$ through
+$D = \kappa\xi/c_s$ and $\delta_{\rm diss}$ through
+$\Gamma_H \propto (\kappa/c_s)^2$, so their ratio is independent of
+$\kappa$ within a given configuration and varies by orders of magnitude
+between configurations. This makes the ratio, not either correction
+separately, the quantity a single apparatus can vary and measure. A
+scattering-length sweep changes $\xi$ and $c_s$ at fixed geometry and
+moves the ratio without moving $\kappa$, which is the cleanest available
+handle on the dissipative sector.
 
-\figuredeferred{fig:d1-correction-hierarchy}{$\delta_{\rm disp}$ against $\delta_{\rm diss}$ per platform, which is Table~I as a figure; blocked on the same $\Gamma_H$ repair that moved the graphene row}
-\section{Polariton platform: stimulated Hawking and reservoir
-correction}
-\label{sec:polariton}
+\subsection{Heidelberg as the one dissipation-dominated configuration}
+\label{sec:hier-heidelberg}
 
-The polariton platform realises analog Hawking at $T_H \sim 85$\,mK,
-roughly $10^8$ above atomic BEC. The driven-dissipative nature of
-the platform alters the noise structure (effective polariton
-temperature $T_\text{noise} \sim 0.81$\,K dominates $T_H$) but
-introduces a new detection mode: stimulated Hawking emission.
+Of the three condensate rows only one has $\delta_{\rm diss}$ larger
+than $|\delta_{\rm disp}|$, and it is larger by a factor $21.8$. That
+inversion, and not the absolute size of either correction, is what makes
+the $^{39}$K configuration the informative condensate target. Its
+consequence for Eq.~\eqref{eq:crossover} is direct: a larger floor is
+reached earlier along the thermal tail, so
+\begin{equation*}
+\omega_\times \;\simeq\; 6.44\,T_{\rm eff}
+  \quad (^{39}\text{K, projected}),
+\end{equation*}
+against $10.65\,T_{\rm eff}$ for the $^{87}$Rb parameters and
+$11.17\,T_{\rm eff}$ for the spin-sonic configuration. All three sit
+well below their dispersive cutoffs, which are
+$\omega_{\rm max} = 121\,T_H$, $115\,T_H$ and $110\,T_H$ respectively,
+so the flattening is not masked by the onset of dispersive reflection at
+any of them. The discriminator is therefore not whether the crossover is
+accessible in frequency but whether the floor is large enough to
+resolve. The floors differ by two orders of magnitude,
+$1.59\times10^{-3}$ against $2.38\times10^{-5}$ and
+$1.41\times10^{-5}$, and only the first is plausibly within reach of
+occupation-number resolution at current density-correlation
+sensitivities.
 
-\subsection{Reservoir-corrected sound speed}
+\emph{Provenance of the $^{39}$K numbers.} These are projections for a
+transonic-flow experiment that has not been performed. The Heidelberg
+group has published analog cosmology results in a $^{39}$K
+condensate~\cite{Viermann2022}, not an analog-Hawking measurement, and
+no transonic flow experiment exists on that apparatus. The parameters
+are recorded in the project's provenance register at projected status
+with that note attached, and they are used here because the
+$\delta_{\rm diss} \sim 10^{-3}$ regime they access is the only
+dissipation-dominated condensate regime among the benchmarks and
+therefore the only one in which Eq.~\eqref{eq:crossover} is a near-term
+target. Every number in this subsection that carries the $^{39}$K label
+inherits that status. The $^{87}$Rb row, by contrast, is anchored to
+published measurements~\cite{Steinhauer2016,deNova2019} and its
+crossover at $10.65\,T_{\rm eff}$ is a prediction for an apparatus that
+exists.
 
-Falque \emph{et al.}~\cite{Falque2025} measure
-$c_s \approx 0.40$\,$\mu$m/ps via off-axis interferometry of the
-flow field and spectral reconstruction of the Bogoliubov dispersion
-across multiple condensate densities, factor $\sim 2.5$ below
-reservoir-free theoretical estimates. The discrepancy is explained
-by the excitonic reservoir absorbing $\sim 50$--$75\%$ of the
-condensate blueshift without contributing dynamic sound speed.
-Three independent measurements~\cite{Estrecho2021,Stepanov2019,Claude2023}
-confirm the reservoir correction. We adopt the Falque measurement
-directly throughout.
+\figuredeferred{fig:d1-correction-hierarchy}{$\delta_{\rm disp}$ against
+$\delta_{\rm diss}$ per configuration on logarithmic axes with the
+dominance boundary marked, which is Table~\ref{tab:hierarchy} as a
+figure; no figure function in \texttt{visualizations.py} renders it}
 
-\subsection{Smooth- and steep-horizon configurations}
-
-The LKB platform supports a smooth-horizon configuration with
-$\kappa = \SI{7e10}{\per\second}$, $D \approx 0.60$, and a
-steep-horizon reach with $\kappa = \SI{1.1e11}{\per\second}$,
-$D \approx 0.93$. Hawking temperatures are
-$T_H \approx 85$\,mK and $T_H \approx 134$\,mK respectively. The
-smooth-horizon configuration sits at the borderline between the
-perturbative and borderline regimes
-($\Gamma_\text{pol}/\kappa \approx 0.143$); the steep-horizon
-configuration is leading-order only ($D > 0.5$).
-
-\subsection{Stimulated-Hawking detection: the universal threshold}
-
-A coherent probe at frequency $\omega$ incident on the analog
-horizon stimulates emission with gain
-\begin{equation}
-G(\omega) \;=\; \frac{\Gamma(\omega)}{e^{2\pi\omega/\kappa_\text{eff}} - 1}.
-\end{equation}
-At single-shot $5\sigma$ detection threshold, $G > 0.5$
-(equivalently $N_\text{probe} = 25/G^2 = 100$ probe photons per
-mode). The threshold is crossed at
-\begin{equation}
-\boxed{\;\omega/\kappa \;<\; \frac{\ln 3}{2\pi} \;\approx\; 0.175\;}
-\label{eq:stim-threshold}
-\end{equation}
-which is universal and independent of $\kappa$. The Lean
-infrastructure in \texttt{PolaritonTier1} provides the foundational
-theorems \texttt{attenuation\_ge\_one} (spatial attenuation
-$\geq 1$ everywhere), \texttt{attenuation\_mono\_Gamma} (monotone
-in $\Gamma$), and \texttt{attenuation\_eq\_one\_at\_zero\_decay}
-(recovery at $\Gamma = 0$). All three are manual Lean proofs, zero
-\texttt{sorry}.
-
-The shot-count comparison is striking: a single CW measurement
-with $N_\text{probe} = 100$ probe photons per mode gives
-$\mathrm{SNR} \approx 11$ at $G(0.1\kappa) \approx 1.14$,
-a factor of $10^3$--$10^6$ improvement over spontaneous-correlation
-detection, which requires $\sim 10^9$ repetitions to resolve
-correlations at the $5 \times 10^{-5}$
-level~\cite{Grisins2016,Jacquet2022}.
-
-\subsection{Quasinormal-mode resonances}
-
-Quasinormal-mode resonances unique to the driven-dissipative
-setting~\cite{Jacquet2023QNM,Burkhard2025} concentrate the
-stimulated signal at specific frequencies. We do not develop the
-QNM analysis here; the companion experimental letter
-E1~\cite{Roehm2026E1} provides the device-specific QNM frequency
-band for the Paris-LKB apparatus.
-
-\subsection{Falsifiable spectral window}
-
-The polariton platform delivers one falsifiable window:
-$\omega/\kappa \in [0.05, 0.30]$ at the smooth-horizon
-configuration. Inside this band, the SK-EFT predictions are
-simultaneously $\delta_\text{disp}$-controlled (perturbative
-regime) and above the gain threshold. Three sub-percent-precision
-measurements anywhere on the band falsify the framework at the
-polariton platform.
-
-%% ══════════════════════════════════════════════════════════════════
-\section{Graphene Dirac-fluid platform: 2+1D, cross-platform Lean
-reuse, Wiedemann-Franz cross-check}
+\section{The bilayer-graphene Dirac fluid}
 \label{sec:graphene}
 
-The bilayer-graphene Dirac fluid realises analog Hawking at
-$T_H \approx 2.4$\,K, nine orders of magnitude above atomic BEC.
-The platform is natively relativistic: $c_s = v_F/\sqrt{2}$ from
-the conformal equation of state $\varepsilon = 2 p$, with
-$c_s \approx 710$\,km/s for monolayer and
-$\approx 440$\,km/s for bilayer~\cite{Zhao2023}.
+\subsection{The 2+1D acoustic metric and the quasi-one-dimensional
+reduction}
+\label{sec:gr-metric}
 
-\subsection{Metric block-diagonalisation}
+Charge carriers in high-quality encapsulated graphene collide with one
+another far more often than with anything else, and the carrier system is
+then described by hydrodynamics rather than by single-particle transport.
+Geurs \emph{et al.}~\cite{Geurs2025} exploit this to accelerate the
+electron fluid in bilayer graphene through a de Laval nozzle, past the
+electronic speed of sound, and to a shock: the transport signature is a
+discontinuity in $dV/dI$ at the throat current density, and the local
+signature is a flattening of the electrochemical potential imaged by
+Kelvin probe force microscopy downstream of the throat. A stationary
+surface across which the flow passes from subsonic to supersonic is, for
+the long-wavelength collective modes, an analog horizon. This section
+works out what the framework of Secs.~\ref{sec:eft} to~\ref{sec:wkb}
+predicts there, and what part of that prediction is machine-checked.
 
-The 2+1D acoustic metric is $3\times 3$ rather than $2\times 2$;
-analog Hawking computations naively require new infrastructure.
-However, for the quasi-1D nozzle geometry of the Dean apparatus
-the metric \emph{block-diagonalises}: the $(t, x)$ sector
-reproduces the 1+1D BEC structure exactly with
-$c_s \to v_F/\sqrt{2}$, and the $y$-sector decouples up to
-corrections $\leq 1.8\%$ at the Dean device parameters. The
-block-diagonalisation theorems
-\texttt{DiracFluidMetric.diracFluidMetric\_y\_offdiag\_zero},
-\texttt{diracFluidMetric\_gyy} formalise this, and
-\texttt{QuasiOneDReduction.quasi1D\_validity\_bound} provides the
-algebraic-envelope bound on the off-diagonal corrections.
-
-\subsection{Cross-platform Lean theorem reuse}
-
-The 1+1D BEC infrastructure consists of nine Lean modules
-(\texttt{AcousticMetric}, \texttt{HawkingUniversality},
-\texttt{WKBConnection}, \texttt{WKBAnalysis},
-\texttt{SecondOrderSK}, \texttt{CGLTransform},
-\texttt{ThirdOrderSK}, \texttt{SKDoubling},
-\texttt{KappaScaling}) containing $\reusePopulation$ theorems. Of
-these, $\reuseTransferred$
-apply to the graphene Dirac-fluid 2+1D setup unchanged after the
-substitution $c_s \to v_F/\sqrt{2}$. The
-$\reuseTransferred/\reusePopulation$ partition is
-computed deterministically by
-\texttt{scripts/count\_theorem\_reuse.py}: a theorem is classified
-platform-specific if and only if its statement references a
-1+1D-explicit or BEC-microphysics-specific definition (the
-explicit $2\times 2$ acoustic-metric matrices and phonon-EOM
-structure, the Bogoliubov superluminal dispersion law, or the
-two-component spin-sonic enhancement); all other statements
-quantify only over platform-parametric structures and hold
-verbatim for the graphene instantiation ($\reuseTransferred$ of
-$\reusePopulation$, i.e.\ $\reusePercent\%$). The
-$\reuseSpecific$ theorems that do not reuse are superseded on the graphene
-side by the metric block-diagonalisation of the preceding
-subsection (the $2\times 2$ matrix algebra) or have no Dirac-fluid analogue
-(the subluminal Dirac fluid negates the superluminal-dispersion
-statement, and no spin/density two-speed structure exists).
-Both the population and the partition are regenerated from the
-Lean sources by \texttt{scripts/update\_counts.py}, so every
-figure quoted in this paper is the counter's current output
-rather than a transcribed literal.
-
-The $\reusePercent\%$ reuse fraction is a quantitative
-measurement of analog-Hawking universality across BEC and
-graphene, which differ in dimension, dispersion sign
-(super- vs.~sub-luminal), and microscopic constituents (cold-atom
-bosons vs.~relativistic Dirac fermions), yet share the bulk of
-the verification infrastructure.
-
-\subsection{Subluminal dispersion eliminates trans-Planckian
-problems}
-
-In bilayer graphene at near-charge-neutrality density,
-$v_F(k)$ \emph{increases} at small $k$ from many-body Coulomb
-corrections. The Dirac fluid is therefore subluminal: high-$k$
-modes propagate at lower velocity than the long-wavelength sound.
-This is encoded in
-\texttt{DiracFluidWKB.soundSpeed\_lt\_vF}.
-Subluminal dispersion eliminates the trans-Planckian
-problem~\cite{CorleyJacobson1996} that haunts BEC analog Hawking:
-high-$k$ modes cannot escape the horizon. The first WKB-mode
-propagation theorem at the lowest transverse channel is
-\texttt{DiracFluidWKB.dean\_lowest\_channel\_above\_four\_omega\_H},
-establishing that the cleanest detection band sits below the first
-transverse-mode resonance and therefore preserves the quasi-1D
-reduction.
-
-\subsection{Hierarchy: the two corrections are comparable and cancel}
-
-At the Dean nozzle parameters ($D = 0.23$),
-$\delta_\text{disp} \approx -2.8\%$ and $\delta_\text{diss} \approx
-+6.5\%$. The dissipative correction is the larger of the two and
-carries the opposite sign, so they partially cancel and the net shift
-is $\approx +3.7\%$: upward, not downward. The dissipative value
-follows from the Dirac fluid's momentum-diffusion constant
-$\nu = \eta v_F^2/w = 2(\eta/sT)c_s^2$; writing $\eta/(sT)$ in place
-of $\nu$ omits a velocity$^2$ and understates $\delta_\text{diss}$ by
-eleven orders of magnitude.
-
-The two equalities each carry a hypothesis worth stating, because each
-fails on a platform this program also considers. The first is
-relativistic-hydrodynamic: the momentum density is $w/v_F^2$ rather
-than a mass density, which is what puts the $v_F^2$ there at all. The
-second, $\eta v_F^2/w = 2(\eta/sT)c_s^2$, holds for a conformal fluid,
-where $c_s = v_F/\sqrt{2}$; we write $\nu$ in the \emph{measured}
-$c_s$ because $v_F$ is a band parameter defined only for the
-monolayer. Bilayer graphene has quadratic band touching and therefore
-no emergent light cone, so the conformal equality is exactly the
-hypothesis that fails there. The sound-attenuation coefficient carries
-$[2(d{-}1)/d]\,\eta + \zeta$, which in $d = 2$ is exactly $1\cdot\eta$
-with $\zeta = 0$ by conformal symmetry, so no $O(1)$ ambiguity
-survives; the familiar $4/3$ is the $d = 3$ value. Bilayer
-non-conformality restores a small $\zeta$, raising $\nu$ by at most
-the estimated $\zeta/\eta \lesssim 0.1$. Graphene is thus the platform where the
-SK-EFT's dissipative channel is a percent-level measurable, not a
-formal refinement, and the one where reporting either correction
-without the other misstates even the sign of the result.
-
-\subsection{Closed-form noise spectrum: independent FDT and
-Landauer-Büttiker derivations}
-
-The observable Hawking signal in graphene is a current-noise
-power-spectral-density excess:
+The linearised collective mode of a $2+1$-dimensional relativistic fluid
+with a conformal equation of state $\varepsilon = 2p$ propagates at
 \begin{equation}
-\Delta S_I(\omega) \;=\; 2\hbar\omega\, \sigma_Q\, \Gamma(\omega)\, n_H(\omega),
-\label{eq:graphene-noise}
+c_s^2 \;=\; \frac{\partial p}{\partial \varepsilon}\, v_F^2 \;=\;
+\frac{v_F^2}{2},
+\label{eq:cs_conformal}
 \end{equation}
-where $\sigma_Q$ is the quantum unit of conductance, $\Gamma(\omega)$
-is the greybody factor, and $n_H(\omega)$ the Hawking occupation.
-Equation~\eqref{eq:graphene-noise} is derived through Keldysh
-fluctuation-dissipation, with the consistency-of-derivation closure
-\texttt{GrapheneNoiseFormula.fdt\_consistency} certifying internal
-agreement at the Lean level. The greybody factor
-$\Gamma_0 = 4 c_R v / (c_R + v)^2 \approx 0.99994$ at the Dean
-nozzle parameters~\cite{AndersonBFP2013}.
+so $c_s = v_F/\sqrt{2}$, with $v_F$ the velocity setting the light cone
+of the underlying excitations. Equation~\eqref{eq:cs_conformal} is
+\texttt{DiracFluidMetric.diracFluidSoundSpeedSq}, and
+\texttt{DiracFluidWKB.soundSpeed\_sq\_eq\_diracFluidSoundSpeedSq} binds
+it to the sound speed used by the wave-mechanical layer so the two cannot
+drift apart. The same factor arises at the Dean device by a route that
+does not pass through conformal symmetry: for isotropic fermionic matter
+the degeneracy-pressure contribution is $v_{\rm FL} = v_F/\sqrt{d}$ in
+$d$ dimensions, and for bilayer graphene with quadratic band touching
+Geurs \emph{et al.} evaluate
+$v_{\rm FL}(n) = \hbar\sqrt{\pi n}/(\sqrt{2}\,m^{*})$, which is
+$440$~km/s at the typical device density
+$n = 10^{12}~\mathrm{cm}^{-2}$. We take
+$c_s = 4.4\times 10^5$~m/s throughout. Two remarks are needed. The $v_F$
+of Eq.~\eqref{eq:cs_conformal} is then the bilayer Fermi-liquid velocity
+$\hbar\sqrt{\pi n}/m^{*} \approx 6.2\times 10^5$~m/s at that density, not
+the monolayer Dirac velocity $10^6$~m/s, and the two must not be paired.
+And the shallow-water contribution from capacitive coupling to a gate is
+suppressed in their device by a lightly doped silicon backgate operated
+at $10$~K, which is why the measured onset matches $v_s \approx v_{\rm FL}$.
 
-\subsection{Independent cross-checks: Kibble--Zurek--Unruh scaling and the simulability demarcation}
+For flow along $x$ with velocity $v(x)$, the acoustic line element of
+Sec.~\ref{sec:eft-metric} generalises to a $3\times 3$ covariant metric
+on $(t,x,y)$,
+\begin{equation}
+G_{\mu\nu} \;=\; \Omega^2
+\begin{pmatrix}
+-\,(c_s^2 - v^2)/v_F^2 & -\,v/v_F^2 & 0\\[2pt]
+-\,v/v_F^2 & 1 & 0\\[2pt]
+0 & 0 & 1
+\end{pmatrix},
+\label{eq:dirac_metric}
+\end{equation}
+with $\Omega^2$ a conformal factor fixed by the thermodynamic state. This
+is \texttt{DiracFluidMetric.diracFluidMetric}, and it is symmetric
+(\texttt{diracFluidMetric\_symmetric}).
 
-An independent classical-simulation cross-check of the universal
-critical-scaling physics underlying this prediction is provided by
-the Kibble-Zurek-Unruh correspondence: the same surface gravity
-$\kappa$ that fixes $T_H = \hbar\kappa/(2\pi k_B)$ also fixes the
-KZM quench rate $1/\tau_Q = \kappa$ at the analog horizon (Lean
-module \texttt{KibbleZurekUnruh.lean}, foundation theorem
-\texttt{surface\_gravity\_bounds\_kzm\_exponent}). The
-Tindall--Mello--Fishman--Stoudenmire--Sels classical tensor-network
-simulation of disordered TFIM
-spin-glasses~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
-extracts the universal KZM scaling exponent $\mu = \nu z / (1+\nu z)$
-on 2D square, 3D cubic, and 3D diamond lattices at 300+ qubits,
-matching the D-Wave Advantage2 quantum annealer via belief-propagation
-contraction. The same $\mu$ governs the analog-Hawking
-thermal-occupation spectrum that the bilayer-nozzle measurement
-proposed here probes; a measured $\Delta S_I(\omega)$ profile
-inconsistent with both the SK-EFT prediction and the KZM scaling
-extracted from independent classical simulation would constitute a
-falsification of the universal critical-scaling backbone shared by
-both formalisms.
+The vanishing of the $y$ row and column off the diagonal in
+Eq.~\eqref{eq:dirac_metric} is a modelling assumption, not a result. It
+is the statement that the channel is translation-invariant along $y$ over
+the region that matters, so transverse and longitudinal motion do not mix
+at the order retained. We adopt it, and the formal layer adopts it too:
+\texttt{DiracFluidMetric.diracFluidMetric\_y\_offdiag\_zero} and
+\texttt{diracFluidMetric\_gyy} unfold the definition
+Eq.~\eqref{eq:dirac_metric} and confirm $G_{2j} = 0$ for $j \neq 2$ and
+$G_{yy} = \Omega^2$; they do not derive the block-diagonal form from the
+two-dimensional problem. What the formal layer does supply, given the
+assumption, is that the $(t,x)$ block then carries the entire horizon
+structure. Writing $G^{(tx)}$ for that block, $G_{tt} = 0$ exactly where
+$v^2 = v_F^2/2 = c_s^2$
+(\texttt{diracFluidMetric\_gtt\_vanishes}), which is the horizon
+condition, so the horizon sits where the drift velocity reaches $c_s$ and
+not where it reaches $v_F$; and at that point
+$\det G^{(tx)}\, v_F^2 = -\Omega^4/2$
+(\texttt{diracFluidMetric\_txBlock\_det\_at\_horizon}), so
+$\det G^{(tx)} < 0$ whenever $\Omega^2 > 0$ and $v_F > 0$
+(\texttt{diracFluidMetric\_txBlock\_lorentzian\_at\_horizon}). The
+signature stays Lorentzian through the horizon; the coordinate degeneracy
+of $G_{tt}$ is not a degeneracy of the metric.
 
-The Phase 6w combined demarcation theorem
-(\texttt{analog\_hawking\_fourCycleFree\_demarcation}, Lean
-module \texttt{AnalogHawkingDemarcation.lean}) further localizes the
-classically-simulable regime for the bilayer-graphene Dirac fluid:
-the SK-EFT-predicted Hawking spectrum at the Dean nozzle's parameters
-passes the BP-on-PEPS simulability screen iff (i) the Dirac-fluid
-factor graph is BP-LDP-favorable (four-cycle-free topology, the
-combinatorial screen implied by tree-like structure, + non-negative
-factor weights) AND (ii) the second Chebyshev expansion coefficient $c_1$
-of the categorical marker vanishes.
+The $(t,x)$ block has the algebraic form of the one-dimensional acoustic
+metric of Sec.~\ref{sec:eft-metric} with $c_s \to v_F/\sqrt{2}$ and
+$\rho/c_s \to \Omega^2$. Surface gravity is computed from that block, and
+the temperature formula is imported without modification because it
+depends on $\kappa$ alone and on nothing that knows the embedding
+dimension. Of the \reusePopulation{} theorems in the modules constituting
+the one-dimensional treatment, \reuseTransferred{} are stated
+parametrically in $c_s$ and transfer under $c_s \to v_F/\sqrt{2}$ with no
+change of statement or proof, the remainder being condensate-specific;
+the substantive content of that transfer is carried by the named theorems
+quoted here, not by the fraction. The map performing the binding is
+\texttt{DiracFluidWKB.toExactWKB}, which sends the graphene parameters to
+the platform-independent parameter record of Sec.~\ref{sec:wkb} with
+$c_s = v_F/\sqrt{2}$.
 
-\emph{Scope: $c_1$ is not the topological Chern coefficient of the graphene moir\'e
-band-structure: \texttt{ChernBridge.lean:68} defines
-\texttt{categoricalChernExpansion c0 c1 := [c0, c1]}, a two-term Chebyshev expansion, and
-no graphene and no moir\'e superlattice appear anywhere in that module. The module does,
-however, invoke a Brillouin-zone reading: \texttt{ChernBridge.lean:14} frames the
-crystalline limit as a Brillouin-zone Chern number reducing to a sum. $c_1$ is therefore a
-Chebyshev coefficient, and the module makes no graphene or moir\'e claim while still invoking
-that Brillouin-zone reading. Naming $c_1$ as a graphene Chern coefficient would also
-contradict D11's own novelty carve-out, which states that this group's
-\texttt{ChernBridge} marker is a different object from a Bloch-band invariant.} The Aalto Chebyshev-TN
-methodology~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
-applies to both crystalline and aperiodic-lattice configurations
-(formalized at the Lean level in
-\texttt{AperiodicLattice.lean} and \texttt{ChernBridge.lean}),
-extending the classical-simulability cross-check to moir\'e-graphene
-super-moir\'e systems that the Dean device can in principle access via
-controlled twist-angle tuning.
+Replacing the two-dimensional channel by its longitudinal section is an
+approximation with two leading errors. The flow profile across a channel
+of width $W$ is not flat: a Poiseuille-like profile averaged across the
+section shifts the surface gravity read off the centre line by a
+fractional amount scaling as $(\ell_{ee}/W)^2$, with $\ell_{ee}$ the
+electron-electron mean free path. And a transverse mode below its cutoff
+does not vanish; it is an evanescent Helmholtz mode decaying as
+$e^{-2\pi L/W}$ over a channel of length $L$, leaking into the greybody
+factor by a fractional amount scaling as
+$(\omega/\omega_\perp)^2 e^{-2\pi L/W}$. The formal statement
+\texttt{QuasiOneDReduction.quasi1D\_validity\_bound} takes both scalings
+as hypotheses and returns their sum,
+\begin{equation}
+\left|\frac{\delta\kappa}{\kappa}\right| +
+\left|\frac{\delta\Gamma}{\Gamma}\right|_{\rm evan}
+\;\leq\;
+\left(\frac{\ell_{ee}}{W}\right)^{\!2} +
+\left(\frac{\omega}{\omega_\perp}\right)^{\!2} e^{-2\pi L/W},
+\label{eq:quasi1d}
+\end{equation}
+by the triangle inequality. It is a triangle addition of its own
+hypotheses and carries no numeral: the two physical bounds are inputs to
+Eq.~\eqref{eq:quasi1d}, not outputs of it, and the machine-checked
+content is that the errors add rather than compound.
+
+The number that matters comes from the device parameters, and we compute
+it here. At the Dean geometry we adopt $W = 1~\mu$m and $L = 200$~nm, and
+take $\ell_{ee} = \hbar v_F/(k_B T_e) = 51$~nm at the electron
+temperature $T_e = 150$~K that Ref.~\cite{Geurs2025} estimates for the
+device at high bias. With $\omega_\perp \approx 4.4\,\omega_H$ from
+Sec.~\ref{sec:gr-detect}, at $\omega = \omega_H$ the two terms of
+Eq.~\eqref{eq:quasi1d} are $(51/1000)^2 = 2.6\times10^{-3}$ and
+$(1/4.4)^2 e^{-2\pi(0.2)} = 1.5\times10^{-2}$, for a total below two per
+cent, and smaller at smaller $\omega$. The estimate is not delicate:
+Ref.~\cite{Geurs2025} quotes $\ell_{ee} \sim 100$~nm as the length scale
+setting the spatial width of the hydraulic jump, and doubling
+$\ell_{ee}$ raises the total to about three per cent, which changes no
+conclusion drawn below.
+
+\subsection{Subluminal dispersion and the absent trans-Planckian problem}
+\label{sec:gr-subluminal}
+
+The most consequential difference between this platform and the
+condensate is the sign of the leading dispersive correction to the mode
+velocity, and it is visible already in the two constant speeds of the
+problem. The acoustic cone sits strictly inside the excitation cone,
+\begin{equation}
+c_s \;=\; \frac{v_F}{\sqrt 2} \;<\; v_F ,
+\label{eq:subluminal}
+\end{equation}
+which is \texttt{DiracFluidWKB.soundSpeed\_lt\_vF}, holding for every
+parameter record with $v_F > 0$ and with no side condition. We state
+plainly what it is and is not. It is an elementary and unconditional
+algebraic fact about the number $v_F/\sqrt 2$, whose proof is that
+$\sqrt 2 > 1$. It is not a statement about the many-body dispersion
+relation $\omega(k)$ at large $k$, and no theorem quoted in this paper
+establishes the sign of $d(\omega/k)/dk$ for the collective modes of the
+bilayer near charge neutrality. That is a separate, empirical claim.
+% TODO: no primary source held in full text establishes the sign of the
+% large-k collective-mode dispersion for bilayer graphene at the relevant
+% densities; the argument below is written so that no conclusion
+% depends on it.
+
+The distinction matters because the two facts do different work. In a
+condensate the Bogoliubov branch
+$\omega^2 = c_s^2 k^2 (1 + k^2\xi^2)$ turns \emph{upward}: above
+$k \sim 1/\xi$ the group velocity exceeds $c_s$, so a mode of high enough
+wavenumber outruns the flow and crosses the horizon from the inside. The
+outgoing Hawking mode, traced backwards, is then a mode of arbitrarily
+short wavelength sitting behind the horizon, and the prediction inherits
+whatever the theory does at wavelengths where it is not trusted. That is
+the trans-Planckian question in its analog form, and it is a feature of
+\emph{superluminal} dispersion.
+
+Corley and Jacobson~\cite{CorleyJacobson1996} studied the opposite,
+subluminal case, taking $F^2(k) = k^2 - k^4/k_0^2$ in the free-fall
+frame, and their result is the reassuring one. An outgoing wavepacket
+propagated backwards in time does not squeeze indefinitely against the
+horizon and blueshift without bound; it reaches a minimum distance of
+approach, reverses group velocity without reflection, and converts
+between branches of the dispersion relation, with a blueshift at closest
+approach independent of the retarded time at which the packet is
+centred. The spectrum survives with considerable fidelity: for the
+smoothest metric they integrate, at $T_H \simeq 0.0008\,k_0$, the horizon
+component agrees with a thermal spectrum to order $(T_H/k_0)^3$ at
+$\omega = T_H$, and to order $T_H/k_0$ out to $\omega/T_H \simeq 45$.
+Their substantial caveat is not about dispersion at all: a second,
+non-thermal component is produced by scattering off static curvature, and
+it becomes large for metrics with a kink, reaching roughly ten per cent
+of the total luminosity for the sharpest profiles they consider. A de
+Laval nozzle is smooth by construction, and the smoothness of the
+realised profile is exactly what the Kelvin-probe map of
+Ref.~\cite{Geurs2025} measures.
+
+There is a second and more robust reason this platform does not inherit a
+short-distance ambiguity, and it does not require knowing the sign of the
+dispersion at large $k$. The effective theory here has a physical cutoff
+rather than a formal one: below the electron-electron mean free path
+there is no fluid. The question is therefore not what happens at
+wavelengths shorter than $\ell_{ee}$, but whether the horizon physics is
+resolved at wavelengths longer than it, and that is what the adiabaticity
+parameter of Sec.~\ref{sec:eft-disp} measures,
+\begin{equation}
+D \;=\; \frac{\kappa\,\ell_{ee}}{c_s},
+\label{eq:adiabaticity}
+\end{equation}
+the ratio of the cutoff length to the gradient length $c_s/\kappa$ over
+which the flow crosses the horizon. At the Dean values
+($\kappa = 2\times10^{12}~\mathrm{s}^{-1}$, $\ell_{ee} = 51$~nm,
+$c_s = 4.4\times 10^{5}$~m/s) this is $D = 0.23$, verified as the
+numerical inequality $D < 1$ in
+\texttt{QuasiOneDReduction.dean\_adiabatic}. The horizon is resolved by
+roughly four mean free paths, so the mode conversion that produces the
+radiation happens where the hydrodynamic description is valid, whatever
+the microscopic theory does above the cutoff. The residual dispersive
+correction is then second order in $D$ and numerically small; that it is
+fourth order rather than second in the deep adiabatic regime is a tracked
+assumption (\texttt{QuasiOneDReduction.H\_AdiabaticRegimeCorrection}) and
+not a theorem, and nothing below rests on it.
+
+\subsection{The noise spectrum and the cancellation of $\sigma_Q$}
+\label{sec:gr-noise}
+
+The observable here is not a density correlation but the current noise. A
+horizon emitting into the fluid's collective modes emits, in an
+electronic fluid, into the current, and the Hawking contribution appears
+as an excess in the current-noise power spectral density,
+\begin{equation}
+\Delta S_I(\omega) \;=\; 2\,\hbar\omega\,\sigma_Q\,\Gamma(\omega)\,
+n_H(\omega),
+\label{eq:noise_psd}
+\end{equation}
+where $\sigma_Q$ is the quantum-critical conductance, $\Gamma(\omega)$
+the greybody transmission factor, and
+$n_H(\omega) = [e^{\hbar\omega/k_B T_H} - 1]^{-1}$ the Hawking
+occupation evaluated with the corrected surface gravity of
+Sec.~\ref{sec:hierarchy}. Equation~\eqref{eq:noise_psd} is obtained in
+the underlying analysis~\cite{Roehm2026Wave16} by two routes independent
+of one another: a Callen--Welton fluctuation--dissipation calculation on
+the closed-time-path contour with the mode-resolved distribution
+function, and a B\"uttiker-type multichannel scattering calculation in
+which the Bogoliubov mixing at the horizon supplies the off-diagonal
+transmission amplitudes.
+
+It is worth being precise about what the formal layer records here,
+because it is less than the preceding paragraph might suggest.
+Equation~\eqref{eq:noise_psd} is the definition
+\texttt{GrapheneNoiseFormula.hawkingNoisePSD}. The machine-checked
+statements about it are that it is positive when its inputs are
+(\texttt{hawkingNoisePSD\_pos}); that it is monotone in the greybody
+factor, so $\Gamma \leq 1$ gives an upper bound on the signal
+(\texttt{hawkingNoisePSD\_greybody\_mono}), which is the useful
+direction, since an upper bound on the signal is a lower bound on the
+integration time needed to see it; and that at $\Gamma = 1$ it reduces to
+$2\hbar\omega\,\sigma_Q n_H$ (\texttt{fdt\_consistency}), the excess over
+vacuum of the high-frequency limit of the fluctuation--dissipation form
+$\hbar\omega \coth(\hbar\omega/2k_BT)\,\mathrm{Re}\,\sigma(\omega)$. That
+last statement is the definition evaluated at unit greybody factor. The
+agreement of the two derivation routes is established in the analysis and
+is \emph{not} a machine-checked proposition: no scattering-theoretic
+object appears anywhere in the formal development, and we do not claim
+that a proof assistant has certified the two calculations against each
+other. Two further statements in the same module record unit-exponent
+bookkeeping rather than physics: in (mass, length, time, current)
+exponents, $\hbar\omega$ contributes $(1,2,-2,0)$ and $\sigma_Q$
+contributes $(-1,-2,3,2)$, summing to
+$(0,0,1,2) = \mathrm{A}^2/\mathrm{Hz}$
+(\texttt{grapheneNoisePSD\_dimensional}), whereas the tuple $(0,0,2,2)$
+of a squared charge is not that of an energy
+(\texttt{old\_prefactor\_wrong\_dimensions}). Their content is only that
+the prefactor must carry units of action times frequency and not of
+charge squared.
+
+The background against which Eq.~\eqref{eq:noise_psd} must be measured is
+the Johnson--Nyquist noise of the same conductor,
+$S_{\rm JN} = 4 k_B T_e \,\sigma_Q$ (\texttt{johnsonNyquistPSD}), white
+in the hydrodynamic regime. The per-bin ratio is therefore
+\begin{equation}
+\frac{\Delta S_I(\omega)}{S_{\rm JN}}
+\;=\;
+\frac{\hbar\omega\,\Gamma(\omega)\,n_H(\omega)}{2\,k_B T_e},
+\label{eq:snr_bin}
+\end{equation}
+which is \texttt{GrapheneNoiseFormula.snr\_sigma\_Q\_cancels}, and the
+conductance has disappeared from it. The companion
+\texttt{snr\_independent\_of\_sigma\_Q} says the same in the form that
+matters for an experimental proposal: the ratio computed with two
+different nonzero values of $\sigma_Q$ is the same number. Raising the
+conductance raises signal and background in the same proportion.
+
+This is why the feasibility estimate below is more robust than its
+inputs. The quantum-critical conductance is the least controlled quantity
+in Eq.~\eqref{eq:noise_psd}: it is not a band-structure parameter, it is
+a property of the critical point, and extracting it from a real device
+requires disentangling it from disorder-driven and thermally-driven
+contributions. Majumdar \emph{et al.}~\cite{Majumdar2025} do exactly
+that, combining electrical and thermal transport in ultra-clean devices
+with charge inhomogeneity as low as
+$5$ to $10\times 10^9~\mathrm{cm}^{-2}$, and find
+$\sigma_Q \approx (4\pm1)\,e^2/h$ close to charge neutrality, nearly
+independent of temperature and varying by at most about a quarter across
+devices. The same measurement reports a giant violation of the
+Wiedemann--Franz law: the effective Lorenz number at the Dirac point
+exceeds the semiclassical value
+$\mathcal{L}_{\rm WF} = (\pi^2/3)(k_B/e)^2
+= 2.44\times10^{-8}~\mathrm{V^2K^{-2}}$ by more than a factor of $200$,
+and by nearly a factor of $300$ at low temperature. That violation is the
+signature that charge and heat decouple, which is what makes the
+transport quantum-critical rather than Fermi-liquid, and it is the regime
+in which Eq.~\eqref{eq:noise_psd} was derived.
+
+Two things must be said about how that measurement is used, and neither
+weakens the prediction. The devices of Ref.~\cite{Majumdar2025} are
+single layers of graphene encapsulated in hexagonal boron nitride,
+whereas the nozzle of Ref.~\cite{Geurs2025} is bilayer. Adopting
+$\sigma_Q \approx 4e^2/h$ and the associated Wiedemann--Franz violation
+for the bilayer nozzle is a cross-device modelling assumption, and it is
+labelled as one; it is not a measurement on the device the prediction is
+made for. And, this being the point of the cancellation, the
+Wiedemann--Franz violation does not validate Eq.~\eqref{eq:noise_psd},
+and is not offered as evidence that the noise prediction is right. What
+\texttt{snr\_sigma\_Q\_cancels} buys is narrower and more useful: the
+detectability of the signal is insensitive, exactly rather than
+approximately, to the one transport coefficient the Wiedemann--Franz
+measurement constrains. A factor-of-four error in $\sigma_Q$ would move
+the absolute noise floor by a factor of four and change the amplifier
+specification; it would not move Eq.~\eqref{eq:snr_bin} at all.
+
+\subsection{Detection at the Dean device}
+\label{sec:gr-detect}
+
+We now put numbers to Eqs.~\eqref{eq:noise_psd}
+and~\eqref{eq:snr_bin} at the realised nozzle, adopting
+$c_s = 4.4\times 10^5$~m/s, throat length $L = 200$~nm, channel width
+$W = 1~\mu$m, and electron temperature $T_e = 150$~K. The surface gravity
+following from the gradient length,
+$\kappa \approx c_s/L \approx 2\times10^{12}~\mathrm{s}^{-1}$, gives
+\begin{equation}
+T_H \;=\; \frac{\hbar\kappa}{2\pi k_B} \;\approx\; 2.4~\mathrm{K},
+\qquad
+\omega_H \;=\; \frac{k_B T_H}{\hbar} \;\approx\;
+3.14\times10^{11}~\mathrm{s}^{-1},
+\end{equation}
+a Hawking frequency near $50$~GHz, squarely inside the band of ordinary
+microwave noise thermometry. The temperature is linear in the velocity
+gradient and inherits the geometry's uncertainty directly:
+Ref.~\cite{Geurs2025} closes with an estimate of
+$T_H \sim 500$~mK for an electronic nozzle, corresponding to a gradient
+length near $1~\mu$m rather than the $200$~nm throat adopted here. The
+two estimates differ by the factor by which the velocity gradient
+differs, and the measured quantity that discriminates between them is the
+width of the sonic transition, not anything about the radiation.
+
+In a channel of width $W$ with Dirichlet boundaries the transverse
+momenta are quantised as $k_n = (n+1)\pi/W$
+(\texttt{DiracFluidWKB.transverseMomentum}) and the associated channel
+cutoffs $\omega_\perp(n) = c_s k_n$
+(\texttt{channelCutoffEnergy}) increase strictly with $n$
+(\texttt{channelCutoffEnergy\_strictMono}), so it suffices to locate the
+lowest. At the Dean values,
+\begin{equation}
+\omega_\perp(0) \;=\; \frac{c_s \pi}{W} \;\approx\;
+1.38\times10^{12}~\mathrm{s}^{-1} \;>\; 4\,\omega_H .
+\label{eq:band_sep}
+\end{equation}
+Equation~\eqref{eq:band_sep} is checked by the Lean kernel as
+\texttt{DiracFluidWKB.dean\_lowest\_channel\_above\_four\_omega\_H}. It
+should be read for what it is: a numerical inequality between two
+hard-coded literals, $(4.4\times10^5)\pi/10^{-6}$ against
+$4 \times 3.14\times 10^{11}$, which does not reference
+\texttt{channelCutoffEnergy}, \texttt{transverseMomentum} or the
+parameter record, and is therefore not a parametric theorem about the
+geometry. Its content is the band separation and nothing more: the lowest
+transverse channel opens above $4\omega_H$, so the entire integration
+window $[0,4\omega_H]$ used below lies inside the quasi-one-dimensional
+regime where Eq.~\eqref{eq:quasi1d} applies and no transverse channel is
+open.
+
+For a one-dimensional acoustic horizon with a smooth velocity profile the
+zero-frequency transmission is profile-independent,
+\begin{equation}
+\Gamma_0 \;=\; \frac{4\,c_R\,v}{(c_R + v)^2},
+\label{eq:gamma0}
+\end{equation}
+a result of Anderson, Balbinot, Fabbri and
+Parentani~\cite{AndersonBFP2013}.
+% TODO: source not held in full text. Eq. (gamma0) is cited from the
+% citation record only; the analytic derivation has not been read
+% against the primary text.
+That $\Gamma_0 \in [0,1]$ with equality only in the step-horizon limit
+$c_R = v$ is elementary and is verified
+(\texttt{QuasiOneDReduction.greybody\_zero\_freq\_nonneg},
+\texttt{greybody\_zero\_freq\_le\_one},
+\texttt{greybody\_zero\_freq\_eq\_one}, the last by the
+arithmetic-geometric mean inequality). At the nozzle the flow reaches
+$v \approx 0.985\,c_s$ against a subsonic asymptote $c_R \approx c_s$,
+giving $\Gamma_0 \approx 0.99994$: the analog horizon of a smooth
+transonic nozzle is very nearly a perfect emitter, in sharp contrast to
+four-dimensional Schwarzschild, where $\Gamma \propto \omega^2$ at low
+frequency.
+
+With $\sigma_Q \approx 4e^2/h = 1.55\times10^{-4}$~S, the
+Johnson--Nyquist floor is
+$S_{\rm JN} \approx 1.3\times10^{-24}~\mathrm{A^2/Hz}$, and the Hawking
+excess peaks near $10^{-26}~\mathrm{A^2/Hz}$ at $50$~GHz, about two
+orders of magnitude below it. The signal is therefore not separated from
+the background by amplitude. It is separated by shape, and
+Eq.~\eqref{eq:snr_bin} says how much shape there is: at
+$\hbar\omega \ll k_B T_H$ the occupation tends to $k_B T_H/\hbar\omega$
+and the per-bin ratio flattens to
+\begin{equation}
+\frac{\Delta S_I}{S_{\rm JN}} \;\longrightarrow\;
+\frac{\Gamma_0\,T_H}{2\,T_e} \;\approx\; 8\times10^{-3},
+\end{equation}
+a fixed fractional excess persisting up to $\omega_H$ and
+Boltzmann-suppressed above it, against a background flat everywhere.
+Figure~\ref{fig:snr} shows the ratio across the band.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig105_graphene_snr_frequency.png}
-\caption{Per-bin Hawking-to-thermal noise ratio
-$S_{\rm Hawking}(\omega) / S_{\rm thermal}$ versus frequency at the
-Dean bilayer-nozzle parameters ($\sigma_Q \approx 4 e^2/h$,
-$T_{\rm e} = \SI{150}{\kelvin}$). The peak ratio is
-$\sim 8 \times 10^{-3}$ at $\omega \approx \omega_H$, reflecting
-the two-orders-of-magnitude separation between the Planckian
-Hawking signal and the white Johnson-Nyquist background. Shape-
-aware correlation analysis recovers the bandwidth-cumulative SNR by
-exploiting this Planckian-vs-white distinction; cumulative SNR
-reaches unity in $\sim 1$ minute of integration across the
-$[0, 4\omega_H]$ band, formally guaranteed to satisfy the quasi-1D
-parametric-safety condition (lowest transverse channel above
-$4\omega_H$, verified in
-\texttt{DiracFluidWKB.dean\_lowest\_channel\_above\_four\_omega\_H}).}
+\caption{Per-bin ratio of the Hawking excess current noise to the
+Johnson--Nyquist background, $\Delta S_I(\omega)/S_{\rm JN}$
+[Eq.~\eqref{eq:snr_bin}], at the Dean bilayer-nozzle parameters:
+$c_s = 4.4\times10^5$~m/s, $\kappa = 2\times10^{12}$~s$^{-1}$,
+$T_H \approx 2.4$~K, $\sigma_Q \approx 4e^2/h$, electron temperature
+$T_e = 150$~K, and greybody factor $\Gamma_0 \approx 0.99994$ from
+Eq.~\eqref{eq:gamma0}. The ratio is flat at $\approx 8\times10^{-3}$
+below $\omega_H \approx 3.14\times10^{11}$~s$^{-1}$ ($50$~GHz), where it
+equals $\Gamma_0 T_H/2T_e$, and falls exponentially above. The figure is
+a statement about spectral shape rather than amplitude: the Hawking
+contribution is a Planckian excess of fixed fractional size across a wide
+band, sitting on a white background. By
+\texttt{snr\_sigma\_Q\_cancels} the plotted quantity does not depend on
+$\sigma_Q$, so the curve is unchanged by the uncertainty in the
+quantum-critical conductance.}
 \label{fig:snr}
 \end{figure}
 
-\subsection{Wiedemann-Franz cross-check}
+A radiometric measurement converts that fractional excess into an
+integration time. For a single bin of width $\Delta f$ the standard
+scaling gives $t = 1/(\mathrm{SNR}_{\rm bin}^2 \Delta f)$, so a bin of
+$1$~GHz at a per-bin ratio of $8\times10^{-3}$ reaches unit
+signal-to-noise in tens of microseconds, and combining the roughly $300$
+independent bins across the band shortens it further. A shape-aware
+correlation analysis, which fits the Planckian profile of the excess
+against the white background rather than integrating bin by bin, is the
+estimate quoted for the experiment: it reaches unit cumulative
+signal-to-noise in of order a minute at these parameters.
+% TODO: the "of order a minute" figure is a downstream estimate from the
+% shape-aware correlation analysis and is not the output of the canonical
+% bandwidth-cumulative radiometer computation, which returns a far
+% shorter time at the same parameters; the chain from one to the other
+% is not reproduced here.
+Either way the conclusion is the same and is the practically important
+one: at this device the measurement is limited by systematics, not by
+statistics. The greybody monotonicity theorem makes that robust in the
+safe direction, since it converts any overestimate of $\Gamma$ into an
+underestimate of the required time; even a hypothetical
+$\Gamma \sim 10^{-2}$, two orders below Eq.~\eqref{eq:gamma0}, leaves the
+statistical requirement inside a second.
 
-The Lorenz number $L_0 = \pi^2 k_B^2 / 3 e^2$ is the standard
-ratio of thermal to electrical conductivities in a Fermi liquid.
-Majumdar et al.~\cite{Majumdar2025} measure a violation of this
-ratio by a factor $> 200$ in ultra-clean monolayer graphene at the
-Dirac point. As in the companion letter E2, we adopt these
-quantum-critical transport coefficients
-($\sigma_Q \approx 4e^2/h$, $L/L_0 > 200$) for the Dean-equivalent
-bilayer-Dirac-fluid regime, a modeling assumption, since the
-Dean nozzle device (Ref.~\cite{Geurs2025}, bilayer) is plausibly
-within the same quantum-critical universality class but is not
-itself the device measured in
-Ref.~\cite{Majumdar2025}. The two-channel SK-EFT structure
-(charge and heat are independent) predicts giant Wiedemann-Franz
-violation as a structural consequence of the same noise structure
-that gives~\eqref{eq:graphene-noise}. This is captured in
-\texttt{GrapheneNoiseFormula.snr\_independent\_of\_sigma\_Q} (the
-Lorenz-cancellation theorem). The Wiedemann-Franz violation is
-therefore a published, calibrated cross-check of the SK-EFT noise
-prediction: if the framework gives the correct $L/L_0 > 200$
-scaling, it gives the correct Hawking noise.
+What limits the measurement instead is calibration. The dominant
+device-specific uncertainty is the frequency dependence of the greybody
+factor near the first transverse channel, where
+Eq.~\eqref{eq:band_sep} holds by a factor of $4.4$ rather than by orders
+of magnitude and where the evanescent term of Eq.~\eqref{eq:quasi1d} is
+largest; an in-situ determination of $\Gamma(\omega)$ across
+$[0,4\omega_H]$ would remove it. Below that sit the amplifier noise
+temperature, a few kelvin for cryogenic microwave amplifiers and so a few
+per cent of an effective noise floor set by $T_e = 150$~K, but which
+would dominate if the ambient temperature were reduced toward $T_H$; the
+low-frequency contact noise at the bottom of the band; and the
+possibility of non-Gaussian fluctuations near the critical point, which
+would invalidate the bin-independence assumed by the radiometer scaling.
+None of these is affected by the value of $\sigma_Q$. The falsifiable
+content is the profile itself: across
+$\omega/\omega_H \in [0.5,4]$ the shape of $\Delta S_I(\omega)$ fixes
+$T_H$ and its prefactor fixes $\sigma_Q$ independently, so a measured
+profile inconsistent with Eq.~\eqref{eq:noise_psd} at the predicted
+$T_{\rm eff}$ falsifies the framework of
+Secs.~\ref{sec:eft} to~\ref{sec:wkb} on this platform rather than merely
+adjusting a parameter within it. The device-specific version of this
+prediction is developed in the companion letter~\cite{Roehm2026E2}.
 
-\subsection{Detection feasibility}
+\section{Exciton-polariton microcavities}
+\label{sec:polariton}
 
-For a $\Delta f = 1$\,Hz noise-spectrum measurement with
-correlation analysis, the Hawking signal is detectable at
-$5\sigma$ with shape-aware bandwidth-cumulative integration in
-$\sim 1$\,minute of integration time at the Dean device. The
-detection is systematics-limited, not statistics-limited: the
-principal device-specific uncertainty is the greybody factor
-$\Gamma(\omega)$ near the lowest transverse channel.
+The condensate platform of Sec.~\ref{sec:hierarchy} and the Dirac fluid
+of Sec.~\ref{sec:graphene} both sit inside the regime the effective
+theory of Sec.~\ref{sec:eft} was constructed for: the gradient expansion
+converges, and damping is a small perturbation on the horizon dynamics.
+The exciton-polariton microcavity is the platform where that stops being
+true, and the purpose of this section is to say exactly where. Two of
+the quantities that control the expansion, the dispersive parameter $D$
+and the ratio of the quasiparticle decay rate to the surface gravity,
+are of order unity at the parameters that have actually been measured.
+The negative statement is the substantive one: it is a theorem, it names
+the platform, and it cannot be weakened without breaking the same
+predicate that certifies the positive cases.
 
-%% ══════════════════════════════════════════════════════════════════
+\subsection{Reservoir-corrected sound speed and the horizon}
+\label{sec:pol-cs}
 
-\figuredeferred{fig:d1-graphene-reuse}{the module-level reuse fraction behind the $\reusePercent\%$ claim; \texttt{scripts/count\_theorem\_reuse.py~-{}-json} emits the per-module attribution but no figure function in \texttt{visualizations.py} renders it}
+The reference device is the Paris-LKB polariton fluid of Falque
+\emph{et al.}~\cite{Falque2025}, a semiconductor microcavity with three
+InGaAs quantum wells between GaAs-AlGaAs Bragg mirrors, driven
+quasi-resonantly by a continuous-wave laser whose spatial phase is
+imprinted by a spatial light modulator. That imprint sets the flow
+profile directly, so the horizon geometry is programmed rather than
+grown. Two families of horizon were realised: smooth transitions with
+surface gravity $\kappa = 0.07$ and $0.08~\mathrm{ps}^{-1}$, and a steep
+configuration reaching $\kappa = 0.11~\mathrm{ps}^{-1}$. We take
+$\kappa = 7\times10^{10}~\mathrm{s}^{-1}$ as the baseline and
+$\kappa = 1.1\times10^{11}~\mathrm{s}^{-1}$ as the demonstrated reach.
+
+The sound speed is the parameter that matters most for the acoustic
+metric and the one most easily overestimated on this platform. Falque
+\emph{et al.} determine it spectroscopically rather than
+hydrodynamically. The velocity field is recovered from the spatial phase
+of the outgoing light by off-axis interferometry,
+$v_0(x) = \partial_x\theta$, while the Bogoliubov dispersion of the
+collective excitations is measured at a chosen point by coherent probe
+spectroscopy with a second continuous-wave laser, scanned in probe
+wavevector and frequency, and fitted with the laboratory-frame
+dispersion using the interaction energy $gn$ as the free parameter.
+Because the outgoing intensity is proportional to the intracavity
+density, the local sound speed follows across the whole fluid from the
+measured intensity map anchored at the probed point. The result is
+$c_s \approx 0.40~\mu\mathrm{m/ps}$ with an upstream healing length
+$\xi \approx 3.4~\mu\mathrm{m}$ and $\xi \approx 4.0~\mu\mathrm{m}$
+downstream, at an effective polariton mass
+$m^* = 7.0\times10^{-35}~\mathrm{kg}$.
+
+The reservoir correction is what separates that number from a naive
+Bogoliubov estimate. Excitonic states that do not couple to light form a
+long-lived dark reservoir contributing an interaction energy $g_r n_r$
+to the polariton field. Falque \emph{et al.} fit their data with
+$g_r n_r \approx 1.84\,gn$, so the reservoir carries roughly $65\%$ of
+the total interaction blueshift. Only the condensate part enters the
+dynamic response: at the turning point of the bistability loop, where
+the dispersion is linear at low wavenumber, the sound speed is
+$c_s = \sqrt{\hbar gn/m^*}$. A fit ignoring the reservoir would assign
+the whole turning-point detuning to the condensate and would infer a
+sound speed larger by $\sqrt{1+1.84} \approx 1.7$, near
+$0.67~\mu\mathrm{m/ps}$. Reservoir-free modelling of polariton horizons
+has used values as high as $1.0~\mu\mathrm{m/ps}$, a factor $2.5$ above
+the measurement, and predictions scale steeply in $c_s$: the dispersive
+parameter goes as $1/c_s$ and the noise scale as $c_s^2$.
+% TODO: source not held in full text (Jacquet2022). The 1.0 um/ps
+% reservoir-free value is quoted from the polariton-horizon modelling
+% literature and has not been checked against that text.
+Sound speeds in this range are reported for other polariton
+condensates~\cite{Estrecho2021,Stepanov2019,Claude2023}.
+% TODO: sources not held in full text (Estrecho2021, Stepanov2019,
+% Claude2023); cited for corroboration of the measured range only.
+
+With the surface-gravity relation of Sec.~\ref{sec:eft-metric}, the two
+configurations give $T_H \approx 85~\mathrm{mK}$ and
+$T_H \approx 134~\mathrm{mK}$, eight orders of magnitude above the
+atomic-condensate benchmark of Sec.~\ref{sec:hierarchy}, which is the
+platform's genuine advantage. One convention point must be stated
+explicitly, because the primary source quotes a different figure: the
+Discussion of Ref.~\cite{Falque2025} reports a Hawking temperature of
+$3~\mathrm{K}$ for the smoothest horizon, which follows from the
+Boltzmann exponent $\omega/2\pi\kappa$ written in their Eq.~(9) rather
+than the $2\pi\omega/\kappa$ used throughout this paper. The two differ
+by $4\pi^2$ at fixed $\kappa$, and the measured $\kappa$ is not in
+dispute.
+
+Two features of this platform are absent from the condensate and
+graphene cases, and both weaken the horizon description. First, the
+excitation field is massive. Because the fluid is driven and dissipative
+rather than isolated, linearising about the steady state gives a
+Klein--Gordon equation on the acoustic metric with a nonzero mass
+$m_{\rm det}$ controlled by the pump detuning, not the massless equation
+the isolated barotropic case delivers. A consequence is that the
+acoustic horizon and the threshold for exciting negative-energy modes no
+longer coincide: the Mach number that must be exceeded for a
+supercritical dispersion is
+$M_{\rm critical} = \sqrt{1+m_{\rm det}/m^*} = 1.34$ at the reported
+parameters, not unity. Sonic-horizon formation and Hawking-type
+amplification are separate conditions here, and only the second is what
+an experiment sees.
+
+Second, the gradient expansion is barely convergent. The dispersive
+parameter $D = \xi\kappa/c_s$ evaluates to $0.59$ at the smooth horizon
+and $0.94$ at the steep reach, the latter using the healing length
+measured in the smooth configuration because the source does not quote
+$\xi$ separately for the steep one. The leading dispersive correction of
+Sec.~\ref{sec:eft-disp} is then $-18\%$ and $-46\%$ respectively. At the
+smooth horizon that is a large but controlled correction. At the steep
+reach the expansion parameter is not small, the next order is not
+obviously smaller than the one retained, and every steep-horizon number
+in this paper is leading-order only. Buying a factor $1.6$ in $T_H$ by
+steepening the horizon costs the expansion that produced the prediction.
+
+Finally, the driven-dissipative steady state is not cold. Its mean-field
+noise scale, $T_{\rm noise} = m^*c_s^2/k_B \approx 0.81~\mathrm{K}$,
+exceeds $T_H$ at the smooth horizon by an order of magnitude. That is
+the practical reason the spontaneous spectrum is hard on this platform,
+and why detection discussions in the polariton literature are stimulated
+rather than spontaneous.
+
+\subsection{Attenuation, and where the model provably fails}
+\label{sec:pol-scope}
+
+Cavity loss is the one dissipative channel with no counterpart in the
+condensate treatment. Polaritons leak out of the cavity at a rate
+$\Gamma_{\rm pol}$ set by the mirrors and independent of frequency, so
+it does not enter the effective theory as a transport coefficient at
+all. We treat it as a patch on the outside of the framework: the horizon
+dynamics are computed as before, and the propagation of the emitted
+quanta from the horizon to the detector is corrected for uniform decay.
+An excitation travelling a distance $L$ at group velocity $v_g$ is
+attenuated by $\exp(-\Gamma_{\rm pol}L/v_g)$, so the intrinsic
+occupation is recovered from the measured one by
+\begin{equation}
+N_{\rm corr} = N_{\rm meas}\,
+\exp\!\left(\frac{\Gamma_{\rm pol}L}{v_g}\right).
+\label{eq:pol-atten}
+\end{equation}
+
+Equation~\eqref{eq:pol-atten} is
+\texttt{PolaritonTier1.attenuationFactor} on the parameter record
+\texttt{PolaritonParams}, which carries $\kappa > 0$,
+$\Gamma_{\rm pol} \geq 0$, $v_g > 0$ and $L \geq 0$. What is formally
+verified about it is exactly what an exponential gives, and we state it
+as such. The exponent is non-negative
+(\texttt{attenuation\_exponent\_nonneg}), so the factor is never below
+unity (\texttt{attenuation\_ge\_one}): the correction can only raise an
+inferred occupation, never lower it, which fixes the sign of the
+systematic. It is monotone in the decay rate at fixed geometry
+(\texttt{attenuation\_mono\_Gamma}), and it returns to unity when the
+decay rate vanishes (\texttt{attenuation\_eq\_one\_at\_zero\_decay}),
+recovering the closed-system limit. These are bookkeeping guarantees.
+They are worth having because a sign-flipped or non-monotone correction
+factor is a mistake that survives numerical testing, and they are not
+worth more than that.
+
+The substantive question is when the patch is legitimate at all.
+Treating loss as a perturbation on the horizon dynamics requires the
+decay rate to be small against the surface gravity, which is the only
+inverse timescale the horizon itself supplies. The framework therefore
+carries the dimensionless ratio $\Gamma_{\rm pol}/\kappa$ as
+\texttt{PolaritonTier1.validityRatio}, non-negative by
+\texttt{validity\_nonneg} and zero in the closed-system limit by
+\texttt{validity\_zero\_at\_zero\_decay}, and the treatment is called
+perturbative only below $\Gamma_{\rm pol}/\kappa = 0.1$.
+
+Applied to the Paris-LKB device as built, that criterion is not met.
+Falque \emph{et al.} measure a polariton decay rate
+$\hbar\gamma \approx 80~\mu\mathrm{eV}$, that is
+$\tau_{\rm cav} \approx 8~\mathrm{ps}$ and
+$\Gamma_{\rm pol} \approx 1.25\times10^{11}~\mathrm{s}^{-1}$, giving
+$\Gamma_{\rm pol}/\kappa \approx 1.8$ at the smooth horizon. Decay is
+not a perturbation on that device; it is the fastest process at the
+horizon. A cavity with $\tau_{\rm cav} = 100~\mathrm{ps}$ would give
+$0.14$, still outside, and only a $300~\mathrm{ps}$ cavity brings the
+ratio to $0.05$. Long-lifetime microcavities of that class exist, but
+they are not the sample these horizons were made in, so every
+perturbative dissipation statement in this section is a statement about
+a projected device and is labelled as such in
+Appendix~\ref{app:status}.
+
+The boundary can be drawn sharply, and it is here that formalisation
+pays for itself. Consider the charge-tunable MoSe$_2$ monolayer
+integrated into a suspended silicon-nitride photonic-crystal nanobeam
+cavity of Wang \emph{et al.}~\cite{Wang2026TMDPolariton}. That device is
+not an analog-gravity experiment: it hosts no flowing condensate and
+forms no sonic horizon, and its subject is nonlinear polariton response
+and all-optical switching. What it supplies is a measured linewidth. In
+the charge-neutral regime the transmission spectrum shows upper and
+lower polariton peaks with linewidths $2.3~\mathrm{meV}$ and
+$\gamma_{\rm LP} = 1.8~\mathrm{meV}$, the latter corresponding to a
+decoherence rate
+$\Gamma_{\rm LP} = \gamma_{\rm LP}/\hbar \approx
+2.73\times10^{12}~\mathrm{s}^{-1}$. Pairing that rate with the
+\emph{most generous} surface gravity anywhere in the polariton family,
+the steep-horizon maximum $\kappa = 1.1\times10^{11}~\mathrm{s}^{-1}$
+from Ref.~\cite{Falque2025}, gives the parameter record
+\texttt{PolaritonTier1.pennTmdPolaritonParams} and
+\begin{equation}
+\frac{\Gamma_{\rm LP}}{\kappa_{\max}} \approx 24.86 ,
+\label{eq:pol-fail}
+\end{equation}
+roughly $250$ times the perturbative threshold. The formal statement is
+\texttt{PolaritonTier1.polariton\_tier1\_fails\_tmds}, which proves
+$1/10 \leq \texttt{validityRatio}$ on that record, with the companion
+\texttt{polariton\_tier1\_predicate\_fails\_tmds} stating that the
+perturbative predicate does not hold; both are closed by
+\texttt{norm\_num} over exact rationals and introduce no assumption. Two
+limitations of the encoding should be recorded. The record also carries
+$v_g$ and $L$ fields, which the validity ratio does not read, and the
+$v_g$ value stored there is a placeholder rather than a measured group
+velocity for this device. Neither enters Eq.~\eqref{eq:pol-fail}.
+
+What this buys is worth being explicit about, because the theorem is
+trivial to prove and easy to undervalue. A narrative estimate can also
+observe that ultrafast polariton linewidths are too broad for a
+perturbative loss treatment. What it cannot do is bind that observation
+to the same predicate that licenses the positive claims. Here the object
+evaluated on the hostile input, \texttt{validityRatio}, is the object
+whose smallness every perturbative dissipation statement in this section
+depends on, and the failure is checked at the same threshold. A later
+relaxation of the threshold to accommodate an inconvenient platform
+would have to falsify a compiled theorem, and a later re-reading of
+$\Gamma_{\rm pol}$ as something other than $\gamma_{\rm LP}/\hbar$ would
+have to change a number that appears in the parameter provenance record.
+Scope claims are the part of a theoretical framework that drifts most
+quietly, because nothing downstream ever recomputes them. Compiling one
+is the cheapest available way to stop that drift.
+
+The stimulated-detection estimate that motivates the polariton platform
+belongs in the same accounting, on the unverified side of it. A coherent
+probe at frequency $\omega$ incident on the horizon is amplified by
+anomalous Bogoliubov scattering, with emitted occupation
+$G(\omega) = \Gamma(\omega)/[\exp(2\pi\omega/\kappa_{\rm eff})-1]$,
+where $\Gamma(\omega)$ is the greybody factor and
+$\kappa_{\rm eff} = \kappa(1+\delta_{\rm disp})$ carries the dispersive
+correction of Sec.~\ref{sec:eft-disp}. Assuming unit greybody factor,
+$\Gamma(\omega) = 1$, the condition $G > 1/2$ reads
+$\exp(2\pi\omega/\kappa_{\rm eff}) < 3$, that is
+$\omega/\kappa_{\rm eff} < \ln 3/(2\pi) \approx 0.175$. That threshold
+holds only under the unit-greybody assumption stated in the same breath
+as it; a dispersive horizon delivers $\Gamma(\omega) < 1$ and moves the
+accessible window down. For shot-noise-limited detection of a probe
+carrying $N_{\rm probe}$ photons per mode, a single-shot
+signal-to-noise ratio $\sqrt{N_{\rm probe}}\,G = 5$ needs
+$N_{\rm probe} = 25/G^2$, of order $10^2$ photons per mode at
+$G = 1/2$, which assumes mean-field probe operation, no loss between
+horizon and detector beyond Eq.~\eqref{eq:pol-atten}, and that the
+$0.81~\mathrm{K}$ noise floor is spectrally featureless across the probe
+window. None of this paragraph is machine-checked: the formalised
+polariton module contains no gain function, and the estimate is analytic
+throughout.
+% TODO: source not held in full text (Grisins2016), cited for the
+% stimulated-detection pathway in a flowing fluid of light; the gain
+% expression is stated from the framework of Sec. II, not attributed
+% to that text.
+
+The framework therefore reaches three platforms and stops inside the
+third. The condensate and the Dirac fluid satisfy both the gradient and
+the dissipation conditions. The Paris-LKB polariton fluid satisfies
+neither cleanly: $D$ is of order unity at the horizons that have been
+built, and $\Gamma_{\rm pol}/\kappa \approx 1.8$ at the cavity they were
+built in, so the predictions of Sec.~\ref{sec:pol-cs} apply to a
+long-lifetime device that has yet to be combined with a programmed
+horizon. Ultrafast polariton nanocavities are outside by a factor of
+$250$, and that exclusion is a theorem rather than a judgement.
+
 \section{Synthesis and outlook}
 \label{sec:synthesis}
 
-\subsection{Three platforms, one machine}
+The question posed in Sec.~\ref{sec:intro} was whether the analog Hawking
+prediction depends on the microscopic constitution of the fluid. The
+answer this paper supports is a qualified no, and the qualification is
+the interesting part.
 
-This paper has presented the SK-EFT framework for analog Hawking
-radiation across three platforms with profoundly different
-microscopic constituents. The unifying claim is the cross-platform
-universality of the prediction, made quantitative through:
-the all-orders transport-coefficient counting
-formula~\eqref{eq:count-formula}; the three non-perturbative
-effects of the exact-WKB connection (\S\ref{sec:exact-wkb},
-equations~\eqref{eq:modified-unitarity}--\eqref{eq:noise-floor});
-the $\reusePercent\%$ Lean theorem reuse fraction across BEC and graphene
-(\S\ref{sec:graphene}); and the platform-dependent hierarchy of
-dispersive and dissipative corrections (Table~\ref{tab:hierarchy}),
-each platform delivering a distinct leading detection mode (BEC:
-spectral floor; polariton: stimulated gain; graphene: noise
-spectrum + Wiedemann-Franz cross-check).
+The unqualified part is kinematic and was already understood: the
+leading spectrum is fixed by the surface gravity alone. What the
+construction here adds is that the leading \emph{corrections} are also
+insensitive to the microscopic content, in a specific and checkable
+sense. The dispersive correction depends on the ultraviolet completion
+only through the single number $(\pi/6)D^2$, with the shape of the
+modified dispersion relation appearing nowhere else, and this is the
+content of \texttt{HawkingUniversality.hawking\_universality}
+(Sec.~\ref{sec:eft-universality}). The dissipative correction depends on
+the microscopic scattering only through the sum $\gamma_1 + \gamma_2$,
+because nine candidate couplings collapse to two under normalisation,
+positivity and the Kubo--Martin--Schwinger condition, and the collapse is
+a theorem rather than a modelling choice
+(Sec.~\ref{sec:eft-first}). Two numbers stand between any fluid and its
+horizon spectrum.
 
-\subsection{Independent cross-check: Kibble-Zurek-Unruh universality}
-\label{sec:kzm-unruh-foundation}
+The structural corroboration is the transfer to a system that shares no
+microscopic physics with a condensate. Of the
+\reusePopulation{} theorems in the one-dimensional inventory,
+\reuseTransferred{} apply verbatim to the two-dimensional Dirac fluid
+under $c_s \to v_F/\sqrt{2}$, and the ones that do not are exactly the
+statements that mention the explicit $2\times2$ matrices or
+condensate-specific microphysics. That is a mechanical partition rather
+than an argument, and it should be read as corroboration of a claim
+carried by the named theorems, not as a measurement of universality in
+its own right.
 
-The universality claim of \S\ref{sec:hierarchy} (\(T_H =
-\hbar\kappa / 2\pi k_B\) controls the analog Hawking spectrum
-identically across BEC, polariton, and graphene Dirac fluids) admits
-an independent experimental cross-check via the Kibble-Zurek-Unruh
-correspondence. A horizon-crossing wavepacket experiences a finite-
-rate transition from subsonic to supersonic flow with rate set by the
-local velocity gradient \(\kappa\); the thermal distribution of
-produced quasiparticles is the Kibble-Zurek (KZM) analog at quench
-rate \(1/\tau_Q = \kappa\), with defect-density scaling \(n_{\rm def}
-\sim \tau_Q^{-\mu}\) and universal exponent \(\mu = \nu z / (1 +
-\nu z) \in (0,1)\). The Lean module
-\texttt{KibbleZurekUnruh.lean} (Wave 6w.1) formalizes this bridge
-and ships the foundation theorem
-\texttt{surface\_gravity\_bounds\_kzm\_exponent}: under the WKB
-low-dissipation regime, the KZM-corrected horizon-crossing rate
-\(\mu\,\kappa\,(1-\delta_k)\) is strictly less than the bare
-WKB-corrected rate \(\kappa\,(1-\delta_k)\), simultaneously consuming
-\(\mu < 1\) (universal KZM exponent bound), \(1-\delta_k > 0\) (WKB
-modified-unitarity spectral budget), and \(\kappa > 0\) (surface
-gravity positivity).
+The qualification is that the three platforms differ sharply in which
+correction dominates, and therefore in what an experiment should look
+for. Table~\ref{tab:hierarchy} makes this concrete: dispersive at
+$^{87}$Rb, dissipative at the projected $^{39}$K configuration and at the
+graphene nozzle, and comparable with opposite signs at the polariton
+smooth horizon. Universality of the framework does not imply uniformity
+of the observable. Each platform accordingly delivers a different
+leading measurement. The condensate delivers the crossover frequency of
+Eq.~\eqref{eq:crossover}, at $6.44\,T_{\rm eff}$ in the one
+dissipation-dominated configuration. The Dirac fluid delivers a
+closed-form current-noise excess whose feasibility estimate is
+insensitive to the least-controlled transport coefficient in it. The
+polariton platform delivers, more usefully than a prediction, a proved
+boundary: at the linewidths of ultrafast nanocavity devices the
+perturbative dissipation treatment fails by more than two orders of
+magnitude, and \texttt{PolaritonTier1.polariton\_tier1\_fails\_tmds}
+says so against the most generous surface gravity in that family.
 
-The Tindall--Mello--Fishman--Stoudenmire--Sels classical-simulation
-extraction of the KZM exponent on disordered transverse-field Ising
-models (2D square, 3D cubic, and 3D diamond lattices, 300+ qubits;
-matching the D-Wave Advantage2 quantum annealer via belief-propagation
-contraction of lattice-specific tensor
-networks)~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
-thus provides an independent validation of the universal critical-
-scaling physics that underlies the analog-Hawking universality
-theorem \texttt{hawking\_universality}: the same exponent \(\mu\)
-that controls KZM defect density at quench rate \(\kappa\) controls
-the thermal-occupation spectrum at Hawking temperature \(T_H = \hbar
-\kappa / 2\pi k_B\). The foundational character of this cross-check
-is developed further in Phase 6w (bundle D7 candidate per
-PAPER\_STRATEGY.md).
+Three things follow for what a reader should do with this.
 
-The Phase 6w foundational substrate extends to a substantive
-quantum-advantage demarcation criterion: an analog Hawking system on
-a factor graph $G$ with factor weights $f_a$ and categorical-Chern data
-$(c_0, c_1)$ passes the BP-on-PEPS classical-simulability screen if
-and only if (i) the LDP rate function of the loop-correction terms
-vanishes (equivalently, the factor graph is four-cycle-free, i.e.\
-satisfies the combinatorial screen implied by tree-like topology, and the
-factor weights are non-negative) AND (ii) the topological coefficient
-$c_1$ vanishes. Lean module
-\texttt{AnalogHawkingDemarcation.lean} (Wave 6w.6, headline
-\texttt{analog\_hawking\_fourCycleFree\_demarcation}) substantively
-combines the Wave 6w.3 BP-LDP biconditional
-(\texttt{fourCycleFree\_nonneg\_iff\_ldp\_rate\_zero}) with the Wave
-6w.5 Chern bridge (\texttt{crystalline\_eq\_quasicrystalline\_iff\_c1\_zero})
-into this falsifiable two-axis demarcation; the end-to-end tree-side
-statement (genuine tree-ness plus synchronous BP convergence to a
-fixed point in diameter-many sweeps) is
-\texttt{analog\_hawking\_tree\_simulable\_demarcation}. The
-contrapositive
-(\texttt{not\_fourCycleFreeNonneg\_or\_nonzero\_c1\_implies\_not\_simulable})
-gives the screen-failure regime explicitly: four-cycle-bearing
-topology or negative factor weights, OR non-trivial
-Chern coefficient. Tindall-Sels-Aalto thus jointly bracket the
-classical-simulability boundary for the analog-Hawking platforms
-documented here.
+The framework is falsifiable in a way that does not require absolute
+calibration. Equation~\eqref{eq:crossover} predicts a shape, the
+departure from exponential decay at a computable frequency, and shapes
+survive the systematic uncertainties that defeat amplitude
+measurements. A measured spectrum that stays exponential well past
+$\omega_\times$ at the $^{39}$K parameters would falsify the dissipative
+sector as constructed here.
 
-\subsection{Methodology sidebar: Aristotle's counterexample}
+The dependency structure is explicit and unusually narrow. Everything in
+Sec.~\ref{sec:wkb} rests on the fluctuation--dissipation relation
+Eq.~\eqref{eq:cgl-fdr}, which this paper imports rather than derives
+(Sec.~\ref{sec:higher-fdr}), and on the open-system Bogoliubov ansatz
+Eq.~\eqref{eq:modified-unitarity}, which is physics input rather than a
+theorem. A reader who rejects either rejects the noise floor and the
+crossover with it, and keeps the counting, the uniqueness reductions,
+the positivity results and the acoustic-metric layer, which do not
+depend on them. Appendix~\ref{app:status} records which claims sit on
+which side of that line.
 
-The SK-EFT \texttt{FirstOrderKMS} Prop record in our Lean library
-(a \texttt{structure~\ldots~: Prop} in \texttt{SKDoubling.lean}, not
-an \texttt{axiom} declaration; the library declares
-\axiomcount{} project-local axioms) is the
-result of an Aristotle-discovered counterexample. The original
-formulation constrained four of nine field components only; the
-counterexample $c = (0, 0, 0, 0, 0, 0, 0, 1, 0)$ exhibited a
-configuration in the unconstrained five-dimensional subspace that
-satisfied the original constraint but violated the dynamical KMS
-condition. Aristotle returned this counterexample within hours of
-submission. The corrected Prop constrains all nine components,
-and its KMS optimality is itself a theorem
-(\S\ref{sec:bec-second}, \texttt{SKDoubling.firstOrder\_KMS\_optimal}).
-We report this Aristotle-discovered counterexample as a
-methodology contribution. The methodology paper
-I1~\cite{Roehm2026I1} elaborates this case study together with two
-others (gap-solution-bounded conjecture disproof; chirality-wall
-axiom decomposition).
+Three questions are open, and one of them is close. The strong-dissipation
+regime $\Gamma_H \gtrsim \kappa$, where the perturbative connection
+breaks down, is reachable in principle by complex-time methods and is
+where the polariton steep-horizon configuration already sits; the
+attenuation results of Sec.~\ref{sec:pol-scope} are a patch, not a
+treatment. The gradient expansion assumes local dissipation, and
+phonon-mediated channels in a condensate and Coulomb-mediated channels
+in graphene both introduce non-local kernels whose effect on
+$\delta_{\rm diss}(\omega)$ is not known. And $\gamma_1$ and
+$\gamma_2$ enter as inputs: Beliaev and Landau damping supply
+first-principles values for a condensate~\cite{Zaremba1999}, but the
+corresponding calculations for driven-dissipative polariton kinetics and
+for electron-electron scattering in a Dirac fluid are not yet at the
+precision the crossover measurement would reward.
 
-\subsection{Open questions}
-
-\begin{itemize}
-\item \emph{Strong-dissipation regime.} For $\Gamma_H \gg \kappa$
-the perturbative WKB connection breaks down. The exact-WKB
-infrastructure of \S\ref{sec:exact-wkb} extends in principle to
-this regime via complex-time methods; the practical extension is
-deferred to future work.
-\item \emph{Finite-range dissipation.} The SK-EFT presented here
-assumes local dissipation. Phonon-mediated long-range channels
-in BEC and Coulomb-mediated long-range channels in graphene
-introduce non-local kernels whose impact on
-$\delta_\text{diss}(\omega)$ is unknown.
-\item \emph{Ab-initio derivation of $\gamma_{1,2}$.} The transport
-coefficients enter the SK-EFT as inputs from microscopic
-many-body QM. Beliaev/Landau damping rates~\cite{Zaremba1999}
-provide first-principles values for BEC; analogous derivations
-for polariton (driven-dissipative kinetics) and graphene
-(electron-electron scattering) are nascent.
-\end{itemize}
-
-\subsection{Bundle architecture}
-
-This deep paper sits within a four-tier bundle
-architecture~\cite{Roehm2026F}. The companion experimental letters
-E1~\cite{Roehm2026E1} (Paris-LKB polariton) and
-E2~\cite{Roehm2026E2} (Dean-Kim-Lucas graphene) ship as Tier-4
-PRL/PRR letters paired with this paper. The flagship review
-F~\cite{Roehm2026F} cites this deep paper as the canonical
-analog-Hawking reference. The infrastructure papers
-I1~\cite{Roehm2026I1} (verification methodology) and
-I2~\cite{Roehm2026I2} (verified statistical estimators) elaborate
-the formal-verification infrastructure used here.
-
-\bigskip
-
-\noindent\textbf{Acknowledgements.} The author thanks the Aristotle
-team for use of the automated prover; Aristotle's counterexample to
-the original \texttt{FirstOrderKMS} formulation and its closure of the
-transport-coefficient counting formula \eqref{eq:count-formula}
-were substantive contributions, not merely closures of existing
-skeletons.
+\begin{acknowledgments}
+The author thanks the Aristotle team for use of the automated prover.
+Its counterexample to the original first-order
+Kubo--Martin--Schwinger formulation (Sec.~\ref{sec:higher-optimal}) and
+its closure of the counting formula Eq.~\eqref{eq:count-formula} were
+substantive contributions rather than closures of existing skeletons.
+\end{acknowledgments}
 
 \section*{Methods and tools disclosure}
-The formal verification layer of this work was developed with
-substantial machine assistance: Lean~4 proof drafting and iteration
-used LLM-based agents (Anthropic Claude-family models) operating under
-the project's staged validation pipeline. A subset of the underlying
-library's theorems was closed by the Aristotle automated theorem
-prover (Harmonic); every proof is ultimately certified by the Lean~4
-kernel via \texttt{lake build} on the public repository, independently
-of any AI tool. Manuscript prose was AI-assisted and human-reviewed.
-The repository's public validation suite reports, for every
-draft, any numerical value written inline in prose rather than
-sourced from a generated table; that report is the authority on
-this manuscript's numerical provenance.
+The formal verification layer of this work was developed with substantial
+machine assistance: Lean~4 proof drafting and iteration used LLM-based
+agents (Anthropic Claude-family models) operating under the project's
+staged validation pipeline. A subset of the underlying library's theorems
+was closed by the Aristotle automated theorem prover (Harmonic); every
+proof is ultimately certified by the Lean~4 kernel via \texttt{lake build}
+on the public repository, independently of any AI tool. Manuscript prose
+was AI-assisted and human-reviewed. The repository's public validation
+suite reports, for every draft, any numerical value written inline in
+prose rather than sourced from a generated table; that report is the
+authority on this manuscript's numerical provenance.
+
+\appendix
+
+\section{What is and is not machine-checked}
+\label{app:status}
+
+Section~\ref{sec:intro} introduced four statuses. This appendix applies
+them to every Lean result the body cites, so that a reader can see the
+dependency structure without reconstructing it from the text.
+\texttt{lake build} is clean over the library, with zero \texttt{sorry}
+and \axiomcount{} project-local axioms beyond the three Lean~4 kernel
+axioms; \aristotleproved{} of the library's theorems were closed by the
+automated prover. The results reachable from this paper's claims comprise
+\bundleTheorems{}~theorems across \bundleModules{}~modules.
+
+\begin{table}[h]
+\centering
+\caption{Status of the Lean results cited in the body.
+\emph{Derived}: the conclusion constrains something the hypotheses do not
+already assert. \emph{Conditional}: the physical content is a hypothesis
+and the theorem propagates it. \emph{Definitional}: the statement unfolds
+a definition or rearranges a structure field. \emph{Demarcation}: a
+kernel-checked statement that a model does not apply.}
+\label{tab:status}
+\begin{ruledtabular}
+\begin{tabular}{lll}
+Result & Sec. & Status \\
+\colrule
+\texttt{acousticMetric\_det} & \ref{sec:eft-metric} & derived \\
+\texttt{acoustic\_metric\_lorentzian} & \ref{sec:eft-metric} & derived \\
+\texttt{acousticMetric\_inv\_correct} & \ref{sec:eft-metric} & derived \\
+\texttt{hawking\_temp\_from\_surface\_gravity} & \ref{sec:eft-metric} & definitional \\
+\texttt{firstOrder\_uniqueness} & \ref{sec:eft-first} & derived \\
+\texttt{deltaDissFromTransport\_eq} & \ref{sec:eft-first} & definitional \\
+\texttt{deltaDissFromTransport\_zero\_iff} & \ref{sec:eft-first} & derived \\
+\texttt{hawking\_universality} & \ref{sec:eft-universality} & derived \\
+\texttt{transport\_coefficient\_count} & \ref{sec:higher-count} & derived \\
+\texttt{firstOrder\_count}, \texttt{secondOrder\_count} & \ref{sec:higher-count} & derived \\
+\texttt{thirdOrder\_count} & \ref{sec:higher-count} & derived \\
+\texttt{secondOrder\_count\_with\_parity} & \ref{sec:higher-parity} & derived \\
+\texttt{secondOrder\_requires\_parity\_breaking} & \ref{sec:higher-parity} & definitional \\
+\texttt{fullSecondOrder\_uniqueness} & \ref{sec:higher-positivity} & derived \\
+\texttt{combined\_positivity\_constraint} & \ref{sec:higher-positivity} & derived \\
+\texttt{firstOrder\_KMS\_optimal} & \ref{sec:higher-optimal} & derived \\
+\texttt{firstOrder\_altSign\_uniqueness\_test} & \ref{sec:higher-optimal} & derived \\
+\texttt{cgl\_fdr\_general} & \ref{sec:higher-fdr} & conditional \\
+\texttt{einstein\_relation} & \ref{sec:higher-fdr} & conditional \\
+\texttt{cgl\_implies\_secondOrderKMS} & \ref{sec:higher-fdr} & conditional \\
+\texttt{turning\_point\_shift\_pos\_iff} & \ref{sec:wkb-turning} & definitional \\
+\texttt{turning\_point\_shift\_eq\_decoherence} & \ref{sec:wkb-turning} & definitional \\
+\texttt{unitarity\_deficit\_eq\_decoherence} & \ref{sec:wkb-unitarity} & definitional \\
+\texttt{standard\_unitarity\_recovered} & \ref{sec:wkb-unitarity} & definitional \\
+\texttt{decoherence\_nonneg}, \texttt{\_zero\_iff} & \ref{sec:wkb-unitarity} & definitional \\
+\texttt{noise\_floor\_eq\_delta\_diss} & \ref{sec:wkb-crossover} & definitional \\
+\texttt{noise\_floor\_nonneg} & \ref{sec:wkb-crossover} & definitional \\
+\texttt{occupation\_reduces\_to\_beta\_sq} & \ref{sec:wkb-crossover} & definitional \\
+\texttt{total\_occupation\_nonneg} & \ref{sec:wkb-crossover} & derived \\
+\texttt{noise\_dominates\_when\_beta\_small} & \ref{sec:wkb-crossover} & definitional \\
+\texttt{diracFluidMetric\_gtt\_vanishes} & \ref{sec:gr-metric} & derived \\
+\texttt{diracFluidMetric\_y\_offdiag\_zero} & \ref{sec:gr-metric} & definitional \\
+\texttt{diracFluidMetric\_txBlock\_lorentzian\_at\_horizon} & \ref{sec:gr-metric} & derived \\
+\texttt{quasi1D\_validity\_bound} & \ref{sec:gr-metric} & conditional \\
+\texttt{soundSpeed\_lt\_vF} & \ref{sec:gr-subluminal} & derived \\
+\texttt{hawkingNoisePSD\_greybody\_mono} & \ref{sec:gr-noise} & derived \\
+\texttt{snr\_sigma\_Q\_cancels} & \ref{sec:gr-noise} & derived \\
+\texttt{snr\_independent\_of\_sigma\_Q} & \ref{sec:gr-noise} & derived \\
+\texttt{fdt\_consistency} & \ref{sec:gr-noise} & definitional \\
+\texttt{dean\_lowest\_channel\_above\_four\_omega\_H} & \ref{sec:gr-detect} & derived \\
+\texttt{attenuation\_ge\_one}, \texttt{\_mono\_Gamma} & \ref{sec:pol-scope} & derived \\
+\texttt{attenuation\_eq\_one\_at\_zero\_decay} & \ref{sec:pol-scope} & definitional \\
+\texttt{polariton\_tier1\_fails\_tmds} & \ref{sec:pol-scope} & demarcation \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Three claims in the body have no entry above because they have no formal
+representative, and they are listed here rather than left to inference.
+The identification of the monomial index set with the independent
+transport coefficients at order $N$ (Sec.~\ref{sec:higher-count}) is an
+argument of this paper. The open-system Bogoliubov relation
+Eq.~\eqref{eq:modified-unitarity} with $\delta_k = 2\Gamma_H/\kappa$ is
+physics input, carried in the library as a structure field
+(Sec.~\ref{sec:wkb-unitarity}). The stimulated-gain threshold of
+Sec.~\ref{sec:pol-scope} is an analytic estimate derived in the text and
+not formalised. All three are load-bearing for at least one prediction,
+and none is presented above as verified.
 
 \begin{thebibliography}{99}
 
@@ -1286,68 +2441,14 @@ A Methodology with Worked Cases'', CPC methodology paper (2026).
 J.~Roehm, ``Verified Statistical Estimators and the
 \texttt{lean-tensor-categories} Library'', JOSS software paper (2026).
 
-% [2026-05-04 cleanup: D1 bibliography placeholder arXiv ID resolution]
-% No `arXiv:XXXX.XXXXX` placeholders found in D1 bibliography on inspection.
-% (Session note flagged Talanov2024 — verified to be cited in paper16, not D1.)
-% All D1 \bibitem entries already carry canonical arXiv IDs or DOIs from
-% src/core/citations.py:CITATION_REGISTRY at the time of this cleanup pass.
+
+
+\bibitem{Wang2026TMDPolariton}
+Z.~Wang, L.~He, B.~Kim, and B.~Zhen,
+\emph{Nonlinear exciton-polaritons in a charge-tunable MoSe$_2$
+monolayer coupled to a suspended photonic-crystal nanobeam cavity},
+Phys.~Rev.~Lett.~\textbf{136}, 146901 (2026), arXiv:2411.16635.
 
 \end{thebibliography}
-
-
-%% ─── Lifted from _phase6n_W1a_lean_only (§3) — 2026-05-06T15:39:38Z ───
-%% \section{BEC SK-EFT geometric envelope (NOT Gevrey-1)}
-%% \label{sec:d1-_phase6n_W1a_lean_only}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §3
-%% Lift notes: D.2 absorption: Phase 6n W1a kinematic-dispersive geometric envelope (NOT Gevrey-1); IsGeometric predicate; closed-form γ_n
-%% TODO: lift content from papers/_phase6n_W1a_lean_only/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
-%% ─── End lift from _phase6n_W1a_lean_only ───
-
-
-%% ─── Lifted from _phase6n_W2c_lean_only (§5) — 2026-05-06T15:39:41Z ───
-%% \section{LDP linear-response framework}
-%% \label{sec:d1-_phase6n_W2c_lean_only}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §5
-%% Lift notes: D.2 absorption: Phase 6n W2c FDR W-form GC + abstract IsLDPRateFunction; LinearResponseRateFunction
-%% TODO: lift content from papers/_phase6n_W2c_lean_only/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
-%% ─── End lift from _phase6n_W2c_lean_only ───
-
-
-%% ─── Lifted from _phase6n_W2b_lean_only (§6) — 2026-05-06T15:39:44Z ───
-%% \section{Quantum Crooks no-go (Perarnau-Llobet)}
-%% \label{sec:d1-_phase6n_W2b_lean_only}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §6
-%% Lift notes: D.2 absorption: Phase 6n W2b BEC + polariton quantum-Crooks landscape; Perarnau-Llobet typeclass connections
-%% TODO: lift content from papers/_phase6n_W2b_lean_only/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
-%% ─── End lift from _phase6n_W2b_lean_only ───
-
-
-%% ─── Lifted from _phase6o_W1a_lean_only (§6) — 2026-05-06T15:39:47Z ───
-%% \section{Boostless / Carrollian soft theorems on analog horizons (Phase 6o W1a)}
-%% \label{sec:d1-_phase6o_W1a_lean_only}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §6
-%% Lift notes: D.2 absorption: Phase 6o W1a boostless / Carrollian soft theorems on BEC + polariton; Strominger-triangle closure
-%% TODO: lift content from papers/_phase6o_W1a_lean_only/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
-%% ─── End lift from _phase6o_W1a_lean_only ───
 
 \end{document}
