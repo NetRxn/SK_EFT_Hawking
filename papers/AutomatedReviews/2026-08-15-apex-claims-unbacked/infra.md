@@ -29,14 +29,18 @@ Two of the findings are not about the ratchet at all — §1.4 is the axis ADR-0
 deliberately scoped **out**, and §1.6/§1.7 are reds the redraft campaign left behind in
 neighbouring guards.
 
-⚠️ **Corpus state at filing, recorded so nobody attributes it here.** Four suite ratchets
-are breached at HEAD by the twenty-one-bundle redraft campaign running concurrently, and
-none of them by this work: `bundle_lean_module_coverage` (161 absent modules against its
-ceiling), `bundle_sentence_length`, and `bundle_stage13_claim_consistent` on **both** legs —
-per-bundle open-REQUIRED (D1 13>2, D2 10>3, D4 13>4, E1 7>1, L3 5>0, none of them `infra`)
-and unattributed open-blocking (53 against a limit of 44, which is **47 without this
-document's six** — already breached). Filing them as further findings would add to the
-population the second leg measures; they belong to the redraft merges that moved them.
+⚠️ **Corpus state at filing, recorded so nobody attributes it here.** A full
+`pytest tests/` at HEAD is RED on 29 tests, and the twenty-one-bundle redraft campaign
+running concurrently — D1, D2, D4, E1, L3 all merged today — is what moved the populations
+under a dozen ratchets. This work touches **no `.tex`**, so every draft-derived one is
+someone else's: `bundle_lean_module_coverage` (161 absent modules), `bundle_sentence_length`,
+`bundle_tables_use_pipeline` (5 against 1), `spelled_out_census_figures`, `counts_fresh`,
+`prose_theorem_reference_coverage`, `numerical_literals` (§1.6). `bundle_stage13_claim_consistent`
+is red on **both** legs — per-bundle open-REQUIRED (D1 13>2, D2 10>3, D4 13>4, E1 7>1,
+L3 5>0, none of them `infra`) and unattributed open-blocking (53 against a limit of 44,
+which is **47 without this document's six** — already breached). Only §1.6 and §1.7 are
+filed, because they are the two whose repair is a decision rather than the campaign's own
+next commit; filing the rest would inflate the very population the second leg measures.
 
 ---
 
