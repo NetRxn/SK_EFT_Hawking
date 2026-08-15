@@ -66,25 +66,278 @@
 \section{Higher orders in the gradient expansion}
 \label{sec:higher}
 
+The first-order analysis of Sec.~\ref{sec:eft} is exhaustive: nine
+candidate monomials collapse to two coefficients, and the collapse is a
+theorem. Whether that economy survives is the question this section
+answers. Two things could go wrong. The count of independent
+coefficients could grow quickly enough with derivative order that the
+expansion loses predictive content, and the first-order constraint could
+be weaker than the physics requires, in which case parameters that look
+free are not. Neither happens, and the reasons are different in kind:
+the first is a combinatorial fact, the second is a statement about the
+constraint itself.
+
 \subsection{Counting the independent coefficients}
 \label{sec:higher-count}
-%% TODO(III.A)
+
+Order the monomials of the dissipative sector by their total derivative
+count. A monomial at gradient order $N$ carries derivative level
+$L = N+1$, distributed as $m$ temporal and $n$ spatial derivatives with
+$m + n = L$. Dynamical KMS pairs each dissipative retarded coefficient
+with a noise coefficient through an odd power of $\omega$, which in the
+monomial basis is the requirement that $m$ be even. The independent
+coefficients at order $N$ are therefore indexed by the pairs
+$(m,n) \in \mathbb{N}^2$ with $m + n = N+1$ and $m$ even.
+
+That index set has a closed cardinality:
+\begin{equation}
+\#\{(m,n) : m+n = N+1,\; m \text{ even}\}
+  \;=\; \left\lfloor \frac{N+1}{2} \right\rfloor + 1 .
+\label{eq:count-formula}
+\end{equation}
+Equation~\eqref{eq:count-formula} is
+\texttt{SecondOrderSK.transport\_coefficient\_count}, proved for every
+$N$ by the Aristotle automated prover (run \texttt{d61290fd}) through an
+explicit bijection with $\{0, 2, \ldots, 2\lfloor L/2\rfloor\}$. The
+three cases the rest of this paper uses,
+\texttt{firstOrder\_count}, \texttt{secondOrder\_count} and
+\texttt{thirdOrder\_count}, are closed independently by
+\texttt{decide}, that is, by kernel-checked evaluation of the finite
+cardinality rather than by compiled evaluation outside the kernel. They
+give $2$, $2$ and $3$.
+
+The scope of Eq.~\eqref{eq:count-formula} should be stated precisely,
+because the formal statement is narrower than the physical reading. What
+is proved is the cardinality of an explicitly described set of index
+pairs. The identification of that set with the independent transport
+coefficients of the Schwinger--Keldysh action at order $N$ rests on the
+monomial classification of the preceding paragraph, which is an argument
+in this paper and not a machine-checked one. At first order the
+identification is independently corroborated, because
+\texttt{SKDoubling.firstOrder\_uniqueness} reduces nine coefficients to
+two by a route that never mentions Eq.~\eqref{eq:count-formula}, and the
+two answers agree. At second and third order no such independent check
+exists, and the count should be read as a consequence of the
+classification rather than as a substitute for it.
+
+The physical content is the growth rate. The number of new coefficients
+increases like $N/2$, so the cumulative parameter count through order
+$N$ grows quadratically while the accuracy of the expansion improves
+geometrically in the gradient ratio. The theory does not run out of
+predictive power at any finite order. It is also worth recording what
+the formula does not assert: it counts coefficients admitted by the
+grading, not coefficients that are nonzero on any particular background.
 
 \subsection{Parity grading and the second-order signature}
 \label{sec:higher-parity}
-%% TODO(III.B)
+
+At derivative level $L = 3$ the surviving pairs are $(m,n) = (0,3)$ and
+$(2,1)$. Both have odd $n$. Every second-order dissipative coefficient
+therefore carries an odd number of spatial derivatives and vanishes
+identically under $x \to -x$. Imposing spatial parity as an additional
+grading, that is, requiring both $m$ and $n$ even, empties the index set
+at $L=3$: \texttt{SecondOrderSK.secondOrder\_count\_with\_parity}
+records that the parity-graded count is zero, which follows because
+$m+n=3$ is odd and cannot be a sum of two even numbers.
+
+This is the cleanest experimental discriminator the framework offers at
+second order. A homogeneous condensate has unbroken spatial parity and
+no second-order dissipative correction at all. A transonic background
+breaks parity by construction, since the flow profile $v(x)$ singles out
+a direction, so these coefficients switch on precisely when a horizon is
+present. Dispersive corrections, which enter through even powers of the
+adiabaticity parameter, survive parity and do not share this behaviour.
+Measuring a frequency-dependent deviation that turns off when the flow
+is made symmetric therefore separates the dissipative channel from the
+dispersive one without needing to know either coefficient.
+
+We flag the formal status of the parity statement explicitly.
+\texttt{SecondOrderSK.secondOrder\_requires\_parity\_breaking} has the
+statement $(3 : \mathbb{N}) \bmod 2 = 1 \wedge (1 : \mathbb{N}) \bmod 2
+= 1$; its coefficient argument is unused. It records that the two
+surviving spatial-derivative counts are odd, and nothing else. The
+inference from oddness to the vanishing of the corresponding operators
+under $x \to -x$ is elementary and is made in this paper, not in the
+library.
 
 \subsection{Second order: positivity at the truncation used here}
 \label{sec:higher-positivity}
-%% TODO(III.C)
 
-\subsection{Optimality of the first-order condition, and the counterexample that produced it}
+Extending the first-order construction to level $3$ enlarges the
+coefficient space to fourteen real parameters, constrained by the
+second-order KMS record \texttt{SecondOrderSK.FullSecondOrderKMS}. That
+record inherits the first-order conditions and adds
+$s_2 = s_4 = 0$ together with a fluctuation--dissipation relation
+$j_{tx}\beta = s_1 + s_3$ for the mixed noise bilinear
+$(\partial_t \psi_a)(\partial_x \psi_a)$.
+
+\texttt{SecondOrderSK.fullSecondOrder\_uniqueness} then states that
+positivity and second-order KMS reduce the fourteen coefficients to
+four: for every such action there exist
+$(\gamma_1, \gamma_2, \gamma_{2,1}, \gamma_{2,2})$, with $\gamma_1$ and
+$\gamma_2$ non-negative, reproducing the Lagrangian on every field
+configuration. The construction is
+$\gamma_1 = -r_2$, $\gamma_2 = r_1 + r_2$, $\gamma_{2,1} = s_1$ and
+$\gamma_{2,2} = s_3$, and the theorem is closed by Aristotle
+(run \texttt{c4d73ca8}). Both second-order signs are unconstrained by
+this theorem.
+
+The reduction from four to three is a separate result, and it is worth
+following its logic because it is more interesting than a parameter
+count. At this truncation the noise sector contains
+$\psi_a^2$ and $(\partial_t \psi_a)^2$ but no $(\partial_x \psi_a)^2$
+term, so the imaginary part of the Lagrangian is
+\begin{equation}
+\mathrm{Im}\,\mathcal{L} \;=\;
+  \frac{\gamma_1}{\beta}\,\psi_a^2
+  + \frac{\gamma_2}{\beta}\,u^2
+  + \frac{\gamma_{2,1}+\gamma_{2,2}}{\beta}\,u\,v ,
+\label{eq:im-lagrangian}
+\end{equation}
+with $u = \partial_t \psi_a$ and $v = \partial_x \psi_a$. As a quadratic
+form in $(\psi_a, u, v)$ this has a vanishing $vv$ entry. A symmetric
+matrix with a zero diagonal entry is positive semidefinite only if the
+whole corresponding row vanishes, so positivity forces
+\begin{equation}
+\gamma_{2,1} + \gamma_{2,2} \;=\; 0 ,
+\label{eq:second-order-relation}
+\end{equation}
+and four second-order parameters become three. This is
+\texttt{SecondOrderSK.combined\_positivity\_constraint}, closed by
+Aristotle in the same run by exhibiting the field configuration
+$u = 1$, $v = -(\gamma_2+1)/(\gamma_{2,1}+\gamma_{2,2})$, which drives
+Eq.~\eqref{eq:im-lagrangian} negative whenever the sum is nonzero.
+
+Equation~\eqref{eq:second-order-relation} is a constraint of the
+truncation, not a prediction about nature, and presenting it otherwise
+would misstate what has been shown. The unpaired cross term in
+Eq.~\eqref{eq:im-lagrangian} is unpaired only because the noise sector
+was truncated before $(\partial_x \psi_a)^2$. Restoring that bilinear
+supplies the missing diagonal entry, and the positive-semidefiniteness
+condition relaxes from $\gamma_{2,1}+\gamma_{2,2} = 0$ to an inequality
+bounding the cross term by the geometric mean of the diagonal ones. So
+the honest statement is conditional and is still useful: within the
+gradient truncation carried here, positivity leaves three free
+second-order parameters rather than four, and any measurement resolving
+$\gamma_{2,1}+\gamma_{2,2} \neq 0$ would be evidence that the noise
+sector must be extended rather than evidence against
+Schwinger--Keldysh positivity. Both branches are informative, which is
+the property one wants of a constraint.
+
+\subsection{Optimality of the first-order condition, and the
+counterexample that produced it}
 \label{sec:higher-optimal}
-%% TODO(III.D)
+
+A reduction theorem is only as strong as the constraint it assumes. If
+the first-order KMS record were weaker than the physics, the two
+surviving coefficients would be an overcount and some region of the
+$(\gamma_1,\gamma_2)$ plane would be unphysical for reasons the
+formalism could not see. The relevant statement is
+\texttt{SKDoubling.firstOrder\_KMS\_optimal}: for every coefficient
+vector $c$ and every $\beta > 0$ satisfying the first-order KMS record,
+\begin{equation}
+\text{positivity of the action}
+  \;\Longleftrightarrow\;
+  i_1 \geq 0 \;\wedge\; i_2 \geq 0 ,
+\label{eq:kms-optimal}
+\end{equation}
+where $i_1$ and $i_2$ are the noise coefficients of $\psi_a^2$ and
+$(\partial_t \psi_a)^2$, equal under the fluctuation--dissipation
+conditions to $\gamma_1/\beta$ and $\gamma_2/\beta$. Both directions
+have content. The forward direction extracts the two inequalities by
+evaluating positivity at two specific field configurations. The reverse
+direction uses $i_3 = 0$, which is a KMS consequence, to reduce the
+imaginary part to a sum of two squares. Equation~\eqref{eq:kms-optimal}
+says there is no third inequality: the non-negativity of the two damping
+coefficients is the complete positivity content of the theory at first
+order, and the parameter space is exactly the closed quadrant. This was
+closed by Aristotle (run \texttt{3eedcabb}).
+
+The same run settled the companion question of whether the
+fluctuation--dissipation signs could have been chosen otherwise.
+Replacing $i_1\beta = -r_2$ by $i_1\beta = +r_2$ and leaving everything
+else in place gives a modified record under which the reduction theorem
+is not merely unproved but false:
+\texttt{SKDoubling.firstOrder\_altSign\_uniqueness\_test} is the
+kernel-checked \emph{negation} of the corresponding universally
+quantified statement, witnessed by
+$c = (1,1,0,0,0,0,1,2,0)$ at $\beta = 1$. That configuration satisfies
+the sign-flipped conditions and positivity, but forces
+$\gamma_1 = -r_2 = -1$, which no admissible coefficient set can
+accommodate. The sign in the fluctuation--dissipation relation is thus
+fixed by internal consistency rather than by convention.
+
+The first-order record itself has a history worth recording, because it
+bears on what formal verification contributes to effective field theory
+rather than to mathematics. The condition was originally written as a
+general KMS transformation property of the action. Submitted for
+proof, that formulation returned not a proof but a counterexample:
+$c = (0,0,0,0,0,0,0,1,0)$, a coefficient vector satisfying the stated
+condition while violating dynamical KMS. Inspection of the
+counterexample showed that the transformation constrained only four of
+the nine coefficients, leaving a five-dimensional unconstrained
+subspace in which the noise sector was free. The condition was
+reformulated as the algebraic record of Sec.~\ref{sec:eft-sk}, which
+constrains all nine, and Eq.~\eqref{eq:kms-optimal} is the statement
+that the reformulated version is not merely sufficient but tight. The
+error was in the statement of a physical assumption, not in a proof,
+and it is the class of error that a proof attempt surfaces and a
+consistency check does not. The reformulated condition remains a
+\texttt{Prop}-valued record rather than an axiom; the library declares
+\axiomcount{} project-local axioms.
 
 \subsection{The fluctuation--dissipation closure, and what it assumes}
 \label{sec:higher-fdr}
-%% TODO(III.E)
+
+Sec.~\ref{sec:wkb} will use the fact that dissipation cannot be
+introduced without noise. The relation that supplies this is the
+Crossley--Glorioso--Liu fluctuation--dissipation
+relation~\cite{CGL2017a,Crossley2017II}, which in the linear regime
+fixes the noise kernel from the retarded kernel,
+\begin{equation}
+K_N(\omega, \mathbf{k})
+  \;=\; -\mathrm{i}\,
+  \frac{K_R(\omega, \mathbf{k}) - K_R(-\omega, \mathbf{k})}{\beta\,\omega} .
+\label{eq:cgl-fdr}
+\end{equation}
+In the monomial basis Eq.~\eqref{eq:cgl-fdr} becomes a family of
+coefficient identities: a dissipative retarded coefficient $b$ at
+derivative level $2j+1$ pairs with the noise coefficient of
+$(\partial_t^j \psi_a)^2$ through $\mathrm{noise} \cdot \beta = -b$. At
+$j = 0$ this is the Einstein relation $\sigma = \gamma T$.
+
+The formal layer records this structure conditionally, and the
+distinction matters enough to state without hedging.
+\texttt{CGLTransform.cgl\_fdr\_general} has the shape
+\begin{equation*}
+\beta > 0 ,\;\; \mathrm{noise}\cdot\beta = -b
+  \;\;\Longrightarrow\;\; \mathrm{noise} = -b/\beta ,
+\end{equation*}
+and \texttt{CGLTransform.einstein\_relation} is the same statement at
+$j = 0$. The fluctuation--dissipation identity is the hypothesis of
+these theorems, not their conclusion; what is machine-checked is that
+the identity may be solved for the noise coefficient. Likewise
+\texttt{CGLTransform.cgl\_implies\_secondOrderKMS} chains five
+equalities, the relation itself, two time-reversal conditions and two
+model identifications, into $j_{tx}\beta = s_1 + s_3$ by linear
+arithmetic. The chain is bookkeeping over assumed inputs, and it is
+valuable as bookkeeping, because it is exactly the place where a sign
+or an index slip would otherwise survive unnoticed. It is not a
+derivation of Eq.~\eqref{eq:cgl-fdr} from the microscopic dynamics.
+
+What follows for the rest of the paper is therefore conditional in a way
+that should be visible to the reader at the point of use rather than
+recovered from an appendix. Given Eq.~\eqref{eq:cgl-fdr}, the noise
+amplitude accompanying a given dissipative coefficient is not adjustable,
+and the floor of Sec.~\ref{sec:wkb-crossover} cannot be tuned away
+without abandoning the relation. Equation~\eqref{eq:cgl-fdr} is not
+established here; it is imported from the effective-field-theory
+literature~\cite{CGL2017a,Crossley2017II,GloriosoLiu2018}, where it
+follows from the dynamical KMS symmetry of the closed-time-path
+generating functional, and this paper checks that its consequences are
+carried consistently through both derivative orders. A reader who
+rejects Eq.~\eqref{eq:cgl-fdr} rejects the noise floor with it, and
+that is the correct dependency to advertise.
 
 \section{The dissipative Bogoliubov connection and the crossover frequency}
 \label{sec:wkb}
