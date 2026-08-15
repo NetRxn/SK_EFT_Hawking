@@ -11,9 +11,17 @@ citation from surviving in the artifact the pipeline calls its strongest evidenc
 `citation_primary_sources_present` originally checked only that a cache FILE
 exists — which let a refuted citation be corrected in the .tex and in the registry
 while the wrong metadata sat in the cache, still tagged "[fetched]". Its content-
-agreement half compares Title/Authors/Year/DOI/arXiv, and its discovery is driven
-by the cache found on disk rather than by a registry field, so blanking one field
-cannot opt a bibkey out.
+agreement half compares Title/Authors/Venue(journal, volume, page)/Year/DOI/arXiv,
+and its discovery is driven by the cache found on disk rather than by a registry
+field, so blanking one field cannot opt a bibkey out. A declared
+`primary_source_path` that resolves to nothing is a FAILURE for a cited bibkey, not
+a silent skip — that skip is how the whole `Phase-6C`/`Phase-6c` cohort went
+unchecked on any case-sensitive filesystem while the gate reported PASS.
+
+⚠️ Year stays ADVISORY on purpose (Semantic Scholar returns `year: null` for the
+Wiley records), and the venue comparison is abbreviation- and first-page-tolerant.
+Both tolerances are pinned by tests; tightening either ships false positives on
+formatting differences that are not citation defects.
 
 Three of these read `_cfg.STRICT_MODE` by ATTRIBUTE (H5) — `parameter_provenance`
 gates paper submission on human verification, `provenance_doi_in_registry` and
@@ -288,7 +296,46 @@ def _lookup_provenance_value(prov_key, experiments, atoms, polariton_platforms):
         if group in reg:
             return reg[group].get(key)
 
+    # ── FLAT registries (2026-08-15) ──────────────────────────────────────────────
+    # ⚠️ A dotted key does not always name `registry[group][key]`. The electroweak
+    # constants live in FLAT module-level dicts — `EW_PARAMS['M_H_GEV']`, not
+    # `SOMETHING['EW']['M_H_GEV']` — so for that whole family the group is a
+    # registry-name PREFIX rather than a key inside one, and every `EW.*` entry
+    # resolved to None.
+    #
+    # This is the more expensive shape of the same defect the dict-of-dicts sweep
+    # above was written to close: an unresolvable entry is COUNTED, not reported, so
+    # the gap sat inside the ceiling silently. Worse, it made the ratchet reward
+    # neglect — I1 Stage-13 finding 2.1 ADDED three well-sourced provenance entries
+    # and the ceiling had to be RAISED by three, because recording a parameter's DOI
+    # and abstract sentence moved it into the unresolvable population. A ratchet that
+    # rises when provenance improves is measuring the wrong thing.
+    #
+    # Derived, not hand-listed (ADR-009 H4): the group is matched against module-level
+    # dict names, never against an enumerated set of families.
+    for reg in _flat_registries(group):
+        if key in reg:
+            return reg[key]
+
     return None
+
+
+def _flat_registries(group: str):
+    """Flat module-level dicts in `src.core.constants` that `group` could name.
+
+    `EW` matches `EW_PARAMS` and `EW`; the `_PARAMS` suffix is this project's naming
+    convention for a flat scalar registry. Only dicts with at least one NON-dict value
+    are yielded, so a dict-of-dicts registry cannot be reached twice by two different
+    rules and return different answers.
+    """
+    from src.core import constants as _c
+
+    for name in (f"{group}_PARAMS", group):
+        val = getattr(_c, name, None)
+        if not isinstance(val, dict) or not val:
+            continue
+        if any(not isinstance(v, dict) for v in val.values()):
+            yield val
 
 
 def _dict_of_dict_registries():
@@ -339,6 +386,98 @@ def _discover_cache_for(bibkey: str):
             if cand.name.lower().startswith(low) and cand.is_file():
                 return cand
     return None
+
+
+# ── Venue agreement (D11 round-4 finding 1.1, round-8 finding 1.1) ──────────
+# `READINESS_GATES.md:36` states Gate 1 passes iff "Journal/volume/page/year in bibitem
+# matches registry (for published refs)". Until this was added, NOTHING compared those
+# three: a reviewer mutated `Voigt1889`'s journal, volume AND page all at once and the
+# check stayed green (MUT-7). Year deliberately stays advisory — Semantic Scholar returns
+# `year: null` for both Wiley records, so gating on it would ship false positives.
+_VENUE_STOP = {"the", "of", "and", "und", "der", "die", "das", "for", "fur", "in", "on",
+               "a", "an", "de", "et", "zur", "zum", "part", "series", "section"}
+
+
+def _venue_tokens(s: str) -> list[str]:
+    """Accent-folded, lowercased content tokens of a journal name."""
+    import unicodedata
+    folded = unicodedata.normalize("NFKD", s)
+    folded = "".join(c for c in folded if not unicodedata.combining(c))
+    # ß folds to ss only under NFKC-casefold; do it explicitly so "Fließgrenze" style
+    # names tokenize the same on both sides.
+    folded = folded.replace("ß", "ss").lower()
+    return [t for t in re.findall(r"[a-z0-9]+", folded)
+            if len(t) > 1 and t not in _VENUE_STOP]
+
+
+def _tok_match(a: str, b: str) -> bool:
+    """Abbreviation-tolerant token equality: `phys` matches `physical`, `lett` matches
+    `letters`. Equality alone would fail every abbreviated registry journal name against
+    a spelled-out cache header, which is a formatting difference, not a citation defect."""
+    if a == b:
+        return True
+    lo, hi = (a, b) if len(a) <= len(b) else (b, a)
+    return len(lo) >= 3 and hi.startswith(lo)
+
+
+def _token_subset(small: list[str], big: list[str]) -> bool:
+    return all(any(_tok_match(s, t) for t in big) for s in small)
+
+
+def _venue_mismatch(venue_line: str, entry: dict) -> str | None:
+    """Compare a cache header `Venue:` line against the registry's journal/volume/page.
+
+    The cache writes `Venue: <journal>, <volume>, p. <page> (<year>)`. Only the parts
+    that parse on BOTH sides are compared, and each carries the tolerance the round-8
+    finding measured as mandatory:
+
+      journal — token-SUBSET, not equality. S2 returns
+                "Zamm-zeitschrift Fur Angewandte Mathematik Und Mechanik" where the
+                registry holds "Zeitschrift fur Angewandte Mathematik und Mechanik".
+      volume  — exact.
+      page    — first-page tolerant. A registry holding '573-587' against a bibitem
+                printing '573' is the documented convention, not a drift.
+
+    Returns a human-readable reason, or None when the two agree.
+    """
+    reasons: list[str] = []
+    line = venue_line.strip()
+    if not line:
+        return None
+
+    # ── journal ──────────────────────────────────────────────────────────────
+    # Compare against the WHOLE line's tokens rather than a chopped prefix. The corpus
+    # writes the volume glued to the name (`Physical Review A 70, 052328 (2004)`), and
+    # writes the published venue inside a parenthetical when the cache records a preprint
+    # (`arXiv preprint (later ACM Transactions on Quantum Computing)`). Any prefix rule
+    # that tried to isolate the name mislabelled one of those two shapes; requiring the
+    # registry's journal tokens to appear SOMEWHERE in the venue line handles both and
+    # still fails a wholly different journal.
+    reg_j = entry.get("journal")
+    if reg_j:
+        c_t, r_t = _venue_tokens(line), _venue_tokens(str(reg_j))
+        if c_t and r_t and not _token_subset(r_t, c_t):
+            reasons.append(f"journal registry={reg_j!r} not found in venue {line!r}")
+
+    # ── volume / page ────────────────────────────────────────────────────────
+    # Both are read from the one shape that is unambiguous on both sides: `<vol>, <page>`
+    # (with an optional `p.`/`pp.`). A venue that does not carry that shape contributes no
+    # volume/page comparison rather than a guessed one.
+    m = re.search(r"(?<![0-9])([0-9]{1,4})\s*,\s*(?:pp?\.\s*)?([0-9]+(?:[-–][0-9]+)?)",
+                  line)
+    if m:
+        v_cache, p_cache = m.group(1), m.group(2)
+        reg_v = entry.get("volume")
+        if reg_v not in (None, "") and str(reg_v).strip() != v_cache:
+            reasons.append(f"volume cache={v_cache} registry={reg_v}")
+        reg_p = entry.get("page") or entry.get("pages")
+        if reg_p not in (None, ""):
+            rp = str(reg_p).strip().replace("–", "-")
+            cp = p_cache.replace("–", "-")
+            # First-page tolerance in both directions: '573-587' vs '573'.
+            if not (rp == cp or rp.startswith(cp + "-") or cp.startswith(rp + "-")):
+                reasons.append(f"page cache={cp} registry={rp}")
+    return "; ".join(reasons) if reasons else None
 
 
 @register_check("citation_primary_sources_present",
@@ -552,9 +691,16 @@ def check_citation_primary_sources_present() -> CheckResult:
     # mutations. The loop is now driven by the cache DISCOVERED for each bibkey, so the
     # registry cannot opt itself out, and a declared-but-unresolvable path is a FAIL
     # rather than a silent skip.
+    # A dangling `primary_source_path` is a hard FAIL for a bibkey some paper actually
+    # cites — that is this check's population, and a cited entry whose declared cache
+    # resolves to nothing gets NO content check while reading as provenance. For an entry
+    # no draft cites yet it is an advisory: registry rows are routinely staged before
+    # their cache is fetched, and failing those would make this gate report on work in
+    # progress rather than on the corpus the papers ship.
     for bibkey, entry in sorted(CITATION_REGISTRY.items()):
         ps = entry.get("primary_source_path")
         declared = bool(ps)
+        is_cited = bibkey in usage
         cache_file = (find_workspace() / ps) if ps else None
         if cache_file is None or not str(ps).endswith(".abstract.txt"):
             # No usable declared path: fall back to the same discovery the existence half
@@ -563,11 +709,14 @@ def check_citation_primary_sources_present() -> CheckResult:
             if found is None:
                 if declared:
                     title_details.append(Detail(
-                        f"cache_path_unresolvable:{bibkey}", False,
+                        f"cache_path_unresolvable:{bibkey}", not is_cited,
                         f"registry declares primary_source_path={ps!r} but no cache "
                         f"resolves for this bibkey by any extension, so NO content check "
                         f"ran. A declared path that names nothing is worse than none: it "
-                        f"reads as provenance."))
+                        f"reads as provenance."
+                        + ("" if is_cited else " (advisory: no draft cites this bibkey"
+                                              " yet)"),
+                        warning=not is_cited))
                 continue
             # Header comparison needs a parseable header. A `.pdf`/`.json` cache has none;
             # that is a real cache, just not one this half can read — skip silently, as the
@@ -596,8 +745,38 @@ def check_citation_primary_sources_present() -> CheckResult:
                         resolved = cand
                         break
             if resolved is None:
-                continue  # existence is the other half of this check
-            cache_file = resolved
+                # ⚠️ WAS A SILENT `continue` (D11 round-4 finding 1.2). A declared
+                # `.abstract.txt` path that resolves to nothing skipped EVERY content
+                # comparison — title, authors, DOI, arXiv, venue — and the check reported
+                # `cache_content_agreement PASS` having read nothing for that entry. That
+                # is the same failure mode as the opt-in bypass closed above, reached by a
+                # typo instead of an edit; on a case-sensitive filesystem the whole
+                # `Phase-6C`/`Phase-6c` cohort took it. Discovery gets one more chance
+                # (the cache may exist under another extension), and if that also finds
+                # nothing the declared path is a FAILURE, not a skip.
+                found = _discover_cache_for(bibkey)
+                if found is None:
+                    title_details.append(Detail(
+                        f"cache_path_unresolvable:{bibkey}", not is_cited,
+                        f"registry declares primary_source_path={ps!r} but nothing "
+                        f"resolves there and no cache resolves for this bibkey by any "
+                        f"extension, so NO content check ran. A declared path that names "
+                        f"nothing is worse than none: it reads as provenance."
+                        + ("" if is_cited else " (advisory: no draft cites this bibkey"
+                                              " yet)"),
+                        warning=not is_cited))
+                    continue
+                title_details.append(Detail(
+                    f"cache_path_wrong:{bibkey}", not is_cited,
+                    f"registry declares primary_source_path={ps!r}, which does not "
+                    f"resolve; the cache actually on disk is {found}. Correct the "
+                    f"registry path — a provenance field that points at the wrong file "
+                    f"is not provenance."))
+                if found.suffix not in (".txt", ".md"):
+                    continue
+                cache_file = found
+            else:
+                cache_file = resolved
         try:
             head = cache_file.read_text(encoding="utf-8", errors="replace")[:4000]
         except OSError:
@@ -656,6 +835,17 @@ def check_citation_primary_sources_present() -> CheckResult:
                 f"cache_doi_mismatch:{bibkey}", False,
                 f"{ps} header DOI {m_doi.group(1)} != registry {reg_doi}",
             ))
+        # Venue: journal / volume / page. See `_venue_mismatch` for the three
+        # normalizations that keep this from firing on formatting differences.
+        m_ven = re.search(r"^Venue:\s*(.+)$", head, re.MULTILINE)
+        if m_ven:
+            why = _venue_mismatch(m_ven.group(1), entry)
+            if why:
+                title_details.append(Detail(
+                    f"cache_venue_mismatch:{bibkey}", False,
+                    f"{cache_file} header Venue disagrees with CITATION_REGISTRY: {why}. "
+                    f"Gate 1 requires journal/volume/page agreement for published refs.",
+                ))
         m_ax = re.search(r"^arXiv:\s*([0-9]{4}\.[0-9]{4,5}|[a-z-]+/[0-9]{7})", head, re.MULTILINE)
         reg_ax = entry.get("arxiv")
         if m_ax and reg_ax and m_ax.group(1).strip() != str(reg_ax).strip():
@@ -667,7 +857,8 @@ def check_citation_primary_sources_present() -> CheckResult:
         title_details.append(Detail(
             "cache_content_agreement", True,
             "Every .abstract.txt cache header agrees with its registry "
-            "Title/Authors/Year/DOI/arXiv",
+            "Title/Authors/Venue(journal,volume,page)/Year/DOI/arXiv, and every "
+            "declared primary_source_path resolves",
         ))
     details.extend(title_details)
     all_pass = all_pass and all(d.passed for d in title_details)

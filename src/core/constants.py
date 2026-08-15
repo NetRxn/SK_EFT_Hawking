@@ -1467,7 +1467,40 @@ LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 80
 #: *counted*, not reported, so a blind resolver reads as debt rather than as a
 #: blind spot — the same failure shape as the three instruments repaired in the
 #: ADR-010 measurement pass.
-PROVENANCE_UNRESOLVABLE_CEILING = 163
+#: 2026-08-14: 163 → 166, +3, I1 Stage-13 finding 2.1. Three lattice endpoint masses
+#: that papers/I1 §5 quotes as bare unit-bearing literals — the SU(2)-Higgs endpoint
+#: 66.5 ± 1.4 GeV and the SM endpoint 72.4 ± 1.7 GeV (both CFH 1999), and the upper
+#: end 95 GeV of the earlier KLRS 1996 range — had NO provenance record at all, while
+#: I1 states Invariant 8 as holding. Registering them is a strict gain in Invariant-8
+#: coverage; it costs three ratchet slots only because `_lookup_provenance_value`
+#: resolves a dotted key against dict-of-dicts registries, and every electroweak
+#: constant lives in the FLAT dicts `EW_PARAMS` / `EWBG_PARAMS`, which that resolver
+#: structurally cannot reach. `EW.M_H_GEV` — the one electroweak parameter that was
+#: already registered — sits inside this same ceiling for the same reason, so this is
+#: a resolver blind spot inherited by the new entries, not new un-wiring. The three
+#: values ARE in `EWBG_PARAMS` (`KLRS_M_H_CROSSOVER_THRESHOLD_GEV` was already there;
+#: the other two were added in the same pass), so lowering this by four is a resolver
+#: change — teach the sweep to read flat registries — not a data-entry task.
+#:
+#: ⚠️ **2026-08-15: 166 → 58, and the resolver change above is exactly what did it.**
+#: The +3 raise recorded immediately above stood for hours. `_lookup_provenance_value`
+#: handled only dict-of-dicts registries, so EVERY flat one — `EW_PARAMS`,
+#: `EWBG_PARAMS` and their siblings — was unreachable and its entries were counted as
+#: debt. Teaching the resolver the flat shape moved **108** entries out of the
+#: unresolvable population in one edit, and the check now cross-checks **152**
+#: provenance values against code where it previously reached 44.
+#:
+#: **All 108 newly-compared values agree with their code constants** (rel_err ≤ 1e-3),
+#: which is the part worth keeping: the ceiling was never measuring missing provenance,
+#: it was measuring the resolver's reach, and 108 correctly-sourced parameters had been
+#: sitting inside it looking like debt.
+#:
+#: ⚠️ The lesson is the raise, not the drop. A ratchet that RISES when someone records
+#: a parameter's DOI and abstract sentence is keyed on the wrong thing, and the +3 was
+#: the signal — I1 finding 2.1 added three well-sourced entries and the honest response
+#: under the old resolver was to raise the limit. Read a forced raise as evidence about
+#: the instrument before accepting it as evidence about the corpus.
+PROVENANCE_UNRESOLVABLE_CEILING = 58
 
 #: Legacy (non-bundle) `papers/*/paper_draft.tex` that do not compile under pdflatex.
 #: Frozen 2026-08-06 at the measured live count.
@@ -2907,7 +2940,15 @@ NATIVE_DECIDE_BUNDLE_DEBT = {
 #
 # Measured 2026-08-03 on all 64 drafts. Enforced by
 # `validate.py --check count_literals` / `--check numerical_literals`.
-COUNT_LITERAL_CEILING = 106      # hardcoded "N theorems/modules/sorry" in paper prose
+# Lowered 106 -> 95 on 2026-08-14, in the same change that removed the debt:
+# D2's twelve per-module theorem literals (§§4-6) moved into the `\dtwo*Thms`
+# macros `update_counts.py` derives from `lean_deps.json`. Nine of the twelve
+# were already WRONG when measured (SMFermionData 48 vs 19, ToricCodeCenter 52
+# vs 25, OnsagerAlgebra 24 vs 41, ...), which is the drift Stage-13 finding
+# `2026-06-08-2240-internal-adversarial:D2:9.1` predicted. Note that finding
+# asserted these literals "slip past count_literals"; measured against the
+# check they did not — all twelve matched, and removing them is the -12 here.
+COUNT_LITERAL_CEILING = 95       # hardcoded "N theorems/modules/sorry" in paper prose
                                  # 107 -> 106 on 2026-08-11: the I1 restructuring deleted a
                                  # count literal from prose. Lowered in the same commit, per
                                  # the rule above — a ratchet that keeps headroom stops being one.
@@ -5501,8 +5542,22 @@ EWBG_PARAMS = {
     # ── Sphaleron decoupling threshold (Cohen-Kaplan-Nelson) ─────────
     'SPHALERON_DECOUPLING_THRESHOLD': 1.0,    # v(T_c)/T_c > 1 for B-violation freeze-out
     # ── KLRS / CFH lattice EW crossover boundary ─────────────────────
-    'KLRS_M_H_CROSSOVER_THRESHOLD_GEV': 72.4, # CFH 1999, refining KLRS 1996
+    # ⚠️ ATTRIBUTION (I1 Stage-13 finding 1.3, 2026-08-14): the 72.4 GeV figure is
+    # Csikor-Fodor-Heitger 1999, NOT KLRS 1996. KLRS 1996's abstract reads
+    # "70 GeV < m_{H,c} < 95 GeV and most likely m_{H,c} ~ 80 GeV" and contains no
+    # "72". The `KLRS_` prefix is historical; the values below record which paper
+    # each number is actually from. Provenance:
+    # PARAMETER_PROVENANCE['EW.M_H_ENDPOINT_SM_GEV'] and siblings.
+    'KLRS_M_H_CROSSOVER_THRESHOLD_GEV': 72.4, # CFH 1999 SM endpoint (NOT KLRS 1996)
     'KLRS_M_H_CROSSOVER_UNCERTAINTY_GEV': 1.7,
+    # CFH 1999's other endpoint: the SU(2)-Higgs (fermion-free) theory, 66.5 ± 1.4 GeV.
+    # The ~6 GeV gap to the SM endpoint above is what the SM fermionic sector buys.
+    'CFH_M_H_ENDPOINT_SU2HIGGS_GEV': 66.5,
+    'CFH_M_H_ENDPOINT_SU2HIGGS_UNCERTAINTY_GEV': 1.4,
+    # KLRS 1996's own result — a RANGE, superseded in precision by CFH 1999 above.
+    'KLRS_M_H_ENDPOINT_RANGE_LOWER_GEV': 70.0,
+    'KLRS_M_H_ENDPOINT_RANGE_UPPER_GEV': 95.0,
+    'KLRS_M_H_ENDPOINT_CENTRAL_GEV': 80.0,
     # ── SM observed Higgs mass (PDG 2024, redundant with EW_PARAMS for EWBG access) ─
     'SM_M_H_GEV': 125.20,
     # ── Z₁₆ anomaly representatives ──────────────────────────────────

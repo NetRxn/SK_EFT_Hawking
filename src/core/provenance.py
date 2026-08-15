@@ -1336,6 +1336,90 @@ PARAMETER_PROVENANCE = {
         'notes': 'Phase 5z Wave 1 canonical value. Enters Anderson-Higgs consistency check '
                  'M_W/M_Z = cos θ_W.',
     },
+    # ── Lattice endpoints of the hot electroweak transition ─────────
+    # Registered 2026-08-14 (I1 Stage-13 finding 2.1). All three values appear
+    # in papers/I1 §5 as bare unit-bearing literals and had NO provenance entry,
+    # while I1 states Invariant 8 ("every experimental parameter has verified
+    # provenance") as holding. The values themselves were correct against the
+    # primary sources; the defect was coverage, so that a later revision cannot
+    # drift them silently. `EW.M_H_ENDPOINT_SM_GEV` additionally backs the
+    # hardcoded 72.4 in
+    # SKEFTHawking.EWBaryogenesisChiralityWall.sm_klrs_overshoot_ratio_gt_threshold.
+    'EW.M_H_ENDPOINT_SU2HIGGS_GEV': {
+        'value': 66.5,
+        'unit': 'GeV/c²',
+        'tier': 'MEASURED',
+        'source': 'Csikor, Fodor & Heitger, Phys. Rev. Lett. 82, 21 (1999)',
+        'detail': 'Endpoint Higgs mass of the finite-temperature SU(2)-Higgs phase transition, '
+                  'm_H = 66.5 ± 1.4 GeV, from four-dimensional lattice Monte Carlo with a '
+                  'systematic a → 0 extrapolation. Abstract verbatim: "the finite temperature '
+                  'SU(2)-Higgs phase transition is of first order for Higgs-boson masses '
+                  'm_H < 66.5 ± 1.4 GeV. At this endpoint the phase transition is of second '
+                  'order, whereas above it only a rapid cross-over can be seen." '
+                  'NOTE: this is the SU(2)-Higgs number, NOT the Standard-Model one — see '
+                  'EW.M_H_ENDPOINT_SM_GEV, which is the same paper\'s SM result.',
+        'doi': '10.1103/PhysRevLett.82.21',
+        'llm_verified_date': '2026-08-14',
+        'llm_verified_notes': 'Re-fetched arxiv.org/abs/hep-ph/9809291 on 2026-08-14 and read the '
+                              'abstract verbatim; the value and its uncertainty are stated there. '
+                              'Bibkey CsikorFodorHeitger1999 is in CITATION_REGISTRY with a cached '
+                              'primary source at Lit-Search/Phase-5z/primary-sources/.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Quoted in papers/I1 §5. Consumed by no formula; it is a literature value the '
+                 'prose contrasts with the SM endpoint to show that the fermionic sector moves '
+                 'the endpoint by about six GeV.',
+    },
+    'EW.M_H_ENDPOINT_SM_GEV': {
+        'value': 72.4,
+        'unit': 'GeV/c²',
+        'tier': 'MEASURED',
+        'source': 'Csikor, Fodor & Heitger, Phys. Rev. Lett. 82, 21 (1999)',
+        'detail': 'Endpoint Higgs mass of the hot electroweak transition in the Standard Model, '
+                  'm_H = 72.4 ± 1.7 GeV. Abstract verbatim: "We obtain that the Higgs-boson '
+                  'endpoint mass in the Standard Model is 72.4 ± 1.7 GeV." Above this mass the '
+                  'transition is a crossover, so no first-order electroweak phase transition '
+                  'occurs and the third Sakharov condition fails.',
+        'doi': '10.1103/PhysRevLett.82.21',
+        'llm_verified_date': '2026-08-14',
+        'llm_verified_notes': 'Re-fetched arxiv.org/abs/hep-ph/9809291 on 2026-08-14, abstract read '
+                              'verbatim. ⚠️ ATTRIBUTION: this 72.4 GeV figure is CFH 1999, NOT '
+                              'KLRS 1996 — KLRS gives the broader range recorded in '
+                              'EW.M_H_ENDPOINT_KLRS_RANGE_GEV. The CITATION_REGISTRY note on '
+                              'KLRS1996 previously mis-attributed it and was corrected in the same '
+                              'pass (I1 Stage-13 finding 1.3).',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Quoted in papers/I1 §5 and hardcoded as the denominator of '
+                 'SKEFTHawking.EWBaryogenesisChiralityWall.sm_klrs_overshoot_ratio_gt_threshold '
+                 '(1.5 < 125.20 / 72.4). Pairs with EW.M_H_GEV as the numerator, so a lattice '
+                 'revision now surfaces here as provenance drift rather than as a silently '
+                 'still-true norm_num.',
+    },
+    'EW.M_H_ENDPOINT_KLRS_RANGE_UPPER_GEV': {
+        'value': 95.0,
+        'unit': 'GeV/c²',
+        'tier': 'MEASURED',
+        'source': 'Kajantie, Laine, Rummukainen & Shaposhnikov, Phys. Rev. Lett. 77, 2887 (1996)',
+        'detail': 'Upper bound of the earlier three-dimensional effective-theory + lattice '
+                  'determination of the critical endpoint. Abstract verbatim: "In the minimal '
+                  'standard electroweak theory 70 GeV < m_{H,c} < 95 GeV and most likely '
+                  'm_{H,c} ~ 80 GeV." This entry pins the upper end of that range; the lower end '
+                  'is 70 GeV and the central estimate is ~80 GeV, both stated in the same '
+                  'sentence. ⚠️ This paper does NOT contain the figure 72.4 — that is CFH 1999 '
+                  '(EW.M_H_ENDPOINT_SM_GEV).',
+        'doi': '10.1103/PhysRevLett.77.2887',
+        'llm_verified_date': '2026-08-14',
+        'llm_verified_notes': 'Re-fetched arxiv.org/abs/hep-ph/9605288 on 2026-08-14, abstract read '
+                              'verbatim. Bibkey KLRS1996 is in CITATION_REGISTRY with a cached '
+                              'primary source at Lit-Search/Phase-5z/primary-sources/KLRS1996.pdf.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Quoted in papers/I1 §5 as "between 70 and 95 GeV, most likely near 80 GeV". '
+                 'Registered as the range\'s upper bound because a single scalar is what this '
+                 'registry stores; the lower bound and central estimate are recorded in `detail` '
+                 'and are quoted from the same sentence of the same abstract.',
+    },
     'EW.M_H_GEV': {
         'value': 125.20,
         'unit': 'GeV/c²',
