@@ -205,8 +205,8 @@ class TestReviewFindingIntegrity:
         # INSTRUMENT, NOT AN ACCOMMODATION.** `extract_flags_edges` was taught to call
         # `build_graph.resolve_attribution` — the same resolver the readiness aggregation
         # already used — instead of resolving from the two inferences on its own. Measured
-        # over the live corpus of 1749 findings: orphans 208 -> 178, attach-rate
-        # **0.881075 -> 0.898228**, FLAGS edges 4987 -> 6227. Nothing was added to the
+        # over the live corpus of 1750 findings: orphans 208 -> 178, attach-rate
+        # **0.881143 -> 0.898286**, FLAGS edges 4988 -> 6228. Nothing was added to the
         # corpus; 30 findings that always declared a resolvable target stopped being
         # invisible to this edge type.
         #
@@ -221,8 +221,8 @@ class TestReviewFindingIntegrity:
         assert attach_rate >= 0.89, (
             f"Only {attach_rate:.1%} of {len(findings)} ReviewFindings are "
             f"attached via FLAGS/SUPERSEDES; attribution may be failing. Measured "
-            f"0.898228 on 2026-08-15 with both layers sharing "
-            f"`build_graph.resolve_attribution`; 0.881075 with the graph layer "
+            f"0.898286 on 2026-08-15 with both layers sharing "
+            f"`build_graph.resolve_attribution`; 0.881143 with the graph layer "
             f"resolving on its own. First 3 orphans: {orphans[:3]}"
         )
 

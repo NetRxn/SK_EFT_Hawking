@@ -1891,6 +1891,118 @@ def _infer_bundle_from_text(review_name: str) -> str | None:
     return code if code in _valid_bundle_codes() else None
 
 
+def resolve_attribution(meta: dict, mapping_keys: frozenset[str]) -> tuple[str | None, str]:
+    """`(partition key, channel)` for one finding — DECLARATION FIRST, inference last.
+
+    ⚠️ **THE one attribution resolver in this codebase, and it lives HERE because both
+    of its consumers are downstream of this module.** `extract_flags_edges` (the graph
+    layer) and `bundle_readiness.load_findings_by_paper` (the aggregation layer) call
+    exactly this function, so a finding cannot be attributed one way in the graph and
+    another way in the ratchet. It arrived on 2026-08-15 in `bundle_readiness`, which
+    left `extract_flags_edges` still resolving from the two inferences alone — and the
+    two layers disagreed about **531 findings — 129 of them still open, and 11 of those
+    open blockers** — every one of the 531 in the same direction: reached by a bundle's ratchet, flagged onto no bundle node, and
+    therefore invisible to `FixPropagation`, the only gate that reads `FLAGS`. A finding
+    present in one surface and absent from another cannot be reconciled by reading
+    either, which is worse than either state alone. Moving it here is what makes a
+    second implementation impossible rather than merely discouraged; `bundle_readiness`
+    re-exports this name so its own callers are unchanged.
+
+    ⚠️ **A DOCUMENT THAT STATES ITS TARGET ATTRIBUTES BY THAT STATEMENT.** This is the
+    same precedence `extract_review_finding_nodes` already applies to severity, where a
+    `- **Severity:**` line is authoritative and glyph inference is the fallback for the
+    historical corpus. Attribution had no such rule: it was inferred from a literal
+    `paper<digit>` in the text and from the filename stem against the bundle roster, and
+    from nothing else — so `paper: note_rt_ch_bounds`, `paper: paper20_scalar_rung` and
+    `bundle_target: D11` were inert, and the bundles that owned those findings reported
+    blockers they did not have while hiding the ones they did.
+
+    The order, and why each step is where it is:
+
+    1. **A declared paper key that is an exact mapping key.** Nothing beats the document
+       naming a key the mapping already knows.
+    2. **A declared bundle code in the roster** — from `bundle_target:`/`bundle:`, else
+       from a declared `paper:` that IS a bundle code (`paper: D12`,
+       `paper: D4_topological_qc_foundations`). Read through `_infer_bundle_from_text`,
+       the same roster-validated token reader the filename stem goes through — one
+       mechanism, two inputs.
+    3. **The filename stem as an exact mapping key**, for the pre-frontmatter corpus.
+    4. **Unique-prefix normalisation of the short inferred key** (`paper10` ->
+       `paper10_modular_generation`), through `resolve_unique_prefix`.
+    5. **The existing inference**, unchanged, for everything else.
+
+    ⚠️ **EXACTLY-ONE MATCH OR NOTHING.** An ambiguous or unrecognised declaration leaves
+    the finding unattributed rather than attributing it somewhere plausible, so a typo
+    cannot invent a bundle. `paper: infra`, `paper: process` and any key outside the
+    mapping resolve to nothing BY CONSTRUCTION — an infra-lane finding is genuinely
+    unattributable to a publication bundle, and the unattributed ratchet
+    (`UNATTRIBUTED_OPEN_BLOCKING_CEILING`) is what bounds it. Narrowing that leg to
+    exclude infra findings would be reclassification standing in for remediation.
+
+    The channel string is returned so the failure is legible: a finding that DECLARES a
+    target which does not resolve is reported as `declared-unresolved`, not silently
+    merged into the undeclared population. Losing that distinction is how a convention
+    rots — the declaration keeps reading as attribution to every human who opens the
+    file while no consumer can act on it.
+
+    ⚠️ `mapping_keys` is a PARAMETER because it is the only thing that legitimately
+    differs between callers, and it is deliberately NOT the caller's node universe. Both
+    layers must resolve into the SAME vocabulary — `PAPER_DRAFT_MAPPING` keys and bundle
+    codes — or the seam reopens; translating a resolved key into whatever nodes happen to
+    exist is the caller's job, done AFTER this returns.
+    """
+    declared_paper = (meta.get("declared_paper") or "").strip() or None
+    declared_bundle = (meta.get("declared_bundle") or "").strip() or None
+
+    # (1) declared paper key that the mapping already knows
+    if declared_paper and declared_paper in mapping_keys:
+        return declared_paper, "declared-paper-key"
+    # (2) declared bundle code, roster-validated
+    for value, channel in ((declared_bundle, "declared-bundle-code"),
+                           (declared_paper, "declared-paper-as-bundle-code")):
+        if value:
+            code = _infer_bundle_from_text(value)
+            if code:
+                return code, channel
+    # (3) filename stem that is an exact mapping key
+    stem = Path(meta.get("review_file") or "").stem
+    if stem and stem in mapping_keys:
+        return stem, "filename-stem-key"
+    # (4) unique-prefix normalisation of the short inferred key
+    normalised = resolve_unique_prefix(meta.get("inferred_paper"), mapping_keys)
+    if normalised:
+        return normalised, "unique-prefix"
+    # (5) the pre-existing inference
+    # ⚠️ FALLBACK ADDED 2026-07-31 (D11 Stage-13 round-5 BLOCKER 4.1, second layer).
+    # Bundle-era reviews are named after their bundle code, carry `inferred_bundle`,
+    # and have NO `inferred_paper`. Partitioning on `inferred_paper` alone dropped
+    # every bundle-era finding on the floor, and the heatmap reported
+    # `Blockers 0 / GREEN` for bundles holding dozens of open criticals — a FALSE
+    # GREEN, strictly worse than the "YELLOW (unreviewed)" it replaced. D11 alone had
+    # 40 findings (6 critical, 11 major) invisible here.
+    inferred = meta.get("inferred_paper") or meta.get("inferred_bundle")
+    if inferred:
+        return inferred, "inferred"
+    return None, ("declared-unresolved" if (declared_paper or declared_bundle)
+                  else "undeclared")
+
+
+def _bundle_assignments() -> dict[str, dict]:
+    """`PAPER_DRAFT_MAPPING` parsed: paper_key -> {`bundle_destinations`: [...], ...}.
+
+    The single read of the mapping document for this module. Returns `{}` if the
+    document is unreadable, so a graph build degrades to paper-key-only resolution
+    rather than crashing — the same posture `_invert_bundle_mapping` has always taken.
+    """
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from bundle_migration import parse_mapping, MAPPING_DOC
+        return parse_mapping(MAPPING_DOC.read_text())
+    except (ImportError, OSError) as exc:
+        logger.warning("PAPER_DRAFT_MAPPING unreadable; attribution degrades: %s", exc)
+        return {}
+
+
 def _load_supersession_ledger() -> dict[str, dict]:
     """Load `docs/review_finding_supersessions.json` and return a dict
     mapping `finding_id` → entry. Phase 6i Wave 2: lets Wave-N close
@@ -4282,11 +4394,32 @@ def extract_flags_edges(node_ids: set) -> list[dict]:
     via `seen`). Source paper_keys with no Paper node — e.g. the
     `_phaseXX_lean_only` dirs excluded by the `paper*_*` glob — are left as
     residual (no Bundle node type, no broadening of the Paper glob).
+
+    ⚠️ **2026-08-15: ONE RESOLVER, TWO LAYERS.** This function used to resolve a
+    finding's target from `meta['inferred_paper']` and `meta['inferred_bundle']` — the
+    two INFERENCES — while `bundle_readiness` had already been taught to read what the
+    document DECLARES. The two layers therefore disagreed about **531 findings — 129 still
+    open, 11 of those open blockers** — and every disagreement ran the same way: the aggregation
+    counted the finding against a bundle's ratchet and this function emitted no edge to
+    that bundle, so `FixPropagation` — the ONLY gate that reads `FLAGS` — could not see
+    it. `resolve_attribution` is now called here and there and nowhere else.
+
+    ⚠️ **A BUNDLE EDGE IS EMITTED FOR EVERY ATTRIBUTION, NOT ONLY BUNDLE-CODED ONES.**
+    A finding resolving to `paper20_scalar_rung` is counted by `aggregate_by_bundle`
+    under D3 and F, because that is where the mapping sends the paper. Emitting only
+    `paper:paper20_scalar_rung` left the two surfaces describing different worlds. The
+    invariant the code already stated for bundle-era findings — *"a finding about bundle
+    X flags `paper:X`. Always."* — now holds for every finding the aggregation reaches,
+    and `tests/test_flags_ratchet_seam.py` asserts the two sets are equal in both
+    directions, per finding.
     """
     findings = extract_review_finding_nodes()
     paper_ids = {nid for nid in node_ids if nid.startswith('paper:')}
     paper_key_universe = frozenset(pid[len('paper:'):] for pid in paper_ids)
+    assignments = _bundle_assignments()
+    mapping_keys = frozenset(assignments)
     bundle_to_papers = _invert_bundle_mapping()
+    roster = _valid_bundle_codes()
     edges = []
     seen: set[tuple[str, str]] = set()
     ambig_warned: set[str] = set()
@@ -4312,43 +4445,46 @@ def extract_flags_edges(node_ids: set) -> list[dict]:
             continue
         meta = f.get('meta', {})
 
-        # (1) paper-key resolution (older paperN_slug reviews) — unchanged.
-        paper = meta.get('inferred_paper')
-        if paper:
-            # ⚠️ SHARED RESOLVER (2026-08-15). The prefix fallback used to be spelled
-            # out here and only here, so `bundle_readiness.load_findings_by_paper`
-            # partitioned on the RAW `paper10` — not a PAPER_DRAFT_MAPPING key — and the
-            # same finding that got a correct FLAGS edge from this block reached no
-            # bundle in the aggregation. `resolve_unique_prefix` is now the one
-            # normalisation, called here with the Paper-node key universe and there with
-            # the mapping-key universe.
-            resolved = resolve_unique_prefix(paper, paper_key_universe)
-            paper_id = f'paper:{resolved}' if resolved else None
-            if paper_id is None and paper not in ambig_warned:
+        # ⚠️ THE SHARED RESOLVER — the same call `bundle_readiness.load_findings_by_paper`
+        # makes, with the same universe, so the two layers cannot answer differently.
+        # It returns EITHER a `PAPER_DRAFT_MAPPING` paper key OR a roster bundle code;
+        # translating that into node ids is this function's job and this function's only.
+        key, _channel = resolve_attribution(meta, mapping_keys)
+        if not key:
+            # Declared-unresolvable (`bundle_target: infra`) or undeclared-and-uninferable.
+            # `UNATTRIBUTED_OPEN_BLOCKING_CEILING` is what bounds this population; an edge
+            # invented here would take it out from under that ratchet.
+            continue
+
+        if key not in roster:
+            # (1) paper-key attribution. Two edges, because the aggregation reads it as
+            # two facts: the finding flags THE PAPER, and it is counted against every
+            # bundle the mapping sends that paper to.
+            resolved = resolve_unique_prefix(key, paper_key_universe)
+            if resolved is not None:
+                _emit(f['id'], f'paper:{resolved}', f)
+            elif key not in ambig_warned:
                 candidates = [pid for pid in paper_ids
-                              if pid.startswith(f'paper:{paper}_')]
+                              if pid.startswith(f'paper:{key}_')]
                 if len(candidates) > 1:
                     logger.info(
                         "Ambiguous paper-key resolution: %r matches %d Paper nodes "
                         "(%s) — FLAGS edges skipped for findings inferring this key.",
-                        paper, len(candidates), ", ".join(sorted(candidates))
+                        key, len(candidates), ", ".join(sorted(candidates))
                     )
-                    ambig_warned.add(paper)
-            if paper_id is not None:
-                _emit(f['id'], paper_id, f)
-                # ⚠️ NO LONGER `continue` (2026-07-31, D11 round-6 BLOCKER 4.1, final
-                # layer). A finding can resolve BOTH a paper key and a bundle; the
-                # short-circuit meant the bundle never got its edge, leaving 17
-                # findings across D1/D2/D3/D11/E2/I1/I2/L1/L2/L3 invisible to their
-                # own bundle's gate. A paper-key match is additional information,
-                # not a reason to withhold the bundle attribution.
-                if not meta.get('inferred_bundle'):
-                    continue
-
-        # (2) bundle-code resolution (bundle-era D*/L*/I*/F/E* reviews).
-        bundle = meta.get('inferred_bundle')
-        if not bundle:
+                    ambig_warned.add(key)
+            # ⚠️ THE EDGE THAT CLOSED THE SEAM (2026-08-15). Without this, a finding
+            # resolving to `note_rt_ch_bounds` was counted by D4's and F's ratchets and
+            # flagged onto neither bundle node, so `FixPropagation` for D4 and F passed
+            # vacuously over it. The destinations come from the mapping, which is the
+            # same list `aggregate_by_bundle` iterates.
+            for dest in assignments.get(key, {}).get('bundle_destinations', ()):
+                if dest in roster:
+                    _emit(f['id'], f'paper:{dest}', f)
             continue
+
+        # (2) bundle-code attribution (bundle-era D*/L*/I*/F/E* reviews).
+        bundle = key
         for source_key in bundle_to_papers.get(bundle, []):
             # source_key is a mapping paper_key (e.g. "paper10_modular_generation"
             # or "_phase6n_W1a_lean_only"). The Paper node id is "paper:<key>".

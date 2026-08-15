@@ -379,9 +379,10 @@ flowchart LR
    old inference. **Exactly-one match or nothing**, so a typo cannot invent a bundle.
    ⚠️ **BOTH LAYERS CALL IT, AND FOR HALF A DAY ONLY ONE DID.** The resolver was authored
    in `bundle_readiness` while `extract_flags_edges` went on resolving from the two
-   inferences, so the aggregation and the graph disagreed about 531 findings — 11 of them
-   open blockers, every disagreement in the same direction: counted against a bundle's
-   ratchet, flagged onto no bundle node, and therefore invisible to `FixPropagation`, the
+   inferences, so the aggregation and the graph disagreed about 531 findings — 129 still
+   open, 11 of those open blockers — every disagreement in the same direction: counted
+   against a bundle's ratchet, flagged onto no bundle node, and therefore invisible to
+   `FixPropagation`, the
    only gate that reads FLAGS. L2 was the visible symptom — RED in the heatmap on 2 open
    blockers with **no** ReadinessGate blocked, which `readiness_verdicts_agree` reported
    as a disagreement it could not localise. The resolver now lives in `build_graph`,
