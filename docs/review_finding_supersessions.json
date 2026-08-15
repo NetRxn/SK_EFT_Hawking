@@ -10233,6 +10233,36 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-baselined-vacuous-theorems-may-be-cited:infra:1.1",
+      "status": "fixed",
+      "evidence": "ADR-016 ships apex_claims_not_vacuous, which reads the union of PLACEHOLDER_LEAN_NAMES, VACUOUS_STATEMENT_BASELINE, MODELING_ASSUMPTION_THEOREMS (definitional/vacuous_proxy), _thin_type_label and the proof witness against every declared apex in bundle_metadata.json. Extending placeholder_not_cited was measured and REJECTED: it scans draft prose with a 320-char window and a hedge escape, and a structured metadata field has neither. Measured portfolio-wide on arrival, as the finding demanded: 20 of 635 apexes across 9 of 21 bundles, 15 undisclosed, reported per bundle in ADR-016 and filed at papers/AutomatedReviews/2026-08-15-apex-claims-unbacked/infra.md. NOTHING was added to any suppression register; the two ceilings name every row on every run. D2 repaired in the same commit.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "commit": "5b844f53",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_d5_lean_substrate.py -q -k \"vacuous and cited\"",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_d5_lean_substrate.py -q -k \"vacuous and cited\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-baselined-vacuous-theorems-may-be-cited:infra:1.2",
+      "status": "fixed",
+      "evidence": "The witness axis is now measured. apex_claims_not_vacuous reads the PROOF TERM from the Lean source (lean_deps.json carries types and not def bodies, so no depth of type walk reaches it) via _scan_lean_theorem_bodies + _TRIVIAL_BODY_RES, with proxy_body_audit s _STRUCTURAL_NAME_RE name gate deliberately removed for a DECLARED apex only (ADR-016 D2). dai_freed_spin_z4 is detected as a self-discharging existential. 13 of the 20 live flagged rows are visible only because of the name-gate removal. ADR-016 D3 adds one new label, reflexive-literal (R n n), to the SHARED classifier, narrowed to closed numeric literals on a measurement (bound-variable form matched 12, of which 8 are legitimate reflexivity lemmas; literals leave exactly 4, all vacuous) and deliberately kept OUT of _THIN_HARD so the repair pressure is a filed finding rather than four forced baselinings. Nothing was bulk-baselined.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "commit": "5b844f53",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_d5_lean_substrate.py -q -k \"vacuous and existential\"",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_d5_lean_substrate.py -q -k \"vacuous and existential\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-15"
+      }
     }
   ]
 }
