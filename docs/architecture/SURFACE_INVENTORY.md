@@ -208,16 +208,16 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `constants.TRACKED_HYPOTHESIS_NON_LOAD_BEARING` | 0 |
 | `provenance.PARAMETER_PROVENANCE` | 207 |
 | `provenance.PAPER_DEPENDENCIES` | 17 |
-| `citations.CITATION_REGISTRY` | 661 |
+| `citations.CITATION_REGISTRY` | 663 |
 
 ## Publication roster — 21 bundles, 21 with declared apexes
 
 | bundle | tier | apexes | title |
 |---|---:|---:|---|
-| `F` | 0 | 29 | Fluid-Based Approaches to Fundamental Physics — A Formally V |
+| `F` | 0 | 31 | Fluid-Based Approaches to Fundamental Physics — A Formally V |
 | `D1` | 1 | 35 | Analog Hawking across three platforms |
 | `D2` | 1 | 47 | Anomaly constraints on SM particle content |
-| `D3` | 1 | 89 | Emergent gravity through BH thermodynamics |
+| `D3` | 1 | 92 | Emergent gravity through BH thermodynamics |
 | `D4` | 1 | 62 | Topological quantum computation foundations |
 | `D5` | 1 | 70 | Dark sector under substrate constraints |
 | `D6` | 1 | 23 | Formally Verified Fault-Tolerant Quantum Computation Substra |
@@ -227,7 +227,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `D10` | 1 | 33 | Kernel-Verified Foundations of Computational Quantum Chemist |
 | `D11` | 1 | 73 | Kernel-Verified Topological Band Theory & Metamaterial Subst |
 | `D12` | 1 | 11 | Kernel-Verified Detector & Readout Metrology — From Photon S |
-| `L1` | 2 | 11 | GW170817 / vestigial-graviton |
+| `L1` | 2 | 14 | GW170817 / vestigial-graviton |
 | `L2` | 2 | 8 | Three generations from modular invariance |
 | `L3` | 2 | 13 | BCH four laws by regime |
 | `I1` | 3 | 6 | Verification methodology with worked cases |
