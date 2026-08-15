@@ -9561,9 +9561,10 @@ def fig_zhitnitsky_de_theta_scan():
 
     Left panel: ρ_DE (Zhitnitsky) vs Λ_QCD on log scale, with horizontal
     band at observed ρ_DE = (2.3 meV)^4 ≈ 2.8e-11 eV⁴; the predicted
-    curve crosses the observed band near Λ_QCD ≈ 30 MeV (close to the
-    PDG Λ_QCD ≈ 100 MeV — the Zhitnitsky prediction matches observation
-    within ~2 orders without free parameters).
+    curve crosses the observed band near Λ_QCD ≈ 40 MeV (close to the
+    PDG Λ_QCD ≈ 100 MeV — at the PDG value the Zhitnitsky prediction
+    6.71e-9 eV⁴ sits a factor ≈240 above the observed 2.8e-11 eV⁴, i.e.
+    within ~3 orders without free parameters).
 
     Right panel: bar chart showing the cosmological-constant problem
     suppression — the Zhitnitsky-predicted ρ_DE sits ~120 orders of

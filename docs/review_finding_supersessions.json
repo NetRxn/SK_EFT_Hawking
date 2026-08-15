@@ -10043,6 +10043,55 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper32_strong_cp_de:F-3",
+      "status": "fixed",
+      "evidence": "STALE, proven by re-measurement rather than by the filing. src/core/provenance.py now carries STRONG_CP_DE.LAMBDA_QCD_GEV, .NEUTRON_EDM_BOUND and .RHO_DE_OBSERVED_EV4 under a comment naming this finding, each with a tier, a DOI (PDG, Pendlebury, Planck), a detail and an llm_verified_date. The verify does not trust that: it re-derives that each registered value equals the live module constant, and parameter_provenance passes at 210/210 coverage with all 152 comparable values matching code. human_verified_date was already operator-set on all three and was not touched.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper32_strong_cp_de:F-4",
+      "status": "fixed",
+      "evidence": "Live at HEAD. The notebook cell said the theorem 'short-circuits via the theta_small invariant — the other two pillars are not even evaluated'. Read the Lean: the theorem takes a ThetaVacuum with theta = 1 and concludes False from theta_small, abs_one and linarith; it neither states nor uses IsAnomalyMatchingCompatible, so it evaluates none of the three pillars. Reworded to say exactly that and to name the theorem that states the uninhabitability directly. The verify anchors BOTH directions — it re-reads the Lean shape so a Lean change reopens it, and requires the theorem still be cited so deleting the sentence does not pass. The notebook was edited as raw JSON at the markdown cell only and NOT re-executed; outputs and float reprs are byte-identical.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper32_strong_cp_de:F-5",
+      "status": "fixed",
+      "evidence": "Live but line-drifted from the filing. Re-derived from the canonical source rather than by majority vote among the three disagreeing surfaces: zhitnitsky_de_eV4(0.1) / RHO_DE_OBSERVED = 239.64, log10 = 2.38, so three orders. Corrected the docstring to ~3 orders anchored to the factor 240 and both densities. The same sentence also claimed the curve crosses the observed band near 30 MeV; the canonical crossing is 40 MeV, so that was corrected too — no other surface carried a crossing scale. The verify RECOMPUTES the order count from code, so it fails if the physics changes, and checks all four surfaces rather than only the one that was wrong.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper32_strong_cp_de:F-6",
+      "status": "fixed",
+      "evidence": "Live, and closed by reading the primary source rather than by softening the prose. The cached PDF contains neither 'gauge/gravity duality' nor any black-body language anywhere; what the paper says is that the mechanism 'can be interpreted as a Casimir-type vacuum energy, arising from numerous tunnelling' events, and describes a model 'rooted in the topological structure of the Quantum ChromoDynamic (QCD) vacuum'. The two invented phrases were replaced with those verbatim quotations plus the paper's own FRW-minus-Minkowski framing. The verify greps the actual PDF, so it fails if the prose drifts off-source again; a negative control confirmed the old phrases really are absent from the source. Markdown cell only, not re-executed.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:6.1",
+      "status": "fixed",
+      "evidence": "STALE. Table I's caption now does exactly what the Expected asked: it defines the checkmark as structurally compatible, states plainly that the per-MTC entries are conjectural-structural and NOT a formally proved per-MTC discharge, and names theorem-level discharges as a follow-on goal, with the two theorem-discharged exceptions named. The verify asserts a non-empty per-MTC row population before asserting the disclosure, so it cannot pass by the table disappearing.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-04-26-0330-internal-adversarial-reinvocation:paper26_bh_entropy:N.1",
+      "status": "fixed",
+      "evidence": "STALE. The broken label appears nowhere in the draft, as neither a ref nor a label. That absence was NOT asserted on its own, which would be vacuous: the verify enumerates all 10 distinct ref targets and all 17 label definitions, asserts the difference is empty, and puts a floor under both populations — so any NEW broken cross-reference in this paper reopens it too.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-04-25-1609-internal-adversarial:paper20_scalar_rung:2.1",
+      "status": "fixed",
+      "evidence": "STALE, and adjudicated against the decider rather than the heading. This finding's own heading reads '🟡 → ✅ CLOSED', which closes nothing since heading-parse closure was retired and every finding is born open. Re-measured: the provenance notes are the remediated text with an llm_verified_date. The verify does not trust the note's prose either — it recomputes sqrt(2)*m_t/v against the live EW_PARAMS Y_TOP, checks the provenance values agree with code, requires the notes to quote those live numerals, and requires every occurrence of the superseded 172.76 / 0.9946 to sit inside a 'prior'-qualified clause, so a future re-drift citing a stale central value fails.",
+      "superseded_by": null,
+      "date": "2026-08-15"
     }
   ]
 }
