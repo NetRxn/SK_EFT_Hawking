@@ -8632,7 +8632,7 @@ def fig_c_GW_vs_ligo_constraint():
         x=_math.log10(chi_lo_nat), y=summary["delta_lower"],
         text=(
             f"χ=0.1<br>Δc/c≈{summary['delta_lower']:.3f}<br>"
-            f"Violates LIGO by<br>{summary['violation_ratio_lower']:.1e}×"
+            f"outside the cap by<br>{summary['violation_ratio_lower']:.1e}×"
         ),
         showarrow=True, arrowhead=2,
         ax=75, ay=-45,
@@ -8644,7 +8644,7 @@ def fig_c_GW_vs_ligo_constraint():
         x=_math.log10(chi_hi_nat), y=summary["delta_upper"],
         text=(
             f"χ=10<br>Δc/c≈{summary['delta_upper']:.3f}<br>"
-            f"Violates LIGO by<br>{summary['violation_ratio_upper']:.1e}×"
+            f"outside the cap by<br>{summary['violation_ratio_upper']:.1e}×"
         ),
         showarrow=True, arrowhead=2,
         ax=80, ay=-30,
@@ -8669,12 +8669,11 @@ def fig_c_GW_vs_ligo_constraint():
         ),
         title=dict(
             text=(
-                "Phase 6a Wave 2 — GW170817 confines the vestigial-second-sound "
-                "graviton ID<br>"
+                "GW170817 confines the vestigial metric-channel susceptibility<br>"
                 "<sub>Δc/c = √χ_vest − 1; cap |Δc/c| ≤ 3 × 10⁻¹⁵ (amber, at "
                 "Δc/c = 0). The compatible window is nested INSIDE the natural "
                 "range, meeting it at χ_vest = 1.<br>"
-                "Lean: <i>ligo_confines_chi_vest_within_natural_range</i></sub>"
+                "The endpoints of the natural range lie far outside the cap.</sub>"
             ),
             font=TITLE_FONT,
         ),
@@ -11155,8 +11154,8 @@ def fig_lambda_emerg_parameter_scan():
     fig.update_layout(
         title=dict(
             text=(
-                "<b>Phase 6e Wave 5 — Λ^emerg parameter scan and Decision "
-                "Gate E.4 verdict (CC problem reproduced in emergent form)</b>"
+                "<b>The emergent cosmological constant over the (Λ_UV, N_f) plane:<br>"
+                "the cosmological-constant problem, reproduced</b>"
             ),
             font=TITLE_FONT,
         ),
@@ -11340,8 +11339,8 @@ def fig_torsion_obs_bound():
     fig.update_layout(
         title=dict(
             text=(
-                "<b>Phase 6e Wave 6 — Einstein-Cartan torsion at "
-                "natural microscopic params is below all published bounds</b>"
+                "<b>Einstein-Cartan torsion at the natural microscopic point,<br>"
+                "against the published bounds</b>"
             ),
             font=TITLE_FONT,
         ),
