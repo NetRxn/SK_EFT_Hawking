@@ -91,7 +91,7 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 46 | `review_docs_mint_findings` | `reviews` | Every bundle Stage-13 review document mints at least one ReviewFinding node |
 | 47 | `accepted_findings_carry_rationale` | `reviews` | Every `accepted` supersession record justifies acceptance in writing |
 | 48 | `review_verify_is_one_command` | `reviews` | Every `Verify:` line is a single runnable command and nothing else |
-| 49 | `seed_residue_absent` | `reviews` | No production review document carries test-seeded content, and no seeded mutation is left unrestored |
+| 49 | `seed_residue_absent` | `reviews` | No production review document carries test-seeded content that would mint a finding, and no seeded mutation is left unrestored |
 | 50 | `ledger_ids_resolve` | `reviews` | Supersession records name findings that exist (ratcheted) |
 | 51 | `chain_backing_targets_resolve` | `reviews` | Every Lean target named in a claims-review chain of backing exists |
 | 52 | `bundle_metadata_matches_graph` | `bundles_readiness` | bundle_metadata.json finding counts equal the live graph's |

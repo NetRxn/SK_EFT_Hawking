@@ -60,7 +60,17 @@ _BLOCKING_SEVERITIES = frozenset({'critical', 'blocker', 'major'})
 #: the predicate that ENFORCES it, or the first honest run trips a ratchet nobody moved.
 #: See `check_accepted_findings_carry_rationale` for why this is a ratchet rather than a
 #: hard gate, and why bulk-stamping a name to clear it is prohibited.
-ACCEPTED_BLOCKING_UNATTRIBUTED_CEILING = 32
+#:
+#: ⚠️ LOWERED 32 → 31, 2026-08-15, and the note above explains the one that is now gone.
+#: The enforcing predicate measured 31 while the ceiling stood at 32 — one of headroom,
+#: which cost exactly what headroom always costs: the sibling leg
+#: `test_an_unattributed_acceptance_past_the_ceiling_FAILS` mutates the ceiling to
+#: `ceiling - 1` and asserts red. At 32 that mutation lands on 31, the population equals
+#: it, `31 > 31` is false, and the check correctly PASSED where the test demanded red. A
+#: ratchet with one of headroom does not merely permit one regression — it disables the
+#: leg that proves the ratchet can fire at all, so both failures had this single cause.
+#: A ratchet may only fall; this is a fall to the measured value, not an accommodation.
+ACCEPTED_BLOCKING_UNATTRIBUTED_CEILING = 31
 
 #: A later review's heading that ANNOUNCES a fix is confirmation of the closure, not
 #: evidence against it (added 2026-08-05, audit finding QI-34). Every finding is born

@@ -35,7 +35,7 @@ evaporates; below it, it cools toward extremality in infinite time. That
 critical mass is the one whose emergent gravitational length reaches the
 cutoff length. We formalize the partition in Lean~4: a decidable
 classifier, strict monotonicity on each branch, a criterion theorem fixing
-the sign of $d\Thawk/dt$ from a mass comparison, and four theorems stating
+the sign of $d\Thawk/dt$ from a mass comparison, and falsifier theorems stating
 what would refute it.
 \end{abstract}
 
@@ -85,8 +85,8 @@ revision \mathlibrev{}. The kernel accepts them from \texttt{propext},
 \texttt{Classical.choice} and \texttt{Quot.sound} alone, with no
 substrate-specific axiom and no incomplete proof. Which hypotheses the
 partition rests on is stated where each is used, and
-Sec.~\ref{sec:falsifiers} gives four theorems whose content is what would
-refute the construction.
+Sec.~\ref{sec:falsifiers} gives the falsifier theorems whose content is what
+would refute the construction.
 
 %% ================================================================
 \section{The critical mass}
@@ -185,8 +185,8 @@ zero only as $t \to \infty$~\cite{Balbinot2005PRD}. The profile carried
 through the development is instead the exponential
 $\Thawk(t) = \Thawk^{(0)} e^{-t/\tau_{\rm cool}}$, positive and strictly
 decreasing for positive $\Thawk^{(0)}$ and $\tau_{\rm cool}$, and equal to
-$\Thawk^{(0)}$ at $t = 0$ (\texttt{T\_H\_acoustic\_evolution} and its three
-theorems).
+$\Thawk^{(0)}$ at $t = 0$ (\texttt{T\_H\_acoustic\_evolution} and its
+accompanying positivity, monotonicity and initial-value lemmas).
 
 Substituting one for the other is a scope condition on everything proved of
 the cooling branch, and it is worth stating twice rather than not at all.
@@ -200,7 +200,7 @@ constant sound speed, so a condensate, where $c \propto \rho^{1/2}$,
 inherits the branch by the sign of $d\Thawk/dt$ rather than by that
 formula.
 
-The partition itself is one theorem. A substrate satisfying positivity of
+The partition itself is a single theorem. A substrate satisfying positivity of
 $\Mc$ and of the initial temperature, a positive evaporation rate above
 $\Mc$, a negative one below, and the substrate response
 $\dADW = (\aADW - 1)\Ladw$, has an evaporation rate whose sign is fixed by
