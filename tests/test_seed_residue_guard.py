@@ -620,3 +620,113 @@ class TestTheMarkerMustMintAFindingNotMerelyAppear:
             pytest.skip("race finding not present")
         assert self.M in doc.read_text(), "the pin is vacuous unless the doc quotes the marker"
         assert self._f()(doc.read_text(), self.M) is False
+
+
+class TestConcurrentSeedersAreSerialised:
+    """Two LIVE seeders of the same production path must not interleave.
+
+    The journal made a seed survive a KILLED run. It does nothing about the other
+    concurrency axis, and that gap was not hypothetical: on 2026-08-15 the D10 stanza
+    reappeared in the corpus while two suites ran concurrently, with the journal
+    reporting 0 in flight. Filed as
+    `papers/AutomatedReviews/2026-08-15-seeded-mutation-seeder-vs-seeder-race/infra.md`.
+
+    Why interleaving corrupts: A reads the original, B reads and captures A's SEED as its
+    own "original", both restore, and the file ends carrying a seed. Each transaction
+    completed correctly on its own terms, so neither can detect it — the invariant is
+    PAIRWISE. Residue is not inert either: the graph extractor mints a marker-bearing
+    section as an OPEN finding at its declared severity, which is how a race manufactures
+    a blocking CRITICAL indistinguishable downstream from a real one.
+
+    ⚠️ These tests assert MUTUAL EXCLUSION, not a hoped-for interleaving. A test that
+    races two threads and checks the file afterwards passes by luck on a fixed lock and
+    passes by luck on a broken one — the window is microseconds. So the first leg holds
+    the lock open and proves the second acquirer is refused, which is deterministic.
+    """
+
+    def test_a_second_seeder_of_the_same_path_is_excluded(self, tmp_path):
+        """FIRES ON THE SEEDED DEFECT: with no lock, the second acquire succeeds."""
+        import threading
+        import seed_journal as sj
+
+        target = tmp_path / "victim.txt"
+        target.write_text("original\n")
+
+        entered = threading.Event()
+        release = threading.Event()
+        failure: list[BaseException] = []
+
+        def hold():
+            try:
+                with sj._path_lock(target):
+                    entered.set()
+                    release.wait(timeout=10)
+            except BaseException as exc:      # noqa: BLE001 - reported, not swallowed
+                failure.append(exc)
+                entered.set()
+
+        t = threading.Thread(target=hold, daemon=True)
+        t.start()
+        assert entered.wait(timeout=10), "the holding thread never acquired the lock"
+        assert not failure, f"the holding thread failed: {failure!r}"
+
+        try:
+            with pytest.raises(TimeoutError) as caught:
+                with sj._path_lock(target, timeout=0.5):
+                    pass
+            assert "seeding" in str(caught.value), (
+                "the exclusion fired but its message does not explain what is held or "
+                "why proceeding is unsafe, so a maintainer meeting it mid-suite cannot "
+                "act on it")
+        finally:
+            release.set()
+            t.join(timeout=10)
+
+    def test_a_different_path_is_not_excluded(self, tmp_path):
+        """The negative control. A lock that blocks EVERYTHING would also pass the test
+        above while serialising the entire suite — so prove the exclusion is keyed to the
+        path, not global."""
+        import threading
+        import seed_journal as sj
+
+        a = tmp_path / "one.txt"
+        b = tmp_path / "two.txt"
+        a.write_text("a\n")
+        b.write_text("b\n")
+
+        entered = threading.Event()
+        release = threading.Event()
+
+        def hold():
+            with sj._path_lock(a):
+                entered.set()
+                release.wait(timeout=10)
+
+        t = threading.Thread(target=hold, daemon=True)
+        t.start()
+        assert entered.wait(timeout=10)
+        try:
+            with sj._path_lock(b, timeout=2.0):
+                pass       # must NOT raise: different path, different transaction
+        finally:
+            release.set()
+            t.join(timeout=10)
+
+    def test_the_lock_key_distinguishes_same_named_files_in_different_trees(self, tmp_path):
+        """Two worktrees seeding same-named files are different transactions.
+
+        Keying the lock on the file's NAME would serialise every worktree against every
+        other, turning a correctness fix into a throughput bug during a multi-agent
+        campaign — which is exactly when concurrent suites run."""
+        import seed_journal as sj
+
+        one = tmp_path / "wt1" / "papers" / "D10.md"
+        two = tmp_path / "wt2" / "papers" / "D10.md"
+        for p in (one, two):
+            p.parent.mkdir(parents=True)
+            p.write_text("x\n")
+
+        assert sj._lock_path(one) != sj._lock_path(two), (
+            "same-named files in different trees share a lockfile, so unrelated "
+            "worktrees would block each other")
+        assert sj._lock_path(one) == sj._lock_path(one), "the lock key is not stable"

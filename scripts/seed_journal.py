@@ -167,6 +167,76 @@ def _entry_path(entry_id: str) -> Path:
     return JOURNAL_DIR / f"{entry_id}.json"
 
 
+def _lock_path(path: Path) -> Path:
+    """The lockfile serialising seeders of ONE production path.
+
+    Keyed on the resolved path's digest, not on its name: two worktrees seeding
+    same-named files are different transactions and must not contend, while two
+    processes seeding the same file must.
+    """
+    digest = hashlib.sha256(str(Path(path).resolve()).encode()).hexdigest()[:16]
+    return JOURNAL_DIR / f"{digest}.lock"
+
+
+@contextmanager
+def _path_lock(path: Path, *, timeout: float = 120.0) -> Iterator[None]:
+    """Hold an exclusive lock for the WHOLE read -> seed -> assert -> restore window.
+
+    ⚠️ THE WINDOW MUST INCLUDE THE ASSERTION, and that is the whole point. The journal
+    made a seed survive a KILLED run; it does nothing about two LIVE seeders of the same
+    file. Both read the original, both write their seed, both restore — and whichever
+    restores first writes back a copy that already contains the other's seed. The journal
+    reports clean, because each transaction completed correctly on its own terms. The
+    invariant broken is PAIRWISE, so no single transaction can observe it.
+
+    Measured 2026-08-15: the D10 stanza reappeared in the corpus while two suites ran
+    concurrently and the journal reported 0 in flight. Residue there is not inert — the
+    graph extractor mints a marker-bearing section as an open finding at its declared
+    severity (see the module docstring), so a race can manufacture a blocking CRITICAL
+    that is indistinguishable downstream from a real one.
+
+    Narrowing the lock to just the write would not fix it: the corruption is that the
+    SECOND reader captures the first's seed AS the original, and that read happens before
+    either write.
+
+    Fails with a timeout naming the holder rather than blocking forever, following
+    `scripts/close_finding.py`'s ledger lock. A same-path re-seed from inside the
+    assertion window would deadlock and is a genuine bug in the calling test — the
+    timeout surfaces it as one instead of hanging the suite.
+    """
+    import fcntl
+
+    JOURNAL_DIR.mkdir(parents=True, exist_ok=True)
+    lock = _lock_path(path)
+    with open(lock, "a+") as fh:
+        deadline = time.monotonic() + timeout
+        while True:
+            try:
+                fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                if time.monotonic() >= deadline:
+                    try:
+                        fh.seek(0)
+                        holder = fh.read(200).strip() or "unknown"
+                    except OSError:
+                        holder = "unknown"
+                    raise TimeoutError(
+                        f"another process has been seeding {path} for {timeout:.0f}s "
+                        f"(holder: {holder}). Proceeding without the lock would let the "
+                        f"two read-seed-restore windows interleave, and the loser's seed "
+                        f"survives as corpus residue that mints a finding.")
+                time.sleep(0.05)
+        try:
+            fh.seek(0)
+            fh.truncate()
+            fh.write(f"pid={os.getpid()} test={_current_test()}")
+            fh.flush()
+            yield
+        finally:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+
+
 def _current_test() -> str:
     """Best-effort nodeid of the running test, for the human reading `status`."""
     return os.environ.get("PYTEST_CURRENT_TEST", "").split(" (")[0] or "<not under pytest>"
@@ -380,25 +450,29 @@ def seeded_mutation(
             f"seeded_mutation targets an existing production artifact; {path} is not a "
             f"file. Use seeded_artifact() to create one.")
 
-    original = path.read_bytes()
-    entry = _open_entry(path, reason=reason, preserve_mtime=preserve_mtime)
+    # ⚠️ The lock opens BEFORE the read. The race this closes is that a second seeder
+    # captures the first's seed AS its original, so locking only the write leaves the
+    # defect intact.
+    with _path_lock(path):
+        original = path.read_bytes()
+        entry = _open_entry(path, reason=reason, preserve_mtime=preserve_mtime)
 
-    try:
-        if callable(mutate):
-            seeded = mutate(original.decode("utf-8")).encode("utf-8")
-        elif isinstance(mutate, bytes):
-            seeded = mutate
-        else:
-            seeded = mutate.encode("utf-8")
-        _require_marker(path, seeded)
-        if seeded == original:
-            raise ValueError(
-                f"the seed did not change {path} — a mutation that fails to apply is a "
-                f"test that proves nothing (guide §2.4)")
-        path.write_bytes(seeded)
-        yield original
-    finally:
-        _restore(entry)
+        try:
+            if callable(mutate):
+                seeded = mutate(original.decode("utf-8")).encode("utf-8")
+            elif isinstance(mutate, bytes):
+                seeded = mutate
+            else:
+                seeded = mutate.encode("utf-8")
+            _require_marker(path, seeded)
+            if seeded == original:
+                raise ValueError(
+                    f"the seed did not change {path} — a mutation that fails to apply is a "
+                    f"test that proves nothing (guide §2.4)")
+            path.write_bytes(seeded)
+            yield original
+        finally:
+            _restore(entry)
 
 
 @contextmanager
@@ -415,46 +489,51 @@ def seeded_artifact(
     that `repair()` acts on identically.
     """
     path = Path(path)
-    if path.exists():
-        raise FileExistsError(
-            f"{path} already exists — seeded_artifact creates; use seeded_mutation to "
-            f"modify. (If this is residue from a killed run, run "
-            f"`uv run python scripts/seed_journal.py repair`.)")
+    # ⚠️ The lock spans the exists-check too. Without it two creators both see the path
+    # absent, both create it, and the first to finish DELETES the file the second is
+    # still asserting against — the same pairwise invariant seeded_mutation breaks, in
+    # the other direction.
+    with _path_lock(path):
+        if path.exists():
+            raise FileExistsError(
+                f"{path} already exists — seeded_artifact creates; use seeded_mutation to "
+                f"modify. (If this is residue from a killed run, run "
+                f"`uv run python scripts/seed_journal.py repair`.)")
 
-    created_dirs: list[str] = []
-    probe = path.parent
-    while not probe.exists():
-        created_dirs.append(str(probe))
-        probe = probe.parent
+        created_dirs: list[str] = []
+        probe = path.parent
+        while not probe.exists():
+            created_dirs.append(str(probe))
+            probe = probe.parent
 
-    payload = content.encode("utf-8") if isinstance(content, str) else content
-    _require_marker(path, payload)
+        payload = content.encode("utf-8") if isinstance(content, str) else content
+        _require_marker(path, payload)
 
-    entry_id = uuid.uuid4().hex
-    entry = {
-        "id": entry_id,
-        "kind": "creation",
-        "path": str(path),
-        "backup": "",
-        "sha256": "",
-        "mtime_ns": 0,
-        "atime_ns": 0,
-        "preserve_mtime": False,
-        # deepest-first on the way in; repair removes them in that same order
-        "created_dirs": created_dirs,
-        "reason": reason,
-        "test": _current_test(),
-        "pid": os.getpid(),
-        "started": datetime.now(timezone.utc).isoformat(),
-    }
-    _write_entry(entry)
+        entry_id = uuid.uuid4().hex
+        entry = {
+            "id": entry_id,
+            "kind": "creation",
+            "path": str(path),
+            "backup": "",
+            "sha256": "",
+            "mtime_ns": 0,
+            "atime_ns": 0,
+            "preserve_mtime": False,
+            # deepest-first on the way in; repair removes them in that same order
+            "created_dirs": created_dirs,
+            "reason": reason,
+            "test": _current_test(),
+            "pid": os.getpid(),
+            "started": datetime.now(timezone.utc).isoformat(),
+        }
+        _write_entry(entry)
 
-    try:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(payload)
-        yield path
-    finally:
-        _restore(entry)
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+            yield path
+        finally:
+            _restore(entry)
 
 
 @contextmanager
