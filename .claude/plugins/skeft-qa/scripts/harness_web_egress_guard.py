@@ -88,6 +88,16 @@ _WHITELIST = (
     #  - ScienceDirect: Theoret. Comput. Sci. 560 (2014), the open republication of BB84.
     "adsabs.harvard.edu", "ntrs.nasa.gov", "nvlpubs.nist.gov",
     "link.springer.com", "opg.optica.org", "sciencedirect.com",
+    # Datastar — the hypermedia framework the provenance dashboard is built on
+    # (docs/architecture/DASHBOARD.md, docs/references/Datastar_Dashboard_Reference.md).
+    # Operational reference, not a scholarly primary. User-authorized 2026-08-15.
+    #
+    # ⚠️ This domain sat in `.claude/settings.local.json` as `WebFetch(domain:data-star.dev)`
+    # and was NEVER reachable: permissions.allow cannot grant egress, only this list can, and
+    # this list did not carry it. Verified 2026-08-15 by fetching it and being denied. Anyone
+    # building dashboard work against "best Datastar practice" was doing so without ever
+    # having read the source. A grant in the wrong file is indistinguishable from no grant.
+    "data-star.dev",
 )
 
 # Path-scoped destinations: (host, path_prefix). A URL passes iff its host matches the
