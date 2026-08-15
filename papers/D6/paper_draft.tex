@@ -10,23 +10,13 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}{Definition}
 
-%% Bundle: D6 (Tier 1; PRX Quantum / Quantum class; CREATED at Phase 6v Wave 6v.1)
-%% Generated 2026-05-26; FIRST kernel-verified declaration under D6 lifted
-%% from `lean/SKEFTHawking/FaultTolerance/GaugingQEC.lean` (Wave 6v.1).
-%% Schema: docs/BUNDLE_DIRECTORY_SCHEMA.md.
-%% Source manifest: papers/D6/source_manifest.md (generated 2026-05-31).
-
 \input{../../docs/counts.tex}
 \input{../../docs/figuredeferred.tex}
 
-\newcommand{\auxQubits}{n_{\rm aux}}
-\newcommand{\polylog}{\mathrm{polylog}}
-
 \begin{document}
 
-\title{Formally Verified Fault-Tolerant Quantum Computation Substrate:
-Gauging-of-Symmetry Logical Measurements, Asymptotically-Optimal Codes,
-and Cyclotomic Universal Compilation}
+\title{Minimal Hypotheses for the Aliferis--Gottesman--Preskill
+Threshold Recursion, Machine-Checked in Lean~4}
 
 \author{John G.\ Roehm}
 \affiliation{NetRxn Foundation}
@@ -34,43 +24,30 @@ and Cyclotomic Universal Compilation}
 \date{\today}
 
 \begin{abstract}
-We collect the project's formal-verification substrate for the
-fault-tolerant quantum-computation frontier into a single, self-contained
-Lean-4-anchored exposition. Its load-bearing result is a machine-checked
-fault-tolerance threshold theorem for the concatenated Steane $[[7,1,3]]$ code
-under abstract local stochastic noise: below a per-location error rate
-$\varepsilon_0 = 1/A_{\rm CNOT}$, certified to exceed the rigorous
-Aliferis--Gottesman--Preskill bound, with $A_{\rm CNOT}$ the
-Aliferis--Gottesman--Preskill malignant-pair count for the Steane CNOT extended
-rectangle, the level-$L$ logical error rate decays double-exponentially in $L$.
-We are explicit that the concatenation recursion is instantiated at that pinned
-count rather than derived from the extended-rectangle structure, and we state
-the resulting boundary in the text. On that regime the bundle assembles four further
-kernel-verified results: (i)~the Williamson--Yoder
-gauging-of-logical-operators overhead bound (a logical-measurement
-auxiliary-qubit count linear in the operator weight up to a
-polylogarithmic factor), formalised against the project's existing
-gauging machinery; (ii)~the Phase~6t quantitative Solovay--Kitaev tight-
-$\varepsilon$ headline, lifted into the substrate as the canonical
-compilation primitive for the universal gate set; (iii)~the
-APM-LDPC asymptotically-optimal code substrate together with a hashing-
-bound Shannon-capacity sub-result; (iv)~the Kyoto--Hiroshima W-state
-single-shot projective measurement decomposed in $\mathbb{Q}(\zeta_N)$
-cyclotomic coordinates. Together, these results form, to our
-knowledge, the first end-to-end kernel-verified ``substrate'' (code
-$\to$ measurement $\to$ compiler $\to$ universal logic) for the FT-QC
-frontier. Formally verified circuit-level \emph{optimizers} exist
-(VOQC/SQIR in Coq); what is new here is not circuit-equivalence
-verification but the end-to-end kernel-verified chain from QEC
-resource overhead through logical measurement and approximation
-compilation to universal logic.
-
-The substrate is closed under standard Lean kernel axioms only
-($[\mathrm{propext}, \mathrm{Classical.choice}, \mathrm{Quot.sound}]$);
-zero new project-local axioms are introduced. We highlight the
-contrast structure that makes each substantive ship non-vacuous:
-each kernel-verified achievement is paired with a falsifier that
-fails the corresponding baseline.
+The accuracy-threshold recursion of Aliferis, Gottesman and Preskill for the
+concatenated Steane $[[7,1,3]]$ code holds under strictly weaker hypotheses than
+its published proof assumes: the joint failure of a malignant pair of circuit
+locations need only be sub-multiplicative, not independent, and each extended
+rectangle's malignant-pair set need only be bounded in cardinality, not fixed at
+it. Both weakenings matter for the models the argument is supposed to cover.
+Independence is an equality between measures and therefore excludes every
+negatively correlated noise model, while local stochastic noise supplies
+sub-multiplicativity in general; and equality on the count is satisfied by no
+real extended rectangle, whose malignant set is a proper subset of the pairs
+available to it. We obtain both by deriving the recursion, rather than positing
+it, from a single inclusion of failure events on a probability space: a
+level-$(L{+}1)$ rectangle fails only when some malignant pair of its level-$L$
+constituents both fail. Induction on that inclusion turns the
+double-exponential bound into a statement about a failure \emph{probability}
+rather than about a real sequence defined to satisfy its own recursion. At the
+malignant-pair count Aliferis, Gottesman and Preskill report for the Steane CNOT
+extended rectangle the chain discharges a numerical certificate exceeding
+$2.73 \times 10^{-5}$. Two things are not derived and are stated as such
+throughout: the malignant-pair count itself, which is a combinatorial
+enumeration over a concrete circuit and enters as a literal, and a noise model
+with a strictly positive base rate, without which the satisfiability witness
+shows the hypotheses are consistent but not that the bound is ever approached.
+The development is closed under the Lean kernel's standard axioms alone.
 \end{abstract}
 
 \maketitle
@@ -79,693 +56,570 @@ fails the corresponding baseline.
 \section{Introduction}
 \label{sec:intro}
 
-\paragraph{Motivation.} The fault-tolerant quantum-computation
-frontier as of mid-2026 has converged on four interlocking
-substrate-level questions: \emph{(i)~how cheap can logical
-measurements be?} (Williamson \& Yoder 2026), \emph{(ii)~what is the
-canonical universal compilation strategy?} (Dawson--Nielsen
-Solovay--Kitaev, lifted at Phase~6t), \emph{(iii)~what code family
-realises Shannon-capacity hashing-bound thresholds?} (APM-LDPC
-substrate, Wave~6v.5), \emph{(iv)~how does one perform single-shot
-projective measurement of entangled (W-state) ancillae?} (Kyoto--
-Hiroshima 2025-09 + Wave~6v.6 lift). Each question has a published
-answer; this bundle formalises all four answers as a unified,
-kernel-verified substrate.
+A fault-tolerance threshold theorem is the statement that every resource count
+in quantum computing presupposes. Gate counts, qubit budgets and code-distance
+estimates are all costs paid inside a regime in which arbitrarily reliable
+logical computation is reachable at all, and it is the threshold theorem that
+establishes there is such a regime. Its content is a recursion: below a critical
+physical error rate, concatenating a code with itself suppresses the logical
+error rate faster than the overhead grows, so the level-$L$ logical error rate
+falls double-exponentially in $L$.
 
-\paragraph{Prior art: formally verified quantum computation.}
-Formal verification of quantum software is an active field, and the
-positioning of this bundle against it must be precise. VOQC/SQIR in
-Coq~\cite{Hietala2020VOQC} verifies \emph{equivalence-preserving}
-optimizations of quantum circuits: a certified compiler pass
-guaranteeing that the optimized circuit denotes the same unitary as
-its input. Qbricks~\cite{Chareton2021Qbricks} provides a deductive
-(Why3-based) verification framework for parametrized
-circuit-building quantum programs, with certified case studies
-including quantum phase estimation and Grover search. The broader
-verified-quantum-programs landscape (quantum Hoare logics and
-tool support across Coq, Isabelle, Why3, and dedicated systems)
-is surveyed by Lewis, Soudjani, and Zuliani~\cite{Lewis2021VerifQC}.
-These efforts certify that a \emph{given circuit or program computes
-what it should}. None of them targets the fault-tolerance substrate
-itself: quantitative QEC resource-overhead bounds, fault-tolerant
-logical-measurement protocols, \emph{approximation} compilation
-(bounded-error synthesis toward a target unitary, as opposed to
-equivalence-preserving rewriting), and density/universality of the
-compiled gate set. D6's contribution, to our knowledge the first
-of its kind, is that chain, kernel-checked end to end in Lean~4:
-the gauging-of-logical-operators overhead bound
-(\textsection\ref{sec:gaugingQEC}), the asymptotically-optimal-code
-substrate (\textsection\ref{sec:apmldpc}), the single-shot W-state
-measurement decomposition (\textsection\ref{sec:wstate}), and the
-consumed D8 Solovay--Kitaev approximation-compilation primitive
-(\textsection\ref{sec:sk}), composed into a single substrate.
-The two genres are complementary: a verified circuit optimizer
-certifies the implementation of a circuit the substrate-level
-theory has already costed and approved.
+Formal verification of quantum computation is an active field, and it has not
+targeted that recursion. VOQC/SQIR in Coq~\cite{Hietala2020VOQC} verifies
+equivalence-preserving optimizations of quantum circuits: a certified compiler
+pass guaranteeing that an optimized circuit denotes the same unitary as its
+input. Qbricks~\cite{Chareton2021Qbricks} provides a deductive, Why3-based
+framework for parametrized circuit-building quantum programs, with certified
+case studies including quantum phase estimation and Grover search. The broader
+landscape of quantum Hoare logics and tool support across Coq, Isabelle, Why3
+and dedicated systems is surveyed by Lewis, Soudjani and
+Zuliani~\cite{Lewis2021VerifQC}. Each of these certifies that a given circuit or
+program computes what it should. None of them formalizes the argument that
+makes running such a circuit reliably possible.
 
-\paragraph{Bundle architecture.} D6 is the fault-tolerant-computation
-bundle in the project's publication architecture, a Tier~1 deep-paper sibling
-to D4 (``Topological Quantum Computation: First Machine-Verified
-Foundations''), which retains the Fibonacci-anyon and topological-foundations
-focus. The threshold theorem of \textsection\ref{sec:threshold} is D6's
-load-bearing result; the four resource and primitive sections
-(\textsection\textsection~\ref{sec:gaugingQEC}, \ref{sec:apmldpc},
-\ref{sec:shor}, \ref{sec:wstate}) are populated and kernel-verified above it.
-Compilation is cited to D8 (\textsection\ref{sec:sk}) and the channel and
-device-certification layer to D9 (\textsection\ref{sec:wstate:envelope});
-neither is restated here.
+This paper reports what happened when we did. The target is the concatenated
+Steane $[[7,1,3]]$ code under abstract local stochastic noise, following
+Aliferis, Gottesman and Preskill~\cite{AGP2006} (henceforth AGP), whose threshold
+argument is the one with a rigorously proven numerical bound attached. The
+formalization is in Lean~4 against Mathlib \texttt{\mathlibrev}
+(toolchain~\leantoolchain), and the recursion is derived from the extended
+rectangle's structure rather than instantiated.
 
-%% ════════════════════════════════════════════════════════════════════
-\section{The Solovay--Kitaev compilation primitive
-(retroactive absorption from Phase 6t)}
-\label{sec:sk}
+\paragraph{What is new.} Reproducing a 2006 theorem in a proof assistant is not
+by itself a result, and we do not present it as one. What the formalization
+produced that the prose proof does not contain is a weakening of the recursion's
+hypotheses, in two places, each of which changes which physical models the bound
+covers.
 
-The universal-compilation primitive consumed throughout this bundle is the
-quantitative Solovay--Kitaev tight-$\varepsilon$ headline. As of 2026-05-31 the
-canonical home of that primitive (and of the alphabet-agnostic,
-arbitrary-dimension $\mathrm{SU}(d)$ compilation theory it instantiates) is
-the sibling bundle \textbf{D8} (\emph{Kernel-Verified Universal Quantum Gate
-Compilation}; consolidating Phase 6p/6t/6u/6x/6x$'$/6y/6z, authorized 2026-05-31
-per Pipeline Invariant~\#14). D6 \emph{consumes} D8's quantitative
-Solovay--Kitaev headline as the per-non-Clifford-rotation compilation primitive
-in \textsection\textsection~\ref{sec:gaugingQEC}--\ref{sec:wstate}: D8 furnishes
-the verified existence-and-bounds guarantee (a compilation exists with bounded
-error and word length), and D6 supplies the fault-tolerant-substrate
-application. The Phase~6t Fibonacci headline that this section previously held
-as a bundle-orphan stub is now the $\mathrm{SU}(2)$ origin instance within D8.
+The first is independence. AGP's single-level step estimates the probability
+that both locations of a malignant pair fail, and the natural formalization of
+``distinct locations fail independently'' is Mathlib's \texttt{IndepSet}, which
+asserts $\mu(s \cap t) = \mu(s)\,\mu(t)$. That is an equality, and the union
+bound consumes only the inequality $\mu(s \cap t) \le \mu(s)\,\mu(t)$. Stating
+the hypothesis as independence therefore excludes every negatively correlated
+noise model --- models in which one location's failure makes another's less
+likely --- and those lie inside the local stochastic class the theorem is
+supposed to cover, not outside it. Section~\ref{sec:single} isolates
+independence into a single lemma and states the recursion step from
+sub-multiplicativity alone.
 
-%% ════════════════════════════════════════════════════════════════════
+The second is the malignant-pair count. Written as $|F| = A$, the hypothesis
+that a rectangle's malignant-pair set has cardinality $A$ is satisfied by no
+extended rectangle that occurs, because a malignant set is a proper subset of
+the $\binom{M}{2}$ pairs its $M$ locations admit. The bound is monotone in the
+cardinality, so $|F| \le A$ is both what the proof uses and what an instance can
+supply. Section~\ref{sec:levels} carries the composition in that form.
 
-\figuredeferred{fig:d6-sk-depth-scaling}{compilation depth against target accuracy; D8 owns the alphabet-agnostic sweep and its data must be shared rather than recomputed}
-\section{Williamson--Yoder gauging-QEC overhead bound
-(Wave 6v.1)}
-\label{sec:gaugingQEC}
+Neither weakening is an artifact of Lean. Both are statements about which noise
+models the AGP recursion applies to, and both are the kind of thing a mechanized
+proof surfaces because the proof assistant will not let an unused strength go
+unnoticed.
 
-\subsection{Setting}
-
-The Williamson--Yoder paper~\cite{WilliamsonYoder2026GaugingLogicalOperators}
-considers fault-tolerant logical measurement of a logical operator
-of weight $W$ in a stabilizer code, and presents a gauging-of-
-symmetry protocol that achieves an auxiliary-qubit count
-\begin{equation}
-  \auxQubits(W) \leq C \cdot W \cdot \polylog(W)
-  \label{eq:wy_bound}
-\end{equation}
-for some constant $C$ depending on the code. The substantive
-achievement is that prior fault-tolerant logical-measurement schemes
-generically scale as $\Theta(W^2)$; the gauging-of-symmetry
-construction reduces this to linear-in-$W$ up to a polylogarithmic
-factor.
-
-\subsection{Formal substrate}
-\label{sec:gaugingQEC:formal}
-
-The kernel-verified Lean substrate ships in
-\verb|lean/SKEFTHawking/FaultTolerance/GaugingQEC.lean|. The headline
-declarations:
-\begin{itemize}
-\item \verb|williamsonYoderAuxQubits|: a $\mathbb{N} \to \mathbb{N}$
-  function realising the bound, encoded as
-  $\auxQubits(W) := W \cdot (\lfloor \log_2 W \rfloor + 1)$. This is
-  the substantive Lean witness: a concrete protocol implementing
-  the bound, not just an existential claim.
-\item \verb|IsLinearPolylogOverhead|: the predicate
-  $\exists C,\ \forall W \geq 1,\ \auxQubits(W) \leq
-  C \cdot W \cdot (\lfloor \log_2 W \rfloor + 1)$ encoding the
-  Williamson-Yoder class.
-\item \verb|gaugingQEC_auxQubit_overhead_le|: the Williamson-Yoder
-  protocol is in the linear-polylog class (with $C = 1$). [Kernel-only.]
-\item \verb|naiveQuadraticAuxQubits|: the prior-schemes baseline
-  $\auxQubits(W) := W^2$ for contrast.
-\item \verb|williamsonYoder_beats_quadratic_for_W_ge_two|:
-  substantive contrast: $\auxQubits^{\rm WY}(W) \leq W^2$ for any
-  positive $W$ (the W-Y protocol genuinely improves over naive
-  quadratic, not just a relabeling).
-\item \verb|quadraticOverhead_not_linear| is the \emph{falsifier}:
-  the quadratic-overhead class is NOT contained in the strict-linear
-  class. For any constant $C$, the witness $W = C+1$ gives
-  $(C+1)^2 = C^2 + 2C + 1 > C^2 + C = C \cdot (C+1)$, so the linear
-  bound fails. This proves that the logarithmic factor in
-  Eq.~\eqref{eq:wy_bound} is unavoidable for any scheme that includes
-  the quadratic baseline.
-\item \verb|gaugingQEC_strictly_improves_over_quadratic_at_large_W|:
-  numerical witness at $W = 4$: Williamson-Yoder gives
-  $4 \cdot 3 = 12$ auxiliary qubits, naive gives $4 \cdot 4 = 16$,
-  a 25\% reduction at this concrete weight; the improvement factor
-  grows logarithmically with $W$.
-\end{itemize}
-
-\subsection{Substantive contrast structure}
-
-The Lean substrate ships the contrast at three levels:
-(i)~point-wise comparison (\verb|williamsonYoder_beats_quadratic_for_W_ge_two|);
-(ii)~asymptotic-class separation (\verb|quadraticOverhead_not_linear|);
-(iii)~concrete numerical witness at $W = 4$. Together these
-constitute a complete non-vacuity package: the W-Y achievement is
-strictly better than naive quadratic, and the falsifier proves the
-class separation is genuine. The substantive Wave 6v.1 closure
-theorem \verb|wave_6v_1_substantive_closure| bundles all three.
-
-\subsection{Connection to existing project gauging machinery}
-
-The Williamson-Yoder construction treats the logical operator as a
-$\mathbb{Z}_2$ symmetry on the code and gauges it. This is the
-\emph{same} categorical gauging operation that the project's existing
-machinery formalises in \verb|GaugeEmergence.lean| and
-\verb|VillainHamiltonian.lean|. A future D6 sub-wave will lift the
-substrate-level overhead bound into the full categorical-gauging
-framework. The current ship at substrate level is the bare scaling
-result; the full algebraic lift is reserved for a future wave
-following the project's canonical bundle-lift protocol.
+\paragraph{Priority, and its limits.} To our knowledge the recursive threshold
+argument itself --- the concatenation recursion carried to the
+double-exponential bound with a numerical threshold attached --- has not
+previously been machine-checked. Two limits bound that claim and we state them
+here rather than let a referee find them. The survey behind it covered the Coq
+stabilizer and verified-compilation line, the Isabelle/HOL quantum Hoare-logic
+and concentration-inequality developments, and the Lean quantum-information
+libraries; the Isabelle Archive of Formal Proofs was not exhaustively searched,
+so the negative result there should be read as probable rather than established.
+And the claim is about the threshold \emph{argument}, not its ingredients:
+concentration inequalities, stabilizer formalisms and code definitions all exist
+in those systems, which is precisely why the recursion that connects them is the
+part worth reporting.
 
 %% ════════════════════════════════════════════════════════════════════
+\section{The model}
+\label{sec:model}
 
-\figuredeferred{fig:d6-wy-overhead}{the linear-polylog overhead against the quadratic baseline; the $W$ sweep exists only at the $W=4$ numerical witness}
-\section{APM-LDPC code substrate + hashing-bound LDP sub-wave
-(Wave 6v.5)}
-\label{sec:apmldpc}
+\subsection{Noise}
 
-\subsection{The high-rate APM-LDPC code substrate}
+A noisy quantum circuit is a set of \emph{locations}: gates, preparations,
+measurements, and the idle intervals between them. Under an abstract local
+stochastic noise model each location either operates ideally or fails, failure
+at a single location occurs with probability at most $\varepsilon$, and the
+failure events at distinct locations satisfy a joint-probability bound. The
+model is abstract in that it says nothing about what a failure does to the
+state; it is the combinatorics of which locations fail that the threshold
+argument reasons about.
 
-Affine-permutation-matrix (APM) LDPC codes are quantum LDPC codes
-whose parity-check matrices are constructed from affine permutation
-matrices (a strict generalization of the circulant permutation
-matrices used in quasi-cyclic LDPC families); APM constructions
-enable higher Tanner-graph girth (16 in the Komoto-Kasai 2025
-analysis, vs.~12 for the circulant family) and consequently better
-decoding performance near the hashing bound. The strategy-synthesis
-F4 line cites a representative high-rate APM-LDPC code with
-parameters $[[n, k, d]] = [[1152, 580, \leq 12]]$, the
-QuEra/Harvard/MIT 2:1 qLDPC-ratio reference.
+We are explicit at the outset that this is the only noise model treated here.
+A topological error model, in which errors live on a lattice and are suppressed
+by a gap rather than by a per-location rate, is a different object. It is not
+this one up to constants and the two are not additive, so its published
+threshold figures live on a different operational domain. Specializing to it is
+deferred rather than claimed.
 
-The Lean substrate ships in
-\verb|lean/SKEFTHawking/FaultTolerance/APMLdpcHashingBound.lean|:
-\begin{itemize}
-\item \verb|ApmLdpcCode| structure carrying $(n_{\rm phys}, k_{\rm
-  log}, d_{\min})$ with positivity + $k_{\rm log} \leq n_{\rm phys}$
-  witnesses.
-\item \verb|quEraHarvardMITCode : ApmLdpcCode| with parameters
-  $(1152, 580, 12)$.
-\item \verb|ApmLdpcCode.rate| = $k_{\rm log} / n_{\rm phys}$
-  (rational).
-\item \verb|IsRateAboveHalf| predicate (strict inequality
-  $1/2 < c.{\rm rate}$).
-\item \verb|apmLdpc_quEraHarvard_rate_above_half|: the QuEra-
-  Harvard-MIT code has rate $580/1152 \approx 0.5035 > 1/2$
-  (\verb|decide|/\verb|norm_num|-discharged).
-\item \verb|exactlyHalfRateCode k hk|: the rate-exactly-$1/2$
-  code $[[2k, k]]$: substantive falsifier-class instance.
-\item \verb|exactlyHalfRateCode_not_above_half|: the substantive
-  non-vacuity check that \verb|IsRateAboveHalf| is a STRICT
-  inequality, not a $\leq$.
-\end{itemize}
+\subsection{Rectangles, and what makes one bad}
 
-\subsection{The Shannon-capacity hashing-bound predicate}
-
-For a depolarizing-noise channel with per-qubit error probability
-$p$, the quantum capacity is bounded above by the Shannon-capacity
-\emph{hashing bound}
+Concatenation implements a level-$L$ gate out of level-$(L{-}1)$ gates. The
+object the argument reasons about is the \emph{extended rectangle}: a level-$L$
+gate together with the error-correction rounds that flank it,
 \begin{equation}
-  C_{\rm hash}(p) = 1 - H_2(p), \qquad
-  H_2(p) = -p \log_2 p - (1-p) \log_2 (1-p).
-  \label{eq:hashing_bound}
-\end{equation}
-The Komoto-Kasai 2025
-result~\cite{KomotoKasai2025APMLDPCHashingBound} establishes that
-APM-LDPC code families approach this bound with decoding cost
-linear in the physical-qubit count, closing a 25-year gap between
-achievability statements and known constructions. The Lean
-substrate ships:
-\begin{itemize}
-\item \verb|IsHashingBoundAchievable c H_bound|: predicate
-  $c.{\rm rate} \leq H_{\rm bound}$.
-\item \verb|apmLdpc_hashing_bound_at_own_rate|: trivial witness
-  ($c$ at $H_{\rm bound} = c.{\rm rate}$).
-\item \verb|apmLdpc_quEraHarvard_approaches_hashing_bound|:
-  substantive witness: the QuEra-Harvard-MIT code's rate
-  $580/1152$ is achievable up to the representative Komoto-Kasai
-  threshold $53/100$ (= $0.53$), which substantively exceeds the
-  code's rate. The representative $0.53$ corresponds approximately
-  to $C_{\rm hash}(p)$ at depolarizing $p \approx 0.10$, a regime
-  the QuEra-Harvard-MIT-class codes target.
-\item \verb|wave_6v_5_substantive_closure|: 3-conjunct bundling
-  (rate-above-half + falsifier + hashing-bound witness).
-\end{itemize}
-\paragraph{Wave 6v.5b substantive Shannon-entropy lift
-(post-scout 2026-05-26).}
-The Wave 6v.5 hashing-bound predicate `IsHashingBoundAchievable c H\_bound`
-ships with `H\_bound` parameterized over rational thresholds. Post-scout,
-the substantive Komoto-Kasai form ships:
-\begin{itemize}
-\item \texttt{H\_2 (p : $\mathbb{R}$) := Real.binEntropy p / Real.log 2}:
-  the base-2 wrapper of Mathlib's natural-log
-  \texttt{Real.binEntropy} (which is in
-  \texttt{Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean}).
-\item Structural theorems \texttt{H\_2\_zero}, \texttt{H\_2\_nonneg},
-  \texttt{H\_2\_one\_half} ($= 1$, max-entropy), \texttt{H\_2\_le\_one}.
-\item \texttt{IsHashingBoundAchievableAt c (p : $\mathbb{R}$)}\,$:=$\,$c.{\rm rate} \leq 1 - H_2\,p$:
-  the substantive Komoto-Kasai-form predicate.
-\item \texttt{apmLdpc\_hashing\_bound\_at\_zero\_noise}: substantive
-  corner-case witness at $p = 0$ ($1 - H_2(0) = 1$; every code
-  with rate $\leq 1$ is achievable).
-\item \texttt{apmLdpc\_quEraHarvard\_not\_achievable\_at\_one\_half\_noise}:
-  substantive \emph{falsifier} at $p = 1/2$ (maximum-entropy noise;
-  capacity vanishes, so no positive-rate code is achievable). This is
-  the substrate-class boundary pinning the non-vacuity of the predicate.
-\end{itemize}
-A future sub-wave will prove the tight numerical bound
-$H_2(0.1) \leq 0.469$ giving $1 - H_2(0.1) \approx 0.531 > 580/1152$
-(matches the Komoto-Kasai depolarizing-channel regime at $p = 0.1$);
-that requires real-interval-arithmetic substrate currently absent
-from Mathlib v\leantoolchain. The structural ship above is non-vacuous at the
-substrate-class boundary.
-
-\subsection{Sub-wave coda: substrate connection to existing
-project LDP}
-
-The hashing-bound predicate consumes the project's existing
-\verb|LDP/| substrate
-(\verb|CramerIID.lean|, \verb|Sanov.lean|, \verb|Varadhan.lean|,
-\verb|Contraction.lean|, \verb|LDPCompatibleSKEFT.lean|): the
-Cramér large-deviation theorem provides the underlying
-concentration-of-measure result from which the binary-Shannon-
-entropy hashing bound is derived (per the standard quantum-
-information-theory textbook derivation). The full Lean cross-bridge
-is reserved for the future Mathlib-Shannon-entropy wave; the
-present substrate-level lift establishes the type signature.
-
-%% ════════════════════════════════════════════════════════════════════
-
-\figuredeferred{fig:d6-hashing-bound}{the achievable rate against noise with the hashing bound; the two endpoint theorems are formalized but no intermediate points are computed}
-\section{Shor T-gate counts for ECC-256 (Wave 6v.2)}
-\label{sec:shor}
-
-\subsection{The headline T-gate-count bound}
-
-The Google-led Babbush--Zalcman--Gidney--Broughton--Khattar--Neven--
-Bergamaschi--Drake--Boneh
-2026~\cite{BabbushGidneyEtAl2026ECC256Shor} resource estimate for
-Shor's algorithm on the 256-bit elliptic-curve discrete-logarithm
-problem reports two configurations:
-\begin{align}
-  \text{config1200:} \qquad &< 1200 \text{ logical qubits},\ <
-  90 \times 10^6 \text{ Toffoli gates}, \\
-  \text{config1450:} \qquad &< 1450 \text{ logical qubits},\ <
-  70 \times 10^6 \text{ Toffoli gates}.
-\end{align}
-The standard exact ancilla-free
-Toffoli-to-T decomposition~\cite{NielsenChuang2010} converts
-each Toffoli into exactly $7$ T-gates in the standard Clifford+T
-gate set. Composing the two gives the kernel-verified T-gate budget:
-\begin{equation}
-  T_{\rm budget}({\rm config1200}) = 7 \times 90 \times 10^6
-  = 630 \times 10^6, \quad
-  T_{\rm budget}({\rm config1450}) = 7 \times 70 \times 10^6
-  = 490 \times 10^6.
-  \label{eq:shor_ecc256_tgate}
-\end{equation}
-
-\subsection{Formal substrate}
-
-The Lean substrate ships in
-\verb|lean/SKEFTHawking/FaultTolerance/ShorTGateCount.lean|:
-\begin{itemize}
-\item \verb|bravyiKitaevToffoliT n := 7 * n|: the BK
-  decomposition's T-cost function.
-\item \verb|ECC256Config| inductive with two constructors
-  \verb|config1200| and \verb|config1450|, plus
-  \verb|googleShorECC256ToffoliBound| and
-  \verb|googleShorECC256TGateBound|.
-\item \verb|shor_ecc256_tgate_count_le| is the headline theorem:
-  any circuit fitting the Babbush Toffoli budget for a given
-  configuration, after BK decomposition, fits the corresponding
-  T-gate budget.
-\item \verb|googleShorECC256TGateBound_config1200_eq| and
-  \verb|_config1450_eq|: concrete numerical evaluations
-  (630M / 490M).
-\item \verb|shor_ecc256_falls_within_megagate_envelope_at_1G|
-  is a substantive contrast: both configurations sit inside the natural
-  $10^9$ T-gate FT-QC budget envelope with concrete headroom
-  (370M / 510M).
-\item \verb|config1450_T_strictly_less_than_config1200| is the
-  qubit-T trade-off witness: spending $+250$ logical qubits saves
-  $140M$ T-gates.
-\item \verb|wave_6v_2_substantive_closure| bundling all three.
-\end{itemize}
-Kernel-only; zero new project-local axioms; zero tracked Props.
-Substantive content: the headline 630M T-gate bound is a CONCRETE
-numerical claim, not asymptotic, not conditional on any unspecified
-compilation overhead; it combines Google's Toffoli budget (a deep
-optimisation result; $\sim 10\times$ improvement over prior
-estimates) and BK's exact 7-factor (an algebraic-Clifford-hierarchy
-result) into a single resource estimate at the headline scale.
-
-\subsection{First-kernel-verified end-to-end ECC-256 Shor
-T-gate-count upper bound}
-
-To our knowledge, this is the first kernel-verified end-to-end
-ECC-256 Shor T-gate-count upper bound in any proof assistant. The
-substrate consumes only the Bravyi-Kitaev exact decomposition (no
-continuous-rotation approximation), so no Solovay-Kitaev
-compilation overhead is added; D6~\textsection\ref{sec:sk}'s SK
-substrate is consumed elsewhere in the bundle (D6~\textsection\ref{sec:wstate}
-on the W-state QFT in $\mathbb{Q}(\zeta_N)$), not here.
-
-%% ════════════════════════════════════════════════════════════════════
-\section{W-state QFT decomposition in $\mathbb{Q}(\zeta_N)$
-(Wave 6v.6)}
-\label{sec:wstate}
-
-\subsection{Setting}
-
-The $n$-qubit W-state~\cite{DurVidalCirac2000WState} is the
-canonical cyclic-shift-symmetric multipartite entangled state
-\begin{equation}
-  |W_n\rangle = \frac{1}{\sqrt{n}} \sum_{k=0}^{n-1}
-    Z_n^k\,|10\cdots 0\rangle
-  = \frac{|10\cdots 0\rangle + |010\cdots 0\rangle
-  + \cdots + |0\cdots 01\rangle}{\sqrt{n}},
-  \label{eq:wstate}
-\end{equation}
-where $Z_n$ is the cyclic-shift operator. The Z$_n$ symmetry means
-that single-shot projective measurement in the QFT$_n$ eigenbasis
-yields one of $n$ outcomes (the cyclic-shift label $k \in \{0, 1,
-\ldots, n-1\}$) with eigenvalues $\zeta_n^k$, the $n$-th roots
-of unity. The natural number field for the QFT$_n$ measurement basis
-is therefore the $n$-th cyclotomic field $\mathbb{Q}(\zeta_n)$.
-
-This decomposition is the single-shot measurement primitive of the
-Kyoto-Hiroshima 2025-09 W-state single-shot projective-measurement
-work (per strategy synthesis F9 line). Substrate connection: for
-$n = 5$ the natural field is the project's existing
-\verb|QCyc5| substrate; for $n = 8$ it is contained in
-\verb|QCyc16|; for $n = 40$ it is exactly the
-\verb|QCyc40| FibonacciQutrit / T-gate-compiler natural number
-field, the same cyclotomic substrate \textsection~\ref{sec:sk}'s
-quantitative Solovay-Kitaev tight-$\varepsilon$ headline operates on.
-
-\subsection{Formal substrate}
-
-The Lean substrate ships in
-\verb|lean/SKEFTHawking/FaultTolerance/WStateQFT.lean|:
-\begin{itemize}
-\item \verb|WStateCyclicShiftDecomposition n| structure (Prop
-  $n \geq 2$).
-\item \verb|nQubitWStateBasisSize n := n|: the W-state QFT
-  basis size equals the qubit count $n$, NOT the full Hilbert
-  dimension $2^n$.
-\item \verb|fullHilbertDim n := 2^n|: for contrast.
-\item \verb|n_qubit_w_state_basis_strictly_smaller_than_full_hilbert|
-  is a substantive exponential-vs-polynomial separation:
-  $n < 2^n$ for $n \geq 1$ (the QFT measurement basis is
-  \emph{exponentially smaller} than the full Hilbert basis).
-\item Concrete witnesses at project-substrate sizes:
-  \verb|wState_separation_at_5| (5 < 32),
-  \verb|wState_separation_at_8| (8 < 256),
-  \verb|wState_separation_at_40| ($40 < 1{,}099{,}511{,}627{,}776$).
-\item \texttt{IsCyclotomicQFTBasis n :=
-  $\exists\,\zeta : \mathtt{CyclotomicField}\,n\,\mathbb{Q},$
-  \texttt{IsPrimitiveRoot} $\zeta\, n$}
-  predicate (Wave 6v.6b substantive lift, post-scout 2026-05-26).
-  Substantively witnessed by Mathlib's canonical
-  \texttt{IsCyclotomicExtension.zeta}\,$n\,\mathbb{Q}\,$(\texttt{CyclotomicField}\,$n\,\mathbb{Q}$)
-  with the companion \texttt{zeta\_spec} proving primitivity.
-\item \texttt{wState\_basis\_isCyclotomic} witnesses the predicate at
-  every positive $n$, via
-  \texttt{CyclotomicField.isCyclotomicExtension} +
-  \texttt{Nat.cast\_ne\_zero} plumbing.
-\item \texttt{wState\_basis\_isCyclotomic\_at\_QCyc\_sizes} concrete
-  witness bundle at $n \in \{5, 8, 16, 40, 80\}$, the project's
-  existing QCyc\_n cyclotomic-substrate sizes.
-\item \verb|wave_6v_6_substantive_closure|: 3-conjunct bundle (the
-  third conjunct is now genuinely non-vacuous: a primitive 40-th
-  root of unity in $\mathbb{Q}(\zeta_{40})$).
-\end{itemize}
-Kernel-only; zero new project-local axioms; zero tracked Props.
-
-\subsection{Cross-bridge to D6 §\ref{sec:sk} (Solovay-Kitaev)}
-
-The W-state QFT decomposition is \emph{exact} at the cyclotomic
-level: no continuous-rotation approximation is needed when the
-gate set already contains the $n$-th roots of unity (e.g., the
-Q($\zeta_{40}$) Fibonacci-qutrit substrate). When the target gate
-set is finite (Clifford+T or Fibonacci), the Phase~6t quantitative
-Solovay-Kitaev tight-$\varepsilon$ headline of D6 §\ref{sec:sk}
-gives the compilation overhead per non-Clifford rotation. The
-substrate connection thus reads: D6 §\ref{sec:wstate} ships the
-exact decomposition primitive; D6 §\ref{sec:sk} ships the
-finite-gate-set approximation bound.
-
-\subsection{Network and device certification: owned by D9}
-\label{sec:wstate:envelope}
-
-The W-state measurement primitive above is consumed by entanglement-based
-network protocols, and the verified substrate for those protocols is the
-sibling bundle \textbf{D9} (\emph{Kernel-Verified Quantum-Network and
-Device-Characterization Certification Substrate}). D9 owns the
-distinguishability calculus (trace distance, Uhlmann fidelity, both
-Fuchs--van de Graaf bounds, the diamond distance with its Choi sandwich and
-the Watrous semidefinite-programming duality), the entropy and majorization
-corpus, the entanglement-measure ladder, the swap-chain fidelity envelope and
-the device-characterization families. D6 cites those results where the
-fault-tolerance argument needs them and does not restate them, exactly as
-\textsection\ref{sec:sk} cites D8 for the compilation primitive.
-
-The division is by layer. D9 certifies the physical layer, the channels and
-the device parameters beneath a logical qubit; D6 certifies the logical layer
-built on top of it, from the code and its threshold up to universal logic. The
-abstract code-distance suppression theorems are the interface, and D9 reports
-them from its side.
-%% ════════════════════════════════════════════════════════════════════
-\section{The concatenated-Steane fault-tolerance threshold
-(Phase~6p Wave~1b)}
-\label{sec:threshold}
-
-\subsection{Why the threshold theorem is the substrate's load-bearing result}
-
-Every claim in \textsection\textsection\ref{sec:gaugingQEC}--\ref{sec:wstate}
-presumes that arbitrarily reliable logical computation is reachable at all. That
-premise is the threshold theorem: below a critical physical error rate, code
-concatenation suppresses the logical error rate faster than the overhead grows.
-Resource counts and measurement primitives are costs paid inside a regime the
-threshold theorem defines, so a fault-tolerance substrate that formalises the
-costs and not the regime has verified the accounting and assumed the physics.
-
-This section closes that gap for the Steane $[[7,1,3]]$ code under abstract
-local stochastic noise, following Aliferis, Gottesman and
-Preskill~\cite{AGP2006}.
-
-\subsection{What is proved, and from what}
-
-The development is eleven modules under
-\verb|lean/SKEFTHawking/FaultTolerance/|. We separate what the headline theorem
-\emph{consumes} from what the corpus \emph{defines}, because the two are not the
-same set and the difference is the honest scope of the result.
-
-\paragraph{The proof chain, 27 declarations.} \verb|StabilizerCode.lean| and
-\verb|SteaneCode.lean| carry the stabilizer substrate and the $[[7,1,3]]$
-instance, distance three and one logical qubit. \verb|Counting.lean| pins the
-malignant-pair count for the CNOT extended rectangle,
-\begin{equation}
-  A_{\rm CNOT} = 35\,235,
-  \label{eq:acnot}
-\end{equation}
-taken from Aliferis, Gottesman and Preskill~\cite{AGP2006} \S8.3,
-equation~(36), with $M = 575$ locations. Its well-formedness is checked rather
-than asserted: \verb|steaneMalignancyCounts_A_CNOT_le_choose_two| proves
-$A_{\rm CNOT} \le \binom{M}{2}$, so the count cannot exceed the number of pairs
-available to it. \verb|Concatenation.lean| states the AGP level recursion
-\begin{equation}
-  \varepsilon_{L+1} \;\le\; A\,\varepsilon_L^{\,2},
-  \label{eq:agp-recursion}
-\end{equation}
-and \verb|DoubleExp.lean| proves its closed form: for $A > 0$ and
-$\varepsilon_0 \ge 0$,
-\begin{equation}
-  A\,\varepsilon_L \;\le\; \left(A\,\varepsilon_0\right)^{2^L}.
-  \label{eq:double-exp}
-\end{equation}
-Equation~\eqref{eq:double-exp} is a statement about non-negative real
-sequences, proved as such, with no quantum content. That is where the double
-exponential comes from.
-
-\paragraph{The substrate the theorem does not consume.} Four further modules
-formalise the objects the AGP argument reasons about. \verb|ExRec.lean| defines
-the extended rectangle, the level-$L$ gate implemented at level $L-1$ as
-\begin{equation}
-  \text{1-EC} \circ \text{1-Ga} \circ \text{1-EC},
+  \text{1-EC} \circ \text{1-Ga} \circ \text{1-EC}.
   \label{eq:exrec}
 \end{equation}
-together with the good and bad classification and the malignant-pair
-attestation; \verb|Malignant.lean| bridges that attestation to concrete counts
-per code; \verb|NoiseModel.lean| and \verb|NoiseModelMT.lean| define the
-abstract local stochastic model and its joint-failure bounds; and
-\verb|Chernoff.lean| proves the pair-failure union bound
-$\binom{n}{2}\varepsilon^2$.
+An extended rectangle is \emph{good} when the faults inside it are few enough
+that the level-$L$ gate it simulates is correct, and \emph{bad} otherwise. For a
+distance-three code a single fault is always tolerable, so the leading failure
+mode is two faults, and the combinatorial content of the argument is which
+\emph{pairs} of locations are jointly intolerable. A pair of locations is
+\emph{malignant} when some pattern of faults on that pair leaves the rectangle
+incorrect; AGP's terminology is that a set of locations is benign when the
+rectangle is correct for any faults on those locations, and malignant when it is
+not.
 
-\paragraph{The single-level step, derived.} The union bound the recursion rests
-on is now proved rather than assumed. \verb|MalignantUnionBound.lean| establishes,
-for a probability measure $\mu$ and a malignant-pair set $F$,
+Write $F$ for the malignant-pair set of a rectangle and $A$ for a bound on its
+cardinality. If every malignant pair fails jointly with probability at most
+$\varepsilon^2$, the rectangle is bad with probability at most $A\varepsilon^2$,
+which is the level recursion
+\begin{equation}
+  \varepsilon_{L+1} \;\le\; A\,\varepsilon_L^{\,2}.
+  \label{eq:agp-recursion}
+\end{equation}
+Below $\varepsilon_0 = 1/A$ the right-hand side contracts, and iterating gives
+double-exponential suppression.
+
+\subsection{What a threshold theorem asserts, and what it does not}
+
+Equation~\eqref{eq:agp-recursion} asserts a bound on a per-level failure
+probability under a per-location failure rate. It does not assert anything about
+a physical device. The identification of a circuit location with a device
+operation, and of a per-location failure probability with a measured error rate,
+is a modelling step outside the theorem, and the threshold is a lower bound on
+what a device must beat rather than a prediction about any particular hardware.
+Sections~\ref{sec:single} and~\ref{sec:levels} prove the recursion and its
+consequence; Section~\ref{sec:steane} supplies the count that turns it into a
+number; Section~\ref{sec:scope} states what remains outside all of it.
+
+%% ════════════════════════════════════════════════════════════════════
+\section{The single-level bound, derived}
+\label{sec:single}
+
+The recursion Eq.~\eqref{eq:agp-recursion} is an inequality between
+probabilities, and this section derives it as one. Fix a measurable space
+$\Omega$, a measure $\mu$ on it, an index type $\iota$ of locations, and a family
+$\mathrm{fail} : \iota \to \mathcal{P}(\Omega)$ of failure events.
+
+\subsection{The union bound}
+
+The rectangle is bad exactly when some malignant pair fails jointly, so its
+failure event is the union over the malignant-pair set. The estimate on that
+union uses no independence at all.
+
+\begin{lemma}[\texttt{measure\_malignant\_union\_le}]
+\label{lem:union}
+Let $F$ be a finite set of pairs of locations and $\varepsilon$ an extended
+non-negative real. If $\mu(\mathrm{fail}_i \cap \mathrm{fail}_j) \le
+\varepsilon^2$ for every $(i,j) \in F$, then
 \begin{equation}
   \mu\!\left(\bigcup_{(i,j)\in F} \mathrm{fail}_i \cap \mathrm{fail}_j\right)
-    \;\le\; |F| \cdot \varepsilon^2,
+    \;\le\; |F| \cdot \varepsilon^2.
   \label{eq:union-bound}
 \end{equation}
-from two separated ingredients: \verb|malignant_pair_indep_le|, which turns
-pairwise independence and a per-location rate $\mu(\mathrm{fail}_i) \le
-\varepsilon$ into $\mu(\mathrm{fail}_i \cap \mathrm{fail}_j) \le \varepsilon^2$,
-and \verb|measure_malignant_union_le|, which is the union bound proper and uses
-no independence at all. Independence enters in exactly one place, which is where
-the local stochastic noise model's content sits.
+\end{lemma}
 
-\verb|exRecFailureProb_le_exRecFailureBound| then closes the loop to
-\textsection\ref{sec:threshold}'s vocabulary: for an ex-Rec whose malignant-pair
-set has cardinality $A$, the probability that it is bad really is at most
-$A\,\varepsilon^2$. Before this, \verb|exRecFailureBound| was a definition
-carrying a docstring that called it a union bound; nothing proved that any
-probability satisfied it.
+The proof is the finite union bound followed by a constant sum: the measure of
+the union is at most $\sum_{p \in F} \mu(\mathrm{fail}_{p_1} \cap
+\mathrm{fail}_{p_2})$, each summand is at most $\varepsilon^2$ by hypothesis, and
+a constant sum over $F$ is $|F|\,\varepsilon^2$. It is stated over
+$\overline{\mathbb{R}}_{\ge 0}$, where no finiteness side condition is needed.
 
-\paragraph{The levels, composed.} \verb|ConcatenatedComposition.lean| applies
-Eq.~\eqref{eq:union-bound} inductively. The concatenation picture enters as a
-single inclusion of events, \verb|hstruct|: a level-$(L{+}1)$ extended rectangle
-fails only when some malignant pair of its level-$L$ constituents both fail.
-From that, \verb|levelFailure_le_agpSeq| derives
+\subsection{Where independence enters, and how little of it is needed}
+
+Lemma~\ref{lem:union} takes the per-pair estimate as a hypothesis. Two lemmas
+supply it, and the difference between them is this paper's first substantive
+point.
+
+\begin{lemma}[\texttt{malignant\_pair\_indep\_le}]
+\label{lem:indep}
+If $\mathrm{fail}_i$ and $\mathrm{fail}_j$ are independent under $\mu$ and each
+has measure at most $\varepsilon$, then $\mu(\mathrm{fail}_i \cap
+\mathrm{fail}_j) \le \varepsilon^2$.
+\end{lemma}
+
+This is the only place in the development where independence is used, and its
+proof is one rewrite: independence turns the measure of the intersection into a
+product, and the product of two quantities each at most $\varepsilon$ is at most
+$\varepsilon^2$. Isolating it makes visible that the rewrite is an equality and
+the conclusion an inequality, so the hypothesis is stronger than the proof
+consumes. The general form drops it:
+
+\begin{lemma}[\texttt{exRecFailure\_le\_agpRecursionStep\_of\_submul}]
+\label{lem:submul}
+Suppose $\mu(\mathrm{fail}_i) \le \varepsilon$ for every location $i$, and that
+every pair in $F$ is sub-multiplicative, $\mu(\mathrm{fail}_i \cap
+\mathrm{fail}_j) \le \mu(\mathrm{fail}_i)\,\mu(\mathrm{fail}_j)$. Then
+Eq.~\eqref{eq:union-bound} holds.
+\end{lemma}
+
+Sub-multiplicativity is implied by independence, so nothing that had the stronger
+hypothesis loses anything; the converse fails, and the models in the gap are the
+negatively correlated ones. A noise process in which the failure of one circuit
+location suppresses the failure probability of another --- shared calibration
+that a fault perturbs, a control line whose failure idles a neighbouring gate,
+any mechanism that anticorrelates two locations --- satisfies
+Lemma~\ref{lem:submul} and violates Lemma~\ref{lem:indep}. AGP's local
+stochastic class is defined by an upper bound on joint failure probabilities,
+which is sub-multiplicativity, not by an equality. The formalization does not
+improve on AGP's intent; it makes the statement match it.
+
+\subsection{From a bound to a bounded probability}
+
+The real-valued expression $A\varepsilon^2$ is a definition, and a definition
+called a union bound is not one until some probability is shown to satisfy it.
+The theorem that connects them is
+\texttt{exRecFailureProb\_le\_exRecFailureBound}: for a probability measure
+$\mu$, a rectangle whose malignant-pair attestation carries the count $A$, a
+malignant-pair set $F$ with $|F| = A$, a per-location bound $\varepsilon$ and
+independence within each malignant pair, the real number
+$\mu\!\left(\bigcup_{(i,j) \in F} \mathrm{fail}_i \cap \mathrm{fail}_j\right)$ is
+at most $A\varepsilon^2$. Its content is the coercion: the combinatorial layer
+carries location counts and malignant-pair counts and mentions no measure, and
+this statement is the bridge across which the counting layer acquires
+probabilistic meaning.
+
+Two monotonicity lemmas travel with it and are used rather than quoted.
+\texttt{agp\_bound\_mono\_card} states that $n \le m$ implies
+$n\varepsilon^2 \le m\varepsilon^2$, which is the form a caller holding
+$|F| \le A$ needs; \texttt{agp\_bound\_mono\_malignant\_set} states monotonicity
+in the set, $F \subseteq G$, and is derived from the cardinality form so the two
+cannot disagree.
+
+%% ════════════════════════════════════════════════════════════════════
+\section{Composition across levels}
+\label{sec:levels}
+
+\subsection{The concatenation picture as one inclusion}
+
+Section~\ref{sec:single} bounds a single rectangle. Concatenation is what makes
+the bound recursive, and the whole of it enters the formalization as one
+hypothesis:
 \begin{equation}
-  \mu\!\left(\mathrm{fail}^{(L)}_i\right) \;\le\; \varepsilon_L,
-  \qquad \varepsilon_{L+1} = A\,\varepsilon_L^2,
-  \label{eq:composed-levels}
+  \mathrm{fail}^{(L+1)}_j \;\subseteq\;
+  \bigcup_{p \in \mathrm{malignant}(L,j)}
+    \mathrm{fail}^{(L)}_{p_1} \cap \mathrm{fail}^{(L)}_{p_2}.
+  \label{eq:hstruct}
 \end{equation}
-level by level, and \verb|agpSeq_coe_eq_agpLevelSequence| identifies that
-sequence with \verb|agpLevelSequence|. The consequence a reader wants is
-\verb|steane_concatenated_failure_below_threshold|: below the Steane threshold, a
-genuine failure \emph{probability}, not an abstract sequence, satisfies
-$A_{\rm CNOT}\,P[\text{level-}L\text{ rectangle fails}] < 1$ for every $L \ge 1$,
-and \verb|concatenated_failure_double_exp| gives the double-exponential form.
-That statement's dependency closure reaches both the measure-theoretic union
-bound and the real-valued threshold chain, which is what it means for the
-recursion to be machine-checked \emph{from} the ex-Rec structure rather than
-alongside it.
+A level-$(L{+}1)$ extended rectangle fails only when some malignant pair of its
+level-$L$ constituents both fail. That is the AGP concatenation picture written
+in the language of the measure space, and compressing it to a single inclusion
+of events is what the formalization forced: everything else in the composition is
+Lemma~\ref{lem:submul} applied at each level with the previous level's rate.
 
-The hypotheses are stated rather than derived, and they are the model:
-\verb|hstruct| above, pairwise independence of constituent failures, a base-level
-rate, and a constant malignant-pair count.
-\verb|levelFailure_hypotheses_satisfiable| exhibits a measure space meeting all
-four, so the result is not conditionally empty; it does not exhibit a model in
-which the bound is tight.
+\subsection{The induction}
 
-\paragraph{What remains, stated because it is the result's real boundary.}
+Let $\mathrm{agpSeq}(A,\varepsilon_0)$ denote the sequence
+$\mathrm{agpSeq}_0 = \varepsilon_0$, $\mathrm{agpSeq}_{L+1} = A\,
+\mathrm{agpSeq}_L^{\,2}$, valued in $\mathbb{R}_{\ge 0}$. The choice of
+$\mathbb{R}_{\ge 0}$ rather than $\mathbb{R}$ or
+$\overline{\mathbb{R}}_{\ge 0}$ is what lets one induction serve both the
+measure-theoretic and the real-valued sides: it embeds into
+$\overline{\mathbb{R}}_{\ge 0}$ as a semiring and into $\mathbb{R}$ as the
+sequence the threshold chain already reasons about, carrying neither a
+non-negativity nor a finiteness side condition at each step.
 
-\emph{The count is still pinned.} $A_{\rm CNOT} = 35\,235$ enters
-Eq.~\eqref{eq:acnot} as a literal from Ref.~\cite{AGP2006}~\S8.3. Deriving it
-requires enumerating malignant pairs over a concrete circuit, which is a
-combinatorial undertaking of a different kind and is not attempted here.
-\subsection{The threshold}
+\begin{theorem}[\texttt{levelFailure\_le\_agpSeq}]
+\label{thm:levels}
+Let $\mathrm{fail}$ be a family of failure events indexed by level and location,
+$\mathrm{malignant}$ a family of finite malignant-pair sets, $A$ a natural number
+and $\varepsilon_0$ a base rate. Assume
+\begin{enumerate}
+\item[(H1)] $\mu(\mathrm{fail}^{(0)}_i) \le \varepsilon_0$ for every level-zero
+  location;
+\item[(H2)] $|\mathrm{malignant}(L,j)| \le A$ for every level and rectangle;
+\item[(H3)] the inclusion Eq.~\eqref{eq:hstruct};
+\item[(H4)] sub-multiplicativity within each malignant pair.
+\end{enumerate}
+Then $\mu(\mathrm{fail}^{(L)}_i) \le \mathrm{agpSeq}(A,\varepsilon_0)_L$ for
+every level $L$ and every level-$L$ rectangle $i$.
+\end{theorem}
 
-\verb|AGP/Threshold.lean| composes the chain. The threshold is the inverse of
-the malignant-pair count,
+The induction is short because each ingredient is already in place: monotonicity
+of the measure across Eq.~\eqref{eq:hstruct}, then Lemma~\ref{lem:submul} with
+the inductive hypothesis as the per-location rate, then
+\texttt{agp\_bound\_mono\_card} to pass from $|\mathrm{malignant}(L,j)| \le A$
+to $A$. Hypotheses (H2) and (H4) are the weakest forms the proof uses, which is
+the point of Section~\ref{sec:intro}'s second paragraph on what is new.
+
+\subsection{The double exponential, and what it is a fact about}
+
+The closed form of Eq.~\eqref{eq:agp-recursion} is a statement about
+non-negative real sequences and has no quantum content whatever. If
+$\varepsilon : \mathbb{N} \to \mathbb{R}$ is non-negative and satisfies
+$\varepsilon_{L+1} \le A\,\varepsilon_L^{\,2}$ with $A \ge 0$, then
+\begin{equation}
+  A\,\varepsilon_L \;\le\; \left(A\,\varepsilon_0\right)^{2^L}
+  \label{eq:double-exp}
+\end{equation}
+for every $L$ (\texttt{agp\_double\_exp\_bound}), by an induction whose step is
+$A\varepsilon_{L+1} \le A(A\varepsilon_L^2) = (A\varepsilon_L)^2 \le
+((A\varepsilon_0)^{2^L})^2 = (A\varepsilon_0)^{2^{L+1}}$. When
+$A\varepsilon_0 < 1$ the right-hand side is below one at every level
+$L \ge 1$ (\texttt{agp\_double\_exp\_bound\_lt\_one}). We state
+Eq.~\eqref{eq:double-exp} flatly as standard and claim no credit for it: it is
+where the double exponential comes from, and it is not a result of this paper.
+
+What is a result of this paper is that the sequence
+Eq.~\eqref{eq:double-exp} is applied to is now known to bound a probability.
+\texttt{agpSeq\_coe\_eq\_agpLevelSequence} identifies the
+$\mathbb{R}_{\ge 0}$-valued sequence of Theorem~\ref{thm:levels} with the
+real-valued sequence the threshold chain reasons about, and the two capstones
+follow. \texttt{concatenated\_failure\_double\_exp} gives
+\begin{equation}
+  A \cdot \mathbb{P}\!\left[\text{level-}L\text{ rectangle fails}\right]
+    \;\le\; \left(A\,\varepsilon_0\right)^{2^L},
+  \label{eq:capstone-doubleexp}
+\end{equation}
+and \texttt{steane\_concatenated\_failure\_below\_threshold} gives, below the
+threshold of Section~\ref{sec:steane}, that
+$A_{\mathrm{CNOT}} \cdot \mathbb{P}[\text{level-}L\text{ rectangle fails}] < 1$
+for every $L \ge 1$. The distinction between Eq.~\eqref{eq:capstone-doubleexp}
+and Eq.~\eqref{eq:double-exp} is the entire point of the composition: the
+latter is about a sequence defined to satisfy its own recursion, and the former
+is about a measure of a set of noise realizations. Their dependency closures
+differ accordingly --- Eq.~\eqref{eq:capstone-doubleexp} reaches both the
+measure-theoretic union bound of Section~\ref{sec:single} and the real-valued
+threshold chain of Section~\ref{sec:steane}, and that joint reach is what
+``derived from the extended-rectangle structure'' means operationally.
+
+\figuredeferred{fig:d6-hypothesis-dependency}{the figure must be generated
+through \texttt{src/core/visualizations.py} so the structural figure checks of
+Stage~9 can see it, and no generator for a proof-dependency diagram exists in
+that module yet; the content is fixed --- which of (H1)--(H4) each capstone
+consumes, and which two are modelling assumptions rather than consequences}
+
+\subsection{Satisfiability, and exactly what it establishes}
+
+Theorem~\ref{thm:levels} and its corollaries are conditional on four
+hypotheses, and a conditional theorem whose hypotheses cannot hold together
+proves nothing. \texttt{levelFailure\_hypotheses\_satisfiable} exhibits, for an
+arbitrary $A$ and an arbitrary base rate, a level structure satisfying all four
+--- and additionally off-diagonality of the malignant pairs, which is strictly
+more than any of them requires. Off-diagonality is not cosmetic: a diagonal pair
+$(i,i)$ is not a pair of two distinct locations at all, AGP's malignant set
+counts pairs of different locations, and under an independence hypothesis
+$\mathrm{IndepSet}(s,s)$ forces $\mu(s) = \mu(s)^2$, so a diagonal malignant set
+could be satisfied only where the theorem says nothing.
+
+The witness takes every failure event empty. That is enough to rule out
+vacuity and it is not enough for anything else, and we state the consequence
+rather than imply it: with $\mathrm{fail} \equiv \emptyset$ every probability is
+zero, so (H1) is satisfied without being exercised. The witness shows the
+hypothesis set is consistent; it does not exhibit a model in which the bound is
+approached. A model with a strictly positive base rate needs a genuine
+independent product space over the circuit's locations, which is the same
+construction as deriving the malignant-pair count itself.
+Section~\ref{sec:scope} names it as open work.
+
+%% ════════════════════════════════════════════════════════════════════
+\section{The Steane instance and the threshold number}
+\label{sec:steane}
+
+\subsection{The extended rectangle and its count}
+
+AGP instantiate the argument on Steane's $[[7,1,3]]$ code, the smallest
+distance-three CSS code. Their level-1 error-correction gadget contains 142
+locations --- four encoders at 18 locations each, four 1-measurements at 7, two
+rests at 7, and four encoded CNOT gates at 7 --- so the CNOT extended rectangle,
+comprising four such gadgets and one CNOT, contains
+\begin{equation}
+  M_{\rm CNOT} = 575
+  \label{eq:mcnot}
+\end{equation}
+locations, and is the largest 1-exRec in the level-1 simulation~\cite[\S8.3]{AGP2006}.
+The count is contingent on the noise model in a way worth stating: it presumes
+storage faults are counted, and AGP report 487 locations if they are neglected.
+The symbol $M$ is ours; AGP write $\ell$ for the maximal number of locations in a
+1-Rec.
+
+Counting malignant pairs within that rectangle is a purely combinatorial
+exhaustive enumeration, which AGP carried out by computer program. The result
+they report is
+\begin{equation}
+  A_{\rm CNOT} = 35\,235
+  \label{eq:acnot}
+\end{equation}
+malignant pairs, obtained as the sum of the entries of a lower-triangular
+$7 \times 7$ matrix in~\cite[\S8.3]{AGP2006}, immediately following that
+section's Eq.~(32). Like Eq.~\eqref{eq:mcnot} it is model-contingent, and the
+contingency is large: the same section gives $A_{\rm CNOT} = 22\,701$ if storage
+faults are neglected and $A_{\rm CNOT} \approx 7\,183$ for depolarizing noise
+rather than adversarial independent stochastic noise. Eq.~\eqref{eq:acnot} is
+the adversarial figure, which is the conservative one and the one matching the
+model of Section~\ref{sec:model}. The choice is not free and it moves the
+threshold by a factor of five.
+
+Its well-formedness is checked rather than asserted:
+\texttt{steaneMalignancyCounts\_A\_CNOT\_le\_choose\_two} proves
+$A_{\rm CNOT} \le \binom{M_{\rm CNOT}}{2} = 165\,025$, so the count cannot exceed
+the number of pairs available to it.
+
+\subsection{What the certificate certifies}
+
+The formalized threshold is the inverse of the malignant-pair count,
 \begin{equation}
   \varepsilon_0 \;:=\; \frac{1}{A_{\rm CNOT}},
   \label{eq:threshold-def}
 \end{equation}
-and the headline theorem \verb|agp_threshold_steane| states
-Eq.~\eqref{eq:double-exp} at $A = A_{\rm CNOT}$, for every level $L$ and every
-$\varepsilon \ge 0$. The operationally useful form is
-\verb|agp_threshold_steane_strict|: strictly below threshold, every level
-$L \ge 1$ satisfies $A_{\rm CNOT}\,\varepsilon_L < 1$, so concatenation
-suppresses the logical error rate without bound.
-
-The numerical certificate is \verb|steaneAGPThreshold_gt|, discharged by
-\verb|norm_num| rather than quoted:
+and \texttt{agp\_threshold\_steane} is Eq.~\eqref{eq:double-exp} at
+$A = A_{\rm CNOT}$, for every level and every non-negative rate.
+\texttt{agp\_threshold\_steane\_strict} is the operationally useful form:
+strictly below Eq.~\eqref{eq:threshold-def}, every level $L \ge 1$ satisfies
+$A_{\rm CNOT}\varepsilon_L < 1$, so concatenation suppresses without bound. The
+numerical certificate \texttt{steaneAGPThreshold\_gt} is discharged by
+\texttt{norm\_num} rather than quoted,
 \begin{equation}
-  \varepsilon_0 \;>\; 2.73 \times 10^{-5}.
+  \frac{1}{A_{\rm CNOT}} \;=\; 2.838 \times 10^{-5} \;>\; 2.73 \times 10^{-5},
   \label{eq:threshold-numeric}
 \end{equation}
-This is the rigorous bound, not the heuristic $10^{-4}$ that circulates
-alongside it, and \verb|agp_threshold_steane_numerical| bundles it with
-$\varepsilon_0 \le 1$ so the quantity is pinned on both sides. The theorem
-asserts the inequality; the decimal value of $\varepsilon_0$ follows from
-Eq.~\eqref{eq:acnot} by arithmetic and is not itself a result.
+and \texttt{agp\_threshold\_steane\_numerical} bundles it with
+$\varepsilon_0 \le 1$ so the quantity is pinned on both sides.
 
-\subsection{Scope, stated plainly}
+\paragraph{What Eq.~\eqref{eq:threshold-def} is, and what AGP's threshold is.}
+These are not the same quantity, and conflating them would overstate the result.
+AGP's published rigorous threshold is not $1/A_{\rm CNOT}$; it is the inverse of
+a twice-corrected count, and the corrections go the wrong way for us. Their
+chain is
+\begin{equation}
+  A_{\rm CNOT} = 35\,235
+  \;\longrightarrow\; A'_{\rm CNOT} \approx 36\,108
+  \;\longrightarrow\; A''_{\rm CNOT} \approx 36\,511,
+  \label{eq:agp-chain}
+\end{equation}
+with $\varepsilon_0^{\rm AGP} = 1/A''_{\rm CNOT} \ge 2.739 \times 10^{-5}$,
+which is~\cite[Eq.~(36)]{AGP2006} and rounds down to the
+$2.73 \times 10^{-5}$ of their Theorem~3. The first correction absorbs the
+\emph{cubic} term of their single-level bound: AGP's estimate is
+$A_{\rm CNOT}\varepsilon^2 + B_{\rm CNOT}\varepsilon^3$ with
+$B_{\rm CNOT} = \binom{575}{3}$, and $A'$ is the constant for which the pure
+quadratic form dominates it. The second is a factor
+$(1 - C/A'_{\rm CNOT})^{-8} \approx 1.0111$, where $C = 50$ is the number of
+locations in the ancilla encoding-and-verification circuit, conditioning on
+acceptance of the eight independently prepared ancilla blocks used in the four
+error-correction gadgets.
 
-Four limits bound this result and none of them is implicit in the Lean. The
-first is the derivation gap just stated; three more follow.
+The consequence for this paper is a scope statement, not a correction to the
+Lean. What Section~\ref{sec:single} derives is a bound on the probability that
+some malignant \emph{pair} fails, and $A_{\rm CNOT}$ is exactly the count of
+those pairs, so Eq.~\eqref{eq:threshold-def} is the right constant for the
+quantity actually bounded. The triple-fault contribution AGP's $B$ term carries,
+and the ancilla-acceptance conditioning, are not modelled here at all. A reader
+should therefore take Eq.~\eqref{eq:threshold-numeric} as certifying the
+threshold of the pair-failure recursion, and should take $2.739 \times 10^{-5}$,
+not $2.838 \times 10^{-5}$, as AGP's rigorous threshold for the full argument.
+Extending the derivation to the cubic term is arithmetic on the same chain
+rather than a new argument, and it is not done here.
 
-\emph{The noise model is abstract local stochastic only.} The topological error
-model is a strictly different object, not equivalent to this one up to
-constants and not additive, and its specialization is deferred rather than
-claimed.
+\paragraph{On the number that circulates alongside it.} A threshold near
+$10^{-4}$ is frequently quoted for concatenated distance-three codes. It is a
+heuristic estimate, not a rigorous bound, and AGP are explicit that their own
+depolarizing-noise figure of $9.376 \times 10^{-5}$ is likewise ``not a rigorous
+lower bound on the accuracy threshold''. Eq.~\eqref{eq:threshold-numeric} and the
+AGP chain Eq.~\eqref{eq:agp-chain} are rigorous and roughly a factor of four
+smaller, and the gap between the two is a statement about proof technique rather
+than about hardware.
 
-\emph{$A_{\rm CNOT}$ is a conservative rigorous upper bound}, not the optimal
-count. A smaller malignant-pair count raises the certified threshold, and
-tightening it is arithmetic on the same chain rather than a new argument.
-
-\emph{The threshold is the AGP threshold for this code under this model}, which
-is a lower bound on what a physical device tolerates and is not a prediction
-about any particular hardware. The identification of a circuit location with a
-device operation is a modeling step, and it is not part of the theorem.
-
-\subsection{Position against existing formalizations}
-
-Formal treatments of quantum error correction exist and are cited precisely in
-\textsection\ref{sec:intro}: the stabilizer and Hoare-logic developments in Coq
-and Isabelle certify single-level fault-tolerant constructions and program
-correctness. To our knowledge, the recursive threshold argument itself, the
-concatenation recursion of Eq.~\eqref{eq:agp-recursion} carried to the
-double-exponential bound of Eq.~\eqref{eq:double-exp} with a numerical
-threshold attached, has not previously been machine-checked.
-
-Two coverage limits bound that claim, and we state them rather than let a
-referee find them. The survey behind it covered the Coq stabilizer and
-verified-compilation line, the Isabelle/HOL quantum Hoare-logic and
-concentration-inequality developments, and the Lean quantum-information
-libraries; the Isabelle Archive of Formal Proofs was not exhaustively searched,
-so the negative result there should be read as probable rather than
-established. And the claim is about the threshold \emph{argument}, not about its
-ingredients: concentration inequalities, stabilizer formalisms and code
-definitions all exist in those systems, which is precisely why the recursion
-that connects them is the part worth reporting.
-
-Kernel-only throughout: the axiom set is
-$\{\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}\}$, with no
-project-local axioms, no \texttt{sorry}, and no \texttt{native\_decide}.
+\figuredeferred{fig:d6-threshold-double-exp}{double-exponential suppression
+against level, with the malignant-pair count swept over the four values AGP
+report --- $7\,183$, $22\,701$, $35\,235$, $36\,511$ --- so the model-choice
+sensitivity of the preceding paragraphs is visible rather than asserted; blocked
+on a generator in \texttt{src/core/visualizations.py}, which is the canonical and
+only home for figure functions, and the curve is closed-form so the sweep is
+cheap once the generator exists}
 
 %% ════════════════════════════════════════════════════════════════════
+\section{Scope and outlook}
+\label{sec:scope}
 
-\figuredeferred{fig:d6-threshold-double-exp}{double-exponential suppression against level, now that the composition is derived; the curve needs $A_{\rm CNOT}$ swept over a plausible range and only the pinned AGP value exists}
-\section{Conclusion and outlook}
-\label{sec:conclusion}
+Four limits bound this result, and none of them is implicit in the Lean.
 
-The D6 substrate certifies the fault-tolerant-computation layer end to end.
-Its load-bearing result is the concatenated-Steane threshold theorem
-(\textsection\ref{sec:threshold}, Phase~6p Wave~1b): below
-$\varepsilon_0 = 1/A_{\rm CNOT}$, code concatenation
-suppresses the logical error rate double-exponentially in the level, proved
-from the extended-rectangle structure and a malignant-pair count taken from the
-primary source. That theorem is what licenses the rest of the bundle: the
-Williamson--Yoder gauging-QEC overhead bound
-(\textsection\ref{sec:gaugingQEC}, Wave~6v.1), the Shor T-gate counts for
-ECC-256 (\textsection\ref{sec:shor}, Wave~6v.2), the APM-LDPC hashing bound
-(\textsection\ref{sec:apmldpc}, Wave~6v.5) and the W-state QFT cyclotomic
-measurement primitive (\textsection\ref{sec:wstate}, Wave~6v.6) are all
-resource statements about a regime the threshold theorem defines.
+\emph{The count is a literal.} Equation~\eqref{eq:acnot} enters from
+Ref.~\cite{AGP2006} and is not derived. Deriving it means enumerating malignant
+pairs over a concrete 575-location circuit, which is a combinatorial undertaking
+of a different kind from anything above.
 
-The composition is the contribution. Each individual link is credited to its
-authors; what is new here is the chain from a physical error rate, through the
-threshold and the code, to universal logic, machine-checked without a gap. The
-compilation primitive is cited to D8 and the channel and device layer to D9,
-and neither is restated.
+\emph{The noise model is abstract local stochastic only.} The topological error
+model is a strictly different object, not equivalent to this one up to constants
+and not additive, and its specialization is deferred rather than claimed.
 
-Every result is verified with axioms
-$\subseteq\{$\texttt{propext}, \texttt{Classical.choice},
-\texttt{Quot.sound}$\}$, with no project-local axioms, no \texttt{sorry} and
-no \texttt{native\_decide}. The remaining extension is the topological error
-model, which is a different noise model rather than a tightening of this one,
-and is deferred rather than claimed. A consolidated full-bundle adversarial
-review across the five headline results is the final pre-submission gate.
+\emph{The count is conservative rather than optimal.} A smaller malignant-pair
+count raises the certified threshold, and tightening it is arithmetic on the
+same chain rather than a new argument. So is extending the single-level bound to
+AGP's cubic term, as Section~\ref{sec:steane} records.
+
+\emph{The threshold is not a statement about hardware.} It is a lower bound on
+what a device must beat under this model, and the identification of a circuit
+location with a device operation is a modelling step that is not part of the
+theorem.
+
+The development is closed under the Lean kernel's standard axioms alone,
+$\{\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}\}$, with no
+project-local axioms, no \texttt{sorry} and no \texttt{native\_decide}.
+
+The open problem is the enumeration, and it is worth naming precisely because it
+closes two gaps at once. Enumerating the malignant pairs of the Steane CNOT
+extended rectangle means deciding, for each of the $\binom{575}{2} = 165\,025$
+candidate pairs, whether some fault pattern on that pair leaves the rectangle
+incorrect --- a decidable question about a fixed circuit, and the computation AGP
+performed outside a proof assistant. Carrying it inside one would replace
+Eq.~\eqref{eq:acnot} with a derivation, and the concrete product space it
+requires over the circuit's locations is precisely the model with a strictly
+positive base rate that Section~\ref{sec:levels}'s satisfiability witness does
+not supply. Until then the recursion is machine-checked and the constant it is
+evaluated at is quoted, and this paper is a step rather than a terminus.
+
+%% ════════════════════════════════════════════════════════════════════
+\appendix
+\section{The Lean development}
+\label{app:lean}
+
+The threshold chain is nine modules under
+\verb|lean/SKEFTHawking/FaultTolerance/|. Its capstone
+\verb|steane_concatenated_failure_below_threshold| has a project-internal
+dependency closure of 46 declarations, of which 14 are theorems, computed from
+the extracted dependency graph \verb|lean/lean_deps.json| rather than by reading
+imports.
+
+\begin{table}[htbp]
+\caption{Modules in the capstone's dependency closure, and what each contributes.}
+\label{tab:modules}
+\begin{ruledtabular}
+\begin{tabular}{ll}
+Module & Contributes \\
+\colrule
+\verb|Basic| & shared definitions \\
+\verb|StabilizerCode| & stabilizer substrate \\
+\verb|SteaneCode| & the $[[7,1,3]]$ instance \\
+\verb|Counting| & Eqs.~\eqref{eq:mcnot},~\eqref{eq:acnot}; well-formedness \\
+\verb|MalignantUnionBound| & Lemmas~\ref{lem:union}--\ref{lem:submul} \\
+\verb|Concatenation| & the level sequence \\
+\verb|DoubleExp| & Eq.~\eqref{eq:double-exp} \\
+\verb|ConcatenatedComposition| & Theorem~\ref{thm:levels}; the capstones \\
+\verb|AGP/Threshold| & Eqs.~\eqref{eq:threshold-def},~\eqref{eq:threshold-numeric} \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Four further modules in the same directory --- \verb|ExRec|, \verb|Malignant|,
+\verb|NoiseModel| and \verb|NoiseModelMT| --- formalize the objects the argument
+reasons about and are reached by the capstone only through
+\verb|MalignantUnionBound|'s bridge to \verb|exRecFailureBound|. We report that
+rather than presenting them as part of the proved chain.
+
+Build provenance: Lean toolchain \leantoolchain, Mathlib revision
+\mathlibrev.
 
 %% ════════════════════════════════════════════════════════════════════
 \begin{thebibliography}{99}
+
+\bibitem{AGP2006}
+P.~Aliferis, D.~Gottesman, and J.~Preskill,
+``Quantum accuracy threshold for concatenated distance-3 codes,''
+Quantum Inf.\ Comput.\ \textbf{6}, 97--165 (2006)
+[arXiv:quant-ph/0504218].
 
 \bibitem{Hietala2020VOQC}
 K.~Hietala, R.~Rand, S.-H.~Hung, X.~Wu, and M.~Hicks,
@@ -787,50 +641,6 @@ M.~Lewis, S.~Soudjani, and P.~Zuliani,
 challenges,''
 ACM Trans.\ Quantum Comput.\ \textbf{5}, 1 (2024)
 [arXiv:2110.01320], doi:10.1145/3624483.
-
-\bibitem{WilliamsonYoder2026GaugingLogicalOperators}
-D.~J.~Williamson and T.~J.~Yoder,
-``Low-overhead fault-tolerant quantum computation by gauging
-logical operators,''
-Nat.\ Phys.\ \textbf{22}, 598--603 (2026)
-[arXiv:2410.02213], doi:10.1038/s41567-026-03220-8.
-
-\bibitem{BabbushGidneyEtAl2026ECC256Shor}
-R.~Babbush, A.~Zalcman, C.~Gidney, M.~Broughton, T.~Khattar,
-H.~Neven, T.~Bergamaschi, J.~Drake, and D.~Boneh,
-``Securing Elliptic Curve Cryptocurrencies against Quantum
-Vulnerabilities: Resource Estimates and Mitigations,''
-arXiv:2603.28846 v2 (April~2026).
-
-\bibitem{DurVidalCirac2000WState}
-W.~Dür, G.~Vidal, and J.~I.~Cirac,
-``Three qubits can be entangled in two inequivalent ways,''
-Phys.\ Rev.\ A \textbf{62}, 062314 (2000)
-[arXiv:quant-ph/0005115], doi:10.1103/PhysRevA.62.062314.
-
-\bibitem{KomotoKasai2025APMLDPCHashingBound}
-D.~Komoto and K.~Kasai,
-``Quantum Error Correction near the Coding Theoretical Bound,''
-npj Quantum Information \textbf{11}, 154 (2025)
-[arXiv:2412.21171], doi:10.1038/s41534-025-01090-1.
-
-\bibitem{NielsenChuang2010}
-M.~A.~Nielsen and I.~L.~Chuang,
-\emph{Quantum Computation and Quantum Information},
-10th anniversary ed. (Cambridge University Press, Cambridge, 2010).
-The exact ancilla-free Toffoli$\to$7-T decomposition is the standard
-Clifford+T construction (Fig.~4.9 and surrounding text).
-
-\bibitem{AGP2006}
-P.~Aliferis, D.~Gottesman, and J.~Preskill,
-``Quantum accuracy threshold for concatenated distance-3 codes,''
-Quantum Inf.\ Comput.\ \textbf{6}, 97--165 (2006)
-[arXiv:quant-ph/0504218].
-
-\bibitem{ChungHajdusekVanMeter2025QNetSimXval}
-K.~Chung, M.~Hajdušek, \emph{et al.} (incl.\ R.~Van Meter),
-``Cross-validating quantum network simulators,''
-arXiv:2504.01290 (2025).
 
 \end{thebibliography}
 
