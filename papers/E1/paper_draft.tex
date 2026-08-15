@@ -49,11 +49,11 @@ amplified by $G(\omega) = \Gamma(\omega)/(e^{2\pi\omega/\kappa_{\rm eff}}-1)$,
 which reaches one half at
 $\omega = \input{tables/lkb_gain_threshold.tex}\unskip\,\kappa_{\rm eff}$ for a
 saturated greybody factor. The obstacle is not the horizon but the
-cavity: the as-built \SI{\input{tables/lkb_tau_cav_ps_standard.tex}\unskip}{\pico\second}
+cavity: the as-built \input{tables/lkb_tau_cav_ps_standard.tex}\unskip\,\si{\pico\second}
 device has $\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_standard.tex}\unskip$,
 so the weak-dissipation expansion that licenses these numbers fails
 by more than an order of magnitude and holds only for
-$\tau_{\rm cav} \gtrsim \SI{\input{tables/lkb_tau_required_ps.tex}\unskip}{\pico\second}$.
+$\tau_{\rm cav} \gtrsim \input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}$.
 We give the predicted spectrum, its falsifiable window
 $\omega \lesssim 0.3\,\kappa$, and the two measurements that would
 close it.
@@ -245,7 +245,7 @@ between it and the device.
 
 Falque \emph{et al.} measure a polariton decay rate
 $\hbar\gamma \approx \SI{80}{\micro\electronvolt}$, or
-$\tau_{\rm cav} \approx \SI{\input{tables/lkb_tau_cav_ps_standard.tex}\unskip}{\pico\second}$.
+$\tau_{\rm cav} \approx \input{tables/lkb_tau_cav_ps_standard.tex}\unskip\,\si{\pico\second}$.
 Against $\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ this gives
 \begin{equation}
 \frac{\Gamma_{\rm pol}}{\kappa} = \input{tables/lkb_ratio_standard.tex}\unskip ,
@@ -269,7 +269,7 @@ $\input{tables/lkb_ratio_ultralong.tex}\unskip$. Eq.~\eqref{eq:weak_dissipation}
 is met from
 \begin{equation}
 \boxed{\;\tau_{\rm cav} \gtrsim
-  \SI{\input{tables/lkb_tau_required_ps.tex}\unskip}{\pico\second}\;}
+  \input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}\;}
 \label{eq:tau_required}
 \end{equation}
 onward, where the per-healing-length recovery factor has fallen to
@@ -300,7 +300,7 @@ polariton decay $\Gamma_{\rm pol}/\kappa$ against cavity lifetime
 $\tau_{\rm cav}$, at the smooth-horizon
 $\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ of
 Falque \emph{et al.}~\cite{Falque2025}. The as-built
-\SI{\input{tables/lkb_tau_cav_ps_standard.tex}\unskip}{\pico\second} device
+\input{tables/lkb_tau_cav_ps_standard.tex}\unskip\,\si{\pico\second} device
 (``standard'') sits at $\input{tables/lkb_ratio_standard.tex}\unskip$, above unity,
 where the weak-dissipation expansion of
 Eq.~\eqref{eq:weak_dissipation} does not apply. The dotted line is
@@ -482,15 +482,139 @@ is a nontrivial check; disagreement in the shape of $G(\omega)$,
 as opposed to its overall scale, cannot be absorbed into the
 greybody factor and falsifies the framework.
 
+%% ══════════════════════════════════════════════════════════════════
+\section{What would settle it}
+
+The horizon is built and its steepness is measured, so the analog
+Hawking temperature at the Paris-LKB platform is not an open
+theoretical question: Eq.~\eqref{eq:T_H} fixes it at
+$\input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$ from a
+quantity already in print. What is open is whether the leading-order
+spectrum is what the device emits, and that is decided by the
+mirror stack rather than by the optics that write the horizon. At
+$\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_standard.tex}\unskip$ the
+as-built cavity is outside the expansion; at
+$\tau_{\rm cav} \gtrsim \input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}$
+it is inside, and the same horizon then emits a spectrum whose
+half-gain frequency, Eq.~\eqref{eq:threshold}, is a pure number that
+no device parameter can move.
+
+Two measurements would convert this from a prediction into a test,
+and both are within the existing apparatus. The first is the
+in-situ polariton decay rate $\Gamma_{\rm pol}$ and cavity lifetime
+$\tau_{\rm cav}$ at the tailored-profile configuration rather than
+at the homogeneous fluid, since Eq.~\eqref{eq:weak_dissipation} is
+evaluated there and the published
+$\hbar\gamma \approx \SI{80}{\micro\electronvolt}$ is not. The
+second is the probe-scan frequency resolution and the fluid's usable
+extent at that configuration, which is what would let the lower edge
+of Eq.~\eqref{eq:window} be fixed by the experiment instead of left
+open. Given a longer-lifetime cavity generation and its $\kappa$,
+the band edges follow from the same expressions used here, and we
+would recompute and circulate them before rather than after a
+measurement.
+
 \begin{acknowledgments}
-%% DRAFTING
+Formal-verification layer built on Lean~4 (v\leantoolchain) with
+Mathlib at commit \texttt{\mathlibrev}. The polariton bounds cited in
+\S III are \texttt{attenuation\_ge\_one},
+\texttt{attenuation\_mono\_Gamma},
+\texttt{attenuation\_eq\_one\_at\_zero\_decay} and
+\texttt{polariton\_tier1\_fails\_tmds} in \texttt{PolaritonTier1.lean}
+(\bundleTheorems{} theorems over \bundleModules{} modules;
+\axiomcount{} project-local axioms, \sorrycount{} \texttt{sorry}).
 \end{acknowledgments}
 
 \section*{Methods and tools disclosure}
-%% DRAFTING
+The formal-verification layer of this work was developed with
+substantial machine assistance: Lean~4 proof drafting and iteration
+used LLM-based agents (Anthropic Claude-family models) operating
+under the project's staged validation pipeline. A subset of the
+underlying library's theorems was closed by the Aristotle automated
+theorem prover (Harmonic); every proof is ultimately certified by
+the Lean~4 kernel via \texttt{lake build} on the public repository,
+independently of any AI tool. Manuscript prose was AI-assisted and
+human-reviewed. Every device-derived numerical value in this
+manuscript is generated from \texttt{src/core/constants.py} and
+\texttt{src/core/formulas.py} through
+\texttt{papers/E1/tables.py} rather than typed into the text.
 
 \begin{thebibliography}{99}
-%% DRAFTING — carried forward selectively from the superseded draft
+
+\bibitem{Steinhauer2016}
+J.~Steinhauer, Nat.\ Phys.\ \textbf{12}, 959 (2016).
+
+\bibitem{deNova2019}
+J.~R.~M.~de~Nova, K.~Golubkov, V.~I.~Kolobov, and J.~Steinhauer,
+Nature \textbf{569}, 688 (2019).
+
+\bibitem{Unruh1981}
+W.~G.~Unruh, Phys.\ Rev.\ Lett.\ \textbf{46}, 1351 (1981).
+
+\bibitem{Visser1998}
+M.~Visser, Class.\ Quantum Grav.\ \textbf{15}, 1767 (1998)
+[arXiv:gr-qc/9712010].
+
+\bibitem{Barcelo2011}
+C.~Barcel\'o, S.~Liberati, and M.~Visser,
+Living Rev.\ Relativ.\ \textbf{8}, 12 (2005)
+[arXiv:gr-qc/0505065].
+
+\bibitem{Gerace2012}
+D.~Gerace and I.~Carusotto,
+Phys.\ Rev.\ B \textbf{86}, 144505 (2012).
+
+\bibitem{Nguyen2015}
+H.~S.~Nguyen \emph{et al.},
+Phys.\ Rev.\ Lett.\ \textbf{114}, 036402 (2015).
+
+\bibitem{Falque2025}
+K.~Falque, A.~Delhom, Q.~Glorieux, E.~Giacobino, A.~Bramati,
+and M.~J.~Jacquet,
+Phys.\ Rev.\ Lett.\ \textbf{135}, 023401 (2025)
+[arXiv:2311.01392].
+
+\bibitem{Estrecho2021}
+E.~Estrecho \emph{et al.},
+Phys.\ Rev.\ Lett.\ \textbf{126}, 075301 (2021).
+
+\bibitem{Stepanov2019}
+P.~Stepanov \emph{et al.},
+Nat.\ Commun.\ \textbf{10}, 3869 (2019).
+
+\bibitem{Claude2023}
+F.~Claude \emph{et al.},
+Phys.\ Rev.\ B \textbf{107}, 174507 (2023).
+
+\bibitem{Grisins2016}
+P.~Grisins \emph{et al.},
+Phys.\ Rev.\ B \textbf{94}, 144518 (2016).
+
+\bibitem{Jacquet2022}
+M.~Jacquet \emph{et al.},
+Eur.\ Phys.\ J.\ D \textbf{76}, 152 (2022).
+
+\bibitem{Finazzi2012}
+S.~Finazzi and R.~Parentani,
+Phys.\ Rev.\ D \textbf{85}, 124027 (2012).
+
+\bibitem{Jacquet2023QNM}
+M.~Jacquet \emph{et al.},
+Phys.\ Rev.\ Lett.\ \textbf{130}, 111501 (2023).
+
+\bibitem{Burkhard2025}
+M.~Burkhard \emph{et al.},
+arXiv:2511.12339 (2025).
+
+\bibitem{Amelio2020}
+I.~Amelio and I.~Carusotto,
+Phys.\ Rev.\ B \textbf{101}, 064505 (2020).
+
+\bibitem{WangKimBZHe2026PennTMDPolariton}
+Z.~Wang, B.~Kim, B.~Zhen, and L.~He,
+Phys.\ Rev.\ Lett.\ \textbf{136}, 146901 (2026)
+[arXiv:2411.16635].
+
 \end{thebibliography}
 
 \end{document}
