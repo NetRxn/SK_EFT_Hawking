@@ -9827,6 +9827,48 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-07-31-1823-internal-adversarial:D12:8.5",
+      "status": "fixed",
+      "evidence": "Both halves of the Expected shipped. VISIBILITY: GateResult gains accepted_blockers and every notes branch of _eval_fix_propagation discloses the count, so a gate reads '0 open; N accepted at blocking severity' instead of 'all review findings fixed'. Measured after the change: 40 FixPropagation gates surface 66 accepted-blocker refs. No gate STATE changes — accepted is a recorded decision, not unclosed work, so this is disclosure and not blocking, which is what the finding asks for. ATTRIBUTION: a new accepted_by leg on accepted_findings_carry_rationale, ratcheted at the measured 32 with a ZERO-HEADROOM test against the production ledger and a seam guard binding its severity set to readiness_gates' own, so the ratchet cannot end up counting a different population from the gate it supplements. Deliberately a ratchet rather than a hard gate — turning it red at once would block every bundle on historical debt — and bulk-stamping a name to clear it is prohibited in-comment, because that reproduces the textbook-exemption defect one layer over: a field satisfied by paperwork rather than by the thing it attests. The ceiling is 32 and not the 31 measured earlier the same day; 31 counts graph NODES at status accepted, 32 counts last-wins LEDGER records whose finding resolves to a blocking severity, and a ceiling must be measured by the predicate that enforces it.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:8.5",
+      "status": "fixed",
+      "evidence": "Both halves of the Expected shipped. VISIBILITY: GateResult gains accepted_blockers and every notes branch of _eval_fix_propagation discloses the count, so a gate reads '0 open; N accepted at blocking severity' instead of 'all review findings fixed'. Measured after the change: 40 FixPropagation gates surface 66 accepted-blocker refs. No gate STATE changes — accepted is a recorded decision, not unclosed work, so this is disclosure and not blocking, which is what the finding asks for. ATTRIBUTION: a new accepted_by leg on accepted_findings_carry_rationale, ratcheted at the measured 32 with a ZERO-HEADROOM test against the production ledger and a seam guard binding its severity set to readiness_gates' own, so the ratchet cannot end up counting a different population from the gate it supplements. Deliberately a ratchet rather than a hard gate — turning it red at once would block every bundle on historical debt — and bulk-stamping a name to clear it is prohibited in-comment, because that reproduces the textbook-exemption defect one layer over: a field satisfied by paperwork rather than by the thing it attests. The ceiling is 32 and not the 31 measured earlier the same day; 31 counts graph NODES at status accepted, 32 counts last-wins LEDGER records whose finding resolves to a blocking severity, and a ceiling must be measured by the predicate that enforces it.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:8.5",
+      "status": "fixed",
+      "evidence": "Both halves of the Expected shipped. VISIBILITY: GateResult gains accepted_blockers and every notes branch of _eval_fix_propagation discloses the count, so a gate reads '0 open; N accepted at blocking severity' instead of 'all review findings fixed'. Measured after the change: 40 FixPropagation gates surface 66 accepted-blocker refs. No gate STATE changes — accepted is a recorded decision, not unclosed work, so this is disclosure and not blocking, which is what the finding asks for. ATTRIBUTION: a new accepted_by leg on accepted_findings_carry_rationale, ratcheted at the measured 32 with a ZERO-HEADROOM test against the production ledger and a seam guard binding its severity set to readiness_gates' own, so the ratchet cannot end up counting a different population from the gate it supplements. Deliberately a ratchet rather than a hard gate — turning it red at once would block every bundle on historical debt — and bulk-stamping a name to clear it is prohibited in-comment, because that reproduces the textbook-exemption defect one layer over: a field satisfied by paperwork rather than by the thing it attests. The ceiling is 32 and not the 31 measured earlier the same day; 31 counts graph NODES at status accepted, 32 counts last-wins LEDGER records whose finding resolves to a blocking severity, and a ceiling must be measured by the predicate that enforces it.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:1.3",
+      "status": "fixed",
+      "evidence": "STALE — the load-bearing premise no longer holds, same root as D1 1.6 and D2 1.1 which were adjudicated the same way this session. The finding says the absent arxiv_verified flags mean 'Gate 1's documented pass criterion cannot be met'. That criterion no longer exists: docs/READINESS_GATES.md Gate 1 was rewritten to state in bold that it is registry COVERAGE, not content verification, and the string appears neither in the section nor in _eval_citation_integrity. Measured at HEAD: Gate 1 mentions arxiv_verified False, evaluator reads it False, D12's 15 bibkeys 15 registered 0 unregistered. Content verification is routed to bibitem_title_primary_source, citation_primary_sources_present and provenance_doi_in_registry, all passing. The finding's own count is also stale — D12 has SEVEN arXiv-bearing entries, not six. A decorative arxiv_verified field is deliberately NOT added: nothing reads it, and populating it from free-text notes would assert a verification the repo cannot re-derive.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:1.3",
+      "status": "fixed",
+      "evidence": "STALE — the load-bearing premise no longer holds, same root as D1 1.6 and D2 1.1 which were adjudicated the same way this session. The finding says the absent arxiv_verified flags mean 'Gate 1's documented pass criterion cannot be met'. That criterion no longer exists: docs/READINESS_GATES.md Gate 1 was rewritten to state in bold that it is registry COVERAGE, not content verification, and the string appears neither in the section nor in _eval_citation_integrity. Measured at HEAD: Gate 1 mentions arxiv_verified False, evaluator reads it False, D12's 15 bibkeys 15 registered 0 unregistered. Content verification is routed to bibitem_title_primary_source, citation_primary_sources_present and provenance_doi_in_registry, all passing. The finding's own count is also stale — D12 has SEVEN arXiv-bearing entries, not six. A decorative arxiv_verified field is deliberately NOT added: nothing reads it, and populating it from free-text notes would assert a verification the repo cannot re-derive.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:1.3",
+      "status": "fixed",
+      "evidence": "STALE — the load-bearing premise no longer holds, same root as D1 1.6 and D2 1.1 which were adjudicated the same way this session. The finding says the absent arxiv_verified flags mean 'Gate 1's documented pass criterion cannot be met'. That criterion no longer exists: docs/READINESS_GATES.md Gate 1 was rewritten to state in bold that it is registry COVERAGE, not content verification, and the string appears neither in the section nor in _eval_citation_integrity. Measured at HEAD: Gate 1 mentions arxiv_verified False, evaluator reads it False, D12's 15 bibkeys 15 registered 0 unregistered. Content verification is routed to bibitem_title_primary_source, citation_primary_sources_present and provenance_doi_in_registry, all passing. The finding's own count is also stale — D12 has SEVEN arXiv-bearing entries, not six. A decorative arxiv_verified field is deliberately NOT added: nothing reads it, and populating it from free-text notes would assert a verification the repo cannot re-derive.",
+      "superseded_by": null,
+      "date": "2026-08-15"
     }
   ]
 }
