@@ -47,6 +47,7 @@ import contextlib
 import fcntl
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -86,10 +87,98 @@ def _norm_cmd(cmd: str) -> str:
     return " ".join((cmd or "").strip().strip("`").split())
 
 
+# ── Out-of-repo artifact anchors (D11 Stage-13 finding 2026-08-01-0009:D11:N3) ──
+# `Lit-Search/` is a workspace SIBLING of this repository, and Pipeline Invariant #11
+# makes a primary-source cache mandatory at every Stage 13 — so for any finding whose
+# artifact lives there, a commit reference is STRUCTURALLY IMPOSSIBLE: no commit in this
+# repo can contain the change. The schema offered only `commit` or `date`, which forced
+# either a fabricated SHA or no closure at all, and a record shipped citing the very
+# commit the finding says did NOT fix it. A provenance record whose commit cannot
+# contain the change is worse than no record, because it reads as an audit trail.
+#
+# `--artifact` is the anchor for that case: it hashes the file as it stands at closure
+# time and records `artifact_sha256` + `artifact_path`, which a later reviewer can
+# re-derive with one command. It counts as an anchor in its own right.
+_PATH_IN_TARGET = re.compile(r"`([^`\s]+/[^`\s]+\.[A-Za-z0-9]+)`")
+
+
+def _resolve_case_insensitively(base: Path, rel: str) -> Path | None:
+    """Resolve `rel` under `base`, falling back to a case-insensitive segment match.
+
+    Filesystem-independent by construction: it never relies on APFS folding the case
+    for it, so a path typed `Phase-6C` against a `Phase-6c` directory resolves the same
+    way on Linux CI as it does here, and the CALLER gets the on-disk spelling back.
+    """
+    cur = base
+    for seg in Path(rel).parts:
+        if not cur.is_dir():
+            return None
+        # ⚠️ Read the DIRECTORY LISTING rather than testing `(cur / seg).exists()`.
+        # On a case-insensitive filesystem `exists()` is true for the TYPED spelling, so
+        # a probe-based walk happily returns `Phase-6C` and the recorded path is one that
+        # exists nowhere else. The listing carries the real name.
+        names = {c.name: c for c in cur.iterdir()}
+        match = names.get(seg) or next(
+            (c for n, c in names.items() if n.lower() == seg.lower()), None)
+        if match is None:
+            return None
+        cur = match
+    return cur if cur.is_file() else None
+
+
+def _artifact_anchor(rel_paths: list[str]) -> tuple[dict | None, str]:
+    """`({artifact_path, artifact_sha256, artifact_anchors}, "")` or `(None, reason)`."""
+    import hashlib
+
+    from src.core.workspace import find_workspace
+    ws = find_workspace()
+    recs = []
+    for rel in rel_paths:
+        f = _resolve_case_insensitively(ws, rel)
+        if f is None:
+            return None, (f"--artifact {rel!r} does not resolve under the workspace "
+                          f"({ws}). An anchor that names nothing is the defect this "
+                          f"option exists to replace.")
+        # Record the RESOLVED spelling, not the typed one: review documents quote
+        # `Phase-6C` where the directory is `Phase-6c`, and a record carrying a path
+        # that only resolves on a case-insensitive filesystem is not provenance
+        # anywhere else (D11 Stage-13 round-4 finding 1.2).
+        recs.append({"path": f.relative_to(ws).as_posix(),
+                     "sha256": hashlib.sha256(f.read_bytes()).hexdigest()})
+    if not recs:
+        return None, "--artifact was given no path"
+    return ({"artifact_path": recs[0]["path"],
+             "artifact_sha256": recs[0]["sha256"],
+             "artifact_anchors": recs}, "")
+
+
+def _targets_are_all_out_of_repo(node) -> list[str]:
+    """Workspace-relative paths a finding names that this git repo does not track.
+
+    Returns `[]` unless EVERY path-shaped token in the finding's Location is untracked
+    here — a finding with an in-repo half still has something a commit can legitimately
+    anchor, and must not be blocked.
+    """
+    target = (node.get("meta") or {}).get("target") or ""
+    cands = _PATH_IN_TARGET.findall(target)
+    if not cands:
+        return []
+    outside = []
+    for c in cands:
+        r = subprocess.run(["git", "ls-files", "--error-unmatch", c],
+                           cwd=str(_bg.PROJECT_ROOT),
+                           capture_output=True, text=True)
+        if r.returncode == 0:
+            return []                      # at least one tracked path: commit is fine
+        outside.append(c)
+    return outside
+
+
 def close(doc: str, sections: list[str], status: str, evidence: str,
           commit: str | None = None, date: str | None = None,
           verify: str | None = None, superseded_by: str | None = None,
-          dry_run: bool = False) -> tuple[bool, str]:
+          dry_run: bool = False,
+          artifact: list[str] | None = None) -> tuple[bool, str]:
     """Close one or more findings from a single review document.
 
     Multiple sections write one record EACH, sharing the evidence string — meeting the
@@ -113,8 +202,28 @@ def close(doc: str, sections: list[str], status: str, evidence: str,
         return False, (f"evidence is {len(evidence.strip())} chars; the bar is "
                        f"{MIN_EVIDENCE}. A closure has to say what changed and where.")
 
-    if not (commit or date):
-        return False, "no anchor: pass --commit or --date"
+    art_rec = None
+    if artifact:
+        art_rec, why = _artifact_anchor(artifact)
+        if art_rec is None:
+            return False, why
+
+    if not (commit or date or art_rec):
+        return False, "no anchor: pass --commit, --date or --artifact"
+
+    # ⚠️ REFUSE a commit anchor this repository cannot possibly carry. Narrow on
+    # purpose: it fires only when EVERY path the finding's Location names is untracked
+    # here, so an in-repo finding is never blocked by it.
+    if commit and not art_rec:
+        for fid in minted:
+            outside = _targets_are_all_out_of_repo(nodes[fid])
+            if outside:
+                return False, (
+                    f"{fid} names only artifacts this repository does not track "
+                    f"({', '.join(outside)}), so NO commit here can contain the change "
+                    f"and --commit {commit} would read as an audit trail while proving "
+                    f"nothing. Anchor it with `--artifact {outside[0]}`, which records "
+                    f"the file's sha256 at closure time; --date may accompany it.")
 
     ok, verified_by, msg = _run_verifications(minted, nodes, verify, status)
     if not ok:
@@ -122,7 +231,7 @@ def close(doc: str, sections: list[str], status: str, evidence: str,
 
     try:
         to_add, already = _plan(minted, nodes, status, evidence, commit, date,
-                               verified_by, superseded_by)
+                               verified_by, superseded_by, art_rec)
     except ValueError as exc:           # a conflicting or sub-bar pre-existing record
         return False, str(exc)
 
@@ -193,7 +302,8 @@ def _run_verifications(minted, nodes, verify, status: str = "fixed") -> tuple[bo
     return True, verified_by, ""
 
 
-def _plan(minted, nodes, status, evidence, commit, date, verified_by, superseded_by):
+def _plan(minted, nodes, status, evidence, commit, date, verified_by, superseded_by,
+          art_rec=None):
     """`(to_add, already)` — or raise. Shared by the real write AND `--dry-run`.
 
     ⚠️ Planning is separate from writing so that `--dry-run` previews the REFUSALS. When
@@ -213,13 +323,19 @@ def _plan(minted, nodes, status, evidence, commit, date, verified_by, superseded
         rec = {"finding_id": fid, "status": status, "evidence": evidence,
                "superseded_by": superseded_by,
                "date": date or _date.today().isoformat()}
-        if prior is not None and prior.get("status") == "open":
+        if prior is not None and (
+                prior.get("status") == "open"
+                or (prior.get("status") in CLOSING_STATUSES
+                    and not _bg._closure_record_meets_bar(
+                        prior, bool((nodes[fid].get("meta") or {}).get("verify"))))):
             # Keep the history legible: this closure walks over an inert `open` record
             # rather than a genuine prior decision. Without the marker the ledger reads as
             # if nothing preceded it, and the next reader cannot tell the two apart.
             rec["supersedes_inert_open"] = True
         if commit:
             rec["commit"] = commit
+        if art_rec:
+            rec.update(art_rec)
         if verified_by.get(fid):
             rec["verified_by"] = verified_by[fid]
         to_add.append(rec)
@@ -264,6 +380,26 @@ def _guard_prior(fid, prior, status, nodes, already) -> None:
     # refusal above are each load-bearing and were each written to close a real defect —
     # widening this guard generally would reopen both.
     if prior_status == "open":
+        return
+    # A prior closure that does NOT MEET THE BAR is inert for the same reason: the reader
+    # leaves the finding `open`, so the record changes no reader's answer either. Refusing
+    # on it strands the finding — and the refusal's advice, "amend the existing record",
+    # still names an operation this tool does not offer.
+    #
+    # Measured 2026-08-15, and the stranding mechanism is worth stating because it is not
+    # obvious: `review:2026-08-14-l1-stage13:L1:3.2` carried a substantive `accepted`
+    # record that could never meet the bar, because the finding DECLARED a Verify
+    # asserting one branch of a two-branch Expected while the decision took the other. The
+    # declared command could not pass under the decision actually made, so no record could
+    # carry a passing `verified_by`, so the bar was unreachable and the finding read `open`
+    # permanently. The Verify was the defect; this guard turned it into a life sentence.
+    #
+    # ⚠️ STILL NARROW. A prior that DOES meet the bar continues to refuse a conflicting
+    # status — that is the `fixed`↔`accepted` guard, and it is load-bearing. Only a record
+    # that closes nothing is walked over, and only by one that closes something: `_plan`
+    # applies the bar to the new record independently.
+    if prior_status in CLOSING_STATUSES and not _bg._closure_record_meets_bar(
+            prior, bool((nodes[fid].get("meta") or {}).get("verify"))):
         return
     # A lifecycle transition through the append-only ledger, which the reader resolves
     # last-wins: closing → reopened, and reopened → closing, are both legitimate.
@@ -379,14 +515,19 @@ def main(argv=None) -> int:
     ap.add_argument("--evidence", required=True,
                     help=f"what changed and where (>= {MIN_EVIDENCE} chars to close)")
     ap.add_argument("--commit", help="commit anchoring the fix")
-    ap.add_argument("--date", help="ISO date (either this or --commit is required)")
+    ap.add_argument("--date", help="ISO date (this, --commit or --artifact is required)")
+    ap.add_argument("--artifact", action="append", metavar="WORKSPACE_REL_PATH",
+                    help="anchor the closure to a file's sha256 instead of a commit. "
+                         "REQUIRED when the finding's artifact lives outside this git "
+                         "repo (e.g. Lit-Search/), where no commit can contain the "
+                         "change. Repeatable.")
     ap.add_argument("--verify", help="command proving the fix; RUN before writing")
     ap.add_argument("--superseded-by", dest="superseded_by",
                     help="the re-review that confirmed it")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args(argv)
     ok, msg = close(a.doc, a.section, a.status, a.evidence, a.commit, a.date,
-                    a.verify, a.superseded_by, a.dry_run)
+                    a.verify, a.superseded_by, a.dry_run, a.artifact)
     print(("✓ " if ok else "✗ REFUSED — ") + msg)
     return 0 if ok else 1
 

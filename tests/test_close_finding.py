@@ -305,6 +305,25 @@ class TestAnInertOpenRecordDoesNotBlockClosure:
         assert ok is True, msg
         assert json.loads(p.read_text())["supersessions"][-1]["supersedes_inert_open"] is True
 
+    def test_a_SUB_BAR_prior_of_another_status_is_also_inert(
+            self, tmp_path, monkeypatch):
+        """A closure that does not meet the bar leaves the finding reading `open`, so it
+        changes no reader's answer — inert for the same reason an `open` record is.
+
+        ⚠️ Measured on a real stranding. `review:2026-08-14-l1-stage13:L1:3.2` carried a
+        substantive `accepted` record that could NEVER meet the bar: the finding declared
+        a Verify asserting one branch of a two-branch Expected while the decision took the
+        other, so the declared command could not pass under the decision actually made, no
+        record could carry a passing `verified_by`, and the finding read `open`
+        permanently. The Verify was the defect; this guard turned it into a life sentence.
+        """
+        self._production_ledger_plus(
+            tmp_path, monkeypatch,
+            {"finding_id": FID, "status": "accepted"})   # no evidence -> below the bar
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence="x" * 60, commit="abc1234")
+        assert ok is True, msg
+
     def test_an_accepted_prior_is_STILL_refused(self, tmp_path, monkeypatch):
         """The narrowness is the point. `fixed`↔`accepted` and the below-the-bar-`fixed`
         refusals are each load-bearing; widening the guard past `open` reopens both."""
@@ -502,3 +521,86 @@ def test_a_passing_verify_records_exit_zero_under_both_statuses():
         ok, verified_by, _ = cf._run_verifications(
             ["review:x:y:1"], nodes, None, status)
         assert ok and verified_by["review:x:y:1"]["exit_code"] == 0
+
+
+class TestOutOfRepoArtifactAnchor:
+    """A finding whose artifact lives OUTSIDE this git repository cannot be anchored to
+    a commit — no commit here can contain the change (D11 Stage-13 finding
+    `2026-08-01-0009:D11:N3`). `Lit-Search/` is a workspace sibling, and Pipeline
+    Invariant #11 makes a primary-source cache mandatory at every Stage 13, so the
+    schema's commit-or-date bar forced either a fabricated SHA or no closure. A record
+    shipped citing the very commit the finding says did NOT fix it.
+
+    Every leg drives the REAL `close()` in `--dry-run`; the tracked ledger is untouched.
+    """
+
+    #: A live finding whose only Location is under `Lit-Search/`.
+    OOR_DOC = "papers/AutomatedReviews/2026-07-31-1951-internal-adversarial/D11.md"
+    OOR_SECTION = "1.1"
+    OOR_ARTIFACT = ("Lit-Search/Phase-6C/primary-sources/"
+                    "LjungstromMortberg2024.abstract.txt")
+    OOR_EVIDENCE = ("Cache Caveat block rewritten so the carve-out states the scope the "
+                    "evidence was gathered at; verified by reading the file.")
+
+    def test_a_commit_anchor_on_an_OUT_OF_REPO_artifact_is_REFUSED(self):
+        """FIRES ON THE SEEDED DEFECT. This is the exact call that produced the shipped
+        bad record: `--commit a683b917` against a finding whose artifact this repo does
+        not track."""
+        ok, msg = cf.close(doc=self.OOR_DOC, sections=[self.OOR_SECTION],
+                           status="fixed", evidence=self.OOR_EVIDENCE,
+                           commit="a683b917", dry_run=True)
+        assert ok is False, "a structurally impossible commit anchor was accepted"
+        assert "does not track" in msg and "--artifact" in msg, msg
+
+    def test_an_IN_REPO_finding_is_NOT_blocked_by_the_guard(self):
+        """The other direction, and it is the load-bearing one: the guard is narrow, so
+        an ordinary in-repo closure must still pass with a plain commit anchor. A guard
+        that blocked those would stop every closure in the project."""
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence=EVIDENCE, commit="b0f44815", dry_run=True)
+        assert ok is True, msg
+
+    def test_the_artifact_anchor_is_accepted_without_a_commit(self):
+        ok, msg = cf.close(doc=self.OOR_DOC, sections=[self.OOR_SECTION],
+                           status="fixed", evidence=self.OOR_EVIDENCE,
+                           artifact=[self.OOR_ARTIFACT], dry_run=True)
+        assert ok is True, msg
+
+    def test_an_artifact_anchor_that_names_nothing_is_REFUSED(self):
+        """The option exists to replace an anchor that proves nothing; it must not become
+        one."""
+        ok, msg = cf.close(doc=self.OOR_DOC, sections=[self.OOR_SECTION],
+                           status="fixed", evidence=self.OOR_EVIDENCE,
+                           artifact=["Lit-Search/__no_such_dir__/nope.txt"],
+                           dry_run=True)
+        assert ok is False and "does not resolve" in msg, msg
+
+    def test_the_recorded_path_is_the_ON_DISK_spelling(self):
+        """Review documents quote `Phase-6C` where the directory is `Phase-6c`. Both
+        resolve on APFS and neither does on Linux CI, so the record must carry the
+        spelling that actually exists (D11 round-4 finding 1.2)."""
+        rec, why = cf._artifact_anchor([self.OOR_ARTIFACT])
+        assert rec is not None, why
+        assert rec["artifact_path"].startswith("Lit-Search/Phase-6c/"), (
+            f"the anchor recorded the TYPED spelling {rec['artifact_path']!r} rather "
+            f"than the on-disk one — a path that resolves only on a case-insensitive "
+            f"filesystem is not provenance anywhere else")
+        assert len(rec["artifact_sha256"]) == 64
+
+    def test_the_hash_actually_tracks_the_file(self, tmp_path, monkeypatch):
+        """A digest that does not move with the bytes is decoration."""
+        import src.core.workspace as _ws
+        ws = tmp_path / "ws"
+        (ws / "Lit-Search" / "p").mkdir(parents=True)
+        f = ws / "Lit-Search" / "p" / "a.txt"
+        f.write_text("one")
+        monkeypatch.setattr(_ws, "find_workspace", lambda: ws)
+        first, _ = cf._artifact_anchor(["Lit-Search/p/a.txt"])
+        f.write_text("two")
+        second, _ = cf._artifact_anchor(["Lit-Search/p/a.txt"])
+        assert first["artifact_sha256"] != second["artifact_sha256"]
+
+    def test_no_anchor_at_all_is_still_REFUSED(self):
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence=EVIDENCE, dry_run=True)
+        assert ok is False and "no anchor" in msg, msg
