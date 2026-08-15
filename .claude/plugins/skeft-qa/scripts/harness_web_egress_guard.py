@@ -140,6 +140,44 @@ _WHITELIST = (
     #   10.3847, 10.1070 -> iopscience.iop.org
     # STILL UNMAPPED (1 entry): 10.26421 — registrant not identified; if a fetch of it is
     # ever denied, identify the host and add it here rather than widening anything.
+    # Python stdlib reference — the language this substrate is written in (added 2026-08-15)
+    "docs.python.org",
+    # package metadata and released versions; dependency-declaration checks (added 2026-08-15)
+    "pypi.org",
+    # hosts the documentation for a large share of our Python dependencies (added 2026-08-15)
+    "readthedocs.io",
+    # uv and ruff — uv is this project's package manager and lockfile authority (added 2026-08-15)
+    "docs.astral.sh",
+    # NumPy — core numerics beneath formulas.py and the WKB/ADW solvers (added 2026-08-15)
+    "numpy.org",
+    # SciPy — integrators and optimizers in the same layer (added 2026-08-15)
+    "scipy.org",
+    # Plotly — the project's MANDATED figure library (matplotlib is prohibited) (added 2026-08-15)
+    "plotly.com",
+    # pytest — the harness both test suites run under (added 2026-08-15)
+    "docs.pytest.org",
+    # Quart and Flask — the provenance dashboard's web layer (added 2026-08-15)
+    "palletsprojects.com",
+    # Playwright — the real-chromium tests that guard page JS (added 2026-08-15)
+    "playwright.dev",
+    # Rust language reference — the RHMC crate (added 2026-08-15)
+    "doc.rust-lang.org",
+    # Rust crate API docs for the RHMC dependency set (added 2026-08-15)
+    "docs.rs",
+    # Rust crate metadata and released versions (added 2026-08-15)
+    "crates.io",
+    # PyO3 — the Rust/Python bridge the RHMC crate is built on (added 2026-08-15)
+    "pyo3.rs",
+    # PostgreSQL — the shared provenance graph database (added 2026-08-15)
+    "postgresql.org",
+    # Docker — the sk_eft_graph container the database runs in (added 2026-08-15)
+    "docs.docker.com",
+    # Cloudflare Workers and Access — the website deployment path (added 2026-08-15)
+    "developers.cloudflare.com",
+    # OpenAI API reference — a provider this workspace evaluates against (added 2026-08-15)
+    "platform.openai.com",
+    # OpenAI model and pricing documentation (added 2026-08-15)
+    "openai.com",
 )
 
 # Path-scoped destinations: (host, path_prefix). A URL passes iff its host matches the

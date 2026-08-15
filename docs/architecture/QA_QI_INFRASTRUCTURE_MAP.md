@@ -216,12 +216,41 @@ it goes in `_WHITELIST`; nowhere else confers access.
 adversarial reviewers. Filtering the fetch layer to police what may be cited is a category error,
 and is how the settings subset came to exist and then drift unnoticed.
 
-Adding an entry: name the *target* in the comment rather than the category, so a later reader
-can retire the grant once that target is acquired instead of inheriting an unexplained
-permission; record the authorizing date; prefer the narrowest form that reaches it; edit the
-plugin **source** under `.claude/plugins/skeft-qa/scripts/` — never the cache, which is a build
-artifact that reverts on the next refresh — and refresh the plugin, since a source edit does not
-affect the running session. What a claim may then rest on is
+**Adding an entry — use [`scripts/egress_policy.py`](../../scripts/egress_policy.py), not an
+editor.** Widening egress is a five-step sequence in which every step has a silent failure mode
+this project has already hit, so it is a command rather than a remembered ritual:
+
+```bash
+uv run python scripts/egress_policy.py add <domain> --for "<what needs it>" --date <YYYY-MM-DD>
+git commit …                     # the cache is keyed by the committed HEAD SHA
+uv run python scripts/egress_policy.py sync
+# then RESTART Claude Code — the operator's call, never automated
+```
+
+`add` refuses a host already covered (matching is subdomain-aware, so it catches parent
+entries), refuses anything that is not a bare registrable host, refuses a bare entry for a
+**code host** and directs you to `--path`, and requires `--date` because an undated grant cannot
+be audited. It then **imports the edited guard and asserts the domain resolves** before running
+the egress tests — a write that lands in a comment fails there rather than at the next fetch.
+
+`sync` discovers the install records from Claude Code's own installed-plugins record rather than
+assuming a fixed number: this plugin has one record **per launch point**, and `claude plugin
+update` only touches the record for the current cwd. It refuses to run while the guard has uncommitted changes, since
+the cache is keyed by the committed SHA and an unsynced edit would be silently skipped.
+
+Three properties of the runtime that make the last step non-negotiable:
+
+- **A restart is required, and only a restart.** Hooks bind at session start. Measured
+  2026-08-15: `/reload-skills` reloaded the skills and left the `PreToolUse` chain untouched.
+- **A refresh is not a restart.** `claude plugin update` moves the cache; the running session
+  keeps serving the hook it loaded. Both are needed, in that order.
+- **The deny message is a version probe.** It names this document. A denial that instead names
+  the retired `dev-loops` egress spec — a document that never existed and whose pointer was
+  removed on 2026-08-15 — proves the *running* hook predates that retirement, whatever the
+  installed-plugins record reports. Config state and runtime state are separate questions, and
+  only the deny text answers the second.
+
+What a claim may then rest on is
 [ADR-014](../adrs/ADR-014-source-acquisition-and-citation-fidelity.md): a fetch that lands a
 publisher **abstract** has not obtained the source.
 

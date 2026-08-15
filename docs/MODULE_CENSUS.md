@@ -229,6 +229,7 @@ Nothing else belongs here.
 | `scripts/datastar_bundles.py` | datastar_bundles.py — Phase 6i Wave 7.5 dashboard data loader for the Bundles tab. |
 | `scripts/datastar_helpers.py` | Flask ↔ Datastar glue. |
 | `scripts/dep_upgrade_preview.py` | Show what `uv lock --upgrade` WOULD do, classified by risk. Writes nothing. |
+| `scripts/egress_policy.py` | Add a domain to the web-egress whitelist, and push it to every running install. |
 | `scripts/emit_clifford_table.py` | Emit the 192-entry Lean Clifford lookup table for cliffordBase. |
 | `scripts/export_web_atlas.py` | Export compact, web-weight JSON distillations of the proof atlas for external visualization surfaces (dashboards, static sites). |
 | `scripts/extract_lean_deps.py` | Lean Declaration Extraction Wrapper — the Lean declaration taxonomy plus per-declaration axiom dependencies. |
