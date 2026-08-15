@@ -94,15 +94,14 @@ class TestTheKeyCoversFilesThatDoNotExistYet:
         catch. Only a baseline captured immediately before the change attributes
         the movement to the change.
         """
+        from seed_journal import seeded_directory
         before = pd._graph_fingerprint()
-        probe = REVIEWS / "2026-08-14-key-coverage-probe"
-        probe.mkdir(parents=True, exist_ok=False)
-        try:
+        with seeded_directory(REVIEWS / "2026-08-14-key-coverage-probe",
+                              reason="a new dated review directory must move the "
+                                     "dashboard's graph key"):
             assert pd._graph_fingerprint() != before, (
                 "a new dated directory did not move the key — paths alone cannot "
                 "see a file that did not exist at the last build")
-        finally:
-            probe.rmdir()
 
 
 class TestTheCacheStillCaches:
@@ -145,22 +144,20 @@ class TestTheSeam:
         graph the dashboard SERVES to contain its node — not merely that a
         fingerprint moved."""
         import build_graph as bg
+        from seed_journal import SEED_MARKER, seeded_artifact
 
         before = pd.get_cached_graph(sync_pg=False)
-        probe_dir = REVIEWS / "2026-08-14-seam-probe"
-        probe_dir.mkdir(parents=True, exist_ok=False)
-        (probe_dir / "infra.md").write_text(
-            "# Seam probe\n\n### 1 — probe finding\n\n"
-            "- **Severity:** minor\n- **Lane:** infra\n"
-            "- **Observed:** seeded by tests/test_dashboard_graph_cache.py\n")
         expected = bg.mint_finding_id("2026-08-14-seam-probe", "infra", "1")
-        try:
+        with seeded_artifact(
+                REVIEWS / "2026-08-14-seam-probe" / "infra.md",
+                "# Seam probe\n\n### 1 — probe finding\n\n"
+                "- **Severity:** minor\n- **Lane:** infra\n"
+                "- **Observed:** seeded by tests/test_dashboard_graph_cache.py "
+                f"<!-- {SEED_MARKER} -->\n",
+                reason="a newly filed finding must reach the graph the dashboard SERVES"):
             after = pd.get_cached_graph(sync_pg=False)
             assert after is not before, "the dashboard served its cached graph"
             assert expected in {n["id"] for n in after["nodes"]}, (
                 "a finding was filed and the dashboard's graph does not contain it")
-        finally:
-            (probe_dir / "infra.md").unlink()
-            probe_dir.rmdir()
         restored = pd.get_cached_graph(sync_pg=False)
         assert expected not in {n["id"] for n in restored["nodes"]}

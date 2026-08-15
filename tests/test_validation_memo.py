@@ -78,14 +78,19 @@ def _bad():
 
 def _seeded(path: Path, addition: bytes, key_fn):
     """Compute `key_fn()`, really change `path` in the production tree, recompute,
-    restore. Returns (before, after)."""
+    restore. Returns (before, after).
+
+    Restores through `seed_journal`, so the original bytes are on stable storage before
+    the production file is touched. Every caller here appends to a TRACKED source file
+    (`src/core/constants.py`, a check module, `lean/lean_deps.json`); before 2026-08-15 a
+    killed run left that append in the working tree.
+    """
+    from seed_journal import journalled
     original = path.read_bytes()
     before = key_fn()
-    try:
+    with journalled(path, reason=f"a real change to {path.name} must move the memo key"):
         path.write_bytes(original + addition)
         after = key_fn()
-    finally:
-        path.write_bytes(original)
     assert path.read_bytes() == original, f"failed to restore {path}"
     return before, after
 
@@ -499,19 +504,21 @@ class TestCheckKeysSpanTheirInputs:
         FAIL-vs-advisory switch — sat outside the key. Seeded in place so line
         numbers do not shift (a line-count change moves the digest for an unrelated
         reason, which is how the lead's first reproduction wrongly cleared it)."""
+        from seed_journal import journalled
         mod = SK_ROOT / "scripts" / "validation" / "checks" / "lean_toolchain.py"
         orig = mod.read_bytes()
         kf = self._key_fn("lean_docstring_refs_resolve")
         before = kf()
-        try:
-            txt = orig.decode()
-            mutated = txt.replace('_DOCSTRING_STRICT_FAMILIES = (',
-                                  '_DOCSTRING_STRICT_FAMILIES = ("ZZZ",', 1)
-            assert mutated.count("\n") == txt.count("\n"), "probe changed line count"
+        txt = orig.decode()
+        mutated = txt.replace('_DOCSTRING_STRICT_FAMILIES = (',
+                              '_DOCSTRING_STRICT_FAMILIES = ("ZZZ",', 1)
+        assert mutated.count("\n") == txt.count("\n"), "probe changed line count"
+        # ⚠️ A killed run here used to leave a LIVE CHECK MODULE carrying a bogus entry in
+        # its fail-vs-advisory switch — residue that changes what validate.py reports, in
+        # the file that decides how strictly it reports it.
+        with journalled(mod, reason="a module-level constant edit must move the memo key"):
             mod.write_text(mutated)
             after = kf()
-        finally:
-            mod.write_bytes(orig)
         assert mod.read_bytes() == orig
         assert before != after, (
             "a module-level constant edit left the key unchanged — flipping a "

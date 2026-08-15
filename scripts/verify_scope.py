@@ -148,6 +148,12 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
                        "--check", "bundle_reader_facing_voice",
                        "--check", "bundle_todo_free_before_green",
                        "--check", "review_verify_is_one_command",
+                       # ⚠️ `seed_residue_absent` belongs here for the same reason and a
+                       # sharper one: the fastest way to dirty `papers/AutomatedReviews/`
+                       # is a killed production-seeded mutation, and the author holding a
+                       # `papers/**` diff is exactly who can tell a seed from a finding.
+                       # Under `--scope` this is the cheapest place the residue surfaces.
+                       "--check", "seed_residue_absent",
                        "--check", "spelled_out_census_figures"]))
     if touched["lean"]:
         # NOT plain `lake build`: it leaves ExtractDeps.olean missing and breaks

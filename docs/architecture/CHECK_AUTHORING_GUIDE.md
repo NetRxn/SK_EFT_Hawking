@@ -99,6 +99,48 @@ carries a second, slow test that does precisely that.
 
 Seed the defect into the **real artifact the check reads**, run the check, watch it fail, restore.
 
+⛔ **SEED THROUGH `scripts/seed_journal.py`. A bare `try/finally` is not a restore.**
+
+```python
+from seed_journal import SEED_MARKER, seeded_mutation
+
+with seeded_mutation(doc, original + seed, reason="what this must turn red"):
+    assert check().passed is False
+```
+
+`finally` runs on a normal exit, on an exception and on `Ctrl-C`. It does **not** run under
+`SIGKILL`, under a `SIGTERM` whose handler never completes, or when a harness timeout kills the
+process group. `seed_journal` writes the original bytes, the original mtime and the owning pid to
+`.seed-journal/` and `fsync`s them **before** the production file is touched, so a *later* process
+can finish what the killed one started — which is the capability `finally` does not have. Three
+entry points, one mechanism: `seeded_mutation` (change an existing artifact), `seeded_artifact` /
+`seeded_directory` (create one), `journalled` (record the restore and let the caller mutate in
+stages, or through a browser).
+
+*(The failure this prevents, measured: on 2026-08-12 a killed run of
+`test_d5_bundles_readiness.py::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED` left six seeded
+lines in a tracked review document. The corpus is read as DATA, so the seed became a live open
+CRITICAL on bundle D10 — a node, a `FLAGS` edge, a ratchet consumer and a moved
+`readiness_submission_gate`, with nothing marking it synthetic — for three days, and was nearly
+frozen into a ratchet ceiling as an accepted blocker.)*
+
+Three things follow, and each is enforced rather than advised:
+
+* **A seed into `papers/AutomatedReviews/` must carry `SEED_MARKER`**, and `seeded_mutation`
+  refuses it otherwise. That is what makes residue readable from the corpus itself, which is what
+  lets a guard assert the outcome instead of trusting the fixture. `journalled` refuses corpus
+  paths entirely, because it never sees the content and so cannot enforce the marker.
+* **`validate.py --check seed_residue_absent` fails while residue is present**, and a
+  session-scoped autouse fixture in `tests/conftest.py` repairs orphans at the start of every
+  pytest run. After a kill: `uv run python scripts/seed_journal.py status`, then `repair`.
+* **`tests/test_seed_residue_guard.py` ratchets the inventory** — a bare `finally` restore in any
+  test under `tests/` fails on arrival unless it is in a short, dated allow-list.
+
+⚠️ **The extractor deliberately does NOT skip marked sections.** Refusing to mint them was the
+obvious containment and was rejected: two `PRODUCTION_SEEDED` entries need a seeded section to
+*become* a finding, so the refusal would have forced them back to fixtures and raised
+`FIXTURE_ONLY_CEILING`. Removing production seeding is not a fix for anything.
+
 A mutation caught against a constructed fixture proves the *test* works, not that the *check* can
 fail in production. Checks have satisfied every fixture test and still been unable to fail in
 production (QI-31…34).

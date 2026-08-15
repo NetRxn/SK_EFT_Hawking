@@ -46,8 +46,29 @@ logger = logging.getLogger(__name__)
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+# `scripts/` too: this module imports its siblings (`seed_journal`), and an importer that
+# reached us via the package root would otherwise not find them.
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
 
 LEAN_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
+
+# ⚠️ WHY `extract_review_finding_nodes` DOES **NOT** SKIP TEST-SEEDED SECTIONS, though the
+# 2026-08-15 finding proposed exactly that. On 2026-08-12 a killed test run left six seeded
+# lines in `2026-08-12-0200-citation-integrity/D10.md` and this extractor minted them as a
+# live open CRITICAL. The obvious containment — refuse any section carrying
+# `seed_journal.SEED_MARKER` — was considered and REJECTED, because it would have made the
+# finding-minting path impossible to production-seed at all. Two entries depend on minting
+# a seeded section: `bundle_stage13_claim_consistent` (a real new blocking finding must
+# breach the D10 ratchet) and `review_severity_declared`'s dangling-`Blocked-by` leg (it
+# reads this function's output, not the walked text). Both would have had to fall back to
+# fixtures, raising `FIXTURE_ONLY_CEILING` by two — a ceiling the project only lets shrink,
+# and the guide's own warning is that removing production seeding is not a fix.
+#
+# The residue is contained where it does not cost that: `scripts/seed_journal.py` makes the
+# restore survive the kill, `tests/conftest.py` repairs orphans at session start, and
+# `validate.py --check seed_residue_absent` fails while any marker is in the corpus. Three
+# mechanisms, none of which blinds the extractor.
 
 # Shape map for all node types (22 after Phase 5v Wave 2a schema extension).
 # Shape vocabulary: diamond = trust boundary (accepted without derivation),
@@ -1718,6 +1739,67 @@ _BLOCKER_RE = re.compile(
 )
 
 
+#: The YAML-ish frontmatter block at the TOP of a review document, and nothing else.
+#:
+#: ⚠️ **`\A` is load-bearing.** A review body routinely contains lines that begin
+#: `paper:` while quoting a declaration, naming a file, or opening a sentence — the live
+#: corpus carries ``paper: `AdmissibleBandFrame.overlap_ne` at `:164-169`, with the …``
+#: inside a finding's prose. A `MULTILINE` search would read that as an attribution and
+#: hand a bundle to whatever the sentence happened to start with. The frontmatter is a
+#: fenced block or it is absent; there is no third case.
+_FRONTMATTER_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---\s*\r?\n", re.DOTALL)
+_FRONTMATTER_LINE_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_-]*):[ \t]*(.*)$")
+
+
+def _parse_frontmatter(source: str) -> dict[str, str]:
+    """Scalar `key: value` pairs from a document's leading `---` block.
+
+    VERBATIM AND UNVALIDATED, by design. This function's whole job is to report what
+    the document says about itself; deciding whether a declaration means anything is
+    the resolver's job, one layer up, where the mapping and the roster live. Keeping
+    the two apart is what lets a typo read as "declared, unresolvable" rather than as
+    "not declared" — the distinction the resolver's failure path is built on.
+
+    List values (`sources_of_truth:` and friends) are skipped: the continuation lines
+    do not match, and the bare key maps to `''`, which no consumer treats as a
+    declaration. First occurrence of a key wins.
+    """
+    m = _FRONTMATTER_RE.match(source)
+    if not m:
+        return {}
+    out: dict[str, str] = {}
+    for line in m.group(1).splitlines():
+        lm = _FRONTMATTER_LINE_RE.match(line)
+        if lm:
+            out.setdefault(lm.group(1), lm.group(2).strip())
+    return out
+
+
+def resolve_unique_prefix(short: str | None, universe) -> str | None:
+    """`paper10` -> `paper10_modular_generation`, when EXACTLY ONE candidate matches.
+
+    ⚠️ **THE one unique-prefix normalisation in this codebase.** It lived inline in
+    `extract_flags_edges` (added 2026-05-14, against Paper NODE IDs) and nowhere else,
+    so `bundle_readiness.load_findings_by_paper` partitioned on the raw short key
+    against MAPPING KEYS and reached no bundle for the same finding that got a correct
+    FLAGS edge. Two layers, two answers, one finding. The universe differs between the
+    callers — node ids there, mapping keys here — and that is the only thing that may
+    differ, so it is the parameter.
+
+    Exactly-one match or `None`: an ambiguous short key (`paper16` matches both
+    `paper16_graphene_sk_eft` and `paper16_wrt_tqft`) resolves to nothing rather than to
+    a coin flip, so a widened key cannot invent an attribution.
+    """
+    if not short:
+        return None
+    universe = frozenset(universe)
+    if short in universe:
+        return short
+    prefix = f"{short}_"
+    candidates = [k for k in universe if k.startswith(prefix)]
+    return candidates[0] if len(candidates) == 1 else None
+
+
 def _infer_paper_key_from_text(text: str) -> str | None:
     """Best-effort extraction of a paper key (paper1_first_order, etc.)
     from the body text of a finding. Returns None if none found.
@@ -2021,6 +2103,36 @@ def extract_review_finding_nodes() -> list[dict]:
             source = md_path.read_text()
         except (OSError, UnicodeDecodeError):
             continue
+
+        # ── WHAT THE DOCUMENT DECLARES ABOUT ITS OWN TARGET (2026-08-15) ──────────
+        # Read here, resolved nowhere near here. Until this line the frontmatter was
+        # opened for NOTHING: severity, lane, gate, location and verify all came from
+        # the body, and attribution came from two regexes over text — a literal
+        # `paper<digit>` and the filename stem against the bundle roster. A document
+        # stating `paper: note_rt_ch_bounds` or `bundle_target: D11` was parsed by
+        # neither, so the convention every recent review writes had no reader anywhere
+        # in `scripts/`, and 11 open blocking findings whose own documents name a
+        # target that resolves through PAPER_DRAFT_MAPPING reached no bundle.
+        #
+        # A declaration no consumer reads is worse than no convention, because it reads
+        # as attribution to every human who opens the file.
+        #
+        # ⚠️ VERBATIM. These two fields are the document's claim, not a resolved
+        # answer; `bundle_readiness.load_findings_by_paper` decides what they mean
+        # against the mapping and the roster. `paper: infra` and `paper: process`
+        # therefore ship as-is and resolve to nothing there, which is correct — an
+        # infra-lane finding is genuinely unattributable to a publication bundle and
+        # belongs to the unattributed ratchet, not to whichever bundle a looser
+        # resolver could be talked into.
+        _fm = _parse_frontmatter(source)
+        # `bundle_target:` is the named convention; `bundle:` is the older spelling.
+        # Measured over the live corpus on the day this landed: 52 documents declare
+        # `bundle_target:`, 18 more declare only `bundle:`, and NO document declares
+        # both with different values — so this is one vocabulary with two spellings,
+        # not two competing channels.
+        declared_paper = _fm.get('paper') or None
+        declared_bundle = _fm.get('bundle_target') or _fm.get('bundle') or None
+
         # ⚠️ FILE-LEVEL SEVERITY ESCALATION DELETED 2026-08-14 (D11 Stage-13 round-9
         # finding 4.5). It read: "if a BLOCKER / severity: critical marker exists
         # ANYWHERE in the file, findings inherit critical severity unless they declare
@@ -2193,6 +2305,12 @@ def extract_review_finding_nodes() -> list[dict]:
                 'section': section_num,
                 'inferred_paper': inferred_paper,
                 'inferred_bundle': inferred_bundle,
+                # The document's OWN declaration, verbatim — see the read above.
+                # Precedence over the two inferences is applied by the resolver in
+                # `bundle_readiness.load_findings_by_paper`, the same way a declared
+                # `- **Severity:**` line outranks glyph inference a few lines up.
+                'declared_paper': declared_paper,
+                'declared_bundle': declared_bundle,
                 # ADR-012 D1 — routing data the reviewer ALREADY writes (C7).
                 'blocks': _parse_finding_field(body, 'Gate'),
                 'target': _parse_finding_field(body, 'Location'),
@@ -4167,6 +4285,7 @@ def extract_flags_edges(node_ids: set) -> list[dict]:
     """
     findings = extract_review_finding_nodes()
     paper_ids = {nid for nid in node_ids if nid.startswith('paper:')}
+    paper_key_universe = frozenset(pid[len('paper:'):] for pid in paper_ids)
     bundle_to_papers = _invert_bundle_mapping()
     edges = []
     seen: set[tuple[str, str]] = set()
@@ -4196,24 +4315,25 @@ def extract_flags_edges(node_ids: set) -> list[dict]:
         # (1) paper-key resolution (older paperN_slug reviews) — unchanged.
         paper = meta.get('inferred_paper')
         if paper:
-            paper_id = f'paper:{paper}'
-            if paper_id not in node_ids:
-                # Prefix fallback: paper10 -> paper:paper10_<slug>
-                prefix = f'paper:{paper}_'
-                candidates = [pid for pid in paper_ids if pid.startswith(prefix)]
-                if len(candidates) == 1:
-                    paper_id = candidates[0]
-                elif len(candidates) > 1:
-                    if paper not in ambig_warned:
-                        logger.info(
-                            "Ambiguous paper-key resolution: %r matches %d Paper nodes "
-                            "(%s) — FLAGS edges skipped for findings inferring this key.",
-                            paper, len(candidates), ", ".join(sorted(candidates))
-                        )
-                        ambig_warned.add(paper)
-                    paper_id = None
-                else:
-                    paper_id = None
+            # ⚠️ SHARED RESOLVER (2026-08-15). The prefix fallback used to be spelled
+            # out here and only here, so `bundle_readiness.load_findings_by_paper`
+            # partitioned on the RAW `paper10` — not a PAPER_DRAFT_MAPPING key — and the
+            # same finding that got a correct FLAGS edge from this block reached no
+            # bundle in the aggregation. `resolve_unique_prefix` is now the one
+            # normalisation, called here with the Paper-node key universe and there with
+            # the mapping-key universe.
+            resolved = resolve_unique_prefix(paper, paper_key_universe)
+            paper_id = f'paper:{resolved}' if resolved else None
+            if paper_id is None and paper not in ambig_warned:
+                candidates = [pid for pid in paper_ids
+                              if pid.startswith(f'paper:{paper}_')]
+                if len(candidates) > 1:
+                    logger.info(
+                        "Ambiguous paper-key resolution: %r matches %d Paper nodes "
+                        "(%s) — FLAGS edges skipped for findings inferring this key.",
+                        paper, len(candidates), ", ".join(sorted(candidates))
+                    )
+                    ambig_warned.add(paper)
             if paper_id is not None:
                 _emit(f['id'], paper_id, f)
                 # ⚠️ NO LONGER `continue` (2026-07-31, D11 round-6 BLOCKER 4.1, final

@@ -164,18 +164,23 @@ class TestTheMemoCannotOutliveABuild:
         process-lifetime memo serves a stale snapshot. Seed the real corpus and
         assert the content moves.
         """
+        from seed_journal import SEED_MARKER, seeded_artifact
         assert bg._current_build_memo() is None
         probe_dir, expected_id = tmp_probe
 
         bg.build_graph_json(sync_pg=False)   # give a process-wide memo a chance to fill
 
-        (probe_dir / "infra.md").write_text(
-            "# probe\n\n### 1 — probe\n\n- **Severity:** minor\n- **Lane:** infra\n")
-        assert expected_id in {n["id"] for n in bg.extract_review_finding_nodes()}, (
-            "a direct extractor call did not see a finding written after the last "
-            "build — the memo is outliving its build")
+        doc = probe_dir / "infra.md"
+        with seeded_artifact(
+                doc,
+                "# probe\n\n### 1 — probe\n\n- **Severity:** minor\n- **Lane:** infra\n"
+                f"<!-- {SEED_MARKER} -->\n",
+                reason="a direct extractor call must see a finding written after the "
+                       "last build"):
+            assert expected_id in {n["id"] for n in bg.extract_review_finding_nodes()}, (
+                "a direct extractor call did not see a finding written after the last "
+                "build — the memo is outliving its build")
 
-        (probe_dir / "infra.md").unlink()
         assert expected_id not in {n["id"] for n in bg.extract_review_finding_nodes()}, (
             "a direct extractor call still reports a deleted finding")
 
@@ -278,24 +283,25 @@ class TestASeededMutationSurvivesTheMemo:
 
     @pytest.fixture
     def seeded_finding(self):
-        """Write a real review document into the real corpus, then remove it."""
-        review_dir = PROJECT_ROOT / "papers" / "AutomatedReviews" / self.SEEDED_DIR
-        review_dir.mkdir(parents=True, exist_ok=False)
-        doc = review_dir / "infra.md"
-        doc.write_text(
-            "# Memo non-vacuity probe\n\n"
-            "### 1 — probe finding written by tests/test_build_graph_memo.py\n\n"
-            "- **Severity:** minor\n"
-            "- **Lane:** infra\n"
-            "- **Observed:** seeded by a test to prove the within-build memo "
-            "cannot hide a corpus change from the next build.\n"
-        )
+        """Write a real review document into the real corpus, then remove it.
+
+        Through `seed_journal.seeded_artifact` since 2026-08-15: the removal is journalled
+        before the file appears, so a killed run leaves a repairable record rather than a
+        stray review directory that the next build reads as a real finding.
+        """
+        from seed_journal import SEED_MARKER, seeded_artifact
+        doc = (PROJECT_ROOT / "papers" / "AutomatedReviews" / self.SEEDED_DIR / "infra.md")
         expected_id = bg.mint_finding_id(self.SEEDED_DIR, "infra", "1")
-        try:
+        with seeded_artifact(
+                doc,
+                "# Memo non-vacuity probe\n\n"
+                "### 1 — probe finding written by tests/test_build_graph_memo.py\n\n"
+                "- **Severity:** minor\n"
+                "- **Lane:** infra\n"
+                "- **Observed:** seeded by a test to prove the within-build memo "
+                f"cannot hide a corpus change from the next build. <!-- {SEED_MARKER} -->\n",
+                reason="a finding filed mid-session must be visible to the NEXT build"):
             yield expected_id
-        finally:
-            doc.unlink(missing_ok=True)
-            review_dir.rmdir()
 
     def test_a_finding_seeded_into_the_REAL_corpus_is_visible_to_the_next_build(
             self, seeded_finding):

@@ -132,3 +132,38 @@ def graph_integrity_report():
     """
     from graph_integrity import run_integrity_checks
     return run_integrity_checks()
+
+
+# ── Orphaned seeded mutations — repaired BEFORE anything reads the corpus ────────────
+#
+# ⚠️ SESSION-SCOPED, AUTOUSE, AND FIRST. A production-seeded mutation restores in a
+# `finally`, which does not run under SIGKILL or a harness timeout. When that happened on
+# 2026-08-12 the seed stayed in `papers/AutomatedReviews/.../D10.md` and was consumed as a
+# live open CRITICAL for three days. Every subsequent test run read the polluted corpus and
+# reported cleanly on it, because nothing looked.
+#
+# This runs the repair at session start rather than at session end deliberately: the run
+# that CRASHES cannot repair itself, so the repair has to belong to the NEXT run. It also
+# runs before the first test touches the corpus, so a suite whose ratchets count findings
+# counts the real ones.
+#
+# ⚠️ IT ANNOUNCES ITSELF. A silent repair would make the crash invisible, and the killed
+# run is a fact worth knowing — `-s` shows it, and `seed_residue_absent` reports the same
+# state to anyone who does not run pytest at all.
+@pytest.fixture(scope="session", autouse=True)
+def _repair_orphaned_seeds():
+    """Restore any production artifact a killed run left seeded. See `scripts/seed_journal.py`."""
+    import sys as _sys
+    from pathlib import Path as _Path
+    _sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "scripts"))
+    try:
+        import seed_journal
+    except ImportError:                       # pragma: no cover - the module is tracked
+        yield
+        return
+    actions = seed_journal.repair()
+    if actions:
+        banner = "\n".join(f"  • {a}" for a in actions)
+        print(f"\n⚠️  SEED JOURNAL: repaired {len(actions)} orphaned seeded mutation(s) "
+              f"left by a killed run:\n{banner}\n", file=_sys.stderr)
+    yield

@@ -32,16 +32,18 @@ def _expected_roster() -> list[str]:
 @pytest.fixture
 def submission_state_guard():
     """Back up docs/submission_state.json around a test that records an event,
-    then restore (delete if it didn't exist) so the repo file isn't polluted."""
-    existed = SUBMISSION_STATE.exists()
-    backup = SUBMISSION_STATE.read_text() if existed else None
-    try:
+    then restore (delete if it didn't exist) so the repo file isn't polluted.
+
+    Journalled since 2026-08-15: a killed e2e run used to leave a recorded submission
+    event in a tracked file, which is a claim about the project's state that nothing
+    downstream distinguishes from a real one.
+    """
+    import sys
+    sys.path.insert(0, str(SUBMISSION_STATE.parent.parent / "scripts"))
+    from seed_journal import journalled
+    with journalled(SUBMISSION_STATE, allow_absent=True,
+                    reason="an e2e test records a real submission event here"):
         yield SUBMISSION_STATE
-    finally:
-        if backup is not None:
-            SUBMISSION_STATE.write_text(backup)
-        elif SUBMISSION_STATE.exists():
-            SUBMISSION_STATE.unlink()
 
 
 @pytest.mark.e2e

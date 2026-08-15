@@ -166,9 +166,18 @@ def _provenance_registry_guard():
 
     Entering dirty is therefore a **FAILURE**, not a skip: it means a previous run leaked,
     and continuing would let this fixture restore someone else's uncommitted work.
+
+    ⚠️ THE WRITER HERE IS A BROWSER, which is why this uses `journalled` rather than
+    `seeded_mutation`: no content is known up front — a Playwright click reaches `/verify`,
+    which persists a real `human_verified_date` into this tracked file. Journalling it
+    means a killed e2e run leaves a repairable record instead of manufactured provenance
+    evidence, one `git add` away from being believed by the P1 `ParameterProvenance` gate.
     """
     import subprocess
+    import sys
     root = PROVENANCE_PATH.parent.parent.parent
+    sys.path.insert(0, str(root / "scripts"))
+    from seed_journal import journalled
     dirty = subprocess.run(["git", "status", "--porcelain", str(PROVENANCE_PATH)],
                            cwd=root, capture_output=True, text=True).stdout.strip()
     assert not dirty, (
@@ -176,9 +185,8 @@ def _provenance_registry_guard():
         f"e2e run leaked a write, or you have uncommitted work here — restoring it "
         f"afterwards would destroy the latter. Resolve it, then re-run.")
     original = PROVENANCE_PATH.read_text(encoding="utf-8")
-    try:
+    with journalled(PROVENANCE_PATH,
+                    reason="an e2e test can reach /verify, which persists a real "
+                           "human_verified_date into this tracked registry"):
         yield
-    finally:
-        if PROVENANCE_PATH.read_text(encoding="utf-8") != original:
-            PROVENANCE_PATH.write_text(original, encoding="utf-8")
-        assert PROVENANCE_PATH.read_text(encoding="utf-8") == original
+    assert PROVENANCE_PATH.read_text(encoding="utf-8") == original

@@ -74,6 +74,7 @@ EXPECTED_CHECKS = [
     # missed — `_CANONICAL_ORDER`, `CI_MIN_CHECKS_RUN` and `MUTATION_VERIFIED` were all
     # updated while this stayed at 80, which left the branch red AND disarmed the only
     # assertion that notices a DROPPED check (`all([])` is True).
+    'seed_residue_absent',
     'ledger_ids_resolve',
     'chain_backing_targets_resolve',
     'bundle_metadata_matches_graph', 'bundle_stage13_claim_consistent',

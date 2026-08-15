@@ -533,29 +533,34 @@ class TestReviewVerifyIsOneCommand:
         corpus — the walk, the glob and the pattern all exercised end to end.
 
         The defect is written into a real review document and restored from saved bytes,
-        never with `git checkout` (ADR-009 §Deferred item 2).
+        never with `git checkout` (ADR-009 §Deferred item 2). Since 2026-08-15 the saved
+        bytes are ALSO written to `.seed-journal/` before the file is touched, so the
+        restore no longer depends on this process surviving to perform it.
         """
+        from seed_journal import SEED_MARKER, seeded_mutation
         target = SK_ROOT / self._SEED_TARGET
         original = target.read_bytes()
-        try:
-            text = original.decode("utf-8")
-            seeded = text.replace(
-                "- **Verify:** `cd \"$REPO\" && uv run python -m pytest "
-                "tests/test_close_finding.py -q -k \"readback or concurren\"`",
-                "- **Verify:** `cd \"$REPO\" && uv run python -m pytest "
-                "tests/test_close_finding.py -q -k \"readback or concurren\"` "
-                "— exits 1 at HEAD", 1)
-            assert seeded != text, (
-                f"the seed did not apply to {self._SEED_TARGET}; its Verify line changed, "
-                f"so this test is no longer seeding anything")
-            target.write_bytes(seeded.encode("utf-8"))
+        text = original.decode("utf-8")
+        seeded = text.replace(
+            "- **Verify:** `cd \"$REPO\" && uv run python -m pytest "
+            "tests/test_close_finding.py -q -k \"readback or concurren\"`",
+            "- **Verify:** `cd \"$REPO\" && uv run python -m pytest "
+            "tests/test_close_finding.py -q -k \"readback or concurren\"` "
+            "— exits 1 at HEAD", 1)
+        assert seeded != text, (
+            f"the seed did not apply to {self._SEED_TARGET}; its Verify line changed, "
+            f"so this test is no longer seeding anything")
+        # The marker is what makes residue readable from the corpus itself, and
+        # `seeded_mutation` refuses a corpus seed without it.
+        seeded += f"\n<!-- {SEED_MARKER} -->\n"
+        with seeded_mutation(target, seeded.encode("utf-8"),
+                             reason="trailing prose on a real Verify line must turn "
+                                    "review_verify_is_one_command red"):
             r = rv.check_review_verify_is_one_command()
             assert r.passed is False, (
                 "a real review document carrying trailing prose on its Verify line "
                 "reported PASS — the check cannot fire in production")
             assert any(self._SEED_TARGET in d.name for d in r.details if not d.passed)
-        finally:
-            target.write_bytes(original)
         assert target.read_bytes() == original, "the corpus was not restored byte-identically"
 
 
@@ -846,19 +851,19 @@ class TestBlockedByResolvesLeg:
         real extractor parses it. A fixture tree cannot reach this leg — it reads
         `extract_review_finding_nodes()`, not the walked document text."""
         import validate_helpers as _H
+        from seed_journal import SEED_MARKER, seeded_mutation
         doc = _H.PROJECT_ROOT / self.DOC
         assert doc.is_file(), f"{self.DOC} moved — re-point this mutation, do not delete it"
         original = doc.read_text(encoding="utf-8")
-        try:
-            doc.write_text(
-                original + "\n- **Blocked-by:** review:no-such-date:NOPE:9.9\n",
-                encoding="utf-8")
+        with seeded_mutation(
+                doc,
+                original + f"\n- **Blocked-by:** review:no-such-date:NOPE:9.9\n"
+                           f"<!-- {SEED_MARKER} -->\n",
+                reason="a dangling Blocked-by id must turn review_severity_declared red"):
             res = rv.check_review_severity_declared()
             assert res.passed is False, "a dangling Blocked-by did not turn the check red"
             assert any("review:no-such-date:NOPE:9.9" in (d.message or "")
                        for d in res.details)
-        finally:
-            doc.write_text(original, encoding="utf-8")
         # and the corpus is clean again, byte for byte
         assert doc.read_text(encoding="utf-8") == original
         assert rv.check_review_severity_declared().passed is True

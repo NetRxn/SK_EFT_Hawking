@@ -2072,25 +2072,35 @@ class TestTheOpenRequiredPopulationRatchets:
         recorded, so the leg's production-seeded status rode on an unverifiable sentence.
         Appending one real blocking finding to a live review document must take its bundle
         over the frozen ceiling and name it.
+
+        ⚠️ THIS TEST IS THE ONE THAT LEAKED. Its `finally` restore did not run when the
+        process was killed at a timeout on 2026-08-12, and the six seeded lines below sat
+        in the tracked corpus for three days as a live open CRITICAL on D10 — a node, a
+        FLAGS edge, a ratchet consumer, a moved `readiness_submission_gate`. It now seeds
+        through `seed_journal.seeded_mutation`, which records the original bytes durably
+        BEFORE touching the file, so a later process can undo what this one may not live
+        to undo. Seeding in place is deliberate and stays: the check resolves the corpus
+        from the repo root and cannot be pointed at a copy.
         """
         import validate_helpers as _H
         import validation.checks.bundles_readiness as br
+        from seed_journal import SEED_MARKER, seeded_mutation
         doc = (_H.PROJECT_ROOT
                / "papers/AutomatedReviews/2026-08-12-0200-citation-integrity/D10.md")
         assert doc.is_file(), "review document moved — re-point this mutation"
         original = doc.read_text(encoding="utf-8")
-        try:
-            doc.write_text(
-                original + "\n### 99.9 — 🔴 CRITICAL — seeded mutation\n\n"
-                           "- **Severity:** critical\n\nSeeded by the test suite.\n",
-                encoding="utf-8")
+        seed = (f"\n### 99.9 — 🔴 CRITICAL — seeded mutation\n\n"
+                f"- **Severity:** critical\n\n"
+                f"Seeded by the test suite. <!-- {SEED_MARKER} -->\n")
+        with seeded_mutation(
+                doc, original + seed,
+                reason="a new open critical must breach the D10 required-population "
+                       "ceiling and name the bundle"):
             res = br.check_bundle_stage13_claim_consistent()
             assert res.passed is False, "a new open critical did not breach any ceiling"
             over = [d for d in res.details
                     if d.name == 'required_population' and not d.passed]
             assert over and 'D10' in over[0].message
-        finally:
-            doc.write_text(original, encoding="utf-8")
         assert doc.read_text(encoding="utf-8") == original
         assert br.check_bundle_stage13_claim_consistent().passed is True
 

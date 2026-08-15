@@ -16,16 +16,18 @@ VERIFICATION_LOG = PROJECT_ROOT / "docs" / "verification_log.jsonl"
 @pytest.fixture
 def verification_log_guard():
     """Restore docs/verification_log.jsonl around tests that record verify events
-    (the /verify change-bus appends to it)."""
-    existed = VERIFICATION_LOG.exists()
-    backup = VERIFICATION_LOG.read_bytes() if existed else None
-    try:
+    (the /verify change-bus appends to it).
+
+    `allow_absent=True`: this is a RUNTIME artifact, absent in a clean checkout, so the
+    restore is a delete rather than a rewrite. Journalled since 2026-08-15 so a killed
+    run leaves a repairable record instead of synthetic verification events.
+    """
+    import sys
+    sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+    from seed_journal import journalled
+    with journalled(VERIFICATION_LOG, allow_absent=True,
+                    reason="the /verify change-bus appends real events here"):
         yield
-    finally:
-        if backup is not None:
-            VERIFICATION_LOG.write_bytes(backup)
-        elif VERIFICATION_LOG.exists():
-            VERIFICATION_LOG.unlink()
 
 
 @pytest.mark.e2e

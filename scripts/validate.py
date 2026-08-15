@@ -207,6 +207,11 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
     'review_verify_is_one_command',
+    # ⚠️ ORDER IS SEMANTIC HERE. `seed_residue_absent` runs BEFORE every check that reads
+    # the review corpus as data, because residue from a killed seeded-mutation run makes
+    # those checks measure a corpus that contains a fabricated finding. Reported first, it
+    # explains their results instead of being buried under them.
+    'seed_residue_absent',
     'ledger_ids_resolve',
     'chain_backing_targets_resolve',
     'bundle_metadata_matches_graph', 'bundle_stage13_claim_consistent',
@@ -709,6 +714,7 @@ check_review_docs_mint_findings = _checks_reviews.check_review_docs_mint_finding
 check_accepted_findings_carry_rationale = _checks_reviews.check_accepted_findings_carry_rationale
 check_ledger_ids_resolve = _checks_reviews.check_ledger_ids_resolve
 check_chain_backing_targets_resolve = _checks_reviews.check_chain_backing_targets_resolve
+check_seed_residue_absent = _checks_reviews.check_seed_residue_absent
 _recurrence_norm = _checks_reviews._recurrence_norm
 _RECURRENCE_MIN_TITLE = _checks_reviews._RECURRENCE_MIN_TITLE
 _RECURRENCE_MIN_OVERLAP = _checks_reviews._RECURRENCE_MIN_OVERLAP

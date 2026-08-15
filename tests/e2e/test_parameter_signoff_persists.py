@@ -40,6 +40,12 @@ def test_a_confirmed_parameter_is_still_confirmed_after_reload(page, dashboard_u
     # dirtied it a moment later, so the branch's flagship persistence proof silently
     # disabled itself on every run after the first. `tests/e2e/conftest.py` guards every
     # e2e test now, because ANY of them can reach `/verify`.
+    #
+    # ⚠️ THE CRASH-SAFE RESTORE IS THE AUTOUSE FIXTURE'S, NOT THIS `finally`'s. The
+    # conftest guard journals `src/core/provenance.py` to `.seed-journal/` before this
+    # test starts, so a kill here is repaired by the next pytest run. The local
+    # `try/finally` is kept as the in-process fast path and for its assertion message;
+    # it is no longer the only copy of the information needed to undo the write.
     original = PROV.read_text(encoding="utf-8")
     key = _first_unverified(original)
     assert key, ("every parameter is already human-verified — this test would pass over "

@@ -298,11 +298,19 @@ class TestCountsFreshness:
         """PRODUCTION-SEEDED MUTATION (guide §2.4) — the defect goes into
         `docs/counts.json` itself, not a fixture. A fixture-only mutation proves the
         test works; only this proves the check can fail against the artifact it
-        actually reads. Restores byte-for-byte, mtime included."""
+        actually reads. Restores byte-for-byte, mtime included.
+
+        ⚠️ `journalled`, not a bare `try/finally`: the restore is recorded durably before
+        `counts.json` is touched, so a killed run leaves a repairable record instead of a
+        published count that disagrees with the tree. `journalled` rather than
+        `seeded_mutation` because the seed is three-phase — stamp the mtime, prove the
+        isolation, and only then write the wrong count."""
         import os
+        from seed_journal import journalled
         real = _H.COUNTS_JSON_PATH
-        original, st = real.read_bytes(), real.stat()
-        try:
+        with journalled(real, reason="counts.json publishing a test_files one higher "
+                                     "than the live tree must read STALE"):
+            original = real.read_bytes()
             data = json.loads(original)
             # ⚠️ Stamp counts.json as the NEWEST thing in the repo. `_counts_is_stale`
             # returns on its FIRST stale reason, so on any working copy where a source
@@ -352,9 +360,6 @@ class TestCountsFreshness:
                 "counts.json publishing a test_files one higher than the live tree "
                 "was reported FRESH — this is exactly what shipped at bee7608c")
             assert "test_files" in reason, reason
-        finally:
-            real.write_bytes(original)
-            os.utime(real, (st.st_atime, st.st_mtime))
         # ⚠️ THE NEGATIVE CONTROL ASSERTS THE COUNT LEG, NOT THE WHOLE PREDICATE.
         # It used to assert `_counts_is_stale()[0] is False`, which is a claim about the
         # DEVELOPER'S TREE: any edit under src/, tests/, notebooks/ or papers/ since the
@@ -1085,16 +1090,16 @@ class TestModuleCensusFresh:
     def test_a_changed_docstring_makes_the_census_stale_in_production(self):
         """FIRES ON THE SEEDED DEFECT — the leg that catches a description drifting away
         from the module it describes, which is the whole failure the hand files had."""
+        from seed_journal import seeded_mutation
         mc = self._mod()
         target = mc.PROJECT_ROOT / "src" / "core" / "transonic_background.py"
         orig = target.read_text(encoding="utf-8")
-        try:
-            target.write_text(orig.replace(
-                "Transonic Background Solver", "SEEDED DEFECT Solver", 1), encoding="utf-8")
+        with seeded_mutation(
+                target,
+                orig.replace("Transonic Background Solver", "SEEDED DEFECT Solver", 1),
+                reason="a drifted module docstring must make the census STALE"):
             leg = self._leg("census_fresh")
             assert not leg.passed and "STALE" in (leg.message or "")
-        finally:
-            target.write_text(orig, encoding="utf-8")
 
     def test_removing_a_real_docstring_trips_the_ratchet(self):
         """FIRES ON THE SEEDED DEFECT. ⚠️ The ratchet reads SOURCE, not the rendered
@@ -1107,19 +1112,19 @@ class TestModuleCensusFresh:
         node = tree.body[0]
         assert isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant), (
             "fixture assumption broken: the target module has no docstring")
-        try:
-            # Drop the docstring by its AST line span rather than by matching the literal —
-            # quoting style and escapes make a text match fragile, and a seed that silently
-            # fails to apply is a mutation test that proves nothing.
-            lines = orig.splitlines(keepends=True)
-            del lines[node.lineno - 1:node.end_lineno]
-            target.write_text("".join(lines), encoding="utf-8")
+        # Drop the docstring by its AST line span rather than by matching the literal —
+        # quoting style and escapes make a text match fragile, and a seed that silently
+        # fails to apply is a mutation test that proves nothing.
+        from seed_journal import seeded_mutation
+        lines = orig.splitlines(keepends=True)
+        del lines[node.lineno - 1:node.end_lineno]
+        with seeded_mutation(target, "".join(lines),
+                             reason="a module that lost its docstring must trip the "
+                                    "undocumented-modules ratchet"):
             assert ast.get_docstring(ast.parse(target.read_text(encoding="utf-8"))) is None
             leg = self._leg("undocumented_modules")
             assert not leg.passed
             assert f"{fr._NO_DOCSTRING_CEILING + 1} module(s)" in (leg.message or "")
-        finally:
-            target.write_text(orig, encoding="utf-8")
 
     def test_a_walk_that_reaches_nothing_is_UNMEASURED_not_clean(self, monkeypatch):
         """Guide §2.5 — the seam. A scan over an empty population passes vacuously; that

@@ -1502,6 +1502,20 @@ LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 80
 #: the instrument before accepting it as evidence about the corpus.
 PROVENANCE_UNRESOLVABLE_CEILING = 58
 
+#: Population FLOOR for `seed_residue_absent`'s corpus scan: the number of
+#: `papers/AutomatedReviews/*/*.md` documents it must reach before a "no residue" verdict
+#: means anything. Measured 2026-08-15 on the live corpus: 404.
+#:
+#: ⚠️ A FLOOR, NOT A CEILING, and the direction is the whole design. Review documents are
+#: append-only — a wave adds a dated directory and nothing removes one — so the count can
+#: only rise. A scan that reads FEWER than this has lost its population to a narrowed
+#: glob, which is guide §2.5's named failure: a grep that matches nothing reports a clean
+#: corpus, and "found no residue" is then a statement about the pattern, not the tree.
+#: The check reports `measured=False` below it rather than passing.
+#:
+#: Raise it when the corpus genuinely grows; never lower it to make a run go green.
+REVIEW_CORPUS_DOC_FLOOR = 404
+
 #: Legacy (non-bundle) `papers/*/paper_draft.tex` that do not compile under pdflatex.
 #: Frozen 2026-08-06 at the measured live count.
 #:

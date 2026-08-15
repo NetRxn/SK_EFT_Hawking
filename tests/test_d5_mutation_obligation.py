@@ -198,6 +198,19 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "(0.857 on `name` against the 0.45 threshold, where the same pair scored "
         "exactly 0.400 against the old 0.40 — at the threshold, not above it)",
     ),
+    "seed_residue_absent": (
+        "test_seed_residue_guard.py",
+        "PRODUCTION-SEEDED and self-dogfooding: `seeded_artifact` writes a real review "
+        "document carrying SEED_MARKER into papers/AutomatedReviews/ and the check goes "
+        "red naming the file; on exit the document is gone and the check is green. The "
+        "seed goes through the very mechanism the check exists to backstop, which is the "
+        "point — a guard built on a crash-safe seeder that could not itself be seeded "
+        "crash-safely would be asserting its own premise. Silent direction: the unmutated "
+        "corpus passes. Also mutation-verified in both directions on the JOURNAL leg (an "
+        "orphaned entry whose pid is dead turns it red; the same entry with a LIVE pid "
+        "does not, because an in-flight seed in a concurrent session is not residue) and "
+        "on the POPULATION floor (a narrowed glob reports measured=False, not a pass).",
+    ),
     "review_severity_declared": (
         "test_d5_reviews.py",
         "`n_sev < n_head` -> `n_sev < 0` caught; plus a pre-cutoff leg so the historical "
@@ -923,6 +936,11 @@ AWAITING_CEILING = 0
 #: is the distinction the four blockers turned on. Erring toward absent overstates the
 #: remaining work; the opposite error is what produced them.
 PRODUCTION_SEEDED: frozenset[str] = frozenset({
+    # 2026-08-15: a real review document carrying SEED_MARKER written into the live
+    # papers/AutomatedReviews/ corpus through `seed_journal.seeded_artifact` -> red,
+    # naming the file; removed on exit and the check green again. Keeps
+    # FIXTURE_ONLY_CEILING at 51.
+    "seed_residue_absent",
     # 2026-08-13: an entry deleted from the REAL EXISTENTIAL_WITNESS_REGISTRY in
     # src/core/constants.py -> red; restored from saved bytes. Keeps FIXTURE_ONLY_CEILING
     # unchanged.

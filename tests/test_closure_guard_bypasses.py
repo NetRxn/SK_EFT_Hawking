@@ -48,7 +48,15 @@ def _open_blocker_id() -> str:
 
 @pytest.fixture
 def ledger_sandbox():
-    """Restore the ledger byte-for-byte no matter how the test exits."""
+    """Restore the ledger byte-for-byte no matter how the test exits.
+
+    ⚠️ "NO MATTER HOW" USED TO EXCLUDE `SIGKILL`, and the supersession ledger is the ONE
+    channel that can close a finding — residue here does not merely dirty a file, it
+    closes or reopens real blockers for every consumer that reads the tree afterwards.
+    Since 2026-08-15 the restore is journalled to `.seed-journal/` before the ledger is
+    touched, so a later process can complete it.
+    """
+    from scripts.seed_journal import journalled
     original = LEDGER.read_text()
 
     def _apply(record: dict) -> str:
@@ -63,8 +71,9 @@ def ledger_sandbox():
             "MISSING",
         )
 
-    yield _apply
-    LEDGER.write_text(original)
+    with journalled(LEDGER, reason="bypass-shaped supersession records must not close a "
+                                   "blocking finding"):
+        yield _apply
     importlib.reload(BG)
 
 
@@ -127,8 +136,10 @@ def test_a_well_formed_record_DOES_close():
     Without this leg, deleting the ledger reader entirely would pass every test
     above. That is the mirror of the defect this file exists for.
     """
+    from scripts.seed_journal import journalled
     original = LEDGER.read_text()
-    try:
+    with journalled(LEDGER, reason="a well-formed supersession record MUST close its "
+                                   "finding — the guard must not be vacuously strict"):
         target = _open_blocker_id()
         data = json.loads(original)
         data["supersessions"].append({
@@ -147,9 +158,7 @@ def test_a_well_formed_record_DOES_close():
         assert status == "fixed", (
             f"a well-formed ledger record failed to close {target} (got {status!r}) — "
             f"the guard is vacuously strict and closure is impossible")
-    finally:
-        LEDGER.write_text(original)
-        importlib.reload(BG)
+    importlib.reload(BG)
 
 
 class TestTheBarAppliesAtEverySeverity:

@@ -150,3 +150,11 @@ docs/verification_log.jsonl
 
 # close_finding.py advisory lock (ADR-012; 2026-08-15 lost-write repair)
 docs/review_finding_supersessions.json.lock
+
+# Crash-safe seeded-mutation journal (`scripts/seed_journal.py`; 2026-08-15 killed-run
+# repair). Holds the original bytes of any production artifact a production-seeded
+# mutation test is CURRENTLY holding open, so a later process can restore it after a
+# SIGKILL. Machine-local and transient by construction: a clean tree has an empty or
+# absent directory, and an entry that outlives its run is exactly what
+# `validate.py --check seed_residue_absent` reports.
+.seed-journal/

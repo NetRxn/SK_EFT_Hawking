@@ -46,46 +46,52 @@ SEED = "\\input{tables/__unscannable_regression_probe}\n"
 def seeded_unresolvable_input():
     """Put an unresolvable `\\input` into a real draft, then restore it exactly.
 
-    Restores from SAVED BYTES in a `finally`, never `git checkout` — a checkout
-    would also discard concurrent edits, which is how a sibling test lost work.
+    Restores from SAVED BYTES, never `git checkout` — a checkout would also discard
+    concurrent edits, which is how a sibling test lost work.
+
+    ⚠️ SINCE 2026-08-15 THE SAVED BYTES ARE DURABLE. `seeded_mutation` writes them, and
+    the draft's mtime, to `.seed-journal/` before the draft is touched, so a run killed
+    mid-test leaves a repairable record rather than an unresolvable `\\input` in a
+    tracked bundle draft. The restore below is unchanged in what it does; it has simply
+    stopped being the only copy of the information needed to do it.
     """
-    import os
     import validate_helpers as _H
+    from seed_journal import seeded_mutation
     draft = _H.PAPERS_DIR / SEED_HOST / "paper_draft.tex"
     original = draft.read_text(encoding="utf-8")
     original_stat = draft.stat()
     assert "\\begin{document}" in original, "fixture host lost its document body"
-    try:
-        draft.write_text(original.replace("\\begin{document}",
-                                          SEED + "\\begin{document}", 1),
-                         encoding="utf-8")
+    # ⚠️ `preserve_mtime=True` (the default) IS LOAD-BEARING, not tidiness. This fixture
+    # edits a TRACKED draft, and `bundle_manuscript_length` refuses to size a PDF older
+    # than its draft's `\input` closure — so a byte-perfect restore with a fresh mtime
+    # silently took D1 UNMEASURED and the length gate went from reporting 11 gaps to 10,
+    # while still passing. Measured: the "0 UNMEASURED" state was invalidated by THIS
+    # FIXTURE eight minutes before the commit claiming it was written. A test must not
+    # change what a production check measures.
+    with seeded_mutation(
+            draft,
+            original.replace("\\begin{document}", SEED + "\\begin{document}", 1),
+            reason="an unresolvable \\input in a real draft must FAIL every "
+                   "gap-sensitive check rather than be silently skipped"):
         yield
-    finally:
-        draft.write_text(original, encoding="utf-8")
-        # ⚠️ RESTORE THE MTIME, not just the bytes. This fixture edits a TRACKED
-        # draft, and `bundle_manuscript_length` refuses to size a PDF older than
-        # its draft's `\input` closure — so a byte-perfect restore with a fresh
-        # mtime silently took D1 UNMEASURED and the length gate went from
-        # reporting 11 gaps to 10, while still passing. Measured: the "0
-        # UNMEASURED" state was invalidated by THIS FIXTURE eight minutes before
-        # the commit claiming it was written. A test must not change what a
-        # production check measures.
-        os.utime(draft, ns=(original_stat.st_atime_ns, original_stat.st_mtime_ns))
 
-        # ⚠️ THE FIXTURE ASSERTS ITS OWN CONTRACT, HERE, IN TEARDOWN.
-        # A separate test asserting this cannot work: an earlier version inlined the
-        # write/restore cycle and asserted on its own two preceding lines, so deleting
-        # the `os.utime` above left it GREEN — mutation-proven by a reviewer. Teardown
-        # is the only place the real fixture's restoration can be observed, and every
-        # test that uses the fixture now inherits the guard for free.
-        after = draft.stat()
-        assert draft.read_text(encoding="utf-8") == original, (
-            "the fixture did not restore the draft's BYTES")
-        assert after.st_mtime_ns == original_stat.st_mtime_ns, (
-            "the fixture restored bytes but MOVED THE MTIME. "
-            "`bundle_manuscript_length` refuses to size a PDF older than its draft's "
-            "`\\input` closure, so this silently takes the bundle UNMEASURED and "
-            "shrinks that gate's reported population while it keeps passing.")
+    # ⚠️ THE FIXTURE ASSERTS ITS OWN CONTRACT, HERE, IN TEARDOWN.
+    # A separate test asserting this cannot work: an earlier version inlined the
+    # write/restore cycle and asserted on its own two preceding lines, so deleting
+    # the mtime restore left it GREEN — mutation-proven by a reviewer. Teardown
+    # is the only place the real fixture's restoration can be observed, and every
+    # test that uses the fixture now inherits the guard for free. It is kept even
+    # though `seeded_mutation` makes the same assertion internally: this one holds
+    # the MECHANISM to the contract, and a guard that trusts the thing it guards is
+    # the proxy failure CHECK_AUTHORING_GUIDE §4.5 names.
+    after = draft.stat()
+    assert draft.read_text(encoding="utf-8") == original, (
+        "the fixture did not restore the draft's BYTES")
+    assert after.st_mtime_ns == original_stat.st_mtime_ns, (
+        "the fixture restored bytes but MOVED THE MTIME. "
+        "`bundle_manuscript_length` refuses to size a PDF older than its draft's "
+        "`\\input` closure, so this silently takes the bundle UNMEASURED and "
+        "shrinks that gate's reported population while it keeps passing.")
 
 
 class TestAnUnreadFileIsNotACleanFile:

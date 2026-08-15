@@ -121,7 +121,12 @@ CI_SKIP: dict[str, str] = {
 #: So `--ci` FAILS when fewer checks MEASURE than this. A missing toolchain becomes a
 #: red build naming how many fewer than the floor MEASURED, not a green tick. Lower it only with a stated
 #: reason, exactly like every other ratchet in this codebase.
-CI_MIN_CHECKS_RUN: int = 81  # 2026-08-15: +1 (spelled_out_census_figures — census
+CI_MIN_CHECKS_RUN: int = 82  # 2026-08-15: +1 (seed_residue_absent — a production-seeded
+                             #   mutation whose `finally` never ran because the process
+                             #   was killed, leaving a fabricated finding in the review
+                             #   corpus. Observed, not theorised: D10, 2026-08-12.)
+                             #   Not CI_SKIP.
+                             # 2026-08-15: +1 (spelled_out_census_figures — census
                              #   figures written in WORDS, invisible to count_literals,
                              #   which matches digits only; I1 finding 7.2). Not CI_SKIP.
                              # 2026-08-14: +1 (notebook_markdown_retracted_claims — the

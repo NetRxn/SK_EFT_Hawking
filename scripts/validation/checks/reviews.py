@@ -1106,3 +1106,161 @@ def check_ledger_ids_resolve() -> CheckResult:
         f"(pre-existing annotated-ID debt, baseline {LEDGER_DANGLING_BASELINE}); no growth",
         warning=bool(dangling)))
     return CheckResult(passed=not keyless, details=details)
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════
+# Seed residue — a production-seeded mutation that outlived its test
+# ══════════════════════════════════════════════════════════════════════════════════════
+
+def _seeded_marker() -> str:
+    """The sentinel, from its ONE owner.
+
+    Imported rather than re-typed. A second copy of the literal in this file would be a
+    second thing to keep in step with `seed_journal.seeded_mutation`, and a guard that
+    greps for a marker the writer no longer writes reports a clean corpus forever.
+    """
+    from seed_journal import SEED_MARKER
+    return SEED_MARKER
+
+
+@register_check("seed_residue_absent",
+                "No production review document carries test-seeded content, and no "
+                "seeded mutation is left unrestored")
+def check_seed_residue_absent() -> CheckResult:
+    """CHECK: a production-seeded mutation has not outlived the test that wrote it.
+
+    THE DEFECT, OBSERVED. `CHECK_AUTHORING_GUIDE` §2.4 requires seeding the REAL artifact
+    a check reads. The restore lived in a `finally`, which does not run under `SIGKILL` or
+    a harness timeout. On 2026-08-12 a killed run left six seeded lines in
+    `2026-08-12-0200-citation-integrity/D10.md`; from that moment the corpus carried a
+    live open CRITICAL on bundle D10 — a node, a FLAGS edge, a ratchet consumer and a
+    moved `readiness_submission_gate`, with nothing marking it synthetic. It was very
+    nearly frozen into a ratchet ceiling as an accepted blocker.
+
+    ⚠️ THIS CHECK ASSERTS THE OUTCOME, NOT THE MECHANISM. `scripts/seed_journal.py` owns
+    seed+restore and a `tests/conftest.py` fixture repairs orphans at session start; both
+    are the braces. This is the belt, and it deliberately does not ask whether either ran
+    — it reads the corpus and reports what is in it. A check that verified "the fixture
+    executed" would be satisfied by a fixture that executed and did nothing, which is the
+    proxy failure §4.5 names.
+
+    Two legs, covering two different populations:
+
+    * `corpus` — every `papers/AutomatedReviews/*/*.md`, scanned for the marker. This is
+      the consequential population: the corpus is read as DATA, so residue here is a
+      fabricated finding rather than merely a dirty file.
+    * `journal` — outstanding `.seed-journal/` entries whose owning process is dead. This
+      reaches residue OUTSIDE the corpus too (`docs/counts.json`, `src/core/provenance.py`,
+      a bundle draft), which the marker cannot: a seed into Python source cannot carry a
+      sentinel without changing what the seed means.
+
+    ⚠️ THE TWO LEGS TREAT A LIVE OWNER DIFFERENTLY, AND THE ASYMMETRY IS THE DESIGN.
+
+    * The JOURNAL leg exempts a live pid. An entry held open by a running pytest is a seed
+      in flight; reporting it would make one session red on another session's healthy
+      test, and the first response to a false red is to weaken the check.
+    * The CORPUS leg exempts NOBODY. A marker in a tracked review document IS test-seeded
+      content in the corpus whoever is holding it, and while it is there the graph mints
+      it. Exempting live owners here was tried first and IMMEDIATELY made the check
+      unseedable: the only way to put a marked document in the real corpus is from a live
+      process, so every production-seeded mutation would have been exempted and the check
+      could not have been shown to fire at all. That is the §1 defect — absence of
+      measurement rendered as success — reached by way of a convenience. The message names
+      which case it found, so a concurrent-run red is diagnosable rather than mysterious.
+    """
+    import os as _os
+
+    marker = _seeded_marker()
+    reviews_dir = _H.PAPERS_DIR / "AutomatedReviews"
+    if not reviews_dir.is_dir():
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "corpus", False, measured=False,
+            message=f"no review corpus at {reviews_dir} — UNVERIFIED, not passing. "
+                    f"Absence of the corpus is not evidence that it is clean")])
+
+    # ── which paths are in flight right now ──────────────────────────────────────────
+    inflight: set[str] = set()
+    orphans: list[dict] = []
+    journal_readable = True
+    try:
+        from seed_journal import outstanding
+        for e in outstanding(include_live=True):
+            (inflight.add(_os.path.realpath(str(e.get("path", ""))))
+             if e.get("live") else orphans.append(e))
+    except Exception as exc:      # noqa: BLE001
+        # FAIL, not warn, and not pass. A journal we cannot read is an unknown amount of
+        # unrepaired state; reporting PASS over it is the fail-open SKIP the guide's §2.1
+        # measured being replayed out of the memo as a genuine PASS.
+        journal_readable = False
+        orphans = []
+        inflight = set()
+        _journal_err = f"{type(exc).__name__}: {exc}"
+
+    details: list[Detail] = []
+
+    # ── leg 1: the corpus itself ─────────────────────────────────────────────────────
+    scanned = 0
+    residue: list[str] = []
+    for md in sorted(reviews_dir.glob("*/*.md")):
+        try:
+            text = md.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        scanned += 1
+        if marker in text:
+            rel = str(md.relative_to(_H.PROJECT_ROOT))
+            residue.append(
+                f"{rel} (IN FLIGHT — a live process is holding this seed open; re-run "
+                f"when it finishes)" if _os.path.realpath(str(md)) in inflight
+                else f"{rel} (ORPHANED)")
+
+    floor = _review_doc_floor()
+    if scanned < floor:
+        details.append(Detail(
+            "corpus", False, measured=False,
+            message=f"scanned {scanned} review documents, below the frozen population "
+                    f"floor of {floor}. The corpus only grows, so a smaller scan means "
+                    f"the glob narrowed — UNVERIFIED, not passing"))
+    elif residue:
+        details.append(Detail(
+            "corpus", False,
+            f"{len(residue)} review document(s) carry test-seeded content "
+            f"(marker {marker!r}), out of {scanned} scanned: "
+            f"{', '.join(residue[:4])}. A killed production-seeded mutation left this "
+            f"behind. Run `uv run python scripts/seed_journal.py repair`; if the journal "
+            f"is gone, restore the file with `git checkout -- <path>` after confirming "
+            f"the diff is only the seed."))
+    else:
+        details.append(Detail(
+            "corpus", True,
+            f"no test-seeded content in {scanned} review document(s) "
+            f"(floor {floor}, {len(inflight)} path(s) in flight)"))
+
+    # ── leg 2: the journal ───────────────────────────────────────────────────────────
+    if not journal_readable:
+        details.append(Detail(
+            "journal", False, measured=False,
+            message=f"the seed journal could not be read ({_journal_err}) — the amount of "
+                    f"unrestored production state is UNKNOWN, which is not the same as "
+                    f"zero"))
+    elif orphans:
+        details.append(Detail(
+            "journal", False,
+            f"{len(orphans)} seeded mutation(s) were never restored and their owning "
+            f"process is gone: "
+            f"{', '.join(str(o.get('path')) for o in orphans[:4])}. Seeded by "
+            f"{orphans[0].get('test')!r}. Run "
+            f"`uv run python scripts/seed_journal.py repair`."))
+    else:
+        details.append(Detail(
+            "journal", True,
+            f"no orphaned seeded mutations ({len(inflight)} in flight)"))
+
+    return CheckResult(passed=all(d.passed for d in details), details=details)
+
+
+def _review_doc_floor() -> int:
+    """The population floor, resolved through `constants` so the ratchet lives with its
+    siblings rather than as a literal buried in a check body."""
+    from src.core.constants import REVIEW_CORPUS_DOC_FLOOR
+    return REVIEW_CORPUS_DOC_FLOOR
