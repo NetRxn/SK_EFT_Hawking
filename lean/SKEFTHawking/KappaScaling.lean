@@ -82,7 +82,43 @@ The EFT corrections as explicit functions of κ at fixed material parameters.
 /-- Dispersive correction as a function of κ.
     δ_disp(κ) = -(π/6) · (ξ·κ/c_s)²
 
-    This is negative (blue-shift) and quadratic in κ. -/
+    This is negative (blue-shift) and quadratic in κ.
+
+    ⚠️ **`π/6` IS A DECLARED PROJECT NORMALIZATION, NOT A DERIVED CONSTANT.**
+    Everything downstream — `crossoverKappa` (whose `6/π` is this coefficient
+    inverted), `dispersive_correction_bound`, `kappa_scaling_dispersive_quadratic`,
+    `HawkingUniversality.universalEffectiveTemp`, `GrapheneHawking`, and the
+    δ_disp numbers printed in papers E1, E2 and D1 — is a statement about THIS
+    DEFINITION, and moves if this number moves.
+
+    What is established, and what is not:
+
+    * The **D² scaling** is supported. Coutant–Weinfurtner (PRD 2017) obtain
+      analytic expressions in the KdV approximation and find the leading
+      correction to the effective temperature is O(ξ²κ²/c_s²) = O(D²) in the
+      adiabatic regime. That is a *parametric* O(·) result.
+    * The **coefficient is not derived anywhere, and no universal value exists.**
+      A near-horizon Hamilton–Jacobi computation shows why: with
+      ω = (v(x)+c_s)k + (c_sξ²/8)k³ and the inverse-profile series x(u) = Σ cᵖₙuⁿ,
+      the tunneling exponent is 2π·Res_{k=0}[x dk] and only n ≡ 1 (mod 3) survives,
+      giving ω·(cᵖ₁ − 4β cᵖ₄ ω² + 21β² cᵖ₇ ω⁴ + …) with β = c_sξ²/8. The leading
+      term cᵖ₁ = 1/κ gives T_H = κ/2π exactly; the first dispersive term is
+      −4β cᵖ₄ ω³, cubic in ω (a non-thermal distortion, not a temperature
+      rescaling) with magnitude set by cᵖ₄ — a fourth-order datum of the velocity
+      profile. Coutant–Parentani (PRD 90, 121501(R), 2014) prove the same by full
+      mode calculation: β_ω = e^{−πω/κ}α_ω exactly for a locally linear profile,
+      with a correction appearing only from the profile's non-linear part. Del
+      Porro–Liberati–Schneider (arXiv:2406.14603) get (3/8)α² for a specific tanh
+      profile and say the coefficient "depends crucially on the specific geometry".
+    * **Do not attribute π/6 to Corley–Jacobson 1996** (numerical; fitted powers
+      whose exponent is itself profile-dependent — p ≈ 3, 2, 1 across profiles;
+      no D² law, no π/6) **or to Finazzi–Parentani 2012** (their D = κL/Λ is a
+      different parameter, and their analytic coefficients there are 1/6 and
+      3√3/8 multiplying D linearly).
+
+    Canonical Python home: `src/core/formulas.DISPERSIVE_C1`; standing recorded in
+    `PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1']`; see
+    `papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/`. -/
 noncomputable def dispersiveCorrection (mat : MaterialParams) (kappa : ℝ) : ℝ :=
   -(π / 6) * (mat.xi * kappa / mat.cs) ^ 2
 
@@ -212,7 +248,7 @@ which is 0.02–0.04 in current experiments. The two theorems below re-express t
 of the transport coefficients — they are the statements `src/core/formulas.py` cites.
 -/
 
-/-- **Dispersive correction bound (Corley–Jacobson 1996; Coutant–Parentani 2014).**
+/-- **Dispersive correction bound.**
 
     The dispersive correction is exactly `−(π/6)·D²` in the adiabaticity parameter
     `D = adiabaticityParam κ c_s (1/ξ)`, hence bounded in magnitude by `(π/6)·D²`
@@ -223,8 +259,14 @@ of the transport coefficients — they are the statements `src/core/formulas.py`
     **Nothing here is existentially quantified.** The bounded quantity is
     `dispersiveCorrection`, the project's definition of δ_disp (the quantity
     `src/core/formulas.py::dispersive_correction(D)` computes), and the bounding
-    constant is the explicit universal number π/6 — so a witness cannot be chosen to
+    constant is the explicit number π/6 — so a witness cannot be chosen to
     satisfy the inequality. The bound is sharp, by the first conjunct.
+
+    ⚠️ This theorem was previously headed "(Corley–Jacobson 1996;
+    Coutant–Parentani 2014)". That attribution is withdrawn: neither paper
+    contains a `D²` law or the constant π/6, and π/6 is a DECLARED PROJECT
+    NORMALIZATION of an O(1) profile-dependent coefficient — see
+    `dispersiveCorrection` for the standing and the sources that do apply.
 
     Companion of `kappa_scaling_dispersive_quadratic`, which fixes the same
     correction's κ-dependence at fixed material parameters. -/

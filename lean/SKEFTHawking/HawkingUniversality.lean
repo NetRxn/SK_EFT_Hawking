@@ -9,14 +9,25 @@ import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 For any UV modification of the phonon dispersion relation satisfying:
   (i)  Subluminal or superluminal at high k
-  (ii) Smooth in the adiabatic sense: D = κL/Λ ≫ 1
+  (ii) Smooth in the adiabatic sense
 the effective temperature extracted from the asymptotic occupation number
 satisfies:
 
   T_eff = T_H (1 + O(T_H/Λ)²)
 
-This is the Corley-Jacobson (1996) / Coutant-Parentani (2014) universality
-result, extended here to include dissipative modifications.
+The ROBUSTNESS of T_H against high-frequency dispersion — the leading term —
+is the Corley-Jacobson (1996) / Coutant-Parentani (PRD 90, 121501(R), 2014)
+result. The O(·)² SCALING of the leading correction is Coutant-Weinfurtner
+(PRD 2017), parametric, in the KdV approximation and the adiabatic regime.
+Neither supplies the COEFFICIENT; see `KappaScaling.dispersiveCorrection`.
+Extended here to include dissipative modifications.
+
+⚠️ TWO DIFFERENT PARAMETERS ARE CALLED `D` IN THIS LITERATURE, and conflating
+them is what produced the 2026-08-15 normalization finding. Finazzi-Parentani
+(PRD 85, 124027, 2012) use D = κL/Λ, carrying the flow-profile length scale L,
+with the ADIABATIC regime at D ≫ 1. This development's `adiabaticityParam`
+is D = κ/(c_s·Λ) → κξ/c_s, with the perturbative regime at D ≪ 1. They are
+not the same quantity and F-P results may not be transported across.
 
 ## Physical Context
 
@@ -51,7 +62,9 @@ The WKB validity (complex turning point analysis) is left as `sorry`.
 ## References
 
 - Corley-Jacobson, PRD 54, 1568 (1996) — dispersive corrections
-- Coutant-Parentani, PRD 89, 124004 (2014) — broadened horizon paradigm
+- Coutant-Parentani, PRD 90, 121501(R) (2014) — broadened-horizon paradigm
+  [N.B. an earlier draft cited "PRD 89, 124004 (2014)" — that is an unrelated
+   Kerr-Newman-NUT paper; corrected 2026-08-15, matching WKBAnalysis.lean:61]
 - Unruh, PRD 51, 2827 (1995) — sonic analog
 - Jacobson, Prog. Theor. Phys. Suppl. 136, 1 (1999) — trans-Planckian review
 -/
@@ -244,9 +257,22 @@ The dissipative statement was the same shape: a case split satisfiable by `0` an
 Both are now stated in `SKEFTHawking/KappaScaling.lean` — the one module where the
 correction definitions and `adiabaticityParam` are simultaneously in scope
 (`KappaScaling` imports this file, so the dependency cannot run the other way).
-They keep their names, and the bounding constant is now the explicit universal
-number `π/6` rather than an existential witness.
+They keep their names, and the bounding constant is now the explicit number
+`π/6` rather than an existential witness.
 See finding 2/3 of `papers/AutomatedReviews/2026-08-13-statement-substance/I1.md`.
+
+⚠️ `π/6` is a DECLARED PROJECT NORMALIZATION, not a constant of nature. The
+repair above correctly replaced an existential witness with a fixed number,
+but the wording it introduced — "universal number", attributed to
+Corley–Jacobson — overstated what that number is. It is not derived
+anywhere and no universal value exists; see
+`src/core/formulas.dispersive_correction` and
+`PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1']` for the Hamilton–Jacobi argument
+that the leading dispersive term is cubic in ω with a profile-dependent
+coefficient. Fixing it by definition is still strictly better than an
+existential witness — the statements below constrain a specific number
+rather than nothing — but they are statements ABOUT THAT DEFINITION.
+See `papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/`.
 -/
 
 /-- **The SK-EFT dressed effective temperature of a sonic horizon.**
@@ -255,7 +281,9 @@ See finding 2/3 of `papers/AutomatedReviews/2026-08-13-statement-substance/I1.md
     existentially witnessed:
 
       T_H     = hawkingTemp κ = κ/(2π)
-      δ_disp  = −(π/6)·D²,  D = adiabaticityParam κ c_s Λ    (Corley–Jacobson 1996)
+      δ_disp  = −(π/6)·D²,  D = adiabaticityParam κ c_s Λ    (π/6 = project normalization,
+                                                              NOT a derived constant —
+                                                              see `dispersiveCorrection`)
       δ_diss  = (γ₁+γ₂)·κ/c_s²                               (SK-EFT, first order)
       δ_cross = 0                                            (no cross term at this order)
 
@@ -280,17 +308,30 @@ noncomputable def universalEffectiveTemp
     dispersion relation `mdr` — subluminal, superluminal, Bogoliubov, or anything else
     satisfying `ModifiedDispersion` — and any first-order transport coefficients:
 
-      δ_disp < 0,        |δ_disp| = (π/6)·D²        (sharp, universal constant π/6)
+      δ_disp < 0,        |δ_disp| = (π/6)·D²        (sharp — the constant is explicit)
       0 ≤ δ_diss,        δ_diss = 0 ↔ γ₁ = γ₂ = 0   (characterisation of the zero set)
-      |T_eff − T_H·(1+δ_diss)| = T_H·(π/6)·D²       (the universality statement)
+      |T_eff − T_H·(1+δ_diss)| = T_H·(π/6)·D²       (the UV-independence statement)
 
     The last conjunct is the content of the theorem: once dissipation is accounted for,
     the whole dependence of `T_eff` on the UV completion is the single number `(π/6)·D²`
     — the *same* number for every `mdr`, since `mdr.F` appears nowhere on the right.
-    That is Corley–Jacobson (1996) / Coutant–Parentani (2014) universality.
+
+    ⚠️ **Read that last sentence precisely.** `mdr.F` appears nowhere on the right
+    because `universalEffectiveTemp` DEFINES `δ_disp` without reference to it — this is
+    UV-independence *by construction of the dressed temperature*, which is the modelling
+    choice this development makes explicit and auditable. It is NOT a derivation of
+    universality from the mode equation, and `π/6` is NOT a constant of nature: no
+    source derives it and no universal value exists. Corley–Jacobson (1996) report
+    numerically fitted powers whose EXPONENT is profile-dependent; Coutant–Parentani
+    (PRD 90, 121501(R), 2014) get `T = κ/2π` EXACTLY for a locally linear profile, with
+    a correction appearing only from the profile's non-linear part. What those papers
+    establish is the ROBUSTNESS of `T_H`, which is the leading conjunct here — not the
+    coefficient. See `src/core/formulas.dispersive_correction`,
+    `PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1']`, and
+    `papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/`.
 
     **Nothing here is existentially quantified**, and no constant is a witness: `π/6` is
-    an explicit universal number and both corrections are the *defined* fields of
+    an explicit fixed number and both corrections are the *defined* fields of
     `universalEffectiveTemp`. The statement was previously
     `∃ teff, … ∧ ∃ C > 0, |teff.delta_disp| ≤ C·D² ∧ …`, which the proof discharged with
     `δ_disp := 1, C := 1/D²` and `δ_diss := if γ₁ = 0 ∧ γ₂ = 0 then 0 else 1` — the

@@ -142,14 +142,38 @@ The dimensionless ratio $D = \xi\kappa/c_s$ compares the horizon's
 gradient scale to the healing length and controls how far the
 hydrodynamic description can be trusted. It is
 $\input{tables/lkb_D_smooth.tex}\unskip$ at the smooth horizon and
-$\input{tables/lkb_D_steep.tex}\unskip$ at the steep one. The leading dispersive
-correction is
+$\input{tables/lkb_D_steep.tex}\unskip$ at the steep one. We take the leading
+dispersive correction to be
 \begin{equation}
-\delta_{\rm disp} = -\frac{\pi}{6}\,D^2 ,
+\delta_{\rm disp} = -c_1 D^2 ,
+\qquad c_1 \equiv \frac{\pi}{6},
 \label{eq:delta_disp}
 \end{equation}
 giving $\input{tables/lkb_delta_disp_smooth.tex}\unskip$ and
 $\input{tables/lkb_delta_disp_steep.tex}\unskip$ respectively.
+
+The $D^2$ scaling is the established one: Coutant and Weinfurtner obtain
+the leading correction to the effective temperature as
+$O(\xi^2\kappa^2/c_s^2)$ in the adiabatic regime. The \emph{coefficient}
+is not. No derivation of a universal $c_1$ exists, and none is possible in
+the form Eq.~\eqref{eq:delta_disp} suggests: for a locally linear
+velocity profile the near-horizon calculation returns
+$\beta_\omega = e^{-\pi\omega/\kappa}\alpha_\omega$ exactly, so the
+temperature is $\kappa/2\pi$ with no $D^2$ term at all, and a correction
+appears only through the profile's non-linear part~\cite{Coutant2014}.
+Corley and Jacobson, correspondingly, report numerically fitted powers
+$(T_H/k_0)^p$ whose exponent is itself profile-dependent, $p \simeq 3$ and
+$2$ for smooth profiles and $p \simeq 1$ for kinked
+ones~\cite{CorleyJacobson1996}. What that literature establishes is the
+robustness of $T_H$, not a coefficient. The value $c_1 = \pi/6$ is
+therefore fixed here as a declared normalization of an $O(1)$
+profile-dependent quantity --- it is the single value carried by this
+project's computational and formal substrate, so that every $\delta_{\rm
+disp}$ quoted below and in the companion papers is the same statement
+about the same definition. A reader who prefers a different $O(1)$
+normalization should rescale every dispersive number in this paper by
+$c_1/(\pi/6)$; the quadratic $\kappa$-scaling and the
+dispersive-versus-dissipative ordering are unaffected.
 
 The Hawking temperature follows from the surface gravity alone,
 \begin{equation}
@@ -597,6 +621,14 @@ Eur.\ Phys.\ J.\ D \textbf{76}, 152 (2022).
 \bibitem{Finazzi2012}
 S.~Finazzi and R.~Parentani,
 Phys.\ Rev.\ D \textbf{85}, 124027 (2012).
+
+\bibitem{CorleyJacobson1996}
+S.~Corley and T.~Jacobson,
+Phys.\ Rev.\ D \textbf{54}, 1568 (1996).
+
+\bibitem{Coutant2014}
+A.~Coutant and R.~Parentani,
+Phys.\ Rev.\ D \textbf{90}, 121501(R) (2014).
 
 \bibitem{Jacquet2023QNM}
 M.~Jacquet \emph{et al.},

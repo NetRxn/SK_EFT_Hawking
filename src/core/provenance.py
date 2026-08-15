@@ -58,6 +58,72 @@ PARAMETER_PROVENANCE = {
                   'itself is DERIVED, not measured — see '
                   'tests/test_bundle_formulas_d11_d12.py::TestPhononPSD for the regression pins.'),
     },
+    'EFT.DISPERSIVE_C1': {
+        'value': 0.5235987755982988,  # pi/6
+        'unit': 'dimensionless (coefficient of D^2)',
+        'tier': 'ASSUMED',
+        'source': 'PROJECT NORMALIZATION. Scaling only: Coutant & Weinfurtner, '
+                  'PRD 2017 (leading T_eff correction is O(xi^2 kappa^2/c_s^2) = O(D^2), '
+                  'KdV approximation, adiabatic regime).',
+        'detail': ('The coefficient c_1 in delta_disp = -c_1 D^2, D = xi*kappa/c_s. '
+                   'THE D^2 SCALING IS SUPPORTED; THE COEFFICIENT IS NOT DERIVED, and no '
+                   'universal value exists. Near-horizon Hamilton-Jacobi: with '
+                   'omega = (v(x)+c_s)k + (c_s xi^2/8)k^3 and the inverse-profile series '
+                   'x(u) = sum_n c^p_n u^n, the tunneling exponent is 2*pi*Res_{k=0}[x dk] '
+                   '= 2*pi*omega*(c^p_1 - 4*beta*c^p_4*omega^2 + 21*beta^2*c^p_7*omega^4 + ...) '
+                   'with beta = c_s xi^2/8 — only n = 1 (mod 3) survives the residue. The '
+                   'leading term c^p_1 = 1/kappa gives T_H = kappa/2pi EXACTLY (hence the '
+                   'robustness result), and the first dispersive term is -4*beta*c^p_4*omega^3: '
+                   'CUBIC in omega, so a non-thermal distortion rather than a temperature '
+                   'rescaling, with magnitude set by c^p_4 — a fourth-order datum of the '
+                   'velocity profile. Nothing universal multiplies D^2. pi/6 is therefore '
+                   'FIXED BY DEFINITION as this project\'s O(1) normalization; every claim '
+                   'about delta_disp in this repo and in E1/E2/D1 is a claim about that '
+                   'definition, and the manuscripts now say so.'),
+        'doi': None,
+        'llm_verified_date': '2026-08-15',
+        'llm_verified_notes': ('Entry created 2026-08-15 resolving E1 finding 2.1 and D1 '
+                               'finding 1.3. ⚠️ DO NOT ATTRIBUTE pi/6 TO CORLEY & JACOBSON: '
+                               'PRD 54, 1568 (1996) was read at page level through Sec. 5.2 '
+                               'from Lit-Search/Phase-4/primary-sources/CorleyJacobson1996.pdf. '
+                               'It is a NUMERICAL study reporting fitted powers (T_H/k_0)^p — '
+                               'p ~ 3 and 2 for smooth profiles at two temperatures, p ~ 1 for '
+                               'kinked ones, i.e. the POWER ITSELF is profile-dependent — with '
+                               'no D^2 law and no pi/6 anywhere in it. Finazzi & Parentani, '
+                               'PRD 85, 124027 (2012) is also NOT a source for it: their regime '
+                               'parameter is D = kappa*L/Lambda, carrying the profile length '
+                               'scale L, a different quantity from xi*kappa/c_s, and their '
+                               'analytic coefficients there are 1/6 and 3*sqrt(3)/8 multiplying '
+                               'D LINEARLY. Independently corroborated 2026-08-15 by a '
+                               'research-scout sweep of five primary sources at equation level: '
+                               'Coutant & Parentani (PRD 90, 121501(R), 2014; arXiv:1402.2514) '
+                               'solve the near-horizon quartic-dispersion mode equation for a '
+                               'locally linear profile and get beta = exp(-pi*omega/kappa)*alpha '
+                               'EXACTLY — T = kappa/2pi with NO D^2 term — with a correction '
+                               'appearing only once the profile departs from linear; and Del '
+                               'Porro, Liberati & Schneider (arXiv:2406.14603) get '
+                               'kappa(alpha) = kappa_KH(1 +/- (3/8)alpha^2) for a specific tanh '
+                               'profile in a DIFFERENT parameter alpha = Omega/Lambda, stating '
+                               'that the coefficient "depends crucially on the specific '
+                               'geometry". The scout found NO paper anywhere stating pi/6. '
+                               '⚠️ CITATION: the correct Coutant-Parentani 2014 reference is '
+                               'PRD 90, 121501(R), NOT "PRD 89, 124004" (an unrelated '
+                               'Kerr-Newman-NUT paper). That misprint was corrected in '
+                               'WKBAnalysis.lean:61 in 2026-04 but is STILL LIVE at '
+                               'HawkingUniversality.lean:54, WKBAnalysis.lean:175 and '
+                               'papers/D1/paper_draft.tex:561 — filed as a finding.'),
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': ('Canonical home: src/core/formulas.DISPERSIVE_C1, consumed by '
+                  'formulas.dispersive_correction and (by delegation) '
+                  'formulas.dispersive_hawking_correction. Lean counterpart: '
+                  'SKEFTHawking.KappaScaling.dispersiveCorrection, with the same number '
+                  'also in HawkingUniversality.universalEffectiveTemp and '
+                  'GrapheneHawking. papers/E1/tables.py imports it rather than retyping '
+                  'the numeral. Changing this value moves every delta_disp in E1, E2 and '
+                  'D1 and the closed form of KappaScaling.crossoverKappa = '
+                  '6(gamma_1+gamma_2)/(pi*xi^2), whose 6/pi IS this coefficient inverted.'),
+    },
     'HBAR': {
         'value': 1.054571817e-34,
         'unit': 'J·s',

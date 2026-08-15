@@ -555,14 +555,40 @@ with a universal coefficient. The coefficient $\pi/6$ in
 Eq.~\eqref{eq:delta-disp} is fixed here as part of the definition of
 $\delta_{\mathrm{disp}}$, and every statement about it in this paper is a
 statement about that definition.
-% TODO: no source in hand derives the coefficient pi/6. Corley & Jacobson
-% (PRD 54, 1568), read in full through Sec. 5.2 from the local corpus,
-% report numerically fitted powers of T_H/k_0 and no analytic coefficient.
-% Coutant-Parentani 2014 (PRD 89, 124004) is NOT cached; the cached
-% Coutant file is Coutant, Parentani & Finazzi (arXiv:1108.1821), which
-% supplies no such coefficient either. Either an additional source is
-% obtained, or pi/6 remains a definition throughout, which is how it is
-% presented here.
+
+That is not a gap awaiting a source. No universal coefficient exists to be
+found, and the reason is visible in the near-horizon calculation itself.
+For a locally linear velocity profile $v \simeq -c_s + \kappa x$ with
+quartic dispersion, the Bogoliubov ratio is
+$\beta_\omega = e^{-\pi\omega/\kappa}\alpha_\omega$ exactly, so the
+temperature is $\kappa/2\pi$ with no $D^{2}$ term at any
+order~\cite{Coutant2014}; equivalently, in the Hamilton--Jacobi form the
+cubic dispersive term is entire in $k$ and contributes no residue, and the
+first surviving dispersive contribution to the tunneling exponent is cubic
+in $\omega$ with a magnitude set by a fourth-order coefficient of the
+velocity profile. The correction is therefore a non-thermal distortion
+sourced by the profile, not a rescaling of the temperature by a universal
+number, which is why the reported exponents differ between smooth and
+kinked profiles, and why the analytic coefficients derived for particular
+profiles elsewhere are stated by their authors to depend on the specific
+geometry. What is established is the $D^{2}$ \emph{scaling} of the leading
+effective-temperature correction in the adiabatic regime. The coefficient
+is a modelling choice, and this paper makes it once, explicitly, and
+carries it consistently.
+% RESOLVED 2026-08-15. The question "which source derives pi/6" is closed
+% NEGATIVE: none does, and none can, because no universal coefficient
+% exists. Corley & Jacobson (PRD 54, 1568), read at page level through
+% Sec. 5.2 from the local corpus, report numerically fitted powers of
+% T_H/k_0 whose EXPONENT is itself profile-dependent. Coutant & Parentani
+% 2014 -- correct reference PRD 90, 121501(R), arXiv:1402.2514, NOT
+% "PRD 89, 124004" which is an unrelated Kerr-Newman-NUT paper -- prove
+% T = kappa/2pi EXACTLY for the locally linear profile. Del Porro,
+% Liberati & Schneider (arXiv:2406.14603) derive 3/8 for a specific tanh
+% profile in a different parameter and state the coefficient "depends
+% crucially on the specific geometry". The D^2 scaling is Coutant &
+% Weinfurtner (PRD 2017), parametric. Standing recorded in
+% PARAMETER_PROVENANCE['DISPERSIVE_C1']; see
+% papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/.
 
 The same cutoff supplies an upper frequency for the treatment. Above
 \begin{equation}
@@ -2323,6 +2349,11 @@ Methuen, London (1962).
 S.~Corley and T.~Jacobson,
 \emph{Hawking spectrum and high-frequency dispersion},
 Phys.~Rev.~D \textbf{54}, 1568 (1996).
+
+\bibitem{Coutant2014}
+A.~Coutant and R.~Parentani,
+\emph{Hawking radiation with dispersion: the broadened horizon paradigm},
+Phys.~Rev.~D \textbf{90}, 121501(R) (2014), arXiv:1402.2514.
 
 \bibitem{CoutantParentani2012}
 A.~Coutant, R.~Parentani, S.~Finazzi,

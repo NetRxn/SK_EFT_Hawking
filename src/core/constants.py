@@ -5821,6 +5821,37 @@ COSMOLOGICAL_PERTURBATIONS_PARAMS = {
 # - Phase 5y H1 deep research (Lit-Search/Phase-5y/Phase5y_H1_second_sound_graviton.md)
 # ════════════════════════════════════════════════════════════════════
 
+# ════════════════════════════════════════════════════════════════════
+# SK-EFT correction coefficients
+#
+# Coefficients of the EFT correction formulas that are NOT derived from
+# other constants and are not measured — i.e. normalizations the project
+# declares. Each one must carry a PARAMETER_PROVENANCE entry saying so;
+# a bare O(1) number with a confident docstring is the failure mode this
+# block exists to prevent.
+# ════════════════════════════════════════════════════════════════════
+
+EFT_PARAMS = {
+    # c_1 in delta_disp = -c_1 * D^2, D = xi*kappa/c_s.
+    #
+    # ⚠️ A DECLARED NORMALIZATION, NOT A DERIVED CONSTANT. The D^2 scaling is
+    # established (Coutant & Weinfurtner, PRD 2017 — parametric, KdV, adiabatic
+    # regime); the coefficient is not, and no universal value exists. For a
+    # locally linear velocity profile the near-horizon calculation gives
+    # T = kappa/2pi EXACTLY with no D^2 term (Coutant & Parentani, PRD 90,
+    # 121501(R), 2014); the leading dispersive term is cubic in omega with a
+    # magnitude set by a fourth-order coefficient of the velocity profile, so it
+    # is profile-dependent. Do NOT attribute pi/6 to Corley & Jacobson 1996 or
+    # to Finazzi & Parentani 2012 — neither contains it.
+    #
+    # Consumed by formulas.DISPERSIVE_C1 / formulas.dispersive_correction, and
+    # mirrored by the Lean definition KappaScaling.dispersiveCorrection. Moving
+    # this number moves every delta_disp in E1, E2 and D1 and the closed form of
+    # KappaScaling.crossoverKappa, whose 6/pi is this coefficient inverted.
+    # Full standing: PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
+    'DISPERSIVE_C1': np.pi / 6,
+}
+
 GW_PARAMS = {
     # ── Speed of light (natural units; SI separately for sanity checks) ─
     'C_LIGHT_M_S': 2.99792458e8,           # SI (defined exactly)

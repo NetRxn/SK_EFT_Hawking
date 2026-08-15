@@ -52,6 +52,7 @@ from src.core.constants import (
     POLARITON_PLATFORMS,
 )
 from src.core.formulas import (
+    dispersive_correction,
     polariton_hawking_temperature,
     stimulated_hawking_gain,
     stimulated_hawking_snr,
@@ -77,16 +78,22 @@ def _dispersion_ratio(kappa: float) -> float:
 
 
 def _delta_disp(kappa: float) -> float:
-    """``delta_disp = -pi D^2 / 6`` — the leading dispersive correction.
+    """``delta_disp = -c_1 D^2`` — the leading dispersive correction.
 
-    This single expression is the manuscript's ONLY dispersive coefficient.
-    It fixes ``c_1 = pi/6`` in the ``kappa_eff = kappa (1 - c_1 D^2)`` form,
-    so ``kappa_eff/kappa = 1 + delta_disp``. ``formulas.dispersive_hawking_
-    correction`` hardcodes ``c_1 = 1.0`` instead, which is a factor 1.9 away;
-    that inconsistency is filed as a finding rather than silently adopted
-    here, and this module deliberately does not call it.
+    Delegates to the canonical evaluator. This module does NOT retype the
+    numeral: ``c_1`` lives once, in ``formulas.DISPERSIVE_C1``, and every
+    number this bundle prints for the dispersive channel is whatever that
+    evaluator returns.
+
+    ``kappa_eff/kappa = 1 + delta_disp``, which is
+    ``formulas.dispersive_hawking_correction`` — as of 2026-08-15 the same
+    function, since the duplicate that hardcoded ``c_1 = 1.0`` was removed
+    (E1 finding 2.1). ``c_1 = pi/6`` is a DECLARED PROJECT NORMALIZATION of
+    an O(1) profile-dependent coefficient, not a derived constant; the draft
+    says so at Eq. (delta_disp) and the standing is recorded in
+    ``PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1']``.
     """
-    return -math.pi * _dispersion_ratio(kappa) ** 2 / 6.0
+    return dispersive_correction(_dispersion_ratio(kappa))
 
 
 def _kappa_tex(kappa: float) -> str:
@@ -237,12 +244,14 @@ SCALARS = {
     },
 
     # ── Dispersive correction, used consistently (§II, §IV) ───────────────
-    # delta_disp = -pi D^2 / 6 fixes the dispersive coefficient at c_1 = pi/6.
-    # kappa_eff/kappa = 1 + delta_disp is the SAME correction, so the gain
-    # threshold in absolute kappa units is 0.175 * that ratio. Deriving both
-    # from one expression is what stops the two drifting apart.
+    # delta_disp = -c_1 D^2 with c_1 = formulas.DISPERSIVE_C1, imported and
+    # never retyped here. kappa_eff/kappa = 1 + delta_disp is the SAME
+    # correction, so the gain threshold in absolute kappa units is 0.175 *
+    # that ratio. Deriving both from one expression is what stops the two
+    # drifting apart; importing c_1 is what stops the bundle drifting from
+    # the substrate.
     'lkb_delta_disp_smooth': {
-        'description': 'E1 §2: leading dispersive correction -pi D^2/6 at the '
+        'description': 'E1 §2: leading dispersive correction -c_1 D^2 at the '
                        'smooth horizon (signed).',
         'value': lambda: f'{_delta_disp(_KAPPA_SMOOTH):.2f}',
     },

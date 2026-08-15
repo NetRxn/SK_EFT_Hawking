@@ -19,6 +19,17 @@ makes the Hawking temperature formula MORE robust:
 
 The dispersive correction is δ_disp = -(π/6)D² with D = κ·l_ee/c_s.
 
+⚠️ **π/6 here is the same DECLARED PROJECT NORMALIZATION carried by
+`KappaScaling.dispersiveCorrection`, not a derived or universal constant** —
+read that definition for what is and is not established. Note the extra step
+this module takes: the Dirac fluid is a *different physical system* from the
+BEC, with a different dispersive length (l_ee, the electron-electron
+scattering length, rather than the healing length ξ). Since the coefficient
+is profile- and system-dependent, reusing one number across both platforms is
+a modelling convention adopted for comparability, and every δ_disp this
+module reports is a statement about that convention. Corrected 2026-08-15;
+see papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/.
+
 ⚠️ **Corrected 2026-08-09.** This header previously said δ_disp is the
 DOMINANT correction, "negligible by 11 orders of magnitude because
 η/(sT) << 1". η/(sT) is a **time**, not a dimensionless number, and comparing

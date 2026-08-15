@@ -194,13 +194,31 @@ scale $T_{\rm imp} \approx \SI{80}{\kelvin}$.}
 \label{fig:T_sweep}
 \end{figure}
 
-The leading dispersive correction follows from the adiabaticity
+The leading dispersive correction is written in the adiabaticity
 parameter $D = \kappa\,l_{\rm ee}/c_s$, where
 $l_{\rm ee} = \hbar v_F/(k_B T)$ is the electron-electron
 scattering length:
 \begin{equation}
-\delta_{\rm disp} = -\frac{\pi}{6} D^2.
+\delta_{\rm disp} = -c_1 D^2,
+\qquad c_1 \equiv \frac{\pi}{6}.
+\label{eq:delta_disp}
 \end{equation}
+The $D^2$ scaling is established; the coefficient is a declared
+normalization, not a derived constant. No universal $c_1$ exists: for a
+locally linear velocity profile the near-horizon calculation returns the
+relativistic Bogoliubov ratio exactly, so the temperature is $\kappa/2\pi$
+with no $D^2$ term, and a correction enters only through the profile's
+non-linear part; the analytic coefficients that have been derived for
+particular profiles are acknowledged by their authors to depend on the
+specific geometry. Fixing $c_1 = \pi/6$ is what makes the numbers below
+commensurable with those of the companion papers, which carry the same
+value, and it is the value in this project's formal substrate
+(\texttt{KappaScaling.dispersiveCorrection}). A different $O(1)$ choice
+rescales every dispersive number here by $c_1/(\pi/6)$ and changes none of
+the qualitative conclusions. Note also that the Dirac fluid is a different
+physical system from the condensate of the companion papers, with $l_{\rm
+ee}$ in place of the healing length; carrying one $c_1$ across both is a
+convention adopted for comparability.
 At the Dean device's high-bias electron temperature $T = \SI{150}{\kelvin}$
 (the lattice bath sits near \SI{10}{\kelvin}; under bias the electron gas
 heats to $\sim\SI{150}{\kelvin}$~\cite{Geurs2025}, and this electron

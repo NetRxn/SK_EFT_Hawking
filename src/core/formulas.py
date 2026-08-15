@@ -20,6 +20,12 @@ Unit conventions:
 
 import numpy as np
 
+# Constants live in constants.py (Invariant #2); formulas.py re-exports the ones
+# it evaluates so that consumers import a formula's coefficient from the formula
+# module without a second literal appearing anywhere. Safe at module level:
+# constants.py does not import this module.
+from src.core.constants import EFT_PARAMS as _EFT_PARAMS
+
 
 # ════════════════════════════════════════════════════════════════════
 # Counting formula (SecondOrderSK.lean)
@@ -116,28 +122,89 @@ def damping_rate(k, omega, c_s, gamma_1, gamma_2, gamma_2_1=0.0, gamma_2_2=0.0,
 
 
 # ════════════════════════════════════════════════════════════════════
-# Dispersive correction (HawkingUniversality.lean: dispersive_correction_bound)
+# Dispersive correction (KappaScaling.lean: dispersive_correction_bound)
 # ════════════════════════════════════════════════════════════════════
+
+#: The dispersive coefficient c₁ in δ_disp = −c₁·D².
+#:
+#: ⚠️ THIS IS A DECLARED PROJECT NORMALIZATION, NOT A DERIVED CONSTANT.
+#: No source derives it, and no universal value exists — see
+#: ``dispersive_correction`` below and PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
+#: Sourced from ``constants.EFT_PARAMS`` (Invariant #2) and re-exported here so
+#: that no consumer — module, script, test, Lean docstring or manuscript table —
+#: ever retypes the numeral. ≈ 0.5235987755982988.
+DISPERSIVE_C1 = _EFT_PARAMS['DISPERSIVE_C1']
+
 
 def dispersive_correction(D):
     """
     Dispersive correction to the effective Hawking temperature.
 
-    δ_disp = -(π/6) · D²
+    δ_disp = -c₁ · D²,  c₁ = DISPERSIVE_C1 = π/6
 
     where D = κξ/c_s is the adiabaticity parameter.
 
-    Lean: dispersive_correction_bound, bogoliubov_superluminal
+    ⚠️ PROVENANCE — WHAT IS AND IS NOT ESTABLISHED.
+
+    The D² SCALING is supported. Coutant & Weinfurtner (PRD 2017) obtain
+    analytic expressions in the KdV approximation and find the leading
+    correction to the effective temperature scales as O(ξ²κ²/c_s²) = O(D²)
+    in the adiabatic regime. That is a PARAMETRIC O(·) result.
+
+    The COEFFICIENT c₁ = π/6 is NOT derived anywhere, and no universal value
+    exists. A near-horizon Hamilton-Jacobi computation shows why. With
+    ω = (v(x)+c_s)k + (c_sξ²/8)k³ and x(u) = Σ c_n uⁿ the inverse profile
+    series, the tunneling exponent is 2π·Res_{k=0}[x dk], and only the terms
+    n ≡ 1 (mod 3) survive the residue:
+
+        Res = ω·(c₁ᵖ - 4β c₄ᵖ ω² + 21 β² c₇ᵖ ω⁴ + ...),   β = c_sξ²/8
+
+    (cᵖ are the PROFILE series coefficients, not this module's c₁). The
+    leading term c₁ᵖ = 1/κ reproduces T_H = κ/2π exactly. The FIRST dispersive
+    term is -4β c₄ᵖ ω³: cubic in ω, so it is a non-thermal distortion rather
+    than a temperature rescaling, and its size is set by c₄ᵖ — a fourth-order
+    datum of the velocity profile. There is no universal number multiplying D².
+
+    That is not merely our own argument. Coutant & Parentani (PRD 90,
+    121501(R), 2014; arXiv:1402.2514) solve the near-horizon quartic-dispersion
+    mode equation for a locally linear profile v ≈ -1 + κx and obtain
+    β_ω = e^{-πω/κ}α_ω EXACTLY, i.e. T = κ/2π with NO D² correction at all at
+    that order. A nonzero correction appears in their §IV only once the
+    profile departs from linear (v = v₀ + δv), and is then set by δv — the
+    profile. Del Porro, Liberati & Schneider (arXiv:2406.14603) derive
+    κ(α) = κ_KH(1 ± (3/8)α²) for a specific tanh profile in a DIFFERENT
+    parameter α = Ω/Λ, and state in terms that its coefficient "depends
+    crucially on the specific geometry".
+
+    Corley & Jacobson (PRD 54, 1568, 1996) agrees: it is a NUMERICAL study
+    reporting fitted powers (T_H/k₀)^p with p ≈ 3 and 2 for smooth profiles at
+    two temperatures and p ≈ 1 for kinked ones — the power ITSELF is
+    profile-dependent. It contains no D² law and no π/6. Do NOT cite it, or
+    Finazzi & Parentani 2012, as the source of this coefficient.
+
+    π/6 is therefore fixed HERE, by definition, as the project's O(1)
+    normalization, and every statement about δ_disp in this repository and in
+    the manuscripts is a statement about that definition. The Lean
+    definition ``KappaScaling.dispersiveCorrection`` carries the same number.
+
+    Lean: dispersive_correction_bound (KappaScaling.lean), bogoliubov_superluminal
     Aristotle: d65e3bba, 3eedcabb
-    Source: Corley & Jacobson, PRD 54, 1568 (1996)
+    Source: SCALING — Coutant & Weinfurtner, PRD 2017 (parametric O(D²), KdV,
+            adiabatic regime). COEFFICIENT — project normalization; see
+            PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
+    Robustness (NOT the coefficient): Corley & Jacobson, PRD 54, 1568 (1996);
+            Coutant & Parentani, PRD 90, 121501(R) (2014).
+            ⚠️ NOT "PRD 89, 124004" — that is an unrelated Kerr-Newman-NUT
+            paper; the misprint is still live at HawkingUniversality.lean:54,
+            WKBAnalysis.lean:175 and papers/D1/paper_draft.tex:561.
 
     Args:
         D: adiabaticity parameter (dimensionless)
 
     Returns:
-        δ_disp (dimensionless, negative for subluminal dispersion)
+        δ_disp (dimensionless, negative)
     """
-    return -(np.pi / 6) * D**2
+    return -DISPERSIVE_C1 * D**2
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -1204,25 +1271,40 @@ def stimulated_hawking_spectrum(kappa, n_points=200, omega_max_ratio=3.0, greybo
 
 def dispersive_hawking_correction(D):
     """
-    Dispersive correction to effective Hawking temperature.
+    Dispersive correction to effective Hawking temperature, as a RATIO.
 
-    κ_eff ≈ κ(1 - c₁·D² + O(D⁴)) where D = ξκ/c_s is the smoothness parameter.
-    The coefficient c₁ ~ O(1) depends on the horizon profile shape.
+    κ_eff/κ = 1 + δ_disp = 1 - c₁·D² + O(D⁴),  D = ξκ/c_s.
 
-    For D ≈ 0.30 (our polariton system, reservoir-corrected c_s): ~9% correction.
+    This is the same physics as ``dispersive_correction``, expressed as the
+    ratio κ_eff/κ rather than as the fractional shift δ_disp. It DELEGATES to
+    that function and does not restate the coefficient — Invariant #1, one
+    home per formula.
 
-    Lean: dispersiveCorrection_in_unit_interval (StimulatedHawking.lean)
+    ⚠️ HISTORY. Until 2026-08-15 this function carried its own hardcoded
+    ``c1 = 1.0``, a second and divergent implementation of a formula that
+    ``dispersive_correction`` already owned with c₁ = π/6. The two disagreed
+    by a factor of 1.91 (at D = 0.595: 0.646 here vs 0.815 there), and the
+    π/6 branch was the one used by every test, gate, script, manuscript and
+    all three Lean modules. The duplicate is removed rather than reconciled.
+    See papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/.
+
+    For the standing of c₁ itself — a declared project normalization, not a
+    derived or universal constant — read ``dispersive_correction``.
+
+    Lean: dispersiveCorrection_in_unit_interval (StimulatedHawking.lean);
+          KappaScaling.dispersiveCorrection carries the same π/6.
     Aristotle: 986b9f66
-    Source: Finazzi & Parentani, PRD 85, 124027 (2012)
+    Source: see ``dispersive_correction``. NOT Finazzi & Parentani 2012 —
+            their regime parameter is D = κL/Λ, which carries the profile
+            length scale L and is a different quantity from ξκ/c_s.
 
     Args:
         D: Smoothness parameter ξκ/c_s
 
     Returns:
-        Fractional correction (1 - c₁D²) with c₁ = 1 (order-of-magnitude)
+        κ_eff/κ = 1 + δ_disp (dimensionless)
     """
-    c1 = 1.0  # O(1) coefficient, profile-dependent
-    return 1.0 - c1 * D**2
+    return 1.0 + dispersive_correction(D)
 
 
 # ════════════════════════════════════════════════════════════════════
