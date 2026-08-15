@@ -2217,6 +2217,21 @@ class TestStage13KindResolution:
         r = br_mod.resolve_stage13_reviews(backfill=False)
         declared = {b: v["kind"] for b, v in r.items() if v["kind"]}
         assert declared, "no bundle resolved a kind — the evidence path is not firing"
-        assert all(v["kind_source"] == "evidence-document"
-                   for v in r.values() if v["kind"]), (
-            "a kind resolved from somewhere other than metadata or an evidence document")
+        # ⚠️ BOTH sources are legitimate, and this assertion said otherwise until 2026-08-15.
+        # It pinned `evidence-document` exclusively, which held only because
+        # `stage13_review_kind` was then absent from all 21 bundles — an incidental state of
+        # the corpus, not a contract. Recording a review through `record_review.py`, the
+        # sanctioned writer, therefore BROKE it: the metadata path is the intended one, and
+        # the evidence path is the backfill for bundles nobody has recorded yet. The failure
+        # message already said "metadata or an evidence document"; the assertion has been
+        # brought into line with it.
+        sources = {b: v["kind_source"] for b, v in r.items() if v["kind"]}
+        assert set(sources.values()) <= {"evidence-document", "bundle_metadata"}, (
+            f"a kind resolved from an unrecognised source: {sources}")
+        # Non-vacuity is what this test actually protects: the EVIDENCE path must still be
+        # able to fire, or a bundle with a review on disk and nothing recorded reads as
+        # kind-less. Pinned separately so that recording every bundle would surface here as
+        # a deliberate change rather than silently retiring the leg.
+        assert any(s == "evidence-document" for s in sources.values()), (
+            "no kind resolved from an evidence document — the backfill path is dead, and its "
+            "silence is indistinguishable from 'no document declares a kind'")

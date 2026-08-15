@@ -50,6 +50,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -75,6 +76,22 @@ KINDS_SUFFICIENT_FOR_GREEN = frozenset({"full-adversarial"})
 
 def _meta_path(bundle: str) -> Path:
     return PAPERS / bundle / "bundle_metadata.json"
+
+
+#: `review_date: <ISO8601>` in a review document's own front matter — the reviewer's
+#: statement of WHEN it reviewed, which is the fact `last_stage{N}_review` is asking for.
+_REVIEW_DATE_RE = re.compile(
+    r"^review_date:\s*(\d{4}-\d{2}-\d{2}(?:[T ][0-9:]{5,8}Z?)?)\s*$", re.MULTILINE)
+
+
+def _declared_review_date(path: Path) -> str | None:
+    """The review date a document declares about itself, or `None` if it declares none."""
+    try:
+        head = path.read_text(errors="replace")[:1200]
+    except OSError:
+        return None
+    m = _REVIEW_DATE_RE.search(head)
+    return m.group(1) if m else None
 
 
 def record(bundle: str, stage: int, verdict: str, doc: str | None,
@@ -125,8 +142,25 @@ def record(bundle: str, stage: int, verdict: str, doc: str | None,
                     f"prerequisite stage — do not edit stage13_status.")
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    # ⚠️ THE REVIEW'S DATE, NOT THE RECORDING'S (2026-08-15). `last_stage{N}_review` answers
+    # "when was this reviewed", and stamping `now` answered "when was this typed" — so a
+    # review recorded late reported as fresh, and the drift runs ONE WAY only, always toward
+    # looking newer. Measured: L1's 2026-08-14 full-adversarial pass recorded as 2026-08-15.
+    # That matters because the staleness rule (WAVE_EXECUTION_PIPELINE Stage 13) compares
+    # edit dates against this field, so an inflated value suppresses a re-review obligation
+    # the corpus has actually earned.
+    #
+    # The document declares `review_date` in its own front matter; prefer it, and fall back
+    # to `now` only when it declares nothing — recording the recording is still better than
+    # recording nothing, provided it is not passed off as the review's own date.
+    reviewed_at, date_src = now, "recording time (document declared no review_date)"
+    if doc is not None:
+        declared = _declared_review_date(REPO / doc)
+        if declared:
+            reviewed_at, date_src = declared, f"declared by {doc}"
     md[f"stage{stage}_status"] = verdict
-    md[f"last_stage{stage}_review"] = now
+    md[f"last_stage{stage}_review"] = reviewed_at
+    md[f"last_stage{stage}_review_recorded_at"] = now
     if stage == 13:
         md["stage13_review_kind"] = kind
         # UNCONDITIONAL write. This was guarded by `if doc is not None`, so a
@@ -141,7 +175,8 @@ def record(bundle: str, stage: int, verdict: str, doc: str | None,
     # the default rewrites every one as `\uXXXX` (TODO-D25).
     write_bundle_json(mp, md)
     suffix = f", kind={kind}" if stage == 13 else ""
-    return True, f"{bundle}: stage{stage}_status = {verdict}{suffix} (recorded {now})"
+    return True, (f"{bundle}: stage{stage}_status = {verdict}{suffix} — reviewed "
+                  f"{reviewed_at} ({date_src}); recorded {now}")
 
 
 def main(argv=None) -> int:

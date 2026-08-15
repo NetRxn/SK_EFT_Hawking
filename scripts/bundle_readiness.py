@@ -167,6 +167,29 @@ def _bundle_metadata_path(bundle: str) -> Path:
     return PAPERS_DIR / bundle / "bundle_metadata.json"
 
 
+#: Kinds that make a document FULL-BUNDLE review evidence — i.e. eligible to set a bundle's
+#: "last reviewed" date. Deliberately WIDER than `_KINDS_SUFFICIENT_FOR_GREEN`: an
+#: `internal-adversarial` pass is a review and dates the bundle, but only `full-adversarial`
+#: earns green. Kinds outside this set (`adjudication`, `targeted-infra`,
+#: `citation-integrity`, `targeted`) are real documents about real work and are simply not
+#: full-bundle reviews; admitting one would date a bundle from a pass that never swept it.
+_FULL_BUNDLE_EVIDENCE_KINDS = frozenset({"full-adversarial", "internal-adversarial"})
+
+
+def _declared_kind_of(path: Path) -> str | None:
+    """The `kind:` a single evidence document declares about itself, or `None`.
+
+    Verbatim, never coerced — see `_declared_review_kind`, which resolves the newest
+    evidence for a bundle and shares this reader.
+    """
+    try:
+        head = path.read_text(errors="replace")[:1200]
+    except OSError:
+        return None
+    m = _DECLARED_KIND_RE.search(head)
+    return m.group(1) if m else None
+
+
 def find_stage13_review_evidence(bundle: str) -> tuple[str, str] | None:
     """Newest genuine fresh-context Stage-13 review evidence for a bundle.
 
@@ -193,11 +216,10 @@ def find_stage13_review_evidence(bundle: str) -> tuple[str, str] | None:
             if not d.is_dir():
                 continue
             name = d.name
-            if "bundle-stage13" not in name and "internal-adversarial" not in name:
-                continue
             m = _DIR_DATE_RE.match(name)
             if not m:
                 continue
+            by_convention = ("bundle-stage13" in name or "internal-adversarial" in name)
             date, hhmm = m.group(1), (m.group(2) or "0000")
             for f in sorted(d.iterdir()):
                 if not f.is_file() or not file_re.match(f.name):
@@ -210,6 +232,30 @@ def find_stage13_review_evidence(bundle: str) -> tuple[str, str] | None:
                         continue  # this script's own aggregation output
                 except OSError:
                     continue
+                # ⚠️ DISCOVERY ASKS THE DOCUMENT FIRST, THE FOLDER ONLY IF IT IS SILENT.
+                # The sibling rule below — a directory name is not a KIND — was already
+                # right, but it was enforced on a candidate set the folder name alone
+                # selected, so a document that DECLARED its kind correctly was unreachable
+                # whenever it sat outside the naming convention. Measured 2026-08-15, both
+                # directions were live:
+                #   * FALSE NEGATIVE — `2026-08-14-l1-stage13/L1.md` declares
+                #     `kind: full-adversarial`; the folder matched neither token, so the one
+                #     genuine adversarial pass of that day's loop was invisible and L1 kept
+                #     reporting a review date from June.
+                #   * FALSE POSITIVE — two `…-internal-adversarial/D12.md` declare
+                #     `kind: adjudication`. The folder admitted them as full-bundle review
+                #     evidence while the document says otherwise.
+                # This changes only what is FINDABLE. A convention-named folder still yields
+                # no kind, so it resolves to `reviewed-kind-unrecorded` and cannot reach
+                # green — the 389 legacy documents that declare nothing are unaffected, and
+                # switching wholesale to declared-kind would have blinded the resolver to
+                # all of them.
+                declared = _declared_kind_of(f)
+                if declared is not None:
+                    if declared not in _FULL_BUNDLE_EVIDENCE_KINDS:
+                        continue      # the document says it is not a full-bundle review
+                elif not by_convention:
+                    continue          # silent document outside the convention: not evidence
                 rel = str(f.relative_to(PROJECT_ROOT))
                 candidates.append(((date, hhmm, name, f.name), date, rel))
 
@@ -281,6 +327,22 @@ def resolve_stage13_reviews(*, backfill: bool) -> dict[str, dict]:
             rec["kind_source"] = "bundle_metadata"
         if md is not None and md.get("last_stage13_review"):
             rec["date"] = str(md["last_stage13_review"])[:10]
+            # ⚠️ RECORDED WINS, BUT A NEWER REVIEW ON DISK MUST NOT VANISH (2026-08-15).
+            # Step (a) is authoritative by design — the metadata is the record, and on-disk
+            # evidence is backfill for bundles that have none. But preferring it SILENTLY
+            # means a review that ran and was never recorded through `record_review.py` is
+            # indistinguishable from one that never ran. Measured: L1's 2026-08-14
+            # `full-adversarial` pass sat on disk while the heatmap reported 2026-06-10, so
+            # the single genuine adversarial review of that day's loop was invisible on the
+            # surface built to show exactly that. Surfaced, never auto-adopted: the remedy is
+            # to record it through the writer, and quietly overwriting the record here would
+            # replace one unverified date with another.
+            ev_newer = find_stage13_review_evidence(b)
+            if ev_newer and ev_newer[0] > rec["date"]:
+                rec["unrecorded_newer_evidence"] = {
+                    "date": ev_newer[0], "path": ev_newer[1],
+                    "kind": _declared_kind_of(PROJECT_ROOT / ev_newer[1]),
+                }
             src = md.get("last_stage13_review_source")
             rec["source"] = src or "bundle_metadata"
             rec["backfilled"] = bool(src) and str(src).startswith("backfilled")
@@ -344,12 +406,7 @@ def _declared_review_kind(bundle: str) -> str | None:
     ev = find_stage13_review_evidence(bundle)
     if ev is None:
         return None
-    try:
-        head = (PROJECT_ROOT / ev[1]).read_text(errors="replace")[:1200]
-    except OSError:
-        return None
-    m = _DECLARED_KIND_RE.search(head)
-    return m.group(1) if m else None
+    return _declared_kind_of(PROJECT_ROOT / ev[1])
 
 
 #: Stage-13 evidence kinds that earn a GREEN readiness verdict. Mirrors
@@ -518,6 +575,7 @@ def aggregate_by_bundle(
             "stage13_review_source": rev.get("source"),
             "stage13_review_backfilled": bool(rev.get("backfilled")),
             "stage13_status_caveat": rev.get("status_caveat"),
+            "unrecorded_newer_evidence": rev.get("unrecorded_newer_evidence"),
             "blocked_p1_gates": gate_block,
             # ⚠️ COMPLETE, not a sample. This was `open_findings[:10]` — a silent cap on
             # the only field that records WHICH findings this aggregation reached. Its one
@@ -739,6 +797,18 @@ def write_heatmap(
                 f"- **{b}** — non-enum `stage13_status` in "
                 f"`papers/{b}/bundle_metadata.json` (surfaced verbatim): "
                 f"\"{info['stage13_status_caveat']}\""
+            )
+        une = info.get("unrecorded_newer_evidence")
+        if une:
+            kind = une.get("kind") or "kind not declared"
+            caveat_lines.append(
+                f"- **{b}** — ⚠️ **a NEWER review sits on disk and is not recorded.** "
+                f"The column above shows the recorded date; `{une['path']}` is dated "
+                f"{une['date']} ({kind}). The recorded value wins here by design, so this "
+                f"review is invisible to every consumer of that column until it is written "
+                f"through `scripts/record_review.py`. Not auto-adopted: a review's verdict "
+                f"is a judgement the writer exists to capture, and silently promoting a "
+                f"date would swap one unverified record for another."
             )
 
     if any_backfilled:
