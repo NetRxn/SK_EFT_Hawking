@@ -90,6 +90,23 @@ provably-false path (the compaction-boundary goldfish-reseed). Your brief from t
   lattice Arf — it is irreducibly geometric) and `dataBordism_two_torsion_of_revStr_trivial` (a *free*-grade
   `ker = ⊥` / order-16 is impossible; only a structure-TIED grade works).
 
+## ⛔ If your slot's `mcp__skeft_wtN__*` tools fail, STOP — do not hand-roll a gate
+
+Symptom: every tool returns `MCP error -32602: Invalid request parameters`, or the first call
+reports a missing session ID. Cause: the lead's session registered your slot's tools while the
+slot was IDLE, and the slot was leased afterwards — the session cannot address the endpoint any
+more. This is not something you can fix from inside the slot, and it is not an authentication
+problem you should go looking for credentials to solve.
+
+**Report it and stop.** Do NOT fall back to invoking `lean` directly over the slot's oleans: it
+discards the build isolation the slot exists to provide and bypasses the `lean_build` denial
+this endpoint enforces. A worker that silently substitutes its own gate produces work the lead
+cannot distinguish from MCP-verified work.
+
+⚠️ Diagnose against the PROXY port (`876N`) with the `?client=` query hint, never the backend
+port (`1876N`) — a direct backend probe returns `401 invalid_token`, which looks like a lease
+rejection and is not one.
+
 ## ⛔ Safety — when something fails, STOP and report (never flail)
 You operate on a SHARED git object store and shared build caches. If a `git commit`, `git add`, or build
 step fails, **STOP immediately and report the verbatim error to the lead.** You are FORBIDDEN from:

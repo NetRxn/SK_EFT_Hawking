@@ -254,11 +254,11 @@
         "links": [
           {
             "kind": "theorem",
-            "target": "GravitationalWaves.natural_range_disjoint_from_ligo_window"
+            "target": "GravitationalWaves.natural_endpoints_violate_ligo_window"
           },
           {
             "kind": "theorem",
-            "target": "GravitationalWaves.second_sound_graviton_natural_range_universally_falsified"
+            "target": "GravitationalWaves.natural_endpoints_violate_ligo_for_every_c"
           }
         ],
         "completeness": "full"
@@ -1096,7 +1096,7 @@
         "links": [
           {
             "kind": "theorem",
-            "target": "GravitationalWaves.natural_range_disjoint_from_ligo_window"
+            "target": "GravitationalWaves.natural_endpoints_violate_ligo_window"
           }
         ],
         "completeness": "full"
@@ -1715,7 +1715,7 @@
         "links": [
           {
             "kind": "theorem",
-            "target": "GravitationalWaves.natural_range_disjoint_from_ligo_window"
+            "target": "GravitationalWaves.natural_endpoints_violate_ligo_window"
           }
         ],
         "completeness": "full"
@@ -1750,7 +1750,7 @@
         "links": [
           {
             "kind": "theorem",
-            "target": "GravitationalWaves.second_sound_graviton_natural_range_universally_falsified"
+            "target": "GravitationalWaves.natural_endpoints_violate_ligo_for_every_c"
           }
         ],
         "completeness": "full"

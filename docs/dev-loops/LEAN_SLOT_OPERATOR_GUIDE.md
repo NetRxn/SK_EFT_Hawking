@@ -161,6 +161,24 @@ restart is what activates both.
 
 ## Per-task orchestrator flow
 
+⛔ **ACQUIRE AND PREPARE THE SLOTS BEFORE STARTING THE SESSION THAT WILL USE THEM.** MCP tools
+attach at session start, and a session that registers a slot's tools while that slot is **idle**
+holds a session established against the idle proxy. Acquiring the lease starts the backend and
+re-establishes the proxy's downstream, after which the client's existing session no longer
+resolves: every call returns `MCP error -32602`, permanently, for the life of that session. The
+tools stay visible and are unusable. Measured 2026-08-14 — a fresh session against the same
+endpoint at the same moment returned HTTP 200 and served tool calls normally.
+
+So the working order is **prepare, then start the client** — or restart the client after
+preparing. Leasing mid-session is what fails.
+
+⚠️ **The port trap, which produced two independent wrong diagnoses in one session.** The client
+config points at the **proxy** (`127.0.0.1:876N`); the lean-lsp backend listens on `1876N`.
+Probing the backend directly returns `401 invalid_token`, which reads like a lease rejection and
+is only the backend refusing a direct connection. Diagnose against the proxy port, and include
+the `?client=<name>` query hint — under `trusted-local` auth that hint *is* the client identity,
+so a probe without it is unauthenticated by construction.
+
 Identical for both clients; only `--client` differs. The endpoints are **lease-gated**: every
 tool call is rejected unless the slot holds an `ACTIVE` lease whose `client` matches the one in
 the endpoint URL. A dispatch without a lease yields a connected server whose every call fails

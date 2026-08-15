@@ -185,7 +185,7 @@
       "round_2_status": "FIXED",
       "round_2_finding_id": null,
       "auto_closed": true,
-      "reason": "§4 line 461 corrected to `GravitationalWaves.natural_range_disjoint_from_ligo_window` (verified PRESENT). §6 references also use GravitationalWaves module qualifier consistently. No surviving `VestigialGravity.*disjoint*` references in paper.",
+      "reason": "§4 line 461 corrected to `GravitationalWaves.natural_endpoints_violate_ligo_window` (verified PRESENT). §6 references also use GravitationalWaves module qualifier consistently. No surviving `VestigialGravity.*disjoint*` references in paper.",
       "deterministic_recheck": {"kind": "tex_grep", "pattern": "VestigialGravity.natural_range_disjoint", "match_count": 0}
     },
     {

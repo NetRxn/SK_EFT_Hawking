@@ -271,11 +271,11 @@
       "type": "theorem-ref",
       "finding_classes": [],
       "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "GravitationalWaves.natural_range_disjoint_from_ligo_window", "link_state": "resolved"}],
+        "links": [{"kind": "theorem", "target": "GravitationalWaves.natural_endpoints_violate_ligo_window", "link_state": "resolved"}],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Resolves to GravitationalWaves.natural_range_disjoint_from_ligo_window (intentional unqualified prose; in §4 line 448 the qualified `VestigialGravity.natural_range_disjoint_from_ligo_window` is wrong-module — the theorem lives in GravitationalWaves, not VestigialGravity). Flag line 448 separately.",
+      "agent_notes": "Resolves to GravitationalWaves.natural_endpoints_violate_ligo_window (intentional unqualified prose; in §4 line 448 the qualified `VestigialGravity.natural_range_disjoint_from_ligo_window` is wrong-module — the theorem lives in GravitationalWaves, not VestigialGravity). Flag line 448 separately.",
       "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
       "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": null,
@@ -297,7 +297,7 @@
         "completeness": "none"
       },
       "agent_verdict": "FAIL",
-      "agent_notes": "TN: theorem lives in module GravitationalWaves not VestigialGravity. `GravitationalWaves.natural_range_disjoint_from_ligo_window` resolves; `VestigialGravity.*` does not. Single-character module-prefix correction.",
+      "agent_notes": "TN: theorem lives in module GravitationalWaves not VestigialGravity. `GravitationalWaves.natural_endpoints_violate_ligo_window` resolves; `VestigialGravity.*` does not. Single-character module-prefix correction.",
       "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
       "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": null,
