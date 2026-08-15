@@ -315,6 +315,51 @@ class TestReviewSeverityDeclared:
         assert "0 review document(s)" in \
             next(d for d in r.details if d.name == "summary").message
 
+    #: Two findings; the FIRST carries two `- **Severity:**` lines and the SECOND carries
+    #: none. Totals reach parity (2 headings, 2 severity lines), so the old `n_sev <
+    #: n_head` predicate passed this document completely — one finding paid for its
+    #: neighbour and 1.2's severity silently fell back to glyph inference.
+    PADDED = ("### 1.1 — the mapping row is stale\n"
+              "- **Severity:** critical\n"
+              "- **Severity:** critical\n\nbody\n"
+              "### 1.2 — 🔴 the second row is stale too\n\nbody\n")
+
+    def test_padding_cannot_pay_for_a_missing_declaration(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — D12 round-11 8.4.
+
+        ⚠️ This is the mutation the old predicate could not catch, and it needed no
+        adversary: comparing `len(severity lines)` to `len(headings)` asks whether the
+        document has ENOUGH declarations, not whether each finding HAS one. Totals are not
+        an association. Severity drives the blocking-closure bar, so the finding whose
+        declaration went missing is exactly the one that must not be inferable.
+        """
+        _patch_roots(monkeypatch, _reviews_tree(
+            tmp_path, {f"{self.CUTOFF_DIR}/D11.md": self.PADDED}))
+        r = rv.check_review_severity_declared()
+        assert r.passed is False, (
+            "two headings and two severity lines reported PASS while finding 1.2 declares "
+            "none — the count reached parity and the association did not")
+        assert any("1.2" in (d.message or "") for d in r.details if not d.passed), \
+            "the failure must NAME the finding that is missing its declaration"
+
+    def test_a_non_iso_directory_name_fails_rather_than_skipping(
+            self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — the cutoff used to be OPT-OUT.
+
+        Scope was decided by `parent.name[:10] < "2026-08-01"`, a string compare against a
+        directory name. A review filed in a folder not named for a date was skipped in
+        silence, so a reviewer chose whether to be checked by choosing a folder name.
+        Undecidable scope is a failure: the check cannot know whether the document is in
+        scope, and a check that cannot know must not answer "fine".
+        """
+        _patch_roots(monkeypatch, _reviews_tree(
+            tmp_path, {"stage13-latest/D11.md": self.UNDECLARED}))
+        r = rv.check_review_severity_declared()
+        assert r.passed is False, (
+            "a review in a non-date directory reported PASS — that is the cutoff working "
+            "as an opt-out rather than as a boundary")
+        assert any("scope" in d.name for d in r.details if not d.passed)
+
     #: A well-formed LINE carrying a token `build_graph` cannot map. Satisfies the
     #: line-count leg completely.
     MISTYPED = ("### 1.1 — the mapping row is stale\n"

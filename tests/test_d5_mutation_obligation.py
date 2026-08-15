@@ -207,7 +207,15 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "since it reads `extract_review_finding_nodes()` rather than the walked text and a "
         "fixture tree cannot reach it. That leg REPLACES a raise in `_blocked_by_edges`: "
         "raising propagated out of `build_graph_json()`, so one hand-typed id would have "
-        "taken the graph, atlas, gate extraction and dashboard down together",
+        "taken the graph, atlas, gate extraction and dashboard down together. "
+        "2026-08-15 (D12 round-11 8.4) two more, both of which the check could NOT have "
+        "caught before: PADDING (two headings, two severity lines, but one finding "
+        "carries both and its neighbour none — the count reached parity while the "
+        "association did not, so the predicate moved from per-document totals to a "
+        "per-section walk), and a NON-ISO DIRECTORY NAME (scope was decided by a string "
+        "compare on `parent.name[:10]`, so a folder not named for a date skipped every "
+        "requirement in silence — the cutoff was an opt-out, and undecidable scope is now "
+        "a failure rather than a skip)",
     ),
     "review_docs_mint_findings": (
         "test_d5_reviews.py",

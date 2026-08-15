@@ -9341,6 +9341,20 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:8.4",
+      "status": "fixed",
+      "evidence": "Re-measured at HEAD, and the finding is part stale and part live — closed on the live part. STALE: 'examined zero documents' is false, it examines 28; the 2026-08-01 cutoff was simply in the future when this was filed, and time made the check non-vacuous. Also stale: 'accepts bogus values', fixed 2026-08-05 by the _SEV_VALUE vocabulary leg. LIVE and now fixed, both root defects: (1) the predicate compared per-document TOTALS (n_sev < n_head), so one finding carrying two Severity lines paid for a neighbour carrying none — replaced by a per-section walk that names the finding whose declaration is missing; (2) scope was a string compare on parent.name[:10], so a review in a folder not named for a date skipped every requirement silently, making the cutoff an OPT-OUT — undecidable scope is now a failure. Both mutations are pinned in test_d5_reviews.py and recorded in the D5 mutation registry.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_d5_reviews.py::TestReviewSeverityDeclared -q && uv run python scripts/validate.py --check review_severity_declared",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }

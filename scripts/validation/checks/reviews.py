@@ -396,24 +396,58 @@ def check_review_severity_declared() -> CheckResult:
             f"build_graph declaration maps unavailable ({exc}) — the accepted "
             f"vocabulary is unknown, so this check cannot validate anything")])
 
+    # ⚠️ A DIRECTORY NAME IS NOT A DATE, and treating it as one made the cutoff an
+    # OPT-OUT. `date < _CUTOFF` is a string compare against `parent.name[:10]`, so a
+    # review filed in a directory whose name does not begin with an ISO date silently
+    # skipped every requirement below — the reviewer chose whether to be checked by
+    # choosing a folder name. Unparseable provenance is now a FAILURE, not a skip:
+    # the check cannot know whether such a document is in scope, and a check that
+    # cannot know must not answer "fine". (D12 round-11 8.4, 2026-07-31.)
+    _ISO_DATE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+    bad_scope = 0
     for md in sorted(reviews_dir.glob("*/*.md")):
         date = md.parent.name[:10]
+        if not _ISO_DATE.match(date):
+            bad_scope += 1
+            details.append(Detail(
+                f"{md.relative_to(_H.PROJECT_ROOT)}:scope", False,
+                f"review directory {md.parent.name!r} does not begin with an ISO date, so "
+                f"whether it falls on/after the {_CUTOFF} cutoff is undecidable. This used "
+                f"to skip the document silently, which made the cutoff opt-out: a reviewer "
+                f"evaded every requirement below by naming the folder."))
+            continue
         if date < _CUTOFF:
             continue
         text = md.read_text(encoding="utf-8", errors="replace")
-        n_head = len(_HEADING.findall(text))
-        if n_head == 0:
+        heads = list(_HEADING.finditer(text))
+        if not heads:
             continue
         checked += 1
-        n_sev = len(_SEV_LINE.findall(text))
-        if n_sev < n_head:
+        # ⚠️ PER-FINDING, NOT PER-DOCUMENT COUNTS. This compared `len(severity lines)` to
+        # `len(headings)` and passed whenever the totals reached parity — so one finding
+        # carrying two `- **Severity:**` lines paid for a neighbour carrying none, and the
+        # document read compliant while a finding's severity fell back to glyph inference.
+        # Severity drives the blocking-closure bar, so that is exactly the finding whose
+        # severity must not be inferable. Totals are not an association; the section is.
+        missing = []
+        for i, h in enumerate(heads):
+            end = heads[i + 1].start() if i + 1 < len(heads) else len(text)
+            section = text[h.start():end]
+            if not _SEV_LINE.search(section):
+                # `_HEADING` matches only up to the first non-space character, so
+                # `h.group(0)` is `### 1` — useless for naming the finding. Take the
+                # heading LINE: a failure that cannot say which finding is missing its
+                # declaration sends the reader back to re-derive it by hand.
+                missing.append(section.split("\n", 1)[0].strip()[:70])
+        if missing:
             bad += 1
             details.append(Detail(
                 str(md.relative_to(_H.PROJECT_ROOT)), False,
-                f"{n_head} finding heading(s) but only {n_sev} `- **Severity:**` line(s). "
-                f"From {_CUTOFF} every finding must declare its severity explicitly: "
-                f"severity drives the blocking-closure bar, and inferring it from a glyph "
-                f"lets it be changed without leaving a trace."))
+                f"{len(missing)} of {len(heads)} finding(s) declare no `- **Severity:**` "
+                f"line in their own section: {missing}. From {_CUTOFF} every finding must "
+                f"declare its severity explicitly: severity drives the blocking-closure "
+                f"bar, and inferring it from a glyph lets it be changed without leaving a "
+                f"trace."))
         unknown = sorted({v for v in _SEV_VALUE.findall(text)
                           if v.strip().lower() not in vocabulary})
         if unknown:
@@ -476,14 +510,16 @@ def check_review_severity_declared() -> CheckResult:
                 "every declared `Blocked-by:` names a minted finding or a valued release "
                 "scheme"))
 
-    _ok = bad == 0 and bad_value == 0 and bad_lane == 0 and bad_dep == 0
+    _ok = (bad == 0 and bad_value == 0 and bad_lane == 0 and bad_dep == 0
+           and bad_scope == 0)
     details.insert(0, Detail(
         "summary", _ok,
         f"{checked} review document(s) dated >= {_CUTOFF} checked; {bad} with findings "
         f"that do not declare severity, {bad_value} declaring an unmappable severity "
         f"value, {bad_lane} declaring an unmappable lane, {bad_dep} unresolvable "
-        f"`Blocked-by:` entr(ies) corpus-wide (earlier documents keep glyph inference; "
-        f"`lane` is forward-only and its absence is not a failure)"))
+        f"`Blocked-by:` entr(ies) corpus-wide, {bad_scope} document(s) whose directory "
+        f"name is not an ISO date so their scope is undecidable (earlier documents keep "
+        f"glyph inference; `lane` is forward-only and its absence is not a failure)"))
     return CheckResult(passed=_ok, details=details)
 
 
