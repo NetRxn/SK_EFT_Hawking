@@ -466,13 +466,77 @@ alphabet is abstracted away.
 %% =====================================================================
 %% §4 — SPT two-qubit gate  [TO DRAFT]
 %% =====================================================================
-\section{A symmetry-protected two-qubit gate substrate}
+\section{A dark state with a protected sign flip}
 \label{sec:gate}
 
-%% TODO(redraft): dark state in singlet-sector kernel, non-trivial;
-%% sign flip on the pi loop AND vanishing dynamical phase (both PROVED —
-%% the prior draft's "explicitly deferred" was stale). Holonomy-level
-%% adiabatic transport is what genuinely remains open.
+\emph{Grade: Theorem.} Kernel-checked, no assumed hypothesis.
+
+Braiding is not the only route to a phase that is insensitive to the
+details of how it was acquired. This section records an independent,
+much smaller result of the same flavour: a two-site fermionic model with
+a dark state whose sign is reversed by a half-circuit of a parameter
+loop, with the dynamical contribution to the phase vanishing identically
+along the relevant locus. It is included because it is a gate-level
+result and it is proved, not because it depends on anything else in this
+paper; it does not.
+
+\subsection{The model and the dark state}
+
+The model is a two-site Fermi--Hubbard dimer with hopping $t$ and a
+pairing or detuning parameter $\Delta$, restricted to its singlet
+sector, where the Hamiltonian $H_{\mathrm{s}}(t,\Delta)$ acts on a
+three-dimensional space. Two facts fix the state of interest:
+\begin{itemize}
+\item the vector $v_{\mathrm{dark}}(t,\Delta)$ lies in the kernel of
+  $H_{\mathrm{s}}(t,\Delta)$, for \emph{all} real $t$ and $\Delta$; and
+\item it is non-zero whenever $(t,\Delta) \neq (0,0)$.
+\end{itemize}
+Both are proved. The second matters more than it looks: a kernel-membership
+statement about a vector that might be zero is vacuous, and the
+non-triviality lemma is what stops it from being so.
+
+\subsection{The sign flip and the vanishing dynamical phase}
+
+Parameterise the dark state by an angle $\theta$, writing
+$\psi_{\mathrm{dark}}(\theta)$, and restrict attention to the locus
+\begin{equation}
+\Delta \sin\theta \;=\; 2t\cos\theta ,
+\label{eq:darklocus}
+\end{equation}
+which is the condition under which $\psi_{\mathrm{dark}}(\theta)$ is the
+dark state of $H_{\mathrm{s}}(t,\Delta)$. Note that
+\eqref{eq:darklocus} is invariant under $\theta \mapsto \theta + \pi$,
+since both sides change sign. On that locus we prove two things:
+\begin{align}
+\psi_{\mathrm{dark}}(\theta + \pi) &= -\,\psi_{\mathrm{dark}}(\theta),
+\label{eq:signflip}\\
+\bigl\langle \psi_{\mathrm{dark}}(\theta),\;
+  H_{\mathrm{s}}(t,\Delta)\,\psi_{\mathrm{dark}}(\theta)\bigr\rangle &= 0 .
+\label{eq:nodynamical}
+\end{align}
+Equation~\eqref{eq:signflip} is the sign flip: the two ends of a
+half-turn in $\theta$ carry states differing by exactly $-1$, not by an
+arbitrary phase. Equation~\eqref{eq:nodynamical} says the expectation of
+the Hamiltonian in the dark state vanishes, so the dynamical phase
+accumulated along any path lying in the locus is zero. Together these
+are the two ingredients from which a geometric phase of $-1$ is read
+off: a sign difference between endpoints, and nothing dynamical to
+account for it.
+
+\subsection{What is not proved}
+
+We are precise about the gap, because the gap is where the physics
+statement would live. Equations~\eqref{eq:signflip}
+and~\eqref{eq:nodynamical} are statements about the endpoints of a
+half-turn and about an expectation value at a configuration. They are
+not a transport theorem. To conclude that a physical protocol which
+slowly varies $(t,\Delta)$ around the loop returns the system to
+$-\psi_{\mathrm{dark}}$ requires an adiabatic theorem --- a statement
+that the evolution stays in the instantaneous kernel, with an error
+controlled by the sweep rate and the spectral gap --- and that is not
+formalised here. What we have is the holonomy's would-be value together
+with the vanishing of its competitor, not the holonomy. Closing that gap
+is listed in Sec.~\ref{sec:open}.
 
 %% =====================================================================
 %% §5 — Quantum groups  [TO DRAFT]
@@ -513,7 +577,122 @@ alphabet is abstracted away.
 \section{Entanglement entropy of a modular tensor category}
 \label{sec:entropy}
 
-%% TODO(redraft)
+\emph{Grade: Conditional} for the two biconditional results, which
+consume a hypothesis package we state in full; \emph{Theorem} for the
+Fibonacci evaluation and the negative result.
+
+Kitaev and Preskill showed that the entanglement entropy of a
+topologically ordered medium across a disk of boundary length $L$ has the
+form $S = \alpha L - \gamma + \cdots$, with the non-universal coefficient
+$\alpha$ depending on short-wavelength physics and the universal
+subleading constant given by
+\begin{equation}
+\gamma = \log \mathcal{D},
+\qquad
+\mathcal{D} = \sqrt{\textstyle\sum_a d_a^2} \;\ge\; 1 ,
+\label{eq:kp}
+\end{equation}
+the sum running over superselection sectors~\cite{KitaevPreskill2006}.
+The constant $\gamma$ vanishes exactly when $\mathcal{D} = 1$, that is,
+when the category is trivial. This section formalises that dichotomy.
+
+\subsection{Saturation holds exactly when the category is trivial}
+
+Fix a hypothesis package $\mathrm{CH}(S_A, c_{LR}, c'_1)$ recording that
+the entropy functional $S_A$ takes the Holzhey--Larsen--Wilczek /
+Casini--Huerta form for a one-dimensional interval. Under that package we
+prove, for every horizon category $H$ and all $0 < \varepsilon < L$:
+\begin{equation}
+S_A(H, L, \varepsilon)
+ \;=\; \frac{c_{LR}}{3}\log\frac{L}{\varepsilon} + c'_1
+\quad\Longleftrightarrow\quad
+\mathcal{D}^2(H) = 1 .
+\label{eq:chsat}
+\end{equation}
+and, separately, that on any category with $\mathcal{D}^2(H) > 1$ the
+inequality is strict:
+\begin{equation}
+S_A(H, L, \varepsilon)
+ \;<\; \frac{c_{LR}}{3}\log\frac{L}{\varepsilon} + c'_1 .
+\label{eq:chstrict}
+\end{equation}
+
+Equation~\eqref{eq:chsat} is the content of \eqref{eq:kp} in
+biconditional form: the free-field logarithmic law is saturated precisely
+by the trivial category, and any topological order produces a deficit.
+Equation~\eqref{eq:chstrict} gives the sign of that deficit. Both are
+kernel-checked. Both consume $\mathrm{CH}$, which is an assumption about
+the form of the entropy functional and not a theorem of this
+development; we grade them Conditional accordingly and state the
+assumption rather than absorbing it into a definition.
+
+\subsection{The deficit, evaluated}
+
+For the Fibonacci category the two objects have quantum dimensions
+$d_1 = 1$ and $d_\tau = \varphi$, so
+$\mathcal{D}^2 = 1 + \varphi^2 = (5+\sqrt5)/2$, and we prove
+\begin{equation}
+\gamma_{\mathrm{Fib}}
+ \;=\; \tfrac12 \log\!\left(\frac{5+\sqrt5}{2}\right)
+ \;\approx\; 0.6429 ,
+\label{eq:gammafib}
+\end{equation}
+i.e.\ $\mathcal{D}_{\mathrm{Fib}} \approx 1.902$. This is a useful place
+to check the arithmetic against the literature independently.
+Kitaev and Preskill record, for $\mathrm{SU}(2)_k$ Chern--Simons,
+$\mathcal{D}^{-1} = \sqrt{2/(k+2)}\,\sin\bigl(\pi/(k+2)\bigr)$, which at
+$k=3$ gives $\mathcal{D}^2 \approx 7.236$~\cite{KitaevPreskill2006}. That
+is exactly twice \eqref{eq:gammafib}'s argument, as it must be: the
+Fibonacci category is the even sector of $\mathrm{SU}(2)_3$, containing
+two of its four labels, and restricting to it halves the sum of squared
+quantum dimensions.
+
+\subsection{Topological entropy is not an area-law logarithm}
+
+One negative result is worth stating on its own, because it rules out a
+form that a reader might otherwise expect. For any horizon category $H$,
+any $G_N > 0$, any $\alpha \neq 0$ and any constant $c$, it is
+\emph{false} that
+\[
+\gamma(H) \;=\; \alpha \log\!\left(\frac{A}{4G_N}\right) + c
+\qquad \text{for all } A > 0 .
+\]
+The reason is immediate once stated: $\gamma(H)$ depends only on the
+category and not on the area at all, so it cannot equal a non-constant
+function of the area. We record it because the logarithmic correction to
+black-hole entropy and the topological entanglement entropy are both
+logarithms and are easy to conflate, and this result says they are not
+the same object.
+
+\subsection{Scope: the error-correction layer}
+
+The development also contains a layer relating horizon data to quantum
+error correction, and we state its standing plainly rather than leaving
+a reader to infer it.
+
+That layer defines two real quantities on a horizon record --- a
+\emph{code distance}, defined as $\log d_{\max}$, and a \emph{scrambling
+time bound}, defined as $\log \mathcal{D}^2$ --- and proves statements
+about them. The statements are correct. But they are, without exception,
+the elementary theory of the logarithm on $[1,\infty)$: the principal
+one asserts that $\log d_{\max} > 0$ if and only if $d_{\max} > 1$,
+together with the implication that positive code distance forces
+positive scrambling-time bound. No error-correcting code is constructed,
+no recovery map is defined, no encoding or decoding is exhibited, and no
+scrambling dynamics is modelled. The vocabulary is an interpretation
+placed on two logarithms, and the theorems are about the logarithms.
+
+Two results in that layer do carry information and we keep them on that
+basis. The horizon boundary condition is a five-field predicate
+--- positivity of the entropy functional, a positive area-law
+coefficient, monotonicity, modular invariance, and anomaly matching ---
+and a five-field predicate is worth nothing if nothing satisfies it. We
+exhibit a witness: the Fibonacci horizon satisfies all five fields.
+Symmetrically, the trivially abelian horizon has $d_{\max} = 1$ and hence
+$\log d_{\max} = 0$, so it fails the positivity requirement. Together
+these establish that the predicate is neither empty nor universal. That
+is a real, if modest, thing to know about a definition, and it is what
+this layer establishes.
 
 %% =====================================================================
 %% §10 — Open problems  [TO DRAFT]
