@@ -9412,6 +9412,330 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:1.1",
+      "status": "fixed",
+      "evidence": "Attribution narrowed: the loop-gain sentence cited IrwinHilton2005 unqualified while a paragraph 66 lines later disclosed it as a resolved-DOI record only. Now cites Irwin1995 (the source read) with IrwinHilton2005 attached on the same provisional footing, and the qualifier mirrored into the registry notes, which had asserted the attribution flatly.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:1.1",
+      "status": "fixed",
+      "evidence": "Attribution narrowed: the loop-gain sentence cited IrwinHilton2005 unqualified while a paragraph 66 lines later disclosed it as a resolved-DOI record only. Now cites Irwin1995 (the source read) with IrwinHilton2005 attached on the same provisional footing, and the qualifier mirrored into the registry notes, which had asserted the attribution flatly.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:1.1",
+      "status": "fixed",
+      "evidence": "Attribution narrowed: the loop-gain sentence cited IrwinHilton2005 unqualified while a paragraph 66 lines later disclosed it as a resolved-DOI record only. Now cites Irwin1995 (the source read) with IrwinHilton2005 attached on the same provisional footing, and the qualifier mirrored into the registry notes, which had asserted the attribution flatly.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:1.2",
+      "status": "fixed",
+      "evidence": "The prose said transform methods 'are formalized in HOL Light'; the fetched arXiv:1705.10050 abstract records an ongoing project with a roadmap. Prose rewritten to 'is under way', and the primary-source cache caveat corrected at source so the overstatement cannot re-seed the prose.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:4.1",
+      "status": "fixed",
+      "evidence": "papers/D10/bibliography.bib had the isabelleCBO authors reversed against arXiv:2512.05878 (Unruh is first), and the rendered .bbl agreed with the .bib. Corrected at source and bibtex re-run so the reader-visible output changed; D12's own rendering is pinned as the reference so a future divergence in either direction fires.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:4.1",
+      "status": "fixed",
+      "evidence": "papers/D10/bibliography.bib had the isabelleCBO authors reversed against arXiv:2512.05878 (Unruh is first), and the rendered .bbl agreed with the .bib. Corrected at source and bibtex re-run so the reader-visible output changed; D12's own rendering is pinned as the reference so a future divergence in either direction fires.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:4.1",
+      "status": "fixed",
+      "evidence": "papers/D10/bibliography.bib had the isabelleCBO authors reversed against arXiv:2512.05878 (Unruh is first), and the rendered .bbl agreed with the .bib. Corrected at source and bibtex re-run so the reader-visible output changed; D12's own rendering is pinned as the reference so a future divergence in either direction fires.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:5.2",
+      "status": "fixed",
+      "evidence": "The paragraph declaring D12's highest prior-art risk named no project and carried no cite, and described it with a subtitle prior_art_novelty.md records as RETRACTED (it came from a search snippet). Replaced with the named project TestingLowerBounds, both citations, and a description restricted to what the read source supports.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:5.2",
+      "status": "fixed",
+      "evidence": "The paragraph declaring D12's highest prior-art risk named no project and carried no cite, and described it with a subtitle prior_art_novelty.md records as RETRACTED (it came from a search snippet). Replaced with the named project TestingLowerBounds, both citations, and a description restricted to what the read source supports.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:5.1",
+      "status": "fixed",
+      "evidence": "The paragraph declaring D12's highest prior-art risk named no project and carried no cite, and described it with a subtitle prior_art_novelty.md records as RETRACTED (it came from a search snippet). Replaced with the named project TestingLowerBounds, both citations, and a description restricted to what the read source supports.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-1730-internal-adversarial:D12:7.1",
+      "status": "fixed",
+      "evidence": "Built the substrate the finding asks for rather than arguing the numbers are fine: papers/D12/tables.py with 20 SCALARS, each an evaluation of a formulas.py function at a stated operating point, retrofitted into the draft as \\input. Every rendered value is byte-identical to the literal it replaced (verified from the compiled PDF text), so this is a provenance retrofit, not a numeric change. Two infra defects had to be repaired for the guard to be real: tables_fresh globbed paper*_* only, so a bundle spec would have been rendered and never guarded, and its output population was a directory glob that would have imported an orphan and made the check permanently stale. Both now derive from one owner.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-1823-internal-adversarial:D12:7.1",
+      "status": "fixed",
+      "evidence": "Built the substrate the finding asks for rather than arguing the numbers are fine: papers/D12/tables.py with 20 SCALARS, each an evaluation of a formulas.py function at a stated operating point, retrofitted into the draft as \\input. Every rendered value is byte-identical to the literal it replaced (verified from the compiled PDF text), so this is a provenance retrofit, not a numeric change. Two infra defects had to be repaired for the guard to be real: tables_fresh globbed paper*_* only, so a bundle spec would have been rendered and never guarded, and its output population was a directory glob that would have imported an orphan and made the check permanently stale. Both now derive from one owner.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2022-internal-adversarial:D12:7.1",
+      "status": "fixed",
+      "evidence": "Built the substrate the finding asks for rather than arguing the numbers are fine: papers/D12/tables.py with 20 SCALARS, each an evaluation of a formulas.py function at a stated operating point, retrofitted into the draft as \\input. Every rendered value is byte-identical to the literal it replaced (verified from the compiled PDF text), so this is a provenance retrofit, not a numeric change. Two infra defects had to be repaired for the guard to be real: tables_fresh globbed paper*_* only, so a bundle spec would have been rendered and never guarded, and its output population was a directory glob that would have imported an orphan and made the check permanently stale. Both now derive from one owner.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2103-internal-adversarial:D12:7.1",
+      "status": "fixed",
+      "evidence": "Built the substrate the finding asks for rather than arguing the numbers are fine: papers/D12/tables.py with 20 SCALARS, each an evaluation of a formulas.py function at a stated operating point, retrofitted into the draft as \\input. Every rendered value is byte-identical to the literal it replaced (verified from the compiled PDF text), so this is a provenance retrofit, not a numeric change. Two infra defects had to be repaired for the guard to be real: tables_fresh globbed paper*_* only, so a bundle spec would have been rendered and never guarded, and its output population was a directory glob that would have imported an orphan and made the check permanently stale. Both now derive from one owner.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:7.1",
+      "status": "fixed",
+      "evidence": "Built the substrate the finding asks for rather than arguing the numbers are fine: papers/D12/tables.py with 20 SCALARS, each an evaluation of a formulas.py function at a stated operating point, retrofitted into the draft as \\input. Every rendered value is byte-identical to the literal it replaced (verified from the compiled PDF text), so this is a provenance retrofit, not a numeric change. Two infra defects had to be repaired for the guard to be real: tables_fresh globbed paper*_* only, so a bundle spec would have been rendered and never guarded, and its output population was a directory glob that would have imported an orphan and made the check permanently stale. Both now derive from one owner.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:1.1",
+      "status": "fixed",
+      "evidence": "Citation substrate repaired without inventing anything: physlean and alphaproof were auto-generated stubs with empty titles, retargeted to TooBySmithHepLean (arXiv:2405.08863) and AlphaProof2025 (Nature 651, 607-613); compcert and sel4 carried VENUES in their title fields, split into real title/journal/volume/page/DOI verified by fetch against Semantic Scholar keyed on the DOI. Every claim traced to a fetched record or an existing cache, and the two unreachable hosts recorded as such rather than as absence.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:1.2",
+      "status": "fixed",
+      "evidence": "Citation substrate repaired without inventing anything: physlean and alphaproof were auto-generated stubs with empty titles, retargeted to TooBySmithHepLean (arXiv:2405.08863) and AlphaProof2025 (Nature 651, 607-613); compcert and sel4 carried VENUES in their title fields, split into real title/journal/volume/page/DOI verified by fetch against Semantic Scholar keyed on the DOI. Every claim traced to a fetched record or an existing cache, and the two unreachable hosts recorded as such rather than as absence.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:1.3",
+      "status": "fixed",
+      "evidence": "The registry note attributed 'm_H_crit = 72 +/- 2 GeV' to KLRS1996. The re-fetched abstract says 70 < m_Hc < 95 GeV, most likely ~80 — no 72. Note rewritten to quote that sentence verbatim, with 72.4 +/- 1.7 attributed to CsikorFodorHeitger1999 where it belongs; correction propagated to EWBG_PARAMS and the Lean docstring.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:1.4",
+      "status": "fixed",
+      "evidence": "Citation substrate repaired without inventing anything: physlean and alphaproof were auto-generated stubs with empty titles, retargeted to TooBySmithHepLean (arXiv:2405.08863) and AlphaProof2025 (Nature 651, 607-613); compcert and sel4 carried VENUES in their title fields, split into real title/journal/volume/page/DOI verified by fetch against Semantic Scholar keyed on the DOI. Every claim traced to a fetched record or an existing cache, and the two unreachable hosts recorded as such rather than as absence.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:1.5",
+      "status": "fixed",
+      "evidence": "Citation substrate repaired without inventing anything: physlean and alphaproof were auto-generated stubs with empty titles, retargeted to TooBySmithHepLean (arXiv:2405.08863) and AlphaProof2025 (Nature 651, 607-613); compcert and sel4 carried VENUES in their title fields, split into real title/journal/volume/page/DOI verified by fetch against Semantic Scholar keyed on the DOI. Every claim traced to a fetched record or an existing cache, and the two unreachable hosts recorded as such rather than as absence.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:2.1",
+      "status": "fixed",
+      "evidence": "Three lattice endpoint masses were bare literals with no provenance key. Registered with tier, DOI and the VERBATIM abstract sentence each was read from, both abstracts re-fetched this pass, plus matching code constants and prose references.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:2.2",
+      "status": "fixed",
+      "evidence": "Both literals of sm_klrs_overshoot_ratio_gt_threshold now trace: the docstring names the provenance keys, their DOIs and code constants, and states explicitly that 72.4 is CFH 1999 and not KLRS 1996. No axiom added. lean_verify reports {propext, Classical.choice, Quot.sound}; lake build clean at HEAD. The verify parses the docstring off the live statement and cross-checks both values, so it reddens on drift.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:4.1",
+      "status": "fixed",
+      "evidence": "paper15 claims twelve stages / ten invariants / 16 checks against I1's fourteen / seventeen. Added a rendered Superseded banner naming I1 as the current account plus a mapping-doc note. The verify is non-vacuous in BOTH directions: it fails if the banner goes away and if either draft stops making the contradicting claim, so it cannot pass by the contradiction quietly disappearing.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.6",
+      "status": "fixed",
+      "evidence": "Re-derived the sweep from its own record rather than the finding's claim: 134 counted anchor pairs across bundles that state a count, 6 fabrication-class NOT-SUPPORTED. Abstract now reports pilot and sweep both; a new paragraph names all six, gives the rate, states the two readings that cannot be separated, and discloses that neither figure covers I1.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.7",
+      "status": "fixed",
+      "evidence": "Re-measured before acting and the filed numbers were stale: manual is 9, not 3, and the abstract figure was already correct because update_counts.py had been fixed to exclude manual. What was wrong was the CORRECTION sentence in section 9 — wrong on the count and on the relation. Rewritten from the live registry.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.8",
+      "status": "fixed",
+      "evidence": "The intro said seventeen invariants while the enumeration had fifteen items — a half-landed state. Wrote invariants 16 and 17 into the enumeration, tied to the sections that depend on them. The verify counts them in the draft and in WAVE_EXECUTION_PIPELINE.md and fails on any mismatch.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.10",
+      "status": "fixed",
+      "evidence": "Found a better source than the finding named: the roadmap carries the full per-wave series, which kills the 'twelve to five to none' framing outright — the sequence is not monotone and 12 is the pre-discipline baseline, not a cycle with the pass applied. Paragraph rewritten to give the series, the median, and why the series is given rather than its endpoints.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:5.11",
+      "status": "fixed",
+      "evidence": "Measured the suite rather than reusing the finding's figures: 484.7s over 82 checks, archived. 'Seconds per stage' is off by two orders of magnitude. Replaced with the measured figure cited by its archived artifact so the denominator is recoverable, and the unmeasured 'weeks per finding' figure DROPPED rather than restated.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:8.1",
+      "status": "fixed",
+      "evidence": "bundle_metadata recorded a Stage-13 date pointing at an anchorless attribution-sweep document while the review doc had been repointed; set to the review's own review_date front-matter with the reason recorded. Separately stage13_redo_required was false against a draft restructured after the review; set true with the three independent reasons green is unavailable.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-08-12-0006-internal-adversarial:I1:8.2",
+      "status": "fixed",
+      "evidence": "bundle_metadata recorded a Stage-13 date pointing at an anchorless attribution-sweep document while the review doc had been repointed; set to the review's own review_date front-matter with the reason recorded. Separately stage13_redo_required was false against a draft restructured after the review; set true with the three independent reasons green is unavailable.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:1.4",
+      "status": "fixed",
+      "evidence": "Citation substrate repaired without inventing anything: physlean and alphaproof were auto-generated stubs with empty titles, retargeted to TooBySmithHepLean (arXiv:2405.08863) and AlphaProof2025 (Nature 651, 607-613); compcert and sel4 carried VENUES in their title fields, split into real title/journal/volume/page/DOI verified by fetch against Semantic Scholar keyed on the DOI. Every claim traced to a fetched record or an existing cache, and the two unreachable hosts recorded as such rather than as absence.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-01-1500-bundle-stage13:I1:1.4",
+      "status": "fixed",
+      "evidence": "Citation substrate repaired without inventing anything: physlean and alphaproof were auto-generated stubs with empty titles, retargeted to TooBySmithHepLean (arXiv:2405.08863) and AlphaProof2025 (Nature 651, 607-613); compcert and sel4 carried VENUES in their title fields, split into real title/journal/volume/page/DOI verified by fetch against Semantic Scholar keyed on the DOI. Every claim traced to a fetched record or an existing cache, and the two unreachable hosts recorded as such rather than as absence.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-06-bundle-stage13:I1-r2:5.1",
+      "status": "fixed",
+      "evidence": "Confirmed still open three rounds after filing: the draft never named FirstOrderProjection_exists. Section 3 now names it with file and lines, states that its entire proof body is the single term A.local_equilibrium and that it is therefore a projection rather than a derivation, and draws the contrast with the 28-line prover-closed declaration. The verify reads the Lean source and reddens if the proof body changes.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:7.2",
+      "status": "fixed",
+      "evidence": "STALE. Re-measured all 26 Lean line-range citations against source at HEAD: every one resolves exactly, and the four sites the finding named are gone or corrected. The verify re-resolves all 26 and fails if an unverified range is added, so it is not an absence grep.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-01-1500-bundle-stage13:I1:5.1",
+      "status": "fixed",
+      "evidence": "STALE. The em-dash-drifted path is gone — the citing sentence went in the twelve-section restructure. A bare absence grep would be vacuous, so the decider instead resolves EVERY path-shaped reference in the draft against the repo and workspace: 29 of them, all resolving, a non-empty population that would catch the drift if it returned.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "supersedes_inert_open": true
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:D5:2.1",
+      "status": "fixed",
+      "evidence": "The provenance entry now exists but its human_verified_date is operator-reserved, so the finding's second branch was taken: the prose no longer attaches the numeral to a primary-source equation as if read off it. It states that the value is not a read-off, what deriving it would require, that it is recorded at tier PROJECTED with no human-verification record, and what the consumers actually use.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-26-2112-internal-adversarial:D7:7.1",
+      "status": "fixed",
+      "evidence": "The finding's literals are stale but the defect class was live and worse: the canonical census over the bundle's own modules is 116, not the 81 the abstract carried. Corrected to 116 against the single owner theorem_census_agrees enforces, and two internally inconsistent per-module literals fixed so abstract and body reconcile.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:E1:1.1",
+      "status": "fixed",
+      "evidence": "0 of 15 bibkeys had a cache record. All 15 verified against their existing primary-source caches and recorded with the method named rather than claimed as a fresh fetch. The pass found two REAL registry defects: Gerace2012 and Amelio2020 both carried titles belonging to different papers than their DOIs. Both corrected; E1's bibitems carry no titles so no prose claim moved.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:E1:7.2",
+      "status": "fixed",
+      "evidence": "Built papers/E1/tables.py (1 TABLE + 9 SCALARS) sourcing from the canonical registries and rewired 19 draft sites to \\input, removing the hand-written tabular whose own in-draft comment conceded the retrofit was a follow-up. D is now DERIVED, which corrected two printed values. numerical_literals was failing corpus-wide at 119 over a ceiling of 117; E1's contribution dropped and the total is 117, green again. The handwritten-table ceiling lowered 4 to 3 as the check instructs.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:7.1",
+      "status": "fixed",
+      "evidence": "Re-measured all three: the earlier literals had landed but the drift re-opened — two modules had grown substantially and the abstract total was 949 against a true 1233. Eleven of 29 per-module counts already matched exactly, which pins the paper's convention to lean_deps.json non-autogen declarations — the same owner render_bundle_counts.py uses — so that convention was applied throughout rather than the reviewers' ad-hoc greps, which disagree with each other.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:7.1",
+      "status": "fixed",
+      "evidence": "Re-measured all three: the earlier literals had landed but the drift re-opened — two modules had grown substantially and the abstract total was 949 against a true 1233. Eleven of 29 per-module counts already matched exactly, which pins the paper's convention to lean_deps.json non-autogen declarations — the same owner render_bundle_counts.py uses — so that convention was applied throughout rather than the reviewers' ad-hoc greps, which disagree with each other.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:I2:7.3",
+      "status": "fixed",
+      "evidence": "Re-measured all three: the earlier literals had landed but the drift re-opened — two modules had grown substantially and the abstract total was 949 against a true 1233. Eleven of 29 per-module counts already matched exactly, which pins the paper's convention to lean_deps.json non-autogen declarations — the same owner render_bundle_counts.py uses — so that convention was applied throughout rather than the reviewers' ad-hoc greps, which disagree with each other.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L2:3.4",
+      "status": "fixed",
+      "evidence": "Same defect as D2 3.4, same theorem cited the same wrong way: the draft read as if a Nat.lcm arithmetic identity carried the physics forcing. Applied D2's closed form — the theorem discharges the identity alone, the step to a constraint on N_f is the prose-level argument — naming the two divisibility premises explicitly. The verify asserts both that the disclosure is present and that the defective form is absent.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L2:3.5",
+      "status": "fixed",
+      "evidence": "Both theorems bundled the same conjunct twice. Rather than drop to three conjuncts, which would falsify three drafts' 'four independent occurrences' prose, the missing fourth context the docstring is named for was supplied and discharged by an existing period-16 lemma. Import closure checked for cycles; every reference across the Lean tree checked (all docstrings, no proof destructures the tuples). No axiom, no sorry, no native_decide, no maxHeartbeats. lake build clean at HEAD.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-11-1251-bundle-stage13:L3:1.2",
+      "status": "fixed",
+      "evidence": "Live and far broader than filed: an AST scan found 114 shadowed keys across 57 entries, not 3, one of which silently discarded a real cached PDF path. Every earlier shadowed occurrence removed, preserving the effective value except the 20 in-prep self-cites where the finding's Expected applies, using journal == 'in preparation' as the evidence-backed rule. Registry diffed HEAD-vs-now to confirm only the intended flips.",
+      "superseded_by": null,
+      "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-05-01-L3-bundle-stage13:L3:6.1",
+      "status": "fixed",
+      "evidence": "STALE. The parenthetical already states Israel's third law the right way round — kappa to 0 attainable only at infinite affine time — and the defective form is absent at HEAD, confirmed against git show. The following clauses are consistent with it. No edit made.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "supersedes_inert_open": true
     }
   ]
 }

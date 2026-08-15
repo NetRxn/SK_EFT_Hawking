@@ -341,9 +341,13 @@ With $\nu_R$, the $\mathbb{Z}_{16}$ anomaly cancels for every $N_f$
 (\texttt{RokhlinBridge.z16\_anomaly\_always\_cancels\_with\_nu\_R}),
 so the only remaining constraint is modular invariance and the
 minimal solution is $N_f = 3$. Without $\nu_R$, both constraints must
-hold simultaneously, forcing
-$N_f = \mathrm{lcm}(16,3) = 48$
-(\texttt{RokhlinBridge.constraints\_without\_nu\_R}). Since $N_f = 3$
+hold simultaneously. The arithmetic identity
+$\operatorname{lcm}(16,3) = 48$ is what is discharged at the Lean level,
+by \texttt{RokhlinBridge.constraints\_without\_nu\_R}; that theorem
+states the identity alone, and the step from it to a constraint on
+$N_f$ is the prose-level argument that $16 \mid N_f$ and $3 \mid N_f$
+must hold together, which forces $N_f \in 48\mathbb{Z}$ and hence a
+minimal $N_f = 48$. Since $N_f = 3$
 is observed, the joint constraint is direct evidence for $\nu_R$.
 The Rokhlin bound is sharp: the K3 surface saturates with
 $\sigma = -16$, while the $E_8$ manifold has $\sigma = 8$ but is not

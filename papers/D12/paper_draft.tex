@@ -199,7 +199,8 @@ probability is at least $e^{-N_a}$, attained by the unit-threshold rule
 \caption{Both failure directions. \textbf{(A)} False-strict as a miss bound: the realizable
 unit-threshold counter misses with probability $e^{-N_a}$, strictly \emph{below} the folklore value,
 undershooting it by the factor $e^{N_b}$: certified at $148\times$ for $(N_b,N_a) = (5,10)$.
-\textbf{(B)} Fail-open as an average-error screen: beyond the crossover at $N_a = 51.40$ the
+\textbf{(B)} Fail-open as an average-error screen: beyond the crossover at
+$N_a = \protect\input{tables/folklore_fail_open_crossover.tex}\protect\unskip$ (at $N_b = 50$) the
 folklore value falls \emph{below} the true Le Cam floor of Eq.~\eqref{eq:lecam}, so a screen built
 on it admits configurations the true floor forbids (shaded). Below that crossover the folklore form
 is merely conservative, which is \emph{not} direction (A). \textbf{(C)} The exact exponent gap
@@ -216,7 +217,8 @@ $N_{\rm diff} = N_a - N_b$. We prove it wrong twice over, in senses that are gen
 strictly less often than the folklore value. That counter is admissible, so this is not an artefact
 of an exotic rule: it undershoots by the factor $e^{N_b}$. The quantitative form
 \thm{folklore\_missFloor\_beaten\_148fold} certifies a factor of $148$ at the operating point
-$(N_b,N_a) = (5,10)$, against the true $e^5 = 148.41\ldots$ The correct constrained statement is
+$(N_b,N_a) = (5,10)$, against the true
+$e^5 = \input{tables/folklore_undershoot_exact.tex}\unskip\ldots$ The correct constrained statement is
 \thm{poisson\_darkBaseline\_miss\_floor}, which the folklore form omits the hypothesis of.
 
 \paragraph{Exponentially fail-open as an average-error screen.} The algebraic core is an identity,
@@ -229,7 +231,8 @@ amplitude separation. \thm{folklore\_avgFloor\_unsound\_of\_bright} then charact
 whenever that gap exceeds $\log 4$, the \emph{true} floor strictly \emph{exceeds} the folklore value,
 so a screen built on the folklore form admits configurations the true floor forbids. At
 $(N_b,N_a) = (50,60)$ the certified ratio is over $1000$
-(\thm{folklore\_avgFloor\_unsound\_factor1000}), against a true ratio of $3491.96\ldots$; the
+(\thm{folklore\_avgFloor\_unsound\_factor1000}), against a true ratio of
+$\input{tables/folklore_bright_ratio.tex}\unskip\ldots$; the
 arithmetic core is \thm{brightGap\_5060}. Fig.~\ref{fig:folklore} plots both failures.
 
 The two are not the same defect. The first says the folklore value is too large to be a miss bound;
@@ -294,7 +297,7 @@ than a comparison; see Section~\ref{sec:scope}.
 floor $1/2$, and for the DC-matched ramp, which does not: the floor is a screen with real slack.
 Right: the Gaussian tail $Q(z)$ inside its certified Chernoff/Mills upper and Birnbaum--Feller lower
 envelopes. The upper curves are \emph{bounds}, not probabilities: the Mills ratio $\varphi(z)/z$
-exceeds $1$ for $z \lesssim 0.37$, where it is vacuous.}
+exceeds $1$ for $z \lesssim \protect\input{tables/mills_vacuity_root.tex}\protect\unskip$, where it is vacuous.}
 \label{fig:enbw}
 \end{figure*}
 
@@ -397,7 +400,11 @@ voltage and the \emph{signed} temperature coefficient. Positivity is deliberatel
 that degenerate branches can be discussed rather than excluded by construction.
 
 The loop gain \thm{loopGain} is signed, and \thm{loopGain\_eq\_irwinHilton} proves it equals the
-instrument-literature convention~\cite{IrwinHilton2005,Irwin1995}. That it is the right object is
+instrument-literature convention as stated in~\cite{Irwin1995}. We attach~\cite{IrwinHilton2005} as
+the standard review in which the same convention is presented, on the same provisional footing it
+carries for the gradient factor below: we hold that source only as a resolved DOI record and have
+not inspected its text, so its half of this attribution should be read as provisional. That it is
+the right object is
 \thm{linearizedSlope\_eq\_neg\_effectiveConductance}: the total slope of the heat-balance
 right-hand side is exactly minus the effective conductance. The minus sign in the bias-power
 linearization is \emph{derived} from the quotient rule over an arbitrary differentiable
@@ -466,20 +473,34 @@ diffuse-conduction $F_{\rm link}(t,n)$; that identity is verified in
 bath-referred form, not by spot-checking values. We attach~\cite{IrwinHilton2005} as the standard
 review in which this layer is presented, but we have not inspected its text: we hold that source
 only as a resolved DOI record, so the attribution of this specific closed form to it should be read
-as provisional. At $r=2$, $n=4$ it gives $\gamma = 0.4731$, and as $r \to \infty$ it
-decreases to $n/(2n+1)$, which is $4/9 = 0.444$ at $n=4$, not $1/2$, and the commonly quoted
-$F_{\rm link} \in [1/2,1]$ band does not contain $0.4731$.
+as provisional. At $r=2$, $n=4$ it gives $\gamma = \input{tables/gamma_worked.tex}\unskip$, and as
+$r \to \infty$ it
+decreases to $n/(2n+1)$, which is $4/9 = \input{tables/gamma_limit_decimal.tex}\unskip$ at $n=4$,
+not $1/2$, and the commonly quoted
+$F_{\rm link} \in [1/2,1]$ band does not contain $\input{tables/gamma_worked.tex}\unskip$.
 
 \paragraph{A convention, stated because it is load-bearing.} $\gamma$ multiplies the \emph{power}
-spectral density, so $\gamma = 0.4731$ is a $53\,\%$ reduction \emph{in PSD}: equivalently
-$1 - \sqrt{0.4731} = 31\,\%$ in amplitude. Mather's ``as much as $30\,\%$''~\cite{Mather1982} is
-quoted without a stated convention, and the two readings differ by $21.5$ points ($52.7 - 31.2$; the rounded figures quoted above
+spectral density, so $\gamma = \input{tables/gamma_worked.tex}\unskip$ is a
+$\input{tables/gamma_psd_reduction_pct.tex}\unskip\,\%$ reduction \emph{in PSD}: equivalently
+$1 - \sqrt{\input{tables/gamma_worked.tex}\unskip} =
+\input{tables/gamma_amp_reduction_pct.tex}\unskip\,\%$ in amplitude.
+Mather's ``as much as $30\,\%$''~\cite{Mather1982} is
+quoted without a stated convention, and the two readings differ by
+$\input{tables/gamma_convention_gap_points.tex}\unskip$ points
+($\input{tables/gamma_psd_reduction_pct_exact.tex}\unskip -
+\input{tables/gamma_amp_reduction_pct_exact.tex}\unskip$; the rounded figures quoted above
 give $22$), so the comparison
 cannot be made without fixing one. Read as a \emph{maximum} (which ``as much as'' invites), the
 amplitude reading is the closer fit: the largest amplitude reduction the closed form admits is
-$1 - \sqrt{n/(2n+1)} = 33\,\%$ at $n = 4$, against a largest PSD reduction of $56\,\%$. We put it
+$1 - \sqrt{n/(2n+1)} = \input{tables/gamma_sup_amp_reduction_pct.tex}\unskip\,\%$ at $n = 4$,
+against a largest PSD reduction of
+$\input{tables/gamma_sup_psd_reduction_pct.tex}\unskip\,\%$. We put it
 no more strongly than that. We have read \cite{Mather1982} in abstract only, and the closed form
-attains \emph{every} PSD reduction between $0$ and $56\,\%$ ($29.87\,\%$ at $r = 1.19$, and exactly $30\,\%$ at $r = 1.19135$), so no argument from the available range can settle the convention either way.
+attains \emph{every} PSD reduction between $0$ and
+$\input{tables/gamma_sup_psd_reduction_pct.tex}\unskip\,\%$
+($\input{tables/gamma_psd_reduction_at_r119_pct.tex}\unskip\,\%$ at $r = 1.19$, and exactly
+$30\,\%$ at $r = \input{tables/gamma_r_at_30pct.tex}\unskip$), so no argument from the available
+range can settle the convention either way.
 
 We spell this out because both of this paragraph's predecessors were wrong: one compared the two
 figures across conventions and de-attributed the citation on that basis, and its replacement
@@ -579,7 +600,9 @@ discriminate. The substantive witnesses are at matched budget $2$, where the cei
 \thm{detector\_chain\_ceiling\_bites\_nondegenerate}): a claimed fidelity of $0.99$ is refuted at an
 ordinary signal-carrying operating point. These rest on \thm{gaussianQ\_one\_ge\_rational}, the
 rational enclosure $Q(1) \ge 3/25$ obtained from the Birnbaum--Feller bound, which at $z = 1$ is
-$76\,\%$ of the true $Q(1) = 0.15866$, against $95\,\%$ at $z = 2$: the bound loosens as $z$
+$\input{tables/birnbaum_fraction_z1.tex}\unskip\,\%$ of the true
+$Q(1) = \input{tables/gaussian_q_one.tex}\unskip$, against
+$\input{tables/birnbaum_fraction_z2.tex}\unskip\,\%$ at $z = 2$: the bound loosens as $z$
 falls. (It sits at a fraction $z^2/(1+z^2)$ of the \emph{Mills} upper bound $\varphi(z)/z$, which
 is a different comparison and equals $50\,\%$ and $80\,\%$ at those two points.) The same operating point carries the two cross-layer composites of \S\ref{sec:control}:
 \thm{relaxation\_filtered\_ceiling\_bites} and
@@ -588,8 +611,10 @@ What that establishes is that the \emph{composite} statement, carrying its full 
 concluding about the attributed error pair, is non-vacuous at a signal-carrying operating point. It
 is not a sharper bound: each proof lower-bounds the maximum by its detection branch and discards the
 relaxation term, so the numerical value $22/25$ is the single-mechanism one and holds uniformly in
-$t$ and $T_1$. (The discarded term is not negligible: for $t/T_1 > 0.4648$ it is the larger of the two, which is precisely why the proofs bound rather than evaluate the maximum. The crossover
-solves $x/(2(1+x)) = Q(1)$, i.e.\ $x = 2Q(1)/(1-2Q(1)) = 0.46479\ldots$)
+$t$ and $T_1$. (The discarded term is not negligible: for
+$t/T_1 > \input{tables/relaxation_crossover.tex}\unskip$ it is the larger of the two, which is precisely why the proofs bound rather than evaluate the maximum. The crossover
+solves $x/(2(1+x)) = Q(1)$, i.e.\ $x = 2Q(1)/(1-2Q(1)) =
+\input{tables/relaxation_crossover_precise.tex}\unskip\ldots$)
 
 \subsection{The composed floor}
 
@@ -643,8 +668,10 @@ What is absent at the pin is the specialization this paper needs: no binary Baye
 two-point bound, no Hellinger divergence, no Bhattacharyya coefficient, no $f$-divergence, no
 Neyman--Pearson lemma, no hypothesis test, no error function, and (the operative point for us) no two-sided tail bracket on the Gaussian. \thm{gaussianQ} is defined project-locally as an upper
 tail because the bounds of Section~\ref{sec:poisson}, not the distribution function, are the
-contribution. Transform methods and transfer-function algebra are formalized in HOL
-Light~\cite{RashidHasan2017}; we are aware of no stochastic noise-metrology layer above them, though HOL Light was not among the ecosystems we assessed and we do not assert absence there. PhysLib
+contribution. A HOL Light formalization of transform methods and transfer-function algebra is under
+way~\cite{RashidHasan2017}, which presents itself as an ongoing project reporting the task completed
+so far together with a roadmap, so we do not read it as establishing how much of that layer is
+finished; we are aware of no stochastic noise-metrology layer above it, though HOL Light was not among the ecosystems we assessed and we do not assert absence there. PhysLib
 formalizes operator uncertainty relations, which are not bandwidth--duration bounds on a filter, and
 a thermoelectric \emph{material} figure of merit, which is not a device thermal circuit.
 
@@ -657,10 +684,13 @@ evidence rather than as an absence claim, because for the ecosystems named in th
 have no evidence either way. The strongest of these is the electrothermal device model, for which a
 grep across the entire package tree returns no related identifier of any kind.
 
-\paragraph{Two open checks, flagged as blocking.} First, an out-of-Mathlib Lean project on
-information theory and hypothesis testing is under active development; a Bayes-binary-risk--divergence
+\paragraph{Two open checks, flagged as blocking.} First, \textsc{TestingLowerBounds}, the
+out-of-Mathlib Lean project in which Mathlib's Kullback--Leibler divergence and a general
+$f$-divergence data-processing inequality were developed~\cite{LuccioliDegenne2024,Degenne2025Kernels},
+is under active development; a Bayes-binary-risk--divergence
 lower bound there would be substantially our Le Cam floor, and it is the highest prior-art risk in
-this work. Second, the Isabelle Archive of Formal Proofs and the Coq \texttt{infotheo} library are
+this work. We describe that project only by the contributions we have verified against a source we
+read, which are the two named here. Second, the Isabelle Archive of Formal Proofs and the Coq \texttt{infotheo} library are
 unassessed. That is a gap in our evidence, not a finding of absence, and we do not assert absence in
 those ecosystems. For HOL4, PVS, Mizar and Agda we say only that we are aware of no relevant
 formalization. All negative claims are scoped to the pinned versions and should be re-checked before

@@ -47,7 +47,7 @@ purely as deterministic functions on finite samples, using neither
 probability theory nor measure theory, with proofs that exercise
 only finite-arithmetic Lean tactics. \textbf{(2)
 \texttt{lean-tensor-categories}}: a 27-module library
-($\sim$949 declarations across theorems, definitions,
+(1233 declarations across theorems, definitions,
 structures, classes, and inductives) covering the categorical
 hierarchy
 (Pivotal $\to$ Spherical $\to$ Balanced $\to$ Ribbon $\to$
@@ -309,10 +309,10 @@ $\to$ Modular}
 \label{sec:categorical}
 
 The four files of the categorical core are
-\texttt{KLinearCategory.lean} (23 declarations),
-\texttt{FusionCategory.lean} (20 declarations including 14 theorems),
-\texttt{SphericalCategory.lean} (22 declarations), and
-\texttt{RibbonCategory.lean} (14 declarations). Together they
+\texttt{KLinearCategory.lean} (40 declarations),
+\texttt{FusionCategory.lean} (39 declarations including 24 theorems),
+\texttt{SphericalCategory.lean} (38 declarations), and
+\texttt{RibbonCategory.lean} (38 declarations). Together they
 encode the standard mathematical hierarchy from
 Bakalov--Kirillov~\cite{bakalov2001}, Kassel~\cite{kassel1995},
 \emph{Lectures on Tensor Categories and Modular Functor} and the
@@ -375,8 +375,8 @@ topological-quantum-computation formalization.
 
 \subsection{Spherical and pivotal structure}
 
-\texttt{SphericalCategory.lean} (22 declarations including
-18 theorems) builds the pivotal structure
+\texttt{SphericalCategory.lean} (38 declarations including
+26 theorems) builds the pivotal structure
 $\mathrm{ev}_X^L : X^* \otimes X \to \mathbf{1}$ and
 $\mathrm{coev}_X^L : \mathbf{1} \to X \otimes X^*$ together with
 their right-handed duals, the snake equations, and the spherical
@@ -386,7 +386,7 @@ machinery depends on is defined here.
 
 \subsection{Fusion structure}
 
-\texttt{FusionCategory.lean} (20 declarations including 14 theorems)
+\texttt{FusionCategory.lean} (39 declarations including 24 theorems)
 encodes finite semisimplicity: a finite set of isomorphism classes
 of simple objects, a unique simple unit, and the assertion that
 every object is a finite direct sum of simples. The fusion
@@ -404,11 +404,11 @@ files; see Section~\ref{sec:instances}).
 The library extends Mathlib's \texttt{HopfAlgebra} typeclass with
 three quantum-group instances and two structural extensions
 (quasitriangularity and the ribbon Hopf-algebra structure). Total
-yield across four files: 114 declarations.
+yield across four files: 119 declarations.
 
 \subsection{$U_q(\mathfrak{sl}_2)$}
 
-\texttt{Uqsl2Hopf.lean} (28 declarations) ships a Lean~4
+\texttt{Uqsl2Hopf.lean} (29 declarations) ships a Lean~4
 formalization of the $U_q(\mathfrak{sl}_2)$ Hopf algebra. The algebra
 generators $E$, $F$, $K$, $K^{-1}$ are encoded via Mathlib's
 \texttt{RingQuot} construction on the free algebra modulo the
@@ -448,7 +448,7 @@ $E_1^2 E_2 - [2]_q E_1 E_2 E_1 + E_2 E_1^2 = 0$
 \subsection{Structural extensions: Quasitriangular bialgebras and
 Ribbon Hopf algebras}
 
-\texttt{QuantumGroupHopf.lean} (21 declarations) defines the generic
+\texttt{QuantumGroupHopf.lean} (25 declarations) defines the generic
 quantum-group Hopf-algebra interface and structural lemmas. The
 project's planned upstream PR-3 (Section~\ref{sec:upstream}) will
 extract a typeclass \texttt{QuasitriangularBialgebra} (a Hopf
@@ -488,9 +488,9 @@ modules.
 
 \subsection{The $\mathbb{Q}(\sqrt{n})$ family}
 
-\texttt{QSqrt2.lean} (18 declarations including 4 theorems),
-\texttt{QSqrt3.lean} (26 declarations), and \texttt{QSqrt5.lean}
-(20 declarations) implement the quadratic-extension fields with
+\texttt{QSqrt2.lean} (32 declarations including 11 theorems),
+\texttt{QSqrt3.lean} (37 declarations), and \texttt{QSqrt5.lean}
+(29 declarations) implement the quadratic-extension fields with
 explicit decidable equality. \texttt{QSqrt2} additionally exposes
 decidable-arithmetic primitives that allow downstream code to use
 \texttt{decide}-blocked equality on
@@ -503,9 +503,9 @@ proposed Mathlib upstream PR (Section~\ref{sec:upstream}).
 
 \subsection{The cyclotomic family}
 
-\texttt{QCyc3.lean} (14), \texttt{QCyc5.lean} (35),
-\texttt{QCyc5Ext.lean} (42), \texttt{QCyc15.lean} (21),
-\texttt{QCyc15SqrtPhi.lean} (13), and \texttt{QCyc16.lean} (18)
+\texttt{QCyc3.lean} (14), \texttt{QCyc5.lean} (118),
+\texttt{QCyc5Ext.lean} (79), \texttt{QCyc15.lean} (21),
+\texttt{QCyc15SqrtPhi.lean} (13), and \texttt{QCyc16.lean} (35)
 implement the cyclotomic extensions $\mathbb{Q}(\zeta_n)$ for the
 specific $n$ values needed by the project's MTC instances:
 $\zeta_3$ for $\mathrm{SU}(3)_k=2$ centre, $\zeta_5$ for the
@@ -518,7 +518,7 @@ ratio), the smallest extension in which Fibonacci's
 $T$-matrix can be diagonalized over a single field with decidable
 arithmetic.
 
-The cumulative count is 207 declarations across the nine
+The cumulative count is 378 declarations across the nine
 algebraic-number-field modules. The decidability structure
 integrates decidable-cyclotomic and decidable-quadratic-extension
 arithmetic in a single library: Mathlib provides each
@@ -534,7 +534,7 @@ this library.
 \label{sec:instances}
 
 The instances are organized by anyon family. Total yield across
-ten files: 549 declarations.
+ten files: 581 declarations.
 
 \begin{figure}[h]
 \centering
@@ -605,7 +605,7 @@ reduction. All of these proofs are kernel-pure
 
 \subsection{$\mathrm{SU}(3)_k$ at $k = 1, 2$}
 
-\texttt{SU3kFusion.lean} (29 declarations) ships the rank-2 fusion
+\texttt{SU3kFusion.lean} (62 declarations) ships the rank-2 fusion
 rules. \texttt{SU3k2SMatrix.lean} (27 declarations) and
 \texttt{SU3k2FSymbols.lean} (12 declarations) ship the
 $\mathrm{SU}(3)_k=2$ specialization, including the F-matrix on the
@@ -631,7 +631,7 @@ $\sigma$-anyon braiding.
 
 \subsection{Fibonacci MTC}
 
-\texttt{FibonacciBraiding.lean} (70 declarations including 45
+\texttt{FibonacciBraiding.lean} (69 declarations including 44
 theorems) is the second-largest instance file in the library
 (after \texttt{SU2kSMatrix.lean}). The
 two simple objects are $\mathbf{1}$ and $\tau$ (the Fibonacci

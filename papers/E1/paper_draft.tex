@@ -27,12 +27,12 @@ We give the SK-EFT-predicted analog Hawking spectrum, surface gravity
 $\kappa$, dispersive parameter $D$, and stimulated-Hawking gain at the
 Paris-LKB exciton-polariton platform's published device
 parameters~\cite{Falque2025}. The reservoir-corrected condensate sound
-speed $c_s \approx \SI{0.40}{\micro\meter/\pico\second}$ and upstream
-healing length $\xi \approx \SI{3.4}{\micro\meter}$ give
-$T_H \approx \SI{85}{\milli\kelvin}$ at the smooth-horizon configuration
-($\kappa = \SI{7e10}{\per\second}$, $D \approx 0.60$) and
-$T_H \approx \SI{134}{\milli\kelvin}$ at the steep-horizon reach
-($\kappa = \SI{1.1e11}{\per\second}$, $D \approx 0.93$). The leading
+speed $c_s \approx \input{tables/lkb_c_s_um_per_ps.tex}\unskip\,\si{\micro\meter/\pico\second}$ and upstream
+healing length $\xi \approx \input{tables/lkb_xi_um.tex}\unskip\,\si{\micro\meter}$ give
+$T_H \approx \input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$ at the smooth-horizon configuration
+($\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$, $D \approx \input{tables/lkb_D_smooth.tex}\unskip$) and
+$T_H \approx \input{tables/lkb_T_H_steep_mK.tex}\unskip\,\si{\milli\kelvin}$ at the steep-horizon reach
+($\kappa = \input{tables/lkb_kappa_steep.tex}\unskip\,\mathrm{s}^{-1}$, $D \approx \input{tables/lkb_D_steep.tex}\unskip$). The leading
 dispersive correction $\delta_{\rm disp} = -\pi D^2/6$ spans
 $\sim$0.19--0.46 across the measured range; perturbative SK-EFT
 predictions are reliable in the smooth regime and leading-order at
@@ -104,32 +104,21 @@ $c_s = \sqrt{g\,n_{\rm cond} / m^*}$, where only the condensate
 density $n_{\rm cond}$ (not the total density including dark
 excitons) contributes to the dynamical response. We adopt
 Falque et al.~\cite{Falque2025} \S IV.1's measured values directly:
-$c_s \approx \SI{0.40}{\micro\meter/\pico\second}$, upstream healing
-length $\xi \approx \SI{3.4}{\micro\meter}$. The downstream healing
+$c_s \approx \input{tables/lkb_c_s_um_per_ps.tex}\unskip\,\si{\micro\meter/\pico\second}$, upstream healing
+length $\xi \approx \input{tables/lkb_xi_um.tex}\unskip\,\si{\micro\meter}$. The downstream healing
 length is $\xi \approx \SI{4.0}{\micro\meter}$. Two configurations
 are reported by the primary source:
 
-%% Provenance: inline literals below trace to
-%%   src/core/constants.py :: POLARITON_PLATFORMS['Paris_standard']
-%%   (c_s = 4.0e5 m/s, xi = 3.4e-6 m, kappa = 7.0e10 s^{-1})
-%% and
-%%   src/core/constants.py :: FALQUE_STEEP_HORIZON_KAPPA = 1.1e11 s^{-1}.
-%% Full tables.py / render_paper_tables.py retrofit is registered as
-%% a follow-up pipeline action (non-blocking for draft state per Gate
-%% 9 remediation; would be required at PRL submission).
+%% Data source: papers/E1/tables.py -> render_paper_tables.py, which reads
+%%   src/core/constants.py :: POLARITON_PLATFORMS['Paris_standard'] and
+%%   src/core/constants.py :: FALQUE_STEEP_HORIZON_KAPPA,
+%% and derives D = xi*kappa/c_s rather than quoting it.
 \begin{center}
-\begin{tabular}{lcc}
-\hline
-Configuration & $\kappa$ ($\SI{}{\per\second}$) & $D = \xi\kappa/c_s$ \\
-\hline
-Smooth horizon (baseline) & $\SI{7e10}{}$ & 0.60 \\
-Steep horizon (reach) & $\SI{1.1e11}{}$ & 0.93 \\
-\hline
-\end{tabular}
+\input{tables/lkb_device_params.tex}
 \end{center}
 
 The reservoir-correction protocol (adopting the measured
-$c_s = \SI{0.40}{\micro\meter/\pico\second}$ rather than the
+$c_s = \input{tables/lkb_c_s_um_per_ps.tex}\unskip\,\si{\micro\meter/\pico\second}$ rather than the
 reservoir-free theoretical estimate of $\SI{1.0}{\micro\meter/\pico\second}$)
 was resolved via the project's Deep Research Reconciliation
 Protocol; three independent measurements
@@ -162,7 +151,7 @@ polariton-decoherence rate
 \end{equation}
 Even paired with the \emph{most generous} polariton-family surface
 gravity (the Falque steep-horizon maximum $\kappa_{\max} =
-\SI{1.1e11}{\per\second}$ adopted as upper reach in
+\input{tables/lkb_kappa_steep.tex}\unskip\,\mathrm{s}^{-1}$ adopted as upper reach in
 \S2) the validity ratio
 $\Gamma_{\rm LP} / \kappa_{\max} \approx 24.86$ exceeds the Tier-1
 perturbative-dissipation threshold $\Gamma_{\rm pol}/\kappa < 0.1$
@@ -238,8 +227,8 @@ unfolding); the substantive universality content lives upstream in
 the project's surface-gravity / Killing-horizon chain
 (\texttt{Basic.SonicHorizon} and \texttt{AcousticMetric}).
 At the smooth-horizon baseline this gives
-$T_H \approx \SI{85}{\milli\kelvin}$; at the steep-horizon reach
-$T_H \approx \SI{134}{\milli\kelvin}$. The leading dispersive
+$T_H \approx \input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$; at the steep-horizon reach
+$T_H \approx \input{tables/lkb_T_H_steep_mK.tex}\unskip\,\si{\milli\kelvin}$. The leading dispersive
 correction follows from the adiabaticity parameter $D$:
 \begin{equation}
 \delta_{\rm disp} = -\frac{\pi}{6} D^2,
@@ -288,9 +277,9 @@ are manual Lean proofs with zero \texttt{sorry}.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_stimulated_hawking_spectrum.png}
-\caption{Stimulated-Hawking gain $G(\omega)$ versus normalized
+\caption[Stimulated-Hawking gain at the LKB smooth-horizon baseline]{Stimulated-Hawking gain $G(\omega)$ versus normalized
 frequency $\omega/\kappa$ for the LKB smooth-horizon baseline
-($\kappa = \SI{7e10}{\per\second}$, $D \approx 0.60$). The dashed
+($\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$, $D \approx \input{tables/lkb_D_smooth.tex}\unskip$). The dashed
 line marks the single-shot $5\sigma$ gain threshold $G = 0.5$
 (equivalently $N_{\rm probe} = 25/G^2 = 100$ probe photons per mode);
 the threshold is crossed at the universal frequency
@@ -322,7 +311,7 @@ detection windows.
 The polariton condensate carries an effective driven-dissipative
 noise temperature
 \begin{equation}
-T_{\rm noise} = \frac{m^* c_s^2}{k_B} \approx \SI{0.81}{\kelvin},
+T_{\rm noise} = \frac{m^* c_s^2}{k_B} \approx \input{tables/lkb_T_noise_K.tex}\unskip\,\si{\kelvin},
 \end{equation}
 which exceeds $T_H$ by an order of magnitude. This noise is spectrally
 featureless (frequency-independent in the hydrodynamic regime) and
@@ -349,14 +338,14 @@ uncertainties anywhere on the band falsifying the framework.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_polariton_regime_map.png}
-\caption{Polariton Tier-1 regime map: normalized polariton decay
+\caption[Polariton Tier-1 regime map]{Polariton Tier-1 regime map: normalized polariton decay
 $\Gamma_{\rm pol}/\kappa$ versus cavity lifetime $\tau$. Four tier
 bands (Intractable, $\Gamma_{\rm pol}/\kappa \in [1, 10]$;
 Borderline, $[0.1, 1]$; Perturbative (Tier 1), $[0.03, 0.1]$;
 Excellent, $[0.001, 0.03]$) classify device feasibility under the
 SK-EFT perturbative-regime criterion. Three Paris-LKB cavity-lifetime
 variants (standard, long, ultralong) are marked at
-$\kappa = \SI{7e10}{\per\second}$ (smooth-horizon baseline; Falque et
+$\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ (smooth-horizon baseline; Falque et
 al.~\cite{Falque2025}). The smooth-horizon Paris~``long''
 configuration sits inside the Borderline tier just above the
 Borderline--Perturbative boundary

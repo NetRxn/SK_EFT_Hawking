@@ -48,6 +48,7 @@ import SKEFTHawking.LatticeSignature
 import SKEFTHawking.RokhlinClassification
 import SKEFTHawking.RokhlinBridge
 import SKEFTHawking.RokhlinHMRankFour
+import SKEFTHawking.KitaevSixteenFold
 
 namespace SKEFTHawking
 
@@ -92,8 +93,9 @@ theorem sixteen_convergence_unconditional :
     (∑ f : SMFermion, components f) = 16 ∧
     (16 : ZMod 16) = 0 ∧
     (∀ M : SmoothSpinManifold4, (16 : ℤ) ∣ M.sig) ∧
-    (∑ f : SMFermion, components f) = (16 : ℕ) :=
+    (∀ ν : ℤ, Kitaev16.kitaevCentralCharge (ν + 16)
+        = Kitaev16.kitaevCentralCharge ν + 8) :=
   ⟨total_components_with_nu_R, by decide,
-   fun M => M.rokhlin, total_components_with_nu_R⟩
+   fun M => M.rokhlin, Kitaev16.kitaevCentralCharge_period16⟩
 
 end SKEFTHawking

@@ -68,9 +68,13 @@ admitted as an axiom. A fourth result concerns the
 verification apparatus itself: a citation can be metadata-valid, with
 a resolving identifier, a cached primary source and correct
 bibliographic data, while the claim the prose attributes to it is unsupported by
-that source, and roughly three in ten spot-checked load-bearing
-attributions were wrong at that level, every one of them passing all
-deterministic checks. Making such failures legible rather than silent
+that source. A pilot of roughly ten spot-checked load-bearing
+attributions found three wrong at that level, every one of them
+passing all deterministic checks; the systematic sweep that alarm
+motivated then read every cached source against every load-bearing
+sentence in eighteen manuscripts and found six such fabrications in a
+hundred and thirty-four pairs, so the pilot rate was an alarm and not
+an estimate. Making such failures legible rather than silent
 is, we argue, the real design problem. The apparatus that produced
 these results is a three-layer pipeline integrating Python numerics,
 Lean~4 proofs and an automated theorem prover, run as a staged
@@ -124,11 +128,12 @@ than retrofitted before submission. Antecedents on the
 formal-verification side include landmark engineering verifications
 (CompCert~\cite{compcert} for a C compiler; seL4~\cite{sel4} for an
 operating-system kernel) and the more recent emergence of
-Lean-based physics infrastructure
-(PhysLean~\cite{physlean}). Antecedents on the
+Lean-based physics infrastructure (PhysLean, published under its
+earlier name HepLean~\cite{TooBySmithHepLean}). Antecedents on the
 proof-assistance side include large-language-model copilots for
-Lean theorem proving~\cite{leancipilot} and recent
-silver-medal IMO results from automated proving~\cite{alphaproof}.
+Lean theorem proving~\cite{leancipilot} and the silver-medal
+International Mathematical Olympiad result obtained by reinforcement
+learning inside Lean~\cite{AlphaProof2025}.
 Our pipeline has fourteen stages and seventeen invariants, integrates
 three orthogonal verification layers, and produces
 machine-checkable artifacts at each stage. We have applied it to
@@ -420,6 +425,24 @@ sanity primitive used for degenerate witnesses, while the substantive
 \texttt{hasDynamicalKMS\_algebraic} (lines~108--111). Neither reading is
 a Lean \texttt{axiom} declaration: both are ordinary structures, and the
 theorems below are proved from them.
+
+One further declaration should be named here, because the reader is
+otherwise entitled to think it carries more than it does. The bridge
+from the skeleton back to the nine-coefficient setting is
+\texttt{GloriosoLiu.FirstOrderProjection\_exists}
+(\texttt{lean/SKEFTHawking/GloriosoLiu/FirstOrderProjection.lean},
+lines~48--52): under \texttt{SKEFTAxioms} there exist
+\texttt{FirstOrderCoeffs} whose \texttt{firstOrderAction} reproduces the
+action's Lagrangian on every field configuration. Its proof body is
+the single term \texttt{A.local\_equilibrium}, because the
+local-equilibrium field of the skeleton \emph{is} that existential. The
+theorem is therefore a projection and not a derivation, and the
+polynomial-form content it appears to establish is content the
+local-equilibrium condition was already assumed to carry. We name it
+because the contrast with \texttt{firstOrder\_uniqueness}, a
+twenty-eight-line declaration closed by the prover, is the distinction a
+reader needs in order to see which declaration in this section carries
+the load.
 
 \subsection{What came back}
 
@@ -1021,7 +1044,17 @@ transforms it perturbatively to $m_H = 72.4 \pm 1.7$~GeV for the full
 Standard Model, above which only a rapid crossover is
 seen~\cite{CsikorFodorHeitger1999}; the earlier three-dimensional
 analysis had bracketed the endpoint between $70$ and $95$~GeV, most
-likely near $80$~GeV~\cite{KLRS1996}. Against the observed $m_H =
+likely near $80$~GeV~\cite{KLRS1996}. All three lattice figures are
+themselves under Invariant~8: they are registered in
+\texttt{PARAMETER\_PROVENANCE} (\texttt{src/core/provenance.py}) as
+\texttt{EW.M\_H\_ENDPOINT\_SU2HIGGS\_GEV},
+\texttt{EW.M\_H\_ENDPOINT\_SM\_GEV} and
+\texttt{EW.M\_H\_ENDPOINT\_KLRS\_RANGE\_UPPER\_GEV}, each carrying the
+tier, the DOI, and the verbatim sentence of the abstract it was read
+from. That registration is what makes the next paragraph's arithmetic
+falsifiable rather than merely true: a revision to either published
+endpoint surfaces as provenance drift instead of leaving a
+still-checking \texttt{norm\_num} behind. Against the observed $m_H =
 125.20$~GeV the margin is wide, and the module states it as a
 falsifiable arithmetic claim rather than a remark:
 \texttt{sm\_klrs\_overshoot\_ratio\_gt\_threshold} proves
@@ -1109,7 +1142,7 @@ adversarial reviewer agent in a fresh context window against each
 paper or bundle near submission readiness. The agent works through
 eight finding classes (citation integrity, parameter provenance,
 formal-verification-claim substantiation, cross-paper
-consistency, narrative grounding, assumption disclosure, count
+consistency, narrative grounding, assumption disclosure, numerical
 freshness, and production-run health, the same eight classes
 enumerated in detail in Section~\ref{sec:adversarial}) and emits
 a structured markdown report.
@@ -1225,6 +1258,26 @@ project-local axiom was retired into a tracked-hypothesis
 \texttt{Prop} on 2026-05-19 (Section~\ref{sec:case3}), taking the
 live project-local axiom count to zero.
 
+\item \textbf{Every consumed tracked-hypothesis proposition is in the
+single registry.} A \texttt{Prop}-valued definition encoding an
+undischarged claim, consumed as a binder by any theorem, must appear
+in \texttt{HYPOTHESIS\_REGISTRY} with its tier, statement, status,
+source, risk and publication-facing gloss, or be listed as
+non-load-bearing with a reason. This is the invariant that makes the
+disclosures of Sections~\ref{sec:case2} and~\ref{sec:case3} obligatory
+rather than optional: it is the reason a free parameter left in a
+statement cannot quietly become an unrecorded assumption.
+
+\item \textbf{Every provably-false settled no-go has a live,
+kernel-pure, non-vacuous backing theorem.} The negative-front mirror
+of the previous invariant. A route the project has settled as
+\emph{false} is recorded with the false statement it rules out and
+with backing theorems that must exist in the dependency export, use
+only the ambient kernel axioms, and be non-vacuous, since a
+self-discharging no-go blocks nothing. Routes closed by policy or
+preference rather than by proof are explicitly out of its scope and
+stay in prose.
+
 \end{enumerate}
 
 The placeholder invariant addresses an inflation problem that would
@@ -1252,10 +1305,18 @@ theorems were stated and proved, with retroactive cuts applied
 where the audit identified a vacuous statement), the pass has
 been moved to the prospective phase: each theorem statement is
 checked against the same six anti-patterns \emph{before} the
-statement is written. The reduction in audit cost is
-substantial: across the first three development cycles in which it
-was applied, the number of statements requiring a retroactive
-strengthening cut fell from twelve, to five, to none.
+statement is written. The reduction in audit cost is substantial, and
+the record is per-wave rather than a trend line. The
+pre-discipline baseline is the wave labelled 6c.3 (2026-04-27), in
+which the pass still ran retroactively and cost twelve cuts; it is
+recorded in that wave's roadmap as ``the baseline to beat''. Across
+the fifteen subsequent waves for which the cost is logged, with the
+pass prospective throughout, it never again reached twelve and never
+exceeded six; the median is two, and it first reached zero at 6e.5 and
+again at 6b.2. We give the series rather than its endpoints because it
+is not monotone (the wave immediately after the first prospective
+one cost more, not less), and a reader entitled to the claim is
+entitled to see that.
 
 The six anti-patterns are:
 
@@ -1568,10 +1629,18 @@ automated batch. There is no module field, no priority field and no
 date field. Three consequences follow. A key does not identify
 a theorem on its own, so a claim of the form ``this theorem was closed
 in this run'' has to be resolved against the module in which the
-declaration actually lives before it is written down. Three entries
-carry the manual marker, so the count of prover-closed theorems is
-three below \aristotleproved{}, and the count of genuine runs is one
-below \aristotleruns{}. Fourteen keys currently name no live
+declaration actually lives before it is written down. Nine entries
+carry the manual marker in place of a run identifier: they are
+theorems closed by hand alongside an automated batch, several of them
+because a machine run had certified a weaker statement that was
+afterwards strengthened. The prover-closed figure
+\aristotleproved{} quoted in the abstract and in
+Section~\ref{sec:intro} excludes them by construction, because the
+decider for ``the prover closed it'' is the presence of a run
+identifier and not the presence of a key, so it is the number a machine
+actually closed. The run count \aristotleruns{} does not yet make the
+same distinction: it counts the marker itself as though it were a
+run, so the number of genuine runs is one below it. Fourteen keys currently name no live
 declaration, the residue of modules restructured after their batch was
 integrated; the population is frozen as a ceiling that fails on any
 new occurrence, and it is not reduced by deletion, because the
@@ -1876,6 +1945,29 @@ about itself. It says that the metadata layer this programme had been
 treating as citation integrity is necessary and not sufficient, and
 that the fresh-context property buys nothing unless the reviewer is
 also required to open the source.
+
+The sweep itself is the better-powered measurement, and it is a
+weaker number, so we report it beside the pilot rather than in place
+of it. It ran on 2026-06-10 across eighteen manuscripts, with
+per-manuscript populations of load-bearing citation--claim pairs
+ranging from three to twenty-three and totalling one hundred and
+thirty-four where the record states a count. Six of those pairs were
+fabrication-class: a method attributed to a paper that does not
+describe it, and the same paper credited with a four-orders-of-magnitude
+comparison it does not make; a log-coefficient given with the wrong
+value; a lattice crossover temperature attributed to the wrong one of
+two lattice papers; and an exact ancilla-free construction credited to
+a magic-state distillation paper rather than to the textbook that
+contains it. That is a rate near one in twenty, not near one in three.
+Two readings are available and we cannot separate them: either the
+pilot's ten were not a random sample (they were chosen because they
+looked load-bearing, which is also what makes an error costly), or
+the corrections the pilot triggered had already removed the densest
+part of the population before the sweep ran. Either way the pilot was
+right about the failure class and wrong about its size, and a
+programme that publishes the alarm owes the reader the follow-up.
+Neither figure covers this manuscript: I1 is listed in the sweep's
+priority tranche and has no entry in its record.
 
 \section{Mathematics the Pipeline Accumulated as a Byproduct}
 \label{sec:phase6f_substrate}
@@ -2477,10 +2569,18 @@ submission, which is late but still upstream of citation. That is the
 honest version of the claim, and it is the one that sets the agenda:
 the checks a stage runs continuously are cheaper than the review that
 caught these, so the work is to move findings of this kind earlier.
-The cost of running
-the checks is on the order of seconds per stage; the cost of
-finding and fixing a propagated error after publication is on the
-order of weeks per finding, in the best case.
+We give the one side of that comparison we have measured and decline
+the other. A full run of the Stage~7 validation suite over the whole
+Lean, Python and paper corpus took 485 seconds on the authors'
+workstation; the run is archived under
+\texttt{docs/validation/reports/} with the timestamp 2026-08-15T03:30:20Z,
+so the denominator it covered is recoverable rather than asserted. The
+full pre-merge certification, which additionally rebuilds and re-runs
+the test suites, took thirty-three minutes on 2026-08-13. Minutes,
+then, not seconds, and not hours. The cost of
+finding and fixing a propagated error after publication we have not
+measured and do not quote; we know only that in this project it has
+never been paid, because no such error has yet reached print.
 
 The pipeline is open-source, domain-agnostic, and immediately
 applicable in any research domain where the connection between
@@ -2513,18 +2613,23 @@ templated path segments in angle brackets (e.g.,
 %% ─────────────────────────────────────────────────────────────────
 
 \begin{thebibliography}{99}
-\bibitem{physlean} J.~Tooby-Smith, ``PhysLean: Lean~4 for physics,''
-\url{https://github.com/HEPLean/PhysLean} (2024).
+\bibitem{TooBySmithHepLean} J.~Tooby-Smith, ``HepLean: Digitalising
+high energy physics,'' \emph{Comput.\ Phys.\ Commun.}\ \textbf{308},
+109457 (2025), arXiv:2405.08863. (The project has since been renamed
+PhysLean.)
 \bibitem{compcert} X.~Leroy, ``Formal verification of a realistic
-compiler,'' \emph{Comm.\ ACM}\ \textbf{52}(7), 107--115 (2009).
-\bibitem{sel4} G.~Klein et al., ``seL4: Formal verification of an OS
-kernel,'' \emph{Proc.\ ACM SOSP} (2009).
+compiler,'' \emph{Commun.\ ACM}\ \textbf{52}(7), 107--115 (2009),
+doi:10.1145/1538788.1538814.
+\bibitem{sel4} G.~Klein, K.~Elphinstone, G.~Heiser et al., ``seL4:
+Formal verification of an OS kernel,'' \emph{Proc.\ ACM SOSP} (2009),
+207--220, doi:10.1145/1629575.1629596.
 \bibitem{leancipilot} P.~Song, K.~Yang, and A.~Anandkumar, ``Lean
 Copilot: Large Language Models as Copilots for Theorem Proving in
 Lean,'' arXiv:2404.12534 (2024).
-\bibitem{alphaproof} Google DeepMind, ``AI achieves silver-medal
-standard solving International Mathematical Olympiad problems,''
-(2024).
+\bibitem{AlphaProof2025} T.~Hubert, R.~Mehta, L.~Sartran et al.,
+``Olympiad-level formal mathematical reasoning with reinforcement
+learning,'' \emph{Nature} \textbf{651}, 607--613 (2025),
+doi:10.1038/s41586-025-09833-y.
 
 \bibitem{CrossleyGloriosoLiu2017} M.~Crossley, P.~Glorioso, and
 H.~Liu, ``Effective field theory of dissipative fluids,''

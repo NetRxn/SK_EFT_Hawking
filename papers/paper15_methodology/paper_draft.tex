@@ -24,6 +24,29 @@
 
 \maketitle
 
+%% ═══════════════════════════════════════════════════════════════════
+%% SUPERSEDED-BY BANNER — added 2026-08-14, I1 Stage-13 finding 4.1.
+%% This draft and papers/I1/paper_draft.tex describe the SAME machinery
+%% with different counts (twelve vs fourteen stages; ten vs seventeen
+%% invariants; sixteen vs the live check census). I1 is the current
+%% account. This draft is retained as the historical source it was
+%% lifted from, NOT as a description of the pipeline as it stands.
+%% Do not update the counts here — update I1.
+%% ═══════════════════════════════════════════════════════════════════
+\begin{center}
+\rule{0.9\textwidth}{0.4pt}\\[2pt]
+\begin{minipage}{0.88\textwidth}
+\textbf{Superseded.} This April 2026 draft is the source from which the
+publication bundle \texttt{papers/I1} was lifted and substantially
+expanded. Its stage, invariant and validation-check counts describe the
+pipeline as of April 2026 and have since changed;
+\texttt{papers/I1/paper\_draft.tex} is the current account. This draft is
+retained for provenance, not as a description of the pipeline as it
+stands.
+\end{minipage}\\[2pt]
+\rule{0.9\textwidth}{0.4pt}
+\end{center}
+
 \begin{abstract}
 We describe a twelve-stage pipeline for conducting computational physics research with continuous machine verification. The pipeline integrates Python numerics, Lean~4 formal proofs, and the Aristotle automated theorem prover into a unified workflow where every formula has a formal theorem, every computed quantity has verified bounds, and every paper claim traces to computation. Applied to a research program spanning dissipative effective field theory, analog Hawking radiation, emergent gravity, quantum groups, and topological quantum field theory, the pipeline has produced \totaltheorems{} machine-checked theorems across \leanmodules{} Lean modules with \sorrycount{} remaining gaps (\sorrypercent\%), while maintaining 16 automated validation checks and full parameter provenance. We present the architecture, its ten invariants, the automated theorem prover integration that routinely compresses months of manual proof work to hours, and a case study where the pipeline caught a real convention bug in pentagon equation verification. The methodology is domain-agnostic and immediately applicable to any research program combining numerical computation with formal verification.
 \end{abstract}

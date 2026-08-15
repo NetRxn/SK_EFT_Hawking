@@ -27,6 +27,7 @@ import Mathlib
 import SKEFTHawking.SMFermionData
 import SKEFTHawking.Z16AnomalyComputation
 import SKEFTHawking.ModularInvarianceConstraint
+import SKEFTHawking.KitaevSixteenFold
 
 namespace SKEFTHawking
 
@@ -83,7 +84,8 @@ The four occurrences:
 4. **Kitaev 16-fold way:** 2D topological superconductors in symmetry
    class D (particle-hole symmetry, NO time-reversal) have a free-fermion
    ℤ classification that reduces to ℤ₁₆ under interactions
-   (Fidkowski-Kitaev 2010). Not formalized here.
+   (Fidkowski-Kitaev 2010). Its arithmetic core is formalized in
+   `KitaevSixteenFold.lean` and enters conjunct 4 below.
 
 **Structural caveat — what the Lean statement actually proves.**
 
@@ -94,8 +96,12 @@ The four conjuncts of the conclusion are:
   discharged by `decide`.
 - Conjunct 3 (echo):       `∀ M, 16 ∣ σ(M)` — verbatim restatement of
   the hypothesis `h_rokhlin`.
-- Conjunct 4 (retype):     `Σ components_f = 16` over ℕ — the same claim
-  as Conjunct 1 with a different target type.
+- Conjunct 4 (substantive): `∀ ν, c₋(ν + 16) = c₋(ν) + 8` — the Kitaev
+  16-fold-way periodicity, sourced from
+  `Kitaev16.kitaevCentralCharge_period16`. Until 2026-08-14 this slot
+  carried a retyped copy of conjunct 1 (`Σ components_f = (16 : ℕ)`),
+  which asserted the same fact twice and left the Kitaev context — the
+  one the enumeration is named for — absent from the statement.
 
 The theorem therefore records, in the proof assistant, that the numeral
 "16" appears in these four contexts. It does NOT demonstrate a common
@@ -117,9 +123,11 @@ theorem sixteen_convergence_full
     (16 : ZMod 16) = 0 ∧
     -- Rokhlin divisor (conditional)
     (∀ M : SpinManifold4, (16 : ℤ) ∣ M.signature) ∧
-    -- All are the same 16
-    (∑ f : SMFermion, components f) = (16 : ℕ) :=
-  ⟨total_components_with_nu_R, by decide, h_rokhlin, total_components_with_nu_R⟩
+    -- Kitaev 16-fold way: the chiral central charge has period 16 in ν (mod 8)
+    (∀ ν : ℤ, Kitaev16.kitaevCentralCharge (ν + 16)
+        = Kitaev16.kitaevCentralCharge ν + 8) :=
+  ⟨total_components_with_nu_R, by decide, h_rokhlin,
+   Kitaev16.kitaevCentralCharge_period16⟩
 
 /-! ## 3. The topological path to 24 | c₋ -/
 

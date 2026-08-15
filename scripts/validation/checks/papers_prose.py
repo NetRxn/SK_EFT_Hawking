@@ -408,10 +408,14 @@ LATEX_COMPILE_CACHE = "papers/.latex_compile_cache.json"
 #: Hand-written `\begin{tabular}` blocks still in publication-target bundle drafts.
 #: MEASURED 2026-08-05: **4** across 3 bundles — D1 (1), E1 (1), L2 (2). Zero
 #: headroom; this may only shrink.
+#: RE-MEASURED 2026-08-14: **3** across 2 bundles — D1 (1), L2 (2). E1's
+#: device-parameter table was discharged to `papers/E1/tables.py` ->
+#: `tables/lkb_device_params.tex` (Stage-13 finding E1:7.2), so the ceiling
+#: drops with it.
 #:
 #: The discharge is a `papers/<bundle>/tables.py` spec per table, rendered by
 #: `scripts/render_paper_tables.py` — NOT deleting the table.
-BUNDLE_HANDWRITTEN_TABLE_CEILING = 4
+BUNDLE_HANDWRITTEN_TABLE_CEILING = 3
 
 
 @register_check("bundle_tables_use_pipeline",
