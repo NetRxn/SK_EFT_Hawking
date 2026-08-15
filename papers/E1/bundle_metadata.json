@@ -3,38 +3,44 @@
   "apex_theorems": [
     {
       "name": "SKEFTHawking.PolaritonTier1.polariton_tier1_fails_tmds",
-      "claims": "§2 the Wave-6v.4 scope demarcation: the Tier-1 patch does NOT cover ultrafast TMD-polariton nanocavities (Γ_LP/κ ≈ 24.86 vs the 0.1 threshold)",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.DKMBootstrap.polariton_dkm_f3_holds_at_pump_below_threshold",
-      "claims": "§2 the Wave-6v.3 deliverable on the E1 side: DKM F3 holds at device-operating pump energies",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.DKMBootstrap.polariton_inherits_graphene_uniqueness_result",
-      "claims": "§2 the bimodal-branch resolution — polariton takes the graphene positive-uniqueness branch; closes the Phase-6q open question",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity",
-      "claims": "§3 the name-binding of Eq. (3) T_H = ħκ/2πk_B to surface gravity; the draft discloses it as a rfl-discharge with the substantive content upstream",
-      "declared": "2026-08-07"
+      "claims": "§III, one sentence: the weak-dissipation criterion evaluated on the UPenn TMD nanocavity. The STATEMENT is `(1/10 : ℝ) ≤ validityRatio pennTmdPolaritonParams`, i.e. the ratio is at least the 0.1 cut at the encoded rationals; the value 24.9 quoted in prose is arithmetic on those same rationals and is not itself the theorem.",
+      "declared": "2026-08-07",
+      "statement_verified": "2026-08-15 (PolaritonTier1.lean:196, statement read, not docstring)"
     },
     {
       "name": "SKEFTHawking.PolaritonTier1.attenuation_ge_one",
-      "claims": "§4/§6 spatial attenuation ≥ 1 — the BEC Re G ≥ 0 chain carried to the polariton case",
-      "declared": "2026-08-07"
+      "claims": "§III: the occupation-recovery factor A = exp(Γ_pol L / v_g) satisfies 1 ≤ A, so dividing it out never deflates an inferred occupation. STATEMENT is exactly that and nothing more; it follows from Γ_pol ≥ 0, L ≥ 0, v_g > 0 and uses no BEC or Re G ≥ 0 result.",
+      "declared": "2026-08-07",
+      "statement_verified": "2026-08-15 (PolaritonTier1.lean:84)"
     },
     {
       "name": "SKEFTHawking.PolaritonTier1.attenuation_mono_Gamma",
-      "claims": "§4 attenuation monotone in Γ",
-      "declared": "2026-08-07"
+      "claims": "§III: A is monotone in Γ_pol at fixed L and v_g.",
+      "declared": "2026-08-07",
+      "statement_verified": "2026-08-15 (PolaritonTier1.lean:115)"
     },
     {
       "name": "SKEFTHawking.PolaritonTier1.attenuation_eq_one_at_zero_decay",
-      "claims": "Acknowledgments: attenuation recovers 1 at zero decay",
-      "declared": "2026-08-07"
+      "claims": "§III: A = 1 exactly at Γ_pol = 0, the closed-system limit.",
+      "declared": "2026-08-07",
+      "statement_verified": "2026-08-15 (PolaritonTier1.lean:98)"
+    }
+  ],
+  "apex_theorems_withdrawn_2026_08_15": [
+    {
+      "name": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity",
+      "reason": "Statement is `hawkingTemp h.surfaceGravity = h.surfaceGravity / (2 * Real.pi) := rfl` against `def hawkingTemp k := k / (2 * Real.pi)` (AcousticMetric.lean:408, Basic.lean:185). It is a definitional unfolding and carries no physics. The prior draft cited it while disclosing that fact; the redraft neither cites it nor spends a reader's attention on internal proof architecture. The prior metadata also claimed 'the substantive universality content lives upstream in the surface-gravity chain', which does not hold: `SonicHorizon.surfaceGravity` is a STRUCTURE FIELD, not derived from the background. Filed as 2.1.",
+      "still_declared_by": "E2 (unchanged by this redraft)"
+    },
+    {
+      "name": "SKEFTHawking.DKMBootstrap.polariton_dkm_f3_holds_at_pump_below_threshold",
+      "reason": "Statement ASSUMES `IsBoundedByPolaritonPumpScale commutatorNorm n_max` as a hypothesis and concludes `¬ IsSuperFactorialUnbounded commutatorNorm` for an abstract sequence. No device energy, pump threshold or occupation number appears anywhere in it, so it cannot support the claim 'DKM F3 holds at device-operating pump energies'. Section cut from the manuscript; filed as 2.2.",
+      "still_declared_by": null
+    },
+    {
+      "name": "SKEFTHawking.DKMBootstrap.polariton_inherits_graphene_uniqueness_result",
+      "reason": "Both pump hypotheses are bound as `_hn` and `_h` and are UNUSED; the proof is `left; exact horizon_transport_uniqueness_polariton_witness_one_half`, which reduces to `1/2 ≤ √(1·1)/1`. `polaritonDKMParameters` is field-for-field identical to BOTH `grapheneDKMParameters` and `becDKMParameters` (all five fields = 1, E1E2CrossBridge.lean:85-124), so the substrate cannot distinguish polariton from BEC, which is the distinction the cut paragraph claimed to make. Filed as 2.3.",
+      "still_declared_by": null
     }
   ],
   "tier": 4,
