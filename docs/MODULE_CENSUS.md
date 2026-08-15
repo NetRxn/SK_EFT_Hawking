@@ -298,6 +298,7 @@ Nothing else belongs here.
 | `scripts/sentence_state.py` | sentence_state.py — sole writer for sentence-level verification state (Phase 5v Wave 10b) |
 | `scripts/setup_lean_worktree_slots.sh` | Create/refresh the persistent lean-worker slots wt1..wtN for parallel Lean development. |
 | `scripts/slotctl.py` | Repository entry point for the ADR-008 Lean slot controller. |
+| `scripts/source_acquisition_register.py` | Regenerate `docs/SOURCE_ACQUISITION_REGISTER.md` — what we cite but do not hold. |
 | `scripts/submit_to_aristotle.py` | Aristotle submission CLI (SAFE, partial-submission process — ADR-006). |
 | `scripts/sync.py` | L3 — the one foolproof mechanical-sync command. Regenerates stale artifacts in dependency order off the L0 manifest, so the agent never reconstructs a multi-script incantation. |
 | `scripts/sync_graph_to_pg.py` | Sync the provenance graph to PostgreSQL + Apache AGE (Phase 5v Wave 9f). |

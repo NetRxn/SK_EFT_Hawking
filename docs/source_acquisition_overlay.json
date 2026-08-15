@@ -1,0 +1,82 @@
+{
+  "_README": [
+    "Curated overlay for scripts/source_acquisition_register.py.",
+    "",
+    "The generator's automated load-bearing signal is a FLOOR, not a census: it fires",
+    "when a source supplies a registered PARAMETER_PROVENANCE value or is named in",
+    "formulas.py. A source that supplies a CLOSED FORM, a theorem, or a convention is",
+    "invisible to it -- IrwinHilton2005 is the measured example, and it is the source",
+    "D12's gradient factor is attributed to. Human knowledge of load-bearingness lives",
+    "here so it survives regeneration.",
+    "",
+    "Fields per bibkey (all optional):",
+    "  load_bearing : true  -> force P0 regardless of what the signal found",
+    "                 false -> the citation is background/context; do NOT buy, and",
+    "                          consider whether the claim should cite it at all",
+    "  reason       : what the source is actually load-bearing FOR (one line)",
+    "  route        : open | arxiv | repository | paywalled | textbook | internal",
+    "  route_note   : the specific free route to try BEFORE spending money",
+    "  est_cost_usd : only for route=paywalled, once checked",
+    "",
+    "Rule: never set route=paywalled without recording in route_note which free",
+    "routes were actually tried and failed. An unchecked paywall is a guess, not a cost."
+  ],
+
+  "IrwinHilton2005": {
+    "load_bearing": true,
+    "reason": "Attributed source of D12's diffuse-conduction closed form for the thermal-link gradient factor gamma (F_link). D12:474-475 currently discloses in reader-facing prose that we hold it only as a resolved DOI record -- a non-starter for submission. Either the attribution is verified or it must be re-sourced.",
+    "route": "repository",
+    "route_note": "Irwin and Hilton are NIST authors; try the NIST public-access repository and NIST TechBeat before purchase. Chapter in Cryogenic Particle Detection, Topics in Applied Physics 99 (Springer) -- a chapter purchase is the fallback, not the first move."
+  },
+
+  "Mather1982": {
+    "load_bearing": true,
+    "reason": "Supplies MATHER_1982_GRADIENT_REDUCTION (0.30). The convention -- whether the quoted 30% is a PSD or an amplitude reduction -- is UNRESOLVED because the body has never been read, and D12:498 discloses that in prose. The body settles it; the abstract cannot.",
+    "route": "repository",
+    "route_note": "John Mather is NASA; try NASA ADS full-text scan and the NASA Technical Reports Server before Optica purchase. Applied Optics 21(6) 1125-1129, 1982."
+  },
+
+  "PDG2024": {
+    "load_bearing": true,
+    "reason": "Supplies EW.M_H_GEV and EW.M_TOP_GEV.",
+    "route": "open",
+    "route_note": "Review of Particle Physics is fully open access at pdg.lbl.gov. No purchase under any circumstances -- if this is still unheld it is a fetch task, not a budget item."
+  },
+
+  "Sen2013": {
+    "load_bearing": true,
+    "reason": "Supplies BH.LOG_CORRECTION_SEN_4D_SCHWARZSCHILD; cited by both D3 and F.",
+    "route": "open",
+    "route_note": "JHEP is fully open access, and the preprint is on arXiv (1205.0971). Fetch task, not a budget item."
+  },
+
+  "BB84": {
+    "load_bearing": true,
+    "reason": "Referenced by formulas.py.",
+    "route": "open",
+    "route_note": "Bennett and Brassard 1984 was republished open access in Theoretical Computer Science 560 (2014) 7-11. Fetch task, not a budget item."
+  },
+
+  "Zhao2023": {
+    "load_bearing": true,
+    "reason": "Supplies Monolayer_100nm.c_s; cited by D1 and E2.",
+    "route": "paywalled",
+    "route_note": "Nature 614. CHECK arXiv and any author postprint before purchase -- not yet checked as of 2026-08-15, so the paywalled label is provisional."
+  },
+
+  "NielsenChuang2010": {
+    "load_bearing": false,
+    "reason": "Standard textbook, cited for background. If a specific theorem is load-bearing, register THAT rather than buying the book.",
+    "route": "textbook"
+  },
+  "KitaevShenVyalyi2002": {
+    "load_bearing": false,
+    "reason": "Textbook, background citation.",
+    "route": "textbook"
+  },
+  "diFrancesco1997": {
+    "load_bearing": false,
+    "reason": "Textbook (Conformal Field Theory), background citation.",
+    "route": "textbook"
+  }
+}
