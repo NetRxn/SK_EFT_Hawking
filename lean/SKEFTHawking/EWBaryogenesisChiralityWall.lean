@@ -289,11 +289,27 @@ def H_KLRS_SM_Crossover
     (p : SKEFTHawking.EWPhaseTransition.EWFiniteTParams) : Prop :=
   SKEFTHawking.EWPhaseTransition.IsCrossoverEW p
 
-/-- **Quantitative anchor:** SM m_H = 125.20 GeV exceeds the KLRS
-lattice crossover threshold m_H = 72.4 GeV (CFH 1999) by a factor
-greater than 1.5 — explicit margin separating SM from the lattice
-transition boundary. This is the load-bearing physics input behind
-`H_KLRS_SM_Crossover`: SM is not within ±5% of threshold. -/
+/-- **Quantitative anchor:** SM m_H = 125.20 GeV exceeds the lattice
+crossover endpoint m_H = 72.4 GeV by a factor greater than 1.5 —
+explicit margin separating SM from the lattice transition boundary.
+This is the load-bearing physics input behind `H_KLRS_SM_Crossover`:
+SM is not within ±5% of threshold.
+
+**Provenance of both literals** (`src/core/provenance.py`,
+`PARAMETER_PROVENANCE`), so that a revision to either published value
+surfaces as provenance drift rather than as a silently-still-true
+`norm_num`:
+
+* `125.20` — `EW.M_H_GEV`, MEASURED, PDG 2024 (S. Navas et al.,
+  Phys. Rev. D 110, 030001), DOI `10.1103/PhysRevD.110.030001`;
+  code constant `EW_PARAMS['M_H_GEV']`.
+* `72.4` — `EW.M_H_ENDPOINT_SM_GEV`, MEASURED, Csikor–Fodor–Heitger,
+  Phys. Rev. Lett. 82, 21 (1999), DOI `10.1103/PhysRevLett.82.21`;
+  code constant `EWBG_PARAMS['KLRS_M_H_CROSSOVER_THRESHOLD_GEV']`.
+  ⚠️ ATTRIBUTION: 72.4 ± 1.7 GeV is **CFH 1999**, not KLRS 1996 — the
+  KLRS 1996 abstract gives `70 GeV < m_{H,c} < 95 GeV`, most likely
+  ~80 GeV, and contains no "72". The `KLRS_` prefix on the constant
+  and on `H_KLRS_SM_Crossover` is historical naming only. -/
 theorem sm_klrs_overshoot_ratio_gt_threshold :
     (1.5 : ℝ) < 125.20 / 72.4 := by norm_num
 
