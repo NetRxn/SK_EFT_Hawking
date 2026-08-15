@@ -7519,6 +7519,19 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:7.1",
+      "status": "fixed",
+      "evidence": "The three work markers were vestigial bookkeeping from the _phase6o_W1b_lean_only lift that was DECLINED on 2026-05-06, sitting inside commented-out LaTeX after the bibliography with no rendered content. Rewritten as non-marker prose per the finding Fix: the note now records that absorption was declined, points at papers/L1/append_log.json, and states what the lift would have owed had it proceeded, so the bookkeeping survives without a marker that reads as outstanding work on L1. L1 recompiles clean, 0 errors, 4 pages.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"TODO\" papers/L1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q \"TODO\" papers/L1/paper_draft.tex",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
