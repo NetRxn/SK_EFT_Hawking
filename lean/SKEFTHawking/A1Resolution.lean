@@ -8,7 +8,7 @@ homological degree 5. Each differential is encoded as an F₂-matrix
 Key results:
   - d² = 0 at every level (chain complex property)
   - Resolution ranks: P₀=1, P₁=2, P₂=2, P₃=2, P₄=3, P₅=4
-  - All verified via native_decide on sparse F₂ matrices
+  - All matrix identities kernel-pure (`decide +kernel`); see Proof method below
 
 The resolution has a bidiagonal structure: Sq(1) on the diagonal,
 Sq(2,1) on the superdiagonal, with 4-fold periodicity from w₁.
@@ -19,12 +19,18 @@ in any proof assistant.
 Cross-validated: scripts/generate_a1_resolution.py (all checks pass)
 Deep research: Lit-Search/Phase-5q/The minimal free resolution...
 
-Proof method: the d∘d=0 / RREF / invertibility identities are kernel-checked
-modulo `native_decide` (ADR-002 #2). Although these are over `Matrix _ _ F2`
-(which IS kernel-`decide`-able in principle — cf. the sibling A1Ring/A1Ext which
-were converted), kernel `decide` on the 8×8-expanded matrix products here is
-impractically slow, so they retain the compiled evaluator. Pipeline Invariant
-#10 forbids raising `maxHeartbeats`.
+Proof method (updated 2026-08-15, Phase 5q.T): every matrix identity in this file —
+`d∘d = 0`, the RREF certificates, the invertibility witnesses and the rank row-vanishing
+statements — is now **kernel-pure**, proven by `decide +kernel`. The `+kernel` modifier
+hands evaluation straight to the kernel, bypassing the elaborator's `whnf` heartbeat and
+recursion budgets that made plain `decide` impractical here; it adds **no** axiom
+(`ofReduceBool` is not incurred, unlike `native_decide`). Axiom set on every such theorem:
+`{propext, Classical.choice, Quot.sound}`.
+
+The two `Fintype.card` kernel-enumeration theorems (`d1_kernel_card` … `d3_kernel_card`)
+still use `native_decide`: they enumerate 2^16 vectors, which exceeds even the kernel's
+recursion budget. They are marked at their site.
+Pipeline Invariant #10 forbids raising `maxHeartbeats`; nothing here does.
 -/
 
 import Mathlib.Data.ZMod.Basic
@@ -102,19 +108,19 @@ def d5 : Matrix (Fin 24) (Fin 32) F2 := Matrix.of fun k i =>
 /-! ## 2. Chain Complex Property: d² = 0
 
 For each consecutive pair (d_n, d_{n+1}), we verify d_n · d_{n+1} = 0 over F₂.
-Each proof is a single native_decide on a concrete matrix product. -/
+Each proof is a single kernel-pure `decide +kernel` on a concrete matrix product. -/
 
 /-- d₁ ∘ d₂ = 0 (8×16 · 16×16 → 8×16 check) -/
-theorem d1_d2_zero : d1 * d2 = 0 := by native_decide
+theorem d1_d2_zero : d1 * d2 = 0 := by decide +kernel
 
 /-- d₂ ∘ d₃ = 0 (16×16 · 16×16 → 16×16 check) -/
-theorem d2_d3_zero : d2 * d3 = 0 := by native_decide
+theorem d2_d3_zero : d2 * d3 = 0 := by decide +kernel
 
 /-- d₃ ∘ d₄ = 0 (16×16 · 16×24 → 16×24 check) -/
-theorem d3_d4_zero : d3 * d4 = 0 := by native_decide
+theorem d3_d4_zero : d3 * d4 = 0 := by decide +kernel
 
 /-- d₄ ∘ d₅ = 0 (16×24 · 24×32 → 16×32 check) -/
-theorem d4_d5_zero : d4 * d5 = 0 := by native_decide
+theorem d4_d5_zero : d4 * d5 = 0 := by decide +kernel
 
 /-! ## 3. Exactness Verification
 
@@ -128,7 +134,10 @@ We verify ranks by counting kernel elements for small matrices
 rank-witnessing submatrices for larger ones. -/
 
 /-- Kernel cardinality of d₁: 2^9 = 512.
-    rank(d₁) = 16 - 9 = 7. Combined with rank(d₂) = 9 (below): 7 + 9 = 16 = dim(P₁). -/
+    rank(d₁) = 16 - 9 = 7. Combined with rank(d₂) = 9 (below): 7 + 9 = 16 = dim(P₁).
+
+    ⚠ `native_decide` (incurs `Lean.ofReduceBool`): 2^16 vector enumeration exceeds the
+    kernel's recursion budget. The other matrix identities in this file are kernel-pure. -/
 theorem d1_kernel_card :
     Fintype.card { v : Fin 16 → ZMod 2 // d1.mulVec v = 0 } = 512 := by native_decide
 
@@ -144,13 +153,13 @@ theorem d3_kernel_card :
 
 /-! ## 3b. RREF Witnesses for d₄ and d₅
 
-For d₄ (16×24) and d₅ (24×32), kernel enumeration exceeds native_decide's
+For d₄ (16×24) and d₅ (24×32), kernel enumeration exceeds any evaluator's
 budget (2²⁴ and 2³² elements). Instead we provide RREF certificates:
 invertible transformation matrices P such that P × d = RREF.
 The rank = number of nonzero rows in the RREF.
 
 Python generates these (scripts/generate_a1_resolution.py).
-Lean VERIFIES them (native_decide on matrix products). If any entry
+Lean VERIFIES them (`decide +kernel` on matrix products). If any entry
 in P, P_inv, or RREF is wrong, the proof fails to compile. -/
 
 -- d₄ RREF witness: P₄ × d₄ = rref₄ with rank 9
@@ -181,14 +190,14 @@ def rref4 : Matrix (Fin 16) (Fin 24) F2 := Matrix.of fun k i =>
   | _, _ => 0
 
 /-- P₄ × d₄ = rref₄ (RREF of d₄, rank 9). -/
-theorem d4_rref_valid : P4 * d4 = rref4 := by native_decide
+theorem d4_rref_valid : P4 * d4 = rref4 := by decide +kernel
 
 /-- P₄ is invertible: P₄ × P₄⁻¹ = I. -/
-theorem P4_invertible : P4 * P4_inv = 1 := by native_decide
+theorem P4_invertible : P4 * P4_inv = 1 := by decide +kernel
 
 /-- rank(d₄) = 9 (9 nonzero rows in rref₄). -/
 theorem d4_rank_9 : ∀ i : Fin 16, (9 ≤ i.val) →
-    (∀ j : Fin 24, rref4 i j = 0) := by native_decide
+    (∀ j : Fin 24, rref4 i j = 0) := by decide +kernel
 
 -- d₅ RREF witness: P₅ × d₅ = rref₅ with rank 15
 def P5 : Matrix (Fin 24) (Fin 24) F2 := Matrix.of fun k i =>
@@ -224,14 +233,14 @@ def rref5 : Matrix (Fin 24) (Fin 32) F2 := Matrix.of fun k i =>
   | _, _ => 0
 
 /-- P₅ × d₅ = rref₅ (RREF of d₅, rank 15). -/
-theorem d5_rref_valid : P5 * d5 = rref5 := by native_decide
+theorem d5_rref_valid : P5 * d5 = rref5 := by decide +kernel
 
 /-- P₅ is invertible: P₅ × P₅⁻¹ = I. -/
-theorem P5_invertible : P5 * P5_inv = 1 := by native_decide
+theorem P5_invertible : P5 * P5_inv = 1 := by decide +kernel
 
 /-- rank(d₅) = 15 (15 nonzero rows in rref₅). -/
 theorem d5_rank_15 : ∀ i : Fin 24, (15 ≤ i.val) →
-    (∀ j : Fin 32, rref5 i j = 0) := by native_decide
+    (∀ j : Fin 32, rref5 i j = 0) := by decide +kernel
 
 /-! Exactness from kernel cardinalities (d₁-d₃) and RREF ranks (d₄-d₅):
   P₀: rank(ε)=1, rank(d₁)=7. dim(P₀)=8. 1+7=8. ✓
@@ -256,5 +265,71 @@ theorem exactness_rank_nullity :
 theorem chain_complex_property :
     d1 * d2 = 0 ∧ d2 * d3 = 0 ∧ d3 * d4 = 0 ∧ d4 * d5 = 0 :=
   ⟨d1_d2_zero, d2_d3_zero, d3_d4_zero, d4_d5_zero⟩
+
+/-! ## 4. A(1)-LINEARITY of the differentials  [Phase 5q.T, 2026-08-15]
+
+Until now the claim "these matrices are the differentials of a complex of **free
+A(1)-modules**" was carried only by the comments in §1: nothing in Lean tied `d1 … d5`
+to the A(1)-action. A chain complex of F₂-vector spaces whose differentials happened to
+square to zero would have satisfied every theorem above. This section closes that gap.
+
+**Which side.** In the left-regular representation a coefficient vector `v ∈ F₂⁸` denotes
+an element `x ∈ A(1)`, and `Lmat a *ᵥ v` denotes `e a · x`. So `d₁ *ᵥ (v₁, v₂) =
+Sq¹·x₁ + Sq²·x₂`, which is A(1)-linear for the **right** action `x ↦ x · b` — the
+differentials are given by left multiplication, hence commute with right multiplication.
+`P n` is therefore a free **right** A(1)-module of rank `rₙ`, and `Extⁿ` below is right-module
+Ext (canonically isomorphic to the left-module one via the antipode of the Hopf algebra A(1);
+the dimensions this file feeds downstream are the same either way).
+
+`blockR n b` is the matrix of `· e b` on `F₂ⁿ = A(1)^{n/8}`: block-diagonal with `Rmat b`
+in each 8×8 diagonal block. Each theorem below is the statement
+`dₙ ∘ (· e b) = (· e b) ∘ dₙ` on the nose, for every one of the eight basis elements. -/
+
+/-- Right multiplication by `e b` on a free right A(1)-module of rank `n / 8`, in the
+    F₂-expanded encoding: block diagonal with `Rmat b` in each 8×8 block. -/
+def blockR (n : ℕ) (b : Idx) : Matrix (Fin n) (Fin n) F2 := Matrix.of fun k i =>
+  if k.val / 8 = i.val / 8 then
+    Rmat b ⟨k.val % 8, Nat.mod_lt _ (by norm_num)⟩ ⟨i.val % 8, Nat.mod_lt _ (by norm_num)⟩
+  else 0
+
+/-- On a rank-1 free module `blockR` is just right multiplication. Sanity-pins `blockR`. -/
+theorem blockR_eight : ∀ b : Idx, blockR 8 b = Rmat b := by decide
+
+/-- `blockR` at the unit is the identity, at each rank occurring in the resolution:
+    the action is unital. -/
+theorem blockR_zero_eq_one :
+    blockR 16 0 = 1 ∧ blockR 24 0 = 1 ∧ blockR 32 0 = 1 := by
+  refine ⟨by decide, by decide, by decide +kernel⟩
+
+/-- **d₁ is right A(1)-linear.** -/
+theorem d1_a1_linear : ∀ b : Idx, d1 * blockR 16 b = Rmat b * d1 := by decide
+
+/-- **d₂ is right A(1)-linear.** -/
+theorem d2_a1_linear : ∀ b : Idx, d2 * blockR 16 b = blockR 16 b * d2 := by decide
+
+/-- **d₃ is right A(1)-linear.** -/
+theorem d3_a1_linear : ∀ b : Idx, d3 * blockR 16 b = blockR 16 b * d3 := by decide
+
+/-- **d₄ is right A(1)-linear.** -/
+theorem d4_a1_linear : ∀ b : Idx, d4 * blockR 24 b = blockR 16 b * d4 := by decide +kernel
+
+/-- **d₅ is right A(1)-linear.** -/
+theorem d5_a1_linear : ∀ b : Idx, d5 * blockR 32 b = blockR 24 b * d5 := by decide +kernel
+
+/-- **The resolution is a complex of free A(1)-modules, not merely of F₂-vector spaces.**
+
+    Every differential commutes with the right A(1)-action on the free modules
+    `Pₙ = A(1)^{rₙ}`, for every basis element of A(1) — hence, by F₂-bilinearity, for
+    every element. Together with `chain_complex_property` this is what makes
+    `Hom_{A(1)}(P•, F₂)` a cochain complex and its cohomology `Ext*_{A(1)}(F₂, F₂)`.
+
+    Before Phase 5q.T this was asserted only in the §1 comments. -/
+theorem resolution_is_a1_linear :
+    (∀ b : Idx, d1 * blockR 16 b = Rmat b * d1)
+    ∧ (∀ b : Idx, d2 * blockR 16 b = blockR 16 b * d2)
+    ∧ (∀ b : Idx, d3 * blockR 16 b = blockR 16 b * d3)
+    ∧ (∀ b : Idx, d4 * blockR 24 b = blockR 16 b * d4)
+    ∧ (∀ b : Idx, d5 * blockR 32 b = blockR 24 b * d5) :=
+  ⟨d1_a1_linear, d2_a1_linear, d3_a1_linear, d4_a1_linear, d5_a1_linear⟩
 
 end SKEFTHawking.A1
