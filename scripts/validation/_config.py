@@ -121,7 +121,10 @@ CI_SKIP: dict[str, str] = {
 #: So `--ci` FAILS when fewer checks MEASURE than this. A missing toolchain becomes a
 #: red build naming how many fewer than the floor MEASURED, not a green tick. Lower it only with a stated
 #: reason, exactly like every other ratchet in this codebase.
-CI_MIN_CHECKS_RUN: int = 82  # 2026-08-15: +1 (seed_residue_absent — a production-seeded
+CI_MIN_CHECKS_RUN: int = 84  # 2026-08-15: +2 (bundle_abstract_length,
+                            # apex_theorem_claims_grounded — L3 Stage-10 redraft
+                            # findings 5.1 and 3; both measure in production).
+                            # 2026-08-15: +1 (seed_residue_absent — a production-seeded
                              #   mutation whose `finally` never ran because the process
                              #   was killed, leaving a fabricated finding in the review
                              #   corpus. Observed, not theorised: D10, 2026-08-12.)

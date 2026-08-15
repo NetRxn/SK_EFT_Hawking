@@ -154,6 +154,13 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
                        # `papers/**` diff is exactly who can tell a seed from a finding.
                        # Under `--scope` this is the cheapest place the residue surfaces.
                        "--check", "seed_residue_absent",
+                       # 2026-08-15: the three bundle gates a Stage-10 redraft moves
+                       # directly. `bundle_lean_module_coverage` was owed here since it
+                       # shipped; the other two are new. All three read only
+                       # `papers/**` artifacts, so this scope is exactly their input.
+                       "--check", "bundle_lean_module_coverage",
+                       "--check", "bundle_abstract_length",
+                       "--check", "apex_theorem_claims_grounded",
                        "--check", "spelled_out_census_figures"]))
     if touched["lean"]:
         # NOT plain `lake build`: it leaves ExtractDeps.olean missing and breaks
