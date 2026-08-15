@@ -9052,8 +9052,8 @@ def fig_T_H_evolution_regime_partition():
         fig,
         title=dict(
             text=(
-                "Phase 6a Wave 5 — BCH four-laws regime partition "
-                "(Schwarzschild ↔ acoustic)"
+                "Hawking temperature evolution across the "
+                "Schwarzschild ↔ acoustic regime partition"
             ),
             font=TITLE_FONT,
         ),
@@ -10258,8 +10258,8 @@ def fig_a2_vs_linearized_G_N():
     heat-kernel calibration reproduces Sakharov's induced-gravity scale
     anchor up to the species-multiplicity prefactor.
 
-    Lean: HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov,
-          a2_matches_GNemerg_iff_alpha_ADW_unity,
+    Lean: HeatKernelExpansion.G_N_from_a2_eq_quarter_G_N_sakharov,
+          a2_matches_GNemerg_iff_alpha_ADW_quarter,
           G_N_from_a2_at_GUT_inverse,
           G_N_from_a2_inverse_at_GUT_below_planck_squared.
     Source: Vassilevich Phys. Rep. 388, 279 (2003) Eq. (4.38);
@@ -10982,7 +10982,7 @@ def fig_lambda_emerg_parameter_scan():
         rows=1, cols=2,
         subplot_titles=(
             "Λ^emerg(Λ_UV, N_f) — natural cutoff CC problem reproduction",
-            "Decision Gate E.4: log10(Λ^emerg / Λ_obs) verdict bands",
+            "log₁₀(Λ^emerg / Λ_obs) over the (Λ_UV, N_f) plane",
         ),
         column_widths=[0.5, 0.5],
         horizontal_spacing=0.15,
@@ -11111,7 +11111,7 @@ def fig_lambda_emerg_parameter_scan():
             ),
             line=dict(color=COLORS["steel_blue"], width=2),
             showscale=False,
-            name="cc_resolved boundary",
+            name="resolution band boundary",
             hoverinfo="skip",
         ),
         row=1, col=2,
@@ -11128,7 +11128,7 @@ def fig_lambda_emerg_parameter_scan():
             ),
             line=dict(color=COLORS["amber"], width=2),
             showscale=False,
-            name="cc_reproduced boundary",
+            name="reproduction band boundary",
             hoverinfo="skip",
         ),
         row=1, col=2,
