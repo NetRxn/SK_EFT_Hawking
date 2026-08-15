@@ -336,7 +336,18 @@ def check_recurrence_reopens_closures() -> CheckResult:
     details.insert(0, Detail(
         "summary", hits == 0,
         f"{compared} blocking-severity closure(s) compared against {len(open_)} open "
-        f"finding(s) from later same-bundle reviews; {hits} contradicted by a recurrence. "
+        # ⚠️ THE ZERO IS NOT EVIDENCE OF ABSENCE, and the summary now says so (D12
+        # round-13 13.3). This matcher compares `label` (`heading[:50]`) by token overlap,
+        # so it is good on near-verbatim restatements and poor on rewordings — and a
+        # recurrence IS a restatement. Measured on the frozen labelled pairs, the worst
+        # true positive does not beat the best negative, so no threshold separates them:
+        # three tunings of the constant were tuning a matcher that cannot discriminate.
+        # A reader who takes `0 contradicted` as "no stale closures exist" is reading a
+        # capability the check does not have, which is this project's own defect class
+        # pointed at its own instrument.
+        f"finding(s) from later same-bundle reviews; {hits} contradicted by a recurrence "
+        f"(⚠️ WEAK detector: near-verbatim restatements only — token overlap on a 50-char "
+        f"heading cannot see a reworded recurrence, so {hits} is a floor, not a count). "
         f"NOT compared: {len(closed) - compared} non-blocking closure(s), and "
         f"{skipped_short} finding(s) whose normalised title is under {_MIN_TITLE} chars, "
         f"and {skipped_notice} pairing(s) whose later finding is a resolution notice "

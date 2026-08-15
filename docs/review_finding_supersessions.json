@@ -9985,6 +9985,49 @@
       "evidence": "The record is corrected and the class is closed. The prior closure of 1951:D11:1.1 cited commit a683b917 while the finding's only Location is a Lit-Search path git ls-files confirms is untracked here, so no commit in this repo could contain the change. It now carries an artifact anchor — the file hashed at closure time with its on-disk spelling — which a later reviewer can re-derive in one command. Three pieces of substrate made that possible and prevent recurrence: close_finding gained --artifact, _closure_record_meets_bar accepts artifact_sha256 as an anchor in its own right, and the writer now REFUSES a --commit anchor when every path a finding's Location names is untracked in this repo. Correcting the record additionally required --amend, which three refusal messages in close_finding had been advising since ADR-012 while it did not exist: a record that MEETS the bar but is WRONG was uncorrectable except by hand-editing the ledger, the exact operation this writer exists to eliminate. The amend records its reason and names the record it supersedes, so the append-only history does not become two valid-looking closures with no account of the second.",
       "superseded_by": null,
       "date": "2026-08-15"
+    },
+    {
+      "finding_id": "review:2026-07-31-2220-internal-adversarial:D12:8.6",
+      "status": "fixed",
+      "evidence": "Re-anchored on the CHECKABLE claim. The semantic repair is real and unchanged: recurrence_reopens_closures' summary denominator counts closures WITH a candidate rather than closures reaching the loop. What was wrong is the REPRODUCE instruction, which quoted 162 as if it were a constant. It is a graph-state quantity that grows with every closure, and it was never reproducible at the commit the record cites: measured 162 at round 13, 201 at the record's own commit 8d0a3e53, 204 at the round-14 HEAD, and 470 today after this session's closures. A reproduction instruction that returns a different number at its own commit trains the next reader to stop reproducing, which is the cost this finding names. The corrected instruction is to check the DENOMINATOR'S DEFINITION rather than its value: run validate.py --check recurrence_reopens_closures and confirm the summary reports closures compared 'against N open finding(s) from later same-bundle reviews' with the NOT-compared populations enumerated beside it. That is stable across graph states; the count is not, and no count should be quoted here.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "amends_prior": {
+        "reason": "the prior record's REPRODUCE instruction quotes an absolute count (162) that is not reproducible at its own cited commit and drifts with every closure",
+        "superseded_record": {
+          "status": "fixed",
+          "commit": "8d0a3e53",
+          "date": null
+        }
+      }
+    },
+    {
+      "finding_id": "review:2026-08-01-0202-internal-adversarial:D12:14.3",
+      "status": "fixed",
+      "evidence": "The record is corrected, and the correction is the one the Expected asks for: quote no constant. The finding's measurement reproduces and extends — 162 at round 13, 201 at the record's own cited commit 8d0a3e53, 204 at the round-14 HEAD, and 470 today after this session's closures. The quantity grows with every closure, so no value of it can serve as a reproduction target at any commit; the defect is not that the wrong number was quoted but that a number was. The amended record states the semantic repair (the summary denominator counts closures WITH a candidate rather than closures reaching the loop), names the count as a graph-state quantity, gives the four measured values as evidence of the drift, and replaces the REPRODUCE instruction with one that checks the denominator's DEFINITION rather than its value. Done through close_finding --amend, which records what it supersedes, so the append-only ledger does not read as two competing closures.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"\nimport json\nd=json.load(open(\\\"docs/review_finding_supersessions.json\\\"))[\\\"supersessions\\\"]\nlast={}\nfor e in d: last[e.get(\\\"finding_id\\\")]=e\nr=last[\\\"review:2026-07-31-2220-internal-adversarial:D12:8.6\\\"]\nev=r.get(\\\"evidence\\\",\\\"\\\")\nassert \\\"REPRODUCE: it reports 162\\\" not in ev, \\\"the unreproducible constant is still quoted as a REPRODUCE target\\\"\nassert \\\"graph-state quantity\\\" in ev, \\\"the record does not say which kind of quantity the count is\\\"\nassert \\\"amends_prior\\\" in r, \\\"the correction did not record what it supersedes\\\"\n\" && uv run python scripts/validate.py --check recurrence_reopens_closures",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-01-0001-internal-adversarial:D12:13.3",
+      "status": "fixed",
+      "evidence": "The diagnosis was right and was acted on; the prescribed remedy is REFUTED by later measurement, and the closure records both rather than picking one. Acted on: calibration no longer consumes its own datum — tests/fixtures/recurrence_pairs.json is a frozen labelled set, TestRecurrenceThresholdAgainstFrozenPairs binds the REAL matcher rather than re-implementing it, and the QI is recorded in-source. Refuted: the Fix says 'one constant' at 0.333, but measured on those frozen pairs the worst true positive does not beat the best negative, so NO threshold separates them — 0.333 would be a fourth tuning of a matcher that cannot discriminate, and I verified the live corpus reports 0 contradictions identically at 0.45, 0.40 and 0.333, so the constant buys nothing here. Root cause is upstream and recorded: label is heading[:50], and a recurrence is a RESTATEMENT, so it shares little vocabulary with its original; improving this needs the full finding text on the node, not a wider constant. What WAS still live is the finding's other half — 'the summary does not say so'. It now does: the summary discloses that this is a weak near-verbatim-only detector and that the hit count is a FLOOR, not a count, so a reader cannot take 0 as evidence that no stale closure exists.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"\nimport sys; sys.path.insert(0,\\\"scripts\\\")\nimport validation.checks.reviews as rv\nr=rv.check_recurrence_reopens_closures()\ns=next(d for d in r.details if d.name==\\\"summary\\\").message\nassert \\\"WEAK detector\\\" in s, \\\"the summary does not disclose that the matcher is weak\\\"\nassert \\\"is a floor, not a count\\\" in s, \\\"the summary does not say the hit count is a floor\\\"\nassert \\\"compared against\\\" in s, \\\"the summary no longer reports its compared population\\\"\n\" && uv run python -m pytest tests/test_d5_reviews.py -q -k Recurrence",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-15"
+      }
     }
   ]
 }
