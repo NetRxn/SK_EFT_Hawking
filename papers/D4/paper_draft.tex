@@ -45,26 +45,31 @@ We give a machine-checked proof, in Lean~4 and with no unverified
 hypotheses, that the three-strand Fibonacci braid representation
 $\rho_{\mathrm{Fib}}\colon B_3 \to \mathrm{SU}(2)$ has dense image: for
 every $U \in \mathrm{SU}(2)$ and every $\varepsilon > 0$ there is a braid
-word whose image agrees with $U$ entrywise to within $\varepsilon$. We
-then strengthen density to efficiency, proving that the Dawson--Nielsen
-compilation of a target $U$ returns, \emph{at one and the same
-algorithmic level}, both an approximation of error at most $\varepsilon$
-and a braid word of length at most
+word whose image agrees with $U$ entrywise to within $\varepsilon$. The
+representation is built from an explicit unitary pair satisfying the
+braid relation, identified with the Fibonacci $F$- and $R$-symbols on
+the literature's authority rather than derived from the fusion category
+here; we are precise about that boundary. We then strengthen density to
+efficiency, proving that the compilation of a target $U$ returns,
+\emph{at one and the same algorithmic level}, both an approximation of
+error at most $\varepsilon$ and a braid word of length at most
 $C\,(\log 1/\varepsilon)^{c}$ with $c = \log 5 / \log(3/2)$ --- a
 bundling that the existence-only statements of the Solovay--Kitaev
 theorem do not provide. Around this result we develop the
-modular-tensor-category apparatus it sits in: the Chevalley--Serre and
-Hopf structure of $U_q(\mathfrak{sl}_2)$ and $U_q(\mathfrak{sl}_3)$;
-$\mathrm{SU}(2)_k$ fusion with $S$-matrix unitarity and the Verlinde
-formula verified entry-by-entry for $k \leq 5$; the Ising category's six
-hexagon and four ribbon equations in $\mathbb{Q}(\zeta_{16})$, with the
-closed-form invariants $\langle \mathrm{trefoil}\rangle = -\sqrt{2}$ and
-$\mathrm{RT}(4_1) = -1/\sqrt{2}$; the Drinfeld centre
-$\mathcal{Z}(\mathrm{Vec}_{S_3}) \simeq \mathrm{Rep}(D(S_3))$ with its
-eight-object non-abelian spectrum; and the entanglement entropy of a
-modular tensor category, where we prove that Casini--Huerta saturation
-holds exactly when the category is trivial and that the deficit on a
-non-trivial category is the topological entropy $\log\mathcal{D}$.
+modular-tensor-category apparatus it sits in: the Chevalley commutator
+and Hopf structure of $U_q(\mathfrak{sl}_2)$ and $U_q(\mathfrak{sl}_3)$
+and a rank-generic construction covering both; $\mathrm{SU}(2)_k$ fusion
+with $S$-matrix unitarity and non-degeneracy for $k \le 5$ and the
+Verlinde formula proved for every triple of labels at $k = 3,4,5$; the
+Ising category's six hexagon and four ribbon equations in
+$\mathbb{Q}(\zeta_{16})$, with the closed-form invariants
+$\langle \mathrm{trefoil}\rangle = -\sqrt{2}$ and
+$\mathrm{RT}(4_1) = -1/\sqrt{2}$; the Drinfeld double $D(G)$ of an
+arbitrary finite group, with the eight-object non-abelian spectrum of
+$D(S_3)$; and the entanglement entropy of a modular tensor category,
+where we prove that Casini--Huerta saturation holds exactly when the
+category is trivial and that the deficit on a non-trivial category is
+the topological entropy $\log\mathcal{D}$.
 Because these layers were verified to different standards, we grade
 them: each section states the strength of its own results, a summary
 table appears in Sec.~\ref{sec:intro}, and a trust-base note records the
@@ -544,7 +549,125 @@ is listed in Sec.~\ref{sec:open}.
 \section{Quantum groups: the algebraic input}
 \label{sec:qgroups}
 
-%% TODO(redraft)
+The structure that encapsulates the braiding and fusion of non-Abelian
+anyons is a modular tensor category: representations of the braid group
+alone are not enough, because they must also be compatible with fusion,
+and the resulting $F$ and $R$ matrices are then constrained by the
+pentagon and hexagon
+equations~\cite[Sec.~III.A.2]{NayakSimonSternFreedmanDasSarma2008}. What
+this section reports is a formalisation of the algebras that stand
+beside that categorical data, $U_q(\mathfrak{sl}_2)$ and
+$U_q(\mathfrak{sl}_3)$, together with a rank-generic construction. We
+prove statements about the algebras. We do not connect them to the
+modular data of Sec.~\ref{sec:modular}, and we say below exactly where
+that connection is absent.
+
+\subsection{The presentation and the four defining relations}
+
+$U_q(\mathfrak{sl}_2)$ is constructed as a quotient of the free
+associative algebra on the four generators $E$, $F$, $K$, $K^{-1}$ over
+the Laurent-polynomial ring $k[q,q^{-1}]$, for an arbitrary commutative
+ring $k$. Four relations are verified on the quotient:
+$KK^{-1} = K^{-1}K = 1$; $KE = q^{2}EK$ and $KF = q^{-2}FK$, which give
+the conjugation form $KEK^{-1} = q^{2}E$ and $KFK^{-1} = q^{-2}F$; and
+\begin{equation}
+(q - q^{-1})\,(EF - FE) \;=\; K - K^{-1}.
+\label{eq:chevalley}
+\end{equation}
+Equation~\eqref{eq:chevalley} is the Chevalley commutator with its
+denominator cleared, which is what makes it meaningful over a base where
+$q - q^{-1}$ is not invertible. It is not the quantum Serre relation:
+that relation is cubic and couples generators attached to distinct
+simple roots, so at rank one there is nothing for it to say.
+
+One consequence of presenting the algebra by generators and relations is
+worth recording for a reader who wants to reuse the development. The
+carrier is a quotient, so unfolding a definition never reaches the
+relations, and rewriting in Lean's simplification pipeline runs at a
+transparency setting at which the quotient's algebra structure is
+opaque. The relations above are therefore the working interface: every
+later computation in this layer is a rewrite by one of them rather than
+an appeal to the construction. \emph{Grade: Theorem}, kernel-checked,
+over an arbitrary commutative ring.
+
+\subsection{Hopf structure}
+
+Comultiplication, counit and antipode are defined on generators and
+shown to descend to the quotient. Coassociativity is proved as an
+identity of algebra homomorphisms into the triple tensor product, and
+the antipode axioms in convolution form,
+$m \circ (S \otimes \mathrm{id}) \circ \Delta = \eta \circ \varepsilon$
+and its mirror. The group-like identity $\Delta(K) = K \otimes K$ holds.
+These discharge the obligations of Mathlib's own \texttt{HopfAlgebra}
+class, so the Hopf-algebra structure on $U_q(\mathfrak{sl}_2)$ is a
+registered instance rather than a bespoke record: it is available to any
+library result stated for a Hopf algebra. We also prove
+$S^{2}(x) = KxK^{-1}$ for \emph{every} element $x$, not merely on
+generators. \emph{Grade: Theorem.}
+
+\subsection{Rank two, where the Serre relations become non-empty}
+
+For $U_q(\mathfrak{sl}_3)$ the cubic relations are genuine and are
+proved:
+\begin{equation}
+E_1^{2}E_2 + E_2E_1^{2} \;=\; (q + q^{-1})\,E_1E_2E_1 ,
+\label{eq:serre3}
+\end{equation}
+with its counterpart for the lowering generators, alongside
+$E_1F_2 = F_2E_1$ and $K_1K_2 = K_2K_1$. The Hopf structure is
+established in the same convolution form as at rank one, again yielding
+a registered \texttt{HopfAlgebra} instance. One scope difference is
+worth stating rather than leaving to be discovered: the rank-two
+antipode-squared result is proved for generators only, where its
+rank-one analogue holds for all elements. \emph{Grade: Theorem}, with
+that restriction on the last item.
+
+\subsection{A rank-generic construction, and its scope}
+
+Both concrete algebras are instances of a construction taking an integer
+matrix $A$ of arbitrary rank as a parameter. Coassociativity and both
+antipode axioms are proved there for every symmetric $A$ with
+$A_{ii} = 2$, at every rank, so the Hopf structure is not a rank-by-rank
+result. The quadratic-link Serre relation holds whenever $A_{ij} = -1$.
+
+The symmetry hypothesis is a real restriction and we flag it rather than
+let the word ``generic'' carry more than it should: it admits the
+simply-laced types and excludes $B_2$, $C_2$ and $G_2$, whose Cartan
+matrices are recorded in the development but to which these theorems do
+not apply. Specialising $A$ to $[2]$ and to
+$\left(\begin{smallmatrix}2 & -1\\ -1 & 2\end{smallmatrix}\right)$
+recovers the two concrete algebras as algebra equivalences, so the
+generic construction is not merely parallel to them. \emph{Grade:
+Theorem} for the generic Hopf and Serre results; \emph{Theorem
+(evaluated)} for the two equivalences, whose relation-respecting
+direction is discharged by \texttt{native\_decide}
+(Sec.~\ref{subsec:nd}).
+
+\subsection{The restricted quotient, and what is not proved about it}
+
+Imposing $E^{\ell} = F^{\ell} = 0$ and $K^{\ell} = 1$ gives the
+restricted algebra, and those three relations are verified on it. That
+every Chevalley relation lies among the restricted relations is what
+makes the passage from the generic algebra to the restricted one an
+algebra homomorphism.
+
+Two expected companion facts are \emph{not} proved: the dimension
+$\ell^{3}$, and the number of simple modules. Nor is any bridge
+established from this quotient to the $\mathrm{SU}(2)_k$ fusion data of
+Sec.~\ref{sec:modular}. \emph{Grade: Theorem} for the three relations
+and the homomorphism, and no grade at all for the dimension, the simple
+count, or the bridge, because there is no statement to grade.
+
+% NOTE (redraft): the declarations bearing the names
+% small_uq_dim_statement, small_uq_simple_count and
+% small_uq_to_su2k_connection have the statement `True` (the second is
+% `forall ell, ell % 2 = 1 -> True`). They are NOT cited above and must
+% not be. Filed.
+
+% TODO: the standard attribution of this presentation to Drinfeld and
+% Jimbo is deliberately absent. No Drinfeld, Jimbo, Lusztig, Kassel or
+% Chari-Pressley source is held in the local corpus, and naming them
+% here would be an unread attribution. Acquire one before adding it.
 
 %% =====================================================================
 %% §6 — Modular data  [TO DRAFT]
@@ -552,7 +675,184 @@ is listed in Sec.~\ref{sec:open}.
 \section{Modular data: fusion, $S$-matrix unitarity, and the Verlinde formula}
 \label{sec:modular}
 
-%% TODO(redraft)
+This paper uses the phrase ``modular tensor category'' throughout, and
+this is the section in which that phrase is discharged. Here the modular
+data is exhibited as an explicit object and non-trivial properties are
+proved of it: the $\mathrm{SU}(2)_k$ modular $S$-matrix is written down
+for $k = 1,\dots,5$, it is proved unitary and non-degenerate at each of
+those levels, and at $k = 3,4,5$ it is proved to diagonalise the fusion
+rules. Each result is verified at a named finite level. No theorem in
+this section is quantified over a general modular tensor category, so
+the Verlinde content as a whole is graded \emph{Instance}; the
+individual level statements are \emph{Theorem}.
+
+\subsection{The $S$-matrices, unitarity and non-degeneracy}
+
+At level $k$ the $k+1$ simple objects carry the Kac--Peterson matrix
+$S_{ab} = \sqrt{2/(k+2)}\,\sin\bigl((a+1)(b+1)\pi/(k+2)\bigr)$. We do not
+work with that trigonometric form directly. Factoring out the overall
+scale $\lambda_k = \sqrt{2/(k+2)}\,\sin(\pi/(k+2))$ leaves
+$S = \lambda_k M_k$ with $M_k$ algebraic: at $k = 3$ its entries are
+$\pm 1$ and $\pm\varphi$, so that all downstream arithmetic happens in
+$\mathbb{Q}(\varphi) = \mathbb{Q}(\sqrt5)$ and reduces under
+$\varphi^2 = \varphi + 1$. The corresponding fields are
+$\mathbb{Q}(\sqrt2)$ at $k = 2$, $\mathbb{Q}(\sqrt3)$ at $k = 4$, and the
+totally real cubic subfield $\mathbb{Q}(2\cos(\pi/7))$ of
+$\mathbb{Q}(\zeta_7)$ at $k = 5$, whose minimal polynomial is proved
+rather than assumed. This is what makes the statements checkable by the
+kernel without numerical evaluation. That the algebraic definition still
+describes the intended matrix is proved separately: the quantum-dimension
+row satisfies $S_{0b} = \sqrt{2/5}\,\sin\bigl((b+1)\pi/5\bigr)$ for every
+$b$ at $k=3$, tying it back to its literal trigonometric values, with
+analogous statements at $k = 4$ and $k = 5$.
+
+Unitarity, $SS^{\mathsf T} = 1$, is proved at every level from $k = 1$ to
+$k = 5$, and so is non-degeneracy, $\det S \neq 0$. Non-degeneracy is the
+modularity condition, and it is what distinguishes a modular tensor
+category from a merely pre-modular one. All ten are kernel-checked with
+no assumed hypothesis and no compiled evaluation. \emph{Grade:
+Theorem.} At $k = 5$ unitarity is additionally obtained by an
+independent route, as an exact integer identity
+$7\,SS^{\mathsf T} = 7\cdot\mathbb{1}$ between character sums over
+$\mathbb{Z}$, which removes the transcendental content from the
+statement altogether.
+
+\subsection{The Verlinde formula}
+
+The strongest result in this section is that the modular $S$-matrix
+diagonalises the fusion rules, for every triple of labels rather than
+for a chosen few. At $k = 3$ we prove
+\begin{equation}
+  \sum_{l=0}^{3} \frac{S_{il}\,S_{jl}\,S_{ml}}{S_{0l}}
+  \;=\; N_{ij}{}^{m}
+  \qquad \text{for all } i,j,m \in \{0,1,2,3\},
+  \label{eq:verlinde-k3}
+\end{equation}
+where $N$ is the truncated Clebsch--Gordan rule and $S$ is real
+symmetric, so that conjugation acts trivially on its
+entries~\cite{Verlinde1988}. That is $4^3 = 64$ independent identities,
+discharged individually and then assembled. The same statement is proved
+at $k = 4$ over $125$ triples and at $k = 5$ over $216$.
+
+% TODO: Verlinde, Nucl. Phys. B 300, 360 (1988) is NOT in the local
+% primary-source cache. The citation above is a name attribution only;
+% Eq. (\ref{eq:verlinde-k3}) is stated as what our theorem proves and no
+% claim is made about that paper's contents. Acquire before asserting a
+% location.
+
+The route is a single reduction lemma. Every column quotient in
+Eq.~\eqref{eq:verlinde-k3} carries exactly two powers of the overall
+scale, so the sum collapses to $\tfrac{1}{10}(3-\varphi)$ times a
+polynomial in the entries of $M_3$, with each column inverse
+$1/(M_3)_{0l}$ replaced by its exact algebraic form, either $1$ or
+$\varphi - 1$, using $\varphi(\varphi-1) = 1$. All $64$ identities route
+through that lemma and then close by reduction in $\mathbb{Q}(\sqrt5)$.
+Kernel-checked, no compiled evaluation, no assumed hypothesis.
+
+Two scope statements belong with this result. First, at $k = 1$ and
+$k = 2$ only representative entries are verified, and those compare the
+Verlinde sum to a numeral rather than to the fusion function; the tie to
+the fusion rule itself exists at $k = 3,4,5$. Second, this development
+defines an abstract Verlinde predicate on the finite data of a
+pre-modular category, and no object in it discharges that predicate.
+What exists is a family of level-specific theorems, each quantified over
+its own label set. Nothing here proves the Verlinde formula for an
+arbitrary modular tensor category, and the level statements should not
+be read as instances of a general theorem proved elsewhere in this work.
+\emph{Grade: Instance.}
+
+\subsection{Modularity and the M\"uger centre}
+
+One statement in this section is genuinely general: for the finite data
+of any pre-modular category over an integral domain, $\det S \neq 0$
+forces the only transparent index to be the vacuum. The mechanism is
+that an invertible matrix admits no row proportional to another. It is
+kernel-checked, and it quantifies over the data rather than over a fixed
+level. Instantiated against separately proved non-degeneracy witnesses
+it yields a trivial M\"uger centre for the Ising and Fibonacci data,
+both kernel-checked.
+
+The scope of the word ``transparent'' should be read carefully.
+Transparency is defined here at the level of the data: index $i$ is
+transparent when $S_{ij} = d_i S_{0j}$ for every $j$. Identifying that
+condition with the categorical one,
+$c_{Y,X}\circ c_{X,Y} = \mathrm{id}_{X\otimes Y}$, is a definition in
+this development and not a derived result, so the theorem establishes
+the linear-algebraic half of the correspondence and not the braiding
+half. \emph{Grade: Theorem}, with transparency as just defined.
+
+\subsection{Fusion rules and quantum dimensions}
+
+The Ising rule $\sigma\times\sigma = 1 + \psi$ is recorded as three
+separate decidable facts, and it is their conjunction that carries the
+content: $N_{11}{}^{0} = 1$, $N_{11}{}^{2} = 1$, and the one that does
+the work, $N_{11}{}^{1} = 0$. At $k = 3$ the analogous four facts give
+$V_2 \times V_2 = V_0 + V_2$, and a further theorem identifies $V_3$ as
+the charge-conjugation object, $V_3 \times V_j = V_{3-j}$. All are
+kernel-checked.
+
+Quantum dimensions are obtained as Frobenius--Perron data rather than
+declared: the dimension vector is verified against the fusion-matrix
+eigenvector equation, giving $d = (1,\varphi)$ for Fibonacci,
+$(1,\sqrt2,1)$ for Ising, and $(1,\varphi,\varphi,1)$ for
+$\mathrm{SU}(2)_3$. These are discharged by \texttt{native\_decide} over
+the quadratic rings, so they are \emph{Theorem (evaluated)} and not
+kernel-checked. Their statements are also narrower than the word
+``eigenvector'' suggests: each is a single component identity with the
+fusion-matrix entries written out as literals, so the matrix itself does
+not appear in the statement being proved.
+
+\subsection{Fibonacci as the even sector of $\mathrm{SU}(2)_3$}
+\label{subsec:fibeven}
+
+The Fibonacci fusion ring is the even sector of $\mathrm{SU}(2)_3$. We
+prove that $\{V_0, V_2\}$ is closed under fusion, in the explicit form
+that no odd label occurs in any of $V_0 \times V_0$, $V_0 \times V_2$,
+$V_2 \times V_0$ or $V_2 \times V_2$; with the fusion facts above this
+gives $V_2 \times V_2 = V_0 + V_2$, which is $\tau^2 = 1 + \tau$. Row
+$0$ of the $k=3$ $S$-matrix is $\lambda_3(1,\varphi,\varphi,1)$, so
+$d_\tau = S_{02}/S_{00} = \varphi$. The global dimension follows:
+$\mathcal{D}^2 = 1 + \varphi^2 = (5+\sqrt5)/2$, a kernel-checked
+identity over $\mathbb{R}$, and the Fibonacci $S$-matrix is proved
+non-degenerate. The full $\mathrm{SU}(2)_3$ category has
+$\mathcal{D}^2 = 5 + \sqrt5$, exactly twice the Fibonacci value, since
+$\varphi$ occurs in two of its four rows.
+
+\subsection{What connects this section to the density theorem, and what does not}
+\label{subsec:posited}
+
+One connective claim must be stated plainly, because how it resolves
+governs the reading of Sec.~\ref{sec:density}. The $F$ and $R$ data from
+which the three-strand Fibonacci braid representation is built there are
+\emph{posited}, not derived from the fusion category described in this
+section. The two generators are written down as literal matrices,
+$\sigma_1 = \mathrm{diag}(e^{-4\pi i/5},\, e^{3\pi i/5})$ and
+$\sigma_2 = F\sigma_1 F$ with
+$F = \left(\begin{smallmatrix} \varphi^{-1} & \varphi^{-1/2}\\
+\varphi^{-1/2} & -\varphi^{-1}\end{smallmatrix}\right)$. What is then
+proved about them, kernel-checked in each case, is that
+$F^2 = \mathbb{1}$, that both generators are unitary, and that they
+satisfy the braid relation
+$\sigma_1\sigma_2\sigma_1 = \sigma_2\sigma_1\sigma_2$.
+
+What is not proved is that they are the $F$- and $R$-symbols of the
+Fibonacci category. No pentagon or hexagon equation is checked for this
+pair. A Fibonacci pentagon equation \emph{is} proved elsewhere in this
+development, exhaustively over the $2^9 = 512$ index assignments --- but
+for a different $F$-matrix, in a different gauge, over a different ring:
+$\left(\begin{smallmatrix} \varphi^{-1} & \varphi^{-1}\\
+1 & -\varphi^{-1}\end{smallmatrix}\right)$ over $\mathbb{Q}(\sqrt5)$,
+discharged by compiled evaluation. Nothing in the development relates
+the two matrices, by gauge transformation or otherwise.
+
+The density result of Sec.~\ref{sec:density} is therefore, as a formal
+statement, a theorem about an explicit unitary pair of $2\times2$
+matrices satisfying the braid relation. Its reading as a statement about
+Fibonacci anyon braiding rests on the standard identification of that
+pair with the Fibonacci $F$- and $R$-symbols, which this work takes as an
+input and does not verify. Supplying that bridge is the single most
+valuable thing that could be added to this development, and we list it
+first in Sec.~\ref{sec:open}.
 
 %% =====================================================================
 %% §7 — Ising category  [TO DRAFT]
@@ -560,16 +860,278 @@ is listed in Sec.~\ref{sec:open}.
 \section{The Ising category: braiding, knot invariants, and the trust boundary}
 \label{sec:ising}
 
-%% TODO(redraft). D^2 = 4, D = 2. NOT D = sqrt 2 (that is d_sigma).
-%% WRT is a SUBSECTION here, three sentences, Encoding-grade.
+\emph{Grade: Theorem (evaluated)} for essentially everything in this
+section --- see Sec.~\ref{subsec:nd}, which is placed here because this
+is where the issue first arises.
+
+The Ising category has three simple objects $1, \sigma, \psi$ with
+quantum dimensions $d_1 = d_\psi = 1$ and $d_\sigma = \sqrt2$, so that
+\begin{equation}
+\mathcal{D}^2 \;=\; \sum_a d_a^2 \;=\; 1 + 2 + 1 \;=\; 4 ,
+\qquad \mathcal{D} = 2 .
+\label{eq:isingD}
+\end{equation}
+Equation~\eqref{eq:isingD} is proved, in two independent
+formulations --- over the reals and inside the cyclotomic field below.
+We state it prominently because $\sqrt2$ and $2$ are easy to interchange
+here and only one of them is the total quantum dimension: $\sqrt2$ is
+$d_\sigma$, the quantum dimension of the single non-abelian object, while
+$\mathcal{D} = 2$ is the norm of the whole object list in the sense of
+Eq.~\eqref{eq:kp}. The Ising category and the toric code share
+$\mathcal{D} = 2$, as they must, both having four sectors' worth of
+squared dimension~\cite{KitaevPreskill2006}.
+
+All braiding data is carried in $\mathbb{Q}(\zeta_{16})$, the cyclotomic
+field of sixteenth roots of unity, represented as an explicit
+eight-dimensional $\mathbb{Q}$-algebra with $\zeta_{16}^8 = -1$. Working
+in an exact field rather than in floating point is what makes the
+identities below decidable, and hence what makes them checkable at all.
+
+\subsection{Hexagon and ribbon equations}
+
+The braiding is specified by four $R$-symbols, $R^{\sigma\sigma}_{1}$,
+$R^{\sigma\sigma}_{\psi}$, $R^{\sigma\psi}_{\sigma}$ and
+$R^{\psi\psi}_{1}$, together with twists $\theta_\sigma$, $\theta_\psi$.
+We verify:
+\begin{itemize}
+\item the six hexagon equations, in the form relating
+  $\mathcal{D}^{-1}(1 \pm R^{\sigma\sigma}_\psi)$ to products of
+  $R$-symbols, together with the three hexagons involving $\psi$;
+\item the four ribbon equations, expressing each squared $R$-symbol
+  through the twists --- for instance
+  $(R^{\sigma\psi}_\sigma)^2 = -1$ and $(R^{\psi\psi}_1)^2 = 1$;
+\item the $R$-matrix squares
+  $(R^{\sigma\sigma}_1)^2 = -\zeta_{16}^6$ and
+  $(R^{\sigma\sigma}_\psi)^2 = +\zeta_{16}^6$; and
+\item the Gauss sum $p_+ = 1 + \mathcal{D}^2\theta_\sigma/2 + \theta_\psi
+  = 2\zeta_{16}$, which fixes the framing anomaly.
+\end{itemize}
+These are the coherence conditions that make the braiding well defined,
+and verifying all of them --- rather than a representative sample --- is
+the point: a braided structure that satisfies five of six hexagons is not
+a braided structure.
+
+\subsection{Knot and link invariants}
+
+From the same data we obtain closed-form invariants.
+
+The trefoil evaluates to
+\begin{equation}
+\bigl\langle \mathrm{trefoil} \bigr\rangle
+ \;=\; \theta_\sigma^{-3}\bigl[(R^{\sigma\sigma}_1)^3 + (R^{\sigma\sigma}_\psi)^3\bigr]
+ \;=\; -\sqrt2 ,
+\label{eq:trefoil}
+\end{equation}
+an exact identity in $\mathbb{Q}(\zeta_{16})$. The figure-eight knot
+gives an unnormalised quantum trace of $-1$, and after dividing by
+$\mathcal{D}/2 = \sqrt2$ --- the normalisation appropriate to the
+$\sigma$-coloured Reshetikhin--Turaev
+invariant~\cite{ReshetikhinTuraev1991,Witten1989} --- yields
+\begin{equation}
+\mathrm{RT}(4_1, \sigma) \;=\; -\frac{1}{\sqrt2} .
+\label{eq:fig8}
+\end{equation}
+Both \eqref{eq:trefoil} and \eqref{eq:fig8} are exact elements of the
+cyclotomic field; \eqref{eq:fig8} is
+$\tfrac12(\zeta_{16}^6 - \zeta_{16}^2)$ in the explicit basis, which is
+$-1/\sqrt2$.
+
+The Hopf link requires a more careful statement than it is usually given.
+What we prove is
+\begin{equation}
+(R^{\sigma\sigma}_1)^2 + (R^{\sigma\sigma}_\psi)^2 \;=\; 0 ,
+\label{eq:hopf}
+\end{equation}
+that is, the $\sigma\sigma$ quantum trace of the squared braiding
+vanishes. The Ising modular $S$-matrix does have $S_{\sigma\sigma} = 0$,
+so \eqref{eq:hopf} is consistent with the expected identification of the
+Hopf-link invariant with an $S$-matrix entry --- but \eqref{eq:hopf} is a
+single-entry computation, and it is not a proof that the diagrammatic
+invariant reproduces the $S$-matrix in general. No $S$-matrix appears in
+the formalised statement. We say this because the natural way to report
+\eqref{eq:hopf} is as an $S$-matrix match, and that report would claim
+more than was verified.
+
+\subsection{The trust boundary: \texttt{native\_decide}}
+\label{subsec:nd}
+
+Every identity in this section is discharged by \texttt{native\_decide}.
+That tactic reduces a decidable proposition by compiling it to machine
+code, executing it, and accepting the result; the resulting proof term
+appeals to an axiom asserting that the compiled evaluation was faithful.
+It is the reason these computations in an eight-dimensional cyclotomic
+algebra complete in seconds rather than exhausting the kernel's reduction
+budget.
+
+The consequence for a reader is precise and worth stating once, clearly.
+For these results the trust base is the Lean~4 kernel \emph{together
+with} the Lean compiler and runtime, rather than the kernel alone. That
+is a strictly larger base than the one underwriting
+Secs.~\ref{sec:density}, \ref{sec:sk}, \ref{sec:gate}
+and~\ref{sec:entropy}, whose results appeal to no axiom beyond the
+ambient three. Of the results this paper puts forward as principal, 18
+carry such an evaluation axiom, and all 18 are in this section and its
+immediate neighbours. We grade them \emph{Theorem (evaluated)} rather
+than \emph{Theorem} throughout, and we do not describe the development as
+kernel-pure. Sec.~\ref{sec:trust} itemises them.
+
+Nothing here suggests the identities are wrong; exact cyclotomic
+arithmetic executed by a compiler is not a plausible source of error, and
+the results agree with the published Ising data. The distinction is about
+what a machine-checked claim means, and a paper whose contribution is
+machine-checking owes its reader that distinction rather than a uniform
+assurance.
+
+\subsection{Witten--Reshetikhin--Turaev partition functions}
+
+\emph{Grade: Encoding.}
+
+The development records two WRT identities: the partition function on
+$S^2 \times S^1$ equals the rank of the category, and the partition
+function on $S^3$ equals $p_+/\mathcal{D}^2$. Both are true by unfolding
+the definitions that name them --- the first because the $S^2 \times S^1$
+partition function is \emph{defined} as the rank, the second because the
+$S^3$ partition function is \emph{defined} as that quotient. They fix the
+Kirby-colour normalisation convention and establish nothing about it.
+
+What a WRT section would need, and what is absent, is invariance under
+the Kirby moves --- the statement that the assigned number depends only
+on the three-manifold and not on the surgery presentation used to
+describe it. The development does contain genuine surrounding material:
+Kirby-move equivalence on surgery presentations as a relation, with
+handle-slide and stabilisation steps, the identification of zero-framed
+surgery on the unknot with $S^2 \times S^1$, and exact lens-space
+evaluations for the Ising category at sixteen framings. But the bridge
+from those to invariance of the invariant is not built, and we do not
+claim it. We also note, since the surrounding literature makes it
+natural to reach for, that no form of the Lickorish--Wallace theorem is
+formalised here.
 
 %% =====================================================================
 %% §8 — Drinfeld centre  [TO DRAFT]
 %% =====================================================================
-\section{The Drinfeld centre and a non-abelian anyon spectrum}
+\section{The Drinfeld double and a non-abelian anyon spectrum}
 \label{sec:drinfeld}
 
-%% TODO(redraft)
+The strongest result in this section holds for an arbitrary finite
+group. For every finite group $G$ and every commutative ring $k$ we
+construct the Drinfeld double $D(G)$ as the free $k$-module on
+$G \times G$, carrying the twisted convolution
+\[
+  (f \cdot f')(a,h) \;=\; \sum_{g \in G} f(a,g)\,
+  f'\bigl(g^{-1}ag,\; g^{-1}h\bigr),
+\]
+and prove that this product is associative and unital on both sides,
+with unit $\sum_a \delta_a \otimes e$. On basis elements the product
+evaluates to
+\begin{equation}
+  (\delta_a \otimes g_1)(\delta_b \otimes g_2) \;=\;
+  \begin{cases}
+    \delta_a \otimes g_1 g_2, & a = g_1 b g_1^{-1},\\
+    0, & \text{otherwise,}
+  \end{cases}
+  \label{eq:ddbasis}
+\end{equation}
+which is the multiplication rule Kitaev writes for the quantum double in
+Sec.~5.1 of Ref.~\cite{KitaevAnyons2003}. The rank is $|G|^2$. All are
+\emph{Theorem}-grade: kernel-checked, universally quantified over $G$
+and $k$, and consuming no hypothesis.
+
+What is \emph{not} formalised is the rest of the Hopf structure.
+Kitaev's comultiplication, counit, antipode and $R$-matrix, which are
+what make $D(G)$ quasi-triangular and therefore make its representation
+category braided, have no counterpart here.
+
+\subsection{The $S_3$ spectrum}
+
+The $S_3$ spectrum is a weaker kind of object and we state its status
+before its content. The eight anyons are introduced as an inductive type
+with eight constructors and their quantum dimensions are assigned by a
+table, so the statement $|\mathrm{Irr}\,D(S_3)| = 8$ is
+\emph{Encoding}-grade: it unfolds to the declaration that names it and
+derives nothing from $S_3$.
+
+The identities built over that table are \emph{Instance}-grade, and they
+are not empty, because a mis-assigned table would break them. The class
+equation $1 + 3 + 2 = 6$ holds; the orbit--stabiliser relation
+$|C_{S_3}(g)|\cdot|K_g| = 6$ holds for each of the three classes; the
+quantum dimensions $(1,1,2,3,3,2,2,2)$ square-sum to the global
+dimension $\mathcal{D}^2 = 36 = |S_3|^2$; the charge sector carries a
+$d = 2$ object and the transposition-flux sector two objects of $d = 3$;
+and the fusion-consistency check
+$d_{A_3}^2 = d_{A_1} + d_{A_2} + d_{A_3}$, that is $4 = 1+1+2$, holds.
+Six of the eight objects have $d > 1$, so the model is non-abelian in
+the sense that matters for braiding: the protected space is
+multi-dimensional and the braid group acts on it non-trivially.
+
+The table itself is not our invention and can be checked against the
+literature. Kitaev, Sec.~5.1 of Ref.~\cite{KitaevAnyons2003}, labels the
+irreducibles of $D(G)$ by pairs $(C,\chi)$ with $C$ a conjugacy class
+and $\chi$ an irreducible representation of the centraliser of any
+element of $C$, and records for $G = S_3$ exactly the dimensionalities
+$1,1,2$; $2,2,2$; $3,3$.
+
+\subsection{Two declarations that are not used}
+
+Two declarations in the development are named for Drinfeld-double
+dimension counts but state something else. One unfolds to
+$|G| \cdot |G| = |G|^2$ and the other to the implication from
+$\sum_i n_i = \sum_i n_i$ to itself. Both are true of any natural
+numbers whatever and neither constrains $D(G)$, so neither is used here.
+The eight-object count is carried by the enumeration above instead.
+
+\subsection{The abelian counterpoint}
+
+The abelian counterpoint is the $\mathbb{Z}_2$ case, where the same
+construction gives the toric code. Here the centre has four simple
+objects $\{1, e, m, \varepsilon\}$, the fusion rules close on the Klein
+four-group with every object its own antiparticle, all four quantum
+dimensions are $1$, and the defining mutual statistic $R(e,m) = -1$
+holds. These carry the same \emph{Instance} grade and the same caveat:
+the anyon labels and the braiding phase are declared and then checked
+for consistency, not derived from a lattice Hamiltonian.
+
+The contrast with $S_3$ is the point. Passing from an abelian to a
+non-abelian gauge group takes the global dimension from
+$\mathcal{D}^2 = 4$ to $\mathcal{D}^2 = 36$ and introduces objects of
+dimension $2$ and $3$, which is what a braid representation needs in
+order to be more than a collection of phases. (The toric code shares its
+$\mathcal{D}^2 = 4$ with the Ising category of Sec.~\ref{sec:ising},
+which is a coincidence of the sum of squared dimensions and not a
+relation between the two categories: the Ising value comes from
+$1 + 2 + 1$ over three objects, the toric-code value from $1+1+1+1$ over
+four.)
+
+\subsection{Two limits}
+
+First, the equivalence
+$\mathcal{Z}(\mathrm{Vec}_{S_3}) \simeq \mathrm{Rep}(D(S_3))$ organises
+this section but is not proved in it. We verify the algebra $D(G)$ on
+one side and enumerate the spectrum on the other; the functor between
+them is not constructed.
+
+Second, a non-abelian spectrum is not by itself a universal one.
+Kitaev's braiding-based universality construction is built on $S_5$, and
+he notes there that unsolvability of the group appears to be what the
+argument needs (Sec.~7 of Ref.~\cite{KitaevAnyons2003}); $S_3$ is
+solvable. The universality result of this paper is the Fibonacci one of
+Sec.~\ref{sec:density}, which is proved from an explicit
+$\mathrm{SU}(2)$ representation and consumes nothing from this section.
+
+% NOTE (redraft): the following are measured vacuous or near-vacuous and
+% are NOT cited above: equivalence_preserves_braiding (`True`);
+% center_is_braided_monoidal (Nonempty (Iso (X (x) Y) (X (x) Y)), i.e.
+% Iso.refl); s3_equivalence_verified and nonabelian_gauge_still_doubled_S3
+% (both literally `6 ^ 2 = 36`, same statement under two names);
+% center_is_doubled (forall n : Z, 8 | 8 * n);
+% dg_module_half_braiding_bijection (conjugation is a group action);
+% sn_vecZ2_center_dim_sq (2^2 = 4); sn_toric_code_logical_qubits (2 = 2*1);
+% sn_vertex_operator_projector (forall b : Bool, (b && b) = b). Filed.
+
+% TODO: Dijkgraaf-Pasquier-Roche (1991) is named in the Lean module
+% docstrings as the source for the D(G) anyon classification but is NOT in
+% the local corpus. Kitaev Sec. 5.1 covers the same claim and IS held, so
+% the section stands on it; add DPR only after acquiring it.
 
 %% =====================================================================
 %% §9 — Categorical entanglement entropy  [TO DRAFT]
@@ -700,15 +1262,128 @@ this layer establishes.
 \section{Open problems}
 \label{sec:open}
 
-%% TODO(redraft)
+We list these in the order in which closing them would most improve the
+development, which is not the order of the sections.
+
+\paragraph{Connect the braid representation to the fusion category.}
+This is the most valuable single addition, and Sec.~\ref{subsec:posited}
+states the gap precisely: the unitary pair from which
+Sec.~\ref{sec:density}'s representation is built is not proved to be the
+$F$- and $R$-symbol data of the Fibonacci category described in
+Sec.~\ref{sec:modular}. A pentagon equation is available for a different
+$F$-matrix in a different gauge over a different ring, and no gauge
+transformation relating the two is constructed. Building that bridge
+would convert the density theorem from a statement about an explicit
+matrix pair into a statement about Fibonacci anyons.
+
+\paragraph{Kirby-move invariance.}
+The Witten--Reshetikhin--Turaev material of Sec.~\ref{sec:ising} fixes a
+normalisation and proves nothing about it. The surrounding
+apparatus --- Kirby-move equivalence as a relation on surgery
+presentations, handle slides, stabilisation, and exact lens-space
+evaluations --- exists; what is missing is the theorem that the assigned
+number is an invariant of the three-manifold rather than of the
+presentation.
+
+\paragraph{An adiabatic theorem for the dark state.}
+Section~\ref{sec:gate} proves the endpoint sign flip and the vanishing
+of the dynamical phase, which are the two ingredients of a $-1$ geometric
+phase, but not the transport statement that would make it a holonomy.
+
+\paragraph{Discharge the Casini--Huerta hypothesis package.}
+The two biconditionals of Sec.~\ref{sec:entropy} are conditional on an
+assumed form for the entropy functional. Deriving that form, rather than
+assuming it, would upgrade them from \emph{Conditional} to
+\emph{Theorem}.
+
+\paragraph{Eliminate the evaluation axioms.}
+The Ising identities of Sec.~\ref{sec:ising} are correct but
+evaluation-checked. Replacing \texttt{native\_decide} with kernel
+reduction --- most plausibly by a better normal form for
+$\mathbb{Q}(\zeta_{16})$ arithmetic --- would put the entire paper on the
+same trust base.
+
+\paragraph{Complete the Drinfeld double.}
+Section~\ref{sec:drinfeld} constructs the algebra $D(G)$ for arbitrary
+finite $G$ but not its comultiplication, counit, antipode or
+$R$-matrix, so the quasi-triangular structure that makes
+$\mathrm{Rep}\,D(G)$ braided is absent, as is the functor realising
+$\mathcal{Z}(\mathrm{Vec}_G) \simeq \mathrm{Rep}(D(G))$. Deriving the
+$(C,\chi)$ spectrum from $G$, rather than declaring it, belongs here
+too, as does the full $8\times8$ fusion table of $D(S_3)$.
+
+\paragraph{Generalise the Verlinde formula.}
+The development defines an abstract Verlinde predicate on pre-modular
+data that no object discharges. Proving it for a general modular tensor
+category, rather than level by level, would replace an \emph{Instance}
+grade with a \emph{Theorem}.
 
 %% =====================================================================
-%% Trust base (unnumbered)  [TO DRAFT]
+%% Trust base (unnumbered)
 %% =====================================================================
 \section*{Formalisation and trust base}
 \label{sec:trust}
 
-%% TODO(redraft)
+\paragraph{Ambient axioms.}
+Results graded \emph{Theorem}, \emph{Conditional}, \emph{Instance} or
+\emph{Encoding} in this paper appeal to no axiom beyond Lean~4's
+ambient three: \texttt{propext}, \texttt{Classical.choice} and
+\texttt{Quot.sound}. The development declares no axiom of its own: there
+is no hand-written \texttt{axiom} in it.
+
+\paragraph{Evaluation axioms.}
+That last sentence is true and, taken alone, would mislead, so we state
+the complement. Results graded \emph{Theorem (evaluated)} are discharged
+by \texttt{native\_decide}, which compiles a decidable proposition to
+machine code, runs it, and accepts the outcome via a generated
+per-theorem axiom. Such an axiom is not hand-written and so does not
+appear in a census of declared axioms, but it does extend the trust base
+from the kernel to the kernel plus the compiler and runtime.
+
+Of the results this paper puts forward as principal, \textbf{18} carry
+such an axiom. They are the six hexagon equations, the four ribbon
+equations, the two $R$-matrix squares, the $R$-matrix product, the Gauss
+sum, the trefoil invariant, the Hopf-link trace, and the two
+figure-eight identities --- that is, the whole of
+Sec.~\ref{sec:ising}'s braiding and knot content. Further results
+elsewhere in the development also use \texttt{native\_decide}, including
+the two algebra equivalences of Sec.~\ref{sec:qgroups}, the
+Frobenius--Perron dimension identities of Sec.~\ref{sec:modular} and the
+Fibonacci pentagon equation; the count of 18 is over this paper's
+principal results and is not a census of the development.
+
+The principal results of Secs.~\ref{sec:density}, \ref{sec:sk},
+\ref{sec:gate} and \ref{sec:entropy} --- including the density theorem
+and the compilation theorem --- carry no evaluation axiom.
+
+\paragraph{Assumed hypotheses.}
+Two hypotheses are assumed rather than proved, and both are stated where
+they are used rather than absorbed into definitions. The horizon
+boundary condition of Sec.~\ref{sec:entropy} is a five-field predicate
+(positivity, positive area-law coefficient, monotonicity, modular
+invariance, anomaly matching); it is exhibited as satisfiable by the
+Fibonacci horizon and as failed by the trivially abelian one, so it is
+neither empty nor universal. The Casini--Huerta hypothesis package
+assumes that the entropy functional takes the
+Holzhey--Larsen--Wilczek form on an interval. Results depending on
+either are graded \emph{Conditional}.
+
+\paragraph{Incomplete proofs.}
+There are no \texttt{sorry} placeholders in the results reported here.
+
+\paragraph{Declarations not used as backing.}
+The development contains declarations whose names describe results
+stronger than their statements --- among them several that reduce to
+\texttt{True}, to $a\cdot a = a^2$, to $6^2 = 36$, or to an implication
+from a reflexivity hypothesis to itself. None is cited as backing
+anywhere in this paper; where a section's argument would naturally have
+reached for one, the section says so and routes around it
+(Secs.~\ref{sec:qgroups}, \ref{sec:drinfeld}).
+
+\paragraph{Toolchain.}
+Lean~4 with Mathlib at the pinned revision recorded in the public
+repository; every result is rebuilt from source by the repository's
+continuous build.
 
 \section*{Methods and tools disclosure}
 The formal verification layer of this work was developed with
