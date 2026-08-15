@@ -7532,6 +7532,53 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:L1:5.1",
+      "status": "fixed",
+      "evidence": "STALE — remediated in the paper, ledger never updated. Re-measured at HEAD 2026-08-14: grep for second_sound_graviton_not_derived_DOF over papers/L1/paper_draft.tex returns ZERO matches, and the forensic paragraph the Fix targeted no longer exists. Confirmed by the 2026-08-14 review staleness audit (S.1 table row 1).",
+      "superseded_by": "papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md",
+      "date": "2026-08-14"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:L1:5.3",
+      "status": "fixed",
+      "evidence": "STALE — remediated in the paper, ledger never updated. Re-measured at HEAD 2026-08-14: grep for \"and lemmas\" over papers/L1/paper_draft.tex returns nothing. Separately, the count itself was stale at 21 and was corrected to 32 in commit 963e2c64 (32 theorems/lemmas measured in GravitationalWaves.lean at HEAD), so both the wording and the number are now right.",
+      "superseded_by": "papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md",
+      "date": "2026-08-14"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:L1:5.2",
+      "status": "fixed",
+      "evidence": "SUPERSEDED — its recommended remedy was WRONG and made the disclosure less honest. This finding told the paper to replace \"at the placeholder Gamma_H/c^2 ~ 1e-30 value\" with \"at the project current conservative upper bound |gamma| <= 1e-30\". That edit was applied verbatim and removed the word \"placeholder\" that constants.py, provenance.py, dispersion_relation.py and GravitationalWaves.lean all still use, while the paper simultaneously gained the stronger \"closed in the Lean rather than argued\" framing. Superseded by review:2026-08-14-l1-stage13:L1:2.2, whose fix restores the placeholder disclosure and downgrades the claim to conditional in BOTH L1 and D3.",
+      "superseded_by": "papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md",
+      "date": "2026-08-14"
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:S.1",
+      "status": "fixed",
+      "evidence": "All three stale minors closed through the ledger with re-measured evidence rather than left open: 5.1 and 5.3 as STALE (remediated in the paper, ledger never updated — both re-greped at HEAD), and 5.2 as SUPERSEDED, because its recommended remedy was wrong. 5.2 had told the paper to drop the word \"placeholder\" in favour of \"the project conservative upper bound\"; that edit was applied verbatim and made the disclosure less honest. Its supersessor, 2.2, restores the placeholder disclosure and downgrades \"closed in the Lean rather than argued\" to a conditional in BOTH L1 and D3 — D3 because I had propagated the same false framing into it earlier in this same pass.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; s=json.load(open('docs/review_finding_supersessions.json')); ids={r.get('finding_id') for r in (s if isinstance(s,list) else s.get('records',s.get('supersessions',[])))}; need={'review:2026-05-11-1550-bundle-stage13:L1:5.1','review:2026-05-11-1550-bundle-stage13:L1:5.3'}; assert need <= ids, sorted(need-ids)\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; s=json.load(open('docs/review_finding_supersessions.json')); ids={r.get('finding_id') for r in (s if isinstance(s,list) else s.get('records',s.get('supersessions',[])))}; need={'review:2026-05-11-1550-bundle-stage13:L1:5.1','review:2026-05-11-1550-bundle-stage13:L1:5.3'}; assert need <= ids, sorted(need-ids)\"",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:2.2",
+      "status": "fixed",
+      "evidence": "L1 recovery-path 3 now states the path is NOT closed. The theorem takes |gamma| <= 1e-30 as a HYPOTHESIS and proves nothing about whether the bound holds; the prose says so, names 1e-30 a Phase 6a scaffold value that is neither derived nor measured, and concludes only that a placeholder-sized correction would not relax the constraint while a larger one is not excluded. The same correction was applied to D3, where I had propagated the identical \"closed in the Lean rather than argued\" claim while adding the recovery paths earlier in this pass — it broke across a line there, so the finding grep did not see it.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"closed in the Lean rather than\" papers/L1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q \"closed in the Lean rather than\" papers/L1/paper_draft.tex",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }

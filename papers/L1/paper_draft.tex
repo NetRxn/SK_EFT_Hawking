@@ -377,12 +377,17 @@ the leading term in a derivative expansion. If $\chivest$ varies
 with frequency, the leading-order constraint could in principle be
 relaxed by a near-cancellation in the LIGO band. The
 SK--EFT dispersion correction is the leading frequency dependence in
-the present framework, and this path is closed in the Lean rather than
-argued: \texttt{vestigial\_dispersion\_below\_ligo\_at\_inspiral\_peak}
-proves that at the project's conservative upper bound
-$|\gamma| \leq 10^{-30}$ on $\Gamma_H/\cGW^2$ the correction at the
-$100\,\mathrm{Hz}$ inspiral peak stays inside the GW170817 tolerance,
-so it does not relax the constraint. The general form is
+the present framework, and this path is \emph{not} closed --- what we
+can say is conditional.
+\texttt{vestigial\_dispersion\_below\_ligo\_at\_inspiral\_peak}
+takes $|\gamma| \leq 10^{-30}$ on $\Gamma_H/\cGW^2$ as a
+\emph{hypothesis} and proves that under it the correction at the
+$100\,\mathrm{Hz}$ inspiral peak stays inside the GW170817 tolerance.
+It proves nothing about whether that bound holds: $10^{-30}$ is a
+Phase~6a scaffold value, chosen so the correction would sit well below
+the cap, and it is neither derived nor measured. So a
+placeholder-sized correction would not relax the constraint; a larger
+one is not excluded. The general form is
 \texttt{dispersion\_within\_ligo\_iff}, a biconditional exchanging the
 correction's tolerance for $|\gamma| \leq \mathrm{tol}/\omega$;
 \texttt{dispersion\_correction\_abs\_bound},
