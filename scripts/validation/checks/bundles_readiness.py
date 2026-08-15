@@ -1895,11 +1895,10 @@ def check_bundle_metadata_matches_graph() -> CheckResult:
 @register_check("readiness_verdicts_agree",
                 "The heatmap and the submission gate return the same per-bundle verdict")
 def check_readiness_verdicts_agree() -> CheckResult:
-    """CHECK: cross-validate the two independent readiness verdicts.
+    """CHECK: cross-validate the two readiness verdicts. They are NOT independent.
 
     Added 2026-07-31 (D12 Stage-13 round-6 BLOCKER 8.1). Two subsystems compute
-    a per-bundle readiness verdict from different inputs and had no consistency
-    obligation between them:
+    a per-bundle readiness verdict and had no consistency obligation between them:
 
       * `scripts/bundle_readiness.py` counts findings straight off the review
         files, per bundle, and rendered D11/D12 RED with unclosed blockers;
@@ -1910,6 +1909,24 @@ def check_readiness_verdicts_agree() -> CheckResult:
     so the reassuring one could be quoted as the verdict. This check asserts the
     direction that matters: a bundle the heatmap calls RED (open blocking
     findings) must NOT be green or yellow at the submission gate.
+
+    ⚠️ **THIS IS NOT AN INDEPENDENCE ARGUMENT, and the docstring used to claim it was**
+    ("from different inputs" — corrected 2026-08-15, D12 round-6 8.2). Both sides call
+    `build_graph.extract_review_finding_nodes()` and both attribute a finding through
+    `meta['inferred_bundle']`, derived from the review filename stem. **Every failure in
+    that shared layer moves both verdicts the same way**, so this check cannot see it: a
+    review filed as `D12-round7.md` infers no bundle, the heatmap drops it AND no FLAGS
+    edge is emitted, giving heatmap-GREEN and gate-passed together — and the RED loop's
+    `continue` means the guard never even runs. Cross-validating two consumers of one
+    input detects disagreement between the consumers, nothing about the input.
+
+    The floor on that shared layer is therefore a SEPARATE check, not this one: the
+    `findings_reach_the_graph` leg of `graph_integrity` (`checks/graph_atlas.py`)
+    asserts both that a finding resolving to bundle X flags `paper:X`, and that every
+    review file named after a roster bundle yields at least one finding resolving to
+    it. Read them as a pair — this check is worthless without that one. (Note it is a
+    Detail inside `graph_integrity`, not a registered check in its own right, so
+    `validate.py --check findings_reach_the_graph` does not resolve.)
     """
     try:
         from build_graph import build_graph_json

@@ -9355,6 +9355,21 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-07-31-1524-internal-adversarial:D12:8.2",
+      "status": "fixed",
+      "evidence": "Re-measured all three parts at HEAD; two were remediated by later rounds and the third was live. MUT1 (heatmap-RED with no gate nodes rated a warning) is FIXED — that branch now does disagreements += 1 and is annotated 'FAIL, not warn (D12 round-7 finding 8.2)'. MUT3 (both exception paths returning passed=True) is FIXED — the ImportError handler and the aggregate handler each return passed=False, and 'no ReadinessGate nodes exist' does too. The structural floor this finding asked for also already exists: the findings_reach_the_graph leg of graph_integrity asserts both that a finding resolving to bundle X flags paper:X and that every review file named after a roster bundle yields a finding resolving to it — green over 1027 bundle-resolved findings. What was still LIVE is what the finding named as Structural: the docstring asserted the two verdicts are computed 'from different inputs', which is false — both call extract_review_finding_nodes() and both attribute through meta['inferred_bundle'] from the review filename, so every failure in that shared layer moves both verdicts the same way. A wrong architecture claim in the guard's own docstring is the kind that gets quoted as an independence argument. Corrected: the summary line now reads 'They are NOT independent', the shared layer and the exact heatmap-GREEN-plus-gate-passed failure mode are spelled out, and the docstring names the separate check that actually floors that layer.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "supersedes_inert_open": true,
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"\nimport sys; sys.path.insert(0,\\\"scripts\\\")\nfrom validation.checks.bundles_readiness import check_readiness_verdicts_agree as c\nd=(c.__doc__ or \\\"\\\").replace(\\\"**\\\",\\\"\\\")\nassert \\\"NOT AN INDEPENDENCE ARGUMENT\\\" in d, \\\"docstring does not disclose the shared attribution layer\\\"\nassert \\\"findings_reach_the_graph\\\" in d, \\\"docstring does not name the floor guarding that layer\\\"\nassert \\\"They are NOT independent\\\" in d.split(chr(10))[0], \\\"summary line still reads as an independence claim\\\"\n\" && uv run python scripts/validate.py --check readiness_verdicts_agree",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
