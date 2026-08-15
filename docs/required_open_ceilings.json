@@ -4,22 +4,9 @@
   "_measured": "2026-08-12 via validation.checks.bundles_readiness._readiness_aggregate(), summing every severity in BLOCKING_SEVERITIES.",
   "_widened": "2026-08-12: the leg counted `severity_mix['major']` ONLY, so the open CRITICALS that DO reach a bundle were ratcheted by nothing — leg 2 covers only the *unattributed* population. Ceilings were re-derived against the wider predicate (183 major -> 232 blocking). ⚠️ This is NOT a ratchet being raised: a broader predicate gets its own baseline, frozen at the live count on the day it was introduced, and may only shrink from here. The per-bundle deltas are exactly the criticals that were previously uncounted (D8 and D10 went 0 -> 17, having carried criticals and no majors at all).",
   "ceilings": {
-    "D1": 14,
-    "D2": 14,
-    "D3": 7,
-    "D5": 9,
-    "D7": 4,
-    "D8": 17,
-    "D10": 17,
-    "D11": 18,
-    "D12": 44,
-    "E1": 4,
-    "F": 17,
-    "I1": 34,
-    "I2": 11,
-    "I3": 7,
-    "L1": 2,
-    "L2": 8,
-    "L3": 5
-  }
+    "D12": 5,
+    "L1": 1
+  },
+  "measured": "2026-08-15",
+  "note": "Re-frozen 2026-08-15 to the measured population. The prior set totalled 232 against a live 6, so every per-bundle ratchet carried headroom and could not fire — 245 closures landed on 2026-08-14 and the ceilings were never lowered in the commits that shrank the population. A ratchet with headroom is not a loose guard, it is no guard. An ABSENT bundle reads 0, so omission is strict."
 }
