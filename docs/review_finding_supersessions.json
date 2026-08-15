@@ -9370,6 +9370,20 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-07-31-1823-internal-adversarial:D12:8.6",
+      "status": "fixed",
+      "evidence": "STALE, and stale by DOCTRINE rather than by code. This finding says 7 bundles assert a forbidden pair (freshness_stale=true with blockers_open>0) and validate.py is red. Measured at HEAD: 13 bundles assert that pair and bundle_source_freshness passes clean. Both facts hold and neither is a defect, because the rule was withdrawn. LATE_PHASE6_ABSORPTION_PROTOCOL.md:237 records the correction made by D12 round-11 8.6: freshness_stale is an MTIME SIGNAL owned by check_bundle_source_freshness.py, meaning a source paper is newer than last_lift, not a readiness verdict. The old clearing rule was violated on every run by two writers, and the doc notes the overload misled two reviewers and one remediation; this finding is one of them. Under the corrected semantics the pair is legal, so there is nothing to remediate. The Stage-F exit gate is stage13_redo_required, which no mtime writer clears.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"\nimport re\nt=open(\\\"docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md\\\").read()\nt=re.sub(r\\\"\\s+\\\",\\\" \\\",t)\nassert \\\"the field is an mtime signal, not a readiness verdict\\\" in t, \\\"the protocol no longer records that freshness_stale is an mtime signal\\\"\nassert \\\"Stage-F exit gate is\\\" in t and \\\"stage13_redo_required\\\" in t, \\\"the protocol does not name stage13_redo_required as the exit gate\\\"\n\" && uv run python scripts/validate.py --check bundle_source_freshness",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
