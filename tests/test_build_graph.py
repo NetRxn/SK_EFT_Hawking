@@ -1416,3 +1416,89 @@ class TestBlockedByIsADagWithAConsumer:
             f"BLOCKED_BY contains a cycle: {cycles[:3]}. Every finding in it waits on "
             f"another finding in it, so none is ever dispatchable and the set is "
             f"invisibly stuck.")
+
+
+class TestSeedMarkerDoesNotSuppressMinting:
+    """A marker-bearing section MUST still mint a ReviewFinding node.
+
+    ⚠️ THIS PINS A DELIBERATE NON-CONTAINMENT, AND IT IS THE REASSURING DIRECTION THAT
+    IS WRONG. `scripts/build_graph.py` documents that skipping sections carrying
+    `seed_journal.SEED_MARKER` was proposed by the 2026-08-15 residue finding and
+    REJECTED: two entries depend on minting a seeded section
+    (`bundle_stage13_claim_consistent`'s ratchet-breach leg and
+    `review_severity_declared`'s dangling-`Blocked-by` leg), so the containment would
+    force both to fixtures and RAISE `FIXTURE_ONLY_CEILING` — a ceiling the project
+    only lets shrink.
+
+    Why this test exists: `seed_journal.py`'s module docstring asserted the OPPOSITE —
+    that "the graph extractor also refuses to mint a marker-bearing finding, so even
+    un-repaired residue cannot become a blocking finding". Two source-of-truth
+    docstrings, flatly contradictory, and the false one said the hazard was contained.
+    Re-measuring a filed finding against the CODE rather than the docstring is what
+    surfaced it; the docstring was corrected 2026-08-15 and this test is what keeps it
+    corrected.
+
+    It fires in BOTH directions a future change could break it:
+      * someone "fixes" the extractor to skip markers -> this goes red, and they are
+        forced to confront the fixture-ceiling cost rather than discover it later;
+      * someone re-writes the docstring back to the comfortable claim -> the claim is
+        now contradicted by a green test that says otherwise.
+
+    The marker buys DETECTABILITY (`seed_residue_absent` reads the corpus), never
+    immunity. Residue mints a node, emits a `FLAGS` edge, and counts against a bundle
+    ratchet, which is exactly how the 2026-08-12 killed run put a fabricated CRITICAL
+    on D10 for three days.
+    """
+
+    def test_a_marker_bearing_section_still_mints(self, tmp_path, monkeypatch):
+        """FIRES IF THE EXTRACTOR IS EVER TAUGHT TO SKIP THE MARKER."""
+        import build_graph as bg
+        from seed_journal import SEED_MARKER
+
+        d = tmp_path / "papers" / "AutomatedReviews" / "2026-09-01-seedprobe"
+        d.mkdir(parents=True)
+        # Frontmatter is not decoration: without it `severity`, `paper` and
+        # `bundle_target` all parse as None, and the test would assert nothing about
+        # how residue actually lands. A first draft of this fixture omitted it and the
+        # severity leg failed for that reason rather than for the reason it exists.
+        (d / "D12.md").write_text(
+            "---\n"
+            "paper: D12\n"
+            "bundle: D12\n"
+            "bundle_target: D12\n"
+            "tier: 1\n"
+            "reviewer: lead\n"
+            "model: claude-opus-5\n"
+            "review_date: 2026-09-01T00:00:00Z\n"
+            "readiness_gates_version: 1\n"
+            "kind: targeted\n"
+            "---\n\n"
+            "### 1.1 — a defect carrying the test-suite marker\n\n"
+            "- **Severity:** critical\n\n"
+            f"Body text. <!-- {SEED_MARKER} -->\n"
+        )
+        monkeypatch.setattr(bg, "PROJECT_ROOT", tmp_path)
+        nodes = bg.extract_review_finding_nodes()
+
+        assert nodes, (
+            "a marker-bearing section minted NOTHING. Either the extractor now skips "
+            f"{SEED_MARKER!r} — which build_graph.py documents as rejected, because it "
+            "forces two production-seeded entries to fixtures and raises "
+            "FIXTURE_ONLY_CEILING — or the parse path broke. If the skip was added "
+            "deliberately, the seed_journal.py docstring, this test and the "
+            "build_graph.py rationale all have to change together."
+        )
+        # ⚠️ `severity` is under `meta`, not top-level. A first draft read it off the
+        # node root, got None, and failed for a reason that had nothing to do with the
+        # marker — a test that fails for the wrong reason is not evidence.
+        assert any(n["meta"].get("severity") == "critical" for n in nodes), (
+            "the marker-bearing section minted, but not at the declared severity, so "
+            "residue would land as something other than what the corpus says it is. "
+            f"got: {[n['meta'].get('severity') for n in nodes]}"
+        )
+        assert any(n["meta"].get("status") == "open" for n in nodes), (
+            "the marker-bearing section minted, but not OPEN — which is the property "
+            "that makes residue count against a bundle ratchet and hold the submission "
+            "gate. This is the leg that matters: a fabricated finding is only harmful "
+            "because it lands open."
+        )

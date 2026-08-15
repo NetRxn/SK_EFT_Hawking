@@ -53,9 +53,25 @@ safety mechanism into a corruption mechanism.
 ⚠️ **THE MARKER IS MANDATORY IN THE REVIEW CORPUS.** A seed under
 `papers/AutomatedReviews/` must contain `SEED_MARKER`, and `seeded_mutation` refuses the
 seed otherwise. That is what makes residue *detectable by reading the corpus*, which is
-what lets the guard check assert an outcome instead of trusting this module. The graph
-extractor also refuses to mint a marker-bearing finding, so even un-repaired residue
-cannot become a blocking finding.
+what lets the guard check assert an outcome instead of trusting this module.
+
+⚠️ **THE MARKER DOES NOT MAKE RESIDUE HARMLESS — the extractor still mints it.** An earlier
+version of this docstring claimed the graph extractor refuses to mint a marker-bearing
+finding, so that un-repaired residue could not become a blocking finding. **That is false,
+and it was false in the reassuring direction.** `scripts/build_graph.py` documents at
+length that exactly this containment was considered and REJECTED: skipping marker-bearing
+sections would make the finding-minting path impossible to production-seed, and two
+entries depend on minting a seeded section (`bundle_stage13_claim_consistent`'s
+ratchet-breach leg and `review_severity_declared`'s dangling-`Blocked-by` leg), so both
+would fall back to fixtures and raise `FIXTURE_ONLY_CEILING` — a ceiling the project only
+lets shrink. Residue in the corpus **does** mint a node, emit a `FLAGS` edge and count
+against a bundle ratchet. The marker buys DETECTABILITY, not immunity, and the containment
+is the three independent consumers below — not a blind spot in the extractor.
+
+(Corrected 2026-08-15. The wrong claim was found while re-measuring a filed finding before
+acting on it: the docstring said the race could not mint a fabricated CRITICAL, `build_graph`
+said it could, and the code agreed with `build_graph`. Judging substrate strength from a
+docstring rather than the code nearly retracted a correct finding.)
 
 USAGE
 -----
