@@ -68,3 +68,40 @@ the false theorem and reported green.
   survives looking valid. That one was fixed with a per-path lock; this one is a *derived
   artifact* rather than a production file, so the lock is not the same lock.
 - **Cache:** N/A.
+
+---
+
+## ⚠️ AMENDED 2026-08-15, after repairing it — the diagnosis above is the SYMPTOM, not the cause
+
+The account above says a backgrounded extraction clobbered a merged file. That is what it
+looked like, and it is not what happened. Correcting it here rather than rewriting, because
+how the wrong diagnosis survived a verification is the more useful half.
+
+**The actual cause.** `lake build SKEFTHawking.ExtractDeps` was run on `main` *before*
+`redraft/D3` merged, so `.lake` held **pre-correction oleans**. `lean_deps.json` is not a file
+that was overwritten once — it is **regenerated on demand from that build**. So *any* consumer
+that triggers extraction rewrites the correct committed graph with the stale one. It happened
+at least twice: once from an explicit background run, and again from `bundle_readiness.py`
+**immediately after the file was restored and verified**.
+
+**Why the verification passed anyway.** The restore was confirmed by reading the artifact —
+40 774 declarations, four post-correction names present, three superseded names absent. All
+true at the instant of measurement, and false minutes later. Checking the artifact rather than
+the thing that produces it is the proxy-versus-decider error, committed while auditing others
+for it.
+
+**The repair that actually worked:** rebuild `ExtractDeps` against the merged sources (10 827
+jobs), then restore the declaration set from D3's own regeneration. `formula_grounding` then
+reads 525 refs / 525 resolve / 0 dangling. The hash over current sources is now *true* rather
+than accidental, because the only Lean edits after D3 were docstrings and the payload carries
+no docstring field — `name`, `type`, `kind`, `module`, axiom and name dependencies only.
+
+**So §1.1's Fix is insufficient as written.** Stamping the build alongside the source hash does
+not catch this: the build was internally consistent, just *older than HEAD*. The extractor must
+also refuse when `.lake` predates the merged sources — staleness of the INPUT, not only
+movement of the sources mid-run.
+
+**What actually caught it:** the `formula_grounding` pre-commit hook, which refused a commit
+whose message announced nine successful merges, on `1 dangling`. The dangling name mattered —
+`a4_alpha_neg` had become `a4_alpha_eq_zero` precisely because the old statement turned false,
+so a consumer resolving against the stale graph would have found the false theorem and passed.
