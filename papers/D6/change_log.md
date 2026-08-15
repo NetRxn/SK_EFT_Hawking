@@ -1,5 +1,45 @@
 # Bundle D6 — Change Log
 
+## 2026-08-15 — Stage-10 full redraft (`redraft/D6`)
+
+- Source: Stage-10 redraft. Every apex theorem's Lean **statement** read directly; four
+  primary sources (AGP 2006 quant-ph/0504218; Williamson–Yoder 2410.02213v2; Komoto–Kasai
+  2412.21171v4; Babbush et al. 2603.28846v2) read at page level.
+- Lift action: full rewrite. The draft was a five-result "substrate" paper; four of the
+  five results lost their warrant against the sources and are removed, not shortened.
+  §2 (a cross-reference with no content), §3 (Williamson–Yoder), §4 (APM-LDPC),
+  §5 (Shor T-gate counts) and §6 (W-state QFT) are deleted in full, together with their
+  bibliography entries, so no citation survives a claim the paper no longer makes.
+- What replaced them: the concatenated-Steane threshold chain, respined on what the
+  formalization actually found — the recursion needs only sub-multiplicativity of joint
+  failure probabilities, not independence, and only an upper bound on each rectangle's
+  malignant-pair count, not equality. Both weakenings change which noise models the bound
+  covers. New §V.C states which half of the AGP argument is formalized (the combinatorial
+  half) and which is not ("good implies correct", and the Steane code's distance, which is
+  a record field rather than a theorem). New Table I gives AGP's four malignant-pair
+  counts and their inverses.
+- AGP accounting corrected from the primary source: their rigorous threshold is
+  `1/A'' = 2.739e-5` after a cubic-term correction (`A → A' ≈ 36 108`) and an
+  ancilla-acceptance correction (`A' → A'' ≈ 36 511`). `1/A_CNOT = 2.838e-5` is an
+  intermediate quantity, and §V now says which of the two the Lean certifies and why the
+  pair-failure recursion is bounded by the uncorrected count.
+- Title changed to *Minimal Hypotheses for the Aliferis–Gottesman–Preskill Threshold
+  Recursion, Machine-Checked in Lean 4*. The previous title named three results the
+  manuscript will not contain.
+- Figures: two declared via `\figuredeferred` (hypothesis-dependency diagram; the
+  double-exponential sweep over AGP's four counts), both blocked on a generator in
+  `src/core/visualizations.py`.
+- LaTeX compile gate: PASS (pdflatex ×2, zero errors, no undefined references, 8 pp).
+- Findings filed: `papers/AutomatedReviews/2026-08-15-d6-stage10-redraft/D6.md` —
+  4 BLOCKER, 8 MAJOR, 2 MINOR, every `Verify` executed and reproducing at HEAD.
+- ⚠️ Not fixed here, filed instead: 15 of the 24 registered `apex_theorems` back deleted
+  sections, so `bundle_counts.tex` (56 theorems / 14 modules) now overstates the
+  manuscript's substrate by roughly 4× and the redraft deliberately does not `\input` it;
+  the `length_target` floor of 24 pp describes a bundle that no longer exists; and
+  `target_journal` ("PRD or JHEP") is wrong for this manuscript.
+- Stage-13 redo required: YES — the manuscript is new prose end to end, and the
+  2026-06-10 sweep recorded as GREEN certified four sections this redraft removed.
+
 ## 2026-06-10 — Review-fix batch (D6-EV1/R3): prior-art positioning + first-claim hedges
 
 - Source: external review 2026-06-05 findings D6-R3/EV1 (accuracy fixes only; full bundle lift remains deferred to Phase 6v close per user directive — `stage10_status` stays `skeleton`).

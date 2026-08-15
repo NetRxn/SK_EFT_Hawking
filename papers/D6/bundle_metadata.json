@@ -1,31 +1,36 @@
 {
   "bundle_target": "D6",
   "tier": 1,
-  "title": "Formally Verified Fault-Tolerant Quantum Computation Substrate",
+  "title": "Minimal Hypotheses for the Aliferis-Gottesman-Preskill Threshold Recursion, Machine-Checked in Lean 4",
   "target_journal": "PRD or JHEP",
   "phase7_subphase": "7c (TBD)",
   "stage9_status": "not_started",
-  "stage10_status": "skeleton",
+  "stage10_status": "redrafted",
   "stage13_status": "pending",
   "stage13_redo_required": true,
   "freshness_stale": true,
   "source_manifest_last_regen": "2026-05-31T15:37:22Z",
   "last_lift": "2026-05-31T15:37:22Z",
   "last_stage9_review": null,
-  "last_stage10_review": null,
+  "last_stage10_review": "2026-08-15T00:00:00Z",
   "last_stage13_review": "2026-06-10T19:30:00Z",
-  "blockers_open": 0,
-  "advisories_open": 0,
+  "blockers_open": 4,
+  "advisories_open": 10,
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d6",
   "audit_log_path": "papers/D6/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "D6 bundle CREATED 2026-05-26 by Phase 6v Wave 6v.1. Per Phase 6v strategy synthesis §3.5. D6 is the 15th publication target in the project's bundle architecture (sibling to D4 'TQC foundations'; D6 covers the fault-tolerant-computation substrate side). | Wave 6v.1 ships §3 Williamson-Yoder gauging-QEC overhead bound (FIRST kernel-verified declaration under D6). Subsequent waves contribute: §2 Phase 6t quantitative Solovay-Kitaev retroactive absorption (currently bundle-orphan); §4 APM-LDPC + hashing-bound (Wave 6v.5); §5 Google/Caltech Shor T-gate counts (Wave 6v.2); §6 W-state QFT in Q(ζ_N) (Wave 6v.6). | Stage-13 adversarial review DEFERRED to Phase 6v close per user directive (single Phase-6v-close adversarial pass after all 7 waves have shipped). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after fix. BravyiKitaev '7 T per Toffoli' was misattributed (that paper is magic-state distillation) -> re-attributed to NielsenChuang2010 (number 7 correct; standard ancilla-free construction). Babbush 1200/1450+90M/70M, Williamson-Yoder linear-polylog verbatim.",
+  "notes": "2026-08-15 STAGE-10 FULL REDRAFT (branch redraft/D6). Four of the five previous results lost their warrant against the primary sources and their sections were REMOVED, not shortened: Williamson-Yoder (source proves O(W log^3 W) against a Theta(Wd) baseline, not the encoded W*(floor(log2 W)+1) against W^2), APM-LDPC (Komoto-Kasai Eq. 32 gives the depolarizing hashing bound as 1-H2(p)-p*log2(3); the omitted term flips the verdict at p=0.10, and the code [[1152,580,<=12]] appears nowhere in that paper), Shor ECC-256 (headline is Nat.mul_le_mul_left; the cited section IV.B and the 10^9 T-gate envelope do not exist in the source), and W-state QFT (n < 2^n plus 'the n-th cyclotomic field has a primitive n-th root'; no module knows what a W-state is). The manuscript is now the concatenated-Steane threshold chain, respined on the hypothesis weakening the formalization found (sub-multiplicativity, not independence; a bound on the malignant-pair count, not equality). AGP accounting corrected from the PDF: their rigorous threshold is 1/A''=2.739e-5, not 1/A_CNOT=2.838e-5. | APEX LIST IS STALE: 15 of the 24 entries below back deleted sections, so bundle_counts.tex overstates the manuscript's substrate ~4x and the draft does not input it. length_target floor 24 describes the five-result bundle and is unreachable without padding (prose-reviewer ruling: 12). target_journal 'PRD or JHEP' is wrong for this manuscript. All three filed rather than fixed - they are portfolio decisions. | The 2026-06-10 attribution sweep recorded as GREEN certified four sections this redraft removed; stage13_status must not be read as coverage. | Findings: papers/AutomatedReviews/2026-08-15-d6-stage10-redraft/D6.md (4 BLOCKER, 8 MAJOR, 2 MINOR; every Verify executed and reproducing at HEAD).",
   "last_stage13_review_source": "backfilled-from-audit-doc docs/audits/stage13_D6_fullbundle_2026-06-01.md 2026-06-10",
-  "open_findings": 0,
+  "open_findings": 14,
   "blocked_p1_gates": [
-    "NarrativeGrounding"
+    "NarrativeGrounding",
+    "CitationFidelity",
+    "ClaimsBacking",
+    "BundleApexResolves",
+    "BundleFigureAdequacy",
+    "BundleManuscriptLength"
   ],
-  "readiness": "YELLOW",
+  "readiness": "RED",
   "readiness_last_computed": "2026-08-15",
   "apex_theorems": [
     {
@@ -152,5 +157,6 @@
   },
   "compiled_pages": 8,
   "compile_gate_ok": true,
-  "critical_open": 0
+  "critical_open": 4,
+  "stage10_review_doc": "papers/AutomatedReviews/2026-08-15-d6-stage10-redraft/D6.md"
 }
