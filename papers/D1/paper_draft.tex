@@ -551,7 +551,116 @@ with the floor}
 
 \section{The condensate platform and the hierarchy of corrections}
 \label{sec:hierarchy}
-%% TODO(V) — Table I + BEC benchmarks + Heidelberg projection caveat
+
+The atomic Bose--Einstein condensate is the platform on which analog
+Hawking radiation has actually been
+measured~\cite{Steinhauer2016,deNova2019}, and it is the reference
+setting for everything above: the acoustic metric of
+Sec.~\ref{sec:eft-metric}, the two transport coefficients of
+Sec.~\ref{sec:eft-first} and the gradient expansion of
+Sec.~\ref{sec:higher} were all written for a superfluid with a
+transonic flow profile. This section evaluates the two corrections at
+benchmark parameters, establishes which of them dominates where, and
+identifies the one configuration in which the crossover of
+Eq.~\eqref{eq:crossover} is within reach.
+
+\subsection{Benchmarks}
+\label{sec:hier-bench}
+
+Table~\ref{tab:hierarchy} collects the dispersive and dissipative
+corrections at three condensate configurations and, for orientation, at
+the two other platforms treated below. The three condensate rows are
+horizon-evaluated at $\omega = \kappa$ from the canonical numerical
+pipeline, which runs from the registered experimental parameters
+through the transonic background solver to the correction formulas of
+Sec.~\ref{sec:eft}, and they are regenerated rather than transcribed.
+The polariton and graphene rows are order-of-magnitude estimates from
+their platform-specific treatments and use a platform-appropriate
+reading of $\delta_{\rm diss}$; for the polariton row it is the cavity
+decay ratio $\Gamma_{\rm pol}/\kappa$ rather than a transport
+coefficient. The $T_H$ column gives the nominal experimental
+temperature scale, not the smooth-model surface gravity that feeds the
+correction columns.
+
+\begin{table*}[!t]
+\centering
+\caption{Dispersive and dissipative corrections at benchmark
+configurations. $\delta_{\rm disp} = -(\pi/6)D^2$ is the leading
+dispersive correction of Eq.~\eqref{eq:delta-disp} and
+$\delta_{\rm diss} = \Gamma_H/\kappa$ the leading dissipative
+correction of Eq.~\eqref{eq:delta-diss}; both are dimensionless
+fractional shifts of $T_{\rm eff}$ and are evaluated at $\omega=\kappa$
+for the condensate rows.}
+\label{tab:hierarchy}
+\begin{tabular}{lcccc}\toprule
+Platform & $T_H$ & $\delta_\text{disp}$ & $\delta_\text{diss}$ & dominance \\\midrule
+$^{87}$Rb BEC (Steinhauer/de~Nova) & $\sim 0.35$\,nK & $-8.53\times10^{-5}$ & $2.38\times10^{-5}$ & disp \\
+$^{39}$K BEC (Heidelberg, projected) & $\sim 1$\,nK & $-7.32\times10^{-5}$ & $1.59\times10^{-3}$ & \textbf{diss} \\
+spin-sonic BEC (Trento)    & $\sim 1$\,nK & $-9.89\times10^{-5}$ & $1.41\times10^{-5}$ & disp \\
+LKB polariton (smooth)     & $\sim 85$\,mK & $-19\%$ & $14\%$ & comparable \\
+LKB polariton (steep)      & $\sim 134$\,mK & $-45\%$ & $\sim 10\%$ & \textbf{disp} \\
+graphene (Dean)            & $\sim 2.4$\,K & $-2.8\%$ & $+6.5\%$ & \textbf{diss} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The condensate rows share a structure. Both corrections scale as
+$\kappa^2$ at fixed platform, $\delta_{\rm disp}$ through
+$D = \kappa\xi/c_s$ and $\delta_{\rm diss}$ through
+$\Gamma_H \propto (\kappa/c_s)^2$, so their ratio is independent of
+$\kappa$ within a given configuration and varies by orders of magnitude
+between configurations. This makes the ratio, not either correction
+separately, the quantity a single apparatus can vary and measure. A
+scattering-length sweep changes $\xi$ and $c_s$ at fixed geometry and
+moves the ratio without moving $\kappa$, which is the cleanest available
+handle on the dissipative sector.
+
+\subsection{Heidelberg as the one dissipation-dominated configuration}
+\label{sec:hier-heidelberg}
+
+Of the three condensate rows only one has $\delta_{\rm diss}$ larger
+than $|\delta_{\rm disp}|$, and it is larger by a factor $21.8$. That
+inversion, and not the absolute size of either correction, is what makes
+the $^{39}$K configuration the informative condensate target. Its
+consequence for Eq.~\eqref{eq:crossover} is direct: a larger floor is
+reached earlier along the thermal tail, so
+\begin{equation*}
+\omega_\times \;\simeq\; 6.44\,T_{\rm eff}
+  \quad (^{39}\text{K, projected}),
+\end{equation*}
+against $10.65\,T_{\rm eff}$ for the $^{87}$Rb parameters and
+$11.17\,T_{\rm eff}$ for the spin-sonic configuration. All three sit
+well below their dispersive cutoffs, which are
+$\omega_{\rm max} = 121\,T_H$, $115\,T_H$ and $110\,T_H$ respectively,
+so the flattening is not masked by the onset of dispersive reflection at
+any of them. The discriminator is therefore not whether the crossover is
+accessible in frequency but whether the floor is large enough to
+resolve. The floors differ by two orders of magnitude,
+$1.59\times10^{-3}$ against $2.38\times10^{-5}$ and
+$1.41\times10^{-5}$, and only the first is plausibly within reach of
+occupation-number resolution at current density-correlation
+sensitivities.
+
+\emph{Provenance of the $^{39}$K numbers.} These are projections for a
+transonic-flow experiment that has not been performed. The Heidelberg
+group has published analog cosmology results in a $^{39}$K
+condensate~\cite{Viermann2022}, not an analog-Hawking measurement, and
+no transonic flow experiment exists on that apparatus. The parameters
+are recorded in the project's provenance register at projected status
+with that note attached, and they are used here because the
+$\delta_{\rm diss} \sim 10^{-3}$ regime they access is the only
+dissipation-dominated condensate regime among the benchmarks and
+therefore the only one in which Eq.~\eqref{eq:crossover} is a near-term
+target. Every number in this subsection that carries the $^{39}$K label
+inherits that status. The $^{87}$Rb row, by contrast, is anchored to
+published measurements~\cite{Steinhauer2016,deNova2019} and its
+crossover at $10.65\,T_{\rm eff}$ is a prediction for an apparatus that
+exists.
+
+\figuredeferred{fig:d1-correction-hierarchy}{$\delta_{\rm disp}$ against
+$\delta_{\rm diss}$ per configuration on logarithmic axes with the
+dominance boundary marked, which is Table~\ref{tab:hierarchy} as a
+figure; no figure function in \texttt{visualizations.py} renders it}
 
 \section{The bilayer-graphene Dirac fluid}
 \label{sec:graphene}
