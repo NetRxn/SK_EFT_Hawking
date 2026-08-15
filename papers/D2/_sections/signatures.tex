@@ -1,0 +1,747 @@
+%% ═══════════════════════════════════════════════════════════════════
+%% §5 — Signatures of even unimodular forms.
+%%
+%% Drafted by a section agent that read the Lean substrate in full
+%% (RokhlinHMRankFour, RokhlinHMDischarge, RokhlinFromHM, VanDerBlijReduction,
+%% RokhlinClassification, ThetaDefiniteDischarge, ThetaModularWeight,
+%% SpinRokhlinInterface, LatticeSignature, E8Signature, E8Literal, E8Lattice,
+%% RokhlinArfNoGo, AlgebraicRokhlin). Extracted verbatim from that agent's
+%% transcript, retained at papers/D2/_sections/signatures-section.md; it is
+%% included by paper_draft.tex and is not to be rewritten without re-reading
+%% the substrate.
+%%
+%% ⚠ The four `% TODO:` markers below are the honest record: van der Blij,
+%% Milnor–Husemoller, Rokhlin 1952, Freedman 1982, Freedman–Kirby and the
+%% Atiyah–Singer index parity are NOT held in full text in the project's
+%% primary-source cache, so the attributions resting on them are unverified.
+%% They are LaTeX comments and do not render. DO NOT delete them to make a
+%% readiness gate go green; a bundle carrying TODOs is meant to stay amber.
+%%
+%% The section deliberately does NOT cite E8Lattice.e8_det_one /
+%% e8_diagonal_all_two / e8_diagonal_even (proved by native_decide, hence not
+%% kernel-pure, and with no in-tree theorem linking CartanMatrix.E₈ to the
+%% literal matrix E8lit that the chain actually runs on), nor e8_sigma_div_8,
+%% rokhlin_gap or char_sq_valid_e8. It cites the kernel-pure E8lit chain.
+%% ═══════════════════════════════════════════════════════════════════
+
+\section{Signatures of even unimodular forms}
+\label{sec:signatures}
+
+\subsection{The result, and what is new about the route}
+\label{sec:sig-result}
+
+Let $M$ be a symmetric $n\times n$ integer matrix that is
+\emph{unimodular} ($\det M = \pm 1$) and \emph{even} (every diagonal
+entry $M_{ii}$ is divisible by $2$, equivalently $b(x,x)\in 2\mathbb{Z}$
+for every $x\in\mathbb{Z}^n$). Write $\sigma(M)$ for its signature, the
+number of positive minus the number of negative eigenvalues of the real
+form $M\otimes\mathbb{R}$. The main result of this section is the
+following.
+
+\begin{theorem}[$8\mid\sigma$, unconditional]
+\label{thm:eight-dvd}
+For every $n$ and every even unimodular $M \in
+\mathrm{Mat}_{n\times n}(\mathbb{Z})$, $\;8 \mid \sigma(M)$.
+\end{theorem}
+
+The statement is classical. It is van der Blij's congruence for even
+forms, and it is standard textbook material on symmetric bilinear
+forms~\cite{vanderBlij1959,MilnorHusemoller1973}.
+% TODO: neither vanderBlij1959 nor MilnorHusemoller1973 was available to
+% the author in full text; the attribution of Theorem 1 to these sources,
+% and the characterisation of the classical proof as proceeding through
+% characteristic vectors, are unverified against the primary literature.
+No referee needs to be told that $8$ divides the signature of an even
+unimodular form. What is new is the \emph{route}, and the route is what
+this section is about.
+
+Three properties distinguish it. First, it is complete inside a proof
+kernel. Theorem~\ref{thm:eight-dvd} is the Lean~4 declaration
+\texttt{eight\_dvd\_latticeSig}, whose statement is exactly the display
+above with $\sigma$ interpreted as the honest Sylvester signature of the
+real form and not as a free integer parameter, and whose proof carries no
+hypothesis, no project-local axiom and no appeal to native compilation.
+Two classical inputs were once carried as explicit hypotheses of the
+reduction, namely a local-global statement for indefinite forms and a
+modularity statement for definite ones. Both are now theorems in the same
+library, so the divisibility is unconditional rather than reduced.
+
+Second, the route is non-circular in a sense that can be checked
+mechanically rather than argued informally. It does not compute the
+four-dimensional spin bordism group, so it consumes no structure theory
+of the spin cobordism ring~\cite{ABP1967}; it consumes neither Rokhlin's
+theorem nor any statement equivalent to it; and it consumes no
+divisibility statement about $\sigma$ at any point. The reader can
+confirm this from the dependency graph rather than from our word for it:
+every declaration named in this section is reachable from the
+even-unimodularity predicate together with real quadratic-form theory,
+$p$-adic analysis and the theory of the lattice theta function, and from
+nothing else. This matters because the divisibility statements in this
+area are close enough to one another that a proof of one from another is
+easy to write down and hard to notice.
+
+Third, the argument is sharp at the boundary where sharpness is usually
+asserted rather than shown. The bound of Theorem~\ref{thm:eight-dvd}
+cannot be improved to $16$: the $E_8$ form is even unimodular with
+$\sigma = 8$, and both facts are machine-checked
+(\texttt{e8lit\_even\_unimodular} and \texttt{e8lit\_latticeSig}). Every
+strengthening to $16 \mid \sigma$ in the literature is therefore a
+statement about $4$-manifolds and not about forms, and any formalisation
+of such a strengthening must expose the extra input.
+Section~\ref{sec:sig-residual} isolates that input, and
+Section~\ref{sec:sig-arf} closes off the most natural attempt to remove
+it.
+
+\paragraph{What this does and does not do for the rest of the paper.}
+Theorem~\ref{thm:eight-dvd} does \emph{not} enter the derivation of
+$N_f \in 3\mathbb{Z}$. That derivation runs entirely through the chiral
+central charge and the modular framing constraint, and it would stand
+unchanged if this section were deleted. Nor does
+Theorem~\ref{thm:eight-dvd} enter the $\mathbb{Z}_{16}$ argument of
+Section~\ref{sec:z16-drinfeld}. The result is a second, independent
+contribution of the present work, unconditional where the generation
+constraint is conditional on a proposal of another author. It is
+presented here because it is the unconditional mathematics in this paper
+and because the integer $8$ it produces is the same integer that governs
+the signature of the intersection form of a spin $4$-manifold, which is
+the object the anomaly discussion of Sections~\ref{sec:modular}
+and~\ref{sec:z16-drinfeld} is ultimately about. The connection is one of
+subject matter, not of logical dependence, and we do not claim more.
+
+\subsection{The signature calculus, and the reduction}
+\label{sec:sig-calculus}
+
+\paragraph{The signature, grounded.}
+A formalisation of a signature theorem is only as good as its signature.
+We define
+\begin{equation}
+\sigma(M) \;:=\; \mathrm{sig}^{+}\!\left(M\otimes\mathbb{R}\right)
+\;-\; \mathrm{sig}^{-}\!\left(M\otimes\mathbb{R}\right),
+\label{eq:latticesig}
+\end{equation}
+where $\mathrm{sig}^{\pm}$ are the positive and negative inertia indices
+of the real quadratic form $x \mapsto x^{\mathsf T} M x$ on
+$\mathbb{R}^n$, taken from the general theory of Sylvester's law of
+inertia rather than introduced for this purpose
+(\texttt{LatticeSignature.lean}). Two consequences are used below and
+both are proved from~\eqref{eq:latticesig} directly: orientation reversal
+$\sigma(-M) = -\sigma(M)$, and the rank bound $|\sigma(M)| \leq n$. When
+$M\otimes\mathbb{R}$ is positive definite, $\sigma(M) = n$; when it is
+negative definite, $\sigma(M) = -n$.
+
+\paragraph{The calculus.}
+Three structural laws of $\sigma$ carry the argument, and each is a
+separate machine-checked statement.
+
+\emph{Congruence invariance.} For $P$ with $\det P$ a unit in
+$\mathbb{Z}$,
+\begin{equation}
+\sigma\!\left(P^{\mathsf T} M P\right) \;=\; \sigma(M)
+\label{eq:sylvester}
+\end{equation}
+(\texttt{latticeSig\_congr}). This is Sylvester's law transported from
+$\mathbb{R}$ to $\mathbb{Z}$-congruence, and it is what allows a
+signature computed in one basis to be quoted in another. A companion
+statement gives the same invariance under relabelling of the index type,
+which is needed because a block decomposition produces a sum type rather
+than $\mathrm{Fin}\,n$.
+
+\emph{Block additivity.} For nondegenerate blocks $A$ and $B$,
+\begin{equation}
+\sigma(A \oplus B) \;=\; \sigma(A) + \sigma(B),
+\label{eq:blockadd}
+\end{equation}
+where $A\oplus B$ is the block-diagonal matrix
+(\texttt{latticeSigOf\_fromBlocks}). Nondegeneracy is not decoration.
+The inertia indices of a degenerate form do not add across a direct sum
+in the way~\eqref{eq:blockadd} asserts, because the radical is
+distributed between the summands; the hypothesis is discharged for each
+block that occurs here from unimodularity.
+
+\emph{Generator values.} $\sigma(E_8) = 8$, $\sigma(-E_8) = -8$ and
+$\sigma(H) = 0$, where $H = \left(\begin{smallmatrix} 0 & 1 \\ 1 & 0
+\end{smallmatrix}\right)$ is the hyperbolic plane. The last two follow
+from the first by orientation reversal and by direct computation. The
+first is the only analytically nontrivial evaluation in this section,
+because a signature is a count of eigenvalue signs and therefore a
+statement about $\mathbb{R}$. We obtain it from an integral certificate
+rather than from an eigenvalue computation. There is an explicit integer
+matrix $C$, whose columns are twice the $E_8$ simple roots, with
+\begin{equation}
+C^{\mathsf T} C \;=\; 4\,E_8 .
+\label{eq:cholesky}
+\end{equation}
+Both sides of~\eqref{eq:cholesky} are products of small integers, so the
+identity reduces in the kernel by evaluation (\texttt{c8\_eq}). Cast to
+$\mathbb{R}$ it exhibits $4E_8$ as a Gram matrix; $C$ is invertible
+because $\det(C)^2 = \det(4E_8) = 4^8\det(E_8) \neq 0$, which uses
+unimodularity and evaluates no $8\times 8$ determinant; hence $4E_8$ and
+then $E_8$ are positive definite, and $\sigma(E_8) = 8$ follows from the
+definite case of~\eqref{eq:latticesig}. The doubling in~\eqref{eq:cholesky}
+is what makes the certificate integral: the $E_8$ root lattice has a
+half-integer basis, so the naive $LDL^{\mathsf T}$ pivots are rational and
+a rational certificate does not reduce.
+
+Unimodularity and evenness of $E_8$ are established on the same explicit
+matrix by exhibiting the integer inverse and checking
+$E_8 \cdot E_8^{-1} = \mathbf{1}$, which is a few hundred small integer
+multiplications, rather than by expanding the determinant
+(\texttt{e8lit\_mul\_inv}, \texttt{e8lit\_even\_unimodular}).
+
+\paragraph{The reduction.}
+The classical route to Theorem~\ref{thm:eight-dvd} is the classification
+of even unimodular lattices: every such $L$ is isomorphic to
+\begin{equation}
+E_8^{\,\oplus a} \;\oplus\; (-E_8)^{\,\oplus b} \;\oplus\; H^{\,\oplus c},
+\qquad \sigma(L) = 8(a-b),
+\label{eq:classification}
+\end{equation}
+after which $8\mid\sigma$ is immediate. The calculus above is exactly
+what is needed to make~\eqref{eq:classification} yield the conclusion in
+a kernel: each generator satisfies $8\mid\sigma$,
+\eqref{eq:blockadd} propagates the divisibility across the direct sum, and
+\eqref{eq:sylvester} transports it back along the isomorphism. Those
+closure facts are shipped (\texttt{RokhlinClassification.lean}).
+
+The proof we actually give does not use the normal
+form~\eqref{eq:classification}. It uses the recursion that produces it,
+which is weaker and therefore cheaper, and it is stated as follows.
+
+\begin{proposition}[Reduction to two classical inputs]
+\label{prop:reduction}
+Suppose
+\begin{itemize}
+\item[{\rm[HM]}] every indefinite even unimodular integer form admits a
+primitive isotropic vector, and
+\item[{\rm[$\Theta$]}] every definite even unimodular integer form
+satisfies $8\mid\sigma$.
+\end{itemize}
+Then $8\mid\sigma(M)$ for every even unimodular integer form $M$.
+\end{proposition}
+
+The proof is strong induction on the rank
+(\texttt{eight\_dvd\_latticeSig\_of\_HM\_of\_Theta}). If $M$ is definite,
+meaning $\mathrm{sig}^{+} = 0$ or $\mathrm{sig}^{-} = 0$, apply
+[$\Theta$]. Otherwise $M$ is indefinite and [HM] supplies a primitive
+$v$ with $v^{\mathsf T} M v = 0$. Primitivity and unimodularity give a
+$w$ with $v^{\mathsf T} M w = 1$, and evenness upgrades $w$ to a genuine
+hyperbolic partner: writing $w^{\mathsf T} M w = 2k$, which is possible
+precisely because the form is even, the vector $w' = w - k v$ satisfies
+\begin{equation}
+v^{\mathsf T} M v = 0, \qquad v^{\mathsf T} M w' = 1, \qquad
+w'^{\mathsf T} M w' = 0
+\label{eq:hyperbolic-pair}
+\end{equation}
+(\texttt{exists\_hyperbolic\_pair}). The plane spanned by $v$ and $w'$ is
+a copy of $H$ and splits off orthogonally. Passing to the Gram matrix
+$M'$ of the orthogonal complement, one has
+\begin{equation}
+\sigma(M) = \sigma(M')
+\label{eq:split}
+\end{equation}
+because $\sigma(H) = 0$ (\texttt{latticeSig\_split}), and $M'$ is again
+even unimodular, of rank $n-2$
+(\texttt{residGram\_evenUnimodular}). The induction hypothesis applies.
+
+The recursion terminates at the definite forms and at rank $0$, and the
+small ranks it passes through are not vacuous, so [HM] is needed at every
+rank the recursion can reach. This is the point at which a reduction
+becomes a proof, and Sections~\ref{sec:sig-indefinite}
+and~\ref{sec:sig-definite} discharge the two inputs.
+
+\paragraph{Scope of the classification claim.}
+We are claiming Proposition~\ref{prop:reduction} together with the
+discharge of [HM] and [$\Theta$], not the normal
+form~\eqref{eq:classification} itself. The existence statement in
+\eqref{eq:classification} is not in our library. Its
+signature-zero case is (a form all of whose blocks are hyperbolic
+planes), but the identification of the definite part with copies of
+$E_8$ is not; the definite branch below stops at the divisibility
+$8 \mid \mathrm{rank}$, which is all that $8\mid\sigma$ requires. A
+reader who wants~\eqref{eq:classification} will not find it here, and we
+do not use it.
+
+\subsection{The indefinite branch, and rank four}
+\label{sec:sig-indefinite}
+
+\begin{proposition}[{[HM]} discharged at every rank]
+\label{prop:hm}
+Every indefinite even unimodular integer form admits a nonzero integer
+isotropic vector, and hence a primitive one.
+\end{proposition}
+
+The upgrade from nonzero to primitive is content extraction: divide by
+the greatest common divisor of the coordinates, which does not disturb
+isotropy (\texttt{exists\_primitive\_isotropic\_of\_isotropic}). The
+substance is the nonzero statement (\texttt{hasWeakIsotropicVector}), and
+it splits by rank.
+
+\emph{Ranks one and three do not occur.} A $1\times 1$ even unimodular
+form would have $M_{00}$ simultaneously even and equal to $\pm 1$. For a
+$3\times 3$ symmetric matrix with even diagonal, every term of the
+Leibniz expansion is even, so $2 \mid \det M$, contradicting
+unimodularity (\texttt{not\_evenUnimodular\_one},
+\texttt{not\_evenUnimodular\_three}). These are the rank-$1$ and rank-$3$
+instances of ``even unimodular implies even rank'', proved directly so as
+to avoid characteristic-two Pfaffian machinery, and they are elementary
+in the strict sense that they use no divisibility property of $\sigma$.
+
+\emph{Rank two is explicit.} With both diagonal entries even,
+$\det M = M_{00}M_{11} - M_{01}^2 \equiv -M_{01}^2 \pmod 4$, which lies
+in $\{0,3\}$, so $\det M = 1$ is impossible and $\det M = -1$
+(\texttt{det\_eq\_neg\_one\_of\_evenUnimodular\_two}). The vector
+$(1 - M_{01},\, M_{00})$, or $(1,0)$ when $M_{00} = 0$, is then isotropic
+by direct computation, since its value is $M_{00}(1 + \det M)$. Note that
+no real-signature input is used: every even unimodular binary form is
+indefinite.
+
+\emph{Rank at least five is generic.} At rank $\geq 5$ a diagonal form
+over $\mathbb{Q}_p$ is isotropic for every $p$, with no hypothesis beyond
+nonvanishing coefficients, and over $\mathbb{R}$ isotropy follows from
+indefiniteness. The local-global spine then applies
+(\texttt{diag\_indefinite\_rat\_zero},
+\texttt{weakIsotropic\_of\_five\_le}). Even unimodularity is not required
+at this rank. Two pieces of plumbing make this usable on a Gram matrix
+rather than a diagonal form. The form is diagonalised over $\mathbb{Q}$
+and the congruence is exhibited explicitly so that it can be cast to every
+completion; and indefiniteness, which is stated over $\mathbb{R}$, is
+transferred to $\mathbb{Q}$ by density, since a real vector on which the
+form is positive lies in an open set and therefore contains a rational
+point (\texttt{sigPos\_cast\_pos}, \texttt{sigNeg\_cast\_pos}).
+
+\emph{Rank four is the frontier.} It is the only rank at which local
+isotropy can genuinely fail: anisotropic quaternary forms exist over every
+$\mathbb{Q}_p$, so nothing is automatic and the even unimodular structure
+must be used. We give the argument in full.
+
+\begin{proposition}[Rank-four weak isotropy]
+\label{prop:rank4}
+Every indefinite even unimodular $4\times 4$ integer form $A$ admits a
+nonzero integer vector $v$ with $v^{\mathsf T} A v = 0$.
+\end{proposition}
+
+\emph{Step 1: the discriminant is a square.} We first show
+$\det A = +1$, excluding the shapes with $\det A = -1$ and
+$\sigma = \pm 2$. Write the diagonal entries as $2g_i$ and the
+off-diagonal ones as $a = A_{01}$, $b = A_{02}$, $c = A_{03}$,
+$d = A_{12}$, $e = A_{13}$, $f = A_{23}$. Reduce the Leibniz expansion
+modulo $4$. Every monomial containing at least two diagonal factors is
+divisible by $4$ outright. Every monomial containing exactly one diagonal
+factor corresponds to a permutation with exactly one fixed point, hence to
+a $3$-cycle; the $3$-cycle and its inverse contribute the same product
+with the same sign, so those monomials pair off and their sum acquires the
+missing second factor of $2$. What survives is
+\begin{equation}
+\det A \;\equiv\; \left(af - be + cd\right)^2 \pmod 4
+\label{eq:det4}
+\end{equation}
+(\texttt{det4\_evenDiag\_sq}). A square modulo $4$ lies in $\{0,1\}$, and
+$-1 \equiv 3$ does not, so unimodularity forces $\det A = 1$
+(\texttt{det\_eq\_one\_of\_evenUnimodular\_four}).
+
+Now diagonalise over $\mathbb{Q}$, writing $A = P^{\mathsf T}
+\mathrm{diag}(w)\, P$ with $\det P$ a unit. Taking determinants,
+$1 = \det(P)^2 \prod_i w_i$, so
+\begin{equation}
+\prod_{i} w_i \;=\; \left(\det P\right)^{-2}
+\label{eq:sqdisc}
+\end{equation}
+is a square (\texttt{isSquare\_prod\_weights}). Clearing denominators
+coordinatewise, the integral diagonal form $\sum_i d_i x_i^2$ with
+$d_i = \mathrm{num}(w_i)\cdot\mathrm{den}(w_i)$ also has square
+discriminant. This is the structural payoff of Step~1, and it is what
+makes the rest of the argument possible: a quaternary form of square
+discriminant is controlled by a \emph{single} binary Hilbert symbol,
+whereas a general quaternary form is not.
+
+\emph{Step 2: the real place.} Indefiniteness gives a positive and a
+negative coefficient among the $d_i$, and a two-variable combination of
+the corresponding coordinates is isotropic over $\mathbb{R}$
+(\texttt{diag\_real\_isotropic\_of\_signs}).
+
+\emph{Step 3: odd primes, by Chevalley--Warning and Hensel.} Fix an odd
+prime $p$. Since $\det A = 1$ is a $p$-adic unit, $A$ is
+$\mathbb{Z}_p$-unimodular, and its reduction $\bar A$ modulo $p$ is a
+rank-four form over $\mathbb{F}_p$ with $\det\bar A \neq 0$. A quadratic
+form in at least three variables over a finite field has a nontrivial
+zero, because the number of solutions of a polynomial system whose total
+degree is smaller than the number of variables is divisible by the
+characteristic, and the trivial solution is one of them; this is the
+Chevalley--Warning theorem, and it is available for an arbitrary finite
+field and any rank at least three
+(\texttt{finite\_field\_form\_isotropic}). Let $\bar x \neq 0$ be such a
+zero.
+
+The zero is \emph{simple}. Its gradient is $\bar A\bar x$, and if that
+vanished then $\bar x$ would lie in the kernel of $\bar A$, contradicting
+$\det \bar A \neq 0$. Choose a coordinate $j$ with
+$(\bar A \bar x)_j \neq 0$, lift $\bar x$ arbitrarily to $x_0$ over
+$\mathbb{Z}_p$, and vary only coordinate $j$. Setting $y$ equal to $x_0$
+with its $j$-th coordinate zeroed, the form becomes a univariate quadratic
+in that coordinate:
+\begin{equation}
+\left(y + t\,e_j\right)^{\mathsf T}\! A \left(y + t\,e_j\right)
+= A_{jj}\,t^2 + 2\,(Ay)_j\, t + y^{\mathsf T} A y ,
+\label{eq:univariate}
+\end{equation}
+the cross terms coinciding by symmetry of $A$
+(\texttt{mulVec\_update\_coord\_quadratic}). Call this polynomial $F$.
+At $t = a := (x_0)_j$ one has $F(a) = x_0^{\mathsf T} A x_0$, which is
+divisible by $p$ by construction, and
+$F'(a) = 2\,(A x_0)_j$, which is a $p$-adic unit because $p$ is odd and
+$(\bar A\bar x)_j \neq 0$. Hence $|F(a)|_p < |F'(a)|_p^2 = 1$, and
+Hensel's lemma produces an exact zero $z \in \mathbb{Z}_p$ of $F$. The
+vector $y + z\,e_j$ is a nonzero $\mathbb{Z}_p$-isotropic vector for $A$,
+and therefore a $\mathbb{Q}_p$-isotropic one
+(\texttt{isotropic\_padicInt\_of\_unit\_det}). Transporting through the
+explicit congruence of Step~1 gives isotropy of the diagonal form at every
+odd $p$.
+
+\emph{Step 4: the prime two, by reciprocity.} No local computation at
+$p = 2$ is performed. Instead, the square-discriminant hypothesis
+converts local isotropy at a place $v$ into the vanishing of a single
+binary Hilbert symbol. Concretely, if $abcd = s^2$ with all entries
+nonzero, then over any field
+\begin{equation}
+a x^2 + b y^2 - c z^2 - d w^2 = 0
+\;\;\Longleftrightarrow\;\;
+z^2 = -ab\,x^2 + ac\,y^2
+\label{eq:quaternary-ternary}
+\end{equation}
+has a nontrivial solution (\texttt{quaternary\_sqdisc\_iso\_iff\_ternary}),
+the right-hand side being the norm form of the quaternion algebra attached
+to the pair $(\alpha,\beta) = (-ab,\,ac)$. Isotropy at $v$ is thus
+equivalent to $(\alpha,\beta)_v = 1$. Steps~2 and~3 give
+$(\alpha,\beta)_\infty = 1$ and $(\alpha,\beta)_p = 1$ for every odd
+prime. Hilbert's product formula
+\begin{equation}
+\prod_{v} \left(\alpha,\beta\right)_v \;=\; 1 ,
+\label{eq:hilbert-product}
+\end{equation}
+the product running over the real place and all primes and being finitely
+supported, then forces the remaining factor to be $1$
+(\texttt{hilbertPrime\_two\_eq\_one\_of\_real\_odd}). The place $2$, which
+is the hard place for quadratic forms, is obtained for free from the
+others. We emphasise that~\eqref{eq:hilbert-product} is itself a theorem
+in our library and not an assumption: it is assembled from the
+bimultiplicativity of the local symbols, quadratic reciprocity and the
+supplementary laws (\texttt{hilbertGlobalProd\_eq\_one}).
+
+\emph{Step 5: local to global.} With every place discharged, the
+square-discriminant quaternary Hasse--Minkowski statement applies. It
+routes through the ternary form on the right of
+\eqref{eq:quaternary-ternary} and requires neither weak approximation nor
+Dirichlet's theorem on primes in arithmetic progressions
+(\texttt{quaternary\_sqdisc\_solvable\_of\_local\_no\_two},
+\texttt{diag\_four\_solvable\_of\_local\_no\_two}). The resulting
+nontrivial rational zero is cleared of denominators to an integral one
+(\texttt{exists\_int\_isotropic\_of\_rat}), and transported back through
+the congruence of Step~1 to $A$ itself. This proves
+Proposition~\ref{prop:rank4} (\texttt{weakIsotropic\_rank\_four}).
+
+Two remarks on this argument. First, it is the even unimodular hypothesis,
+and nothing else, that supplies each local input: unimodularity gives the
+$\mathbb{Z}_p$-unit determinant that Step~3 needs, and evenness gives
+the mod-$4$ congruence~\eqref{eq:det4} that Step~1 needs. Second, the
+argument is confined to rank four by design. At rank at least five the
+local inputs are automatic and the even unimodular structure is not used
+at all; at rank four it is used twice, and both uses are essential.
+
+\subsection{The definite branch, by theta modularity}
+\label{sec:sig-definite}
+
+For a definite form, $\sigma = \pm\,\mathrm{rank}$, so $8\mid\sigma$ is
+equivalent to $8\mid\mathrm{rank}$. The bridge from the inertia
+hypothesis to definiteness is short. A unimodular form is nondegenerate,
+so its radical is trivial; with $\mathrm{sig}^{-} = 0$, the identity
+$\mathrm{sig}^{+} + \mathrm{sig}^{-} + \dim(\mathrm{radical}) =
+\mathrm{rank}$ forces $\mathrm{sig}^{+}$ to be the full dimension, and a
+form whose maximal positive subspace is everything is positive definite.
+The case $\mathrm{sig}^{+} = 0$ is the mirror image, handled by negating
+the form (\texttt{eight\_dvd\_latticeSig\_of\_definite}). So the content
+is the following.
+
+\begin{proposition}[Modular weight]
+\label{prop:theta}
+A positive-definite even unimodular integer form of rank $d$ has
+$8 \mid d$.
+\end{proposition}
+
+The proof is the classical theta argument, carried out analytically. For
+a real positive-definite $G$ set
+\begin{equation}
+\Theta_G(\tau) \;=\; \sum_{v \in \mathbb{Z}^d}
+e^{\,\pi i \tau\, v^{\mathsf T} G v},
+\qquad \mathrm{Im}\,\tau > 0 ,
+\label{eq:theta}
+\end{equation}
+which converges absolutely (\texttt{latticeTheta}).
+
+\emph{$T$-invariance.} If $G$ comes from an even integer form then
+$v^{\mathsf T} G v \in 2\mathbb{Z}$ for every $v$, so each summand
+in~\eqref{eq:theta} is unchanged under $\tau \mapsto \tau + 1$ and
+\begin{equation}
+\Theta_G(\tau + 1) = \Theta_G(\tau)
+\label{eq:theta-T}
+\end{equation}
+termwise, with no summability argument required
+(\texttt{latticeTheta\_T\_int}).
+
+\emph{$S$-transformation.} Multivariate Poisson summation applied to the
+Gaussian $v \mapsto e^{\pi i \tau v^{\mathsf T} G v}$ gives the
+functional equation relating $\Theta_G$ to the theta function of the dual
+form $G^{-1}$ (\texttt{latticeTheta\_S}). Two facts collapse it. A
+positive-definite unimodular form has $\det = +1$, which removes the
+$(\det G)^{-1/2}$ prefactor; and for an integral $A$ with unit
+determinant, $A^{-1}$ is again integral and
+$A^{-1} = (A^{-1})^{\mathsf T} A\, A^{-1}$, so the dual lattice is the
+original lattice in a different unimodular basis and its theta function is
+literally the same function (\texttt{latticeTheta\_inv\_eq}). What remains
+is the self-transformation
+\begin{equation}
+\Theta_G\!\left(-1/\tau\right)
+\;=\; \left(\tau/i\right)^{d/2}\,\Theta_G(\tau).
+\label{eq:theta-S}
+\end{equation}
+
+\emph{The multiplier is forced.} Composing~\eqref{eq:theta-S}
+with~\eqref{eq:theta-T} gives the combined step
+$\Theta_G(-1/(w+1)) = ((w+1)/i)^{d/2}\,\Theta_G(w)$
+(\texttt{theta\_ST}). Iterating it three times traverses the orbit
+\begin{equation}
+i \;\longmapsto\; \tfrac{i-1}{2} \;\longmapsto\; i-1
+\;\longmapsto\; i ,
+\label{eq:st-orbit}
+\end{equation}
+which closes because $(ST)^3$ is the identity in the modular group. The
+accumulated multiplier must therefore be $1$. It can be divided out
+because $\Theta_G(i)$ is a sum of positive reals and so is nonzero
+(\texttt{latticeTheta\_I\_ne\_zero}), and the three factors combine to a
+single power because each base has positive real part, keeping the
+principal branch of the complex power additive
+(\texttt{mul\_cpow\_of\_re\_pos}). The product of the three multipliers
+along~\eqref{eq:st-orbit} is $(-i)^{d/2}$, so
+\begin{equation}
+(-i)^{d/2} = e^{-i\pi d/4} = 1
+\quad\Longleftrightarrow\quad
+8 \mid d
+\label{eq:eight-dvd-rank}
+\end{equation}
+(\texttt{neg\_I\_cpow\_eq\_one\_iff\_eight\_dvd},
+\texttt{eight\_dvd\_rank}). This proves Proposition~\ref{prop:theta}.
+
+Proposition~\ref{prop:reduction} applied to Propositions~\ref{prop:hm}
+and~\ref{prop:theta} proves Theorem~\ref{thm:eight-dvd}.
+
+It is worth recording what the two branches cost. The definite branch is
+analysis: Poisson summation, absolute convergence of a Gaussian lattice
+sum, and the principal branch of $z^{s}$. The indefinite branch is
+arithmetic: finite fields, $\mathbb{Z}_p$, Hensel lifting, and quadratic
+reciprocity in the form of the Hilbert product formula. Neither branch
+uses the other, and neither uses any topology.
+
+\subsection{The residual factor of two, and why it is irreducible}
+\label{sec:sig-residual}
+
+The signature of the intersection form of a closed smooth spin
+$4$-manifold is divisible by $16$, not merely by
+$8$~\cite{Rokhlin1952}.
+% TODO: Rokhlin1952 (Doklady Akad. Nauk SSSR 84, 221) was not available to
+% the author; the statement of Rokhlin's theorem as quoted here is taken
+% from its standard formulation and is unverified against the original.
+The gap between Theorem~\ref{thm:eight-dvd} and that statement is exactly
+a factor of two, and the purpose of this subsection is to say precisely
+where the factor of two comes from and to prove that it cannot come from
+the form.
+
+We record the interface first. A closed smooth spin $4$-manifold
+contributes two pieces of data to the argument and no others: its
+intersection form on $H^2(M;\mathbb{Z})$, which is even by Wu's formula
+and unimodular by Poincar\'e duality, and the divisibility
+$2 \mid \sigma/8$. The Lean structure \texttt{SmoothSpinManifold4}
+carries exactly these, with its signature \emph{defined} as
+$\sigma(\text{form})$ in the sense of~\eqref{eq:latticesig} rather than
+supplied as a free parameter. On that interface,
+\begin{equation}
+8 \mid \sigma(M)
+\label{eq:interface-eight}
+\end{equation}
+is a derived theorem and not a carried field
+(\texttt{SmoothSpinManifold4.eight\_dvd\_sig}); it is
+Theorem~\ref{thm:eight-dvd} applied to the intersection form. Composing
+it with the carried divisibility gives
+\begin{equation}
+8 \mid \sigma \;\wedge\; 2 \mid \sigma/8
+\;\;\Longrightarrow\;\; 16 \mid \sigma
+\label{eq:compose}
+\end{equation}
+(\texttt{SmoothSpinManifold4.rokhlin}). We state plainly that this second
+statement is conditional on the interface field $2\mid\sigma/8$, and that
+it must be: $16\mid\sigma$ is false for general even unimodular forms, as
+$E_8$ witnesses. A formalisation that presented $16\mid\sigma$ as
+unconditional at the level of forms would be proving something untrue.
+
+\paragraph{What the residual factor is.}
+The input $2\mid\sigma/8$ is the evenness of the $\hat A$-genus. For a
+closed spin $4$-manifold the index of the Dirac operator equals
+$-\sigma/8$, and in dimension four that index is even because the spinor
+bundle carries a quaternionic structure commuting with the Dirac
+operator, so its kernel and cokernel are quaternionic vector spaces.
+Equivalently, and more geometrically, it is the vanishing of the Arf
+invariant of the quadratic refinement carried by a smoothly embedded
+characteristic surface, in the congruence of
+Freedman--Kirby~\cite{FreedmanKirby1978},
+\begin{equation}
+\sigma(M) \;\equiv\; \Sigma\cdot\Sigma \;+\; 8\,\mathrm{Arf}(M,\Sigma)
+\pmod{16},
+\label{eq:freedman-kirby}
+\end{equation}
+in which $\Sigma \subset M$ is a smoothly embedded surface representing a
+characteristic class and $\mathrm{Arf}(M,\Sigma)$ is the Arf invariant of
+a quadratic refinement on $H_1(\Sigma;\mathbb{Z}/2)$. For a spin manifold
+the class $0$ is characteristic, both correction terms drop out, and
+\eqref{eq:freedman-kirby} reduces to $16\mid\sigma$.
+% TODO: neither the Atiyah--Singer identification of the index with
+% -sigma/8 and its quaternionic parity, nor the Freedman--Kirby
+% congruence (5.14), could be checked against a primary source available
+% to the author; both are stated from their standard formulations and are
+% unverified.
+
+\paragraph{Why it is irreducible.}
+There are two statements here, of increasing strength, and we prove the
+first and cite the second.
+
+The algebraic statement is that no property of the intersection form can
+supply the factor of two, and it follows from
+Theorem~\ref{thm:eight-dvd} being sharp. The implication ``$M$ even
+unimodular $\Rightarrow 16 \mid \sigma(M)$'' is false, refuted by $E_8$,
+which is even unimodular with $\sigma = 8$; both halves of that
+refutation are machine-checked. Consequently any correct derivation of
+$16\mid\sigma$ must consume an input that is not a function of the
+isomorphism class of the form. The interface above is honest precisely
+because it exposes such an input rather than deriving it, and the previous
+subsections show that everything else on the path is derivable.
+
+The stronger statement is that the input cannot be supplied by the
+topology of the underlying manifold either, but requires the smooth
+structure. Freedman's classification of simply-connected closed
+topological $4$-manifolds produces a closed simply-connected
+\emph{topological} $4$-manifold whose intersection form is
+$E_8$~\cite{Freedman1982}.
+% TODO: Freedman (1982) was not available to the author; the existence and
+% properties of the topological E8 manifold are stated from their standard
+% formulation and are unverified against the primary source.
+Its form is even, so it is spin in the sense available to a topological
+manifold, and its signature is $8$. It therefore violates the conclusion
+$16\mid\sigma$ while satisfying every hypothesis that does not mention
+smoothness. Smoothness is what the Dirac operator needs in order to exist,
+and it is what a smooth embedding of the characteristic surface
+in~\eqref{eq:freedman-kirby} needs in order to be available. This is not
+a defect of our formalisation to be repaired later. It is the theorem's
+actual content, and the interface is built so that the content is visible.
+
+\subsection{The lattice Arf invariant cannot be the residual factor}
+\label{sec:sig-arf}
+
+The most natural attempt to remove the residual input is to look for it in
+the mod-two structure of the lattice itself. An even lattice $L$ carries a
+canonical quadratic refinement of its mod-two intersection pairing,
+\begin{equation}
+\bar q : L/2L \longrightarrow \mathbb{Z}/2,
+\qquad
+\bar q(x) \;=\; \tfrac{1}{2}\,b(x,x) \bmod 2 ,
+\label{eq:redquad}
+\end{equation}
+which is well defined precisely because $L$ is even
+(\texttt{redQuad}). Since $\bar q$ is a quadratic refinement of a
+nondegenerate symplectic form over $\mathbb{F}_2$, it has an Arf
+invariant, readable off the sign of its Gauss sum through the genus-$g$
+identity
+\begin{equation}
+\sum_{x} (-1)^{\bar q(x)} \;=\; 2^{\,g}\,(-1)^{\mathrm{Arf}(\bar q)} ,
+\label{eq:gauss-arf}
+\end{equation}
+which is itself machine-checked (\texttt{gaussSum\_genus\_g}). Write
+$\mathrm{Arf}(M)$ for the invariant so defined
+(\texttt{arfOfForm}). The candidate bridge is
+\begin{equation}
+\sigma(M)/8 \;\equiv\; \mathrm{Arf}(M) \pmod 2
+\qquad\text{for every even unimodular } M ,
+\label{eq:arf-bridge}
+\end{equation}
+which would replace the geometric input of
+Section~\ref{sec:sig-residual} by a finite computation on $L/2L$. It is
+attractive: it has the right shape, it is finite, and it is the lattice
+shadow of the genuinely correct geometric congruence
+\eqref{eq:freedman-kirby}. It is also false.
+
+\begin{theorem}[The lattice Arf bridge is refuted]
+\label{thm:arf-nogo}
+Statement~\eqref{eq:arf-bridge} is false. Explicitly, $E_8$ is even
+unimodular with $\sigma(E_8)/8 = 1$ and $\mathrm{Arf}(E_8) = 0$.
+\end{theorem}
+
+The witness is computed rather than argued
+(\texttt{lattice\_arf\_bridge\_refuted}). On $E_8/2E_8$, which has
+$2^8 = 256$ elements,
+\begin{equation}
+\sum_{x \in E_8/2E_8} (-1)^{\bar q(x)} \;=\; +16 \;=\; +2^4 ,
+\label{eq:e8-gauss}
+\end{equation}
+evaluated by kernel reduction and not by native compilation
+(\texttt{gaussSum\_redQuad\_e8lit\_eq}). By~\eqref{eq:gauss-arf} with
+$g=4$ the positive sign is the $\mathrm{Arf} = 0$ branch, so
+$\mathrm{Arf}(E_8) = 0$, while $\sigma(E_8)/8 = 1$ is odd. The Gauss sum
+also decomposes as $136 - 120$, and the count is recognisable: the $120$
+classes on which $\bar q = 1$ are the $240$ roots of $E_8$ taken in
+$\pm$ pairs. Thus~\eqref{eq:arf-bridge} would read $1 \equiv 0$.
+
+Theorem~\ref{thm:arf-nogo} is not an isolated numerical accident, and
+three structural facts show that the bridge cannot be repaired inside the
+lattice category.
+
+\emph{The lattice Arf invariant is constant.} Each generator of the even
+unimodular family has vanishing Arf invariant
+(\texttt{arfOfForm\_e8lit\_eq\_zero},
+\texttt{arfOfForm\_neg\_e8lit\_eq\_zero},
+\texttt{arfOfForm\_hyp\_eq\_zero}), and the Gauss sum is multiplicative
+under orthogonal direct sums with every factor on the positive branch, so
+$\mathrm{Arf}$ is additive and vanishes identically on even unimodular
+forms. A constant function cannot equal $\sigma/8 \bmod 2$, which is not
+constant.
+
+\emph{It is orientation-blind.} Every coefficient of $\bar q$ is fixed
+modulo two under negation of the form, because $-a \equiv a$ and
+$-(2k)/2 = -k \equiv k$, so $\bar q(-M) = \bar q(M)$ and hence
+$\mathrm{Arf}(-M) = \mathrm{Arf}(M)$
+(\texttt{redQuad\_neg\_eq}, \texttt{arfOfForm\_neg\_eq}). But
+$\sigma(-M) = -\sigma(M)$. No invariant derived from $\bar q$ can see the
+sign of the signature, and $E_8$ against $-E_8$ makes that concrete: the
+Arf invariants agree while the signatures are $8$ and $-8$.
+
+\emph{The discriminant form is trivial.} For a unimodular lattice the
+discriminant group $L^{*}/L$ vanishes. The entire finite quadratic-form
+apparatus that produces signature congruences from Gauss sums therefore
+has nothing to act on beyond the mod-two reduction, and it can certify
+only $\sigma \equiv 0 \pmod 8$, which is Theorem~\ref{thm:eight-dvd} and
+which we already have by other means. It is blind to $\sigma$ modulo
+$16$. The refinement of $\bar q$ to values in $\mathbb{Z}/4$ does not
+help, since on an even lattice $b(x,x)$ takes only even values and the
+refinement collapses back to the same $\pm 1$ sum.
+
+The distinction that~\eqref{eq:arf-bridge} elides is between two
+different objects that share a name. The Arf invariant appearing in the
+correct congruence~\eqref{eq:freedman-kirby} lives on
+$H_1(\Sigma;\mathbb{Z}/2)$ for a smoothly embedded surface $\Sigma$ in a
+$4$-manifold; the one appearing in~\eqref{eq:arf-bridge} lives on
+$L/2L$ for the intersection lattice. The first depends on a smooth
+embedding and the second does not, and the data determining the first is
+not present in, and not recoverable from, the lattice.
+Theorem~\ref{thm:arf-nogo} is the precise statement that the substitution
+is unavailable, and it explains why the interface of
+Section~\ref{sec:sig-residual} must keep $2\mid\sigma/8$ as an input.
+
+The Gauss-sum machinery itself is correct and reusable: it proves
+\eqref{eq:gauss-arf} and it computes $\mathrm{Arf}$ on any even form
+presented in symplectic normal form. What it does not do, and provably
+cannot do, is certify the factor of two.
