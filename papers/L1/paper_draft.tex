@@ -283,14 +283,19 @@ the exact biconditional.
   \includegraphics[width=0.96\columnwidth]{figures/fig_c_GW_vs_ligo_constraint.png}
   \caption{\textbf{Headline result.} The
   $\dccap = \sqrt{\chivest} - 1$ deviation across the natural
-  $\chivest \in [0.1,10]$ range (red span) versus the
-  GW170817~\cite{Abbott2017GW170817} multi-messenger cap
-  $|\dccap| \leq 3\times 10^{-15}$ (amber band, visually
-  invisible at this scale). The natural range produces $\dccap
-  \in [-0.68, +2.16]$, exceeding the GW170817 cap by $\sim
-  10^{14}\times$. The compatible $\chivest$ window
-  $[(1-\tau)^2,(1+\tau)^2]$ collapses to a point at $\chivest = 1$
-  (gold star). Lean witness:
+  $\chivest \in [0.1,10]$ range (pale blue band, dashed blue border)
+  versus the GW170817~\cite{Abbott2017GW170817} multi-messenger cap
+  $|\dccap| \leq 3\times 10^{-15}$ (amber, drawn at $\dccap = 0$ ---
+  the cap's own width is far below one pixel at this scale). Over the
+  natural range $\dccap$ sweeps $[-0.68, +2.16]$, exceeding the cap by
+  $\sim 10^{14}\times$ \emph{at the endpoints} (orange callouts) and
+  vanishing at $\chivest = 1$. The compatible $\chivest$ window
+  $[(1-\tau)^2,(1+\tau)^2]$ is $10^{14}$ times narrower than the
+  natural range and so renders as the single gold star --- note that it
+  sits \emph{inside} the band, not beside it: the datum confines
+  $\chivest$, it does not exclude the range. Lean witnesses:
+  \texttt{ligo\_confines\_chi\_vest\_within\_natural\_range},
+  \texttt{ligo\_window\_subset\_natural\_range},
   \texttt{vestigial\_natural\_range\_violates\_ligo}.}
   \label{fig:cGW}
 \end{figure}

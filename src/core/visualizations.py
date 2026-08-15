@@ -8597,8 +8597,13 @@ def fig_c_GW_vs_ligo_constraint():
         line=dict(color=COLORS["steel_blue"], width=1, dash="dash"),
         fillcolor="rgba(74, 144, 226, 0.10)",
     )
+    # ⚠️ On a LOG x-axis Plotly takes annotation `x` in LOG UNITS. Passing the
+    # raw χ value put the χ=10 box at 10¹⁰ — seven decades from its datum, with
+    # its arrow in empty canvas (review:2026-08-14-l1-stage13:L1:5.2). Every
+    # annotation below therefore anchors on log10(χ).
+    import math as _math
     fig.add_annotation(
-        x=(chi_lo_nat * chi_hi_nat) ** 0.5,
+        x=_math.log10((chi_lo_nat * chi_hi_nat) ** 0.5),
         y=y_max + 0.05,
         text="Natural χ_vest range [0.1, 10]",
         showarrow=False,
@@ -8624,25 +8629,25 @@ def fig_c_GW_vs_ligo_constraint():
     # Endpoint annotations: violation factors
     summary = ligo_falsification_summary()
     fig.add_annotation(
-        x=chi_lo_nat, y=summary["delta_lower"],
+        x=_math.log10(chi_lo_nat), y=summary["delta_lower"],
         text=(
             f"χ=0.1<br>Δc/c≈{summary['delta_lower']:.3f}<br>"
             f"Violates LIGO by<br>{summary['violation_ratio_lower']:.1e}×"
         ),
         showarrow=True, arrowhead=2,
-        ax=60, ay=30,
+        ax=75, ay=-45,
         font=dict(size=9, color=COLORS["amber"]),
         bgcolor="rgba(255,255,255,0.85)",
         bordercolor=COLORS["amber"], borderwidth=1,
     )
     fig.add_annotation(
-        x=chi_hi_nat, y=summary["delta_upper"],
+        x=_math.log10(chi_hi_nat), y=summary["delta_upper"],
         text=(
             f"χ=10<br>Δc/c≈{summary['delta_upper']:.3f}<br>"
             f"Violates LIGO by<br>{summary['violation_ratio_upper']:.1e}×"
         ),
         showarrow=True, arrowhead=2,
-        ax=-80, ay=-30,
+        ax=80, ay=-30,
         font=dict(size=9, color=COLORS["amber"]),
         bgcolor="rgba(255,255,255,0.85)",
         bordercolor=COLORS["amber"], borderwidth=1,
@@ -8653,6 +8658,10 @@ def fig_c_GW_vs_ligo_constraint():
         xaxis=dict(
             title="χ_vest (vestigial-phase metric-channel susceptibility, dimensionless)",
             type="log",
+            # Clamp to the decades that carry data. Auto-ranging left eight
+            # empty decades on the right, because the mis-anchored χ=10
+            # annotation sat at 10¹⁰ and dragged the axis out with it.
+            range=[_math.log10(chi_grid[0]), _math.log10(chi_grid[-1])],
         ),
         yaxis=dict(
             title="Δc/c = (c_GW − c)/c",
@@ -8660,11 +8669,12 @@ def fig_c_GW_vs_ligo_constraint():
         ),
         title=dict(
             text=(
-                "Phase 6a Wave 2 — vestigial-second-sound graviton ID vs GW170817<br>"
-                "<sub>Δc/c = √χ_vest − 1; "
-                "GW170817 amber band |Δc/c| ≤ 3 × 10⁻¹⁵; "
-                "natural range fails by ~10¹⁴; "
-                "Lean: <i>GravitationalWaves.vestigial_natural_range_violates_ligo</i></sub>"
+                "Phase 6a Wave 2 — GW170817 confines the vestigial-second-sound "
+                "graviton ID<br>"
+                "<sub>Δc/c = √χ_vest − 1; cap |Δc/c| ≤ 3 × 10⁻¹⁵ (amber, at "
+                "Δc/c = 0). The compatible window is nested INSIDE the natural "
+                "range, meeting it at χ_vest = 1.<br>"
+                "Lean: <i>ligo_confines_chi_vest_within_natural_range</i></sub>"
             ),
             font=TITLE_FONT,
         ),

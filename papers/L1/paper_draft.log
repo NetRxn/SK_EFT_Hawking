@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  14 AUG 2026 20:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  14 AUG 2026 20:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -780,14 +780,25 @@ Underfull \hbox (badness 2334) in paragraph at lines 267--280
 at the
  []
 
-<figures/fig_c_GW_vs_ligo_constraint.png, id=99, 2409.0pt x 1606.0pt>
+<figures/fig_c_GW_vs_ligo_constraint.png, id=99, 2770.35pt x 1866.975pt>
 File: figures/fig_c_GW_vs_ligo_constraint.png Graphic file (type png)
 <use figures/fig_c_GW_vs_ligo_constraint.png>
 Package pdftex.def Info: figures/fig_c_GW_vs_ligo_constraint.png  used on input
  line 283.
-(pdftex.def)             Requested size: 236.16165pt x 157.42369pt.
+(pdftex.def)             Requested size: 236.16165pt x 159.13234pt.
 
-Overfull \hbox (192.61974pt too wide) detected at line 307
+Underfull \hbox (badness 10000) in paragraph at lines 299--299
+\OT1/cmr/m/n/9 nesses: \OT1/cmtt/m/n/9 ligo[]confines[]chi[]vest[]within[]natur
+al[]range\OT1/cmr/m/n/9 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 299--299
+\OT1/cmtt/m/n/9 ligo[]window[]subset[]natural[]range\OT1/cmr/m/n/9 ,
+ []
+
+
+Overfull \hbox (192.61974pt too wide) detected at line 312
 []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^_[]\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10 ^^Q
  \OML/cmm/m/it/10 ^^_[] > \OT1/cmr/m/n/10 0 \OMS/cmsy/m/n/10 ^ []\OT1/cmr/m/n/1
 0 (^^A\OML/cmm/m/it/10 c=c\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^_[]\OT1/cmr/m/n/1
@@ -797,234 +808,234 @@ Overfull \hbox (192.61974pt too wide) detected at line 307
  []
 
 
-Underfull \hbox (badness 1038) in paragraph at lines 307--327
+Underfull \hbox (badness 1038) in paragraph at lines 312--332
 \OT1/cmr/m/n/10 demanding pos-i-tiv-ity (P1), GW170817 com-pat-i-bil-ity
  []
 
 
-Underfull \hbox (badness 1163) in paragraph at lines 307--327
+Underfull \hbox (badness 1163) in paragraph at lines 312--332
 \OT1/cmr/m/n/10 at $\OML/cmm/m/it/10 ^^_[] \OT1/cmr/m/n/10 = 1$ (\OT1/cmtt/m/n/
 10 H[]VestigialModeIsGraviton[]at[]one\OT1/cmr/m/n/10 )
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 307--327
+Underfull \hbox (badness 10000) in paragraph at lines 312--332
 \OT1/cmr/m/n/10 and \OT1/cmr/m/it/10 four \OT1/cmr/m/n/10 ex-plicit fal-si-fier
  the-o-rems prove non-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 307--327
+Underfull \hbox (badness 10000) in paragraph at lines 312--332
 \OT1/cmr/m/n/10 vacuity: [][]\OT1/cmtt/m/n/10 *_fails_at_natural_lower []\OT1/c
 mr/m/n/10 (P2),
  []
 
 
-Underfull \hbox (badness 3460) in paragraph at lines 307--327
+Underfull \hbox (badness 3460) in paragraph at lines 312--332
 [][]\OT1/cmtt/m/n/10 *_fails_at_natural_upper []\OT1/cmr/m/n/10 (P2), [][]\OT1/
 cmtt/m/n/10 *_fails_at_zero
  []
 
 
-Underfull \hbox (badness 2717) in paragraph at lines 307--327
+Underfull \hbox (badness 2717) in paragraph at lines 312--332
 \OT1/cmr/m/n/10 sup-port over the natural-range prior has mea-sure
  []
 
 
-Underfull \hbox (badness 3375) in paragraph at lines 328--341
+Underfull \hbox (badness 3375) in paragraph at lines 333--346
  []\OT1/cmr/m/it/10 Phase 5y H1 caveat as a Lean end-point the-o-
  []
 
 
-Underfull \hbox (badness 2057) in paragraph at lines 328--341
+Underfull \hbox (badness 2057) in paragraph at lines 333--346
 \OT1/cmr/m/it/10 rem.[] \OT1/cmr/m/n/10 The Phase 5y H1 deep re-search es-tab-l
 ished
  []
 
 
-Underfull \hbox (badness 1303) in paragraph at lines 328--341
+Underfull \hbox (badness 1303) in paragraph at lines 333--346
 \OT1/cmr/m/n/10 that the Volovik iden-ti-fi-ca-tion is not a \OT1/cmr/m/it/10 d
 eriva-tion\OT1/cmr/m/n/10 :
  []
 
 
-Underfull \hbox (badness 2608) in paragraph at lines 328--341
+Underfull \hbox (badness 2608) in paragraph at lines 333--346
 \OT1/cmr/m/n/10 mode nor-mal-iza-tion in terms of the second-sound
  []
 
 
-Underfull \hbox (badness 3861) in paragraph at lines 328--341
+Underfull \hbox (badness 3861) in paragraph at lines 333--346
 \OT1/cmr/m/n/10 DOF. We for-mal-ize this caveat as the end-point
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 328--341
+Underfull \hbox (badness 10000) in paragraph at lines 333--346
 \OT1/cmr/m/n/10 the-o-rem \OT1/cmtt/m/n/10 natural[]endpoints[]violate[]ligo[]w
 indow\OT1/cmr/m/n/10 :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 328--341
+Underfull \hbox (badness 10000) in paragraph at lines 333--346
 \OT1/cmr/m/n/10 for $\OML/cmm/m/it/10 ^^_[]$ \OT1/cmr/m/n/10 at ei-ther natural
 -range end-point
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 328--341
+Underfull \hbox (badness 10000) in paragraph at lines 333--346
 \OMS/cmsy/m/n/10 f\OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 1\OML/cmm/
 m/it/10 ; \OT1/cmr/m/n/10 10\OMS/cmsy/m/n/10 g$\OT1/cmr/m/n/10 , no $\OML/cmm/m
 /it/10 c$\OT1/cmr/m/n/10 -rescaling gives a GW170817-
  []
 
 
-Underfull \hbox (badness 6412) in paragraph at lines 328--341
+Underfull \hbox (badness 6412) in paragraph at lines 333--346
 \OT1/cmr/m/n/10 compatible $^^A\OML/cmm/m/it/10 c=c$\OT1/cmr/m/n/10 . The frame
 -independent form
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 328--341
+Underfull \hbox (badness 10000) in paragraph at lines 333--346
 \OT1/cmtt/m/n/10 natural[]endpoints[]violate[]ligo[]for[]every[]c
  []
 
 
-Underfull \hbox (badness 3240) in paragraph at lines 328--341
+Underfull \hbox (badness 3240) in paragraph at lines 333--346
 \OT1/cmr/m/n/10 quan-ti-fies over all $\OML/cmm/m/it/10 c > \OT1/cmr/m/n/10 0$ 
 ex-plic-itly, rest-ing on
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 328--341
+Underfull \hbox (badness 10000) in paragraph at lines 333--346
 \OT1/cmtt/m/n/10 c[]GW[]relative[]deviation[]eq\OT1/cmr/m/n/10 . Both con-cern
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 328--341
+Underfull \hbox (badness 10000) in paragraph at lines 333--346
 \OT1/cmr/m/n/10 the two end-points only; nei-ther ex-cludes in-
  []
 
 
-Underfull \hbox (badness 4168) in paragraph at lines 328--341
+Underfull \hbox (badness 4168) in paragraph at lines 333--346
 \OT1/cmr/m/n/10 te-rior val-ues, and $\OML/cmm/m/it/10 ^^_[] \OT1/cmr/m/n/10 = 
 1$ sat-is-fies the cap
  []
 
 [3 <./figures/fig_c_GW_vs_ligo_constraint.png>]
-Underfull \hbox (badness 2653) in paragraph at lines 375--398
+Underfull \hbox (badness 2653) in paragraph at lines 380--403
  \OT1/cmr/m/n/10 lead-ing term in a deriva-tive ex-pan-sion. If
  []
 
 
-Underfull \hbox (badness 2165) in paragraph at lines 375--398
+Underfull \hbox (badness 2165) in paragraph at lines 380--403
  \OML/cmm/m/it/10 ^^_[]$ \OT1/cmr/m/n/10 varies with fre-quency, the leading-or
 der
  []
 
 
-Underfull \hbox (badness 1270) in paragraph at lines 375--398
+Underfull \hbox (badness 1270) in paragraph at lines 380--403
  \OT1/cmr/m/n/10 con-straint could in prin-ci-ple be re-laxed by a
  []
 
 
-Overfull \hbox (22.1778pt too wide) in paragraph at lines 375--398
+Overfull \hbox (22.1778pt too wide) in paragraph at lines 380--403
  \OT1/cmtt/m/n/10 vestigial[]dispersion[]below[]ligo[]at[]inspiral[]peak
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 375--398
+Underfull \hbox (badness 10000) in paragraph at lines 380--403
  \OT1/cmr/m/n/10 is \OT1/cmtt/m/n/10 dispersion[]within[]ligo[]iff\OT1/cmr/m/n/
 10 , a bi-con-di-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 375--398
+Underfull \hbox (badness 10000) in paragraph at lines 380--403
  \OT1/cmtt/m/n/10 dispersion[]correction[]linear[]in[]gamma \OT1/cmr/m/n/10 and
 
  []
 
 
-Overfull \hbox (2.64798pt too wide) in paragraph at lines 375--398
+Overfull \hbox (2.64798pt too wide) in paragraph at lines 380--403
  \OT1/cmtt/m/n/10 dispersion[]correction[]zero[]at[]no[]dissipation
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 417--426
+Underfull \hbox (badness 10000) in paragraph at lines 422--431
 \OT1/cmr/m/n/10 (32 the-o-rems, zero \OT1/cmtt/m/n/10 sorry\OT1/cmr/m/n/10 , ze
 ro new ax-ioms,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 417--426
+Underfull \hbox (badness 10000) in paragraph at lines 422--431
 \OT1/cmr/m/n/10 zero \OT1/cmtt/m/n/10 maxHeartbeats \OT1/cmr/m/n/10 over-rides)
  at the project's
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 417--426
+Underfull \hbox (badness 10000) in paragraph at lines 422--431
 \OT1/cmr/m/n/10 pinned Math-lib4 com-mit; the Python layer is
  []
 
 
-Underfull \hbox (badness 5533) in paragraph at lines 417--426
+Underfull \hbox (badness 5533) in paragraph at lines 422--431
 \OT1/cmtt/m/n/10 src/gravitational[]waves/ \OT1/cmr/m/n/10 with 49 \OT1/cmtt/m/
 n/10 pytest \OT1/cmr/m/n/10 cases
  []
 
 
-Underfull \hbox (badness 6775) in paragraph at lines 417--426
+Underfull \hbox (badness 6775) in paragraph at lines 422--431
 \OT1/cmr/m/n/10 cross-checking ev-ery nu-meric quoted in the ab-
  []
 
 
-Underfull \hbox (badness 4205) in paragraph at lines 417--426
+Underfull \hbox (badness 4205) in paragraph at lines 422--431
 \OT1/cmr/m/n/10 stract and fig-ure cap-tion. The head-line fig-ure
  []
 
 
-Overfull \hbox (37.92532pt too wide) in paragraph at lines 417--426
+Overfull \hbox (37.92532pt too wide) in paragraph at lines 422--431
 \OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 src/core/visualizations.py:fig[]c[]GW[]vs[]li
 go[]constraint\OT1/cmr/m/n/10 )
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 431--434
+Underfull \hbox (badness 10000) in paragraph at lines 436--439
  []\OT1/cmr/m/n/9 G. E. Volovik, ``Fermionic Quar-tet and Ves-ti-
  []
 
 
-Underfull \hbox (badness 1400) in paragraph at lines 431--434
+Underfull \hbox (badness 1400) in paragraph at lines 436--439
  \OT1/cmr/m/n/9 gial Grav-ity,'' JETP Lett. \OT1/cmr/bx/n/9 119\OT1/cmr/m/n/9 ,
  330 (2024); DOI:
  []
 
 
-Underfull \hbox (badness 2189) in paragraph at lines 455--457
+Underfull \hbox (badness 2189) in paragraph at lines 460--462
  []\OT1/cmr/m/n/9 D. Di-akonov, ``To-wards lattice-regularized quan-tum
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 469--471
+Underfull \hbox (badness 10000) in paragraph at lines 474--476
  []\OT1/cmr/m/n/9 C. Wet-terich, JHEP \OT1/cmr/bx/n/9 06\OT1/cmr/m/n/9 , 069 (2
 022); DOI:
  []
 
 
-Underfull \hbox (badness 7326) in paragraph at lines 497--500
+Underfull \hbox (badness 7326) in paragraph at lines 502--505
  []\OT1/cmr/m/n/9 J. M. Ezquiaga and M. Zu-malac^^Sarregui, Phys.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 502--506
+Underfull \hbox (badness 10000) in paragraph at lines 507--511
  []\OT1/cmr/m/n/9 J. G. Roehm, ``Lin-earized Ein-stein Equa-tions
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 502--506
+Underfull \hbox (badness 10000) in paragraph at lines 507--511
  \OT1/cmr/m/n/9 from Anderson--Higgs Tetrad Con-den-sa-tion'',
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 502--506
+Underfull \hbox (badness 10000) in paragraph at lines 507--511
  \OT1/cmr/m/it/9 SK--EFT-Hawking project, in prepa-ra-tion\OT1/cmr/m/n/9 , 2026
 
  []
@@ -1039,13 +1050,13 @@ Package rerunfilecheck Info: File `paper_draft.out' has not changed.
 (rerunfilecheck)             Checksum: 125BBA4620DEFB31C3E2461305DB4D36;1227.
  ) 
 Here is how much of TeX's memory you used:
- 15910 strings out of 467525
- 301249 string characters out of 5418982
- 713855 words of memory out of 5000000
- 44618 multiletter control sequences out of 15000+600000
+ 15911 strings out of 467525
+ 301260 string characters out of 5418982
+ 717223 words of memory out of 5000000
+ 44619 multiletter control sequences out of 15000+600000
  637559 words of font info for 79 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,79p,767b,1124s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,79p,1195b,1124s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
@@ -1067,7 +1078,7 @@ dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-d
 ist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dis
 t/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist
 /fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on paper_draft.pdf (4 pages, 420216 bytes).
+Output written on paper_draft.pdf (4 pages, 493218 bytes).
 PDF statistics:
  230 PDF objects out of 1000 (max. 8388607)
  176 compressed objects within 2 object streams

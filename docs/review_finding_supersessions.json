@@ -7579,6 +7579,19 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:5.2",
+      "status": "fixed",
+      "evidence": "Verified the PNG myself rather than taking the finding on trust, and it was right on every point. Caption corrected: the natural-range band is pale blue with a dashed blue border, not red; \"amber band, visually invisible\" replaced with the truth, that the cap is drawn at Delta c/c = 0 and its own width is sub-pixel at this scale. Generator fixed at the root cause: on a Plotly LOG axis annotation x is taken in LOG UNITS, so passing the raw chi value put the chi=10 callout at 10^10 -- seven decades from its datum, with its arrow in empty canvas, and it dragged the auto-ranged axis out to eight empty decades. All three annotations now anchor on log10(chi) and the x-range is clamped to the decades carrying data. Re-rendered through the canonical sizing (the figure own 920x620 canvas at scale 3) and read back twice, which caught two further defects I had introduced: a subtitle too long for the canvas and a callout colliding with the axis labels. Both fixed. The figure now shows what the corrected prose says -- the gold star at chi_vest = 1 sits INSIDE the natural-range band. L1 recompiles 0 errors, 4 pages.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"red span\" papers/L1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q \"red span\" papers/L1/paper_draft.tex",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
