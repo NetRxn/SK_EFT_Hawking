@@ -200,11 +200,30 @@ class TestReviewFindingIntegrity:
         # paper-key matcher or the bundle-code matcher. The residual orphans are
         # findings on bundles whose sources are all `_phaseXX_lean_only` dirs
         # with no Paper node (e.g. I2/I3/D7/D8) — intentionally left unattached.
+        #
+        # ⚠️ **0.70 -> 0.89 on 2026-08-15, AND THIS IS A RE-DERIVATION FROM A CORRECTED
+        # INSTRUMENT, NOT AN ACCOMMODATION.** `extract_flags_edges` was taught to call
+        # `build_graph.resolve_attribution` — the same resolver the readiness aggregation
+        # already used — instead of resolving from the two inferences on its own. Measured
+        # over the live corpus of 1749 findings: orphans 208 -> 178, attach-rate
+        # **0.881075 -> 0.898228**, FLAGS edges 4987 -> 6227. Nothing was added to the
+        # corpus; 30 findings that always declared a resolvable target stopped being
+        # invisible to this edge type.
+        #
+        # The floor is placed at 0.89 DELIBERATELY BETWEEN the two measured values, which
+        # 0.70 could not do: a floor beneath the pre-fix rate cannot detect the pre-fix
+        # behaviour, so reverting the shared resolver would have left this test green.
+        # 0.70 carried eighteen points of headroom, and a ratchet with headroom is not a
+        # loose guard, it is no guard. ~0.8 points of margin remain — about fourteen
+        # findings — which is a real budget for new review documents and a real alarm if
+        # a batch of them lands declaring targets that resolve nowhere.
         attach_rate = 1.0 - (len(orphans) / len(findings))
-        assert attach_rate >= 0.70, (
-            f"Only {attach_rate:.0%} of {len(findings)} ReviewFindings are "
-            f"attached via FLAGS/SUPERSEDES; heuristic paper-attribution "
-            f"may be failing. First 3 orphans: {orphans[:3]}"
+        assert attach_rate >= 0.89, (
+            f"Only {attach_rate:.1%} of {len(findings)} ReviewFindings are "
+            f"attached via FLAGS/SUPERSEDES; attribution may be failing. Measured "
+            f"0.898228 on 2026-08-15 with both layers sharing "
+            f"`build_graph.resolve_attribution`; 0.881075 with the graph layer "
+            f"resolving on its own. First 3 orphans: {orphans[:3]}"
         )
 
 

@@ -2354,3 +2354,449 @@ class TestStage13KindResolution:
         assert any(s == "evidence-document" for s in sources.values()), (
             "no kind resolved from an evidence document — the backfill path is dead, and its "
             "silence is indistinguishable from 'no document declares a kind'")
+
+
+class TestLeanModuleDeregistration:
+    """`bundle_lean_module_coverage`'s deregistration path (2026-08-15).
+
+    **The defect this closes was a CONTENT defect, not a gate defect.** The ratchet was
+    frozen at its corpus ceiling, so a redraft that legitimately stopped depending on a
+    module raised the count and turned the corpus red. The L3 Stage-10 redraft therefore
+    kept two theorem citations in its Discussion purely to hold the ratchet green, and
+    the `prose-reviewer` independently flagged those same two as belonging to a different
+    paper's argument (`papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md` §5.2).
+
+    What is tested here is the property that keeps deregistration from being an escape
+    hatch: **it is a falsifiable claim about the manuscript, not a mute button.**
+    """
+
+    def _setup(self, tmp_path, monkeypatch, bundles):
+        """`bundles = {code: (events, draft_body)}` — events verbatim, so a test can
+        write a deregistration event the writer would have refused."""
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        for code, (events, body) in bundles.items():
+            (papers / code).mkdir(parents=True, exist_ok=True)
+            (papers / code / "paper_draft.tex").write_text(body)
+            (papers / code / "append_log.json").write_text(json.dumps(
+                {"bundle_target": code, "events": events}))
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", tuple(bundles))
+
+    @staticmethod
+    def _why(n=60):
+        return "the redraft dropped this dependency; " + "x" * n
+
+    def test_a_deregistered_module_leaves_the_absence_ledger(self, tmp_path, monkeypatch):
+        """THE POINT OF THE MECHANISM. Registered-and-unreached fails at ceiling 0;
+        deregistering the same module passes, because the ledger scores the NET set."""
+        self._setup(tmp_path, monkeypatch, {"D1": (
+            [{"lean_modules_referenced": ["ADWMechanism"]}], "no mention\n")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 0)
+        assert not bru.check_bundle_lean_module_coverage().passed
+
+        self._setup(tmp_path, monkeypatch, {"D1": (
+            [{"lean_modules_referenced": ["ADWMechanism"]},
+             {"lean_modules_deregistered": ["ADWMechanism"],
+              "deregistration_rationale": self._why()}], "no mention\n")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 0)
+        r = bru.check_bundle_lean_module_coverage()
+        assert r.passed, [d.message for d in r.details if not d.passed]
+
+    def test_the_drop_is_REPORTED_even_when_the_check_is_green(self, tmp_path, monkeypatch):
+        """Visibility is half the design. A silent drop and a declared drop must not
+        look the same in the gate's output, or 'deliberate' means nothing."""
+        self._setup(tmp_path, monkeypatch, {"D1": (
+            [{"lean_modules_referenced": ["ADWMechanism"]},
+             {"lean_modules_deregistered": ["ADWMechanism"],
+              "deregistration_rationale": self._why()}], "no mention\n")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 0)
+        r = bru.check_bundle_lean_module_coverage()
+        assert r.passed
+        dereg = [d for d in r.details if d.name == "deregistered"]
+        assert dereg and "ADWMechanism" in dereg[0].message, (
+            "a green run must still name what the bundle stopped resting on")
+
+    def test_deregistering_a_module_the_draft_STILL_REACHES_fails(self, tmp_path, monkeypatch):
+        """THE FALSIFIABILITY LEG. 'I no longer depend on this' is checked against the
+        manuscript. Unratcheted: a ratchet here would resell the escape hatch."""
+        self._setup(tmp_path, monkeypatch, {"D1": (
+            [{"lean_modules_referenced": ["ADWMechanism"]},
+             {"lean_modules_deregistered": ["ADWMechanism"],
+              "deregistration_rationale": self._why()}],
+            "we rely on ADWMechanism throughout\n")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 999)
+        r = bru.check_bundle_lean_module_coverage()
+        assert not r.passed
+        bad = [d for d in r.details if d.name == "deregistration_contradicted"]
+        assert bad and "ADWMechanism" in bad[0].message
+
+    def test_the_contradiction_leg_fires_when_EVERYTHING_was_deregistered(
+            self, tmp_path, monkeypatch):
+        """Regression pin for a real ordering trap: the contradiction scan sits ABOVE
+        the `not mods` guard. A bundle that deregistered its whole registration set has
+        an empty net set, and scoring it inside the registered-module accounting would
+        skip exactly the bundle most likely to have over-claimed."""
+        self._setup(tmp_path, monkeypatch, {"D1": (
+            [{"lean_modules_referenced": ["ADWMechanism"]},
+             {"lean_modules_deregistered": ["ADWMechanism"],
+              "deregistration_rationale": self._why()}],
+            "we rely on ADWMechanism throughout\n")})
+        r = bru.check_bundle_lean_module_coverage()
+        assert not r.passed
+        assert any(d.name == "deregistration_contradicted" for d in r.details)
+
+    def test_a_bare_deregistration_fails_even_when_HAND_WRITTEN(self, tmp_path, monkeypatch):
+        """The rationale floor is asserted by the CHECK, not only by the CLI. A gate
+        that trusts its own writer to have been used is not a gate — `append_log.json`
+        is an ordinary tracked file and a hand edit reaches it."""
+        self._setup(tmp_path, monkeypatch, {"D1": (
+            [{"lean_modules_referenced": ["ADWMechanism"]},
+             {"lean_modules_deregistered": ["ADWMechanism"],
+              "deregistration_rationale": "n/a"}], "no mention\n")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 999)
+        r = bru.check_bundle_lean_module_coverage()
+        assert not r.passed
+        assert any(d.name == "deregistration_unjustified" for d in r.details)
+
+    def test_re_registration_after_a_drop_is_ORDER_sensitive(self, tmp_path, monkeypatch):
+        """`union(registered) - union(deregistered)` reports a re-registered module as
+        dropped forever. Walking in order is the only reading that gets a
+        register -> drop -> register sequence right."""
+        from bundle_append import net_registered_modules
+        reg, dereg = net_registered_modules([
+            {"lean_modules_referenced": ["A"]},
+            {"lean_modules_deregistered": ["A"], "deregistration_rationale": "x" * 40},
+            {"lean_modules_referenced": ["A"]},
+        ])
+        assert reg == {"A"} and dereg == set(), (
+            "a module re-registered by a later wave is registered again")
+
+    def test_the_writer_REFUSES_a_module_the_bundle_never_registered(
+            self, tmp_path, monkeypatch):
+        """A deregistration of something never registered reads, forever after, as
+        evidence a dependency once existed. Refuse rather than record a no-op."""
+        import bundle_append
+        d = tmp_path / "papers" / "D1"
+        d.mkdir(parents=True)
+        (d / "append_log.json").write_text(json.dumps(
+            {"bundle_target": "D1", "events": [{"lean_modules_referenced": ["A"]}]}))
+        monkeypatch.setattr(bundle_append, "PAPERS_DIR", tmp_path / "papers")
+        assert bundle_append.deregister_lean_modules(
+            bundle="D1", modules=["B"], rationale=self._why()) != 0
+
+    def test_the_writer_REFUSES_a_thin_rationale(self, tmp_path, monkeypatch):
+        import bundle_append
+        d = tmp_path / "papers" / "D1"
+        d.mkdir(parents=True)
+        (d / "append_log.json").write_text(json.dumps(
+            {"bundle_target": "D1", "events": [{"lean_modules_referenced": ["A"]}]}))
+        monkeypatch.setattr(bundle_append, "PAPERS_DIR", tmp_path / "papers")
+        assert bundle_append.deregister_lean_modules(
+            bundle="D1", modules=["A"], rationale="dropped") != 0
+
+    def test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red(self):
+        """§2.4: seed the defect into the artifact the check ACTUALLY reads.
+
+        L3's draft demonstrably reaches `BHThermodynamicsFourLaws` — it is the module
+        the Letter is about. Recording a deregistration of it into the real
+        `papers/L3/append_log.json` must turn the live check red, or the falsifiability
+        leg is decoration.
+        """
+        from seed_journal import seeded_mutation
+        log = _H.PAPERS_DIR / "L3" / "append_log.json"
+        assert bru.check_bundle_lean_module_coverage().passed, (
+            "precondition: the live check is green before seeding")
+
+        def _seed(text):
+            data = json.loads(text)
+            data["events"].append({
+                "date": "2026-08-15T00:00:00Z",
+                "lean_modules_deregistered": ["BHThermodynamicsFourLaws"],
+                "deregistration_rationale":
+                    "SEEDED BY THE TEST SUITE — a deliberately FALSE deregistration of "
+                    "the module this Letter is entirely about, to prove the "
+                    "contradiction leg can fire in production.",
+            })
+            return json.dumps(data, indent=2)
+
+        with seeded_mutation(log, _seed,
+                             reason="prove a deregistration contradicted by the draft "
+                                    "fails in production"):
+            r = bru.check_bundle_lean_module_coverage()
+            assert not r.passed, "a false deregistration must not pass"
+            bad = [d for d in r.details if d.name == "deregistration_contradicted"]
+            assert bad and "BHThermodynamicsFourLaws" in bad[0].message
+        assert bru.check_bundle_lean_module_coverage().passed, "restore failed"
+
+
+class TestBundleAbstractLength:
+    """`bundle_abstract_length` (2026-08-15, L3 Stage-10 redraft finding 5.1).
+
+    The superseded L3 abstract was ~1900 characters against PRL's ~600 and **every gate
+    in the suite passed it**, because `bundle_manuscript_length` sizes the whole
+    manuscript and four pages is within a 3750 word-equivalent ceiling however the words
+    are distributed. A real submission would have been desk-returned before review.
+    """
+
+    def _setup(self, tmp_path, monkeypatch, bundles):
+        """`bundles = {code: (metadata, tex)}`."""
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        for code, (md, tex) in bundles.items():
+            (papers / code).mkdir(parents=True, exist_ok=True)
+            (papers / code / "bundle_metadata.json").write_text(json.dumps(md))
+            (papers / code / "paper_draft.tex").write_text(tex)
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", tuple(bundles))
+        # ⚠️ The production POPULATION FLOOR is a property of the real corpus. A fixture
+        # legitimately has fewer rows, so it is lowered here — and ONLY here. The floor
+        # itself is asserted against production by
+        # `test_the_population_floor_has_zero_headroom`, which does not use this helper.
+        monkeypatch.setattr(bru, "ABSTRACT_CEILING_DECLARED_FLOOR", 0)
+
+    @staticmethod
+    def _md(ceiling=600, unit="characters", verified=True):
+        return {"length_target": {"unit": "word_equivalents", "ceiling": 3750,
+                                  "abstract_ceiling": {
+                                      "unit": unit, "ceiling": ceiling,
+                                      "source": "test", "source_verified": verified}},
+                "target_journal": "PRL"}
+
+    @staticmethod
+    def _tex(body):
+        return "\\begin{abstract}\n" + body + "\n\\end{abstract}\n"
+
+    def test_a_short_abstract_passes_and_a_long_one_fails(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"L1": (self._md(), self._tex("a" * 100))})
+        assert bru.check_bundle_abstract_length().passed
+        self._setup(tmp_path, monkeypatch, {"L1": (self._md(), self._tex("a" * 900))})
+        r = bru.check_bundle_abstract_length()
+        assert not r.passed
+        assert any(d.name == "over_ceiling" and "L1" in d.message for d in r.details)
+
+    def test_MARKUP_does_not_count_but_its_ARGUMENT_does(self, tmp_path, monkeypatch):
+        r"""`\textit{foo}` renders as `foo`. Counting the control sequence would fail an
+        abstract that fits, which is the same class of wrongness as passing one that
+        does not — a gate whose measurement is wrong in EITHER direction is not a gate."""
+        assert bru.abstract_plain_text(self._tex(r"\textit{hello} \emph{there}")) == \
+            "hello there"
+
+    def test_a_MACRO_counts_as_ONE_character_not_its_source_length(self, tmp_path):
+        r"""`\Thawk` typesets as roughly one glyph. Counting six would inflate a
+        symbol-dense abstract past a limit it actually meets."""
+        assert len(bru.abstract_plain_text(self._tex(r"$\Thawk$"))) == 1
+
+    def test_an_escaped_percent_is_ONE_character(self):
+        assert bru.abstract_plain_text(self._tex(r"50\% of it")) == "50% of it"
+
+    def test_a_bundle_with_NO_declared_ceiling_is_UNMEASURED_not_passing(
+            self, tmp_path, monkeypatch):
+        """An absent declaration is a live, visible state — never a quiet pass. This is
+        the `bundle_manuscript_length` policy, deliberately mirrored."""
+        self._setup(tmp_path, monkeypatch, {
+            "L1": ({"length_target": {"unit": "pages", "ceiling": 60}},
+                   self._tex("a" * 9000))})
+        r = bru.check_bundle_abstract_length()
+        assert not r.passed and not r.measured, (
+            "a corpus that declares no abstract ceiling is UNVERIFIED, not clean")
+        assert any(d.name == "unmeasured" and "L1" in d.message for d in r.details)
+
+    def test_a_draft_with_NO_abstract_environment_is_UNMEASURED(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, {"L1": (self._md(), "\\section{Intro}\n")})
+        r = bru.check_bundle_abstract_length()
+        assert not r.passed and not r.measured
+
+    def test_an_UNVERIFIED_ceiling_is_SAID_SO_on_a_passing_run(self, tmp_path, monkeypatch):
+        """A green must not read as 'confirmed venue-conformant' when no human has
+        checked the number against the primary author guide. The 2026-08-15
+        research-scout pass could not reach ONE of fourteen venues' guides."""
+        self._setup(tmp_path, monkeypatch,
+                    {"L1": (self._md(verified=False), self._tex("a" * 100))})
+        r = bru.check_bundle_abstract_length()
+        assert r.passed
+        assert any(d.name == "ceiling_provenance" for d in r.details)
+        assert "NOT confirmed" in r.details[0].message
+
+    def test_the_POPULATION_floor_fires_when_declarations_are_dropped(
+            self, tmp_path, monkeypatch):
+        """§2.5: NON-EMPTY IS NOT ENOUGH. Without this leg, dropping four of the five
+        declarations leaves the check sizing one abstract, finding it within its ceiling
+        and reporting a clean pass — a narrowed population reporting health over the
+        bundles it stopped reading. `theorem_census_agrees` lost 13 matched sites to 5
+        and stayed green on exactly this shape."""
+        self._setup(tmp_path, monkeypatch, {"L1": (self._md(), self._tex("a" * 100))})
+        monkeypatch.setattr(bru, "ABSTRACT_CEILING_DECLARED_FLOOR", 5)  # undo _setup
+        r = bru.check_bundle_abstract_length()
+        assert not r.passed and not r.measured, (
+            "1 declaration against a floor of 5 must fail, and must not count as a "
+            "measurement of the corpus")
+        assert any(d.name == "population_floor" for d in r.details)
+
+    def test_the_population_floor_has_zero_headroom(self):
+        """The live count IS the floor."""
+        r = bru.check_bundle_abstract_length()
+        n = int(re.search(r"(\d+) abstract\(s\) sized", r.details[0].message).group(1))
+        assert n == bru.ABSTRACT_CEILING_DECLARED_FLOOR, (
+            f"floor {bru.ABSTRACT_CEILING_DECLARED_FLOOR} but live {n}")
+
+    def test_the_words_unit_counts_words(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch,
+                    {"L1": (self._md(ceiling=3, unit="words"), self._tex("a b c d e"))})
+        assert not bru.check_bundle_abstract_length().passed
+
+    def test_PRODUCTION_SEEDED_inflating_a_REAL_abstract_turns_that_bundle_red(self):
+        """§2.4: seed into the artifact the check ACTUALLY reads.
+
+        ⚠️ The live check is RED at HEAD (L1/L2/E1/E2 are over), so 'the check went
+        red' proves nothing here. What this asserts is the per-bundle verdict: **L3 is
+        within its ceiling before the seed and OVER it after**, which is the transition
+        a bundle-scoped gate has to be able to make.
+        """
+        from seed_journal import seeded_mutation
+
+        def _l3_row(kind):
+            r = bru.check_bundle_abstract_length()
+            return [d for d in r.details if d.name == kind and d.message.startswith("L3:")]
+
+        assert _l3_row("within_ceiling"), "precondition: L3's abstract fits at HEAD"
+        assert not _l3_row("over_ceiling")
+
+        tex = _H.PAPERS_DIR / "L3" / "paper_draft.tex"
+        with seeded_mutation(
+                tex,
+                lambda t: t.replace(
+                    r"\begin{abstract}",
+                    r"\begin{abstract}" + "\nSeeded by the test suite. " * 40, 1),
+                reason="prove the abstract ceiling fires on a bundle that was passing"):
+            assert _l3_row("over_ceiling"), "an inflated real abstract must go over"
+            assert not _l3_row("within_ceiling")
+        assert _l3_row("within_ceiling"), "restore failed"
+
+
+class TestApexTheoremClaimsGrounded:
+    """`apex_theorem_claims_grounded` (2026-08-15, L3 Stage-10 redraft finding 3).
+
+    ⚠️ **READ THE CHECK'S DOCSTRING BEFORE READING THIS AS VERIFICATION.** The three
+    legs are decidable and were unmeasured; they are not claim-to-type equivalence, and
+    the exact L3 §2.3 defect that motivated the check is NOT caught by it. That is
+    stated in the check, and this class does not contradict it.
+    """
+
+    def _setup(self, tmp_path, monkeypatch, apexes):
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        (papers / "L3").mkdir(parents=True, exist_ok=True)
+        (papers / "L3" / "bundle_metadata.json").write_text(
+            json.dumps({"apex_theorems": apexes}))
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", ("L3",))
+        # See the note in TestBundleAbstractLength._setup — production floor, fixture
+        # population. Asserted against production separately.
+        monkeypatch.setattr(bru, "APEX_CLAIMS_SCORED_FLOOR", 0)
+
+    #: A real theorem, so the check reaches the claim rather than skipping the row.
+    REAL = "SKEFTHawking.BHThermodynamicsFourLaws.regime_partition_criterion"
+
+    def test_live_state_passes(self):
+        assert bru.check_apex_theorem_claims_grounded().passed
+
+    def test_a_real_claim_passes(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, [
+            {"name": self.REAL, "claims": "the sign of dT_H/dt flips at the threshold"}])
+        assert bru.check_apex_theorem_claims_grounded().passed
+
+    def test_a_PLACEHOLDER_claim_fails(self, tmp_path, monkeypatch):
+        for bad in ("TODO", "", "TBD — fill this in later", "see the module docstring"):
+            self._setup(tmp_path, monkeypatch, [{"name": self.REAL, "claims": bad}])
+            r = bru.check_apex_theorem_claims_grounded()
+            assert not r.passed, f"{bad!r} must not pass"
+            assert any(d.name == "claim_placeholder" for d in r.details)
+
+    def test_a_claim_that_RESTATES_THE_NAME_fails(self, tmp_path, monkeypatch):
+        for bad in ("regime_partition_criterion", "Regime partition criterion.",
+                    "REGIME-PARTITION-CRITERION"):
+            self._setup(tmp_path, monkeypatch, [{"name": self.REAL, "claims": bad}])
+            r = bru.check_apex_theorem_claims_grounded()
+            assert not r.passed, f"{bad!r} must not pass"
+            assert any(d.name == "claim_restates_name" for d in r.details)
+
+    def test_a_numeral_absent_from_the_statement_is_counted(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, [
+            {"name": self.REAL, "claims": "the threshold sits at 987654 exactly"}])
+        monkeypatch.setattr(bru, "APEX_CLAIM_NUMERAL_CEILING", 0)
+        r = bru.check_apex_theorem_claims_grounded()
+        assert not r.passed
+        assert any(d.name == "claim_numeral_absent" for d in r.details)
+
+    def test_SECTION_AND_YEAR_refs_are_not_treated_as_claimed_quantities(
+            self, tmp_path, monkeypatch):
+        """A pointer into the corpus is not a quantity the theorem asserts. Requiring
+        `§7.3` or `2005` to appear in an elaborated type guarantees a false positive,
+        and a check whose population is mostly noise stops being read."""
+        self._setup(tmp_path, monkeypatch, [
+            {"name": self.REAL,
+             "claims": "§7.3 — the Balbinot 2005 grounded sign, Wave 6a, Lemma 3.10"}])
+        monkeypatch.setattr(bru, "APEX_CLAIM_NUMERAL_CEILING", 0)
+        assert bru.check_apex_theorem_claims_grounded().passed
+
+    def test_an_UNRESOLVED_apex_is_SKIPPED_not_scored(self, tmp_path, monkeypatch):
+        """`bundle_apex_resolves` owns name resolution and hard-fails on it. Reporting
+        it twice makes one defect look like two; scoring it here would be worse still,
+        because this check would claim coverage of a row it could not read."""
+        self._setup(tmp_path, monkeypatch, [
+            {"name": "SKEFTHawking.NoSuchModule.no_such_theorem", "claims": "TODO"}])
+        r = bru.check_apex_theorem_claims_grounded()
+        assert not r.passed and not r.measured, (
+            "a corpus with no resolvable apex is UNVERIFIED, not clean")
+
+    def test_the_POPULATION_floor_fires_when_the_scored_set_shrinks(
+            self, tmp_path, monkeypatch):
+        """§2.5. All three legs are universals over a bundle-supplied set, so anything
+        that quietly shrinks that set makes them hold over fewer rows while still
+        reporting a clean pass. The violations were ratcheted from the start; the
+        POPULATION was not, and that is the half that rots silently."""
+        self._setup(tmp_path, monkeypatch, [
+            {"name": self.REAL, "claims": "the sign of dT_H/dt flips at the threshold"}])
+        monkeypatch.setattr(bru, "APEX_CLAIMS_SCORED_FLOOR", 639)  # undo _setup
+        r = bru.check_apex_theorem_claims_grounded()
+        assert not r.passed and not r.measured
+        assert any(d.name == "population_floor" for d in r.details)
+
+    def test_the_population_floor_has_zero_headroom(self):
+        r = bru.check_apex_theorem_claims_grounded()
+        n = int(re.search(r"(\d+) declared apex claim", r.details[0].message).group(1))
+        assert n == bru.APEX_CLAIMS_SCORED_FLOOR, (
+            f"floor {bru.APEX_CLAIMS_SCORED_FLOOR} but live {n}")
+
+    def test_the_numeral_ratchet_has_zero_headroom(self):
+        """A ratchet above the live population cannot fire (§2.3)."""
+        r = bru.check_apex_theorem_claims_grounded()
+        n = int(re.search(r"(\d+) with a numeral absent", r.details[0].message).group(1))
+        assert n == bru.APEX_CLAIM_NUMERAL_CEILING, (
+            f"ceiling {bru.APEX_CLAIM_NUMERAL_CEILING} but live count {n}")
+
+    def test_PRODUCTION_SEEDED_a_placeholder_claim_turns_the_real_corpus_red(self):
+        """§2.4: seed into `papers/L3/bundle_metadata.json`, the artifact the check
+        reads. Legs 1 and 2 have a live population of ZERO, which is what a regression
+        guard looks like — and exactly why they need production seeding rather than a
+        ratchet to prove they can fire at all."""
+        from seed_journal import seeded_mutation
+        md_path = _H.PAPERS_DIR / "L3" / "bundle_metadata.json"
+        assert bru.check_apex_theorem_claims_grounded().passed, "precondition: green"
+
+        def _seed(text):
+            data = json.loads(text)
+            data["apex_theorems"][0]["claims"] = "TODO"
+            data["apex_theorems"][1]["claims"] = \
+                data["apex_theorems"][1]["name"].split(".")[-1]
+            return json.dumps(data, indent=2)
+
+        with seeded_mutation(md_path, _seed,
+                             reason="prove the placeholder and name-restatement legs "
+                                    "fire in production"):
+            r = bru.check_apex_theorem_claims_grounded()
+            assert not r.passed
+            assert any(d.name == "claim_placeholder" for d in r.details)
+            assert any(d.name == "claim_restates_name" for d in r.details)
+        assert bru.check_apex_theorem_claims_grounded().passed, "restore failed"

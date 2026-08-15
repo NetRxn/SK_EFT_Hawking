@@ -167,6 +167,49 @@ Effects (vs `§3a`/`§3b` full lifts):
 
 The notes field is required; it carries the entire explanation of why no content change was needed, so it should specifically name the drifted files and the verification (`grep`, manual inspection, or compile-time decoupling) that justifies the bookkeeping path over a real lift.
 
+### §3d. Deregistering a Lean module a redraft no longer rests on (ADR-015 D1)
+
+A drafting pass that **stops** depending on a Lean module must be able to say so. Before
+2026-08-15 it could not, and the cost was measured in manuscript quality: with
+`bundle_lean_module_coverage` frozen at its corpus ceiling, dropping a dependency raised
+the count and turned the corpus red, so the cheap path was to keep citing the module. The
+L3 Stage-10 redraft took it — **two theorem citations were retained in the Discussion
+purely to hold the ratchet green, and the `prose-reviewer` independently flagged those
+same two as belonging to a different paper's argument**
+(`papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md` §5.2).
+
+```bash
+uv run python scripts/bundle_append.py --bundle <X> \
+    --deregister-lean-modules "GloriosoLiu.Axioms,SKDoubling" \
+    --deregistration-rationale "<why this draft no longer rests on them>"
+```
+
+Effects:
+- **Appends** a `Deregister-lean-modules` event carrying `lean_modules_deregistered` and
+  `deregistration_rationale`. The registering event is **never edited or removed**, so
+  the log still says the bundle once depended on the module, and when and why it stopped.
+- Appends a dated H2 to `change_log.md`.
+- Bumps `last_lift`, clears `freshness_stale`; **does NOT** touch `paper_draft.tex` and
+  **does NOT** flip `stage{9,10,13}_status` — nothing reviewed changed.
+
+Four things keep this from being an escape hatch, and the last is the one that matters:
+
+1. the rationale is **required**, with a length floor, and the floor is re-asserted by
+   `bundle_lean_module_coverage` — a hand-edited `append_log.json` cannot get a bare
+   deregistration past the gate;
+2. the writer **refuses** a module the bundle does not currently register, rather than
+   recording a no-op that reads forever after as evidence a dependency once existed;
+3. every deregistration is **reported by the check on every run, including a green one**,
+   naming the modules;
+4. **the claim is falsifiable.** Deregistering a module the draft still reaches — by name
+   or by citing its theorems — is a hard, unratcheted FAILURE of
+   `bundle_lean_module_coverage`.
+
+⚠️ **Lower `LEAN_MODULE_ABSENT_CEILING` in the same commit.** A deregistration lowers the
+live absence count, and `test_the_ratchet_has_zero_headroom` fails until the ceiling
+follows it down. That is deliberate: it stops one bundle's legitimate drop becoming
+silent headroom for the next bundle's drift.
+
 ### §4. Sentence-state migration
 
 After all source-paper appends for the bundle have run (often a single sub-wave), migrate sentence-level provenance:

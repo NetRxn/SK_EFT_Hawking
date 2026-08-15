@@ -78,7 +78,12 @@ EXPECTED_CHECKS = [
     'ledger_ids_resolve',
     'chain_backing_targets_resolve',
     'bundle_metadata_matches_graph', 'bundle_stage13_claim_consistent',
-    'bundle_manuscript_length', 'bundle_reviewer_stage_ordering',
+    'bundle_manuscript_length',
+    # 2026-08-15 (L3 Stage-10 redraft finding 5.1): the abstract's own ceiling,
+    # which a whole-manuscript size gate structurally cannot see. Adjacent on
+    # purpose.
+    'bundle_abstract_length',
+    'bundle_reviewer_stage_ordering',
     'bundle_prose_em_dash_free', 'bundle_reader_facing_voice',
     'bundle_sentence_length',
     'bundle_figure_adequacy', 'bundle_structural_coherence',
@@ -93,6 +98,10 @@ EXPECTED_CHECKS = [
     'bundle_consistency', 'bundle_source_freshness',
     'bibitem_title_primary_source', 'quantum_network',
     'bundle_registry_consistency', 'bundle_apex_resolves',
+    # 2026-08-15 (L3 Stage-10 redraft finding 3): the `claims` prose beside the
+    # apex NAME that `bundle_apex_resolves` gates. Must follow it — it skips any
+    # apex that check reports unresolved.
+    'apex_theorem_claims_grounded',
     # ADR-010 §Open items 4 + the operator's TODO ruling, both 2026-08-08. Placed
     # after `bundle_apex_resolves` because both read the DECLARED-APEX CLOSURE, whose
     # one hand-maintained input that check gates.

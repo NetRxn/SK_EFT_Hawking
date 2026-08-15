@@ -1097,6 +1097,25 @@ _AMBIGUOUS_MODULE_BASENAMES = frozenset({
 LEAN_MODULE_ABSENT_CEILING = 149
 
 
+def _deregistered_detail(dropped: dict[str, list[str]]) -> Detail:
+    """The always-printed ledger of what each bundle stopped resting on.
+
+    ⚠️ It NAMES the modules, and both exit paths of the coverage check use this one
+    formatter. A summary that reports only a count is not the visibility half of the
+    deregistration design — "1 module deregistered" and "the module this Letter is
+    about was deregistered" have to look different to a reader, and the second is the
+    one worth seeing.
+    """
+    n = sum(len(v) for v in dropped.values())
+    return Detail(
+        "deregistered", True,
+        f"{n} module(s) across {len(dropped)} bundle(s) are recorded as DEREGISTERED — "
+        f"a draft that stopped resting on them, declared through `bundle_append.py "
+        f"--deregister-lean-modules` with a rationale, and excluded from the absence "
+        f"ledger ({'; '.join(f'{c}: {", ".join(v)}' for c, v in sorted(dropped.items()))})",
+        warning=True)
+
+
 @register_check("bundle_lean_module_coverage",
                 "Lean modules a bundle registers as contributing are reached by its draft, "
                 "by module name or by citing their theorems (ratcheted)")
@@ -1249,12 +1268,33 @@ def check_bundle_lean_module_coverage() -> CheckResult:
         if ghosts:
             unbuilt[code] = ghosts
 
-    if checked == 0:
+    if checked == 0 and not dropped:
         details.insert(0, Detail(
             "population", False,
             "no bundle declares a contributing Lean module — this check is UNVERIFIED, "
             "not passing. The field is `lean_modules_referenced` in append_log.json"))
         return CheckResult(passed=False, measured=False, details=details)
+
+    if checked == 0:
+        # ⚠️ Every registration in the corpus has been deregistered. The ABSENCE LEDGER
+        # is then unmeasurable — zero absent modules out of zero registered is not a
+        # clean bill — but the deregistration legs below DID measure, and a corpus in
+        # this state is exactly where a false deregistration would hide. So the ratchet
+        # leg reports UNMEASURED and the falsifiability legs still return their verdict,
+        # rather than the whole check going quiet over the one shape it must not.
+        details.append(Detail(
+            "ratchet", True,
+            "UNMEASURABLE — every registered module in the corpus has been "
+            "deregistered, so the absence ledger has no population. The "
+            "deregistration legs below are this check's only live assertion in that "
+            "state.", warning=True, measured=False))
+        ok = not contradicted and not unjustified
+        for r in contradicted:
+            details.append(Detail("deregistration_contradicted", False, r))
+        for r in unjustified:
+            details.append(Detail("deregistration_unjustified", False, r))
+        details.insert(0, _deregistered_detail(dropped))
+        return CheckResult(passed=ok, measured=True, details=details)
 
     for n, code, missing in sorted(worst, reverse=True):
         details.append(Detail(
@@ -1279,15 +1319,7 @@ def check_bundle_lean_module_coverage() -> CheckResult:
     # nobody opens. It is a warning-level detail because a legitimate drop is not a
     # defect — the two legs below are what fail.
     if dropped:
-        n_dropped = sum(len(v) for v in dropped.values())
-        details.append(Detail(
-            "deregistered", True,
-            f"{n_dropped} module(s) across {len(dropped)} bundle(s) are recorded as "
-            f"DEREGISTERED — a draft that stopped resting on them, declared through "
-            f"`bundle_append.py --deregister-lean-modules` with a rationale, and "
-            f"excluded from the absence ledger above "
-            f"({'; '.join(f'{c}: {", ".join(v)}' for c, v in sorted(dropped.items()))})",
-            warning=True))
+        details.append(_deregistered_detail(dropped))
 
     # Both legs below are HARD, unratcheted failures. A ratchet on either would let a
     # bundle buy absence-ledger relief with an unjustified or false deregistration,
@@ -2085,6 +2117,221 @@ def check_bundle_manuscript_length() -> CheckResult:
     # VALIDATION_ARCHITECTURE.md §5.1 for the regeneration ORDER.
     return CheckResult(passed=len(over) == 0,
                        measured=sized > 0, details=details)
+
+
+#: LaTeX control sequences that contribute NOTHING to the rendered abstract: pure
+#: markup, cross-referencing and spacing. Their ARGUMENT still counts — `\textit{foo}`
+#: renders as `foo` — so only the command token is removed.
+_ABSTRACT_INVISIBLE_MACROS = frozenset({
+    "textit", "textbf", "texttt", "textrm", "textsf", "textsc", "emph", "mbox",
+    "text", "mathrm", "mathbf", "mathit", "mathcal", "mathbb", "operatorname",
+    "label", "noindent", "protect", "ensuremath", "left", "right", "big", "Big",
+    "bigl", "bigr", "Bigl", "Bigr", "displaystyle", "textstyle", "vspace", "hspace",
+    "small", "footnotesize", "normalsize", "par", "linebreak", "newline",
+})
+
+#: LaTeX escapes for characters that ARE one rendered character.
+_ABSTRACT_LITERAL_ESCAPES = {
+    r"\%": "%", r"\&": "&", r"\_": "_", r"\$": "$", r"\#": "#",
+    r"\{": "{", r"\}": "}", r"\~": "~", r"\^": "^",
+}
+
+_ABSTRACT_ENV_RE = re.compile(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", re.S)
+_MACRO_RE = re.compile(r"\\([A-Za-z]+)\*?")
+
+
+def abstract_plain_text(tex_body: str) -> str | None:
+    """The `abstract` environment reduced to a RENDERED-LENGTH PROXY, or `None`.
+
+    ⚠️ **This is a proxy, and saying so is part of the check's contract.** The only
+    authoritative count is the one the publisher's own submission form performs on the
+    typeset abstract. What this does:
+
+    * takes the `abstract` environment, minus LaTeX comments;
+    * drops pure-markup control sequences (`\\textit`, `\\label`, sizing, `\\left`)
+      while KEEPING their arguments, because `\\textit{foo}` renders as `foo`;
+    * collapses every OTHER control sequence to a single character, because a macro
+      like `\\alpha`, `\\kappa` or a project shorthand like `\\Thawk` typesets as
+      roughly one glyph — counting `\\Thawk` as six characters would inflate a
+      symbol-dense abstract past a limit it actually meets;
+    * unescapes `\\%`, `\\_`, … to the one character each renders as;
+    * removes braces and math delimiters, and collapses whitespace runs to one space.
+
+    **The proxy's error is bounded and small relative to the verdicts it drives.** The
+    corpus measurement on 2026-08-15 found the letter abstracts at 2.1–4.7× their
+    declared ceiling; no plausible per-macro error changes those verdicts. A bundle
+    landing within a few percent of its ceiling should be confirmed by hand — the
+    detail line prints the measured value so that is possible without re-deriving it.
+    """
+    m = _ABSTRACT_ENV_RE.search(_strip_tex_comments(tex_body))
+    if not m:
+        return None
+    s = m.group(1)
+    for esc, lit in _ABSTRACT_LITERAL_ESCAPES.items():
+        s = s.replace(esc, "\x00" + lit + "\x00")   # park it out of macro reach
+    s = _MACRO_RE.sub(
+        lambda mo: "" if mo.group(1) in _ABSTRACT_INVISIBLE_MACROS else "x", s)
+    s = s.replace("\x00", "")
+    s = re.sub(r"[{}$]|\\[()\[\]]|\\\\", " ", s)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+#: Down-only floor on how many bundles declare an `abstract_ceiling`.
+#:
+#: MEASURED 2026-08-15: **5 of 21** — the letter bundles L1, L2, L3, E1, E2.
+#:
+#: ⚠️ **THIS IS THE POPULATION FLOOR, NOT A VIOLATION CEILING, and it is the leg
+#: `CHECK_AUTHORING_GUIDE` §2.5 exists for.** Non-empty is not enough: if four of the
+#: five declarations were dropped, the check would size one abstract, find it within its
+#: ceiling and report a clean pass — a narrowed population reporting health over the
+#: bundles it stopped reading. `theorem_census_agrees` lost 13 matched sites to 5 and
+#: stayed green on exactly that shape. RAISE this as venues are declared; lower it only
+#: with a stated reason (a bundle retired, or a venue confirmed to publish no limit).
+ABSTRACT_CEILING_DECLARED_FLOOR = 5
+
+
+@register_check(
+    "bundle_abstract_length",
+    "Every bundle's abstract is within the abstract ceiling its declared venue imposes")
+def check_bundle_abstract_length() -> CheckResult:
+    """CHECK: the abstract is the size the venue accepts, which no other gate asked.
+
+    **The gap this closes, measured.** `bundle_manuscript_length` sizes the whole
+    compiled manuscript and nothing sized the abstract, so PRL's abstract limit was
+    enforced nowhere. The 2026-08-15 L3 Stage-10 redraft found the superseded L3
+    abstract at roughly 1900 characters against PRL's ~600 — **over three times the
+    limit, and every gate in the suite passed it.** A real submission would have been
+    desk-returned before review
+    (`papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md` §5.1). Five bundles
+    are letters (L1, L2, L3, E1, E2), so this is not a single-bundle accident.
+
+    ## The ceiling is DECLARED, never known by this check
+
+    ⛔ **This check hardcodes no venue's limit, and must not start.** It reads
+    `length_target.abstract_ceiling` from each bundle's `bundle_metadata.json`:
+
+    ```json
+    "abstract_ceiling": {
+      "unit": "characters",          // or "words"
+      "ceiling": 600,
+      "source": "<the author guide that states it>",
+      "source_verified": false,      // has a human confirmed it against the primary?
+      "source_note": "<why not, if not>"
+    }
+    ```
+
+    A hardcoded table would be the `CHECK_AUTHORING_GUIDE` §6 failure *"a
+    hand-maintained list parallel to a registry"*: the venue already lives in the
+    bundle's own metadata, beside the `length_target` this parallels exactly.
+
+    ⚠️ **`source_verified` is reported in the detail line, and it is not decoration.**
+    A 2026-08-15 `research-scout` pass could not confirm a single one of fourteen
+    venues' abstract limits against its primary author guide: APS
+    (`journals.aps.org/robots.txt` disallows automated agents), Elsevier and AIP return
+    403 to every request including `robots.txt`, and Springer redirects to a login
+    wall. The one figure it DID verify — JOSS — is that JOSS states no separate
+    abstract limit at all. So the PRL ~600 in the letter bundles is **the pilot
+    finding's number, not a primary-sourced one**, and the check says so on every run
+    rather than letting a green be read as *"confirmed venue-conformant"*. Confirming
+    these against the actual author guides is filed as a finding, not silently assumed.
+
+    ## What UNMEASURED means here
+
+    A bundle with no `abstract_ceiling`, or with no `abstract` environment in its
+    draft, is reported BY NAME as UNMEASURED with `measured=False` on that detail — it
+    is never a quiet pass. The wholly-unreachable case returns `measured=False` for the
+    check. This mirrors `bundle_manuscript_length`, deliberately: an absent declaration
+    is a live, visible state and the honest record for a bundle whose venue is open.
+
+    **What this does NOT verify:** that the abstract is *good*, that it states the
+    paper's result, or that the count matches the publisher's own tool to the
+    character. The first two belong to `prose-reviewer`; the third is bounded by
+    `abstract_plain_text`'s documented proxy error.
+    """
+    details: List[Detail] = []
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False, _roster_err)])
+
+    over: list[str] = []
+    within: list[str] = []
+    unmeasured: list[str] = []
+    notes: set[str] = set()
+    unverified_source = 0
+    for code in codes:
+        md = _read_metadata(code)
+        tex = _H.PAPERS_DIR / code / "paper_draft.tex"
+        if md is None or not tex.is_file():
+            continue
+        spec = (md.get("length_target") or {}).get("abstract_ceiling")
+        if not spec or spec.get("ceiling") is None:
+            unmeasured.append(
+                f"{code}: no `length_target.abstract_ceiling` declared "
+                f"(target_journal: {md.get('target_journal', '?')})")
+            continue
+        plain = abstract_plain_text(tex.read_text(errors="replace"))
+        if plain is None:
+            unmeasured.append(f"{code}: no `abstract` environment in paper_draft.tex")
+            continue
+
+        unit = spec.get("unit") or "characters"
+        value = len(plain.split()) if unit == "words" else len(plain)
+        ceiling = spec["ceiling"]
+        u = "word(s)" if unit == "words" else "character(s)"
+        # ⚠️ The provenance NOTE is printed ONCE, in its own detail below, not on every
+        # row. Repeating a 400-character caveat 21 times is how a caveat stops being
+        # read — the per-row marker points at the note, the note carries the reason.
+        prov = "" if spec.get("source_verified") else " [ceiling UNVERIFIED — see `ceiling_provenance`]"
+        if not spec.get("source_verified"):
+            unverified_source += 1
+            notes.add(f"{spec.get('source') or 'no source recorded'} — "
+                      f"{spec.get('source_note') or 'no reason recorded'}")
+        if value > ceiling:
+            over.append(
+                f"{code}: abstract is {value} {u} against a declared ceiling of "
+                f"{ceiling} ({value / ceiling:.1f}x) — {md.get('target_journal', '?')} "
+                f"would desk-return this before review{prov}")
+        else:
+            within.append(f"{code}: {value} of {ceiling} {u}{prov}")
+
+    for r in over:
+        details.append(Detail("over_ceiling", False, r))
+    for r in within:
+        details.append(Detail("within_ceiling", True, r))
+    for r in unmeasured:
+        details.append(Detail("unmeasured", True, r, warning=True, measured=False))
+    for r in sorted(notes):
+        details.append(Detail("ceiling_provenance", True, r, warning=True))
+
+    sized = len(over) + len(within)
+    if sized == 0:
+        details.insert(0, Detail(
+            "population", False,
+            f"no bundle abstract could be sized ({len(unmeasured)} unmeasured) — this "
+            f"check is UNVERIFIED, not passing. Declare "
+            f"`length_target.abstract_ceiling` with the venue's limit and its source."))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    population_ok = sized >= ABSTRACT_CEILING_DECLARED_FLOOR
+    if not population_ok:
+        details.insert(0, Detail(
+            "population_floor", False,
+            f"only {sized} bundle(s) declare an `abstract_ceiling`, below the floor of "
+            f"{ABSTRACT_CEILING_DECLARED_FLOOR} — the population this check reads has "
+            f"SHRUNK. A narrowed population reports health over the bundles it stopped "
+            f"reading, which is the defect this suite exists to prevent. Restore the "
+            f"declaration, or lower the floor with a stated reason.", measured=False))
+
+    details.insert(0, Detail(
+        "summary", not over and population_ok,
+        f"{sized} abstract(s) sized against a declared venue ceiling (floor "
+        f"{ABSTRACT_CEILING_DECLARED_FLOOR}) — {len(over)} OVER (gating), "
+        f"{len(unmeasured)} UNMEASURED; {unverified_source} of the {sized} ceilings are "
+        f"NOT confirmed against their primary author guide",
+        warning=bool(unverified_source)))
+    return CheckResult(passed=not over and population_ok,
+                       measured=population_ok, details=details)
 
 
 #: Down-only floor on how many bundle metadata blobs carry the `critical_open` field
@@ -3082,6 +3329,260 @@ def check_bundle_apex_resolves() -> CheckResult:
             warning=bool(c.truncated_private)))
 
     return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK: the apex `claims` STRING — the half `bundle_apex_resolves` never reads
+# ═══════════════════════════════════════════════════════════════════════
+
+#: Markers that a `claims` string was never written. Anchored: a claim may legitimately
+#: contain the word "see" mid-sentence, but one that OPENS with it is a pointer, not a
+#: claim.
+_CLAIM_PLACEHOLDER_RE = re.compile(
+    r"^\s*(todo|tbd|t\.b\.d|n/?a|none|placeholder|xxx|fixme|\.\.\.|see\b|as above\b)",
+    re.I)
+
+#: Shortest string that can describe a theorem. Below this it is a label, not a claim.
+_CLAIM_MIN_CHARS = 12
+
+#: Numerals to ignore before asking whether a claim's numbers are in the statement.
+#: Each is a POINTER to somewhere else in the corpus, not a quantity the theorem
+#: asserts, so requiring it in the type would guarantee a false positive.
+_CLAIM_NUMERAL_NOISE = (
+    re.compile(r"§+\s*\d+(?:\.\d+)*"),                            # §7.3, §§4.2
+    re.compile(r"\b(?:19|20)\d\d\b"),                             # citation years
+    re.compile(r"\b[Ww]ave[-\s]?\d+[A-Za-z.]*"),                  # Wave 6v.4
+    re.compile(r"\b[Pp]hase[-\s]?\d+[A-Za-z.]*"),                 # Phase 6a
+    re.compile(r"\b(?:Lemma|Thm|Theorem|Eq|Prop|Proposition|Cor|Corollary|Def|"
+               r"Definition|Sec|Section|Fig|Figure|Table|Ch|Chapter|App|Appendix|"
+               r"Tier|Route|Step|Item|Gate|Closure|TODO-D)\.?\s*\d+(?:\.\d+)*",
+               re.I),
+)
+
+#: A numeral worth asking about: a decimal, or two or more digits. Single digits 0-9
+#: are excluded DELIBERATELY and the exclusion is measured, not guessed — an elaborated
+#: Lean type writes small literals through `OfNat`/`One`/`Zero` and prose uses them as
+#: enumeration ("EFFECT 1", "2+1D", "|beta|^2"). Including them took the population
+#: from 31 to 159 on 2026-08-15, essentially all noise.
+_CLAIM_NUMERAL_RE = re.compile(r"(?<![\w.^])(\d+\.\d+|\d{2,})(?![\w])")
+
+#: Apex claims whose numerals are not found in the statement they describe.
+#: **A RATCHET: may only shrink.**
+#:
+#: MEASURED 2026-08-15: **31 of 639 declared apex claims** across 12 bundles. The
+#: measurement is one-hop: a numeral counts as present if it appears in the theorem's
+#: own elaborated type OR in the type of any declaration that type references.
+#:
+#: ⚠️ **AN ENTRY HERE IS A POINTER TO CHECK, NOT A PROVEN DEFECT, and the ratchet is
+#: why that is honest.** `lean_deps.json` carries types, not definition BODIES, so a
+#: numeral that lives inside a `def`'s value — `G_N_sakharov = 12π/(N_f Λ²)` — is
+#: invisible to any depth of type walk, and its claim lands here while being perfectly
+#: correct. What the number DOES say is how many published claims assert a quantity
+#: that no machine-readable statement in their chain carries, and that can only be
+#: strengthened. Lower it by restating the claim over what the theorem proves, or by
+#: proving the quantity; never by widening the noise list above.
+APEX_CLAIM_NUMERAL_CEILING = 31
+
+#: Down-only floor on how many apex claims this check actually SCORES.
+#:
+#: MEASURED 2026-08-15: **639**, every declared apex across all 21 bundles, all of which
+#: resolve.
+#:
+#: ⚠️ **THE POPULATION FLOOR (§2.5).** The three legs above are universals over a
+#: bundle-supplied set, so anything that quietly shrinks that set — a metadata key
+#: renamed, `lean_deps.json` regenerated without a module, the resolution skip widening —
+#: makes them hold over fewer and fewer rows while still reporting a clean pass. The
+#: violations were ratcheted from the start; the POPULATION was not, and that is the half
+#: that rots silently. Lower it only with a stated reason.
+APEX_CLAIMS_SCORED_FLOOR = 639
+
+
+@register_check(
+    "apex_theorem_claims_grounded",
+    "Every declared apex theorem's `claims` prose is present, is not a restatement of "
+    "the theorem's own name, and its numerals appear in the statement (ratcheted)")
+def check_apex_theorem_claims_grounded() -> CheckResult:
+    """CHECK: `bundle_metadata.json.apex_theorems[*].claims` was read by NOTHING.
+
+    ## Scope — and what already owns the rest
+
+    ⛔ **This check does NOT resolve apex names and does not judge their kind.**
+    `bundle_apex_resolves` owns both, hard-failing on an apex that names no live
+    declaration and on one that resolves to something other than a theorem. Re-asserting
+    either here would be the second-resolver duplication `CLAUDE.md` rule 1 names. The
+    residue genuinely uncovered — measured 2026-08-15, and the reason this exists — is
+    the **`claims` STRING**: 639 of them across the corpus, read by no check, no test
+    and no reviewer agent. The L3 Stage-10 redraft found one of thirteen describing a
+    theorem that does not exist in the form claimed
+    (`papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md` §2.3: the metadata
+    said `falsifier_alpha_ADW_dependence` establishes that δ_ADW must depend on α_ADW
+    rather than being free; the theorem is `1 < α_ADW → 0 < (α_ADW - 1) * Λ_UV`, which
+    mentions neither the bundle nor δ).
+
+    ## ⚠️ WHAT THIS CHECK CANNOT VERIFY — read this before quoting its silence
+
+    **Claim-to-type equivalence is not decidable, and this check does not approximate
+    it.** A green verdict here means the three properties below hold. It does NOT mean:
+
+    * that the claim DESCRIBES the theorem. Prose and a dependent type are different
+      languages; nothing mechanical adjudicates between them.
+    * that the claim is TRUE of the theorem, or that it is not the *converse* of it, or
+      that it is not a strictly stronger statement than the theorem supports. **The
+      exact L3 §2.3 defect that motivated this check would NOT be caught by it** — that
+      claim carries no numerals and is not a name-restatement, so it passes all three
+      legs. Catching it needed a human reading the type beside the prose, and still does.
+    * that the claim's *hypotheses* match the theorem's. A claim silently dropping a
+      hypothesis is invisible here; `atlas_hypothesis_discipline` and the
+      `claims-reviewer` agent's HD class are where that lives.
+    * that the theorem is SUBSTANTIVE. `vacuous_statement_audit` owns that.
+
+    So: this check's silence is evidence about three narrow properties and about
+    nothing else. It exists because those three are cheap, decidable and were
+    previously unmeasured — not because they add up to verification.
+
+    ## The three legs
+
+    1. **Present and non-placeholder** (hard fail; live population 0). A claim shorter
+       than `_CLAIM_MIN_CHARS`, or opening with TODO / TBD / N/A / "see …", is a field
+       nobody filled.
+    2. **Not a restatement of the theorem's own name** (hard fail; live population 0).
+       `claims: "critical_coupling_pos"` against `theorem critical_coupling_pos` tells a
+       reader nothing they did not have. Compared on alphanumerics only, so
+       `"Critical coupling pos."` is caught too.
+    3. **Numerals appear in the statement** (RATCHETED at
+       `APEX_CLAIM_NUMERAL_CEILING`; live population 31). See that constant for what an
+       entry does and does not prove.
+
+    Legs 1 and 2 are hard rather than ratcheted precisely BECAUSE their live population
+    is zero: that is what a regression guard looks like, and a ratchet at zero is the
+    same thing with a worse name. The mutation test seeds each into production metadata.
+    """
+    details: List[Detail] = []
+    codes, _roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False, _roster_err)])
+
+    try:
+        records = json.loads(
+            (_H.PROJECT_ROOT / "lean" / "lean_deps.json").read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "lean_deps", False,
+            f"lean/lean_deps.json unreadable ({exc}) — the statements this check "
+            f"compares claims against are UNAVAILABLE, so this is UNVERIFIED, not "
+            f"passing. Rebuild with `lake build SKEFTHawking.ExtractDeps`.")])
+    by_name = {r["name"]: r for r in records if isinstance(r, dict) and r.get("name")}
+
+    def _statement_haystack(rec: dict) -> str:
+        """The theorem's type, plus the types of the declarations it references.
+
+        One hop, not a full closure: a numeral in the statement of something the
+        statement mentions is still *in the chain a reader follows*. Deeper walks were
+        measured and moved the population 34 -> 31, which does not pay for the cost or
+        for the weaker meaning of a hit.
+        """
+        parts = [rec.get("type") or ""]
+        for dep in (rec.get("type_deps_project") or []):
+            d = by_name.get(dep)
+            if d:
+                parts.append(d.get("type") or "")
+        return " ".join(parts)
+
+    scored = 0
+    placeholders: list[str] = []
+    restatements: list[str] = []
+    numeral_gaps: list[tuple[str, str, list[str]]] = []
+    for code in codes:
+        md = _read_metadata(code)
+        if md is None:
+            continue
+        for apex in (md.get("apex_theorems") or []):
+            if not isinstance(apex, dict):
+                continue
+            name = str(apex.get("name") or "")
+            rec = by_name.get(name)
+            if rec is None:
+                # `bundle_apex_resolves` owns this and hard-fails on it. Skipping
+                # rather than double-reporting keeps one defect to one gate — but it
+                # is skipped from the SCORED population too, so this check never
+                # claims coverage of an apex it could not read.
+                continue
+            claim = str(apex.get("claims") or "").strip()
+            short = name.split(".")[-1]
+            scored += 1
+
+            if len(claim) < _CLAIM_MIN_CHARS or _CLAIM_PLACEHOLDER_RE.match(claim):
+                placeholders.append(
+                    f"{code}: `{short}` has claims={claim!r} — a declared apex with no "
+                    f"claim is a published assertion nobody wrote")
+                continue
+            if (re.sub(r"[^a-z0-9]", "", claim.lower())
+                    == re.sub(r"[^a-z0-9]", "", short.lower())):
+                restatements.append(
+                    f"{code}: `{short}` claims only its own name — the field is meant "
+                    f"to say what the theorem establishes, in words a referee reads")
+                continue
+
+            probe = claim
+            for noise in _CLAIM_NUMERAL_NOISE:
+                probe = noise.sub(" ", probe)
+            hay = _statement_haystack(rec)
+            hay_compact = hay.replace(" ", "")
+            missing = sorted({n for n in _CLAIM_NUMERAL_RE.findall(probe)
+                              if n not in hay and n.replace(".", "") not in hay_compact})
+            if missing:
+                numeral_gaps.append((code, short, missing))
+
+    if scored == 0:
+        details.insert(0, Detail(
+            "population", False,
+            "no bundle declares a resolvable apex theorem — this check is UNVERIFIED, "
+            "not passing. The field is `apex_theorems` in bundle_metadata.json"))
+        return CheckResult(passed=False, measured=False, details=details)
+
+    for r in placeholders:
+        details.append(Detail("claim_placeholder", False, r))
+    for r in restatements:
+        details.append(Detail("claim_restates_name", False, r))
+
+    numerals_ok = len(numeral_gaps) <= APEX_CLAIM_NUMERAL_CEILING
+    for code, short, missing in numeral_gaps[:20]:
+        details.append(Detail(
+            "claim_numeral_absent", True,
+            f"{code}: `{short}` claims {', '.join(missing)}, which appears neither in "
+            f"its statement nor in the statement of anything its statement references "
+            f"— check the claim against the type (it may still be correct: a numeral "
+            f"inside a `def`'s VALUE is invisible to lean_deps.json)", warning=True))
+    if len(numeral_gaps) > 20:
+        details.append(Detail(
+            "claim_numeral_absent", True,
+            f"… and {len(numeral_gaps) - 20} more", warning=True))
+
+    population_ok = scored >= APEX_CLAIMS_SCORED_FLOOR
+    if not population_ok:
+        details.insert(0, Detail(
+            "population_floor", False,
+            f"only {scored} apex claim(s) were scored, below the floor of "
+            f"{APEX_CLAIMS_SCORED_FLOOR} — the population has SHRUNK, so the three legs "
+            f"below are holding over fewer rows than they were written for. Find what "
+            f"stopped resolving (see `bundle_apex_resolves`) before reading this "
+            f"check's verdict.", measured=False))
+
+    ok = not placeholders and not restatements and numerals_ok and population_ok
+    details.insert(0, Detail(
+        "summary", ok,
+        f"{scored} declared apex claim(s) scored (floor {APEX_CLAIMS_SCORED_FLOOR}) — "
+        f"{len(placeholders)} placeholder, "
+        f"{len(restatements)} name-restatement (both gating, both zero by design), "
+        f"{len(numeral_gaps)} with a numeral absent from the statement "
+        f"(ceiling {APEX_CLAIM_NUMERAL_CEILING})"
+        + ("" if numerals_ok else
+           " — MORE PUBLISHED CLAIMS NOW ASSERT A QUANTITY NO STATEMENT IN THEIR CHAIN "
+           "CARRIES. Restate the claim over what the theorem proves, or prove the "
+           "quantity; do not widen the numeral-noise list"),
+        warning=bool(numeral_gaps) and numerals_ok))
+    return CheckResult(passed=ok, measured=population_ok, details=details)
 
 
 # ═══════════════════════════════════════════════════════════════════════

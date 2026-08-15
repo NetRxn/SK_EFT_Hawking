@@ -562,6 +562,171 @@ def _append_to_append_log_bookkeeping(
     write_bundle_json(log_path, data)
 
 
+#: The shortest rationale that says anything. A deregistration is a claim about the
+#: manuscript ("this draft no longer rests on that module"), and a rationale below this
+#: is a shrug. `check_bundle_lean_module_coverage` re-asserts the same floor, so a
+#: hand-edited `append_log.json` cannot get a bare deregistration past the gate.
+DEREGISTRATION_RATIONALE_MIN = 24
+
+
+def net_registered_modules(events: list[dict]) -> tuple[set[str], set[str]]:
+    """`(net_registered, net_deregistered)` from an append log's event list.
+
+    ⚠️ **ORDER IS SEMANTIC AND THE SET DIFFERENCE IS NOT.** A module may be registered,
+    deregistered when a redraft drops it, and registered again when a later wave brings
+    it back. Walking the events in order is the only reading that gets that sequence
+    right; `union(registered) - union(deregistered)` reports the module as dropped
+    forever, which is a silently wrong answer rather than a loud one.
+
+    The log is append-only in both directions: a deregistration ADDS an event, it never
+    edits or removes the registering one. That is what keeps the drop visible — the
+    history says the bundle once depended on the module and says when and why it stopped.
+
+    This is the single implementation. `bundle_append.py` writes the events and
+    `check_bundle_lean_module_coverage` scores them, and a second copy of this walk on
+    the check side is exactly the duplication `CLAUDE.md` rule 1 names.
+    """
+    registered: set[str] = set()
+    deregistered: set[str] = set()
+    for e in events:
+        add = e.get("lean_modules_referenced") or []
+        if isinstance(add, str):
+            add = add.split(",")
+        drop = e.get("lean_modules_deregistered") or []
+        if isinstance(drop, str):
+            drop = drop.split(",")
+        for m in (str(x).strip() for x in add):
+            if m:
+                registered.add(m)
+                deregistered.discard(m)
+        for m in (str(x).strip() for x in drop):
+            if m:
+                deregistered.add(m)
+                registered.discard(m)
+    return registered, deregistered
+
+
+def _append_to_change_log_deregister(
+    bundle: str, modules: list[str], rationale: str,
+) -> None:
+    log_path = _bundle_dir(bundle) / "change_log.md"
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    entry = f"""
+## {today} — Deregister-lean-modules
+
+- Modules deregistered: {', '.join(f'`{m}`' for m in modules)}
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: {rationale}
+"""
+    if log_path.exists():
+        log_path.write_text(log_path.read_text().rstrip() + "\n" + entry)
+    else:
+        log_path.write_text(f"# Bundle {bundle} — Change Log\n" + entry)
+
+
+def _append_to_append_log_deregister(
+    bundle: str, modules: list[str], rationale: str,
+) -> None:
+    log_path = _bundle_dir(bundle) / "append_log.json"
+    data = (json.loads(log_path.read_text()) if log_path.exists()
+            else {"bundle_target": bundle, "events": []})
+    data["events"].append({
+        "date": _now_iso(),
+        "source_paper": "(none — deregistration)",
+        "lift_action": "Deregister-lean-modules",
+        "bundle_section_inserted": "(n/a — deregistration)",
+        "lean_modules_referenced": [],
+        "lean_modules_deregistered": modules,
+        "deregistration_rationale": rationale,
+        "citation_count_added": 0,
+        "stage13_redo_required": False,
+        "agent_run_id": f"bundle_append-deregister-{_now_iso()}",
+        "notes": rationale,
+    })
+    write_bundle_json(log_path, data)
+
+
+def deregister_lean_modules(
+    *, bundle: str, modules: list[str], rationale: str,
+) -> int:
+    """Record that a bundle's draft no longer rests on the named Lean modules.
+
+    **Why this exists.** `check_bundle_lean_module_coverage` ratchets the corpus-wide
+    count of registered-but-unreached modules at its live ceiling. Before this mode
+    the only way to stop registering a module was to hand-edit `append_log.json`, so
+    the cheap path for a drafting pass that legitimately dropped a dependency was to
+    keep citing the module. **That is not hypothetical: the 2026-08-15 L3 Stage-10
+    redraft kept two theorem citations in its Discussion purely to hold the ratchet
+    green, and the `prose-reviewer` independently flagged exactly those two as
+    belonging to a different paper's argument.** A gate that makes the manuscript
+    worse is worse than no gate.
+
+    **What keeps this from being an escape hatch.** Four things, and the last is the
+    one that matters:
+
+    1. It is a named mode with a REQUIRED rationale — there is no silent form.
+    2. It APPENDS an event; the registering event stays in the log, so the history
+       still says the bundle once depended on the module.
+    3. `check_bundle_lean_module_coverage` reports every deregistration on every run,
+       so the drop is visible in the gate's own output rather than only in a log.
+    4. **The claim is falsifiable.** Deregistering a module the draft still reaches —
+       by name or by citing its theorems — FAILS that check, unratcheted. "I no longer
+       depend on this" is checked against the manuscript, not taken on the word of the
+       agent that wrote it.
+
+    Returns 0 on success, nonzero on error.
+    """
+    if bundle not in _VALID_BUNDLE_TARGETS:
+        print(f"FATAL: invalid bundle {bundle!r}", file=sys.stderr)
+        return 2
+
+    log_path = _bundle_dir(bundle) / "append_log.json"
+    if not log_path.exists():
+        print(f"FATAL: papers/{bundle}/append_log.json missing; a bundle that has "
+              f"registered nothing cannot deregister anything", file=sys.stderr)
+        return 2
+
+    if len(rationale.strip()) < DEREGISTRATION_RATIONALE_MIN:
+        print(f"FATAL: --deregistration-rationale must be at least "
+              f"{DEREGISTRATION_RATIONALE_MIN} characters. Dropping a declared "
+              f"dependency is a claim about the manuscript; say why the draft no "
+              f"longer rests on it.", file=sys.stderr)
+        return 2
+
+    try:
+        events = json.loads(log_path.read_text()).get("events", [])
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"FATAL: cannot read {log_path}: {exc}", file=sys.stderr)
+        return 2
+
+    registered, already = net_registered_modules(events)
+    unknown = [m for m in modules if m not in registered]
+    if unknown:
+        # Refuse rather than record a no-op. A deregistration of something never
+        # registered reads, forever after, as evidence a dependency once existed.
+        print(f"FATAL: {bundle} does not currently register: {', '.join(unknown)}. "
+              f"Already deregistered: {', '.join(sorted(already)) or '(none)'}. "
+              f"Currently registered: {', '.join(sorted(registered)) or '(none)'}",
+              file=sys.stderr)
+        return 2
+
+    _append_to_change_log_deregister(bundle, modules, rationale.strip())
+    _append_to_append_log_deregister(bundle, modules, rationale.strip())
+    _update_metadata_post_bookkeeping(bundle)
+    _refresh_source_manifest(bundle)
+
+    remaining = sorted(registered - set(modules))
+    print(f"  [DEREGISTER] {bundle}  dropped: {', '.join(modules)}")
+    print(f"               still registered ({len(remaining)}): "
+          f"{', '.join(remaining) or '(none)'}")
+    print(f"               Recorded as an APPEND — the registering event is still in "
+          f"the log. `validate.py --check bundle_lean_module_coverage` will report "
+          f"this drop on every run, and will FAIL if the draft still reaches a "
+          f"deregistered module.")
+    return 0
+
+
 def _update_metadata_post_bookkeeping(bundle: str) -> None:
     """Bookkeeping variant of `_update_metadata_post_append`: refreshes
     `last_lift` and clears `freshness_stale`, but does NOT flip
@@ -790,6 +955,18 @@ def main() -> int:
                         help="record a bookkeeping-only event (no \\section "
                              "insertion, no stage flips); requires --lift-action "
                              "and --notes")
+    parser.add_argument("--deregister-lean-modules", default="",
+                        help="comma-separated Lean modules this bundle's draft no "
+                             "longer rests on. Records an APPEND-ONLY deregistration "
+                             "event; the registering event stays in the log. Requires "
+                             "--deregistration-rationale. Refuses a module the bundle "
+                             "does not currently register, and "
+                             "`bundle_lean_module_coverage` FAILS if the draft still "
+                             "reaches a deregistered module.")
+    parser.add_argument("--deregistration-rationale", default="",
+                        help="why the draft no longer rests on those modules; written "
+                             "to append_log.json and change_log.md. Required with "
+                             "--deregister-lean-modules.")
     parser.add_argument("--lift-action", default="",
                         help="lift action name recorded in append_log.json and "
                              "change_log.md (e.g., 'Freshness-bookkeeping', "
@@ -797,6 +974,22 @@ def main() -> int:
                              "--bookkeeping-only, inherited from "
                              "PAPER_DRAFT_MAPPING.md in lift modes")
     args = parser.parse_args()
+
+    if args.deregister_lean_modules:
+        if args.bookkeeping_only:
+            print("FATAL: --deregister-lean-modules and --bookkeeping-only are "
+                  "exclusive; a deregistration is its own recorded event",
+                  file=sys.stderr)
+            return 2
+        mods = [m.strip() for m in args.deregister_lean_modules.split(",") if m.strip()]
+        if not mods:
+            print("FATAL: --deregister-lean-modules named no module", file=sys.stderr)
+            return 2
+        return deregister_lean_modules(
+            bundle=args.bundle,
+            modules=mods,
+            rationale=args.deregistration_rationale,
+        )
 
     if args.bookkeeping_only:
         if not args.lift_action:

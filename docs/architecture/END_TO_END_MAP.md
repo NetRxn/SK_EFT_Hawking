@@ -383,7 +383,7 @@ Hand edits remain possible and are not forbidden — they are caught after the f
   document DECLARED about itself, so `paper: note_rt_ch_bounds` and `bundle_target: D11`
   were inert and eleven open blocking findings reached no bundle. Both legs were internally
   consistent over a corpus with those findings removed — leg 1 read 6 and leg 2 read 57
-  while nine bundles carrying open blockers rendered YELLOW.
+  while every bundle carrying open blockers outside D12 and L1 rendered YELLOW.
   **All three times the fix was to assert the decider instead of the proxy**, and all three
   times it required re-deriving the baseline: a measurement is scoped by its predicate, and
   changing what it keys on voids it. That re-derivation is not a ratchet being raised; a
@@ -391,6 +391,18 @@ Hand edits remain possible and are not forbidden — they are caught after the f
   The third re-derivation is a pure DISPLACEMENT and reconciles both ways: leg 1 6 → 32
   bundle occurrences, leg 2 57 → 46 findings, the eleven fanning out to 26 occurrences
   (6 + 26 = 32, 57 − 11 = 46). Nothing was found and nothing was forgiven.
+
+  ⚠️ **The fourth was not a predicate at all — it was the SAME predicate implemented in
+  two places.** The declaration-aware resolver landed in the aggregation and not in
+  `build_graph.extract_flags_edges`, which went on inferring, so a finding could be
+  counted against a bundle's ratchet and emit no `FLAGS` edge to that bundle. `FLAGS` is
+  the only channel by which a finding reaches a readiness gate, so those findings held
+  bundles RED in the heatmap while `FixPropagation` passed over them; L2 was RED on open
+  blockers with no gate blocked at all. This one required no re-derivation of either leg —
+  both read the aggregation, which did not move — and it is the reason the resolver is now
+  ONE function, in `build_graph`, called by both layers, with
+  `tests/test_flags_ratchet_seam.py` asserting per finding and in both directions that the
+  ratchet population and the FLAGS population are the same set.
 
   ⚠️ This ratchets **growth**, and adds no severity to the blocking set. `major` has been in
   `BLOCKING_SEVERITIES` since 2026-07-31; it blocked before this change and blocks the same way

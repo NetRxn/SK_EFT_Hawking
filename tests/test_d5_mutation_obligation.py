@@ -623,8 +623,13 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     "citation_primary_sources_present": (
         "test_d5_citations.py",
         "the cite-regex narrowing to bare `\\cite{}` is CAUGHT — a narrowed regex "
-        "silently shrinks the scanned population. inprep and pre-DOI-textbook exemptions "
-        "exercised; no-drafts fails rather than passes",
+        "silently shrinks the scanned population. inprep and declared-class exemptions "
+        "exercised; no-drafts fails rather than passes. ADR-014 D7 added THREE production "
+        "seeds against the real src/core/citations.py (a DOI onto a declared textbook; a "
+        "declaration stripped off one; a typo'd citation_class), each restored via "
+        "seed_journal. Negative control run BOTH ways: with the old absence-keyed "
+        "predicate restored, 4 of the D7 legs go red — including the one that pins the "
+        "incentive, since under that predicate recording a DOI revokes the exemption",
     ),
     "bibitem_title_primary_source": (
         "test_d5_citations.py",
@@ -649,6 +654,40 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "the verdict alone, so it is structurally load-bearing rather than shadowed by "
         "the green rule that used to live here. Plus the missing-blob and "
         "uncomputable-aggregate fail-closed legs",
+    ),
+    "bundle_abstract_length": (
+        "test_d5_bundles_readiness.py",
+        "9 mutations (2026-08-15, L3 Stage-10 redraft finding 5.1). The superseded L3 "
+        "abstract was ~1900 characters against PRL's ~600 and EVERY gate passed it, "
+        "because `bundle_manuscript_length` sizes the whole manuscript and 4 pages is "
+        "within a 3750 word-equivalent ceiling however the words are distributed. Five "
+        "bundles are letters. Legs: short passes / long fails; markup does not count but "
+        "its ARGUMENT does; a macro counts as ONE character, not its source length; an "
+        "escaped percent is one character; a bundle with no declared ceiling and a draft "
+        "with no `abstract` environment are BOTH UNMEASURED rather than passing; an "
+        "UNVERIFIED ceiling is said so on a GREEN run; the `words` unit counts words. "
+        "PRODUCTION SEED: inflated the abstract in the REAL `papers/L3/paper_draft.tex`, "
+        "and asserted L3's own row moved within_ceiling -> over_ceiling — the check is "
+        "RED at HEAD (L1/L2/E1/E2 are over), so 'the check went red' would have proved "
+        "nothing and the per-bundle transition is what carries it. Restored byte-identical "
+        "through seed_journal.",
+    ),
+    "apex_theorem_claims_grounded": (
+        "test_d5_bundles_readiness.py",
+        "9 mutations (2026-08-15, L3 Stage-10 redraft finding 3). 639 apex `claims` "
+        "strings corpus-wide were read by no check, no test and no reviewer agent; the "
+        "pilot found one of L3's thirteen describing a theorem that does not exist in "
+        "that form. Scope is the STRING only — `bundle_apex_resolves` owns the name and "
+        "the kind, and re-asserting either here would be a second resolver. Legs: a real "
+        "claim passes; a PLACEHOLDER fails (4 forms); a claim RESTATING the theorem's own "
+        "name fails (3 forms); an absent numeral is counted; section/year/Wave/Lemma "
+        "refs are NOT treated as claimed quantities; an unresolved apex is SKIPPED rather "
+        "than double-reported, and a corpus of only such rows is UNVERIFIED; the numeral "
+        "ratchet has zero headroom against the LIVE count. PRODUCTION SEED: wrote a "
+        "placeholder and a name-restatement into the REAL "
+        "`papers/L3/bundle_metadata.json` -> both legs red. Both have a live population "
+        "of ZERO, which is precisely why they need a production seed rather than a "
+        "ratchet to show they can fire. Restored byte-identical through seed_journal.",
     ),
     "bundle_lean_module_coverage": (
         "test_d5_bundles_readiness.py",
@@ -1061,7 +1100,20 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # 2026-08-08 (ADR-011 Phase 6): registered a module I3 does not cite into the REAL
     # `papers/I3/append_log.json` -> 238 -> 239 against a ceiling of 238, rc=1 with the
     # remediation named. Restored byte-identical.
+    # 2026-08-15 (L3 Stage-10 redraft finding 5.2): appended a FALSE deregistration of
+    # `BHThermodynamicsFourLaws` — the module the L3 Letter is entirely about — into the
+    # REAL `papers/L3/append_log.json` -> rc=1 on `deregistration_contradicted`. That leg
+    # has a live population of ZERO, so a production seed is the only thing that shows
+    # the falsifiability half of the deregistration path can fire at all. Restored
+    # byte-identical through seed_journal.
     "bundle_lean_module_coverage",
+    # 2026-08-15: inflated the abstract in the REAL `papers/L3/paper_draft.tex` -> L3's
+    # own row moved within_ceiling -> over_ceiling. Restored through seed_journal.
+    "bundle_abstract_length",
+    # 2026-08-15: wrote a placeholder claim and a name-restatement claim into the REAL
+    # `papers/L3/bundle_metadata.json` -> rc=1 on both legs. Restored through
+    # seed_journal.
+    "apex_theorem_claims_grounded",
     # 2026-08-08 (ADR-010 §D4): lowered NATIVE_DECIDE_BUNDLE_DEBT["D4"] 19 -> 18 against
     # the LIVE apex closure and lean_deps.json -> rc=1 naming D4, its densest modules
     # (IsingBraiding=17, FigureEightKnot=2) and both remediations. Restored.

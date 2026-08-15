@@ -156,6 +156,16 @@ authorization-before-measurement pattern that created the problem. Method and qu
 tracked by `UNDECLARED_APEX_CEILING` in `scripts/validation/checks/bundles_readiness.py` and gated
 by `validate.py --check bundle_apex_resolves`.
 
+⚠️ **An apex declaration has two halves and they are gated separately.**
+`bundle_apex_resolves` owns the **name** — it hard-fails on an apex resolving to no live
+declaration, and on one resolving to something other than a theorem. The `claims` **string** beside
+it was read by nothing until ADR-015 D3, and `apex_theorem_claims_grounded` now owns it: present
+and non-placeholder, not a restatement of the theorem's own name, and its numerals traceable to the
+statement. **Neither check establishes that the claim describes the theorem** — claim-to-type
+equivalence is not decidable, and the check's docstring enumerates what its silence does not mean.
+Reading a green on both as "this bundle's declared results are verified" is exactly the
+inference the second check was written to make impossible.
+
 **It is evidence-generating, not bookkeeping — and it has already overturned audit conclusions.**
 The audit recommends merging D6+D9+D12 on the strategy document's own three-layer outline; the
 derived closures say D12 does not belong (D6∩D12 empty, D9∩D12 negligible). It also **relocated**

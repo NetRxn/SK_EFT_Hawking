@@ -341,7 +341,9 @@ flowchart LR
     A["adversarial-reviewer"] -->|writes| MD["papers/AutomatedReviews/<br/>&lt;date&gt;/&lt;paper&gt;.md"]
     MD -->|"_REVIEW_SECTION_RE<br/>heading parse"| EX["extract_review_finding_nodes"]
     EX -->|"status='open' at birth<br/>(unconditional)"| RFN["ReviewFinding node"]
-    RFN -->|extract_flags_edges| FE["FLAGS → paper:X"]
+    RFN -->|"resolve_attribution<br/>(THE one resolver)"| AT["paper key | bundle code"]
+    AT -->|"load_findings_by_paper"| RAT["aggregate_by_bundle<br/>→ per-bundle ratchet"]
+    AT -->|extract_flags_edges| FE["FLAGS → paper:X<br/>AND paper:&lt;each bundle&gt;"]
     FE -->|"only consumer"| G11["FixPropagation"]
     G11 -->|"open ∧ blocking severity"| BL["state=blocked<br/>self-promotes to P1"]
     BL --> AGG["paper_aggregate_state → RED"]
@@ -371,11 +373,22 @@ flowchart LR
    every recent review writes had no reader anywhere in `scripts/`, and eleven open
    blocking findings whose own documents named a mappable target reached no bundle. Nine
    bundles rendered YELLOW while carrying open blockers.
-   `bundle_readiness.resolve_attribution` is now the one resolver and reads the
+   `build_graph.resolve_attribution` is now the one resolver and reads the
    declaration first — declared mapping key, then declared bundle code, then filename
-   stem, then unique-prefix normalisation (`build_graph.resolve_unique_prefix`, shared
-   with `extract_flags_edges` rather than re-implemented beside it), then the old
-   inference. **Exactly-one match or nothing**, so a typo cannot invent a bundle.
+   stem, then unique-prefix normalisation (`build_graph.resolve_unique_prefix`), then the
+   old inference. **Exactly-one match or nothing**, so a typo cannot invent a bundle.
+   ⚠️ **BOTH LAYERS CALL IT, AND FOR HALF A DAY ONLY ONE DID.** The resolver was authored
+   in `bundle_readiness` while `extract_flags_edges` went on resolving from the two
+   inferences, so the aggregation and the graph disagreed about 531 findings — 11 of them
+   open blockers, every disagreement in the same direction: counted against a bundle's
+   ratchet, flagged onto no bundle node, and therefore invisible to `FixPropagation`, the
+   only gate that reads FLAGS. L2 was the visible symptom — RED in the heatmap on 2 open
+   blockers with **no** ReadinessGate blocked, which `readiness_verdicts_agree` reported
+   as a disagreement it could not localise. The resolver now lives in `build_graph`,
+   beside the three functions it is built out of and beside both callers; the dependency
+   direction forces it (readiness imports graph, never the reverse), and
+   `tests/test_flags_ratchet_seam.py` asserts object identity so a second implementation
+   fails rather than drifts.
    ⚠️ **At a blocking severity it is no longer silent.** ADR-012 P5 counts that population
    against `UNATTRIBUTED_OPEN_BLOCKING_CEILING`, a second leg of
    `bundle_stage13_claim_consistent`, so growth in the unattributed blocking set fails a check
@@ -393,7 +406,13 @@ flowchart LR
    `review_docs_mint_findings`.
 
 **`FixPropagation` is the only evaluator that reads FLAGS.** Every other gate is blind to
-review findings.
+review findings. That is precisely why the graph layer and the aggregation layer must
+resolve attribution identically: `FLAGS` is the *sole* channel by which a finding can
+reach a gate, so a finding the aggregation attributes and the graph does not is counted
+in one surface and absent from the other — a state neither surface can be read to
+diagnose. The seam is asserted directly, in both directions and per finding, by
+`tests/test_flags_ratchet_seam.py`: **a finding reaches a bundle's ratchet iff it FLAGS
+that bundle.**
 
 **A `BLOCKED_BY` that names nothing is COUNTED, at a ceiling of zero.** The routing edge added
 by ADR-012 P4 does not silently drop an unresolvable target, an unknown release scheme, or a

@@ -215,7 +215,14 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'ledger_ids_resolve',
     'chain_backing_targets_resolve',
     'bundle_metadata_matches_graph', 'bundle_stage13_claim_consistent',
-    'bundle_manuscript_length', 'bundle_reviewer_stage_ordering',
+    'bundle_manuscript_length',
+    # Directly after it: the same artifact, the one size a whole-manuscript gate
+    # cannot see. A 4-page letter is within a 3750 word-equivalent ceiling however
+    # the words are distributed, so an abstract three times its venue's limit
+    # passes `bundle_manuscript_length` and is desk-returned anyway. Adjacency is
+    # the point — the pair is the manuscript's size surface.
+    'bundle_abstract_length',
+    'bundle_reviewer_stage_ordering',
     'bundle_prose_em_dash_free', 'bundle_reader_facing_voice',
     'bundle_sentence_length',
     'bundle_figure_adequacy', 'bundle_structural_coherence',
@@ -233,6 +240,11 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     # gates the ONE hand-maintained input to the derived substrate closure, so a reader
     # needs its verdict before any per-bundle substrate figure downstream.
     'bundle_registry_consistency', 'bundle_apex_resolves',
+    # Immediately after `bundle_apex_resolves`, which gates the apex NAME. This
+    # reads the other half of the same record — the `claims` prose — and skips any
+    # apex that check already reported as unresolved, so its verdict is only
+    # legible once that one has run.
+    'apex_theorem_claims_grounded',
     # Both of these read the DECLARED-APEX CLOSURE, so they must follow
     # `bundle_apex_resolves` — it gates the one hand-maintained input the closure rests
     # on. Reporting a per-bundle compiler-trust figure derived from an apex list that
@@ -734,6 +746,8 @@ check_readiness_submission_gate = _checks_bundles.check_readiness_submission_gat
 check_bundle_consistency = _checks_bundles.check_bundle_consistency
 check_bundle_registry_consistency = _checks_bundles.check_bundle_registry_consistency
 check_bundle_apex_resolves = _checks_bundles.check_bundle_apex_resolves
+check_apex_theorem_claims_grounded = _checks_bundles.check_apex_theorem_claims_grounded
+check_bundle_abstract_length = _checks_bundles.check_bundle_abstract_length
 check_bundle_native_decide_debt = _checks_bundles.check_bundle_native_decide_debt
 check_bundle_todo_free_before_green = _checks_bundles.check_bundle_todo_free_before_green
 check_bundle_cross_references_resolve = _checks_papers_prose.check_bundle_cross_references_resolve
