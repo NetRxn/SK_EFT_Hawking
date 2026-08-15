@@ -28,7 +28,7 @@ The new structure is **twenty-one publication targets**, organized as one flagsh
 
 Three principles drive the architecture:
 
-1. **Falsifiability-led ordering.** The PRL-style headline letters (Tier 2) lead with the program's strongest falsifiable results — GW170817 vs vestigial-graviton (7 × 10¹⁴ falsification), three generations from modular invariance, BCH four laws by regime. These are the door-openers. Readers arrive through them.
+1. **Falsifiability-led ordering.** The PRL-style headline letters (Tier 2) lead with the program's strongest falsifiable results — GW170817 vs vestigial-graviton (a 10¹⁵ confinement of χ_vest, with both natural-range endpoints excluded at ~7 × 10¹⁴), three generations from modular invariance, BCH four laws by regime. These are the door-openers. Readers arrive through them.
 2. **NO-GOs as first-class deliverables.** The dark-sector deep paper (Tier 1 #5) is built around the structural-NO-GO architecture. The flagship's Layer-3 scope statement makes the predictive-boundary explicit. The methodology paper documents specific cases where verification produced negative content the conventional process would have missed.
 3. **The flagship is the citation anchor.** Tier 0 — one *Reviews of Modern Physics* / *Physics Reports* / *Annual Review* article — is the canonical entry point. Every other paper in the program cites it. It ships *last*, after the Tier 1 papers are out, so it can cite them and serve as the stable reference rather than a snapshot.
 
@@ -201,15 +201,18 @@ Sources: Phases 6EA, 6EB, 6EC, 6EE (`6E*` series head: `roadmaps/Phase6EA_Roadma
 
 Each is four pages, citing flagship + one Tier 1 paper. Each is a stand-alone news-attractor.
 
-**Paper L1: GW170817 Falsifies the Vestigial-Second-Sound Graviton Identification by 7 × 10¹⁴**
+**Paper L1: GW170817 Confines the Vestigial-Second-Sound Graviton Identification to One Part in 10¹⁵ of Its Natural Range**
 
 Target: *Physical Review Letters*.
 
 Length: 4 pages.
 
-Lede: Volovik (JETP Lett. 119, 564, 2024) identified the vestigial second-sound mode as the spin-2 graviton, with leading-order propagation `c_GW = c · √χ_vest`. The natural susceptibility range χ_vest ∈ [0.1, 10] gives Δc/c ∈ [−0.68, +2.16], exceeding the LIGO-Virgo GW170817 cap of 3 × 10⁻¹⁵ by ~7 × 10¹⁴. Both endpoints proved as Lean falsifier theorems. Recovery requires either a derived-DOF mechanism for χ_vest = 1 or recognition that the metric-channel susceptibility is a separate UV input.
+⚠️ **REWRITTEN 2026-08-15. This entry described a falsification, and the result is not one.**
+`natural_range_disjoint_from_ligo_window` was a statement about the two ENDPOINTS χ_vest ∈ {0.1, 10}; the prose read it as an interval disjointness. The GW170817-compatible window is nested strictly *inside* [0.1, 10] and meets it at χ_vest = 1, which satisfies the cap. See `papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md` §3.1/§4.1.
 
-Why it ships first: clean falsification at LIGO precision, news-attractive, fits cleanly in 4 pages, doesn't require flagship to land. Strongest candidate for the arXiv-voucher first submission.
+Lede: Volovik identifies the vestigial second-sound mode as the graviton — in arXiv:2601.00639 and arXiv:2410.04392, **not** in the vestigial-gravity note (JETP Lett. **119, 330**, 2024; the "119, 564" this entry previously carried belongs to no paper we could find). On his own de Sitter background the Landau formula gives `s₂ = c` **exactly** — structural, not tunable — and he records GW170817 as satisfied. The χ-dependent speed `c_GW = c·√χ_vest` is **this project's** construction, obtained by transplanting his identification onto the ADW substrate, whose metric-channel susceptibility does not fix χ_vest. GW170817 then confines χ_vest to a window of width 4τ ≈ 1.2 × 10⁻¹⁴ against a natural-range width of 9.9 — narrower by >14 orders of magnitude — while both endpoints are excluded at ~7 × 10¹⁴ by Lean falsifier theorems. The value the datum selects is the value Volovik's own construction already produces, so it **corroborates** him and constrains our substrate.
+
+Why it ships first: stand-alone, four pages, depends on no other paper and on no open Phase-6 closure. ⚠️ Its *rationale* has changed — "clean falsification, news-attractive" no longer describes it, and whether a confinement result is still the right door-opener is an **open portfolio decision reserved for the operator**. The ordering below is unchanged pending that call.
 
 Source: Paper 25 + Phase 6a Wave 2 material.
 
@@ -301,7 +304,7 @@ Sources: Phase 5w material; Paper 16a main content.
 
 The order matters. Three principles:
 
-1. **Clear the arXiv-voucher gate with the easiest stand-alone PRL.** L1 (GW170817 vs vestigial-graviton) is the strongest candidate: clean negative result, fits in 4 pages, news-attractive, doesn't require any other paper to be out, doesn't depend on uncertain content.
+1. **Clear the arXiv-voucher gate with the easiest stand-alone PRL.** L1 (GW170817 vs vestigial-graviton) is the strongest candidate on STRUCTURE — stand-alone, no Phase-6 dependency, fits in 4 pages, news-attractive, doesn't require any other paper to be out, doesn't depend on uncertain content.
 
 2. **Tier 1 papers ship before Tier 0.** The flagship cites the Tier 1 papers; trying to write the flagship without them done is a snapshot. Tier 1 papers ship roughly in parallel after the voucher, with priority weighted toward shipping-ready material.
 
@@ -338,7 +341,11 @@ Twelve months from voucher to flagship is the rough envelope. The Phase 6 deep-r
 
 The critical path is L1 → voucher → everything else. The slowest path is Phase 6m → D5 → F. The flagship lands roughly when Phase 6m closes.
 
-**Status note (2026-05-07).** All 14 bundles have shipped Stage 9 + Stage 10 + Stage 13 reviewer triples GREEN per `BUNDLE_READINESS_HEATMAP.md` after Phase 7 absorption Sessions 1–5 (2026-05-06 → 2026-05-08). The roll-out timeline above expressed *first-pass* drafting cadence; the now-shipped state is "all 14 bundles cleared per-bundle reviewer triple, awaiting submission gates per the dependency graph" — the critical-path L1 → voucher gate is the only remaining program-level blocker for the first three Tier-2 splashes.
+**⚠️ Status note — CORRECTED 2026-08-15. The 2026-05-07 note this replaces was false, and it was the sentence a reader planned from.** It said: *"All 14 bundles have shipped Stage 9 + Stage 10 + Stage 13 reviewer triples GREEN … the critical-path L1 → voucher gate is the only remaining program-level blocker."* Measured against `BUNDLE_READINESS_HEATMAP.md` on 2026-08-15: **0 GREEN, 4 YELLOW, 17 RED, 1 UNMEASURED across 21 bundles** — and the roster is 21, not 14. There were **209 open blocking findings on the submission bundles** (plus 518 on legacy `paperNN` source drafts), with `FixPropagation` blocking 58 of 64 papers.
+
+Two lessons are worth keeping over the number itself. First, the note aged into a fiction because it stated a *census* in a narrative — the failure `CLAUDE.md` architecture rule 3 exists to prevent; the live figures belong in the heatmap and `SURFACE_INVENTORY.md`, and this note should say where to look rather than what the count is. Second, part of that 209 was never real: 34 of them were false positives from a checker that asserted `\bibitem` presence as a proxy for whether a citation resolves, which is wrong for every BibTeX draft (retired 2026-08-15, commit `d39d2ffb`).
+
+**For current state, read `BUNDLE_READINESS_HEATMAP.md` and `docs/architecture/PUBLICATION_PORTFOLIO_MAP.md`, not this document.** The sequencing above is still the intended order; the readiness claims are not current.
 
 ---
 
