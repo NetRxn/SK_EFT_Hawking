@@ -127,6 +127,7 @@ CANNOT_MEASURE_PASS_BASELINE = frozenset({
     ('placeholder_not_cited', 'missing-input'),
     ('proxy_body_audit', 'missing-input'),
     ('review_severity_declared', 'missing-input'),
+    ('review_verify_is_one_command', 'missing-input'),
     ('tracked_hypothesis_ledger', 'missing-input'),
     ('vacuous_statement_audit', 'missing-input'),
 })

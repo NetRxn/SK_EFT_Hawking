@@ -41,6 +41,7 @@ three. A guard is load-bearing in both directions or it is decoration.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -452,6 +453,163 @@ class TestReviewDocsMintFindings:
         r = rv.check_review_docs_mint_findings()
         assert r.passed is False
         assert any("unverified" in (d.message or "") for d in r.details)
+
+
+class TestReviewVerifyIsOneCommand:
+    """Rule 4 of the review-document marker contract, stated in two docstrings and
+    enforced nowhere until 2026-08-15.
+
+    `close_finding.py` reads the `Verify:` line, takes it as ONE command and runs it under
+    a shell — so trailing prose is argv, not commentary. A finding whose Verify line
+    cannot run can be neither verified nor closed, because `close_finding` refuses a
+    `--verify` that differs from the declared command.
+    """
+
+    GOOD = ("### 1.1 — the row is stale\n"
+            "- **Severity:** major\n"
+            "- **Verify:** `uv run python scripts/validate.py --check tables_fresh`\n"
+            "  *What it asserts:* that the shipped scalars match a fresh render.\n")
+    TRAILING_PROSE = ("### 1.1 — the row is stale\n"
+                      "- **Severity:** major\n"
+                      "- **Verify:** `uv run python -c \"pass\"` — exits 1 at HEAD\n")
+    TWO_COMMANDS = ("### 1.1 — the row is stale\n"
+                    "- **Severity:** major\n"
+                    "- **Verify:** `first --thing` and then `second --thing`\n")
+
+    def test_trailing_prose_after_the_command_fails(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT. This is the exact shape that strands a finding:
+        `— exits 1 at HEAD` reads as commentary and runs as arguments."""
+        _patch_roots(monkeypatch, _reviews_tree(
+            tmp_path, {"2026-08-15-stage13/D11.md": self.TRAILING_PROSE}))
+        r = rv.check_review_verify_is_one_command()
+        assert r.passed is False
+        assert any("not a single command" in (d.message or "")
+                   for d in r.details if not d.passed)
+
+    def test_two_commands_on_one_line_fails(self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — a distinct shape from trailing prose."""
+        _patch_roots(monkeypatch, _reviews_tree(
+            tmp_path, {"2026-08-15-stage13/D11.md": self.TWO_COMMANDS}))
+        assert rv.check_review_verify_is_one_command().passed is False
+
+    def test_a_single_command_with_a_following_gloss_line_passes(
+            self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA. The explanation belongs on the NEXT line, and the
+        contract's own house style puts it there — the check must not punish that."""
+        _patch_roots(monkeypatch, _reviews_tree(
+            tmp_path, {"2026-08-15-stage13/D11.md": self.GOOD}))
+        r = rv.check_review_verify_is_one_command()
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+
+    def test_an_EMPTY_WALK_fails_rather_than_passing_vacuously(
+            self, tmp_path, monkeypatch):
+        """⚠️ THE MUTATION THAT MATTERS. Every other leg is a zero-violation assertion,
+        which a corpus containing no `Verify:` lines at all satisfies perfectly — so a
+        broken walk or a drifted pattern would read exactly like a clean corpus. `checked
+        > 0` is part of the verdict."""
+        _patch_roots(monkeypatch, _reviews_tree(
+            tmp_path, {"2026-08-15-stage13/D11.md": "### 1.1 — no verify here\n"}))
+        r = rv.check_review_verify_is_one_command()
+        assert r.passed is False
+        assert "asserted nothing this run" in \
+            next(d for d in r.details if d.name == "summary").message
+
+    def test_the_live_corpus_is_clean(self):
+        """PRODUCTION. Measured 2026-08-15: 129 Verify lines, 0 violating — which is why
+        the bar is a hard zero. If this fails, a new document broke rule 4; fix the
+        document, never the bar."""
+        r = rv.check_review_verify_is_one_command()
+        assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+
+    #: A review document this test OWNS. Chosen deliberately: seeding a document another
+    #: worker may be editing risks a lost restore, and the whole point of restoring from
+    #: saved bytes is that the corpus comes back byte-identical.
+    _SEED_TARGET = ("papers/AutomatedReviews/"
+                    "2026-08-15-closure-write-lost-under-concurrency/infra.md")
+
+    def test_PRODUCTION_SEEDED_a_broken_verify_line_turns_it_red(self):
+        """⚠️ PRODUCTION-SEEDED, per CHECK_AUTHORING_GUIDE §2.4. The fixture mutations
+        above prove the TEST works; only this proves the CHECK can fire against the real
+        corpus — the walk, the glob and the pattern all exercised end to end.
+
+        The defect is written into a real review document and restored from saved bytes,
+        never with `git checkout` (ADR-009 §Deferred item 2).
+        """
+        target = SK_ROOT / self._SEED_TARGET
+        original = target.read_bytes()
+        try:
+            text = original.decode("utf-8")
+            seeded = text.replace(
+                "- **Verify:** `cd \"$REPO\" && uv run python -m pytest "
+                "tests/test_close_finding.py -q -k \"readback or concurren\"`",
+                "- **Verify:** `cd \"$REPO\" && uv run python -m pytest "
+                "tests/test_close_finding.py -q -k \"readback or concurren\"` "
+                "— exits 1 at HEAD", 1)
+            assert seeded != text, (
+                f"the seed did not apply to {self._SEED_TARGET}; its Verify line changed, "
+                f"so this test is no longer seeding anything")
+            target.write_bytes(seeded.encode("utf-8"))
+            r = rv.check_review_verify_is_one_command()
+            assert r.passed is False, (
+                "a real review document carrying trailing prose on its Verify line "
+                "reported PASS — the check cannot fire in production")
+            assert any(self._SEED_TARGET in d.name for d in r.details if not d.passed)
+        finally:
+            target.write_bytes(original)
+        assert target.read_bytes() == original, "the corpus was not restored byte-identically"
+
+
+class TestAcceptedByRatchet:
+    """D12 rounds 8/9/10 finding 8.5, second half. The rationale floor enforces that a
+    decision was WRITTEN; this enforces that it is ATTRIBUTED. For a critical or major a
+    bundle will ship carrying, an unattributed decision is one nobody can be asked about.
+    """
+
+    def test_the_blocking_set_matches_the_gate_evaluator(self):
+        """SEAM GUARD. Two modules must not disagree about what 'blocking' means — the
+        ratchet would then count a different population from the gate it exists to
+        supplement, and both would look right."""
+        from readiness_gates import BLOCKING_SEVERITIES
+        assert rv._BLOCKING_SEVERITIES == BLOCKING_SEVERITIES
+
+    def test_the_ceiling_carries_no_headroom(self):
+        """PRODUCTION-SEEDED, and the reason this lives here rather than in the check:
+        every fixture in `TestAcceptedFindingsCarryRationale` builds a synthetic ledger
+        whose ids resolve to no severity, so a below-ceiling leg inside the check would
+        fire on all of them and the ratchet would be measuring the fixtures.
+
+        A ceiling left standing above an improved corpus stops ratcheting silently.
+        """
+        r = rv.check_accepted_findings_carry_rationale()
+        d = next(x for x in r.details if x.name == "accepted_by")
+        n = int(re.match(r"(\d+) blocking-severity", d.message).group(1))
+        assert n == rv.ACCEPTED_BLOCKING_UNATTRIBUTED_CEILING, (
+            f"{n} unattributed blocking acceptances against a ceiling of "
+            f"{rv.ACCEPTED_BLOCKING_UNATTRIBUTED_CEILING}. Lower "
+            f"ACCEPTED_BLOCKING_UNATTRIBUTED_CEILING to {n} in the same commit. "
+            f"⚠️ If it rose, do NOT raise the ceiling — the new acceptance owes an "
+            f"`accepted_by`.")
+
+    def test_an_unattributed_acceptance_past_the_ceiling_FAILS(self, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — the ceiling dropped by one, so the live corpus is
+        one over. Seeds the CEILING rather than the ledger, which leaves the 645 KB
+        production file untouched while still exercising it as the input."""
+        monkeypatch.setattr(
+            rv, "ACCEPTED_BLOCKING_UNATTRIBUTED_CEILING",
+            rv.ACCEPTED_BLOCKING_UNATTRIBUTED_CEILING - 1)
+        r = rv.check_accepted_findings_carry_rationale()
+        assert r.passed is False
+        d = next(x for x in r.details if x.name == "accepted_by")
+        assert "ABOVE the ceiling" in d.message and "review:" in d.message, (
+            "the failure must NAME the records that owe an accepted_by")
+
+    def test_an_unavailable_extractor_is_UNMEASURED_not_passing(self, monkeypatch):
+        """Cannot-measure is not success. Without severities the leg cannot tell a
+        blocking acceptance from an advisory one, so its silence is not evidence."""
+        monkeypatch.delattr(build_graph, "extract_review_finding_nodes")
+        r = rv.check_accepted_findings_carry_rationale()
+        assert r.measured is False
+        assert any(d.name == "accepted_by" and not d.passed for d in r.details)
 
 
 class TestAcceptedFindingsCarryRationale:

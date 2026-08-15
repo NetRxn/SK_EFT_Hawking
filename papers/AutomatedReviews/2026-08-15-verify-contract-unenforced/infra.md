@@ -31,8 +31,13 @@ findings in one review document were unclosable, including four blockers.
 
 - **Severity:** major
 - **Lane:** `infra`
-- **Verify:** `cd "$REPO" && uv run python -c "import sys; sys.path.insert(0,'scripts'); from validation.checks import reviews as r; assert hasattr(r, 'check_review_verify_is_one_command'), 'no registered check enforces Verify-is-one-command'"`
-  *What it asserts:* that a registered check exists for rule 4. Exits 1 at HEAD.
+- **Verify:** `cd "$REPO" && uv run python -m pytest tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand -q && uv run python scripts/validate.py --check review_verify_is_one_command`
+  *What it asserts:* that the check fires on trailing prose, on a second command, and on an empty walk; stays silent on a correctly-formed line; is red when the defect is seeded into a real review document; and is green over the live corpus. Exits 1 at HEAD.
+  ⚠️ **Amended 2026-08-15 — the original asserted EXISTENCE, which is a proxy.** It was
+  `hasattr(reviews, 'check_review_verify_is_one_command')`, satisfied by a function that
+  returns `passed=True` unconditionally, or by one whose glob matches nothing. Rule 4's
+  whole problem was a requirement stated and not enforced; a verify that a stub satisfies
+  reproduces that at one remove. Assert what the mechanism RETURNS.
 - **Gate:** FixPropagation
 - **Location:** `scripts/validate_review_doc.py:43-45` (rule 4, stated), `scripts/close_finding.py` (`_run_verifications`, the consumer), `scripts/validation/checks/reviews.py` (where the check belongs)
 - **Observed:** `_REVIEW_DOC_CHECKS = ("review_severity_declared", "review_docs_mint_findings")`.

@@ -9398,6 +9398,20 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-verify-contract-unenforced:infra:1.1",
+      "status": "fixed",
+      "evidence": "Rule 4 now has a registered check, review_verify_is_one_command. It walks every review document and requires the whole remainder of a Verify line to be exactly one backtick-delimited command, because close_finding.py runs that line verbatim under a shell — trailing prose is argv, not commentary — and refuses any --verify that differs from the declared one, so a broken line strands the finding. Measured 2026-08-15: 129 Verify lines corpus-wide, 0 violating, which is why the bar is a hard zero rather than a ratchet. An EMPTY WALK also fails: every other leg is a zero-violation assertion that a broken glob would satisfy perfectly. PRODUCTION-SEEDED per CHECK_AUTHORING_GUIDE 2.4 — a trailing-prose defect written into a real review document turns it red, restored byte-identically. All registration sites satisfied per the architecture-change probe; CI_MIN_CHECKS_RUN 78 to 79; FIXTURE_ONLY_CEILING unchanged at 51. The finding's own Verify line was amended first: it asserted hasattr, which a stub returning passed=True satisfies — reproducing at one remove the stated-but-unenforced defect it describes.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand -q && uv run python scripts/validate.py --check review_verify_is_one_command",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand -q && uv run python scripts/validate.py --check review_verify_is_one_command",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }

@@ -67,6 +67,7 @@ EXPECTED_CHECKS = [
     'atlas_hypothesis_discipline',
     'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
+    'review_verify_is_one_command',
     # ADR-012 P6: promoted out of `graph_integrity`, whose leg was deleted in the same
     # commit. ⚠️ THIS ROSTER IS THE THIRD REGISTRATION OBLIGATION and it was the one
     # missed — `_CANONICAL_ORDER`, `CI_MIN_CHECKS_RUN` and `MUTATION_VERIFIED` were all
@@ -81,6 +82,10 @@ EXPECTED_CHECKS = [
     'bundle_figure_adequacy', 'bundle_structural_coherence',
     'bundle_lean_module_coverage',
     'notebook_stored_outputs_current',
+    # 2026-08-14 (D11 Stage-13 round-10 finding 5.2b): the markdown-cell half of a
+    # bundle notebook's claim surface. Adjacent to the re-execution check on purpose —
+    # a markdown cell has no code, so re-execution is structurally blind to it.
+    'notebook_markdown_retracted_claims',
     'readiness_verdicts_agree', 'readiness_submission_gate',
     'citation_primary_sources_present', 'provenance_doi_in_registry',
     'bundle_consistency', 'bundle_source_freshness',

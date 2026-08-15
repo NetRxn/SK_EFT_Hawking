@@ -32,7 +32,7 @@ WHAT DECIDES SCOPE — this table is DERIVED FROM `_plan()`, not written beside 
                               since D3), notebook_exec + viz_consistency
   docs/architecture/**     -> architecture_inventory_fresh
   docs/counts.*            -> counts_fresh
-  papers/**                -> counts_fresh, the three deterministic bundle gates
+  papers/**                -> counts_fresh, the deterministic bundle gates + review_verify_is_one_command
   .claude/plugins/**       -> plugin guards AND architecture_inventory_fresh, because
                               the census derives agents/hooks/commands from that tree
   everything else (*.md)   -> nothing mechanical; say so rather than imply coverage
@@ -136,11 +136,17 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
                       ["uv", "run", "python", "scripts/validate.py",
                        "--check", "architecture_inventory_fresh"]))
     if touched["papers"]:
+        # ⚠️ `review_verify_is_one_command` belongs here because review DOCUMENTS live
+        # under `papers/AutomatedReviews/`, so editing one is a `papers/**` change. A
+        # broken `Verify:` line strands the finding it belongs to — `close_finding` runs
+        # that line verbatim and refuses any other command — and the whole point of
+        # catching it under `--scope` is that the author is still holding the document.
         steps.append(("bundle gates",
                       ["uv", "run", "python", "scripts/validate.py",
                        "--check", "bundle_prose_em_dash_free",
                        "--check", "bundle_reader_facing_voice",
-                       "--check", "bundle_todo_free_before_green"]))
+                       "--check", "bundle_todo_free_before_green",
+                       "--check", "review_verify_is_one_command"]))
     if touched["lean"]:
         # NOT plain `lake build`: it leaves ExtractDeps.olean missing and breaks
         # graph_integrity + counts_fresh downstream (CLAUDE.md, Build & run).

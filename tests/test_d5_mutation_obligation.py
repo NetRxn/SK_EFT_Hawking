@@ -217,6 +217,15 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "requirement in silence — the cutoff was an opt-out, and undecidable scope is now "
         "a failure rather than a skip)",
     ),
+    "review_verify_is_one_command": (
+        "test_d5_reviews.py",
+        "3 mutations: trailing prose after the command, a second backticked command on "
+        "the same line, and an EMPTY WALK — the last is the one that matters, because "
+        "every other leg is a zero-violation assertion that an empty corpus satisfies "
+        "perfectly, so `checked > 0` is part of the verdict rather than decoration. "
+        "Pins a practice rather than repairing a defect: 129 Verify lines corpus-wide on "
+        "2026-08-15, 0 violating, which is why the bar is a hard zero and not a ratchet",
+    ),
     "review_docs_mint_findings": (
         "test_d5_reviews.py",
         "2 mutations: the zero-minted verdict, and `_carries_findings` forced True — the "
@@ -227,7 +236,15 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "test_d5_reviews.py",
         "`len(why) < MIN_CHARS` -> False caught; all three historical field spellings "
         "(`evidence`/`rationale`/`note`) exercised, and the missing-ledger H1-silent site "
-        "pinned so converting it to FAIL updates this test and the baseline together",
+        "pinned so converting it to FAIL updates this test and the baseline together. "
+        "2026-08-15 (D12 rounds 8/9/10 finding 8.5) the `accepted_by` ratchet added, "
+        "PRODUCTION-SEEDED by lowering the CEILING rather than editing the 645 KB ledger: "
+        "the live corpus is then one over and the check must name the offending records. "
+        "Plus a no-headroom test (a ceiling above an improved corpus stops ratcheting "
+        "silently), a cannot-measure leg (no severities -> measured=False, not pass), and "
+        "a seam guard binding `_BLOCKING_SEVERITIES` to `readiness_gates`' own set so the "
+        "ratchet cannot end up counting a different population from the gate it "
+        "supplements",
     ),
     # lean_substrate.py: 34 tests / 12 mutations. One MISSED on the first pass, and it
     # found a live defect (QI-28): six of nine `_LEDGER_HEDGE_RE` alternatives were
@@ -380,7 +397,9 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "test_d5_freshness.py",
         "3 mutations on `_counts_is_stale` incl. `rglob` -> `glob` — ADR-004 W7 M2, the "
         "ORIGINAL instance of the QI-01 class. A failed/unrunnable generator fails the "
-        "check rather than reading as fresh",
+        "check rather than reading as fresh. 2026-08-14: 5 more on the "
+        "PAPER_DRAFT_MAPPING row leg — stale lines/theorems/defs all CAUGHT, and a "
+        "RESHAPED or MISSING row FAILS rather than silently comparing nothing",
     ),
     "tables_fresh": (
         "test_d5_freshness.py",
@@ -397,7 +416,18 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "6 mutations. One leg per reviewer-demonstrated bypass of an earlier version: "
         "stale figure title (round-7), moved scalar marker (round-8), base64-vs-list "
         "asymmetry (round-8), length-only digest (round-9), narrow MIME allow-list "
-        "(round-10), hand-edited SVG (round-12), plus the empty-scope FAIL",
+        "(round-10), hand-edited SVG (round-12), an UNANTICIPATED MIME key after the "
+        "allow-list was inverted to a deny-list (round-10 5.2a; `text/csv` seeded in "
+        "the real notebook -> rc=1), raster pixels still ignored, plus the "
+        "empty-scope FAIL",
+    ),
+    "notebook_markdown_retracted_claims": (
+        "test_d5_freshness.py",
+        "7 legs. MUT-N2 verbatim (the retracted Voigt-Reuss-on-M_eff naming) and the "
+        "retracted necessity claim both CAUGHT; a QUOTED retraction is warned, not "
+        "failed, and the exemption is PARAGRAPH-scoped so a retraction paragraph "
+        "cannot license an unrelated assertion in the same cell; empty scope and "
+        "zero-markdown-cells both fail rather than pass",
     ),
     "bundle_source_freshness": (
         "test_d5_freshness.py",
@@ -878,6 +908,12 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # src/core/constants.py -> red; restored from saved bytes. Keeps FIXTURE_ONLY_CEILING
     # unchanged.
     "existential_witness_disclosure",
+    # 2026-08-15: trailing prose appended to the Verify line of a REAL review document
+    # (papers/AutomatedReviews/2026-08-15-closure-write-lost-under-concurrency/infra.md)
+    # -> red; restored from saved bytes and asserted byte-identical. The target is a
+    # document this session authored, chosen so a concurrent worker cannot lose an edit
+    # to the restore. Keeps FIXTURE_ONLY_CEILING at 51.
+    "review_verify_is_one_command",
     # 2026-08-13 (ADR-013 P1): seeded in the real src/core/transonic_background.py —
     # docstring changed, then removed — and in the real docs/MODULE_CENSUS.md.
     "module_census_fresh",
@@ -997,6 +1033,38 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # ratchet of 22, rc=1 naming the excess and the longest sentence. Restored from a
     # scratchpad snapshot, byte-identical.
     "bundle_sentence_length",
+    # 2026-08-14 (D11 Stage-13 round-4 findings 1.1/1.2, round-8 finding 1.1): the Venue
+    # leg seeded into the REAL src/core/citations.py — `Voigt1889` volume 274 -> 275, then
+    # journal -> "Journal of Applied Physics" — turned `validate.py --check
+    # citation_primary_sources_present` red each time, naming
+    # `cache_venue_mismatch:Voigt1889` against the real
+    # Lit-Search/Phase-6c/primary-sources/Voigt1889.abstract.txt header. Restored and
+    # verified byte-identical by `cmp`. The negative control matters here: the unmutated
+    # corpus reports ZERO venue disagreements, so the red is the seed and not a standing
+    # failure. A third seed (reverting the path to the wrong-case `Phase-6C`) is caught by
+    # `test_declared_phase_tokens_match_on_disk_case_sensitively` rather than by the check,
+    # because both spellings resolve on APFS — that leg is filesystem-independent by
+    # construction.
+    "citation_primary_sources_present",
+    # 2026-08-14 (D11 Stage-13 round-9 finding 4.4): `critical_open` set 1 -> 0 in the
+    # REAL papers/D11/bundle_metadata.json -> rc=1 naming D11 with `critical_open=0
+    # live=1`. Restored and verified byte-identical by `cmp`. The new field exists
+    # because `blockers_open` counts critical+major while its name says only the first,
+    # so a bundle with one open 🔴 read as carrying eighteen blockers.
+    "bundle_metadata_matches_graph",
+    # 2026-08-14 (D11 Stage-13 round-10 finding 5.2b): found a hit on the UNMODIFIED
+    # shipped notebook at first run (cell 10, correctly classified as a quoted
+    # retraction) — a check that responds to production data before any seeding. Then
+    # MUT-N2 written verbatim into the REAL
+    # notebooks/D11_TopologicalBandTheory_Technical.ipynb ("Voigt-Reuss bounds on the
+    # effective modulus M_eff") -> rc=1 naming md-cell-0. Restored, `git hash-object`
+    # identical (83e4911d).
+    "notebook_markdown_retracted_claims",
+    # 2026-08-14 (D11 Stage-13 finding 1530:4.1): the D11 row's line count set back to
+    # the historical stale 6144 in the REAL docs/PAPER_DRAFT_MAPPING.md -> rc=1 naming
+    # `mapping_row_stale:D11:lines` against \dxiLines=6267. Restored, `cmp`
+    # byte-identical.
+    "counts_fresh",
 })
 
 #: The ratchet, in the same idiom as `AWAITING_CEILING`: the number of registered
@@ -1007,7 +1075,10 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
 #: every check for which nobody has yet demonstrated a production failure, not every
 #: check that is broken. Lower it one check at a time, each with the probe recorded in
 #: the commit — the same way the 54-entry `AWAITING_MUTATION_TEST` backlog went to zero.
-FIXTURE_ONLY_CEILING = 54  # 2026-08-13 (ADR-013 P4): UNCHANGED by the Index check's
+FIXTURE_ONLY_CEILING = 51  # 2026-08-14: 54 -> 51, `citation_primary_sources_present`
+                           #   `bundle_metadata_matches_graph` and `counts_fresh`
+                           #   production-seeded (see their entries above).
+                           # 2026-08-13 (ADR-013 P4): UNCHANGED by the Index check's
                            #   retirement, measured not assumed. This counts registered
                            #   checks NOT production-seeded; the deleted check WAS
                            #   production-seeded, so registered and PRODUCTION_SEEDED

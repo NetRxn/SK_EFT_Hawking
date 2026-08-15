@@ -95,6 +95,22 @@ class GateResult:
     #: the node payload already agree on.
     blocker_refs: list[dict] = field(default_factory=list)
 
+    #: Findings at BLOCKING severity that carry `status: accepted` — a recorded decision
+    #: to live with the defect rather than a repair.
+    #:
+    #: ⚠️ THESE ARE DELIBERATELY NOT IN `blockers`, and that is exactly why they need
+    #: their own field. `_eval_fix_propagation` partitions `accepted` out before the
+    #: severity filter runs, so none of them reaches `r.blockers`, sets `state='blocked'`,
+    #: or drives `needs-recheck` — correctly, because an accepted finding is a decision,
+    #: not unclosed work. What was wrong is that they then appeared NOWHERE: a gate could
+    #: read `passed` / "all review findings fixed" over a bundle carrying accepted
+    #: criticals. Measured 2026-08-15: 31 project-wide, 12 critical and 19 major.
+    #:
+    #: Surfacing is not blocking. The state is unchanged; only the disclosure is added,
+    #: so a reader sees "0 open, N accepted at blocking severity" rather than silence.
+    #: (D12 Stage-13 rounds 8/9/10 finding 8.5.)
+    accepted_blockers: list[dict] = field(default_factory=list)
+
     def to_node_payload(self) -> dict:
         shape_map = {'blocked': 'diamond', 'passed': 'square',
                      'needs-recheck': 'triangle', 'in-review': 'circle',
@@ -131,6 +147,9 @@ class GateResult:
                 'blocker_refs': self.blocker_refs[:50],
                 'blocker_refs_total': len(self.blocker_refs),
                 'blocker_refs_truncated': len(self.blocker_refs) > 50,
+                'accepted_blockers': self.accepted_blockers[:50],
+                'accepted_blockers_total': len(self.accepted_blockers),
+                'accepted_blockers_truncated': len(self.accepted_blockers) > 50,
                 'notes': self.notes,
                 'last_evaluated': self.last_evaluated,
                 'shape': shape_map.get(self.state, 'square'),
@@ -961,6 +980,21 @@ def _eval_fix_propagation(paper: dict, idx: GraphIndex) -> GateResult:
             })
         return out
 
+    # ── Accepted AT BLOCKING SEVERITY (D12 rounds 8/9/10 finding 8.5) ────────────────
+    # `accepted` is partitioned out above, so these never reach `blocking` and never
+    # change `state` — correct, since an accepted finding is a recorded decision, not
+    # unclosed work. But they were then invisible EVERYWHERE: the `passed` branch below
+    # says "all review findings fixed" over a bundle that may carry accepted criticals,
+    # and `accepted` became the cheapest closure in the system precisely because it
+    # removes a finding from the gate's blocking set. Disclosure, not blocking — the
+    # state is untouched and only the notes and a dedicated ref list are added.
+    accepted_blocking = [f for f in accepted_findings
+                         if str((f.get('meta') or {}).get('severity', '')).lower()
+                         in BLOCKING_SEVERITIES]
+    r.accepted_blockers = _refs(accepted_blocking)
+    _acc = (f'; {len(accepted_blocking)} accepted at blocking severity'
+            if accepted_blocking else '')
+
     if blocking:
         # ⚠️ THE CAP MOVED, and that is not incidental. This was `blocking[:10]` HERE, so
         # `len(self.blockers)` in the payload counted the truncated list — meaning a
@@ -974,16 +1008,22 @@ def _eval_fix_propagation(paper: dict, idx: GraphIndex) -> GateResult:
         r.priority = 1
         r.notes = (f'{len(blocking)} open review findings at severity '
                    f'{"/".join(sorted(BLOCKING_SEVERITIES))} '
-                   f'({len(open_findings)} open in total)')
+                   f'({len(open_findings)} open in total){_acc}')
     elif open_findings:
         r.blocker_refs = _refs(open_findings)
         r.blockers = [x['label'] for x in r.blocker_refs]
         r.state = 'needs-recheck'
-        r.notes = f'{len(open_findings)} review findings still open (all advisory)'
+        r.notes = (f'{len(open_findings)} review findings still open '
+                   f'(all advisory){_acc}')
     else:
         r.state = 'passed'
+        # ⚠️ "all review findings fixed" was FALSE for any bundle carrying an accepted
+        # blocker — they are closed, but not fixed, and the distinction is the whole
+        # point of the `accepted` status. This branch is where 8.5 bites hardest: a
+        # green gate over a recorded decision to ship a known critical.
         r.notes = ('no review findings' if not flagged
-                   else 'all review findings fixed')
+                   else ('all review findings fixed' if not accepted_blocking
+                         else f'0 open{_acc[2:]}'))
     return r
 
 

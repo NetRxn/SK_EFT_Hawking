@@ -43,6 +43,25 @@ from validation._registry import CheckResult, Detail, register_check
 _RECURRENCE_MIN_TITLE = 12     # see the check body for why
 _RECURRENCE_MIN_OVERLAP = 0.45  # Jaccard over token sets; see the check body for the derivation
 
+#: Severities at which a finding blocks submission. Mirrors
+#: `readiness_gates.BLOCKING_SEVERITIES`; imported lazily there to keep this module's
+#: import graph flat, and asserted equal by `tests/test_d5_reviews.py` so the two cannot
+#: drift into disagreeing about what "blocking" means.
+_BLOCKING_SEVERITIES = frozenset({'critical', 'blocker', 'major'})
+
+#: Blocking-severity `accepted` records with no `accepted_by`. **MAY ONLY FALL.**
+#: Measured 2026-08-15 by the leg below, on the live ledger: 32.
+#:
+#: ⚠️ A SIBLING MEASUREMENT SAID 31, AND THE DIFFERENCE IS THE POINT. Counting
+#: `ReviewFinding` nodes whose `meta.status == 'accepted'` gives 31 (12 critical, 19
+#: major); counting last-wins LEDGER records whose finding resolves to a blocking
+#: severity gives 32. Both are correct about their own population — a record can name a
+#: finding whose node carries a different resolved status. A ceiling must be measured by
+#: the predicate that ENFORCES it, or the first honest run trips a ratchet nobody moved.
+#: See `check_accepted_findings_carry_rationale` for why this is a ratchet rather than a
+#: hard gate, and why bulk-stamping a name to clear it is prohibited.
+ACCEPTED_BLOCKING_UNATTRIBUTED_CEILING = 32
+
 #: A later review's heading that ANNOUNCES a fix is confirmation of the closure, not
 #: evidence against it (added 2026-08-05, audit finding QI-34). Every finding is born
 #: `open` by the birth-status invariant — including the "✅ FIXED — <restated finding>"
@@ -676,6 +695,71 @@ def check_review_docs_mint_findings() -> CheckResult:
 # gate below.)
 
 
+#: `- **Verify:** …` as the review-document contract writes it.
+_VERIFY_LINE = re.compile(r'^[ \t]*[-*]\s*\*\*Verify:?\*\*:?[ \t]*(.*)$', re.M)
+#: The whole remainder must be ONE backtick-delimited command and nothing else.
+_VERIFY_ONE_COMMAND = re.compile(r'^`([^`]+)`$')
+
+
+@register_check("review_verify_is_one_command",
+                "Every `Verify:` line is a single runnable command and nothing else")
+def check_review_verify_is_one_command() -> CheckResult:
+    """CHECK: rule 4 of the review-document marker contract, which was enforced nowhere.
+
+    Added 2026-08-15 (`2026-08-15-verify-contract-unenforced`). The contract has four
+    rules. `validate_review_doc.py` delegates severity declaration and finding minting to
+    registered checks, so rules 1–3 bind; rule 4 was stated in that validator's docstring
+    and in `close_finding.py`'s, and checked by neither.
+
+    ⚠️ **The consumer is literal.** `close_finding.py` reads the `Verify:` line, takes it
+    as ONE command, and runs it under `shell=True`. Explanatory prose trailing the command
+    is therefore not commentary — it is argv. A finding whose Verify line cannot run is a
+    finding whose closure cannot be verified, and `close_finding` refuses a closure whose
+    `--verify` differs from the declared command, so such a finding is STRANDED: it can be
+    neither verified nor closed except by amending the document.
+
+    ⚠️ **This pins a practice; it does not repair a live defect.** Measured 2026-08-15:
+    129 `Verify:` lines corpus-wide, **0** violating. That is why the bar is a hard zero
+    rather than a ratchet — there is no historical debt to ratchet down from, so any
+    violation is new, and a ceiling above zero would only make room for one.
+    """
+    reviews_dir = _H.PAPERS_DIR / "AutomatedReviews"
+    if not reviews_dir.is_dir():
+        # Cannot-measure is not success (ADR-009 H1): the PASS stays, but it stops
+        # counting as evidence toward the coverage floor.
+        return CheckResult(passed=True, measured=False, details=[
+            Detail("scope", True, "no review directory", warning=True, measured=False)])
+
+    bad: list[tuple[str, str]] = []
+    checked = 0
+    for md in sorted(reviews_dir.glob("*/*.md")):
+        text = md.read_text(encoding="utf-8", errors="replace")
+        for m in _VERIFY_LINE.finditer(text):
+            checked += 1
+            rest = m.group(1).strip()
+            if not _VERIFY_ONE_COMMAND.match(rest):
+                bad.append((str(md.relative_to(_H.PROJECT_ROOT)), rest[:120]))
+
+    details = [Detail(
+        "summary", not bad and checked > 0,
+        f"{checked} `Verify:` line(s) checked, {len(bad)} carrying anything other than a "
+        f"single backticked command"
+        + ("" if checked else
+           " — NONE FOUND, so this check asserted nothing this run; the corpus had 129 "
+           "on 2026-08-15, so zero means the walk or the pattern broke, not that the "
+           "documents changed"))]
+    for path, rest in bad[:10]:
+        details.append(Detail(
+            path, False,
+            f"`Verify:` is not a single command: {rest!r}. `close_finding.py` runs this "
+            f"line verbatim under a shell, so trailing prose is argv, not commentary — "
+            f"the finding can then be neither verified nor closed. Put the explanation on "
+            f"the following line as `*What it asserts:* …`."))
+    # ⚠️ `checked > 0` is part of the verdict, not decoration. Every other leg here is a
+    # zero-violation assertion, which an empty walk satisfies perfectly.
+    return CheckResult(passed=not bad and checked > 0, details=details)
+
+
 @register_check("accepted_findings_carry_rationale",
                 "Every `accepted` supersession record justifies acceptance in writing")
 def check_accepted_findings_carry_rationale() -> CheckResult:
@@ -739,7 +823,63 @@ def check_accepted_findings_carry_rationale() -> CheckResult:
             f"status=accepted with {n} characters of rationale. `accepted` removes a "
             f"finding from Gate 11's blocking set, so it must record a DECISION — why "
             f"acceptance rather than a fix — not merely assert one."))
-    return CheckResult(passed=not bad, details=details)
+
+    # ── WHO accepted it (D12 rounds 8/9/10 finding 8.5, second half) ─────────────────
+    # The rationale floor above enforces that a decision was WRITTEN. It says nothing
+    # about who made it. For a blocking-severity finding — a critical or major that a
+    # bundle will ship carrying — an unattributed decision is not a decision anyone can
+    # be asked about later.
+    #
+    # ⚠️ A RATCHET, NOT A HARD GATE, and deliberately. Measured 2026-08-15: 31 records
+    # are accepted at blocking severity (12 critical, 19 major) and NONE carries
+    # `accepted_by`. Turning this red immediately would block every bundle on historical
+    # debt. The ceiling may only fall.
+    #
+    # ⚠️ DO NOT CLEAR THIS BY BACK-FILLING `accepted_by` IN BULK. Stamping a name onto 31
+    # decisions nobody re-made reproduces exactly the defect
+    # `2026-08-15-textbook-exemption-rewards-absent-metadata` describes one layer over —
+    # a field satisfied by paperwork rather than by the thing it attests. Each one comes
+    # down by being re-decided or fixed.
+    bad_owner: list[str] = []
+    owner_measured = True
+    try:
+        from build_graph import extract_review_finding_nodes
+        sev = {n["id"]: str((n.get("meta") or {}).get("severity", "")).lower()
+               for n in extract_review_finding_nodes()}
+    except Exception as exc:
+        owner_measured = False
+        details.append(Detail(
+            "accepted_by", False, measured=False,
+            message=f"could not load finding severities ({type(exc).__name__}: {exc}) — "
+                    f"the attribution floor did NOT run, so its silence is not evidence"))
+    else:
+        last: dict[str, dict] = {}
+        for e in led.get("supersessions", []):
+            last[e.get("finding_id")] = e          # last-wins, as the reader
+        for fid, e in last.items():
+            if e.get("status") != "accepted":
+                continue
+            if sev.get(fid, "") not in _BLOCKING_SEVERITIES:
+                continue
+            if not str(e.get("accepted_by") or "").strip():
+                bad_owner.append(fid)
+
+    # ⚠️ The check fails only ABOVE the ceiling. Headroom — a ceiling left standing above
+    # a corpus that has improved — is asserted by
+    # `tests/test_d5_reviews.py::TestAcceptedByRatchet::test_the_ceiling_carries_no_headroom`
+    # against the PRODUCTION ledger, matching `TestChainOfBackingResolves` in the same
+    # file. It cannot live here: every fixture in that suite builds a small synthetic
+    # ledger whose ids resolve to no severity, so a below-ceiling failure would fire on
+    # every one of them and the ratchet would be measuring the fixtures.
+    over = owner_measured and len(bad_owner) > ACCEPTED_BLOCKING_UNATTRIBUTED_CEILING
+    details.append(Detail(
+        "accepted_by", not over,
+        f"{len(bad_owner)} blocking-severity `accepted` record(s) carry no `accepted_by` "
+        f"(ceiling {ACCEPTED_BLOCKING_UNATTRIBUTED_CEILING}, may only fall)"
+        + (f" — ABOVE the ceiling: {sorted(bad_owner)[:5]}" if over else "")))
+
+    return CheckResult(passed=not bad and not over,
+                       measured=owner_measured, details=details)
 
 
 # ── Chain-of-backing resolvability ────────────────────────────────────────────────────

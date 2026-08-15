@@ -205,6 +205,7 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'atlas_hypothesis_discipline',
     'count_literals', 'recurrence_reopens_closures', 'review_severity_declared',
     'review_docs_mint_findings', 'accepted_findings_carry_rationale',
+    'review_verify_is_one_command',
     'ledger_ids_resolve',
     'chain_backing_targets_resolve',
     'bundle_metadata_matches_graph', 'bundle_stage13_claim_consistent',
@@ -214,6 +215,10 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     'bundle_figure_adequacy', 'bundle_structural_coherence',
     'bundle_lean_module_coverage',
     'notebook_stored_outputs_current',
+    # Immediately after it: the same artifact, the one surface a re-execution gate
+    # cannot see (markdown cell source). Adjacency is the point — the pair is the
+    # notebook's claim surface, and separating them is how the gap reopened.
+    'notebook_markdown_retracted_claims',
     'readiness_verdicts_agree', 'readiness_submission_gate',
     'citation_primary_sources_present', 'provenance_doi_in_registry',
     'bundle_consistency', 'bundle_source_freshness',
@@ -628,6 +633,7 @@ check_tables_fresh = _checks_freshness.check_tables_fresh
 check_claim_clusters_fresh = _checks_freshness.check_claim_clusters_fresh
 check_bundle_source_freshness = _checks_freshness.check_bundle_source_freshness
 check_notebook_stored_outputs_current = _checks_freshness.check_notebook_stored_outputs_current
+check_notebook_markdown_retracted_claims = _checks_freshness.check_notebook_markdown_retracted_claims
 _counts_is_stale = _checks_freshness._counts_is_stale      # scripts/sync_manifest.py
 _tables_is_stale = _checks_freshness._tables_is_stale      # scripts/sync_manifest.py
 _claim_clusters_is_stale = _checks_freshness._claim_clusters_is_stale
@@ -696,6 +702,7 @@ check_provenance_doi_in_registry = _checks_citations.check_provenance_doi_in_reg
 check_bibitem_title_primary_source = _checks_citations.check_bibitem_title_primary_source
 check_recurrence_reopens_closures = _checks_reviews.check_recurrence_reopens_closures
 check_review_severity_declared = _checks_reviews.check_review_severity_declared
+check_review_verify_is_one_command = _checks_reviews.check_review_verify_is_one_command
 check_review_docs_mint_findings = _checks_reviews.check_review_docs_mint_findings
 check_accepted_findings_carry_rationale = _checks_reviews.check_accepted_findings_carry_rationale
 check_ledger_ids_resolve = _checks_reviews.check_ledger_ids_resolve
