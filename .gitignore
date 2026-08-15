@@ -147,3 +147,6 @@ lean/.lean_json_cache.json
 # path and produced the first event — which also corrected the standing claim that the bus
 # "has never written a file". It writes fine; nobody had clicked the button.
 docs/verification_log.jsonl
+
+# close_finding.py advisory lock (ADR-012; 2026-08-15 lost-write repair)
+docs/review_finding_supersessions.json.lock

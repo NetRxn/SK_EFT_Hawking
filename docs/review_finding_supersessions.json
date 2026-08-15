@@ -9384,6 +9384,20 @@
         "enforced": true,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-closure-write-lost-under-concurrency:infra:1.1",
+      "status": "fixed",
+      "evidence": "Both parts of the Fix shipped. (1) An exclusive advisory lock on a sidecar file spans the whole read-modify-write window, so a lock-respecting second writer waits instead of building on a stale snapshot; the lock path is derived at call time from LEDGER, not bound at import, or the suite would serialise against live closures and leave a lockfile in the tree. It is NOT held across _run_verifications, which shells out. (2) A read-back after the write re-parses the ledger and asserts every intended id is present, raising WRITE LOST if not — this catches the non-participant case a lock cannot prevent, and it is what makes the tool's success line falsifiable from its own output. The raise is converted to a (False, msg) refusal rather than a traceback, because a batch runner would otherwise log it as 'one entry errored' and skip past, which is how the original loss stayed invisible. Three tests pin it, including a deterministic reproduction of the 8.6 clobber that reported success at HEAD.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_close_finding.py -q -k \"readback or concurren\"",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_close_finding.py -q -k \"readback or concurren\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }

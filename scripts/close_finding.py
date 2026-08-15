@@ -43,11 +43,14 @@ repo; neither is untrusted input, and neither is taken from a network source.
 from __future__ import annotations
 
 import argparse
+import contextlib
+import fcntl
 import json
 import os
 import subprocess
 import sys
 import tempfile
+import time as _time
 from datetime import date as _date
 from pathlib import Path
 
@@ -124,7 +127,15 @@ def close(doc: str, sections: list[str], status: str, evidence: str,
         return False, str(exc)
 
     if not dry_run and to_add:
-        _write(to_add)
+        try:
+            _write(to_add)
+        except (RuntimeError, TimeoutError) as exc:
+            # A lost or blocked write is a REFUSAL, not a crash. Every caller of this
+            # function — the CLI, the batch scripts, the tests — reads the `(ok, msg)`
+            # pair; a traceback escaping here would be reported by a batch runner as
+            # "one entry errored" and skipped past, which is how a lost write became
+            # invisible in the first place.
+            return False, str(exc)
 
     verb = "would write" if dry_run else "wrote"
     body = ", ".join(r["finding_id"] for r in to_add) or "(nothing)"
@@ -272,11 +283,74 @@ def _read_ledger() -> dict:
     return data
 
 
+def _lock_path() -> Path:
+    """Sidecar advisory lock beside whatever `LEDGER` currently points at.
+
+    ⚠️ Derived at CALL time, not bound at import. Every test in
+    `tests/test_close_finding.py` repoints `LEDGER` into `tmp_path`; a module-level
+    constant would have kept locking the real `docs/` file, so the suite would serialise
+    against live closures and leave a lockfile in the tree.
+
+    NOT the ledger itself: `_atomic_write` replaces the ledger's inode, so a lock held on
+    that fd would guard a file no longer at the path.
+    """
+    return LEDGER.parent / (LEDGER.name + ".lock")
+
+
+@contextlib.contextmanager
+def _ledger_lock(timeout: float = 60.0):
+    """Exclusive advisory lock over the read-modify-write window.
+
+    ⚠️ **A re-read before writing is not enough, and this is measured.** `_write` already
+    re-read the ledger immediately before serialising it, on the reasoning that the window
+    was too small to matter. On 2026-08-15, during a five-worker parallel run, a closure
+    for `…:2026-07-31-1823…:D12:8.6` printed `✓ wrote 1 record(s)`, exited 0, and the
+    record was **not in the file** afterwards while an earlier one was. `json.dump` of a
+    645 KB structure is not instantaneous; "too small to matter" was a guess, and the
+    guess was wrong.
+
+    Scoped to the file operations ONLY. `_run_verifications` shells out to a `--verify`
+    command that can run for minutes and must never hold this lock.
+    """
+    lock = _lock_path()
+    lock.touch(exist_ok=True)
+    with open(lock, "r+", encoding="utf-8") as fh:
+        deadline = _time.monotonic() + timeout
+        while True:
+            try:
+                fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                if _time.monotonic() >= deadline:
+                    raise TimeoutError(
+                        f"another process has held {lock.name} for {timeout:.0f}s. The "
+                        f"ledger is read-modify-write, so proceeding without the lock "
+                        f"risks silently discarding that process's records.")
+                _time.sleep(0.05)
+        try:
+            yield
+        finally:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+
+
 def _write(to_add: list[dict]) -> None:
-    # Re-read immediately before writing, so a concurrent append is not clobbered.
-    data = _read_ledger()
-    data["supersessions"].extend(to_add)
-    _atomic_write(data)
+    with _ledger_lock():
+        # Re-read UNDER THE LOCK, so a concurrent append is not clobbered.
+        data = _read_ledger()
+        data["supersessions"].extend(to_add)
+        _atomic_write(data)
+        # ⚠️ READ BACK. The success line is printed from the in-memory plan, so without
+        # this it asserts what the tool INTENDED, not what the file holds — the one thing
+        # a closure writer must never get wrong. The 8.6 loss above was caught by a
+        # coincidence of workflow (`git commit` reporting "no changes"), not by any guard.
+        landed = {e.get("finding_id") for e in _read_ledger()["supersessions"]}
+        lost = sorted({r["finding_id"] for r in to_add} - landed)
+        if lost:
+            raise RuntimeError(
+                f"WRITE LOST: {len(lost)} record(s) reported written are absent from the "
+                f"ledger on read-back: {lost}. Another process replaced the file inside "
+                f"the locked window, which should be impossible — do not re-run blindly, "
+                f"inspect {LEDGER.name} first.")
 
 
 def _atomic_write(data: dict) -> None:

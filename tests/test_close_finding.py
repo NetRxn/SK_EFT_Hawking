@@ -178,6 +178,88 @@ class TestAMatchingRecordIsNotAutomaticallyIdempotent:
         assert len(json.loads(p.read_text())["supersessions"]) == 1
 
 
+class TestTheWriteIsDurableUnderConcurrency:
+    """⚠️ Filed 2026-08-15 after a REAL loss, not a theoretical one. A closure for
+    `…2026-07-31-1823…:D12:8.6` printed `✓ wrote 1 record(s)`, exited 0, and the record
+    was absent from the ledger afterwards while an earlier one survived. Five workers were
+    running. The re-read that `_write` already performed was reasoned to make the window
+    "too small to matter"; `json.dump` of 645 KB is not instantaneous and the guess was
+    wrong.
+    """
+
+    def _ledger(self, tmp_path, monkeypatch, records):
+        p = tmp_path / "review_finding_supersessions.json"
+        p.write_text(json.dumps({"supersessions": records}))
+        monkeypatch.setattr(cf, "LEDGER", p)
+        return p
+
+    def test_the_lock_lives_beside_the_CURRENT_ledger(self, tmp_path, monkeypatch):
+        """A module-level constant would keep locking the real `docs/` file, so the suite
+        would serialise against live closures and leave a lockfile in the tree."""
+        p = self._ledger(tmp_path, monkeypatch, [])
+        assert cf._lock_path().parent == p.parent
+
+    def test_a_lock_respecting_writer_is_SERIALISED_not_interleaved(
+            self, tmp_path, monkeypatch):
+        """The lock's actual guarantee: a second writer that takes it WAITS, so its read
+        happens after the first write and neither snapshot is stale.
+
+        Two `open()` calls get separate fds, so `flock` arbitrates between them even
+        inside one process — which is what makes this testable without a subprocess.
+        """
+        p = self._ledger(tmp_path, monkeypatch, [])
+        with cf._ledger_lock():
+            p.write_text(json.dumps({"supersessions": [
+                {"finding_id": "review:other:X:1.1", "status": "fixed",
+                 "evidence": "z" * 60, "date": "2026-01-01"}]}))
+            with pytest.raises(TimeoutError, match="held"):
+                with cf._ledger_lock(timeout=0.2):
+                    pass                       # a second holder must not get in
+        # Released: the next writer reads the interloper's state and adds to it.
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence="x" * 60, commit="abc1234")
+        assert ok is True, msg
+        ids = [e["finding_id"] for e in json.loads(p.read_text())["supersessions"]]
+        assert ids == ["review:other:X:1.1", FID], (
+            f"a serialised writer lost a record: {ids}")
+
+    def test_a_writer_that_IGNORES_the_lock_is_still_caught(
+            self, tmp_path, monkeypatch):
+        """FIRES ON THE SEEDED DEFECT — the 8.6 loss, reproduced deterministically.
+
+        A lock only binds participants. This seeds the non-participant: a writer that
+        replaces the file inside the locked window, clobbering the record just written.
+        The lock cannot stop it; the read-back must still refuse to call it success.
+        """
+        p = self._ledger(tmp_path, monkeypatch, [])
+        real_atomic = cf._atomic_write
+
+        def _clobber(data):
+            real_atomic(data)
+            p.write_text(json.dumps({"supersessions": [
+                {"finding_id": "review:other:X:1.1", "status": "fixed"}]}))
+
+        monkeypatch.setattr(cf, "_atomic_write", _clobber)
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence="x" * 60, commit="abc1234")
+        assert ok is False, "a clobbered closure reported SUCCESS — this is the 8.6 loss"
+        assert "WRITE LOST" in msg and FID in msg
+
+    def test_a_lost_write_is_RAISED_not_reported_as_success(
+            self, tmp_path, monkeypatch):
+        """The success line is printed from the in-memory plan, so without a read-back it
+        asserts what the tool INTENDED rather than what the file holds. Seed a writer that
+        drops the record entirely and require the tool to notice."""
+        p = self._ledger(tmp_path, monkeypatch, [])
+        monkeypatch.setattr(
+            cf, "_atomic_write",
+            lambda data: p.write_text(json.dumps({"supersessions": []})))
+        ok, msg = cf.close(doc=DOC, sections=[SECTION], status="fixed",
+                           evidence="x" * 60, commit="abc1234")
+        assert ok is False, "a closure whose record never landed reported SUCCESS"
+        assert "WRITE LOST" in msg and FID in msg
+
+
 class TestAnInertOpenRecordDoesNotBlockClosure:
     """⚠️ Findings are BORN `open` (`build_graph.py` BIRTH-STATUS INVARIANT), so a ledger
     record restating `open` asserts nothing and changes no reader's answer. Refusing on it
