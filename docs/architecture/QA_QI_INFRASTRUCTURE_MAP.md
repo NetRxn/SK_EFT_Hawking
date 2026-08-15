@@ -166,6 +166,36 @@ ones. All fail closed.
 | `harness_worker_shell_guard.py` | `Bash`, for worker subagents only | a dispatched worker may not run builds, cache mutations, or integration commands; the lead owns those. Keyed on the subagent, so the lead session is unaffected. |
 | `harness_question_guard.py` | `AskUserQuestion` | redirects a blocking question raised inside an autonomous loop to the `coach` agent, which resolves it against the standing pre-decisions. The operator is deliberately out of the loop; a question that diligence would have answered is deferral, not deference. |
 
+#### The egress whitelist — where it is, and the two places it is not
+
+`harness_web_egress_guard.py` is **unconditional** (unlike the loop-durability hooks, it is not
+gated on a session marker) and denies on any internal error. `WebSearch` is a search engine and
+is **not** domain-gated; only the denylist applies to it.
+
+Its whitelist has two forms. `_WHITELIST` holds registrable hostnames, matched exactly or as a
+subdomain (`endswith("." + entry)`), so `export.arxiv.org` passes while `arxiv.org.evil.com`
+does not. `_PATH_WHITELIST` holds `(host, path_prefix)` pairs matched on the normalized path at
+a `/` boundary, so a single code-hosting repository is reachable without granting the whole
+host. **Never promote a code-hosting host to a bare `_WHITELIST` entry** — it serves arbitrary
+user-controlled content, a far broader grant than a prior-art check needs.
+
+⚠️ **Three places name scholarly domains and only one enforces.** `_WHITELIST` is the authority.
+`.claude/settings.local.json`'s `WebFetch(domain:…)` entries are a strict subset and are not the
+gate. `agents/research-scout.md` carries **none, deliberately** — an earlier revision embedded a
+list that drifted from the guard, and the agent now states that it does not hold the whitelist
+and must not reason from a remembered one. In the recorded failure that drift both refused a
+sanctioned fetch and downgraded primary evidence to orientation-grade. A fetch that returns
+content was sanctioned; the agent judges the **source**, not the domain.
+
+Adding an entry: name the *target* in the comment rather than the category, so a later reader
+can retire the grant once that target is acquired instead of inheriting an unexplained
+permission; record the authorizing date; prefer the narrowest form that reaches it; edit the
+plugin **source** under `.claude/plugins/skeft-qa/scripts/` — never the cache, which is a build
+artifact that reverts on the next refresh — and refresh the plugin, since a source edit does not
+affect the running session. What a claim may then rest on is
+[ADR-014](../adrs/ADR-014-source-acquisition-and-citation-fidelity.md): a fetch that lands a
+publisher **abstract** has not obtained the source.
+
 ⚠️ **The plugin uses progressive disclosure, and the governing detail is often one layer down.**
 A skill's `SKILL.md` is an entry point; its `references/` carry the operating detail, and reading
 only the entry point yields a systematically shallow picture — the same failure this section

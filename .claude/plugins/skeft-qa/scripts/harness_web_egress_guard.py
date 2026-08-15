@@ -15,7 +15,17 @@ Denylist = committed research_egress_denylist.sample.txt (baseline, always)
 Both live in this script's directory; the local file is gitignored so it may hold
 literals (incl. firewall terms) without ever being committed.
 
-Stdlib only. Full spec: docs/dev-loops/RESEARCH_LADDER_AND_WEB_EGRESS.md.
+Stdlib only. Owning document: docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md §1.5 (the
+enforcement layer — whitelist forms, how to add an entry, and the three places that name
+scholarly domains of which only this one enforces). What a claim may rest on once a fetch
+lands: docs/adrs/ADR-014-source-acquisition-and-citation-fidelity.md.
+
+⚠️ This docstring cited `docs/dev-loops/RESEARCH_LADDER_AND_WEB_EGRESS.md` as its "full spec"
+from the day it shipped until 2026-08-15. That file never existed, so the only description of
+this fail-closed control was its own source; and a later reader, trusting the path, created the
+phantom rather than asking which document already owned the surface — producing a second
+description beside QA_QI_INFRASTRUCTURE_MAP §1.5, which had owned it all along. A dangling
+reference invents a home if you let it.
 """
 from __future__ import annotations
 
@@ -229,7 +239,9 @@ def evaluate(ev: dict):
             return (
                 f"[web-egress] WebFetch to non-whitelisted domain "
                 f"'{host or tool_input.get('url', '')}'. Only scholarly primaries / greylist "
-                f"are allowed (see docs/dev-loops/RESEARCH_LADDER_AND_WEB_EGRESS.md §6)."
+                f"are allowed (see docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md §1.5). "
+                f"Do NOT reason from a remembered whitelist: if a fetch returns content it "
+                f"was sanctioned. To request a domain, name the SOURCE you need it for."
             )
     return None
 
