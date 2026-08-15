@@ -141,6 +141,33 @@ Sec.~\ref{sec:trust} states what the kernel checked and, more usefully, the
 places where a theorem's name reads stronger than the theorem. All results are
 verified with the standard Lean axiom set and no project-local axioms, and the
 corpus contains no compiled-evaluation escape hatch.
+Table~\ref{tab:results} is the map.
+
+\begin{table}
+\caption{The results, and where each is proved. Conditional statements carry
+their hypotheses in the theorem statement; unconditional ones have none.}
+\label{tab:results}
+\begin{ruledtabular}
+\begin{tabular}{llc}
+Result & Statement & Conditional \\
+\colrule
+SK over an abstract alphabet & Thm~\ref{thm:substrate} & yes \\
+Logarithm with named radius & Thm~\ref{thm:mercator} & no \\
+SK at arbitrary $\su d$ & Thm~\ref{thm:sud} & yes \\
+Clifford$+T$ density & Thm~\ref{thm:accpt} & no \\
+Clifford$+T$ compilation & Thm~\ref{thm:cliffordt} & no \\
+$T$-free density at $\su 8$ & Thm~\ref{thm:literal} & no \\
+Clifford-only is not dense & Thm~\ref{thm:notdense} & no \\
+Toffoli-count lower bound & Thm~\ref{thm:toffoli} & no \\
+Compiler correctness & Thm~\ref{thm:compile} & no \\
+Grid-route length, exponent $1$ & Thm~\ref{thm:rslength} & yes \\
+Grid route from the hypothesis & Thm~\ref{thm:rssynth} & yes \\
+Ancilla route, exponent $1$ & Thm~\ref{thm:kmm} & no \\
+Operator norm to diamond & Thm~\ref{thm:akn} & no \\
+End-to-end channel certificate & Thm~\ref{thm:capstone} & no \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
 
 \section{Compilation as an instantiable theory}
 \label{sec:substrate}
@@ -241,15 +268,53 @@ point, because at $\su 2$ the substrate's own length conjunct is stated for the
 recursion-level length function and the bound on the emitted word is a separate,
 later theorem.
 
-The four reusable ingredients behind Theorem~\ref{thm:substrate} are the
-$\varepsilon_0$-net, which supplies a finite family of words approximating every
-target to a fixed base precision; the balanced group-commutator recursion of
-Dawson and Nielsen~\cite{DawsonNielsen2006}, which converts a
-precision-$\varepsilon$ approximation into a precision-$O(\varepsilon^{3/2})$
-one at a fivefold word-length cost; a Baker--Campbell--Hausdorff estimate
-bounding the commutator's deviation from the corresponding Lie-bracket flow;
-and a Cartan-type argument passing from a one-parameter subgroup to density in
-the whole group. None of these mentions the alphabet.
+\subsection{The mechanism, and its constants}
+\label{sec:substrate-mechanism}
+
+Four ingredients sit behind Theorem~\ref{thm:substrate}, and none mentions the
+alphabet.
+
+The \emph{$\varepsilon_0$-net} supplies a finite family of words approximating
+every target to a fixed base precision $\varepsilon_0$. Density
+(Definition~\ref{def:dense}) plus compactness of $\su d$ gives one.
+
+The \emph{balanced group-commutator recursion} of Dawson and
+Nielsen~\cite{DawsonNielsen2006} is the engine. Given a word $W_n$ with
+$\opn{\rho(W_n) - U} \le \varepsilon_n$, write the residual
+$\Delta = U\rho(W_n)^{-1}$, which is within $\varepsilon_n$ of the identity.
+Write $\Delta = \exp(H)$ with $H$ traceless anti-Hermitian and
+$\opn{H} = O(\varepsilon_n)$, split $H$ as a Lie bracket $[A,B]$ with
+$\opn{A},\opn{B} = O(\sqrt{\varepsilon_n})$, approximate $\exp(A)$ and
+$\exp(B)$ recursively, and take the group commutator of the results. The gain
+is the discrepancy between the group commutator and the exponential of the Lie
+bracket, which is third order in the operand norms and hence
+$O(\varepsilon_n^{3/2})$ in the residual. The cost is that $W_{n+1}$ is built
+from five level-$n$ words.
+
+The \emph{Baker--Campbell--Hausdorff estimate} is what makes the previous
+sentence a theorem. It bounds
+$\opn{\exp(A)\exp(B)\exp(-A)\exp(-B) - \exp([A,B])}$ by a cubic in
+$\max(\opn A, \opn B)$, with an explicit constant, at order two.
+
+The \emph{Cartan step} converts an accumulation point at the identity into
+density: an infinite-order element in a compact group generates a subgroup
+whose closure contains a one-parameter subgroup, whose generator spans a line
+in the Lie algebra, and conjugation spreads that line to the whole algebra.
+
+The two recurrences these produce are
+\[
+  \varepsilon_{n+1} = K^{2}\varepsilon_n^{3/2},
+  \qquad
+  L(n+1) = 5\,L(n) + \beta ,
+\]
+with $K = 1024$ the composition constant of the estimate above and $\beta$ the
+per-level assembly overhead. They solve in closed form to
+$L(n) = \lambda\,5^n + \beta(5^n - 1)/4$, and the base threshold is
+$\varepsilon_0 = 1/(8K^2)$, chosen so that $K^2 \cdot 2\varepsilon_0 = 1/4 < 1$,
+which is the condition under which the error recurrence contracts. In the
+formalization $\lambda = \beta = 100$ and $c = 1000$; these are rigorous upper
+bounds rather than tight ones, and Sec.~\ref{sec:length} is where tightness is
+pursued by other means.
 
 The $\varepsilon_0$-net deserves an explicit caveat. In the generic substrate it
 is obtained existentially from the density witness rather than by enumeration,
@@ -474,10 +539,17 @@ unconditionally.
 realized on production trapped-ion hardware consists of single-qubit rotations
 together with the M\o lmer--S\o rensen entangling gate at a discrete grid of
 angles. Here the density witness is supplied not by a trace obstruction but by
-the Brylinski--Brylinski criterion~\cite{Brylinski2002}, which states that any
-entangling two-qubit gate, together with all single-qubit gates, is universal.
-The resulting compilation theorem holds for every even grid resolution
-$N > 0$ and is unconditional.
+the Brylinski--Brylinski criterion~\cite{Brylinski2002}: a two-qubit gate $V$,
+together with all single-qubit gates, generates a dense subgroup of $\su 4$ if
+and only if $V$ is \emph{primitive}, meaning it maps some product state to an
+entangled one. The M\o lmer--S\o rensen gate at any angle that is not a
+multiple of $\pi$ is entangling by inspection of its action on
+$\lvert 00\rangle$, so the criterion applies directly and the alphabet-specific
+work reduces to exhibiting one such angle in the grid. The resulting
+compilation theorem holds for every even grid resolution $N > 0$ and is
+unconditional. This row is the strongest evidence that the interface is not
+tuned to number theory: the witness here is geometric, and it enters through
+the same predicate as the others.
 
 \paragraph{Clifford$+$CCZ at $\su 8$.} The three-qubit case admits two density
 mechanisms that are structurally different, and the contrast between them is
@@ -817,11 +889,26 @@ $t^{\dagger}t = \xi$ over $\mathbb Z[\omega]$, which we verify as a chain
 rather than assuming. The chain is worth exhibiting because it is where the
 number theory actually lives.
 
+Here $\dagger$ is the ring automorphism of $\mathbb Z[\omega]$ sending
+$\omega \mapsto \omega^{-1}$, an element $\xi$ of the fixed ring
+$\mathbb Z[\sqrt 2]$ is \emph{doubly positive} when it is positive under both
+real embeddings $\sqrt 2 \mapsto \pm\sqrt 2$, and $\xi$ is
+\emph{$\dagger$-decomposable} when it is a relative norm $t^{\dagger}t$ for some
+$t \in \mathbb Z[\omega]$. Solvability is thus decomposability, and the chain
+below reduces decomposability to a congruence condition on prime factors.
+
 \begin{lemma}[Units]
 \label{lem:c2}
 A unit of $\mathbb Z[\sqrt 2]$ that is positive under both real embeddings is a
 square.
 \end{lemma}
+
+Lemma~\ref{lem:c2} is what makes the criterion below independent of the choice
+of associate: the unit group of $\mathbb Z[\sqrt 2]$ is generated by $-1$ and
+the fundamental unit $1+\sqrt 2$, whose norm is $-1$, so a doubly positive unit
+has even exponent on the fundamental unit and is therefore a square. Without
+it, decomposability could fail merely because a representative was multiplied by
+a unit.
 
 \begin{lemma}[Solvability criterion]
 \label{lem:c16}
@@ -829,11 +916,20 @@ $t^{\dagger}t = \xi$ is solvable in $\mathbb Z[\omega]$ if and only if $\xi$ is
 doubly positive and $\dagger$-decomposable.
 \end{lemma}
 
+Double positivity is necessary because a relative norm is a sum of squares under
+each real embedding. That it is, with decomposability, also sufficient is the
+content, and it is a biconditional rather than an implication, which is what
+lets the grid search reject a candidate rather than merely fail to accept it.
+
 \begin{lemma}[Multiplicativity]
 \label{lem:c19}
 $\dagger$-decomposability is multiplicative across coprime factors: a product of
 coprime factors is $\dagger$-decomposable if and only if each factor is.
 \end{lemma}
+
+Lemma~\ref{lem:c19} is what turns the criterion into a decision procedure: it
+reduces a question about $\xi$ to independent questions about the prime powers
+in its factorization. The two lemmas that follow answer those questions.
 
 \begin{lemma}[The obstruction at $p \equiv 7 \bmod 8$]
 \label{lem:c20}
@@ -842,11 +938,22 @@ $\dagger$-decomposable when that power is odd, and for a prime dividing the
 norm squared there is a constructive decomposition in the remaining cases.
 \end{lemma}
 
+The congruence class is not arbitrary: $2$ ramifies in $\mathbb Z[\sqrt 2]$ and
+the splitting of an odd prime $p$ is governed by whether $2$ is a quadratic
+residue modulo $p$, which holds exactly for $p \equiv \pm 1 \pmod 8$. The
+residue class $7 \bmod 8$ is the one where $p$ splits in $\mathbb Z[\sqrt 2]$
+but the resulting primes fail to be relative norms from $\mathbb Z[\omega]$, and
+a mod-$8$ count of the valuation is what detects it.
+
 \begin{lemma}[Even-power criterion]
 \label{lem:c21}
 For $\xi$ of norm $\pm p$ with $p \equiv 7 \pmod 8$, the power $\xi^m$ is
 $\dagger$-decomposable if and only if $m$ is even.
 \end{lemma}
+
+Lemma~\ref{lem:c21} is again a biconditional, and it closes the chain: combined
+with Lemma~\ref{lem:c19} it decides decomposability for any $\xi$ whose
+factorization is known, which is what the grid finder needs at each candidate.
 
 The greatest-common-divisor machinery these lemmas consume requires that
 $\mathbb Z[\omega] = \mathbb Z[\zeta_8]$ be a Euclidean domain, an instance
