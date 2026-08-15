@@ -82,7 +82,15 @@ _TYPE_IDENT_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_'.]*")
 # genuine ℝ→ℚ transfer LOOKS reflexive. Restricting to simple args removes this
 # whole elision false-positive class (reconcile 2026-06-13).
 _SIMPLE_ARG_RE = re.compile(r"^-?[\w.]+'?$")
+#: Head of a prefix-applied relation (`Int.instDvd.dvd`, `LE.le`, …).
+_REL_HEAD_RE = re.compile(r"^[A-Za-z_][\w.]*$")
 _THIN_HARD = {"True", "reflexive (X=X)"}
+#: `reflexive-literal (R n n)` is DELIBERATELY absent from `_THIN_HARD` (ADR-016 D3).
+#: It is a real vacuity — `(8:ℤ) ∣ (8:ℤ)` is `dvd_refl 8` — but the four live
+#: declarations carrying it predate the label, and hard-failing them here would leave
+#: `VACUOUS_STATEMENT_BASELINE` as the only available repair, which is the suppression
+#: move ADR-016 refuses. `apex_claims_not_vacuous` treats it as content-free where it
+#: matters most: on a declaration a bundle has ELECTED as a published result.
 
 
 def _top_tokens(s: str) -> List[str]:
@@ -215,6 +223,19 @@ def _thin_type_label(type_str: str):
     if len(toks) == 3 and toks[1] == "=" and toks[0] == toks[2] \
             and _SIMPLE_ARG_RE.match(toks[0]):
         return "reflexive (X=X)"
+    # reflexive relation on CLOSED NUMERIC LITERALS — `R n n`, i.e. `R.refl n` wearing a
+    # physics name. `e8_sigma_div_8 : (8:ℤ) ∣ (8:ℤ)` is `dvd_refl 8`;
+    # `sm_with_nu_R_anomaly_free : (16:ℤ) ∣ (16:ℤ)` is `dvd_refl 16` under a name that
+    # asserts the Standard Model is anomaly free.
+    #
+    # ⚠️ THE LITERAL RESTRICTION IS THE WHOLE CLASSIFIER, AND IT IS MEASURED (ADR-016 D3).
+    # Allowing a BOUND VARIABLE — `∀ a, R a a` — matched 12 declarations on 2026-08-15 and
+    # 8 of them are legitimate reflexivity lemmas (`causal_refl`, `weldRel_refl`,
+    # `WittEquivalent_refl`, `IntCongr.rfl`, …), where reflexivity of a relation over a
+    # variable is a real theorem. Closed literals leave exactly 4, every one vacuous.
+    if (len(toks) == 3 and toks[0] != "Eq" and _REL_HEAD_RE.match(toks[0])
+            and toks[1] == toks[2] and _NUMLIT_RE.match(toks[1])):
+        return f"reflexive-literal ({toks[0]} n n)"
     # ground arithmetic: conclusion's only identifiers are operators/literals
     leftover = [x for x in _TYPE_IDENT_RE.findall(concl)
                 if x not in _ARITH_TOKENS and not _NUMLIT_RE.match(x)]

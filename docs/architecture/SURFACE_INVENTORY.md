@@ -18,14 +18,14 @@
 **No timestamp is recorded here on purpose** — a date would make the file dirty on
 every run and turn the freshness check into noise. The tree state IS the timestamp.
 
-## Validation checks — 88, in execution order
+## Validation checks — 89, in execution order
 
 Execution order is semantic: the `*_fresh` regenerators rewrite artifacts that later
 checks read. See `validate._CANONICAL_ORDER`.
 
 | module | checks |
 |---|---:|
-| `bundles_readiness` | 20 |
+| `bundles_readiness` | 21 |
 | `freshness` | 9 |
 | `papers_prose` | 9 |
 | `physics` | 9 |
@@ -118,18 +118,19 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 73 | `bundle_registry_consistency` | `bundles_readiness` | Publication-bundle roster has ONE source of truth (scripts/bundle_registry.py) that every consumer derives from |
 | 74 | `bundle_apex_resolves` | `bundles_readiness` | Every apex theorem a bundle declares names a live Lean theorem, and the undeclared-bundle count does not rise (publication-intake closure) |
 | 75 | `apex_theorem_claims_grounded` | `bundles_readiness` | Every declared apex theorem's `claims` prose is present, is not a restatement of the theorem's own name, and its numerals appear in the statement (ratcheted) |
-| 76 | `bundle_native_decide_debt` | `bundles_readiness` | Every bundle's native_decide debt is disclosed in its draft and does not grow (ADR-002 ratchet, per-bundle) |
-| 77 | `bundle_todo_free_before_green` | `bundles_readiness` | No bundle carrying an unresolved work marker records a Stage-13 green |
-| 78 | `bundle_counts_fresh` | `freshness` | papers/<CODE>/bundle_counts.tex matches a fresh derivation from the bundle's apex closure |
-| 79 | `bundle_cross_references_resolve` | `papers_prose` | Every \ref in a draft has a matching \label in its input closure (bundles at zero; legacy corpus ratcheted) |
-| 80 | `paper_latex_compiles` | `papers_prose` | Every papers/*/paper_draft.tex compiles under pdflatex — bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) |
-| 81 | `axiom_count_prose_consistency` | `papers_prose` | Paper prose axiom-count claims agree with docs/counts.json |
-| 82 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, verb, or a TeX `name' quote) resolve in lean_deps.json |
-| 83 | `theorem_name_embedded_citations` | `prose_lean_refs` | Declaration names embedding author+year have matching bibliography entries |
-| 84 | `architecture_inventory_fresh` | `freshness` | docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code |
-| 85 | `module_census_fresh` | `freshness` | docs/MODULE_CENSUS.md matches a fresh derivation, and the undocumented module population is ratcheted |
-| 86 | `lean_docstring_refs_resolve` | `lean_toolchain` | Lean docstring `backticked` project names resolve (rename-drift guard) |
-| 87 | `paper_toolchain_pin_drift` | `papers_prose` | Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml |
+| 76 | `apex_claims_not_vacuous` | `bundles_readiness` | No declared apex theorem resolves to a declaration the project records or derives as content-free, and any that does says so in its own `claims` string (ratcheted) |
+| 77 | `bundle_native_decide_debt` | `bundles_readiness` | Every bundle's native_decide debt is disclosed in its draft and does not grow (ADR-002 ratchet, per-bundle) |
+| 78 | `bundle_todo_free_before_green` | `bundles_readiness` | No bundle carrying an unresolved work marker records a Stage-13 green |
+| 79 | `bundle_counts_fresh` | `freshness` | papers/<CODE>/bundle_counts.tex matches a fresh derivation from the bundle's apex closure |
+| 80 | `bundle_cross_references_resolve` | `papers_prose` | Every \ref in a draft has a matching \label in its input closure (bundles at zero; legacy corpus ratcheted) |
+| 81 | `paper_latex_compiles` | `papers_prose` | Every papers/*/paper_draft.tex compiles under pdflatex — bundles HARD-FAIL, legacy drafts ratchet; per-draft content-hash cache (--force-latex recompiles all) |
+| 82 | `axiom_count_prose_consistency` | `papers_prose` | Paper prose axiom-count claims agree with docs/counts.json |
+| 83 | `prose_theorem_reference_coverage` | `prose_lean_refs` | Bundle-draft Lean references in any verbatim form (texttt, a preamble alias for it, verb, or a TeX `name' quote) resolve in lean_deps.json |
+| 84 | `theorem_name_embedded_citations` | `prose_lean_refs` | Declaration names embedding author+year have matching bibliography entries |
+| 85 | `architecture_inventory_fresh` | `freshness` | docs/architecture/SURFACE_INVENTORY.md matches a fresh derivation from the code |
+| 86 | `module_census_fresh` | `freshness` | docs/MODULE_CENSUS.md matches a fresh derivation, and the undocumented module population is ratcheted |
+| 87 | `lean_docstring_refs_resolve` | `lean_toolchain` | Lean docstring `backticked` project names resolve (rename-drift guard) |
+| 88 | `paper_toolchain_pin_drift` | `papers_prose` | Advisory (Class TP): paper-draft toolchain/Mathlib pins match lean-toolchain + lakefile.toml |
 
 </details>
 
@@ -212,7 +213,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `constants.KERNEL_NOGO_REGISTRY` | 45 |
 | `constants.MODELING_ASSUMPTION_THEOREMS` | 21 |
 | `constants.TRACKED_HYPOTHESIS_NON_LOAD_BEARING` | 0 |
-| `provenance.PARAMETER_PROVENANCE` | 210 |
+| `provenance.PARAMETER_PROVENANCE` | 211 |
 | `provenance.PAPER_DEPENDENCIES` | 17 |
 | `citations.CITATION_REGISTRY` | 664 |
 
@@ -222,7 +223,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 |---|---:|---:|---|
 | `F` | 0 | 31 | Fluid-Based Approaches to Fundamental Physics — A Formally V |
 | `D1` | 1 | 35 | Analog Hawking across three platforms |
-| `D2` | 1 | 47 | Anomaly constraints on SM particle content |
+| `D2` | 1 | 46 | Anomaly constraints on SM particle content |
 | `D3` | 1 | 92 | Emergent gravity through BH thermodynamics |
 | `D4` | 1 | 62 | Topological quantum computation foundations |
 | `D5` | 1 | 70 | Dark sector under substrate constraints |
@@ -239,6 +240,6 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `I1` | 3 | 6 | Verification methodology with worked cases |
 | `I2` | 3 | 20 | Verified statistical estimators + lean-tensor-categories |
 | `I3` | 3 | 12 | Verified Stochastic Calculus for Mathlib4 — Stochastic Integ |
-| `E1` | 4 | 7 | Paris-LKB polariton letter |
+| `E1` | 4 | 4 | Paris-LKB polariton letter |
 | `E2` | 4 | 6 | Dean-Kim-Lucas graphene letter |
 

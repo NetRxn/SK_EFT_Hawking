@@ -161,6 +161,11 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
                        "--check", "bundle_lean_module_coverage",
                        "--check", "bundle_abstract_length",
                        "--check", "apex_theorem_claims_grounded",
+                       # ADR-016: reads `papers/**` metadata AND lean_deps.json + the
+                       # Lean sources. Listed under the papers scope because a metadata
+                       # edit is the way it goes red; the lean scope below re-runs the
+                       # substrate checks that move its other input.
+                       "--check", "apex_claims_not_vacuous",
                        "--check", "spelled_out_census_figures"]))
     if touched["lean"]:
         # NOT plain `lake build`: it leaves ExtractDeps.olean missing and breaks

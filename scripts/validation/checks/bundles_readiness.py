@@ -3387,6 +3387,16 @@ APEX_CLAIM_NUMERAL_CEILING = 31
 #:
 #: MEASURED 2026-08-15: **639**, every declared apex across all 21 bundles, all of which
 #: resolve.
+#: 639 -> 638 (2026-08-15, ADR-016 D7): D2's `hom_tensor_adjunction_dim` apex entry was
+#: REMOVED. Its statement is `∀ rank : ℕ, rank = rank`, its module's docstring records
+#: hypothesis H2 as OPEN, and the Stage-10 redraft cites it nowhere — so the bundle no
+#: longer declares it as a result. The population fell because a false declaration was
+#: withdrawn, not because the measurement narrowed.
+#: 638 -> 635 (2026-08-15): E1's Stage-10 redraft (`978aa349`) withdrew 3 apexes, 7 -> 4.
+#: ⚠️ Same shape, different author — and it lands mid-campaign, so this floor is expected
+#: to fall repeatedly while the twenty-one redrafts run. Falling is the RATCHET WORKING:
+#: a redraft that withdraws a claim the substrate never supported is exactly the
+#: remediation. Lower it with the merge commit and the count named, as these two rows do.
 #:
 #: ⚠️ **THE POPULATION FLOOR (§2.5).** The three legs above are universals over a
 #: bundle-supplied set, so anything that quietly shrinks that set — a metadata key
@@ -3394,7 +3404,7 @@ APEX_CLAIM_NUMERAL_CEILING = 31
 #: makes them hold over fewer and fewer rows while still reporting a clean pass. The
 #: violations were ratcheted from the start; the POPULATION was not, and that is the half
 #: that rots silently. Lower it only with a stated reason.
-APEX_CLAIMS_SCORED_FLOOR = 639
+APEX_CLAIMS_SCORED_FLOOR = 635
 
 
 @register_check(
@@ -3582,6 +3592,289 @@ def check_apex_theorem_claims_grounded() -> CheckResult:
            "CARRIES. Restate the claim over what the theorem proves, or prove the "
            "quantity; do not widen the numeral-noise list"),
         warning=bool(numeral_gaps) and numerals_ok))
+    return CheckResult(passed=ok, measured=population_ok, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK: a declared apex may not be a declaration the project records as EMPTY
+#        (ADR-016; discharges the 2026-08-15 baselined-vacuous-theorems finding)
+# ═══════════════════════════════════════════════════════════════════════
+
+#: Vocabulary that makes a `claims` string DISCLOSE its declaration's thinness.
+#:
+#: ⚠️ A VOCABULARY, NOT A WINDOW, and the difference is the design (ADR-016 D5).
+#: `placeholder_not_cited` searches 320 characters either side of a match for a hedge,
+#: because draft prose spreads a qualification across sentences. A `claims` string is one
+#: field about one declaration: proximity carries no information, so a window would add
+#: only a way to pass by accident. Four of the six live disclosures were written by
+#: drafters before any check asked for them — the convention predates the guard.
+_APEX_VACUITY_DISCLOSURE_RE = re.compile(
+    r"\b(rfl|definitional|trivial|tautolog\w*|vacuous|content[- ]free|scaffold|"
+    r"placeholder|stub|bookkeep\w*|sanity[- ]check|closed arithmetic|"
+    r"proves nothing|carries no content|single[- ]point evaluation|retracted)\b",
+    re.I)
+
+
+#: How many declared apexes may resolve to a content-free declaration at all.
+#: **A RATCHET — it may only fall.**
+#:
+#: MEASURED 2026-08-15, after ADR-016 D7's D2 repair and E1's redraft merge (`978aa349`,
+#: which withdrew E1's one flagged row): **20 of 635**, across 9 of the 21 bundles.
+#: Per bundle — D1 1 · D2 2 · D3 1 · D4 3 · D5 9 · D8 1 · D10 1 · E2 1 · F 1.
+#: Twelve bundles carry none: D6, D7, D9, D11, D12, E1, I1, I2, I3, L1, L2, L3.
+#:
+#: ⚠️ **THIS IS NOT A SUPPRESSION LIST, AND THE DISTINCTION IS THE POINT.** A suppression
+#: list (`VACUOUS_STATEMENT_BASELINE` is one) removes a NAMED declaration from a
+#: detector's population, which converts a detection into a permission — the move that
+#: created the gap this check closes. This ceiling removes nothing: every flagged row is
+#: re-derived and PRINTED BY NAME on every run, disclosed and undisclosed alike, and no
+#: per-declaration exemption key exists to grant. Lower it by strengthening the theorem or
+#: by withdrawing the apex; never by adding a name anywhere.
+APEX_VACUITY_CEILING = 20
+
+#: …of which the bundle's own `claims` string does not SAY the declaration is thin.
+#: **A RATCHET — it may only fall.**
+#:
+#: MEASURED 2026-08-15: **15 of the 20**. Per bundle — D1 1 · D3 1 · D4 1 · D5 9 · D8 1 ·
+#: D10 1 · F 1. D2 (2), E2 (1) and D4 (2 of its 3) disclose.
+#:
+#: The escape is DISCLOSURE, in the words a referee reads, and it moves a row out of this
+#: ceiling and NOT out of `APEX_VACUITY_CEILING` — so being honest is never room to add
+#: another. Remediation is per bundle and needs the draft read beside the metadata:
+#: `papers/AutomatedReviews/2026-08-15-apex-claims-unbacked/infra.md`.
+APEX_UNDISCLOSED_VACUITY_CEILING = 15
+
+
+@register_check(
+    "apex_claims_not_vacuous",
+    "No declared apex theorem resolves to a declaration the project records or derives "
+    "as content-free, and any that does says so in its own `claims` string (ratcheted)")
+def check_apex_claims_not_vacuous() -> CheckResult:
+    """CHECK: Invariant #9, carried from draft prose to the bundle METADATA claim surface.
+
+    ## The seam
+
+    `vacuous_statement_audit` knows which declarations are content-free and does not know
+    they are cited. `bundle_metadata.json` knows what is cited and does not know it is
+    content-free. Between them a declaration the project has FORMALLY RECORDED as saying
+    nothing could be published as a bundle's apex result with every gate green — measured
+    live on 2026-08-15, in a bundle being redrafted for submission, where
+    `hom_tensor_adjunction_dim` (`∀ rank : ℕ, rank = rank`) was declared as *"substantively
+    discharging hypothesis H2"* while its own module recorded H2 as OPEN.
+
+    ## What it reads, and what already owns the rest (ADR-016 D1)
+
+    * `bundle_apex_resolves` owns name resolution and kind. An apex that does not resolve
+      is skipped here — and skipped from the SCORED population too, so this check never
+      claims coverage of a row it could not read.
+    * `apex_theorem_claims_grounded` owns the claims STRING's three decidable properties
+      (present, not a name-restatement, numerals in the statement). It states substance as
+      out of its scope; this is that residue.
+    * `placeholder_not_cited` owns the same rule over draft PROSE, with a window and a
+      hedge escape. Neither transfers to a structured field.
+    * `proxy_body_audit` owns trivial bodies corpus-wide, **name-gated**. The gate comes
+      off here and only here (ADR-016 D2): an apex is a declaration the bundle ELECTED to
+      present as a result, and the election supplies what the name filter stood in for.
+      14 of the 21 live rows are visible only because of that.
+
+    ## Five registers, one row per (bundle, apex)
+
+    `PLACEHOLDER_LEAN_NAMES` · `_thin_type_label` ∈ `_THIN_HARD` · `_thin_type_label`
+    otherwise (`ground-arith`, `reflexive-literal`) · `VACUOUS_STATEMENT_BASELINE` ·
+    `MODELING_ASSUMPTION_THEOREMS` (`definitional` / `vacuous_proxy`) · a trivial witness.
+    A row may carry several; it is counted once.
+
+    ⚠️ The witness register needs the PROOF TERM, and `lean_deps.json` carries types and
+    not `def` bodies — so it is unreachable by any depth of type walk and is read from the
+    Lean source instead. That is why an unreadable `lean/` tree is a FAILURE below and not
+    a quiet pass: a body scan that reads nothing reports every apex clean.
+
+    ## Legs
+
+    1. **No apex is a placeholder** (HARD, live 0) — Invariant #9 at its strictest.
+    2. **No apex's statement is `True` or reflexive `X = X`** (HARD, live 0 after
+       ADR-016 D7).
+    3. **Every flagged apex discloses** (RATCHET `APEX_UNDISCLOSED_VACUITY_CEILING`).
+    4. **The flagged total does not grow** (RATCHET `APEX_VACUITY_CEILING`), so
+       disclosing one is never room to add another.
+    5. **The scored population does not shrink** (`APEX_CLAIMS_SCORED_FLOOR`, shared with
+       `apex_theorem_claims_grounded` rather than duplicated).
+
+    ## ⚠️ What a green verdict does NOT mean
+
+    Only that no apex is backed by a declaration the project can SHOW proves nothing. It
+    does not mean any claim was verified against its type (ADR-015 D3: prose↔type
+    equivalence is not decidable), and it says nothing about **relevance** — a citation
+    can be true, kernel-checked and simply not on the path to the claim it is offered for.
+    D2's `e8_det_one` is the live instance: `native_decide` over `CartanMatrix.E₈` with no
+    in-tree `E8lit = CartanMatrix.E₈` bridge, so it is sound and not on the chain that
+    carries `eight_dvd_latticeSig`. **No vacuity predicate catches that**, this check does
+    not pretend to, and ADR-016 D6 scopes it out explicitly rather than letting it be read
+    as covered.
+    """
+    from build_graph import _scan_lean_theorem_bodies
+    from src.core.constants import PLACEHOLDER_LEAN_NAMES
+    from src.core.constants import VACUOUS_STATEMENT_BASELINE as BASELINE
+    from validation.checks.lean_statements import _THIN_HARD, _thin_type_label
+    from validation.checks.lean_substrate import (_NONTRIVIAL_MARKER_RE,
+                                                  _TRIVIAL_BODY_RES)
+    try:
+        from src.core.constants import MODELING_ASSUMPTION_THEOREMS
+    except ImportError:
+        MODELING_ASSUMPTION_THEOREMS = {}
+
+    codes, roster_err = _H.bundle_codes_or_unmeasured()
+    if codes is None:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "roster", False, roster_err)])
+
+    if not _H.lean_deps_present():
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "lean_deps", False,
+            "lean/lean_deps.json absent — the statements this check classifies are "
+            "UNAVAILABLE, so it is UNVERIFIED, not passing. Rebuild with "
+            "`cd lean && lake build SKEFTHawking.ExtractDeps`.")])
+    by_name = {r["name"]: r for r in _H.load_lean_deps()
+               if isinstance(r, dict) and r.get("name")}
+
+    # ── the WITNESS index, read from source (types cannot carry a proof term) ──
+    lean_dir = _H.LEAN_DIR
+    witness: dict[str, str] = {}
+    n_lean_files = 0
+    for lean_file in sorted(lean_dir.rglob("*.lean")) if lean_dir.exists() else []:
+        if ".lake" in lean_file.parts:
+            continue
+        try:
+            source = lean_file.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+        n_lean_files += 1
+        for thm_name, _line, body, _is_simp in _scan_lean_theorem_bodies(source):
+            if thm_name in witness:
+                continue
+            norm = " ".join(body.split())
+            if _NONTRIVIAL_MARKER_RE.search(norm):
+                continue
+            label = next((lbl for rx, lbl in _TRIVIAL_BODY_RES if rx.match(norm)), None)
+            if label:
+                witness[thm_name] = label
+    # SEAM GUARD (authoring guide §2.5). `lean_dir.exists()` is NOT the seam: an existing
+    # but empty tree scans zero files, `witness` comes back empty, and every apex reports
+    # a clean witness — the same sentence a genuinely clean corpus produces. Count what
+    # was actually read and gate on that count.
+    if n_lean_files == 0:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "lean_src", False,
+            f"SKIPPED — no readable .lean files under {lean_dir}; the witness half of "
+            f"this check is UNVERIFIED, and an unread witness reads as a clean one")])
+
+    disclosed_modeling = {
+        v.get("lean_name", k): v.get("category")
+        for k, v in MODELING_ASSUMPTION_THEOREMS.items()
+        if v.get("category") in ("definitional", "vacuous_proxy")}
+
+    scored = 0
+    placeholders: list[str] = []
+    thin_hard: list[str] = []
+    flagged: list[tuple[str, str, list[str], bool]] = []
+    for code in codes:
+        md = _read_metadata(code)
+        if md is None:
+            continue
+        for apex in (md.get("apex_theorems") or []):
+            if not isinstance(apex, dict):
+                continue
+            name = str(apex.get("name") or "")
+            rec = by_name.get(name)
+            if rec is None:
+                continue          # `bundle_apex_resolves` hard-fails on this
+            scored += 1
+            short = name.split(".")[-1]
+            claim = str(apex.get("claims") or "")
+            registers: list[str] = []
+
+            if short in PLACEHOLDER_LEAN_NAMES:
+                registers.append("placeholder (True := trivial)")
+                placeholders.append(
+                    f"{code}: `{short}` is a PLACEHOLDER declared as an apex result — "
+                    f"Invariant #9. Withdraw the apex or prove the theorem")
+            label = _thin_type_label(rec.get("type") or "")
+            if label in _THIN_HARD:
+                registers.append(f"thin statement [{label}]")
+                thin_hard.append(
+                    f"{code}: `{short}` states `{label}` and is declared as an apex "
+                    f"result with claims={claim[:90]!r} — the statement carries none of "
+                    f"it. Strengthen the theorem or withdraw the apex")
+            elif label:
+                registers.append(f"thin statement [{label}]")
+            if short in BASELINE:
+                registers.append("VACUOUS_STATEMENT_BASELINE")
+            if short in disclosed_modeling:
+                registers.append(
+                    f"MODELING_ASSUMPTION_THEOREMS [{disclosed_modeling[short]}]")
+            if short in witness:
+                registers.append(f"trivial witness [{witness[short]}]")
+
+            if registers:
+                flagged.append((code, short, registers,
+                                bool(_APEX_VACUITY_DISCLOSURE_RE.search(claim))))
+
+    details: List[Detail] = []
+    if scored == 0:
+        return CheckResult(passed=False, measured=False, details=[Detail(
+            "population", False,
+            "no bundle declares a resolvable apex theorem — this check is UNVERIFIED, "
+            "not passing. The field is `apex_theorems` in bundle_metadata.json")])
+
+    for msg in placeholders:
+        details.append(Detail("apex_not_placeholder", False, msg))
+    for msg in thin_hard:
+        details.append(Detail("apex_not_thin_hard", False, msg))
+
+    undisclosed = [f for f in flagged if not f[3]]
+    total_ok = len(flagged) <= APEX_VACUITY_CEILING
+    disclosure_ok = len(undisclosed) <= APEX_UNDISCLOSED_VACUITY_CEILING
+    population_ok = scored >= APEX_CLAIMS_SCORED_FLOOR
+
+    # EVERY flagged row, by name, on every run. This is what makes the two ceilings
+    # ratchets rather than suppression: nothing leaves the population, and a reader of
+    # the output can see exactly which twenty-one rows the number is made of.
+    for code, short, registers, disc in flagged:
+        details.append(Detail(
+            "apex_content_free", True,
+            f"{code}: `{short}` — {'; '.join(registers)}"
+            + ("  [claims string DISCLOSES this]" if disc else
+               "  [claims string does NOT disclose it — say what the statement carries, "
+               "or strengthen the theorem]"),
+            warning=True))
+
+    if not population_ok:
+        details.insert(0, Detail(
+            "population_floor", False,
+            f"only {scored} apex claim(s) were scored, below the floor of "
+            f"{APEX_CLAIMS_SCORED_FLOOR} — the population has SHRUNK, so every leg below "
+            f"is holding over fewer rows than it was written for. Find what stopped "
+            f"resolving (see `bundle_apex_resolves`) before reading this verdict"))
+
+    ok = (not placeholders and not thin_hard and total_ok and disclosure_ok
+          and population_ok)
+    n_bundles = len({c for c, _, _, _ in flagged})
+    details.insert(0, Detail(
+        "summary", ok,
+        f"{scored} declared apex claim(s) scored (floor {APEX_CLAIMS_SCORED_FLOOR}) — "
+        f"{len(flagged)} resolve to a content-free declaration across {n_bundles} "
+        f"bundle(s) (ceiling {APEX_VACUITY_CEILING}), {len(undisclosed)} of them "
+        f"UNDISCLOSED in their own claims string (ceiling "
+        f"{APEX_UNDISCLOSED_VACUITY_CEILING}); {len(placeholders)} placeholder and "
+        f"{len(thin_hard)} thin-statement apex(es) (both gating, both zero by design)"
+        + ("" if total_ok else
+           " — MORE APEXES NOW REST ON A DECLARATION THAT PROVES NOTHING. Strengthen the "
+           "theorem or withdraw the apex; adding the name to a register is the move that "
+           "created this gap")
+        + ("" if disclosure_ok else
+           " — MORE PUBLISHED APEX CLAIMS NOW ASSERT CONTENT THEIR STATEMENT DOES NOT "
+           "CARRY, without saying so"),
+        warning=bool(flagged) and ok))
     return CheckResult(passed=ok, measured=population_ok, details=details)
 
 

@@ -156,15 +156,26 @@ authorization-before-measurement pattern that created the problem. Method and qu
 tracked by `UNDECLARED_APEX_CEILING` in `scripts/validation/checks/bundles_readiness.py` and gated
 by `validate.py --check bundle_apex_resolves`.
 
-⚠️ **An apex declaration has two halves and they are gated separately.**
+⚠️ **An apex declaration has three halves and they are gated separately.**
 `bundle_apex_resolves` owns the **name** — it hard-fails on an apex resolving to no live
 declaration, and on one resolving to something other than a theorem. The `claims` **string** beside
 it was read by nothing until ADR-015 D3, and `apex_theorem_claims_grounded` now owns it: present
 and non-placeholder, not a restatement of the theorem's own name, and its numerals traceable to the
-statement. **Neither check establishes that the claim describes the theorem** — claim-to-type
-equivalence is not decidable, and the check's docstring enumerates what its silence does not mean.
-Reading a green on both as "this bundle's declared results are verified" is exactly the
-inference the second check was written to make impossible.
+statement. The **substance** of the declaration the claim rests on is ADR-016's
+`apex_claims_not_vacuous`: no declared apex may resolve to a declaration the project records or
+derives as content-free — placeholder, thin statement, baselined, disclosed-definitional, or
+trivially witnessed — and one that does must say so in its own `claims` string. **None of the three
+establishes that the claim describes the theorem** — claim-to-type equivalence is not decidable,
+and each check's docstring enumerates what its silence does not mean. Reading a green on all three
+as "this bundle's declared results are verified" is exactly the inference the second and third were
+written to make impossible.
+
+⚠️ **And none of them measures RELEVANCE.** A cited theorem can be true, kernel-checked, and simply
+not on the path to the claim it is offered for — D2's `e8_det_one` is the measured instance
+(`native_decide` over Mathlib's `CartanMatrix.E₈`, with no in-tree `E8lit = CartanMatrix.E₈`
+bridge, so it is not on the chain that carries `eight_dvd_latticeSig`). ADR-016 D6 scopes that axis
+out deliberately rather than letting a vacuity predicate be read as covering it; it is filed at
+[`papers/AutomatedReviews/2026-08-15-apex-claims-unbacked/infra.md`](../../papers/AutomatedReviews/2026-08-15-apex-claims-unbacked/infra.md).
 
 **It is evidence-generating, not bookkeeping — and it has already overturned audit conclusions.**
 The audit recommends merging D6+D9+D12 on the strategy document's own three-layer outline; the

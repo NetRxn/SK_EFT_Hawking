@@ -637,3 +637,89 @@ class TestTrackedHypothesesFresh:
         assert not doc.exists(), (
             "the check WROTE the generated doc — it must hard-fail and leave the "
             "tree alone (ADR-004 W7 M1)")
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# The SEAM between the vacuity registers and the citation rule (ADR-016)
+# ═══════════════════════════════════════════════════════════════════════
+
+class TestVacuousDeclarationsMayNotBeCitedAsApexResults:
+    """Discharges §1.1 and §1.2 of
+    `papers/AutomatedReviews/2026-08-15-baselined-vacuous-theorems-may-be-cited/infra.md`.
+
+    ⚠️ **These two legs live HERE, beside `placeholder_not_cited`, deliberately.** The
+    check they drive is `apex_claims_not_vacuous` in `bundles_readiness.py`, and its own
+    thirteen-case class lives beside it in `test_d5_bundles_readiness.py`. What the
+    finding declared, in its `Verify:` lines, is that *this* file — the home of the
+    substance gates, and of the guard whose population was too narrow — carries an
+    executable assertion that a vacuous declaration cannot be cited. Putting the
+    assertion where the finding said it should be is what makes the closure verifiable
+    rather than a claim about a file nobody named.
+
+    ADR-016 D1 states why the ENFORCEMENT is not here: `placeholder_not_cited` scans
+    draft prose with a 320-character window and a hedge escape, and a structured metadata
+    field has neither.
+    """
+
+    #: `∀ rank : ℕ, rank = rank`, in `VACUOUS_STATEMENT_BASELINE`, docstring promising a
+    #: change-of-rings adjunction. The finding's own §1.1 specimen.
+    BASELINED = "SKEFTHawking.hom_tensor_adjunction_dim"
+    #: `∃ φ : ZMod 16 ≃ ZMod 16, Function.Bijective φ := ⟨Equiv.refl _, …⟩` — named for the
+    #: bordism identification Ω₅^{Spin^ℤ₄} ≅ ℤ₁₆, true of every type, witnessed by the
+    #: identity. The finding's §1.2 specimen, and in NEITHER register.
+    SEMANTICALLY_VACUOUS_EXISTENTIAL = "SKEFTHawking.dai_freed_spin_z4"
+
+    def _declare_as_apex(self, tmp_path, monkeypatch, name, claims):
+        import json
+        import bundle_registry as registry
+        import validation.checks.bundles_readiness as bru
+        papers = tmp_path / "papers"
+        (papers / "L3").mkdir(parents=True, exist_ok=True)
+        (papers / "L3" / "bundle_metadata.json").write_text(json.dumps(
+            {"apex_theorems": [{"name": name, "claims": claims}]}))
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", ("L3",))
+        monkeypatch.setattr(bru, "APEX_CLAIMS_SCORED_FLOOR", 0)
+        monkeypatch.setattr(bru, "APEX_VACUITY_CEILING", 0)
+        monkeypatch.setattr(bru, "APEX_UNDISCLOSED_VACUITY_CEILING", 0)
+        return bru.check_apex_claims_not_vacuous()
+
+    def test_a_vacuous_baselined_theorem_cited_as_an_apex_result_fails(
+            self, tmp_path, monkeypatch):
+        """§1.1. A declaration the project has FORMALLY RECORDED as content-free was
+        citable as verified backing with every gate green: `placeholder_not_cited` passes
+        because it is not a `True := trivial` stub, and `vacuous_statement_audit` passes
+        because it is inside the frozen baseline. Both guards correct about their own
+        populations, and the seam between them unasserted."""
+        r = self._declare_as_apex(
+            tmp_path, monkeypatch, self.BASELINED,
+            "the A(1) -> A change-of-rings adjunction, discharging hypothesis H2")
+        assert not r.passed, (
+            "a VACUOUS_STATEMENT_BASELINE declaration was cited as a bundle's apex "
+            "result and nothing failed — this is the §1.1 gap")
+        assert any("hom_tensor_adjunction_dim" in d.message for d in r.details)
+
+    def test_a_semantically_vacuous_existential_cited_as_an_apex_is_detected(
+            self, tmp_path, monkeypatch):
+        """§1.2, the harder half. This declaration is in NEITHER register: its statement
+        is not syntactically thin (it is a real existential over a real type), so the
+        type-based audit cannot see it, and only the WITNESS is empty — an `Equiv.refl`
+        that makes the statement true of every type. `lean_deps.json` carries types and
+        not `def` bodies, so no depth of type walk reaches it; the proof term does."""
+        r = self._declare_as_apex(
+            tmp_path, monkeypatch, self.SEMANTICALLY_VACUOUS_EXISTENTIAL,
+            "the Dai-Freed bordism identification of the Spin-Z4 group with Z16")
+        assert not r.passed, (
+            "a statement witnessed entirely by Equiv.refl was cited as a bundle's apex "
+            "result and nothing failed — this is the §1.2 gap")
+        assert any("trivial witness" in d.message for d in r.details)
+
+    def test_a_SUBSTANTIVE_theorem_cited_as_an_apex_is_silent(
+            self, tmp_path, monkeypatch):
+        """SILENT ON CORRECT DATA. Without this the two legs above pass for a check that
+        flags everything, which is the same as no check at a higher cost."""
+        r = self._declare_as_apex(
+            tmp_path, monkeypatch,
+            "SKEFTHawking.BHThermodynamicsFourLaws.regime_partition_criterion",
+            "the sign of dT_H/dt flips at the regime threshold")
+        assert r.passed, [(d.name, d.message) for d in r.details if not d.passed]

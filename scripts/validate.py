@@ -245,6 +245,13 @@ _CANONICAL_ORDER: tuple[str, ...] = (
     # apex that check already reported as unresolved, so its verdict is only
     # legible once that one has run.
     'apex_theorem_claims_grounded',
+    # ADR-016: the SUBSTANCE half of the same record. Placed immediately after
+    # `apex_theorem_claims_grounded` because the two score the identical population and
+    # share `APEX_CLAIMS_SCORED_FLOOR` — adjacency is how a reader who has found one
+    # finds the other. Not a data dependency: neither regenerates an artifact the other
+    # reads. It must still follow `bundle_apex_resolves`, for the same reason its
+    # neighbour does — it skips any apex that check reports unresolved.
+    'apex_claims_not_vacuous',
     # Both of these read the DECLARED-APEX CLOSURE, so they must follow
     # `bundle_apex_resolves` — it gates the one hand-maintained input the closure rests
     # on. Reporting a per-bundle compiler-trust figure derived from an apex list that
@@ -747,6 +754,7 @@ check_bundle_consistency = _checks_bundles.check_bundle_consistency
 check_bundle_registry_consistency = _checks_bundles.check_bundle_registry_consistency
 check_bundle_apex_resolves = _checks_bundles.check_bundle_apex_resolves
 check_apex_theorem_claims_grounded = _checks_bundles.check_apex_theorem_claims_grounded
+check_apex_claims_not_vacuous = _checks_bundles.check_apex_claims_not_vacuous
 check_bundle_abstract_length = _checks_bundles.check_bundle_abstract_length
 check_bundle_native_decide_debt = _checks_bundles.check_bundle_native_decide_debt
 check_bundle_todo_free_before_green = _checks_bundles.check_bundle_todo_free_before_green

@@ -689,6 +689,28 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "of ZERO, which is precisely why they need a production seed rather than a "
         "ratchet to show they can fire. Restored byte-identical through seed_journal.",
     ),
+    "apex_claims_not_vacuous": (
+        "test_d5_bundles_readiness.py",
+        "13 mutations (ADR-016, 2026-08-15). Discharges §1.1/§1.2 of the "
+        "2026-08-15 baselined-vacuous-theorems finding: `vacuous_statement_audit` knows "
+        "which declarations are content-free and does not know they are cited; "
+        "`bundle_metadata.json` knows what is cited and does not know it is content-free. "
+        "Measured on arrival: 21 of 638 declared apexes across 10 of 21 bundles resolve "
+        "to a content-free declaration, 15 of them without saying so. Legs: a "
+        "substantive apex is not flagged; a PLACEHOLDER apex hard-fails AND is not "
+        "excused by disclosure; a `True` statement hard-fails; a TRIVIALLY-WITNESSED "
+        "apex is flagged though it is in NEITHER register (the §1.2 half, invisible to "
+        "any type walk because lean_deps.json carries no proof term, and discarded by "
+        "`proxy_body_audit`'s name gate); disclosure moves a row out of the undisclosed "
+        "ratchet and NOT out of the total; an unresolved apex is SKIPPED; an EMPTY lean "
+        "tree is UNVERIFIED, not clean; both ratchets and the population floor carry zero "
+        "headroom against the LIVE re-derivation; every flagged row is NAMED in the "
+        "output, which is what makes the ceilings ratchets rather than suppression. "
+        "PRODUCTION SEED: appended three apexes to the REAL "
+        "`papers/L3/bundle_metadata.json` — a `True := trivial` placeholder, a `True`-"
+        "statement theorem, and an undisclosed `rfl`-witnessed one -> the two hard legs "
+        "and both ratchets red in turn. Restored through seed_journal.",
+    ),
     "bundle_lean_module_coverage": (
         "test_d5_bundles_readiness.py",
         "7 mutations (ADR-011 Phase 6, F-10). 238 of 444 declared modules (54%) are "
@@ -1114,6 +1136,11 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # `papers/L3/bundle_metadata.json` -> rc=1 on both legs. Restored through
     # seed_journal.
     "apex_theorem_claims_grounded",
+    # 2026-08-15 (ADR-016): appended three apexes to the REAL
+    # `papers/L3/bundle_metadata.json` — a PLACEHOLDER_THEOREMS declaration, a `True`-
+    # statement theorem, and an undisclosed `rfl`-witnessed one -> both hard legs and
+    # both zero-headroom ratchets red in turn. Restored through seed_journal.
+    "apex_claims_not_vacuous",
     # 2026-08-08 (ADR-010 §D4): lowered NATIVE_DECIDE_BUNDLE_DEBT["D4"] 19 -> 18 against
     # the LIVE apex closure and lean_deps.json -> rc=1 naming D4, its densest modules
     # (IsingBraiding=17, FigureEightKnot=2) and both remediations. Restored.

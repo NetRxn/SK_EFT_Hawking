@@ -2800,3 +2800,205 @@ class TestApexTheoremClaimsGrounded:
             assert any(d.name == "claim_placeholder" for d in r.details)
             assert any(d.name == "claim_restates_name" for d in r.details)
         assert bru.check_apex_theorem_claims_grounded().passed, "restore failed"
+
+
+class TestApexClaimsNotVacuous:
+    """`apex_claims_not_vacuous` (ADR-016, 2026-08-15).
+
+    Discharges §1.1 and §1.2 of
+    `papers/AutomatedReviews/2026-08-15-baselined-vacuous-theorems-may-be-cited/infra.md`
+    — a declaration the project has RECORDED as content-free could be published as a
+    bundle's apex result with every gate green.
+
+    ⚠️ **What this class does NOT establish.** That any claim matches its type
+    (ADR-015 D3), or that a cited theorem is RELEVANT to the claim it backs. The
+    sound-but-irrelevant axis is scoped out in ADR-016 D6 and filed, not covered here.
+    """
+
+    #: A `True := trivial` declaration, `PLACEHOLDER_THEOREMS`-registered, declared as an
+    #: apex by no bundle.
+    PLACEHOLDER = "SKEFTHawking.half_braiding_gives_action_TODO"
+    #: Statement is literally `True` (`_THIN_HARD`), declared as an apex by no bundle.
+    THIN_HARD = "SKEFTHawking.davies_roan_classification"
+    #: Substantive statement, `rfl` witness, declared as an apex by no bundle — the §1.2
+    #: axis, which is in NEITHER register.
+    TRIVIAL_WITNESS = "SKEFTHawking.APSEta.etaInvariant_ADWHorizon_eq_zero"
+    #: A real, substantive apex — the control.
+    REAL = "SKEFTHawking.BHThermodynamicsFourLaws.regime_partition_criterion"
+
+    def _setup(self, tmp_path, monkeypatch, apexes):
+        import bundle_registry as registry
+        papers = tmp_path / "papers"
+        (papers / "L3").mkdir(parents=True, exist_ok=True)
+        (papers / "L3" / "bundle_metadata.json").write_text(
+            json.dumps({"apex_theorems": apexes}))
+        monkeypatch.setattr(_H, "PAPERS_DIR", papers)
+        monkeypatch.setattr(registry, "BUNDLE_CODES", ("L3",))
+        monkeypatch.setattr(bru, "APEX_CLAIMS_SCORED_FLOOR", 0)
+
+    def test_live_state_passes(self):
+        assert bru.check_apex_claims_not_vacuous().passed
+
+    def test_a_substantive_apex_is_not_flagged(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, [
+            {"name": self.REAL, "claims": "the sign of dT_H/dt flips at the threshold"}])
+        r = bru.check_apex_claims_not_vacuous()
+        assert r.passed
+        assert not any(d.name == "apex_content_free" for d in r.details)
+
+    def test_a_PLACEHOLDER_apex_hard_fails(self, tmp_path, monkeypatch):
+        """Invariant #9, carried to the metadata surface. `placeholder_not_cited` reads
+        draft PROSE with a hedge escape; a `claims` string has neither, so the escape
+        must not exist here."""
+        self._setup(tmp_path, monkeypatch, [
+            {"name": self.PLACEHOLDER, "claims": "establishes the half-braiding action"}])
+        r = bru.check_apex_claims_not_vacuous()
+        assert not r.passed
+        assert any(d.name == "apex_not_placeholder" for d in r.details)
+
+    def test_a_PLACEHOLDER_apex_is_not_excused_by_disclosure(self, tmp_path, monkeypatch):
+        """Disclosure is the escape from the RATCHETS, never from a hard leg. A bundle
+        may not declare a `True := trivial` stub as a result by admitting it is one."""
+        self._setup(tmp_path, monkeypatch, [
+            {"name": self.PLACEHOLDER,
+             "claims": "a placeholder, disclosed as trivial and definitional"}])
+        assert not bru.check_apex_claims_not_vacuous().passed
+
+    def test_a_THIN_STATEMENT_apex_hard_fails(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, [
+            {"name": self.THIN_HARD,
+             "claims": "the Davies-Roan classification of the near-horizon regimes"}])
+        r = bru.check_apex_claims_not_vacuous()
+        assert not r.passed
+        assert any(d.name == "apex_not_thin_hard" for d in r.details)
+
+    def test_a_TRIVIALLY_WITNESSED_apex_is_flagged_though_in_NO_register(
+            self, tmp_path, monkeypatch):
+        """The finding's §1.2, and the half neither register sees. The declaration is in
+        no register and its statement is not syntactically thin — only the PROOF TERM is
+        empty, which `lean_deps.json` cannot carry, and which `proxy_body_audit` computes
+        and then discards because the NAME is not structural (ADR-016 D2)."""
+        self._setup(tmp_path, monkeypatch, [
+            {"name": self.TRIVIAL_WITNESS,
+             "claims": "the APS eta invariant vanishes on the ADW horizon"}])
+        monkeypatch.setattr(bru, "APEX_VACUITY_CEILING", 0)
+        r = bru.check_apex_claims_not_vacuous()
+        assert not r.passed
+        assert any("trivial witness" in d.message for d in r.details)
+
+    def test_DISCLOSURE_moves_a_row_out_of_the_undisclosed_ratchet_only(
+            self, tmp_path, monkeypatch):
+        """ADR-016 D5. Saying so in the words a referee reads is how a bundle keeps a
+        thin apex — and it leaves the row in `APEX_VACUITY_CEILING`, so being honest is
+        never room to add another."""
+        disclosed = [{"name": self.TRIVIAL_WITNESS,
+                      "claims": "the APS eta invariant on the ADW horizon, an `rfl` "
+                                "discharge of the definitional value"}]
+        self._setup(tmp_path, monkeypatch, disclosed)
+        monkeypatch.setattr(bru, "APEX_UNDISCLOSED_VACUITY_CEILING", 0)
+        monkeypatch.setattr(bru, "APEX_VACUITY_CEILING", 1)
+        assert bru.check_apex_claims_not_vacuous().passed
+
+        # …and the SAME row still counts against the total.
+        monkeypatch.setattr(bru, "APEX_VACUITY_CEILING", 0)
+        assert not bru.check_apex_claims_not_vacuous().passed
+
+    def test_an_UNRESOLVED_apex_is_SKIPPED_not_scored(self, tmp_path, monkeypatch):
+        self._setup(tmp_path, monkeypatch, [
+            {"name": "SKEFTHawking.NoSuchModule.no_such_theorem", "claims": "anything"}])
+        r = bru.check_apex_claims_not_vacuous()
+        assert not r.passed and not r.measured
+
+    def test_an_EMPTY_lean_tree_is_UNVERIFIED_not_clean(self, tmp_path, monkeypatch):
+        """§2.5 — the seam is the count of files READ, not `dir.exists()`. An existing
+        but empty tree yields an empty witness index, and every apex then reports a clean
+        witness: the same sentence a genuinely clean corpus produces."""
+        empty = tmp_path / "lean_empty"
+        empty.mkdir()
+        monkeypatch.setattr(_H, "LEAN_DIR", empty)
+        r = bru.check_apex_claims_not_vacuous()
+        assert not r.passed and not r.measured
+        assert any(d.name == "lean_src" for d in r.details)
+
+    def test_the_population_floor_has_zero_headroom(self):
+        r = bru.check_apex_claims_not_vacuous()
+        n = int(re.search(r"(\d+) declared apex claim", r.details[0].message).group(1))
+        assert n == bru.APEX_CLAIMS_SCORED_FLOOR, (
+            f"floor {bru.APEX_CLAIMS_SCORED_FLOOR} but live {n}")
+
+    def test_both_ratchets_have_zero_headroom(self):
+        """§2.3. A ceiling above the live population cannot fire — and these two were set
+        FROM the measurement, so the assertion is against the live re-derivation, not
+        against the number the ADR quotes."""
+        msg = bru.check_apex_claims_not_vacuous().details[0].message
+        total = int(re.search(r"(\d+) resolve to a content-free", msg).group(1))
+        undisc = int(re.search(r"(\d+) of them\s+UNDISCLOSED", msg).group(1))
+        assert total == bru.APEX_VACUITY_CEILING, (
+            f"ceiling {bru.APEX_VACUITY_CEILING} but live {total}")
+        assert undisc == bru.APEX_UNDISCLOSED_VACUITY_CEILING, (
+            f"ceiling {bru.APEX_UNDISCLOSED_VACUITY_CEILING} but live {undisc}")
+
+    def test_every_flagged_row_is_NAMED_in_the_output(self):
+        """What makes the ceilings ratchets rather than suppression (ADR-016 D4): nothing
+        leaves the population, and the identity of every row is re-derived on every run.
+        A count with no names is a suppression list with extra steps."""
+        r = bru.check_apex_claims_not_vacuous()
+        named = [d for d in r.details if d.name == "apex_content_free"]
+        assert len(named) == bru.APEX_VACUITY_CEILING
+        for d in named:
+            assert re.match(r"^[A-Z]\d*: `\w", d.message), d.message
+
+    def test_PRODUCTION_SEEDED_a_vacuous_apex_turns_the_real_corpus_red(self):
+        """§2.4: seed into `papers/L3/bundle_metadata.json`, the production artifact the
+        check reads. Both hard legs have a live population of ZERO — which is what a
+        regression guard looks like, and exactly why a fixture cannot prove they fire."""
+        from seed_journal import seeded_mutation
+        md_path = _H.PAPERS_DIR / "L3" / "bundle_metadata.json"
+        assert bru.check_apex_claims_not_vacuous().passed, "precondition: green"
+
+        def _seed_placeholder(text):
+            data = json.loads(text)
+            data["apex_theorems"].append(
+                {"name": self.PLACEHOLDER,
+                 "claims": "establishes the half-braiding action on the centre",
+                 "declared": "2026-08-15"})
+            return json.dumps(data, indent=2, ensure_ascii=False)
+
+        with seeded_mutation(md_path, _seed_placeholder,
+                             reason="prove the placeholder leg fires in production"):
+            r = bru.check_apex_claims_not_vacuous()
+            assert not r.passed
+            assert any(d.name == "apex_not_placeholder" for d in r.details)
+
+        def _seed_thin(text):
+            data = json.loads(text)
+            data["apex_theorems"].append(
+                {"name": self.THIN_HARD,
+                 "claims": "the Davies-Roan classification of near-horizon regimes",
+                 "declared": "2026-08-15"})
+            return json.dumps(data, indent=2, ensure_ascii=False)
+
+        with seeded_mutation(md_path, _seed_thin,
+                             reason="prove the thin-statement leg fires in production"):
+            r = bru.check_apex_claims_not_vacuous()
+            assert not r.passed
+            assert any(d.name == "apex_not_thin_hard" for d in r.details)
+
+        def _seed_witness(text):
+            data = json.loads(text)
+            data["apex_theorems"].append(
+                {"name": self.TRIVIAL_WITNESS,
+                 "claims": "the APS eta invariant vanishes on the ADW horizon",
+                 "declared": "2026-08-15"})
+            return json.dumps(data, indent=2, ensure_ascii=False)
+
+        with seeded_mutation(md_path, _seed_witness,
+                             reason="prove BOTH ratchets fire in production on an "
+                                    "undisclosed trivially-witnessed apex"):
+            r = bru.check_apex_claims_not_vacuous()
+            assert not r.passed, (
+                "the two ratchets carry zero headroom, so one more row must be red")
+            assert any(self.TRIVIAL_WITNESS.split(".")[-1] in d.message
+                       for d in r.details)
+
+        assert bru.check_apex_claims_not_vacuous().passed, "restore failed"

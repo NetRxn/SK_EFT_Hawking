@@ -121,6 +121,22 @@ roadmaps, the Lean cited, the claims record — one bundle at a time (ADR-010 §
 condition). For new work the intended moment is **wave close**, where the author context is
 already loaded.
 
+⚠️ **The `claims` string is a PUBLISHED ASSERTION, and it has two readers.**
+`apex_theorem_claims_grounded` (ADR-015 D3) requires it to be present, not a restatement of the
+theorem's own name, and to carry no numeral its statement cannot account for.
+`apex_claims_not_vacuous` (ADR-016) requires the declaration underneath it not to be one the
+project records or derives as content-free — `PLACEHOLDER_THEOREMS`, a `True` / reflexive
+statement, `VACUOUS_STATEMENT_BASELINE`, a `definitional` / `vacuous_proxy` disclosure, or a
+trivial proof witness.
+
+**The one escape from the second is DISCLOSURE, in the `claims` string itself.** A bundle may keep
+a content-thin apex by saying so in the words a referee reads — *"⚠️ DEFINITIONAL ENCODING … an
+`rfl` sanity-check"* is the live idiom, written by drafters before any check asked for it. That
+moves the row out of the undisclosed ratchet and **not** out of the total, so honesty is never room
+to add another. Adding the declaration to a suppression register is not a repair and is refused by
+ADR-016 D4; the repairs are **strengthen the theorem**, **withdraw the apex**, or **say what the
+statement actually carries**.
+
 #### `stage{9,10,13}_status` — who writes a `green`, and what it takes
 
 Use **`scripts/record_review.py`**. It is the only writer that produces a verdict, and it

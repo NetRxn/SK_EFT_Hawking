@@ -27,33 +27,28 @@
       "declared": "2026-08-07"
     },
     {
-      "name": "SKEFTHawking.hom_tensor_adjunction_dim",
-      "claims": "§2.5 — the A(1) -> A change-of-rings adjunction at the DIMENSION-EQUALITY level, substantively discharging hypothesis H2. The draft is explicit that the full isomorphism statement remains tracked",
-      "declared": "2026-08-07"
-    },
-    {
       "name": "SKEFTHawking.sixteen_convergence_full",
       "claims": "ABSTRACT + §2.4 — the four independent occurrences of 16 enumerated. ⚠️ The draft states its own scope from the Lean docstring: it INDEXES the four occurrences WITHOUT asserting a common-origin theorem",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.e8_det_one",
-      "claims": "§2.4 — E8 unimodularity by cofactor expansion against the Cartan matrix",
+      "claims": "§2.4 — det(CartanMatrix.E8) = 1. ⚠️ NOT ON THE KERNEL CHAIN AND NOT KERNEL-PURE: proved by `native_decide` (Lean.ofReduceBool in its axiom set) against Mathlib's `CartanMatrix.E8`, whereas `eight_dvd_latticeSig` runs over the literal matrix `E8lit`. There is NO in-tree theorem `E8lit = CartanMatrix.E8`, so this declaration is sound but NOT on the path to the signature result; it is retained as an independent evaluation, not as a step",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.e8_diagonal_all_two",
-      "claims": "§2.4 — the E8 diagonal is all twos",
+      "claims": "§2.4 — every diagonal entry of CartanMatrix.E8 is 2. ⚠️ Same disclosure as e8_det_one: `native_decide` (not kernel-pure) over `CartanMatrix.E8`, with no `E8lit = CartanMatrix.E8` bridge in tree, so it is not on the `eight_dvd_latticeSig` chain",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.e8_diagonal_even",
-      "claims": "§2.4 — hence the form is even",
+      "claims": "§2.4 — every diagonal entry of CartanMatrix.E8 is Even. ⚠️ This is a statement about the DIAGONAL only; it is not the evenness of the quadratic form, and it does not compose with e8_det_one into unimodularity+evenness because neither is bridged to `E8lit`. Same `native_decide` disclosure",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.e8_sigma_div_8",
-      "claims": "§2.4 + §3.5 — sigma(E8) = 8; the same 8 as the Witten Z2 inside Z16",
+      "claims": "§2.4 + §3.5 — ⚠️ CONTENT-FREE AS STATED: the elaborated statement is `(8 : Int) | (8 : Int)`, i.e. `dvd_refl 8`. It mentions no lattice, no signature and no E8; it does NOT establish sigma(E8) = 8 and carries no link to the Witten Z2 inside Z16. Retained only as the numeric anchor the prose quotes; the substantive divisibility is eight_dvd_latticeSig",
       "declared": "2026-08-07"
     },
     {
@@ -63,17 +58,17 @@
     },
     {
       "name": "SKEFTHawking.rokhlin_gap",
-      "claims": "§2.4 — the structural gap 16 | 2 sigma(E8) with 16 not dividing sigma(E8)",
+      "claims": "§2.4 — ⚠️ CLOSED ARITHMETIC AS STATED: the elaborated statement is `16 | 2 * 8 AND NOT (16 | 8)`, a decidable fact about the literals 16, 2 and 8. It is the arithmetic SHADOW of the structural gap, not a statement about sigma(E8) or about any lattice; nothing in the type binds 8 to a signature",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.char_sq_valid_e8",
-      "claims": "§2.4 — validity of the characteristic-square pairing on E8",
+      "claims": "§2.4 — ⚠️ SINGLE-POINT EVALUATION, NOT VALIDITY: the statement evaluates `selfPairing CartanMatrix.E8` at the ZERO vector and compares it mod 8. It does not quantify over characteristic vectors, so it does not establish validity of the characteristic-square pairing on E8; it records one point of it",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.constraints_without_nu_R",
-      "claims": "§2.4 — lcm(16, 3) = 48, which with the no-nu_R argument forces N_f in 48Z, in tension with the observed N_f = 3",
+      "claims": "§2.4 — ⚠️ RETRACTED CLAIM, CLOSED ARITHMETIC AS STATED. The statement is `Nat.lcm 16 3 = 48` and nothing else. The 48Z reading it was declared for is WITHDRAWN: `3 | N_f` already follows from the sixteen-component spectrum, and at fifteen components modular invariance gives `16 | N_f`, which is the Z16 condition itself — so the two conditions do not compose to lcm(16,3); the minimum is 16, and each condition excludes N_f = 3 on its own",
       "declared": "2026-08-07"
     },
     {
@@ -233,7 +228,7 @@
     },
     {
       "name": "SKEFTHawking.FK.spectral_gap",
-      "claims": "§4.4 — the Fidkowski-Kitaev eight-Majorana spectral gap; the 2+1D machine-checked evidence supporting the 4+1D TPFConjecture",
+      "claims": "§4.4 — ⚠️ CLOSED ARITHMETIC AS STATED: the complete statement is `0 - (-14) = 14`. It names no Hamiltonian, no Majorana mode and no spectrum, so it is not machine-checked evidence for the Fidkowski-Kitaev eight-Majorana gap or for the 4+1D TPFConjecture; it records the gap's numeric value once the spectrum is supplied elsewhere",
       "declared": "2026-08-07"
     }
   ],
@@ -242,7 +237,7 @@
   "target_journal": "PRD | JHEP",
   "phase7_subphase": "7d",
   "stage9_status": "pending",
-  "stage10_status": "pending",
+  "stage10_status": "pending-redo",
   "stage13_status": "pending",
   "stage13_redo_required": true,
   "freshness_stale": true,
@@ -251,14 +246,15 @@
   "last_stage9_review": "2026-05-06T22:00:00Z",
   "last_stage10_review": "2026-05-06T22:45:00Z",
   "last_stage13_review": "2026-06-10T19:45:00Z",
-  "blockers_open": 3,
+  "blockers_open": 10,
   "advisories_open": 58,
   "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d2",
   "audit_log_path": "papers/D2/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "notes": "2026-05-06 Session-2 round-3 surfaced 1 BLOCKER (Class TN line 401) + 2 advisories. All 3 fixed via paper_draft.tex Edits + lean_deps.json regen + supersession ledger 5 entries. Round-4 re-review in flight. | 2026-05-06 round-4 re-review GREEN: all 3 round-3 findings closed cleanly (BLOCKER TN line 401 + 2 advisories). 72 sentences walked / by_verdict PASS=48 WARN=16 INFO=4 TRANSITION=4 FAIL=0. Cross-bundle L2 consistency verified. Schema validates exit 0. | Round-2 verification 2026-05-06: both BLOCKERs closed cleanly (GarciaEtxebarriaMontero2019 cite typo + Schellekens trivial-discharge prose softening). Round-1 REQUIREDs 5.1 + 5.2 also closed via prose softening. 1 NEW advisory V.8 (Lean docstring sync at Chain.lean:76-77). 2 carry-forward advisories. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. paper10 source findings (2242 ×6) superseded — all resolved on disk (unconditional 16|σ). D2 own anchors (anomaly N_f≡0 mod 3, Ext over A(1)) intact; 2315 re-review had cleared D2-level blockers.",
-  "open_findings": 61,
+  "open_findings": 68,
   "blocked_p1_gates": [
+    "CitationIntegrity",
     "FixPropagation",
     "LeanProofSubstance"
   ],
@@ -270,7 +266,7 @@
     "ceiling": 45,
     "source": "PAPER_STRATEGY.md §6"
   },
-  "compiled_pages": 11,
+  "compiled_pages": 18,
   "compile_gate_ok": true,
-  "critical_open": 1
+  "critical_open": 5
 }

@@ -102,6 +102,11 @@ EXPECTED_CHECKS = [
     # apex NAME that `bundle_apex_resolves` gates. Must follow it — it skips any
     # apex that check reports unresolved.
     'apex_theorem_claims_grounded',
+    # ADR-016 (2026-08-15): the SUBSTANCE half of the same record — no declared apex may
+    # resolve to a declaration the project records or derives as content-free. Adjacent
+    # to its neighbour because the two score the identical population and share
+    # `APEX_CLAIMS_SCORED_FLOOR`.
+    'apex_claims_not_vacuous',
     # ADR-010 §Open items 4 + the operator's TODO ruling, both 2026-08-08. Placed
     # after `bundle_apex_resolves` because both read the DECLARED-APEX CLOSURE, whose
     # one hand-maintained input that check gates.
