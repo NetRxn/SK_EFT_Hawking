@@ -106,9 +106,11 @@ $\chivest$, is what produces a $\chivest$-dependent speed:
   \label{eq:cGW}
 \end{equation}
 where $\chivest$ is the metric-channel susceptibility of the
-vestigial phase, computed in the random-phase approximation (RPA)
-in this project's formalization
-(\texttt{VestigialSusceptibility.lean}); the underlying
+vestigial phase. It is a \emph{free parameter} here, and constraining
+it is what this Letter does; the random-phase-approximation form our
+substrate models it with is set out in
+\texttt{VestigialSusceptibility.lean}, but no value of $\chivest$ is
+derived there or anywhere else in the project. The underlying
 lattice-fermion framework is the one whose unitarity Vergeles
 establishes~\cite{Vergeles2025}. The identification is appealing in its
 brevity. As established by the present project's Phase~5y H1
@@ -185,11 +187,15 @@ each requires replacing the identification rather than repairing it.
 \label{sec:result}
 
 \paragraph{Vestigial-susceptibility natural range.}
-The vestigial-phase metric-channel susceptibility $\chivest$ is the
-RPA bubble integral with closed form
+Our substrate models the vestigial-phase metric-channel susceptibility
+by the RPA \emph{resummation}
 $\chi_{\rm RPA} = \chi_0/(1 - \gamma_\star \chi_0)$ in the standard
-Hertz--Millis convention, as formalized in
-\texttt{VestigialSusceptibility.lean}. The natural range
+Hertz--Millis convention, where $\chi_0$ is the bubble integral --- the
+two are distinct, and $\chi_{\rm RPA}$ is not itself a bubble integral.
+\texttt{VestigialSusceptibility.lean} formalizes that closed form and
+its stability properties; it evaluates neither $\chi_0$ nor
+$\gamma_\star$, so it fixes no numerical $\chivest$, which is why
+$\chivest$ enters Eq.~\eqref{eq:cGW} as a free parameter. The natural range
 $\chivest \in [0.1, 10]$ (in units of inverse $\Lambda_{\rm UV}^2$)
 is a \emph{project-adopted} naturalness window: the one-loop bubble
 normalization is $\mathcal{O}(\Lambda_{\rm UV}^2/16\pi^2)$ by

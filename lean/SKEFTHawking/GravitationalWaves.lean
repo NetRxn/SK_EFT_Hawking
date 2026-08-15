@@ -8,9 +8,21 @@ import Mathlib
 ## Overview
 
 Phase 6a Wave 2. Formalizes gravitational-wave propagation speed and
-leading dispersion correction from the vestigial-phase metric-channel
-susceptibility (`VestigialSusceptibility.chi_RPA`) plus the SK-EFT
-dissipative correction (`SecondOrderSK.GammaH`).
+the leading dispersion correction in terms of the vestigial-phase
+metric-channel susceptibility `χ_vest` and a dissipative coefficient
+`γ`.
+
+⚠️ **Both are FREE PARAMETERS of this module — it has no project
+dependencies, by design.** `χ_vest` is a free `ℝ` in `c_GW`; `γ` is a
+free `ℝ` in `dispersion_correction`. The prose counterparts
+`VestigialSusceptibility.chi_RPA` and `SecondOrderSK.GammaH` are the
+substrate's *models* for these quantities, not values it computes:
+`chi_RPA χ₀ γ⋆ = χ₀ / (1 − γ⋆ * χ₀)` is a resummation of the bubble
+integral `χ₀` (the two are distinct), and neither `χ₀` nor `γ⋆` is
+evaluated anywhere in the project. So this module IMPORTS neither, and
+must not be described as deriving `χ_vest` from them. What it does is
+CONSTRAIN `χ_vest` against a datum — see `Key Results` 4.
+(review:2026-08-14-l1-stage13:L1:3.2)
 
 The correctness-push anchor is the GW170817 multi-messenger bound
 `|c_GW − c| / c ≤ 3 × 10⁻¹⁵` (Abbott et al. ApJL 848, L13 (2017)).
