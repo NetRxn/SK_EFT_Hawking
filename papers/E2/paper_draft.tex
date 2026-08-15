@@ -15,8 +15,8 @@
 
 \begin{document}
 
-\title{Analog Hawking Radiation in a Bilayer-Graphene Electronic de~Laval Nozzle:\\
-A Falsifiable Current-Noise Spectrum and What It Costs to Predict}
+\title{Analog Hawking Radiation in a Bilayer-Graphene Electronic\\
+de~Laval Nozzle: A Falsifiable Current-Noise Spectrum}
 
 \author{J.~Roehm}
 \affiliation{Independent Researcher}
@@ -24,28 +24,17 @@ A Falsifiable Current-Noise Spectrum and What It Costs to Predict}
 \date{\today}
 
 \begin{abstract}
-A sonic horizon in the bilayer-graphene electron fluid emits analog Hawking
-radiation as excess current noise
-$\Delta S_I(\omega) = 2\hbar\omega\,\sigma_Q\,\Gamma(\omega)\,n_H(\omega)$,
-a low-frequency plateau of height $2 k_B T_H \sigma_Q$ rolling off above
-$\omega_H = k_B T_H/\hbar$. We evaluate this spectrum with a
-Schwinger--Keldysh effective field theory at the parameters of the
-electronic de~Laval nozzle of Geurs \emph{et al.}, and we report what the
-prediction actually rests on. For an assumed horizon velocity gradient
-$\kappa = \SI{2e12}{\per\second}$ the plateau is
-$\SI{1.2e-26}{\ampere\squared/\hertz}$ against a
-$\SI{1.3e-24}{\ampere\squared/\hertz}$ Johnson--Nyquist background,
-separated by shape rather than amplitude. The two leading corrections are
-comparable and opposite in sign, a dispersive
-$\delta_{\rm disp} = -c_1 D^2$ with $D \approx 0.23$ against a viscous
-$\delta_{\rm diss} \approx +6.5\%$, which makes graphene the one analog
-platform where the dissipative sector is measurable rather than formal.
-The sign of the net shift is not yet a prediction: it flips between the
-values of the electron-electron length reported for this device and the
-one the framework derives, and it depends on the $O(1)$ profile
-coefficient $c_1$. We state the gradient scale, the transport coefficients,
-and the coefficient $c_1$ as the assumptions they are, and identify the
-three measurements that would convert each into a datum.
+A sonic horizon in the bilayer-graphene electron fluid radiates as excess
+current noise, a low-frequency plateau $2k_BT_H\sigma_Q$ falling off above
+$\omega_H$. At the electronic de~Laval nozzle of Geurs \emph{et al.}, for
+an assumed horizon gradient $\kappa = \SI{2e12}{\per\second}$, this is
+\SI{1.2e-26}{\ampere\squared/\hertz}, a factor $100$ below the
+Johnson--Nyquist background and separated from it by shape. Dispersive and
+viscous corrections are comparable and opposite, making graphene the one
+analog platform where the dissipative sector is measurable. Their net sign
+flips between the two electron-electron lengths in circulation for this
+device; we state the gradient scale and transport coefficients as the
+assumptions they are.
 \end{abstract}
 
 \maketitle
@@ -53,57 +42,45 @@ three measurements that would convert each into a datum.
 %% ══════════════════════════════════════════════════════════════════
 \section{Introduction}
 
-A fluid that crosses from subsonic to supersonic flow carries a sonic
-horizon, and a sonic horizon radiates at a temperature fixed by the
-velocity gradient there~\cite{Unruh1981,Visser1998,Bilic1999}. Geurs
-\emph{et al.}~\cite{Geurs2025} have now realized the transonic transition
-in an electronic fluid: current driven through an etched constriction in
-hBN-encapsulated bilayer graphene accelerates the electron liquid past its
-own speed of sound and relaxes it at a stationary shock, imaged directly by
-Kelvin-probe force microscopy. The speed of sound they report is the
-Fermi-liquid value $v_{FL}(n) = \hbar\sqrt{\pi n}/(\sqrt{2}\,m^*)$,
-equal to \SI{440}{\kilo\meter/\second} at carrier density
-$n = \SI{e12}{\per\centi\meter\squared}$~[\citenum{Geurs2025}, p.~3]. That
-is three orders of magnitude above the sound speed of an atomic
-Bose--Einstein condensate, and it is the entire reason this platform is
-interesting for analog gravity.
-
-Ref.~\cite{Geurs2025} closes by noting the correspondence, attributing the
-de~Laval-nozzle-as-acoustic-black-hole analogy to Unruh, and estimating
-$T_H \sim \SI{500}{\milli\kelvin}$ for the electronic fluid. What is
-missing, and what this Letter supplies, is the observable: the spectrum,
-its normalization in a measurable quantity, the two leading corrections to
-it, and an honest account of which inputs are measured and which are
-assumed.
+A fluid crossing from subsonic to supersonic flow carries a sonic horizon,
+which radiates at a temperature fixed by the velocity gradient
+there~\cite{Unruh1981,Visser1998,Bilic1999}. Geurs \emph{et
+al.}~\cite{Geurs2025} have realized that transition in an electronic fluid:
+current through an etched constriction in hBN-encapsulated bilayer graphene
+accelerates the electron liquid past its own speed of sound and relaxes it
+at a stationary shock, imaged by Kelvin-probe force microscopy. Their sound
+speed is the Fermi-liquid value
+$v_{FL}(n) = \hbar\sqrt{\pi n}/(\sqrt{2}\,m^*) = \SI{440}{\kilo\meter/\second}$
+at $n = \SI{e12}{\per\centi\meter\squared}$ [\citenum{Geurs2025}, p.~3],
+three orders of magnitude above an atomic Bose--Einstein condensate, which
+is why the platform matters here. Ref.~\cite{Geurs2025} closes by noting
+the correspondence and estimating $T_H \sim \SI{500}{\milli\kelvin}$. What
+is missing is the observable: the spectrum, its normalization in a
+measurable quantity, the corrections to it, and an account of which inputs
+are measured and which assumed.
 
 The Hawking temperature is universal,
 \begin{equation}
 T_H = \frac{\hbar \kappa}{2\pi k_B},
 \label{eq:T_H}
 \end{equation}
-with $\kappa$ the velocity-gradient surface gravity at the horizon. Only
-$\kappa$ distinguishes one platform from another. We take the
+with $\kappa$ the velocity-gradient surface gravity; only $\kappa$
+distinguishes platforms. We organize the corrections with the
 Schwinger--Keldysh dissipative effective field
-theory~\cite{CGL2017a,CGL2017b} as the organizing framework because it
-treats the dispersive and dissipative corrections to Eq.~\eqref{eq:T_H} in
-one expansion rather than as unrelated refinements, and because graphene
-is the platform where that distinction is quantitative.
-
-Two transport inputs enter. Majumdar \emph{et al.}~\cite{Majumdar2025}
-report, for ultra-clean monolayer graphene near charge neutrality, a
-quantum-critical conductivity $\sigma_Q \simeq (4 \pm 1)\,e^2/h$, a
-Wiedemann--Franz violation exceeding $200\times$, and a shear-viscosity-to-
-entropy ratio approaching the holographic limit
-$\hbar/(4\pi k_B)$~\cite{KSS2005,Romatschke2010} to within a factor of four
-[\citenum{Majumdar2025}, abstract]. We adopt both, and we state plainly
-below the two respects in which the adoption goes beyond what that
-experiment measured.
+theory~\cite{CGL2017a,CGL2017b}, because it treats the dispersive and
+dissipative channels in one expansion, and graphene is where that
+distinction becomes quantitative. Two transport inputs enter: Majumdar
+\emph{et al.}~\cite{Majumdar2025} report, for ultra-clean monolayer
+graphene near charge neutrality, $\sigma_Q \simeq (4\pm1)\,e^2/h$, a
+Wiedemann--Franz violation above $200\times$, and a viscosity-to-entropy
+ratio within a factor of four of the holographic limit
+$\hbar/(4\pi k_B)$~\cite{KSS2005,Romatschke2010}. We adopt all three, with
+the scope conditions stated below.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Acoustic metric and quasi-1D reduction}
 
-The $2{+}1$D acoustic metric for flow along $x$ in a two-dimensional
-electron fluid is~\cite{Bilic1999}
+The $2{+}1$D acoustic metric for flow along $x$ is~\cite{Bilic1999}
 \begin{equation}
 G_{\mu\nu} = \Omega^2
 \begin{pmatrix}
@@ -113,56 +90,46 @@ G_{\mu\nu} = \Omega^2
 \end{pmatrix}.
 \label{eq:metric}
 \end{equation}
-With translational symmetry along $y$, the $3\times3$ form
-block-diagonalizes: the $y$ row has vanishing off-diagonal entries and the
-$yy$ entry reduces to the conformal factor. Both statements are machine-checked
-in \texttt{DiracFluidMetric.lean}, as
+With translational symmetry along $y$ it block-diagonalizes: the $y$-row
+off-diagonals vanish and the $yy$ entry reduces to the conformal factor.
+Both are machine-checked in \texttt{DiracFluidMetric.lean} as
 \texttt{diracFluidMetric\_y\_offdiag\_zero}
-($\forall\, v, v_F, \Omega^2,\ j \neq 2:\ G_{2j} = 0$) and
-\texttt{diracFluidMetric\_gyy} ($\forall\, v, v_F, \Omega^2:\ G_{22} = \Omega^2$).
-These are algebraic identities about the matrix of Eq.~\eqref{eq:metric},
-and they are what they look like; the physical content is that the $(t,x)$
-block is then isomorphic to the $1{+}1$D acoustic metric, so every
-$1{+}1$D result (WKB connection formulae, Bogoliubov coefficients,
-dispersive corrections) transfers to it unchanged.
+($\forall v, v_F, \Omega^2, j \neq 2: G_{2j} = 0$) and
+\texttt{diracFluidMetric\_gyy} ($G_{22} = \Omega^2$), algebraic identities
+about Eq.~\eqref{eq:metric} that are exactly what they look like. Their
+consequence is that the $(t,x)$ block is isomorphic to the $1{+}1$D
+acoustic metric, so every $1{+}1$D result transfers to it.
 
 The transverse-channel cutoff is the only genuinely $2{+}1$D effect. For a
-channel of width $W$ with Dirichlet boundaries the transverse momenta are
-$k_n = (n{+}1)\pi/W$ and the channel cutoffs are $\omega_\perp(n) = c_s k_n$.
-Taking $W = \SI{1}{\micro\meter}$ and $c_s = \SI{4.4e5}{\meter/\second}$
-gives $\omega_\perp(0) = \SI{1.38e12}{\per\second}$, which exceeds
-$4\,\omega_H = \SI{1.27e12}{\per\second}$ and so leaves the whole
-$[0, 4\omega_H]$ integration window inside the single-channel regime.
+channel of width $W$ with Dirichlet boundaries,
+$\omega_\perp(n) = c_s(n{+}1)\pi/W$. With $W = \SI{1}{\micro\meter}$ and
+$c_s = \SI{4.4e5}{\meter/\second}$, $\omega_\perp(0) = \SI{1.38e12}{\per\second}$
+exceeds $4\omega_H = \SI{1.27e12}{\per\second}$, leaving the whole
+$[0,4\omega_H]$ window single-channel. That inequality is checked in
+\texttt{DiracFluidWKB.dean\_lowest\_channel\_above\_four\_omega\_H}, whose
+exact content is
+$(4.4\!\times\!10^5)\pi/10^{-6} > 4\times3.14\!\times\!10^{11}$: a
+comparison of two numerals, with the identification of the left side as
+$\omega_\perp(0)$ and the right as $4\omega_H$ carried in prose here rather
+than in the theorem, which mentions no device record. The margin is $10\%$;
+the factor of four is the separation between $\omega_\perp(0)$ and
+$\omega_H$, which is $4.4$. Ref.~\cite{Geurs2025} states no throat width
+numerically, remarking only that a momentum-relaxation length
+$\sim\SI{2}{\micro\meter}$ is ``comparable to the throat width''
+[\citenum{Geurs2025}, p.~6]. Our $W = \SI{1}{\micro\meter}$ sits at the low
+end of that, and at $W = \SI{2}{\micro\meter}$ the lowest channel falls to
+$2.2\,\omega_H$ and the guarantee fails, so a measured throat width is a
+precondition for the quasi-1D treatment rather than a refinement of it.
 
-That inequality is checked in
-\texttt{DiracFluidWKB.dean\_lowest\_channel\_above\_four\_omega\_H}, and
-its exact content is
-$(4.4\!\times\!10^5)\pi/10^{-6} > 4 \times 3.14\!\times\!10^{11}$: a
-comparison between two numerals, with the identification of the left side
-as $\omega_\perp(0)$ and of the right as $4\omega_H$ carried in prose here
-rather than in the theorem. The margin is $10\%$, not a factor of four; the
-factor of four is the separation between $\omega_\perp(0)$ and $\omega_H$
-itself, which is $4.4$. Two caveats follow. Ref.~\cite{Geurs2025} does not
-state the throat width numerically, remarking only that a
-momentum-relaxation length of $\sim\SI{2}{\micro\meter}$ is ``comparable to
-the throat width'' [\citenum{Geurs2025}, p.~6]; $W = \SI{1}{\micro\meter}$
-sits at the low end of what that supports, and at $W = \SI{2}{\micro\meter}$
-the lowest channel falls to $2.2\,\omega_H$ and the single-channel
-guarantee over $[0,4\omega_H]$ fails. A measured throat width is therefore
-a precondition for the quasi-1D treatment, not a refinement of it.
-
-Finite-width corrections to the greybody factor decompose into a
-surface-gravity term bounded by $(l_{\rm ee}/W)^2$ and an evanescent-leakage
-term bounded by $(\omega/\omega_\perp)^2 e^{-2\pi L/W}$, summing to
+Finite-width corrections to the greybody factor split into a
+surface-gravity term bounded by $(l_{\rm ee}/W)^2$ and evanescent leakage
+bounded by $(\omega/\omega_\perp)^2 e^{-2\pi L/W}$, summing to
 $\approx 1.8\%$ at $\omega_H$ for $l_{\rm ee} = \SI{51}{\nano\meter}$,
-$W = \SI{1}{\micro\meter}$ and $L = \SI{200}{\nano\meter}$.
+$W = \SI{1}{\micro\meter}$, $L = \SI{200}{\nano\meter}$.
 \texttt{QuasiOneDReduction.quasi1D\_validity\_bound} combines the two by
 triangle inequality and \emph{takes each component bound as a hypothesis};
-the partial-differential-equation content behind them, that transverse
-averaging of a Poiseuille profile and sub-cutoff Helmholtz decay produce
-these forms, is not proved there. The $1.8\%$ figure is an arithmetic
-consequence of the two assumed bounds at the stated geometry, and is
-reported here as such.
+the underlying analysis, that transverse averaging of a Poiseuille profile
+and sub-cutoff Helmholtz decay produce these forms, is not proved there.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The horizon gradient scale}
@@ -170,117 +137,93 @@ reported here as such.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig102_graphene_hawking_T_sweep.png}
-\caption{Hawking temperature $T_H = \hbar\kappa/2\pi k_B$ versus the
-horizon velocity-gradient length $L$, with $\kappa = c_s/L$, for the
-bilayer sound speed \SI{440}{\kilo\meter/\second} (dashed) and the
-monolayer \SI{710}{\kilo\meter/\second} (solid). The bilayer point plotted
-at $L = \SI{200}{\nano\meter}$ is the assumed gradient of this Letter, not
-a measured device dimension. The monolayer points show $T_H$ only and are
-not viable operating points (Fig.~\ref{fig:diss_window}). Horizontal lines:
-the high-bias electron temperature $T_{\rm e} = \SI{150}{\kelvin}$
-[\citenum{Geurs2025}, p.~3] and the disorder scale
-$T_{\rm imp} \approx \SI{80}{\kelvin}$.}
+\caption{$T_H = \hbar\kappa/2\pi k_B$ versus horizon velocity-gradient
+length $L$, with $\kappa = c_s/L$, for the bilayer sound speed
+\SI{440}{\kilo\meter/\second} (dashed) and monolayer
+\SI{710}{\kilo\meter/\second} (solid). The bilayer point at
+$L = \SI{200}{\nano\meter}$ is the assumed gradient of this Letter, not a
+measured device dimension. Monolayer points show $T_H$ only and are not
+viable operating points: their viscous windows $\omega_H/\Gamma_H$ are
+$0.46$ and $0.23$, below unity. Lines: high-bias electron temperature
+$T_{\rm e} = \SI{150}{\kelvin}$ [\citenum{Geurs2025}, p.~3] and disorder
+scale $T_{\rm imp} \approx \SI{80}{\kelvin}$.}
 \label{fig:T_sweep}
 \end{figure}
 
-Everything quantitative below is proportional to $\kappa$, so $\kappa$
-deserves to be stated before it is used. It is not measured in
-Ref.~\cite{Geurs2025}. We take $\kappa = \SI{2.0e12}{\per\second}$, which
-is the value carried by this work's parameter registry and which
-corresponds, through the order-of-magnitude identification
-$\kappa \approx c_s/L$, to a velocity-gradient length
-$L \approx \SI{200}{\nano\meter}$. Equation~\eqref{eq:T_H} then gives
+Everything below is proportional to $\kappa$, which is not measured in
+Ref.~\cite{Geurs2025}. We take $\kappa = \SI{2.0e12}{\per\second}$,
+corresponding through $\kappa \approx c_s/L$ to a gradient length
+$L \approx \SI{200}{\nano\meter}$. Equation~\eqref{eq:T_H} gives
 \begin{equation}
-T_H = \SI{2.43}{\kelvin}, \qquad
+T_H = \SI{2.43}{\kelvin}, \quad
 \omega_H \equiv \frac{k_B T_H}{\hbar} = \SI{3.18e11}{\per\second},
 \label{eq:T_H_dean}
 \end{equation}
 that is $\nu_H = \omega_H/2\pi = \SI{50.7}{\giga\hertz}$ as an ordinary
 frequency. This is nine orders of magnitude above the atomic-BEC analog
-temperature of $\SI{0.35}{\nano\kelvin}$~\cite{Steinhauer2016,deNova2019},
-and it sits inside the \SIrange{1}{10}{\kelvin} window where noise
-spectroscopy is routine. That is the platform's decisive advantage and it
-survives every caveat below.
-
-The value of $L$ does not survive them. Ref.~\cite{Geurs2025} contains no
-nozzle length of \SI{200}{\nano\meter}. The two occurrences of that scale
-in it are a high-bias momentum-relaxation mean free path
-$\ell_{\rm mr} \sim \SI{200}{\nano\meter}$ and the width of the
-shock feature resolved by Kelvin-probe microscopy
-[\citenum{Geurs2025}, p.~6], neither of which is the velocity-gradient
-length at the sonic point. Ref.~\cite{Geurs2025}'s own estimate
-$T_H \sim \SI{500}{\milli\kelvin}$ corresponds, through
-Eq.~\eqref{eq:T_H}, to $\kappa \approx \SI{4.1e11}{\per\second}$ and a
-gradient length $\approx \SI{1}{\micro\meter}$, which is the throat-width
-scale rather than a sub-throat one. Our $\SI{2.43}{\kelvin}$ and their
-$\SI{500}{\milli\kelvin}$ are therefore not in conflict about the physics;
-they are two choices of gradient length differing by a factor of five, and
-the entire spectrum scales with that choice. We quote
-Eq.~\eqref{eq:T_H_dean} throughout because it is what the stated $\kappa$
-gives, and we treat the gradient length as the single most consequential
-quantity the experiment could return.
+temperature of \SI{0.35}{\nano\kelvin}~\cite{Steinhauer2016,deNova2019} and
+sits inside the \SIrange{1}{10}{\kelvin} window where noise spectroscopy is
+routine. That advantage survives every caveat below; the value of $L$ does
+not. Ref.~\cite{Geurs2025} contains no nozzle length of
+\SI{200}{\nano\meter}: its two occurrences of that scale are a high-bias
+momentum-relaxation mean free path and the width of the
+Kelvin-probe-resolved shock feature [\citenum{Geurs2025}, p.~6], neither
+the velocity gradient at the sonic point. Their own
+$T_H \sim \SI{500}{\milli\kelvin}$ corresponds through Eq.~\eqref{eq:T_H}
+to $\kappa \approx \SI{4.1e11}{\per\second}$ and a gradient length
+$\approx\SI{1}{\micro\meter}$, the throat-width scale. The two temperatures
+are not a disagreement about physics but two choices of gradient length
+differing by five, and the whole spectrum scales with that choice. We quote
+Eq.~\eqref{eq:T_H_dean} because it is what the stated $\kappa$ gives, and
+treat the gradient length as the most consequential quantity the experiment
+could return.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The two leading corrections}
 
 The dispersive correction is governed by the adiabaticity parameter
-$D = \kappa\, l_{\rm ee}/c_s$, with $l_{\rm ee}$ the electron-electron
+$D = \kappa\,l_{\rm ee}/c_s$, with $l_{\rm ee}$ the electron-electron
 scattering length at which hydrodynamics gives out:
-\begin{equation}
-\delta_{\rm disp} = - c_1 D^2 , \qquad c_1 = O(1),
-\label{eq:disp}
-\end{equation}
-following Coutant and Parentani and Finazzi and
-Parentani~\cite{Finazzi2012}. The coefficient $c_1$ depends on the horizon
+$\delta_{\rm disp} = -c_1 D^2$ with $c_1 = O(1)$, following Finazzi and
+Parentani~\cite{Finazzi2012}. The coefficient depends on the horizon
 profile and is not universal. This work's positivity result,
 \texttt{GrapheneHawking.graphene\_T\_eff\_positive}, states
-$\forall\, T_H, D:\ 0 < T_H \wedge D^2 < 6/\pi \Rightarrow
-0 < T_H(1 - \tfrac{\pi}{6}D^2)$, that is, it is proved for the particular
-choice $c_1 = \pi/6$ and both hypotheses are used. Our numerical pipeline
-uses the same $\pi/6$; a separate general-purpose routine in the same
-codebase uses $c_1 = 1$. We therefore quote $\delta_{\rm disp}$ with $c_1$
-displayed rather than absorbed, and note that the two choices differ by a
-factor $1.9$.
+$\forall T_H, D: 0 < T_H \wedge D^2 < 6/\pi \Rightarrow
+0 < T_H(1 - \tfrac{\pi}{6}D^2)$, proved for the particular choice
+$c_1 = \pi/6$ with both hypotheses used. Our spectrum pipeline uses the
+same $\pi/6$; a separate general-purpose routine in the same codebase uses
+$c_1 = 1$, a factor $1.9$ apart. We therefore display $c_1$ rather than
+absorb it.
 
-At $T_{\rm e} = \SI{150}{\kelvin}$, which is the electron temperature
-Ref.~\cite{Geurs2025} estimates the device reaches under high bias while
-the lattice bath sits near \SI{10}{\kelvin} [\citenum{Geurs2025}, p.~3],
-the framework's own $l_{\rm ee} = \hbar v_F/(k_B T)$ evaluates to
-\SI{51}{\nano\meter} and gives
-\begin{equation}
-D = 0.23, \qquad
-\delta_{\rm disp} = -2.8\%\ (c_1 = \pi/6),
-\label{eq:D_dean}
-\end{equation}
-comfortably inside the perturbative regime. Ref.~\cite{Geurs2025}, however,
-reports $\ell_{\rm ee} \sim \SI{100}{\nano\meter}$ for this device, as the
-length scale setting the width of the hydraulic jump
-[\citenum{Geurs2025}, p.~6]. At that value $D = 0.45$ and
+At the electron temperature $T_{\rm e} = \SI{150}{\kelvin}$ that
+Ref.~\cite{Geurs2025} estimates the device reaches under high bias, with
+the lattice bath near \SI{10}{\kelvin} [\citenum{Geurs2025}, p.~3], the
+framework's $l_{\rm ee} = \hbar v_F/(k_B T)$ evaluates to
+\SI{51}{\nano\meter}, giving $D = 0.23$ and
+$\delta_{\rm disp} = -2.8\%$ at $c_1 = \pi/6$. Ref.~\cite{Geurs2025},
+however, reports $\ell_{\rm ee} \sim \SI{100}{\nano\meter}$ for this
+device, as the scale setting the hydraulic-jump width
+[\citenum{Geurs2025}, p.~6]; there $D = 0.45$ and
 $\delta_{\rm disp} = -11\%$. The discrepancy traces to the Fermi velocity
-used in $\hbar v_F/(k_B T)$: the value \SI{e6}{\meter/\second} is the
-monolayer Dirac velocity, whereas the bilayer band is quadratic and the
-velocity consistent with the measured $c_s$ is
-$\sqrt{2}\,c_s = \SI{6.2e5}{\meter/\second}$. We report both, because the
-choice changes the sign of the net correction below.
+in $\hbar v_F/(k_B T)$: \SI{e6}{\meter/\second} is the monolayer Dirac
+value, whereas the bilayer band is quadratic and the velocity consistent
+with the measured $c_s$ is $\sqrt{2}c_s = \SI{6.2e5}{\meter/\second}$.
 
-The dissipative correction is of comparable size and opposite sign. What
-the Schwinger--Keldysh damping kernel requires is a momentum-diffusion
-constant with units of $\si{\meter\squared\per\second}$, not the relaxation
-time $\eta/(sT)$:
+The dissipative correction is comparable and opposite. What the
+Schwinger--Keldysh damping kernel requires is a momentum-diffusion constant
+in \si{\meter\squared\per\second}, not the relaxation time $\eta/(sT)$:
 \begin{equation}
 \nu = \frac{\eta\,v_F^2}{w} = 2\,\frac{\eta}{s\,T}\,c_s^2 ,
 \label{eq:nu}
 \end{equation}
-the first equality because the relativistic momentum density is $w/v_F^2$,
-the second for a fluid with $c_s^2 = v_F^2/2$. The velocity squared in
-Eq.~\eqref{eq:nu} is not decorative: omitting it turns a time into a
-dimensionless number and misstates $\delta_{\rm diss}$ by eleven orders of
-magnitude. Because the bilayer band touching is quadratic and admits no
-emergent light cone, $\nu$ must be written in the \emph{measured} $c_s$
-rather than in a nominal Fermi velocity. With
-$\eta/s = 4 \times \hbar/(4\pi k_B)$ and $T = \SI{150}{\kelvin}$ this gives
-$\nu = \SI{6.3e-3}{\meter\squared\per\second}$ and, at the horizon
-wavenumber $k_H = \kappa/c_s$,
+the first equality because relativistic momentum density is $w/v_F^2$, the
+second for $c_s^2 = v_F^2/2$. The velocity squared is not decorative:
+omitting it turns a time into a dimensionless number and misstates
+$\delta_{\rm diss}$ by eleven orders of magnitude. Because the bilayer band
+touching is quadratic and admits no emergent light cone, $\nu$ is written
+in the \emph{measured} $c_s$ rather than a nominal Fermi velocity. With
+$\eta/s = 4\hbar/(4\pi k_B)$ and $T = \SI{150}{\kelvin}$,
+$\nu = \SI{6.3e-3}{\meter\squared\per\second}$ and, at $k_H = \kappa/c_s$,
 \begin{equation}
 \Gamma_H = \nu \left(\frac{\kappa}{c_s}\right)^2
 = \SI{1.3e11}{\per\second}, \quad
@@ -288,130 +231,103 @@ wavenumber $k_H = \kappa/c_s$,
 \label{eq:diss}
 \end{equation}
 
-Taking Eqs.~\eqref{eq:D_dean} and~\eqref{eq:diss} together, the two
-channels partially cancel and leave $T_{\rm eff}/T_H - 1 = +3.7\%$, a net
-shift \emph{above} $T_H$ rather than below it. This is the observable the
-Schwinger--Keldysh organization buys, and it is the point of the platform:
-at $\SI{2.4}{\kelvin}$ and a few percent each, both corrections sit inside
-the derivative expansion's domain, so their relative size is a prediction
-rather than an extrapolation to the edge of validity. For comparison, the
-smooth-horizon polariton configuration of Falque \emph{et al.} has
+The two channels partially cancel, leaving
+$T_{\rm eff}/T_H - 1 = +3.7\%$, a shift \emph{above} $T_H$. This is what
+the Schwinger--Keldysh organization buys: at a few percent each, both
+corrections sit inside the derivative expansion's domain, so their relative
+size is a prediction rather than an extrapolation to the edge of validity.
+The smooth-horizon polariton configuration of Falque \emph{et al.}\ has
 $\delta_{\rm disp} \approx -19\%$ against $\delta_{\rm diss} \approx 14\%$
-at the same $c_1 = \pi/6$; the corrections there are comparable too, but
-neither is small.
+at the same $c_1$: comparable too, but neither small.
 
-The sign of the net shift, however, is not yet a prediction. It is $+3.7\%$
-with $l_{\rm ee} = \SI{51}{\nano\meter}$ and $c_1 = \pi/6$; it is
-$-4.3\%$ with Ref.~\cite{Geurs2025}'s $\SI{100}{\nano\meter}$ at the same
-$c_1$, and $+1.1\%$ with $c_1 = 1$ at $\SI{51}{\nano\meter}$. A measured
-$l_{\rm ee}$ and a profile-specific $c_1$ are what convert the sign into a
-falsifiable statement. The magnitude, a few percent, is robust across all
-four combinations.
+The \emph{sign} of the net shift is not yet a prediction. It is $+3.7\%$ at
+$l_{\rm ee} = \SI{51}{\nano\meter}$, $c_1 = \pi/6$; $-4.3\%$ at
+Ref.~\cite{Geurs2025}'s \SI{100}{\nano\meter}; and $+1.1\%$ at $c_1 = 1$.
+A measured $l_{\rm ee}$ and a profile-specific $c_1$ are what make the sign
+falsifiable. The magnitude, a few percent, is robust across all four.
 
-Two scope conditions attach to the transport inputs. Ref.~\cite{Majumdar2025}
-observes $\sigma_Q \to 4e^2/h$ only for
-$|n| \lesssim \SI{5e10}{\per\centi\meter\squared}$ and reports $\sigma_Q$
-below that value at larger density [\citenum{Majumdar2025}, p.~5], while
-the nozzle of Ref.~\cite{Geurs2025} is quoted at
-$n = \SI{e12}{\per\centi\meter\squared}$, twenty times higher; and the
-factor-of-four approach to $\hbar/(4\pi k_B)$ is reported for the cleanest
-device close to room temperature, whereas $\eta_{\rm th}/s_{\rm th}$ varies
-as $1/T^3$ below $T_{\rm imp} \sim \SI{100}{\kelvin}$
-[\citenum{Majumdar2025}, p.~7]. Adopting both values at
-$n = \SI{e12}{\per\centi\meter\squared}$ and $T = \SI{150}{\kelvin}$ is a
-modeling assumption, and it is one that Ref.~\cite{Majumdar2025}'s own
-density and temperature dependence argues against rather than for. It is
-additionally a transfer from monolayer to bilayer. We use it because no
-bilayer measurement of either quantity exists; a measurement of $\sigma_Q$
-on the nozzle device itself would replace the largest single uncertainty in
-the prefactor of Eq.~\eqref{eq:noise_psd}.
+Two scope conditions attach to the transport inputs.
+Ref.~\cite{Majumdar2025} observes $\sigma_Q \to 4e^2/h$ only for
+$|n| \lesssim \SI{5e10}{\per\centi\meter\squared}$ and reports it lower at
+larger density [\citenum{Majumdar2025}, p.~5], while the nozzle is quoted
+at $n = \SI{e12}{\per\centi\meter\squared}$, twenty times higher; and the
+factor-of-four approach to $\hbar/(4\pi k_B)$ holds for the cleanest device
+near room temperature, whereas $\eta_{\rm th}/s_{\rm th}$ varies as $1/T^3$
+below $T_{\rm imp} \sim \SI{100}{\kelvin}$
+[\citenum{Majumdar2025}, p.~7]. Adopting both at
+$n = \SI{e12}{\per\centi\meter\squared}$ and \SI{150}{\kelvin} is a
+modeling assumption that Ref.~\cite{Majumdar2025}'s own density and
+temperature dependence argues against rather than for, and it is
+additionally a monolayer-to-bilayer transfer. We use it because no bilayer
+measurement exists.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figures/fig103_graphene_dissipation_window.png}
-\caption{Dissipation windows. Solid: $\omega_H/\Gamma_{\rm mr}$, set by
-momentum relaxation, which rises toward $\sim 22$ at sub-\SI{50}{\nano\meter}
-widths. That is not the binding rate. Dotted: the viscous window
-$\omega_H/\Gamma_H$, which runs the other way, $2.5$ at the bilayer nozzle
-against $0.46$ and $0.23$ at $100$ and \SI{50}{\nano\meter}, because
-$\omega_H \propto \kappa$ while $\Gamma_H \propto \kappa^2$. Both monolayer
-configurations sit below unity, where the quanta damp faster than they
-oscillate and no spectral feature survives, so shrinking the constriction
-closes the window rather than opening it.}
-\label{fig:diss_window}
-\end{figure}
+Equation~\eqref{eq:diss} also settles which direction the geometry should
+be pushed. The binding rate is viscous, not momentum-relaxing: the window
+$\omega_H/\Gamma_H$ scales as $1/\kappa$ because $\omega_H \propto \kappa$
+while $\Gamma_H \propto \kappa^2$, giving $2.5$ at the bilayer nozzle
+against $0.46$ and $0.23$ for monolayer constrictions of $100$ and
+\SI{50}{\nano\meter}. Both of those sit below unity, where the quanta damp
+faster than they oscillate and no spectral feature survives. Shrinking the
+constriction to raise $T_H$ therefore closes the detection window rather
+than opening it, and the momentum-relaxation window, which does improve
+with shrinking, is not the one that binds.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The current-noise observable}
 
-The Hawking flux at an electronic horizon is a current, so it is visible as
-excess current noise. Two routes give the same closed form. The
+The Hawking flux at an electronic horizon is a current, so it appears as
+excess current noise, and two routes give one closed form. The
 Callen--Welton fluctuation-dissipation theorem~\cite{CallenWelton1951} for
-a hydrodynamic conductor yields the symmetrized current noise; at a sonic
-horizon, pair creation replaces the thermal $\coth$ kernel by the
-mode-resolved distribution $F_u(\omega) = 1 + 2\Gamma(\omega) n_H(\omega)$
-with $\Gamma(\omega) \leq 1$ the greybody transmission factor. Separately,
-the B\"uttiker multichannel noise formula~\cite{Blanter2000}, generalized
-to Bogoliubov-mixing channels on the structural template of Anantram and
-Datta~\cite{AnantramDatta1996}, applied to a two-dimensional conductor with
-$N_{\rm eff} = \sigma_Q h/(2e^2)$ effective channels, gives
+a hydrodynamic conductor gives the symmetrized noise, with pair creation at
+the horizon replacing the thermal $\coth$ kernel by
+$F_u(\omega) = 1 + 2\Gamma(\omega)n_H(\omega)$. Separately, the B\"uttiker
+multichannel formula~\cite{Blanter2000} generalized to Bogoliubov-mixing
+channels on the template of Anantram and Datta~\cite{AnantramDatta1996},
+for a 2D conductor with $N_{\rm eff} = \sigma_Q h/(2e^2)$ channels, gives
 \begin{equation}
 \boxed{\;\Delta S_I(\omega) = 2\hbar\omega\,\sigma_Q\,\Gamma(\omega)\,n_H(\omega)\;}
 \label{eq:noise_psd}
 \end{equation}
-with $n_H(\omega) = [e^{\hbar\omega/k_B T_H} - 1]^{-1}$. The dimensions
-check: $[\hbar\omega]\times[\sigma_Q] = \mathrm{J}\cdot\mathrm{S}
-= \mathrm{A}^2\mathrm{s} = \mathrm{A}^2/\mathrm{Hz}$.
+with $n_H = [e^{\hbar\omega/k_B T_H} - 1]^{-1}$. Dimensions check:
+$\mathrm{J}\cdot\mathrm{S} = \mathrm{A}^2/\mathrm{Hz}$.
 
-The agreement of the two routes is established here at the level of
-matching prefactors and channel content, and it is not what the machine
-checking covers. \texttt{GrapheneNoiseFormula.fdt\_consistency} states
-$\forall\, \hbar\omega, \sigma_Q, n_H:\
-\texttt{hawkingNoisePSD}(\hbar\omega, \sigma_Q, 1, n_H)
-= 2\hbar\omega\,\sigma_Q\,n_H$, which is the substitution
-$\Gamma = 1$ into the definition of the closed form, discharged by
-unfolding and ring normalization. It certifies the algebraic identity of
-Eq.~\eqref{eq:noise_psd} at unit greybody factor. It does not certify
-either derivation, and it does not certify their equivalence. The name
-notwithstanding, no fluctuation-dissipation content enters it.
+The agreement of the two routes is established here by matching prefactors
+and channel content, and is not what the machine checking covers.
+\texttt{GrapheneNoiseFormula.fdt\_consistency} states
+$\forall \hbar\omega, \sigma_Q, n_H:
+\texttt{hawkingNoisePSD}(\hbar\omega,\sigma_Q,1,n_H)
+= 2\hbar\omega\sigma_Q n_H$, the substitution $\Gamma = 1$ into the
+definition, discharged by unfolding and ring normalization. It certifies
+the closed form's algebraic identity at unit greybody factor. It certifies
+neither derivation nor their equivalence, and despite its name no
+fluctuation-dissipation content enters it.
 
-Two features of Eq.~\eqref{eq:noise_psd} matter for detection. Because
-$\omega\, n_H(\omega) = (k_B T_H/\hbar)\,x/(e^x - 1)$ with
-$x = \hbar\omega/k_B T_H$, the spectrum is a plateau at low frequency and
-falls monotonically: it does \emph{not} peak at $\omega_H$. The plateau
-height is
+Since $\omega n_H(\omega) = (k_B T_H/\hbar)\,x/(e^x-1)$ with
+$x = \hbar\omega/k_B T_H$, the spectrum is a low-frequency plateau falling
+monotonically: it does \emph{not} peak at $\omega_H$. The plateau is
 \begin{equation}
-\Delta S_I(\omega \to 0) = 2 k_B T_H\, \sigma_Q\, \Gamma_0
+\Delta S_I(\omega \to 0) = 2 k_B T_H \sigma_Q \Gamma_0
 = \SI{1.2e-26}{\ampere\squared/\hertz},
 \label{eq:plateau}
 \end{equation}
-and the signal falls to half of it at $\omega = 1.6\,\omega_H$. Second, the
-plateau is independent of $\omega$ and therefore of the detector's tuning,
-which is why the discriminant against the background is spectral shape.
+halving at $\omega = 1.6\,\omega_H$, and it is independent of the
+detector's tuning, which is why the discriminant is spectral shape.
 
-The greybody factor encodes the horizon's departure from a perfect thermal
-emitter. For a $1{+}1$D acoustic horizon with a smooth velocity profile the
-zero-frequency limit is profile-independent,
-\begin{equation}
-\Gamma_0 = \frac{4\,c_R\,v}{(c_R + v)^2},
-\label{eq:greybody}
-\end{equation}
-% TODO: Eq. (7) and its profile-independence are attributed to
+The greybody factor encodes departure from a perfect thermal emitter. For a
+smooth $1{+}1$D acoustic horizon the zero-frequency limit is
+profile-independent, $\Gamma_0 = 4 c_R v/(c_R+v)^2$~\cite{AndersonBFP2013},
+% TODO: this closed form and its profile-independence are attributed to
 % Anderson, Balbinot, Fabbri and Parentani, PRD 87, 124018 (2013), which is
-% NOT held in Lit-Search/Phase-*/primary-sources/. Not read at page level.
-% Verify the closed form and the profile-independence claim against the
-% primary before submission.
-giving $\Gamma_0 = 0.99995$ at $v = 0.985\,c_s$ and $c_R \approx c_s$. That
-$\Gamma_0$ is within $10^{-4}$ of unity is a statement about the near-sonic
-asymptotic flow, and it is the reason the prefactor of
-Eq.~\eqref{eq:noise_psd} is effectively $\sigma_Q$ alone. In the adiabatic
-regime the frequency dependence is
+% NOT held in Lit-Search/Phase-*/primary-sources/ and has not been read at
+% page level. Verify against the primary before submission.
+giving $\Gamma_0 = 0.99995$ at $v = 0.985c_s$, $c_R \approx c_s$, which is
+why the prefactor of Eq.~\eqref{eq:noise_psd} is effectively $\sigma_Q$
+alone. In the adiabatic regime
 $\Gamma(\omega) \approx \Gamma_0[1 - (\omega/\omega_{\max})^2]$ with
-$\omega_{\max} = \sqrt{\kappa c_s / l_{\rm ee}} \approx 7.8\,\omega_H$, so
-$\Gamma$ stays within a few percent of $\Gamma_0$ across the detection
-band. The frequency dependence of $\Gamma$ is the largest device-specific
-unknown in the spectrum's shape, which is the quantity the shape-based
-discriminant is built on.
+$\omega_{\max} = \sqrt{\kappa c_s/l_{\rm ee}} \approx 7.8\,\omega_H$, so
+$\Gamma$ stays within a few percent of $\Gamma_0$ across the band. Its
+frequency dependence is the largest device-specific unknown in the
+spectrum's shape, which is what the discriminant is built on.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Detection and the falsifiable window}
@@ -419,31 +335,27 @@ discriminant is built on.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig104_graphene_noise_spectrum.png}
-\caption{Hawking excess current noise $\Delta S_I(\omega)$
-(Eq.~\eqref{eq:noise_psd}) at the bilayer-nozzle parameters: a
-\SI{1.2e-26}{\ampere\squared/\hertz} low-frequency plateau falling to half
-height at $1.6\,\omega_H$. The white Johnson--Nyquist background
+\caption{Hawking excess current noise (Eq.~\eqref{eq:noise_psd}) at the
+bilayer-nozzle parameters: a \SI{1.2e-26}{\ampere\squared/\hertz}
+low-frequency plateau falling to half height at $1.6\,\omega_H$. The white
+Johnson--Nyquist background
 $4k_B T_{\rm e}\sigma_Q = \SI{1.3e-24}{\ampere\squared/\hertz}$ at
 $T_{\rm e} = \SI{150}{\kelvin}$ lies two orders of magnitude above it, and
 is separated from it by shape, not amplitude.}
 \label{fig:noise}
 \end{figure}
 
-The excess sits a factor $\sim 100$ below the Johnson--Nyquist floor
-$4 k_B T_{\rm e} \sigma_Q = \SI{1.3e-24}{\ampere\squared/\hertz}$, so
-detection is a shape measurement. The per-bin ratio is
-$\Delta S_I/S_{\rm JN} = \hbar\omega\,\Gamma\, n_H/(2 k_B T_{\rm e})$,
-which peaks at $9.6\times10^{-3}$ at the low-frequency end and falls with
-the plateau. Integrating the squared ratio across the band,
-$t = [\int (\Delta S_I/S_{\rm JN})^2 \, d\nu]^{-1}$, gives a
-statistics-limited integration time of \SI{1.3e-7}{\second} over the full
-\SI{0.5}{\giga\hertz} to \SI{507}{\giga\hertz} window, and
-\SI{6.4e-6}{\second} in the single best bin. Those figures assume a
-background whose gain and temperature are stable to better than $1\%$ over
-the measurement, which no real cryogenic amplifier chain provides; the
-measurement is systematics-limited by many orders of magnitude, and the
-statistical time is reported to show that photon shot noise is not the
-obstacle.
+The excess sits a factor $\sim100$ below the Johnson--Nyquist floor
+$4k_B T_{\rm e}\sigma_Q = \SI{1.3e-24}{\ampere\squared/\hertz}$, so
+detection is a shape measurement. The per-bin ratio
+$\hbar\omega\Gamma n_H/(2k_B T_{\rm e})$ peaks at $9.6\times10^{-3}$ at the
+low-frequency end; integrating its square across
+\SIrange{0.5}{507}{\giga\hertz} gives a statistics-limited integration time
+of \SI{1.3e-7}{\second}, and \SI{6.4e-6}{\second} in the single best bin.
+Those figures assume a background stable in gain and temperature to better
+than $1\%$, which no cryogenic amplifier chain provides. The measurement is
+systematics-limited by many orders of magnitude, and the statistical time
+is quoted only to show that shot noise is not the obstacle.
 
 The window over which the prediction is cleanest is
 \begin{equation}
@@ -453,96 +365,80 @@ The window over which the prediction is cleanest is
 Below it the plateau carries no shape information and the measurement
 degenerates into an amplitude comparison against an uncalibrated
 background; above it the greybody roll-off and the transverse-channel edge
-both enter. Inside it, $D = 0.23$ keeps the dispersive expansion
-perturbative, $\Gamma$ stays within a few percent of $\Gamma_0$, and the
-lowest transverse channel remains closed at the assumed $W$.
+enter. Inside it $D = 0.23$ keeps the dispersive expansion perturbative,
+$\Gamma$ stays within a few percent of $\Gamma_0$, and the lowest
+transverse channel is closed at the assumed $W$.
 
-A measured $\Delta S_I(\omega)$ in this band determines $T_H$ from the
-Planckian shape and $\sigma_Q$ from the plateau height independently, so the
-framework is tested twice by one spectrum. The prediction is falsified if
-the measured profile is Planckian at a temperature inconsistent with
-Eq.~\eqref{eq:T_H} at the measured velocity gradient, or if the plateau
-height is inconsistent with $2 k_B T_H \sigma_Q$ at the measured $\sigma_Q$.
-It is not falsified by a disagreement in $T_H$ alone while $\kappa$ remains
-unmeasured, and we do not claim otherwise.
+A measured $\Delta S_I(\omega)$ in this band fixes $T_H$ from the Planckian
+shape and $\sigma_Q$ from the plateau height independently, so one spectrum
+tests the framework twice. The prediction fails if the profile is Planckian
+at a temperature inconsistent with Eq.~\eqref{eq:T_H} at the measured
+velocity gradient, or if the plateau height is inconsistent with
+$2k_B T_H \sigma_Q$ at the measured $\sigma_Q$. It is not falsified by
+disagreement in $T_H$ alone while $\kappa$ is unmeasured, and we claim
+otherwise nowhere. Three measurements would convert this Letter's
+assumptions into data: the velocity-gradient length at the sonic point,
+from the Kelvin-probe profile already demonstrated in
+Ref.~\cite{Geurs2025}; $\sigma_Q$ and $\eta/s$ on the nozzle device at its
+operating density; and the throat width and electron-electron length at
+operating bias.
 
-Three measurements would convert the three assumptions of this Letter into
-data, in descending order of leverage. First, the velocity-gradient length
-at the sonic point, from the Kelvin-probe velocity profile already
-demonstrated in Ref.~\cite{Geurs2025}: this sets $\kappa$ and with it every
-frequency and temperature quoted here. Second, $\sigma_Q$ and
-$\eta/s$ on the nozzle device at its operating density, which would replace
-a cross-device, cross-density, cross-material transfer with a measurement.
-Third, the throat width and the electron-electron length at operating bias,
-which together decide whether the quasi-1D reduction holds and which sign
-the net temperature shift takes.
+A like-for-like comparison across platforms requires a common
+normalization, which this literature does not use uniformly. Falque
+\emph{et al.}~\cite{Falque2025} report an exciton-polariton horizon of
+measured steepness $\kappa = 0.07$ to \SI{0.11}{\per\pico\second} and quote
+a Hawking temperature of \SI{3}{\kelvin}. That number is not
+$\hbar\kappa/2\pi k_B$: their Eq.~(9) writes the flux as
+$[e^{\omega/2\pi\kappa}-1]^{-1}$, an exponent smaller than the standard
+$2\pi\omega/\kappa$ by $(2\pi)^2$, and it is that exponent, not the label
+attached to it, which reproduces their quoted fluxes ($I^{\rm HR} = 3$ and
+$5$ at \SI{20}{\giga\hertz} detuning follow from their two $\kappa$ values
+to within rounding). Under Eq.~\eqref{eq:T_H} their $\kappa$ gives
+\SIrange{0.085}{0.13}{\kelvin}, so Eq.~\eqref{eq:T_H_dean} sits roughly
+twenty times above the polariton scale rather than comparable to it, and
+the apparent near-agreement is a convention artifact. We take that
+comparison only at their smooth-horizon configurations:
+Ref.~\cite{Falque2025} states that their steep-horizon spectrum is
+dominated by nonlinear frequency dispersion and is therefore not thermal
+[\citenum{Falque2025}, p.~6], and we make no thermal claim about those.
 
 An independent cross-check of the same critical scaling runs through the
-Kibble--Zurek--Unruh correspondence, and a demarcation result localizes the
-classically-simulable regime for this device; both are developed, with the
-scope caveat on the categorical marker they use, in the companion
-paper~\cite{Roehm2026GrapheneDeep}.
-
-%% ══════════════════════════════════════════════════════════════════
-\section{Comparison across platforms}
-
-The temperature advantage is worth stating against a like-for-like
-normalization, because the analog-gravity literature does not use one
-uniformly. Falque \emph{et al.}~\cite{Falque2025} report an exciton-polariton
-horizon with measured steepness $\kappa = 0.07$ to
-$\SI{0.11}{\per\pico\second}$ and quote a Hawking temperature of
-\SI{3}{\kelvin}. That number is not $\hbar\kappa/2\pi k_B$: their Eq.~(9)
-writes the emitted flux as $[e^{\omega/2\pi\kappa} - 1]^{-1}$, an exponent
-smaller than the standard $2\pi\omega/\kappa$ by $(2\pi)^2$, and it is that
-exponent, not the label attached to it, which reproduces their quoted
-fluxes exactly (their $I^{\rm HR} = 3$ and $5$ at $20$~GHz detuning follow
-from $\kappa = 0.07$ and $\SI{0.11}{\per\pico\second}$ to within rounding).
-Under the normalization of Eq.~\eqref{eq:T_H}, their measured $\kappa$
-corresponds to \SIrange{0.085}{0.13}{\kelvin}. The bilayer-graphene value
-of Eq.~\eqref{eq:T_H_dean} is therefore roughly twenty times above the
-polariton scale, not comparable to it; the apparent near-agreement in the
-literature is a convention artifact.
-
-We take the polariton comparison only at the smooth-horizon
-configurations. Ref.~\cite{Falque2025} states that the spectrum of their
-steep horizons is dominated by nonlinear frequency dispersion and is
-therefore not thermal [\citenum{Falque2025}, p.~6], and we make no thermal
-claim about those configurations.
+Kibble--Zurek--Unruh correspondence, developed with its scope caveat in the
+companion paper~\cite{Roehm2026GrapheneDeep}.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Conclusion}
 
 The bilayer-graphene electronic de~Laval nozzle is the first platform on
 which an analog Hawking spectrum is both thermodynamically accessible and
-electrically readable. At the assumed horizon gradient
-$\kappa = \SI{2e12}{\per\second}$ it radiates at
-$T_H = \SI{2.43}{\kelvin}$, nine orders of magnitude above atomic BEC and
-roughly twenty times above the polariton platform on a common
-normalization, and the signal is a
+electrically readable. At the assumed gradient
+$\kappa = \SI{2e12}{\per\second}$ it radiates at \SI{2.43}{\kelvin}, nine
+orders of magnitude above atomic BEC and roughly twenty times above the
+polariton platform on a common normalization, and the signal is a
 \SI{1.2e-26}{\ampere\squared/\hertz} Planckian excess separated from a
-white background by shape over $\omega/\omega_H \in [0.5,4]$. The
-Schwinger--Keldysh organization of the corrections is what distinguishes
-this platform: the dispersive and dissipative channels are comparable, of
-opposite sign, and both small, so their ratio is a quantitative prediction
-rather than an extrapolation.
+white background by shape over $\omega/\omega_H \in [0.5,4]$. What
+distinguishes the platform is the Schwinger--Keldysh organization: the
+dispersive and dissipative channels are comparable, opposite, and both
+small, so their ratio is a quantitative prediction rather than an
+extrapolation.
 
-That prediction is currently gated on three inputs the experiment has not
-yet supplied: the velocity gradient at the sonic point, the transport
-coefficients at the operating density, and the electron-electron length at
-operating bias. The first fixes the whole frequency scale, and our value
-differs from Ref.~\cite{Geurs2025}'s own estimate by a factor of five for
-exactly that reason. The third fixes the sign of the net temperature shift,
-which flips between the two values in circulation. We report the magnitudes
-as predictions and the gradient scale as an assumption because that is what
-they are, and the machine-checked chain
-(\bundleTheorems{}~theorems / \bundleModules{}~modules;
+That prediction is gated on three inputs the experiment has not supplied.
+The velocity gradient at the sonic point fixes the entire frequency scale,
+and is why our temperature differs from Ref.~\cite{Geurs2025}'s own
+estimate by a factor of five. The transport coefficients are transferred
+across device, density and material. The electron-electron length fixes the
+sign of the net shift, which flips between the two values in circulation.
+The machine-checked chain (\texttt{DiracFluidMetric},
+\texttt{DiracFluidWKB}, \texttt{GrapheneHawking},
+\texttt{GrapheneNoiseFormula}, \texttt{QuasiOneDReduction};
 \texttt{lake build} clean, v\leantoolchain, Mathlib \texttt{\mathlibrev})
-supplies the algebraic backbone rather than the physical inputs.
+supplies the algebraic backbone and none of the physical inputs; the
+statements it does establish are quoted above in full so that the
+difference is visible.
 
 \begin{acknowledgments}
-Lean~4 proofs verified by \texttt{lake build} (v\leantoolchain, Mathlib
-commit \texttt{\mathlibrev}). Five of the six graphene Dirac-fluid modules
-are named where their bounds are used; the sixth,
+Lean~4 proofs verified by \texttt{lake build}. Five of the six graphene
+Dirac-fluid modules are named where their bounds are used; the sixth,
 \texttt{DiracFluidSK.lean}, carries the second-order kernel behind
 Eq.~\eqref{eq:noise_psd}.
 \end{acknowledgments}
@@ -553,80 +449,67 @@ J.~Roehm, \emph{Formally Verified Analog Hawking Radiation Across Three
 Platforms} (companion paper), in preparation.
 
 \bibitem{Unruh1981}
-W.~G.~Unruh,
-Phys.\ Rev.\ Lett.\ \textbf{46}, 1351 (1981).
+W.~G.~Unruh, Phys.\ Rev.\ Lett.\ \textbf{46}, 1351 (1981).
 
 \bibitem{Visser1998}
-M.~Visser,
-Class.\ Quant.\ Grav.\ \textbf{15}, 1767 (1998).
+M.~Visser, Class.\ Quant.\ Grav.\ \textbf{15}, 1767 (1998).
 
 \bibitem{Steinhauer2016}
-J.~Steinhauer,
-Nat.\ Phys.\ \textbf{12}, 959 (2016).
+J.~Steinhauer, Nat.\ Phys.\ \textbf{12}, 959 (2016).
 
 \bibitem{deNova2019}
-J.~R.~M.~de~Nova \emph{et al.},
-Nature \textbf{569}, 688 (2019).
+J.~R.~M.~de~Nova \emph{et al.}, Nature \textbf{569}, 688 (2019).
 
 \bibitem{Falque2025}
 K.~Falque, A.~Delhom, Q.~Glorieux, E.~Giacobino, A.~Bramati, and
-M.~J.~Jacquet,
-``Polariton fluids as quantum field theory simulators on tailored curved
-spacetimes,''
-Phys.\ Rev.\ Lett.\ \textbf{135}, 023401 (2025) [arXiv:2311.01392].
+M.~J.~Jacquet, ``Polariton fluids as quantum field theory simulators on
+tailored curved spacetimes,'' Phys.\ Rev.\ Lett.\ \textbf{135}, 023401
+(2025) [arXiv:2311.01392].
 
 \bibitem{CGL2017a}
-M.~Crossley, P.~Glorioso, and H.~Liu,
-JHEP \textbf{09}, 095 (2017) [arXiv:1511.03646].
+M.~Crossley, P.~Glorioso, and H.~Liu, JHEP \textbf{09}, 095 (2017)
+[arXiv:1511.03646].
 
 \bibitem{CGL2017b}
-P.~Glorioso, M.~Crossley, and H.~Liu,
-JHEP \textbf{09}, 096 (2017) [arXiv:1701.07817].
+P.~Glorioso, M.~Crossley, and H.~Liu, JHEP \textbf{09}, 096 (2017)
+[arXiv:1701.07817].
 
 \bibitem{Geurs2025}
 J.~Geurs, T.~A.~Webb, Y.~Guo, I.~Keren, J.~H.~Farrell, J.~Xu,
 K.~Watanabe, T.~Taniguchi, D.~N.~Basov, J.~Hone, A.~Lucas, A.~Pasupathy,
-and C.~R.~Dean,
-``Supersonic flow and hydraulic jump in an electronic de Laval nozzle,''
-arXiv:2509.16321v2 (2025).
+and C.~R.~Dean, ``Supersonic flow and hydraulic jump in an electronic de
+Laval nozzle,'' arXiv:2509.16321v2 (2025).
 
 \bibitem{Majumdar2025}
-A.~Majumdar \emph{et al.},
-``Universality in quantum critical flow of charge and heat in
-ultra-clean graphene,'' Nature Physics \textbf{21}, 1374 (2025),
-arXiv:2501.03193.
+A.~Majumdar \emph{et al.}, ``Universality in quantum critical flow of
+charge and heat in ultra-clean graphene,'' Nature Physics \textbf{21},
+1374 (2025), arXiv:2501.03193.
 
 \bibitem{KSS2005}
-P.~K.~Kovtun, D.~T.~Son, and A.~O.~Starinets,
-Phys.\ Rev.\ Lett.\ \textbf{94}, 111601 (2005).
+P.~K.~Kovtun, D.~T.~Son, and A.~O.~Starinets, Phys.\ Rev.\ Lett.\
+\textbf{94}, 111601 (2005).
 
 \bibitem{Bilic1999}
-N.~Bili\'c,
-Class.\ Quant.\ Grav.\ \textbf{16}, 3953 (1999).
+N.~Bili\'c, Class.\ Quant.\ Grav.\ \textbf{16}, 3953 (1999).
 
 \bibitem{Romatschke2010}
-P.~Romatschke,
-Int.\ J.\ Mod.\ Phys.\ E \textbf{19}, 1 (2010).
+P.~Romatschke, Int.\ J.\ Mod.\ Phys.\ E \textbf{19}, 1 (2010).
 
 \bibitem{Finazzi2012}
-S.~Finazzi and R.~Parentani,
-Phys.\ Rev.\ D \textbf{85}, 124027 (2012).
+S.~Finazzi and R.~Parentani, Phys.\ Rev.\ D \textbf{85}, 124027 (2012).
 
 \bibitem{CallenWelton1951}
-H.~B.~Callen and T.~A.~Welton,
-Phys.\ Rev.\ \textbf{83}, 34 (1951).
+H.~B.~Callen and T.~A.~Welton, Phys.\ Rev.\ \textbf{83}, 34 (1951).
 
 \bibitem{AndersonBFP2013}
-P.~R.~Anderson, R.~Balbinot, A.~Fabbri, and R.~Parentani,
-Phys.\ Rev.\ D \textbf{87}, 124018 (2013).
+P.~R.~Anderson, R.~Balbinot, A.~Fabbri, and R.~Parentani, Phys.\ Rev.\ D
+\textbf{87}, 124018 (2013).
 
 \bibitem{Blanter2000}
-Ya.~M.~Blanter and M.~B\"uttiker,
-Phys.\ Rep.\ \textbf{336}, 1 (2000).
+Ya.~M.~Blanter and M.~B\"uttiker, Phys.\ Rep.\ \textbf{336}, 1 (2000).
 
 \bibitem{AnantramDatta1996}
-M.~P.~Anantram and S.~Datta,
-Phys.\ Rev.\ B \textbf{53}, 16390 (1996).
+M.~P.~Anantram and S.~Datta, Phys.\ Rev.\ B \textbf{53}, 16390 (1996).
 \end{thebibliography}
 
 \end{document}
