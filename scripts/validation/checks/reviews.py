@@ -1123,9 +1123,48 @@ def _seeded_marker() -> str:
     return SEED_MARKER
 
 
+#: A seeded stanza the FINDING EXTRACTOR would mint from: a severity-bearing heading whose
+#: body carries the marker. Anchored on the same `### N.N — … SEVERITY` shape
+#: `extract_review_finding_nodes` keys on, because that is what makes residue harmful.
+_SEEDED_STANZA_RE = re.compile(
+    r"^###\s+\d+(?:\.\d+)*\s*[—–-][^\n]*\n"       # a finding heading — `[^\n]*`, NOT `.*`:
+                                                     # under DOTALL a greedy `.*$` swallows the
+                                                     # whole document and the body pattern below
+                                                     # never gets to stop at a heading.
+    r"(?:(?!^\#{1,6}\s).)*?"                        # its body — ends at the NEXT HEADING OF
+                                                     # ANY LEVEL. Stopping only at `###` let
+                                                     # a stanza swallow a later `## Notes`
+                                                     # section and match a prose mention
+                                                     # there; caught by the three-way test
+                                                     # below, which is why it is three-way.
+    r"SKEFT-SEEDED-BY-TEST-SUITE",
+    re.MULTILINE | re.DOTALL)
+
+
+def _marker_mints_a_finding(text: str, marker: str) -> bool:
+    """Does this document carry seeded content that would MINT a phantom finding?
+
+    ⚠️ ASSERT THE DECIDER, NOT THE STRING — and this check shipped keying on the string.
+    Within hours a finding documenting the seeder-vs-seeder race quoted the marker in its
+    own prose, and the guard flagged THAT DOCUMENT as residue, with remediation text
+    instructing the reader to `git checkout --` it. Following the advice would have deleted
+    the finding. A guard whose repair instruction destroys correct work is worse than the
+    defect it guards.
+
+    The harm residue does is that it MINTS A FINDING: a fabricated CRITICAL is
+    indistinguishable downstream from a real one. Prose *about* the marker mints nothing.
+    So the predicate is the finding-shaped stanza the extractor keys on, not the token —
+    which also means a document explaining this mechanism can be written without tripping
+    it, and whoever fixes the underlying race will need to write exactly such a document.
+    """
+    if marker not in text:
+        return False
+    return _SEEDED_STANZA_RE.search(text) is not None
+
+
 @register_check("seed_residue_absent",
-                "No production review document carries test-seeded content, and no "
-                "seeded mutation is left unrestored")
+                "No production review document carries test-seeded content that would mint "
+                "a finding, and no seeded mutation is left unrestored")
 def check_seed_residue_absent() -> CheckResult:
     """CHECK: a production-seeded mutation has not outlived the test that wrote it.
 
@@ -1207,7 +1246,7 @@ def check_seed_residue_absent() -> CheckResult:
         except (OSError, UnicodeDecodeError):
             continue
         scanned += 1
-        if marker in text:
+        if _marker_mints_a_finding(text, marker):
             rel = str(md.relative_to(_H.PROJECT_ROOT))
             residue.append(
                 f"{rel} (IN FLIGHT — a live process is holding this seed open; re-run "

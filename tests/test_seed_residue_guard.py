@@ -100,7 +100,8 @@ class TestTheCheckFiresOnRealResidue:
                 f"# Seed-residue guard probe\n\n"
                 f"### 1 — probe\n\n- **Severity:** minor\n- **Lane:** infra\n"
                 f"- **Observed:** written by tests/test_seed_residue_guard.py.\n"
-                f"<!-- {sj.SEED_MARKER} -->\n",
+                f"### 9.9 — 🔴 CRITICAL — seeded probe\n\n- **Severity:** critical\n\n"
+                f"Seeded by the test suite. <!-- {sj.SEED_MARKER} -->\n",
                 reason="a marker-bearing document in the real corpus must turn "
                        "seed_residue_absent red"):
             res = _run()
@@ -172,7 +173,8 @@ class TestTheCheckFiresOnRealResidue:
         So: a marker in the corpus is red whoever holds it, and the message says which."""
         doc = _probe_doc("inflight.md")
         with sj.seeded_artifact(
-                doc, f"# probe\n\n<!-- {sj.SEED_MARKER} -->\n",
+                doc, f"### 9.9 — 🔴 CRITICAL — seeded probe\n\n- **Severity:** critical\n\n"
+                f"Seeded by the test suite. <!-- {sj.SEED_MARKER} -->\n",
                 reason="in-flight reporting probe"):
             res = _run()
             assert res.passed is False, (
@@ -568,3 +570,53 @@ def test_the_guard_is_REGISTERED_not_merely_importable():
     from validation._config import CI_SKIP
     assert "seed_residue_absent" not in CI_SKIP, (
         "the check is CI_SKIPped, so --ci never measures it")
+
+
+class TestTheMarkerMustMintAFindingNotMerelyAppear:
+    """ADR-014-adjacent, 2026-08-15 — the guard shipped keying on the STRING.
+
+    Within hours a finding documenting the seeder-vs-seeder race quoted the marker in its
+    own prose, and the guard flagged THAT DOCUMENT as residue — with remediation text
+    telling the reader to `git checkout --` it, which would have deleted the finding. A
+    guard whose repair instruction destroys correct work is worse than the defect.
+
+    The harm residue does is that it MINTS A FINDING; prose about the marker mints nothing.
+    So the predicate is the finding-shaped stanza the extractor keys on.
+    """
+
+    M = "SKEFT-SEEDED-BY-TEST-SUITE"
+
+    def _f(self):
+        from validation.checks.reviews import _marker_mints_a_finding
+        return _marker_mints_a_finding
+
+    def test_a_seeded_STANZA_fires(self):
+        assert self._f()(
+            f"### 1.1 — 🔴 CRITICAL — seeded mutation\n\n- **Severity:** critical\n\n"
+            f"Seeded by the test suite. <!-- {self.M} -->\n", self.M) is True
+
+    def test_a_PROSE_mention_does_not_fire(self):
+        assert self._f()(f"The marker `{self.M}` is written by the seeder.\n", self.M) is False
+
+    def test_a_real_finding_plus_a_prose_mention_ELSEWHERE_does_not_fire(self):
+        """⚠️ THE SEAM, and the leg that caught a real bug in the first fix. Under
+        `re.DOTALL` a greedy `.*$` on the heading line swallows the whole document, so the
+        body pattern never stops at the next heading and a prose mention three sections
+        later matched. Both a `##` and a `###` boundary are pinned: stopping only at `###`
+        let a stanza swallow a following `## Notes`."""
+        for boundary in ("## Notes", "### Appendix"):
+            doc = (f"### 2.1 — 🔴 MAJOR — real\n\n- **Severity:** major\n\nBody.\n\n"
+                   f"{boundary}\n\nThe marker `{self.M}` in prose.\n")
+            assert self._f()(doc, self.M) is False, f"leaked across {boundary!r}"
+
+    def test_the_live_race_FINDING_DOCUMENT_does_not_trip_the_guard(self):
+        """Production-anchored: the document that exposed this must stay clean, or the
+        next person to document the mechanism cannot write it down."""
+        import validate_helpers as _H
+        doc = (_H.PROJECT_ROOT / "papers/AutomatedReviews"
+               / "2026-08-15-seeded-mutation-seeder-vs-seeder-race/infra.md")
+        if not doc.is_file():
+            import pytest
+            pytest.skip("race finding not present")
+        assert self.M in doc.read_text(), "the pin is vacuous unless the doc quotes the marker"
+        assert self._f()(doc.read_text(), self.M) is False
