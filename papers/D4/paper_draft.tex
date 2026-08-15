@@ -53,23 +53,23 @@ here; we are precise about that boundary. We then strengthen density to
 efficiency, proving that the compilation of a target $U$ returns,
 \emph{at one and the same algorithmic level}, both an approximation of
 error at most $\varepsilon$ and a braid word of length at most
-$C\,(\log 1/\varepsilon)^{c}$ with $c = \log 5 / \log(3/2)$ --- a
+$C\,(\log 1/\varepsilon)^{c}$ with $c = \log 5 / \log(3/2)$: a
 bundling that the existence-only statements of the Solovay--Kitaev
 theorem do not provide. Around this result we develop the
-modular-tensor-category apparatus it sits in: the Chevalley commutator
-and Hopf structure of $U_q(\mathfrak{sl}_2)$ and $U_q(\mathfrak{sl}_3)$
-and a rank-generic construction covering both; $\mathrm{SU}(2)_k$ fusion
-with $S$-matrix unitarity and non-degeneracy for $k \le 5$ and the
-Verlinde formula proved for every triple of labels at $k = 3,4,5$; the
-Ising category's six hexagon and four ribbon equations in
-$\mathbb{Q}(\zeta_{16})$, with the closed-form invariants
+modular-tensor-category apparatus it sits in. We give the Chevalley
+commutator and Hopf structure of $U_q(\mathfrak{sl}_2)$ and
+$U_q(\mathfrak{sl}_3)$, with a rank-generic construction covering both;
+$\mathrm{SU}(2)_k$ fusion with $S$-matrix unitarity and non-degeneracy
+for $k \le 5$, and the Verlinde formula proved for every triple of
+labels at $k = 3,4,5$; the Ising category's six hexagon and four ribbon
+equations in $\mathbb{Q}(\zeta_{16})$, with the closed-form invariants
 $\langle \mathrm{trefoil}\rangle = -\sqrt{2}$ and
-$\mathrm{RT}(4_1) = -1/\sqrt{2}$; the Drinfeld double $D(G)$ of an
+$\mathrm{RT}(4_1) = -1/\sqrt{2}$; and the Drinfeld double $D(G)$ of an
 arbitrary finite group, with the eight-object non-abelian spectrum of
-$D(S_3)$; and the entanglement entropy of a modular tensor category,
-where we prove that Casini--Huerta saturation holds exactly when the
-category is trivial and that the deficit on a non-trivial category is
-the topological entropy $\log\mathcal{D}$.
+$D(S_3)$. For the entanglement entropy of a modular tensor category we
+prove that Casini--Huerta saturation holds exactly when the category is
+trivial, and that the deficit on a non-trivial category is the
+topological entropy $\log\mathcal{D}$.
 Because these layers were verified to different standards, we grade
 them: each section states the strength of its own results, a summary
 table appears in Sec.~\ref{sec:intro}, and a trust-base note records the
@@ -105,8 +105,8 @@ $\rho_{\mathrm{Fib}} \colon B_3 \to \mathrm{SU}(2)$ has dense image, in
 the concrete entrywise sense: for every $U$ in $\mathrm{SU}(2)$ and every
 $\varepsilon > 0$ there exists a braid $b \in B_3$ with
 $\lVert \rho_{\mathrm{Fib}}(b)_{ij} - U_{ij}\rVert < \varepsilon$ for all
-$i,j$. The statement is unconditional --- it depends on no assumed
-lemma, no tracked hypothesis and no numerical oracle --- and it is
+$i,j$. The statement is unconditional (it depends on no assumed
+lemma, no tracked hypothesis and no numerical oracle) and it is
 checked by the Lean~4 kernel from the axioms of the ambient type theory.
 Section~\ref{sec:density} proves it.
 
@@ -169,16 +169,16 @@ property. Kirby-move invariance, which is the content a reader would
 expect from a WRT section, is not proved here.
 
 Second, the layer that relates horizon modular data to quantum error
-correction --- which earlier project documents described as a
-load-bearing biconditional --- is, measured against its Lean statements,
+correction (which earlier project documents described as a
+load-bearing biconditional) is, measured against its Lean statements,
 a set of definitions ($\textsf{codeDistance} := \log d_{\max}$,
 $\textsf{scramblingTimeBound} := \log \mathcal{D}^2$) whose theorems are
 the elementary theory of the logarithm on $[1,\infty)$. It carries no
 error-correcting code, no recovery map and no scrambling dynamics.
 Section~\ref{sec:entropy} says so in those words and confines it to a
-scope paragraph. The genuinely categorical entropy results --- the
+scope paragraph. The genuinely categorical entropy results (the
 Casini--Huerta saturation biconditional and the $\log\mathcal{D}$
-deficit --- are separate theorems, they do contain the category, and
+deficit) are separate theorems, they do contain the category, and
 they are what that section is built on.
 
 \paragraph{The layers are independent, not a chain.}
@@ -199,10 +199,10 @@ and a reader inspecting the sources would find it out.
 
 \paragraph{Relation to the companion compilation paper.}
 The alphabet-agnostic and dimension-agnostic theory of quantitative
-gate compilation --- the generic \textsf{GeneratingSet} abstraction, the
+gate compilation (the generic \textsf{GeneratingSet} abstraction, the
 lift to $\mathrm{SU}(d)$, and the instantiations at Clifford$+T$,
 Read--Rezayi $\mathrm{SU}(2)_5$ and $\mathrm{SU}(2)_7$, trapped-ion
-$\mathrm{SU}(4)$ and Clifford$+\mathrm{CCZ}$ $\mathrm{SU}(8)$ --- is
+$\mathrm{SU}(4)$ and Clifford$+\mathrm{CCZ}$ $\mathrm{SU}(8)$) is
 developed in a companion paper~\cite{RoehmD8Compilation} and is not
 reproduced here. This paper owns the Fibonacci alphabet, which is the
 anyonic one; the companion paper owns the general theory and cites this
@@ -216,7 +216,7 @@ Section~\ref{sec:gate} gives an independent gate-level result: a
 two-qubit dark state with a sign flip on the $\pi$ loop and vanishing
 dynamical phase.
 Sections~\ref{sec:qgroups}--\ref{sec:drinfeld} develop the algebraic
-apparatus --- quantum groups, modular data and the Verlinde formula, the
+apparatus: quantum groups, modular data and the Verlinde formula, the
 Ising category and its knot invariants, and the Drinfeld centre.
 Section~\ref{sec:entropy} treats the entanglement entropy of a modular
 tensor category.
@@ -246,8 +246,8 @@ two-dimensional space.
 \subsection{The representation}
 
 Write $\varphi = (1+\sqrt5)/2$ for the golden ratio. The Fibonacci
-braiding data consists of two $R$-symbols $R_1, R_\tau$ --- roots of
-unity attached to the two fusion channels of $\tau \times \tau$ --- and
+braiding data consists of two $R$-symbols $R_1, R_\tau$ (roots of
+unity attached to the two fusion channels of $\tau \times \tau$) and
 an $F$-matrix $F$ built from $\varphi$. The braid generators are
 \begin{equation}
 \sigma_1 \;=\;
@@ -278,7 +278,7 @@ $\sigma_1\sigma_2\sigma_1 = \sigma_2\sigma_1\sigma_2$ and returns the
 induced homomorphism on the three-strand braid group. The Yang--Baxter
 witness is discharged, not assumed.
 
-Second --- and this is the honest scope of the whole section --- the
+Second (and this is the honest scope of the whole section) the
 matrices in \eqref{eq:fibgens} are \emph{posited}. They are written down
 with literal entries and are not derived, within this development, from
 the fusion category of Sec.~\ref{sec:modular} by solving the pentagon
@@ -313,7 +313,7 @@ connected group $\mathrm{SU}(2)$, hence by Cartan's closed-subgroup
 theorem an embedded Lie subgroup. A Lie subgroup of $\mathrm{SU}(2)$ is
 either all of $\mathrm{SU}(2)$, or contained in a maximal torus, or
 finite. The torus branch is excluded because $\sigma_1$ and $\sigma_2$
-do not commute --- $\sigma_2$ is a non-diagonal conjugate of $\sigma_1$
+do not commute: $\sigma_2$ is a non-diagonal conjugate of $\sigma_1$
 by $F$, and $F$ does not preserve the eigenbasis of $\sigma_1$. The
 finite branch is excluded by a cardinality argument: the group generated
 contains elements of unbounded order, so it cannot be finite. Only the
@@ -426,9 +426,9 @@ Polylogarithmic bounds of this kind are often stated with an unquantified
 constant. Ours is quantified, and the quantification is machine-checked:
 the composition constant is fixed at $K = 1024$, and a numerical
 inequality certifies that the constant chain assembled from the
-recursion's own ingredients --- the group-commutator stability estimate,
+recursion's own ingredients (the group-commutator stability estimate,
 the order-two Baker--Campbell--Hausdorff cubic bound, and the
-$\varepsilon_0$-net --- is bounded above by it. Written out, the
+$\varepsilon_0$-net) is bounded above by it. Written out, the
 certified inequality is
 \[
 \sqrt2\Bigl(12\sqrt2\,e\,\bigl(\tfrac{\pi\sqrt2}{4}\bigr)^{1/2}
@@ -454,11 +454,11 @@ would most directly improve the bound.
 \subsection{Scope: this paper owns the Fibonacci alphabet}
 
 The result above is stated for one generating set, the Fibonacci braid
-generators. The general theory --- a quantitative Solovay--Kitaev
+generators. The general theory (a quantitative Solovay--Kitaev
 statement parameterised by an abstract generating set, lifted to
 $\mathrm{SU}(d)$ for arbitrary $d$, and instantiated at Clifford$+T$,
 Read--Rezayi $\mathrm{SU}(2)_5$ and $\mathrm{SU}(2)_7$, trapped-ion
-$\mathrm{SU}(4)$ and Clifford$+\mathrm{CCZ}$ $\mathrm{SU}(8)$ --- is the
+$\mathrm{SU}(4)$ and Clifford$+\mathrm{CCZ}$ $\mathrm{SU}(8)$) is the
 subject of a companion paper~\cite{RoehmD8Compilation} and is not
 developed here. The division is by subject and not by convenience: the
 Fibonacci alphabet is the anyonic one, it is the alphabet whose density
@@ -536,9 +536,9 @@ and~\eqref{eq:nodynamical} are statements about the endpoints of a
 half-turn and about an expectation value at a configuration. They are
 not a transport theorem. To conclude that a physical protocol which
 slowly varies $(t,\Delta)$ around the loop returns the system to
-$-\psi_{\mathrm{dark}}$ requires an adiabatic theorem --- a statement
+$-\psi_{\mathrm{dark}}$ requires an adiabatic theorem (a statement
 that the evolution stays in the instantaneous kernel, with an error
-controlled by the sweep rate and the spectral gap --- and that is not
+controlled by the sweep rate and the spectral gap) and that is not
 formalised here. What we have is the holonomy's would-be value together
 with the vanishing of its competitor, not the holonomy. Closing that gap
 is listed in Sec.~\ref{sec:open}.
@@ -838,7 +838,7 @@ $\sigma_1\sigma_2\sigma_1 = \sigma_2\sigma_1\sigma_2$.
 What is not proved is that they are the $F$- and $R$-symbols of the
 Fibonacci category. No pentagon or hexagon equation is checked for this
 pair. A Fibonacci pentagon equation \emph{is} proved elsewhere in this
-development, exhaustively over the $2^9 = 512$ index assignments --- but
+development, exhaustively over the $2^9 = 512$ index assignments, but
 for a different $F$-matrix, in a different gauge, over a different ring:
 $\left(\begin{smallmatrix} \varphi^{-1} & \varphi^{-1}\\
 1 & -\varphi^{-1}\end{smallmatrix}\right)$ over $\mathbb{Q}(\sqrt5)$,
@@ -861,7 +861,7 @@ first in Sec.~\ref{sec:open}.
 \label{sec:ising}
 
 \emph{Grade: Theorem (evaluated)} for essentially everything in this
-section --- see Sec.~\ref{subsec:nd}, which is placed here because this
+section: see Sec.~\ref{subsec:nd}, which is placed here because this
 is where the issue first arises.
 
 The Ising category has three simple objects $1, \sigma, \psi$ with
@@ -872,7 +872,7 @@ quantum dimensions $d_1 = d_\psi = 1$ and $d_\sigma = \sqrt2$, so that
 \label{eq:isingD}
 \end{equation}
 Equation~\eqref{eq:isingD} is proved, in two independent
-formulations --- over the reals and inside the cyclotomic field below.
+formulations: over the reals and inside the cyclotomic field below.
 We state it prominently because $\sqrt2$ and $2$ are easy to interchange
 here and only one of them is the total quantum dimension: $\sqrt2$ is
 $d_\sigma$, the quantum dimension of the single non-abelian object, while
@@ -898,7 +898,7 @@ We verify:
   $\mathcal{D}^{-1}(1 \pm R^{\sigma\sigma}_\psi)$ to products of
   $R$-symbols, together with the three hexagons involving $\psi$;
 \item the four ribbon equations, expressing each squared $R$-symbol
-  through the twists --- for instance
+  through the twists: for instance
   $(R^{\sigma\psi}_\sigma)^2 = -1$ and $(R^{\psi\psi}_1)^2 = 1$;
 \item the $R$-matrix squares
   $(R^{\sigma\sigma}_1)^2 = -\zeta_{16}^6$ and
@@ -907,7 +907,7 @@ We verify:
   = 2\zeta_{16}$, which fixes the framing anomaly.
 \end{itemize}
 These are the coherence conditions that make the braiding well defined,
-and verifying all of them --- rather than a representative sample --- is
+and verifying all of them (rather than a representative sample) is
 the point: a braided structure that satisfies five of six hexagons is not
 a braided structure.
 
@@ -924,9 +924,9 @@ The trefoil evaluates to
 \end{equation}
 an exact identity in $\mathbb{Q}(\zeta_{16})$. The figure-eight knot
 gives an unnormalised quantum trace of $-1$, and after dividing by
-$\mathcal{D}/2 = \sqrt2$ --- the normalisation appropriate to the
+$\mathcal{D}/2 = \sqrt2$ (the normalisation appropriate to the
 $\sigma$-coloured Reshetikhin--Turaev
-invariant~\cite{ReshetikhinTuraev1991,Witten1989} --- yields
+invariant~\cite{ReshetikhinTuraev1991,Witten1989}) yields
 \begin{equation}
 \mathrm{RT}(4_1, \sigma) \;=\; -\frac{1}{\sqrt2} .
 \label{eq:fig8}
@@ -945,7 +945,7 @@ What we prove is
 that is, the $\sigma\sigma$ quantum trace of the squared braiding
 vanishes. The Ising modular $S$-matrix does have $S_{\sigma\sigma} = 0$,
 so \eqref{eq:hopf} is consistent with the expected identification of the
-Hopf-link invariant with an $S$-matrix entry --- but \eqref{eq:hopf} is a
+Hopf-link invariant with an $S$-matrix entry, but \eqref{eq:hopf} is a
 single-entry computation, and it is not a proof that the diagrammatic
 invariant reproduces the $S$-matrix in general. No $S$-matrix appears in
 the formalised statement. We say this because the natural way to report
@@ -989,13 +989,13 @@ assurance.
 The development records two WRT identities: the partition function on
 $S^2 \times S^1$ equals the rank of the category, and the partition
 function on $S^3$ equals $p_+/\mathcal{D}^2$. Both are true by unfolding
-the definitions that name them --- the first because the $S^2 \times S^1$
+the definitions that name them: the first because the $S^2 \times S^1$
 partition function is \emph{defined} as the rank, the second because the
 $S^3$ partition function is \emph{defined} as that quotient. They fix the
 Kirby-colour normalisation convention and establish nothing about it.
 
 What a WRT section would need, and what is absent, is invariance under
-the Kirby moves --- the statement that the assigned number depends only
+the Kirby moves: the statement that the assigned number depends only
 on the three-manifold and not on the surgery presentation used to
 describe it. The development does contain genuine surrounding material:
 Kirby-move equivalence on surgery presentations as a relation, with
@@ -1232,9 +1232,9 @@ The development also contains a layer relating horizon data to quantum
 error correction, and we state its standing plainly rather than leaving
 a reader to infer it.
 
-That layer defines two real quantities on a horizon record --- a
+That layer defines two real quantities on a horizon record (a
 \emph{code distance}, defined as $\log d_{\max}$, and a \emph{scrambling
-time bound}, defined as $\log \mathcal{D}^2$ --- and proves statements
+time bound}, defined as $\log \mathcal{D}^2$) and proves statements
 about them. The statements are correct. But they are, without exception,
 the elementary theory of the logarithm on $[1,\infty)$: the principal
 one asserts that $\log d_{\max} > 0$ if and only if $d_{\max} > 1$,
@@ -1246,8 +1246,8 @@ placed on two logarithms, and the theorems are about the logarithms.
 
 Two results in that layer do carry information and we keep them on that
 basis. The horizon boundary condition is a five-field predicate
---- positivity of the entropy functional, a positive area-law
-coefficient, monotonicity, modular invariance, and anomaly matching ---
+ (positivity of the entropy functional, a positive area-law
+coefficient, monotonicity, modular invariance, and anomaly matching)
 and a five-field predicate is worth nothing if nothing satisfies it. We
 exhibit a witness: the Fibonacci horizon satisfies all five fields.
 Symmetrically, the trivially abelian horizon has $d_{\max} = 1$ and hence
@@ -1259,8 +1259,41 @@ this layer establishes.
 %% =====================================================================
 %% §10 — Open problems  [TO DRAFT]
 %% =====================================================================
-\section{Open problems}
+\section{Conclusion and outlook}
 \label{sec:open}
+
+The result this paper is for is the one in Sec.~\ref{sec:density}: the
+three-strand Fibonacci braid representation has dense image in
+$\mathrm{SU}(2)$, and a machine has checked it. Section~\ref{sec:sk}
+turns that existence statement into a computational one by bounding the
+length of the approximating braid, with the error bound and the length
+bound established of the same compiled word rather than separately. To
+our knowledge no comparable universality-with-compilation statement has
+previously been checked by a proof assistant in any language.
+
+The rest of the paper is the apparatus that topological quantum
+computation is usually presented through, formalised to standards that
+vary, and reported at the standard each layer actually reaches. That
+variation is the paper's second contribution and we would rather it be
+read as one than discovered. Two of the strongest results in the
+development are the ones we found by looking past names: the Verlinde
+formula holds entry-by-entry at three levels
+(Sec.~\ref{sec:modular}), and Casini--Huerta saturation is
+biconditional with triviality of the category
+(Sec.~\ref{sec:entropy}). Two of the weakest are also the ones with the
+most confident names: the Witten--Reshetikhin--Turaev identities are
+definitional, and the error-correction layer is the theory of the
+logarithm on $[1,\infty)$ under coding vocabulary.
+
+The single most consequential gap is not any of those. It is that the
+matrix pair from which Sec.~\ref{sec:density}'s representation is built
+is identified with the Fibonacci $F$- and $R$-symbols on the
+literature's authority rather than by a checked pentagon or hexagon
+equation, so the headline theorem is formally a statement about two
+explicit unitaries. Closing that gap would make it a statement about
+anyons.
+
+\subsection{Open problems}
 
 We list these in the order in which closing them would most improve the
 development, which is not the order of the sections.
@@ -1279,9 +1312,9 @@ matrix pair into a statement about Fibonacci anyons.
 \paragraph{Kirby-move invariance.}
 The Witten--Reshetikhin--Turaev material of Sec.~\ref{sec:ising} fixes a
 normalisation and proves nothing about it. The surrounding
-apparatus --- Kirby-move equivalence as a relation on surgery
+apparatus (Kirby-move equivalence as a relation on surgery
 presentations, handle slides, stabilisation, and exact lens-space
-evaluations --- exists; what is missing is the theorem that the assigned
+evaluations) exists; what is missing is the theorem that the assigned
 number is an invariant of the three-manifold rather than of the
 presentation.
 
@@ -1299,8 +1332,8 @@ assuming it, would upgrade them from \emph{Conditional} to
 \paragraph{Eliminate the evaluation axioms.}
 The Ising identities of Sec.~\ref{sec:ising} are correct but
 evaluation-checked. Replacing \texttt{native\_decide} with kernel
-reduction --- most plausibly by a better normal form for
-$\mathbb{Q}(\zeta_{16})$ arithmetic --- would put the entire paper on the
+reduction (most plausibly by a better normal form for
+$\mathbb{Q}(\zeta_{16})$ arithmetic) would put the entire paper on the
 same trust base.
 
 \paragraph{Complete the Drinfeld double.}
@@ -1344,7 +1377,7 @@ Of the results this paper puts forward as principal, \textbf{18} carry
 such an axiom. They are the six hexagon equations, the four ribbon
 equations, the two $R$-matrix squares, the $R$-matrix product, the Gauss
 sum, the trefoil invariant, the Hopf-link trace, and the two
-figure-eight identities --- that is, the whole of
+figure-eight identities: that is, the whole of
 Sec.~\ref{sec:ising}'s braiding and knot content. Further results
 elsewhere in the development also use \texttt{native\_decide}, including
 the two algebra equivalences of Sec.~\ref{sec:qgroups}, the
@@ -1353,8 +1386,8 @@ Fibonacci pentagon equation; the count of 18 is over this paper's
 principal results and is not a census of the development.
 
 The principal results of Secs.~\ref{sec:density}, \ref{sec:sk},
-\ref{sec:gate} and \ref{sec:entropy} --- including the density theorem
-and the compilation theorem --- carry no evaluation axiom.
+\ref{sec:gate} and \ref{sec:entropy} (including the density theorem
+and the compilation theorem) carry no evaluation axiom.
 
 \paragraph{Assumed hypotheses.}
 Two hypotheses are assumed rather than proved, and both are stated where
@@ -1373,7 +1406,7 @@ There are no \texttt{sorry} placeholders in the results reported here.
 
 \paragraph{Declarations not used as backing.}
 The development contains declarations whose names describe results
-stronger than their statements --- among them several that reduce to
+stronger than their statements: among them several that reduce to
 \texttt{True}, to $a\cdot a = a^2$, to $6^2 = 36$, or to an implication
 from a reflexivity hypothesis to itself. None is cited as backing
 anywhere in this paper; where a section's argument would naturally have
