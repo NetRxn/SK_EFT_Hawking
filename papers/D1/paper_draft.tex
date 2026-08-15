@@ -342,17 +342,212 @@ that is the correct dependency to advertise.
 \section{The dissipative Bogoliubov connection and the crossover frequency}
 \label{sec:wkb}
 
+Everything so far is perturbative in the gradient expansion. The
+corrections of Secs.~\ref{sec:eft} and~\ref{sec:higher} shift the
+effective temperature, and a shifted temperature is still a temperature:
+the spectrum remains Planckian and the measurement remains a fit for one
+number. This section treats an effect of a different kind. Dissipation
+moves the Wentzel--Kramers--Brillouin turning point off the real axis,
+and the mode matching across a complex turning point does not preserve
+the Bogoliubov normalisation. The consequence is a spectrum that is not
+Planckian at any temperature, with a deviation that survives at every
+order in the gradient expansion because it is controlled by the ratio
+$\Gamma_H/\kappa$ rather than by the gradient ratio.
+
 \subsection{The complex turning point}
 \label{sec:wkb-turning}
-%% TODO(IV.A)
+
+For a non-dissipative horizon the Hawking spectrum arises from the
+branch structure of the mode equation at a turning point on the
+imaginary axis, at $x_H \simeq -\mathrm{i}\,c_s/\kappa$ in the
+eikonal saddle-point treatment~\cite{Berry1989,Heading1962}. Dissipation
+adds an imaginary part to the local dispersion relation and perturbs the
+turning point by
+\begin{equation}
+\delta x_{\rm imag} \;=\; \frac{c_s\, \Gamma_H}{2\,\kappa^2}
+  \;=\; \frac{c_s}{\kappa}\cdot\frac{\delta_{\rm diss}}{2} ,
+\label{eq:turning-point-shift}
+\end{equation}
+so that $x_{\rm tp} = -\mathrm{i}(c_s/\kappa)(1 + \delta_{\rm diss}/2)$.
+The shift is a fraction $\delta_{\rm diss}/2$ of the Wentzel--Kramers--Brillouin
+localisation length $c_s/\kappa$, which is the natural comparison and
+the reason $\delta_{\rm diss}$ rather than $\Gamma_H$ is the controlling
+parameter. Dimensionally, $c_s$ carries $[L/T]$ and $\Gamma_H, \kappa$
+carry $[1/T]$, so Eq.~\eqref{eq:turning-point-shift} has units of
+length.
+
+The library carries Eq.~\eqref{eq:turning-point-shift} as the definition
+\texttt{WKBConnection.turningPointShift} together with its elementary
+properties: the shift is non-negative
+(\texttt{turning\_point\_shift\_nonneg}), it is strictly positive if and
+only if $\Gamma_H > 0$
+(\texttt{turning\_point\_shift\_pos\_iff}), it vanishes if and only if
+$\Gamma_H = 0$ (\texttt{turning\_point\_shift\_zero\_iff}), and it
+equals $c_s \delta_k/(4\kappa)$
+(\texttt{turning\_point\_shift\_eq\_decoherence}), which is the binding
+to the decoherence parameter of the next subsection. These are
+statements about a defined quantity. The physics that places the turning
+point where Eq.~\eqref{eq:turning-point-shift} says it is comes from the
+saddle-point analysis of the dissipative mode
+equation~\cite{RobertsonParentani2015,CoutantParentani2012} and is not
+itself machine-checked.
 
 \subsection{The modified-unitarity ansatz and its one parameter}
 \label{sec:wkb-unitarity}
-%% TODO(IV.B)
+
+Matching across the shifted turning point gives the Bogoliubov ratio in
+the familiar form with a dressed surface gravity,
+\begin{equation}
+\left|\frac{\beta(\omega)}{\alpha(\omega)}\right|^2
+  = \exp\!\left(-\frac{2\pi\omega}{\kappa_{\rm eff}(\omega)}\right),
+\quad
+\kappa_{\rm eff}(\omega)
+  = \frac{\kappa}{1 + \delta_{\rm disp} + \delta_{\rm diss}(\omega)} ,
+\label{eq:bogo-ratio}
+\end{equation}
+but it does not preserve the normalisation. A mode traversing the
+dissipative region can be absorbed by the environment, with probability
+proportional to the damping rate times the horizon-crossing time
+$\tau_{\rm cross} \sim 1/\kappa$. Counting both branches of the
+closed-time-path contour gives an absorption probability
+\begin{equation}
+\delta_k \;=\; \frac{2\,\Gamma_H}{\kappa} \;=\; 2\,\delta_{\rm diss} ,
+\label{eq:decoherence-param}
+\end{equation}
+and the Bogoliubov relation becomes
+\begin{equation}
+|\alpha(\omega)|^2 - |\beta(\omega)|^2 \;=\; 1 - \delta_k .
+\label{eq:modified-unitarity}
+\end{equation}
+The relation between the two small parameters is worth stating once and
+explicitly, because both appear below: $\delta_{\rm diss} = \Gamma_H/\kappa$
+is the fractional temperature shift of Eq.~\eqref{eq:delta-diss},
+$\delta_k = 2\delta_{\rm diss}$ is the unitarity deficit, and the
+factor of two is the two contour traversals. In the library this
+identification is the definitional lemma
+\texttt{WKBConnection.decoherence\_double\_delta\_diss}.
+
+Equation~\eqref{eq:modified-unitarity} is an ansatz, and the formal
+layer treats it as one. \texttt{WKBConnection.ModifiedBogoliubov} is a
+structure whose fields are $|\alpha|^2 \geq 0$, $|\beta|^2 \geq 0$ and
+Eq.~\eqref{eq:modified-unitarity} itself; the theorems of the module are
+consequences of inhabiting it.
+\texttt{unitarity\_deficit\_eq\_decoherence} rearranges the field to
+$1 - (|\alpha|^2 - |\beta|^2) = \delta_k$;
+\texttt{standard\_unitarity\_recovered} gives
+$|\alpha|^2 - |\beta|^2 = 1$ at $\Gamma_H = 0$;
+\texttt{decoherence\_nonneg} and \texttt{decoherence\_zero\_iff} give
+$\delta_k \geq 0$ with equality exactly at zero damping. What is
+machine-checked is that the ansatz is algebraically consistent, that it
+degenerates correctly in the closed-system limit, and that its one
+parameter is non-negative and vanishes only when dissipation does. That
+the correct open-system generalisation of the Bogoliubov relation is
+Eq.~\eqref{eq:modified-unitarity} with Eq.~\eqref{eq:decoherence-param}
+is physics input, argued from the absorption
+picture~\cite{RobertsonParentani2015} and consistent with the
+dissipative-decoherence literature, not a theorem of this work.
+
+The physical reading of $\delta_k > 0$ is that the outgoing state is not
+pure. In the closed-system treatment the Hawking pair is a two-mode
+squeezed vacuum, and its purity is what makes the entanglement
+measurements of Refs.~\cite{Steinhauer2016,deNova2019} meaningful.
+Coupling to the microscopic environment removes a fraction $\delta_k$ of
+the norm into unobserved degrees of freedom, so the reduced state of the
+outgoing mode carries a mixed-state weight that does not vanish at any
+order in the gradient expansion.
 
 \subsection{The crossover frequency}
 \label{sec:wkb-crossover}
-%% TODO(IV.C)
+
+Absorption alone would be a loss. The fluctuation--dissipation relation
+of Sec.~\ref{sec:higher-fdr} forbids that reading: a channel that
+removes quanta at rate $\Gamma_H$ also injects them, and at zero
+environment temperature the injected occupation is
+\begin{equation}
+n_{\rm noise} \;=\; \frac{\delta_k}{2} \;=\; \frac{\Gamma_H}{\kappa}
+  \;=\; \delta_{\rm diss} .
+\label{eq:noise-floor}
+\end{equation}
+This is \texttt{WKBConnection.noiseFloor} with
+\texttt{noise\_floor\_eq\_delta\_diss}; non-negativity is
+\texttt{noise\_floor\_nonneg} and vanishing exactly at zero damping is
+\texttt{noise\_floor\_zero\_iff}. Both are unfoldings of the definition
+$n_{\rm noise} := \delta_k/2$, so what Eq.~\eqref{eq:noise-floor}
+contributes is not a proof but a bookkeeping identity: the same number
+that measures the unitarity deficit, divided by two, is the floor. Its
+force comes from Eq.~\eqref{eq:cgl-fdr}, and it is exactly as
+conditional as that relation.
+
+The floor is a constant in $\omega$; the Hawking occupation is not.
+Writing $n_{\rm Hawking} = |\beta|^2/(1-\delta_k)$ for the occupation
+corrected for the fraction of modes that survive the crossing, and using
+Eqs.~\eqref{eq:bogo-ratio} and~\eqref{eq:modified-unitarity},
+\begin{equation}
+n_{\rm Hawking}(\omega)
+  \;=\; \frac{1}{\exp(\omega/T_{\rm eff}) - 1} ,
+\label{eq:planck}
+\end{equation}
+the Planck distribution at the dressed temperature, with
+$T_{\rm eff} = \kappa_{\rm eff}/2\pi$. The total occupation is
+\begin{equation}
+n(\omega) \;=\; n_{\rm Hawking}(\omega) \;+\; n_{\rm noise} ,
+\label{eq:total-occupation}
+\end{equation}
+which reduces to $|\beta|^2$ in the zero-dissipation limit
+(\texttt{WKBConnection.occupation\_reduces\_to\_beta\_sq}) and is
+non-negative throughout the perturbative regime $\delta_k < 1$
+(\texttt{total\_occupation\_nonneg}).
+
+Equations~\eqref{eq:noise-floor} and~\eqref{eq:planck} cross. The
+Hawking term falls exponentially and the floor does not, so above some
+frequency the spectrum stops being thermal and flattens. The crossover
+is where the two terms of Eq.~\eqref{eq:total-occupation} are equal,
+$1/(e^{\omega/T_{\rm eff}} - 1) = \delta_{\rm diss}$, that is
+\begin{equation}
+\boxed{\;
+\omega_\times \;=\; T_{\rm eff}\,
+  \ln\!\left(1 + \frac{1}{\delta_{\rm diss}}\right)
+  \;\simeq\; T_{\rm eff}\,\ln\frac{1}{\delta_{\rm diss}} \; }
+\label{eq:crossover}
+\end{equation}
+for $\delta_{\rm diss} \ll 1$. The corresponding inequality is
+\texttt{WKBConnection.noise\_dominates\_when\_beta\_small}, which states
+that $|\beta|^2 < n_{\rm noise}(1-\delta_k)$ implies
+$n_{\rm Hawking} < n_{\rm noise}$; as a formal statement it is the
+rearrangement of a quotient inequality, and the content of
+Eq.~\eqref{eq:crossover} is arithmetic performed here.
+
+Two features of Eq.~\eqref{eq:crossover} make it the most useful
+prediction in this paper. It depends on the dissipative sector only
+through the logarithm, so it is robust: an order-of-magnitude error in
+$\delta_{\rm diss}$ moves $\omega_\times$ by $\ln 10 \simeq 2.3$ in
+units of $T_{\rm eff}$. And it is a shape, not a scale. Measuring
+$\omega_\times$ requires resolving where the spectrum departs from
+exponential decay, which does not require absolute calibration of the
+occupation number and does not require knowing $\kappa$ independently.
+Numerically, at the benchmark condensate parameters tabulated in
+Sec.~\ref{sec:hierarchy}, $\delta_{\rm diss} = 1.59\times10^{-3}$ gives
+$\omega_\times \simeq 6.4\,T_{\rm eff}$, and
+$\delta_{\rm diss} = 2.38\times10^{-5}$ gives
+$\omega_\times \simeq 10.6\,T_{\rm eff}$. Above $\omega_\times$ the
+spectrum is the flat floor $\delta_{\rm diss}$ rather than an
+exponential tail, which for the first of these is an occupation of order
+$10^{-3}$ where the thermal prediction is of the same order and falling.
+
+Two boundaries must be respected for Eq.~\eqref{eq:crossover} to be
+meaningful. The crossover must lie below the ultraviolet cutoff
+$\omega_{\rm max} = \kappa/D^{2/3}$ of Eq.~\eqref{eq:delta-disp}, above
+which the mode is reflected by the dispersive potential rather than
+transmitted, and the frequency must remain inside the regime where the
+gradient expansion controls $\kappa_{\rm eff}$. Section~\ref{sec:hierarchy}
+checks both at each benchmark.
+
+\figuredeferred{fig:d1-spectral-floor}{the total occupation of
+Eq.~\eqref{eq:total-occupation} against $\omega/T_{\rm eff}$ with the
+Planckian term, the constant floor and $\omega_\times$ marked, at the
+three condensate benchmarks; no figure function in
+\texttt{visualizations.py} pairs the Wentzel--Kramers--Brillouin arrays
+with the floor}
 
 \section{The condensate platform and the hierarchy of corrections}
 \label{sec:hierarchy}
