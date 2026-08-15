@@ -29,7 +29,26 @@ DENIED: tuple[tuple[str, str], ...] = (
                             "PhysLib / REPL / toolchain) the orchestrator owns"),
     (r"\blake\s+exe\s+cache\s+get\b", "cache publication is the orchestrator's"),
     (r"\brm\s+-rf?\b[^\n]*\.lake\b", "workers do not repair shared build state"),
-    (r"\bcp\s+-[a-zA-Z]*R[a-zA-Z]*\b[^\n]*\.lake\b", "cache seeding is the orchestrator's"),
+    # ⚠️ ASSERT THE DECIDER (does this touch `.lake`?), NOT A FLAG SPELLING.
+    # The predecessor was `\bcp\s+-[a-zA-Z]*R[a-zA-Z]*\b[^\n]*\.lake\b`, which assumed the
+    # recursion flag is COALESCED into one token: it caught `cp -aR` and `cp -Rp` and missed
+    # `cp -c -R`, where the R sits in a separate token. A worker seeded a worktree's `.lake`
+    # with exactly that on 2026-08-15 and self-disclosed it. Enumerating flag spellings is a
+    # losing game — `-r`, `-R`, `-a`, `--recursive`, `--archive`, split or joined, in any
+    # order — so this now denies ANY `cp` naming `.lake` in either operand. A worker has no
+    # legitimate reason to copy a build cache in or out; that is the orchestrator's job, and
+    # the flags were never what made it unsafe.
+    (r"\bcp\b[^\n|;&]*\.lake\b", "cache seeding is the orchestrator's"),
+    # Same shape for the other bulk copiers a worker might reach for instead.
+    (r"\b(rsync|ditto|install)\b[^\n|;&]*\.lake\b", "cache seeding is the orchestrator's"),
+    # Broad process killing: a worker stopping "its own" contending processes by pattern has
+    # no way to tell its runs from a sibling agent's in a shared repo. One did exactly that on
+    # 2026-08-15 and may have killed another agent's suite. Workers stop their own work by
+    # returning, not by signalling.
+    (r"\b(pkill|killall)\b", "workers do not signal processes; a name pattern cannot "
+                             "distinguish your run from a concurrent agent's"),
+    (r"\bkill\s+(-\w+\s+)?\$?\(", "workers do not signal process groups discovered by "
+                                  "substitution; that reaches other agents' runs"),
     (r"\bgit\s+merge\b", "integration is the orchestrator's"),
     (r"\bgit\s+rebase\b", "integration is the orchestrator's"),
     (r"\bgit\s+cherry-pick\b", "breaks ancestry; the reset guard then reads absorbed work "
