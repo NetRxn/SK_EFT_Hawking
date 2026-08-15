@@ -21,7 +21,8 @@ ordering occurs before tetrad condensation in the ADW model.
 
 - Fernandes/Chubukov/Schmalian, Ann. Rev. CMP 10, 133 (2019)
 - Nie/Tarjus/Kivelson, PNAS 111, 7980 (2014)
-- Volovik, JETP Letters 119, 564 (2024)
+- Volovik, "Fermionic quartet and vestigial gravity", JETP Letters 119,
+  330 (2024); DOI 10.1134/S002136402460006X
 -/
 
 noncomputable section

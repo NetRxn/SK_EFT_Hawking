@@ -7493,6 +7493,32 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:1.2",
+      "status": "fixed",
+      "evidence": "Both Lean reference blocks now carry the registry-verified metadata, re-measured against CITATION_REGISTRY[\"Volovik2024Vestigial\"] rather than taken from the finding: JETP Letters 119, 330--334 (2024), title \"Fermionic quartet and vestigial gravity\", DOI 10.1134/S002136402460006X. GravitationalWaves.lean also gains a note that this paper does NOT contain the second-sound-graviton identification, which is advanced in arXiv:2601.00639 and arXiv:2410.04392 -- the substance of blocker 1.1, propagated to the Lean so a reader following the reproducibility pointer is not misled. Both modules elaborate with zero errors via lean-lsp after the edit.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -qE \"119, ?564\" lean/SKEFTHawking/GravitationalWaves.lean lean/SKEFTHawking/VestigialSusceptibility.lean",
+        "declared": "cd \"$REPO\" && ! grep -qE \"119, ?564\" lean/SKEFTHawking/GravitationalWaves.lean lean/SKEFTHawking/VestigialSusceptibility.lean",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:1.3",
+      "status": "fixed",
+      "evidence": "Closed as already-satisfied for L1: the review that filed this finding appended the three missing records itself, and the declared verify (latest L1-scoped record per bibkey carries match) passes at HEAD. The systemic half -- that a review which fetches must append to the cache rather than only to its own document -- remains a QI candidate and is not claimed closed here.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; r=[json.loads(l) for l in open('docs/citation_verifications.jsonl')]; latest={}; [latest.__setitem__(x['bibkey'],x) for x in r if x.get('paper')=='papers/L1/paper_draft.tex']; bad=[k for k,v in latest.items() if v.get('verdict')!='match']; assert not bad, bad\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; r=[json.loads(l) for l in open('docs/citation_verifications.jsonl')]; latest={}; [latest.__setitem__(x['bibkey'],x) for x in r if x.get('paper')=='papers/L1/paper_draft.tex']; bad=[k for k,v in latest.items() if v.get('verdict')!='match']; assert not bad, bad\"",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }

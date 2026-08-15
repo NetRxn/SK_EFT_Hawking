@@ -79,7 +79,11 @@ those two endpoints, not over the range.
 - Abbott et al. (LIGO+Virgo+EM partners), "Gravitational Waves and
   Gamma-Rays from a Binary Neutron Star Merger: GW170817 and
   GRB 170817A", ApJL 848, L13 (2017).
-- Volovik, "Vestigial gravity", JETP Lett. 119, 564 (2024).
+- Volovik, "Fermionic quartet and vestigial gravity", JETP Lett. 119,
+  330 (2024); DOI 10.1134/S002136402460006X. NOTE: this paper does NOT
+  contain the second-sound--graviton identification; that is advanced in
+  arXiv:2601.00639 and arXiv:2410.04392, where Volovik derives `s₂ = c`
+  exactly and notes it is GW170817-compatible.
 - Phase 5y H1 deep research,
   `Lit-Search/Phase-5y/Phase 5y Hypothesis 1 — Kronecker-Anomaly Second-Sound Graviton as Dark Energy Candidate.md`.
 - Crossley-Glorioso-Liu, "Effective field theory of dissipative
