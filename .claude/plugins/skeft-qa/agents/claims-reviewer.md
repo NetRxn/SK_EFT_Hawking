@@ -366,6 +366,80 @@ Maps to **Gate 5 LeanProofSubstance** (Invariant #9 — placeholders MUST NOT be
 
 ---
 
+## C.7 Class SB — Superseded backing (the substrate moved on and the sentence did not)
+
+**Detect.** The sentence's backing declaration is *correct but weaker than what the repository
+now proves*. A genuinely stronger theorem for the same claim exists and is not cited. Unlike
+every other class here, **nothing is false** — which is why nothing downstream catches it.
+
+**Why this class exists.** Every bundle draft predates substrate work that has since landed;
+the drafts, the `bundle_metadata.json` apex lists and the review corpus were all written at
+some earlier moment. Classes TN/HD/PC ask *"is the cited thing real, disclosed, non-empty?"*
+None of them asks *"is it the best we have?"* So a paper can be fully backed, fully disclosed
+and fully green while understating its own result — and the understatement is invisible
+precisely because every check passes.
+
+**Measured instance, 2026-08-15.** `wang_sixteen_convergence`, a *declared apex* whose
+docstring says it records the convergence of four independent sixteens, is
+`(∑_f components f = 16) ∧ ((16 : ZMod 16) = 0)`.
+
+⚠️ **And the obvious replacement is a trap — this is the half of the lesson that costs money.**
+The lead went looking for a stronger form and found
+`sixteen_convergence_common_origin_substrate`: the Kitaev class maps to the Pin⁺ bordism
+generator, signature mod 16 equal to 1, exact order 16, `Nonempty (Ω₄^{Pin⁺} ≃+ ZMod 16)`,
+kernel-pure, unconditional, uncited portfolio-wide. **Its carrier is a posit.**
+`Omega4PinPlusBordism` is a `Quotient` of a one-field structure `⟨signature : ℤ⟩` by
+`16 ∣ (difference)`, `PinPlusStructure` is a field-less `Prop`, and `pinPlusRP4 := ⟨1⟩`. The
+theorem is `ZMod 16 ≃+ ZMod 16` in costume, and citing it would be **worse** than citing the
+enumeration, which is at least transparent about being one.
+
+`docs/SIXTEEN_CONVERGENCE_STATUS.md` says so explicitly, and the defining module's own later
+section retires those forms as "posit-based". **Both documents existed before the mistake.**
+
+**Procedure.**
+1. For each sentence whose chain-of-backing resolves to a Lean declaration, look for stronger
+   near neighbours in `lean/lean_deps.json`: the same stem with a `_substrate`, `_derived`,
+   `_unconditional`, `_faithful`, `_full`, or `_via_<route>` suffix, and other declarations in
+   the same module or namespace.
+   ⚠️ **`lean_local_search` returns EMPTY for declarations that exist and are built**, silently
+   — a miss from it is not evidence of absence. `lean_deps.json` is the authority.
+2. Read the phase roadmap that owns the claim (`docs/roadmaps/Phase*_Roadmap.md`). A roadmap
+   recording that a later wave "assembled the capstone" or "discharged the hypothesis" means a
+   stronger declaration should exist; go find it.
+3. Compare **statements**, never names or docstrings. A candidate is stronger only if it
+   implies the cited one on the claim's own terms.
+4. Check the candidate's axioms before recommending it. A stronger statement resting on a
+   project-local axiom, a `sorry`, or `native_decide` is **not** an upgrade, and recommending
+   it would trade a true weak claim for an untrustworthy strong one.
+5. ⚠️ **Unfold the candidate's CARRIER TYPES.** Existence, statement and axioms can all pass
+   while the types the statement quantifies over are project posits — a one-field wrapper, a
+   field-less `Prop` class, a `Quotient` by a hand-written relation. Follow every structure,
+   quotient and class down to Mathlib or a genuine construction. A kernel-pure theorem about a
+   posited type proves something about the posit, and its NAME will not say so.
+6. **Read the defining module's later sections and any status document for the claim.** Modules
+   routinely retire their own early forms further down the file, and a `docs/*_STATUS.md` often
+   states the limitation in plain words. Recommending a form the project has already retired is
+   the failure this step exists to prevent.
+
+**A candidate that is strong in appearance only is itself a finding**, and a more urgent one
+than the understatement you were looking for — because every reader downstream will take its
+name at face value.
+
+**Verdict.** `INFO`, never `FAIL` — the sentence as written is true. This class *strengthens*
+a paper; it never blocks one. Emit it so the lead can route a cheap upgrade.
+
+**Output.**
+```json
+"finding_classes": ["SB"],
+"agent_notes": "SB: §4.2 cites wang_sixteen_convergence ((Σ components = 16) ∧ (16 : ZMod 16) = 0) for the common-origin claim. CommonOrigin.sixteen_convergence_common_origin_substrate proves the Kitaev-class → Pin⁺-generator map, signatureMod16 = 1, and exact order 16; kernel-pure, unconditional, uncited portfolio-wide. INFO — upgrade available, sentence not false."
+```
+
+Maps to no gate. It is advisory by construction: a bundle is never held back for being
+*modest*. But an SB finding is often the highest-value line in a review, because the
+strengthening is already paid for.
+
+---
+
 # Part D — Reconciliation protocol (replaces silent supersession)
 
 Before emitting your output, load `papers/<paper>/claims_review.json` (if present). Extract every prior finding from `blocking_issues`, `non_blocking_followups`, and (legacy v1) typed sections.

@@ -69,6 +69,25 @@ The paths below are written relative to those two roots; prepend the absolute pr
    verdict on a draft you only partly read is worse than no verdict, because it looks like
    one.
 
+4. **The phase roadmap(s) that own the bundle's claims** — `docs/roadmaps/Phase*_Roadmap.md`.
+   Skim, do not study: you are looking for one thing only, described next.
+
+   ⚠️ **These drafts predate substrate work that has since landed.** A manuscript can be
+   structured around what the project could prove *when it was written*, and a later wave may
+   have closed the very gap the spine is built to apologise for. That is a structural finding,
+   not a citation detail — if the strongest result is now provable and the paper still leads
+   with the weaker one, **the argument is in the wrong order**, and reordering it is exactly
+   the kind of instruction this review exists to give.
+
+   ⚠️ **The converse costs more, so hold the bar in both directions.** On 2026-08-15 the lead
+   found what looked like a large free upgrade — a kernel-pure, unconditional, uncited theorem
+   about the Pin⁺ bordism group — and it turned out to be `ZMod 16 ≃+ ZMod 16` wearing a
+   physics name, because its carrier is a one-field `⟨signature : ℤ⟩` structure quotiented by
+   `16 ∣ difference`. A paper respined onto it would have looked *stronger* and been *less
+   honest*. If a draft's caution matches a `docs/*_STATUS.md` or a module's own later
+   retirement note, **that caution is the finding's absence, not its presence** — say so
+   rather than instructing a restructure toward a result the project has already disowned.
+
 ## The five questions
 
 Answer each with a verdict and evidence. **Block on any `no`.**

@@ -66,8 +66,66 @@ Credibility is the project's primary asset. A paper that cites the wrong arXiv I
 2. `docs/READINESS_GATES.md` — **the canonical 11-gate taxonomy you are backstopping.** Every finding you emit maps to exactly one gate; the gate's pass/fail criteria define what "correct" means.
 3. `docs/WAVE_EXECUTION_PIPELINE.md` Stage 13 — your role in the pipeline and the loopback rules
 4. The target paper's `paper_draft.tex`
+5. **The phase roadmaps that own the bundle's claims** — `docs/roadmaps/Phase*_Roadmap.md`, and
+   `git log --oneline` on the Lean modules the draft leans on. See the box below for why these
+   are mandatory rather than optional colour.
 
 Announce these reads before you begin any grep / fetch work.
+
+### ⚠️ The manuscript is older than the substrate, and both can be wrong in OPPOSITE directions
+
+You are used to hunting overclaims. In this portfolio the drafts were written *before* large
+amounts of substrate work landed, so a bundle can be wrong in either direction — and the
+second is invisible to every instrument here:
+
+- **Overclaim** (your usual quarry): prose asserts more than the cited theorem carries.
+- **UNDERclaim / superseded backing**: the cited theorem is correct, but a genuinely stronger
+  one now exists and is uncited. Nothing is false, so nothing fails, and the paper quietly
+  understates its own result.
+
+Roadmaps and git history are how you see this. A roadmap recording that a later wave
+"assembled the capstone" or "discharged the hypothesis" means a stronger declaration may
+exist; the commit that renamed or superseded a theorem usually says why in its message.
+
+### ⚠️ The third direction, and the one that will fool you: STRONG IN APPEARANCE ONLY
+
+Measured 2026-08-15, and it caught the lead. `sixteen_convergence_common_origin_substrate`
+states that the Kitaev class maps to the Pin⁺ bordism generator, that its signature mod 16 is
+1, that it has exact order 16, and — in a sibling — `Nonempty (Ω₄^{Pin⁺} ≃+ ZMod 16)`. It is
+kernel-pure (`{propext, Classical.choice, Quot.sound}`), unconditional, and cited by no paper.
+Every check you would normally run says "genuine, uncited, upgrade available."
+
+**Its carrier is a posit.** `Omega4PinPlusBordism` is a `Quotient` of a one-field structure
+`⟨signature : ℤ⟩` by `16 ∣ (difference)`; `PinPlusStructure` is a field-less `Prop` class;
+`pinPlusRP4 := ⟨1⟩` is a chosen integer. The theorem is `ZMod 16 ≃+ ZMod 16` in costume, and
+citing it would have been **worse** than the enumeration it was meant to replace — an
+enumeration is transparently an enumeration; this reads like Kirby–Taylor 1990.
+
+**So your check has four levels, and three of them passing means nothing:** the declaration
+exists; its *statement* carries content; its *axioms* are the standard three; and — the one
+that fails silently — **its carrier types are what they appear to be.** Unfold every
+structure, quotient and class a statement mentions until you reach Mathlib or a real
+construction.
+
+Then read the defining module's **later sections** and any `docs/*_STATUS.md` for the claim.
+Here both already said so: the status document records the carrier as "a posited `ℤ/16ℤ` …
+**not** the smooth bordism group", and the module retires those forms as "posit-based" in its
+own §6. The information was on disk the whole time.
+
+**A theorem that is strong in appearance only is a BLOCKER-class finding when a paper cites
+it** — it manufactures unearned confidence in every reader who takes the name at face value.
+That is the opposite disposition from superseded backing, which is advisory. Distinguish them
+by unfolding the carrier, and by nothing else.
+
+⚠️ The derived proof atlas (`lean/atlas_view.json`, via `/skeft-qa:frontier`) ranks declared
+OPEN hypotheses. **It does not see a theorem that is proved but content-free**, so a claim's
+absence from the frontier says nothing about whether its backing is substantive.
+
+⚠️ **`lean_local_search` returns EMPTY for declarations that exist and are built**, silently.
+Never report a declaration as absent on that basis; `lean/lean_deps.json` is the authority.
+
+Emit superseded backing as an **advisory** finding, never a blocker — the prose is not false,
+and a bundle is never held back for modesty. But say it, because the strengthening is free.
 
 ## Process
 

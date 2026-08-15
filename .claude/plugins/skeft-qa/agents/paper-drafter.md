@@ -114,6 +114,77 @@ Consequences you must honour:
 - If the source contradicts the claim your brief asked you to make, **report the
   contradiction**. Do not soften it into agreement.
 
+## The substrate is usually AHEAD of the manuscript — check before you cite
+
+⚠️ **Every bundle draft predates substrate work that has since landed.** The manuscript, its
+`bundle_metadata.json` apex list, and your brief were all written at some earlier moment in the
+project's history. A theorem that was the best available backing then may since have been
+superseded by a genuinely stronger one, sitting unused in the same repository.
+
+**So "is this claim backed?" is the wrong question. Ask "is this the STRONGEST available
+backing, as of today?"**
+
+Before you cite any declaration as support:
+
+1. **Find the phase roadmap that owns the claim** — `docs/roadmaps/Phase*_Roadmap.md`. These
+   record what was built, what was deferred, and what a later wave closed. A roadmap saying
+   "W5 assembled the capstone" means a capstone exists; go find it.
+2. **Consult the derived proof atlas** — `lean/atlas_view.json`, surfaced by
+   `/skeft-qa:frontier`. It is derived from `lean_deps.json` and cannot drift. ⚠️ Its
+   *positive frontier* ranks declared OPEN hypotheses; it does **not** see a theorem that is
+   proved but content-free, so a claim's absence from the frontier is not evidence the claim
+   is well-backed.
+3. **Read the git history of the module** — `git log --oneline -- lean/SKEFTHawking/<Module>.lean`
+   — when a docstring and a statement disagree, or a name promises more than the type delivers.
+   The commit that renamed a theorem usually says why.
+4. **Search the declaration space for near neighbours.** A weak `foo` very often has a strong
+   `foo_substrate`, `foo_derived`, `foo_unconditional` or `foo_via_<route>` beside it. Use
+   `lean/lean_deps.json` for this — ⚠️ `lean_local_search` returns EMPTY for declarations that
+   exist and are built, silently, so a miss from it proves nothing.
+
+## ⚠️ …but a "stronger" theorem can be weaker. UNFOLD THE CARRIER TYPES.
+
+**This is the trap that caught the lead on 2026-08-15, and it is worth more to you than the
+rule above.**
+
+Hunting for stronger backing, the lead found `sixteen_convergence_common_origin_substrate` and
+`sixteen_convergence_finite_discharge_substrate`. Their statements read as serious topology —
+the Kitaev class maps to the Pin⁺ bordism generator, its signature mod 16 is 1, it has exact
+order 16, `Nonempty (Ω₄^{Pin⁺} ≃+ ZMod 16)`. `lean_verify` returned `{propext,
+Classical.choice, Quot.sound}`: kernel-pure. Unconditional, instantiated at concrete terms.
+Cited by no paper. It looked like a large free upgrade.
+
+**It was not.** `Omega4PinPlusBordism` is `Quotient PinPlusBordism4Setoid`, where
+`PinPlusManifold4` is a **one-field structure `⟨signature : ℤ⟩`**, the setoid relation is
+`16 ∣ (M.signature − N.signature)`, `PinPlusStructure` is a **field-less `Prop` class**, and
+`pinPlusRP4 := ⟨1⟩` is a hand-chosen integer. So `Nonempty (Ω₄^{Pin⁺} ≃+ ZMod 16)` is
+`ZMod 16 ≃+ ZMod 16` wearing a physics name, and `addOrderOf [pinPlusRP4] = 16` is
+`addOrderOf (1 : ZMod 16) = 16`.
+
+It would have been **worse to cite than the enumeration it was meant to replace** — an
+enumeration is transparently an enumeration, while this reads like Kirby–Taylor 1990. The
+project already knew: `docs/SIXTEEN_CONVERGENCE_STATUS.md` records that the carrier is "a
+posited `ℤ/16ℤ` … **not** the smooth bordism group", and the defining module's own later
+section retires those forms as "posit-based".
+
+**So the check has four levels, and passing three of them means nothing:**
+
+1. the declaration exists ✗ insufficient
+2. its **statement** carries the content, not its name or docstring ✗ insufficient
+3. its **axioms** are `{propext, Classical.choice, Quot.sound}` ✗ insufficient
+4. **its carrier types are what they appear to be** — unfold every structure, quotient and
+   class the statement mentions, down to the point where you meet Mathlib or a genuine
+   construction. A kernel-pure theorem about a posited type proves something about the posit.
+
+Then: **read the module's own later sections and its status document before citing it.** A
+module often retires its own early forms further down, and the retirement is the honest part.
+
+**Report both directions.** If you find a genuinely stronger theorem — carrier included —
+cite it and say so. If the backing is as weak as it looks and no stronger form exists, say
+*that*: it routes the gap to a substantiation wave instead of another drafting pass. And if
+you find a theorem that is strong *in appearance only*, that is the most important thing you
+can report, because everyone downstream will read its name and believe it.
+
 ## Drafting
 
 - Every numerical value traces to `formulas.py` or `constants.py`. Never invent one, never
