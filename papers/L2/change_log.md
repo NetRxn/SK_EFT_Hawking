@@ -71,3 +71,62 @@ Phase 7b sub-wave 7b.3 ledger entry: <0.5 person-day effort for fresh first-pass
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-06-10 freshness reconciliation. L2's only flagged source is paper10_modular_generation (RESTRICTED — owned by active Phase 5q.B session with 6 open adversarial findings; its 16|sigma/Rokhlin deltas are NOT reconciled by this event). Verification-only on source side: paper10's post-2026-05-12 commits (f6048c48 + 6ac6ef89, 2026-06-08) edited L2 in tandem, and 1bb62842 (2026-06-10) applied the L2-Y2 epistemic-label fix — L2 prose already matches paper10's current committed framing (TPFConjecture tracked-Prop note, counts.tex macros, v4.29.1/5e932f97 pins; CHECKs 24/25/26 PASS). No non-paper10 divergence found. ONE bundle edit this event per docs/DISCLOSURE_TEXT.md: standard Variant-B 'Methods and tools disclosure' block installed before bibliography (was clearly absent; register verdict L2=Variant B), and the stale acknowledgments blurb 'Automated proofs by the Aristotle theorem prover (Harmonic).' removed per DISCLOSURE_TEXT.md §2 advisory (L2 uses no Aristotle-proved theorems; lake-build sentence kept). Boilerplate only — no scientific claims added/removed; stage13 redo NOT required. pdflatex x2 clean (4 pp, 0 errors, 0 undefined refs). freshness_stale deliberately RE-SET to true after this event: paper10 substantive reconciliation remains pending Phase 5q.B.
+
+## 2026-08-15 — Deregister-lean-modules
+
+- Modules deregistered: `Schellekens.Chain`, `Schellekens.HolomorphicVOAc24`, `Schellekens.NiemeierLattice`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: The redraft hands the holomorphic-VOA reading of 24 | c_- to the companion paper on anomaly constraints on Standard-Model particle content, which owns that derivation. The Letter now states the reading in one Discussion sentence citing Schellekens and Moller-Scheithauer as published work, and rests no claim on the Schellekens.* Lean modules: it does not name them and cites none of their theorems. They were registered when this Letter was expected to carry the Niemeier-lattice chain itself. Keeping the citations alive purely to hold the coverage ratchet green is the failure mode ADR-015 D1 was written for, so the registration is withdrawn instead and LEAN_MODULE_ABSENT_CEILING is lowered by three in the same commit.
+
+## 2026-08-15 — Stage-10 full redraft
+
+- Source: (none — full re-authoring from the Lean substrate and the primary sources)
+- Lift action: Redraft
+- Insertion point: whole manuscript
+- Stage-13 redo required: yes
+- Findings filed: `papers/AutomatedReviews/2026-08-15-l2-stage10-redraft/L2.md`
+  (2 BLOCKER, 8 REQUIRED, 6 RECOMMENDED)
+- Notes: Manuscript re-authored end to end against a `prose-reviewer` pre-drafting
+  instruction and a second pass on the finished text. Six sections became five;
+  the standalone Ext section was folded into the right-handed-neutrino section,
+  where the number 16 first does work. Abstract 2454 -> 588 characters against
+  the declared 600 ceiling. Both hand-written tabulars and the second figure cut
+  (fig73 duplicated fig75's divisibility in a second visual grammar); the
+  four-occurrence "16-convergence" enumeration cut to one Discussion sentence;
+  the project-wide library census cut from abstract and conclusion.
+  TWO BLOCKER-class corrections, both found by re-reading the primary sources
+  and the Lean statements rather than the prior manuscript.
+  (1) The right-handed-neutrino conclusion. The prior draft concluded that
+  modular invariance is a formal argument for nu_R. Wang Sec. IV.2 supplies a
+  Pfaffian-like non-Abelian quantum Hall sector carrying the missing c_- = 3/2,
+  and Garcia-Etxebarria and Montero Sec. 4.6 state that Dai-Freed constraints
+  are altered by coupling to a suitable topological field theory without
+  changing the local degrees of freedom. The Letter now states the disjunction.
+  (2) The lcm(16,3) = 48 "combined without-nu_R constraint" is wrong: 3 | N_f
+  follows from c_- = 8 N_f, which is the 16-component spectrum. At 15 components
+  c_- = 15 N_f / 2 and modular invariance gives 16 | N_f, the same condition as
+  the Z_16 anomaly. The minimum is 16, not 48, and each condition excludes
+  N_f = 3 on its own.
+  Ext material CUT from the manuscript. It was grounded first on
+  `A1ExtSubstantive.lean` rather than `A1Ext.lean`'s arithmetic proxies, and
+  the priority claim was then dropped because no categorical Ext appears in any
+  Lean statement and exactness of the free complex is not proved in tree. With
+  the priority claim withdrawn the paragraph had no argumentative job: the Ext
+  computation is the Adams route to Rokhlin, which this paper obtains from the
+  lattice interface instead. Rokhlin survives as a compressed scope paragraph
+  justifying why the divisor is 16 and not 8, with an explicit statement that
+  the headline 3 | N_f rests on Secs. II and III alone and carries no such
+  assumption. `native_decide` remains disclosed in the artifact-availability
+  section. The two A1.* apex entries and the charter lede still declare the
+  cut contribution; filed as REQUIRED, not fixed here, because
+  `bundle_counts.tex` derives from the apex closure and ExtractDeps does not
+  run in this worktree.
+  Citations: AlvarezGaumeWitten1984, Rademacher1973 and diFrancesco1997 dropped
+  (no primary source held; the c = 1/2 coefficient and the zeta(-1) origin of
+  the 24 are now grounded on Wang Eqs. (6)-(11), (15), (16) and n. 9, read at
+  page level). Kitaev2009 and FidkowskiKitaev2010 dropped (the prior draft's
+  Z -> Z_16 class-D attribution is wrong on dimension, symmetry class and
+  group). Niemeier1973 dropped with the enumeration. The companion-paper
+  bibitem no longer exposes internal bundle codes.
+  Compile clean: 4 pp, 0 tex errors, 0 unresolved refs, 0 overfull.
