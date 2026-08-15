@@ -654,6 +654,7 @@ import SKEFTHawking.KacWaltonFusion
 import SKEFTHawking.FPDimension
 import SKEFTHawking.MugerCenter
 import SKEFTHawking.A1Ring
+import SKEFTHawking.A1Algebra
 import SKEFTHawking.A1Resolution
 import SKEFTHawking.A1Ext
 import SKEFTHawking.A1ExtSubstantive
