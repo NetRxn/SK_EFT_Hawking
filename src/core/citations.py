@@ -3454,10 +3454,67 @@ CITATION_REGISTRY = {
         'notes': 'Vestigial gravity: composite ⟨ē e⟩ condenses before tetrad ⟨e⟩. '
                  'Phase 6a Wave 1 derivation is in the fully-condensed phase '
                  'where this distinction is irrelevant. Wave 2 cites for the '
-                 'second-sound graviton identification. NOTE: same paper as '
+                 'second-sound graviton identification. ⚠️ CORRECTED 2026-08-14 '
+                 '(review:2026-08-14-l1-stage13:L1:1.1): this paper does NOT '
+                 'contain that identification — its subject is the two-step '
+                 'transition and metric-before-tetrad condensation. The '
+                 'identification is advanced in `Volovik2026SecondSound` '
+                 '(arXiv:2601.00639) and `Volovik2024VacuumDecay` '
+                 '(arXiv:2410.04392). NOTE: same paper as '
                  '`Volovik2024` (arXiv:2312.09435); the two keys exist for '
                  'historical reasons in different paper drafts. Consolidate in '
                  'a future pass.',
+    },
+    'Volovik2026SecondSound': {
+        'authors': 'Volovik, G. E.',
+        'title': 'Massless graviton in de Sitter as second sound in two-fluid hydrodynamics',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': '2601.00639',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path':
+            'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2026SecondSound.abstract.txt',
+        'used_in': ['papers/L1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'THE actual source of the second-sound--graviton identification, '
+                 'registered 2026-08-14 to close review:2026-08-14-l1-stage13:L1:1.1, '
+                 'which found the identification misattributed to Volovik2024Vestigial. '
+                 'Derives s₂ = c EXACTLY on the de Sitter two-fluid background, '
+                 'independent of H — structural from the stiff-matter equation of '
+                 'state w_n = 1, not tunable — and records GW170817 as SATISFIED. '
+                 'Also leaves the graviton type open, describing a scalar mode, '
+                 'against L1 spin-2 assignment (which comes from the ADW Goldstone '
+                 'counting and is ours). ⚠️ TITLE PROVENANCE: taken from the project '
+                 'corpus (Lit-Search/Phase-5y, two independent files quote it), NOT '
+                 'from a fresh Crossref/arXiv fetch. Needs fresh-fetch confirmation '
+                 'and a primary_source_path before any Stage-13 green that depends '
+                 'on this bibitem metadata.',
+    },
+    'Volovik2024VacuumDecay': {
+        'authors': 'Volovik, G. E.',
+        'title': 'From Landau two-fluid model to de Sitter Universe',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2024,
+        'doi': None,
+        'arxiv': '2410.04392',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path':
+            'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2024VacuumDecay.abstract.txt',
+        'used_in': ['papers/L1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Companion source for the second-sound--graviton identification; '
+                 'registered 2026-08-14 alongside `Volovik2026SecondSound` to close '
+                 'review:2026-08-14-l1-stage13:L1:1.1. Two-fluid de Sitter '
+                 'thermodynamics with a Zel\'dovich stiff-matter component. '
+                 '⚠️ TITLE PROVENANCE: same caveat as `Volovik2026SecondSound` — '
+                 'corpus-sourced, not fresh-fetched.',
     },
     # ── The 2017 GW170817-constraint sweep ────────────────────────────────
     # Four back-to-back PRLs (251301-251304, 18 Dec 2017) that turned the c_GW
