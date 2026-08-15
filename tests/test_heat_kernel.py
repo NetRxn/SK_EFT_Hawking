@@ -79,8 +79,11 @@ class TestA2:
     def test_a2_closed_form(self):
         """Lean: a2_R_coefficient (definition)."""
         for N_f in [1.0, 15.0, 45.0]:
+            # Vassilevich Eq. (4.27) with tr_V 𝟙 = 4 N_f, E = -R/4:
+            # (1/6)(4 N_f)(-1/2) = -N_f/3.  (Was -N_f/12 — the untraced
+            # value — before the 2026-08-15 correction.)
             assert seeley_dewitt_a2_R_coefficient(N_f) == pytest.approx(
-                -N_f / (12.0 * FOUR_PI_SQ)
+                -N_f / (3.0 * FOUR_PI_SQ)
             )
 
     def test_a2_negative(self):
@@ -104,43 +107,57 @@ class TestG_N_Calibration:
         """Lean: G_N_from_a2 (definition)."""
         Lambda, N_f = 1e16, 15
         assert G_N_from_seeley_dewitt(Lambda, N_f) == pytest.approx(
-            12 * math.pi / (N_f * Lambda**2)
+            3 * math.pi / (N_f * Lambda**2)
         )
 
-    def test_calibration_exact_at_alpha_one(self):
-        """Lean: G_N_from_a2_eq_G_N_sakharov.
+    def test_calibration_exact_at_alpha_quarter(self):
+        """Lean: G_N_from_a2_eq_quarter_G_N_sakharov.
 
-        At α_ADW = 1, the heat-kernel a_2 calibration matches the
+        At α_ADW = 1/4, the heat-kernel a_2 calibration matches the
         Sakharov-Adler linearized G_N exactly — no tolerance needed.
+        The locus is 1/4, not 1: the traced a_2 gives
+        G_N_from_a2 = 3π/(N_f Λ²) against Phase 6a.1's 12π/(N_f Λ²).
         """
         for Lambda in [1e10, 1e16, 1e19]:
             for N_f in [1, 15, 45]:
-                assert a2_calibration_relative_error(Lambda, N_f, 1.0) == 0.0
-                assert a2_calibration_passes(Lambda, N_f, 1.0)
+                assert a2_calibration_relative_error(Lambda, N_f, 0.25) == 0.0
+                assert a2_calibration_passes(Lambda, N_f, 0.25)
 
-    def test_calibration_fails_at_alpha_far_from_one(self):
-        """Lean: a2_matches_GNemerg_iff_alpha_ADW_unity (→ direction).
+    def test_calibration_not_exact_at_alpha_one(self):
+        """The old α_ADW = 1 locus is now a factor-of-four mismatch.
 
-        At α_ADW well outside the natural band, the heat-kernel
-        calibration disagrees with the linearized form.
+        Ratchet against a silent regression to the untraced a_2:
+        rel err = |3π − 12π| / 12π = 3/4 exactly.
         """
-        # alpha = 5 → rel err = |1 - 5|/5 = 0.8 > 0.5
+        for Lambda in [1e10, 1e16]:
+            for N_f in [1, 15]:
+                assert a2_calibration_relative_error(
+                    Lambda, N_f, 1.0) == pytest.approx(0.75, rel=1e-12)
+                assert not a2_calibration_passes(Lambda, N_f, 1.0)
+
+    def test_calibration_fails_at_alpha_far_from_quarter(self):
+        """Lean: a2_matches_GNemerg_iff_alpha_ADW_quarter (→ direction).
+
+        At α_ADW well outside the natural band around 1/4, the
+        heat-kernel calibration disagrees with the linearized form.
+        """
+        # alpha = 5 → rel err = |0.25 - 5|/5 = 0.95 > 0.5
         assert not a2_calibration_passes(1e16, 15, 5.0)
-        # alpha = 0.1 → rel err = |1 - 0.1|/0.1 = 9.0 > 0.5
-        assert not a2_calibration_passes(1e16, 15, 0.1)
+        # alpha = 0.025 → rel err = |0.25 - 0.025|/0.025 = 9.0 > 0.5
+        assert not a2_calibration_passes(1e16, 15, 0.025)
 
     def test_calibration_boundary_at_tolerance(self):
-        """At α_ADW = 2, rel err = 0.5 exactly = tolerance (≤ → True)."""
-        rel_err = a2_calibration_relative_error(1e16, 15, 2.0)
+        """At α_ADW = 0.5, rel err = 0.5 exactly = tolerance (≤ → True)."""
+        rel_err = a2_calibration_relative_error(1e16, 15, 0.5)
         assert rel_err == pytest.approx(0.5, rel=1e-12)
-        assert a2_calibration_passes(1e16, 15, 2.0)
+        assert a2_calibration_passes(1e16, 15, 0.5)
 
     def test_explicit_tolerance_override(self):
-        """Tighten tolerance to reject α = 1.5 (rel err = 1/3 = 0.333)."""
-        # default tol 0.5 → 1.5 passes
-        assert a2_calibration_passes(1e16, 15, 1.5)
+        """Tighten tolerance to reject α = 0.375 (rel err = 1/3)."""
+        # default tol 0.5 → 0.375 passes
+        assert a2_calibration_passes(1e16, 15, 0.375)
         # tighter tol 0.1 → fails
-        assert not a2_calibration_passes(1e16, 15, 1.5, tolerance=0.1)
+        assert not a2_calibration_passes(1e16, 15, 0.375, tolerance=0.1)
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -182,28 +199,57 @@ class TestA4Basis:
         assert set(a4.keys()) == {"R_sq", "Ricci_sq", "Riemann_sq"}
 
     def test_a4_signs(self):
-        """Lean: a4_R_sq_coef_neg, a4_Ricci_sq_coef_pos,
-        a4_Riemann_sq_coef_neg."""
+        """Lean: a4_R_sq_coef_pos, a4_Ricci_sq_coef_neg,
+        a4_Riemann_sq_coef_neg.
+
+        The R² and Ricci² signs flipped on 2026-08-15: the published
+        Dirac triple is (+30, -48, -42)/(12·180), not (-5, +7, -12).
+        """
         signs = higher_curvature_dirac_signs(15)
-        assert signs["R_sq"] == "neg"
-        assert signs["Ricci_sq"] == "pos"
+        assert signs["R_sq"] == "pos"
+        assert signs["Ricci_sq"] == "neg"
         assert signs["Riemann_sq"] == "neg"
 
     def test_a4_signs_invariant_in_N_f(self):
         """Signs do not depend on the species count (only the magnitude)."""
         for N_f in [0.5, 15.0, 1000.0]:
             signs = higher_curvature_dirac_signs(N_f)
-            assert signs == {"R_sq": "neg", "Ricci_sq": "pos", "Riemann_sq": "neg"}
+            assert signs == {"R_sq": "pos", "Ricci_sq": "neg", "Riemann_sq": "neg"}
 
     def test_a4_rejects_nonpositive_N_f(self):
         with pytest.raises(ValueError):
             higher_curvature_dirac_signs(0)
 
     def test_a4_riemann_canonical_value(self):
-        """a_4 Riemann² coefficient = -12/(12·180) · N_f / (4π)²."""
+        """a_4 Riemann² coefficient = -42/(12·180) · N_f / (4π)²."""
         for N_f in [1.0, 15.0]:
-            expected = N_f * (-12.0 / (12.0 * 180.0)) / FOUR_PI_SQ
+            expected = N_f * (-42.0 / (12.0 * 180.0)) / FOUR_PI_SQ
             assert seeley_dewitt_a4_basis(N_f)["Riemann_sq"] == pytest.approx(expected)
+
+    def test_a4_reproduces_dirac_weyl_anomaly_coefficients(self):
+        """Lean: HigherCurvatureStructure.a4_density_eq_dirac_weyl_anomaly_form.
+
+        The published-value anchor.  Decomposing the a_4 triple in the
+        Weyl basis (W² = Riem² − 2Ric² + R²/3, E₄ = Riem² − 4Ric² + R²)
+        must return the textbook four-component-Dirac conformal-anomaly
+        coefficients c = 1/20 and a = 11/360 — and, because a massless
+        Dirac field is conformal, NO independent R² term.
+
+        This is the check the pre-correction triple fails: it decomposes
+        to c' = 18/... inconsistently and leaves a non-zero R² residue.
+        """
+        for N_f in [1.0, 15.0, 27.0]:
+            d = seeley_dewitt_a4_basis(N_f)
+            k = FOUR_PI_SQ / N_f
+            cR, cRic, cRiem = (d["R_sq"] * k, d["Ricci_sq"] * k,
+                               d["Riemann_sq"] * k)
+            # Solve a_4 = A·R² + B·W² + C·E₄ from the Riem² and Ric² rows.
+            C = (cRic + 2.0 * cRiem) / (-2.0)   # from -2B - 4C = cRic, B+C = cRiem
+            B = cRiem - C
+            A = cR - B / 3.0 - C
+            assert math.isclose(A, 0.0, abs_tol=1e-15)
+            assert math.isclose(B, -1.0 / 20.0, rel_tol=1e-12)
+            assert math.isclose(C, 11.0 / 360.0, rel_tol=1e-12)
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -220,19 +266,19 @@ class TestGaussBonnet:
         """Lean: a4_gauss_bonnet_combination.
 
         c_R² − 4 c_Ricci² + c_Riem²
-            = N_f · (-45/(12·180)) / (4π)²
-            = -N_f / (48 (4π)²)
+            = N_f · (+180/(12·180)) / (4π)²
+            = +N_f / (12 (4π)²)
         """
         for N_f in [1.0, 15.0, 45.0]:
             gb = gauss_bonnet_combination(N_f)
-            expected = N_f * (-45.0 / (12.0 * 180.0)) / FOUR_PI_SQ
+            expected = N_f * (180.0 / (12.0 * 180.0)) / FOUR_PI_SQ
             assert gb == pytest.approx(expected, rel=1e-12)
 
     def test_gauss_bonnet_simplified_form(self):
-        """The combination = -N_f / (48 (4π)²)."""
+        """The combination = +N_f / (12 (4π)²)."""
         for N_f in [1.0, 15.0]:
             gb = gauss_bonnet_combination(N_f)
-            simplified = -N_f / (48.0 * FOUR_PI_SQ)
+            simplified = N_f / (12.0 * FOUR_PI_SQ)
             assert gb == pytest.approx(simplified, rel=1e-12)
 
 
@@ -284,17 +330,33 @@ class TestConstantsConsistency:
     def test_a0_rational_is_four(self):
         assert HEAT_KERNEL_PARAMS["A0_DIRAC_RATIONAL"] == 4.0
 
-    def test_a2_R_coef_is_neg_one_twelfth(self):
-        assert HEAT_KERNEL_PARAMS["A2_DIRAC_R_COEF"] == pytest.approx(-1.0 / 12.0)
+    def test_a2_R_coef_is_neg_one_third(self):
+        """Traced Vassilevich Eq. (4.27) value; was -1/12 (untraced)."""
+        assert HEAT_KERNEL_PARAMS["A2_DIRAC_R_COEF"] == pytest.approx(-1.0 / 3.0)
+
+    def test_a2_carries_the_same_fibre_trace_as_a0(self):
+        """Lean: a2_R_coefficient_eq_gilkey_trace.
+
+        The defect this replaced: a_0 took tr_V 𝟙 = 4 N_f and a_2 did
+        not.  Assert the Gilkey/Vassilevich assembly relating them,
+        (1/6)(6·E_R + 1)·a_0 with E_R = -1/4, rather than either value
+        alone — so the pair cannot drift apart again.
+        """
+        for N_f in [1.0, 15.0, 27.0]:
+            assert seeley_dewitt_a2_R_coefficient(N_f) == pytest.approx(
+                (1.0 / 6.0) * (6.0 * (-0.25) + 1.0) * seeley_dewitt_a0(N_f),
+                rel=1e-12,
+            )
 
     def test_four_pi_sq_consistency(self):
         assert HEAT_KERNEL_PARAMS["FOUR_PI_SQ"] == pytest.approx(FOUR_PI_SQ)
 
     def test_eh_prefactor_consistency(self):
-        """12 · (4π)² appears in `1/G_N = N_f Λ² / (12 (4π)²)` after
-        absorbing the EH `-1/(16π G_N)` sign convention."""
+        """3 · (4π)² appears in `1/G_N = N_f Λ² / (3 (4π)²)` after
+        absorbing the EH `-1/(16π G_N)` sign convention.  (Corrected
+        2026-08-15 from 12·(4π)²; the key name is retained.)"""
         assert HEAT_KERNEL_PARAMS["EH_PREFACTOR_TWELVE_FOUR_PI_SQ"] == pytest.approx(
-            12.0 * FOUR_PI_SQ
+            3.0 * FOUR_PI_SQ
         )
 
     def test_match_tolerance_consistent_with_GRAV(self):

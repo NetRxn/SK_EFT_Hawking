@@ -8632,7 +8632,7 @@ def fig_c_GW_vs_ligo_constraint():
         x=_math.log10(chi_lo_nat), y=summary["delta_lower"],
         text=(
             f"χ=0.1<br>Δc/c≈{summary['delta_lower']:.3f}<br>"
-            f"Violates LIGO by<br>{summary['violation_ratio_lower']:.1e}×"
+            f"outside the cap by<br>{summary['violation_ratio_lower']:.1e}×"
         ),
         showarrow=True, arrowhead=2,
         ax=75, ay=-45,
@@ -8644,7 +8644,7 @@ def fig_c_GW_vs_ligo_constraint():
         x=_math.log10(chi_hi_nat), y=summary["delta_upper"],
         text=(
             f"χ=10<br>Δc/c≈{summary['delta_upper']:.3f}<br>"
-            f"Violates LIGO by<br>{summary['violation_ratio_upper']:.1e}×"
+            f"outside the cap by<br>{summary['violation_ratio_upper']:.1e}×"
         ),
         showarrow=True, arrowhead=2,
         ax=80, ay=-30,
@@ -8669,12 +8669,11 @@ def fig_c_GW_vs_ligo_constraint():
         ),
         title=dict(
             text=(
-                "Phase 6a Wave 2 — GW170817 confines the vestigial-second-sound "
-                "graviton ID<br>"
+                "GW170817 confines the vestigial metric-channel susceptibility<br>"
                 "<sub>Δc/c = √χ_vest − 1; cap |Δc/c| ≤ 3 × 10⁻¹⁵ (amber, at "
                 "Δc/c = 0). The compatible window is nested INSIDE the natural "
                 "range, meeting it at χ_vest = 1.<br>"
-                "Lean: <i>ligo_confines_chi_vest_within_natural_range</i></sub>"
+                "The endpoints of the natural range lie far outside the cap.</sub>"
             ),
             font=TITLE_FONT,
         ),
@@ -9053,8 +9052,8 @@ def fig_T_H_evolution_regime_partition():
         fig,
         title=dict(
             text=(
-                "Phase 6a Wave 5 — BCH four-laws regime partition "
-                "(Schwarzschild ↔ acoustic)"
+                "Hawking temperature evolution across the "
+                "Schwarzschild ↔ acoustic regime partition"
             ),
             font=TITLE_FONT,
         ),
@@ -10259,8 +10258,8 @@ def fig_a2_vs_linearized_G_N():
     heat-kernel calibration reproduces Sakharov's induced-gravity scale
     anchor up to the species-multiplicity prefactor.
 
-    Lean: HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov,
-          a2_matches_GNemerg_iff_alpha_ADW_unity,
+    Lean: HeatKernelExpansion.G_N_from_a2_eq_quarter_G_N_sakharov,
+          a2_matches_GNemerg_iff_alpha_ADW_quarter,
           G_N_from_a2_at_GUT_inverse,
           G_N_from_a2_inverse_at_GUT_below_planck_squared.
     Source: Vassilevich Phys. Rep. 388, 279 (2003) Eq. (4.38);
@@ -10983,7 +10982,7 @@ def fig_lambda_emerg_parameter_scan():
         rows=1, cols=2,
         subplot_titles=(
             "Λ^emerg(Λ_UV, N_f) — natural cutoff CC problem reproduction",
-            "Decision Gate E.4: log10(Λ^emerg / Λ_obs) verdict bands",
+            "log₁₀(Λ^emerg / Λ_obs) over the (Λ_UV, N_f) plane",
         ),
         column_widths=[0.5, 0.5],
         horizontal_spacing=0.15,
@@ -11112,7 +11111,7 @@ def fig_lambda_emerg_parameter_scan():
             ),
             line=dict(color=COLORS["steel_blue"], width=2),
             showscale=False,
-            name="cc_resolved boundary",
+            name="resolution band boundary",
             hoverinfo="skip",
         ),
         row=1, col=2,
@@ -11129,7 +11128,7 @@ def fig_lambda_emerg_parameter_scan():
             ),
             line=dict(color=COLORS["amber"], width=2),
             showscale=False,
-            name="cc_reproduced boundary",
+            name="reproduction band boundary",
             hoverinfo="skip",
         ),
         row=1, col=2,
@@ -11155,8 +11154,8 @@ def fig_lambda_emerg_parameter_scan():
     fig.update_layout(
         title=dict(
             text=(
-                "<b>Phase 6e Wave 5 — Λ^emerg parameter scan and Decision "
-                "Gate E.4 verdict (CC problem reproduced in emergent form)</b>"
+                "<b>The emergent cosmological constant over the (Λ_UV, N_f) plane:<br>"
+                "the cosmological-constant problem, reproduced</b>"
             ),
             font=TITLE_FONT,
         ),
@@ -11340,8 +11339,8 @@ def fig_torsion_obs_bound():
     fig.update_layout(
         title=dict(
             text=(
-                "<b>Phase 6e Wave 6 — Einstein-Cartan torsion at "
-                "natural microscopic params is below all published bounds</b>"
+                "<b>Einstein-Cartan torsion at the natural microscopic point,<br>"
+                "against the published bounds</b>"
             ),
             font=TITLE_FONT,
         ),

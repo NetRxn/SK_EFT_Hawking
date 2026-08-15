@@ -114,7 +114,7 @@
 
 ### `H_Sakharov`
 
-**Statement.** Sakharov induction condition: the physical Newton constant is fully induced by N_f Dirac fermion loops (no bare gravitational action), G_N = G_N_from_a2 = 12π/(N_f Λ²). Consumed by the Frolov–Fursaev induced-gravity 1/4 conditional (Phase 6a Wave 9, frolov_fursaev_quarter_coefficient).
+**Statement.** Sakharov induction condition: the physical Newton constant is fully induced by N_f Dirac fermion loops (no bare gravitational action), G_N = G_N_from_a2 = 3π/(N_f Λ²). Consumed by the Frolov–Fursaev induced-gravity 1/4 conditional (Phase 6a Wave 9, frolov_fursaev_quarter_coefficient).
 
 - status `active` · eliminability `hard` · module `InducedGravityEntropy`
 - **Posture.** The fully-induced-G_N condition consumed by frolov_fursaev_quarter_coefficient to derive κ = 1/(4 G_N) (Gate A.2). Witnessed (Dirac, frolov_fursaev_dirac_witness) and falsified (wrong heat-kernel coefficient, frolov_fursaev_falsifier_wrong_coeff).

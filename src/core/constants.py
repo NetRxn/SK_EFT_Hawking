@@ -4091,7 +4091,7 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'circularity_note': 'None.', 'prose': 'A 5-condition bundle Prop carrying a companion HorizonModularData (S-matrix + c₋); consumed by the microscopic-entropy and QEC-holography bridges. Wave 8: modularInvariant := md.modular, anomalyMatch := (8 ∣ c₋) — no longer True placeholders.',
     },
     'H_Sakharov': {
-        'statement': 'Sakharov induction condition: the physical Newton constant is fully induced by N_f Dirac fermion loops (no bare gravitational action), G_N = G_N_from_a2 = 12π/(N_f Λ²). Consumed by the Frolov–Fursaev induced-gravity 1/4 conditional (Phase 6a Wave 9, frolov_fursaev_quarter_coefficient).',
+        'statement': 'Sakharov induction condition: the physical Newton constant is fully induced by N_f Dirac fermion loops (no bare gravitational action), G_N = G_N_from_a2 = 3π/(N_f Λ²). Consumed by the Frolov–Fursaev induced-gravity 1/4 conditional (Phase 6a Wave 9, frolov_fursaev_quarter_coefficient).',
         'status': 'active', 'tier': 'external_boundary', 'eliminability': 'hard',
         'module': 'InducedGravityEntropy',
         'source': 'Sakharov 1967 induced gravity; Adler 1982; Frolov–Fursaev–Zelnikov, Nucl. Phys. B 486 (1997), hep-th/9607104.',
@@ -6074,27 +6074,42 @@ BH_THERMODYNAMICS_PARAMS = {
 # gauge field, no torsion (the bare ADW substrate at mean field):
 #
 #   a_0 = 4 N_f / (4π)²                         [coefficient of Λ⁴ → Λ_emerg]
-#   a_2 = - N_f R / (12 (4π)²)                  [coefficient of Λ² → 1/(16π G_N)]
+#   a_2 = - N_f R / (3 (4π)²)                   [coefficient of Λ² → 1/(16π G_N)]
 #   a_4 = N_f / (180 (4π)²) ·                   [order log(Λ) — 4D Weyl-anomaly]
-#         (-12 R_μνρσ R^μνρσ + 7 R_μν R^μν - 5 R²)/12
-#                                               [Christensen-Duff convention]
+#         (-42 R_μνρσ R^μνρσ - 48 R_μν R^μν + 30 R²)/12
+#                                               [Christensen-Duff spin-1/2]
+#
+# ⚠️ TRACE CONVENTION (corrected 2026-08-15).  Every coefficient here
+# carries the fibre trace tr_V of Vassilevich Eqs. (4.26)-(4.28), so
+# tr_V 𝟙 = 4 N_f for N_f four-component Dirac species.  a_0 always
+# carried it; a_2 and a_4 previously did not.  a_2 read -1/12 (the
+# untraced value) and the a_4 triple read (-5, +7, -12)/2160, which is
+# not proportional to the published spin-1/2 triple and disagrees with
+# it in two of three signs.
 #
 # Cross-calibration: integrating Λ²·a_2 over volume gives the
 # Einstein-Hilbert coefficient -(1/(16π G_N)) ∫ R √g d⁴x, fixing
-#   G_N^Sakharov = 12π / (N_f Λ²)
-# in exact agreement with Phase 6a.1 LinearizedEFE.G_N_sakharov.
-# The structural identity is the load-bearing correctness-push anchor
-# (Decision Gate E.2): a_2 ↔ G_N^emerg consistency at 6a.1's α_ADW = 1
-# baseline ⇒ mean-field validity within the natural-parameter band.
+#   G_N_from_a2 = 3π / (N_f Λ²)
+# which is exactly ONE QUARTER of Phase 6a.1
+# LinearizedEFE.G_N_sakharov = 12π/(N_f Λ²) — the factor is the Dirac
+# index trace.  Phase 6a.1's value is stated independently (Adler 1982
+# Eq. 3.3) and is NOT changed here; the exact ratio is recorded by the
+# Lean theorem G_N_from_a2_eq_quarter_G_N_sakharov.  The Decision Gate
+# E.2 matching locus therefore moved from α_ADW = 1 to α_ADW = 1/4
+# (Lean: a2_matches_GNemerg_iff_alpha_ADW_quarter).
 #
 # References:
 # - Gilkey, "Invariance Theory, the Heat Equation, and the Atiyah-Singer
 #   Index Theorem" (CRC Press, 2nd ed., 1995) — canonical reference,
 #   Theorem 3.3.1 (Dirac coefficients), Corollary 4.8.16 (4D coefficients)
-# - Vassilevich, Phys. Rep. 388, 279 (2003) — modern review, §4 (Dirac
-#   spinors), Eqs. (4.37)–(4.42)
-# - Christensen-Duff, Nucl. Phys. B154, 301 (1979) — explicit a_4 for
-#   spin-1/2
+# - Vassilevich, Phys. Rep. 388, 279 (2003) — modern review, §4.1:
+#   Eq. (4.26) a_0, Eq. (4.27) a_2, Eq. (4.28) a_4, Eq. (4.35) + Table 1
+#   (Weyl-basis a_4 by spin; spin-1/2 row (a,b,c,d) = (-7/2,-11,6,0),
+#   "Spin 1/2 means 4-component Dirac spinors")
+# - Christensen-Duff, "New gravitational index theorems and
+#   supertheorems", Nucl. Phys. B154, 301 (1979) — the arbitrary-spin
+#   a_4 calculation Vassilevich credits (his ref. [127]).  NOT a source
+#   for a_2, and distinct from the 1978 Phys. Lett. B anomalies paper.
 # - Avramidi, Heat Kernel and Quantum Gravity (Springer, 2000) — physics
 #   conventions used here
 # - Adler, Rev. Mod. Phys. 54, 729 (1982) — induced-gravity coefficient
@@ -6111,23 +6126,31 @@ HEAT_KERNEL_PARAMS = {
     # In 4D vacuum, with E = R/4 endomorphism in D̸² = -∇² + R/4 - …
     # (Lichnerowicz), the standard rational coefficients are:
     'A0_DIRAC_RATIONAL': 4.0,                # tr 𝟙_4 = 4
-    'A2_DIRAC_R_COEF': -1.0/12.0,            # coef of N_f R / (4π)² in a_2
-    'A4_DIRAC_R_SQ_COEF': -5.0/(12.0*180.0), # = -1/432 (R² piece)
-    'A4_DIRAC_RICCI_SQ_COEF': 7.0/(12.0*180.0),    # = 7/2160 (R_μν R^μν)
-    'A4_DIRAC_RIEMANN_SQ_COEF': -12.0/(12.0*180.0),# = -1/180 (R_μνρσ R^μνρσ)
+    'A2_DIRAC_R_COEF': -1.0/3.0,             # coef of N_f R / (4π)² in a_2
+                                             #   = (1/6)·tr_V(6E+R)/R with
+                                             #     tr_V 𝟙 = 4, E = -R/4
+    'A4_DIRAC_R_SQ_COEF': 30.0/(12.0*180.0), # = +1/72  (R² piece)
+    'A4_DIRAC_RICCI_SQ_COEF': -48.0/(12.0*180.0),  # = -1/45  (R_μν R^μν)
+    'A4_DIRAC_RIEMANN_SQ_COEF': -42.0/(12.0*180.0),# = -7/360 (R_μνρσ R^μνρσ)
     # ── (4π)² normalization (canonical heat-kernel measure) ───────────
     # The (4π)^(-d/2) factor in the τ → 0 asymptotic comes from the
     # Gaussian integral on the cotangent space.  In 4D this is (4π)².
     'FOUR_PI_SQ': float((4.0 * np.pi) ** 2),  # (4π)² ≈ 157.91367
-    # ── Sakharov-Adler calibration factor ─────────────────────────────
-    # G_N^Sakharov = 12π / (N_f Λ²) (cf. GRAV_PARAMS.SAKHAROV_COEFFICIENT)
-    # appears here as the value 1/(16π G_N) = N_f Λ² / (12 · 16π²) =
-    # N_f Λ² / (192 π²); the prefactor 192 π² = 12 (4π)² is the link.
-    'EH_PREFACTOR_TWELVE_FOUR_PI_SQ': 12.0 * float((4.0 * np.pi) ** 2),
+    # ── Einstein-Hilbert prefactor from the traced a_2 ────────────────
+    # G_N_from_a2 = 3π / (N_f Λ²) appears here as the value
+    # 1/(16π G_N) = N_f Λ² / (3 · 16π²) = N_f Λ² / (48 π²); the
+    # prefactor 48 π² = 3 (4π)² is the link.  (Corrected 2026-08-15 from
+    # 12·(4π)², the untraced value; the key name is kept so downstream
+    # readers can see the move.  Contrast GRAV_PARAMS.SAKHAROV_COEFFICIENT
+    # = 12π, which is Phase 6a.1's independently-stated Adler value and
+    # is deliberately unchanged.)
+    'EH_PREFACTOR_TWELVE_FOUR_PI_SQ': 3.0 * float((4.0 * np.pi) ** 2),
     # ── Mean-field validity band on a_2 vs G_N^emerg (correctness-push) ─
-    # Decision Gate E.2: a_2 calibration matches 6a.1 G_N_sakharov *exactly*
-    # at α_ADW = 1; the "natural-parameter band" matches within ±50%
+    # Decision Gate E.2: the traced a_2 calibration matches 6a.1
+    # G_N_sakharov *exactly* at α_ADW = 1/4 (was α_ADW = 1 before the
+    # trace correction); the "natural-parameter band" matches within ±50%
     # (matches GRAV_PARAMS.G_N_MATCH_TOLERANCE).
+    'A2_GN_MATCH_ALPHA_ADW': 0.25,
     'A2_GN_MATCH_TOLERANCE': 0.5,
     # ── Gauss-Bonnet sanity coefficient ───────────────────────────────
     # In 4D the Euler density 𝒢 = R² - 4 R_μν R^μν + R_μνρσ R^μνρσ is
@@ -6170,9 +6193,10 @@ HIGHER_CURVATURE_PARAMS = {
     # in Wave 1's Dirac a_4 (per N_f fermion species, in units of the
     # canonical (4π)² heat-kernel measure).  These reproduce the values
     # in HEAT_KERNEL_PARAMS — duplicated here for downstream clarity.
-    'A4_R_SQ_PER_NF':       -5.0/(12.0*180.0),  # = -1/432  (R² piece)
-    'A4_RICCI_SQ_PER_NF':    7.0/(12.0*180.0),  # =  7/2160 (R_μν² piece)
-    'A4_RIEMANN_SQ_PER_NF': -12.0/(12.0*180.0), # = -1/180  (R_μνρσ² piece)
+    # ⚠️ Corrected 2026-08-15 with HEAT_KERNEL_PARAMS (Dirac fibre trace).
+    'A4_R_SQ_PER_NF':       30.0/(12.0*180.0),  # = +1/72   (R² piece)
+    'A4_RICCI_SQ_PER_NF':  -48.0/(12.0*180.0),  # = -1/45   (R_μν² piece)
+    'A4_RIEMANN_SQ_PER_NF': -42.0/(12.0*180.0), # = -7/360  (R_μνρσ² piece)
     # ── Gauss-Bonnet 4D coefficients ─────────────────────────────────
     # 𝒢 = R² - 4 R_μν² + R_μνρσ²  (Euler density, topological in 4D)
     'GB_R_SQ_COEF':       1.0,

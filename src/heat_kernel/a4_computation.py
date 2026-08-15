@@ -46,7 +46,7 @@ def higher_curvature_dirac_signs(N_f: float) -> dict[str, str]:
       - ``Riemann²`` coefficient is negative
 
     Useful as a fast structural check + as a Lean cross-bridge target
-    (see ``a4_R_sq_coef_neg``, ``a4_Ricci_sq_coef_pos``,
+    (see ``a4_R_sq_coef_pos``, ``a4_Ricci_sq_coef_neg``,
     ``a4_Riemann_sq_coef_neg``).
     """
     if N_f <= 0:

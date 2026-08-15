@@ -33,8 +33,8 @@ The load-bearing **Decision Gate E.4** result is:
 - §3: Match-residual theorems — linear deviation channel +
   Decision-Gate-style biconditional `δG = 0 ↔ α_ADW = 1` (the
   Wave 5 expression of Decision Gate E.2)
-- §4: Cross-bridges to Phase 6a.1 (`G_N_emerg_at_alpha_one`),
-  Wave 1 (`G_N_from_a2_eq_G_N_sakharov`), and Wave 2 (Stelle
+- §4: Cross-bridges to Phase 6a.1 (`G_N_emerg`),
+  Wave 1 (`G_N_from_a2_eq_quarter_G_N_sakharov`), and Wave 2 (Stelle
   coefficient sign aggregate)
 - §5: Bundled tracked-Prop `H_MicroscopicCoefficientMatch` with
   Dirac witness + perturbed-α falsifier
@@ -57,14 +57,15 @@ The load-bearing **Decision Gate E.4** result is:
 - Sakharov, *Sov. Phys. Dokl.* 12, 1040 (1968) — induced-gravity
   identification `1/(16π G_N) = (1/12) Σ_f m_f² log Λ²/m_f²` (here
   the leading-order Λ² piece).
-- Vassilevich, *Phys. Rep.* 388, 279 (2003), Eqs. (4.37–4.38) —
-  Christensen-Duff Dirac heat-kernel coefficients.
+- Vassilevich, *Phys. Rep.* 388, 279 (2003), Eqs. (4.26–4.28) and
+  Eq. (4.35) + Table 1 — the Dirac heat-kernel coefficients, with the
+  `a_4` rationals credited there to Christensen & Duff (1979).
 - Weinberg, *Rev. Mod. Phys.* 61, 1 (1989) — cosmological constant
   problem.
 - Planck 2018 (Aghanim et al., A&A 641, A6, 2020) — `Λ_obs`.
 - Phase 6a.1 LinearizedEFE.lean — `G_N_emerg`, `G_N_emerg_at_alpha_one`
 - Phase 6e Wave 1 HeatKernelExpansion.lean — `a0_dirac`,
-  `G_N_from_a2`, `G_N_from_a2_eq_G_N_sakharov`
+  `G_N_from_a2`, `G_N_from_a2_eq_quarter_G_N_sakharov`
 - Phase 6e Wave 2 HigherCurvatureStructure.lean — `a4_alpha`,
   `a4_beta`, `a4_gamma`, sign theorems
 -/
@@ -112,10 +113,10 @@ the Phase 6a.1 ADW substrate-rescaling parameter `α_ADW`:
 
   `gNMicroscopic(Λ_UV, N_f, α_ADW) = α_ADW · G_N_from_a2(Λ_UV, N_f)`.
 
-At the Sakharov-Adler calibration `α_ADW = 1` this matches both
-`G_N_from_a2` (definitionally) and `LinearizedEFE.G_N_emerg`
-(via `G_N_from_a2_eq_G_N_sakharov` + `G_N_emerg_at_alpha_one`,
-witnessed in §4 below). -/
+At `α_ADW = 1` this matches `G_N_from_a2` definitionally; it matches
+`LinearizedEFE.G_N_emerg` at *a quarter* of the ADW coefficient (via
+`G_N_from_a2_eq_quarter_G_N_sakharov`, witnessed in §4 below) — the
+factor being the Dirac index trace carried by the corrected `a_2`. -/
 def gNMicroscopic (Λ_UV N_f α_ADW : ℝ) : ℝ :=
   α_ADW * G_N_from_a2 Λ_UV N_f
 
@@ -127,8 +128,10 @@ the heat-kernel-induced baseline:
 
 Vanishes iff `α_ADW = 1` (under positive `(Λ_UV, N_f)`); this is the
 Wave 5 expression of Decision Gate E.2 (the Wave 1 closure
-`a2_matches_GNemerg_iff_alpha_ADW_unity` re-expressed at the
-microscopic-coefficient level). -/
+`a2_matches_GNemerg_iff_alpha_ADW_quarter` re-expressed at the
+microscopic-coefficient level).  Both sides of this residual are
+heat-kernel quantities and moved together under the 2026-08-15 trace
+correction, so its `α_ADW = 1` locus is unchanged. -/
 def matchResidual (Λ_UV N_f α_ADW : ℝ) : ℝ :=
   gNMicroscopic Λ_UV N_f α_ADW - G_N_from_a2 Λ_UV N_f
 
@@ -304,8 +307,10 @@ Under positive cutoff and species count, the match residual vanishes
 iff the ADW coefficient is at the Sakharov-Adler calibration
 `α_ADW = 1`.  This is the Wave 5 expression of Decision Gate E.2
 — the Wave 1 closure
-`a2_matches_GNemerg_iff_alpha_ADW_unity` re-stated at the
-microscopic-coefficient level.
+`a2_matches_GNemerg_iff_alpha_ADW_quarter` re-stated at the
+microscopic-coefficient level.  Both sides of this residual are
+heat-kernel quantities, so its locus is `α_ADW = 1` and is *not* moved
+by the 2026-08-15 trace correction.
 
 Substantive: forward direction uses positivity of `G_N_from_a2`
 (`G_N_from_a2_pos`, Wave 1) to flip `mul_eq_zero`; reverse is
@@ -326,40 +331,65 @@ theorem matchResidual_eq_zero_iff_alpha_unity
 
 /-! ## §4. Cross-bridges to Phase 6a.1, Wave 1, and Wave 2 -/
 
-/-- **Substantive cross-bridge (Phase 6a.1 + Wave 1).**  At the
-Sakharov-Adler calibration `α_ADW = 1`, the microscopic Newton
-constant equals the Phase 6a.1 emergent Newton constant.  Proof body
-invokes both `LinearizedEFE.G_N_emerg_at_alpha_one` and
-`HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov` by name —
-drift-protection per `feedback_python_lean_refs_drift.md` (P6
-cross-module bridge integrity). -/
-theorem gNMicroscopic_at_alpha_one_eq_G_N_emerg
+/-- **Substantive cross-bridge (Phase 6a.1 + Wave 1), corrected
+2026-08-15 — and strengthened from a point statement to an identity in
+`α_ADW`.**  For *every* `α_ADW`, the microscopic Newton constant at
+`α_ADW` is the Phase 6a.1 emergent Newton constant at `α_ADW / 4`:
+
+  `gNMicroscopic Λ N_f α = G_N_emerg Λ N_f (α/4)`.
+
+The quarter is the Dirac index trace carried by the corrected `a_2`
+(`HeatKernelExpansion.G_N_from_a2_eq_quarter_G_N_sakharov`): the
+heat-kernel-induced `G_N` is `3π/(N_f Λ²)` against Phase 6a.1's
+`12π/(N_f Λ²)`.
+
+This replaces `gNMicroscopic_at_alpha_one_eq_G_N_emerg`, which asserted
+agreement at `α_ADW = 1` and is false under the correction.  Proof body
+invokes `HeatKernelExpansion.G_N_from_a2_eq_quarter_G_N_sakharov` and
+`LinearizedEFE.G_N_emerg` by name — drift-protection per
+`feedback_python_lean_refs_drift.md` (P6 cross-module bridge
+integrity). -/
+theorem gNMicroscopic_eq_G_N_emerg_at_quarter_alpha
+    (Λ_UV N_f α_ADW : ℝ) :
+    gNMicroscopic Λ_UV N_f α_ADW =
+      SKEFTHawking.LinearizedEFE.G_N_emerg Λ_UV N_f (α_ADW / 4) := by
+  unfold gNMicroscopic SKEFTHawking.LinearizedEFE.G_N_emerg
+  rw [SKEFTHawking.HeatKernelExpansion.G_N_from_a2_eq_quarter_G_N_sakharov
+        Λ_UV N_f]
+  ring
+
+/-- **Specialization at the ADW calibration `α_ADW = 1`.**  The
+microscopic Newton constant at `α_ADW = 1` is the Phase 6a.1 emergent
+Newton constant at `α_ADW = 1/4` — the corrected form of the old
+Decision-Gate E.2 coincidence. -/
+theorem gNMicroscopic_at_alpha_one_eq_G_N_emerg_at_quarter
     (Λ_UV N_f : ℝ) :
     gNMicroscopic Λ_UV N_f 1 =
-      SKEFTHawking.LinearizedEFE.G_N_emerg Λ_UV N_f 1 := by
-  unfold gNMicroscopic
-  rw [SKEFTHawking.LinearizedEFE.G_N_emerg_at_alpha_one Λ_UV N_f]
-  rw [← SKEFTHawking.HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov Λ_UV N_f]
-  ring
+      SKEFTHawking.LinearizedEFE.G_N_emerg Λ_UV N_f (1 / 4) := by
+  simpa using gNMicroscopic_eq_G_N_emerg_at_quarter_alpha Λ_UV N_f 1
 
 /-- **Stelle-basis sum closed form.**  The aggregate `α + β + γ` of
 the Wave 2 Stelle coefficients evaluates in closed form to
-`-(7 N_f / 810) · (4π)⁻²`.  Substantive cross-bridge: combines the
+`-(7 N_f / 360) · (4π)⁻²`.  Substantive cross-bridge: combines the
 three Wave 2 definitions `a4_alpha`, `a4_beta`, `a4_gamma` into a
 single rational aggregate, exposing a *different* numerical
 fingerprint than any individual coefficient (the rationals
-`-1/324, -41/4320, +17/4320` combine to `-7/810` — non-trivial
-rational arithmetic). -/
+`0, -1/20, +11/360` combine to `-7/360`).
+
+⚠️ Corrected 2026-08-15: the aggregate was `-7/810` under the
+pre-correction `a_4` triple.  Note `-7/360` is exactly the corrected
+`a4_Riemann_sq_coef` rational — as it must be, since `α = 0` and
+`C² + 𝒢` contribute one unit of `Riem²` between them. -/
 theorem higherCurvature_stelle_sum_eq (N_f : ℝ) :
     a4_alpha N_f + a4_beta N_f + a4_gamma N_f =
-      -(7 * N_f / 810) * fourPiSqInv := by
+      -(7 * N_f / 360) * fourPiSqInv := by
   unfold a4_alpha a4_beta a4_gamma
   ring
 
 /-- **Stelle-basis sum sign aggregate.**  For positive species count,
 the sum `α + β + γ` is strictly negative.  Substantive composite:
 this is *not* implied by any individual `a4_*` sign theorem
-(`a4_alpha_neg` covers only `α`, etc.); the aggregate sign is its own
+(`a4_beta_neg` covers only `β`, etc.); the aggregate sign is its own
 load-bearing structural fact, used by the bundle witness. -/
 theorem higherCurvature_stelle_sum_negative
     {N_f : ℝ} (hN : 0 < N_f) :

@@ -139,7 +139,7 @@ class TestGnMicroscopic:
     """Lean: ``gNMicroscopic``, ``matchResidual``."""
 
     def test_g_n_at_alpha_one_matches_baseline(self):
-        # Lean: gNMicroscopic_at_alpha_one_eq_G_N_emerg
+        # Lean: gNMicroscopic_eq_G_N_emerg_at_quarter_alpha
         baseline = G_N_from_seeley_dewitt(M_PL, N_F_SM)
         assert g_n_microscopic(M_PL, N_F_SM, 1.0) == pytest.approx(
             baseline, rel=1e-12
@@ -182,9 +182,10 @@ class TestHigherCurvatureStelle:
     ``higherCurvature_stelle_sum_negative``."""
 
     def test_stelle_signs(self):
-        # alpha < 0, beta < 0, gamma > 0  (Wave 2 sign signature)
+        # alpha == 0, beta < 0, gamma > 0  (Wave 2 sign signature,
+        # corrected 2026-08-15: α is exactly zero for a conformal field)
         a, b, g = higher_curvature_microscopic_stelle(N_F_SM)
-        assert a < 0.0
+        assert a == 0.0
         assert b < 0.0
         assert g > 0.0
 
@@ -195,10 +196,11 @@ class TestHigherCurvatureStelle:
 
     def test_stelle_sum_closed_form(self):
         # Lean: higherCurvature_stelle_sum_eq:
-        # alpha + beta + gamma = -(7 N_f / 810) * (4π)^-2
+        # alpha + beta + gamma = -(7 N_f / 360) * (4π)^-2
+        # (corrected 2026-08-15 from -7/810)
         for N in [1.0, 4.0, N_F_SM, 100.0]:
             a, b, g = higher_curvature_microscopic_stelle(N)
-            expected = -(7.0 * N / 810.0) / (4.0 * math.pi) ** 2
+            expected = -(7.0 * N / 360.0) / (4.0 * math.pi) ** 2
             assert (a + b + g) == pytest.approx(expected, rel=1e-12)
 
     def test_stelle_linearity_in_N_f(self):

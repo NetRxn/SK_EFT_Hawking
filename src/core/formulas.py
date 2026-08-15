@@ -9048,18 +9048,27 @@ def seeley_dewitt_a2_R_coefficient(N_f):
 
     The a_2 density carries one power of the Ricci scalar:
 
-        a_2(x) = - N_f / (12 (4π)²) · R(x)
+        a_2(x) = - N_f / (3 (4π)²) · R(x)
+
+    Vassilevich Eq. (4.27): ``a_2 = (4π)^{-n/2} (1/6) ∫ tr_V{6E + R}``
+    with the Lichnerowicz endomorphism ``E = -R/4`` (so ``6E + R =
+    -R/2``) and the spinor fibre trace ``tr_V 𝟙 = 4 N_f`` — the same
+    factor ``seeley_dewitt_a0`` carries.  Hence ``(1/6)(4 N_f)(-1/2) =
+    -N_f/3``.
 
     Integrating Λ² · a_2 over volume reproduces the Einstein-Hilbert
-    action with coefficient ``-1/(16 π G_N)``, fixing the Sakharov-Adler
-    induced Newton constant ``G_N^Sakharov = 12 π / (N_f Λ²)``.
-    The minus sign is the spin-1/2 Lichnerowicz convention; see
-    Christensen-Duff 1979.
+    action with coefficient ``-1/(16 π G_N)``, fixing the induced
+    Newton constant ``G_N_from_a2 = 3 π / (N_f Λ²)``.
+    The minus sign is the spin-1/2 Lichnerowicz convention.
 
-    Lean: HeatKernelExpansion.a2_R_coefficient, a2_R_coefficient_neg
+    ⚠️ Corrected 2026-08-15: this returned ``-N_f/(12 (4π)²)``, the
+    value obtained when the fibre trace is omitted while ``a_0`` takes
+    it.  Lean ``a2_R_coefficient_eq_gilkey_trace`` now binds the two.
+
+    Lean: HeatKernelExpansion.a2_R_coefficient, a2_R_coefficient_neg,
+          a2_R_coefficient_eq_gilkey_trace
     Aristotle: manual
-    Source: Vassilevich, Phys. Rep. 388, 279 (2003), Eq. (4.38);
-            Christensen & Duff, Nucl. Phys. B154, 301 (1979), Eq. (3.7)
+    Source: Vassilevich, Phys. Rep. 388, 279 (2003), Eq. (4.27)
 
     Parameters
     ----------
@@ -9072,7 +9081,7 @@ def seeley_dewitt_a2_R_coefficient(N_f):
         Coefficient C such that a_2 = C · R(x).
     """
     import math
-    return - float(N_f) / (12.0 * (4.0 * math.pi) ** 2)
+    return - float(N_f) / (3.0 * (4.0 * math.pi) ** 2)
 
 
 def G_N_from_seeley_dewitt(Lambda_UV, N_f):
@@ -9081,19 +9090,24 @@ def G_N_from_seeley_dewitt(Lambda_UV, N_f):
     Setting the EH action ``-1/(16 π G_N) ∫ R √g d⁴x`` equal to the
     Λ²-divergent part of the heat-kernel effective action gives
 
-        1/(16 π G_N) = N_f Λ²/(12 · (4π)²) = N_f Λ²/(192 π²)
+        1/(16 π G_N) = N_f Λ²/(3 · (4π)²) = N_f Λ²/(48 π²)
 
     so
 
-        G_N = 12 π / (N_f Λ²)
+        G_N = 3 π / (N_f Λ²)
 
-    in exact agreement with ``LinearizedEFE.G_N_sakharov`` from Phase
-    6a.1. This is the Decision Gate E.2 calibration: the heat-kernel
-    nonlinear derivation reproduces the linearized Sakharov-Adler
-    coefficient, fixing the mean-field validity boundary.
+    which is exactly ONE QUARTER of ``LinearizedEFE.G_N_sakharov =
+    12π/(N_f Λ²)`` from Phase 6a.1 — the factor being the Dirac index
+    trace ``tr_V 𝟙 = 4`` that the corrected ``a_2`` carries.  Phase
+    6a.1's value is stated independently (Adler 1982 Eq. 3.3) and is
+    unchanged.  Decision Gate E.2 therefore matches at ``α_ADW = 1/4``,
+    not ``α_ADW = 1``.
+
+    ⚠️ Corrected 2026-08-15 (was ``12 π / (N_f Λ²)``, from the untraced
+    ``a_2``).  The matching rule itself is unchanged.
 
     Lean: HeatKernelExpansion.G_N_from_a2,
-          G_N_from_a2_eq_G_N_sakharov
+          G_N_from_a2_eq_quarter_G_N_sakharov
     Aristotle: manual
     Source: Sakharov, Sov. Phys. Dokl. 12, 1040 (1968);
             Adler, RMP 54, 729 (1982), Eq. (3.3)
@@ -9111,7 +9125,7 @@ def G_N_from_seeley_dewitt(Lambda_UV, N_f):
         Induced Newton constant in [GeV⁻²].
     """
     import math
-    return 12.0 * math.pi / (float(N_f) * float(Lambda_UV) ** 2)
+    return 3.0 * math.pi / (float(N_f) * float(Lambda_UV) ** 2)
 
 
 def seeley_dewitt_a4_basis(N_f):
@@ -9120,20 +9134,37 @@ def seeley_dewitt_a4_basis(N_f):
     The a_4 density for a free Dirac spinor in 4D is
 
         a_4(x) = N_f / (4π)² · (
-                    -5/(12·180) · R² +
-                    7/(12·180) · R_μν R^μν +
-                    -12/(12·180) · R_μνρσ R^μνρσ )
+                    +30/(12·180) · R² +
+                    -48/(12·180) · R_μν R^μν +
+                    -42/(12·180) · R_μνρσ R^μνρσ )
 
-    These rational coefficients are independent of microscopic
-    parameters; only the overall N_f / (4π)² prefactor depends on the
-    species count. The Gauss-Bonnet combination
+    equivalently ``a_4 = (4π)^-2 (1/360)[5R² - 8Ric² - 7Riem²]`` per
+    Dirac species.  These rational coefficients are independent of
+    microscopic parameters; only the overall N_f / (4π)² prefactor
+    depends on the species count.  The Gauss-Bonnet combination
     ``𝒢 = R² − 4 R_μν R^μν + R_μνρσ R^μνρσ`` is topological in 4D.
 
+    Two independent routes to the triple: Vassilevich Eq. (4.28) with
+    the Dirac data (``tr_V 𝟙 = 4``, ``E = -R/4``,
+    ``tr(Ω_μν Ω^μν) = -(1/2) Riem²``); and Eq. (4.35) with the spin-1/2
+    row of his Table 1, ``(a,b,c,d) = (-7/2, -11, 6, 0)``.  In the Weyl
+    basis the triple is ``-(1/20) C² + (11/360) 𝒢``, i.e. the textbook
+    Dirac conformal-anomaly coefficients ``c = 1/20``, ``a = 11/360``,
+    with **no independent R² term**.
+
+    ⚠️ Corrected 2026-08-15: this returned ``(-5, +7, -12)/(12·180)``,
+    a triple that is not proportional to the published one (two of three
+    signs differ) and that implies a non-zero R² Stelle coefficient for
+    a field that is conformal.
+
     Lean: HeatKernelExpansion.a4_R_sq_coef, a4_Ricci_sq_coef,
-          a4_Riemann_sq_coef
+          a4_Riemann_sq_coef;
+          HigherCurvatureStructure.a4_density_eq_dirac_weyl_anomaly_form
     Aristotle: manual
-    Source: Christensen & Duff, Nucl. Phys. B154, 301 (1979), Eq. (3.8);
-            Gilkey 1995, Theorem 4.8.16
+    Source: Vassilevich, Phys. Rep. 388, 279 (2003), Eqs. (4.28), (4.35)
+            + Table 1, crediting Christensen & Duff, "New gravitational
+            index theorems and supertheorems", Nucl. Phys. B154, 301
+            (1979); Gilkey 1995, Theorem 4.8.16
 
     Parameters
     ----------
@@ -9150,9 +9181,9 @@ def seeley_dewitt_a4_basis(N_f):
     import math
     prefactor = float(N_f) / (4.0 * math.pi) ** 2
     return {
-        'R_sq': prefactor * (-5.0 / (12.0 * 180.0)),
-        'Ricci_sq': prefactor * (7.0 / (12.0 * 180.0)),
-        'Riemann_sq': prefactor * (-12.0 / (12.0 * 180.0)),
+        'R_sq': prefactor * (30.0 / (12.0 * 180.0)),
+        'Ricci_sq': prefactor * (-48.0 / (12.0 * 180.0)),
+        'Riemann_sq': prefactor * (-42.0 / (12.0 * 180.0)),
     }
 
 
@@ -9172,21 +9203,25 @@ def gauss_bonnet_density(R_sq, Ricci_sq, Riemann_sq):
     return float(R_sq) - 4.0 * float(Ricci_sq) + float(Riemann_sq)
 
 
-def heat_kernel_a2_matches_GN_sakharov(Lambda_UV, N_f, alpha_ADW=1.0,
+def heat_kernel_a2_matches_GN_sakharov(Lambda_UV, N_f, alpha_ADW=0.25,
                                         tolerance=None):
     """Decision Gate E.2 calibration check.
 
     Compare ``G_N_from_seeley_dewitt(Λ, N_f)`` with the 6a.1 linearized
-    ``α_ADW · G_N_sakharov(Λ, N_f)`` at the mean-field α_ADW = 1
-    baseline. Returns True iff the relative difference is within
-    ``HEAT_KERNEL_PARAMS['A2_GN_MATCH_TOLERANCE']`` (default 0.5 = ±50%,
-    matching ``GRAV_PARAMS.G_N_MATCH_TOLERANCE``).
+    ``α_ADW · G_N_sakharov(Λ, N_f)``.  Returns True iff the relative
+    difference is within ``HEAT_KERNEL_PARAMS['A2_GN_MATCH_TOLERANCE']``
+    (default 0.5 = ±50%, matching ``GRAV_PARAMS.G_N_MATCH_TOLERANCE``).
 
-    At α_ADW = 1 the match is mathematically exact (rel diff = 0).
-    Tolerance permits the natural-parameter band α_ADW ∈ [0.5, 1.5].
+    ⚠️ The exact-match locus is ``α_ADW = 1/4``
+    (``HEAT_KERNEL_PARAMS['A2_GN_MATCH_ALPHA_ADW']``), not 1.  The
+    traced ``a_2`` gives ``G_N_from_a2 = 3π/(N_f Λ²)`` against Phase
+    6a.1's ``12π/(N_f Λ²)``; the factor of four is the Dirac index
+    trace.  The default argument moved with it on 2026-08-15.
 
-    Lean: HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov,
-          a2_matches_GNemerg_at_natural_params
+    At α_ADW = 1/4 the match is mathematically exact (rel diff = 0).
+
+    Lean: HeatKernelExpansion.G_N_from_a2_eq_quarter_G_N_sakharov,
+          a2_matches_GNemerg_iff_alpha_ADW_quarter
     Aristotle: manual
 
     Parameters
@@ -9194,7 +9229,8 @@ def heat_kernel_a2_matches_GN_sakharov(Lambda_UV, N_f, alpha_ADW=1.0,
     Lambda_UV : float
     N_f : float
     alpha_ADW : float, optional
-        ADW dimensionless coefficient; default 1.0 (Sakharov baseline).
+        ADW dimensionless coefficient; default 0.25 (the exact-match
+        locus of the traced a_2 against Phase 6a.1's G_N_sakharov).
     tolerance : float, optional
         Override default match tolerance.
 
@@ -9224,11 +9260,10 @@ def heat_kernel_a2_matches_GN_sakharov(Lambda_UV, N_f, alpha_ADW=1.0,
 def higher_curvature_R_sq_coefficient(N_f):
     """a_4 coefficient of R² for N_f Dirac fermions, including (4π)⁻²:
 
-        c_R(N_f) = N_f / (4π)² · (-5 / (12·180)) = -N_f / (432 (4π)²)
+        c_R(N_f) = N_f / (4π)² · (+30 / (12·180)) = +N_f / (72 (4π)²)
 
-    Sign reflects the canonical Christensen-Duff convention (the heat
-    kernel measure carries a global sign chosen so a_2 gives the
-    Sakharov-Adler positive G_N).
+    Christensen-Duff spin-1/2 value, carrying the Dirac fibre trace
+    (corrected 2026-08-15 from `-5/(12·180)`).
 
     Mirrors Lean ``HigherCurvatureStructure.a4_R_sq_coef`` (= Wave 1's
     ``HeatKernelExpansion.a4_R_sq_coef``).
@@ -9245,7 +9280,9 @@ def higher_curvature_R_sq_coefficient(N_f):
 def higher_curvature_Ricci_sq_coefficient(N_f):
     """a_4 coefficient of R_μν R^μν for N_f Dirac fermions, including (4π)⁻²:
 
-        c_Ricci(N_f) = N_f / (4π)² · (7 / (12·180)) = 7 N_f / (2160 (4π)²)
+        c_Ricci(N_f) = N_f / (4π)² · (-48 / (12·180)) = -N_f / (45 (4π)²)
+
+    Corrected 2026-08-15 from `+7/(12·180)`; the sign flipped.
 
     Mirrors Lean ``HigherCurvatureStructure.a4_Ricci_sq_coef``.
 
@@ -9261,7 +9298,10 @@ def higher_curvature_Ricci_sq_coefficient(N_f):
 def higher_curvature_Riemann_sq_coefficient(N_f):
     """a_4 coefficient of R_μνρσ R^μνρσ for N_f Dirac fermions, including (4π)⁻²:
 
-        c_Riem(N_f) = N_f / (4π)² · (-12 / (12·180)) = -N_f / (180 (4π)²)
+        c_Riem(N_f) = N_f / (4π)² · (-42 / (12·180)) = -7 N_f / (360 (4π)²)
+
+    Corrected 2026-08-15 from `-12/(12·180)`; this is the one sign of
+    the three the correction left standing.
 
     Mirrors Lean ``HigherCurvatureStructure.a4_Riemann_sq_coef``.
 
@@ -9622,7 +9662,7 @@ def efe_residual_at_dirac_calibration(Lambda_UV, N_f, rho_ADW):
     Lean: NonlinearEFE.efeResidualTrace_at_dirac_calibration_vanishes
     Aristotle: manual
     Source: Phase 6a.1 LinearizedEFE.G_N_emerg_at_alpha_one;
-    Phase 6e Wave 1 G_N_from_a2_eq_G_N_sakharov;
+    Phase 6e Wave 1 G_N_from_a2_eq_quarter_G_N_sakharov;
     Phase 6e Wave 4 paper42_nonlinear_efe Eq. (3.3)
     """
     G_N = G_N_from_seeley_dewitt(Lambda_UV, N_f)
@@ -9768,19 +9808,20 @@ def cc_decision_gate_e4_verdict(Lambda_UV, N_f):
 def g_n_microscopic(Lambda_UV, N_f, alpha_ADW=1.0):
     """Microscopic prediction for `G_N^emerg` parameterised by α_ADW.
 
-    Combines the Wave 1 heat-kernel result `G_N_sakharov = 12π/(N_f Λ²)`
+    Combines the Wave 1 heat-kernel result `G_N_from_a2 = 3π/(N_f Λ²)`
     with the Phase 6a.1 ADW rescaling
-    `G_N^emerg = α_ADW · G_N_sakharov`. At the Sakharov-Adler
-    calibration `α_ADW = 1` the two coincide — the substantive Decision
-    Gate E.2 closure.
+    `G_N^emerg = α_ADW · G_N_sakharov = α_ADW · 12π/(N_f Λ²)`.  The two
+    coincide at `α_ADW = 1/4`, the corrected Decision Gate E.2 locus;
+    more generally `g_n_microscopic(Λ, N_f, α) = G_N_emerg(Λ, N_f, α/4)`.
 
     Lean: MicroscopicCoefficientMatch.gNMicroscopic + the cross-bridge
-          theorem MicroscopicCoefficientMatch.gNMicroscopic_at_alpha_one_eq_G_N_emerg
-          (which invokes LinearizedEFE.G_N_emerg_at_alpha_one and
-          HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov by name).
+          theorem
+          MicroscopicCoefficientMatch.gNMicroscopic_eq_G_N_emerg_at_quarter_alpha
+          (which invokes
+          HeatKernelExpansion.G_N_from_a2_eq_quarter_G_N_sakharov by name).
     Aristotle: manual
-    Source: Phase 6a.1 LinearizedEFE.G_N_emerg_at_alpha_one;
-            Phase 6e Wave 1 G_N_from_a2_eq_G_N_sakharov
+    Source: Phase 6a.1 LinearizedEFE.G_N_emerg;
+            Phase 6e Wave 1 G_N_from_a2_eq_quarter_G_N_sakharov
     """
     return float(alpha_ADW) * G_N_from_seeley_dewitt(Lambda_UV, N_f)
 
@@ -9792,45 +9833,58 @@ def higher_curvature_microscopic_stelle(N_f):
     (`a_4_density = α R² + β R_μν² + γ R_μνρσ²` after re-decomposition
     via Wave 2's ``a4_density_eq_a4_density_in_RC2GB_basis``):
 
-        α(N_f) = -N_f / (324 (4π)²)
-        β(N_f) = -41 N_f / (4320 (4π)²)
-        γ(N_f) = +17 N_f / (4320 (4π)²)
+        α(N_f) = 0                     (exactly)
+        β(N_f) = -N_f / (20 (4π)²)
+        γ(N_f) = +11 N_f / (360 (4π)²)
 
-    `γ > 0` carries the chiral-anomaly-positive sign; `α, β < 0`. The
-    function returns the triple as a `(alpha, beta, gamma)` tuple in
-    natural units (no Λ_UV dependence — the triple is dimensionless
-    times `(4π)⁻²`).
+    `γ > 0` carries the chiral-anomaly-positive sign; `β < 0`; and
+    **`α` is identically zero** — a massless Dirac field is conformal,
+    so its `a_4` carries no independent `R²` structure.  `-β` and `γ`
+    are the textbook Dirac Weyl-anomaly coefficients `c = 1/20` and
+    `a = 11/360`.  The function returns the triple as a
+    `(alpha, beta, gamma)` tuple in natural units (no Λ_UV dependence —
+    the triple is dimensionless times `(4π)⁻²`).
 
-    Lean: HigherCurvatureStructure.a4_alpha / a4_beta / a4_gamma +
+    ⚠️ Corrected 2026-08-15, with the Wave 1 `a_4` triple.  Was
+    `(-1/324, -41/4320, +17/4320)`; in particular `α < 0` was asserted
+    and is false.
+
+    Lean: HigherCurvatureStructure.a4_alpha / a4_beta / a4_gamma,
+          a4_alpha_eq_zero, a4_stelle_triple_unique,
+          a4_density_eq_dirac_weyl_anomaly_form +
           MicroscopicCoefficientMatch.higherCurvature_stelle_sum_eq
-          (closed-form aggregate -7 N_f / (810 (4π)²)) +
+          (closed-form aggregate -7 N_f / (360 (4π)²)) +
           higherCurvature_stelle_sum_negative.
     Aristotle: manual
-    Source: Christensen & Duff, Nucl. Phys. B154, 301 (1979), Eq. (3.7);
-            Stelle, Gen. Rel. Grav. 9, 353 (1978);
+    Source: Vassilevich, Phys. Rep. 388, 279 (2003), Eqs. (4.28), (4.35)
+            + Table 1, crediting Christensen & Duff, Nucl. Phys. B154,
+            301 (1979); Stelle, Gen. Rel. Grav. 9, 353 (1978);
             Phase 6e Wave 2 paper40 §3
     """
     import math
     inv_4pi_sq = 1.0 / (4.0 * math.pi) ** 2
-    alpha = -float(N_f) / 324.0 * inv_4pi_sq
-    beta = -41.0 * float(N_f) / 4320.0 * inv_4pi_sq
-    gamma = 17.0 * float(N_f) / 4320.0 * inv_4pi_sq
+    alpha = 0.0 * float(N_f) * inv_4pi_sq
+    beta = -float(N_f) / 20.0 * inv_4pi_sq
+    gamma = 11.0 * float(N_f) / 360.0 * inv_4pi_sq
     return (alpha, beta, gamma)
 
 
 def microscopic_macroscopic_match_residual(Lambda_UV, N_f, alpha_ADW):
     """Cross-wave coefficient-match residual at given microscopic params.
 
-    Closed-form algebraic residual measuring whether the heat-kernel
-    Wave 1 closed form `G_N_from_a2 = 12π/(N_f Λ_UV²)` matches the
-    Phase 6a.1 emergent form `G_N^emerg = α_ADW · G_N_sakharov` at the
-    calibration value `α_ADW = 1`. By construction the residual equals
+    Closed-form algebraic residual measuring whether the ADW-rescaled
+    microscopic Newton constant matches the heat-kernel Wave 1 closed
+    form `G_N_from_a2 = 3π/(N_f Λ_UV²)`. By construction the residual
+    equals
 
-        residual = G_N^emerg(Λ_UV, N_f, α_ADW) - G_N_from_a2(Λ_UV, N_f)
-                 = (α_ADW - 1) · G_N_sakharov(Λ_UV, N_f),
+        residual = g_n_microscopic(Λ_UV, N_f, α_ADW)
+                     - G_N_from_a2(Λ_UV, N_f)
+                 = (α_ADW - 1) · G_N_from_a2(Λ_UV, N_f),
 
-    so it is identically zero iff `α_ADW = 1`. This is the Decision
-    Gate E.2 anchor expressed at the formula level.
+    so it is identically zero iff `α_ADW = 1`.  Both sides are
+    heat-kernel quantities and moved together under the 2026-08-15
+    trace correction, so this locus is unchanged (unlike the
+    against-Phase-6a.1 locus, which moved to `α_ADW = 1/4`).
 
     Lean: MicroscopicCoefficientMatch.matchResidual,
           MicroscopicCoefficientMatch.matchResidual_eq_zero_iff_alpha_unity
@@ -9853,7 +9907,9 @@ def microscopic_macroscopic_match_holds(Lambda_UV, N_f, alpha_ADW,
       2. Λ^emerg(Λ_UV, N_f) is strictly positive (well-defined emergent
          CC);
       3. Higher-curvature Stelle coefficients consistent with Wave 2
-         (γ > 0, α + β < 0 — sign signature).
+         (γ > 0, α + β < 0 — sign signature; note α ≡ 0 exactly since
+         the 2026-08-15 trace correction, so this conjunct now tests
+         β < 0).
 
     Any α_ADW ≠ 1 violates conjunct 1; any non-positive (Λ_UV, N_f)
     violates conjunct 2.
@@ -9982,7 +10038,7 @@ def ec_match_residual(Lambda_UV, N_f, alpha_EC, n_spin):
 
     Vanishes iff `α_EC = 1` under positive `(Λ_UV, N_f, n_spin)` —
     the Wave 6 expression of Decision Gate E.2 (Wave 1
-    `a2_matches_GNemerg_iff_alpha_ADW_unity` lifted to the EC sector).
+    `a2_matches_GNemerg_iff_alpha_ADW_quarter` lifted to the EC sector).
 
     Lean: EinsteinCartanExtension.ecResidual,
           ecResidual_eq_zero_iff_alpha_unity

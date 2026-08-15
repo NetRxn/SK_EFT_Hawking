@@ -22,7 +22,7 @@ load-bearing parametric content of the Wave 6 model is the closed form
 
   `|T_EC|(Λ_UV, N_f, α_EC, n_spin)
       = G_N^emerg(Λ_UV, N_f, α_EC) · n_spin
-      = α_EC · 12π/(N_f · Λ_UV²) · n_spin`.
+      = α_EC · 3π/(N_f · Λ_UV²) · n_spin`.
 
 The **load-bearing correctness-push** is a quantitative observational-
 bound theorem: at the natural microscopic point `(Λ_UV, N_f, α_EC) =
@@ -44,7 +44,7 @@ the Wave 6 expression of Decision Gate E.2.
   cross-bridges)
 - §3: EC-residual theorems (Decision-Gate-style biconditional)
 - §4: Cross-bridge to Phase 6a.1 (`G_N_emerg_at_alpha_one`) +
-  Wave 1 (`G_N_from_a2_eq_G_N_sakharov`)
+  Wave 1 (`G_N_from_a2_eq_quarter_G_N_sakharov`)
 - §5: Quantitative observational-bound theorems (correctness-push
   Decision-Gate-E.6 anchor + cross-channel chaining)
 - §6: Tracked-Prop bundle `H_EinsteinCartanExtensionHolds` +
@@ -79,9 +79,9 @@ the Wave 6 expression of Decision Gate E.2.
   rotational-axial-torsion bound `T < 10⁻²⁹ GeV`.
 - Phase 6a.1 LinearizedEFE.lean — `G_N_emerg`, `G_N_emerg_at_alpha_one`
 - Phase 6e Wave 1 HeatKernelExpansion.lean — `G_N_from_a2`,
-  `G_N_from_a2_pos`, `G_N_from_a2_eq_G_N_sakharov`
+  `G_N_from_a2_pos`, `G_N_from_a2_eq_quarter_G_N_sakharov`
 - Phase 6e Wave 5 MicroscopicCoefficientMatch.lean — `gNMicroscopic`,
-  `gNMicroscopic_at_alpha_one_eq_G_N_emerg`
+  `gNMicroscopic_eq_G_N_emerg_at_quarter_alpha`
 
 ## Scope lock
 
@@ -118,7 +118,7 @@ is therefore
 
   `torsionAmplitude(Λ_UV, N_f, α_EC, n_spin)
       = gNMicroscopic(Λ_UV, N_f, α_EC) · n_spin
-      = α_EC · 12π/(N_f · Λ_UV²) · n_spin`.
+      = α_EC · 3π/(N_f · Λ_UV²) · n_spin`.
 
 Defined through Wave 5's `gNMicroscopic` for *structural* P6
 cross-module integrity: any future change to the ADW G_N rescaling
@@ -159,7 +159,7 @@ torsion amplitude relative to the Sakharov-Adler calibration:
 
 Vanishes iff `α_EC = 1` (under positive `(Λ_UV, N_f, n_spin)`).
 The Wave 6 expression of Decision Gate E.2 (the Wave 1 closure
-`a2_matches_GNemerg_iff_alpha_ADW_unity` lifted to the EC sector). -/
+`a2_matches_GNemerg_iff_alpha_ADW_quarter` lifted to the EC sector). -/
 def ecResidual (Λ_UV N_f α_EC n_spin : ℝ) : ℝ :=
   torsionAmplitude Λ_UV N_f α_EC n_spin
     - torsionAmplitude Λ_UV N_f 1 n_spin
@@ -229,7 +229,7 @@ anchor).**  Under positive cutoff and species count and *non-zero*
 spin density, the EC residual vanishes iff the ADW coefficient is at
 the Sakharov-Adler calibration `α_EC = 1`.  This is the Wave 6
 expression of Decision Gate E.2 — Wave 1's
-`a2_matches_GNemerg_iff_alpha_ADW_unity` lifted to the EC sector.
+`a2_matches_GNemerg_iff_alpha_ADW_quarter` lifted to the EC sector.
 
 Substantive: forward direction uses positivity of `G_N_from_a2`
 (`G_N_from_a2_pos`, Wave 1) plus non-vanishing of `n_spin` to flip
@@ -257,21 +257,36 @@ theorem ecResidual_eq_zero_iff_alpha_unity
 
 /-! ## §4. Cross-bridge to Phase 6a.1 + Wave 1 -/
 
-/-- **Substantive cross-bridge (Phase 6a.1 + Wave 1).**  At the
-Sakharov-Adler calibration `α_EC = 1`, the torsion amplitude equals
-`G_N_emerg(Λ_UV, N_f, 1) · n_spin` — the Phase-6a.1 emergent Newton
-constant times the spin density.  Proof body invokes both
-`LinearizedEFE.G_N_emerg_at_alpha_one` and Wave 5's
-`gNMicroscopic_at_alpha_one_eq_G_N_emerg` by name — drift-protection
-per `feedback_python_lean_refs_drift.md` (P6 cross-module integrity:
-the Wave-6 prediction at calibration is structurally identified with
-the Phase-6a.1 emergent G_N). -/
-theorem torsionAmplitude_at_alpha_one_eq_G_N_emerg_times_n
+/-- **Substantive cross-bridge (Phase 6a.1 + Wave 1), corrected
+2026-08-15 and strengthened to an identity in `α_EC`.**  For *every*
+`α_EC`, the torsion amplitude equals `G_N_emerg(Λ_UV, N_f, α_EC/4) ·
+n_spin` — the Phase-6a.1 emergent Newton constant at a quarter of the
+EC coefficient, times the spin density.
+
+The quarter is the Dirac index trace carried by the corrected `a_2`.
+This replaces `torsionAmplitude_at_alpha_one_eq_G_N_emerg_times_n`,
+which identified the two at `α_EC = 1` and is false under the
+correction.  Proof body invokes Wave 5's
+`gNMicroscopic_eq_G_N_emerg_at_quarter_alpha` by name —
+drift-protection per `feedback_python_lean_refs_drift.md` (P6
+cross-module integrity: the Wave-6 prediction at calibration is
+structurally identified with the Phase-6a.1 emergent G_N). -/
+theorem torsionAmplitude_eq_G_N_emerg_at_quarter_alpha_times_n
+    (Λ_UV N_f α_EC n_spin : ℝ) :
+    torsionAmplitude Λ_UV N_f α_EC n_spin =
+      SKEFTHawking.LinearizedEFE.G_N_emerg Λ_UV N_f (α_EC / 4) * n_spin := by
+  unfold torsionAmplitude
+  rw [SKEFTHawking.MicroscopicCoefficientMatch.gNMicroscopic_eq_G_N_emerg_at_quarter_alpha]
+
+/-- **Specialization at the EC calibration `α_EC = 1`.**  The Wave-6
+torsion amplitude at `α_EC = 1` is the Phase-6a.1 emergent Newton
+constant at `α_ADW = 1/4`, times the spin density. -/
+theorem torsionAmplitude_at_alpha_one_eq_G_N_emerg_at_quarter_times_n
     (Λ_UV N_f n_spin : ℝ) :
     torsionAmplitude Λ_UV N_f 1 n_spin =
-      SKEFTHawking.LinearizedEFE.G_N_emerg Λ_UV N_f 1 * n_spin := by
-  unfold torsionAmplitude
-  rw [SKEFTHawking.MicroscopicCoefficientMatch.gNMicroscopic_at_alpha_one_eq_G_N_emerg]
+      SKEFTHawking.LinearizedEFE.G_N_emerg Λ_UV N_f (1 / 4) * n_spin := by
+  simpa using
+    torsionAmplitude_eq_G_N_emerg_at_quarter_alpha_times_n Λ_UV N_f 1 n_spin
 
 /-! ## §5. Quantitative observational-bound theorems (correctness-push) -/
 
@@ -306,8 +321,11 @@ Kostelecky-Russell-Tasson published bound `1/10³¹ GeV`.
 
 Concretely we prove `torsionAtCosmologicalBackground planckMassGeV
 16 1 < torsionBoundKostelecky`.  The natural-parameter prediction is
-`|T_EC| = 12π/(16 · planckMassGeV²) · 13/10⁴⁰ ≃ 2.05×10⁻⁷⁷ GeV`,
-which sits ~46 orders of magnitude below the bound.
+`|T_EC| = 3π/(16 · planckMassGeV²) · 13/10⁴⁰ ≃ 5.3×10⁻⁷⁸ GeV`,
+which sits ~46 orders of magnitude below the bound.  (The 2026-08-15
+`a_2` trace correction divided `G_N_from_a2` — and with it this
+amplitude — by four; the bound was and remains passed by a wide
+margin.)
 
 **Substantive Decision-Gate-style anchor:** quantitatively connects
 the Wave 6 microscopic prediction to the published observational
@@ -320,7 +338,7 @@ theorem torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky :
   unfold torsionAtCosmologicalBackground torsionAmplitude gNMicroscopic
         G_N_from_a2 cosmologicalSpinDensityGeV3 planckMassGeV
         torsionBoundKostelecky
-  -- Goal: 1 * (12π / (16 · (12·10^18)²)) * (13/10^40) < 1/10^31.
+  -- Goal: 1 * (3π / (16 · (12·10^18)²)) * (13/10^40) < 1/10^31.
   have hpi_lt : Real.pi < 3.15 := Real.pi_lt_d2
   have hpi_pos : 0 < Real.pi := Real.pi_pos
   have h36 : (0 : ℝ) < (10 : ℝ) ^ (36 : ℕ) := pow_pos (by norm_num) _
@@ -336,17 +354,17 @@ theorem torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky :
     have h2 : ((10 : ℝ) ^ (18 : ℕ)) ^ 2 = (10 : ℝ) ^ (36 : ℕ) := by rw [← pow_mul]
     rw [h1, h2]; norm_num
   rw [h_sq_eq]
-  -- Step 2: collapse the LHS into (12π·13) / (2304·10^76).
+  -- Step 2: collapse the LHS into (3π·13) / (2304·10^76).
   have h_LHS_clean :
-      (1 : ℝ) * (12 * Real.pi / (16 * (144 * (10 : ℝ) ^ (36 : ℕ))))
+      (1 : ℝ) * (3 * Real.pi / (16 * (144 * (10 : ℝ) ^ (36 : ℕ))))
         * (13 / (10 : ℝ) ^ (40 : ℕ))
-      = (12 * Real.pi * 13) / (2304 * (10 : ℝ) ^ (76 : ℕ)) := by
+      = (3 * Real.pi * 13) / (2304 * (10 : ℝ) ^ (76 : ℕ)) := by
     have h36_ne : (10 : ℝ) ^ (36 : ℕ) ≠ 0 := ne_of_gt h36
     have h40_ne : (10 : ℝ) ^ (40 : ℕ) ≠ 0 := ne_of_gt h40
     have h_lhs_to_combined :
-        (1 : ℝ) * (12 * Real.pi / (16 * (144 * (10 : ℝ) ^ (36 : ℕ))))
+        (1 : ℝ) * (3 * Real.pi / (16 * (144 * (10 : ℝ) ^ (36 : ℕ))))
           * (13 / (10 : ℝ) ^ (40 : ℕ))
-        = (12 * Real.pi * 13) /
+        = (3 * Real.pi * 13) /
             ((16 * (144 * (10 : ℝ) ^ (36 : ℕ))) * (10 : ℝ) ^ (40 : ℕ)) := by
       field_simp
     rw [h_lhs_to_combined]
@@ -361,27 +379,27 @@ theorem torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky :
   -- Step 3: cross-multiply via div_lt_div_iff₀.
   have h_denom_pos : (0 : ℝ) < 2304 * (10 : ℝ) ^ (76 : ℕ) := by positivity
   rw [div_lt_div_iff₀ h_denom_pos h31]
-  -- Goal: 12·π·13 · 10^31 < 1 · (2304 · 10^76)
-  -- 156π < 156·3.15 = 491.4 < 2304 ≤ 2304·10^45 = 2304·10^76 / 10^31, so the
+  -- Goal: 3·π·13 · 10^31 < 1 · (2304 · 10^76)
+  -- 39π < 39·3.15 = 122.85 < 2304 ≤ 2304·10^45 = 2304·10^76 / 10^31, so the
   -- inequality holds.  Prove via h_pi13_bound + the 10^45 ≥ 1 expansion.
   rw [h_split]
-  -- Goal: 12·π·13 · 10^31 < 1 · (2304 · (10^31 · 10^45))
-  have h_pi13_bound : 12 * Real.pi * 13 < 491.4 := by nlinarith [hpi_lt, hpi_pos]
+  -- Goal: 3·π·13 · 10^31 < 1 · (2304 · (10^31 · 10^45))
+  have h_pi13_bound : 3 * Real.pi * 13 < 122.85 := by nlinarith [hpi_lt, hpi_pos]
   have h_45_ge_one : (1 : ℝ) ≤ (10 : ℝ) ^ (45 : ℕ) := by
     have h0 : (1 : ℝ) = (10 : ℝ) ^ (0 : ℕ) := by norm_num
     rw [h0]
     exact pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 10) (by decide : (0 : ℕ) ≤ 45)
-  have h_491_lt_2304_10_45 : (491.4 : ℝ) < 2304 * (10 : ℝ) ^ (45 : ℕ) := by
+  have h_491_lt_2304_10_45 : (122.85 : ℝ) < 2304 * (10 : ℝ) ^ (45 : ℕ) := by
     have h_2304_le : (2304 : ℝ) ≤ 2304 * (10 : ℝ) ^ (45 : ℕ) := by
       calc (2304 : ℝ) = 2304 * 1 := by ring
         _ ≤ 2304 * (10 : ℝ) ^ (45 : ℕ) :=
             mul_le_mul_of_nonneg_left h_45_ge_one (by norm_num)
     linarith
   -- Final assembly: multiply h_491_lt_2304_10_45 by 10^31 (positive), chain.
-  have h_pi13_step : 12 * Real.pi * 13 * (10 : ℝ) ^ (31 : ℕ) <
-      491.4 * (10 : ℝ) ^ (31 : ℕ) :=
+  have h_pi13_step : 3 * Real.pi * 13 * (10 : ℝ) ^ (31 : ℕ) <
+      122.85 * (10 : ℝ) ^ (31 : ℕ) :=
     mul_lt_mul_of_pos_right h_pi13_bound h31
-  have h_491_step : (491.4 : ℝ) * (10 : ℝ) ^ (31 : ℕ) <
+  have h_491_step : (122.85 : ℝ) * (10 : ℝ) ^ (31 : ℕ) <
       (2304 * (10 : ℝ) ^ (45 : ℕ)) * (10 : ℝ) ^ (31 : ℕ) :=
     mul_lt_mul_of_pos_right h_491_lt_2304_10_45 h31
   have h_RHS_eq : (1 : ℝ) * (2304 * ((10 : ℝ) ^ (31 : ℕ) * (10 : ℝ) ^ (45 : ℕ)))

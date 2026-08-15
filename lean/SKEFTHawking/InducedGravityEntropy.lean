@@ -15,13 +15,20 @@ ADW Sakharov induced-gravity substrate WITHOUT γ-tuning. The conditional
   `H_Sakharov (G_N fully induced) ∧ (S_BH = S_ent) ∧ (S_ent = Frolov–Fursaev a₂ form) ⟹ S_BH = A/(4 G_N)`.
 
 **Anti-vacuity (strengthening checklist #5).** NONE of the three antecedents is `S = A/4G`:
-(i) the Sakharov induction condition `G_N = G_N_from_a2 = 12π/(N_f Λ²)` (no bare action;
+(i) the Sakharov induction condition `G_N = G_N_from_a2 = 3π/(N_f Λ²)` (no bare action;
 `HeatKernelExpansion`); (ii) the entanglement identification `S_BH = S_ent` (Sorkin–Bombelli);
 (iii) the Frolov–Fursaev–Zelnikov / Susskind–Uglum heat-kernel result
-`S_ent = (N_f Λ²/(48π))·A`. The `1/4` is the ratio `48 : 12 = 4 : 1` — the SAME Seeley–DeWitt
-`a₂` coefficient fixes both the induced `G_N` (EH, `12π`) and the horizon entanglement entropy
-(`48π`), and their ratio is exactly 4. So the `1/4` emerges algebraically, not by tuning γ
+`S_ent = (N_f Λ²/(12π))·A`. The `1/4` is the ratio `12 : 3 = 4 : 1` — the SAME Seeley–DeWitt
+`a₂` coefficient fixes both the induced `G_N` (EH) and the horizon entanglement entropy, and
+their ratio is exactly 4. So the `1/4` emerges algebraically, not by tuning γ
 (Bianchi arXiv:1204.5122 corroborates γ-independence; the LQG counting `−3/2` is Wave 7B).
+
+⚠️ **2026-08-15 trace correction.** Both prefactors previously read four times smaller in
+`1/G` and four times larger in `S_ent` (`12π` and `48π`), because `a₂` omitted the Dirac index
+trace `tr_V 𝟙 = 4`. Both are proportional to the *same* `a₂`, so both moved by the same factor
+and **the 4 : 1 ratio — the entire content of Gate A.2 — is untouched.** That invariance is the
+point: Frolov–Fursaev's result is that induced gravity gives exactly `A/(4G)`, and it is the
+ratio, not either absolute prefactor, that the literature fixes.
 
 **Modeling note (checklist #5, honest input).** The conical-deficit replica derivation of the
 `48π` prefactor is not formalized (Mathlib lacks conical heat kernels); it enters as a NAMED,
@@ -40,17 +47,18 @@ open Real
 /--
 **Frolov–Fursaev horizon entanglement-entropy area density.** The leading (area-law)
 entanglement entropy of `N_f` Dirac fermions across the horizon, from the Seeley–DeWitt `a₂`
-heat-kernel coefficient (conical-deficit replica trick): `S_ent = (N_f Λ²/(48π))·A`. The
+heat-kernel coefficient (conical-deficit replica trick): `S_ent = (N_f Λ²/(12π))·A`. The
 coefficient is the FFZ/Susskind–Uglum result — the SAME `a₂` that induces `G_N`
-(`HeatKernelExpansion.G_N_from_a2 = 12π/(N_f Λ²)`), with the heat-kernel-to-EH ratio fixed to 4
-(`48 = 4·12`). [The `48π` prefactor is a documented physical input, not derived here — see the
-module header and `frolov_fursaev_falsifier_wrong_coeff`.]
+(`HeatKernelExpansion.G_N_from_a2 = 3π/(N_f Λ²)`), with the heat-kernel-to-EH ratio fixed to 4
+(`12 = 4·3`). [The prefactor is a documented physical input, not derived here — see the
+module header and `frolov_fursaev_falsifier_wrong_coeff`. It carries the Dirac index trace, as
+`a₂` does; it read `48π` before the 2026-08-15 correction moved both sides together.]
 -/
 noncomputable def entanglementEntropyAreaLeading (N_f Λ A : ℝ) : ℝ :=
-  N_f * Λ ^ 2 / (48 * Real.pi) * A
+  N_f * Λ ^ 2 / (12 * Real.pi) * A
 
 /-- **Sakharov induction condition.** The physical Newton constant is the fully-induced value
-(no bare gravitational action): `G_N = G_N_from_a2 Λ N_f = 12π/(N_f Λ²)`. -/
+(no bare gravitational action): `G_N = G_N_from_a2 Λ N_f = 3π/(N_f Λ²)`. -/
 def H_Sakharov (Λ N_f G_N : ℝ) : Prop := G_N = HeatKernelExpansion.G_N_from_a2 Λ N_f
 
 /-- **Bridge: Sakharov induction ⟺ the substrate's `α_ADW = 1` (δG = 0).** Ties `H_Sakharov` to
@@ -62,8 +70,9 @@ theorem H_Sakharov_iff_alpha_unity {Λ N_f α_ADW : ℝ} (hΛ : 0 < Λ) (hN : 0 
       MicroscopicCoefficientMatch.matchResidual, H_Sakharov, sub_eq_zero]
 
 /-- **The 1/4 ratio (substantive content).** The Frolov–Fursaev entanglement area density equals
-`A/(4 · G_N^induced)` — i.e. the heat-kernel `a₂` ratio is `48 : 12 = 4 : 1`. This is the
-algebraic heart: the `1/4` is forced by the shared `a₂`, with no free parameter. -/
+`A/(4 · G_N^induced)` — i.e. the heat-kernel `a₂` ratio is `12 : 3 = 4 : 1`. This is the
+algebraic heart: the `1/4` is forced by the shared `a₂`, with no free parameter, and it is
+invariant under the 2026-08-15 trace correction that rescaled both prefactors. -/
 theorem entanglement_area_eq_quarter_inv_G_induced (A Λ N_f : ℝ) (hΛ : 0 < Λ) (hN : 0 < N_f) :
     entanglementEntropyAreaLeading N_f Λ A
       = A / (4 * HeatKernelExpansion.G_N_from_a2 Λ N_f) := by
@@ -98,13 +107,13 @@ theorem frolov_fursaev_dirac_witness (A Λ N_f : ℝ) (hΛ : 0 < Λ) (hN : 0 < N
     (entanglementEntropyAreaLeading N_f Λ A) (entanglementEntropyAreaLeading N_f Λ A)
     hΛ hN rfl rfl rfl
 
-/-- **Falsifier (the 48π coefficient is load-bearing).** If `S_ent = c·A` for any coefficient
-`c ≠ N_f Λ²/(48π)` (a heat-kernel coefficient other than Frolov–Fursaev's), the induced-gravity
+/-- **Falsifier (the `12π` coefficient is load-bearing).** If `S_ent = c·A` for any coefficient
+`c ≠ N_f Λ²/(12π)` (a heat-kernel coefficient other than Frolov–Fursaev's), the induced-gravity
 match `S_BH = A/(4 G_N)` FAILS. So the `1/4` genuinely depends on the FF coefficient — it is not
 vacuously true for any input. -/
 theorem frolov_fursaev_falsifier_wrong_coeff
     (A Λ N_f c : ℝ) (hA : 0 < A) (hΛ : 0 < Λ) (hN : 0 < N_f)
-    (hc : c ≠ N_f * Λ ^ 2 / (48 * Real.pi)) :
+    (hc : c ≠ N_f * Λ ^ 2 / (12 * Real.pi)) :
     c * A ≠ A / (4 * HeatKernelExpansion.G_N_from_a2 Λ N_f) := by
   rw [← entanglement_area_eq_quarter_inv_G_induced A Λ N_f hΛ hN, entanglementEntropyAreaLeading]
   intro h

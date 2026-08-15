@@ -38,12 +38,14 @@ def G_N_linearized_at_alpha(
 
 
 def a2_calibration_relative_error(
-    Lambda_UV: float, N_f: float, alpha_ADW: float = 1.0
+    Lambda_UV: float, N_f: float, alpha_ADW: float = 0.25
 ) -> float:
     """|G_N_heat_kernel - G_N_linearized| / G_N_linearized.
 
-    Returns 0.0 at α_ADW = 1 (exact match). Linear in |α − 1| below 1
-    and bounded by |α − 1| / α above 1.
+    Returns 0.0 at α_ADW = 1/4 (exact match).  The locus is 1/4, not 1:
+    the traced a_2 gives G_N_from_a2 = 3π/(N_f Λ²) against the
+    linearized 12π/(N_f Λ²), the factor being the Dirac index trace.
+    At α_ADW = 1 the relative error is 3/4 exactly.
     """
     G_hk = G_N_from_a2(Lambda_UV, N_f)
     G_lin = G_N_linearized_at_alpha(Lambda_UV, N_f, alpha_ADW)
@@ -53,7 +55,7 @@ def a2_calibration_relative_error(
 def a2_calibration_passes(
     Lambda_UV: float,
     N_f: float,
-    alpha_ADW: float = 1.0,
+    alpha_ADW: float = 0.25,
     tolerance: float | None = None,
 ) -> bool:
     """Decision Gate E.2 boolean: relative error within tolerance."""
