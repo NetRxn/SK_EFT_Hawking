@@ -51,7 +51,11 @@ from src.core.constants import (
     POLARITON_MASS,
     POLARITON_PLATFORMS,
 )
-from src.core.formulas import polariton_hawking_temperature
+from src.core.formulas import (
+    polariton_hawking_temperature,
+    stimulated_hawking_gain,
+    stimulated_hawking_snr,
+)
 
 _LKB = POLARITON_PLATFORMS['Paris_standard']
 
@@ -262,6 +266,32 @@ SCALARS = {
         'value': lambda: (
             f'{math.log(3.0) / (2.0 * math.pi) * (1.0 + _delta_disp(_KAPPA_SMOOTH)):.3f}'
         ),
+    },
+
+    # ── Gain spectrum (§IV) ───────────────────────────────────────────────
+    # Consumed from the canonical formulas.stimulated_hawking_gain / _snr so
+    # the manuscript cannot drift from the pipeline. The argument is
+    # omega/kappa_eff, which is what the exponent actually contains; the
+    # translation to absolute kappa is lkb_gain_threshold_absolute above.
+    'lkb_gain_at_0p1': {
+        'description': 'E1 §4 and the Fig. 1 caption: G at omega = 0.1 kappa_eff, '
+                       'greybody-saturated.',
+        'value': lambda: f'{stimulated_hawking_gain(0.1, 1.0):.2f}',
+    },
+    'lkb_gain_at_0p3': {
+        'description': 'E1 §4: G at omega = 0.3 kappa_eff, greybody-saturated.',
+        'value': lambda: f'{stimulated_hawking_gain(0.3, 1.0):.2f}',
+    },
+    'lkb_gain_at_1': {
+        'description': 'E1 §4: G at omega = kappa_eff, greybody-saturated. Two '
+                       'significant figures, matching its neighbours (the prior '
+                       'draft rounded this one to 0.002 and its neighbours to two).',
+        'value': lambda: f'{stimulated_hawking_gain(1.0, 1.0):.4f}',
+    },
+    'lkb_snr_at_0p1': {
+        'description': 'E1 §4: single-shot SNR at omega = 0.1 kappa_eff with '
+                       '100 probe photons per mode.',
+        'value': lambda: f'{stimulated_hawking_snr(0.1, 1.0, 100, 1):.0f}',
     },
 
     # ── The primary source's own normalization (§II) ──────────────────────

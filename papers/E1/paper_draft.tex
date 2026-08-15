@@ -331,19 +331,156 @@ prediction of what it will return.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The stimulated-Hawking gain spectrum}
-%% DRAFTING — §IV
+
+%% Numbers consumed from src/core/formulas.py :: stimulated_hawking_gain
+%% and :: stimulated_hawking_snr via papers/E1/tables.py. The argument is
+%% omega/kappa_eff, which is what the exponent contains.
+
+Waiting for spontaneous emission is what makes the atomic-BEC
+measurements slow. Driving the horizon instead removes that cost.
+A coherent probe injected at frequency $\omega$ scatters
+anomalously at the horizon, and the amplitude returned in the
+partner channel is set by the same Bogoliubov mixing that produces
+the spontaneous pairs, so a classical mean-field measurement reads
+out a quantum-gravitational analog coefficient~\cite{Grisins2016}.
+The gain is
+\begin{equation}
+G(\omega) = \frac{\Gamma(\omega)}{e^{2\pi\omega/\kappa_{\rm eff}} - 1},
+\label{eq:gain}
+\end{equation}
+with $\Gamma(\omega)$ the greybody transmission factor and
+$\kappa_{\rm eff} = \kappa\,(1 + \delta_{\rm disp})$ the surface
+gravity carrying the dispersive correction of
+Eq.~\eqref{eq:delta_disp}. At the smooth horizon
+$\kappa_{\rm eff}/\kappa = \input{tables/lkb_kappa_eff_ratio_smooth.tex}\unskip$, a
+19\% reduction, and this is the only place a dispersive coefficient
+enters; the Letter does not introduce a second one.
+
+Every number below assumes the greybody-saturation limit
+$\Gamma(\omega) \equiv 1$, and the statements that follow are
+universal in $\kappa$ only within that limit. The assumption is
+defensible in the low-frequency window
+$\omega \lesssim 0.3\,\kappa$ of interest here, where greybody
+corrections enter at $\mathcal{O}(\omega^2/\kappa^2)$ in the
+hydrodynamic regime and leave the plateau
+flat~\cite{Finazzi2012,Jacquet2023QNM}; it is not defensible outside
+it, and a measured $\Gamma(\omega)$ profile is one of the things the
+experiment would deliver.
+
+Under it the gain falls monotonically from a low-frequency
+divergence: $G = \input{tables/lkb_gain_at_0p1.tex}\unskip$ at
+$\omega = 0.1\,\kappa_{\rm eff}$,
+$\input{tables/lkb_gain_at_0p3.tex}\unskip$ at $0.3\,\kappa_{\rm eff}$, and
+$\input{tables/lkb_gain_at_1.tex}\unskip$ at $\kappa_{\rm eff}$. Setting
+$G = 1/2$ inverts Eq.~\eqref{eq:gain} exactly, with no device
+parameter surviving:
+\begin{equation}
+\frac{\omega_{1/2}}{\kappa_{\rm eff}} = \frac{\ln 3}{2\pi}
+  = \input{tables/lkb_gain_threshold.tex}\unskip .
+\label{eq:threshold}
+\end{equation}
+Equation~\eqref{eq:threshold} is the sharpest prediction in this
+Letter, because it is a pure number. Expressed in the surface
+gravity the experiment measures rather than in $\kappa_{\rm eff}$,
+it sits at $\omega_{1/2} = \input{tables/lkb_gain_threshold_absolute.tex}\unskip\,\kappa$
+at the smooth horizon, and the difference between
+$\input{tables/lkb_gain_threshold.tex}\unskip$ and
+$\input{tables/lkb_gain_threshold_absolute.tex}\unskip$ is exactly the dispersive
+correction. A measurement that locates the half-gain frequency
+therefore measures $\delta_{\rm disp}$, and through it $D$, without
+needing an absolute calibration of the probe.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_stimulated_hawking_spectrum.png}
+\caption[Stimulated-Hawking gain against normalized frequency]{Stimulated-Hawking
+gain $G(\omega)$ against normalized frequency, at the smooth-horizon
+$\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ and
+$D = \input{tables/lkb_D_smooth.tex}\unskip$ of Falque \emph{et al.}~\cite{Falque2025},
+in the greybody-saturation limit $\Gamma \equiv 1$. The dashed line
+is $G = 1/2$, at which a single shot with 100 probe photons per mode
+reaches $5\sigma$; Eq.~\eqref{eq:threshold} puts the crossing at
+$\ln(3)/2\pi$, independent of every device parameter. The shaded
+band is the window of Eq.~\eqref{eq:window}, above which the
+dispersive correction stops being small and below which the
+apparatus rather than the theory sets the edge.}
+\label{fig:gain}
+\end{figure}
+
+For a shot-noise-limited readout,
+$\mathrm{SNR} = \sqrt{N_{\rm shots} N_{\rm probe}}\;G(\omega)$, so
+$G = 1/2$ with $N_{\rm probe} = 100$ probe photons per mode is a
+single-shot $5\sigma$ detection. At
+$\omega = 0.1\,\kappa_{\rm eff}$ the same 100 photons give
+$\mathrm{SNR} = \input{tables/lkb_snr_at_0p1.tex}\unskip$. The comparison that
+matters is not with a better spontaneous measurement but with the
+scaling: a spontaneous correlation signal at the
+$5\times 10^{-5}$ level needs of order $10^9$ repetitions to
+resolve~\cite{Grisins2016,Jacquet2022}, and a stimulated
+measurement replaces that repetition count with probe power.
+Quasinormal modes of the driven-dissipative
+geometry~\cite{Jacquet2023QNM,Burkhard2025} concentrate the response
+at particular frequencies and offer additional windows, which the
+Paris-LKB apparatus has already resolved.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Noise floor and the falsifiable window}
-%% DRAFTING — §V
 
-%% ══════════════════════════════════════════════════════════════════
-\section{Measurements requested from the LKB team}
-%% DRAFTING — §VI
+The polariton fluid is not cold. Its mean-field energy scale
+corresponds to
+\begin{equation}
+T_{\rm noise} = \frac{m^* c_s^2}{k_B} = \input{tables/lkb_T_noise_K.tex}\unskip\,\si{\kelvin},
+\end{equation}
+an order of magnitude above $T_H$, and in a spontaneous measurement
+that ratio is the whole problem: the Hawking occupation would have
+to be dug out of a background ten times larger.
 
-%% ══════════════════════════════════════════════════════════════════
-\section{Conclusion}
-%% DRAFTING — §VII
+The stimulated measurement does not face that ratio, and the reason
+is spectral and phase structure rather than magnitude. The
+driven-dissipative background is broadband and phase-incoherent
+with the probe, whereas Eq.~\eqref{eq:gain} describes a response at
+the probe frequency, phase-locked to it. A narrowband
+phase-referenced readout therefore rejects the background by the
+ratio of its bandwidth to the detection bandwidth, and this is not
+a modification of the Paris-LKB apparatus but a description of it:
+the existing coherent probe spectroscopy already modulates the
+probe at \SI{5}{\mega\hertz} and detects in a \SI{300}{\hertz}
+bandwidth around that modulation~\cite{Falque2025}. What survives
+in the detection band is the shot noise of the probe itself, which
+is what the SNR above assumes. The background enters the
+uncertainty only through its contribution to the condensate's
+amplitude fluctuations, which is spectrally flat across the
+window~\cite{Amelio2020} and so cannot mimic the Planckian shape of
+Eq.~\eqref{eq:gain}.
+
+That shape is what makes the prediction falsifiable rather than
+merely quantitative. We give the window
+\begin{equation}
+\boxed{\;\omega/\kappa \lesssim 0.30\;}
+\label{eq:window}
+\end{equation}
+at the smooth horizon. The upper edge is derived: above it $D$ is
+no longer small against the frequencies being probed, the
+$\mathcal{O}(\omega^2/\kappa^2)$ greybody corrections that
+Eq.~\eqref{eq:gain} neglects stop being negligible, and
+$G$ has fallen to $\input{tables/lkb_gain_at_0p3.tex}\unskip$, near the point where
+the returned signal is no longer a large fraction of the probe. The
+lower edge is set by the apparatus, not by the theory: $G$ grows
+without bound as $\omega \to 0$, and what stops the window there is
+the frequency resolution of the probe scan and the finite spatial
+extent of the fluid. We do not fix it here, because fixing it
+requires the resolution figures for the tailored-profile
+configuration rather than for the one already
+published.
+
+Inside the window the prediction is over-determined, which is what
+gives it teeth. The three device quantities $(c_s, \xi, \kappa)$
+enter $G(\omega)$ only through $\kappa_{\rm eff}$, a single
+combination, so a measured gain profile is a one-parameter fit to a
+three-parameter set that has been independently measured. Agreement
+is a nontrivial check; disagreement in the shape of $G(\omega)$,
+as opposed to its overall scale, cannot be absorbed into the
+greybody factor and falsifies the framework.
 
 \begin{acknowledgments}
 %% DRAFTING
