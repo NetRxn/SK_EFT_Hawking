@@ -41,6 +41,7 @@ Import rules as elsewhere. No check here reads a runtime flag.
 from __future__ import annotations
 
 import ast
+import bisect
 import hashlib
 import importlib
 import json
@@ -711,6 +712,42 @@ _EM_DASH_RE = re.compile(r"(?<!-)---(?!-)|—")
 _TEX_COMMENT_RE = re.compile(r"(?<!\\)%.*")
 
 
+def _prose_with_line_index(src: Path) -> tuple[str, list[int]]:
+    r"""Comment-stripped prose as ONE string, plus each line's start offset in it.
+
+    ⚠️ **A per-LINE scan of a soft-wrapped manuscript measures the line breaks, not the
+    prose.** LaTeX source wraps at ~95 columns wherever the word happens to fall, so
+    whether a phrase is visible to a line-oriented pattern is decided by the wrap. It is
+    not hypothetical: D12 `:405-406` reads *"…and have / not inspected its text"*, and a
+    line scan sees `have` and `not inspected its text` as different subjects. That
+    passage was caught only because a SECOND pattern happened to fall inside one line —
+    reflow the paragraph and the gate goes green on unchanged prose.
+
+    A **blank line is a paragraph break** and is rendered as a full stop, so no pattern
+    can span two paragraphs; a comment-only line is not a break (a `%` note inside a
+    paragraph does not interrupt the sentence) and joins as a space. Blankness is read
+    off the RAW line, before comment stripping, so the two cases stay distinguishable.
+
+    Returns `(prose, starts)` where `starts[i]` is the offset of source line `i+1`;
+    `_line_at` maps a match offset back to a 1-indexed line, so widening the scan
+    window costs nothing in the precision of what the report names.
+    """
+    out: list[str] = []
+    starts: list[int] = []
+    pos = 0
+    for raw in src.read_text(errors="replace").splitlines():
+        piece = "." if not raw.strip() else _TEX_COMMENT_RE.sub("", raw)
+        starts.append(pos)
+        out.append(piece)
+        pos += len(piece) + 1
+    return " ".join(out), starts
+
+
+def _line_at(starts: list[int], offset: int) -> int:
+    """1-indexed source line containing `offset` in `_prose_with_line_index`'s string."""
+    return bisect.bisect_right(starts, offset)
+
+
 
 #: THE ONE definition of "reader-visible prose for bundle `code`".
 #:
@@ -1328,7 +1365,61 @@ _SELF_NARRATION = (
      r"(?:rated|supplied|flagged|caught|raised|noted)",
      "review rounds cast as actors in the manuscript's own history"),
     (r"in every draft\b", "a claim about what every draft of this paper contained"),
+    # ── Added 2026-08-15: the SECOND shape, disclosed INCOMPLETE DILIGENCE ──
+    # The seven patterns above all match one act — the manuscript narrating its own
+    # EDITING history. A manuscript telling a referee that it did not read a source it
+    # cites is a different act with the same disqualifying property: it is an account of
+    # the authors' process, the reader cannot act on it, and here it is also a submission
+    # non-starter, because the citation is left standing as support for a claim while the
+    # text says nobody read it. See ADR-014: the repair is ACQUISITION, and deleting the
+    # disclosure while keeping the citation converts a visible gap into an invisible one.
+    #
+    # ⚠️ **THREE SHAPES LOOK ALIKE AND ONLY ONE IS THE DEFECT.** This is why the patterns
+    # below key on *the text of a cited source*, never on "we did not"/"not read":
+    #
+    #   ✗ "we did not read a source we cite as support"     → the defect; must fire
+    #   ✓ "the cited source ITSELF reports partial progress" → scholarly hedging
+    #   ✓ "our novelty search covered X and not Y"          → REQUIRED on a novelty claim
+    #
+    # All three are live in D12 within 300 lines of each other, and the near-misses are
+    # measured, not imagined: `:673` *"…which presents itself as an ongoing project…so we
+    # do not read it as establishing how much of that layer is finished"* (shape 2),
+    # `:674` *"HOL Light was not among the ecosystems we assessed and we do not assert
+    # absence there"* (shape 3), and — one word from firing — `:288` *"We have not been
+    # able to inspect that development directly"* and `:792` *"We did not inspect this
+    # development"*, both of which bound a PRIOR-ART sweep rather than excusing a
+    # citation, and both of which stay green. **The discriminator is the noun**: not
+    # reading *its text* is the defect; not having surveyed *that development* is the
+    # scope statement a priority claim owes its reader.
+    #
+    # Measured before shipping, per the 2026-08-08 bar: 21 bundle drafts + their full
+    # `\input` closure (85 reader-visible files), and all 64 `paper_draft.tex` in the
+    # tree. **5 matches, all in D12, at `:405`, `:474`, `:475`, `:498`; zero elsewhere.**
+    # The existing seven patterns are unchanged at 0 in both scan modes.
+    (r"(?:have|has|had|having)\s+not\s+(?:yet\s+)?"
+     r"(?:read|inspected|examined|consulted|obtained|accessed)\s+"
+     r"(?:its|their|the|this)\s+(?:full[-\s]text|text|contents?|body|manuscript)\b",
+     "a disclosure that the text of a cited source was never read"),
+    (r"only\s+as\s+an?\s+(?:resolved\s+)?"
+     r"(?:DOI|bibliographic|catalogue|catalog|metadata|index)\s+(?:record|entry)\b",
+     "a cited source held only as a metadata record, disclosed to the reader"),
+    (r"\b[Ww]e\s+(?:have\s+|had\s+)?read\s+(?:"
+     r"[^.]{0,80}?\bin\s+(?:the\s+)?abstracts?\s+(?:only|alone)\b"
+     r"|only\s+(?:its|the|this)\s+abstracts?\b"
+     r"|(?:its|the|this)\s+abstracts?\s+(?:only|alone)\b)",
+     "a disclosure that a cited source was read in abstract only"),
 )
+
+# ── What the diligence half deliberately does NOT cover, and why (2026-08-15) ──
+# Two further phrasings of the same act were drafted and DROPPED before shipping:
+# "without having read it" and "could not obtain the full text". Both score ZERO on the
+# corpus, so neither could be validated by measurement — and each sits one word from
+# live, legitimate prose: I1 `:2543` "can be classified without reading the prose that
+# surrounds it" and `:775` "without reading a proof"; D11 `:560` "the two results we
+# could not obtain are recorded as deferred". Shipping an unmeasured pattern whose
+# nearest neighbour is correct prose in the methodology paper is exactly the mistake the
+# vocabulary denylist made. Those two phrasings are therefore UNCOVERED: the prose
+# reviewer catches them, and a pattern is added THEN, with a measurement behind it.
 
 
 @register_check("bundle_sentence_length",
@@ -1427,8 +1518,10 @@ def check_bundle_sentence_length() -> CheckResult:
                        measured=not unscannable, details=details)
 
 
-@register_check("bundle_reader_facing_voice",
-                "No bundle draft narrates its own correction history to the reader")
+@register_check(
+    "bundle_reader_facing_voice",
+    "No bundle draft narrates its own process to the reader — neither its correction "
+    "history nor its unfinished diligence")
 def check_bundle_reader_facing_voice() -> CheckResult:
     """CHECK (ADR-011 Phase 3, F-05): a fix may not narrate itself.
 
@@ -1436,6 +1529,20 @@ def check_bundle_reader_facing_voice() -> CheckResult:
     draft of itself said, when it was corrected, or which review round caught it. That
     reader has no access to the process and cannot act on it, so the text reads as a
     repository changelog pasted into a manuscript.
+
+    **Two shapes, one rule.** The first is the manuscript's own EDITING history (seven
+    patterns, 2026-08-01/08-08). The second, added 2026-08-15, is disclosed **incomplete
+    diligence** — the manuscript telling a referee that it never read the text of a
+    source it cites. Same disqualifying property, and additionally a submission
+    non-starter: the citation stands as support while the prose says nobody read it. The
+    repair is ACQUISITION (ADR-014), not deletion — dropping the disclosure and keeping
+    the citation turns a visible gap into an invisible one, so this check going RED on
+    the sites that are blocked on acquisition is the correct state, not a bug.
+
+    ⚠️ The diligence patterns key on *the text of a cited source*, never on "we did
+    not" — a source that ITSELF reports partial progress, and a novelty search that
+    states which ecosystems it covered, are legitimate and stay green. The constant's
+    comment carries the measured near-misses that fix that line.
 
     **Why it accumulates, and why an agent review cannot be the guard.** The lift
     procedure makes the manuscript the fix surface: a reviewer files a finding, the
@@ -1449,7 +1556,9 @@ def check_bundle_reader_facing_voice() -> CheckResult:
     per F-05, the history moves to `change_log.md` and the supersession ledger, which are
     where a later reader can actually check it.
 
-    Comments are stripped — `%` text is not rendered, and the lift banners live there.
+    Comments are stripped — `%` text is not rendered, and the lift banners live there —
+    and the scan runs over paragraph-joined prose, so a soft wrap cannot hide a passage
+    (`_prose_with_line_index`).
     """
     details: List[Detail] = []
     codes, _roster_err = _H.bundle_codes_or_unmeasured()
@@ -1471,14 +1580,17 @@ def check_bundle_reader_facing_voice() -> CheckResult:
                 f"\\input target {g} does not resolve and was NOT scanned",
                 measured=False))
         for src in srcs:
-            for i, line in enumerate(src.read_text(errors="replace").splitlines(), 1):
-                body = _TEX_COMMENT_RE.sub("", line)
-                for pat, why in _SELF_NARRATION:
-                    for m in re.finditer(pat, body):
-                        found.append((src, i, why, m.group(0)[:60]))
+            prose, starts = _prose_with_line_index(src)
+            for pat, why in _SELF_NARRATION:
+                for m in re.finditer(pat, prose):
+                    found.append((src, _line_at(starts, m.start()), why,
+                                  m.group(0)[:60]))
         if found:
             total += len(found)
-            src, i, why, txt = found[0]
+            # Sorted, because the patterns are now scanned pattern-major over the whole
+            # file: "first" must mean earliest in the DOCUMENT, which is the only sense
+            # in which it is a place to start reading.
+            src, i, why, txt = min(found, key=lambda f: (str(f[0]), f[1]))
             details.append(Detail(
                 code, False,
                 f"{len(found)} self-narrating passage(s); first at "
@@ -1493,7 +1605,9 @@ def check_bundle_reader_facing_voice() -> CheckResult:
     details.insert(0, Detail(
         "summary", total == 0,
         f"{checked} bundle draft(s) scanned, {total} passage(s) narrating the paper's own "
-        f"correction history (target 0; the history belongs in change_log.md)"))
+        f"process to the reader — its correction history, or a source it cites without "
+        f"having read (target 0; a correction belongs in change_log.md, and an unread "
+        f"source is repaired by acquiring it, not by dropping the disclosure — ADR-014)"))
     n_gaps = sum(1 for d in details if ":unscannable:" in d.name)
     return CheckResult(passed=(total == 0 and n_gaps == 0),
                        measured=(n_gaps == 0), details=details)

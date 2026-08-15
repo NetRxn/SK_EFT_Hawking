@@ -14,6 +14,14 @@
   lines, so neither can hide behind a colour. See `ACCURACY_LEDGER` V70 and V72; V72 records a
   closure reviewer's charge that the figure gate's green is a scope move, and does not defend it away.
 
+  **F-05 AMENDED 2026-08-15 and `bundle_reader_facing_voice` is now RED, on purpose.** The check
+  matched only one act — the manuscript narrating its own editing history — and reported 0 while
+  D12 disclosed at four sites that it cites sources it never read. That second shape now fires,
+  and the check stays red until the sources are **acquired**: per
+  [ADR-014](ADR-014-source-acquisition-and-citation-fidelity.md) deleting the disclosure while
+  keeping the citation is the walk-back, not the repair. The measurement, the three shapes that
+  look alike, and what was deliberately left uncovered are in Phase 3 §2 below.
+
   Build was authorized by the operator 2026-08-08
   (*"approved to build"*), with three standing directions that shaped the plan below:
   1. **Flywheel ordering** — *"always prioritize steps that will pay the biggest dividends as we
@@ -317,7 +325,9 @@ A gate over that vocabulary needs a per-bundle exemption and is a judgment call 
 which is exactly what the operator assigned to the prose agent.
 
 **Matching the act instead scores 13 hits across 4 bundles with I1 at ZERO**, so there is no
-exemption mechanism to maintain or drift. Four patterns, none with any legitimate use in a
+exemption mechanism to maintain or drift. Four patterns as first shipped — three more followed
+on 2026-08-08 and three on 2026-08-15, each measured corpus-wide before it was trusted (see the
+amendment below) — none with any legitimate use in a
 manuscript: a correction stamped with an ISO date; an account of what an earlier draft of this
 text said; a first-person superseded claim (*"We previously shipped…"*); an internal
 review-round finding reference. Live examples: *"three earlier drafts of this sentence named…"*,
@@ -330,6 +340,74 @@ in the present tense and only the editing account goes. Per F-05 the history mov
 
 It is a regression guard an agent run cannot be: the deposits accumulate *between* reviews, one
 per remediation round, and D11/D12 ran fourteen Stage-13 rounds in a single day.
+
+#### AMENDED 2026-08-15 — the second shape: **disclosed incomplete diligence**
+
+⚠️ **The seven patterns matched one act, and F-05 is about a class.** They all catch the
+manuscript narrating its own *editing* history. A manuscript telling a referee that it never
+read the text of a source it cites is the same violation — an account of the authors' process
+that the reader cannot act on — and the check reported **0 and was green** while D12 carried
+it at four sites. It is additionally a submission non-starter, because the citation stands as
+support for a claim while the prose says nobody read it.
+
+**The repair is ACQUISITION, not deletion, and the RED is the correct state.** Per
+[ADR-014](ADR-014-source-acquisition-and-citation-fidelity.md), dropping the disclosure while
+keeping the citation converts a visible gap into an invisible one — the narrow-and-reclassify
+move. So this check now fails on D12 and stays failing until the sources are acquired. A green
+here would have been the defect.
+
+⚠️ **THREE SHAPES LOOK ALIKE AND ONLY ONE IS THE DEFECT.** All three are live in D12 within
+300 lines of each other:
+
+| | shape | verdict |
+|---|---|---|
+| ✗ | *"we did not read a source we cite as support"* | fires — the defect |
+| ✓ | *"the cited source ITSELF reports partial progress"* | clean — scholarly hedging |
+| ✓ | *"our novelty search covered X and not Y"* | clean — REQUIRED on a novelty claim |
+
+**The discriminator is the noun, not the negation.** Not reading *its text* is the defect; not
+having surveyed *that development* is the scope statement a priority claim owes its reader. No
+pattern may key on `not read` or `we did not`: D12 `:673` writes *"…so we do not read it as
+establishing how much of that layer is finished"* (shape 2) and `:674` *"HOL Light was not
+among the ecosystems we assessed and we do not assert absence there"* (shape 3). One word
+further out sit `:288` *"We have not been able to inspect that development directly"* and
+`:792` *"We did not inspect this development"* — both bound a prior-art sweep rather than
+excuse a citation, and both are **measured near-misses that stay green**, pinned by test.
+
+**Three patterns, measured before shipping to the 2026-08-08 bar** (the check's own population
+— 21 bundle drafts plus their full `\input` closure, 85 reader-visible files — and every
+`paper_draft.tex` in the tree, 64 of them):
+
+| pattern | act | hits |
+|---|---|---|
+| `have not inspected/read/… its text` | the text of a cited source was never read | D12 `:405`, `:474` |
+| `only as a resolved DOI/metadata record` | a citation held only as a metadata record | D12 `:405`, `:475` |
+| `we have read … in abstract only` | a citation read in abstract only | D12 `:498` |
+
+**5 matches, all in D12, zero elsewhere.** The seven editing-history patterns are unchanged at
+their prior count. Note that `only as a` is otherwise *common* legitimate prose — D3 `:924`
+*"only as a structural admission"*, D8 `:500` *"only as a randomized algorithm"*, F `:383`,
+`paper17` `:87` — and the required record/entry noun is what keeps it at zero there.
+
+**Two phrasings were drafted and DROPPED, and the corpus is uncovered for them:**
+*"without having read it"* and *"could not obtain the full text"*. Both score zero, so neither
+could be validated by measurement, and each sits one word from live legitimate prose — I1
+`:2543` *"can be classified without reading the prose that surrounds it"*, D11 `:560` *"the two
+results we could not obtain are recorded as deferred"*. Shipping an unmeasured pattern whose
+nearest neighbour is correct prose in the methodology paper is the vocabulary-denylist mistake
+again. The prose reviewer covers them; a pattern is added when there is something to measure.
+
+#### AMENDED 2026-08-15 — the scan window: a soft wrap is not a hiding place
+
+The check scanned **line by line**, which on a soft-wrapped manuscript measures the line breaks
+rather than the prose. D12 `:405-406` reads *"…and have / not inspected its text"*: a line scan
+sees two different subjects, and that passage was caught only because a *second* pattern
+happened to land inside one line. Reflow the paragraph and the gate goes green on unchanged
+prose. The scan now runs over comment-stripped, paragraph-joined prose with an offset→line
+index, so the report still names an exact line; a **blank line is a paragraph break** rendered
+as a full stop, so joining cannot manufacture a match across two paragraphs, while a
+comment-only line joins as a space and cannot be used to split a sentence out of view. Measured
+across all 64 drafts: the widening adds **zero** hits for the seven existing patterns.
 
 **3. F-05:** lift §11 gains *"a fix may not narrate itself"*; §12 gains a terminal de-scarring
 pass.

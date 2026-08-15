@@ -116,6 +116,29 @@ Enforced by `validate.py --check bundle_reader_facing_voice`, target zero. Banne
 - review rounds cast as actors: `rounds 7 and 10 both rated this cosmetic`
 - a claim about the paper's own drafting: `typeset unconditionally in every draft`
 
+**And never tell the reader that you did not read a source you cite.** Same rule, second
+shape (added 2026-08-15): it is an account of your process, and it leaves the citation
+standing as support for a claim while the prose says nobody read it. Banned forms:
+
+- an unread cited source: `we have not inspected its text`
+- a citation held as metadata: `we hold that source only as a resolved DOI record`
+- a citation read off its abstract: `we have read \cite{X} in abstract only`
+
+**The fix is to acquire the source, never to delete the sentence.** Dropping the hedge while
+keeping the citation converts a visible gap into an invisible one (ADR-014). If the source
+cannot be acquired, the claim must stand without it or not stand.
+
+⚠️ **Three shapes look alike and only one is prohibited.** Keep the other two:
+
+- ✓ **the cited source is itself preliminary** — *"presents itself as an ongoing project…so
+  we do not read it as establishing how much of that layer is finished"*. You are
+  characterising the work's maturity, not confessing that you skipped it.
+- ✓ **a novelty search states its scope** — *"HOL Light was not among the ecosystems we
+  assessed and we do not assert absence there"*. This is REQUIRED on an absence claim.
+
+The line is the noun: not reading *its text* is prohibited; not having surveyed *that
+development* is the scope statement a priority claim owes its reader.
+
 **The history is not lost, it moves.** `papers/<X>/change_log.md` and
 `docs/review_finding_supersessions.json` are where a later reader can actually check it, and
 the ledger entry is required by the lift procedure anyway.

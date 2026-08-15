@@ -464,7 +464,11 @@ Two prohibitions apply to every draft, both deterministic and both enforced:
   en-dash, so that rule lives in the authoring reference.
 - **A fix may not narrate itself** (`bundle_reader_facing_voice`). The manuscript states what is
   true. It does not report what an earlier draft said, when it was corrected, or which review round
-  caught it. That history belongs in `change_log.md` and the supersession ledger.
+  caught it. That history belongs in `change_log.md` and the supersession ledger. **Nor does it
+  tell the reader that it never read a source it cites** — same rule, second shape; the repair is
+  acquiring the source, never deleting the sentence (ADR-014). A source that is *itself*
+  preliminary, and a novelty search that names the ecosystems it covered, are legitimate and stay
+  green: the line is *its text*, not *that development*.
 
 Everything else about prose — length, structure, whether the argument carries — belongs to the
 read-through reviewer, not to a check.

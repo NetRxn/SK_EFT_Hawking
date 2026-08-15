@@ -100,12 +100,28 @@ class TestAnUnreadFileIsNotACleanFile:
             f"{check} reported a MEASUREMENT over a population it could not read")
 
     @pytest.mark.parametrize("check", GAP_SENSITIVE_CHECKS)
-    def test_the_clean_tree_still_passes(self, check):
-        """The silent direction. A check wired to fail unconditionally would
-        satisfy the test above while carrying no information."""
+    def test_the_clean_tree_reports_no_GAP(self, check):
+        """The silent direction. A check wired to fail unconditionally would satisfy
+        the test above while carrying no information.
+
+        ⚠️ **It asserts the GAP mechanism, not a green corpus, and that is a
+        correction (2026-08-15).** It read `passed is True`, which is a PROXY: it
+        holds only while every one of these checks is green on production content,
+        so any legitimate red anywhere in the corpus fails a test about `\\input`
+        resolution. `bundle_reader_facing_voice` is deliberately RED — D12 discloses
+        that it cites sources it has not read, and per ADR-014 that stays red until
+        the sources are acquired, because deleting the disclosure while keeping the
+        citation is the walk-back rather than the repair. Asserting `measured is
+        True` and an empty gap set discriminates seeded from unseeded exactly, which
+        is what this file owns; the seeded leg above asserts `measured is False`.
+        """
         r = getattr(br, check)()
-        assert r.passed is True and r.measured is True, (
-            f"{check} is failing on the UNSEEDED tree: {[d.message for d in r.details[:2]]}")
+        gaps = [d.message for d in r.details if "unscannable" in d.name]
+        assert not gaps, (
+            f"{check} reported an unresolvable `\\input` on the UNSEEDED tree: {gaps}")
+        assert r.measured is True, (
+            f"{check} declined to measure the UNSEEDED tree: "
+            f"{[d.message for d in r.details[:2]]}")
 
     def test_the_fixture_restores_the_draft_byte_for_byte(
             self, seeded_unresolvable_input):

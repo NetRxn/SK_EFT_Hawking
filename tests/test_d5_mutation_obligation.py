@@ -695,7 +695,7 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
     ),
     "bundle_reader_facing_voice": (
         "test_d5_bundles_readiness.py",
-        "13 mutations (ADR-011 Phase 3, F-05). Matches the ACT of a fix narrating "
+        "22 mutations (ADR-011 Phase 3, F-05; AMENDED 2026-08-15). Matches the ACT of a fix narrating "
         "itself, NOT the vocabulary around it, and that is the design under test: the "
         "audit's proposed word denylist scores 90 on this corpus with I1 holding 48 "
         "legitimately (its subject matter IS the review pipeline), and `reviewer` "
@@ -705,7 +705,16 @@ MUTATION_VERIFIED: dict[str, tuple[str, str]] = {
         "and I2/I3's address to their referees stay CLEAN; a correction by OTHERS "
         "(`Smith corrected this in 2019`) is clean; a lift banner in a comment is "
         "ignored; a bare round ordinal is clean while a round + review-verb fires; the "
-        "report names the act and a findable line; empty population is UNVERIFIED",
+        "report names the act and a findable line; empty population is UNVERIFIED. "
+        "2026-08-15 added the SECOND shape — disclosed incomplete diligence — and its "
+        "legs are the three-way discrimination that is the design under test: an unread "
+        "cited source, a DOI-only holding and an abstract-only reading all fire, while "
+        "a source that is ITSELF preliminary (D12:673), a novelty search stating its "
+        "scope (D12:674) and an unsurveyed DEVELOPMENT (D12:288/:792, one word from the "
+        "flagged sites) stay CLEAN — the discriminator is the noun, `its text` vs `that "
+        "development`, never the negation. Plus the scan window: a passage split by a "
+        "soft wrap still fires (D12:405-406 is exactly that), a pattern may NOT span a "
+        "paragraph break, and a comment line does not break a sentence",
     ),
     "bundle_prose_em_dash_free": (
         "test_d5_bundles_readiness.py",
@@ -1013,6 +1022,15 @@ PRODUCTION_SEEDED: frozenset[str] = frozenset({
     # IDENTICAL position -> PASS: reporting that the literature corrected something is
     # ordinary scholarship, and only the paper narrating its OWN edit history is the
     # defect. Restored byte-identical.
+    # 2026-08-15 (F-05 amendment, the diligence shape): re-seeded BOTH directions into the
+    # REAL `papers/D1/paper_draft.tex`, at the top of the body. The defect SPLIT ACROSS A
+    # SOFT WRAP — "...but we have / not inspected its text" — -> FAIL naming D1:24, corpus
+    # total 5 -> 6, which is the leg that proves the scan is no longer line-oriented. In
+    # the IDENTICAL position, shape 2 + shape 3 together ("presents itself as an ongoing
+    # project, so we do not read it as establishing..." + "HOL Light was not among the
+    # ecosystems we assessed") -> D1 NOT named, total stays 5. Restored byte-identical
+    # (`cmp`). The residual 5 are D12's, and they are the CORRECT state: red until the
+    # sources are acquired (ADR-014), not a defect in the check.
     "bundle_reader_facing_voice",
     # 2026-08-08 (ADR-011 Phase 4): L1 carries 1 figure and passes at tier 2. Retiering
     # it to 0 in the REAL `papers/L1/bundle_metadata.json` -> rc=1 naming L1 against the

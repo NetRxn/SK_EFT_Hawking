@@ -125,7 +125,10 @@ Consequences you must honour:
   ranges.
 - **A fix may not narrate itself** (`bundle_reader_facing_voice`). The manuscript states
   what is true. It never reports what an earlier draft said, when it was corrected, or
-  which review caught it.
+  which review caught it — **and never that you did not read a source you cite**. If you
+  have not read a source, do not cite it as support: say so in your report and let the
+  lead acquire it. Characterising a source as itself preliminary, and stating which
+  ecosystems a novelty search covered, remain legitimate and required.
 - Stay inside your section. If your section cannot be written without changing another,
   say so in your report rather than reaching across the boundary.
 

@@ -1375,6 +1375,115 @@ class TestBundleReaderFacingVoice:
                     {"D1": "Convergence is reached at round 3 of the iteration.\n"})
         assert bru.check_bundle_reader_facing_voice().passed
 
+    # ── the SECOND shape: disclosed incomplete diligence (2026-08-15) ─────
+    #
+    # Measured over the check's own population (21 bundles + their full \input
+    # closure, 85 files) and all 64 `paper_draft.tex` in the tree: 5 matches, all
+    # in D12, at :405, :474, :475, :498. Zero elsewhere, and the seven editing-history
+    # patterns are unchanged at their prior count in both scan modes.
+    #
+    # THREE SHAPES LOOK ALIKE AND ONLY ONE IS THE DEFECT. All three are live in D12
+    # within 300 lines, so the next four tests are the design under test, not padding.
+
+    def test_an_unread_cited_source_is_flagged(self, tmp_path, monkeypatch):
+        """D12 :474 — the citation stands as support while the prose says nobody read
+        it. A submission non-starter; the repair is acquisition (ADR-014)."""
+        self._setup(tmp_path, monkeypatch, {"D1":
+            "We attach~\\cite{IrwinHilton2005} as the standard review in which this "
+            "layer is presented, but we have not inspected its text.\n"})
+        assert not bru.check_bundle_reader_facing_voice().passed
+
+    def test_a_source_held_only_as_a_metadata_record_is_flagged(
+            self, tmp_path, monkeypatch):
+        """D12 :405/:475. `abstract`-fidelity and DOI-only holdings are ADR-014's
+        subject: holding a cache is not holding the source."""
+        self._setup(tmp_path, monkeypatch, {"D1":
+            "We hold that source only as a resolved DOI record, so the attribution "
+            "should be read as provisional.\n"})
+        assert not bru.check_bundle_reader_facing_voice().passed
+
+    def test_a_source_read_in_abstract_only_is_flagged(self, tmp_path, monkeypatch):
+        """D12 :498, backing a quantitative comparison off an abstract."""
+        self._setup(tmp_path, monkeypatch, {"D1":
+            "We have read \\cite{Mather1982} in abstract only, and the closed form "
+            "attains every reduction in that range.\n"})
+        assert not bru.check_bundle_reader_facing_voice().passed
+
+    def test_a_source_that_is_ITSELF_preliminary_is_CLEAN(self, tmp_path, monkeypatch):
+        """SHAPE 2 — legitimate scholarly hedging, and a LIVE false positive the naive
+        predicate produced: D12 :673 verbatim. The paper is characterising the cited
+        work's maturity, not confessing that it skipped it. `we do not read it as
+        establishing` is why no pattern may key on `not read`."""
+        self._setup(tmp_path, monkeypatch, {"D12":
+            "A HOL Light formalization of transform methods is under "
+            "way~\\cite{RashidHasan2017}, which presents itself as an ongoing project "
+            "reporting the task completed so far together with a roadmap, so we do not "
+            "read it as establishing how much of that layer is finished.\n"})
+        r = bru.check_bundle_reader_facing_voice()
+        assert r.passed, [d.message for d in r.details]
+
+    def test_a_novelty_search_stating_its_scope_is_CLEAN(self, tmp_path, monkeypatch):
+        """SHAPE 3 — D12 :674 verbatim. Naming the ecosystems a prior-art sweep did NOT
+        cover is REQUIRED practice on a novelty claim: a gate that fired here would
+        push the corpus toward unbounded absence claims, which is the opposite of the
+        repair."""
+        self._setup(tmp_path, monkeypatch, {"D12":
+            "We are aware of no stochastic noise-metrology layer above it, though HOL "
+            "Light was not among the ecosystems we assessed and we do not assert "
+            "absence there.\n"})
+        r = bru.check_bundle_reader_facing_voice()
+        assert r.passed, [d.message for d in r.details]
+
+    def test_an_unsurveyed_DEVELOPMENT_is_CLEAN_and_the_NOUN_is_why(
+            self, tmp_path, monkeypatch):
+        """THE DISCRIMINATOR, and the measured near-miss: D12 :288 and :792 sit one
+        word from the flagged sites and must stay green. Not reading *its text* is the
+        defect — a source is cited as support and nobody read it. Not having surveyed
+        *that development* is the scope statement a priority claim owes its reader.
+        Both bound a prior-art sweep; neither excuses a citation."""
+        self._setup(tmp_path, monkeypatch, {"D12":
+            "We have not been able to inspect that development directly, so we state "
+            "the relationship rather than a comparison.\n"
+            "We did not inspect this development: both its repository host and its "
+            "blueprint host lie outside the network policy.\n"})
+        r = bru.check_bundle_reader_facing_voice()
+        assert r.passed, [d.message for d in r.details]
+
+    # ── the scan window: a soft wrap is not a hiding place ────────────────
+    def test_a_passage_SPLIT_BY_A_SOFT_WRAP_is_still_flagged(
+            self, tmp_path, monkeypatch):
+        """⚠️ THE REASON THE SCAN IS PARAGRAPH-JOINED. D12 :405-406 reads `...and have
+        / not inspected its text`, so a per-LINE scan sees two different subjects and
+        catches that passage only because a SECOND pattern happens to fall inside one
+        line. Reflow the paragraph and a line-oriented gate goes green on unchanged
+        prose: it would be measuring the line breaks, not the manuscript."""
+        self._setup(tmp_path, monkeypatch, {"D1":
+            "carries for the gradient factor below: we hold it and have\n"
+            "not inspected its text, so this attribution is provisional.\n"})
+        r = bru.check_bundle_reader_facing_voice()
+        assert not r.passed
+        assert ":1" in r.details[1].message, r.details[1].message
+
+    def test_a_pattern_may_NOT_span_a_PARAGRAPH_BREAK(self, tmp_path, monkeypatch):
+        """The other direction of the same widening, and the one that keeps it honest:
+        joining lines must not MANUFACTURE a passage out of two unrelated paragraphs.
+        A blank line is rendered as a full stop, so nothing spans it."""
+        self._setup(tmp_path, monkeypatch, {"D1":
+            "The estimator is unbiased and we have\n"
+            "\n"
+            "not inspected its text is a phrase this paper never writes as one.\n"})
+        assert bru.check_bundle_reader_facing_voice().passed
+
+    def test_a_COMMENT_LINE_does_not_break_a_sentence(self, tmp_path, monkeypatch):
+        """A `%` note inside a paragraph is invisible to the reader and does not
+        interrupt the sentence, so it must not interrupt the scan either — otherwise
+        inserting a comment is a way to switch the gate off."""
+        self._setup(tmp_path, monkeypatch, {"D1":
+            "We cite the review but we have\n"
+            "% TODO: acquire this one\n"
+            "not inspected its text.\n"})
+        assert not bru.check_bundle_reader_facing_voice().passed
+
 
 class TestBundleFigureAdequacy:
     """A bundle carries at least the figures its tier owes a reader (ADR-011 Phase 4).
