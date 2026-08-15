@@ -178,6 +178,8 @@ _WHITELIST = (
     "platform.openai.com",
     # OpenAI model and pricing documentation (added 2026-08-15)
     "openai.com",
+    # MDN — web-platform reference for the dashboard's Datastar/SSE layer (EventSource, morphing, data-* semantics) (added 2026-08-15)
+    "developer.mozilla.org",
 )
 
 # Path-scoped destinations: (host, path_prefix). A URL passes iff its host matches the
