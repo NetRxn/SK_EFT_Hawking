@@ -58,4 +58,12 @@ was healthy.
   build isolation and the `lean_build` denial the worker endpoint enforces.
   A protocol-level repair (proxy re-issuing or migrating sessions across a backend start) would
   remove the constraint entirely and is the better end state; it is not attempted here.
-- **Verify:** `uv run python scripts/slotctl.py doctor`
+- **Verify:** `uv run python -m pytest tests/test_lean_slots.py -k "mints or lease_gate or distinct_session or stale_backend or adopted" -q`
+  *What it asserts:* that the front door mints its own client-facing session, keeps it distinct per
+  client, re-establishes a stale backend mapping instead of surfacing it, and still fails closed on
+  dispatch without a lease. ⚠️ **AMENDED 2026-08-15 — the original verify was
+  `slotctl doctor`, which is VACUOUS for this finding.** `doctor` probes control-plane health and
+  never touches session handling: it passed on 2026-08-14 while this defect was fully live, and it
+  fails today for an unrelated reason (HEAD advanced past the published build epoch). A verify that
+  cannot distinguish fixed from unfixed is not a verify. The replacement was proven non-vacuous by
+  stashing `proxy.py` to its pre-fix state and observing `KeyError: 'mcp-session-id'` on a 200.

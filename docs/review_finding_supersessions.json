@@ -7592,6 +7592,19 @@
         "exit_code": 0,
         "run_at": "2026-08-14"
       }
+    },
+    {
+      "finding_id": "review:2026-08-14-slot-session-ordering:infra:1",
+      "status": "fixed",
+      "evidence": "FIXED AT THE ROOT, not worked around. This finding recorded an ordering constraint (acquire and prepare before session start) and I wrote it into the operator guide and ADR-008 S-P as a rule. It was never a property of MCP. Measured 2026-08-15 against the live wt1 front door: an idle slot answered initialize with HTTP 200 and NO Mcp-Session-Id header, while the backend mints one — so a client attaching to an idle slot held no session any later backend had issued. ADR-008 S-Q (88ee20a3) makes the proxy mint and own the client-facing session and translate it to a lazily re-established backend session, retrying once on rejection. Verified end to end on the live control plane: a session minted while slot 1 was IDLE AND UNLEASED survived acquire, an authoritative build, prepare and a Lean-server start, then ran tools/call lean_local_search successfully, returning ligo_confines_chi_vest_within_natural_range. Under the old code that call was -32602 permanently. S-N and S-E intact: 21 tools with lean_build removed; pre-lease dispatch refused with -32001. The declared verify was AMENDED because the original (slotctl doctor) is vacuous for this finding — it passed on 2026-08-14 with the defect fully live and probes control-plane health, never session handling.",
+      "superseded_by": null,
+      "date": "2026-08-15",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_lean_slots.py -k \"mints or lease_gate or distinct_session or stale_backend or adopted\" -q",
+        "declared": "uv run python -m pytest tests/test_lean_slots.py -k \"mints or lease_gate or distinct_session or stale_backend or adopted\" -q",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }
