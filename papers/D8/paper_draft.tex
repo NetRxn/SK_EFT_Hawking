@@ -38,7 +38,32 @@ Alphabet-Agnostic Solovay--Kitaev across Dimensions}
 \author{John Roehm}
 
 \begin{abstract}
-PLACEHOLDER: the abstract is written last, after the introduction.
+We prove, in the Lean~4 proof assistant and checked to the kernel, a
+quantitative Solovay--Kitaev theorem at arbitrary dimension: for a generating
+set of $\su d$ that is dense and has compatible word length, every target
+$U \in \su d$ and every precision $\varepsilon$ below a fixed threshold admit a
+word approximating $U$ within $\varepsilon$ whose length is at most
+$c\,(\log 1/\varepsilon)^{\gamma}$ with $\gamma = \log 5/\log(3/2)$, both bounds
+holding of the same compiled word. To our knowledge this is the first
+kernel-verified quantitative Solovay--Kitaev theorem at general dimension in
+any proof assistant; the enabling step is a Banach-algebra matrix logarithm
+with an explicit convergence radius, which removes a circular dependency that
+blocks the naive lift. Because the two hypotheses are the only alphabet-specific
+input, a gate set enters the verified theory by supplying a density witness, and
+we discharge four such witnesses, at $\su 2$, $\su 4$ and $\su 8$. At $\su 8$ we
+settle the role of the doubly controlled-$Z$ gate: it is sufficient for density
+with no $T$ gate present, it is necessary, since the Clifford group alone has
+finite image under the channel representation, and it is priced, by a
+machine-checked lower bound on the number of Toffoli gates in any exact
+Clifford$+$CCZ circuit for a target. Beyond existence we verify a named
+correct-by-construction Clifford$+T$ compiler; two further length mechanisms
+attaining the optimal $O(\log 1/\varepsilon)$, one conditional on a stated
+number-theoretic hypothesis and one unconditional with ancillas; and an
+end-to-end certificate converting compiler accuracy $\varepsilon$ into
+worst-case channel error at most $\sqrt 2\,\varepsilon$. All results use the
+standard Lean axiom set with no project-local axioms and no compiled-evaluation
+escapes. Runtime implementation, hardware tuning and constant-factor length
+optimization are outside this scope.
 \end{abstract}
 
 \maketitle
@@ -46,7 +71,76 @@ PLACEHOLDER: the abstract is written last, after the introduction.
 \section{Introduction}
 \label{sec:intro}
 
-PLACEHOLDER: the introduction is written last, once the territory it maps exists.
+A compiler for a quantum processor answers three questions about every target
+unitary it is handed. Does a circuit over the machine's gate set approximate
+this target at all? How long is that circuit? And what does running it cost, in
+the error budget the hardware actually charges against? The Solovay--Kitaev
+theorem answers the first affirmatively for any sufficiently rich gate set and
+gives a poly-logarithmic answer to the second, and both answers are, in the
+literature, proved one gate set at a time.
+
+This paper reports a machine-checked development, in the Lean~4 proof
+assistant, that answers all three, and that answers the first in a form which
+is reusable rather than per-alphabet. Its organizing observation is that of the
+ingredients in a Solovay--Kitaev proof, only one is alphabet-specific. The
+density argument that a discrete gate set does not close up into a finite group
+depends on the gate set. The $\varepsilon_0$-net, the balanced group-commutator
+recursion, the Baker--Campbell--Hausdorff estimate controlling it, and the
+Cartan step from a one-parameter subgroup to the whole group do not. Separating
+them yields a substrate over an abstract generating set, into which an alphabet
+enters by supplying a density witness and nothing else
+(Sec.~\ref{sec:substrate}), and which lifts to the special unitary group
+$\su d$ of arbitrary dimension once an obstruction involving convergence radii
+is removed (Sec.~\ref{sec:sud}). To our knowledge, the resulting statement is
+the first kernel-verified quantitative Solovay--Kitaev theorem at general
+dimension in any proof assistant.
+
+Sec.~\ref{sec:alphabets} is the evidence for the reusability claim rather than
+a survey: four alphabets, whose density witnesses range over an
+algebraic-integer obstruction, a Chebyshev factorization, a triple-angle
+identity and an entangling-gate criterion, all pass through the interface
+without modifying it. Sec.~\ref{sec:su8} treats the three-qubit case at length,
+because there the question of which gate carries the universality has a
+complete answer: the doubly controlled-$Z$ gate is necessary, is sufficient
+without any $T$ gate, and has a machine-checked cost, all three established
+through the channel representation.
+
+The second question, circuit length, is Sec.~\ref{sec:length}. Three verified
+mechanisms reach it, and none dominates: the commutator recursion is
+unconditional at exponent $\approx 3.97$; the Ross--Selinger grid
+route~\cite{RossSelinger2016} reaches the optimal exponent $1$ but rests on a
+number-theoretic existence that is open, which we isolate as a single stated
+hypothesis rather than an atmosphere of caveats; and the
+Kliuchnikov--Maslov--Mosca ancilla route~\cite{KMM2013ancilla} reaches exponent
+$1$ unconditionally, at the price of two ancillas and a weaker form of
+contract. Between the first and second questions sits a third thing a compiler
+user wants and an existence theorem does not give: Sec.~\ref{sec:compiler}
+verifies a named compilation \emph{function}, whose error and length bounds are
+theorems about the algorithm rather than certificates checked per output.
+
+The third question is Sec.~\ref{sec:diamond}, which converts a bound between
+matrices into a bound between physical channels and composes it with the
+verified compiler, so that a synthesis accuracy $\varepsilon$ yields a
+worst-case channel error at most $\sqrt 2\,\varepsilon$ with no unverified step
+in between.
+
+Prior formal verification in quantum computation has largely targeted
+\emph{exact} circuit semantics. VOQC and SQIR in Coq~\cite{Hietala2020VOQC}
+verify that circuit optimizations preserve semantics, and the wider landscape
+of verified quantum programming, including Why3/Qbricks and Isabelle
+developments, is surveyed in Ref.~\cite{Lewis2021VerifQC}. Those establish that
+a circuit computes what it should. The subject here is different and
+complementary: quantitative \emph{approximation}, meaning the density of a
+discrete alphabet, the trade-off between error and length, and resource lower
+bounds. Verifying that a given circuit is correctly optimized and verifying
+that a target can be approached to arbitrary precision within a length budget
+are different questions, and the second is the one a compiler's existence
+guarantee rests on.
+
+Sec.~\ref{sec:trust} states what the kernel checked and, more usefully, the
+places where a theorem's name reads stronger than the theorem. All results are
+verified with the standard Lean axiom set and no project-local axioms, and the
+corpus contains no compiled-evaluation escape hatch.
 
 \section{Compilation as an instantiable theory}
 \label{sec:substrate}
