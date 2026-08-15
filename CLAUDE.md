@@ -295,6 +295,17 @@ with their own identifiers.
 **First-run setup:** run `.claude/plugins/skeft-qa/scripts/install_egress_denylist.sh` (or copy the
 sample) and fill in the FILL-IN rows; until then only the generic absolute-path baseline applies.
 
+⚠️ **The whitelist lives in the guard and NOWHERE else.** `permissions.allow` in a
+`settings.local.json` cannot grant egress — it decides whether Claude Code *prompts*, never
+whether the fetch is allowed — so a domain granted there and absent from the guard is denied,
+silently, for as long as anyone believes the grant works. **Blocked by egress? Do not edit
+settings, and do not reason from a remembered whitelist: if a fetch returns content it was
+sanctioned.** Add the domain with `scripts/egress_policy.py add <domain> --for "<what needs
+it>" --date <today>`, then commit, then `egress_policy.py sync`, then **restart** — hooks bind
+at session start, so neither a refresh nor `/reload-skills` reloads them. Mechanism and rules:
+[QA_QI_INFRASTRUCTURE_MAP §1.5](docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md); what a fetched
+source may then back: [ADR-014](docs/adrs/ADR-014-source-acquisition-and-citation-fidelity.md).
+
 ## Process health
 
 **Dev-loop / harness process learnings** — re-orientation, friction, escape attempts, wasted

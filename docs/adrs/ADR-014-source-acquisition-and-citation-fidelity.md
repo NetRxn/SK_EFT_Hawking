@@ -144,6 +144,26 @@ strict subset. Added for the P0 targets, each with its target named:
 
 `nature.com` (`Zhao2023`) and `arxiv.org`/`pdg.lbl.gov` were already whitelisted.
 
+**Extended 2026-08-15, same day, after the acquisition targets exposed a wider gap.** Whitelisting
+`doi.org` does not reach a paper: a DOI resolves by cross-host redirect, and `WebFetch` returns
+cross-host redirects rather than following them, so the publisher host must be reachable in its
+own right. Derived from the DOI prefixes actually present in `CITATION_REGISTRY`, the publisher
+hosts were added, taking the corpus from a long tail of unreachable journals to all but one
+prefix. The Pareto set of development infrastructure went in alongside.
+
+Two consolidations fell out and are recorded in
+[QA_QI_INFRASTRUCTURE_MAP §1.5](../architecture/QA_QI_INFRASTRUCTURE_MAP.md), which owns the
+mechanism:
+
+- **The guard is the only domain list.** The `WebFetch(domain:…)` grants in
+  `.claude/settings.local.json` were removed rather than reconciled: they cannot confer egress,
+  and one had been granted-and-unreachable for months without anyone noticing, because a config
+  that says yes is not re-checked. A blanket `WebFetch` grant was considered and rejected — it
+  would bypass the harness's always-on judgment layer in favour of a plugin hook that is
+  per-checkout opt-in.
+- **Adding one is a command**, [`scripts/egress_policy.py`](../../scripts/egress_policy.py), not
+  a remembered sequence.
+
 ---
 
 ## Consequences
