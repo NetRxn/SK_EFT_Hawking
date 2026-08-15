@@ -1357,10 +1357,17 @@ bulk-boundary correspondence of Davydov, M\"uger, Nikshych and Ostrik
 perturbative part is what the mod-$8$ condition expresses.
 
 The category selected by \S\ref{sec:entropy-falsifiers} is also the object that carries the
-horizon's error-correcting structure: the code distance of the horizon code is the same
-$\log d_{\max}$ whose positivity the boundary condition demands, so a category admissible
-for the entropy count is admissible for fault-tolerant encoding and conversely, and positive
-code distance forces a positive scrambling-time bound
+horizon's error-correcting structure, and the link between them is an identification this
+work makes rather than an agreement it derives. The code distance of the horizon code is
+\emph{defined} to be the same $\log d_{\max}$ that the area-law coefficient uses
+(\texttt{QECHolography\lb{}Bridge.\lb{}HPCode.\lb{}code\lb{}Distance}). On that definition the
+first conjunct of the bridge theorem --- code distance positive if and only if
+$d_{\max} > 1$, that is, if and only if the category is non-abelian --- is the positivity
+of a logarithm and carries nothing beyond it; in particular it is not a statement that two
+independently specified admissibility criteria coincide. What the theorem does add is its
+second conjunct: positive code distance forces a strictly positive scrambling-time bound
+$\log \mathcal{D}^2$, which follows from $d_{\max}^2 \le \mathcal{D}^2$ and is not available
+from the definition alone
 (\texttt{QECHolography\lb{}Bridge.\lb{}HPCode.\lb{}code\_\lb{}distance\_\lb{}scaling\_\lb{}matches\_\lb{}anyonic\_\lb{}fusion\_\lb{}iff\_\lb{}fusion\_\lb{}in\_\lb{}admissible\_\lb{}class}).
 The recovery dynamics on that code, in the sense of Hayden and
 Preskill~\cite{HaydenPreskill2007,PastawskiYoshidaHarlowPreskill2015}, are developed in the
