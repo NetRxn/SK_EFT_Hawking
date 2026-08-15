@@ -439,7 +439,47 @@ def _required_open_ceilings() -> dict[str, int]:
 #: sign-off on this specific raise. **A future raise justified by pointing at this one is
 #: exactly the abuse this note exists to make visible.** The ceiling records a distance that
 #: must shrink; ADR-012 P10 is what shrinks it.
-UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 52
+#:
+#: ⚠️ **52 -> 45, AND THIS IS A RE-DERIVATION FROM AN IMPROVED INSTRUMENT, NOT A RAISE —
+#: the number went DOWN and the sibling leg went UP, which is what a displacement looks
+#: like.** Until 2026-08-15 the aggregation read a finding's bundle from two regexes over
+#: text and never opened the frontmatter, so a document declaring `paper:
+#: note_rt_ch_bounds` or `bundle_target: D11` was parsed by neither and its findings
+#: reached no bundle. `bundle_readiness.resolve_attribution` now reads the declaration.
+#: **Twelve** open blocking findings moved out of this leg and into leg 1, where their own
+#: bundles carry them: 57 - 12 = 45, and the 12 fan out to **27** bundle occurrences, so
+#: leg 1 goes 12 -> 39. Every number reconciles, because nothing was found and nothing was
+#: forgiven — the same findings are now counted where they belong.
+#:
+#: (The leg-1 endpoints include L3's concurrent redraft, which landed 6 of its 7 blockers
+#: visibly to the OLD instrument as well; `docs/required_open_ceilings.json` records why
+#: that growth is deliberately NOT absorbed into the frozen per-bundle set. This leg is
+#: unaffected by the distinction: it only ever SHRANK.)
+#:
+#: The test is which of the two changed, the POPULATION or the INSTRUMENT. Here the
+#: instrument did: these findings have existed all along and the aggregation could not see
+#: them. A ratchet may never be raised to accommodate a population that GREW; it MUST be
+#: re-derived when a wider predicate reveals what was always there — the precedent this
+#: file already carries twice (`major` -> `BLOCKING_SEVERITIES`, and the neither-key proxy
+#: -> what the aggregation actually reached), and the pattern `count_literals` prescribes
+#: in its own Fix section: widen the predicate, MEASURE the new population, then sweep it
+#: or freeze at the measured value with the jump stated in the same commit. Never widen and
+#: quietly raise.
+#:
+#: ⚠️ **23 of the 45 carry a declaration that does NOT resolve, and they are NOT a residue
+#: of the fix — they are what the fix made visible.** Eight are `bundle_target: infra` /
+#: `paper: infra` and are correctly unattributable: a defect in `formulas.py` or
+#: `update_counts.py` belongs to no publication bundle, and this leg is what bounds them.
+#: Narrowing the predicate to exclude them would be reclassification standing in for
+#: remediation. The other sixteen — `phase6EE_control` (11) and `phase6EA_substrate` (5,
+#: plus 3 in round 2) — declare `paper: phase6EA_substrate` / `paper: phase6EE_control`,
+#: which are not `PAPER_DRAFT_MAPPING` keys and not bundle codes, so they resolve to
+#: nothing BY CONSTRUCTION. `phase6EA_substrate` names D12 only inside a free-prose
+#: `scope:` sentence, and `phase6EE_control` names no bundle at all; reading either would
+#: be a regex over prose, which is the channel this fix exists to remove. The remedy is for
+#: those documents to DECLARE `bundle_target: D12`, at which point this leg drops by 19
+#: without a line of code changing — which is the point of asserting the decider.
+UNATTRIBUTED_OPEN_BLOCKING_CEILING: int = 45
 
 
 def _readiness_aggregate():
@@ -668,11 +708,28 @@ def check_bundle_stage13_claim_consistent() -> CheckResult:
     _covered_blocking = [n for n in _open_blocking if n["id"] in _covered]
     unattributed = len(_uncovered)
     ok_un = unattributed <= UNATTRIBUTED_OPEN_BLOCKING_CEILING
+    # ⚠️ THE SEAM, REPORTED (2026-08-15). "Declared a target that does not resolve" and
+    # "declared nothing" are different facts about a document and must not share a
+    # rendering: the first is a convention with a typo or a missing mapping entry, and it
+    # keeps reading as attribution to every human who opens the file, while no consumer
+    # can act on it. A silent merge into the undeclared population is how the whole
+    # defect this leg is measuring stayed invisible for months.
+    _unresolved = 0
+    for _n in _uncovered:
+        _m = _n["meta"]
+        if _m.get("declared_paper") or _m.get("declared_bundle"):
+            _unresolved += 1
     details.append(Detail(
         "unattributed_population", ok_un,
         f"{unattributed} open {'/'.join(sorted(_BLOCKING))} finding(s) are NOT reached by "
         f"the per-bundle aggregation, so no bundle ceiling bounds them; "
-        f"limit {UNATTRIBUTED_OPEN_BLOCKING_CEILING}. The two legs are complements over one id set, so every open blocking finding reaches exactly one of them: "
+        f"limit {UNATTRIBUTED_OPEN_BLOCKING_CEILING}. "
+        f"Of those, {_unresolved} DECLARE a target that resolves to no bundle "
+        f"(an `infra`/`process` lane, or a key outside PAPER_DRAFT_MAPPING) and "
+        f"{unattributed - _unresolved} declare nothing — a declaration that cannot be "
+        f"resolved is reported here rather than merged into the undeclared population, "
+        f"because it still reads as attribution to anyone opening the file. "
+        f"The two legs are complements over one id set, so every open blocking finding reaches exactly one of them: "
         f"{len(_covered_blocking)} reached by the aggregation, {unattributed} not. "
         f"⚠️ Leg 1 ratchets bundle-OCCURRENCES of those {len(_covered_blocking)} findings, not the findings — a finding attributed to two bundles counts against both ceilings, which is correct for a per-bundle guard and is why leg 1's total exceeds this one"
         + ("" if ok_un else
@@ -1060,7 +1117,47 @@ def check_bundle_lean_module_coverage() -> CheckResult:
     naming the file, which is the stronger form of reaching it — see
     `_declarations_by_module`. Commented-out LaTeX is excluded, so a module surviving
     only in a `%` block reads as absent, which it is.
+
+    ## Deregistration — a bundle MAY drop a module, visibly and deliberately
+
+    ⚠️ **This ratchet used to punish a legitimate redraft, and the cost was measured
+    in manuscript quality, not in gate noise.** Frozen at its corpus-wide ceiling, it
+    made any drafting pass that stopped depending on a module raise the count and turn
+    the corpus red — so the cheap path was to keep naming the module. The 2026-08-15
+    L3 Stage-10 redraft took exactly that path: it **retained two theorem citations in
+    its Discussion purely to hold this ratchet green**, and the `prose-reviewer`
+    independently flagged those same two as belonging to a different paper's argument
+    (`papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md` §5.2). The check's
+    own guidance already said *"repay by removing the registration"* for unbuilt
+    modules; there was no mechanism to do it for built ones.
+
+    There is now. `bundle_append.py --deregister-lean-modules … --deregistration-rationale
+    …` appends a deregistration event, and the score is taken over the **net**
+    registration set (`bundle_append.net_registered_modules`, the single walk — a
+    second copy of it here is the duplication `CLAUDE.md` rule 1 names).
+
+    **The ceiling was NOT raised and must not be.** Deregistration lowers the live
+    count, which is a down-ratchet — the direction this ratchet already permits.
+    Raising the ceiling would buy the same relief while destroying the measurement,
+    which is the move `bundle_manuscript_length`'s docstring calls *"accepting a gap
+    and hiding it are different acts"*.
+
+    **Three things stop this being an escape hatch**, and only the third is load-bearing:
+
+    * the CLI requires a rationale, and this check re-asserts the same floor, so a
+      hand-edited `append_log.json` cannot smuggle a bare deregistration past it;
+    * every deregistration is REPORTED on every run, so a bundle that drops substrate
+      says so in the gate's own output rather than only in a log nobody opens;
+    * **a deregistration is falsifiable against the manuscript.** Claiming the draft no
+      longer rests on a module it still reaches — by name or by citing its theorems —
+      is a FAILURE, and deliberately not a ratcheted one. That leg is what makes this a
+      declaration rather than a mute. Its population is legitimately zero today, which
+      is what a regression guard looks like; the mutation test seeds it into production
+      to prove it can fire.
     """
+    from bundle_append import (DEREGISTRATION_RATIONALE_MIN,
+                               net_registered_modules)
+
     details: List[Detail] = []
     codes, _roster_err = _H.bundle_codes_or_unmeasured()
     if codes is None:
@@ -1070,6 +1167,9 @@ def check_bundle_lean_module_coverage() -> CheckResult:
     checked = declared = absent_total = 0
     worst: list[tuple[int, str, list[str]]] = []
     unbuilt: dict[str, list[str]] = {}
+    dropped: dict[str, list[str]] = {}
+    contradicted: list[str] = []
+    unjustified: list[str] = []
     for code in codes:
         log = _H.PAPERS_DIR / code / "append_log.json"
         tex = _H.PAPERS_DIR / code / "paper_draft.tex"
@@ -1079,16 +1179,30 @@ def check_bundle_lean_module_coverage() -> CheckResult:
             events = json.loads(log.read_text()).get("events", [])
         except (OSError, json.JSONDecodeError):
             continue
-        mods: set[str] = set()
+        mods, deregistered = net_registered_modules(events)
+
+        # ⚠️ The rationale floor is asserted HERE as well as in the writer, because the
+        # writer is not the only way an event reaches this file — a hand edit is. A
+        # gate that trusts its own CLI to have been used is not a gate.
         for e in events:
-            v = e.get("lean_modules_referenced") or []
-            if isinstance(v, str):
-                v = v.split(",")
-            mods |= {str(x).strip() for x in v if str(x).strip()}
-        if not mods:
+            drop = e.get("lean_modules_deregistered") or []
+            if isinstance(drop, str):
+                drop = drop.split(",")
+            drop = [str(x).strip() for x in drop if str(x).strip()]
+            if not drop:
+                continue
+            why = str(e.get("deregistration_rationale") or "").strip()
+            if len(why) < DEREGISTRATION_RATIONALE_MIN:
+                unjustified.append(
+                    f"{code}: deregistration of {', '.join(drop)} dated "
+                    f"{e.get('date', '?')} carries a rationale of {len(why)} "
+                    f"character(s), below the floor of "
+                    f"{DEREGISTRATION_RATIONALE_MIN}")
+
+        if deregistered:
+            dropped[code] = sorted(deregistered)
+        if not mods and not deregistered:
             continue
-        checked += 1
-        declared += len(mods)
         # `\_` -> `_` so an escaped identifier matches its declared form; then drop
         # commented-out LaTeX, which is not part of the published claim.
         body = _strip_tex_comments(tex.read_text(errors="replace").replace("\\_", "_"))
@@ -1099,6 +1213,24 @@ def check_bundle_lean_module_coverage() -> CheckResult:
                 return True
             resolved = _resolve_module(m)
             return bool(resolved) and any(d in body for d in owned.get(resolved, ()))
+
+        # ⚠️ THE FALSIFIABILITY LEG. A deregistration says "this draft no longer rests
+        # on that module". `_reached` is the same predicate the absence ledger uses, so
+        # a module the draft still names, or whose theorems it still cites, contradicts
+        # the record. Scored for EVERY deregistering bundle, including one that has
+        # deregistered everything it ever registered — which is why this sits above the
+        # `not mods` guard rather than inside the registered-module accounting.
+        contradicted += [
+            f"{code}: `{m}` was deregistered, but the draft still reaches it "
+            f"(by name or by citing its theorems) — the record and the manuscript "
+            f"disagree; re-register it, or stop reaching it"
+            for m in sorted(deregistered)
+            if m.split(".")[-1] not in _AMBIGUOUS_MODULE_BASENAMES and _reached(m)]
+
+        if not mods:
+            continue
+        checked += 1
+        declared += len(mods)
 
         missing = [m for m in sorted(mods)
                    if m.split(".")[-1] not in _AMBIGUOUS_MODULE_BASENAMES
@@ -1134,14 +1266,43 @@ def check_bundle_lean_module_coverage() -> CheckResult:
             f"Repay by removing the registration, not by writing prose about them "
             f"(TODO-D50)", warning=True))
 
-    ok = absent_total <= LEAN_MODULE_ABSENT_CEILING
+    # ⚠️ **DEREGISTRATIONS ARE REPORTED ON EVERY RUN, INCLUDING A GREEN ONE.** That is
+    # half of what makes dropping a dependency *visible* rather than silent: the ledger
+    # of what each bundle stopped resting on is in the gate's output, not only in a log
+    # nobody opens. It is a warning-level detail because a legitimate drop is not a
+    # defect — the two legs below are what fail.
+    if dropped:
+        n_dropped = sum(len(v) for v in dropped.values())
+        details.append(Detail(
+            "deregistered", True,
+            f"{n_dropped} module(s) across {len(dropped)} bundle(s) are recorded as "
+            f"DEREGISTERED — a draft that stopped resting on them, declared through "
+            f"`bundle_append.py --deregister-lean-modules` with a rationale, and "
+            f"excluded from the absence ledger above "
+            f"({'; '.join(f'{c}: {", ".join(v)}' for c, v in sorted(dropped.items()))})",
+            warning=True))
+
+    # Both legs below are HARD, unratcheted failures. A ratchet on either would let a
+    # bundle buy absence-ledger relief with an unjustified or false deregistration,
+    # which is precisely the escape hatch this mechanism must not be.
+    for r in contradicted:
+        details.append(Detail("deregistration_contradicted", False, r))
+    for r in unjustified:
+        details.append(Detail("deregistration_unjustified", False, r))
+
+    ok = (absent_total <= LEAN_MODULE_ABSENT_CEILING
+          and not contradicted and not unjustified)
     details.insert(0, Detail(
-        "ratchet", ok,
+        "ratchet", absent_total <= LEAN_MODULE_ABSENT_CEILING,
         f"{absent_total} registered-but-absent module(s) across {checked} bundle(s) "
-        f"({declared} declared); ceiling {LEAN_MODULE_ABSENT_CEILING}"
-        + ("" if ok else
+        f"({declared} net-declared after {sum(len(v) for v in dropped.values())} "
+        f"deregistration(s)); ceiling {LEAN_MODULE_ABSENT_CEILING}"
+        + ("" if absent_total <= LEAN_MODULE_ABSENT_CEILING else
            " — REGISTERED SUBSTRATE DRIFTED FURTHER FROM THE PUBLISHED CLAIM. Cite the "
-           "module or stop registering it; do not widen the ambiguous-basename list")))
+           "module, or DEREGISTER it with a rationale "
+           "(`bundle_append.py --deregister-lean-modules`) if the draft genuinely no "
+           "longer rests on it; do not widen the ambiguous-basename list, and do not "
+           "keep a citation alive only to hold this number down")))
     return CheckResult(passed=ok, details=details)
 
 

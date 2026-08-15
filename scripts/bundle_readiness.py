@@ -130,25 +130,110 @@ from bundle_registry import (  # noqa: E402
 from bundle_json import write_bundle_json  # noqa: E402
 
 
+def _mapping_keys() -> frozenset[str]:
+    """Every `PAPER_DRAFT_MAPPING` key — the vocabulary an attribution may resolve INTO.
+
+    Returns an empty set if the mapping is unreadable, so a resolution falls back to
+    inference rather than crashing the aggregation.
+    """
+    try:
+        return frozenset(parse_mapping(MAPPING_DOC.read_text()))
+    except OSError:
+        return frozenset()
+
+
+def resolve_attribution(meta: dict, mapping_keys: frozenset[str]) -> tuple[str | None, str]:
+    """`(partition key, channel)` for one finding — DECLARATION FIRST, inference last.
+
+    ⚠️ **A DOCUMENT THAT STATES ITS TARGET ATTRIBUTES BY THAT STATEMENT.** This is the
+    same precedence `extract_review_finding_nodes` already applies to severity, where a
+    `- **Severity:**` line is authoritative and glyph inference is the fallback for the
+    historical corpus. Attribution had no such rule: it was inferred from a literal
+    `paper<digit>` in the text and from the filename stem against the bundle roster, and
+    from nothing else — so `paper: note_rt_ch_bounds`, `paper: paper20_scalar_rung` and
+    `bundle_target: D11` were inert, and the bundles that owned those findings reported
+    blockers they did not have while hiding the ones they did.
+
+    The order, and why each step is where it is:
+
+    1. **A declared paper key that is an exact mapping key.** Nothing beats the document
+       naming a key the mapping already knows.
+    2. **A declared bundle code in the roster** — from `bundle_target:`/`bundle:`, else
+       from a declared `paper:` that IS a bundle code (`paper: D12`,
+       `paper: D4_topological_qc_foundations`). Read through
+       `build_graph._infer_bundle_from_text`, the same roster-validated token reader the
+       filename stem goes through — one mechanism, two inputs.
+    3. **The filename stem as an exact mapping key**, for the pre-frontmatter corpus.
+    4. **Unique-prefix normalisation of the short inferred key** (`paper10` ->
+       `paper10_modular_generation`), through `build_graph.resolve_unique_prefix` — THE
+       resolver, shared with `extract_flags_edges`, which is where it used to live alone.
+    5. **The existing inference**, unchanged, for everything else.
+
+    ⚠️ **EXACTLY-ONE MATCH OR NOTHING.** An ambiguous or unrecognised declaration leaves
+    the finding unattributed rather than attributing it somewhere plausible, so a typo
+    cannot invent a bundle. `paper: infra`, `paper: process` and any key outside the
+    mapping resolve to nothing BY CONSTRUCTION — an infra-lane finding is genuinely
+    unattributable to a publication bundle, and the unattributed ratchet
+    (`UNATTRIBUTED_OPEN_BLOCKING_CEILING`) is what bounds it. Narrowing that leg to
+    exclude infra findings would be reclassification standing in for remediation.
+
+    The channel string is returned so the failure is legible: a finding that DECLARES a
+    target which does not resolve is reported as `declared-unresolved`, not silently
+    merged into the undeclared population. Losing that distinction is how a convention
+    rots — the declaration keeps reading as attribution to every human who opens the
+    file while no consumer can act on it.
+    """
+    from build_graph import _infer_bundle_from_text, resolve_unique_prefix
+
+    declared_paper = (meta.get("declared_paper") or "").strip() or None
+    declared_bundle = (meta.get("declared_bundle") or "").strip() or None
+
+    # (1) declared paper key that the mapping already knows
+    if declared_paper and declared_paper in mapping_keys:
+        return declared_paper, "declared-paper-key"
+    # (2) declared bundle code, roster-validated
+    for value, channel in ((declared_bundle, "declared-bundle-code"),
+                           (declared_paper, "declared-paper-as-bundle-code")):
+        if value:
+            code = _infer_bundle_from_text(value)
+            if code:
+                return code, channel
+    # (3) filename stem that is an exact mapping key
+    stem = Path(meta.get("review_file") or "").stem
+    if stem and stem in mapping_keys:
+        return stem, "filename-stem-key"
+    # (4) unique-prefix normalisation of the short inferred key
+    normalised = resolve_unique_prefix(meta.get("inferred_paper"), mapping_keys)
+    if normalised:
+        return normalised, "unique-prefix"
+    # (5) the pre-existing inference
+    # ⚠️ FALLBACK ADDED 2026-07-31 (D11 Stage-13 round-5 BLOCKER 4.1, second layer).
+    # Bundle-era reviews are named after their bundle code, carry `inferred_bundle`,
+    # and have NO `inferred_paper`. Partitioning on `inferred_paper` alone dropped
+    # every bundle-era finding on the floor, and the heatmap reported
+    # `Blockers 0 / GREEN` for bundles holding dozens of open criticals — a FALSE
+    # GREEN, strictly worse than the "YELLOW (unreviewed)" it replaced. D11 alone had
+    # 40 findings (6 critical, 11 major) invisible here.
+    inferred = meta.get("inferred_paper") or meta.get("inferred_bundle")
+    if inferred:
+        return inferred, "inferred"
+    return None, ("declared-unresolved" if (declared_paper or declared_bundle)
+                  else "undeclared")
+
+
 def load_findings_by_paper() -> dict[str, list[dict]]:
     """Pull current ReviewFinding nodes via build_graph and partition
-    by paper."""
+    by paper, honouring what each review document DECLARES about its own
+    target (see :func:`resolve_attribution`) before falling back to inference."""
     from build_graph import extract_review_finding_nodes
     from qi_register import classify_finding
 
     findings = extract_review_finding_nodes()
+    mapping_keys = _mapping_keys()
     by_paper: dict[str, list[dict]] = defaultdict(list)
     for f in findings:
         m = f.get("meta", {}) or {}
-        # ⚠️ FALLBACK ADDED 2026-07-31 (D11 Stage-13 round-5 BLOCKER 4.1, second
-        # layer). Bundle-era reviews are named after their bundle code, carry
-        # `inferred_bundle`, and have NO `inferred_paper`. Partitioning on
-        # `inferred_paper` alone therefore dropped every bundle-era finding on
-        # the floor, and the heatmap reported `Blockers 0 / GREEN` for bundles
-        # holding dozens of open criticals — a FALSE GREEN, strictly worse than
-        # the "YELLOW (unreviewed)" it replaced. D11 alone had 40 findings
-        # (6 critical, 11 major) invisible here.
-        paper = m.get("inferred_paper") or m.get("inferred_bundle")
+        paper, _channel = resolve_attribution(m, mapping_keys)
         if not paper:
             continue
         by_paper[paper].append({

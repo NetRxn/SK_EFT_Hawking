@@ -371,17 +371,26 @@ Hand edits remain possible and are not forbidden — they are caught after the f
   blocking population by construction.** Both carry zero headroom and may only be
   **lowered**, in the commit that lowers the population.
 
-  ⚠️ **The predicate is the whole guarantee, and it has now been wrong twice.** Leg 1 first
+  ⚠️ **The predicate is the whole guarantee, and it has now been wrong three times.** Leg 1 first
   counted `major` alone, which left the open criticals that *do* reach a bundle ratcheted by
   nothing at all. Leg 2 then keyed on *"carries neither `inferred_paper` nor
   `inferred_bundle`"* — a **proxy** for "the aggregation did not reach it", and wrong for the
   pre-bundle-era corpus (ADR-012 D7): those findings carry an `inferred_paper`, so leg 2
   skipped them, and their paper maps to no bundle, so leg 1 never saw them. Eight open
   blocking findings sat outside both legs while this paragraph claimed they could not.
-  **Both times the fix was to assert the decider instead of the proxy**, and both times it
-  required re-deriving the baseline: a measurement is scoped by its predicate, and changing
-  what it keys on voids it. That re-derivation is not a ratchet being raised; a broader
-  predicate gets its own baseline, frozen at the live count, and shrinks from there.
+  The third was one layer down, in what "resolves to a bundle" MEANT: the aggregation
+  inferred a finding's bundle from two regexes over text and never read what the review
+  document DECLARED about itself, so `paper: note_rt_ch_bounds` and `bundle_target: D11`
+  were inert and eleven open blocking findings reached no bundle. Both legs were internally
+  consistent over a corpus with those findings removed — leg 1 read 6 and leg 2 read 57
+  while nine bundles carrying open blockers rendered YELLOW.
+  **All three times the fix was to assert the decider instead of the proxy**, and all three
+  times it required re-deriving the baseline: a measurement is scoped by its predicate, and
+  changing what it keys on voids it. That re-derivation is not a ratchet being raised; a
+  broader predicate gets its own baseline, frozen at the live count, and shrinks from there.
+  The third re-derivation is a pure DISPLACEMENT and reconciles both ways: leg 1 6 → 32
+  bundle occurrences, leg 2 57 → 46 findings, the eleven fanning out to 26 occurrences
+  (6 + 26 = 32, 57 − 11 = 46). Nothing was found and nothing was forgiven.
 
   ⚠️ This ratchets **growth**, and adds no severity to the blocking set. `major` has been in
   `BLOCKING_SEVERITIES` since 2026-07-31; it blocked before this change and blocks the same way

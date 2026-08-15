@@ -350,7 +350,7 @@ flowchart LR
     LED["review_finding_supersessions.json<br/>append-only"] -->|"status override<br/>+ closure bar, every severity"| EX
     RFN -->|extract_blocked_by_edges| BE["BLOCKED_BY → finding:Y"]
 
-    D1(["⚠ no inferred paper OR bundle:<br/>reaches no per-bundle ratchet.<br/>COUNTED if blocking; still<br/>dropped if minor/advisory"]):::drop
+    D1(["⚠ resolve_attribution → nothing:<br/>reaches no per-bundle ratchet.<br/>COUNTED if blocking; still<br/>dropped if minor/advisory"]):::drop
     D2(["⚠ dropped: FLAGS target<br/>not in node_ids — silent"]):::drop
     D3(["⚠ dropped: heading outside<br/>the regex → no findings"]):::drop
     EX -.-> D1 & D3
@@ -361,7 +361,21 @@ flowchart LR
 
 **Silent-drop points**, ranked by observed damage:
 
-1. A finding with neither `inferred_paper` nor `inferred_bundle` reaches no bundle's ratchet.
+1. A finding that resolves to no bundle reaches no bundle's ratchet.
+   ⚠️ **THE PREDICATE HERE READ `neither inferred_paper nor inferred_bundle` UNTIL
+   2026-08-15, AND THAT WAS THE ATTRIBUTION CHANNEL, NOT A DESCRIPTION OF IT.** Those two
+   keys came from two regexes over text — a literal `paper<digit>` in the heading, body or
+   filename, and the filename stem matched against the bundle roster — and the review
+   document's frontmatter was opened for nothing. A document *declaring* `paper:
+   note_rt_ch_bounds` or `bundle_target: D11` was parsed by neither, so the convention
+   every recent review writes had no reader anywhere in `scripts/`, and eleven open
+   blocking findings whose own documents named a mappable target reached no bundle. Nine
+   bundles rendered YELLOW while carrying open blockers.
+   `bundle_readiness.resolve_attribution` is now the one resolver and reads the
+   declaration first — declared mapping key, then declared bundle code, then filename
+   stem, then unique-prefix normalisation (`build_graph.resolve_unique_prefix`, shared
+   with `extract_flags_edges` rather than re-implemented beside it), then the old
+   inference. **Exactly-one match or nothing**, so a typo cannot invent a bundle.
    ⚠️ **At a blocking severity it is no longer silent.** ADR-012 P5 counts that population
    against `UNATTRIBUTED_OPEN_BLOCKING_CEILING`, a second leg of
    `bundle_stage13_claim_consistent`, so growth in the unattributed blocking set fails a check

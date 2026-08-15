@@ -31,7 +31,7 @@ Nothing else belongs here.
 | `src/bh_entropy/horizon_spectrum.py` | Horizon spectrum + falsifier-instance status reports. |
 | `src/bh_entropy/mtc_state_counting.py` | MTC state counting at the horizon — Verlinde-formula numerics. |
 | `src/bh_thermodynamics/__init__.py` | Phase 6a Wave 5 — BH thermodynamics four laws + regime partition. |
-| `src/bh_thermodynamics/acoustic_evolution.py` | BEC-acoustic time-evolution Hawking temperature (Balbinot 2005). |
+| `src/bh_thermodynamics/acoustic_evolution.py` | acoustic time-evolution Hawking temperature (Balbinot 2005). |
 | `src/bh_thermodynamics/falsifier_checks.py` | Numerical implementations of the four Wave 5 falsifiers. |
 | `src/bh_thermodynamics/four_laws_data.py` | Regime-dependent four-laws bundle dataclasses. |
 | `src/bh_thermodynamics/regime_classifier.py` | Regime classification for emergent-gravity ADW black holes. |

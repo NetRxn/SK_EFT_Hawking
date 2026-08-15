@@ -1,12 +1,24 @@
 {
   "_purpose": "Frozen per-bundle ceilings on OPEN findings at any BLOCKING severity (critical/blocker/major — `readiness_gates.BLOCKING_SEVERITIES`) — ADR-012 D9. A RATCHET: may only shrink, in the commit that shrinks the population.",
   "_why_not_python": "A 15-code dict literal in a check module trips `bundle_registry_consistency` Leg C — a hand-maintained roster parallel to `scripts/bundle_registry.py`, which is a known-bad pattern here. The per-file allowlist would blind the gate to the whole module, so the ceilings live in data instead. A bundle ABSENT from this file reads 0, which is the strictest possible default: a newly-registered bundle starts clean and any open blocking finding fails it.",
-  "_measured": "2026-08-12 via validation.checks.bundles_readiness._readiness_aggregate(), summing every severity in BLOCKING_SEVERITIES.",
+  "_measured": "2026-08-15 via validation.checks.bundles_readiness._readiness_aggregate(), summing every severity in BLOCKING_SEVERITIES.",
   "_widened": "2026-08-12: the leg counted `severity_mix['major']` ONLY, so the open CRITICALS that DO reach a bundle were ratcheted by nothing — leg 2 covers only the *unattributed* population. Ceilings were re-derived against the wider predicate (183 major -> 232 blocking). ⚠️ This is NOT a ratchet being raised: a broader predicate gets its own baseline, frozen at the live count on the day it was introduced, and may only shrink from here. The per-bundle deltas are exactly the criticals that were previously uncounted (D8 and D10 went 0 -> 17, having carried criticals and no majors at all).",
   "ceilings": {
+    "D1": 2,
+    "D2": 3,
+    "D3": 1,
+    "D4": 4,
+    "D5": 1,
     "D12": 5,
-    "L1": 1
+    "E1": 1,
+    "F": 11,
+    "I1": 1,
+    "L1": 1,
+    "L2": 2
   },
   "measured": "2026-08-15",
-  "note": "Re-frozen 2026-08-15 to the measured population. The prior set totalled 232 against a live 6, so every per-bundle ratchet carried headroom and could not fire — 245 closures landed on 2026-08-14 and the ceilings were never lowered in the commits that shrank the population. A ratchet with headroom is not a loose guard, it is no guard. An ABSENT bundle reads 0, so omission is strict."
+  "note": "Re-frozen 2026-08-15 to the measured population. The prior set totalled 232 against a live 6, so every per-bundle ratchet carried headroom and could not fire — 245 closures landed on 2026-08-14 and the ceilings were never lowered in the commits that shrank the population. A ratchet with headroom is not a loose guard, it is no guard. An ABSENT bundle reads 0, so omission is strict.",
+  "_rederived": "2026-08-15, SAME DAY, 6 -> 32 occurrences across 2 -> 11 bundles. ⚠️ THIS IS A RE-DERIVATION FROM AN IMPROVED INSTRUMENT, NOT A RAISE, and the earlier freeze on this same day is what it corrects. That freeze measured through `bundle_readiness.load_findings_by_paper`, which resolved a finding's bundle from two regexes over text and never opened the review document's frontmatter — so `paper: note_rt_ch_bounds`, `paper: paper17_dark_sector`, `paper: paper20_scalar_rung` and every short `paperN` key were inert, and open blocking findings whose own documents named a mappable target reached no bundle at all. Freezing every bundle outside D12/L1 at zero therefore froze a fiction: nine bundles read YELLOW while carrying open blockers. `resolve_attribution` now reads what each document DECLARES about itself. Measured over the whole live corpus, 12 open blocking findings move out of the unattributed leg and fan out to 27 bundle occurrences: leg 1 12 -> 39, leg 2 57 -> 45, and 12 + 27 = 39 while 57 - 12 = 45. Every number reconciles both ways, which is the point — this is a displacement between two legs of one partition, not a discovery of new debt and not an accommodation of growth. The test that separates the two is which changed, the population or the measurement; here the measurement did, and these findings have existed all along. Bundles whose verdict flips YELLOW -> RED on this correction: D1, D2, D3, D4, D5, E1, F, I1, L2.",
+  "_excluded_L3": "⚠️ L3 CARRIES 7 AND IS DELIBERATELY ABSENT, SO ITS CEILING READS 0 AND THE RATCHET FIRES. Those 7 are POPULATION GROWTH, not instrument effect: commit `03b56666` (\"Redraft L3 as a publication-quality Letter, and file what the redraft found\") landed a full L3 redraft and its findings while this re-derivation was in flight, and neither closed them nor recorded a ceiling. **The leg was ALREADY red on L3 when this change landed** — 6 of the 7 were visible to the OLD blind aggregation through the filename stem, so `L3 6>0` was failing before a line of this was written, and that is exactly the discriminator: a finding the previous instrument could already see cannot be re-derived into a new baseline. Writing 7 here would be one ratchet absorbing another change's growth, silently and undetectably, which is what the note below forbids. PD-5 governs them: close them, or freeze them in a commit that argues for the raise on its own evidence. Not this one.",
+  "_never": "A ratchet may NEVER be raised to accommodate a population that GREW. It MUST be re-derived when the INSTRUMENT improves and reveals findings that were always there — and the commit that re-derives it states the jump, the reconciling arithmetic, and which of the two changed. `parameter_provenance` went 166 -> 58 the day its resolver was taught flat registries; this is the same move. Widening a predicate and quietly raising the number is the abuse both notes exist to make visible."
 }
