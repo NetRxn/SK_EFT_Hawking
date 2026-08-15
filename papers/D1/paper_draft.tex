@@ -694,12 +694,198 @@ figure; no figure function in \texttt{visualizations.py} renders it}
 
 \section{Synthesis and outlook}
 \label{sec:synthesis}
-%% TODO(VIII)
+
+The question posed in Sec.~\ref{sec:intro} was whether the analog Hawking
+prediction depends on the microscopic constitution of the fluid. The
+answer this paper supports is a qualified no, and the qualification is
+the interesting part.
+
+The unqualified part is kinematic and was already understood: the
+leading spectrum is fixed by the surface gravity alone. What the
+construction here adds is that the leading \emph{corrections} are also
+insensitive to the microscopic content, in a specific and checkable
+sense. The dispersive correction depends on the ultraviolet completion
+only through the single number $(\pi/6)D^2$, with the shape of the
+modified dispersion relation appearing nowhere else, and this is the
+content of \texttt{HawkingUniversality.hawking\_universality}
+(Sec.~\ref{sec:eft-universality}). The dissipative correction depends on
+the microscopic scattering only through the sum $\gamma_1 + \gamma_2$,
+because nine candidate couplings collapse to two under normalisation,
+positivity and the Kubo--Martin--Schwinger condition, and the collapse is
+a theorem rather than a modelling choice
+(Sec.~\ref{sec:eft-first}). Two numbers stand between any fluid and its
+horizon spectrum.
+
+The structural corroboration is the transfer to a system that shares no
+microscopic physics with a condensate. Of the
+\reusePopulation{} theorems in the one-dimensional inventory,
+\reuseTransferred{} apply verbatim to the two-dimensional Dirac fluid
+under $c_s \to v_F/\sqrt{2}$, and the ones that do not are exactly the
+statements that mention the explicit $2\times2$ matrices or
+condensate-specific microphysics. That is a mechanical partition rather
+than an argument, and it should be read as corroboration of a claim
+carried by the named theorems, not as a measurement of universality in
+its own right.
+
+The qualification is that the three platforms differ sharply in which
+correction dominates, and therefore in what an experiment should look
+for. Table~\ref{tab:hierarchy} makes this concrete: dispersive at
+$^{87}$Rb, dissipative at the projected $^{39}$K configuration and at the
+graphene nozzle, and comparable with opposite signs at the polariton
+smooth horizon. Universality of the framework does not imply uniformity
+of the observable. Each platform accordingly delivers a different
+leading measurement. The condensate delivers the crossover frequency of
+Eq.~\eqref{eq:crossover}, at $6.44\,T_{\rm eff}$ in the one
+dissipation-dominated configuration. The Dirac fluid delivers a
+closed-form current-noise excess whose feasibility estimate is
+insensitive to the least-controlled transport coefficient in it. The
+polariton platform delivers, more usefully than a prediction, a proved
+boundary: at the linewidths of ultrafast nanocavity devices the
+perturbative dissipation treatment fails by more than two orders of
+magnitude, and \texttt{PolaritonTier1.polariton\_tier1\_fails\_tmds}
+says so against the most generous surface gravity in that family.
+
+Three things follow for what a reader should do with this.
+
+The framework is falsifiable in a way that does not require absolute
+calibration. Equation~\eqref{eq:crossover} predicts a shape, the
+departure from exponential decay at a computable frequency, and shapes
+survive the systematic uncertainties that defeat amplitude
+measurements. A measured spectrum that stays exponential well past
+$\omega_\times$ at the $^{39}$K parameters would falsify the dissipative
+sector as constructed here.
+
+The dependency structure is explicit and unusually narrow. Everything in
+Sec.~\ref{sec:wkb} rests on the fluctuation--dissipation relation
+Eq.~\eqref{eq:cgl-fdr}, which this paper imports rather than derives
+(Sec.~\ref{sec:higher-fdr}), and on the open-system Bogoliubov ansatz
+Eq.~\eqref{eq:modified-unitarity}, which is physics input rather than a
+theorem. A reader who rejects either rejects the noise floor and the
+crossover with it, and keeps the counting, the uniqueness reductions,
+the positivity results and the acoustic-metric layer, which do not
+depend on them. Appendix~\ref{app:status} records which claims sit on
+which side of that line.
+
+Three questions are open, and one of them is close. The strong-dissipation
+regime $\Gamma_H \gtrsim \kappa$, where the perturbative connection
+breaks down, is reachable in principle by complex-time methods and is
+where the polariton steep-horizon configuration already sits; the
+attenuation results of Sec.~\ref{sec:pol-scope} are a patch, not a
+treatment. The gradient expansion assumes local dissipation, and
+phonon-mediated channels in a condensate and Coulomb-mediated channels
+in graphene both introduce non-local kernels whose effect on
+$\delta_{\rm diss}(\omega)$ is not known. And $\gamma_1$ and
+$\gamma_2$ enter as inputs: Beliaev and Landau damping supply
+first-principles values for a condensate~\cite{Zaremba1999}, but the
+corresponding calculations for driven-dissipative polariton kinetics and
+for electron-electron scattering in a Dirac fluid are not yet at the
+precision the crossover measurement would reward.
+
+\begin{acknowledgments}
+The author thanks the Aristotle team for use of the automated prover.
+Its counterexample to the original first-order
+Kubo--Martin--Schwinger formulation (Sec.~\ref{sec:higher-optimal}) and
+its closure of the counting formula Eq.~\eqref{eq:count-formula} were
+substantive contributions rather than closures of existing skeletons.
+\end{acknowledgments}
+
+\section*{Methods and tools disclosure}
+The formal verification layer of this work was developed with substantial
+machine assistance: Lean~4 proof drafting and iteration used LLM-based
+agents (Anthropic Claude-family models) operating under the project's
+staged validation pipeline. A subset of the underlying library's theorems
+was closed by the Aristotle automated theorem prover (Harmonic); every
+proof is ultimately certified by the Lean~4 kernel via \texttt{lake build}
+on the public repository, independently of any AI tool. Manuscript prose
+was AI-assisted and human-reviewed. The repository's public validation
+suite reports, for every draft, any numerical value written inline in
+prose rather than sourced from a generated table; that report is the
+authority on this manuscript's numerical provenance.
 
 \appendix
 
 \section{What is and is not machine-checked}
 \label{app:status}
-%% TODO(App A) — per-claim status table
+
+Section~\ref{sec:intro} introduced four statuses. This appendix applies
+them to every Lean result the body cites, so that a reader can see the
+dependency structure without reconstructing it from the text.
+\texttt{lake build} is clean over the library, with zero \texttt{sorry}
+and \axiomcount{} project-local axioms beyond the three Lean~4 kernel
+axioms; \aristotleproved{} of the library's theorems were closed by the
+automated prover. The results reachable from this paper's claims comprise
+\bundleTheorems{}~theorems across \bundleModules{}~modules.
+
+\begin{table}[h]
+\centering
+\caption{Status of the Lean results cited in the body.
+\emph{Derived}: the conclusion constrains something the hypotheses do not
+already assert. \emph{Conditional}: the physical content is a hypothesis
+and the theorem propagates it. \emph{Definitional}: the statement unfolds
+a definition or rearranges a structure field. \emph{Demarcation}: a
+kernel-checked statement that a model does not apply.}
+\label{tab:status}
+\begin{ruledtabular}
+\begin{tabular}{lll}
+Result & Sec. & Status \\
+\colrule
+\texttt{acousticMetric\_det} & \ref{sec:eft-metric} & derived \\
+\texttt{acoustic\_metric\_lorentzian} & \ref{sec:eft-metric} & derived \\
+\texttt{acousticMetric\_inv\_correct} & \ref{sec:eft-metric} & derived \\
+\texttt{hawking\_temp\_from\_surface\_gravity} & \ref{sec:eft-metric} & definitional \\
+\texttt{firstOrder\_uniqueness} & \ref{sec:eft-first} & derived \\
+\texttt{deltaDissFromTransport\_eq} & \ref{sec:eft-first} & definitional \\
+\texttt{deltaDissFromTransport\_zero\_iff} & \ref{sec:eft-first} & derived \\
+\texttt{hawking\_universality} & \ref{sec:eft-universality} & derived \\
+\texttt{transport\_coefficient\_count} & \ref{sec:higher-count} & derived \\
+\texttt{firstOrder\_count}, \texttt{secondOrder\_count} & \ref{sec:higher-count} & derived \\
+\texttt{thirdOrder\_count} & \ref{sec:higher-count} & derived \\
+\texttt{secondOrder\_count\_with\_parity} & \ref{sec:higher-parity} & derived \\
+\texttt{secondOrder\_requires\_parity\_breaking} & \ref{sec:higher-parity} & definitional \\
+\texttt{fullSecondOrder\_uniqueness} & \ref{sec:higher-positivity} & derived \\
+\texttt{combined\_positivity\_constraint} & \ref{sec:higher-positivity} & derived \\
+\texttt{firstOrder\_KMS\_optimal} & \ref{sec:higher-optimal} & derived \\
+\texttt{firstOrder\_altSign\_uniqueness\_test} & \ref{sec:higher-optimal} & derived \\
+\texttt{cgl\_fdr\_general} & \ref{sec:higher-fdr} & conditional \\
+\texttt{einstein\_relation} & \ref{sec:higher-fdr} & conditional \\
+\texttt{cgl\_implies\_secondOrderKMS} & \ref{sec:higher-fdr} & conditional \\
+\texttt{turning\_point\_shift\_pos\_iff} & \ref{sec:wkb-turning} & definitional \\
+\texttt{turning\_point\_shift\_eq\_decoherence} & \ref{sec:wkb-turning} & definitional \\
+\texttt{unitarity\_deficit\_eq\_decoherence} & \ref{sec:wkb-unitarity} & definitional \\
+\texttt{standard\_unitarity\_recovered} & \ref{sec:wkb-unitarity} & definitional \\
+\texttt{decoherence\_nonneg}, \texttt{\_zero\_iff} & \ref{sec:wkb-unitarity} & definitional \\
+\texttt{noise\_floor\_eq\_delta\_diss} & \ref{sec:wkb-crossover} & definitional \\
+\texttt{noise\_floor\_nonneg} & \ref{sec:wkb-crossover} & definitional \\
+\texttt{occupation\_reduces\_to\_beta\_sq} & \ref{sec:wkb-crossover} & definitional \\
+\texttt{total\_occupation\_nonneg} & \ref{sec:wkb-crossover} & derived \\
+\texttt{noise\_dominates\_when\_beta\_small} & \ref{sec:wkb-crossover} & definitional \\
+\texttt{diracFluidMetric\_gtt\_vanishes} & \ref{sec:gr-metric} & derived \\
+\texttt{diracFluidMetric\_y\_offdiag\_zero} & \ref{sec:gr-metric} & definitional \\
+\texttt{diracFluidMetric\_txBlock\_lorentzian\_at\_horizon} & \ref{sec:gr-metric} & derived \\
+\texttt{quasi1D\_validity\_bound} & \ref{sec:gr-metric} & conditional \\
+\texttt{soundSpeed\_lt\_vF} & \ref{sec:gr-subluminal} & derived \\
+\texttt{hawkingNoisePSD\_greybody\_mono} & \ref{sec:gr-noise} & derived \\
+\texttt{snr\_sigma\_Q\_cancels} & \ref{sec:gr-noise} & derived \\
+\texttt{snr\_independent\_of\_sigma\_Q} & \ref{sec:gr-noise} & derived \\
+\texttt{fdt\_consistency} & \ref{sec:gr-noise} & definitional \\
+\texttt{dean\_lowest\_channel\_above\_four\_omega\_H} & \ref{sec:gr-detect} & derived \\
+\texttt{attenuation\_ge\_one}, \texttt{\_mono\_Gamma} & \ref{sec:pol-scope} & derived \\
+\texttt{attenuation\_eq\_one\_at\_zero\_decay} & \ref{sec:pol-scope} & definitional \\
+\texttt{polariton\_tier1\_fails\_tmds} & \ref{sec:pol-scope} & demarcation \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Three claims in the body have no entry above because they have no formal
+representative, and they are listed here rather than left to inference.
+The identification of the monomial index set with the independent
+transport coefficients at order $N$ (Sec.~\ref{sec:higher-count}) is an
+argument of this paper. The open-system Bogoliubov relation
+Eq.~\eqref{eq:modified-unitarity} with $\delta_k = 2\Gamma_H/\kappa$ is
+physics input, carried in the library as a structure field
+(Sec.~\ref{sec:wkb-unitarity}). The stimulated-gain threshold of
+Sec.~\ref{sec:pol-scope} is an analytic estimate derived in the text and
+not formalised. All three are load-bearing for at least one prediction,
+and none is presented above as verified.
 
 \end{document}
