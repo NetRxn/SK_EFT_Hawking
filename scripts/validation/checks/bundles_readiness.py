@@ -3404,7 +3404,14 @@ APEX_CLAIM_NUMERAL_CEILING = 31
 #: makes them hold over fewer and fewer rows while still reporting a clean pass. The
 #: violations were ratcheted from the start; the POPULATION was not, and that is the half
 #: that rots silently. Lower it only with a stated reason.
-APEX_CLAIMS_SCORED_FLOOR = 635
+#: 635 -> 634 (2026-08-15): E2's Stage-10 redraft withdrew
+#: `hawking_temp_from_surface_gravity` — `rfl` against its own definition, over a
+#: `SonicHorizon.surfaceGravity` that is a bare structure field with no theorem
+#: relating it to the background, and carrying neither hbar nor k_B. E1 withdrew the
+#: SAME declaration hours earlier; it was the ONE apex the two bundles shared, so the
+#: E1/E2 overlap is now zero — which is what the 2026-08-08 rejected-merge adjudication
+#: wants and had not got. Measured 634 across the 21 bundles before lowering.
+APEX_CLAIMS_SCORED_FLOOR = 634
 
 
 @register_check(
