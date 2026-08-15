@@ -1029,34 +1029,38 @@ separately Lean-verified at the Newton-constant level. Wen's
 mechanism is consistent for a $U(1)$ photon (its original
 target) but cannot scale to gravity at quantitative magnitude.
 
-\paragraph{Closure 3: GW170817 vestigial-graviton falsification (D3
+\paragraph{Closure 3: GW170817 vestigial-graviton constraint (D3
 \S 6 with Bundle~L1).} The Volovik vestigial-second-sound
 mode~\cite{Volovik2024Vestigial} is a candidate for the substrate's
-graviton, but the natural-range parameter band
+graviton. Carried onto our substrate, the identification makes the
+propagation speed depend on the natural-range parameter band
 $\chi_{\mathrm{vest}}\in[0.1,10]$ (a project-adopted order-unity
 naturalness window about the random-phase-approximation
 bubble-integral scale, a modeling choice of this project rather than
-a published derivation) is universally falsified by the
+a published derivation). The
 GW170817 multi-messenger constraint (asymmetrically
 $-3\times 10^{-15} \le \Delta c/c \le +7\times 10^{-16}$;
 conservatively two-sided $|\Delta c/c| \le 3\times
-10^{-15}$)~\cite{Abbott2017GW170817}. The substrate's prediction for
-the vestigial-graviton propagation speed deviates from $c$ by
-$\sim 14$ orders of magnitude
-($\sim 7\times 10^{14}$ over the natural-range band). The Lean
-formalisation \texttt{GravitationalWaves.natural\_range\_disjoint\_from\_ligo\_window}
-plus \texttt{vestigial\_natural\_range\_violates\_ligo} plus the
-universal-falsifier
-\texttt{second\_sound\_graviton\_natural\_range\_universally\_falsified}
-ship the falsification at zero \texttt{sorry}. Bundle~L1 PRL splash
+10^{-15}$)~\cite{Abbott2017GW170817} then \emph{confines} that band
+rather than falsifying it: the compatible window is nested strictly
+inside $[0.1,10]$ and meets it at $\chi_{\mathrm{vest}} = 1$, while
+both endpoints deviate from $c$ by $\sim 14$ orders of magnitude
+($\sim 7\times 10^{14}$). The Lean
+formalisation \texttt{GravitationalWaves.natural\_endpoints\_violate\_ligo\_window}
+plus \texttt{vestigial\_natural\_range\_violates\_ligo} plus
+\texttt{ligo\_confines\_chi\_vest\_within\_natural\_range} and the
+width ratio
+\texttt{ligo\_window\_width\_lt\_natural\_range\_width\_by\_1e14}
+ship the constraint at zero \texttt{sorry}. Bundle~L1 PRL splash
 extracts this as a stand-alone four-page submission.
 
 The three closures, taken together, force the substrate to the ADW
 tetrad-condensation channel: the alternative emergent-gravity
 mechanisms are ruled out either structurally (gauge erasure;
 fracton diff-invariance no-go), at quantitative magnitude (Wen-ADW
-deficit), or experimentally (GW170817 falsification of vestigial
-graviton).
+deficit), or --- for the vestigial graviton --- conditionally, absent
+a mechanism pinning $\chi_{\mathrm{vest}}$ to unity, which GW170817
+confines it to within $3\times 10^{-15}$.
 
 \subsection{Four cleared decision gates}
 

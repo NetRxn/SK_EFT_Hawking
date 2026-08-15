@@ -47,14 +47,29 @@
       "declared": "2026-08-07"
     },
     {
-      "name": "SKEFTHawking.GravitationalWaves.natural_range_disjoint_from_ligo_window",
-      "claims": "the Phase-5y H1 underdetermination caveat as a disjointness theorem: no c-rescaling reconciles either endpoint",
+      "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+      "claims": "the Phase-5y H1 underdetermination caveat as an endpoint theorem: no c-rescaling reconciles either endpoint",
       "declared": "2026-08-07"
     },
     {
-      "name": "SKEFTHawking.GravitationalWaves.second_sound_graviton_natural_range_universally_falsified",
+      "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
       "claims": "the frame-independent form, quantifying over all c > 0 explicitly",
       "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
+      "claims": "TITLE + ABSTRACT — the headline result: GW170817 confines chi_vest to a window strictly interior to the natural range",
+      "declared": "2026-08-14"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.ligo_window_inter_natural_range_nonempty",
+      "claims": "ABSTRACT — the compatible window and the natural range intersect at chi_vest = 1; the kernel-checked refutation of the retired disjointness framing",
+      "declared": "2026-08-14"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
+      "claims": "TITLE + ABSTRACT + §4 — the fine-tuning quantified: one part in 10^15 of the natural range",
+      "declared": "2026-08-14"
     }
   ],
   "tier": 2,
@@ -79,6 +94,7 @@
   "stage13_round1_summary": "Round-1 surfaced 6 BLOCKERs + 2 REQUIRED. All 6 BLOCKERs remediated (1.1 Volovik2024 page+title; 1.2 Volovik2022 vol+page+title; 1.3 Roehm2026LinearizedEFE fabricated title→actual paper23 title + inprep=True; 3.1 second_sound_graviton_not_derived_DOF→natural_range_disjoint_from_ligo_window cascade [body only]; 3.2 H_VestigialModeIsGraviton P3→P3' cascade + 4th falsifier; 5.1 21 theorems consistency; 5.2 4 falsifiers). 1 REQUIRED accepted (7.1). 1 REQUIRED user-action OPEN (2.1).",
   "stage13_round2_summary": "Round-2 verified 5 of 6 round-1 BLOCKERs clean. 1 BLOCKER 3.1 regressed (3.1.b NEW): L1 abstract lines 50-54 still cited deleted second_sound_graviton_not_derived_DOF. Round-1 fix patched body sections but missed abstract preview. Round-2 fix: rewrote L1 abstract lines 50-56 to cite natural_range_disjoint_from_ligo_window with disjointness statement. QI candidate raised: 'body-only fixes for narrative drift in cross-section papers' — paper_lean_refs_live should enumerate every section's references not stop at first hit.",
   "stage13_round3_summary": "Round-3 (2026-05-01T18:45Z) verified 3.1.b clean: zero stale matches for second_sound_graviton_not_derived_DOF in L1; abstract cites natural_range_disjoint_from_ligo_window (live at GravitationalWaves.lean:284); body and abstract narratively consistent; 21-theorem counts consistent across all 4 sections of L1+paper25; PDF compiles clean (3 pages, 391KB, 0 undefined refs); cross-paper consistency with paper25 preserved. Verdict: **GREEN**. 1 new non-blocking RECOMMENDED observation: revtex4-2 + \\begin{theorem} envs without amsthm declaration produce pre-existing LaTeX warnings (not round-1/round-2 regression; project-wide pattern); logged as QI candidate for a future paper_latex_compile_clean validator.",
+  "stage13_round4_summary": "Round-4 (2026-08-14) OVERTURNS rounds 1-3 on the physics. Rounds 1-3 verified that L1 cited `natural_range_disjoint_from_ligo_window` consistently; none of them checked whether the theorem's STATEMENT matched the prose. It did not. That theorem is a two-point statement about chi_vest in {0.1, 10}; the prose read it as an interval disjointness. The compatible window is in fact nested strictly INSIDE the natural range and shares chi_vest = 1 with it, so the claim that the two are 'entirely disjoint' was false, as was 'fails GW170817 over the entire natural range'. The theorem was renamed `natural_endpoints_violate_ligo_window` (its name was a misnomer), and `ligo_confines_chi_vest_within_natural_range`, `ligo_window_subset_natural_range`, `ligo_window_inter_natural_range_nonempty` and `ligo_window_width_lt_natural_range_width_by_1e14` were added to state and prove what is actually true: GW170817 CONFINES chi_vest to a window narrower than the natural range by >14 orders of magnitude. Title, abstract, intro, Sec.~4 and Discussion were rewritten from falsification to confinement. Separately, the attribution of c_GW = c*sqrt(chi_vest) to Volovik was corrected: the IDENTIFICATION is his, but the susceptibility-dependent speed is this project's, obtained by transplanting it onto the ADW substrate; Volovik's own de Sitter computation gives s_2 = c exactly (chi_vest = 1), which is GW170817-compatible. Round-3's '21 theorems' count was also stale (32 at HEAD). Names appearing in rounds 1-3 summaries above are retained as accurate HISTORY; `natural_range_disjoint_from_ligo_window` and `second_sound_graviton_natural_range_universally_falsified` no longer exist.",
   "audit_log_path": "papers/L1/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "notes": "Phase 7b sub-wave 7b.0 CLOSED at GREEN 2026-05-01T18:45Z. 3-round Stage-13 cycle: round-1 6 BLOCKERs/2 REQUIRED → round-2 1 regression caught (3.1.b abstract miss) → round-3 GREEN. 11 supersession ledger entries appended. 1 advisory carries forward (2.1 chi_vest provenance human-verify — user-action submission gate, not bundle-state). 7.1 inline-literal pattern accepted-with-rationale (verifiable raw counts; macro-binding deferred to project-wide pass). Bundle ready for submission post chi_vest human-verify. | 2026-05-06 Session-2 stage10 round-3 GREEN: 69 sentences, 0 blocking_issues, 5 anchors PASS (LIGO Δc/c, vestigial-graviton dispersion, GW170817 falsification factor 7.21e14, D3 §6 cross-bundle char-for-char match, Abbott2017GW170817 cached). 1 D.2 absorption stub auto-closed via Session-2 systematic stub-commenting. Pre-existing revtex4-2 \\begin{theorem} env warning FIXED Session-2 (added \\usepackage{amsthm} + \\newtheorem{theorem}{Theorem}; LaTeX recompile clean 3pp/391983 bytes). | 2026-05-06 Session-2 stage13 round-1 GREEN: 0 BLOCKER, 0 REQUIRED-new, 0 RECOMMENDED-new. All 5 anchors PASS. Cross-bundle L1↔D3 §6 character-for-character match verified. Carryover REQUIRED 2.1 (chi_vest human-verify) is user-action submission gate, not bundle-state. | 2026-05-06 Session-2 stage9 Stage9 GREEN: 1 figure unchanged from Session-1 absorption events (Kerr-Schild context cross-ref upgrade is prose-only). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 3/3 anchors SUPPORTED (Abbott Δc/c PDF-confirmed + D3 char-match; χ_vest project-adopted; 7.21e14).",

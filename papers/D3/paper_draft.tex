@@ -147,18 +147,21 @@ constraints break diffeomorphism action at exactly the order where
 the Stelle-basis higher-curvature coefficients live (\S\ref{sec:closure-triad},
 \S\ref{sec:diff-invariance}). \emph{(iii)} Volovik's identification of the
 vestigial second-sound mode as the spin-2
-graviton~\cite{Volovik2024Vestigial} predicts a leading
+graviton~\cite{Volovik2024Vestigial}, carried onto the ADW substrate,
+gives a leading
 gravitational-wave-speed offset $c_{\mathrm{GW}} = c\sqrt{\chi_{\mathrm{vest}}}$;
 on the natural susceptibility range $\chi_{\mathrm{vest}}\in[0.1,10]$
 (a project-adopted order-unity naturalness window about the
 random-phase-approximation bubble-integral scale), this
-forces $|\Delta c/c|\in[0.68,2.16]$, while the LIGO--Virgo GW170817
-multi-messenger constraint
+forces $|\Delta c/c|$ up to $2.16$ at the endpoints, while the
+LIGO--Virgo GW170817 multi-messenger constraint
 $-3\times 10^{-15} \le \Delta c/c \le +7\times 10^{-16}$
 (conservatively two-sided: $|\Delta c/c|\le 3\times
 10^{-15}$)~\cite{Abbott2017GW170817}
-falsifies the entire natural range by approximately
-$7\times 10^{14}$ (\S\ref{sec:gw170817}). Each closure is a Lean theorem,
+excludes those endpoints by approximately $7\times 10^{14}$ and
+confines $\chi_{\mathrm{vest}}$ to a sub-window of the natural range
+narrower by more than fourteen orders of magnitude
+(\S\ref{sec:gw170817}). Each closure is a Lean theorem,
 not a literature pointer; together they isolate the ADW route as the
 \emph{only} surviving channel that is simultaneously gravity-emergent and
 quantitatively non-trivial.
@@ -431,7 +434,7 @@ also be ruled out before the ADW route is uniquely forced: perturbative
 extension of Wen's emergent
 $U(1)$~\cite{Wen2003} to gravity, and Pretko--Radzihovsky fracton
 hydrodynamics~\cite{PretkoRadzihovsky2018}. We treat both here, then
-preview the third closure: the GW170817 falsification of Volovik's
+preview the third closure: the GW170817 constraint on Volovik's
 vestigial second-sound graviton (full in \S\ref{sec:gw170817}).
 
 \subsection{Perturbative Wen-ADW deficit}
@@ -491,11 +494,14 @@ The third closure is reported in full in \S\ref{sec:gw170817} as the
 headline negative result. We summarise: Volovik's vestigial second-sound
 mode predicts a $c_{\mathrm{GW}} = c\sqrt{\chi_{\mathrm{vest}}}$ with
 $\chi_{\mathrm{vest}}\in[0.1,10]$ on the natural range; LIGO--Virgo
-caps $|\Delta c/c|\le 3\times 10^{-15}$; the Lean disjointness theorem
-\texttt{GravitationalWaves.natural\_range\_disjoint\_from\_ligo\_window}
-falsifies the entire natural range with the endpoint ratios
+caps $|\Delta c/c|\le 3\times 10^{-15}$; the Lean endpoint theorem
+\texttt{GravitationalWaves.natural\_endpoints\_violate\_ligo\_window}
+excludes both ends of the natural range with the endpoint ratios
 $|\Delta c/c|/\tau \approx 7.21\times 10^{14}$ at the $\chi=10$
-endpoint and $\approx 2.28\times 10^{14}$ at the $\chi=0.1$ endpoint
+endpoint and $\approx 2.28\times 10^{14}$ at the $\chi=0.1$ endpoint,
+while \texttt{ligo\_window\_subset\_natural\_range} places the
+compatible window strictly inside the natural range rather than
+disjoint from it
 (matching Bundle~L1 \S\ref{sec:gw170817} character-for-character).
 
 \subsection{Triad summary}
@@ -507,11 +513,15 @@ distinct alternative channel:
 fails by quantitative magnitude.
 \item Fracton-hydrodynamics: a structural diffeomorphism-invariance
 obstruction at $a_4$ closes the channel.
-\item Volovik vestigial graviton: the natural-susceptibility prediction is
-falsified by GW170817.
+\item Volovik vestigial graviton: GW170817 confines the
+natural-susceptibility prediction to a window narrower than the
+natural range by more than fourteen orders of magnitude, leaving the
+channel open only at a fine-tuned $\chi_{\mathrm{vest}} = 1$.
 \end{itemize}
 \noindent
-With all three closed, the ADW route is forced as the unique substrate
+With the first two closed outright and the third closed absent a
+mechanism pinning $\chi_{\mathrm{vest}}$ to unity, the ADW route is
+forced as the unique substrate
 channel that is simultaneously gravity-emergent and quantitatively
 non-trivial.
 
@@ -608,14 +618,22 @@ $M_c$), \S\ref{sec:cc-emergent} ($\Lambda_{\mathrm{emerg}}$), and
 \section{GW170817 falsifies the vestigial second-sound graviton}
 \label{sec:gw170817}
 
-Volovik's identification of the vestigial second-sound mode in the
-ADW substrate as the spin-2 graviton~\cite{Volovik2024Vestigial} carries
-a leading-order prediction
+Volovik identifies the vestigial second-sound mode with the spin-2
+graviton~\cite{Volovik2024Vestigial}. Transplanting that identification
+onto the ADW substrate --- whose metric-channel susceptibility we
+compute independently, and which does not fix $\chi_{\mathrm{vest}}$
+--- yields the leading-order relation
 \begin{equation}
 \label{eq:c-gw-leading}
 c_{\mathrm{GW}}(\chi_{\mathrm{vest}}) \;=\; c\,\sqrt{\chi_{\mathrm{vest}}}\,,
 \qquad \chi_{\mathrm{vest}} \in [0.1,\,10] \text{ (natural range)}.
 \end{equation}
+\noindent
+Eq.~\eqref{eq:c-gw-leading} is ours, not Volovik's: on his own
+de~Sitter two-fluid background the Landau formula returns $s_2 = c$
+exactly --- structurally, from the stiff-matter equation of state ---
+which corresponds to $\chi_{\mathrm{vest}} = 1$. The
+$\chi_{\mathrm{vest}}$-dependence enters only through our substrate.
 \noindent
 Closed in \texttt{GravitationalWaves.c\_GW\_at\_chi\_one}, the prediction
 agrees with general relativity ($c_{\mathrm{GW}}=c$) only at
@@ -643,35 +661,65 @@ asymmetrically,
 $-3\times 10^{-15} \le \Delta c/c \le
 +7\times 10^{-16}$~\cite{Abbott2017GW170817}; throughout we adopt the
 conservative two-sided envelope $|\Delta c/c| \le 3\times 10^{-15}$
-(the looser, negative side) as the falsification cap. Combined
+(the looser, negative side) as the constraint cap. Combined
 with~\eqref{eq:c-gw-leading}, the natural range produces
-$\Delta c/c \in [-0.68, +2.16]$, which violates the LIGO--Virgo cap by
-roughly fourteen orders of magnitude. Lean
+$\Delta c/c$ sweeping $[-0.68, +2.16]$, vanishing only at
+$\chi_{\mathrm{vest}} = 1$ and violating the LIGO--Virgo cap by
+roughly fourteen orders of magnitude at the endpoints. Lean
 \texttt{GravitationalWaves.natural\_lower\_violates\_ligo} and
 \texttt{natural\_upper\_violates\_ligo} discharge the two endpoint
-falsifiers; \texttt{vestigial\_natural\_range\_violates\_ligo} closes the
-universal-quantifier statement over the natural range; and the
-disjointness theorem
-\texttt{natural\_range\_disjoint\_from\_ligo\_window} formalises the
-joint statement that no value of $\chi_{\mathrm{vest}}$ in the natural
-range admits a $c_{\mathrm{GW}}$ inside the LIGO window. The
-universal falsification (under the natural-range hypothesis) reads
+falsifiers, and \texttt{vestigial\_natural\_range\_violates\_ligo}
+bundles them; the endpoint theorem
+\texttt{natural\_endpoints\_violate\_ligo\_window} adds that no
+rescaling of $c$ rescues either endpoint. None of these is a statement
+about the interior: $\chi_{\mathrm{vest}} = 1$ satisfies the cap
+(\texttt{ligo\_satisfied\_at\_chi\_one}), and the compatible window is
+nested strictly \emph{inside} the natural range
+(\texttt{ligo\_window\_subset\_natural\_range}), meeting it there
+(\texttt{ligo\_window\_inter\_natural\_range\_nonempty}).
+
+What GW170817 delivers over the natural range is therefore a
+confinement, not a universal exclusion. For non-negative
+$\chi_{\mathrm{vest}}$ satisfying the cap,
 \begin{equation}
-\forall\,\chi_{\mathrm{vest}}\in[0.1,10],\quad
-|c_{\mathrm{GW}}(\chi_{\mathrm{vest}}) - c| \;>\; 3\times 10^{-15}\,c\,,
+(1-\tau)^2 \;\le\; \chi_{\mathrm{vest}} \;\le\; (1+\tau)^2,
+\qquad \tau = 3\times 10^{-15},
 \end{equation}
 \noindent
-and is theorem
-\texttt{second\_sound\_graviton\_natural\_range\_universally\_falsified}
-(zero \texttt{sorry}).
+and hence $0.1 < \chi_{\mathrm{vest}} < 10$ strictly --- theorem
+\texttt{ligo\_confines\_chi\_vest\_within\_natural\_range} (zero
+\texttt{sorry}). The admissible interval has width exactly $4\tau$
+(\texttt{ligo\_window\_width\_eq}) against the natural range's $9.9$
+(\texttt{natural\_range\_width\_eq}), a ratio of more than fourteen
+orders of magnitude
+(\texttt{ligo\_window\_width\_lt\_natural\_range\_width\_by\_1e14}).
+That ratio is the load-bearing fine-tuning claim.
+
+Three routes could supply a mechanism that makes the surviving locus
+structural rather than tuned, and each would reopen the vestigial
+channel that \S\ref{sec:closure-triad} otherwise closes: (i) a
+symmetry-driven fixed point making $\chi_{\mathrm{vest}} = 1$ exact
+under the RG flow; (ii) a distinct metric-channel identification in
+which the ``vestigial mode'' is not the second-sound degree of freedom
+at all; and (iii) a
+frequency-dependent $\chi_{\mathrm{vest}}$ at higher derivative order.
+Bundle~L1 develops all three. Route (iii) is closed in the Lean rather
+than argued --- \texttt{vestigial\_dispersion\_below\_ligo\_at\_inspiral\_peak}
+shows the SK-EFT dispersion correction stays inside the GW170817
+tolerance at the conservative $\Gamma_H$ bound --- while (i) and (ii)
+remain open and are the Phase~6 targets.
 
 \subsection{Architecture: triad closure}
 
 \S\ref{sec:gw170817} is the third of the predictive-boundary closures of
 \S\ref{sec:closure-triad}. It is reported here in full because the
-falsification is load-bearing for the remaining argument: with vestigial
-graviton excluded, the substrate's gravity-emergence channel is forced
-to the ADW route. Bundle~L1 ships the same content as a
+constraint is load-bearing for the remaining argument: the vestigial
+graviton survives GW170817 only at a fine-tuned
+$\chi_{\mathrm{vest}} = 1$, so absent a mechanism that pins it there,
+the substrate's gravity-emergence channel is forced to the ADW route.
+The closure is therefore conditional on the absence of such a
+mechanism, not on an outright exclusion --- \S\ref{sec:gw170817} states
+the three recovery paths that would supply one. Bundle~L1 ships the same content as a
 four-page Physical Review Letters splash; the same numerical anchors are
 shared. The \texttt{VestigialGravity} module supplements with the
 phase-count theorem (\texttt{phase\_count}) showing that only
@@ -683,8 +731,8 @@ violation that distinguishes vestigial from full
 
 \subsection{Dispersive correction (forward link to \S\ref{sec:vestigial-mc})}
 
-The leading-order $c_{\mathrm{GW}} = c\sqrt{\chi_{\mathrm{vest}}}$ falsification
-already excludes the natural range. A subleading SK-EFT dissipative
+The leading-order $c_{\mathrm{GW}} = c\sqrt{\chi_{\mathrm{vest}}}$ constraint
+already confines the natural range to a window of width $4\tau$. A subleading SK-EFT dissipative
 correction $\delta\omega/\omega = \Gamma_H \omega/c_{\mathrm{GW}}^{2}$ is
 quantitatively negligible at GW170817 frequencies but is the empirical
 target of the vestigial-metric Monte Carlo of \S\ref{sec:vestigial-mc}.
@@ -2296,8 +2344,11 @@ identifier with a one-line closure path:
   rigorous lower bound (heuristic $\sim 10^{122}$ caveat).
 \item \texttt{GravitationalWaves.H\_VestigialModeIsGraviton}: the
   vestigial-second-sound mode is identified with the graviton
-  (\S\ref{sec:gw170817}); falsifier shipped via
-  \texttt{second\_sound\_graviton\_natural\_range\_universally\_falsified}.
+  (\S\ref{sec:gw170817}); falsifiers shipped via
+  \texttt{H\_VestigialModeIsGraviton\_fails\_at\_natural\_lower},
+  \texttt{\_fails\_at\_natural\_upper}, \texttt{\_fails\_at\_zero} and
+  \texttt{\_fails\_at\_quarter}, with the surviving locus discharged at
+  \texttt{H\_VestigialModeIsGraviton\_at\_one}.
 \item \texttt{BHEntropyMicroscopic.H\_VerlindeKMLiteralSumDerivation}: the literal
   SU(2) Kaul--Majumdar singlet-count derivation. \textbf{DISCHARGED (Wave 7B,
   2026-06-14):} restated to its genuine non-vacuous content and proven kernel-pure

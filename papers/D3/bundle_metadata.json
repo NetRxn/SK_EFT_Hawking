@@ -103,17 +103,32 @@
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
-      "claims": "§6.1 — the violation across the whole natural range",
+      "claims": "§6.1 — the violation at both natural-range endpoints, bundled",
       "declared": "2026-08-07"
     },
     {
-      "name": "SKEFTHawking.GravitationalWaves.natural_range_disjoint_from_ligo_window",
-      "claims": "ABSTRACT + §4.3 + §6.1 — CLOSURE 3: the natural range is DISJOINT from the LIGO window. Shared character-for-character with L1",
+      "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+      "claims": "ABSTRACT + §4.3 + §6.1 — CLOSURE 3, negative half: both endpoints of the natural range violate the LIGO window. Shared character-for-character with L1",
       "declared": "2026-08-07"
     },
     {
-      "name": "SKEFTHawking.GravitationalWaves.second_sound_graviton_natural_range_universally_falsified",
-      "claims": "ABSTRACT + §6.1 — the universal falsifier, the bundle's headline NO-GO",
+      "name": "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
+      "claims": "ABSTRACT + §6.1 — CLOSURE 3, positive half: the LIGO cap confines chi_vest to a window strictly interior to the natural range. The headline is a CONSTRAINT, not an exclusion",
+      "declared": "2026-08-14"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.ligo_window_subset_natural_range",
+      "claims": "§6.1 — the compatible window is nested inside the natural range, not disjoint from it",
+      "declared": "2026-08-14"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
+      "claims": "ABSTRACT + §6.1 — the fine-tuning quantified: the width ratio exceeds 14 orders of magnitude. The bundle's headline quantitative claim",
+      "declared": "2026-08-14"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+      "claims": "ABSTRACT + §6.1 — the frame-independent endpoint falsifier",
       "declared": "2026-08-07"
     },
     {

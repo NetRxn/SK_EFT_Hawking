@@ -8535,12 +8535,14 @@ def fig_c_GW_vs_ligo_constraint():
     """Phase 6a Wave 2: c_GW deviation across the natural χ_vest range, vs the
     GW170817 constraint.
 
-    The key Wave 2 finding: the Volovik vestigial-second-sound graviton
-    identification is *quantitatively falsified* under GW170817 unless χ_vest
-    is fine-tuned to within 3e-15 of unity. The natural range [0.1, 10]
-    fails by 14+ orders of magnitude.
+    The key Wave 2 finding: GW170817 *confines* χ_vest to within 3e-15 of
+    unity. The endpoints of the natural range [0.1, 10] fail the cap by 14+
+    orders of magnitude, but the compatible window is nested strictly inside
+    that range and meets it at χ_vest = 1 — a fine-tuning constraint, not a
+    falsification of the range.
 
-    Lean: GravitationalWaves.vestigial_natural_range_violates_ligo
+    Lean: GravitationalWaves.ligo_confines_chi_vest_within_natural_range,
+    GravitationalWaves.vestigial_natural_range_violates_ligo
     Source: Abbott et al. ApJL 848, L13 (2017).
     viz-ref: Phase 6a Paper 25 §main result
     """

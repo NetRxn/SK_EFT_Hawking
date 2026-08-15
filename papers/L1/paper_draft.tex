@@ -21,8 +21,8 @@
 
 \begin{document}
 
-\title{GW170817 falsifies the vestigial-second-sound graviton
-identification at the natural-range level}
+\title{GW170817 confines the vestigial-second-sound graviton
+identification to one part in $10^{15}$ of its natural range}
 
 \author{John G.\ Roehm}
 \affiliation{NetRxn Foundation}
@@ -43,22 +43,23 @@ result is sharp: over the natural susceptibility range
 $\chivest \in [0.1, 10]$ (a project-adopted order-unity
 naturalness window about the random-phase-approximation
 bubble-integral scale) the
-deviation $\dccap = \sqrt{\chivest} - 1$ falls in $[-0.68, +2.16]$,
-exceeding the GW170817 cap by $\sim 7\times 10^{14}$. The
+deviation $\dccap = \sqrt{\chivest} - 1$ sweeps $[-0.68, +2.16]$,
+vanishing only at $\chivest = 1$ and exceeding the GW170817 cap by
+$\sim 7\times 10^{14}$ at the endpoints. The
 GW170817-compatible window
 $\chivest \in [(1-\tau)^2,(1+\tau)^2]$ with $\tau = 3\times 10^{-15}$
 has measure $4\tau \approx 1.2\times 10^{-14}$, vanishingly small
 under any natural-range prior. The result is a Lean 4 formal proof
-(\texttt{GravitationalWaves.lean}, 21 theorems, zero \texttt{sorry},
+(\texttt{GravitationalWaves.lean}, 32 theorems, zero \texttt{sorry},
 zero new axioms): a biconditional locating the compatible window plus
 two endpoint falsifier theorems witnessed at $\chivest \in \{0.1,
-10\}$. We also formalize the Phase~5y H1 underdetermination caveat
-as the disjointness theorem
-\texttt{natural\_range\_disjoint\_from\_ligo\_window}: the natural
-range $[0.1, 10]$ and the GW170817-compatible window are entirely
-disjoint at any speed-of-light rescaling, so the identification
-admits no consistent $\chivest$ outside the fine-tuning window.
-The falsification is local to the leading-
+10\}$, and the Phase~5y H1 underdetermination caveat. The compatible
+window is not disjoint from the natural range but strictly nested
+inside it, meeting it at $\chivest = 1$; the datum \emph{confines}
+$\chivest$ to that window, while no speed-of-light rescaling admits
+either endpoint. The identification therefore survives only on a
+sub-interval narrower than the natural range by more than 14 orders of
+magnitude. The constraint is local to the leading-
 order kinematic identification; we identify three avenues by which
 emergent-gravity programs may yet recover GW170817 compatibility
 (symmetry-driven $\chivest \to 1$ fixed point; distinct
@@ -83,7 +84,22 @@ formulation~\cite{Akama1978,Diakonov2011,VladimirovDiakonov2012,%
 HebeckerWetterich2003,Wetterich2022}; two propagating helicities
 remain, identified with $h_+, h_\times$). The hydrodynamic claim is
 that the propagation equation of these two modes is the second-sound
-wave equation with effective sound speed
+wave equation.
+
+\paragraph{Whose claim is Eq.~\eqref{eq:cGW}.} The \emph{identification}
+is Volovik's; the susceptibility-dependent speed is ours. He advances
+it in~\cite{Volovik2026SecondSound,Volovik2024VacuumDecay} --- not in
+the vestigial-gravity note~\cite{Volovik2024Vestigial}, which concerns
+the two-step transition --- and on his own de~Sitter two-fluid
+background the Landau formula yields $s_2 = c$ \emph{exactly},
+independent of $H$: a structural consequence of the stiff-matter
+equation of state $w_n = 1$, not a tunable parameter, and hence
+GW170817-compatible at leading order. He leaves the spin assignment
+open, describing a scalar mode; the spin-2 assignment above comes from
+the ADW Goldstone counting and is likewise ours. Transplanting the
+identification onto the ADW substrate, whose metric-channel
+susceptibility we compute independently and which does \emph{not} fix
+$\chivest$, is what produces a $\chivest$-dependent speed:
 \begin{equation}
   \cGW^2(\chivest) = c^2 \cdot \chivest, \qquad
   \cGW(\chivest) = c\sqrt{\chivest},
@@ -113,12 +129,14 @@ $\tau = 3 \times 10^{-15}$.
 
 This Letter formalizes Eq.~\eqref{eq:cGW}, places it head-to-head
 against GW170817, and reports the result. The conclusion is sharp:
-the leading-order Volovik identification fails GW170817 over the
-entire natural range $\chivest \in [0.1, 10]$ by 14 orders of
-magnitude. The GW170817-compatible window
-$[(1-\tau)^2, (1+\tau)^2]$ has measure $\sim 4\tau$ in $\chivest$,
-vanishingly small under any natural-range prior. The result is a
-refutation of one specific kinematic identification, not of emergent
+the leading-order Volovik identification survives GW170817 only on a
+sub-interval of the natural range $\chivest \in [0.1, 10]$ narrower
+than that range by more than 14 orders of magnitude. The
+GW170817-compatible window $[(1-\tau)^2, (1+\tau)^2]$ has measure
+$\sim 4\tau$ in $\chivest$, vanishingly small under any natural-range
+prior, and sits strictly interior to $[0.1, 10]$ about the anchor
+$\chivest = 1$. The result is a fine-tuning constraint on one specific
+kinematic identification, not a refutation of emergent
 gravity nor of the ADW program; we discuss three Phase~6 recovery
 paths in Sec.~\ref{sec:discussion}.
 
@@ -147,11 +165,12 @@ Sec.~\ref{sec:intro} notes, $\cGW = c\sqrt{\chivest}$ is asserted
 kinematically: the mode is assumed rather than derived, so there are no
 operator coefficients for the bound to constrain and nothing to tune.
 What the bound can do instead is fix $\chivest$ itself, and the content
-of this Letter is that the value it fixes is incompatible with every
-value the identification's own microscopic origin would predict. The
+of this Letter is that it fixes $\chivest$ to a part in $10^{15}$ of
+the order-unity window the identification's own microscopic origin
+would predict --- a value that window contains, but does not favour. The
 2017 sweep constrained \emph{theories}; this constrains an
-\emph{identification}, which is why it is stated as a disjointness of
-two intervals rather than as a surviving region of parameter space.
+\emph{identification}, which is why it is stated as a ratio of two
+interval widths rather than as a surviving region of parameter space.
 
 A corollary worth stating plainly: because the argument never uses a
 Lagrangian, it is insensitive to the operator-level escape routes those
@@ -212,10 +231,16 @@ The proof is a $\sqrt{\cdot}$/squaring round-trip via
 $\sqrt{\chivest}^2 = \chivest$. The compatible $\chivest$
 window has width $\sim 4\tau = 1.2\times 10^{-14}$.
 
-\paragraph{Natural-range falsification.} The natural range $[0.1,10]$
-has width $9.9$. The GW170817-compatible window has width
-$1.2\times 10^{-14}$. The two are disjoint by 14 orders of magnitude.
-We sharpen this with two endpoint-falsifier theorems.
+\paragraph{Natural-range fine-tuning.} The natural range $[0.1,10]$
+has width $9.9$ (\texttt{natural\_range\_width\_eq}); the
+GW170817-compatible window has width exactly $4\tau =
+1.2\times 10^{-14}$ (\texttt{ligo\_window\_width\_eq}) and is nested
+strictly inside it
+(\texttt{ligo\_window\_subset\_natural\_range}), not disjoint from it.
+Scaling the window up by $10^{14}$ still leaves it the narrower
+(\texttt{ligo\_window\_width\_lt\_natural\_range\_width\_by\_1e14}):
+that ratio, not a disjointness, is the fine-tuning claim.
+Two endpoint-falsifier theorems sharpen the exclusion of the extremes.
 
 \begin{theorem}[\texttt{natural\_lower\_violates\_ligo}]
   \label{thm:falsifier-lower}
@@ -291,35 +316,41 @@ $\chivest = 1$ (\texttt{H\_VestigialModeIsGraviton\_at\_one}) and
 \verb|*_fails_at_zero| (P1), and
 \verb|*_fails_at_quarter| (P3'; at $\chivest = 1/4$ the deviation is
 exactly $\dccap = -1/2$, saturating the bound and isolating P3'
-independence). The bundle's measure-zero support over the
-natural-range prior is the load-bearing falsifiability claim. (The
+independence). The bundle's support over the natural-range prior has
+measure $4\tau \approx 1.2\times 10^{-14}$ --- vanishingly small, but
+non-empty, and containing $\chivest = 1$ --- and that is the
+load-bearing falsifiability claim. (The
 original Wave-2 P3 = $\forall c{>}0,\,\cGW(\chivest, c) > 0$ was
 removed in the 2026-04-25 post-Wave-2 audit as redundant given P1;
 P3' replaces it with a load-bearing quantitative constraint per the
 project's preemptive-strengthening discipline.)
 
-\paragraph{Phase~5y H1 caveat as a Lean disjointness theorem.} The
+\paragraph{Phase~5y H1 caveat as a Lean endpoint theorem.} The
 Phase 5y H1 deep research established that the Volovik identification
 is not a \emph{derivation}: there is no first-principles bound fixing
 the graviton-mode normalization in terms of the second-sound DOF.
-We formalize this caveat directly as the disjointness theorem
-\texttt{natural\_range\_disjoint\_from\_ligo\_window}: for $\chivest$
+We formalize this caveat as the endpoint theorem
+\texttt{natural\_endpoints\_violate\_ligo\_window}: for $\chivest$
 at either natural-range endpoint $\{0.1, 10\}$, no $c$-rescaling
 gives a GW170817-compatible $\dccap$. The frame-independent form
-\texttt{second\_sound\_graviton\_natural\_range\_universally\_falsified}
-quantifies over all $c > 0$ explicitly. Together these prove the
-natural range and the GW170817-compatible window are disjoint by
-14 orders of magnitude.
+\texttt{natural\_endpoints\_violate\_ligo\_for\_every\_c}
+quantifies over all $c > 0$ explicitly, resting on
+\texttt{c\_GW\_relative\_deviation\_eq}. Both concern the two
+endpoints only; neither excludes interior values, and $\chivest = 1$
+satisfies the cap (\texttt{ligo\_satisfied\_at\_chi\_one}).
 
 %% ================================================================
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{What this rules out.} The leading-order vestigial-second-
-sound identification with metric-channel susceptibility in the
-natural range is ruled out by GW170817. Eq.~\eqref{eq:cGW} requires
-$\chivest = 1 \pm 3\times 10^{-15}$, a fine-tuning so extreme it
-cannot follow from a generic UV theory.
+\paragraph{What this rules out.} GW170817 does not exclude the
+leading-order vestigial-second-sound identification outright: it
+survives at $\chivest = 1$. What it rules out is the identification as
+a \emph{generic} consequence of the natural range. Eq.~\eqref{eq:cGW}
+requires $\chivest = 1 \pm 3\times 10^{-15}$, a fine-tuning so extreme
+it cannot follow from a generic UV theory --- so any surviving version
+of the identification owes an account of why $\chivest$ sits exactly
+at unity.
 
 \paragraph{What this does not rule out.} Three Phase~6 paths remain
 open:
@@ -327,7 +358,12 @@ open:
 \item \textbf{Symmetry-driven $\chivest \to 1$ fixed point.} If a
 deep-IR symmetry (e.g.\ Lorentz invariance of the emergent metric
 sector) makes $\chivest = 1$ an exact fixed point of the RG flow, the
-fine-tuning is structural rather than tuned. Phase~6 should examine
+fine-tuning is structural rather than tuned. The present evidence
+most favours this path: Volovik's own background returns $s_2 = c$
+exactly, i.e.\ $\chivest = 1$, structurally. The value GW170817
+selects is thus the value his construction already produces --- the
+datum corroborates his result and indicts our substrate's failure to
+reproduce it, not the identification. Phase~6 should examine
 whether such a fixed point is realized in the ADW broken phase.
 \item \textbf{Distinct metric-channel identification.} The
 ``vestigial mode'' may not be the second-sound DOF at all but a
@@ -338,15 +374,15 @@ negative-evidence result. Phase~6e (full nonlinear emergent action)
 is the natural venue for the disambiguation.
 \item \textbf{Frequency-dependent $\chivest$.} Eq.~\eqref{eq:cGW} is
 the leading term in a derivative expansion. If $\chivest$ varies
-with frequency, the leading-order falsification could in principle be
-lifted by a near-cancellation in the LIGO band. The
+with frequency, the leading-order constraint could in principle be
+relaxed by a near-cancellation in the LIGO band. The
 SK--EFT dispersion correction is the leading frequency dependence in
 the present framework, and this path is closed in the Lean rather than
 argued: \texttt{vestigial\_dispersion\_below\_ligo\_at\_inspiral\_peak}
 proves that at the project's conservative upper bound
 $|\gamma| \leq 10^{-30}$ on $\Gamma_H/\cGW^2$ the correction at the
 $100\,\mathrm{Hz}$ inspiral peak stays inside the GW170817 tolerance,
-so it does not lift the falsification. The general form is
+so it does not relax the constraint. The general form is
 \texttt{dispersion\_within\_ligo\_iff}, a biconditional exchanging the
 correction's tolerance for $|\gamma| \leq \mathrm{tol}/\omega$;
 \texttt{dispersion\_correction\_abs\_bound},
@@ -374,7 +410,7 @@ the latter, and its bound is too tight to absorb the natural-range
 spread.
 
 \paragraph{Reproducibility.} The result is reproducible in two
-layers. The Lean layer is \texttt{GravitationalWaves.lean} (21
+layers. The Lean layer is \texttt{GravitationalWaves.lean} (32
 theorems, zero \texttt{sorry}, zero new axioms, zero
 \texttt{maxHeartbeats} overrides) at the project's pinned
 Mathlib4 commit; the Python layer is \texttt{src/gravitational\_waves/}
@@ -395,6 +431,16 @@ DOI: 10.1134/S002136402460006X.
 G.~E.~Volovik, ``Gravity from Symmetry Breaking Phase Transition,''
 J.~Low Temp.\ Phys.\ \textbf{207}, 127 (2022);
 DOI: 10.1007/s10909-022-02694-z.
+
+\bibitem{Volovik2026SecondSound}
+G.~E.~Volovik, ``Massless graviton in de Sitter as second sound,''
+arXiv:2601.00639 (2026). \emph{The source of the
+second-sound--graviton identification; derives $s_2 = c$ exactly and
+leaves the graviton type open.}
+
+\bibitem{Volovik2024VacuumDecay}
+G.~E.~Volovik, ``From Landau two-fluid model to de Sitter Universe,''
+arXiv:2410.04392 (2024).
 
 \bibitem{Akama1978}
 K.~Akama, Prog.\ Theor.\ Phys.\ \textbf{60}, 1900 (1978);

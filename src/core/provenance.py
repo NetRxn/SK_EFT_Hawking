@@ -4239,11 +4239,13 @@ PAPER_DEPENDENCIES = {
     },
     'paper25_gravitational_waves': {
         'title': 'Paper 25: Gravitational Wave Propagation under the Vestigial-Susceptibility '
-                 'Identification — A GW170817 Falsification of the Volovik Second-Sound Graviton (PRD)',
+                 'Identification — GW170817 Confines the Volovik Second-Sound Graviton to One '
+                 'Part in 10^15 of the Natural Range (PRD)',
         'topic': 'c_GW = c · √χ_vest leading-order propagation, GW170817 multi-messenger '
-                 'correctness-push biconditional, natural-range falsification by ~10^14, '
-                 'tracked-hypothesis bundle H_VestigialModeIsGraviton with three falsifiers, '
-                 'Phase 5y H1 caveat encoded as second_sound_graviton_not_derived_DOF, '
+                 'correctness-push biconditional, natural-range confinement by >10^14 in '
+                 'interval width, tracked-hypothesis bundle H_VestigialModeIsGraviton with four '
+                 'falsifiers, Phase 5y H1 caveat encoded as '
+                 'natural_endpoints_violate_ligo_window, '
                  'SK-EFT dispersion correction from SecondOrderSK Γ_H',
         'formulas': [
             'c_GW_from_chi_vest',
@@ -4260,13 +4262,22 @@ PAPER_DEPENDENCIES = {
                 '(Lean: c_GW_deviation, _zero_iff_chi_one, _strict_mono)',
             'GW170817 correctness-push biconditional: |Δc/c| ≤ 3e-15 ⟺ χ_vest ∈ '
                 '[(1-τ)², (1+τ)²] (Lean: c_GW_match_iff_chi_close_to_one)',
-            'Natural-range falsification: at χ_vest = 0.1, Δc/c ≈ -0.684; at χ_vest = 10, '
+            'Natural-range endpoint exclusion: at χ_vest = 0.1, Δc/c ≈ -0.684; at χ_vest = 10, '
                 'Δc/c ≈ +2.162. Both endpoints fail GW170817 by ~10^14 (Lean: '
                 'natural_lower_violates_ligo, natural_upper_violates_ligo, '
-                'vestigial_natural_range_violates_ligo)',
-            'Phase 5y H1 caveat: vestigial-second-sound graviton identification is NOT '
-                'derived as a propagating DOF (Lean: second_sound_graviton_not_derived_DOF, '
-                'an existential meta-theorem)',
+                'vestigial_natural_range_violates_ligo). The interior is NOT excluded: '
+                'χ_vest = 1 satisfies the cap (Lean: ligo_satisfied_at_chi_one)',
+            'Natural-range confinement: the GW170817-compatible window is nested strictly '
+                'inside [0.1, 10] and meets it at χ_vest = 1 (Lean: '
+                'ligo_window_subset_natural_range, ligo_window_inter_natural_range_nonempty); '
+                'the cap confines χ_vest to that window (Lean: '
+                'ligo_confines_chi_vest_within_natural_range), which is narrower than the '
+                'natural range by >14 orders of magnitude (Lean: '
+                'ligo_window_width_lt_natural_range_width_by_1e14)',
+            'Phase 5y H1 caveat: neither natural-range endpoint admits a GW170817-compatible '
+                'deviation at any c (Lean: natural_endpoints_violate_ligo_window, '
+                'natural_endpoints_violate_ligo_for_every_c, resting on '
+                'c_GW_relative_deviation_eq)',
             'Bundled tracked hypothesis H_VestigialModeIsGraviton: positivity ∧ LIGO '
                 'compatibility ∧ luminal propagation; discharged at χ_vest = 1 (Lean: '
                 'H_VestigialModeIsGraviton_at_one), three falsifiers at natural range '

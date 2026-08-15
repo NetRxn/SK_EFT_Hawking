@@ -7441,6 +7441,58 @@
       "superseded_by": null,
       "date": "2026-08-14",
       "commit": "f1a0829f"
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:3.1",
+      "status": "fixed",
+      "evidence": "L1 restated from falsification to confinement: title is now \"GW170817 confines the vestigial-second-sound graviton identification to one part in 10^15 of its natural range\"; abstract, intro, Sec.4 and Discussion rewritten. The misnamed theorem is renamed natural_endpoints_violate_ligo_window and prose now cites ligo_window_subset_natural_range, ligo_window_inter_natural_range_nonempty, ligo_confines_chi_vest_within_natural_range and ligo_window_width_lt_natural_range_width_by_1e14. A fifth occurrence the declared predicate did not cover (\"the deviation falls in [-0.68,+2.16], exceeding the cap\", false at chi_vest=1) was corrected in the same pass. L1 compiles clean at 4 pages.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import re; t=re.sub(r'\\s+',' ',open('papers/L1/paper_draft.tex').read()); h=re.findall(r'entirely disjoint|are disjoint by|fails GW170817 over the entire natural range',t); assert not h, h\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import re; t=re.sub(r'\\s+',' ',open('papers/L1/paper_draft.tex').read()); h=re.findall(r'entirely disjoint|are disjoint by|fails GW170817 over the entire natural range',t); assert not h, h\"",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:4.1",
+      "status": "fixed",
+      "evidence": "D3 and paper25 corrected in the same pass as 3.1. D3: the false displayed equation asserting forall chi in [0.1,10] the deviation exceeds the cap is replaced by the true confinement statement backed by ligo_confines_chi_vest_within_natural_range, plus the width ratio; the triad-closure argument is restated as conditional on the absence of a mechanism pinning chi_vest to unity, and the three recovery paths are now stated in D3 itself rather than merely referenced. paper25: title, abstract, section heading, discussion and conclusion restated from falsification to confinement. Both compile: D3 60pp 0 errors; paper25 unchanged at its 13 pre-existing legacy-macro errors (13 at HEAD, 13 now).",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import re; h=[(f,x) for f in ('papers/D3/paper_draft.tex','papers/paper25_gravitational_waves/paper_draft.tex') for x in re.findall(r'entirely disjoint|are disjoint by|universal-quantifier statement over the natural range|fails GW170817 over the entire natural range', re.sub(r'\\s+',' ',open(f).read()))]; assert not h, h\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import re; h=[(f,x) for f in ('papers/D3/paper_draft.tex','papers/paper25_gravitational_waves/paper_draft.tex') for x in re.findall(r'entirely disjoint|are disjoint by|universal-quantifier statement over the natural range|fails GW170817 over the entire natural range', re.sub(r'\\s+',' ',open(f).read()))]; assert not h, h\"",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:1.1",
+      "status": "fixed",
+      "evidence": "Resolved by restating the attribution rather than retargeting alone. L1 now carries a \"Whose claim is Eq. (1)\" paragraph before the equation: the identification is Volovik advanced in arXiv:2601.00639 and arXiv:2410.04392 (both added to the bibliography with titles taken from the project corpus: \"Massless graviton in de Sitter as second sound\" and \"From Landau two-fluid model to de Sitter Universe\"), NOT in Volovik2024Vestigial which concerns the two-step transition. The susceptibility-dependent speed is stated plainly as this project construction. The spin-2 vs scalar conflict is disclosed: the source leaves the spin assignment open and describes a scalar mode, and the spin-2 assignment is attributed to the ADW Goldstone counting, i.e. to us.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -qE \"2601\\.00639|2410\\.04392\" papers/L1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && grep -qE \"2601\\.00639|2410\\.04392\" papers/L1/paper_draft.tex",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:5.1",
+      "status": "fixed",
+      "evidence": "Resolved on branch (b) of the finding two options: L1 targets a different construction from the one the H1 document analysed. L1 now engages section 4 of that document directly, stating that Volovik own de Sitter background gives s_2 = c exactly, independent of H, structurally from the stiff-matter equation of state w_n = 1, and is therefore GW170817-compatible. The title no longer claims to falsify a proposal no one made; it states confinement. Discussion recovery path 1 now notes that the value GW170817 selects is the value Volovik construction already produces, so the datum corroborates his result and constrains OUR substrate.",
+      "superseded_by": null,
+      "date": "2026-08-14",
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -qiE \"s_?2 = c|s₂ = c|structurally equal to \\$c\\$\" papers/L1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && grep -qiE \"s_?2 = c|s₂ = c|structurally equal to \\$c\\$\" papers/L1/paper_draft.tex",
+        "exit_code": 0,
+        "run_at": "2026-08-14"
+      }
     }
   ]
 }

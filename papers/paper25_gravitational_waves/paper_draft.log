@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  1 MAY 2026 13:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  14 AUG 2026 20:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -497,28 +497,41 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 30.
 (/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 1675) in paragraph at lines 103--110
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 81.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `superscript' on input line 81.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 81.
+
+
+Underfull \hbox (badness 1675) in paragraph at lines 107--114
 []\OT1/cmr/m/n/10 The Au-gust 17, 2017 binary-neutron-star merger
  []
 
 
-Underfull \hbox (badness 3514) in paragraph at lines 111--120
+Underfull \hbox (badness 3514) in paragraph at lines 115--124
 \OT1/cmr/m/n/10 speed iden-ti-fi-ca-tion, place it head-to-head against
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 135--145
+Underfull \hbox (badness 10000) in paragraph at lines 139--149
 []\OT1/cmr/m/n/10 The vestigial-phase metric-channel sus-cep-ti-bil-
  []
 
 
-Underfull \hbox (badness 1377) in paragraph at lines 135--145
+Underfull \hbox (badness 1377) in paragraph at lines 139--149
 \OT1/cmr/m/n/10 ity $\OML/cmm/m/it/10 ^^_[]$ \OT1/cmr/m/n/10 is the RPA bub-ble
  in-te-gral com-puted in
  []
 
 
-Underfull \hbox (badness 5260) in paragraph at lines 135--145
+Underfull \hbox (badness 5260) in paragraph at lines 139--149
 \OT1/cmtt/m/n/10 VestigialSusceptibility.lean\OT1/cmr/m/n/10 , with closed form
 
  []
@@ -526,31 +539,31 @@ Underfull \hbox (badness 5260) in paragraph at lines 135--145
 [1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 146.
+(hyperref)                removing `math shift' on input line 150.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 146.
+(hyperref)                removing `subscript' on input line 150.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 146.
+(hyperref)                removing `math shift' on input line 150.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 166--170
+Underfull \hbox (badness 10000) in paragraph at lines 176--180
 []\OT1/cmr/m/n/10 In Lean ([][]\OT1/cmtt/m/n/10 GravitationalWaves.lean []\OT1/
 cmr/m/n/10 Sec-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 166--170
+Underfull \hbox (badness 10000) in paragraph at lines 176--180
 \OT1/cmr/m/n/10 tions 1--2): [][]\OT1/cmtt/m/n/10 c_GW[]\OT1/cmr/m/n/10 , [][]\
 OT1/cmtt/m/n/10 c_GW_at_chi_one[]\OT1/cmr/m/n/10 , [][]\OT1/cmtt/m/n/10 c_GW_po
 s[]\OT1/cmr/m/n/10 ,
  []
 
 
-Overfull \hbox (16.51149pt too wide) detected at line 183
+Overfull \hbox (16.51149pt too wide) detected at line 193
 [][][][]\OT1/cmr/m/n/10 (^^A\OML/cmm/m/it/10 c=c\OT1/cmr/m/n/10 (\OML/cmm/m/it/
 10 ^^_[]\OT1/cmr/m/n/10 ))  \OMS/cmsy/m/n/10 ([])  \OML/cmm/m/it/10 ^^_[] \OMS/
 cmsy/m/n/10 2 \OT1/cmr/m/n/10 [(1 \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 ^^\\OT1
@@ -559,160 +572,213 @@ cmsy/m/n/10 2 \OT1/cmr/m/n/10 [(1 \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 ^^\\OT1
  []
 
 
-Underfull \hbox (badness 3590) in paragraph at lines 183--186
+Underfull \hbox (badness 3590) in paragraph at lines 193--196
 \OT1/cmr/bx/n/10 Theorem A \OT1/cmr/m/n/10 ([][]\OT1/cmtt/m/n/10 c_GW_match_iff
 _chi_close_to_one[]\OT1/cmr/m/n/10 ).
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 187--193
+Underfull \hbox (badness 10000) in paragraph at lines 197--203
 []\OT1/cmr/m/n/10 The proof is a $[]$/squaring round-trip via
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 187--193
+Underfull \hbox (badness 10000) in paragraph at lines 197--203
 [][]\OT1/cmtt/m/n/10 Real.sqrt_le_sqrt []\OT1/cmr/m/n/10 and [][]\OT1/cmtt/m/n/
 10 Real.sqrt_sq[]\OT1/cmr/m/n/10 , with a
  []
 
 
-Underfull \hbox (badness 2941) in paragraph at lines 187--193
+Underfull \hbox (badness 2941) in paragraph at lines 197--203
 \OT1/cmr/m/n/10 nonlinear-arithmetic step closed by [][]\OT1/cmtt/m/n/10 nlinar
 ith []\OT1/cmr/m/n/10 us-
  []
 
 
-Underfull \hbox (badness 2495) in paragraph at lines 217--222
+Underfull \hbox (badness 10000) in paragraph at lines 208--220
+[]\OT1/cmr/m/n/10 The GW170817-compatible $\OML/cmm/m/it/10 ^^_[]$ \OT1/cmr/m/n
+/10 win-dow
+ []
+
+
+Underfull \hbox (badness 3375) in paragraph at lines 208--220
+\OT1/cmr/m/n/10 [0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 1\OML/cmm/m/it/10 ; \OT1/cm
+r/m/n/10 10]$ has width $9\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 9$ ([][]\OT1/cmtt/m
+/n/10 natural_range_width_eq[]\OT1/cmr/m/n/10 ).
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 208--220
+\OT1/cmr/m/n/10 The com-pat-i-ble win-dow is not dis-joint from
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 208--220
+\OT1/cmr/m/n/10 the nat-u-ral range: it is nested strictly in-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 208--220
+\OT1/cmr/m/n/10 side it ([][]\OT1/cmtt/m/n/10 ligo_window_subset_natural_range[
+]\OT1/cmr/m/n/10 )
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 208--220
+\OT1/cmr/m/n/10 and the two meet at $\OML/cmm/m/it/10 ^^_[] \OT1/cmr/m/n/10 = 1
+$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 208--220
+\OT1/cmr/m/n/10 ([][]\OT1/cmtt/m/n/10 ligo_window_inter_natural_range_nonempty[
+]\OT1/cmr/m/n/10 ).
+ []
+
+
+Underfull \hbox (badness 4205) in paragraph at lines 208--220
+\OT1/cmr/m/n/10 The con-tent of the con-straint is the width ra-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 208--220
+\OT1/cmr/m/n/10 tio --- scal-ing the win-dow up by $10[]$ still
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 208--220
+\OT1/cmr/m/n/10 leaves it nar-rower than the nat-u-ral range
+ []
+
+
+Overfull \hbox (16.55339pt too wide) in paragraph at lines 208--220
+\OT1/cmr/m/n/10 ([][]\OT1/cmtt/m/n/10 ligo_window_width_lt_natural_range_width_
+by_1e14[]\OT1/cmr/m/n/10 ). 
+ []
+
+
+Underfull \hbox (badness 2495) in paragraph at lines 234--239
 []\OT1/cmr/m/n/10 The proofs use $[] \OMS/cmsy/m/n/10 ^^T [] \OT1/cmr/m/n/10 = 
 1\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 2$ and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 223--225
+Underfull \hbox (badness 10000) in paragraph at lines 240--242
 []\OT1/cmr/bx/n/10 Bundled The-o-rem D
  []
 
 
-Underfull \hbox (badness 2818) in paragraph at lines 223--225
+Underfull \hbox (badness 2818) in paragraph at lines 240--242
 \OT1/cmr/m/n/10 ([][]\OT1/cmtt/m/n/10 vestigial_natural_range_violates_ligo[]\O
 T1/cmr/m/n/10 ). Both
  []
 
 
-Overfull \hbox (109.83981pt too wide) in paragraph at lines 237--259
+Overfull \hbox (109.83981pt too wide) in paragraph at lines 254--275
 []\OT1/cmr/m/n/10 Phase 5y H1 (\OT1/cmtt/m/n/10 Lit-Search/Phase-5y/Phase5y[]H1
 []second[]sound[]graviton.md\OT1/cmr/m/n/10 )
  []
 
 
-Underfull \hbox (badness 2012) in paragraph at lines 237--259
-\OT1/cmr/m/n/10 es-tab-lished that the Volovik second-sound gravi-ton
+Underfull \hbox (badness 6658) in paragraph at lines 254--275
+\OT1/cmr/m/n/10 es-tab-lished that the Volovik second-sound gravi-
  []
 
 
-Underfull \hbox (badness 2744) in paragraph at lines 237--259
-\OT1/cmr/m/n/10 in terms of the second-sound DOF. The orig-i-nal
+Underfull \hbox (badness 1178) in paragraph at lines 254--275
+\OT1/cmr/m/n/10 ton iden-ti-fi-ca-tion is \OT1/cmr/m/it/10 not \OT1/cmr/m/n/10 
+a deriva-tion: there is no
  []
 
 
-Underfull \hbox (badness 1360) in paragraph at lines 237--259
-\OT1/cmtt/m/n/10 second[]sound[]graviton[]not[]derived[]DOF \OT1/cmr/m/n/10 the
--o-rem (a
+Underfull \hbox (badness 1484) in paragraph at lines 254--275
+\OT1/cmr/m/n/10 first-principles bound fix-ing the graviton-mode nor-
  []
 
 
-Underfull \hbox (badness 1454) in paragraph at lines 237--259
-\OT1/cmr/m/n/10 was re-tired dur-ing the 2026-04-25 post-Wave-2 au-
+Underfull \hbox (badness 10000) in paragraph at lines 254--275
+\OT1/cmr/m/n/10 orig-i-nal \OT1/cmtt/m/n/10 second[]sound[]graviton[]not[]deriv
+ed[]DOF
  []
 
 
-Underfull \hbox (badness 1939) in paragraph at lines 237--259
-\OT1/cmr/m/n/10 dit as an $\OMS/cmsy/m/n/10 9$\OT1/cmr/m/n/10 -absorption tau-t
-ol-ogy | the ex-is-tence
+Underfull \hbox (badness 1275) in paragraph at lines 254--275
+\OT1/cmr/m/n/10 the-o-rem (a $\OMS/cmsy/m/n/10 8\OML/cmm/m/it/10 c; \OMS/cmsy/m
+/n/10 9\OML/cmm/m/it/10 ^^_[]$ \OT1/cmr/m/n/10 ex-is-ten-tial dis-charged triv-
+ially
  []
 
 
-Underfull \hbox (badness 1117) in paragraph at lines 237--259
-\OT1/cmr/m/n/10 of \OT1/cmr/m/it/10 one \OT1/cmr/m/n/10 con-sis-tent value does
- not en-code ``un-der-de-
+Underfull \hbox (badness 1389) in paragraph at lines 254--275
+\OT1/cmr/m/n/10 Wave-2 au-dit as an $\OMS/cmsy/m/n/10 9$\OT1/cmr/m/n/10 -absorp
+tion tau-tol-ogy | the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--259
-\OT1/cmr/m/n/10 rem [][]\OT1/cmtt/m/n/10 natural_range_disjoint_from_ligo_windo
+Underfull \hbox (badness 10000) in paragraph at lines 254--275
+\OT1/cmr/m/n/10 o-rem [][]\OT1/cmtt/m/n/10 natural_endpoints_violate_ligo_windo
 w[]\OT1/cmr/m/n/10 :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--259
+Underfull \hbox (badness 10000) in paragraph at lines 254--275
 \OT1/cmr/m/n/10 for any $\OML/cmm/m/it/10 ^^_[]$ \OT1/cmr/m/n/10 at the natural
 -range end-points
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--259
+Underfull \hbox (badness 10000) in paragraph at lines 254--275
 \OMS/cmsy/m/n/10 f[]\OML/cmm/m/it/10 ; []\OMS/cmsy/m/n/10 g \OT1/cmr/m/n/10 =
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--259
-\OMS/cmsy/m/n/10 f\OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 1\OML/cmm/
-m/it/10 ; \OT1/cmr/m/n/10 10\OMS/cmsy/m/n/10 g$\OT1/cmr/m/n/10 , there is \OT1/
-cmr/m/it/10 no $\OML/cmm/m/it/10 c$\OT1/cmr/m/n/10 -value rescal-
+Underfull \hbox (badness 3240) in paragraph at lines 254--275
+[]\OT1/cmr/m/n/10 quan-ti-fies over all $\OML/cmm/m/it/10 c > \OT1/cmr/m/n/10 0
+$ ex-plic-itly, rest-ing on
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--259
-\OT1/cmr/m/n/10 ing that gives a GW170817-compatible
+Underfull \hbox (badness 4144) in paragraph at lines 254--275
+[][]\OT1/cmtt/m/n/10 c_GW_relative_deviation_eq[]\OT1/cmr/m/n/10 : the rel-a-ti
+ve de-vi-a-
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 237--259
-\OT1/cmr/m/n/10 ^^A\OML/cmm/m/it/10 c=c$\OT1/cmr/m/n/10 . The frame-independent
- form
- []
-
-
-Overfull \hbox (53.24739pt too wide) in paragraph at lines 237--259
-[][]\OT1/cmtt/m/n/10 second_sound_graviton_natural_range_universally_falsified
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 262--271
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 285--294
 []\OT1/cmr/m/n/10 The strength-en-ing pass also re-vised
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--271
+Underfull \hbox (badness 10000) in paragraph at lines 285--294
 [][]\OT1/cmtt/m/n/10 H_VestigialModeIsGraviton[]\OT1/cmr/m/n/10 . The orig-i-na
 l P3
  []
 
 
-Underfull \hbox (badness 1259) in paragraph at lines 262--271
+Underfull \hbox (badness 1259) in paragraph at lines 285--294
 \OT1/cmr/m/n/10 con-junct ($\OMS/cmsy/m/n/10 8\OML/cmm/m/it/10 c > \OT1/cmr/m/n
 /10 0\OML/cmm/m/it/10 ;  c[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^_[]; c\OT1/cmr/
 m/n/10 ) \OML/cmm/m/it/10 > \OT1/cmr/m/n/10 0$) was re-dun-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--271
+Underfull \hbox (badness 10000) in paragraph at lines 285--294
 \OT1/cmr/m/n/10 project's preemptive-strengthening dis-ci-pline (see
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--271
+Underfull \hbox (badness 10000) in paragraph at lines 285--294
 \OT1/cmtt/m/n/10 feedback[]post[]wave[]strengthening[]audit.md \OT1/cmr/m/n/10 
 P2
  []
 
 
-Underfull \hbox (badness 1946) in paragraph at lines 262--271
+Underfull \hbox (badness 1946) in paragraph at lines 285--294
 \OT1/cmr/m/n/10 bundle- re-dun-dancy rule) re-quires re-mov-ing re-dun-
  []
 
-[2]
-Overfull \hbox (204.84166pt too wide) detected at line 275
+
+Overfull \hbox (204.84166pt too wide) detected at line 298
 []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^_[]\OT1/cmr/m/n/10 )  \OMS/cmsy/m/n/10 ^^
 Q  \OML/cmm/m/it/10 ^^_[] > \OT1/cmr/m/n/10 0  \OMS/cmsy/m/n/10 ^  []\OT1/cmr/m
 /n/10 (^^A\OML/cmm/m/it/10 c=c\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^_[]\OT1/cmr/m
@@ -722,50 +788,50 @@ m/n/10 (\OML/cmm/m/it/10 ^^_[]\OT1/cmr/m/n/10 )\OMS/cmsy/m/n/10 j \OML/cmm/m/it
  []
 
 
-Underfull \hbox (badness 1028) in paragraph at lines 275--280
+Underfull \hbox (badness 1028) in paragraph at lines 298--303
 \OT1/cmr/m/n/10 com-pat-i-bil-ity, and P3' is the load-bearing sub-half-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 284--291
+Underfull \hbox (badness 10000) in paragraph at lines 307--314
 []\OT1/cmr/bx/n/10 Falsifier the-o-rems \OT1/cmr/m/n/10 (four; the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 284--291
+Underfull \hbox (badness 10000) in paragraph at lines 307--314
 \OT1/cmr/m/n/10 fourth iso-lates P3' in-de-pen-dence).
  []
 
 
-Overfull \hbox (5.9978pt too wide) in paragraph at lines 284--291
+Overfull \hbox (5.9978pt too wide) in paragraph at lines 307--314
 [][]\OT1/cmtt/m/n/10 H_VestigialModeIsGraviton_fails_at_natural_lower
  []
 
 
-Overfull \hbox (50.58124pt too wide) in paragraph at lines 284--291
+Overfull \hbox (50.58124pt too wide) in paragraph at lines 307--314
 []\OT1/cmr/m/n/10 (P2 fails), [][]\OT1/cmtt/m/n/10 H_VestigialModeIsGraviton_fa
 ils_at_natural_upper
  []
 
 
-Overfull \hbox (3.33165pt too wide) in paragraph at lines 284--291
+Overfull \hbox (3.33165pt too wide) in paragraph at lines 307--314
 []\OT1/cmr/m/n/10 (P2 fails), [][]\OT1/cmtt/m/n/10 H_VestigialModeIsGraviton_fa
 ils_at_zero
  []
 
 
-Overfull \hbox (19.08151pt too wide) in paragraph at lines 284--291
+Overfull \hbox (19.08151pt too wide) in paragraph at lines 307--314
 []\OT1/cmr/m/n/10 (P1 fails), [][]\OT1/cmtt/m/n/10 H_VestigialModeIsGraviton_fa
 ils_at_quarter
  []
 
 
-Underfull \hbox (badness 1648) in paragraph at lines 292--297
+Underfull \hbox (badness 1648) in paragraph at lines 315--321
 []\OT1/cmr/m/n/10 The natural-range fal-si-fiers are non-trivial: they
  []
 
 
-Underfull \hbox (badness 4556) in paragraph at lines 292--297
+Underfull \hbox (badness 4556) in paragraph at lines 315--321
 \OT1/cmr/m/n/10 (avoid-ing the [][]\OT1/cmtt/m/n/10 feedback_subagent_lean_qual
 ity.md
  []
@@ -778,22 +844,22 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.299 ...ion from the SK--EFT Γ\textsubscript{H}}
+l.323 ...ion from the SK--EFT Γ\textsubscript{H}}
                                                   
 You may provide a definition with
 \DeclareUnicodeCharacter 
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\mathsurround' on input line 299.
+(hyperref)                removing `\mathsurround' on input line 323.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\z@' on input line 299.
+(hyperref)                removing `\z@' on input line 323.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 299.
+(hyperref)                removing `subscript' on input line 323.
 
 
 ! LaTeX Error: Unicode character γ (U+03B3)
@@ -803,7 +869,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.312 \verb|dispersion_correction(γ
+l.336 \verb|dispersion_correction(γ
                                     , ω) = γ ω| as
 You may provide a definition with
 \DeclareUnicodeCharacter 
@@ -816,7 +882,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.312 \verb|dispersion_correction(γ, ω
+l.336 \verb|dispersion_correction(γ, ω
                                         ) = γ ω| as
 You may provide a definition with
 \DeclareUnicodeCharacter 
@@ -829,7 +895,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.312 \verb|dispersion_correction(γ, ω) = γ
+l.336 \verb|dispersion_correction(γ, ω) = γ
                                                ω| as
 You may provide a definition with
 \DeclareUnicodeCharacter 
@@ -842,45 +908,50 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.312 \verb|dispersion_correction(γ, ω) = γ ω
+l.336 \verb|dispersion_correction(γ, ω) = γ ω
                                                  | as
 You may provide a definition with
 \DeclareUnicodeCharacter 
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--319
+Underfull \hbox (badness 10000) in paragraph at lines 333--343
 \OT1/cmr/m/n/10 with $\OML/cmm/m/it/10 ^^M$ \OT1/cmr/m/n/10 the di-men-sion-les
 s co-ef-fi-cient $^^@[]\OML/cmm/m/it/10 =c[]$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--319
+Underfull \hbox (badness 10000) in paragraph at lines 333--343
 \OT1/cmr/m/n/10 at the probe fre-quency. We add the for-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--319
+Underfull \hbox (badness 10000) in paragraph at lines 333--343
 \OT1/cmr/m/n/10 mula [][]\OT1/cmtt/m/n/10 dispersion_correction(, ) =   []\OT1/
 cmr/m/n/10 as
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--319
+Underfull \hbox (badness 10000) in paragraph at lines 333--343
 [][]\OT1/cmtt/m/n/10 GravitationalWaves.dispersion_correction []\OT1/cmr/m/n/10
  with
  []
 
-<figures/fig_c_GW_vs_ligo_constraint.png, id=135, 2409.0pt x 1606.0pt>
+<figures/fig_c_GW_vs_ligo_constraint.png, id=137, 2409.0pt x 1606.0pt>
 File: figures/fig_c_GW_vs_ligo_constraint.png Graphic file (type png)
 <use figures/fig_c_GW_vs_ligo_constraint.png>
 Package pdftex.def Info: figures/fig_c_GW_vs_ligo_constraint.png  used on input
- line 334.
+ line 358.
 (pdftex.def)             Requested size: 236.16165pt x 157.42369pt.
+
+Underfull \hbox (badness 6708) in paragraph at lines 384--392
+[]\OT1/cmr/m/n/10 GW170817 does not ex-clude the leading-order
+ []
+
 [3 <./figures/fig_c_GW_vs_ligo_constraint.png>]
 ! Undefined control sequence.
 <recently read> \GNemerg 
                          
-l.403 $\GNemerg
+l.428 $\GNemerg
                 = \alpha_{\rm ADW} \cdot 12\pi/(\Nf\,\Lambdauv^{2})$ at
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -889,7 +960,7 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 ! Undefined control sequence.
-l.403 ...emerg = \alpha_{\rm ADW} \cdot 12\pi/(\Nf
+l.428 ...emerg = \alpha_{\rm ADW} \cdot 12\pi/(\Nf
                                                   \,\Lambdauv^{2})$ at
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -898,7 +969,7 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 ! Undefined control sequence.
-l.403 ...pha_{\rm ADW} \cdot 12\pi/(\Nf\,\Lambdauv
+l.428 ...pha_{\rm ADW} \cdot 12\pi/(\Nf\,\Lambdauv
                                                   ^{2})$ at
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -909,7 +980,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 <recently read> \Lambdauv 
                           
-l.404 $\Lambdauv
+l.429 $\Lambdauv
                  = \Mpl$ produces $\alpha_{\rm ADW}^{\star} \in [0.40,1.27]$
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -918,7 +989,7 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 ! Undefined control sequence.
-l.404 $\Lambdauv = \Mpl
+l.429 $\Lambdauv = \Mpl
                        $ produces $\alpha_{\rm ADW}^{\star} \in [0.40,1.27]$
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -929,7 +1000,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 <recently read> \Nf 
                     
-l.405 for SM $\Nf
+l.430 for SM $\Nf
                  $, sitting comfortably inside the natural range $[0.1,10]$.
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -940,7 +1011,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 <recently read> \GNemerg 
                          
-l.409 $\GNemerg
+l.434 $\GNemerg
                $ depends on the Sakharov-Adler kernel computed at the
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -951,7 +1022,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 <recently read> \Mpl 
                      
-l.410 ... level, where the relevant scale is $\Mpl
+l.435 ... level, where the relevant scale is $\Mpl
                                                   $;
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -960,28 +1031,50 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-Underfull \hbox (badness 1377) in paragraph at lines 459--475
+Underfull \hbox (badness 2027) in paragraph at lines 444--459
+\OT1/cmr/m/n/10 correctness-push bi-con-di-tional lo-cat-ing the $\OML/cmm/m/it
+/10 c[] \OT1/cmr/m/n/10 =
+ []
+
+
+Underfull \hbox (badness 1137) in paragraph at lines 444--459
+\OML/cmm/m/it/10 c$ \OT1/cmr/m/n/10 win-dow; (iii) the load-bearing natural-ran
+ge con-
+ []
+
+
+Underfull \hbox (badness 1888) in paragraph at lines 444--459
+\OT1/cmr/m/n/10 both end-point fal-si-fier the-o-rems; (iv) the bun-dled
+ []
+
+
+Underfull \hbox (badness 1112) in paragraph at lines 444--459
+\OT1/cmr/m/n/10 tracked hy-poth-e-sis with four fal-si-fier the-o-rems (the
+ []
+
+[4]
+Underfull \hbox (badness 1377) in paragraph at lines 486--502
  \OT1/cmr/m/n/9 GBM, IN-TE-GRAL, Ice-Cube, As-troSat CZTI, IPN,
  []
 
 
-Underfull \hbox (badness 2828) in paragraph at lines 459--475
+Underfull \hbox (badness 2828) in paragraph at lines 486--502
  \OT1/cmr/m/n/9 GROWTH, JAG-WAR, Cal-tech-N-RAO, TTU-NRAO,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 476--479
+Underfull \hbox (badness 10000) in paragraph at lines 503--506
  []\OT1/cmr/m/n/9 G. E. Volovik, ``Fermionic Quar-tet and Ves-ti-
  []
 
 
-Underfull \hbox (badness 1400) in paragraph at lines 476--479
+Underfull \hbox (badness 1400) in paragraph at lines 503--506
  \OT1/cmr/m/n/9 gial Grav-ity,'' JETP Lett. \OT1/cmr/bx/n/9 119\OT1/cmr/m/n/9 ,
  330 (2024); DOI:
  []
 
-[4]
-Underfull \hbox (badness 1184) in paragraph at lines 505--508
+
+Underfull \hbox (badness 1184) in paragraph at lines 532--535
  []\OT1/cmr/m/n/9 J. G. Roehm, ``Lin-earized Ein-stein Equa-tions from
  []
 
@@ -992,16 +1085,16 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `paper_draft.out' has not changed.
-(rerunfilecheck)             Checksum: 177A17A9689279656569EBB0C39D969B;4157.
+(rerunfilecheck)             Checksum: A1A0F57F883864FB3B5646355BA83D3E;4181.
  ) 
 Here is how much of TeX's memory you used:
- 15776 strings out of 467525
- 298573 string characters out of 5418982
- 705844 words of memory out of 5000000
- 44492 multiletter control sequences out of 15000+600000
- 635380 words of font info for 70 fonts, out of 8000000 for 9000
+ 15819 strings out of 467525
+ 299226 string characters out of 5418982
+ 710987 words of memory out of 5000000
+ 44531 multiletter control sequences out of 15000+600000
+ 637871 words of font info for 80 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,80p,965b,1191s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,80p,1024b,1163s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx6.pfb></
@@ -1012,22 +1105,23 @@ local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/lo
 cal/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/loca
 l/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/
 texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/te
-xlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texli
-ve/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/
-2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/202
-6/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2026/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on paper_draft.pdf (5 pages, 427137 bytes).
+xlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texl
+ive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive
+/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/20
+26/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2026/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2026/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on paper_draft.pdf (5 pages, 436638 bytes).
 PDF statistics:
- 274 PDF objects out of 1000 (max. 8388607)
- 217 compressed objects within 3 object streams
+ 280 PDF objects out of 1000 (max. 8388607)
+ 221 compressed objects within 3 object streams
  45 named destinations out of 1000 (max. 500000)
  158 words of extra memory for PDF output out of 10000 (max. 10000000)
 

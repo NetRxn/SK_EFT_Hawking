@@ -32,9 +32,19 @@
       "declared": "2026-08-07"
     },
     {
-      "name": "SKEFTHawking.GravitationalWaves.natural_range_disjoint_from_ligo_window",
-      "claims": "§6.2 — Closure 3: the vestigial-graviton natural range is disjoint from the GW170817 window",
+      "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+      "claims": "§6.2 — Closure 3: both endpoints of the vestigial-graviton natural range violate the GW170817 window",
       "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
+      "claims": "§6.2 — Closure 3, positive half: GW170817 confines chi_vest to a window strictly interior to the natural range",
+      "declared": "2026-08-14"
+    },
+    {
+      "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
+      "claims": "§6.2 — the fine-tuning quantified: the compatible window is narrower than the natural range by more than 14 orders of magnitude",
+      "declared": "2026-08-14"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
@@ -42,8 +52,8 @@
       "declared": "2026-08-07"
     },
     {
-      "name": "SKEFTHawking.GravitationalWaves.second_sound_graviton_natural_range_universally_falsified",
-      "claims": "ABSTRACT + §6.2 + §10 — the universal falsifier: the second-sound graviton is falsified across the whole natural-range band. F's headline FALSIFIED-register entry, shared character-for-character with L1",
+      "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+      "claims": "ABSTRACT + §6.2 + §10 — the frame-independent endpoint falsifier: neither natural-range endpoint admits a GW170817-compatible deviation at any c. F's headline register entry, shared character-for-character with L1",
       "declared": "2026-08-07"
     },
     {

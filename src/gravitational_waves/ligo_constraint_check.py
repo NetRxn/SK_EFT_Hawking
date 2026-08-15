@@ -1,13 +1,22 @@
 """GW170817 constraint check for vestigial-second-sound graviton ID.
 
-Encodes the Wave 2 falsification result: the natural χ_vest range
-[0.1, 10] gives Δc/c ∈ [-0.68, +2.16], failing the GW170817 cap
-(3e-15) by 14+ orders of magnitude.
+Encodes the Wave 2 constraint result: over the natural χ_vest range
+[0.1, 10], Δc/c sweeps [-0.68, +2.16], vanishing at χ_vest = 1 and
+exceeding the GW170817 cap (3e-15) by 14+ orders of magnitude **at the
+endpoints**.
+
+The interior is NOT excluded. The GW170817-compatible window is nested
+strictly inside the natural range and meets it at χ_vest = 1, so the
+datum CONFINES the susceptibility to unity rather than falsifying the
+range. Treating this as a falsification of the whole range is the error
+corrected on 2026-08-14.
 
 Lean cross-reference: ``GravitationalWaves.LigoSatisfied``,
 ``GravitationalWaves.natural_lower_violates_ligo``,
 ``GravitationalWaves.natural_upper_violates_ligo``,
-``GravitationalWaves.vestigial_natural_range_violates_ligo``.
+``GravitationalWaves.vestigial_natural_range_violates_ligo``,
+``GravitationalWaves.ligo_confines_chi_vest_within_natural_range``,
+``GravitationalWaves.ligo_window_subset_natural_range``.
 """
 
 from __future__ import annotations

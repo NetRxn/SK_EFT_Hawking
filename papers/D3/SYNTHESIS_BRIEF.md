@@ -88,13 +88,14 @@ D3 is the architectural unification of 22 source papers around a single thesis: 
 **Length target:** 3 pp | **Lift from:** `paper25_gravitational_waves` (full content; L1 already extracted as 4-pp PRL splash).
 **Key claims to land:**
 - Volovik 2024 identification: vestigial second-sound mode = spin-2 graviton, leading-order `c_GW = c · √χ_vest`.
-- Natural susceptibility range `χ_vest ∈ [0.1, 10]` → `Δc/c ∈ [−0.68, +2.16]`.
+- Natural susceptibility range `χ_vest ∈ [0.1, 10]` → `Δc/c` sweeps `[−0.68, +2.16]`, vanishing at `χ_vest = 1`.
 - LIGO-Virgo GW170817 cap: `|Δc/c| ≤ 3 × 10⁻¹⁵`.
-- **Falsification by ~7 × 10¹⁴** (both natural-range endpoints proved as Lean falsifier theorems in `VestigialGravity.lean`).
-- Lean disjointness theorem `natural_range_disjoint_from_ligo_window` + four explicit falsifiers (natural-lower, natural-upper, χ_vest=0, χ_vest=1/4).
+- **Endpoint exclusion by ~7 × 10¹⁴** (both natural-range endpoints proved as Lean falsifier theorems in `GravitationalWaves.lean`). The interior is NOT excluded — `ligo_satisfied_at_chi_one`.
+- **Confinement, not disjointness:** the compatible window is nested strictly inside the natural range (`ligo_window_subset_natural_range`) and meets it at `χ_vest = 1` (`ligo_window_inter_natural_range_nonempty`). The load-bearing claim is the width ratio, `ligo_window_width_lt_natural_range_width_by_1e14`.
+- Lean endpoint theorem `natural_endpoints_violate_ligo_window` + `ligo_confines_chi_vest_within_natural_range` + four explicit falsifiers (natural-lower, natural-upper, χ_vest=0, χ_vest=1/4).
 - SK-EFT dissipative dispersion correction `δω/ω = Γ_H · ω/c_GW²` (forward-link to §10 vestigial MC).
 **Citations carried:** Volovik2024Vestigial; Abbott2017GW170817; Will2014 (PPN review).
-**Synthesis-thread (NEW to D3):** §6 in D3 is **architectural** — the falsification is presented as one of three predictive-boundary closures forcing ADW (companion to §4 Wen-deficit + fracton-no-go). L1 ships this as a stand-alone splash; D3 frames it as part of a triad.
+**Synthesis-thread (NEW to D3):** §6 in D3 is **architectural** — the constraint is presented as one of three predictive-boundary closures forcing ADW (companion to §4 Wen-deficit + fracton-no-go). The third closure is **conditional**: it holds absent a mechanism pinning `χ_vest` to unity. L1 ships this as a stand-alone splash; D3 frames it as part of a triad.
 **Risks / open hypotheses:** Numerical Δc/c bound MUST match L1 character-for-character (Stage-13 anchor; per `claims-reviewer-bundle-prompts.md` §D3 line 144 + line 204).
 **Cross-bundle bridge:** **L1** (PRL splash; same Lean theorem, same numerical anchor); **F §6, §10**.
 

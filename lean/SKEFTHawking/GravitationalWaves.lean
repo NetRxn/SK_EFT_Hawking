@@ -16,7 +16,7 @@ The correctness-push anchor is the GW170817 multi-messenger bound
 `|c_GW − c| / c ≤ 3 × 10⁻¹⁵` (Abbott et al. ApJL 848, L13 (2017)).
 
 **Phase 5y H1 caveat (LOAD-BEARING).** The Phase 5y H1 deep research
-finding (`Lit-Search/Phase-5y/Phase5y_H1_second_sound_graviton.md`)
+finding (`Lit-Search/Phase-5y/Phase 5y Hypothesis 1 — Kronecker-Anomaly Second-Sound Graviton as Dark Energy Candidate.md`)
 established that the second-sound mode is NOT derived as a propagating
 DOF from first principles — the Volovik identification "second sound =
 graviton" is an *identification*, not a derivation. Wave 2 ships in
@@ -81,7 +81,7 @@ those two endpoints, not over the range.
   GRB 170817A", ApJL 848, L13 (2017).
 - Volovik, "Vestigial gravity", JETP Lett. 119, 564 (2024).
 - Phase 5y H1 deep research,
-  `Lit-Search/Phase-5y/Phase5y_H1_second_sound_graviton.md`.
+  `Lit-Search/Phase-5y/Phase 5y Hypothesis 1 — Kronecker-Anomaly Second-Sound Graviton as Dark Energy Candidate.md`.
 - Crossley-Glorioso-Liu, "Effective field theory of dissipative
   fluids", JHEP 2017 (arXiv:1511.03646).
 - VestigialSusceptibility.lean (`chi_RPA` closed form).
