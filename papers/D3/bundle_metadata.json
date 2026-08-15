@@ -323,12 +323,12 @@
     },
     {
       "name": "SKEFTHawking.HeatKernelExpansion.G_N_from_a2_eq_quarter_G_N_sakharov",
-      "claims": "ABSTRACT + §1 + §17.2 — THE single-coefficient identity: G_N^Sak = 12 pi/(N_f Lambda^2) DERIVED from the heat-kernel a2 data. Everything else in the bundle consumes this",
+      "claims": "ABSTRACT + §1 + §17.2 — THE single-coefficient identity: the traced heat-kernel a2 gives G_N = 3 pi/(N_f Lambda^2), exactly one quarter of the independently-stated Sakharov-Adler 12 pi/(N_f Lambda^2). Everything else in the bundle consumes this",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.HeatKernelExpansion.a2_matches_GNemerg_iff_alpha_ADW_quarter",
-      "claims": "§17.2 — DECISION GATE E.2: the heat-kernel-calibrated G_N matches the Sakharov form iff alpha_ADW = 1",
+      "claims": "§17.2 — DECISION GATE E.2: the heat-kernel-calibrated G_N matches the Sakharov form iff alpha_ADW = 1/4",
       "declared": "2026-08-07"
     },
     {

@@ -322,7 +322,7 @@ Kostelecky-Russell-Tasson published bound `1/10³¹ GeV`.
 Concretely we prove `torsionAtCosmologicalBackground planckMassGeV
 16 1 < torsionBoundKostelecky`.  The natural-parameter prediction is
 `|T_EC| = 3π/(16 · planckMassGeV²) · 13/10⁴⁰ ≃ 5.3×10⁻⁷⁸ GeV`,
-which sits ~47 orders of magnitude below the bound.  (The 2026-08-15
+which sits ~46 orders of magnitude below the bound.  (The 2026-08-15
 `a_2` trace correction divided `G_N_from_a2` — and with it this
 amplitude — by four; the bound was and remains passed by a wide
 margin.)
