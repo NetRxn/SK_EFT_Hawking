@@ -8913,14 +8913,17 @@ def fig_T_H_evolution_regime_partition():
       evaporates (dM/dt < 0), T_H = 1/(8π M) increases ⇒ dT_H/dt > 0 (heats
       as evaporates), finite t-evap. Plotted as a function of normalized
       time using a representative evaporation trajectory.
-    - BEC-acoustic branch (M < M_c): Balbinot et al. PRD 71, 064019 (2005)
+    - Acoustic branch (M < M_c): Balbinot et al. PRD 71, 064019 (2005)
       Eq. (Tsonic) gives strict monotone decay; leading-order exponential
       `T_H(t) = T_H,0 · exp(-t/τ_cool)` per `wkb/backreaction.py`. T → 0
       at infinite time (`t ~ 1/T³` extrapolation per Balbinot 2005).
+      Scope: Balbinot's computation is a SONIC hole in a Laval nozzle at
+      constant sound speed, not a Bose-Einstein condensate (the authors
+      defer the condensate case explicitly).
 
     The genuine regime partition is the **sign-flip of dT_H/dt during
     evaporation**: positive in Schwarzschild (heats), negative in
-    BEC-acoustic (cools). Right panel overlays the substrate-response
+    acoustic (cools). Right panel overlays the substrate-response
     coefficient `δ_ADW = (α_ADW − 1) · Λ_UV` showing the bare
     Sakharov-Adler limit at α_ADW = 1.
 
@@ -8938,7 +8941,7 @@ def fig_T_H_evolution_regime_partition():
         delta_ADW_ansatz,
     )
 
-    # Time grid in units of τ_cool (BEC-acoustic side)
+    # Time grid in units of τ_cool (acoustic side)
     t_grid_acoustic = np.linspace(0.0, 5.0, 121)
     T_H0 = 1.0  # natural-units initial temperature
     tau_cool = 1.0
@@ -8972,7 +8975,7 @@ def fig_T_H_evolution_regime_partition():
             x=t_grid_acoustic, y=T_H_acoustic,
             mode="lines",
             line=dict(color=COLORS["steel_blue"], width=3),
-            name="BEC-acoustic (Balbinot 2005)",
+            name="Acoustic / sonic (Balbinot 2005)",
         ),
         row=1, col=1,
     )
@@ -9041,7 +9044,7 @@ def fig_T_H_evolution_regime_partition():
         row=1, col=2,
     )
 
-    fig.update_xaxes(title_text="Time t / τ_cool (BEC-acoustic) or t / t_evap (Schwarzschild)", row=1, col=1)
+    fig.update_xaxes(title_text="Time t / τ_cool (acoustic) or t / t_evap (Schwarzschild)", row=1, col=1)
     fig.update_yaxes(title_text="T_H / T_H,0", row=1, col=1, range=[0, 4])
     fig.update_xaxes(title_text="α_ADW", row=1, col=2)
     fig.update_yaxes(title_text="δ_ADW / Λ_UV", row=1, col=2)
@@ -9051,7 +9054,7 @@ def fig_T_H_evolution_regime_partition():
         title=dict(
             text=(
                 "Phase 6a Wave 5 — BCH four-laws regime partition "
-                "(Schwarzschild ↔ BEC-acoustic)"
+                "(Schwarzschild ↔ acoustic)"
             ),
             font=TITLE_FONT,
         ),

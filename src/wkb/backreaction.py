@@ -20,9 +20,18 @@ Key physics (Balbinot et al. 2005, 2025):
     - The Hawking luminosity L_H ~ T_H^2, so cooling is self-limiting
     - Exact extremality (kappa = 0) is never reached: analog third law
 
+Scope of the 2005 Balbinot anchors (clarified 2026-08-15): PRD 71, 064019
+computes a SONIC hole in a Laval nozzle at CONSTANT sound speed, and its
+authors explicitly defer the condensate case ("the sound velocity c is not
+constant, but proportional to rho^(1/2). This will be discussed elsewhere").
+The condensate evolution implemented in THIS module is the project's own
+computation; the 2005 papers supply the cooling SIGN and the near-extremal-RN
+analogy, not the condensate equations. The Balbinot-group 2025 references
+below are the condensate-side follow-ups.
+
 References:
     - Balbinot, Fagnocchi, Fabbri, Procopio, PRL 94, 161302 (2005)
-    - Balbinot, Fagnocchi, Fabbri, Procopio, PRD 71, 064019 (2005)
+    - Balbinot, Fagnocchi, Fabbri, PRD 71, 064019 (2005)
     - Ciliberto, Balbinot, Fabbri, Pavloff, PRA 112, 063323 (2025)
     - Balbinot, Fabbri, Ciliberto, Pavloff, PRD 112, L121703 (2025)
     - Liberati, Tricella, Trombettoni, Appl. Sci. 10, 8868 (2020)

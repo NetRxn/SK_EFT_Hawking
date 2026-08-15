@@ -3,9 +3,9 @@
 Python mirror of `lean/SKEFTHawking/BHThermodynamicsFourLaws.lean`.
 
 Subpackage scope:
-- `regime_classifier`: Schwarzschild / BEC-acoustic (`ADWExtremality` constructor)
+- `regime_classifier`: Schwarzschild / acoustic (`ADWExtremality` constructor)
   / Boundary classification per `M ⋛ M_c(α_ADW, Λ_UV, N_f)`.
-- `acoustic_evolution`: Balbinot 2005 BEC-acoustic time-evolution
+- `acoustic_evolution`: Balbinot 2005 acoustic time-evolution
   `T_H(t) = T_H,0 · exp(-t/τ_cool)` + Schwarzschild `T_H = 1/(8π M)`
   contrast + δ_ADW ansatz. (Replaces the deleted `schottky_saturation`
   module from initial Wave 5 ship; see process review at
@@ -17,8 +17,8 @@ Subpackage scope:
   χ_vest dependence).
 
 Primary references:
-- Balbinot, Fagnocchi, Fabbri, Procopio, **PRD 71, 064019 (2005)**,
-  arXiv:gr-qc/0405098 — primary anchor for BEC-acoustic cooling regime.
+- Balbinot, Fagnocchi, Fabbri, **PRD 71, 064019 (2005)**,
+  arXiv:gr-qc/0405098 — primary anchor for acoustic cooling regime.
 - Hawking, **CMP 43, 199 (1975)** — primary anchor for Schwarzschild
   heating regime.
 - Glorioso-Liu arXiv:1612.07705 — SK-EFT second law (no NEC).

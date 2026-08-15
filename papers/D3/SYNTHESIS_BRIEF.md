@@ -122,7 +122,7 @@ D3 is the architectural unification of 22 source papers around a single thesis: 
 **Length target:** 3 pp | **Lift from:** `paper27_bh_thermodynamics_four_laws` (full content; L3 already extracted as PRL splash).
 **Key claims to land:**
 - Regime partition criterion: `M_c = (N_f Λ_UV) / (12π α_ADW)` separating Schwarzschild branch (heats up under accretion, finite-time evaporation) from ADW-extremality branch (cools toward extremality, infinite-time near-extremal asymptote).
-- Two-regime T_H profiles: Hawking 1975 (Schwarzschild) vs Balbinot 2005 (BEC-acoustic) with Jacobson-Koike 2002 contrast `T_H(v) = T_H(0) (1 − v²/c_⊥²)` as structural anchor.
+- Two-regime T_H profiles: Hawking 1975 (Schwarzschild) vs Balbinot 2005 (sonic/acoustic, constant-c Laval nozzle) with Jacobson-Koike 2002 thin-film contrast `T_H(v) = T_H(0) (1 − v²/c_⊥²)` as structural anchor.
 - Tracked-hypothesis bundle `H_RegimePartition`.
 - Four laws in two regimes (zeroth, first, second, third).
 - Second law from Glorioso-Liu SK-EFT entropy-current monotonicity **without invoking pointwise NEC**.

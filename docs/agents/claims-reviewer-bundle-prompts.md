@@ -964,7 +964,8 @@ all Lean-only. Novelty backing: `papers/D12/prior_art_novelty.md`.
 **Anchors:**
 - BCH four laws by regime partition (`H_RegimePartition` Prop bundle
   with M_c_form_consistent witness).
-- Balbinot 2005 BEC-acoustic primary anchor (NOT the older
+- Balbinot 2005 acoustic primary anchor (a sonic hole in a Laval nozzle
+  at constant sound speed, NOT a Bose-Einstein condensate) (NOT the older
   3He-A heating analogy — `feedback_deep_research_analog_conflation.md`
   applies).
 - Hawking 1975 Schwarzschild contrast as the secondary anchor.

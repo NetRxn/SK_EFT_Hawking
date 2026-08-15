@@ -2754,6 +2754,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'CRC Press 2nd ed., ISBN 978-0-8493-7874-4; the a_4 heat-kernel '
+                         'coefficients are verified via Vassilevich 2003 §4 and broadly '
+                         'across the heat-kernel literature.',
         'used_in': ['papers/paper39_heat_kernel_expansion/paper_draft.tex'],
         'provides': ['Christensen-Duff Dirac heat-kernel coefficients '
                      '(Theorem 4.8.16, Eq. 4.8.18) — primary mathematical '
@@ -2964,6 +2968,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Symposia Mathematica (1973), a pre-DOI volume; verified via '
+                         'canonical Einstein-Cartan bibliographies (Hehl et al., Rev. '
+                         'Mod. Phys. 48, 393 (1976) §I.B).',
         'used_in': ['papers/paper43_einstein_cartan/paper_draft.tex'],
         'provides': ['Trautman-form Einstein-Cartan equations; derivation of '
                      'spin-current-sourced torsion from variational principle.'],
@@ -3291,6 +3299,10 @@ CITATION_REGISTRY = {
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Sov. Phys. Dokl. 12, 1040 (1968), translated from Dokl. Akad. '
+                         'Nauk SSSR 177, 70 — a pre-DOI Soviet publication, verified via '
+                         'the induced-gravity literature.',
         'used_in': ['papers/paper23_linearized_efe/paper_draft.tex',
                     'papers/paper42b_cc_emergent/paper_draft.tex',
                     'papers/D3/paper_draft.tex'],
@@ -3347,6 +3359,10 @@ CITATION_REGISTRY = {
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Standard graduate GR textbook; §6.1 linearized GR (de Donder '
+                         'gauge) and §8.4 FLRW verified against the wider GR literature. '
+                         'No cacheable full text.',
         'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
         'provides': [],
         'notes': 'Standard graduate GR textbook. §6.1 linearized GR (h_μν, '
@@ -3365,6 +3381,10 @@ CITATION_REGISTRY = {
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': "Freeman, 'MTW'; Ch. 35 linearized gravity and the spin-2 wave "
+                         'equation are verified across the standard GR literature. No '
+                         'cacheable full text.',
         'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
         'provides': [],
         'notes': 'Canonical GR textbook ("MTW"). Ch. 35 linearized gravity, '
@@ -3956,16 +3976,36 @@ CITATION_REGISTRY = {
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/JacobsonVolovik1998.pdf',
         'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
-        'provides': ['§VIII prose "cools as it evaporates and approaches an extremal '
-                     'black hole" — INCONSISTENT with the same paper\'s own equations: '
-                     'back-reaction slows v, so T_H(v) = T_H(0)(1 − v²/c_⊥²) gives '
-                     'increasing T_H during evaporation. Cited as the moving-domain-'
-                     'wall analog system contrast case.'],
-        'notes': 'Wave 5 contrast citation (post-2026-04-26 rewrite). The cooling-'
-                 'toward-extremality claim in §VIII is loose prose at odds with the '
-                 'paper\'s own math; the actual cooling primary anchor is Balbinot '
-                 '2005 (gr-qc/0405098, BEC-acoustic system). TeX source preserved '
-                 'at Lit-Search/Phase-6a/primary-sources/jv9801308/.',
+        'provides': ['Planar soliton moving in bulk ³He-A, analogous to a charged '
+                     'rotating black hole. Horizon exists ONLY for v > c_⊥ (§V: '
+                     '"The horizons appear in the moving soliton if v > c_⊥"; '
+                     'Eq. (5.2)). Eq. (5.7): κ = (v_F/d)(1 − v²/v_F²)·'
+                     '√[(1 − c_⊥²/v²)/(1 − c_⊥²/v_F²)], so κ → 0 and hence '
+                     'T_H = ℏκ/(2π k_B) → 0 as back-reaction slows the soliton '
+                     'toward c_⊥ from above. §VIII: "The Hawking temperature is '
+                     'fairly constant until, as v approaches c_⊥, T_H goes to zero. '
+                     'This is unlike the evaporation of a neutral black hole which '
+                     'gets hotter as it shrinks. It is rather like the Hawking '
+                     'radiation from a black hole with a large magnetic charge which '
+                     'cannot be discharged and so cools as it evaporates and '
+                     'approaches an extremal black hole." COOLING branch, same sign '
+                     'as Balbinot 2005.'],
+        'notes': 'ATTRIBUTION CORRECTED 2026-08-15 (L3 Stage-10 redraft BLOCKER 1.1). '
+                 'From 2026-04-26 until then this entry recorded the paper as a '
+                 'HEATING contrast case whose §VIII prose was "inconsistent with the '
+                 'same paper\'s own equations". Both halves were wrong: the prose '
+                 'follows from Eq. (5.7), and the heating law '
+                 'T_H(v) = T_H(0)(1 − v²/c_⊥²) belongs to the JacobsonKoike2002 '
+                 'thin-film moving domain wall (v < c_⊥), a structurally different '
+                 '³He-A system that had been swapped with this one. Re-verified '
+                 'against the full arXiv TeX source '
+                 '(JacobsonVolovik1998.source/EventHorIn3He13Unix.tex) and the '
+                 'published PDF. NOTE: Balbinot 2005\'s own contrast \\bibitem'
+                 '{jacobson} resolves to Jacobson-Volovik, JETP Lett. 68, 874 (1998) '
+                 'plus Jacobson-Koike cond-mat/0205174, NOT to this PRD 58, 064021, '
+                 'which is absent from Balbinot\'s reference list. TeX source '
+                 'preserved at Lit-Search/Phase-6a/primary-sources/'
+                 'JacobsonVolovik1998.source/.',
     },
     'JacobsonKoike2002': {
         'authors': 'Jacobson, T. A. and Koike, T.',
@@ -3980,16 +4020,24 @@ CITATION_REGISTRY = {
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/JacobsonKoike2002.pdf',
         'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
-        'provides': ['Eq. (13): T_H(v) = T_H(0)·(1 − v²/c_⊥²) for moving-domain-'
-                     'wall analog BH in ³He-A. dT_H/dv < 0 monotonically; '
-                     'evaporation slows v ⇒ T_H ↑ (heats). Used as the contrast '
-                     'case to BEC-acoustic per Balbinot 2005\'s own contrast.'],
-        'notes': 'Wave 5 contrast citation (post-2026-04-26 rewrite). Initial Wave 5 '
-                 'ship attributed BEC-acoustic cooling-toward-extremality behavior '
-                 'to this paper, which actually describes a different analog system '
-                 'with opposite (heating) behavior; see Balbinot 2005 §"Fate of the '
-                 'acoustic black hole" for the explicit contrast. TeX source '
-                 'preserved at Lit-Search/Phase-6a/primary-sources/jk0205174/.',
+        'provides': ['THIN-FILM ³He-A moving domain wall, moving at v < c_⊥ with '
+                     'horizons at c(x_h) = ±v: T_H(v) = T_H(0)·(1 − v²/c_⊥²), '
+                     'T_H(0) = ℏc_⊥/(2πd) ~ 1 μK. dT_H/dv < 0 monotonically; '
+                     'radiation slows v ⇒ T_H ↑ toward the NON-ZERO constant '
+                     'T_H(0) ("the Hawking temperature approaches a nonzero '
+                     'constant as v → 0"). THE heating contrast case to the '
+                     'acoustic cooling branch, per Balbinot 2005\'s own contrast.'],
+        'notes': 'Wave 5 contrast citation (post-2026-04-26 rewrite; re-verified '
+                 '2026-08-15). Initial Wave 5 ship attributed acoustic cooling-'
+                 'toward-extremality behavior to this paper, which actually '
+                 'describes a different analog system with opposite (heating) '
+                 'behavior; see Balbinot 2005 §"Fate of the acoustic black hole" for '
+                 'the explicit contrast. This is the SOLE heating contrast case: '
+                 'JacobsonVolovik1998 (PRD 58, 064021) is a bulk moving soliton on '
+                 'the COOLING side and was wrongly grouped here until 2026-08-15. '
+                 'TeX source preserved at Lit-Search/Phase-6a/primary-sources/'
+                 'JacobsonKoike2002.source/bhbu.tex (the T_H equation carries '
+                 '\\label{E:TH} in the source).',
     },
     'Balbinot2005PRD': {
         'authors': 'Balbinot, R. and Fagnocchi, S. and Fabbri, A.',
@@ -4005,17 +4053,29 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Balbinot2005PRD.pdf',
         'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
         'provides': ['Eq. (Tsonic): T(t) = (ℏc/2π)·κ·[1 − (563/720π)·ε·κ³·c·A_0·t] '
-                     '— linear-in-t cooling under Hawking backreaction in BEC-'
-                     'acoustic system. Asymptotic extrapolation t ~ 1/T³ ⇒ T → 0 '
+                     '— linear-in-t cooling under Hawking backreaction for a SONIC '
+                     'hole in a Laval nozzle, one-dimensional flow, at CONSTANT '
+                     'sound speed c (§IV: "Let us further assume the sound velocity '
+                     'c constant"). Asymptotic extrapolation t ~ 1/T³ ⇒ T → 0 '
                      'at infinite time (analog of near-extremal RN). Explicit '
                      'contrast statement: "other analog models like a thin film of '
                      '³He-A with a moving domain wall [Jacobson] seem to show a '
                      'non-vanishing end-temperature of the evaporation process." '
-                     'PRIMARY ANCHOR for the BEC-acoustic cooling regime in Wave 5.'],
+                     'PRIMARY ANCHOR for the acoustic cooling regime in Wave 5.'],
         'notes': 'Wave 5 primary anchor (post-2026-04-26 rewrite). Mirrors '
                  'src/wkb/backreaction.py exponential-decay leading-order form. '
-                 'TeX source preserved at Lit-Search/Phase-6a/primary-sources/'
-                 'balbinot/.',
+                 'SCOPE CORRECTED 2026-08-15 (L3 Stage-10 redraft BLOCKER 1.2): this '
+                 'is NOT a Bose-Einstein-condensate result, and was carried under a '
+                 'condensate-prefixed acoustic label across the substrate until '
+                 'then. The authors '
+                 'explicitly defer the condensate case: "In a similar way one can '
+                 'treat sonic black holes formed by a Bose-Einstein condensate '
+                 '[garayvisser]. The major difference comes from the fact that the '
+                 'sound velocity c is not constant, but proportional to ρ^(1/2). '
+                 'This will be discussed elsewhere." A condensate substrate inherits '
+                 'this branch by the SIGN of dT_H/dt, not by Eq. (Tsonic). TeX '
+                 'source preserved at Lit-Search/Phase-6a/primary-sources/'
+                 'Balbinot2005PRD.source/acusticpap.tex.',
     },
     'Hawking1975CMP': {
         'authors': 'Hawking, S. W.',
@@ -5416,6 +5476,10 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Cambridge Studies in Advanced Mathematics 38; the Hom-tensor '
+                         'adjunction (Thm 2.6.1) it is cited for is standard and '
+                         'verified across the homological-algebra literature.',
         'used_in': ['papers/paper10_modular_generation/paper_draft.tex'],
         'provides': [],
         'notes': 'Canonical-textbook reference (textbook exemption: doi/arxiv/primary_source_path all None). Cited in paper10 (2026-06-08 Stage-13 fix-pass) for the Hom-tensor adjunction (Thm 2.6.1), the standard algebra fact underlying the change-of-rings reduction documented in ChangeOfRings.lean.',
@@ -5433,6 +5497,11 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Chicago Lectures monograph (Stable Homotopy and Generalised '
+                         'Homology); canonical Adams-spectral-sequence reference '
+                         'verified via secondary academic citation. No cacheable full '
+                         'text.',
         'used_in': ['papers/paper10_modular_generation/paper_draft.tex',
                     'papers/L2/paper_draft.tex',
                     'papers/D2/paper_draft.tex'],
@@ -6436,6 +6505,11 @@ CITATION_REGISTRY = {
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': None,  # textbook — no arXiv PDF
+        'citation_class': 'textbook',
+        'exempt_reason': 'AMS Graduate Studies in Mathematics 47, ISBN '
+                         '978-0-8218-2161-8; the Solovay-Kitaev existence form (Thm 8.3) '
+                         'is verified via the Dawson-Nielsen quantitative refinement '
+                         'literature.',
         'used_in': ['papers/D4/paper_draft.tex', 'papers/D8/paper_draft.tex'],
         'provides': [],
         'notes': 'American Mathematical Society, Graduate Studies in Mathematics vol. 47 (ISBN 978-0-8218-2161-8). Textbook existence-form statement of the Solovay-Kitaev theorem (Theorem 8.3), prior to Dawson-Nielsen quantitative refinement. Textbook-exempt per validate.py textbook rule (no arXiv, primary-source-path None). No DOI on record for the book; doi_verified not applicable (2026-06-10 review pass).',
@@ -6625,11 +6699,16 @@ CITATION_REGISTRY = {
         'volume': 175,
         'page': None,
         'year': 1997,
-        'doi': None,
+        'doi': '10.1007/978-1-4612-0691-0',
         'arxiv': None,
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': None,  # textbook — no arXiv PDF
+        'citation_class': 'textbook',
+        'exempt_reason': 'Springer GTM 175 knot-theory monograph. DOI recorded (verified '
+                         'against Springer 2026-05-11) — the exemption is the reference '
+                         'CLASS, not the absence of an identifier; there is still no '
+                         'cacheable full text.',
         'used_in': ['papers/D4/paper_draft.tex'],
         'provides': ['Lickorish surgery presentation of 3-manifolds; foundational knot-theory reference for WRT TQFT surgery formula.'],
         'notes': 'Springer Graduate Texts in Mathematics 175 (textbook). DOI 10.1007/978-1-4612-0691-0 verified via Springer 2026-05-11; textbook-exempt per validate.py textbook rule (no arXiv, primary-source-path None).',
@@ -7808,11 +7887,14 @@ CITATION_REGISTRY = {
         'volume': None,
         'page': None,
         'year': 1982,
-        'doi': None,
+        'doi': '10.1137/1.9781611970319',
         'arxiv': None,
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'SIAM CBMS-NSF 38 (1982); the canonical resampling monograph. '
+                         'Volume DOI recorded; no cacheable full text.',
         'used_in': ['papers/I2/paper_draft.tex'],
         'provides': [],
         'notes': 'Canonical textbook (SIAM CBMS-NSF 38, 1982); Wave 6 textbook exemption applies (Pipeline Invariant #11: doi=arxiv=path=None). Volume DOI for documentation: 10.1137/1.9781611970319.',
@@ -7842,11 +7924,15 @@ CITATION_REGISTRY = {
         'volume': None,
         'page': None,
         'year': 2001,
-        'doi': None,
+        'doi': '10.1090/ulect/021',
         'arxiv': None,
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'AMS ULect 21 modular-functor monograph. Volume DOI recorded — '
+                         'the class carries the exemption, not the missing identifier; '
+                         'no cacheable full text exists.',
         'used_in': ['papers/I2/paper_draft.tex'],
         'provides': [],
         'notes': 'Canonical textbook (AMS ULect 21, 2001); Wave 6 textbook exemption applies (Pipeline Invariant #11: doi=arxiv=path=None). Volume DOI for documentation: 10.1090/ulect/021.',
@@ -7859,11 +7945,15 @@ CITATION_REGISTRY = {
         'volume': None,
         'page': None,
         'year': 2015,
-        'doi': None,
+        'doi': '10.1090/surv/205',
         'arxiv': None,
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'AMS Mathematical Surveys 205 (EGNO, 2015); the canonical '
+                         'tensor-category monograph. Volume DOI recorded; no cacheable '
+                         'full text.',
         'used_in': ['papers/I2/paper_draft.tex'],
         'provides': [],
         'notes': 'Canonical EGNO textbook (AMS Math Surveys 205, 2015); Wave 6 textbook exemption applies (Pipeline Invariant #11: doi=arxiv=path=None). Volume DOI for documentation: 10.1090/surv/205.',
@@ -7876,11 +7966,14 @@ CITATION_REGISTRY = {
         'volume': None,
         'page': None,
         'year': 1995,
-        'doi': None,
+        'doi': '10.1007/978-1-4612-0783-2',
         'arxiv': None,
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Springer GTM 155 (1995); the canonical Kassel quantum-groups '
+                         'monograph. Volume DOI recorded; no cacheable full text.',
         'used_in': ['papers/I2/paper_draft.tex'],
         'provides': [],
         'notes': 'Canonical Kassel textbook (Springer GTM 155, 1995); Wave 6 textbook exemption applies (Pipeline Invariant #11: doi=arxiv=path=None). Volume DOI for documentation: 10.1007/978-1-4612-0783-2.',
@@ -8214,6 +8307,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'software',
+        'exempt_reason': 'Mathlib4 upstream CovariantDerivative + Torsion branch pinned '
+                         'at commit 8850ed93; the commit hash is the canonical '
+                         'reference.',
         'used_in': ['papers/paper44_riemannian_connection/paper_draft.tex'],
         'provides': ['Mathlib `Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.{Basic,Torsion}` API: `IsCovariantDerivativeOn`, `CovariantDerivative`, `ContMDiffCovariantDerivative`, `addOneForm`/`difference`/`affine_combination`, `torsionAux`, `torsion` via `TensorialAt.mkHom₂`, `torsion_self`, `torsion_antisymm`, `torsion_eq_zero_iff`. Files dated 2026-04-13 in pinned commit.'],
         'notes': 'Mathlib4-upstream attribution. Pinned at commit `8850ed93` (April 2026). HALF-ERC funded scope: Bonn covariant-derivative / Levi-Civita / torsion branch. No DOI/arXiv (Mathlib commit is the canonical reference); per Pipeline Invariant #11 software-attribution exemption parallel to the textbook exemption — no primary_source_path required because Mathlib4 commit hash is the canonical reference.',
@@ -8231,6 +8328,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'software',
+        'exempt_reason': 'Mathlib4 upstream contribution pinned at commit 8850ed93; the '
+                         'commit hash IS the canonical reference, so there is no paper '
+                         'to cache.',
         'used_in': ['papers/paper44_riemannian_connection/paper_draft.tex'],
         'provides': ['Mathlib `Mathlib.Geometry.Manifold.VectorField.LieBracket` API: `mlieBracket`, `mlieBracket_swap`, `mlieBracket_swap_apply`, `mlieBracket_const_smul_right`, `mlieBracket_const_smul_left`, `mlieBracket_self`, `mlieBracket_zero_left`, `leibniz_identity_mlieBracket`, `leibniz_identity_mlieBracket_apply`, `_root_.ContMDiffAt.mlieBracket_vectorField`. Mathlib ships only the Leibniz form, not cyclic Jacobi.'],
         'notes': 'Mathlib4-upstream attribution for the manifold Lie-bracket calculus on smooth vector fields. Pinned at commit `8850ed93`. No DOI/arXiv (Mathlib commit hash is canonical); software-attribution exemption per Pipeline Invariant #11 parallel.',
@@ -8248,6 +8349,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'software',
+        'exempt_reason': 'Mathlib4 upstream IsRiemannianManifold / Riemannian-bundle '
+                         'infrastructure; the pinned Mathlib commit is the canonical '
+                         'reference, so there is no paper to cache.',
         'used_in': ['papers/paper44_riemannian_connection/paper_draft.tex'],
         'provides': ['Mathlib `IsRiemannianManifold` typeclass + `IsContinuousRiemannianBundle` (positive-definite Riemannian metric). Pinned commit lacks Lorentzian / pseudo-Riemannian extension — paper44 LorentzianMetric.lean closes that gap above this Mathlib foundation.'],
         'notes': 'Mathlib4-upstream attribution for the positive-definite Riemannian-bundle infrastructure that paper44 Sections 2-3 sit above. Per Phase 6f deep-research audit §3E, this is the post-2025 typeclass; the Lorentzian extension is project-local (SK-EFT-owned per the audit).',
@@ -8265,6 +8370,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Wiley, ISBN 0-471-15733-3 (Vol. I); canonical '
+                         'differential-geometry monograph verified via secondary '
+                         'academic citation.',
         'used_in': ['papers/paper44_riemannian_connection/paper_draft.tex',
                     'papers/I1/paper_draft.tex'],
         'provides': ['Theorem III.5.1 (algebraic first Bianchi identity for torsion-free connections on the tangent bundle); Theorem IV.2.2 (Levi-Civita uniqueness on a Riemannian manifold via the Koszul formula).'],
@@ -8283,6 +8392,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'de Gruyter 2nd ed., ISBN 3-11-014593-6; canonical '
+                         'Riemannian-geometry monograph verified via secondary academic '
+                         'citation.',
         'used_in': ['papers/paper44_riemannian_connection/paper_draft.tex'],
         'provides': ['§1.3 (Riemann curvature tensor on the tangent bundle as `R(X,Y)Z := ∇_X ∇_Y Z - ∇_Y ∇_X Z - ∇_{[X,Y]} Z`; bundle-level Bianchi identities; Levi-Civita connection).'],
         'notes': 'Canonical Riemannian-geometry textbook. ISBN 3-11-014593-6. Pre-DOI / textbook-class reference exempt under Pipeline Invariant #11 textbook clause.',
@@ -8597,6 +8710,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Springer GTM 113, 2nd ed. (1991); canonical Brownian-motion / '
+                         'stochastic-calculus monograph verified via secondary academic '
+                         'citation.',
         'used_in': ['papers/I3/paper_draft.tex'],
         'provides': ['Standard Brownian-motion + stochastic-calculus textbook; Itô integral, Itô lemma, Girsanov, Novikov classical references.'],
         'notes': 'Textbook-exempt per Pipeline Invariant #11 (no DOI/arXiv; Springer GTM 113, 2nd ed. 1991).',
@@ -8611,6 +8728,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Springer Grundlehren 293, 3rd ed. (1999); canonical '
+                         'continuous-martingale monograph verified via secondary '
+                         'academic citation.',
         'used_in': ['papers/I3/paper_draft.tex'],
         'provides': ['Continuous-martingale + Brownian-motion textbook; complementary to KaratzasShreve.'],
         'notes': 'Textbook-exempt per Pipeline Invariant #11 (no DOI/arXiv; Springer Grundlehren 293, 3rd ed. 1999).',
@@ -8625,6 +8746,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Springer Applications of Mathematics 38, 2nd ed. (1998); '
+                         'canonical large-deviations monograph verified via secondary '
+                         'academic citation.',
         'used_in': ['papers/I3/paper_draft.tex'],
         'provides': ['Standard LDP textbook; Cramér + Sanov + Varadhan + contraction principle classical references.'],
         'notes': 'Textbook-exempt per Pipeline Invariant #11 (no DOI/arXiv; Springer Applications of Mathematics 38, 2nd ed. 1998).',
@@ -8639,6 +8764,10 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'AMS Fields Institute Monographs 14 (2000); canonical '
+                         'large-deviations monograph verified via secondary academic '
+                         'citation.',
         'used_in': ['papers/I3/paper_draft.tex'],
         'provides': ['Pedagogical LDP textbook complementary to DemboZeitouni; cited as alternate reference.'],
         'notes': 'Textbook-exempt per Pipeline Invariant #11 (no DOI/arXiv; AMS Fields Institute Monographs 14, 2000).',
@@ -10370,8 +10499,22 @@ CITATION_REGISTRY = {
         'inprep': False,
         'primary_source_path': None,
         'used_in': ['papers/D3/paper_draft.tex'],
-        'provides': ['BEC analog Hawking T_H(v) = T_H(0)(1 - v^2/c_perp^2) backreaction profile; cooling-toward-extremality'],
-        'notes': 'D3 §6 cites for the BEC-acoustic backreaction profile. Same paper Jacobson-Koike2002 references for explicit comparison/contrast.',
+        'provides': ['Letter companion to Balbinot2005PRD on backreaction in acoustic '
+                     '(sonic) black holes: the emission temperature DECREASES as the '
+                     'hole radiates, unlike Schwarzschild.'],
+        'notes': 'CORRECTED 2026-08-15 (L3 Stage-10 redraft BLOCKER 1.2 blast radius). '
+                 'This entry previously advertised "BEC analog Hawking '
+                 'T_H(v) = T_H(0)(1 - v^2/c_perp^2)". Both halves were wrong: that '
+                 'formula is the JacobsonKoike2002 THIN-FILM ³He-A moving-domain-wall '
+                 'law (a HEATING profile), not a Balbinot result, and the Balbinot '
+                 'group\'s companion PRD (Balbinot2005PRD, gr-qc/0405098) computes a '
+                 'constant-sound-speed Laval-nozzle sonic hole whose cooling law is '
+                 'linear in t (Eq. Tsonic), explicitly deferring the '
+                 'Bose-Einstein-condensate case. ⚠️ NO PRIMARY SOURCE IS HELD for '
+                 'this PRL (primary_source_path is None, doi_verified is None), so no '
+                 'equation-level claim may be attached to it until gr-qc/0405096 is '
+                 'acquired; cite Balbinot2005PRD for equation content. Used by D3 §6 '
+                 'and F.',
     },
     'BardeenCarterHawking1973': {
         'authors': 'Bardeen, J. M., Carter, B., Hawking, S. W.',
@@ -11611,6 +11754,9 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Lett. Math. Phys. (1983) — predates arXiv deposit; '
+                         'bibliographic record verified against the journal of record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Pre-arXiv classic (Lett. Math. Phys. 1983). No arXiv preprint exists; bibliographic record verified against the journal of record. Textbook/pre-arXiv exempt from primary-source caching.',
@@ -11645,6 +11791,10 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'IEEE ICCSSP Bangalore 1984 proceedings — predates arXiv and '
+                         'carries no DOI; verified via the QKD literature that reprints '
+                         'it (TCS 560).',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Conference proceedings (IEEE ICCSSP, Bangalore, 1984). No arXiv/DOI; canonical foundational reference. Textbook/pre-arXiv exempt.',
@@ -11713,6 +11863,10 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Springer GTM 169 monograph; the standard matrix-analysis '
+                         'reference, verified via secondary academic citation. No '
+                         'downloadable full-text primary source.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Textbook (Springer GTM 169). No arXiv/DOI primary source. Textbook exempt.',
@@ -11747,6 +11901,9 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Phys. Rev. D (1982) — predates arXiv deposit; bibliographic '
+                         'record verified against the journal of record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Pre-arXiv classic (Phys. Rev. D 1982). No arXiv preprint. Pre-arXiv exempt.',
@@ -11764,6 +11921,9 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Linear Algebra Appl. (1975) — predates arXiv deposit; '
+                         'bibliographic record verified against the journal of record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Pre-arXiv classic (Linear Algebra Appl. 1975). No arXiv preprint. Pre-arXiv exempt.',
@@ -11815,6 +11975,9 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Commun. Math. Phys. (1973) — predates arXiv deposit; '
+                         'bibliographic record verified against the journal of record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Pre-arXiv classic (Commun. Math. Phys. 1973). No arXiv preprint. Pre-arXiv exempt.',
@@ -11832,6 +11995,9 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Canad. J. Math. (1956) — predates arXiv deposit; bibliographic '
+                         'record verified against the journal of record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Pre-arXiv classic (Canad. J. Math. 1956). No arXiv preprint. Pre-arXiv exempt.',
@@ -11917,6 +12083,10 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Academic Press monograph; the canonical quantum '
+                         'detection-and-estimation reference, verified via secondary '
+                         'academic citation.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Textbook (Academic Press, 1976). No arXiv/DOI primary source. Textbook exempt.',
@@ -11985,6 +12155,10 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Russ. Math. Surv. 52, 1191 (1997) review — no arXiv deposit '
+                         'exists for this review; record verified against the journal of '
+                         'record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Review article (Russ. Math. Surv. 52, 1191, 1997). No arXiv preprint for this review. Pre-arXiv exempt.',
@@ -12036,6 +12210,9 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Phys. Rev. Lett. 74, 1259 (1995) — predates routine quant-ph '
+                         'deposit; record verified against the journal of record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Pre-arXiv classic (Phys. Rev. Lett. 74, 1259, 1995). No arXiv preprint (predates quant-ph deposit). Pre-arXiv exempt.',
@@ -12053,6 +12230,9 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Quart. J. Math. (1960) — predates arXiv deposit; bibliographic '
+                         'record verified against the journal of record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Pre-arXiv classic (Quart. J. Math. 1960). No arXiv preprint. Pre-arXiv exempt.',
@@ -12087,6 +12267,10 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Cambridge Univ. Press, 10th anniversary ed.; the canonical '
+                         'quantum-computation textbook, verified via secondary academic '
+                         'citation.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Textbook (Cambridge Univ. Press, 10th anniv. ed.). No arXiv/DOI primary source. Textbook exempt.',
@@ -12104,6 +12288,9 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Phys. Rev. 32, 110 (1928) — predates arXiv by six decades; '
+                         'record verified against the journal of record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Pre-arXiv classic (Phys. Rev. 32, 110, 1928). No arXiv preprint. Pre-arXiv exempt.',
@@ -12206,6 +12393,9 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Rep. Math. Phys. 9, 273 (1976) — predates arXiv deposit; '
+                         'record verified against the journal of record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Pre-arXiv classic (Rep. Math. Phys. 9, 273, 1976). No arXiv preprint. Pre-arXiv exempt.',
@@ -12257,6 +12447,10 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Cambridge Univ. Press (2018); canonical '
+                         'quantum-information-theory monograph verified via secondary '
+                         'academic citation.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Textbook (Cambridge Univ. Press, 2018). No arXiv/DOI primary source. Textbook exempt.',
@@ -12274,6 +12468,9 @@ CITATION_REGISTRY = {
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Phys. Rev. A 40, 4277 (1989) — predates quant-ph deposit; '
+                         'record verified against the journal of record.',
         'used_in': ['papers/D9/paper_draft.tex'],
         'provides': [],
         'notes': 'Pre-arXiv classic (Phys. Rev. A 40, 4277, 1989). No arXiv preprint (predates quant-ph deposit). Pre-arXiv exempt.',
@@ -12291,8 +12488,12 @@ CITATION_REGISTRY = {
         'authors': 'de Moura, L., Ullrich, S.',
         'title': 'The Lean 4 Theorem Prover and Programming Language',
         'journal': 'CADE 28, LNCS 12699', 'volume': None, 'page': '625', 'year': 2021,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1007/978-3-030-79876-5_37', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'software',
+        'exempt_reason': 'Tool paper for the Lean 4 prover (CADE-28); the artifact '
+                         'actually cited is the pinned toolchain, and the DOI records '
+                         'the paper of record.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Tool reference (DOI 10.1007/978-3-030-79876-5_37). Canonical; textbook-exempt.',
     },
@@ -12300,8 +12501,12 @@ CITATION_REGISTRY = {
         'authors': 'The Mathlib Community',
         'title': 'The Lean Mathematical Library',
         'journal': 'CPP 2020', 'volume': None, 'page': None, 'year': 2020,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1145/3372885.3373824', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'software',
+        'exempt_reason': 'Tool paper for the Lean mathematical library (CPP 2020); the '
+                         'artifact actually cited is the pinned Mathlib commit, and the '
+                         'DOI records the paper of record.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Tool reference (DOI 10.1145/3372885.3373824). Canonical; textbook-exempt.',
     },
@@ -12349,8 +12554,11 @@ CITATION_REGISTRY = {
         'authors': 'Datta, S.',
         'title': 'Electronic Transport in Mesoscopic Systems',
         'journal': 'Cambridge University Press', 'volume': None, 'page': None, 'year': 1995,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1017/CBO9780511805776', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Cambridge Univ. Press; the canonical NEGF mesoscopic-transport '
+                         'monograph. Volume DOI recorded; no cacheable full text.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical NEGF textbook (DOI 10.1017/CBO9780511805776). Textbook-exempt.',
     },
@@ -12358,8 +12566,11 @@ CITATION_REGISTRY = {
         'authors': 'Landauer, R.',
         'title': 'Spatial Variation of Currents and Fields Due to Localized Scatterers in Metallic Conduction',
         'journal': 'IBM J. Res. Dev.', 'volume': 1, 'page': '223', 'year': 1957,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1147/rd.13.0223', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'IBM J. Res. Dev. 1, 223 (1957) — predates arXiv. DOI recorded; '
+                         'the class carries the exemption.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical classic (DOI 10.1147/rd.13.0223). Pre-arXiv; textbook-exempt.',
     },
@@ -12367,8 +12578,12 @@ CITATION_REGISTRY = {
         'authors': 'Büttiker, M.',
         'title': 'Four-Terminal Phase-Coherent Conductance',
         'journal': 'Phys. Rev. Lett.', 'volume': 57, 'page': '1761', 'year': 1986,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1103/PhysRevLett.57.1761', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Phys. Rev. Lett. 57, 1761 (1986) — predates arXiv deposit. DOI '
+                         'recorded: the exemption is the reference CLASS, not a missing '
+                         'identifier.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical classic (DOI 10.1103/PhysRevLett.57.1761). Pre-arXiv; textbook-exempt.',
     },
@@ -12376,8 +12591,12 @@ CITATION_REGISTRY = {
         'authors': 'Meir, Y., Wingreen, N. S.',
         'title': 'Landauer Formula for the Current through an Interacting Electron Region',
         'journal': 'Phys. Rev. Lett.', 'volume': 68, 'page': '2512', 'year': 1992,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1103/PhysRevLett.68.2512', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Phys. Rev. Lett. 68, 2512 (1992) — no arXiv deposit. DOI '
+                         'recorded and the record verified against the journal of '
+                         'record.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical classic (DOI 10.1103/PhysRevLett.68.2512). Textbook-exempt.',
     },
@@ -12385,8 +12604,12 @@ CITATION_REGISTRY = {
         'authors': 'Kato, T.',
         'title': 'Perturbation Theory for Linear Operators',
         'journal': 'Springer', 'volume': None, 'page': None, 'year': 1995,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1007/978-3-642-66282-9', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Springer 2nd ed.; the canonical '
+                         'perturbation-theory-for-linear-operators monograph. Volume DOI '
+                         'recorded; no cacheable full text.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical operator-theory textbook (2nd ed., DOI 10.1007/978-3-642-66282-9). Textbook-exempt.',
     },
@@ -12396,6 +12619,10 @@ CITATION_REGISTRY = {
         'journal': 'Academic Press', 'volume': None, 'page': None, 'year': 1975,
         'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'textbook',
+        'exempt_reason': 'Academic Press, Methods of Modern Mathematical Physics Vol. '
+                         'II; canonical mathematical-physics monograph verified via '
+                         'secondary academic citation.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical math-physics textbook. Textbook-exempt.',
     },
@@ -12403,8 +12630,11 @@ CITATION_REGISTRY = {
         'authors': 'Hohenberg, P., Kohn, W.',
         'title': 'Inhomogeneous Electron Gas',
         'journal': 'Phys. Rev.', 'volume': 136, 'page': 'B864', 'year': 1964,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1103/PhysRev.136.B864', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Phys. Rev. 136, B864 (1964), the DFT founding paper — predates '
+                         'arXiv. DOI recorded; the class carries the exemption.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical DFT founding paper (DOI 10.1103/PhysRev.136.B864). Pre-arXiv; textbook-exempt.',
     },
@@ -12412,8 +12642,11 @@ CITATION_REGISTRY = {
         'authors': 'Levy, M.',
         'title': 'Universal Variational Functionals of Electron Densities, First-Order Density Matrices, and Natural Spin-Orbitals and Solution of the v-Representability Problem',
         'journal': 'Proc. Natl. Acad. Sci. USA', 'volume': 76, 'page': '6062', 'year': 1979,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1073/pnas.76.12.6062', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'PNAS 76, 6062 (1979), the constrained-search paper — predates '
+                         'arXiv. DOI recorded; the class carries the exemption.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical Levy constrained-search paper (DOI 10.1073/pnas.76.12.6062). Pre-arXiv; textbook-exempt.',
     },
@@ -12421,8 +12654,11 @@ CITATION_REGISTRY = {
         'authors': 'Lieb, E. H.',
         'title': 'Density Functionals for Coulomb Systems',
         'journal': 'Int. J. Quantum Chem.', 'volume': 24, 'page': '243', 'year': 1983,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1002/qua.560240302', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Int. J. Quantum Chem. 24, 243 (1983) — predates arXiv. DOI '
+                         'recorded; the class carries the exemption.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical Lieb DFT paper (DOI 10.1002/qua.560240302). Pre-arXiv; textbook-exempt.',
     },
@@ -12430,8 +12666,11 @@ CITATION_REGISTRY = {
         'authors': 'Gorini, V., Kossakowski, A., Sudarshan, E. C. G.',
         'title': 'Completely Positive Dynamical Semigroups of N-Level Systems',
         'journal': 'J. Math. Phys.', 'volume': 17, 'page': '821', 'year': 1976,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1063/1.522979', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'J. Math. Phys. 17, 821 (1976), the GKSL founding paper — '
+                         'predates arXiv. DOI recorded; the class carries the exemption.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical GKSL founding paper (DOI 10.1063/1.522979). Pre-arXiv; textbook-exempt.',
     },
@@ -12439,8 +12678,12 @@ CITATION_REGISTRY = {
         'authors': 'Lindblad, G.',
         'title': 'On the Generators of Quantum Dynamical Semigroups',
         'journal': 'Commun. Math. Phys.', 'volume': 48, 'page': '119', 'year': 1976,
-        'doi': None, 'arxiv': None, 'doi_verified': False, 'inprep': False,
+        'doi': '10.1007/BF01608499', 'arxiv': None, 'doi_verified': False, 'inprep': False,
         'primary_source_path': None,
+        'citation_class': 'pre_arxiv',
+        'exempt_reason': 'Commun. Math. Phys. 48, 119 (1976), the Lindblad founding '
+                         'paper — predates arXiv. DOI recorded; the class carries the '
+                         'exemption.',
         'used_in': ['papers/D10/paper_draft.tex'], 'provides': [],
         'notes': 'Canonical Lindblad founding paper (DOI 10.1007/BF01608499). Pre-arXiv; textbook-exempt.',
     },

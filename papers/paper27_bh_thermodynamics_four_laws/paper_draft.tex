@@ -21,7 +21,7 @@
 
 \title{BCH four laws and the regime partition for emergent-gravity ADW
 black holes: a sign-of-$d\Thawk/dt$ partition between Schwarzschild
-and BEC-acoustic evaporation}
+and acoustic evaporation}
 
 \author{John G. Roehm}
 \affiliation{SK-EFT Hawking Project (Phase 6a Wave 5)}
@@ -36,7 +36,7 @@ follows the textbook Schwarzschild signature: $\Thawk = \hbar/(8\pi M)$
 (Hawking 1975~\cite{Hawking1975CMP}), so during evaporation
 $dM/dt < 0$ and $d\Thawk/dt > 0$ (heats as evaporates), with
 finite evaporation time $t_{\rm evap} \sim M^3$. Below $\Mc$, the BH
-follows the BEC-acoustic backreaction profile of Balbinot, Fagnocchi,
+follows the acoustic backreaction profile of Balbinot, Fagnocchi,
 Fabbri (PRD~71, 064019 (2005),
 arXiv:gr-qc/0405098~\cite{Balbinot2005PRD}): linear-in-$t$ cooling
 $\Thawk(t) = (\hbar c / 2\pi) \kappa [1 - (563/720\pi)\,\varepsilon\, \kappa^3 c
@@ -44,7 +44,7 @@ A_0 t]$ with extrapolation $t \sim 1/T^3$, hence asymptotic $\Thawk \to 0$
 in infinite time --- the analog of near-extremal Reissner--Nordstr\"om
 evaporation. The genuine regime partition is the
 \emph{sign-flip of $d\Thawk/dt$ during Hawking-radiation evaporation}:
-positive in the Schwarzschild branch, negative in the BEC-acoustic
+positive in the Schwarzschild branch, negative in the acoustic
 branch. We ship the regime-partition criterion and the four-laws
 bundles in tracked-hypothesis mode (Outcome-3). The substrate-response
 coefficient ansatz $\dADW = (\aADW - 1)\Ladw$ vanishes in the bare
@@ -76,7 +76,7 @@ Hawking evaporation, with finite evaporation time $t_{\rm evap}
 \propto M_0^3$.
 
 Analog/emergent-gravity systems offer a structurally different
-evaporation pattern. In the BEC-acoustic system of Balbinot,
+evaporation pattern. In the acoustic system of Balbinot,
 Fagnocchi, Fabbri~\cite{Balbinot2005PRD},
 backreaction of thermally radiated phonons on the fluid background
 \emph{shrinks} the sonic horizon and \emph{decreases} the temperature
@@ -89,7 +89,12 @@ in time, with linear-in-$t$ leading order
 \end{equation}
 and asymptotic extrapolation $t \sim 1/T^3$ giving $\Thawk \to 0$
 at \emph{infinite} time --- the analog of near-extremal
-Reissner--Nordstr\"om. Crucially, Ref.~\cite{Balbinot2005PRD}
+Reissner--Nordstr\"om. That computation is a sonic hole in a Laval
+nozzle under one-dimensional flow at \emph{constant} sound speed;
+the authors state explicitly that the condensate case, where the sound
+speed goes as $\rho^{1/2}$, is deferred to later work, so a condensate
+substrate inherits this branch through the sign of $d\Thawk/dt$ rather
+than through Eq.~\eqref{eq:Tsonic}. Crucially, Ref.~\cite{Balbinot2005PRD}
 itself \emph{contrasts} this with the moving-domain-wall analog
 in $^3$He-A studied by Jacobson and Koike~\cite{JacobsonKoike2002}
 (cond-mat/0205174), which has \emph{non}-vanishing end-temperature
@@ -113,7 +118,7 @@ original and explicitly disclosed.
 The remainder of the paper is organized as follows:
 Section~\ref{sec:setup} introduces the data carriers
 \texttt{BHData}, \texttt{ADWParams} and the regime classifier;
-Section~\ref{sec:profiles} states the BEC-acoustic and Schwarzschild
+Section~\ref{sec:profiles} states the acoustic and Schwarzschild
 $\Thawk$ profiles per their primary sources; Section~\ref{sec:hreg}
 introduces $H_{\rm RegimePartition}$;
 Section~\ref{sec:fourlaws} the regime-dependent four-laws bundles;
@@ -139,7 +144,7 @@ The \texttt{Regime} inductive type has three constructors:
 \texttt{Schwarzschild}, \texttt{Boundary}, and \texttt{ADWExtremality}.
 The \texttt{ADWExtremality} constructor name is retained from the
 initial Wave 5 ship for backward bibliographic continuity, but the
-post-rewrite physics interpretation is the BEC-acoustic regime per
+post-rewrite physics interpretation is the acoustic regime per
 Balbinot 2005~\cite{Balbinot2005PRD}.
 
 The \emph{decidable} regime classifier \texttt{classify} is defined
@@ -193,9 +198,9 @@ $dM/dt < 0$ during evaporation, this establishes
 $d\Thawk/dt > 0$ in the Schwarzschild branch ---
 the load-bearing primary-source-grounded sign claim.
 
-\subsection{BEC-acoustic branch (Balbinot 2005)}
+\subsection{Acoustic branch (Balbinot 2005)}
 
-For $b.M < \Mc(p)$, the BEC-acoustic backreaction analysis of
+For $b.M < \Mc(p)$, the acoustic backreaction analysis of
 Balbinot, Fagnocchi, Fabbri~\cite{Balbinot2005PRD}
 applies. Their Eq.~(Tsonic) [Eq.~\ref{eq:Tsonic}] gives a strictly
 decreasing $\Thawk(t)$ under Hawking-phonon backreaction, with the
@@ -218,27 +223,39 @@ prove \texttt{T\_H\_acoustic\_evolution\_pos}
 \texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}
 ($t_1 < t_2 \Rightarrow \Thawk^{\rm acoustic}(t_2) < \Thawk^{\rm acoustic}(t_1)$
 when $\Thawk^{(0)} > 0$ and $\tau_{\rm cool} > 0$). The strict
-monotone-decay theorem is the BEC-acoustic regime's primary-source-
+monotone-decay theorem is the acoustic regime's primary-source-
 grounded sign claim.
 
 \subsection{The contrast case: Jacobson--Koike 2002}
 
-It is essential to note that the moving-domain-wall analog black hole
-in $^3$He-A studied by Jacobson and Koike~\cite{JacobsonKoike2002}
-gives a structurally different result. Their Eq.~(13)
+It is essential to note that the thin-film moving-domain-wall analog
+black hole in $^3$He-A studied by Jacobson and Koike~\cite{JacobsonKoike2002}
+gives a structurally different result. The wall moves at $v < c_\perp$,
+with horizons at $c(x_h) = \pm v$, and
 $\Thawk(v) = \Thawk^{(0)}(1 - v^2/c_\perp^2)$
-(with $v$ the soliton velocity) is monotonically decreasing in $v$,
-but Hawking-radiation back-reaction \emph{slows} the soliton
+(with $v$ the wall velocity) is monotonically decreasing in $v$,
+but Hawking-radiation back-reaction \emph{slows} the wall
 ($dE/dt = -bv^n$, $E = \mu v^2/2$, hence $dv/dt < 0$),
-which makes $\Thawk$ \emph{increase} in time --- heating, not cooling.
+which makes $\Thawk$ \emph{increase} in time toward the non-vanishing
+constant $\Thawk^{(0)} = \hbar c_\perp / 2\pi d$ --- heating, not cooling.
 This regime is structurally similar to Schwarzschild, not to
 near-extremal Reissner--Nordstr\"om. Reference~\cite{Balbinot2005PRD}
 itself notes the distinction:
 ``\emph{other analog models like a thin film of $^3$He-A with a
 moving domain wall [Jacobson] seem to show a non-vanishing
 end-temperature of the evaporation process}.''
-We cite~\cite{JacobsonKoike2002} and \cite{JacobsonVolovik1998} only
-as the contrast case, not as the cooling anchor.
+We cite~\cite{JacobsonKoike2002} only as the contrast case, not as the
+cooling anchor.
+
+A second $^3$He-A texture sits on the \emph{other} branch. The planar
+soliton moving in bulk $^3$He-A studied by Jacobson and
+Volovik~\cite{JacobsonVolovik1998} has a horizon only for $v > c_\perp$,
+and its surface gravity carries a factor $(1 - c_\perp^2/v^2)^{1/2}$
+that vanishes as back-reaction slows the soliton toward $c_\perp$ from
+above, so $\Thawk \to 0$ and the system cools toward an extremal
+configuration. Two textures in the same superfluid therefore evaporate
+in opposite directions, which is precisely why a mass criterion rather
+than an analogy is required.
 
 \begin{figure*}[t]
 \centering
@@ -246,7 +263,7 @@ as the contrast case, not as the cooling anchor.
 \caption{Phase 6a Wave 5 BCH four-laws regime partition under Hawking-
 radiation evaporation. Left panel: $\Thawk(t)$ contrast between the
 Schwarzschild regime (amber dashed, Hawking 1975~\cite{Hawking1975CMP};
-$d\Thawk/dt > 0$, finite $t_{\rm evap}$) and the BEC-acoustic regime
+$d\Thawk/dt > 0$, finite $t_{\rm evap}$) and the acoustic regime
 (steel-blue solid, Balbinot et al.~\cite{Balbinot2005PRD};
 $d\Thawk/dt < 0$, asymptotic extremality at infinite time).
 The genuine regime partition is the sign-flip of $d\Thawk/dt$ during
@@ -273,7 +290,7 @@ $b.M > \Mc(p) \;\Rightarrow\; 0 < dT/dt|_{\rm evap}$
 1975~\cite{Hawking1975CMP}).
 \item[\texttt{evap\_dT\_dt\_below}:]
 $b.M < \Mc(p) \;\Rightarrow\; dT/dt|_{\rm evap} < 0$
-(BEC-acoustic cooling sign per Balbinot
+(acoustic cooling sign per Balbinot
 2005~\cite{Balbinot2005PRD} Eq.~Tsonic).
 \item[\texttt{delta\_consistent\_with\_ansatz}:]
 $\delta = (\aADW - 1) \Ladw$ (deep-research \S9 ansatz).
@@ -322,7 +339,7 @@ substantive fields, with two key modifications:
 \texttt{firstLaw\_smarr\_with\_substrate} adds the substrate-response
 correction $\delta = (\aADW - 1)\Ladw$ to the Smarr identity, and
 \texttt{evap\_dT\_dt\_negative} flips the evaporation-sign claim
-(BEC-acoustic cooling sign $< 0$). The bundle is satisfied
+(acoustic cooling sign $< 0$). The bundle is satisfied
 consistently with the regime $b.M < \Mc(p)$.
 
 \textbf{Deferred to Phase 6f+.} The zeroth law ($\kappa$ constant on
@@ -333,15 +350,15 @@ to encode properly: the zeroth law needs Killing-vector/horizon-generator
 machinery, and the Israel strong form needs the affine-time integral
 formalism. Both are surfaced in the bundle docstrings as deferred slots,
 not as \texttt{True} placeholders. The Balbinot 2005 $t \sim 1/T^3$
-extrapolation gives the BEC-acoustic-regime Israel-strong preservation
+extrapolation gives the acoustic-regime Israel-strong preservation
 prose-level (Section~\ref{sec:third}); the corresponding Lean encoding
 follows once Phase 6f.5 lands.
 
 The Wave 5 \emph{gating theorem}
 \texttt{four\_laws\_consistent\_with\_acoustic\_regime} combines the
-classifier with the BEC-acoustic four-laws bundle and the
+classifier with the acoustic four-laws bundle and the
 tracked-hypothesis bundle to produce the substantive structural
-claim: in the BEC-acoustic regime, the BH satisfies the formalized
+claim: in the acoustic regime, the BH satisfies the formalized
 subset of the four laws (with the substrate-response first-law
 correction) AND the Hawking temperature has \emph{negative}
 time-derivative under evaporation. Both conjuncts are non-trivial:
@@ -383,7 +400,7 @@ perturbative gravity.
 \section{Third law: BPS-conditional preservation, Kehle--Unger violation}
 \label{sec:third}
 
-In the BEC-acoustic regime, Balbinot's $t \sim 1/T^3$ extrapolation
+In the acoustic regime, Balbinot's $t \sim 1/T^3$ extrapolation
 guarantees that $\Thawk \to 0$ is reached only in \emph{infinite} affine
 time, preserving the Israel 1986 strong third law for the natural
 substrate-response branch. However, Kehle and
@@ -402,7 +419,7 @@ fields rather than ship vacuous content. Encoding the Israel form
 quantitatively requires affine-time integral formalism from Phase~6f.5
 (\texttt{ADMDecomposition.lean}); the substantive content of this
 section is the (uncoded) \emph{prose-level} disclosure that the natural
-BEC-acoustic Schottky-saturation branch preserves Israel-strong, while
+acoustic branch preserves Israel-strong, while
 charged-matter sectors (Kehle--Unger) violate it absent the Reall BPS
 condition. The two non-tautological falsifier theorems
 \texttt{falsifier\_third\_law\_form}
@@ -499,11 +516,11 @@ Wave 1's $\GN$ evaluated at substrate parameters. The bridge
 $\GN$ propagates through to both regime branches.
 
 \textbf{Wave 2} ($c_{\rm GW} = c \cdot \sqrt{\xivest}$): the
-BEC-acoustic substrate inherits the metric-channel speed via
+acoustic substrate inherits the metric-channel speed via
 $\kappa$ dependence on $\xivest$.
 
 \textbf{Wave 3} (\texttt{HorizonMTCBC} + \texttt{kaulMajumdarS}):
-in the BEC-acoustic regime, $\Thawk \to 0$ is reached asymptotically;
+in the acoustic regime, $\Thawk \to 0$ is reached asymptotically;
 the horizon entropy from Wave 3 stays positive at $\Thawk = 0$
 (weak Nernst preserved, strong Nernst violated). The substantive
 bridge is encoded by
@@ -529,7 +546,7 @@ above is the load-bearing weak-Nernst/strong-Nernst encoding.
   $\Mc(\aADW, \Ladw, \Nf) = (\Nf \Ladw) / (12\pi \aADW)$
   ansatz is project-original.
 \item The cross-regime gluing (Schwarzschild for $b.M > \Mc$,
-  BEC-acoustic for $b.M < \Mc$) is project-conjecture; no published
+  acoustic for $b.M < \Mc$) is project-conjecture; no published
   paper proposes a single emergent-gravity BH with this regime
   structure.
 \item The $\dADW = (\aADW - 1)\Ladw$ substrate-response coefficient
@@ -539,7 +556,7 @@ above is the load-bearing weak-Nernst/strong-Nernst encoding.
 \textbf{Primary-source-grounded}:
 \begin{itemize}
 \item Schwarzschild branch: Hawking 1975~\cite{Hawking1975CMP}.
-\item BEC-acoustic branch: Balbinot et al.~\cite{Balbinot2005PRD}
+\item Acoustic branch: Balbinot et al.~\cite{Balbinot2005PRD}
   Eq.~(Tsonic), mirrored by \texttt{src/wkb/backreaction.py}.
 \item Second law: Glorioso--Liu~\cite{GloriosoLiu2018}
   (no NEC needed).
@@ -557,7 +574,7 @@ encoded as the sign-flip of $d\Thawk/dt$ during Hawking-radiation
 evaporation. Above the critical mass $\Mc(\aADW, \Ladw, \Nf)$,
 the BH heats as it evaporates (Schwarzschild branch, Hawking
 1975~\cite{Hawking1975CMP}); below $\Mc$, the BH cools
-asymptotically (BEC-acoustic branch,
+asymptotically (acoustic branch,
 Balbinot 2005~\cite{Balbinot2005PRD}). The genuine
 regime-partition theorem is the sign-flip
 of $d\Thawk/dt$, with both regime sides primary-source-grounded.

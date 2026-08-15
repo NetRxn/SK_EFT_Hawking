@@ -1565,6 +1565,30 @@ LEGACY_DRAFT_DANGLING_REF_CEILING = 1
 #: needs a stated reason in the same commit.**
 BIBITEM_TITLE_DRIFT_CEILING = 7
 
+#: Cited bibkeys with NO identifiers (`primary_source_path`/`doi`/`arxiv` all None) and NO
+#: declared `citation_class` — read by `citation_primary_sources_present` (ADR-014 D7).
+#:
+#: ⚠️ These are NOT textbook exemptions. Until 2026-08-15 they read as such: the exemption
+#: fired on `path is None and doi is None and arxiv is None`, a PROXY for "canonical pre-DOI
+#: textbook" that every unfinished entry satisfies. The incentive ran backwards — recording a
+#: textbook's DOI REMOVED its exemption and demanded a cache, so the emptier an entry was, the
+#: more exempt it became. 129 of 544 cited bibkeys sat in that branch and **74 of them carried
+#: an auto-generated `\bibitem` stub for `notes`**: nobody had ever said what they were.
+#:
+#: Measured 2026-08-15 after migrating the 51 entries that DID carry a human-authored
+#: rationale (textbook 24 · pre_arxiv 22 · software 5) to an explicit `citation_class`. The
+#: residue is 74 stubs + 4 under-populated entries whose `notes` prose carries an identifier
+#: the structured field never got (`isabelleCBO`, `leanQI2025`, `survey2021`) or an open TODO
+#: (`Sola2023`).
+#:
+#: A RATCHET WITH ZERO HEADROOM, and unlike `abstract_only` (ADR-014 D4) it BLOCKS: the remedy
+#: is authoring, not acquisition, so no purchase queue stalls behind it. Its real job is the
+#: incentive: blanking a field to dodge the cache requirement now lands the entry HERE and
+#: pushes the count over this ceiling, turning the check red. **Lower this as entries are
+#: established; back-filling `citation_class` onto the residue to lower it reproduces the very
+#: defect it records.**
+CITATION_UNDECLARED_CLASS_CEILING = 78
+
 # ═══════════════════════════════════════════════════════════════════════
 # Axiom metadata — historical record (all axioms now removed)
 # ═══════════════════════════════════════════════════════════════════════
@@ -5947,10 +5971,19 @@ BH_ENTROPY_PARAMS = {
 # Phase 6a Wave 5: BH Thermodynamics Four Laws + Regime Partition
 # ════════════════════════════════════════════════════════════════════
 # References:
+# - Balbinot, Fagnocchi & Fabbri, PRD 71, 064019 (2005),
+#   arXiv:gr-qc/0405098, Eq. (Tsonic) — PRIMARY COOLING ANCHOR. Scope:
+#   a SONIC hole in a Laval nozzle, 1-D flow, CONSTANT sound speed; the
+#   authors explicitly defer the Bose-Einstein-condensate case.
 # - Jacobson & Volovik, PRD 58, 064021 (1998), arXiv:cond-mat/9801308
-#   (§VIII verbatim "BHs cool toward extremality")
+#   — a planar soliton in BULK ³He-A, horizon only for v > c_⊥; Eq. (5.7)
+#   sends κ → 0 as back-reaction slows v to c_⊥, so its §VIII "cools as it
+#   evaporates and approaches an extremal black hole" AGREES with its own
+#   equations. COOLING side (attribution corrected 2026-08-15).
 # - Jacobson & Koike, in Artificial Black Holes (World Sci. 2002),
-#   arXiv:cond-mat/0205174, Eq. (13): T_H(v) = T_H(0)(1 - v²/c_⊥²)
+#   arXiv:cond-mat/0205174: T_H(v) = T_H(0)(1 - v²/c_⊥²) for a THIN-FILM
+#   moving domain wall at v < c_⊥ — THE heating contrast case (T_H rises
+#   to the non-zero T_H(0) as radiation slows the wall).
 # - Volovik, Found. Phys. 33, 349 (2003), arXiv:gr-qc/0301043
 #   (horizon fermion zero modes)
 # - Glorioso & Liu, arXiv:1612.07705 (SK-EFT 2nd law from KMS Z₂)
@@ -5968,7 +6001,7 @@ BH_THERMODYNAMICS_PARAMS = {
     # Natural range for α_ADW from Wave 1 (Vergeles range):
     'ALPHA_ADW_LOWER': 0.1,
     'ALPHA_ADW_UPPER': 10.0,
-    # BEC-acoustic T_H,0 prefactor (Balbinot 2005 leading-order initial
+    # Acoustic T_H,0 prefactor (Balbinot 2005 leading-order initial
     # temperature in natural units). Replaces the deleted SCHOTTKY_*
     # entries from the initial Wave 5 ship per the post-rewrite
     # provenance correction (see
@@ -5988,9 +6021,9 @@ BH_THERMODYNAMICS_PARAMS = {
     # Hawking-Page transition (AdS extension, not ADW-default):
     'HAWKING_PAGE_R_PLUS_OVER_L': 1.0,       # r_+/l = 1 at HP transition
     'HAWKING_PAGE_FOLD_RATIO': 0.5774,       # 1/√3 small/large fold
-    # BEC-acoustic decay-form falsifier tolerance (Balbinot Eq. Tsonic
+    # Acoustic decay-form falsifier tolerance (Balbinot Eq. Tsonic
     # strict-monotone-decay deviation; non-strict-decreasing candidates
-    # falsify the BEC-acoustic regime identification).
+    # falsify the acoustic regime identification).
     'ACOUSTIC_DECAY_FALSIFIER_TOLERANCE': 0.01,  # 1% relative deviation
     # Third-law form: BPS-violating-matter Kehle-Unger threshold
     # (T_H_threshold for finite-time approach claim, dimensionless)

@@ -9,15 +9,15 @@ import Mathlib
 ## Overview
 
 Phase 6a Wave 5 (re-shipped 2026-04-26 around the corrected primary-source
-anchor). Formalizes the Bardeen–Carter–Hawking four laws of black hole
-mechanics in two regimes — Schwarzschild and BEC-acoustic — separated by
-a critical mass `M_c` set by ADW substrate parameters
-`(α_ADW, Λ_UV, N_f, χ_vest)`. The two regimes have *opposite signs* of
-`dT_H/dt` under Hawking-radiation evaporation:
+anchor; citation attribution re-verified 2026-08-15). Formalizes the
+Bardeen–Carter–Hawking four laws of black hole mechanics in two regimes —
+Schwarzschild and acoustic — separated by a critical mass `M_c` set by ADW
+substrate parameters `(α_ADW, Λ_UV, N_f, χ_vest)`. The two regimes have
+*opposite signs* of `dT_H/dt` under Hawking-radiation evaporation:
 
 - **Schwarzschild regime** (`b.M > M_c`): `dT_H/dt > 0` during evaporation
   (BH heats as it loses mass, Hawking 1975, finite t-evap).
-- **BEC-acoustic regime** (`b.M < M_c`): `dT_H/dt < 0` during evaporation
+- **Acoustic regime** (`b.M < M_c`): `dT_H/dt < 0` during evaporation
   (BH cools toward asymptotic extremality, infinite t-evap), per
   Balbinot–Fagnocchi–Fabbri, *Quantum Effects in Acoustic
   Black Holes: the Backreaction*, **Phys. Rev. D 71, 064019 (2005)**,
@@ -26,6 +26,15 @@ a critical mass `M_c` set by ADW substrate parameters
       T(t) = (ℏc/2π) · κ · [1 − (563/720π) · ε · κ³ · c · A_0 · t]
 
   with extrapolation `t ~ 1/T³`, asymptotic `T → 0` in infinite time.
+
+  ⚠️ **Scope of the anchor.** Balbinot 2005 computes a *sonic* hole in a
+  Laval nozzle under one-dimensional flow, and assumes the sound speed
+  `c` is **constant** (§IV, "Let us further assume the sound velocity c
+  constant"). It is *not* a Bose–Einstein-condensate result: the paper
+  says of the condensate case that "the sound velocity c is not constant,
+  but proportional to ρ^(1/2). This will be discussed elsewhere." A
+  condensate substrate inherits this branch by the *sign* of `dT_H/dt`,
+  not by Eq. (Tsonic) itself.
 
 The project's own `src/wkb/backreaction.py` (Phase 1-2 anchor) implements
 the leading-order time evolution `κ(t) ~ κ_0 · exp(-t/τ_cool)`. Wave 5
@@ -39,24 +48,63 @@ form** `T_H(M) = T_H,0 · (1 − (M/M_c)²)` attributed to Jacobson–Koike
 2002 cond-mat/0205174 Eq. (13). Stage 9 figure-reviewer flagged a
 slope-sign annotation contradicting the plotted curve. Verbatim
 TeX-source verification (saved at
-`Lit-Search/Phase-6a/primary-sources/{jk0205174, jv9801308, balbinot}/`)
+`Lit-Search/Phase-6a/primary-sources/{JacobsonKoike2002, JacobsonVolovik1998,
+Balbinot2005PRD}.source/`)
 revealed the deep research conflated **two different analog systems**:
 
-- JK 2002 Eq. (13) is for a **³He-A moving domain wall**:
-  `T_H(v) = T_H(0)·(1 − v²/c_⊥²)`. `dT_H/dv < 0` monotonically;
-  evaporation slows v ⇒ `T_H ↑` (heats, like Schwarzschild).
-- Balbinot 2005 (gr-qc/0405098) is for the **BEC-acoustic** system:
-  `dT_H/dt < 0` (cools, like near-extremal RN).
+- JK 2002 is for a **³He-A thin-film moving domain wall**, which moves at
+  `v < c_⊥` with horizons at `c(x_h) = ±v`:
+  `T_H(v) = T_H(0)·(1 − v²/c_⊥²)`, `T_H(0) = ℏc_⊥/(2πd)`.
+  `dT_H/dv < 0` monotonically; radiation slows v ⇒ `T_H ↑` toward the
+  **non-zero** constant `T_H(0)` (heats, like Schwarzschild).
+- Balbinot 2005 (gr-qc/0405098) is for a **sonic (Laval-nozzle,
+  constant-c) hole**: `dT_H/dt < 0` (cools, like near-extremal RN).
 - Balbinot 2005 §"Fate of the acoustic black hole" **explicitly
   contrasts** the two: "*other analog models like a thin film of
   ³He-A with a moving domain wall [Jacobson] seem to show a
   non-vanishing end-temperature of the evaporation process*."
+  ⚠️ Balbinot's `\bibitem{jacobson}` for that contrast resolves to
+  Jacobson–Volovik, *JETP Lett.* **68**, 874 (1998) together with
+  Jacobson–Koike cond-mat/0205174 — both thin-film works. It does
+  **not** resolve to PRD 58, 064021, which is absent from Balbinot's
+  reference list.
 
 The wave was rewritten around Balbinot 2005 as the primary cooling
-anchor. JK 2002 / JV 1998 remain cited as the **explicit contrast
-case** (different analog system, opposite behavior). See Stage-14
-process review at
+anchor. **JK 2002 alone is the heating contrast case**; see the
+JV-1998 correction below. Stage-14 process review at
 `papers/AutomatedReviews/2026-04-26-2230-wave5-process/deep_research_analog_conflation.md`.
+
+## Attribution correction (2026-08-15)
+
+The 2026-04-26 note above recorded JV 1998 (PRD **58**, 064021,
+arXiv:cond-mat/9801308) beside JK 2002 as a *heating* contrast case,
+and asserted that its §VIII prose was inconsistent with its own
+equations. **Both halves were wrong, and the two ³He-A systems had been
+swapped.** Re-verified against the full text (arXiv TeX source and the
+published PDF):
+
+- JV 1998 is a **planar soliton moving in bulk ³He-A**, not a thin film.
+  Its horizon exists **only above** `c_⊥`: "The horizons appear in the
+  moving soliton if `v > c_⊥`" (§V), and Eq. (5.2) requires
+  `cos²α(z_h) = (v² − c_⊥²)/(v_F² − c_⊥²)`.
+- Its surface gravity, Eq. (5.7), is
+  `κ = (v_F/d)·(1 − v²/v_F²)·√[(1 − c_⊥²/v²)/(1 − c_⊥²/v_F²)]`,
+  so `κ → 0` — and hence `T_H = ℏκ/(2π k_B) → 0` — as back-reaction
+  slows the soliton toward `c_⊥` from above.
+- §VIII therefore **agrees** with the equations: "*The Hawking
+  temperature is fairly constant until, as v approaches c_⊥, T_H goes to
+  zero. This is unlike the evaporation of a neutral black hole which
+  gets hotter as it shrinks. It is rather like the Hawking radiation
+  from a black hole with a large magnetic charge which cannot be
+  discharged and so cools as it evaporates and approaches an extremal
+  black hole.*"
+
+**JV 1998 sits on the cooling side, with Balbinot 2005.** The
+"back-reaction slows v, so T_H rises" reasoning belongs to the JK 2002
+thin film, where the horizon exists for `v < c_⊥` and `T_H` stays finite
+at `v = 0`. Two textures in the *same* superfluid evaporate in opposite
+directions, which is why a mass criterion rather than an analogy is
+needed.
 
 ## Scoping mode
 
@@ -70,10 +118,12 @@ dynamics:
    `T_H = ℏ/(8π M)` decreases with M, but during evaporation
    `dM/dt < 0` so `dT_H/dt > 0` (heats); finite evaporation time
    `t_evap ~ M³`.
-2. **BEC-acoustic branch** (`M < M_c`): Balbinot 2005 Eq. Tsonic gives
+2. **Acoustic branch** (`M < M_c`): Balbinot 2005 Eq. Tsonic gives
    linear-in-t cooling, extrapolation `t ~ 1/T³` ⇒ `T → 0` at infinite
-   time; analog of near-extremal Reissner–Nordström.
-3. **Third law**: Israel strong form preserved in BEC-acoustic regime
+   time; analog of near-extremal Reissner–Nordström. Same sign as the
+   JV-1998 moving soliton, whose `κ → 0` at `v → c_⊥⁺` is an
+   independent primary-source realization of this branch.
+3. **Third law**: Israel strong form preserved in the acoustic regime
    (the asymptotic-extremality is reached in infinite time per
    Balbinot's `t ~ 1/T³`); classical regime carries Kehle–Unger 2022
    caveat (arXiv:2211.15742) for charged-scalar matter sectors;
@@ -87,10 +137,10 @@ dynamics:
 
 - **Wave 1** (`LinearizedEFE.G_N_emerg`): provides G_N^emerg used in
   the first law's `dM = (κ / (8π G_N^emerg)) dA + Φ dQ + Ω dJ + ...`.
-- **Wave 2** (`c_GW = c · √χ_vest`): the BEC-acoustic substrate
+- **Wave 2** (`c_GW = c · √χ_vest`): the acoustic substrate
   inherits the metric-channel speed via the dependence of κ on χ_vest.
 - **Wave 3** (`HorizonMTCBC` + `kaulMajumdarS`): the asymptotic-T=0
-  state in the BEC-acoustic regime carries non-zero entropy
+  state in the acoustic regime carries non-zero entropy
   (Wave 3's Kaul–Majumdar form), preserving weak Nernst (S finite at
   T = 0) and violating strong Nernst (S(M_c) > 0).
 
@@ -119,19 +169,27 @@ dynamics:
 - **R. Balbinot, S. Fagnocchi, A. Fabbri**, *Quantum
   Effects in Acoustic Black Holes: the Backreaction*, **Phys. Rev. D
   71, 064019 (2005)**, arXiv:gr-qc/0405098. Eq. (Tsonic) — primary
-  cooling anchor for the BEC-acoustic regime. TeX source preserved at
-  `Lit-Search/Phase-6a/primary-sources/balbinot/acusticpap.tex`.
+  cooling anchor for the acoustic regime. **Scope: a sonic hole in a
+  Laval nozzle at constant sound speed, one-dimensional flow; the
+  condensate case is explicitly deferred by the authors.** TeX source
+  preserved at
+  `Lit-Search/Phase-6a/primary-sources/Balbinot2005PRD.source/acusticpap.tex`.
 - **S.W. Hawking**, *Particle creation by black holes*, Commun. Math.
   Phys. **43**, 199 (1975) — primary anchor for the Schwarzschild
   regime: `T_H = ℏ/(8π M)`, finite t-evap.
 - T.A. Jacobson, T. Koike, *Artificial Black Holes*, World Scientific
-  (2002), arXiv:cond-mat/0205174 — **explicit contrast case** (³He-A
-  moving wall, opposite cooling behavior; cited per Balbinot 2005's
-  own contrast statement).
+  (2002), arXiv:cond-mat/0205174 — **the heating contrast case** (³He-A
+  thin-film moving domain wall at `v < c_⊥`; `T_H` rises to the non-zero
+  constant `T_H(0)` as radiation slows the wall; cited per Balbinot
+  2005's own contrast statement).
 - T.A. Jacobson, G.E. Volovik, Phys. Rev. D **58**, 064021 (1998),
-  arXiv:cond-mat/9801308 — also a contrast case; §VIII prose
-  "cools as it evaporates" is **inconsistent with the same paper's
-  own equations** (back-reaction slows v, so T_H rises).
+  arXiv:cond-mat/9801308 — **a second cooling case, not a contrast
+  case**: a planar soliton in bulk ³He-A whose horizon exists only for
+  `v > c_⊥`, with Eq. (5.7) sending `κ → 0` as back-reaction slows the
+  soliton to `c_⊥`. Its §VIII prose ("cools as it evaporates and
+  approaches an extremal black hole") is *consistent* with its own
+  equations. TeX source preserved at
+  `Lit-Search/Phase-6a/primary-sources/JacobsonVolovik1998.source/`.
 - C. Kehle, R. Unger, J. Eur. Math. Soc. (2025) DOI 10.4171/JEMS/1591,
   arXiv:2211.15742 — third-law disproof under charged-scalar matter.
 - H.S. Reall, Phys. Rev. D **110**, 124059 (2024), arXiv:2410.11956 —
@@ -153,7 +211,7 @@ open Real
 classical thermodynamics applies. Evaporation ⇒ `dM/dt < 0`,
 `dT_H/dt > 0` (heats), `C(M) < 0`, finite t-evap.
 
-`BEC-acoustic` regime (`ADWExtremality` constructor name retained for
+`Acoustic` regime (`ADWExtremality` constructor name retained for
 backward bibliographic continuity): below the critical mass `M_c`.
 Balbinot 2005 backreaction analysis applies. Evaporation ⇒
 `dT_H/dt < 0` (cools), asymptotic `T → 0` at infinite time
@@ -309,7 +367,7 @@ trivial-projection); both are positive on their physical domains.
 -/
 
 /--
-**BEC-acoustic Hawking temperature time evolution.** Leading-order
+**Acoustic Hawking temperature time evolution.** Leading-order
 exponential decay form per the project's own
 `src/wkb/backreaction.py` (line 449-450), citing Balbinot 2005:
 
@@ -324,13 +382,13 @@ both share `dT/dt < 0` and asymptotic `T → 0`.
 noncomputable def T_H_acoustic_evolution (T_H0 τ_cool t : ℝ) : ℝ :=
   T_H0 * Real.exp (-t / τ_cool)
 
-/-- At `t = 0` the BEC-acoustic profile equals its initial value `T_H,0`. -/
+/-- At `t = 0` the acoustic profile equals its initial value `T_H,0`. -/
 theorem T_H_acoustic_evolution_at_zero (T_H0 τ_cool : ℝ) :
     T_H_acoustic_evolution T_H0 τ_cool 0 = T_H0 := by
   unfold T_H_acoustic_evolution
   rw [neg_zero, zero_div, Real.exp_zero, mul_one]
 
-/-- Positivity of the BEC-acoustic profile when `T_H,0 > 0`. -/
+/-- Positivity of the acoustic profile when `T_H,0 > 0`. -/
 theorem T_H_acoustic_evolution_pos {T_H0 : ℝ} (hT0 : 0 < T_H0)
     (τ_cool t : ℝ) : 0 < T_H_acoustic_evolution T_H0 τ_cool t := by
   unfold T_H_acoustic_evolution
@@ -338,7 +396,7 @@ theorem T_H_acoustic_evolution_pos {T_H0 : ℝ} (hT0 : 0 < T_H0)
 
 /-- **Strict monotone-decay** (Balbinot 2005 Eq. Tsonic content): for
 positive `T_H,0` and `τ_cool`, `T_H(t)` is strictly decreasing in `t`.
-This is the load-bearing primary-source claim for the BEC-acoustic
+This is the load-bearing primary-source claim for the acoustic
 regime: `dT/dt < 0` strictly, formalized as monotone-decreasing. -/
 theorem T_H_acoustic_evolution_strict_decreasing {T_H0 τ_cool : ℝ}
     (hT0 : 0 < T_H0) (hτ : 0 < τ_cool)
@@ -430,7 +488,7 @@ ansatz; the regime sign-of-dT_H/dt claims are primary-source-grounded:
 - **Schwarzschild branch** (`b.M > M_c p`): `dT_H/dt > 0` during
   evaporation. Standard Hawking 1975 result combined with
   `T_H_schwarzschild_strict_decreasing` (M↓ ⇒ T↑) and `dM/dt < 0`.
-- **BEC-acoustic branch** (`b.M < M_c p`): `dT_H/dt < 0` during
+- **Acoustic branch** (`b.M < M_c p`): `dT_H/dt < 0` during
   evaporation. Balbinot 2005 Eq. Tsonic primary anchor; encoded
   via `T_H_acoustic_evolution_strict_decreasing`.
 
@@ -457,7 +515,7 @@ to produce the explicit **sign-of-dT_H/dt-flips-at-M_c** statement.
 
 This is the genuine regime-partition: in the Schwarzschild branch,
 the BH heats during evaporation (Hawking 1975 + textbook); in the
-BEC-acoustic branch, the BH cools during evaporation (Balbinot 2005,
+acoustic branch, the BH cools during evaporation (Balbinot 2005,
 primary anchor). The sign of `dT_H/dt` flips at `M_c`.
 
 **Anti-pattern audit.** Not ∃-absorption: the conditional sign claims
@@ -541,10 +599,10 @@ structure FourLaws_Schwarzschild
   evap_dT_dt_positive           : 0 < dT_dt_value
 
 /--
-**BEC-acoustic-regime four laws (post-Stage-13 reduced bundle).
+**Acoustic-regime four laws (post-Stage-13 reduced bundle).
 `ADWExtremality` constructor name retained for backward bibliographic
 continuity, but the post-rewrite physics interpretation is
-BEC-acoustic per Balbinot 2005.** Three substantive
+acoustic per Balbinot 2005.** Three substantive
 Wave-5-formalizable fields:
 
 - `firstLaw_smarr_with_substrate`: `0 < p.G_N_emerg_eval ∧
@@ -581,7 +639,7 @@ structure FourLaws_ADWExtremality
 with the tracked-hypothesis bundle and the FourLaws bundle to produce
 the substantive structural claim:
 
-  In the BEC-acoustic regime (formally `.ADWExtremality`), the
+  In the acoustic regime (formally `.ADWExtremality`), the
   emergent BH satisfies the four laws (with the substrate-response
   first-law correction) AND the Hawking temperature has *negative*
   time-derivative under evaporation (cooling toward asymptotic
@@ -614,7 +672,7 @@ the wave's regime-partition ansatz.
 
 /--
 **Falsifier 1 — Acoustic-decay form falsifier (post-Stage-13 strengthened).**
-The BEC-acoustic regime predicts strict monotone-decay of `T_H(t)` per
+The acoustic regime predicts strict monotone-decay of `T_H(t)` per
 Balbinot 2005 Eq. (Tsonic). A candidate `T_H_alt(t)` whose values match
 `T_H_acoustic_evolution` at `t₁` AND `t₂` (both endpoints of an
 evaporation interval) but does NOT decrease across the interval is
@@ -671,7 +729,7 @@ theorem falsifier_schwarzschild_heating
 
 /--
 **Falsifier 3 — Third-law-form falsifier (post-Stage-13 strengthened).**
-The BEC-acoustic regime predicts `t ~ 1/T³` per Balbinot 2005, hence
+The acoustic regime predicts `t ~ 1/T³` per Balbinot 2005, hence
 Israel strong form: the approach time `τ_approach(ε)` to reach
 `T_H = ε` is unbounded as `ε → 0`. Kehle–Unger (arXiv:2211.15742)
 demonstrates a charged-scalar-matter sector that violates this:
@@ -741,7 +799,7 @@ theorem wave1_bridge_G_N_emerg_pos
 
 /--
 **Wave 3 bridge — concrete weak-Nernst at SU(2)_k (post-Stage-13
-strengthened).** In the BEC-acoustic regime, the Hawking temperature
+strengthened).** In the acoustic regime, the Hawking temperature
 reaches zero asymptotically (Balbinot 2005 `t ~ 1/T³`), but the
 entropy is *positive* — inherited concretely from Wave 3's
 Kaul–Majumdar `kaulMajumdarS` evaluated at the asymptotic-extremality
@@ -768,7 +826,7 @@ theorem wave3_bridge_kaul_majumdar_at_e_squared_anchor
 -- Note: the previous tautological theorem
 -- `wave3_bridge_weak_nernst_holds_strong_nernst_violated` was retired
 -- in the post-Stage-13 strengthening pass. The substantive content
--- (weak Nernst preserved, strong Nernst violated for the BEC-acoustic
+-- (weak Nernst preserved, strong Nernst violated for the acoustic
 -- regime at the asymptotic-extremality limit) is now encoded by
 -- `wave3_bridge_kaul_majumdar_at_e_squared_anchor` above, which
 -- actually imports `SKEFTHawking.BHEntropyMicroscopic` and calls
@@ -781,7 +839,7 @@ theorem wave3_bridge_kaul_majumdar_at_e_squared_anchor
 module formalizes the BCH four laws + regime partition for emergent-
 gravity ADW black holes, anchored on:
 
-- **Balbinot 2005** (gr-qc/0405098, PRD 71, 064019) for the BEC-acoustic
+- **Balbinot 2005** (gr-qc/0405098, PRD 71, 064019) for the acoustic
   cooling regime (`b.M < M_c`): `dT_H/dt < 0`, asymptotic extremality
   at infinite time, mirrors `src/wkb/backreaction.py`'s exponential
   approximation `κ(t) ~ κ_0 · exp(-t/τ_cool)`.

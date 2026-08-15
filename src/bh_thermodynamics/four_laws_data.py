@@ -3,7 +3,7 @@
 Mirrors `FourLaws_Schwarzschild` and `FourLaws_ADWExtremality` Prop
 bundles in `lean/SKEFTHawking/BHThermodynamicsFourLaws.lean`. Each
 bundle's load-bearing distinguishing field is the **evap_dT_dt sign**
-(positive in Schwarzschild = heats; negative in BEC-acoustic = cools)
+(positive in Schwarzschild = heats; negative in acoustic = cools)
 rather than heat-capacity sign — see provenance correction in
 `papers/AutomatedReviews/2026-04-26-2230-wave5-process/deep_research_analog_conflation.md`.
 """
@@ -47,7 +47,7 @@ class FourLawsSchwarzschild:
 
 @dataclass(frozen=True)
 class FourLawsADWExtremality:
-    """BEC-acoustic-regime four laws (M < M_c).
+    """acoustic-regime four laws (M < M_c).
 
     Five mutually-independent fields (mirrors the Lean Prop bundle):
     - `zerothLaw_check`: κ constant on horizon (placeholder).
@@ -59,7 +59,7 @@ class FourLawsADWExtremality:
     - `thirdLaw_check`: third-law form conditional on Reall BPS condition;
       may be violated under Kehle-Unger charged-scalar matter.
     - `evap_dT_dt`: time-derivative of T_H during Hawking evaporation
-      (must be < 0 for the BEC-acoustic signature; Balbinot 2005
+      (must be < 0 for the acoustic signature; Balbinot 2005
       Eq. Tsonic).
     """
 
@@ -72,7 +72,7 @@ class FourLawsADWExtremality:
     third_law_check: bool = True
 
     def is_valid(self, delta_tolerance: float = 1.0e-12) -> bool:
-        """Check all six fields satisfy the BEC-acoustic signature.
+        """Check all six fields satisfy the acoustic signature.
 
         Includes a tolerance check on `delta_ADW` matching the deep-research
         ansatz `(α_ADW − 1)·Λ_UV` (`delta_ansatz_predicted`).

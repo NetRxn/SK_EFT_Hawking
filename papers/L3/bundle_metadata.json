@@ -33,17 +33,17 @@
     },
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_acoustic_evolution_pos",
-      "claims": "BEC-acoustic branch: the exponential alias is positive",
+      "claims": "Acoustic branch: the exponential alias is positive",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_acoustic_evolution_at_zero",
-      "claims": "BEC-acoustic branch: the alias reproduces T_H^(0) at t = 0",
+      "claims": "Acoustic branch: the alias reproduces T_H^(0) at t = 0",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_acoustic_evolution_strict_decreasing",
-      "claims": "the load-bearing BEC-acoustic sign claim: T_H strictly decreasing in t (Balbinot 2005 grounded)",
+      "claims": "the load-bearing acoustic sign claim: T_H strictly decreasing in t (Balbinot 2005 grounded)",
       "declared": "2026-08-07"
     },
     {
@@ -99,7 +99,14 @@
   "length_target": {
     "unit": "word_equivalents",
     "ceiling": 3750,
-    "source": "PRL author guide (3750 word equivalents: text + 300/figure + tables + captions + refs)"
+    "source": "PRL author guide (3750 word equivalents: text + 300/figure + tables + captions + refs)",
+    "abstract_ceiling": {
+      "unit": "characters",
+      "ceiling": 600,
+      "source": "PRL author guide — abstract of roughly 600 characters",
+      "source_verified": false,
+      "source_note": "UNVERIFIED against the primary. A 2026-08-15 research-scout pass could not reach journals.aps.org: its robots.txt disallows automated agents and every author-guide fetch returned 403. This figure is the one recorded in papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md §5.1, not one read off the APS author guide. Confirm by hand before treating a pass here as venue conformance; the current abstracts are 2-5x over, so the exact figure does not change any live verdict."
+    }
   },
   "compiled_pages": 4,
   "compile_gate_ok": true,

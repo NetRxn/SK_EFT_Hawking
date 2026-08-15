@@ -1,14 +1,21 @@
-"""BEC-acoustic time-evolution Hawking temperature (Balbinot 2005).
+"""acoustic time-evolution Hawking temperature (Balbinot 2005).
 
 Mirrors `T_H_acoustic_evolution` and `T_H_schwarzschild` in
 `lean/SKEFTHawking/BHThermodynamicsFourLaws.lean`. The leading-order
 exponential `T_H(t) = T_H,0 · exp(-t/τ_cool)` is the same approximation
 used by `src/wkb/backreaction.py` (line 449), citing
-Balbinot, Fagnocchi, Fabbri, Procopio, *Quantum Effects in Acoustic
+Balbinot, Fagnocchi, Fabbri, *Quantum Effects in Acoustic
 Black Holes: the Backreaction*, **Phys. Rev. D 71, 064019 (2005)**,
 arXiv:gr-qc/0405098. The full coupled-ODE evolution lives in
 `backreaction.backreaction_evolution`; this module exposes the analytic
 forms used by the four-laws / regime-partition formalization.
+
+Scope of the Balbinot anchor (corrected 2026-08-15): that paper computes a
+*sonic* hole in a Laval nozzle under one-dimensional flow at **constant**
+sound speed. It is not a Bose-Einstein-condensate result — the authors
+explicitly defer the condensate case, where `c ∝ ρ^(1/2)` is not constant,
+to later work. A condensate substrate inherits this branch by the *sign* of
+`dT_H/dt`, not by Eq. (Tsonic) itself.
 
 Replaces the (deleted) `schottky_saturation.py` from the initial Wave 5
 ship; that module implemented the Jacobson-Koike Eq. (13) Schottky form
@@ -30,7 +37,7 @@ from src.bh_thermodynamics.regime_classifier import ADWParams
 
 
 def T_H_acoustic_evolution(T_H0: float, tau_cool: float, t: float) -> float:
-    """BEC-acoustic Hawking temperature at time t under backreaction.
+    """acoustic Hawking temperature at time t under backreaction.
 
     `T_H(t) = T_H,0 · exp(-t / τ_cool)` — leading-order exponential
     decay form per `wkb/backreaction.py` and Balbinot 2005 Eq. Tsonic.
@@ -62,7 +69,7 @@ def T_H_acoustic_evolution(T_H0: float, tau_cool: float, t: float) -> float:
 def T_H_acoustic_evolution_grid(
     T_H0: float, tau_cool: float, t_max: float, N_points: int = 101
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Time grid of BEC-acoustic T_H over t ∈ [0, t_max].
+    """Time grid of acoustic T_H over t ∈ [0, t_max].
 
     Returns (t_grid, T_H_grid) suitable for plotting the cooling
     profile. Verifies T_H is strictly positive and strictly decreasing

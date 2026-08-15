@@ -2,11 +2,11 @@
 
 Mirrors the four falsifier theorems in
 `lean/SKEFTHawking/BHThermodynamicsFourLaws.lean` (post-rewrite
-2026-04-26-2230 around Balbinot 2005 BEC-acoustic primary anchor):
+2026-04-26-2230 around Balbinot 2005 acoustic primary anchor):
 
-- `falsifier_acoustic_decay_form`: BEC-acoustic strict-monotone-decay
+- `falsifier_acoustic_decay_form`: acoustic strict-monotone-decay
   (Balbinot 2005 Eq. Tsonic). T_H_alt non-decreasing on [t₁, t₂]
-  falsifies the BEC-acoustic-regime identification.
+  falsifies the acoustic-regime identification.
 - `falsifier_schwarzschild_heating`: Schwarzschild dT/dt > 0
   prediction. dT/dt_observed ≤ 0 in M > M_c regime falsifies.
 - `falsifier_third_law_form`: Israel/Reall infinite-time vs.
@@ -28,12 +28,12 @@ def falsifier_acoustic_decay_form(
     t_2: float,
     tolerance: float = 0.0,
 ) -> bool:
-    """Falsifier 1 — BEC-acoustic decay form (Balbinot 2005 Eq. Tsonic).
+    """Falsifier 1 — acoustic decay form (Balbinot 2005 Eq. Tsonic).
 
-    The BEC-acoustic regime predicts strict monotone-decay of T_H(t)
+    The acoustic regime predicts strict monotone-decay of T_H(t)
     under Hawking-radiation backreaction. A candidate `T_H_alt(t)`
     that fails to be strictly decreasing on [t₁, t₂] falsifies the
-    BEC-acoustic-regime identification.
+    acoustic-regime identification.
 
     Returns True if `T_H_alt(t_2) >= T_H_alt(t_1) - tolerance` (with
     `t_1 < t_2`), i.e., the candidate violates strict monotone-decay.
@@ -97,7 +97,7 @@ def falsifier_third_law_form(
 ) -> bool:
     """Falsifier 3 — third-law form (Israel/Reall vs. Kehle-Unger).
 
-    The BEC-acoustic regime predicts `t ~ 1/T³` per Balbinot 2005,
+    The acoustic regime predicts `t ~ 1/T³` per Balbinot 2005,
     hence Israel strong form preserved (κ → 0 only in infinite affine
     time). Kehle-Unger 2022 (arXiv:2211.15742) demonstrates that
     charged-scalar matter sectors can allow finite-time approach.

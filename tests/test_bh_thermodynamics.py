@@ -2,13 +2,13 @@
 
 Cross-validation between Lean theorems in
 `lean/SKEFTHawking/BHThermodynamicsFourLaws.lean` (post-rewrite
-2026-04-26-2230 around Balbinot 2005 BEC-acoustic primary anchor) and
+2026-04-26-2230 around the Balbinot 2005 acoustic primary anchor) and
 Python numerics in `src/bh_thermodynamics/`. Covers:
 
-- Regime classifier: Schwarzschild / Boundary / BEC-acoustic
+- Regime classifier: Schwarzschild / Boundary / acoustic
   (`ADW_EXTREMALITY` constructor name retained).
 - M_c default scaling per ADW deep-research §3 dimensional ansatz.
-- BEC-acoustic time-evolution `T_H(t) = T_H,0·exp(-t/τ_cool)`
+- Acoustic time-evolution `T_H(t) = T_H,0·exp(-t/τ_cool)`
   (Balbinot 2005 Eq. Tsonic; mirrored from `wkb/backreaction.py`).
 - Schwarzschild static `T_H = 1/(8π M)` form (Hawking 1975).
 - Substrate-response coefficient ansatz `δ_ADW = (α_ADW − 1)·Λ_UV`.
@@ -69,7 +69,7 @@ def default_bh(M: float, A: float = 1.0, r_h: float = 1.0,
 
 
 class TestRegimeClassifier:
-    """Three-way regime classifier: Schwarzschild / Boundary / BEC-acoustic."""
+    """Three-way regime classifier: Schwarzschild / Boundary / acoustic."""
 
     def test_classify_schwarzschild_above_M_c(self):
         """M > M_c ⇒ Schwarzschild regime (heats as evaporates)."""
@@ -78,7 +78,7 @@ class TestRegimeClassifier:
         assert classify(default_bh(M=2.0 * M_c), p) == Regime.SCHWARZSCHILD
 
     def test_classify_adw_extremality_below_M_c(self):
-        """M < M_c ⇒ BEC-acoustic regime (cools as evaporates)."""
+        """M < M_c ⇒ acoustic regime (cools as evaporates)."""
         p = default_params()
         M_c = M_c_default(p)
         assert classify(default_bh(M=0.5 * M_c), p) == Regime.ADW_EXTREMALITY
@@ -132,7 +132,7 @@ class TestMCriticalScaling:
 
 
 class TestAcousticEvolution:
-    """BEC-acoustic time-evolution T_H(t) = T_H,0·exp(-t/τ_cool) (Balbinot 2005)."""
+    """Acoustic time-evolution T_H(t) = T_H,0·exp(-t/τ_cool) (Balbinot 2005)."""
 
     def test_T_H_acoustic_at_zero_time(self):
         """T_H(t=0) = T_H,0 (initial value)."""
@@ -242,7 +242,7 @@ class TestDeltaADWAnsatz:
 
 
 class TestFalsifier1AcousticDecayForm:
-    """Falsifier 1 — non-monotone-decreasing T_H profile falsifies BEC-acoustic."""
+    """Falsifier 1 — non-monotone-decreasing T_H profile falsifies the acoustic branch."""
 
     def test_decreasing_profile_not_falsified(self):
         """A T_H_alt that strictly decreases is NOT falsified."""
@@ -284,7 +284,7 @@ class TestFalsifier2SchwarzschildHeating:
         assert falsifier_schwarzschild_heating(dT_dt_observed=0.0)
 
     def test_negative_dT_dt_falsified(self):
-        """Negative dT/dt IS falsified (BEC-acoustic signature in Schwarzschild regime)."""
+        """Negative dT/dt IS falsified (acoustic signature in Schwarzschild regime)."""
         assert falsifier_schwarzschild_heating(dT_dt_observed=-1.0)
 
 
@@ -352,12 +352,12 @@ class TestFourLawsBundles:
         assert bundle.is_valid()
 
     def test_schwarzschild_bundle_invalid_with_negative_evap_dT_dt(self):
-        """Schwarzschild bundle invalid if dT/dt ≤ 0 (BEC-acoustic signature)."""
+        """Schwarzschild bundle invalid if dT/dt ≤ 0 (acoustic signature)."""
         bundle = FourLawsSchwarzschild(G_N_emerg=1.0, evap_dT_dt=-2.0)
         assert not bundle.is_valid()
 
     def test_adw_extremality_bundle_valid_with_consistent_delta(self):
-        """BEC-acoustic bundle valid: G_N > 0, dT/dt < 0 (cools), δ matches ansatz."""
+        """Acoustic bundle valid: G_N > 0, dT/dt < 0 (cools), δ matches ansatz."""
         bundle = FourLawsADWExtremality(
             G_N_emerg=1.0,
             delta_ADW=3.0,
@@ -367,7 +367,7 @@ class TestFourLawsBundles:
         assert bundle.is_valid()
 
     def test_adw_extremality_bundle_invalid_with_positive_evap_dT_dt(self):
-        """BEC-acoustic bundle invalid if dT/dt ≥ 0 (Schwarzschild signature)."""
+        """Acoustic bundle invalid if dT/dt ≥ 0 (Schwarzschild signature)."""
         bundle = FourLawsADWExtremality(
             G_N_emerg=1.0,
             delta_ADW=3.0,
@@ -377,7 +377,7 @@ class TestFourLawsBundles:
         assert not bundle.is_valid()
 
     def test_adw_extremality_bundle_invalid_with_inconsistent_delta(self):
-        """BEC-acoustic bundle invalid if δ doesn't match ansatz."""
+        """Acoustic bundle invalid if δ doesn't match ansatz."""
         bundle = FourLawsADWExtremality(
             G_N_emerg=1.0,
             delta_ADW=3.0,
@@ -454,7 +454,7 @@ class TestLeanCrossChecks:
     def test_regime_partition_criterion_lean_anchor(self):
         """Lean: `regime_partition_criterion`. dT/dt sign flips at M_c.
 
-        Schwarzschild regime ⇒ supplied dT/dt > 0; BEC-acoustic ⇒ dT/dt < 0.
+        Schwarzschild regime ⇒ supplied dT/dt > 0; acoustic ⇒ dT/dt < 0.
         """
         # Verify the sign-prediction for each branch using bundle validity.
         s_bundle = FourLawsSchwarzschild(G_N_emerg=1.0, evap_dT_dt=1.0)
@@ -463,7 +463,7 @@ class TestLeanCrossChecks:
             evap_dT_dt=-1.0)
         assert s_bundle.is_valid()
         assert a_bundle.is_valid()
-        # Sign-flip check: Schwarzschild bundle's dT/dt > 0; BEC-acoustic's < 0.
+        # Sign-flip check: Schwarzschild bundle's dT/dt > 0; acoustic's < 0.
         assert s_bundle.evap_dT_dt > 0
         assert a_bundle.evap_dT_dt < 0
 
