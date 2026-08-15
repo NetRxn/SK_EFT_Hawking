@@ -21,14 +21,14 @@
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Stage-13 review | Verdict |
 |---|---:|---:|---:|---:|---|:---:|:---:|
 | **F** | 0 | 63 | 151 | 11 | 105 advisory, 3 critical, 8 major, 35 minor | 2026-06-10 | 🔴 RED |
-| **D1** | 1 | 12 | 25 | 2 | 7 advisory, 2 major, 16 minor | 2026-06-10 | 🔴 RED |
+| **D1** | 1 | 12 | 41 | 13 | 7 advisory, 3 critical, 10 major, 21 minor | 2026-06-10 | 🔴 RED |
 | **D2** | 1 | 6 | 68 | 10 | 38 advisory, 5 critical, 5 major, 20 minor | 2026-06-10 | 🔴 RED |
-| **D3** | 1 | 31 | 69 | 1 | 52 advisory, 1 major, 16 minor | 2026-06-10 | 🔴 RED |
-| **D4** | 1 | 12 | 50 | 4 | 42 advisory, 1 critical, 3 major, 4 minor | 2026-06-10 | 🔴 RED |
+| **D3** | 1 | 31 | 85 | 14 | 52 advisory, 5 critical, 9 major, 19 minor | 2026-06-10 | 🔴 RED |
+| **D4** | 1 | 12 | 64 | 13 | 42 advisory, 4 critical, 9 major, 9 minor | 2026-06-10 | 🔴 RED |
 | **D5** | 1 | 9 | 48 | 1 | 36 advisory, 1 critical, 11 minor | 2026-06-10 | 🔴 RED |
-| **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-10 † | 🟡 YELLOW (P1 gate blocked: NarrativeGrounding) |
+| **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-10 † | ⚪ UNMEASURED (Stage-13 evidence kind=unrecorded; only full-adversarial earns GREEN) |
 | **D7** | 1 | 1 | 5 | 0 | 5 minor | 2026-06-10 | ⚪ UNMEASURED (Stage-13 evidence kind=unrecorded; only full-adversarial earns GREEN) |
-| **D8** | 1 | 13 | 14 | 0 | 8 advisory, 6 minor | 2026-06-10 | 🟡 YELLOW |
+| **D8** | 1 | 13 | 23 | 6 | 8 advisory, 6 major, 9 minor | 2026-06-10 | 🔴 RED |
 | **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | ⚪ UNMEASURED (Stage-13 evidence kind=unrecorded; only full-adversarial earns GREEN) |
 | **D10** | 1 | 4 | 3 | 0 | 1 advisory, 2 minor | 2026-06-30 | 🟡 YELLOW (P1 gate blocked: LeanProofSubstance, NarrativeGrounding) |
 | **D11** | 1 | 6 | 63 | 0 | 18 advisory, 45 minor | 2026-07-31 † | 🟡 YELLOW |
@@ -39,7 +39,7 @@
 | **I1** | 3 | 8 | 38 | 1 | 14 advisory, 1 major, 23 minor | 2026-08-12 | 🔴 RED |
 | **I2** | 3 | 1 | 42 | 0 | 37 advisory, 5 minor | 2026-06-10 | 🟡 YELLOW |
 | **I3** | 3 | 1 | 20 | 0 | 16 advisory, 4 minor | 2026-06-10 | 🟡 YELLOW |
-| **E1** | 4 | 5 | 8 | 1 | 1 major, 7 minor | 2026-06-10 | 🔴 RED |
+| **E1** | 4 | 5 | 17 | 7 | 2 critical, 5 major, 10 minor | 2026-06-10 | 🔴 RED |
 | **E2** | 4 | 4 | 22 | 0 | 15 advisory, 7 minor | 2026-06-10 | 🟡 YELLOW |
 
 † review date backfilled from on-disk review evidence; the evidence path is recorded in the bundle's `bundle_metadata.json` `last_stage13_review_source` field.
@@ -55,14 +55,14 @@
 | Bundle | AssumptionDisclosu | CitationIntegrity | ComputationCorrect | CountFreshness | CrossPaperConsiste | FixPropagation | LeanProofSubstance | NarrativeGrounding | ParameterProvenanc | ProductionRunHealt | unclassified |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | **F** | 8 | 31 | 9 | 10 | 12 | 0 | 5 | 3 | 21 | 1 | 51 |
-| **D1** | 0 | 8 | 0 | 0 | 5 | 0 | 2 | 1 | 3 | 0 | 6 |
+| **D1** | 0 | 8 | 1 | 0 | 8 | 0 | 3 | 1 | 3 | 0 | 17 |
 | **D2** | 10 | 18 | 3 | 4 | 6 | 0 | 2 | 4 | 4 | 0 | 17 |
-| **D3** | 5 | 9 | 6 | 6 | 3 | 0 | 2 | 2 | 9 | 1 | 26 |
-| **D4** | 3 | 12 | 1 | 1 | 4 | 1 | 2 | 1 | 5 | 0 | 20 |
+| **D3** | 5 | 11 | 7 | 6 | 3 | 0 | 3 | 2 | 10 | 1 | 37 |
+| **D4** | 3 | 12 | 4 | 1 | 5 | 1 | 3 | 1 | 5 | 0 | 29 |
 | **D5** | 4 | 9 | 2 | 2 | 5 | 0 | 2 | 2 | 5 | 0 | 17 |
 | **D6** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | **D7** | 1 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 1 |
-| **D8** | 4 | 4 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 | 4 |
+| **D8** | 4 | 5 | 1 | 0 | 1 | 0 | 1 | 4 | 0 | 0 | 7 |
 | **D9** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | **D10** | 0 | 2 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
 | **D11** | 5 | 14 | 2 | 9 | 4 | 0 | 1 | 0 | 13 | 0 | 15 |
@@ -73,7 +73,7 @@
 | **I1** | 3 | 7 | 2 | 0 | 1 | 0 | 0 | 10 | 4 | 0 | 11 |
 | **I2** | 1 | 6 | 2 | 3 | 1 | 0 | 4 | 6 | 5 | 0 | 14 |
 | **I3** | 1 | 0 | 0 | 0 | 5 | 0 | 2 | 3 | 4 | 0 | 5 |
-| **E1** | 0 | 3 | 0 | 1 | 0 | 0 | 0 | 2 | 1 | 0 | 1 |
+| **E1** | 0 | 3 | 0 | 1 | 2 | 0 | 0 | 2 | 3 | 0 | 6 |
 | **E2** | 1 | 6 | 0 | 0 | 2 | 0 | 1 | 5 | 3 | 0 | 4 |
 
 ## Notes
