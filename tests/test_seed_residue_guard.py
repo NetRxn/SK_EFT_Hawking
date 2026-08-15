@@ -546,3 +546,25 @@ class TestEverySeederUsesTheOneMechanism:
         assert len(_UNJOURNALLED_RESTORES) <= 2, (
             f"the unjournalled-restore allow-list has grown to "
             f"{len(_UNJOURNALLED_RESTORES)}. It may only shrink.")
+
+
+def test_the_guard_is_REGISTERED_not_merely_importable():
+    """⚠️ WITHOUT THIS THE VERIFY HAS ITS LAST HOLE. Every assertion above reaches the
+    check by importing `validation.checks.reviews` directly, so the whole file stays green
+    with the check dropped from `_CANONICAL_ORDER` — a guard nobody runs, which is the
+    same nothing as a guard that cannot fire.
+
+    `close_finding` executes this file's Verify verbatim and nothing else, so the
+    registration has to be provable from inside it.
+    """
+    import validate
+    assert "seed_residue_absent" in validate._CANONICAL_ORDER, (
+        "the check is not in the canonical order — validate.py will never run it")
+    assert validate.check_seed_residue_absent is rv.check_seed_residue_absent, (
+        "validate.py's re-export does not point at the live check")
+    from validation._registry import _CHECKS
+    spec = [s for s in _CHECKS if s.name == "seed_residue_absent"]
+    assert spec, f"not in the registry: {sorted(s.name for s in _CHECKS)[:5]}…"
+    from validation._config import CI_SKIP
+    assert "seed_residue_absent" not in CI_SKIP, (
+        "the check is CI_SKIPped, so --ci never measures it")
