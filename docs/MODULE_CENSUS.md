@@ -295,6 +295,7 @@ Nothing else belongs here.
 | `scripts/run_vestigial_inflation_preliminary.py` | Phase 6b Wave 3 Stage 3a — preliminary (n_s, r) scan. |
 | `scripts/run_vestigial_production.py` | Production vestigial MC runs: 4D fermion-bag finite-size scaling. |
 | `scripts/scan_rhmc_l8_stepsize.py` | L=8 MD step-size (epsilon) scan for the Rust HS+RHMC backend. |
+| `scripts/seed_journal.py` | Crash-safe production-seeded mutation — the journal that survives a killed run. |
 | `scripts/sentence_findings.py` | Resolve manuscript sentences to the open findings that land on them (ADR-012 D15 S4). |
 | `scripts/sentence_state.py` | sentence_state.py — sole writer for sentence-level verification state (Phase 5v Wave 10b) |
 | `scripts/setup_lean_worktree_slots.sh` | Create/refresh the persistent lean-worker slots wt1..wtN for parallel Lean development. |

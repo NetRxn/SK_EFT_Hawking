@@ -13,7 +13,7 @@
 5 & \texttt{bundle\_structural\_coherence} & Every bundle has a closing section, a bibliography, and a readable section count \\
 6 & \texttt{bundle\_figure\_adequacy} & Every bundle carries at least the figures its tier owes a reader \\
 7 & \texttt{bundle\_sentence\_length} & No bundle draft grows its stock of sentences a reader must re-read to parse \\
-8 & \texttt{bundle\_reader\_facing\_voice} & No bundle draft narrates its own correction history to the reader \\
+8 & \texttt{bundle\_reader\_facing\_voice} & No bundle draft narrates its own process to the reader --- neither its correction history nor its unfinished diligence \\
 9 & \texttt{bundle\_reviewer\_stage\_ordering} & No bundle records a Stage-13 verdict before Stages 9 and 10 are green \\
 10 & \texttt{bundle\_manuscript\_length} & Every bundle's compiled manuscript is within its declared length target \\
 11 & \texttt{bundle\_metadata\_matches\_graph} & bundle\_metadata.json finding counts equal the live graph's \\
@@ -25,7 +25,7 @@
 17 & \texttt{bundle\_native\_decide\_debt} & Every bundle's native\_decide debt is disclosed in its draft and does not grow (ADR-002 ratchet, per-bundle) \\
 18 & \texttt{bundle\_todo\_free\_before\_green} & No bundle carrying an unresolved work marker records a Stage-13 green \\
 19 & \texttt{parameter\_provenance} & Every experimental parameter has verified provenance \\
-20 & \texttt{citation\_primary\_sources\_present} & Every external bibitem cited in papers has a primary-source cache file \\
+20 & \texttt{citation\_primary\_sources\_present} & Every cited external bibitem has a primary-source cache, and an abstract-only one is flagged rather than counted as the source \\
 21 & \texttt{provenance\_doi\_in\_registry} & PARAMETER\_PROVENANCE source DOIs resolve to CITATION\_REGISTRY bibkeys \\
 22 & \texttt{bibitem\_title\_primary\_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
 23 & \texttt{counts\_fresh} & counts.json / counts.tex are up-to-date vs. sources \\
@@ -91,5 +91,6 @@
 83 & \texttt{accepted\_findings\_carry\_rationale} & Every `accepted` supersession record justifies acceptance in writing \\
 84 & \texttt{chain\_backing\_targets\_resolve} & Every Lean target named in a claims-review chain of backing exists \\
 85 & \texttt{ledger\_ids\_resolve} & Supersession records name findings that exist (ratcheted) \\
+86 & \texttt{seed\_residue\_absent} & No production review document carries test-seeded content, and no seeded mutation is left unrestored \\
 \hline
 \end{tabular}
