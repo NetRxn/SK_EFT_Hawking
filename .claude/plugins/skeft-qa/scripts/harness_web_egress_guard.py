@@ -98,6 +98,48 @@ _WHITELIST = (
     # building dashboard work against "best Datastar practice" was doing so without ever
     # having read the source. A grant in the wrong file is indistinguishable from no grant.
     "data-star.dev",
+    # ── Publisher hosts our OWN citation corpus resolves to (user-authorized 2026-08-15) ──
+    # DERIVED, not guessed: every DOI prefix present in CITATION_REGISTRY was mapped to its
+    # registrant's article host, and the ones missing here are listed below. This matters
+    # because `doi.org` alone is not enough — a DOI resolves by CROSS-HOST REDIRECT, and
+    # WebFetch returns cross-host redirects rather than following them, so the destination
+    # must be reachable in its own right. Whitelisting doi.org while omitting the publisher
+    # buys the redirect and not the paper.
+    #
+    # Re-derive after adding citations:
+    #   uv run python -c "from src.core.citations import CITATION_REGISTRY as C; import re,collections;
+    #   print(collections.Counter(re.match(r'(10\.\d{4,5})/',v.get('doi') or '').group(1)
+    #   for v in C.values() if re.match(r'(10\.\d{4,5})/', v.get('doi') or '')))"
+    #
+    # All are scholarly publishers serving editorially-controlled content — unlike a code
+    # host, a bare entry here is not a grant over arbitrary user-supplied material.
+    "dl.acm.org",                    # 10.1145 — ACM
+    "worldscientific.com",           # 10.1142 — World Scientific
+    "pubs.aip.org",                  # 10.1063 — AIP
+    "science.org",                   # 10.1126 — AAAS
+    "royalsocietypublishing.org",    # 10.1098 — Royal Society
+    "annualreviews.org",             # 10.1146 — Annual Reviews
+    "academic.oup.com",              # 10.1093, 10.1143 — Oxford (incl. Prog. Theor. Phys.)
+    "mdpi.com",                      # 10.3390 — MDPI
+    "intlpress.com",                 # 10.4310 — International Press (ATMP)
+    "cambridge.org",                 # 10.1017 — Cambridge
+    "scipost.org",                   # 10.21468 — SciPost
+    "onlinelibrary.wiley.com",       # 10.1002, 10.1112 — Wiley / LMS
+    "journals.uchicago.edu", "press.uchicago.edu",   # 10.1086, 10.7208 — U. Chicago
+    "edpsciences.org",               # 10.1051 — EDP Sciences
+    "tandfonline.com",               # 10.1080 — Taylor & Francis
+    "ieeexplore.ieee.org",           # 10.1109 — IEEE
+    "ems.press",                     # 10.4171 — EMS Press
+    "msp.org",                       # 10.2140 — Mathematical Sciences Publishers
+    "pos.sissa.it",                  # 10.22323 — Proceedings of Science
+    "centre-mersenne.org",           # 10.5802 — Centre Mersenne
+    "emis.de",                       # 10.3842 — SIGMA
+    "digital-library.theiet.org",    # 10.1049 — IET
+    # Already reachable via entries above, recorded so the mapping is not re-derived:
+    #   10.48550 -> arxiv.org · 10.1134, 10.1023, 10.1140, 10.12942 -> link.springer.com
+    #   10.3847, 10.1070 -> iopscience.iop.org
+    # STILL UNMAPPED (1 entry): 10.26421 — registrant not identified; if a fetch of it is
+    # ever denied, identify the host and add it here rather than widening anything.
 )
 
 # Path-scoped destinations: (host, path_prefix). A URL passes iff its host matches the
