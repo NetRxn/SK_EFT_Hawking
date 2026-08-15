@@ -42,12 +42,14 @@ double-exponential bound into a statement about a failure \emph{probability}
 rather than about a real sequence defined to satisfy its own recursion. At the
 malignant-pair count Aliferis, Gottesman and Preskill report for the Steane CNOT
 extended rectangle the chain discharges a numerical certificate exceeding
-$2.73 \times 10^{-5}$. Two things are not derived and are stated as such
-throughout: the malignant-pair count itself, which is a combinatorial
-enumeration over a concrete circuit and enters as a literal, and a noise model
-with a strictly positive base rate, without which the satisfiability witness
-shows the hypotheses are consistent but not that the bound is ever approached.
-The development is closed under the Lean kernel's standard axioms alone.
+$2.73 \times 10^{-5}$. The scope is the combinatorial half of their argument:
+the malignant-pair count enters as a literal rather than an enumeration, the
+lemma that a good extended rectangle correctly simulates its ideal gate is a
+hypothesis rather than a theorem, and the satisfiability witness for the
+composed bound has every failure event empty, so it establishes that the
+hypotheses are consistent and not that the bound is ever approached. We state
+each of these where it arises rather than at the end. The development is closed
+under the Lean kernel's standard axioms alone.
 \end{abstract}
 
 \maketitle
@@ -119,13 +121,30 @@ unnoticed.
 \paragraph{Priority, and its limits.} To our knowledge the recursive threshold
 argument itself --- the concatenation recursion carried to the
 double-exponential bound with a numerical threshold attached --- has not
-previously been machine-checked. Two limits bound that claim and we state them
-here rather than let a referee find them. The survey behind it covered the Coq
-stabilizer and verified-compilation line, the Isabelle/HOL quantum Hoare-logic
-and concentration-inequality developments, and the Lean quantum-information
-libraries; the Isabelle Archive of Formal Proofs was not exhaustively searched,
-so the negative result there should be read as probable rather than established.
-And the claim is about the threshold \emph{argument}, not its ingredients:
+previously been machine-checked. Two limits bound that claim.
+
+The survey behind it covered three lines. In Coq: the stabilizer and
+verified-compilation developments around SQIR and QWIRE, together with the
+quantum-error-correction and quantum-Hoare-logic work presented at CAV and PLDI
+in 2025, which certify single-level fault-tolerant constructions and program
+correctness but carry no threshold argument.
+%% TODO: the CAV 2025 and PLDI 2025 entries are named from the project's own
+%% survey notes; their full bibliographic records have not been acquired and
+%% verified, so they are described rather than cited.
+In Isabelle/HOL: the concentration-inequality material in the Archive of Formal
+Proofs and the QHLProver line, where the concentration substrate a threshold
+argument would need is present but not connected to one. And in Lean: the
+quantum-information libraries, which supply capacity-side primitives without
+$\varepsilon$-thresholding. The Archive of Formal Proofs was not exhaustively
+searched, so the negative result there should be read as probable rather than
+established.
+
+The second limit is that the claim is narrower than ``AGP formalized''. What is
+machine-checked is the concatenation recursion carried to the double-exponential
+bound with a numerical threshold attached. The semantic half of their argument
+--- that a good extended rectangle correctly simulates its ideal gate --- is a
+hypothesis here, as Section~\ref{sec:steane:half} sets out. Relatedly, the claim
+is about the threshold \emph{argument}, not its ingredients:
 concentration inequalities, stabilizer formalisms and code definitions all exist
 in those systems, which is precisely why the recursion that connects them is the
 part worth reporting.
@@ -137,20 +156,46 @@ part worth reporting.
 \subsection{Noise}
 
 A noisy quantum circuit is a set of \emph{locations}: gates, preparations,
-measurements, and the idle intervals between them. Under an abstract local
-stochastic noise model each location either operates ideally or fails, failure
-at a single location occurs with probability at most $\varepsilon$, and the
-failure events at distinct locations satisfy a joint-probability bound. The
-model is abstract in that it says nothing about what a failure does to the
-state; it is the combinatorics of which locations fail that the threshold
-argument reasons about.
+measurements, and the idle intervals between them. A noise realization selects a
+subset of locations at which the circuit departs from its ideal behaviour, and a
+noise model is a probability distribution over such subsets.
 
-We are explicit at the outset that this is the only noise model treated here.
-A topological error model, in which errors live on a lattice and are suppressed
-by a gap rather than by a per-location rate, is a different object. It is not
-this one up to constants and the two are not additive, so its published
-threshold figures live on a different operational domain. Specializing to it is
-deferred rather than claimed.
+\begin{definition}[abstract local stochastic noise]
+\label{def:local-stochastic}
+Fix a probability space $(\Omega, \mu)$ and, for each location $i$, a measurable
+failure event $\mathrm{fail}_i \subseteq \Omega$. The model is \emph{local
+stochastic at rate $\varepsilon$} when
+\begin{equation}
+  \mu(\mathrm{fail}_i) \;\le\; \varepsilon
+  \quad\text{for every location } i,
+  \label{eq:rate}
+\end{equation}
+together with a bound on the joint failure of location sets. AGP's condition on
+that joint behaviour is an upper bound; the strongest form of it,
+$\mu(\mathrm{fail}_i \cap \mathrm{fail}_j) = \mu(\mathrm{fail}_i)\,
+\mu(\mathrm{fail}_j)$, is independence, and Section~\ref{sec:single} shows that
+the recursion consumes only
+\begin{equation}
+  \mu(\mathrm{fail}_i \cap \mathrm{fail}_j) \;\le\;
+    \mu(\mathrm{fail}_i)\,\mu(\mathrm{fail}_j).
+  \label{eq:submul}
+\end{equation}
+\end{definition}
+
+The model is \emph{abstract} in two senses that matter for reading the results
+below. It says nothing about what a failure does to the state --- no channel, no
+Kraus operators, no Pauli decomposition --- so the argument is combinatorics over
+which locations fail rather than linear algebra over what they do. And it says
+nothing about the physical origin of $\varepsilon$: Eq.~\eqref{eq:rate} is a
+hypothesis about a mathematical object, and identifying it with a measured gate
+error is a separate step that Section~\ref{sec:scope} keeps outside the theorem.
+
+We are explicit at the outset that this is the only noise model treated here. A
+topological error model, in which errors live on a lattice and are suppressed by
+a gap rather than by a per-location rate, is a different object. It is not this
+one up to constants and the two are not additive, so its published threshold
+figures live on a different operational domain. Specializing to it is deferred
+rather than claimed.
 
 \subsection{Rectangles, and what makes one bad}
 
@@ -161,15 +206,19 @@ gate together with the error-correction rounds that flank it,
   \text{1-EC} \circ \text{1-Ga} \circ \text{1-EC}.
   \label{eq:exrec}
 \end{equation}
-An extended rectangle is \emph{good} when the faults inside it are few enough
-that the level-$L$ gate it simulates is correct, and \emph{bad} otherwise. For a
-distance-three code a single fault is always tolerable, so the leading failure
-mode is two faults, and the combinatorial content of the argument is which
-\emph{pairs} of locations are jointly intolerable. A pair of locations is
-\emph{malignant} when some pattern of faults on that pair leaves the rectangle
-incorrect; AGP's terminology is that a set of locations is benign when the
-rectangle is correct for any faults on those locations, and malignant when it is
-not.
+The flanking error-correction rounds are what make this the right unit of
+analysis rather than the bare gate: a fault inside a rectangle can be corrected
+by the round that follows it, so correctness is a property of the rectangle and
+not of any location in isolation.
+
+A set of locations inside a rectangle is \emph{benign} when the rectangle
+remains correct for every pattern of faults confined to that set, and
+\emph{malignant} when it does not; a rectangle is \emph{good} when its faulty
+locations form a benign set and \emph{bad} otherwise. For a distance-three code
+any single fault is tolerable, so no singleton is malignant and the leading
+failure mode is two faults. The combinatorial content of the whole argument is
+therefore which \emph{pairs} of locations are jointly intolerable, and the
+constant that determines the threshold is how many such pairs a rectangle has.
 
 Write $F$ for the malignant-pair set of a rectangle and $A$ for a bound on its
 cardinality. If every malignant pair fails jointly with probability at most
@@ -181,6 +230,15 @@ which is the level recursion
 \end{equation}
 Below $\varepsilon_0 = 1/A$ the right-hand side contracts, and iterating gives
 double-exponential suppression.
+
+Two approximations are folded into Eq.~\eqref{eq:agp-recursion} and both matter
+later. It keeps only the quadratic term: three simultaneous faults can also
+spoil a rectangle, contributing at order $\varepsilon^3$ with a coefficient
+$\binom{M}{3}$ for an $M$-location rectangle, and Section~\ref{sec:steane}
+records what AGP do with that term and what we do not. And it treats the
+malignant-pair count as constant across levels, which is what
+\emph{concatenated} means: every level implements the same gadgets on the level
+below, so the same rectangle structure and the same count recur.
 
 \subsection{What a threshold theorem asserts, and what it does not}
 
@@ -221,11 +279,29 @@ non-negative real. If $\mu(\mathrm{fail}_i \cap \mathrm{fail}_j) \le
 \end{equation}
 \end{lemma}
 
-The proof is the finite union bound followed by a constant sum: the measure of
-the union is at most $\sum_{p \in F} \mu(\mathrm{fail}_{p_1} \cap
-\mathrm{fail}_{p_2})$, each summand is at most $\varepsilon^2$ by hypothesis, and
-a constant sum over $F$ is $|F|\,\varepsilon^2$. It is stated over
-$\overline{\mathbb{R}}_{\ge 0}$, where no finiteness side condition is needed.
+The proof is three steps and is worth printing, because every later result in
+the paper is this chain with more structure around it:
+\begin{align}
+  \mu\!\left(\bigcup_{p\in F} \mathrm{fail}_{p_1} \cap \mathrm{fail}_{p_2}\right)
+    &\;\le\; \sum_{p \in F} \mu(\mathrm{fail}_{p_1} \cap \mathrm{fail}_{p_2})
+      \notag \\
+    &\;\le\; \sum_{p \in F} \varepsilon^2
+      \;=\; |F| \cdot \varepsilon^2 .
+  \label{eq:union-calc}
+\end{align}
+The first step is countable subadditivity over a finite index set, the second is
+the hypothesis applied termwise, and the third is a constant sum. No step uses
+any property of $\mathrm{fail}$ beyond measurability, and in particular none uses
+independence --- a point that becomes load-bearing immediately below.
+
+The statement is made over $\overline{\mathbb{R}}_{\ge 0}$ rather than
+$\mathbb{R}$, which is not a technicality. Over $\mathbb{R}$ each of the three
+steps in Eq.~\eqref{eq:union-calc} would carry a finiteness side condition on
+the measures involved, and those conditions would then have to be threaded
+through the induction of Section~\ref{sec:levels} at every level. In the
+extended non-negative reals the arithmetic is total and the side conditions
+disappear; the single coercion back to $\mathbb{R}$ happens once, at the
+capstone.
 
 \subsection{Where independence enters, and how little of it is needed}
 
@@ -268,25 +344,48 @@ improve on AGP's intent; it makes the statement match it.
 
 \subsection{From a bound to a bounded probability}
 
-The real-valued expression $A\varepsilon^2$ is a definition, and a definition
-called a union bound is not one until some probability is shown to satisfy it.
-The theorem that connects them is
-\texttt{exRecFailureProb\_le\_exRecFailureBound}: for a probability measure
-$\mu$, a rectangle whose malignant-pair attestation carries the count $A$, a
-malignant-pair set $F$ with $|F| = A$, a per-location bound $\varepsilon$ and
-independence within each malignant pair, the real number
-$\mu\!\left(\bigcup_{(i,j) \in F} \mathrm{fail}_i \cap \mathrm{fail}_j\right)$ is
-at most $A\varepsilon^2$. Its content is the coercion: the combinatorial layer
-carries location counts and malignant-pair counts and mentions no measure, and
-this statement is the bridge across which the counting layer acquires
-probabilistic meaning.
+The development carries a combinatorial layer beneath the probabilistic one: an
+extended rectangle is represented by its location count $M$, a
+\emph{malignant-pair attestation} records a count $A$ together with the
+well-formedness fact $A \le \binom{M}{2}$, and a real-valued function
+\begin{equation}
+  \mathrm{exRecFailureBound}(A, \varepsilon) \;:=\; A\,\varepsilon^2
+  \label{eq:exrec-bound}
+\end{equation}
+names the bound. Nothing in that layer mentions a measure, so
+Eq.~\eqref{eq:exrec-bound} is an expression called a union bound rather than one
+proved to be a bound on anything.
 
-Two monotonicity lemmas travel with it and are used rather than quoted.
-\texttt{agp\_bound\_mono\_card} states that $n \le m$ implies
-$n\varepsilon^2 \le m\varepsilon^2$, which is the form a caller holding
-$|F| \le A$ needs; \texttt{agp\_bound\_mono\_malignant\_set} states monotonicity
-in the set, $F \subseteq G$, and is derived from the cardinality form so the two
-cannot disagree.
+\begin{theorem}[\texttt{exRecFailureProb\_le\_exRecFailureBound}]
+\label{thm:bridge}
+Let $\mu$ be a probability measure, let $R$ be an extended rectangle with a
+malignant-pair attestation carrying the count $A$, let $F$ be a malignant-pair
+set with $|F| = A$, and let $\varepsilon$ be a non-negative real. If
+$\mu(\mathrm{fail}_i) \le \varepsilon$ for every location and the two failure
+events of each pair in $F$ are independent, then
+\begin{equation}
+  \mu\!\left(\bigcup_{(i,j) \in F} \mathrm{fail}_i \cap \mathrm{fail}_j\right)
+    \;\le\; \mathrm{exRecFailureBound}(A, \varepsilon)
+  \label{eq:bridge}
+\end{equation}
+as real numbers.
+\end{theorem}
+
+Theorem~\ref{thm:bridge} is Lemma~\ref{lem:union} plus a coercion, and the
+coercion is its content: it is the bridge across which the counting layer
+acquires probabilistic meaning, and without it the location counts of
+Section~\ref{sec:steane} would be bookkeeping attached to the argument rather
+than inputs to it.
+
+Two monotonicity facts travel with the bound and are invoked rather than
+restated at each use. \texttt{agp\_bound\_mono\_card} gives $n \le m
+\Rightarrow n\varepsilon^2 \le m\varepsilon^2$, which is the form a caller
+holding $|F| \le A$ needs; \texttt{agp\_bound\_mono\_malignant\_set} gives
+monotonicity in the set, $F \subseteq G$, and is derived from the cardinality
+form so that the two cannot disagree. The direction matters for reading
+Section~\ref{sec:levels}: because the bound is monotone in the count, an
+instance may supply any upper bound on its malignant-pair set's size, which is
+what makes hypothesis (H2) there satisfiable.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Composition across levels}
@@ -337,12 +436,36 @@ Then $\mu(\mathrm{fail}^{(L)}_i) \le \mathrm{agpSeq}(A,\varepsilon_0)_L$ for
 every level $L$ and every level-$L$ rectangle $i$.
 \end{theorem}
 
-The induction is short because each ingredient is already in place: monotonicity
-of the measure across Eq.~\eqref{eq:hstruct}, then Lemma~\ref{lem:submul} with
-the inductive hypothesis as the per-location rate, then
-\texttt{agp\_bound\_mono\_card} to pass from $|\mathrm{malignant}(L,j)| \le A$
-to $A$. Hypotheses (H2) and (H4) are the weakest forms the proof uses, which is
-the point of Section~\ref{sec:intro}'s second paragraph on what is new.
+The induction is on $L$. The base case is (H1) verbatim. For the step, fix a
+level-$(L{+}1)$ rectangle $j$ and chain three facts:
+\begin{align}
+  \mu\!\left(\mathrm{fail}^{(L+1)}_j\right)
+    &\;\le\; \mu\!\left(\bigcup_{p} \mathrm{fail}^{(L)}_{p_1} \cap
+       \mathrm{fail}^{(L)}_{p_2}\right)
+    \label{eq:step1} \\
+    &\;\le\; \left|\mathrm{malignant}(L,j)\right| \cdot
+       \left(\mathrm{agpSeq}_L\right)^2
+    \label{eq:step2} \\
+    &\;\le\; A \cdot \left(\mathrm{agpSeq}_L\right)^2
+    \;=\; \mathrm{agpSeq}_{L+1},
+    \label{eq:step3}
+\end{align}
+the union running over $p \in \mathrm{malignant}(L,j)$.
+Equation~\eqref{eq:step1} is monotonicity of the measure applied to the
+inclusion (H3); Eq.~\eqref{eq:step2} is Lemma~\ref{lem:submul} with the
+inductive hypothesis supplying the per-location rate at level $L$ and (H4)
+supplying sub-multiplicativity; Eq.~\eqref{eq:step3} is
+\texttt{agp\_bound\_mono\_card} applied to (H2), followed by the definition of
+the sequence.
+
+The shape of that chain is what makes the two hypothesis weakenings visible
+rather than incidental. Equation~\eqref{eq:step2} is the only place a joint
+failure probability is estimated, and it consumes an inequality, so (H4) can be
+the inequality Eq.~\eqref{eq:submul} rather than independence.
+Equation~\eqref{eq:step3} is the only place the count is used, and it consumes
+monotonicity, so (H2) can be a bound rather than an equality. Neither weakening
+required rearranging the proof; both were forced by writing it down and
+observing which direction each step needed.
 
 \subsection{The double exponential, and what it is a fact about}
 
@@ -513,6 +636,38 @@ not $2.838 \times 10^{-5}$, as AGP's rigorous threshold for the full argument.
 Extending the derivation to the cubic term is arithmetic on the same chain
 rather than a new argument, and it is not done here.
 
+\begin{table}[htbp]
+\caption{Malignant-pair counts AGP report for the Steane CNOT extended
+rectangle, and the inverse of each. The last two rows are the corrected
+constants of Eq.~\eqref{eq:agp-chain}, and $1/A''$ is AGP's published rigorous
+threshold. The inverses in the first two rows are uncorrected, so they are not
+AGP's thresholds for those models; for depolarizing noise AGP quote
+$9.4 \times 10^{-5}$ and say explicitly that it is not a rigorous bound. The
+spread across rows is the model-dependence of the constant, not an uncertainty
+in it.}
+\label{tab:counts}
+\begin{ruledtabular}
+\begin{tabular}{lrl}
+Count & Value & Inverse \\
+\colrule
+$A_{\rm CNOT}$, depolarizing noise & $\approx 7\,183$ & $1.39\times10^{-4}$ \\
+$A_{\rm CNOT}$, no storage faults & $22\,701$ & $4.41\times10^{-5}$ \\
+$A_{\rm CNOT}$, Eq.~\eqref{eq:acnot} & $35\,235$ & $2.84\times10^{-5}$ \\
+$A'_{\rm CNOT}$, cubic term absorbed & $\approx 36\,108$ & $2.77\times10^{-5}$ \\
+$A''_{\rm CNOT}$, ancilla acceptance & $\approx 36\,511$ & $2.74\times10^{-5}$ \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Table~\ref{tab:counts} collects the constants. Two readings of it are worth
+stating. The corrections of Eq.~\eqref{eq:agp-chain} move the threshold by
+about 3.5\% in total, so they are small next to the model choice: whether
+storage faults are counted moves it by 55\%, and adversarial versus depolarizing
+noise moves it by a factor of five. And each count is an upper bound on the
+number of malignant pairs, so each inverse is a lower bound on the
+corresponding threshold: the rigorous figure is the most conservative entry, and
+any refinement of the enumeration can only raise it.
+
 \paragraph{On the number that circulates alongside it.} A threshold near
 $10^{-4}$ is frequently quoted for concatenated distance-three codes. It is a
 heuristic estimate, not a rigorous bound, and AGP are explicit that their own
@@ -530,11 +685,58 @@ on a generator in \texttt{src/core/visualizations.py}, which is the canonical an
 only home for figure functions, and the curve is closed-form so the sweep is
 cheap once the generator exists}
 
+\subsection{Which half of the AGP argument this is}
+\label{sec:steane:half}
+
+AGP's proof has two halves, and it is worth saying plainly which one is
+formalized here, because the division is not visible from the statement of the
+threshold theorem.
+
+The first half is semantic. It establishes that a \emph{good} extended
+rectangle --- one whose faulty locations form a benign set --- correctly
+simulates the ideal gate it stands for, in the sense that the rectangle followed
+by an ideal decoder agrees with the ideal decoder followed by the ideal gate.
+That is the content of AGP's ``good implies correct'' lemma, and it is where the
+stabilizer formalism, the recovery map and the code's distance actually do work.
+
+The second half is combinatorial and probabilistic. Taking the malignant-pair
+structure as given, it counts the malignant pairs of a concrete rectangle and
+propagates the resulting per-level bound through concatenation to a threshold.
+
+\textbf{This development formalizes the second half and not the first.}
+Malignancy enters as a record carrying a natural number $A$ together with the
+well-formedness fact $A \le \binom{M}{2}$; no predicate in the development says
+which pairs of locations are malignant, and nothing proves that a good rectangle
+is correct. What makes Theorem~\ref{thm:levels} a statement about quantum error
+correction rather than about an arbitrary indexed family of events is therefore
+supplied by hypothesis --- by the inclusion Eq.~\eqref{eq:hstruct} and by the
+number $A$ --- and not by anything proved here.
+
+The same boundary shows up one level down, in the code. The Steane code enters
+as a stabilizer-code record: seven physical qubits, one logical qubit, six
+generators built from the $[7,4,3]$ Hamming parity-check matrix, the two
+weight-seven logical operators, and a distance \emph{field} set to three. That
+the generators give distance three is asserted by the record rather than derived
+from them, so \verb|steaneCode_isDistanceThree| is a projection and not a
+theorem about the code. The generators and the parity-check matrix are present
+and could support such a derivation; it is not attempted, and the paper does not
+claim it.
+
+We report this rather than leave it to inference because it determines what a
+reader may conclude. The threshold recursion is machine-checked. The claim that
+the objects it quantifies over are the extended rectangles of a distance-three
+stabilizer code is carried by definitions and hypotheses, and closing that gap
+is the same enumeration named in Section~\ref{sec:scope}.
+
 %% ════════════════════════════════════════════════════════════════════
 \section{Scope and outlook}
 \label{sec:scope}
 
-Four limits bound this result, and none of them is implicit in the Lean.
+Five limits bound this result, and none of them is implicit in the Lean.
+
+\emph{Only the counting half is formalized.} Section~\ref{sec:steane:half} states
+the division: ``good implies correct'' and the distance of the Steane code are
+hypotheses and record fields here, not theorems.
 
 \emph{The count is a literal.} Equation~\eqref{eq:acnot} enters from
 Ref.~\cite{AGP2006} and is not derived. Deriving it means enumerating malignant
@@ -604,10 +806,12 @@ Module & Contributes \\
 \end{table}
 
 Four further modules in the same directory --- \verb|ExRec|, \verb|Malignant|,
-\verb|NoiseModel| and \verb|NoiseModelMT| --- formalize the objects the argument
-reasons about and are reached by the capstone only through
-\verb|MalignantUnionBound|'s bridge to \verb|exRecFailureBound|. We report that
-rather than presenting them as part of the proved chain.
+\verb|NoiseModel| and \verb|NoiseModelMT| --- carry the extended-rectangle and
+noise-model records. \verb|ExRec| is reached by the capstone through
+Theorem~\ref{thm:bridge}; the other three are not reached by it at all, and we
+report that rather than presenting them as part of the proved chain. Their
+content is the vocabulary of Section~\ref{sec:model}, and the boundary between
+vocabulary and theorem is the subject of Section~\ref{sec:steane:half}.
 
 Build provenance: Lean toolchain \leantoolchain, Mathlib revision
 \mathlibrev.
