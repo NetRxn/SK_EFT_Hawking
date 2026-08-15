@@ -435,16 +435,24 @@ def make_handler(inventory: Inventory, number: int):
             headers["Authorization"] = f"Bearer {backend_token}"
             if body:
                 headers["Content-Length"] = str(len(body))
+            # A SESSION-LESS request still gets a backend session. Two clients arrive
+            # this way and neither is misbehaving: one that initialized against the
+            # pre-S-Q front door (which minted nothing), and one that legitimately
+            # sends no id because the server never issued it. Forwarding such a request
+            # bare is what would leave every session opened before this fix permanently
+            # broken — the exact tax S-Q exists to remove, re-introduced for anyone who
+            # was already connected. The sentinel keeps them on one shared backend
+            # session rather than handshaking per call.
             client_session = next(
                 (v for k, v in self.headers.items() if k.lower() == "mcp-session-id"),
                 None,
             )
+            translation_key = client_session or "\x00sessionless"
             connection = http.client.HTTPConnection(
                 backend_host, backend_port, timeout=180
             )
             try:
-                if client_session:
-                    headers["Mcp-Session-Id"] = broker.backend_session(client_session)
+                headers["Mcp-Session-Id"] = broker.backend_session(translation_key)
                 connection.request(
                     self.command, request_url.path, body=body or None, headers=headers
                 )
@@ -454,11 +462,9 @@ def make_handler(inventory: Inventory, number: int):
                 # retried instead of surfacing as `-32602` to the client.
                 if self.command != "GET":
                     buffered = response.read()
-                    if client_session and backend_rejected_session(
-                        response.status, buffered
-                    ):
-                        broker.forget(client_session)
-                        headers["Mcp-Session-Id"] = broker.backend_session(client_session)
+                    if backend_rejected_session(response.status, buffered):
+                        broker.forget(translation_key)
+                        headers["Mcp-Session-Id"] = broker.backend_session(translation_key)
                         connection.close()
                         connection = http.client.HTTPConnection(
                             backend_host, backend_port, timeout=180
