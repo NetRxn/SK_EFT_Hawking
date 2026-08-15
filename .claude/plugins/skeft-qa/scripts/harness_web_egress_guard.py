@@ -64,6 +64,20 @@ _WHITELIST = (
     # blocking prior-art gate (AFP `Error_Function`, `Probability`, `Kraus Maps`,
     # `Concentration Inequalities`, `Projective Measurements`, `Isabelle Marries Dirac`).
     "isa-afp.org",
+    # Source-acquisition targets (ADR-014). Each entry is here for a P0 row of
+    # docs/SOURCE_ACQUISITION_REGISTER.md — a source a bundle's CLAIM depends on that we do
+    # not hold in full text. Named so a later reader can retire an entry once its target is
+    # acquired, rather than inheriting an unexplained grant. User-authorized 2026-08-15:
+    #  - NASA ADS + NTRS: Mather 1982 (Appl. Opt. 21, 1125). NASA-authored, so the scanned
+    #    full text may be reachable free; the abstract we hold cannot settle the PSD-vs-
+    #    amplitude convention that D12 §3.2 turns on.
+    #  - NIST public-access: Irwin & Hilton 2005 (NIST authors) — the attributed source of
+    #    D12's diffuse-conduction closed form, currently held only as a resolved DOI record.
+    #  - Springer: JHEP (Sen 2013, open access) and the Cryogenic Particle Detection volume.
+    #  - Optica: the Mather landing record.
+    #  - ScienceDirect: Theoret. Comput. Sci. 560 (2014), the open republication of BB84.
+    "adsabs.harvard.edu", "ntrs.nasa.gov", "nvlpubs.nist.gov",
+    "link.springer.com", "opg.optica.org", "sciencedirect.com",
 )
 
 # Path-scoped destinations: (host, path_prefix). A URL passes iff its host matches the
