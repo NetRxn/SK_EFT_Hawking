@@ -481,7 +481,8 @@ def _venue_mismatch(venue_line: str, entry: dict) -> str | None:
 
 
 @register_check("citation_primary_sources_present",
-                "Every external bibitem cited in papers has a primary-source cache file")
+                "Every cited external bibitem has a primary-source cache, and an "
+                "abstract-only one is flagged rather than counted as the source")
 def check_citation_primary_sources_present() -> CheckResult:
     """For every \\cite{<bibkey>} in any papers/*/paper_draft.tex, verify a
     primary-source artifact exists on disk under
@@ -577,6 +578,7 @@ def check_citation_primary_sources_present() -> CheckResult:
     textbook_exempt: list[str] = []
     cached: list[str] = []
     not_cached: list[tuple[str, str, list[str]]] = []  # (key, phase, papers)
+    abstract_only: list[tuple[str, list[str]]] = []    # (key, papers) — ADR-014 D1
 
     for bibkey in sorted(usage):
         entry = CITATION_REGISTRY.get(bibkey)
@@ -602,6 +604,15 @@ def check_citation_primary_sources_present() -> CheckResult:
             candidate = target_dir / f"{bibkey}.{ext}"
             if candidate.is_file() and candidate.stat().st_size > 0:
                 found = True
+                # ADR-014 D1 — FIDELITY, not mere presence. `abstract.txt` is an accepted
+                # extension, so before this it was indistinguishable from a full text and the
+                # check reported "cached" either way. Mather1982 is the measured cost: its
+                # cache file's own last line says the body has never been read, and a
+                # convention ambiguity worth 21.5 points at D12's worked point was recorded as
+                # a property of the SOURCE rather than of not having read it — while this
+                # check stayed green throughout.
+                if ext == "abstract.txt":
+                    abstract_only.append((bibkey, sorted(usage[bibkey])))
                 break
         if found:
             cached.append(bibkey)
@@ -616,14 +627,36 @@ def check_citation_primary_sources_present() -> CheckResult:
     n_missing = len(missing_from_registry)
     n_uncached = len(not_cached)
 
+    n_abstract = len(abstract_only)
+
     details.append(Detail(
         "summary",
         n_uncached == 0 and n_missing == 0,
         f"{n_cited} bibkeys cited across {len(paper_tex_files)} papers — "
-        f"{n_cached} cached / {n_inprep} inprep-exempt / "
+        f"{n_cached} cached ({n_cached - n_abstract} full text, "
+        f"{n_abstract} ABSTRACT ONLY) / {n_inprep} inprep-exempt / "
         f"{n_textbook} textbook-exempt / "
         f"{n_uncached} need cache / {n_missing} missing-from-registry"
     ))
+
+    if abstract_only:
+        # ADVISORY, not a failure — ADR-014 D4, operator decision 2026-08-15. Acquisition is
+        # the only remedy and it costs money, so blocking here would stall every downstream
+        # stage behind a purchase queue, including the adversarial review that would find the
+        # next such defect. It FLAGS, and the register ranks what is worth buying.
+        sample = ", ".join(k for k, _ in abstract_only[:6])
+        more = f" (and {n_abstract - 6} more)" if n_abstract > 6 else ""
+        details.append(Detail(
+            "abstract_only_fidelity",
+            True,
+            f"⚠️ {n_abstract} cited source(s) held as a publisher ABSTRACT, not full text: "
+            f"{sample}{more}. An abstract is not evidence of what the source says, so a claim "
+            f"resting on one is unbacked — and a provenance record describing such a source's "
+            f"'ambiguity' is recording our own ignorance of it. Ranked by whether a claim "
+            f"actually depends on it in docs/SOURCE_ACQUISITION_REGISTER.md; regenerate with "
+            f"scripts/source_acquisition_register.py.",
+            warning=True,
+        ))
 
     if missing_from_registry:
         all_pass = False

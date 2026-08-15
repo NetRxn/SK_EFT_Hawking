@@ -552,3 +552,65 @@ class TestCitationCacheVenueAgreementProduction:
             f"{len(bad)} promote-sidecar entries name a phase directory that does not "
             f"exist under this exact spelling: {bad[:5]}. The next "
             f"`promote_primary_sources.py` run would write them into CITATION_REGISTRY.")
+
+
+class TestAbstractIsNotFullText:
+    """ADR-014 D1/D4 — `citation_primary_sources_present` reports FIDELITY, not presence.
+
+    `abstract.txt` is an accepted cache extension, so before ADR-014 a source held only as a
+    publisher abstract was indistinguishable from one held in full text: both reported
+    "cached", and the check was green. Mather1982 is the measured cost — its cache file's own
+    last line records that the body has never been read, and a convention ambiguity worth 21.5
+    points at D12's worked point was written into PARAMETER_PROVENANCE as a property of the
+    SOURCE rather than of our not having read it.
+
+    The flag is ADVISORY by operator decision: acquisition is the only remedy and it costs
+    money, so blocking would stall every downstream stage behind a purchase queue.
+    """
+
+    def _result(self):
+        from validation.checks import citations as C
+        return C.check_citation_primary_sources_present()
+
+    def test_the_fidelity_flag_FIRES_on_the_production_corpus(self):
+        """Non-vacuity against the real Lit-Search tree, not a fixture."""
+        det = {d.name: d for d in self._result().details}
+        assert "abstract_only_fidelity" in det, (
+            "the fidelity leg did not report at all — either every cited source is now full "
+            "text (verify before believing it) or the leg stopped running")
+        msg = det["abstract_only_fidelity"].message
+        n = int(msg.split("⚠️ ")[1].split(" ")[0])
+        assert n > 0, "flag present but reporting zero — that is a leg that cannot fire"
+
+    def test_the_flag_is_ADVISORY_and_does_not_block(self):
+        """A blocking fidelity gate would stall the pipeline behind a purchase queue."""
+        res = self._result()
+        det = {d.name: d for d in res.details}
+        assert det["abstract_only_fidelity"].warning is True
+        assert det["abstract_only_fidelity"].passed is True, (
+            "the fidelity leg must not fail the check — ADR-014 D4 makes it a flag")
+
+    def test_the_DISCRIMINATOR_is_the_abstract_extension_not_mere_presence(self):
+        """Guard the seam. A predicate that counted every cached key, or none, would satisfy
+        a naive 'it reports a number' test. Pin it to the actual population: strictly fewer
+        than all cached keys, and exactly the keys whose on-disk cache is an abstract."""
+        from validation.checks import citations as C
+        from src.core.citations import CITATION_REGISTRY
+        from src.core.workspace import find_workspace
+
+        res = self._result()
+        det = {d.name: d for d in res.details}
+        summary = det["summary"].message
+        n_cached = int(summary.split(" cached (")[0].split("—")[1].strip())
+        n_abstract = int(summary.split("full text, ")[1].split(" ABSTRACT")[0])
+        assert 0 < n_abstract < n_cached, (
+            f"{n_abstract} abstract of {n_cached} cached — a leg that flags all or none is "
+            f"not discriminating on fidelity")
+
+        ws = find_workspace()
+        on_disk = sum(
+            1 for e in CITATION_REGISTRY.values()
+            if isinstance(e.get("primary_source_path"), str)
+            and e["primary_source_path"].endswith(".abstract.txt")
+            and (ws / e["primary_source_path"]).is_file())
+        assert on_disk > 0, "no abstract-fidelity cache files on disk — the pin measures nothing"

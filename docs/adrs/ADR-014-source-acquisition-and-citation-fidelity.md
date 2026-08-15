@@ -1,9 +1,14 @@
 # ADR-014 — Source acquisition and citation fidelity: holding a cache is not holding the source
 
-- **Status:** **ACCEPTED (2026-08-15); IMPLEMENTATION IN PROGRESS.** Decisions 1–3 shipped
-  (register + overlay + egress whitelist); Decision 4 (fidelity dimension on
-  `citation_primary_sources_present`) and Decision 5 (D12 prose repair, blocked on acquisition)
-  outstanding.
+- **Status:** **ACCEPTED + IMPLEMENTED (2026-08-15)**, except Decision 5. Decisions 1–4 shipped:
+  the derived register and its curated overlay; the egress whitelist, extended the same day to
+  every publisher the citation corpus resolves to and made repeatable by
+  [`scripts/egress_policy.py`](../../scripts/egress_policy.py); and the fidelity dimension on
+  `citation_primary_sources_present`, which on its first production run found that **61 of 384
+  "cached" sources are publisher abstracts** — a sixth of the corpus that had been reporting as
+  held. Decision 5 (D12's four prose sites) remains open and is blocked on acquisition, not on
+  authoring: deleting the disclosures while the citations stand would convert a visible gap into
+  an invisible one.
 - **Deciders:** John Roehm (project owner); investigation + draft by Claude (Opus 5).
 - **Context source:** direct reads at HEAD of `src/core/citations.py`,
   `scripts/validation/checks/citations.py::check_citation_primary_sources_present`,

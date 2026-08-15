@@ -107,7 +107,7 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 62 | `notebook_markdown_retracted_claims` | `freshness` | Bundle companion notebooks' MARKDOWN cells carry no retracted claim |
 | 63 | `readiness_verdicts_agree` | `bundles_readiness` | The heatmap and the submission gate return the same per-bundle verdict |
 | 64 | `readiness_submission_gate` | `bundles_readiness` | Every paper has all P1 readiness gates passed (Phase 5v Wave 4) |
-| 65 | `citation_primary_sources_present` | `citations` | Every external bibitem cited in papers has a primary-source cache file |
+| 65 | `citation_primary_sources_present` | `citations` | Every cited external bibitem has a primary-source cache, and an abstract-only one is flagged rather than counted as the source |
 | 66 | `provenance_doi_in_registry` | `citations` | PARAMETER_PROVENANCE source DOIs resolve to CITATION_REGISTRY bibkeys |
 | 67 | `bundle_consistency` | `bundles_readiness` | Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries |
 | 68 | `bundle_source_freshness` | `freshness` | Bundle source-paper mtime ≤ bundle last_lift; flag stale bundles |
