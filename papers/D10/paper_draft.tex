@@ -437,3 +437,116 @@ our word that a hypothesis was removed.
 
 To our knowledge Eq.~\eqref{eq:apex} is the first formalization of \emph{unconditional} essential
 self-adjointness of a molecular many-body Coulomb Hamiltonian in any proof assistant.
+
+\figuredeferred{fig:d10-hk-uniqueness}{the Hohenberg--Kohn map as a commuting diagram; design only}
+\section{Open-system dynamics}
+\label{sec:lindblad}
+
+\subsection{The GKSL generator and complete positivity of the dissipator}
+
+The Markovian master equation $\dot\rho = \mathcal{L}(\rho)$ has the GKSL generator
+\begin{equation}
+\mathcal{L}(\rho) = -i[H,\rho] + \sum_{k}\Bigl(L_{k}\rho L_{k}^{\dagger}
+- \tfrac{1}{2}\bigl\{L_{k}^{\dagger}L_{k},\,\rho\bigr\}\Bigr),
+\label{eq:gksl}
+\end{equation}
+formalized as three linear pieces on $\mathrm{Mat}_{d}(\mathbb{C})$ --- a Hamiltonian commutator
+part, a jump part, and an anticommutator part --- each built from \texttt{LinearMap} combinators, so
+that linearity of $\mathcal{L}$ is automatic rather than a lemma.
+
+The jump map $\rho \mapsto \sum_{k} L_{k}\rho L_{k}^{\dagger}$ is the completely-positive engine of
+the dynamics, and \thm{lindblad\_generator\_CP} certifies its complete positivity. We are precise
+about the provenance of this step: we \emph{define} the jump map as PhysLib's Kraus-form map
+$\texttt{MatrixMap.of\_kraus}\,L\,L$, and the theorem is a direct application of PhysLib's
+\texttt{MatrixMap.of\_kraus\_CP}, whose own proof exhibits the Choi matrix as a sum of rank-one
+positive-semidefinite blocks. This is correct use of the library rather than a new proof of complete
+positivity, and it is the right division of labour --- but a reader should not credit us with the
+Choi-route argument, which is PhysLib's.
+
+We are equally explicit that complete positivity is asserted here for the \emph{dissipator}. The
+full generator $\mathcal{L}$ is only conditionally completely positive, and we do not claim
+otherwise.
+
+\subsection{Structure theorem and trace preservation}
+
+The canonical form \thm{gksl\_canonical\_form} assembles the explicit pointwise action of
+Eq.~\eqref{eq:gksl} from the three combinator pieces. It is a definitional rearrangement rather than
+a discovery, and its role is to make the subsequent trace computation possible in the form a reader
+would write by hand.
+
+Trace preservation is the substantive result of this subsection:
+\begin{equation}
+\mathrm{tr}\,\mathcal{L}(\rho) = 0 \qquad \text{for every } \rho
+\label{eq:trace-preserving}
+\end{equation}
+(\thm{gksl\_trace\_preserving}). The unitary part is traceless by cyclicity of the trace; the
+dissipative gain $\sum_{k}\mathrm{tr}\bigl(L_{k}\rho L_{k}^{\dagger}\bigr)$ is rewritten by
+cyclicity as $\sum_{k}\mathrm{tr}\bigl(L_{k}^{\dagger}L_{k}\rho\bigr)$, which cancels the
+anticommutator loss exactly. Equation~\eqref{eq:trace-preserving} is what makes the propagator carry
+density matrices to density matrices; without it the semigroup of the next subsection would not act
+on states at all.
+
+\subsection{The Markovian semigroup}
+
+Because $\mathcal{L}$ is a superoperator and the Liouvillian is non-Hermitian, the propagator
+$\Lambda_{t} = e^{t\mathcal{L}}$ is taken as the matrix exponential of the \emph{vectorized}
+Liouvillian, using Mathlib's \texttt{Matrix.exp}. We flag the negative design decision explicitly
+because it is the one a reader is most likely to assume we got wrong: a Hermitian functional
+calculus does \emph{not} apply here, the generator being non-Hermitian, and the vectorization is
+what makes the matrix exponential the right object.
+
+We verify $\Lambda_{0} = \mathbf{1}$ (\thm{lindblad\_propagator\_zero}) and the semigroup law
+\begin{equation}
+\Lambda_{t}\,\Lambda_{s} = \Lambda_{t+s}
+\label{eq:semigroup}
+\end{equation}
+(\thm{lindblad\_semigroup}), the latter from \texttt{Matrix.exp\_add\_of\_commute} applied to the
+commuting scalar multiples $t\mathcal{L}$ and $s\mathcal{L}$. Note that Eq.~\eqref{eq:semigroup}
+holds for all real $t$ and $s$, including negative ones: it is the algebraic semigroup identity for
+the exponential, and it does not by itself express the physical irreversibility of the dynamics.
+
+That irreversibility is the content of trace-distance contractivity,
+\begin{equation}
+D\bigl(\Lambda_{t}\rho,\,\Lambda_{t}\sigma\bigr) \;\le\; D(\rho,\sigma)
+\qquad (t \ge 0),
+\label{eq:contractivity}
+\end{equation}
+(\thm{traceDist\_lindblad\_monotone}), the data-processing inequality for this dynamics. This result
+was formerly conditional: it disclosed, as an argument, the hypothesis that the time-$t$ propagator
+is realized by a Kraus channel. That hypothesis is now discharged. The propagator's action is proven
+completely positive for $t \ge 0$, a Kraus family is \emph{extracted} from that proof rather than
+assumed, re-indexed to a finite type, and fed to the project's CPTP data-processing inequality. The
+signature of Eq.~\eqref{eq:contractivity} now takes a Hermitian $H$, the jump operators, $0\le t$,
+and two Hermitian states, and nothing else.
+
+To our knowledge Eqs.~\eqref{eq:gksl}--\eqref{eq:contractivity} constitute the first Lindblad
+generator and Markovian dynamical semigroup formalized in any proof assistant, as distinct from the
+static CPTP and channel formalizations already present in \Lean{}, Coq, and Isabelle, on which this
+section builds.
+
+\subsection{A certified damped two-level model}
+\label{sec:damped}
+
+An abstract semigroup that is never instantiated is a weak result, so we close with a concrete
+model: amplitude damping at $d=2$, with $H=0$ and a single jump operator
+$L = \sqrt{\gamma}\,\sigma_{-}$.
+
+The excited-state population obeys $\dot p_{e} = -\gamma p_{e}$, and we verify this directly from the
+canonical form as $(\mathcal{L}\rho)_{11} = -\gamma\,\rho_{11}$
+(\thm{dampedTwoLevel\_generator\_decay\_rate}) --- that is, the decay rate is read off the
+formalized generator rather than posited. We then verify that $p_{0}e^{-\gamma t}$ solves that rate
+equation (\thm{dampedTwoLevel\_population\_solves\_rate}).
+
+Finally, the decay factor admits a kernel-only rational enclosure
+\begin{equation}
+1 - \gamma t \;\le\; e^{-\gamma t} \;\le\; \frac{1}{1 + \gamma t}
+\qquad (\gamma t \ge 0),
+\label{eq:decay-envelope}
+\end{equation}
+(\thm{dampedTwoLevel\_decay\_envelope}), with a \texttt{norm\_num} operating point at
+$\gamma t = \tfrac12$. The enclosure is the mechanism by which a transcendental quantity enters a
+kernel-checked bound without any floating-point evaluation: both endpoints are rational functions of
+$\gamma t$, and the comparison at the operating point is decided by exact rational arithmetic. This
+is the pattern we use wherever a transcendental appears in a quantitative claim.
+
+\figuredeferred{fig:d10-lindblad-decay}{the damped two-level trace-distance envelope; the decay-rate theorem is proved and the envelope needs a numerical solve that is not in the pipeline}
