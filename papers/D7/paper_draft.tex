@@ -35,9 +35,9 @@ initial bundle and for arbitrary real factor weights, including negative ones,
 whenever the directed message endpoints carry a topological rank certificate.
 The map as formalized sums over complete assignments rather than over the
 factor's scope, and fixedness is an exact equality of message bundles, not a
-numerical tolerance. Each endpoint freezes at its own rank plus one rather than
-the whole bundle at the supremum, and the order-theoretic statement carrying
-that mentions no messages: it holds for any rank-local iteration. Rank locality
+numerical tolerance. Each endpoint freezes at its own rank plus one, not the
+whole bundle at the supremum, and the order-theoretic statement carrying that
+mentions no messages. Rank locality
 is discharged from the cavity neighbourhoods of the actual updates, and a
 certificate is proven to force 4-cycle-freeness, so the hypothesis is not empty.
 Our result about the statistic the development builds to detect that regime, a
@@ -210,26 +210,6 @@ sweep \texttt{bpUpdate} applies both rules at every endpoint simultaneously,
 and \texttt{IsBPFixedPoint}\,$m\ f$ is the proposition
 $\texttt{bpUpdate}\ m\ f = m$, an equality of message bundles rather than a
 numerical tolerance.
-
-\subsection{A modelling caveat in the factor update}
-\label{sec:caveat-factor}
-
-Equation~\eqref{eq:facupdate} carries a deviation from the textbook rule that
-a reader must be told about. The factor weight is typed
-$f : \alpha \to (\nu \to X) \to \mathbb{R}$, a function of a complete
-assignment to \emph{all} variables, and the sum accordingly ranges over all
-$y : \nu \to X$ with $y(v) = x$ rather than over assignments to $\partial a$.
-The product is correctly restricted to the cavity $\partial a \setminus \{v\}$,
-so locality of the message in the \emph{messages} is exact, which is what
-Sec.~\ref{sec:convergence} needs. Locality in the \emph{weights} is not: if
-$f_a$ depends on a variable outside $\partial a$, the message
-$m_{a \to v}$ depends on it too. When $f_a$ does factor through
-$\partial a$, the sum overcounts the textbook sum by the constant
-$|X|^{|\nu| - |\partial a|}$, which rescales each factor message by a
-per-endpoint constant. Since the development works with unnormalized messages
-and states fixed points as exact equalities, that rescaling is not neutral for
-\texttt{IsBPFixedPoint}, and no theorem here relates the fixed points of
-\eqref{eq:facupdate} to those of the restricted rule.
 
 \subsection{Elementary properties, and what is absent}
 
@@ -414,10 +394,28 @@ empty quantifier.
 \subsection{Scope}
 \label{sec:conv-scope}
 
-Three statements bound what Theorem~\ref{thm:bpconv} establishes, and each is a
+Four statements bound what Theorem~\ref{thm:bpconv} establishes, and each is a
 gap rather than a caveat.
 
-First, the existence of a rank certificate is a hypothesis and is not derived
+First, Eq.~\eqref{eq:facupdate} carries a deviation from the textbook rule that
+a reader must be told about. The factor weight is typed
+$f : \alpha \to (\nu \to X) \to \mathbb{R}$, a function of a complete
+assignment to \emph{all} variables, and the sum accordingly ranges over all
+$y : \nu \to X$ with $y(v) = x$ rather than over assignments to $\partial a$,
+the set of variables the factor touches. The product is correctly restricted to
+the cavity $\partial a \setminus \{v\}$, so locality of the message in the
+\emph{messages} is exact, which is what Theorem~\ref{thm:ranklocal} needs.
+Locality in the \emph{weights} is not: if
+$f_a$ depends on a variable outside $\partial a$, the message
+$m_{a \to v}$ depends on it too. When $f_a$ does factor through
+$\partial a$, the sum overcounts the textbook sum by the constant
+$|X|^{|\nu| - |\partial a|}$, which rescales each factor message by a
+per-endpoint constant. Since the development works with unnormalized messages
+and states fixed points as exact equalities, that rescaling is not neutral for
+\texttt{IsBPFixedPoint}, and no theorem here relates the fixed points of
+\eqref{eq:facupdate} to those of the restricted rule.
+
+Second, the existence of a rank certificate is a hypothesis and is not derived
 from acyclicity. The development defines the bipartite incidence graph, defines
 acyclicity and tree-ness through Mathlib's acyclicity and tree predicates on
 simple graphs, and proves that acyclicity implies
@@ -427,7 +425,7 @@ on the forest, and until it lands the theorem reads ``given a topological order
 on message endpoints, the iteration freezes'', with the graph theory sitting in
 the assumption.
 
-Second, $\mathrm{convergenceHorizon}$ is $\sup(\mathrm{rank}) + 1$ for the
+Third, $\mathrm{convergenceHorizon}$ is $\sup(\mathrm{rank}) + 1$ for the
 supplied certificate and nothing proves it equals the diameter of the incidence
 graph. Since Definition~\ref{def:cert} constrains only the two strict
 inequalities, a certificate with unnecessarily spread ranks is still a
@@ -435,7 +433,7 @@ certificate and still gives a valid but weaker bound. The diameter reading is
 correct for the subtree-depth certificate specifically; that certificate is the
 one not yet constructed.
 
-Third, the end-to-end statement that couples convergence to the structural
+Fourth, the end-to-end statement that couples convergence to the structural
 predicates carries a redundant hypothesis. It takes a certificate and a
 tree-simulability hypothesis (tree-ness, non-negative weights, a vanishing
 scalar) and returns three conclusions, but all three are reachable from the
