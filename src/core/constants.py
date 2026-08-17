@@ -2966,7 +2966,6 @@ NATIVE_DECIDE_DECL_CLOSURE_CEILING = 530  # 2026-08-17 (A1Resolution kernel-pure
 #: is the target state for every row below.
 NATIVE_DECIDE_BUNDLE_DEBT = {
     "D4": 19,   # IsingBraiding 17, FigureEightKnot 2 — the audit's D-5 "D4's headline results"
-    "L2": 6,    # A1Resolution 5, A1Ext 1
     "F": 3,     # FigureEightKnot 2, IsingBraiding 1 (inherited from D4's substrate)
     "D2": 3,    # E8Lattice 3
     "I2": 1,    # FibonacciMTC 1
