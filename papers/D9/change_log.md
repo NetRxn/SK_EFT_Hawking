@@ -46,3 +46,54 @@ _Initial bookkeeping created 2026-06-10T20:39:59Z by `scripts/bundle_source_mani
   (regex), `scripts/datastar_bundles.py`, and
   `scripts/aristotle_usage_by_bundle.py` so the standard tooling and
   CHECK 22 freshness tracking see the bundle.
+
+---
+
+## 2026-08-17 — Stage-10 full redraft (branch `redraft/D9`)
+
+Manuscript rebuilt from a five-layer inventory onto the certification chain itself as its
+spine. Findings filed at `papers/AutomatedReviews/2026-08-17-d9-stage10-redraft/D9.md`
+(17 live: 2 critical, 12 major, 2 minor, 1 advisory; F12 withdrawn by re-measurement;
+F17 filed as roster evidence rather than as a defect).
+
+**Claims corrected in this pass** (the manuscript states the corrected version and does not
+narrate the correction; this entry is the record):
+
+- The randomized-benchmarking "two-sided certificate" is withdrawn (F1). The corpus proves a
+  LOWER bound on the diamond distance from `avgGateFidelity` and nothing in the other
+  direction; `avgGateFidelity_diamondDist_two_sided` two-sides the entanglement
+  distinguishability, not the diamond distance. The manuscript now states the lower bound and
+  carries the impossibility as Negative result 1. `bundle_metadata.json`'s apex `claims`
+  string for that theorem was false in the same way and is corrected.
+- The §5.2 paragraph asserting that `fdt_rare_event_tail_is_ldp_certified` states both halves
+  for one object is retired (F2); the certification half has been a separate theorem,
+  `linearResponseRateFunctionCentered_is_ldp_certified`, since 2026-08-09.
+- The erasure/PLOB "mutual consistency" cross-link is cut, not restated (F3): the two are
+  capacities of different channels.
+- The `logNegB_ncopy_localKraus_le` scope is corrected from "the per-n form of E_D <= E_N" to
+  the one-sided-local specialization it is (F4); LOCC is now named as an open library gap.
+- `diamondDist_genAmpDamp_bracket` is reported as a lower bound; its proven upper endpoint is
+  the universal range bound (F5). Metadata `claims` string corrected likewise.
+- The Kronecker operator-norm bound is ceded by citation to the compilation manuscript, which
+  holds it in its apex set (F6).
+- The `fig:wghz` caption no longer calls 1 "the GHZ_3 rate" (F7); Fortescue--Lo p.2 gives 0.64
+  for the random-pair GHZ rate, and 1 is a specified-pair figure of merit.
+- The opening motivation no longer leans on a simulator disagreement (F8): Chung et al. report
+  AGREEMENT on fidelity, which is D9's own domain.
+- Hardcoded 103 modules / "over 900" theorems removed (F9); counts now come from
+  `bundle_counts.tex`, with the counted population named.
+- `fdt_noise_floor_amplifier` is reported as a disclosure, not a result (F10).
+- Two unheld primary sources (Audenaert 2007, Nielsen 2002) carry `% TODO:` markers (F11) and
+  correctly hold the bundle off green.
+- Entropy-unit notation disambiguated (F13); `teleport_useful_over_chain_unconditional` now
+  cited in place of its conditional sibling (F14).
+- NEW in this pass, not previously filed anywhere: the rate side of the chain does not
+  terminate in the kernel (F15). The enclosure technique covers the exponential only, so the
+  claim "every envelope is evaluable" was false for every logarithmic quantity. The manuscript
+  now works the fiber chain to the point where it stops and names the missing bracket.
+- Reader-facing internal taxonomy removed (F16): companions are cited as papers by title.
+
+**Structural:** new sections for the chain diagram, the benchmark impossibility, a worked
+certification against published transmon parameters, the results the formalization owns, the
+failure taxonomy, and related formalizations. Cut: the five-layer framing, the QEC interface
+subsection, the library-contribution appendix. Compiles clean at 14 pages (advisory floor 24).
