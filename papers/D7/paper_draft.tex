@@ -149,8 +149,297 @@ number, a local Chern marker, or any other topological invariant.
 \section{Belief propagation on factor graphs}
 \label{sec:bp}
 
+This section fixes the carriers and the update rule that
+Sec.~\ref{sec:convergence} proves a theorem about. It is deliberately thin:
+only the objects consumed downstream are developed here, and the remaining
+formalized material is summarized at the end of the section and listed in
+Appendix~\ref{app:statements}.
+
+\subsection{Carriers}
+
+A factor graph is a variable index type $\nu$, a factor index type $\alpha$,
+and a decidable incidence relation.
+
+\begin{defn}[\texttt{FactorGraph}]
+\texttt{FactorGraph}\,$\nu\ \alpha$ is a structure with a single field
+$\mathrm{incidence} : \alpha \to \nu \to \mathrm{Bool}$. Factor $a$ touches
+variable $v$ when $\mathrm{incidence}\ a\ v = \mathtt{true}$.
+\end{defn}
+
+The variable state space $X$ is a separate parameter, so the same graph carries
+message bundles over different alphabets. A message bundle is a pair of
+real-valued families indexed by directed endpoints.
+
+\begin{defn}[\texttt{BPMessages}]
+\texttt{BPMessages}\,$\nu\ \alpha\ G\ X$ is a structure with fields
+$\mathrm{varToFactor} : \nu \to \alpha \to X \to \mathbb{R}$ and
+$\mathrm{factorToVar} : \alpha \to \nu \to X \to \mathbb{R}$.
+\end{defn}
+
+Messages are real-valued and unnormalized. Normalization is available as a
+predicate (\texttt{IsNormalizedAt}, \texttt{BPNormalized}) rather than built
+into the carrier, so that the update rule is a total function and no proof
+obligation is incurred at every application.
+
+\subsection{The update rule}
+
+The cavity neighbourhoods are the two \texttt{Finset}s that make the update
+local:
+\begin{align}
+\mathrm{otherFactors}\ G\ v\ a &= \{\, b : b \neq a,\ \mathrm{incidence}\ b\ v \,\},\\
+\mathrm{otherVars}\ G\ a\ v &= \{\, u : u \neq v,\ \mathrm{incidence}\ a\ u \,\}.
+\end{align}
+In the Yedidia--Freeman--Weiss convention~\cite{YedidiaFreemanWeiss2003} the
+two unnormalized updates are
+\begin{align}
+\label{eq:varupdate}
+m'_{v \to a}(x) &= \!\!\prod_{b \,\in\, \mathrm{otherFactors}\ G\ v\ a}\!\! m_{b \to v}(x),\\
+\label{eq:facupdate}
+m'_{a \to v}(x) &= \sum_{\substack{y : \nu \to X \\ y(v) = x}} f_a(y)
+  \!\!\prod_{u \,\in\, \mathrm{otherVars}\ G\ a\ v}\!\! m_{u \to a}(y(u)),
+\end{align}
+formalized as \texttt{bpVariableUpdate} and \texttt{bpFactorUpdate}. The empty
+product convention gives the leaf boundary directly: a variable whose only
+incident factor is $a$ sends the constant message $1$
+(\texttt{bpVariableUpdate\_eq\_one\_of\_no\_other\_factors}). One synchronous
+sweep \texttt{bpUpdate} applies both rules at every endpoint simultaneously,
+and \texttt{IsBPFixedPoint}\,$m\ f$ is the proposition
+$\texttt{bpUpdate}\ m\ f = m$, an equality of message bundles rather than a
+numerical tolerance.
+
+\subsection{A modelling caveat in the factor update}
+\label{sec:caveat-factor}
+
+Equation~\eqref{eq:facupdate} carries a deviation from the textbook rule that
+a reader must be told about. The factor weight is typed
+$f : \alpha \to (\nu \to X) \to \mathbb{R}$, a function of a complete
+assignment to \emph{all} variables, and the sum accordingly ranges over all
+$y : \nu \to X$ with $y(v) = x$ rather than over assignments to $\partial a$.
+The product is correctly restricted to the cavity $\partial a \setminus \{v\}$,
+so locality of the message in the \emph{messages} is exact, which is what
+Sec.~\ref{sec:convergence} needs. Locality in the \emph{weights} is not: if
+$f_a$ depends on a variable outside $\partial a$, the message
+$m_{a \to v}$ depends on it too. When $f_a$ does factor through
+$\partial a$, the sum overcounts the textbook sum by the constant
+$|X|^{|\nu| - |\partial a|}$, which rescales each factor message by a
+per-endpoint constant. Since the development works with unnormalized messages
+and states fixed points as exact equalities, that rescaling is not neutral for
+\texttt{IsBPFixedPoint}, and no theorem here relates the fixed points of
+\eqref{eq:facupdate} to those of the restricted rule.
+
+\subsection{Elementary properties, and what is absent}
+
+Non-negativity and strict positivity propagate through both updates
+(\texttt{bpVariableUpdate\_nonneg\_of\_factor\_msgs\_nonneg},
+\texttt{bpVariableUpdate\_pos\_of\_factor\_msgs\_pos},
+\texttt{bpFactorUpdate\_nonneg\_of\_inputs\_nonneg}); the factor update is
+linear in the factor weight
+(\texttt{bpFactorUpdate\_smul\_factor\_weight}) and propagates a hard zero
+(\texttt{bpFactorUpdate\_eq\_zero\_of\_factor\_weight\_zero}); the variable
+update factorizes out any single cavity message
+(\texttt{bpVariableUpdate\_factorization}); and a bundle is a fixed point iff
+every iterate reproduces it
+(\texttt{IsBPFixedPoint\_iff\_all\_iterates\_invariant}).
+
+The development additionally defines variable and factor beliefs, a Shannon
+entropy on the belief simplex, a factor energy with a relative-entropy
+decomposition, and a Bethe free energy with a vacuum boundary value and a
+congruence property. None of that is consumed by any result in this paper.
+It is stated in Appendix~\ref{app:statements} and flagged here for what it
+lacks: there is no theorem asserting that the Bethe free energy is stationary
+at belief-propagation fixed points, which is the property that makes the Bethe
+construction interesting. Presenting the free-energy layer as support for the
+convergence theorem would be presenting inventory as argument.
+
+\figuredeferred{fig:d7-incidence-and-cycles}{a factor graph beside its bipartite incidence graph, with a 4-cycle and the 6-cycle that separates four-cycle-freeness from acyclicity; blocked only on drawing time and is the first figure to land}
+
 \section{Rank-local iteration and finite-horizon convergence}
 \label{sec:convergence}
+
+Belief propagation on a tree converges in a number of sweeps set by the
+diameter, and the reason is a topological ordering: a message is determined by
+the messages behind it, and on an acyclic graph ``behind'' is a well-founded
+relation. This section proves that statement in the form the argument actually
+needs, separating the order-theoretic content from the belief-propagation
+content so that the first is reusable and the second is checked against the
+real update rule.
+
+\subsection{The abstract engine}
+
+Let $E$ be a finite type, $\beta$ any type, $\mathrm{rank} : E \to \mathbb{N}$,
+and $\mathrm{step} : (E \to \beta) \to (E \to \beta)$.
+
+\begin{defn}[\texttt{RankLocalStep}]
+$\mathrm{step}$ is \emph{rank-local} for $\mathrm{rank}$ when, for all states
+$s, s'$ and every coordinate $e$, agreement of $s$ and $s'$ on every coordinate
+of rank strictly below $\mathrm{rank}\ e$ forces
+$\mathrm{step}\ s\ e = \mathrm{step}\ s'\ e$.
+\end{defn}
+
+The hypothesis is exactly ``one round at $e$ reads only strictly lower ranks'',
+stated extensionally so that no syntactic dependency analysis is required.
+
+\begin{thm}[\texttt{rankLocalStep\_coord\_stable}]
+\label{thm:coordstable}
+If $\mathrm{step}$ is rank-local then for every $s$, every $e$, and every
+$n \geq \mathrm{rank}\ e + 1$,
+$\mathrm{step}^{[n]}\, s\, e = \mathrm{step}^{[\mathrm{rank}\, e + 1]}\, s\, e$.
+\end{thm}
+
+The proof is a strong induction on $\mathrm{rank}\ e$. Writing
+$n = m+1$ and pushing one application to the outside on both sides reduces the
+goal to an application of rank locality, whose hypothesis is discharged by the
+induction hypothesis at each strictly smaller rank: coordinate $e'$ has already
+frozen by round $\mathrm{rank}\ e' + 1$, and both $m$ and $\mathrm{rank}\ e$
+exceed that bound. Rank-zero coordinates freeze after one round because their
+rank-locality hypothesis is vacuous, and every higher coordinate freezes exactly
+one round after everything it reads.
+
+\begin{defn}
+$\mathrm{convergenceHorizon}\ \mathrm{rank} = \bigl(\sup_{e \in E} \mathrm{rank}\ e\bigr) + 1$.
+\end{defn}
+
+\begin{thm}[\texttt{rankLocalStep\_converges}]
+\label{thm:converges}
+If $\mathrm{step}$ is rank-local then for every initial state $s$, writing
+$H = \mathrm{convergenceHorizon}\ \mathrm{rank}$: every iterate past $H$ equals
+the $H$-th iterate, and the $H$-th iterate is a fixed point of
+$\mathrm{step}$.
+\end{thm}
+
+Both conclusions matter and neither implies the other cheaply. The first is
+stabilization; the second is that the stable point is genuinely fixed, obtained
+by evaluating the stabilization statement one round further and commuting the
+extra application to the outside.
+
+\subsection{Instantiation on the real update}
+
+Flattening carries the message bundle onto a single coordinate type. Let
+$\mathrm{MsgEndpoint}\ \nu\ \alpha = (\nu \times \alpha) \oplus (\alpha \times \nu)$,
+with $\mathrm{inl}(v,a)$ the $v \to a$ endpoint and $\mathrm{inr}(a,v)$ the
+$a \to v$ endpoint, and let $\mathrm{flattenMsg}$ and $\mathrm{unflattenMsg}$
+be the evident mutually inverse maps to $\mathrm{MsgEndpoint} \to (X \to \mathbb{R})$.
+Setting $\mathrm{bpStep}\ G\ f = \mathrm{flattenMsg} \circ (\cdot \mapsto
+\texttt{bpUpdate}\ \cdot\ f) \circ \mathrm{unflattenMsg}$ makes one synchronous
+sweep an endomorphism of the flattened state, and
+\texttt{flattenMsg\_iterate} transports iterates in both directions.
+
+\begin{defn}[\texttt{BPRankCert}]
+\label{def:cert}
+A rank certificate for $G$ is a rank $r$ on $\mathrm{MsgEndpoint}\ \nu\ \alpha$
+with two strict inequalities:
+\begin{align}
+\label{eq:vargt}
+b \neq a,\ \mathrm{incidence}\ b\ v &\ \Rightarrow\ r(\mathrm{inr}(b,v)) < r(\mathrm{inl}(v,a)),\\
+\label{eq:facgt}
+u \neq v,\ \mathrm{incidence}\ a\ u &\ \Rightarrow\ r(\mathrm{inl}(u,a)) < r(\mathrm{inr}(a,v)).
+\end{align}
+\end{defn}
+
+Conditions~\eqref{eq:vargt} and~\eqref{eq:facgt} are not chosen for
+convenience: they are precisely the membership conditions of
+$\mathrm{otherFactors}\ G\ v\ a$ and $\mathrm{otherVars}\ G\ a\ v$, which is
+why the next theorem is provable at all.
+
+\begin{thm}[\texttt{bpStep\_rankLocal}]
+\label{thm:ranklocal}
+For any rank certificate $\mathrm{cert}$ and any factor weight,
+$\mathrm{bpStep}\ G\ f$ is rank-local for $\mathrm{cert.rank}$.
+\end{thm}
+
+The proof case-splits on the endpoint and unfolds the actual update. At
+$\mathrm{inl}(v,a)$ the goal is an equality of products over
+$\mathrm{otherFactors}\ G\ v\ a$; a congruence reduces it to an equality of
+each factor, and membership in that \texttt{Finset} supplies exactly the
+hypothesis of~\eqref{eq:vargt}. At $\mathrm{inr}(a,v)$ the goal is an equality
+of sums over assignments, and after congruences on the sum and the inner
+product, membership in $\mathrm{otherVars}\ G\ a\ v$ supplies~\eqref{eq:facgt}.
+No property of the factor weight is used, so the theorem holds for arbitrary
+real weights, including negative ones.
+
+\begin{thm}[\texttt{bp\_converges\_on\_ranked\_acyclic}]
+\label{thm:bpconv}
+Let $\mathrm{cert}$ be a rank certificate for $G$, let $f$ be any factor weight,
+let $m$ be any initial message bundle, and put
+$H = \mathrm{convergenceHorizon}\ \mathrm{cert.rank}$. Then every sweep count
+$n \geq H$ gives the same bundle as $H$ sweeps, and that bundle satisfies
+$\texttt{IsBPFixedPoint}$.
+\end{thm}
+
+This follows from Theorem~\ref{thm:converges} and
+Theorem~\ref{thm:ranklocal} transported along $\mathrm{flattenMsg}$, whose
+injectivity is proven from its left inverse. The quantification is worth
+reading carefully: the initial bundle is arbitrary, the factor weight is
+arbitrary, the fixed point is an exact equality of bundles, and the bound is
+uniform in both.
+
+\subsection{The certificate is not a vacuous hypothesis}
+
+A convergence theorem conditional on a hypothesis is worth only as much as the
+hypothesis. Two results pin it down.
+
+\begin{thm}[\texttt{isFourCycleFree\_of\_bpRankCert}]
+\label{thm:certc4}
+If $G$ admits a rank certificate then $G$ is four-cycle-free.
+\end{thm}
+
+A 4-cycle $u\,a\,v\,b$ would give, by two applications each
+of~\eqref{eq:vargt} and~\eqref{eq:facgt}, the chain
+$r(\mathrm{inr}(a,v)) < r(\mathrm{inl}(v,b)) < r(\mathrm{inr}(b,u)) <
+r(\mathrm{inl}(u,a)) < r(\mathrm{inr}(a,v))$, which no rank into $\mathbb{N}$
+admits. So a certificate carries genuine loop-freeness content rather than
+being satisfiable by fiat.
+
+\begin{prop}[\texttt{bpRankCertStar}, \texttt{bp\_converges\_on\_star}]
+\label{prop:star}
+The factor graph on two variables and one factor, with the factor incident to
+both, carries the explicit certificate $r(\mathrm{inl}(\cdot)) = 0$,
+$r(\mathrm{inr}(\cdot)) = 1$. Its bipartite incidence graph is the three-node
+path, a genuine tree, and Theorem~\ref{thm:bpconv} applied to it yields a
+fixed point for every factor weight and every initial bundle.
+\end{prop}
+
+Proposition~\ref{prop:star} is stated as a non-vacuity witness and must be read
+with its limitation attached. On that graph~\eqref{eq:facgt} is discharged
+substantively, by $0 < 1$ at a real incidence, but~\eqref{eq:vargt} is
+discharged vacuously: there is only one factor, so no $b \neq a$ is incident to
+either variable. The witness therefore certifies half of
+Definition~\ref{def:cert} against a real instance and the other half against an
+empty quantifier.
+
+\subsection{Scope}
+\label{sec:conv-scope}
+
+Three statements bound what Theorem~\ref{thm:bpconv} establishes, and each is a
+gap rather than a caveat.
+
+First, the existence of a rank certificate is a hypothesis and is not derived
+from acyclicity. The development defines the bipartite incidence graph, defines
+acyclicity and tree-ness through Mathlib's \texttt{SimpleGraph.IsAcyclic} and
+\texttt{SimpleGraph.IsTree}, and proves that acyclicity implies
+four-cycle-freeness. It does not prove that an acyclic factor graph admits a
+certificate. That construction is a finite well-founded one, by leaf stripping
+on the forest, and until it lands the theorem reads ``given a topological order
+on message endpoints, the iteration freezes'', with the graph theory sitting in
+the assumption.
+
+Second, $\mathrm{convergenceHorizon}$ is $\sup(\mathrm{rank}) + 1$ for the
+supplied certificate and nothing proves it equals the diameter of the incidence
+graph. Since Definition~\ref{def:cert} constrains only the two strict
+inequalities, a certificate with unnecessarily spread ranks is still a
+certificate and still gives a valid but weaker bound. The diameter reading is
+correct for the subtree-depth certificate specifically; that certificate is the
+one not yet constructed.
+
+Third, the end-to-end statement that couples convergence to the structural
+predicates carries a redundant hypothesis. It takes a certificate and a
+tree-simulability hypothesis (tree-ness, non-negative weights, a vanishing
+scalar) and returns three conclusions, but all three are reachable from the
+certificate together with the two non-structural conjuncts, because
+Theorem~\ref{thm:certc4} already supplies four-cycle-freeness from the
+certificate alone. The tree hypothesis does no work there.
+
+\figuredeferred{fig:d7-rank-freeze}{message-endpoint ranks on the three-node path with the freeze-out round of each endpoint; blocked on nothing for the star, and on the unbuilt subtree-depth certificate for any deeper tree, so the deeper panel cannot be drawn honestly yet}
 
 \section{A Cram\'er rate for 4-cycle density}
 \label{sec:rate}
