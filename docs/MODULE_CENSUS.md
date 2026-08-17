@@ -273,6 +273,7 @@ Nothing else belongs here.
 | `scripts/phase6p_tgate_compiler_v8.py` | Phase 6p Wave 3a.2.3c-substrate-upgrade-followup: T-gate compiler v8 (Solovay-Kitaev iteration). |
 | `scripts/phase6p_tgate_exact_frob.py` | Compute EXACT rational Frobenius² distance for the L=46 T-gate braid against ζ_40^k · T_NC target. |
 | `scripts/phase_bridge_validation.py` | Validate the Phase 6x Item G phase bridge BEFORE formalizing. |
+| `scripts/plugin_lifecycle.py` | The `skeft-qa` plugin's bind/refresh lifecycle — status, sync, and the mid-flight delta. |
 | `scripts/pre-commit-notebooks.sh` | Pre-commit hook: verify all notebooks execute without errors. |
 | `scripts/pre-commit-sync.sh` | L2 mechanical-sync commit gate (public-safe). Chained AFTER the leak-guard by the canonical installer. FAIL-OPEN by design: a missing toolchain or a transient crash NEVER blocks a commit. Auto-fixes cheap staleness; INCREMENTAL lean guard (never the clean ExtractDeps — that's /skeft-qa:sync); HARD-BLOCKS only genuine SOUNDNESS breakage, and only on `main`. |
 | `scripts/probe_rhmc_conditioning.py` | Is the L=8 near-zero fermion mode (kappa~1e7) a property of the OPERATOR or induced by the (trapped) CONFIG? |

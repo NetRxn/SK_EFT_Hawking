@@ -223,7 +223,7 @@ this project has already hit, so it is a command rather than a remembered ritual
 ```bash
 uv run python scripts/egress_policy.py add <domain> --for "<what needs it>" --date <YYYY-MM-DD>
 git commit …                     # the cache is keyed by the committed HEAD SHA
-uv run python scripts/egress_policy.py sync
+uv run python scripts/plugin_lifecycle.py sync
 # then RESTART Claude Code — the operator's call, never automated
 ```
 

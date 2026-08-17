@@ -19,8 +19,11 @@ we have already hit:
 
 Usage:
     uv run python scripts/egress_policy.py add <domain> --for "<what needs it>" [--path /prefix]
-    uv run python scripts/egress_policy.py sync           # refresh every install from HEAD
-    uv run python scripts/egress_policy.py status         # what is live vs committed vs source
+
+⚠️ A whitelist edit does not reach a running session until the plugin cache is refreshed and
+Claude Code restarts. That lifecycle — status, sync, and the mid-flight delta — is owned by
+`scripts/plugin_lifecycle.py`, which asserts the decider over the WHOLE plugin tree rather than
+over this guard alone. Run `plugin_lifecycle.py sync` after committing an `add`.
 
 `add` refuses a domain that is already covered (including by a parent entry, since matching is
 subdomain-aware), refuses anything that is not a bare registrable host, and — for code-hosting
@@ -88,53 +91,6 @@ def _run(cmd: list[str], cwd: Path) -> tuple[int, str]:
     return p.returncode, (p.stdout + p.stderr).strip()
 
 
-def cmd_status(_args) -> int:
-    head, _ = _run(["git", "rev-parse", "HEAD"], REPO)
-    head = _run(["git", "rev-parse", "HEAD"], REPO)[1][:12]
-    dirty = _run(["git", "status", "--porcelain", str(GUARD.relative_to(REPO))], REPO)[1]
-    print(f"guard source        : {'MODIFIED, uncommitted' if dirty else 'clean'}")
-    print(f"repo HEAD           : {head}")
-    print(f"whitelist entries   : {len(_load_guard()._WHITELIST)} (source)")
-    print("install records:")
-    stale = False
-    for proj, sha in _live_sha().items():
-        mark = "current" if sha.startswith(head[:8]) or head.startswith(sha[:8]) else "STALE"
-        if mark == "STALE":
-            stale = True
-        print(f"  {mark:8} {sha}  {proj}")
-    if dirty or stale:
-        print("\nRun `egress_policy.py sync` (commit first if the source is modified).")
-    return 1 if (dirty or stale) else 0
-
-
-def cmd_sync(args) -> int:
-    dirty = _run(["git", "status", "--porcelain", str(GUARD.relative_to(REPO))], REPO)[1]
-    if dirty:
-        print("REFUSING: the guard source has uncommitted changes. The plugin cache is keyed "
-              "by the committed HEAD SHA, so an unsynced edit would be silently skipped.\n"
-              "Commit it, then re-run sync.")
-        return 1
-    records = _install_records()
-    if not records:
-        print(f"No install records for {PLUGIN}. Nothing to refresh.")
-        return 0
-    rc, out = _run(["claude", "plugin", "marketplace", "update"], records[0])
-    print(f"marketplace update: {out.splitlines()[-1] if out else rc}")
-    failed = []
-    for proj in records:
-        rc, out = _run(["claude", "plugin", "update", PLUGIN, "--scope", "local"], proj)
-        last = out.splitlines()[-1] if out else f"rc={rc}"
-        print(f"  [{proj.name}] {last}")
-        if rc != 0:
-            failed.append(proj)
-    if failed:
-        print(f"\nFAILED for: {', '.join(p.name for p in failed)}")
-        return 1
-    print("\nAll install records refreshed. RESTART Claude Code to apply "
-          "(a refresh alone does not reload the running hooks).")
-    return 0
-
-
 def cmd_add(args) -> int:
     host = args.domain.strip().lower().removeprefix("https://").removeprefix("http://").rstrip("/")
     if not _HOST_RE.match(host):
@@ -189,7 +145,7 @@ def cmd_add(args) -> int:
 
     print(f"\nAdded {host}{' ' + args.path if args.path else ''} to the "
           f"{'path ' if args.path else ''}whitelist.")
-    print("Next: commit the guard, then `egress_policy.py sync`, then restart.")
+    print("Next: commit the guard, then `plugin_lifecycle.py sync`, then restart.")
     return 0
 
 
@@ -205,8 +161,6 @@ def main() -> int:
     a.add_argument("--date", default=os.environ.get("EGRESS_DATE", ""),
                    help="authorizing date (YYYY-MM-DD); grants must be datable to be audited")
     a.set_defaults(func=cmd_add)
-    sub.add_parser("sync", help="refresh every install record from HEAD").set_defaults(func=cmd_sync)
-    sub.add_parser("status", help="what is live vs committed vs source").set_defaults(func=cmd_status)
     args = ap.parse_args()
     if args.cmd == "add" and not args.date:
         print("REFUSING: --date is required (or set EGRESS_DATE). An undated grant cannot be audited.")
