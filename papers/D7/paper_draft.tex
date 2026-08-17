@@ -29,31 +29,30 @@ propagation, and why 4-cycle density does not screen for it}
 
 \begin{abstract}
 We prove, in the Lean~4 proof assistant and with kernel-only axiom closure,
-that synchronous belief propagation on a finite factor graph reaches a genuine
-fixed point of the message-update map within a bounded number of sweeps, from
-any initial message bundle, whenever the directed message endpoints carry a
-topological rank certificate. The proof factors through a reusable statement
-about arbitrary rank-local iterations on a finite coordinate type, and is
-instantiated on the actual belief-propagation update rather than on a proxy:
-rank locality is discharged by reading off the cavity neighbourhoods of the
-variable and factor updates. We then examine the combinatorial statistic the
-same development builds to detect that regime, a large-deviation rate function
-whose Bernoulli parameter is the 4-cycle density of the factor graph, and
-report a negative result. The rate admits a closed Legendre evaluation
-$-\log(1-p)$, vanishes exactly on four-cycle-free graphs, is strictly positive
-and strictly monotone off them, and takes the kernel-checked value
-$\log(4/3)$ on the complete bipartite $2{\times}2$ graph; but four-cycle-freeness
-is implied by, and does not imply, acyclicity, and it holds automatically for
-every model whose factors couple at most two variables on a simple interaction
-graph. The rate is therefore identically zero across the lattice families of
-the tensor-network simulations that motivate it, including those whose loop
-corrections are the technical core of that work, and its normalization by the
-ambient tuple space makes a fixed loop motif's density fall as the system
-grows. One step separates the convergence theorem from an unconditional
-statement about trees: the existence of a rank certificate on an acyclic
-bipartite incidence graph is assumed, not derived. We state that obligation
-explicitly, along with the three others that a genuine simulability criterion
-would require.
+that synchronous belief propagation on a finite factor graph reaches a fixed
+point of the message-update map within a bounded number of sweeps, from any
+initial bundle and for arbitrary real factor weights, including negative ones,
+whenever the directed message endpoints carry a topological rank certificate.
+The map as formalized sums over complete assignments rather than over the
+factor's scope, and fixedness is an exact equality of message bundles, not a
+numerical tolerance. Each endpoint freezes at its own rank plus one rather than
+the whole bundle at the supremum, and the order-theoretic statement carrying
+that mentions no messages: it holds for any rank-local iteration. Rank locality
+is discharged from the cavity neighbourhoods of the actual updates, and a
+certificate is proven to force 4-cycle-freeness, so the hypothesis is not empty.
+Our result about the statistic the development builds to detect that regime, a
+large-deviation rate function in the 4-cycle density $p$, is negative. The rate
+admits a closed Legendre evaluation $-\log(1-p)$, vanishes exactly on
+4-cycle-free graphs, is strictly monotone off them, and takes the kernel-checked
+value $\log(4/3)$ on the complete bipartite $2{\times}2$ graph. But
+4-cycle-freeness does not imply acyclicity, and holds automatically for every
+model whose factors couple at most two variables on a simple interaction graph;
+both limits are argued on paper, not in Lean. The rate is therefore identically
+zero across the lattice families of the tensor-network simulations that motivate
+it, and its normalization by the ambient tuple space makes a fixed motif's
+density fall with system size. One step separates the convergence theorem from an
+unconditional statement about trees: the existence of a rank certificate on an
+acyclic bipartite incidence graph is assumed, not derived.
 \end{abstract}
 
 \maketitle
@@ -612,7 +611,7 @@ statement that was intended to be the payoff.
 The zero-rate boundary is four-cycle-freeness, and belief-propagation exactness
 requires a tree. The gap is not a technicality.
 
-\begin{prop}
+\begin{prop}[not formalized]
 \label{prop:sixcycle}
 The bipartite $6$-cycle $v_0\,a_0\,v_1\,a_1\,v_2\,a_2\,v_0$ is four-cycle-free
 and is not acyclic. Consequently $I_G(0) = 0$ on it.
@@ -635,7 +634,7 @@ Theorem~\ref{thm:certc4}, and is not sufficient for one.
 The second problem removes the statistic's discriminating power on the models
 that motivate it.
 
-\begin{prop}
+\begin{prop}[not formalized]
 \label{prop:pairwise}
 Let $G$ be a factor graph in which every factor is incident to at most two
 variables, and in which no two distinct factors have the same pair of incident
@@ -862,6 +861,16 @@ we proposed does not work.
 Every theorem cited in the body, in source form, each preceded by the one thing
 it contributes. Names are as they appear in the development; all are proven
 with no \texttt{sorry} and no project-local axiom.
+
+Two body statements are not in this list and are not machine-checked:
+Proposition~\ref{prop:sixcycle}, that the bipartite $6$-cycle is 4-cycle-free
+and not acyclic, and Proposition~\ref{prop:pairwise}, that every factor graph
+whose factors couple at most two variables on distinct pairs is 4-cycle-free.
+Both are marked \textup{(not formalized)} where they are stated and both carry
+pen-and-paper proofs. Every other numbered result in the body, including
+Proposition~\ref{prop:star} and the worked value of
+Sec.~\ref{sec:rate}, appears below under the name it carries in the
+development.
 
 Per-coordinate stabilization, the strong induction that carries the whole engine.
 
