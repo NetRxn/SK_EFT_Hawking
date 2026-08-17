@@ -2,89 +2,99 @@
   "bundle_target": "D7",
   "apex_theorems": [
     {
+      "name": "SKEFTHawking.BeliefPropagation.rankLocalStep_converges",
+      "claims": "ABSTRACT + Sec. III -- the abstract rank-local convergence engine: a rank-local iteration on a finite coordinate type reaches a fixed point after sup(rank)+1 rounds from any initial state and stays there",
+      "declared": "2026-08-17"
+    },
+    {
+      "name": "SKEFTHawking.BeliefPropagation.bpStep_rankLocal",
+      "claims": "Sec. III -- one synchronous BP sweep is rank-local under a BPRankCert, proven by reading off the actual otherFactors/otherVars cavity sets of bpVariableUpdate and bpFactorUpdate",
+      "declared": "2026-08-17"
+    },
+    {
+      "name": "SKEFTHawking.BeliefPropagation.bp_converges_on_ranked_acyclic",
+      "claims": "ABSTRACT HEADLINE + Sec. III -- synchronous BP from ANY initial message bundle reaches an IsBPFixedPoint after convergenceHorizon cert.rank sweeps and stays there. Conditional on a supplied BPRankCert; the draft states plainly that certificate existence is NOT derived from IsAcyclicFactorGraph",
+      "declared": "2026-08-17"
+    },
+    {
+      "name": "SKEFTHawking.BeliefPropagation.isFourCycleFree_of_bpRankCert",
+      "claims": "Sec. III -- a rank certificate forces four-cycle-freeness via a strict rank cycle over the naturals; the certificate is a genuine loop-freeness witness, not a vacuous carrier",
+      "declared": "2026-08-17"
+    },
+    {
+      "name": "SKEFTHawking.BeliefPropagation.bp_converges_on_star",
+      "claims": "Sec. III -- non-vacuity witness on a genuine 3-node tree. The draft states plainly that this instance discharges fac_gt non-vacuously but var_gt vacuously",
+      "declared": "2026-08-17"
+    },
+    {
+      "name": "SKEFTHawking.BeliefPropagation.isAcyclicFactorGraph_imp_fourCycleFree",
+      "claims": "Sec. II + Sec. V -- acyclicity is strictly stronger than four-cycle-freeness, proven through Mathlib path-uniqueness",
+      "declared": "2026-08-17"
+    },
+    {
       "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_eq_neg_log",
-      "claims": "ABSTRACT + §3 — the Legendre evaluation: loopCorrectionRate G = -log(1-p) as an explicit least-upper-bound argument. The supremum is approached as theta -> -inf and NOT attained on loopy graphs, and the draft says so",
+      "claims": "ABSTRACT + Sec. IV -- the Legendre evaluation loopCorrectionRate G = -log(1-p) as an explicit least-upper-bound argument; the supremum is approached as theta -> -inf and NOT attained on graphs carrying a 4-cycle",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_eq_zero_iff_fourCycleFree",
-      "claims": "ABSTRACT + §3 — the zero-rate <=> four-cycle-freeness equivalence, PROVEN from the variational definition rather than definitional. This is the D7-EV3 upgrade from the earlier {0,1} tree indicator",
+      "claims": "ABSTRACT + Sec. IV -- the zero-rate <=> FOUR-CYCLE-FREENESS equivalence, proven from the variational definition rather than definitional. NOT a tree equivalence: a bipartite 6-cycle is four-cycle-free and cyclic",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_pos_of_not_fourCycleFree",
-      "claims": "§3 — strict positivity of the rate on loopy graphs",
+      "claims": "Sec. IV -- strict positivity of the rate on graphs carrying a 4-cycle",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_lt_of_loopDensity_lt",
-      "claims": "§3 — strict monotonicity in loop density: the rate SEPARATES loopy graphs by loop content (the complete bipartite 2x2 graph has rate log(4/3), kernel-checked)",
+      "claims": "Sec. IV + Sec. V -- strict monotonicity in loop density ACROSS INDEX TYPES. Sec. V states that this same cross-type generality is what makes the ordering size-dependent",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_le_iff_loopDensity_le",
-      "claims": "§3 — the general threshold form (rate <= t <=> loop density <= 1 - e^-t), replacing the former fixed indicator threshold",
+      "claims": "Sec. IV -- the general threshold form (rate <= t <=> loop density <= 1 - e^-t)",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.BPLDPSimulability.no_loop_event_prob_eq_exp_neg_rate",
-      "claims": "§3 — the exact finite-n Cramer identity (1-p)^n = exp(-n I(0)) for the no-loop-correction event",
+      "claims": "Sec. IV -- the exact finite-n Cramer identity (1-p)^n = exp(-n I(0)) for the no-loop-correction event",
       "declared": "2026-08-07"
     },
     {
-      "name": "SKEFTHawking.BPLDPSimulability.loopCorrection_isCramerIIDUpperBound",
-      "claims": "§3 — the bridge to the project LDP suite via the Bernoulli Kullback-Leibler rate function",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.BPLDPSimulability.fourCycles_eq_empty_iff_fourCycleFree",
-      "claims": "§3 — the 4-cycle Finset <-> predicate bridge. Load-bearing for the kernel-checked decidable-combinatorics construction of the rate",
+      "name": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_completeBipartite22",
+      "claims": "Sec. IV -- the worked kernel-checked value log(4/3) on the complete bipartite 2x2 factor graph, the concrete falsifiable anchor that the rate is not a {0,1} indicator",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.BPLDPSimulability.fourCycleFree_nonneg_iff_ldp_rate_zero",
-      "claims": "ABSTRACT + §3 HEADLINE — the BP-favorability biconditional: IsFourCycleFreeNonnegWeighted iff the loop-correction rate vanishes and the factor weights are non-negative",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.ChernBridge.crystalline_eq_quasicrystalline_iff_c1_zero",
-      "claims": "ABSTRACT + §4 — the categorical-Chern <-> real-space-Chern bridge: the crystalline (c0+c1) and quasicrystalline (c0-c1) band-edge limits agree iff c1 = 0, so their difference 2c1 extracts the topological invariant",
+      "claims": "ABSTRACT + Sec. IV -- the structural biconditional: IsFourCycleFreeNonnegWeighted iff the loop-correction rate vanishes and the factor weights are non-negative",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_fourCycleFree_demarcation",
-      "claims": "ABSTRACT HEADLINE + §5 — THE demarcation biconditional: classically simulable in the combined BP / Chebyshev-TN regime iff (zero loop-correction rate AND non-negative weights) AND c1 = 0",
+      "claims": "Sec. V.D ANATOMY ONLY -- the combined structural biconditional is dissected, not advertised. The draft states that its second conjunct is c0+c1 = c0-c1, i.e. c1 = 0 restated through a linear evaluation at two points, and that the combined statement carries no content beyond its first conjunct",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_tree_simulable_demarcation",
-      "claims": "§5 — the end-to-end tree-side form: genuine tree-ness plus synchronous BP convergence",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.AnalogHawkingDemarcation.not_fourCycleFreeNonneg_or_nonzero_c1_implies_not_simulable",
-      "claims": "ABSTRACT + §5 — the contrapositive, giving the QUANTUM-ADVANTAGE regime explicitly: loop-bearing topology or negative weights, OR non-trivial Chern coefficient",
-      "declared": "2026-08-07"
-    },
-    {
-      "name": "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent",
-      "claims": "§6 — the Kibble-Zurek-Unruh foundation theorem bounding the KZM exponent via the SK-EFT surface gravity. ⚠️ The draft states plainly that AnalogHawkingDemarcation.lean does NOT import KibbleZurekUnruh.lean and that per-platform instantiation bridges do not exist",
+      "claims": "Sec. III scope -- the tree-side end-to-end statement. The draft states that its IsTreeFactorGraph hypothesis does no work the rank certificate does not already do",
       "declared": "2026-08-07"
     }
   ],
   "tier": 1,
-  "title": "Classical Simulability and Quantum Advantage via Tensor Networks: A Formally Verified Demarcation",
+  "title": "A machine-checked finite-horizon convergence theorem for belief propagation, and why 4-cycle density does not screen for it",
   "target_journal": "PRX Quantum or Physical Review X",
   "phase7_subphase": "7w (Phase 6w D7 spin-out)",
   "stage9_status": "not_started",
-  "stage10_status": "pending",
+  "stage10_status": "in_progress",
   "stage13_status": "pending",
   "stage13_redo_required": true,
   "freshness_stale": true,
   "source_manifest_last_regen": null,
   "last_lift": "2026-05-26T20:00:00Z",
   "last_stage9_review": null,
-  "last_stage10_review": "2026-05-26T21:35:00Z",
+  "last_stage10_review": null,
   "last_stage10_review_round1": "2026-05-26T21:12:00Z",
   "last_stage13_review": "2026-06-10T19:30:00Z",
   "blockers_open": 0,
@@ -114,10 +124,11 @@
     "lean/SKEFTHawking/AnalogHawkingDemarcation.lean"
   ],
   "headline_theorems": [
-    "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_quantum_advantage_demarcation",
-    "SKEFTHawking.BPLDPSimulability.bp_convergence_iff_ldp_below_threshold",
-    "SKEFTHawking.ChernBridge.crystalline_minus_quasicrystalline_eq_twice_c1",
-    "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent"
+    "SKEFTHawking.BeliefPropagation.bp_converges_on_ranked_acyclic",
+    "SKEFTHawking.BeliefPropagation.bpStep_rankLocal",
+    "SKEFTHawking.BeliefPropagation.isFourCycleFree_of_bpRankCert",
+    "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_eq_neg_log",
+    "SKEFTHawking.BPLDPSimulability.fourCycleFree_nonneg_iff_ldp_rate_zero"
   ],
   "remediation_history": [
     {
@@ -183,7 +194,8 @@
     "ceiling": 60,
     "source": "PAPER_STRATEGY.md §6"
   },
-  "compiled_pages": 4,
+  "compiled_pages": 2,
   "compile_gate_ok": true,
-  "critical_open": 0
+  "critical_open": 0,
+  "charter_mismatch_finding": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md (D7-R1): target_journal PRX-Q/PRX and length_target 24-60pp are not supported by the substrate; retarget recommendation filed, deliberately NOT applied here so the mismatch stays gated."
 }

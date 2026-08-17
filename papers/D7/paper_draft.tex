@@ -8,10 +8,15 @@
 
 \input{../../docs/figuredeferred.tex}
 
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{prop}[thm]{Proposition}
+
 \begin{document}
 
-\title{Classical Simulability and Quantum Advantage via Tensor
-Networks: A Formally Verified Demarcation}
+\title{A machine-checked finite-horizon convergence theorem for belief
+propagation, and why 4-cycle density does not screen for it}
 
 \author{John G.~Roehm}
 \affiliation{Independent research, USA}
@@ -19,291 +24,153 @@ Networks: A Formally Verified Demarcation}
 \date{\today}
 
 \begin{abstract}
-Recent classical tensor-network methods have collectively
-narrowed the gap between classical and quantum many-body simulation:
-belief propagation on
-2D/3D PEPS networks (Tindall, Mello, Fishman, Stoudenmire, Sels,
-\textit{Science} \textbf{392}, 868 (2026)) and Chebyshev-TN density-
-matrix expansions on quasicrystal Hamiltonians (Antão, Sun, Fumega,
-Lado, \textit{PRL} \textbf{136}, 156601 (2026)).
-We formalize a joint substrate in the Lean~4 proof assistant and
-ship a kernel-verified \textit{simulability demarcation
-biconditional}\footnote{To the best of our knowledge after a scoped
-search of GitHub topics \texttt{lean4} / \texttt{coq} / \texttt{agda},
-the Mathlib / mathlib4 indexes, and the Coq UniMath / Agda categories
-ecosystems (2026-05-26), no prior proof-assistant formalization of a
-classical-simulability vs.\ quantum-advantage demarcation on tensor-
-network factor graphs exists. We make no broader first-claim and
-welcome notification of prior work.}: a quantum many-body system on a
-factor graph $G$ with factor weights $f_a$ and categorical-Chern data
-$(c_0, c_1)$ is classically simulable in the combined BP / Chebyshev-
-TN regime if and only if (i) the loop-correction rate function of the
-factor graph (the Cram\'er/Legendre transform at zero deviation of
-the log-MGF of the Bernoulli loop-presence observable whose success
-parameter is the graph's 4-cycle density) vanishes and the factor
-weights are non-negative, AND (ii) the topological coefficient $c_1$
-vanishes. The zero-rate $\Leftrightarrow$ tree equivalence is proven
-from the variational definition (not definitional). Outside this
-regime (strictly positive loop-correction rate OR non-trivial
-Chern coefficient) quantum processors retain a structural
-simulation advantage at the level of the formalized substrate. The
-Lean substrate is fully generic over the (finite) factor-graph type
-parameters; analog-Hawking applications via the
-Kibble-Zurek-Unruh correspondence are sketched at the cross-module
-substrate level in Section~\ref{sec:kzu-application}, with explicit
-per-platform (BEC, polariton, graphene Dirac fluid) instantiation
-bridges deferred to the D-bundle absorption pass. The 116 substantive
-theorems shipped across seven contributing modules have kernel-only
-axiom closure $[\mathtt{propext}, \mathtt{Classical.choice},
-\mathtt{Quot.sound}]$ with zero project-local axioms; the
-loop-correction rate is built from decidable 4-cycle combinatorics
-(a kernel-checked \texttt{Finset} filter), with noncomputability
-entering only through the real-valued logarithm and supremum, as is
-standard for rate functions.
+We prove, in the Lean~4 proof assistant and with kernel-only axiom closure,
+that synchronous belief propagation on a finite factor graph reaches a genuine
+fixed point of the message-update map within a bounded number of sweeps, from
+any initial message bundle, whenever the directed message endpoints carry a
+topological rank certificate. The proof factors through a reusable statement
+about arbitrary rank-local iterations on a finite coordinate type, and is
+instantiated on the actual belief-propagation update rather than on a proxy:
+rank locality is discharged by reading off the cavity neighbourhoods of the
+variable and factor updates. We then examine the combinatorial statistic the
+same development builds to detect that regime, a large-deviation rate function
+whose Bernoulli parameter is the 4-cycle density of the factor graph, and
+report a negative result. The rate admits a closed Legendre evaluation
+$-\log(1-p)$, vanishes exactly on four-cycle-free graphs, is strictly positive
+and strictly monotone off them, and takes the kernel-checked value
+$\log(4/3)$ on the complete bipartite $2{\times}2$ graph; but four-cycle-freeness
+is implied by, and does not imply, acyclicity, and it holds automatically for
+every model whose factors couple at most two variables on a simple interaction
+graph. The rate is therefore identically zero across the lattice families of
+the tensor-network simulations that motivate it, including those whose loop
+corrections are the technical core of that work, and its normalization by the
+ambient tuple space makes a fixed loop motif's density fall as the system
+grows. One step separates the convergence theorem from an unconditional
+statement about trees: the existence of a rank certificate on an acyclic
+bipartite incidence graph is assumed, not derived. We state that obligation
+explicitly, along with the three others that a genuine simulability criterion
+would require.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
+\label{sec:intro}
 
-The boundary between classical and quantum many-body simulation has
-moved substantially over 2025--2026. Tindall, Mello, Fishman,
-Stoudenmire, and Sels demonstrated that classical tensor-network
-contraction via belief propagation matches the D-Wave Advantage2
-quantum annealer on 300+ qubit spin-glass dynamics across 2D square,
-3D cubic, and 3D diamond lattices~\cite{TindallMelloFishmanStoudenmireSels2026Science392}.
-Antão, Sun, Fumega, and Lado complemented this with a Chebyshev-TN
-density-matrix algorithm that computes local Chern markers on
-quasicrystal Hamiltonians with hundreds of millions of
-sites~\cite{AntaoSunFumegaLado2026PRL136}. Together these two
-results bracket a substantial swath of quantum-simulation territory
-in which classical methods are competitive.
+Two recent results narrowed the practical gap between classical and quantum
+simulation of correlated many-body systems, and they are the reason a formal
+criterion for where that gap lies is worth stating precisely.
 
-Where exactly does the boundary lie? When does classical simulation
-suffice, and when do quantum processors retain a structural
-advantage? This paper formalizes a substantive demarcation criterion
-at the Lean~4 substrate level, producing a kernel-verified
-biconditional that decomposes the simulability question into two
-load-bearing axes:
+Tindall, Mello, Fishman, Stoudenmire and
+Sels~\cite{TindallMelloFishmanStoudenmireSels2026Science392} simulated the
+glassy annealing dynamics of a disordered transverse-field Ising model on
+cylindrical, diamond cubic and dimerized cubic lattices using tensor networks
+whose connectivity mirrors the lattice, evolved by a belief-propagation-based
+simple-update scheme and measured with controlled contraction. On the
+cylindrical and diamond lattices their errors fall noticeably below those of
+the D-Wave Advantage2 annealer on the same instances; on the dimerized cubic
+lattice the two are comparable. Separately, they simulated a system of over
+$300$ qubits and used the resulting scaling collapse of the correlation
+function to extract a Kibble--Zurek exponent $\mu \approx 2.70$ to $2.75$,
+consistent with independent Monte Carlo estimates. Two features of that work
+matter for what follows. The first is that plain belief propagation was not
+accurate enough: the authors report that standard belief-propagation
+contraction, successful on tree-like systems, does not suffice for the lattices
+they study, and they use loop-corrected belief propagation and matrix-product-state
+message passing instead. The second is that they attribute a specific error
+increase in the dimerized cubic geometry to a loop of size three created by the
+periodic boundary, and remove inherent loops by pairing dimers into single
+tensors so that the structure becomes ``more tree-like''. Loop content, at a
+specific size, is the operative variable.
 
-\begin{enumerate}
-\item \textit{Zero-rate condition}: the loop-correction rate
-function of the factor graph must vanish (equivalently, and
-provably rather than merely definitionally, the factor graph is
-tree-like), and the
-factor weights must be non-negative. The Lean implementation is a
-genuine Cram\'er/Legendre construction
-(\texttt{loopCorrectionRate}\,$G := \sup_{\theta}\,
-[-\log \mathrm{mgf}_G(\theta)]$, the Legendre transform at zero
-deviation of the log-MGF $\mathrm{mgf}_G(\theta) = 1 - p +
-p\,e^{\theta}$ of the Bernoulli \emph{loop-presence observable},
-whose success parameter $p = \mathtt{loopDensity}\,G \in [0,1)$ is
-the graph's 4-cycle density). The closed form $-\log(1-p)$ is a
-theorem (\texttt{loopCorrectionRate\_eq\_neg\_log}, an explicit
-least-upper-bound argument; the supremum is approached as $\theta
-\to -\infty$ and not attained on loopy graphs), as are the
-zero-rate $\Leftrightarrow$ four-cycle-freeness equivalence
-(\texttt{loopCorrectionRate\_eq\_zero\_iff\_fourCycleFree}), strict
-positivity on loopy graphs
-(\texttt{loopCorrectionRate\_pos\_of\_not\_fourCycleFree}), strict
-monotonicity in loop density
-(\texttt{loopCorrectionRate\_lt\_of\_loopDensity\_lt}: the rate
-separates loopy graphs by loop content, e.g.\ the complete
-bipartite $2{\times}2$ graph has rate $\log(4/3)$,
-kernel-checked), the exact finite-$n$ Cram\'er identity $(1-p)^n =
-e^{-n \cdot I(0)}$ for the no-loop-correction event
-(\texttt{no\_loop\_event\_prob\_eq\_exp\_neg\_rate}), and the
-bridge to the project LDP-suite Cram\'er predicate via the
-Bernoulli Kullback-Leibler rate function
-(\texttt{loopCorrection\_isCramerIIDUpperBound}). This upgrades the
-earlier $\{0,1\}$-valued tree indicator flagged in the
-review-2026-06-05 finding D7-EV3. Honest residual scope: the rate
-is attached to the \emph{combinatorial} loop-presence observable
-(4-cycle density, matching the granularity of the tree predicate);
-the attachment to the \emph{dynamical} loop-correction terms of the
-Chertkov-Chernyak loop-series
-expansion~\cite{ChertkovChernyak2006LoopSeries} over the BP message
-space remains future work.
-\item \textit{Topological condition}: the
-categorical Chern coefficient $c_1$ of the system must vanish.
-\end{enumerate}
+Antão, Sun, Fumega and Lado~\cite{AntaoSunFumegaLado2026PRL136} computed local
+topological markers on quasicrystalline systems of up to $268$ million sites.
+Their method represents the ground-state projector $\hat{\mathcal P}$ as a
+matrix-product operator obtained from a Chebyshev expansion of the Hamiltonian
+MPO, then builds the Bianco--Resta local Chern
+marker~\cite{BiancoResta2011}
+$C_\alpha = 2\pi i \langle \alpha | \hat Q \hat X \hat P \hat Y \hat Q -
+\hat P \hat X \hat Q \hat Y \hat P | \alpha\rangle$
+as a tensor-network contraction. Applied to a $\pi$-flux square lattice with an
+incommensurate $C_8$ or $C_{10}$ modulation of the second-neighbour imaginary
+hopping, the marker resolves spatially alternating Chern domains of width on the
+order of $40$ atoms.
 
-The biconditional
-\texttt{analog\_hawking\_simulable\_iff\_fourCycleFree\_and\_nonneg\_and\_c1\_zero}
-(Lean module \texttt{AnalogHawkingDemarcation.lean}) ties these two
-axes together at the type level. The substrate beneath it
-(seven Lean modules across the BP-on-TN, LDP-rate-function, Chebyshev-
-TN, aperiodic-lattice, and Chern-bridge layers) is fully generic
-over the factor-graph type parameters and applies to any LDP-
-controlled-BP / Chebyshev-TN classification setting. Analog-Hawking
-radiation is one concrete application, formalized via the Kibble-
-Zurek-Unruh correspondence (Section~\ref{sec:kzu-application}).
+A demarcation criterion separating these regimes would have to be a statement
+about the interaction structure that predicts, in advance, whether the classical
+method suffices. This paper does not supply one. What it supplies is a
+machine-checked theorem about when the message-passing iteration itself
+terminates, and a machine-checked account of why the combinatorial statistic we
+built to detect that condition does not do the job it was named for.
 
-\subsection{Scope and contributions}
-
-We make four main contributions:
+\subsection{Contributions}
 
 \begin{itemize}
-\item A Lean~4 formalization of belief propagation on bipartite
-factor graphs in the Yedidia-Freeman-Weiss 2003 convention, with 46
-substantive theorems covering message-update positivity, factorization,
-fixed-point stability, and Bethe free-energy substrate
-(Section~\ref{sec:bp-substrate}).
+\item A formalization of belief propagation on bipartite factor graphs in the
+Yedidia--Freeman--Weiss convention~\cite{YedidiaFreemanWeiss2003}, including
+the message updates, their cavity neighbourhoods, the fixed-point predicate,
+beliefs, and a Bethe free energy (Sec.~\ref{sec:bp}).
 
-\item A kernel-verified biconditional characterization of BP-
-favorable factor graphs in terms of the vanishing of a continuous
-loop-correction rate function:
-$\mathrm{IsBPConvergenceFavorable}\ G\ f_a \iff
-\mathrm{loopCorrectionRate}\ G = 0 \land
-(\forall a\, y,\, 0 \leq f_a(y))$ where $\mathrm{loopCorrectionRate}$
-is the Cram\'er/Legendre transform at zero deviation of the Bernoulli
-loop-presence log-MGF (4-cycle density of the factor graph; see
-Section~\ref{sec:ldp-bp}). The zero-rate $\Leftrightarrow$ tree
-equivalence is itself a theorem proven through the Legendre
-evaluation, and a general threshold form
-($\mathrm{rate} \leq t \Leftrightarrow$ explicit loop-density bound
-$1 - e^{-t}$) replaces the former fixed indicator threshold
-(Section~\ref{sec:ldp-bp}).
+\item A finite-horizon convergence theorem for synchronous belief propagation
+(Sec.~\ref{sec:convergence}). Its mathematical core is a self-contained
+statement about any iteration on a finite coordinate type whose one-round
+update at a coordinate reads only coordinates of strictly smaller rank: such an
+iteration freezes coordinate by coordinate and reaches a genuine fixed point
+after $\sup(\mathrm{rank})+1$ rounds. The belief-propagation instantiation
+supplies rank locality from the actual update rule, and the rank certificate
+that supplies it is proven to force four-cycle-freeness, so it is not a vacuous
+hypothesis. An explicit certificate on a three-node tree witnesses that the
+theorem fires.
 
-\item A categorical-Chern $\leftrightarrow$ real-space-Chern bridge
-formalized via the Chebyshev tensor-network expansion, with
-substantively distinct crystalline (band-edge $x = 1$) and
-quasicrystalline (band-edge $x = -1$) limits whose difference
-$2 c_1$ extracts the topological invariant
-(Section~\ref{sec:chern-bridge}).
+\item A large-deviation rate function on finite factor graphs
+(Sec.~\ref{sec:rate}), constructed as the Legendre transform at zero deviation
+of the log-moment-generating function of a Bernoulli loop-presence observable
+whose success parameter is the graph's 4-cycle density. The closed form
+$-\log(1-p)$ is proven by an explicit least-upper-bound argument, and the
+resulting object is strictly monotone in loop density rather than
+$\{0,1\}$-valued.
 
-\item A unified demarcation theorem
-(Section~\ref{sec:demarcation}) combining the LDP-BP and Chern
-contributions: a system is classically simulable iff BP-LDP-
-favorable AND $c_1 = 0$. Contrapositive yields the quantum-advantage
-regime explicitly.
+\item A negative result about that rate function (Sec.~\ref{sec:limits}). It is
+the paper's main finding, and it disqualifies the criterion the development was
+built to support.
 \end{itemize}
 
-\section{Belief propagation on factor graphs: Lean substrate}
-\label{sec:bp-substrate}
+\subsection{What is not claimed}
 
-[Wave 6w.2 substrate. Section content to be expanded in subsequent
-Stage-10 revision passes per the bundle-lift procedure. The 46
-substantive theorems in \texttt{BeliefPropagation.lean} cover the
-bipartite \texttt{FactorGraph} structure, \texttt{BPMessages} bundle,
-the Yedidia-Freeman-Weiss \texttt{bpVariableUpdate} +
-\texttt{bpFactorUpdate} + combined \texttt{bpUpdate}, the
-\texttt{IsBPFixedPoint} predicate, all-iterates-invariant
-characterization, variable + factor beliefs with positivity
-propagation, Shannon entropy + log-1/log-0 identities, factor energy
-+ relative-entropy decomposition, Bethe free energy with vacuum
-boundary + functoriality, and the tree-factor-graph predicate.]
+No theorem here states that a system is classically simulable, or that a
+quantum processor holds an advantage on it. No theorem bounds a runtime, an
+approximation error, or a bond dimension. The convergence theorem is
+conditional on a supplied rank certificate and is silent about which graphs
+admit one. The Bethe free energy is defined and given boundary and congruence
+properties; it is not shown to be stationary at belief-propagation fixed
+points. Nothing in the development computes, approximates or bounds a Chern
+number, a local Chern marker, or any other topological invariant.
 
-\figuredeferred{fig:d7-bp-factor-graph}{a worked factor graph with the BP messages; design only}
-\section{LDP-controlled belief-propagation convergence}
-\label{sec:ldp-bp}
+\section{Belief propagation on factor graphs}
+\label{sec:bp}
 
-[Wave 6w.3 headline substrate, upgraded per review-2026-06-05
-finding D7-EV3. The biconditional
-\texttt{fourCycleFree\_nonneg\_iff\_ldp\_rate\_zero} ties the
-structural favorability predicate
-\texttt{IsFourCycleFreeNonnegWeighted} (four-cycle-free topology with
-non-negative factor weights) to
-the vanishing of the loop-correction rate function via the
-substantive characterization
-\texttt{loopCorrectionRate\_eq\_zero\_iff\_fourCycleFree} (proven
-through the
-Legendre evaluation \texttt{loopCorrectionRate\_eq\_neg\_log}, the
-log/density analysis, and the 4-cycle Finset $\leftrightarrow$
-predicate bridge \texttt{fourCycles\_eq\_empty\_iff\_fourCycleFree});
-genuine tree-ness enters through
-\texttt{IsTreeFactorGraph} and the end-to-end BP-convergence
-demarcation \texttt{analog\_hawking\_tree\_simulable\_demarcation}.
-Twenty-three substantive theorems + two companions verified
-kernel-only, including strict positivity on loopy graphs, strict
-monotonicity in loop density, the threshold $\Leftrightarrow$
-loop-density characterization
-(\texttt{loopCorrectionRate\_le\_iff\_loopDensity\_le}), the exact
-finite-$n$ Cram\'er identity for the no-loop-correction event, the
-Bernoulli Kullback-Leibler bridge to the project LDP suite
-(\texttt{loopCorrection\_isCramerIIDUpperBound}), and the worked
-complete-bipartite $2{\times}2$ value $\log(4/3)$.]
+\section{Rank-local iteration and finite-horizon convergence}
+\label{sec:convergence}
 
-\figuredeferred{fig:d7-bp-convergence}{the convergence rate against the LDP rate function; the rate function is formalized as a predicate, so numerical convergence data must be generated}
-\section{Chebyshev tensor-network Chern bridge}
-\label{sec:chern-bridge}
+\section{A Cram\'er rate for 4-cycle density}
+\label{sec:rate}
 
-[Wave 6w.4 + Wave 6w.5 substrate. First-kind Chebyshev polynomials via
-canonical recurrence; aperiodic-lattice predicates; categorical-Chern
-$\leftrightarrow$ real-space-Chern bridge with substantively distinct
-crystalline ($c_0+c_1$) vs quasicrystalline ($c_0-c_1$) band-edge
-limits.]
+\section{What the 4-cycle rate does not measure}
+\label{sec:limits}
 
-\figuredeferred{fig:d7-chebyshev-chern}{the Chern marker against bond dimension; blocked on a tensor-network production run that has not been made}
-\section{The demarcation theorem}
-\label{sec:demarcation}
+\section{Related work}
+\label{sec:related}
 
-[Wave 6w.6 HEADLINE. Combined biconditional consuming Wave 6w.3 +
-Wave 6w.5 substantive theorems; two companion lemmas (the post-
-adversarial-remediation count, after the three P5 tautologies caught
-by the Round-1 review were deleted: bare-decomposition equivalence
-and contrapositive quantum-advantage-regime; the forward-extraction
-and reverse-constructor wrappers were also deleted as P5 identity-
-and trivial-constructor tautologies) including the
-contrapositive quantum-advantage regime.]
+\section{What would have to be proved}
+\label{sec:outlook}
 
-\figuredeferred{fig:d7-demarcation-boundary}{the simulability/advantage boundary; this is the paper's headline and the boundary is currently a theorem rather than a computed curve}
-\section{Kibble-Zurek-Unruh application (substrate level only)}
-\label{sec:kzu-application}
+\appendix
 
-[Wave 6w.1 application substrate at the cross-module identification
-level. The headline
-\texttt{surface\_gravity\_bounds\_kzm\_exponent} (Lean module
-\texttt{KibbleZurekUnruh.lean}) substantively bounds the
-Kibble-Zurek exponent via the SK-EFT surface gravity under the
-identification $1/\tau_Q \equiv \kappa$, but the present substrate
-does NOT contain per-platform instantiation bridges into the
-demarcation theorem. Concretely, the \texttt{AnalogHawkingDemarcation.lean}
-module does not import \texttt{KibbleZurekUnruh.lean} and there are
-no \texttt{analog\_hawking\_simulable\_BEC\_instance} or analogous
-platform-specific lemmas at this writing. Per-platform bridges (BEC,
-polariton, graphene Dirac fluid) are deferred to a subsequent D-bundle
-absorption pass; the present paper's claim is limited to the
-substrate-level identification and the cross-module-level cross-check
-that the KZM exponent extraction by Tindall-Sels classical
-simulation is in the same universal-scaling regime as the SK-EFT
-analog-Hawking prediction.]
+\section{Statements as elaborated}
+\label{app:statements}
 
-\section{Discussion}
-
-The Phase 6w D7 bundle's central contribution is a kernel-verified
-biconditional demarcation between regimes where the formalized
-classical tensor-network substrate suffices and where the
-formalization identifies a structural simulation advantage for
-quantum processors. The demarcation is falsifiable on two distinct
-axes (loop-correction rate function + Chern coefficient) and the substrate
-is generic enough at the type level to apply beyond analog Hawking
-to any factor-graph + Chebyshev-TN classification setting.
-
-We are explicit about the substrate's current scope: (i) the
-loop-correction rate function is now a genuine Cram\'er/Legendre
-construction (the review-2026-06-05 D7-EV3 upgrade): the Legendre
-transform at zero deviation of the Bernoulli loop-presence log-MGF,
-with the closed form $-\log(1 - p)$, the zero-rate
-$\Leftrightarrow$ tree equivalence, strict positivity on loopy
-graphs, strict monotonicity in loop density, the exact finite-$n$
-Cram\'er identity, and the Kullback-Leibler bridge to the project
-LDP suite all proven kernel-only: the honest residual is that
-the rate attaches to the \emph{combinatorial} loop-presence
-observable (4-cycle density, the granularity of the tree
-predicate), while the attachment to the \emph{dynamical}
-loop-correction terms of the Chertkov-Chernyak loop-series
-expansion over the BP message space remains future work; (ii) the
-per-platform analog-Hawking bridges (BEC, polariton, graphene
-Dirac fluid) are at the cross-module substrate level via the
-\texttt{KibbleZurekUnruh.lean} foundation theorem but are NOT yet
-shipped as platform-specific instantiation lemmas attached to the
-demarcation predicate; (iii) the rate function is built from
-decidable 4-cycle combinatorics (kernel-checked \texttt{Finset}
-filter; the former \texttt{Classical.byCases} on the undecidable
-tree predicate is gone from the definition), with noncomputability
-entering only through the real-valued logarithm and supremum.
-Each residual scope point is a clean future-revision target.
+\section{Axiom closure and reproduction}
+\label{app:axioms}
 
 \begin{thebibliography}{99}
 
@@ -318,7 +185,7 @@ DOI 10.1126/science.adx2728, arXiv:2503.05693.
 T.~V.~C.~Antão, Y.~Sun, A.~O.~Fumega, J.~L.~Lado,
 \emph{Tensor Network Method for Real-Space Topology in Quasicrystal
 Chern Mosaics},
-Phys.\ Rev.\ Lett.\ \textbf{136}, 156601 (2026), Editor's Suggestion,
+Phys.\ Rev.\ Lett.\ \textbf{136}, 156601 (2026),
 DOI 10.1103/hhdf-xpwg, arXiv:2506.05230.
 
 \bibitem{YedidiaFreemanWeiss2003}
@@ -332,11 +199,6 @@ M.~Chertkov, V.~Y.~Chernyak,
 \emph{Loop series for discrete statistical models on graphs},
 J.\ Stat.\ Mech.\ (2006) P06009,
 DOI 10.1088/1742-5468/2006/06/P06009, arXiv:cond-mat/0603189.
-
-\bibitem{Zurek1985}
-W.~H.~Zurek,
-\emph{Cosmological experiments in superfluid helium?},
-Nature \textbf{317}, 505 (1985).
 
 \bibitem{BiancoResta2011}
 R.~Bianco, R.~Resta,
