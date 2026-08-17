@@ -410,7 +410,12 @@ read the same `references/prohibited-patterns.md`, so a rule cannot mean one thi
 and another while reviewing.
 
 Draft either in-context or by dispatching `skeft-qa:paper-drafter`, one agent per **disjoint**
-section, each with a brief. The lead owns the outline, the argument's spine and integration. A
+section, each with a brief. The lead owns the outline, the argument's spine and integration.
+**What that brief must contain, and where each of its claims must be derived from, is owned by the
+`skeft-qa:paper-authoring` skill's `references/dispatch-brief.md`** — read it before dispatching. Its
+rule is that every factual claim a brief makes names the artifact it came from; a brief is an
+instruction that nothing gates, so that is the only control acting before a dispatch spends itself on
+a wrong premise. A
 drafted section that cites, quotes **or characterizes** prior work is written against that work
 **read first** — the full text of every section, table and equation carrying the claim being made,
 never an abstract in place of one. No layer below catches misrepresented prior art, because each

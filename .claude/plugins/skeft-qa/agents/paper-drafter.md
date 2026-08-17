@@ -62,7 +62,13 @@ The paths below are written relative to those roots; prepend the absolute prefix
 3. `papers/<bundle>/bundle_metadata.json` — `target_journal` and `length_target` are the
    contract this manuscript is judged against.
 4. **Your brief** — bundle, section, charter role, the substrate you may draw on, and an
-   absolute path for every source your section cites.
+   absolute path for every source your section cites. What the lead owes you, and where each
+   of the brief's claims must have been derived from, is
+   `.claude/plugins/skeft-qa/skills/paper-authoring/references/dispatch-brief.md` — the
+   author's side of this list.
+   Its rule is that **every factual claim a brief makes names the artifact it came from**, so
+   a brief claim with no named origin is one nobody verified: treat it as unverified and
+   establish it before you rely on it.
 5. **The substrate you are describing** — Lean theorem statements, `formulas.py` entries,
    computed values. The actual declarations, not a summary of them.
 

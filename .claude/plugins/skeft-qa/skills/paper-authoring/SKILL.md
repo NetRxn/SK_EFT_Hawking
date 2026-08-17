@@ -16,6 +16,13 @@ path, so the floor is identical however the prose is produced.
 **Read `references/prohibited-patterns.md` before drafting.** It is mandatory, not
 background, and it is short.
 
+**Dispatching a `paper-drafter` or a redraft lead rather than writing yourself? Read
+`references/dispatch-brief.md` first.** It is the author's side of the brief — what the
+lead owes the agent, and for each claim class, the artifact the claim must be derived
+from. Its one rule is that every factual claim a brief makes names its origin, which is
+the only control that operates while the brief is being written rather than after a
+dispatch has acted on it.
+
 ---
 
 ## Why this skill exists

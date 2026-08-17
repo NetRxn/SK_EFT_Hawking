@@ -176,14 +176,43 @@ Wave 2 read `paper-drafter.md`, the paper-authoring skill, `BUNDLE_LIFT_PROCEDUR
 `WAVE_EXECUTION_PIPELINE.md` in full. **No artifact specifies what a Stage-10 dispatch brief must
 contain or where its claims must come from.** It is composed fresh, from memory, each time.
 
-Measured across the window: **13 of 13 bundles filed at least one finding recording that the brief's
-own assertions were contradicted by the substrate or by a held primary source.** The receiving agent's
-first substantive act is refuting its instructions.
+**The detection works; the prevention does not exist.** `paper-drafter.md:64` enumerates what a brief
+carries, `:80` ranks a rule above it, and `:217` instructs the agent to report *"contradictions
+between your brief and what the sources actually say."* `WAVE_EXECUTION_PIPELINE.md:412-423` governs
+the dispatch and likewise ranks a reading rule above the brief. Every brief defect is therefore caught
+**downstream**, after an agent has read sources and formed prose, at full dispatch cost — because
+nothing exists on the author's side to prevent it at near-zero cost.
 
-Wave 2 corrected wave 1 here: "assemble incrementally" was *not* missing from the Aug-17 briefs — it
-appears verbatim in the D9/D10/D7 sub-transcripts. It survives only because it is hand-retyped each
-time, and D9's transcript shows that backfiring, a rule copied from a differently-shaped bundle being
-flagged as wrong for D9.
+**Piloted 2026-08-17 against the real D9 dispatch brief.** A de-facto contract exists and is strong —
+worktree and branch, why the redraft exists, settled bundle context, the assemble-incrementally rule,
+a seven-point verification discipline, an explicit *"REQUIRED: report contradictions between this
+brief and the sources"*, the findings format, git discipline. It is retyped per dispatch and written
+down nowhere.
+
+So the defect is not that instructions go missing. It is that the contract **cannot improve
+cumulatively**: a lesson learned on one bundle reaches the next only if the lead re-types it, and a
+rule shaped for one bundle gets copied to another whose shape differs.
+
+**What is measurably wrong is the unsourced factual claim.** That same brief asserts *"D9's
+manuscript contains fifteen `\texttt` spans in total, so the audit's 169 references cannot be
+prose."* No origin given. The receiving agent measured it and refuted it, and its filed finding
+records the measurement — `papers/AutomatedReviews/2026-08-17-d9-stage10-redraft/D9.md` §3: fifteen
+literal `\texttt` spans, 196 `\lean{}` spans over 176 distinct declaration names, because `\lean` is
+`\texttt{#1}` in the preamble. The prose population is 176, and the token-scan trap that produced the
+error is warned against two paragraphs above it in the same brief. Requiring each brief claim to name
+its origin catches that while writing, free, rather than mid-dispatch, at full cost.
+
+⚠️ **Three earlier revisions of this section were wrong, and the sequence is the finding.** The first
+claimed *13 of 13 bundles filed a brief contradiction* — conflating wave 2's result (13/13 show
+**metadata or charter** contradicted by substrate) with a claim about the **brief**. The second
+claimed *5 of 13 carry a CONTRADICTIONS section, none of them from Aug-17*; the adversarial pass
+showed both halves false — zero of thirteen findings files contain the string, the five traced to
+`contradicts` matching inside ordinary physics findings, and D9, counted as carrying none, contains
+*"See the contradictions section of my report."* The third located the section in the **findings
+file** when the brief requires it in the **report-back**.
+
+Each correction came from checking a different artifact, and the corrected claim is now about a
+mechanism rather than a count — which is what the population figures kept failing to measure.
 
 **Remediation.** A brief contract naming the required sections and, per claim class, the artifact its
 claims must be read from — substrate → `lean_deps.json`; recency → the phase roadmap and module git

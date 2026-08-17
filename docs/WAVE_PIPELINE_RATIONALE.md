@@ -108,6 +108,32 @@ Renumbering would silently invalidate all four. `BUNDLE_LIFT_PROCEDURE.md` §9 a
 `gate_precheck.py s10` use "Stage 10" as shorthand for the claims sub-gate specifically; that is
 the same stage narrowed to its exit condition, not a second Stage 10.
 
+## Stage 10 — why a dispatch brief must name each claim's origin
+
+A brief is an instruction, not a deliverable. No gate reads it, no reviewer audits it, and the
+pipeline's controls all sit downstream of it — so a wrong premise in a brief is discovered only after
+a drafting agent has read sources and formed prose against it.
+
+The receiving side was already built to survive this: `paper-drafter` ranks a reading rule above its
+brief and is required to report contradictions between the brief and the sources. That detection
+works. It is simply the *only* control, so every brief defect is paid for at full dispatch cost.
+
+Naming the origin is the counterpart that acts while the brief is being written. It is self-checking
+rather than enforced: a claim whose artifact you cannot name is a claim you did not verify, and the
+sentence is where that surfaces.
+
+Measured on the D9 dispatch, 2026-08-17, and recorded in that dispatch's own filed finding —
+`papers/AutomatedReviews/2026-08-17-d9-stage10-redraft/D9.md` §3. The brief asserted a manuscript
+contained fifteen `\texttt` spans, and concluded from it that a 169-reference audit population could
+not be prose. The receiving agent measured it: fifteen literal `\texttt` spans, but **196** `\lean{}`
+spans over **176 distinct declaration names**, because `\lean` is defined as `\texttt{#1}` in the
+preamble. The prose population is 176, so the audit figure was consistent with prose all along. The
+brief had warned against token-level scans two paragraphs above the claim that a token-level scan
+produced.
+
+The rule is owned by the `paper-authoring` skill's `references/dispatch-brief.md`; Stage 10 names it
+rather than restating it, per ADR-011 D3.
+
 ## Stage 10 — why the prose rules are exactly these two
 
 **The em-dash rule is a trust signal, not a style preference.** An em-dash reads as AI authorship

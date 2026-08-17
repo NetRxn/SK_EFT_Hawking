@@ -190,6 +190,47 @@ converges on a different bad attractor. Hence: the voice gate (Phase 3) is **det
 read-through reviewer (Phase 5) carries a **distinct brief** and is explicitly not the
 adversarial-reviewer, and human calibration happens on a *sample*.
 
+### C6. The Stage-10 dispatch brief has a reader's side and no author's side. Measured 2026-08-17.
+
+`skeft-qa:paper-drafter` enumerates what a brief carries, ranks a reading rule above it, and
+instructs the agent to report contradictions between its brief and what the sources say.
+`WAVE_EXECUTION_PIPELINE.md` §Stage 10 governs the dispatch — one agent per disjoint section, each
+with a brief, the lead owning outline, spine and integration — and likewise ranks a reading rule
+above the brief.
+
+**Nothing states what the lead must put in.** So a brief's claims are validated only *downstream*,
+after a drafting agent has read its sources and formed prose, at full dispatch cost.
+
+**A de-facto contract exists and is strong; it is simply not written anywhere.** Piloted 2026-08-17
+against the D9 dispatch: that brief carries the worktree and branch, why the redraft exists, the
+bundle-specific context already settled, the assemble-incrementally rule, a seven-point verification
+discipline (read a theorem's statement rather than grepping for it; unfold carrier types; treat a
+`lean_local_search` miss as proving nothing; check whether the substrate has moved ahead of the
+manuscript; read primary sources at page level; mark an unheld source rather than inventing
+verification; distrust token-level scans), an explicit *"REQUIRED: report contradictions between this
+brief and the sources"*, the findings format, and git discipline.
+
+Every one of those is retyped per dispatch. The consequence is not that instructions vanish — it is
+that the contract cannot be **improved cumulatively**: a lesson learned on one bundle reaches the
+next only if the lead remembers to carry it, and a rule shaped for one bundle is copied to another
+whose shape differs.
+
+**The measurable defect is the unsourced factual claim.** The same D9 brief asserts *"D9's manuscript
+contains fifteen `\texttt` spans in total, so the audit's 169 references cannot be prose."* No origin
+is stated. The receiving agent measured it and refuted it; its filed finding
+(`papers/AutomatedReviews/2026-08-17-d9-stage10-redraft/D9.md` §3) records the measurement: fifteen
+literal `\texttt` spans, **196** `\lean{}` spans over **176 distinct declaration names**, because
+`\lean` is defined as `\texttt{#1}` in the preamble — so the prose population is 176, and a
+169-reference audit is entirely consistent with being a prose measurement. The brief's own
+token-scan warning sits two paragraphs above the claim a token scan produced.
+
+A brief obliged to name each claim's origin surfaces that while writing, at no cost, instead of
+mid-dispatch, at full cost.
+
+⚠️ This is the failure `docs/architecture/README.md` predicts for a surface with no owning document:
+*a fix with nowhere to be specified goes into the artifact it was found in.* Both prior instances —
+source fidelity (ADR-014) and the Lean slots (ADR-008) — were resolved by giving the surface a home.
+
 ---
 
 ## Decision
@@ -223,6 +264,50 @@ values with pointers to the artifact that owns them. Every amendment in this ADR
 The Stage-9/10-before-13 ordering assertion is Gate 16 assertion #2 and sub-item 3 of TODO-D5. It
 ships inside Phase 1 with the other four sub-items, not as a standalone check. Filing it separately
 was itself an instance of the failure `docs/architecture/README.md` rule 1 names.
+
+### D5 — The dispatch brief's author-side contract inverts the reader-side enumeration; it does not add a second one
+
+**ADDED 2026-08-17.** Per C6.
+
+**Scope, stated because the two candidate scopes differ materially.** `paper-drafter` enumerates five
+fields — bundle, section, charter role, the substrate the agent may draw on, and absolute source
+paths. That is what the *receiving agent* needs in order to start, and it is a strict subset of what
+a real brief carries: the piloted D9 dispatch also carries the settled bundle context, the
+assemble-incrementally override, a seven-point verification discipline, the contradictions
+requirement, the findings format and git discipline.
+
+**The contract covers the brief as actually written, not the drafter's five fields.** Calling it an
+inversion of `paper-drafter` would understate it. What the two share is a single rule, and that rule
+is the contract's substance: for each claim the brief makes, **the artifact the claim was derived
+from is named in the brief**. `paper-drafter` is then updated to cite the contract as its author-side
+counterpart, so the field list and the contract cannot drift apart silently — which is the rule-1
+obligation here, since neither document may become a second roster for the other.
+
+Three consequences follow, and each is a rule rather than a preference:
+
+1. **Every brief claim names the artifact it came from.** Substrate claims from `lean/lean_deps.json`
+   and the module's git history; recency claims from the owning phase roadmap; source claims from the
+   citation registry's **held** state, never its presence (ADR-014). A brief assertion with no named
+   origin is the shape that produced C6's population.
+2. **The contract lives in the `paper-authoring` skill**, which is what the lead reads while
+   drafting, and the law names it as the owner rather than restating it — per D3. The brief itself
+   remains free prose; what is fixed is which questions it must answer and where each answer comes
+   from.
+3. **The CONTRADICTIONS section stops being brief-carried.** It is the instrument that detects a
+   defective brief, so it belongs to the contract and not to whichever brief happened to request it.
+
+**Deliberately out of scope.** No check, no gate, no ratchet. The detection this ADR's §C6 describes
+already exists and works; what is missing is prevention, and a gate on brief prose would be a second
+decider over an artifact that is an instruction, not a deliverable.
+
+⚠️ **The contract is falsified in the drafter's RETURNED REPORT, not in the filed findings.** The
+brief requires the contradictions section in the report-back; a bundle's
+`papers/AutomatedReviews/<date>-<slug>/<bundle>.md` need not carry it, and scanning that file for the
+section is the measurement error C6's own history records. The evidence that the contract failed is a
+returned report that contradicts a brief claim **whose origin the brief named** — the brief cited an
+artifact, and the artifact does not say what the brief said it says. A contradiction against an
+unsourced claim falsifies nothing about the contract, because the contract's whole content is that
+such a claim should not have been written.
 
 ---
 
@@ -704,6 +789,38 @@ always-on posture document is a content change that deserves its own change, not
 
 The new `paper-authoring` skill (Phase 5) is authored to these criteria from the start, so it
 does not join the backlog it is landing beside.
+
+---
+
+### Phase 9 — the dispatch brief's author-side contract (ADDED 2026-08-17)
+
+**Why last, and why small.** It ships no mechanism. Phases 1–8 built the layer that *detects* a
+manuscript defect; this one closes the gap that makes detection the only control on the layer's own
+input. It is documentation and a skill reference — the cheapest phase in the ADR and the only one
+that pays on every future dispatch rather than on a corpus.
+
+Five artifacts, one commit, per D2 and `docs/architecture/README.md` rule 2:
+
+1. **`skills/paper-authoring/references/dispatch-brief.md`** — the contract. The field list inverted
+   from `paper-drafter`, each field paired with the artifact its claims must be derived from, and the
+   CONTRADICTIONS section stated as a standing requirement rather than a per-brief request. The
+   skill's `SKILL.md` gains the pointer.
+2. **`WAVE_EXECUTION_PIPELINE.md` §Stage 10** — names the contract as the brief's owner. Per D3 it
+   names the owner and does not restate the fields.
+3. **`docs/architecture/README.md`** — a new ownership-table row for *what must a dispatch brief
+   contain, and where do its claims come from*. C6 records that this row's absence is the root cause,
+   and the table already carries two prior instances of the same omission.
+4. **`.claude/plugins/skeft-qa/agents/paper-drafter.md`** — its brief enumeration cites the contract
+   as the author-side counterpart, so the two cannot drift apart silently.
+5. **`docs/WAVE_PIPELINE_RATIONALE.md`** — the rule's *why*. Phase 7 made this document the home for
+   every pipeline rule's reason, and D3's law-names-owners split means the Stage 10 amendment carries
+   the rule while the rationale carries what it cost to learn. A rule whose reason lives nowhere is
+   the next rule somebody relitigates.
+
+**Verification.** Not a check, and not the filed findings — per D5, the contract is falsified in the
+drafter's **returned report**: a contradiction raised against a brief claim whose origin the brief
+named. The D9 dispatch is the recorded baseline, where an unsourced count of `\texttt` spans was
+refuted by the receiving agent's first measurement.
 
 ---
 
