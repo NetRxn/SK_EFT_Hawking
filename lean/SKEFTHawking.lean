@@ -4192,10 +4192,13 @@ import SKEFTHawking.Phase6vSubwaves8DHClose
 import SKEFTHawking.Phase6vWave9Close
 
 -- Phase 6w Wave 6w.1 foundation: Kibble-Zurek-Unruh correspondence between
--- the SK-EFT surface gravity kappa and the KZM defect-density scaling
--- exponent (Tindall, Mello, Fishman, Stoudenmire, Sels, Science 392, 868
--- (2026), DOI 10.1126/science.adx2728; arXiv:2503.05693). Headline:
--- surface_gravity_bounds_kzm_exponent.
+-- the SK-EFT surface gravity kappa and the KZM freeze-out-time exponent,
+-- with the freeze-out-length, defect-density and correlation-collapse
+-- exponents named separately and related by kernel-checked reduction laws
+-- (the last is the reciprocal convention of Tindall, Mello, Fishman,
+-- Stoudenmire, Sels, Science 392, 868 (2026), DOI 10.1126/science.adx2728;
+-- arXiv:2503.05693). Headline:
+-- kzm_freezeOutTime_exceeds_horizonTime_of_one_lt_kappa.
 import SKEFTHawking.KibbleZurekUnruh
 
 -- Phase 6w Wave 6w.2 Mathlib-PR-quality substrate: belief propagation on

@@ -77,7 +77,7 @@
 
 ### Wave 6w.1 — Kibble-Zurek-Unruh bridge (foundation)
 
-**Goal:** Lift the former Phase 6v.7 Tindall/Sels KZM-Unruh bridge into Phase 6w as the foundation wave. Ship `surface_gravity_bounds_kzm_exponent` Lean theorem: the SK-EFT surface gravity κ at the analog horizon bounds the KZM exponent extracted by tensor-network methods on disordered spin glasses, via the WKB connection formula's modified unitarity. Cite Tindall/Sels as independent classical-simulation validation.
+**Goal:** Lift the former Phase 6v.7 Tindall/Sels KZM-Unruh bridge into Phase 6w as the foundation wave. Ship the KZM exponent family with the reduction laws that relate them, and the headline `kzm_freezeOutTime_exceeds_horizonTime_of_one_lt_kappa`: under the identification τ_Q = 1/κ, the SK-EFT surface gravity at the analog horizon decides whether the KZM freeze-out time exceeds the bare horizon-crossing time. Cite Tindall/Sels for the correlation-collapse exponent their tensor-network method extracts, converted into the standard convention rather than compared to it.
 
 **Bundle target:** D1 + E1 + E2 reinforcement; light foundation for the deeper 6w.3 + 6w.5 + 6w.6 waves.
 **Key substrate:** `HawkingUniversality.lean`, `WKBConnection.lean`, `LDP/`, `QuantumCrooks/`, `CrooksAnalogHawking/`, `ETH/`.

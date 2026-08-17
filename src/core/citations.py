@@ -11267,7 +11267,7 @@ CITATION_REGISTRY = {
                     'papers/D1/paper_draft.tex',
                     'papers/E1/paper_draft.tex',
                     'papers/E2/paper_draft.tex'],
-        'provides': ['Independent classical-simulation validation of universal Kibble-Zurek physics on 300+ qubit disordered TFIMs (2D square, 3D cubic, 3D diamond lattices), matching D-Wave Advantage2 5000-qubit quantum annealer via belief-propagation contraction of lattice-specific PEPS/PEPO tensor networks'],
+        'provides': ['Independent classical-simulation extraction of a Kibble-Zurek correlation-collapse exponent on a 300+ qubit disordered TFIM (cylindrical, diamond cubic and dimerized cubic lattices, p. 2) via belief-propagation contraction of lattice-specific tensor networks. The reported mu ~ 2.70-2.75 (Fig. 5, p. 6) is the RECIPROCAL-convention length exponent defined by the rescaling d~ = t_a^{-1/mu} d, i.e. xi ~ t_a^{1/mu}; it is not a defect density and is not comparable to the freeze-out-time exponent nu*z/(1+nu*z). Head-to-head comparisons against the D-Wave Advantage2 annealer are at 8x8 cylinders and ~50-qubit three-dimensional lattices (pp. 4-5), not at the 300+ qubit Kibble-Zurek run'],
         'notes': 'Phase 6w Wave 6w.1 foundation reference. The Kibble-Zurek scaling exponent extracted here (universal data of the continuous quantum phase transition) is the experimentally-cross-checked analog of the SK-EFT surface-gravity prediction via the Kibble-Zurek-Unruh correspondence (1/τ_Q ≡ κ). Also anchors Phase 6w Wave 6w.2/6w.3 (BP-on-TN Mathlib substrate + LDP-controlled simulability) as the foundational primary source.',
     },
 

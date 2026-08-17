@@ -11,16 +11,23 @@
 
 ## Goal
 
-Ship the foundation theorem `surface_gravity_bounds_kzm_exponent` in a new
+Ship the foundation theorem
+`kzm_freezeOutTime_exceeds_horizonTime_of_one_lt_kappa` in a new
 Lean module `lean/SKEFTHawking/KibbleZurekUnruh.lean`. The theorem
 substantively encodes the Kibble-Zurek-Unruh correspondence: the SK-EFT
-surface gravity `κ` at an analog horizon controls the effective KZM
-quench rate experienced by a horizon-crossing wavepacket, and via the
-WKB modified-unitarity result from `WKBConnection.lean` the surface
-gravity bounds the KZM defect-density scaling that classical
-tensor-network methods (Tindall, Mello, Fishman, Stoudenmire, Sels —
-Science 392, 868 (2026), DOI 10.1126/science.adx2728) extract on
-disordered TFIM spin glasses.
+surface gravity `κ` at an analog horizon is the effective KZM quench
+rate experienced by a horizon-crossing wavepacket, so the KZM freeze-out
+time is `κ^{-μ_t}` and is compared against the bare horizon-crossing
+time `κ^{-1}`, with `κ` deciding the direction of the comparison.
+
+The module also names the four distinct exponents the literature writes
+as "the Kibble-Zurek exponent" and proves the reduction laws between
+them, which is what makes the value that classical tensor-network
+methods extract (Tindall, Mello, Fishman, Stoudenmire, Sels — Science
+392, 868 (2026), DOI 10.1126/science.adx2728) on disordered TFIM spin
+glasses comparable: theirs is the correlation-collapse exponent in the
+reciprocal convention `ξ̂ ~ τ_Q^{1/μ}`, not a defect density and not the
+freeze-out-time exponent.
 
 This wave produces the *foundation* theorem only. The deeper
 substrate-shaping waves (6w.2 BP-on-TN substrate; 6w.3 LDP-controlled
@@ -32,14 +39,15 @@ follow.
 
 1. **New Lean module** `lean/SKEFTHawking/KibbleZurekUnruh.lean`:
    - `KZMExponents` structure (correlation length exponent `ν > 0`, dynamic exponent `z > 0`).
-   - `kzmScalingExponent (e : KZMExponents) : ℝ := (e.ν * e.z) / (1 + e.ν * e.z)` — closed-form universal scaling.
-   - Substantive lemma `kzmScalingExponent_pos` (defect density does scale).
-   - Substantive lemma `kzmScalingExponent_lt_one` (defect density does not scale faster than τ_Q^{-1}).
+   - `kzmFreezeOutTimeExponent (e : KZMExponents) : ℝ := (e.ν * e.z) / (1 + e.ν * e.z)` — the freeze-out-TIME exponent `t̂ ~ τ_Q^{νz/(1+νz)}`; the only member of the family universally in (0,1).
+   - `kzmFreezeOutLengthExponent`, `kzmDefectDensityExponent (d : ℕ)` and `kzmCorrelationCollapseExponent` — the other three quantities the literature also calls "the Kibble-Zurek exponent", with reduction laws relating them and explicit witnesses that each exceeds 1 for admissible (ν, z, d).
+   - Substantive lemma `kzmFreezeOutTimeExponent_pos` (the freeze-out time does scale with the quench duration).
+   - Substantive lemma `kzmFreezeOutTimeExponent_lt_one` (the freeze-out time never grows faster than the quench duration itself).
    - `KZMUnruhBridge` structure linking an `ExactWKBParams` (from `WKBConnection.lean`) to a `KZMExponents`.
    - `kappaToInverseQuenchRate (br : KZMUnruhBridge) : ℝ := br.wkb.kappa` — the bridge identification 1/τ_Q ≡ κ.
    - `kzmThermalOccupation`: the KZM-Unruh correspondence reproduces Hawking T_H = κ/(2π) (in natural units, matching `hawkingTemp` from `Basic.lean`).
    - Substantive lemma `kzm_unruh_thermal_matches_hawking`: combines the KZM bridge with the existing `hawkingTemp` definition.
-   - **Headline theorem** `surface_gravity_bounds_kzm_exponent`: the WKB modified-unitarity result (`|α|² − |β|² = 1 − δ_k` with `δ_k = 2 Γ_H / κ`) provides a closed-form quantitative upper bound on the KZM defect-density compatible with finite Hawking radiation: under the bridge, the dissipative correction `δ_k ≤ 1` bounds the KZM defect density at horizon-crossing rate `κ` by `1 - δ_k`, giving a falsifiable cross-check between the Tindall/Sels KZM-exponent extraction and the SK-EFT dissipative prediction.
+   - **Headline theorem** `kzm_freezeOutTime_exceeds_horizonTime_of_one_lt_kappa` with its opposite-regime companion `kzm_freezeOutTime_below_horizonTime_of_kappa_lt_one`: under the bridge identification `τ_Q = 1/κ`, the KZM freeze-out time `t̂ = κ^{-μ_t}` exceeds the bare horizon-crossing time `κ^{-1}` when `κ > 1` and falls below it when `κ < 1`. The surface gravity decides the direction and the inequality reverses at `κ = 1`, so the statement is not invariant under rescaling `κ`. The cross-check against the Tindall/Sels extraction runs through `kzmCorrelationCollapseExponent_mul_freezeOutLengthExponent` (convention conversion) and `kzmCorrelationCollapseExponent_three_dim_ising_mem_Ioo` (numerical enclosure in their quoted band).
    - Optional secondary lemma `kzm_extraction_consistent_with_skeft_iff_low_dissipation` — bridge between low-dissipation regime and standard KZM scaling holding.
 
 2. **Citation registration**:
