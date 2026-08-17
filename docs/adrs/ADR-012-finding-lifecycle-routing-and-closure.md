@@ -944,14 +944,19 @@ updated in the same commit, and the move is a `git mv` so history follows.
 
 ADR-004 and ADR-007 each define a ratchet and name **disclosure** as the sanctioned way to satisfy
 it: ADR-004 R2/R3 accept a disclosed assumption on a docstring plus a ledger entry — `topo` is named
-its *"template compliant-disclosed-assumption"* — and ADR-007 mirrors that for a settled no-go.
+its *"template compliant-disclosed-assumption **for R2/R3**"* — and ADR-007 mirrors that for a
+settled no-go.
 Writing the gap down is therefore how you comply, and nothing converts that record into work.
 
 ⚠️ **ADR-016 is the partial exception, and this amendment must not misstate it.** Its D5 says
 disclosure *"moves a row out of the undisclosed ratchet and **not** out of the total ratchet, so it
 is a way to be honest, never a way to be quiet."* That total ratchet is down-only, so ADR-016
-already applies population-level pressure to disclosed rows — the one place in the system that
-does. What it still lacks is *per-item* accountability: the total may fall while any given
+already applies population-level pressure to disclosed rows. It is **not** the only mechanism that
+does — `lean_toolchain.py` calls the down-only ceiling *"the house idiom"*, and at least
+`SIMP_PROJECTION_CEILING` and ADR-002's `NATIVE_DECIDE_BUNDLE_DEBT` keep a disclosed item inside
+their counted population too. ADR-016 D5 names the latter as its own precedent, in the clause
+immediately before the one quoted above. What no ratchet supplies is *per-item* accountability: a
+total may fall while any given
 disclosure sits untouched forever, and no row carries an owner or a date. D23–D27 add that, and
 change nothing about D5's two-ratchet design.
 
@@ -982,26 +987,32 @@ Neither leg ever requires the existing three closed.
 
 The accepted-gap registers, and what each records:
 
-| register | rows | has an open/closed state field? | live |
+| register | rows | the key that already answers *open?* | open |
 |---|---|---|---|
-| `HYPOTHESIS_REGISTRY` | 48 | **yes** — `status`, via `atlas_view._hyp_status` | 37 |
-| `AXIOM_METADATA` | 10 | **yes** — `eliminability` | 1 |
-| `PLACEHOLDER_THEOREMS` | 38 | no — `category` is a *kind* | assumed all |
-| `MODELING_ASSUMPTION_THEOREMS` | 20 | no — `category` is a *kind* | assumed all |
-| `EXISTENTIAL_WITNESS_REGISTRY` | 16 | no — `status` holds a *kind* (`misnamed`/`anchored`) | assumed all |
-| `NATIVE_DECIDE_BUNDLE_DEBT` | 4 | no — bare integers | assumed all |
-| `GATE_EDGE_TYPES_WITHOUT_EMITTERS` | 3 | no | assumed all |
+| `HYPOTHESIS_REGISTRY` | 48 | `status`, via `atlas_view._hyp_status` | 37 |
+| `PLACEHOLDER_THEOREMS` | 38 | `category` — `content` claims content and proves nothing; `docs_marker` is harmless | 32 |
+| `MODELING_ASSUMPTION_THEOREMS` | 20 | `category` — `vacuous_proxy` is disclosed tracked debt; `definitional` is a correct record | 5 |
+| `EXISTENTIAL_WITNESS_REGISTRY` | 16 | `status` — its own header: *"`escape` and `misnamed` are OPEN DEBT, not dispositions"*; `anchored` is clean | 7 |
+| `AXIOM_METADATA` | 10 | `eliminability` — `removed`/`closed`/`ELIMINATED` are closed | 1 |
+| `GATE_EDGE_TYPES_WITHOUT_EMITTERS` | 3 | none stored — re-derived from the AST every run | 3 |
+| `NATIVE_DECIDE_BUNDLE_DEBT` | 4 | none stored — per-bundle ceilings, live count re-derived every run | n/a |
+| **total** | **139** | | **85** |
 
-⚠️ **The first draft of this amendment said "139 accepted-gap disclosures." That was a count of
-ROWS, and the decider is *open gaps*.** The pilot below killed it: 9 of `AXIOM_METADATA`'s 10 read
-`removed` / `closed` / `ELIMINATED` — historical provenance, deliberately retained, exactly as
-`atlas_view` retains a discharged hypothesis *"in the registry (provenance) but NOT an open
-assumption."* Two registers make that distinction, under two different field names. **Four record no
-state at all**, so for 78 of the rows nothing in the system can say whether the gap is still open.
+⚠️ **Row count is not debt count, and a register without a lifecycle field is not a register without
+an answer.** 139 rows carry 85 open gaps. Two registers state their status in a dedicated field;
+three encode it in a `category`/`status` value that names a *kind* whose debt status is fixed by the
+register's own header; two store nothing because they are re-derived from source on every run, which
+is stronger than a stored field — it cannot go stale. **Read each register by its own key; the live
+population is a single computable number, not a range.**
 
-**The live population is therefore between 42 and 119, and the machine cannot narrow it.** That is a
-sharper defect than the one this amendment set out to fix, and it is the precondition for the rest:
-ageing a disclosure is undefined until "is it still open" has an answer.
+**Presence is the state, and delete-on-close is the enforced house convention.** Three checks fail
+on a row whose gap has closed: `graph_atlas.py` — *"is listed in GATE_EDGE_TYPES_WITHOUT_EMITTERS
+but IS now emitted — remove it, or the ratchet stops biting on the ones that remain"*;
+`lean_substrate.py` F7 — *"an entry nobody uses is a stale exemption widening the rule invisibly"*;
+`bundles_readiness.py` — *"debt is now 0 against a ceiling of {ceil} — PAID DOWN; delete its entry"*.
+`EXISTENTIAL_WITNESS_REGISTRY` carries the same instruction in its own body: three remediated rows
+are *"retained (not deleted) so the gate is green against BOTH the pre- and post-regeneration
+`lean_deps.json`; **delete them at the next sweep**."*
 
 ⛔ **`KERNEL_NOGO_REGISTRY` (45) and `SETTLED_FORKS.md` are OUT OF SCOPE and must stay out.** A
 kernel-checked no-go is terminal *correctly* — it is a proven-false route, not deferred work, and a
@@ -1013,10 +1024,11 @@ the decision, not an omission.
 Run before specifying, per the `architecture-change` sequence.
 
 **Slice A, `AXIOM_METADATA` (10).** Nine are closed provenance; one (`aa_residual_interior_at_one_for_hom`,
-`planned`) is live. Its closure plan is present but spelled `discharge_wave`, while five siblings use
+`planned`) is live. Its closure plan is present but spelled `discharge_wave`, while six siblings use
 `evidence_on_close`, one `discharge_plan`, one `elimination_wave`/`elimination_note`. **Six spellings
-across ten rows, no two entries sharing a schema, and zero owners.** This is the one register that is
-internally inconsistent; the other four are each self-consistent.
+across ten rows, seven distinct schemas, and zero owners** — the last of which holds across all seven
+registers. Six of the ten rows *do* share a schema with a sibling, so the spread is narrower than a
+first pass suggests; the register is untidy, not structureless.
 
 **Slice B, `GATE_EDGE_TYPES_WITHOUT_EMITTERS` (3).** All live. Each carries a one-line reason naming
 the gate it starves. None carries a closure plan, an owner, or a date. Gate 7 is one of them, which
@@ -1024,20 +1036,43 @@ is why nothing surfaced it in the eleven days it sat correct and unrepaired.
 
 ### D23 — A registry disclosure is a finding whose remedy is deferred, and it enters this queue
 
-A **fifth emitter** mints live accepted-gap rows into the same `ReviewFinding` population, under a
-reserved id namespace so provenance stays separable from reviewer-emitted findings. It reuses
+A **new extractor** — not a new emitter — mints live accepted-gap rows into the same `ReviewFinding`
+population, under a reserved id namespace so provenance stays separable from reviewer-emitted
+findings.
+
+⚠️ **C3's emitter count is unchanged and must not be renumbered.** C3 governs *reviewer output
+formats* — five candidate channels, of which three feed the graph and two are excluded by design —
+and a register scan is neither a reviewer agent nor a `### N.N — 🔴` markdown heading. In code there
+is exactly one minting path today (`extract_review_finding_nodes`); this adds a second **extractor**
+into the same node type, which is a different axis from C3's count.
+
+It reuses
 `blocks`, `target`, `lane`, `verify` and `blocked_by` unchanged, closes through `close_finding.py`,
 and inherits D10's cascade. **No second store, no second writer, no parallel clock** — the D19
 lesson applied to a different blocker: where a parked item is a finding whose blocker is *external*,
 a disclosure is a finding whose remedy is *accepted for now*.
 
-### D24 — Every accepted-gap register declares an open/closed state; four do not have one and get one
+### D24 — Every accepted-gap register already declares open/closed. Read it; do not add a field
 
-The precondition. `HYPOTHESIS_REGISTRY` and `AXIOM_METADATA` already answer it and **keep their own
-field names** — `atlas_view._hyp_status` and `_CLOSED_HYP_STATUSES` are the existing definition and
-are reused, not restated, so a hypothesis cannot read open in one view and closed in another. The
-four stateless registers gain a state field; until a row carries one it is **live**, because an
-unanswerable question must not resolve to "fine".
+Each register answers under its own existing key — the table above. `GATE_EDGE_TYPES_WITHOUT_EMITTERS`
+and `NATIVE_DECIDE_BUNDLE_DEBT` store no state **by design**: both are re-derived from source on
+every run, which is stronger than a stored field because it cannot go stale. **The live population
+is 85 and is computable today.**
+
+⚠️ `atlas_view._hyp_status` is **`HYPOTHESIS_REGISTRY`-specific** and must not be generalized: run
+against the other registers it returns `STATED` — *open* — for every row, silently, including the
+nine closed `AXIOM_METADATA` rows. It is reused for its own register and nowhere else.
+
+⚠️ `eliminability` is spelled identically on two registers with **incompatible meanings** — a
+difficulty grade on `HYPOTHESIS_REGISTRY` (`hard`, `very_hard`, …), a lifecycle state on
+`AXIOM_METADATA` (`closed`, `removed`, …). The adapter disambiguates **by register, never by field
+name**. This, not `AXIOM_METADATA`'s internal spread, is the real vocabulary hazard here.
+
+**The one genuine gap:** `PLACEHOLDER_THEOREMS` and `MODELING_ASSUMPTION_THEOREMS` have no
+stale-row leg, so a row whose gap closed can linger. **Extend the existing `stale_disclosure` / F7
+idiom to those two registers** — promote the mechanism that exists rather than adding a field to
+four registers that do not need one. Adding a state field beside a `category` that already carries
+the state would be the tenth spelling D25 forbids.
 
 ### D25 — The adapter is per-register; no field is renamed across the corpus
 
@@ -1049,16 +1084,23 @@ normalized internally — six spellings over ten rows is drift, not vocabulary.
 ⚠️ **Do not add a tenth spelling.** The closure field already exists on most of the population; the
 work is to *read* it per register, never to introduce one more name beside the nine.
 
-### D26 — A live disclosure carries an owner and a review date, and the ratchet requires both
+### D26 — A live disclosure carries an owner and a `revisit_on` date, and the ratchet requires both
+
+⚠️ **The field is `revisit_on`, not `review_date`.** `ReviewFinding` meta already carries
+`review_date` (`build_graph.py:2415`), meaning *the date the review ran* — a backward-looking fact.
+D26's date is forward-looking: *the date someone must look again*. Same node type, same name,
+opposite direction, which is exactly the tenth spelling D25 forbids — introduced, on the first
+draft, by D26 itself two decisions later.
 
 Forward-only, matching D1's treatment of `lane` and `verify`: a ratchet that accepts a **new**
-disclosure refuses one without an owner and a review date. Existing live rows are triaged once, in a
+disclosure refuses one without an owner and a `revisit_on` date. Existing live rows are triaged once, in a
 wave, and are not held to a retroactive bar — the same posture that made D1's parse-don't-backfill
 affordable.
 
-A review date is not a deadline. It is the date on which someone must **look again** and either
-re-affirm the disclosure with a new date or file its closure — which is precisely the step that has
-never existed.
+`revisit_on` is not a deadline. It is the date on which someone must **look again** and either
+re-affirm the disclosure with a new date or file its closure. That step is not unheard of — one
+`MODELING_ASSUMPTION_THEOREMS` row records a conjunction shrinking *"because the substrate GREW"* —
+but it happens when someone notices, and nothing schedules it.
 
 ### D27 — An overdue disclosure surfaces in the Attention feed that already exists
 
@@ -1069,10 +1111,11 @@ one population to one existing reader.
 
 ### Consequences
 
-- The four instances above become queue items with owners and dates, rather than correct sentences
+- The four instances above become queue items with owners and `revisit_on` dates, rather than correct sentences
   nobody returns to.
 - `atlas_view` and this queue agree on what "open" means, because they share one definition.
-- The live count becomes knowable. Today it is a range because four registers cannot be asked.
+- ⚠️ The live count is ALREADY knowable — 85, from keys that exist. What is missing is not the
+  number but the obligation attached to each row.
 - ⚠️ **This adds a population to the queue that was previously invisible, and the open count will
   rise on the day it ships.** That is the measurement arriving, not a regression, and the D9 ratchet
   must be re-based once rather than read as a breach.

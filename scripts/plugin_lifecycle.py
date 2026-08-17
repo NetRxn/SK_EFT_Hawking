@@ -37,7 +37,8 @@ Usage:
 `delta` is the mid-flight half. A long `/goal` run cannot restart, so plugin improvements authored
 during it are inert until it ends. `delta` renders the current text of every changed agent, skill
 and reference to a stable path a dispatch brief can cite by absolute path, letting a lead hand a
-subagent the guidance its own definition lacks. It emits nothing when the SHAs agree, so a brief
+subagent the guidance its own definition lacks. It emits nothing — and clears any document a prior
+run left — when no plugin file differs between a running session and HEAD, so a brief
 carries the pointer only when there is something to point at.
 
 ⚠️ `delta` and `status` answer different questions and therefore read different deciders. `status`
@@ -120,7 +121,14 @@ def _running_shas() -> list[str]:
 
 
 def _plugin_head() -> str:
-    """The last commit touching plugin SOURCE — what a refresh would bind."""
+    """The last commit touching plugin SOURCE. Reported for the operator; NOT the staleness test.
+
+    ⚠️ This is **not** what `claude plugin update` writes into the install record — that is stamped
+    with the repo's HEAD at sync time, whether or not the commit touched a plugin file. Measured:
+    `4c81c2ec` was a record SHA and changed zero files under the plugin tree. Comparing the two as
+    SHAs therefore asks "did the repo move" when the question is "did the plugin move", and the
+    answer diverges on every non-plugin commit. `_is_stale` is the decider; this is a display value.
+    """
     return _run(["git", "log", "-1", "--format=%H", "--", str(PLUGIN_SRC.relative_to(REPO))], REPO)[1]
 
 
@@ -137,25 +145,37 @@ def _commits_behind(sha: str) -> int:
     return int(out) if rc == 0 and out.isdigit() else -1
 
 
-def _is_current(bound: str, head: str) -> bool:
-    """Cache dirs are SHA-prefixed; compare on the shorter of the two prefixes."""
-    if not bound or not head:
-        return False
-    n = min(len(bound), len(head))
-    return bound[:n] == head[:n]
+def _is_stale(bound: str) -> bool:
+    """⚠️ THE DECIDER: does any plugin file DIFFER between the bound cache and HEAD?
+
+    Not "do the SHAs match". The install record is stamped with repo HEAD at sync time, so a SHA
+    comparison reports stale on every commit that advances the repo without touching the plugin —
+    a detector that cries stale always is one nobody reads. Content is the question, and
+    `git diff --name-only <bound>..HEAD -- <plugin>` answers it directly in all three cases:
+    the plugin moved (non-empty → stale), the repo moved past it (empty → current), nothing moved
+    (empty → current).
+
+    An unresolvable `bound` is stale: a cache built from a commit this repo does not have cannot be
+    shown equivalent to HEAD, and the unprovable case must not resolve to "fine".
+    """
+    if not bound:
+        return True
+    if _commits_behind(bound) < 0:
+        return True
+    return bool(_changed_since(bound))
 
 
 def cmd_status(_args) -> int:
     head = _plugin_head()
     dirty = _plugin_dirty()
     print(f"plugin source   : {'MODIFIED, uncommitted' if dirty else 'clean'}")
-    print(f"plugin HEAD     : {head[:12]}")
+    print(f"last plugin commit: {head[:12]}   (display only — staleness is a content diff)")
     stale = False
     print("install records :")
     for proj, bound in _bound_shas().items():
-        current = _is_current(bound, head)
-        stale = stale or not current
-        print(f"  {'current' if current else 'STALE  '}  {bound}  {proj}")
+        is_stale = _is_stale(bound)
+        stale = stale or is_stale
+        print(f"  {'STALE  ' if is_stale else 'current'}  {bound}  {proj}")
     if dirty:
         print("\nCommit the plugin source first — the cache is keyed by the committed HEAD,\n"
               "so an uncommitted edit is skipped by a refresh that still reports success.")
@@ -214,17 +234,18 @@ def cmd_delta(args) -> int:
         return 0
     # A cache SHA that does not resolve here (rebased away, or built from another checkout) cannot
     # be diffed against. Say so — silently rendering nothing would read as "you are up to date".
-    unknown = [b for b in bound if _commits_behind(b) < 0 and not _is_current(b, head)]
+    unknown = [b for b in bound if _commits_behind(b) < 0]
     bound = [b for b in bound if b not in unknown]
     for b in unknown:
         print(f"⚠️ {source} is on cache {b}, which does not resolve in this repo — cannot diff it. "
               f"Treat that session as stale and restart it.")
-    if not bound:
-        return 1 if unknown else 0
-    if all(_is_current(b, head) for b in bound):
+    if not bound or not any(_is_stale(b) for b in bound):
+        # ⚠️ CLEAR THE DOCUMENT ON EVERY no-delta PATH, not only the SHAs-agree one. A brief cites
+        # this file by absolute path, so a survivor from an earlier run is read as current guidance.
         if DELTA_DOC.exists():
             DELTA_DOC.unlink()
-        print(f"No delta: every {source} is at plugin HEAD {head[:12]}.")
+        if bound:
+            print(f"No delta: no plugin file differs between any {source} and HEAD.")
         return 1 if unknown else 0
 
     # Sessions may disagree (one started before a sync, one after). Render against the most stale
@@ -243,10 +264,11 @@ def cmd_delta(args) -> int:
         "# Plugin delta — guidance the RUNNING session is not executing",
         "",
         "**Derived; do not edit.** Regenerate with `uv run python scripts/plugin_lifecycle.py delta`.",
-        "It is emptied automatically once every RUNNING session reaches plugin HEAD — which is a "
-        "restart, not a `sync`. A sync moves the install record and nothing else.",
+        "It is deleted automatically by the next `delta` run once no plugin file differs between a "
+        "RUNNING session and HEAD — which takes a restart, not a `sync`. A sync moves the install "
+        "record and nothing else.",
         "",
-        f"Oldest {source} on cache `{oldest}` · plugin HEAD `{head[:12]}`",
+        f"Oldest {source} on cache `{oldest}` · last plugin commit `{head[:12]}`",
         "",
         "A session binds its plugin at process start. The files below changed afterwards, so the "
         "agents and skills this session dispatches do not carry them.",

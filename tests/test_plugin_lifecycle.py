@@ -97,6 +97,64 @@ def test_delta_is_empty_when_the_bound_cache_is_current(fake_repo, pl, monkeypat
     assert not pl.DELTA_DOC.exists(), "a current cache must clear the doc, not leave it stale"
 
 
+def test_a_repo_commit_that_leaves_the_plugin_alone_is_NOT_stale(fake_repo, pl, monkeypatch, capsys):
+    """`claude plugin update` stamps the record with REPO HEAD, not the last plugin commit.
+
+    So after a sync, any commit that advances the repo without touching the plugin makes the two
+    SHAs differ while the plugin is byte-identical. Keyed on SHA equality, status reports STALE
+    forever and advises a sync that changes nothing — a detector that cries stale always.
+    """
+    # A sync happens HERE, at a commit that touches nothing under the plugin. `claude plugin update`
+    # stamps the record with THIS sha — which is not the last plugin-touching commit, and that gap
+    # is the whole defect. Binding to the last plugin commit instead would make both predicates
+    # agree and prove nothing.
+    (fake_repo / "unrelated.py").write_text("x = 99\n")
+    _git(fake_repo, "add", "-A")
+    _git(fake_repo, "commit", "-qm", "unrelated repo work")
+    bound = pl._run(["git", "rev-parse", "HEAD"], fake_repo)[1]
+    monkeypatch.setattr(pl, "_bound_shas", lambda: {"/p": bound[:12]})
+
+    assert bound[:12] != pl._plugin_head()[:12], "fixture must seed the divergence it tests"
+    assert pl._is_stale(bound[:12]) is False, (
+        "no plugin file differs, so the bound cache is current — the SHAs differing is a fact "
+        "about the repo, not about the plugin")
+    assert pl.cmd_status(None) == 0
+    assert "STALE" not in capsys.readouterr().out
+
+
+def test_a_plugin_commit_IS_stale(fake_repo, pl):
+    """Non-vacuity for the test above: the predicate must still fire when the plugin moves."""
+    bound = pl._run(["git", "rev-parse", "HEAD"], fake_repo)[1]
+    (fake_repo / ".claude/plugins/skeft-qa/agents/lean-worker.md").write_text("v2\n")
+    _git(fake_repo, "add", "-A")
+    _git(fake_repo, "commit", "-qm", "plugin work")
+
+    assert pl._is_stale(bound[:12]) is True
+
+
+def test_delta_clears_a_prior_document_when_no_plugin_file_differs(fake_repo, pl, monkeypatch):
+    """The path the SHA-keyed version left uncovered: bound != HEAD, but nothing plugin differs.
+
+    A brief cites this document by ABSOLUTE PATH, so a survivor from an earlier run is delivered to
+    a subagent as current guidance. Clearing must happen on every no-delta path, not just one.
+    """
+    (fake_repo / "unrelated.py").write_text("x = 7\n")
+    _git(fake_repo, "add", "-A")
+    _git(fake_repo, "commit", "-qm", "unrelated")
+    bound = pl._run(["git", "rev-parse", "HEAD"], fake_repo)[1]   # a non-plugin commit, as synced
+    assert bound[:12] != pl._plugin_head()[:12], "fixture must seed the divergence it tests"
+    monkeypatch.setattr(pl, "_running_shas", lambda: [bound[:12]])
+    pl.DELTA_DOC.parent.mkdir(parents=True, exist_ok=True)
+    pl.DELTA_DOC.write_text("# STALE DELTA FROM A PREVIOUS RUN — an agent will cite this\n")
+
+    rc = pl.cmd_delta(None)
+
+    assert rc == 0
+    assert not pl.DELTA_DOC.exists(), (
+        "a no-delta run must delete the document; leaving it makes a brief hand a subagent "
+        "guidance that no longer reflects HEAD")
+
+
 def test_delta_follows_the_running_session_not_the_refreshed_record(fake_repo, pl, monkeypatch,
                                                                     capsys):
     """The state after a sync: the record names HEAD, a live session still executes the old cache.

@@ -529,15 +529,22 @@ _BODY_MIN_CHARS = 2000
 def _cache_fidelity(path, ext: str) -> str:
     """What the cache file HOLDS: ``full`` | ``abstract`` | ``metadata``.
 
-    ⚠️ **The decider is content, not extension.** ADR-014 tiers the four accepted extensions,
-    placing ``json`` under *full (pdf/tex/json body)* — correct for a JSON holding a body, and
-    wrong for the corpus we actually have, where JSON is overwhelmingly a CrossRef API record
-    (``status`` / ``message-type`` / ``message``) carrying no body text at all. Keyed on the
-    extension, a bibliographic stub is indistinguishable from a PDF, and a claim resting on one
-    reads as fully backed.
+    ⚠️ **Scope: this reads CONTENT for ``json`` only.** ``pdf`` / ``tex`` / ``abstract.txt`` are
+    still tiered by extension, so an HTML error page saved as ``.pdf`` reads as full text. That
+    hole has no live instance — every corpus PDF carries the ``%PDF`` magic and exceeds 20 KB —
+    but the rule is *not* "content decides", it is "content decides where the extension is known
+    to be ambiguous". Do not quote it more strongly than that.
 
-    Order matters: a file's own ``cache_kind`` declaration wins, because a file that says what
-    it is should never be second-guessed by a shape heuristic.
+    ``json`` earned the content check because ADR-014 tiered it under *full (pdf/tex/json body)*,
+    which is correct for a JSON holding a body and wrong for the corpus we have, where JSON is
+    overwhelmingly a CrossRef API record (``status`` / ``message-type`` / ``message``) with no
+    body text at all. Keyed on the extension alone, a bibliographic stub was indistinguishable
+    from a PDF.
+
+    ⚠️ An UNRECOGNISED ``cache_kind`` falls through to the shape checks rather than demoting the
+    file. Returning ``metadata`` for every spelling outside the whitelist would make declaring
+    your kind *cost* you the tier — the same incentive inversion ADR-014 D7 repaired for the
+    class exemption, rebuilt one function away.
     """
     if ext in ("pdf", "tex"):
         return "full"
@@ -554,8 +561,8 @@ def _cache_fidelity(path, ext: str) -> str:
         return "metadata"
 
     declared = data.get("cache_kind")
-    if isinstance(declared, str):
-        return "full" if declared.strip().lower() in _FULL_TEXT_CACHE_KINDS else "metadata"
+    if isinstance(declared, str) and declared.strip().lower() in _FULL_TEXT_CACHE_KINDS:
+        return "full"
 
     if {"status", "message-type", "message"} <= set(data):
         message = data.get("message")
@@ -710,27 +717,29 @@ def check_citation_primary_sources_present() -> CheckResult:
         phase = bibkey_phase(entry) or FALLBACK
         target_dir = LIT_SEARCH / phase / "primary-sources"
         found = False
+        # ⚠️ Score EVERY cache this bibkey holds and keep the STRONGEST tier. Breaking on the first
+        # existing extension scores the entry on whichever spelling happens to sort first in
+        # EXTENSIONS — so a stub `abstract.txt` beside a full-body `.json` would report `abstract`.
+        # 29 bibkeys hold more than one cache, so this is the routine case, not a corner.
+        _TIER_RANK = {"full": 3, "abstract": 2, "metadata": 1}
+        best = None
         for ext in EXTENSIONS:
             candidate = target_dir / f"{bibkey}.{ext}"
             if candidate.is_file() and candidate.stat().st_size > 0:
                 found = True
-                # ADR-014 D1 — FIDELITY, not mere presence. Before this, an accepted
-                # extension was indistinguishable from a full text and the check reported
-                # "cached" either way. Mather1982 is the measured cost: its cache file's own
-                # last line says the body has never been read, and a convention ambiguity
-                # worth 21.5 points at D12's worked point was recorded as a property of the
-                # SOURCE rather than of not having read it — while this check stayed green.
-                #
-                # ⚠️ The tier is decided by what the file HOLDS, never by its extension.
-                # Naming one extension per tier is right only for the spellings the author
-                # enumerated: `json` was tiered as a full-text body and is, in this corpus,
-                # overwhelmingly a CrossRef metadata record carrying no body at all.
-                fidelity = _cache_fidelity(candidate, ext)
-                if fidelity == "abstract":
-                    abstract_only.append((bibkey, sorted(usage[bibkey])))
-                elif fidelity == "metadata":
-                    metadata_only.append((bibkey, sorted(usage[bibkey])))
-                break
+                tier = _cache_fidelity(candidate, ext)
+                if best is None or _TIER_RANK[tier] > _TIER_RANK[best]:
+                    best = tier
+        # ADR-014 D1 — FIDELITY, not mere presence. Before this, an accepted extension was
+        # indistinguishable from a full text and the check reported "cached" either way.
+        # Mather1982 is the measured cost: its cache file's own last line says the body has
+        # never been read, and a convention ambiguity worth 21.5 points at D12's worked point
+        # was recorded as a property of the SOURCE rather than of not having read it — while
+        # this check stayed green throughout.
+        if best == "abstract":
+            abstract_only.append((bibkey, sorted(usage[bibkey])))
+        elif best == "metadata":
+            metadata_only.append((bibkey, sorted(usage[bibkey])))
         if found:
             cached.append(bibkey)
             continue
