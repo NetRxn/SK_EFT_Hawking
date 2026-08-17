@@ -1189,7 +1189,7 @@ below replace them. The local half of Y4 — that D1's four counting theorems ar
 2. `lean_statements.py:557-564` **documents this precise trap**: *"`native_decide` axioms were
    STRIPPED from the project-axiom list before the test, so a `native_decide`-backed refutation
    scored kernel-pure"*, and states the 546 figure in as many words.
-3. `reference-measurement-traps-false-absence`, written by me the previous day, says: *"a scan
+3. `docs/dev-loops/MEASUREMENT_TRAPS.md`, written by me the previous day, says: *"a scan
    reporting zero is a claim that needs the same scrutiny as a scan reporting a defect… Before
    filing 'X does not exist,' seed a known-present instance and confirm the scan finds it."*
    **Seeding one `native_decide` theorem would have caught it in one call.**
@@ -2130,7 +2130,7 @@ list.
 **⚠️ ATOM 1→2 IS THE NEAR-MISS AND THE LESSON.** I measured `lean_modules`, got zero across the
 whole corpus, and was one step from reporting that the audit was wrong and the phase unbuildable.
 The field is named `lean_modules_referenced`. This is
-`reference-measurement-traps-false-absence` in its purest form: **a narrow key makes a live
+`docs/dev-loops/MEASUREMENT_TRAPS.md` in its purest form: **a narrow key makes a live
 population scan empty, and an empty scan reads as evidence.** The wrong-field case is now a test,
 so the trap is pinned rather than remembered.
 

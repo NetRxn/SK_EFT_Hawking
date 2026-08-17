@@ -84,7 +84,7 @@ what is not content — 12 structure fields and `def` projections (`IsHoneycombC
 — leaves **≈69 author-written declarations that the D11 draft never names.**
 
 Verified with an **underscore-aware** scan (the draft writes `\thm{bernal\_effectiveMass\_eq}`,
-so a raw-identifier grep returns a false zero — `reference-measurement-traps-false-absence`).
+so a raw-identifier grep returns a false zero — `docs/dev-loops/MEASUREMENT_TRAPS.md`).
 The scan was seeded with two known-present names first and found both.
 
 **Nor are they claimed by any other bundle.** Ten representatives were scanned across all 65

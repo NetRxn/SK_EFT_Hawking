@@ -1042,7 +1042,7 @@ def _resolve_module(registered: str) -> str | None:
     Resolving on `SKEFTHawking.<registered>` alone calls 182 of 444 registrations
     nonexistent; resolving through nesting and leaf brings that to 52, and the difference
     is entirely naming convention. Anything reported as unresolved must survive this
-    ladder first — see `reference-measurement-traps-false-absence`.
+    ladder first — see `docs/dev-loops/MEASUREMENT_TRAPS.md`.
     """
     name = registered.replace("/", ".")
     mods = _build_modules()
@@ -1133,7 +1133,7 @@ def check_bundle_lean_module_coverage() -> CheckResult:
     ⚠️ **The field is `lean_modules_referenced`, not `lean_modules`.** Probing the latter
     reports 0 of 21 bundles declaring anything, which reads as "the data does not exist"
     and would have retired this check as unbuildable. It is
-    `reference-measurement-traps-false-absence` exactly: a narrow key makes a live
+    `docs/dev-loops/MEASUREMENT_TRAPS.md` exactly: a narrow key makes a live
     population scan empty.
 
     **A module counts as reached three ways, and never from a comment.** Drafts escape

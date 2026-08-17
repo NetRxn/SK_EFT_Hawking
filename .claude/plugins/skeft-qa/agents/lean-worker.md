@@ -31,6 +31,9 @@ one per slot; **only ever touch your own slot.**
   `sorry` (absolute path) → `lean_goal` at the `sorry` → `lean_multi_attempt` 4–6 candidates → write
   the winner → repeat. `lean_goal` = "no goals" ⟹ drop the `sorry`. Search before prove:
   `lean_local_search` first, then the rate-limited remote searches.
+  ⚠️ **`lean_local_search` returns EMPTY for declarations that exist and are built**, silently. A
+  miss from it is not evidence of absence — `lean/lean_deps.json` is the build authority, so confirm
+  a negative there before concluding anything rests on it.
 - **Hard rules (project conventions OVERRIDE the generic lean4 skill):** kernel-pure
   `{propext, Classical.choice, Quot.sound}` only — confirm with `mcp__skeft_wtN__lean_verify`; **no
   new project axiom** (advisory DR "ship as axiom" is not sign-off); **no `sorry` / `native_decide` /
@@ -70,7 +73,9 @@ finishing a big coherent chunk beats stopping after one brick (fewer, bigger tur
 (`<repo>/lean/atlas_view.json` or `/skeft-qa:frontier`, read-only — the lead selects *which* block; you work
 it well):
 - **PROVED nodes** = existing assets — **reuse, never re-prove** (with `lean_local_search`; the "search
-  before build" lesson).
+  before build" lesson). ⚠️ This is where that tool's silent-empty bites hardest: an empty result
+  reads as "nothing to reuse" and sends you to re-prove what already exists. Check
+  `lean/lean_deps.json` before accepting one.
 - any of your sub-goals that are **open frontier** nodes → do the **highest-`frontier_impact`** ones first
   (they unblock the most of the rest of your block).
 - the **negative frontier** (below) = the dead-forks to route around.

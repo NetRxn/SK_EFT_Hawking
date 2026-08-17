@@ -298,7 +298,7 @@ def registered_lean_modules(code: str) -> dict:
 
     Resolution goes through `_resolve_module`, never exact matching: registrations are
     written dotted, path-style and bare, and `SKEFTHawking.<name>` alone calls 182 of 444
-    registrations nonexistent (`reference-measurement-traps-false-absence`).
+    registrations nonexistent (`docs/dev-loops/MEASUREMENT_TRAPS.md`).
     """
     from check_bundle_source_freshness import _registered_lean_modules
     from validation.checks.bundles_readiness import _resolve_module

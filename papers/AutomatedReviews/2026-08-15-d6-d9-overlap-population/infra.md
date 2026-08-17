@@ -70,7 +70,7 @@ claim anyone should re-derive with a fourth ad-hoc one.
   absorbed QuantumNetwork modules — that is a real change and the ADR should record it as such,
   with the population named. If it has not, D6's "do not merge" conclusion is scoped to apexes and
   should say so.
-- **Related:** `reference-measurement-traps-false-absence` (narrow alternation; reference ≠ write).
+- **Related:** `docs/dev-loops/MEASUREMENT_TRAPS.md` (narrow alternation; reference ≠ write).
   Same shape as the crossover gate that pinned a wrong formula: an instrument and a claim agreeing
   with each other while neither is checked against the thing being decided.
 - **Cache:** N/A.

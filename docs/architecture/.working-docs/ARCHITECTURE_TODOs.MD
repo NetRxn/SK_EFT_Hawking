@@ -900,7 +900,7 @@ violated for the fifth time in this workstream.
 > ⚠️ **A false zero on the first attempt.** The first measurement keyed on `action` / `event` /
 > `type` and reported **0 Lift-section events in all four bundles** — the field is `lift_action`. The
 > raw text contained the string 7 times in D1 alone. A narrow key produces a confident absence, which
-> is the trap `reference-measurement-traps-false-absence` catalogues. Reading the schema beat guessing
+> is the trap `docs/dev-loops/MEASUREMENT_TRAPS.md` catalogues. Reading the schema beat guessing
 > at it.
 >
 > **The D25 serializer paid for itself here:** annotating four D1 events produced an 8-insertion /
@@ -2773,7 +2773,7 @@ form: dotted (`APSEta.He3A`), path-style (`RossSelinger/BridgeParity`) and bare
 (`CliffordCCZSU8Density`, actually `SKEFTHawking.FKLW.CliffordCCZSU8Density`) all occur.
 Matching on `SKEFTHawking.<name>` alone calls **182 of 444** registrations nonexistent;
 the true figure after resolving nesting and leaf is **52**, of which these 24 are also
-uncited. See `_resolve_module` and `reference-measurement-traps-false-absence`.
+uncited. See `_resolve_module` and `docs/dev-loops/MEASUREMENT_TRAPS.md`.
 
 ### D51 — the manuscript-length gate keys on mtime, and one identical rewrite blanks all 21
 
