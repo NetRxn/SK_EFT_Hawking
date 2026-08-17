@@ -201,3 +201,239 @@ endpoints (Sec.~\ref{sec:damped}), so that the bound is itself kernel-checkable 
 \texttt{norm\_num} and no floating-point arithmetic enters the verified layer at any point.
 
 \figuredeferred{fig:d10-verification-stack}{the PhysLib-on-Mathlib substrate stack; design only}
+\section{Non-equilibrium Green's-function transport}
+\label{sec:negf}
+
+\subsection{Green's functions and the spectral relation}
+\label{sec:negf-green}
+
+For a Hermitian device Hamiltonian $H$ on a finite site basis, we define the retarded and advanced
+resolvent arguments
+\begin{equation}
+(G^{R})^{-1} = (E + i\eta)\mathbf{1} - H,
+\qquad
+(G^{A})^{-1} = (E - i\eta)\mathbf{1} - H ,
+\label{eq:negf-args}
+\end{equation}
+and verify that the retarded argument is invertible for every $\eta>0$
+(\thm{retardedArg\_isUnit}), which is what makes $G^{R}(E) = \bigl((E+i\eta)\mathbf{1}-H\bigr)^{-1}$
+well defined rather than formal. The proof is by exhibiting
+$(G^{R})^{-1}(G^{A})^{-1} = \eta^{2}\mathbf{1} + (H - E\mathbf{1})^{2}$, a sum of a positive scalar
+and a square of a Hermitian matrix, hence invertible. We then verify
+$G^{A} = (G^{R})^{\dagger}$ for Hermitian $H$ (\thm{gAdvanced\_eq\_conjTranspose}), so the advanced
+function is not a second definition but a consequence of the first.
+
+The spectral function $A = i(G^{R} - G^{A})$ satisfies the NEGF relation
+\begin{equation}
+A(E) \;=\; G^{R}(E)\,\Gamma\,G^{A}(E)
+\label{eq:negf-spectral}
+\end{equation}
+(\thm{spectralFn\_eq\_gR\_broadening\_gA}), and is positive semidefinite
+(\thm{spectralFn\_posSemidef}) --- the operator-level statement that the density of states is
+non-negative. The positivity proof is structural rather than spectral: $A$ reduces to
+$2\eta\,G^{R}(G^{R})^{\dagger}$, which is a non-negative scalar times a matrix of the manifestly
+positive-semidefinite form $MM^{\dagger}$.
+
+\paragraph{Scope of Eq.~\eqref{eq:negf-spectral}: the self-energy is structureless.}
+We state precisely what is verified here, because the notation invites a stronger reading than the
+theorem supports. In this development the self-energy is not a free parameter. It is
+\begin{equation}
+\Sigma(\eta) = -i\eta\,\mathbf{1},
+\qquad\text{whence}\qquad
+\Gamma = i(\Sigma - \Sigma^{\dagger}) = 2\eta\,\mathbf{1},
+\label{eq:negf-selfenergy}
+\end{equation}
+a scalar multiple of the identity. The Dyson-form identity
+$(G^{R})^{-1} = E\mathbf{1} - H - \Sigma$ is proved for exactly this $\Sigma$
+(\thm{retardedArg\_eq\_sub\_selfEnergy}), and Eq.~\eqref{eq:negf-spectral} is therefore
+established in the structureless, energy-independent broadening limit --- the wide-band limit with
+identical coupling on every site --- and \emph{not} for a general, site- and energy-dependent lead
+self-energy. A referee should read Eq.~\eqref{eq:negf-spectral} with that restriction attached.
+Extending the Green's-function layer to a general Hermitian-decomposable $\Sigma$ is a well-defined
+next step and it is not done here.
+
+The transmission layer of Sec.~\ref{sec:negf-landauer} carries no such restriction: its broadening
+matrices are arbitrary.
+
+\subsection{Meir--Wingreen transmission and the Landauer conductance}
+\label{sec:negf-landauer}
+
+The Meir--Wingreen transmission is
+\begin{equation}
+T(E) = \mathrm{tr}\bigl(\Gamma_{L}\,G^{R}\,\Gamma_{R}\,G^{A}\bigr),
+\label{eq:meir-wingreen}
+\end{equation}
+defined for arbitrary matrices $\Gamma_{L}, \Gamma_{R}$ and an arbitrary $G^{R}$. Two properties
+make it a transmission probability rather than merely a trace.
+
+First, $T(E)$ is real whenever the lead broadenings are Hermitian
+(\thm{transmission\_isReal}): the statement verified is that complex conjugation fixes it,
+$\overline{T} = T$, proved by moving the conjugation through the trace as a conjugate-transpose and
+using Hermiticity of $\Gamma_{L}$ and $\Gamma_{R}$. No assumption is placed on $G^{R}$.
+
+Second, $T(E) \ge 0$ whenever the broadenings are positive semidefinite
+(\thm{transmission\_nonneg}). The proof factors $\Gamma_{R} = BB^{\dagger}$ and rewrites the trace as
+$\mathrm{tr}\bigl((G^{R}B)^{\dagger}\,\Gamma_{L}\,(G^{R}B)\bigr)$, a congruence of a
+positive-semidefinite matrix, which is non-negative. The factorization step is itself in-tree: we
+build the symmetric spectral square root $B = U\,\mathrm{diag}(\sqrt{\lambda})\,U^{\dagger}$ by hand
+from Mathlib's \texttt{IsHermitian.spectral\_theorem} (\thm{posSemidef\_exists\_mul\_conjTranspose}),
+because the continuous-functional-calculus square root is unavailable at this type without a
+C$^{\star}$-operator-norm instance that conflicts with the entrywise matrix norms. This is the
+"dual-norm characterization Mathlib lacks" that the route avoids.
+
+The linear-response conductance is
+\begin{equation}
+G \;=\; G_{0}\!\int T(E)\,\bigl(-\partial_{E} f(E)\bigr)\,dE ,
+\qquad G_{0} = \frac{2e^{2}}{h},
+\label{eq:landauer}
+\end{equation}
+with $f$ the Fermi--Dirac distribution. Equation~\eqref{eq:landauer} is our \emph{definition} of
+\texttt{landauerConductance}, not a theorem; we make the distinction because the substantive content
+sits in the two results that follow it.
+
+The Fermi window $-\partial_{E}f$ integrates to unity for every $\beta>0$
+(\thm{fermiWindow\_integral\_eq\_one}). This is the improper fundamental theorem of calculus applied
+to $f$, using $f(-\infty)=1$ and $f(+\infty)=0$, and it is the only genuinely analytic step in the
+transport layer. With it, the wide-band limit follows unconditionally: for an energy-independent
+transmission $T_{0}$,
+\begin{equation}
+G = G_{0}\,T_{0}
+\qquad (\beta > 0),
+\label{eq:wideband}
+\end{equation}
+with no normalization hypothesis left in the signature
+(\thm{landauerConductance\_const\_transmission'}). The conditional form that takes the
+normalization as an argument is retained separately, so the discharge is visible in the tree.
+
+\subsection{The conductance-quantization certificate}
+\label{sec:negf-quantization}
+
+For $n$ channels with transmissions $\tau_{i}$, the channel conductance is
+$G = G_{0}\sum_{i}\tau_{i}$, and
+\begin{equation}
+G \;\le\; n\,G_{0}
+\label{eq:quantum-bound}
+\end{equation}
+(\thm{channelConductance\_le\_quantum}), with equality when every channel is fully open
+(\thm{conductance\_quantization}). We record one respect in which the verified statement is
+\emph{stronger} than the physical framing usually given: the theorem assumes only $\tau_{i}\le 1$
+and $G_{0}\ge 0$. It does \emph{not} require $\tau_{i}\ge 0$. The bound is therefore a statement
+about the sum of quantities capped at unity, and it holds on a strictly larger domain than the
+physical range $\tau_{i}\in[0,1]$ would give it.
+
+Equation~\eqref{eq:quantum-bound} is also stated as a refutation: a conductance strictly exceeding
+$n\,G_{0}$ is impossible (\thm{conductance\_quantization\_falsifier}), with a concrete
+\texttt{norm\_num}-backed witness --- a two-channel point contact cannot carry three conductance
+quanta (\thm{two\_channel\_no\_three\_quanta}). We should be plain that the falsifier is the
+contrapositive of Eq.~\eqref{eq:quantum-bound} and carries no content the bound does not already
+have; its value is that it fixes the direction in which the claim is refutable, and the two-channel
+instance makes that refutation concrete and arithmetically checkable rather than schematic. The
+certificate connects back to the integral picture of Eq.~\eqref{eq:landauer} through
+\thm{channelConductance\_eq\_landauer}.
+
+\figuredeferred{fig:d10-landauer-conductance}{conductance quantization against gate voltage; the certificate is formalized but no numerical transport run backs a plot}
+\section{The molecular Coulomb Hamiltonian}
+\label{sec:molecular}
+
+This section contains the paper's strongest result, and the one whose route required the most
+infrastructure that did not previously exist.
+
+\subsection{Why self-adjointness is the precondition}
+
+The $N$-electron molecular Coulomb Hamiltonian $H = T + V$, with kinetic term $T$ and the
+electron--nucleus plus electron--electron Coulomb potential $V$, is an unbounded operator. For such
+an operator, symmetry is cheap and self-adjointness is not, and the gap between them is physical: a
+symmetric operator that is not essentially self-adjoint has no unique self-adjoint extension, hence
+no well-defined unitary dynamics $e^{-iHt}$ and no guarantee of a real spectrum. Every statement
+about molecular energy levels presupposes that the gap has been closed.
+
+\subsection{Kato--Rellich, built in-tree}
+
+Mathlib does not supply unbounded-operator essential self-adjointness in the form required, so we
+build the Kato--Rellich criterion in-tree: if $A$ is self-adjoint and $B$ is symmetric with
+$A$-relative bound $a<1$, meaning
+\begin{equation}
+\|Bu\| \;\le\; a\,\|Au\| + b\,\|u\|
+\qquad\text{for all } u \in \mathcal{D}(A),
+\label{eq:relbound}
+\end{equation}
+then $A+B$ is self-adjoint. The apex theorem
+\begin{equation}
+\thm{molecularHamiltonian\_essSelfAdjoint} : \quad
+\mathrm{IsSelfAdjoint}\bigl(\overline{T} + V\bigr)
+\label{eq:apex}
+\end{equation}
+instantiates this for the closure of the kinetic operator plus the Coulomb potential. Its signature
+takes the electron count $N$, the mass $m$, a proof that $0<m$, and the nuclei --- and nothing else.
+There is no analytic-hypothesis argument and no tracked \texttt{Prop}. This is what we mean by
+unconditional, and it is checkable by reading the signature.
+
+Reaching it required discharging three inputs, each now a proven kernel-pure theorem.
+
+\subsection{Input (i): symmetry of the potential}
+
+The potential operator is multiplication by a real-valued function, so its symmetry reduces to
+measurability of the Coulomb sum (\thm{molecularPotentialOperator\_isSymmetric}). This is the
+easiest of the three and we note it for completeness.
+
+\subsection{Input (ii): the kinetic operator's self-adjoint closure}
+
+PhysLib's kinetic operator is a real scalar multiple of the momentum-square operator, so essential
+self-adjointness reduces, by a scaling argument on closures, to the momentum-square operator's
+self-adjoint closure (\thm{kineticOperator\_isSelfAdjoint\_closure}). The route runs through a
+dense-range criterion --- a densely defined symmetric $S$ whose $S \pm i\mu$ have dense range has
+self-adjoint closure --- which we established separately, and which avoids needing a
+Plancherel-unitary bridge that would have been considerably more expensive.
+
+\subsection{Input (iii): the Coulomb relative bound $a<1$}
+\label{sec:coulomb-bound}
+
+This is the substantive one. The statement verified is existential:
+\begin{equation}
+\exists\, a, b : \quad 0 \le a \;\wedge\; a < 1 \;\wedge\; 0 \le b \;\wedge\;
+\mathrm{IsRelBounded}\,\bigl(\overline{T},\, V,\, a,\, b\bigr)
+\label{eq:coulomb-relbound}
+\end{equation}
+(\thm{coulomb\_isRelBounded}). The existential quantifier is the point: the constants are
+\emph{produced} by the proof, not supplied as parameters by the caller. A version that took $a$ and
+$b$ as hypotheses would have been a considerably weaker theorem wearing the same name.
+
+The argument is a Fourier--Kato development rather than the from-scratch Hardy inequality one might
+expect. A single-electron relative bound is obtained from the momentum-space
+$L^{\infty}$--$L^{2}$ estimate with an $\varepsilon$-dilation, then lifted to each molecular
+electron--nucleus and electron--electron term by a measure-preserving coordinate split and a
+Tonelli/lower-integral Minkowski reassembly, and summed over the finitely many terms with
+$\varepsilon$ chosen so that the total bound falls below $\tfrac12$. Establishing it below
+$\tfrac12$ rather than merely below $1$ costs nothing extra in the argument and leaves margin.
+
+That bound is established on the Schwartz core. Transferring it to the kinetic operator's closure ---
+which is what Eq.~\eqref{eq:relbound} must hold on for Kato--Rellich to apply --- is a separate
+theorem, and Mathlib does not have it.
+
+\subsection{The core-to-closure extension}
+\label{sec:extend-closure}
+
+We prove that relative boundedness on a core extends to the operator's closure
+(\thm{IsRelBounded.extend\_to\_closure}), given that the dominating operator is closable and the
+dominated one is closed. The proof is a graph-limit argument: a vector in the closure's domain is a
+limit of core vectors along which both the vectors and their images converge, the bound passes to
+the limit by continuity of the norm, and closedness of the dominated operator identifies the limit
+of the images as the image of the limit.
+
+We flag this as the piece of the development most likely to be reusable outside this paper. It is
+stated for a general pair of unbounded operators, it makes no reference to Coulomb potentials or to
+molecular systems, and any Kato--Rellich application that establishes its bound on a convenient core
+--- which is the normal situation --- needs exactly this step to reach the closure. It is
+Mathlib-grade infrastructure that Mathlib happens not to carry, and we built it because the molecular
+result could not be reached without it.
+
+\subsection{The supersession trail}
+
+The earlier conditional apex, which disclosed the potential-symmetry and relative-bound hypotheses as
+arguments, is retained in the tree as
+\thm{molecularHamiltonian\_essSelfAdjoint\_of\_hpot\_hrel}. We keep superseded forms rather than
+deleting them so that a reader can check the discharge by comparing signatures, instead of taking
+our word that a hypothesis was removed.
+
+To our knowledge Eq.~\eqref{eq:apex} is the first formalization of \emph{unconditional} essential
+self-adjointness of a molecular many-body Coulomb Hamiltonian in any proof assistant.
