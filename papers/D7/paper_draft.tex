@@ -5,6 +5,7 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{natbib}
+\usepackage{tikz}
 
 \input{../../docs/figuredeferred.tex}
 \input{bundle_counts.tex}
@@ -235,8 +236,6 @@ at belief-propagation fixed points, which is the property that makes the Bethe
 construction interesting. Presenting the free-energy layer as support for the
 convergence theorem would be presenting inventory as argument.
 
-\figuredeferred{fig:d7-incidence-and-cycles}{a factor graph beside its bipartite incidence graph, with a 4-cycle and the 6-cycle that separates four-cycle-freeness from acyclicity; blocked only on drawing time and is the first figure to land.}
-
 \section{Rank-local iteration and finite-horizon convergence}
 \label{sec:convergence}
 
@@ -441,7 +440,7 @@ certificate together with the two non-structural conjuncts, because
 Theorem~\ref{thm:certc4} already supplies four-cycle-freeness from the
 certificate alone. The tree hypothesis does no work there.
 
-\figuredeferred{fig:d7-rank-freeze}{message-endpoint ranks on the three-node path with the freeze-out round of each endpoint; blocked on nothing for the star, and on the unbuilt subtree-depth certificate for any deeper tree, so the deeper panel cannot be drawn honestly yet.}
+\figuredeferred{fig:d7-rank-freeze}{the unconstructed subtree-depth certificate, which is what assigns a rank to any tree deeper than the three-node path.}
 
 \section{A Cram\'er rate for 4-cycle density}
 \label{sec:rate}
@@ -593,7 +592,7 @@ and Theorem~\ref{thm:contract}\,(2) upgrades it to
 conjunct passes through unchanged on both sides; all of the content
 of~\eqref{eq:structbicond} is Theorem~\ref{thm:contract}\,(2).
 
-\figuredeferred{fig:d7-rate-curves}{a two-panel figure: $-\log(1-p)$ against loop density with the $\log(4/3)$ anchor marked, beside the density of a single embedded 4-cycle as the ambient index types grow, showing the rate of a fixed motif falling toward zero; blocked on a small enumeration script over \texttt{fourCycles} that does not exist yet.}
+\figuredeferred{fig:d7-rate-curves}{an unbuilt enumeration of $|\mathrm{fourCycles}|$ across growing index types, which is what the size-dependence panel plots.}
 
 \section{What the 4-cycle rate does not measure}
 \label{sec:limits}
@@ -616,7 +615,8 @@ and is not acyclic. Consequently $I_G(0) = 0$ on it.
 \end{prop}
 
 No two distinct factors of that graph are incident to two common variables, so
-the 4-cycle screen passes; the length-six cycle is nonetheless a cycle. The
+the 4-cycle screen passes; the length-six cycle is nonetheless a cycle
+(Fig.~\ref{fig:d7-incidence-and-cycles}(c)). The
 implication that does hold is one-directional and is proven: acyclicity implies
 four-cycle-freeness (\texttt{isAcyclicFactorGraph\_imp\_fourCycleFree}), by
 exhibiting the two distinct length-two paths a 4-cycle would create between the
@@ -625,6 +625,58 @@ acyclicity. The converse is false, and four-cycle-freeness additionally imposes
 no connectivity condition at all, so it does not even characterize forests.
 A vanishing rate is therefore a necessary condition for a certificate, by
 Theorem~\ref{thm:certc4}, and is not sufficient for one.
+
+\begin{figure*}
+\centering
+\begin{tikzpicture}[
+  var/.style={circle,draw=black,thick,minimum size=6mm,inner sep=0pt,fill=white},
+  fac/.style={rectangle,draw=black,thick,minimum size=5.5mm,inner sep=0pt,
+              fill=black!10},
+  ed/.style={thick,draw=black!70}]
+
+%% (a) the 4-cycle: two factors on the same pair of variables
+\node[var] (au) at (0,1.25)  {$u$};
+\node[var] (av) at (0,-1.25) {$v$};
+\node[fac] (aa) at (-1.25,0) {$a$};
+\node[fac] (ab) at (1.25,0)  {$b$};
+\draw[ed] (au) -- (aa); \draw[ed] (au) -- (ab);
+\draw[ed] (av) -- (aa); \draw[ed] (av) -- (ab);
+\node at (0,-2.15) {(a) a $4$-cycle: $p>0$};
+
+%% (b) a two-body model on three variables, as its interaction graph
+\node[var] (bu) at (5.0,1.25)  {$u$};
+\node[var] (bv) at (4.05,-0.5) {$v$};
+\node[var] (bw) at (5.95,-0.5) {$w$};
+\draw[ed] (bu) -- node[above left,inner sep=1.5pt] {$a$} (bv);
+\draw[ed] (bv) -- node[below,inner sep=2pt]      {$b$} (bw);
+\draw[ed] (bw) -- node[above right,inner sep=1.5pt] {$c$} (bu);
+\node at (5.0,-2.15) {(b) one factor per bond};
+
+%% (c) the bipartite incidence graph of (b): a 6-cycle
+\node[var] (cu) at (10.0,1.30)   {$u$};
+\node[fac] (ca) at (8.87,0.65)   {$a$};
+\node[var] (cv) at (8.87,-0.65)  {$v$};
+\node[fac] (cb) at (10.0,-1.30)  {$b$};
+\node[var] (cw) at (11.13,-0.65) {$w$};
+\node[fac] (cc) at (11.13,0.65)  {$c$};
+\draw[ed] (cu) -- (ca); \draw[ed] (ca) -- (cv); \draw[ed] (cv) -- (cb);
+\draw[ed] (cb) -- (cw); \draw[ed] (cw) -- (cc); \draw[ed] (cc) -- (cu);
+\node at (10.0,-2.15) {(c) a $6$-cycle: $p=0$};
+
+\draw[-latex,thick,draw=black!70] (6.9,0) -- (7.9,0);
+\end{tikzpicture}
+\caption{What the $4$-cycle screen sees and what it misses. Circles are
+variables, squares are factors, and an edge is an incidence. (a) Two distinct
+factors incident to the same two variables is the only configuration
+$\mathrm{fourCycles}$ counts; on the complete bipartite $2{\times}2$ graph it
+gives $p = 1/4$ and $I_G(0) = \log(4/3)$. (b) A two-body model on three
+variables with one factor per bond, drawn as its interaction graph. (c) The
+bipartite incidence graph of (b). No two factors share two variables, so
+$p = 0$ and $I_G(0) = 0$ by Theorem~\ref{thm:contract}\,(2); the graph is
+nonetheless a $6$-cycle and therefore not acyclic, which is
+Proposition~\ref{prop:sixcycle}.}
+\label{fig:d7-incidence-and-cycles}
+\end{figure*}
 
 \subsection{Every pairwise-coupled model is four-cycle-free}
 \label{sec:pairwise}
@@ -657,15 +709,13 @@ rate is identically zero on all of them.
 
 The same conclusion survives the other natural encoding, in which the variables
 are the virtual bonds of the tensor network and the factors are its tensors. A
-4-cycle then requires two tensors sharing two distinct virtual bonds, which a
-lattice tensor network does not have. This is where the failure becomes
-concrete rather than formal. That work reports that plain belief-propagation
-contraction is not accurate enough for the lattices studied and that
-loop-corrected contraction is required; it attributes a specific error increase
-in the dimerized cubic geometry to a loop of size three created by the periodic
-boundary; and it removes inherent loops by pairing dimers so the network becomes
-more tree-like. A loop of three tensors is a six-cycle in the bipartite
-incidence graph. It is exactly the configuration
+4-cycle then requires two tensors sharing two distinct virtual bonds, which the
+lattice geometries of that work do not have. That last step is an observation
+about the encoding rather than a theorem, and nothing below rests on more than
+the observation. This is where the failure becomes concrete rather than formal.
+The loop of size three that Sec.~\ref{sec:intro} records as the source of a
+specific error increase is a six-cycle in the bipartite incidence graph
+(Fig.~\ref{fig:d7-incidence-and-cycles}), exactly the configuration
 Proposition~\ref{prop:sixcycle} shows the screen cannot see. The statistic
 assigns zero loop-correction rate to the geometry whose loop correction that
 work had to compute, and assigns the same zero to the geometry from which the
@@ -831,7 +881,7 @@ implies one. A simulability criterion is a quantitative object, and until one
 of these exists the honest description of this work is a convergence theorem
 and an audit.
 
-\figuredeferred{fig:d7-obligation-graph}{a dependency graph of the four obligations against the theorems each unblocks; blocked on the first obligation, whose attempt settles the shape.}
+\figuredeferred{fig:d7-obligation-graph}{certificate existence, the first obligation.}
 
 \section{Conclusion}
 \label{sec:conclusion}
