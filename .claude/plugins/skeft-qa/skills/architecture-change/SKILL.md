@@ -57,6 +57,23 @@ Derive every figure that steers a decision from the live artifact, and date it. 
 of a prior document — including one authored this session — is a claim, not a measurement.
 Re-derive it.
 
+**Ask of every predicate you write or measure with: what does this actually assert, and is that
+the thing I mean?** A predicate keyed on a *proxy* for its purpose is correct for the population
+it was written against and wrong for the rest — and it fails silently, because a wrong predicate
+and an empty population return the same answer. The recurring shapes:
+
+| the predicate asserts | it is standing in for | it is wrong for |
+|---|---|---|
+| a flag spelling, an extension, a constant's name | what the command *does*, what the file *holds*, what the capability *is* | every spelling the author did not enumerate |
+| a directory exists | the artifact inside it exists | a directory materialised without its contents |
+| a delimiter follows the token | the token ends there | a token ending its line |
+| one level of children | a tree that nests | every deeper level |
+| one file is uncommitted | any relevant file is uncommitted | every file outside the chosen one |
+
+Two checks cost nothing and catch all of it: **name a known-present instance and confirm the
+predicate finds it**, and **state the predicate in words** — if the sentence is not the thing you
+meant, the code is not either.
+
 ### 3. Specify before building
 
 Write the ADR and the spec **before** the code.

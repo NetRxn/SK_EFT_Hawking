@@ -48,6 +48,9 @@ The claim was then widened three times, each step making it more valuable and ad
 | a non-UTF-8 source file | an ISO-8859 `.tex` returns nothing at all from plain `grep`, including for words plainly in it. It scans as an **empty file**, so every absence over it is vacuous | `LC_ALL=C grep -a`, and sanity-check with a word you know is present before trusting any zero |
 | one level of a nested tree | `docs/dev-loops/*/` as a proxy for *notebook homes* missed every sub-loop notebook; `.gitignore` matches `**/` at any depth and so must the scan | enumerate by finding the artifact, not by listing a directory |
 | one tree, one spelling | the same population lived in three trees under two naming conventions; each scan was correct and collectively they were narrow | search by what the thing **is**, then confirm the tree list is complete |
+| **a required trailing delimiter** | a declaration scanner matched `name` only when followed by a space or colon, so a name ending its line — signature beginning below — was invisible, and with it the whole namespace. 7.2% of one Lean corpus | anchor on what actually ends the token, and remember that **end-of-line ends it too**: `(?:\s|:\|$)` |
+| **the new code's spelling for an old capability** | asked whether a tool had auth support by grepping the constant `AUTH_TOKEN_ENV`, which only exists after a refactor. The capability was there all along under its literal value `LEAN_LSP_MCP_TOKEN` | grep the **value**, not the identifier a later version gave it |
+| **a path filter naming a layout that changed** | `git grep … -- src/` against a revision predating the `src/` move searches a path that does not exist there, and reports clean | confirm the tree shape at the revision you are searching, not at HEAD |
 
 ## Traps that produce false PRESENCE
 

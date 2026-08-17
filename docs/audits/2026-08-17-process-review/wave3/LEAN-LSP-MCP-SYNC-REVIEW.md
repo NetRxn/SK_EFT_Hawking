@@ -52,7 +52,7 @@ Turing-complete build script. This is inherent to pointing any Lean tool at
 an untrusted repo, not something this sync introduces — it only applies when
 `--loogle-local` is enabled (an opt-in flag), and it makes the *implicit*
 project-driven toolchain selection explicit rather than adding a new one.
-Not a blocker for a first-party repo (a first-party project we control), worth
+Not a blocker for a project we control, worth
 remembering if this fork is ever pointed at a third-party Lean project.
 
 ## 2. Network surface
