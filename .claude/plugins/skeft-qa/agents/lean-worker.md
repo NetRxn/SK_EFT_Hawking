@@ -34,8 +34,11 @@ one per slot; **only ever touch your own slot.**
   ⚠️ **`lean/lean_deps.json` is the build authority; a search miss is not evidence of absence.**
   Confirm every negative there before anything rests on it. `lean_local_search`'s declaration scan
   matched only names followed by a space or colon, so a declaration whose signature begins on the
-  next line — its name ending the line — was invisible, along with its whole namespace. Fixed in the
-  fork at `8b44970`; a slot still bound to an earlier pin has it.
+  next line — its name ending the line — was invisible. A second bug made a **fully-qualified name**
+  (`SKEFTHawking.Foo.bar`) never match at all: the query was applied to source text, where a
+  declaration carries only its bare name. Both fixed in the fork at `8f876e8`; a slot bound to an
+  earlier pin still has them, and the FQN one bites hardest because the qualified name is what
+  `lean_deps.json` records and what you would naturally paste.
 - **Hard rules (project conventions OVERRIDE the generic lean4 skill):** kernel-pure
   `{propext, Classical.choice, Quot.sound}` only — confirm with `mcp__skeft_wtN__lean_verify`; **no
   new project axiom** (advisory DR "ship as axiom" is not sign-off); **no `sorry` / `native_decide` /
