@@ -7,6 +7,7 @@
 \usepackage{natbib}
 
 \input{../../docs/figuredeferred.tex}
+\input{bundle_counts.tex}
 
 \emergencystretch=3em
 \sloppy
@@ -954,8 +955,10 @@ Their distribution is: belief propagation, $46$; the rate-function module,
 $25$; the Kibble--Zurek module, $14$; the Chebyshev module, $13$; the aperiodic
 lattice module, $7$; the Chebyshev-expansion bridge, $5$; the combined
 structural module, $6$. Only the first two and part of the last contribute to
-any statement in this paper; the closure of the theorems actually cited here is
-smaller and is given by the generated per-paper count.
+any statement in this paper. The transitive closure of the theorems this paper
+actually cites is smaller: \bundleTheorems{} theorems and \bundleDecls{}
+declarations across \bundleModules{} modules, which is the figure a reader
+should use when asking how much verified content this paper rests on.
 
 The union of the axioms used by every one of those theorems is
 $\{\mathtt{propext},\ \mathtt{Classical.choice},\ \mathtt{Quot.sound}\}$, the
