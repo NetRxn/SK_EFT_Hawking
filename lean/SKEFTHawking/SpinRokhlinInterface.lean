@@ -40,7 +40,7 @@ classification with mixed signature) is the open K8b interior brick (see
 hypothesis is `topo`** (`2 ∣ σ/8`), which is irreducibly topological (not an axiom, not algebraic).
 
 See docs/roadmaps/Phase5qB_SpectraFreeSpinBordism_Roadmap.md (Waves B3, B4) and
-docs/roadmaps/Phase5qB_LabNotebook.md.
+docs/dev-loops/Phase5qB/LAB_NOTEBOOK.md.
 -/
 
 import SKEFTHawking.AlgebraicRokhlin

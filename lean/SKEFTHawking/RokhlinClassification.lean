@@ -1,5 +1,5 @@
 /-
-Phase 5q.B: assembling `8 ∣ σ` from the classification ([E3] in `Phase5qB_LabNotebook.md`).
+Phase 5q.B: assembling `8 ∣ σ` from the classification ([E3] in `docs/dev-loops/Phase5qB/LAB_NOTEBOOK.md`).
 
 The classification of even unimodular lattices says every such form is congruent to a block-diagonal sum
 `E₈^a ⊕ (−E₈)^b ⊕ H^c`. Granting that normal form, `8 ∣ σ` is now PURELY the signature calculus built in

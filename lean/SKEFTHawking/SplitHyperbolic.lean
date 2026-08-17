@@ -10,7 +10,7 @@ orthogonal complement. The block structure is exactly `hypPerpBasis_ortho` (off-
 
 `gramB_eq` is the kernel-pure block identity. The remaining step to `latticeSig M = latticeSigOf residGram`
 is the change-of-basis congruence (the matrix of `hypFullBasis` is unimodular, so `latticeSig_congr`
-applies), tracked as the next brick in `docs/roadmaps/Phase5qB_LabNotebook.md`.
+applies), tracked as the next brick in `docs/dev-loops/Phase5qB/LAB_NOTEBOOK.md`.
 
 All proofs are kernel-pure (`propext`/`Classical.choice`/`Quot.sound` only); no `native_decide`, no
 `maxHeartbeats`, no axiom.

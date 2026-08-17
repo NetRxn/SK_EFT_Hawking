@@ -65,7 +65,7 @@ What actually shipped:
 `HasseMinkowskiLocal.lean` / `PadicSquare.lean` / `HilbertProductFormula.lean` (the from-scratch p-adic /
 Hilbert-symbol / quaternary-HM substrate), `RokhlinFromHM.lean` / `RokhlinManifoldFromHM.lean` (compose
 [HM]+[Θ]+topo), `SpinRokhlinInterface.lean` (wired manifold interface), `RokhlinClassification.lean` +
-`LatticeSignature.lean` (signature calculus). Lab notebook: `Phase5qB_LabNotebook.md`.
+`LatticeSignature.lean` (signature calculus). Lab notebook: `docs/dev-loops/Phase5qB/LAB_NOTEBOOK.md`.
 
 **Out of scope (unchanged):** the 5D `Ω₅^{Spin×ℤ₄} ≅ ℤ₁₆` Dai–Freed leg and the `24 ∣ c₋` Niemeier/Schellekens
 leg remain separate tracks (see "Out of scope" at the bottom). The `3 ∣ N_f` headline still consumes only the

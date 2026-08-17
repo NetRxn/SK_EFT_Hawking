@@ -151,7 +151,7 @@ is recorded so it is not re-attempted after a compaction.
 | `docs/dev-loops/<loop>/LAB_NOTEBOOK_W<n>.md` | frozen historical shards; audit layer, read on demand |
 
 Notebooks are created **per goal loop**. A phase that never ran as a loop has no notebook, and
-`docs/roadmaps/Phase5qB_LabNotebook.md` is a legacy location predating the layout.
+`docs/dev-loops/Phase5qB/LAB_NOTEBOOK.md` is a legacy location predating the layout.
 
 **What belongs in it:** landed bricks, tried-and-failed routes with the reason, and reusable
 substrate found along the way. Log continuously rather than at the end of a wave — the notebook

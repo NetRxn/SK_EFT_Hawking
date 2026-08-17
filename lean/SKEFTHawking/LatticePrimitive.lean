@@ -1,6 +1,6 @@
 /-
 Phase 5q.B: primitive integer vectors and the dual-vector lemma — first brick of the classification
-scaffolding ([E1] in `Phase5qB_LabNotebook.md`).
+scaffolding ([E1] in `docs/dev-loops/Phase5qB/LAB_NOTEBOOK.md`).
 
 The classification of even unimodular lattices (the remaining input to van der Blij `8 ∣ σ`) proceeds by
 *splitting off a hyperbolic plane* `H` from a primitive isotropic vector. That construction needs, as its

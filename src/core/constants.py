@@ -3754,7 +3754,7 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             '{propext,Classical.choice,Quot.sound}, axiom_closure_allowlist GREEN. '
             'sixteen_convergence_unconditional is the companion to sixteen_convergence_full with the 16|σ '
             'conjunct now a full theorem, not an assumed h_rokhlin. Full living decomposition: '
-            'docs/roadmaps/Phase5qB_LabNotebook.md.',
+            'docs/dev-loops/Phase5qB/LAB_NOTEBOOK.md.',
         'dependent_theorems': [
             'SKEFTHawking.SmoothSpinManifold4.rokhlin',
             'SKEFTHawking.SmoothSpinManifold4.eight_dvd_sig',
