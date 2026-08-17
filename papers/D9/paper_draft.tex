@@ -47,9 +47,11 @@ Certification Substrate}
 \begin{abstract}
 We report a machine-checked chain, formalized in Lean~4 on Mathlib, that
 carries stated device and link parameters to a certified interval on an
-achievable quantum-network or device quantity and terminates in rational
-arithmetic the proof kernel performs, with no floating-point
-transcendental and no external oracle. Attacking every link of that chain
+achievable quantum-network or device quantity. On the device side the
+chain terminates in rational arithmetic the proof kernel performs, with
+no floating-point transcendental and no external oracle; on the rate side
+it terminates one step short, and we report the missing step rather than
+rounding past it. Attacking every link of that chain
 produces the second result: one link that a large experimental practice
 relies on cannot exist. An averaged benchmark fidelity is an average over
 input states and the diamond distance is a supremum over them, and the
@@ -90,13 +92,19 @@ achievable value of this quantity lies in this interval. This paper
 reports that chain, built and machine-checked end to end, and three
 results that came out of attacking it.
 
-\emph{First}, the chain exists and terminates. Stated device and link
-parameters ($T_1$, $T_2$, temperature, frequency, window length,
-transmissivity, per-link fidelity) reach a certified interval through
-named theorems, and the final evaluation is rational arithmetic performed
-by the proof kernel: no floating-point transcendental, no interval
-oracle, nothing outside the assistant. Section~\ref{sec:worked} carries
-one published parameter set through it.
+\emph{First}, the chain exists and, on the device side, terminates.
+Stated device and link parameters ($T_1$, $T_2$, temperature, frequency,
+window length, transmissivity, per-link fidelity) reach a certified
+interval through named theorems, and for every quantity whose evaluation
+reduces to a decaying exponential the final step is rational arithmetic
+performed by the proof kernel: no floating-point transcendental, no
+interval oracle, nothing outside the assistant.
+Section~\ref{sec:worked} carries one published parameter set through it.
+For the logarithmic quantities, the rate-bound functions and the key
+rate, the chain stops one step earlier, because the corpus has an
+enclosure for the exponential and none for the logarithm; we report that
+step as missing rather than quoting decimals across it
+(Sec.~\ref{sec:worked-network}).
 
 \emph{Second}, one link of that chain cannot exist, and it is a link a
 large experimental practice assumes. Randomized benchmarking measures an
@@ -558,20 +566,57 @@ attainment is what makes Theorem~\ref{thm:sdp} usable as the worst-case
 route promised in Sec.~\ref{sec:rb}.
 
 For the channel families a benchmark actually targets, the dual witness
-closes the sandwich to exact values. Dephasing and depolarizing, both
-covariant, give $\ddist(\Phi_\gamma,\mathrm{id}) = \gamma$
-(\lean{diamondDist\_dephasing\_eq}) and
-$\ddist(\Delta_p,\mathrm{id}) = p$
-(\lean{diamondDist\_depolarizing\_eq}) from explicit optimal witnesses
-with no twirling machinery. The Pauli channel gives exactly its total
-error weight, $\ddist(\Phi_{\mathbf p},\mathrm{id}) = 1-p_0$
-(\lean{diamondDist\_pauliKraus\_eq}), and this generalizes to any unitary
-error basis, a family $\{U_i\}$ with $U_0 = 1$ and Hilbert--Schmidt
-orthogonality (\lean{diamondDist\_errorBasisKraus\_eq}), with the
-two-qubit Pauli channel (\lean{diamondDist\_twoQubitPauliKraus\_eq}) and
-the qutrit Weyl--Heisenberg channel (\lean{diamondDist\_weylKraus\_eq})
-as instances; the pure cyclic-shift leakage channel has diamond distance
-exactly its leakage probability (\lean{diamondDist\_shiftLeakage\_eq}).
+closes the sandwich to exact values, collected in
+Table~\ref{tab:exact}. Dephasing and depolarizing, both covariant, give
+$\ddist(\Phi_\gamma,\mathrm{id}) = \gamma$ and
+$\ddist(\Delta_p,\mathrm{id}) = p$ from explicit optimal witnesses with
+no twirling machinery. The Pauli channel gives exactly its total error
+weight $1-p_0$, and this generalizes to any unitary error basis, a family
+$\{U_i\}$ with $U_0 = 1$ and Hilbert--Schmidt orthogonality, with the
+two-qubit Pauli and qutrit Weyl--Heisenberg channels as instances. The
+pattern is worth naming: for a channel whose Kraus operators form a
+unitary error basis, the worst-case channel error is exactly the total
+probability of a non-identity Kraus branch, which is the number a
+device-characterization pipeline already reports. That coincidence is
+what makes these families the practical route to a worst-case budget, and
+it is the route Sec.~\ref{sec:rb} recommends in place of a benchmark
+average.
+
+\begin{table}
+\caption{Exact diamond distances to the identity, closed by an explicit
+dual witness. Every row is an equality, not a bound. The last two rows
+are the non-covariant cases, where equality is not available and the
+entry is what is proven.}
+\label{tab:exact}
+\begin{ruledtabular}
+\begin{tabular}{lll}
+Channel & $\ddist(\Phi,\mathrm{id})$ & Declaration \\
+\colrule
+Dephasing $\gamma$ & $\gamma$ &
+  \lean{diamondDist\_dephasing\_eq} \\
+Depolarizing $p$ & $p$ &
+  \lean{diamondDist\_depolarizing\_eq} \\
+Pauli $\mathbf p$ & $1-p_0$ &
+  \lean{diamondDist\_pauliKraus\_eq} \\
+Two-qubit Pauli & $1-p_{00}$ &
+  \lean{diamondDist\_twoQubitPauliKraus\_eq} \\
+Qutrit Weyl & $1-p_0$ &
+  \lean{diamondDist\_weylKraus\_eq} \\
+Unitary error basis & $1-p_0$ &
+  \lean{diamondDist\_errorBasisKraus\_eq} \\
+Cyclic-shift leakage & leakage prob. &
+  \lean{diamondDist\_shiftLeakage\_eq} \\
+Readout bit-flip $q$ & $q$ &
+  \lean{diamondDist\_spamBitFlip\_eq} \\
+\colrule
+Amplitude damping $\gamma$ &
+  $[\,\gamma/2,\;\gamma{+}1{-}\sqrt{1{-}\gamma}\,]$ &
+  \lean{diamondDist\_ampDamp\_ge/le} \\
+Generalized amp.\ damp. & $\ge (1-N)\gamma$ &
+  \lean{diamondDist\_genAmpDamp\_bracket} \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
 
 Where the channel is not covariant the corpus reports bounds rather than
 exact values, and the two available cases are not of the same quality.
@@ -935,6 +980,63 @@ misassignment probability depends on the filter, leaving the formula
 layer above it unchanged. The weighted-integration reading is a physical
 explanation offered here and is not a claim of the verified corpus.
 
+Two further observations follow from the same computation and are worth
+separating from it. The first is that the certificate's discriminating
+power comes from its being tight enough to fail. A floor at
+$\tfrac12 p_{\mathrm{decay}}$ is within a factor of two of the reported
+error at both operating points, which is why the sign of the comparison
+carries information; a floor loose by an order of magnitude would have
+passed at both points and told us nothing about either. Usefulness and
+falsifiability are the same property here. The second is that the failure
+is not an argument against the identification in general. At
+$48$\,ns the same identification is sound, and the literature it rests
+on~\cite{Gambetta2007,Geerlings2013} states the all-or-nothing reading
+for protocols in which the decision is taken on the final state rather
+than on a filtered trajectory. The identification has a domain, and what
+the certificate located is the edge of it.
+
+\subsection{The same chain on the network side, and where it stops}
+\label{sec:worked-network}
+
+The network half of the chain runs on the same pattern with a different
+terminating step, and the difference is instructive. Take a fiber
+attenuation of $0.2$\,dB/km over $10$\,km, the operating point the corpus
+carries.
+
+\emph{Formula layer.} The decibel-to-neper identity
+(\lean{fiberTransmission\_eq\_exp\_neg\_attenuationNp}) converts $2$\,dB
+of loss into the transmissivity $\eta = e^{-0.46}$, and the degree-5
+Taylor squeeze (\lean{expNeg046\_tight}) brackets it rationally,
+$0.631 \le \eta \le 0.632$. Up to here the network chain is exactly as
+good as the device chain: an operating point has become a rational
+interval with no float.
+
+\emph{Formula layer.} Strict monotonicity of the repeaterless rate-bound
+function (\lean{plobBound\_strictMonoOn}) transports that interval:
+$\mathrm{plob}(0.631) \le \mathrm{plob}(\eta) \le \mathrm{plob}(0.632)$.
+For a two-segment path network the capacity is exactly the bottleneck
+(\lean{path3\_capacity\_eq\_bottleneck}), and instantiating both segments
+at this operating point gives the repeaterless series bound
+(\lean{path3\_repeaterless\_bottleneck}).
+
+\emph{Where it stops.} Turning $\mathrm{plob}(0.631)$ into a rational
+number requires bracketing a logarithm, and the corpus has no logarithm
+enclosure. Its numerical-bounds module contains three declarations, all
+of them about $e^{-r}$: the Bernoulli bracket of
+Theorem~\ref{thm:bernoulli} and two instances of it. So the device chain
+of Sec.~\ref{sec:worked} terminates in the kernel and the rate chain does
+not: it terminates in a proven interval whose endpoints are transcendental
+expressions, and any decimal a reader wants from it comes from outside
+the assistant. We state this rather than quoting decimals, because
+quoting them would be exactly the float dependence the technique exists
+to remove. The gap is a library gap in the sense of
+Sec.~\ref{sec:breaks} and its shape is clear: a Bernoulli-style bracket
+for $\ln(1+u)$ on a rational interval, composed with a rational bound on
+$\ln 2$, would close it, and every logarithmic quantity in the corpus,
+the rate-bound functions, the binary-entropy key rate, and the
+log-negativity of Sec.~\ref{sec:breaks}, would become evaluable at the
+same stroke.
+
 \section{Results the formalization owns}
 \label{sec:owned}
 
@@ -1024,6 +1126,56 @@ shortcut is to define the constant as $\tfrac13$ and prove the identity
 by reflexivity, which would leave Theorem~\ref{thm:teleport}
 kernel-checked and vacuous. The definition is the integral.
 
+\subsection{The semidefinite program without a conic-duality library}
+\label{sec:owned-sdp}
+
+Theorem~\ref{thm:sdp} is the result whose formalization cost was least
+predictable from its textbook statement. The standard derivation quotes
+strong duality for semidefinite programs together with a Slater
+condition, and Mathlib at our pin has neither a semidefinite-programming
+development nor the conic-duality theorem that would discharge it. The
+route taken avoids the general theory entirely, and its shape is worth
+recording because it transfers to other matrix optimization problems.
+
+The carrier is the real inner-product space of self-adjoint matrices with
+the real Frobenius form
+$\langle A,B\rangle = \mathrm{Re}\operatorname{tr}(AB)$
+(\lean{SelfAdjointInnerProduct}). Working over $\mathbb{R}$ rather than
+$\mathbb{C}$ is what makes the separation theorem available: the
+positive-semidefinite matrices form a proper convex cone in that real
+space, and Mathlib's hyperplane separation for proper cones applies
+directly. The dual value is the honest infimum
+\[
+\inf\{\opnorm{\mathrm{Tr}_2 W} : W \succeq 0,\;
+W \succeq J(\Phi_1)-J(\Phi_2)\}
+\]
+over a set proven nonempty by exhibiting the positive part of the Choi
+difference as a feasible witness (\lean{choiDualValue\_set\_nonempty}),
+which is also what keeps the infimum from being $-\infty$ and lets
+\lean{le\_csInf} do the weak-duality half in three lines.
+
+The substantive half is the reverse inequality, and it is where the
+separation enters: a point strictly below the primal optimum is
+separated from the feasible cone by a hyperplane whose Riesz
+representative, transported back through the Frobenius form, is a matrix
+that is dual-feasible and achieves the value. That construction gives
+strong duality and attainment (\lean{exists\_choiDualValue\_eq}) in one
+step, where the textbook argument gives duality from Slater and
+attainment from a separate compactness argument. The primal side is
+attained by the same compactness route used for the diamond distance
+itself (\lean{exists\_diamondDist\_eq}), resting on the Lipschitz
+continuity of the trace norm (\lean{continuous\_traceNorm}) rather than
+on continuity of individual eigenvalues, which does not hold.
+
+Two consequences matter for use. First, both optima are attained, so a
+diamond-distance claim can be certified by exhibiting a single matrix on
+either side, which is what makes Theorem~\ref{thm:sdp} a practical
+worst-case route rather than an existence statement. Second, the norm
+throughout is the spectral norm, on the L2-operator instance rather than
+any entrywise surrogate; that is a convention it would be easy to get
+wrong silently, and it is the reason the statement matches
+Ref.~\cite{Watrous2018} rather than resembling it.
+
 \subsection{Max-flow/min-cut in Lean}
 
 Theorem~\ref{thm:maxflow} is a library gap rather than new mathematics,
@@ -1070,7 +1222,22 @@ Ref.~\cite{VidalWerner2002} is cited, not formalized. The
 continuous-variable converse behind the rate-bound functions of
 Sec.~\ref{sec:capacity} is likewise of this class, as are the DEJMPS
 convergence basin~\cite{Macchiavello1998} and an exact diamond distance
-for the non-covariant thermal channel.
+for the non-covariant thermal channel. The logarithm enclosure of
+Sec.~\ref{sec:worked-network} is the cheapest open item in the class and
+the one with the widest reach: it is the single missing piece between the
+rate side of the chain and the same kernel-terminating property the
+device side already has.
+
+Class 2 is the class most often misreported, because the phrase ``the
+library does not have it'' is used for two different situations. When the
+substrate is absent but the route is known and short, as with the
+logarithm bracket, the item is scheduling. When the substrate is absent
+and building it is a research programme in its own right, as with LOCC or
+with the continuous-variable capacity converse, the item is a genuine
+dependency and the honest response is to cite. We separate the two in
+this paper rather than listing both as gaps, because a reader deciding
+whether to build on this corpus needs to know which of the two they would
+be inheriting.
 
 \paragraph*{Class 3: impossibility. Closed by nothing.} Negative
 result~\ref{nr:rb}. The arrow from an averaged benchmark to a worst-case
