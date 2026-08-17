@@ -87,8 +87,9 @@ admits a closed Legendre evaluation $-\log(1-p)$, vanishes exactly on
 4-cycle-free graphs, is strictly monotone off them, and takes the kernel-checked
 value $\log(4/3)$ on the complete bipartite $2{\times}2$ graph. But
 4-cycle-freeness does not imply acyclicity, and holds automatically for every
-model whose factors couple at most two variables on a simple interaction graph;
-both limits are argued on paper, not in Lean. The rate is therefore identically
+model whose factors couple at most two variables on a simple interaction graph
+(\texttt{fourCycleFree\_of\_pairwise\_factors}, kernel-checked); the first limit
+is argued on paper, the second in Lean. The rate is therefore identically
 zero across the lattice families of the tensor-network simulations that motivate
 it, and its normalization by the ambient tuple space makes a fixed motif's
 density fall with system size. One step separates the convergence theorem from an
@@ -651,7 +652,7 @@ Proposition~\ref{prop:sixcycle}.}
 The second problem removes the statistic's discriminating power on the models
 that motivate it.
 
-\begin{prop}[not formalized]
+\begin{prop}
 \label{prop:pairwise}
 Let $G$ be a factor graph in which every factor is incident to at most two
 variables, and in which no two distinct factors have the same pair of incident
@@ -663,8 +664,14 @@ A 4-cycle requires distinct factors $a \neq b$ each incident to both of the
 distinct variables $u \neq v$. Since $|\partial a| \leq 2$ and
 $\{u,v\} \subseteq \partial a$, we get $\partial a = \{u,v\}$, and likewise
 $\partial b = \{u,v\}$. So $a$ and $b$ are distinct factors on the same pair,
-excluded by hypothesis.
+excluded by hypothesis. Formalized as
+\texttt{fourCycleFree\_of\_pairwise\_factors}, with the two hypotheses carried as
+\texttt{IsAtMostPairwise} and \texttt{HasDistinctScopes}.
 \end{proof}
+
+Both hypotheses are load-bearing. Dropping the second admits two parallel factors
+on one bond --- a 4-cycle assembled entirely from arity-2 factors --- so the
+result is about simple interaction graphs, not about pairwise coupling alone.
 
 The hypothesis of Proposition~\ref{prop:pairwise} is satisfied by every
 two-body Hamiltonian on a simple interaction graph with one factor per bond,
@@ -869,12 +876,10 @@ The theorems the body's results rest on, in source form, each preceded by the
 one thing it contributes. Names are as they appear in the development; all are
 proven with no \texttt{sorry} and no project-local axiom.
 
-Two numbered statements in the body are not machine-checked and are not in this
+One numbered statement in the body is not machine-checked and is not in this
 list: Proposition~\ref{prop:sixcycle}, that the bipartite 6-cycle is
-4-cycle-free and not acyclic, and Proposition~\ref{prop:pairwise}, that every
-factor graph whose factors couple at most two variables on distinct pairs is
-4-cycle-free. Both are marked \textup{(not formalized)} where they are stated,
-and both carry pen-and-paper proofs. Every other numbered statement in the body
+4-cycle-free and not acyclic. It is marked \textup{(not formalized)} where it is
+stated and carries a pen-and-paper proof. Every other numbered statement in the body
 names the declaration that discharges it, including
 Proposition~\ref{prop:star} and the worked value of Sec.~\ref{sec:rate}.
 

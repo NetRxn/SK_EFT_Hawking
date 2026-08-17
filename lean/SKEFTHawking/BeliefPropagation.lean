@@ -770,6 +770,63 @@ theorem IsFourCycleFreeFactorGraph_of_no_two_factors_share_two_vars
   intro u v a b huv hab ⟨h1, h2, h3, h4⟩
   exact h u v a b huv hab h1 h2 h3 h4
 
+/-- A factor is **at most pairwise** when no three pairwise-distinct variables are
+    all incident to it — the factor-graph rendering of `|∂a| ≤ 2`. -/
+def IsAtMostPairwise {ν α : Type*} (G : FactorGraph ν α) (a : α) : Prop :=
+  ∀ x y z : ν, G.incidence a x = true → G.incidence a y = true →
+    G.incidence a z = true → x = y ∨ x = z ∨ y = z
+
+/-- Distinct factors carry **distinct scopes**: no two of them are incident to
+    exactly the same set of variables. In a pairwise model this is the statement
+    that a bond carries one coupling, not two parallel ones. -/
+def HasDistinctScopes {ν α : Type*} (G : FactorGraph ν α) : Prop :=
+  ∀ a b : α, a ≠ b → ∃ w : ν, G.incidence a w ≠ G.incidence b w
+
+/-- **Every pairwise-coupled model is four-cycle-free.**
+
+    If every factor couples at most two variables and distinct factors carry
+    distinct scopes, the 4-cycle screen `IsFourCycleFreeFactorGraph` passes
+    identically. Both hypotheses are load-bearing and neither is cosmetic:
+    dropping `HasDistinctScopes` admits two parallel factors on one bond, which
+    is a 4-cycle built entirely from arity-2 factors.
+
+    This is what removes the statistic's discriminating power on the models that
+    motivate it: for a two-body Hamiltonian with one factor per bond the screen
+    returns zero on every instance, independent of the interaction graph, so a
+    vanishing loop-correction rate carries no information there. -/
+theorem fourCycleFree_of_pairwise_factors {ν α : Type*}
+    (G : FactorGraph ν α)
+    (harity : ∀ a : α, IsAtMostPairwise G a)
+    (hscope : HasDistinctScopes G) :
+    IsFourCycleFreeFactorGraph G := by
+  intro u v a b huv hab ⟨hau, hbu, hav, hbv⟩
+  -- `∂a ⊆ {u, v}`: a third incident variable would violate `|∂a| ≤ 2`.
+  have ha_sub : ∀ w : ν, G.incidence a w = true → w = u ∨ w = v := by
+    intro w hw
+    rcases harity a w u v hw hau hav with h | h | h
+    · exact Or.inl h
+    · exact Or.inr h
+    · exact absurd h huv
+  have hb_sub : ∀ w : ν, G.incidence b w = true → w = u ∨ w = v := by
+    intro w hw
+    rcases harity b w u v hw hbu hbv with h | h | h
+    · exact Or.inl h
+    · exact Or.inr h
+    · exact absurd h huv
+  -- Both scopes are therefore exactly `{u, v}`, so the two factors agree everywhere.
+  obtain ⟨w, hw⟩ := hscope a b hab
+  refine hw ?_
+  by_cases haw : G.incidence a w = true
+  · rcases ha_sub w haw with rfl | rfl
+    · rw [haw, hbu]
+    · rw [haw, hbv]
+  · by_cases hbw : G.incidence b w = true
+    · rcases hb_sub w hbw with rfl | rfl
+      · exact absurd hau haw
+      · exact absurd hav haw
+    · simp only [Bool.not_eq_true] at haw hbw
+      rw [haw, hbw]
+
 /-! ## Genuine acyclicity / tree predicate (remediation B-04, 2026-07-17)
 
 The four-cycle-free predicate above is a weak combinatorial screen. This

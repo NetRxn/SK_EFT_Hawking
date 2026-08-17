@@ -80,7 +80,8 @@
       "name": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_tree_simulable_demarcation",
       "claims": "Sec. III scope -- the tree-side end-to-end statement. The draft states that its IsTreeFactorGraph hypothesis does no work the rank certificate does not already do",
       "declared": "2026-08-07"
-    }
+    },
+    "SKEFTHawking.BeliefPropagation.fourCycleFree_of_pairwise_factors"
   ],
   "tier": 1,
   "title": "A machine-checked finite-horizon convergence theorem for belief propagation, and why 4-cycle density does not screen for it",
