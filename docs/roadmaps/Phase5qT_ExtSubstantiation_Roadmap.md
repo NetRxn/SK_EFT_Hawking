@@ -99,6 +99,49 @@ matrices, **not** from `SteenrodA1.a1_mul`: the latter is in the admissible/Adem
 (Milnor-basis) matrices encode; the `L·` matrices are the correct, sum-capable source.
 **Risk.** Low-medium (typeclass diamond; mitigated by newtype, proven pattern in repo).
 
+### ⚠️ STATUS UPDATE 2026-08-17 — T2 shipped, T4's route is REFUTED, and T3 is the critical path
+
+**Wave T2 is COMPLETE** (`substantiate/ext-A1`, merged `0188a9b1`). `A1Algebra.lean` gives A(1) a
+genuine `Ring` / `Algebra (ZMod 2)` instance; A(1)-linearity and full associativity are proved over
+all 512 basis triples by kernel `decide`; `native_decide` in `A1Resolution` fell 17 → 3.
+`hom_tensor_adjunction_dim` and `change_of_rings_ext_dim` are real theorems and were retired from
+`VACUOUS_STATEMENT_BASELINE`.
+
+**T4's planned route does not work, and this roadmap was wrong.** The entry-state table and Wave T4
+both prescribe `ModuleCat.restrictCoextendScalarsAdj` as the general-ring substitute for the
+`CommRing`-only `extendRestrictScalarsAdj`. It is `restrictScalars ⊣ coextendScalars` — **CO**induction,
+which is the **wrong variance** for Shapiro in the first `Ext` argument. Induction (`extendScalars`,
+i.e. `A ⊗_{A(1)} −`) is what Shapiro needs, and Mathlib has it only for `CommRing`. Found by the Wave
+T2 agent; recorded here so the route is not re-attempted.
+
+**But "Mathlib lacks a noncommutative tensor product" is a COST, not a route closure — and it is not
+even on the critical path.** Three things follow, and they were missed because the gap was stated
+abstractly:
+
+1. **The resolution is a MINIMAL FREE resolution** (`P₀…P₅` free of ranks 1, 2, 2, 2, 3, 4). Base change
+   of a *free* module along `A(1) → A` is `A^r` — a finite direct sum. It is statable in Lean today,
+   with no balanced tensor product anywhere. The abstract object `A ⊗_{A(1)} P` is unstatable; the
+   object this development actually needs is not.
+2. **Wave T3 is untouched and needs none of this.** `ProjectiveResolution.isoExt` consumes a projective
+   resolution over ONE ring; the change-of-rings question does not arise. T3 is therefore the highest
+   remaining value and is dispatchable now — it replaces the `ext_dim_n` proxies with genuine
+   `Ext^n_{A(1)}(F₂, F₂)`, which is the wave's stated purpose.
+3. **A balanced tensor product over a noncommutative ring is a legitimate build target**, not a wall —
+   `M ⊗_R N` for `[Ring R]`, right module ⊗ left module, as a quotient of the free abelian group on
+   `M × N`. Mathlib-grade, well-understood, and reusable far beyond this wave. Scope it on its own
+   merits AFTER T3, and only if the abstract statement is genuinely wanted; the free-module route may
+   discharge H2 without it.
+
+**Revised order:** T3 (real `Ext`, no blockers) → re-plan T4 on the free-module base change → decide the
+balanced tensor product on cost/benefit, with T3's outcome in hand.
+
+⚠️ **Open mathematical question for the re-planned T4**, to be settled before building: base change is
+only right-exact, so the base-changed free complex is a resolution of `A ⊗_{A(1)} F₂` only given
+flatness or a direct exactness argument. Establish that first — it decides whether the free-module
+route discharges H2 or merely restates it.
+
+---
+
 ### Wave T3 — Real `Ext^n_{A(1)}(F₂, F₂)` via `ProjectiveResolution.isoExt`
 
 **Goal.** Build `ProjectiveResolution` of `F₂` over `A1` from the resolution matrices and prove
