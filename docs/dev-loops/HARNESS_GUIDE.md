@@ -134,6 +134,62 @@ claude plugin update skeft-qa@skeft-local --scope local   # run from BOTH the wo
 
 ---
 
+## 8b. Lab notebooks — where a loop's durable memory lives, and who can see it
+
+A loop's lab notebook is the project's **cross-session process memory**: what landed, what was
+tried and failed, and which routes are settled dead. It is the home of the 5q.B operating rule
+**"log tried-and-FAILED so we never repeat post-compact"** — the goldfish-reseed guard.
+
+**Layout** (owned by `.claude/plugins/skeft-qa/scripts/notebook_lib.py`; create with
+`/skeft-qa:notebook new`, never by hand):
+
+| file | role |
+|---|---|
+| `docs/dev-loops/<loop>/LAB_NOTEBOOK_INDEX.md` | the durable, always-loaded entry point — bounded and topical |
+| `docs/dev-loops/<loop>/LAB_NOTEBOOK.md` | the active chronological shard, oldest first |
+| `docs/dev-loops/<loop>/LAB_NOTEBOOK_W<n>.md` | frozen historical shards; the audit layer, read on demand |
+
+One legacy exception predates the layout: `docs/roadmaps/Phase5qB_LabNotebook.md`.
+
+### ⚠️ Notebooks are GITIGNORED, so no worktree has one
+
+`.gitignore` carries `**/LAB_NOTEBOOK*.md`. Notebooks are therefore **untracked**, and
+`git worktree add` materialises only tracked files. **No lab notebook exists in any worktree.**
+
+This matters because subagents are dispatched into worktrees by default, so the tracker the loop
+calls authoritative is invisible to the workers doing the work. And the failure is **asymmetric**:
+the notebook tooling resolves against the **repo root**, not the caller's cwd (the same
+fail-open resolution recorded for `harness_common_cli.py`), so a worker's `notebook new` **writes
+to the main checkout** while its reads come back empty. Writes land, reads fail — an agent
+consults the tracker, finds nothing, proceeds uninformed, and still contributes to it.
+
+**Rules that follow:**
+
+- **Dispatching a worker that should read a notebook? Cite the ABSOLUTE path into the main
+  checkout.** The lead knows it; the worker cannot derive it. A repo-relative path silently
+  resolves to nothing inside a worktree.
+- **Never conclude from a worktree-relative miss that a notebook does not exist.** Check the main
+  checkout before reporting absence — this exact collision produced a live contradiction between a
+  lead who had seen both files and an agent that correctly found neither.
+- **Never have a worker write a notebook into its own worktree.** Gitignored files there are
+  invisible to the merge and are destroyed with the worktree.
+
+### Why a loop without a notebook is a real risk, not a tidiness issue
+
+Notebooks are created per **goal loop**, so a phase that never ran as one never gets a tracker —
+and `END_TO_END_MAP.md` records that **nothing validates a roadmap**. Phase 5q.T is the worked
+example: a roadmap authored inside another phase's housekeeping commit, no loop, no notebook, and
+months later three route errors sitting in it that nothing caught — a change-of-rings adjunction
+with the wrong variance for its purpose, an entry-state table silent about work that had already
+landed, and a sidedness error making one prescribed construction untypeable. A roadmap is a plan
+and is unchecked; the notebook is the tracker and is the only durable place a refuted route gets
+recorded.
+
+⚠️ **Open, deliberately not decided here:** whether these should be gitignored at all. The stated
+purpose is durable cross-session memory, and untracked files survive neither a fresh clone, nor a
+new worktree, nor a machine change. Raised in
+`papers/AutomatedReviews/2026-08-17-worktree-agents-cannot-read-notebooks/infra.md`.
+
 ## 9. Parallel Lean apparatus (persistent worktree slots)
 
 For a `lead` orchestrating **independent** Lean sub-chains, fan out to the **`lean-worker`** project

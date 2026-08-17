@@ -211,7 +211,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `constants.HYPOTHESIS_REGISTRY` | 48 |
 | `constants.PLACEHOLDER_THEOREMS` | 38 |
 | `constants.KERNEL_NOGO_REGISTRY` | 45 |
-| `constants.MODELING_ASSUMPTION_THEOREMS` | 21 |
+| `constants.MODELING_ASSUMPTION_THEOREMS` | 20 |
 | `constants.TRACKED_HYPOTHESIS_NON_LOAD_BEARING` | 0 |
 | `provenance.PARAMETER_PROVENANCE` | 211 |
 | `provenance.PAPER_DEPENDENCIES` | 17 |
@@ -241,5 +241,5 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `I2` | 3 | 20 | Verified statistical estimators + lean-tensor-categories |
 | `I3` | 3 | 12 | Verified Stochastic Calculus for Mathlib4 — Stochastic Integ |
 | `E1` | 4 | 4 | Paris-LKB polariton letter |
-| `E2` | 4 | 6 | Dean-Kim-Lucas graphene letter |
+| `E2` | 4 | 5 | Dean-Kim-Lucas graphene letter |
 
