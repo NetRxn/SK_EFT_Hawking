@@ -81,10 +81,21 @@ its directory never materialised, the fallback fired, and Wave T3's writes lande
 `D10_Discharge` has one, so its directory did materialise and the read failed. Writes landing while
 reads failed was one bug seen from two sides.
 
-**Measured 2026-08-17:** eight loop directories carry both notebooks and at least one tracked file
-(`D10_Discharge`, `Phase5qH`, `Phase6BA`, `Phase6BB`, `Phase6BC`, `Phase6EA`, `Phase6EB`,
-`Phase6EE`) — the affected set. Seven carry notebooks and no tracked file and were already resolving
-correctly.
+**Measured 2026-08-17, corrected the same day.** A notebook is the tracker for a **unit of
+development work**; a managed `/goal` loop is the preferred way to run one, not a precondition for
+having one. **Notebook homes nest** — when a roadmap grows past what can be reasoned about
+correctly, the work splits into a sub-roadmap carrying its own notebook, as `Phase5qH` has done into
+`E1_SubstrateG_Topology` … `E5_SubstrateS_Spectral`.
+
+**Twenty-one directories hold notebooks at any depth. Nine are affected** — `D10_Discharge`,
+`Phase5qH`, `Phase5qH/E4_GenuineCarrier_Assembly`, `Phase6BA`, `Phase6BB`, `Phase6BC`, `Phase6EA`,
+`Phase6EB`, `Phase6EE` — and twelve carry no tracked file, so their directories never materialise
+and they were already resolving correctly.
+
+⚠️ A first pass reported eight of fifteen, enumerating with `docs/dev-loops/*/` — one level of
+children as a proxy for *notebook homes*. It missed `Phase5qH/E4_GenuineCarrier_Assembly` and every
+nested sibling. `.gitignore` matches `**/LAB_NOTEBOOK*.md` at any depth, so any scan of this
+population must too: enumerate by finding the notebooks, not by listing a directory.
 
 **Verified against production, not a fixture:** from `.claude/worktrees/wt1`, which holds only
 `goal_prompt_20260629T191903.md` under `docs/dev-loops/Phase6BC/`,
