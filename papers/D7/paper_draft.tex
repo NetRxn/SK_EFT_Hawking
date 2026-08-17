@@ -757,16 +757,221 @@ and~\ref{sec:normalization} are the price of both simplifications.
 \section{Related work}
 \label{sec:related}
 
+The update rule formalized here is the sum-product algorithm in the
+presentation of Yedidia, Freeman and Weiss~\cite{YedidiaFreemanWeiss2003},
+whose account of Bethe free energy and of exactness on trees is the reference
+for both the convention and the claim Sec.~\ref{sec:convergence} formalizes.
+That exactness on trees is classical, and Theorem~\ref{thm:bpconv} is not new
+mathematics; what is new is that it is checked by a kernel against the actual
+update, with the order-theoretic content isolated in a form
+(Theorem~\ref{thm:converges}) that applies to any rank-local iteration and does
+not mention messages.
+
+The correction theory that Sec.~\ref{sec:limits} argues the rate function
+should have been built on is the loop series of Chertkov and
+Chernyak~\cite{ChertkovChernyak2006LoopSeries}, which expresses the exact
+partition function as the belief-propagation estimate times a sum over
+generalized loops. The loop-corrected contraction used
+in~\cite{TindallMelloFishmanStoudenmireSels2026Science392} is a tensor-network
+realization of the same idea, organized as a sum over placements of projectors
+and anti-projectors on the network's edges and truncated by the number of
+anti-projectors.
+
+The local marker of Bianco and Resta~\cite{BiancoResta2011} is the real-space
+topological invariant that~\cite{AntaoSunFumegaLado2026PRL136} computes at
+scale. This paper does not formalize it, and Sec.~\ref{sec:anatomy} states why
+the object that carried its name in the present development is not a version
+of it.
+
+On prior formalization, we make no priority claim. Probabilistic graphical
+models and message passing have been mechanized in several settings, and the
+narrow statement we are willing to defend is that we are not aware of a
+proof-assistant development that proves finite-horizon convergence of the
+sum-product updates themselves against a topological ordering of directed
+message endpoints. We would welcome notification of prior work, and a reader
+should treat the claim as a statement about our search rather than about the
+literature.
+
 \section{What would have to be proved}
 \label{sec:outlook}
 
+Four obligations separate this development from the criterion it set out to
+supply. Each is stated as the Lean statement that would discharge it.
+
+\paragraph{Certificate existence.}
+$\texttt{IsAcyclicFactorGraph}\ G \to \mathrm{Nonempty}\ (\texttt{BPRankCert}\ G)$.
+This is the one that converts Theorem~\ref{thm:bpconv} from a conditional
+statement into ``belief propagation converges on forests'', and it is a finite
+well-founded construction: strip leaves from the bipartite incidence graph and
+take the subtree depth behind each directed edge as the rank, checking that
+Eqs.~\eqref{eq:vargt} and~\eqref{eq:facgt} hold because each cavity message sits
+strictly deeper. Until it lands, the graph theory is in the hypothesis and
+Sec.~\ref{sec:limits} is a demolition of a screen for a condition that is
+itself still assumed.
+
+\paragraph{Diameter identification.}
+For the subtree-depth certificate, $\mathrm{convergenceHorizon}\ \mathrm{cert.rank}$
+equals the diameter of the incidence graph. Without it the bound is uniform but
+uninterpreted, and no statement in this paper should be read as giving a
+diameter-sized round count.
+
+\paragraph{A loop-series observable.}
+A rate function whose Bernoulli or empirical measure is supported on the
+generalized loops of Chertkov and Chernyak with message-dependent weights,
+together with the theorem that its vanishing is equivalent to the collapse of
+the series. This is the replacement for
+Definition~\ref{def:density} that Sec.~\ref{sec:limits} argues for, and it
+requires the belief-propagation fixed point as an input, so it depends on the
+first obligation.
+
+\paragraph{A quantitative statement.}
+Any of: an error bound for the belief-propagation estimate in terms of a loop
+statistic; a bond-dimension requirement; a runtime. The development contains no
+theorem of this shape, and no combination of the theorems it does contain
+implies one. A simulability criterion is a quantitative object, and until one
+of these exists the honest description of this work is a convergence theorem
+and an audit.
+
+\figuredeferred{fig:d7-obligation-graph}{a dependency graph of the four obligations against the theorems each would unblock; blocked on nothing but is worth drawing only once the first obligation is attempted, since its shape is what the attempt would settle}
+
 \appendix
 
-\section{Statements as elaborated}
+\section{Cited statements}
 \label{app:statements}
+
+Every theorem cited in the body, in source form. Names are as they appear in
+the development; all are proven with no \texttt{sorry} and no project-local
+axiom.
+
+\begin{widetext}
+{\small
+\begin{verbatim}
+theorem rankLocalStep_coord_stable
+  (hloc : RankLocalStep rank step) (s : E -> b) :
+  forall (e : E) (n : N), rank e + 1 <= n ->
+    step^[n] s e = step^[rank e + 1] s e
+
+theorem rankLocalStep_converges [Fintype E]
+  (hloc : RankLocalStep rank step) (s : E -> b) :
+  (forall n, convergenceHorizon rank <= n ->
+     step^[n] s = step^[convergenceHorizon rank] s)
+  /\ step (step^[convergenceHorizon rank] s)
+       = step^[convergenceHorizon rank] s
+
+theorem bpStep_rankLocal
+  (cert : BPRankCert G) (factorWeight : a -> (v -> X) -> R) :
+  RankLocalStep cert.rank (bpStep G factorWeight)
+
+theorem bp_converges_on_ranked_acyclic
+  (cert : BPRankCert G) (factorWeight : a -> (v -> X) -> R)
+  (m : BPMessages v a G X) :
+  (forall n, convergenceHorizon cert.rank <= n ->
+     (fun m' => bpUpdate m' factorWeight)^[n] m
+       = (fun m' => bpUpdate m' factorWeight)^[
+           convergenceHorizon cert.rank] m)
+  /\ IsBPFixedPoint
+       ((fun m' => bpUpdate m' factorWeight)^[
+          convergenceHorizon cert.rank] m) factorWeight
+
+theorem isFourCycleFree_of_bpRankCert
+  (G : FactorGraph v a) (cert : BPRankCert G) :
+  IsFourCycleFreeFactorGraph G
+
+theorem bp_converges_on_star
+  (factorWeight : Fin 1 -> (Fin 2 -> X) -> R)
+  (m : BPMessages (Fin 2) (Fin 1) starFactorGraph X) :
+  IsBPFixedPoint
+    ((fun m' => bpUpdate m' factorWeight)^[
+       convergenceHorizon bpRankCertStar.rank] m) factorWeight
+
+theorem isAcyclicFactorGraph_imp_fourCycleFree
+  (G : FactorGraph v a) (h : IsAcyclicFactorGraph G) :
+  IsFourCycleFreeFactorGraph G
+
+theorem loopCorrectionRate_eq_neg_log (G : FactorGraph v a) :
+  loopCorrectionRate G = -Real.log (1 - loopDensity G)
+
+theorem loopCorrectionRate_eq_zero_iff_fourCycleFree
+  (G : FactorGraph v a) :
+  loopCorrectionRate G = 0 <-> IsFourCycleFreeFactorGraph G
+
+theorem loopCorrectionRate_lt_of_loopDensity_lt
+  (G1 : FactorGraph v1 a1) (G2 : FactorGraph v2 a2)
+  (h : loopDensity G1 < loopDensity G2) :
+  loopCorrectionRate G1 < loopCorrectionRate G2
+
+theorem loopCorrectionRate_le_iff_loopDensity_le
+  (G : FactorGraph v a) (t : R) :
+  loopCorrectionRate G <= t <-> loopDensity G <= 1 - Real.exp (-t)
+
+theorem no_loop_event_prob_eq_exp_neg_rate
+  (G : FactorGraph v a) (n : N) :
+  (1 - loopDensity G) ^ n
+    = Real.exp (-(n : R) * loopCorrectionRate G)
+
+theorem loopCorrectionRate_completeBipartite22 :
+  loopCorrectionRate
+    (<|fun _ _ => true|> : FactorGraph (Fin 2) (Fin 2))
+      = Real.log (4 / 3)
+
+theorem fourCycleFree_nonneg_iff_ldp_rate_zero
+  (G : FactorGraph v a) (factorWeight : a -> (v -> X) -> R) :
+  IsFourCycleFreeNonnegWeighted G factorWeight
+    <-> (loopCorrectionRate G = 0
+         /\ forall a y, 0 <= factorWeight a y)
+
+theorem analog_hawking_fourCycleFree_demarcation
+  (G : FactorGraph v a) (factorWeight : a -> (v -> X) -> R)
+  (c0 c1 : R) :
+  IsAnalogHawkingFourCycleFreeSimulable G factorWeight c1
+    <-> (loopCorrectionRate G = 0
+         /\ forall a y, 0 <= factorWeight a y)
+        /\ realSpaceChernAt (categoricalChernExpansion c0 c1) 1
+             = realSpaceChernAt
+                 (categoricalChernExpansion c0 c1) (-1)
+\end{verbatim}
+}
+\end{widetext}
+
+Universe and instance binders are elided above for readability; the elaborated
+types carry \texttt{Fintype} and \texttt{DecidableEq} on the index types
+wherever a \texttt{Finset} is formed, and the angle-bracket anonymous
+constructor is written \texttt{<|\dots|>} because the source glyphs do not
+survive this typesetting. Two conventions are worth noting because they are
+easy to misread. In \texttt{loopCorrectionRate\_lt\_of\_loopDensity\_lt} the
+two factor graphs range over \emph{independent} index-type pairs, which is what
+makes the comparison in Sec.~\ref{sec:normalization} expressible. In
+\texttt{bpStep\_rankLocal} the factor weight is an arbitrary real-valued
+function with no positivity hypothesis, so the convergence result does not
+depend on the sign condition that appears in the structural predicate.
 
 \section{Axiom closure and reproduction}
 \label{app:axioms}
+
+The seven contributing modules carry $116$ manually authored theorems, which is
+the count after excluding compiler-generated equation lemmas and projections.
+Their distribution is: belief propagation, $46$; the rate-function module,
+$25$; the Kibble--Zurek module, $14$; the Chebyshev module, $13$; the aperiodic
+lattice module, $7$; the Chebyshev-expansion bridge, $5$; the combined
+structural module, $6$. Only the first two and part of the last contribute to
+any statement in this paper; the closure of the theorems actually cited here is
+smaller and is given by the generated per-paper count.
+
+The union of the axioms used by every one of those theorems is
+$\{\mathtt{propext},\ \mathtt{Classical.choice},\ \mathtt{Quot.sound}\}$, the
+three axioms of Lean's core logic. No project-local axiom appears in any of
+them, and the development contains no \texttt{sorry} in this closure.
+Non-computability enters only through the real logarithm, the real supremum,
+and the real-valued messages themselves; the 4-cycle combinatorics is a
+decidable \texttt{Finset} filter, which is what allows the kernel to evaluate
+$|\mathrm{fourCycles}| = 4$ on the complete bipartite $2 \times 2$ graph by
+decision.
+
+The development builds against Lean \texttt{v4.32.0} with Mathlib pinned at
+revision \texttt{81a5d257}. Reproduction is \texttt{lake build} in the
+\texttt{lean} directory, which must complete with no error and no warning about
+an unproven declaration; axiom closure is checked per declaration with
+\texttt{\#print axioms}.
 
 \begin{thebibliography}{99}
 
