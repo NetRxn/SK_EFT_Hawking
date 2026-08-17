@@ -239,6 +239,7 @@ Nothing else belongs here.
 | `scripts/gate_precheck.py` | L4 — cheap deterministic prechecks BEFORE an expensive LLM reviewer stage, so Opus tokens/wall-time never burn on stale/failing state (spec 12 L4). |
 | `scripts/gen_d1_hierarchy_table.py` | Canonical evaluator for Paper D1's BEC correction-hierarchy table. |
 | `scripts/gen_kernel_nogos_module.py` | Regenerate ``lean/SKEFTHawking/KernelNoGos.lean`` — the Lean-side consolidated fence for the kernel-verified no-gos. |
+| `scripts/generate_a1_homotopy.py` | Generate an F2 contracting homotopy for the augmented A(1) minimal free resolution. |
 | `scripts/generate_a1_resolution.py` | Generate the minimal free resolution of F₂ over A(1) and export matrices for Lean 4. |
 | `scripts/graph_integrity.py` | SK-EFT Provenance Graph — Integrity Checker, including the sentence-level provenance checks (chain completeness, sentence-id collisions, audit-event well-formedness, claim-cluster consistency). |
 | `scripts/grid_compile_pygridsynth_xval.py` | Phase 6x Item I — ≥50-case cross-validation of the Ross-Selinger `compile` against pygridsynth. |
