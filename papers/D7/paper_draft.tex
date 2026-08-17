@@ -6,6 +6,46 @@
 \usepackage{listings}
 \usepackage{natbib}
 \usepackage{tikz}
+\tikzset{
+  var/.style={circle,draw=black,thick,minimum size=6mm,inner sep=0pt,
+              fill=white},
+  fac/.style={rectangle,draw=black,thick,minimum size=5.5mm,inner sep=0pt,
+              fill=black!10},
+  ed/.style={thick,draw=black!70}}
+
+%% Drawing commands for Fig. \ref{fig:d7-incidence-and-cycles}. They live in the
+%% preamble, beside the styles they use, so that the figure environment in the
+%% body carries only what a reader reads: the picture and its caption.
+\newcommand{\incidenceandcyclespicture}{%
+\begin{tikzpicture}
+%% (a) the 4-cycle: two factors on the same pair of variables
+\node[var] (au) at (0,1.25)  {$u$};
+\node[var] (av) at (0,-1.25) {$v$};
+\node[fac] (aa) at (-1.25,0) {$a$};
+\node[fac] (ab) at (1.25,0)  {$b$};
+\draw[ed] (au) -- (aa); \draw[ed] (au) -- (ab);
+\draw[ed] (av) -- (aa); \draw[ed] (av) -- (ab);
+\node at (0,-2.15) {(a) a 4-cycle: $p>0$};
+%% (b) a two-body model on three variables, as its interaction graph
+\node[var] (bu) at (5.0,1.25)  {$u$};
+\node[var] (bv) at (4.05,-0.5) {$v$};
+\node[var] (bw) at (5.95,-0.5) {$w$};
+\draw[ed] (bu) -- node[above left,inner sep=1.5pt] {$a$} (bv);
+\draw[ed] (bv) -- node[below,inner sep=2pt] {$b$} (bw);
+\draw[ed] (bw) -- node[above right,inner sep=1.5pt] {$c$} (bu);
+\node at (5.0,-2.15) {(b) one factor per bond};
+%% (c) the bipartite incidence graph of (b): a 6-cycle
+\node[var] (cu) at (10.0,1.30)   {$u$};
+\node[fac] (ca) at (8.87,0.65)   {$a$};
+\node[var] (cv) at (8.87,-0.65)  {$v$};
+\node[fac] (cb) at (10.0,-1.30)  {$b$};
+\node[var] (cw) at (11.13,-0.65) {$w$};
+\node[fac] (cc) at (11.13,0.65)  {$c$};
+\draw[ed] (cu) -- (ca); \draw[ed] (ca) -- (cv); \draw[ed] (cv) -- (cb);
+\draw[ed] (cb) -- (cw); \draw[ed] (cw) -- (cc); \draw[ed] (cc) -- (cu);
+\node at (10.0,-2.15) {(c) a 6-cycle: $p=0$};
+\draw[-latex,thick,draw=black!70] (6.9,0) -- (7.9,0);
+\end{tikzpicture}}
 
 \input{../../docs/figuredeferred.tex}
 \input{bundle_counts.tex}
@@ -591,43 +631,7 @@ Theorem~\ref{thm:certc4}, and is not sufficient for one.
 
 \begin{figure*}
 \centering
-\begin{tikzpicture}[
-  var/.style={circle,draw=black,thick,minimum size=6mm,inner sep=0pt,fill=white},
-  fac/.style={rectangle,draw=black,thick,minimum size=5.5mm,inner sep=0pt,
-              fill=black!10},
-  ed/.style={thick,draw=black!70}]
-
-%% (a) the 4-cycle: two factors on the same pair of variables
-\node[var] (au) at (0,1.25)  {$u$};
-\node[var] (av) at (0,-1.25) {$v$};
-\node[fac] (aa) at (-1.25,0) {$a$};
-\node[fac] (ab) at (1.25,0)  {$b$};
-\draw[ed] (au) -- (aa); \draw[ed] (au) -- (ab);
-\draw[ed] (av) -- (aa); \draw[ed] (av) -- (ab);
-\node at (0,-2.15) {(a) a 4-cycle: $p>0$};
-
-%% (b) a two-body model on three variables, as its interaction graph
-\node[var] (bu) at (5.0,1.25)  {$u$};
-\node[var] (bv) at (4.05,-0.5) {$v$};
-\node[var] (bw) at (5.95,-0.5) {$w$};
-\draw[ed] (bu) -- node[above left,inner sep=1.5pt] {$a$} (bv);
-\draw[ed] (bv) -- node[below,inner sep=2pt]      {$b$} (bw);
-\draw[ed] (bw) -- node[above right,inner sep=1.5pt] {$c$} (bu);
-\node at (5.0,-2.15) {(b) one factor per bond};
-
-%% (c) the bipartite incidence graph of (b): a 6-cycle
-\node[var] (cu) at (10.0,1.30)   {$u$};
-\node[fac] (ca) at (8.87,0.65)   {$a$};
-\node[var] (cv) at (8.87,-0.65)  {$v$};
-\node[fac] (cb) at (10.0,-1.30)  {$b$};
-\node[var] (cw) at (11.13,-0.65) {$w$};
-\node[fac] (cc) at (11.13,0.65)  {$c$};
-\draw[ed] (cu) -- (ca); \draw[ed] (ca) -- (cv); \draw[ed] (cv) -- (cb);
-\draw[ed] (cb) -- (cw); \draw[ed] (cw) -- (cc); \draw[ed] (cc) -- (cu);
-\node at (10.0,-2.15) {(c) a 6-cycle: $p=0$};
-
-\draw[-latex,thick,draw=black!70] (6.9,0) -- (7.9,0);
-\end{tikzpicture}
+\incidenceandcyclespicture
 \caption{What the 4-cycle screen sees and what it misses. Circles are
 variables, squares are factors, and an edge is an incidence. (a) Two distinct
 factors incident to the same two variables is the only configuration

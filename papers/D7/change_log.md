@@ -61,3 +61,43 @@ _Created 2026-06-10 with the review-2026-06-05 D7-EV3 remediation. Append histor
   every Verify executed and failing at HEAD).
 - Compile clean at 10 pages; `bundle_prose_em_dash_free` and `bundle_reader_facing_voice`
   clean for D7.
+
+## 2026-08-17 — Prose-review restructuring pass (skeft-qa:prose-reviewer, post-redraft)
+
+- Source: the `prose-reviewer` restructuring instruction on the merged Stage-10 redraft.
+  Nine items, subtractive except one figure. Executed against the draft, not a redraft.
+- **The two hand proofs are now marked.** Proposition (bipartite 6-cycle) and Proposition
+  (pairwise-coupled models, the paper's principal finding) carried the same `prop`
+  environment as the kernel-checked results under an Appendix A preamble asserting that
+  everything listed is proven with no `sorry` and no project-local axiom. Both re-verified
+  against `lean/lean_deps.json`: neither has a Lean witness. The 6-cycle exists in the
+  substrate only as `BeliefPropagation.lean` docstring prose; the pairwise statement's
+  arity step is unformalized and is already filed as D7-07. Both now read
+  `\begin{prop}[not formalized]`, Appendix A's preamble names them as the two numbered
+  statements outside its list, and the abstract no longer carries either under its
+  Lean-scope clause.
+- The modelling caveat on the factor update moved from Sec. II.C, where it landed three
+  pages before the theorem it scopes, to Sec. III.D as the first of four scope statements.
+- `fig:d7-incidence-and-cycles` drawn (TikZ, no data and no generated asset): the 4-cycle
+  the screen counts, a two-body model on three variables, and that model's bipartite
+  incidence graph, a 6-cycle the screen scores at zero. The three remaining
+  `\figuredeferred` boxes now name a blocker only.
+- Cuts: the Tindall re-narration in Sec. V.B (back-reference to Sec. I), Sec. VI's second
+  and third paragraphs (restating Sec. V.E and Sec. V.D), Sec. II.D's eight-name inventory
+  paragraph, Sec. IV's Kullback--Leibler display and Cramér-predicate bridge, Sec. IV.F
+  (collapsed into Sec. V.D), the conclusion's middle restatement, and Appendix B's
+  seven-module census. The exact finite-n identity was kept with the sentence saying what
+  it buys, which is the option the instruction allows.
+- Symbols: the Bianco--Resta display dropped in favour of words; the cavity set defined
+  where first used; `step^[n]` named as the n-fold iterate; `c_0` quantified; `p` bound
+  before use in the abstract. The Kibble--Zurek exponent clause cut, the qubit count kept.
+  One convention throughout: 4-cycle, not four-cycle.
+- The virtual-bond encoding claim in Sec. V.B is marked as an observation about the
+  encoding rather than a theorem.
+- `target_journal` and `length_target` deliberately NOT changed; the mismatch stays gated
+  as D7-12. The draft was not padded toward the 24 pp floor.
+- Compile clean at 10 pages, 0 TeX errors, 0 unresolved references, 4 overfull boxes
+  (6 before). `bundle_prose_em_dash_free`, `bundle_reader_facing_voice`,
+  `bundle_cross_references_resolve`, `bundle_figure_adequacy`, `paper_provenance`,
+  `bundle_apex_resolves`, `bundle_native_decide_debt` and `bundle_counts_fresh` all clean
+  for D7; `bundle_sentence_length` back at its main-checkout baseline.
