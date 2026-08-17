@@ -28,7 +28,7 @@
 20 & \texttt{bundle\_native\_decide\_debt} & Every bundle's native\_decide debt is disclosed in its draft and does not grow (ADR-002 ratchet, per-bundle) \\
 21 & \texttt{bundle\_todo\_free\_before\_green} & No bundle carrying an unresolved work marker records a Stage-13 green \\
 22 & \texttt{parameter\_provenance} & Every experimental parameter has verified provenance \\
-23 & \texttt{citation\_primary\_sources\_present} & Every cited external bibitem has a primary-source cache, an abstract-only one is flagged rather than counted as the source, and exemption is claimed by a declared citation\_class rather than inferred from absent metadata \\
+23 & \texttt{citation\_primary\_sources\_present} & Every cited external bibitem has a primary-source cache, its fidelity tier is decided by what the file holds rather than by its extension so an abstract-only or metadata-only cache is flagged rather than counted as the source, and exemption is claimed by a declared citation\_class rather than inferred from absent metadata \\
 24 & \texttt{provenance\_doi\_in\_registry} & PARAMETER\_PROVENANCE source DOIs resolve to CITATION\_REGISTRY bibkeys \\
 25 & \texttt{bibitem\_title\_primary\_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
 26 & \texttt{counts\_fresh} & counts.json / counts.tex are up-to-date vs. sources \\

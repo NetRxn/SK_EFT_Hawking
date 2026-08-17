@@ -14,6 +14,7 @@ MUTATION-VERIFIED 2026-08-04 — 10 mutations, all CAUGHT, clean negative contro
 """
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -698,6 +699,86 @@ class TestAbstractIsNotFullText:
             and e["primary_source_path"].endswith(".abstract.txt")
             and (ws / e["primary_source_path"]).is_file())
         assert on_disk > 0, "no abstract-fidelity cache files on disk — the pin measures nothing"
+
+
+class TestMetadataIsNotFullText:
+    """ADR-014 D1 — the fidelity tier is decided by CONTENT, never by the extension.
+
+    `json` is an accepted extension and ADR-014 tiered it under `full (pdf/tex/json body)`.
+    That is correct for a JSON holding a body and wrong for the corpus we have: measured
+    2026-08-17, 108 of 111 primary-source `.json` files are CrossRef API records
+    (`status`/`message-type`/`message`) carrying no body text at all. Keyed on the extension,
+    a bibliographic stub read as full text — 64 cited sources, previously counted as held in
+    full.
+
+    Advisory for the same reason as the abstract tier (ADR-014 D4): acquisition is the only
+    remedy and it costs money.
+    """
+
+    def _result(self):
+        from validation.checks import citations as C
+        return C.check_citation_primary_sources_present()
+
+    def test_the_metadata_flag_FIRES_on_the_production_corpus(self):
+        """Non-vacuity against the real Lit-Search tree, not a fixture."""
+        det = {d.name: d for d in self._result().details}
+        assert "metadata_only_fidelity" in det, (
+            "the metadata leg did not report at all — either every cached .json now holds a "
+            "body (verify before believing it) or the leg stopped running")
+        n = int(det["metadata_only_fidelity"].message.split("⚠️ ")[1].split(" ")[0])
+        assert n > 0, "flag present but reporting zero — that is a leg that cannot fire"
+
+    def test_the_flag_is_ADVISORY_and_does_not_block(self):
+        det = {d.name: d for d in self._result().details}
+        assert det["metadata_only_fidelity"].warning is True
+        assert det["metadata_only_fidelity"].passed is True, (
+            "the fidelity leg must not fail the check — ADR-014 D4 makes it a flag")
+
+    def test_the_DECIDER_is_content_not_the_extension(self, tmp_path):
+        """The seam. Two files share the `.json` extension and must tier differently.
+
+        A predicate keyed on the extension gives them the same answer, which is exactly the
+        defect: it is right for a JSON body and wrong for every bibliographic record.
+        """
+        from validation.checks import citations as C
+
+        envelope = tmp_path / "Stub.json"
+        envelope.write_text(json.dumps({
+            "status": "ok", "message-type": "work", "message-version": "1.0.0",
+            "message": {"title": ["A paper"], "author": [{"family": "Doe"}]}}))
+        body = tmp_path / "Real.json"
+        body.write_text(json.dumps({"title": "A paper", "body": "x" * 5000}))
+        declared = tmp_path / "Declared.json"
+        declared.write_text(json.dumps({"bibkey": "d", "cache_kind": "bibliographic-record",
+                                        "response": {"title": "A paper"}}))
+
+        assert C._cache_fidelity(envelope, "json") == "metadata", (
+            "a CrossRef API record holds no body and must not tier as full text")
+        assert C._cache_fidelity(body, "json") == "full", (
+            "a JSON that actually carries a body is full text — the fix must not condemn the "
+            "whole extension, only assert what each file holds")
+        assert C._cache_fidelity(declared, "json") == "metadata", (
+            "a file that DECLARES itself a bibliographic record is believed")
+
+    def test_a_crossref_record_carrying_an_abstract_tiers_as_abstract(self, tmp_path):
+        """Three tiers, not two: 22 of the corpus's envelopes do carry an abstract field, and
+        an abstract is a weaker source than a body but a stronger one than a bare header."""
+        from validation.checks import citations as C
+        p = tmp_path / "WithAbstract.json"
+        p.write_text(json.dumps({
+            "status": "ok", "message-type": "work", "message-version": "1.0.0",
+            "message": {"title": ["A paper"], "abstract": "<p>We show that ...</p>"}}))
+        assert C._cache_fidelity(p, "json") == "abstract"
+
+    def test_the_metadata_population_is_a_strict_subset_of_cached(self):
+        """A leg that flags all or none is not discriminating on fidelity."""
+        det = {d.name: d for d in self._result().details}
+        summary = det["summary"].message
+        n_cached = int(summary.split(" cached (")[0].split("—")[1].strip())
+        n_meta = int(summary.split("ABSTRACT ONLY, ")[1].split(" METADATA")[0])
+        n_full = int(summary.split("cached (")[1].split(" full text")[0])
+        assert 0 < n_meta < n_cached
+        assert n_full > 0, "the fix must not reclassify the entire cached population"
 
 
 class TestExemptionIsClaimedNotInferred:

@@ -516,12 +516,66 @@ _EXEMPT_CITATION_CLASSES: dict[str, str] = {
 #: pathway — does not clear it.
 _EXEMPT_REASON_MIN_CHARS = 25
 
+#: `cache_kind` values a cache file may DECLARE that amount to holding the body. A file that
+#: declares its own kind is believed — that is the honest path, and three files already take it
+#: (`sel4`, `compcert`, `AlphaProof2025`), each stating in prose that it is a bibliographic
+#: record and "NOT sufficient for a content-level attribution sweep".
+_FULL_TEXT_CACHE_KINDS = frozenset({"full-text", "fulltext", "body", "manuscript"})
+
+#: Below this, a `body`-ish JSON field is a stub rather than a source.
+_BODY_MIN_CHARS = 2000
+
+
+def _cache_fidelity(path, ext: str) -> str:
+    """What the cache file HOLDS: ``full`` | ``abstract`` | ``metadata``.
+
+    ⚠️ **The decider is content, not extension.** ADR-014 tiers the four accepted extensions,
+    placing ``json`` under *full (pdf/tex/json body)* — correct for a JSON holding a body, and
+    wrong for the corpus we actually have, where JSON is overwhelmingly a CrossRef API record
+    (``status`` / ``message-type`` / ``message``) carrying no body text at all. Keyed on the
+    extension, a bibliographic stub is indistinguishable from a PDF, and a claim resting on one
+    reads as fully backed.
+
+    Order matters: a file's own ``cache_kind`` declaration wins, because a file that says what
+    it is should never be second-guessed by a shape heuristic.
+    """
+    if ext in ("pdf", "tex"):
+        return "full"
+    if ext == "abstract.txt":
+        return "abstract"
+
+    try:
+        import json as _json
+        data = _json.loads(path.read_text(encoding="utf-8", errors="replace"))
+    except (ValueError, OSError):
+        # Unreadable JSON backs nothing. Fail toward the weaker tier, never the stronger.
+        return "metadata"
+    if not isinstance(data, dict):
+        return "metadata"
+
+    declared = data.get("cache_kind")
+    if isinstance(declared, str):
+        return "full" if declared.strip().lower() in _FULL_TEXT_CACHE_KINDS else "metadata"
+
+    if {"status", "message-type", "message"} <= set(data):
+        message = data.get("message")
+        if isinstance(message, dict) and str(message.get("abstract") or "").strip():
+            return "abstract"
+        return "metadata"
+
+    for field in ("body", "fulltext", "full_text", "text"):
+        value = data.get(field)
+        if isinstance(value, str) and len(value) >= _BODY_MIN_CHARS:
+            return "full"
+    return "metadata"
+
 
 @register_check("citation_primary_sources_present",
-                "Every cited external bibitem has a primary-source cache, an "
-                "abstract-only one is flagged rather than counted as the source, and "
-                "exemption is claimed by a declared citation_class rather than inferred "
-                "from absent metadata")
+                "Every cited external bibitem has a primary-source cache, its fidelity "
+                "tier is decided by what the file holds rather than by its extension so "
+                "an abstract-only or metadata-only cache is flagged rather than counted "
+                "as the source, and exemption is claimed by a declared citation_class "
+                "rather than inferred from absent metadata")
 def check_citation_primary_sources_present() -> CheckResult:
     """For every \\cite{<bibkey>} in any papers/*/paper_draft.tex, verify a
     primary-source artifact exists on disk under
@@ -635,6 +689,7 @@ def check_citation_primary_sources_present() -> CheckResult:
     cached: list[str] = []
     not_cached: list[tuple[str, str, list[str]]] = []  # (key, phase, papers)
     abstract_only: list[tuple[str, list[str]]] = []    # (key, papers) — ADR-014 D1
+    metadata_only: list[tuple[str, list[str]]] = []    # (key, papers) — ADR-014 D1, json tier
 
     for bibkey in sorted(usage):
         entry = CITATION_REGISTRY.get(bibkey)
@@ -659,15 +714,22 @@ def check_citation_primary_sources_present() -> CheckResult:
             candidate = target_dir / f"{bibkey}.{ext}"
             if candidate.is_file() and candidate.stat().st_size > 0:
                 found = True
-                # ADR-014 D1 — FIDELITY, not mere presence. `abstract.txt` is an accepted
-                # extension, so before this it was indistinguishable from a full text and the
-                # check reported "cached" either way. Mather1982 is the measured cost: its
-                # cache file's own last line says the body has never been read, and a
-                # convention ambiguity worth 21.5 points at D12's worked point was recorded as
-                # a property of the SOURCE rather than of not having read it — while this
-                # check stayed green throughout.
-                if ext == "abstract.txt":
+                # ADR-014 D1 — FIDELITY, not mere presence. Before this, an accepted
+                # extension was indistinguishable from a full text and the check reported
+                # "cached" either way. Mather1982 is the measured cost: its cache file's own
+                # last line says the body has never been read, and a convention ambiguity
+                # worth 21.5 points at D12's worked point was recorded as a property of the
+                # SOURCE rather than of not having read it — while this check stayed green.
+                #
+                # ⚠️ The tier is decided by what the file HOLDS, never by its extension.
+                # Naming one extension per tier is right only for the spellings the author
+                # enumerated: `json` was tiered as a full-text body and is, in this corpus,
+                # overwhelmingly a CrossRef metadata record carrying no body at all.
+                fidelity = _cache_fidelity(candidate, ext)
+                if fidelity == "abstract":
                     abstract_only.append((bibkey, sorted(usage[bibkey])))
+                elif fidelity == "metadata":
+                    metadata_only.append((bibkey, sorted(usage[bibkey])))
                 break
         if found:
             cached.append(bibkey)
@@ -719,13 +781,14 @@ def check_citation_primary_sources_present() -> CheckResult:
     n_uncached = len(not_cached)
 
     n_abstract = len(abstract_only)
+    n_metadata = len(metadata_only)
 
     details.append(Detail(
         "summary",
         n_uncached == 0 and n_missing == 0,
         f"{n_cited} bibkeys cited across {len(paper_tex_files)} papers — "
-        f"{n_cached} cached ({n_cached - n_abstract} full text, "
-        f"{n_abstract} ABSTRACT ONLY) / {n_inprep} inprep-exempt / "
+        f"{n_cached} cached ({n_cached - n_abstract - n_metadata} full text, "
+        f"{n_abstract} ABSTRACT ONLY, {n_metadata} METADATA ONLY) / {n_inprep} inprep-exempt / "
         f"{n_declared} declared-class-exempt / "
         f"{n_undeclared} UNDECLARED-class (ceiling {_UNDECL_CEIL}) / "
         f"{n_uncached} need cache / {n_missing} missing-from-registry"
@@ -790,6 +853,26 @@ def check_citation_primary_sources_present() -> CheckResult:
             f"'ambiguity' is recording our own ignorance of it. Ranked by whether a claim "
             f"actually depends on it in docs/SOURCE_ACQUISITION_REGISTER.md; regenerate with "
             f"scripts/source_acquisition_register.py.",
+            warning=True,
+        ))
+
+    if metadata_only:
+        # Same posture as abstract_only, and for the same reason (ADR-014 D4): acquisition is
+        # the only remedy and it costs money, so this FLAGS rather than blocks. It is the
+        # weaker tier of the two — a publisher abstract at least states the source's findings,
+        # while a bibliographic record states only that the source exists.
+        n_meta_sample = ", ".join(k for k, _ in metadata_only[:6])
+        more = f" (and {n_metadata - 6} more)" if n_metadata > 6 else ""
+        details.append(Detail(
+            "metadata_only_fidelity",
+            True,
+            f"⚠️ {n_metadata} cited source(s) held only as a BIBLIOGRAPHIC RECORD — title, "
+            f"authors, venue, year — with no body text: {n_meta_sample}{more}. Sufficient to "
+            f"check a bibitem's header against the source; not sufficient for any claim about "
+            f"what the source SAYS. These were previously counted as full text because `json` "
+            f"is an accepted extension and the tier was read off the extension rather than the "
+            f"content. Ranked for acquisition in docs/SOURCE_ACQUISITION_REGISTER.md. A cache "
+            f"file may declare its own tier with `cache_kind`; three already do.",
             warning=True,
         ))
 

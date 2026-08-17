@@ -38,6 +38,15 @@ EXTENSIONS = ["pdf", "tex", "abstract.txt", "json"]
 indistinguishable, to every consumer of this check, from one we hold in full text. The check
 asserts *a file exists*, which is a proxy for *we hold the source*, and the two come apart.
 
+**And an extension is a proxy for content.** Naming one extension per tier is right only for
+the spellings the author enumerated. Measured 2026-08-17: **108 of 111** primary-source `.json`
+files are CrossRef API records (`status` / `message-type` / `message`) holding no body text,
+and **64 cited sources** were counted as full text on the strength of the extension alone. The
+tier is therefore decided by what a file **holds** — `_cache_fidelity` in
+`scripts/validation/checks/citations.py` — reading, in order: a file's own `cache_kind`
+declaration, then its shape, then a body-length floor. A file that declares what it is, is
+believed; three already do.
+
 That is not hypothetical. `Mather1982` is held as a 5,975-byte abstract. Its cache file ends
 with the line **"we hold this source in ABSTRACT ONLY -- the body has not been read"**, and
 `PARAMETER_PROVENANCE['MATHER_1982_GRADIENT_REDUCTION']` records a convention ambiguity —
@@ -83,10 +92,17 @@ spend is at most one or two, and three of the six load-bearing gaps (`PDG2024`, 
 
 ### 1. Fidelity is a first-class property of a held source, and `abstract` is not `full`
 
-`full` (pdf/tex/json body) · `abstract` (publisher abstract only) · `none` · `missing`
-(path recorded, file absent). No consumer may treat `abstract` as evidence of the source's
-contents. A claim resting on an `abstract`-fidelity source is **unbacked**, and a provenance
+`full` (pdf, tex, or a JSON that actually carries a body) · `abstract` (publisher abstract
+only, including a CrossRef record whose `abstract` field is populated) · `metadata` (a
+bibliographic record — title, authors, venue, year — and nothing about the content) · `none` ·
+`missing` (path recorded, file absent). No consumer may treat `abstract` **or `metadata`** as
+evidence of the source's contents. A claim resting on either is **unbacked**, and a provenance
 record that describes a source's ambiguity from its abstract is recording its own ignorance.
+
+`metadata` is the weaker of the two flagged tiers: an abstract at least states the source's
+findings, while a bibliographic record establishes only that the source exists. It is
+sufficient to check a bibitem's header — author, title, venue, year, pagination — against the
+source, and sufficient for nothing else.
 
 ### 2. The acquisition register is derived, never hand-maintained
 
