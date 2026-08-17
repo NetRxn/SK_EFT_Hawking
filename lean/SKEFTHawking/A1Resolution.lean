@@ -27,10 +27,16 @@ recursion budgets that made plain `decide` impractical here; it adds **no** axio
 (`ofReduceBool` is not incurred, unlike `native_decide`). Axiom set on every such theorem:
 `{propext, Classical.choice, Quot.sound}`.
 
-The two `Fintype.card` kernel-enumeration theorems (`d1_kernel_card` … `d3_kernel_card`)
-still use `native_decide`: they enumerate 2^16 vectors, which exceeds even the kernel's
-recursion budget. They are marked at their site.
-Pipeline Invariant #10 forbids raising `maxHeartbeats`; nothing here does.
+This includes the three `Fintype.card` kernel theorems (`d1_kernel_card` … `d3_kernel_card`),
+so **this file contains no `native_decide`**.
+
+Do not prove those three by enumeration: `decide +kernel` over the 2^16 vectors exhausts the
+kernel's recursion limit (measured: it fails after 2m34s), and `native_decide` buys the count
+only at the price of `ofReduceBool`. A cardinality need not be counted — it can be *exhibited*
+by a bijection, which §3 does with a kernel-basis certificate the kernel checks in seconds.
+Reach for that certificate for any further kernel-cardinality fact here.
+Pipeline Invariant #10 forbids raising `maxHeartbeats`; nothing here does, and nothing raises
+`maxRecDepth` either.
 -/
 
 import Mathlib.Data.ZMod.Basic
@@ -129,27 +135,177 @@ ker(d_n) = im(d_{n+1}) at each degree. Since d²=0 gives im ⊆ ker,
 exactness reduces to dim(ker(d_n)) = rank(d_{n+1}), equivalently
 rank(d_n) + rank(d_{n+1}) = dim(P_n).
 
-We verify ranks by counting kernel elements for small matrices
-(d1-d3, kernel in 2^16 = 65536 elements) and by exhibiting
-rank-witnessing submatrices for larger ones. -/
+We fix the kernel cardinalities of d₁-d₃ exactly, by an explicit bijection
+(below), and exhibit rank-witnessing RREF certificates for the larger d₄, d₅ (§3b).
+
+### The kernel-basis certificate
+
+These three statements are *cardinalities*, not ranks, so the RREF certificate used for
+d₄/d₅ in §3b does not reach them on its own: an RREF pins a rank, and getting from there
+to a cardinality needs rank-nullity plus a cardinality computation. Counting the 2^16
+vectors directly is not available either — `decide +kernel` on the enumeration exhausts
+the kernel's recursion limit.
+
+So instead of *counting* the kernel we *exhibit* it. For each dₙ we give three matrices
+
+  Bₙ : 16 × k   columns spanning ker(dₙ)
+  Cₙ : k × 16   the coordinate projection back
+  Xₙ : 16 × mₙ  a cofactor witnessing that `Bₙ Cₙ + 1` kills the kernel
+
+and three matrix identities, each an explicit literal closed by `decide +kernel`:
+
+  (1)  dₙ · Bₙ = 0            every column of Bₙ is in the kernel
+  (2)  Cₙ · Bₙ = 1            Bₙ is injective, Cₙ recovers coordinates
+  (3)  Bₙ · Cₙ + 1 = Xₙ · dₙ  `Bₙ Cₙ` is the identity **on** the kernel
+
+(3) is what makes the map onto: if `dₙ v = 0` then `(BₙCₙ + 1) v = Xₙ (dₙ v) = 0`, so
+`Bₙ (Cₙ v) = v` over F₂. With (2) the two maps are mutually inverse, so ker(dₙ) has
+exactly 2^k elements — `kerCard` below packages this once and the three theorems apply it.
+
+Python finds B, C, X (`scripts/generate_a1_kernel_basis.py`); Lean re-derives every
+identity from the literals. A single wrong entry fails the build. -/
+
+/-- Over F₂, `a + b = 0` says `a = b`. Four cases, `decide`. -/
+theorem f2_add_eq_zero : ∀ {a b : F2}, a + b = 0 → a = b := by decide
+
+/-- **The kernel-basis certificate.** Given `d · B = 0`, `C · B = 1` and
+    `B · C + 1 = X · d`, the maps `w ↦ B w` and `v ↦ C v` are mutually inverse
+    bijections between `F₂^k` and `ker d`. -/
+def kerEquiv {m n k : ℕ} (d : Matrix (Fin m) (Fin n) F2) (B : Matrix (Fin n) (Fin k) F2)
+    (C : Matrix (Fin k) (Fin n) F2) (X : Matrix (Fin n) (Fin m) F2)
+    (hdB : d * B = 0) (hCB : C * B = 1) (hsplit : B * C + 1 = X * d) :
+    (Fin k → F2) ≃ { v : Fin n → F2 // d.mulVec v = 0 } where
+  toFun w := ⟨B.mulVec w, by rw [Matrix.mulVec_mulVec, hdB, Matrix.zero_mulVec]⟩
+  invFun v := C.mulVec v.val
+  left_inv w := by
+    show C.mulVec (B.mulVec w) = w
+    rw [Matrix.mulVec_mulVec, hCB, Matrix.one_mulVec]
+  right_inv v := by
+    have hv : d.mulVec v.val = 0 := v.property
+    have h : B.mulVec (C.mulVec v.val) + v.val = 0 := by
+      have e := congrArg (fun M : Matrix (Fin n) (Fin n) F2 => M.mulVec v.val) hsplit
+      simpa [Matrix.add_mulVec, Matrix.one_mulVec, ← Matrix.mulVec_mulVec, hv] using e
+    refine Subtype.ext (funext fun i => ?_)
+    exact f2_add_eq_zero (congrFun h i)
+
+/-- The cardinality read off `kerEquiv`: a certified kernel basis of size `k` means
+    exactly `2^k` kernel vectors. -/
+theorem kerCard {m n k : ℕ} (d : Matrix (Fin m) (Fin n) F2) (B : Matrix (Fin n) (Fin k) F2)
+    (C : Matrix (Fin k) (Fin n) F2) (X : Matrix (Fin n) (Fin m) F2)
+    (hdB : d * B = 0) (hCB : C * B = 1) (hsplit : B * C + 1 = X * d) :
+    Fintype.card { v : Fin n → F2 // d.mulVec v = 0 } = 2 ^ k := by
+  rw [← Fintype.card_congr (kerEquiv d B C X hdB hCB hsplit)]
+  simp [ZMod.card]
+
+-- d₁ kernel certificate: nullity 9, hence rank(d₁) = 16 - 9 = 7.
+def kerB1 : Matrix (Fin 16) (Fin 9) F2 := Matrix.of fun k i =>
+  match k.val, i.val with
+  | 1, 0 => 1 | 3, 1 => 1 | 3, 4 => 1 | 4, 1 => 1
+  | 5, 2 => 1 | 6, 6 => 1 | 7, 3 => 1 | 10, 4 => 1
+  | 11, 5 => 1 | 13, 6 => 1 | 14, 7 => 1 | 15, 8 => 1
+  | _, _ => 0
+
+def kerC1 : Matrix (Fin 9) (Fin 16) F2 := Matrix.of fun k i =>
+  match k.val, i.val with
+  | 0, 1 => 1 | 1, 4 => 1 | 2, 5 => 1 | 3, 7 => 1
+  | 4, 10 => 1 | 5, 11 => 1 | 6, 13 => 1 | 7, 14 => 1
+  | 8, 15 => 1
+  | _, _ => 0
+
+def kerX1 : Matrix (Fin 16) (Fin 8) F2 := Matrix.of fun k i =>
+  match k.val, i.val with
+  | 0, 1 => 1 | 2, 4 => 1 | 3, 5 => 1 | 6, 7 => 1
+  | 8, 2 => 1 | 9, 3 => 1 | 9, 4 => 1 | 12, 6 => 1
+  | _, _ => 0
+
+/-- Every column of `kerB1` lies in ker(d₁). -/
+theorem d1_kerB_zero : d1 * kerB1 = 0 := by decide +kernel
+
+/-- `kerC1` recovers the coordinates: `kerB1` is injective. -/
+theorem d1_kerC_left_inv : kerC1 * kerB1 = 1 := by decide +kernel
+
+/-- `kerB1 · kerC1` is the identity on ker(d₁) — the surjectivity half. -/
+theorem d1_kerB_split : kerB1 * kerC1 + 1 = kerX1 * d1 := by decide +kernel
+
+-- d₂ kernel certificate: nullity 7, hence rank(d₂) = 16 - 7 = 9.
+def kerB2 : Matrix (Fin 16) (Fin 7) F2 := Matrix.of fun k i =>
+  match k.val, i.val with
+  | 1, 0 => 1 | 3, 1 => 1 | 4, 1 => 1 | 5, 2 => 1
+  | 6, 4 => 1 | 7, 3 => 1 | 11, 4 => 1 | 14, 5 => 1
+  | 15, 6 => 1
+  | _, _ => 0
+
+def kerC2 : Matrix (Fin 7) (Fin 16) F2 := Matrix.of fun k i =>
+  match k.val, i.val with
+  | 0, 1 => 1 | 1, 4 => 1 | 2, 5 => 1 | 3, 7 => 1
+  | 4, 11 => 1 | 5, 14 => 1 | 6, 15 => 1
+  | _, _ => 0
+
+def kerX2 : Matrix (Fin 16) (Fin 16) F2 := Matrix.of fun k i =>
+  match k.val, i.val with
+  | 0, 1 => 1 | 2, 4 => 1 | 3, 5 => 1 | 6, 7 => 1
+  | 6, 14 => 1 | 8, 3 => 1 | 8, 4 => 1 | 9, 11 => 1
+  | 10, 6 => 1 | 12, 14 => 1 | 13, 15 => 1
+  | _, _ => 0
+
+/-- Every column of `kerB2` lies in ker(d₂). -/
+theorem d2_kerB_zero : d2 * kerB2 = 0 := by decide +kernel
+
+/-- `kerC2` recovers the coordinates: `kerB2` is injective. -/
+theorem d2_kerC_left_inv : kerC2 * kerB2 = 1 := by decide +kernel
+
+/-- `kerB2 · kerC2` is the identity on ker(d₂) — the surjectivity half. -/
+theorem d2_kerB_split : kerB2 * kerC2 + 1 = kerX2 * d2 := by decide +kernel
+
+-- d₃ kernel certificate: nullity 9, hence rank(d₃) = 16 - 9 = 7.
+def kerB3 : Matrix (Fin 16) (Fin 9) F2 := Matrix.of fun k i =>
+  match k.val, i.val with
+  | 1, 0 => 1 | 3, 1 => 1 | 4, 1 => 1 | 5, 2 => 1
+  | 6, 4 => 1 | 7, 3 => 1 | 9, 4 => 1 | 11, 5 => 1
+  | 12, 5 => 1 | 13, 6 => 1 | 14, 7 => 1 | 15, 8 => 1
+  | _, _ => 0
+
+def kerC3 : Matrix (Fin 9) (Fin 16) F2 := Matrix.of fun k i =>
+  match k.val, i.val with
+  | 0, 1 => 1 | 1, 4 => 1 | 2, 5 => 1 | 3, 7 => 1
+  | 4, 9 => 1 | 5, 12 => 1 | 6, 13 => 1 | 7, 14 => 1
+  | 8, 15 => 1
+  | _, _ => 0
+
+def kerX3 : Matrix (Fin 16) (Fin 16) F2 := Matrix.of fun k i =>
+  match k.val, i.val with
+  | 0, 1 => 1 | 2, 3 => 1 | 3, 5 => 1 | 6, 7 => 1
+  | 8, 6 => 1 | 10, 14 => 1 | 11, 15 => 1
+  | _, _ => 0
+
+/-- Every column of `kerB3` lies in ker(d₃). -/
+theorem d3_kerB_zero : d3 * kerB3 = 0 := by decide +kernel
+
+/-- `kerC3` recovers the coordinates: `kerB3` is injective. -/
+theorem d3_kerC_left_inv : kerC3 * kerB3 = 1 := by decide +kernel
+
+/-- `kerB3 · kerC3` is the identity on ker(d₃) — the surjectivity half. -/
+theorem d3_kerB_split : kerB3 * kerC3 + 1 = kerX3 * d3 := by decide +kernel
 
 /-- Kernel cardinality of d₁: 2^9 = 512.
     rank(d₁) = 16 - 9 = 7. Combined with rank(d₂) = 9 (below): 7 + 9 = 16 = dim(P₁).
 
-    ⚠ `native_decide` (incurs `Lean.ofReduceBool`): 2^16 vector enumeration exceeds the
-    kernel's recursion budget. The other matrix identities in this file are kernel-pure. -/
+    Proven from the `kerB1`/`kerC1`/`kerX1` certificate above; kernel-pure. -/
 theorem d1_kernel_card :
-    Fintype.card { v : Fin 16 → ZMod 2 // d1.mulVec v = 0 } = 512 := by native_decide
+    Fintype.card { v : Fin 16 → ZMod 2 // d1.mulVec v = 0 } = 512 :=
+  kerCard d1 kerB1 kerC1 kerX1 d1_kerB_zero d1_kerC_left_inv d1_kerB_split
 
 /-- Kernel cardinality of d₂: 2^7 = 128.
-    rank(d₂) = 16 - 7 = 9. -/
+    rank(d₂) = 16 - 7 = 9. Proven from the `kerB2`/`kerC2`/`kerX2` certificate; kernel-pure. -/
 theorem d2_kernel_card :
-    Fintype.card { v : Fin 16 → ZMod 2 // d2.mulVec v = 0 } = 128 := by native_decide
+    Fintype.card { v : Fin 16 → ZMod 2 // d2.mulVec v = 0 } = 128 :=
+  kerCard d2 kerB2 kerC2 kerX2 d2_kerB_zero d2_kerC_left_inv d2_kerB_split
 
 /-- Kernel cardinality of d₃: 2^9 = 512.
-    rank(d₃) = 16 - 9 = 7. -/
+    rank(d₃) = 16 - 9 = 7. Proven from the `kerB3`/`kerC3`/`kerX3` certificate; kernel-pure. -/
 theorem d3_kernel_card :
-    Fintype.card { v : Fin 16 → ZMod 2 // d3.mulVec v = 0 } = 512 := by native_decide
+    Fintype.card { v : Fin 16 → ZMod 2 // d3.mulVec v = 0 } = 512 :=
+  kerCard d3 kerB3 kerC3 kerX3 d3_kerB_zero d3_kerC_left_inv d3_kerB_split
 
 /-! ## 3b. RREF Witnesses for d₄ and d₅
 
@@ -249,7 +405,8 @@ theorem d5_rank_15 : ∀ i : Fin 24, (15 ≤ i.val) →
   P₃: rank(d₃)=7, rank(d₄)=9. dim(P₃)=16. 7+9=16. ✓  (d₄ rank from RREF)
   P₄: rank(d₄)=9, rank(d₅)=15. dim(P₄)=24. 9+15=24. ✓  (d₅ rank from RREF)
 
-  All ranks machine-checked: d₁-d₃ via kernel enumeration, d₄-d₅ via RREF witnesses.
+  All ranks machine-checked, and all of it kernel-pure: d₁-d₃ via the kernel-basis
+  certificates of §3 (nullity, hence rank), d₄-d₅ via the RREF witnesses of §3b.
 -/
 
 /-- Exactness **arithmetic**: rank(d_n) + rank(d_{n+1}) = dim(P_n) at every degree.

@@ -2929,7 +2929,14 @@ FORMULA_GROUNDING_KIND: dict[str, dict[str, str]] = {
 # is owned by ADR-002; this is only the regression backstop. Tracked in
 # docs/counts.json `lean.native_decide_decl_closure`; enforced by
 # `validate.py --check native_decide_regression`.
-NATIVE_DECIDE_DECL_CLOSURE_CEILING = 546  # 2026-06-13 (post-6AO; was 852→587 at ADR-002 cleanup)
+# SET THIS TO THE MEASURED VALUE, never above it. The measurement is
+# `len(update_counts.native_decide_decls(lean_deps.json))`; any gap between that number
+# and this one is spare capacity for new compiler trust, which is what the ratchet exists
+# to deny. Recompute and lower it whenever a wave removes a `native_decide`.
+# ⚠️ The measurement reads `lean/lean_deps.json`, so it is only current after
+# `lake build SKEFTHawking.ExtractDeps` regenerates that file against the tree being
+# checked. A failure on a stale extraction means REGENERATE THE DEPS, never raise this.
+NATIVE_DECIDE_DECL_CLOSURE_CEILING = 530  # 2026-08-17 (A1Resolution kernel-pure; was 852→587→546)
 
 #: PER-BUNDLE `native_decide` debt — the operator's ratchet, authorized 2026-08-08:
 #: *"We are working down the native_decides, but some are thorny. they need to be
