@@ -40,6 +40,13 @@ and reference to a stable path a dispatch brief can cite by absolute path, letti
 subagent the guidance its own definition lacks. It emits nothing when the SHAs agree, so a brief
 carries the pointer only when there is something to point at.
 
+⚠️ `delta` and `status` answer different questions and therefore read different deciders. `status`
+asks what the NEXT restart will bind — the install record. `delta` asks what a session is executing
+RIGHT NOW — the `--plugin-dir` in its live argv. The two disagree for exactly the window `delta`
+exists to serve: `sync` moves the record to HEAD at once, while every already-running session goes
+on executing the old cache until it restarts. Keyed on the record, `delta` would report "no delta"
+and delete its own document at the moment the amendment became necessary.
+
 ⚠️ Hooks bind at start and execute outside any prompt. A stale guard stays stale until restart, and
 no amendment document can reach it — `delta` says so rather than implying full coverage.
 """
@@ -47,8 +54,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
-import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -88,6 +95,30 @@ def _bound_shas() -> dict[str, str]:
             for r in data.get("plugins", {}).get(PLUGIN, [])}
 
 
+#: `--plugin-dir …/skeft-qa/<sha>` as it appears in a live session's argv.
+_PLUGIN_DIR_ARG = re.compile(
+    r"--plugin-dir\s+\S*?/" + re.escape(PLUGIN.split("@")[0]) + r"/([0-9a-f]{6,})"
+)
+
+
+def _running_shas() -> list[str]:
+    """⚠️ THE DECIDER for `delta`: the cache SHA each LIVE session is executing.
+
+    The install record answers a different question — what the NEXT restart will bind — which is
+    the right decider for `status` and the wrong one here. The two disagree for the whole window
+    that matters: `sync` moves the record to HEAD immediately, while every session started before
+    it goes on executing the old cache until it restarts. Keyed on the record, `delta` reports
+    "no delta" and deletes its own document precisely when a running session most needs the
+    amendment.
+
+    A session's argv carries the bound directory, so this is what it executes, not a proxy for it.
+    """
+    rc, out = _run(["ps", "-eo", "args"], REPO)
+    if rc != 0:
+        return []
+    return sorted(set(_PLUGIN_DIR_ARG.findall(out)))
+
+
 def _plugin_head() -> str:
     """The last commit touching plugin SOURCE — what a refresh would bind."""
     return _run(["git", "log", "-1", "--format=%H", "--", str(PLUGIN_SRC.relative_to(REPO))], REPO)[1]
@@ -96,6 +127,14 @@ def _plugin_head() -> str:
 def _plugin_dirty() -> str:
     """⚠️ THE DECIDER: is any plugin source uncommitted? Not: is one chosen file uncommitted."""
     return _run(["git", "status", "--porcelain", str(PLUGIN_SRC.relative_to(REPO))], REPO)[1]
+
+
+def _commits_behind(sha: str) -> int:
+    """How many commits `sha` trails HEAD by. ⚠️ Ordering SHAs lexicographically is not an age
+    ordering — hex strings sort by their digits, so `0a…` reads as "older" than `f9…` whatever
+    their dates. Ancestry is the decider. Returns -1 when the SHA does not resolve here."""
+    rc, out = _run(["git", "rev-list", "--count", f"{sha}..HEAD"], REPO)
+    return int(out) if rc == 0 and out.isdigit() else -1
 
 
 def _is_current(bound: str, head: str) -> bool:
@@ -163,22 +202,38 @@ def _changed_since(bound_sha: str) -> list[str]:
 
 def cmd_delta(args) -> int:
     head = _plugin_head()
-    bound = sorted({s for s in _bound_shas().values()})
+    # Live sessions are the decider; the install records are the fallback for when none is running
+    # (a cron or headless invocation), and are labelled as such rather than reported as equivalent.
+    bound = _running_shas()
+    source = "running session"
     if not bound:
-        print("No install record — nothing bound, so no delta.")
+        bound = sorted({s for s in _bound_shas().values()})
+        source = "install record (no live session found)"
+    if not bound:
+        print("No live session and no install record — nothing bound, so no delta.")
         return 0
-    # Records may disagree (one launch point refreshed, the other not). Render against the most
-    # stale of them, so the delta covers every session regardless of which record it bound.
-    oldest = sorted(bound)[0]
+    # A cache SHA that does not resolve here (rebased away, or built from another checkout) cannot
+    # be diffed against. Say so — silently rendering nothing would read as "you are up to date".
+    unknown = [b for b in bound if _commits_behind(b) < 0 and not _is_current(b, head)]
+    bound = [b for b in bound if b not in unknown]
+    for b in unknown:
+        print(f"⚠️ {source} is on cache {b}, which does not resolve in this repo — cannot diff it. "
+              f"Treat that session as stale and restart it.")
+    if not bound:
+        return 1 if unknown else 0
     if all(_is_current(b, head) for b in bound):
         if DELTA_DOC.exists():
             DELTA_DOC.unlink()
-        print(f"No delta: every install record is at plugin HEAD {head[:12]}.")
-        return 0
+        print(f"No delta: every {source} is at plugin HEAD {head[:12]}.")
+        return 1 if unknown else 0
 
+    # Sessions may disagree (one started before a sync, one after). Render against the most stale
+    # by ANCESTRY, so the delta covers every one of them regardless of which cache it bound.
+    oldest = max(bound, key=_commits_behind)
     changed = _changed_since(oldest)
     if not changed:
-        print(f"Records report {oldest}, but no plugin file differs from HEAD. Nothing to render.")
+        print(f"Oldest {source} is on {oldest}, but no plugin file differs from HEAD. "
+              f"Nothing to render.")
         return 0
 
     amendable = [f for f in changed if any(k in f for k in _PROMPT_DELIVERED)]
@@ -188,9 +243,10 @@ def cmd_delta(args) -> int:
         "# Plugin delta — guidance the RUNNING session is not executing",
         "",
         "**Derived; do not edit.** Regenerate with `uv run python scripts/plugin_lifecycle.py delta`.",
-        "It is emptied automatically once the bound cache reaches plugin HEAD.",
+        "It is emptied automatically once every RUNNING session reaches plugin HEAD — which is a "
+        "restart, not a `sync`. A sync moves the install record and nothing else.",
         "",
-        f"Bound cache `{oldest}` · plugin HEAD `{head[:12]}`",
+        f"Oldest {source} on cache `{oldest}` · plugin HEAD `{head[:12]}`",
         "",
         "A session binds its plugin at process start. The files below changed afterwards, so the "
         "agents and skills this session dispatches do not carry them.",

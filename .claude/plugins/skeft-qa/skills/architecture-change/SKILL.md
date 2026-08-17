@@ -69,6 +69,7 @@ and an empty population return the same answer. The recurring shapes:
 | a delimiter follows the token | the token ends there | a token ending its line |
 | one level of children | a tree that nests | every deeper level |
 | one file is uncommitted | any relevant file is uncommitted | every file outside the chosen one |
+| a config record | what is actually running | the whole window between a config change and a restart |
 
 Two checks cost nothing and catch all of it: **name a known-present instance and confirm the
 predicate finds it**, and **state the predicate in words** — if the sentence is not the thing you

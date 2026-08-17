@@ -235,8 +235,10 @@ the egress tests — a write that lands in a comment fails there rather than at 
 
 `sync` discovers the install records from Claude Code's own installed-plugins record rather than
 assuming a fixed number: this plugin has one record **per launch point**, and `claude plugin
-update` only touches the record for the current cwd. It refuses to run while the guard has uncommitted changes, since
-the cache is keyed by the committed SHA and an unsynced edit would be silently skipped.
+update` only touches the record for the current cwd. It refuses to run while **any file under
+`.claude/plugins/skeft-qa/`** is uncommitted — not merely the egress guard — since the cache is
+keyed by the committed SHA and an unsynced edit is silently skipped by a refresh that still
+reports success. Scoping that check to one file would pass for every edit outside it.
 
 Three properties of the runtime that make the last step non-negotiable:
 
@@ -249,6 +251,11 @@ Three properties of the runtime that make the last step non-negotiable:
   removed on 2026-08-15 — proves the *running* hook predates that retirement, whatever the
   installed-plugins record reports. Config state and runtime state are separate questions, and
   only the deny text answers the second.
+
+  **The same split governs `plugin_lifecycle.py` itself:** `status` reports config state (what
+  the next restart will bind — the install record) and `delta` reports runtime state (what a live
+  session is executing — the `--plugin-dir` in its argv). They disagree for the whole window
+  between a `sync` and a restart, which is precisely the window `delta` serves.
 
 What a claim may then rest on is
 [ADR-014](../adrs/ADR-014-source-acquisition-and-citation-fidelity.md): a fetch that lands a
