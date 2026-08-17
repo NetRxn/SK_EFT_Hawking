@@ -92,7 +92,8 @@ theorem hom_tensor_adjunction_dim {A : Type*} [Ring A] [Module A A1.F2]
 /-- The cochain groups of the A(1)-resolution, at the actual ranks `1,2,2,2,3,4` of
     `P₀ … P₅` (`A1Resolution.lean`). Each `Hom_{A(1)}(A(1)^{rₙ}, F₂)` has F₂-dimension `rₙ`
     — the fact that turns the resolution's ranks into cochain-group dimensions, and hence
-    (given `A1ExtSubstantive.all_dual_coboundaries_vanish`) into the Ext dimensions. -/
+    (given `SKEFTHawking.A1.all_dual_coboundaries_vanish`, in `A1ExtSubstantive.lean`) into the
+    Ext dimensions. -/
 theorem hom_A1_cochain_dims :
     Module.finrank A1.F2 ((Fin 1 → A1.A1sub) →ₗ[A1.A1sub] A1.F2) = 1
     ∧ Module.finrank A1.F2 ((Fin 2 → A1.A1sub) →ₗ[A1.A1sub] A1.F2) = 2

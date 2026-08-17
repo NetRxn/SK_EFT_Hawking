@@ -100,7 +100,8 @@ Each now states the F₂-dimension of the genuine cochain group
 instance for A(1) built in `A1Algebra.lean`, with F₂ the trivial module via the augmentation.
 
 **Why cochain dimension = Ext dimension here.** The dual coboundaries all vanish
-(`A1ExtSubstantive.all_dual_coboundaries_vanish`, a kernel-checked consequence of minimality
+(`SKEFTHawking.A1.all_dual_coboundaries_vanish`, in `A1ExtSubstantive.lean` — the module and the
+namespace differ, so the name is NOT `A1ExtSubstantive.…`; a kernel-checked consequence of minimality
 — `dn_minimal` above), so `Extⁿ = ker δⁿ / im δⁿ⁻¹ = Hom_{A(1)}(Pₙ, F₂)` with nothing
 quotiented away. `A1ExtSubstantive` carries that half, including the literal subquotient
 `ker δ⁴ ⧸ im δ³` in `ext4_homology_dim_substantive`. -/
