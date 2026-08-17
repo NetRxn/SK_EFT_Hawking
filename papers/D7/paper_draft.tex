@@ -255,7 +255,7 @@ at belief-propagation fixed points, which is the property that makes the Bethe
 construction interesting. Presenting the free-energy layer as support for the
 convergence theorem would be presenting inventory as argument.
 
-\figuredeferred{fig:d7-incidence-and-cycles}{a factor graph beside its bipartite incidence graph, with a 4-cycle and the 6-cycle that separates four-cycle-freeness from acyclicity; blocked only on drawing time and is the first figure to land}
+\figuredeferred{fig:d7-incidence-and-cycles}{a factor graph beside its bipartite incidence graph, with a 4-cycle and the 6-cycle that separates four-cycle-freeness from acyclicity; blocked only on drawing time and is the first figure to land.}
 
 \section{Rank-local iteration and finite-horizon convergence}
 \label{sec:convergence}
@@ -419,8 +419,8 @@ gap rather than a caveat.
 
 First, the existence of a rank certificate is a hypothesis and is not derived
 from acyclicity. The development defines the bipartite incidence graph, defines
-acyclicity and tree-ness through Mathlib's \texttt{SimpleGraph.IsAcyclic} and
-\texttt{SimpleGraph.IsTree}, and proves that acyclicity implies
+acyclicity and tree-ness through Mathlib's acyclicity and tree predicates on
+simple graphs, and proves that acyclicity implies
 four-cycle-freeness. It does not prove that an acyclic factor graph admits a
 certificate. That construction is a finite well-founded one, by leaf stripping
 on the forest, and until it lands the theorem reads ``given a topological order
@@ -443,7 +443,7 @@ certificate together with the two non-structural conjuncts, because
 Theorem~\ref{thm:certc4} already supplies four-cycle-freeness from the
 certificate alone. The tree hypothesis does no work there.
 
-\figuredeferred{fig:d7-rank-freeze}{message-endpoint ranks on the three-node path with the freeze-out round of each endpoint; blocked on nothing for the star, and on the unbuilt subtree-depth certificate for any deeper tree, so the deeper panel cannot be drawn honestly yet}
+\figuredeferred{fig:d7-rank-freeze}{message-endpoint ranks on the three-node path with the freeze-out round of each endpoint; blocked on nothing for the star, and on the unbuilt subtree-depth certificate for any deeper tree, so the deeper panel cannot be drawn honestly yet.}
 
 \section{A Cram\'er rate for 4-cycle density}
 \label{sec:rate}
@@ -595,7 +595,7 @@ and Theorem~\ref{thm:contract}\,(2) upgrades it to
 conjunct passes through unchanged on both sides; all of the content
 of~\eqref{eq:structbicond} is Theorem~\ref{thm:contract}\,(2).
 
-\figuredeferred{fig:d7-rate-curves}{a two-panel figure: $-\log(1-p)$ against loop density with the $\log(4/3)$ anchor marked, beside the density of a single embedded 4-cycle as the ambient index types grow, showing the rate of a fixed motif falling toward zero; blocked on a small enumeration script over \texttt{fourCycles} that does not exist yet}
+\figuredeferred{fig:d7-rate-curves}{a two-panel figure: $-\log(1-p)$ against loop density with the $\log(4/3)$ anchor marked, beside the density of a single embedded 4-cycle as the ambient index types grow, showing the rate of a fixed motif falling toward zero; blocked on a small enumeration script over \texttt{fourCycles} that does not exist yet.}
 
 \section{What the 4-cycle rate does not measure}
 \label{sec:limits}
@@ -833,38 +833,77 @@ implies one. A simulability criterion is a quantitative object, and until one
 of these exists the honest description of this work is a convergence theorem
 and an audit.
 
-\figuredeferred{fig:d7-obligation-graph}{a dependency graph of the four obligations against the theorems each would unblock; blocked on nothing but is worth drawing only once the first obligation is attempted, since its shape is what the attempt would settle}
+\figuredeferred{fig:d7-obligation-graph}{a dependency graph of the four obligations against the theorems each unblocks; blocked on the first obligation, whose attempt settles the shape.}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+The result of this work is a kernel-checked statement about the
+belief-propagation iteration itself: synchronous message passing on a finite
+factor graph whose directed endpoints admit a topological rank reaches an exact
+fixed point in a bounded number of sweeps, from any starting bundle and for
+arbitrary real factor weights, with the order-theoretic content isolated in a
+form that mentions no messages at all. The finding of this work is that the
+combinatorial statistic built alongside it to detect that regime does not
+detect it. Four-cycle density vanishes on every pairwise-coupled model, so it
+returns the same verdict on the lattices whose loop corrections had to be
+computed and on the lattices from which the loops were removed, and its
+normalization by the ambient tuple space inverts the ordering it induces as the
+system grows. Both belong in the same paper. A formalization is worth reading
+for what it settles, and one of the things it settled here is that a criterion
+we proposed does not work.
 
 \appendix
 
 \section{Cited statements}
 \label{app:statements}
 
-Every theorem cited in the body, in source form. Names are as they appear in
-the development; all are proven with no \texttt{sorry} and no project-local
-axiom.
+Every theorem cited in the body, in source form, each preceded by the one thing
+it contributes. Names are as they appear in the development; all are proven
+with no \texttt{sorry} and no project-local axiom.
 
-\begin{widetext}
-{\small
+Per-coordinate stabilization, the strong induction that carries the whole engine.
+
+{\footnotesize
 \begin{verbatim}
 theorem rankLocalStep_coord_stable
   (hloc : RankLocalStep rank step) (s : E -> b) :
   forall (e : E) (n : N), rank e + 1 <= n ->
     step^[n] s e = step^[rank e + 1] s e
+\end{verbatim}
+}
 
+Global convergence, with stabilization and fixedness as separate conjuncts.
+
+{\footnotesize
+\begin{verbatim}
 theorem rankLocalStep_converges [Fintype E]
   (hloc : RankLocalStep rank step) (s : E -> b) :
   (forall n, convergenceHorizon rank <= n ->
      step^[n] s = step^[convergenceHorizon rank] s)
   /\ step (step^[convergenceHorizon rank] s)
        = step^[convergenceHorizon rank] s
+\end{verbatim}
+}
 
+Rank locality of one belief-propagation sweep, for an arbitrary real factor weight.
+
+{\footnotesize
+\begin{verbatim}
 theorem bpStep_rankLocal
-  (cert : BPRankCert G) (factorWeight : a -> (v -> X) -> R) :
+  (cert : BPRankCert G)
+  (factorWeight : a -> (v -> X) -> R) :
   RankLocalStep cert.rank (bpStep G factorWeight)
+\end{verbatim}
+}
 
+The convergence theorem itself, quantified over every initial bundle and every weight.
+
+{\footnotesize
+\begin{verbatim}
 theorem bp_converges_on_ranked_acyclic
-  (cert : BPRankCert G) (factorWeight : a -> (v -> X) -> R)
+  (cert : BPRankCert G)
+  (factorWeight : a -> (v -> X) -> R)
   (m : BPMessages v a G X) :
   (forall n, convergenceHorizon cert.rank <= n ->
      (fun m' => bpUpdate m' factorWeight)^[n] m
@@ -872,67 +911,139 @@ theorem bp_converges_on_ranked_acyclic
            convergenceHorizon cert.rank] m)
   /\ IsBPFixedPoint
        ((fun m' => bpUpdate m' factorWeight)^[
-          convergenceHorizon cert.rank] m) factorWeight
+          convergenceHorizon cert.rank] m)
+       factorWeight
+\end{verbatim}
+}
 
+The certificate's own loop-freeness content, which is what makes it a real hypothesis.
+
+{\footnotesize
+\begin{verbatim}
 theorem isFourCycleFree_of_bpRankCert
   (G : FactorGraph v a) (cert : BPRankCert G) :
   IsFourCycleFreeFactorGraph G
+\end{verbatim}
+}
 
+The non-vacuity witness, on a graph whose incidence graph is the three-node path.
+
+{\footnotesize
+\begin{verbatim}
 theorem bp_converges_on_star
   (factorWeight : Fin 1 -> (Fin 2 -> X) -> R)
   (m : BPMessages (Fin 2) (Fin 1) starFactorGraph X) :
   IsBPFixedPoint
     ((fun m' => bpUpdate m' factorWeight)^[
-       convergenceHorizon bpRankCertStar.rank] m) factorWeight
+       convergenceHorizon bpRankCertStar.rank] m)
+    factorWeight
+\end{verbatim}
+}
 
+The one-directional strength relation between acyclicity and the 4-cycle screen.
+
+{\footnotesize
+\begin{verbatim}
 theorem isAcyclicFactorGraph_imp_fourCycleFree
   (G : FactorGraph v a) (h : IsAcyclicFactorGraph G) :
   IsFourCycleFreeFactorGraph G
+\end{verbatim}
+}
 
-theorem loopCorrectionRate_eq_neg_log (G : FactorGraph v a) :
+The Legendre evaluation, proven by an explicit least-upper-bound argument.
+
+{\footnotesize
+\begin{verbatim}
+theorem loopCorrectionRate_eq_neg_log
+  (G : FactorGraph v a) :
   loopCorrectionRate G = -Real.log (1 - loopDensity G)
+\end{verbatim}
+}
 
+The zero-rate characterization, which is four-cycle-freeness and not tree-ness.
+
+{\footnotesize
+\begin{verbatim}
 theorem loopCorrectionRate_eq_zero_iff_fourCycleFree
   (G : FactorGraph v a) :
-  loopCorrectionRate G = 0 <-> IsFourCycleFreeFactorGraph G
+  loopCorrectionRate G = 0
+    <-> IsFourCycleFreeFactorGraph G
+\end{verbatim}
+}
 
+Strict monotonicity, stated across independent index-type pairs.
+
+{\footnotesize
+\begin{verbatim}
 theorem loopCorrectionRate_lt_of_loopDensity_lt
   (G1 : FactorGraph v1 a1) (G2 : FactorGraph v2 a2)
   (h : loopDensity G1 < loopDensity G2) :
   loopCorrectionRate G1 < loopCorrectionRate G2
+\end{verbatim}
+}
 
+The general threshold form, recovering the zero characterization at zero.
+
+{\footnotesize
+\begin{verbatim}
 theorem loopCorrectionRate_le_iff_loopDensity_le
   (G : FactorGraph v a) (t : R) :
-  loopCorrectionRate G <= t <-> loopDensity G <= 1 - Real.exp (-t)
+  loopCorrectionRate G <= t
+    <-> loopDensity G <= 1 - Real.exp (-t)
+\end{verbatim}
+}
 
+The exact finite-$n$ identity for the no-loop event.
+
+{\footnotesize
+\begin{verbatim}
 theorem no_loop_event_prob_eq_exp_neg_rate
   (G : FactorGraph v a) (n : N) :
   (1 - loopDensity G) ^ n
     = Real.exp (-(n : R) * loopCorrectionRate G)
+\end{verbatim}
+}
 
+The kernel-checked worked value.
+
+{\footnotesize
+\begin{verbatim}
 theorem loopCorrectionRate_completeBipartite22 :
   loopCorrectionRate
     (<|fun _ _ => true|> : FactorGraph (Fin 2) (Fin 2))
       = Real.log (4 / 3)
+\end{verbatim}
+}
 
+The structural biconditional, whose content is the zero-rate characterization.
+
+{\footnotesize
+\begin{verbatim}
 theorem fourCycleFree_nonneg_iff_ldp_rate_zero
-  (G : FactorGraph v a) (factorWeight : a -> (v -> X) -> R) :
+  (G : FactorGraph v a)
+  (factorWeight : a -> (v -> X) -> R) :
   IsFourCycleFreeNonnegWeighted G factorWeight
     <-> (loopCorrectionRate G = 0
          /\ forall a y, 0 <= factorWeight a y)
+\end{verbatim}
+}
 
+The combined statement dissected in Sec.~\ref{sec:anatomy}.
+
+{\footnotesize
+\begin{verbatim}
 theorem analog_hawking_fourCycleFree_demarcation
-  (G : FactorGraph v a) (factorWeight : a -> (v -> X) -> R)
-  (c0 c1 : R) :
+  (G : FactorGraph v a)
+  (factorWeight : a -> (v -> X) -> R) (c0 c1 : R) :
   IsAnalogHawkingFourCycleFreeSimulable G factorWeight c1
     <-> (loopCorrectionRate G = 0
          /\ forall a y, 0 <= factorWeight a y)
-        /\ realSpaceChernAt (categoricalChernExpansion c0 c1) 1
+        /\ realSpaceChernAt
+             (categoricalChernExpansion c0 c1) 1
              = realSpaceChernAt
                  (categoricalChernExpansion c0 c1) (-1)
 \end{verbatim}
 }
-\end{widetext}
 
 Universe and instance binders are elided above for readability; the elaborated
 types carry \texttt{Fintype} and \texttt{DecidableEq} on the index types
