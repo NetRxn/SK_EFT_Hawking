@@ -264,3 +264,79 @@ def test_extract_frontier_resolves_repo_relative_from_workspace_root(tmp_path, m
 def test_absolute_and_cwd_paths_are_untouched(tmp_path):
     nb.op_new(tmp_path)
     assert not any("run `notebook new`" in w for w in nb.op_check(str(tmp_path))["warnings"])
+
+
+
+# ── the worktree seam ─────────────────────────────────────────────────────────
+# Notebooks are gitignored, so `git worktree add` materialises a loop directory
+# (its goal_prompt is tracked) WITHOUT any notebook in it. The repo-root fallback
+# has to fire on that shape, and the decider is whether the NOTEBOOK is present —
+# not whether the DIRECTORY is, which is true in both the real and the empty case.
+
+
+def _fake_checkouts(tmp_path, monkeypatch, *, worktree_loop_dir_exists):
+    """A main checkout holding a notebook, and a worktree that does not.
+
+    `worktree_loop_dir_exists` is the ONLY difference between the two shapes, and it
+    is exactly what a bare `p.exists()` keys on.
+    """
+    main = tmp_path / "SK_EFT_Hawking"
+    loop = main / "docs" / "dev-loops" / "PhaseX"
+    loop.mkdir(parents=True)
+    nb.op_new(loop)
+
+    wt_loop = main / ".claude" / "worktrees" / "wt1" / "docs" / "dev-loops" / "PhaseX"
+    if worktree_loop_dir_exists:
+        wt_loop.mkdir(parents=True)
+        (wt_loop / "goal_prompt_x.md").write_text("tracked, so this dir materialises\n")
+    else:
+        wt_loop.parent.mkdir(parents=True)
+
+    import harness_common as hc
+    monkeypatch.setattr(hc, "repo_root", lambda start=None: main)
+    return main, loop, wt_loop
+
+
+def test_resolver_reaches_the_notebook_from_a_worktree_whose_loop_dir_exists(
+    tmp_path, monkeypatch
+):
+    """RED before the fix: the worktree loop dir exists but holds no notebook."""
+    main, loop, wt_loop = _fake_checkouts(
+        tmp_path, monkeypatch, worktree_loop_dir_exists=True
+    )
+    monkeypatch.chdir(wt_loop.parent.parent.parent)
+
+    resolved = nb.nb_paths("docs/dev-loops/PhaseX")
+    assert resolved["index"].exists(), (
+        f"resolved to {resolved['index']}, which holds no notebook; the real one is "
+        f"at {loop / nb.INDEX_NAME}"
+    )
+    assert resolved["index"].read_text() == (loop / nb.INDEX_NAME).read_text()
+
+
+def test_resolver_still_reaches_it_when_the_worktree_loop_dir_is_absent(
+    tmp_path, monkeypatch
+):
+    """The shape that already worked — guard it against regression by the fix."""
+    main, loop, wt_loop = _fake_checkouts(
+        tmp_path, monkeypatch, worktree_loop_dir_exists=False
+    )
+    monkeypatch.chdir(wt_loop.parent.parent.parent)
+
+    resolved = nb.nb_paths("docs/dev-loops/PhaseX")
+    assert resolved["index"].exists()
+
+
+def test_a_loop_dir_that_holds_a_notebook_resolves_to_itself(tmp_path, monkeypatch):
+    """The fallback must not hijack a caller standing on a real notebook."""
+    main = tmp_path / "SK_EFT_Hawking"
+    here = main / "docs" / "dev-loops" / "PhaseY"
+    here.mkdir(parents=True)
+    nb.op_new(here)
+
+    import harness_common as hc
+    monkeypatch.setattr(hc, "repo_root", lambda start=None: tmp_path / "elsewhere")
+    monkeypatch.chdir(main)
+
+    resolved = nb.nb_paths("docs/dev-loops/PhaseY")
+    assert resolved["home"].resolve() == here.resolve()

@@ -80,6 +80,20 @@ _DECISIONS_SEED = (
 )
 
 
+def _carries_notebook(d):
+    """True when directory `d` actually holds notebook artifacts — the INDEX, the active
+    shard, or any rolled shard. This is the decider `_resolve_repo_relative` needs for a
+    directory: an empty loop directory and a live one are indistinguishable by existence."""
+    try:
+        return (
+            (d / INDEX_NAME).exists()
+            or (d / ACTIVE_NAME).exists()
+            or any(SHARD_RE.match(q.name) for q in d.glob("LAB_NOTEBOOK_W*.md"))
+        )
+    except OSError:
+        return False
+
+
 def _resolve_repo_relative(p):
     """Resolve a marker-style REPO-RELATIVE path against the caller's cwd, falling back to the
     harness repo root.
@@ -103,10 +117,23 @@ def _resolve_repo_relative(p):
 
     A nonexistent relative path resolves to the repo-joined form when a repo root is available,
     so `notebook new` scaffolds where notebooks live (and where the pre-commit check looks)
-    regardless of cwd. Absolute paths and paths that exist at cwd are returned untouched.
+    regardless of cwd. Absolute paths are returned untouched.
+
+    ⚠️ **For a DIRECTORY the decider is whether the notebook is here, not whether the directory
+    is.** Notebooks are gitignored, so `git worktree add` materialises a loop directory whenever
+    any sibling in it is tracked — a `goal_prompt_<id>.md` is enough — and produces a directory
+    that exists and holds no notebook. Keying the short-circuit on `p.exists()` therefore returns
+    the empty worktree copy and never reaches the main checkout, which is where every notebook
+    lives. A path that names a FILE keeps `exists()` as its decider, which for a file is the same
+    question.
     """
     p = Path(p)
-    if p.is_absolute() or p.exists():
+    if p.is_absolute():
+        return p
+    if p.is_dir():
+        if _carries_notebook(p):
+            return p
+    elif p.exists():
         return p
     try:
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

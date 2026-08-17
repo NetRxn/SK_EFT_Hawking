@@ -63,3 +63,45 @@ workers cannot read cannot prevent any of that.
   ⚠️ Do **not** "fix" this by having agents write notebooks into their worktree: gitignored files there are invisible to the merge and would be destroyed with the worktree.
 - **Related:** same family as `reference-worktree-gitignored-data-gaps` (a fresh worktree lacks gitignored `data/` and the notebook skip-cache). That entry recorded the data case; this is the tracker case, and the tracker is load-bearing for process memory rather than for a measurement.
 - **Cache:** N/A.
+
+---
+
+## AMENDED 2026-08-17 — the tooling half is closed; the finding stays OPEN
+
+**What changed.** `notebook_lib._resolve_repo_relative` short-circuited on `p.exists()`. For a
+directory that is the wrong decider: `git worktree add` materialises a loop directory whenever any
+sibling in it is tracked — a `goal_prompt_<id>.md` suffices — so the directory exists and holds no
+notebook, and the repo-root fallback never fired. It now asks whether the directory **carries a
+notebook** (`_carries_notebook`), so `/skeft-qa:notebook` and `extract_frontier` reach the main
+checkout from inside a worktree. A path naming a file keeps `exists()`, which for a file is the
+same question.
+
+**This explains both halves of the asymmetry recorded above.** `Phase5qT` has no tracked file, so
+its directory never materialised, the fallback fired, and Wave T3's writes landed on main.
+`D10_Discharge` has one, so its directory did materialise and the read failed. Writes landing while
+reads failed was one bug seen from two sides.
+
+**Measured 2026-08-17:** eight loop directories carry both notebooks and at least one tracked file
+(`D10_Discharge`, `Phase5qH`, `Phase6BA`, `Phase6BB`, `Phase6BC`, `Phase6EA`, `Phase6EB`,
+`Phase6EE`) — the affected set. Seven carry notebooks and no tracked file and were already resolving
+correctly.
+
+**Verified against production, not a fixture:** from `.claude/worktrees/wt1`, which holds only
+`goal_prompt_20260629T191903.md` under `docs/dev-loops/Phase6BC/`,
+`notebook_lib.py check docs/dev-loops/Phase6BC` now reports the live shard size and a stale-FRONTIER
+warning. Before, it reported the INDEX absent and advised `notebook new` over a live loop.
+
+### Why this finding is NOT closed, and why its `Verify` cannot pass
+
+The declared `Verify` asserts that `LAB_NOTEBOOK_INDEX.md` **exists inside a fresh worktree**. Re-run
+after the fix: still exit 1, and it will stay that way. Only un-ignoring `**/LAB_NOTEBOOK*.md` could
+satisfy it, and that is prohibited — the ignore exists to keep private loop content out of public
+git.
+
+**The `Verify` asserts a proxy.** File materialisation stands in for the thing that matters, *can an
+agent reach the notebook*, and the two come apart precisely because the correct fix routes around
+materialisation rather than achieving it.
+
+**Residue, genuinely open:** a **direct file read** from a worktree still finds nothing, so a brief
+citing a notebook must still use an absolute path into the main checkout. Closing this finding needs
+either a `Verify` re-keyed to the decider, or a mechanism that makes a direct read resolve.
