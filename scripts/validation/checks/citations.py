@@ -529,30 +529,12 @@ _BODY_MIN_CHARS = 2000
 def _cache_fidelity(path, ext: str) -> str:
     """What the cache file HOLDS: ``full`` | ``abstract`` | ``metadata``.
 
-    ⚠️ **Scope: this reads CONTENT for ``json`` only, and that is deliberate — not a gap.**
-    ``pdf`` / ``tex`` / ``abstract.txt`` are tiered by extension because their integrity is
-    asserted **where they are written**. Two scripts write into `primary-sources/`, and the split
-    is what makes the extension safe to trust:
-
-      * `back_fill_primary_sources.py` — the only writer of ``.pdf`` and ``.tex``. Its PDF leg
-        asserts the ``%PDF`` magic and raises rather than saving, and a failed fetch walks down the
-        tier ladder (arXiv PDF → arXiv abstract → Crossref abstract → Crossref JSON) instead of
-        leaving a mislabelled file.
-      * `convert_inprep_citations.py` — writes ``.json`` stubs for project self-deposits, which
-        this function content-checks like any other ``.json``.
-
-    So ``json`` gets a content check because it is the one accepted extension whose tier the
-    extension does not fix — a ``.json`` may be a body, a bibliographic record, or a stub.
-
-    **Do not add a sniff here.** It would be a second mechanism for a property the writer already
-    guarantees (`CLAUDE.md` rule 1). A NEW writer into `primary-sources/` owes the assertion at its
-    own write; that is where it belongs. Normative: ADR-014 §*Fidelity is a first-class property*.
-
-    ``json`` earned the content check because ADR-014 tiered it under *full (pdf/tex/json body)*,
-    which is correct for a JSON holding a body and wrong for the corpus we have, where JSON is
-    overwhelmingly a CrossRef API record (``status`` / ``message-type`` / ``message``) with no
-    body text at all. Keyed on the extension alone, a bibliographic stub was indistinguishable
-    from a PDF.
+    Content decides for ``json`` — the one accepted extension whose tier it does not fix, since a
+    ``.json`` may be a body, a CrossRef record, or a self-deposit stub. ``pdf`` / ``tex`` /
+    ``abstract.txt`` take their tier from the extension, which holds because the writer asserts it:
+    `back_fill_primary_sources.py` verifies the ``%PDF`` magic before saving and degrades the tier
+    on failure. **A new writer into `primary-sources/` owes that assertion at its own write.**
+    Normative: ADR-014 §*Fidelity is a first-class property*.
 
     ⚠️ An UNRECOGNISED ``cache_kind`` falls through to the shape checks rather than demoting the
     file. Returning ``metadata`` for every spelling outside the whitelist would make declaring

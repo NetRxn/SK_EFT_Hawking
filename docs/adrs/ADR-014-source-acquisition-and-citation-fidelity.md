@@ -115,13 +115,10 @@ raises rather than saving the bytes, so a redirect, a paywall interstitial or an
 **degrades the tier** and is recorded as such in the `docs/primary_sources_state.json` sidecar. A
 failed fetch therefore yields an honest weaker tier, never a mislabelled strong one.
 
-⚠️ **A downstream reader must NOT re-derive what the writer guarantees.** `_cache_fidelity` reads
-content for `json` only, because `json` is the one accepted extension whose *tier* the extension
-does not determine — a `.json` may be a body or a bibliographic record. `pdf` and `tex` are taken
-at their extension deliberately: their integrity is asserted where the file is written, and adding
-a second sniff at read time would be a duplicate mechanism for a property already held, of the kind
-`CLAUDE.md` rule 1 forbids. If a route ever writes into `primary-sources/` **other than** this
-script, that route owes the same assertion — the guarantee belongs to the writer, not the reader.
+**The guarantee belongs to the writer, not the reader.** `_cache_fidelity` reads content for
+`json` only — the one accepted extension whose tier the extension does not determine. `pdf` and
+`tex` are taken at their extension, which holds exactly as far as the writing assertion does: a
+route that writes into `primary-sources/` owes that assertion at its own write.
 
 ### 2. The acquisition register is derived, never hand-maintained
 
