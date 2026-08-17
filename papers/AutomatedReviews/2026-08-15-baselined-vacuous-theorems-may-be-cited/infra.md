@@ -173,3 +173,53 @@ population must be widened on a third axis as well: a citation can be defective 
 the cited theorem is empty, but because it is *sound and irrelevant* — true, kernel-checked, and
 not on the path to the claim it is offered for. That is not caught by any vacuity predicate and
 should be scoped explicitly before the extension in §1.1 is built.
+
+---
+
+## Addendum 2026-08-17 — §1.2's population, MEASURED: 16 named entries the detector cannot see
+
+§1.2 predicted that the vacuity audit's predicate is **syntactic**, so a semantically-empty
+statement can be invisible to it. That population is now measured, using the check's own
+classifier rather than a restatement of it (`validation.checks.lean_statements._thin_type_label`,
+whose `_THIN_HARD` is `{"True", "reflexive (X=X)"}`).
+
+Against `VACUOUS_STATEMENT_BASELINE` at HEAD:
+
+| | count |
+|---|---|
+| entries registered in the baseline | **47** |
+| still classified content-thin by the detector | 31 |
+| **registered but INVISIBLE to the detector** | **16** |
+| registered but absent from the build graph | 0 |
+
+**The 16.** `character_preserved`, `dd_simples_count`, `dispersion_matches_charge_scaling`,
+`even_odd_cg_equivalence`, `even_odd_force_equivalence`, `fusion_matches_k1`, `fusion_matches_k2`,
+`grading_preserved`, `hopf_link_matches_S_matrix`, `phase5x_viable_candidate_count`,
+`sixteen_majoranas_gappable`, `spt_classification_from_bordism`, `stress_tensor_isotropic_holds`,
+`vec_G_simples_count`, `wrt_S2xS1_eq_rank`, `z16_classification`.
+
+⚠️ **These must NOT be retired from the baseline.** They read as "no longer thin" only because the
+detector cannot express why they were registered. Three were verified by hand on 2026-08-15:
+
+- `dd_simples_count` — `∀ n irreps, (Σ irreps i = Σ irreps i) → (Σ irreps i = Σ irreps i)`. An
+  *implication between two copies of the same reflexive equation*. `_thin_type_label` matches a
+  bare `Eq X X`, not an arrow whose both sides are one.
+- `hopf_link_matches_S_matrix` — `quantum_trace_R2 = 0`, an alias of `hopf_link_zero`. Syntactically
+  a real equation; it simply contains no S-matrix, which is what its name promises.
+- `wrt_S2xS1_eq_rank` — `wrtS2xS1 D = D.n.cast`, true by `rfl` against its own definition. The
+  statement shape is unremarkable; the emptiness is in the proof.
+
+So the baseline is **deliberately broader than the detector**, and the gap is not noise — it is a
+register of judgments the syntactic predicate cannot reproduce. Pruning the baseline to match the
+detector would delete exactly that knowledge and release sixteen declarations, three of them
+confirmed empty, back into the citable population with no guard at all.
+
+**What this changes about §1.2's fix.** The extension must key on **witness triviality** (`rfl`,
+`Equiv.refl`, `id`, an alias, or an arrow between reflexive equations), which needs the proof term
+— so it needs the extractor or `lean_verify`, not a type walk. `lean_deps.json` carries `type` but
+no `def` body, which is why every type-level attempt so far, including this one, lands on the same
+31 and misses the same 16.
+
+**Measured by the lead 2026-08-17**, after a first attempt with a hand-written predicate returned
+26/21 instead of 31/16 and put `dd_simples_count` in the wrong bucket. A measurement scoped by a
+predicate narrower than the mechanism's is not a measurement of the mechanism.
