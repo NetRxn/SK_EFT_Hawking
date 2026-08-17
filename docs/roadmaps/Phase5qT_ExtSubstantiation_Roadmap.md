@@ -147,10 +147,76 @@ route discharges H2 or merely restates it.
 **Goal.** Build `ProjectiveResolution` of `F₂` over `A1` from the resolution matrices and prove
 `Module.finrank (ZMod 2) ((Ext _ _ n).obj (op F₂)).obj F₂) = rₙ` using `ProjectiveResolution.isoExt`.
 **Sub-tasks.** (a) `ModuleCat A1` wrappers for `Pₙ` (free) and the differentials as `A1`-linear maps;
-(b) free ⟹ projective; (c) the five `ProjectiveResolution` fields incl. `quasiIso` (exactness — port the
-ker-card / RREF rank facts into the homology vanishing of the augmented complex); (d) a small
-computable-rank-over-F₂ helper to turn matrix ranks into `finrank`; (e) `isoExt` +
-minimality ⟹ dimension. **Risk.** Medium — `noncomputable` homology API wrangling; the certified complex is
+(b) free ⟹ projective; (c) the five `ProjectiveResolution` fields incl. `quasiIso` (exactness); (d) a
+rank-over-F₂ helper; (e) `isoExt` + minimality ⟹ dimension.
+
+#### Status 2026-08-17 — (a), (b) and the exactness half of (c) are SHIPPED; (d)/(e) remain
+
+Branch `substantiate/ext-T3` (from `06869285`), three commits.
+
+**Landed.**
+
+1. **`ext_dim_n` proxies retired** (`313e74dd`). `ext_dim_0 … ext_dim_5` now state
+   `Module.finrank F2 ((Fin rₙ → A1sub) →ₗ[A1sub] F2) = rₙ` over the real Wave-T2 algebra,
+   discharged by `hom_free_A1_finrank`. The shape-to-rank arithmetic survives, honestly named, as
+   `resolution_ranks_from_matrix_shapes`. This is an **intermediate** — the cochain group, not yet
+   Mathlib's `Ext` — and is to be upgraded again when (e) lands.
+2. **`A1Exactness.lean` — the resolution is EXACT** (`7a0e0f01`). This closed a gap larger than the
+   wave anticipated: *nothing in the development previously proved the complex was a resolution*.
+   The nearest thing, `A1Resolution.exactness_rank_nullity : 1+7=8 ∧ … := by omega`, is the same
+   proxy class as `ext_dim_n` one level up — no matrix enters its proof. The real statement is now
+   `resolution_is_exact`: surjectivity of `ε` plus `ker dₙ = range dₙ₊₁` at `P₀ … P₄`, from an
+   explicit **contracting homotopy** (`ε·s₋₁ = 1`, `d₁·s₀ + s₋₁·ε = 1`, `dₙ₊₁·sₙ + sₙ₋₁·dₙ = 1`),
+   each a `decide +kernel` matrix identity. Python solves for the `sₙ`
+   (`scripts/generate_a1_homotopy.py`), Lean verifies them. **Deliberately not routed through the
+   kernel cardinalities**: `d1/d2/d3_kernel_card` are the three surviving `native_decide` theorems,
+   and depending on them would put `Lean.ofReduceBool` on every downstream `Ext` theorem. Exactness
+   at `P₅` is not claimed — it needs `d₆`. `exactness_rank_nullity` was retained with a corrected
+   docstring, not deleted.
+3. **`A1ModuleCat.lean` — sub-tasks (a) and (b)** (`6c4c9a19`). `coordEquiv_smul` is the bridge that
+   makes the F₂-expanded matrices morphisms of genuine A(1)-modules; `ofMatrix` turns any certified
+   matrix into one; `D1 … D5` and `D_chain_complex` give `dₙ ∘ dₙ₊₁ = 0` as module morphisms;
+   `P r : ModuleCat A1op` with `Projective (P r)` is (b). All kernel-pure.
+
+**⚠️ Sidedness — structural, not cosmetic.** The differentials are *left* multiplication, so they
+commute with the *right* action: `Pₙ` is a free **right** A(1)-module. `ModuleCat R` is *left*
+modules and `Rmat` is an algebra **anti**-homomorphism, so the resolution lives over
+**`A1op := A1subᵐᵒᵖ`**. This is the convention `A1Resolution` §4 already documented in prose; it is
+now structural. Do not attempt to force left modules onto `d1…d5` — `dn_a1_linear` states plainly
+that they are not left-linear.
+
+**⚠️ The blocker the roadmap did not anticipate.** `ProjectiveResolution`
+(`Preadditive/Projective/Resolution.lean`) requires an **ℕ-indexed complex exact in EVERY degree**.
+The A(1)-resolution of F₂ is genuinely infinite — the Ext ranks 1,2,2,2,3,4,4,4,5,6,… grow, since
+`Ext_{A(1)}(F₂,F₂) = F₂[h₀,h₁,v,w₁]/(h₀h₁, h₁³, h₁v, v²−h₀²w₁)` is not rank-periodic — so the six
+explicit terms **cannot** be handed to `isoExt` as they stand. Sub-task (c) as written is therefore
+not reachable from the matrices alone. It is not a wall; the route is a **splice**, written out in
+full in `A1ModuleCat.lean`'s header: take `K := ker D5`, take any `Q : ProjectiveResolution K` from
+`EnoughProjectives` (arbitrary, never computed with), and define the complex by structural match,
+`X 0…5 := P 1,2,2,2,3,4` and `X (n+6) := Q.complex.X n`, with `d 5 := Q.π.f 0 ≫ (K ↪ P 4)`.
+Exactness at degree 5 is epi-ness of `Q.π.f 0`; at degree 6 it is `Q`'s `exact₀` (using that
+`K ↪ P 4` is mono); above that it is `Q`'s own; degrees 1–4 and the augmentation come from
+`resolution_is_exact`. **Because `Extⁿ` sees only `dₙ` and `dₙ₊₁`, this yields `Ext⁰ … Ext⁴`
+honestly; `Ext⁵` additionally requires an explicit `d₆`** (generatable by the same Python route).
+
+**Measured Mathlib facts** (verify before relying on them; this roadmap's route claims have already
+been wrong twice). `ProjectiveResolution.isoExt` exists at `Mathlib/CategoryTheory/Abelian/Ext.lean:67`.
+`Ext R C n : Cᵒᵖ ⥤ C ⥤ ModuleCat R`, so with `R = F2` the Ext object is already an object of
+`ModuleCat F2` and `Module.finrank F2` applies with no extra instance work. ⚠️ There are **two**
+`Ext`s in this Mathlib: the `leftDerived`-based `CategoryTheory.Abelian.Ext` (the one with
+`isoExt`, and the one this wave targets) and the derived-category-based `Ext X Y n : Type w` in
+`Algebra/Homology/DerivedCategory/Ext/`, which is the one carrying the long exact sequences. Do not
+conflate them.
+
+**Correction to the entry-state table above.** It says `A1Ext.lean` holds `cols/8` proxies, which
+was true, but omits that Wave T1 *also* landed the substantive statements. `A1ExtSubstantive.lean` is
+fully live — imported at `lean/SKEFTHawking.lean:660`, 30 declarations in `lean_deps.json`, all
+kernel-pure. A claim that it "resolves to nothing in the build graph" is **false**; what is broken is
+the *citation form* — the module is `SKEFTHawking.A1ExtSubstantive` but the declarations are
+`SKEFTHawking.A1.*`, so `A1ExtSubstantive.all_dual_coboundaries_vanish` fails as a name while the
+theorem exists. Those citations are fixed on this branch.
+
+**Risk.** Medium — `noncomputable` homology API wrangling; the certified complex is
 already in hand.
 
 ### Wave T4 — Genuine change-of-rings (discharge H2 for real)
@@ -202,8 +268,8 @@ any critical path; `16 ∣ σ` is already unconditional via Phase 5q.B). Otherwi
 | Wave | Scope | Status | Risk |
 |------|-------|--------|------|
 | T1 | Dual-complex cohomology substantiation | **COMPLETE 2026-06-03** | — |
-| T2 | A(1) genuine Ring/Algebra instance | Planned | Low-medium |
-| T3 | Real `Ext` via `isoExt` | Planned | Medium |
+| T2 | A(1) genuine Ring/Algebra instance | **COMPLETE 2026-08-15** (`0188a9b1`) | — |
+| T3 | Real `Ext` via `isoExt` | **(a),(b),exactness SHIPPED 2026-08-17**; (c) splice + (d),(e) remain | Medium |
 | T4 | Genuine change-of-rings (H2) | Planned | Medium-high |
 | T5 | Proxy detector + integration | Planned | Low |
 | T6 | (OPTIONAL) full Steenrod A + `A//A(1)` structure | Planned — narrative-gated (ADR-003) | Low-medium |

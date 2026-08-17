@@ -252,7 +252,15 @@ theorem d5_rank_15 : ∀ i : Fin 24, (15 ≤ i.val) →
   All ranks machine-checked: d₁-d₃ via kernel enumeration, d₄-d₅ via RREF witnesses.
 -/
 
-/-- Exactness arithmetic: rank(d_n) + rank(d_{n+1}) = dim(P_n) at every degree. -/
+/-- Exactness **arithmetic**: rank(d_n) + rank(d_{n+1}) = dim(P_n) at every degree.
+
+    ⚠️ Read the name precisely. This is a closed arithmetic identity on the ranks recorded
+    above — it says the documented ranks are *consistent with* exactness. It is NOT a proof
+    that `ker dₙ = range dₙ₊₁`, and nothing about the matrices enters its proof.
+
+    The genuine statement is `A1Exactness.resolution_is_exact` (Phase 5q.T Wave T3), proven
+    kernel-purely from an explicit contracting homotopy. This theorem is retained as the
+    rank bookkeeping it always was, now honestly labelled. -/
 theorem exactness_rank_nullity :
     1 + 7 = 8         -- P₀
     ∧ 7 + 9 = 16      -- P₁

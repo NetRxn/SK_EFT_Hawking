@@ -658,6 +658,8 @@ import SKEFTHawking.A1Algebra
 import SKEFTHawking.A1Resolution
 import SKEFTHawking.A1Ext
 import SKEFTHawking.A1ExtSubstantive
+import SKEFTHawking.A1Exactness
+import SKEFTHawking.A1ModuleCat
 import SKEFTHawking.ArfInvariant
 import SKEFTHawking.GMArfVanishing
 import SKEFTHawking.EvenLatticeForm
