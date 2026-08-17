@@ -99,46 +99,43 @@ matrices, **not** from `SteenrodA1.a1_mul`: the latter is in the admissible/Adem
 (Milnor-basis) matrices encode; the `L·` matrices are the correct, sum-capable source.
 **Risk.** Low-medium (typeclass diamond; mitigated by newtype, proven pattern in repo).
 
-### ⚠️ STATUS UPDATE 2026-08-17 — T2 shipped, T4's route is REFUTED, and T3 is the critical path
+### Wave status (2026-08-17)
 
-**Wave T2 is COMPLETE** (`substantiate/ext-A1`, merged `0188a9b1`). `A1Algebra.lean` gives A(1) a
-genuine `Ring` / `Algebra (ZMod 2)` instance; A(1)-linearity and full associativity are proved over
-all 512 basis triples by kernel `decide`; `native_decide` in `A1Resolution` fell 17 → 3.
-`hom_tensor_adjunction_dim` and `change_of_rings_ext_dim` are real theorems and were retired from
-`VACUOUS_STATEMENT_BASELINE`.
+| wave | state |
+|---|---|
+| T1 — cohomology of the dual complex | **complete**. `A1.ext_dims_substantive` gives honest `finrank` cohomology dimensions; `A1.all_dual_coboundaries_vanish` proves the coboundaries vanish. ⚠️ The `ext_dim_n` `cols/8` proxies were **retired in T3**, not T1 — both populations were live in between. |
+| T2 — A(1) as `Ring` / `Algebra (ZMod 2)` | **complete**. Genuine instance; A(1)-linearity and full associativity over all 512 basis triples by kernel `decide`; `native_decide` in `A1Resolution` 17 → 3. `hom_tensor_adjunction_dim` and `change_of_rings_ext_dim` are real theorems, retired from `VACUOUS_STATEMENT_BASELINE`. |
+| T3 — real `Ext` via `ProjectiveResolution.isoExt` | **partial**. Sub-tasks (a)+(b) shipped, plus `A1Exactness.lean`: the resolution is proved exact from an explicit contracting homotopy, kernel-pure. **Blocked at (c)** — see below. |
+| T4 — change of rings | **route re-planned**; see the settled routes below. |
 
-**T4's planned route does not work, and this roadmap was wrong.** The entry-state table and Wave T4
-both prescribe `ModuleCat.restrictCoextendScalarsAdj` as the general-ring substitute for the
-`CommRing`-only `extendRestrictScalarsAdj`. It is `restrictScalars ⊣ coextendScalars` — **CO**induction,
-which is the **wrong variance** for Shapiro in the first `Ext` argument. Induction (`extendScalars`,
-i.e. `A ⊗_{A(1)} −`) is what Shapiro needs, and Mathlib has it only for `CommRing`. Found by the Wave
-T2 agent; recorded here so the route is not re-attempted.
+**Live notebook:** `docs/dev-loops/Phase5qT/LAB_NOTEBOOK_INDEX.md` (main checkout only — gitignored,
+absent from worktrees). It is the tracker; this roadmap is the plan.
 
-**But "Mathlib lacks a noncommutative tensor product" is a COST, not a route closure — and it is not
-even on the critical path.** Three things follow, and they were missed because the gap was stated
-abstractly:
+### ⛔ Settled routes — do not re-attempt
 
-1. **The resolution is a MINIMAL FREE resolution** (`P₀…P₅` free of ranks 1, 2, 2, 2, 3, 4). Base change
-   of a *free* module along `A(1) → A` is `A^r` — a finite direct sum. It is statable in Lean today,
-   with no balanced tensor product anywhere. The abstract object `A ⊗_{A(1)} P` is unstatable; the
-   object this development actually needs is not.
-2. **Wave T3 is untouched and needs none of this.** `ProjectiveResolution.isoExt` consumes a projective
-   resolution over ONE ring; the change-of-rings question does not arise. T3 is therefore the highest
-   remaining value and is dispatchable now — it replaces the `ext_dim_n` proxies with genuine
-   `Ext^n_{A(1)}(F₂, F₂)`, which is the wave's stated purpose.
-3. **A balanced tensor product over a noncommutative ring is a legitimate build target**, not a wall —
-   `M ⊗_R N` for `[Ring R]`, right module ⊗ left module, as a quotient of the free abelian group on
-   `M × N`. Mathlib-grade, well-understood, and reusable far beyond this wave. Scope it on its own
-   merits AFTER T3, and only if the abstract statement is genuinely wanted; the free-module route may
-   discharge H2 without it.
+- **`ModuleCat.restrictCoextendScalarsAdj` for Shapiro.** It is `restrictScalars ⊣ coextendScalars`
+  — **co**induction, the wrong variance for the first `Ext` argument. Shapiro needs induction
+  (`extendScalars`), which Mathlib provides only for `CommRing`.
+- **`ModuleCat A1` wrappers.** Not typeable: `d₁…d₅` are left multiplication, hence **right**-A(1)-
+  linear, and `Rmat` is an algebra **anti**-homomorphism. The resolution lives over `A1subᵐᵒᵖ`.
+- **Handing the six-term resolution to `ProjectiveResolution.isoExt`.** `ProjectiveResolution`
+  requires an ℕ-indexed complex exact in **every** degree. The A(1)-resolution of F₂ is genuinely
+  infinite — ranks grow, since `F₂[h₀,h₁,v,w₁]/(h₀h₁, h₁³, h₁v, v²−h₀²w₁)` is not rank-periodic.
+  The splice route (`K := ker D5` plus any `ProjectiveResolution K` from `EnoughProjectives`) is
+  written out in `A1ModuleCat.lean`'s header and yields `Ext⁰…Ext⁴`; `Ext⁵` additionally needs an
+  explicit `d₆`.
 
-**Revised order:** T3 (real `Ext`, no blockers) → re-plan T4 on the free-module base change → decide the
-balanced tensor product on cost/benefit, with T3's outcome in hand.
+### Scope note — the missing balanced tensor product is not on the critical path
 
-⚠️ **Open mathematical question for the re-planned T4**, to be settled before building: base change is
-only right-exact, so the base-changed free complex is a resolution of `A ⊗_{A(1)} F₂` only given
-flatness or a direct exactness argument. Establish that first — it decides whether the free-module
-route discharges H2 or merely restates it.
+Mathlib has no balanced tensor product over a noncommutative base (`TensorProduct` requires
+`CommSemiring`, and `A1.a1_noncommutative` is proved), so the abstract object `A ⊗_{A(1)} P` cannot
+be stated. **The resolution is a minimal FREE resolution** (ranks 1, 2, 2, 2, 3, 4), and base change
+of a free module is a finite direct sum — statable today. Building the balanced tensor product is a
+legitimate Mathlib-grade target to scope on its own merits, not a precondition for T3.
+
+⚠️ **Settle before building the re-planned T4:** base change is only right-exact, so the
+base-changed free complex resolves `A ⊗_{A(1)} F₂` only given flatness or a direct exactness
+argument. That decides whether the free-module route discharges H2 or restates it.
 
 ---
 
