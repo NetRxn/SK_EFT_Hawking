@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """The `skeft-qa` plugin's bind/refresh lifecycle — status, sync, and the mid-flight delta.
 
-A Claude Code session resolves `--plugin-dir` ONCE, at process start, from
-`installed_plugins.json`. Editing `.claude/plugins/skeft-qa/` changes the SOURCE; the bound copy
-is a cache keyed by the committed HEAD SHA. So a long-running session executes whatever the
-plugin was when it started, however far the repo has moved since.
+A Claude Code PROCESS resolves `--plugin-dir` once, at start, from `installed_plugins.json`.
+Editing `.claude/plugins/skeft-qa/` changes the SOURCE; the bound copy is a cache keyed by the
+committed HEAD SHA. So a long-running process executes whatever the plugin was when it started,
+however far the repo has moved since.
+
+⚠️ **A conversation can outlive its process.** The desktop host may respawn the CLI process under
+a running conversation, and the new process binds whatever the record says *then* — so the plugin
+a conversation executes can change with no restart the operator performed and no visible event.
+This is why `delta` reads the LIVE process rather than the record, a remembered value, or anything
+established earlier in the conversation: only the running process knows what it loaded.
 
 **A RESTART ALONE DOES NOT REFRESH.** The install record still points at the old SHA, so a restart
 re-binds the same stale cache. Only `sync` moves the record; the restart then binds what it points
