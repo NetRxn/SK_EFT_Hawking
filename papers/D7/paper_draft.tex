@@ -8,6 +8,9 @@
 
 \input{../../docs/figuredeferred.tex}
 
+\emergencystretch=3em
+\sloppy
+
 \newtheorem{thm}{Theorem}
 \newtheorem{lem}[thm]{Lemma}
 \newtheorem{defn}[thm]{Definition}
@@ -444,8 +447,312 @@ certificate alone. The tree hypothesis does no work there.
 \section{A Cram\'er rate for 4-cycle density}
 \label{sec:rate}
 
+Theorem~\ref{thm:bpconv} is conditional on a certificate, and
+Theorem~\ref{thm:certc4} says a certificate forces four-cycle-freeness. That
+invites a graded statistic: not the yes-or-no question of whether a 4-cycle
+exists, but a real number that vanishes exactly when none does and grows with
+how many there are. This section constructs one as a large-deviation rate
+function and proves its contract.
+
+\subsection{Loop density}
+
+Fix finite $\nu$ and $\alpha$ with decidable equality.
+
+\begin{defn}[\texttt{fourCycles}]
+$\mathrm{fourCycles}\ G \subseteq \nu \times \nu \times \alpha \times \alpha$
+is the \texttt{Finset} of tuples $(u,v,a,b)$ with $u \neq v$, $a \neq b$, and
+all four incidences $a\,u$, $b\,u$, $a\,v$, $b\,v$ present.
+\end{defn}
+
+The bridge to the predicate is proven, not assumed:
+$\mathrm{fourCycles}\ G = \varnothing$ iff $G$ is four-cycle-free
+(\texttt{fourCycles\_eq\_empty\_iff\_fourCycleFree}). Since
+\texttt{IsFourCycleFreeFactorGraph} is the universally quantified absence of
+exactly that configuration, this is a near-definitional restatement, and it is
+load-bearing because everything below counts the \texttt{Finset} while
+everything above quantifies over the predicate.
+
+\begin{defn}[\texttt{loopDensity}]
+\label{def:density}
+$p(G) = |\mathrm{fourCycles}\ G| \,/\, |\nu \times \nu \times \alpha \times \alpha|$,
+with the convention $0/0 = 0$.
+\end{defn}
+
+Two facts about $p$ are needed. It is non-negative, and it is strictly below
+one (\texttt{loopDensity\_lt\_one}): the diagonal tuple $(u,u,a,a)$ fails
+$u \neq v$ and so is never a 4-cycle, making $\mathrm{fourCycles}\ G$ a proper
+subset of a nonempty tuple space, while the empty-tuple-space case evaluates to
+$0$. Strictness is what makes $\log(1-p)$ defined below, and it is used in
+every subsequent proof.
+
+\subsection{The Legendre transform}
+
+Let $X_G$ be the Bernoulli indicator that a uniformly drawn tuple is a 4-cycle,
+so $X_G \sim \mathrm{Bernoulli}(p(G))$, with moment-generating function
+$M_G(\theta) = 1 - p + p\,e^{\theta}$ (\texttt{bernoulliLoopMgf}). It is
+strictly positive everywhere because $p < 1$ strictly, and $M_G(0) = 1$.
+
+\begin{defn}[\texttt{loopCorrectionRate}]
+$I_G(0) = \sup_{\theta \in \mathbb{R}} \bigl[ -\log M_G(\theta) \bigr]$,
+the Cram\'er transform $\sup_\theta [\theta \cdot 0 - \log M_G(\theta)]$ of the
+log-moment-generating function at zero deviation.
+\end{defn}
+
+\begin{thm}[\texttt{loopCorrectionRate\_eq\_neg\_log}]
+\label{thm:legendre}
+$I_G(0) = -\log\bigl(1 - p(G)\bigr)$.
+\end{thm}
+
+The value is a supremum that is not attained when $p > 0$, so the proof is an
+explicit least-upper-bound argument rather than a substitution. The upper bound
+is monotonicity: $1 - p \leq M_G(\theta)$ for every $\theta$ because
+$p\,e^\theta \geq 0$, and $-\log$ is antitone. For leastness, suppose $b$ is an
+upper bound with $b < -\log(1-p)$. Then $1 - p < e^{-b}$, so
+$\varepsilon = e^{-b} - (1-p) > 0$, and the witness
+$\theta_0 = \log\bigl(\varepsilon / (2(p+1))\bigr)$ gives
+$p\,e^{\theta_0} < \varepsilon$ and hence $M_G(\theta_0) < e^{-b}$, so
+$-\log M_G(\theta_0) > b$, contradicting the bound. The witness is uniform in
+$p$ and covers $p = 0$ and $p > 0$ without a case split.
+
+\subsection{The contract}
+
+\begin{thm}
+\label{thm:contract}
+For every finite factor graph $G$:
+\begin{enumerate}
+\item $I_G(0) \geq 0$ \textup{(\texttt{loopCorrectionRate\_nonneg})};
+\item $I_G(0) = 0$ iff $G$ is four-cycle-free
+  \textup{(\texttt{loopCorrectionRate\_eq\_zero\_iff\_fourCycleFree})};
+\item $I_G(0) > 0$ if $G$ is not four-cycle-free
+  \textup{(\texttt{loopCorrectionRate\_pos\_of\_not\_fourCycleFree})};
+\item for graphs $G_1, G_2$ over possibly \emph{different} index types,
+  $p(G_1) < p(G_2)$ implies $I_{G_1}(0) < I_{G_2}(0)$
+  \textup{(\texttt{loopCorrectionRate\_lt\_of\_loopDensity\_lt})};
+\item for every threshold $t$, $I_G(0) \leq t$ iff $p(G) \leq 1 - e^{-t}$
+  \textup{(\texttt{loopCorrectionRate\_le\_iff\_loopDensity\_le})}.
+\end{enumerate}
+\end{thm}
+
+Item~2 is the one that carries content, and it is not definitional: the rate is
+defined as a supremum over $\theta$, and the equivalence is obtained by
+composing Theorem~\ref{thm:legendre} with the elementary implication
+$-\log(1-p) = 0 \Rightarrow p = 0$ (which needs $0 < 1-p$) and with the
+density-to-predicate bridge. Item~4 supplies the property no
+$\{0,1\}$-valued indicator has, and Sec.~\ref{sec:limits} shows it is also
+where the construction fails. Item~5 recovers item~2 at $t = 0$.
+
+\subsection{Kullback--Leibler form and the exact identity}
+
+Writing the Bernoulli relative entropy in $\mathrm{negMulLog}$ form,
+\begin{equation}
+I_p(q) = -\,\mathrm{negMulLog}\, q - \mathrm{negMulLog}(1-q) - q \log p - (1-q)\log(1-p),
+\end{equation}
+one has $I_p(p) = 0$ and $I_p(0) = -\log(1-p)$, so
+$I_G(0) = I_{p(G)}(0)$ (\texttt{loopCorrectionRate\_eq\_bernoulliCramerRate\_zero}).
+The $\mathrm{negMulLog}$ form is chosen because it is continuous on all of
+$\mathbb{R}$, which the quotient form is not at the junk values, and continuity
+is a field of the ambient Cram\'er predicate this discharges
+(\texttt{loopCorrection\_isCramerIIDUpperBound}). That bridge is plumbing to a
+separate large-deviation development and carries no argument here.
+
+One consequence is exact rather than asymptotic. For every $n$,
+\begin{equation}
+\label{eq:exact}
+\bigl(1 - p(G)\bigr)^{n} = \exp\bigl(-n\, I_G(0)\bigr)
+\end{equation}
+(\texttt{no\_loop\_event\_prob\_eq\_exp\_neg\_rate}): the probability that $n$
+independent draws all miss a 4-cycle decays at exactly $I_G(0)$, at every finite
+$n$. Equation~\eqref{eq:exact} is an identity about the Bernoulli tail at the
+boundary of its support, not a large-$n$ estimate, and its proof is
+$\log$ of a power.
+
+\subsection{A worked value}
+
+\begin{prop}[\texttt{loopCorrectionRate\_completeBipartite22}]
+For the complete bipartite factor graph on two variables and two factors,
+$|\mathrm{fourCycles}| = 4$ by kernel decision over the $16$-element tuple
+space, $p = 1/4$, and $I(0) = \log(4/3) \approx 0.2877$.
+\end{prop}
+
+The value is an anchor rather than an illustration: it is strictly between $0$
+and $1$ and it is computed by the kernel, so a change to
+Definition~\ref{def:density} that preserved the zero-rate boundary but altered
+the scale would break it.
+
+\subsection{The structural biconditional}
+
+Bundling four-cycle-freeness with a sign condition on the weights gives
+$\texttt{IsFourCycleFreeNonnegWeighted}\ G\ f =
+\texttt{IsFourCycleFreeFactorGraph}\ G \wedge \forall a\,y,\ 0 \leq f_a(y)$,
+and Theorem~\ref{thm:contract}\,(2) upgrades it to
+\begin{equation}
+\label{eq:structbicond}
+\texttt{IsFourCycleFreeNonnegWeighted}\ G\ f
+\iff I_G(0) = 0 \wedge \forall a\,y,\ 0 \leq f_a(y)
+\end{equation}
+(\texttt{fourCycleFree\_nonneg\_iff\_ldp\_rate\_zero}). The non-negativity
+conjunct passes through unchanged on both sides; all of the content
+of~\eqref{eq:structbicond} is Theorem~\ref{thm:contract}\,(2).
+
+\figuredeferred{fig:d7-rate-curves}{a two-panel figure: $-\log(1-p)$ against loop density with the $\log(4/3)$ anchor marked, beside the density of a single embedded 4-cycle as the ambient index types grow, showing the rate of a fixed motif falling toward zero; blocked on a small enumeration script over \texttt{fourCycles} that does not exist yet}
+
 \section{What the 4-cycle rate does not measure}
 \label{sec:limits}
+
+Theorem~\ref{thm:contract} is a correct theorem about $I_G(0)$. This section
+argues that $I_G(0)$ is not the quantity the construction was built to supply,
+and it is the paper's principal finding. Three independent problems are stated,
+in increasing order of severity, followed by an anatomy of the combined
+statement that was intended to be the payoff.
+
+\subsection{Four-cycle-freeness is not acyclicity}
+
+The zero-rate boundary is four-cycle-freeness, and belief-propagation exactness
+requires a tree. The gap is not a technicality.
+
+\begin{prop}
+\label{prop:sixcycle}
+The bipartite $6$-cycle $v_0\,a_0\,v_1\,a_1\,v_2\,a_2\,v_0$ is four-cycle-free
+and is not acyclic. Consequently $I_G(0) = 0$ on it.
+\end{prop}
+
+No two distinct factors of that graph are incident to two common variables, so
+the 4-cycle screen passes; the length-six cycle is nonetheless a cycle. The
+implication that does hold is one-directional and is proven: acyclicity implies
+four-cycle-freeness (\texttt{isAcyclicFactorGraph\_imp\_fourCycleFree}), by
+exhibiting the two distinct length-two paths a 4-cycle would create between the
+same endpoints and contradicting Mathlib's path-uniqueness characterization of
+acyclicity. The converse is false, and four-cycle-freeness additionally imposes
+no connectivity condition at all, so it does not even characterize forests.
+A vanishing rate is therefore a necessary condition for a certificate, by
+Theorem~\ref{thm:certc4}, and is not sufficient for one.
+
+\subsection{Every pairwise-coupled model is four-cycle-free}
+\label{sec:pairwise}
+
+The second problem removes the statistic's discriminating power on the models
+that motivate it.
+
+\begin{prop}
+\label{prop:pairwise}
+Let $G$ be a factor graph in which every factor is incident to at most two
+variables, and in which no two distinct factors have the same pair of incident
+variables. Then $G$ is four-cycle-free, hence $p(G) = 0$ and $I_G(0) = 0$.
+\end{prop}
+
+\begin{proof}
+A 4-cycle requires distinct factors $a \neq b$ each incident to both of the
+distinct variables $u \neq v$. Since $|\partial a| \leq 2$ and
+$\{u,v\} \subseteq \partial a$, we get $\partial a = \{u,v\}$, and likewise
+$\partial b = \{u,v\}$. So $a$ and $b$ are distinct factors on the same pair,
+excluded by hypothesis.
+\end{proof}
+
+The hypothesis of Proposition~\ref{prop:pairwise} is satisfied by every
+two-body Hamiltonian on a simple interaction graph with one factor per bond,
+which includes every model simulated
+in~\cite{TindallMelloFishmanStoudenmireSels2026Science392}: the disordered
+transverse-field Ising couplings $J_{ij}\sigma^z_i\sigma^z_j$ over nearest
+neighbours of the cylindrical, diamond cubic and dimerized cubic lattices. The
+rate is identically zero on all of them.
+
+The same conclusion survives the other natural encoding, in which the variables
+are the virtual bonds of the tensor network and the factors are its tensors. A
+4-cycle then requires two tensors sharing two distinct virtual bonds, which a
+lattice tensor network does not have. This is where the failure becomes
+concrete rather than formal. That work reports that plain belief-propagation
+contraction is not accurate enough for the lattices studied and that
+loop-corrected contraction is required; it attributes a specific error increase
+in the dimerized cubic geometry to a loop of size three created by the periodic
+boundary; and it removes inherent loops by pairing dimers so the network becomes
+more tree-like. A loop of three tensors is a six-cycle in the bipartite
+incidence graph. It is exactly the configuration
+Proposition~\ref{prop:sixcycle} shows the screen cannot see. The statistic
+assigns zero loop-correction rate to the geometry whose loop correction that
+work had to compute, and assigns the same zero to the geometry from which the
+loops were removed, so it does not distinguish the two cases whose difference
+was measured.
+
+\subsection{The normalization is size-dependent}
+\label{sec:normalization}
+
+The third problem concerns the ordering that Theorem~\ref{thm:contract}\,(4)
+induces. The denominator of Definition~\ref{def:density} is
+$|\nu|^2|\alpha|^2$, the full tuple space, so a fixed loop motif contributes a
+density that falls as the ambient graph grows. Embedding a single 4-cycle in a
+graph on $N$ variables and $M$ factors gives $|\mathrm{fourCycles}| = 4$ and
+$p = 4/(N^2M^2)$, hence $I(0) = -\log(1 - 4/(N^2M^2)) \to 0$.
+
+Theorem~\ref{thm:contract}\,(4) is stated across different index types, and
+that generality is what makes the consequence visible. With $N = M = 3$ the
+single embedded 4-cycle gives $p = 4/81$ and $I(0) \approx 0.0506$, strictly
+below the $\log(4/3) \approx 0.2877$ of the complete bipartite $2 \times 2$
+graph, whose incidence structure is entirely 4-cycles. The rate ranks a larger
+graph containing a genuine loop below a smaller one, and the gap widens without
+bound as $N$ and $M$ grow. What item~4 orders is the density of 4-cycles in the
+tuple space, which is a property of the pair (motif, ambient size), and not the
+loop content of the graph.
+
+The zero-versus-positive dichotomy is unaffected: $p(G) = 0$ exactly when no
+4-cycle exists, at any size, so Theorem~\ref{thm:contract}\,(2) and~(3) stand.
+It is the magnitude, and every comparison built on it including the threshold
+form of item~5, that does not survive a change of system size.
+
+\subsection{Anatomy of the combined statement}
+\label{sec:anatomy}
+
+The development bundles the structural predicate with a scalar condition into
+$\texttt{IsAnalogHawkingFourCycleFreeSimulable}\ G\ f\ c_1 =
+\texttt{IsFourCycleFreeNonnegWeighted}\ G\ f \wedge c_1 = 0$
+and proves
+\begin{equation}
+\label{eq:combined}
+\begin{split}
+&\texttt{IsAnalogHawkingFourCycleFreeSimulable}\ G\ f\ c_1 \\
+&\quad\iff \bigl(I_G(0) = 0 \wedge \forall a\,y,\ 0 \leq f_a(y)\bigr) \\
+&\quad\qquad \wedge\ \Phi(c_0,c_1)(1) = \Phi(c_0,c_1)(-1),
+\end{split}
+\end{equation}
+where $\Phi(c_0,c_1)$ is a two-coefficient Chebyshev expansion evaluated at a
+real point.
+
+The second conjunct requires reading. The expansion is
+$\Phi(c_0,c_1) = c_0 T_0 + c_1 T_1$ with $T_0 = 1$ and $T_1(x) = x$, so
+$\Phi(c_0,c_1)(x) = c_0 + c_1 x$ identically, and the equality of its values at
+$+1$ and $-1$ is the statement $c_1 = 0$. Both directions of that equivalence
+are a single linear step. Consequently~\eqref{eq:combined} is
+Eq.~\eqref{eq:structbicond} conjoined with $c_1 = 0$ rewritten as the equality
+of a linear function at two points, and it carries no content beyond its first
+conjunct. Its two companions are of the same kind: one reassociates a
+three-fold conjunction, and the other derives the failure of a conjunction from
+the failure of one conjunct.
+
+No part of~\eqref{eq:combined} computes, approximates or constrains a
+topological invariant. The scalar $c_1$ is a free real parameter, no
+projector, position operator or Bianco--Resta marker appears anywhere in the
+development, and the naming of $x = +1$ and $x = -1$ as distinct physical
+regimes has no counterpart in~\cite{AntaoSunFumegaLado2026PRL136}, where the
+Chebyshev argument is a rescaled Hamiltonian operator and $\pm 1$ are the two
+band edges of a single spectrum. The Chebyshev recurrence and boundary values
+that the development does prove, $T_{n+2}(x) = 2xT_{n+1}(x) - T_n(x)$ with
+$T_n(1) = 1$ and $T_n(-1) = (-1)^n$, are correct and agree with the recursion
+that work states, and they support nothing in this paper.
+
+\subsection{What would measure the right thing}
+
+The intended object is the weight of the loop corrections themselves. In the
+loop-series expansion of Chertkov and
+Chernyak~\cite{ChertkovChernyak2006LoopSeries}, the exact partition function is
+the belief-propagation estimate times a sum over generalized loops of the
+factor graph, with each term a product of message-dependent factors, and the
+belief-propagation estimate is exact precisely when that sum collapses to its
+empty term. The correct rate function is a large-deviation rate for a
+distribution on that series, whose parameters are the messages at the
+belief-propagation fixed point, and whose vanishing is the collapse of the
+series. The Bernoulli loop-presence observable used here is the combinatorial
+shadow of that construction at a single cycle length, evaluated on the graph
+rather than on the message space, and Secs.~\ref{sec:pairwise}
+and~\ref{sec:normalization} are the price of both simplifications.
 
 \section{Related work}
 \label{sec:related}
