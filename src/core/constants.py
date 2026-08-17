@@ -1458,7 +1458,7 @@ ARISTOTLE_REGISTRY_UNRESOLVED_CEILING = 14
 #: strictly worse than a dangling reference. The bundle drafts that supersede them (D3,
 #: F) are corrected and carry ZERO unresolved references. Lower this ceiling when the
 #: legacy corpus is retired or rewritten.
-LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 91
+LEGACY_DRAFT_UNRESOLVED_REF_CEILING = 90
 
 #: Provenance entries with no comparable value in code (`_lookup_provenance_value`
 #: returns None, or the value is non-numeric). Frozen 2026-08-05 at the live count.

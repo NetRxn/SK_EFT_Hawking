@@ -199,6 +199,16 @@ _PROSE_REF_ALLOWLIST = {
     # Probability/Moments/SubGaussian.lean:334 and
     # Probability/Decision/Risk/Basic.lean:236.
     "HasSubgaussianMGF.measure_ge_le", "bayesRisk_le_bayesRisk_comp",
+    # Bare Mathlib names, each verified present in the pinned source by
+    # `#check` against the resolved environment (2026-08-17). The first two are
+    # ROOT-LEVEL, which is why `_PROSE_MATHLIB_PREFIXES` cannot reach them: that
+    # tier keys on a namespace, and a root-level Mathlib lemma has none, so it
+    # is shape-indistinguishable from one of ours. `IsHermitian.spectral_theorem`
+    # is cited under its partial namespace (full name `Matrix.IsHermitian.…`).
+    # `Lean.ofReduceBool` is the native-reduction axiom; papers name it when
+    # disclosing native_decide debt, and it is deprecated-but-present at this pin.
+    "le_csInf", "ciInf_le", "IsHermitian.spectral_theorem",
+    "Lean.ofReduceBool",
     # project infrastructure identifiers (validate.py checks, cluster /
     # sentence-state schema fields) described in the I1 infrastructure
     # paper and the F flagship process section
