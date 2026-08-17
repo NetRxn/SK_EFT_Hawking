@@ -212,19 +212,7 @@ and \texttt{IsBPFixedPoint}\,$m\ f$ is the proposition
 $\texttt{bpUpdate}\ m\ f = m$, an equality of message bundles rather than a
 numerical tolerance.
 
-\subsection{Elementary properties, and what is absent}
-
-Non-negativity and strict positivity propagate through both updates
-(\texttt{bpVariableUpdate\_nonneg\_of\_factor\_msgs\_nonneg},
-\texttt{bpVariableUpdate\_pos\_of\_factor\_msgs\_pos},
-\texttt{bpFactorUpdate\_nonneg\_of\_inputs\_nonneg}); the factor update is
-linear in the factor weight
-(\texttt{bpFactorUpdate\_smul\_factor\_weight}) and propagates a hard zero
-(\texttt{bpFactorUpdate\_eq\_zero\_of\_factor\_weight\_zero}); the variable
-update factorizes out any single cavity message
-(\texttt{bpVariableUpdate\_factorization}); and a bundle is a fixed point iff
-every iterate reproduces it
-(\texttt{IsBPFixedPoint\_iff\_all\_iterates\_invariant}).
+\subsection{What is absent}
 
 The development additionally defines variable and factor beliefs, a Shannon
 entropy on the belief simplex, a factor energy with a relative-entropy
@@ -816,30 +804,13 @@ update, with the order-theoretic content isolated in a form
 (Theorem~\ref{thm:converges}) that applies to any rank-local iteration and does
 not mention messages.
 
-The correction theory that Sec.~\ref{sec:limits} argues the rate function
-should have been built on is the loop series of Chertkov and
-Chernyak~\cite{ChertkovChernyak2006LoopSeries}, which expresses the exact
-partition function as the belief-propagation estimate times a sum over
-generalized loops. The loop-corrected contraction used
-in~\cite{TindallMelloFishmanStoudenmireSels2026Science392} is a tensor-network
-realization of the same idea, organized as a sum over placements of projectors
-and anti-projectors on the network's edges and truncated by the number of
-anti-projectors.
-
-The local marker of Bianco and Resta~\cite{BiancoResta2011} is the real-space
-topological invariant that~\cite{AntaoSunFumegaLado2026PRL136} computes at
-scale. This paper does not formalize it, and Sec.~\ref{sec:anatomy} states why
-the object that carried its name in the present development is not a version
-of it.
-
 On prior formalization, we make no priority claim. Probabilistic graphical
 models and message passing have been mechanized in several settings, and the
 narrow statement we are willing to defend is that we are not aware of a
 proof-assistant development that proves finite-horizon convergence of the
 sum-product updates themselves against a topological ordering of directed
-message endpoints. We would welcome notification of prior work, and a reader
-should treat the claim as a statement about our search rather than about the
-literature.
+message endpoints. A reader should treat the claim as a statement about our
+search rather than about the literature.
 
 \section{What would have to be proved}
 \label{sec:outlook}
@@ -906,19 +877,18 @@ we proposed does not work.
 \section{Cited statements}
 \label{app:statements}
 
-Every theorem cited in the body, in source form, each preceded by the one thing
-it contributes. Names are as they appear in the development; all are proven
-with no \texttt{sorry} and no project-local axiom.
+The theorems the body's results rest on, in source form, each preceded by the
+one thing it contributes. Names are as they appear in the development; all are
+proven with no \texttt{sorry} and no project-local axiom.
 
-Two body statements are not in this list and are not machine-checked:
-Proposition~\ref{prop:sixcycle}, that the bipartite $6$-cycle is 4-cycle-free
-and not acyclic, and Proposition~\ref{prop:pairwise}, that every factor graph
-whose factors couple at most two variables on distinct pairs is 4-cycle-free.
-Both are marked \textup{(not formalized)} where they are stated and both carry
-pen-and-paper proofs. Every other numbered result in the body, including
-Proposition~\ref{prop:star} and the worked value of
-Sec.~\ref{sec:rate}, appears below under the name it carries in the
-development.
+Two numbered statements in the body are not machine-checked and are not in this
+list: Proposition~\ref{prop:sixcycle}, that the bipartite $6$-cycle is
+4-cycle-free and not acyclic, and Proposition~\ref{prop:pairwise}, that every
+factor graph whose factors couple at most two variables on distinct pairs is
+4-cycle-free. Both are marked \textup{(not formalized)} where they are stated,
+and both carry pen-and-paper proofs. Every other numbered statement in the body
+names the declaration that discharges it, including
+Proposition~\ref{prop:star} and the worked value of Sec.~\ref{sec:rate}.
 
 Per-coordinate stabilization, the strong induction that carries the whole engine.
 
