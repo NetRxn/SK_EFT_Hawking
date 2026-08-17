@@ -75,8 +75,8 @@ cylindrical and diamond lattices their errors fall noticeably below those of
 the D-Wave Advantage2 annealer on the same instances; on the dimerized cubic
 lattice the two are comparable. Separately, they simulated a system of over
 $300$ qubits and used the resulting scaling collapse of the correlation
-function to extract a Kibble--Zurek exponent $\mu \approx 2.70$ to $2.75$,
-consistent with independent Monte Carlo estimates. Two features of that work
+function to extract a Kibble--Zurek exponent consistent with independent Monte
+Carlo estimates. Two features of that work
 matter for what follows. The first is that plain belief propagation was not
 accurate enough: the authors report that standard belief-propagation
 contraction, successful on tree-like systems, does not suffice for the lattices
@@ -89,13 +89,11 @@ specific size, is the operative variable.
 
 Antão, Sun, Fumega and Lado~\cite{AntaoSunFumegaLado2026PRL136} computed local
 topological markers on quasicrystalline systems of up to $268$ million sites.
-Their method represents the ground-state projector $\hat{\mathcal P}$ as a
-matrix-product operator obtained from a Chebyshev expansion of the Hamiltonian
-MPO, then builds the Bianco--Resta local Chern
-marker~\cite{BiancoResta2011}
-$C_\alpha = 2\pi i \langle \alpha | \hat Q \hat X \hat P \hat Y \hat Q -
-\hat P \hat X \hat Q \hat Y \hat P | \alpha\rangle$
-as a tensor-network contraction. Applied to a $\pi$-flux square lattice with an
+Their method represents the ground-state projector as a matrix-product operator
+obtained from a Chebyshev expansion of the Hamiltonian MPO, then builds the
+Bianco--Resta local Chern marker~\cite{BiancoResta2011}, a site-resolved
+quantity assembled from the projector and the two position operators, as a
+tensor-network contraction. Applied to a $\pi$-flux square lattice with an
 incommensurate $C_8$ or $C_{10}$ modulation of the second-neighbour imaginary
 hopping, the marker resolves spatially alternating Chern domains whose
 characteristic width is on the order of $40$ atoms at a modulation period of
@@ -123,7 +121,7 @@ update at a coordinate reads only coordinates of strictly smaller rank: such an
 iteration freezes coordinate by coordinate and reaches a genuine fixed point
 after $\sup(\mathrm{rank})+1$ rounds. The belief-propagation instantiation
 supplies rank locality from the actual update rule, and the rank certificate
-that supplies it is proven to force four-cycle-freeness, so it is not a vacuous
+that supplies it is proven to force 4-cycle-freeness, so it is not a vacuous
 hypothesis. An explicit certificate on a three-node tree witnesses that the
 theorem fires.
 
@@ -238,7 +236,8 @@ real update rule.
 \subsection{The abstract engine}
 
 Let $E$ be a finite type, $\beta$ any type, $\mathrm{rank} : E \to \mathbb{N}$,
-and $\mathrm{step} : (E \to \beta) \to (E \to \beta)$.
+and $\mathrm{step} : (E \to \beta) \to (E \to \beta)$, and write
+$\mathrm{step}^{[n]}$ for the $n$-fold iterate of $\mathrm{step}$.
 
 \begin{defn}[\texttt{RankLocalStep}]
 $\mathrm{step}$ is \emph{rank-local} for $\mathrm{rank}$ when, for all states
@@ -351,7 +350,7 @@ hypothesis. Two results pin it down.
 
 \begin{thm}[\texttt{isFourCycleFree\_of\_bpRankCert}]
 \label{thm:certc4}
-If $G$ admits a rank certificate then $G$ is four-cycle-free.
+If $G$ admits a rank certificate then $G$ is 4-cycle-free.
 \end{thm}
 
 A 4-cycle $u\,a\,v\,b$ would give, by two applications each
@@ -406,7 +405,7 @@ Second, the existence of a rank certificate is a hypothesis and is not derived
 from acyclicity. The development defines the bipartite incidence graph, defines
 acyclicity and tree-ness through Mathlib's acyclicity and tree predicates on
 simple graphs, and proves that acyclicity implies
-four-cycle-freeness. It does not prove that an acyclic factor graph admits a
+4-cycle-freeness. It does not prove that an acyclic factor graph admits a
 certificate. That construction is a finite well-founded one, by leaf stripping
 on the forest, and until it lands the theorem reads ``given a topological order
 on message endpoints, the iteration freezes'', with the graph theory sitting in
@@ -425,7 +424,7 @@ predicates carries a redundant hypothesis. It takes a certificate and a
 tree-simulability hypothesis (tree-ness, non-negative weights, a vanishing
 scalar) and returns three conclusions, but all three are reachable from the
 certificate together with the two non-structural conjuncts, because
-Theorem~\ref{thm:certc4} already supplies four-cycle-freeness from the
+Theorem~\ref{thm:certc4} already supplies 4-cycle-freeness from the
 certificate alone. The tree hypothesis does no work there.
 
 \figuredeferred{fig:d7-rank-freeze}{the unconstructed subtree-depth certificate, which is what assigns a rank to any tree deeper than the three-node path.}
@@ -434,7 +433,7 @@ certificate alone. The tree hypothesis does no work there.
 \label{sec:rate}
 
 Theorem~\ref{thm:bpconv} is conditional on a certificate, and
-Theorem~\ref{thm:certc4} says a certificate forces four-cycle-freeness. That
+Theorem~\ref{thm:certc4} says a certificate forces 4-cycle-freeness. That
 invites a graded statistic: not the yes-or-no question of whether a 4-cycle
 exists, but a real number that vanishes exactly when none does and grows with
 how many there are. This section constructs one as a large-deviation rate
@@ -451,7 +450,7 @@ all four incidences $a\,u$, $b\,u$, $a\,v$, $b\,v$ present.
 \end{defn}
 
 The bridge to the predicate is proven, not assumed:
-$\mathrm{fourCycles}\ G = \varnothing$ iff $G$ is four-cycle-free
+$\mathrm{fourCycles}\ G = \varnothing$ iff $G$ is 4-cycle-free
 (\texttt{fourCycles\_eq\_empty\_iff\_fourCycleFree}). Since
 \texttt{IsFourCycleFreeFactorGraph} is the universally quantified absence of
 exactly that configuration, this is a near-definitional restatement, and it is
@@ -507,9 +506,9 @@ $p$ and covers $p = 0$ and $p > 0$ without a case split.
 For every finite factor graph $G$:
 \begin{enumerate}
 \item $I_G(0) \geq 0$ \textup{(\texttt{loopCorrectionRate\_nonneg})};
-\item $I_G(0) = 0$ iff $G$ is four-cycle-free
+\item $I_G(0) = 0$ iff $G$ is 4-cycle-free
   \textup{(\texttt{loopCorrectionRate\_eq\_zero\_iff\_fourCycleFree})};
-\item $I_G(0) > 0$ if $G$ is not four-cycle-free
+\item $I_G(0) > 0$ if $G$ is not 4-cycle-free
   \textup{(\texttt{loopCorrectionRate\_pos\_of\_not\_fourCycleFree})};
 \item for graphs $G_1, G_2$ over possibly \emph{different} index types,
   $p(G_1) < p(G_2)$ implies $I_{G_1}(0) < I_{G_2}(0)$
@@ -527,21 +526,12 @@ density-to-predicate bridge. Item~4 supplies the property no
 $\{0,1\}$-valued indicator has, and Sec.~\ref{sec:limits} shows it is also
 where the construction fails. Item~5 recovers item~2 at $t = 0$.
 
-\subsection{Kullback--Leibler form and the exact identity}
+\subsection{The exact finite-$n$ identity}
 
-Writing the Bernoulli relative entropy in $\mathrm{negMulLog}$ form,
-\begin{equation}
-I_p(q) = -\,\mathrm{negMulLog}\, q - \mathrm{negMulLog}(1-q) - q \log p - (1-q)\log(1-p),
-\end{equation}
-one has $I_p(p) = 0$ and $I_p(0) = -\log(1-p)$, so
-$I_G(0) = I_{p(G)}(0)$ (\texttt{loopCorrectionRate\_eq\_bernoulliCramerRate\_zero}).
-The $\mathrm{negMulLog}$ form is chosen because it is continuous on all of
-$\mathbb{R}$, which the quotient form is not at the junk values, and continuity
-is a field of the ambient Cram\'er predicate this discharges
-(\texttt{loopCorrection\_isCramerIIDUpperBound}). That bridge is plumbing to a
-separate large-deviation development and carries no argument here.
-
-One consequence is exact rather than asymptotic. For every $n$,
+One consequence of Theorem~\ref{thm:legendre} is exact rather than asymptotic,
+and it is what earns $I_G(0)$ the name of a rate function: a large-deviation
+rate is normally the exponent of an asymptotic decay, and here the decay it
+governs holds at every finite $n$ with no error term. For every $n$,
 \begin{equation}
 \label{eq:exact}
 \bigl(1 - p(G)\bigr)^{n} = \exp\bigl(-n\, I_G(0)\bigr)
@@ -565,21 +555,6 @@ and $1$ and it is computed by the kernel, so a change to
 Definition~\ref{def:density} that preserved the zero-rate boundary but altered
 the scale would break it.
 
-\subsection{The structural biconditional}
-
-Bundling four-cycle-freeness with a sign condition on the weights gives
-$\texttt{IsFourCycleFreeNonnegWeighted}\ G\ f =
-\texttt{IsFourCycleFreeFactorGraph}\ G \wedge \forall a\,y,\ 0 \leq f_a(y)$,
-and Theorem~\ref{thm:contract}\,(2) upgrades it to
-\begin{equation}
-\label{eq:structbicond}
-\texttt{IsFourCycleFreeNonnegWeighted}\ G\ f
-\iff I_G(0) = 0 \wedge \forall a\,y,\ 0 \leq f_a(y)
-\end{equation}
-(\texttt{fourCycleFree\_nonneg\_iff\_ldp\_rate\_zero}). The non-negativity
-conjunct passes through unchanged on both sides; all of the content
-of~\eqref{eq:structbicond} is Theorem~\ref{thm:contract}\,(2).
-
 \figuredeferred{fig:d7-rate-curves}{an unbuilt enumeration of $|\mathrm{fourCycles}|$ across growing index types, which is what the size-dependence panel plots.}
 
 \section{What the 4-cycle rate does not measure}
@@ -591,14 +566,14 @@ and it is the paper's principal finding. Three independent problems are stated,
 in increasing order of severity, followed by an anatomy of the combined
 statement that was intended to be the payoff.
 
-\subsection{Four-cycle-freeness is not acyclicity}
+\subsection{4-cycle-freeness is not acyclicity}
 
-The zero-rate boundary is four-cycle-freeness, and belief-propagation exactness
+The zero-rate boundary is 4-cycle-freeness, and belief-propagation exactness
 requires a tree. The gap is not a technicality.
 
 \begin{prop}[not formalized]
 \label{prop:sixcycle}
-The bipartite $6$-cycle $v_0\,a_0\,v_1\,a_1\,v_2\,a_2\,v_0$ is four-cycle-free
+The bipartite 6-cycle $v_0\,a_0\,v_1\,a_1\,v_2\,a_2\,v_0$ is 4-cycle-free
 and is not acyclic. Consequently $I_G(0) = 0$ on it.
 \end{prop}
 
@@ -606,10 +581,10 @@ No two distinct factors of that graph are incident to two common variables, so
 the 4-cycle screen passes; the length-six cycle is nonetheless a cycle
 (Fig.~\ref{fig:d7-incidence-and-cycles}(c)). The
 implication that does hold is one-directional and is proven: acyclicity implies
-four-cycle-freeness (\texttt{isAcyclicFactorGraph\_imp\_fourCycleFree}), by
+4-cycle-freeness (\texttt{isAcyclicFactorGraph\_imp\_fourCycleFree}), by
 exhibiting the two distinct length-two paths a 4-cycle would create between the
 same endpoints and contradicting Mathlib's path-uniqueness characterization of
-acyclicity. The converse is false, and four-cycle-freeness additionally imposes
+acyclicity. The converse is false, and 4-cycle-freeness additionally imposes
 no connectivity condition at all, so it does not even characterize forests.
 A vanishing rate is therefore a necessary condition for a certificate, by
 Theorem~\ref{thm:certc4}, and is not sufficient for one.
@@ -629,7 +604,7 @@ Theorem~\ref{thm:certc4}, and is not sufficient for one.
 \node[fac] (ab) at (1.25,0)  {$b$};
 \draw[ed] (au) -- (aa); \draw[ed] (au) -- (ab);
 \draw[ed] (av) -- (aa); \draw[ed] (av) -- (ab);
-\node at (0,-2.15) {(a) a $4$-cycle: $p>0$};
+\node at (0,-2.15) {(a) a 4-cycle: $p>0$};
 
 %% (b) a two-body model on three variables, as its interaction graph
 \node[var] (bu) at (5.0,1.25)  {$u$};
@@ -649,11 +624,11 @@ Theorem~\ref{thm:certc4}, and is not sufficient for one.
 \node[fac] (cc) at (11.13,0.65)  {$c$};
 \draw[ed] (cu) -- (ca); \draw[ed] (ca) -- (cv); \draw[ed] (cv) -- (cb);
 \draw[ed] (cb) -- (cw); \draw[ed] (cw) -- (cc); \draw[ed] (cc) -- (cu);
-\node at (10.0,-2.15) {(c) a $6$-cycle: $p=0$};
+\node at (10.0,-2.15) {(c) a 6-cycle: $p=0$};
 
 \draw[-latex,thick,draw=black!70] (6.9,0) -- (7.9,0);
 \end{tikzpicture}
-\caption{What the $4$-cycle screen sees and what it misses. Circles are
+\caption{What the 4-cycle screen sees and what it misses. Circles are
 variables, squares are factors, and an edge is an incidence. (a) Two distinct
 factors incident to the same two variables is the only configuration
 $\mathrm{fourCycles}$ counts; on the complete bipartite $2{\times}2$ graph it
@@ -661,12 +636,12 @@ gives $p = 1/4$ and $I_G(0) = \log(4/3)$. (b) A two-body model on three
 variables with one factor per bond, drawn as its interaction graph. (c) The
 bipartite incidence graph of (b). No two factors share two variables, so
 $p = 0$ and $I_G(0) = 0$ by Theorem~\ref{thm:contract}\,(2); the graph is
-nonetheless a $6$-cycle and therefore not acyclic, which is
+nonetheless a 6-cycle and therefore not acyclic, which is
 Proposition~\ref{prop:sixcycle}.}
 \label{fig:d7-incidence-and-cycles}
 \end{figure*}
 
-\subsection{Every pairwise-coupled model is four-cycle-free}
+\subsection{Every pairwise-coupled model is 4-cycle-free}
 \label{sec:pairwise}
 
 The second problem removes the statistic's discriminating power on the models
@@ -676,7 +651,7 @@ that motivate it.
 \label{prop:pairwise}
 Let $G$ be a factor graph in which every factor is incident to at most two
 variables, and in which no two distinct factors have the same pair of incident
-variables. Then $G$ is four-cycle-free, hence $p(G) = 0$ and $I_G(0) = 0$.
+variables. Then $G$ is 4-cycle-free, hence $p(G) = 0$ and $I_G(0) = 0$.
 \end{prop}
 
 \begin{proof}
@@ -702,7 +677,7 @@ lattice geometries of that work do not have. That last step is an observation
 about the encoding rather than a theorem, and nothing below rests on more than
 the observation. This is where the failure becomes concrete rather than formal.
 The loop of size three that Sec.~\ref{sec:intro} records as the source of a
-specific error increase is a six-cycle in the bipartite incidence graph
+specific error increase is a 6-cycle in the bipartite incidence graph
 (Fig.~\ref{fig:d7-incidence-and-cycles}), exactly the configuration
 Proposition~\ref{prop:sixcycle} shows the screen cannot see. The statistic
 assigns zero loop-correction rate to the geometry whose loop correction that
@@ -738,7 +713,19 @@ form of item~5, that does not survive a change of system size.
 \subsection{Anatomy of the combined statement}
 \label{sec:anatomy}
 
-The development bundles the structural predicate with a scalar condition into
+Bundling 4-cycle-freeness with a sign condition on the weights gives
+$\texttt{IsFourCycleFreeNonnegWeighted}\ G\ f =
+\texttt{IsFourCycleFreeFactorGraph}\ G \wedge \forall a\,y,\ 0 \leq f_a(y)$,
+which Theorem~\ref{thm:contract}\,(2) upgrades to
+\begin{equation}
+\label{eq:structbicond}
+\texttt{IsFourCycleFreeNonnegWeighted}\ G\ f
+\iff I_G(0) = 0 \wedge \forall a\,y,\ 0 \leq f_a(y)
+\end{equation}
+(\texttt{fourCycleFree\_nonneg\_iff\_ldp\_rate\_zero}); the non-negativity
+conjunct passes through unchanged on both sides, so all of the content
+of~\eqref{eq:structbicond} is Theorem~\ref{thm:contract}\,(2). The development
+bundles that predicate with a scalar condition into
 $\texttt{IsAnalogHawkingFourCycleFreeSimulable}\ G\ f\ c_1 =
 \texttt{IsFourCycleFreeNonnegWeighted}\ G\ f \wedge c_1 = 0$
 and proves
@@ -751,7 +738,9 @@ and proves
 \end{split}
 \end{equation}
 where $\Phi(c_0,c_1)$ is a two-coefficient Chebyshev expansion evaluated at a
-real point.
+real point and $c_0$ is universally quantified: the equivalence is asserted for
+every real $c_0$, and $c_0$ appears on the right of~\eqref{eq:combined} but not
+on the left.
 
 The second conjunct requires reading. The expansion is
 $\Phi(c_0,c_1) = c_0 T_0 + c_1 T_1$ with $T_0 = 1$ and $T_1(x) = x$, so
@@ -861,14 +850,9 @@ The result of this work is a kernel-checked statement about the
 belief-propagation iteration itself: synchronous message passing on a finite
 factor graph whose directed endpoints admit a topological rank reaches an exact
 fixed point in a bounded number of sweeps, from any starting bundle and for
-arbitrary real factor weights, with the order-theoretic content isolated in a
-form that mentions no messages at all. The finding of this work is that the
+arbitrary real factor weights. The finding of this work is that the
 combinatorial statistic built alongside it to detect that regime does not
-detect it. Four-cycle density vanishes on every pairwise-coupled model, so it
-returns the same verdict on the lattices whose loop corrections had to be
-computed and on the lattices from which the loops were removed, and its
-normalization by the ambient tuple space inverts the ordering it induces as the
-system grows. Both belong in the same paper. A formalization is worth reading
+detect it. Both belong in the same paper. A formalization is worth reading
 for what it settles, and one of the things it settled here is that a criterion
 we proposed does not work.
 
@@ -882,7 +866,7 @@ one thing it contributes. Names are as they appear in the development; all are
 proven with no \texttt{sorry} and no project-local axiom.
 
 Two numbered statements in the body are not machine-checked and are not in this
-list: Proposition~\ref{prop:sixcycle}, that the bipartite $6$-cycle is
+list: Proposition~\ref{prop:sixcycle}, that the bipartite 6-cycle is
 4-cycle-free and not acyclic, and Proposition~\ref{prop:pairwise}, that every
 factor graph whose factors couple at most two variables on distinct pairs is
 4-cycle-free. Both are marked \textup{(not formalized)} where they are stated,
@@ -988,7 +972,7 @@ theorem loopCorrectionRate_eq_neg_log
 \end{verbatim}
 }
 
-The zero-rate characterization, which is four-cycle-freeness and not tree-ness.
+The zero-rate characterization, which is 4-cycle-freeness and not tree-ness.
 
 {\footnotesize
 \begin{verbatim}
@@ -1075,9 +1059,8 @@ theorem analog_hawking_fourCycleFree_demarcation
 
 Universe and instance binders are elided above for readability; the elaborated
 types carry \texttt{Fintype} and \texttt{DecidableEq} on the index types
-wherever a \texttt{Finset} is formed, and the angle-bracket anonymous
-constructor is written \texttt{<|\dots|>} because the source glyphs do not
-survive this typesetting. Two conventions are worth noting because they are
+wherever a \texttt{Finset} is formed, and we write \texttt{<|\dots|>} for the
+anonymous-constructor brackets. Two conventions are worth noting because they are
 easy to misread. In \texttt{loopCorrectionRate\_lt\_of\_loopDensity\_lt} the
 two factor graphs range over \emph{independent} index-type pairs, which is what
 makes the comparison in Sec.~\ref{sec:normalization} expressible. In
@@ -1088,16 +1071,11 @@ depend on the sign condition that appears in the structural predicate.
 \section{Axiom closure and reproduction}
 \label{app:axioms}
 
-The seven contributing modules carry $116$ manually authored theorems, which is
-the count after excluding compiler-generated equation lemmas and projections.
-Their distribution is: belief propagation, $46$; the rate-function module,
-$25$; the Kibble--Zurek module, $14$; the Chebyshev module, $13$; the aperiodic
-lattice module, $7$; the Chebyshev-expansion bridge, $5$; the combined
-structural module, $6$. Only the first two and part of the last contribute to
-any statement in this paper. The transitive closure of the theorems this paper
-actually cites is smaller: \bundleTheorems{} theorems and \bundleDecls{}
-declarations across \bundleModules{} modules, which is the figure a reader
-should use when asking how much verified content this paper rests on.
+The transitive closure of the theorems this paper cites is \bundleTheorems{}
+theorems and \bundleDecls{} declarations across \bundleModules{} modules, and
+that is the figure a reader should use when asking how much verified content
+this paper rests on. The development these are drawn from is larger and covers
+material this paper makes no use of; none of it is counted here.
 
 The union of the axioms used by every one of those theorems is
 $\{\mathtt{propext},\ \mathtt{Classical.choice},\ \mathtt{Quot.sound}\}$, the
