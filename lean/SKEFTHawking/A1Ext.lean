@@ -29,6 +29,7 @@ Deep research: Lit-Search/Phase-5q/The minimal free resolution...
 -/
 
 import SKEFTHawking.A1Resolution
+import SKEFTHawking.A1Algebra
 
 namespace SKEFTHawking.A1
 
@@ -83,24 +84,60 @@ The ranks are read off from the resolution construction:
   P₅: rank 4 (generators at degrees 5, 9, 13, 14 → h₀⁵, h₀²v, h₀w₁, h₁w₁)
 -/
 
-/-- dim Ext⁰ = rank(P₀) = cols(d₁)/8 = 8/8 = 1.
-    The rank is computed from the resolution matrix dimensions. -/
-theorem ext_dim_0 : (Fintype.card (Fin 8)) / 8 = 1 := by decide
+/-! **Strengthened 2026-08-15 (Phase 5q.T).** Each `ext_dim_n` below used to read
 
-/-- dim Ext¹ = rank(P₁) = cols(d₁)/8 = 16/8 = 2 (generators: h₀, h₁). -/
-theorem ext_dim_1 : (Fintype.card (Fin 16)) / 8 = 2 := by decide
-
-/-- dim Ext² = rank(P₂) = cols(d₂)/8 = 16/8 = 2 (generators: h₀², h₁²). -/
-theorem ext_dim_2 : (Fintype.card (Fin 16)) / 8 = 2 := by decide
-
-/-- dim Ext³ = rank(P₃) = cols(d₃)/8 = 16/8 = 2 (generators: h₀³, v). -/
-theorem ext_dim_3 : (Fintype.card (Fin 16)) / 8 = 2 := by decide
-
-/-- dim Ext⁴ = rank(P₄) = cols(d₄)/8 = 24/8 = 3 (generators: h₀⁴, h₀v, w₁). -/
+```
 theorem ext_dim_4 : (Fintype.card (Fin 24)) / 8 = 3 := by decide
+```
 
-/-- dim Ext⁵ = rank(P₅) = cols(d₅)/8 = 32/8 = 4 (generators: h₀⁵, h₀²v, h₀w₁, h₁w₁). -/
-theorem ext_dim_5 : (Fintype.card (Fin 32)) / 8 = 4 := by decide
+— the arithmetic identity `24 / 8 = 3`, mentioning neither A(1), nor `Hom`, nor `Ext`. It
+slipped both project guards: its type is not `True`, so the placeholder counter did not see
+it, and its body is `decide`, not `rfl`/`trivial`, so the placeholder-body detector did not
+see it either. A substantive-*looking* theorem whose content was weaker than its name.
+
+Each now states the F₂-dimension of the genuine cochain group
+`Hom_{A(1)}(Pₙ, F₂) = Hom_{A1sub}(A1sub^{rₙ}, F₂)`, over the real `Ring`/`Algebra (ZMod 2)`
+instance for A(1) built in `A1Algebra.lean`, with F₂ the trivial module via the augmentation.
+
+**Why cochain dimension = Ext dimension here.** The dual coboundaries all vanish
+(`A1ExtSubstantive.all_dual_coboundaries_vanish`, a kernel-checked consequence of minimality
+— `dn_minimal` above), so `Extⁿ = ker δⁿ / im δⁿ⁻¹ = Hom_{A(1)}(Pₙ, F₂)` with nothing
+quotiented away. `A1ExtSubstantive` carries that half, including the literal subquotient
+`ker δ⁴ ⧸ im δ³` in `ext4_homology_dim_substantive`. -/
+
+/-- dim Ext⁰ = dim Hom_{A(1)}(P₀, F₂) = rank(P₀) = 1. -/
+theorem ext_dim_0 : Module.finrank F2 ((Fin 1 → A1sub) →ₗ[A1sub] F2) = 1 :=
+  hom_free_A1_finrank 1
+
+/-- dim Ext¹ = dim Hom_{A(1)}(P₁, F₂) = rank(P₁) = 2 (generators: h₀, h₁). -/
+theorem ext_dim_1 : Module.finrank F2 ((Fin 2 → A1sub) →ₗ[A1sub] F2) = 2 :=
+  hom_free_A1_finrank 2
+
+/-- dim Ext² = dim Hom_{A(1)}(P₂, F₂) = rank(P₂) = 2 (generators: h₀², h₁²). -/
+theorem ext_dim_2 : Module.finrank F2 ((Fin 2 → A1sub) →ₗ[A1sub] F2) = 2 :=
+  hom_free_A1_finrank 2
+
+/-- dim Ext³ = dim Hom_{A(1)}(P₃, F₂) = rank(P₃) = 2 (generators: h₀³, v). -/
+theorem ext_dim_3 : Module.finrank F2 ((Fin 2 → A1sub) →ₗ[A1sub] F2) = 2 :=
+  hom_free_A1_finrank 2
+
+/-- dim Ext⁴ = dim Hom_{A(1)}(P₄, F₂) = rank(P₄) = 3 (generators: h₀⁴, h₀v, w₁).
+    The stem-4 dimension that the generation-constraint chain reads off. -/
+theorem ext_dim_4 : Module.finrank F2 ((Fin 3 → A1sub) →ₗ[A1sub] F2) = 3 :=
+  hom_free_A1_finrank 3
+
+/-- dim Ext⁵ = dim Hom_{A(1)}(P₅, F₂) = rank(P₅) = 4 (generators: h₀⁵, h₀²v, h₀w₁, h₁w₁). -/
+theorem ext_dim_5 : Module.finrank F2 ((Fin 4 → A1sub) →ₗ[A1sub] F2) = 4 :=
+  hom_free_A1_finrank 4
+
+/-- The ranks `rₙ` of the resolution are the column counts of the F₂-expanded differentials
+    divided by 8 — the bookkeeping that connects `A1Resolution`'s matrix shapes to the free
+    module ranks appearing in `ext_dim_0 … ext_dim_5`. Retained (as arithmetic, honestly
+    labelled) because the shape-to-rank step is otherwise carried only by comments. -/
+theorem resolution_ranks_from_matrix_shapes :
+    (Fintype.card (Fin 8)) / 8 = 1 ∧ (Fintype.card (Fin 16)) / 8 = 2
+    ∧ (Fintype.card (Fin 24)) / 8 = 3 ∧ (Fintype.card (Fin 32)) / 8 = 4 := by
+  refine ⟨by decide, by decide, by decide, by decide⟩
 
 /-- Total Ext dimension through degree 5: 1+2+2+2+3+4 = 14 basis elements. -/
 theorem ext_total_dim : 1 + 2 + 2 + 2 + 3 + 4 = 14 := by norm_num
@@ -148,9 +185,12 @@ theorem ext_computation_summary :
     d1 * d2 = 0 ∧ d2 * d3 = 0 ∧ d3 * d4 = 0 ∧ d4 * d5 = 0
     -- Minimality (spot check: d₁ row 0 is zero)
     ∧ (∀ j : Fin 16, d1 0 j = 0)
-    -- Ext dimensions (as equalities on ℕ)
+    -- Ext dimensions, as F₂-dimensions of the genuine cochain groups over the real A(1)
+    ∧ Module.finrank F2 ((Fin 3 → A1sub) →ₗ[A1sub] F2) = 3
+    ∧ Module.finrank F2 ((Fin 4 → A1sub) →ₗ[A1sub] F2) = 4
+    -- and their total through degree 5
     ∧ (1 + 2 + 2 + 2 + 3 + 4 = 14) :=
   ⟨chain_complex_property.1, chain_complex_property.2.1, chain_complex_property.2.2.1,
-   chain_complex_property.2.2.2, d1_minimal, by norm_num⟩
+   chain_complex_property.2.2.2, d1_minimal, ext_dim_4, ext_dim_5, by norm_num⟩
 
 end SKEFTHawking.A1

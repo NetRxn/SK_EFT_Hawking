@@ -1,7 +1,8 @@
 /-
 Phase 5q.T Wave T1: Substantive Ext dimensions from the dualized complex
 
-This module upgrades the `A1Ext.ext_dim_n : (Fintype.card (Fin (8·rₙ)))/8 = rₙ`
+This module upgrades the `A1Ext.ext_dim_n` proxies (which read `(Fintype.card (Fin (8·rₙ)))/8 = rₙ`
+until Phase 5q.T restated them as cochain-group dimensions over the genuine A(1) algebra)
 *arithmetic proxies* into honest statements about the cohomology of the
 `Hom_{A(1)}(P•, F₂)`-dualized complex.
 
@@ -17,7 +18,7 @@ real meaning of "a minimal resolution computes Ext with zero differentials":
 
   Hence Hⁿ = ker δⁿ / im δⁿ⁻¹ ≅ F₂^{rₙ}, so dim Ext^n_{A(1)}(F₂, F₂) = rₙ.
 
-Unlike `ext_dim_n` (which is `24/8 = 3`), `dualCoboundary_n_eq_zero` is a genuine
+Unlike the pre-5q.T `ext_dim_n` (which was `24/8 = 3`), `dualCoboundary_n_eq_zero` is a genuine
 linear-algebra fact extracted from the certified differentials, and the finrank
 theorems below are about actual F₂-vector spaces (ker/range/quotient of real maps).
 
@@ -144,7 +145,10 @@ theorem ext3_dim_substantive :
     H⁴ = ker δ⁴ / im δ³. Since δ⁴ = 0 (cocycles = ⊤) and δ³ = 0 (coboundaries = ⊥),
     H⁴ ≅ F₂³ as an F₂-vector space, so dim Ext⁴_{A(1)}(F₂, F₂) = 3.
 
-    This is the honest replacement for `A1Ext.ext_dim_4 : 24/8 = 3`. -/
+    This is the honest replacement for the pre-5q.T `A1Ext.ext_dim_4 : 24/8 = 3`. (As of
+    2026-08-15 `A1Ext.ext_dim_4` itself states `finrank F₂ Hom_{A(1)}(P₄, F₂) = 3`; THIS
+    theorem remains the one that quotients by the incoming coboundary, so it is the
+    unimpeachable `Ext` statement rather than the cochain-group one.) -/
 theorem ext4_dim_substantive :
     Module.finrank F2 ((Fin 3 → F2) ⧸ LinearMap.range (mulVecLin delta3)) = 3 := by
   rw [range_delta3_bot]
@@ -176,7 +180,7 @@ theorem ext4_homology_dim_substantive :
 /-- **Master substantiation theorem.** The dualized minimal resolution has all
     coboundaries zero, and the resulting cohomology dimensions (= dim Ext^n) are
     1, 2, 2, 2, 3, 4 — each a genuine `Module.finrank` of an F₂-vector space built
-    from the certified differentials, NOT the `A1Ext.ext_dim_n` arithmetic proxies. -/
+    from the certified differentials, NOT from arithmetic on matrix shapes. -/
 theorem ext_dims_substantive :
     Module.finrank F2 (LinearMap.ker (mulVecLin delta0)) = 1 ∧
     Module.finrank F2 ((Fin 2 → F2) ⧸ LinearMap.range (mulVecLin delta0)) = 2 ∧
