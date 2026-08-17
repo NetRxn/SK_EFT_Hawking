@@ -9,31 +9,31 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     # Core scientific
-    "numpy>=2.0",
-    "scipy>=1.14",
+    "numpy>=2.5.2",
+    "scipy>=1.18.0",
     # Aristotle theorem prover (>=2.1.0: 1.0.0 spoke the now-deprecated v2 API; the
     # server requires v3 — see ADR-006 / the safe submission process)
     "aristotlelib>=2.1.0",
     # Symbolic math (Phase 2 WKB expansion)
     "sympy>=1.12",
-    "mpmath>=1.3",
+    "mpmath>=1.4.1",
     # Visualization
-    "plotly>=6.0",
-    "kaleido>=1.0",
+    "plotly>=6.9.0",
+    "kaleido>=1.3.0",
     # Notebooks — explicit minimum set (we don't ship a UI; users open .ipynb
     # with their own frontend). Avoids pulling jupyterlab/notebook/jupyter-console
     # via the `jupyter` umbrella, and pins nbconvert past CVE-2026-39377/39378.
-    "ipykernel>=6.29",
+    "ipykernel>=7.3.0",
     "ipywidgets>=8.1",
-    "nbformat>=5.10",
-    "nbclient>=0.10",       # validate.py CHECK 11 notebook execution
+    "nbformat>=5.11.0",
+    "nbclient>=0.11.0",       # validate.py CHECK 11 notebook execution
     "nbconvert>=7.17.1",    # scripts/pre-commit-notebooks.sh CLI; CVE-patched
     # Testing
-    "pytest>=9.0.3",
+    "pytest>=9.1.1",
     "pyyaml>=6.0",  # plugin frontmatter validation
     # Rust RHMC extension (built automatically via maturin from rust/)
     "sk-eft-rhmc",
-    "pandas>=3.0.1",
+    "pandas>=3.0.5",
     # Provenance dashboard
     "flask>=3.0",
     "markupsafe>=3.0",      # dashboard XSS escaping; was reachable only via flask/jinja2
@@ -76,7 +76,7 @@ fermion-bag = ["numba>=0.65.0"]
 # JAX CPU backend (Wave 7C) — JIT CG solver, vmap multi-shift.
 # Required for: hs_rhmc_jax.py
 # Superseded by PyTorch MPS for production (faster on Apple Silicon)
-jax-cpu = ["jax>=0.9.2"]
+jax-cpu = ["jax>=0.11.0"]
 
 # PyTorch MPS GPU backend (Wave 7C production) — ~100× speedup on Apple Silicon.
 # Required for: hs_rhmc_torch.py (to be implemented)
@@ -95,7 +95,7 @@ mlx = [
 rust = []
 
 # All MC backends (development/testing)
-mc-all = ["numba>=0.65.0", "jax>=0.9.2", "torch>=2.13.0"]
+mc-all = ["numba>=0.65.0", "jax>=0.11.0", "torch>=2.13.0"]
 
 [build-system]
 requires = ["hatchling"]
@@ -125,8 +125,8 @@ markers = [
 
 [dependency-groups]
 dev = [
-    "maturin>=1.12.6",
+    "maturin>=1.14.1",
     # Browser-driven e2e tests for the provenance dashboard (tests/e2e/).
     # Dev-only; never shipped. Chromium provisioned via `uv run playwright install chromium`.
-    "playwright>=1.50",
+    "playwright>=1.62.0",
 ]
