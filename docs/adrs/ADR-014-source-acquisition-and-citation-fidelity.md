@@ -104,6 +104,25 @@ findings, while a bibliographic record establishes only that the source exists. 
 sufficient to check a bibitem's header — author, title, venue, year, pagination — against the
 source, and sufficient for nothing else.
 
+**The tier is established at ACQUISITION, by the writer.** Two scripts write into
+`primary-sources/`: [`back_fill_primary_sources.py`](../../scripts/back_fill_primary_sources.py),
+the only writer of `.pdf` and `.tex`, and
+[`convert_inprep_citations.py`](../../scripts/convert_inprep_citations.py), which writes `.json`
+stubs for project self-deposits. The former walks a tier
+ladder — arXiv PDF → arXiv abstract → Crossref abstract → Crossref metadata — and **refuses to
+write a response that is not what it claims to be**: the PDF leg asserts the `%PDF` magic and
+raises rather than saving the bytes, so a redirect, a paywall interstitial or an error page
+**degrades the tier** and is recorded as such in the `docs/primary_sources_state.json` sidecar. A
+failed fetch therefore yields an honest weaker tier, never a mislabelled strong one.
+
+⚠️ **A downstream reader must NOT re-derive what the writer guarantees.** `_cache_fidelity` reads
+content for `json` only, because `json` is the one accepted extension whose *tier* the extension
+does not determine — a `.json` may be a body or a bibliographic record. `pdf` and `tex` are taken
+at their extension deliberately: their integrity is asserted where the file is written, and adding
+a second sniff at read time would be a duplicate mechanism for a property already held, of the kind
+`CLAUDE.md` rule 1 forbids. If a route ever writes into `primary-sources/` **other than** this
+script, that route owes the same assertion — the guarantee belongs to the writer, not the reader.
+
 ### 2. The acquisition register is derived, never hand-maintained
 
 `scripts/source_acquisition_register.py` → `docs/SOURCE_ACQUISITION_REGISTER.md`, measured at

@@ -292,6 +292,7 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `docs/QI_REGISTER.md` | `qi_register.py` | **none** — *re-parses its own Closed Items* | **no** |
 | PG + AGE `sk_eft` | `build_graph.write_graph_to_pg` | **none** (full delete + rewrite) | opt-in only |
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
+| `Lit-Search/Phase-*/primary-sources/<bibkey>.{pdf,abstract.txt,json}` | `back_fill_primary_sources.py` (`.pdf`/`.tex`/`.abstract.txt`) + `convert_inprep_citations.py` (self-deposit `.json` stubs) | **none** — additive; a cached source is never re-fetched. Per-bibkey fetch verdicts in the `docs/primary_sources_state.json` sidecar | **no** — an explicit acquisition run |
 
 ⚠️ **`counts.json`'s key is a hybrid because an mtime-max is blind in one direction, and it
 shipped that way.** Deleting a file leaves every surviving file's mtime untouched, so the
