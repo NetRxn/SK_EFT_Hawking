@@ -87,8 +87,8 @@
   "target_journal": "PRX Quantum or Physical Review X",
   "phase7_subphase": "7w (Phase 6w D7 spin-out)",
   "stage9_status": "not_started",
-  "stage10_status": "in_progress",
-  "stage13_status": "pending",
+  "stage10_status": "pending-redo",
+  "stage13_status": "pending-redo",
   "stage13_redo_required": true,
   "freshness_stale": true,
   "source_manifest_last_regen": null,
@@ -194,7 +194,7 @@
     "ceiling": 60,
     "source": "PAPER_STRATEGY.md §6"
   },
-  "compiled_pages": 2,
+  "compiled_pages": 10,
   "compile_gate_ok": true,
   "critical_open": 0,
   "charter_mismatch_finding": "papers/AutomatedReviews/2026-08-17-d7-stage10-redraft/D7.md (D7-R1): target_journal PRX-Q/PRX and length_target 24-60pp are not supported by the substrate; retarget recommendation filed, deliberately NOT applied here so the mismatch stays gated."
