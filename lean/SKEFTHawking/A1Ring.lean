@@ -99,11 +99,59 @@ theorem q1_squared : L4 * L4 = (0 : Matrix Idx Idx F2) := by decide
 /-- Top element is absorbing: Sq(3,1) · x = 0 for all x ≠ 1. -/
 theorem top_absorbing : L7 * L1 = (0 : Matrix Idx Idx F2) := by decide
 
+/-! ## 2b. Right multiplication, and FULL associativity
+
+`Rmat b` is the matrix of *right* multiplication by the basis element `e b`, read off
+the left-regular representation: the coefficient of `e k` in `e i · e b` is `(L_{e i})_{k,b}`,
+so `(R_b)_{k,i} = (Lmat i) k b`. Both `Lmat` and `Rmat` are pinned to their intended meaning
+by their action on the unit `e₀` (`Lmat_col0`, `Rmat_col0`).
+
+Left and right multiplication commute *exactly when* the algebra is associative:
+`(a · x) · b = a · (x · b)` for all basis `a, x, b`. `assoc_all` below discharges all
+64 matrix identities — i.e. all 512 basis triples — by kernel `decide`, superseding the
+six hand-picked triples of §3, which are retained only because they are cited elsewhere. -/
+
+/-- Right multiplication by the basis element `e b`, in the left-regular representation.
+    `(R_b)_{k,i}` = coefficient of `e k` in `e i · e b`. -/
+def Rmat (b : Idx) : Matrix Idx Idx F2 := Matrix.of fun k i => Lmat i k b
+
+/-- `Lmat` is left multiplication: `L_a · e₀ = a`, i.e. column 0 of `L_a` is the
+    coefficient vector of `e a`. This pins `Lmat`'s meaning. -/
+theorem Lmat_col0 : ∀ a k : Idx, Lmat a k 0 = if k = a then 1 else 0 := by decide
+
+/-- `Rmat` is right multiplication: `e₀ · e b = e b`, i.e. column 0 of `R_b` is the
+    coefficient vector of `e b`. This pins `Rmat`'s meaning. -/
+theorem Rmat_col0 : ∀ b k : Idx, Rmat b k 0 = if k = b then 1 else 0 := by decide
+
+/-- Right multiplication by the unit is the identity. -/
+theorem Rmat_zero : Rmat 0 = 1 := by decide
+
+/-- **Full associativity of A(1)**: left and right multiplication commute on every pair
+    of basis elements. Equivalently `(e a · e x) · e b = e a · (e x · e b)` for all 512
+    basis triples `(a, x, b)`. Kernel-`decide`, no `native_decide`.
+
+    This replaces the six hand-picked triples of §3 (and the Python-only claim that the
+    remaining 506 were checked outside Lean) with a single machine-checked statement. -/
+theorem assoc_all : ∀ a b : Idx, Lmat a * Rmat b = Rmat b * Lmat a := by decide
+
+/-- **A(1) is noncommutative**: `Sq¹ · Sq² ≠ Sq² · Sq¹`. Recorded because it is the
+    fact that rules out Mathlib's `CommRing`-only change-of-rings machinery
+    (`ModuleCat.extendRestrictScalarsAdj`) for this algebra. -/
+theorem a1_noncommutative : L1 * L2 ≠ L2 * L1 := by decide
+
+/-- Structure constants: the product of two basis elements re-expands in the basis, with
+    coefficients read off column `b` of `L_a`. This is the closure property that makes the
+    F₂-span of `Lmat` a subalgebra (see `A1Algebra.lean`). -/
+theorem Lmat_mul_expand : ∀ a b : Idx, Lmat a * Lmat b = ∑ k, (Lmat a k b) • Lmat k := by
+  decide +kernel
+
+/-- The unit basis element is the identity matrix. -/
+theorem Lmat_zero_eq_one : Lmat 0 = 1 := by decide
+
 /-! ## 3. Associativity (machine-checked for critical triples)
 
-Full associativity over 512 triples is verified in Python
-(scripts/generate_a1_resolution.py). Here we verify the critical
-triples that were the source of bugs in development. -/
+Superseded by `assoc_all` (§2b), which covers all 512 triples. Retained because these
+names are cited in `a1_multiplication_verified` and downstream documentation. -/
 
 theorem assoc_1_2_2 : L1 * L2 * L2 = L1 * (L2 * L2) := by decide
 theorem assoc_2_1_2 : L2 * L1 * L2 = L2 * (L1 * L2) := by decide
@@ -123,14 +171,18 @@ theorem mul_L0 (M : Matrix Idx Idx F2) : M * L0 = M := by rw [L0_eq_one, mul_one
 /-! ## 5. Module Summary -/
 
 /-- A(1) multiplication table: machine-checked in the Milnor basis.
-    Sq(1)² = 0, Sq(2)² = Sq(1,1), Q₁² = 0, associativity verified.
-    FIRST machine-checked Steenrod subalgebra multiplication in any proof assistant. -/
+    Sq(1)² = 0, Sq(2)² = Sq(1,1), Q₁² = 0, **full** associativity (all 512 basis triples,
+    via `assoc_all`), and noncommutativity.
+
+    Strengthened 2026-08-15 (Phase 5q.T): the associativity conjuncts were two hand-picked
+    triples; they are now the universally quantified `assoc_all`, and the statement records
+    that the algebra is genuinely noncommutative. -/
 theorem a1_multiplication_verified :
     L1 * L1 = (0 : Matrix Idx Idx F2)
     ∧ L2 * L2 = L5
     ∧ L4 * L4 = (0 : Matrix Idx Idx F2)
-    ∧ L1 * L2 * L2 = L1 * (L2 * L2)
-    ∧ L2 * L1 * L2 = L2 * (L1 * L2) :=
-  ⟨sq1_squared, sq2_squared, q1_squared, assoc_1_2_2, assoc_2_1_2⟩
+    ∧ (∀ a b : Idx, Lmat a * Rmat b = Rmat b * Lmat a)
+    ∧ L1 * L2 ≠ L2 * L1 :=
+  ⟨sq1_squared, sq2_squared, q1_squared, assoc_all, a1_noncommutative⟩
 
 end SKEFTHawking.A1

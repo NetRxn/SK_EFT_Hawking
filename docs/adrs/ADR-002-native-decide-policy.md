@@ -221,7 +221,9 @@ gotcha):
 ### Documented native_decide (Decision #2, "kernel-checked modulo native_decide", with module comments)
 FibonacciUniversality + FibonacciQutrit (the QCyc5Ext two-level tower Q(ζ₅,√φ) / 3×3 `Mat3K`), QSqrt5
 (FibonacciMTC F-symbols), the heartbeat-bound FibonacciBraiding braid/σ₂/`s1s2_cu` identities, A1Resolution
-(8×8-expanded F2-matrix products, kernel-`decide`-able in principle but impractically slow), KacWaltonFusion
+(**only** the three `dₙ_kernel_card` 2^16-vector enumerations — as of Phase 5q.T, 2026-08-15, every
+*matrix-product* identity in that module is kernel-pure via `decide +kernel`, which routes evaluation
+past the elaborator's heartbeat/recursion budgets without incurring `Lean.ofReduceBool`), KacWaltonFusion
 (alcove enumerations), SU2kMTC (Q(√2)), and the Route-1′-gated high-degree QCyc16 (Ising) / QCyc40 (D6)
 modules.
 
