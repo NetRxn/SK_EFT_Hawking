@@ -1421,33 +1421,22 @@ class TestBlockedByIsADagWithAConsumer:
 class TestSeedMarkerDoesNotSuppressMinting:
     """A marker-bearing section MUST still mint a ReviewFinding node.
 
-    ⚠️ THIS PINS A DELIBERATE NON-CONTAINMENT, AND IT IS THE REASSURING DIRECTION THAT
-    IS WRONG. `scripts/build_graph.py` documents that skipping sections carrying
-    `seed_journal.SEED_MARKER` was proposed by the 2026-08-15 residue finding and
-    REJECTED: two entries depend on minting a seeded section
-    (`bundle_stage13_claim_consistent`'s ratchet-breach leg and
-    `review_severity_declared`'s dangling-`Blocked-by` leg), so the containment would
-    force both to fixtures and RAISE `FIXTURE_ONLY_CEILING` — a ceiling the project
-    only lets shrink.
+    ⚠️ THIS PINS A DELIBERATE NON-CONTAINMENT. `scripts/build_graph.py` documents that
+    skipping sections carrying `seed_journal.SEED_MARKER` was considered and REJECTED:
+    two entries depend on minting a seeded section (`bundle_stage13_claim_consistent`'s
+    ratchet-breach leg and `review_severity_declared`'s dangling-`Blocked-by` leg), so
+    the containment would force both to fixtures and RAISE `FIXTURE_ONLY_CEILING` — a
+    ceiling the project only lets shrink.
 
-    Why this test exists: `seed_journal.py`'s module docstring asserted the OPPOSITE —
-    that "the graph extractor also refuses to mint a marker-bearing finding, so even
-    un-repaired residue cannot become a blocking finding". Two source-of-truth
-    docstrings, flatly contradictory, and the false one said the hazard was contained.
-    Re-measuring a filed finding against the CODE rather than the docstring is what
-    surfaced it; the docstring was corrected 2026-08-15 and this test is what keeps it
-    corrected.
+    The marker buys DETECTABILITY (`seed_residue_absent` reads the corpus), never
+    immunity: residue mints a node, emits a `FLAGS` edge and counts against a bundle
+    ratchet exactly as a real finding does.
 
     It fires in BOTH directions a future change could break it:
       * someone "fixes" the extractor to skip markers -> this goes red, and they are
         forced to confront the fixture-ceiling cost rather than discover it later;
-      * someone re-writes the docstring back to the comfortable claim -> the claim is
-        now contradicted by a green test that says otherwise.
-
-    The marker buys DETECTABILITY (`seed_residue_absent` reads the corpus), never
-    immunity. Residue mints a node, emits a `FLAGS` edge, and counts against a bundle
-    ratchet, which is exactly how the 2026-08-12 killed run put a fabricated CRITICAL
-    on D10 for three days.
+      * someone writes the containment claim back into a docstring -> the claim is now
+        contradicted by a green test that says otherwise.
     """
 
     def test_a_marker_bearing_section_still_mints(self, tmp_path, monkeypatch):

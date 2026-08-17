@@ -116,6 +116,10 @@ Four rules. They are requirements, not style preferences:
    `validate.py --check architecture_inventory_fresh` fails on a census count found in any
    narrative there. Name the *mechanism*, not the *magnitude*, and link to the census.
 
+**Voice:** these documents state the mechanism and the rule, never the incident — workspace
+[`CLAUDE.md` § Voice](../CLAUDE.md). It governs ADRs, roadmaps, guides and durable code comments
+too; incidents go to the finding, the QI register or the System-2 register.
+
 ⚠️ **A wrong architecture document is worse than none, because it gets quoted.** Rule 3 is
 machine-enforced; rules 1 and 2 are not, and **nothing mechanically verifies a prose claim**.
 Where the guard is discipline rather than a check, treat it as the stricter obligation, not

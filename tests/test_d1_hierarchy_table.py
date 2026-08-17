@@ -56,18 +56,13 @@ def _generated_draft_body() -> str:
     """A minimal D1 draft whose table + crossover come from the generator."""
     heid = compute_bec_hierarchy()["Heidelberg"]
     diss_tex = fmt_sci_latex(heid["delta_diss"]).strip("$")
-    # ⚠️ This fixture previously emitted `ω_× ≈ T_H ln(2/X) ≈ Y T_H`, matching a
-    # check that required that shape. Both encoded the WRONG physics: the FDR
-    # floor is δ_diss, not δ_diss/2 (the halving is inside
-    # `noise_floor_eq_delta_diss`), so the crossover is `ln(1 + 1/δ_diss)` and
-    # the old form ran high by exactly ln 2. Because the fixture, the check and
-    # the draft all agreed with each other, the gate was green while the physics
-    # was wrong — and correcting the paper would have turned it red. Three
-    # Stage-13 passes flagged the discrepancy and none could close it.
-    #
-    # The coefficient is taken from the evaluator (`omega_cross_over_TH`), never
-    # recomputed here: a fixture that restates the formula under test proves only
-    # that two copies of the same mistake agree.
+    # ⚠️ The coefficient is taken from the evaluator (`omega_cross_over_TH`), never
+    # recomputed here and never written as a `ln(...)` shape. A fixture that restates
+    # the formula under test proves only that two copies of the same mistake agree —
+    # and when fixture, check and draft all carry one formula, the gate reports green
+    # on wrong physics and turns RED when someone corrects the paper.
+    # The physics: the FDR floor is δ_diss, not δ_diss/2 (the halving is already inside
+    # `noise_floor_eq_delta_diss`), so the crossover is `ln(1 + 1/δ_diss)`.
     crossover = (
         r"$\delta_{\rm diss} = " + diss_tex + r"$ gives "
         r"$\omega_\times \simeq " + f"{heid['omega_cross_over_TH']:.2f}"

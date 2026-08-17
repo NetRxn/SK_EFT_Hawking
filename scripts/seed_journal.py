@@ -17,14 +17,10 @@ into the **real artifact the check reads**. The house pattern for that was::
 timeout that kills the process group, or on a dead runner. When it does not run, the
 seed stays in the working tree.
 
-That is not hypothetical. Measured 2026-08-15: a killed run of
-`tests/test_d5_bundles_readiness.py::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED`
-left six seeded lines in
-`papers/AutomatedReviews/2026-08-12-0200-citation-integrity/D10.md`. For the review
-corpus the seed **is a finding**: it minted a node, emitted a `FLAGS` edge, counted
-against the D10 ratchet and moved `readiness_submission_gate`. Nothing marked it
-synthetic, and it was three days from being frozen into a ratchet ceiling as an
-accepted blocker. Filed as
+The review corpus is where this bites hardest, because there a seed **is a finding**: it
+mints a node, emits a `FLAGS` edge, counts against the bundle's ratchet and moves
+`readiness_submission_gate`. Residue from a killed run is therefore indistinguishable
+from an accepted blocker, and a ratchet ceiling can freeze it in. Evidence:
 `papers/AutomatedReviews/2026-08-15-seeded-mutation-survives-a-killed-run/infra.md`.
 
 WHAT THIS MODULE CHANGES
@@ -55,23 +51,15 @@ safety mechanism into a corruption mechanism.
 seed otherwise. That is what makes residue *detectable by reading the corpus*, which is
 what lets the guard check assert an outcome instead of trusting this module.
 
-⚠️ **THE MARKER DOES NOT MAKE RESIDUE HARMLESS — the extractor still mints it.** An earlier
-version of this docstring claimed the graph extractor refuses to mint a marker-bearing
-finding, so that un-repaired residue could not become a blocking finding. **That is false,
-and it was false in the reassuring direction.** `scripts/build_graph.py` documents at
-length that exactly this containment was considered and REJECTED: skipping marker-bearing
-sections would make the finding-minting path impossible to production-seed, and two
-entries depend on minting a seeded section (`bundle_stage13_claim_consistent`'s
-ratchet-breach leg and `review_severity_declared`'s dangling-`Blocked-by` leg), so both
-would fall back to fixtures and raise `FIXTURE_ONLY_CEILING` — a ceiling the project only
-lets shrink. Residue in the corpus **does** mint a node, emit a `FLAGS` edge and count
-against a bundle ratchet. The marker buys DETECTABILITY, not immunity, and the containment
-is the three independent consumers below — not a blind spot in the extractor.
-
-(Corrected 2026-08-15. The wrong claim was found while re-measuring a filed finding before
-acting on it: the docstring said the race could not mint a fabricated CRITICAL, `build_graph`
-said it could, and the code agreed with `build_graph`. Judging substrate strength from a
-docstring rather than the code nearly retracted a correct finding.)
+⚠️ **THE MARKER BUYS DETECTABILITY, NOT IMMUNITY — the extractor still mints marker-bearing
+findings.** `scripts/build_graph.py` documents that exactly this containment — skipping
+marker-bearing sections at extraction — was considered and REJECTED: it would make the
+finding-minting path impossible to production-seed, and two entries depend on minting a
+seeded section (`bundle_stage13_claim_consistent`'s ratchet-breach leg and
+`review_severity_declared`'s dangling-`Blocked-by` leg), so both would fall back to
+fixtures and raise `FIXTURE_ONLY_CEILING` — a ceiling the project only lets shrink.
+Residue therefore **does** mint a node, emit a `FLAGS` edge and count against a ratchet.
+Containment is the three independent consumers above, not a blind spot in the extractor.
 
 USAGE
 -----
@@ -189,11 +177,10 @@ def _path_lock(path: Path, *, timeout: float = 120.0) -> Iterator[None]:
     reports clean, because each transaction completed correctly on its own terms. The
     invariant broken is PAIRWISE, so no single transaction can observe it.
 
-    Measured 2026-08-15: the D10 stanza reappeared in the corpus while two suites ran
-    concurrently and the journal reported 0 in flight. Residue there is not inert — the
-    graph extractor mints a marker-bearing section as an open finding at its declared
-    severity (see the module docstring), so a race can manufacture a blocking CRITICAL
-    that is indistinguishable downstream from a real one.
+    Residue left this way is not inert: the graph extractor mints a marker-bearing
+    section as an open finding at its declared severity (see the module docstring), so a
+    race manufactures a blocking CRITICAL that is indistinguishable downstream from a
+    real one, while the journal reports 0 in flight.
 
     Narrowing the lock to just the write would not fix it: the corruption is that the
     SECOND reader captures the first's seed AS the original, and that read happens before
@@ -301,9 +288,9 @@ def _require_marker(path: Path, seeded: bytes) -> None:
     """A seed into the review corpus must be self-identifying.
 
     The corpus is consumed as DATA, so an unmarked seed is indistinguishable from a real
-    finding to every consumer — the exact property that made the 2026-08-12 residue
-    dangerous. Refusing the seed at write time is the only place this can be enforced
-    cheaply; afterwards the seed is already in the tree.
+    finding to every consumer — the extractor, the ratchets, the readiness gates. Refusing
+    the seed at write time is the only place this can be enforced cheaply; afterwards the
+    seed is already in the tree.
     """
     try:
         path.relative_to(REVIEW_CORPUS)
@@ -312,8 +299,8 @@ def _require_marker(path: Path, seeded: bytes) -> None:
     if SEED_MARKER.encode() not in seeded:
         raise ValueError(
             f"a seed into the review corpus must contain {SEED_MARKER!r} so that "
-            f"residue is detectable by reading the corpus (and so the extractor "
-            f"refuses to mint it as a finding): {path}")
+            f"residue is detectable by reading the corpus — the extractor still mints "
+            f"it as a finding either way: {path}")
 
 
 @contextmanager

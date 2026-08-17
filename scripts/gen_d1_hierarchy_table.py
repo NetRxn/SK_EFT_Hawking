@@ -119,14 +119,15 @@ def compute_bec_hierarchy() -> dict[str, dict]:
         #
         # The crossover is where the thermal occupation meets the floor:
         #     1/(exp(x) - 1) = n_noise  =>  x = ln(1 + 1/n_noise)
-        # With n_noise = delta_diss/2 that becomes ln(1 + 2/delta_diss) ~ ln(2/delta_diss)
-        # for small delta_diss — which is the old expression. It was internally
-        # consistent with the halved floor below, so neither line looked wrong on its
-        # own; only the Lean statement settles which is right.
+        # with n_noise = delta_diss.
         #
-        # Heidelberg: delta_diss = 1.585e-3 gives 7.14 the old way and 6.44 this way.
-        # The charter's "~6 T_H" was the only published figure that was ever correct,
-        # and it was the one this pipeline did not produce.
+        # ⚠️ Do NOT halve the floor here, and do NOT approximate this as ln(2/delta_diss).
+        # Both re-apply the halving `noise_floor_eq_delta_diss` has already taken, and the
+        # two errors are consistent with each other — a halved floor and a ln(2/X)
+        # crossover agree line-by-line while running high by exactly ln 2. The Lean
+        # statement, not the pipeline's internal agreement, settles which form is right.
+        #
+        # Heidelberg: delta_diss = 1.585e-3 gives 6.44, matching the charter's "~6 T_H".
         ln_arg = math.log(1.0 + 1.0 / delta_diss)
         omega_max_over_TH = plat.omega_max / plat.T_H
         out[name] = {

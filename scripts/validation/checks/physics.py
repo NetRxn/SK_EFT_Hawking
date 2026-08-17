@@ -527,10 +527,9 @@ def check_d1_hierarchy_table() -> CheckResult:
     if not matches:
         details.append(Detail(
             "crossover.present", False,
-            "no numeric 'δ_diss = X gives ω_× ≃ Y T_eff' sentence found. NOTE: "
-            "this check previously required the ln(2/X) form, which is the "
-            "SUPERSEDED and incorrect expression; if the draft still carries "
-            "it, the draft is what must change."))
+            "no numeric 'δ_diss = X gives ω_× ≃ Y T_eff' sentence found. NOTE: the "
+            "ln(2/X) form is SUPERSEDED and incorrect — the crossover is "
+            "ln(1 + 1/X); a draft still carrying ln(2/X) is what must change."))
         all_pass = False
     # Canonical (δ_diss -> crossover) pairs, straight from the evaluator.
     canon_cross = {h["delta_diss"]: h["omega_cross_over_TH"] for h in hier.values()}
