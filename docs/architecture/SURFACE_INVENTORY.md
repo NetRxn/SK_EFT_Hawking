@@ -228,7 +228,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `D4` | 1 | 62 | Topological quantum computation foundations |
 | `D5` | 1 | 70 | Dark sector under substrate constraints |
 | `D6` | 1 | 23 | Formally Verified Fault-Tolerant Quantum Computation Substra |
-| `D7` | 1 | 16 | Classical Simulability and Quantum Advantage via Tensor Netw |
+| `D7` | 1 | 17 | Classical Simulability and Quantum Advantage via Tensor Netw |
 | `D8` | 1 | 35 | Kernel-Verified Universal Quantum Gate Compilation — Alphabe |
 | `D9` | 1 | 27 | Kernel-Verified Quantum-Network and Device-Characterization  |
 | `D10` | 1 | 33 | Kernel-Verified Foundations of Computational Quantum Chemist |
