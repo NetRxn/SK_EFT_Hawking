@@ -450,6 +450,57 @@ theorem of this corpus. The two failures compound: the benchmark number
 is the wrong kind of quantity for the job, and it is attached to a fixed
 channel only under assumptions.
 
+Table~\ref{tab:whatcertifies} states the resulting division of labour
+across the characterization data a device programme already collects. The
+pattern in it is worth naming, because it is not that some measurements
+are better than others. It is that a measurement certifies a worst case
+exactly when the quantity it reports is itself a worst case or a complete
+description. A readout bit-flip probability is a worst case, so it
+converts with no loss. A reconstructed Choi matrix is a complete
+description, so Theorem~\ref{thm:sdp} extracts the worst case from it. A
+channel known to lie in a unitary error basis is complete up to
+parameters that a Pauli-twirled experiment reports, so
+Table~\ref{tab:exact} applies. An average over a unitary ensemble is
+neither, and no amount of precision in it repairs that.
+
+\begin{table}
+\caption{What each kind of characterization datum certifies about
+worst-case channel error, within the stated model. The distinction is not
+precision but kind: a datum certifies a worst case when it is itself a
+worst case or a complete description of the channel.}
+\label{tab:whatcertifies}
+\begin{ruledtabular}
+\footnotesize
+\begin{tabular}{lll}
+Datum & Certifies $\ddist$ & Route \\
+\colrule
+Readout error prob. & exactly &
+  Table~\ref{tab:exact} \\
+Pauli error weights & exactly &
+  Table~\ref{tab:exact} \\
+Reconstructed Choi & from above &
+  Thm.~\ref{thm:sdp} \\
+Choi, spectral bound only & from above, loosely &
+  Thm.~\ref{thm:sandwich} \\
+Compiler accuracy $\varepsilon$ & from above &
+  \lean{diamondDist\_unitaryKraus\_le} \\
+$F_{\mathrm{avg}}$ (benchmark) & \emph{from below only} &
+  Thm.~\ref{thm:rblower} \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The practical reading is therefore not that benchmarking should be
+abandoned but that it should be reported for what it bounds. A programme
+that wants a worst-case budget and has only a benchmark number has two
+options inside this corpus, and both are cheap relative to acquiring the
+benchmark in the first place: twirl into a Pauli channel and read the
+exact value off Table~\ref{tab:exact}, or reconstruct the Choi matrix and
+exhibit one dual witness against Theorem~\ref{thm:sdp}. The second is the
+more general and the attainment result is what makes it practical, since
+a certificate is then a single matrix rather than an optimization anyone
+has to trust.
+
 \section{From channel error to protocol guarantees}
 \label{sec:protocol}
 
@@ -589,6 +640,7 @@ are the non-covariant cases, where equality is not available and the
 entry is what is proven.}
 \label{tab:exact}
 \begin{ruledtabular}
+\footnotesize
 \begin{tabular}{lll}
 Channel & $\ddist(\Phi,\mathrm{id})$ & Declaration \\
 \colrule
@@ -609,10 +661,11 @@ Cyclic-shift leakage & leakage prob. &
 Readout bit-flip $q$ & $q$ &
   \lean{diamondDist\_spamBitFlip\_eq} \\
 \colrule
-Amplitude damping $\gamma$ &
-  $[\,\gamma/2,\;\gamma{+}1{-}\sqrt{1{-}\gamma}\,]$ &
-  \lean{diamondDist\_ampDamp\_ge/le} \\
-Generalized amp.\ damp. & $\ge (1-N)\gamma$ &
+Amp.\ damping $\gamma$ &
+  $[\gamma/2,\,\gamma{+}1{-}\sqrt{1{-}\gamma}]$ &
+  \lean{diamondDist\_ampDamp\_ge},
+  \lean{\ldots\_le} \\
+Gen.\ amp.\ damping & $\ge (1-N)\gamma$ &
   \lean{diamondDist\_genAmpDamp\_bracket} \\
 \end{tabular}
 \end{ruledtabular}
@@ -1267,6 +1320,46 @@ of each statement before it is written: what would have to be true of the
 world for this to be false? A statement for which the answer is
 ``nothing'' belongs to Class 4, whatever its axiom set. That question is
 the one thing here we would ask another formalization project to adopt.
+
+Two properties of Class 4 make it worse than it first sounds, and both
+were visible in our own corpus before we had a name for the class. The
+first is that it is \emph{name-driven}. In all three instances the
+declaration's name described the theorem the author intended rather than
+the theorem the author proved, and every downstream reader, including
+prose written months later by the same author, took the name at face
+value. A name is the one part of a formal development that the kernel
+does not check, and it is therefore the part that carries the error. The
+second is that Class 4 statements \emph{survive review disproportionately
+well}, because every property a reviewer can check mechanically is
+satisfied: kernel-pure, unconditional, no \texttt{sorry}, correctly
+attributed. A review that asks whether the mathematics is right will pass
+them every time; only a review that asks what the statement excludes will
+not.
+
+Table~\ref{tab:classes} collects the four classes with the response each
+one warrants. The reason to separate them explicitly rather than keeping
+a single list of caveats is that they call for opposite decisions. Class
+2 is a plan; Class 3 is a stop; Class 1 is a disclosure that must stay
+visible for the lifetime of the claim; and Class 4 is a retraction of
+something already shipped.
+
+\begin{table}
+\caption{Where a certification chain breaks, and what each class warrants.
+The classes call for opposite responses, which is why a single list of
+caveats is not a substitute for separating them.}
+\label{tab:classes}
+\begin{ruledtabular}
+\footnotesize
+\begin{tabular}{lll}
+Class & Closed by & Response \\
+\colrule
+1. Identification & literature & disclose, keep visible \\
+2. Library gap & work & schedule, or cite and say so \\
+3. Impossibility & nothing & state as a negative result \\
+4. Kernel-checked, empty & nothing to close & retract the claim \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
 
 \section{Related formalizations and scope}
 \label{sec:related}

@@ -99,7 +99,7 @@
     },
     {
       "name": "SKEFTHawking.QuantumNetwork.diamondDist_genAmpDamp_bracket",
-      "claims": "§2 — the two-sided bracket where the channel is NOT covariant (thermal amplitude damping)",
+      "claims": "§2 — the LOWER bound (1-N)γ on the diamond distance for the non-covariant thermal amplitude-damping family, achievable and recovering γ at N=0. The upper endpoint proven alongside it is the universal range bound ≤ 1, which carries no information about this family, so this is not a two-sided bracket. Corrected 2026-08-17; see the redraft findings F5.",
       "declared": "2026-08-06"
     },
     {
@@ -169,7 +169,7 @@
     },
     {
       "name": "SKEFTHawking.QuantumNetwork.avgGateFidelity_diamondDist_two_sided",
-      "claims": "§5 — the randomized-benchmarking-style two-sided certificate",
+      "claims": "§5 — a two-sided Fuchs-van de Graaf bracket on the ENTANGLEMENT distinguishability (the trace distance between the Choi images), plus the one-sided fact that this quantity is at most the diamond distance. It is NOT a two-sided bracket on the diamond distance and NOT a randomized-benchmarking certificate: no theorem in the corpus upper-bounds the diamond distance by a function of avgGateFidelity, and none can (an average over inputs cannot bound a supremum over inputs). Corrected 2026-08-17 by the Stage-10 redraft; see papers/AutomatedReviews/2026-08-17-d9-stage10-redraft/D9.md F1.",
       "declared": "2026-08-06"
     },
     {
@@ -204,7 +204,7 @@
     "ceiling": 60,
     "source": "PAPER_STRATEGY.md §6"
   },
-  "compiled_pages": 12,
+  "compiled_pages": 14,
   "compile_gate_ok": true,
   "critical_open": 0
 }
