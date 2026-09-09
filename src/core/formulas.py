@@ -12331,3 +12331,64 @@ def memory_process_reference(history, *, reset_environment=False,
     final = memory_swap(reset)
     return {"initial": initial, "after_swap": exchanged, "after_reset": reset,
             "final": final, "probabilities": memory_system_probabilities(final)}
+
+
+def memory_binary_robustness_reference(t, a, b, q, *, d0=0.0, d1=0.0,
+                                       allowance0=None, allowance1=None):
+    """Diagonal-qubit common-channel comparison, evaluated from matrices.
+
+    rho(p)=diag(1-p,p); inputs rho(t-a), rho(t+b) share reference rho(t).
+    Phi(rho)=(1-q)rho+q X rho X, common effect |1><1|. Trace distance is
+    half the sum of absolute eigenvalues of the Hermitian difference.
+    Observations v0=u0-d0, v1=u1+d1 are synthetic bounded perturbations,
+    not confidence intervals. Nonnegative allowances must cover d0,d1.
+    Returns the conditional bound min(1, eps0+eps1+allowance0+allowance1).
+    No general reset-mechanism theorem or Lean correspondence is asserted.
+    All quantities are dimensionless float64; invalid inputs are not clipped.
+    Perturbations apply to computed matrix probabilities. Exact rational checks
+    on their binary-float values enforce probability and allowance boundaries;
+    an unrepresentable perturbation may round away, but may not exceed allowance.
+    Returned distances/bounds remain numerical estimates, not certified bounds.
+    """
+    values = np.asarray([t, a, b, q, d0, d1], dtype=float)
+    if not np.all(np.isfinite(values)):
+        raise ValueError("parameters must be finite")
+    t, a, b, q, d0, d1 = values
+    if not (0 <= a <= t <= 1 and 0 <= b <= 1-t and 0 <= q <= .5
+            and d0 >= 0 and d1 >= 0):
+        raise ValueError("parameters outside diagonal-fixture domain")
+    allowances = np.asarray([d0 if allowance0 is None else allowance0,
+                             d1 if allowance1 is None else allowance1], dtype=float)
+    if not np.all(np.isfinite(allowances)) or np.any(allowances < [d0, d1]):
+        raise ValueError("allowances must be finite and cover perturbations")
+    reference = np.diag([1-t, t])
+    states = np.array([np.diag([1-(t-a), t-a]), np.diag([1-(t+b), t+b])])
+    x = np.array([[0., 1.], [1., 0.]])
+    kraus = [np.sqrt(1-q)*np.eye(2), np.sqrt(q)*x]
+    outputs = np.array([sum(k @ rho @ k.T for k in kraus) for rho in states])
+    effect = np.diag([0., 1.])
+    probabilities = np.array([np.trace(effect @ rho) for rho in outputs])
+    # Validate against the exact rational values of the computed binary floats.
+    # This catches even sub-ULP excursions past probability boundaries.
+    from fractions import Fraction
+    exact_observed = [Fraction(float(probabilities[0]))-Fraction(float(d0)),
+                      Fraction(float(probabilities[1]))+Fraction(float(d1))]
+    if any(v < 0 or v > 1 for v in exact_observed):
+        raise ValueError("synthetic observations must lie in [0,1]")
+    observed = np.array([float(v) for v in exact_observed])
+    actual_errors = np.abs(observed-probabilities)
+    # Rounding is not licensed to enlarge an allowance. Reject rather than
+    # silently accepting a represented observation outside its declared budget.
+    if any(abs(Fraction(float(v))-Fraction(float(u))) > Fraction(float(limit))
+           for v, u, limit in zip(observed, probabilities, allowances)):
+        raise ValueError("represented observation exceeds its error allowance")
+    distances = np.array([.5*np.abs(np.linalg.eigvalsh(rho-reference)).sum()
+                          for rho in states])
+    return {"reference": reference, "states": states, "outputs": outputs,
+            "probabilities": probabilities, "observed": observed,
+            "trace_distances": distances, "allowances": allowances,
+            "actual_errors": actual_errors,
+            "separation": abs(probabilities[1]-probabilities[0]),
+            "observed_separation": abs(observed[1]-observed[0]),
+            "ideal_bound": min(1., distances.sum()),
+            "observed_bound": min(1., distances.sum()+allowances.sum())}
