@@ -1,6 +1,6 @@
 # Finite memory experiment — supervised increment
 
-Status: integrated substrate validation and independent scientific review passed; main-branch integration pending.
+Status: accepted under substrate scope after integrated validation and independent scientific review. Integration records: PR 67 (process) and PR 71 (science).
 
 Root owns integration, notebook writing and acceptance. CPU-reference work may proceed independently of Lean slot admission. No native compaction or unattended-operation claim is implied.
 
@@ -65,3 +65,9 @@ reproduced the memory tests and additional correlated-state/fixture checks. The
 stable substrate precheck passed with paper failures reported separately. PR 71
 holds the scientific review record; PR 67 holds the process review record. Neither
 result certifies paper submission or a green full-pytest merge gate.
+
+Owner acceptance on 2026-09-09 explicitly excludes pre-existing corpus-test
+failures from this increment. Integration is authorized using the passed
+substrate gate and independent reviews, with those failures disclosed. This
+scoped acceptance does not modify the merge script, raise corpus ratchets,
+change paper readiness, or certify a green full pytest run.
