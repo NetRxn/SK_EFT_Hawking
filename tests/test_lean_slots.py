@@ -112,6 +112,10 @@ def slot_repo(
     monkeypatch.setenv("LEAN_SLOT_STATE_DIR", str(tmp_path / "state"))
     monkeypatch.setenv("LEAN_SLOT_SKIP_SUPERVISOR", "1")
     monkeypatch.setenv("LEAN_SLOT_OWNER_PID", str(os.getpid()))
+    # Session tests select their own identity after removing the PID override.
+    # Never let the launching client shadow those synthetic session identities.
+    for variable in ("LEAN_SLOT_OWNER_SESSION", "CODEX_THREAD_ID", "CLAUDE_CODE_SESSION_ID"):
+        monkeypatch.delenv(variable, raising=False)
     controller = Controller(Inventory.load(inventory_path))
     return controller, repo, worktrees
 
