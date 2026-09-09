@@ -1,6 +1,6 @@
 # Finite memory experiment — supervised increment
 
-Status: authorized bounded development; proof validation and review pending.
+Status: implementations and independent source reviews complete; integrated substrate validation and closure review pending.
 
 Root owns integration, notebook writing and acceptance. CPU-reference work may proceed independently of Lean slot admission. No native compaction or unattended-operation claim is implied.
 
@@ -21,3 +21,41 @@ Admit a controller-managed slot before proof edits. Reuse traceDist triangle, co
 ## Review and completion
 
 Tests must distinguish a retained environment from reset-both control and catch an incorrect factor ordering or reset that destroys E. Independent semantic review checks common-continuation/common-measurement assumptions and the memoryless comparison boundary. Root integrates accepted changes and updates evidence. Only consumed results claim completion.
+
+
+## Implemented mathematical and numerical boundary
+
+`QuantumNetwork/FiniteMemoryProcess.lean` proves arbitrary-input discard-and-prepare,
+normalized SWAP/reset channels, the retained-history and erased-environment control,
+and exclusion of a common system-only continuation with a common measurement.
+`BinaryMemoryRobustness.lean` proves the binary separation bound and its extension
+with explicit observation-error budgets.
+
+`FiniteMemoryResetMixture.lean` connects the CPU reset-skip mixture and raw diagonal
+measurement sums to exact matrix operations. The basis-history experiment is
+insensitive to the skip probability because S is already zero at the reset; this
+is not a general imperfect-reset robustness result. `BinaryMemoryFixture.lean`
+provides a separate diagonal-state family with exact trace distances and a common
+bit-flip channel that instantiates the binary bound.
+
+The CPU functions in `src/core/formulas.py` reference these mathematical results.
+Their floating-point execution, eigensolver, input tolerances, clipping and
+renormalization have no formal error certificate. Synthetic observation checks
+bound errors relative to represented computed probabilities; using the observed
+Lean theorem for physical evidence additionally requires budgets relative to
+exact Born probabilities. This increment supplies the model and conditional
+criterion, not a certified numerical decision procedure.
+
+## Integration and closure
+
+Process and science candidates remain on reviewed feature branches until accepted.
+Run the existing `gate_precheck.py s13-lean` substrate path for this increment,
+which changes no paper corpus: paper failures remain reported and do not become
+submission-readiness claims. Record full-test results separately; do not describe
+scoped acceptance as a clean full suite. Regenerate dependency evidence and counts
+through the existing producers, then obtain independent adversarial review of the
+integrated candidate. Notebook evidence records exact commits and executed checks.
+
+`s13-lean` establishes eligibility for substrate-focused Stage-13 review; it does
+not replace `verify_scope.py --merge-gate` or waive failing pytest checks. Report
+any remaining merge-certification failure separately.
