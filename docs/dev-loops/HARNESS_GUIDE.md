@@ -150,8 +150,7 @@ is recorded so it is not re-attempted after a compaction.
 | `docs/dev-loops/<loop>/LAB_NOTEBOOK.md` | active chronological shard, oldest first |
 | `docs/dev-loops/<loop>/LAB_NOTEBOOK_W<n>.md` | frozen historical shards; audit layer, read on demand |
 
-Notebooks are created **per goal loop**. A phase that never ran as a loop has no notebook, and
-`docs/dev-loops/Phase5qB/LAB_NOTEBOOK.md` is a legacy location predating the layout.
+Notebooks belong to a sustained development unit, including nested sub-efforts. Each notebook has one designated lead writer; workers read and report to that lead. Parent notebooks link to sub-effort notebooks. Use the notebook tooling to create and validate the layout.
 
 **What belongs in it:** landed bricks, tried-and-failed routes with the reason, and reusable
 substrate found along the way. Log continuously rather than at the end of a wave — the notebook
@@ -173,9 +172,7 @@ Three rules follow, and they apply to every dispatch:
 - **Never have a worker create a notebook inside its own worktree.** Gitignored files there are
   invisible to the merge and are destroyed with the worktree.
 
-Whether notebooks should be gitignored at all is open — untracked files survive neither a fresh
-clone nor a new worktree nor a machine change. Tracked in
-`papers/AutomatedReviews/2026-08-17-worktree-agents-cannot-read-notebooks/infra.md`.
+Notebooks remain gitignored and machine-local. They may contain absolute paths and local operational details. Commit sanitized decisions and acceptance evidence to owning roadmaps, not notebook contents. Codex dispatch and recovery follow [CODEX_CONTINUITY.md](CODEX_CONTINUITY.md).
 
 ## 9. Parallel Lean apparatus (persistent worktree slots)
 

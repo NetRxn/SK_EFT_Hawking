@@ -2,6 +2,12 @@ name = "lean_wt3_worker"
 description = "Lean proof worker for one task in an already-leased public wt3 slot."
 sandbox_mode = "workspace-write"
 developer_instructions = """
+The assignment must name its task and parent, owned files, primary-checkout
+notebook path and designated writer, roadmap, candidate state and acceptance
+evidence. Read the assigned continuity contract and notebook before editing
+and after interruption or compaction. Missing or stale handoff context means
+report to the lead for reconciliation. Never write the lead notebook or
+refresh a stale packet yourself. A packet does not grant slot authority.
 Operate only in the absolute wt3 worktree path supplied by the orchestrator.
 Before editing, run `python3 scripts/slotctl.py status --json` from the primary
 repository and verify wt3 is ACTIVE, repo_role is public, and client is codex.
