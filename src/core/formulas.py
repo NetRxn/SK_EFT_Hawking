@@ -12243,3 +12243,91 @@ def bernal_full_gap_sq(bias_u: float, gamma: float) -> float:
     """
     U = 2.0 * bias_u
     return U ** 2 * gamma ** 2 / (gamma ** 2 + U ** 2)
+
+
+# Finite two-qubit memory reference. Candidate numerical implementation;
+# formal correspondence and pipeline acceptance remain pending.
+def _memory_joint_state(state):
+    """Validate a complex128 density matrix in basis |00>, |01>, |10>, |11>.
+
+    First tensor factor is system S, second environment E. Absolute validation
+    tolerance is 1e-12; inputs are neither normalized nor projected onto PSD.
+    """
+    rho = np.asarray(state, dtype=np.complex128)
+    tol = 1e-12
+    if rho.shape != (4, 4) or not np.all(np.isfinite(rho)):
+        raise ValueError("state must be a finite 4-by-4 density matrix")
+    if not np.allclose(rho, rho.conj().T, atol=tol, rtol=0):
+        raise ValueError("state must be Hermitian")
+    if not np.isclose(np.trace(rho), 1, atol=tol, rtol=0):
+        raise ValueError("state must have trace one")
+    if np.linalg.eigvalsh(rho).min() < -tol:
+        raise ValueError("state must be positive semidefinite")
+    return rho
+
+
+def memory_swap(state):
+    """Return U rho U† for the two-qubit SWAP, with tensor order (S,E).
+
+    Float64-complex CPU evaluation; not a certified numerical/Lean bridge.
+    """
+    rho = _memory_joint_state(state)
+    order = [0, 2, 1, 3]
+    return rho[np.ix_(order, order)].copy()
+
+
+def memory_reset_system(state, failure_probability=0.0):
+    """Return (1-p)|0><0| tensor Tr_S(rho) + p*rho, for 0 <= p <= 1.
+
+    p is a classical probability of doing nothing instead of discard-and-prepare,
+    not a general reset-error bound. Works on correlated/entangled joint states;
+    successful reset removes correlations while preserving E's reduced state.
+    Numerical candidate; formal correspondence remains pending.
+    """
+    rho = _memory_joint_state(state)
+    p = float(failure_probability)
+    if not np.isfinite(p) or not 0 <= p <= 1:
+        raise ValueError("failure_probability must be finite and in [0,1]")
+    environment = np.trace(rho.reshape(2, 2, 2, 2), axis1=0, axis2=2)
+    reset = np.zeros((4, 4), dtype=np.complex128)
+    reset[:2, :2] = environment
+    return (1 - p) * reset + p * rho
+
+
+def memory_system_probabilities(state):
+    """Binary computational-basis probabilities (P(S=0), P(S=1)).
+
+    Born probabilities are sums of joint diagonal entries. Roundoff-sized
+    negative entries are clipped and the result normalized after input validation;
+    this is numerical housekeeping, not a certified floating-point error bound.
+    """
+    rho = _memory_joint_state(state)
+    probabilities = np.diag(rho).real.reshape(2, 2).sum(axis=1)
+    probabilities = np.clip(probabilities, 0, 1)
+    return probabilities / probabilities.sum()
+
+
+def memory_process_reference(history, *, reset_environment=False,
+                             failure_probability=0.0):
+    """Compute |b,0>, SWAP, reset, SWAP and binary measurement, b in {0,1}.
+
+    Returns joint-state trajectory and final system probabilities. The control
+    resets E to zero after the S reset. failure_probability is the specific
+    identity/reset mixture in memory_reset_system, not an adversarial error model.
+    For this particular trajectory S already equals zero before reset, so changing
+    p has no effect: use a correlated input to investigate reset imperfections.
+    Exact finite-model operations evaluated in complex128; no formal association
+    or robustness theorem is claimed by this CPU candidate.
+    """
+    if history not in (0, 1):
+        raise ValueError("history must be 0 or 1")
+    initial = np.zeros((4, 4), dtype=np.complex128)
+    initial[2 * int(history), 2 * int(history)] = 1
+    exchanged = memory_swap(initial)
+    reset = memory_reset_system(exchanged, failure_probability)
+    if reset_environment:
+        # Reset E using the same discard-and-prepare map with factors exchanged.
+        reset = memory_swap(memory_reset_system(memory_swap(reset)))
+    final = memory_swap(reset)
+    return {"initial": initial, "after_swap": exchanged, "after_reset": reset,
+            "final": final, "probabilities": memory_system_probabilities(final)}
