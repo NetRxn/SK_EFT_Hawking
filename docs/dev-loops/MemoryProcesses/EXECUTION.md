@@ -1,6 +1,6 @@
 # Finite memory experiment — supervised increment
 
-Status: implementations and independent source reviews complete; integrated substrate validation and closure review pending.
+Status: integrated substrate validation and independent scientific review passed; main-branch integration pending.
 
 Root owns integration, notebook writing and acceptance. CPU-reference work may proceed independently of Lean slot admission. No native compaction or unattended-operation claim is implied.
 
@@ -59,3 +59,9 @@ integrated candidate. Notebook evidence records exact commits and executed check
 `s13-lean` establishes eligibility for substrate-focused Stage-13 review; it does
 not replace `verify_scope.py --merge-gate` or waive failing pytest checks. Report
 any remaining merge-certification failure separately.
+
+The integrated review at `8d71b7e9` found no substantive defects and independently
+reproduced the memory tests and additional correlated-state/fixture checks. The
+stable substrate precheck passed with paper failures reported separately. PR 71
+holds the scientific review record; PR 67 holds the process review record. Neither
+result certifies paper submission or a green full-pytest merge gate.
