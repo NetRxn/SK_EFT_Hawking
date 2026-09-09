@@ -219,6 +219,7 @@ Nothing else belongs here.
 | `scripts/clifford_base_validation.py` | Validate the `cliffordBase` discharge BEFORE formalizing. |
 | `scripts/close_finding.py` | Write a closure into the supersession ledger — the writer the ledger never had. |
 | `scripts/cluster_detect.py` | cluster_detect.py — cross-paper ClaimCluster builder (Phase 5v Wave 10f) |
+| `scripts/codex_continuity.py` | Create and check local Codex assignment snapshots (ADR-017). |
 | `scripts/codex_dossier.py` | Codex dossier pipeline — keep GPT-provider output OUT of the orchestrator's context. |
 | `scripts/compile_bundle_pdf.py` | Compile a bundle draft to PDF WITHOUT writing build artifacts into the bundle. |
 | `scripts/convert_inprep_citations.py` | convert_inprep_citations.py — deposit-time conversion of in-preparation self-citations to real arXiv citations, in one documented pass. |
