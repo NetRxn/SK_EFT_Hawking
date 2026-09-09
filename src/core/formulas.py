@@ -12245,13 +12245,15 @@ def bernal_full_gap_sq(bias_u: float, gamma: float) -> float:
     return U ** 2 * gamma ** 2 / (gamma ** 2 + U ** 2)
 
 
-# Finite two-qubit memory reference. Candidate numerical implementation;
-# formal correspondence and pipeline acceptance remain pending.
+# Finite two-qubit memory models with exact Lean foundations.
+# Numerical execution and roundoff are not formally certified.
 def _memory_joint_state(state):
     """Validate a complex128 density matrix in basis |00>, |01>, |10>, |11>.
 
     First tensor factor is system S, second environment E. Absolute validation
     tolerance is 1e-12; inputs are neither normalized nor projected onto PSD.
+    This engineering guard does not prove exact density validity: small
+    mathematical violations can pass, and eigensolver accuracy is not certified.
     """
     rho = np.asarray(state, dtype=np.complex128)
     tol = 1e-12
@@ -12269,7 +12271,11 @@ def _memory_joint_state(state):
 def memory_swap(state):
     """Return U rho U† for the two-qubit SWAP, with tensor order (S,E).
 
-    Float64-complex CPU evaluation; not a certified numerical/Lean bridge.
+    Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.swapJoint_eq
+    Aristotle: manual
+
+    The theorem establishes the exact matrix map. Complex128 indexing and
+    tolerance-based input validation are not formally verified.
     """
     rho = _memory_joint_state(state)
     order = [0, 2, 1, 3]
@@ -12282,7 +12288,12 @@ def memory_reset_system(state, failure_probability=0.0):
     p is a classical probability of doing nothing instead of discard-and-prepare,
     not a general reset-error bound. Works on correlated/entangled joint states;
     successful reset removes correlations while preserving E's reduced state.
-    Numerical candidate; formal correspondence remains pending.
+    Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.resetMixtureKraus_eq
+    Aristotle: manual
+
+    resetMixtureKraus_normalized and resetMixture_density establish physicality
+    for p in [0,1]. These are exact matrix results; complex128 arithmetic and
+    numerical validation have no certified error bound.
     """
     rho = _memory_joint_state(state)
     p = float(failure_probability)
@@ -12300,6 +12311,13 @@ def memory_system_probabilities(state):
     Born probabilities are sums of joint diagonal entries. Roundoff-sized
     negative entries are clipped and the result normalized after input validation;
     this is numerical housekeeping, not a certified floating-point error bound.
+
+    Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.systemProbability_diagonal_sum
+    Aristotle: manual
+
+    systemProbability_sum and systemProbability_mem_Icc establish exact Born
+    normalization and range on density operators. They do not certify clipping,
+    renormalization or the numerical input guard.
     """
     rho = _memory_joint_state(state)
     probabilities = np.diag(rho).real.reshape(2, 2).sum(axis=1)
@@ -12316,8 +12334,14 @@ def memory_process_reference(history, *, reset_environment=False,
     identity/reset mixture in memory_reset_system, not an adversarial error model.
     For this particular trajectory S already equals zero before reset, so changing
     p has no effect: use a correlated input to investigate reset imperfections.
-    Exact finite-model operations evaluated in complex128; no formal association
-    or robustness theorem is claimed by this CPU candidate.
+    Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.retainedMixtureRun_probability
+    Aristotle: manual
+
+    controlMixtureRun_probability proves the E-only reset control returns zero;
+    no_common_system_model excludes a common system-only continuation and common
+    measurement reproducing both retained histories after the same reset state.
+    These exact results do not distinguish classical from quantum memory or
+    certify complex128 execution and measurement housekeeping.
     """
     if history not in (0, 1):
         raise ValueError("history must be 0 or 1")
@@ -12343,12 +12367,21 @@ def memory_binary_robustness_reference(t, a, b, q, *, d0=0.0, d1=0.0,
     Observations v0=u0-d0, v1=u1+d1 are synthetic bounded perturbations,
     not confidence intervals. Nonnegative allowances must cover d0,d1.
     Returns the conditional bound min(1, eps0+eps1+allowance0+allowance1).
-    No general reset-mechanism theorem or Lean correspondence is asserted.
+    Lean: SKEFTHawking.QuantumNetwork.binaryFixture_memoryless_bound
+    Aristotle: manual
+
+    binaryFixture_density, binaryFixture_distances and binaryFixture_separation
+    prove the exact family is physical, has reference distances a,b and separation
+    (1-2q)(a+b). binary_memoryless_observed_separation_le proves the observed
+    bound only when error budgets cover errors relative to exact Born
+    probabilities. No general reset-mechanism theorem is asserted.
     All quantities are dimensionless float64; invalid inputs are not clipped.
     Perturbations apply to computed matrix probabilities. Exact rational checks
     on their binary-float values enforce probability and allowance boundaries;
     an unrepresentable perturbation may round away, but may not exceed allowance.
-    Returned distances/bounds remain numerical estimates, not certified bounds.
+    These represented-float checks do not bound discrepancies from exact Born
+    probabilities or provide confidence intervals. Returned distances/bounds
+    remain numerical estimates, not certified bounds.
     """
     values = np.asarray([t, a, b, q, d0, d1], dtype=float)
     if not np.all(np.isfinite(values)):
