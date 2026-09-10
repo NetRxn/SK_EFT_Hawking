@@ -28,3 +28,5 @@ The contribution proposed for D9 is the checked connection between physical memo
 A future manuscript section should introduce one intervention experiment, expose its physical and statistical assumptions, state the calibrated exclusion theorem, and then show how a forgetting assumption changes what history must be retained. Use the sharp lower bound to show why truncation is conditional. Keep the exact CPU arithmetic distinct from Lean extraction, and the synthetic count example distinct from observed data.
 
 Before publication: complete D9's existing repair/review cycle; select and review figures derived through the canonical pipeline; reconcile primary references at equation level; review all manuscript claims against extracted declarations; perform the existing disclosure and submission gates. These are bundle-owned obligations, not silently satisfied by this substrate increment.
+
+Detailed section and figure preparation is in [D9_ABSORPTION_BRIEF.md](D9_ABSORPTION_BRIEF.md). Current manuscript labels, rather than historical section numbers, govern placement. The existing D.0 readiness requirement still gates insertion.

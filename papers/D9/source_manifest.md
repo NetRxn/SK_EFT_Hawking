@@ -11,7 +11,7 @@
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
 | `D9_initial_draft` | §1–§6 | (unspecified) | (see mapping) | (missing) |
-| `D9_memory_processes_lean_only` | §5 | (unspecified) | (see mapping) | (missing) |
+| `D9_memory_processes_lean_only` | §3, §5, §6 | (unspecified) | (see mapping) | (missing) |
 
 ## Coverage notes
 
