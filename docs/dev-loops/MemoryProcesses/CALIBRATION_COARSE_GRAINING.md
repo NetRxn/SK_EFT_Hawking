@@ -1,6 +1,6 @@
 # Calibrated memory inference and temporal approximation
 
-Status: authorized, design review in progress. Builds on the accepted sampling increment at `147aea7f`. Root owns integration and the machine-local notebook. Public development and reviewed integration remain local on `codex/memory-calibration-coarse`; public main and remotes are unchanged.
+Status: implementation and independent review complete; final substrate gate pending. Builds on the accepted sampling increment at `147aea7f`. Root owns integration and the machine-local notebook. Public development and reviewed integration remain local on `codex/memory-calibration-coarse`; public main and remotes are unchanged.
 
 ## Objective and sequence
 
@@ -24,7 +24,7 @@ Use fixed protocols and sample sizes. Adaptive selection, optional stopping, unk
 - P1: D9 claim/evidence mapping and queued absorption, without manuscript readiness inflation.
 - A1: independent integrated review, required gates and durable acceptance record.
 
-The per-package statements and evidence are recorded here as design review resolves them; this document does not treat proposed formulas or workers' reports as accepted results.
+C1, C2, G1, G2 and P1 are implemented and independently reviewed. A1 awaits the running final substrate gate. Evidence is recorded in [the acceptance audit](../../audits/2026-09-10-memory-calibration-coarse.md) and the local notebook.
 
 ## C1 reviewed contract
 
@@ -34,8 +34,8 @@ For calibration proportions `A,B,C0,C1` and fixed positive radii `sa,sb,s0,s1`, 
 
 The main empirical gap must strictly exceed `Bhat+rho0+rho1`. Prove directly that rejection under the common-channel null is contained in the union of the six sampling-failure events. A fixed-budget theorem cannot simply be instantiated with a data-dependent budget. Sum the six conservative dyadic tails and cap at one; no independence between groups is required. Certification additionally requires this total bound to meet the predeclared failure level.
 
-Concrete example: `t=1/2,p=1/4,a=b=1/256`; calibration groups each have `n=81920,radius=1/128`, main groups each have `n=20480,radius=1/64`. Counts `[320,320,320,10480,80,6430]` in the order above are illustrative exact-mean counts. Each tail exponent is ten, total failure bound `3/256`, and requested level `1/64`. Prove a model-linked positive-power result as well as evaluating favorable counts. Numeric design review establishes a worst-coverage margin `13/2048`; implementation and independent review must verify it.
+Concrete example: `t=1/2,p=1/4,a=b=1/256`; calibration groups each have `n=81920,radius=1/128`, main groups each have `n=20480,radius=1/64`. Counts `[320,320,320,10480,80,6430]` in the order above are illustrative exact-mean counts. Each tail exponent is ten, total failure bound `3/256`, and requested level `1/64`. Prove a model-linked positive-power result as well as evaluating favorable counts. Numeric design review establishes a worst-coverage margin `13/2048`; the implementation and independent review verified it. The explicit finite binary law has power at least `253/256`.
 
 ## G1 reviewed direction
 
-Develop the actual driven replacement channel `Phi_b(rho)=lambda*rho+(1-lambda)*|b><b|` with normalized Kraus realization. A common suffix of length `L` should contract two initial states by exactly `lambda^L` in trace distance. Derive binary prediction error, a tight diagonal example and the no-forgetting obstruction at `lambda=1`. This is finite-history approximation in a specified model, not a new general compression or speedup theorem. Existing chain contraction and diamond composition bounds are reused where appropriate rather than duplicated as new claims.
+The implemented driven replacement channel `Phi_b(rho)=lambda*rho+(1-lambda)*|b><b|` is realized by the existing normalized probabilistic SWAP and partial trace. For varying retention parameters, a common suffix contracts trace distance by exactly their product; constant retention gives `lambda^L`. Proofs establish binary prediction error and operational saturation on orthogonal suffix-boundary states. Any common scalar predictor has worst-case error at least half the product over arbitrary boundary states, which need not be reachable through a fixed prefix. At `lambda=1`, old boundary information need not decay; at zero retention a collision erases it. Exact CPU examples distinguish full replay from suffix replay and count their scalar updates. This is finite-history approximation in the stated model, without arbitrary retained outputs, feedback or a general compression/speedup claim.
