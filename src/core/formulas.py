@@ -12607,3 +12607,137 @@ def memory_sampling_certificate(*, n0, n1, count0, count1, rho0, rho1, alpha,
         "positive_margin": positive_margin,
         "reject_common_channel": confidence_sufficient and positive_margin,
     }
+
+
+def memory_calibrated_sampling_certificate(*, groups, alpha, exponent_cap=4096):
+    """Exact six-group calibration and memory-test arithmetic.
+
+    groups has exactly false_positive, false_negative, reset0, reset1, main0,
+    main1, each containing n, count, radius. False-negative counts are reported
+    zeros for a trusted one standard; all other counts are reported ones.
+    Counts/n/cap are strict Python integers, radii/alpha strict int or Fraction.
+    The stable readout model is Q(x)=a*(1-x)+(1-b)*x. Reset states must be
+    independently justified diagonal states; counts cannot establish this.
+    Fixed protocols, trusted standards, within-group independent complete trials
+    and readout stability remain assumptions. Cross-group independence is unused.
+
+    Ua=min(1,A+sa), Ub=min(1,B+sb), d=max(Ua,Ub),
+    eps_h=min(1,Ch+sh+Ub), Bhat=min(1,eps0+eps1)+2*d.
+    Reject only if the main empirical gap exceeds Bhat+rho0+rho1 AND the
+    combined six-group failure bound meets alpha. All decisions use Fractions.
+    No conditioning on estimated budgets or main-only confidence is performed.
+
+    Lean: SKEFTHawking.QuantumNetwork.BinaryMemoryCalibration.calibrated_false_positive
+    Aristotle: manual
+    Mathematical theorem and Python implementation review are separate evidence;
+    this is not Lean-extracted code or an experimental applicability verifier.
+    The downward exponent cap has the same conservative meaning as in
+    memory_sampling_certificate. Input rational bit lengths are caller-controlled.
+    """
+    from fractions import Fraction
+
+    names = ("false_positive", "false_negative", "reset0", "reset1", "main0", "main1")
+    if type(groups) is not dict or set(groups) != set(names):
+        raise ValueError("groups must contain exactly the six named calibration/test groups")
+    reports = {}
+    # Reuse the established strict input validation and dyadic arithmetic. Only
+    # individual group fields are retained, never its two-group decision.
+    for first, second in zip(names[::2], names[1::2]):
+        for name in (first, second):
+            if type(groups[name]) is not dict or set(groups[name]) != {"n", "count", "radius"}:
+                raise ValueError(f"{name} must contain exactly n, count, radius")
+        a, b = groups[first], groups[second]
+        pair = memory_sampling_certificate(
+            n0=a["n"], n1=b["n"], count0=a["count"], count1=b["count"],
+            rho0=a["radius"], rho1=b["radius"], alpha=alpha, exponent_cap=exponent_cap)
+        for i, name in enumerate((first, second)):
+            exponent = pair[f"exponent{i}"]
+            used = pair[f"used_exponent{i}"]
+            reports[name] = {
+                "n": groups[name]["n"], "count": groups[name]["count"],
+                "radius": Fraction(groups[name]["radius"]),
+                "proportion": pair[f"proportion{i}"], "exponent": exponent,
+                "used_exponent": used, "exponent_capped": used < exponent,
+                "tail_bound": min(Fraction(1), Fraction(2, 1 << used)),
+            }
+    ua = min(Fraction(1), reports["false_positive"]["proportion"] + reports["false_positive"]["radius"])
+    ub = min(Fraction(1), reports["false_negative"]["proportion"] + reports["false_negative"]["radius"])
+    d = max(ua, ub)
+    eps = [min(Fraction(1), reports[f"reset{h}"]["proportion"] + reports[f"reset{h}"]["radius"] + ub) for h in (0, 1)]
+    bound = min(Fraction(1), sum(eps)) + 2*d
+    gap = abs(reports["main0"]["proportion"] - reports["main1"]["proportion"])
+    threshold = bound + reports["main0"]["radius"] + reports["main1"]["radius"]
+    calibration = min(Fraction(1), sum(reports[name]["tail_bound"] for name in names[:4]))
+    sampling = min(Fraction(1), sum(reports[name]["tail_bound"] for name in names[4:]))
+    beta = min(Fraction(1), calibration + sampling)
+    confident, positive = beta <= alpha, gap > threshold
+    return {
+        "groups": reports, "alpha": Fraction(alpha), "exponent_cap": exponent_cap,
+        "false_positive_upper": ua, "false_negative_upper": ub,
+        "readout_bias_bound": d, "eps0": eps[0], "eps1": eps[1],
+        "memoryless_bound": bound, "empirical_gap": gap,
+        "rejection_threshold": threshold, "strict_margin": gap-threshold,
+        "calibration_failure_bound": calibration, "sampling_failure_bound": sampling,
+        "failure_bound": beta, "confidence_sufficient": confident,
+        "positive_margin": positive, "reject_common_channel": confident and positive,
+    }
+
+
+def memory_history_approximation(*, inputs, retentions, initial, cutoff, reference=0):
+    """Exact diagonal collision-memory trajectory and suffix approximation.
+
+    Each chronological fresh input bit b drives a retained memory by
+    r <- lambda*r + (1-lambda)*b, realized by identity/SWAP mixing with
+    SWAP probability 1-lambda and discarding the fresh system. cutoff is the
+    number of most-recent rounds replayed from reference, not a time index.
+    The full and truncated trajectories are computed independently.
+    Arbitrary quantum inputs are covered by the theorem; this exact executable
+    example restricts initial/reference states to diagonal Bernoulli laws.
+
+    Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining.suffix_prediction_bound
+    Aristotle: manual
+    Bound is the product of suffix retentions; worst-case suffix-only prediction
+    error is at least half that product on orthogonal initial memories. Retained
+    measurement records, adaptive controls and arbitrary process compression are
+    outside the model. Full and suffix replay cost N and cutoff scalar updates;
+    both use constant-size state. This is no general simulation-speedup claim.
+    int/Fraction inputs are exact; floats and booleans are refused.
+    """
+    from fractions import Fraction
+
+    if type(inputs) not in (list, tuple) or type(retentions) not in (list, tuple):
+        raise TypeError("inputs and retentions must be lists or tuples")
+    if len(inputs) != len(retentions):
+        raise ValueError("one retention is required per input")
+    if type(cutoff) is not int or not 0 <= cutoff <= len(inputs):
+        raise ValueError("cutoff must be an integer in [0, number of rounds]")
+    if any(type(b) is not int or b not in (0, 1) for b in inputs):
+        raise ValueError("each input must be the integer zero or one")
+    for value in (initial, reference, *retentions):
+        if type(value) not in (int, Fraction):
+            raise TypeError("probabilities must be Python int or Fraction")
+        if not 0 <= value <= 1:
+            raise ValueError("probabilities must lie in [0,1]")
+    initial, reference = Fraction(initial), Fraction(reference)
+    retentions = tuple(map(Fraction, retentions))
+    full = initial
+    for bit, retention in zip(inputs, retentions):
+        full = retention*full + (1-retention)*bit
+    truncated = reference
+    bound = Fraction(1)
+    start = len(inputs)-cutoff
+    prefix = initial
+    for bit, retention in zip(inputs[:start], retentions[:start]):
+        prefix = retention*prefix + (1-retention)*bit
+    for bit, retention in zip(inputs[start:], retentions[start:]):
+        truncated = retention*truncated + (1-retention)*bit
+        bound *= retention
+    return {
+        "full_probability": full, "truncated_probability": truncated,
+        "prefix_probability": prefix, "reference_probability": reference,
+        "absolute_error": abs(full-truncated), "error_bound": bound,
+        "exact_error_from_prefix": bound*abs(prefix-reference),
+        "suffix_pair_minimax_lower_bound": bound/2,
+        "full_updates": len(inputs), "suffix_updates": cutoff,
+        "cutoff": cutoff,
+    }
