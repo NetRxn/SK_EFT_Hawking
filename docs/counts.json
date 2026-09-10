@@ -1,12 +1,12 @@
 {
-  "generated": "2026-09-10T08:35:15.230894",
+  "generated": "2026-09-10T09:57:03.474986",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 41200,
-    "theorems_total": 22935,
-    "theorems_substantive": 22909,
+    "total_declarations": 41411,
+    "theorems_total": 23038,
+    "theorems_substantive": 23012,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 22842,
+    "theorems_kernel_substantive": 22945,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2051,
+    "modules": 2054,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1259,6 +1259,9 @@
       "SKEFTHawking.QuantumNetwork.FidelityForwardBoundPSD",
       "SKEFTHawking.QuantumNetwork.FidelityKrausDP",
       "SKEFTHawking.QuantumNetwork.FidelityUpperBound",
+      "SKEFTHawking.QuantumNetwork.FiniteGibbsClock",
+      "SKEFTHawking.QuantumNetwork.FiniteInstrument",
+      "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess",
       "SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining",
       "SKEFTHawking.QuantumNetwork.FiniteMemoryPartialInteraction",
       "SKEFTHawking.QuantumNetwork.FiniteMemoryProcess",
@@ -2069,10 +2072,10 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12948,
-    "structures": 482,
-    "instances": 945,
-    "inductives": 101,
+    "definitions": 13006,
+    "structures": 484,
+    "instances": 946,
+    "inductives": 102,
     "native_decide_decl_closure": 530,
     "native_decide_clusters": {
       "anyon_mtc": 327,
@@ -2083,8 +2086,8 @@
   },
   "python": {
     "python_modules": 138,
-    "test_files": 209,
-    "pytest_cases": 7161,
+    "test_files": 212,
+    "pytest_cases": 7209,
     "notebooks": 91,
     "papers": 42,
     "figures": 170
