@@ -12533,9 +12533,11 @@ def memory_sampling_certificate(*, n0, n1, count0, count1, rho0, rho1, alpha,
     Arithmetic rejection requires BOTH beta <= alpha and strict margin > 0.
     A non-rejection does not establish the null or absence of memory.
 
-    Lean: SKEFTHawking.QuantumNetwork.binary_memoryless_observed_separation_le
+    Lean: SKEFTHawking.QuantumNetwork.BinaryMemorySampling.BoundedTrials.empirical_tail_dyadic,
+          SKEFTHawking.QuantumNetwork.BinaryMemorySampling.joint_failure_dyadic,
+          SKEFTHawking.QuantumNetwork.BinaryMemorySampling.common_channel_false_positive,
+          SKEFTHawking.QuantumNetwork.BinaryMemorySampling.certified_false_positive
     Aristotle: manual
-    Sampling provenance: QuantumNetwork/BinaryMemorySampling.lean (S1).
     This implementation is not Lean-extracted or a certified Python runtime.
     It does not verify IID sampling, preparations, the comparison channel/effect,
     or physical/calibration budgets. Calibration failure needs a separate bound.
