@@ -25,3 +25,17 @@ Use fixed protocols and sample sizes. Adaptive selection, optional stopping, unk
 - A1: independent integrated review, required gates and durable acceptance record.
 
 The per-package statements and evidence are recorded here as design review resolves them; this document does not treat proposed formulas or workers' reports as accepted results.
+
+## C1 reviewed contract
+
+Use a stable classical binary readout law `q(x)=a*(1-x)+(1-b)*x`, with false-positive and false-negative rates `a,b` in `[0,1]`. Trusted zero/one standards and two post-reset populations supply four calibration groups. Reset states are model-established diagonal qubit states; measuring a population does not establish diagonality. The same readout law applies during calibration and main trials. Standards, stability and independent fixed trials within each group remain explicit assumptions.
+
+For calibration proportions `A,B,C0,C1` and fixed positive radii `sa,sb,s0,s1`, define `Ua=min(1,A+sa)`, `Ub=min(1,B+sb)`, `d=max(Ua,Ub)`, and `eps_h=min(1,Ch+sh+Ub)`. Simultaneous coverage implies true reset populations are at most `eps_h`, their trace distances from the zero state are at most `eps_h`, and readout bias is at most `d`. The random comparison allowance is `Bhat=min(1,eps0+eps1)+2*d`.
+
+The main empirical gap must strictly exceed `Bhat+rho0+rho1`. Prove directly that rejection under the common-channel null is contained in the union of the six sampling-failure events. A fixed-budget theorem cannot simply be instantiated with a data-dependent budget. Sum the six conservative dyadic tails and cap at one; no independence between groups is required. Certification additionally requires this total bound to meet the predeclared failure level.
+
+Concrete example: `t=1/2,p=1/4,a=b=1/256`; calibration groups each have `n=81920,radius=1/128`, main groups each have `n=20480,radius=1/64`. Counts `[320,320,320,10480,80,6430]` in the order above are illustrative exact-mean counts. Each tail exponent is ten, total failure bound `3/256`, and requested level `1/64`. Prove a model-linked positive-power result as well as evaluating favorable counts. Numeric design review establishes a worst-coverage margin `13/2048`; implementation and independent review must verify it.
+
+## G1 reviewed direction
+
+Develop the actual driven replacement channel `Phi_b(rho)=lambda*rho+(1-lambda)*|b><b|` with normalized Kraus realization. A common suffix of length `L` should contract two initial states by exactly `lambda^L` in trace distance. Derive binary prediction error, a tight diagonal example and the no-forgetting obstruction at `lambda=1`. This is finite-history approximation in a specified model, not a new general compression or speedup theorem. Existing chain contraction and diamond composition bounds are reused where appropriate rather than duplicated as new claims.
