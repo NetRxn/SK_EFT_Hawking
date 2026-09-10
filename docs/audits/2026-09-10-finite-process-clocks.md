@@ -1,6 +1,6 @@
 # Finite process and clock integration review
 
-Status: component implementation, scientific reviews and aggregate build passed. Final extracted-evidence and substrate-gate acceptance are pending. Owning contract: [PROCESS_CLOCK_PROGRAM.md](../dev-loops/MemoryProcesses/PROCESS_CLOCK_PROGRAM.md). Public acceptance is local feature-branch integration only.
+Status: component implementation, scientific reviews and aggregate build passed. Final extracted evidence and substrate gate passed; independent integrated acceptance remains pending. Owning contract: [PROCESS_CLOCK_PROGRAM.md](../dev-loops/MemoryProcesses/PROCESS_CLOCK_PROGRAM.md). Public acceptance is local feature-branch integration only.
 
 ## Reviewed implementations
 
@@ -28,4 +28,6 @@ Existing D9 D.0 readiness prerequisites remain unresolved and outside the owner'
 
 Canonical extraction and derived sync completed. Relative to accepted `bbdbe40d`, the final inventory adds 272 records: 46 instrument, 81 process, 84 clock and 61 coherent. It removes none. Of these, 135 are author-written theorem additions under the canonical autogen resolver, matching the generated counts increase from 22,935 to 23,070; record counts do not represent independent scientific claims. Every added record has no project-axiom dependency or extraction timeout and uses only the standard core axioms where needed. The sole existing-record change is the module attribution of `matrixLog.eq_1`; all its other fields are unchanged.
 
-Substrate gate and independent final integrated acceptance review remain pending.
+`gate_precheck.py s13-lean` passed in 527.1 seconds: 70/89 checks passed, with no Lean/Python-side failure and 19 visible pre-existing paper-corpus failures outside scope. Independent final integrated acceptance review remains pending.
+
+The new short-name ambiguity for `identity` removes two inferred verification edges. Independent investigation traced both to unchanged quaternion tests that import a Python quaternion helper, not the neutrino theorem to which the old unique-name lookup pointed. These were false coverage attributions; no legitimate scientific link was identified as lost. The pre-existing short-name resolver issue is outside this increment, and no graph or resolver was modified.

@@ -1,6 +1,6 @@
 # Finite processes, coherent interventions and clocks
 
-Status: implementation and independent component reviews complete; the full aggregate Lean build passed at `5238bafc`. Final extraction, substrate gate and integrated acceptance review are in progress. This program extends the locally accepted calibrated-memory/coarse-graining increment `bbdbe40d`.
+Status: implementation and independent component reviews complete; the full aggregate Lean build passed at `5238bafc`. Final extraction and substrate gate passed; independent integrated acceptance review remains in progress. This program extends the locally accepted calibrated-memory/coarse-graining increment `bbdbe40d`.
 
 Root owns integration, slot admission and the primary notebook. Public changes remain local on the reviewed feature branch; no public push or main merge is included. Existing ADR-008 slots, continuity packets, planners and review writers govern execution. Workers read notebooks and report; they do not write the shared record.
 
