@@ -1,6 +1,6 @@
 # Fixed-sample memory inference review
 
-Scope: [SAMPLING.md](../dev-loops/MemoryProcesses/SAMPLING.md). Root files this receipt from independent reviewer reports and separate integration evidence. Acceptance remains pending the final canonical audit and substrate gate recorded below. No paper submission or public remote publication is part of this receipt.
+Scope: [SAMPLING.md](../dev-loops/MemoryProcesses/SAMPLING.md). Root files this receipt from independent reviewer reports and separate integration evidence. The scoped increment is accepted locally. No paper submission or public remote publication is part of this receipt.
 
 ## Independent design and implementation review
 
@@ -28,7 +28,13 @@ Controller absorption rebased and integrated the proof as `e59c5051`. The source
 
 The proof worker's final diagnostics had no errors or warnings; seven principal axiom closures used only `propext`, `Classical.choice` and `Quot.sound`. Canonical extraction subsequently added 44 records, all in the new sampling module, with no changed or removed existing records. Every new extracted closure uses only standard core axioms, with no project axioms or dependency timeouts. The source has 15 public theorem declarations and three private proof helpers. The mechanical theorem census increases by 20 because it also classifies five proposition-valued structure projections as theorem records; those projections express sampling hypotheses and are not five additional proved statistical results. Counts retain the producer's classification unchanged.
 
-The existing fast sync completed successfully, refreshing counts, dependency evidence and atlas views. It did not run a full citation-cache refresh or establish paper readiness. Final substrate-gate and integrated closure results remain pending.
+The existing fast sync completed successfully, refreshing counts, dependency evidence and atlas views. It did not run a full citation-cache refresh or establish paper readiness.
+
+## Acceptance
+
+Independent integrated evidence review at `657114c3` found no issues. The reviewer independently confirmed source identity against both accepted candidates and reproduced the 44-added/zero-changed/zero-removed extraction comparison, closure audit and theorem/projection distinction. Its packet remained fresh; no duplicate test run or independent kernel build was claimed.
+
+The `s13-lean` substrate gate passed in 537.3 seconds: 70/89 checks overall and 1,146 warnings, with no Lean/Python substrate failure. The 19 pre-existing paper-corpus failures remain separately reported and outside the owner-authorized scope. This is not a full-pytest or publication-readiness pass, and no gate, ratchet or paper state was weakened. S1–S3 are complete at the local feature-branch boundary; public main and remote were not updated by this increment.
 
 ## Interpretation limits
 
