@@ -12510,3 +12510,98 @@ def memory_partial_interaction_reference(t, p):
             "control_separation": control_separation,
             "retained_control_difference": retained_separation-control_separation,
             "criterion_margin": retained_separation-bound}
+
+
+def memory_sampling_certificate(*, n0, n1, count0, count1, rho0, rho1, alpha,
+                                eps0=0, eps1=0, delta0=0, delta1=0,
+                                exponent_cap=4096):
+    """Exact arithmetic report for a pre-specified fixed-sample binary test.
+
+    Each history has n_h > 0 IID binary trials with a fresh preparation and
+    environment per complete trial. The groups need not be independent of each
+    other. Counts, sample sizes and exponent_cap must be Python ints (not bool).
+    Radii, budgets and alpha accept only Python int or fractions.Fraction;
+    floats, strings and Decimal are rejected rather than silently converted.
+    Radii are positive, budgets nonnegative, and 0 < alpha < 1.
+
+    Put j_h = floor(2*n_h*rho_h**2), k_h = min(j_h, exponent_cap), and
+    beta = min(1, 2/2**k_0 + 2/2**k_1). Hoeffding and exp(1) >= 2 give
+    simultaneous failure probability at most beta. B = min(1,eps0+eps1)
+    + delta0 + delta1 bounds the true observed gap under the common normalized
+    system-channel/common binary-effect null with valid reset and bias budgets.
+    The strict margin is |count0/n0-count1/n1| - B - rho0 - rho1.
+    Arithmetic rejection requires BOTH beta <= alpha and strict margin > 0.
+    A non-rejection does not establish the null or absence of memory.
+
+    Lean: SKEFTHawking.QuantumNetwork.binary_memoryless_observed_separation_le
+    Aristotle: manual
+    Sampling provenance: QuantumNetwork/BinaryMemorySampling.lean (S1).
+    This implementation is not Lean-extracted or a certified Python runtime.
+    It does not verify IID sampling, preparations, the comparison channel/effect,
+    or physical/calibration budgets. Calibration failure needs a separate bound.
+    Sample sizes, radii, budgets, intervention/effect and decision rule must be
+    fixed before observing outcomes: optional stopping and selected multiple
+    tests are outside this contract.
+
+    exponent_cap is an engineering resource limit in [0,4096], bounding each
+    allocated dyadic denominator to at most 4097 bits. It caps DOWNWARD only,
+    so it can increase beta (lose confidence), never strengthen confidence.
+    Input integer/rational bit sizes are otherwise caller-controlled. The
+    returned report exposes both uncapped and used exponents and cap flags.
+    Proportions, bounds and margins are Fraction values, with no float step.
+    """
+    from fractions import Fraction
+
+    for name, value in (("n0", n0), ("n1", n1), ("count0", count0),
+                        ("count1", count1), ("exponent_cap", exponent_cap)):
+        if type(value) is not int:
+            raise TypeError(f"{name} must be a Python int, not bool")
+    if n0 <= 0 or n1 <= 0:
+        raise ValueError("sample sizes must be positive")
+    if not (0 <= count0 <= n0 and 0 <= count1 <= n1):
+        raise ValueError("each count must lie between zero and its sample size")
+    if not 0 <= exponent_cap <= 4096:
+        raise ValueError("exponent_cap must lie in [0,4096]")
+    rationals = {}
+    for name, value in (("rho0", rho0), ("rho1", rho1), ("alpha", alpha),
+                        ("eps0", eps0), ("eps1", eps1),
+                        ("delta0", delta0), ("delta1", delta1)):
+        if type(value) not in (int, Fraction):
+            raise TypeError(f"{name} must be a Python int or Fraction")
+        rationals[name] = Fraction(value)
+    rho0, rho1, alpha = (rationals[k] for k in ("rho0", "rho1", "alpha"))
+    eps0, eps1, delta0, delta1 = (
+        rationals[k] for k in ("eps0", "eps1", "delta0", "delta1"))
+    if rho0 <= 0 or rho1 <= 0:
+        raise ValueError("sampling radii must be positive")
+    if min(eps0, eps1, delta0, delta1) < 0:
+        raise ValueError("reset and observation-bias budgets must be nonnegative")
+    if not 0 < alpha < 1:
+        raise ValueError("alpha must lie strictly between zero and one")
+
+    exponent0 = (2*n0*rho0**2).__floor__()
+    exponent1 = (2*n1*rho1**2).__floor__()
+    used0, used1 = min(exponent0, exponent_cap), min(exponent1, exponent_cap)
+    beta = min(Fraction(1), Fraction(2, 1 << used0) + Fraction(2, 1 << used1))
+    bound = min(Fraction(1), eps0+eps1) + delta0 + delta1
+    proportion0, proportion1 = Fraction(count0, n0), Fraction(count1, n1)
+    gap = abs(proportion0-proportion1)
+    threshold = bound+rho0+rho1
+    margin = gap-threshold
+    confidence_sufficient = beta <= alpha
+    positive_margin = margin > 0
+    return {
+        "n0": n0, "n1": n1, "count0": count0, "count1": count1,
+        **rationals,
+        "proportion0": proportion0, "proportion1": proportion1,
+        "exponent0": exponent0, "exponent1": exponent1,
+        "used_exponent0": used0, "used_exponent1": used1,
+        "exponent_cap": exponent_cap,
+        "exponent_capped0": used0 < exponent0,
+        "exponent_capped1": used1 < exponent1,
+        "failure_bound": beta, "memoryless_bound": bound,
+        "empirical_gap": gap, "rejection_threshold": threshold,
+        "strict_margin": margin, "confidence_sufficient": confidence_sufficient,
+        "positive_margin": positive_margin,
+        "reject_common_channel": confidence_sufficient and positive_margin,
+    }
