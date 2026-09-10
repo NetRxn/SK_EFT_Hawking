@@ -1,16 +1,17 @@
 # Bundle D9 — Source Manifest
 
-**Auto-generated:** 2026-06-10
+**Auto-generated:** 2026-09-10
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D9`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (1)
+## Contributing source papers (2)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
-| `D9_initial_draft` | §1–§6 | Synthesize | (see mapping) | (missing) |
+| `D9_initial_draft` | §1–§6 | (unspecified) | (see mapping) | (missing) |
+| `D9_memory_processes_lean_only` | §5 | (unspecified) | (see mapping) | (missing) |
 
 ## Coverage notes
 

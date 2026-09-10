@@ -4055,6 +4055,8 @@ import SKEFTHawking.QuantumNetwork.BinaryMemoryRobustness
 import SKEFTHawking.QuantumNetwork.FiniteMemoryResetMixture
 import SKEFTHawking.QuantumNetwork.FiniteMemoryPartialInteraction
 import SKEFTHawking.QuantumNetwork.BinaryMemorySampling
+import SKEFTHawking.QuantumNetwork.BinaryMemoryCalibration
+import SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining
 import SKEFTHawking.QuantumNetwork.BinaryMemoryFixture
 -- Phase 6AK Wave FU-6 brick 5 (2026-06-04): single-copy distillation rate bound
 -- (distillation_single_copy_bound: local op → Φ_k ⟹ log₂k ≤ E_N(ρ); brick-1 monotone ∘ brick-4 target).
