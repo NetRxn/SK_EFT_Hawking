@@ -12425,3 +12425,88 @@ def memory_binary_robustness_reference(t, a, b, q, *, d0=0.0, d1=0.0,
             "observed_separation": abs(observed[1]-observed[0]),
             "ideal_bound": min(1., distances.sum()),
             "observed_bound": min(1., distances.sum()+allowances.sum())}
+
+
+def memory_partial_interaction(state, exchange_probability):
+    """Apply the probabilistic channel C_t(rho)=(1-t)rho+t SWAP(rho).
+
+    Tensor order is (S,E), and 0 <= t <= 1. This is an incoherent mixture
+    of identity and SWAP, not a coherent partial-SWAP unitary. It accepts
+    correlated density matrices using the numerical guard _memory_joint_state.
+    Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.partialInteractionKraus_eq
+    Aristotle: manual
+
+    The exact Kraus map is the mathematical reference; complex128 execution
+    and the tolerance-based density check are not numerically certified.
+    """
+    rho = _memory_joint_state(state)
+    t = float(exchange_probability)
+    if not np.isfinite(t) or not 0 <= t <= 1:
+        raise ValueError("exchange_probability must be finite and in [0,1]")
+    return (1-t)*rho + t*memory_swap(rho)
+
+
+def memory_partial_interaction_reference(t, p):
+    """Run both basis histories through C_t, imperfect S reset, then C_t.
+
+    p in [0,1] is the probability of skipping the S reset. The control resets
+    E perfectly AFTER that same imperfect S reset and BEFORE the second C_t.
+    The two channel applications use fresh probabilistic mixtures, not one
+    shared random SWAP choice. A>B alone is not the exclusion criterion.
+    Returned trajectories are joint matrices, with first factor S. Each
+    history retains both the pre-control reset state and the control input.
+
+    Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.partialRetained_probability,
+          SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.partialControl_probability,
+          SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.partialPostReset_traceDist
+    Aristotle: manual
+
+    Exact outcome-one separations are A=t^2+p(1-t)^2 (retained) and
+    B=p(1-t)^2 (control). Post-reset system distance from |0><0| is zero
+    for history zero and r=p(1-t) for history one. The common-system-channel
+    bound is r, giving excess A-r=t(t-p(1-t)). Positive exact excess excludes
+    a common system-only continuation reproducing both histories; nonpositive
+    excess does not establish absent memory. The control may retain a signal.
+
+    All returned estimates are computed from matrix trajectories, including
+    eigensolver trace distances. No boolean witness verdict is returned:
+    roundoff and the existing probability clipping/normalization have no
+    certified error budget. These basis dynamics admit classical memory and
+    demonstrate neither quantum advantage nor unusual time structure.
+    """
+    t, p = float(t), float(p)
+    if not (np.isfinite(t) and np.isfinite(p) and 0 <= t <= 1 and 0 <= p <= 1):
+        raise ValueError("t and p must be finite and in [0,1]")
+    reference = np.diag([1., 0.]).astype(np.complex128)
+    histories = []
+    for history in (0, 1):
+        initial = np.zeros((4, 4), dtype=np.complex128)
+        initial[2*history, 2*history] = 1
+        interacted = memory_partial_interaction(initial, t)
+        reset = memory_reset_system(interacted, p)
+        reduced = np.trace(reset.reshape(2, 2, 2, 2), axis1=1, axis2=3)
+        control_input = memory_swap(memory_reset_system(memory_swap(reset)))
+        retained = memory_partial_interaction(reset, t)
+        control = memory_partial_interaction(control_input, t)
+        histories.append({
+            "initial": initial, "after_interaction": interacted,
+            "after_reset": reset, "reset_system_state": reduced,
+            "control_input": control_input, "retained_final": retained,
+            "control_final": control,
+            "retained_probabilities": memory_system_probabilities(retained),
+            "control_probabilities": memory_system_probabilities(control),
+        })
+    distances = np.array([
+        .5*np.abs(np.linalg.eigvalsh(h["reset_system_state"]-reference)).sum()
+        for h in histories])
+    retained_separation = abs(histories[1]["retained_probabilities"][1]
+                              - histories[0]["retained_probabilities"][1])
+    control_separation = abs(histories[1]["control_probabilities"][1]
+                             - histories[0]["control_probabilities"][1])
+    bound = min(1., distances.sum())
+    return {"t": t, "p": p, "histories": histories, "reference": reference,
+            "reset_trace_distances": distances, "memoryless_bound": bound,
+            "retained_separation": retained_separation,
+            "control_separation": control_separation,
+            "retained_control_difference": retained_separation-control_separation,
+            "criterion_margin": retained_separation-bound}
