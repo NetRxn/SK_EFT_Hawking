@@ -12883,12 +12883,14 @@ def coherent_memory_process(*, c=None, s=None):
     entanglement-breaking explanation; reset contrast alone also has an
     incoherent-mixture realization.
 
-    Lean: SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.normalized_weights,
-          SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.no_future_signaling
+    Lean: SKEFTHawking.QuantumNetwork.CoherentMemoryProcess.interference_contrast,
+          SKEFTHawking.QuantumNetwork.CoherentMemoryProcess.reset_probability,
+          SKEFTHawking.QuantumNetwork.CoherentMemoryProcess.coherent_readout_equivalence,
+          SKEFTHawking.QuantumNetwork.CoherentMemoryProcess.reset_readout_equivalence
     Aristotle: manual
-    Exact executable model, not Lean-extracted or empirical evidence. The generic
-    normalization/causality references do not yet certify these coherent-specific
-    constants; their dedicated Lean consumer remains pending.
+    Exact executable model, not Lean-extracted or empirical evidence. The Lean
+    constants and readout bridges cover the default c=3/5,s=4/5 example; other
+    rational coefficient choices are separately tested computational instances.
     """
     from fractions import Fraction as F
     c, s = F(3, 5) if c is None else c, F(4, 5) if s is None else s
