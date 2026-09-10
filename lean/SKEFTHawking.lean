@@ -4057,6 +4057,8 @@ import SKEFTHawking.QuantumNetwork.FiniteMemoryPartialInteraction
 import SKEFTHawking.QuantumNetwork.BinaryMemorySampling
 import SKEFTHawking.QuantumNetwork.BinaryMemoryCalibration
 import SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining
+import SKEFTHawking.QuantumNetwork.FiniteInstrument
+import SKEFTHawking.QuantumNetwork.FiniteInterventionProcess
 import SKEFTHawking.QuantumNetwork.BinaryMemoryFixture
 -- Phase 6AK Wave FU-6 brick 5 (2026-06-04): single-copy distillation rate bound
 -- (distillation_single_copy_bound: local op → Φ_k ⟹ log₂k ≤ E_N(ρ); brick-1 monotone ∘ brick-4 target).
@@ -5277,6 +5279,3 @@ Blueprint+sorry: algebraic identities are fully formalized; PDE well-posedness,
 asymptotic analysis, and derivative expansion convergence are left as `sorry`.
 The `sorry` gaps are documented and flagged for Aristotle automated filling.
 -/
-
-import SKEFTHawking.QuantumNetwork.FiniteInstrument
-import SKEFTHawking.QuantumNetwork.FiniteInterventionProcess
