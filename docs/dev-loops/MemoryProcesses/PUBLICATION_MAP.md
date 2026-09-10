@@ -1,6 +1,6 @@
 # D9 finite-memory contribution and evidence map
 
-This work is homed in D9, **Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate**, through `PAPER_DRAFT_MAPPING.md`. The owning scientific increment is [CALIBRATION_COARSE_GRAINING.md](CALIBRATION_COARSE_GRAINING.md). Its aggregate acceptance is recorded there; source review is not a substitute for that gate.
+This work is homed in D9, **Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate**, through `PAPER_DRAFT_MAPPING.md`. The earlier accepted scientific increment is [CALIBRATION_COARSE_GRAINING.md](CALIBRATION_COARSE_GRAINING.md). The extension is owned by [PROCESS_CLOCK_PROGRAM.md](PROCESS_CLOCK_PROGRAM.md); its final aggregate acceptance is separate from component source review.
 
 ## Publication disposition
 
@@ -30,3 +30,11 @@ A future manuscript section should introduce one intervention experiment, expose
 Before publication: complete D9's existing repair/review cycle; select and review figures derived through the canonical pipeline; reconcile primary references at equation level; review all manuscript claims against extracted declarations; perform the existing disclosure and submission gates. These are bundle-owned obligations, not silently satisfied by this substrate increment.
 
 Detailed section and figure preparation is in [D9_ABSORPTION_BRIEF.md](D9_ABSORPTION_BRIEF.md). Current manuscript labels, rather than historical section numbers, govern placement. The existing D.0 readiness requirement still gates insertion.
+
+## Finite-process extension
+
+The new instrument, process-tree and coherent-example modules extend this queued contribution. Place realized instruments and unnormalized branches in `sec:params`; outcome-dependent process trees and unpostselected prefix invariance in `sec:protocol`; the coherent intervention/reset example in `sec:worked`. Exact backing is `FiniteInstrument.branch_posSemidef`, `sum_trace`, `lift_branch_posSemidef`, `zero_outcome`; `FiniteInterventionProcess.normalized_weights`, `prefix_marginal`, `no_future_signaling`, `feedback_example_weights`; and `CoherentMemoryProcess.coherent_probability`, `measured_table`, `interference_contrast`, `reset_marginal`, `reset_probability`, `control_probability`, `no_common_system_model`.
+
+The coherent default gives uninterrupted probability 49/625, measured 337/625, contrast 288/625 and reset-history probabilities 0 and 256/625. Explicit `coherent_readout_equivalence` and `reset_readout_equivalence` connect the Lean paths to the padded CPU readout shape. The canonical evaluators are `finite_intervention_process` and `coherent_memory_process`; their contracts are in PROCESS_CLOCK_USAGE.md. These results do not extend the older calibration or suffix-approximation guarantees to arbitrary adaptive protocols. Prefix invariance fixes the prefix and sums every future outcome. The reset witness excludes the stipulated common system-only continuation, not arbitrary classical hidden-state explanations.
+
+`FiniteGibbsClock.matrixLog_gibbs` and `modular_eq_heisenberg` remain a separate finite-equilibrium physics follow-on. They are not yet a necessary D9 certification step or a proved bridge to intervention-dependent memory. D9 insertion and readiness remain unchanged behind D.0.

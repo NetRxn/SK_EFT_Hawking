@@ -1,37 +1,51 @@
 # Finite processes, coherent interventions and clocks
 
-Status: authorized for supervised execution; exact scientific packages undergoing admission review. Builds on locally accepted calibrated-memory/coarse-graining increment bbdbe40d. Root owns integration and notebook; public changes stay local, with reviewed feature-branch integration only.
+Status: implementation and independent component reviews complete; the full aggregate Lean build passed at `5238bafc`. Final extraction, substrate gate and integrated acceptance review are in progress. This program extends the locally accepted calibrated-memory/coarse-graining increment `bbdbe40d`.
 
-## Parallel scope
+Root owns integration, slot admission and the primary notebook. Public changes remain local on the reviewed feature branch; no public push or main merge is included. Existing ADR-008 slots, continuity packets, planners and review writers govern execution. Workers read notebooks and report; they do not write the shared record.
 
-1. General finite realized process-and-intervention framework, with a coherent-interaction example as a consumer. Explicit state validity, instrument normalization, ordering/causality and non-vacuous operational claims. Do not claim a full comb representation theorem without proving it.
-2. Bounded finite Gibbs/modular-flow comparison with Heisenberg evolution. State signs, units, faithfulness and degeneracies explicitly; no physical horizon identification by naming convention.
-3. Absorb accepted memory results into D9 using the existing manuscript review and repair graph. Gate the changed claims; unrelated old paper failures remain outside scope.
+## Delivered components and acceptance boundary
 
-Each package begins with source-grounded theorem/claim admission and an independent review. Existing ADR-008 global slots limit simultaneous proof work. Root admits slots, integrates, builds, audits complete new axiom closures and synchronizes evidence. Workers receive explicit ownership and notebook references and report rather than writing the shared notebook. No extra harness, public push, CUDA or commercial release is authorized by this plan. CUDA remains conditional on a required CPU simulation exceeding ten hours.
+| Component | Reviewed candidate | Integrated source | Evidence |
+|---|---|---|---|
+| Finite instruments and realized process trees | `18d2e694` | `4adc216a` | Independent scientific review; aggregate build; initial complete dependency audit |
+| Faithful finite Gibbs state and clock comparison | `c4dc26f2` | `8c04fca2` | Independent scientific review; aggregate build; initial complete dependency audit |
+| Coherent process and reset witness | `3b10dbc7` | `1abbd043` | Independent scientific review; matching-slot diagnostics and capstone axiom checks; aggregate build |
+| Exact process/coherent CPU models and floating clock diagnostic | `92c760d4` | `843a359c`, provenance update `b76a711f` | Independent 353-test run plus additional feedback, rational-coefficient and randomized-clock cases; executable code unchanged by provenance edit |
+| D9 absorption preparation | Source-backed briefs and mapping | Local documentation | Independent preparation review; actual manuscript insertion remains behind D.0 |
 
-## Closure
+Component reviews and builds do not by themselves close the final acceptance gate. Final evidence is recorded in the program audit. The source files must remain identical to the reviewed candidates through integration, and all new declaration closures must be audited after canonical extraction.
 
-Exact package acceptance criteria and evidence will be added after admission. Distinguish implemented science, reviewed manuscript changes and publication readiness. Independent reviews and actual gates close each package; no proposed work is complete merely because it appears here.
+## Finite instruments and realized processes
 
-## Finite clock contract (independently admitted)
+Finite outcome-indexed Kraus families satisfying total normalization define instruments. Branch states remain unnormalized, including impossible outcomes. The implementation proves positivity, linearity, trace inequalities and total trace preservation. Complete positivity is represented by explicit finite spectator lifts. The system and environment may have different finite dimensions.
 
-For an arbitrary nonempty finite index type, Hermitian H, real beta>0 and hbar>0, construct the matrix exponential exp(-beta H). Define real Z=Re(trace(exp(-beta H))), prove positive Z and that the complex trace is its real embedding. Define rho=Z^-1 exp(-beta H), prove positive definiteness and trace one, and prove the existing spectral matrixLog(rho)=-beta H-log(Z)I. Define modular conjugation by exp(i s matrixLog(rho)) and physical Heisenberg conjugation by exp(i t H/hbar) independently. Prove sigma_s=alpha_(-beta*hbar*s), complex linearity, identity/multiplication/adjoint preservation, group and inverse laws. beta has inverse-energy units, hbar energy*time, s dimensionless.
+A fixed-depth, fixed-arity tree applies a normalized joint evolution followed by a local instrument. Later subtrees may depend on the observed outcome. History weights are nonnegative and normalized. Summing every normalized future continuation recovers its prefix probability; no-future-signaling follows from the actual maps rather than an assumed field. The concrete feedback fixture has two reachable outcomes and different subsequent preparations.
 
-Non-vacuity: for H=diag(0,Delta),Delta>0, E01 acquires phase exp(i beta Delta s); at s=pi/(beta Delta), E01 and PauliX change sign. Degenerate energy blocks fixed, scalar H yields maximally mixed state and trivial flow, energy shift H+cI leaves rho andboth flows unchanged. Periodicity means parameter comparison is not globally unique clock readout. Faithfulness is necessary; log-zero convention does not justify singular-state modular claims. No infinite modular/KMS analyticity/Lindblad/horizon identification claimed.
+The source is `QuantumNetwork/FiniteInstrument.lean` and `FiniteInterventionProcess.lean`. This is a realized finite-process framework, not a general comb representation theorem. The exact rational CPU evaluator validates the entire protocol before evaluation. Full history enumeration is exponential in depth and also depends on matrix dimensions and rational bit lengths; no computational speedup follows from the framework alone.
 
-Proof ownership: new QuantumNetwork/FiniteGibbsClock.lean, with a separate helper file only if source dependencies justify it. Source-inspected reuse: MixedState spectral calculus, QuantumRelativeEntropy matrixLog, Mathlib matrixexponential. GibbsVariational does not already construct Gibbs states. Independent admission confirmed the sign, real partition definition and non-vacuity; kernel admission remains a separate step.
+## Coherent interaction consumer
 
-## Finite instruments and processes (independently admitted)
+For `U = (3/5) I - i (4/5) SWAP` and initial system/environment state `|10>`, two uninterrupted interactions give final system-one probability `49/625`. A resolved local computational-basis measurement between them gives the history table `[[144,256],[144,81]]/625`, final probability `337/625`, and contrast `288/625`. Changing the later interaction to identity preserves the earlier probabilities `16/25` and `9/25` when all future outcomes are summed.
 
-Finite outcome-indexed Kraus families with total sum K-adjoint*K=I define an instrument. Branch states remain unnormalized, including impossible zero branches. Prove PSD/linearity, complete positivity by explicit finite spectator lifts, trace inequalities and totaltrace preservation. Lift a system instrument with identity on an arbitrary finite environment, not only equal dimensions. A finite depth-indexed tree applies a normalized joint evolution and then a local system instrument, allowing outcome-dependent later subtrees. Prove history weights nonnegative and normalized and that summing any normalized future subtree recovers its prefix probability. Derive no-future-signaling from these actual maps; do not assume it as a field.
+Resetting only the system between interactions gives final probabilities `0` and `256/625` for the two initial histories, despite identical reset-system states. Resetting the environment removes the signal. The common-system-model exclusion consumes the existing binary separation theorem with a common normalized continuation and common binary effect.
 
-Proof ownership: QuantumNetwork/FiniteInstrument.lean and FiniteInterventionProcess.lean sequentially in one slot. Subsequent CoherentMemoryProcess.lean must consume those APIs. With U=(3/5)I-i(4/5)SWAP and initial|10>, two coherent steps have finalsystemone probability49/625. A local Zinstrument between the two steps gives table[[144,256],[144,81]]/625 and probability337/625, contrast288/625. Earliermarginals16/25,9/25 remain fixed when laterU is changed toidentity. Reset only S between U steps yields history contrast256/625 with equal reset S states; reset-E control removes it. The interference comparison is required because the reset contrast alone matches an incoherent mixture. Neither example certifies quantum-only memory against all classical models.
+`CoherentMemoryProcess.lean` uses the general tree evaluator. Explicit readout-equivalence theorems connect singleton paths with external binary readout to padded binary-outcome trees. Impossible outcomes and the generic feedback fixture are covered. Python clears both factors in its control; Lean clears the environment, which agrees on these already system-reset inputs. This does not establish equivalence on arbitrary inputs.
 
-CPU follows a frozen protocol API, using exact rational complex components, subnormalized branch states and weights, explicit invalid-dimension/normalization checks and zero/adaptivecases. Full tree leaf enumeration is exponential in the worst case; no general speedup claim. Root owns canonical formulas integration and aggregate imports.
+The coherent Lean constants cover the stated default coefficients. Other rational coefficient choices accepted by Python are separately tested computational instances. The reset contrast alone also has an incoherent-mixture realization; neither the interference comparison nor reset witness excludes every classical hidden-state explanation.
 
-## D9 admission boundary
+## Finite Gibbs clock comparison
 
-Current D9 has prior Stage9/10/13 pending and Stage 13 redo; existing late-absorption D.0 requires restoring readiness before inserting new manuscript content. Owner excludes preexisting corpus repairs. Accordingly this track first prepares a source-backed section/figure brief and fixes the affected destination mapping to current stable labels: sec:params for characterization, sec:worked for counts and power, sec:protocol for suffix bounds; limits and related work link sec:breaks/sec:related. Actual append remains separately gated and must not be represented as complete. No silent corpus cleanup or bypass of D.0.
+For an arbitrary nonempty finite Hermitian Hamiltonian, construct the matrix exponential, its real positive partition function and a faithful trace-one Gibbs state. Prove the existing spectral matrix logarithm equals `-beta H - log(Z) I`. Independently defined modular and Heisenberg conjugations then agree at `t = -beta*hbar*s` for positive `hbar`. The mathematical construction permits real `beta`; the positive-temperature interpretation specializes to positive `beta`.
 
-Independent statement review reproduced all coherent-model constants. Acceptance additionally requires a zero-probability branch and a genuinely outcome-dependent continuation. Prefix comparisons fix the earlier operations and initial state and sum over every future outcome; postselecting future outcomes is a different statement. Every reachable feedback continuation must be trace preserving. The concrete example must use the tree evaluator, not merely adjacent matrix identities.
+The source is `QuantumNetwork/FiniteGibbsClock.lean`. It proves linearity, identity/product/adjoint preservation, group and inverse laws, a nontrivial two-level phase/sign example, fixed degenerate blocks, trivial scalar-Hamiltonian flow and energy-shift invariance. Here `beta` has inverse-energy units, `hbar` has energy-times-time units, and `s` is dimensionless. Periodicity prevents treating the parameter relation as a globally unique clock readout. Faithfulness is essential; the logarithm-at-zero convention does not justify singular-state claims.
+
+The CPU function reconstructs the density logarithm independently and reports floating residuals. It refuses numerical rank loss and nonfinite outputs. These diagnostics are not certified numerical error bounds or proofs of the input model. No infinite-dimensional modular, KMS-analytic, Lindblad, horizon or physical-clock identification is asserted.
+
+## Publication and parallel follow-ons
+
+D9's existing pending reviews and Stage 13 redo select the late-absorption protocol's D.0 prerequisite. The owner excludes pre-existing corpus repairs. Accordingly the delivered publication work is preparation: current section destinations, claim-to-source links and a figure specification. The manuscript and readiness verdicts remain unchanged. Follow `PUBLICATION_MAP.md` and `D9_ABSORPTION_BRIEF.md` when D.0 clears; do not treat these documents as a waiver.
+
+The finite-clock result remains a separate physics follow-on until a substantive bridge to the memory/certification argument is established. The general process framework does not automatically extend the earlier calibration or suffix-approximation guarantees to arbitrary adaptive protocols. Broader horizon and noise applications remain future work.
+
+CPU work stays on the ordinary workstation. CUDA is deferred unless a required simulation cannot complete in an overnight run of about ten hours; long runs must remain asynchronous and off unrelated work's critical path. No new harness, hardware integration, commercial release or publication submission is included.

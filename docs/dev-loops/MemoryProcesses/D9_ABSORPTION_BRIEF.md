@@ -1,6 +1,6 @@
 # D9 finite-memory absorption brief
 
-Status: preparation only. Accepted source bbdbe40d; D9 manuscript insertion remains blocked by existing D.0 readiness prerequisites. This brief neither alters the manuscript nor closes its pending reviews. Root owns integration; independent review follows this candidate.
+Status: preparation only. Earlier accepted calibration/coarse-graining source bbdbe40d; the finite-process extension has its own acceptance record in PROCESS_CLOCK_PROGRAM.md. D9 manuscript insertion remains blocked by existing D.0 readiness prerequisites. This brief neither alters the manuscript nor closes its pending reviews. Root owns integration; component and final preparation reviews are recorded in the owning program.
 
 ## Scientific thread and placement
 
@@ -39,3 +39,9 @@ Use the existing figure registry/generation and review path once this figure bri
 5. Route resulting Lean, Python, research or prose repairs through existing grouped findings and closure writers. Update manifests and readiness only from actual accepted evidence.
 
 No quantum-only memory, unusual-time physics, general simulation speedup, tomography, firstness or submission readiness is claimed. Broader horizon and clock connections belong to their own accepted results.
+
+## Queued finite-process extension
+
+Precede calibration with realized instrument definitions in `sec:params`, including subnormalized zero branches. In `sec:protocol`, introduce the normalized outcome-dependent tree and show that summing every future outcome preserves an earlier probability. Use the coherent example in `sec:worked`: final probability 49/625 without the intermediate computational-basis (Z-basis) measurement, 337/625 with it, contrast 288/625; system-reset history probabilities 0 and 256/625 with an environment-reset control. Exact declaration links are in the finite-process section of PUBLICATION_MAP.md.
+
+In `sec:breaks` and `sec:discussion`, preserve the fixed-prefix/all-futures requirement, default-coefficient scope, common-system-only exclusion and absence of a general adaptive calibration/approximation theorem. Readout padding has explicit Lean bridges; Python and Lean remain independently implemented. The clock comparison stays a separately scoped physics follow-on rather than an inserted D9 clock section. These additions are preparation only, with no new figure deliverable, manuscript edit or D.0 waiver.

@@ -1,12 +1,12 @@
 {
-  "generated": "2026-09-10T09:57:03.474986",
+  "generated": "2026-09-10T10:08:35.142411",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 41411,
-    "theorems_total": 23038,
-    "theorems_substantive": 23012,
+    "total_declarations": 41472,
+    "theorems_total": 23070,
+    "theorems_substantive": 23044,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 22945,
+    "theorems_kernel_substantive": 22977,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2054,
+    "modules": 2055,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1225,6 +1225,7 @@
       "SKEFTHawking.QuantumNetwork.CPTPChannel",
       "SKEFTHawking.QuantumNetwork.Channels",
       "SKEFTHawking.QuantumNetwork.CoherenceFidelity",
+      "SKEFTHawking.QuantumNetwork.CoherentMemoryProcess",
       "SKEFTHawking.QuantumNetwork.ComposedGateFidelity",
       "SKEFTHawking.QuantumNetwork.DEJMPSConvergence",
       "SKEFTHawking.QuantumNetwork.DecayEnvelope",
@@ -2072,7 +2073,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13006,
+    "definitions": 13026,
     "structures": 484,
     "instances": 946,
     "inductives": 102,
