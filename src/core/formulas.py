@@ -12742,3 +12742,285 @@ def memory_history_approximation(*, inputs, retentions, initial, cutoff, referen
         "full_updates": len(inputs), "suffix_updates": cutoff,
         "cutoff": cutoff,
     }
+
+
+def finite_intervention_process(*, system_dim, environment_dim, outcome_count,
+                                initial, protocol):
+    """Evaluate a fixed-depth local-instrument tree using exact rational matrices.
+
+    Matrix entries are strict Python ints/Fractions, or (real, imag) pairs of
+    those types. A node has exactly evolution, instrument, next: a normalized
+    joint Kraus list, outcome-indexed equal-length local Kraus lists, and one
+    child per outcome. None is a leaf. Joint evolution precedes the local
+    instrument. Finite classical feedback is permitted through distinct children.
+    Cycles, ragged depth, malformed dimensions and nonphysical inputs are refused.
+    No branch is normalized: impossible outcomes stay zero, without division.
+
+    Lean: SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.normalized_weights,
+          SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.no_future_signaling
+    Aristotle: manual
+    Exact arithmetic implementation, separately reviewed, not Lean-extracted.
+    Full enumeration has outcome_count**depth leaves; all prefix states are
+    retained in this diagnostic report. Input size and rational bit lengths are
+    caller-controlled. This is not a general comb representation or device test.
+    Output matrices use rational (real, imag) pairs and weights are Fractions.
+    """
+    from fractions import Fraction
+    import sympy as sp
+
+    for name, value in (("system_dim", system_dim), ("environment_dim", environment_dim),
+                        ("outcome_count", outcome_count)):
+        if type(value) is not int or value <= 0:
+            raise ValueError(f"{name} must be a positive Python int")
+    dim = system_dim * environment_dim
+
+    def rational(x):
+        if type(x) not in (int, Fraction):
+            raise TypeError("exact entries require Python int or Fraction, never float/bool")
+        f = Fraction(x)
+        return sp.Rational(f.numerator, f.denominator)
+
+    def scalar(x):
+        if type(x) is tuple and len(x) == 2:
+            return rational(x[0]) + sp.I*rational(x[1])
+        return rational(x)
+
+    def matrix(x, d):
+        if type(x) not in (list, tuple) or len(x) != d:
+            raise ValueError("matrix has the wrong row dimension")
+        if any(type(row) not in (list, tuple) or len(row) != d for row in x):
+            raise ValueError("matrix has the wrong column dimension")
+        return sp.ImmutableMatrix([[scalar(v) for v in row] for row in x])
+
+    def family(xs, d):
+        if type(xs) not in (list, tuple):
+            raise TypeError("Kraus families must be lists or tuples")
+        return tuple(matrix(x, d) for x in xs)
+
+    def normalized(ks, d):
+        total = sum((k.H*k for k in ks), sp.zeros(d)).applyfunc(sp.expand)
+        if total != sp.eye(d):
+            raise ValueError("Kraus operators are not exactly normalized")
+
+    rho = matrix(initial, dim)
+    if rho != rho.H or sp.trace(rho) != 1 or rho.is_positive_semidefinite is not True:
+        raise ValueError("initial must be an exact Hermitian PSD trace-one matrix")
+    active = set()
+
+    def compile_node(node):
+        if node is None:
+            return None, 0
+        if type(node) is not dict or set(node) != {"evolution", "instrument", "next"}:
+            raise ValueError("node requires exactly evolution, instrument, next")
+        if id(node) in active:
+            raise ValueError("protocol contains a cycle")
+        active.add(id(node))
+        try:
+            evolution = family(node["evolution"], dim)
+            normalized(evolution, dim)
+            ins, nxt = node["instrument"], node["next"]
+            if (type(ins) not in (list, tuple) or type(nxt) not in (list, tuple)
+                    or len(ins) != outcome_count or len(nxt) != outcome_count):
+                raise ValueError("instrument and children must have the fixed outcome count")
+            local = tuple(family(xs, system_dim) for xs in ins)
+            if len({len(xs) for xs in local}) != 1:
+                raise ValueError("pad outcome Kraus families to a common rank with zero matrices")
+            normalized(tuple(k for xs in local for k in xs), system_dim)
+            lifted = tuple(tuple(sp.kronecker_product(k, sp.eye(environment_dim))
+                                  for k in xs) for xs in local)
+            children = [compile_node(child) for child in nxt]
+            if len({depth for _, depth in children}) != 1:
+                raise ValueError("every leaf must have the same fixed depth")
+            return (evolution, lifted, tuple(child for child, _ in children)), children[0][1]+1
+        finally:
+            active.remove(id(node))
+
+    compiled, depth = compile_node(protocol)
+
+    def fraction(x):
+        x = sp.expand(x)
+        if x.is_Rational is not True:
+            raise ArithmeticError("internal exact result is not rational")
+        return Fraction(int(x.p), int(x.q))
+
+    def export(x):
+        return tuple(tuple((fraction(sp.re(x[i, j])), fraction(sp.im(x[i, j])))
+                           for j in range(dim)) for i in range(dim))
+
+    def apply(ks, x):
+        return sum((k*x*k.H for k in ks), sp.zeros(dim)).applyfunc(sp.expand)
+
+    branches, leaves = {}, []
+
+    def visit(node, history, x):
+        branches[history] = {"state": export(x), "weight": fraction(sp.trace(x))}
+        if node is None:
+            leaves.append(history)
+            return
+        evolution, instrument, children = node
+        evolved = apply(evolution, x)
+        for outcome, (ks, child) in enumerate(zip(instrument, children)):
+            visit(child, history+(outcome,), apply(ks, evolved))
+
+    visit(compiled, (), rho)
+    marginals = {h: Fraction(0) for h in branches}
+    for leaf in leaves:
+        for length in range(len(leaf)+1):
+            marginals[leaf[:length]] += branches[leaf]["weight"]
+    return {"branches": branches, "leaves": tuple(leaves), "prefix_marginals": marginals,
+            "total_probability": marginals[()], "depth": depth, "arity": outcome_count,
+            "leaf_count": len(leaves), "enumeration": "all histories; exponential in depth"}
+
+
+def coherent_memory_process(*, c=None, s=None):
+    """Exact coherent-SWAP experiments, all evaluated by finite_intervention_process.
+
+    U=c I-i s SWAP, c**2+s**2=1; defaults c=3/5,s=4/5. Coefficients are
+    strict int/Fraction. Reports distinguish uninterrupted interference, a local
+    resolved Z intervention, changed future evolution, reset memory and a
+    joint reset control. The feedback example has both initial outcomes possible.
+    Comparing these protocols does not exclude every classical hidden-state or
+    entanglement-breaking explanation; reset contrast alone also has an
+    incoherent-mixture realization.
+
+    Lean: SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.normalized_weights,
+          SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.no_future_signaling
+    Aristotle: manual
+    Exact executable model, not Lean-extracted or empirical evidence. The generic
+    normalization/causality references do not yet certify these coherent-specific
+    constants; their dedicated Lean consumer remains pending.
+    """
+    from fractions import Fraction as F
+    c, s = F(3, 5) if c is None else c, F(4, 5) if s is None else s
+    if type(c) not in (int, F) or type(s) not in (int, F):
+        raise TypeError("c and s must be exact int or Fraction")
+    c, s = F(c), F(s)
+    if c*c+s*s != 1:
+        raise ValueError("c squared plus s squared must equal one exactly")
+    ident = lambda d: [[int(i == j) for j in range(d)] for i in range(d)]
+    zero = [[0, 0], [0, 0]]
+    z = [[[1, 0], [0, 0]], [[0, 0], [0, 1]]]
+    reset = [[[1, 0], [0, 0]], [[0, 1], [0, 0]]]
+    u = [[(c*int(i == j), -s*int(i == (j % 2)*2+j//2)) for j in range(4)] for i in range(4)]
+    zz = [[z[0]], [z[1]]]
+    identity_instrument = [[ident(2)], [zero]]
+    reset_instrument = [reset, [zero, zero]]
+    node = lambda evolution, instrument, children: {
+        "evolution": evolution, "instrument": instrument, "next": children}
+    read = lambda evolution: node(evolution, zz, [None, None])
+    initial = lambda b: [[int(i == j == 2*b) for j in range(4)] for i in range(4)]
+    evaluate = lambda protocol, rho: finite_intervention_process(
+        system_dim=2, environment_dim=2, outcome_count=2, initial=rho, protocol=protocol)
+    uninterrupted = evaluate(node([u], identity_instrument, [read([u]), read([u])]), initial(1))
+    measured = evaluate(node([u], zz, [read([u]), read([u])]), initial(1))
+    future_identity = evaluate(node([u], zz, [read([ident(4)]), read([ident(4)])]), initial(1))
+    retained = tuple(evaluate(node([u], reset_instrument, [read([u]), read([u])]), initial(b))
+                     for b in (0, 1))
+    # A physical joint reset channel, followed by U, explicitly clears both factors.
+    reset_joint = [[[int(i == 0 and j == k) for j in range(4)] for i in range(4)]
+                   for k in range(4)]
+    control = tuple(evaluate(node([u], reset_instrument,
+                        [node(reset_joint, identity_instrument, [read([u]), read([u])])]*2), initial(b))
+                    for b in (0, 1))
+    prepare = lambda b: [[[int(i == b and j == k) for j in range(2)] for i in range(2)] for k in range(2)]
+    feedback_children = [node([ident(4)], [prepare(b) if a == b else [zero, zero]
+                            for a in (0, 1)], [None, None]) for b in (0, 1)]
+    mixed = [[F(1, 2)*int(i == j and i in (0, 2)) for j in range(4)] for i in range(4)]
+    feedback = evaluate(node([ident(4)], zz, feedback_children), mixed)
+    final_one = lambda report: sum((report["branches"][h]["weight"] for h in report["leaves"]
+                                    if h[-1] == 1), F(0))
+    return {"c": c, "s": s, "uninterrupted": uninterrupted, "measured": measured,
+            "future_identity": future_identity, "retained": retained, "control": control,
+            "feedback": feedback, "uninterrupted_one": final_one(uninterrupted),
+            "measured_one": final_one(measured),
+            "interference_contrast": final_one(measured)-final_one(uninterrupted),
+            "retained_one": tuple(map(final_one, retained)), "control_one": tuple(map(final_one, control))}
+
+
+def finite_gibbs_clock(*, hamiltonian, observable, beta, hbar, modular_time):
+    """Numerical diagnostic of finite Gibbs modular versus Heisenberg evolution.
+
+    Uses Hermitian H, positive beta/hbar and real modular_time. The observable
+    may be any finite complex matrix. sigma_s(X)=rho**(i*s) X rho**(-i*s)
+    equals alpha_t(X) at t=-beta*hbar*s. Gibbs weights are energy-shifted for
+    stability; log(rho) is independently reconstructed from rho's eigensystem.
+    Observable and H are not mutated. Near-Hermitian H is symmetrized only within
+    a fixed roundoff tolerance, whose residual is reported. Underflow, numerical
+    rank loss, and unresolvable log spectra are refused, not called faithful.
+
+    Lean: SKEFTHawking.QuantumNetwork.FiniteGibbsClock.modular_eq_heisenberg,
+          SKEFTHawking.QuantumNetwork.FiniteGibbsClock.matrixLog_gibbs
+    Aristotle: manual
+    Floating diagnostics are not certified error bounds or a numerical proof.
+    The exact finite theorem does not certify the input model or eigensolver.
+    """
+    import numbers
+    import numpy as np
+
+    scalars = {}
+    for name, value in (("beta", beta), ("hbar", hbar), ("modular_time", modular_time)):
+        if isinstance(value, (bool, np.bool_)) or not isinstance(value, numbers.Real):
+            raise TypeError(f"{name} must be a finite real scalar")
+        scalars[name] = float(value)
+        if not np.isfinite(scalars[name]):
+            raise ValueError(f"{name} must be finite")
+    beta, hbar, modular_time = (scalars[k] for k in ("beta", "hbar", "modular_time"))
+    if beta <= 0 or hbar <= 0:
+        raise ValueError("beta and hbar must be positive")
+    H, X = np.asarray(hamiltonian, dtype=complex), np.asarray(observable, dtype=complex)
+    if H.ndim != 2 or H.shape[0] == 0 or H.shape[0] != H.shape[1] or X.shape != H.shape:
+        raise ValueError("H must be nonempty square and observable must match its shape")
+    if not np.all(np.isfinite(H)) or not np.all(np.isfinite(X)):
+        raise ValueError("matrices must have finite entries")
+    scale = max(1., np.linalg.norm(H, ord='fro'))
+    hermitian_residual = float(np.linalg.norm(H-H.conj().T, ord='fro'))
+    if not np.isfinite(scale) or hermitian_residual > 64*np.finfo(float).eps*scale:
+        raise ValueError("hamiltonian must be Hermitian within roundoff")
+    H = (H+H.conj().T)/2
+    energies, vectors = np.linalg.eigh(H)
+    with np.errstate(over='ignore', under='ignore', invalid='ignore'):
+        shifted = -beta*(energies-energies.min())
+        weights = np.exp(shifted)
+        probabilities = weights/weights.sum()
+    # A positive exact Gibbs eigenvalue can be numerically indistinguishable
+    # from zero: require a conservative spectral resolution margin.
+    floor = 64*H.shape[0]*np.finfo(float).eps
+    if not np.all(np.isfinite(probabilities)) or probabilities.min() <= floor:
+        raise ValueError("Gibbs spectrum loses numerical faithfulness/resolution")
+    rho = (vectors*probabilities)@vectors.conj().T
+    rho_values, rho_vectors = np.linalg.eigh(rho)
+    if rho_values.min() <= floor or not np.all(np.isfinite(rho_values)):
+        raise ValueError("reconstructed Gibbs state has unresolved rank")
+    log_values = np.log(rho_values)
+    log_rho = (rho_vectors*log_values)@rho_vectors.conj().T
+    physical_time = -beta*hbar*modular_time
+    with np.errstate(over='ignore', invalid='ignore'):
+        modular_phases = modular_time*log_values
+        # Scalar energy shifts have no effect on observable conjugation.
+        physical_phases = (physical_time/hbar)*(energies-energies.min())
+    if (not np.isfinite(physical_time) or not np.all(np.isfinite(modular_phases))
+            or not np.all(np.isfinite(physical_phases))):
+        raise ValueError("time/phase calculation overflowed")
+    Um = (rho_vectors*np.exp(1j*modular_phases))@rho_vectors.conj().T
+    Uh = (vectors*np.exp(1j*physical_phases))@vectors.conj().T
+    modular = Um@X@Um.conj().T
+    heisenberg = Uh@X@Uh.conj().T
+    if not np.all(np.isfinite(modular)) or not np.all(np.isfinite(heisenberg)):
+        raise ValueError("observable evolution overflowed")
+    identity = np.eye(H.shape[0])
+    predicted_log = (vectors*(shifted-np.log(weights.sum())))@vectors.conj().T
+    report = {**scalars, "physical_time": physical_time, "gibbs_state": rho,
+            "gibbs_eigenvalues": rho_values, "matrix_log": log_rho,
+            "modular_unitary": Um, "heisenberg_unitary": Uh,
+            "modular_observable": modular, "heisenberg_observable": heisenberg,
+            "comparison_residual": float(np.linalg.norm(modular-heisenberg, ord='fro')),
+            "normalization_residual": float(abs(np.trace(rho)-1)),
+            "hermitian_input_residual": hermitian_residual,
+            "matrix_log_residual": float(np.linalg.norm(log_rho-predicted_log, ord='fro')),
+            "modular_unitarity_residual": float(np.linalg.norm(Um.conj().T@Um-identity, ord='fro')),
+            "heisenberg_unitarity_residual": float(np.linalg.norm(Uh.conj().T@Uh-identity, ord='fro')),
+            "spectral_resolution_floor": floor, "evidence_kind": "floating numerical diagnostic"}
+
+    if any(not np.isfinite(value) for key, value in report.items() if key.endswith("residual")):
+        raise ValueError("numerical diagnostic residual overflowed")
+    return report
