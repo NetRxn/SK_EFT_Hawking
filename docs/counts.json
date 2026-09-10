@@ -1,12 +1,12 @@
 {
-  "generated": "2026-09-09T19:57:29.787640",
+  "generated": "2026-09-10T07:11:49.826566",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 41065,
-    "theorems_total": 22872,
-    "theorems_substantive": 22846,
+    "total_declarations": 41109,
+    "theorems_total": 22892,
+    "theorems_substantive": 22866,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 22779,
+    "theorems_kernel_substantive": 22799,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2048,
+    "modules": 2049,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1220,6 +1220,7 @@
       "SKEFTHawking.QuantumNetwork.BellNegativity",
       "SKEFTHawking.QuantumNetwork.BinaryMemoryFixture",
       "SKEFTHawking.QuantumNetwork.BinaryMemoryRobustness",
+      "SKEFTHawking.QuantumNetwork.BinaryMemorySampling",
       "SKEFTHawking.QuantumNetwork.CPTPChannel",
       "SKEFTHawking.QuantumNetwork.Channels",
       "SKEFTHawking.QuantumNetwork.CoherenceFidelity",
@@ -2066,9 +2067,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12905,
-    "structures": 480,
-    "instances": 943,
+    "definitions": 12920,
+    "structures": 481,
+    "instances": 944,
     "inductives": 101,
     "native_decide_decl_closure": 530,
     "native_decide_clusters": {
@@ -2080,8 +2081,8 @@
   },
   "python": {
     "python_modules": 138,
-    "test_files": 206,
-    "pytest_cases": 6934,
+    "test_files": 207,
+    "pytest_cases": 7056,
     "notebooks": 91,
     "papers": 42,
     "figures": 170

@@ -26,4 +26,8 @@ Use the existing source, notebook and review workflows. This increment supplies 
 
 ## Evidence
 
-Implementation and acceptance evidence will be recorded here after verification. The owning process is unchanged; no new harness or scheduler is part of this increment.
+S1 and S2 are implemented and independently reviewed. The module `QuantumNetwork/BinaryMemorySampling.lean` derives concentration and joint coverage from `BoundedTrials`, which supports independent [0,1]-valued observations with equal means and includes IID binary trials. `common_channel_false_positive` consumes the existing physical comparison theorem, `certified_false_positive` supplies confidence gating, and `partial_model_certified_power` connects the actual model to the finite-sample power result. `partial_binary_witness` constructs a genuine finite Bernoulli probability law realizing the assumptions.
+
+The canonical CPU entry point is `memory_sampling_certificate`; [the usage guide](SAMPLING_USAGE.md) specifies exact inputs, report fields and operational limits. The independently reviewed implementation passed 200 combined memory tests, 1,000 additional rational cases and exact null enumerations. A separate fresh scientific reviewer found no defects in the full probability/physics/Python chain and checked a dependent-history example.
+
+Aggregate commit `61acb70d` passed the controller's authoritative build. Canonical extraction adds 44 records solely in the sampling module, with no changed or removed existing records; all new closures have only standard core axioms and no extraction timeouts. Counts and atlas were refreshed using existing producers. Final substrate and evidence acceptance remain pending in the [review receipt](../../audits/2026-09-10-memory-sampling.md). The owning process is unchanged; no new harness or scheduler is part of this increment.
