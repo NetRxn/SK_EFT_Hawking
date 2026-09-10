@@ -1,6 +1,6 @@
 # Finite process and clock integration review
 
-Status: component implementation, scientific reviews and aggregate build passed. Final extracted evidence and substrate gate passed; independent integrated acceptance remains pending. Owning contract: [PROCESS_CLOCK_PROGRAM.md](../dev-loops/MemoryProcesses/PROCESS_CLOCK_PROGRAM.md). Public acceptance is local feature-branch integration only.
+Status: component implementation, scientific reviews and aggregate build passed. Final extracted evidence, substrate gate and fresh independent integrated review passed; root accepts the bounded increment locally. Owning contract: [PROCESS_CLOCK_PROGRAM.md](../dev-loops/MemoryProcesses/PROCESS_CLOCK_PROGRAM.md). Public acceptance is local feature-branch integration only.
 
 ## Reviewed implementations
 
@@ -28,6 +28,12 @@ Existing D9 D.0 readiness prerequisites remain unresolved and outside the owner'
 
 Canonical extraction and derived sync completed. Relative to accepted `bbdbe40d`, the final inventory adds 272 records: 46 instrument, 81 process, 84 clock and 61 coherent. It removes none. Of these, 135 are author-written theorem additions under the canonical autogen resolver, matching the generated counts increase from 22,935 to 23,070; record counts do not represent independent scientific claims. Every added record has no project-axiom dependency or extraction timeout and uses only the standard core axioms where needed. The sole existing-record change is the module attribution of `matrixLog.eq_1`; all its other fields are unchanged.
 
-`gate_precheck.py s13-lean` passed in 527.1 seconds: 70/89 checks passed, with no Lean/Python-side failure and 19 visible pre-existing paper-corpus failures outside scope. Independent final integrated acceptance review remains pending.
+`gate_precheck.py s13-lean` passed in 527.1 seconds: 70/89 checks passed, with no Lean/Python-side failure and 19 visible pre-existing paper-corpus failures outside scope. A fresh-context final reviewer accepted candidate `87c46405` with no actionable scientific or implementation findings.
 
 The new short-name ambiguity for `identity` removes two inferred verification edges. Independent investigation traced both to unchanged quaternion tests that import a Python quaternion helper, not the neutrino theorem to which the old unique-name lookup pointed. These were false coverage attributions; no legitimate scientific link was identified as lost. The pre-existing short-name resolver issue is outside this increment, and no graph or resolver was modified.
+
+## Final independent acceptance
+
+The fresh reviewer read all four complete Lean modules and all three canonical CPU implementations, checked actual carrier constructions and readout bridges, and independently ran all 353 tests in 0.71 seconds. Additional checks covered 13 exact rational coherent cases, eight dissipative mixed-state feedback branches with unequal factor dimensions and exact matrix agreement, and 48 dense clock comparisons against independent matrix exponentials (maximum discrepancy 2.54e-14). Source identity, the complete canonical dependency delta, build receipt, gate result and unchanged paper-failure set were independently confirmed. No new Lean build or slot action was claimed by the reviewer.
+
+Root accepts the local scientific increment and reviewed D9 preparation. Actual manuscript absorption remains behind D.0 and outside the excluded pre-existing repair scope. No public push, public main merge, hardware validation, unusual-time result, quantum advantage or submission readiness is asserted.

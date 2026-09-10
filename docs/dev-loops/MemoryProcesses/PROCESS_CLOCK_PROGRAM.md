@@ -1,6 +1,6 @@
 # Finite processes, coherent interventions and clocks
 
-Status: implementation and independent component reviews complete; the full aggregate Lean build passed at `5238bafc`. Final extraction and substrate gate passed; independent integrated acceptance review remains in progress. This program extends the locally accepted calibrated-memory/coarse-graining increment `bbdbe40d`.
+Status: implementation and independent component reviews complete; the full aggregate Lean build passed at `5238bafc`. Final extraction, substrate gate and fresh independent integrated review passed. Root accepts this bounded increment locally. This program extends the locally accepted calibrated-memory/coarse-graining increment `bbdbe40d`.
 
 Root owns integration, slot admission and the primary notebook. Public changes remain local on the reviewed feature branch; no public push or main merge is included. Existing ADR-008 slots, continuity packets, planners and review writers govern execution. Workers read notebooks and report; they do not write the shared record.
 
@@ -14,7 +14,7 @@ Root owns integration, slot admission and the primary notebook. Public changes r
 | Exact process/coherent CPU models and floating clock diagnostic | `92c760d4` | `843a359c`, provenance update `b76a711f` | Independent 353-test run plus additional feedback, rational-coefficient and randomized-clock cases; executable code unchanged by provenance edit |
 | D9 absorption preparation | Source-backed briefs and mapping | Local documentation | Independent preparation review; actual manuscript insertion remains behind D.0 |
 
-Component reviews and builds do not by themselves close the final acceptance gate. Final evidence is recorded in the program audit. The source files must remain identical to the reviewed candidates through integration, and all new declaration closures must be audited after canonical extraction.
+Component reviews and builds do not by themselves close the final acceptance gate. Final evidence is recorded in [the program audit](../../audits/2026-09-10-finite-process-clocks.md). The source files must remain identical to the reviewed candidates through integration, and all new declaration closures must be audited after canonical extraction.
 
 ## Finite instruments and realized processes
 
