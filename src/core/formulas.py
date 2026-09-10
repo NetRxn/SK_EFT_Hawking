@@ -12627,7 +12627,7 @@ def memory_calibrated_sampling_certificate(*, groups, alpha, exponent_cap=4096):
     combined six-group failure bound meets alpha. All decisions use Fractions.
     No conditioning on estimated budgets or main-only confidence is performed.
 
-    Lean: SKEFTHawking.QuantumNetwork.BinaryMemoryCalibration.calibrated_false_positive
+    Lean: SKEFTHawking.QuantumNetwork.BinaryMemoryCalibration.certified_common_channel_false_positive
     Aristotle: manual
     Mathematical theorem and Python implementation review are separate evidence;
     this is not Lean-extracted code or an experimental applicability verifier.
@@ -12697,7 +12697,8 @@ def memory_history_approximation(*, inputs, retentions, initial, cutoff, referen
     Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining.suffix_prediction_bound
     Aristotle: manual
     Bound is the product of suffix retentions; worst-case suffix-only prediction
-    error is at least half that product on orthogonal initial memories. Retained
+    error is at least half that product for arbitrary orthogonal memories at the
+    truncation boundary, not necessarily states reachable through a fixed prefix. Retained
     measurement records, adaptive controls and arbitrary process compression are
     outside the model. Full and suffix replay cost N and cutoff scalar updates;
     both use constant-size state. This is no general simulation-speedup claim.
