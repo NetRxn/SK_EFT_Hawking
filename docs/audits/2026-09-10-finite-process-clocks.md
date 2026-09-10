@@ -26,6 +26,6 @@ Existing D9 D.0 readiness prerequisites remain unresolved and outside the owner'
 
 ## Final extracted evidence and gate
 
-Canonical extraction and derived sync completed. Relative to accepted `bbdbe40d`, the final inventory adds 272 records: 46 instrument, 81 process, 84 clock and 61 coherent. It removes none. Of these, 152 are author-written theorems under the extractor's autogen convention; record counts do not represent independent scientific claims. Every added record has no project-axiom dependency or extraction timeout and uses only the standard core axioms where needed. The sole existing-record change is the module attribution of `matrixLog.eq_1`; all its other fields are unchanged.
+Canonical extraction and derived sync completed. Relative to accepted `bbdbe40d`, the final inventory adds 272 records: 46 instrument, 81 process, 84 clock and 61 coherent. It removes none. Of these, 135 are author-written theorem additions under the canonical autogen resolver, matching the generated counts increase from 22,935 to 23,070; record counts do not represent independent scientific claims. Every added record has no project-axiom dependency or extraction timeout and uses only the standard core axioms where needed. The sole existing-record change is the module attribution of `matrixLog.eq_1`; all its other fields are unchanged.
 
 Substrate gate and independent final integrated acceptance review remain pending.
