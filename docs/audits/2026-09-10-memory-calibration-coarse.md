@@ -1,6 +1,6 @@
 # Calibrated inference and temporal approximation review
 
-Status: independently source-reviewed and aggregate-built; extracted evidence and canonical sync complete; substrate gate pending. Owning contract: [CALIBRATION_COARSE_GRAINING.md](../dev-loops/MemoryProcesses/CALIBRATION_COARSE_GRAINING.md). Public acceptance is local feature-branch integration only.
+Status: independently source-reviewed and aggregate-built; extracted evidence, canonical sync and substrate gate complete; locally accepted. Owning contract: [CALIBRATION_COARSE_GRAINING.md](../dev-loops/MemoryProcesses/CALIBRATION_COARSE_GRAINING.md). Public acceptance is local feature-branch integration only.
 
 ## Candidates and independent review
 
@@ -21,3 +21,9 @@ The theorem and CPU implementation are separate evidence layers. Physical applic
 ## Extracted evidence
 
 Canonical `update_counts.py` and `sync.py --fast` completed. Compared with accepted `147aea7f`, the inventory adds exactly 91 declarations (46 calibration, 45 coarse-graining), removes none and changes no existing declaration. Every new declaration has empty project-axiom dependencies, no extraction timeout and only `propext`, `Classical.choice`, `Quot.sound` where required. Global extraction reports zero project axioms and zero sorry. Counts are inventory records, not 91 independently authored scientific theorems.
+
+## Final acceptance
+
+Independent final evidence review accepted the complete 91-record delta, counts and atlas. It found one stale future-tense G1 paragraph; root corrected it to the implemented varying-retention product and boundary-state domain, and the reviewer accepted the correction. No actionable findings remain.
+
+`gate_precheck.py s13-lean` passed in 521.4 seconds: 70/89 checks green, no Lean/Python-side failure, and the same 19 pre-existing paper-corpus failures as the prior accepted sampling increment. Those failures remain visible and outside owner-authorized scope. All three ADR-008 slots are free. Public main and remote remain unchanged; acceptance is confined to this local feature branch. The passing aggregate build applies to unchanged proof sources; subsequent commits contain only generated evidence and documentation.

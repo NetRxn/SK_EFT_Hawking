@@ -1,6 +1,6 @@
 # Calibrated memory inference and temporal approximation
 
-Status: implementation and independent review complete; final substrate gate pending. Builds on the accepted sampling increment at `147aea7f`. Root owns integration and the machine-local notebook. Public development and reviewed integration remain local on `codex/memory-calibration-coarse`; public main and remotes are unchanged.
+Status: complete and locally accepted after independent review and substrate gating. Builds on the accepted sampling increment at `147aea7f`. Root owns integration and the machine-local notebook. Public development and reviewed integration remain local on `codex/memory-calibration-coarse`; public main and remotes are unchanged.
 
 ## Objective and sequence
 
@@ -24,7 +24,7 @@ Use fixed protocols and sample sizes. Adaptive selection, optional stopping, unk
 - P1: D9 claim/evidence mapping and queued absorption, without manuscript readiness inflation.
 - A1: independent integrated review, required gates and durable acceptance record.
 
-C1, C2, G1, G2 and P1 are implemented and independently reviewed. A1 awaits the running final substrate gate. Evidence is recorded in [the acceptance audit](../../audits/2026-09-10-memory-calibration-coarse.md) and the local notebook.
+C1, C2, G1, G2 and P1 are implemented and independently reviewed. A1 is complete: authoritative aggregate build, full new-declaration audit, canonical sync, 305 focused tests and substrate gate passed. Evidence is recorded in [the acceptance audit](../../audits/2026-09-10-memory-calibration-coarse.md) and the local notebook.
 
 ## C1 reviewed contract
 
