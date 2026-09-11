@@ -1,12 +1,12 @@
 {
-  "generated": "2026-09-11T11:44:06.935529",
+  "generated": "2026-09-11T13:02:33.683926",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 41552,
-    "theorems_total": 23103,
-    "theorems_substantive": 23077,
+    "total_declarations": 41632,
+    "theorems_total": 23160,
+    "theorems_substantive": 23134,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 23010,
+    "theorems_kernel_substantive": 23067,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2056,
+    "modules": 2057,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -617,6 +617,7 @@
       "SKEFTHawking.FibonacciUniversality",
       "SKEFTHawking.FigureEightKnot",
       "SKEFTHawking.FinitePositiveKernel",
+      "SKEFTHawking.FinitePositiveKernelDynamics",
       "SKEFTHawking.FocalPoint",
       "SKEFTHawking.FractonDarkMatter",
       "SKEFTHawking.FractonFormulas",
@@ -2074,7 +2075,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13051,
+    "definitions": 13067,
     "structures": 485,
     "instances": 955,
     "inductives": 102,

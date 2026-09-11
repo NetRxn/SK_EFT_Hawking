@@ -44,20 +44,19 @@ The controller built `SKEFTHawking.ExtractDeps` successfully at `59507873`, epoc
 `be2ed393b5f7b57d115b6ef2ae383d5a09f0e325118b056a0c8dc91783b5dd7c`.
 The proof slot was released after successful absorption.
 
-## Next theorem package
+## Dynamics contract
 
-Descend a coefficient map preserving the kernel null space to the quotient and
-prove its action on representatives. PSD `K - A* K A` should supply null-space
-invariance and norm contraction; kernel equality plus inverses should supply
-unitary dynamics. Positive selfadjoint transfer additionally requires `K A=A* K`
-and positivity of `K A`.
+The continuation below implements coefficient-map descent, its representative
+action, PSD-defect contraction and unitary dynamics from pairing preservation
+and an inverse modulo null vectors. Positive selfadjoint transfer additionally
+requires `K A=A* K` and positivity of `K A`; that further package remains open.
 
 A concrete consumer is the finite Gibbs observable Gram kernel
 `K(a,b)=tr(rho E_a* E_b)` on matrix units. Prove positivity and invariance under
 the linear automorphism `FiniteGibbsClock.modular`, descend that action, then consume the existing signed
 modular/Heisenberg comparison. Preserve Gibbs faithfulness and positive hbar.
 Use both the degenerate quotient and a nontrivial two-level off-diagonal observable
-as examples. These dynamics theorems are proposed follow-on work.
+as examples. The finite dynamics and examples are implemented in the continuation below.
 
 ## Canonical extraction
 
@@ -117,12 +116,16 @@ class has the explicit phase and a nontrivial sign flip for positive beta and
 two-level gap.
 
 Independent source semantic review passed. Complete namespace axiom audit covers
-263 declarations, including all91new declarations and generated auxiliaries,
-with no omissions or axioms beyond the standard three. The source has57named
-theorems and16definitions; canonical extraction is a separate count. Source
-SHA25671142948d1704b5da1efe7ca65f6bacddb69ea2ff61dc8345de82c0ed02170a7.
+263 declarations, including all 91 new declarations and generated auxiliaries,
+with no omissions or axioms beyond the standard three. The source has 57 named
+theorems and 16 definitions; canonical extraction is a separate count. Source
+SHA256: `71142948d1704b5da1efe7ca65f6bacddb69ea2ff61dc8345de82c0ed02170a7`.
 
-Root authoritative build, canonical extraction, substrate gate and final
+The integrated aggregate build passed at `b1428c15` (10,912 jobs), followed
+by an authoritative controller build. Canonical extraction adds exactly 80 records, all in the new dynamics module,
+with no removed or changed existing records, project axioms, nonstandard core
+axioms or dependency timeouts. This is distinct from the 57 named source
+theorems and the 91 new elaborated declarations. The substrate gate and final
 integrated acceptance remain pending. These are finite algebraic dynamics;
 parameter continuity, generators, positive selfadjoint transfer, general channel
 contraction and continuum OS reconstruction are outside this increment.
