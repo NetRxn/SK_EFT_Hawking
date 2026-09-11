@@ -1,8 +1,8 @@
 # Finite positive-kernel reconstruction
 
 Status: independently reviewed implementation integrated locally at `59507873`;
-authoritative aggregate build passed. Canonical extraction and final substrate
-acceptance remain in progress. No public push or main merge is included.
+authoritative aggregate build passed. Canonical extraction and the substrate
+gate passed; final independent integrated acceptance review remains in progress. No public push or main merge is included.
 
 ## Mathematical result
 
@@ -71,3 +71,11 @@ There are 32 explicitly named source theorems. The existing census classifies
 injectivity and size lemmas. Those are generated support, not four additional
 independent mathematical claims. The namespace environment audit includes
 more compiler auxiliaries than the canonical extractor retains.
+
+## Substrate gate
+
+`gate_precheck.py s13-lean` passed in 454.9 seconds. The complete validator
+reported 70/89 checks passed, with all 19 failures classified as paper-corpus
+failures outside this pure-Lean increment. Those failures remain visible and
+unresolved; this result is not paper readiness. The proof and generated inventory
+are unchanged from the candidate submitted to the gate.
