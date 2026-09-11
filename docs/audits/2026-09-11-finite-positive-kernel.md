@@ -1,8 +1,9 @@
 # Finite positive-kernel reconstruction
 
 Status: independently reviewed implementation integrated locally at `59507873`;
-authoritative aggregate build passed. Canonical extraction and the substrate
-gate passed; final independent integrated acceptance review remains in progress. No public push or main merge is included.
+authoritative aggregate build passed. Canonical extraction, the substrate
+gate and final independent integrated review passed. Root accepts this bounded
+mathematical increment locally. No public push or main merge is included.
 
 ## Mathematical result
 
@@ -37,7 +38,7 @@ Source SHA256: `d66bbc47c7aee73bd2ed6b299fd2de3a493245ea09841f7871afc02c07e7011a
 Worker proof diagnostics were clean. A complete environment audit covered all
 172 namespace declarations including generated auxiliaries, with all 32 named
 theorems accounted for and no axiom outside `propext`, `Classical.choice`,
-`Quot.sound`. This audit is distinct from the pending canonical extraction check.
+`Quot.sound`. This audit is distinct from the separate canonical extraction check reported below.
 
 The controller built `SKEFTHawking.ExtractDeps` successfully at `59507873`, epoch
 `be2ed393b5f7b57d115b6ef2ae383d5a09f0e325118b056a0c8dc91783b5dd7c`.
@@ -53,7 +54,7 @@ and positivity of `K A`.
 
 A concrete consumer is the finite Gibbs observable Gram kernel
 `K(a,b)=tr(rho E_a* E_b)` on matrix units. Prove positivity and invariance under
-modular conjugation, descend that action, then consume the existing signed
+the linear automorphism `FiniteGibbsClock.modular`, descend that action, then consume the existing signed
 modular/Heisenberg comparison. Preserve Gibbs faithfulness and positive hbar.
 Use both the degenerate quotient and a nontrivial two-level off-diagonal observable
 as examples. These dynamics theorems are proposed follow-on work.
@@ -79,3 +80,17 @@ reported 70/89 checks passed, with all 19 failures classified as paper-corpus
 failures outside this pure-Lean increment. Those failures remain visible and
 unresolved; this result is not paper readiness. The proof and generated inventory
 are unchanged from the candidate submitted to the gate.
+
+## Final independent acceptance
+
+The final reviewer accepted integrated candidate `f0623514`, independently
+confirming source identity, the full canonical delta, the axiom/time-out audit,
+the named-versus-generated theorem accounting and the gate result. The reviewer
+retained the scientific PASS for the actual quotient, reflected-sector example
+and instrument consumer. Root applied the reviewer's extraction-status wording
+correction and named `FiniteGibbsClock.modular` explicitly for the next package,
+to distinguish its linear action from antiunitary modular conjugation.
+
+No new proof or statement change followed review. The next dynamics package,
+continuum reconstruction, paper readiness and publication remain outside this
+accepted increment.
