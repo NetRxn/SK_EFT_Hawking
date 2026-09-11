@@ -181,3 +181,33 @@ change follows that acceptance; paper readiness remains separate.
 The general positive operator may be semidefinite and is not asserted invertible
 or contractive without further hypotheses. This package does not construct a
 transfer semigroup, parameter continuity, a generator or a continuum field.
+
+## Stationary-channel integration contract — in progress
+
+The next increment connects the reconstructed observable Gram space with actual
+finite quantum channels. For a positive-semidefinite state `rho`, normalized
+Kraus family `V`, and stationarity `sum V rho V* = rho`, define the Heisenberg
+observable action `Psi(X)=sum V* X V`. Derive its Schwarz remainder and weighted
+energy contraction; transport that action through the existing matrix-unit
+synthesis and actual null quotient. Singular states remain permitted.
+
+Weighted detailed balance must be an explicit pairing identity. It yields
+selfadjointness; positivity of the lazy operator `(I+Psi)/2` must be proved from
+the contraction and symmetry. Complete positivity does not itself imply Hilbert
+operator positivity.
+
+The discrete consumer uses the existing dephasing Kraus family and two-level
+Gibbs state, including the exact nonzero off-diagonal rate `1-2*gamma` and its
+iterations. The `gamma=1` case must exhibit the distinction between complete
+positivity and Hilbert positivity. The continuous consumer identifies the actual
+existing Lindblad exponential with zero Hamiltonian and jump `sqrt(a) Z` with
+dephasing at `(1-exp(-2*a*t))/2`, for `a,t >= 0`, then descends its semigroup and
+exact decay. Diagonal observables remain fixed, so no global strict contraction
+or thermalization claim follows.
+
+These are implementation and acceptance requirements, not completed results.
+The lead integrates the shared proof before dependent quotient consumers.
+Independent source review, nontrivial witnesses, all named axiom audits,
+authoritative builds, canonical extraction and the applicable substrate gate
+remain required. General stationary Lindblad systems, centered spectral estimates
+and continuum reconstruction are subsequent work.
