@@ -261,4 +261,101 @@ theorem branchGram_reconstruction (I : QuantumNetwork.FiniteInstrument ι o) (a 
   rw [Finset.sum_comm]
 
 end QuantumConsumer
+/-! A finite reflected-kernel specialization. Reflection positivity below is a
+full sesquilinear-form condition on the positive sector. No time evolution,
+Euclidean-field reconstruction, or Osterwalder-Schrader dynamics is asserted. -/
+section ReflectedKernel
+
+variable {X : Type*} [Fintype X]
+
+/-- Ambient covariance data and an embedded positive sector. The reflection is
+an actual involution; positivity is a separate condition on the reflected kernel. -/
+structure ReflectionData (X ι : Type*) [Fintype X] [Fintype ι] where
+  theta : X → X
+  involutive : Function.Involutive theta
+  positiveSector : ι ↪ X
+  covariance : Matrix X X ℂ
+
+namespace ReflectionData
+
+/-- Reflect the first covariance argument and restrict both arguments to the sector. -/
+def kernel (R : ReflectionData X ι) : Matrix ι ι ℂ :=
+  fun i j => R.covariance (R.theta (R.positiveSector i)) (R.positiveSector j)
+
+/-- Reflection positivity includes Hermitian symmetry and nonnegativity for every
+complex coefficient vector, not merely nonnegative diagonal entries. -/
+def Positive (R : ReflectionData X ι) : Prop := R.kernel.PosSemidef
+
+theorem positive_iff (R : ReflectionData X ι) : R.Positive ↔
+    R.kernel.IsHermitian ∧ ∀ c : ι → ℂ,
+      0 ≤ ∑ i, ∑ j, star (c i) *
+        R.covariance (R.theta (R.positiveSector i)) (R.positiveSector j) * c j := by
+  rw [Positive, Matrix.posSemidef_iff_dotProduct_mulVec]
+  simp only [kernel, dotProduct, mulVec, Pi.star_apply, Finset.mul_sum, mul_assoc]
+
+/-- The finite reflected space is constructed from the null quotient above. -/
+abbrev Reconstructed (R : ReflectionData X ι) (hR : R.Positive) := Space R.kernel hR
+
+/-- The constructed sector vectors recover reflected covariance values. -/
+theorem inner_reconstructed [DecidableEq ι] (R : ReflectionData X ι) (hR : R.Positive)
+    (i j : ι) :
+    ⟪feature R.kernel hR i, feature R.kernel hR j⟫_ℂ =
+      R.covariance (R.theta (R.positiveSector i)) (R.positiveSector j) :=
+  inner_feature R.kernel hR i j
+
+end ReflectionData
+
+/-- Two finite sectors exchanged by reflection, with a nonzero constant covariance. -/
+def twoSectorReflection : ReflectionData (Bool × Fin 2) (Fin 2) where
+  theta x := (!x.1, x.2)
+  involutive := by
+    intro x
+    rcases x with ⟨b, i⟩
+    cases b <;> rfl
+  positiveSector := ⟨fun i => (false, i), by
+    intro i j h
+    exact congrArg Prod.snd h⟩
+  covariance _ _ := 1
+
+theorem twoSectorReflection_nonidentity : twoSectorReflection.theta ≠ id := by
+  intro h
+  have hh := congrFun h (false, 0)
+  simp [twoSectorReflection] at hh
+
+/-- The embedded sector and its reflection are disjoint in this concrete model. -/
+theorem twoSectorReflection_disjoint (i j : Fin 2) :
+    twoSectorReflection.theta (twoSectorReflection.positiveSector i) ≠
+      twoSectorReflection.positiveSector j := by
+  simp [twoSectorReflection]
+
+/-- The reflected kernel is the previously verified nonzero degenerate kernel. -/
+theorem twoSectorReflection_kernel : twoSectorReflection.kernel = degenerate := rfl
+
+theorem twoSectorReflection_positive : twoSectorReflection.Positive := by
+  change twoSectorReflection.kernel.PosSemidef
+  rw [twoSectorReflection_kernel]
+  exact degenerate_posSemidef
+
+/-- Explicit vectors in the reflected null quotient have the prescribed unit pairing. -/
+theorem twoSectorReflection_pairing (i j : Fin 2) :
+    ⟪feature _ twoSectorReflection_positive i,
+      feature _ twoSectorReflection_positive j⟫_ℂ = 1 :=
+  ReflectionData.inner_reconstructed twoSectorReflection twoSectorReflection_positive i j
+
+/-- A nonzero feature survives reflection reconstruction despite the null direction. -/
+theorem twoSectorReflection_feature_nonzero :
+    feature _ twoSectorReflection_positive 0 ≠ 0 := by
+  intro h
+  have hi := twoSectorReflection_pairing 0 0
+  rw [h, inner_zero_left] at hi
+  norm_num at hi
+
+theorem twoSectorReflection_null :
+    mk _ twoSectorReflection_positive ![1, -1] = 0 := by
+  apply (mk_eq_zero_iff _ _ _).mpr
+  change pairing degenerate ![1, -1] ![1, -1] = 0
+  exact degenerate_null
+
+end ReflectedKernel
+
 end SKEFTHawking.FinitePositiveKernel
