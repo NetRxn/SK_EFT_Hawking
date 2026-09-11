@@ -26,7 +26,7 @@ theorem integrable_inverse_weight_sq :
       NavierStokes.ProblemStatement.Space])
   convert! h using 1
   ext ξ
-  norm_num [Real.rpow_two]
+  norm_num [Real.rpow_two] <;> rfl
 
 /-- A finite numerical constant depending only on three-dimensional Lebesgue measure. -/
 def fourierMomentConstant : ℝ :=
