@@ -1,0 +1,278 @@
+{
+  "repository": "https://github.com/openai/NavierStokesAndEuler",
+  "commit": "f9e8bc5b38b6e212696e8a30e3e91517af887bbd",
+  "upstream_toolchain": "leanprover/lean4:v4.34.0-rc2",
+  "upstream_mathlib": "85e3a25e006c35636f0e53b0e9296caca2685bc0",
+  "target": "NavierStokesR3.WholeSpaceUniqueness.classical_uniqueness_on_Icc",
+  "modules": [
+    {
+      "path": "NavierStokes/PeriodicIntegration.lean",
+      "upstream_sha256": "4f637ee61edc17fd3e99da4c407f13a9c749bf7e6f6a2c49a85396e7a56eec1a"
+    },
+    {
+      "path": "NavierStokes/PeriodicUniqueness.lean",
+      "upstream_sha256": "fa8f82a4f4fabb6bd6b6c8d0d450152ab7fa540f9bf22235ea8eb70931a30558"
+    },
+    {
+      "path": "NavierStokes/ProblemStatement.lean",
+      "upstream_sha256": "d2f5cdf24a060acd41011b50492e89058991965e18d2cb797c58d915f95af633"
+    },
+    {
+      "path": "NavierStokes/R3/ActualPressureFlux.lean",
+      "upstream_sha256": "56c026a1fe91d64a8e05b13ca678cffa9073d39d308f990939d72286c094f0ee"
+    },
+    {
+      "path": "NavierStokes/R3/CompactComparisonBounds.lean",
+      "upstream_sha256": "59aa6b7ede54c7fcffc9d2d7d6b2b577dbc1308ca249df82751a10a452e828f6"
+    },
+    {
+      "path": "NavierStokes/R3/CompactEnergy.lean",
+      "upstream_sha256": "5f6b0e17cd55b82672d52d04de70a973d74ee483316a5fe993aee7ccdb9ac71e"
+    },
+    {
+      "path": "NavierStokes/R3/CompactForceBound.lean",
+      "upstream_sha256": "ed2e1ad50aa4b24554092ee0bfe19390131c85d43f2b563d26e1a184ea85f36b"
+    },
+    {
+      "path": "NavierStokes/R3/CompactSchwartz.lean",
+      "upstream_sha256": "d56930b6144facde894ff13057791b0235833d739c8bca5a313f2d7a2f9ad622"
+    },
+    {
+      "path": "NavierStokes/R3/CompactTimeIntegral.lean",
+      "upstream_sha256": "65f72cbcff36ec69bc7b2cf925db98aad723dc6a4a09be8acc76f9ef1ce3d08a"
+    },
+    {
+      "path": "NavierStokes/R3/ComparisonCutoffs.lean",
+      "upstream_sha256": "a4fba9b793ad51dca007cc6d8f6adf30f06b4f79c9c9811384ec299da230ab6b"
+    },
+    {
+      "path": "NavierStokes/R3/ComparisonFiniteEnergy.lean",
+      "upstream_sha256": "f73e27eca00d63d6a13cda5d4239ee70c2334e3e410ab90ab9533d674c7418c6"
+    },
+    {
+      "path": "NavierStokes/R3/ComparisonFourierSetup.lean",
+      "upstream_sha256": "30b9551a34a825c2c9de181eb28c4e48a14091e927ad8dfdedad1c84e8a468ff"
+    },
+    {
+      "path": "NavierStokes/R3/ComparisonGronwall.lean",
+      "upstream_sha256": "165a2076c39df025d4dbc94e94b46c21ac9e8ccb03c0ab5f241fe1f073ba22d2"
+    },
+    {
+      "path": "NavierStokes/R3/ComparisonRateBound.lean",
+      "upstream_sha256": "b992584a72424037527f2db635834446b873f3d77ebe362f3f896c777ae9334b"
+    },
+    {
+      "path": "NavierStokes/R3/ComparisonSetup.lean",
+      "upstream_sha256": "2c1335d9da753d25c73b2b102b0c7686648c8928ddfac416d87284bb9b20fbde"
+    },
+    {
+      "path": "NavierStokes/R3/ComparisonTimeAverages.lean",
+      "upstream_sha256": "b8f58608f5954801f892e990714c2cf7d96cfa7f9105ac1c5421baea55da169c"
+    },
+    {
+      "path": "NavierStokes/R3/ComparisonYoung.lean",
+      "upstream_sha256": "1ede4e4ee74651b222e1676ff7a1fd32d3772eff0a866aca28ec4e05c2e3e2b4"
+    },
+    {
+      "path": "NavierStokes/R3/ConservativeDifference.lean",
+      "upstream_sha256": "380ad80fd48eb8a509d618fbba31e2e0bec6fed9b8254596db4cc8f65d8f31db"
+    },
+    {
+      "path": "NavierStokes/R3/FourierConvolution.lean",
+      "upstream_sha256": "394ffeddbc14c6cdfc61aec9ff1d98dcfa57e3e4a9f941686b32125f0b794d47"
+    },
+    {
+      "path": "NavierStokes/R3/FourierSobolevWeights.lean",
+      "upstream_sha256": "073f501e63394b0b378e1a8480a8443f217c6b337d96941df461210115990245"
+    },
+    {
+      "path": "NavierStokes/R3/FourierTestDerivatives.lean",
+      "upstream_sha256": "3937144132a8a69cb739890a585a964d9c98f12850fba615217b6292422f8c63"
+    },
+    {
+      "path": "NavierStokes/R3/GaussianMoments.lean",
+      "upstream_sha256": "638e482ba99943b1c3198949ffb8a894140d04d2cfb04661ba1e6e011898430d"
+    },
+    {
+      "path": "NavierStokes/R3/GradientOperator.lean",
+      "upstream_sha256": "94559bda701acd5e8be547573aa95f8324d92ab420653af01dc27cde5f73c5bb"
+    },
+    {
+      "path": "NavierStokes/R3/HarmonicTestFunctionals.lean",
+      "upstream_sha256": "5046e01dd9701ffa030b59aa6d86ab6740444fed3eaec2d7abc4baac47ec62b8"
+    },
+    {
+      "path": "NavierStokes/R3/HeatKernel.lean",
+      "upstream_sha256": "a15d6b8e8d21756fddddaa5525e2cdd36d9d4b3c12d17a7321c7eefadcbe7212"
+    },
+    {
+      "path": "NavierStokes/R3/HeatKernelCancellation.lean",
+      "upstream_sha256": "1d4cb71389454447f3e1e818c379fc726bc836a312662e125028470bc77c0267"
+    },
+    {
+      "path": "NavierStokes/R3/HeatKernelCommutator.lean",
+      "upstream_sha256": "a72f167f34047e271508da9bcda8ee5bf7739247a36e85da9769d87051a08e20"
+    },
+    {
+      "path": "NavierStokes/R3/HeatKernelFourier.lean",
+      "upstream_sha256": "43de750a908fe9e9203d0d210a7ee37e1830ff5d77f23a9c2761ca94f158ded8"
+    },
+    {
+      "path": "NavierStokes/R3/HeatKernelFubini.lean",
+      "upstream_sha256": "16d156e1264df28d130cbbd5dca6cc8cf8d76ea07132358eea5712a696c7364e"
+    },
+    {
+      "path": "NavierStokes/R3/HeatKernelPairedBound.lean",
+      "upstream_sha256": "64dfb0726c3edc2c38542315b7db8eff2500a4405f2e7f3890e202d7651c9e17"
+    },
+    {
+      "path": "NavierStokes/R3/HeatKernelTimeBound.lean",
+      "upstream_sha256": "0fb569cbbc8757f8bb6ceca8e4465287e1185fd2383e3d916ebf270e03d0db59"
+    },
+    {
+      "path": "NavierStokes/R3/HilbertFunctionalExtension.lean",
+      "upstream_sha256": "757d1c4955ac1e88a5207292da7e306c7c203c50f0dec114edcdd401685fc536"
+    },
+    {
+      "path": "NavierStokes/R3/LocalizedDifferenceEnergy.lean",
+      "upstream_sha256": "08751df30963bfced9a1aeba5c56d3a263fdae2b4c68e69b42f3b640c39733aa"
+    },
+    {
+      "path": "NavierStokes/R3/LocalizedFluxEstimates.lean",
+      "upstream_sha256": "5c0730ac51fd0445b8ab52b428d3c5fbf0182ca375ef4bf00d77b676ad0b2583"
+    },
+    {
+      "path": "NavierStokes/R3/LocalizedLaplacian.lean",
+      "upstream_sha256": "5ee2093c65c9c02327237f9c093d45c1afca69924c77ed1cb9fcbfc7542c6965"
+    },
+    {
+      "path": "NavierStokes/R3/LocalizedTensorBounds.lean",
+      "upstream_sha256": "0240381b0b7054bd2f92f110e70e031e9ab622cfb5aac823445cb747b4ca6aa0"
+    },
+    {
+      "path": "NavierStokes/R3/LocalizedTransport.lean",
+      "upstream_sha256": "a1d95e1e9a57544cb9652fd3993cf2ec9fecf7b4894f00a9882dc4821dd1a4f7"
+    },
+    {
+      "path": "NavierStokes/R3/LpNormTools.lean",
+      "upstream_sha256": "a5f032aaefda87c09048c77c88a87eb980b36b531cd2a4acabd408ea078a738e"
+    },
+    {
+      "path": "NavierStokes/R3/PairedKernelBound.lean",
+      "upstream_sha256": "f52333ca33743338b34b0fbd32fc82292ece2e2621dfdb25ac2ac515ab51b9bd"
+    },
+    {
+      "path": "NavierStokes/R3/PressureFlux.lean",
+      "upstream_sha256": "0adffc7879e8e5e226e5d4b2d721139a4ff12a04b4c9b4ebc12cf0d0f597fc2a"
+    },
+    {
+      "path": "NavierStokes/R3/PressureFluxIdentity.lean",
+      "upstream_sha256": "a6167833447ef6e0f03e0b91e98266820c8fa40b6dae34bce99a3ac42f5fc25e"
+    },
+    {
+      "path": "NavierStokes/R3/PressureFluxTest.lean",
+      "upstream_sha256": "435b82aec70d0894178086fb38e3433752b5cbb72d05caf3a8b7e349c73b1a30"
+    },
+    {
+      "path": "NavierStokes/R3/PressureFunctionals.lean",
+      "upstream_sha256": "5eeb4124298159564ad6034fbd2189c8083e2199e1a212e712d4d603edfd2d15"
+    },
+    {
+      "path": "NavierStokes/R3/PressureRecovery.lean",
+      "upstream_sha256": "089962e70d0e0c8aa1970785e4203910bdb56d9e16cd98cf80d5bbe72d4e6098"
+    },
+    {
+      "path": "NavierStokes/R3/PressureRecoveryHelpers.lean",
+      "upstream_sha256": "efa98613cf549e064efb6bc44b92648e0b00a461bb423864586fe4ff3fcc24b7"
+    },
+    {
+      "path": "NavierStokes/R3/PressureTemporalIdentity.lean",
+      "upstream_sha256": "4cc785f9e168faab1ed11b34a4ba6f8165d63b54f35e4eeb448192d7f39f55ef"
+    },
+    {
+      "path": "NavierStokes/R3/PressureTestBounds.lean",
+      "upstream_sha256": "3d9984e6a89c9e252af10e8bdd226723570457260f5c3c366e60de5825df9527"
+    },
+    {
+      "path": "NavierStokes/R3/ProblemStatement.lean",
+      "upstream_sha256": "8b0a28b3b93fb8dfcf967d0082a5a2829a5e5f079de6662c846417057b0856d7"
+    },
+    {
+      "path": "NavierStokes/R3/RadialKernelBounds.lean",
+      "upstream_sha256": "4dfc00b6ee64e9886a98456cff3b344dc86ef299252068068486fef81b501140"
+    },
+    {
+      "path": "NavierStokes/R3/RieszHeatRepresentation.lean",
+      "upstream_sha256": "238018df10708279be34b9e21efbacd854b3a7bdbb72575534fa3809cf792dec"
+    },
+    {
+      "path": "NavierStokes/R3/RieszL2Bounds.lean",
+      "upstream_sha256": "986161e3e04e00668868a5b46902675b73139c4639bbd09bea4b4241db8897fe"
+    },
+    {
+      "path": "NavierStokes/R3/RieszLinearityDecay.lean",
+      "upstream_sha256": "0d23e250e2605f29362400ff5763072ea018865e59a9982ea2286afe2c725fa1"
+    },
+    {
+      "path": "NavierStokes/R3/RieszPairing.lean",
+      "upstream_sha256": "6da03c719747f40ca67d7b37721932efa0e015224c2ab66aff5e0acad285aee0"
+    },
+    {
+      "path": "NavierStokes/R3/RieszSymbolRegularity.lean",
+      "upstream_sha256": "9087b62cecf3a443ed55c9d833846b30ac9728dd4d7af5168eb5f0b02ddba41d"
+    },
+    {
+      "path": "NavierStokes/R3/RieszTestOperators.lean",
+      "upstream_sha256": "95aff76a30315a8c937150186e6fc0817d6c06e216f15da2172d55b736d9aa19"
+    },
+    {
+      "path": "NavierStokes/R3/ScalarEnergyBound.lean",
+      "upstream_sha256": "ee2a47869f1f8466984dc025eeb448b0165cb4980cc278e95bea49aa6755f5d9"
+    },
+    {
+      "path": "NavierStokes/R3/SchwartzCompactApproximation.lean",
+      "upstream_sha256": "65805b2ea9af8a2f96c00ed1c76e11783662d25a38493d4ceecfab9cd4e356fd"
+    },
+    {
+      "path": "NavierStokes/R3/SchwartzParseval.lean",
+      "upstream_sha256": "c45a84eb3715812072a6772e58e11e866f91a4675ca35b72a67d06df32039c68"
+    },
+    {
+      "path": "NavierStokes/R3/SmoothSobolevL6.lean",
+      "upstream_sha256": "1c89ed275a84d3ccfac47f573e4d5039c86c9fe9be7642aecbc84c83a4c2bace"
+    },
+    {
+      "path": "NavierStokes/R3/TemporalTestUniqueness.lean",
+      "upstream_sha256": "8da8ce6d03d609ee8d20a60b3995103d5414da96eb0a62bdcf2b386fbc931051"
+    },
+    {
+      "path": "NavierStokes/R3/WeakFourierUniqueness.lean",
+      "upstream_sha256": "18a754a3dc55954c11e397126529fa170c7552eab4065c47da24572fc0162d95"
+    },
+    {
+      "path": "NavierStokes/R3/WeakTimeContinuity.lean",
+      "upstream_sha256": "35c1c03b202bc8ff103c61ccba274c04241ecd22b34113d67972e59c09248ea2"
+    },
+    {
+      "path": "NavierStokes/R3/WeightedInterpolation.lean",
+      "upstream_sha256": "919ba5c3d2df2d88ace044a03555b91aa5000bc2a63997b4f683fb867f5638f1"
+    },
+    {
+      "path": "NavierStokes/R3/WeightedSobolev.lean",
+      "upstream_sha256": "69faf86d194c00acd438c6ce40b102ff3d40d55fd5dc4470a5b6c27306d6f136"
+    },
+    {
+      "path": "NavierStokes/R3/WholeSpaceComparisonClosure.lean",
+      "upstream_sha256": "a341c40686a2ab0f4b5916b2813814a176438210df63350b2d88b308ce106b3d"
+    },
+    {
+      "path": "NavierStokes/R3/WholeSpaceEnergyLimit.lean",
+      "upstream_sha256": "1a0518847b2b01324506d288a28148f4ec24b87f584d838383f469ef8a5589e1"
+    },
+    {
+      "path": "NavierStokes/R3/WholeSpaceUniqueness.lean",
+      "upstream_sha256": "c5db96b5a524d852cecc34947be821e1ccab983febdb3fd71f398cabf5e46dcf"
+    }
+  ],
+  "port_modifications": []
+}
