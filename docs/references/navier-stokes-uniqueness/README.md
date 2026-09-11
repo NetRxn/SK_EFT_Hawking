@@ -3,7 +3,7 @@
 This directory records the upstream attribution and exact source closure for the
 67 vendored modules under `lean/NavierStokes`. Source and original pins are in
 `source-manifest.json`; Apache-2.0 license is preserved verbatim in `LICENSE`.
-The original upstream source is unchanged in this initial compiler candidate.
+Port modifications are listed in the manifest and marked in the affected source files.
 
 The separate `NavierStokes` Lean library preserves upstream `autoImplicit=true`.
 Its root imports only `NavierStokes.R3.WholeSpaceUniqueness`. Euler, Comparator

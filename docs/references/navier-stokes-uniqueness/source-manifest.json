@@ -274,5 +274,10 @@
       "upstream_sha256": "c5db96b5a524d852cecc34947be821e1ccab983febdb3fd71f398cabf5e46dcf"
     }
   ],
-  "port_modifications": []
+  "port_modifications": [
+    {
+      "path": "NavierStokes/PeriodicIntegration.lean",
+      "change": "Replace unavailable ite_eq_left rfl with if_pos rfl in the equal-index boundary branch; statement unchanged."
+    }
+  ]
 }

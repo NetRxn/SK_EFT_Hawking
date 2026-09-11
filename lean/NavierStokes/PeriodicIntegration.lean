@@ -1,3 +1,5 @@
+/- Port modification: replace the newer ite_eq_left simp lemma with if_pos on Lean 4.32.
+   Upstream source and Apache-2.0 attribution: docs/references/navier-stokes-uniqueness. -/
 import NavierStokes.ProblemStatement
 import Mathlib.MeasureTheory.Integral.DivergenceTheorem
 import Mathlib.MeasureTheory.Measure.OpenPos
@@ -160,7 +162,7 @@ theorem cubeIntegral_partial_eq_zero {f : Space → ℝ} (hf : ContDiff ℝ 1 f)
     intro k y
     by_cases hk : k = i
     · subst k
-      simp only [F, ite_eq_left rfl, g]
+      simp only [F, if_pos rfl, g]
       rw [insertNth_one_eq, map_add, toSpace_single]
       exact hp _ i
     · simp [F, hk]
