@@ -1,3 +1,5 @@
+/- Port modification: explicitly identify real exponent two with the natural square on Lean 4.32.
+   Attribution: docs/references/navier-stokes-uniqueness. -/
 import NavierStokes.R3.SchwartzParseval
 import NavierStokes.R3.FourierTestDerivatives
 import NavierStokes.R3.FourierSobolevWeights
@@ -24,7 +26,7 @@ theorem integrable_inverse_weight_sq :
       NavierStokes.ProblemStatement.Space])
   convert! h using 1
   ext ξ
-  norm_num
+  norm_num [Real.rpow_two]
 
 /-- A finite numerical constant depending only on three-dimensional Lebesgue measure. -/
 def fourierMomentConstant : ℝ :=

@@ -1,3 +1,5 @@
+/- Port modification: explicitly normalize the real square in the zero branch on Lean 4.32.
+   Attribution: docs/references/navier-stokes-uniqueness. -/
 import NavierStokes.R3.ComparisonSetup
 import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 import Mathlib.MeasureTheory.Integral.Layercake
@@ -47,7 +49,7 @@ private theorem kernel_one_le_cube (z : Space) :
 private theorem kernel_one_le_square (z : Space) :
     radialCommutatorKernel 1 z ≤ ‖z‖ ^ (-2 : ℝ) := by
   by_cases hz : z = 0
-  · simp [hz]
+  · norm_num [hz, Real.rpow_two]
   have hn : 0 < ‖z‖ := norm_pos_iff.mpr hz
   calc
     radialCommutatorKernel 1 z ≤ ‖z‖ ^ (-3 : ℝ) * ‖z‖ := by

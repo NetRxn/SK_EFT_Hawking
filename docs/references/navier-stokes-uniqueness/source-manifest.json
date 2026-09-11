@@ -278,6 +278,14 @@
     {
       "path": "NavierStokes/PeriodicIntegration.lean",
       "change": "Replace unavailable ite_eq_left rfl with if_pos rfl in the equal-index boundary branch; statement unchanged."
+    },
+    {
+      "path": "NavierStokes/R3/RadialKernelBounds.lean",
+      "change": "Normalize real power two explicitly in zero-vector branch; statement unchanged."
+    },
+    {
+      "path": "NavierStokes/R3/PressureTestBounds.lean",
+      "change": "Use Real.rpow_two explicitly in inverse weight integral conversion; statement unchanged."
     }
   ]
 }
