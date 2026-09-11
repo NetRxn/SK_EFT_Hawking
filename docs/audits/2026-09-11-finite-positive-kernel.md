@@ -169,8 +169,14 @@ epoch `379e86b182bfc53cba1c0c8b4d751906344a5d99477ee8867e9bc44e2c665ed8`.
 Canonical extraction adds exactly 32 records, all in the transfer module, with
 no changes or removals among existing records and only ordinary core axiom
 closures. Its 27 theorem records comprise the 24 named source theorems plus
-two equation lemmas and `matrixTransfer.congr_simp`. The substrate gate and
-final integrated review remain pending.
+two equation lemmas and `matrixTransfer.congr_simp`. The substrate gate passed
+at `38d8c5a8` in 446.9 seconds, with no Lean/Python-side failure. The validator
+reported 70/89 checks passing and 1,146 warnings; the same 19 paper-corpus
+failures remain unresolved. Independent final review confirmed the unchanged
+source and canonical hashes, exact failure-set comparison and authoritative
+epoch `df4eb483c54efc15a35a1ee54cb11d1737c6e930e28db617b3710e87e7c92aec`.
+Root accepts this bounded transfer increment locally. No proof or statement
+change follows that acceptance; paper readiness remains separate.
 
 The general positive operator may be semidefinite and is not asserted invertible
 or contractive without further hypotheses. This package does not construct a
