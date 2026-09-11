@@ -182,7 +182,7 @@ The general positive operator may be semidefinite and is not asserted invertible
 or contractive without further hypotheses. This package does not construct a
 transfer semigroup, parameter continuity, a generator or a continuum field.
 
-## Stationary-channel integration — source accepted, final gates pending
+## Stationary-channel integration — accepted locally
 
 `FinitePositiveKernelChannel.lean` derives the Heisenberg observable action
 `Psi(X)=sum V* X V` from an actual finite Kraus family. Kraus normalization
@@ -230,7 +230,16 @@ only its recorded module from `GKSLStructure` to `LindbladCPSemigroup`; its type
 value dependencies and axiom closure are unchanged. Every added record has only
 ordinary core axioms, no project axiom and no dependency timeout.
 
-The applicable substrate gate and final integrated review remain pending.
-These source and build results do not establish publication or paper readiness.
-General stationary Lindblad systems, centered spectral estimates, time-continuity
-packaging and continuum reconstruction remain subsequent work.
+The final independent integrated review and `s13-lean` gate passed at
+`14c181bd`, authoritative epoch
+`b4f6042ad429cb9c2310b346639431832c08652e213235902a2c05f52d4c565d`.
+The gate completed in 456.2 seconds: 70/89 checks passing, 1,146 warnings,
+no Lean/Python-side failure, and exactly the same 19 existing paper-corpus
+failures as the preceding accepted round. Those failures remain unresolved.
+Root accepts the bounded integration locally; paper readiness, publication and
+main-branch promotion are separate.
+
+The next finite decay target removes the full fixed diagonal algebra, rather
+than only the equilibrium mean: mean-zero diagonal observables can remain fixed.
+General stationary Lindblad systems, time-continuity packaging and continuum
+reconstruction remain subsequent work.
