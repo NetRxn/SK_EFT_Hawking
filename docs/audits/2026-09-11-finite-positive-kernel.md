@@ -94,3 +94,35 @@ to distinguish its linear action from antiunitary modular conjugation.
 No new proof or statement change followed review. The next dynamics package,
 continuum reconstruction, paper readiness and publication remain outside this
 accepted increment.
+
+## Finite quotient dynamics continuation
+
+Candidate `d6921648` adds `FinitePositiveKernelDynamics.lean`. A coefficient
+linear map preserving the derived kernel null space descends to the actual
+quotient, with representative, identity, composition, iteration and power laws.
+PSD `K - AᴴKA` supplies a quotient norm contraction. Pairing preservation and a
+right inverse modulo null vectors supply a surjective linear isometry.
+
+The singular two-point projection is noninvertible on coefficients and acts as
+identity on the nonzero quotient. Its half-scaled version strictly contracts a
+surviving feature. These examples exercise genuine null-space collapse.
+
+The Gibbs consumer builds the matrix-unit Gram kernel `tr(E_q rho E_pᴴ)`, proves
+its full coefficient pairing and positivity, and uses positive definiteness for
+faithful observable reconstruction. Gibbs commutation and trace cyclicity prove
+weighted-pairing invariance for the existing linear modular automorphism. Its
+quotient action is unitary and satisfies group and inverse laws. The signed
+Heisenberg comparison uses `t = -beta*hbar*s` with positive hbar. A nonzero E01
+class has the explicit phase and a nontrivial sign flip for positive beta and
+two-level gap.
+
+Independent source semantic review passed. Complete namespace axiom audit covers
+263 declarations, including all91new declarations and generated auxiliaries,
+with no omissions or axioms beyond the standard three. The source has57named
+theorems and16definitions; canonical extraction is a separate count. Source
+SHA25671142948d1704b5da1efe7ca65f6bacddb69ea2ff61dc8345de82c0ed02170a7.
+
+Root authoritative build, canonical extraction, substrate gate and final
+integrated acceptance remain pending. These are finite algebraic dynamics;
+parameter continuity, generators, positive selfadjoint transfer, general channel
+contraction and continuum OS reconstruction are outside this increment.

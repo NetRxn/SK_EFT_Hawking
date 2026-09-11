@@ -10,8 +10,15 @@ Its root imports only `NavierStokes.R3.WholeSpaceUniqueness`. Euler, Comparator
 and challenge modules are outside the selected closure. The project stays on its
 existing coupled Lean/Mathlib/PhysLib/REPL 4.32 pins.
 
-Status: initial compiler experiment; no compatibility or adapter acceptance yet.
-Acceptance requires a successful project build, full selected-theorem axiom audit,
-review of any port changes, and a concrete consumer with explicit hypotheses.
+The bounded closure compiles on the existing pins at `4390030d`: the project
+build passed 10,911 jobs. Four files required the disclosed proof-normalization
+adaptations; independent review confirmed unchanged theorem statements.
+Original source hashes, import-closure completeness and the license were verified.
+The elaborated axiom closure of `classical_uniqueness_on_Icc` contains exactly
+`propext`, `Classical.choice`, and `Quot.sound`. This measured compatibility
+supports the bounded backport without a coordinated toolchain upgrade.
+
+Model-specific consumers must explicitly transport coordinates, derivatives,
+support, measure and energy, and discharge the theorem's hypotheses.
 The theorem concerns smooth classical flows with a compact reference and a
 finite-energy competitor; it does not establish global or weak-solution uniqueness.
