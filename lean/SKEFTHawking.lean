@@ -4057,6 +4057,7 @@ import SKEFTHawking.QuantumNetwork.FiniteMemoryPartialInteraction
 import SKEFTHawking.QuantumNetwork.BinaryMemorySampling
 import SKEFTHawking.QuantumNetwork.BinaryMemoryCalibration
 import SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining
+import SKEFTHawking.FinitePositiveKernel
 import SKEFTHawking.QuantumNetwork.FiniteInstrument
 import SKEFTHawking.QuantumNetwork.FiniteInterventionProcess
 import SKEFTHawking.QuantumNetwork.FiniteGibbsClock
