@@ -1,3 +1,5 @@
+/- Port modification: use the fully normalized integral casts directly on Lean 4.32.
+   Attribution: docs/references/navier-stokes-uniqueness. -/
 import NavierStokes.R3.PressureRecoveryHelpers
 import NavierStokes.R3.PressureFunctionals
 import NavierStokes.R3.ComparisonTimeAverages
@@ -163,10 +165,6 @@ theorem noncanonical_average_identity {T : ℝ} {u v : VelocityField} {p q : Pre
       H.smooth_p H.smooth_q H.div_u H.div_v H.equation ha hsupp hψ hcψ k).symm
   simp only [laplacianCLM_realTest, partialCLM_realTest, realTest_apply,
     ← Complex.ofReal_mul, integral_complex_ofReal]
-  change ((∫ x, velocityAverage T a u v k x * scalarLaplacian ψ x : ℝ) : ℂ) +
-      ((∫ x, velocityAverage T (deriv a) u v k x * ψ x : ℝ) : ℂ) +
-      (∑ i : Fin 3, ∫ x, (tensorAverage T a u v k i x : ℂ) *
-        ((spatialPartial i ψ x : ℝ) : ℂ)) = _
   simpa only [← Complex.ofReal_mul, integral_complex_ofReal, Complex.ofReal_add,
     Complex.ofReal_sum] using congrArg Complex.ofReal hreal
 

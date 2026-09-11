@@ -286,6 +286,10 @@
     {
       "path": "NavierStokes/R3/PressureTestBounds.lean",
       "change": "Use Real.rpow_two explicitly in inverse weight integral conversion; statement unchanged."
+    },
+    {
+      "path": "NavierStokes/R3/PressureRecovery.lean",
+      "change": "Remove redundant change to pre-normalized integral casts after simp; conclude from the same real identity. Statement unchanged."
     }
   ]
 }
