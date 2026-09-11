@@ -164,8 +164,13 @@ elaborated all 29 named declarations and audited their axiom closures; every
 closure contains only `propext`, `Classical.choice` and `Quot.sound`, with no
 error or timeout. Independent evidence reconciliation confirmed exact coverage.
 Source SHA256: `27583f46ced54eef0b8a86470f5be4cf04a9700de0a47673718aaab12fd0a3a2`.
-Diagnostics were clean. Aggregate integration and canonical/gate verification
-are in progress; source acceptance does not establish integrated acceptance.
+Diagnostics were clean. The aggregate build passed at `8cdc6b92`, authoritative
+epoch `379e86b182bfc53cba1c0c8b4d751906344a5d99477ee8867e9bc44e2c665ed8`.
+Canonical extraction adds exactly 32 records, all in the transfer module, with
+no changes or removals among existing records and only ordinary core axiom
+closures. Its 27 theorem records comprise the 24 named source theorems plus
+two equation lemmas and `matrixTransfer.congr_simp`. The substrate gate and
+final integrated review remain pending.
 
 The general positive operator may be semidefinite and is not asserted invertible
 or contractive without further hypotheses. This package does not construct a
