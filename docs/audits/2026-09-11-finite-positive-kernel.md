@@ -182,32 +182,55 @@ The general positive operator may be semidefinite and is not asserted invertible
 or contractive without further hypotheses. This package does not construct a
 transfer semigroup, parameter continuity, a generator or a continuum field.
 
-## Stationary-channel integration contract — in progress
+## Stationary-channel integration — source accepted, final gates pending
 
-The next increment connects the reconstructed observable Gram space with actual
-finite quantum channels. For a positive-semidefinite state `rho`, normalized
-Kraus family `V`, and stationarity `sum V rho V* = rho`, define the Heisenberg
-observable action `Psi(X)=sum V* X V`. Derive its Schwarz remainder and weighted
-energy contraction; transport that action through the existing matrix-unit
-synthesis and actual null quotient. Singular states remain permitted.
+`FinitePositiveKernelChannel.lean` derives the Heisenberg observable action
+`Psi(X)=sum V* X V` from an actual finite Kraus family. Kraus normalization
+makes that action unital. The explicit Schwarz remainder is a sum of positive
+squares; stationarity of the state map then yields contraction of the weighted
+observable energy. The existing matrix-unit synthesis and null quotient descend
+the action to a continuous contraction, including singular PSD states.
 
-Weighted detailed balance must be an explicit pairing identity. It yields
-selfadjointness; positivity of the lazy operator `(I+Psi)/2` must be proved from
-the contraction and symmetry. Complete positivity does not itself imply Hilbert
-operator positivity.
+Weighted detailed balance is an explicit trace-pairing identity. It supplies
+selfadjointness; the lazy operator `(Id+T)/2` is proved positive using that
+symmetry and the derived contraction bound. Positivity is not assumed in its
+constructor.
 
-The discrete consumer uses the existing dephasing Kraus family and two-level
-Gibbs state, including the exact nonzero off-diagonal rate `1-2*gamma` and its
-iterations. The `gamma=1` case must exhibit the distinction between complete
-positivity and Hilbert positivity. The continuous consumer identifies the actual
-existing Lindblad exponential with zero Hamiltonian and jump `sqrt(a) Z` with
-dephasing at `(1-exp(-2*a*t))/2`, for `a,t >= 0`, then descends its semigroup and
-exact decay. Diagonal observables remain fixed, so no global strict contraction
-or thermalization claim follows.
+`FiniteGibbsDephasing.lean` supplies two concrete consumers. The existing
+qubit dephasing Kraus family preserves the actual two-level Gibbs state and
+satisfies weighted detailed balance. The descended operator multiplies the
+surviving off-diagonal class by `1-2*gamma`, with exact norm and power formulas.
+Within the CPTP range `0 <= gamma <= 1`, Hilbert positivity holds exactly when
+`gamma <= 1/2`. Above that threshold the nonzero coherence has negative
+quadratic pairing; `gamma=1` is an explicit counterexample to inferring Hilbert
+positivity from complete positivity and weighted symmetry.
 
-These are implementation and acceptance requirements, not completed results.
-The lead integrates the shared proof before dependent quotient consumers.
-Independent source review, nontrivial witnesses, all named axiom audits,
-authoritative builds, canonical extraction and the applicable substrate gate
-remain required. General stationary Lindblad systems, centered spectral estimates
-and continuum reconstruction are subsequent work.
+For `a >= 0`, the existing Lindblad generator with zero Hamiltonian and jump
+`sqrt(a) Z` has its actual matrix exponential identified with dephasing at
+`(1-exp(-2*a*t))/2` for `t >= 0`. The descended maps have identity at zero,
+composition for nonnegative times, positivity, selfadjointness and contraction.
+The coherence norm has exact multiplier `exp(-2*a*t)` and strictly decreases
+when `a,t > 0`. Diagonal observables remain fixed, so the result does not assert
+global strict contraction or thermalization.
+
+Independent scientific review accepted core candidate `2c71ee1e`, concrete
+foundation `4d4f350f`, and final consumer `cd94d192`. The core has 29 named
+declarations (22 theorems and seven definitions); the final consumer has 52
+named declarations including two abbreviations. Persisted raw audits cover
+every named declaration exactly once with ordinary core axioms only, and
+matching-MCP diagnostics are clean. Root independently reconciled those audits
+against source names and read both proof modules. The authoritative aggregate
+build at `cd94d192` passed after integration.
+
+Post-build canonical extraction adds 90 records: 32 attributed to the channel
+module and 58 to dephasing. The 81 named declarations are accompanied by nine
+generated support records, including `lindbladPropagator.congr_simp`. No records
+were removed. One existing generated record, `lindbladGenerator.eq_1`, changes
+only its recorded module from `GKSLStructure` to `LindbladCPSemigroup`; its type,
+value dependencies and axiom closure are unchanged. Every added record has only
+ordinary core axioms, no project axiom and no dependency timeout.
+
+The applicable substrate gate and final integrated review remain pending.
+These source and build results do not establish publication or paper readiness.
+General stationary Lindblad systems, centered spectral estimates, time-continuity
+packaging and continuum reconstruction remain subsequent work.
