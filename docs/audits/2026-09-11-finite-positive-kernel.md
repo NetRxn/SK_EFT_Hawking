@@ -428,3 +428,31 @@ Publication readiness remains separate.
 The next isolated candidate combines this actual dissipative model with the
 existing diagonal Gibbs Hamiltonian clock. Its source review is complete; its
 own aggregate, inventory and final acceptance are still required.
+
+## Hamiltonian and dissipative Gibbs evolution — integration in progress
+
+`FiniteGibbsHamiltonianRelaxation.lean` combines the actual diagonal Hamiltonian
+commutator with the accepted reset/block GKSL generator. The commuting vectorized
+matrix exponential factors into unitary state conjugation and dissipation.
+Unitary-multiplied Kraus operators realize this state action; their trace-dual
+observable action uses the opposite phase of the existing Gibbs Heisenberg clock.
+
+On the faithful reconstructed observable quotient, rotation is an isometry
+commuting with the scalar and signature-block projections. The actual channel
+retains the exact two-rate squared error and positive-reset convergence. Its
+unique trace-one stationary matrix is the existing Gibbs state. Energies 0,1,2
+provide actual nonuniform Gibbs weights, population transfer and distinct
+coherence phases/decay rates. At zero reset, a surviving within-block coherence
+has no limit: two sequences of increasing times give distinct nonzero limits.
+Both dissipative rates zero recover the existing Gibbs clock.
+
+These statements concern diagonal Hamiltonians and uniform block dephasing.
+Hamiltonian evolution is not asserted positive or self-adjoint as an operator
+on the weighted Hilbert space. Finite-time resonant fixed points are distinct
+from stationary operators. No bath derivation or continuum reconstruction follows.
+
+Candidate `14b3b71f`, integrated unchanged as `16042afc`, passed independent
+full-source review. All 76 authored declarations (67 theorems, nine definitions)
+have exact ordinary-core raw axiom audits and clean standalone diagnostics.
+Two local projection abbreviations were independently checked as benign.
+Aggregate build, canonical inventory and final gate acceptance remain pending.

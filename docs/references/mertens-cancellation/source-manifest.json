@@ -1,0 +1,215 @@
+{
+  "revision": "a5154676af9aa3095150ee410cdda80555aa0642",
+  "repository": "https://github.com/AlexKontorovich/PrimeNumberTheoremAnd",
+  "files": [
+    {
+      "path": "PrimeNumberTheoremAnd/Consequences.lean",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/PrimeNumberTheoremAnd/Consequences.lean",
+      "sha256": "b6c3ce0377e08884af9ead61b19c028635a0226c375af55460f6e41143657c6a",
+      "bytes": 139036
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Defs.lean",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/PrimeNumberTheoremAnd/Defs.lean",
+      "sha256": "64137811210c81187151a3d48ef170195cf36d58ea07a67ee61d1dc3212c82d0",
+      "bytes": 11240
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Wiener.lean",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/PrimeNumberTheoremAnd/Wiener.lean",
+      "sha256": "bc70281bdae2f501807630dcc75928ee11e35d2dfc44aea25c4344771fbb2656",
+      "bytes": 221508
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Fourier.lean",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/PrimeNumberTheoremAnd/Fourier.lean",
+      "sha256": "e9db3c235cabf356d2b4aed528d0ceca6ad3e23c7a150d7049fd9ac796315823",
+      "bytes": 8888
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Sobolev.lean",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/PrimeNumberTheoremAnd/Sobolev.lean",
+      "sha256": "fe06e13fad5b47dbd324307ba246110515c4cb50f4c41d6cb15764fd53b1b8ef",
+      "bytes": 15951
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/SmoothExistence.lean",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/PrimeNumberTheoremAnd/SmoothExistence.lean",
+      "sha256": "e689045a2d7f92c71c68fda6aa69a89d4a8692187475ba432ed010f453110ea0",
+      "bytes": 4738
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Mathlib/Analysis/SpecialFunctions/Log/Basic.lean",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/PrimeNumberTheoremAnd/Mathlib/Analysis/SpecialFunctions/Log/Basic.lean",
+      "sha256": "7e3e2b8f84e6c170051a6474272455bed2432e6fddac5660072318b9b4eda7ec",
+      "bytes": 679
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Mathlib/Analysis/Asymptotics/Asymptotics.lean",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/PrimeNumberTheoremAnd/Mathlib/Analysis/Asymptotics/Asymptotics.lean",
+      "sha256": "c1cdb6bb509c6178bf17868c57e5b53721b87fb2774ef8562bc5945ffe5b11ae",
+      "bytes": 1670
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Mathlib/Algebra/Notation/Support.lean",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/PrimeNumberTheoremAnd/Mathlib/Algebra/Notation/Support.lean",
+      "sha256": "e688bf925c2130b291c536d3b93b72c20e41ae95d530c90915921d75a6f52504",
+      "bytes": 279
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    {
+      "path": "lean-toolchain",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+      "bytes": 25
+    },
+    {
+      "path": "lake-manifest.json",
+      "url": "https://raw.githubusercontent.com/AlexKontorovich/PrimeNumberTheoremAnd/a5154676af9aa3095150ee410cdda80555aa0642/lake-manifest.json",
+      "sha256": "3b7d62f8313e49dd6a69cab0a702f2c483f40df2b29ea450a0d6c670a5e6d5d2",
+      "bytes": 4395
+    }
+  ],
+  "acceptance": "Unmodified source retrieval only; compatibility and axiom audit pending",
+  "status": "SOURCE_REVIEWED_INTEGRATED_AGGREGATE_PENDING",
+  "target_module": "SKEFTHawking.MertensCancellationBackport",
+  "local_lean": "4.32.0",
+  "local_mathlib": "81a5d257c8e410db227a6665ed08f64fea08e997",
+  "upstream_lean": "4.32.2",
+  "upstream_mathlib": "905b95818eb32af7874a58b427f50c1711a5e96c",
+  "selection": "Conservative supporting modules and Wiener/Consequences prefixes through WeakPNT/M_isLittleO; exact retained blocks and modifications pending worker evidence",
+  "excluded_unfinished_alternatives": [
+    "Wiener.prelim_decay_2",
+    "Wiener.prelim_decay_3",
+    "Wiener.decay_alt"
+  ],
+  "kernel_axiom_acceptance": "Source audit PASS1002unique same-session closures, ordinarycoreonly",
+  "source_compatibility": "Standalone full diagnostics PASS on unchanged local pins",
+  "source_candidate": "b3fd5848c3e8a4ac1790ee4225e4fa89380032aa",
+  "source_sha256": "82fa59c8cddbd59e438548a53f80530ec7b2487e3b7ed99bac9ffddaab4e9fff",
+  "retained_modules": [
+    {
+      "path": "PrimeNumberTheoremAnd/Mathlib/Algebra/Notation/Support.lean",
+      "sha256": "e688bf925c2130b291c536d3b93b72c20e41ae95d530c90915921d75a6f52504",
+      "changes": [],
+      "retained_prefix_end": 13
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Sobolev.lean",
+      "sha256": "fe06e13fad5b47dbd324307ba246110515c4cb50f4c41d6cb15764fd53b1b8ef",
+      "changes": [],
+      "retained_prefix_end": 359
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Fourier.lean",
+      "sha256": "e9db3c235cabf356d2b4aed528d0ceca6ad3e23c7a150d7049fd9ac796315823",
+      "changes": [],
+      "retained_prefix_end": 186
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/SmoothExistence.lean",
+      "sha256": "e689045a2d7f92c71c68fda6aa69a89d4a8692187475ba432ed010f453110ea0",
+      "changes": [],
+      "retained_prefix_end": 107
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Mathlib/Analysis/Asymptotics/Asymptotics.lean",
+      "sha256": "c1cdb6bb509c6178bf17868c57e5b53721b87fb2774ef8562bc5945ffe5b11ae",
+      "changes": [],
+      "retained_prefix_end": 41
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Defs.lean",
+      "sha256": "64137811210c81187151a3d48ef170195cf36d58ea07a67ee61d1dc3212c82d0",
+      "changes": [],
+      "retained_prefix_end": 304
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Mathlib/Analysis/SpecialFunctions/Log/Basic.lean",
+      "sha256": "7e3e2b8f84e6c170051a6474272455bed2432e6fddac5660072318b9b4eda7ec",
+      "changes": [],
+      "retained_prefix_end": 17
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Wiener.lean",
+      "sha256": "bc70281bdae2f501807630dcc75928ee11e35d2dfc44aea25c4344771fbb2656",
+      "changes": [
+        {
+          "remove_declaration": "prelim_decay_2",
+          "text": "theorem prelim_decay_2 (\u03c8 : \u211d \u2192 \u2102) (h\u03c8 : Integrable \u03c8) (hvar : BoundedVariationOn \u03c8 Set.univ)\n    (u : \u211d) (hu : u \u2260 0) :\n    \u2016\ud835\udcd5 (\u03c8 : \u211d \u2192 \u2102) u\u2016 \u2264 (eVariationOn \u03c8 Set.univ).toReal / (2 * \u03c0 * \u2016u\u2016) := by sorry\n\n"
+        },
+        {
+          "remove_declaration": "prelim_decay_3",
+          "text": "theorem prelim_decay_3 (\u03c8 : \u211d \u2192 \u2102) (h\u03c8 : Integrable \u03c8)\n    (habscont : AbsolutelyContinuous \u03c8)\n    (hvar : BoundedVariationOn (deriv \u03c8) Set.univ) (u : \u211d) (hu : u \u2260 0) :\n    \u2016\ud835\udcd5 (\u03c8 : \u211d \u2192 \u2102) u\u2016 \u2264 (eVariationOn (deriv \u03c8) Set.univ).toReal / (2 * \u03c0 * \u2016u\u2016) ^ 2 := by sorry\n\n"
+        },
+        {
+          "remove_declaration": "decay_alt",
+          "text": "theorem decay_alt (\u03c8 : \u211d \u2192 \u2102) (h\u03c8 : Integrable \u03c8) (habscont : AbsolutelyContinuous \u03c8)\n    (hvar : BoundedVariationOn (deriv \u03c8) Set.univ) (u : \u211d) :\n    \u2016\ud835\udcd5 (\u03c8 : \u211d \u2192 \u2102) u\u2016 \u2264\n      ((\u222b t, \u2016\u03c8 t\u2016) + (eVariationOn (deriv \u03c8) Set.univ).toReal / (2 * \u03c0) ^ 2) /\n        (1 + \u2016u\u2016 ^ 2) := by\n  rw [le_div_iff\u2080' <| one_add_sq_pos \u2016u\u2016]\n  by_cases hu : u = 0\n  \u00b7 subst hu\n    simp only [norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, add_zero,\n      one_mul]\n    calc \u2016\ud835\udcd5 \u03c8 0\u2016 \u2264 \u222b t, \u2016\u03c8 t\u2016 := prelim_decay \u03c8 0\n      _ \u2264 (\u222b t, \u2016\u03c8 t\u2016) + (eVariationOn (deriv \u03c8) Set.univ).toReal / (2 * \u03c0) ^ 2 := by\n          have : 0 \u2264 (eVariationOn (deriv \u03c8) Set.univ).toReal / (2 * \u03c0) ^ 2 := by positivity\n          linarith\n  \u00b7 have bound1 : \u2016\ud835\udcd5 \u03c8 u\u2016 \u2264 \u222b t, \u2016\u03c8 t\u2016 := prelim_decay \u03c8 u\n    have bound2 : \u2016\ud835\udcd5 \u03c8 u\u2016 \u2264 (eVariationOn (deriv \u03c8) Set.univ).toReal / (2 * \u03c0 * \u2016u\u2016) ^ 2 :=\n      prelim_decay_3 \u03c8 h\u03c8 habscont hvar u hu\n    have : (2 * \u03c0 * \u2016u\u2016) ^ 2 = (2 * \u03c0) ^ 2 * \u2016u\u2016 ^ 2 := by ring\n    calc (1 + \u2016u\u2016 ^ 2) * \u2016\ud835\udcd5 \u03c8 u\u2016\n        = \u2016\ud835\udcd5 \u03c8 u\u2016 * 1 + \u2016\ud835\udcd5 \u03c8 u\u2016 * \u2016u\u2016 ^ 2 := by ring\n      _ \u2264 (\u222b t, \u2016\u03c8 t\u2016) * 1 +\n            (eVariationOn (deriv \u03c8) Set.univ).toReal / (2 * \u03c0 * \u2016u\u2016) ^ 2 * \u2016u\u2016 ^ 2 := by\n          gcongr\n      _ = (\u222b t, \u2016\u03c8 t\u2016) + (eVariationOn (deriv \u03c8) Set.univ).toReal / (2 * \u03c0) ^ 2 := by\n          rw [mul_one, this, div_mul_eq_div_div]\n          congr 1\n          rw [div_mul_eq_mul_div, div_eq_iff (pow_ne_zero 2 <| norm_ne_zero_iff.mpr hu)]\n\n"
+        }
+      ],
+      "retained_prefix_end": 2462
+    },
+    {
+      "path": "PrimeNumberTheoremAnd/Consequences.lean",
+      "sha256": "b6c3ce0377e08884af9ead61b19c028635a0226c375af55460f6e41143657c6a",
+      "changes": [],
+      "retained_prefix_end": 1918
+    }
+  ],
+  "retained_imports": [
+    "import Mathlib.Algebra.Notation.Support",
+    "import Mathlib.Analysis.Calculus.Deriv.Support",
+    "import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv",
+    "import Mathlib.Order.Filter.ZeroAndBoundedAtFilter",
+    "import Mathlib.MeasureTheory.Integral.IntegralEqImproper",
+    "import Mathlib.Topology.ContinuousMap.Bounded.Basic",
+    "import Mathlib.Analysis.Fourier.FourierTransformDeriv",
+    "import Batteries.Tactic.Lemma",
+    "import Mathlib.Geometry.Manifold.PartitionOfUnity",
+    "import Mathlib.Tactic.Bound",
+    "import Mathlib.Analysis.Asymptotics.Lemmas",
+    "import Mathlib.Topology.Order.Compact",
+    "import Mathlib.NumberTheory.Chebyshev",
+    "import Mathlib.Algebra.Order.Floor.Defs",
+    "import Mathlib.Algebra.Order.Floor.Ring",
+    "import Mathlib.Algebra.Order.Floor.Semiring",
+    "import Mathlib.Analysis.SpecialFunctions.Log.Basic",
+    "import Mathlib.Analysis.SpecialFunctions.Pow.Continuity",
+    "import Mathlib.Analysis.Fourier.RiemannLebesgueLemma",
+    "import Mathlib.Analysis.Normed.Group.Tannery",
+    "import Mathlib.Analysis.SumIntegralComparisons",
+    "import Mathlib.NumberTheory.LSeries.PrimesInAP",
+    "import Mathlib.NumberTheory.MulChar.Lemmas",
+    "import Mathlib.Topology.EMetricSpace.BoundedVariation",
+    "import Mathlib.Analysis.Convolution",
+    "import Mathlib.NumberTheory.Harmonic.Bounds"
+  ],
+  "metadata_modifications": [
+    "Architect imports removed",
+    "balanced blueprint attributes converted to inert comments",
+    "blueprint_comment command removed, mathematical comment retained",
+    "lang.lemmaCmd options removed",
+    "anonymous section per upstream file",
+    "Header ranges reconciled to original splitlines/prefix counts"
+  ],
+  "mathematical_proof_modifications": [],
+  "authored_declarations": 365,
+  "authored_kinds": {
+    "lemma": 235,
+    "theorem": 48,
+    "definition": 57,
+    "abbreviation": 5,
+    "instance": 17,
+    "structure": 3
+  },
+  "explicit_constructors_projections": 12,
+  "other_generated_audited": 625,
+  "independent_source_review": "PASS",
+  "final_aggregate_inventory_gate_acceptance": "PENDING",
+  "integrated_source_commit": "5b4bf9f18cfb3431f63e7d8eef1f62f2b74d7eac"
+}
