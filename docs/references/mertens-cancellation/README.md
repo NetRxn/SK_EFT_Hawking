@@ -55,3 +55,17 @@ The package extractor therefore excludes these three generated records. Direct
 checks confirm that all three equations remain available with ordinary core
 axioms; backport and extractor source are unchanged. This is module attribution,
 not loss of a theorem. The original 1,002-name raw audit remains unchanged.
+
+## Logarithm-weighted power-tail helper — integration in progress
+
+The separate project-authored `PowerLogTail.lean` proves integrability and the
+exact integral of `log(t)*t^(-d-1)` over `t>R`, for `d>0` and `R>=1`:
+`R^(-d)*(log(R)/d+1/d^2)`. Its explicit primitive has the required derivative
+and vanishes at infinity; the radius-one value is `1/d^2`. It combines existing
+improper-integral and logarithm-versus-power APIs and adds no boundary estimate.
+
+Candidate `531c4af4` has independent full-source and ordinary-axiom review for
+all six authored declarations (five theorems, one definition). Complete
+diagnostics and source scan are clean. Root has integrated the unchanged source;
+aggregate, canonical and final cycle acceptance remain pending. These six
+project-authored helpers are separate from the attributed upstream backport.

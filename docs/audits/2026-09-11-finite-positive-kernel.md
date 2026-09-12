@@ -501,3 +501,24 @@ no bath derivation, continuum field theory or coherent-memory erasure claim.
 Publication and paper readiness remain separate. Actual two-time Gibbs statistics
 are independently source-reviewed for the next increment and remain outside this
 acceptance; their final integration and aggregate checks are still pending.
+
+## Actual two-time equilibrium statistics — integration in progress
+
+`FiniteGibbsTwoTimeProcess.lean` starts from the actual finite Gibbs density.
+A first computational or plus/minus instrument at time zero collapses the branch
+state before the actual lag channel acts. Depth-two tree weights give population
+reversal symmetry and stationary marginals. The signed population correlation is
+`m^2 + (1-m^2)*exp(-gamma*t)`, with observed Gibbs mean `m`; the signed coherent
+correlation is `exp(-(gamma+eta)*t)*cos(Delta*t)`.
+
+The joint laws follow from unnormalized branch-state identities and actual
+channel evolution. Normalized distributions, nonuniform positive population
+transfer, positive stationary variance, and the complete pi-time Hamiltonian
+anticorrelation distribution are proved. These finite operational statements do
+not assert full quantum detailed balance, environmental memory or a temporal
+Bell violation. The optional measurement-disturbance comparison is not included.
+
+Candidate `d72fe8b2` has independent full-source and ordinary-axiom review for
+all 33 authored declarations (28 theorems, five definitions), with clean complete
+diagnostics and source scan. Root has integrated the unchanged source; aggregate,
+canonical and final cycle acceptance remain pending.
