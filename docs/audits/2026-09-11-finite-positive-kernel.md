@@ -395,7 +395,7 @@ block projector dephasing, with two orthogonal decay rates and explicit state/
 observable duality. Its source review is separate from this accepted increment;
 its own integration, inventory and gate checks remain required.
 
-## Combined reset and block relaxation — integration in progress
+## Combined reset and block relaxation — accepted locally
 
 `FiniteGibbsBlockRelaxation.lean` combines actual reset jumps with uniform
 signature-block projector dephasing. The actual GKSL generator, vectorized
@@ -415,5 +415,16 @@ Source candidate `c0547447` passed independent full-source review and exact raw
 ordinary-core-axiom audits for all 70 authored declarations (61 theorems and
 nine definitions). Source diagnostics are clean; the two local projection
 abbreviations were independently checked as benign. The source was integrated
-unchanged as `2a51d9ad`. Aggregate build, canonical extraction, substrate gate
-and final integrated acceptance remain pending for this increment.
+unchanged as `2a51d9ad`. Root accepts this increment locally after independent
+source, integrated inventory/build and gate review at `b79adf09`. Canonical
+extraction adds 87 records: all 70 authored declarations and 17 generated
+helpers, including `BlockConditionalExpectation.blockKraus.congr_simp`.
+No previous canonical record changes or disappears. Every added closure uses
+ordinary core axioms without dependency timeouts. The complete public increment
+adds 114 records, reaching 42,156. The substrate gate passes in 447.9 seconds,
+with 70/89 checks, 1,146 warnings and the same 19 unresolved paper-corpus failures.
+Publication readiness remains separate.
+
+The next isolated candidate combines this actual dissipative model with the
+existing diagonal Gibbs Hamiltonian clock. Its source review is complete; its
+own aggregate, inventory and final acceptance are still required.

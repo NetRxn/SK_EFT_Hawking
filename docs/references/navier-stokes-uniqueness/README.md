@@ -112,7 +112,7 @@ eta-weighted squared-L2 work bound. Its source review is separate from this
 acceptance. Existing pressure recovery assumes equal residuals, so full unequal-
 force whole-space stability still requires a justified pressure estimate.
 
-## Unequal-residual localized balance — integration in progress
+## Unequal-residual localized balance — accepted locally
 
 `ClassicalFlowForcedLocalized.lean` derives the actual residual difference
 and its positive-sign work term in the compactly weighted difference-energy
@@ -130,5 +130,16 @@ increment does not claim unequal-force whole-space stability.
 Source `2e3f9aa9`, integrated unchanged as `a80477ec`, passed independent full
 source review and exact raw ordinary-core-axiom audits for 24 authored and nine
 generated declarations. Source diagnostics and scans are clean. Three audit-only
-auxiliary-name warnings were reconciled separately. Aggregate build, canonical
-extraction, substrate gate and final integrated acceptance remain pending.
+auxiliary-name warnings were reconciled separately. Root accepts this increment
+locally after independent source, integrated inventory/build and gate review at
+`b79adf09`. Canonical extraction adds 27 records: all 24 authored declarations
+and three generated helpers; six further audited auxiliaries are absent from
+that view. No prior record changes or disappears. Added closures have ordinary
+core axioms and no dependency timeout. The complete public increment adds 114
+records. Its substrate gate passes in 447.9 seconds with the same 19 unresolved
+paper-corpus failures, 70/89 checks and 1,146 warnings.
+
+The next isolated fluid package targets actual global forced stability under
+uniform compact support of the velocity difference, explicit square-integrable
+forcing and a continuous forcing-energy envelope. Its implementation is active;
+no global noncompact pressure-recovery result is implied.
