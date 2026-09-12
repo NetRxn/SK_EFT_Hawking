@@ -35,13 +35,23 @@ Candidate `b3fd5848` was integrated unchanged as `5b4bf9f1`, with source SHA256
 `82fa59c8cddbd59e438548a53f80530ec7b2487e3b7ed99bac9ffddaab4e9fff`.
 No toolchain upgrade, publication or broader number-theory claim is included.
 
-Canonical extraction retains all 365 upstream-authored declarations and 89
-generated support records, for 454 additions. The raw source audit additionally
+The initial accepted cycle retained all 365 upstream-authored declarations and
+89 generated support records, for 454 additions. The raw source audit additionally
 covers 548 auxiliary constants omitted from canonical extraction; two anonymous
 local coercion names differ only by the compiled versus audit module name.
 This distinction does not inflate upstream authorship or count generated helpers
-as new mathematical results. The entire public cycle adds 593 canonical records,
+as new mathematical results. That initial public cycle added 593 canonical records,
 with no previous record changes/removals or nonstandard-axiom/dependency-timeout
 closures. Its substrate gate passes in 439.4 seconds with 70/89 checks, 1,146
 warnings and the same 19 unresolved paper-corpus failures. Paper readiness and
 publication remain separate from this local substrate acceptance.
+
+At reviewed aggregate `662501f1`, the unchanged backport has 451 canonical
+records: all 365 authored declarations and 86 generated records. A subsequent
+aggregate import attributes `Circle.exp.eq_1` and `Real.fourierChar.eq_1` to
+Mathlib's `CharacteristicFunction.TaylorExpansion`, and
+`Filter.BoundedAtFilter.eq_1` to `UpperHalfPlane.FunctionsBoundedAtInfty`.
+The package extractor therefore excludes these three generated records. Direct
+checks confirm that all three equations remain available with ordinary core
+axioms; backport and extractor source are unchanged. This is module attribution,
+not loss of a theorem. The original 1,002-name raw audit remains unchanged.

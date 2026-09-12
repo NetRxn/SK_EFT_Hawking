@@ -464,7 +464,7 @@ the same 19 unresolved paper-corpus failures. The finite prepare-thermalize-read
 process is a reviewed next-cycle candidate and remains outside this acceptance.
 No publication or primary-branch promotion is included.
 
-## Finite prepare-thermalize-readout process — integration in progress
+## Finite prepare-thermalize-readout process — accepted locally
 
 `FiniteGibbsRelaxationProcess.lean` connects the actual Hamiltonian/reset/block
 GKSL channel to `FiniteInterventionProcess.Step` and actual tree weights.
@@ -485,6 +485,19 @@ readout from population-only measurements.
 Candidate `de2584ba`, integrated unchanged as `1ceb5fe6`, passed independent
 full-source and semantic review. All 50 authored declarations (38 theorems,
 11 definitions, one abbreviation) have exact ordinary-or-empty raw axiom closures;
-complete diagnostics and source scan are clean. The aggregate build, inventory
-and final cycle acceptance are being completed. This finite operational result
-adds no bath derivation, continuum field theory or coherent-memory erasure claim.
+complete diagnostics and source scan are clean. Root accepts the increment locally
+at reviewed aggregate `662501f1`, after independent source, integrated and gate
+reviews. Canonical extraction adds 58 records: 50 authored and eight generated.
+Three prior generated equation helpers now have Mathlib module attribution and
+are excluded by the package filter; all three remain available with ordinary
+axioms, and no authored declaration was removed. The net inventory growth is 55,
+to 42,804 records. The derived atlas adds 38 proved, kernel-pure nodes; 15 prior
+changes affect only frontier impact, with no removed node or changed unknown,
+edge or obstruction surface.
+
+The substrate gate passes in 441.9 seconds, with 70/89 checks, 1,146 warnings and
+the same 19 unresolved paper-corpus failures. This finite operational result adds
+no bath derivation, continuum field theory or coherent-memory erasure claim.
+Publication and paper readiness remain separate. Actual two-time Gibbs statistics
+are independently source-reviewed for the next increment and remain outside this
+acceptance; their final integration and aggregate checks are still pending.
