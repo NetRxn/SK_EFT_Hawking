@@ -284,3 +284,27 @@ match the preceding accepted cycle. Those paper failures remain unresolved and
 this result does not establish publication readiness. Independent final gate
 reconciliation passed. Root accepts this bounded growth increment locally;
 subsequent closure edits change documentation only.
+
+## Finite diagonal Lindblad convergence
+
+`FiniteDiagonalLindblad.lean` derives the existing generator and exponential for
+arbitrary finite real diagonal jump families with zero Hamiltonian. Its entry
+rate is one half the sum of squared jump-signature differences. Faithful diagonal
+weights give the actual reconstructed norm; normalized weights give a density
+state. The descended evolution contracts that norm and converges to the complete
+equal-signature block projection. Finiteness proves a positive rate bound on the
+complement, including the empty-complement case, so the convergence theorem does
+not assume a separate spectral gap.
+
+The three-level normalized faithful example has rates 1/2, 1/2 and 2, with a
+nonzero coherence attaining the slow rate. Duplicate signatures preserve an
+off-diagonal block, and zero jumps preserve every observable. These facts delimit
+the claim: this is finite diagonal noise, not unique-state thermalization or a
+continuum reconstruction theorem.
+
+Independent scientific review accepts source `6b583aa9`, SHA256
+`3b21eb51f815fd31f1df0fb0e969a8d7e9cd7ea46c47b529576e2c0fe20e4794`.
+All 58 named declarations (46 theorems, 11 definitions and one abbreviation)
+have raw ordinary-core-axiom audits, clean diagnostics and clean source verification.
+Canonical extraction, authoritative aggregate build and final gate review remain
+required before local acceptance.
