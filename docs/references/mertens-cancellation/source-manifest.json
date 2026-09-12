@@ -75,18 +75,18 @@
       "bytes": 4395
     }
   ],
-  "acceptance": "Unmodified source retrieval only; compatibility and axiom audit pending",
-  "status": "SOURCE_REVIEWED_INTEGRATED_AGGREGATE_PENDING",
+  "acceptance": "Independent source, extraction, provenance and same-session ordinary axiom audits PASS; authoritative aggregate build PASS at fc283951; final canonical inventory and cycle gate pending",
+  "status": "SOURCE_AND_AGGREGATE_PASS_FINAL_INVENTORY_GATE_PENDING",
   "target_module": "SKEFTHawking.MertensCancellationBackport",
   "local_lean": "4.32.0",
   "local_mathlib": "81a5d257c8e410db227a6665ed08f64fea08e997",
   "upstream_lean": "4.32.2",
   "upstream_mathlib": "905b95818eb32af7874a58b427f50c1711a5e96c",
-  "selection": "Conservative supporting modules and Wiener/Consequences prefixes through WeakPNT/M_isLittleO; exact retained blocks and modifications pending worker evidence",
+  "selection": "Nine retained supporting modules or Wiener/Consequences prefixes through WeakPNT/M_isLittleO, with exact retained blocks and metadata changes independently reconciled",
   "excluded_unfinished_alternatives": [
-    "Wiener.prelim_decay_2",
-    "Wiener.prelim_decay_3",
-    "Wiener.decay_alt"
+    "prelim_decay_2",
+    "prelim_decay_3",
+    "decay_alt"
   ],
   "kernel_axiom_acceptance": "Source audit PASS1002unique same-session closures, ordinarycoreonly",
   "source_compatibility": "Standalone full diagnostics PASS on unchanged local pins",
@@ -210,6 +210,12 @@
   "explicit_constructors_projections": 12,
   "other_generated_audited": 625,
   "independent_source_review": "PASS",
-  "final_aggregate_inventory_gate_acceptance": "PENDING",
-  "integrated_source_commit": "5b4bf9f18cfb3431f63e7d8eef1f62f2b74d7eac"
+  "final_aggregate_inventory_gate_acceptance": "Final canonical inventory and cycle gate pending; source and initial authoritative aggregate PASS",
+  "integrated_source_commit": "5b4bf9f18cfb3431f63e7d8eef1f62f2b74d7eac",
+  "excluded_declaration_source": "PrimeNumberTheoremAnd/Wiener.lean; names are global, not namespace-qualified; first two unfinished, third their unused consumer",
+  "aggregate_build": {
+    "status": "PASS",
+    "head": "fc283951925d913e63a09045b2c9589cc0c77f6b",
+    "epoch": "ed06800cddce34229a43d7fb139c93e6bb69eddee2a17c59a2d8f2d342554733"
+  }
 }

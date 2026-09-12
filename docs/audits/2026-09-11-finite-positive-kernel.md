@@ -455,4 +455,5 @@ Candidate `14b3b71f`, integrated unchanged as `16042afc`, passed independent
 full-source review. All 76 authored declarations (67 theorems, nine definitions)
 have exact ordinary-core raw axiom audits and clean standalone diagnostics.
 Two local projection abbreviations were independently checked as benign.
-Aggregate build, canonical inventory and final gate acceptance remain pending.
+The authoritative aggregate build passed at `fc283951`. Canonical inventory
+and final cycle gate acceptance remain pending.

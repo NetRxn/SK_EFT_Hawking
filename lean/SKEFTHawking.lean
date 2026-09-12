@@ -1,3 +1,4 @@
+import SKEFTHawking.ClassicalFlowForcedCompact
 import SKEFTHawking.MertensCancellationBackport
 import SKEFTHawking.FiniteGibbsHamiltonianRelaxation
 import SKEFTHawking.FiniteGibbsBlockRelaxation

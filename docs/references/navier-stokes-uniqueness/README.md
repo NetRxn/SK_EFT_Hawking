@@ -141,5 +141,28 @@ paper-corpus failures, 70/89 checks and 1,146 warnings.
 
 The next isolated fluid package targets actual global forced stability under
 uniform compact support of the velocity difference, explicit square-integrable
-forcing and a continuous forcing-energy envelope. Its implementation is active;
-no global noncompact pressure-recovery result is implied.
+forcing and a continuous forcing-energy envelope. Source implementation and independent review pass; final cycle acceptance
+is pending. No global noncompact pressure-recovery result is implied.
+
+## Compact-difference forced global stability — source integrated
+
+`ClassicalFlowForcedCompact.lean` proves the actual whole-space energy identity
+and integrating-factor forcing convolution when the velocity difference has one
+compact spatial support throughout the time slab. Individual velocities and
+pressure need not be compactly supported. Force-square integrability and its
+continuous energy envelope are explicit. Integration by parts uses compactness
+of the transported scalar, and the pressure term cancels against the compact
+divergence-free difference.
+
+The estimate handles zero-length intervals. Equal residuals recover the exact
+zero-force exponent without the Young-inequality penalty. A smooth compact
+stream field is divergence-free and equals a coordinate vector near the origin;
+its accelerating velocity has calculated nonzero compact forcing, positive
+energy and an actual application of the stability theorem. This is conditional
+classical stability at unit viscosity, not existence or general noncompact
+unequal-force pressure recovery.
+
+Candidate `6d2468db`, integrated unchanged as `31a56a35`, passed independent
+full-source and semantic review. All 46 authored declarations have exact ordinary
+raw axiom audits; diagnostics and source scan are clean. Aggregate import,
+canonical inventory and final cycle gate acceptance are being completed.
