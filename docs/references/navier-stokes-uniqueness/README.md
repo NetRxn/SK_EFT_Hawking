@@ -22,3 +22,19 @@ Model-specific consumers must explicitly transport coordinates, derivatives,
 support, measure and energy, and discharge the theorem's hypotheses.
 The theorem concerns smooth classical flows with a compact reference and a
 finite-energy competitor; it does not establish global or weak-solution uniqueness.
+
+## Quantitative stability consumer
+
+`SKEFTHawking.ClassicalFlowStability` derives nonzero-initial-error stability
+from this closure's actual equal-force equations, pressure recovery and localized
+energy identity. The squared L2 difference obeys `E(t) ≤ E(0) exp(2Gt)` when `G`
+bounds the reference gradient; compact smooth reference support supplies a finite
+nonnegative coefficient. Weighted initial energy is dominated by actual initial
+energy before cutoff exhaustion. Zero initial error recovers pointwise uniqueness.
+
+The six named theorems passed independent scientific review and raw standard-axiom
+audits at `66eff70a`. The public aggregate includes this module at `b01e09e0` and
+passed the authoritative build, epoch
+`e373db382f79e373d00935c3433a60008b64918d7eac85cff1b336494a3ac756`.
+The vendored source and provenance manifest are unchanged. Final canonical and
+gate reconciliation for this growth cycle is pending.

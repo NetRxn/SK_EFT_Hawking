@@ -243,3 +243,37 @@ The next finite decay target removes the full fixed diagonal algebra, rather
 than only the equilibrium mean: mean-zero diagonal observables can remain fixed.
 General stationary Lindblad systems, time-continuity packaging and continuum
 reconstruction remain subsequent work.
+
+## Full fixed-algebra convergence growth
+
+`FiniteGibbsDephasingConvergence.lean` realizes the full diagonal projection `Q`
+using the existing stationary Kraus quotient at strength one half. It proves
+idempotence, positivity, self-adjointness, contraction and the complete diagonal
+fixed-class characterization. Gibbs faithfulness also gives the literal matrix
+fixed-point characterization.
+
+For every reconstructed Gibbs-space vector, actual Lindblad evolution has exact
+error `T(t)z-Qz = exp(-2at)(z-Qz)`, with the same factor in its Gibbs norm. At
+positive rate, the existing evolution converges to `Qz` in nonnegative time.
+The same projection gives discrete error `(1-2γ)^k(z-Qz)` and convergence for
+`0<γ<1`. Strength one has a nonzero coherence witness whose error never decays;
+zero Lindblad rate fixes every vector. The fixed algebra includes every diagonal
+observable. These results do not assert unique-state thermalization or continuum
+field reconstruction.
+
+Candidate `22ba6d9c` passed independent scientific review and raw audits of all
+24 named declarations (two definitions and 22 theorems), with only standard core
+axioms and clean compiler diagnostics. Source SHA256:
+`930c7503befeb762cf6e140d51e5ac543b4f2e7be976fbd5b99f3da4408ef229`.
+The authoritative public aggregate build passed at `b01e09e0`, epoch
+`e373db382f79e373d00935c3433a60008b64918d7eac85cff1b336494a3ac756`.
+Final canonical extraction, substrate gate and integrated review remain pending.
+
+Canonical extraction for the growth cycle contains 41,787 records: 33 additions
+(six classical stability and 27 convergence records), no removals, and one
+existing generated lemma whose module attribution changed. Its other fields
+are identical. The 27 convergence records comprise 24 named declarations and
+three generated support records. Every added or changed closure has only standard
+core axioms, no project axioms and no dependency timeout. This inventory check
+is separate from the raw named-declaration audits. Final gate and integrated
+review remain pending.
