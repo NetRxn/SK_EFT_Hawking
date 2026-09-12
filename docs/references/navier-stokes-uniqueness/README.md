@@ -78,3 +78,24 @@ failures exactly match the preceding accepted cycle and remain unresolved.
 Independent gate reconciliation passed. Root accepts this increment locally;
 closure edits affect documentation only. Publication and main promotion remain
 separate.
+
+## Restarted windows and chaining — integration in progress
+
+`ClassicalFlowWindowStability.lean` transports actual velocity and pressure fields
+by time translation. Its `Window` structure records the smoothness, support,
+finite-energy, divergence, equal-residual and continuous-gradient obligations on
+an arbitrary ordered interval. The actual energy estimate starts at that window's
+initial time. Coincident endpoints are handled directly.
+
+Two-window and finite-partition consumers use the actual intermediate energies.
+Each window may have its own compact support, energy bound and continuous
+envelope. The exponent sums the window integrals; continuity across unmatched
+envelope endpoints is not assumed. Restriction and exact splitting recover the
+unsplit estimate for a continuous envelope. The zero-based API is recovered.
+This remains an equal-force classical-flow theorem.
+
+Source `3d4cbcc7`, integrated as `9680b090`, passed independent scientific review.
+All 20 authored declarations and 14 constructor/projections have raw ordinary
+axiom audits, with clean diagnostics and source verification. Source SHA256:
+`0ec8ceaae78881917e130bbe7289069ad484827319c4cb4bb150063b1241c587`.
+Aggregate, canonical and final gate acceptance are still pending for this increment.

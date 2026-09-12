@@ -357,3 +357,28 @@ failures exactly match the preceding accepted cycle and remain unresolved.
 Independent gate reconciliation passed. Root accepts this increment locally;
 closure edits affect documentation only. Publication and main promotion remain
 separate.
+
+## Faithful finite Gibbs reset — integration in progress
+
+`FiniteGibbsReset.lean` realizes finite population relaxation using actual reset
+Kraus operators and rate-scaled GKSL jumps. The state action is `tr(X)rho`; its
+trace-dual observable action is `tr(rho X)I`. A nonuniform three-level witness
+proves these actions differ. An exponential identity for complementary idempotents
+identifies the existing vectorized matrix propagator, and explicit finite-time
+Kraus operators connect that propagator to the observable quotient.
+
+For positive normalized diagonal weights the reconstructed observable evolution
+is a positive self-adjoint interpolation between identity and the scalar
+projection. Its centered norm decays exactly by `exp(-gamma*t)`. Positive rate
+and positive time give the exact scalar fixed range and a unique trace-one
+stationary matrix; zero rate remains identity. Normalized Boltzmann weights are
+identified with the existing Gibbs state. The scalar projection absorbs the
+existing signature-block projection in either order for the same faithful
+density. Population transfer and strict centered diagonal decay are proved in a
+nonuniform three-level example. These are finite-model statements.
+
+Source `f9663b8b`, integrated as `18c5d8c7`, passed independent scientific review.
+Its 72 named declarations (59 theorems and 13 definitions) have exact raw
+ordinary-core-axiom audits, clean diagnostics and source scans. Source SHA256:
+`1b5350ee740b02a786000f005900c0222e9018adbcb72d198a230e1216891e12`.
+Aggregate, canonical and final gate acceptance are still pending for this increment.
