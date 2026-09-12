@@ -530,22 +530,45 @@ and unknowns, edges and obstructions remain unchanged. The substrate gate passes
 in 440.7 seconds with 70/89 checks, 1,146 warnings and the same 19 unresolved
 paper-corpus failures. Publication and paper readiness remain separate.
 
-### Finite-history integration — final validation in progress
+### Finite-history integration — accepted locally
 
-`FiniteGibbsHistoryKernel.lean` candidate `087d021e` connects actual finite
-computational measurement histories to their centered covariance and the existing
-positive-kernel reconstruction. The product law and selected-pair marginals
-sum intervening outcomes of the same full history. Positivity follows from a
-weighted Gram representation of actual nonnegative probabilities. Finite ordered
-schedules require no infinite-process hypothesis. A three-time example has a
-positive leading two-by-two minor; zero reset and repeated times are guarded.
+`FiniteGibbsHistoryKernel.lean` connects actual finite computational measurement
+histories to centered covariance and the existing positive-kernel reconstruction.
+Selected-pair marginals sum the intervening outcomes of that same full history.
+The actual probability-weighted Gram representation proves covariance positivity.
+A three-time example has a positive two-by-two minor; zero reset and repeated
+times retain their explicit guards. No infinite-process premise is introduced.
 
-All 46 authored and 56 generated declarations have exact ordinary-or-empty
-raw audits; independent source review, root review, diagnostics and source scan
-pass. The source is integrated unchanged as `c97f9b05` for the next cycle;
-aggregate and private compatibility builds pass. Canonical extraction adds 68
-records: all 46 authored and 22 generated, to 42,916, with no prior changes,
-removals, nonstandard axioms or timeouts. Final gate and full-cycle acceptance
-checks remain pending. It remains outside the preceding cycle's acceptance
-counts and makes no coherent-X
-repeated-history, continuum, reflection-positivity or environmental-memory claim.
+Candidate `087d021e` is integrated unchanged as `c97f9b05`. Independent full-source
+review and root audit cover all 46 authored declarations (31 theorems, 15
+definitions) and 56 generated names, with ordinary-or-empty axiom closures and
+clean standalone diagnostics/source scan. Root accepts the increment locally at
+reviewed aggregate `3ca0d901`, after independent source, integrated and gate
+reviews. Canonical extraction adds 68 records: all 46 authored and 22 generated,
+to 42,916, with no prior changes/removals, nonstandard axioms or timeouts. The 102
+raw names reconcile by omitting 34 generated auxiliaries from the canonical set;
+no authored result is missing.
+
+The derived atlas adds 31 proved, kernel-pure nodes; 14 prior changes affect only
+frontier impact. Unknowns, edges and obstructions are unchanged. The substrate
+gate passes in 444.6 seconds with 70/89 checks, 1,146 warnings and the same 19
+unresolved paper-corpus failures. This finite computational-history result does
+not assert coherent-X repeated histories, reflection positivity, a continuum
+field model or environmental memory. Publication and paper readiness remain
+separate.
+
+### Next reflected-history increment — source reviewed, not integrated
+
+`FiniteGibbsReflectedHistory.lean` candidate `52ff0b93` uses the actual symmetric
+history with negative reversed and positive chronological labels. Direct Gram
+factorization establishes reflected positivity; an exact amplitude null
+criterion and a scalar linear equivalence prove that its centered reconstructed
+space has dimension one. The same four-observation example `(-2,-1,1,2)` has a
+strictly positive ordinary covariance minor and a nonzero reflected null vector.
+Zero reset and repeated-time guards preserve a surviving feature.
+
+All 44 authored declarations and 45 generated names have exact ordinary-or-empty
+raw audits, clean standalone diagnostics/source scan, independent source review
+and root review. The candidate remains unabsorbed and outside this cycle's
+counts. Next-cycle integration and validation are pending. No dynamics, full
+Osterwalder-Schrader axiom package, continuum field theory or bath claim follows.
