@@ -1,3 +1,5 @@
+import SKEFTHawking.ClassicalFlowStability
+import SKEFTHawking.FiniteGibbsDephasingConvergence
 -- Bounded upstream classical-uniqueness dependency.
 import NavierStokes
 import SKEFTHawking.Basic
