@@ -79,7 +79,7 @@ Independent gate reconciliation passed. Root accepts this increment locally;
 closure edits affect documentation only. Publication and main promotion remain
 separate.
 
-## Restarted windows and chaining — integration in progress
+## Restarted windows and chaining — accepted locally
 
 `ClassicalFlowWindowStability.lean` transports actual velocity and pressure fields
 by time translation. Its `Window` structure records the smoothness, support,
@@ -111,3 +111,24 @@ The next localized forcing candidate adds the actual residual-work term and an
 eta-weighted squared-L2 work bound. Its source review is separate from this
 acceptance. Existing pressure recovery assumes equal residuals, so full unequal-
 force whole-space stability still requires a justified pressure estimate.
+
+## Unequal-residual localized balance — integration in progress
+
+`ClassicalFlowForcedLocalized.lean` derives the actual residual difference
+and its positive-sign work term in the compactly weighted difference-energy
+balance. Smooth slab hypotheses supply local work integrability and the actual
+energy derivative. With eta positive, a cutoff between zero and one, and an
+explicitly square-integrable residual difference, Young's inequality bounds
+twice the absolute work by eta times weighted energy plus the squared L2 force
+norm divided by eta. Equal residuals recover the original localized balance.
+
+An accelerating constant velocity supplies a genuine nonzero-residual witness
+and exact localized work/energy derivative. That constant force is not globally
+L2. Existing whole-space pressure recovery requires equal residuals, so this
+increment does not claim unequal-force whole-space stability.
+
+Source `2e3f9aa9`, integrated unchanged as `a80477ec`, passed independent full
+source review and exact raw ordinary-core-axiom audits for 24 authored and nine
+generated declarations. Source diagnostics and scans are clean. Three audit-only
+auxiliary-name warnings were reconciled separately. Aggregate build, canonical
+extraction, substrate gate and final integrated acceptance remain pending.

@@ -358,7 +358,7 @@ Independent gate reconciliation passed. Root accepts this increment locally;
 closure edits affect documentation only. Publication and main promotion remain
 separate.
 
-## Faithful finite Gibbs reset — integration in progress
+## Faithful finite Gibbs reset — accepted locally
 
 `FiniteGibbsReset.lean` realizes finite population relaxation using actual reset
 Kraus operators and rate-scaled GKSL jumps. The state action is `tr(X)rho`; its
@@ -394,3 +394,26 @@ The next isolated candidate combines actual reset jumps with uniform signature-
 block projector dephasing, with two orthogonal decay rates and explicit state/
 observable duality. Its source review is separate from this accepted increment;
 its own integration, inventory and gate checks remain required.
+
+## Combined reset and block relaxation — integration in progress
+
+`FiniteGibbsBlockRelaxation.lean` combines actual reset jumps with uniform
+signature-block projector dephasing. The actual GKSL generator, vectorized
+exponential and normalized finite-time Kraus channel agree, with explicit
+state/observable trace duality. On the faithful observable quotient, the scalar,
+centered block and cross-block components are orthogonal. The latter two decay
+at rates gamma and gamma+eta, with an exact squared-norm identity.
+
+Positive reset rate gives the unique trace-one stationary density and scalar
+observable fixed space. Zero reset, zero dephasing and both-zero cases have
+separate fixed-space and convergence statements. Nonuniform three-level
+population and coherence witnesses demonstrate both distinct rates. This is
+uniform block-projector dephasing; general unequal diagonal-jump rates and
+continuum reconstruction are outside this increment.
+
+Source candidate `c0547447` passed independent full-source review and exact raw
+ordinary-core-axiom audits for all 70 authored declarations (61 theorems and
+nine definitions). Source diagnostics are clean; the two local projection
+abbreviations were independently checked as benign. The source was integrated
+unchanged as `2a51d9ad`. Aggregate build, canonical extraction, substrate gate
+and final integrated acceptance remain pending for this increment.
