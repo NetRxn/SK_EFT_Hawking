@@ -463,3 +463,28 @@ The substrate gate passes in 439.4 seconds with 70/89 checks, 1,146 warnings and
 the same 19 unresolved paper-corpus failures. The finite prepare-thermalize-readout
 process is a reviewed next-cycle candidate and remains outside this acceptance.
 No publication or primary-branch promotion is included.
+
+## Finite prepare-thermalize-readout process — integration in progress
+
+`FiniteGibbsRelaxationProcess.lean` connects the actual Hamiltonian/reset/block
+GKSL channel to `FiniteInterventionProcess.Step` and actual tree weights.
+An invertible singleton-environment matrix transport preserves the state, trace,
+Kraus action and normalization. Computational-basis preparation/readout yields
+Gibbs population relaxation. A normalized rank-one plus/minus instrument on the
+plus density yields the phase-sensitive probability
+`(1 + exp(-(gamma+eta)*t)*cos(Delta*t))/2`.
+
+The actual process distributions are nonnegative and normalized. Positive reset
+rate gives population convergence to the actual finite Gibbs weights. Arbitrary
+finite-depth adaptive continuations retain arity two; summing all future outcomes
+preserves earlier marginals without postselection. The beta=Delta=1 example has
+nonuniform equilibrium and strictly positive population transfer. Pure Hamiltonian
+evolution gives a pi-time plus/minus flip, distinguishing the phase-sensitive
+readout from population-only measurements.
+
+Candidate `de2584ba`, integrated unchanged as `1ceb5fe6`, passed independent
+full-source and semantic review. All 50 authored declarations (38 theorems,
+11 definitions, one abbreviation) have exact ordinary-or-empty raw axiom closures;
+complete diagnostics and source scan are clean. The aggregate build, inventory
+and final cycle acceptance are being completed. This finite operational result
+adds no bath derivation, continuum field theory or coherent-memory erasure claim.
