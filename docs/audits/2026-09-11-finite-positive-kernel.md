@@ -557,7 +557,7 @@ not assert coherent-X repeated histories, reflection positivity, a continuum
 field model or environmental memory. Publication and paper readiness remain
 separate.
 
-### Next reflected-history increment — source reviewed, not integrated
+### Reflected-history increment — integration in progress
 
 `FiniteGibbsReflectedHistory.lean` candidate `52ff0b93` uses the actual symmetric
 history with negative reversed and positive chronological labels. Direct Gram
@@ -569,6 +569,7 @@ Zero reset and repeated-time guards preserve a surviving feature.
 
 All 44 authored declarations and 45 generated names have exact ordinary-or-empty
 raw audits, clean standalone diagnostics/source scan, independent source review
-and root review. The candidate remains unabsorbed and outside this cycle's
-counts. Next-cycle integration and validation are pending. No dynamics, full
+and root review. The source is integrated unchanged as `d055e330` for the next cycle.
+Aggregate and full-cycle validation are pending; it remains outside the preceding
+cycle's acceptance counts. No dynamics, full
 Osterwalder-Schrader axiom package, continuum field theory or bath claim follows.
