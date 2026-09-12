@@ -5277,6 +5277,7 @@ import SKEFTHawking.PowerLogTail
 import SKEFTHawking.FiniteGibbsTwoTimeProcess
 import SKEFTHawking.FiniteGibbsHistoryKernel
 import SKEFTHawking.FiniteGibbsReflectedHistory
+import SKEFTHawking.FiniteGibbsUnitalHistory
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
