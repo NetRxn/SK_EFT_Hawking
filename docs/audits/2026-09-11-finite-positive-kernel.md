@@ -310,4 +310,8 @@ The authoritative aggregate build passes at `0c33f09b`. Canonical extraction add
 70 records: the 58 named declarations and 12 generated support records. None of
 the 41,787 prior records changed or disappeared. Every new closure has ordinary
 core axioms, no project axioms and no dependency timeout. Independent integrated
-review and the substrate gate remain required before local acceptance.
+review accepted the final candidate `d1c25308`. The substrate gate passed in
+463.7 seconds, reporting 70/89 checks and 1,146 warnings. Its 19 paper-corpus
+failures exactly match the preceding accepted cycle and remain unresolved.
+Independent final gate reconciliation passed. Root accepts this finite growth
+increment locally; publication and main-branch promotion remain separate.
