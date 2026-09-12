@@ -351,4 +351,9 @@ support records). No prior record was removed. The preserved pressure-flux theor
 now depends on the new time-gradient helper; only its immediate proof-dependency
 fields change, with its type and axiom fields unchanged. All added and changed
 closures have ordinary core axioms, no project axioms and no dependency timeout.
-Final integrated review and the substrate gate remain pending.
+Independent integrated review accepted `81adc133`. The substrate gate passed in
+443.4 seconds, reporting 70/89 checks and 1,146 warnings. Its 19 paper-corpus
+failures exactly match the preceding accepted cycle and remain unresolved.
+Independent gate reconciliation passed. Root accepts this increment locally;
+closure edits affect documentation only. Publication and main promotion remain
+separate.
