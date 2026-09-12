@@ -75,8 +75,8 @@
       "bytes": 4395
     }
   ],
-  "acceptance": "Independent source, extraction, provenance and same-session ordinary axiom audits PASS; authoritative aggregate build PASS at fc283951; final canonical inventory and cycle gate pending",
-  "status": "SOURCE_AND_AGGREGATE_PASS_FINAL_INVENTORY_GATE_PENDING",
+  "acceptance": "COMPLETE_LOCAL_ACCEPTANCE after independent source/extraction/provenance/ordinary axiom/integrated/gate reviews; no publication",
+  "status": "ACCEPTED_LOCAL_SUBSTRATE",
   "target_module": "SKEFTHawking.MertensCancellationBackport",
   "local_lean": "4.32.0",
   "local_mathlib": "81a5d257c8e410db227a6665ed08f64fea08e997",
@@ -210,12 +210,53 @@
   "explicit_constructors_projections": 12,
   "other_generated_audited": 625,
   "independent_source_review": "PASS",
-  "final_aggregate_inventory_gate_acceptance": "Final canonical inventory and cycle gate pending; source and initial authoritative aggregate PASS",
+  "final_aggregate_inventory_gate_acceptance": "PASS at reviewed public c6ad2948; final closure changes documentation only",
   "integrated_source_commit": "5b4bf9f18cfb3431f63e7d8eef1f62f2b74d7eac",
   "excluded_declaration_source": "PrimeNumberTheoremAnd/Wiener.lean; names are global, not namespace-qualified; first two unfinished, third their unused consumer",
   "aggregate_build": {
     "status": "PASS",
     "head": "fc283951925d913e63a09045b2c9589cc0c77f6b",
     "epoch": "ed06800cddce34229a43d7fb139c93e6bb69eddee2a17c59a2d8f2d342554733"
+  },
+  "canonical_reconciliation": {
+    "authored": 365,
+    "generated_support": 89,
+    "total": 454,
+    "raw_auxiliary_omitted": 548,
+    "anonymous_local_module_name_aliases": 2
+  },
+  "final_reviewed_candidate": "c6ad2948bac612ce115d387810aa70eb2a718ef9",
+  "final_reviewed_epoch": "d3544d4f4b1f29d663a55df13de02642d31263c8e2f3197c553bde415d54e031",
+  "gate": {
+    "candidate": "c6ad2948bac612ce115d387810aa70eb2a718ef9",
+    "gate": "s13-lean",
+    "passed": true,
+    "duration_seconds": 439.4,
+    "checks_passed": 70,
+    "checks_total": 89,
+    "warnings": 1146,
+    "paper_failures_unchanged": true,
+    "paper_failures": [
+      "apex_theorem_claims_grounded",
+      "bundle_abstract_length",
+      "bundle_figure_adequacy",
+      "bundle_figure_integrity",
+      "bundle_lean_module_coverage",
+      "bundle_metadata_matches_graph",
+      "bundle_prose_em_dash_free",
+      "bundle_reader_facing_voice",
+      "bundle_reviewer_stage_ordering",
+      "bundle_sentence_length",
+      "bundle_stage13_claim_consistent",
+      "bundle_structural_coherence",
+      "bundle_tables_use_pipeline",
+      "chain_backing_targets_resolve",
+      "citation_primary_sources_present",
+      "numerical_literals",
+      "readiness_submission_gate",
+      "review_severity_declared",
+      "review_verify_is_one_command"
+    ],
+    "new_paper_failures": []
   }
 }

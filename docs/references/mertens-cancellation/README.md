@@ -5,8 +5,9 @@ revision `a5154676af9aa3095150ee410cdda80555aa0642`. The original license is
 preserved in `LICENSE.Apache-2.0`; `source-manifest.json` records exact upstream
 URLs, file hashes, retained prefixes, exclusions and compatibility changes.
 Independent source, extraction, provenance and kernel-axiom reviews pass.
-The authoritative aggregate build passed at `fc283951` on unchanged local pins;
-canonical inventory and final cycle gate acceptance remain pending.
+The authoritative aggregate and canonical inventory pass on unchanged local
+pins. Root accepts the bounded backport locally after independent source,
+integrated and gate reviews at `c6ad2948`.
 
 The endpoint `M_isLittleO` proves unconditional sublinear growth of the inclusive
 real summatory Moebius function. Its route uses a proved Wiener-Ikehara theorem
@@ -33,3 +34,14 @@ not newly authored mathematical results of this project.
 Candidate `b3fd5848` was integrated unchanged as `5b4bf9f1`, with source SHA256
 `82fa59c8cddbd59e438548a53f80530ec7b2487e3b7ed99bac9ffddaab4e9fff`.
 No toolchain upgrade, publication or broader number-theory claim is included.
+
+Canonical extraction retains all 365 upstream-authored declarations and 89
+generated support records, for 454 additions. The raw source audit additionally
+covers 548 auxiliary constants omitted from canonical extraction; two anonymous
+local coercion names differ only by the compiled versus audit module name.
+This distinction does not inflate upstream authorship or count generated helpers
+as new mathematical results. The entire public cycle adds 593 canonical records,
+with no previous record changes/removals or nonstandard-axiom/dependency-timeout
+closures. Its substrate gate passes in 439.4 seconds with 70/89 checks, 1,146
+warnings and the same 19 unresolved paper-corpus failures. Paper readiness and
+publication remain separate from this local substrate acceptance.

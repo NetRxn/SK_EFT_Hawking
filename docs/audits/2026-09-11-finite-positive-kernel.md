@@ -429,7 +429,7 @@ The next isolated candidate combines this actual dissipative model with the
 existing diagonal Gibbs Hamiltonian clock. Its source review is complete; its
 own aggregate, inventory and final acceptance are still required.
 
-## Hamiltonian and dissipative Gibbs evolution — integration in progress
+## Hamiltonian and dissipative Gibbs evolution — accepted locally
 
 `FiniteGibbsHamiltonianRelaxation.lean` combines the actual diagonal Hamiltonian
 commutator with the accepted reset/block GKSL generator. The commuting vectorized
@@ -455,5 +455,11 @@ Candidate `14b3b71f`, integrated unchanged as `16042afc`, passed independent
 full-source review. All 76 authored declarations (67 theorems, nine definitions)
 have exact ordinary-core raw axiom audits and clean standalone diagnostics.
 Two local projection abbreviations were independently checked as benign.
-The authoritative aggregate build passed at `fc283951`. Canonical inventory
-and final cycle gate acceptance remain pending.
+Root accepts this increment locally after independent source, integrated and
+gate review at `c6ad2948`. Canonical extraction adds 88 records: all 76 authored
+declarations and 12 generated helpers. The complete public cycle adds 593 records,
+with no prior change/removal or nonstandard-axiom/dependency-timeout closure.
+The substrate gate passes in 439.4 seconds with 70/89 checks, 1,146 warnings and
+the same 19 unresolved paper-corpus failures. The finite prepare-thermalize-readout
+process is a reviewed next-cycle candidate and remains outside this acceptance.
+No publication or primary-branch promotion is included.

@@ -141,10 +141,10 @@ paper-corpus failures, 70/89 checks and 1,146 warnings.
 
 The next isolated fluid package targets actual global forced stability under
 uniform compact support of the velocity difference, explicit square-integrable
-forcing and a continuous forcing-energy envelope. Source implementation and independent review pass; final cycle acceptance
-is pending. No global noncompact pressure-recovery result is implied.
+forcing and a continuous forcing-energy envelope. Source implementation, integrated inventory/build and final substrate review
+pass locally. No global noncompact pressure-recovery result is implied.
 
-## Compact-difference forced global stability — source integrated
+## Compact-difference forced global stability — accepted locally
 
 `ClassicalFlowForcedCompact.lean` proves the actual whole-space energy identity
 and integrating-factor forcing convolution when the velocity difference has one
@@ -164,5 +164,11 @@ unequal-force pressure recovery.
 
 Candidate `6d2468db`, integrated unchanged as `31a56a35`, passed independent
 full-source and semantic review. All 46 authored declarations have exact ordinary
-raw axiom audits; diagnostics and source scan are clean. Aggregate import,
-canonical inventory and final cycle gate acceptance are being completed.
+raw axiom audits; diagnostics and source scan are clean. Root accepts the increment locally after aggregate, canonical and independent
+integrated/gate review at `c6ad2948`. Canonical extraction adds all 46 authored
+declarations and five generated helpers. No old record changes or disappears,
+and every new closure has ordinary core axioms without a dependency timeout.
+The full public cycle adds 593 canonical records. Its substrate gate passes in
+439.4 seconds, with 70/89 checks, 1,146 warnings and the same 19 unresolved paper
+failures. This acceptance does not include publication or general noncompact
+unequal-force pressure recovery.
