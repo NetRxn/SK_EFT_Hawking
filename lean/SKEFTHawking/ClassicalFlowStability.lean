@@ -15,7 +15,7 @@ open NavierStokes.PeriodicUniqueness (spatial_smooth time_differentiable_at_inte
 
 /-- The actual pressure-flux estimate gives a uniform localized energy rate,
 without any initial-data equality assumption. -/
-theorem exists_weighted_rate_of_pressure_flux {T M G CP R₀ : ℝ}
+theorem exists_weighted_rate_of_time_gradient {T M CP R₀ : ℝ} {g : ℝ → ℝ}
     {u v : VelocityField} {p q : PressureField}
     (hM0 : 0 ≤ M) (hCP0 : 0 ≤ CP)
     (hu : ContDiffOn ℝ ∞ u (Comparison.slab 0 T))
@@ -24,7 +24,7 @@ theorem exists_weighted_rate_of_pressure_flux {T M G CP R₀ : ℝ}
     (hq : ContDiffOn ℝ ∞ q (Comparison.slab 0 T))
     (hwu : ∀ t ∈ Icc (0 : ℝ) T, MemLp (fun x => (u - v) (t, x)) 2 volume)
     (hM : ∀ t ∈ Icc (0 : ℝ) T, comparisonLpNorm 2 (fun x => (u - v) (t, x)) ≤ M)
-    (hG : ∀ t ∈ Icc (0 : ℝ) T, ∀ x, ‖spatialDerivative u t x‖ ≤ G)
+    (hG : ∀ t ∈ Icc (0 : ℝ) T, ∀ x, ‖spatialDerivative u t x‖ ≤ g t)
     (hdu : ∀ t ∈ Ioo (0 : ℝ) T, ∀ x, spatialDivergence u t x = 0)
     (hdv : ∀ t ∈ Ioo (0 : ℝ) T, ∀ x, spatialDivergence v t x = 0)
     (hNS : ∀ t ∈ Ioo (0 : ℝ) T, ∀ x,
@@ -37,7 +37,7 @@ theorem exists_weighted_rate_of_pressure_flux {T M G CP R₀ : ℝ}
           (cutoffL6 (cutoff R) (u - v) t)) :
     ∃ D : ℝ, 0 ≤ D ∧ ∀ R : ℝ, max 1 R₀ ≤ R → ∀ t ∈ Ioo (0 : ℝ) T,
       weightedEnergyRate (weight R) (u - v) t ≤
-        (2 * G) * weightedEnergy (weight R) (u - v) t + D / R := by
+        (2 * g t) * weightedEnergy (weight R) (u - v) t + D / R := by
   let C0 := LocalizedFluxEstimates.weightLaplacianConstant * M ^ 2 / 2
   let C1 := 4 * derivativeConstant 1 * M ^ (3 / 2 : ℝ)
   have hC0 : 0 ≤ C0 := by
@@ -119,7 +119,7 @@ theorem exists_weighted_rate_of_pressure_flux {T M G CP R₀ : ℝ}
     (time_differentiable_at_interior hu ht) (time_differentiable_at_interior hv ht)
     (hdu t ht) (hdv t ht) (hNS t ht)
   apply hrate R hR1 A hA B hB hSob
-    (weightedEnergy (weight R) (u - v) t) (weightedEnergyRate (weight R) (u - v) t) G
+    (weightedEnergy (weight R) (u - v) t) (weightedEnergyRate (weight R) (u - v) t) (g t)
   rw [hAsq, hbalance]
   have hlle := (le_abs_self (∫ x : Space, ‖(u - v) (t, x)‖ ^ 2 *
     ∑ i : Fin 3, partialD i (partialD i (weight R)) x)).trans hl'
@@ -134,6 +134,33 @@ theorem exists_weighted_rate_of_pressure_flux {T M G CP R₀ : ℝ}
   convert! hsum using 1
   dsimp only [C0, C1, pressureEnvelope]
   ring
+
+/-- The constant-gradient API is recovered exactly from the time-gradient estimate. -/
+theorem exists_weighted_rate_of_pressure_flux {T M G CP R₀ : ℝ}
+    {u v : VelocityField} {p q : PressureField}
+    (hM0 : 0 ≤ M) (hCP0 : 0 ≤ CP)
+    (hu : ContDiffOn ℝ ∞ u (Comparison.slab 0 T))
+    (hv : ContDiffOn ℝ ∞ v (Comparison.slab 0 T))
+    (hp : ContDiffOn ℝ ∞ p (Comparison.slab 0 T))
+    (hq : ContDiffOn ℝ ∞ q (Comparison.slab 0 T))
+    (hwu : ∀ t ∈ Icc (0 : ℝ) T, MemLp (fun x => (u - v) (t, x)) 2 volume)
+    (hM : ∀ t ∈ Icc (0 : ℝ) T, comparisonLpNorm 2 (fun x => (u - v) (t, x)) ≤ M)
+    (hG : ∀ t ∈ Icc (0 : ℝ) T, ∀ x, ‖spatialDerivative u t x‖ ≤ G)
+    (hdu : ∀ t ∈ Ioo (0 : ℝ) T, ∀ x, spatialDivergence u t x = 0)
+    (hdv : ∀ t ∈ Ioo (0 : ℝ) T, ∀ x, spatialDivergence v t x = 0)
+    (hNS : ∀ t ∈ Ioo (0 : ℝ) T, ∀ x,
+      navierStokesResidual 1 u p t x = navierStokesResidual 1 v q t x)
+    (hvanish : ∀ R ≥ R₀, ∀ t ∈ Icc (0 : ℝ) T, ∀ x,
+      fderiv ℝ (weight R) x (u (t, x)) = 0)
+    (hpressure : ∀ R ≥ 1, ∀ t ∈ Ioo (0 : ℝ) T,
+      |∫ x : Space, (p - q) (t, x) * fderiv ℝ (weight R) x ((u - v) (t, x))| ≤
+        CP * pressureEnvelope R (dissipationRoot (cutoff R) (u - v) t)
+          (cutoffL6 (cutoff R) (u - v) t)) :
+    ∃ D : ℝ, 0 ≤ D ∧ ∀ R : ℝ, max 1 R₀ ≤ R → ∀ t ∈ Ioo (0 : ℝ) T,
+      weightedEnergyRate (weight R) (u - v) t ≤
+        (2 * G) * weightedEnergy (weight R) (u - v) t + D / R := by
+  exact exists_weighted_rate_of_time_gradient (g := fun _ => G)
+    hM0 hCP0 hu hv hp hq hwu hM hG hdu hdv hNS hvanish hpressure
 
 /-- Gronwall with a genuine initial error and interior derivatives only. -/
 theorem le_initial_exp_add {T K ε a : ℝ} {E E' : ℝ → ℝ}
