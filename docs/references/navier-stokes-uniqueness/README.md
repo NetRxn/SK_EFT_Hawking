@@ -36,5 +36,9 @@ The six named theorems passed independent scientific review and raw standard-axi
 audits at `66eff70a`. The public aggregate includes this module at `b01e09e0` and
 passed the authoritative build, epoch
 `e373db382f79e373d00935c3433a60008b64918d7eac85cff1b336494a3ac756`.
-The vendored source and provenance manifest are unchanged. Final canonical and
-gate reconciliation for this growth cycle is pending.
+The vendored source and provenance manifest are unchanged. Canonical extraction
+adds exactly the six named stability records with ordinary core axioms and no
+project axioms or dependency timeouts. Independent integrated review passed at
+`4fcc7af1`; the final `s13-lean` gate passed in 445.7 seconds, retaining the same
+19 unresolved paper-corpus failures. This quantitative consumer is accepted locally;
+no publication or broader flow-regularity claim follows.

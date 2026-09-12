@@ -267,7 +267,7 @@ axioms and clean compiler diagnostics. Source SHA256:
 `930c7503befeb762cf6e140d51e5ac543b4f2e7be976fbd5b99f3da4408ef229`.
 The authoritative public aggregate build passed at `b01e09e0`, epoch
 `e373db382f79e373d00935c3433a60008b64918d7eac85cff1b336494a3ac756`.
-Final canonical extraction, substrate gate and integrated review remain pending.
+Canonical extraction and final gate reconciliation are recorded below.
 
 Canonical extraction for the growth cycle contains 41,787 records: 33 additions
 (six classical stability and 27 convergence records), no removals, and one
@@ -275,5 +275,12 @@ existing generated lemma whose module attribution changed. Its other fields
 are identical. The 27 convergence records comprise 24 named declarations and
 three generated support records. Every added or changed closure has only standard
 core axioms, no project axioms and no dependency timeout. This inventory check
-is separate from the raw named-declaration audits. Final gate and integrated
-review remain pending.
+is separate from the raw named-declaration audits. Independent integrated review
+accepted the exact source, inventory and authoritative build at `4fcc7af1`.
+
+The final `s13-lean` substrate gate passed in 445.7 seconds. The full validator
+reported 70/89 checks and 1,146 warnings; its 19 paper-corpus failures exactly
+match the preceding accepted cycle. Those paper failures remain unresolved and
+this result does not establish publication readiness. Independent final gate
+reconciliation passed. Root accepts this bounded growth increment locally;
+subsequent closure edits change documentation only.
