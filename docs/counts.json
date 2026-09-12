@@ -1,12 +1,12 @@
 {
-  "generated": "2026-09-12T15:58:53.893653",
+  "generated": "2026-09-12T16:51:32.375542",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 42848,
-    "theorems_total": 24010,
-    "theorems_substantive": 23984,
+    "total_declarations": 42916,
+    "theorems_total": 24041,
+    "theorems_substantive": 24015,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 23917,
+    "theorems_kernel_substantive": 23948,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2075,
+    "modules": 2076,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -627,6 +627,7 @@
       "SKEFTHawking.FiniteGibbsDephasing",
       "SKEFTHawking.FiniteGibbsDephasingConvergence",
       "SKEFTHawking.FiniteGibbsHamiltonianRelaxation",
+      "SKEFTHawking.FiniteGibbsHistoryKernel",
       "SKEFTHawking.FiniteGibbsRelaxationProcess",
       "SKEFTHawking.FiniteGibbsReset",
       "SKEFTHawking.FiniteGibbsTwoTimeProcess",
@@ -2093,7 +2094,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13284,
+    "definitions": 13302,
     "structures": 489,
     "instances": 972,
     "inductives": 102,
