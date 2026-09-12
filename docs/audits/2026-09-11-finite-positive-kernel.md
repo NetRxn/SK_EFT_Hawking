@@ -557,7 +557,7 @@ not assert coherent-X repeated histories, reflection positivity, a continuum
 field model or environmental memory. Publication and paper readiness remain
 separate.
 
-### Reflected-history increment — integration in progress
+### Reflected-history increment — accepted locally
 
 `FiniteGibbsReflectedHistory.lean` candidate `52ff0b93` uses the actual symmetric
 history with negative reversed and positive chronological labels. Direct Gram
@@ -569,7 +569,22 @@ Zero reset and repeated-time guards preserve a surviving feature.
 
 All 44 authored declarations and 45 generated names have exact ordinary-or-empty
 raw audits, clean standalone diagnostics/source scan, independent source review
-and root review. The source is integrated unchanged as `d055e330` for the next cycle.
-Aggregate and full-cycle validation are pending; it remains outside the preceding
-cycle's acceptance counts. No dynamics, full
-Osterwalder-Schrader axiom package, continuum field theory or bath claim follows.
+and root review. The source is integrated unchanged as `d055e330`. Root accepts
+this increment locally at reviewed aggregate `a56df17f`, after independent
+integrated and substrate-gate review. Canonical extraction adds 54 records:
+all 44 authored and ten generated, bringing the total to 42,970 with no prior
+changes/removals, nonstandard axioms or timeouts. The 89 raw names reconcile
+with 35 generated auxiliaries omitted from the canonical set.
+
+The derived atlas adds 34 proved, kernel-pure nodes; seven prior changes affect
+only frontier impact, with unknowns, edges and obstructions unchanged. The gate
+passes in 448.7 seconds with 70/89 checks, 1,146 warnings and the same 19 unresolved
+paper-corpus failures. Closing documentation is checked separately against this
+reviewed source and inventory. No dynamics, full Osterwalder-Schrader axiom
+package, continuum field theory or bath claim follows from this increment.
+
+The admitted continuation adds a constant probe to the same history distribution,
+constructs the exact two-mode quotient and its isometry onto faithful diagonal
+Gibbs observables, then intertwines the actual reset channel. This separate
+implementation is in progress and excluded from the present acceptance counts.
+Publication and paper readiness remain separate.
