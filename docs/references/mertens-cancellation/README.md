@@ -56,7 +56,7 @@ checks confirm that all three equations remain available with ordinary core
 axioms; backport and extractor source are unchanged. This is module attribution,
 not loss of a theorem. The original 1,002-name raw audit remains unchanged.
 
-## Logarithm-weighted power-tail helper — integration in progress
+## Logarithm-weighted power-tail helper — accepted locally
 
 The separate project-authored `PowerLogTail.lean` proves integrability and the
 exact integral of `log(t)*t^(-d-1)` over `t>R`, for `d>0` and `R>=1`:
@@ -64,8 +64,14 @@ exact integral of `log(t)*t^(-d-1)` over `t>R`, for `d>0` and `R>=1`:
 and vanishes at infinity; the radius-one value is `1/d^2`. It combines existing
 improper-integral and logarithm-versus-power APIs and adds no boundary estimate.
 
-Candidate `531c4af4` has independent full-source and ordinary-axiom review for
-all six authored declarations (five theorems, one definition). Complete
-diagnostics and source scan are clean. Root has integrated the unchanged source;
-aggregate, canonical and final cycle acceptance remain pending. These six
-project-authored helpers are separate from the attributed upstream backport.
+Candidate `531c4af4`, integrated unchanged as `592db568`, has independent
+full-source and ordinary-axiom review for all six authored declarations (five
+theorems, one definition). Complete diagnostics and source scan are clean.
+Root accepts the helper locally at reviewed aggregate `268cb3bc`, after independent
+source, integrated and substrate-gate review. Canonical extraction contains its
+six records; the paired increment totals 44 additions, with no prior changes or
+removals, to 42,848. The unchanged attributed backport retains 451 records.
+The substrate gate passes in 440.7 seconds, with the same 19 paper-corpus failures
+and 1,146 warnings. These six project-authored helpers remain separate from the
+upstream backport, and no effective cancellation cutoff is inferred. Publication
+and paper readiness remain separate.

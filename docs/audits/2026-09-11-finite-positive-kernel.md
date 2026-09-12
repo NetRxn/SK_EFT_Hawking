@@ -498,11 +498,10 @@ edge or obstruction surface.
 The substrate gate passes in 441.9 seconds, with 70/89 checks, 1,146 warnings and
 the same 19 unresolved paper-corpus failures. This finite operational result adds
 no bath derivation, continuum field theory or coherent-memory erasure claim.
-Publication and paper readiness remain separate. Actual two-time Gibbs statistics
-are independently source-reviewed for the next increment and remain outside this
-acceptance; their final integration and aggregate checks are still pending.
+Publication and paper readiness remain separate. The subsequent two-time
+increment is recorded below.
 
-## Actual two-time equilibrium statistics — integration in progress
+## Actual two-time equilibrium statistics — accepted locally
 
 `FiniteGibbsTwoTimeProcess.lean` starts from the actual finite Gibbs density.
 A first computational or plus/minus instrument at time zero collapses the branch
@@ -518,7 +517,31 @@ anticorrelation distribution are proved. These finite operational statements do
 not assert full quantum detailed balance, environmental memory or a temporal
 Bell violation. The optional measurement-disturbance comparison is not included.
 
-Candidate `d72fe8b2` has independent full-source and ordinary-axiom review for
-all 33 authored declarations (28 theorems, five definitions), with clean complete
-diagnostics and source scan. Root has integrated the unchanged source; aggregate,
-canonical and final cycle acceptance remain pending.
+Candidate `d72fe8b2`, integrated unchanged as `c90e791d`, has independent
+full-source and ordinary-axiom review for all 33 authored declarations (28
+theorems, five definitions), with clean complete diagnostics and source scan.
+Root accepts the increment locally at reviewed aggregate `268cb3bc`, after
+independent source, integrated and substrate-gate review. Canonical extraction
+adds 38 TwoTime records: 33 authored and five generated. The separate six-record
+power-log helper brings this cycle to 44 additions and 42,848 total records,
+with no prior changes/removals or nonstandard axioms/timeouts. The derived atlas
+adds 33 proved, kernel-pure nodes; 18 prior changes affect only frontier impact,
+and unknowns, edges and obstructions remain unchanged. The substrate gate passes
+in 440.7 seconds with 70/89 checks, 1,146 warnings and the same 19 unresolved
+paper-corpus failures. Publication and paper readiness remain separate.
+
+### Next finite-history integration — source reviewed, unabsorbed
+
+`FiniteGibbsHistoryKernel.lean` candidate `087d021e` connects actual finite
+computational measurement histories to their centered covariance and the existing
+positive-kernel reconstruction. The product law and selected-pair marginals
+sum intervening outcomes of the same full history. Positivity follows from a
+weighted Gram representation of actual nonnegative probabilities. Finite ordered
+schedules require no infinite-process hypothesis. A three-time example has a
+positive leading two-by-two minor; zero reset and repeated times are guarded.
+
+All 46 authored and 56 generated declarations have exact ordinary-or-empty
+raw audits; independent source review, root review, diagnostics and source scan
+pass. This candidate remains outside the current aggregate and acceptance counts.
+It makes no coherent-X repeated-history, continuum, reflection-positivity or
+environmental-memory claim. Integration and full-cycle checks are the next step.
