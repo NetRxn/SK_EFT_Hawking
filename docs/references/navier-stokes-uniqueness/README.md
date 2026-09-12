@@ -42,3 +42,34 @@ project axioms or dependency timeouts. Independent integrated review passed at
 `4fcc7af1`; the final `s13-lean` gate passed in 445.7 seconds, retaining the same
 19 unresolved paper-corpus failures. This quantitative consumer is accepted locally;
 no publication or broader flow-regularity claim follows.
+
+## Continuous-gradient stability
+
+`ClassicalFlowTimeStability.lean` proves the actual energy bound
+`E(t) <= E(0) exp(2 integral_0^t g)` for continuous nonnegative reference-gradient
+envelopes. The localized PDE estimate has a cutoff error constant independent of
+time and radius. An integrating factor supplies the scalar estimate, and cutoff
+exhaustion transfers it to the actual squared L2 difference. Equal residuals,
+smoothness, compact reference support and the finite-energy competitor remain
+explicit. The vendored closure and its provenance are unchanged.
+
+Constant envelopes recover the existing coefficient. For `g(t)=A+Bt`, the
+actual PDE consumer has exponent `2At+Bt^2`; with positive initial error and
+positive slope at an interior time, it is strictly smaller than the slab-maximum
+estimate. This is a quantitative stability result, not an existence theorem.
+
+Independent review accepted source `63794e0c`: all six existing stability
+statements are preserved, one time-dependent cutoff-rate helper is added, and
+the new module supplies nine theorems. All 16 current named declarations have
+raw ordinary-core-axiom audits and clean source scans. Combined-source diagnostics
+and post-build standalone module diagnostics pass. Aggregate `363508f6` passes
+the authoritative build. Canonical and final gate acceptance is recorded below
+when complete.
+
+Post-build canonical extraction contains 41,912 records, adding 55: ten new
+fluid declarations and 45 block-expectation records (42 named and three generated
+support records). No prior record was removed. The preserved pressure-flux theorem
+now depends on the new time-gradient helper; only its immediate proof-dependency
+fields change, with its type and axiom fields unchanged. All added and changed
+closures have ordinary core axioms, no project axioms and no dependency timeout.
+Final integrated review and the substrate gate remain pending.

@@ -315,3 +315,40 @@ review accepted the final candidate `d1c25308`. The substrate gate passed in
 failures exactly match the preceding accepted cycle and remain unresolved.
 Independent final gate reconciliation passed. Root accepts this finite growth
 increment locally; publication and main-branch promotion remain separate.
+
+## Signature-block conditional expectation
+
+`FiniteBlockConditionalExpectation.lean` builds Kraus operators from distinct
+quotient blocks of equal jump signatures. Their actual channel map equals the
+accepted block expectation, retaining off-diagonal entries within degenerate
+blocks. Its fixed range is a unital complex subalgebra closed under adjoint;
+the map satisfies the bimodule law with fixed outer factors. A concrete
+nonmultiplicativity witness shows why those hypotheses matter.
+
+Faithful diagonal weights make the descended channel the existing orthogonal
+block projection. Detailed balance, positivity, self-adjointness, orthogonal error
+and Pythagoras are proved on the actual reconstructed space. Duplicate-signature
+witnesses retain a nonzero off-diagonal block. This finite conditional expectation
+does not assert population relaxation or continuum reconstruction.
+
+Independent scientific review accepted source `d9d339da`, SHA256
+`d73d929762fbad43930428eacb2c75df1e274a968944963ed338ed893c179752`.
+All 42 named declarations (34 theorems, five definitions, two named instances
+and one abbreviation) have exact raw ordinary-core-axiom audits and clean source
+scans. The authoritative aggregate and post-build standalone diagnostics pass at
+`363508f6`. Canonical and final gate acceptance is recorded below when complete.
+
+The next reviewed growth contract is faithful finite Gibbs reset dynamics, with
+actual population relaxation and explicit state/observable duality. The state
+map `tr(X)rho` and observable map `tr(rho X)I` differ for nonuniform weights;
+the implementation must identify the actual generator, matrix exponential and
+Kraus channel before descending observable evolution. It will retain the zero-rate
+identity obstruction and test nonuniform three-level population transfer.
+
+Post-build canonical extraction contains 41,912 records, adding 55: ten new
+fluid declarations and 45 block-expectation records (42 named and three generated
+support records). No prior record was removed. The preserved pressure-flux theorem
+now depends on the new time-gradient helper; only its immediate proof-dependency
+fields change, with its type and axiom fields unchanged. All added and changed
+closures have ordinary core axioms, no project axioms and no dependency timeout.
+Final integrated review and the substrate gate remain pending.
