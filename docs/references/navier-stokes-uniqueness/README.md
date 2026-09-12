@@ -98,4 +98,16 @@ Source `3d4cbcc7`, integrated as `9680b090`, passed independent scientific revie
 All 20 authored declarations and 14 constructor/projections have raw ordinary
 axiom audits, with clean diagnostics and source verification. Source SHA256:
 `0ec8ceaae78881917e130bbe7289069ad484827319c4cb4bb150063b1241c587`.
-Aggregate, canonical and final gate acceptance are still pending for this increment.
+This increment is accepted locally after independent source, integrated inventory,
+build and gate review. The aggregate at `970f0745` preserves all 20 authored
+window declarations and 14 constructor/projection audits. Canonical extraction
+adds 37 window records: the constructor is omitted from that view, with four
+additional generated records. No prior canonical records change or disappear;
+all new closures use ordinary core axioms without dependency timeouts. The public
+substrate gate passes in 447.0 seconds with the same 19 unresolved paper-corpus
+failures and 1,146 warnings. Publication readiness is not established.
+
+The next localized forcing candidate adds the actual residual-work term and an
+eta-weighted squared-L2 work bound. Its source review is separate from this
+acceptance. Existing pressure recovery assumes equal residuals, so full unequal-
+force whole-space stability still requires a justified pressure estimate.

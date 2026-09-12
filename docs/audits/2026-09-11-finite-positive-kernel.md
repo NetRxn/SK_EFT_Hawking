@@ -381,4 +381,16 @@ Source `f9663b8b`, integrated as `18c5d8c7`, passed independent scientific revie
 Its 72 named declarations (59 theorems and 13 definitions) have exact raw
 ordinary-core-axiom audits, clean diagnostics and source scans. Source SHA256:
 `1b5350ee740b02a786000f005900c0222e9018adbcb72d198a230e1216891e12`.
-Aggregate, canonical and final gate acceptance are still pending for this increment.
+This increment is accepted locally after independent source, integrated inventory,
+build and gate review. The reviewed aggregate at `970f0745` retains the exact
+72 named source audits; canonical extraction adds 93 reset records, including
+generated helpers, with no prior record changes or removals. All new closures
+use ordinary core axioms and have no dependency timeout. The combined public
+increment adds 130 canonical records. The substrate gate passes in 447.0 seconds
+with 70/89 checks, 1,146 warnings and the same 19 unresolved paper-corpus failures.
+This does not establish publication readiness.
+
+The next isolated candidate combines actual reset jumps with uniform signature-
+block projector dephasing, with two orthogonal decay rates and explicit state/
+observable duality. Its source review is separate from this accepted increment;
+its own integration, inventory and gate checks remain required.
