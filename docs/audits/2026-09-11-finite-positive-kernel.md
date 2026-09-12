@@ -588,3 +588,37 @@ constructs the exact two-mode quotient and its isometry onto faithful diagonal
 Gibbs observables, then intertwines the actual reset channel. This separate
 implementation is in progress and excluded from the present acceptance counts.
 Publication and paper readiness remain separate.
+
+### Unital-history increment — accepted locally
+
+`FiniteGibbsUnitalHistory.lean` candidate `2d2044c6` adjoins the constant probe to
+that same actual history distribution. The reflected pairing has an exact
+two-mode Gram formula and null criterion. Its quotient is two-dimensional and
+isometric onto all diagonal qubit observables with the faithful Gibbs inner
+product. The actual reset channel intertwines this isometry: the constant mode
+is fixed, the centered mode decays, and the transferred operators are positive,
+self-adjoint and contractive at nonnegative times. Repeated-time and zero-reset
+guards retain both modes; the four-observation example uses the same history.
+
+All 100 authored declarations and 70 generated names have exact ordinary-or-empty
+raw audits, clean production diagnostics/source scan, independent source review
+and root review. The source is integrated unchanged as `655aa412`. Root accepts
+this increment locally at reviewed aggregate `60f6d517`, following independent
+integrated and substrate-gate review. Canonical extraction adds 138 records:
+100 authored and 38 generated, reaching 43,108 with no prior changes/removals,
+nonstandard axioms or timeouts. The raw count reconciles as 170-32=138, with only
+generated support omitted from the canonical set.
+
+The derived atlas adds 78 proved, kernel-pure nodes; 36 prior changes affect only
+frontier impact. Unknowns, edges and obstructions are unchanged. The substrate
+gate passes in 443.8 seconds with 70/89 checks, 1,146 warnings and the same 19
+unresolved paper-corpus failures. Closing documentation is checked separately
+against this reviewed source and inventory. This finite diagonal-channel bridge
+does not establish a full Osterwalder-Schrader axiom package, geometric time
+translation, coherent histories, a continuum field model or an external bath.
+
+The admitted continuation treats arbitrary cylinder observables of the same
+finite history. It will derive the actual reflected probability factorization
+and recover the existing two-mode reconstruction. That separate implementation
+awaits fresh preparation and contributes no declarations to this acceptance.
+Publication and paper readiness remain separate.
