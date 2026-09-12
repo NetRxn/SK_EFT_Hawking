@@ -306,5 +306,8 @@ Independent scientific review accepts source `6b583aa9`, SHA256
 `3b21eb51f815fd31f1df0fb0e969a8d7e9cd7ea46c47b529576e2c0fe20e4794`.
 All 58 named declarations (46 theorems, 11 definitions and one abbreviation)
 have raw ordinary-core-axiom audits, clean diagnostics and clean source verification.
-Canonical extraction, authoritative aggregate build and final gate review remain
-required before local acceptance.
+The authoritative aggregate build passes at `0c33f09b`. Canonical extraction adds
+70 records: the 58 named declarations and 12 generated support records. None of
+the 41,787 prior records changed or disappeared. Every new closure has ordinary
+core axioms, no project axioms and no dependency timeout. Independent integrated
+review and the substrate gate remain required before local acceptance.

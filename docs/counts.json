@@ -1,12 +1,12 @@
 {
-  "generated": "2026-09-12T07:56:17.897653",
+  "generated": "2026-09-12T09:08:56.631027",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 41787,
-    "theorems_total": 23280,
-    "theorems_substantive": 23254,
+    "total_declarations": 41857,
+    "theorems_total": 23326,
+    "theorems_substantive": 23300,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 23187,
+    "theorems_kernel_substantive": 23233,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2062,
+    "modules": 2063,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -617,6 +617,7 @@
       "SKEFTHawking.FibonacciSextetTrueRep",
       "SKEFTHawking.FibonacciUniversality",
       "SKEFTHawking.FigureEightKnot",
+      "SKEFTHawking.FiniteDiagonalLindblad",
       "SKEFTHawking.FiniteGibbsDephasing",
       "SKEFTHawking.FiniteGibbsDephasingConvergence",
       "SKEFTHawking.FinitePositiveKernel",
@@ -2080,7 +2081,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13087,
+    "definitions": 13099,
     "structures": 485,
     "instances": 955,
     "inductives": 102,
