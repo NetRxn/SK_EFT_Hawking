@@ -530,7 +530,7 @@ and unknowns, edges and obstructions remain unchanged. The substrate gate passes
 in 440.7 seconds with 70/89 checks, 1,146 warnings and the same 19 unresolved
 paper-corpus failures. Publication and paper readiness remain separate.
 
-### Next finite-history integration — source reviewed, unabsorbed
+### Finite-history integration — aggregate checks in progress
 
 `FiniteGibbsHistoryKernel.lean` candidate `087d021e` connects actual finite
 computational measurement histories to their centered covariance and the existing
@@ -542,6 +542,7 @@ positive leading two-by-two minor; zero reset and repeated times are guarded.
 
 All 46 authored and 56 generated declarations have exact ordinary-or-empty
 raw audits; independent source review, root review, diagnostics and source scan
-pass. This candidate remains outside the current aggregate and acceptance counts.
-It makes no coherent-X repeated-history, continuum, reflection-positivity or
-environmental-memory claim. Integration and full-cycle checks are the next step.
+pass. The source is integrated unchanged as `c97f9b05` for the next cycle;
+aggregate, canonical and full-cycle acceptance checks remain pending. It remains
+outside the preceding cycle's acceptance counts and makes no coherent-X
+repeated-history, continuum, reflection-positivity or environmental-memory claim.
