@@ -657,3 +657,40 @@ transport, the factor of two when both reflected halves move, and a nonlinear
 four-event decay formula with a positive constant-mode floor. Implementation
 requires fresh preparation after this cycle closes and is excluded from these
 counts. Publication and paper readiness remain separate.
+
+
+### Cylinder-shift increment — accepted locally
+
+`FiniteGibbsCylinderShift.lean` source `86c768a5` shifts the actual positive
+observation times and re-reflects their negative partners. The conditional law
+obeys Chapman-Kolmogorov, preserves null equivalence in both directions, and is
+realized in the fixed base quotient by the existing reset channel. Its actual
+observable image intertwines the Gibbs channel. Shifting both halves produces
+the double-time pairing, with a strictly decaying nonlinear four-event term
+above a positive constant-mode floor. The schedule is explicitly distinguished
+from a common translation of every chronological event.
+
+All 39 authored declarations and 9 generated names have ordinary-or-empty raw
+axiom audits, clean production diagnostics/source scan and independent source
+review. Root integrated the source unchanged. Independent integration and gate
+reviews accept reviewed aggregate `33c77817`. Canonical extraction adds 43
+records to reach 43,254, with no prior changes/removals, nonstandard axioms or
+timeouts. All authored names are retained; exact raw accounting is 48-5=43.
+The derived atlas adds 35 proved, kernel-pure nodes and changes only frontier
+impact on 33 prior nodes. Unknowns, edges and obstructions remain unchanged.
+
+The substrate gate passes in 440.7 seconds with 70/89 checks, 1,146 warnings and
+the same 19 unresolved paper-corpus failures. Closing documentation is checked
+separately against the reviewed source and inventory. The result concerns the
+actual finite computational history and its reset dynamics; it does not supply
+full Osterwalder-Schrader axioms, a continuum field model or an external bath.
+
+The independently reviewed continuation expands the reflected measurement
+construction to a faithful finite-level state. It requires an actual normalized
+computational instrument and two-event process, their central Gram factorization,
+an isometry onto all diagonal observables and full finite rank. A nonuniform
+three-level witness must exhibit two independent centered modes, and an explicit
+qubit reindexing must recover the existing one-positive-time cylinder and shift.
+The generic process pilot and fresh preparation precede implementation; none of
+these planned results is included above. Publication and paper readiness remain
+separate.
