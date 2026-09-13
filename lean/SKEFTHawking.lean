@@ -1,3 +1,4 @@
+import SKEFTHawking.FiniteGibbsMultilevelCylinder
 import SKEFTHawking.FiniteGibbsMultilevelProcess
 import SKEFTHawking.FiniteGibbsMultilevelReflection
 import SKEFTHawking.FiniteGibbsRelaxationProcess
