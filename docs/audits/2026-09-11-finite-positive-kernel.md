@@ -694,3 +694,38 @@ qubit reindexing must recover the existing one-positive-time cylinder and shift.
 The generic process pilot and fresh preparation precede implementation; none of
 these planned results is included above. Publication and paper readiness remain
 separate.
+
+
+### Multilevel reflection increment — accepted locally
+
+`FiniteGibbsMultilevelReflection.lean` constructs the actual normalized finite
+computational instrument and two-event process. Their reflected weight has a
+central Gram factorization. An explicit finite-time inverse identifies the exact
+null space, and the existing reconstruction embeds isometrically onto all
+faithful diagonal observable classes, with dimension equal to the level count.
+The nonuniform three-level example has two independent centered modes and a
+positive cross-transition. Zero rate and zero time retain full rank. Explicit
+qubit reindexing recovers the earlier kernel, pairing and double-time shift.
+
+Source `cf7682b3` has 80 authored declarations and 156 raw audited names.
+All audits use ordinary or empty axiom sets; production diagnostics and source
+scan are clean. The 28 generated-name inspection warnings occur only in the
+audit input. Independent source, integration and gate reviews pass at reviewed
+aggregate `372e7984`. Source bytes are unchanged by integration.
+Canonical extraction adds 112 records to reach 43,366, retaining every authored
+declaration with no prior changes/removals, nonstandard axioms or timeouts.
+Exact raw accounting is 156-44=112. The derived atlas adds 58 proved, kernel-pure
+nodes; only frontier impact changes on 18 prior nodes. Unknowns, edges and
+obstructions remain unchanged.
+
+The substrate gate passes in 438.9 seconds with 70/89 checks, 1,146 warnings and
+the same 19 unresolved paper-corpus failures. Closing documentation is checked
+separately against the reviewed source and inventory. This is finite
+computational measurement reconstruction, without continuum OS axioms, a field
+existence theorem or an external-bath model. Publication remains separate.
+
+The independently reviewed next contract develops actual finite multilevel
+history products, endpoint marginals and a three-event transfer-moment consumer
+in the existing reconstructed space. The first pilot must prove scalar branch
+closure and actual depth-three weights. A fresh lease and current-cycle closure
+precede implementation; these future results are excluded from the counts above.
