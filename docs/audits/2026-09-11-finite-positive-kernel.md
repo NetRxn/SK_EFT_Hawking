@@ -729,3 +729,47 @@ history products, endpoint marginals and a three-event transfer-moment consumer
 in the existing reconstructed space. The first pilot must prove scalar branch
 closure and actual depth-three weights. A fresh lease and current-cycle closure
 precede implementation; these future results are excluded from the counts above.
+
+
+### Multilevel process and transfer moments — accepted locally
+
+`FiniteGibbsMultilevelProcess.lean` proves scalar closure of the actual
+computational branches, finite-history product weights, endpoint marginals and
+backward transfer recursion for complex product moments. These constructions
+use the existing generic process and reconstructed diagonal observable space.
+The actual three-event consumer has mixed moment `(5/4) exp(-gamma (s+u))`;
+nonuniform three-level transition witnesses, zero-rate histories and repeated
+times retain their explicit guards.
+
+Source `2d29df31` has 52 authored declarations and 128 audited namespace names.
+Independent source and integrated review pass; integration preserves the source
+bytes. Canonical extraction adds 92 records to reach 43,458, with no prior
+record changes or removals. All additions have ordinary axioms and no dependency
+timeout. Exact accounting is 128+1-37=92: the additional `step.congr_simp`
+congruence helper belongs to an earlier namespace but is generated in this
+module. It is not authored work, despite the existing classifier's false
+`autogen` flag. The atlas adds 33 proved, kernel-pure nodes and changes only
+frontier impact on 27 prior nodes. Unknowns, edges and obstructions are unchanged.
+
+The inventory at reviewed `47349737` passes the substrate gate in 443.0 seconds:
+70/89 checks, 1,146 warnings and the same 19 unresolved paper-corpus failures.
+Closing documentation is separately checked against that reviewed candidate.
+This is a finite computational process and transfer-moment result; it supplies
+neither continuum OS axioms nor a field existence or external-bath model.
+
+Canonical refresh also required the narrowly reviewed ADR-005 D-G.3 cache
+serialization repair, source `59ca7c07`. The original whole-cache pretty
+serializer overflowed after array construction. Compact serialization preserves
+the existing JSON values and readers. Real-cache roundtrips, the authoritative
+cold rebuild and warm run produce identical canonical data; the warm run takes
+181.407 seconds. All 15 extraction regression tests pass. The original finding
+is closed through the existing writer; no runtime limit, dependency pin or
+mathematical source was changed to accommodate the failure.
+
+The next independently reviewed contract constructs reflected multilevel
+cylinder pairings from actual finite histories, proves their central Gram
+factorization and exact null space, and identifies the quotient with all
+faithful diagonal observables. Nonuniform three-level witnesses must include
+a nonzero null cylinder and a positive product-cylinder norm. The initial
+four-event split and central-Gram pilot, current closure and fresh prepared
+lease precede implementation. Publication and paper readiness remain separate.

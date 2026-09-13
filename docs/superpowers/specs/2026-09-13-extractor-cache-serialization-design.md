@@ -1,6 +1,6 @@
 # Compact extractor cache persistence
 
-Status: design independently reviewed; original serialization failure localized and isolated real-data pilot passed. Authoritative integration and cold/warm validation pending.
+Status: implemented. Independent specification, pilot and source review; authoritative cold/warm canonical equality; extraction regression tests; and the substrate gate passed.
 Decision owner: ADR-005 D-G.3, extending D-G.1 and D-G.2.
 
 ## Contract
