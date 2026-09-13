@@ -10263,6 +10263,21 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-09-13-canonical-extractor-stack:infra:1.1",
+      "status": "fixed",
+      "evidence": "Replaced only the four cache pretty-serialization expressions with Json.compress. Independently reviewed original --run stack failure after array construction, exact real-cache JSON and original-reader roundtrips, authoritative cold/warm canonical byte equality at SHA256 2d9fa74c29580213743d520de3c7b405bd96060d26d10f466a94b929cd759ccd, 92 additions with no prior record changes/removals, and 15 extraction regression tests. Local evidence: round19-extractor-final-review.json and cold-warm-equivalence receipt in root continuity. Full mathematical round gate and closure remain pending.",
+      "superseded_by": null,
+      "date": "2026-09-13",
+      "commit": "59ca7c07",
+      "verified_by": {
+        "command": "python3 scripts/extract_lean_deps.py",
+        "declared": "python3 scripts/extract_lean_deps.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-09-13"
+      }
     }
   ]
 }
