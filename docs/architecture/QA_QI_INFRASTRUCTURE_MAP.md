@@ -278,6 +278,7 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | artifact | writer | staleness key | auto-synced? |
 |---|---|---|---|
 | `lean/lean_deps.json` | `extract_lean_deps.py` | **content hash** of every `.lean` under `SKEFTHawking/` **plus the root aggregate `lean/SKEFTHawking.lean`** | yes |
+| `lean/.lean_*_cache.json` | `lean/SKEFTHawking/ExtractDeps.lean` | declaration hashes and source/dependency pins under ADR-005 D-G.2 | saved during extraction as compact JSON with the existing schemas and readers (D-G.3) |
 | `docs/counts.json` / `.tex` | `update_counts.py` | **hybrid** — **value compare** on the five glob figures, mtime vs sources for `pytest_cases` (see below) | yes |
 | `papers/*/tables/*.tex` | `render_paper_tables.py` | mtime | yes |
 | `docs/MODULE_CENSUS.md` | `module_census.py` | **content compare** (`render(collect())`) | yes |
