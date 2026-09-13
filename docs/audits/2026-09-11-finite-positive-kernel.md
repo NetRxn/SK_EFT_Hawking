@@ -622,3 +622,38 @@ finite history. It will derive the actual reflected probability factorization
 and recover the existing two-mode reconstruction. That separate implementation
 awaits fresh preparation and contributes no declarations to this acceptance.
 Publication and paper readiness remain separate.
+
+
+### Cylinder-history increment — accepted locally
+
+`FiniteGibbsCylinderHistory.lean` source `8dabe598` treats arbitrary complex
+observables of the full finite positive-time outcome path. The actual reflected
+history mass factors through its central Gibbs state. This yields a direct
+positive Gram kernel, an exact null criterion, and an isometry of the full
+cylinder quotient onto the existing two-mode unital reconstruction. A nonlinear
+two-label product gives the actual four-event correlation and a nonzero path
+function in the null space. Repeated-time and zero-rate cases retain the full
+indicator quotient; no rank claim is made for arbitrary selected subfamilies.
+
+All 87 authored declarations and 69 generated names have ordinary-or-empty raw
+axiom audits, clean production diagnostics/source scan and independent source
+review. Root integrated the source unchanged. Independent integration and gate
+reviews accept reviewed aggregate `26239dfa`. Canonical extraction adds 103
+records, reaching 43,211 with no prior changes/removals, nonstandard axioms or
+timeouts. All authored declarations are retained; raw accounting is 156-53=103.
+The derived atlas adds 61 proved, kernel-pure nodes and changes only frontier
+impact on 30 prior nodes. Unknowns, edges and obstructions remain unchanged.
+
+The substrate gate passes in 442.3 seconds with 70/89 checks, 1,146 warnings and
+the same 19 unresolved paper-corpus failures. Closing documentation is checked
+separately against the reviewed source and inventory. This increment establishes
+finite cylinder reconstruction; it does not establish a continuum field model,
+full Osterwalder-Schrader axioms, coherent histories or an external bath.
+
+The reviewed next target shifts the actual positive observation times and
+re-reflects their partners, then proves that the resulting conditional law is
+realized by the existing reset dynamics. Its contract requires two-way null
+transport, the factor of two when both reflected halves move, and a nonlinear
+four-event decay formula with a positive constant-mode floor. Implementation
+requires fresh preparation after this cycle closes and is excluded from these
+counts. Publication and paper readiness remain separate.
