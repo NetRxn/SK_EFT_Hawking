@@ -51,6 +51,10 @@ Add a production-shaped regression in `tests/test_lean_slots.py` using the exist
 
 Inspect the architecture index and any load-bearing current operator/claim documentation affected by the implementation. Do not rewrite historical audits. Update only current documents made false by the shipping change.
 
+### H5 — minimize unrelated operator-guide churn
+
+Review the existing `LEAN_SLOT_OPERATOR_GUIDE.md` diff before treating it as final. Keep the ADR-018-required client-admission/removal/owner changes, and keep a correction only where the **current authoritative inventory/mechanism proves the old operator text is false**. Do not opportunistically shorten historical rationale or rewrite unrelated operating guidance merely because the file is already open. In particular, preserve useful port/session/history explanations unless the new mechanism actually makes the statement false. The implementation review should see a narrow architecture change rather than an accidental guide rewrite.
+
 ## Verification posture
 
 This hardening task is static/Git-only. It may add or edit tests, but must not claim they passed unless an actual hosted/mechanical run exists. Record hosted-CI absence as `NOT_MEASURED` rather than success.
