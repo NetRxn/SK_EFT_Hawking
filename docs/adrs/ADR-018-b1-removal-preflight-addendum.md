@@ -1,6 +1,6 @@
 # ADR-018 addendum — removal preflight and bearer-token ordering
 
-**Status:** PROPOSED closure addendum for the focused re-review residual B1 on PR #75.
+**Status:** supporting reconciliation record. Canonical removal order now lives in parent ADR-018 D8; if this addendum conflicts, the parent ADR controls.
 
 **Parent:** `ADR-018-chat-client-for-shared-lean-slots.md`.
 
@@ -8,7 +8,7 @@
 
 **Focused re-review result:** `ACCEPT_WITH_CHANGES`; B1 `PARTIALLY_CLOSED`; B2–B6 `CLOSED`; no new blocker beyond residual B1.
 
-This addendum narrows ADR-018 D8. It does not change ADR-008 lifecycle ownership, lease cleanup authority, slot count, worker privileges, or the no-worker-build rule.
+This addendum records the reasoning that led to canonical ADR-018 D8. It does not change ADR-008 lifecycle ownership, lease cleanup authority, slot count, worker privileges, or the no-worker-build rule.
 
 ## D13 — removal preflight is a non-disruptive health predicate
 
@@ -32,7 +32,7 @@ The production-shaped test seeds the defect into the artifact `doctor`/preflight
 2. change the versioned/prospective roster so that client is absent without deleting the lease;
 3. observe the health/removal-preflight predicate go red while leaving the lease untouched;
 4. exercise the legitimate owner cleanup path;
-5. restart the supervisor/proxy after the roster edit;
+5. complete the canonical credential/roster/restart sequence from parent D8;
 6. observe health green and the removed identity denied.
 
 A fixture-only helper that never reads the real lease artifact does not satisfy this requirement.
@@ -41,12 +41,19 @@ A fixture-only helper that never reads the real lease artifact does not satisfy 
 
 Bearer-token cleanup must not depend on `session env --client <removed>` after the roster edit, because ADR-018 requires `session_environment()` to reject an unadmitted client **before** token processing.
 
-The supported ordering is therefore one of these equivalent project-owned operations, chosen by implementation but tested explicitly:
+The exact project-owned operation is:
 
-- **delete-before-edit:** while the client is still admitted and quiescent, remove its token file/state, then edit the roster, restart, and verify denial; or
-- **rotate-before-edit then delete stale state:** rotate/revoke the credential while still admitted, record the new/revoked state, then remove the client, restart, and ensure the pre-removal credential cannot become valid again on later re-admission.
+```text
+slotctl session revoke-token --client <client>
+```
 
-The implementation must not document an impossible post-removal `session env` cleanup step. Re-admission after a removal must never silently resurrect the pre-removal credential.
+It runs **while the client is still admitted and quiescent**, before the `allowed_clients` edit. It is valid only in bearer mode, fails if the client has a live lease, resolves only `Inventory.client_token_path(client)`, deletes that credential state idempotently, and never prints token material. Trusted-local mode skips the token step.
+
+The canonical sequence is therefore:
+
+`quiesce + removal-preflight → bearer revoke-token while still admitted → roster edit → supervisor restart → doctor/controller/proxy denial verification`.
+
+A later re-add must create fresh credential state; the pre-removal credential must not authenticate.
 
 ## Acceptance delta
 
@@ -54,7 +61,8 @@ In addition to ADR-018's existing acceptance requirements:
 
 - a live lease whose client is outside the current/prospective roster makes doctor/removal-preflight red without mutating the lease;
 - the legitimate owner can still complete cleanup while that mismatch is reported;
-- after cleanup + roster edit + restart, doctor is green and the removed client is denied;
-- bearer-mode tests prove the chosen pre-edit credential cleanup ordering and prove old credential non-reuse after re-admission.
+- `session revoke-token` cannot target an arbitrary path, expose token bytes, or run while a live client lease exists;
+- after credential cleanup + roster edit + restart, doctor is green and the removed client is denied;
+- bearer-mode tests prove old credential non-reuse after re-admission.
 
-No runtime implementation is authorized until a fresh independent reviewer accepts this residual-B1 closure.
+No runtime implementation is authorized until a fresh independent reviewer accepts the now-canonical parent D8/S18-9 removal procedure.
