@@ -308,7 +308,11 @@ class Controller:
     def _lease_roster_mismatches(
         self, admitted_clients: Iterable[str] | None = None
     ) -> list[dict[str, Any]]:
-        admitted = set(admitted_clients or self.inventory.allowed_clients)
+        admitted = (
+            set(self.inventory.allowed_clients)
+            if admitted_clients is None
+            else set(admitted_clients)
+        )
         mismatches: list[dict[str, Any]] = []
         for number in (1, 2, 3):
             lease = self.inventory.lease(number, required=False)
@@ -330,6 +334,8 @@ class Controller:
         client = self.inventory.require_allowed_client(client)
         prospective = set(self.inventory.allowed_clients)
         prospective.remove(client)
+        if not prospective:
+            raise SlotError("server.allowed_clients must remain non-empty")
         mismatches = self._lease_roster_mismatches(prospective)
         return {
             "client": client,
