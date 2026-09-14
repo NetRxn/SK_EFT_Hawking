@@ -1,6 +1,6 @@
 # ADR-018 — Distinct Chat client on the shared Lean slot control plane
 
-- **Status:** **PROPOSED — first independent adversarial review returned `ACCEPT_WITH_CHANGES`; blockers reconciled in this revision; focused independent re-review required before implementation.**
+- **Status:** **PROPOSED — independent review chain remains `ACCEPT_WITH_CHANGES`; B2–B6 are closed; residual B1 is narrowed to canonical removal-order/credential-revocation consistency and remains review-gated before implementation.**
 - **Tracks:** issue #74; specification review on PR #75.
 - **Measured public base:** `codex/memory-process-clocks` @ `9ea7b61a33e91190ffe99e843247e03a51e8fb3e`.
 - **Measured private/downstream state:** `NetRxn-RD` `codex/frontier-first-deliverables` @ `47b380f6e233a0fd70662640422b3652e6d3191a`; `config/lean-slots.private.json` is schema 1, trusted-local, has no `allowed_clients`, and `tests/test_lean_slot_overlay.py` verifies the private wrapper reuses the public controller.
@@ -113,17 +113,21 @@ A direct Chat control plane may checkpoint a slot commit and mark it ready only 
 
 `allowed_clients` is loaded into the long-running proxy process. Editing the inventory is therefore **not immediate revocation**.
 
-The supported removal procedure is:
+The canonical supported removal procedure is:
 
-1. quiesce the client: no active lease owned by that client may remain;
-2. remove the client from the versioned inventory;
-3. in bearer mode, delete/rotate that client's token state so later re-admission cannot silently reuse an old credential;
+1. **quiesce and preflight:** prove there is no active lease owned by the client and evaluate the non-disruptive prospective-roster/lease health predicate;
+2. **bearer mode only, while the client is still admitted:** run the project-owned `slotctl session revoke-token --client <client>` operation. It must fail closed unless the client is currently admitted and has no live lease, delete only `Inventory.client_token_path(client)`, be idempotent when the token is already absent, and never print token material. Trusted-local mode skips this step;
+3. remove the client from the versioned `allowed_clients` inventory;
 4. restart the supervisor/proxies so the new inventory/code fingerprint is actually loaded;
-5. run project-native health/doctor checks and prove the removed identity is denied.
+5. run project-native health/doctor checks and prove the removed identity is denied through controller and proxy paths.
 
-A roster edit while an active lease for that client exists is an invalid migration state and must be reported, not treated as successful revocation. Existing lifecycle methods do not gain ad-hoc roster revalidation that could strand an already-issued lease mid-cleanup; the operator must quiesce before the edit.
+A roster edit while an active lease for that client exists is an invalid migration state and must be reported by the health/removal-preflight predicate, not treated as successful revocation. That predicate is observational only: it must not make lifecycle methods roster-sensitive mid-flight or strand an already-issued lease. The legitimate owner retains the existing ADR-008 cleanup path until the lease is quiescent.
 
-Tests must distinguish a stale still-serving proxy from an effective post-restart removal.
+Bearer credential revocation is deliberately **pre-edit**. `Controller.session_environment()` is planned to reject an unadmitted client before token processing, so post-removal session-token cleanup is not a valid dependency. Deleting the token while still admitted ensures a later re-admission creates fresh credential state rather than silently reusing the pre-removal credential.
+
+Tests must distinguish a stale still-serving proxy from an effective post-restart removal and must production-seed the roster/lease mismatch into the real artifacts consumed by doctor/preflight.
+
+This canonical sequence incorporates the residual-B1 D13/D14 addendum. If older reconciliation text differs on credential-removal ordering, **this ADR D8 controls**.
 
 ### D9 — schema-1 private/downstream compatibility is explicit and does not imply Chat
 
@@ -193,7 +197,7 @@ Rejected. Transport connectivity does not authorize slot use. The project lease 
 
 ### A6 — immediate roster-edit revocation
 
-Rejected for this local control plane. The proxy snapshots versioned inventory; pretending a file edit instantly revokes a live process would create a false security property and can strand active leases. Quiesce + restart + verify is the supported removal boundary.
+Rejected for this local control plane. The proxy snapshots versioned inventory; pretending a file edit instantly revokes a live process would create a false security property and can strand active leases. Quiesce + credential revocation where applicable + roster edit + restart + verify is the supported removal boundary.
 
 ## Compatibility and migration
 
@@ -221,12 +225,12 @@ Implementation is not accepted merely because `chat` can call an endpoint. Requi
 5. a lease acquired as `chat` cannot be used by `claude` or `codex`, and vice versa;
 6. controller programmatic acquisition rejects an unadmitted client before lease state is created;
 7. bearer mode maps `chat` to its own token file and preserves hint/token mismatch denial;
-8. removal/re-add tests cover stale running proxy behavior, mandatory restart, quiescent active-lease policy, and bearer-token rotation/deletion;
+8. removal/re-add tests cover production-seeded roster/lease mismatch reporting, unchanged lease state, correct-owner cleanup, stale running proxy behavior, mandatory restart, canonical pre-edit bearer token revocation, and proof that re-admission cannot reuse the pre-removal credential;
 9. same `LEAN_SLOT_OWNER_SESSION` permits cross-process acquire/prepare/release for Gate A; heartbeat/ready/absorb owner continuity is proven before Gate B;
 10. worker endpoint still omits/denies `lean_build` for `chat`;
 11. mixed-version paired public/private dependency tests preserve private Codex/Claude-only admission;
 12. `slotctl config render --client chat` fails without writing Codex/Claude configuration;
-13. `slotctl doctor`/supervisor fingerprinting detect stale pre-change proxies after code/inventory changes;
+13. `slotctl doctor`/supervisor fingerprinting detect stale pre-change proxies after code/inventory changes, and doctor/removal-preflight reports a live lease whose client is outside the current/prospective roster without mutating the lease;
 14. one bounded **no-mutation** live rehearsal exercises the real production bridge path from preflight through release;
 15. disposable production-shaped mutation tests exercise write/checkpoint/ready before any real source task;
 16. ADR-008 and the operator guide are reconciled in the same implementation commit;
@@ -234,6 +238,10 @@ Implementation is not accepted merely because `chat` can call an endpoint. Requi
 
 ## Review gate
 
-The first independent review on PR #75 returned `ACCEPT_WITH_CHANGES` against head `332f44f5e4ba557ae1d119a55018aa51fd923ce8`. Its blocking findings B1–B6 are addressed by D8–D12 plus the measured migration decision in D9.
+The review chain on PR #75 is historical evidence tied to exact heads:
 
-Because these are material design changes, implementation remains blocked until a **fresh focused independent re-review of the revised PR head** confirms the dispositions are adequate. Self-review does not satisfy that gate.
+- first independent review at `332f44f5e4ba557ae1d119a55018aa51fd923ce8`: `ACCEPT_WITH_CHANGES`, B1–B6;
+- focused re-review at `8407079f935ba3dd758a4f2c288b3cd43ec5239e`: B1 `PARTIALLY_CLOSED`, B2–B6 `CLOSED`;
+- cloud-dispatched residual-B1 closure review at `0e71346775028daa09eb90006be6c85c458b5388`: `ACCEPT_WITH_CHANGES`, substantive D13/S18-14 mismatch-preflight design accepted, with one remaining canonical contradiction in bearer credential-removal ordering.
+
+D8 now removes that contradiction and names the exact project-owned credential-revocation operation. Because the target head changes again, implementation remains blocked until a **narrow fresh closure re-review** confirms that the canonical ADR/spec/plan now agree. Self-review does not satisfy that gate.
