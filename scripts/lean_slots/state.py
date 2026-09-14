@@ -25,6 +25,7 @@ SLOT_STATES = {
     "REWARMING",
     "QUARANTINED",
 }
+LEGACY_SCHEMA1_CLIENTS = frozenset({"codex", "claude"})
 
 
 class SlotError(RuntimeError):
@@ -47,6 +48,12 @@ def canonical_digest(value: Any) -> str:
     return sha256_bytes(
         json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
     )
+
+
+def validate_client_name(client: str) -> str:
+    if not client or not client.replace("-", "").replace("_", "").isalnum():
+        raise SlotError(f"invalid client name: {client!r}")
+    return client
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -168,6 +175,7 @@ class Inventory:
         )
         inventory = cls(source_path, raw, repo_root, workspace_root, state_root)
         _ = inventory.client_auth_mode
+        _ = inventory.allowed_clients
         return inventory
 
     @property
@@ -175,12 +183,45 @@ class Inventory:
         return str(self.raw["repo_role"])
 
     @property
+    def allowed_clients(self) -> frozenset[str]:
+        """Versioned lease/dispatch admission roster.
+
+        Schema 1 predates the field. Its only compatibility interpretation is the
+        exact legacy pair Codex/Claude; absence never implies Chat admission.
+        """
+
+        server = self.raw.get("server", {})
+        configured = server.get("allowed_clients")
+        if configured is None:
+            if self.raw.get("schema_version") == 1:
+                return LEGACY_SCHEMA1_CLIENTS
+            raise SlotError("server.allowed_clients is required")
+        if not isinstance(configured, list) or not configured:
+            raise SlotError("server.allowed_clients must be a non-empty JSON array")
+        normalized: list[str] = []
+        for item in configured:
+            if not isinstance(item, str):
+                raise SlotError("server.allowed_clients entries must be strings")
+            normalized.append(validate_client_name(item))
+        if len(set(normalized)) != len(normalized):
+            raise SlotError("server.allowed_clients must not contain duplicates")
+        return frozenset(normalized)
+
+    def require_allowed_client(self, client: str) -> str:
+        client = validate_client_name(client)
+        if client not in self.allowed_clients:
+            raise SlotError(
+                f"client {client!r} is not admitted by server.allowed_clients"
+            )
+        return client
+
+    @property
     def client_auth_mode(self) -> str:
         """Client-to-proxy authentication mode.
 
         ``trusted-local`` is the single-user workstation default: the proxy is
-        loopback-only and the lease remains the dispatch authority, but Codex
-        does not need a bearer credential merely to start. ``bearer`` retains
+        loopback-only and the lease remains the dispatch authority, but clients
+        do not need a bearer credential merely to start. ``bearer`` retains
         the stronger client/session binding for a future shared-user host.
         """
 
@@ -224,14 +265,12 @@ class Inventory:
         return self.state_root / "logs" / f"{self.repo_role}-wt{number}-{kind}.log"
 
     def client_token_path(self, client: str) -> Path:
-        return self.state_root / "clients" / f"{client}.token"
+        return self.state_root / "clients" / f"{validate_client_name(client)}.token"
 
     def backend_token_path(self, number: int) -> Path:
         return self.state_root / "backends" / f"{self.repo_role}-wt{number}.token"
 
     def token(self, client: str, *, create: bool = True, rotate: bool = False) -> str:
-        if not client.replace("-", "").replace("_", "").isalnum():
-            raise SlotError(f"invalid client name: {client!r}")
         path = self.client_token_path(client)
         if rotate or not path.exists():
             if not create:
