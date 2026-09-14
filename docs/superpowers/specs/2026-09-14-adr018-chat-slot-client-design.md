@@ -1,6 +1,6 @@
 # ADR-018 — distinct Chat client for shared Lean slots: design specification
 
-**Status:** revised after independent adversarial review (`ACCEPT_WITH_CHANGES`). **Do not implement until a focused fresh-reader re-review accepts the reconciled design.**
+**Status:** revised through independent + focused + cloud-dispatched residual-B1 review. **B2–B6 are closed; runtime implementation remains blocked until one narrow fresh review confirms the canonical B1 removal procedure is internally consistent.**
 
 **Normative decision:** [`ADR-018`](../../adrs/ADR-018-chat-client-for-shared-lean-slots.md).
 
@@ -175,22 +175,38 @@ The active private inventory is not silently rewritten and remains Codex/Claude-
 
 Mixed-version paired-inventory tests are mandatory. A later schema version may make the field required after all overlays migrate.
 
-### S18-9 — removal is quiescent and restart-bound, not instant file-edit revocation
+### S18-9 — removal is quiescent, bearer-credential-cleaned, and restart-bound
 
-A roster edit does not mutate an already-running proxy's in-memory inventory.
+A roster edit does not mutate an already-running proxy's in-memory inventory, and the planned `session_environment(client)` path rejects unadmitted clients before token processing. Therefore credential cleanup cannot depend on a post-removal session command.
 
-Supported removal procedure:
+Canonical removal procedure:
 
-1. prove there is no active lease for the client being removed;
-2. remove the client from the versioned inventory;
-3. in bearer mode, delete or rotate the removed client's token state so future re-admission cannot silently reuse an old credential;
-4. restart the supervisor/proxies so the current code and inventory are loaded;
+1. **quiesce + preflight:** prove there is no active lease for the client being removed and evaluate the current/prospective roster-vs-live-lease health predicate;
+2. **bearer mode only, while still admitted:** invoke `slotctl session revoke-token --client <client>`;
+3. remove the client from the versioned inventory;
+4. restart the supervisor/proxies so current code + inventory are loaded;
 5. run project-native health/doctor checks;
-6. prove the removed identity is denied through controller and proxy paths.
+6. prove the removed identity is denied through both controller and proxy paths.
 
-Attempting to treat an inventory edit with an active removed-client lease as completed revocation is invalid. Existing owner lifecycle commands are not made roster-sensitive mid-flight because that could strand an issued lease; the client must be quiesced before the edit.
+`slotctl session revoke-token --client <client>` is a narrow operator/admin capability, not a worker capability. Its implementation contract is:
 
-Tests must measure stale-proxy behavior before restart and effective removal after restart rather than conflating the two.
+- require `client_auth == "bearer"`;
+- require the client is still present in `Inventory.allowed_clients`;
+- fail closed if any live lease records that client;
+- resolve exactly `Inventory.client_token_path(client)`; no caller-supplied path;
+- delete that token file if present, and succeed idempotently if already absent;
+- never emit the token value or other secret material;
+- return only nonsecret structured evidence such as client name + whether credential state existed/revocation completed.
+
+Trusted-local mode has no credential state to revoke and skips step 2.
+
+The roster/lease mismatch predicate is observational. A current or prospective roster that excludes a client while a live lease still records that client is red migration-health evidence, but the predicate must not mutate/reclaim/quarantine/release the lease and must not be inserted as a hidden `_lease_for_command()` admission re-check. Correct-owner ADR-008 cleanup remains legal until the lease is quiescent.
+
+Bearer re-admission after removal must generate fresh credential state. The pre-removal credential must fail after later re-admission; `Inventory.token()` must not silently reuse a credential that removal declared revoked.
+
+Tests must distinguish stale-process policy before restart from effective removal after restart, and must production-seed the roster/lease mismatch into the actual lease/inventory artifacts consumed by doctor/preflight.
+
+This section incorporates and supersedes the ordering portion of the residual-B1 S18-14..16 supplement. Where the supplement or older reconciliation prose differs, **S18-9 is canonical**.
 
 ### S18-10 — owner continuity is a control-plane responsibility, not an implicit worker privilege
 
@@ -241,16 +257,16 @@ This is mandatory architecture-rule compliance, not optional documentation clean
 
 ## 3. Files and ownership
 
-Expected implementation surfaces if focused re-review accepts the reconciled design:
+Expected implementation surfaces after the final narrow specification closure review accepts the canonical B1 procedure:
 
 | Surface | Responsibility |
 |---|---|
 | `config/lean-slots.public.json` | explicitly admits public clients |
-| `scripts/lean_slots/state.py` | validates/exports allowed clients; schema-1 exact legacy fallback |
-| `scripts/lean_slots/controller.py` | programmatic admission enforcement on acquire/session environment; product-neutral diagnostics where touched |
+| `scripts/lean_slots/state.py` | validates/exports allowed clients; schema-1 exact legacy fallback; exact token-path primitive |
+| `scripts/lean_slots/controller.py` | programmatic admission enforcement; doctor/removal-preflight mismatch predicate; bearer token revocation guard/operation; product-neutral diagnostics where touched |
 | `scripts/lean_slots/proxy.py` | trusted-local/bearer admission enforcement against loaded inventory |
-| `scripts/lean_slots/cli.py` | delegates admission on acquire/session; preserves exhaustive renderer capability boundary |
-| `tests/test_lean_slots.py` | production-shaped admission/removal/stale-proxy/owner/renderer/mixed-version tests |
+| `scripts/lean_slots/cli.py` | delegates admission on acquire/session; exposes narrow `session revoke-token`; preserves exhaustive renderer capability boundary |
+| `tests/test_lean_slots.py` | production-shaped admission/removal/stale-proxy/token-revocation/owner/renderer/mixed-version tests |
 | `docs/adrs/ADR-008-shared-lean-slot-control-plane.md` | mandatory client-enumeration reconciliation |
 | `docs/dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md` | mandatory client/removal/owner procedure reconciliation |
 | architecture claim/routing docs | update if implementation makes a load-bearing claim or routing row incomplete |
@@ -279,7 +295,9 @@ Implementation is incorrect if any of the following becomes true:
 12. `config render --client chat` reaches the Codex renderer;
 13. failure of a Chat client causes automatic reset/repair/discard of slot state;
 14. a different owner session can absorb a Chat-owned ready lease without an explicit transfer mechanism;
-15. direct Chat receives merge, publication, or release authority merely from slot admission.
+15. direct Chat receives merge, publication, or release authority merely from slot admission;
+16. bearer token revocation depends on a caller-supplied filesystem path or on an already-unadmitted client reaching `session env`;
+17. doctor/removal-preflight changes lease lifecycle state merely because roster health is red.
 
 ---
 
@@ -314,7 +332,8 @@ Removal tests use a real long-running proxy fixture or equivalent process bounda
 - roster file edit alone leaves the stale process on old policy;
 - stale state is detected;
 - restart loads the new roster;
-- removed identity then fails.
+- removed identity then fails;
+- production-seeded live-lease/roster mismatch is red in doctor/removal-preflight while the lease artifact remains unchanged and correct-owner cleanup stays possible.
 
 ### 5.3 Bearer-mode tests
 
@@ -322,8 +341,11 @@ Removal tests use a real long-running proxy fixture or equivalent process bounda
 - correct Chat token + Chat hint maps to Chat;
 - Chat token + Claude hint fails;
 - a token for a client absent from the loaded roster fails admission;
-- removal procedure deletes/rotates token state;
-- later re-add does not silently reuse the pre-removal credential;
+- `slotctl session revoke-token --client chat` succeeds only while Chat is still admitted, bearer mode is active, and no Chat lease remains;
+- token revocation deletes only the exact project-owned client token path and never emits credential material;
+- trusted-local mode does not pretend to revoke nonexistent bearer state;
+- roster removal follows revocation, then supervisor restart + denial verification;
+- later re-add creates fresh credential state and the pre-removal credential cannot authenticate;
 - legacy Codex/Claude token behavior remains green.
 
 ### 5.4 Session-owner tests
@@ -397,18 +419,19 @@ Only after Gate A and the prerequisite above:
 
 ---
 
-## 7. Review reconciliation and focused re-review questions
+## 7. Review reconciliation and final narrow closure question
 
-The first independent review on PR #75 returned `ACCEPT_WITH_CHANGES`. Focused re-review should verify that the revised head adequately resolves:
+Review history on PR #75 is tied to exact target heads:
 
-- B1: removal/revocation, stale proxy, active-lease and bearer-token semantics → S18-9;
-- B2: durable owner session, heartbeat, `ready → absorb` actor boundary → S18-5/S18-10/S18-12;
-- B3: measured private migration and exact schema-1 fallback → S18-8;
-- B4: renderer capability vs admission → S18-4/S18-6/S18-11;
-- B5: production bridge Gate A and disposable mutation-path prerequisite → S18-12;
-- B6: mandatory ADR-008/operator-guide reconciliation → S18-13.
+- first review at `332f44f5e4ba557ae1d119a55018aa51fd923ce8`: `ACCEPT_WITH_CHANGES`, B1–B6;
+- focused review at `8407079f935ba3dd758a4f2c288b3cd43ec5239e`: B1 `PARTIALLY_CLOSED`, B2–B6 `CLOSED`;
+- cloud-dispatched residual-B1 closure review at `0e71346775028daa09eb90006be6c85c458b5388`: substantive mismatch-preflight design accepted, with one remaining blocker that D14/S18-16's pre-edit credential cleanup contradicted canonical D8/S18-9 and left the concrete credential operation deferred.
 
-The reviewer should also challenge whether these dispositions introduce a new blocker or contradict ADR-008.
+This revision makes S18-9 canonical, moves bearer credential revocation before the roster edit, and names the exact `slotctl session revoke-token --client <client>` semantics. The remaining independent review question is intentionally narrow:
+
+> Do canonical ADR D8 + spec S18-9 + the B1 implementation plan now express one executable removal procedure without regressing B2–B6 or weakening ADR-008 owner cleanup?
+
+Runtime implementation remains blocked until a fresh reviewer answers that question acceptably against the new exact head.
 
 ---
 
