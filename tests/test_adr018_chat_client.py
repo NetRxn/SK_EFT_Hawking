@@ -207,6 +207,17 @@ def test_removal_preflight_reports_live_client_without_mutating_lease(adr018_rep
     assert controller.removal_preflight(client="chat")["ok"]
 
 
+def test_empty_prospective_roster_is_not_replaced_by_current_roster(adr018_repo) -> None:
+    controller, _, _, _ = adr018_repo
+    controller.inventory.raw["server"]["allowed_clients"] = ["chat"]
+    controller.acquire(1, client="chat", base_ref="main")
+    assert controller._lease_roster_mismatches(set()) == [
+        {"slot": 1, "client": "chat", "state": "ACQUIRED", "repo_role": "public"}
+    ]
+    with pytest.raises(SlotError, match="must remain non-empty"):
+        controller.removal_preflight(client="chat")
+
+
 def test_doctor_reports_current_roster_mismatch_without_mutating_lease(adr018_repo) -> None:
     controller, _, _, _ = adr018_repo
     controller.acquire(1, client="chat", base_ref="main")
@@ -262,17 +273,21 @@ def test_cli_admission_arguments_accept_chat_but_renderer_does_not() -> None:
         parser.parse_args(["config", "render", "--client", "chat"])
 
 
-def test_legacy_private_style_inventory_never_inherits_public_chat_admission(
-    adr018_repo, tmp_path: Path
-) -> None:
-    controller, _, _, _ = adr018_repo
-    private_path = tmp_path / "private.json"
-    raw = json.loads(controller.inventory.source.read_text())
+def test_schema1_paired_inventory_keeps_private_roster_narrow(adr018_repo) -> None:
+    controller, _, _, public_path = adr018_repo
+    assert controller.inventory.allowed_clients == frozenset({"codex", "claude", "chat"})
+
+    private_path = public_path.parent / "lean-slots.private-test.json"
+    raw = json.loads(public_path.read_text())
     raw["repo_role"] = "private"
     raw["server"].pop("allowed_clients", None)
-    # Loading the standalone schema-1 overlay is enough to pin the compatibility
-    # interpretation: the missing field cannot inherit the public explicit roster.
+    raw["paired_dependency"] = {"inventory": public_path.name}
     private_path.write_text(json.dumps(raw))
+
     private = Inventory.load(private_path)
+    paired_public = private.paired_inventory()
+    assert paired_public is not None
+    assert paired_public.source == public_path.resolve()
+    assert paired_public.allowed_clients == frozenset({"codex", "claude", "chat"})
     assert private.allowed_clients == frozenset({"codex", "claude"})
     assert "chat" not in private.allowed_clients
