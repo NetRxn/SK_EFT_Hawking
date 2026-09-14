@@ -2,7 +2,7 @@
 
 **Status:** review requested; this file is a dispatch artifact, not a verdict.
 
-**Target branch:** `design/adr018-chat-slot-client`
+**Target PR:** #75 — `design/adr018-chat-slot-client` → `codex/memory-process-clocks`
 
 **Measured base:** `codex/memory-process-clocks` @ `9ea7b61a33e91190ffe99e843247e03a51e8fb3e`
 
@@ -62,5 +62,11 @@ Return:
 6. **Non-vacuity / acceptance-test weaknesses**.
 7. **Downstream/private compatibility risks**.
 8. A concise statement of what would need to change for acceptance if the verdict is not `ACCEPT`.
+
+## Durable filing
+
+After completing the review, submit the report as a GitHub **COMMENT review on PR #75**. Do **not** submit `APPROVE` or `REQUEST_CHANGES`: the Chat review is evidence for the project process, not merge authorization.
+
+Also return the same report in the Chat response for operator visibility. Downstream control-plane work should consume the durable PR review rather than relying on manual copy/paste of the transcript.
 
 Do not implement or modify repository files during this review. Do not rely on prior conversation history.
