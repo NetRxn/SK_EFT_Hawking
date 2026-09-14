@@ -1,10 +1,12 @@
 # ADR-018 — distinct Chat client for shared Lean slots: design specification
 
-**Status:** proposed design, 2026-09-14. **Do not implement until the independent adversarial specification review is complete and blocking findings are resolved.**
+**Status:** revised after independent adversarial review (`ACCEPT_WITH_CHANGES`). **Do not implement until a focused fresh-reader re-review accepts the reconciled design.**
 
 **Normative decision:** [`ADR-018`](../../adrs/ADR-018-chat-client-for-shared-lean-slots.md).
 
-**Measured base:** `codex/memory-process-clocks` @ `9ea7b61a33e91190ffe99e843247e03a51e8fb3e`.
+**Measured public base:** `codex/memory-process-clocks` @ `9ea7b61a33e91190ffe99e843247e03a51e8fb3e`.
+
+**Measured private/downstream state:** `NetRxn-RD` `codex/frontier-first-deliverables` @ `47b380f6e233a0fd70662640422b3652e6d3191a`; its `config/lean-slots.private.json` is schema 1, trusted-local, has no `allowed_clients`, and its overlay tests exercise the public controller.
 
 **Existing owner:** ADR-008 remains the authority for the shared slot lifecycle. This specification only extends client admission; it does not introduce a second execution plane.
 
@@ -26,17 +28,25 @@ The existing shared Lean control plane already has the correct execution semanti
 
 The missing capability is narrower: a machine-local NetRxn Chat execution bridge needs to participate as a **distinct client identity** rather than impersonating Codex or Claude.
 
-Measured at the base ref:
+Measured at the public base ref:
 
 - `Controller._owner()` already accepts the product-neutral `LEAN_SLOT_OWNER_SESSION` before client-specific session variables;
 - lease records already store an arbitrary string `client`;
 - bearer token filenames already accept safe generic client strings;
 - `LeaseGate.identify()` in trusted-local mode hard-codes `{codex, claude}`;
 - `slotctl acquire --client` and `slotctl session env --client` hard-code `codex|claude` in argparse;
+- `slotctl config render --client` is a different capability boundary and supports only concrete Codex/Claude renderers;
 - the versioned slot inventory has no declared admitted-client set;
-- `Controller.acquire()` itself does not currently enforce an admission roster.
+- `Controller.acquire()` itself does not currently enforce an admission roster;
+- a running proxy snapshots inventory/code, so a roster file edit is not immediate revocation.
 
-The design must make admission a project-owned versioned fact while preserving every existing runtime invariant.
+Measured in the private/downstream overlay:
+
+- the active private inventory is schema 1 and lacks `allowed_clients`;
+- it uses the same public controller through the private `slotctl` wrapper;
+- therefore a required new schema-1 field would be a real cross-repository compatibility break.
+
+The design must make admission a project-owned versioned fact while preserving every existing runtime invariant and making rollout/removal semantics explicit.
 
 ---
 
@@ -44,7 +54,7 @@ The design must make admission a project-owned versioned fact while preserving e
 
 Numbering `S18-n` is stable and is cited by the implementation plan and review.
 
-### S18-1 — one versioned client-admission owner
+### S18-1 — one versioned lease/dispatch client-admission owner
 
 Add to `config/lean-slots.public.json`:
 
@@ -54,57 +64,69 @@ Add to `config/lean-slots.public.json`:
 }
 ```
 
-`Inventory.allowed_clients` is the **only** admission owner. It validates:
+`Inventory.allowed_clients` is the **only lease/dispatch admission owner**. It validates:
 
 - JSON array shape;
 - non-empty;
 - unique values;
 - safe client-name grammar compatible with existing token-file naming;
-- existing public deployment includes `codex` and `claude` during migration;
 - callers receive an immutable/set-like projection rather than mutating raw inventory state.
 
-The exact validation helper belongs beside the existing inventory/auth validation in `scripts/lean_slots/state.py`.
+The renderer capability set is intentionally separate because it answers a different question: which product configuration formats this repository knows how to generate.
 
 ### S18-2 — controller validates admission even for programmatic callers
 
-`Controller.acquire(number, client=..., base_ref=...)` must reject a client not present in `Inventory.allowed_clients` **before creating a lease or mutating slot state**.
+`Controller.acquire(number, client=..., base_ref=...)` rejects a client not present in `Inventory.allowed_clients` **before creating a lease or mutating slot state**.
+
+`Controller.session_environment(client=...)` applies the same validation before token/environment handling.
 
 Rationale: CLI validation alone is not an authority boundary. The local Chat bridge and future callers may invoke controller logic programmatically.
 
-`Controller.session_environment(client=...)` applies the same validation before token/environment handling.
+Existing lifecycle commands operating on an already-issued lease do not re-check a newly edited roster mid-flight; removal is a quiescent migration defined in S18-9.
 
 ### S18-3 — proxy consumes the same admission data
 
 In trusted-local mode, `LeaseGate.identify()` replaces the hard-coded set with `Inventory.allowed_clients`.
 
-It still requires a non-empty `?client=` hint. A hint not admitted by the inventory fails closed.
+It still requires a non-empty `?client=` hint. A hint not admitted by the proxy's loaded inventory fails closed.
 
-Bearer mode retains its existing token lookup and hint/token-consistency checks. Admission is checked in addition to token ownership: possession of a stale token file for a removed client must not silently re-admit that client.
+Bearer mode retains its existing token lookup and hint/token-consistency checks. Admission is checked in addition to token ownership: possession of a token file for a client not present in the loaded roster does not admit that client.
 
-### S18-4 — CLI does not maintain its own client roster
+Because the proxy snapshots inventory at process start, roster changes become effective only after the restart/verification procedure in S18-9.
 
-Remove argparse `choices=("codex", "claude")` from the client arguments whose true authority is the versioned inventory.
+### S18-4 — admission CLI paths do not maintain their own roster
 
-The CLI accepts a string, and the controller/inventory returns the authoritative failure.
-
-This applies to at least:
+Remove argparse `choices=("codex", "claude")` only from client arguments whose true authority is the versioned admission roster:
 
 - `slotctl acquire --client`;
 - `slotctl session env --client`.
 
-No new `--client chat` special case is added elsewhere.
+The CLI accepts a string and the controller/inventory returns the authoritative admission failure.
 
-### S18-5 — Chat uses the existing owner-session mechanism
+This decision does **not** remove the explicit capability restriction from `slotctl config render --client`; that is covered by S18-11.
 
-The direct local bridge supplies a stable opaque execution-session identifier via:
+### S18-5 — one durable bridge owner session spans project lifecycle operations
+
+The direct local bridge supplies one stable opaque execution-session identifier via:
 
 ```text
 LEAN_SLOT_OWNER_SESSION=<opaque bridge session id>
 ```
 
-for every lifecycle invocation belonging to one admitted execution session.
+for every project-native lifecycle invocation belonging to that execution session.
 
-No `CHAT_THREAD_ID` or product-specific slot-owner variable is introduced.
+There is no owner transfer at `ready`. The same durable local orchestration session remains the lease owner until a project-native terminal transition.
+
+This ADR does not authorize the bridge to perform `absorb`. Before any real source-mutating Chat task is admitted, the caller/control-plane side must:
+
+- expose project-native heartbeat under the same owner session;
+- demonstrate owner continuity across separate processes;
+- define and independently review the explicitly authorized lead/integration operation that continues `ready → absorb` under that same owner session;
+- prove that this does not turn ordinary worker authority into implicit merge/integration authority.
+
+Gate A remains no-change and terminates through `release`, so it does not claim to prove heartbeat or absorb.
+
+No product-specific Chat owner variable is introduced.
 
 ### S18-6 — no third client configuration renderer
 
@@ -114,9 +136,11 @@ The direct bridge derives the slot endpoint from versioned inventory and calls:
 http://127.0.0.1:<proxy_port>/mcp?client=chat
 ```
 
-The existing Claude and Codex config renderers remain unchanged.
+The existing Claude and Codex config renderers remain the only renderer capabilities in this change.
 
-This change therefore does **not** add Chat entries to workspace `.mcp.json`, a new generated config file, or a new endpoint family.
+`slotctl config render --client chat` must fail before writing any configuration. The CLI handler uses exhaustive named dispatch rather than a catch-all `else` that could silently map an unknown client to Codex.
+
+A future Chat-specific renderer requires a separate architecture change driven by a concrete transport need.
 
 ### S18-7 — no privilege difference by client identity
 
@@ -135,38 +159,105 @@ The same slot invariants apply regardless of admitted client:
 
 Any future client-specific privilege difference requires a separate architecture change.
 
-### S18-8 — migration is explicit and downstream-safe
+### S18-8 — schema-1 migration uses an exact legacy fallback and never implies Chat
 
-The public inventory declares `allowed_clients` immediately when implementation lands.
+Measurement of the active private overlay resolves the earlier migration alternative.
 
-For an older/private paired inventory that lacks the field, implementation must choose one of these **before coding** based on actual downstream usage:
+For schema 1 only:
 
-1. fail closed and require that inventory to migrate in the same coordinated release; or
-2. provide a narrow legacy default of exactly `{"codex", "claude"}` while emitting/recording a migration obligation.
+- if `server.allowed_clients` is present, validate and use it;
+- if it is absent, interpret the admitted set as exactly `{codex, claude}`;
+- the missing-field fallback never contains `chat`.
 
-The implementation must not silently default missing inventories to include `chat`.
+The public inventory explicitly declares `[codex, claude, chat]` when implementation lands.
 
-The adversarial review must explicitly evaluate which migration behavior is safer given the current private overlay contract.
+The active private inventory is not silently rewritten and remains Codex/Claude-only until its own repository explicitly opts in to Chat.
+
+Mixed-version paired-inventory tests are mandatory. A later schema version may make the field required after all overlays migrate.
+
+### S18-9 — removal is quiescent and restart-bound, not instant file-edit revocation
+
+A roster edit does not mutate an already-running proxy's in-memory inventory.
+
+Supported removal procedure:
+
+1. prove there is no active lease for the client being removed;
+2. remove the client from the versioned inventory;
+3. in bearer mode, delete or rotate the removed client's token state so future re-admission cannot silently reuse an old credential;
+4. restart the supervisor/proxies so the current code and inventory are loaded;
+5. run project-native health/doctor checks;
+6. prove the removed identity is denied through controller and proxy paths.
+
+Attempting to treat an inventory edit with an active removed-client lease as completed revocation is invalid. Existing owner lifecycle commands are not made roster-sensitive mid-flight because that could strand an issued lease; the client must be quiesced before the edit.
+
+Tests must measure stale-proxy behavior before restart and effective removal after restart rather than conflating the two.
+
+### S18-10 — owner continuity is a control-plane responsibility, not an implicit worker privilege
+
+The project slot controller already has the primitive required for cross-process ownership: `LEAN_SLOT_OWNER_SESSION`.
+
+The caller/control plane is responsible for retaining that opaque session identity durably and presenting it on every lifecycle command. It may expose `heartbeat` without gaining integration authority.
+
+A `READY_TO_ABSORB` lease cannot be handed to an unrelated actor/session. The production continuation must either use the same authorized owner session or a future explicit project-native ownership-transfer mechanism. This ADR chooses the former for the first implementation and does not introduce ownership transfer.
+
+### S18-11 — renderer capability and lease admission remain deliberately distinct
+
+Lease admission comes from `Inventory.allowed_clients`.
+
+Renderer support remains an exhaustive product capability:
+
+- Codex renderer;
+- Claude renderer;
+- no Chat renderer in ADR-018.
+
+Negative verification must prove `config render --client chat` fails with no write.
+
+### S18-12 — live acceptance tests the production bridge end-to-end
+
+Gate A must exercise the real NetRxn local execution path, not manually substitute project commands:
+
+1. durable direct-Chat preflight;
+2. bridge `activate()`;
+3. independently observe active Chat lease/prepared state;
+4. bridge domain-MCP diagnostics/`lean_verify` over the adapter-selected endpoint;
+5. mismatched-client negative control;
+6. prove HEAD and `git status --porcelain` unchanged;
+7. bridge `release_no_change()`;
+8. capture exact task/ref/SHA/slot/lease/tool evidence.
+
+Manual `slotctl` calls may be used as observation/debug evidence only.
+
+Before Gate B (real source mutation), a production-shaped disposable repository must exercise `write → checkpoint → ready`, and the production bridge must support heartbeat. A real source task is a bounded canary after those conditions, not the first test of the mutation API.
+
+### S18-13 — normative lifecycle documentation is reconciled in the shipping commit
+
+ADR-008 remains lifecycle authority, but its current Codex/Claude-only client enumeration becomes false once Chat is admitted.
+
+Therefore the implementation commit must update the relevant ADR-008 S-A/S-C language and `LEAN_SLOT_OPERATOR_GUIDE.md` to make admitted-client enumeration inventory-owned while preserving the existing lifecycle/build/integration contract.
+
+This is mandatory architecture-rule compliance, not optional documentation cleanup.
 
 ---
 
 ## 3. Files and ownership
 
-Expected implementation surfaces if the design is accepted:
+Expected implementation surfaces if focused re-review accepts the reconciled design:
 
 | Surface | Responsibility |
 |---|---|
-| `config/lean-slots.public.json` | declares admitted client identities |
-| `scripts/lean_slots/state.py` | validates/exports allowed clients |
-| `scripts/lean_slots/controller.py` | programmatic admission enforcement on acquire/session environment |
-| `scripts/lean_slots/proxy.py` | trusted-local and bearer admission enforcement |
-| `scripts/lean_slots/cli.py` | removes duplicated argparse roster; delegates authority |
-| `tests/test_lean_slots.py` | production-shaped positive/negative admission and compatibility tests |
-| `docs/adrs/ADR-008-shared-lean-slot-control-plane.md` | only if implementation changes/corrects a current statement there |
-| `docs/dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md` | documents the third client only when implementation exists |
-| `docs/architecture/*` owning slot surface | update if the implementation makes existing mechanism prose incomplete |
+| `config/lean-slots.public.json` | explicitly admits public clients |
+| `scripts/lean_slots/state.py` | validates/exports allowed clients; schema-1 exact legacy fallback |
+| `scripts/lean_slots/controller.py` | programmatic admission enforcement on acquire/session environment; product-neutral diagnostics where touched |
+| `scripts/lean_slots/proxy.py` | trusted-local/bearer admission enforcement against loaded inventory |
+| `scripts/lean_slots/cli.py` | delegates admission on acquire/session; preserves exhaustive renderer capability boundary |
+| `tests/test_lean_slots.py` | production-shaped admission/removal/stale-proxy/owner/renderer/mixed-version tests |
+| `docs/adrs/ADR-008-shared-lean-slot-control-plane.md` | mandatory client-enumeration reconciliation |
+| `docs/dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md` | mandatory client/removal/owner procedure reconciliation |
+| architecture claim/routing docs | update if implementation makes a load-bearing claim or routing row incomplete |
 
 No Chat-control-plane Python is copied into SK_EFT.
+
+The caller-side WP-010 separately owns bridge heartbeat, durable local execution state, scoped mutation, and end-to-end bridge acceptance mechanics.
 
 ---
 
@@ -175,30 +266,37 @@ No Chat-control-plane Python is copied into SK_EFT.
 Implementation is incorrect if any of the following becomes true:
 
 1. an unadmitted client can acquire a lease through either CLI or direct Python calls;
-2. a stale bearer token file can re-admit a removed client;
-3. `chat` can dispatch tools against a `claude`/`codex` lease, or vice versa;
-4. adding `chat` creates another worktree, backend, proxy, build lane, cache, or integration route;
-5. the bridge must impersonate `claude` to function;
-6. the worker gains `lean_build` or primary-checkout build authority;
-7. Chat connectivity alone authorizes execution without an active project lease;
-8. implementation changes private/downstream inventory contents implicitly;
-9. failure of a Chat client causes automatic reset/repair/discard of slot state;
-10. direct Chat receives merge, publication, or release authority merely from slot admission.
+2. a stale bearer token alone can admit a removed client;
+3. a roster edit is claimed as immediate revocation while a stale proxy continues serving;
+4. a client can be removed while its active lease remains and the system calls that migration complete;
+5. `chat` can dispatch tools against a `claude`/`codex` lease, or vice versa;
+6. adding `chat` creates another worktree, backend, proxy, build lane, cache, or integration route;
+7. the bridge must impersonate `claude` to function;
+8. the worker gains `lean_build` or primary-checkout build authority;
+9. Chat connectivity alone authorizes execution without an active project lease;
+10. implementation changes private/downstream inventory contents implicitly;
+11. schema-1 missing-field compatibility admits Chat;
+12. `config render --client chat` reaches the Codex renderer;
+13. failure of a Chat client causes automatic reset/repair/discard of slot state;
+14. a different owner session can absorb a Chat-owned ready lease without an explicit transfer mechanism;
+15. direct Chat receives merge, publication, or release authority merely from slot admission.
 
 ---
 
 ## 5. Mechanical verification design
 
-### 5.1 Inventory admission tests
+### 5.1 Inventory admission and migration tests
 
-Production-shaped inventory fixtures must demonstrate:
+Production-shaped inventory fixtures demonstrate:
 
 - public inventory with `codex`, `claude`, `chat` loads;
 - empty list fails;
 - duplicate entries fail;
 - malformed client names fail;
-- unadmitted client acquire fails before a lease file is created;
-- removal of a client from the inventory makes later acquisition fail.
+- schema-1 missing field resolves exactly to Codex/Claude;
+- mixed public-explicit/private-legacy paired inventories load;
+- private legacy inventory does not admit Chat;
+- unadmitted client acquire fails before a lease file is created.
 
 ### 5.2 Trusted-local proxy tests
 
@@ -211,21 +309,39 @@ For an inventory admitting all three clients:
 - active `claude` lease + `?client=chat` fails;
 - unknown `?client=other` fails before dispatch.
 
+Removal tests use a real long-running proxy fixture or equivalent process boundary to demonstrate:
+
+- roster file edit alone leaves the stale process on old policy;
+- stale state is detected;
+- restart loads the new roster;
+- removed identity then fails.
+
 ### 5.3 Bearer-mode tests
 
 - `chat` gets its own token path under the existing token mechanism;
 - correct Chat token + Chat hint maps to Chat;
 - Chat token + Claude hint fails;
-- token for a client removed from `allowed_clients` fails admission;
+- a token for a client absent from the loaded roster fails admission;
+- removal procedure deletes/rotates token state;
+- later re-add does not silently reuse the pre-removal credential;
 - legacy Codex/Claude token behavior remains green.
 
 ### 5.4 Session-owner tests
 
-Use multiple controller invocations with the same `LEAN_SLOT_OWNER_SESSION` value and verify ownership survives across the lifecycle exactly as the current cross-process session tests require.
+Use multiple controller invocations with the same `LEAN_SLOT_OWNER_SESSION` and verify ownership across acquire/prepare/heartbeat/ready/release-or-absorb as appropriate.
+
+Negative control: a different owner session cannot operate the lease.
 
 No client-specific owner variable is needed for `chat`.
 
-### 5.5 Existing-invariant regression tests
+### 5.5 Renderer tests
+
+- Codex renderer remains positive;
+- Claude renderer remains positive;
+- `config render --client chat` fails before writing;
+- an unknown renderer value fails explicitly rather than falling through.
+
+### 5.6 Existing-invariant regression tests
 
 All existing ADR-008 tests remain green, especially:
 
@@ -234,57 +350,65 @@ All existing ADR-008 tests remain green, especially:
 - build-epoch matching;
 - proxy fingerprint/drift behavior;
 - paired dependency pinning;
-- quarantine/release/ready/absorb semantics.
+- quarantine/release/ready/absorb semantics;
+- global three-slot capacity.
 
 ---
 
 ## 6. Live acceptance sequence — explicitly after implementation review
 
-Live acceptance is ordered so the first Chat interaction cannot mutate project source.
+### Gate A — no-mutation production-bridge rehearsal
 
-### Gate A — no-mutation direct Chat rehearsal
+Only after implementation + independent implementation review are green:
 
-1. supervisor/current proxy fingerprint healthy;
-2. choose a clean/free slot;
-3. `acquire --client chat` using one stable `LEAN_SLOT_OWNER_SESSION`;
-4. `prepare`;
-5. call bounded diagnostics/`lean_verify` via `?client=chat`;
-6. assert no source diff/unabsorbed commit;
-7. `release`;
-8. record exact ref/SHA, slot, lease evidence and tool result.
+1. bridge durable preflight against exact ref/SHA and clean/free slot;
+2. bridge `activate()` performs project-native probe/acquire/prepare with one owner session;
+3. independent status observation confirms expected Chat lease/worktree/endpoint;
+4. bridge calls only task-allowlisted diagnostics/`lean_verify` via `?client=chat`;
+5. mismatched-client call is denied;
+6. `lean_build` is absent/denied;
+7. HEAD and `git status --porcelain` prove no source/untracked mutation;
+8. bridge `release_no_change()` succeeds;
+9. exact evidence is filed.
 
-Failure at any step blocks source-mutating direct Chat work.
+This rehearsal remains below the lease timeout with margin and does not substitute for heartbeat validation.
 
-### Gate B — source-mutating proof task
+### Gate B prerequisite — mutation API and continuation proof
 
-Only after Gate A:
+Before touching real project source:
 
-1. acquire/prepare an admitted task-owned slot;
+- bridge heartbeat is implemented and tested with the same owner session;
+- a disposable production-shaped repo/slot exercise proves scoped `write → checkpoint → ready`;
+- owner continuity through the intended authorized `ready → absorb` continuation is tested/reviewed;
+- no bridge operation gains integration authority accidentally.
+
+### Gate B — first source-mutating proof canary
+
+Only after Gate A and the prerequisite above:
+
+1. acquire/prepare an admitted task-owned slot through the bridge;
 2. bounded read / Lean MCP / scoped edit loop;
-3. diagnostics + `lean_verify` floor;
-4. task-owned commit through normal hooks;
-5. `ready`;
-6. existing lead/orchestrator performs `absorb` and authoritative build/validation;
-7. independent implementation review remains separate from worker success.
+3. heartbeat as needed;
+4. diagnostics + `lean_verify` floor;
+5. task-owned commit through normal hooks;
+6. `ready`;
+7. same durable project lifecycle owner continues through the separately authorized lead/integration path to `absorb` and authoritative build/validation;
+8. independent implementation/scientific review remains separate from worker success.
 
 ---
 
-## 7. Adversarial-review questions
+## 7. Review reconciliation and focused re-review questions
 
-The required independent specification review should actively try to falsify these claims:
+The first independent review on PR #75 returned `ACCEPT_WITH_CHANGES`. Focused re-review should verify that the revised head adequately resolves:
 
-- Is inventory actually the correct single owner, or does another existing client registry already exist?
-- Does moving argparse validation inward accidentally broaden another call path?
-- Is `chat` really privilege-equivalent under trusted-local/bearer, or is there a hidden Claude/Codex assumption elsewhere?
-- Is missing-field migration safe for the private paired overlay?
-- Can a removed bearer client survive through an existing token file?
-- Is `LEAN_SLOT_OWNER_SESSION` sufficient for the local bridge's process model, including heartbeats and recovery?
-- Is there any path where a Chat bridge can change source before project-native lease admission?
-- Does the proposed no-mutation acceptance genuinely test the transport/identity boundary, or can it pass vacuously?
-- Does a third client increase slot concurrency/resource pressure, or only provide another contender for the same leases?
-- Which current architecture/operator docs become false or incomplete when the change lands?
+- B1: removal/revocation, stale proxy, active-lease and bearer-token semantics → S18-9;
+- B2: durable owner session, heartbeat, `ready → absorb` actor boundary → S18-5/S18-10/S18-12;
+- B3: measured private migration and exact schema-1 fallback → S18-8;
+- B4: renderer capability vs admission → S18-4/S18-6/S18-11;
+- B5: production bridge Gate A and disposable mutation-path prerequisite → S18-12;
+- B6: mandatory ADR-008/operator-guide reconciliation → S18-13.
 
-The reviewer should report **blocking**, **non-blocking**, and **unknown / needs measurement** findings separately and give an explicit `ACCEPT / ACCEPT_WITH_CHANGES / REJECT` specification verdict.
+The reviewer should also challenge whether these dispositions introduce a new blocker or contradict ADR-008.
 
 ---
 
@@ -294,7 +418,8 @@ The reviewer should report **blocking**, **non-blocking**, and **unknown / needs
 - ChatGPT Apps SDK UI;
 - changing the number of slots;
 - worker-side authoritative builds;
-- changing private paired-repository semantics except explicit compatibility testing/migration;
+- silently enabling Chat in the private paired repository;
+- introducing a generic lease ownership-transfer mechanism;
 - generalizing all SK_EFT clients into a portfolio-wide identity system;
 - merging or publishing from Chat;
 - changing the research/publication control planes.
