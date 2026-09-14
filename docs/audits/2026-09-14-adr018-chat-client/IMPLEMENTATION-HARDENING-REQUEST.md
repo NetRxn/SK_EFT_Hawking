@@ -31,11 +31,11 @@ Do not rewrite historical Phase-4/Claude records merely because they name the cl
 
 ### H2 — empty prospective roster is not a valid removal target
 
-In `Controller._lease_roster_mismatches`, distinguish `admitted_clients is None` from an explicitly supplied empty iterable. The current `admitted_clients or self.inventory.allowed_clients` expression incorrectly maps an empty prospective set back to the current roster.
+In `Controller._lease_roster_mismatches`, distinguish `admitted_clients is None` from an explicitly supplied empty iterable. The earlier truthiness implementation incorrectly mapped an empty prospective set back to the current roster; preserve the corrected `is None` behavior.
 
 In `removal_preflight`, refuse an operation that would leave `server.allowed_clients` empty, consistent with `Inventory.allowed_clients` requiring a non-empty roster.
 
-Add a regression test that would fail with the current truthiness bug.
+Ensure a regression test would fail if either behavior regresses.
 
 ### H3 — mixed-version pairing must be tested through the actual pairing seam
 
@@ -54,6 +54,17 @@ Inspect the architecture index and any load-bearing current operator/claim docum
 ### H5 — minimize unrelated operator-guide churn
 
 Review the existing `LEAN_SLOT_OPERATOR_GUIDE.md` diff before treating it as final. Keep the ADR-018-required client-admission/removal/owner changes, and keep a correction only where the **current authoritative inventory/mechanism proves the old operator text is false**. Do not opportunistically shorten historical rationale or rewrite unrelated operating guidance merely because the file is already open. In particular, preserve useful port/session/history explanations unless the new mechanism actually makes the statement false. The implementation review should see a narrow architecture change rather than an accidental guide rewrite.
+
+### H6 — make removal quiescence operationally explicit without inventing a new state machine
+
+The accepted design is an operator-controlled quiescent migration, not instantaneous revocation. Clarify in the operator-facing procedure that **quiesced** means both:
+
+- no live lease for the client, as mechanically checked by removal preflight; and
+- the client/bridge/dispatcher that could issue a new `acquire` is paused/stopped for the duration of credential revocation → inventory edit → supervisor restart/verification.
+
+This matters because `session revoke-token` checks for live leases and then unlinks bearer state, while a separately running caller could otherwise attempt a new acquire before the versioned roster edit becomes effective. Do not silently add a second revocation state machine merely to paper over this; preserve the accepted operational model and ask the independent implementation reviewer to assess whether the concurrency window is acceptably closed by project-native quiescence or needs an additional atomic project mechanism before Gate A.
+
+Add a comment/test where useful to prevent future code from claiming `revoke-token` alone is full client revocation. `revoke-token` is one step in the migration, not the admission change.
 
 ## Verification posture
 
