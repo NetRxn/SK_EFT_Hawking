@@ -283,7 +283,12 @@ Use this canonical sequence from ADR-018:
    It fails/red if any live lease records that client. The check does not mutate, reclaim,
    quarantine, release, or invalidate a lease; the legitimate owner retains normal cleanup.
    Removal is also refused if it would leave `server.allowed_clients` empty.
-2. Quiesce the client completely. No live lease for that client may remain.
+2. Quiesce the client completely. This means **both** that no live lease for that client remains
+   **and** that the client, bridge, dispatcher, or other caller capable of issuing a new
+   `acquire` for that identity is paused/stopped. Keep that acquire-capable caller paused for the
+   whole migration window: bearer credential revocation (when applicable) → `allowed_clients`
+   edit → supervisor restart → `doctor`/controller/proxy denial verification. A green removal
+   preflight proves the first condition only; operator-controlled quiescence supplies the second.
 3. **Bearer mode only:** revoke the client's credential while it is still admitted:
 
    ```bash
@@ -292,6 +297,8 @@ Use this canonical sequence from ADR-018:
 
    This deletes only the project-owned `Inventory.client_token_path(client)`, is idempotent,
    emits no token, and refuses a live client lease. Trusted-local mode has no credential step.
+   **`revoke-token` is one step in this migration, not full client revocation**: admission does
+   not change until the roster edit is loaded by restarted front doors and denial is verified.
 4. Edit `server.allowed_clients` in the versioned inventory.
 5. Restart front doors: `slotctl supervisor stop` then `slotctl supervisor start`.
 6. Run `slotctl doctor` and prove controller/proxy negative controls deny the removed identity.
