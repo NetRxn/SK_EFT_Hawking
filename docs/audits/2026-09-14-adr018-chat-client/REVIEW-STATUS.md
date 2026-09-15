@@ -4,12 +4,13 @@
 
 - Specification target: PR #75, `design/adr018-chat-slot-client` @ `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f`.
 - Final canonical-consistency specification review: COMPLETE, COMMENT review `5202241729`, verdict ACCEPT; B1 CLOSED, no B2–B6 regression.
-- Bounded author implementation: IN PROGRESS under the operator's instruction to continue repairs; the prior specification-pending prohibition is historical, not the current state.
+- Bounded author implementation: IN PROGRESS; the prior specification-pending prohibition is historical, not the current state.
 - Implementation target: PR #76, `implementation/adr018-chat-slot-client`; resolve its current head before review.
-- Implementation review `5203396570`: ACCEPT_WITH_CHANGES at `42803dfc2baa5e5a26b152557e0c7e0d8c9504aa`; current-document status reconciliation required.
+- Implementation review `5203396570`: ACCEPT_WITH_CHANGES at `42803dfc2baa5e5a26b152557e0c7e0d8c9504aa`; current-document status reconciliation required on the changed head.
 - Post-audit code/test repair: `fbfeb76e3ed5736ec95268e3ede9acd0dad59d44`, explicit-null roster rejection with artifact-seeded regression tests.
-- Remaining current-document reconciliation: parent ADR/spec/plan and B1 supplements; see `POST-AUDIT-DOC-RECONCILIATION-REQUEST.md`.
-- Mechanical test execution: NOT_MEASURED at this checkpoint; no PASS inferred from authored tests or source inspection.
+- Current-document reconciliation: AUTHOR COMPLETE in this author wave; canonical ADR/spec/plan and B1 supplements now point to the accepted specification and current implementation gate. See `POST-AUDIT-DOC-RECONCILIATION-STATUS.md`.
+- Focused post-audit implementation re-review request: PREPARED at `POST-AUDIT-IMPLEMENTATION-REREVIEW-REQUEST.md`; not enqueued while independent scheduled context remains unresolved.
+- Mechanical test execution: NOT_MEASURED; no PASS inferred from authored tests or source inspection. Existing hosted workflow feasibility and exact candidate commands are recorded in `POST-AUDIT-DOC-RECONCILIATION-STATUS.md`.
 - Exact-changed-head independent implementation re-review: REQUIRED / PENDING.
 - Live Gate A, source-mutating proof work, authoritative build, absorb, merge and publication: NOT AUTHORIZED by this status record.
 
@@ -31,7 +32,7 @@ The roster-null finding at `papers/AutomatedReviews/2026-09-14-adr018-roster-nul
 
 ## Evidence boundaries
 
-Schema-1 missing-field compatibility remains exactly Codex/Claude; no downstream Chat opt-in is inferred. Public inventory changes do not rewrite another inventory.
+Schema-1 missing-field compatibility remains exactly Codex/Claude; every present roster value must validate as a non-empty array and explicit JSON null is invalid. No downstream Chat opt-in is inferred. Public inventory changes do not rewrite another inventory.
 
 A GitHub COMMENT is durable review evidence, not merge or execution authorization. A distinct scheduled task does not by itself prove independent context. Reviewer isolation for future automation must be established separately; no blanket judgment about every historical review follows from another task's contamination report.
 

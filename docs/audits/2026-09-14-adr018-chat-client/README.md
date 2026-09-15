@@ -8,8 +8,10 @@ Relevant routing:
 
 - `SPEC-REVIEW-REQUEST.md` and the focused/B1 requests: historical specification-review scopes.
 - `REVIEW-STATUS.md`: current gate state and exact reviewed-head lineage.
-- `IMPLEMENTATION-REVIEW-REQUEST.md`: existing implementation-review contract.
+- `IMPLEMENTATION-REVIEW-REQUEST.md`: original implementation-review contract.
 - `POST-AUDIT-REPAIR.md`: explicit-null roster repair and authored regression-test checkpoint.
-- `POST-AUDIT-DOC-RECONCILIATION-REQUEST.md`: remaining current-document reconciliation and mechanical-evidence reconnaissance.
+- `POST-AUDIT-DOC-RECONCILIATION-REQUEST.md`: author instructions for current-document reconciliation, focused re-review preparation and verification feasibility.
+- `POST-AUDIT-DOC-RECONCILIATION-STATUS.md`: D1–D3 author progress, handoff, feasibility evidence and remaining gates.
+- `POST-AUDIT-IMPLEMENTATION-REREVIEW-REQUEST.md`: focused changed-head re-review scope covering documentation reconciliation and the explicit-null repair; prepared only, not central-intake authorization.
 
 No live slot, Lean, MCP, build, absorb, merge or publication is authorized by the presence of these artifacts. Source inspection and readback prove neither executed tests nor independent-review acceptance.
