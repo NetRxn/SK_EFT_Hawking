@@ -1,8 +1,10 @@
 # Lean-slot operator guide
 
-[ADR-008](../adrs/ADR-008-shared-lean-slot-control-plane.md) defines the normative design.
-This guide is the operator's copy for the shared three-slot control plane, which **Codex and
-Claude Code both use**. A slot may be driven by either client, never by two writers at once.
+[ADR-008](../adrs/ADR-008-shared-lean-slot-control-plane.md) defines the normative lifecycle design.
+[ADR-018](../adrs/ADR-018-chat-client-for-shared-lean-slots.md) makes admitted client identity
+versioned inventory data. This guide is the operator's copy for the shared three-slot control plane.
+The shipped public inventory admits **Codex, Claude Code, and Chat**; a private/downstream inventory
+may admit a narrower set. A slot may be driven by one admitted client at a time, never by two writers.
 
 ---
 
@@ -24,7 +26,7 @@ uv run python scripts/slotctl.py doctor
 A shortfall is reported with the exact command to run, e.g. on macOS:
 
 ```bash
-sudo sysctl -w kern.maxvnodes=786432
+sudo sysctl -w kern.maxvnodes=1048576
 ```
 
 ### Why this needs a boot-time job, not just the command above
@@ -47,7 +49,7 @@ sudo tee /Library/LaunchDaemons/local.leanslots.maxvnodes.plist >/dev/null <<'PL
   <array>
     <string>/usr/sbin/sysctl</string>
     <string>-w</string>
-    <string>kern.maxvnodes=786432</string>
+    <string>kern.maxvnodes=1048576</string>
   </array>
   <key>RunAtLoad</key><true/>
 </dict>
@@ -84,8 +86,8 @@ every host.** The requirement is declared data, not code, in `config/lean-slots.
 
 ```json
 "host_limits": [
-  {"platform": "Darwin", "sysctl": "kern.maxvnodes", "minimum": 786432,
-   "why": "...", "remedy": "sudo sysctl -w kern.maxvnodes=786432"}
+  {"platform": "Darwin", "sysctl": "kern.maxvnodes", "minimum": 1048576,
+   "why": "...", "remedy": "sudo sysctl -w kern.maxvnodes=1048576"}
 ]
 ```
 
@@ -117,16 +119,27 @@ directory, so running it inside a slot addresses a different control plane and r
 slot `FREE`.
 
 ```bash
-uv run python scripts/slotctl.py config render --scope both          # Codex
-uv run python scripts/slotctl.py config render --client claude       # Claude
+uv run python scripts/slotctl.py config render --scope both          # Codex renderer
+uv run python scripts/slotctl.py config render --client claude       # Claude renderer
 uv run python scripts/slotctl.py supervisor start
 uv run python scripts/slotctl.py doctor
 ```
 
 The active workstation inventory uses `server.client_auth = "trusted-local"`: the MCP front
-doors bind only to `127.0.0.1`, so a normal launch of either client needs no token or shell
-bootstrap. Lease state, repository/worktree/endpoint identity, the no-build policy, and the
+doors bind only to `127.0.0.1`, so an admitted client needs no token or shell bootstrap merely
+to connect. Lease state, repository/worktree/endpoint identity, the no-build policy, and the
 global backend limit remain enforced.
+
+`server.allowed_clients` is the **lease/dispatch admission roster**. In the public inventory it
+is currently `["codex", "claude", "chat"]`. A schema-1 inventory that predates this field has
+the exact compatibility meaning `{codex, claude}`; missing data never implies Chat admission.
+The controller and proxy enforce this same roster, so a caller cannot bypass admission by
+skipping CLI parsing.
+
+**Renderer support is a different capability from admission.** This repository has concrete
+Codex and Claude configuration renderers. It intentionally has no Chat renderer in ADR-018.
+`slotctl config render --client chat` must fail; the Chat bridge derives an admitted slot's
+HTTP URL from the inventory instead of generating a third workspace client configuration.
 
 **Claude** entries are written into the workspace `.mcp.json` as a named block: the renderer
 adds `skeft_wt{1,2,3}` (HTTP), removes the legacy per-slot stdio servers, and leaves every
@@ -139,23 +152,25 @@ root. `config render` refuses to overwrite a locally modified generated file unl
 is explicit.
 
 Bearer authentication is banked for a future shared-user deployment. To use it, select
-`server.client_auth = "bearer"` in that deployment's inventory, render configuration, and run
-`eval "$(uv run python scripts/slotctl.py session env --client codex --rotate-token)"` in the
-launching shell. Token rotation is invalid in trusted-local mode and must never occur while
-leases are active.
+`server.client_auth = "bearer"` in that deployment's inventory and obtain the selected admitted
+client's environment through `slotctl session env --client <client>`. Token rotation is invalid
+in trusted-local mode and must never occur while leases are active.
 
-Changing `server.client_auth` — **or editing anything under `scripts/lean_slots/`** — requires
-a front-door restart so the proxies load the new code: `supervisor stop`, then
-`supervisor start`. The supervisor fingerprints the loaded proxy implementation and inventory,
-so a plain `supervisor start` fails closed rather than silently reusing stale policy.
+Changing `server.allowed_clients`, `server.client_auth`, **or editing anything under
+`scripts/lean_slots/`** requires a front-door restart so the proxies load the new code/policy:
+`supervisor stop`, then `supervisor start`. The supervisor fingerprints the loaded proxy
+implementation and inventory, so a plain `supervisor start` fails closed rather than silently
+reusing stale policy. A roster file edit alone is not immediate revocation.
 
 ⚠️ A proxy running stale code is reported by `doctor` as `proxy=False` **while its port is
 still open and serving**. If a `prepare` fails with an unhealthy proxy, restart the supervisor
-before investigating anything else.
+before investigating anything else. For an admission-roster change, do not treat the edit as
+effective until the front doors have been restarted and denial has been re-verified.
 
-**Restart the client after the first render** so the endpoints attach — MCP servers are
+**Restart a rendered client after the first render** so the endpoints attach — MCP servers are
 attached at session start, and for Claude the plugin cache is a content-hashed snapshot, so a
-restart is what activates both.
+restart is what activates both rendered clients. The direct Chat bridge has no Chat renderer,
+so Chat admission itself does not create a renderer-restart step.
 
 ---
 
@@ -173,21 +188,21 @@ and prepare *before* starting the client. That was a workaround for our own defe
 an operating rule; [ADR-008 S-Q](../adrs/ADR-008-shared-lean-slot-control-plane.md) fixed the
 proxy instead, and the rule is retired. **Do not reinstate it.**
 
-The one thing that still needs a client restart is changing *which endpoints exist* — adding or
-removing a slot in `.mcp.json` via `config render`. That is a configuration change, not a
-per-wave step.
+The one thing that still needs a rendered-client restart is changing *which endpoints exist* —
+for example adding or removing a slot in `.mcp.json` via `config render`. That is a configuration
+change, not a per-wave step.
 
 ⚠️ **The port trap, which produced two independent wrong diagnoses in one session.** The client
-config points at the **proxy** (`127.0.0.1:876N`); the lean-lsp backend listens on `1876N`.
-Probing the backend directly returns `401 invalid_token`, which reads like a lease rejection and
-is only the backend refusing a direct connection. Diagnose against the proxy port, and include
-the `?client=<name>` query hint — under `trusted-local` auth that hint *is* the client identity,
-so a probe without it is unauthenticated by construction.
+config or direct bridge points at the **proxy** (`127.0.0.1:876N`); the lean-lsp backend listens
+on `1876N`. Probing the backend directly returns `401 invalid_token`, which reads like a lease
+rejection and is only the backend refusing a direct connection. Diagnose against the proxy port,
+and include the `?client=<name>` query hint — under `trusted-local` auth that hint *is* the client
+identity, so a probe without it is unauthenticated by construction.
 
-Identical for both clients; only `--client` differs. The endpoints are **lease-gated**: every
-tool call is rejected unless the slot holds an `ACTIVE` lease whose `client` matches the one in
-the endpoint URL. A dispatch without a lease yields a connected server whose every call fails
-closed.
+Identical for admitted lease clients; only `--client`/the endpoint identity differs. The
+endpoints are **lease-gated**: every tool call is rejected unless the slot holds an `ACTIVE`
+lease whose `client` matches the one in the endpoint URL. A dispatch without a lease yields a
+connected server whose every call fails closed.
 
 ```bash
 # Acquire and prepare IMMEDIATELY before dispatching this slot's worker, per task,
@@ -196,15 +211,21 @@ uv run python scripts/slotctl.py acquire --slot 2 --client claude --base-ref mai
 uv run python scripts/slotctl.py prepare --slot 2
 
 # Dispatch the worker at mcp__skeft_wt2__* (Claude) or lean_wt2_worker (Codex),
-# with its exact absolute worktree path and one bounded task.
+# or through the scoped Chat bridge, with its exact absolute worktree path and one bounded task.
 # A worker running longer than the lease timeout (900s in the shipped inventory)
-# needs its heartbeat refreshed by the LEAD — workers do not touch the controller:
+# needs its heartbeat refreshed by the same OWNER session — workers do not gain integration authority:
 uv run python scripts/slotctl.py heartbeat --slot 2
 
 # After the worker commits and reports success:
 uv run python scripts/slotctl.py ready  --slot 2
 uv run python scripts/slotctl.py absorb --slot 2
 ```
+
+`LEAN_SLOT_OWNER_SESSION` is the product-neutral explicit owner identity. The same opaque owner
+session must be supplied on acquire/prepare/heartbeat/ready/release and, when separately
+authorized, absorb. **`ready` does not transfer ownership.** Admitting `client=chat` therefore
+does not grant Chat integration authority; the caller/control plane must carry a separately
+reviewed same-owner integration continuation before a real mutating Chat task can be integrated.
 
 `prepare` resets the worktree to the base and installs a `.lake` matching the published
 successful-build epoch — a stronger freshness predicate than the HEAD stamp it replaced.
@@ -242,8 +263,52 @@ Drop `--sandbox read-only` only when the worker must actually commit.
 A raw transcript is 1–2 MB and must never be read into the lead's context; harvest the deliverable
 mechanically with `scripts/codex_dossier.py harvest`, per the codex-dossier protocol.
 
-The endpoints are identical for both clients — only `?client=` and the lease's `client` field
-differ. A Codex worker on a slot leased to Claude is refused at dispatch, and vice versa.
+The endpoints are identical for admitted lease clients — only `?client=` and the lease's
+`client` field differ. A request identifying as one client against a slot leased to another is
+refused at dispatch.
+
+---
+
+## Client removal / rollback
+
+Removing an admitted client is **quiescent and restart-bound**, not a file-edit revocation.
+Use this canonical sequence from ADR-018:
+
+1. Run the read-only prospective check while the client is still admitted:
+
+   ```bash
+   uv run python scripts/slotctl.py session removal-preflight --client chat
+   ```
+
+   It fails/red if any live lease records that client. The check does not mutate, reclaim,
+   quarantine, release, or invalidate a lease; the legitimate owner retains normal cleanup.
+   Removal is also refused if it would leave `server.allowed_clients` empty.
+2. Quiesce the client completely. This means **both** that no live lease for that client remains
+   **and** that the client, bridge, dispatcher, or other caller capable of issuing a new
+   `acquire` for that identity is paused/stopped. Keep that acquire-capable caller paused for the
+   whole migration window: bearer credential revocation (when applicable) → `allowed_clients`
+   edit → supervisor restart → `doctor`/controller/proxy denial verification. A green removal
+   preflight proves the first condition only; operator-controlled quiescence supplies the second.
+3. **Bearer mode only:** revoke the client's credential while it is still admitted:
+
+   ```bash
+   uv run python scripts/slotctl.py session revoke-token --client chat
+   ```
+
+   This deletes only the project-owned `Inventory.client_token_path(client)`, is idempotent,
+   emits no token, and refuses a live client lease. Trusted-local mode has no credential step.
+   **`revoke-token` is one step in this migration, not full client revocation**: admission does
+   not change until the roster edit is loaded by restarted front doors and denial is verified.
+4. Edit `server.allowed_clients` in the versioned inventory.
+5. Restart front doors: `slotctl supervisor stop` then `slotctl supervisor start`.
+6. Run `slotctl doctor` and prove controller/proxy negative controls deny the removed identity.
+
+If an operator creates the invalid intermediate state "roster no longer admits client C while a
+live lease still records C", `doctor` reports the lease/admission mismatch red. It does **not**
+turn that report into revocation or strand owner cleanup.
+
+In bearer mode, later re-admission must create/use a fresh token. A credential removed during
+the procedure above must never silently become valid again.
 
 ---
 
@@ -262,9 +327,10 @@ commits move the slot to `QUARANTINED`; resolve them deliberately in the named w
 rerun diagnostics.
 
 Leases are owned by the driving **session**, not by the shell that ran `acquire` — resolved
-from `LEAN_SLOT_OWNER_SESSION` if set, else the client's own session variable, else a verified
-parent PID. Reclaiming a stale session-owned lease requires `--confirm-owner-gone` after the
-operator verifies that session has ended, and the heartbeat threshold still applies.
+from `LEAN_SLOT_OWNER_SESSION` if set, else a supported client's native session variable, else
+a verified parent PID. Reclaiming a stale session-owned lease requires
+`--confirm-owner-gone` only after the operator verifies the driving session has ended, and the
+heartbeat threshold still applies.
 
 ⚠️ **A slot number is workspace-wide capacity, not per-client.** A slot held by another
 repository against the same number — including a downstream/private overlay — is unavailable

@@ -1,4 +1,4 @@
-# ADR-008 — Shared three-slot Lean control plane for Codex and Claude Code
+# ADR-008 — Shared three-slot Lean control plane
 
 - **Status:** **ACCEPTED (design, 2026-07-22; trusted-local authentication amendment, 2026-07-22). CODEX-FIRST IMPLEMENTATION AUTHORIZED; CLAUDE CODE ACTIVATION DEFERRED.**
 
@@ -34,6 +34,20 @@
 - **Decider:** John Roehm (project owner) — approved the three-slot, orchestrator-owned-build posture and the Codex-first/Claude-later rollout on 2026-07-22.
 - **Investigation and draft:** Codex, following an adversarial review of the current workspace, the pinned `lean-lsp-mcp` implementation, and the relevant public Claude-plugin commit history.
 - **Scope:** the public `SK_EFT_Hawking` Lean substrate, product-neutral local slot infrastructure, Codex integration, and a privacy-preserving extension point for private downstream repositories. Repository-specific private configuration and paths remain in private overlays and MUST NOT be committed here.
+
+## ADR-018 client-admission amendment — 2026-09-14
+
+[ADR-018](ADR-018-chat-client-for-shared-lean-slots.md) makes lease/dispatch client admission
+versioned inventory data. `server.allowed_clients` is the admission authority consumed at the
+controller and proxy boundaries; for schema 1, an absent field retains exactly the legacy
+`{codex, claude}` compatibility meaning and never implies Chat admission.
+
+This amendment changes only which client identities may enter the existing control plane.
+ADR-008 remains authoritative for slot count, lifecycle ownership, endpoint/root isolation,
+successful-build epochs, worker/build restrictions, quarantine/reclaim, and serialized
+integration. Admitting `chat` does not grant build, repair, `absorb`, merge, publication, or
+repository authority. Once a lease is issued, normal lifecycle cleanup remains owner-gated;
+a later roster mismatch is reported rather than converted into hidden revocation.
 
 ## 2026-08-13 Phase 4 record — Claude activation wired
 
@@ -164,16 +178,18 @@ The public Git history records operational requirements that remain binding:
 
 ## Decision
 
-Adopt a **product-neutral, three-slot Lean control plane** shared by Codex and, after live validation, Claude Code. The physical worktrees remain `wt1`–`wt3`; no Codex-only `wt4`–`wt6` set is created. A slot may be used by either client, but never by two writers at once.
+Adopt a **product-neutral, three-slot Lean control plane** shared by every client admitted by
+versioned inventory. The physical worktrees remain `wt1`–`wt3`; no per-client slot set is
+created. A slot may be used by one admitted client at a time, never by two writers at once.
 
 The words MUST, MUST NOT, SHOULD, and MAY below are normative.
 
 | # | Decision | Required behavior |
 |---|---|---|
-| **S-A — Three global physical slots** | Slot identifiers are exactly `1`, `2`, and `3`. They are a workspace-wide capacity pool, not a per-client allowance. Codex and Claude MUST reuse this pool. Private/downstream work MAY have a repository-specific worktree paired with each number, but it remains the same capacity slot: only one heavy backend and one writer may be active for slot `N`. |
+| **S-A — Three global physical slots** | Slot identifiers are exactly `1`, `2`, and `3`. They are a workspace-wide capacity pool, not a per-client allowance. Every admitted client MUST reuse this pool; admission creates no per-client capacity. Private/downstream work MAY have a repository-specific worktree paired with each number, but it remains the same capacity slot: only one heavy backend and one writer may be active for slot `N`. |
 | **S-B — The primary orchestrator owns lifecycle and builds** | Only a non-worktree orchestrator may acquire/reclaim slots, reset branches, replace `.lake`, start/stop heavy backends, absorb commits, publish build epochs, run authoritative `lake build`/extraction/validation, or repair infrastructure. Workers may edit, query their leased MCP endpoint, verify proof state, stage their assigned files, and commit. Workers MUST NOT invoke `lake build`, `lake clean`, `lean_build`, dependency/cache repair, raw Git plumbing, or integration operations. |
-| **S-C — Cross-client lease is the authority** | Every active slot has one fail-closed lease containing at least: schema version, slot number, repository role, client (`codex` or `claude`), client-auth mode, owner process/session identity, base ref and base SHA, worktree path, endpoint identity, acquired/heartbeat timestamps, lease state, and—when downstream—its exact public dependency SHA. Bearer mode additionally stores the client-token hash. Lease creation/transfer MUST use an atomic filesystem primitive; implementations MUST NOT assume `flock` exists on macOS. Prompt text and Claude goal markers are advisory projections of this lease, not competing authorities. |
-| **S-D — Fixed-root HTTP endpoints** | Each repository/worktree has a stable, repository-qualified streamable-HTTP endpoint bound to `127.0.0.1`. The active single-user deployment uses credential-free `trusted-local` client access; an explicit `bearer` feature flag adds environment-backed client authentication for a shared-user deployment. Both products connect to the same endpoint for that project/worktree; no endpoint is duplicated per client. An endpoint MUST NOT be hot-rebound between public and downstream projects. A global gate MUST prevent more than three heavy Lean LSP/REPL backends across the numbered slots, even if more lightweight HTTP front doors are configured. |
+| **S-C — Cross-client lease is the authority** | Every active slot has one fail-closed lease containing at least: schema version, slot number, repository role, client (an identity admitted by the versioned inventory when the lease is created), client-auth mode, owner process/session identity, base ref and base SHA, worktree path, endpoint identity, acquired/heartbeat timestamps, lease state, and—when downstream—its exact public dependency SHA. Bearer mode additionally stores the client-token hash. Lease creation/transfer MUST use an atomic filesystem primitive; implementations MUST NOT assume `flock` exists on macOS. Once issued, lifecycle commands remain owner-gated through cleanup even if a later roster edit makes the recorded client absent; that mismatch is reported, not converted into hidden revocation. Prompt text and client-specific goal markers are advisory projections of this lease, not competing authorities. |
+| **S-D — Fixed-root HTTP endpoints** | Each repository/worktree has a stable, repository-qualified streamable-HTTP endpoint bound to `127.0.0.1`. The active single-user deployment uses credential-free `trusted-local` client access; an explicit `bearer` feature flag adds environment-backed client authentication for a shared-user deployment. Admitted clients connect to the same endpoint for that project/worktree; no endpoint is duplicated per admitted client. An endpoint MUST NOT be hot-rebound between public and downstream projects. A global gate MUST prevent more than three heavy Lean LSP/REPL backends across the numbered slots, even if more lightweight HTTP front doors are configured. |
 | **S-E — Worker endpoint tool policy** | `lean_build` MUST be removed server-side from worker endpoint tool listings, then denied again by each client's worker tool policy. Shell `lake build`/`lake clean` MUST likewise be unavailable to worker roles. Defense is layered because client hooks are guardrails, not the sole enforcement boundary. Main/orchestrator validation uses an explicit orchestrator command path, never the worker endpoint. |
 | **S-F — REPL is initially disabled** | Codex-first endpoints launch without `--repl`. Shared REPL is a later optimization, not an activation dependency. It may be enabled only after the pinned fork provides one lazy, project-scoped REPL per daemon (or an equivalently bounded design), serializes stateful access, resets it at lease/build boundaries, and passes two-client concurrency and teardown tests. Per-session REPL subprocess multiplication is not acceptable. |
 | **S-G — Successful-build epochs replace HEAD-only stamps** | A slot cache is current only when it matches an orchestrator-published successful-build epoch. A public epoch includes the public commit SHA plus Lean toolchain and Lake manifest/dependency fingerprints. A downstream epoch additionally includes the exact public dependency SHA and the downstream fingerprints. The orchestrator MUST stop/park the slot LSP, clone the authoritative `.lake` to a temporary sibling, atomically install it, then restart service. It MUST NOT delete or replace `.lake` beneath a live LSP, and MUST NOT publish an epoch before the authoritative build succeeds. |
@@ -234,9 +250,19 @@ slotctl ready --slot N
 slotctl absorb --slot N
 slotctl release --slot N
 slotctl reclaim --slot N
+slotctl session env --client CLIENT [--rotate-token]
+slotctl session removal-preflight --client CLIENT
+slotctl session revoke-token --client CLIENT
 ```
 
-`doctor` checks, at minimum: configured worktrees and realpaths, dirty/untracked state, branch/base reachability, lease/schema validity, endpoint health, process ownership, active heavy-backend count, successful-build epoch fingerprints, generated-config drift, and public/private boundary violations. Human-readable output and stable JSON are both required so Codex, later Claude, and operators consume the same facts.
+`acquire` and `session env` delegate client admission to the versioned inventory roster.
+`session removal-preflight` is a read-only prospective roster/lease check and MUST NOT mutate,
+quarantine, reclaim, release, or invalidate a lease. `session revoke-token` is the narrow
+bearer-only admin path used while the client is still admitted and quiescent, before a roster
+edit. Client configuration rendering is a separate capability surface: the existence of a
+renderer does not admit a client, and admission does not create a renderer.
+
+`doctor` checks, at minimum: configured worktrees and realpaths, dirty/untracked state, branch/base reachability, lease/schema validity, endpoint health, process ownership, active heavy-backend count, successful-build epoch fingerprints, generated-config drift, admission-roster/lease consistency, and public/private boundary violations. Human-readable output and stable JSON are both required so admitted clients and operators consume the same facts.
 
 ---
 

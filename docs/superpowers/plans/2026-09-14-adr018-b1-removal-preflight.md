@@ -1,6 +1,6 @@
 # ADR-018 residual B1 — removal-preflight implementation plan
 
-**Status:** proposed plan supplement; substantive B1 mechanism is reconciled, but implementation remains blocked on one narrow fresh closure re-review of the canonical ADR/spec/plan sequence.
+**Status:** supporting plan supplement under the specification accepted at PR #75 head `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` / COMMENT `5202241729`; author implementation is in progress. Mechanical verification and exact-head independent implementation re-review remain pending before Gate A.
 
 **ADR addendum:** `docs/adrs/ADR-018-b1-removal-preflight-addendum.md`
 
@@ -12,8 +12,8 @@
 - the mismatch check is observational and must never mutate an issued lease;
 - existing owner-gated cleanup remains legal even while doctor reports a roster/lease mismatch;
 - bearer cleanup is pre-edit; trusted-local has no token cleanup step;
-- canonical parent ADR-018 D8 and parent spec S18-9 now own the removal order and override older reconciliation prose if it differs;
-- implementation stays blocked until a fresh independent reviewer closes residual B1 at the current head.
+- canonical parent ADR-018 D8 and parent spec S18-9 own the removal order and override older reconciliation prose if it differs;
+- the specification gate is closed; author implementation may proceed, but implementation acceptance still requires applicable mechanical evidence and fresh exact-head independent implementation re-review.
 
 ## Task B1.1 — one lease/client roster predicate
 
@@ -111,4 +111,4 @@ The later independent implementation reviewer must receive evidence for:
 
 The cloud-dispatched B1 closure review against `0e71346775028daa09eb90006be6c85c458b5388` returned `ACCEPT_WITH_CHANGES`: the substantive D13/S18-14 mismatch design was accepted, but canonical D8/S18-9 still contradicted the pre-edit bearer cleanup rule and the concrete operation remained deferred.
 
-Those two residuals are now reconciled in the canonical ADR/spec and this plan. No Phase-1 ADR-018 runtime code work begins until a fresh independent reviewer resolves the new exact head and confirms this one removal procedure closes B1 without regressing B2–B6. This supplement itself is specification work only.
+Those residual specification issues were reconciled and final canonical-consistency COMMENT review `5202241729` at `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` returned **`ACCEPT`**, closing B1 without B2–B6 regression. Runtime author implementation has since proceeded under that accepted design. The current gate is implementation evidence: applicable mechanical verification plus a fresh exact-head independent implementation re-review before Gate A. This supplement itself remains specification/plan evidence and does not accept the implementation.

@@ -1,6 +1,6 @@
 # ADR-018 — distinct Chat client for shared Lean slots: implementation plan
 
-**Status:** revised after independent adversarial review (`ACCEPT_WITH_CHANGES`). **Implementation remains blocked on focused fresh-reader re-review of the reconciled head.**
+**Status:** specification accepted at PR #75 head `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` / COMMENT `5202241729`; author implementation is in progress on PR #76. The implementation review at `42803dfc2baa5e5a26b152557e0c7e0d8c9504aa` returned `ACCEPT_WITH_CHANGES`; current-document reconciliation, applicable mechanical verification, and a fresh exact-head independent implementation re-review are pending before Gate A.
 
 **Design:** [`2026-09-14-adr018-chat-slot-client-design.md`](../specs/2026-09-14-adr018-chat-slot-client-design.md)
 
@@ -13,11 +13,11 @@
 ## Global constraints
 
 - ADR-008 remains the slot lifecycle/build/integration authority.
-- Do not implement until focused independent re-review accepts this reconciled ADR/spec/plan.
+- The specification gate is closed at `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f`; author implementation may proceed, but do not call the implementation accepted until applicable mechanical evidence and exact-head independent implementation re-review are satisfactory.
 - Do not add a second slot/worktree/backend/proxy/integration mechanism.
 - `chat` is a distinct client identity; never impersonate `claude` or `codex`.
 - Inventory owns lease/dispatch admission; renderer capability is a separate explicit interface.
-- Schema-1 missing `allowed_clients` means exactly Codex/Claude, never Chat.
+- Schema-1 missing `allowed_clients` means exactly Codex/Claude, never Chat; any present value must pass the declared roster validation and explicit JSON `null` is invalid.
 - Roster removal is quiescent + restart-bound; a file edit is not immediate revocation.
 - One opaque `LEAN_SLOT_OWNER_SESSION` remains the lifecycle owner; no implicit ownership transfer at `ready`.
 - No worker-side `lean_build`, direct slot push, merge, publication, deployment, or automatic repair/discard.
@@ -44,24 +44,18 @@ Blocking findings:
 
 Reconciled dispositions:
 
-- B1 → ADR D8 / spec S18-9: quiesce, edit, token cleanup, supervisor restart, verify;
+- B1 → ADR D8 / spec S18-9: quiesce + removal preflight, bearer token revocation while still admitted, roster edit, supervisor restart, verify;
 - B2 → ADR D5/D11 / spec S18-5/S18-10/S18-12: one durable owner session, heartbeat before mutation, no implicit transfer or bridge integration authority;
 - B3 → ADR D9 / spec S18-8: measured private schema-1 overlay; exact missing-field fallback `{codex, claude}` only;
 - B4 → ADR D6/D10 / spec S18-4/S18-6/S18-11: admission and renderer capability remain distinct; Chat renderer rejected;
 - B5 → ADR D11 / spec S18-12: Gate A uses production bridge end-to-end; disposable mutation path before real source;
 - B6 → ADR D12 / spec S18-13: ADR-008 + operator guide reconciliation mandatory in shipping commit.
 
-### Task 0.3 — focused fresh-reader re-review — REQUIRED
+### Task 0.3 — focused fresh-reader specification re-review — COMPLETE
 
-A new independent reviewer must resolve the **current PR head**, compare it with the first reviewed head, and verify B1–B6 dispositions without relying on either author conversation or the first reviewer's hidden reasoning.
+The review chain continued through focused and residual B1 passes. Final canonical-consistency COMMENT review `5202241729` at exact PR #75 head `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` returned **`ACCEPT`**, residual B1 `CLOSED`, with no B2–B6 regression.
 
-Required output:
-
-- whether every blocking finding is adequately closed;
-- any new blocker introduced by the reconciliation;
-- explicit `ACCEPT`, `ACCEPT_WITH_CHANGES`, or `REJECT` verdict.
-
-No implementation starts until the focused re-review returns `ACCEPT` or an `ACCEPT_WITH_CHANGES` whose blockers are then reconciled and re-reviewed as needed.
+That result closes the specification gate at its exact head. It does not accept later implementation heads, replace mechanical verification, authorize Gate A, or waive independent implementation review.
 
 ## Phase 1 — make admission versioned data
 
@@ -80,12 +74,14 @@ No implementation starts until the focused re-review returns `ACCEPT` or an `ACC
 - safe grammar consistent with existing token-file naming;
 - validate non-empty + unique;
 - for schema 1 only, missing field returns exactly `{codex, claude}`;
+- every present value, including JSON `null`, reaches declared roster validation rather than compatibility fallback;
 - never infer Chat from a missing field.
 
 **Tests**
 
 - explicit three-client public inventory loads;
 - empty/duplicate/malformed fail;
+- present non-array values including explicit null fail;
 - schema-1 missing field is exactly Codex/Claude;
 - active private-style schema-1 paired fixture remains loadable and does not admit Chat.
 
@@ -105,7 +101,7 @@ No implementation starts until the focused re-review returns `ACCEPT` or an `ACC
 - restart loads the new roster;
 - post-restart controller/proxy deny the removed identity;
 - active lease for the client makes the removal procedure invalid until quiesced;
-- bearer token is deleted/rotated during removal and later re-add does not silently reuse the old credential.
+- bearer token is revoked while the client is still admitted, before the roster edit, and later re-add does not silently reuse the old credential.
 
 ## Phase 2 — enforce admission at project boundaries without confusing renderer support
 
@@ -198,7 +194,7 @@ Document:
 - bridge connects to the selected proxy with `?client=chat`;
 - no Chat-specific workspace renderer exists;
 - connection does not grant a lease;
-- roster removal is quiesce → edit → token cleanup if bearer → supervisor restart → doctor/deny verification;
+- canonical removal is `quiesce + removal-preflight → bearer revoke-token while still admitted → roster edit → supervisor restart → doctor/controller/proxy denial verification`;
 - `ready` does not transfer lease ownership.
 
 ### Task 3.3 — architecture claims/registration
@@ -221,6 +217,8 @@ Run project-native relevant tests/checks, including:
 
 No live Chat MCP dispatch yet.
 
+At the current author-document checkpoint these commands are **NOT_MEASURED**; the repository has no `.github/workflows/` runner. Exact feasible commands and environment requirements are recorded in the post-audit document-reconciliation status rather than promoted to PASS by source inspection.
+
 ## Phase 5 — independent implementation review
 
 Separate from the specification reviewer and implementer where practical.
@@ -237,12 +235,13 @@ Review questions:
 - do mixed-version private/public tests match the measured private overlay?
 - are tests production-shaped rather than helper-only?
 - are ADR-008/operator docs now true?
+- does explicit JSON null fail closed rather than selecting schema-1 missing-field compatibility, with neighboring malformed and valid positive controls?
 
 Blocking findings are fixed and re-reviewed before live acceptance.
 
 ## Phase 6 — bounded no-mutation **production bridge** acceptance
 
-**Only after implementation + independent implementation review are green.**
+**Only after implementation, applicable mechanical verification, and independent implementation review are satisfactory.**
 
 Use one clean/free slot and the actual WP-010 bridge path:
 
@@ -317,9 +316,9 @@ The first real canary is not permitted to serve as the first mutation-API or own
 
 ## Stop conditions
 
-Stop and return to design/review rather than implementing around the issue if:
+Stop and return to author repair/review rather than working around the issue if:
 
-- focused re-review does not accept B1–B6 dispositions;
+- exact-head independent implementation re-review reports unresolved blockers;
 - an existing admission owner is discovered;
 - private/downstream behavior differs materially from the measured active inventory;
 - direct Chat would require impersonating another client;

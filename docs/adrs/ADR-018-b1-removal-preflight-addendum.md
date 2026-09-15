@@ -1,6 +1,6 @@
 # ADR-018 addendum — removal preflight and bearer-token ordering
 
-**Status:** supporting reconciliation record. Canonical removal order now lives in parent ADR-018 D8; if this addendum conflicts, the parent ADR controls.
+**Status:** supporting reconciliation record under the specification accepted at PR #75 head `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` / COMMENT `5202241729`; author implementation is in progress. Canonical removal order lives in parent ADR-018 D8; if this addendum conflicts, the parent ADR controls.
 
 **Parent:** `ADR-018-chat-client-for-shared-lean-slots.md`.
 
@@ -65,4 +65,4 @@ In addition to ADR-018's existing acceptance requirements:
 - after credential cleanup + roster edit + restart, doctor is green and the removed client is denied;
 - bearer-mode tests prove old credential non-reuse after re-admission.
 
-No runtime implementation is authorized until a fresh independent reviewer accepts the now-canonical parent D8/S18-9 removal procedure.
+The parent specification gate was accepted at `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` with COMMENT `5202241729`. Author runtime implementation may proceed under that accepted mechanism; mechanical verification and a fresh exact-head independent implementation re-review remain pending before Gate A. This addendum does not itself accept the implementation or authorize live execution.

@@ -60,7 +60,7 @@ def parser() -> argparse.ArgumentParser:
     acquire = commands.add_parser("acquire", help="atomically lease a clean slot")
     acquire.add_argument("--slot", type=int, required=True)
     acquire.add_argument("--repo-role")
-    acquire.add_argument("--client", choices=("codex", "claude"), required=True)
+    acquire.add_argument("--client", required=True)
     acquire.add_argument("--base-ref", required=True)
 
     for name, help_text in (
@@ -87,6 +87,7 @@ def parser() -> argparse.ArgumentParser:
     render = config_commands.add_parser(
         "render", help="render gitignored client configuration"
     )
+    # Renderer capability is intentionally NOT the lease-admission roster.
     render.add_argument("--client", choices=("codex", "claude"), default="codex")
     render.add_argument(
         "--scope", choices=("repo", "workspace", "both"), default="repo"
@@ -100,14 +101,26 @@ def parser() -> argparse.ArgumentParser:
     )
 
     session = commands.add_parser(
-        "session", help="emit optional client-auth and shared-state environment"
+        "session", help="emit client environment or administer client admission state"
     )
     session_commands = session.add_subparsers(dest="session_command", required=True)
     environment = session_commands.add_parser(
         "env", help="print shell exports required by the selected client-auth mode"
     )
-    environment.add_argument("--client", choices=("codex", "claude"), required=True)
+    environment.add_argument("--client", required=True)
     environment.add_argument("--rotate-token", action="store_true")
+
+    removal = session_commands.add_parser(
+        "removal-preflight",
+        help="read-only check that a currently admitted client is quiescent before removal",
+    )
+    removal.add_argument("--client", required=True)
+
+    revoke = session_commands.add_parser(
+        "revoke-token",
+        help="bearer-only: delete a quiescent admitted client's bearer token before roster removal",
+    )
+    revoke.add_argument("--client", required=True)
 
     supervisor = commands.add_parser(
         "supervisor", help="manage the three fixed-root endpoints"
@@ -165,13 +178,7 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "build":
             _json(controller.build())
         elif args.command == "config":
-            if args.client == "claude":
-                if args.rotate_token:
-                    raise SlotError(
-                        "trusted-local Claude endpoints carry no token to rotate"
-                    )
-                paths = controller.render_claude_config(rollback=args.rollback)
-            else:
+            if args.client == "codex":
                 if args.rollback:
                     raise SlotError("--rollback applies to --client claude only")
                 paths = controller.render_config(
@@ -179,15 +186,32 @@ def main(argv: list[str] | None = None) -> int:
                     force=args.force,
                     rotate_token=args.rotate_token,
                 )
+            elif args.client == "claude":
+                if args.rotate_token:
+                    raise SlotError(
+                        "trusted-local Claude endpoints carry no token to rotate"
+                    )
+                paths = controller.render_claude_config(rollback=args.rollback)
+            else:  # pragma: no cover - argparse enforces renderer capability
+                raise SlotError(f"unsupported configuration renderer: {args.client!r}")
             for path in paths:
                 print(path)
         elif args.command == "session":
-            print(
-                controller.session_environment(
-                    client=args.client,
-                    rotate_token=args.rotate_token,
+            if args.session_command == "env":
+                print(
+                    controller.session_environment(
+                        client=args.client,
+                        rotate_token=args.rotate_token,
+                    )
                 )
-            )
+            elif args.session_command == "removal-preflight":
+                value = controller.removal_preflight(client=args.client)
+                _json(value)
+                return 0 if value["ok"] else 1
+            elif args.session_command == "revoke-token":
+                _json(controller.revoke_client_token(client=args.client))
+            else:  # pragma: no cover - argparse enforces subcommand selection
+                raise SlotError(f"unsupported session command: {args.session_command}")
         elif args.command == "supervisor":
             supervisor = Supervisor(inventory)
             if args.action == "probe":

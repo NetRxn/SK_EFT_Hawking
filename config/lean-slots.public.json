@@ -30,6 +30,11 @@
   "server": {
     "host": "127.0.0.1",
     "client_auth": "trusted-local",
+    "allowed_clients": [
+      "codex",
+      "claude",
+      "chat"
+    ],
     "backend_policy": "leased",
     "command": [
       "uvx",

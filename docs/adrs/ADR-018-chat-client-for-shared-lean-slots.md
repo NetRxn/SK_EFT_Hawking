@@ -1,7 +1,7 @@
 # ADR-018 — Distinct Chat client on the shared Lean slot control plane
 
-- **Status:** **PROPOSED — independent review chain remains `ACCEPT_WITH_CHANGES`; B2–B6 are closed; residual B1 is narrowed to canonical removal-order/credential-revocation consistency and remains review-gated before implementation.**
-- **Tracks:** issue #74; specification review on PR #75.
+- **Status:** **SPECIFICATION ACCEPTED — PR #75 head `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` received COMMENT review `5202241729`: `ACCEPT`, residual B1 `CLOSED`, no B2–B6 regression. Author implementation is in progress on PR #76; mechanical verification and exact-head independent implementation re-review remain pending before Gate A.**
+- **Tracks:** issue #74; specification review on PR #75; implementation on PR #76.
 - **Measured public base:** `codex/memory-process-clocks` @ `9ea7b61a33e91190ffe99e843247e03a51e8fb3e`.
 - **Measured private/downstream state:** `NetRxn-RD` `codex/frontier-first-deliverables` @ `47b380f6e233a0fd70662640422b3652e6d3191a`; `config/lean-slots.private.json` is schema 1, trusted-local, has no `allowed_clients`, and `tests/test_lean_slot_overlay.py` verifies the private wrapper reuses the public controller.
 - **Owner:** ADR-008 remains normative for slot lifecycle, builds, integration, leases, endpoint identity, and paired-dependency safety. This ADR is a narrow client-admission extension, not a second control plane.
@@ -12,14 +12,14 @@ ADR-008 already supports Codex and Claude Code over the same supervisor-owned `w
 
 A separate NetRxn Chat control-plane project is preparing a machine-local execution bridge so an ordinary Chat session can eventually drive the same bounded proof-development loop directly rather than requiring a Claude/Codex worker for every edit/MCP cycle. The bridge deliberately refuses to impersonate either existing client. The project therefore needs an explicit third client identity if direct Chat is ever admitted.
 
-The current implementation is partly generic already:
+At the measured specification base, the implementation was partly generic already:
 
 - `Controller._owner()` prefers product-neutral `LEAN_SLOT_OWNER_SESSION`, then product-specific session variables;
 - bearer token files accept generic safe client names;
 - lease records already carry a string `client` and the proxy compares it to the active lease;
 - endpoint/worktree/repository-role/dependency/build-epoch checks do not depend on a specific product.
 
-But client admission is currently duplicated/hard-coded:
+At that measured base, client admission was duplicated/hard-coded:
 
 - trusted-local `LeaseGate.identify()` accepts only `codex` and `claude`;
 - `slotctl acquire --client` accepts only `codex|claude` in argparse;
@@ -218,7 +218,7 @@ Rollback/removal of Chat follows D8 and leaves the legacy private overlay unaffe
 
 Implementation is not accepted merely because `chat` can call an endpoint. Required evidence includes:
 
-1. inventory validation rejects empty, duplicate, and malformed client admission;
+1. inventory validation rejects empty, duplicate, malformed, and other present non-array client admission values; explicit JSON `null` is invalid and never selects the missing-field compatibility path;
 2. missing schema-1 field resolves to exactly `codex`/`claude`, never Chat;
 3. existing `codex` and `claude` trusted-local tests remain green;
 4. trusted-local proxy accepts `chat` discovery traffic but denies lease-required calls before an active `chat` lease;
@@ -242,6 +242,7 @@ The review chain on PR #75 is historical evidence tied to exact heads:
 
 - first independent review at `332f44f5e4ba557ae1d119a55018aa51fd923ce8`: `ACCEPT_WITH_CHANGES`, B1–B6;
 - focused re-review at `8407079f935ba3dd758a4f2c288b3cd43ec5239e`: B1 `PARTIALLY_CLOSED`, B2–B6 `CLOSED`;
-- cloud-dispatched residual-B1 closure review at `0e71346775028daa09eb90006be6c85c458b5388`: `ACCEPT_WITH_CHANGES`, substantive D13/S18-14 mismatch-preflight design accepted, with one remaining canonical contradiction in bearer credential-removal ordering.
+- cloud-dispatched residual-B1 closure review at `0e71346775028daa09eb90006be6c85c458b5388`: `ACCEPT_WITH_CHANGES`, substantive D13/S18-14 mismatch-preflight design accepted, with one remaining canonical contradiction in bearer credential-removal ordering;
+- final canonical-consistency review at `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f`: COMMENT `5202241729`, **`ACCEPT`**, residual B1 `CLOSED`, no B2–B6 regression.
 
-D8 now removes that contradiction and names the exact project-owned credential-revocation operation. Because the target head changes again, implementation remains blocked until a **narrow fresh closure re-review** confirms that the canonical ADR/spec/plan now agree. Self-review does not satisfy that gate.
+That final review closes the ADR-018 specification gate at its exact head. PR #76 implementation may proceed under this accepted design, but acceptance does not transfer to implementation heads. Implementation review `5203396570` at `42803dfc2baa5e5a26b152557e0c7e0d8c9504aa` returned `ACCEPT_WITH_CHANGES` and required current-document reconciliation; the later explicit-null author repair also changed the target. Mechanical verification and a fresh exact-head independent implementation re-review remain required before Gate A. Self-review and author reconciliation do not satisfy that implementation-review gate.

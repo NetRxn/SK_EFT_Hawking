@@ -58,9 +58,7 @@ class LeaseGate:
         if self.inventory.client_auth_mode == "trusted-local":
             if client_hint is None:
                 return None, None
-            if client_hint not in {"codex", "claude"}:
-                raise SlotError(f"unknown local client identity: {client_hint!r}")
-            return client_hint, None
+            return self.inventory.require_allowed_client(client_hint), None
         if not authorization or not authorization.startswith("Bearer "):
             raise SlotError("missing bearer credential")
         supplied = authorization.removeprefix("Bearer ").strip()
@@ -68,9 +66,10 @@ class LeaseGate:
         for path in sorted(clients.glob("*.token")) if clients.exists() else []:
             expected = path.read_text(encoding="utf-8").strip()
             if expected and hmac.compare_digest(supplied, expected):
-                if client_hint is not None and client_hint != path.stem:
+                client = self.inventory.require_allowed_client(path.stem)
+                if client_hint is not None and client_hint != client:
                     raise SlotError("client identity does not match bearer credential")
-                return path.stem, token_hash(supplied)
+                return client, token_hash(supplied)
         raise SlotError("unknown or expired bearer credential")
 
     def authorize(
@@ -180,7 +179,7 @@ def cached_tool_list(inventory: Inventory) -> list[dict[str, Any]]:
 def offline_handshake(
     messages: list[dict[str, Any]], tools: list[dict[str, Any]] | None = None
 ) -> dict[str, Any] | None:
-    """A local reply for MCP handshake traffic when the slot has no backend, else None.
+    """A local reply for MCP handshake traffic when this slot has no backend, else None.
 
     A client opens every endpoint in its configuration at startup, long before any slot is
     leased. Answering 503 to `initialize` is therefore wrong on principle — the backend is a

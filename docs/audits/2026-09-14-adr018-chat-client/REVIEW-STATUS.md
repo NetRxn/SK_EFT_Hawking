@@ -1,40 +1,39 @@
 # ADR-018 review gate status
 
-- Design branch: `design/adr018-chat-slot-client`
-- Base: `codex/memory-process-clocks` @ `9ea7b61a33e91190ffe99e843247e03a51e8fb3e`
-- First reviewed head: `332f44f5e4ba557ae1d119a55018aa51fd923ce8`
-- First independent adversarial review: **COMPLETE — `ACCEPT_WITH_CHANGES`**
-- First durable review: PR #75 COMMENT review `pullrequestreview-5199476588`
-- First blockers: **B1–B6**
-- Focused reviewed head: `8407079f935ba3dd758a4f2c288b3cd43ec5239e`
-- Focused independent re-review: **COMPLETE — `ACCEPT_WITH_CHANGES`**
-- Focused closure: **B1 `PARTIALLY_CLOSED`; B2–B6 `CLOSED`; no new blocker beyond residual B1**
-- Residual B1 reviewed head: `0e71346775028daa09eb90006be6c85c458b5388`
-- Cloud-dispatched residual B1 review: **COMPLETE — `ACCEPT_WITH_CHANGES` / B1 `PARTIALLY_CLOSED`**
-- Durable cloud filing: GitHub COMMENT review reported as `#5201956869`, independently read back by the cloud task
-- Duplicate observation: GitHub currently contains **two** substantially equivalent residual-B1 COMMENT reviews on the same head within roughly two minutes; treat this as dispatcher idempotency dogfood, not extra independent acceptance evidence
-- Substantive B1 mismatch/preflight design: **ACCEPTED BY REVIEW**
-- Remaining B1 finding from cloud review: **canonical D8/S18-9 credential-removal order + exact bearer cleanup operation**
-- Canonical reconciliation: **COMPLETE IN CURRENT ADR/SPEC/PLAN** — pre-edit bearer revocation, exact `slotctl session revoke-token --client <client>` semantics, and parent precedence are now explicit
-- Final narrow canonical-consistency re-review: **REQUIRED / PENDING**
-- Private/downstream measurement: **COMPLETE** — NetRxn-RD `codex/frontier-first-deliverables` @ `47b380f6e233a0fd70662640422b3652e6d3191a`; schema-1 private inventory has no `allowed_clients` and reuses the public controller
-- Implementation authorized: **NO**
-- Live slot acceptance authorized: **NO**
+## Current gate state
 
-## Review lineage
+- Specification target: PR #75, `design/adr018-chat-slot-client` @ `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f`.
+- Final canonical-consistency specification review: COMPLETE, COMMENT review `5202241729`, verdict ACCEPT; B1 CLOSED, no B2–B6 regression.
+- Bounded author implementation: IN PROGRESS; the prior specification-pending prohibition is historical, not the current state.
+- Implementation target: PR #76, `implementation/adr018-chat-slot-client`; resolve its current head before review.
+- Implementation review `5203396570`: ACCEPT_WITH_CHANGES at `42803dfc2baa5e5a26b152557e0c7e0d8c9504aa`; current-document status reconciliation required on the changed head.
+- Post-audit code/test repair: `fbfeb76e3ed5736ec95268e3ede9acd0dad59d44`, explicit-null roster rejection with artifact-seeded regression tests.
+- Current-document reconciliation: AUTHOR COMPLETE in this author wave; canonical ADR/spec/plan and B1 supplements now point to the accepted specification and current implementation gate. See `POST-AUDIT-DOC-RECONCILIATION-STATUS.md`.
+- Focused post-audit implementation re-review request: PREPARED at `POST-AUDIT-IMPLEMENTATION-REREVIEW-REQUEST.md`; not enqueued while independent scheduled context remains unresolved.
+- Mechanical test execution: NOT_MEASURED; no PASS inferred from authored tests or source inspection. Existing hosted workflow feasibility and exact candidate commands are recorded in `POST-AUDIT-DOC-RECONCILIATION-STATUS.md`.
+- Exact-changed-head independent implementation re-review: REQUIRED / PENDING.
+- Live Gate A, source-mutating proof work, authoritative build, absorb, merge and publication: NOT AUTHORIZED by this status record.
 
-The first review remains historical evidence anchored to `332f44f...`. The focused review at `8407079f...` closed B2–B6 and narrowed B1. The cloud-dispatched review at `0e713467...` accepted the non-disruptive roster/lease mismatch predicate and owner-cleanup preservation, then found one documentary-but-normative contradiction: residual addendum/spec required bearer cleanup before roster removal while canonical parent D8/S18-9 still had the inverse order, and the concrete cleanup operation remained deferred.
+## Historical review lineage
 
-The current design removes that contradiction:
+| Target head | Evidence | Disposition at that head |
+|---|---|---|
+| `332f44f5e4ba557ae1d119a55018aa51fd923ce8` | PR #75 COMMENT `5199476588` | ACCEPT_WITH_CHANGES; B1–B6 |
+| `8407079f935ba3dd758a4f2c288b3cd43ec5239e` | focused PR #75 COMMENT review | ACCEPT_WITH_CHANGES; B1 partially closed, B2–B6 closed |
+| `0e71346775028daa09eb90006be6c85c458b5388` | residual review `5201956869` and equivalent duplicate filing | ACCEPT_WITH_CHANGES; canonical removal-order contradiction remained; duplicate is not extra independent evidence |
+| `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` | PR #75 COMMENT `5202241729` | ACCEPT; residual B1 closed, no B2–B6 regression |
+| `42803dfc2baa5e5a26b152557e0c7e0d8c9504aa` | PR #76 COMMENT `5203396570` | ACCEPT_WITH_CHANGES; current-document status contradiction; tests NOT_MEASURED |
 
-`quiesce + removal-preflight → bearer session revoke-token while client is still admitted → allowed_clients edit → supervisor restart → doctor + controller/proxy denial verification`.
+Historical requests and reconciliation reports retain their original scope and verdicts. They do not override this current status and their verdicts do not transfer to a later head automatically.
 
-The exact bearer command is project-owned and narrow:
+The canonical removal sequence remains unchanged: quiesce all acquire/credential-producing callers and leases; removal preflight; bearer `session revoke-token` while still admitted; roster edit; restart; doctor and denial verification. The current repair does not alter lifecycle or cleanup authority.
 
-`slotctl session revoke-token --client <client>`
+The roster-null finding at `papers/AutomatedReviews/2026-09-14-adr018-roster-null/ADR018.md` remains formally open pending the project-owned verification/closure path. Author repair presence is not independent finding closure.
 
-It is bearer-only, admission-aware, refuses a live client lease, resolves only `Inventory.client_token_path(client)`, deletes credential state idempotently, and never emits token bytes.
+## Evidence boundaries
 
-Because these edits move the PR head again, the favorable portions of the `0e713467...` review remain historical evidence; implementation does not start until a fresh reviewer checks only that the canonical ADR/spec/plan now agree and that no B2–B6 regression was introduced.
+Schema-1 missing-field compatibility remains exactly Codex/Claude; every present roster value must validate as a non-empty array and explicit JSON null is invalid. No downstream Chat opt-in is inferred. Public inventory changes do not rewrite another inventory.
 
-This status file is routing/status evidence only; it does not grant implementation, merge, live-slot, publication, or other authorization.
+A GitHub COMMENT is durable review evidence, not merge or execution authorization. A distinct scheduled task does not by itself prove independent context. Reviewer isolation for future automation must be established separately; no blanket judgment about every historical review follows from another task's contamination report.
+
+This file routes current work. It does not grant new authority, waive a gate, operate the host or replace project-native closure machinery.

@@ -274,7 +274,7 @@ class Controller:
         if lease.get("owner_kind") == "session" and lease.get(
             "owner_session_hash"
         ) != current_owner.get("owner_session_hash"):
-            raise SlotError(f"Codex session owner mismatch for wt{number}")
+            raise SlotError(f"session owner mismatch for wt{number}")
         if lease.get("owner_kind") == "process" and (
             lease.get("owner_pid") != current_owner.get("owner_pid")
             or lease.get("owner_signature") != current_owner.get("owner_signature")
@@ -305,8 +305,69 @@ class Controller:
             # reclaim would make the next one fail too — forever.
             self.inventory.save_lease(number, lease, touch_heartbeat=False)
 
+    def _lease_roster_mismatches(
+        self, admitted_clients: Iterable[str] | None = None
+    ) -> list[dict[str, Any]]:
+        admitted = (
+            set(self.inventory.allowed_clients)
+            if admitted_clients is None
+            else set(admitted_clients)
+        )
+        mismatches: list[dict[str, Any]] = []
+        for number in (1, 2, 3):
+            lease = self.inventory.lease(number, required=False)
+            if lease is None:
+                continue
+            client = str(lease.get("client", ""))
+            if client not in admitted:
+                mismatches.append(
+                    {
+                        "slot": number,
+                        "client": client,
+                        "state": lease.get("state"),
+                        "repo_role": lease.get("repo_role"),
+                    }
+                )
+        return mismatches
+
+    def removal_preflight(self, *, client: str) -> dict[str, Any]:
+        client = self.inventory.require_allowed_client(client)
+        prospective = set(self.inventory.allowed_clients)
+        prospective.remove(client)
+        if not prospective:
+            raise SlotError("server.allowed_clients must remain non-empty")
+        mismatches = self._lease_roster_mismatches(prospective)
+        return {
+            "client": client,
+            "ok": not mismatches,
+            "prospective_allowed_clients": sorted(prospective),
+            "mismatches": mismatches,
+        }
+
+    def revoke_client_token(self, *, client: str) -> dict[str, Any]:
+        client = self.inventory.require_allowed_client(client)
+        if self.inventory.client_auth_mode != "bearer":
+            raise SlotError("client token revocation is available only in bearer mode")
+        live = [
+            number
+            for number in (1, 2, 3)
+            if (
+                (lease := self.inventory.lease(number, required=False)) is not None
+                and lease.get("client") == client
+            )
+        ]
+        if live:
+            raise SlotError(
+                f"cannot revoke {client} token while that client owns live lease(s): {live}"
+            )
+        path = self.inventory.client_token_path(client)
+        existed = path.exists()
+        path.unlink(missing_ok=True)
+        return {"client": client, "revoked": existed}
+
     def acquire(self, number: int, *, client: str, base_ref: str) -> dict[str, Any]:
         with self._slot_lock(number):
+            client = self.inventory.require_allowed_client(client)
             if self.inventory.lease(number, required=False) is not None:
                 existing = self.inventory.lease(number)
                 raise SlotError(
@@ -727,7 +788,7 @@ class Controller:
             elif lease.get("owner_kind") == "session" and not confirm_owner_gone:
                 raise SlotError(
                     f"wt{number} has a session owner; rerun with --confirm-owner-gone only after "
-                    "verifying that Codex session has ended"
+                    "verifying that driving session has ended"
                 )
             elif lease.get("owner_kind") not in {"process", "session"}:
                 raise SlotError(f"wt{number} has an invalid owner identity")
@@ -1003,6 +1064,7 @@ class Controller:
         ]
 
     def session_environment(self, *, client: str, rotate_token: bool = False) -> str:
+        client = self.inventory.require_allowed_client(client)
         if rotate_token and self.inventory.client_auth_mode != "bearer":
             raise SlotError(
                 "token rotation is available only in bearer client-auth mode"
@@ -1061,14 +1123,19 @@ class Controller:
                 record(f"wt{number}.identity", False, str(exc))
             try:
                 lease = self.inventory.lease(number, required=False)
-                lease_ok = lease is None or lease.get("state") != "QUARANTINED"
-                record(
-                    f"wt{number}.lease",
-                    lease_ok,
-                    "FREE"
-                    if lease is None
-                    else f"{lease.get('repo_role')}:{lease.get('state')}",
-                )
+                if lease is None:
+                    lease_ok = True
+                    lease_detail = "FREE"
+                else:
+                    client = str(lease.get("client", ""))
+                    client_allowed = client in self.inventory.allowed_clients
+                    lease_ok = (
+                        lease.get("state") != "QUARANTINED" and client_allowed
+                    )
+                    lease_detail = f"{lease.get('repo_role')}:{lease.get('state')} client={client}"
+                    if not client_allowed:
+                        lease_detail += " — client absent from current admission roster"
+                record(f"wt{number}.lease", lease_ok, lease_detail)
             except SlotError as exc:
                 record(f"wt{number}.lease", False, str(exc))
         try:
@@ -1076,7 +1143,8 @@ class Controller:
             record(
                 "client_auth",
                 True,
-                f"{auth_mode} on {self.inventory.raw['server']['host']}",
+                f"{auth_mode} on {self.inventory.raw['server']['host']}; "
+                f"allowed_clients={','.join(sorted(self.inventory.allowed_clients))}",
             )
         except SlotError as exc:
             record("client_auth", False, str(exc))

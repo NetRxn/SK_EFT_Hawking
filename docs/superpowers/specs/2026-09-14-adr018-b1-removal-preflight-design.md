@@ -1,6 +1,6 @@
 # ADR-018 residual B1 — removal-preflight design
 
-**Status:** supporting specification supplement; parent ADR-018 D8 and parent spec S18-9 are now canonical and supersede this supplement if any older wording conflicts. Implementation remains blocked on a narrow fresh closure re-review.
+**Status:** supporting specification supplement under the specification accepted at PR #75 head `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` / COMMENT `5202241729`; author implementation is in progress. Parent ADR-018 D8 and parent spec S18-9 are canonical and supersede this supplement if any older wording conflicts.
 
 **Parent ADR:** `docs/adrs/ADR-018-chat-client-for-shared-lean-slots.md`
 
@@ -10,7 +10,7 @@
 
 At the measured ADR-018 base, `Controller.doctor()` records `wtN.lease` as healthy whenever the lease is absent or its state is not `QUARANTINED`. It does not compare `lease.client` with an admission roster. Therefore a future roster edit that removes client `C` while a lease for `C` remains can be reported healthy by the existing lease-health predicate even though ADR-018 declares that migration state invalid.
 
-The focused independent re-review of PR #75 at head `8407079f935ba3dd758a4f2c288b3cd43ec5239e` returned `ACCEPT_WITH_CHANGES`: B2–B6 were `CLOSED`, B1 was `PARTIALLY_CLOSED`, and no new blocker was introduced. The residual was the missing non-disruptive mismatch predicate plus bearer-token cleanup ordering. A later cloud-dispatched closure review at `0e71346775028daa09eb90006be6c85c458b5388` accepted the substantive mismatch design and narrowed the remaining issue to canonical removal-order consistency plus the exact bearer cleanup operation.
+The focused independent re-review of PR #75 at head `8407079f935ba3dd758a4f2c288b3cd43ec5239e` returned `ACCEPT_WITH_CHANGES`: B2–B6 were `CLOSED`, B1 was `PARTIALLY_CLOSED`, and no new blocker was introduced. The residual was the missing non-disruptive mismatch predicate plus bearer-token cleanup ordering. A later cloud-dispatched closure review at `0e71346775028daa09eb90006be6c85c458b5388` accepted the substantive mismatch design and narrowed the remaining issue to canonical removal-order consistency plus the exact bearer cleanup operation. Final canonical-consistency review `5202241729` at `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` then returned `ACCEPT`, closing residual B1 with no B2–B6 regression.
 
 ## S18-14 — one non-disruptive lease/roster mismatch predicate
 
@@ -110,4 +110,4 @@ Also prove the revoke command rejects bearer cleanup when a live lease exists an
 
 ## No new authority
 
-This supplement does not authorize Chat execution, implementation merge, source mutation, worker build, slot repair, or integration. It records the residual B1 reasoning; canonical implementation requirements live in parent ADR D8, parent spec S18-9, and the B1 plan supplement.
+This supplement does not itself authorize live Chat execution, implementation acceptance, source mutation, worker build, slot repair, or integration. It records the residual B1 reasoning; canonical implementation requirements live in parent ADR D8, parent spec S18-9, and the B1 plan supplement. The specification gate is closed, but mechanical verification, exact-head independent implementation re-review, Gate A, and later source-mutation gates remain separate and pending.

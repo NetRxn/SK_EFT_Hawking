@@ -1,6 +1,6 @@
 # ADR-018 — distinct Chat client for shared Lean slots: design specification
 
-**Status:** revised through independent + focused + cloud-dispatched residual-B1 review. **B2–B6 are closed; runtime implementation remains blocked until one narrow fresh review confirms the canonical B1 removal procedure is internally consistent.**
+**Status:** **SPECIFICATION ACCEPTED** at PR #75 head `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f`, COMMENT review `5202241729`: `ACCEPT`, residual B1 `CLOSED`, no B2–B6 regression. Author implementation is in progress on PR #76; mechanical verification and fresh exact-head independent implementation re-review remain pending before Gate A.
 
 **Normative decision:** [`ADR-018`](../../adrs/ADR-018-chat-client-for-shared-lean-slots.md).
 
@@ -257,7 +257,7 @@ This is mandatory architecture-rule compliance, not optional documentation clean
 
 ## 3. Files and ownership
 
-Expected implementation surfaces after the final narrow specification closure review accepts the canonical B1 procedure:
+Implementation surfaces for the accepted design and current author implementation wave:
 
 | Surface | Responsibility |
 |---|---|
@@ -311,6 +311,7 @@ Production-shaped inventory fixtures demonstrate:
 - empty list fails;
 - duplicate entries fail;
 - malformed client names fail;
+- every present non-array roster value, including JSON `null`, fails rather than taking the schema-1 compatibility fallback;
 - schema-1 missing field resolves exactly to Codex/Claude;
 - mixed public-explicit/private-legacy paired inventories load;
 - private legacy inventory does not admit Chat;
@@ -381,7 +382,7 @@ All existing ADR-008 tests remain green, especially:
 
 ### Gate A — no-mutation production-bridge rehearsal
 
-Only after implementation + independent implementation review are green:
+Only after implementation, applicable mechanical verification, and independent implementation review are satisfactory:
 
 1. bridge durable preflight against exact ref/SHA and clean/free slot;
 2. bridge `activate()` performs project-native probe/acquire/prepare with one owner session;
@@ -419,19 +420,18 @@ Only after Gate A and the prerequisite above:
 
 ---
 
-## 7. Review reconciliation and final narrow closure question
+## 7. Review reconciliation and current implementation gate
 
 Review history on PR #75 is tied to exact target heads:
 
 - first review at `332f44f5e4ba557ae1d119a55018aa51fd923ce8`: `ACCEPT_WITH_CHANGES`, B1–B6;
 - focused review at `8407079f935ba3dd758a4f2c288b3cd43ec5239e`: B1 `PARTIALLY_CLOSED`, B2–B6 `CLOSED`;
-- cloud-dispatched residual-B1 closure review at `0e71346775028daa09eb90006be6c85c458b5388`: substantive mismatch-preflight design accepted, with one remaining blocker that D14/S18-16's pre-edit credential cleanup contradicted canonical D8/S18-9 and left the concrete credential operation deferred.
+- cloud-dispatched residual-B1 closure review at `0e71346775028daa09eb90006be6c85c458b5388`: substantive mismatch-preflight design accepted, with one remaining blocker that D14/S18-16's pre-edit credential cleanup contradicted canonical D8/S18-9 and left the concrete credential operation deferred;
+- final canonical-consistency review at `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f`: COMMENT `5202241729`, **`ACCEPT`**, residual B1 `CLOSED`, no B2–B6 regression.
 
-This revision makes S18-9 canonical, moves bearer credential revocation before the roster edit, and names the exact `slotctl session revoke-token --client <client>` semantics. The remaining independent review question is intentionally narrow:
+That final review closed the specification gate. The current implementation remains a separate evidence target. Implementation review `5203396570` at `42803dfc2baa5e5a26b152557e0c7e0d8c9504aa` returned `ACCEPT_WITH_CHANGES` because current normative/status documents still contradicted the accepted specification; later author repair `fbfeb76e3ed5736ec95268e3ede9acd0dad59d44` also corrected the explicit-null/missing-key parser distinction under S18-8 and added regression tests. Those changes are author work, not independent acceptance.
 
-> Do canonical ADR D8 + spec S18-9 + the B1 implementation plan now express one executable removal procedure without regressing B2–B6 or weakening ADR-008 owner cleanup?
-
-Runtime implementation remains blocked until a fresh reviewer answers that question acceptably against the new exact head.
+Before Gate A, obtain actual applicable mechanical evidence on the exact resulting head and a fresh independent implementation re-review that checks both the documentation reconciliation and explicit-null repair. Tests merely authored are not tests run, and a scheduled task identity alone does not establish reviewer independence.
 
 ---
 
