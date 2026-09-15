@@ -82,12 +82,13 @@ Smallest next verification step is not a new CI project: on an already authorize
 
 - Code/test repair: `fbfeb76e3ed5736ec95268e3ede9acd0dad59d44` — authored, NOT_MEASURED.
 - Audit-routing handoff: `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b`.
+- D1–D3 substantive author document reconciliation: `01bacd198ef20e496a8d9ba01d2cc6661017e0fe`.
 - Specification acceptance: PR #75 head `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f`, COMMENT `5202241729`.
 - Prior implementation review: COMMENT `5203396570` at `42803dfc2baa5e5a26b152557e0c7e0d8c9504aa`, `ACCEPT_WITH_CHANGES`.
-- This author documentation wave changes only the paths listed above plus this status and the focused re-review request. The exact substantive reconciliation commit is recorded by the final handoff status update after commit creation.
+- D1–D3 changed paths are the nine current surfaces listed above plus `POST-AUDIT-IMPLEMENTATION-REREVIEW-REQUEST.md` and this status file.
 - No current head receives independent acceptance from this author work.
 - Roster-null finding remains open pending project-owned verification/closure evidence.
 - Remaining before Gate A: exact-head applicable mechanical evidence; independently established reviewer context; focused exact-head implementation re-review; project-native disposition of findings/gates.
 - Remaining before source mutation: all Gate A requirements plus heartbeat, disposable write/checkpoint/ready evidence, and separately reviewed same-owner integration continuation.
 
-Current owner handoff: AUTHOR_DOC_REPAIRS_COMPLETE_PENDING_VERIFICATION_AND_REVIEW. No further author documentation mutation is required unless readback exposes a contradiction or another writer changes the branch.
+Current owner handoff: AUTHOR_DOC_REPAIRS_COMPLETE_PENDING_VERIFICATION_AND_REVIEW. No further author documentation mutation is required unless readback exposes a contradiction or another writer changes the branch. The status-finalization commit is a documentation-only child of `01bacd198ef20e496a8d9ba01d2cc6661017e0fe`; the current PR head is the authoritative freshness key and must be resolved before later review.

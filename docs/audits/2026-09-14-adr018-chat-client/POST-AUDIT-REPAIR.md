@@ -8,7 +8,7 @@ The accepted specification remains PR #75 head `469e4e47607b7d74da0b9b3c81dc56d0
 
 The author spot-check finding is filed under `papers/AutomatedReviews/2026-09-14-adr018-roster-null/ADR018.md`. No historical finding/closure record is rewritten by this repair.
 
-Coordinator handoff arrived through code/test repair `fbfeb76e3ed5736ec95268e3ede9acd0dad59d44` and audit-routing commit `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b`. The author documentation lane re-resolved PR #76 at that exact handoff head before editing and observed no intervening writer move.
+Coordinator handoff arrived through code/test repair `fbfeb76e3ed5736ec95268e3ede9acd0dad59d44` and audit-routing commit `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b`. The D1–D3 author document reconciliation is commit `01bacd198ef20e496a8d9ba01d2cc6661017e0fe`. The author documentation lane re-resolved PR #76 at the handoff head before editing and observed no intervening writer move.
 
 ## Implementation
 
