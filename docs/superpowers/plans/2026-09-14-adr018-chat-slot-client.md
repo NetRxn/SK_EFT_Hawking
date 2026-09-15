@@ -44,7 +44,7 @@ Blocking findings:
 
 Reconciled dispositions:
 
-- B1 → ADR D8 / spec S18-9: quiesce, edit, token cleanup, supervisor restart, verify;
+- B1 → ADR D8 / spec S18-9: quiesce + removal preflight, bearer token revocation while still admitted, roster edit, supervisor restart, verify;
 - B2 → ADR D5/D11 / spec S18-5/S18-10/S18-12: one durable owner session, heartbeat before mutation, no implicit transfer or bridge integration authority;
 - B3 → ADR D9 / spec S18-8: measured private schema-1 overlay; exact missing-field fallback `{codex, claude}` only;
 - B4 → ADR D6/D10 / spec S18-4/S18-6/S18-11: admission and renderer capability remain distinct; Chat renderer rejected;
