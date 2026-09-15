@@ -188,14 +188,15 @@ class Inventory:
 
         Schema 1 predates the field. Its only compatibility interpretation is the
         exact legacy pair Codex/Claude; absence never implies Chat admission.
+        Only an absent key enables fallback; explicit null is an invalid roster.
         """
 
         server = self.raw.get("server", {})
-        configured = server.get("allowed_clients")
-        if configured is None:
+        if "allowed_clients" not in server:
             if self.raw.get("schema_version") == 1:
                 return LEGACY_SCHEMA1_CLIENTS
             raise SlotError("server.allowed_clients is required")
+        configured = server["allowed_clients"]
         if not isinstance(configured, list) or not configured:
             raise SlotError("server.allowed_clients must be a non-empty JSON array")
         normalized: list[str] = []
