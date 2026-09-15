@@ -4,7 +4,7 @@ Status: AUTHOR_DOC_REPAIRS_COMPLETE_PENDING_VERIFICATION_AND_REVIEW.
 
 ## Ownership and handoff
 
-Author lane accepted coordinator handoff after runtime repair `fbfeb76e3ed5736ec95268e3ede9acd0dad59d44` and audit-routing commit `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b`. PR #76 was re-resolved at head `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b`, base `design/adr018-chat-slot-client` @ `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f`, immediately before author edits. No intervening branch move or prior reconciliation-status owner record was observed, so this lane proceeded. A later unexpected writer move must still be treated as `CONCURRENT_CHANGE`, not overwritten.
+Author lane accepted coordinator handoff after runtime repair `fbfeb76e3ed5736ec95268e3ede9acd0dad59d44` and audit-routing commit `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b`. PR #76 was re-resolved at head `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b`, base `design/adr018-chat-slot-client` @ `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f`, immediately before author edits. No intervening branch move or prior reconciliation-status owner record was observed, so this lane proceeded. The branch remained a fast-forward through the final readback correction; any later unexpected writer move must still be treated as `CONCURRENT_CHANGE`, not overwritten.
 
 No child jobs, automation mutations, runtime/test execution, other-repository writes or review filing were performed by this author lane.
 
@@ -26,11 +26,11 @@ Changed current surfaces:
 
 Current truth is now: specification `ACCEPT` at PR #75 head `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f` / COMMENT `5202241729`; bounded author implementation in progress; prior implementation review `5203396570` applies only to `42803dfc2baa5e5a26b152557e0c7e0d8c9504aa`; mechanical evidence and a fresh exact-head independent implementation re-review remain pending before Gate A. Canonical D8/S18-9 ordering remains pre-edit bearer revocation while still admitted, with observational mismatch reporting and owner cleanup unchanged.
 
-The main implementation plan's deeper stale operator-order text was also corrected to the already-accepted canonical order; this is reconciliation, not a new decision.
+Initial final-file readback found one surviving stale shorthand in main-plan Phase 0 Task 0.2 (`quiesce, edit, token cleanup, ...`) even though the current operator section had already been corrected. Commit `404aa7b60b86526874e10c6a0e30b21d9f1a0264` corrected that historical disposition summary to the accepted canonical order: quiesce + removal preflight → bearer revocation while still admitted → roster edit → restart → verify. This was a documentation consistency correction, not a new mechanism or decision.
 
 ## D2 — focused implementation re-review request
 
-**PREPARED / NOT ENQUEUED.** `POST-AUDIT-IMPLEMENTATION-REREVIEW-REQUEST.md` now scopes a changed-head read-only review of:
+**PREPARED / NOT ENQUEUED.** `POST-AUDIT-IMPLEMENTATION-REREVIEW-REQUEST.md` scopes a changed-head read-only review of:
 
 - prior implementation-review B1 document/status contradiction;
 - the original absent-vs-explicit-null failure;
@@ -46,10 +46,10 @@ It explicitly requires current head/base resolution, COMMENT-only filing, and in
 
 **READ-ONLY FEASIBILITY COMPLETE; EXECUTION NOT_MEASURED.**
 
-Observed repository facts at author handoff head `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b`:
+Observed repository facts at author handoff and final documentation heads:
 
 - `.github/` contains `dependabot.yml` and no `.github/workflows/` directory. The repository's own `tests/test_architecture_claims.py::test_there_is_no_scheduled_ci_runner` explicitly asserts that there is deliberately no scheduled GitHub workflow runner.
-- An Actions workflow-runs query filtered to exact handoff head `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b` returned `total_count: 0`.
+- Actions workflow-runs queries filtered to the author handoff head `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b` and documentation handoff head `4a6ce8ddd0534dd749be093a542287a1e497f1cb` each returned `total_count: 0`. No PASS is inferred for later documentation-only heads either.
 - `pyproject.toml` requires Python `>=3.14`, includes `pytest>=9.0.3`, sets `pythonpath = ["."]`, and by default excludes `slow` and `e2e` tests.
 - `tests/test_adr018_roster_validation.py` imports only stdlib/pytest plus `Inventory`/`SlotError`, uses `tmp_path` and `monkeypatch`, writes disposable inventory JSON, sets `LEAN_SLOT_STATE_DIR` to a temporary location, and asserts parser loading creates no runtime-state directory. It does not invoke Git, slots, server, Lean, MCP or controller lifecycle.
 - `tests/test_adr018_chat_client.py` is broader but still synthetic: it requires the `git` executable, creates disposable Git repositories/worktrees, sets `LEAN_SLOT_SKIP_SUPERVISOR=1`, uses inert synthetic build commands, and exercises controller/proxy/CLI admission behavior without needing a live supervisor or Lean process.
@@ -83,6 +83,8 @@ Smallest next verification step is not a new CI project: on an already authorize
 - Code/test repair: `fbfeb76e3ed5736ec95268e3ede9acd0dad59d44` — authored, NOT_MEASURED.
 - Audit-routing handoff: `eae41dac6ef8a0e6c7205014b5269e02f2a8ba3b`.
 - D1–D3 substantive author document reconciliation: `01bacd198ef20e496a8d9ba01d2cc6661017e0fe`.
+- Initial author status handoff: `4a6ce8ddd0534dd749be093a542287a1e497f1cb`.
+- Final-plan readback correction: `404aa7b60b86526874e10c6a0e30b21d9f1a0264`.
 - Specification acceptance: PR #75 head `469e4e47607b7d74da0b9b3c81dc56d04c3dd24f`, COMMENT `5202241729`.
 - Prior implementation review: COMMENT `5203396570` at `42803dfc2baa5e5a26b152557e0c7e0d8c9504aa`, `ACCEPT_WITH_CHANGES`.
 - D1–D3 changed paths are the nine current surfaces listed above plus `POST-AUDIT-IMPLEMENTATION-REREVIEW-REQUEST.md` and this status file.
@@ -91,4 +93,4 @@ Smallest next verification step is not a new CI project: on an already authorize
 - Remaining before Gate A: exact-head applicable mechanical evidence; independently established reviewer context; focused exact-head implementation re-review; project-native disposition of findings/gates.
 - Remaining before source mutation: all Gate A requirements plus heartbeat, disposable write/checkpoint/ready evidence, and separately reviewed same-owner integration continuation.
 
-Current owner handoff: AUTHOR_DOC_REPAIRS_COMPLETE_PENDING_VERIFICATION_AND_REVIEW. No further author documentation mutation is required unless readback exposes a contradiction or another writer changes the branch. The status-finalization commit is a documentation-only child of `01bacd198ef20e496a8d9ba01d2cc6661017e0fe`; the current PR head is the authoritative freshness key and must be resolved before later review.
+Current owner handoff: AUTHOR_DOC_REPAIRS_COMPLETE_PENDING_VERIFICATION_AND_REVIEW. No further author documentation mutation is required unless readback exposes another contradiction or another writer changes the branch. The current PR head is the authoritative freshness key and must be resolved before later verification/review.
