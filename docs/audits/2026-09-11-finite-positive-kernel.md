@@ -914,3 +914,60 @@ compatibility results. The substantive extension results are
 `extensionMap_coordinates`, `historySynthesis_extendPull` and
 `history_pairing_extendPull`, which consume the proved outer-map identities.
 The computation rules must not be cited as deriving those results.
+
+## Adaptive perturbation and finite-depth reflected histories
+
+Independent source and final integrated reviews pass at `c00e8974`, with an
+exact controller build and a passing full substrate gate in 229.2 seconds.
+The gate reports 70/89 checks and 1,146 warnings; the same 19 paper-corpus
+failures remain. Root accepts this bounded mathematical increment locally.
+Publication and owner acceptance remain separate.
+
+`QuantumNetwork/FiniteAdaptiveMapPerturbation.lean` compares the actual retained
+joint-memory branch states of two adaptive strategies. Contraction and local
+channel/instrument errors give a depth telescope, including changed initial
+inputs, a density-input cap of one, full-history variation and terminal-memory
+bounds. Local hypotheses cover every modeled joint density and every reachable
+continuation. Explicit Kraus mixtures include the cross terms even when family
+sizes differ. The actual SWAP/preparation witness has equal history probabilities
+but unit memory distance. Outcome-selected feedback attains the exact accumulated
+error `1-(1-p)^m`. No unmodeled spectator, diamond norm, postselection or physical
+clock claim follows.
+
+`FinitePauliHistoryConsistency.lean` derives the actual finite-depth reflected
+Pauli process kernel from chronological runs, then proves its full complex Gram
+identity. Literal outer-coordinate pullbacks descend to quotient isometries and
+preserve synthesis and pairing; their ordered composition is compatible with
+schedule transport. Positive central retention gives the full matrix range and
+rank four; central reset gives the actual scalar mean and rank one. Interior
+measurement erasure changes the dynamics by a depolarizing factor of one third;
+the repeated-X and six-event XYY consumers rule out arbitrary deletion. Split
+and unsplit indicator effects retain their distinct central retentions. These
+results apply to the specified stationary symmetric Pauli family, not arbitrary
+adaptive or nonstationary reflection or a continuum field.
+
+The source files have 160 and 155 authored declarations respectively, with
+254 and 316 namespace-audited names. Complete original evidence and independent
+source reviews are preserved. Canonical extraction adds 413 records: 570 raw
+names minus 157 extractor exclusions. Every authored name remains, all additions
+have ordinary core axioms and no extraction timeout, and no prior record is
+removed. One prior theorem, `pt2_isHermitian`, changes only its module attribution
+between two pre-existing unchanged definitions. That provenance change adds no
+mathematical strength. The empty-extension computation rule is disclosed in the Empty-extension computation rules section
+and excluded from kernel-substantive credit.
+
+The derived atlas adds 229 proved, kernel-pure nodes. Its prior changes are
+79 frontier-impact updates and the single module attribution; unknowns, edges
+and obstructions remain unchanged. D9's generated closure retains the same
+638 declarations and 494 theorems, while module attribution changes its module
+count from 73 to 74. This is generated accounting, not publication acceptance.
+
+The next reviewed recursive-process contract targets a positive remainder for
+actual independently mixed evolution and instrument maps, with changed-input
+control and explicit branch-action realizations. Zero-rate mixtures may have
+different stored Kraus counts, so record equality is not assumed. The next field
+contract targets one faithful nontracial qubit state and a normalized six-outcome
+instrument whose actual four-event kernel has a square-root-weighted reflection
+Gram form. It includes failure witnesses for naive state substitution and the
+old one-sided metric. Both contracts require original-evidence pilot review and
+fresh controller admission after cycle closure; neither is implemented here.

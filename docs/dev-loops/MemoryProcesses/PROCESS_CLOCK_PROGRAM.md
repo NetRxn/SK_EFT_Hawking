@@ -81,14 +81,22 @@ review and the substrate gate at `6bf92d2f`; root accepts the bounded increment
 locally. Closing documentation and final build receipts are checked separately.
 Publication and D9 absorption prerequisites remain unchanged.
 
-The next independently reviewed recursive-process contract perturbs actual maps
-on a fixed adaptive strategy, not only the initial state. Terminal branch-state
-trace distance must retain memory and be bounded by the initial distance plus
-the sum of local channel/instrument errors, capped at one for density inputs.
-Local hypotheses quantify over all joint densities, including entangled ones.
-Actual Kraus mixtures, a noisy feedback example with exact error
-1-(1-p)^m, and a memory witness with zero history variation but unit state
-distance are mandatory. Root-reviewed contraction, mixture and telescope pilots
-precede general expansion. No diamond norm, postselection, unmodeled ancilla,
-sampling guarantee or physical-clock claim is included. Fresh lease admission
-follows current-cycle acceptance; root retains shared writers and integration.
+`FiniteAdaptiveMapPerturbation.lean` now implements the actual-map perturbation
+contract, including retained joint-memory branch distance, changed-input control,
+full-history variation, independent Kraus mixtures and the exact feedback error
+`1-(1-p)^m`. The equal-history/unit-memory-distance witness prevents replacing
+joint-state control with outcome probabilities. Original proof evidence and
+independent source review pass. The combined finite-depth field and adaptive
+increment is locally accepted at `c00e8974` after the aggregate build, inventory
+reconciliation, independent integrated review and substrate gate. See
+`docs/audits/2026-09-11-finite-positive-kernel.md` for scope and gate details.
+
+The next reviewed recursive contract targets positive remainders for independently
+mixed evolution and instrument maps, including changed inputs and actual
+branch-action realizations when zero-rate mixtures have different Kraus counts.
+Exact feedback consumers and a coherent-channel counterexample are required.
+The next field contract targets one faithful nontracial stationary instrument
+and its actual four-event reflection identity with the correct weighted metric.
+Both remain unimplemented contracts, with original-evidence pilot gates and
+fresh controller admission. No diamond norm, postselection, unmodeled ancilla,
+continuum reconstruction or physical-clock claim is included.
