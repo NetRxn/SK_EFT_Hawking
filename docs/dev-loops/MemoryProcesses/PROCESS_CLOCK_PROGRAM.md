@@ -53,48 +53,42 @@ CPU work stays on the ordinary workstation. CUDA is deferred unless a required s
 
 ## Continuous growth and field integration
 
-The accepted finite-process and clock foundations continue through bounded
-implementation and independent review. Current quotient modular dynamics and
-Hamiltonian/Gibbs relaxation already supply the earlier clock bridge; further
-work must consume those results rather than repeat them. Root owns integration,
-shared proof-slot admission and this program record.
+The earlier adaptive robustness module remains accepted: one common complete
+feedback tree bounds full-history total variation and event errors by initial
+trace distance without a depth factor. Its actual collision/SWAP-feedback
+consumer is retained. The new `FiniteGibbsHistoryPreparationBounds.lean`, source
+`5a2a7ee9`, connects that bound to actual reflected Gibbs histories.
 
-`QuantumNetwork/FiniteAdaptiveProcessRobustness.lean` is accepted locally as
-source `8366614b`, integrated with the current public cycle at reviewed
-`6ee9155f`. It constructs backward effects from actual normalized intervention
-trees and bounds event-probability and full-history total-variation differences
-by initial trace distance. Both inputs use one common complete feedback strategy;
-its later interventions may depend on observed outcomes. The bound has no depth
-or history-count factor and retains impossible branches without postselection.
+The perturbed kernel is defined by the same chronological process started from
+an arbitrary density state. Complex pairing error is at most twice the initial
+trace distance times the two coefficient sup norms, without a history-count
+factor. Stationary positivity bounds the real quadratic defect and imaginary
+part; it does not make the perturbed kernel positive. Actual Gibbs reset warm-up
+reduces trace distance exactly by its exponential retention.
 
-The actual collision suffix consumer attains the retention-product bound using
-SWAP, computational measurement and outcome-dependent preparation. The explicit
-two-collision example has total variation one quarter; zero/one retention, empty
-suffix and depth-zero guards are proved. This does not extend sampling guarantees
-or identify physical time.
+A nonuniform three-level example has strictly unequal transposed entries after
+every finite warm-up. It remains non-Hermitian and cannot define the proposed
+positive quotient. Stationary input, zero waiting/rate and repeated-time guards
+are proved. All 64 authored declarations and 73 namespace names have original
+ordinary-axiom audits and independent source review. Canonical extraction retains
+69 of those namespace names plus four generated equations for existing history
+index equivalences, adding 73 records. Combined public-cycle reconciliation and
+validation are recorded in `docs/audits/2026-09-11-finite-positive-kernel.md`.
 
-All 45 authored declarations and 60 namespace names receive original ordinary
-axiom audits and independent source review. Canonical extraction retains all
-authored names and adds 56 records: 60 namespace names plus one generated
-congruence helper for the existing Step constructor, minus five internal names.
-The combined adaptive/Pauli cycle passes aggregate build, canonical and atlas
-reconciliation, independent integrated review and the substrate gate. Detailed
-combined accounting and the one prior module-attribution change are recorded in
-`docs/audits/2026-09-11-finite-positive-kernel.md`. Closing documentation is checked
-separately; publication and D9 absorption prerequisites remain unchanged.
+The source and original evidence pass independent review. The combined public
+cycle passes aggregate builds, inventory reconciliation, independent integrated
+review and the substrate gate at `6bf92d2f`; root accepts the bounded increment
+locally. Closing documentation and final build receipts are checked separately.
+Publication and D9 absorption prerequisites remain unchanged.
 
-The next independently reviewed integration contract is
-`FiniteGibbsHistoryPreparationBounds.lean`. Define perturbed reflected kernels
-from the same actual histories with an arbitrary prepared density state. Consume
-adaptive robustness to bound complex pairing error by twice the preparation
-trace distance times the two coefficient sup norms, with no history-count factor.
-Derive exact exponential reduction of that budget under the actual Gibbs reset
-channel. Include the nonuniform three-level counterexample whose transposed
-entries remain unequal after every finite warm-up: convergence must not be
-claimed as exact positivity or used to construct a positive perturbed quotient.
-
-A fresh prepared slot and root-reviewed pilots must establish actual history
-indexing and stationary recovery, the actual Kraus warm-up contraction, and the
-strict asymmetry and factor-two complex estimate before expansion. This next
-module is not yet implemented. It supplements the continuing field reconstruction
-program; local acceptance does not change publication or finite-model scope.
+The next independently reviewed recursive-process contract perturbs actual maps
+on a fixed adaptive strategy, not only the initial state. Terminal branch-state
+trace distance must retain memory and be bounded by the initial distance plus
+the sum of local channel/instrument errors, capped at one for density inputs.
+Local hypotheses quantify over all joint densities, including entangled ones.
+Actual Kraus mixtures, a noisy feedback example with exact error
+1-(1-p)^m, and a memory witness with zero history variation but unit state
+distance are mandatory. Root-reviewed contraction, mixture and telescope pilots
+precede general expansion. No diamond norm, postselection, unmodeled ancilla,
+sampling guarantee or physical-clock claim is included. Fresh lease admission
+follows current-cycle acceptance; root retains shared writers and integration.

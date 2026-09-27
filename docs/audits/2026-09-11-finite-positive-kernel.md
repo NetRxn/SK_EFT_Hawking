@@ -852,3 +852,53 @@ four; complete reset must give rank one. Genuinely two-time positive and null
 cylinders, noncommuting modes and exact probability witnesses are required.
 This is a proposed next implementation, separate from preparation-error bounds
 owned by `docs/dev-loops/MemoryProcesses/PROCESS_CLOCK_PROGRAM.md`.
+
+### Reflected Pauli histories and preparation bounds
+
+`FinitePauliReflectedCylinder.lean` constructs the kernel from the actual four-event
+Pauli process, with symmetric depolarizing gaps and the maximally mixed state.
+The chronological trace identity yields a complex Gram kernel. Explicit synthesis
+and its inverse identify the quotient isometrically with all complex two-by-two
+observables for positive central retention; complete reset gives a one-dimensional
+scalar quotient. The inverse is never used at zero retention.
+
+Actual inner Pauli modes and genuinely two-time XX/XZ cylinders distinguish
+nonzero observable images from nonzero coefficients in the null space. The
+matrix-image commutator is nonzero for positive retention. All 1,296 history
+weights sum to one; the outer marginal is an actual two-event process. Exact
+all-X probabilities include 1/162 and 5/2304. The actual Kraus map agrees with
+the existing Lindblad action, and finite nonnegative waiting times retain rank
+four. Complete reset is a separate boundary, not an attained finite waiting time.
+No generic adaptive-history positivity, coefficientwise quotient algebra,
+continuum reconstruction or physical-clock identification follows.
+
+Reviewed source `e8ff66ba` integrates as `69900b82`, with 158 authored declarations
+and 215 namespace names. The separately owned preparation source `5a2a7ee9` has
+64 authored declarations and 73 audited names. Both reviewed source hashes are
+unchanged after integration. At `6bf92d2f`, canonical records reach 43,986, adding
+245: 172 reflected-Pauli and 73 preparation records. All 222 authored names are
+retained. Exact accounting is 288+4-47=245; the four extras are generated equations
+for imported history-index equivalences. No prior canonical record changes or
+is removed, and every addition has ordinary axioms without a dependency timeout.
+The derived atlas adds 182 proved, kernel-pure nodes and changes only frontier
+impact on 51 prior nodes; unknowns, edges and obstructions are unchanged.
+
+Independent source and integrated reviews pass at `6bf92d2f`. The exact
+public controller build passes at that revision. The full substrate gate passes
+in 441.0 seconds with 70/89 checks, 1,147 warnings and the same 19 paper-corpus
+failures. Warning identities are unchanged; rendered differences reflect inventory
+population and nearest-name suggestions for existing advisories. Root accepts
+this bounded mathematical cycle locally. Closing documentation receives a separate
+consistency review and final build receipt. Publication and paper readiness remain
+separate.
+
+The next reviewed field contract constructs a compatible finite-depth family
+for this fixed symmetric instrument/channel model. Actual outer-extension maps
+must preserve complex pairings and compose under explicit index transports.
+Summing an interior Pauli intervention retains the nonselective D_(1/3) channel:
+the required six-to-four marginal has side retention r*s/3, with a 1/9 versus 1
+XX disturbance guard. A three-time XYY cylinder and a split-half D_p indicator
+effect bridge provide actual consumers. The unsplit suffix uses D_(p*p), a
+distinct effect. Six-event pilots precede arbitrary-depth induction; implementation
+requires cycle acceptance, a fresh lease and original-proof review. No arbitrary
+schedule-deletion consistency is proposed.
