@@ -49,3 +49,46 @@ D9's existing pending reviews and Stage 13 redo select the late-absorption proto
 The finite-clock result remains a separate physics follow-on until a substantive bridge to the memory/certification argument is established. The general process framework does not automatically extend the earlier calibration or suffix-approximation guarantees to arbitrary adaptive protocols. Broader horizon and noise applications remain future work.
 
 CPU work stays on the ordinary workstation. CUDA is deferred unless a required simulation cannot complete in an overnight run of about ten hours; long runs must remain asynchronous and off unrelated work's critical path. No new harness, hardware integration, commercial release or publication submission is included.
+
+
+## Continuous growth and field integration
+
+The accepted finite-process and clock foundations continue through bounded
+implementation and independent review. Current quotient modular dynamics and
+Hamiltonian/Gibbs relaxation already supply the earlier clock bridge; further
+work must consume those results rather than repeat them. Root owns integration,
+shared proof-slot admission and this program record.
+
+The next reviewed contract is `QuantumNetwork/FiniteAdaptiveProcessRobustness.lean`:
+construct a backward binary effect from the actual normalized intervention tree,
+then bound differences of event probabilities and full-history total variation
+by the initial trace distance. Both inputs use one common complete feedback
+strategy; later interventions may depend on outcomes within that strategy.
+The bound must have no depth or history-count factor and must preserve impossible
+branches without postselection. A required consumer extends the actual collision
+suffix-forgetting bound to adaptive continuation. A SWAP followed by computational
+measurement and outcome-dependent preparation must attain the retention-product
+bound, including the explicit one-quarter example and zero/one retention guards.
+
+Independent mathematical contract review found no blocking issue. Implementation
+requires a fresh prepared slot and root-reviewed pilots: the actual one-node
+dual trace and complement identities, recursive scores and the finite event/TV
+identity, and the tensor-distance/SWAP-feedback consumer. General expansion and
+acceptance follow the existing proof, original axiom-audit, independent scientific
+review, aggregate build, canonical extraction and substrate-gate process. This
+contract does not extend sampling guarantees or identify physical time.
+
+A subsequent, separately admitted integration target is
+`FiniteGibbsHistoryPreparationBounds.lean`. Define perturbed reflected kernels
+from the same actual histories with an arbitrary prepared density state. Consume
+adaptive robustness to bound complex pairing error by twice the preparation
+trace distance times the two coefficient sup norms. Derive exponential reduction
+of that budget under the actual Gibbs reset channel. Include the nonuniform
+three-level counterexample whose transposed entries remain unequal after every
+finite warm-up: approximate convergence must not be claimed as exact positivity
+or used to construct an unjustified positive quotient. This integration awaits
+accepted adaptive robustness and its own proof pilots and review.
+
+These targets supplement the existing field reconstruction program. Existing D9
+absorption prerequisites, local-only publication disposition and finite-model
+scope remain in force. Neither proposed module is delivered by this plan.

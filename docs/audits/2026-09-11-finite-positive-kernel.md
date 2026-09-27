@@ -773,3 +773,39 @@ faithful diagonal observables. Nonuniform three-level witnesses must include
 a nonzero null cylinder and a positive product-cylinder norm. The initial
 four-event split and central-Gram pilot, current closure and fresh prepared
 lease precede implementation. Publication and paper readiness remain separate.
+
+
+### Reflected multilevel cylinders — accepted locally
+
+`FiniteGibbsMultilevelCylinder.lean` defines the reflected pairing from actual
+finite history weights, proves the central Gram factorization and exact null
+criterion, and identifies the quotient isometrically with all faithful diagonal
+observables. Complex product cylinders consume the existing transfer recursion.
+The nonuniform three-level, four-event example includes positive pairing
+`(5/4) exp(-4)` and a nonzero cylinder whose quotient class vanishes. Singleton
+compatibility, repeated times and zero-rate support are proved explicitly.
+No division by a transition probability or continuum reconstruction is used.
+
+Source `c06954d2` contains 95 authored declarations and 198 audited namespace
+names. Independent source and integrated reviews pass, with source bytes
+unchanged. At reviewed `07802b3f`, the authoritative build passes with epoch
+`d788a42f`. Canonical extraction adds 128 records to reach 43,586, with no prior
+record changes or removals. All additions have ordinary axioms and no dependency
+timeout; every authored name is retained. Exact accounting is 198+0-70=128.
+The atlas adds 58 proved, kernel-pure nodes and changes only frontier impact on
+27 prior nodes. Unknowns, edges and obstructions remain unchanged.
+
+The regenerated atlas heatmap agrees with the canonical census. The substrate
+gate passes in 262.4 seconds with 70/89 checks, 1,146 warnings and the same 19
+paper-corpus failures. Root accepts this finite mathematical increment locally;
+closing documentation is independently checked against the reviewed candidate.
+Publication and paper readiness remain separate.
+
+The next independently reviewed field contract uses an actual six-outcome
+Pauli instrument to reconstruct the full complex two-by-two observable space.
+Its normalized-instrument, actual-history Gram and complex right-inverse pilots
+must precede full quotient development. In parallel, the existing finite-process
+program targets quantitative robustness for outcome-dependent feedback, with
+later preparation-error bounds for these reflected histories. Those proposals
+are owned by `docs/dev-loops/MemoryProcesses/PROCESS_CLOCK_PROGRAM.md`; neither
+is included in this accepted result or its counts.
