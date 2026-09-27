@@ -109,7 +109,8 @@ to arbitrary nontracial schedules.
 
 Both sources pass independent source/evidence review and are included in the
 aggregate build at `8124e489`. Independent inventory reconciliation and the
-substrate gate pass; existing paper-corpus failures remain. Final paired builds
-and independent cycle closure remain pending. No diamond norm,
+substrate gate pass; existing paper-corpus failures remain. The final controller build at inventory revision `8865dade` passes.
+Independent integrated review passes and root accepts the bounded
+implementation cycle locally. No diamond norm,
 postselection, unmodeled ancilla, continuum reconstruction, physical-clock
 identification or publication acceptance is asserted.

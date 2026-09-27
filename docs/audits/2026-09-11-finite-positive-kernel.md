@@ -1003,5 +1003,6 @@ review retains all 316 authored declarations. Canonical extraction adds 406
 declarations with no prior removals or changes, including one generated equation
 from the unchanged adaptive-map dependency. The substrate gate passes: 70 of 89
 checks pass, with the same 19 paper-corpus failures and 1146 warnings as the
-preceding cycle. Final paired builds and independent cycle closure remain
-pending; this paragraph does not establish publication readiness.
+preceding cycle. Exact final controller builds pass at the reviewed inventory revision
+`8865dade`. Independent integrated review passes and root accepts the bounded
+implementation cycle locally. Publication readiness remains separate.
