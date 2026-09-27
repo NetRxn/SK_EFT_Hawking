@@ -902,3 +902,15 @@ effect bridge provide actual consumers. The unsplit suffix uses D_(p*p), a
 distinct effect. Six-event pilots precede arbitrary-depth induction; implementation
 requires cycle acceptance, a fresh lease and original-proof review. No arbitrary
 schedule-deletion consistency is proposed.
+
+## Empty-extension computation rules
+
+In `FinitePauliHistoryConsistency.lean`, `extendPull_identity` records the
+empty-list branch of the recursive coefficient pullback: applying no outer
+extensions returns the input coefficient function by definition. Likewise,
+`extensionMap_identity` records the identity branch of the recursively defined
+quotient map. These are computation rules, not independent positivity or
+compatibility results. The substantive extension results are
+`extensionMap_coordinates`, `historySynthesis_extendPull` and
+`history_pairing_extendPull`, which consume the proved outer-map identities.
+The computation rules must not be cited as deriving those results.

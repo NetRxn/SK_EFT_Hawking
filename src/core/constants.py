@@ -3221,6 +3221,16 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
     # Populated by the 2026-06-13 W2 triage of the proxy_body_audit flagged set.
 
     # ---- definitional records (legitimate trivial-by-design) ----
+    'extendPull_identity': {
+        'lean_name': 'extendPull_identity', 'module': 'FinitePauliHistoryConsistency',
+        'category': 'definitional',
+        'reason': 'Records the empty-list equation of the recursive coefficient pullback: '
+                  'extendPull rs [] F is defined to be F. This is a computation rule, '
+                  'not a derivation of history-kernel positivity or extension compatibility.',
+        'discloses': 'docs/audits/2026-09-11-finite-positive-kernel.md '
+                     'section Empty-extension computation rules; substantive preservation '
+                     'is proved by historySynthesis_extendPull and history_pairing_extendPull.',
+    },
     'extBordismBridge_hypotheses_are_vacuous': {
         'lean_name': 'extBordismBridge_hypotheses_are_vacuous', 'module': 'ExtBordismBridge',
         'category': 'definitional',
