@@ -962,12 +962,46 @@ and obstructions remain unchanged. D9's generated closure retains the same
 638 declarations and 494 theorems, while module attribution changes its module
 count from 73 to 74. This is generated accounting, not publication acceptance.
 
-The next reviewed recursive-process contract targets a positive remainder for
-actual independently mixed evolution and instrument maps, with changed-input
-control and explicit branch-action realizations. Zero-rate mixtures may have
-different stored Kraus counts, so record equality is not assumed. The next field
-contract targets one faithful nontracial qubit state and a normalized six-outcome
-instrument whose actual four-event kernel has a square-root-weighted reflection
-Gram form. It includes failure witnesses for naive state substitution and the
-old one-sided metric. Both contracts require original-evidence pilot review and
-fresh controller admission after cycle closure; neither is implemented here.
+## Mixture survival and nontracial reflection
+
+`QuantumNetwork/FiniteAdaptiveMixtureSurvival.lean` constructs actual normalized
+branch realizations for independently mixed evolution and instruments, including
+the cross term. The positive remainder has mass `(1-w)*trace(X)` and gives the
+changed-input bound `w*traceDist(X,Y)+1-w`. History and terminal-memory bounds
+follow for the modeled joint system. Exact retained-memory distance `p+q-p*q`
+can exceed history variation q while improving the additive bound. The accepted
+adaptive feedback process attains `1-(1-p)^m`; a coherent SWAP witness excludes
+a positive ideal component of every positive weight. This is a finite mixture
+mechanism, with no diamond-norm or physical-clock conclusion.
+
+`FiniteNontracialPauliReflection.lean` uses the faithful density
+`diag(16/25,9/25)` and an actual normalized six-outcome replacement instrument.
+Its effects equal the Pauli effects, while selected output states differ.
+Actual state and observable reset actions remain distinct. Chronological
+four-event weights have a full complex Gram identity for the square-root-weighted
+form, realized by the Q-sandwich Hilbert-Schmidt feature. The actual null quotient
+is isometric to its matrix range: dimension four for positive central retention,
+and the one-dimensional R line at complete central reset. No side retention
+is inverted.
+
+The literal two-event outer marginal and centered Pauli modes consume the same
+actual process. Their squared norms are `1`, `24*p^2/25`, `24*p^2/25`, and
+`576*p^2/625`; the complex X+iY mode has squared norm `48*p^2/25`. Complete side
+reset retains the positive X witness `6/25` at central retention one half.
+The nonzero commutator is a matrix-image statement, not quotient multiplication.
+The original instrument at the new state has unequal reversed probabilities
+`1/36` and `8/225`; the old one-sided metric gives 1 instead of `24/25`.
+These guards delimit the replacement instrument and metric.
+
+Independent source and original-evidence reviews pass for both modules. The
+recursive source has 103 authored declarations and 198 audited namespace names;
+the field source has 213 authored declarations and 293 audited namespace names.
+Two field scanner notices are the local identity-weighted Hilbert-Schmidt
+instances used by the explicit isometry proof; they are retained and reviewed.
+The aggregate controller build passes at `8124e489`. Independent inventory
+review retains all 316 authored declarations. Canonical extraction adds 406
+declarations with no prior removals or changes, including one generated equation
+from the unchanged adaptive-map dependency. The substrate gate passes: 70 of 89
+checks pass, with the same 19 paper-corpus failures and 1146 warnings as the
+preceding cycle. Final paired builds and independent cycle closure remain
+pending; this paragraph does not establish publication readiness.

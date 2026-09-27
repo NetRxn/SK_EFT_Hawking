@@ -91,12 +91,25 @@ increment is locally accepted at `c00e8974` after the aggregate build, inventory
 reconciliation, independent integrated review and substrate gate. See
 `docs/audits/2026-09-11-finite-positive-kernel.md` for scope and gate details.
 
-The next reviewed recursive contract targets positive remainders for independently
-mixed evolution and instrument maps, including changed inputs and actual
-branch-action realizations when zero-rate mixtures have different Kraus counts.
-Exact feedback consumers and a coherent-channel counterexample are required.
-The next field contract targets one faithful nontracial stationary instrument
-and its actual four-event reflection identity with the correct weighted metric.
-Both remain unimplemented contracts, with original-evidence pilot gates and
-fresh controller admission. No diamond norm, postselection, unmodeled ancilla,
-continuum reconstruction or physical-clock claim is included.
+`FiniteAdaptiveMixtureSurvival.lean` now constructs positive remainders for
+actual independently mixed evolution and instrument maps. Its changed-input
+bound is `w*traceDist(X,Y) + 1-w`, where w is the product of the surviving
+ideal weights. The retained-memory consumer has exact distance `p+q-p*q`,
+while history variation is q; arbitrary-depth feedback attains `1-(1-p)^m`.
+A coherent-channel witness excludes a positive ideal component for every
+positive weight, keeping the mixture mechanism's scope explicit.
+
+`FiniteNontracialPauliReflection.lean` now supplies the fixed faithful qubit
+state, actual normalized replacement instrument and four-event reflection
+identity. Its quotient uses the Q-sandwich Hilbert-Schmidt feature, with rank
+four at positive central retention and rank one at complete central reset.
+Literal outer marginals, centered complex modes and the two original failure
+witnesses are proved. It does not extend arbitrary-depth tracial consistency
+to arbitrary nontracial schedules.
+
+Both sources pass independent source/evidence review and are included in the
+aggregate build at `8124e489`. Independent inventory reconciliation and the
+substrate gate pass; existing paper-corpus failures remain. Final paired builds
+and independent cycle closure remain pending. No diamond norm,
+postselection, unmodeled ancilla, continuum reconstruction, physical-clock
+identification or publication acceptance is asserted.
