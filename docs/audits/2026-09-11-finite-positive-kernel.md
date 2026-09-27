@@ -809,3 +809,46 @@ program targets quantitative robustness for outcome-dependent feedback, with
 later preparation-error bounds for these reflected histories. Those proposals
 are owned by `docs/dev-loops/MemoryProcesses/PROCESS_CLOCK_PROGRAM.md`; neither
 is included in this accepted result or its counts.
+
+
+### Full Pauli observable reconstruction — accepted locally
+
+`FinitePauliInstrumentReconstruction.lean` defines its kernel from the actual
+six-outcome Pauli instrument applied twice to the maximally mixed state. Its
+weighted Gram identity yields an exact null criterion and a quotient isometric
+to the full faithful complex two-by-two observable space, of complex dimension
+four. Explicit nonzero null coefficients, four orthonormal spanning modes and
+a nonzero matrix-image commutator are proved. Reversing the positive-X and
+positive-Z interventions leaves their probabilities at 1/36 but changes the
+actual unnormalized output state. This establishes neither coefficientwise
+quotient multiplication nor generic multitime positivity.
+
+Source `cddda608` has 81 authored declarations and 113 exhaustively audited
+namespace names. Alongside the separately owned adaptive-process source
+`8366614b` (45 authored, 60 audited), both sources remain unchanged after
+independent review and integration. At reviewed `6ee9155f`, the aggregate build
+passes. Canonical extraction adds 155 records to reach 43,741: 99 Pauli and
+56 adaptive records. All 126 authored names are retained; all additions have
+ordinary axioms and no dependency timeout. Accounting is 173+1-19=155. The
+extra record is the generated congruence helper for the existing memory Step
+constructor, emitted in the adaptive module. One prior record, `Fin.divNat.eq_1`,
+changes only its recorded module; its type and dependency fields are unchanged.
+No prior record is removed.
+
+The derived atlas adds 88 proved, kernel-pure nodes and changes only frontier
+impact on 35 prior nodes; unknowns, edges and obstructions remain unchanged.
+The substrate gate passes in 437.8 seconds with 70/89 checks, 1,147 warnings and
+the same 19 paper-corpus failures. The additional warning reports stale paper
+tables, which the gate regenerates and verifies fresh. Independent integrated
+review reconciles the complete source, original proof evidence, inventories,
+atlas and gate. Root accepts this finite mathematical cycle locally; closing
+documentation receives a separate consistency review. Publication remains separate.
+
+The next independently reviewed field contract is an actual four-event
+reflected Pauli process with symmetric depolarizing evolution. Required pilots
+prove chronological history-to-Gram factorization and the complex synthesis
+inverse before quotient expansion. Positive central retention must give rank
+four; complete reset must give rank one. Genuinely two-time positive and null
+cylinders, noncommuting modes and exact probability witnesses are required.
+This is a proposed next implementation, separate from preparation-error bounds
+owned by `docs/dev-loops/MemoryProcesses/PROCESS_CLOCK_PROGRAM.md`.
