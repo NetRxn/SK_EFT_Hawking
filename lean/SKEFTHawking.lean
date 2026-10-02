@@ -5291,6 +5291,8 @@ import SKEFTHawking.FiniteGibbsReflectedHistory
 import SKEFTHawking.FiniteGibbsUnitalHistory
 import SKEFTHawking.FiniteGibbsCylinderHistory
 import SKEFTHawking.FiniteGibbsCylinderShift
+import SKEFTHawking.FiniteNontracialReflectionDynamics
+import SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutDiscrimination
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
