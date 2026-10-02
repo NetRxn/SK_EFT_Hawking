@@ -1006,3 +1006,43 @@ checks pass, with the same 19 paper-corpus failures and 1146 warnings as the
 preceding cycle. Exact final controller builds pass at the reviewed inventory revision
 `8865dade`. Independent integrated review passes and root accepts the bounded
 implementation cycle locally. Publication readiness remains separate.
+
+## Nontracial transfer dynamics and attained adaptive readout
+
+`FiniteNontracialReflectionDynamics.lean` derives transfer dynamics for the
+accepted faithful qubit state and its actual four-event reflected process.
+The weighted feature intertwines the actual state and observable maps. The
+complex Gram identity and half-time positivity descend through the original
+null quotient, including complete central reset without division. Conditional
+projections define positive self-adjoint contractive transfer operators and a
+continuous two-rate semigroup. The positive dissipation generator agrees with
+the modeled finite GKSL evolution; centered complex modes, the sharp contraction
+norm and endpoint limits consume the same dynamics. These are finite weighted
+quotient results, with no continuum reconstruction or physical mass-gap claim.
+
+`QuantumNetwork/FiniteAdaptiveReadoutDiscrimination.lean` proves the attained
+equal-prior error `(1-distance)/2` for normalized joint history/terminal-state
+families and all history-dependent binary effects. Actual normalized readouts
+realize the optimum, including impossible branches and complex examples. A
+depth-two process pair has identical history laws and identical unconditional
+terminal states, while its retained joint history and memory permit zero error.
+A fixed physical measurement with classical history relabeling already suffices
+for that example; it does not prove that adaptive physical measurement is needed.
+
+Actual independent-mixture consumers retain universal history-only and
+joint-memory optima. At the quarter-rate witness, the joint optimum is `9/32`
+while the optimum over every randomized history classifier is `3/8`. The actual
+arbitrary-depth feedback pair attains error `(1-p)^m/2`, with zero depth and both
+rate endpoints proved. All rates remain dimensionless finite-model parameters;
+no postselection, quantum advantage or physical-clock identification follows.
+
+Both complete sources and their original evidence pass independent review.
+Normal source integration and the authoritative aggregate build pass at
+`68a07163`; both separate compiled modules retain their reviewed source hashes.
+Root canonical inventory reconciliation preserves every prior record and
+explicitly separates generated equation and congruence rows from authored
+proofs. Independent integrated source and inventory review pass. The quiet-state
+full substrate gate passes with its paper-corpus failures reported. The canonical
+Python suite reports 7,273 passed and 32 failed; the all-tests obligation and
+complete-pipeline acceptance remain open. These component results do not accept
+the paper corpus or publication prerequisites.

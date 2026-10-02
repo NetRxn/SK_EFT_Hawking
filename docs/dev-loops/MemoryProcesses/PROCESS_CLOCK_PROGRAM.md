@@ -114,3 +114,37 @@ Independent integrated review passes and root accepts the bounded
 implementation cycle locally. No diamond norm,
 postselection, unmodeled ancilla, continuum reconstruction, physical-clock
 identification or publication acceptance is asserted.
+
+## Attained readout discrimination and retained-memory advantage
+
+`QuantumNetwork/FiniteAdaptiveReadoutDiscrimination.lean` now supplies the
+attained binary discrimination theorem for the actual joint history and
+terminal-memory branch families. For equal priors, the optimum over every
+history-dependent binary effect is `(1-distance)/2`. Realized normalized
+readouts include zero-probability branches, unequal history masses and complex
+state examples. Positivity and total normalization are derived for the actual
+finite process tree.
+
+The depth-two correlation witness has equal history distributions and equal
+unconditional terminal states. History-only classifiers and a constant terminal
+effect have error one half, while a joint history/memory readout has error zero.
+Its physical computational-basis measurement can be fixed, with history used
+only to relabel the classical result. The witness certifies retained correlation
+and does not establish a need for adaptive physical measurements.
+
+Actual mixture consumers give attained joint and universal randomized
+history-only optima, including the strict quarter-rate gap `9/32 < 3/8`.
+Arbitrary-depth noisy feedback attains error `(1-p)^m/2`; zero depth, zero noise
+and full noise endpoints are included. This is an equal-prior finite-model
+readout result with explicit dimensionless rates, not a physical-clock or
+quantum-advantage claim.
+
+Independent complete source and original-evidence review pass. The normal
+source integration and authoritative aggregate build at `68a07163` include the
+separate readout module. Root canonical reconciliation and independent integrated
+source/inventory review pass. Quiet-state full substrate validation passes with
+paper-corpus failures reported. The canonical Python suite has 7,273 passed and
+32 failed; all-tests and complete-pipeline acceptance remain open. See
+`docs/audits/2026-09-11-finite-positive-kernel.md` for the combined finite-field
+integration and evidence boundary. D9 absorption and publication prerequisites
+remain unchanged.
