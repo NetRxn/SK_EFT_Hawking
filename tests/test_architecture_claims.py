@@ -562,3 +562,14 @@ def test_the_operator_guide_is_client_neutral_and_carries_the_persistence_recipe
     assert "LEAN_SLOT_SKIP_HOST_LIMITS" in text
     assert not Path("docs/dev-loops/CODEX_LEAN_SLOTS.md").exists(), (
         "promotion must delete the original in the same commit")
+
+
+def test_paper_scope_runs_numeric_count_literal_guard():
+    """Draft-only verification must exercise the real count-literal detector."""
+    import verify_scope
+    for path in ("papers/D7/paper_draft.tex",
+                 "papers/paper1_first_order/paper_draft.tex"):
+        steps, _ = verify_scope._plan([path])
+        checks = [argv[i + 1] for _, argv in steps
+                  for i, arg in enumerate(argv[:-1]) if arg == "--check"]
+        assert checks.count("count_literals") == 1, (path, steps)

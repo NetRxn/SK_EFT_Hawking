@@ -15,9 +15,9 @@ disposition table); three were not, and are fixed here:
   are now RATCHETS: existing debt frozen, any NEW literal fails.
 
 Each test below runs BOTH directions, per D5: fires on a seeded defect, silent on
-correct data. The literal tests drive synthetic drafts through the real check
-rather than asserting on the live corpus, so they cannot be broken by remediation
-legitimately changing the counts.
+correct data. The fixture tests drive synthetic drafts through the real check. The count-literal
+production seed also exercises the current zero-headroom guard on a real draft and
+verifies exact restoration through seed_journal.
 """
 from __future__ import annotations
 
@@ -76,6 +76,38 @@ class TestCountLiteralRatchet:
         monkeypatch.setitem(__import__("src.core.constants", fromlist=["x"]).__dict__,
                             "COUNT_LITERAL_CEILING", 0)
         assert pp.check_count_literals().passed is True
+
+
+    def test_PRODUCTION_SEEDED_one_more_count_literal_fails_on_real_draft(self):
+        """The configured guard must detect new debt in its actual input corpus."""
+        import re
+        from seed_journal import seeded_mutation
+        from src.core.constants import COUNT_LITERAL_CEILING
+
+        assert _H.PAPERS_DIR.resolve() == (SK_ROOT / "papers").resolve()
+        draft = _H.PAPERS_DIR / "D6" / "paper_draft.tex"
+        original = draft.read_bytes()
+        before = pp.check_count_literals()
+        summary = next(d for d in before.details if d.name == "summary")
+        total = int(re.match(r"(\d+) count-literal", summary.message).group(1))
+        row = next(d for d in before.details if d.name == "D6")
+        match = re.search(r"(\d+) count-literal matches", row.message)
+        draft_count = int(match.group(1)) if match else 0
+        assert before.measured and before.passed and total == COUNT_LITERAL_CEILING, (
+            "precondition: the real numeric-count guard is green with no headroom")
+
+        with seeded_mutation(draft, lambda t: t + "\n99 theorems.\n",
+                             reason="prove one new numeric count trips the real guard"):
+            seeded = pp.check_count_literals()
+            summary = next(d for d in seeded.details if d.name == "summary")
+            row = next(d for d in seeded.details if d.name == "D6")
+            assert not seeded.passed and not summary.passed
+            assert summary.message.startswith(f"{total + 1} count-literal")
+            assert "EXCEEDS by 1" in summary.message
+            assert int(re.search(r"(\d+) count-literal matches", row.message).group(1)) == draft_count + 1
+            assert any(d.name == "ratchet" and not d.passed for d in seeded.details)
+        assert draft.read_bytes() == original, "journal must restore exact draft bytes"
+        assert pp.check_count_literals().passed, "restored real guard must be green"
 
 
 class TestNumericalLiteralRatchet:

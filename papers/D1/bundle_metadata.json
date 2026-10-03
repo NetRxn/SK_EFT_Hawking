@@ -153,7 +153,7 @@
     },
     {
       "name": "SKEFTHawking.QuasiOneDReduction.quasi1D_validity_bound",
-      "claims": "§7.1 — the algebraic-envelope bound on the off-diagonal corrections (<= 1.8% at the Dean device parameters)",
+      "claims": "Section 7.1: conditional addition of supplied off-diagonal error envelopes. For real errors and parameters with omega_perp > 0, W > 0 and L > 0, assume |delta_kappa_over_kappa| <= (l_ee/W)^2 and |delta_Gamma_over_Gamma_evan| <= (omega/omega_perp)^2 * exp(-2*pi*L/W). The theorem concludes that the sum of these absolute errors is at most the sum of those envelopes. Both physical bounds are inputs; the Lean proof is their algebraic addition. The Dean-device numerical estimate is a separate parameter evaluation in the draft, not a numerical conclusion or a derivation of either physical envelope by this theorem.",
       "declared": "2026-08-07"
     },
     {

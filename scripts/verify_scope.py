@@ -33,7 +33,8 @@ WHAT DECIDES SCOPE — this table is DERIVED FROM `_plan()`, not written beside 
   docs/architecture/**     -> architecture_inventory_fresh
   docs/counts.*            -> counts_fresh
   papers/**                -> counts_fresh, the deterministic bundle gates,
-                              review_verify_is_one_command + spelled_out_census_figures
+                              review_verify_is_one_command + count_literals +
+                              spelled_out_census_figures
   .claude/plugins/**       -> plugin guards AND architecture_inventory_fresh, because
                               the census derives agents/hooks/commands from that tree
   everything else (*.md)   -> nothing mechanical; say so rather than imply coverage
@@ -166,6 +167,7 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
                        # edit is the way it goes red; the lean scope below re-runs the
                        # substrate checks that move its other input.
                        "--check", "apex_claims_not_vacuous",
+                       "--check", "count_literals",
                        "--check", "spelled_out_census_figures"]))
     if touched["lean"]:
         # NOT plain `lake build`: it leaves ExtractDeps.olean missing and breaks
