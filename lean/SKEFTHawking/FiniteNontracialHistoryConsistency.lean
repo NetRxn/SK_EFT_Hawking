@@ -1890,3 +1890,851 @@ theorem history_feature_null_iff (p : Gap) (rs : List Gap) (F : Labels rs → �
     simpa [NontracialPauliReflection.feature] using h
 
 end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix FiniteInterventionProcess NontracialPauliReflection FinitePositiveKernel
+open scoped BigOperators ComplexOrder InnerProductSpace
+
+theorem outerMap_surjective_positive (p q : Gap) (hp : 0<p.value) (rs : List Gap) :
+    Function.Surjective (outerMap p q rs) := by
+  intro z
+  refine ⟨(historyCoordinateEquiv p hp rs).symm (historyCoordinates p (rs++[q]) z),?_⟩
+  apply historyCoordinates_injective p (rs++[q])
+  rw [outerMap_coordinates]
+  exact (historyCoordinateEquiv p hp rs).apply_symm_apply _
+
+theorem outerMap_surjective_reset (p q : Gap) (hp : p.value=0) (rs : List Gap) :
+    Function.Surjective (outerMap p q rs) := by
+  intro z
+  obtain ⟨F,rfl⟩ := mk_surjective _ _ z
+  refine ⟨historyMean (rs++[q]) F • mk _ _ (fun _ => 1),?_⟩
+  apply historyCoordinates_injective p (rs++[q])
+  rw [outerMap_coordinates,map_smul,historyCoordinates_mk,historyCoordinates_mk,
+    historySynthesis_constant,historySynthesis_reset p hp]
+
+abbrev extendSchedule := PauliHistoryConsistency.extendSchedule
+abbrev extendPull := PauliHistoryConsistency.extendPull
+
+def extensionMap (p : Gap) (rs : List Gap) : (qs : List Gap) →
+    HistorySpace p rs →ₗᵢ[ℂ] HistorySpace p (extendSchedule rs qs)
+  | [] => LinearIsometry.id (R := ℂ) (E := HistorySpace p rs)
+  | q::qs => (extensionMap p (rs++[q]) qs).comp (outerMap p q rs)
+
+theorem extensionMap_mk (p : Gap) (rs qs : List Gap) (F : Labels rs → ℂ) :
+    extensionMap p rs qs (mk _ _ F)=mk _ _ (extendPull rs qs F) := by
+  induction qs generalizing rs with
+  | nil => rfl
+  | cons q qs ih =>
+    change extensionMap p (rs++[q]) qs (outerMap p q rs (mk _ _ F))=_
+    rw [outerMap_mk,ih]
+    rfl
+
+theorem extensionMap_coordinates (p : Gap) (rs qs : List Gap) (z : HistorySpace p rs) :
+    historyCoordinates p (extendSchedule rs qs) (extensionMap p rs qs z)=historyCoordinates p rs z := by
+  induction qs generalizing rs with
+  | nil => rfl
+  | cons q qs ih =>
+    change historyCoordinates p (extendSchedule (rs++[q]) qs)
+      (extensionMap p (rs++[q]) qs (outerMap p q rs z))=_
+    rw [ih,outerMap_coordinates]
+
+theorem extensionMap_identity (p : Gap) (rs : List Gap) :
+    extensionMap p rs []=LinearIsometry.id (R := ℂ) (E := HistorySpace p rs) := rfl
+
+theorem extendSchedule_composition (rs as bs : List Gap) :
+    extendSchedule rs (as++bs)=extendSchedule (extendSchedule rs as) bs := by
+  exact PauliHistoryConsistency.extendSchedule_composition rs as bs
+
+/-- The necessary dependent transport only changes equal schedule indices. -/
+def scheduleTransport (p : Gap) {rs ss : List Gap} (h : rs=ss) : HistorySpace p rs →ₗᵢ[ℂ] HistorySpace p ss := by
+  subst ss
+  exact LinearIsometry.id (R := ℂ) (E := HistorySpace p rs)
+
+theorem scheduleTransport_coordinates (p : Gap) {rs ss : List Gap} (h : rs=ss) (z : HistorySpace p rs) :
+    historyCoordinates p ss (scheduleTransport p h z)=historyCoordinates p rs z := by
+  subst ss
+  rfl
+
+/-- Ordered composition, with the target schedule transport displayed. -/
+theorem extensionMap_composition (p : Gap) (rs as bs : List Gap) (z : HistorySpace p rs) :
+    scheduleTransport p (extendSchedule_composition rs as bs) (extensionMap p rs (as++bs) z)=
+      extensionMap p (extendSchedule rs as) bs (extensionMap p rs as z) := by
+  apply historyCoordinates_injective p (extendSchedule (extendSchedule rs as) bs)
+  rw [scheduleTransport_coordinates,extensionMap_coordinates,extensionMap_coordinates,extensionMap_coordinates]
+
+theorem outerMap_surjective (p q : Gap) (rs : List Gap) : Function.Surjective (outerMap p q rs) := by
+  rcases lt_or_eq_of_le p.nonnegative with hp|hp
+  · exact outerMap_surjective_positive p q hp rs
+  · exact outerMap_surjective_reset p q hp.symm rs
+
+theorem extensionMap_surjective (p : Gap) (rs qs : List Gap) : Function.Surjective (extensionMap p rs qs) := by
+  induction qs generalizing rs with
+  | nil => exact Function.surjective_id
+  | cons q qs ih => exact (ih (rs++[q])).comp (outerMap_surjective p q rs)
+
+
+/-- Literal ordered outer pullbacks preserve the nontracial matrix synthesis. -/
+theorem historySynthesis_extendPull (p : Gap) (rs qs : List Gap) (F : Labels rs → ℂ) :
+    historySynthesis p (extendSchedule rs qs) (extendPull rs qs F) = historySynthesis p rs F := by
+  have h := extensionMap_coordinates p rs qs (mk _ _ F)
+  rw [extensionMap_mk, historyCoordinates_mk, historyCoordinates_mk] at h
+  exact h
+
+/-- The complete mixed original pairing is unchanged under ordered outer extension. -/
+theorem history_pairing_extendPull (p : Gap) (rs qs : List Gap) (F G : Labels rs → ℂ) :
+    pairing (historyKernel p (extendSchedule rs qs)) (extendPull rs qs F) (extendPull rs qs G) =
+      pairing (historyKernel p rs) F G := by
+  rw [history_pairing, history_pairing, historySynthesis_extendPull, historySynthesis_extendPull]
+
+/-- Ordered outer extension also preserves the complete actual inserted mixed pairing. -/
+theorem history_inserted_pairing_extendPull (p : Gap) (rs qs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F G : Labels rs → ℂ) :
+    pairing (historyInsertedKernel p (extendSchedule rs qs) γ η t hγ hη ht)
+      (extendPull rs qs F) (extendPull rs qs G) =
+      pairing (historyInsertedKernel p rs γ η t hγ hη ht) F G := by
+  rw [history_inserted_pairing, history_inserted_pairing,
+    historySynthesis_extendPull, historySynthesis_extendPull]
+
+/-- Onto ordered extension yields an equivalence without any side-retention inverse. -/
+def extensionEquiv (p : Gap) (rs qs : List Gap) :
+    HistorySpace p rs ≃ₗᵢ[ℂ] HistorySpace p (extendSchedule rs qs) :=
+  LinearIsometryEquiv.ofSurjective (extensionMap p rs qs) (extensionMap_surjective p rs qs)
+
+theorem extensionEquiv_mk (p : Gap) (rs qs : List Gap) (F : Labels rs → ℂ) :
+    extensionEquiv p rs qs (mk _ _ F) = mk _ _ (extendPull rs qs F) :=
+  extensionMap_mk p rs qs F
+
+
+/-- Ordered extension preserves the faithful square-root-weighted matrix feature. -/
+theorem historyEmbeddingLinear_extension (p : Gap) (rs qs : List Gap) (z : HistorySpace p rs) :
+    historyEmbeddingLinear p (extendSchedule rs qs) (extensionMap p rs qs z) =
+      historyEmbeddingLinear p rs z := by
+  change NontracialPauliReflection.feature
+    (historyCoordinates p (extendSchedule rs qs) (extensionMap p rs qs z)) = _
+  rw [extensionMap_coordinates]
+  rfl
+
+section OrderedHilbertSchmidtEmbedding
+local instance : NormedAddCommGroup Mat2 := Matrix.toMatrixNormedAddCommGroup 1 Matrix.PosDef.one
+local instance : InnerProductSpace ℂ Mat2 := Matrix.toMatrixInnerProductSpace 1 Matrix.PosSemidef.one
+
+/-- The same literal equality holds for the actual Hilbert-Schmidt isometric feature. -/
+theorem historyEmbedding_extension (p : Gap) (rs qs : List Gap) (z : HistorySpace p rs) :
+    historyEmbedding p (extendSchedule rs qs) (extensionMap p rs qs z) =
+      historyEmbedding p rs z := historyEmbeddingLinear_extension p rs qs z
+end OrderedHilbertSchmidtEmbedding
+
+
+/-- Scalar coordinates of the actual observable action are fixed. -/
+theorem scalarPart_observable (γ η t : ℝ) (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t)
+    (A : Mat2) :
+    NontracialReflectionDynamics.scalarPart (NontracialReflectionDynamics.observable γ η t A) =
+      NontracialReflectionDynamics.scalarPart A := by
+  change NontracialReflectionDynamics.scalarLinear _ = _
+  rw [NontracialReflectionDynamics.observable_formula γ η t hγ hη ht]
+  change NontracialReflectionDynamics.scalarLinear
+    (NontracialReflectionDynamics.scalarPart A +
+      (Real.exp (-γ*t) : ℂ) • (NontracialReflectionDynamics.diagonalPart A - NontracialReflectionDynamics.scalarPart A) +
+      (Real.exp (-(γ+η)*t) : ℂ) • (A - NontracialReflectionDynamics.diagonalPart A)) = _
+  simp only [map_add, map_smul, map_sub]
+  change NontracialReflectionDynamics.scalarPart (NontracialReflectionDynamics.scalarPart A) +
+    (Real.exp (-γ*t) : ℂ) • (NontracialReflectionDynamics.scalarPart (NontracialReflectionDynamics.diagonalPart A) - NontracialReflectionDynamics.scalarPart (NontracialReflectionDynamics.scalarPart A)) +
+    (Real.exp (-(γ+η)*t) : ℂ) • (NontracialReflectionDynamics.scalarPart A - NontracialReflectionDynamics.scalarPart (NontracialReflectionDynamics.diagonalPart A)) = _
+  rw [NontracialReflectionDynamics.scalar_idempotent, NontracialReflectionDynamics.scalar_diagonal]
+  simp
+
+
+open NontracialReflectionDynamics
+
+/-- The diagonal sector of the actual observable action has its nonzero exponential. -/
+theorem diagonalPart_observable (γ η t : ℝ) (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t)
+    (A : Mat2) :
+    diagonalPart (observable γ η t A) = scalarPart A +
+      (Real.exp (-γ*t) : ℂ) • (diagonalPart A - scalarPart A) := by
+  change diagonalLinear _ = _
+  rw [observable_formula γ η t hγ hη ht]
+  change diagonalLinear (scalarPart A +
+    (Real.exp (-γ*t) : ℂ) • (diagonalPart A - scalarPart A) +
+    (Real.exp (-(γ+η)*t) : ℂ) • (A - diagonalPart A)) = _
+  simp only [map_add, map_smul, map_sub]
+  change diagonalPart (scalarPart A) +
+    (Real.exp (-γ*t) : ℂ) • (diagonalPart (diagonalPart A) - diagonalPart (scalarPart A)) +
+    (Real.exp (-(γ+η)*t) : ℂ) • (diagonalPart A - diagonalPart (diagonalPart A)) = _
+  rw [diagonal_scalar, diagonal_idempotent]
+  simp
+
+/-- Finite-time observable evolution preserves exactly the zero matrix. -/
+theorem observable_eq_zero_iff (γ η t : ℝ) (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t)
+    (A : Mat2) : observable γ η t A = 0 ↔ A = 0 := by
+  constructor
+  · intro ho
+    have hs0 : scalarPart (0 : Mat2) = 0 := map_zero scalarLinear
+    have hd0 : diagonalPart (0 : Mat2) = 0 := map_zero diagonalLinear
+    have hs : scalarPart A = 0 := by
+      have h := (scalarPart_observable γ η t hγ hη ht A).symm
+      simpa only [ho, hs0] using h
+    have ha : (Real.exp (-γ*t) : ℂ) ≠ 0 := by
+      exact_mod_cast Real.exp_ne_zero (-γ*t)
+    have hb : (Real.exp (-(γ+η)*t) : ℂ) ≠ 0 := by
+      exact_mod_cast Real.exp_ne_zero (-(γ+η)*t)
+    have hd : diagonalPart A = 0 := by
+      have h := (diagonalPart_observable γ η t hγ hη ht A).symm
+      rw [ho, hd0, hs] at h
+      have hh : (Real.exp (-γ*t) : ℂ) • diagonalPart A = 0 := by simpa using h
+      exact (smul_eq_zero.mp hh).resolve_left ha
+    rw [observable_formula γ η t hγ hη ht] at ho
+    change scalarPart A + (Real.exp (-γ*t) : ℂ) • (diagonalPart A - scalarPart A) +
+      (Real.exp (-(γ+η)*t) : ℂ) • (A - diagonalPart A) = 0 at ho
+    rw [hs, hd] at ho
+    have hh : (Real.exp (-(γ+η)*t) : ℂ) • A = 0 := by simpa using ho
+    exact (smul_eq_zero.mp hh).resolve_left hb
+  · intro h
+    subst A
+    exact map_zero (observableLinear γ η t)
+
+/-- All scalar, diagonal and off-diagonal coordinates survive each finite physical time. -/
+theorem observable_injective (γ η t : ℝ) (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    Function.Injective (observable γ η t) := by
+  intro A B h
+  apply sub_eq_zero.mp
+  apply (observable_eq_zero_iff γ η t hγ hη ht (A-B)).mp
+  change observableLinear γ η t (A-B) = 0
+  rw [map_sub]
+  exact sub_eq_zero.mpr h
+
+
+/-- The actual inserted mixed form equals the two half-time observable features. -/
+theorem history_inserted_pairing_half (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F G : Labels rs → ℂ) :
+    pairing (historyInsertedKernel p rs γ η t hγ hη ht) F G =
+      form (observable γ η (t/2) (historySynthesis p rs F))
+        (observable γ η (t/2) (historySynthesis p rs G)) := by
+  rw [history_inserted_pairing, form_half_time γ η t hγ hη ht]
+
+/-- The actual inserted zero form is precisely the original synthesis null condition. -/
+theorem history_inserted_pairing_zero_iff (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    pairing (historyInsertedKernel p rs γ η t hγ hη ht) F F = 0 ↔
+      historySynthesis p rs F = 0 := by
+  rw [history_inserted_pairing_half, form_self_zero_iff,
+    observable_eq_zero_iff γ η (t/2) hγ hη (by linarith)]
+
+/-- The inserted quotient kills exactly the same literal coefficient vectors. -/
+theorem history_inserted_null_iff (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    mk (historyInsertedKernel p rs γ η t hγ hη ht)
+      (history_inserted_posSemidef p rs γ η t hγ hη ht) F = 0 ↔
+      historySynthesis p rs F = 0 := by
+  rw [mk_eq_zero_iff, history_inserted_pairing_zero_iff]
+
+/-- Equality concerns literal coefficient null submodules, not equality of metrics. -/
+theorem history_inserted_nullSpace (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    nullSpace (historyInsertedKernel p rs γ η t hγ hη ht)
+      (history_inserted_posSemidef p rs γ η t hγ hη ht) =
+      nullSpace (historyKernel p rs) (history_posSemidef p rs) := by
+  ext F
+  exact ((mem_nullSpace_iff (historyInsertedKernel p rs γ η t hγ hη ht) (history_inserted_posSemidef p rs γ η t hγ hη ht) F).trans (history_inserted_pairing_zero_iff p rs γ η t hγ hη ht F)).trans
+    (((mem_nullSpace_iff (historyKernel p rs) (history_posSemidef p rs) F).trans (by rw [history_pairing, form_self_zero_iff])).symm)
+
+
+/-- The actual finite-time inserted kernel keeps its own induced quotient norm. -/
+abbrev InsertedHistorySpace (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :=
+  Space (historyInsertedKernel p rs γ η t hγ hη ht)
+    (history_inserted_posSemidef p rs γ η t hγ hη ht)
+
+/-- Descend the literal identity of coefficients from the original kernel to the inserted one. -/
+def historyToInserted (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    HistorySpace p rs →ₗ[ℂ] InsertedHistorySpace p rs γ η t hγ hη ht :=
+  ((nullSpace (historyKernel p rs) (history_posSemidef p rs)).liftQ
+    (mkLinear (historyInsertedKernel p rs γ η t hγ hη ht)
+      (history_inserted_posSemidef p rs γ η t hγ hη ht)) (by
+      intro F hF
+      apply (history_inserted_null_iff p rs γ η t hγ hη ht F).mpr
+      apply (history_null_iff p rs F).mp
+      rw [mk_eq_zero_iff]
+      exact (mem_nullSpace_iff _ _ F).mp hF)).comp
+    (quotientEquiv (historyKernel p rs) (history_posSemidef p rs)).symm.toLinearMap
+
+theorem historyToInserted_mk (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    historyToInserted p rs γ η t hγ hη ht (mk _ _ F) =
+      mk (historyInsertedKernel p rs γ η t hγ hη ht)
+        (history_inserted_posSemidef p rs γ η t hγ hη ht) F := by
+  rw [← quotientEquiv_mk (history_posSemidef p rs) F]
+  simp only [historyToInserted, LinearMap.comp_apply, LinearEquiv.coe_coe,
+    LinearEquiv.symm_apply_apply, Submodule.liftQ_apply]
+  rfl
+
+/-- The inverse descended map is the same literal coefficient identity. -/
+def insertedToHistory (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    InsertedHistorySpace p rs γ η t hγ hη ht →ₗ[ℂ] HistorySpace p rs :=
+  ((nullSpace (historyInsertedKernel p rs γ η t hγ hη ht)
+      (history_inserted_posSemidef p rs γ η t hγ hη ht)).liftQ
+    (mkLinear (historyKernel p rs) (history_posSemidef p rs)) (by
+      intro F hF
+      apply (history_null_iff p rs F).mpr
+      apply (history_inserted_null_iff p rs γ η t hγ hη ht F).mp
+      rw [mk_eq_zero_iff]
+      exact (mem_nullSpace_iff _ _ F).mp hF)).comp
+    (quotientEquiv (historyInsertedKernel p rs γ η t hγ hη ht)
+      (history_inserted_posSemidef p rs γ η t hγ hη ht)).symm.toLinearMap
+
+theorem insertedToHistory_mk (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    insertedToHistory p rs γ η t hγ hη ht
+      (mk (historyInsertedKernel p rs γ η t hγ hη ht)
+        (history_inserted_posSemidef p rs γ η t hγ hη ht) F) = mk _ _ F := by
+  rw [← quotientEquiv_mk (history_inserted_posSemidef p rs γ η t hγ hη ht) F]
+  simp only [insertedToHistory, LinearMap.comp_apply, LinearEquiv.coe_coe,
+    LinearEquiv.symm_apply_apply, Submodule.liftQ_apply]
+  rfl
+
+/-- This preserves coefficient classes; it does not identify the two norms. -/
+def historyInsertedEquiv (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    HistorySpace p rs ≃ₗ[ℂ] InsertedHistorySpace p rs γ η t hγ hη ht where
+  toLinearMap := historyToInserted p rs γ η t hγ hη ht
+  invFun := insertedToHistory p rs γ η t hγ hη ht
+  left_inv z := by
+    obtain ⟨F,rfl⟩ := mk_surjective _ _ z
+    exact (congrArg (insertedToHistory p rs γ η t hγ hη ht)
+      (historyToInserted_mk p rs γ η t hγ hη ht F)).trans
+        (insertedToHistory_mk p rs γ η t hγ hη ht F)
+  right_inv z := by
+    obtain ⟨F,rfl⟩ := mk_surjective _ _ z
+    exact (congrArg (historyToInserted p rs γ η t hγ hη ht)
+      (insertedToHistory_mk p rs γ η t hγ hη ht F)).trans
+        (historyToInserted_mk p rs γ η t hγ hη ht F)
+
+theorem historyInsertedEquiv_mk (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    historyInsertedEquiv p rs γ η t hγ hη ht (mk _ _ F) =
+      mk (historyInsertedKernel p rs γ η t hγ hη ht)
+        (history_inserted_posSemidef p rs γ η t hγ hη ht) F :=
+  historyToInserted_mk p rs γ η t hγ hη ht F
+
+/-- At positive retention, finite physical time keeps the four complex coordinates. -/
+theorem history_inserted_finrank (p : Gap) (hp : 0 < p.value) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    Module.finrank ℂ (InsertedHistorySpace p rs γ η t hγ hη ht) = 4 := by
+  rw [← (historyInsertedEquiv p rs γ η t hγ hη ht).finrank_eq]
+  exact history_finrank p hp rs
+
+/-- At central reset, finite time keeps the one-dimensional constant coordinate line. -/
+theorem history_inserted_reset_finrank (p : Gap) (hp : p.value = 0) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    Module.finrank ℂ (InsertedHistorySpace p rs γ η t hγ hη ht) = 1 := by
+  rw [← (historyInsertedEquiv p rs γ η t hγ hη ht).finrank_eq]
+  exact history_reset_finrank p hp rs
+
+
+/-- Coordinates of an inserted class remain the literal original matrix synthesis. -/
+def insertedHistoryCoordinates (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    InsertedHistorySpace p rs γ η t hγ hη ht →ₗ[ℂ] Mat2 :=
+  (historyCoordinates p rs).comp (insertedToHistory p rs γ η t hγ hη ht)
+
+theorem insertedHistoryCoordinates_mk (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    insertedHistoryCoordinates p rs γ η t hγ hη ht (mk _ _ F) =
+      historySynthesis p rs F := by
+  exact (congrArg (historyCoordinates p rs)
+    (insertedToHistory_mk p rs γ η t hγ hη ht F)).trans (historyCoordinates_mk p rs F)
+
+/-- The actual inserted quotient inner product has the actual two half-time features. -/
+theorem insertedHistoryCoordinates_inner (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t)
+    (z w : InsertedHistorySpace p rs γ η t hγ hη ht) :
+    ⟪z,w⟫_ℂ = form (observable γ η (t/2) (insertedHistoryCoordinates p rs γ η t hγ hη ht z))
+      (observable γ η (t/2) (insertedHistoryCoordinates p rs γ η t hγ hη ht w)) := by
+  obtain ⟨F,rfl⟩ := mk_surjective _ _ z
+  obtain ⟨G,rfl⟩ := mk_surjective _ _ w
+  rw [inner_mk, insertedHistoryCoordinates_mk, insertedHistoryCoordinates_mk]
+  exact history_inserted_pairing_half p rs γ η t hγ hη ht F G
+
+/-- The inserted feature is composed from actual observable and weighted-feature linear maps. -/
+def insertedHistoryEmbeddingLinear (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    InsertedHistorySpace p rs γ η t hγ hη ht →ₗ[ℂ] Mat2 :=
+  featureLinear.comp ((observableLinear γ η (t/2)).comp
+    (insertedHistoryCoordinates p rs γ η t hγ hη ht))
+
+section InsertedHilbertSchmidtEmbedding
+local instance : NormedAddCommGroup Mat2 := Matrix.toMatrixNormedAddCommGroup 1 Matrix.PosDef.one
+local instance : InnerProductSpace ℂ Mat2 := Matrix.toMatrixInnerProductSpace 1 Matrix.PosSemidef.one
+
+/-- Isometry into the Hilbert-Schmidt feature metric is proved from the actual inserted pairing. -/
+def insertedHistoryEmbedding (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    InsertedHistorySpace p rs γ η t hγ hη ht →ₗᵢ[ℂ] Mat2 :=
+  (insertedHistoryEmbeddingLinear p rs γ η t hγ hη ht).isometryOfInner (by
+    intro z w
+    rw [insertedHistoryCoordinates_inner p rs γ η t hγ hη ht]
+    change (NontracialPauliReflection.feature
+      (observable γ η (t/2) (insertedHistoryCoordinates p rs γ η t hγ hη ht w)) * 1 *
+      (NontracialPauliReflection.feature
+        (observable γ η (t/2) (insertedHistoryCoordinates p rs γ η t hγ hη ht z)))ᴴ).trace = _
+    simpa using feature_gram
+      (observable γ η (t/2) (insertedHistoryCoordinates p rs γ η t hγ hη ht z))
+      (observable γ η (t/2) (insertedHistoryCoordinates p rs γ η t hγ hη ht w)))
+
+/-- Literal coefficient classes give the actual half-time feature, including central reset. -/
+theorem insertedHistoryEmbedding_mk (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    insertedHistoryEmbedding p rs γ η t hγ hη ht (mk _ _ F) =
+      NontracialPauliReflection.feature (observable γ η (t/2) (historySynthesis p rs F)) := by
+  change NontracialPauliReflection.feature
+    (observable γ η (t/2) (insertedHistoryCoordinates p rs γ η t hγ hη ht (mk _ _ F))) = _
+  rw [insertedHistoryCoordinates_mk]
+
+/-- The actual inserted norm is exactly the weighted half-time feature norm. -/
+theorem insertedHistory_norm_mk (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    ‖mk (historyInsertedKernel p rs γ η t hγ hη ht)
+      (history_inserted_posSemidef p rs γ η t hγ hη ht) F‖ =
+      ‖NontracialPauliReflection.feature (observable γ η (t/2) (historySynthesis p rs F))‖ := by
+  exact ((insertedHistoryEmbedding p rs γ η t hγ hη ht).norm_map (mk _ _ F)).symm.trans
+    (congrArg norm (insertedHistoryEmbedding_mk p rs γ η t hγ hη ht F))
+
+end InsertedHilbertSchmidtEmbedding
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped InnerProductSpace
+
+/-- The squared inserted norm comes from its actual chronological kernel pairing. -/
+theorem insertedHistory_norm_sq_pairing (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    ‖mk (historyInsertedKernel p rs γ η t hγ hη ht)
+      (history_inserted_posSemidef p rs γ η t hγ hη ht) F‖ ^ 2 =
+      (pairing (historyInsertedKernel p rs γ η t hγ hη ht) F F).re := by
+  rw [norm_sq_eq_re_inner (𝕜 := ℂ)]
+  change (⟪mk (historyInsertedKernel p rs γ η t hγ hη ht) (history_inserted_posSemidef p rs γ η t hγ hη ht) F, mk (historyInsertedKernel p rs γ η t hγ hη ht) (history_inserted_posSemidef p rs γ η t hγ hη ht) F⟫_ℂ).re = _
+  rw [inner_mk]
+
+/-- Exact finite-time squared norm in the faithful half-time observable coordinates. -/
+theorem insertedHistory_norm_sq_mk (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    ‖mk (historyInsertedKernel p rs γ η t hγ hη ht)
+      (history_inserted_posSemidef p rs γ η t hγ hη ht) F‖ ^ 2 =
+      (form (observable γ η (t/2) (historySynthesis p rs F))
+        (observable γ η (t/2) (historySynthesis p rs F))).re := by
+  rw [insertedHistory_norm_sq_pairing, history_inserted_pairing_half]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped BigOperators InnerProductSpace
+
+/-- The raw midpoint observable is synthesized before central retention acts. -/
+def historyRawSynthesisLinear (rs : List Gap) : (Labels rs → ℂ) →ₗ[ℂ] Mat2 where
+  toFun := historyRawSynthesis rs
+  map_add' F G := by simp [historyRawSynthesis, add_smul, Finset.sum_add_distrib]
+  map_smul' c F := by simp [historyRawSynthesis, Finset.smul_sum, smul_smul]
+
+/-- A literal inner coefficient has the same value at every outer continuation. -/
+def historyInnerPullLinear (rs : List Gap) : (Fin 6 → ℂ) →ₗ[ℂ] (Labels rs → ℂ) where
+  toFun F u := F u.1
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+
+/-- Division-free representative action: raw synthesis, actual observable, then Pauli coefficients. -/
+def historyRawObservableLinear (rs : List Gap) (γ η t : ℝ) :
+    (Labels rs → ℂ) →ₗ[ℂ] (Labels rs → ℂ) :=
+  (historyInnerPullLinear rs).comp (pauliCoefficients.comp
+    ((observableLinear γ η t).comp (historyRawSynthesisLinear rs)))
+
+/-- Every central retention, including reset, intertwines this actual representative action. -/
+theorem historyRawObservableLinear_synthesis (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    historySynthesis p rs (historyRawObservableLinear rs γ η t F) =
+      observable γ η t (historySynthesis p rs F) := by
+  change historySynthesis p rs (fun u => PauliInstrumentReconstruction.coefficients (observable γ η t (historyRawSynthesis rs F)) u.1) = _
+  rw [historySynthesis_inner, PauliInstrumentReconstruction.synthesis_coefficients, ← observable_Psi p.value γ η t hγ hη ht, history_synthesis_raw]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped InnerProductSpace
+
+/-- Actual representative observables preserve every original null class without division. -/
+theorem historyRawObservableLinear_nullPreserving (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    NullPreserving (history_posSemidef p rs) (historyRawObservableLinear rs γ η t) := by
+  intro F hF
+  have h0 : historySynthesis p rs F = 0 := by
+    have h := (mem_nullSpace_iff (historyKernel p rs) (history_posSemidef p rs) F).mp hF
+    rwa [history_pairing, form_self_zero_iff] at h
+  change historyRawObservableLinear rs γ η t F ∈ nullSpace (historyKernel p rs) (history_posSemidef p rs)
+  apply (mem_nullSpace_iff (historyKernel p rs) (history_posSemidef p rs) _).mpr
+  rw [history_pairing, form_self_zero_iff, historyRawObservableLinear_synthesis p rs γ η t hγ hη ht, h0]
+  change observableLinear γ η t 0 = 0
+  exact map_zero (observableLinear γ η t)
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped InnerProductSpace
+
+/-- Descend the constructed raw observable action on the original history quotient. -/
+def historyObservable (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) : HistorySpace p rs →ₗ[ℂ] HistorySpace p rs :=
+  descend (history_posSemidef p rs) (historyRawObservableLinear rs γ η t)
+    (historyRawObservableLinear_nullPreserving p rs γ η t hγ hη ht)
+
+/-- The descended action retains its actual raw coefficient representative. -/
+theorem historyObservable_mk (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (F : Labels rs → ℂ) :
+    historyObservable p rs γ η t hγ hη ht (mk (historyKernel p rs) (history_posSemidef p rs) F) =
+      mk (historyKernel p rs) (history_posSemidef p rs) (historyRawObservableLinear rs γ η t F) :=
+  descend_mk (history_posSemidef p rs) (historyRawObservableLinear rs γ η t)
+    (historyRawObservableLinear_nullPreserving p rs γ η t hγ hη ht) F
+
+/-- Coordinates are the actual finite matrix observable, also at central reset. -/
+theorem historyObservable_coordinates (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (z : HistorySpace p rs) :
+    historyCoordinates p rs (historyObservable p rs γ η t hγ hη ht z) =
+      observable γ η t (historyCoordinates p rs z) := by
+  obtain ⟨F,rfl⟩ := mk_surjective _ _ z
+  rw [historyObservable_mk, historyCoordinates_mk, historyCoordinates_mk,
+    historyRawObservableLinear_synthesis p rs γ η t hγ hη ht]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped ComplexOrder InnerProductSpace
+
+/-- Original quotient norms after the actual observable use its original weighted form. -/
+theorem historyObservable_norm_sq (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (z : HistorySpace p rs) :
+    ‖historyObservable p rs γ η t hγ hη ht z‖ ^ 2 =
+      (form (observable γ η t (historyCoordinates p rs z))
+        (observable γ η t (historyCoordinates p rs z))).re := by
+  rw [norm_sq_eq_re_inner (𝕜 := ℂ)]
+  change (⟪historyObservable p rs γ η t hγ hη ht z,
+    historyObservable p rs γ η t hγ hη ht z⟫_ℂ).re = _
+  rw [history_coordinates_inner, historyObservable_coordinates]
+
+section ObservableHilbertSchmidtNorm
+local instance : NormedAddCommGroup Mat2 := Matrix.toMatrixNormedAddCommGroup 1 Matrix.PosDef.one
+local instance : InnerProductSpace ℂ Mat2 := Matrix.toMatrixInnerProductSpace 1 Matrix.PosSemidef.one
+
+/-- This is the faithful weighted feature of the descended representative action. -/
+theorem historyObservable_embedding (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (z : HistorySpace p rs) :
+    historyEmbedding p rs (historyObservable p rs γ η t hγ hη ht z) =
+      NontracialPauliReflection.feature (observable γ η t (historyCoordinates p rs z)) := by
+  change NontracialPauliReflection.feature
+    (historyCoordinates p rs (historyObservable p rs γ η t hγ hη ht z)) = _
+  rw [historyObservable_coordinates]
+
+/-- Exact norm of the constructed action in the unchanged original quotient metric. -/
+theorem historyObservable_norm (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (z : HistorySpace p rs) :
+    ‖historyObservable p rs γ η t hγ hη ht z‖ =
+      ‖NontracialPauliReflection.feature (observable γ η t (historyCoordinates p rs z))‖ := by
+  exact ((historyEmbedding p rs).norm_map (historyObservable p rs γ η t hγ hη ht z)).symm.trans
+    (congrArg norm (historyObservable_embedding p rs γ η t hγ hη ht z))
+
+/-- The inserted metric equals the original metric after the actual half-time action. -/
+theorem history_inserted_norm_half_observable (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (z : HistorySpace p rs) :
+    ‖historyToInserted p rs γ η t hγ hη ht z‖ =
+      ‖historyObservable p rs γ η (t/2) hγ hη (by linarith) z‖ := by
+  obtain ⟨F,rfl⟩ := mk_surjective _ _ z
+  rw [historyToInserted_mk, insertedHistory_norm_mk, historyObservable_norm,
+    historyCoordinates_mk]
+
+end ObservableHilbertSchmidtNorm
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped ComplexOrder InnerProductSpace
+
+/-- Literal inner centered Pauli coefficients, constant over every outer label. -/
+def historyCenteredCoefficients (rs : List Gap) (a : Fin 3) (u : Labels rs) : ℂ :=
+  innerMode a (u.1, 0)
+
+/-- The actual non-Hermitian X+iY coefficients keep the accepted Y orientation. -/
+def historyComplexCoefficients (rs : List Gap) (u : Labels rs) : ℂ :=
+  complexMode (u.1, 0)
+
+/-- Outer marginalization identifies inner coefficients with the accepted two-event synthesis. -/
+theorem history_inner_reference_synthesis (p : Gap) (rs : List Gap) (F : Fin 6 → ℂ) :
+    historySynthesis p rs (fun u => F u.1) =
+      NontracialPauliReflection.synthesis p.value 0 (fun u => F u.1) := by
+  rw [historySynthesis_inner, NontracialPauliReflection.synthesis_inner]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped ComplexOrder InnerProductSpace
+
+/-- Literal centered coefficients synthesize independently of every side schedule. -/
+theorem historyCenteredCoefficients_synthesis (p : Gap) (rs : List Gap) (a : Fin 3) :
+    historySynthesis p rs (historyCenteredCoefficients rs a) = (p.value : ℂ) • modeMatrix a := by
+  exact (history_inner_reference_synthesis p rs (fun i => innerMode a (i, 0))).trans
+    (synthesis_innerMode p.value 0 a)
+
+/-- The X+iY representative has its actual complex, oriented matrix coordinate. -/
+theorem historyComplexCoefficients_synthesis (p : Gap) (rs : List Gap) :
+    historySynthesis p rs (historyComplexCoefficients rs) =
+      (p.value : ℂ) • (pauliX + Complex.I • pauliY) := by
+  exact (history_inner_reference_synthesis p rs (fun i => complexMode (i, 0))).trans
+    (synthesis_complexMode p.value 0)
+
+/-- The literal centered inner mode in the unchanged original history metric. -/
+def historyCenteredVector (p : Gap) (rs : List Gap) (a : Fin 3) : HistorySpace p rs :=
+  mk (historyKernel p rs) (history_posSemidef p rs) (historyCenteredCoefficients rs a)
+
+/-- The literal complex inner mode in the unchanged original history metric. -/
+def historyComplexVector (p : Gap) (rs : List Gap) : HistorySpace p rs :=
+  mk (historyKernel p rs) (history_posSemidef p rs) (historyComplexCoefficients rs)
+
+/-- Actual coordinates of the centered inner representative. -/
+theorem historyCenteredVector_coordinates (p : Gap) (rs : List Gap) (a : Fin 3) :
+    historyCoordinates p rs (historyCenteredVector p rs a) = (p.value : ℂ) • modeMatrix a := by
+  rw [historyCenteredVector, historyCoordinates_mk, historyCenteredCoefficients_synthesis]
+
+/-- Actual coordinates of the complex inner representative. -/
+theorem historyComplexVector_coordinates (p : Gap) (rs : List Gap) :
+    historyCoordinates p rs (historyComplexVector p rs) =
+      (p.value : ℂ) • (pauliX + Complex.I • pauliY) := by
+  rw [historyComplexVector, historyCoordinates_mk, historyComplexCoefficients_synthesis]
+
+/-- Original centered-mode norm, derived from the actual chronological kernel. -/
+theorem historyCenteredVector_norm_sq (p : Gap) (rs : List Gap) (a : Fin 3) :
+    ‖historyCenteredVector p rs a‖ ^ 2 = modeNorm a * p.value ^ 2 := by
+  rw [norm_sq_eq_re_inner (𝕜 := ℂ)]
+  change (⟪historyCenteredVector p rs a, historyCenteredVector p rs a⟫_ℂ).re = _
+  rw [history_coordinates_inner, historyCenteredVector_coordinates, form_smul, modeMatrix_form]
+  simp
+  ring
+
+/-- Original X+iY norm retains both complex off-diagonal sectors. -/
+theorem historyComplexVector_norm_sq (p : Gap) (rs : List Gap) :
+    ‖historyComplexVector p rs‖ ^ 2 = 48 * p.value ^ 2 / 25 := by
+  rw [norm_sq_eq_re_inner (𝕜 := ℂ)]
+  change (⟪historyComplexVector p rs, historyComplexVector p rs⟫_ℂ).re = _
+  rw [history_coordinates_inner, historyComplexVector_coordinates, form_smul, complex_mode_form]
+  simp
+  ring
+
+/-- The actual matrix observable acts with the longitudinal and transverse rates. -/
+theorem history_observable_modeMatrix (γ η t : ℝ) (hγ : 0 ≤ γ) (hη : 0 ≤ η)
+    (ht : 0 ≤ t) (a : Fin 3) :
+    observable γ η t (modeMatrix a) =
+      (Real.exp (-(if a = 2 then γ else γ + η) * t) : ℂ) • modeMatrix a := by
+  have h := congrArg (NontracialPauliReflection.coordinates 1 0
+      (by norm_num) (by norm_num) (by norm_num) (by norm_num))
+    (transfer_centered 1 0 (by norm_num) (by norm_num) (by norm_num) (by norm_num) γ η t a)
+  rw [transfer_coordinates 1 0 (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    γ η t hγ hη ht, centered_coordinates, map_smul, centered_coordinates] at h
+  simpa using h
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped ComplexOrder InnerProductSpace
+
+/-- Actual descended centered modes have their longitudinal or transverse eigenvalue. -/
+theorem historyObservable_centered (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (a : Fin 3) :
+    historyObservable p rs γ η t hγ hη ht (historyCenteredVector p rs a) =
+      (Real.exp (-(if a = 2 then γ else γ + η) * t) : ℂ) • historyCenteredVector p rs a := by
+  apply historyCoordinates_injective p rs
+  rw [historyObservable_coordinates, map_smul, historyCenteredVector_coordinates]
+  change observableLinear γ η t ((p.value : ℂ) • modeMatrix a) = _
+  rw [map_smul]
+  change (p.value : ℂ) • observable γ η t (modeMatrix a) = _
+  rw [history_observable_modeMatrix γ η t hγ hη ht]
+  module
+
+/-- The actual complex mode is X+iY, rather than a real pair substituted for it. -/
+theorem historyComplexVector_decomposition (p : Gap) (rs : List Gap) :
+    historyComplexVector p rs = historyCenteredVector p rs 0 +
+      Complex.I • historyCenteredVector p rs 1 := by
+  apply historyCoordinates_injective p rs
+  rw [map_add, map_smul, historyComplexVector_coordinates, historyCenteredVector_coordinates,
+    historyCenteredVector_coordinates]
+  change (p.value : ℂ) • (pauliX + Complex.I • pauliY) =
+    (p.value : ℂ) • pauliX + Complex.I • ((p.value : ℂ) • pauliY)
+  module
+
+/-- Both complex off-diagonal sectors evolve with the transverse rate. -/
+theorem historyObservable_complex (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    historyObservable p rs γ η t hγ hη ht (historyComplexVector p rs) =
+      (Real.exp (-(γ + η) * t) : ℂ) • historyComplexVector p rs := by
+  rw [historyComplexVector_decomposition, map_add, map_smul, historyObservable_centered,
+    historyObservable_centered]
+  simp only [show (0 : Fin 3) ≠ 2 by decide, show (1 : Fin 3) ≠ 2 by decide, if_false]
+  module
+
+/-- Full-time transported norms have the square of the actual mode eigenvalue. -/
+theorem historyObservable_centered_norm_sq (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (a : Fin 3) :
+    ‖historyObservable p rs γ η t hγ hη ht (historyCenteredVector p rs a)‖ ^ 2 =
+      modeNorm a * p.value ^ 2 * Real.exp (-(if a = 2 then γ else γ + η) * t) ^ 2 := by
+  rw [historyObservable_centered, norm_smul, mul_pow, historyCenteredVector_norm_sq]
+  simp only [Complex.norm_real, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
+  ring
+
+/-- Full-time X+iY norm has transverse eigenvalue squared and its exact weighted constant. -/
+theorem historyObservable_complex_norm_sq (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    ‖historyObservable p rs γ η t hγ hη ht (historyComplexVector p rs)‖ ^ 2 =
+      (48 * p.value ^ 2 / 25) * Real.exp (-(γ + η) * t) ^ 2 := by
+  rw [historyObservable_complex, norm_smul, mul_pow, historyComplexVector_norm_sq]
+  simp only [Complex.norm_real, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
+  ring
+
+/-- Squaring the half-time eigenvalue gives the full-time eigenvalue. -/
+theorem history_exp_half_sq (r t : ℝ) :
+    Real.exp (-r * (t / 2)) ^ 2 = Real.exp (-r * t) := by
+  rw [pow_two, ← Real.exp_add]
+  congr 1
+  ring
+
+/-- The inserted metric has one mode eigenvalue, rather than its square. -/
+theorem historyInserted_centered_norm_sq (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (a : Fin 3) :
+    ‖historyToInserted p rs γ η t hγ hη ht (historyCenteredVector p rs a)‖ ^ 2 =
+      modeNorm a * p.value ^ 2 * Real.exp (-(if a = 2 then γ else γ + η) * t) := by
+  rw [history_inserted_norm_half_observable,
+    historyObservable_centered_norm_sq, history_exp_half_sq]
+
+/-- The actual inserted X+iY metric retains the complex mode and one transverse factor. -/
+theorem historyInserted_complex_norm_sq (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    ‖historyToInserted p rs γ η t hγ hη ht (historyComplexVector p rs)‖ ^ 2 =
+      (48 * p.value ^ 2 / 25) * Real.exp (-(γ + η) * t) := by
+  rw [history_inserted_norm_half_observable,
+    historyObservable_complex_norm_sq, history_exp_half_sq]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped ComplexOrder InnerProductSpace
+
+/-- The centered inserted norm is the real actual chronological pairing. -/
+theorem historyInserted_centered_pairing (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) (a : Fin 3) :
+    (pairing (historyInsertedKernel p rs γ η t hγ hη ht)
+      (historyCenteredCoefficients rs a) (historyCenteredCoefficients rs a)).re =
+      modeNorm a * p.value ^ 2 * Real.exp (-(if a = 2 then γ else γ + η) * t) := by
+  have h := historyInserted_centered_norm_sq p rs γ η t hγ hη ht a
+  rw [historyCenteredVector, historyToInserted_mk, insertedHistory_norm_sq_pairing] at h
+  exact h
+
+/-- The non-Hermitian inserted norm is its actual complex chronological pairing. -/
+theorem historyInserted_complex_pairing (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    (pairing (historyInsertedKernel p rs γ η t hγ hη ht)
+      (historyComplexCoefficients rs) (historyComplexCoefficients rs)).re =
+      (48 * p.value ^ 2 / 25) * Real.exp (-(γ + η) * t) := by
+  have h := historyInserted_complex_norm_sq p rs γ η t hγ hη ht
+  rw [historyComplexVector, historyToInserted_mk, insertedHistory_norm_sq_pairing] at h
+  exact h
+
+/-- The three X quantities distinguish original, inserted and full-time transported metrics. -/
+theorem historyX_three_quantities (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    ‖historyCenteredVector p rs 0‖ ^ 2 = 24 * p.value ^ 2 / 25 ∧
+    (pairing (historyInsertedKernel p rs γ η t hγ hη ht)
+      (historyCenteredCoefficients rs 0) (historyCenteredCoefficients rs 0)).re =
+      Real.exp (-(γ + η) * t) * (24 * p.value ^ 2 / 25) ∧
+    ‖historyObservable p rs γ η t hγ hη ht (historyCenteredVector p rs 0)‖ ^ 2 =
+      Real.exp (-(γ + η) * t) ^ 2 * (24 * p.value ^ 2 / 25) := by
+  have h0 := historyCenteredVector_norm_sq p rs 0
+  have hK := historyInserted_centered_pairing p rs γ η t hγ hη ht 0
+  have hT := historyObservable_centered_norm_sq p rs γ η t hγ hη ht 0
+  simp only [show (0 : Fin 3) ≠ 2 by decide, if_false] at hK hT
+  change ‖historyCenteredVector p rs 0‖ ^ 2 = (24 / 25 : ℝ) * p.value ^ 2 at h0
+  change (pairing (historyInsertedKernel p rs γ η t hγ hη ht)
+    (historyCenteredCoefficients rs 0) (historyCenteredCoefficients rs 0)).re =
+    (24 / 25 : ℝ) * p.value ^ 2 * Real.exp (-(γ + η) * t) at hK
+  change ‖historyObservable p rs γ η t hγ hη ht (historyCenteredVector p rs 0)‖ ^ 2 =
+    (24 / 25 : ℝ) * p.value ^ 2 * Real.exp (-(γ + η) * t) ^ 2 at hT
+  exact ⟨by nlinarith [h0], by nlinarith [hK], by nlinarith [hT]⟩
+
+/-- The three centered-Z quantities retain the longitudinal decay and faithful-state constant. -/
+theorem historyZ_three_quantities (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    ‖historyCenteredVector p rs 2‖ ^ 2 = 576 * p.value ^ 2 / 625 ∧
+    (pairing (historyInsertedKernel p rs γ η t hγ hη ht)
+      (historyCenteredCoefficients rs 2) (historyCenteredCoefficients rs 2)).re =
+      Real.exp (-γ * t) * (576 * p.value ^ 2 / 625) ∧
+    ‖historyObservable p rs γ η t hγ hη ht (historyCenteredVector p rs 2)‖ ^ 2 =
+      Real.exp (-γ * t) ^ 2 * (576 * p.value ^ 2 / 625) := by
+  have h0 := historyCenteredVector_norm_sq p rs 2
+  have hK := historyInserted_centered_pairing p rs γ η t hγ hη ht 2
+  have hT := historyObservable_centered_norm_sq p rs γ η t hγ hη ht 2
+  simp only [ite_true] at hK hT
+  change ‖historyCenteredVector p rs 2‖ ^ 2 = (576 / 625 : ℝ) * p.value ^ 2 at h0
+  change (pairing (historyInsertedKernel p rs γ η t hγ hη ht)
+    (historyCenteredCoefficients rs 2) (historyCenteredCoefficients rs 2)).re =
+    (576 / 625 : ℝ) * p.value ^ 2 * Real.exp (-γ * t) at hK
+  change ‖historyObservable p rs γ η t hγ hη ht (historyCenteredVector p rs 2)‖ ^ 2 =
+    (576 / 625 : ℝ) * p.value ^ 2 * Real.exp (-γ * t) ^ 2 at hT
+  exact ⟨by nlinarith [h0], by nlinarith [hK], by nlinarith [hT]⟩
+
+/-- The three complex X+iY quantities keep the larger non-Hermitian weighted constant. -/
+theorem historyComplex_three_quantities (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 ≤ t) :
+    ‖historyComplexVector p rs‖ ^ 2 = 48 * p.value ^ 2 / 25 ∧
+    (pairing (historyInsertedKernel p rs γ η t hγ hη ht)
+      (historyComplexCoefficients rs) (historyComplexCoefficients rs)).re =
+      Real.exp (-(γ + η) * t) * (48 * p.value ^ 2 / 25) ∧
+    ‖historyObservable p rs γ η t hγ hη ht (historyComplexVector p rs)‖ ^ 2 =
+      Real.exp (-(γ + η) * t) ^ 2 * (48 * p.value ^ 2 / 25) := by
+  exact ⟨historyComplexVector_norm_sq p rs,
+    by nlinarith [historyInserted_complex_pairing p rs γ η t hγ hη ht],
+    by nlinarith [historyObservable_complex_norm_sq p rs γ η t hγ hη ht]⟩
+
+/-- Positive central retention and transverse damping strictly change the X metric. -/
+theorem historyX_inserted_norm_sq_lt (p : Gap) (rs : List Gap) (γ η t : ℝ)
+    (hγ : 0 ≤ γ) (hη : 0 ≤ η) (ht : 0 < t) (hp : 0 < p.value)
+    (hrate : 0 < γ + η) :
+    ‖historyToInserted p rs γ η t hγ hη ht.le (historyCenteredVector p rs 0)‖ ^ 2 <
+      ‖historyCenteredVector p rs 0‖ ^ 2 := by
+  rw [historyInserted_centered_norm_sq, historyCenteredVector_norm_sq]
+  simp only [show (0 : Fin 3) ≠ 2 by decide, if_false]
+  change (24 / 25 : ℝ) * p.value ^ 2 * Real.exp (-(γ + η) * t) <
+    (24 / 25 : ℝ) * p.value ^ 2
+  have hdecay : Real.exp (-(γ + η) * t) < 1 :=
+    Real.exp_lt_one_iff.mpr (by nlinarith)
+  have hd : 0 < (24 / 25 : ℝ) * p.value ^ 2 := by positivity
+  simpa only [mul_one] using mul_lt_mul_of_pos_left hdecay hd
+
+/-- At central reset all centered original history representatives are null. -/
+theorem historyCenteredVector_reset (p : Gap) (rs : List Gap) (hreset : p.value = 0)
+    (a : Fin 3) : historyCenteredVector p rs a = 0 := by
+  apply norm_eq_zero.mp
+  have h := historyCenteredVector_norm_sq p rs a
+  rw [hreset, zero_pow (by decide), mul_zero] at h
+  exact (sq_eq_zero_iff.mp h)
+
+/-- At central reset the actual complex X+iY original representative is null as well. -/
+theorem historyComplexVector_reset (p : Gap) (rs : List Gap) (hreset : p.value = 0) :
+    historyComplexVector p rs = 0 := by
+  apply norm_eq_zero.mp
+  have h := historyComplexVector_norm_sq p rs
+  rw [hreset, zero_pow (by decide), mul_zero, zero_div] at h
+  exact (sq_eq_zero_iff.mp h)
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
