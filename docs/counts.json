@@ -1,12 +1,12 @@
 {
-  "generated": "2026-10-02T20:51:10.784440",
+  "generated": "2026-10-02T21:27:00.085469",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 45201,
-    "theorems_total": 25437,
-    "theorems_substantive": 25411,
+    "total_declarations": 45482,
+    "theorems_total": 25601,
+    "theorems_substantive": 25575,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25343,
+    "theorems_kernel_substantive": 25507,
     "theorems_tracked_vacuity_debt": 68,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2093,
+    "modules": 2094,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -639,6 +639,7 @@
       "SKEFTHawking.FiniteGibbsReset",
       "SKEFTHawking.FiniteGibbsTwoTimeProcess",
       "SKEFTHawking.FiniteGibbsUnitalHistory",
+      "SKEFTHawking.FiniteNontracialHistoryConsistency",
       "SKEFTHawking.FiniteNontracialPauliReflection",
       "SKEFTHawking.FiniteNontracialReflectionDynamics",
       "SKEFTHawking.FinitePauliHistoryConsistency",
@@ -2111,9 +2112,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13816,
+    "definitions": 13883,
     "structures": 495,
-    "instances": 985,
+    "instances": 987,
     "inductives": 106,
     "native_decide_decl_closure": 530,
     "native_decide_clusters": {

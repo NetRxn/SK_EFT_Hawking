@@ -1046,3 +1046,42 @@ full substrate gate passes with its paper-corpus failures reported. The canonica
 Python suite reports 7,273 passed and 32 failed; the all-tests obligation and
 complete-pipeline acceptance remain open. These component results do not accept
 the paper corpus or publication prerequisites.
+
+## Finite nontracial history consistency
+
+`FiniteNontracialHistoryConsistency.lean` extends the accepted nontracial
+qubit construction to arbitrary finite ordered lists of side retentions in
+`[0,1]`. The central retention also lies in `[0,1]`; side resets are allowed.
+The actual chronological process and the complex positive Gram kernel remain
+distinct. Normalized chronological labels recover the Gram kernel. The inherited
+`NontracialPauliReflection.original_not_posSemidef` obstruction concerns
+`originalKernel`, which uses the original Pauli instrument and tree with initial
+state `rhoN`. The replacement instrument's operational `historyKernel` is
+positive by `history_posSemidef`.
+
+The positive kernel defines its actual null quotient. Weighted matrix
+coordinates identify a four-dimensional quotient when central retention is
+positive and a one-dimensional quotient at complete central reset. One outer
+extension induces an isometry preserving those coordinates, including zero
+side retention. The matrix feature isometry uses the explicitly scoped
+Hilbert-Schmidt instances; it does not assert equality with the operator norm.
+Depth-zero and depth-one identities recover the earlier central and four-event
+models. Inserted finite-time kernels have positive half-time factorizations
+and compatible outer marginals.
+
+The complete source and original proof evidence pass independent bounded
+source review. Normal integration and the authoritative aggregate build pass
+at `25f9b5e9`. Canonical extraction preserves all 45,201 prior records and adds
+281 records from this module. These include two generated congruence helpers
+outside the history namespace and two local instances whose compiled names
+differ from the original snippet names. The canonical autogen resolver
+separates 52 generated records from 164 theorem records, 63 definitions and
+two local instances. Generated records are not counted as authored theorems.
+
+Independent integrated inventory review is required for local acceptance;
+full-cycle gates remain open. Ordered
+extension composition, onto and reference equivalences, quotient transfer
+maps, generator and semigroup naturality, and the finite-time null-space and
+norm comparisons remain required continuation work. This checkpoint supplies
+finite history consistency; it does not establish continuum reconstruction,
+a physical gap, publication readiness or completion of the full field target.
