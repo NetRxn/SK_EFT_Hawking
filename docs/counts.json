@@ -1,12 +1,12 @@
 {
-  "generated": "2026-10-02T21:27:00.085469",
+  "generated": "2026-10-02T23:47:06.502939",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 45482,
-    "theorems_total": 25601,
-    "theorems_substantive": 25575,
+    "total_declarations": 45581,
+    "theorems_total": 25685,
+    "theorems_substantive": 25659,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25507,
+    "theorems_kernel_substantive": 25591,
     "theorems_tracked_vacuity_debt": 68,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2094,
+    "modules": 2095,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1299,6 +1299,7 @@
       "SKEFTHawking.QuantumNetwork.FiniteAdaptiveMixtureSurvival",
       "SKEFTHawking.QuantumNetwork.FiniteAdaptiveProcessRobustness",
       "SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutDiscrimination",
+      "SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness",
       "SKEFTHawking.QuantumNetwork.FiniteGibbsClock",
       "SKEFTHawking.QuantumNetwork.FiniteInstrument",
       "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess",
@@ -2112,9 +2113,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13883,
+    "definitions": 13889,
     "structures": 495,
-    "instances": 987,
+    "instances": 989,
     "inductives": 106,
     "native_decide_decl_closure": 530,
     "native_decide_clusters": {

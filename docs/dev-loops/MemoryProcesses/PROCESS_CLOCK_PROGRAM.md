@@ -148,3 +148,41 @@ paper-corpus failures reported. The canonical Python suite has 7,273 passed and
 `docs/audits/2026-09-11-finite-positive-kernel.md` for the combined finite-field
 integration and evidence boundary. D9 absorption and publication prerequisites
 remain unchanged.
+
+## Robustness of attained readouts under actual map perturbations
+
+`QuantumNetwork/FiniteAdaptiveReadoutRobustness.lean` bounds the change of
+attained equal-prior readout error by half the sum of the two retained
+joint-branch family distances, comparing each hypothesis with its own
+perturbation. History-only optima are bounded by half the sum of the two
+corresponding full-history total-variation distances. Both bounds consume the actual normalized finite process maps, and apply
+to changed initial density states and independently mixed evolution and
+instrument maps. The mixture survival product controls the error without
+replacing retained joint memory by outcome probabilities.
+
+The module includes unequal history masses, normalized sign readouts, zero
+branches, complex qubit mixtures and the endpoint guards of the perturbation
+estimate. Complete source and original-evidence review pass for this bounded
+component. Its source is integrated at `8e8250a4`; the authoritative aggregate
+build passes after the import-placement repair at `69e0bcc6`. Canonical
+extraction retains all 92 authored names, six generated namespace helpers and
+one generated congruence helper attributed to the existing discrimination
+module, adding 99 records. All 45,482 previous full inventory records are
+unchanged. The new records have only the allowed core axiom closures. Independent
+review verifies this bounded imported-source, inventory, counts and atlas
+checkpoint.
+
+The next consumers are the actual noisy correlation and mixed-memory witnesses,
+the distinction between fixed and reoptimized symmetric readouts, and the
+finite Gibbs spectator warm-up classifier. Those proofs remain open; the
+generic robustness estimate does not itself supply their numerical margins.
+No quantum advantage, physical-clock identification or continuum claim follows.
+
+The latest measured canonical Python run, before this component's integration,
+has 7,285 passed, 23 failed, seven skipped and 92 deselected. Fresh quiet full
+validation of the candidate at `69e0bcc6` measures 89 checks: 71 pass and 18
+fail, with 1,147 warning details and no check errors. The measured Lean build,
+source, zero-sorry, axiom, counts, graph and atlas checks pass. The same 18 failed
+check names recur; this does not establish identical diagnostics or waive any
+failure. Fresh all-tests acceptance, the full pipeline, D9 absorption and
+publication prerequisites remain open.
