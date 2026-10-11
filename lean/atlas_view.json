@@ -51649,7 +51649,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 11
     },
     {
       "fqn": "SKEFTHawking.FinitePositiveKernel.GibbsBlockRelaxation.time_normalized",
@@ -128617,7 +128617,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 16
+      "frontier_impact": 17
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.prefix_marginal",
@@ -132379,7 +132379,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 25
+      "frontier_impact": 26
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.GibbsMultilevelReflection.joint_weight",
@@ -134773,7 +134773,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.XX_synthesis",
@@ -134782,7 +134782,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.XYY_form",
@@ -134791,7 +134791,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.XYY_inserted_pairing",
@@ -134800,7 +134800,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.XYY_positive",
@@ -134827,7 +134827,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.XYY_three_label_dependence",
@@ -134845,7 +134845,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.XYY_values",
@@ -134854,7 +134854,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.XYY_zero_central",
@@ -134908,7 +134908,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.centeredXZ_actual_null_pairing",
@@ -134926,7 +134926,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.centeredXZ_synthesis",
@@ -134935,7 +134935,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.centeredZScore_synthesis",
@@ -134998,7 +134998,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.erased_not_scalar_reset",
@@ -135007,7 +135007,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.erased_observable_commute",
@@ -135043,7 +135043,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.extendSchedule_composition",
@@ -135052,7 +135052,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.extensionEquiv_mk",
@@ -135070,7 +135070,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.extensionMap_coordinates",
@@ -135142,7 +135142,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.half_split_positive_trace",
@@ -135250,7 +135250,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 6
+      "frontier_impact": 8
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyCenteredVector_reset",
@@ -135313,7 +135313,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyComplexVector_reset",
@@ -135340,7 +135340,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyConstantVector_ne_zero",
@@ -135376,7 +135376,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 20
+      "frontier_impact": 26
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyCoordinates_mk",
@@ -135385,7 +135385,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 19
+      "frontier_impact": 25
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyCoordinates_reset_range",
@@ -135430,7 +135430,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalProjection_centered",
@@ -135439,7 +135439,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalProjection_complex",
@@ -135448,7 +135448,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalProjection_constant",
@@ -135457,7 +135457,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalProjection_coordinates",
@@ -135466,7 +135466,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 14
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalProjection_error_orthogonal",
@@ -135485,6 +135485,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalProjection_fixed_range",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalProjection_idempotent",
@@ -135556,7 +135565,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalProjection_pythagoras",
@@ -135574,7 +135583,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalProjection_selfAdjoint",
@@ -135592,7 +135601,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalProjection_twice",
@@ -135601,7 +135610,25 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 7
+      "frontier_impact": 9
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalRangeCoordinates_injective",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyDiagonalRangeCoordinates_surjective",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyEffect_adjoint",
@@ -135676,6 +135703,15 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyFourModeVector_reference",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyFromReferenceCoefficients_apply",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
       "atlas_kind": "TRUE",
@@ -135719,6 +135755,87 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyGenerator_apply",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyGenerator_coordinates",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyGenerator_extension",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyGenerator_ordered_composition",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyGenerator_outer",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyGenerator_positive",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyGenerator_reset",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyGenerator_selfAdjoint",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyGenerator_transfer",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyInsertedEquiv_mk",
@@ -135844,7 +135961,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyObservable_embedding",
@@ -135934,7 +136051,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyPairEquiv_apply",
@@ -135979,7 +136096,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyProjection_modes",
@@ -136015,7 +136132,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyProjection_pythagoras",
@@ -136087,7 +136204,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceEquiv_complex",
@@ -136105,7 +136222,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceEquiv_coordinates",
@@ -136123,7 +136240,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceEquiv_extension",
@@ -136132,11 +136249,20 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceEquiv_feature",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceEquiv_generator",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -136162,6 +136288,15 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceEquiv_opNorm",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceEquiv_ordered_composition",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
       "atlas_kind": "TRUE",
@@ -136177,7 +136312,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceEquiv_reset_equiv",
@@ -136231,7 +136366,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceEquiv_symm_apply",
@@ -136250,6 +136385,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceEquiv_transfer",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 11
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyReferenceFeature_reset_range",
@@ -136339,7 +136483,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarComplement_selfAdjoint",
@@ -136375,7 +136519,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarProjection_centered",
@@ -136384,7 +136528,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarProjection_complex",
@@ -136393,7 +136537,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarProjection_constant",
@@ -136402,7 +136546,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarProjection_coordinates",
@@ -136411,7 +136555,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 14
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarProjection_error_orthogonal",
@@ -136430,6 +136574,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarProjection_fixed_line",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarProjection_idempotent",
@@ -136501,7 +136654,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarProjection_pythagoras",
@@ -136519,7 +136672,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarProjection_selfAdjoint",
@@ -136546,7 +136699,34 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 7
+      "frontier_impact": 8
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarRangeCoordinates_injective",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyScalarRangeCoordinates_surjective",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historySingletonVector_coordinates",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historySnocEquiv_apply",
@@ -136675,6 +136855,375 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_apply",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 9
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_centered",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_centered_norm_sq",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_centered_opNorm",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_centered_opNorm_reset",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_comp",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_complex",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_complex_norm_sq",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_constant",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_convex",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_coordinates",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_eq_observable",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_error_bound",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_error_sq",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_extension",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_fixed_diagonal",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_fixed_diagonal_range",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_fixed_line",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_fixed_scalar",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_norm_le",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_not_scalar",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_numerical_mode_norms",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_ordered_composition",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_outer",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_positive",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_rates_zero",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_reset",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_selfAdjoint",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_state_observable_guard",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_tendsto_diagonal",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_tendsto_scalar",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_zero",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyTransfer_zero_dephasing_coordinates",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyXYYVector_coordinates",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyXYYVector_norm_sq",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyXYY_inserted_pairing",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyXYY_positive",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyXYY_three_label_values",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyXYY_transferred_norm_sq",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyXYY_zero_central",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyXYY_zero_outer",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.historyX_inserted_norm_sq_lt",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
       "atlas_kind": "TRUE",
@@ -136702,6 +137251,33 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_XX_disturbance",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_actual_entry_transfer",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_actual_pairing_transfer",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_actual_probabilities",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
       "atlas_kind": "TRUE",
@@ -136720,13 +137296,22 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_centeredXZ_guard",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_coordinates_inner",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 7
+      "frontier_impact": 12
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_coordinates_reset",
@@ -136756,8 +137341,71 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_depth_one_synthesis",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_depth_two_effect",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_depth_two_midpoint",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_depth_two_pairing",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_depth_two_synthesis",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_depth_zero",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_diagonal_range_finrank",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_diagonal_range_finrank_reset",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -136810,6 +137458,42 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_four_modes_span",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_half_split_indicator_effect",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_half_split_normalized",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_half_split_positive_trace",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inner_reference_synthesis",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
       "atlas_kind": "TRUE",
@@ -136846,13 +137530,22 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_depth_two",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_depth_zero",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_finrank",
@@ -136879,7 +137572,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_kernel_nonnegative",
@@ -136915,7 +137608,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_norm_half_observable",
@@ -136924,7 +137617,16 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_norm_half_transfer",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_nullSpace",
@@ -136951,7 +137653,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_pairing_extendPull",
@@ -136996,7 +137698,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 28
+      "frontier_impact": 29
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_positive_trace",
@@ -137005,11 +137707,20 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_reset_finrank",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_inserted_two_kernel",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -137080,6 +137791,33 @@
       "frontier_impact": 3
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_metric_mismatch_guard",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_middle_effect_sectors",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_middle_erased_marginal",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_negative_run",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
       "atlas_kind": "TRUE",
@@ -137095,11 +137833,29 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_observable_modeMatrix",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_orbit_continuous",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_orbit_hasDerivAt",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -137140,7 +137896,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 215
+      "frontier_impact": 299
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_positive_trace",
@@ -137149,7 +137905,34 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_quotient_generator_GKSL",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_range_diagonal_coordinates",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_reset_action_guard",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_reset_finrank",
@@ -137158,11 +137941,38 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_reset_null",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_scalar_range_finrank",
+      "module": "SKEFTHawking.FiniteNontracialObservableTransfer",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_side_reset_decay",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_split_indicator_effect",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -137179,13 +137989,31 @@
       "frontier_impact": 5
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_uncenteredXZ_guard",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.history_unsplit_indicator_effect",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.ignored_XX_form",
       "module": "SKEFTHawking.FiniteNontracialHistoryConsistency",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.ignored_XX_synthesis",
@@ -137194,7 +138022,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.insertedHistoryCoordinates_inner",
@@ -137518,7 +138346,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.six_middle_marginal",
@@ -137527,7 +138355,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.six_outer_marginal",
@@ -137545,7 +138373,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency.six_posSemidef",
@@ -137788,7 +138616,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 14
+      "frontier_impact": 15
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialPauliReflection.Phi_one",
@@ -138022,7 +138850,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 11
+      "frontier_impact": 12
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialPauliReflection.c_real",
@@ -138454,7 +139282,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 6
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialPauliReflection.kernel_entry_nonnegative",
@@ -138481,7 +139309,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 173
+      "frontier_impact": 192
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialPauliReflection.kernel_total",
@@ -138706,7 +139534,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialPauliReflection.original_asymmetry",
@@ -138859,7 +139687,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialPauliReflection.reset_embedding",
@@ -138949,7 +139777,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 14
+      "frontier_impact": 15
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialPauliReflection.selected_output_differs",
@@ -139093,7 +139921,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 11
+      "frontier_impact": 12
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialPauliReflection.twoKernel_trace",
@@ -139156,7 +139984,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.actual_kernel_form",
@@ -139291,7 +140119,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.centered_pythagoras",
@@ -139363,7 +140191,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.diagonalCoefficients_synthesis",
@@ -139480,7 +140308,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.diagonal_inner",
@@ -139678,7 +140506,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.inserted_outer_marginal",
@@ -139732,7 +140560,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.observable_adjoint",
@@ -139750,7 +140578,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 11
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.observable_mean",
@@ -139768,7 +140596,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.orbit_continuous",
@@ -139795,7 +140623,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.quotient_generator_GKSL",
@@ -139822,7 +140650,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.reset_projections",
@@ -139939,7 +140767,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.scalar_inner",
@@ -140047,7 +140875,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.state_sum",
@@ -140110,7 +140938,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 9
+      "frontier_impact": 10
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.transfer_apply",
@@ -140119,7 +140947,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 12
+      "frontier_impact": 13
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.transfer_centered",
@@ -140146,7 +140974,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.transfer_complex",
@@ -140209,7 +141037,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.transfer_error_sq",
@@ -140218,7 +141046,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.transfer_fixed_diagonal",
@@ -140227,7 +141055,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.transfer_fixed_diagonal_range",
@@ -140254,7 +141082,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.transfer_half_inner",
@@ -140272,7 +141100,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.transfer_not_scalar",
@@ -140281,7 +141109,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.transfer_positive",
@@ -140317,7 +141145,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.transfer_tendsto_scalar",
@@ -140407,7 +141235,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.PauliHistoryConsistency.Gap.bounded",
@@ -140416,7 +141244,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 66
+      "frontier_impact": 94
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.PauliHistoryConsistency.Gap.nonnegative",
@@ -140425,7 +141253,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 68
+      "frontier_impact": 96
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.PauliHistoryConsistency.XYY_coordinate_dependence",
@@ -140515,7 +141343,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.PauliHistoryConsistency.erased_retention_le_one",
@@ -140929,7 +141757,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.PauliHistoryConsistency.negativeHistory_list",
@@ -239395,7 +240223,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 25957,
+    "theorem_nodes": 26049,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -239406,7 +240234,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 402,
-      "TRUE:PROVED": 25555,
+      "TRUE:PROVED": 25647,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
