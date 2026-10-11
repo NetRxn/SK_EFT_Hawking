@@ -952,3 +952,1038 @@ end Guards
 
 end FiniteAdaptiveReadoutRobustness
 end SKEFTHawking.QuantumNetwork
+
+namespace SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+open Matrix FiniteInterventionProcess FiniteAdaptiveMapPerturbation
+open FiniteAdaptiveMixtureSurvival FiniteAdaptiveReadoutDiscrimination FiniteMemoryProcess
+open scoped BigOperators ComplexOrder Kronecker
+noncomputable section
+
+section NodeWrappers
+variable {S E : Type*} [Fintype S] [DecidableEq S] [Fintype E] [DecidableEq E] {o : ℕ}
+
+/-- Independent evolution and instrument noise wraps the actual nominal fields. -/
+def wrapStep {l : ℕ} (D : Step S E o) (L : Fin l → Matrix (S × E) (S × E) ℂ)
+    (hL : IsKrausChannel L) (J : FiniteInstrument S o) (r : NoiseRates) : Step S E o :=
+  mixedStep S E o D.evolution L D.normalized hL D.instrument J r.p r.q r.hp r.hp1 r.hq r.hq1
+
+/-- Both action fields quantify every complex joint matrix and every outcome. -/
+def wrapStep_realizes {l : ℕ} (D : Step S E o) (L : Fin l → Matrix (S × E) (S × E) ℂ)
+    (hL : IsKrausChannel L) (J : FiniteInstrument S o) (r : NoiseRates) :
+    RealizesMixture S E o D (wrapStep D L hL J r) r.p r.q where
+  k := D.count
+  l := l
+  K := D.evolution
+  L := L
+  hK := D.normalized
+  hL := hL
+  D := D.instrument
+  D' := J
+  hp := r.hp
+  hp1 := r.hp1
+  hq := r.hq
+  hq1 := r.hq1
+  ideal_action := fun _ _ => rfl
+  mixed_action := fun _ _ => rfl
+
+theorem wrapStep_four_terms {l : ℕ} (D : Step S E o)
+    (L : Fin l → Matrix (S × E) (S × E) ℂ) (hL : IsKrausChannel L)
+    (J : FiniteInstrument S o) (r : NoiseRates) (a : Fin o) (Z : Matrix (S × E) (S × E) ℂ) :
+    (wrapStep D L hL J r).branch S E o a Z =
+      ((1-r.p)*(1-r.q)) • D.branch S E o a Z +
+      (r.p*(1-r.q)) • (D.instrument.lift E).branch a (krausMap L Z) +
+      ((1-r.p)*r.q) • (J.lift E).branch a (krausMap D.evolution Z) +
+      (r.p*r.q) • (J.lift E).branch a (krausMap L Z) :=
+  mixedStep_branch S E o D.evolution L D.normalized hL D.instrument J
+    r.p r.q r.hp r.hp1 r.hq r.hq1 a Z
+
+end NodeWrappers
+
+/-- Both physical fields have strictly positive dimensionless rate. -/
+def positiveNoise : NoiseRates := ⟨1/256,1/256,by norm_num,by norm_num,by norm_num,by norm_num⟩
+
+def correlationNoisyKeep : Tree Qubit Qubit 2 2 :=
+  .node (wrapStep readStep environmentXKraus environmentX_normalized (FiniteInstrument.prepare 1) positiveNoise)
+    (fun _ => .node (wrapStep identityPrepare environmentXKraus environmentX_normalized
+      (FiniteInstrument.prepare 1) positiveNoise) (fun _ => .done))
+
+def correlationNoisyFlip : Tree Qubit Qubit 2 2 :=
+  .node (wrapStep readStep environmentXKraus environmentX_normalized (FiniteInstrument.prepare 1) positiveNoise)
+    (fun _ => .node (wrapStep flipPrepare identityKraus identityKraus_normalized
+      (FiniteInstrument.prepare 1) positiveNoise) (fun _ => .done))
+
+theorem correlationNoisyKeep_paired :
+    PairedMixture Qubit Qubit 2 correlationKeep correlationNoisyKeep [positiveNoise,positiveNoise] := by
+  apply PairedMixture.node (wrapStep_realizes ..) (by rfl)
+  intro a
+  apply PairedMixture.node (wrapStep_realizes ..) (by rfl)
+  intro b
+  exact .done
+
+theorem correlationNoisyFlip_paired :
+    PairedMixture Qubit Qubit 2 correlationFlip correlationNoisyFlip [positiveNoise,positiveNoise] := by
+  apply PairedMixture.node (wrapStep_realizes ..) (by rfl)
+  intro a
+  apply PairedMixture.node (wrapStep_realizes ..) (by rfl)
+  intro b
+  exact .done
+
+def quarterMemoryStep : Step Qubit Qubit 2 := memoryMixed (1/4) (1/4)
+  (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+
+def quarterMemoryTree : Tree Qubit Qubit 2 1 := .node quarterMemoryStep (fun _ => .done)
+
+def memoryNoisyMixed : Tree Qubit Qubit 2 1 :=
+  .node (wrapStep quarterMemoryStep environmentXKraus environmentX_normalized
+    (FiniteInstrument.prepare 1) positiveNoise) (fun _ => .done)
+
+def memoryNoisyIdentity : Tree Qubit Qubit 2 1 :=
+  .node (wrapStep identityPrepare environmentXKraus environmentX_normalized
+    (FiniteInstrument.prepare 1) positiveNoise) (fun _ => .done)
+
+theorem memoryNoisyMixed_paired :
+    PairedMixture Qubit Qubit 2 quarterMemoryTree memoryNoisyMixed [positiveNoise] := by
+  apply PairedMixture.node (wrapStep_realizes ..) (by rfl)
+  intro a
+  exact .done
+
+theorem memoryNoisyIdentity_paired :
+    PairedMixture Qubit Qubit 2 memoryIdentityTree memoryNoisyIdentity [positiveNoise] := by
+  apply PairedMixture.node (wrapStep_realizes ..) (by rfl)
+  intro a
+  exact .done
+
+theorem correlation_survival : survival [positiveNoise,positiveNoise] = (255/256 : ℝ)^4 := by
+  norm_num [survival,retention,positiveNoise]
+
+theorem memory_survival : survival [positiveNoise] = (255/256 : ℝ)^2 := by
+  norm_num [survival,retention,positiveNoise]
+
+def correlationBudget : ℝ := survival [positiveNoise,positiveNoise]/1024 + 1-survival [positiveNoise,positiveNoise]
+def memoryBudget : ℝ := survival [positiveNoise]/1024 + 1-survival [positiveNoise]
+
+theorem correlationBudget_exact : 2*correlationBudget = 72546121729/2199023255552 ∧
+    2*correlationBudget < 1/16 := by
+  norm_num [correlationBudget,correlation_survival]
+
+theorem memoryBudget_exact : 2*memoryBudget = 588289/33554432 ∧ 2*memoryBudget < 1/32 := by
+  norm_num [memoryBudget,memory_survival]
+
+end
+end SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+
+namespace SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+open Matrix FiniteInterventionProcess FiniteAdaptiveMapPerturbation
+open FiniteAdaptiveMixtureSurvival FiniteAdaptiveReadoutDiscrimination FiniteMemoryProcess
+open scoped BigOperators ComplexOrder Kronecker
+noncomputable section
+
+def changedCorrelationInput : Matrix Joint Joint ℂ :=
+  (1023/1024 : ℂ) • correlatedInput + (1/1024 : ℂ) • (basisState 0 ⊗ₖ basisState 1)
+def changedMemoryInput : Matrix Joint Joint ℂ :=
+  (1023/1024 : ℂ) • memoryInput + (1/1024 : ℂ) • (basisState 0 ⊗ₖ basisState 1)
+
+theorem changedCorrelationInput_density : IsDensityOperator changedCorrelationInput := by
+  refine ⟨(correlatedInput_density.1.smul (by norm_num [Complex.le_def])).add
+    ((basisJoint_density 0 1).1.smul (by norm_num [Complex.le_def])), ?_⟩
+  norm_num [changedCorrelationInput,Matrix.trace_add,Matrix.trace_smul,
+    correlatedInput_density.2,(basisJoint_density 0 1).2]
+
+theorem changedMemoryInput_density : IsDensityOperator changedMemoryInput := by
+  refine ⟨(memoryInput_density.1.smul (by norm_num [Complex.le_def])).add
+    ((basisJoint_density 0 1).1.smul (by norm_num [Complex.le_def])), ?_⟩
+  norm_num [changedMemoryInput,Matrix.trace_add,Matrix.trace_smul,
+    memoryInput_density.2,(basisJoint_density 0 1).2]
+
+theorem correlationInput_diagonal : correlatedInput - changedCorrelationInput =
+    diagonal (fun i : Joint => ((if i=(0,0) ∨ i=(1,1) then 1/2048 else
+      if i=(0,1) then -1/1024 else 0 : ℝ) : ℂ)) := by
+  ext ⟨i,j⟩ ⟨k,l⟩
+  fin_cases i <;> fin_cases j <;> fin_cases k <;> fin_cases l <;>
+    norm_num [changedCorrelationInput,correlatedInput,Matrix.kronecker_apply,basisState,Matrix.diagonal_apply]
+
+theorem memoryInput_diagonal : memoryInput - changedMemoryInput =
+    diagonal (fun i : Joint => ((if i=(1,0) then 1/1024 else
+      if i=(0,1) then -1/1024 else 0 : ℝ) : ℂ)) := by
+  ext ⟨i,j⟩ ⟨k,l⟩
+  fin_cases i <;> fin_cases j <;> fin_cases k <;> fin_cases l <;>
+    norm_num [changedMemoryInput,memoryInput,Matrix.kronecker_apply,basisState,Matrix.diagonal_apply]
+
+theorem changedCorrelationInput_distance : traceDist correlatedInput changedCorrelationInput = 1/1024 := by
+  rw [traceDist,correlationInput_diagonal,traceNorm_real_diagonal]
+  norm_num [Fintype.sum_prod_type,Fin.sum_univ_two]
+
+theorem changedMemoryInput_distance : traceDist memoryInput changedMemoryInput = 1/1024 := by
+  rw [traceDist,memoryInput_diagonal,traceNorm_real_diagonal]
+  norm_num [Fintype.sum_prod_type,Fin.sum_univ_two]
+
+theorem changedCorrelationInput_ne : changedCorrelationInput ≠ correlatedInput := by
+  intro h
+  have e := changedCorrelationInput_distance
+  rw [h,traceDist_self] at e
+  norm_num at e
+
+theorem changedMemoryInput_ne : changedMemoryInput ≠ memoryInput := by
+  intro h
+  have e := changedMemoryInput_distance
+  rw [h,traceDist_self] at e
+  norm_num at e
+end
+end SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+
+namespace SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+open Matrix FiniteInterventionProcess FiniteAdaptiveMapPerturbation
+open FiniteAdaptiveMixtureSurvival FiniteAdaptiveReadoutDiscrimination FiniteMemoryProcess
+open scoped BigOperators ComplexOrder Kronecker
+noncomputable section
+
+theorem correlationReadout_realizes (A B : History 2 2 → Matrix Joint Joint ℂ) :
+    instrumentError A B correlationReadout = readoutError A B correlationEffect := by
+  simp only [instrumentError,readoutTable,correlationReadout_weight_zero,
+    correlationReadout_weight_one,readoutError]
+
+theorem memoryReadout_realizes (A B : History 2 1 → Matrix Joint Joint ℂ) :
+    instrumentError A B memoryReadout = readoutError A B memoryEffect := by
+  simp only [instrumentError,readoutTable,memoryReadout_weight_zero,
+    memoryReadout_weight_one,readoutError]
+
+theorem correlation_mixture_advantage (U V : Tree Qubit Qubit 2 2)
+    {Y Z : Matrix Joint Joint ℂ} (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z)
+    {rsA rsB : List NoiseRates}
+    (cA : PairedMixture Qubit Qubit 2 correlationKeep U rsA)
+    (cB : PairedMixture Qubit Qubit 2 correlationFlip V rsB)
+    (a : History 2 2 → ℝ) (ha : ∀ h, a h ∈ Set.Icc (0 : ℝ) 1) :
+    1/2 - (survival rsA * traceDist correlatedInput Y + 1-survival rsA) -
+      (survival rsB * traceDist correlatedInput Z + 1-survival rsB) ≤
+    historyError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) a -
+      instrumentError (fun h => run Qubit Qubit 2 U h Y)
+        (fun h => run Qubit Qubit 2 V h Z) correlationReadout := by
+  have h := readout_advantage_conservative (run_family correlationKeep correlatedInput_density)
+    (run_family correlationFlip correlatedInput_density) (run_family U hY) (run_family V hZ)
+    correlationEffect (fun h => isBinaryPOVM_of_projection (correlationEffect_hermitian h)
+      (correlationEffect_idem h)) (1/2)
+    (fun a ha => le_of_eq (correlation_history_only a ha).symm) a ha
+  rw [correlation_effect_error_zero,sub_zero,tree_branchDistance,tree_branchDistance] at h
+  rw [correlationReadout_realizes]
+  have hA := pairedMixture_changed_input Qubit Qubit 2 cA correlatedInput_density hY
+  have hB := pairedMixture_changed_input Qubit Qubit 2 cB correlatedInput_density hZ
+  linarith
+
+theorem memory_mixture_advantage (p q : ℝ) (hp : 0≤p) (hp1 : p≤1) (hq : 0≤q) (hq1 : q≤1)
+    (U V : Tree Qubit Qubit 2 1) {Y Z : Matrix Joint Joint ℂ}
+    (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z) {rsA rsB : List NoiseRates}
+    (cA : PairedMixture Qubit Qubit 2 (memoryMixedTree p q hp hp1 hq hq1) U rsA)
+    (cB : PairedMixture Qubit Qubit 2 memoryIdentityTree V rsB)
+    (a : History 2 1 → ℝ) (ha : ∀ h, a h ∈ Set.Icc (0 : ℝ) 1) :
+    p*(1-q)/2 - (survival rsA * traceDist memoryInput Y + 1-survival rsA) -
+      (survival rsB * traceDist memoryInput Z + 1-survival rsB) ≤
+    historyError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) a -
+      instrumentError (fun h => run Qubit Qubit 2 U h Y)
+        (fun h => run Qubit Qubit 2 V h Z) memoryReadout := by
+  have h := readout_advantage_conservative
+    (run_family (memoryMixedTree p q hp hp1 hq hq1) memoryInput_density)
+    (run_family memoryIdentityTree memoryInput_density) (run_family U hY) (run_family V hZ)
+    memoryEffect (fun h => isBinaryPOVM_of_projection (memoryEffect_hermitian h)
+      (memoryEffect_idem h)) ((1-q)/2) (fun a ha => memory_history_lower p q hp hp1 hq hq1 a ha) a ha
+  rw [memoryReadout_optimal_effect,tree_branchDistance,tree_branchDistance] at h
+  rw [memoryReadout_realizes]
+  have hA := pairedMixture_changed_input Qubit Qubit 2 cA memoryInput_density hY
+  have hB := pairedMixture_changed_input Qubit Qubit 2 cB memoryInput_density hZ
+  nlinarith
+
+theorem correlation_mixture_strict (U V : Tree Qubit Qubit 2 2)
+    {Y Z : Matrix Joint Joint ℂ} (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z)
+    {rsA rsB : List NoiseRates}
+    (cA : PairedMixture Qubit Qubit 2 correlationKeep U rsA)
+    (cB : PairedMixture Qubit Qubit 2 correlationFlip V rsB)
+    (hsmall : (survival rsA * traceDist correlatedInput Y + 1-survival rsA) +
+      (survival rsB * traceDist correlatedInput Z + 1-survival rsB) < 1/2)
+    (a : History 2 2 → ℝ) (ha : ∀ h, a h ∈ Set.Icc (0 : ℝ) 1) :
+    instrumentError (fun h => run Qubit Qubit 2 U h Y)
+      (fun h => run Qubit Qubit 2 V h Z) correlationReadout <
+    historyError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) a := by
+  have h := correlation_mixture_advantage U V hY hZ cA cB a ha
+  linarith
+
+theorem memory_mixture_strict (p q : ℝ) (hp : 0≤p) (hp1 : p≤1) (hq : 0≤q) (hq1 : q≤1)
+    (U V : Tree Qubit Qubit 2 1) {Y Z : Matrix Joint Joint ℂ}
+    (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z) {rsA rsB : List NoiseRates}
+    (cA : PairedMixture Qubit Qubit 2 (memoryMixedTree p q hp hp1 hq hq1) U rsA)
+    (cB : PairedMixture Qubit Qubit 2 memoryIdentityTree V rsB)
+    (hsmall : (survival rsA * traceDist memoryInput Y + 1-survival rsA) +
+      (survival rsB * traceDist memoryInput Z + 1-survival rsB) < p*(1-q)/2)
+    (a : History 2 1 → ℝ) (ha : ∀ h, a h ∈ Set.Icc (0 : ℝ) 1) :
+    instrumentError (fun h => run Qubit Qubit 2 U h Y)
+      (fun h => run Qubit Qubit 2 V h Z) memoryReadout <
+    historyError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) a := by
+  have h := memory_mixture_advantage p q hp hp1 hq hq1 U V hY hZ cA cB a ha
+  linarith
+
+theorem correlationNoisy_comparisons :
+    outputDistance Qubit Qubit 2 correlationKeep correlationNoisyKeep correlatedInput changedCorrelationInput ≤ correlationBudget ∧
+    outputDistance Qubit Qubit 2 correlationFlip correlationNoisyFlip correlatedInput changedCorrelationInput ≤ correlationBudget := by
+  constructor
+  · simpa [changedCorrelationInput_distance,correlationBudget,div_eq_mul_inv] using
+      pairedMixture_changed_input Qubit Qubit 2 correlationNoisyKeep_paired correlatedInput_density changedCorrelationInput_density
+  · simpa [changedCorrelationInput_distance,correlationBudget,div_eq_mul_inv] using
+      pairedMixture_changed_input Qubit Qubit 2 correlationNoisyFlip_paired correlatedInput_density changedCorrelationInput_density
+
+theorem memoryNoisy_comparisons :
+    outputDistance Qubit Qubit 2 quarterMemoryTree memoryNoisyMixed memoryInput changedMemoryInput ≤ memoryBudget ∧
+    outputDistance Qubit Qubit 2 memoryIdentityTree memoryNoisyIdentity memoryInput changedMemoryInput ≤ memoryBudget := by
+  constructor
+  · simpa [changedMemoryInput_distance,memoryBudget,div_eq_mul_inv] using
+      pairedMixture_changed_input Qubit Qubit 2 memoryNoisyMixed_paired memoryInput_density changedMemoryInput_density
+  · simpa [changedMemoryInput_distance,memoryBudget,div_eq_mul_inv] using
+      pairedMixture_changed_input Qubit Qubit 2 memoryNoisyIdentity_paired memoryInput_density changedMemoryInput_density
+
+theorem correlationNoisy_universal_gap (a : History 2 2 → ℝ)
+    (ha : ∀ h, a h ∈ Set.Icc (0 : ℝ) 1) :
+    7/16 < historyError (fun h => run Qubit Qubit 2 correlationNoisyKeep h changedCorrelationInput)
+      (fun h => run Qubit Qubit 2 correlationNoisyFlip h changedCorrelationInput) a -
+      instrumentError (fun h => run Qubit Qubit 2 correlationNoisyKeep h changedCorrelationInput)
+        (fun h => run Qubit Qubit 2 correlationNoisyFlip h changedCorrelationInput) correlationReadout := by
+  have h := correlation_mixture_advantage correlationNoisyKeep correlationNoisyFlip
+    changedCorrelationInput_density changedCorrelationInput_density
+    correlationNoisyKeep_paired correlationNoisyFlip_paired a ha
+  simp only [changedCorrelationInput_distance] at h
+  have hb := correlationBudget_exact.2
+  unfold correlationBudget at hb
+  linarith
+
+theorem memoryNoisy_universal_gap (a : History 2 1 → ℝ)
+    (ha : ∀ h, a h ∈ Set.Icc (0 : ℝ) 1) :
+    1/16 < historyError (fun h => run Qubit Qubit 2 memoryNoisyMixed h changedMemoryInput)
+      (fun h => run Qubit Qubit 2 memoryNoisyIdentity h changedMemoryInput) a -
+      instrumentError (fun h => run Qubit Qubit 2 memoryNoisyMixed h changedMemoryInput)
+        (fun h => run Qubit Qubit 2 memoryNoisyIdentity h changedMemoryInput) memoryReadout := by
+  have h := memory_mixture_advantage (1/4) (1/4) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    memoryNoisyMixed memoryNoisyIdentity changedMemoryInput_density changedMemoryInput_density
+    memoryNoisyMixed_paired memoryNoisyIdentity_paired a ha
+  simp only [changedMemoryInput_distance] at h
+  have hb := memoryBudget_exact.2
+  unfold memoryBudget at hb
+  norm_num at h
+  linarith
+
+theorem correlationNoisy_tables :
+    ((∀ h a, 0 ≤ readoutTable correlationReadout (fun h => run Qubit Qubit 2 correlationNoisyKeep h changedCorrelationInput) h a) ∧
+      (∑ h, ∑ a, readoutTable correlationReadout (fun h => run Qubit Qubit 2 correlationNoisyKeep h changedCorrelationInput) h a)=1) ∧
+    ((∀ h a, 0 ≤ readoutTable correlationReadout (fun h => run Qubit Qubit 2 correlationNoisyFlip h changedCorrelationInput) h a) ∧
+      (∑ h, ∑ a, readoutTable correlationReadout (fun h => run Qubit Qubit 2 correlationNoisyFlip h changedCorrelationInput) h a)=1) :=
+  ⟨tree_readout_probabilities correlationNoisyKeep changedCorrelationInput_density correlationReadout,
+    tree_readout_probabilities correlationNoisyFlip changedCorrelationInput_density correlationReadout⟩
+
+theorem memoryNoisy_tables :
+    ((∀ h a, 0 ≤ readoutTable memoryReadout (fun h => run Qubit Qubit 2 memoryNoisyMixed h changedMemoryInput) h a) ∧
+      (∑ h, ∑ a, readoutTable memoryReadout (fun h => run Qubit Qubit 2 memoryNoisyMixed h changedMemoryInput) h a)=1) ∧
+    ((∀ h a, 0 ≤ readoutTable memoryReadout (fun h => run Qubit Qubit 2 memoryNoisyIdentity h changedMemoryInput) h a) ∧
+      (∑ h, ∑ a, readoutTable memoryReadout (fun h => run Qubit Qubit 2 memoryNoisyIdentity h changedMemoryInput) h a)=1) :=
+  ⟨tree_readout_probabilities memoryNoisyMixed changedMemoryInput_density memoryReadout,
+    tree_readout_probabilities memoryNoisyIdentity changedMemoryInput_density memoryReadout⟩
+end
+end SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+
+
+namespace SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+open Matrix FiniteInterventionProcess FiniteAdaptiveMapPerturbation
+open FiniteAdaptiveMixtureSurvival FiniteAdaptiveReadoutDiscrimination FiniteMemoryProcess
+open scoped BigOperators ComplexOrder Kronecker
+noncomputable section
+
+/-- Real scalar homogeneity includes negative coefficients without positivity premises. -/
+theorem traceNorm_real_signed {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (c : ℝ) (Z : Matrix ι ι ℂ) : traceNorm (c • Z) = |c| * traceNorm Z := by
+  have hc (d : ℝ) : d • Z = (d:ℂ) • Z := by ext i j; simp [Complex.real_smul]
+  by_cases h : 0≤c
+  · rw [hc,traceNorm_smul_nonneg h,abs_of_nonneg h]
+  · have hn : 0≤ -c := by linarith
+    have he : c • Z = -((-c) • Z) := by module
+    rw [he,traceNorm_neg,hc,traceNorm_smul_nonneg hn,abs_of_neg (lt_of_not_ge h)]
+
+/-- The symmetric control mixes the evolution before the same prepare-zero instrument. -/
+def symmetricKeepStep (r : ℝ) (hr : 0≤r) (hr1 : r≤1) : Step Qubit Qubit 2 :=
+  realizedStep Qubit Qubit 2 (mixKraus identityKraus environmentXKraus r)
+    (mixKraus_channel identityKraus_normalized environmentX_normalized hr hr1) (FiniteInstrument.prepare 0)
+def symmetricFlipStep (r : ℝ) (hr : 0≤r) (hr1 : r≤1) : Step Qubit Qubit 2 :=
+  realizedStep Qubit Qubit 2 (mixKraus environmentXKraus identityKraus r)
+    (mixKraus_channel environmentX_normalized identityKraus_normalized hr hr1) (FiniteInstrument.prepare 0)
+def symmetricKeep (r : ℝ) (hr : 0≤r) (hr1 : r≤1) : Tree Qubit Qubit 2 2 :=
+  .node readStep (fun _ => .node (symmetricKeepStep r hr hr1) (fun _ => .done))
+def symmetricFlip (r : ℝ) (hr : 0≤r) (hr1 : r≤1) : Tree Qubit Qubit 2 2 :=
+  .node readStep (fun _ => .node (symmetricFlipStep r hr hr1) (fun _ => .done))
+
+theorem symmetricKeepStep_action (r : ℝ) (hr : 0≤r) (hr1 : r≤1) (a : Qubit) (Z : Matrix Joint Joint ℂ) :
+    (symmetricKeepStep r hr hr1).branch Qubit Qubit 2 a Z =
+      (1-r) • identityPrepare.branch Qubit Qubit 2 a Z + r • flipPrepare.branch Qubit Qubit 2 a Z := by
+  rw [identityPrepare,localStep_branch]
+  change ((FiniteInstrument.prepare 0).lift Qubit).branch a (krausMap (mixKraus identityKraus environmentXKraus r) Z)=
+    (1-r) • ((FiniteInstrument.prepare 0).lift Qubit).branch a Z +
+      r • ((FiniteInstrument.prepare 0).lift Qubit).branch a (krausMap environmentXKraus Z)
+  rw [mixKraus_action identityKraus environmentXKraus hr hr1,FiniteInstrument.branch_add,branch_real_smul,branch_real_smul]
+  congr 2
+  simp [krausMap,identityKraus]
+
+theorem symmetricFlipStep_action (r : ℝ) (hr : 0≤r) (hr1 : r≤1) (a : Qubit) (Z : Matrix Joint Joint ℂ) :
+    (symmetricFlipStep r hr hr1).branch Qubit Qubit 2 a Z =
+      (1-r) • flipPrepare.branch Qubit Qubit 2 a Z + r • identityPrepare.branch Qubit Qubit 2 a Z := by
+  rw [identityPrepare,localStep_branch]
+  change ((FiniteInstrument.prepare 0).lift Qubit).branch a (krausMap (mixKraus environmentXKraus identityKraus r) Z)=
+    (1-r) • ((FiniteInstrument.prepare 0).lift Qubit).branch a (krausMap environmentXKraus Z) +
+      r • ((FiniteInstrument.prepare 0).lift Qubit).branch a Z
+  rw [mixKraus_action environmentXKraus identityKraus hr hr1,FiniteInstrument.branch_add,branch_real_smul,branch_real_smul]
+  congr 2
+  simp [krausMap,identityKraus]
+
+theorem symmetricKeep_run (r : ℝ) (hr : 0≤r) (hr1 : r≤1) (h : History 2 2) (Z : Matrix Joint Joint ℂ) :
+    run Qubit Qubit 2 (symmetricKeep r hr hr1) h Z =
+      (1-r) • run Qubit Qubit 2 correlationKeep h Z + r • run Qubit Qubit 2 correlationFlip h Z := by
+  rcases h with ⟨a,b,u⟩; cases u
+  exact symmetricKeepStep_action r hr hr1 b _
+
+theorem symmetricFlip_run (r : ℝ) (hr : 0≤r) (hr1 : r≤1) (h : History 2 2) (Z : Matrix Joint Joint ℂ) :
+    run Qubit Qubit 2 (symmetricFlip r hr hr1) h Z =
+      (1-r) • run Qubit Qubit 2 correlationFlip h Z + r • run Qubit Qubit 2 correlationKeep h Z := by
+  rcases h with ⟨a,b,u⟩; cases u
+  exact symmetricFlipStep_action r hr hr1 b _
+
+theorem symmetric_run_difference (r : ℝ) (hr : 0≤r) (hr1 : r≤1) (h : History 2 2) (Z : Matrix Joint Joint ℂ) :
+    run Qubit Qubit 2 (symmetricKeep r hr hr1) h Z - run Qubit Qubit 2 (symmetricFlip r hr hr1) h Z =
+      (1-2*r) • (run Qubit Qubit 2 correlationKeep h Z - run Qubit Qubit 2 correlationFlip h Z) := by
+  rw [symmetricKeep_run,symmetricFlip_run]; module
+
+theorem symmetric_half_all_complex (h : History 2 2) (Z : Matrix Joint Joint ℂ) :
+    run Qubit Qubit 2 (symmetricKeep (1/2) (by norm_num) (by norm_num)) h Z =
+      run Qubit Qubit 2 (symmetricFlip (1/2) (by norm_num) (by norm_num)) h Z := by
+  rw [symmetricKeep_run,symmetricFlip_run]; norm_num; abel
+
+theorem symmetric_full_swap_all_complex (h : History 2 2) (Z : Matrix Joint Joint ℂ) :
+    run Qubit Qubit 2 (symmetricKeep 1 (by norm_num) le_rfl) h Z = run Qubit Qubit 2 correlationFlip h Z ∧
+    run Qubit Qubit 2 (symmetricFlip 1 (by norm_num) le_rfl) h Z = run Qubit Qubit 2 correlationKeep h Z := by
+  simp [symmetricKeep_run,symmetricFlip_run]
+
+theorem symmetric_zero_all_complex (h : History 2 2) (Z : Matrix Joint Joint ℂ) :
+    run Qubit Qubit 2 (symmetricKeep 0 le_rfl (by norm_num)) h Z = run Qubit Qubit 2 correlationKeep h Z ∧
+    run Qubit Qubit 2 (symmetricFlip 0 le_rfl (by norm_num)) h Z = run Qubit Qubit 2 correlationFlip h Z := by
+  simp [symmetricKeep_run,symmetricFlip_run]
+
+theorem symmetric_outputDistance (r : ℝ) (hr : 0≤r) (hr1 : r≤1) :
+    outputDistance Qubit Qubit 2 (symmetricKeep r hr hr1) (symmetricFlip r hr hr1) correlatedInput correlatedInput = |1-2*r| := by
+  unfold outputDistance
+  simp only [symmetric_run_difference,traceNorm_real_signed,← Finset.mul_sum]
+  have hn := correlation_outputDistance_one
+  unfold outputDistance at hn
+  rw [mul_div_assoc,hn,mul_one]
+
+theorem symmetric_same_history (r : ℝ) (hr : 0≤r) (hr1 : r≤1) (h : History 2 2) :
+    (run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput).trace.re =
+      (run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput).trace.re := by
+  have he : (run Qubit Qubit 2 correlationKeep h correlatedInput).trace.re =
+      (run Qubit Qubit 2 correlationFlip h correlatedInput).trace.re := correlation_same_history h
+  simp only [symmetricKeep_run,symmetricFlip_run,Matrix.trace_add,Matrix.trace_smul,Complex.add_re,
+    Complex.real_smul,Complex.mul_re,Complex.ofReal_re,Complex.ofReal_im,zero_mul,sub_zero]
+  rw [he]
+
+theorem symmetric_history_error (r : ℝ) (hr : 0≤r) (hr1 : r≤1) (a : History 2 2 → ℝ) :
+    historyError (fun h => run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput) a = 1/2 :=
+  historyError_same_law (run_family (symmetricKeep r hr hr1) correlatedInput_density) (symmetric_same_history r hr hr1) a
+
+theorem symmetric_same_terminal (r : ℝ) (hr : 0≤r) (hr1 : r≤1) :
+    terminalState Qubit Qubit 2 (symmetricKeep r hr hr1) correlatedInput =
+      terminalState Qubit Qubit 2 (symmetricFlip r hr hr1) correlatedInput := by
+  have ht : (∑ h, run Qubit Qubit 2 correlationKeep h correlatedInput) =
+    ∑ h, run Qubit Qubit 2 correlationFlip h correlatedInput := correlation_terminal.1.trans correlation_terminal.2.symm
+  simp only [terminalState,symmetricKeep_run,symmetricFlip_run,Finset.sum_add_distrib,← Finset.smul_sum]
+  rw [ht]
+
+end
+end SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+
+
+namespace SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+open Matrix FiniteInterventionProcess FiniteAdaptiveMapPerturbation
+open FiniteAdaptiveMixtureSurvival FiniteAdaptiveReadoutDiscrimination FiniteMemoryProcess
+open scoped BigOperators ComplexOrder Kronecker
+noncomputable section
+
+/-- Arbitrary-depth feedback uses two independent directional actual-tree certificates. -/
+theorem feedback_mixture_optimum (p : ℝ) (hp : 0≤p) (hp1 : p≤1) (m : ℕ)
+    (U V : Tree Qubit Qubit 2 (m+1)) {Y Z : Matrix Joint Joint ℂ}
+    (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z) {rsA rsB : List NoiseRates}
+    (cA : PairedMixture Qubit Qubit 2 (idealFeedback m) U rsA)
+    (cB : PairedMixture Qubit Qubit 2 (noisyFeedback p hp hp1 m) V rsB) :
+    IsLeast {x : ℝ | ∃ F : History 2 (m+1) → Matrix Joint Joint ℂ,
+      (∀ h, IsBinaryPOVM (F h)) ∧ readoutError (fun h => run Qubit Qubit 2 U h Y)
+        (fun h => run Qubit Qubit 2 V h Z) F = x}
+      ((1-outputDistance Qubit Qubit 2 U V Y Z)/2) ∧
+    instrumentError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z)
+      (optimalReadout (run_family U hY) (run_family V hZ)) = (1-outputDistance Qubit Qubit 2 U V Y Z)/2 ∧
+    |(1-outputDistance Qubit Qubit 2 U V Y Z)/2 - (1-p)^m/2| ≤
+      ((survival rsA * traceDist correlatedInput Y + 1-survival rsA) +
+       (survival rsB * traceDist correlatedInput Z + 1-survival rsB))/2 := by
+  refine ⟨tree_error_isLeast U V hY hZ, ?_, ?_⟩
+  · simpa only [instrumentError] using tree_optimalReadout_error U V hY hZ
+  · have h := tree_optimum_stability (idealFeedback m) (noisyFeedback p hp hp1 m) U V
+      correlatedInput_density correlatedInput_density hY hZ
+    rw [(noisyFeedback_exact p hp hp1 m).1,sub_sub_cancel,abs_sub_comm] at h
+    have hA := pairedMixture_changed_input Qubit Qubit 2 cA correlatedInput_density hY
+    have hB := pairedMixture_changed_input Qubit Qubit 2 cB correlatedInput_density hZ
+    linarith
+
+/-- The old physical feedback instrument is transported separately from reoptimization. -/
+theorem feedback_mixture_fixed (p : ℝ) (hp : 0≤p) (hp1 : p≤1) (m : ℕ)
+    (U V : Tree Qubit Qubit 2 (m+1)) {Y Z : Matrix Joint Joint ℂ}
+    (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z) {rsA rsB : List NoiseRates}
+    (cA : PairedMixture Qubit Qubit 2 (idealFeedback m) U rsA)
+    (cB : PairedMixture Qubit Qubit 2 (noisyFeedback p hp hp1 m) V rsB) :
+    |instrumentError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z)
+      (feedbackReadout p hp hp1 m) - (1-p)^m/2| ≤
+      ((survival rsA * traceDist correlatedInput Y + 1-survival rsA) +
+       (survival rsB * traceDist correlatedInput Z + 1-survival rsB))/2 := by
+  have h := tree_transport_stability (idealFeedback m) (noisyFeedback p hp hp1 m) U V
+    correlatedInput_density correlatedInput_density hY hZ
+  rw [(noisyFeedback_exact p hp hp1 m).1,sub_sub_cancel] at h
+  change |instrumentError _ _ (feedbackReadout p hp hp1 m) - _| ≤ _ at h
+  have hA := pairedMixture_changed_input Qubit Qubit 2 cA correlatedInput_density hY
+  have hB := pairedMixture_changed_input Qubit Qubit 2 cB correlatedInput_density hZ
+  linarith
+
+/-- The independent additive route is available for the same arbitrary-depth consumer. -/
+theorem feedback_errors_optimum_fixed (p : ℝ) (hp : 0≤p) (hp1 : p≤1) (m : ℕ)
+    (U V : Tree Qubit Qubit 2 (m+1)) {Y Z : Matrix Joint Joint ℂ}
+    (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z) {esA esB : List ℝ}
+    (cA : PairedErrors Qubit Qubit 2 (idealFeedback m) U esA)
+    (cB : PairedErrors Qubit Qubit 2 (noisyFeedback p hp hp1 m) V esB) :
+    |(1-outputDistance Qubit Qubit 2 U V Y Z)/2 - (1-p)^m/2| ≤
+      (min 1 (traceDist correlatedInput Y + esA.sum) + min 1 (traceDist correlatedInput Z + esB.sum))/2 ∧
+    |instrumentError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z)
+      (feedbackReadout p hp hp1 m) - (1-p)^m/2| ≤
+      (min 1 (traceDist correlatedInput Y + esA.sum) + min 1 (traceDist correlatedInput Z + esB.sum))/2 := by
+  have hA := pairedErrors_capped Qubit Qubit 2 cA correlatedInput_density hY
+  have hB := pairedErrors_capped Qubit Qubit 2 cB correlatedInput_density hZ
+  have ho := tree_optimum_stability (idealFeedback m) (noisyFeedback p hp hp1 m) U V
+    correlatedInput_density correlatedInput_density hY hZ
+  have hf := tree_transport_stability (idealFeedback m) (noisyFeedback p hp hp1 m) U V
+    correlatedInput_density correlatedInput_density hY hZ
+  rw [(noisyFeedback_exact p hp hp1 m).1,sub_sub_cancel,abs_sub_comm] at ho
+  rw [(noisyFeedback_exact p hp hp1 m).1,sub_sub_cancel] at hf
+  change |instrumentError _ _ (feedbackReadout p hp hp1 m) - _| ≤ _ at hf
+  exact ⟨by linarith,by linarith⟩
+
+theorem feedback_perturbed_tables (p : ℝ) (hp : 0≤p) (hp1 : p≤1) (m : ℕ)
+    (U V : Tree Qubit Qubit 2 (m+1)) {Y Z : Matrix Joint Joint ℂ}
+    (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z) :
+    let I := feedbackReadout p hp hp1 m
+    let J := optimalReadout (run_family U hY) (run_family V hZ)
+    ((∀ h a, 0 ≤ readoutTable I (fun h => run Qubit Qubit 2 U h Y) h a) ∧
+      (∑ h, ∑ a, readoutTable I (fun h => run Qubit Qubit 2 U h Y) h a)=1) ∧
+    ((∀ h a, 0 ≤ readoutTable I (fun h => run Qubit Qubit 2 V h Z) h a) ∧
+      (∑ h, ∑ a, readoutTable I (fun h => run Qubit Qubit 2 V h Z) h a)=1) ∧
+    ((∀ h a, 0 ≤ readoutTable J (fun h => run Qubit Qubit 2 U h Y) h a) ∧
+      (∑ h, ∑ a, readoutTable J (fun h => run Qubit Qubit 2 U h Y) h a)=1) ∧
+    ((∀ h a, 0 ≤ readoutTable J (fun h => run Qubit Qubit 2 V h Z) h a) ∧
+      (∑ h, ∑ a, readoutTable J (fun h => run Qubit Qubit 2 V h Z) h a)=1) := by
+  dsimp only
+  exact ⟨tree_readout_probabilities U hY _,tree_readout_probabilities V hZ _,
+    tree_readout_probabilities U hY _,tree_readout_probabilities V hZ _⟩
+
+/-- Every depth/rate boundary is obtained from the actual fixed Kraus-rule attainment. -/
+theorem feedback_actual_boundary_errors (p : ℝ) (hp : 0≤p) (hp1 : p≤1) (m : ℕ) :
+    instrumentError (fun h => run Qubit Qubit 2 (idealFeedback 0) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (noisyFeedback p hp hp1 0) h correlatedInput) (feedbackReadout p hp hp1 0)=1/2 ∧
+    instrumentError (fun h => run Qubit Qubit 2 (idealFeedback m) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (noisyFeedback 0 le_rfl (by norm_num) m) h correlatedInput)
+      (feedbackReadout 0 le_rfl (by norm_num) m)=1/2 ∧
+    instrumentError (fun h => run Qubit Qubit 2 (idealFeedback 0) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (noisyFeedback 1 (by norm_num) le_rfl 0) h correlatedInput)
+      (feedbackReadout 1 (by norm_num) le_rfl 0)=1/2 ∧
+    (0<m → instrumentError (fun h => run Qubit Qubit 2 (idealFeedback m) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (noisyFeedback 1 (by norm_num) le_rfl m) h correlatedInput)
+      (feedbackReadout 1 (by norm_num) le_rfl m)=0) := by
+  exact ⟨feedback_zero_layers p hp hp1,feedback_zero_noise_error m,
+    feedback_full_noise_zero_layers,feedback_full_noise_error m⟩
+end
+end SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+
+
+namespace SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+open Matrix FiniteInterventionProcess FiniteAdaptiveMapPerturbation
+open FiniteAdaptiveMixtureSurvival FiniteAdaptiveReadoutDiscrimination FiniteMemoryProcess
+open scoped BigOperators ComplexOrder Kronecker
+noncomputable section
+
+/-- The transported old physical correlation rule has error r, even above one half. -/
+theorem symmetric_fixed_error (r : ℝ) (hr : 0≤r) (hr1 : r≤1) :
+    instrumentError (fun h => run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput) correlationReadout = r := by
+  rw [correlationReadout_realizes,readoutError_eq _ _ _ (run_family (symmetricKeep r hr hr1) correlatedInput_density).2]
+  have hscore : (∑ h, (correlationEffect h * (run Qubit Qubit 2 correlationKeep h correlatedInput -
+      run Qubit Qubit 2 correlationFlip h correlatedInput)).trace.re) = 1 := by
+    have h := correlation_effect_error_zero
+    rw [readoutError_eq _ _ _ (run_family correlationKeep correlatedInput_density).2] at h
+    linarith
+  simp only [symmetric_run_difference,Matrix.mul_smul,Matrix.trace_smul,Complex.real_smul,
+    Complex.mul_re,Complex.ofReal_re,Complex.ofReal_im,zero_mul,sub_zero,← Finset.mul_sum]
+  rw [hscore]; ring
+
+theorem complementary_readout_error {ι H : Type*} [Fintype ι] [DecidableEq ι] [Fintype H]
+    (A B F : H → Matrix ι ι ℂ) :
+    readoutError A B (fun h => 1-F h)=readoutError B A F := by
+  simp only [readoutError,sub_sub_cancel,add_comm]
+
+theorem swapped_readout_errors {ι H : Type*} [Fintype ι] [DecidableEq ι] [Fintype H]
+    {A B : H → Matrix ι ι ℂ} (hA : IsBranchFamily A) (hB : IsBranchFamily B)
+    (F : H → Matrix ι ι ℂ) : readoutError A B F + readoutError B A F = 1 := by
+  rw [readoutError_eq _ _ _ hA.2,readoutError_eq _ _ _ hB.2]
+  simp only [Matrix.mul_sub,Matrix.trace_sub,Complex.sub_re,Finset.sum_sub_distrib]
+  ring
+
+def symmetricEffect (r : ℝ) (h : History 2 2) : Matrix Joint Joint ℂ :=
+  if r≤1/2 then correlationEffect h else 1-correlationEffect h
+
+theorem symmetricEffect_hermitian (r : ℝ) (h : History 2 2) : (symmetricEffect r h).IsHermitian := by
+  unfold symmetricEffect; split
+  · exact correlationEffect_hermitian h
+  · exact Matrix.isHermitian_one.sub (correlationEffect_hermitian h)
+
+theorem symmetricEffect_idem (r : ℝ) (h : History 2 2) :
+    symmetricEffect r h * symmetricEffect r h=symmetricEffect r h := by
+  unfold symmetricEffect; split
+  · exact correlationEffect_idem h
+  · rw [sub_mul,one_mul,mul_sub,mul_one,correlationEffect_idem,sub_self,sub_zero]
+
+def symmetricReadout (r : ℝ) (h : History 2 2) : FiniteInstrument Joint 2 :=
+  projectiveReadout (symmetricEffect r h) (symmetricEffect_hermitian r h) (symmetricEffect_idem r h)
+
+theorem symmetricReadout_weights (r : ℝ) (h : History 2 2) (Z : Matrix Joint Joint ℂ) :
+    (symmetricReadout r h).weight 0 Z=(symmetricEffect r h * Z).trace.re ∧
+    (symmetricReadout r h).weight 1 Z=((1-symmetricEffect r h)*Z).trace.re :=
+  ⟨projectiveReadout_weight_zero _ _ _ _,projectiveReadout_weight_one _ _ _ _⟩
+
+theorem symmetricReadout_realizes (r : ℝ) (A B : History 2 2 → Matrix Joint Joint ℂ) :
+    instrumentError A B (symmetricReadout r)=readoutError A B (symmetricEffect r) := by
+  simp only [instrumentError,readoutTable,symmetricReadout,projectiveReadout_weight_zero,
+    projectiveReadout_weight_one,readoutError]
+
+theorem symmetric_min_formula (r : ℝ) : (1-|1-2*r|)/2=min r (1-r) := by
+  by_cases h : r≤1/2
+  · rw [abs_of_nonneg (by linarith),min_eq_left (by linarith)]; ring
+  · rw [abs_of_neg (by linarith),min_eq_right (by linarith)]; ring
+
+theorem symmetric_reoptimized_error (r : ℝ) (hr : 0≤r) (hr1 : r≤1) :
+    instrumentError (fun h => run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput) (symmetricReadout r) = min r (1-r) := by
+  rw [symmetricReadout_realizes]
+  have hfixed := symmetric_fixed_error r hr hr1
+  rw [correlationReadout_realizes] at hfixed
+  by_cases h : r≤1/2
+  · have he : symmetricEffect r=correlationEffect := by funext k; simp only [symmetricEffect,if_pos h]
+    rw [he,hfixed,min_eq_left (by linarith)]
+  · have he : symmetricEffect r=(fun k => 1-correlationEffect k) := by funext k; simp only [symmetricEffect,if_neg h]
+    rw [he,complementary_readout_error,min_eq_right (by linarith)]
+    have hs := swapped_readout_errors (run_family (symmetricKeep r hr hr1) correlatedInput_density)
+      (run_family (symmetricFlip r hr hr1) correlatedInput_density) correlationEffect
+    linarith
+
+theorem symmetric_optimum_isLeast (r : ℝ) (hr : 0≤r) (hr1 : r≤1) :
+    IsLeast {x : ℝ | ∃ F : History 2 2 → Matrix Joint Joint ℂ,
+      (∀ h, IsBinaryPOVM (F h)) ∧ readoutError
+        (fun h => run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput)
+        (fun h => run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput) F=x}
+      (min r (1-r)) := by
+  have h := tree_error_isLeast (symmetricKeep r hr hr1) (symmetricFlip r hr hr1)
+    correlatedInput_density correlatedInput_density
+  rw [symmetric_outputDistance,symmetric_min_formula] at h
+  exact h
+
+theorem symmetric_physical_tables (r : ℝ) (hr : 0≤r) (hr1 : r≤1) :
+    ((∀ h a, 0≤readoutTable (symmetricReadout r) (fun h => run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput) h a) ∧
+      (∑ h, ∑ a, readoutTable (symmetricReadout r) (fun h => run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput) h a)=1) ∧
+    ((∀ h a, 0≤readoutTable (symmetricReadout r) (fun h => run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput) h a) ∧
+      (∑ h, ∑ a, readoutTable (symmetricReadout r) (fun h => run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput) h a)=1) ∧
+    ((∀ h a, 0≤readoutTable correlationReadout (fun h => run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput) h a) ∧
+      (∑ h, ∑ a, readoutTable correlationReadout (fun h => run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput) h a)=1) ∧
+    ((∀ h a, 0≤readoutTable correlationReadout (fun h => run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput) h a) ∧
+      (∑ h, ∑ a, readoutTable correlationReadout (fun h => run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput) h a)=1) :=
+  ⟨tree_readout_probabilities _ correlatedInput_density _,tree_readout_probabilities _ correlatedInput_density _,
+    tree_readout_probabilities _ correlatedInput_density _,tree_readout_probabilities _ correlatedInput_density _⟩
+
+theorem symmetric_old_rule_suboptimal (r : ℝ) (hr : 0≤r) (hr1 : r≤1) (hh : 1/2<r) :
+    instrumentError (fun h => run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput) (symmetricReadout r) <
+    instrumentError (fun h => run Qubit Qubit 2 (symmetricKeep r hr hr1) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip r hr hr1) h correlatedInput) correlationReadout := by
+  rw [symmetric_reoptimized_error,symmetric_fixed_error,min_eq_right (by linarith)]; linarith
+
+theorem symmetric_half_no_advantage (a : History 2 2 → ℝ)
+    (F : History 2 2 → Matrix Joint Joint ℂ) :
+    outputDistance Qubit Qubit 2 (symmetricKeep (1/2) (by norm_num) (by norm_num))
+      (symmetricFlip (1/2) (by norm_num) (by norm_num)) correlatedInput correlatedInput=0 ∧
+    readoutError (fun h => run Qubit Qubit 2 (symmetricKeep (1/2) (by norm_num) (by norm_num)) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip (1/2) (by norm_num) (by norm_num)) h correlatedInput) F=1/2 ∧
+    historyError (fun h => run Qubit Qubit 2 (symmetricKeep (1/2) (by norm_num) (by norm_num)) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip (1/2) (by norm_num) (by norm_num)) h correlatedInput) a=1/2 := by
+  refine ⟨by rw [symmetric_outputDistance]; norm_num,?_,symmetric_history_error _ _ _ a⟩
+  rw [readoutError_eq _ _ _ (run_family (symmetricKeep (1/2) (by norm_num) (by norm_num)) correlatedInput_density).2]
+  simp only [symmetric_half_all_complex,sub_self,Matrix.mul_zero,Matrix.trace_zero,Complex.zero_re,Finset.sum_const_zero,sub_zero]
+
+/-- The half-rate equality is evaluated on every complex joint input at the evolution level. -/
+theorem symmetric_half_evolution (Z : Matrix Joint Joint ℂ) :
+    krausMap (symmetricKeepStep (1/2) (by norm_num) (by norm_num)).evolution Z =
+      krausMap (symmetricFlipStep (1/2) (by norm_num) (by norm_num)).evolution Z := by
+  change krausMap (mixKraus identityKraus environmentXKraus (1/2)) Z=
+    krausMap (mixKraus environmentXKraus identityKraus (1/2)) Z
+  rw [mixKraus_action _ _ (by norm_num) (by norm_num),mixKraus_action _ _ (by norm_num) (by norm_num)]
+  norm_num; abel
+end
+end SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+
+
+namespace SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+open Matrix FiniteInterventionProcess FiniteAdaptiveMapPerturbation
+open FiniteAdaptiveMixtureSurvival FiniteAdaptiveReadoutDiscrimination FiniteMemoryProcess
+open scoped BigOperators ComplexOrder Kronecker
+noncomputable section
+
+section LiteralFields
+variable {S E : Type*} [Fintype S] [DecidableEq S] [Fintype E] [DecidableEq E] {o l : ℕ}
+theorem wrapStep_evolution_action (D : Step S E o) (L : Fin l → Matrix (S × E) (S × E) ℂ)
+    (hL : IsKrausChannel L) (J : FiniteInstrument S o) (r : NoiseRates) (Z : Matrix (S × E) (S × E) ℂ) :
+    krausMap (wrapStep D L hL J r).evolution Z =
+      (1-r.p) • krausMap D.evolution Z + r.p • krausMap L Z :=
+  mixKraus_action D.evolution L r.hp r.hp1 Z
+
+theorem wrapStep_instrument_action (D : Step S E o) (L : Fin l → Matrix (S × E) (S × E) ℂ)
+    (hL : IsKrausChannel L) (J : FiniteInstrument S o) (r : NoiseRates) (a : Fin o) (Z : Matrix (S × E) (S × E) ℂ) :
+    ((wrapStep D L hL J r).instrument.lift E).branch a Z =
+      (1-r.q) • (D.instrument.lift E).branch a Z + r.q • (J.lift E).branch a Z :=
+  mixInstrument_lift_branch S E o D.instrument J r.q r.hq r.hq1 a Z
+end LiteralFields
+
+theorem positive_environment_action_change (D : Step Qubit Qubit 2)
+    (hD : krausMap D.evolution (basisState 0 ⊗ₖ basisState 0)=basisState 0 ⊗ₖ basisState 0) :
+    krausMap (wrapStep D environmentXKraus environmentX_normalized (FiniteInstrument.prepare 1) positiveNoise).evolution
+      (basisState 0 ⊗ₖ basisState 0) ≠ krausMap D.evolution (basisState 0 ⊗ₖ basisState 0) := by
+  rw [wrapStep_evolution_action,hD,environmentX_basis]
+  intro h
+  have he := congrArg (fun M : Matrix Joint Joint ℂ => (M (0,1) (0,1)).re) h
+  norm_num [positiveNoise,Matrix.kronecker_apply,basisState,Complex.real_smul] at he
+
+theorem positive_instrument_action_change (D : Step Qubit Qubit 2) (c : ℝ) (hc : c≠0)
+    (hD : (D.instrument.lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0)=c • (basisState 0 ⊗ₖ basisState 0))
+    {l : ℕ} (L : Fin l → Matrix Joint Joint ℂ) (hL : IsKrausChannel L) :
+    ((wrapStep D L hL (FiniteInstrument.prepare 1) positiveNoise).instrument.lift Qubit).branch 0
+      (basisState 0 ⊗ₖ basisState 0) ≠ (D.instrument.lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0) := by
+  rw [wrapStep_instrument_action,hD,lift_branch_tensor,prepare_basis]
+  intro h
+  have he := congrArg (fun M : Matrix Joint Joint ℂ => (M (0,0) (0,0)).re) h
+  norm_num [positiveNoise,Matrix.kronecker_apply,basisState,Complex.real_smul] at he
+  apply hc
+  linarith
+
+theorem positiveReadStep_actions :
+    IsDensityOperator (basisState 0 ⊗ₖ basisState 0) ∧
+    krausMap (wrapStep readStep environmentXKraus environmentX_normalized (FiniteInstrument.prepare 1) positiveNoise).evolution
+      (basisState 0 ⊗ₖ basisState 0) ≠ krausMap readStep.evolution (basisState 0 ⊗ₖ basisState 0) ∧
+    ((wrapStep readStep environmentXKraus environmentX_normalized (FiniteInstrument.prepare 1) positiveNoise).instrument.lift Qubit).branch 0
+      (basisState 0 ⊗ₖ basisState 0) ≠ (readStep.instrument.lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0) := by
+  refine ⟨basisJoint_density 0 0,positive_environment_action_change readStep ?_,
+    positive_instrument_action_change readStep 1 (by norm_num) ?_ _ _⟩
+  · simp [readStep,localStep,krausMap]
+  · change (FiniteInstrument.computational.lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0)=_
+    rw [lift_branch_tensor,computational_basis]; simp
+
+theorem positiveIdentityStep_actions :
+    IsDensityOperator (basisState 0 ⊗ₖ basisState 0) ∧
+    krausMap (wrapStep identityPrepare environmentXKraus environmentX_normalized (FiniteInstrument.prepare 1) positiveNoise).evolution
+      (basisState 0 ⊗ₖ basisState 0) ≠ krausMap identityPrepare.evolution (basisState 0 ⊗ₖ basisState 0) ∧
+    ((wrapStep identityPrepare environmentXKraus environmentX_normalized (FiniteInstrument.prepare 1) positiveNoise).instrument.lift Qubit).branch 0
+      (basisState 0 ⊗ₖ basisState 0) ≠ (identityPrepare.instrument.lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0) := by
+  refine ⟨basisJoint_density 0 0,positive_environment_action_change identityPrepare ?_,
+    positive_instrument_action_change identityPrepare 1 (by norm_num) ?_ _ _⟩
+  · simp [identityPrepare,localStep,krausMap]
+  · change ((FiniteInstrument.prepare 0).lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0)=_
+    rw [lift_branch_tensor,prepare_basis]; simp
+
+theorem positiveFlipStep_actions :
+    IsDensityOperator (basisState 0 ⊗ₖ basisState 0) ∧
+    krausMap (wrapStep flipPrepare identityKraus identityKraus_normalized (FiniteInstrument.prepare 1) positiveNoise).evolution
+      (basisState 0 ⊗ₖ basisState 0) ≠ krausMap flipPrepare.evolution (basisState 0 ⊗ₖ basisState 0) ∧
+    ((wrapStep flipPrepare identityKraus identityKraus_normalized (FiniteInstrument.prepare 1) positiveNoise).instrument.lift Qubit).branch 0
+      (basisState 0 ⊗ₖ basisState 0) ≠ (flipPrepare.instrument.lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0) := by
+  refine ⟨basisJoint_density 0 0,?_,positive_instrument_action_change flipPrepare 1 (by norm_num) ?_ _ _⟩
+  · rw [wrapStep_evolution_action]
+    change (1-positiveNoise.p) • krausMap environmentXKraus (basisState 0 ⊗ₖ basisState 0) +
+      positiveNoise.p • krausMap identityKraus (basisState 0 ⊗ₖ basisState 0) ≠ krausMap environmentXKraus (basisState 0 ⊗ₖ basisState 0)
+    rw [environmentX_basis]
+    simp only [krausMap,identityKraus,Fin.sum_univ_one,Matrix.one_mul,Matrix.conjTranspose_one,Matrix.mul_one]
+    intro h
+    have he := congrArg (fun M : Matrix Joint Joint ℂ => (M (0,0) (0,0)).re) h
+    norm_num [positiveNoise,Matrix.kronecker_apply,basisState,Complex.real_smul] at he
+  · change ((FiniteInstrument.prepare 0).lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0)=_
+    rw [lift_branch_tensor,prepare_basis]; simp
+
+theorem quarterMemory_evolution_zero_basis :
+    krausMap quarterMemoryStep.evolution (basisState 0 ⊗ₖ basisState 0)=basisState 0 ⊗ₖ basisState 0 := by
+  change krausMap (mixKraus identityKraus swapKraus (1/4)) (basisState 0 ⊗ₖ basisState 0)=_
+  rw [mixKraus_action _ _ (by norm_num) (by norm_num)]
+  have hs : krausMap swapKraus (basisState 0 ⊗ₖ basisState 0)=basisState 0 ⊗ₖ basisState 0 := swapJoint_basis 0 0
+  rw [hs]
+  simp only [krausMap,identityKraus,Fin.sum_univ_one,Matrix.one_mul,Matrix.conjTranspose_one,Matrix.mul_one]
+  module
+
+theorem quarterMemory_instrument_zero_basis :
+    (quarterMemoryStep.instrument.lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0)=
+      (3/4:ℝ) • (basisState 0 ⊗ₖ basisState 0) := by
+  change ((mixInstrument (FiniteInstrument.prepare 0) (FiniteInstrument.prepare 1) (1/4)
+    (by norm_num) (by norm_num)).lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0)=_
+  rw [mixInstrument_lift_branch,lift_branch_tensor,lift_branch_tensor,prepare_basis,prepare_basis]
+  norm_num
+
+theorem positiveQuarterStep_actions :
+    IsDensityOperator (basisState 0 ⊗ₖ basisState 0) ∧
+    krausMap (wrapStep quarterMemoryStep environmentXKraus environmentX_normalized (FiniteInstrument.prepare 1) positiveNoise).evolution
+      (basisState 0 ⊗ₖ basisState 0) ≠ krausMap quarterMemoryStep.evolution (basisState 0 ⊗ₖ basisState 0) ∧
+    ((wrapStep quarterMemoryStep environmentXKraus environmentX_normalized (FiniteInstrument.prepare 1) positiveNoise).instrument.lift Qubit).branch 0
+      (basisState 0 ⊗ₖ basisState 0) ≠ (quarterMemoryStep.instrument.lift Qubit).branch 0 (basisState 0 ⊗ₖ basisState 0) :=
+  ⟨basisJoint_density 0 0,positive_environment_action_change quarterMemoryStep quarterMemory_evolution_zero_basis,
+    positive_instrument_action_change quarterMemoryStep (3/4) (by norm_num) quarterMemory_instrument_zero_basis _ _⟩
+end
+end SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+
+
+namespace SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+open Matrix FiniteInterventionProcess FiniteAdaptiveMapPerturbation
+open FiniteAdaptiveMixtureSurvival FiniteAdaptiveReadoutDiscrimination FiniteMemoryProcess
+open scoped BigOperators ComplexOrder Kronecker
+noncomputable section
+
+/-- The symmetric fixture law retains the impossible suffix outcome explicitly. -/
+theorem symmetric_fixture_branches (r : ℝ) (hr : 0≤r) (hr1 : r≤1) (h a : Qubit) :
+    run Qubit Qubit 2 (symmetricKeep r hr hr1) (h,a,()) correlatedInput =
+      (if a=0 then (1-r) • ((1/2:ℂ) • (basisState 0 ⊗ₖ basisState h)) +
+        r • ((1/2:ℂ) • (basisState 0 ⊗ₖ basisState (1-h))) else 0) ∧
+    run Qubit Qubit 2 (symmetricFlip r hr hr1) (h,a,()) correlatedInput =
+      (if a=0 then (1-r) • ((1/2:ℂ) • (basisState 0 ⊗ₖ basisState (1-h))) +
+        r • ((1/2:ℂ) • (basisState 0 ⊗ₖ basisState h)) else 0) := by
+  rw [symmetricKeep_run,symmetricFlip_run,correlationKeep_run,correlationFlip_run]
+  by_cases ha : a=0 <;> simp only [ha,if_true,if_false,smul_zero,zero_add,and_self]
+
+/-- Impossible suffixes remain zero on every complex input, without postselection. -/
+theorem symmetric_impossible_all_complex (r : ℝ) (hr : 0≤r) (hr1 : r≤1) (h : Qubit) (Z : Matrix Joint Joint ℂ) :
+    run Qubit Qubit 2 (symmetricKeep r hr hr1) (h,1,()) Z=0 ∧
+    run Qubit Qubit 2 (symmetricFlip r hr hr1) (h,1,()) Z=0 := by
+  constructor <;>
+    exact FiniteInstrument.lift_prepare_other Qubit 0 1 (by decide) _
+
+theorem symmetric_boundary_errors :
+    outputDistance Qubit Qubit 2 (symmetricKeep 0 le_rfl (by norm_num)) (symmetricFlip 0 le_rfl (by norm_num)) correlatedInput correlatedInput=1 ∧
+    instrumentError (fun h => run Qubit Qubit 2 (symmetricKeep 0 le_rfl (by norm_num)) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip 0 le_rfl (by norm_num)) h correlatedInput) correlationReadout=0 ∧
+    instrumentError (fun h => run Qubit Qubit 2 (symmetricKeep 0 le_rfl (by norm_num)) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip 0 le_rfl (by norm_num)) h correlatedInput) (symmetricReadout 0)=0 ∧
+    instrumentError (fun h => run Qubit Qubit 2 (symmetricKeep (1/2) (by norm_num) (by norm_num)) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip (1/2) (by norm_num) (by norm_num)) h correlatedInput) correlationReadout=1/2 ∧
+    instrumentError (fun h => run Qubit Qubit 2 (symmetricKeep (1/2) (by norm_num) (by norm_num)) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip (1/2) (by norm_num) (by norm_num)) h correlatedInput) (symmetricReadout (1/2))=1/2 ∧
+    outputDistance Qubit Qubit 2 (symmetricKeep 1 (by norm_num) le_rfl) (symmetricFlip 1 (by norm_num) le_rfl) correlatedInput correlatedInput=1 ∧
+    instrumentError (fun h => run Qubit Qubit 2 (symmetricKeep 1 (by norm_num) le_rfl) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip 1 (by norm_num) le_rfl) h correlatedInput) correlationReadout=1 ∧
+    instrumentError (fun h => run Qubit Qubit 2 (symmetricKeep 1 (by norm_num) le_rfl) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (symmetricFlip 1 (by norm_num) le_rfl) h correlatedInput) (symmetricReadout 1)=0 := by
+  simp only [symmetric_outputDistance,symmetric_fixed_error,symmetric_reoptimized_error]
+  norm_num
+
+theorem quarterMemory_nominal_errors :
+    instrumentError (fun h => run Qubit Qubit 2 quarterMemoryTree h memoryInput)
+      (fun h => run Qubit Qubit 2 memoryIdentityTree h memoryInput) memoryReadout=9/32 ∧
+    instrumentError (fun h => run Qubit Qubit 2 quarterMemoryTree h memoryInput)
+      (fun h => run Qubit Qubit 2 memoryIdentityTree h memoryInput) historyOnlyReadout=3/8 ∧
+    (∀ a : History 2 1 → ℝ, (∀ h, a h ∈ Set.Icc (0:ℝ) 1) →
+      3/8 ≤ historyError (fun h => run Qubit Qubit 2 quarterMemoryTree h memoryInput)
+        (fun h => run Qubit Qubit 2 memoryIdentityTree h memoryInput) a) := by
+  refine ⟨memory_quarter_actual_error,quarter_history_actual_error,?_⟩
+  intro a ha
+  exact quarter_history_isLeast.2 ⟨a,ha,rfl⟩
+
+/-- Zero-gap memory boundaries concern actual physical rules, not an abstract margin. -/
+theorem memory_zero_gap_endpoints (p q : ℝ) (hp : 0≤p) (hp1 : p≤1) (hq : 0≤q) (hq1 : q≤1) :
+    instrumentError (fun h => run Qubit Qubit 2 (memoryMixedTree 0 q le_rfl (by norm_num) hq hq1) h memoryInput)
+      (fun h => run Qubit Qubit 2 memoryIdentityTree h memoryInput) historyOnlyReadout -
+    instrumentError (fun h => run Qubit Qubit 2 (memoryMixedTree 0 q le_rfl (by norm_num) hq hq1) h memoryInput)
+      (fun h => run Qubit Qubit 2 memoryIdentityTree h memoryInput) memoryReadout=0 ∧
+    instrumentError (fun h => run Qubit Qubit 2 (memoryMixedTree p 1 hp hp1 (by norm_num) le_rfl) h memoryInput)
+      (fun h => run Qubit Qubit 2 memoryIdentityTree h memoryInput) historyOnlyReadout -
+    instrumentError (fun h => run Qubit Qubit 2 (memoryMixedTree p 1 hp hp1 (by norm_num) le_rfl) h memoryInput)
+      (fun h => run Qubit Qubit 2 memoryIdentityTree h memoryInput) memoryReadout=0 := by
+  have h0 := actual_memory_readout_gap 0 q le_rfl (by norm_num) hq hq1
+  have h1 := actual_memory_readout_gap p 1 hp hp1 (by norm_num) le_rfl
+  exact ⟨by simpa only [instrumentError,zero_mul,zero_div] using h0,
+    by simpa only [instrumentError,sub_self,mul_zero,zero_div] using h1⟩
+
+/-- Both zero-error certificates preserve the feedback optimum and its old physical rule. -/
+theorem feedback_zero_comparisons (p : ℝ) (hp : 0≤p) (hp1 : p≤1) (m : ℕ)
+    (U V : Tree Qubit Qubit 2 (m+1)) {esA esB : List ℝ}
+    (cA : PairedErrors Qubit Qubit 2 (idealFeedback m) U esA)
+    (cB : PairedErrors Qubit Qubit 2 (noisyFeedback p hp hp1 m) V esB)
+    (hA : esA.sum=0) (hB : esB.sum=0) :
+    (1-outputDistance Qubit Qubit 2 U V correlatedInput correlatedInput)/2=(1-p)^m/2 ∧
+    instrumentError (fun h => run Qubit Qubit 2 U h correlatedInput)
+      (fun h => run Qubit Qubit 2 V h correlatedInput) (feedbackReadout p hp hp1 m)=(1-p)^m/2 := by
+  have h := feedback_errors_optimum_fixed p hp hp1 m U V correlatedInput_density correlatedInput_density cA cB
+  simp only [hA,hB,traceDist_self,zero_add,min_eq_right (by norm_num : (0:ℝ)≤1),zero_div] at h
+  exact ⟨sub_eq_zero.mp (abs_eq_zero.mp (le_antisymm h.1 (abs_nonneg _))),
+    sub_eq_zero.mp (abs_eq_zero.mp (le_antisymm h.2 (abs_nonneg _)))⟩
+
+theorem feedback_survival_one_exact (p : ℝ) (hp : 0≤p) (hp1 : p≤1) (m : ℕ)
+    (U V : Tree Qubit Qubit 2 (m+1)) {rsA rsB : List NoiseRates}
+    (cA : PairedMixture Qubit Qubit 2 (idealFeedback m) U rsA)
+    (cB : PairedMixture Qubit Qubit 2 (noisyFeedback p hp hp1 m) V rsB)
+    (hA : survival rsA=1) (hB : survival rsB=1) :
+    (1-outputDistance Qubit Qubit 2 U V correlatedInput correlatedInput)/2=(1-p)^m/2 ∧
+    instrumentError (fun h => run Qubit Qubit 2 U h correlatedInput)
+      (fun h => run Qubit Qubit 2 V h correlatedInput) (feedbackReadout p hp hp1 m)=(1-p)^m/2 := by
+  have ho := (feedback_mixture_optimum p hp hp1 m U V correlatedInput_density correlatedInput_density cA cB).2.2
+  have hf := feedback_mixture_fixed p hp hp1 m U V correlatedInput_density correlatedInput_density cA cB
+  simp only [hA,hB,traceDist_self,mul_zero,zero_add,sub_self,zero_div] at ho hf
+  exact ⟨sub_eq_zero.mp (abs_eq_zero.mp (le_antisymm ho (abs_nonneg _))),
+    sub_eq_zero.mp (abs_eq_zero.mp (le_antisymm hf (abs_nonneg _)))⟩
+
+theorem feedback_survival_zero_guard (p : ℝ) (hp : 0≤p) (hp1 : p≤1) (m : ℕ)
+    (U V : Tree Qubit Qubit 2 (m+1)) {Y Z : Matrix Joint Joint ℂ}
+    (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z) {rsA rsB : List NoiseRates}
+    (cA : PairedMixture Qubit Qubit 2 (idealFeedback m) U rsA)
+    (cB : PairedMixture Qubit Qubit 2 (noisyFeedback p hp hp1 m) V rsB)
+    (hA : survival rsA=0) (hB : survival rsB=0) :
+    |(1-outputDistance Qubit Qubit 2 U V Y Z)/2-(1-p)^m/2|≤1 ∧
+    |instrumentError (fun h => run Qubit Qubit 2 U h Y)
+      (fun h => run Qubit Qubit 2 V h Z) (feedbackReadout p hp hp1 m)-(1-p)^m/2|≤1 := by
+  have ho := (feedback_mixture_optimum p hp hp1 m U V hY hZ cA cB).2.2
+  have hf := feedback_mixture_fixed p hp hp1 m U V hY hZ cA cB
+  simpa only [hA,hB,zero_mul,zero_add,sub_zero,show (1+1:ℝ)/2=1 by norm_num] using And.intro ho hf
+end
+end SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+
+
+namespace SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+open Matrix FiniteInterventionProcess FiniteAdaptiveMapPerturbation
+open FiniteAdaptiveMixtureSurvival FiniteAdaptiveReadoutDiscrimination FiniteMemoryProcess
+open scoped BigOperators ComplexOrder Kronecker
+noncomputable section
+
+/-- Every complex branch of any perturbed tree uses the original fixed E measurement. -/
+theorem correlation_transported_fixed_relabel (U : Tree Qubit Qubit 2 2)
+    (Z : Matrix Joint Joint ℂ) (k : History 2 2) (b : Qubit) :
+    readoutTable correlationReadout (fun h => run Qubit Qubit 2 U h Z) k b =
+      fixedEnvironmentReadout.weight (if k.1=0 then b else 1-b) (run Qubit Qubit 2 U k Z) :=
+  correlationReadout_fixed_relabel k b _
+
+/-- Reoptimization exchanges only the hypothesis labels of that same physical rule. -/
+theorem symmetricReadout_relabel (r : ℝ) (k : History 2 2) (b : Qubit) (Z : Matrix Joint Joint ℂ) :
+    (symmetricReadout r k).weight b Z =
+      (correlationReadout k).weight (if r≤1/2 then b else 1-b) Z := by
+  have hb : b=0 ∨ b=1 := by fin_cases b <;> norm_num
+  by_cases h : r≤1/2
+  · rw [if_pos h]
+    rcases hb with rfl | rfl
+    · rw [(symmetricReadout_weights r k Z).1,correlationReadout_weight_zero]
+      simp only [symmetricEffect,if_pos h]
+    · rw [(symmetricReadout_weights r k Z).2,correlationReadout_weight_one]
+      simp only [symmetricEffect,if_pos h]
+  · rw [if_neg h]
+    rcases hb with rfl | rfl
+    · simp only [sub_zero]
+      rw [(symmetricReadout_weights r k Z).1,correlationReadout_weight_one]
+      simp only [symmetricEffect,if_neg h]
+    · simp only [sub_self]
+      rw [(symmetricReadout_weights r k Z).2,correlationReadout_weight_zero]
+      simp only [symmetricEffect,if_neg h,sub_sub_cancel]
+
+section NormalizedWrapper
+variable {S E : Type*} [Fintype S] [DecidableEq S] [Fintype E] [DecidableEq E] {o l : ℕ}
+theorem wrapStep_branch_normalized (D : Step S E o) (L : Fin l → Matrix (S × E) (S × E) ℂ)
+    (hL : IsKrausChannel L) (J : FiniteInstrument S o) (r : NoiseRates) (Z : Matrix (S × E) (S × E) ℂ) :
+    (∑ a, ((wrapStep D L hL J r).branch S E o a Z).trace)=Z.trace :=
+  Step.sum_trace S E o _ Z
+
+theorem wrapStep_branch_positive (D : Step S E o) (L : Fin l → Matrix (S × E) (S × E) ℂ)
+    (hL : IsKrausChannel L) (J : FiniteInstrument S o) (r : NoiseRates) (a : Fin o)
+    {Z : Matrix (S × E) (S × E) ℂ} (hZ : Z.PosSemidef) :
+    ((wrapStep D L hL J r).branch S E o a Z).PosSemidef :=
+  Step.branch_posSemidef S E o _ a hZ
+end NormalizedWrapper
+
+/-- Actual separate comparison budgets also support arbitrary non-mixture perturbations. -/
+theorem correlation_budget_advantage (U V : Tree Qubit Qubit 2 2)
+    {Y Z : Matrix Joint Joint ℂ} (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z)
+    (βA βB : ℝ)
+    (hA : outputDistance Qubit Qubit 2 correlationKeep U correlatedInput Y ≤ βA)
+    (hB : outputDistance Qubit Qubit 2 correlationFlip V correlatedInput Z ≤ βB)
+    (a : History 2 2 → ℝ) (ha : ∀ h, a h ∈ Set.Icc (0:ℝ) 1) :
+    1/2-βA-βB ≤ historyError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) a -
+      instrumentError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) correlationReadout := by
+  have h := readout_advantage_conservative (run_family correlationKeep correlatedInput_density)
+    (run_family correlationFlip correlatedInput_density) (run_family U hY) (run_family V hZ)
+    correlationEffect (fun h => isBinaryPOVM_of_projection (correlationEffect_hermitian h)
+      (correlationEffect_idem h)) (1/2) (fun a ha => le_of_eq (correlation_history_only a ha).symm) a ha
+  rw [correlation_effect_error_zero,sub_zero,tree_branchDistance,tree_branchDistance] at h
+  rw [correlationReadout_realizes]; linarith
+
+theorem memory_budget_advantage (p q : ℝ) (hp : 0≤p) (hp1 : p≤1) (hq : 0≤q) (hq1 : q≤1)
+    (U V : Tree Qubit Qubit 2 1) {Y Z : Matrix Joint Joint ℂ}
+    (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z) (βA βB : ℝ)
+    (hA : outputDistance Qubit Qubit 2 (memoryMixedTree p q hp hp1 hq hq1) U memoryInput Y ≤ βA)
+    (hB : outputDistance Qubit Qubit 2 memoryIdentityTree V memoryInput Z ≤ βB)
+    (a : History 2 1 → ℝ) (ha : ∀ h, a h ∈ Set.Icc (0:ℝ) 1) :
+    p*(1-q)/2-βA-βB ≤ historyError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) a -
+      instrumentError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) memoryReadout := by
+  have h := readout_advantage_conservative
+    (run_family (memoryMixedTree p q hp hp1 hq hq1) memoryInput_density)
+    (run_family memoryIdentityTree memoryInput_density) (run_family U hY) (run_family V hZ)
+    memoryEffect (fun h => isBinaryPOVM_of_projection (memoryEffect_hermitian h)
+      (memoryEffect_idem h)) ((1-q)/2) (fun a ha => memory_history_lower p q hp hp1 hq hq1 a ha) a ha
+  rw [memoryReadout_optimal_effect,tree_branchDistance,tree_branchDistance] at h
+  rw [memoryReadout_realizes]; nlinarith
+
+theorem correlation_budget_strict (U V : Tree Qubit Qubit 2 2)
+    {Y Z : Matrix Joint Joint ℂ} (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z)
+    (βA βB : ℝ)
+    (hA : outputDistance Qubit Qubit 2 correlationKeep U correlatedInput Y ≤ βA)
+    (hB : outputDistance Qubit Qubit 2 correlationFlip V correlatedInput Z ≤ βB)
+    (hsmall : βA+βB<1/2) (a : History 2 2 → ℝ) (ha : ∀ h, a h ∈ Set.Icc (0:ℝ) 1) :
+    instrumentError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) correlationReadout <
+      historyError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) a := by
+  have h := correlation_budget_advantage U V hY hZ βA βB hA hB a ha; linarith
+
+theorem memory_budget_strict (p q : ℝ) (hp : 0≤p) (hp1 : p≤1) (hq : 0≤q) (hq1 : q≤1)
+    (U V : Tree Qubit Qubit 2 1) {Y Z : Matrix Joint Joint ℂ}
+    (hY : IsDensityOperator Y) (hZ : IsDensityOperator Z) (βA βB : ℝ)
+    (hA : outputDistance Qubit Qubit 2 (memoryMixedTree p q hp hp1 hq hq1) U memoryInput Y ≤ βA)
+    (hB : outputDistance Qubit Qubit 2 memoryIdentityTree V memoryInput Z ≤ βB)
+    (hsmall : βA+βB<p*(1-q)/2) (a : History 2 1 → ℝ) (ha : ∀ h, a h ∈ Set.Icc (0:ℝ) 1) :
+    instrumentError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) memoryReadout <
+      historyError (fun h => run Qubit Qubit 2 U h Y) (fun h => run Qubit Qubit 2 V h Z) a := by
+  have h := memory_budget_advantage p q hp hp1 hq hq1 U V hY hZ βA βB hA hB a ha; linarith
+end
+end SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+
+namespace SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
+open Matrix FiniteInterventionProcess FiniteAdaptiveMapPerturbation
+open FiniteAdaptiveMixtureSurvival FiniteAdaptiveReadoutDiscrimination FiniteMemoryProcess
+open scoped BigOperators ComplexOrder Kronecker
+noncomputable section
+
+/-- Nominal feedback optimization is obtained from the existing all-effect theorem. -/
+theorem feedback_nominal_optimum_physical (p : ℝ) (hp : 0≤p) (hp1 : p≤1) (m : ℕ) :
+    IsLeast {x : ℝ | ∃ F : History 2 (m+1) → Matrix Joint Joint ℂ,
+      (∀ h, IsBinaryPOVM (F h)) ∧ readoutError
+        (fun h => run Qubit Qubit 2 (idealFeedback m) h correlatedInput)
+        (fun h => run Qubit Qubit 2 (noisyFeedback p hp hp1 m) h correlatedInput) F=x}
+      ((1-p)^m/2) ∧
+    instrumentError (fun h => run Qubit Qubit 2 (idealFeedback m) h correlatedInput)
+      (fun h => run Qubit Qubit 2 (noisyFeedback p hp hp1 m) h correlatedInput)
+      (feedbackReadout p hp hp1 m)=(1-p)^m/2 :=
+  ⟨feedback_error_isLeast p hp hp1 m,feedbackReadout_attains p hp hp1 m⟩
+end
+end SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
