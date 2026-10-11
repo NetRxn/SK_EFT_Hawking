@@ -5295,6 +5295,7 @@ import SKEFTHawking.FiniteGibbsCylinderHistory
 import SKEFTHawking.FiniteGibbsCylinderShift
 import SKEFTHawking.FiniteNontracialReflectionDynamics
 import SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutDiscrimination
+import SKEFTHawking.QuantumNetwork.FiniteAdaptiveGibbsReadout
 import SKEFTHawking.FiniteNontracialObservableTransfer
 import SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess
 
