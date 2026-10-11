@@ -2738,3 +2738,942 @@ theorem historyComplexVector_reset (p : Gap) (rs : List Gap) (hreset : p.value =
   exact (sq_eq_zero_iff.mp h)
 
 end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped BigOperators ComplexOrder InnerProductSpace
+
+/-- The scalar representative is the raw nontracial mean at every literal history. -/
+def historyScalarCoefficients (rs : List Gap) : (Labels rs → ℂ) →ₗ[ℂ] (Labels rs → ℂ) where
+  toFun F _ := (rhoN * historyRawSynthesisLinear rs F).trace
+  map_add' F G := by
+    ext u
+    simp only [map_add, mul_add, Matrix.trace_add, Pi.add_apply]
+  map_smul' c F := by
+    ext u
+    simp only [map_smul, Matrix.mul_smul, Matrix.trace_smul, Pi.smul_apply]
+    rfl
+
+/-- Diagonal raw synthesis is expanded in actual inner Pauli coefficients. -/
+def historyDiagonalCoefficients (rs : List Gap) : (Labels rs → ℂ) →ₗ[ℂ] (Labels rs → ℂ) :=
+  (historyInnerPullLinear rs).comp
+    (pauliCoefficients.comp (diagonalLinear.comp (historyRawSynthesisLinear rs)))
+
+theorem historyScalarCoefficients_apply (rs : List Gap) (F : Labels rs → ℂ) (u : Labels rs) :
+    historyScalarCoefficients rs F u = (rhoN * historyRawSynthesis rs F).trace := rfl
+
+theorem historyDiagonalCoefficients_apply (rs : List Gap) (F : Labels rs → ℂ) (u : Labels rs) :
+    historyDiagonalCoefficients rs F u =
+      PauliInstrumentReconstruction.coefficients (diagonalPart (historyRawSynthesis rs F)) u.1 := rfl
+
+/-- The two synthesis identities hold before quotienting, with no retention inverse. -/
+theorem historyScalarCoefficients_synthesis (p : Gap) (rs : List Gap) (F : Labels rs → ℂ) :
+    historySynthesis p rs (historyScalarCoefficients rs F) = scalarPart (historySynthesis p rs F) := by
+  have hc (c : ℂ) : historySynthesis p rs (fun _ => c) = c • (1 : Mat2) := by
+    simp only [historySynthesis, ← Finset.smul_sum]
+    apply congrArg (c • ·)
+    simpa only [historySynthesis, one_smul] using historySynthesis_constant p rs
+  change historySynthesis p rs (fun _ => (rhoN * historyRawSynthesis rs F).trace) = _
+  rw [hc, scalarPart, history_synthesis_raw, Psi_mean]
+
+theorem historyDiagonalCoefficients_synthesis (p : Gap) (rs : List Gap) (F : Labels rs → ℂ) :
+    historySynthesis p rs (historyDiagonalCoefficients rs F) = diagonalPart (historySynthesis p rs F) := by
+  change historySynthesis p rs (fun u => PauliInstrumentReconstruction.coefficients
+    (diagonalPart (historyRawSynthesis rs F)) u.1) = _
+  rw [historySynthesis_inner, PauliInstrumentReconstruction.synthesis_coefficients,
+    history_synthesis_raw, diagonal_Psi]
+
+theorem historyScalarCoefficients_null (p : Gap) (rs : List Gap) :
+    NullPreserving (history_posSemidef p rs) (historyScalarCoefficients rs) := by
+  intro F hF
+  apply (mem_nullSpace_iff _ _ _).mpr
+  apply (mk_eq_zero_iff _ _ _).mp
+  rw [history_null_iff]
+  erw [historyScalarCoefficients_synthesis]
+  have h : historySynthesis p rs F = 0 := (history_null_iff p rs F).mp
+    ((mk_eq_zero_iff _ _ F).mpr ((mem_nullSpace_iff _ _ F).mp hF))
+  rw [h]
+  exact map_zero scalarLinear
+
+theorem historyDiagonalCoefficients_null (p : Gap) (rs : List Gap) :
+    NullPreserving (history_posSemidef p rs) (historyDiagonalCoefficients rs) := by
+  intro F hF
+  apply (mem_nullSpace_iff _ _ _).mpr
+  apply (mk_eq_zero_iff _ _ _).mp
+  rw [history_null_iff]
+  erw [historyDiagonalCoefficients_synthesis]
+  have h : historySynthesis p rs F = 0 := (history_null_iff p rs F).mp
+    ((mk_eq_zero_iff _ _ F).mpr ((mem_nullSpace_iff _ _ F).mp hF))
+  rw [h]
+  exact map_zero diagonalLinear
+
+/-- Finite-dimensional continuity is obtained from the actual descended linear map. -/
+def historyScalarProjection (p : Gap) (rs : List Gap) : HistorySpace p rs →L[ℂ] HistorySpace p rs :=
+  (descend (history_posSemidef p rs) (historyScalarCoefficients rs)
+    (historyScalarCoefficients_null p rs)).toContinuousLinearMap
+
+def historyDiagonalProjection (p : Gap) (rs : List Gap) : HistorySpace p rs →L[ℂ] HistorySpace p rs :=
+  (descend (history_posSemidef p rs) (historyDiagonalCoefficients rs)
+    (historyDiagonalCoefficients_null p rs)).toContinuousLinearMap
+
+theorem historyScalarProjection_mk (p : Gap) (rs : List Gap) (F : Labels rs → ℂ) :
+    historyScalarProjection p rs (mk _ _ F) = mk _ _ (historyScalarCoefficients rs F) :=
+  descend_mk _ _ _ F
+
+theorem historyDiagonalProjection_mk (p : Gap) (rs : List Gap) (F : Labels rs → ℂ) :
+    historyDiagonalProjection p rs (mk _ _ F) = mk _ _ (historyDiagonalCoefficients rs F) :=
+  descend_mk _ _ _ F
+
+theorem historyScalarProjection_coordinates (p : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    historyCoordinates p rs (historyScalarProjection p rs z) = scalarPart (historyCoordinates p rs z) := by
+  obtain ⟨F,rfl⟩ := mk_surjective _ _ z
+  rw [historyScalarProjection_mk, historyCoordinates_mk, historyCoordinates_mk,
+    historyScalarCoefficients_synthesis]
+
+theorem historyDiagonalProjection_coordinates (p : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    historyCoordinates p rs (historyDiagonalProjection p rs z) = diagonalPart (historyCoordinates p rs z) := by
+  obtain ⟨F,rfl⟩ := mk_surjective _ _ z
+  rw [historyDiagonalProjection_mk, historyCoordinates_mk, historyCoordinates_mk,
+    historyDiagonalCoefficients_synthesis]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped ComplexOrder InnerProductSpace
+
+section HistoryProjections
+variable (p : Gap) (rs : List Gap)
+local notation "C" => historyScalarProjection p rs
+local notation "B" => historyDiagonalProjection p rs
+
+theorem historyScalarProjection_twice (z : HistorySpace p rs) : C (C z) = C z := by
+  apply historyCoordinates_injective p rs
+  simp only [historyScalarProjection_coordinates, scalar_idempotent]
+
+theorem historyDiagonalProjection_twice (z : HistorySpace p rs) : B (B z) = B z := by
+  apply historyCoordinates_injective p rs
+  simp only [historyDiagonalProjection_coordinates, diagonal_idempotent]
+
+theorem historyScalarProjection_after_diagonal (z : HistorySpace p rs) : C (B z) = C z := by
+  apply historyCoordinates_injective p rs
+  rw [historyScalarProjection_coordinates, historyDiagonalProjection_coordinates,
+    historyScalarProjection_coordinates, scalar_diagonal]
+
+theorem historyDiagonalProjection_after_scalar (z : HistorySpace p rs) : B (C z) = C z := by
+  apply historyCoordinates_injective p rs
+  simp only [historyDiagonalProjection_coordinates, historyScalarProjection_coordinates, diagonal_scalar]
+
+theorem historyScalarProjection_symmetric : (C).IsSymmetric := by
+  intro z w
+  change ⟪C z,w⟫_ℂ = ⟪z,C w⟫_ℂ
+  rw [history_coordinates_inner, history_coordinates_inner, historyScalarProjection_coordinates,
+    historyScalarProjection_coordinates, form_scalar_symmetric]
+
+theorem historyDiagonalProjection_symmetric : (B).IsSymmetric := by
+  intro z w
+  change ⟪B z,w⟫_ℂ = ⟪z,B w⟫_ℂ
+  rw [history_coordinates_inner, history_coordinates_inner, historyDiagonalProjection_coordinates,
+    historyDiagonalProjection_coordinates, form_diagonal_symmetric]
+
+theorem historyScalarProjection_inner (z : HistorySpace p rs) : ⟪C z,z⟫_ℂ = ⟪C z,C z⟫_ℂ := by
+  have h := historyScalarProjection_symmetric p rs (C z) z
+  change ⟪C (C z),z⟫_ℂ = ⟪C z,C z⟫_ℂ at h
+  rwa [historyScalarProjection_twice] at h
+
+theorem historyDiagonalProjection_inner (z : HistorySpace p rs) : ⟪B z,z⟫_ℂ = ⟪B z,B z⟫_ℂ := by
+  have h := historyDiagonalProjection_symmetric p rs (B z) z
+  change ⟪B (B z),z⟫_ℂ = ⟪B z,B z⟫_ℂ at h
+  rwa [historyDiagonalProjection_twice] at h
+
+theorem historyScalarProjection_positive : (C).IsPositive := by
+  rw [ContinuousLinearMap.isPositive_def]
+  refine ⟨historyScalarProjection_symmetric p rs,?_⟩
+  intro z
+  change 0 ≤ (⟪C z,z⟫_ℂ).re
+  rw [historyScalarProjection_inner]
+  exact inner_self_nonneg (𝕜 := ℂ) (x := C z)
+
+theorem historyDiagonalProjection_positive : (B).IsPositive := by
+  rw [ContinuousLinearMap.isPositive_def]
+  refine ⟨historyDiagonalProjection_symmetric p rs,?_⟩
+  intro z
+  change 0 ≤ (⟪B z,z⟫_ℂ).re
+  rw [historyDiagonalProjection_inner]
+  exact inner_self_nonneg (𝕜 := ℂ) (x := B z)
+
+theorem historyScalarProjection_selfAdjoint : IsSelfAdjoint C :=
+  (historyScalarProjection_positive p rs).isSelfAdjoint
+
+theorem historyDiagonalProjection_selfAdjoint : IsSelfAdjoint B :=
+  (historyDiagonalProjection_positive p rs).isSelfAdjoint
+
+theorem historyScalarProjection_error_orthogonal (z : HistorySpace p rs) : ⟪C z,z-C z⟫_ℂ = 0 := by
+  rw [inner_sub_right, historyScalarProjection_inner, sub_self]
+
+theorem historyDiagonalProjection_error_orthogonal (z : HistorySpace p rs) : ⟪B z,z-B z⟫_ℂ = 0 := by
+  rw [inner_sub_right, historyDiagonalProjection_inner, sub_self]
+
+/-- The three complementary sectors are orthogonal in the actual weighted quotient. -/
+theorem historyProjection_sectors_orthogonal (z : HistorySpace p rs) :
+    ⟪C z,B z-C z⟫_ℂ = 0 ∧ ⟪C z,z-B z⟫_ℂ = 0 ∧ ⟪B z-C z,z-B z⟫_ℂ = 0 := by
+  have hcb : ⟪C z,B z⟫_ℂ = ⟪C z,z⟫_ℂ := by
+    have h := historyDiagonalProjection_symmetric p rs (C z) z
+    change ⟪B (C z),z⟫_ℂ = ⟪C z,B z⟫_ℂ at h
+    rw [historyDiagonalProjection_after_scalar] at h
+    exact h.symm
+  refine ⟨?_,?_,?_⟩
+  · rw [inner_sub_right, hcb, historyScalarProjection_inner, sub_self]
+  · rw [inner_sub_right, hcb, sub_self]
+  · rw [inner_sub_left, historyDiagonalProjection_error_orthogonal, inner_sub_right,
+      hcb, sub_self, sub_self]
+
+theorem historyProjection_centered_pythagoras (z : HistorySpace p rs) :
+    ‖z-C z‖ ^ 2 = ‖B z-C z‖ ^ 2 + ‖z-B z‖ ^ 2 := by
+  have h := norm_add_sq (𝕜 := ℂ) (B z-C z) (z-B z)
+  rw [(historyProjection_sectors_orthogonal p rs z).2.2] at h
+  have he : B z-C z+(z-B z)=z-C z := by abel
+  simpa only [he, map_zero, mul_zero, add_zero] using h
+
+theorem historyScalarProjection_pythagoras (z : HistorySpace p rs) :
+    ‖z‖ ^ 2 = ‖C z‖ ^ 2 + ‖z-C z‖ ^ 2 := by
+  have h := norm_add_sq (𝕜 := ℂ) (C z) (z-C z)
+  rw [historyScalarProjection_error_orthogonal] at h
+  have he : C z+(z-C z)=z := by abel
+  simpa only [he, map_zero, mul_zero, add_zero] using h
+
+theorem historyDiagonalProjection_pythagoras (z : HistorySpace p rs) :
+    ‖z‖ ^ 2 = ‖B z‖ ^ 2 + ‖z-B z‖ ^ 2 := by
+  have h := norm_add_sq (𝕜 := ℂ) (B z) (z-B z)
+  rw [historyDiagonalProjection_error_orthogonal] at h
+  have he : B z+(z-B z)=z := by abel
+  simpa only [he, map_zero, mul_zero, add_zero] using h
+
+/-- All three squared sector norms sum to the original quotient norm. -/
+theorem historyProjection_pythagoras (z : HistorySpace p rs) :
+    ‖z‖ ^ 2 = ‖C z‖ ^ 2 + ‖B z-C z‖ ^ 2 + ‖z-B z‖ ^ 2 := by
+  rw [historyScalarProjection_pythagoras, historyProjection_centered_pythagoras]
+  ring
+
+end HistoryProjections
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped BigOperators ComplexOrder InnerProductSpace
+
+/-- The reference is the accepted actual four-event quotient with the same central retention. -/
+abbrev HistoryReference (p : Gap) :=
+  Reconstructed p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+
+def historyReferenceCoordinates (p : Gap) : HistoryReference p →ₗ[ℂ] Mat2 :=
+  coordinates p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+
+/-- This pullback is literal on the accepted reference's two labels. -/
+def referenceInnerPullLinear : (Fin 6 → ℂ) →ₗ[ℂ] (HalfHistory → ℂ) where
+  toFun F u := F u.1
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+
+/-- Forward representatives synthesize the original raw history at reference inner labels. -/
+def historyToReferenceCoefficients (rs : List Gap) : (Labels rs → ℂ) →ₗ[ℂ] (HalfHistory → ℂ) :=
+  referenceInnerPullLinear.comp (pauliCoefficients.comp (historyRawSynthesisLinear rs))
+
+/-- Reverse representatives synthesize the reference before central retention. -/
+def historyFromReferenceCoefficients (rs : List Gap) : (HalfHistory → ℂ) →ₗ[ℂ] (Labels rs → ℂ) :=
+  (historyInnerPullLinear rs).comp (pauliCoefficients.comp (synthesisLinear 1 0))
+
+theorem historyToReferenceCoefficients_apply (rs : List Gap) (F : Labels rs → ℂ) (u : HalfHistory) :
+    historyToReferenceCoefficients rs F u =
+      PauliInstrumentReconstruction.coefficients (historyRawSynthesis rs F) u.1 := rfl
+
+theorem historyFromReferenceCoefficients_apply (rs : List Gap) (G : HalfHistory → ℂ) (u : Labels rs) :
+    historyFromReferenceCoefficients rs G u =
+      PauliInstrumentReconstruction.coefficients (synthesis 1 0 G) u.1 := rfl
+
+theorem historyToReferenceCoefficients_synthesis (p : Gap) (rs : List Gap) (F : Labels rs → ℂ) :
+    synthesis p.value 0 (historyToReferenceCoefficients rs F) = historySynthesis p rs F := by
+  change synthesis p.value 0 (fun u => PauliInstrumentReconstruction.coefficients
+    (historyRawSynthesis rs F) u.1) = _
+  rw [synthesis_inner, PauliInstrumentReconstruction.synthesis_coefficients, history_synthesis_raw]
+
+theorem historyFromReferenceCoefficients_synthesis (p : Gap) (rs : List Gap) (G : HalfHistory → ℂ) :
+    historySynthesis p rs (historyFromReferenceCoefficients rs G) = synthesis p.value 0 G := by
+  change historySynthesis p rs (fun u => PauliInstrumentReconstruction.coefficients
+    (synthesis 1 0 G) u.1) = _
+  rw [historySynthesis_inner, PauliInstrumentReconstruction.synthesis_coefficients]
+  exact (synthesis_from_raw p.value 0 G).symm
+
+/-- Null preservation is across the actual distinct coefficient types and kernels. -/
+theorem historyToReferenceCoefficients_null (p : Gap) (rs : List Gap) (F : Labels rs → ℂ)
+    (hF : F ∈ nullSpace (historyKernel p rs) (history_posSemidef p rs)) :
+    historyToReferenceCoefficients rs F ∈
+      nullSpace (NontracialPauliReflection.kernel p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num))
+        (kernel_posSemidef p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)) := by
+  have h0 : historySynthesis p rs F = 0 := by
+    have h := (mem_nullSpace_iff _ _ F).mp hF
+    rwa [history_pairing, form_self_zero_iff] at h
+  apply (mem_nullSpace_iff _ _ _).mpr
+  rw [pairing_synthesis, form_self_zero_iff, historyToReferenceCoefficients_synthesis, h0]
+
+theorem historyFromReferenceCoefficients_null (p : Gap) (rs : List Gap) (G : HalfHistory → ℂ)
+    (hG : G ∈
+      nullSpace (NontracialPauliReflection.kernel p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num))
+        (kernel_posSemidef p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num))) :
+    historyFromReferenceCoefficients rs G ∈ nullSpace (historyKernel p rs) (history_posSemidef p rs) := by
+  have h0 : synthesis p.value 0 G = 0 := by
+    have h := (mem_nullSpace_iff _ _ G).mp hG
+    rwa [pairing_synthesis, form_self_zero_iff] at h
+  apply (mem_nullSpace_iff _ _ _).mpr
+  rw [history_pairing, form_self_zero_iff, historyFromReferenceCoefficients_synthesis, h0]
+
+/-- Actual cross-kernel descent, rather than the endomorphism-only descend API. -/
+def historyToReferenceLinear (p : Gap) (rs : List Gap) : HistorySpace p rs →ₗ[ℂ] HistoryReference p :=
+  ((nullSpace (historyKernel p rs) (history_posSemidef p rs)).liftQ
+    ((mkLinear (NontracialPauliReflection.kernel p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num))
+      (kernel_posSemidef p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num))).comp
+      (historyToReferenceCoefficients rs)) (by
+        intro F hF
+        change mk _ _ (historyToReferenceCoefficients rs F) = 0
+        rw [mk_eq_zero_iff]
+        exact (mem_nullSpace_iff _ _ _).mp (historyToReferenceCoefficients_null p rs F hF))).comp
+    (quotientEquiv (historyKernel p rs) (history_posSemidef p rs)).symm.toLinearMap
+
+def historyFromReferenceLinear (p : Gap) (rs : List Gap) : HistoryReference p →ₗ[ℂ] HistorySpace p rs :=
+  ((nullSpace (NontracialPauliReflection.kernel p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num))
+    (kernel_posSemidef p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num))).liftQ
+    ((mkLinear (historyKernel p rs) (history_posSemidef p rs)).comp
+      (historyFromReferenceCoefficients rs)) (by
+        intro G hG
+        change mk _ _ (historyFromReferenceCoefficients rs G) = 0
+        rw [mk_eq_zero_iff]
+        exact (mem_nullSpace_iff _ _ _).mp (historyFromReferenceCoefficients_null p rs G hG))).comp
+    (quotientEquiv (NontracialPauliReflection.kernel p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num))
+      (kernel_posSemidef p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num))).symm.toLinearMap
+
+theorem historyToReferenceLinear_mk (p : Gap) (rs : List Gap) (F : Labels rs → ℂ) :
+    historyToReferenceLinear p rs (mk _ _ F) = mk _ _ (historyToReferenceCoefficients rs F) := by
+  rw [← quotientEquiv_mk (history_posSemidef p rs) F]
+  simp only [historyToReferenceLinear, LinearMap.comp_apply, LinearEquiv.coe_coe,
+    LinearEquiv.symm_apply_apply, Submodule.liftQ_apply]
+  rfl
+
+theorem historyFromReferenceLinear_mk (p : Gap) (rs : List Gap) (G : HalfHistory → ℂ) :
+    historyFromReferenceLinear p rs (mk _ _ G) = mk _ _ (historyFromReferenceCoefficients rs G) := by
+  rw [← quotientEquiv_mk (kernel_posSemidef p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)) G]
+  simp only [historyFromReferenceLinear, LinearMap.comp_apply, LinearEquiv.coe_coe,
+    LinearEquiv.symm_apply_apply, Submodule.liftQ_apply]
+  rfl
+
+theorem historyToReferenceLinear_coordinates (p : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    historyReferenceCoordinates p (historyToReferenceLinear p rs z) = historyCoordinates p rs z := by
+  obtain ⟨F,rfl⟩ := mk_surjective _ _ z
+  change coordinates _ _ _ _ _ _ (historyToReferenceLinear p rs (mk _ _ F)) = _
+  rw [historyToReferenceLinear_mk, coordinates_mk, historyCoordinates_mk,
+    historyToReferenceCoefficients_synthesis]
+
+theorem historyFromReferenceLinear_coordinates (p : Gap) (rs : List Gap) (z : HistoryReference p) :
+    historyCoordinates p rs (historyFromReferenceLinear p rs z) = historyReferenceCoordinates p z := by
+  obtain ⟨G,rfl⟩ := mk_surjective _ _ z
+  change _ = coordinates _ _ _ _ _ _ (mk _ _ G)
+  rw [historyFromReferenceLinear_mk, coordinates_mk, historyCoordinates_mk,
+    historyFromReferenceCoefficients_synthesis]
+
+theorem historyReference_left_inverse (p : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    historyFromReferenceLinear p rs (historyToReferenceLinear p rs z) = z := by
+  apply historyCoordinates_injective p rs
+  rw [historyFromReferenceLinear_coordinates, historyToReferenceLinear_coordinates]
+
+theorem historyReference_right_inverse (p : Gap) (rs : List Gap) (z : HistoryReference p) :
+    historyToReferenceLinear p rs (historyFromReferenceLinear p rs z) = z := by
+  apply coordinates_injective p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+  change historyReferenceCoordinates p _ = historyReferenceCoordinates p z
+  rw [historyToReferenceLinear_coordinates, historyFromReferenceLinear_coordinates]
+
+/-- The full complex weighted inner product is proved from both actual coordinate identities. -/
+theorem historyToReferenceLinear_inner (p : Gap) (rs : List Gap) (z w : HistorySpace p rs) :
+    ⟪historyToReferenceLinear p rs z, historyToReferenceLinear p rs w⟫_ℂ = ⟪z,w⟫_ℂ := by
+  rw [coordinates_inner, history_coordinates_inner]
+  change form (historyReferenceCoordinates p _) (historyReferenceCoordinates p _) = _
+  rw [historyToReferenceLinear_coordinates, historyToReferenceLinear_coordinates]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped ComplexOrder InnerProductSpace
+
+/-- A genuine isometry of the actual weighted quotients, with literal representatives both ways. -/
+def historyReferenceEquiv (p : Gap) (rs : List Gap) : HistorySpace p rs ≃ₗᵢ[ℂ] HistoryReference p :=
+  LinearIsometryEquiv.ofSurjective
+    ((historyToReferenceLinear p rs).isometryOfInner (historyToReferenceLinear_inner p rs))
+    (fun z => ⟨historyFromReferenceLinear p rs z, historyReference_right_inverse p rs z⟩)
+
+theorem historyReferenceEquiv_apply (p : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    historyReferenceEquiv p rs z = historyToReferenceLinear p rs z := rfl
+
+theorem historyReferenceEquiv_symm_apply (p : Gap) (rs : List Gap) (z : HistoryReference p) :
+    (historyReferenceEquiv p rs).symm z = historyFromReferenceLinear p rs z := by
+  apply (historyReferenceEquiv p rs).injective
+  rw [LinearIsometryEquiv.apply_symm_apply, historyReferenceEquiv_apply, historyReference_right_inverse]
+
+theorem historyReferenceEquiv_mk (p : Gap) (rs : List Gap) (F : Labels rs → ℂ) :
+    historyReferenceEquiv p rs (mk _ _ F) = mk _ _ (historyToReferenceCoefficients rs F) :=
+  historyToReferenceLinear_mk p rs F
+
+theorem historyReferenceEquiv_symm_mk (p : Gap) (rs : List Gap) (G : HalfHistory → ℂ) :
+    (historyReferenceEquiv p rs).symm (mk _ _ G) = mk _ _ (historyFromReferenceCoefficients rs G) := by
+  rw [historyReferenceEquiv_symm_apply, historyFromReferenceLinear_mk]
+
+theorem historyReferenceEquiv_coordinates (p : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    historyReferenceCoordinates p (historyReferenceEquiv p rs z) = historyCoordinates p rs z :=
+  historyToReferenceLinear_coordinates p rs z
+
+theorem historyReferenceEquiv_inner (p : Gap) (rs : List Gap) (z w : HistorySpace p rs) :
+    ⟪historyReferenceEquiv p rs z, historyReferenceEquiv p rs w⟫_ℂ = ⟪z,w⟫_ℂ :=
+  historyToReferenceLinear_inner p rs z w
+
+/-- The new scalar projection intertwines with the actual reference scalar projection. -/
+theorem historyReferenceEquiv_scalar (p : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    historyReferenceEquiv p rs (historyScalarProjection p rs z) =
+      scalarProjection p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+        (historyReferenceEquiv p rs z) := by
+  apply coordinates_injective p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+  change historyReferenceCoordinates p _ = _
+  rw [historyReferenceEquiv_coordinates, historyScalarProjection_coordinates, scalar_coordinates]
+  change _ = scalarPart (historyReferenceCoordinates p _)
+  rw [historyReferenceEquiv_coordinates]
+
+theorem historyReferenceEquiv_diagonal (p : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    historyReferenceEquiv p rs (historyDiagonalProjection p rs z) =
+      diagonalProjection p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+        (historyReferenceEquiv p rs z) := by
+  apply coordinates_injective p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+  change historyReferenceCoordinates p _ = _
+  rw [historyReferenceEquiv_coordinates, historyDiagonalProjection_coordinates, diagonal_coordinates]
+  change _ = diagonalPart (historyReferenceCoordinates p _)
+  rw [historyReferenceEquiv_coordinates]
+
+/-- Every literal one-step outer map has the same common-reference image. -/
+theorem historyReferenceEquiv_outer (p q : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    historyReferenceEquiv p (rs++[q]) (outerMap p q rs z) = historyReferenceEquiv p rs z := by
+  apply coordinates_injective p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+  change historyReferenceCoordinates p _ = historyReferenceCoordinates p _
+  rw [historyReferenceEquiv_coordinates, historyReferenceEquiv_coordinates, outerMap_coordinates]
+
+/-- All ordered literal extensions are compatible with this same reference quotient. -/
+theorem historyReferenceEquiv_extension (p : Gap) (rs qs : List Gap) (z : HistorySpace p rs) :
+    historyReferenceEquiv p (extendSchedule rs qs) (extensionMap p rs qs z) = historyReferenceEquiv p rs z := by
+  apply coordinates_injective p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+  change historyReferenceCoordinates p _ = historyReferenceCoordinates p _
+  rw [historyReferenceEquiv_coordinates, historyReferenceEquiv_coordinates, extensionMap_coordinates]
+
+/-- The schedule transport is displayed in the ordered composition reference diagram. -/
+theorem historyReferenceEquiv_ordered_composition (p : Gap) (rs as bs : List Gap) (z : HistorySpace p rs) :
+    historyReferenceEquiv p (extendSchedule (extendSchedule rs as) bs)
+      (scheduleTransport p (extendSchedule_composition rs as bs) (extensionMap p rs (as++bs) z)) =
+      historyReferenceEquiv p rs z := by
+  rw [extensionMap_composition, historyReferenceEquiv_extension, historyReferenceEquiv_extension]
+
+theorem historyScalarProjection_outer (p q : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    outerMap p q rs (historyScalarProjection p rs z) = historyScalarProjection p (rs++[q]) (outerMap p q rs z) := by
+  apply historyCoordinates_injective p (rs++[q])
+  rw [outerMap_coordinates, historyScalarProjection_coordinates, historyScalarProjection_coordinates,
+    outerMap_coordinates]
+
+theorem historyDiagonalProjection_outer (p q : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    outerMap p q rs (historyDiagonalProjection p rs z) = historyDiagonalProjection p (rs++[q]) (outerMap p q rs z) := by
+  apply historyCoordinates_injective p (rs++[q])
+  rw [outerMap_coordinates, historyDiagonalProjection_coordinates, historyDiagonalProjection_coordinates,
+    outerMap_coordinates]
+
+theorem historyScalarProjection_extension (p : Gap) (rs qs : List Gap) (z : HistorySpace p rs) :
+    extensionMap p rs qs (historyScalarProjection p rs z) =
+      historyScalarProjection p (extendSchedule rs qs) (extensionMap p rs qs z) := by
+  apply historyCoordinates_injective p (extendSchedule rs qs)
+  rw [extensionMap_coordinates, historyScalarProjection_coordinates, historyScalarProjection_coordinates,
+    extensionMap_coordinates]
+
+theorem historyDiagonalProjection_extension (p : Gap) (rs qs : List Gap) (z : HistorySpace p rs) :
+    extensionMap p rs qs (historyDiagonalProjection p rs z) =
+      historyDiagonalProjection p (extendSchedule rs qs) (extensionMap p rs qs z) := by
+  apply historyCoordinates_injective p (extendSchedule rs qs)
+  rw [extensionMap_coordinates, historyDiagonalProjection_coordinates, historyDiagonalProjection_coordinates,
+    extensionMap_coordinates]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped ComplexOrder InnerProductSpace
+
+section HistorySectors
+variable (p : Gap) (rs : List Gap)
+local notation "C" => historyScalarProjection p rs
+local notation "B" => historyDiagonalProjection p rs
+
+/-- The three sector maps are actual continuous maps on the reconstructed history quotient. -/
+def historyCenteredDiagonalProjection : HistorySpace p rs →L[ℂ] HistorySpace p rs := B-C
+def historyOffDiagonalProjection : HistorySpace p rs →L[ℂ] HistorySpace p rs := 1-B
+def historyScalarComplement : HistorySpace p rs →L[ℂ] HistorySpace p rs := 1-C
+
+theorem historyScalarProjection_idempotent : C*C=C := by
+  ext z
+  exact historyScalarProjection_twice p rs z
+
+theorem historyDiagonalProjection_idempotent : B*B=B := by
+  ext z
+  exact historyDiagonalProjection_twice p rs z
+
+theorem historyProjection_commutation : C*B=C ∧ B*C=C := by
+  constructor <;> ext z
+  · exact historyScalarProjection_after_diagonal p rs z
+  · exact historyDiagonalProjection_after_scalar p rs z
+
+theorem historyCenteredDiagonalProjection_twice (z : HistorySpace p rs) :
+    historyCenteredDiagonalProjection p rs (historyCenteredDiagonalProjection p rs z) =
+      historyCenteredDiagonalProjection p rs z := by
+  simp only [historyCenteredDiagonalProjection, _root_.sub_apply, map_sub,
+    historyScalarProjection_twice, historyDiagonalProjection_twice,
+    historyScalarProjection_after_diagonal, historyDiagonalProjection_after_scalar]
+  abel
+
+theorem historyOffDiagonalProjection_twice (z : HistorySpace p rs) :
+    historyOffDiagonalProjection p rs (historyOffDiagonalProjection p rs z) =
+      historyOffDiagonalProjection p rs z := by
+  simp only [historyOffDiagonalProjection, _root_.sub_apply, one_apply_eq_self, map_sub,
+    historyDiagonalProjection_twice]
+  abel
+
+theorem historyScalarComplement_twice (z : HistorySpace p rs) :
+    historyScalarComplement p rs (historyScalarComplement p rs z) = historyScalarComplement p rs z := by
+  simp only [historyScalarComplement, _root_.sub_apply, one_apply_eq_self, map_sub,
+    historyScalarProjection_twice]
+  abel
+
+theorem historyCenteredDiagonalProjection_symmetric : (historyCenteredDiagonalProjection p rs).IsSymmetric := by
+  intro z w
+  change ⟪B z-C z,w⟫_ℂ = ⟪z,B w-C w⟫_ℂ
+  rw [inner_sub_left, inner_sub_right]
+  exact congrArg₂ (fun a b : ℂ => a-b)
+    (historyDiagonalProjection_symmetric p rs z w) (historyScalarProjection_symmetric p rs z w)
+
+theorem historyOffDiagonalProjection_symmetric : (historyOffDiagonalProjection p rs).IsSymmetric := by
+  intro z w
+  change ⟪z-B z,w⟫_ℂ = ⟪z,w-B w⟫_ℂ
+  rw [inner_sub_left, inner_sub_right]
+  exact congrArg (fun a : ℂ => ⟪z,w⟫_ℂ-a) (historyDiagonalProjection_symmetric p rs z w)
+
+theorem historyScalarComplement_symmetric : (historyScalarComplement p rs).IsSymmetric := by
+  intro z w
+  change ⟪z-C z,w⟫_ℂ = ⟪z,w-C w⟫_ℂ
+  rw [inner_sub_left, inner_sub_right]
+  exact congrArg (fun a : ℂ => ⟪z,w⟫_ℂ-a) (historyScalarProjection_symmetric p rs z w)
+
+/-- A proved symmetric idempotent has its actual quadratic form equal to the sector norm. -/
+theorem historyProjection_inner_of_idempotent (P : HistorySpace p rs →L[ℂ] HistorySpace p rs)
+    (hP : P.IsSymmetric) (hPP : ∀ z, P (P z)=P z) (z : HistorySpace p rs) :
+    ⟪P z,z⟫_ℂ = ⟪P z,P z⟫_ℂ := by
+  have h := hP (P z) z
+  change ⟪P (P z),z⟫_ℂ = ⟪P z,P z⟫_ℂ at h
+  rwa [hPP] at h
+
+theorem historyProjection_positive_of_idempotent (P : HistorySpace p rs →L[ℂ] HistorySpace p rs)
+    (hP : P.IsSymmetric) (hPP : ∀ z, P (P z)=P z) : P.IsPositive := by
+  rw [ContinuousLinearMap.isPositive_def]
+  refine ⟨hP,?_⟩
+  intro z
+  change 0 ≤ (⟪P z,z⟫_ℂ).re
+  rw [historyProjection_inner_of_idempotent p rs P hP hPP]
+  exact inner_self_nonneg (𝕜 := ℂ) (x := P z)
+
+theorem historyCenteredDiagonalProjection_positive : (historyCenteredDiagonalProjection p rs).IsPositive :=
+  historyProjection_positive_of_idempotent p rs _ (historyCenteredDiagonalProjection_symmetric p rs)
+    (historyCenteredDiagonalProjection_twice p rs)
+
+theorem historyOffDiagonalProjection_positive : (historyOffDiagonalProjection p rs).IsPositive :=
+  historyProjection_positive_of_idempotent p rs _ (historyOffDiagonalProjection_symmetric p rs)
+    (historyOffDiagonalProjection_twice p rs)
+
+theorem historyScalarComplement_positive : (historyScalarComplement p rs).IsPositive :=
+  historyProjection_positive_of_idempotent p rs _ (historyScalarComplement_symmetric p rs)
+    (historyScalarComplement_twice p rs)
+
+theorem historyCenteredDiagonalProjection_selfAdjoint : IsSelfAdjoint (historyCenteredDiagonalProjection p rs) :=
+  (historyCenteredDiagonalProjection_positive p rs).isSelfAdjoint
+
+theorem historyOffDiagonalProjection_selfAdjoint : IsSelfAdjoint (historyOffDiagonalProjection p rs) :=
+  (historyOffDiagonalProjection_positive p rs).isSelfAdjoint
+
+theorem historyScalarComplement_selfAdjoint : IsSelfAdjoint (historyScalarComplement p rs) :=
+  (historyScalarComplement_positive p rs).isSelfAdjoint
+
+/-- Every constructed sector is contractive, including the two complementary sectors. -/
+theorem historyProjection_norm_le_of_idempotent (P : HistorySpace p rs →L[ℂ] HistorySpace p rs)
+    (hP : P.IsSymmetric) (hPP : ∀ z, P (P z)=P z) (z : HistorySpace p rs) : ‖P z‖ ≤ ‖z‖ := by
+  have hi : ⟪P z,z-P z⟫_ℂ = 0 := by
+    rw [inner_sub_right, historyProjection_inner_of_idempotent p rs P hP hPP, sub_self]
+  have h := norm_add_sq (𝕜 := ℂ) (P z) (z-P z)
+  rw [hi] at h
+  have hz : P z+(z-P z)=z := by abel
+  rw [hz] at h
+  simp only [map_zero, mul_zero, add_zero] at h
+  nlinarith [sq_nonneg ‖z-P z‖, norm_nonneg z, norm_nonneg (P z)]
+
+theorem historyScalarProjection_norm_le (z : HistorySpace p rs) : ‖C z‖ ≤ ‖z‖ :=
+  historyProjection_norm_le_of_idempotent p rs C (historyScalarProjection_symmetric p rs)
+    (historyScalarProjection_twice p rs) z
+
+theorem historyDiagonalProjection_norm_le (z : HistorySpace p rs) : ‖B z‖ ≤ ‖z‖ :=
+  historyProjection_norm_le_of_idempotent p rs B (historyDiagonalProjection_symmetric p rs)
+    (historyDiagonalProjection_twice p rs) z
+
+theorem historyCenteredDiagonalProjection_norm_le (z : HistorySpace p rs) :
+    ‖historyCenteredDiagonalProjection p rs z‖ ≤ ‖z‖ :=
+  historyProjection_norm_le_of_idempotent p rs _ (historyCenteredDiagonalProjection_symmetric p rs)
+    (historyCenteredDiagonalProjection_twice p rs) z
+
+theorem historyOffDiagonalProjection_norm_le (z : HistorySpace p rs) :
+    ‖historyOffDiagonalProjection p rs z‖ ≤ ‖z‖ :=
+  historyProjection_norm_le_of_idempotent p rs _ (historyOffDiagonalProjection_symmetric p rs)
+    (historyOffDiagonalProjection_twice p rs) z
+
+theorem historyScalarComplement_norm_le (z : HistorySpace p rs) : ‖historyScalarComplement p rs z‖ ≤ ‖z‖ :=
+  historyProjection_norm_le_of_idempotent p rs _ (historyScalarComplement_symmetric p rs)
+    (historyScalarComplement_twice p rs) z
+
+theorem historyProjection_opNorm_le_of_idempotent (P : HistorySpace p rs →L[ℂ] HistorySpace p rs)
+    (hP : P.IsSymmetric) (hPP : ∀ z, P (P z)=P z) : ‖P‖ ≤ 1 := by
+  apply P.opNorm_le_bound (by norm_num)
+  intro z
+  simpa only [one_mul] using historyProjection_norm_le_of_idempotent p rs P hP hPP z
+
+theorem historyScalarProjection_opNorm_le : ‖C‖ ≤ 1 :=
+  historyProjection_opNorm_le_of_idempotent p rs C (historyScalarProjection_symmetric p rs)
+    (historyScalarProjection_twice p rs)
+
+theorem historyDiagonalProjection_opNorm_le : ‖B‖ ≤ 1 :=
+  historyProjection_opNorm_le_of_idempotent p rs B (historyDiagonalProjection_symmetric p rs)
+    (historyDiagonalProjection_twice p rs)
+
+theorem historyCenteredDiagonalProjection_opNorm_le : ‖historyCenteredDiagonalProjection p rs‖ ≤ 1 :=
+  historyProjection_opNorm_le_of_idempotent p rs _ (historyCenteredDiagonalProjection_symmetric p rs)
+    (historyCenteredDiagonalProjection_twice p rs)
+
+theorem historyOffDiagonalProjection_opNorm_le : ‖historyOffDiagonalProjection p rs‖ ≤ 1 :=
+  historyProjection_opNorm_le_of_idempotent p rs _ (historyOffDiagonalProjection_symmetric p rs)
+    (historyOffDiagonalProjection_twice p rs)
+
+theorem historyScalarComplement_opNorm_le : ‖historyScalarComplement p rs‖ ≤ 1 :=
+  historyProjection_opNorm_le_of_idempotent p rs _ (historyScalarComplement_symmetric p rs)
+    (historyScalarComplement_twice p rs)
+end HistorySectors
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped ComplexOrder InnerProductSpace
+
+/-- The actual nonzero constant class, independent of every finite side schedule. -/
+def historyConstantVector (p : Gap) (rs : List Gap) : HistorySpace p rs := mk _ _ (fun _ => 1)
+
+theorem historyConstantVector_coordinates (p : Gap) (rs : List Gap) :
+    historyCoordinates p rs (historyConstantVector p rs) = 1 := by
+  rw [historyConstantVector, historyCoordinates_mk, historySynthesis_constant]
+
+theorem historyReferenceEquiv_constant (p : Gap) (rs : List Gap) :
+    historyReferenceEquiv p rs (historyConstantVector p rs) =
+      constantVector p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num) := by
+  apply coordinates_injective p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+  change historyReferenceCoordinates p _ = _
+  rw [historyReferenceEquiv_coordinates, historyConstantVector_coordinates, constant_coordinates]
+
+theorem historyConstantVector_norm_sq (p : Gap) (rs : List Gap) : ‖historyConstantVector p rs‖ ^ 2 = 1 := by
+  rw [norm_sq_eq_re_inner (𝕜 := ℂ)]
+  change (⟪historyConstantVector p rs,historyConstantVector p rs⟫_ℂ).re = _
+  rw [history_coordinates_inner, historyConstantVector_coordinates]
+  norm_num [form_entries]
+
+theorem historyConstantVector_norm (p : Gap) (rs : List Gap) : ‖historyConstantVector p rs‖ = 1 := by
+  nlinarith [historyConstantVector_norm_sq p rs, norm_nonneg (historyConstantVector p rs)]
+
+theorem historyConstantVector_ne_zero (p : Gap) (rs : List Gap) : historyConstantVector p rs ≠ 0 := by
+  intro h
+  have hn := historyConstantVector_norm p rs
+  rw [h, norm_zero] at hn
+  norm_num at hn
+
+theorem historyScalarProjection_constant (p : Gap) (rs : List Gap) :
+    historyScalarProjection p rs (historyConstantVector p rs) = historyConstantVector p rs := by
+  apply historyCoordinates_injective p rs
+  rw [historyScalarProjection_coordinates, historyConstantVector_coordinates]
+  simp [scalarPart, rhoN_trace]
+
+theorem historyDiagonalProjection_constant (p : Gap) (rs : List Gap) :
+    historyDiagonalProjection p rs (historyConstantVector p rs) = historyConstantVector p rs := by
+  apply historyCoordinates_injective p rs
+  rw [historyDiagonalProjection_coordinates, historyConstantVector_coordinates]
+  simp [diagonalPart]
+
+theorem historyScalarProjection_reset (p : Gap) (rs : List Gap) (hp : p.value=0) :
+    historyScalarProjection p rs = 1 := by
+  ext z
+  apply historyCoordinates_injective p rs
+  rw [historyScalarProjection_coordinates]
+  simp only [history_coordinates_reset p hp, one_apply_eq_self]
+  change scalarLinear (historyResetCoordinates p rs z • (1 : Mat2)) = _
+  rw [map_smul]
+  simp [scalarLinear, scalarPart, rhoN_trace]
+
+theorem historyDiagonalProjection_reset (p : Gap) (rs : List Gap) (hp : p.value=0) :
+    historyDiagonalProjection p rs = 1 := by
+  ext z
+  apply historyCoordinates_injective p rs
+  rw [historyDiagonalProjection_coordinates]
+  simp only [history_coordinates_reset p hp, one_apply_eq_self]
+  change diagonalLinear (historyResetCoordinates p rs z • (1 : Mat2)) = _
+  rw [map_smul]
+  simp [diagonalLinear, diagonalPart]
+
+theorem historyComplementaryProjections_reset (p : Gap) (rs : List Gap) (hp : p.value=0) :
+    historyCenteredDiagonalProjection p rs = 0 ∧ historyOffDiagonalProjection p rs = 0 ∧
+      historyScalarComplement p rs = 0 := by
+  simp only [historyCenteredDiagonalProjection, historyOffDiagonalProjection, historyScalarComplement,
+    historyScalarProjection_reset p rs hp, historyDiagonalProjection_reset p rs hp, sub_self, and_self]
+
+/-- The literal all-schedule isometry preserves the actual faithful feature as well. -/
+theorem historyReferenceEquiv_feature (p : Gap) (rs : List Gap) (z : HistorySpace p rs) :
+    embeddingLinear p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+      (historyReferenceEquiv p rs z) = historyEmbeddingLinear p rs z := by
+  change NontracialPauliReflection.feature (historyReferenceCoordinates p (historyReferenceEquiv p rs z)) =
+    NontracialPauliReflection.feature (historyCoordinates p rs z)
+  rw [historyReferenceEquiv_coordinates]
+
+/-- At reset both actual coordinate diagrams land on the same scalar cI. -/
+theorem historyReferenceEquiv_reset_scalar (p : Gap) (rs : List Gap) (hp : p.value=0) (z : HistorySpace p rs) :
+    historyReferenceCoordinates p (historyReferenceEquiv p rs z) = historyResetEquiv p hp rs z • (1 : Mat2) := by
+  rw [historyReferenceEquiv_coordinates, history_coordinates_reset p hp]
+  rfl
+
+/-- At reset both faithful features land on the same cR line, without inversePsi. -/
+theorem historyReferenceEquiv_reset_feature (p : Gap) (rs : List Gap) (hp : p.value=0) (z : HistorySpace p rs) :
+    embeddingLinear p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+      (historyReferenceEquiv p rs z) = historyResetEquiv p hp rs z • R := by
+  rw [historyReferenceEquiv_feature]
+  change featureLinear (historyCoordinates p rs z) = _
+  rw [history_coordinates_reset p hp, map_smul]
+  change historyResetCoordinates p rs z • (Q * 1 * Q) = _
+  rw [mul_one, Q_square]
+  rfl
+
+/-- Explicit reset diagram with the accepted reference scalar-coordinate equivalence. -/
+theorem historyReferenceEquiv_reset_equiv (rs : List Gap)
+    (z : HistorySpace (⟨0,le_rfl,by norm_num⟩ : Gap) rs) :
+    resetCoordinateEquiv 0 (by norm_num) (by norm_num)
+      (historyReferenceEquiv (⟨0,le_rfl,by norm_num⟩ : Gap) rs z) =
+      historyResetEquiv (⟨0,le_rfl,by norm_num⟩ : Gap) rfl rs z := by
+  change historyReferenceCoordinates (⟨0,le_rfl,by norm_num⟩ : Gap)
+    (historyReferenceEquiv (⟨0,le_rfl,by norm_num⟩ : Gap) rs z) 0 0 =
+      historyCoordinates (⟨0,le_rfl,by norm_num⟩ : Gap) rs z 0 0
+  exact congrArg (fun A : Mat2 => A 0 0) (historyReferenceEquiv_coordinates _ rs z)
+
+/-- The inverse reset diagram is the actual inverse of the same reference isometry. -/
+theorem historyReferenceEquiv_reset_symm_equiv (rs : List Gap)
+    (z : HistoryReference (⟨0,le_rfl,by norm_num⟩ : Gap)) :
+    historyResetEquiv (⟨0,le_rfl,by norm_num⟩ : Gap) rfl rs
+      ((historyReferenceEquiv (⟨0,le_rfl,by norm_num⟩ : Gap) rs).symm z) =
+      resetCoordinateEquiv 0 (by norm_num) (by norm_num) z := by
+  rw [← historyReferenceEquiv_reset_equiv, LinearIsometryEquiv.apply_symm_apply]
+
+/-- All three centered inner modes match the actual reference modes. -/
+theorem historyReferenceEquiv_centered (p : Gap) (rs : List Gap) (a : Fin 3) :
+    historyReferenceEquiv p rs (historyCenteredVector p rs a) =
+      centeredVector p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num) a := by
+  apply coordinates_injective p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)
+  change historyReferenceCoordinates p _ = _
+  rw [historyReferenceEquiv_coordinates, historyCenteredVector_coordinates, centered_coordinates]
+
+theorem historyScalarProjection_centered (p : Gap) (rs : List Gap) (a : Fin 3) :
+    historyScalarProjection p rs (historyCenteredVector p rs a) = 0 := by
+  apply historyCoordinates_injective p rs
+  rw [historyScalarProjection_coordinates, historyCenteredVector_coordinates, map_zero]
+  simp [scalarPart, mode_mean_zero]
+
+theorem historyDiagonalProjection_centered (p : Gap) (rs : List Gap) (a : Fin 3) :
+    historyDiagonalProjection p rs (historyCenteredVector p rs a) =
+      if a=2 then historyCenteredVector p rs a else 0 := by
+  apply historyCoordinates_injective p rs
+  rw [historyDiagonalProjection_coordinates, historyCenteredVector_coordinates]
+  change diagonalLinear ((p.value : ℂ) • modeMatrix a) = _
+  rw [map_smul]
+  change (p.value : ℂ) • diagonalPart (modeMatrix a) = _
+  rw [diagonal_modeMatrix]
+  split_ifs <;> simp [historyCenteredVector_coordinates]
+
+/-- The oriented complex mode is killed by both scalar and diagonal projection. -/
+theorem historyScalarProjection_complex (p : Gap) (rs : List Gap) :
+    historyScalarProjection p rs (historyComplexVector p rs) = 0 := by
+  rw [historyComplexVector_decomposition, map_add, map_smul,
+    historyScalarProjection_centered, historyScalarProjection_centered]
+  simp
+
+theorem historyDiagonalProjection_complex (p : Gap) (rs : List Gap) :
+    historyDiagonalProjection p rs (historyComplexVector p rs) = 0 := by
+  rw [historyComplexVector_decomposition, map_add, map_smul,
+    historyDiagonalProjection_centered, historyDiagonalProjection_centered]
+  simp only [show (0 : Fin 3) ≠ 2 by decide, show (1 : Fin 3) ≠ 2 by decide,
+    if_false, smul_zero, add_zero]
+
+/-- Empty schedules and arbitrary endpoint/mixed side schedules obey the same explicit sector rules. -/
+theorem historyProjection_modes (p : Gap) (rs : List Gap) :
+    historyScalarProjection p rs (historyCenteredVector p rs 0) = 0 ∧
+    historyScalarProjection p rs (historyCenteredVector p rs 1) = 0 ∧
+    historyScalarProjection p rs (historyCenteredVector p rs 2) = 0 ∧
+    historyDiagonalProjection p rs (historyCenteredVector p rs 0) = 0 ∧
+    historyDiagonalProjection p rs (historyCenteredVector p rs 1) = 0 ∧
+    historyDiagonalProjection p rs (historyCenteredVector p rs 2) = historyCenteredVector p rs 2 := by
+  simp only [historyScalarProjection_centered, historyDiagonalProjection_centered]
+  simp only [show (0 : Fin 3) ≠ 2 by decide, show (1 : Fin 3) ≠ 2 by decide,
+    if_false, if_true, and_self]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped ComplexOrder InnerProductSpace
+
+/-- The reset coordinate range is exactly cI on the actual history quotient. -/
+theorem historyCoordinates_reset_range (p : Gap) (rs : List Gap) (hp : p.value=0) (A : Mat2) :
+    A ∈ (historyCoordinates p rs).range ↔ ∃ c : ℂ, A=c • (1 : Mat2) := by
+  constructor
+  · rintro ⟨z,rfl⟩
+    exact ⟨historyResetCoordinates p rs z, history_coordinates_reset p hp rs z⟩
+  · rintro ⟨c,rfl⟩
+    refine ⟨c • historyConstantVector p rs,?_⟩
+    rw [map_smul, historyConstantVector_coordinates]
+
+/-- The actual same-central reference has precisely the same reset cI range. -/
+theorem historyReferenceCoordinates_reset_range (p : Gap) (rs : List Gap) (hp : p.value=0) (A : Mat2) :
+    A ∈ (historyReferenceCoordinates p).range ↔ ∃ c : ℂ, A=c • (1 : Mat2) := by
+  rw [← historyCoordinates_reset_range p rs hp A]
+  constructor
+  · rintro ⟨z,rfl⟩
+    exact ⟨(historyReferenceEquiv p rs).symm z, by
+      rw [← historyReferenceEquiv_coordinates p rs, LinearIsometryEquiv.apply_symm_apply]⟩
+  · rintro ⟨z,rfl⟩
+    exact ⟨historyReferenceEquiv p rs z, historyReferenceEquiv_coordinates p rs z⟩
+
+/-- The two actual faithful feature ranges are the same reset cR line. -/
+theorem historyReferenceFeature_reset_range (p : Gap) (rs : List Gap) (hp : p.value=0) (A : Mat2) :
+    A ∈ (embeddingLinear p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)).range ↔
+      ∃ c : ℂ, A=c • R := by
+  rw [← history_feature_range_reset p hp rs A]
+  constructor
+  · rintro ⟨z,rfl⟩
+    refine ⟨(historyReferenceEquiv p rs).symm z,?_⟩
+    rw [← historyReferenceEquiv_feature p rs, LinearIsometryEquiv.apply_symm_apply]
+  · rintro ⟨z,rfl⟩
+    exact ⟨historyReferenceEquiv p rs z, historyReferenceEquiv_feature p rs z⟩
+
+/-- The complex oriented X+iY class is the accepted actual reference class. -/
+theorem historyReferenceEquiv_complex (p : Gap) (rs : List Gap) :
+    historyReferenceEquiv p rs (historyComplexVector p rs) =
+      mk (NontracialPauliReflection.kernel p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num))
+        (kernel_posSemidef p.value 0 p.nonnegative p.bounded (by norm_num) (by norm_num)) complexMode := by
+  rw [historyComplexVector_decomposition, map_add, map_smul,
+    historyReferenceEquiv_centered, historyReferenceEquiv_centered, complexVector_decomposition]
+
+/-- Numerical weighted endpoint norms include the nonzero constant and all complex centered modes. -/
+theorem historyProjection_mode_norms (p : Gap) (rs : List Gap) :
+    ‖historyConstantVector p rs‖ ^ 2 = 1 ∧
+    ‖historyCenteredVector p rs 0‖ ^ 2 = 24*p.value^2/25 ∧
+    ‖historyCenteredVector p rs 1‖ ^ 2 = 24*p.value^2/25 ∧
+    ‖historyCenteredVector p rs 2‖ ^ 2 = 576*p.value^2/625 ∧
+    ‖historyComplexVector p rs‖ ^ 2 = 48*p.value^2/25 := by
+  refine ⟨historyConstantVector_norm_sq p rs,?_,?_,?_,historyComplexVector_norm_sq p rs⟩
+  · have h := historyCenteredVector_norm_sq p rs 0
+    change ‖historyCenteredVector p rs 0‖ ^ 2 = (24/25 : ℝ)*p.value^2 at h
+    nlinarith [h]
+  · have h := historyCenteredVector_norm_sq p rs 1
+    change ‖historyCenteredVector p rs 1‖ ^ 2 = (24/25 : ℝ)*p.value^2 at h
+    nlinarith [h]
+  · have h := historyCenteredVector_norm_sq p rs 2
+    change ‖historyCenteredVector p rs 2‖ ^ 2 = (576/625 : ℝ)*p.value^2 at h
+    nlinarith [h]
+
+/-- Constant projection norms are exactly one even at central reset. -/
+theorem historyScalarProjection_opNorm (p : Gap) (rs : List Gap) : ‖historyScalarProjection p rs‖ = 1 := by
+  apply le_antisymm (historyScalarProjection_opNorm_le p rs)
+  have h := (historyScalarProjection p rs).le_opNorm (historyConstantVector p rs)
+  rw [historyScalarProjection_constant, historyConstantVector_norm, mul_one] at h
+  exact h
+
+theorem historyDiagonalProjection_opNorm (p : Gap) (rs : List Gap) : ‖historyDiagonalProjection p rs‖ = 1 := by
+  apply le_antisymm (historyDiagonalProjection_opNorm_le p rs)
+  have h := (historyDiagonalProjection p rs).le_opNorm (historyConstantVector p rs)
+  rw [historyDiagonalProjection_constant, historyConstantVector_norm, mul_one] at h
+  exact h
+
+/-- All complementary norms collapse at reset while the constant retains norm one. -/
+theorem historyComplementaryProjections_reset_norms (p : Gap) (rs : List Gap) (hp : p.value=0) :
+    ‖historyCenteredDiagonalProjection p rs‖ = 0 ∧ ‖historyOffDiagonalProjection p rs‖ = 0 ∧
+      ‖historyScalarComplement p rs‖ = 0 := by
+  obtain ⟨hd,ho,hc⟩ := historyComplementaryProjections_reset p rs hp
+  simp only [hd,ho,hc,norm_zero,and_self]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open NontracialPauliReflection
+
+/-- The accepted reference reset equivalence, transported only along central retention equality. -/
+def historyReferenceResetEquiv (p : Gap) (hp : p.value=0) : HistoryReference p ≃ₗ[ℂ] ℂ := by
+  rcases p with ⟨v,hv,hv1⟩
+  change v=0 at hp
+  subst v
+  exact resetCoordinateEquiv 0 (by norm_num) (by norm_num)
+
+/-- The reference reset diagram holds for every Gap with central retention zero. -/
+theorem historyReferenceEquiv_reset_equiv_all (p : Gap) (hp : p.value=0) (rs : List Gap)
+    (z : HistorySpace p rs) :
+    historyReferenceResetEquiv p hp (historyReferenceEquiv p rs z) = historyResetEquiv p hp rs z := by
+  rcases p with ⟨v,hv,hv1⟩
+  change v=0 at hp
+  subst v
+  exact historyReferenceEquiv_reset_equiv rs z
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+
+namespace SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
+open Matrix NontracialPauliReflection NontracialReflectionDynamics FinitePositiveKernel
+open scoped InnerProductSpace
+
+/-- The three sector ranges are mutually orthogonal for arbitrary distinct quotient vectors. -/
+theorem historyProjection_sectors_mixed_orthogonal (p : Gap) (rs : List Gap) (z w : HistorySpace p rs) :
+    ⟪historyScalarProjection p rs z, historyCenteredDiagonalProjection p rs w⟫_ℂ = 0 ∧
+    ⟪historyScalarProjection p rs z, historyOffDiagonalProjection p rs w⟫_ℂ = 0 ∧
+    ⟪historyCenteredDiagonalProjection p rs z, historyOffDiagonalProjection p rs w⟫_ℂ = 0 := by
+  have hcb : ⟪historyScalarProjection p rs z,historyDiagonalProjection p rs w⟫_ℂ =
+      ⟪historyScalarProjection p rs z,w⟫_ℂ := by
+    have h := historyDiagonalProjection_symmetric p rs (historyScalarProjection p rs z) w
+    change ⟪historyDiagonalProjection p rs (historyScalarProjection p rs z),w⟫_ℂ = _ at h
+    rw [historyDiagonalProjection_after_scalar] at h
+    exact h.symm
+  have hcc : ⟪historyScalarProjection p rs z,historyScalarProjection p rs w⟫_ℂ =
+      ⟪historyScalarProjection p rs z,w⟫_ℂ := by
+    have h := historyScalarProjection_symmetric p rs (historyScalarProjection p rs z) w
+    change ⟪historyScalarProjection p rs (historyScalarProjection p rs z),w⟫_ℂ = _ at h
+    rw [historyScalarProjection_twice] at h
+    exact h.symm
+  have hbb : ⟪historyDiagonalProjection p rs z,historyDiagonalProjection p rs w⟫_ℂ =
+      ⟪historyDiagonalProjection p rs z,w⟫_ℂ := by
+    have h := historyDiagonalProjection_symmetric p rs (historyDiagonalProjection p rs z) w
+    change ⟪historyDiagonalProjection p rs (historyDiagonalProjection p rs z),w⟫_ℂ = _ at h
+    rw [historyDiagonalProjection_twice] at h
+    exact h.symm
+  change ⟪historyScalarProjection p rs z,historyDiagonalProjection p rs w-historyScalarProjection p rs w⟫_ℂ=0 ∧
+    ⟪historyScalarProjection p rs z,w-historyDiagonalProjection p rs w⟫_ℂ=0 ∧
+    ⟪historyDiagonalProjection p rs z-historyScalarProjection p rs z,w-historyDiagonalProjection p rs w⟫_ℂ=0
+  simp only [inner_sub_left, inner_sub_right, hcb, hcc, hbb, sub_self, and_self]
+
+end SKEFTHawking.QuantumNetwork.NontracialHistoryConsistency
