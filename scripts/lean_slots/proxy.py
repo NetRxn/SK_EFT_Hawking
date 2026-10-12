@@ -12,7 +12,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
-from .state import Inventory, SlotError, read_json, token_hash, tool_cache_path, tool_list_key
+from .state import Inventory, SlotError, read_json, token_hash, tool_cache_path, tool_list_key, observe_process
 
 
 _DISCOVERY_METHODS = {
@@ -113,6 +113,10 @@ class LeaseGate:
             raise SlotError(f"wt{self.number} project-root mismatch")
         if lease.get("endpoint") != slot["endpoint_name"]:
             raise SlotError(f"wt{self.number} endpoint-identity mismatch")
+        if lease.get("owner_kind") == "process":
+            owner = observe_process(int(lease.get("owner_pid", 0)), lease.get("owner_signature"))
+            if owner.state != "present" or not lease.get("owner_signature"):
+                raise SlotError(f"wt{self.number} process owner identity is {owner.state}", observations=(owner,))
         self._authorize_paired_dependency(lease)
 
     def _authorize_paired_dependency(self, lease: dict[str, Any]) -> None:

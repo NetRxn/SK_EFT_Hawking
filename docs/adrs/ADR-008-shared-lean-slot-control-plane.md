@@ -116,9 +116,13 @@ Two operational facts this exercise established, both worth knowing before the f
   report `proxy=False` while still serving, and `prepare` fails with *"proxy for wtN is not healthy"*
   and quarantines the slot. Run `supervisor stop && supervisor start` after any controller edit. This
   is the mechanism working — it is what stops a stale front door being mistaken for a current one.
-- **`slotctl` resolves its inventory, state root and lease directory from the current working
-  directory.** Invoked from inside a slot it addresses a different control plane and reports every slot
-  FREE. Always run it from the primary checkout.
+- **Use the canonical primary controller and inventory.** The dated exercise reported
+  a different control plane and FREE slots when invoked inside a slot. Its CWD-only
+  attribution is superseded: current `Inventory.load` chooses explicit inventory,
+  `LEAN_SLOT_CONFIG` or module-location default, then resolves repository/state roots
+  from that config and the state override. A copied slot wrapper can select a different
+  domain; CWD alone cannot establish authority or absence. Always use the verified
+  canonical primary wrapper/inventory as the operator guide specifies.
 
 ## 2026-07-22 authentication amendment
 
@@ -184,7 +188,7 @@ The words MUST, MUST NOT, SHOULD, and MAY below are normative.
 | **S-L — A heavy backend is a consequence of a lease** *(added 2026-08-14)* | The public inventory sets `server.backend_policy = "leased"`: a backend runs only while this repository holds a lease in an active state. Every lease-exit path — `release`, `reclaim`, `absorb` — MUST reconcile the backend **after** the lease record is removed, because expectation is derived from the lease. Reclamation MUST NOT fail an exit path that has already succeeded; a stray backend is a resource cost, not a correctness one, and is reported for `supervisor start` to resolve. Rationale is measured, not assumed: one active slot holds `lake serve` + `lean --server` + `lean --worker` at ~4.4 GB, and before this rule that memory persisted from first use until the supervisor was stopped by hand. Peak concurrency is unchanged; only the idle-after-a-wave cost is removed. `"default"` remains available and is unaffected. |
 | **S-P — An idle endpoint still advertises the real tool surface** *(added 2026-08-14)* | MCP tools are registered at **session start**. A slot whose backend is idle at that moment must therefore still advertise the full tool list, or it contributes **zero tools to that session permanently** — no matter what the lead leases afterwards. The supervisor harvests the list once (`tools/list` needs no Lean server, so this costs ~2s and spawns nothing heavy), caches it keyed on the server command + `disabled_tools` + REPL flag — **not** the per-slot fingerprint, which folds in the project path and would invalidate a good cache per slot — and the proxy serves it whenever the backend is down. Safety is unchanged: `tools/call` still reaches the real backend and still fails closed (`wt1 has no active lease`). ⚠️ Without this, S-L and S-N combine into an undispatchable swarm, which is how it was found: `skeft_wt2` registered empty in a live session because its backend was down at attach, and preparing the slot later never added its tools. **A legible failure at call time beats a silent absence at registration time.** ⚠️ **AMENDED 2026-08-14 — necessary, NOT sufficient.** S-P makes tools *register* on an idle slot; it does not make them *usable* once the slot is leased. A session whose MCP session was established against the idle proxy cannot address the endpoint after a lease starts the backend — every `tools/call` returns `-32602`, permanently, while a fresh session against the same endpoint at the same moment succeeds. **Tool registration and tool usability are different properties, and S-P delivers only the first.** See `papers/AutomatedReviews/2026-08-14-slot-session-ordering/infra.md`. ⛔ **The ordering constraint this amendment originally imposed — "acquire and prepare slots BEFORE starting the session that will use them" — is RETIRED by S-Q (2026-08-15) and must not be reinstated.** It was a workaround for a defect in our own front door, not a property of MCP: the idle proxy answered `initialize` without minting a session. S-Q makes the proxy own the client session, so usability now follows registration and the lifecycle is drivable mid-session. This is the second time this ADR recorded a proxy defect as a rule for operators to obey; when the next one appears, ask whether the front door should be behaving that way before writing the constraint down. |
 | **S-O — Absorption means containment in the INTEGRATION ref** *(added 2026-08-14)* | `release` and `reclaim` must decide *"would freeing this slot lose work?"* by testing the slot's `HEAD` against the declared integration ref (`integration_ref`, default `main`) — the branch `absorb` fast-forwards. The lease's recorded `base_ref` is a **hint**, tried second, never the authority: ordinary hygiene (merge a feature branch, delete it) deletes or supersedes it. An unresolvable ref is skipped, not fatal; if nothing resolves the answer is **not absorbed**, so the audit stays fail-closed and dirty work still blocks. ⚠️ Discovered by a slot that no verb could free: its base branch was deleted after its commits reached `main`, so `release` failed on owner identity, `reclaim` failed on `rev-parse`, and the only exit was deleting runtime state by hand — precisely what S-C tells operators not to do. **A state reachable by ordinary hygiene must never be unrecoverable through the controller.** |
-| **S-N — The lease gate applies at DISPATCH, not at CONNECT** *(added 2026-08-14)* | A client opens every endpoint in its configuration at startup, long before any slot is leased. An endpoint whose slot is unleased MUST therefore still complete the MCP handshake — `initialize`, `tools/list`, `ping`, and notifications — answering locally when no backend is running, and MUST advertise an **empty tool list**. ⚠️ **The empty list is the UNLEASED state only, and constrains no worker.** A leased, prepared slot exposes its full surface — measured at 21 tools, every one the MCP-first loop needs (`lean_goal`, `lean_multi_attempt`, `lean_diagnostic_messages`, `lean_verify`, `lean_run_code`, the searches, hover, completions). The single removal anywhere is `lean_build` (S-E). A worker never meets the empty list, because a worker is only ever dispatched into a slot the lead has leased and prepared. Refusal belongs on `tools/call`, where `LeaseGate.authorize` already enforces it. This does not weaken S-E: no tool can be named, and dispatch still fails closed. ⚠️ Discovered by regression — S-L made unleased endpoints answer `503` to `initialize`, and codex-cli 0.145.0 (`rmcp`) treats that as a **fatal** transport error that kills the whole session with no answer, `required = false` notwithstanding. Claude Code tolerates it, so client resilience here is **not symmetric** and a single client's success is not evidence the contract holds. |
+| **S-N — The lease gate applies at DISPATCH, not at CONNECT** *(added 2026-08-14)* | A client opens every endpoint in its configuration at startup, long before any slot is leased. An endpoint whose slot is unleased MUST therefore still complete the MCP handshake — `initialize`, `tools/list`, `ping`, and notifications — answering locally when no backend is running, and serves the cached real tool list when available. The original empty-catalogue instruction is superseded by S-P and S-Q: an idle attachment must register the real tool surface without authorizing dispatch. A leased, prepared slot exposes its full surface — measured at 21 tools, every one the MCP-first loop needs (`lean_goal`, `lean_multi_attempt`, `lean_diagnostic_messages`, `lean_verify`, `lean_run_code`, the searches, hover, completions). The single removal anywhere is `lean_build` (S-E). A worker never meets the empty list, because a worker is only ever dispatched into a slot the lead has leased and prepared. Refusal belongs on `tools/call`, where `LeaseGate.authorize` already enforces it. This does not weaken S-E: `lean_build` remains unavailable and unleased dispatch still fails closed. ⚠️ Discovered by regression — S-L made unleased endpoints answer `503` to `initialize`, and codex-cli 0.145.0 (`rmcp`) treats that as a **fatal** transport error that kills the whole session with no answer, `required = false` notwithstanding. Claude Code tolerates it, so client resilience here is **not symmetric** and a single client's success is not evidence the contract holds. |
 | **S-Q — The proxy owns the client-facing MCP session** *(added 2026-08-15)* | The front door MUST mint and return its **own** `Mcp-Session-Id` on every `initialize` it answers — idle or not — and MUST translate that client session to a **lazily (re-)established backend session** on each forwarded request, re-establishing and retrying once when the backend does not recognise it. The client session is therefore stable across every backend lifecycle event: lease start, `prepare`'s server restart, `absorb`'s rewarm, and release. ⚠️ **This retires the ordering constraint recorded in S-P's amendment.** Measured at HEAD 2026-08-15: an idle proxy answered `initialize` with HTTP 200 and **no `Mcp-Session-Id` header at all**, while the backend mints one (`supervisor.py:676`). That asymmetry — not any MCP limitation — is why a session established against an idle slot could never address the endpoint after a lease: the client held no session the backend had ever issued, so every `tools/call` returned `-32602`. **Minting only when idle would not be enough**, and the reason generalises the bug: a session that attached while the backend was UP would hold a *backend* session id, which `prepare` invalidates when it restarts the Lean server mid-wave. Uniform minting is what makes the whole lifecycle transparent. Session state is per-proxy and in-memory, so a `supervisor stop`/`start` still ends client sessions — that is a configuration-change cost, not a per-wave one. **The operating consequence is that an agent may now drive `acquire → prepare → dispatch → absorb` entirely inside one session, with no operator restart** — which is the property the swarm needed and never had. |
 | **S-M — Host kernel limits are declared, checked, and portable** *(added 2026-08-14)* | Resource requirements a swarm depends on MUST live as data in the versioned inventory (`host_limits`), keyed by `platform.system()`, and be reported by `doctor` with a remedy command derived from the declared minimum so the two cannot drift. Because this repository is public, the check MUST fail **only** for a knob the running kernel exposes whose value is below the declared floor: an undeclared platform passes, an unexposed knob passes, and `LEAN_SLOT_SKIP_HOST_LIMITS` opts a host out without a repository diff. A limit that is right for one workstation MUST NOT fail a clone on another. |
 
@@ -408,3 +412,140 @@ Each phase is independently reversible. A later phase may not weaken an earlier 
 - [Codex MCP documentation](https://learn.chatgpt.com/docs/extend/mcp) — HTTP URLs, bearer-token environment variables, and server/tool allow/deny configuration.
 - [Codex hooks documentation](https://learn.chatgpt.com/docs/hooks) — tool-hook coverage and the explicit warning that hooks are guardrails rather than a complete enforcement boundary.
 - Pinned `lean-lsp-mcp` source at release 0.26.1 — fixed-root HTTP behavior, shared LSP client, session-scoped REPL, destructive `lean_build`, bearer authentication, and disabled-tool support.
+
+
+## 2026-10-11 lifecycle observation amendment
+
+**Status:** The LO-1–LO-6 and native-domain source corrections are implemented and
+independently accepted for bounded source/test/evidence scope. ROOT canonical evidence
+records documentation/source integration and current project-gate outcomes; source
+review alone does not certify them. Live activation and proof-slot admission remain
+unverified.
+The accepted decisions and historical validation records above retain their statuses;
+candidate test evidence does not replace their separate runtime gates.
+
+Design: [lifecycle observation specification](../superpowers/specs/2026-10-11-lean-lifecycle-observation-design.md).
+Plan: [bounded implementation and validation](../superpowers/plans/2026-10-11-lean-lifecycle-observation.md).
+
+### Context and measured source constraints
+
+Source read at public `ffef94744b6c115618848c703ceda5ee4c54d2d8`, 2026-10-11:
+`state.py:367-387` collapses failed `ps` observation into `None`/false;
+`supervisor.py:33-38` collapses all socket `OSError` into false. Consequently
+`_stop:237-266` can unlink registration without signaling when observation fails.
+`paused_backend:370-390` has no actual-quiescence gate before its mutation yield;
+`Controller.prepare:488-534` and `absorb:825-840` consume that yield for cache changes.
+`_spawn:161-235` lacks complete rollback after identity/registration failures.
+Registry-only count/status cannot measure unregistered live servers.
+`cli.py:191-207` applies `--slot` only to `probe`; other supervisor actions are global.
+`Controller.absorb:788-793` requires literal primary-branch/base-ref equality.
+These are source constraints, not a population-shape or repair-completeness claim.
+
+A paired public read-only observation on 2026-10-11 records authorized successful
+old-process observations and a connected backend port, followed by restricted
+`PermissionError` observations for both process and socket. This demonstrates a
+present false-negative observation path. It does **not** establish the exact
+historical metadata unlink event or exclusive incident causality. Immutable originals
+and the full forensic review remain root-owned evidence, not new process authority.
+
+### Lifecycle observation decisions
+
+- **LO-1 — Unavailable observation is not absence (F1).** Replace ambiguous boolean
+  lifecycle predicates with present, confirmed-absent, identity-mismatch and
+  unavailable evidence. Preserve existing process registration, identity and physical
+  capacity reservation on unavailable/mismatch results. A refused TCP connection is
+  endpoint absence only; permission denial, timeout, failed `ps`, malformed output and
+  incomplete descendant evidence are not proof of stopped processes. This includes
+  lease-owner acquisition/reclaim consumers of the identity helper.
+- **LO-2 — Prove actual quiescence before mutation (F2).** Under the existing shared
+  lifecycle lock, all reset/cache transition entries must prove the actual target
+  backend and relevant descendants stopped before yielding. A healthy proxy or missing
+  registry row is insufficient. Unknown/unavailable target occupancy blocks entry.
+  Apply the same contract to paired activation/restoration, rewarm and temporary
+  tool-discovery backends; preserve body and restoration failures separately.
+- **LO-3 — Launch is a transaction in the existing registry (F3).** Reserve capacity
+  durably at the existing process-record path before `Popen`, then transition that
+  record through `launch_pending`, `running` or `uncertain_residual` states, with
+  coherent PID/signature capture inside the pending phase. `identity-established` is
+  not a serialized phase. Only the exact newly created, still-owned process handle/established identity
+  may receive bounded automatic `SIGTERM` rollback. Reap or retain durable uncertain
+  occupancy; do not forget live residuals after timeout, identity/write failure or
+  orchestrator interruption. No new control plane or second reservation ledger.
+- **LO-4 — Capacity and status include uncertainty (F4).** Admission observes all
+  configured shared physical slots and registered residuals under the lifecycle lock.
+  Unknown/unavailable occupancy reserves that physical number and cannot be presented
+  as free. Distinguish measured services from conservative reservations; never turn an
+  incomplete census into an exact global count. Exclude a linked checkout copy only
+  after capable Git top-level/common-directory/Git-directory evidence and agreement
+  with a capable canonical primary's complete physical/server domain. Retain genuine
+  primary conflicts and same-primary aliases; failed identity observation reserves
+  capacity. Validate complete ancestry through generic parents: project descendants
+  belong to one tree only through a matching-project ancestor, while unrelated trees
+  under a common nonproject manager remain distinct. Retain stored generic/reparented
+  descendants independently. Conflicting occupancy within one physical number blocks
+  admission. Preserve the global maximum of three and fixed
+  project roots; no adoption or signaling of unknown processes.
+- **LO-5 — Supervisor CLI scope is explicit (F5).** Reject `--slot` with `start`, `stop`
+  or `status` before any action. Those existing verbs remain global. `probe` continues
+  to require `--slot`. Add no verbs or scoped lifecycle API. Existing root internal
+  number APIs retain their scope. A conditional replacement of a known owned proxy
+  requires target-slot then lifecycle locking, reliable lease FREE, a complete capable
+  census, both-role backend/project/retained-descendant quiescence and independently
+  drained client requests. Call existing unlocked internals inside the already-held
+  lifecycle lock; never reacquire that nonreentrant lock through its public wrappers.
+  Global code/config restart requires every owner drained and actual ownership known;
+  observation failure never authorizes restart or unknown-process management.
+- **LO-6 — Lease, resource and integration states remain distinct (F6).** Retain
+  release/reclaim/absorb reconciliation after lease unlink and nonfatal resource-stop
+  reporting after a completed lease exit. `FREE` describes the lease only; residual
+  occupancy still blocks reuse/mutation. Supported normal absorption acquires the
+  actual current primary branch name, not a literal SHA base-ref. Do not broaden
+  `absorb`, add retargeting or hand-edit leases to make a mismatch pass. Preserve exact
+  sources/commits through the existing recovery process and revalidate fresh runtime.
+
+### Overlap and compatibility
+
+`LO-1`–`LO-4` strengthen the evidence that S-A/S-D/S-G already need; they retain
+S-B/S-C single writers/locks, S-J owner identities and S-Q proxy-owned MCP sessions.
+`LO-6` retains S-L's post-unlink, nonfatal lease-exit behavior. Its historical phrase
+“a stray backend is a resource cost, not a correctness one” is limited to completion
+of the **already completed lease exit**: such a residual becomes a correctness and
+capacity blocker before a later cache mutation or launch. `supervisor start` cannot
+resolve a genuinely unknown process by adoption; its historical remedy is not an
+instruction to restart all slots during active work. The operator guide states the candidate source contract and its separate live admission gate.
+
+No changes to scientific modules, proof scope, repository boundaries, authenticated
+endpoints, generated client configuration, heavy-backend limits or public/private
+dependency direction are introduced. ADR-017 snapshots remain freshness evidence only.
+
+### Alternatives and consequences
+
+Rejected: permission errors as absence; unlinking a record to regain capacity;
+creating a sidecar registry/watchdog; automatic PID adoption or `SIGKILL`; scoped
+start/stop verbs to repair an ignored flag; branch spoofing/retargeting; extra slots.
+The smallest route extends the existing state/supervisor/controller/CLI and tests.
+It refuses operations with incomplete evidence and retains
+visible uncertain resources. That conservative refusal is intentional; documentation
+alone does not repair the running supervisor or release quarantined capacity.
+
+### Acceptance and rollout gate
+
+Whole specification and implementation reviews accepted the bounded source contract,
+including the original lifecycle decisions and native-domain corrections. Meaningful
+sole production mutants and restored-source suites substantiate that bounded scope.
+Independent review of reconciled authorities, current policy/architecture and project
+gates, ROOT integration and the existing finding-closure writer remain required.
+Existing failing tests/validators remain unwaived; scoped checks do not establish a
+whole green gate. See the lifecycle and native-domain plans for the remaining phases.
+
+After source integration, take fresh capable native observations before managing
+anything. A source edit does not load code into a persistent proxy. Conditional
+known-number replacement requires the ownership, locking and quiescence gates in
+LO-5; otherwise retain source-only status. FREE, endpoint closure and a preliminary
+TCP/thread sample do not prove no in-flight request. ROOT must freeze its own
+dispatch/probes and reconcile completed request receipts; fresh exact-PID identity,
+all-state TCP and native-thread witnesses supplement that evidence. Passive snapshots
+do not serialize outside HTTP requests, and daemon handler threads are not joined by
+server close. Unaccounted activity blocks replacement. Preserve rollback and measure
+loaded fingerprints, actual lease/MCP dispatch, release/reconnect and paired epochs
+separately. Nothing here permits adoption or signaling of unknown processes.

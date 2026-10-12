@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import hashlib
 import os
 import shlex
@@ -24,8 +26,8 @@ from .state import (
     directory_lock,
     exclusive_json,
     now_iso,
-    process_matches,
-    process_start_signature,
+    require_process_signature,
+    observe_process,
     read_json,
     token_hash,
 )
@@ -218,7 +220,7 @@ class Controller:
             return {
                 "owner_kind": "process",
                 "owner_pid": pid,
-                "owner_signature": process_start_signature(pid),
+                "owner_signature": require_process_signature(pid),
             }
         # A slot lease outlives any one CLI invocation, so the owner must be the driving
         # session, not the shell that happened to run `acquire`. `LEAN_SLOT_OWNER_SESSION`
@@ -241,7 +243,7 @@ class Controller:
         return {
             "owner_kind": "process",
             "owner_pid": pid,
-            "owner_signature": process_start_signature(pid),
+            "owner_signature": require_process_signature(pid),
         }
 
     def _lease_for_command(
@@ -681,7 +683,8 @@ class Controller:
         except (SlotError, OSError) as exc:  # pragma: no cover - defensive
             print(
                 f"slotctl: wt{number} released, but its backend could not be stopped "
-                f"({exc}); run `slotctl supervisor start` to reconcile",
+                f"({exc}); resource remains reserved; diagnose ownership/observation before any coordinated reload; "
+                f"observations={json.dumps([item.as_dict() for item in getattr(exc, 'observations', ())], sort_keys=True)}",
                 file=sys.stderr,
             )
 
@@ -720,10 +723,9 @@ class Controller:
                     "whose owner is gone."
                 )
             if lease.get("owner_kind") == "process":
-                if process_matches(
-                    int(lease.get("owner_pid", 0)), lease.get("owner_signature")
-                ):
-                    raise SlotError(f"wt{number} owner process is still alive")
+                owner = observe_process(int(lease.get("owner_pid", 0)), lease.get("owner_signature"))
+                if owner.state != "absent":
+                    raise SlotError(f"wt{number} owner is not confirmed absent ({owner.state})")
             elif lease.get("owner_kind") == "session" and not confirm_owner_gone:
                 raise SlotError(
                     f"wt{number} has a session owner; rerun with --confirm-owner-gone only after "
@@ -851,6 +853,9 @@ class Controller:
                 return {"integrated_head": slot_head, "epoch": epoch}
 
     def status(self) -> dict[str, Any]:
+        from .supervisor import Supervisor
+        runtime = Supervisor(self.inventory).status()
+        runtime_slots = {item["slot"]: item for item in runtime["slots"]}
         slots: list[dict[str, Any]] = []
         for number in (1, 2, 3):
             lease = self.inventory.lease(number, required=False)
@@ -859,6 +864,10 @@ class Controller:
                 "repo_role": self.inventory.repo_role,
                 "worktree": str(self.inventory.worktree(number)),
                 "lease": lease,
+                "proxy_state": runtime_slots[number]["proxy_state"],
+                "backend_state": runtime_slots[number]["backend_state"],
+                "resources": runtime_slots[number]["resources"],
+                "resource_reserved": number in runtime["reserved_physical_slots"],
             }
             try:
                 worktree, slot = self._assert_worktree_identity(number)
@@ -876,6 +885,12 @@ class Controller:
             "schema_version": SCHEMA_VERSION,
             "repo_role": self.inventory.repo_role,
             "state_root": str(self.inventory.state_root),
+            "capacity_complete": runtime["capacity_complete"],
+            "capacity_errors": runtime["capacity_errors"],
+            "capacity_observations": runtime["capacity_observations"],
+            "capacity_conflicts": runtime["capacity_conflicts"],
+            "reserved_physical_slots": runtime["reserved_physical_slots"],
+            "global_running_backends": runtime["global_running_backends"],
             "slots": slots,
         }
 
@@ -1133,19 +1148,21 @@ class Controller:
         running_backends = int(supervisor["global_running_backends"])
         record(
             "heavy_backend_limit",
-            running_backends <= int(self.inventory.raw["max_active_slots"]),
+            supervisor.get("capacity_complete", False)
+            and not supervisor.get("capacity_conflicts")
+            and len(supervisor.get("reserved_physical_slots", [])) <= int(self.inventory.raw["max_active_slots"]),
             f"{running_backends}/3 running",
         )
         for item in supervisor["slots"]:
             expected_backend = self.inventory.backend_expected(int(item["slot"]))
             record(
                 f"wt{item['slot']}.endpoint",
-                item["proxy_running"] and item["backend_running"] == expected_backend,
+                item["proxy_running"] and item["backend_running"] == expected_backend
+                and item.get("backend_state") in {"running", "down"},
                 (
-                    "proxy is ALIVE but running stale code/configuration — run "
-                    "`slotctl supervisor stop` then `start`; it is serving, not dead"
+                    "proxy is ALIVE but stale; diagnose and coordinate a drained root reload window"
                     if item.get("proxy_state") == "stale"
-                    else f"proxy={item['proxy_running']} backend={item['backend_running']} "
+                    else f"proxy={item.get('proxy_state')} backend={item.get('backend_state')} "
                     f"expected_backend={expected_backend}"
                 ),
             )

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import signal
 from types import SimpleNamespace
 from pathlib import Path
 
@@ -15,6 +16,17 @@ from scripts.lean_slots.proxy import LeaseGate
 from scripts.lean_slots.state import Inventory, SlotError
 from scripts.lean_slots.state import atomic_json, process_start_signature
 from scripts.lean_slots.supervisor import Supervisor
+
+
+@pytest.fixture(autouse=True)
+def isolated_process_observations(monkeypatch, tmp_path):
+    """Keep this policy suite off the actual host; all runtime state is tmp."""
+    monkeypatch.setenv("LEAN_SLOT_STATE_DIR", str(tmp_path / "isolated-observation-runtime"))
+    from tests.test_lean_lifecycle_observation import Host
+    original = subprocess.Popen
+    host = Host(monkeypatch)
+    host.real_popen = original
+    return host
 
 
 def run(cwd: Path, *command: str) -> str:
@@ -396,14 +408,18 @@ def test_two_sibling_workers_absorb_by_rebase_and_fast_forward(slot_repo) -> Non
     assert controller.inventory.lease(2, required=False) is None
 
 
-def test_stale_reclaim_is_safe_or_quarantines(slot_repo, monkeypatch) -> None:
+def test_stale_reclaim_is_safe_or_quarantines(slot_repo, monkeypatch, isolated_process_observations) -> None:
     controller, _, worktrees = slot_repo
     monkeypatch.setenv("LEAN_SLOT_OWNER_PID", "999999")
+    isolated_process_observations.add(999999, "verified fixture owner")
     controller.acquire(1, client="codex", base_ref="main")
+    isolated_process_observations.remove(999999)
     controller.reclaim(1)
     assert controller.inventory.lease(1, required=False) is None
 
+    isolated_process_observations.add(999999, "verified fixture owner")
     controller.acquire(2, client="codex", base_ref="main")
+    isolated_process_observations.remove(999999)
     protected = worktrees[1] / "uncommitted.txt"
     protected.write_text("keep\n")
     with pytest.raises(SlotError, match="quarantined"):
@@ -545,46 +561,27 @@ def test_two_scope_render_preflights_before_writing(slot_repo) -> None:
     assert workspace_config.read_text() == "# operator-owned\n"
 
 
-def test_global_backend_limit_counts_other_repository_roles(slot_repo) -> None:
-    controller, _, _ = slot_repo
-    process_root = controller.inventory.state_root / "processes"
-    signature = process_start_signature(os.getpid())
-    assert signature
+def test_global_backend_limit_counts_other_repository_roles(downstream_repo, isolated_process_observations) -> None:
+    from tests.test_lean_lifecycle_observation import owned
+    downstream, public, _, _ = downstream_repo
+    supervisor = Supervisor(public.inventory)
+    counterpart = Supervisor(downstream.inventory)
     for number in (1, 2, 3):
-        atomic_json(
-            process_root / f"other-wt{number}-backend.json",
-            {
-                "schema_version": 1,
-                "repo_role": "other",
-                "slot": number,
-                "kind": "backend",
-                "pid": os.getpid(),
-                "signature": signature,
-            },
-        )
-    supervisor = Supervisor(controller.inventory)
+        owned(counterpart, isolated_process_observations, "backend", number, 811000 + number)
     assert supervisor.global_backend_count() == 3
+    assert supervisor.capacity_census()["complete"]
     with pytest.raises(SlotError, match="global heavy-backend limit"):
         supervisor.start_backend(1)
+    assert not isolated_process_observations.launches
 
 
-def test_one_physical_slot_cannot_have_two_repository_backends(slot_repo) -> None:
-    controller, _, _ = slot_repo
-    signature = process_start_signature(os.getpid())
-    assert signature
-    atomic_json(
-        controller.inventory.state_root / "processes" / "other-wt2-backend.json",
-        {
-            "schema_version": 1,
-            "repo_role": "other",
-            "slot": 2,
-            "kind": "backend",
-            "pid": os.getpid(),
-            "signature": signature,
-        },
-    )
-    with pytest.raises(SlotError, match="physical wt2 already has"):
-        Supervisor(controller.inventory).start_backend(2)
+def test_one_physical_slot_cannot_have_two_repository_backends(downstream_repo, isolated_process_observations) -> None:
+    from tests.test_lean_lifecycle_observation import owned
+    downstream, public, _, _ = downstream_repo
+    owned(Supervisor(downstream.inventory), isolated_process_observations, "backend", 2, 811102)
+    with pytest.raises(SlotError, match="physical wt2 already reserved"):
+        Supervisor(public.inventory).start_backend(2)
+    assert not isolated_process_observations.launches
 
 
 def test_proxy_runtime_fingerprint_changes_with_client_auth_mode(slot_repo) -> None:
@@ -655,11 +652,13 @@ def test_downstream_lakefile_path_must_match_pair_inventory(downstream_repo) -> 
 
 
 def test_foreign_repository_cannot_reclaim_stale_lease(
-    downstream_repo, monkeypatch: pytest.MonkeyPatch
+    downstream_repo, isolated_process_observations, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     controller, public_controller, _, _ = downstream_repo
     monkeypatch.setenv("LEAN_SLOT_OWNER_PID", "999999")
+    isolated_process_observations.add(999999, "verified foreign fixture owner")
     controller.acquire(2, client="codex", base_ref="main")
+    isolated_process_observations.remove(999999)
     with pytest.raises(SlotError, match="repository-role mismatch"):
         public_controller.reclaim(2)
     assert controller.inventory.lease(2)["repo_role"] == "downstream"
@@ -686,75 +685,27 @@ def test_bearer_session_environment_exports_token(slot_repo) -> None:
     )
 
 
-def test_backend_pair_handoff_is_ordered_and_rolls_back(
-    downstream_repo, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_backend_pair_handoff_is_ordered_and_rolls_back(downstream_repo, isolated_process_observations) -> None:
+    from tests.test_lean_lifecycle_observation import owned
     controller, public_controller, _, _ = downstream_repo
-    target = Supervisor(controller.inventory)
-    counterpart = Supervisor(public_controller.inventory)
-    running = {"target": False, "counterpart": True}
-    events: list[str] = []
-
-    monkeypatch.setattr(
-        target,
-        "_running",
-        lambda kind, number: running["target"] if kind == "backend" else True,
-    )
-    monkeypatch.setattr(
-        counterpart,
-        "_running",
-        lambda kind, number: running["counterpart"] if kind == "backend" else True,
-    )
-    monkeypatch.setattr(
-        target, "_start_proxy_unlocked", lambda number: events.append("proxy")
-    )
-    monkeypatch.setattr(target, "_assert_backend_owned_or_stopped", lambda number: None)
-    monkeypatch.setattr(
-        counterpart, "_assert_backend_owned_or_stopped", lambda number: None
-    )
-    monkeypatch.setattr(
-        target, "assert_healthy", lambda number: events.append("healthy")
-    )
-
-    def start_target(number: int) -> None:
-        running["target"] = True
-        events.append("start-target")
-
-    def stop_target(number: int) -> None:
-        running["target"] = False
-        events.append("stop-target")
-
-    def start_counterpart(number: int) -> None:
-        running["counterpart"] = True
-        events.append("start-counterpart")
-
-    def stop_counterpart(number: int) -> None:
-        running["counterpart"] = False
-        events.append("stop-counterpart")
-
-    monkeypatch.setattr(target, "_start_backend_unlocked", start_target)
-    monkeypatch.setattr(target, "_stop_backend_unlocked", stop_target)
-    monkeypatch.setattr(counterpart, "_start_backend_unlocked", start_counterpart)
-    monkeypatch.setattr(counterpart, "_stop_backend_unlocked", stop_counterpart)
-
+    host = isolated_process_observations
+    target, counterpart = Supervisor(controller.inventory), Supervisor(public_controller.inventory)
+    owned(counterpart, host, "proxy", 2, 811202)
+    owned(counterpart, host, "backend", 2, 811302)
+    events = []
     with target.activating_from(2, counterpart):
-        assert not running["target"] and not running["counterpart"]
+        assert target.process_state("backend", 2) == counterpart.process_state("backend", 2) == "down"
+        assert host.signals == [(811302, signal.SIGTERM)]
         events.append("cache-transition")
-    assert events == [
-        "proxy",
-        "stop-counterpart",
-        "cache-transition",
-        "start-target",
-        "healthy",
-    ]
-
-    events.clear()
-    running.update(target=False, counterpart=True)
+    assert events == ["cache-transition"]
+    assert target.process_state("backend", 2) == "running"
+    target.restore_counterpart(2, counterpart)
+    assert target.process_state("backend", 2) == "down" and counterpart.process_state("backend", 2) == "running"
     with pytest.raises(RuntimeError, match="copy failed"):
         with target.activating_from(2, counterpart):
+            assert counterpart.process_state("backend", 2) == "down"
             raise RuntimeError("copy failed")
-    assert events == ["proxy", "stop-counterpart", "start-counterpart"]
-    assert not running["target"] and running["counterpart"]
+    assert target.process_state("backend", 2) == "down" and counterpart.process_state("backend", 2) == "running"
 
 
 def test_doctor_json_shape_is_stable(slot_repo) -> None:
@@ -1433,22 +1384,21 @@ def test_the_integration_ref_is_configurable(slot_repo) -> None:
     assert "trunk" in why
 
 
-def test_a_stale_proxy_is_reported_differently_from_a_dead_one(slot_repo, monkeypatch) -> None:
-    """Minor #2: `proxy=False` sent an operator hunting a dead process that was serving.
-
-    The remedies differ — restart the supervisor vs investigate a crash — so conflating
-    them is a wrong diagnosis, not just terse output.
-    """
-    from scripts.lean_slots import supervisor as sup
+def test_a_stale_proxy_is_reported_differently_from_a_dead_one(slot_repo, isolated_process_observations) -> None:
+    """Actual stale identity/fingerprint and confirmed exit have different diagnoses."""
+    from tests.test_lean_lifecycle_observation import owned
 
     controller, _, _ = slot_repo
-    monkeypatch.setattr(sup.Supervisor, "process_state",
-                        lambda self, kind, number: "stale" if kind == "proxy" else "down")
-    monkeypatch.setattr(sup.Supervisor, "_running", lambda self, kind, number: False)
-    monkeypatch.setattr(sup.Supervisor, "global_backend_count", lambda self: 0)
+    host = isolated_process_observations
+    supervisor = Supervisor(controller.inventory)
+    record = owned(supervisor, host, "proxy", 1, 829101, stale=True)
+    original = record.read_bytes()
     detail = {c["name"]: c for c in controller.doctor()["checks"]}["wt1.endpoint"]["detail"]
-    assert "stale" in detail and "supervisor stop" in detail
-    assert "serving, not dead" in detail
+    assert "stale" in detail and "drained root reload" in detail and "ALIVE" in detail
+    host.remove(829101)
+    detail = {c["name"]: c for c in controller.doctor()["checks"]}["wt1.endpoint"]["detail"]
+    assert "proxy=down" in detail and "ALIVE" not in detail
+    assert record.read_bytes() == original  # Read-only diagnostic never cleans metadata.
 
 
 def test_reclaim_routes_an_owner_to_release(slot_repo) -> None:
@@ -1546,43 +1496,32 @@ def test_a_missing_cache_yields_no_tools_rather_than_an_error(slot_repo) -> None
 
 
 def _serve_proxy(inventory, number: int):
-    """Run one real proxy handler on an ephemeral port; yields (host, port, close)."""
-    import threading
-    from http.server import ThreadingHTTPServer
+    """Construct the real handler; transport is isolated in-process HTTP byte streams."""
     from scripts.lean_slots.proxy import make_handler
-
-    server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(inventory, number))
-    thread = threading.Thread(target=server.serve_forever, kwargs={"poll_interval": 0.05})
-    thread.daemon = True
-    thread.start()
-
-    def close() -> None:
-        server.shutdown()
-        server.server_close()
-
-    return server.server_address[0], server.server_address[1], close
+    return make_handler(inventory, number), 0, lambda: None
 
 
-def _post(host: str, port: int, payload: dict, session: str | None = None):
+def _post(host, port: int, payload: dict, session: str | None = None):
+    import io
     import http.client
-
     body = json.dumps(payload).encode()
-    headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json, text/event-stream",
-        "Content-Length": str(len(body)),
-    }
+    headers = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream",
+               "Content-Length": str(len(body)), "Connection": "close"}
     if session:
         headers["Mcp-Session-Id"] = session
-    connection = http.client.HTTPConnection(host, port, timeout=10)
-    try:
-        connection.request("POST", "/mcp?client=claude", body=body, headers=headers)
-        response = connection.getresponse()
-        raw = response.read()
-        got = {k.lower(): v for k, v in response.getheaders()}
-        return response.status, got, raw
-    finally:
-        connection.close()
+    request = b"POST /mcp?client=claude HTTP/1.1\r\n" + b"".join(f"{key}: {value}\r\n".encode() for key, value in headers.items()) + b"\r\n" + body
+    class Wire:
+        def __init__(self, incoming):
+            self.incoming, self.outgoing = incoming, bytearray()
+        def makefile(self, mode, *args, **kwargs):
+            return io.BytesIO(self.incoming)
+        def sendall(self, data):
+            self.outgoing.extend(data)
+    wire = Wire(request)
+    host(wire, ("127.0.0.1", 0), SimpleNamespace(server_name="isolated", server_port=0))
+    response = http.client.HTTPResponse(Wire(bytes(wire.outgoing)))
+    response.begin()
+    return response.status, {key.lower(): value for key, value in response.getheaders()}, response.read()
 
 
 def test_an_idle_slot_mints_a_session_on_initialize(slot_repo) -> None:

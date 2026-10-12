@@ -3,13 +3,17 @@
 from __future__ import annotations
 
 import hashlib
+import datetime
+import stat
+import re
+import subprocess
 import json
 import os
 import secrets
 import tempfile
 import time
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -28,7 +32,12 @@ SLOT_STATES = {
 
 
 class SlotError(RuntimeError):
-    """An invariant failed and the requested slot operation was refused."""
+    """An invariant failed, with optional bounded external observation witnesses."""
+
+    def __init__(self, *args: object, observations: tuple["Observation", ...] = ()):
+        super().__init__(*args)
+        self.observations = observations
+        self.recorded_pid = None  # Diagnostic raw input only, never identity authority.
 
 
 def now_iso() -> str:
@@ -51,13 +60,19 @@ def canonical_digest(value: Any) -> str:
 
 def read_json(path: Path) -> dict[str, Any]:
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
-    except FileNotFoundError as exc:
-        raise SlotError(f"missing state file: {path}") from exc
-    except (OSError, json.JSONDecodeError) as exc:
-        raise SlotError(f"invalid state file {path}: {exc}") from exc
-    if not isinstance(value, dict):
-        raise SlotError(f"state file must contain a JSON object: {path}")
+        with path.open("rb") as handle:
+            content = handle.read(MAX_JSON_BYTES + 1)
+        if len(content) > MAX_JSON_BYTES:
+            raise ValueError("JSON artifact exceeds bounded read limit")
+        value = json.loads(content.decode("utf-8"))
+        if not isinstance(value, dict):
+            raise ValueError("state file must contain a JSON object")
+    except (OSError, UnicodeError, ValueError) as exc:
+        evidence = Observation("absent" if isinstance(exc, FileNotFoundError) else "unavailable",
+                               detail=str(exc), errno=getattr(exc, "errno", None),
+                               target=str(path), operation="read-json", error_class=type(exc).__name__)
+        label = "missing state file" if isinstance(exc, FileNotFoundError) else "invalid state file"
+        raise SlotError(f"{label} {path}: {evidence.detail}", observations=(evidence,)) from exc
     return value
 
 
@@ -143,18 +158,38 @@ class Inventory:
             )
         source_path = Path(source).expanduser().resolve()
         raw = read_json(source_path)
-        if raw.get("schema_version") != SCHEMA_VERSION:
-            raise SlotError(
-                f"unsupported inventory schema: {raw.get('schema_version')!r}"
-            )
-        if raw.get("max_active_slots") != 3 or set(raw.get("slots", {})) != {
-            "1",
-            "2",
-            "3",
-        }:
-            raise SlotError(
-                "inventory must define exactly the global slots 1, 2, and 3"
-            )
+        def invalid(message: str) -> None:
+            evidence = Observation("unavailable", detail=message, target=str(source_path),
+                                   operation="validate-inventory", error_class="ValueError")
+            raise SlotError(message, observations=(evidence,))
+        if type(raw.get("schema_version")) is not int or raw["schema_version"] != SCHEMA_VERSION:
+            invalid(f"unsupported inventory schema: {raw.get('schema_version')!r}")
+        slots = raw.get("slots")
+        if type(raw.get("max_active_slots")) is not int or raw["max_active_slots"] != 3 or not isinstance(slots, dict) or set(slots) != {"1", "2", "3"}:
+            invalid("inventory must define exactly the global slots 1, 2, and 3")
+        if not isinstance(raw.get("repo_role"), str) or not raw["repo_role"].strip():
+            invalid("inventory repo_role must be a nonempty string")
+        if not isinstance(raw.get("repo_root", ".."), str) or not raw.get("repo_root", "..").strip():
+            invalid("inventory repo_root must be a nonempty string")
+        server = raw.get("server")
+        if not isinstance(server, dict) or not isinstance(server.get("host"), str) or not server["host"].strip():
+            invalid("inventory server must map a nonempty host string")
+        for number, slot in slots.items():
+            if not isinstance(slot, dict):
+                invalid(f"inventory slot {number} must be an object")
+            for key in ("worktree", "branch", "endpoint_name"):
+                if not isinstance(slot.get(key), str) or not slot[key].strip():
+                    invalid(f"inventory slot {number}.{key} must be a nonempty string")
+            for key in ("proxy_port", "backend_port"):
+                value = slot.get(key)
+                if type(value) not in (int, str):
+                    invalid(f"inventory slot {number}.{key} must be a valid port")
+                try:
+                    port = int(value)
+                except ValueError:
+                    invalid(f"inventory slot {number}.{key} must be a valid port")
+                if not 1 <= port <= 65535:
+                    invalid(f"inventory slot {number}.{key} must be a valid port")
         repo_root = (source_path.parent / str(raw.get("repo_root", ".."))).resolve()
         workspace_root = repo_root.parent
         state_root = (
@@ -167,7 +202,10 @@ class Inventory:
             .resolve()
         )
         inventory = cls(source_path, raw, repo_root, workspace_root, state_root)
-        _ = inventory.client_auth_mode
+        try:
+            _ = inventory.client_auth_mode
+        except SlotError as exc:
+            invalid(str(exc))
         return inventory
 
     @property
@@ -315,9 +353,12 @@ class Inventory:
 
     def lease(self, number: int, *, required: bool = True) -> dict[str, Any] | None:
         path = self.lease_path(number)
-        if not path.exists():
+        observed = observe_path(path)
+        if observed.state == "unavailable":
+            raise SlotError(f"lease observation unavailable for wt{number}", observations=(observed,))
+        if observed.state == "absent":
             if required:
-                raise SlotError(f"slot wt{number} is not leased")
+                raise SlotError(f"slot wt{number} is not leased", observations=(observed,))
             return None
         lease = read_json(path)
         if lease.get("schema_version") != SCHEMA_VERSION:
@@ -364,24 +405,239 @@ def tool_list_key(server: dict[str, Any]) -> str:
     )
 
 
-def process_start_signature(pid: int) -> str | None:
-    """Return a stable-enough host signature to defend against PID reuse."""
-    if pid <= 0:
+# Bounds protect diagnostics and complete observations; overflow is unavailable,
+# never a truncated census from which absence or capacity can be inferred.
+DIAGNOSTIC_LIMIT = 2048
+MAX_JSON_BYTES = 4 * 1024 * 1024
+MAX_OBSERVER_OUTPUT = 8 * 1024 * 1024
+MAX_CENSUS_ROWS = 16384
+MAX_DIRECTORY_ENTRIES = 4096
+
+
+@dataclass(frozen=True)
+class Observation:
+    """Evidence, never an absence inferred from failed observation."""
+
+    state: str
+    signature: str | None = None
+    detail: str = ""
+    errno: int | None = None
+    target: str = ""
+    operation: str = ""
+    observed_at: str = field(default_factory=now_iso)
+    returncode: int | None = None
+    error_class: str | None = None
+    identity: Any = None
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "detail", str(self.detail)[:DIAGNOSTIC_LIMIT])
+
+    def as_dict(self) -> dict[str, Any]:
+        return {"state": self.state, "target": self.target, "operation": self.operation,
+                "observed_at": self.observed_at, "returncode": self.returncode,
+                "error_class": self.error_class, "errno": self.errno,
+                "observed_identity": self.identity if self.identity is not None else self.signature,
+                "diagnostic_text": self.detail}
+
+
+def observe_path(path: Path) -> Observation:
+    """Native stat: only FileNotFoundError establishes absence."""
+    try:
+        value = os.stat(path)
+    except (OSError, ValueError) as exc:
+        return Observation("absent" if isinstance(exc, FileNotFoundError) else "unavailable",
+                           detail=str(exc), errno=getattr(exc, "errno", None),
+                           target=str(path), operation="stat", error_class=type(exc).__name__)
+    return Observation("present", target=str(path), operation="stat",
+                       identity={"mode": stat.S_IFMT(value.st_mode), "inode": value.st_ino,
+                                 "device": value.st_dev})
+
+
+def observe_directory(path: Path) -> tuple[tuple[Path, ...], Observation]:
+    """Bounded, complete native scandir; never use suppressed glob/is_dir errors."""
+    before = observe_path(path)
+    if before.state != "present":
+        return (), Observation(before.state, detail=before.detail, errno=before.errno,
+                               target=str(path), operation="scandir", error_class=before.error_class)
+    if before.identity["mode"] != stat.S_IFDIR:
+        return (), Observation("unavailable", detail="directory observer target is not a directory",
+                               target=str(path), operation="scandir")
+    entries = []
+    try:
+        with os.scandir(path) as iterator:
+            for entry in iterator:
+                entries.append(path / entry.name)
+                if len(entries) > MAX_DIRECTORY_ENTRIES:
+                    return (), Observation("unavailable", detail="directory exceeds complete enumeration bound",
+                                           target=str(path), operation="scandir")
+    except (OSError, ValueError) as exc:
+        return (), Observation("absent" if isinstance(exc, FileNotFoundError) else "unavailable",
+                               detail=str(exc), errno=getattr(exc, "errno", None),
+                               target=str(path), operation="scandir", error_class=type(exc).__name__)
+    return tuple(sorted(entries)), Observation("present", target=str(path), operation="scandir",
+                                               identity={"entry_count": len(entries)})
+
+
+@dataclass(frozen=True)
+class ProcessRow:
+    pid: int
+    ppid: int
+    command: str
+    signature: str
+
+
+@dataclass(frozen=True)
+class ProcessSnapshot:
+    state: str
+    rows: tuple[ProcessRow, ...] = ()
+    detail: str = ""
+    target: str = "all-processes"
+    operation: str = "ps-census"
+    observed_at: str = field(default_factory=now_iso)
+    returncode: int | None = None
+    error_class: str | None = None
+    errno: int | None = None
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "detail", str(self.detail)[:DIAGNOSTIC_LIMIT])
+
+    def as_dict(self) -> dict[str, Any]:
+        witness = next((row for row in self.rows if row.pid == os.getpid()), None)
+        return {"state": self.state, "target": self.target, "operation": self.operation,
+                "observed_at": self.observed_at, "returncode": self.returncode,
+                "error_class": self.error_class, "errno": self.errno,
+                "observed_identity": {"pid": witness.pid, "signature": witness.signature} if witness else None,
+                "diagnostic_text": self.detail}
+
+    def as_observation(self) -> Observation:
+        value = self.as_dict()
+        return Observation(self.state, detail=self.detail, errno=self.errno,
+                           target=self.target, operation=self.operation, observed_at=self.observed_at,
+                           returncode=self.returncode, error_class=self.error_class,
+                           identity=value["observed_identity"])
+
+    def descendants(self, pid: int) -> set[int]:
+        found = {pid}
+        while True:
+            expanded = found | {row.pid for row in self.rows if row.ppid in found}
+            if expanded == found:
+                return found
+            found = expanded
+
+
+def _signature_command(value: str) -> str | None:
+    if not isinstance(value, str) or "\x00" in value or "\n" in value or "\r" in value:
+        return None
+    match = re.fullmatch(r"(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2})\s+(\d{2}:\d{2}:\d{2})\s+(\d{4})\s+(\S.*)", value.strip())
+    if not match:
         return None
     try:
-        import subprocess
-
-        result = subprocess.run(
-            ["ps", "-p", str(pid), "-o", "lstart=", "-o", "command="],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-    except OSError:
+        moment = datetime.datetime.strptime(" ".join(match.groups()[:5]), "%a %b %d %H:%M:%S %Y")
+    except ValueError:
         return None
+    return match[6] if moment.strftime("%a") == match[1] else None
+
+
+def process_snapshot() -> ProcessSnapshot:
+    """A complete ps observation, with a known-present witness, or unavailable."""
+    try:
+        result = subprocess.run(["ps", "-axo", "pid=,ppid=,lstart=,command="],
+                                check=False, capture_output=True, text=True, timeout=2)
+    except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
+        return ProcessSnapshot("unavailable", detail=str(exc), error_class=type(exc).__name__,
+                               errno=getattr(exc, "errno", None))
+    if result.returncode or result.stderr.strip():
+        return ProcessSnapshot("unavailable", detail=f"ps exit {result.returncode}: {result.stderr.strip()}",
+                               returncode=result.returncode)
+    if len(result.stdout) > MAX_OBSERVER_OUTPUT:
+        return ProcessSnapshot("unavailable", detail="process census exceeds complete output bound", returncode=result.returncode)
+    rows = []
+    seen = set()
+    for line in result.stdout.splitlines():
+        match = re.fullmatch(r"\s*(\d+)\s+(\d+)\s+(.+)", line)
+        if not match or len(rows) >= MAX_CENSUS_ROWS:
+            return ProcessSnapshot("unavailable", detail="malformed/oversized process census", returncode=result.returncode)
+        pid, ppid, signature = int(match[1]), int(match[2]), match[3].strip()
+        command = _signature_command(signature)
+        if pid <= 0 or pid in seen or command is None:
+            return ProcessSnapshot("unavailable", detail="malformed/ambiguous process census identity", returncode=result.returncode)
+        seen.add(pid); rows.append(ProcessRow(pid, ppid, command, signature))
+    if not any(row.pid == os.getpid() for row in rows):
+        return ProcessSnapshot("unavailable", detail="process census lacks known-present observer", returncode=result.returncode)
+    return ProcessSnapshot("present", tuple(rows), returncode=result.returncode)
+
+
+def observe_process(pid: int, signature: str | None = None) -> Observation:
+    target = f"PID {pid}"
+    def observed(state: str, value: str | None = None, detail: str = "", *, result=None, exc=None):
+        return Observation(state, value, detail, getattr(exc, "errno", None), target=target,
+                           operation="ps-selected", returncode=result.returncode if result else None,
+                           error_class=type(exc).__name__ if exc else None)
+    if type(pid) is not int or pid <= 0:
+        return observed("unavailable", detail="no authoritative positive integer PID")
+    try:
+        result = subprocess.run(["ps", "-p", str(pid), "-o", "lstart=", "-o", "command="],
+                                check=False, capture_output=True, text=True, timeout=2)
+    except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
+        return observed("unavailable", detail=str(exc), exc=exc)
+    if len(result.stdout) > MAX_OBSERVER_OUTPUT:
+        return observed("unavailable", detail="selected process output exceeds bound", result=result)
     value = result.stdout.strip()
-    return value or None
+    if result.stderr.strip() or result.returncode not in {0, 1}:
+        return observed("unavailable", detail=f"ps exit {result.returncode}: {result.stderr.strip()}", result=result)
+    if value and (result.returncode != 0 or _signature_command(value) is None):
+        return observed("unavailable", detail="malformed/partial/ambiguous selected process identity", result=result)
+    census = process_snapshot()
+    if census.state != "present":
+        return observed("unavailable", detail=f"coherent process census unavailable: {census.detail}", result=result)
+    row = next((item for item in census.rows if item.pid == pid), None)
+    if not value and row is None:
+        return observed("absent", detail="confirmed absent in capable process census", result=result)
+    if not value or row is None or row.signature != value:
+        return observed("unavailable", detail="selected/census target identity inconsistent", result=result)
+    return observed("mismatch" if signature and value != signature else "present", value, result=result)
+
+
+def _observe_created_handle(process: Any, signature: str) -> Observation:
+    """Only the exact unreaped handle and a previously coherent identity may use this.
+
+    Generic identity consumers use observe_process with a complete census. This
+    narrower rollback witness permits bounded wrapper reap when a later census
+    fails; it cannot discharge unknown descendants or the capacity reservation.
+    """
+    pid = process.pid
+    target = f"PID {pid}"
+    if getattr(process, "returncode", None) is not None or _signature_command(signature) is None:
+        return Observation("unavailable", detail="created handle lacks unreaped coherent identity",
+                           target=target, operation="ps-created-handle")
+    try:
+        result = subprocess.run(["ps", "-p", str(pid), "-o", "lstart=", "-o", "command="],
+                                check=False, capture_output=True, text=True, timeout=2)
+    except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
+        return Observation("unavailable", detail=str(exc), errno=getattr(exc, "errno", None),
+                           target=target, operation="ps-created-handle", error_class=type(exc).__name__)
+    value = result.stdout.strip()
+    if result.returncode != 0 or result.stderr.strip() or len(value) > MAX_OBSERVER_OUTPUT or _signature_command(value) is None:
+        return Observation("unavailable", detail=f"created handle selected identity invalid: {result.stderr.strip()}",
+                           target=target, operation="ps-created-handle", returncode=result.returncode)
+    return Observation("present" if value == signature else "mismatch", value,
+                       detail="exact unreaped creation handle checked against prior coherent identity",
+                       target=target, operation="ps-created-handle", returncode=result.returncode)
+
+
+def process_start_signature(pid: int) -> str | None:
+    """Read-only compatibility helper; destructive consumers inspect Observation."""
+    observed = observe_process(pid)
+    return observed.signature if observed.state == "present" else None
+
+
+def require_process_signature(pid: int) -> str:
+    observed = observe_process(pid)
+    if observed.state != "present" or not observed.signature:
+        raise SlotError(f"process identity unavailable for PID {pid}: {observed.detail}", observations=(observed,))
+    return observed.signature
 
 
 def process_matches(pid: int, signature: str | None) -> bool:
-    return bool(signature and process_start_signature(pid) == signature)
+    """Observed match only, never authority to delete or reclaim when false."""
+    return bool(signature and observe_process(pid, signature).state == "present")
