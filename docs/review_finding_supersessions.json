@@ -10470,6 +10470,21 @@
         "enforced": true,
         "run_at": "2026-10-12"
       }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-runner-recovery:source:R4",
+      "status": "fixed",
+      "evidence": "The legacy review parser also mints the historical R4 progress heading as an advisory finding. Its bounded fresh-guard progress correction is independently reviewed at exact 6db2cde source and exercised by 391 canonical-primary runner regressions, 26 sole-guard red/exact-restore green controls and actual warning-free populated native releases. The accepted full contract retains strict whole-family identity and terminal-presence qualifications, the shared ten-second deadline, fresh observations after durable writes and signals, actual every-PID absence and final project/endpoint/capacity gates. Review-r4.md and native-admission-r1.json record scoped source and public native acceptance; broader project and merged-wave gates remain open. This closure adds no scientific acceptance and preserves the original advisory text.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md",
+      "date": "2026-10-12",
+      "commit": "6db2cde4036587627f07077a67868809aa856f34",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr4",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
     }
   ]
 }
