@@ -10278,6 +10278,126 @@
         "enforced": true,
         "run_at": "2026-09-13"
       }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:1",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:2",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:3",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:4",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:5",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:6",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-native-domain-census:supervisor:1",
+      "status": "fixed",
+      "evidence": "Integrated shared supervisor observes the canonical primary and Git-proven linked-worktree native process domains and fails closed on unavailable or conflicting observations (ND1). Exact native project ancestry and endpoint occupancy feed physical global reservations, including unresolved listeners and residual project trees without adopting or signalling them (ND2). Whole independent source R4 and canonical findings R2 accepted; current integrated four-file gate269 and private overlay16 passed. This existing writer executes each declared source Verify. Actual runtime reload, client RPC drain, matching leases/MCP and native admission remain separate; original20 full-test and18 validator failures are unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-native-domain-census:supervisor:2",
+      "status": "fixed",
+      "evidence": "Integrated shared supervisor observes the canonical primary and Git-proven linked-worktree native process domains and fails closed on unavailable or conflicting observations (ND1). Exact native project ancestry and endpoint occupancy feed physical global reservations, including unresolved listeners and residual project trees without adopting or signalling them (ND2). Whole independent source R4 and canonical findings R2 accepted; current integrated four-file gate269 and private overlay16 passed. This existing writer executes each declared source Verify. Actual runtime reload, client RPC drain, matching leases/MCP and native admission remain separate; original20 full-test and18 validator failures are unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
     }
   ]
 }
