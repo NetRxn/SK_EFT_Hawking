@@ -48,6 +48,7 @@ class Host:
         self.port_errors = {}
         self.launch_reservations = []
         self.ps_calls = []
+        self.ps_cost = 0.0  # Synthetic per-command elapsed time, never a native guarantee.
         self.command_calls = []
         self.real_run = subprocess.run
         self.native_states = {}
@@ -92,6 +93,10 @@ class Host:
             finally:
                 subprocess.Popen = saved
         self.ps_calls.append(list(argv))
+        remaining = kwargs.get("timeout", 2.0)
+        self.clock += min(self.ps_cost, remaining)
+        if self.ps_cost > remaining:
+            raise subprocess.TimeoutExpired(argv, remaining)
         native = "stat=" in " ".join(argv)
         def native_row(pid, row):
             return f"{pid} {row[0]} {' '.join(row[2].split()[:5])} {self.native_states.get(pid, 'S')} {row[1]}\n"
@@ -106,16 +111,20 @@ class Host:
             if self.after_census and not native:
                 self.after_census()
             return SimpleNamespace(returncode=0, stdout=output, stderr="")
-        pid = int(argv[2])
-        if pid in self.selected_results:
-            result = self.selected_results[pid]
-            if isinstance(result, BaseException):
-                raise result
-            return result
-        if pid in self.denied_pids:
-            raise PermissionError(errno.EPERM, "selected ps denied")
-        return SimpleNamespace(returncode=0 if pid in self.rows else 1,
-                               stdout=(native_row(pid, self.rows[pid]) if native else self.rows[pid][2]) if pid in self.rows else "", stderr="")
+        requested = [int(pid) for pid in argv[2].split(",")]
+        for pid in requested:
+            if pid in self.selected_results:
+                result = self.selected_results[pid]
+                if isinstance(result, BaseException):
+                    raise result
+                return result
+            if pid in self.denied_pids:
+                raise PermissionError(errno.EPERM, "selected ps denied")
+        with_pid = "pid=" in " ".join(argv)
+        output = "".join(native_row(pid, self.rows[pid]) if native else
+                         f"{pid} {self.rows[pid][0]} {self.rows[pid][2]}\n" if with_pid else self.rows[pid][2]
+                         for pid in requested if pid in self.rows)
+        return SimpleNamespace(returncode=0 if output else 1, stdout=output, stderr="")
 
     def connection(self, address, **kwargs):
         port = address[1]
@@ -1981,8 +1990,9 @@ def test_rr1_final_observed_parent_guard(rig, monkeypatch, shape):
         if (directory_writes >= 2 and argv[:3] == ["ps", "-p", str(target)] and
                 "stat=" in " ".join(argv)):
             native_reads += 1
-            if native_reads == 2:
-                # Final native selected + census both report the changed real parent.
+            if native_reads == 1:
+                # Batched classification has a multi-PID selection; this individual
+                # native read is the final target seam after post-write classification.
                 host.rows[target] = (1, *host.rows[target][1:]); drifted = True
         return real_run(argv, **kwargs)
     monkeypatch.setattr(os, "fsync", sync); monkeypatch.setattr(subprocess, "run", observe)
@@ -2147,3 +2157,216 @@ def test_rr2_reverse_paired_physical_reservation(host, downstream_repo, monkeypa
     assert not record.exists()
     public.acquire(1, client="codex", base_ref="main")
     assert public.inventory.lease_path(1).exists()
+
+
+# R4: production shutdown with asynchronous external OS observations and real JSON.
+def rr4_live_family(sup, host, count=5):
+    pids = [980050, 980010, 980060, 980020, 980040, 980030][:count]
+    path = owned(sup, host, "backend", 1, pids[0])
+    for parent, pid in zip(pids, pids[1:]):
+        host.add(pid, f"generic owned child {pid}", ppid=parent)
+    return path, pids, {pid: host.rows[pid] for pid in pids}
+
+
+@pytest.mark.parametrize("count", [5, 6], ids=["five", "six"])
+def test_rr4_transient_exit_progress_and_cost(rig, count):
+    _, sup, host = rig
+    path, pids, originals = rr4_live_family(sup, host, count)
+    host.ps_cost = 0.035  # Pilot-informed synthetic schedule; not a native guarantee.
+    start_calls = len(host.ps_calls)
+    def after(pid):
+        if pid == pids[-1]:
+            host.rows[pid] = originals[pid]
+            def disappear():
+                host.remove(pid); host.after_census = None
+            host.after_census = disappear
+    host.after_signal = after
+    def before(pid):
+        data = read_json(path)
+        assert {row["pid"]: row["signature"] for row in data["descendants"]} == {
+            key: value[2] for key, value in originals.items()}, "RR4 original identities survive every exit"
+        assert host.native_states.get(pid, "S") != "Z", "RR4 no zombie signal"
+    host.before_signal = before
+    _, error = captured(lambda: sup.stop_backend(1))
+    assert error is None, "RR4 transient exit resumes exact live parents: " + repr(error)
+    assert [pid for pid, _ in host.signals] == list(reversed(pids)), "RR4 transient exit resumes exact live parents"
+    assert not path.exists() and not (set(pids) & host.rows.keys()), "RR4 actual whole-family absence precedes unregister"
+    assert host.clock <= 10.00001 and len(host.ps_calls) - start_calls < 180, "RR4 populated stop respects synthetic cost and fixed deadline"
+
+
+def test_rr4_nested_terminal_progress(rig):
+    _, sup, host = rig
+    path, pids, originals = rr4_live_family(sup, host, 4)
+    root, parent, intermediate, leaf = pids
+    def zombie(pid):
+        host.rows[pid] = (originals[pid][0], "<defunct>", "Sun Oct 11 00:00:00 2026 <defunct>")
+        host.native_states[pid] = "Z"
+    def after(pid):
+        if pid == leaf:
+            zombie(leaf); zombie(intermediate)
+        elif pid == parent:
+            host.remove(intermediate)
+    host.after_signal = after
+    slept = []
+    def reap():
+        slept.append(True)
+        assert [pid for pid, _ in host.signals] == [leaf], "RR4 unqualified nested terminal blocks every parent signal"
+        host.remove(leaf); host.after_sleep = None
+    host.after_sleep = reap
+    host.before_signal = lambda pid: (host.native_states.get(pid) != "Z") or pytest.fail("RR4 no zombie signal")
+    _, error = captured(lambda: sup.stop_backend(1))
+    assert error is None, repr(error)
+    assert slept and [pid for pid, _ in host.signals] == [leaf, parent, root], "RR4 terminal ancestry becomes eligible only after deeper absence"
+    assert not path.exists()
+
+
+@pytest.mark.parametrize("failure", ["reparented", "mismatch", "denied", "root-absent", "nested-terminal"], ids=str)
+def test_rr4_persistent_exit_refusal(rig, failure):
+    _, sup, host = rig
+    path, pids, originals = rr4_live_family(sup, host, 4)
+    root, parent, intermediate, leaf = pids
+    def after(pid):
+        assert pid == leaf, "RR4 persistent unqualified family forbids additional signals"
+        if failure == "root-absent": host.remove(root)
+        elif failure == "denied": host.denied_pids.add(leaf)
+        elif failure == "mismatch": host.add(leaf, "unrelated replacement", ppid=intermediate)
+        else:
+            host.rows[leaf] = (1 if failure == "reparented" else intermediate, "<defunct>", "Sun Oct 11 00:00:00 2026 <defunct>")
+            host.native_states[leaf] = "Z"
+            if failure == "nested-terminal":
+                host.rows[intermediate] = (parent, "<defunct>", "Sun Oct 11 00:00:00 2026 <defunct>")
+                host.native_states[intermediate] = "Z"
+    host.after_signal = after
+    _, error = captured(lambda: sup.stop_backend(1))
+    assert [pid for pid, _ in host.signals] == [leaf], "RR4 persistent unqualified family forbids additional signals"
+    assert isinstance(error, SlotError) and "post-SIGTERM" in str(error) and path.exists()
+    assert host.clock <= 10.00001 and error.observations
+    assert {row["pid"]: row["signature"] for row in read_json(path)["descendants"]} == {
+        key: value[2] for key, value in originals.items()}
+
+
+@pytest.mark.parametrize("boundary", ["persistence", "signal"], ids=str)
+def test_rr4_batch_not_reused_across_effects(rig, monkeypatch, boundary):
+    _, sup, host = rig
+    path, pids, _ = rr4_live_family(sup, host, 3)
+    root, parent, leaf = pids
+    changed = []
+    if boundary == "signal":
+        def after(pid):
+            host.rows[parent] = (1, *host.rows[parent][1:]); changed.append(True)
+        host.after_signal = after
+    else:
+        real_sync = os.fsync
+        writes = 0
+        def sync(fd):
+            nonlocal writes
+            real_sync(fd)
+            if state.stat.S_ISDIR(os.fstat(fd).st_mode):
+                writes += 1
+                if writes == 2:
+                    host.rows[parent] = (1, *host.rows[parent][1:]); changed.append(True)
+        monkeypatch.setattr(os, "fsync", sync)
+    _, error = captured(lambda: sup.stop_backend(1))
+    assert changed and isinstance(error, SlotError) and path.exists()
+    expected = [leaf] if boundary == "signal" else []
+    assert [pid for pid, _ in host.signals] == expected, "RR4 fresh family evidence after every effect forbids drifted ancestry"
+
+
+@pytest.mark.parametrize("failure", ["malformed", "denied", "missing-observer", "partial-selected", "extra-selected", "duplicate", "output-bound", "row-bound", "cross-format", "selected-census", "returncode", "stderr"], ids=str)
+def test_rr4_batch_refusal(rig, monkeypatch, failure):
+    _, sup, host = rig
+    path, pids, originals = rr4_live_family(sup, host, 3)
+    real_run = subprocess.run
+    injected = []
+    def observe(argv, **kwargs):
+        batch = argv[0] == "ps" and "-p" in argv and "," in argv[2]
+        native_census = argv[:2] == ["ps", "-axo"] and "stat=" in argv[-1]
+        target = native_census if failure in {"missing-observer", "cross-format"} else batch
+        result = real_run(argv, **kwargs)
+        if not target or injected:
+            return result
+        injected.append(True)
+        if failure == "denied": raise PermissionError(errno.EPERM, "batch denied")
+        lines = result.stdout.splitlines()
+        if failure == "malformed": result.stdout = "bad row\n"
+        elif failure == "missing-observer": result.stdout = "\n".join(line for line in lines if int(line.split()[0]) != os.getpid()) + "\n"
+        elif failure == "partial-selected": result.stdout = "\n".join(lines[:-1]) + "\n"
+        elif failure == "extra-selected": result.stdout += f"999991 1 Sun Oct 11 00:00:00 2026 foreign selected\n"
+        elif failure == "duplicate": result.stdout += lines[0] + "\n"
+        elif failure == "output-bound": result.stdout = "x" * (state.MAX_OBSERVER_OUTPUT + 1)
+        elif failure == "row-bound": result.stdout = "".join(f"{1200000+i} 1 Sun Oct 11 00:00:00 2026 bound row\n" for i in range(state.MAX_CENSUS_ROWS+1))
+        elif failure == "cross-format": result.stdout = result.stdout.replace(f"{pids[-1]} {pids[-2]} ", f"{pids[-1]} 1 ")
+        elif failure == "selected-census": result.stdout = result.stdout.replace("generic owned child", "changed child")
+        elif failure == "returncode": result.returncode = 1
+        elif failure == "stderr": result.stderr = "partial output warning"
+        return result
+    # Initial discovery also uses native censuses; inject only the batch pass.
+    started = False
+    def gated(argv, **kwargs):
+        nonlocal started
+        if argv[0] == "ps" and "-p" in argv and "," in argv[2]: started = True
+        return observe(argv, **kwargs) if started else real_run(argv, **kwargs)
+    monkeypatch.setattr(subprocess, "run", gated)
+    before = path.read_bytes()
+    _, error = captured(lambda: sup.stop_backend(1))
+    assert injected, "RR4 batch refusal reached intended external seam"
+    assert not host.signals and path.read_bytes() == before, "RR4 incomplete batch cannot authorize any effect"
+    assert isinstance(error, SlotError)
+
+
+@pytest.mark.parametrize("mode", ["mixed-absence", "all-absent", "zombie", "at-bound", "over-bound", "request-bytes", "selection-bytes"], ids=str)
+def test_rr4_batch_identity_and_bounds(rig, mode):
+    _, sup, host = rig
+    _, pids, originals = rr4_live_family(sup, host, 3)
+    identities = {pid: row[2] for pid, row in originals.items()}
+    if mode == "mixed-absence": host.remove(pids[-1])
+    elif mode == "all-absent":
+        for pid in pids: host.remove(pid)
+    elif mode == "zombie":
+        host.rows[pids[-1]] = (pids[-2], "<defunct>", "Sun Oct 11 00:00:00 2026 <defunct>")
+        host.native_states[pids[-1]] = "Z"
+    elif mode in {"at-bound", "over-bound"}:
+        for pid in range(1200000, 1200000 + (4096 if mode == "at-bound" else 4097) - len(identities)):
+            identities[pid] = "Sun Oct 11 00:00:00 2026 absent original"
+    elif mode == "request-bytes": identities[pids[0]] = "Sun Oct 11 00:00:00 2026 " + "x" * state.MAX_OBSERVER_OUTPUT
+    elif mode == "selection-bytes":
+        identities.update({10**100 + i: "Sun Oct 11 00:00:00 2026 absent original" for i in range(1000)})
+    before = len(host.ps_calls)
+    snapshot, generic, native = state.observe_shutdown_family(identities, pids[0])
+    if mode in {"over-bound", "request-bytes", "selection-bytes"}:
+        assert snapshot.state == "unavailable" and len(host.ps_calls) == before, "RR4 oversized batch refused before observations"
+    else:
+        assert snapshot.state == "present" and len(host.ps_calls) - before == 4, "RR4 one classification has exactly four fresh commands"
+        assert set(generic) == set(native) == set(identities)
+        if mode == "zombie":
+            assert generic[pids[-1]].state == "mismatch" and native[pids[-1]].state == "present", "RR4 batch native Z is present not absence"
+        else:
+            assert all(generic[pid].state == native[pid].state == ("present" if pid in host.rows else "absent") for pid in identities), "RR4 absence requires capable agreement for every retained PID"
+        assert all(generic[pid].signature == host.rows[pid][2] for pid in identities if pid in host.rows), "RR4 generic full signatures remain exact"
+
+
+def test_rr4_first_refusal_survives_deadline(rig, monkeypatch):
+    _, sup, host = rig
+    path, pids, _ = rr4_live_family(sup, host, 3)
+    root, parent, leaf = pids
+    real_sync = os.fsync
+    writes = 0
+    def sync(fd):
+        nonlocal writes
+        real_sync(fd)
+        if state.stat.S_ISDIR(os.fstat(fd).st_mode):
+            writes += 1
+            if writes == 4:
+                # After leaf delivery: pending parent was live before persistence.
+                # It now becomes terminal beneath exact live root. Whole-state
+                # comparison must refuse this signal and record its precise cause.
+                host.rows[parent] = (root, "<defunct>", "Sun Oct 11 00:00:00 2026 <defunct>")
+                host.native_states[parent] = "Z"
+    monkeypatch.setattr(os, "fsync", sync)
+    # Keep the terminal child unresolved after resampling by reparenting it on wait.
+    host.after_sleep = lambda: host.rows.update({parent: (1, *host.rows[parent][1:])})
+    _, error = captured(lambda: sup.stop_backend(1))
+    assert [pid for pid, _ in host.signals] == [leaf], "RR4 first refusal never authorizes another signal"
+    assert isinstance(error, SlotError) and path.exists() and host.clock <= 10.00001
+    assert "first refusal: post-write classification" in str(error) and "shutdown rooted ancestry changed after durable write" in str(error), "RR4 first transition cause survives the passive deadline"
+    assert error.observations and any(row.state == "present" for row in error.observations), "RR4 first typed observations survive final unavailable evidence"

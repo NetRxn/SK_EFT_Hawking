@@ -263,3 +263,47 @@ remain for existing strict resource consumers to reject. Explicit origin presenc
 never means legacy, even for null or false values. Physical-slot recovery protection
 uses existing registry observation and role discovery in either pairing direction.
 The API shape, ten-second stop budget, original identities and retry pins remain.
+
+
+### R4: bounded fresh-guard shutdown progress
+
+The accepted R3 source and its bounded controls are distinct from native pool
+acceptance. A populated normal release reached the ten-second stop deadline after
+one delivered SIGTERM; FREE did not mean backend absence. R4 corrects the source
+progress and observation costs; implementation review, ROOT execution and native
+normal-release acceptance remain pending.
+
+Keep initial identity/ancestry refusals unchanged. Only after a successful SIGTERM
+in this invocation may a temporary exit-related refusal enter bounded passive
+re-observation and later resume the pending target. Resumption requires the entire
+retained family to satisfy the original classification again, followed by durable
+persistence, fresh whole-family state/PPID comparison and the final exact live-target
+check. While any required descendant is reparented, mismatched, unqualified terminal
+or unavailable, no further signal is authorized. An exact live parent alone does
+not bypass its descendants. An eligible native Z remains present and never receives
+a signal; actual absence may permit fresh parent progress. Root absence with
+survivors never permits chasing them. Delivery receipts contain only this attempt's
+successful signals and do not prove termination or historical parent identity.
+
+A shutdown-only family observation may batch bounded generic/native selected and
+complete-census commands within one classification. Preserve original full generic
+signatures and native PID/PPID/birth/STAT/command. Require capable known-observer
+censuses, complete parsing, no extra/duplicate selected rows, selected/census and
+cross-format coherence; absence needs all capable views. Generic observe_process
+and ordinary readers retain their existing semantics. Never reuse a batch across
+a durable write, signal or passive retry. Reject oversized requests/output rather
+than truncating; the combined identity bound remains 4096, including absent IDs.
+
+The same absolute ten-second budget includes every observation, persistence and
+wait. Retain a bounded first refusal phase/target/typed observations alongside the
+last passive observations in timeout diagnostics, without new probes after expiry.
+Unregistration still requires actual absence of every retained PID and all existing
+endpoint/project/registry/capacity checks. Ownership, exact retry hash, lease/pin/
+domain preservation, stop-only provenance and all broader gates are unchanged.
+
+R4 controls use production methods, real isolated JSON and external OS seams:
+five/six-PID asynchronous exit chains with a synthetic 0.035-second cost per ps
+command (pilot-informed, not a native guarantee), persistent refusal/no-extra-signal
+negatives, nested terminal transitions, fresh evidence after persistence/signals,
+malformed/denied/partial/duplicate/extra/oversized batches, and first-cause retention.
+Preserve all nineteen prior mutation intents and add focused sole-guard controls.

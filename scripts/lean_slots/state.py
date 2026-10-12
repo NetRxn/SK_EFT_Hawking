@@ -692,6 +692,99 @@ def observe_shutdown_process(pid: int) -> Observation:
         return refusal(str(exc), exc)
 
 
+
+def observe_shutdown_family(identities: dict[int, str], root: int, *,
+                            max_identities: int = 4096) -> tuple[ProcessSnapshot, dict[int, Observation], dict[int, Observation]]:
+    """One bounded shutdown-only pass; never retain its witnesses across effects.
+
+    Generic signatures remain byte-exact. Native state is additional evidence,
+    never a replacement identity or proof that a zombie is absent. Unrelated
+    processes may change between censuses; every selected PID and the complete
+    rooted family must agree across the four capable views.
+    """
+    try:
+        if (not identities or len(identities) > max_identities or type(root) is not int or root not in identities or
+                any(type(pid) is not int or pid <= 0 or not isinstance(sig, str) or
+                    _signature_command(sig) is None for pid, sig in identities.items())):
+            raise ValueError("invalid/oversized shutdown family request")
+        selection = ",".join(str(pid) for pid in sorted(identities))
+        if len(selection.encode()) > 65536 or sum(len(sig.encode()) for sig in identities.values()) > MAX_OBSERVER_OUTPUT:
+            raise ValueError("shutdown family request exceeds byte bound")
+
+        def read(native, selected):
+            fields = "pid=,ppid=,lstart=,stat=,command=" if native else "pid=,ppid=,lstart=,command="
+            argv = ["ps", "-p", selection, "-o", fields] if selected else ["ps", "-axo", fields]
+            value = subprocess.run(argv, check=False, capture_output=True, text=True,
+                                   timeout=observation_timeout())
+            if (value.returncode not in ((0, 1) if selected else (0,)) or value.stderr.strip() or
+                    len(value.stdout) > MAX_OBSERVER_OUTPUT):
+                raise ValueError("shutdown family command failed/exceeded output bound")
+            rows = {}
+            for line in value.stdout.splitlines():
+                if len(rows) >= MAX_CENSUS_ROWS:
+                    raise ValueError("shutdown family census exceeds row bound")
+                if native:
+                    fields = line.split(None, 8)
+                    if len(fields) != 9:
+                        raise ValueError("incomplete shutdown family native row")
+                    pid, ppid = int(fields[0]), int(fields[1])
+                    birth, stat_value, command = " ".join(fields[2:7]), fields[7], fields[8]
+                    if (_signature_command(birth + " " + command) is None or
+                            re.fullmatch(r"[DIRSTtUWXZ][+<>NnsLlEXV]*", stat_value) is None):
+                        raise ValueError("malformed shutdown family native identity")
+                    row = {"pid": pid, "ppid": ppid, "birth": birth,
+                           "native_state": stat_value, "command": command}
+                else:
+                    match = re.fullmatch(r"\s*(\d+)\s+(\d+)\s+(.+)", line)
+                    if match is None:
+                        raise ValueError("incomplete shutdown family generic row")
+                    pid, ppid, signature = int(match[1]), int(match[2]), match[3].strip()
+                    command = _signature_command(signature)
+                    if command is None:
+                        raise ValueError("malformed shutdown family generic identity")
+                    row = ProcessRow(pid, ppid, command, signature)
+                if pid <= 0 or ppid < 0 or pid in rows:
+                    raise ValueError("duplicate/invalid shutdown family PID")
+                rows[pid] = row
+            if selected:
+                if set(rows) - set(identities) or bool(rows) != (value.returncode == 0):
+                    raise ValueError("shutdown family selected extra PID/returncode")
+            elif os.getpid() not in rows:
+                raise ValueError("shutdown family census lacks known-present observer")
+            return rows
+
+        selected = read(False, True)
+        complete = read(False, False)
+        native_selected = read(True, True)
+        native_complete = read(True, False)
+        snapshot = ProcessSnapshot("present", tuple(complete.values()), operation="ps-shutdown-family")
+        native_snapshot = ProcessSnapshot("present", tuple(
+            ProcessRow(pid, row["ppid"], row["command"], row["birth"] + " " + row["command"])
+            for pid, row in native_complete.items()))
+        if snapshot.descendants(root) != native_snapshot.descendants(root):
+            raise ValueError("shutdown family cross-format rooted census drift")
+        generic, native = {}, {}
+        for pid, signature in identities.items():
+            row, terminal = complete.get(pid), native_complete.get(pid)
+            if selected.get(pid) != row or native_selected.get(pid) != terminal:
+                raise ValueError("shutdown family selected/census drift")
+            if ((row is None) != (terminal is None) or
+                    row is not None and (row.ppid != terminal["ppid"] or
+                                         signature_birth(row.signature) != terminal["birth"] or
+                                         row.command != terminal["command"])):
+                raise ValueError("shutdown family cross-format identity drift")
+            generic[pid] = Observation("absent" if row is None else "present" if row.signature == signature else "mismatch",
+                                       row.signature if row else None, target=f"PID {pid}", operation="ps-shutdown-family-generic")
+            native[pid] = Observation("present" if terminal is not None else "absent", target=f"PID {pid}",
+                                      operation="ps-shutdown-family-native", identity=terminal)
+        observation_timeout()
+        return snapshot, generic, native
+    except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
+        snapshot = ProcessSnapshot("unavailable", detail=str(exc), operation="ps-shutdown-family",
+                                   error_class=type(exc).__name__, errno=getattr(exc, "errno", None))
+        return snapshot, {}, {}
+
+
 def observe_tcp_sockets() -> tuple[list[dict[str, Any]], Observation]:
     """Bounded machine-readable TCP census with a known-present lsof witness."""
     try:

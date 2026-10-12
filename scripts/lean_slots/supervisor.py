@@ -43,6 +43,7 @@ from .state import (
     observation_budget,
     observation_timeout,
     observe_shutdown_process,
+    observe_shutdown_family,
     observe_tcp_sockets,
     signature_birth,
     _signature_command,
@@ -1255,22 +1256,30 @@ class Supervisor:
         terminal_eligible = set(identities)
         root = int(metadata["pid"])
 
-        def classified():
-            snapshot = process_snapshot()
+        results = []
+
+        def family_observation():
+            nonlocal results
+            snapshot, generic, native = observe_shutdown_family(identities, root, max_identities=MAX_SHUTDOWN_IDENTITIES)
+            results = [snapshot.as_observation(), *generic.values(), *native.values()][-16:]
             if snapshot.state != "present":
-                raise SlotError("shutdown ancestry unavailable", observations=(snapshot.as_observation(),))
+                raise SlotError("shutdown ancestry unavailable: " + snapshot.detail, observations=tuple(results))
+            return snapshot, generic, native
+
+        def classified():
+            snapshot, generic, natives = family_observation()
             rows = {row.pid: row for row in snapshot.rows}
             if snapshot.descendants(root) - set(identities):
                 raise SlotError("new shutdown descendant; retained graph cannot authorize it")
             states, depths = {}, {}
             for pid, signature in identities.items():
-                observed = observe_process(pid, signature)
+                observed = generic[pid]
                 if observed.state == "absent":
                     if pid in rows:
                         raise SlotError("shutdown absence/census drift")
                     states[pid] = "absent"; depths[pid] = -1
                     continue
-                native = observe_shutdown_process(pid)
+                native = natives[pid]
                 if native.state != "present" or pid not in rows or native.identity["ppid"] != rows[pid].ppid:
                     raise SlotError("shutdown native state unavailable/drifting", observations=(observed, native))
                 terminal = native.identity["native_state"].startswith("Z")
@@ -1299,7 +1308,7 @@ class Supervisor:
                     if states.get(ancestor) != "live":
                         raise SlotError("shutdown ancestor is not independently exact/live")
                 depths[pid] = len(chain)
-            if states.get(root) != "live":
+            if states.get(root) != "live" and any(value != "absent" for value in states.values()):
                 raise SlotError("shutdown root is not independently live")
             return states, depths, {pid: rows[pid].ppid for pid in states if states[pid] != "absent"}
 
@@ -1310,55 +1319,74 @@ class Supervisor:
         self._validate_record(metadata, kind, number)
         self._persist_stop(path, metadata)  # RR persist original identities before any signal.
         order = sorted((pid for pid in identities if states[pid] != "absent"), key=lambda pid: (-depths[pid], pid))
-        for pid in order:
-            try:
-                states, _, parents = classified()
-            except SlotError:
-                if not receipts:
-                    raise
-                break  # A delivered signal permits passive waiting, never weaker authority.
-            if states[pid] == "absent":
-                continue
-            if states[pid] == "terminal":  # RR terminal descendants never receive signals.
-                continue
-            self._persist_stop(path, metadata)
-            # Reobserve the entire rooted chain after the intervening durable write.
-            # Observed drift is a refusal, not the unavoidable final OS scheduling race.
-            try:
-                final_states, _, final_parents = classified()
-                if final_parents != parents or final_states != states:
-                    raise SlotError("shutdown rooted ancestry changed after durable write")
-            except SlotError:
-                if not receipts:
-                    raise
-                break
-            check = observe_process(pid, identities[pid])
-            native = observe_shutdown_process(pid)
-            if (check.state != "present" or native.state != "present" or native.identity["native_state"].startswith("Z") or
-                    native.identity["birth"] != signature_birth(identities[pid]) or
-                    native.identity["command"] != _signature_command(identities[pid]) or
-                    native.identity["ppid"] != final_parents[pid]):  # RR final observed parent guard.
-                if not receipts:
-                    raise SlotError("live target changed before SIGTERM", observations=(check, native))
-                break
-            observation_timeout()
-            os.kill(pid, signal.SIGTERM)
-            receipts.append({"pid": pid, "signature": identities[pid], "delivered_at": now_iso()})
-            self._persist_stop(path, metadata)
-        results = []
+        first_refusal = None
+        first_observations = ()
+        phase, pending = "signal classification", None
         try:
+            index = 0
+            while index < len(order):
+                pid = pending = order[index]
+                try:
+                    phase = "signal classification"
+                    states, _, parents = classified()
+                    if states[pid] == "absent":
+                        index += 1
+                        continue
+                    if states[pid] == "terminal":  # RR terminal descendants never receive signals.
+                        index += 1
+                        continue
+                    phase = "durable persistence"
+                    self._persist_stop(path, metadata)
+                    # A new complete pass is mandatory after every durable write.
+                    phase = "post-write classification"
+                    final_states, _, final_parents = classified()
+                    if final_parents != parents or final_states != states:
+                        raise SlotError("shutdown rooted ancestry changed after durable write", observations=tuple(results))
+                    phase = "final target check"
+                    check = observe_process(pid, identities[pid])
+                    native = observe_shutdown_process(pid)
+                    results = [*results, check, native][-16:]
+                    if (check.state != "present" or native.state != "present" or native.identity["native_state"].startswith("Z") or
+                            native.identity["birth"] != signature_birth(identities[pid]) or
+                            native.identity["command"] != _signature_command(identities[pid]) or
+                            native.identity["ppid"] != final_parents[pid]):  # RR final observed parent guard.
+                        raise SlotError("live target changed before SIGTERM", observations=(check, native))
+                except SlotError as exc:
+                    if not receipts:
+                        raise
+                    if first_refusal is None:
+                        first_refusal = f"{phase} PID {pid}: {str(exc)[:2048]}"
+                        first_observations = tuple(exc.observations or results)[-8:]
+                    # Passive waiting grants no authority. Retry every original guard.
+                    time.sleep(observation_timeout(0.1))
+                    continue  # RR resume only through a fresh full-family classification.
+                observation_timeout()
+                os.kill(pid, signal.SIGTERM)
+                receipts.append({"pid": pid, "signature": identities[pid], "delivered_at": now_iso()})
+                self._persist_stop(path, metadata)
+                index += 1
+            phase, pending = "final passive absence", None
             while True:
-                results = [observe_process(pid, signature) for pid, signature in identities.items()]
+                try:
+                    _, generic, _ = family_observation()
+                    results = list(generic.values())
+                except SlotError as exc:
+                    if first_refusal is None and receipts:
+                        first_refusal = f"{phase}: {str(exc)[:2048]}"
+                        first_observations = tuple(exc.observations)[-8:]
+                    time.sleep(observation_timeout(0.1))
+                    continue
                 if all(item.state == "absent" for item in results):  # RR actual every-PID absence.
                     self._confirm_stop_quiescence(kind, number)
                     observation_timeout()
                     path.unlink(missing_ok=True)
                     return
-                # Exit transitions permit passive observation, never another signal.
                 time.sleep(observation_timeout(0.1))
         except (OSError, subprocess.TimeoutExpired) as exc:
-            raise SlotError(f"post-SIGTERM passive observation failed; registration retained: {exc}",
-                            observations=tuple(results[-16:])) from exc
+            cause = f"; first refusal: {first_refusal}" if first_refusal else ""
+            stage = "post-SIGTERM" if receipts else "pre-SIGTERM"
+            raise SlotError(f"{stage} passive observation failed during {phase} PID {pending}; registration retained: {exc}{cause}",
+                            observations=(*first_observations, *results[-16:])) from exc
 
     def _recover_orphan_backend_stop_unlocked(self, number, *, expected_root, expected_family,
                                                authorization, expected_residual_sha256=None,
