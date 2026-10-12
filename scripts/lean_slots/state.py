@@ -13,6 +13,7 @@ import secrets
 import tempfile
 import time
 from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterator
@@ -110,6 +111,50 @@ def exclusive_json(path: Path, value: dict[str, Any]) -> None:
             os.fsync(handle.fileno())
     finally:
         os.close(fd)
+
+
+def exclusive_durable_json(path: Path, value: dict[str, Any]) -> None:
+    """Publish complete process recovery provenance without replacing any record."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    temporary = Path(name)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write((json.dumps(value, indent=2, sort_keys=True) + "\n").encode())
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.link(temporary, path)  # RR durable reservation: exclusive complete publication.
+        directory = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+    except OSError as exc:
+        raise SlotError(f"recovery reservation publication failed: {exc}") from exc
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+_OBSERVATION_DEADLINE = ContextVar("lean_slot_observation_deadline", default=None)
+
+
+def observation_timeout(limit: float = 2.0) -> float:
+    deadline = _OBSERVATION_DEADLINE.get()
+    remaining = limit if deadline is None else min(limit, deadline - time.monotonic())
+    if remaining <= 0:
+        raise TimeoutError("whole stop observation deadline expired")
+    return remaining
+
+
+@contextmanager
+def observation_budget(seconds: float) -> Iterator[None]:
+    current = _OBSERVATION_DEADLINE.get()
+    deadline = time.monotonic() + seconds
+    token = _OBSERVATION_DEADLINE.set(min(current, deadline) if current is not None else deadline)
+    try:
+        yield
+    finally:
+        _OBSERVATION_DEADLINE.reset(token)
 
 
 @contextmanager
@@ -542,7 +587,7 @@ def process_snapshot() -> ProcessSnapshot:
     """A complete ps observation, with a known-present witness, or unavailable."""
     try:
         result = subprocess.run(["ps", "-axo", "pid=,ppid=,lstart=,command="],
-                                check=False, capture_output=True, text=True, timeout=2)
+                                check=False, capture_output=True, text=True, timeout=observation_timeout())
     except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
         return ProcessSnapshot("unavailable", detail=str(exc), error_class=type(exc).__name__,
                                errno=getattr(exc, "errno", None))
@@ -577,7 +622,7 @@ def observe_process(pid: int, signature: str | None = None) -> Observation:
         return observed("unavailable", detail="no authoritative positive integer PID")
     try:
         result = subprocess.run(["ps", "-p", str(pid), "-o", "lstart=", "-o", "command="],
-                                check=False, capture_output=True, text=True, timeout=2)
+                                check=False, capture_output=True, text=True, timeout=observation_timeout())
     except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
         return observed("unavailable", detail=str(exc), exc=exc)
     if len(result.stdout) > MAX_OBSERVER_OUTPUT:
@@ -596,6 +641,111 @@ def observe_process(pid: int, signature: str | None = None) -> Observation:
     if not value or row is None or row.signature != value:
         return observed("unavailable", detail="selected/census target identity inconsistent", result=result)
     return observed("mismatch" if signature and value != signature else "present", value, result=result)
+
+
+def signature_birth(signature: str) -> str | None:
+    """The genuine legacy lstart precision, never a fabricated generation token."""
+    return " ".join(signature.split()[:5]) if _signature_command(signature) is not None else None
+
+
+def observe_shutdown_process(pid: int) -> Observation:
+    """Coherent native state for shutdown only; Z remains present, never absent."""
+    target = f"PID {pid}"
+    def refusal(detail, exc=None):
+        return Observation("unavailable", detail=detail, target=target,
+                           operation="ps-shutdown-state", error_class=type(exc).__name__ if exc else None)
+    if type(pid) is not int or pid <= 0:
+        return refusal("invalid shutdown PID")
+    def rows(output):
+        if len(output) > MAX_OBSERVER_OUTPUT:
+            raise ValueError("shutdown observation exceeds bound")
+        result = {}
+        for line in output.splitlines():
+            fields = line.split(None, 8)
+            if len(fields) != 9 or len(result) >= MAX_CENSUS_ROWS:
+                raise ValueError("incomplete shutdown row")
+            number, parent = int(fields[0]), int(fields[1])
+            birth, native, command = " ".join(fields[2:7]), fields[7], fields[8]
+            if (number <= 0 or parent < 0 or number in result or
+                    _signature_command(birth + " " + command) is None or
+                    re.fullmatch(r"[DIRSTtUWXZ][+<>NnsLlEXV]*", native) is None):
+                raise ValueError("malformed/ambiguous shutdown row")
+            result[number] = {"pid": number, "ppid": parent, "birth": birth,
+                              "native_state": native, "command": command}
+        return result
+    try:
+        selected = subprocess.run(["ps", "-p", str(pid), "-o", "pid=,ppid=,lstart=,stat=,command="],
+                                  check=False, capture_output=True, text=True, timeout=observation_timeout())
+        census = subprocess.run(["ps", "-axo", "pid=,ppid=,lstart=,stat=,command="],
+                                check=False, capture_output=True, text=True, timeout=observation_timeout())
+        if selected.returncode not in (0, 1) or selected.stderr.strip() or census.returncode or census.stderr.strip():
+            raise ValueError("native state observation failed")
+        chosen, complete = rows(selected.stdout), rows(census.stdout)
+        if os.getpid() not in complete or set(chosen) - {pid}:
+            raise ValueError("native state census lacks witness or selected PID differs")
+        if bool(chosen) != (selected.returncode == 0) or chosen.get(pid) != complete.get(pid):
+            raise ValueError("native state selected/census drift")
+        observation_timeout()
+        return Observation("present" if pid in complete else "absent", target=target,
+                           operation="ps-shutdown-state", identity=complete.get(pid))
+    except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
+        return refusal(str(exc), exc)
+
+
+def observe_tcp_sockets() -> tuple[list[dict[str, Any]], Observation]:
+    """Bounded machine-readable TCP census with a known-present lsof witness."""
+    try:
+        witness = subprocess.run(["lsof", "-nP", "-a", "-p", str(os.getpid()), "-d", "cwd", "-Fpn"],
+                                 capture_output=True, text=True, check=False, timeout=observation_timeout())
+        if witness.returncode or witness.stderr.strip() or len(witness.stdout) > MAX_OBSERVER_OUTPUT:
+            raise ValueError("lsof capability witness unavailable")
+        if f"p{os.getpid()}" not in witness.stdout.splitlines() or not any(x.startswith("n/") for x in witness.stdout.splitlines()):
+            raise ValueError("lsof lacks known-present observer cwd")
+        result = subprocess.run(["lsof", "-nP", "-iTCP", "-FpftnT"],
+                                capture_output=True, text=True, check=False, timeout=observation_timeout())
+        if result.returncode not in (0, 1) or result.stderr.strip() or len(result.stdout) > MAX_OBSERVER_OUTPUT:
+            raise ValueError("TCP census unavailable")
+        sockets, pid, current = [], None, None
+        def finish():
+            if current is not None:
+                if (set(current) != {"pid", "fd", "type", "name", "state"} or
+                        current["type"] not in {"IPv4", "IPv6"} or not current["state"]):
+                    raise ValueError("incomplete TCP socket record")
+                sockets.append(current.copy())
+        for line in result.stdout.splitlines():
+            if not line or len(sockets) >= MAX_CENSUS_ROWS:
+                raise ValueError("malformed/oversized TCP census")
+            field, value = line[0], line[1:]
+            if field == "p":
+                finish(); current = None; pid = int(value)
+                if pid <= 0:
+                    raise ValueError("invalid TCP owner")
+            elif field == "f":
+                finish()
+                if pid is None or not value:
+                    raise ValueError("TCP descriptor lacks owner")
+                current = {"pid": pid, "fd": value}
+            elif current is None:
+                raise ValueError("TCP field lacks descriptor")
+            elif field in {"t", "n"}:
+                key = {"t": "type", "n": "name"}[field]
+                if key in current or not value:
+                    raise ValueError("ambiguous TCP field")
+                current[key] = value
+            elif field == "T" and value.startswith("ST="):
+                if "state" in current:
+                    raise ValueError("duplicate TCP state")
+                current["state"] = value[3:]
+            elif field != "T":
+                raise ValueError("unsupported TCP field")
+        finish()
+        if (result.returncode == 1) != (not sockets):
+            raise ValueError("TCP result disagrees with census")
+        return sockets, Observation("present", target="all-TCP-sockets", operation="lsof-census",
+                                    identity={"count": len(sockets)})
+    except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
+        return [], Observation("unavailable", detail=str(exc), target="all-TCP-sockets",
+                               operation="lsof-census", error_class=type(exc).__name__)
 
 
 def _observe_created_handle(process: Any, signature: str) -> Observation:

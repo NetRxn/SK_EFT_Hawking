@@ -50,6 +50,11 @@ class Host:
         self.ps_calls = []
         self.command_calls = []
         self.real_run = subprocess.run
+        self.native_states = {}
+        self.tcp_extra = []
+        self.tcp_denied = False
+        self.before_signal = None
+        self.after_sleep = None
         patch.setattr(subprocess, "run", self.run)
         patch.setattr(lifecycle.socket, "create_connection", self.connection)
         patch.setattr(subprocess, "Popen", self.popen)
@@ -65,6 +70,15 @@ class Host:
         return signature
 
     def run(self, argv, **kwargs):
+        if argv[0] == "lsof":
+            if self.tcp_denied:
+                raise PermissionError(errno.EPERM, "TCP observation denied")
+            if "cwd" in argv:
+                return SimpleNamespace(returncode=0, stdout=f"p{os.getpid()}\nn/isolated-observer\n", stderr="")
+            sockets = [{"pid": pid, "fd": str(port), "type": "IPv4", "name": f"127.0.0.1:{port}", "state": "LISTEN"}
+                       for port, pid in self.ports.items()] + self.tcp_extra
+            output = "".join(f"p{x['pid']}\nf{x['fd']}\nt{x['type']}\nn{x['name']}\nTST={x['state']}\n" for x in sockets)
+            return SimpleNamespace(returncode=0 if output else 1, stdout=output, stderr="")
         if argv[0] != "ps":
             self.command_calls.append(list(argv))
             # Only disposable fixture Git/build commands are allowed to execute.
@@ -78,6 +92,9 @@ class Host:
             finally:
                 subprocess.Popen = saved
         self.ps_calls.append(list(argv))
+        native = "stat=" in " ".join(argv)
+        def native_row(pid, row):
+            return f"{pid} {row[0]} {' '.join(row[2].split()[:5])} {self.native_states.get(pid, 'S')} {row[1]}\n"
         if "-axo" in argv:
             if self.census_denied:
                 raise PermissionError(errno.EPERM, "census denied")
@@ -85,8 +102,8 @@ class Host:
                 if isinstance(self.census_result, BaseException):
                     raise self.census_result
                 return self.census_result
-            output = "".join(f"{pid} {row[0]} {row[2]}\n" for pid, row in self.rows.items())
-            if self.after_census:
+            output = "".join(native_row(pid, row) if native else f"{pid} {row[0]} {row[2]}\n" for pid, row in self.rows.items())
+            if self.after_census and not native:
                 self.after_census()
             return SimpleNamespace(returncode=0, stdout=output, stderr="")
         pid = int(argv[2])
@@ -98,7 +115,7 @@ class Host:
         if pid in self.denied_pids:
             raise PermissionError(errno.EPERM, "selected ps denied")
         return SimpleNamespace(returncode=0 if pid in self.rows else 1,
-                               stdout=self.rows[pid][2] if pid in self.rows else "", stderr="")
+                               stdout=(native_row(pid, self.rows[pid]) if native else self.rows[pid][2]) if pid in self.rows else "", stderr="")
 
     def connection(self, address, **kwargs):
         port = address[1]
@@ -112,6 +129,8 @@ class Host:
 
     def sleep(self, seconds):
         self.clock += seconds
+        if self.after_sleep:
+            self.after_sleep()
 
     def remove(self, pid):
         self.rows.pop(pid, None)
@@ -121,6 +140,8 @@ class Host:
 
     def kill(self, pid, sig):
         assert sig == signal.SIGTERM, "automatic SIGKILL forbidden"
+        if self.before_signal:
+            self.before_signal(pid)
         self.signals.append((pid, sig))
         self.remove(pid)
         if self.after_signal:
@@ -264,8 +285,10 @@ def test_control_03_post_signal_unavailable(rig):
     _, sup, host = rig
     path = owned(sup, host, "backend", 1, 810103)
     host.after_signal = lambda pid: host.denied_pids.add(pid)
-    with pytest.raises(SlotError, match="post-SIGTERM"):
+    with pytest.raises(SlotError, match="post-SIGTERM") as failure:
         sup.stop_backend(1)
+    assert failure.value.observations and all(row.state == "unavailable" for row in failure.value.observations)
+    assert host.clock <= 10.00001
     assert path.exists() and read_json(path)["descendants"] and host.signals == [(810103, signal.SIGTERM)]
     host.after_signal = None; host.denied_pids.clear()
     sup.stop_backend(1)
@@ -1149,6 +1172,7 @@ def test_six_r6_native_fs_denial_never_false_absence(rig, monkeypatch, capsys, f
         if target_kind.endswith("scan") and Path(path) == target:
             raise OSError(failure_errno, "native scandir denied")
         return real_scan(path)
+    ctl.acquire(1,client="codex",base_ref="main")  # Acquire before deliberately denying provenance.
     before = forbidden_counts(host)
     with monkeypatch.context() as patch:
         patch.setattr(os,"stat",stat_seam); patch.setattr(os,"scandir",scan_seam)
@@ -1162,7 +1186,6 @@ def test_six_r6_native_fs_denial_never_false_absence(rig, monkeypatch, capsys, f
         assert not next(x for x in doctor["checks"] if x["name"]=="heavy_backend_limit")["ok"]
         _,error = captured(lambda:sup.start_backend(1)); assert isinstance(error,SlotError)
         _,error = captured(lambda:sup.stop_backend(1)); assert isinstance(error,SlotError)
-        ctl.acquire(1,client="codex",base_ref="main")
         marker=ctl.inventory.worktree(1)/"lean/.lake/preserve-r6";marker.parent.mkdir(parents=True,exist_ok=True);marker.write_text("untouched")
         _,error=captured(lambda:ctl.prepare(1));assert isinstance(error,SlotError)
         assert marker.exists() and marker.read_text()=="untouched"
@@ -1512,3 +1535,615 @@ def test_native_control_06_unavailable_ancestry_and_retained_pins(rig, failure):
         _,error=captured(lambda:sup.start_backend(3));assert isinstance(error,SlotError)
     require_witnesses(census["observations"])
     assert record.read_bytes()==original and forbidden_counts(host)==before
+
+
+# RR controls use production owners, real temporary records and only external OS seams.
+def rr_session(monkeypatch):
+    monkeypatch.delenv("LEAN_SLOT_OWNER_PID", raising=False)
+    monkeypatch.setenv("LEAN_SLOT_OWNER_SESSION", "rr-driving-session")
+
+
+def rr_authorization(ctl, number=1, owner=None):
+    sup = Supervisor(ctl.inventory)
+    lease = ctl.inventory.lease(number, required=False)
+    binding = None
+    if lease:
+        owner = owner or ctl
+        binding = {"inventory_source": str(owner.inventory.source), "repo_role": owner.inventory.repo_role,
+                   "inventory_domain": sup._inventory_domain(owner.inventory),
+                   "worktree": str(owner.inventory.worktree(number)), "state_root": str(owner.inventory.state_root),
+                   "slot": number, "public_dependency_sha": lease.get("public_dependency_sha"),
+                   "lease_sha256": state.sha256_bytes(owner.inventory.lease_path(number).read_bytes())}
+    return {"approval_ref": "isolated operator approval RR", "drain_receipt": "isolated requests completed",
+            "dispatch_frozen": True, "requests_drained": True,
+            "owner_session_hash": ctl._owner()["owner_session_hash"],
+            "backend_target": sup.recovery_target(number), "lease_owner": binding}
+
+
+def rr_orphan(ctl, host, *, owner=None, number=1):
+    sup = Supervisor(ctl.inventory)
+    if owner is not None:
+        lease = owner.acquire(number, client="codex", base_ref="main")
+        owner._quarantine(number, lease, "isolated recovery case")
+    root = 910030 + number
+    signature = host.add(root, " ".join(sup.backend_command(number)), ppid=1,
+                         port=int(ctl.inventory.slot(number)["backend_port"]))
+    child = root - 10
+    child_signature = host.add(child, "generic backend child", ppid=root)
+    family = [{"pid": root, "ppid": 1, "signature": signature},
+              {"pid": child, "ppid": root, "signature": child_signature}]
+    return {"expected_root": {"pid": root, "signature": signature}, "expected_family": family,
+            "authorization": rr_authorization(ctl, number, owner)}
+
+
+def rr_managed_zombie(sup, host, *, legacy=False):
+    root, parent, child = 920030, 920010, 920020
+    path = owned(sup, host, "backend", 1, root)
+    parent_sig = host.add(parent, "generic live backend", ppid=root)
+    child_sig = host.add(child, "lake serve -- fixture", ppid=parent)
+    data = read_json(path)
+    data["descendants"] = [{"pid": root, "signature": data["signature"]},
+                           {"pid": parent, "signature": parent_sig},
+                           {"pid": child, "signature": child_sig}]
+    if legacy:
+        data.pop("phase"); data.pop("process_schema_version")
+    atomic_json(path, data)
+    host.rows[child] = (parent, "<defunct>", "Sun Oct 11 00:00:00 2026 <defunct>")
+    host.native_states[child] = "Z"
+    return path, root, parent, child, data
+
+
+def test_rr1_generic_identity_unchanged(rig):
+    _, sup, host = rig
+    path, root, parent, child, data = rr_managed_zombie(sup, host)
+    assert state.observe_process(root, data["signature"]).state == "present"
+    assert state.observe_process(child, data["descendants"][-1]["signature"]).state == "mismatch"
+    terminal = state.observe_shutdown_process(child)
+    assert terminal.state == "present" and terminal.identity["native_state"] == "Z", "RR native zombie remains present"
+    assert state.observe_process(99999999).state == "absent"
+    host.denied_pids.add(child)
+    assert state.observe_process(child).state == state.observe_shutdown_process(child).state == "unavailable"
+    assert path.exists() and not host.signals
+
+
+@pytest.mark.parametrize("legacy", [False, True], ids=["current", "legacy"])
+def test_rr1_retained_zombie_parent_progress(rig, legacy):
+    _, sup, host = rig
+    path, root, parent, child, original = rr_managed_zombie(sup, host, legacy=legacy)
+    def before(pid):
+        assert pid != child, "native zombie must never receive a signal"
+        assert read_json(path)["descendants"] == sorted(original["descendants"], key=lambda row: row["pid"]), "original signatures must survive exit"
+        assert child in host.rows, "terminal child is present until the actual parent reaps it"
+    host.before_signal = lambda pid: before(pid) if pid == parent else None
+    host.after_signal = lambda pid: host.remove(child) if pid == parent else None
+    _, error = captured(lambda: sup.stop_backend(1))
+    assert error is None, repr(error)
+    assert [pid for pid, _ in host.signals] == [parent, root], "independently live parents must make progress"
+    assert not path.exists() and not ({root, parent, child} & host.rows.keys())
+
+
+@pytest.mark.parametrize("failure", ["fake-defunct", "bad-state", "birth", "unretained", "root-absent", "reparented", "cycle", "denied"], ids=str)
+def test_rr1_terminal_evidence_refusal(rig, failure):
+    _, sup, host = rig
+    path, root, parent, child, data = rr_managed_zombie(sup, host)
+    if failure == "fake-defunct": host.native_states[child] = "S"
+    elif failure == "bad-state": host.native_states[child] = "?"
+    elif failure == "birth": host.rows[child] = (parent, "<defunct>", "Sun Oct 11 01:00:00 2026 <defunct>")
+    elif failure == "unretained":
+        data["descendants"] = data["descendants"][:-1]; atomic_json(path, data)
+    elif failure == "root-absent": host.remove(root)
+    elif failure == "reparented": host.rows[child] = (1, *host.rows[child][1:])
+    elif failure == "cycle": host.rows[child] = (child, *host.rows[child][1:])
+    elif failure == "denied": host.denied_pids.add(child)
+    before = path.read_bytes()
+    _, error = captured(lambda: sup.stop_backend(1))
+    assert isinstance(error, SlotError), repr(error)
+    assert not host.signals, "invalid terminal witness must not authorize parent signals"
+    assert path.read_bytes() == before
+
+
+def test_rr1_ancestry_order(rig):
+    _, sup, host = rig
+    path = owned(sup, host, "backend", 1, 930090)
+    host.add(930010, "generic intermediate", ppid=930090)
+    host.add(930050, "generic leaf", ppid=930010)
+    host.add(930030, "generic deepest leaf", ppid=930050)
+    _, error = captured(lambda: sup.stop_backend(1))
+    assert [x[0] for x in host.signals] == [930030, 930050, 930010, 930090], "topology must determine signal order"
+    assert error is None, repr(error)
+    assert not path.exists()
+
+
+@pytest.mark.parametrize("outcome", ["reaped", "persistent", "slow-observation"], ids=str)
+def test_rr1_exit_wait(rig, outcome):
+    _, sup, host = rig
+    path, root, parent, child, data = rr_managed_zombie(sup, host)
+    def after_signal(pid):
+        if pid == parent:
+            host.rows[parent] = (root, "<defunct>", "Sun Oct 11 00:00:00 2026 <defunct>")
+            host.native_states[parent] = "Z"
+            host.rows[child] = (1, *host.rows[child][1:])
+    host.after_signal = after_signal
+    if outcome == "reaped":
+        def reap():
+            for pid in (root, parent, child): host.remove(pid)
+        host.after_sleep = reap
+    if outcome == "slow-observation": host.after_census = lambda: setattr(host, "clock", host.clock + 1)
+    _, error = captured(lambda: sup.stop_backend(1))
+    if outcome == "reaped":
+        assert error is None and not path.exists()
+        assert [x[0] for x in host.signals] == [parent], "exit transitions permit passive wait only"
+    else:
+        assert isinstance(error, SlotError) and path.exists()
+        assert host.clock <= 10.00001, "all stop observation consumes one fixed deadline"
+        assert child not in [x[0] for x in host.signals]
+
+
+@pytest.mark.parametrize("residual", [False, True], ids=["absent", "foreign-listener"])
+def test_rr1_absent_root_and_quiescence(rig, residual):
+    _, sup, host = rig
+    path = owned(sup, host, "backend", 1, 940010)
+    if residual:
+        host.after_signal = lambda pid: host.ports.update({29101: 999999})
+    _, error = captured(lambda: sup.stop_backend(1))
+    if residual:
+        assert path.exists(), "endpoint/project quiescence must precede unregister"
+        assert isinstance(error, SlotError)
+    else:
+        assert error is None and not path.exists()
+
+
+@pytest.mark.parametrize("leased,deep", [(False, False), (True, False), (True, True)], ids=["free", "same-role-quarantine", "deep-family"])
+def test_rr2_unique_family_stop_only(rig, monkeypatch, leased, deep):
+    ctl, sup, host = rig; rr_session(monkeypatch)
+    request = rr_orphan(ctl, host, owner=ctl if leased else None)
+    if deep:
+        parent = request["expected_family"][-1]["pid"]
+        for pid in (909050, 909010, 909070, 909030):
+            signature = host.add(pid, "generic deep intermediary", ppid=parent)
+            request["expected_family"].append({"pid": pid, "ppid": parent, "signature": signature})
+            parent = pid
+    lease_path = ctl.inventory.lease_path(1)
+    lease_before = lease_path.read_bytes() if leased else None
+    record_path = ctl.inventory.process_path("backend", 1)
+    records = []
+    def before(pid):
+        assert record_path.exists(), "no signal before exclusive durable reservation"
+        data = read_json(record_path); records.append(data)
+        assert data["record_origin"] == "operator_stop_only" and data["phase"] == "uncertain_residual"
+        assert "runtime_fingerprint" not in data and "launch_token" not in data
+    host.before_signal = before
+    _, error = captured(lambda: ctl.recover_orphan_backend_stop(1, **request))
+    assert error is None, repr(error)
+    assert records and not record_path.exists() and not host.launches
+    assert set(x[0] for x in host.signals) == {x["pid"] for x in request["expected_family"]}
+    if deep:
+        assert [x[0] for x in host.signals] == [row["pid"] for row in reversed(request["expected_family"])]
+    assert (lease_path.read_bytes() if leased else None) == lease_before
+
+
+@pytest.mark.parametrize("failure", ["approval", "wrong-owner", "active", "acquired", "preparing", "ready_to_absorb", "dirty", "unabsorbed", "drain", "scope"], ids=str)
+def test_rr2_authority_and_work_refusal(rig, monkeypatch, failure):
+    ctl, sup, host = rig; rr_session(monkeypatch)
+    request = rr_orphan(ctl, host, owner=ctl)
+    if failure == "approval": request["authorization"]["approval_ref"] = ""
+    elif failure == "wrong-owner":
+        lease = ctl.inventory.lease(1); lease["owner_session_hash"] = "0" * 64
+        atomic_json(ctl.inventory.lease_path(1), lease)
+        request["authorization"] = rr_authorization(ctl)
+    elif failure in {"active", "acquired", "preparing", "ready_to_absorb"}:
+        lease = ctl.inventory.lease(1); lease["state"] = failure.upper()
+        atomic_json(ctl.inventory.lease_path(1), lease)
+        request["authorization"] = rr_authorization(ctl)
+    elif failure == "dirty": (ctl.inventory.worktree(1) / "unabsorbed.txt").write_text("preserve")
+    elif failure == "unabsorbed":
+        tree = ctl.inventory.worktree(1); (tree / "unabsorbed.txt").write_text("preserve")
+        run(tree, "git", "add", "unabsorbed.txt"); run(tree, "git", "commit", "-m", "isolated unabsorbed work")
+    elif failure == "drain": request["authorization"]["requests_drained"] = False
+    elif failure == "scope": request["authorization"]["backend_target"]["slot"] = 2
+    _, error = captured(lambda: ctl.recover_orphan_backend_stop(1, **request))
+    assert not host.signals, "authority/work refusal must precede all native signals"
+    assert isinstance(error, SlotError)
+    assert not ctl.inventory.process_path("backend", 1).exists()
+
+
+@pytest.mark.parametrize("failure", ["stale", "stale-child", "omitted-child", "extra-member", "second-root", "wrong-project", "wrong-port", "wrong-host", "foreign-listener", "duplicate-listener", "tcp", "denied", "census-denied", "registry-present"], ids=str)
+def test_rr2_family_and_listener_refusal(rig, monkeypatch, failure):
+    ctl, sup, host = rig; rr_session(monkeypatch)
+    request = rr_orphan(ctl, host)
+    root = request["expected_root"]["pid"]
+    if failure == "stale": request["expected_root"]["signature"] = "Sun Oct 11 01:00:00 2026 stale"
+    elif failure == "stale-child": request["expected_family"][-1]["signature"] = "Sun Oct 11 01:00:00 2026 stale child"
+    elif failure == "extra-member": request["expected_family"].append({"pid": 950099, "ppid": root, "signature": "Sun Oct 11 00:00:00 2026 missing child"})
+    elif failure == "omitted-child": request["expected_family"] = request["expected_family"][:1]
+    elif failure in {"wrong-project", "wrong-port", "wrong-host"}:
+        args = sup.backend_command(1)
+        flag = {"wrong-project": "--lean-project-path", "wrong-port": "--port", "wrong-host": "--host"}[failure]
+        args[args.index(flag)+1] = {"wrong-project": "/other/project", "wrong-port": "29999", "wrong-host": "0.0.0.0"}[failure]
+        signature = host.add(root, " ".join(args), ppid=1)
+        request["expected_root"]["signature"] = request["expected_family"][0]["signature"] = signature
+    elif failure == "second-root": host.add(950001, " ".join(sup.backend_command(1)), ppid=1)
+    elif failure == "foreign-listener": host.ports[29101] = 999999
+    elif failure == "duplicate-listener": host.tcp_extra.append({"pid": root, "fd": "dup", "type": "IPv4", "name": "127.0.0.1:29101", "state": "LISTEN"})
+    elif failure == "tcp": host.tcp_extra.append({"pid": root, "fd": "active", "type": "IPv4", "name": "127.0.0.1:29101->127.0.0.1:40000", "state": "ESTABLISHED"})
+    elif failure == "denied": host.tcp_denied = True
+    elif failure == "census-denied": host.census_denied = True
+    elif failure == "registry-present": owned(sup, host, "backend", 1, root)
+    _, error = captured(lambda: ctl.recover_orphan_backend_stop(1, **request))
+    assert not host.signals, "ambiguous family/listener must never authorize signals"
+    assert isinstance(error, SlotError)
+    assert ctl.inventory.process_path("backend", 1).exists() == (failure == "registry-present")
+
+
+@pytest.mark.parametrize("failure", ["none", "collision", "file-fsync", "directory-fsync", "link"], ids=str)
+def test_rr2_exclusive_durable_reservation(tmp_path, monkeypatch, failure):
+    path = tmp_path / "process.json"; data = {"phase": "uncertain_residual", "complete": [1, 2, 3]}
+    real_fsync, real_link = os.fsync, os.link
+    synchronizations = []
+    def sync(fd):
+        is_directory = state.stat.S_ISDIR(os.fstat(fd).st_mode)
+        synchronizations.append("directory" if is_directory else "file")
+        if failure == ("directory-fsync" if is_directory else "file-fsync"):
+            raise OSError("isolated sync refusal")
+        real_fsync(fd)
+    def link(source, target):
+        assert json.loads(Path(source).read_text()) == data
+        assert "file" in synchronizations
+        if failure == "link": raise OSError("isolated link refusal")
+        real_link(source, target)
+    monkeypatch.setattr(os, "fsync", sync); monkeypatch.setattr(os, "link", link)
+    if failure == "collision": path.write_text("competitor")
+    _, error = captured(lambda: state.exclusive_durable_json(path, data))
+    if failure == "none":
+        assert error is None and read_json(path) == data
+        assert synchronizations == ["file", "directory"], "publication requires file and directory durability"
+    elif failure == "collision":
+        assert isinstance(error, SlotError) and path.read_text() == "competitor"
+    elif failure == "directory-fsync":
+        assert isinstance(error, SlotError) and read_json(path) == data
+    else:
+        assert isinstance(error, SlotError) and not path.exists()
+
+
+def rr_retained_recovery(ctl, host, request):
+    # Publication succeeds, then a genuine external signal failure leaves a real residual.
+    host.before_signal = lambda pid: (_ for _ in ()).throw(PermissionError("isolated signal refusal"))
+    _, error = captured(lambda: ctl.recover_orphan_backend_stop(1, **request))
+    assert isinstance(error, SlotError)
+    host.before_signal = None
+    path = ctl.inventory.process_path("backend", 1)
+    assert path.exists() and not host.signals
+    assert read_json(path)["recovery"]["admission_observations"]
+    assert read_json(path)["recovery"]["error_observations"]
+    return path
+
+
+def test_rr2_record_consumers(rig, monkeypatch):
+    ctl, sup, host = rig; rr_session(monkeypatch)
+    request = rr_orphan(ctl, host, owner=ctl)
+    path = rr_retained_recovery(ctl, host, request)
+    original = path.read_bytes()
+    lease_original = ctl.inventory.lease_path(1).read_bytes()
+    resource = sup._resource_status("backend", 1)
+    assert resource["state"] == "uncertain_residual", "recovery provenance cannot become healthy managed service"
+    assert resource["identity_authority"] == "stop_only_recovery"
+    assert 1 in sup.capacity_census()["reserved_physical_slots"]
+    assert ctl.status()["slots"][0]["resources"]["backend"]["state"] == "uncertain_residual"
+    assert ctl.doctor()["checks"]
+    # A healthy proxy makes these checks reach the backend recovery guard.
+    owned(sup, host, "proxy", 1, 961001)
+    effects = []
+    def paused_transition():
+        with sup.paused_backend(1):
+            effects.append("forbidden cache transition")
+    for operation in (lambda: sup.stop_backend(1), lambda: sup.start_backend(1), lambda: sup.assert_healthy(1)):
+        _, error = captured(operation)
+        assert not host.signals, "ordinary lifecycle cannot resume stop-only recovery"
+        assert isinstance(error, SlotError) and path.read_bytes() == original
+    for operation in (sup.start, paused_transition):
+        _, error = captured(operation)
+        assert isinstance(error, SlotError) and not effects and not host.launches and not host.signals
+        assert path.read_bytes() == original
+    data = read_json(path)
+    for key, value in (("phase", "running"), ("phase", "launch_pending"), ("runtime_fingerprint", "invented"), ("launch_token", "invented"), ("record_origin", "unknown")):
+        corrupt = dict(data); corrupt[key] = value; atomic_json(path, corrupt)
+        assert sup._resource_status("backend", 1)["state"] == "unavailable"
+        assert 1 in sup.capacity_census()["reserved_physical_slots"]
+        _, error = captured(lambda: sup.stop_backend(1)); assert isinstance(error, SlotError)
+        assert not host.signals
+    path.write_bytes(original)
+    marker = ctl.inventory.lean_root(1) / ".lake/preserved-recovery"
+    marker.parent.mkdir(parents=True, exist_ok=True); marker.write_text("retained cache")
+    for operation in (lambda: ctl.prepare(1), lambda: ctl.release(1)):
+        _, error = captured(operation)
+        assert isinstance(error, SlotError) and not host.signals and not host.launches
+        assert marker.read_text() == "retained cache" and path.read_bytes() == original
+        assert ctl.inventory.lease_path(1).read_bytes() == lease_original, "RR original quarantine lease bytes preserved"
+    ctl.recover_orphan_backend_stop(1, **request, expected_residual_sha256=state.sha256_bytes(original))
+    assert not path.exists()
+    ctl.release(1)
+    assert not ctl.inventory.lease_path(1).exists()
+
+
+@pytest.mark.parametrize("failure", ["none", "partial-absent", "all-absent", "hash", "owner", "target", "signature", "domain"], ids=str)
+def test_rr2_exact_residual_retry(rig, monkeypatch, failure):
+    ctl, sup, host = rig; rr_session(monkeypatch)
+    request = rr_orphan(ctl, host)
+    path = rr_retained_recovery(ctl, host, request)
+    original = path.read_bytes(); digest = state.sha256_bytes(original)
+    if failure == "partial-absent": host.remove(request["expected_family"][-1]["pid"])
+    elif failure == "all-absent":
+        for row in request["expected_family"]: host.remove(row["pid"])
+    elif failure == "hash": digest = "0" * 64
+    elif failure == "owner": request["authorization"]["owner_session_hash"] = "0" * 64
+    elif failure == "target": request["authorization"]["backend_target"]["slot"] = 2
+    elif failure == "signature": request["expected_family"][-1]["signature"] = "Sun Oct 11 01:00:00 2026 other"
+    elif failure == "domain":
+        value = read_json(ctl.inventory.source); value["server"]["instructions"] = "changed same-path domain"
+        atomic_json(ctl.inventory.source, value)
+    _, error = captured(lambda: ctl.recover_orphan_backend_stop(1, **request, expected_residual_sha256=digest))
+    if failure in {"none", "partial-absent", "all-absent"}:
+        assert error is None, repr(error)
+        assert not path.exists()
+        assert bool(host.signals) == (failure != "all-absent")
+    else:
+        assert not host.signals, "retry must not signal under changed original authority/hash"
+        assert isinstance(error, SlotError) and path.read_bytes() == original
+
+
+@pytest.mark.parametrize("failure", ["none", "unpaired", "wrong-owner", "pin", "opposing-backend", "state-root", "number", "active", "dirty", "worktree", "retry-authority", "owner-domain"], ids=str)
+def test_rr2_paired_lease_authority(host, downstream_repo, monkeypatch, failure):
+    owner, target, _, _ = downstream_repo; rr_session(monkeypatch)
+    request = rr_orphan(target, host, owner=owner)
+    lease_path = owner.inventory.lease_path(1)
+    residual = None
+    if failure in {"retry-authority", "owner-domain"}:
+        residual = rr_retained_recovery(target, host, request)
+        if failure == "retry-authority":
+            request["authorization"]["lease_owner"]["inventory_source"] += "-other"
+        else:
+            value = read_json(owner.inventory.source); value["server"]["instructions"] = "changed owner domain"
+            atomic_json(owner.inventory.source, value)
+    if failure == "unpaired":
+        value = json.loads(owner.inventory.source.read_text()); value.pop("paired_dependency")
+        owner.inventory.source.write_text(json.dumps(value))
+    elif failure == "wrong-owner":
+        value = read_json(lease_path); value["owner_session_hash"] = "0" * 64; atomic_json(lease_path, value)
+        request["authorization"] = rr_authorization(target, owner=owner)
+    elif failure == "pin":
+        value = read_json(lease_path); value["public_dependency_sha"] = "0" * 40; atomic_json(lease_path, value)
+        request["authorization"] = rr_authorization(target, owner=owner)
+    elif failure == "opposing-backend":
+        host.add(960001, " ".join(Supervisor(owner.inventory).backend_command(1)), ppid=1, port=29301)
+    elif failure == "state-root": request["authorization"]["lease_owner"]["state_root"] += "-other"
+    elif failure == "number": request["authorization"]["lease_owner"]["slot"] = 2
+    elif failure == "active":
+        value = read_json(lease_path); value["state"] = "ACTIVE"; atomic_json(lease_path, value)
+        request["authorization"] = rr_authorization(target, owner=owner)
+    elif failure == "dirty": (owner.inventory.worktree(1) / "preserve.txt").write_text("unabsorbed")
+    elif failure == "worktree":
+        value = read_json(lease_path); value["worktree"] += "-other"; atomic_json(lease_path, value)
+        request["authorization"] = rr_authorization(target, owner=owner)
+    before = lease_path.read_bytes()
+    retry = {"expected_residual_sha256": state.sha256_bytes(residual.read_bytes())} if residual else {}
+    _, error = captured(lambda: target.recover_orphan_backend_stop(1, **request, **retry))
+    if failure == "none":
+        assert error is None, repr(error)
+        assert host.signals and not target.inventory.process_path("backend", 1).exists()
+        assert not owner.inventory.process_path("backend", 1).exists()
+    else:
+        assert not host.signals, "foreign/unpaired/invalid owner cannot authorize target signals"
+        assert isinstance(error, SlotError)
+    assert lease_path.read_bytes() == before, "recovery must preserve the actual owner's lease"
+    assert not host.launches
+
+
+def test_rr2_lock_and_no_lifecycle_expansion(rig, monkeypatch, capsys):
+    ctl, sup, host = rig; rr_session(monkeypatch)
+    request = rr_orphan(ctl, host)
+    locks = ctl.inventory.state_root / "locks"
+    def before(pid):
+        assert (locks / "wt1.lock").is_dir() and (locks / "supervisor.lock").is_dir()
+        assert len(list(locks.iterdir())) == 2, "one physical slot lock then one lifecycle lock"
+    host.before_signal = before
+    _, error = captured(lambda: ctl.recover_orphan_backend_stop(1, **request))
+    assert error is None, repr(error)
+    assert not host.launches and not list(locks.iterdir())
+    assert not ctl.inventory.lease_path(1).exists()
+    effects = forbidden_counts(host)
+    for verb in ("start", "stop", "status"):
+        code, error = captured(lambda verb=verb: cli.main(["supervisor", verb, "--slot", "1"]))
+        assert error is None and code == 2
+        assert "are global; --slot is only valid for probe" in capsys.readouterr().err
+        assert forbidden_counts(host) == effects
+
+
+@pytest.mark.parametrize("shape", ["live-child", "terminal-parent"], ids=str)
+def test_rr1_final_observed_parent_guard(rig, monkeypatch, shape):
+    _, sup, host = rig
+    if shape == "terminal-parent":
+        path, root, target, child, _ = rr_managed_zombie(sup, host)
+    else:
+        root, target = 970030, 970010
+        path = owned(sup, host, "backend", 1, root)
+        host.add(target, "generic exact child", ppid=root)
+    real_sync, real_run = os.fsync, subprocess.run
+    directory_writes = 0
+    native_reads = 0
+    drifted = False
+    def sync(fd):
+        nonlocal directory_writes
+        if state.stat.S_ISDIR(os.fstat(fd).st_mode):
+            directory_writes += 1
+        real_sync(fd)
+    def observe(argv, **kwargs):
+        nonlocal native_reads, drifted
+        if (directory_writes >= 2 and argv[:3] == ["ps", "-p", str(target)] and
+                "stat=" in " ".join(argv)):
+            native_reads += 1
+            if native_reads == 2:
+                # Final native selected + census both report the changed real parent.
+                host.rows[target] = (1, *host.rows[target][1:]); drifted = True
+        return real_run(argv, **kwargs)
+    monkeypatch.setattr(os, "fsync", sync); monkeypatch.setattr(subprocess, "run", observe)
+    _, error = captured(lambda: sup.stop_backend(1))
+    assert drifted, "RR final parent control reached the intended native seam"
+    assert not host.signals, "RR final observed parent drift forbids every signal"
+    assert isinstance(error, SlotError) and path.exists()
+    assert sup._metadata("backend", 1)["pid"] == root
+
+
+@pytest.mark.parametrize("shape", ["at-bound", "retained-plus-root", "discovered-with-absent"], ids=str)
+def test_rr1_combined_family_bound(rig, shape):
+    _, sup, host = rig
+    root = 971001
+    path = owned(sup, host, "backend", 1, root)
+    data = read_json(path)
+    count = 4096 if shape == "retained-plus-root" else 4095
+    data["descendants"] = [{"pid": 1100000 + n, "signature": "Sun Oct 11 00:00:00 2026 retained absent worker"}
+                           for n in range(count)]
+    atomic_json(path, data)
+    if shape == "discovered-with-absent": host.add(971002, "new owned child", ppid=root)
+    original = path.read_bytes()
+    def before(pid):
+        persisted = sup._metadata("backend", 1)
+        assert len(persisted["descendants"]) <= 4096, "RR combined retained identity bound before native effect"
+        retained = {(row["pid"], row["signature"]) for row in data["descendants"]}
+        assert retained <= {(row["pid"], row["signature"]) for row in persisted["descendants"]}
+    host.before_signal = before
+    _, error = captured(lambda: sup.stop_backend(1))
+    if shape == "at-bound":
+        assert error is None, repr(error)
+        assert host.signals == [(root, signal.SIGTERM)] and not path.exists()
+    else:
+        assert not host.signals and path.read_bytes() == original, "RR over-bound family preserves original record without effects"
+        assert isinstance(error, SlotError)
+
+
+@pytest.mark.parametrize("mode", ["free", "same-role", "paired"], ids=str)
+def test_rr2_pending_lease_authority(host, downstream_repo, monkeypatch, mode):
+    down, target, _, _ = downstream_repo; rr_session(monkeypatch)
+    owner = down if mode == "paired" else target if mode == "same-role" else None
+    request = rr_orphan(target, host, owner=owner)
+    record = rr_retained_recovery(target, host, request)
+    original = record.read_bytes(); lease_path = target.inventory.lease_path(1)
+    lease_before = lease_path.read_bytes() if lease_path.exists() else None
+    before = forbidden_counts(host)
+    if mode == "free":
+        operation = lambda: target.acquire(1, client="codex", base_ref="main")
+    else:
+        operation = lambda: owner.release(1)
+    _, error = captured(operation)
+    after = lease_path.read_bytes() if lease_path.exists() else None
+    assert after == lease_before, "RR pending recovery preserves exact original lease presence and bytes"
+    assert record.read_bytes() == original and forbidden_counts(host) == before
+    assert isinstance(error, SlotError)
+    target.recover_orphan_backend_stop(1, **request, expected_residual_sha256=state.sha256_bytes(original))
+    assert not record.exists() and (lease_path.read_bytes() if lease_path.exists() else None) == lease_before
+    if mode == "free":
+        target.acquire(1, client="codex", base_ref="main")
+        assert lease_path.exists()
+    elif mode == "same-role":
+        owner.release(1)
+        assert not lease_path.exists()
+
+
+@pytest.mark.parametrize("lock", ["wt1.lock", "supervisor.lock"], ids=str)
+def test_rr2_real_lock_contention(rig, monkeypatch, lock):
+    ctl, _, host = rig; rr_session(monkeypatch)
+    request = rr_orphan(ctl, host)
+    path = ctl.inventory.state_root / "locks" / lock
+    with state.directory_lock(path, purpose="independent held lock"):
+        witness = {str(p): p.read_bytes() for p in path.iterdir() if p.is_file()}
+        _, error = captured(lambda: ctl.recover_orphan_backend_stop(1, **request))
+        assert isinstance(error, SlotError) and not host.signals and not host.launches
+        assert path.is_dir() and {str(p): p.read_bytes() for p in path.iterdir() if p.is_file()} == witness
+        assert not ctl.inventory.process_path("backend", 1).exists()
+    ctl.recover_orphan_backend_stop(1, **request)
+    assert host.signals and not ctl.inventory.process_path("backend", 1).exists()
+
+
+@pytest.mark.parametrize("failure", ["write", "flush", "interruption"], ids=str)
+def test_rr2_publication_io_failure(rig, monkeypatch, failure):
+    ctl, _, host = rig; rr_session(monkeypatch)
+    request = rr_orphan(ctl, host)
+    real_open = os.fdopen
+    class Stream:
+        def __init__(self, stream): self.stream = stream
+        def __enter__(self): self.stream.__enter__(); return self
+        def __exit__(self, *args): return self.stream.__exit__(*args)
+        def write(self, value):
+            if failure == "write": raise OSError("isolated recovery write failure")
+            return self.stream.write(value)
+        def flush(self):
+            if failure == "flush": raise OSError("isolated recovery flush failure")
+            if failure == "interruption": raise KeyboardInterrupt("isolated publication interruption")
+            return self.stream.flush()
+        def fileno(self): return self.stream.fileno()
+    def fdopen(fd, mode, *args, **kwargs):
+        stream = real_open(fd, mode, *args, **kwargs)
+        return Stream(stream) if mode == "wb" else stream
+    with monkeypatch.context() as patch:
+        patch.setattr(os, "fdopen", fdopen)
+        error = None
+        try:
+            ctl.recover_orphan_backend_stop(1, **request)
+        except BaseException as exc:
+            error = exc
+    assert isinstance(error, KeyboardInterrupt if failure == "interruption" else SlotError)
+    assert not host.signals and not host.launches, "RR publication failure has no native effects"
+    assert not ctl.inventory.process_path("backend", 1).exists()
+    assert not list((ctl.inventory.state_root / "processes").glob(".*.json.*"))
+    ctl.recover_orphan_backend_stop(1, **request)
+    assert host.signals
+
+
+def test_rr2_legacy_release_warning(rig, monkeypatch, capsys):
+    ctl, sup, host = rig; rr_session(monkeypatch)
+    config = read_json(ctl.inventory.source); config["server"]["backend_policy"] = "leased"
+    atomic_json(ctl.inventory.source, config)
+    ctl = Controller(Inventory.load(ctl.inventory.source)); sup = Supervisor(ctl.inventory)
+    ctl.acquire(1, client="codex", base_ref="main")
+    path = owned(sup, host, "backend", 1, 972001)
+    original = path.read_bytes(); host.denied_pids.add(972001)
+    ctl.release(1)
+    assert not ctl.inventory.lease_path(1).exists()
+    assert path.read_bytes() == original and not host.signals
+    assert "resource remains reserved" in capsys.readouterr().err
+    assert 1 in sup.capacity_census()["reserved_physical_slots"]
+    host.denied_pids.clear(); sup.stop_backend(1)
+    assert not path.exists() and host.signals == [(972001, signal.SIGTERM)]
+
+
+@pytest.mark.parametrize("origin", [None, True, False, "", "unknown", "operator_stop_only"],
+                         ids=["null", "true", "false", "blank", "unknown", "incomplete-stop-only"])
+def test_rr2_optional_origin_is_not_legacy(rig, monkeypatch, origin):
+    ctl, sup, host = rig; rr_session(monkeypatch)
+    path = owned(sup, host, "backend", 1, 973001)
+    legacy = read_json(path); corrupt = dict(legacy); corrupt["record_origin"] = origin
+    atomic_json(path, corrupt); original = path.read_bytes()
+    assert sup.process_state("backend", 1) == "unavailable", "RR explicit malformed origin is never legacy"
+    assert 1 in sup.capacity_census()["reserved_physical_slots"]
+    for operation in (lambda: ctl.acquire(1, client="codex", base_ref="main"), lambda: sup.stop_backend(1)):
+        _, error = captured(operation)
+        assert isinstance(error, SlotError) and not host.signals and not host.launches
+        assert path.read_bytes() == original and not ctl.inventory.lease_path(1).exists()
+    atomic_json(path, legacy)
+    ctl.acquire(1, client="codex", base_ref="main")
+    assert ctl.inventory.lease_path(1).exists()
+    sup.stop_backend(1)
+    assert host.signals == [(973001, signal.SIGTERM)] and not path.exists()
+
+
+def test_rr2_reverse_paired_physical_reservation(host, downstream_repo, monkeypatch):
+    target, public, _, _ = downstream_repo; rr_session(monkeypatch)
+    request = rr_orphan(target, host)
+    record = rr_retained_recovery(target, host, request); original = record.read_bytes()
+    _, error = captured(lambda: public.acquire(1, client="codex", base_ref="main"))
+    assert not public.inventory.lease_path(1).exists(), "RR reverse paired reservation preserves original FREE authority"
+    assert isinstance(error, SlotError) and record.read_bytes() == original
+    assert not host.signals and not host.launches
+    target.recover_orphan_backend_stop(1, **request, expected_residual_sha256=state.sha256_bytes(original))
+    assert not record.exists()
+    public.acquire(1, client="codex", base_ref="main")
+    assert public.inventory.lease_path(1).exists()

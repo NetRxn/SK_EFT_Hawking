@@ -487,10 +487,14 @@ and the full forensic review remain root-owned evidence, not new process authori
   under a common nonproject manager remain distinct. Retain stored generic/reparented
   descendants independently. Conflicting occupancy within one physical number blocks
   admission. Preserve the global maximum of three and fixed
-  project roots; no adoption or signaling of unknown processes.
+  project roots. Ordinary lifecycle paths MUST NOT adopt or signal unknown processes.
+  The explicit RR-3 stop-only recovery exception below requires explicit operator
+  authorization and complete fresh identity evidence; it grants no healthy reuse.
 - **LO-5 — Supervisor CLI scope is explicit (F5).** Reject `--slot` with `start`, `stop`
   or `status` before any action. Those existing verbs remain global. `probe` continues
-  to require `--slot`. Add no verbs or scoped lifecycle API. Existing root internal
+  to require `--slot`. Add no targeted start/stop/status verbs. LO adds no scoped
+  lifecycle API; the separate RR-3 controller recovery API is stop-only.
+  Existing root internal
   number APIs retain their scope. A conditional replacement of a known owned proxy
   requires target-slot then lifecycle locking, reliable lease FREE, a complete capable
   census, both-role backend/project/retained-descendant quiescence and independently
@@ -551,7 +555,8 @@ all-state TCP and native-thread witnesses supplement that evidence. Passive snap
 do not serialize outside HTTP requests, and daemon handler threads are not joined by
 server close. Unaccounted activity blocks replacement. Preserve rollback and measure
 loaded fingerprints, actual lease/MCP dispatch, release/reconnect and paired epochs
-separately. Nothing here permits adoption or signaling of unknown processes.
+separately. LO grants no adoption or signal authority for unknown processes; RR-3
+separately specifies the owner-authorized stop-only exception.
 
 
 <a id="2026-10-12-shared-runtime-source-fingerprint-proposal"></a>
@@ -667,3 +672,122 @@ controls and independent whole source review are accepted, and the reviewed file
 are present in the primary checkout. Current project gates, normal commit and
 separately measured native admission remain open. Historical originals and
 qualifying/invalid evidence remain retained.
+
+
+## Owned shutdown and operator-authorized orphan recovery
+
+**Status: design accepted; candidate source implemented, verification pending.**
+Independent whole-design review and ROOT intake accepted this contract. Candidate
+source, controls and mutation mappings now exist; source review/test acceptance and
+native recovery acceptance remain separate and pending. The operator has authorized fixing shutdown and restoring
+the affected slots; that authorization does not make an observation current or waive
+the controls below. The [design](../superpowers/specs/2026-10-12-owned-lean-shutdown-and-orphan-recovery-design.md)
+and [plan](../superpowers/plans/2026-10-12-owned-lean-shutdown-and-orphan-recovery.md)
+bind the implementation and acceptance requirements.
+
+### Context and measured constraints
+
+At source `33be8dbe04d3477788b2696633970c76fc72365f`, `state.observe_process`
+compares full `lstart` plus command identities with a capable complete census.
+`Supervisor._stop` persists descendant signatures, then signals reversed numeric PID
+order and requires those full signatures at each step. Numeric order is not ancestry
+order; an exited child's command can change while its PID remains present. Generic
+mismatch remains the correct observation, but refusing every such child prevents
+otherwise independently guarded live-parent shutdown. Native evidence and its limits
+are recorded in [RR1/RR2](../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/source.md).
+
+The existing process registry, `uncertain_residual` phase, slot/lifecycle locks,
+capacity census, clean/containment checks and final quiescence guards are the owners
+of this work. Missing registration deliberately provides no normal stop authority.
+The residue is a terminal-child shutdown case and an explicitly authorized route to
+stop an identified unregistered family; no second registry or recovery framework is
+needed.
+
+### Decisions
+
+- **RR-1 — Separate terminal observation from signal authority.** Keep generic
+  `observe_process` mismatch/absence semantics unchanged. A shutdown-only observer
+  may classify a retained descendant as native `Z` only with a genuine prior live
+  signature, matching observed birth information and capable coherent current
+  ancestry to an independently exact live root through independently exact live
+  ancestors. Command text such as `<defunct>` alone is never evidence of terminal
+  state. A zombie remains present, retains its original signature and reservation,
+  and MUST NOT receive a signal. The exception permits considering independently
+  owned live parents; it neither proves child absence nor authenticates another PID.
+  Legacy `lstart` is second-resolution observational evidence, not an atomic PID
+  generation handle. Do not manufacture historical parent/signal witnesses or finer
+  birth precision; genuine ambiguity affecting an actual signal still refuses.
+- **RR-2 — Stop by ancestry and prove final absence.** Use a complete validated
+  descendant graph, children before parents, with the root last. Before each live
+  target's existing `SIGTERM`, recheck exact identity and applicable ancestry; retain
+  every prior PID/signature and newly observed owned descendant before signalling.
+  Bound observation/reaping waits. Root-absent, reparented/unrelated mismatch,
+  denied/incomplete/drifting observations and unresolved residuals remain refusals.
+  Never `waitpid` a nonchild, infer reaping, send `SIGKILL`, or unregister on `Z`.
+  Success still requires actual absence of every retained PID and the existing full
+  endpoint/project/registry/capacity quiescence evidence.
+- **RR-3 — Authorize orphan stopping explicitly.** Propose only
+  `Controller.recover_orphan_backend_stop(...)`, calling a guarded unlocked
+  Supervisor operation under target-slot then one lifecycle lock. This is a new
+  narrow internal API, not an existing CLI command. It requires explicit operator
+  authorization bound to the target, expected full root/family identities, absent
+  initial registration, complete capable fresh unique fixed-project family and
+  configured listener attribution, no active lease, matching authorized session for
+  a quarantined lease, clean contained work and independently drained requests.
+  Resolve `backend_target` separately from the actual `lease_owner`. A same-session
+  downstream QUARANTINED lease may own the physical slot while its declared paired
+  public backend is the stop target. Require genuine declared pairing, the same
+  shared state root/physical number and capable canonical identities; run the actual
+  owning controller's unchanged `_lease_for_command` and work/pin checks. Keep
+  backend project/listener/record checks with the target. Approval, residual and
+  retry bind both roles/worktrees and the recorded dependency pin. FREE has no lease
+  owner. Do not accept arbitrary foreign roles, opposing active backends, loosen
+  role equality or rewrite a lease; an eligible paired quarantine is not itself a
+  resource conflict.
+  Reject ambiguity, competing families/listeners, stale identities and unavailable
+  evidence. Before any signal, exclusively and durably reserve the existing backend
+  record as `uncertain_residual`, explicitly marked `operator_stop_only`. It MUST NOT
+  claim a managed launch, `running`, runtime fingerprint, backend token or healthy
+  reuse. Preserve failures and reservations. The design defines tightly bound retry
+  of this same residual; no ordinary path silently admits an orphan.
+- **RR-4 — Recovery ends at stopped resources.** The route cannot start/reload a
+  service, release or rewrite a lease, reset a worktree, replace a cache, publish an
+  epoch, or transfer work. After actual quiescence, ROOT uses the actual lease-owner
+  controller's normal release, then normal build,
+  acquire, prepare, matching MCP probe and release/reconnect operations. Source,
+  isolated controls and native operational acceptance are separately recorded.
+  Existing broader test, paper and wave failures remain unwaived.
+
+### Overlap, alternatives and consequences
+
+RR-1/RR-2 extend owned `_stop`; LO-1 and every generic observer consumer retain their
+strict contract. RR-3 is an explicit exception to ordinary unknown-resource
+prohibitions in LO-4/LO-5 and the operator guide, with separate origin and stop-only
+authority. S-B/S-C and LO-6 still own lifecycle and lease semantics. S-G cache safety,
+S-Q client sessions and SF launch-source fingerprints are unchanged: a recovered
+record is never evidence that a process loaded current source. ADR-017 snapshots
+remain freshness evidence only.
+
+Rejected alternatives: changing generic mismatch to absence; treating a command
+string as zombie proof; signaling zombies or a process group; copying a current
+signature over the retained original; manually fabricating a running record;
+automatic unknown-PID adoption during start/prepare; a second recovery ledger;
+global supervisor restart; and weakening clean/containment or capacity gates.
+Conservative residual refusal can still require a later separately assessed recovery.
+No scientific, apex, whole-project or publication claim follows from this correction.
+
+The stop-only origin also reserves its original lease presence and bytes. Ordinary
+acquire/release must inspect the relevant target and declared paired target under
+the existing slot/lifecycle locks before creating, quarantining or unlinking a lease
+or restoring a counterpart. Refuse while that origin remains; preserve legacy
+managed post-unlink warning behavior. Shutdown bounds the union of retained IDs
+(including absent IDs), root and discovered descendants at 4096 before writing or
+signalling, validates every persisted record, and rejects final observed parent or
+rooted-chain drift after a durable write. These candidate repairs remain unverified.
+
+R3 limits the lease preflight to recovery provenance selected from bounded capable
+raw records. A readable known legacy record with no origin/recovery fields retains
+normal lease semantics; all resource readers remain strict. Explicit null, boolean,
+blank or unknown origins are invalid. A declared stop-only reservation protects the
+same physical slot across roles in either pairing direction. Opaque evidence still
+refuses. Post-SIGTERM passive timeout retains its phase and last typed observations.

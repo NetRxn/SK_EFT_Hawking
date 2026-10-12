@@ -1146,14 +1146,11 @@ def test_release_reconciles_the_backend_after_the_lease_is_gone(
     seen: list[tuple[str, bool]] = []
     monkeypatch.delenv("LEAN_SLOT_SKIP_SUPERVISOR", raising=False)
 
-    class FakeSupervisor:
-        def __init__(self, inventory):
-            self.inventory = inventory
+    import scripts.lean_slots.supervisor as sup
 
+    class FakeSupervisor(sup.Supervisor):
         def stop_backend(self, number):
             seen.append(("stop", leased.inventory.lease_path(number).exists()))
-
-    import scripts.lean_slots.supervisor as sup
 
     monkeypatch.setattr(sup, "Supervisor", FakeSupervisor)
     leased.release(1)
@@ -1170,14 +1167,11 @@ def test_a_default_policy_slot_keeps_its_backend_on_release(slot_repo, monkeypat
     calls: list[int] = []
     monkeypatch.delenv("LEAN_SLOT_SKIP_SUPERVISOR", raising=False)
 
-    class FakeSupervisor:
-        def __init__(self, inventory):
-            pass
+    import scripts.lean_slots.supervisor as sup
 
+    class FakeSupervisor(sup.Supervisor):
         def stop_backend(self, number):
             calls.append(number)
-
-    import scripts.lean_slots.supervisor as sup
 
     monkeypatch.setattr(sup, "Supervisor", FakeSupervisor)
     controller.release(1)
@@ -1193,14 +1187,11 @@ def test_a_supervisor_failure_never_fails_an_already_successful_release(
     prepare(leased, 1, client="claude")
     monkeypatch.delenv("LEAN_SLOT_SKIP_SUPERVISOR", raising=False)
 
-    class ExplodingSupervisor:
-        def __init__(self, inventory):
-            pass
+    import scripts.lean_slots.supervisor as sup
 
+    class ExplodingSupervisor(sup.Supervisor):
         def stop_backend(self, number):
             raise SlotError("supervisor is wedged")
-
-    import scripts.lean_slots.supervisor as sup
 
     monkeypatch.setattr(sup, "Supervisor", ExplodingSupervisor)
     leased.release(1)  # must not raise

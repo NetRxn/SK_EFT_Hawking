@@ -323,8 +323,10 @@ requires separate measured admission.
 It does not mean the backend has stopped. Current nonfatal stop warnings must remain
 visible. “Down”, a missing process JSON or the registered global count is not proof
 of host absence when observation is denied. Preserve originals and source bytes;
-never delete process registration, fabricate a signature, adopt/signal an unknown
-PID, bypass the supervisor, force a dirty reset or create a fourth backend.
+never delete process registration, fabricate a signature, bypass the supervisor,
+force a dirty reset or create a fourth backend. Ordinary lifecycle paths cannot
+adopt/signal an unknown PID. The explicit owner-authorized stop-only exception below
+requires its own complete fresh gates and does not authorize healthy reuse.
 
 If observation is unavailable or a backend listener is unknown, keep its physical
 number reserved and its project cache untouched. Root may collect bounded authorized
@@ -430,3 +432,95 @@ controls and independent whole source review are accepted, and the reviewed file
 are present in the primary checkout. Current project gates, normal commit and
 separately measured native admission remain open. Historical originals and
 qualifying/invalid evidence remain retained.
+
+
+## Owned-shutdown and orphan-stop procedure
+
+**Design accepted; candidate source implemented, verification pending.**
+The internal API is source-present; source acceptance and native recovery remain
+pending. There is no new CLI command.
+[ADR-008 RR-1–RR-4](../adrs/ADR-008-shared-lean-slot-control-plane.md#owned-shutdown-and-operator-authorized-orphan-recovery)
+and the [complete design](../superpowers/specs/2026-10-12-owned-lean-shutdown-and-orphan-recovery-design.md)
+govern this extension. Whole-design review and ROOT intake accepted the contract.
+ROOT must obtain bounded source acceptance before using it on native resources.
+An existing explicit operator authorization suffices within its recorded scope;
+routine recovery does not require repeatedly asking for the same permission.
+
+A retained native zombie is still a present process. Shutdown may use a separate
+native-state observation to recognize its terminal state while keeping generic
+identity mismatch visible and its original signature intact. The child is never
+signalled. Only independently exact live owned ancestors may receive the existing
+bounded `SIGTERM` sequence, ordered by ancestry. Legacy `lstart` is coarse birth
+evidence, not a race-free generation guarantee; missing native state, a bare
+`<defunct>` command, a lost root, reparenting or ambiguous identity cannot justify
+signalling. Require every retained PID actually absent and all normal quiescence
+guards satisfied before removing registration. Retain timeout/refusal evidence.
+
+For an unregistered backend, the internal API is
+`Controller.recover_orphan_backend_stop(...)`; it has no CLI spelling. Keep
+`supervisor start`, `stop` and `status` global, and `probe --slot N` unchanged.
+The canonical primary controller and matching repository interpreter remain
+mandatory. Both authority objects include `inventory_domain`, the existing canonical
+`Supervisor._inventory_domain` digest; a same-path domain change invalidates approval
+and retry. The reserved record retains bounded `admission_observations` and
+`error_observations`, separately from original identities and signal-delivery receipts.
+ROOT performs this sequence only after source acceptance:
+
+1. Bind existing operator approval to the exact slot/domain, expected full root
+   and family signatures and driving session, with separate `backend_target` and
+   actual `lease_owner` identities. Bind both canonical inventories/roles/worktrees,
+   shared state root/physical number and original dependency pin. Preserve original
+   witnesses. Freeze
+   dispatch/probes and account for completed requests; absent established TCP alone
+   does not prove handler completion. Inspect clean work and containment using
+   existing controller checks, preserving all quarantine/source evidence.
+2. Acquire target-slot then the single lifecycle lock. Reobserve the configured
+   project, unique complete family, exact expected identities, registry absence,
+   unique correct listener, all-state TCP and capacity/domain evidence. Refuse an
+   ACTIVE or other transitional lease. Allow only FREE or this session's matching
+   QUARANTINED lease, with clean contained work. Resolve a different-role owner only
+   through its genuine declared pairing to the target, same shared state root and
+   physical number. Use that actual owner's unchanged `_lease_for_command` and
+   work/containment checks; verify clean paired target path and recorded dependency
+   SHA without replacing the pin with a later primary HEAD. Backend family/listener/
+   record authority stays with the target. A legitimate paired quarantine alone is
+   not a conflict; arbitrary foreign roles and opposing active backends are refused.
+   FREE uses target containment with no synthesized owner. Opposing ownership, ambiguous roots,
+   foreign listeners, unavailable evidence and any drift block the operation.
+3. Before the first signal, exclusively publish and sync the existing process-path
+   reservation marked `operator_stop_only`, phase `uncertain_residual`. This is
+   explicit stop authority, never a reconstructed launch record: no runtime
+   fingerprint, token or `running` claim. Stop only the guarded family. Preserve
+   the durable record on interruption or failure; do not erase or restamp it.
+4. A deliberate retry uses the same API, an exact expected residual SHA-256 and
+   matching original target/lease-owner authorities and owner/authorization scope.
+   Recheck pairing, both worktrees, shared state root/number and unchanged dependency
+   pin. Repeat all fresh gates and preserve original signatures. Managed, foreign,
+   unknown or unmatched existing records
+   are refusals. Ordinary start/prepare/status cannot convert this record into
+   healthy managed service or silently resume recovery.
+5. Declare stopped only after actual every-PID absence and endpoint/project/registry/
+   capacity quiescence. Then use the actual lease-owner controller's normal release of a clean contained
+   quarantine, current authoritative build/epoch, acquire/prepare, matching native
+   MCP diagnostics, no-change release, and subsequent reconnect/capacity checks.
+   Measure each affected slot; FREE alone is never pool restoration.
+
+The recovery API neither starts/reloads services nor changes leases, caches, branches
+or epochs. No raw signals, process-group signals, `SIGKILL` or nonchild `waitpid`
+are substitutes. Proxy replacement, if separately necessary, retains the existing
+coordinated request-drain and LO-5 gates. The finding/plan separate source correction
+from native acceptance and leave broader failed project/paper gates unwaived.
+
+While a stop-only residual exists, ordinary acquisition/release refuses before
+changing the original FREE state or quarantined lease bytes, including the actual
+paired owner. Retry uses the original authorization and exact current residual hash;
+a failed ordinary lease operation does not mint new authority. Normal lease actions
+resume after complete recovery. Legacy managed release warnings remain unchanged.
+The combined retained/root/discovered shutdown graph is limited to 4096 identities;
+absent retained identities still count. Observed parent drift before a signal refuses.
+
+R3 preserves legacy lease behavior when bounded readable process provenance has no
+origin/recovery fields. This does not loosen status, prepare, capacity or stop record
+validation. Explicit malformed origins and opaque provenance refuse; recovery
+reservations cover every declared role at the physical slot, including reverse
+paired acquisition. Passive post-SIGTERM timeout retains typed diagnostic evidence.

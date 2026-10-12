@@ -39,12 +39,19 @@ from .state import (
     tool_list_key,
     read_json,
     sha256_bytes,
+    exclusive_durable_json,
+    observation_budget,
+    observation_timeout,
+    observe_shutdown_process,
+    observe_tcp_sockets,
+    signature_birth,
+    _signature_command,
 )
 
 
 def _port_observation(host: str, port: int, timeout: float = 0.15) -> Observation:
     try:
-        with socket.create_connection((host, port), timeout=timeout):
+        with socket.create_connection((host, port), timeout=observation_timeout(timeout)):
             return Observation("present", target=f"{host}:{port}", operation="connect")
     except OSError as exc:
         if exc.errno == errno.ECONNREFUSED:
@@ -574,6 +581,9 @@ class _RuntimeSourcePass:
                             "routing": routing}}
 
 
+MAX_SHUTDOWN_IDENTITIES = 4096  # One bound for retained/root/discovered persisted identities.
+
+
 class Supervisor:
     def __init__(self, inventory: Inventory | None = None):
         self.inventory = inventory or Inventory.load()
@@ -604,7 +614,7 @@ class Supervisor:
             invalid("running record lacks a complete root identity")
         if "descendants" in value:
             descendants = value["descendants"]
-            if not isinstance(descendants, list) or len(descendants) > 4096:
+            if not isinstance(descendants, list) or len(descendants) > MAX_SHUTDOWN_IDENTITIES:
                 invalid("descendants must be a bounded list of complete identities")
             identities = {}
             for child in descendants:
@@ -618,7 +628,56 @@ class Supervisor:
                 identities[child["pid"]] = child_signature
                 if child["pid"] == pid and signature is not None and child_signature != signature:
                     invalid("root and retained descendant signatures conflict")
+        origin = value.get("record_origin")
+        if "record_origin" in value or "recovery" in value:
+            if origin != "operator_stop_only" or kind != "backend" or version != 2 or phase != "uncertain_residual":
+                invalid("invalid stop-only recovery origin/phase")
+            if any(key in value for key in ("runtime_fingerprint", "launch_token", "command", "started_at", "initiator_pid", "backend_token")):
+                invalid("stop-only recovery cannot claim a managed launch")
+            recovery = value.get("recovery")
+            if not isinstance(recovery, dict) or set(recovery) != {"authorization", "expected_root", "expected_family", "reserved_at", "admission_observations", "error_observations"}:
+                invalid("incomplete recovery provenance")
+            if (not isinstance(recovery["reserved_at"], str) or not recovery["reserved_at"] or
+                    len(json.dumps(recovery)) > 262144):
+                invalid("unbounded recovery provenance")
+            for key in ("admission_observations", "error_observations"):
+                if (not isinstance(recovery[key], list) or len(recovery[key]) > 16 or
+                        any(not isinstance(row, dict) for row in recovery[key])):
+                    invalid("invalid bounded recovery observations")
+            root, family = recovery["expected_root"], recovery["expected_family"]
+            if root != {"pid": pid, "signature": signature} or not isinstance(family, list) or not family or len(family) > 4096:
+                invalid("recovery root/family mismatch")
+            expected = {}
+            for row in family:
+                if (not isinstance(row, dict) or set(row) != {"pid", "ppid", "signature"} or
+                        type(row["pid"]) is not int or row["pid"] <= 0 or type(row["ppid"]) is not int or row["ppid"] < 0 or
+                        row["pid"] in expected or not isinstance(row["signature"], str) or signature_birth(row["signature"]) is None):
+                    invalid("invalid recovery family identity")
+                expected[row["pid"]] = row["signature"]
+            if expected != {row["pid"]: row["signature"] for row in value.get("descendants", [])}:
+                invalid("recovery original identities changed")
+            auth = recovery["authorization"]
+            if (not isinstance(auth, dict) or set(auth) != {"approval_ref", "drain_receipt", "dispatch_frozen", "requests_drained", "owner_session_hash", "backend_target", "lease_owner"} or
+                    auth["dispatch_frozen"] is not True or auth["requests_drained"] is not True or
+                    any(not isinstance(auth[key], str) or not auth[key].strip() or len(auth[key]) > 2048 for key in ("approval_ref", "drain_receipt")) or
+                    not isinstance(auth["owner_session_hash"], str) or len(auth["owner_session_hash"]) != 64):
+                invalid("invalid recovery approval/drain/owner binding")
+            target = auth["backend_target"]
+            if target != self.recovery_target(number):
+                invalid("recovery target authority mismatch")
+            owner = auth["lease_owner"]
+            if owner is not None and (not isinstance(owner, dict) or set(owner) != {"inventory_source", "inventory_domain", "repo_role", "worktree", "state_root", "slot", "public_dependency_sha", "lease_sha256"} or
+                                      owner["state_root"] != str(self.inventory.state_root) or owner["slot"] != number or
+                                      not isinstance(owner["inventory_domain"], str) or len(owner["inventory_domain"]) != 64):
+                invalid("invalid recovery lease-owner authority")
         return value  # Preserve legacy fields/bytes; never manufacture or silently drop pins.
+
+    def recovery_target(self, number: int) -> dict[str, Any]:
+        return {"inventory_source": str(self.inventory.source), "repo_role": self.inventory.repo_role,
+                "inventory_domain": self._inventory_domain(self.inventory),
+                "worktree": str(self.inventory.worktree(number)), "project": str(self.inventory.lean_root(number)),
+                "state_root": str(self.inventory.state_root), "slot": number,
+                "process_path": str(self.inventory.process_path("backend", number))}
 
     def _read_metadata(self, kind: str, number: int) -> tuple[dict[str, Any] | None, tuple[Observation, ...]]:
         path = self.inventory.process_path(kind, number)
@@ -780,7 +839,7 @@ class Supervisor:
             return None
         try:
             result = subprocess.run(["git", "rev-parse", "--show-toplevel", "--git-common-dir", "--git-dir"],
-                                    cwd=root, check=False, capture_output=True, text=True, timeout=2)
+                                    cwd=root, check=False, capture_output=True, text=True, timeout=observation_timeout())
         except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
             return unavailable(str(exc), exc=exc)
         lines = result.stdout.splitlines()
@@ -1121,16 +1180,47 @@ class Supervisor:
                 raise SlotError(f"launch failed: {original}; residual retained: {rollback_error}") from original
             raise
 
-    def _stop(self, kind: str, number: int, port: int) -> None:
+    def _confirm_stop_quiescence(self, kind: str, number: int) -> None:
+        self._assert_quiescent(kind, number)
+        if kind == "backend":
+            capacity = self.capacity_census()
+            if not capacity["complete"] or capacity["conflicts"]:
+                raise SlotError("stop capacity/registry quiescence unavailable or conflicting")
+        observation_timeout()
+
+    def _stop(self, kind: str, number: int, port: int, *, recovery_sha256: str | None = None) -> None:
+        with observation_budget(10):
+            try:
+                self._stop_owned(kind, number, port, recovery_sha256=recovery_sha256)
+            except (OSError, subprocess.TimeoutExpired) as exc:
+                raise SlotError(f"owned stop failed; registration retained: {exc}") from exc
+
+    def _persist_stop(self, path: Path, metadata: dict[str, Any]) -> None:
+        observation_timeout()
+        self._validate_record(metadata, metadata["kind"], metadata["slot"])
+        atomic_json(path, metadata)
+        directory = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+        observation_timeout()
+
+    def _stop_owned(self, kind: str, number: int, port: int, *, recovery_sha256=None) -> None:
         path = self.inventory.process_path(kind, number)
         metadata = self._metadata(kind, number)
+        if metadata and metadata.get("record_origin") == "operator_stop_only":
+            if recovery_sha256 is None or sha256_bytes(path.read_bytes()) != recovery_sha256:
+                raise SlotError("stop-only residual requires explicit controller recovery and exact hash")
         if metadata is None or not metadata.get("signature"):
-            self._assert_quiescent(kind, number)
+            self._confirm_stop_quiescence(kind, number)
+            observation_timeout()
             path.unlink(missing_ok=True)
             return
         seen = observe_process(int(metadata.get("pid", 0)), metadata["signature"])
         if seen.state == "absent":
-            self._assert_quiescent(kind, number)
+            self._confirm_stop_quiescence(kind, number)
+            observation_timeout()
             path.unlink(missing_ok=True)
             return
         if seen.state != "present":
@@ -1143,36 +1233,260 @@ class Supervisor:
         census_identities = {row.pid: row.signature for row in census.rows}
         if census_identities.get(int(metadata["pid"])) != metadata["signature"]:
             raise SlotError("refusing stop: wrapper census identity unavailable/mismatch", observations=(census.as_observation(),))
-        owned = []
+        retained = set(identities)
         pids = census.descendants(int(metadata["pid"])) | set(identities)
+        if len(pids) > MAX_SHUTDOWN_IDENTITIES:  # RR combined retained/root/discovered identity bound.
+            raise SlotError("combined shutdown family exceeds retained identity bound")
         for pid in sorted(pids):
             child = observe_process(pid, identities.get(pid, census_identities.get(pid)))
             if child.state == "absent":
                 continue
-            if child.state != "present" or not child.signature:
+            if pid in retained:
+                continue  # Classified below, without replacing the original signature.
+            native = observe_shutdown_process(pid)
+            if (child.state != "present" or not child.signature or native.state != "present" or
+                    native.identity["native_state"].startswith("Z")):
                 raise SlotError("refusing stop: descendant identity unavailable/mismatch", observations=(child,))
-            owned.append({"pid": pid, "signature": child.signature})
-        # Durable descendants survive wrapper exit/reparenting and future invocations.
-        metadata["descendants"] = owned
-        atomic_json(path, metadata)
-        for child in reversed(owned):
-            check = observe_process(child["pid"], child["signature"])
-            if check.state == "absent":
+            identities[pid] = child.signature
+        if metadata.get("record_origin") == "operator_stop_only" and set(identities) != retained:
+            raise SlotError("recovery family drift; original reservation retained")
+        # Newly discovered children have just supplied genuine live identities.
+        # Persist these originals before any effect, just like legacy retained IDs.
+        terminal_eligible = set(identities)
+        root = int(metadata["pid"])
+
+        def classified():
+            snapshot = process_snapshot()
+            if snapshot.state != "present":
+                raise SlotError("shutdown ancestry unavailable", observations=(snapshot.as_observation(),))
+            rows = {row.pid: row for row in snapshot.rows}
+            if snapshot.descendants(root) - set(identities):
+                raise SlotError("new shutdown descendant; retained graph cannot authorize it")
+            states, depths = {}, {}
+            for pid, signature in identities.items():
+                observed = observe_process(pid, signature)
+                if observed.state == "absent":
+                    if pid in rows:
+                        raise SlotError("shutdown absence/census drift")
+                    states[pid] = "absent"; depths[pid] = -1
+                    continue
+                native = observe_shutdown_process(pid)
+                if native.state != "present" or pid not in rows or native.identity["ppid"] != rows[pid].ppid:
+                    raise SlotError("shutdown native state unavailable/drifting", observations=(observed, native))
+                terminal = native.identity["native_state"].startswith("Z")
+                if terminal:
+                    if (pid == root or pid not in terminal_eligible or
+                            _signature_command(signature) in {None, "<defunct>"} or
+                            signature_birth(signature) != native.identity["birth"] or
+                            observed.state not in {"present", "mismatch"}):
+                        raise SlotError("unqualified terminal shutdown identity", observations=(observed, native))
+                    states[pid] = "terminal"
+                elif (observed.state == "present" and native.identity["birth"] == signature_birth(signature) and
+                      native.identity["command"] == _signature_command(signature)):
+                    states[pid] = "live"
+                else:
+                    raise SlotError("shutdown live identity mismatch/unavailable", observations=(observed, native))
+            for pid, state in states.items():
+                if state == "absent":
+                    continue
+                ancestor, chain = pid, set()
+                while ancestor != root:
+                    if ancestor in chain or ancestor not in rows:
+                        raise SlotError("shutdown ancestry incomplete/cyclic")
+                    chain.add(ancestor); ancestor = rows[ancestor].ppid
+                    if ancestor not in identities:
+                        raise SlotError("retained descendant reparented outside owned root")
+                    if states.get(ancestor) != "live":
+                        raise SlotError("shutdown ancestor is not independently exact/live")
+                depths[pid] = len(chain)
+            if states.get(root) != "live":
+                raise SlotError("shutdown root is not independently live")
+            return states, depths, {pid: rows[pid].ppid for pid in states if states[pid] != "absent"}
+
+        states, depths, parents = classified()
+        metadata["descendants"] = [{"pid": pid, "signature": sig} for pid, sig in sorted(identities.items())]
+        receipts = []  # This invocation only; old descendant lists prove no signal history.
+        metadata["shutdown"] = {"attempted_at": now_iso(), "delivered_sigterm": receipts}
+        self._validate_record(metadata, kind, number)
+        self._persist_stop(path, metadata)  # RR persist original identities before any signal.
+        order = sorted((pid for pid in identities if states[pid] != "absent"), key=lambda pid: (-depths[pid], pid))
+        for pid in order:
+            try:
+                states, _, parents = classified()
+            except SlotError:
+                if not receipts:
+                    raise
+                break  # A delivered signal permits passive waiting, never weaker authority.
+            if states[pid] == "absent":
                 continue
-            if check.state != "present":
-                raise SlotError("refusing to signal mismatched/unavailable owned descendant", observations=(check,))
-            os.kill(child["pid"], signal.SIGTERM)
-        deadline = time.monotonic() + 10
-        while time.monotonic() < deadline:
-            results = [observe_process(child["pid"], child["signature"]) for child in owned]
-            if any(item.state in {"unavailable", "mismatch"} for item in results):
-                raise SlotError("post-SIGTERM observation unavailable/mismatch; registration retained", observations=tuple(results))
-            if all(item.state == "absent" for item in results):
-                self._assert_quiescent(kind, number)
-                path.unlink(missing_ok=True)
-                return
-            time.sleep(0.1)
-        raise SlotError("owned process did not stop; registration retained; no automatic SIGKILL", observations=tuple(results))
+            if states[pid] == "terminal":  # RR terminal descendants never receive signals.
+                continue
+            self._persist_stop(path, metadata)
+            # Reobserve the entire rooted chain after the intervening durable write.
+            # Observed drift is a refusal, not the unavoidable final OS scheduling race.
+            try:
+                final_states, _, final_parents = classified()
+                if final_parents != parents or final_states != states:
+                    raise SlotError("shutdown rooted ancestry changed after durable write")
+            except SlotError:
+                if not receipts:
+                    raise
+                break
+            check = observe_process(pid, identities[pid])
+            native = observe_shutdown_process(pid)
+            if (check.state != "present" or native.state != "present" or native.identity["native_state"].startswith("Z") or
+                    native.identity["birth"] != signature_birth(identities[pid]) or
+                    native.identity["command"] != _signature_command(identities[pid]) or
+                    native.identity["ppid"] != final_parents[pid]):  # RR final observed parent guard.
+                if not receipts:
+                    raise SlotError("live target changed before SIGTERM", observations=(check, native))
+                break
+            observation_timeout()
+            os.kill(pid, signal.SIGTERM)
+            receipts.append({"pid": pid, "signature": identities[pid], "delivered_at": now_iso()})
+            self._persist_stop(path, metadata)
+        results = []
+        try:
+            while True:
+                results = [observe_process(pid, signature) for pid, signature in identities.items()]
+                if all(item.state == "absent" for item in results):  # RR actual every-PID absence.
+                    self._confirm_stop_quiescence(kind, number)
+                    observation_timeout()
+                    path.unlink(missing_ok=True)
+                    return
+                # Exit transitions permit passive observation, never another signal.
+                time.sleep(observation_timeout(0.1))
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise SlotError(f"post-SIGTERM passive observation failed; registration retained: {exc}",
+                            observations=tuple(results[-16:])) from exc
+
+    def _recover_orphan_backend_stop_unlocked(self, number, *, expected_root, expected_family,
+                                               authorization, expected_residual_sha256=None,
+                                               revalidate_authority) -> None:
+        """Only the explicit controller entry calls this under slot/lifecycle locks."""
+        path = self.inventory.process_path("backend", number)
+        initial, _ = self._read_metadata("backend", number)
+        retry = expected_residual_sha256 is not None
+        if retry:
+            if (initial is None or initial.get("record_origin") != "operator_stop_only" or
+                    sha256_bytes(path.read_bytes()) != expected_residual_sha256):
+                raise SlotError("recovery retry requires exact stop-only residual hash")
+            retained = initial["recovery"]
+            if (retained["authorization"] != authorization or retained["expected_root"] != expected_root or
+                    retained["expected_family"] != expected_family):
+                raise SlotError("recovery retry authority/original identity changed")
+            record = initial
+        else:
+            if initial is not None:
+                raise SlotError("initial recovery requires absent backend registration")
+            record = {"schema_version": SCHEMA_VERSION, "process_schema_version": 2,
+                      "phase": "uncertain_residual", "record_origin": "operator_stop_only",
+                      "kind": "backend", "slot": number, "repo_role": self.inventory.repo_role,
+                      "pid": expected_root.get("pid"), "signature": expected_root.get("signature"),
+                      "descendants": [{"pid": row.get("pid"), "signature": row.get("signature")} for row in expected_family],
+                      "recovery": {"expected_root": expected_root, "expected_family": expected_family,
+                                   "authorization": authorization, "reserved_at": now_iso(),
+                                   "admission_observations": [], "error_observations": []}}
+        self._validate_record(record, "backend", number)
+
+        def fresh_family():
+            revalidate_authority()
+            capacity = self.capacity_census()
+            # Terminal retained signatures remain generic mismatches; retry stop owns
+            # their separate classification. All other capacity errors still refuse.
+            allowed = {f"{self.inventory.repo_role} wt{number} retained descendant mismatch"}
+            if capacity["conflicts"] or any(error not in allowed or not retry for error in capacity["errors"]):
+                raise SlotError("orphan recovery capacity unavailable/conflicting")
+            census = process_snapshot()
+            if census.state != "present":
+                raise SlotError("orphan family census unavailable", observations=(census.as_observation(),))
+            rows = {row.pid: row for row in census.rows}
+            root = expected_root["pid"]
+            expected = {row["pid"]: row for row in expected_family}
+            observed = set(rows) & set(expected)
+            if (not retry and observed != set(expected)) or (root not in observed and observed):
+                raise SlotError("orphan root/family absent or reparented")
+            actual = census.descendants(root) & set(rows)
+            if actual != observed:
+                raise SlotError("orphan family incomplete or contains unexpected descendants")
+            project = str(self.inventory.lean_root(number))
+            project_rows = [row for row in census.rows if project in row.command]
+            roots = self._project_roots(census, project_rows, project, [])
+            if {row.pid for row in roots} != ({root} if observed else set()):
+                raise SlotError("orphan project has ambiguous or competing roots")
+            for pid in observed:
+                wanted = expected[pid]
+                if rows[pid].ppid != wanted["ppid"]:
+                    raise SlotError("orphan ancestry changed")
+                seen = observe_process(pid, wanted["signature"])
+                native = observe_shutdown_process(pid)
+                zombie = (retry and pid != root and native.state == "present" and
+                          native.identity["native_state"].startswith("Z") and
+                          native.identity["birth"] == signature_birth(wanted["signature"]))
+                if (native.state != "present" or native.identity["ppid"] != wanted["ppid"] or
+                        (seen.state != "present" and not (seen.state == "mismatch" and zombie)) or
+                        (native.identity["native_state"].startswith("Z") and not zombie)):
+                    raise SlotError("orphan exact native identity unavailable/mismatch", observations=(seen, native))
+            if observed:
+                args = shlex.split(rows[root].command)
+                for flag, value in (("--lean-project-path", project), ("--host", str(self.inventory.raw["server"]["host"])),
+                                    ("--port", str(self.inventory.slot(number)["backend_port"])), ("--transport", "streamable-http")):
+                    if args.count(flag) != 1 or args.index(flag) + 1 >= len(args) or args[args.index(flag) + 1] != value:
+                        raise SlotError("orphan fixed project/host/port command mismatch")
+            sockets, witness = observe_tcp_sockets()
+            if witness.state != "present":
+                raise SlotError("orphan listener/TCP observation unavailable", observations=(witness,))
+            port = int(self.inventory.slot(number)["backend_port"])
+            address = f"{self.inventory.raw['server']['host']}:{port}"
+            listeners = [row for row in sockets if row["state"] == "LISTEN" and row["name"].rsplit(":", 1)[-1] == str(port)]
+            if (not retry and len(listeners) != 1) or len(listeners) > 1:
+                raise SlotError("orphan listener is not unique")
+            if any(row["pid"] not in observed or row["name"] != address for row in listeners):
+                raise SlotError("orphan listener has foreign ownership/address")
+            if any(row["pid"] in observed and (row not in listeners or row["state"] != "LISTEN") for row in sockets):
+                raise SlotError("orphan family has unaccounted TCP activity")
+            endpoint = _port_observation(str(self.inventory.raw["server"]["host"]), port)
+            if endpoint.state != ("present" if listeners else "absent"):
+                raise SlotError("orphan endpoint/listener observations disagree", observations=(endpoint,))
+            return {"observed_at": now_iso(), "operation": "orphan-stop-admission", "state": "present",
+                    "family_pids": sorted(observed), "listener_pids": [row["pid"] for row in listeners],
+                    "inventory_domain": self._inventory_domain(self.inventory),
+                    "capacity_complete": capacity["complete"], "capacity_errors": capacity["errors"][:16],
+                    "tcp": witness.as_dict(), "endpoint": endpoint.as_dict()}
+
+        admission = fresh_family()
+        if not retry:
+            record["recovery"]["admission_observations"] = [admission]
+            self._validate_record(record, "backend", number)
+            exclusive_durable_json(path, record)  # RR no signal before complete durable reservation.
+        try:
+            current = self._metadata("backend", number)
+            if current != record:
+                raise SlotError("recovery reservation changed before stop")
+            admission = fresh_family()
+            record["recovery"]["admission_observations"] = (record["recovery"]["admission_observations"] + [admission])[-16:]
+            self._validate_record(record, "backend", number)
+            self._persist_stop(path, record)
+            digest = sha256_bytes(path.read_bytes())
+            self._stop("backend", number, int(self.inventory.slot(number)["backend_port"]), recovery_sha256=digest)
+        except (SlotError, OSError) as exc:
+            # Keep bounded admission/error evidence on our own reserved record.
+            # Failure to write evidence never removes the durable reservation.
+            try:
+                residual = self._metadata("backend", number)
+                if (residual and residual.get("record_origin") == "operator_stop_only" and
+                        residual["recovery"]["authorization"] == authorization and
+                        residual["recovery"]["expected_root"] == expected_root and
+                        residual["recovery"]["expected_family"] == expected_family):
+                    evidence = {"observed_at": now_iso(), "operation": "orphan-stop-failure",
+                                "error_class": type(exc).__name__, "detail": str(exc)[:2048],
+                                "observations": [item.as_dict() for item in getattr(exc, "observations", ())[:8]]}
+                    residual["recovery"]["error_observations"] = (residual["recovery"]["error_observations"] + [evidence])[-16:]
+                    self._validate_record(residual, "backend", number)
+                    self._persist_stop(path, residual)
+            except (SlotError, OSError):
+                pass
+            raise
 
     def backend_command(self, number: int) -> list[str]:
         slot = self.inventory.slot(number)
@@ -1733,7 +2047,7 @@ class Supervisor:
                     witnesses.extend(exc.observations); errors.append(str(exc))
         return {"state": state,
                 "record_phase": "unavailable" if metadata_error else metadata.get("phase", "running") if metadata else "missing",
-                "identity_authority": "unavailable" if metadata_error or identity_error else "managed" if metadata and metadata.get("signature") else "unverified" if metadata else "none",
+                "identity_authority": "unavailable" if metadata_error or identity_error else "stop_only_recovery" if metadata and metadata.get("record_origin") == "operator_stop_only" else "managed" if metadata and metadata.get("signature") else "unverified" if metadata else "none",
                 "recorded_pid": metadata.get("pid") if metadata else unvalidated_pid,
                 "process_observation": process.state, "process_detail": process.detail,
                 "endpoint_observation": endpoint.state, "endpoint_detail": endpoint.detail,
