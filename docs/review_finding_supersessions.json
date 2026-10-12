@@ -10440,6 +10440,36 @@
         "enforced": true,
         "run_at": "2026-10-12"
       }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-runner-recovery:source:1",
+      "status": "fixed",
+      "evidence": "Shutdown-only terminal evidence, fresh ancestry and final live guards, bounded family observations and guarded stop-only orphan recovery are independently reviewed and integrated at 6db2cde. ROOT executed 26 meaningful sole-guard mutations with exact restoration, candidate 390-pass regression and canonical-primary 391-pass regression. Original managed and orphan families were stopped with owner, work and dependency pins retained; all three public normal cycles, two repeat reconnect cycles and paired native HTTP cycles passed with warning-free releases. Fresh canonical public and paired doctor/status checks passed with FREE leases, current front doors, absent backends and complete zero-reserved capacity. See review-r4.md and the ROOT final native-admission receipt c81b1ccbbb6ecf64055776a78dada2a96ee024ad78bea387ebe452eb103490a7. Full-project FAST completion, broader historical failures, merged-wave and publication gates remain open; no scientific acceptance is implied.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md",
+      "date": "2026-10-12",
+      "commit": "6db2cde4036587627f07077a67868809aa856f34",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr1",
+        "declared": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr1",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-runner-recovery:source:2",
+      "status": "fixed",
+      "evidence": "Shutdown-only terminal evidence, fresh ancestry and final live guards, bounded family observations and guarded stop-only orphan recovery are independently reviewed and integrated at 6db2cde. ROOT executed 26 meaningful sole-guard mutations with exact restoration, candidate 390-pass regression and canonical-primary 391-pass regression. Original managed and orphan families were stopped with owner, work and dependency pins retained; all three public normal cycles, two repeat reconnect cycles and paired native HTTP cycles passed with warning-free releases. Fresh canonical public and paired doctor/status checks passed with FREE leases, current front doors, absent backends and complete zero-reserved capacity. See review-r4.md and the ROOT final native-admission receipt c81b1ccbbb6ecf64055776a78dada2a96ee024ad78bea387ebe452eb103490a7. Full-project FAST completion, broader historical failures, merged-wave and publication gates remain open; no scientific acceptance is implied.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md",
+      "date": "2026-10-12",
+      "commit": "6db2cde4036587627f07077a67868809aa856f34",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr2",
+        "declared": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr2",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
     }
   ]
 }

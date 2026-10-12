@@ -676,10 +676,17 @@ qualifying/invalid evidence remain retained.
 
 ## Owned shutdown and operator-authorized orphan recovery
 
-**Status: design accepted; candidate source implemented, verification pending.**
-Independent whole-design review and ROOT intake accepted this contract. Candidate
-source, controls and mutation mappings now exist; source review/test acceptance and
-native recovery acceptance remain separate and pending. The operator has authorized fixing shutdown and restoring
+**Status: scoped source and native recovery accepted (2026-10-12).**
+Independent whole-source review and ROOT execution accepted the repair at
+`6db2cde4036587627f07077a67868809aa856f34`: 391 primary runner regressions and
+26 meaningful mutation/restoration controls passed. All three public normal cycles,
+slots 1/2 reconnect cycles and the separate paired native checks passed, followed by
+warning-free releases and healthy canonical audits with no retained backends.
+RR1/RR2 are fixed through the canonical closure writer; the original review is
+retained. See the [re-review](../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md)
+and [native admission](../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/native-admission-r1.json).
+The historical candidate checkpoints below are superseded for this bounded scope.
+Broader project, merged-wave, mathematical and publication gates remain open. The operator has authorized fixing shutdown and restoring
 the affected slots; that authorization does not make an observation current or waive
 the controls below. The [design](../superpowers/specs/2026-10-12-owned-lean-shutdown-and-orphan-recovery-design.md)
 and [plan](../superpowers/plans/2026-10-12-owned-lean-shutdown-and-orphan-recovery.md)

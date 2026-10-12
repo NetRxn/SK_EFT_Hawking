@@ -1,0 +1,209 @@
+{
+  "schema": "lean-runner-recovery-native-admission/v1",
+  "recorded_at": "2026-10-12T19:49:42.647405+00:00",
+  "operator": "ROOT, same authorized owner session; native execution distinct from independent source review",
+  "public_source_commit": "6db2cde4036587627f07077a67868809aa856f34",
+  "scope": "Bounded controller repair and restored public physical pool. Public slots share three physical capacity units with their declared paired role.",
+  "source_control_receipt_sha256": "a1fc729bba8cf8afb8667062d0597b5ec351090f795e8906c511395877716c6d",
+  "first_three_public_cycles": [
+    {
+      "slot": 1,
+      "normal_acquire_prepare": "PASS",
+      "attached_Lean_diagnostic": "PASS",
+      "HTTP_initialize_list_diagnostic_DELETE": "PASS",
+      "HTTP_session_cleanup_status": 200,
+      "normal_release_no_warning": true,
+      "release_started": "2026-10-12T19:27:53.521930+00:00",
+      "release_ended": "2026-10-12T19:27:59.107564+00:00",
+      "actual_raw_result_sha256": {
+        "acquire": "69ce00076f297c7b66e5268835762f88e46dd89a5136cbd112229f7ba714ac22",
+        "prepare": "4242bd5f4721d5f9bdb5c46def09f30e585971bae12b7fe4eb31dfa0a93bbf8a",
+        "attached_diagnostic": "efdcd3a148fb815c3540f379073e3369863533c64fca272359004e292205d12b",
+        "HTTP_probe": "3e7f4c18757aab02d89c5d76ec53c8be545c2ce88169b4656e0cb0c48250bccd",
+        "normal_release": "7e083663d6210f5f35cd980c9d11cbe648d4b9bf6f11ba942074b4a4cc7085c0"
+      }
+    },
+    {
+      "slot": 2,
+      "normal_acquire_prepare": "PASS",
+      "attached_Lean_diagnostic": "PASS",
+      "HTTP_initialize_list_diagnostic_DELETE": "PASS",
+      "HTTP_session_cleanup_status": 200,
+      "normal_release_no_warning": true,
+      "release_started": "2026-10-12T19:27:59.149140+00:00",
+      "release_ended": "2026-10-12T19:28:04.516282+00:00",
+      "actual_raw_result_sha256": {
+        "acquire": "f9445a7daa6504b145751d9c4ea7e632f3031ffb300fca786961d4abdf16b310",
+        "prepare": "eb213e89ff174b83fe489034e770c5ed6c6945a616cceeaa52088ab1ed4bcaa5",
+        "attached_diagnostic": "efdcd3a148fb815c3540f379073e3369863533c64fca272359004e292205d12b",
+        "HTTP_probe": "4583e6bc6b37dad6942fd6612701473e25f1afd922d5cbc8674bc3471d4db92e",
+        "normal_release": "83db4d64820bba264ea69c363cc87bc204121fa030cd7389f257d0ea63e21001"
+      }
+    },
+    {
+      "slot": 3,
+      "normal_acquire_prepare": "PASS",
+      "attached_Lean_diagnostic": "PASS",
+      "HTTP_initialize_list_diagnostic_DELETE": "PASS",
+      "HTTP_session_cleanup_status": 200,
+      "normal_release_no_warning": true,
+      "release_started": "2026-10-12T19:28:04.557774+00:00",
+      "release_ended": "2026-10-12T19:28:09.963570+00:00",
+      "actual_raw_result_sha256": {
+        "acquire": "7c5f8f956dab831daa6e6626432a3a548ada799341c4c525974715387dcc314d",
+        "prepare": "ba5f1538ea3346be04926e4057054f0cbfa647d5571e1333b78627986b1fc45b",
+        "attached_diagnostic": "efdcd3a148fb815c3540f379073e3369863533c64fca272359004e292205d12b",
+        "HTTP_probe": "47e5e74341fad0943f8c0459be979c2bd97aa489271e0e09bb3314ced1ab8f56",
+        "normal_release": "decf3cff44d9d59399cebb83a45ca72816f82ec5c3b13c6ead2789d556a49e0d"
+      }
+    }
+  ],
+  "first_public_cycle_receipt_sha256": "4d799f8f9ec85539be911f213c8956dcef56dc034e9e1ed9a00ba6391c32a45a",
+  "reconnect_cycles": [
+    {
+      "slot": 1,
+      "result": "PASS",
+      "real_new_HTTP_session": true,
+      "raw_result_sha256": {
+        "acquire": "8a37db257a2978d7c9a03305e01d4883394c3674bec7b3a39a846b51cf93c2c4",
+        "prepare": "733b2461d2772eaa80b041a1f9e2c7f38db7d3c8993a482a3128b713b18b79ff",
+        "release": "42bdf830ecf6b0a451e8c94f24dce043f8a34b61d7f0f402d0fec57f11b24713",
+        "HTTP_probe": "988a9a849ef44d55b97895bceaf5f6bd017695a3f6ab9a401c573e38ddd0b27f"
+      },
+      "normal_release_no_warning": true,
+      "release_started": "2026-10-12T19:46:32.769599+00:00",
+      "release_ended": "2026-10-12T19:46:38.047382+00:00",
+      "HTTP_cleanup_status": 200
+    },
+    {
+      "slot": 2,
+      "result": "PASS",
+      "real_new_HTTP_session": true,
+      "raw_result_sha256": {
+        "acquire": "6f8e07306ddbca0ede2fe936d6cbb448d8cff5916da17649278d17122feda3d3",
+        "prepare": "0ce071eaf216e6ead6d52a590c0508790814e0969cb47ecac369dfc6cf2cdbe4",
+        "release": "41f5cff4e9872347f37196f005a4b165f9ef264439113ff342008f10566c72b4",
+        "HTTP_probe": "36a81e55f986b5341ec999d8c29fc65abc33472417b492356e7d73d95d884376"
+      },
+      "normal_release_no_warning": true,
+      "release_started": "2026-10-12T19:47:50.320599+00:00",
+      "release_ended": "2026-10-12T19:47:55.853043+00:00",
+      "HTTP_cleanup_status": 200
+    }
+  ],
+  "source_sha256": {
+    "scripts/lean_slots/state.py": "51e303ff7f9e963eb466d0002adcecb3be8cc645cc87422eb826bfb4e079dafc",
+    "scripts/lean_slots/supervisor.py": "adb3e171903533c9518911f157414dacf1b593eb254db205b5b1748a5ae0ea37",
+    "scripts/lean_slots/controller.py": "0c07cc23885529bb08782a1966a687fc7e72fb0583882387d6cebe28cf2a5ea9",
+    "scripts/lean_slots/cli.py": "8448fbdbeaf683a602f93d50096865ca037d0ed4da7487f4595cc27148fce942"
+  },
+  "fresh_public_canonical_audit": {
+    "status_raw_sha256": "92f7bfeb4fabd952370288b18e0471af77dbd558ba214e60a2ee344a96b66e4a",
+    "doctor_raw_sha256": "7b1fef5b9abfaad32a75d33cc0c29568847fa0d9c55c7fa4f96f22c0178b057a",
+    "doctor_ok": true,
+    "physical_capacity": 3,
+    "complete": true,
+    "reserved_physical_slots": [],
+    "conflicts": [],
+    "running_heavy_backends": 0,
+    "slots": [
+      {
+        "slot": 1,
+        "lease_state": "FREE",
+        "proxy_state": "running",
+        "backend_state": "down",
+        "worktree_clean": true
+      },
+      {
+        "slot": 2,
+        "lease_state": "FREE",
+        "proxy_state": "running",
+        "backend_state": "down",
+        "worktree_clean": true
+      },
+      {
+        "slot": 3,
+        "lease_state": "FREE",
+        "proxy_state": "running",
+        "backend_state": "down",
+        "worktree_clean": true
+      }
+    ]
+  },
+  "historical_owned_and_orphan_cleanup": [
+    {
+      "slot": 1,
+      "raw_stop_result_sha256": "e7a0347bb2df9f8be48fc191a9d894770346b8a9510ee59aca6d15b343e0f086",
+      "stop_returned": true,
+      "all_retained_PID_and_endpoint_project_quiescence": "PASS through canonical guarded stop; original refusal and retry receipts retained"
+    },
+    {
+      "slot": 2,
+      "raw_stop_result_sha256": "090bc9295ac37939e9e54af28ccc1989bd1af4d08f423d1f1177e360ba32f03b",
+      "stop_returned": true,
+      "all_retained_PID_and_endpoint_project_quiescence": "PASS through canonical guarded stop; original refusal and retry receipts retained"
+    },
+    {
+      "slot": 3,
+      "raw_stop_result_sha256": "44cab370ecb6d109fa68c3303bcdcb5d28e589eb9ea448336f69ee9ff10b7b5f",
+      "stop_returned": true,
+      "all_retained_PID_and_endpoint_project_quiescence": "PASS through canonical guarded stop; original refusal and retry receipts retained"
+    }
+  ],
+  "separate_paired_checks": "ROOT verified each declared paired native HTTP endpoint and warning-free normal release, then guardedly stopped each restored idle public counterpart. The paired canonical doctor also passes. Private desktop profile attachment is not inferred.",
+  "limits": [
+    "The native witness is a dated ROOT observation, not a guarantee against later state changes.",
+    "Runtime source fingerprint and canonical input selection were verified; no general process-memory attestation is claimed.",
+    "Initial creation-identity and helper entrypoint-context refusals were preserved and normally released/retried; identity guards were not relaxed.",
+    "Broader project FAST run reached its 900-second bound without a completed result; historical broader failures remain unwaived. No full-project, merged-wave, publication or mathematical apex acceptance.",
+    "No manual lease reset, owner-gone claim, unknown-process healthy adoption, PID-group signal or forced kill."
+  ],
+  "original_ROOT_native_receipt_sha256": "c81b1ccbbb6ecf64055776a78dada2a96ee024ad78bea387ebe452eb103490a7",
+  "canonical_primary_regression": {
+    "at": "2026-10-12T19:53:17.326936+00:00",
+    "public_source_commit": "6db2cde4036587627f07077a67868809aa856f34",
+    "primary_four_module": "391 PASS, no skips, 295.47 seconds",
+    "command": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py tests/test_architecture_claims.py -q",
+    "interpreter_and_cwd": "Matching canonical PUBLIC primary environment and checkout; -B plus fresh per-run bytecode prefix used",
+    "raw_result_sha256": "e9569b7a0962ac550c6a8dfdb16b9152ea7773ea750eb995303e0be7861c113a",
+    "stdout_sha256": "2161c151742f101f7e06681664acc2b8244723d8768e445327bc7a910ac4663d",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual_stdout": "........................................................................ [ 18%]\n........................................................................ [ 36%]\n........................................................................ [ 55%]\n........................................................................ [ 73%]\n........................................................................ [ 92%]\n...............................                                          [100%]\n391 passed in 295.47s (0:04:55)\n",
+    "actual_stderr": "",
+    "scope": "Required post-integration primary regression. The frozen candidate run remains 390 PASS/1 SKIP; primary environment also ran its previously skipped case. This does not establish broader FAST/full-project gates.",
+    "independent_review_sha256": "4b730b6d5fdd7cc645e1301847cd8ba9ac11c271315ebbea5441d1e68bb92cb8"
+  },
+  "independent_re_review_sha256": "4b730b6d5fdd7cc645e1301847cd8ba9ac11c271315ebbea5441d1e68bb92cb8",
+  "canonical_finding_closures": [
+    {
+      "finding_id": "review:2026-10-12-lean-runner-recovery:source:1",
+      "status": "fixed",
+      "evidence": "Shutdown-only terminal evidence, fresh ancestry and final live guards, bounded family observations and guarded stop-only orphan recovery are independently reviewed and integrated at 6db2cde. ROOT executed 26 meaningful sole-guard mutations with exact restoration, candidate 390-pass regression and canonical-primary 391-pass regression. Original managed and orphan families were stopped with owner, work and dependency pins retained; all three public normal cycles, two repeat reconnect cycles and paired native HTTP cycles passed with warning-free releases. Fresh canonical public and paired doctor/status checks passed with FREE leases, current front doors, absent backends and complete zero-reserved capacity. See review-r4.md and the ROOT final native-admission receipt c81b1ccbbb6ecf64055776a78dada2a96ee024ad78bea387ebe452eb103490a7. Full-project FAST completion, broader historical failures, merged-wave and publication gates remain open; no scientific acceptance is implied.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md",
+      "date": "2026-10-12",
+      "commit": "6db2cde4036587627f07077a67868809aa856f34",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr1",
+        "declared": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr1",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-runner-recovery:source:2",
+      "status": "fixed",
+      "evidence": "Shutdown-only terminal evidence, fresh ancestry and final live guards, bounded family observations and guarded stop-only orphan recovery are independently reviewed and integrated at 6db2cde. ROOT executed 26 meaningful sole-guard mutations with exact restoration, candidate 390-pass regression and canonical-primary 391-pass regression. Original managed and orphan families were stopped with owner, work and dependency pins retained; all three public normal cycles, two repeat reconnect cycles and paired native HTTP cycles passed with warning-free releases. Fresh canonical public and paired doctor/status checks passed with FREE leases, current front doors, absent backends and complete zero-reserved capacity. See review-r4.md and the ROOT final native-admission receipt c81b1ccbbb6ecf64055776a78dada2a96ee024ad78bea387ebe452eb103490a7. Full-project FAST completion, broader historical failures, merged-wave and publication gates remain open; no scientific acceptance is implied.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md",
+      "date": "2026-10-12",
+      "commit": "6db2cde4036587627f07077a67868809aa856f34",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr2",
+        "declared": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr2",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    }
+  ]
+}

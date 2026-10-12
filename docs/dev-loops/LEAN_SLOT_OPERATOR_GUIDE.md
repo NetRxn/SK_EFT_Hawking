@@ -436,9 +436,16 @@ qualifying/invalid evidence remain retained.
 
 ## Owned-shutdown and orphan-stop procedure
 
-**Design accepted; candidate source implemented, verification pending.**
-The internal API is source-present; source acceptance and native recovery remain
-pending. There is no new CLI command.
+**Scoped source and native recovery accepted (2026-10-12).**
+The internal stop-only API and shutdown correction at `6db2cde` passed independent
+whole-source review, 391 primary runner regressions and 26 meaningful mutation/restore
+controls. Public slots 1/2/3 passed real diagnostics and warning-free release; 1/2
+also passed fresh reconnect cycles. Canonical public and paired audits found FREE
+leases, current front doors, absent backends and complete capacity without conflicts.
+See the [re-review](../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md)
+and [native admission](../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/native-admission-r1.json).
+Historical candidate checkpoints below are retained; broader gates remain open.
+There is no new CLI command.
 [ADR-008 RR-1–RR-4](../adrs/ADR-008-shared-lean-slot-control-plane.md#owned-shutdown-and-operator-authorized-orphan-recovery)
 and the [complete design](../superpowers/specs/2026-10-12-owned-lean-shutdown-and-orphan-recovery-design.md)
 govern this extension. Whole-design review and ROOT intake accepted the contract.

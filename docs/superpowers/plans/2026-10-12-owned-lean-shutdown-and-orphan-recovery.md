@@ -1,9 +1,17 @@
 # Owned Lean shutdown and orphan recovery plan
 
-Status: **design accepted; candidate source implemented, verification pending.**
-Whole independent design review and ROOT intake accepted the contract. Source
-controls and mutation mappings are present; ROOT execution and whole implementation
-review remain pending. Owner: primary controller lead. Findings:
+Status: **scoped source and native recovery accepted (2026-10-12).**
+The repair at `6db2cde` passed independent whole-source review, 391 canonical-primary
+runner regressions and 26 meaningful sole-guard mutation/restoration controls.
+Original owned/orphan cleanup, three public normal cycles, affected-slot reconnects
+and paired native endpoint cycles passed. Normal releases had no warnings, and final
+canonical audits found FREE leases, current front doors, absent backends and complete
+zero-reserved capacity. RR1/RR2 were closed through their declared Verify commands
+and the canonical writer. See the [re-review](../../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md)
+and [native admission](../../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/native-admission-r1.json).
+Historical candidate checkpoints below remain provenance. Full wave completion is
+OPEN: the wider FAST run was incomplete at its 900-second bound and prior broader
+failures are unwaived; there is no merge, publication or scientific acceptance. Owner: primary controller lead. Findings:
 [RR1/RR2](../../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/source.md).
 Contract: [design](../specs/2026-10-12-owned-lean-shutdown-and-orphan-recovery-design.md),
 [ADR-008 RR-1–RR-4](../../adrs/ADR-008-shared-lean-slot-control-plane.md#owned-shutdown-and-operator-authorized-orphan-recovery).

@@ -1,9 +1,14 @@
 # Owned Lean shutdown and stop-only orphan recovery
 
-Status: **design accepted; candidate source implemented, verification pending.**
-Whole independent design review and ROOT intake accepted the contract. Candidate
-source and controls exist; tests, whole source review and native recovery acceptance
-remain pending. This document alone authorizes no native operation. Owning decisions: [ADR-008 RR-1–RR-4](../../adrs/ADR-008-shared-lean-slot-control-plane.md#owned-shutdown-and-operator-authorized-orphan-recovery).
+Status: **scoped source and native recovery accepted (2026-10-12).**
+The repair at `6db2cde` passed independent whole-source review, 391 primary
+runner regressions and 26 meaningful sole-guard mutation/restoration controls.
+The three public normal cycles, affected-slot reconnect cycles, paired native checks
+and final healthy canonical audits passed; RR1/RR2 were closed by the canonical writer.
+See the [re-review](../../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md)
+and [native admission](../../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/native-admission-r1.json).
+The later revision paragraphs preserve historical candidate checkpoints. Broader
+project, merged-wave, scientific and publication gates remain open. This document alone authorizes no native operation. Owning decisions: [ADR-008 RR-1–RR-4](../../adrs/ADR-008-shared-lean-slot-control-plane.md#owned-shutdown-and-operator-authorized-orphan-recovery).
 The operator has explicitly authorized repairing shutdown and restoring affected
 slots. This design implements that scope without altering scientific work or gates.
 
