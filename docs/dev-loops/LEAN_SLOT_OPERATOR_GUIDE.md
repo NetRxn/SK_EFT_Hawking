@@ -165,8 +165,14 @@ for safe operations. Existing root internal number APIs permit a conditional kno
 owned proxy replacement only under the gates in the observation section below.
 This adds no targeted CLI verb. A source edit or configuration render does not reload
 running proxies, and source integration alone does not authorize a reload.
-The supervisor fingerprints the loaded implementation and inventory; a plain
-`supervisor start` refuses stale reuse rather than silently activating the new policy.
+The supervisor compares recorded launch-source/configuration inputs with current
+expected inputs; this does not attest process-memory code. Earlier enumeration
+was inventory-local and did not fully cover externally imported shared code. The
+accepted SF implementation below covers that source contract and is present in the
+primary checkout. Current project gates and separately measured native loading
+remain open. A plain
+`supervisor start` refuses detected stale reuse; an unchanged incomplete digest is
+not proof that imported shared code is current.
 
 ⚠️ An unhealthy proxy observation does not establish stale code as its cause. If `prepare`
 fails with an unhealthy proxy, first perform bounded authorized read-only diagnosis of
@@ -360,10 +366,67 @@ does not prove handler completion. TCP/thread samples are supplementary observat
 at their timestamps: an outside HTTP request can race them, and daemon handler threads
 are not joined by server close. Unaccounted activity blocks replacement. Replacing a
 proxy loses its in-memory session map; S-Q backend rotation under a persistent proxy
-does not guarantee active-client continuity through proxy replacement. Loaded-source
-fingerprints, initialize/list/unleased denial, matching lease dispatch and subsequent
+does not guarantee active-client continuity through proxy replacement. Expected and
+recorded source fingerprints, separate loaded-code evidence, initialize/list/unleased
+denial, matching lease dispatch and subsequent
 release/reconnect/recovery and paired epoch validation require separate measured gates.
 
 Existing mathematical acceptance and broader project gates remain separate. Original
 failed gates remain unwaived; their dated counts are historical evidence, not a standing
 current-failure census. Bounded source review alone does not certify primary integration or live admission.
+
+
+## Shared-runtime fingerprint coverage
+
+**WHOLE SOURCE IMPLEMENTATION ACCEPTED / SOURCE FINDINGS CLOSED / CURRENT PROJECT GATES AND NATIVE ADMISSION PENDING.** The
+[SF design](../superpowers/specs/2026-10-12-shared-runtime-source-fingerprint-design.md)
+and [plan](../superpowers/plans/2026-10-12-shared-runtime-source-fingerprint.md)
+extend the existing fingerprint to mandatory actual imported package source,
+launcher-route coherence and separate deterministic local/shared namespaces.
+Missing, denied, incoherent, dynamic/unsupported or observed-drifting source is
+unavailable. A launcher-defined shared-path override is accepted only when its
+actual supported complete entry template and capable selected package agree with
+loaded module origins; the environment value alone is not authority. Transparent
+selected-cli fail-fast guards and source-defined default-inventory setdefault are
+covered by the accepted bounded grammar, with exact aliases/order/captured effects.
+Only literal or bounded selected-Path f-string guard messages are supported; dynamic
+expressions and extra statements remain unsupported. Validation and actual Popen
+must use one captured environment, preserving explicit inventory precedence and the
+applicable backend-token addition; a later external selection change must not be
+silently recaptured for launch. A bounded expanduser().resolve() template is supported
+only for genuine recognized Path sources: bare tilde/tilde-slash consumes the same
+valid capable captured HOME passed to Popen; absolute non-tilde no-op is independent
+of HOME. Named-user, missing/invalid/unavailable home or unsupported transforms
+refuse. No ambient user/home fallback, new environment API or child probe is added.
+Actual home/path capability and alias/source reobservation remain required; no
+home string or source digest grants process authority.
+
+The admitted source contract covers mandatory imported shared source; do not use an
+unchanged inventory-local legacy digest to certify that code. A source digest
+describes expected/recorded launch inputs rather than running process memory or
+completed client requests. No old process record may be
+rewritten to make it current. This adds no lifecycle command and permits no reload,
+unknown-PID adoption or signals. Follow the existing ownership/quiescence/drain and
+separate loaded-code/MCP/lease/reconnect/paired-epoch gates above.
+
+
+Supported parent indices must exist on the actual recognized Path; missing parents
+give typed unavailable evidence before pending/Popen. Relevant loaded qualified
+origins, including same-source aliases, are capped at 1024 before native observations.
+The complete module-dictionary discovery cost remains proportional to that dictionary.
+The accepted source implementation and its native assertion controls cover these
+bounds. Current project gates and separately measured native admission remain open;
+no process record rewrite, adoption or signal follows from source acceptance.
+
+
+Supported source string/Path conversions and selected source-defined fallbacks retain
+same-operand transform provenance. Aliases, conversions, literal joins, expansion and
+resolution retain cumulative parent operations across the complete recipe, capped at
+four; parents[index] consumes index + 1. Parent/join-derived operands can use their
+own admitted expansion while retaining that cumulative budget. Inactive defaults and
+selector fallbacks validate eagerly. These rules require typed source refusal before
+pending/Popen with existing witnesses/records/reservations preserved. The complete source implementation, ROOT native assertion mutation/restoration
+controls and independent whole source review are accepted, and the reviewed files
+are present in the primary checkout. Current project gates, normal commit and
+separately measured native admission remain open. Historical originals and
+qualifying/invalid evidence remain retained.

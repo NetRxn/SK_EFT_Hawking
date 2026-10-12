@@ -10398,6 +10398,48 @@
         "enforced": true,
         "run_at": "2026-10-11"
       }
+    },
+    {
+      "finding_id": "review:2026-10-12-shared-runtime-source-fingerprint:supervisor:1",
+      "status": "fixed",
+      "evidence": "Complete runtime source fingerprint repairs independently accepted; ROOT verified 56 baseline/red/restored triads, 52 distinct production images, 168 command captures and exact source restoration. Whole current review SHA256 30dfc344de4b7abc301b272ee4abad595159672c317028f02bc7b7ebdd7af97e; current primary five-module check 469 PASS. Source closure only: full project gates and loaded native runtime, ownership, request drain, lease and reconnect remain separately unadmitted.",
+      "superseded_by": null,
+      "date": "2026-10-12",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py tests/test_lean_slots.py tests/test_lean_lifecycle_observation.py tests/test_codex_lean_slot_policy.py tests/test_architecture_claims.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py tests/test_lean_slots.py tests/test_lean_lifecycle_observation.py tests/test_codex_lean_slot_policy.py tests/test_architecture_claims.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-shared-runtime-source-fingerprint:supervisor:2",
+      "status": "fixed",
+      "evidence": "Complete runtime source fingerprint repairs independently accepted; ROOT verified 56 baseline/red/restored triads, 52 distinct production images, 168 command captures and exact source restoration. Whole current review SHA256 30dfc344de4b7abc301b272ee4abad595159672c317028f02bc7b7ebdd7af97e; current primary five-module check 469 PASS. Source closure only: full project gates and loaded native runtime, ownership, request drain, lease and reconnect remain separately unadmitted.",
+      "superseded_by": null,
+      "date": "2026-10-12",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py -q -k \"fp_34 or fp_37\"",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py -q -k \"fp_34 or fp_37\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-shared-runtime-source-fingerprint:supervisor:3",
+      "status": "fixed",
+      "evidence": "Complete runtime source fingerprint repairs independently accepted; ROOT verified 56 baseline/red/restored triads, 52 distinct production images, 168 command captures and exact source restoration. Whole current review SHA256 30dfc344de4b7abc301b272ee4abad595159672c317028f02bc7b7ebdd7af97e; current primary five-module check 469 PASS. Source closure only: full project gates and loaded native runtime, ownership, request drain, lease and reconnect remain separately unadmitted.",
+      "superseded_by": null,
+      "date": "2026-10-12",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py -q -k \"fp_35 or fp_37\"",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py -q -k \"fp_35 or fp_37\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
     }
   ]
 }

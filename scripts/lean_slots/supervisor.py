@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import ast
 import errno
 import secrets
 import stat
@@ -15,6 +16,8 @@ import subprocess
 import sys
 import time
 from contextlib import contextmanager
+from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Iterator
 
 from .state import (
@@ -54,6 +57,521 @@ def _port_observation(host: str, port: int, timeout: float = 0.15) -> Observatio
 def _port_open(host: str, port: int, timeout: float = 0.15) -> bool:
     """Observed-only compatibility reader; never a destructive absence gate."""
     return _port_observation(host, port, timeout).state == "present"
+
+
+# Source inputs describe expected launch bytes, never process memory or PID authority.
+_FP_REQUIRED = frozenset({"__init__.py", "state.py", "supervisor.py", "controller.py",
+                          "cli.py", "proxy.py", "claude_config.py", "host_limits.py"})
+_FP_ENTRIES, _FP_DIRECTORIES, _FP_DEPTH, _FP_FILES = 4096, 256, 16, 1024
+_FP_ORIGINS = _FP_FILES
+_FP_TOTAL_BYTES, _FP_PATH_BYTES = 32 * 1024 * 1024, 4096
+
+
+@dataclass(frozen=True)
+class _RuntimePath:
+    value: Path
+    last: str = "source"
+    parent_steps: int = 0
+
+
+@dataclass(frozen=True)
+class _RuntimeText:
+    value: str
+    last: str
+    parent_steps: int
+
+
+class _RuntimeSourcePass:
+    """One bounded observation pass over the actual supported source inputs."""
+
+    def __init__(self, supervisor, kind, number, command, environment):
+        self.supervisor, self.inventory = supervisor, supervisor.inventory
+        self.kind, self.number, self.command = kind, number, list(command)
+        self.environment = dict(environment)
+        self.predicted_environment = dict(environment)
+        self.observations = []
+        self.capabilities = {}
+        self.total_bytes = 0
+        self.bindings = {}
+        self.path_bindings = 0
+        self.selections, self.transforms = [], []
+
+    def fail(self, target, operation, detail, exc=None):
+        evidence = Observation("unavailable", target=str(target), operation=operation,
+                               detail=detail, errno=getattr(exc, "errno", None),
+                               error_class=type(exc).__name__ if exc else "ValueError")
+        raise SlotError(f"runtime source unavailable: {detail}",
+                        observations=tuple(self.observations) + (evidence,)) from exc
+
+    def text(self, value, target):
+        if isinstance(value, _RuntimeText):
+            value = value.value
+        if not isinstance(value, str) or any(x in value for x in ("\x00", "\r", "\n")):
+            self.fail(target, "runtime-source-path", "malformed source path/value")
+        try:
+            if len(value.encode("utf-8")) > _FP_PATH_BYTES:
+                self.fail(target, "runtime-source-path", "source path/value exceeds bound")
+        except UnicodeError as exc:
+            self.fail(target, "runtime-source-path", "invalid source path encoding", exc)
+        return value
+
+    def remember(self, key, value):
+        if key in self.capabilities and self.capabilities[key] != value:
+            self.fail(key, "runtime-source-reobserve", "input changed within source pass")
+        self.capabilities[key] = value
+
+    def canonical(self, path):
+        path = Path(path)
+        self.text(str(path), path)
+        if not path.is_absolute():
+            self.fail(path, "runtime-source-resolve", "relative/unexpanded source path unsupported")
+        try:
+            result = path.resolve()
+        except (OSError, RuntimeError, ValueError) as exc:
+            self.fail(path, "runtime-source-resolve", "canonical path unavailable", exc)
+        self.text(str(result), path)
+        return result
+
+    def path(self, path, mode=None, *, optional=False, contained=None):
+        path = Path(path)
+        observed = observe_path(path)
+        self.observations.append(observed)
+        if observed.state == "absent" and optional:
+            self.remember("path:" + str(path), {"state": "absent"})
+            return None
+        if observed.state != "present":
+            self.fail(path, "runtime-source-stat", "required path not capably present")
+        try:
+            native, lexical = os.stat(path), os.lstat(path)
+            resolved = self.canonical(path)
+        except (OSError, ValueError) as exc:
+            self.fail(path, "runtime-source-stat", "native identity unavailable", exc)
+        if mode is not None and stat.S_IFMT(native.st_mode) != mode:
+            self.fail(path, "runtime-source-stat", "required path has wrong shape")
+        if contained is not None and not resolved.is_relative_to(contained):
+            self.fail(path, "runtime-source-resolve", "source link escapes package")
+        identity = (native.st_dev, native.st_ino, stat.S_IFMT(native.st_mode),
+                    native.st_size, native.st_mtime_ns, native.st_ctime_ns,
+                    lexical.st_dev, lexical.st_ino, lexical.st_mode,
+                    lexical.st_mtime_ns, lexical.st_ctime_ns, str(resolved))
+        self.remember("path:" + str(path), identity)
+        if (native.st_dev, native.st_ino) != (observed.identity["device"], observed.identity["inode"]):
+            self.fail(path, "runtime-source-stat", "stat observations disagree")
+        return resolved
+
+    def read(self, path, *, contained=None):
+        resolved = self.path(path, stat.S_IFREG, contained=contained)
+        try:
+            with Path(path).open("rb") as handle:
+                content = handle.read(MAX_JSON_BYTES + 1)
+            if len(content) > MAX_JSON_BYTES:
+                self.fail(path, "runtime-source-read", "source file exceeds bounded read")
+            self.total_bytes += len(content)
+            if self.total_bytes > _FP_TOTAL_BYTES:
+                self.fail(path, "runtime-source-read", "total source read exceeds bound")
+        except OSError as exc:
+            self.fail(path, "runtime-source-read", "source read unavailable", exc)
+        self.path(path, stat.S_IFREG, contained=contained)
+        if len(content) != self.capabilities["path:" + str(path)][3]:
+            self.fail(path, "runtime-source-read", "source read is incomplete for native size")
+        digest = sha256_bytes(content)
+        self.remember("bytes:" + str(path), digest)
+        return content, resolved
+
+    def manifest(self, path, *, required):
+        root = self.path(path, stat.S_IFDIR)
+        pending, directories, identities, files = [(Path(path), 0)], 0, set(), {}
+        entries_count = 0
+        while pending:
+            directory, depth = pending.pop()
+            if depth > _FP_DEPTH:
+                self.fail(directory, "runtime-source-scandir", "source depth exceeds bound")
+            self.path(directory, stat.S_IFDIR, contained=root)
+            inode = self.capabilities["path:" + str(directory)][:2]
+            if inode in identities:
+                self.fail(directory, "runtime-source-scandir", "source directory cycle/alias")
+            identities.add(inode)
+            directories += 1
+            if directories > _FP_DIRECTORIES:
+                self.fail(directory, "runtime-source-scandir", "source directory count exceeds bound")
+            entries, evidence = observe_directory(directory)
+            self.observations.append(evidence)
+            if evidence.state != "present":
+                self.fail(directory, "runtime-source-scandir", "source enumeration unavailable")
+            entries_count += len(entries)
+            if entries_count > _FP_ENTRIES:
+                self.fail(directory, "runtime-source-scandir", "source entries exceed bound")
+            self.remember("members:" + str(directory), tuple(str(p) for p in entries))
+            for entry in entries:
+                self.path(entry, contained=root)
+                mode = self.capabilities["path:" + str(entry)][2]
+                if entry.suffix == ".py" and mode != stat.S_IFREG:
+                    self.fail(entry, "runtime-source-read", "nonregular Python source")
+                if mode == stat.S_IFDIR:
+                    pending.append((entry, depth + 1))
+                elif entry.suffix == ".py":
+                    key = entry.relative_to(path).as_posix()
+                    if mode != stat.S_IFREG or key in files:
+                        self.fail(entry, "runtime-source-read", "nonregular/duplicate Python source")
+                    content, _ = self.read(entry, contained=root)
+                    files[key] = sha256_bytes(content)
+                    if len(files) > _FP_FILES:
+                        self.fail(entry, "runtime-source-read", "Python source count exceeds bound")
+        if not required.issubset(files):
+            self.fail(path, "runtime-source-membership", "required initialized source missing")
+        return {"root": str(root), "files": dict(sorted(files.items()))}
+
+    def loaded_root(self):
+        module = sys.modules.get(__name__)
+        state_module = sys.modules.get(Inventory.__module__)
+        if module is None or state_module is None or getattr(state_module, "Inventory", None) is not Inventory:
+            self.fail(__name__, "runtime-source-origin", "actual loaded state identity unavailable")
+        for function in (observe_path, observe_directory, observe_process, read_json):
+            if sys.modules.get(function.__module__) is not state_module:
+                self.fail(function.__module__, "runtime-source-origin", "loaded state functions incoherent")
+        prefix = __name__.rsplit(".", 1)[0]
+        origins = {}
+        peers = {}
+        for name, value in tuple(sys.modules.items()):
+            if name == prefix or name.startswith(prefix + "."):
+                peers[name] = value
+                if len(peers) > _FP_ORIGINS:
+                    self.fail(prefix, "runtime-source-origin", "loaded source origin count exceeds bound")
+        peers[__name__], peers[Inventory.__module__] = module, state_module
+        instance_module = sys.modules.get(type(self.inventory).__module__)
+        if instance_module is None:
+            self.fail("inventory", "runtime-source-origin", "actual inventory type origin unavailable")
+        peers[type(self.inventory).__module__] = instance_module
+        # Count aliases too: native origin observations must not grow beyond the
+        # complete-source budget merely because one file has many loaded names.
+        if len(peers) > _FP_ORIGINS:
+            self.fail(prefix, "runtime-source-origin", "loaded source origin count exceeds bound")
+        root = None
+        for name, value in sorted(peers.items()):
+            origin = getattr(value, "__file__", None)
+            declared = getattr(getattr(value, "__spec__", None), "origin", None)
+            if not isinstance(origin, str) or not isinstance(declared, str) or not origin.endswith(".py"):
+                self.fail(name, "runtime-source-origin", "source module origin unavailable")
+            actual = self.path(Path(origin), stat.S_IFREG)
+            if self.canonical(declared) != actual:
+                self.fail(name, "runtime-source-origin", "module spec/file origins disagree")
+            if name == __name__:
+                if actual.name != "supervisor.py":
+                    self.fail(name, "runtime-source-origin", "supervisor source origin malformed")
+                root = actual.parent
+            if name == Inventory.__module__ and actual.name != "state.py":
+                self.fail(name, "runtime-source-origin", "state source origin malformed")
+            origins[name] = str(actual)
+        if root is None or any(not Path(p).is_relative_to(root) for p in origins.values()):
+            self.fail(prefix, "runtime-source-origin", "loaded package peer roots disagree")
+        self.remember("loaded-origins", origins)
+        return root
+
+    def symbol(self, node, kind):
+        return isinstance(node, ast.Name) and self.bindings.get(node.id) == ("symbol", kind)
+
+    def os_method(self, node, method):
+        if not isinstance(node, ast.Attribute) or node.attr != method:
+            return False
+        if method in {"get", "setdefault"}:
+            return (isinstance(node.value, ast.Attribute) and node.value.attr == "environ"
+                    and self.symbol(node.value.value, "os"))
+        return method == "getenv" and self.symbol(node.value, "os")
+
+    def expand(self, value):
+        raw = self.text(str(value.value), "expanduser")
+        if value.last in {"resolved", "expanded"}:
+            self.fail(raw, "runtime-source-template", "reordered/repeated home transform")
+        if raw.startswith("~"):
+            if raw != "~" and not raw.startswith("~/"):
+                self.fail(raw, "runtime-source-home", "named/unsupported tilde home")
+            present = "HOME" in self.environment
+            home = self.text(self.environment.get("HOME"), "HOME") if present else ""
+            if not home or not Path(home).is_absolute():
+                self.fail("HOME", "runtime-source-home", "required captured HOME invalid")
+            canonical_home = self.path(Path(home), stat.S_IFDIR)
+            expanded = home if raw == "~" else str(Path(home) / raw[2:])
+            self.text(expanded, raw)
+            event = {"raw": raw, "branch": "captured-home", "HOME_present": present,
+                     "HOME": home, "canonical_home": str(canonical_home), "expanded": expanded}
+        else:
+            if not value.value.is_absolute():
+                self.fail(raw, "runtime-source-home", "nonabsolute expansion unsupported")
+            expanded = raw
+            event = {"raw": raw, "branch": "absolute-noop", "expanded": expanded}
+        self.transforms.append(event)
+        return _RuntimePath(Path(expanded), "expanded", value.parent_steps)
+
+    def value(self, node, *, depth=0, allow_expand=False):
+        if depth > 64:
+            self.fail("launcher", "runtime-source-template", "path expression depth exceeds bound")
+        def val(x, **kw):
+            return self.value(x, depth=depth + 1, **kw)
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            return self.text(node.value, "launcher literal")
+        if isinstance(node, ast.Name):
+            if node.id == "__file__":
+                return str(self.launcher)
+            value = self.bindings.get(node.id)
+            if isinstance(value, _RuntimePath):
+                return value
+            self.fail(node.id, "runtime-source-template", "unbound/nonpath expression")
+        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div) and isinstance(node.right, ast.Constant):
+            left, right = val(node.left), val(node.right)
+            if isinstance(left, _RuntimePath) and isinstance(right, str):
+                return _RuntimePath(left.value / right, "derived", left.parent_steps)
+        if isinstance(node, ast.Attribute) and node.attr == "parent":
+            base = val(node.value)
+            if isinstance(base, _RuntimePath):
+                if base.parent_steps + 1 > 4:
+                    self.fail("launcher", "runtime-source-template", "parent selection exceeds bound")
+                return _RuntimePath(base.value.parent, "derived", base.parent_steps + 1)
+        if (isinstance(node, ast.Subscript) and isinstance(node.value, ast.Attribute)
+                and node.value.attr == "parents" and isinstance(node.slice, ast.Constant)
+                and type(node.slice.value) is int and 0 <= node.slice.value <= 4):
+            base = val(node.value.value)
+            if isinstance(base, _RuntimePath):
+                steps = base.parent_steps + node.slice.value + 1
+                if steps > 4:
+                    self.fail("launcher", "runtime-source-template", "parent selection exceeds bound")
+                if node.slice.value >= len(base.value.parents):
+                    self.fail(base.value, "runtime-source-template", "requested parent index is unavailable")
+                return _RuntimePath(base.value.parents[node.slice.value], "derived", steps)
+        if isinstance(node, ast.Call) and not node.keywords:
+            if self.symbol(node.func, "Path") and len(node.args) == 1:
+                operand = val(node.args[0])
+                if isinstance(operand, (str, _RuntimePath, _RuntimeText)):
+                    provenance = isinstance(operand, (_RuntimePath, _RuntimeText))
+                    value = Path(operand.value if provenance else operand)
+                    if not value.is_absolute() and not str(value).startswith("~"):
+                        self.fail(value, "runtime-source-template", "relative Path source unsupported")
+                    return _RuntimePath(value, operand.last if provenance else "source",
+                                        operand.parent_steps if provenance else 0)
+            if isinstance(node.func, ast.Name) and node.func.id == "str" and len(node.args) == 1:
+                operand = val(node.args[0])
+                if isinstance(operand, _RuntimePath):
+                    return _RuntimeText(self.text(str(operand.value), "launcher str"),
+                                        operand.last, operand.parent_steps)
+            if self.os_method(node.func, "get") or self.os_method(node.func, "getenv"):
+                if 1 <= len(node.args) <= 2 and isinstance(node.args[0], ast.Constant):
+                    key = val(node.args[0])
+                    if key == "LEAN_LSP_MCP_TOKEN":
+                        self.fail(key, "runtime-source-template", "token cannot select source")
+                    # Python evaluates defaults eagerly even if the key is present.
+                    fallback = val(node.args[1]) if len(node.args) == 2 else None
+                    if isinstance(fallback, _RuntimePath):
+                        self.fail(key, "runtime-source-template", "selector fallback must be a string")
+                    chosen = self.predicted_environment.get(key, fallback)
+                    selected_text = self.text(chosen, key)
+                    self.selections.append({"key": key, "present": key in self.predicted_environment,
+                                            "fallback": self.text(fallback, key) if fallback is not None else None,
+                                            "selected": selected_text})
+                    return chosen
+            if isinstance(node.func, ast.Attribute) and not node.args:
+                if node.func.attr == "resolve":
+                    if isinstance(node.func.value, ast.Call) and isinstance(node.func.value.func, ast.Attribute) and node.func.value.func.attr == "expanduser":
+                        base = val(node.func.value, allow_expand=True)
+                    else:
+                        base = val(node.func.value)
+                    if isinstance(base, _RuntimePath) and base.last != "resolved":
+                        result = self.canonical(base.value)
+                        self.transforms.append({"raw": str(base.value), "branch": "resolve", "canonical": str(result)})
+                        return _RuntimePath(result, "resolved", base.parent_steps)
+                if node.func.attr == "expanduser" and allow_expand:
+                    base = val(node.func.value)
+                    if isinstance(base, _RuntimePath):
+                        return self.expand(base)
+        self.fail("launcher", "runtime-source-template", "unsupported path expression/transform")
+
+    def bind_symbol(self, name, kind):
+        if name in self.bindings or name in {"str", "SystemExit", "__file__", "__name__"}:
+            self.fail(name, "runtime-source-template", "reassigned/reserved symbol")
+        self.bindings[name] = ("symbol", kind)
+
+    def guard(self, statement):
+        test = statement.test
+        if not (isinstance(test, ast.UnaryOp) and isinstance(test.op, ast.Not)
+                and isinstance(test.operand, ast.Call) and isinstance(test.operand.func, ast.Attribute)
+                and test.operand.func.attr in {"exists", "is_file"} and not test.operand.args
+                and not test.operand.keywords and not statement.orelse and len(statement.body) == 1):
+            self.fail("launcher", "runtime-source-template", "unsupported selected CLI guard")
+        target = test.operand.func.value
+        if not (isinstance(target, ast.BinOp) and isinstance(target.op, ast.Div)
+                and isinstance(target.right, ast.Constant) and target.right.value == "cli.py"
+                and isinstance(target.left, ast.BinOp) and isinstance(target.left.op, ast.Div)
+                and isinstance(target.left.right, ast.Constant) and target.left.right.value == "lean_slots"
+                and isinstance(target.left.left, ast.Name)):
+            self.fail("launcher", "runtime-source-template", "guard not selected CLI")
+        selected_name = target.left.left.id
+        selected = self.value(target.left.left)
+        self.path(selected.value / "lean_slots" / "cli.py", stat.S_IFREG)
+        raised = statement.body[0]
+        if not (isinstance(raised, ast.Raise) and raised.cause is None
+                and isinstance(raised.exc, ast.Call) and isinstance(raised.exc.func, ast.Name)
+                and raised.exc.func.id == "SystemExit" and len(raised.exc.args) == 1 and not raised.exc.keywords):
+            self.fail("launcher", "runtime-source-template", "unsupported guard body")
+        message = raised.exc.args[0]
+        if isinstance(message, ast.Constant) and isinstance(message.value, str):
+            text = message.value
+        elif isinstance(message, ast.JoinedStr):
+            parts = []
+            for item in message.values:
+                if isinstance(item, ast.Constant) and isinstance(item.value, str):
+                    parts.append(item.value)
+                elif (isinstance(item, ast.FormattedValue) and isinstance(item.value, ast.Name)
+                      and isinstance(self.bindings.get(item.value.id), _RuntimePath)
+                      and self.canonical(self.bindings[item.value.id].value) == self.canonical(selected.value)
+                      and item.conversion == -1 and item.format_spec is None):
+                    parts.append(str(self.bindings[item.value.id].value))
+                else:
+                    self.fail("launcher", "runtime-source-template", "unsupported guard f-string")
+            text = "".join(parts)
+        else:
+            self.fail("launcher", "runtime-source-template", "unsupported guard message")
+        try:
+            if len(text.encode("utf-8")) > _FP_PATH_BYTES:
+                self.fail("guard diagnostic", "runtime-source-template", "guard diagnostic exceeds bound")
+        except UnicodeError as exc:
+            self.fail("guard diagnostic", "runtime-source-template", "guard diagnostic encoding", exc)
+        return {"selected": str(self.canonical(selected.value)),
+                "method": test.operand.func.attr, "message": text}
+
+    def route(self, launcher_content, loaded_root):
+        try:
+            tree = ast.parse(launcher_content.decode("utf-8"))
+        except (SyntaxError, UnicodeError, ValueError, RecursionError) as exc:
+            self.fail(self.launcher, "runtime-source-template", "launcher syntax unavailable", exc)
+        if sum(1 for _ in ast.walk(tree)) > 2048:
+            self.fail(self.launcher, "runtime-source-template", "launcher AST exceeds bound")
+        inserted, guard, default, imported, terminal = None, None, None, None, False
+        for index, statement in enumerate(tree.body):
+            if terminal:
+                self.fail(self.launcher, "runtime-source-template", "statements after terminal main")
+            if imported:
+                if (isinstance(statement, ast.If) and not statement.orelse and len(statement.body) == 1
+                        and isinstance(statement.test, ast.Compare) and isinstance(statement.test.left, ast.Name)
+                        and statement.test.left.id == "__name__" and len(statement.test.ops) == 1
+                        and isinstance(statement.test.ops[0], ast.Eq) and len(statement.test.comparators) == 1
+                        and isinstance(statement.test.comparators[0], ast.Constant)
+                        and statement.test.comparators[0].value == "__main__"):
+                    body = statement.body[0]
+                    if (isinstance(body, ast.Raise) and body.cause is None
+                            and isinstance(body.exc, ast.Call) and isinstance(body.exc.func, ast.Name)
+                            and body.exc.func.id == "SystemExit" and len(body.exc.args) == 1
+                            and not body.exc.keywords and isinstance(body.exc.args[0], ast.Call)
+                            and self.symbol(body.exc.args[0].func, "main") and not body.exc.args[0].args
+                            and not body.exc.args[0].keywords):
+                        terminal = True
+                        continue
+                self.fail(self.launcher, "runtime-source-template", "unsupported terminal main")
+            if isinstance(statement, ast.Expr) and isinstance(statement.value, ast.Constant) and isinstance(statement.value.value, str) and index == 0:
+                continue
+            if isinstance(statement, ast.Import):
+                for item in statement.names:
+                    if item.name not in {"os", "sys"}:
+                        self.fail(self.launcher, "runtime-source-template", "unsupported launcher import")
+                    self.bind_symbol(item.asname or item.name, item.name)
+                continue
+            if isinstance(statement, ast.ImportFrom) and not statement.level:
+                if statement.module == "__future__" and [(x.name, x.asname) for x in statement.names] == [("annotations", None)]:
+                    leading = 1 if tree.body and isinstance(tree.body[0], ast.Expr) and isinstance(tree.body[0].value, ast.Constant) and isinstance(tree.body[0].value.value, str) else 0
+                    if index != leading or self.path_bindings or inserted or guard or default:
+                        self.fail(self.launcher, "runtime-source-template", "future import order")
+                    continue
+                if statement.module == "pathlib" and len(statement.names) == 1 and statement.names[0].name == "Path":
+                    self.bind_symbol(statement.names[0].asname or "Path", "Path")
+                    continue
+                if statement.module == "lean_slots.cli" and len(statement.names) == 1 and statement.names[0].name == "main":
+                    self.bind_symbol(statement.names[0].asname or "main", "main")
+                    imported = statement.names[0].asname or "main"
+                    continue
+            if isinstance(statement, ast.Assign) and len(statement.targets) == 1 and isinstance(statement.targets[0], ast.Name):
+                name = statement.targets[0].id
+                if name in self.bindings or name in {"str", "SystemExit", "__file__", "__name__"}:
+                    self.fail(name, "runtime-source-template", "launcher reassignment")
+                value = self.value(statement.value)
+                if not isinstance(value, _RuntimePath):
+                    self.fail(name, "runtime-source-template", "binding is not a validated Path")
+                self.path_bindings += 1
+                if self.path_bindings > 8:
+                    self.fail(name, "runtime-source-template", "path bindings exceed bound")
+                self.bindings[name] = value
+                continue
+            if isinstance(statement, ast.If) and guard is None:
+                guard = self.guard(statement)
+                continue
+            if isinstance(statement, ast.Expr) and isinstance(statement.value, ast.Call):
+                call = statement.value
+                if not call.keywords and self.os_method(call.func, "setdefault") and default is None:
+                    if not (len(call.args) == 2 and isinstance(call.args[0], ast.Constant)
+                            and call.args[0].value == "LEAN_SLOT_CONFIG"):
+                        self.fail(self.launcher, "runtime-source-template", "unsupported inventory default")
+                    if not (isinstance(call.args[1], ast.Call) and isinstance(call.args[1].func, ast.Name)
+                            and call.args[1].func.id == "str" and len(call.args[1].args) == 1):
+                        self.fail(self.launcher, "runtime-source-template", "default is not source Path str")
+                    fallback = self.value(call.args[1])  # Eager regardless of key presence.
+                    present = "LEAN_SLOT_CONFIG" in self.predicted_environment
+                    effective = self.text(self.predicted_environment.setdefault("LEAN_SLOT_CONFIG", fallback), "LEAN_SLOT_CONFIG")
+                    default = {"key": "LEAN_SLOT_CONFIG", "present": present,
+                               "default": self.text(fallback, "LEAN_SLOT_CONFIG"),
+                               "applied": not present, "effective": effective}
+                    continue
+                if (not call.keywords and isinstance(call.func, ast.Attribute) and call.func.attr == "insert"
+                        and isinstance(call.func.value, ast.Attribute) and call.func.value.attr == "path"
+                        and self.symbol(call.func.value.value, "sys") and inserted is None
+                        and len(call.args) == 2 and isinstance(call.args[0], ast.Constant)
+                        and type(call.args[0].value) is int and call.args[0].value == 0
+                        and isinstance(call.args[1], ast.Call) and isinstance(call.args[1].func, ast.Name)
+                        and call.args[1].func.id == "str" and len(call.args[1].args) == 1
+                        and not call.args[1].keywords):
+                    value = self.value(call.args[1].args[0])
+                    if isinstance(value, _RuntimePath):
+                        inserted = value.value
+                        continue
+            self.fail(self.launcher, "runtime-source-template", "unsupported executable launcher statement")
+        if not imported or not terminal:
+            self.fail(self.launcher, "runtime-source-template", "complete entry point missing")
+        selected = inserted if inserted is not None else self.launcher.parent
+        if not selected.is_absolute():
+            self.fail(selected, "runtime-source-template", "selected scripts path not absolute")
+        selected = self.path(selected, stat.S_IFDIR)
+        package = self.path(selected / "lean_slots", stat.S_IFDIR)
+        self.path(package / "__init__.py", stat.S_IFREG)
+        self.path(package / "cli.py", stat.S_IFREG)
+        if package != loaded_root or guard is not None and guard["selected"] != str(selected):
+            self.fail(selected, "runtime-source-route", "selected and actual loaded roots disagree")
+        if "--inventory" in self.command:
+            offset = self.command.index("--inventory") + 1
+            if offset >= len(self.command) or self.canonical(self.command[offset]) != self.canonical(self.inventory.source):
+                self.fail(self.launcher, "runtime-source-route", "command inventory differs")
+        return {"template": "shared" if inserted is not None else "direct",
+                "selected_scripts": str(selected), "selected_package": str(package),
+                "selectors": self.selections, "transforms": self.transforms,
+                "guard": guard, "inventory_default": default,
+                "inventory_source": str(self.inventory.source), "inventory_precedence": "explicit/configured"}
+
+    def build(self):
+        if self.kind not in {"proxy", "backend"}:
+            self.fail(self.kind, "runtime-source-input", "unsupported managed kind")
+        root = self.loaded_root()
+        shared = self.manifest(root, required=_FP_REQUIRED)
+        self.launcher = self.inventory.repo_root / "scripts" / "slotctl.py"
+        content, launcher_path = self.read(self.launcher)
+        routing = self.route(content, root)
+        local_path = self.inventory.repo_root / "scripts" / "lean_slots"
+        local_root = self.path(local_path, stat.S_IFDIR, optional=True)
+        local = self.manifest(local_path, required=frozenset({"__init__.py"})) if local_root else {"absent": True}
+        if local_root == root:
+            if local["files"] != shared["files"]:
+                self.fail(local_path, "runtime-source-membership", "shared/local alias manifests disagree")
+            local = {"alias_of": "shared", "root": str(root), "files": local["files"]}
+        return {"kind": self.kind, "repo_role": self.inventory.repo_role,
+                "command": self.command,
+                "server": json.loads(json.dumps(self.inventory.raw.get("server", {}))),
+                "slot": json.loads(json.dumps(self.inventory.slot(self.number))),
+                "sources": {"version": 2, "shared": shared, "local": local,
+                            "launcher": {"path": str(launcher_path), "sha256": sha256_bytes(content)},
+                            "routing": routing}}
 
 
 class Supervisor:
@@ -130,54 +648,32 @@ class Supervisor:
     def _runtime_fingerprint(
         self, kind: str, number: int, command: list[str] | None = None
     ) -> str:
-        """Identify the code/config a managed process actually loaded.
+        """Compare expected launch-source/config inputs, never process-memory code."""
+        command = command if command is not None else (
+            self.proxy_command(number) if kind == "proxy" else self.backend_command(number))
+        return self._runtime_inputs(kind, number, command, self._capture_runtime_environment())
 
-        The proxy command line names an inventory file but does not encode the
-        selected client-auth mode. Recording the loaded inputs prevents a plain
-        ``supervisor start`` from silently reusing a front door that still runs
-        an earlier authentication policy or implementation.
-        """
+    def _capture_runtime_environment(self):
+        try:
+            return os.environ.copy()
+        except (OSError, RuntimeError, ValueError, TypeError) as exc:
+            evidence = Observation("unavailable", target="launch environment",
+                                   operation="runtime-environment-capture", detail=str(exc),
+                                   error_class=type(exc).__name__, errno=getattr(exc, "errno", None))
+            raise SlotError("runtime launch environment capture unavailable", observations=(evidence,)) from exc
 
-        if command is None:
-            command = (
-                self.proxy_command(number)
-                if kind == "proxy"
-                else self.backend_command(number)
-            )
-        sources: dict[str, str] = {}
-        if kind in {"proxy", "backend"}:
-            directory = self.inventory.repo_root / "scripts" / "lean_slots"
-            entries, enumeration = observe_directory(directory)
-            if enumeration.state == "unavailable":
-                raise SlotError("runtime source enumeration unavailable", observations=(enumeration,))
-            candidates = [self.inventory.repo_root / "scripts" / "slotctl.py"]
-            candidates.extend(path for path in entries if path.suffix == ".py")
-            for path in candidates:
-                observed = observe_path(path)
-                if observed.state == "absent":
-                    continue
-                if observed.state != "present" or observed.identity["mode"] != stat.S_IFREG:
-                    raise SlotError("runtime source observation unavailable", observations=(observed,))
-                try:
-                    with path.open("rb") as handle:
-                        content = handle.read(MAX_JSON_BYTES + 1)
-                    if len(content) > MAX_JSON_BYTES:
-                        raise ValueError("runtime source exceeds bounded read")
-                except (OSError, ValueError) as exc:
-                    evidence = Observation("unavailable", detail=str(exc), errno=getattr(exc, "errno", None),
-                                           target=str(path), operation="runtime-source-read", error_class=type(exc).__name__)
-                    raise SlotError("runtime source read unavailable", observations=(observed, evidence)) from exc
-                sources[str(path.relative_to(self.inventory.repo_root))] = sha256_bytes(content)
-        return canonical_digest(
-            {
-                "kind": kind,
-                "repo_role": self.inventory.repo_role,
-                "command": command,
-                "server": self.inventory.raw.get("server", {}),
-                "slot": self.inventory.slot(number),
-                "sources": sources,
-            }
-        )
+    def _runtime_inputs(self, kind, number, command, environment):
+        first = _RuntimeSourcePass(self, kind, number, command, environment)
+        payload = first.build()
+        second = _RuntimeSourcePass(self, kind, number, command, environment)
+        repeated = second.build()
+        if payload != repeated or first.capabilities != second.capabilities:
+            evidence = Observation("unavailable", target="runtime source inputs",
+                                   operation="runtime-source-reobserve",
+                                   detail="source origin/membership/identity/bytes/route changed between passes")
+            raise SlotError("runtime source inputs changed between bounded passes",
+                            observations=tuple(first.observations + second.observations) + (evidence,))
+        return canonical_digest(payload)
 
     def _role_inventories(self, *, retain_aliases: bool = False,
                           observations: list[Observation] | None = None) -> tuple[list[Inventory], list[str]]:
@@ -494,7 +990,8 @@ class Supervisor:
         raise SlotError(f"timed out waiting for {host}:{port} to {expected}")
 
     def _spawn(self, kind: str, number: int, command: list[str], port: int) -> None:
-        fingerprint = self._runtime_fingerprint(kind, number, command)
+        environment = self._capture_runtime_environment()
+        fingerprint = self._runtime_inputs(kind, number, command, environment)
         metadata = self._metadata(kind, number)
         if metadata:
             seen = observe_process(int(metadata.get("pid", 0)), metadata.get("signature"))
@@ -518,7 +1015,6 @@ class Supervisor:
         process = None
         creation_signature = None
         try:
-            environment = os.environ.copy()
             if kind == "backend":
                 environment["LEAN_LSP_MCP_TOKEN"] = self.inventory.backend_token(number)
             log_path = self.inventory.log_path(kind, number)

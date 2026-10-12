@@ -35,6 +35,21 @@ def run(cwd: Path, *command: str) -> str:
     ).stdout.strip()
 
 
+def _fixture_runtime_launcher(repo: Path) -> None:
+    """A real transparent launcher selecting the package this suite imported."""
+    from scripts.lean_slots import supervisor as loaded
+    scripts = Path(loaded.__file__).resolve().parent.parent
+    directory = repo / "scripts"
+    directory.mkdir(exist_ok=True)
+    (directory / "slotctl.py").write_text(
+        "import sys\nfrom pathlib import Path\n"
+        f"SELECTED_SCRIPTS = Path({str(scripts)!r})\n"
+        "sys.path.insert(0, str(SELECTED_SCRIPTS))\n"
+        "from lean_slots.cli import main\n"
+        'if __name__ == "__main__":\n    raise SystemExit(main())\n'
+    )
+
+
 @pytest.fixture()
 def slot_repo(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -119,7 +134,8 @@ def slot_repo(
         "name = 'worker'\nurl = 'http://127.0.0.1:29001/mcp'\n"
     )
     (repo / ".codex" / "hooks" / "pre_tool_use_policy.py").write_text("# policy\n")
-    run(repo, "git", "add", "config", ".codex")
+    _fixture_runtime_launcher(repo)
+    run(repo, "git", "add", "config", ".codex", "scripts")
     run(repo, "git", "commit", "-m", "add slot infrastructure")
     monkeypatch.setenv("LEAN_SLOT_STATE_DIR", str(tmp_path / "state"))
     monkeypatch.setenv("LEAN_SLOT_SKIP_SUPERVISOR", "1")
@@ -235,7 +251,8 @@ def downstream_repo(
     )
     (repo / ".codex" / "agents" / "worker.toml").write_text("name = 'worker'\n")
     (repo / ".codex" / "hooks" / "pre_tool_use_policy.py").write_text("# policy\n")
-    run(repo, "git", "add", "config", ".codex")
+    _fixture_runtime_launcher(repo)
+    run(repo, "git", "add", "config", ".codex", "scripts")
     run(repo, "git", "commit", "-m", "add downstream slot infrastructure")
     controller = Controller(Inventory.load(inventory_path))
     return controller, public_controller, repo, worktrees

@@ -112,10 +112,13 @@ verified beyond test 2 on this record.**
 Two operational facts this exercise established, both worth knowing before the first swarm:
 
 - **A controller code change invalidates the running endpoints.** The proxy records a runtime
-  fingerprint of the implementation it loaded, so after editing `scripts/lean_slots/*` the endpoints
-  report `proxy=False` while still serving, and `prepare` fails with *"proxy for wtN is not healthy"*
-  and quarantines the slot. Run `supervisor stop && supervisor start` after any controller edit. This
-  is the mechanism working — it is what stops a stale front door being mistaken for a current one.
+  fingerprint of expected launch-source inputs and inventory; this is not an attestation of
+  process memory. The dated public exercise reported `proxy=False` after a source edit while the
+  proxy still served, and `prepare` failed with *"proxy for wtN is not healthy"* and quarantined.
+  The earlier source coverage was inventory-local; the accepted SF implementation below covers actual imported source and is present in the primary checkout. Current project gates and separately measured native loading remain open.
+  The historical unconditional stop/start remedy is superseded by LO-5: ROOT must establish
+  known ownership, capable quiescence and completed client requests in a coordinated window.
+  A source edit or stale digest alone never authorizes a reload.
 - **Use the canonical primary controller and inventory.** The dated exercise reported
   a different control plane and FREE slots when invoked inside a slot. Its CWD-only
   attribution is superseded: current `Inventory.load` chooses explicit inventory,
@@ -128,7 +131,7 @@ Two operational facts this exercise established, both worth knowing before the f
 
 The original Codex-first implementation required every local MCP client to inherit an environment-backed bearer token. That requirement was not part of the operator's requested feature and adds little protection on this trusted, single-user workstation: any process with the same user account can already read the local runtime state and repositories. It also creates a material reliability cost because an otherwise normal Codex launch fails MCP startup when hidden shell state is absent.
 
-The active deployment therefore uses `server.client_auth = "trusted-local"`. Front doors remain bound to loopback, each client supplies a nonsecret URL identity label for collision/routing checks, tool dispatch remains fail-closed on the active lease and its client/repository/worktree/endpoint/dependency identity, and `lean_build` remains disabled. `server.client_auth = "bearer"` is retained and tested as an explicit deployment feature flag for a future shared-user host; only that mode requires `LEAN_SLOT_CODEX_TOKEN` and client-token hashes. Proxy process metadata fingerprints the loaded implementation and inventory so an authentication-mode or code change cannot be mistaken for an already-current process. This amendment changes authentication, not lifecycle authority or collision safety.
+The active deployment therefore uses `server.client_auth = "trusted-local"`. Front doors remain bound to loopback, each client supplies a nonsecret URL identity label for collision/routing checks, tool dispatch remains fail-closed on the active lease and its client/repository/worktree/endpoint/dependency identity, and `lean_build` remains disabled. `server.client_auth = "bearer"` is retained and tested as an explicit deployment feature flag for a future shared-user host; only that mode requires `LEAN_SLOT_CODEX_TOKEN` and client-token hashes. Proxy process metadata records expected launch-source inputs and inventory for stale-reuse comparison. The accepted SF implementation below covers mandatory imported shared source. Fingerprints describe expected launch-source inputs, and do not attest process-memory code. This amendment changes authentication, not lifecycle authority or collision safety.
 - **Related:** [ADR-004](ADR-004-substrate-integrity-gates.md) (single-writer/generated-artifact integrity posture); [ADR-005](ADR-005-derived-proof-atlas.md) (three-slot proof swarming and lead-owned extraction); [ADR-007](ADR-007-kernel-nogo-ledger-and-negative-frontier.md) (machine-enforced swarm steering); `ef0c3d36`, `f0d1d6eb`, `5639f685`, `abaff71b`, `ff0dcab4`, `62e8da08`, `e3441cc5`, and `43686347` (the public worktree/LSP harness evolution whose lessons this ADR preserves).
 
 ---
@@ -549,3 +552,118 @@ do not serialize outside HTTP requests, and daemon handler threads are not joine
 server close. Unaccounted activity blocks replacement. Preserve rollback and measure
 loaded fingerprints, actual lease/MCP dispatch, release/reconnect and paired epochs
 separately. Nothing here permits adoption or signaling of unknown processes.
+
+
+<a id="2026-10-12-shared-runtime-source-fingerprint-proposal"></a>
+
+## Shared-runtime source fingerprint
+
+**Status: WHOLE SOURCE IMPLEMENTATION INDEPENDENTLY ACCEPTED / SOURCE FINDINGS CLOSED / CURRENT PROJECT GATES AND NATIVE ADMISSION PENDING.**
+This section extends the existing runtime fingerprint. Independent whole review
+accepted the complete source implementation and ROOT verified the admitted native
+assertion mutation/restoration controls. The reviewed files are present in the primary
+checkout and its declared source verification passed. The canonical closure writer
+closed the source findings. Current project gates, normal commit and separately
+measured native loading remain open. Source acceptance supplies no native authority. [Design](../superpowers/specs/2026-10-12-shared-runtime-source-fingerprint-design.md),
+[plan](../superpowers/plans/2026-10-12-shared-runtime-source-fingerprint.md) and
+[generic finding](../../papers/AutomatedReviews/2026-10-12-shared-runtime-source-fingerprint/supervisor.md).
+
+### Context and source constraints
+
+At assigned public source 39f8e544, source read on 2026-10-12 identifies a concrete
+coverage gap in Supervisor._runtime_fingerprint: inventory-local Python enumeration
+can be absent while a launcher imports shared controller code elsewhere. Existing
+_spawn and _resource_status compare that incomplete digest. This historical source assessment did not establish a native reproduction, host
+census or prevalence claim. The later admitted assertion controls verify source
+behavior; loaded-process admission remains separate.
+The public entry point directly imports lean_slots.cli.main; supported downstream
+entry points must bind their actual shared-path/override selection, not infer one
+from inventory, a sibling name or environment text alone.
+
+### Accepted source decisions
+
+- **SF-1 — Expected launch-source inputs.** Fingerprints bind expected source/config
+  inputs and existing records preserve their launch digest. They do not attest
+  process-memory code or request drain. No automatic reload, record rewrite or PID
+  management follows. The method docstring states the expected-source scope.
+- **SF-2 — Actual imported root is mandatory.** Coherent running supervisor/state
+  module origins anchor required shared package source; initializer and required
+  modules are genuinely read. Missing, bytecode-only, incoherent or denied origin
+  is unavailable, never launcher-only success.
+- **SF-3 — Complete bounded bytes.** Enumerate all package Python source, including
+  additional/nested modules, with capable native observers and bounded regular-file
+  reads. Reobserve origins, membership, identities and bytes; observed drift refuses.
+  Sequential reobservation is not atomic source attestation.
+- **SF-4 — Supported child route is coherent.** Bind mandatory actual launcher bytes
+  and the existing command, then match complete supported direct/shared-path/
+  launcher-defined-override templates, including an optional selected-cli fail-fast
+  guard and source-defined LEAN_SLOT_CONFIG setdefault. Recognize complete exact
+  AST shapes, aliases and ordered captured effects; guard messages allow only a
+  literal or bounded f-string of constants and the validated selected scripts Path,
+  without expressions/conversions/format specs/custom objects. Require capable
+  selected child package equal to loaded origins. Optional exactly no-argument
+  expanduser().resolve() on recognized genuine Path selectors uses captured HOME
+  only for bare tilde/tilde-slash; absolute no-op is independent of unused HOME.
+  Required home is bounded, absolute and capably observed/reobserved; named-user,
+  malformed/denied/missing home and unsupported transforms refuse. Bind only used
+  raw/expanded/canonical path and consumed HOME, no ambient pwd/UID fallback.
+  Unsupported/dynamic routing refuses. No general AST interpreter, guessed sibling,
+  new environment API or repeated child probe is introduced.
+- **SF-5 — Inputs cannot collide.** Preserve role/kind/server/slot/command/auth inputs.
+  Use deterministic separate shared/launcher/local/routing namespaces; optional
+  local absence must be confirmed, while denial is unavailable. Same-root aliases
+  retain mandatory coverage.
+- **SF-6 — Actual consumers enforce evidence.** Refusal precedes pending write/Popen.
+  Existing status/reuse/doctor preserve running/stale/down/unavailable distinctions,
+  typed witnesses, record and capacity reservations. Genuine file-byte, import-route
+  and production-consumer controls plus sole mutants/restoration must prove the seam.
+  A distinct real A/B control validates captured A, changes external selection to B,
+  then asserts actual Popen still receives A plus applicable backend token and
+  unchanged argv. A sole production environment-recapture mutant must fail that
+  independent oracle; subsequent current B selection with parent A refuses.
+  Preserve that selector-only triad and add a distinct HOME/tilde A/B proxy/backend
+  Popen oracle, with captured HOME/sentinel/token/argv. Separate ambient-HOME and
+  unsupported-transform sole mutants must fail independently and restore green.
+- **SF-7 — Preserve original contracts and acceptance.** Extend existing fingerprint,
+  no registry/API/CLI/check family or controller/state/proxy edits. Retain complete
+  F1–F6/LO, R, ND/NC, session/auth, pairing, capacity, borrowing, rollback and
+  literal-branch contracts. Independent specification/implementation review, ROOT
+  integration/current gates and supported closure precede acceptance; native loading,
+  request drain and matching-lease MCP gates remain separate.
+
+### Alternatives, consequences and admission
+
+The accepted source route uses bounded whole-template recognition inside supervisor.
+Child import-origin probing would add launch/import/reap/timeout and repeated-call
+seams; no timing has been measured and no such process is authorized by this design.
+A local-only/environment-only hash does not bind actual imports. A general loader
+interpreter or second source registry duplicates machinery and is rejected.
+Independent review covered template support and refusal, including public direct
+imports and generic overlay defaults/overrides. Unsupported launcher forms refuse
+with unavailable source evidence; source coverage is never silently omitted.
+
+This source implementation makes no population-shape assertion; a later one owes the existing
+architecture-change pilot. Existing source/runtime acceptance and failed project
+gates remain separate and unwaived. Unknown resources remain reserved and unsignalled.
+
+
+Supported parent indices must exist on the actual recognized Path; missing parents
+give typed unavailable evidence before pending/Popen. Relevant loaded qualified
+origins, including same-source aliases, are capped at 1024 before native observations.
+The complete module-dictionary discovery cost remains proportional to that dictionary.
+The accepted source implementation and its native assertion controls cover these
+bounds. Current project gates and separately measured native admission remain open;
+no process record rewrite, adoption or signal follows from source acceptance.
+
+
+Supported source string/Path conversions and selected source-defined fallbacks retain
+same-operand transform provenance. Aliases, conversions, literal joins, expansion and
+resolution retain cumulative parent operations across the complete recipe, capped at
+four; parents[index] consumes index + 1. Parent/join-derived operands can use their
+own admitted expansion while retaining that cumulative budget. Inactive defaults and
+selector fallbacks validate eagerly. These rules require typed source refusal before
+pending/Popen with existing witnesses/records/reservations preserved. The complete source implementation, ROOT native assertion mutation/restoration
+controls and independent whole source review are accepted, and the reviewed files
+are present in the primary checkout. Current project gates, normal commit and
+separately measured native admission remain open. Historical originals and
+qualifying/invalid evidence remain retained.
