@@ -1085,3 +1085,19 @@ maps, generator and semigroup naturality, and the finite-time null-space and
 norm comparisons remain required continuation work. This checkpoint supplies
 finite history consistency; it does not establish continuum reconstruction,
 a physical gap, publication readiness or completion of the full field target.
+
+## Event readout computation rule
+
+`QuantumNetwork/FiniteAdaptiveGibbsReadout.eventReadout_count` extracts the
+fixed `count := 1` field of the binary projective instrument: one Kraus
+operator per outcome. The instrument has two outcomes. This definitional
+computation rule supplies no discrimination bound, history-count result or
+normalization proof. It is disclosed in `MODELING_ASSUMPTION_THEOREMS` as
+`definitional` and contributes to tracked definitional debt, rather than the
+kernel-load-bearing theorem count.
+
+The operational claims use `eventTable_complete`, `three_full_history_variation` and
+`eventPhysical_error`, whose proofs consume the actual branch weights and complete
+finite laws. This disclosure does not alter the Lean declaration or its proof,
+the canonical generated-declaration filter, the projection exemption ceiling,
+or the unresolved full project and publication gates.

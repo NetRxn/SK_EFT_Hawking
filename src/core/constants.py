@@ -3221,6 +3221,16 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
     # Populated by the 2026-06-13 W2 triage of the proxy_body_audit flagged set.
 
     # ---- definitional records (legitimate trivial-by-design) ----
+    'eventReadout_count': {
+        'lean_name': 'eventReadout_count', 'module': 'FiniteAdaptiveGibbsReadout',
+        'category': 'definitional',
+        'reason': 'Extracts the fixed count field of the binary projective instrument: '
+                  'one Kraus operator per outcome. It is a computation rule, not a '
+                  'discrimination bound, history count or proof of instrument normalization.',
+        'discloses': 'docs/audits/2026-09-11-finite-positive-kernel.md '
+                     'section Event readout computation rule; operational content is '
+                     'proved by eventTable_complete, three_full_history_variation and eventPhysical_error.',
+    },
     'extendPull_identity': {
         'lean_name': 'extendPull_identity', 'module': 'FinitePauliHistoryConsistency',
         'category': 'definitional',
