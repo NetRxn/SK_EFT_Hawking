@@ -292,19 +292,32 @@ files passed independent whole integration review. Normal metadata commit
 contract retains its chronological, branchwise and Hermitian premises and all
 zero-dose, reset, ordering, metric, half-time and non-Hermitian controls.
 Shared decay factors do not identify the distinct carriers or their norms, and
-finite dose sums do not identify physical or modular clocks. Documentation closing,
-the final committed registered build and closing verification remain required.
-Broader project, scientific, paper, publication and apex gates remain separate;
-existing failures are retained without waiver.
+finite dose sums do not identify physical or modular clocks. The final registered
+build and independent committed closing verification passed at `046a3387` for
+the complete bounded finite two-rate target. Broader project, scientific, paper,
+publication and apex gates remain separate; existing failures are retained without
+waiver.
 
 The next complete finite growth target has independent enabling-design review.
-It would reconstruct the existing faithful reference through the independent
-Gibbs construction, prove the actual nonzero-Hamiltonian GKSL/Kraus factorization,
-and connect phase-sensitive retained-memory observations to the accepted weighted
-history metric. Fixed and co-rotated instruments have separate complete laws and
-attained optima. The target includes actual reflected-kernel nonpositivity under
-phase, rather than transporting dissipative positivity to a unitary-composed map.
-Group and inverse laws apply to the phase isometry; the damped transfer has its
-own normality and adjoint obligations. This target has no new implementation or
-proof admission at this checkpoint. It preserves the current two-rate contract
-and the separately typed recursive-time contract.
+`QuantumNetwork/FiniteNontracialThermalPhase.lean` supplies its complete thermal
+and chronological evolution foundation. The existing faithful reference equals
+an independently constructed Gibbs state for a non-scalar diagonal Hamiltonian.
+The same normalized unitary-after-noise family equals the actual nonzero-Hamiltonian
+GKSL propagator on arbitrary complex matrices. Forward state and reverse observable
+phases have opposite signs. Literal timed schedules, separate free pulses and
+unchanged spectator marginals retain their explicit scale, periodicity, zero-dose
+and Hermitian norm premises.
+
+The entire source and proof originals passed independent whole review, and normal
+source commit `c8600589` preserves the reviewed bytes. Aggregate import registration
+makes the module reachable by the canonical build. The registered build, exhaustive
+actual imported inventory, canonical metadata and independent integration review
+remain required. Source acceptance alone does not accept the complete growth target.
+
+The remaining consumer work connects phase-sensitive retained-memory observations
+to the accepted weighted history metric. Fixed and co-rotated instruments owe
+separate complete laws and attained optima. The target includes actual reflected-kernel
+nonpositivity under phase; dissipative positivity does not transfer to a
+unitary-composed map. Group and inverse laws belong to the phase isometry; the
+damped transfer retains its normality and adjoint obligations. The current two-rate
+contract, separately typed recursive-time contract and broader gates remain distinct.
