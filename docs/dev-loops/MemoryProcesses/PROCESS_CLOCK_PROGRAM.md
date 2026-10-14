@@ -172,10 +172,18 @@ unchanged. The new records have only the allowed core axiom closures. Independen
 review verifies this bounded imported-source, inventory, counts and atlas
 checkpoint.
 
-The next consumers are the actual noisy correlation and mixed-memory witnesses,
-the distinction between fixed and reoptimized symmetric readouts, and the
-finite Gibbs spectator warm-up classifier. Those proofs remain open; the
-generic robustness estimate does not itself supply their numerical margins.
+The robustness module now also implements the noisy correlation and mixed-memory
+consumers, including physical readout tables and the distinction between fixed
+and reoptimized symmetric readouts. For symmetric mixing, the fixed rule has
+error `r`, while reoptimization attains `min(r,1-r)`; the endpoint guards and
+normalized physical rules are proved. The source-present consumers therefore
+extend the earlier generic estimate with concrete margins.
+
+`QuantumNetwork/FiniteAdaptiveGibbsReadout.lean` supplies the finite Gibbs
+spectator warm-up classifier. Its actual warm-up maps have exact retained
+distance, and concrete two- and three-level measurements attain the stated
+all-effect and randomized-classifier bounds. Warm-up readout discrimination
+does not establish positivity of the perturbed reflected kernel.
 No quantum advantage, physical-clock identification or continuum claim follows.
 
 The latest measured canonical Python run, before this component's integration,
@@ -186,3 +194,34 @@ source, zero-sorry, axiom, counts, graph and atlas checks pass. The same 18 fail
 check names recur; this does not establish identical diagnostics or waive any
 failure. Fresh all-tests acceptance, the full pipeline, D9 absorption and
 publication prerequisites remain open.
+
+## Chronological field evolution and retained environment memory
+
+`QuantumNetwork/FiniteNontracialSchedule.lean` constructs actual chronological
+Kraus composition for arbitrary finite lists of nonnegative rates and durations.
+The reset dose `G` and dephasing dose `D` yield population retention `exp(-G)`
+and coherence retention `exp(-(G+D))`. The closed action is proved for every
+complex matrix, with reverse observable pullback and trace duality. Its generator
+is tied to actual jump operators; the physical derivative at zero is one-sided.
+Empty schedules, zero rates, zero durations and a distinct two-rate numerical
+example are included. Complete source and original-evidence review pass.
+
+`QuantumNetwork/FiniteNontracialEnvironmentLift.lean` constructs the actual
+second-factor lift `I_S tensor K_E`. Its identities hold for arbitrary joint
+matrices, including correlated inputs. Environment-only evolution preserves the
+literal system partial trace; identical system-local instrument branches
+propagate equality of that marginal. Actual Gibbs reset, computational dephasing
+and the primitive two-rate action are proved. Distinct stationary system
+preparations have joint trace distance one, excluding strict global contraction;
+a local-reset/SWAP counterexample guards later noise cuts. Complete scoped-core
+source and original-evidence review pass.
+
+These are independently reviewed foundations being integrated through the
+authoritative controller build. Imported inventory, canonical metadata and
+independent integrated review remain separate acceptance gates. The next proof
+target specializes the environment lift to the actual schedule and establishes
+contraction for Hermitian inputs with equal system marginals at every history
+branch. Actual diagonal and complex retained-memory readouts, attained optima,
+and the weighted reflected-history transfer remain open. Compatibility of their
+decay factors must be proved through the actual maps; their carriers and norms
+must remain distinct. The full two-rate integration target is not complete.
