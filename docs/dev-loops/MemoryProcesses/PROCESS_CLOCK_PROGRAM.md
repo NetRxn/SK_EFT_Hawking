@@ -2,7 +2,7 @@
 
 Status: implementation and independent component reviews complete; the full aggregate Lean build passed at `5238bafc`. Final extraction, substrate gate and fresh independent integrated review passed. Root accepts this bounded increment locally. This program extends the locally accepted calibrated-memory/coarse-graining increment `bbdbe40d`.
 
-Root owns integration, slot admission and the primary notebook. Public changes remain local on the reviewed feature branch; no public push or main merge is included. Existing ADR-008 slots, continuity packets, planners and review writers govern execution. Workers read notebooks and report; they do not write the shared record.
+Root owns integration, slot admission and the primary notebook. Reviewed feature history is checkpointed remotely and exposed through draft integration PRs. Main merge and publication acceptance require their separate gates. Existing ADR-008 slots, continuity packets, planners and review writers govern execution. Workers read notebooks and report; they do not write the shared record.
 
 ## Delivered components and acceptance boundary
 
@@ -224,8 +224,9 @@ at every history branch for the retained-family distance and all-effect error
 bound. Literal system-local instruments and environment-only channels propagate
 the premise. A shared normalized continuation earns ordinary contractivity;
 another retention factor requires a separately verified later noise cut.
-Complete M2 source and original evidence passed independent review; its imported
-integration gates are checked separately.
+Complete M2 source, original evidence, imported inventory and canonical metadata
+passed independent integrated review. Acceptance retains the branchwise premise
+and the distinct downstream noise-cut requirements.
 
 `FiniteNontracialScheduleTransfer.lean` constructs the chronological observable
 pullback on the accepted weighted history quotient. Actual central and split
@@ -234,8 +235,8 @@ every duration gives square-root retention coefficients. The inserted-kernel
 norm equals the half-schedule transfer norm, while the full transfer retains
 squared decay factors. Exact mode norms, complete central reset, and
 state/observable and metric distinctions are proved. The assigned mathematical
-bridge passed complete source and original-evidence review; imported inventory,
-canonical metadata and independent integrated review remain separate gates.
+bridge passed complete source, original-evidence, imported inventory, canonical
+metadata and independent integrated review within its mathematical scope.
 
 Actual diagonal and complex retained-memory readouts, complete physical tables,
 attained optima and the numerical, order and observation-erasure controls remain
