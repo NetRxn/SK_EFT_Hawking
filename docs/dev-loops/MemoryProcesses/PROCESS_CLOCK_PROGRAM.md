@@ -258,9 +258,11 @@ witnesses, a genuine full environment Gibbs reset, system-only preparation and
 identical inputs.
 
 Both consumer packages passed complete independent source and original-evidence
-review and normal source absorption. Their aggregate imports are registered;
-authoritative imported compilation, exhaustive imported inventory, canonical
-metadata reconciliation and independent integrated acceptance remain pending.
+review and normal source absorption. Their aggregate imports compile through the
+registered build. Exhaustive actual imported inventory, canonical metadata and
+both complete consumer scopes passed independent integrated review. Canonical
+metadata preserves the prior full records and the existing producer's kind and
+type-rendering distinctions. Final committed closing checks remain separate.
 The remaining diagonal/joint reset, order, non-Hermitian and null controls remain
 open. Physical compatibility with the weighted-history factors must consume the
 actual readout proofs. Shared decay factors do not identify the distinct carriers
