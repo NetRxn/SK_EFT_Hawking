@@ -262,8 +262,31 @@ review and normal source absorption. Their aggregate imports compile through the
 registered build. Exhaustive actual imported inventory, canonical metadata and
 both complete consumer scopes passed independent integrated review. Canonical
 metadata preserves the prior full records and the existing producer's kind and
-type-rendering distinctions. Final committed closing checks remain separate.
-The remaining diagonal/joint reset, order, non-Hermitian and null controls remain
-open. Physical compatibility with the weighted-history factors must consume the
-actual readout proofs. Shared decay factors do not identify the distinct carriers
-or their norms. The full two-rate integration target is not complete.
+type-rendering distinctions. Final committed closing review and the registered
+build passed at `8191023d` within this consumer component's scope.
+
+`QuantumNetwork/FiniteNontracialMemoryScheduleControls.lean` adds actual empty,
+zero-rate, zero-duration and logarithmic controls with complete physical tables,
+normalized laws and attained optima. A normalized environment reset after the
+Flip intervention erases the retained distinction; system-only preparation after
+the first recorded measurement preserves it. Identical stationary inputs use the
+same tree. Both normalized intervention orders have exact distance
+`7*(1-alpha)/25`, positive for positive population dose. Literal non-Hermitian
+state, observable, GKSL and effect identities retain their distinct domains.
+
+`FiniteNontracialOperationalCompatibility.lean` connects the independently proved
+physical readout values to actual weighted-history transfer and mode norms.
+Actual ordinary, scheduled and half-duration trees realize three distinct
+effects. Half-time insertion retains a single damping factor in squared norms;
+full-time transfer retains its square. The negative quotient generator is tied
+to actual primitive GKSL duality. Positive-dose physical witnesses coexist with
+the independent central-reset quotient endpoint; side-reset, carrier, metric and
+state/observable guards preserve the separate constructions.
+
+Both additions passed complete independent source, mathematics and original
+evidence review, followed by normal source commits and controller integration.
+Their production imports are registered. Fresh aggregate imported inventories,
+canonical metadata and combined independent integration review remain pending.
+Shared decay factors do not identify the distinct carriers or their norms, and
+finite dose sums do not identify physical or modular clocks. Full current-project
+gates and the complete two-rate integration target remain open.
