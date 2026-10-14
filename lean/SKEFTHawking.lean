@@ -5300,6 +5300,8 @@ import SKEFTHawking.FiniteNontracialObservableTransfer
 import SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess
 import SKEFTHawking.QuantumNetwork.FiniteNontracialSchedule
 import SKEFTHawking.QuantumNetwork.FiniteNontracialEnvironmentLift
+import SKEFTHawking.QuantumNetwork.FiniteNontracialMemoryReadout
+import SKEFTHawking.QuantumNetwork.FiniteNontracialCoherentReadout
 import SKEFTHawking.FiniteNontracialScheduleTransfer
 
 /-!

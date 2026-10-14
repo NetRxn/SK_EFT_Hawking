@@ -238,8 +238,30 @@ state/observable and metric distinctions are proved. The assigned mathematical
 bridge passed complete source, original-evidence, imported inventory, canonical
 metadata and independent integrated review within its mathematical scope.
 
-Actual diagonal and complex retained-memory readouts, complete physical tables,
-attained optima and the numerical, order and observation-erasure controls remain
-open. Their compatibility with the weighted-history factors must consume those
+`QuantumNetwork/FiniteNontracialMemoryReadout.lean` derives the actual depth-two
+Keep/Flip branches, including impossible histories, and their normalized
+correlation-readout tables. Retained distance is population retention; the named
+physical readout attains error `(1-alpha)/2` and the all-effect optimum.
+History-only and common terminal-only consumers have error `1/2`. Their
+restriction is blindness to the retained correlation, whose readout has a
+computational-basis implementation.
+
+`QuantumNetwork/FiniteNontracialCoherentReadout.lean` derives the actual schedule,
+SWAP and complex projective observation of the noncommuting qubit preparations.
+Independent upper and lower arguments give retained distance and history
+variation `beta/sqrt(2)`. The physical decision attains error
+`(1-beta/sqrt(2))/2`, with separate all-effect and randomized-history optima.
+The same preparations, schedule and SWAP followed by computational observation
+have identical branch families and error `1/2` for every permitted readout.
+Assigned complex controls include zero-dose identities, exact logarithmic
+witnesses, a genuine full environment Gibbs reset, system-only preparation and
+identical inputs.
+
+Both consumer packages passed complete independent source and original-evidence
+review and normal source absorption. Their aggregate imports are registered;
+authoritative imported compilation, exhaustive imported inventory, canonical
+metadata reconciliation and independent integrated acceptance remain pending.
+The remaining diagonal/joint reset, order, non-Hermitian and null controls remain
+open. Physical compatibility with the weighted-history factors must consume the
 actual readout proofs. Shared decay factors do not identify the distinct carriers
 or their norms. The full two-rate integration target is not complete.
