@@ -1,12 +1,12 @@
 {
-  "generated": "2026-10-12T02:29:55.310499",
+  "generated": "2026-10-14T08:48:24.039545",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 46157,
-    "theorems_total": 26126,
-    "theorems_substantive": 26100,
+    "total_declarations": 46345,
+    "theorems_total": 26238,
+    "theorems_substantive": 26212,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 26031,
+    "theorems_kernel_substantive": 26143,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2098,
+    "modules": 2100,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1309,7 +1309,9 @@
       "SKEFTHawking.QuantumNetwork.FiniteMemoryPartialInteraction",
       "SKEFTHawking.QuantumNetwork.FiniteMemoryProcess",
       "SKEFTHawking.QuantumNetwork.FiniteMemoryResetMixture",
+      "SKEFTHawking.QuantumNetwork.FiniteNontracialEnvironmentLift",
       "SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess",
+      "SKEFTHawking.QuantumNetwork.FiniteNontracialSchedule",
       "SKEFTHawking.QuantumNetwork.GateFidelity",
       "SKEFTHawking.QuantumNetwork.GateFidelityBridge",
       "SKEFTHawking.QuantumNetwork.GaussianComplexMoment",
@@ -2116,9 +2118,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 13974,
-    "structures": 495,
-    "instances": 995,
+    "definitions": 14017,
+    "structures": 496,
+    "instances": 997,
     "inductives": 106,
     "native_decide_decl_closure": 530,
     "native_decide_clusters": {
@@ -2131,7 +2133,7 @@
   "python": {
     "python_modules": 138,
     "test_files": 214,
-    "pytest_cases": 7551,
+    "pytest_cases": 7673,
     "notebooks": 91,
     "papers": 42,
     "figures": 170
