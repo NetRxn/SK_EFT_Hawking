@@ -216,12 +216,29 @@ preparations have joint trace distance one, excluding strict global contraction;
 a local-reset/SWAP counterexample guards later noise cuts. Complete scoped-core
 source and original-evidence review pass.
 
-These are independently reviewed foundations being integrated through the
-authoritative controller build. Imported inventory, canonical metadata and
-independent integrated review remain separate acceptance gates. The next proof
-target specializes the environment lift to the actual schedule and establishes
-contraction for Hermitian inputs with equal system marginals at every history
-branch. Actual diagonal and complex retained-memory readouts, attained optima,
-and the weighted reflected-history transfer remain open. Compatibility of their
-decay factors must be proved through the actual maps; their carriers and norms
-must remain distinct. The full two-rate integration target is not complete.
+The bounded foundations passed authoritative builds, imported inventory and
+independent integrated review. The schedule specializes the environment lift
+to arbitrary joint matrices. For Hermitian inputs with equal system marginals,
+trace distance contracts by population retention. The same premise is required
+at every history branch for the retained-family distance and all-effect error
+bound. Literal system-local instruments and environment-only channels propagate
+the premise. A shared normalized continuation earns ordinary contractivity;
+another retention factor requires a separately verified later noise cut.
+Complete M2 source and original evidence passed independent review; its imported
+integration gates are checked separately.
+
+`FiniteNontracialScheduleTransfer.lean` constructs the chronological observable
+pullback on the accepted weighted history quotient. Actual central and split
+Kraus steps realize the scheduled kernel and three distinct effects. Halving
+every duration gives square-root retention coefficients. The inserted-kernel
+norm equals the half-schedule transfer norm, while the full transfer retains
+squared decay factors. Exact mode norms, complete central reset, and
+state/observable and metric distinctions are proved. The assigned mathematical
+bridge passed complete source and original-evidence review; imported inventory,
+canonical metadata and independent integrated review remain separate gates.
+
+Actual diagonal and complex retained-memory readouts, complete physical tables,
+attained optima and the numerical, order and observation-erasure controls remain
+open. Their compatibility with the weighted-history factors must consume those
+actual readout proofs. Shared decay factors do not identify the distinct carriers
+or their norms. The full two-rate integration target is not complete.

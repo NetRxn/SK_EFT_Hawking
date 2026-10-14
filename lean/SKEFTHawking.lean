@@ -5300,6 +5300,7 @@ import SKEFTHawking.FiniteNontracialObservableTransfer
 import SKEFTHawking.QuantumNetwork.FiniteNontracialInterventionProcess
 import SKEFTHawking.QuantumNetwork.FiniteNontracialSchedule
 import SKEFTHawking.QuantumNetwork.FiniteNontracialEnvironmentLift
+import SKEFTHawking.FiniteNontracialScheduleTransfer
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
