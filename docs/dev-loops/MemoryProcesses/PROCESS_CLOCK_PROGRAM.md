@@ -285,8 +285,26 @@ state/observable guards preserve the separate constructions.
 
 Both additions passed complete independent source, mathematics and original
 evidence review, followed by normal source commits and controller integration.
-Their production imports are registered. Fresh aggregate imported inventories,
-canonical metadata and combined independent integration review remain pending.
+Their production imports compile through the registered aggregate build. Exhaustive
+actual imported inventories, full canonical records and all six derived metadata
+files passed independent whole integration review. Normal metadata commit
+`47e2e4a6` preserves the reviewed candidate bytes. The complete original two-rate
+contract retains its chronological, branchwise and Hermitian premises and all
+zero-dose, reset, ordering, metric, half-time and non-Hermitian controls.
 Shared decay factors do not identify the distinct carriers or their norms, and
-finite dose sums do not identify physical or modular clocks. Full current-project
-gates and the complete two-rate integration target remain open.
+finite dose sums do not identify physical or modular clocks. Documentation closing,
+the final committed registered build and closing verification remain required.
+Broader project, scientific, paper, publication and apex gates remain separate;
+existing failures are retained without waiver.
+
+The next complete finite growth target has independent enabling-design review.
+It would reconstruct the existing faithful reference through the independent
+Gibbs construction, prove the actual nonzero-Hamiltonian GKSL/Kraus factorization,
+and connect phase-sensitive retained-memory observations to the accepted weighted
+history metric. Fixed and co-rotated instruments have separate complete laws and
+attained optima. The target includes actual reflected-kernel nonpositivity under
+phase, rather than transporting dissipative positivity to a unitary-composed map.
+Group and inverse laws apply to the phase isometry; the damped transfer has its
+own normality and adjoint obligations. This target has no new implementation or
+proof admission at this checkpoint. It preserves the current two-rate contract
+and the separately typed recursive-time contract.
