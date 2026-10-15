@@ -4,6 +4,52 @@ Status: implementation and independent component reviews complete; the full aggr
 
 Root owns integration, slot admission and the primary notebook. Reviewed feature history is checkpointed remotely and exposed through draft integration PRs. Main merge and publication acceptance require their separate gates. Existing ADR-008 slots, continuity packets, planners and review writers govern execution. Workers read notebooks and report; they do not write the shared record.
 
+## Current finite growth and integration
+
+The adaptive qutrit and correlated-environment foundations are integrated.
+`QuantumNetwork/FiniteThreeLevelMemoryReadout.lean` now has whole source,
+compiled, canonical and committed-closing acceptance at `6476175c`. The actual
+normalized three-outcome readout and every history-dependent binary physical
+instrument retain their distinct roles. Both physical minima include universal
+lower bounds and named attaining instruments. Complete branch matrices, both
+initial marginals, the common Keep map on two actual initial states, both exact
+commutator arms, impossible histories, phase controls and equal-mass decisions
+are included. Raw private-name printer differences are retained separately from
+exact imported minimal/aggregate agreement. Failed transport and integration
+operations remain distinct from their later successful validations.
+
+The four-wire local-channel foundation retains bounded acceptance at `d8afcf18`.
+The shallow-depth obstruction is source-accepted and normally absorbed at
+`58969d22`; its aggregate registration `3e85b4ec` passes the registered build.
+Its compiled inventories, canonical reconciliation and committed closing remain
+pending. The inherited next locality target is an actual two-layer CNOT
+construction attaining the target matrix, with correlated-initialization and
+unrestricted-preparation counterexamples. A finite locality certificate supplies
+no computational-advantage claim.
+
+The next field/process target has complete enabling-design acceptance. It is
+planned, not implemented: fifteen concrete qutrit reflection effects at the
+existing nontracial equilibrium define an actual chronological positive-history
+kernel and its null quotient. Positive central retention must represent every
+complex qutrit observable, including complete side reset; central reset retains
+only the scalar quotient. Subsequent work descends the actual thermal observable
+channel and represents the retained experiment's complete Born probabilities
+through inverse-sandwich state evaluation. It must consume both physical minimum
+theorems as well as the named attainers, rather than merely reproduce a shared
+decay factor. The reflection instrument, physical readout and retained carrier
+remain distinct.
+
+The whole target retains all phase and reset obstructions. Phase-bearing
+chronological probabilities do not automatically give a Hermitian or positive
+kernel; normal transfer acts on the original positive quotient. Strict norm
+comparisons require a nonzero centered component and strictly intermediate
+retention. Operational readout error is not quotient norm, free phase controls
+are not elapsed-time calibration, and finite reconstruction supplies no
+continuum theory or physical mass gap. Ordinary slot admission, complete native
+proofs, independent whole review, integration and current gates remain required
+for each subsequent implementation package. Broader red project and publication
+gates remain unwaived.
+
 ## Delivered components and acceptance boundary
 
 | Component | Reviewed candidate | Integrated source | Evidence |
