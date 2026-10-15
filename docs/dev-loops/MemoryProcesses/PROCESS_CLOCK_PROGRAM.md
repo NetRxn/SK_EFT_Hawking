@@ -310,9 +310,14 @@ and Hermitian norm premises.
 
 The entire source and proof originals passed independent whole review, and normal
 source commit `c8600589` preserves the reviewed bytes. Aggregate import registration
-makes the module reachable by the canonical build. The registered build, exhaustive
-actual imported inventory, canonical metadata and independent integration review
-remain required. Source acceptance alone does not accept the complete growth target.
+makes the module reachable by the canonical build. The registered build and exhaustive
+actual imported module inventory passed. The canonical catalogue and all six derived
+metadata files passed independent whole integration review; normal metadata commit
+`a52165dc` preserves the reviewed bytes and passed the registered build. Compiler
+generated members retain their original catalogue flags, while the existing shared
+resolver excludes generated helpers from the published author-written theorem census.
+These results establish the thermal foundation's integration within the growth target.
+They do not accept the remaining consumers or the complete growth target.
 
 The remaining consumer work connects phase-sensitive retained-memory observations
 to the accepted weighted history metric. Fixed and co-rotated instruments owe
