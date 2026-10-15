@@ -5313,6 +5313,7 @@ import SKEFTHawking.QuantumNetwork.FiniteThreeLevelCoherentReadout
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelAdaptiveReadout
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelEnvironmentLift
 import SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer
+import SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
@@ -5342,4 +5343,3 @@ Blueprint+sorry: algebraic identities are fully formalized; PDE well-posedness,
 asymptotic analysis, and derivative expansion convergence are left as `sorry`.
 The `sorry` gaps are documented and flagged for Aristotle automated filling.
 -/
-import SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout
