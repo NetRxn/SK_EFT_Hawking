@@ -2,14 +2,14 @@
 
 > **Auto-generated** by `scripts/atlas_heatmap.py` from `atlas_view.build_atlas()` — a VIEW over `lean_deps.json` ∪ `HYPOTHESIS_REGISTRY`. Do not hand-edit; regenerate with `uv run python scripts/atlas_heatmap.py --write`.
 
-_Source: 26677 theorem nodes, 48 tracked open assumptions, 72 IMPLIES edges._
+_Source: 26844 theorem nodes, 48 tracked open assumptions, 72 IMPLIES edges._
 
 ## Landscape
 
 | | count |
 |---|---:|
-| ✅ TRUE (proved) | 26273 |
-| ⛔ OBSTRUCTION (no-go) | 404 |
+| ✅ TRUE (proved) | 26434 |
+| ⛔ OBSTRUCTION (no-go) | 410 |
 | ❓ open (tracked assumptions) | 48 |
 | ★ apex (headline open targets) | 1 |
 
