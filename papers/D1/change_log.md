@@ -176,3 +176,7 @@ Qualify the steep polariton gradient scale as nonthermal, distinguish cavity val
 ## 2026-10-15: Predicted versus measured spectrum
 
 Distinguish the nonthermal Hawking spectrum predicted in Falque et al.'s discussion from the measured fluid profiles and excitation dispersions. Remove the unsupported measurement attribution in the benchmark paragraph and matching review evidence. Numeric inputs, formulas, proofs, closures and stage fields are unchanged.
+
+## 2026-10-15 — Citation identity and source-fidelity reconciliation
+
+Corrected Wang2026TMDPolariton bibliography to the actual published title, author order and DOI; registry notes distinguish the held 2024-v1 author preprint from the published body. No numerical inputs or platform claims changed. Scoped review and evidence: `../AutomatedReviews/2026-10-15-publication-citation-coverage/`. Broader publication gates remain pending.
