@@ -71,3 +71,108 @@ frequency-dependent $\chivest$ at higher derivative order).
 ```
 
 The shorter abstract reflows the preexisting overwide tracked-hypothesis display into the left column, where its original single line overlaps neighboring prose. The display is therefore broken across four aligned lines, preserving its complete mathematical token sequence. This is the sole body-layout exception; it does not establish the adjacent conjunct-independence claim. All other body source bytes are preserved. The original clipped baseline and the pre-layout-fix overlapping rendering are retained in local execution evidence.
+
+## 2026-10-15 — Finite-tolerance and logical-clause interpretation
+
+The symmetric speed cap permits a finite susceptibility interval, not just the exact-zero anchor. Its expanded susceptibility endpoints have approximately twice the speed-deviation offset. P2 already implies P3 at the stated tolerance, and positivity holds throughout the compatible physical interval; the falsifier proofs do not establish independent-clause necessity. The quarter point lies inside the adopted range. Interval width is distinguished from prior probability and microscopic selection, including recovery mechanisms that can preserve the speed law. The figure caption and the exclusively allocated canonical producer label/docstring carry the same distinctions; numerical trace/shape data are preserved. The accepted 443-character abstract and displayed predicate/theorem statements are unchanged. No live Lean/proof, external-attribution, source/comment/metadata or whole-paper certification follows.
+
+Displaced manuscript spans and proposal-propagation corrections, retained as exact history (the science text states the current result):
+
+```latex
+GW170817-compatible window $[(1-\tau)^2, (1+\tau)^2]$ has measure
+$\sim 4\tau$ in $\chivest$, vanishingly small under any natural-range
+prior, and sits strictly interior to $[0.1, 10]$ about the anchor
+$\chivest = 1$.
+```
+
+```latex
+What the bound can do instead is fix $\chivest$ itself, and the content
+of this Letter is that it fixes $\chivest$ to a part in $10^{15}$ of
+the order-unity window the identification's own microscopic origin
+would predict --- a value that window contains, but does not favour.
+```
+
+```latex
+establish that the failure is not an endpoint artefact. The one value
+that survives is the singleton:
+\verb|ligo_satisfied_at_chi_one| proves \verb|LigoSatisfied| holds at
+$\chivest = 1$, and \verb|c_GW_deviation_zero_iff_chi_one| makes that
+the exact biconditional.
+```
+
+```latex
+  $[(1-\tau)^2,(1+\tau)^2]$ is $10^{14}$ times narrower than the
+  natural range and so renders as the single gold star --- note that it
+  sits \emph{inside} the band, not beside it: the datum confines
+  $\chivest$, it does not exclude the range.
+```
+
+```latex
+three independently load-bearing conjuncts:
+```
+
+```latex
+demanding positivity (P1), GW170817 compatibility (P2), and
+sub-half-deviation $|\dccap| < 1/2$ as P3'. P3' is genuinely
+independent of P1 (e.g.\ $\chivest = 1/10$ satisfies P1 with
+$|\dccap| \approx 0.684 \not< 1/2$). The bundle is discharged at
+$\chivest = 1$ (\texttt{H\_VestigialModeIsGraviton\_at\_one}) and
+\emph{four} explicit falsifier theorems prove non-vacuity:
+\verb|*_fails_at_natural_lower| (P2),
+\verb|*_fails_at_natural_upper| (P2),
+\verb|*_fails_at_zero| (P1), and
+\verb|*_fails_at_quarter| (P3'; at $\chivest = 1/4$ the deviation is
+exactly $\dccap = -1/2$, saturating the bound and isolating P3'
+independence). The bundle's support over the natural-range prior has
+measure $4\tau \approx 1.2\times 10^{-14}$ --- vanishingly small, but
+non-empty, and containing $\chivest = 1$ --- and that is the
+load-bearing falsifiability claim. (The
+original Wave-2 P3 = $\forall c{>}0,\,\cGW(\chivest, c) > 0$ was
+removed in the 2026-04-25 post-Wave-2 audit as redundant given P1;
+P3' replaces it with a load-bearing quantitative constraint per the
+project's preemptive-strengthening discipline.)
+
+
+```
+
+```latex
+\paragraph{What this rules out.} GW170817 does not exclude the
+leading-order vestigial-second-sound identification outright: it
+survives at $\chivest = 1$. What it rules out is the identification as
+a \emph{generic} consequence of the natural range. Eq.~\eqref{eq:cGW}
+requires $\chivest = 1 \pm 3\times 10^{-15}$, a fine-tuning so extreme
+it cannot follow from a generic UV theory --- so any surviving version
+of the identification owes an account of why $\chivest$ sits exactly
+at unity.
+
+
+```
+
+```latex
+The present evidence
+most favours this path: Volovik's own background returns $s_2 = c$
+exactly, i.e.\ $\chivest = 1$, structurally. The value GW170817
+selects is thus the value his construction already produces --- the
+datum corroborates his result and indicts our substrate's failure to
+reproduce it, not the identification. Phase~6 should examine
+whether such a fixed point is realized in the ADW broken phase.
+
+```
+
+```latex
+$\chivest \in \{0, 1/4\}$, which are outside the natural range and
+establish that the failure is not an endpoint artefact.
+```
+
+```latex
+Sec.~\ref{sec:discussion} are correspondingly different in kind, and
+each requires replacing the identification rather than repairing it.
+```
+
+```latex
+$\cGW$ depends on the metric-channel susceptibility, where the
+relevant scale is the dimensionless $\chivest$ which the natural
+range happens to pin around 1 only by coincidence. GW170817 sees
+the latter, and its bound is too tight to absorb the natural-range
+spread.
+```
