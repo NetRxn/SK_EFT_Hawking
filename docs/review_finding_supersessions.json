@@ -10822,6 +10822,21 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-l1-h1-dynamics:L1:1.1",
+      "status": "fixed",
+      "evidence": "Exact five-span H1 correction and only two exclusively allocated apex claims descriptions are implemented in source commit 2e33bf664b30ed77f08793168028128ae88307f7. Fresh independent complete affected scientific/source and all-four-page rendering review accepts the bounded repair; actual final reasoning body SHA256 361c1f888ae08211446123e915b4517f27882b486a8ace96848a93d7ecfc0e07. Exact declared lexical/metadata/abstract Verify is a structural regression floor, not a dynamics proof. Preservation, actual four-page/six-overfull isolated compilation and existing scoped manuscript checks are retained; stale catalogs and broader gates remain unaccepted.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-l1-h1-dynamics/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "commit": "2e33bf664b30ed77f08793168028128ae88307f7",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from pathlib import Path;import re,json,sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text());bad=[x for x in [\"We formalize this caveat as the endpoint theorem\",\"because the argument never uses a Lagrangian, it is insensitive\",\"reads as the more likely interpretation under\"] if x in s];print(\"Known H1 wrong-inference floor:\",bad);assert not bad;m=json.loads(Path(\"papers/L1/bundle_metadata.json\").read_text());rows=[x for x in m[\"apex_theorems\"] if x[\"name\"].endswith((\"natural_endpoints_violate_ligo_window\",\"natural_endpoints_violate_ligo_for_every_c\"))];assert len(rows)==2;assert all(\"underdetermination caveat as an endpoint theorem\" not in x[\"claims\"] and \"quantifying over all c > 0 explicitly\" not in x[\"claims\"] for x in rows);r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "declared": "cd \"$REPO\" && python3 -c 'from pathlib import Path;import re,json,sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text());bad=[x for x in [\"We formalize this caveat as the endpoint theorem\",\"because the argument never uses a Lagrangian, it is insensitive\",\"reads as the more likely interpretation under\"] if x in s];print(\"Known H1 wrong-inference floor:\",bad);assert not bad;m=json.loads(Path(\"papers/L1/bundle_metadata.json\").read_text());rows=[x for x in m[\"apex_theorems\"] if x[\"name\"].endswith((\"natural_endpoints_violate_ligo_window\",\"natural_endpoints_violate_ligo_for_every_c\"))];assert len(rows)==2;assert all(\"underdetermination caveat as an endpoint theorem\" not in x[\"claims\"] and \"quantifying over all c > 0 explicitly\" not in x[\"claims\"] for x in rows);r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
