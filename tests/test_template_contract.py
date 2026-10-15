@@ -538,3 +538,29 @@ def test_the_retired_papers_tab_still_redirects(dash):
     resp = dash.app.test_client().get("/?tab=papers")
     assert resp.status_code == 302
     assert resp.headers["Location"].startswith("/?tab=paper")
+
+
+def test_flow_first_import_failure_is_a_sanitized_error_pane(monkeypatch):
+    """Early reader preparation keeps the existing pane failure boundary."""
+    import importlib
+    import provenance_dashboard as dash
+    for name in ('load_parameters', 'load_formulas', 'load_lean_theorems',
+                 'load_paper_claims', 'load_citations'):
+        monkeypatch.setattr(dash, name, lambda: [])
+    original_import = importlib.import_module
+    attempted = []
+    def fail_flow(name, *args, **kwargs):
+        if name == 'dashboard_flow':
+            attempted.append(name)
+            raise ImportError('sensitive-reader-path-do-not-render')
+        return original_import(name, *args, **kwargs)
+    monkeypatch.setattr(importlib, 'import_module', fail_flow)
+    monkeypatch.setitem(dash.app.config, 'PG_SYNC_ENABLED', False)
+    response = dash.app.test_client().get('/?tab=flow')
+    html = response.get_data(as_text=True)
+    assert response.status_code == 200
+    assert attempted == ['dashboard_flow']
+    assert 'failed to build the flow pane (see server log)' in html
+    assert 'sensitive-reader-path-do-not-render' not in html
+    assert 'Traceback' not in html
+    assert 'class="flow-cell flow-green"' not in html

@@ -166,11 +166,27 @@ The three operator panes, `?tab=flow` · `?tab=attention` · `?tab=loops`. Each 
 its own partial from the data layer described under *The ADR-012 operator surfaces* below;
 `index()` builds only the pane whose tab is selected, since each walks the whole graph.
 
-⚠️ **The five non-verdict cell kinds render hatched-grey, not green or red.** `not-tracked`,
-`unmeasured`, `missing`, `undeclared` and `warning` are not verdicts, and painting them as
-verdicts at the render layer would undo, invisibly, the refusal the data layer is built
-around. On failure the panes render an **error**, never an empty pane — `flow_board()` itself
-raises rather than returning a board with no rows.
+**The non-verdict cell kinds render hatched-grey.** `not-tracked`, `unmeasured`, `absent`
+and `undeclared` retain the meanings declared by `dashboard_flow.CELL_KINDS`; `warning` is a
+measured advisory with its own styling. On failure the panes render an **error**, never an
+empty pane — `flow_board()` itself raises rather than returning a board with no rows.
+
+**Request reuse — implemented, pending independent implementation review and full verification:**
+[ADR-019](../adrs/ADR-019-flow-request-graph-reuse.md) connects the existing graph cache to the
+Flow board's existing `by_bundle` and `gate_nodes` inputs. The Flow request borrows the complete
+graph through `get_cached_graph`,
+passes it through the existing aggregation reader, and supplies its complete gate population to
+the board. Actual reader imports precede graph acquisition; the captured-read/imported-source
+fingerprint remains authoritative and still rebuilds when observations change or are unavailable.
+Standalone loaders retain their fallback builds. Request reuse preserves real P1 evaluation,
+unknown-versus-clear results, empty-gate unmeasured cells, full findings and coverage, and pane
+error rendering. Configured PG synchronization remains with `get_cached_graph`; request reuse
+adds no independent PG writer. Verification uses the existing `--no-pg-sync` browser fixture or
+disabled PG sync for test-client runs. Legitimate graph rebuilds remain available; reuse adds no
+Lean build or dependency extraction. It grants no new writer or readiness authority. The
+[specification](../superpowers/specs/2026-10-15-flow-request-graph-reuse-design.md) owns the input
+and verification contracts. Source presence and isolated test evidence do not establish browser
+latency, full verification, deployment or closure.
 
 ### Paper Provenance v2 _(Phase 5v Wave 10)_
 

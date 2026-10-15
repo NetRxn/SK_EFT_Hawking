@@ -79,6 +79,7 @@ import json
 import re
 import sys
 from collections import Counter, defaultdict
+from collections.abc import Mapping
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -159,6 +160,7 @@ def _mapping_keys() -> frozenset[str]:
 # and `tests/test_flags_ratchet_seam.py` asserts OBJECT IDENTITY, so re-authoring a second
 # implementation under this name fails rather than drifting.
 from build_graph import resolve_attribution  # noqa: E402,F401
+import qi_register  # noqa: E402 — reader dependency loaded before a Flow graph borrow
 
 
 def load_findings_by_paper() -> dict[str, list[dict]]:
@@ -166,7 +168,6 @@ def load_findings_by_paper() -> dict[str, list[dict]]:
     by paper, honouring what each review document DECLARES about its own
     target (see :func:`resolve_attribution`) before falling back to inference."""
     from build_graph import extract_review_finding_nodes
-    from qi_register import classify_finding
 
     findings = extract_review_finding_nodes()
     mapping_keys = _mapping_keys()
@@ -179,7 +180,7 @@ def load_findings_by_paper() -> dict[str, list[dict]]:
         by_paper[paper].append({
             "id": f["id"],
             "label": f["label"],
-            "gate": classify_finding(f),
+            "gate": qi_register.classify_finding(f),
             "severity": m.get("severity", "advisory"),
             "status": m.get("status", "open"),
             "review_date": m.get("review_date", ""),
@@ -441,7 +442,7 @@ def _declared_review_kind(bundle: str) -> str | None:
 _KINDS_SUFFICIENT_FOR_GREEN = frozenset({"full-adversarial"})
 
 
-def _blocked_p1_gates_by_paper() -> dict[str, list[str]] | None:
+def _blocked_p1_gates_by_paper(*, graph=None) -> dict[str, list[str]] | None:
     """Bundle/paper key -> names of its BLOCKED priority-1 ReadinessGates, or None.
 
     Added 2026-07-31 (self-audit, corroborated by D12 Stage-13 round-7 finding 8.2).
@@ -473,8 +474,28 @@ def _blocked_p1_gates_by_paper() -> dict[str, list[str]] | None:
     try:
         from readiness_gates import evaluate_all_gates
         from build_graph import build_graph_json
+        if graph is None:
+            graph = build_graph_json()
+        else:
+            # An explicit input is never silently replaced with a fresh build. Shape
+            # cannot prove corpus completeness; the request must borrow the FULL graph.
+            if not isinstance(graph, Mapping):
+                raise ValueError("supplied graph must be a mapping")
+            nodes, links = graph.get("nodes"), graph.get("links")
+            if not isinstance(nodes, (list, tuple)) or not isinstance(links, (list, tuple)):
+                raise ValueError("supplied graph needs nodes and links collections")
+            if any(not isinstance(n, Mapping) or
+                   any(not isinstance(n.get(k), str) or not n[k] for k in ("id", "type"))
+                   for n in nodes):
+                raise ValueError("supplied graph has malformed node entries")
+            if any(not isinstance(e, Mapping) or
+                   any(not isinstance(e.get(k), str) or not e[k]
+                       for k in ("source", "target", "type")) for e in links):
+                raise ValueError("supplied graph has malformed link entries")
+            if not any(n["type"] == "Paper" for n in nodes):
+                raise ValueError("supplied graph has no Paper population")
         out: dict[str, list[str]] = {}
-        for r in evaluate_all_gates(build_graph_json()):
+        for r in evaluate_all_gates(graph):
             if r.state == "blocked" and r.priority == 1:
                 out.setdefault(r.paper, []).append(r.gate)
         return out
@@ -488,6 +509,7 @@ def aggregate_by_bundle(
     assignments: dict[str, dict],
     findings_by_paper: dict[str, list[dict]],
     review_info: dict[str, dict] | None = None,
+    *, graph=None,
 ) -> dict[str, dict]:
     """For each bundle code, aggregate all findings from its source
     papers + collect bundle-level statistics.
@@ -500,7 +522,8 @@ def aggregate_by_bundle(
     if review_info is None:
         review_info = resolve_stage13_reviews(backfill=False)
 
-    blocked_p1 = _blocked_p1_gates_by_paper()
+    blocked_p1 = (_blocked_p1_gates_by_paper() if graph is None
+                  else _blocked_p1_gates_by_paper(graph=graph))
 
     by_bundle: dict[str, dict] = {}
     for b in _VALID_BUNDLE_TARGETS:
