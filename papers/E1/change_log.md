@@ -73,3 +73,13 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Shortened the abstract and removed its numbered citation while retaining the body attribution, generated scalars, weak-dissipation condition and saturated-greybody assumption.
 - Reconciled abstract-limit provenance against the current APS author page and its linked February 2026 Style Guide, Abstract subsection (printed p.11 / PDF p.12). The existing 600-character ceiling is unchanged and is now primary-verified for PRL.
 - Focused evidence: `papers/AutomatedReviews/2026-10-15-e1-abstract-contract/`. This changes no bundle-wide review verdict or submission status.
+
+## 2026-10-15 — Deregister-lean-modules
+
+- Modules deregistered: `PolaritonPhase5u`, `DispersionAndPolariton`, `GrapheneHawking`, `WKBConnection`, `SoftTheorems.NoiseFloorPrediction`, `KerrSchild.PolaritonCrossBridge`, `KerrSchild.SingleCopy`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: Current E1 no longer contains the registered ringdown/single-copy, graphene comparison or Wilson-independent FDR occupation-floor sections. PolaritonPhase5u, DispersionAndPolariton, KerrSchild.PolaritonCrossBridge and KerrSchild.SingleCopy have no source file or built module record at the pinned base. Direct full-source/history review plus source-matching imported inspection of the three built modules shows GrapheneHawking supplies generic arithmetic and a definitional temperature identity; SoftTheorems.NoiseFloorPrediction defines an occupation floor delta_k/2 and Wilson invariance, not the E1 mean-field energy temperature; WKBConnection uses an assumed modified-unitarity carrier and decoherence occupation not asserted by E1. KappaScaling was inspected as stronger matching arithmetic for the adopted correction but supplies no universal coefficient or physical noise derivation; the manuscript already discloses the normalization and no new formal claim is introduced. The retained explicit verification claims continue to cite PolaritonTier1 and declare their apexes. This event reconciles historical direct registrations; it does not remove Lean source, change scientific scope or certify bundle freshness. See papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/E1.md for source pins and independent review.
+
+- Closing section now explicitly identifies its role as “Conclusions and required measurements”; its scientific body is unchanged.
+- Freshness/pending metadata and prior source manifest were preserved; this declaration-only reconciliation does not certify a fresh lift. The worktree-path producer limitation is an open infra finding in `papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/E1.md` §2.1.
