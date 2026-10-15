@@ -1,6 +1,6 @@
 # Citation identity, acquisition and validation evidence
 
-Evidence assessment against `7f788810`. This report records the lead's actual acquisition/validation receipt, current source changes and the preceding independent identity assessments. Final independent acceptance is recorded in SCOPED_REVIEW.md; the separate ledger audit accepted the supported closure. No source, acquisition, test, metadata or ledger changes were made by this evidence author.
+Evidence assessment against `7f788810`. This report records the lead's actual acquisition/validation receipt, current source changes and the preceding independent identity assessments. Final independent acceptance and the subsequent exact-25053c00 FLS qualification are recorded in SCOPED_REVIEW.md; the separate ledger audit accepted the supported closure. No source, acquisition, test, metadata or ledger changes were made by this evidence author.
 
 ## Twelve cited identities
 
@@ -41,7 +41,7 @@ The existing acquisition writer made all four fetch records. The three new PDF h
 
 ## Directly cited scientific precision
 
-The independent FLS assessment and lead's actual held p.2 read establish the acoustic-geometric regime at wavelengths larger than the healing length, with quartic-dispersion breakdown for k>xi^-1. D3's reversed wavelength statement was corrected without changing equations or numerical inputs. Relevant depletion-comparison discussion was assessed at pp.2–4.
+The independent FLS assessment and lead's actual held p.2 read establish the acoustic-geometric regime at wavelengths larger than the healing length, with quartic-dispersion breakdown for k>xi^-1. D3's reversed wavelength statement was corrected without changing equations or numerical inputs. The earlier assessment of the pp.2–4 depletion comparison missed a retained attribution error, subsequently returned by ROOT: Eq. (14) is the condensate's total ground-state energy density, compared alongside its grand-canonical density h on p.4. It is not the total ground-state energy of the phonon effective theory. The separate phonon-EFT vacuum-energy statement does not identify either condensate quantity. D3 now names both condensate energy densities; fresh follow-up review is recorded separately.
 
 Kitaev's held v3 pp.42–44 distinguish anyon statistics modulo 16 from additional robust chiral-central-charge data. D2 now qualifies both its item 4 attribution and later discussion; existing period arithmetic remains unchanged and is not promoted into a full physical-phase classification.
 

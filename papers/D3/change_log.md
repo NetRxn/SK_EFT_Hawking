@@ -303,3 +303,7 @@ All recorded in `docs/review_finding_supersessions.json`. Post-remediation: D3 o
 ## 2026-10-15 — Citation identity and source-fidelity reconciliation
 
 Reconciled the TQC companion identity with current D4 and corrected the unsupported recovery-dynamics attribution to its actual scope. Corrected the FLS acoustic-geometry condition to wavelengths larger than the healing length, with breakdown for k>xi^-1. Registered existing citing keys without substituting the separate proceedings source. Scoped review and evidence: `../AutomatedReviews/2026-10-15-publication-citation-coverage/`. Broader publication gates remain pending.
+
+## 2026-10-15 — Returned FLS energy-attribution correction
+
+Corrected the same FLS paragraph to identify the two compared quantities as the condensate's grand-canonical and total ground-state energy densities. The previous source review missed the retained phonon-EFT attribution error; its exact-25053c00 acceptance is qualified in the existing citation review evidence. The wavelength repair, equations, numerical data and formal limitations are preserved. No new closure or historical ledger rewrite.
