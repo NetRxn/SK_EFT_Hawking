@@ -1,12 +1,12 @@
 {
-  "generated": "2026-10-15T14:00:25.262477",
+  "generated": "2026-10-15T14:47:21.895395",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 48916,
-    "theorems_total": 27985,
-    "theorems_substantive": 27959,
+    "total_declarations": 48971,
+    "theorems_total": 28022,
+    "theorems_substantive": 27996,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 27890,
+    "theorems_kernel_substantive": 27927,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2114,
+    "modules": 2115,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1308,6 +1308,7 @@
       "SKEFTHawking.QuantumNetwork.FiniteGibbsClock",
       "SKEFTHawking.QuantumNetwork.FiniteInstrument",
       "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess",
+      "SKEFTHawking.QuantumNetwork.FiniteLocalChannelDepthObstruction",
       "SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer",
       "SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining",
       "SKEFTHawking.QuantumNetwork.FiniteMemoryPartialInteraction",
@@ -2132,7 +2133,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 14532,
+    "definitions": 14539,
     "structures": 502,
     "instances": 1005,
     "inductives": 109,
