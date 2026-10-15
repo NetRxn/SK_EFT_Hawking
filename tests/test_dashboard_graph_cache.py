@@ -161,3 +161,250 @@ class TestTheSeam:
                 "a finding was filed and the dashboard's graph does not contain it")
         restored = pd.get_cached_graph(sync_pg=False)
         assert expected not in {n["id"] for n in restored["nodes"]}
+
+
+def _exercise_flow_request_in_fresh_process(scratch, *, warm):
+    """Real route/cache/board/aggregate; only corpus producers use temporary inputs.
+
+    Called in a fresh interpreter, so collection order cannot pre-import Flow's readers.
+    No production graph build, PG scheduling, source seed or artifact repair occurs here.
+    """
+    import copy
+    import importlib
+    import json
+    from unittest.mock import patch
+    import build_graph as bg
+    import readiness_gates as rg
+
+    assert "dashboard_flow" not in sys.modules
+    scratch = Path(scratch)
+    papers = scratch / "papers"
+    for code in ("X1", "X2"):
+        (papers / code).mkdir(parents=True)
+        (papers / code / "bundle_metadata.json").write_text(json.dumps({"stage9_status": "pending-redo"}))
+    findings = [{"id": f"review:f{i}", "type": "ReviewFinding", "label": f"finding {i}",
+                 "meta": {"status": "open", "severity": "minor", "lane": "unclassified",
+                          "inferred_bundle": "X1"}} for i in range(12)]
+    findings.append({"id": "review:unattributed", "type": "ReviewFinding", "label": "unattributed",
+                     "meta": {"status": "open", "severity": "major", "lane": "infra"}})
+    graph = {"nodes": [{"id": f"paper:{c}", "type": "Paper", "meta": {}} for c in ("X1", "X2")]
+                      + findings + [rg.GateResult(gate="Fixture", paper=c, priority=1,
+                                                  state="passed").to_node_payload()
+                                    for c in ("X1", "X2", "outside-roster")],
+             "links": [{"source": "review:f0", "target": "paper:X1", "type": "FLAGS"}]}
+    original = copy.deepcopy(graph)
+    builds, claims, aggregates, evaluations, boards, gate_inputs, fallback = [], [], [], [], [], [], []
+    real_claims = pd.load_paper_claims
+    def claims_spy(*args, **kwargs):
+        claims.append(kwargs.get("graph"))
+        return real_claims(*args, **kwargs)
+    def builder(*args, **kwargs):
+        # The real builder imports this registry in extract_source_nodes. Retain that
+        # dependency even though the fixture replaces the expensive corpus build.
+        from src.core.citations import CITATION_REGISTRY
+        assert CITATION_REGISTRY
+        # Captured read set remains real; this owned source is read, never changed here.
+        (PROJECT_ROOT / "scripts" / "dashboard_flow.py").read_text()
+        builds.append(dict(kwargs))
+        return graph
+    real_evaluate = rg.evaluate_all_gates
+    def evaluate(g):
+        evaluations.append(g)
+        return real_evaluate(g)
+    real_import = importlib.import_module
+    configured = False
+    stack = __import__('contextlib').ExitStack()
+    def set_attr(obj, name, value):
+        stack.enter_context(patch.object(obj, name, value))
+    def import_pane(name, *args, **kwargs):
+        nonlocal configured
+        module = real_import(name, *args, **kwargs)
+        if name == "dashboard_flow" and not configured:
+            configured = True
+            import bundle_readiness as br
+            import check_bundle_source_freshness as fresh
+            from validation.checks import bundles_readiness as checks
+            set_attr(module, "PAPERS_DIR", papers)
+            set_attr(module, "BUNDLE_CODES", ("X1", "X2"))
+            set_attr(module, "parse_mapping", lambda text: {})
+            set_attr(br, "PAPERS_DIR", papers)
+            set_attr(br, "_VALID_BUNDLE_TARGETS", ("X1", "X2"))
+            set_attr(br, "resolve_stage13_reviews", lambda **kw: {})
+            set_attr(br, "load_findings_by_paper", lambda: {"X1": [
+                {"id": n["id"], "label": n["label"], "status": "open", "severity": "minor",
+                 "gate": "fixture"} for n in findings[:-1]]})
+            set_attr(fresh, "check", lambda **kw: [{"bundle": "X1", "passed": True,
+                "warning": False, "message": "fixture unmeasured", "measured": False}])
+            set_attr(fresh, "_registered_lean_modules", lambda code: [])
+            set_attr(checks, "_measure_manuscript", lambda code: (None, "pages", "fixture unmeasured"))
+            real_aggregate = br.aggregate_by_bundle
+            def aggregate(*args, **kwargs):
+                aggregates.append(kwargs.get("graph"))
+                return real_aggregate(*args, **kwargs)
+            set_attr(br, "aggregate_by_bundle", aggregate)
+            real_board = module.flow_board
+            def board(**kwargs):
+                gate_inputs.append(kwargs.get("gate_nodes"))
+                out = real_board(**kwargs)
+                boards.append(out)
+                return out
+            set_attr(module, "flow_board", board)
+            real_fallback = module.load_gate_nodes
+            def gates():
+                fallback.append(True)
+                return real_fallback()
+            set_attr(module, "load_gate_nodes", gates)
+        return module
+    with stack:
+        set_attr(bg, "build_graph_json", builder)
+        set_attr(bg, "extract_review_finding_nodes", lambda: findings)
+        set_attr(pd, "load_paper_claims", claims_spy)
+        set_attr(rg, "evaluate_all_gates", evaluate)
+        set_attr(rg, "GATES", [("FixPropagation", 2, rg._eval_fix_propagation)])
+        set_attr(importlib, "import_module", import_pane)
+        pd.app.config.update(TESTING=True, PG_SYNC_ENABLED=False)
+        def no_sync(*args):
+            raise AssertionError("PG scheduling must be disabled in route tests")
+        set_attr(pd, "_schedule_pg_sync", no_sync)
+        client = pd.app.test_client()
+        if warm:
+            assert client.get('/').status_code == 200
+            assert len(builds) == 1
+        before = len(builds)
+        observations = []
+        for _ in range(2):
+            response = client.get('/?tab=flow')
+            html = response.get_data(as_text=True)
+            cached_key = pd._GRAPH_CACHE['fingerprint']
+            current_key = pd._graph_fingerprint()
+            observations.append({'builds': len(builds), 'added_key_entries': [
+                str(e) for e in current_key if e not in cached_key]})
+            assert response.status_code == 200
+            assert 'failed to build the flow pane' not in html
+            assert 'class="flow-cell flow-not-tracked"' in html
+            assert 'class="flow-cell flow-undeclared"' in html
+            assert 'class="flow-cell flow-unmeasured"' in html
+            assert 'TODO-D50' in html and 'TODO-D51' in html
+            assert 'class="data-table flow-coverage"' in html
+        assert len(builds) == before + 1, f"graph builds: {builds!r}; observations: {observations!r}"
+        assert fallback == [], "Flow used its standalone gate fallback"
+        assert all(g is graph for g in claims[-2:])
+        assert len(aggregates) == 2 and all(g is graph for g in aggregates)
+        assert len(evaluations) == 2 and all(g is graph for g in evaluations)
+        expected = [n for n in graph['nodes'] if n['type'] == 'ReadinessGate']
+        assert len(expected) == 3  # Includes a gate outside the controlled row roster.
+        assert len(gate_inputs) == 2
+        for supplied in gate_inputs:
+            assert supplied == expected
+            assert all(a is b for a, b in zip(supplied, expected))
+        for board in boards:
+            assert [r['bundle'] for r in board['rows']] == ['X1', 'X2']
+            assert board['rows'][0]['overlay']['open_total'] == 12
+            assert board['coverage']['open_findings'] == 13
+            assert board['coverage']['attributed_to_a_row'] == 12
+            assert board['coverage']['carry_no_bundle_or_paper_key'] == 1
+            assert board['coverage']['attributed_with_no_declared_lane'] == 12
+            assert board['rows'][0]['overlay']['unclassified'] == 12
+        assert graph == original
+        assert pd._GRAPH_CACHE['fingerprint'] == pd._graph_fingerprint()
+        print(json.dumps({'warm': warm, 'builds': len(builds), 'fallbacks': len(fallback),
+                          'aggregate_calls': len(aggregates), 'gate_population': len(expected),
+                          'fingerprint_stable': True}))
+
+
+@pytest.mark.parametrize("warm", [False, True], ids=["first-flow", "warm-then-flow"])
+def test_flow_request_reuses_full_graph_in_fresh_process(tmp_path, warm):
+    import os
+    import subprocess
+    source = Path(__file__).resolve()
+    code = ("import runpy; from pathlib import Path; "
+            f"ns=runpy.run_path({str(source)!r}); "
+            f"ns['_exercise_flow_request_in_fresh_process'](Path({str(tmp_path)!r}), warm={warm!r})")
+    result = subprocess.run([sys.executable, '-B', '-c', code], cwd=PROJECT_ROOT,
+                            env={**os.environ, 'PYTHONDONTWRITEBYTECODE': '1'},
+                            text=True, capture_output=True)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert '"fingerprint_stable": true' in result.stdout
+    print(result.stdout)
+
+
+class TestIsolatedGraphCachePolicy:
+    """Actual cache/keys with a temporary read set; no live builds or source seeds."""
+
+    @pytest.fixture
+    def cache(self, monkeypatch, tmp_path):
+        import build_graph
+        data = tmp_path / 'ledger.json'
+        data.write_text('{}')
+        graph = {'nodes': [], 'links': []}
+        builds, schedules = [], []
+        def build(*, sync_pg):
+            assert sync_pg is False
+            data.read_text()
+            builds.append(True)
+            return graph
+        monkeypatch.setattr(build_graph, 'build_graph_json', build)
+        monkeypatch.setattr(pd, '_GRAPH_CACHE', {'graph': None, 'fingerprint': None, 'built_at': None})
+        monkeypatch.setattr(pd, '_READ_SET', {'paths': None, 'dirs': None})
+        monkeypatch.setattr(pd, '_schedule_pg_sync', lambda g, fp: schedules.append((g, fp)))
+        monkeypatch.setitem(pd.app.config, 'PG_SYNC_ENABLED', False)
+        return graph, data, builds, schedules
+
+    @pytest.mark.parametrize('enabled', [False, True])
+    def test_configured_pg_policy_only_schedules_after_rebuild(self, cache, monkeypatch, enabled):
+        graph, _, builds, schedules = cache
+        monkeypatch.setitem(pd.app.config, 'PG_SYNC_ENABLED', enabled)
+        assert pd.get_cached_graph() is graph
+        assert pd.get_cached_graph() is graph
+        assert len(builds) == 1
+        assert len(schedules) == int(enabled)
+        if enabled:
+            assert schedules[0][0] is graph
+        pd.get_cached_graph(force_rebuild=True, sync_pg=False)
+        assert len(builds) == 2
+        assert len(schedules) == int(enabled)
+
+    def test_data_directory_and_code_changes_rebuild_served_graph(self, cache, monkeypatch, tmp_path):
+        import types
+        graph, data, builds, _ = cache
+        # Let the real imported-module observer see a temporary repository module.
+        monkeypatch.setattr(pd, 'PROJECT_ROOT', tmp_path)
+        assert pd.get_cached_graph() is graph
+        assert len(builds) == 1
+        data.write_text('{"closed": true}')
+        assert pd.get_cached_graph() is graph
+        assert len(builds) == 2
+        (tmp_path / 'new-review-directory').mkdir()
+        assert pd.get_cached_graph() is graph
+        assert len(builds) == 3
+        source = tmp_path / 'reader.py'
+        source.write_text('VALUE = 1\n')
+        pd.get_cached_graph()  # Directory creation is an independent invalidation.
+        before_import = len(builds)
+        module = types.ModuleType('isolated_flow_reader')
+        module.__file__ = str(source)
+        monkeypatch.setitem(sys.modules, module.__name__, module)
+        assert str(source) in pd._loaded_repo_module_sources()
+        assert pd.get_cached_graph() is graph
+        assert len(builds) == before_import + 1
+        source.write_text('VALUE = 22\n')
+        assert pd.get_cached_graph() is graph
+        assert len(builds) == before_import + 2
+        assert pd.get_cached_graph() is graph
+        assert len(builds) == before_import + 2
+
+    def test_missing_readset_and_unlistable_directory_force_misses(self, cache, monkeypatch):
+        graph, data, builds, _ = cache
+        pd.get_cached_graph()
+        pd._READ_SET['paths'] = None
+        pd.get_cached_graph()
+        assert len(builds) == 2
+        real_listdir = pd.os.listdir
+        def unlistable(path):
+            if str(path) == str(data.parent):
+                raise OSError('controlled directory observation failure')
+            return real_listdir(path)
+        monkeypatch.setattr(pd.os, 'listdir', unlistable)
+        assert pd.get_cached_graph() is graph
+        assert pd.get_cached_graph() is graph
+        assert len(builds) == 4

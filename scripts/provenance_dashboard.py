@@ -686,7 +686,7 @@ def load_lean_theorems():
     return theorems
 
 
-def load_paper_claims():
+def load_paper_claims(*, graph=None):
     """Load per-paper claim analysis. For each paper on disk, merges
     declared PAPER_DEPENDENCIES metadata with auto-extracted PaperClaim
     nodes from the graph (covers papers without PAPER_DEPENDENCIES
@@ -707,7 +707,8 @@ def load_paper_claims():
     # + extract_cites_*_edges inline, which re-ran all heavy Lean/paper
     # parsing for every request to `/` — the dashboard's "hang on reload"
     # behavior was traced to this path (Phase 5v Wave 9a fix, 2026-04-24).
-    graph = get_cached_graph()
+    if graph is None:
+        graph = get_cached_graph()
     claim_nodes = [n for n in graph['nodes'] if n['type'] == 'PaperClaim']
     claims_by_paper: dict[str, list[dict]] = {}
     for cn in claim_nodes:
@@ -1302,16 +1303,37 @@ def index():
         target = '/?tab=paper' + (f'&paper={paper_arg}' if paper_arg else '')
         return redirect(target, code=302)
 
+    tab = request.args.get('tab', 'parameters')
+    # Used by every render: load the label reader before the common graph lookup.
+    from dashboard_attention import label_of as _label_of
+
+    # Keep first-import failures inside the same sanitized boundary as pane builds.
+    # No graph is acquired until the selected pane's real reader imports are loaded.
+    flow_reader = None
+    flow_error = None
+    if tab == 'flow':
+        try:
+            import importlib
+            flow_reader = importlib.import_module('dashboard_flow')
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            flow_error = {'error': 'failed to build the flow pane (see server log)'}
+
     params = load_parameters()
     formulas = load_formulas()
     theorems = load_lean_theorems()
-    papers = load_paper_claims()
+    graph = None
+    if flow_reader is not None:
+        graph = get_cached_graph()
+        papers = load_paper_claims(graph=graph)
+    else:
+        papers = load_paper_claims()
     citations = load_citations()
     summary = compute_summary(params, formulas, theorems)
 
     # Load proof architecture data for the lean/proof-arch tab
     proof_arch = None
-    tab = request.args.get('tab', 'parameters')
     if tab == 'lean':
         try:
             proof_arch = load_proof_architecture()
@@ -1389,18 +1411,20 @@ def index():
     # here would undo the module's whole refusal — so the except branch carries an
     # `error` key and the partial renders it as an error.
     flow_board = attention = loops = None
-    # The Attention pane resolves each item's label through the PRODUCER's map, since the
-    # five feeds are five stores with five different label keys. Passing the resolver keeps
-    # that vocabulary next to the code that mints the sources.
-    from dashboard_attention import label_of as _label_of
     _panes = {'flow': ('dashboard_flow', 'flow_board'),
               'attention': ('dashboard_attention', 'attention'),
               'loops': ('dashboard_loops', 'loops_panel')}
     if tab in _panes:
         _modname, _fn = _panes[tab]
         try:
-            import importlib
-            _built = getattr(importlib.import_module(_modname), _fn)()
+            if tab == 'flow':
+                _built = (flow_error if flow_error is not None else flow_reader.flow_board(
+                    by_bundle=flow_reader.load_aggregate(graph=graph),
+                    gate_nodes=[n for n in graph['nodes']
+                                if n.get('type') == 'ReadinessGate']))
+            else:
+                import importlib
+                _built = getattr(importlib.import_module(_modname), _fn)()
         except Exception:
             import traceback
             traceback.print_exc()

@@ -215,7 +215,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `constants.TRACKED_HYPOTHESIS_NON_LOAD_BEARING` | 0 |
 | `provenance.PARAMETER_PROVENANCE` | 211 |
 | `provenance.PAPER_DEPENDENCIES` | 17 |
-| `citations.CITATION_REGISTRY` | 664 |
+| `citations.CITATION_REGISTRY` | 666 |
 
 ## Publication roster — 21 bundles, 21 with declared apexes
 
