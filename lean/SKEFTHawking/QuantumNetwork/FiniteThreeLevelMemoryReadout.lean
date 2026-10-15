@@ -2155,4 +2155,165 @@ theorem full_H01_probe (b ℏ γ t : ℝ) (hγ : 0 ≤ γ) (ht : 0 ≤ t) (A : M
     krausMap_smul, traceless_channel b ℏ γ t hγ ht _ (single_off_diagonal_trace 0 1 (by decide)),
     phase_E01, smul_smul, smul_smul]
 
+/-- Exact commutator coefficients of the two noncommuting signal arms. -/
+theorem signal_commutator_01 (r : ℝ) :
+    (sigma r 0 * sigma r 1 - sigma r 1 * sigma r 0) 0 1 = ((-r*(1-r)/10:ℝ):ℂ) := by
+  simp only [Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero]
+  norm_num [sigma, mixture, P, equilibrium,
+    density, three, GibbsReset.threeWeights, Matrix.diagonal_apply, Matrix.cons_val_two, Fin.ext_iff]
+  ring
+
+theorem signal_commutator_02 (r : ℝ) :
+    (sigma r 0 * sigma r 1 - sigma r 1 * sigma r 0) 0 2 = ((-4*r*(1-r)/15:ℝ):ℂ) := by
+  simp only [Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero]
+  norm_num [sigma, mixture, P, equilibrium,
+    density, three, GibbsReset.threeWeights, Matrix.diagonal_apply, Matrix.cons_val_two, Fin.ext_iff]
+  ring
+
+/-- The alternate initial density is the actual normalized environmental pulse. -/
+def rhoF (r : ℝ) : MatJoint := krausMap (pulseKraus true) (input r)
+
+theorem rhoF_density {r : ℝ} (hr : 0 ≤ r) (hr1 : r ≤ 1) : IsDensityOperator (rhoF r) :=
+  krausMap_isDensityOperator (pulse_normalized true) (input_density hr hr1)
+
+theorem rhoF_sum (r : ℝ) :
+    rhoF r = (1/3:ℂ) • ∑ a : Q, projector a ⊗ₖ sigma r (exchange a) := by
+  rw [rhoF, input, krausMap_smul]
+  congr 1
+  simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero, krausMap_add, pulse_tensor,
+    pulse, ite_true, F_sigma]
+
+theorem rhoF_entry (r : ℝ) (a b e f : Q) :
+    rhoF r (a,e) (b,f) = if a = b then sigma r (exchange a) e f/3 else 0 := by
+  rw [rhoF_sum]
+  simp [Matrix.sum_apply, projector, Matrix.diagonal_apply]
+  split_ifs <;> simp_all
+  ring
+
+theorem input_initial_S_marginal (r : ℝ) :
+    FiniteThreeLevelEnvironmentLift.ptrace2 (input r) = (1/3:ℂ) • (1:MatQ) := by
+  ext a b
+  simp only [FiniteThreeLevelEnvironmentLift.ptrace2, input_entry]
+  by_cases hab : a = b
+  · subst b
+    simp only [ite_true]
+    rw [← Finset.sum_div]
+    change (sigma r a).trace/3 = _
+    rw [sigma_trace]
+    simp
+  · simp [hab]
+
+theorem rhoF_initial_S_marginal (r : ℝ) :
+    FiniteThreeLevelEnvironmentLift.ptrace2 (rhoF r) = (1/3:ℂ) • (1:MatQ) := by
+  ext a b
+  simp only [FiniteThreeLevelEnvironmentLift.ptrace2, rhoF_entry]
+  by_cases hab : a = b
+  · subst b
+    simp only [ite_true]
+    rw [← Finset.sum_div]
+    change (sigma r (exchange a)).trace/3 = _
+    rw [sigma_trace]
+    simp
+  · simp [hab]
+
+theorem input_initial_E_marginal (r : ℝ) :
+    FiniteThreeLevelEnvironmentLift.ptrace2 (FiniteThreeLevelEnvironmentLift.swap (input r)) =
+      (1/3:ℂ) • ∑ a : Q, sigma r a := by
+  ext e f
+  simp only [FiniteThreeLevelEnvironmentLift.ptrace2, FiniteThreeLevelEnvironmentLift.swap_entry,
+    input_entry, ite_true, Matrix.smul_apply, Matrix.sum_apply, smul_eq_mul]
+  change (∑ a : Q, sigma r a e f/3) = (1/3:ℂ)*(∑ a : Q, sigma r a e f)
+  rw [← Finset.sum_div]
+  ring
+
+theorem rhoF_initial_E_marginal (r : ℝ) :
+    FiniteThreeLevelEnvironmentLift.ptrace2 (FiniteThreeLevelEnvironmentLift.swap (rhoF r)) =
+      (1/3:ℂ) • ∑ a : Q, sigma r a := by
+  ext e f
+  simp only [FiniteThreeLevelEnvironmentLift.ptrace2, FiniteThreeLevelEnvironmentLift.swap_entry,
+    rhoF_entry, ite_true, Matrix.smul_apply, Matrix.sum_apply, smul_eq_mul]
+  change (∑ a : Q, sigma r (exchange a) e f/3) = (1/3:ℂ)*(∑ a : Q, sigma r a e f)
+  rw [← Finset.sum_div, sum_exchange (fun a : Q => sigma r a e f)]
+  ring
+
+theorem initial_marginals_equal (r : ℝ) :
+    FiniteThreeLevelEnvironmentLift.ptrace2 (input r) = FiniteThreeLevelEnvironmentLift.ptrace2 (rhoF r) ∧
+    FiniteThreeLevelEnvironmentLift.ptrace2 (FiniteThreeLevelEnvironmentLift.swap (input r)) =
+      FiniteThreeLevelEnvironmentLift.ptrace2 (FiniteThreeLevelEnvironmentLift.swap (rhoF r)) := by
+  rw [input_initial_S_marginal, rhoF_initial_S_marginal,
+    input_initial_E_marginal, rhoF_initial_E_marginal]
+  exact ⟨rfl, rfl⟩
+
+theorem recordStep_pulse_commute (a : Q) (X : MatJoint) :
+    recordStep.branch Q Q 3 a (krausMap (pulseKraus true) X) =
+      krausMap (pulseKraus true) (recordStep.branch Q Q 3 a X) := by
+  have hi (Y : MatJoint) : krausMap (fun _ : Fin 1 => (1:MatJoint)) Y = Y := by simp [krausMap]
+  change ((instrument 3).lift Q).branch a (krausMap (fun _ : Fin 1 => (1:MatJoint)) _) =
+    krausMap (pulseKraus true) (((instrument 3).lift Q).branch a
+      (krausMap (fun _ : Fin 1 => (1:MatJoint)) X))
+  rw [hi, hi]
+  exact (FiniteThreeLevelEnvironmentLift.instrument_branch_commute (fun _ : Fin 1 => F) (instrument 3) a X).symm
+
+theorem memoryStep_common_input (b ℏ γ t : ℝ) (hγ : 0 ≤ γ) (ht : 0 ≤ t)
+    (c : Q) (X : MatJoint) :
+    (memoryStep b ℏ γ t hγ ht false).branch Q Q 3 c (krausMap (pulseKraus true) X) =
+      (memoryStep b ℏ γ t hγ ht true).branch Q Q 3 c X := by
+  have hi (Y : MatJoint) : krausMap (pulseKraus false) Y = Y := by simp [pulseKraus, pulse, krausMap]
+  change (prepare.lift Q).branch c (krausMap (evolution b ℏ γ t false) _) =
+    (prepare.lift Q).branch c (krausMap (evolution b ℏ γ t true) X)
+  rw [evolution_action, evolution_action, hi]
+
+/-- The same Keep tree on the pulsed input realizes every Flip memory branch. -/
+theorem memory_common_input (b ℏ γ t r : ℝ) (hγ : 0 ≤ γ) (ht : 0 ≤ t) (h : MemoryHist) :
+    run Q Q 3 (memoryTree b ℏ γ t hγ ht false) h (rhoF r) =
+      memoryFamily b ℏ γ t r hγ ht true h := by
+  rcases h with ⟨a,c,⟨⟩⟩
+  change (memoryStep b ℏ γ t hγ ht false).branch Q Q 3 c (recordStep.branch Q Q 3 a (rhoF r)) =
+    (memoryStep b ℏ γ t hγ ht true).branch Q Q 3 c (recordStep.branch Q Q 3 a (input r))
+  rw [rhoF, recordStep_pulse_commute, memoryStep_common_input]
+
+/-- The common normalized readout preserves the same-map representation on all 27 histories. -/
+theorem measured_common_input (b ℏ γ t r φ₁ φ₂ : ℝ) (hγ : 0 ≤ γ) (ht : 0 ≤ t)
+    (h : MeasuredHist) :
+    run Q Q 3 (measuredTree b ℏ γ t φ₁ φ₂ hγ ht false) h (rhoF r) =
+      measuredFamily b ℏ γ t r φ₁ φ₂ hγ ht true h := by
+  rcases h with ⟨a,c,j,⟨⟩⟩
+  change (readStep φ₁ φ₂).branch Q Q 3 j
+    (run Q Q 3 (memoryTree b ℏ γ t hγ ht false) (a,c,()) (rhoF r)) =
+    (readStep φ₁ φ₂).branch Q Q 3 j (memoryFamily b ℏ γ t r hγ ht true (a,c,()))
+  rw [memory_common_input]
+
+theorem initial_commutator_block (r : ℝ) (a e f : Q) :
+    (input r * rhoF r - rhoF r * input r) (a,e) (a,f) =
+      (sigma r a * sigma r (exchange a) - sigma r (exchange a) * sigma r a) e f / 9 := by
+  simp [Matrix.sub_apply, Matrix.mul_apply, Fintype.sum_prod_type, input_entry, rhoF_entry,
+    ite_mul, mul_ite]
+  simp only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero]
+  ring
+
+theorem initial_commutator_01 (r : ℝ) :
+    (input r * rhoF r - rhoF r * input r) (0,0) (0,1) = ((-r*(1-r)/90:ℝ):ℂ) := by
+  rw [initial_commutator_block]
+  norm_num only [exchange, Fin.val_zero, ite_true]
+  rw [signal_commutator_01]
+  push_cast
+  ring
+
+theorem initial_commutator_02 (r : ℝ) :
+    (input r * rhoF r - rhoF r * input r) (0,0) (0,2) = ((-4*r*(1-r)/135:ℝ):ℂ) := by
+  rw [initial_commutator_block]
+  norm_num only [exchange, Fin.val_zero, ite_true]
+  rw [signal_commutator_02]
+  push_cast
+  ring
+
+theorem initial_pair_noncommuting {r : ℝ} (hr : 0 < r) (hr1 : r < 1) :
+    input r * rhoF r ≠ rhoF r * input r := by
+  intro hh
+  have hz : (input r * rhoF r - rhoF r * input r) (0,0) (0,1) = 0 := by rw [hh, sub_self]; rfl
+  rw [initial_commutator_01] at hz
+  have he := congrArg Complex.re hz
+  norm_num at he
+  rcases he with h0 | h1 <;> linarith
+
 end SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout
