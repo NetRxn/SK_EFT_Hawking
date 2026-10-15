@@ -10500,6 +10500,21 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-d7-current-theorem-regression:infra:1.1",
+      "status": "fixed",
+      "evidence": "D7 regression now checks the current verbatim theorem, exact generated declaration and existing resolver while rejecting the obsolete phantom in three citation forms; complete independent review accepted the bounded repair and the declared seven-test class passes.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "06c7d8eb",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "declared": ".venv/bin/python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
