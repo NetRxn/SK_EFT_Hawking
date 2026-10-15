@@ -172,3 +172,7 @@ deliberately not green while they stand. Findings at
 ## 2026-10-15: Edition and polariton claim reconciliation
 
 Qualify the steep polariton gradient scale as nonthermal, distinguish cavity validity ratios from temperature shifts, and replace mean-field-energy noise inference with a conditional calibrated readout/noise budget. No executable formulas or proof statements changed.
+
+## 2026-10-15: Predicted versus measured spectrum
+
+Distinguish the nonthermal Hawking spectrum predicted in Falque et al.'s discussion from the measured fluid profiles and excitation dispersions. Remove the unsupported measurement attribution in the benchmark paragraph and matching review evidence. Numeric inputs, formulas, proofs, closures and stage fields are unchanged.
