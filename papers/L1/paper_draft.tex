@@ -30,41 +30,15 @@ identification to one part in $10^{15}$ of its natural range}
 \date{\today}
 
 \begin{abstract}
-Several emergent-gravity programs identify the spin-2 graviton with
-the second-sound mode of a fermionic vestigial fluid, predicting a
-gravitational-wave propagation speed
-$\cGW = c\sqrt{\chivest}$ where $\chivest$ is the metric-channel
-susceptibility of the broken-symmetry phase. We formalize this
-identification and confront it with the multi-messenger
-GW170817~\cite{Abbott2017GW170817} bound
-$-3\times 10^{-15} \leq \dccap \leq +7\times 10^{-16}$
-(conservatively two-sided: $|\dccap| \leq 3\times 10^{-15}$). The
-result is sharp: over the natural susceptibility range
-$\chivest \in [0.1, 10]$ (a project-adopted order-unity
-naturalness window about the random-phase-approximation
-bubble-integral scale) the
-deviation $\dccap = \sqrt{\chivest} - 1$ sweeps $[-0.68, +2.16]$,
-vanishing only at $\chivest = 1$ and exceeding the GW170817 cap by
-$\sim 7\times 10^{14}$ at the endpoints. The
-GW170817-compatible window
-$\chivest \in [(1-\tau)^2,(1+\tau)^2]$ with $\tau = 3\times 10^{-15}$
-has measure $4\tau \approx 1.2\times 10^{-14}$, vanishingly small
-under any natural-range prior. The result is a Lean 4 formal proof
-(\texttt{GravitationalWaves.lean}, 32 theorems, zero \texttt{sorry},
-zero new axioms): a biconditional locating the compatible window plus
-two endpoint falsifier theorems witnessed at $\chivest \in \{0.1,
-10\}$, and the Phase~5y H1 underdetermination caveat. The compatible
-window is not disjoint from the natural range but strictly nested
-inside it, meeting it at $\chivest = 1$; the datum \emph{confines}
-$\chivest$ to that window, while no speed-of-light rescaling admits
-either endpoint. The identification therefore survives only on a
-sub-interval narrower than the natural range by more than 14 orders of
-magnitude. The constraint is local to the leading-
-order kinematic identification; we identify three avenues by which
-emergent-gravity programs may yet recover GW170817 compatibility
-(symmetry-driven $\chivest \to 1$ fixed point; distinct
-metric-channel identification decoupled from second sound;
-frequency-dependent $\chivest$ at higher derivative order).
+We constrain our assumed leading-order graviton speed
+$\cGW=c\sqrt{\chivest}$. The conservative GW170817 bound
+$|\dccap|\leq\tau=3\times10^{-15}$ confines the nonnegative
+susceptibility to $[(1-\tau)^2,(1+\tau)^2]$, of width $4\tau$.
+This interval contains $\chivest=1$ and is over fourteen orders of
+magnitude narrower than our adopted range $[0.1,10]$.
+The mode and range are not derived from microscopic dynamics;
+the constraint applies to this kinematic model, not to emergent
+gravity generally.
 \end{abstract}
 
 \maketitle
@@ -311,10 +285,12 @@ for non-derived identifications, we bundle the structural properties
 of ``the vestigial mode is the graviton'' into a Lean Prop with
 three independently load-bearing conjuncts:
 \begin{equation*}
-  \verb|H_VestigialModeIsGraviton|(\chivest)
-  \equiv \chivest > 0
-  \wedge \verb|LigoSatisfied|(\dccap(\chivest))
-  \wedge |\dccap(\chivest)| < 1/2,
+  \begin{aligned}
+    &\verb|H_VestigialModeIsGraviton|(\chivest) \\
+    &\quad \equiv \chivest > 0 \\
+    &\qquad \wedge \verb|LigoSatisfied|(\dccap(\chivest)) \\
+    &\qquad \wedge |\dccap(\chivest)| < 1/2,
+  \end{aligned}
 \end{equation*}
 demanding positivity (P1), GW170817 compatibility (P2), and
 sub-half-deviation $|\dccap| < 1/2$ as P3'. P3' is genuinely
