@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-08-14T04:03:05+00:00",
+  "generated_at": "2026-10-15T14:37:47+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -357,13 +357,13 @@
     "Amelio2020": {
       "bibkey": "Amelio2020",
       "phase": "Phase-5w",
-      "tier_achieved": "crossref-json",
-      "primary_source_path": "Lit-Search/Phase-5w/primary-sources/Amelio2020.json",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-5w/primary-sources/Amelio2020.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-11T16:12:11+00:00",
-      "size_bytes": 7497,
-      "url_used": "https://api.crossref.org/works/10.1103/PhysRevB.101.064505",
-      "note": "no arxiv id"
+      "fetched_at": "2026-10-15T12:45:00+00:00",
+      "size_bytes": 2136611,
+      "url_used": "https://arxiv.org/pdf/1905.05855v2",
+      "note": null
     },
     "Amo2009": {
       "bibkey": "Amo2009",
@@ -649,6 +649,17 @@
       "fetched_at": "2026-05-11T16:13:49+00:00",
       "size_bytes": 239457,
       "url_used": "https://arxiv.org/pdf/hep-th/9404156",
+      "note": null
+    },
+    "Barcelo2011": {
+      "bibkey": "Barcelo2011",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-10-15T14:37:47+00:00",
+      "size_bytes": 2172677,
+      "url_used": "https://arxiv.org/pdf/gr-qc/0505065v3",
       "note": null
     },
     "BarceloLRR2005": {
@@ -1523,13 +1534,13 @@
     "Coutant2014": {
       "bibkey": "Coutant2014",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": null,
-      "primary_source_path": null,
-      "verdict": "no-source",
-      "fetched_at": "2026-08-14T04:03:05+00:00",
-      "size_bytes": 0,
-      "url_used": null,
-      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-10-15T13:53:26+00:00",
+      "size_bytes": 640599,
+      "url_used": "https://arxiv.org/pdf/1402.2514v2",
+      "note": null
     },
     "CoutantParentani2010": {
       "bibkey": "CoutantParentani2010",
@@ -1551,6 +1562,17 @@
       "fetched_at": "2026-05-11T16:17:00+00:00",
       "size_bytes": 2641853,
       "url_used": "https://arxiv.org/pdf/1108.1821",
+      "note": null
+    },
+    "CoutantWeinfurtner2018KdV": {
+      "bibkey": "CoutantWeinfurtner2018KdV",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/CoutantWeinfurtner2018KdV.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-10-15T13:53:26+00:00",
+      "size_bytes": 1349807,
+      "url_used": "https://arxiv.org/pdf/1707.09651v2",
       "note": null
     },
     "CreminelliVernizzi2017": {

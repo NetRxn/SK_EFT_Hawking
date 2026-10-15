@@ -59,3 +59,46 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-06-10 source-reconciliation pass post external-review remediation: single flagged source paper12_polariton carries the real committed change (5207b72b axiom-retirement note: gapped_interface_axiom retired into tracked Prop TPFConjecture); E1 counterpart is macro-driven (axiomcount=0 via counts.tex, already post-retirement) and E1's polariton-scope 'no new project-local axioms / no tracked Props' statements are consistent — NO residual divergence. Drifted source tables are byte-identical regen; E1 inputs no source tables. Sweep theme (E1 module-attribution fix Basic.SonicHorizon/AcousticMetric) applied in tandem 5207b72b; Vergeles/Halenka/Geurs not referenced (polariton-only letter). Standard DISCLOSURE_TEXT.md Variant A block inserted before bibliography (register-derived S1: 1 module / 5 theorems; pdflatex x2 clean). stage13_redo_required set true + freshness_stale deliberately retained by the reconciliation session (post-script metadata restore).
+
+## 2026-10-15 — Occupation-recovery direction and attenuation scope
+
+- Corrected §III to state the model relations `N_meas = N_emit/A` and `N_emit = A N_meas`, matching `polariton_spatial_attenuation`; the bound on the defined factor is distinguished from the physical recovery model in the matching apex claim.
+- Restricted the zero-decay statement to its proved implication and disclosed the permitted zero-distance case. Live imported Lean statements and axiom closures were checked against the exact main-compatible module hash.
+- Made the group-velocity identification explicit: the per-healing-length exponent is `(Gamma_pol/kappa) D c_s/v_g`, and the generated numerical estimates specialize to `v_g = c_s`.
+- Shortened the same attenuation section and its caption without changing generated device values, the declared validity cut, projected-cavity status or fabrication uncertainty. The normalization paragraph uses sentences in place of its reader-visible em-dash.
+- Focused findings and independent review evidence: `papers/AutomatedReviews/2026-10-15-e1-attenuation-recovery/`. Bundle-wide review statuses remain pending; this correction does not establish submission readiness.
+
+## 2026-10-15 — Self-contained abstract within the declared PRL ceiling
+
+- Shortened the abstract and removed its numbered citation while retaining the body attribution, generated scalars, weak-dissipation condition and saturated-greybody assumption.
+- Reconciled abstract-limit provenance against the current APS author page and its linked February 2026 Style Guide, Abstract subsection (printed p.11 / PDF p.12). The existing 600-character ceiling is unchanged and is now primary-verified for PRL.
+- Focused evidence: `papers/AutomatedReviews/2026-10-15-e1-abstract-contract/`. This changes no bundle-wide review verdict or submission status.
+
+## 2026-10-15 — Deregister-lean-modules
+
+- Modules deregistered: `PolaritonPhase5u`, `DispersionAndPolariton`, `GrapheneHawking`, `WKBConnection`, `SoftTheorems.NoiseFloorPrediction`, `KerrSchild.PolaritonCrossBridge`, `KerrSchild.SingleCopy`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: Current E1 no longer contains the registered ringdown/single-copy, graphene comparison or Wilson-independent FDR occupation-floor sections. PolaritonPhase5u, DispersionAndPolariton, KerrSchild.PolaritonCrossBridge and KerrSchild.SingleCopy have no source file or built module record at the pinned base. Direct full-source/history review plus source-matching imported inspection of the three built modules shows GrapheneHawking supplies generic arithmetic and a definitional temperature identity; SoftTheorems.NoiseFloorPrediction defines an occupation floor delta_k/2 and Wilson invariance, not the E1 mean-field energy temperature; WKBConnection uses an assumed modified-unitarity carrier and decoherence occupation not asserted by E1. KappaScaling was inspected as stronger matching arithmetic for the adopted correction but supplies no universal coefficient or physical noise derivation; the manuscript already discloses the normalization and no new formal claim is introduced. The retained explicit verification claims continue to cite PolaritonTier1 and declare their apexes. This event reconciles historical direct registrations; it does not remove Lean source, change scientific scope or certify bundle freshness. See papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/E1.md for source pins and independent review.
+
+- Closing section now explicitly identifies its role as “Conclusions and required measurements”; its scientific body is unchanged.
+- Freshness/pending metadata and prior source manifest were preserved; this declaration-only reconciliation does not certify a fresh lift. The worktree-path producer limitation is an open infra finding in `papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/E1.md` §2.1.
+
+## 2026-10-15 — Conditional detection model and calibrated testability
+
+- Recast the mean-field temperature-unit scalar as an energy scale, not an inferred occupation background or PSD. Retained Falque's actual modulation/bandwidth settings and made ideal SNR conditional on measured in-band noise and transfer/efficiency calibration.
+- Distinguished the dimensionless half-gain ratio from dimensional frequency, required independent greybody calibration for a shape test, and labeled the selected band as a working choice in effective-frequency units rather than a derived validity boundary.
+- Regenerated the two E1 figures from bounded canonical functions: measured/projected cavity status, explicit weak-loss threshold, consistent frequency coordinate, and conditional ideal sensitivity. No formula expressions, API or constants changed; a lowfrequency gain docstring was corrected.
+- Acquired the actual Amelio author preprintv2 through the existing exact-bibkey writer and reconciled its registry/sidecar provenance; the final journal body remains distinct. Claim/source and artifact evidence are in `papers/AutomatedReviews/2026-10-15-e1-detection-contract/`.
+- The earlier source-path infra limitation in the roster entry is subsequently closed through independently reviewed relative-path reader repairs. Bundle freshness/stage verdicts remain stale/pending; only measured compiled page count follows the new compile.
+
+## 2026-10-15 — Dispersive-model standing and primary-source limits
+
+- Labelled the whole quadratic dispersive law, including its leading power and coefficient, as an adopted phenomenological parametrization. Qualified the 2014 near-horizon approximation and replaced the unsupported leading-quadratic attribution with the profile-specific 2018 KdV result. Numerical definitions remain unchanged.
+- Removed the unsupported matched factor-2.5 reservoir comparison and introductory temperature range; retained Falque's reported parameters and distinguished other devices. A correction near one half no longer purports to prove divergence.
+- Reconciled the exact two source registry entries and acquired their versioned full author preprints through the existing writer. Final journal bodies were not read; matching metadata does not upgrade that status. Source assessment and focused findings are in `papers/AutomatedReviews/2026-10-15-publication-source-propagation/`.
+- Focused measurement: clean four-page compile, 3408/3750 word-equivalents, abstract 581/600 characters. Shared executable Python and Lean noncomment content are unchanged. Independent scientific review, artifact review and applicable merge gates remain distinct from these measurements; stale/pending stage fields and last_lift are preserved.
+
+## 2026-10-15: Edition and polariton claim reconciliation
+
+Bind the normalization reference to the published 2011 review and separately acquired arXiv v3, preserving the historical 2005 reference metadata and mismatched 2024 cache identity. Clarify table documentation and the steep formal gradient scale; no numerical evaluator changes.

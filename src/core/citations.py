@@ -371,18 +371,44 @@ CITATION_REGISTRY = {
         'arxiv': 'gr-qc/0505065',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf',
+        'primary_source_path': None,
         'used_in': [
             'src/core/transonic_background.py',
-            'papers/paper1_first_order/paper_draft.tex',
+            'lean/SKEFTHawking/AcousticMetric.lean',
         ],
         'provides': [],
-        'notes': 'Canonical review of analog gravity. Acoustic metric definition.',
+        'notes': ('2005 review metadata; current consumers cite this edition. '
+                  'No verified 2005 full body is held. Historical artifact '
+                  'Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf '
+                  'is arXiv gr-qc/0505065v4 (29 November 2024), not the 2005 body; '
+                  'its bytes and historical fetch record are preserved. '
+                  'The 2011 E1 reference is registered separately as Barcelo2011.'),
     },
 
     # ════════════════════════════════════════════════════════════════
     # Polariton analog gravity
     # ════════════════════════════════════════════════════════════════
+
+    'Barcelo2011': {
+        'authors': 'Barceló, C., Liberati, S., Visser, M.',
+        'title': 'Analogue Gravity',
+        'journal': 'Living Reviews in Relativity',
+        'volume': 14,
+        'page': '3',
+        'year': 2011,
+        'doi': '10.12942/lrr-2011-3',
+        'arxiv': 'gr-qc/0505065v3',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf',
+        'used_in': ['papers/E1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Published 2011 review metadata verified at the publisher. '
+                  'Held full author preprint v3, 12 May 2011; the journal body is '
+                  'not the cached artifact. Eqs. (61), (63)-(64) distinguish '
+                  'acceleration g_H from frequency kappa = g_H/c_H and give '
+                  'k_B T_H = hbar kappa/(2 pi). Not the 2005 or 2024 edition.'),
+    },
 
     'Falque2025': {
         'authors': 'Falque, K., Delhom, A., Glorieux, Q., Giacobino, E., Bramati, A., Jacquet, M. J.',
@@ -799,14 +825,17 @@ CITATION_REGISTRY = {
         'page': '064505',
         'year': 2020,
         'doi': '10.1103/PhysRevB.101.064505',
-        'arxiv': None,
-        'doi_verified': None,
+        'arxiv': '1905.05855v2',
+        'doi_verified': '2026-10-15',
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Amelio2020.json',
-        'used_in': ['papers/paper12_polariton/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Amelio2020.pdf',
+        'used_in': ['papers/paper12_polariton/paper_draft.tex', 'papers/E1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Acoustic metric in driven-dissipative polariton systems; '
-                 'weak-loss, long-wavelength limit.',
+        'notes': 'Publisher metadata verifies final DOI/title/venue. Author preprint '
+                 '1905.05855v2 (2019-06-13), linked to that DOI by arXiv, models '
+                 'reservoir/disorder-induced instability and loss of coherence '
+                 '(Sec. IV.C); it does not calibrate the Paris-LKB in-band noise. '
+                 'The preprint predates the final 2020 journal revision.',
     },
     'Jacquet2023QNM': {
         'authors': 'Jacquet, M. J., Giacomelli, L., Valnais, Q., Joly, M., Claude, F., Giacobino, E., Glorieux, Q., Carusotto, I., Bramati, A.',
@@ -5803,20 +5832,51 @@ CITATION_REGISTRY = {
     },
 
     'Coutant2014': {
-        'authors': 'O.~Coutant and R.~Parentani',
-        'title': 'Phys.\\ Rev.\\ D',
-        'journal': None,
+        'authors': 'Coutant, A., and Parentani, R.',
+        'title': 'Hawking radiation with dispersion: The broadened horizon paradigm',
+        'journal': 'Phys. Rev. D',
         'volume': 90,
-        'page': None,
+        'page': '121501',
         'year': 2014,
-        'doi': None,
-        'arxiv': None,
-        'doi_verified': False,
+        'doi': '10.1103/PhysRevD.90.121501',
+        'arxiv': '1402.2514v2',
+        'doi_verified': True,
         'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/paper1_first_order/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf',
+        'used_in': ['papers/paper1_first_order/paper_draft.tex',
+                    'papers/E1/paper_draft.tex', 'papers/D1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
+        'notes': ('Metadata reconciled2026-10-15 against the arXiv v2 record linked '
+                  'to the journal DOI. Author preprint v2 read at equation level: '
+                  'Eq10 thermal mixing ratio uses the locally linear near-horizon, '
+                  'weak-dispersion momentum-space WKB approximation; Eq11 specifies '
+                  'its validity region. Profile perturbations enter through the '
+                  'broadened horizon. This does not derive the adopted quadratic '
+                  'temperature-shift ansatz or pi/6. Final journal body not read.'),
+    },
+
+    'CoutantWeinfurtner2018KdV': {
+        'authors': 'Coutant, A., and Weinfurtner, S.',
+        'title': 'Low-frequency analogue Hawking radiation: The Korteweg–de Vries model',
+        'journal': 'Phys. Rev. D',
+        'volume': 97,
+        'page': '025005',
+        'year': 2018,
+        'doi': '10.1103/PhysRevD.97.025005',
+        'arxiv': '1707.09651v2',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CoutantWeinfurtner2018KdV.pdf',
+        'used_in': ['papers/E1/paper_draft.tex', 'papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Publisher title/authors/DOI/year verified2026-10-15 against APS; '
+                  '2017 is submission year, not journal year. Author preprint v2 '
+                  'read at equation level. Weak-dispersive KdV model neglects '
+                  'co-propagating coupling. For the specified profile, Eqs39–40 '
+                  'give low-frequency T_eff/T_H=tanh(pi*q_r) and exponentially '
+                  'small smooth-limit departures. No nonzero leading local-D^2 '
+                  'temperature term or device-specific pi/6 is established by '
+                  'this result. Final journal body not read.'),
     },
 
     'CoutantParentani2010': {

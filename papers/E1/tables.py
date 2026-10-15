@@ -1,41 +1,30 @@
-"""Table and scalar specs for the E1 bundle (Paris-LKB polariton device).
+"""Table and scalar specs for the E1 Paris-LKB polariton device.
 
-Every device parameter E1 quotes — sound speed, healing length, both horizon
-steepnesses, both Fresnel-like dispersion ratios, both Hawking temperatures and
-the mean-field noise temperature — was a hand-typed ``\\SI{...}`` literal in the
-draft, repeated at four to six sites each (abstract, §2, §3, §5, the Fig.~2
-caption, §7). The device-parameter table on the old lines 118--130 was a
-hand-written ``tabular``. Nothing bound any of them to
-``src/core/constants.py``, so a change to the platform record would have left
-the manuscript quoting the superseded numbers with no gate noticing:
-``numerical_literals`` only counts literals against a frozen ceiling and
-``bundle_tables_use_pipeline`` reads the ``\\input{tables/}`` form, which E1 did
-not use.
+Device parameters come from ``src/core/constants.py`` and derived values
+from the canonical evaluators in ``src/core/formulas.py``. These include
+dispersion ratios, the smooth-horizon Hawking temperature, the formal
+steep-horizon gradient scale and the mean-field energy in temperature units.
+The latter two do not establish a thermal spectrum or a measured noise floor.
 
 Each entry renders to ``papers/E1/tables/<id>.tex``. Scalars are one-line
-snippets the draft pulls in as ``\\input{tables/<id>.tex}\\unskip``; the table
-renders a complete ``tabular`` the draft wraps in its own ``center`` envelope.
-
-Regenerate after any change to constants or formulas, or to this spec:
+snippets; the device table renders a complete ``tabular`` for the draft's
+``center`` envelope. Regenerate through the existing renderer:
 
     uv run python scripts/render_paper_tables.py --paper E1
 
-Provenance of every value below:
+Provenance:
 
-* ``POLARITON_PLATFORMS['Paris_standard']`` in ``src/core/constants.py`` — the
-  Falque et al.\\ 2025 §IV.1 measured record (``c_s``, ``xi``, ``kappa``).
-* ``FALQUE_STEEP_HORIZON_KAPPA`` — the steep-horizon reach, same source.
-* ``formulas.polariton_hawking_temperature`` — ``T_H = hbar*kappa/(2*pi*k_B)``.
-* ``POLARITON_MASS`` — the mean-field noise floor ``T_noise = m* c_s^2 / k_B``.
+* ``POLARITON_PLATFORMS['Paris_standard']``: Falque et al. 2025 measured
+  ``c_s``, ``xi`` and ``kappa``.
+* ``FALQUE_STEEP_HORIZON_KAPPA``: the steep-horizon reach, same source.
+* ``formulas.polariton_hawking_temperature``: ``hbar*kappa/(2*pi*k_B)``;
+  a temperature interpretation requires a thermal spectrum.
+* ``POLARITON_MASS``: mean-field energy scale ``T_mf = m* c_s^2 / k_B``.
 
-⚠️ The downstream healing length (4.0 um) is NOT here. It has no record in
-``constants.py``; binding it to a Python re-derivation would assert a freshness
-relation that does not exist. It stays an inline literal until it is entered as
-a provenanced parameter.
-
-⚠️ Every value line is emitted without a trailing unit so the draft keeps
-control of ``siunitx`` formatting; call sites read
-``\\SI{\\input{tables/<id>.tex}\\unskip}{<unit>}``.
+The downstream healing length (4.0 um) has no ``constants.py`` record and
+remains an inline manuscript value rather than a generated parameter.
+Value lines carry no trailing unit. Use separate input and unit commands:
+``\\input{tables/<id>.tex}\\unskip\\,\\si{<unit>}``.
 """
 
 from __future__ import annotations
@@ -167,12 +156,12 @@ SCALARS = {
         'value': lambda: f'{polariton_hawking_temperature(_KAPPA_SMOOTH) * 1e3:.0f}',
     },
     'lkb_T_H_steep_mK': {
-        'description': 'E1 abstract and §5: Hawking temperature at the steep '
-                       'horizon, in mK.',
+        'description': 'Formal steep-horizon gradient scale hbar*kappa/(2*pi*k_B), '
+                       'in mK; not a measured thermal temperature.',
         'value': lambda: f'{polariton_hawking_temperature(_KAPPA_STEEP) * 1e3:.0f}',
     },
     'lkb_T_noise_K': {
-        'description': 'E1 §5: mean-field noise floor T_noise = m* c_s^2 / k_B, in K.',
+        'description': 'E1 §5: mean-field energy scale T_mf = m* c_s^2 / k_B, in K.',
         'value': lambda: f'{POLARITON_MASS * _C_S ** 2 / K_B:.2f}',
     },
 

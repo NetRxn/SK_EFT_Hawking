@@ -313,7 +313,7 @@ def _latest_source_mtime(source: str) -> datetime | None:
     for p in pdir.rglob("*"):
         if not p.is_file():
             continue
-        if any(part.startswith(".") or part == "__pycache__" for part in p.parts):
+        if any(part.startswith(".") or part == "__pycache__" for part in p.relative_to(pdir).parts):
             continue
         # Skip bundle-bookkeeping files when source happens to be a
         # bundle (it shouldn't, but be defensive).
