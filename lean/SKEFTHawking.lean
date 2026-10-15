@@ -5309,6 +5309,7 @@ import SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase
 import SKEFTHawking.QuantumNetwork.FiniteNontracialPhaseReadout
 import SKEFTHawking.FiniteNontracialPhaseHistoryTransfer
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelThermalPhase
+import SKEFTHawking.QuantumNetwork.FiniteThreeLevelCoherentReadout
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
