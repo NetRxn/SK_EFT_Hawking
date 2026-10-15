@@ -8496,11 +8496,11 @@ def fig_c_GW_vs_ligo_constraint():
     """Phase 6a Wave 2: c_GW deviation across the natural χ_vest range, vs the
     GW170817 constraint.
 
-    The key Wave 2 finding: GW170817 *confines* χ_vest to within 3e-15 of
-    unity. The endpoints of the natural range [0.1, 10] fail the cap by 14+
-    orders of magnitude, but the compatible window is nested strictly inside
-    that range and meets it at χ_vest = 1 — a fine-tuning constraint, not a
-    falsification of the range.
+    The symmetric speed-deviation cap is τ = 3e-15; susceptibility lies in
+    [(1−τ)², (1+τ)²]. The endpoints of the adopted natural range [0.1, 10]
+    fail the cap by 14+ orders of magnitude, while the compatible interval
+    lies strictly inside that range and contains χ_vest = 1. This is an
+    interval constraint, not exclusion of the range.
 
     Lean: GravitationalWaves.ligo_confines_chi_vest_within_natural_range,
     GravitationalWaves.vestigial_natural_range_violates_ligo
@@ -8581,7 +8581,7 @@ def fig_c_GW_vs_ligo_constraint():
         marker=dict(symbol="star", size=18,
                     color=COLORS["amber"],
                     line=dict(width=1, color="black")),
-        text=["GW170817-compatible<br>(χ_vest = 1 ± 3×10⁻¹⁵)"],
+        text=[f"GW170817-compatible<br>χ_vest ∈ [(1−τ)², (1+τ)²]<br>τ = {cap:.0e}"],
         textposition="bottom right",
         textfont=dict(size=10),
         showlegend=False,
