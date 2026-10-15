@@ -4573,47 +4573,14 @@ def extract_verifies_edges(node_ids: set) -> list[dict]:
             if target is None:
                 target = param_name_to_id.get(raw)
             if target is None:
-                # ── Lean resolution, GUARDED (ADR-009 §Deferred item 7) ──────
-                # This branch used to call `_resolve_lean_short(raw, ...)`
-                # unguarded, and that function falls back to matching the TAIL
-                # of a dotted name against Lean short names. The formula index
-                # above has carried an alias allow-list against exactly this
-                # hazard since D12 round-9 — "a blanket tail fallback would let
-                # `np.sum` or `math.exp` match a formula named `sum` or `exp`,
-                # manufacturing coverage that does not exist". The Lean branch
-                # had no equivalent, so precisely that happened.
-                #
-                # Measured on the live graph at the fix: **144 of 536
-                # Lean-targeted VERIFIES edges were fabricated** — `np.all` (58)
-                # -> `FaultTolerance.Pauli.all`, `v` (21, from `import validate
-                # as v`) -> `EWMassMatrixInputs.v`, `np.diag` (11) ->
-                # `IsCharQ.diag`, `np.dot` -> `KMM.Col.dot`, `mx.eval` ->
-                # `IntFundamentalClass.eval`, `PARAMETER_PROVENANCE.get` ->
-                # `NeutrinoMixing.get`, and so on. All 17 Lean declarations that
-                # lost an edge lost EVERY edge they had, i.e. none of them had
-                # any genuine coverage mixed in.
-                # (ADR-009 recorded 10; that figure was measured from a sample
-                # of five example names and understated the count 14-fold.)
-                #
-                # Two rules, one principle — a VERIFIES edge must rest on a name
-                # the test actually wrote, not on a suffix of one:
-                #   * a ref rooted at a MODULE ALIAS is a Python module
-                #     reference, never a Lean declaration (`np`, `mx`, `sp`,
-                #     `time`, `v`, `ext`);
-                #   * a DOTTED ref is a Python attribute access, so it may
-                #     resolve only as a full Lean name, never by its tail.
-                #     (No ref on disk resolves this way today; the leg is kept
-                #     so a genuine `SKEFTHawking.Foo.bar` reference still works.)
-                #
-                # Formula- and param-targeted edges are provably untouched: this
-                # branch runs only when both indexes already missed, so it can
-                # neither add nor remove one. Verified empirically — 1,390
-                # non-Lean edges before and after, bit-identical — which is why
-                # no ReadinessGate:ComputationCorrectness verdict can move.
+                # ADR-009 item 7: alias roots precede every Lean lookup;
+                # allowed dotted references require exact membership.
+                if raw.split('.', 1)[0] in module_aliases:
+                    continue
                 lean_id = None
                 if f'lean:{raw}' in node_ids:
                     lean_id = f'lean:{raw}'
-                elif '.' not in raw and raw not in module_aliases:
+                elif '.' not in raw:
                     # (returns None if ambiguous/missing)
                     lean_id = _resolve_lean_short(raw, node_ids)
                 if lean_id is not None:
