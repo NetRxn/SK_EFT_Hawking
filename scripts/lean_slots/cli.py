@@ -14,6 +14,208 @@ from .state import Inventory, SlotError
 from .supervisor import Supervisor
 
 
+# These are presentation budgets, never lifecycle admission predicates.
+_DIAGNOSTIC_BYTES = 65536
+_DIAGNOSTIC_GROUPS = 8
+_DIAGNOSTIC_EDGES = 16
+_DIAGNOSTIC_OBSERVATIONS = 32
+
+
+def _diagnostic_text(value: object, limit: int) -> tuple[str, bool]:
+    try:
+        text = str(value)
+        bounded = text[:limit]
+        bounded.encode("utf-8", errors="strict")
+        return bounded, len(text) > limit
+    except Exception:
+        return "<presentation unavailable>", True
+
+
+def _strict_diagnostic_json(value: Any, limit: int) -> str:
+    """Refuse whole payloads before large encoding; never coerce identity values.
+
+    The structural limits bound our traversal, not arbitrary user-defined object
+    behavior. Only plain JSON containers/scalars are admitted, without hooks.
+    """
+    visits = 0
+    active: set[int] = set()
+
+    def check(item: Any, depth: int) -> None:
+        nonlocal visits
+        visits += 1
+        if visits > 65536 or depth > 64:
+            raise ValueError("diagnostic structure limit")
+        kind = type(item)
+        if kind is str:
+            if len(item) > limit:
+                raise OverflowError("diagnostic string limit")
+        elif kind is int:
+            if item.bit_length() > limit * 3:
+                raise OverflowError("diagnostic integer limit")
+        elif kind in (float, bool, type(None)):
+            return
+        elif kind in (list, tuple, dict):
+            if id(item) in active:
+                raise ValueError("cyclic diagnostic value")
+            if len(item) > 65536:
+                raise ValueError("diagnostic structure limit")
+            active.add(id(item))
+            try:
+                if kind is dict:
+                    for key, child in item.items():
+                        if type(key) is not str:
+                            raise ValueError("diagnostic keys must be strings")
+                        check(key, depth + 1)
+                        check(child, depth + 1)
+                else:
+                    for child in item:
+                        check(child, depth + 1)
+            finally:
+                active.remove(id(item))
+        else:
+            raise ValueError("non-JSON diagnostic value")
+
+    check(value, 0)
+    parts = []
+    size = 0
+    encoder = json.JSONEncoder(ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+    for part in encoder.iterencode(value):
+        size += len(part.encode("utf-8", errors="strict"))
+        if size > limit:
+            raise OverflowError("diagnostic byte limit")
+        parts.append(part)
+    return "".join(parts)
+
+
+def _exception_diagnostics(exc: BaseException) -> str | None:
+    """Present bounded explicit provenance without observing external state."""
+    groups: list[dict[str, Any]] = []
+    edges: list[dict[str, Any]] = []
+    objects: dict[int, int] = {}
+    stack: set[int] = set()
+    pending: list[tuple[dict[str, Any], tuple]] = []
+    omitted = {"relationships": 0, "group_targets": 0, "observation_budget": 0,
+               "serialization": 0, "bytes": 0}
+    exhausted: list[str] = []
+    inspected_edges = 0
+    discovered = 0
+
+    def budget(name: str) -> None:
+        if name not in exhausted:
+            exhausted.append(name)
+
+    def visit(error: BaseException) -> int:
+        nonlocal inspected_edges, discovered
+        number = len(groups)
+        objects[id(error)] = number
+        stack.add(id(error))
+        name, name_cut = _diagnostic_text(type(error).__name__, 128)
+        message, message_cut = _diagnostic_text(error, 1024)
+        observations = error.observations if isinstance(error, SlotError) else ()
+        group = {"id": number, "class": name, "class_truncated": name_cut,
+                 "message": message, "message_truncated": message_cut,
+                 "observations_total": len(observations), "observations": []}
+        groups.append(group)
+        pending.append((group, observations))
+        discovered += len(observations)
+        cause = error.__cause__
+        secondary = error.secondary_errors if isinstance(error, SlotError) else ()
+        relation_count = (cause is not None) + len(secondary)
+        for index in range(relation_count):
+            if inspected_edges >= _DIAGNOSTIC_EDGES:
+                omitted["relationships"] += relation_count - index
+                budget("relationships")
+                break
+            inspected_edges += 1
+            if cause is not None and index == 0:
+                relation, role, child = "cause", "cause", cause
+            else:
+                role, child = secondary[index - (cause is not None)]
+                relation = "secondary"
+            role_text, role_cut = _diagnostic_text(role, 128)
+            target = objects.get(id(child))
+            if target is not None:
+                disposition = "cycle" if id(child) in stack else "shared"
+            elif len(groups) >= _DIAGNOSTIC_GROUPS:
+                disposition = "group_budget"
+                omitted["group_targets"] += 1
+                budget("groups")
+            else:
+                disposition = "new"
+            edge = {"from": number, "to": target, "relation": relation,
+                    "role": role_text, "role_truncated": role_cut,
+                    "disposition": disposition}
+            edges.append(edge)
+            if disposition == "new":
+                edge["to"] = visit(child)
+        stack.remove(id(error))
+        return number
+
+    visit(exc)
+    if not discovered:
+        return None
+    unknown = bool(omitted["relationships"] or omitted["group_targets"])
+    envelope = {"schema": "slotctl-diagnostics/v1", "groups": groups, "edges": edges,
+                "limits": {"groups": _DIAGNOSTIC_GROUPS, "relationships": _DIAGNOSTIC_EDGES,
+                           "observations": _DIAGNOSTIC_OBSERVATIONS, "utf8_bytes": _DIAGNOSTIC_BYTES},
+                "inspection": {"relationships": inspected_edges, "observations": 0,
+                               "discovered_observations": discovered},
+                "omitted": omitted, "budget_exhausted": exhausted,
+                "unvisited_content_unknown": unknown, "traversal_complete": not unknown,
+                "observations_complete": False, "fallback": False}
+    try:
+        # No observation is admitted until graph/omission metadata is reserved.
+        reserved = len(_strict_diagnostic_json(envelope, _DIAGNOSTIC_BYTES).encode("utf-8")) + 4096
+        available = max(0, _DIAGNOSTIC_BYTES - reserved)
+        attempts = 0
+        for group, observations in pending:
+            for index in range(len(observations)):
+                if attempts >= _DIAGNOSTIC_OBSERVATIONS:
+                    omitted["observation_budget"] += len(observations) - index
+                    budget("observations")
+                    break
+                attempts += 1
+                try:
+                    item = {"index": index, "value": observations[index].as_dict()}
+                    encoded = _strict_diagnostic_json(item, _DIAGNOSTIC_BYTES)
+                except OverflowError:
+                    omitted["bytes"] += 1
+                    budget("utf8_bytes")
+                    continue
+                except Exception:
+                    omitted["serialization"] += 1
+                    continue
+                size = len(encoded.encode("utf-8")) + 1
+                if size > available:
+                    omitted["bytes"] += 1
+                    budget("utf8_bytes")
+                    continue
+                group["observations"].append(item)
+                available -= size
+        envelope["inspection"]["observations"] = attempts
+        while True:
+            envelope["observations_complete"] = not unknown and not any(
+                omitted[key] for key in ("observation_budget", "serialization", "bytes"))
+            try:
+                return _strict_diagnostic_json(envelope, _DIAGNOSTIC_BYTES)
+            except OverflowError:
+                for group in reversed(groups):
+                    if group["observations"]:
+                        group["observations"].pop()
+                        omitted["bytes"] += 1
+                        budget("utf8_bytes")
+                        break
+                else:
+                    raise
+    except Exception:
+        # Discovered evidence exists; failure here must never look complete.
+        return json.dumps({"schema": "slotctl-diagnostics/v1", "fallback": True,
+                           "discovered_evidence_omitted": True,
+                           "unvisited_content_unknown": True,
+                           "traversal_complete": False, "observations_complete": False},
+                          separators=(",", ":"), allow_nan=False)
+
+
 def _json(value: Any) -> None:
     print(json.dumps(value, indent=2, sort_keys=True))
 
@@ -233,6 +435,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     except (SlotError, OSError, ValueError) as exc:
         print(f"slotctl: {exc}", file=sys.stderr)
+        try:
+            diagnostics = _exception_diagnostics(exc)
+            if diagnostics is not None:
+                print("slotctl diagnostics: " + diagnostics, file=sys.stderr)
+        except Exception:
+            pass  # Added presentation must not replace the original refusal.
         return 2
 
 

@@ -561,6 +561,20 @@ separately specifies the owner-authorized stop-only exception.
 
 <a id="2026-10-12-shared-runtime-source-fingerprint-proposal"></a>
 
+### LO-1 / LO-3 explicit failure presentation
+
+**Status:** isolated source candidate; whole independent review, normal integration
+and separately measured runtime loading remain required.
+
+The existing SlotError owns passive labelled secondary exception references alongside
+its own observations and explicit cause. Existing CLI failure handling presents the
+bounded explicit graph specified in the [lifecycle design](../superpowers/specs/2026-10-11-lean-lifecycle-observation-design.md#explicit-failure-diagnostics-lo-1--lo-3-presentation).
+Each witness belongs to its actual exception; restoration and rollback do not replace
+the original cause. Whole-item strict serialization omissions and unknown unvisited
+contents remain visible. The primary message, failure status, persistent strings,
+post-release warnings and every lifecycle/identity/capacity decision remain unchanged.
+This is diagnostic source behavior, not native-refusal causality or runtime loading.
+
 ## Shared-runtime source fingerprint
 
 **Status: WHOLE SOURCE IMPLEMENTATION INDEPENDENTLY ACCEPTED / SOURCE FINDINGS CLOSED / CURRENT PROJECT GATES AND NATIVE ADMISSION PENDING.**

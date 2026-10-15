@@ -272,3 +272,82 @@ internals avoid reacquiring the held lifecycle lock. FREE and passive TCP/native
 samples do not prove request drain; outside HTTP races and daemon handler nonjoining
 remain limitations. See the operator guide for the before/after witnesses and separate
 loaded-source/MCP/lease/reconnect/paired-epoch gates. Unknown resources stay untouched.
+
+## Explicit failure diagnostics (LO-1 / LO-3 presentation)
+
+**Status:** isolated source candidate; whole independent review, normal integration
+and separately measured runtime loading remain required.
+
+`SlotError.secondary_errors` is an optional tuple of `(role, actual_exception)`
+references. Construction is passive. Each exception retains its own observations
+and original explicit cause. The CLI collector follows only `__cause__` and these
+labelled references, cause first, then stored order. It never follows implicit
+context, traceback, locals or native state. Existing first/last shutdown witnesses
+remain bounded witnesses rather than a complete observation history.
+
+After the unchanged `slotctl: <message>` stderr emission, a caught failure with any
+own observation discovered by traversal emits `slotctl diagnostics: ` followed by
+one strict JSON object with `schema: "slotctl-diagnostics/v1"`. Exit status remains
+two and the diagnostic path emits no stdout. Formatting/write errors are contained.
+No discovered observation means no added line; an unvisited tail may still contain
+unknown witnesses. Normal returned observations, parser output, release warnings
+and proxy HTTP/JSON-RPC surfaces retain their existing contracts.
+
+The envelope contains `groups`, `edges`, `limits`, `inspection`, `omitted`,
+`budget_exhausted`, `unvisited_content_unknown`, `traversal_complete`,
+`observations_complete`, and `fallback`. Groups have small integer `id`, bounded
+`class` and `message`, separate presentation truncation flags, `observations_total`,
+and `observations` entries containing original tuple `index` plus exact `value`.
+Edges have `from`, nullable `to`, `relation` (`cause` or `secondary`), bounded `role`,
+`role_truncated`, and `disposition` (`new`, `shared`, `cycle`, or `group_budget`).
+Only a reference to the current DFS stack is a cycle; repeated objects reuse IDs.
+
+Aggregate limits are eight groups including root, sixteen relationship inspections,
+thirty-two observation attempts, and 65536 final encoded UTF-8 JSON bytes. Inspected
+repeated relationships and omitted observations consume their budgets. Known direct
+relationship and observation tuple lengths give exact local omissions; unreachable
+subgraph contents are explicitly unknown. Group/edge omissions imply incomplete
+traversal. Cycles/shared references are disclosed independently of completeness.
+Class and role presentation are capped at 128 Unicode code points, messages at 1024;
+truncation flags are separate from observation completeness. Unencodable presentation
+text is replaced with an explicitly marked unavailable presentation.
+
+Discover bounded graph metadata first and reserve its encoded size plus 4096 bytes
+for final counters before accepting payloads. Observation encoding is strict JSON,
+with finite numbers, string dictionary keys, no coercion and no `default=str`.
+Use bounded structural preflight (depth 64, 65536 value/key visits and conservative
+string/number size checks) and bounded streaming encoding. The omission precedence
+is observation-attempt budget, serialization/structural refusal, then byte budget.
+Oversized/invalid items are omitted whole, leaving later small items eligible. Exact
+small `Observation.as_dict()` values preserve all nine fields; identities, signatures
+and targets are never shortened. A final encoded-size check removes whole admitted
+items from the end if required, attributing each removal to byte budget. A bounded
+fallback states discovered evidence was omitted and never claims completeness.
+These defensive budgets are not census counts, readiness gates or cost guarantees.
+
+Actual multi-failure wrappers attach only already-caught objects:
+
+| Method | Secondary role |
+|---|---|
+| `_spawn` | `launch_rollback` |
+| `paused_backend` | `backend_restoration` |
+| `activating_from` | `paired_restoration` |
+| `restore_counterpart` | `target_recovery` |
+| `start` | `start_cleanup:<kind>:<slot>`, original reverse-started order |
+| `_harvest_tool_list_unlocked` | `borrowed_cleanup` |
+
+Existing message and persisted error strings stay unchanged. Cause-only safe-capacity
+borrowing, source/environment failure, quiescence, stop and state wrappers retain
+their explicit causes. Controller bookkeeping bare rethrows preserve the object;
+implicit bookkeeping/lock-cleanup histories remain outside this representation.
+Post-unlink warning `observations=` arrays, orphan persisted evidence and proxy error
+surfaces are unchanged. No observation, poll, clock, write, signal, reap, retry,
+reservation, capacity, readiness, fingerprint or lifecycle decision is added.
+
+Acceptance requires actual production-method/CLI controls through temporary records
+and external OS seams, nested restoration/spawn/rollback and multiple cleanup roles,
+strict JSON and UTF-8 boundaries, exact witnesses and unchanged lifecycle counters.
+Separate production mutations dropping a secondary attachment and suppressing CLI
+emission must each fail its specific full-route oracle, then restore exact bytes and
+rerun green. Whole independent source/evidence review precedes ROOT commit, existing
+finding closure and separately measured runtime admission.

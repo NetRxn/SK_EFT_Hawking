@@ -185,3 +185,33 @@ admission or stated activation blocker. Existing findings use supported closure 
 this plan creates no ledger/notebook writer. Original research streams, full theorem
 contracts and failed gates are unchanged. Any unknown-process recovery or API expansion
 beyond this contract needs a new evidence/decision package rather than silent scope drift.
+
+## Explicit failure presentation increment
+
+**Status:** isolated source candidate; whole independent review, normal integration
+and separately measured runtime loading remain required.
+
+Extend LO-1/LO-3 through the existing SlotError, CLI and supervisor files plus
+`tests/test_lean_lifecycle_observation.py`. Correct ADR/spec/guide/architecture map
+before source. Preserve old messages, persisted fields, direct restoration branches,
+release warnings and all observation/lifecycle decisions. No new check is introduced.
+The sole implementation author owns the coherent graph/serializer/wrapper/test package;
+ROOT retains Git, ordinary finding closure, broad gates and runtime admission.
+
+Required controls cover initial creation loss and successful rollback/unlink, identity
+and census refusals, reaped/reused handles, coherent readiness, every wrapper and
+cause-only borrow, paused/paired nested spawn plus distinct rollback failure, multiple
+global cleanups in actual reverse order, exact nine-field witnesses, shared versus
+cyclic graphs, all aggregate budgets, strict JSON/UTF-8 boundaries, omitted oversized
+items followed by small ones, all-omitted emission and stderr failure containment.
+Use actual production methods and CLI dispatch with isolated external seams; capture
+original exceptions, exact file preimages and operation counters. Preserve two separate
+production mutants with exact red assertions, bytes and restoration/green reruns.
+
+The ordinary finding declares:
+`.venv/bin/python -m pytest -m '' tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q -s`.
+Run that complete command and `git diff --check`, freeze whole source/outputs/hashes
+and clause mapping, then independent whole review. ROOT owns broader fast-suite,
+normal commit/integration, declared Verify through the closure writer, and any later
+known-owner drained runtime window. Isolated propagation does not explain a live
+refusal or certify operational reliability.

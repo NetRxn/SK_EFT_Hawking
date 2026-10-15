@@ -35,9 +35,11 @@ SLOT_STATES = {
 class SlotError(RuntimeError):
     """An invariant failed, with optional bounded external observation witnesses."""
 
-    def __init__(self, *args: object, observations: tuple["Observation", ...] = ()):
+    def __init__(self, *args: object, observations: tuple["Observation", ...] = (),
+                 secondary_errors: tuple[tuple[str, BaseException], ...] = ()):
         super().__init__(*args)
         self.observations = observations
+        self.secondary_errors = secondary_errors
         self.recorded_pid = None  # Diagnostic raw input only, never identity authority.
 
 

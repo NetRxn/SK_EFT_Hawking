@@ -630,3 +630,14 @@ beyond the definition is the doctor-shape assertion in `tests/test_lean_slots.py
 `architecture-change` skill's `registration_sites.py` keys on a check *name* as a proxy for
 "a `validate.py` check" and so reports seven owed sites for a doctor check, all of them false
 positives — assert which family the check belongs to before working its list.
+
+### Slot failure presentation ownership
+
+The existing `scripts/lean_slots/state.py` SlotError retains own observations and
+passive labelled secondary failures. Existing `scripts/lean_slots/cli.py` handling
+presents their bounded explicit cause graph; `scripts/lean_slots/supervisor.py`
+attaches already-caught rollback/restoration failures without changing control flow.
+The [lifecycle design](../superpowers/specs/2026-10-11-lean-lifecycle-observation-design.md#explicit-failure-diagnostics-lo-1--lo-3-presentation)
+owns its schema, aggregate budgets, strict serialization and truthful omissions.
+It is a presentation surface, with no observer, store, checker or lifecycle authority.
+Release warning arrays and proxy transport errors remain independent surfaces.

@@ -312,6 +312,18 @@ or alternate layouts with `LEAN_SLOT_STATE_DIR`.
 
 ## Observation failures and residual resources
 
+CLI failures retain their first `slotctl: <message>` line and exit status two. When
+bounded explicit-cause/labelled-secondary traversal discovers own observations,
+`slotctl diagnostics: ` adds a versioned JSON stderr line. Each group owns its exact
+small typed witnesses; edges distinguish cause, restoration and cleanup provenance.
+Read omission counters, budget exhaustion and unknown-tail flags before interpreting
+missing evidence. Message truncation is separate from witness omissions. No added
+line does not prove that an unvisited subgraph lacked witnesses. The JSON budget does
+not bound the preexisting primary message or total stderr. See the
+[lifecycle diagnostic schema](../superpowers/specs/2026-10-11-lean-lifecycle-observation-design.md#explicit-failure-diagnostics-lo-1--lo-3-presentation).
+This display does not collect native observations or identify a refusal's cause.
+
+
 The implemented, independently source-reviewed controller rejects `--slot` with
 `supervisor start`, `stop` and `status` before inventory loading or action. These verbs
 remain global. `supervisor probe --slot N` requires and uses that slot. No targeted

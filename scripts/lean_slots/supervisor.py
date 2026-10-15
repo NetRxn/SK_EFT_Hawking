@@ -1178,7 +1178,8 @@ class Supervisor:
                     atomic_json(path, pending)
                 except (OSError, SlotError):
                     pass  # The earlier durable pending record continues to reserve this slot.
-                raise SlotError(f"launch failed: {original}; residual retained: {rollback_error}") from original
+                raise SlotError(f"launch failed: {original}; residual retained: {rollback_error}",
+                                    secondary_errors=(("launch_rollback", rollback_error),)) from original
             raise
 
     def _confirm_stop_quiescence(self, kind: str, number: int) -> None:
@@ -1626,7 +1627,8 @@ class Supervisor:
                     self._start_backend_unlocked(number)
                     self.assert_healthy(number)
                 except BaseException as restoration:
-                    raise SlotError(f"transition failed: {original}; restoration failed: {restoration}") from original
+                    raise SlotError(f"transition failed: {original}; restoration failed: {restoration}",
+                                    secondary_errors=(("backend_restoration", restoration),)) from original
                 raise
             else:
                 self._start_backend_unlocked(number)
@@ -1672,7 +1674,8 @@ class Supervisor:
                         counterpart._start_backend_unlocked(number)
                         counterpart.assert_healthy(number)
                 except BaseException as restoration:
-                    raise SlotError(f"paired transition failed: {original}; restoration failed: {restoration}") from original
+                    raise SlotError(f"paired transition failed: {original}; restoration failed: {restoration}",
+                                    secondary_errors=(("paired_restoration", restoration),)) from original
                 raise
 
     def restore_counterpart(self, number: int, counterpart: "Supervisor") -> None:
@@ -1700,7 +1703,8 @@ class Supervisor:
                         self._start_backend_unlocked(number)
                         self.assert_healthy(number)
                 except BaseException as restoration:
-                    raise SlotError(f"paired restoration failed: {original}; target recovery failed: {restoration}") from original
+                    raise SlotError(f"paired restoration failed: {original}; target recovery failed: {restoration}",
+                                    secondary_errors=(("target_recovery", restoration),)) from original
                 raise
 
     def start(self) -> dict[str, Any]:
@@ -1726,6 +1730,7 @@ class Supervisor:
                 self._harvest_tool_list_unlocked()
             except Exception as original:
                 rollback_errors = []
+                cleanup_failures = []
                 for kind, number in reversed(started):
                     slot = self.inventory.slot(number)
                     port = int(slot[f"{kind}_port"])
@@ -1733,8 +1738,10 @@ class Supervisor:
                         self._stop(kind, number, port)
                     except (SlotError, OSError) as exc:
                         rollback_errors.append(str(exc))
+                        cleanup_failures.append((f"start_cleanup:{kind}:{number}", exc))
                 if rollback_errors:
-                    raise SlotError(f"global startup failed: {original}; rollback residuals: {rollback_errors}") from original
+                    raise SlotError(f"global startup failed: {original}; rollback residuals: {rollback_errors}",
+                                    secondary_errors=tuple(cleanup_failures)) from original
                 raise
         return self.status()
 
@@ -1879,7 +1886,8 @@ class Supervisor:
                 try:
                     self._stop_backend_unlocked(number)
                 except BaseException as cleanup:
-                    raise SlotError(f"tool discovery failed: {original}; borrowed cleanup failed: {cleanup}") from original
+                    raise SlotError(f"tool discovery failed: {original}; borrowed cleanup failed: {cleanup}",
+                                    secondary_errors=(("borrowed_cleanup", cleanup),)) from original
                 raise
             else:
                 self._stop_backend_unlocked(number)

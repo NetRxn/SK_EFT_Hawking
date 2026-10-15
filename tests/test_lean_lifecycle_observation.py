@@ -5,6 +5,8 @@ or supervisor guard is patched. Real Git commands are limited to pytest tmp repo
 """
 from __future__ import annotations
 
+import base64
+import hashlib
 import errno
 import json
 import os
@@ -37,6 +39,10 @@ class Host:
         self.launches = []
         self.handles = []
         self.clock = 0.0
+        self.clock_reads = 0
+        self.polls = 0
+        self.socket_calls = []
+        self.replacements = []
         self.next_pid = 810000
         self.launch_failure = None
         self.no_open = False
@@ -60,7 +66,15 @@ class Host:
         patch.setattr(lifecycle.socket, "create_connection", self.connection)
         patch.setattr(subprocess, "Popen", self.popen)
         patch.setattr(os, "kill", self.kill)
-        patch.setattr(lifecycle.time, "monotonic", lambda: self.clock)
+        def clock_read():
+            self.clock_reads += 1
+            return self.clock
+        original_replace = os.replace
+        def replace(source, target, *args, **kwargs):
+            self.replacements.append((str(source), str(target)))
+            return original_replace(source, target, *args, **kwargs)
+        patch.setattr(os, "replace", replace)
+        patch.setattr(lifecycle.time, "monotonic", clock_read)
         patch.setattr(lifecycle.time, "sleep", self.sleep)
 
     def add(self, pid, command, *, ppid=None, port=None, signature=None):
@@ -128,6 +142,7 @@ class Host:
 
     def connection(self, address, **kwargs):
         port = address[1]
+        self.socket_calls.append(address)
         if port in self.port_errors:
             raise self.port_errors[port]
         if port in self.denied_ports:
@@ -182,6 +197,7 @@ class Host:
                 self.waits = []
                 self.returncode = None
             def poll(self):
+                host.polls += 1
                 if self.returncode is not None:
                     return self.returncode
                 if host.after_poll:
@@ -2370,3 +2386,489 @@ def test_rr4_first_refusal_survives_deadline(rig, monkeypatch):
     assert isinstance(error, SlotError) and path.exists() and host.clock <= 10.00001
     assert "first refusal: post-write classification" in str(error) and "shutdown rooted ancestry changed after durable write" in str(error), "RR4 first transition cause survives the passive deadline"
     assert error.observations and any(row.state == "present" for row in error.observations), "RR4 first typed observations survive final unavailable evidence"
+
+
+# Explicit diagnostic provenance uses the same isolated Host as lifecycle controls.
+# The CLI status dispatch adapter below is only an entry trampoline; every tested
+# supervisor operation and its guards run unmodified production source.
+def diagnostic_effects(sup, host):
+    return {
+        "ps": list(host.ps_calls), "commands": list(host.command_calls),
+        "clock_reads": host.clock_reads, "polls": host.polls,
+        "sockets": list(host.socket_calls), "writes": list(host.replacements),
+        "signals": list(host.signals), "launches": list(host.launches), "clock": host.clock,
+        "handles": [(h.terminations, list(h.waits), h.returncode) for h in host.handles],
+        "files": {str(p.relative_to(sup.inventory.state_root)): p.read_bytes()
+                  for p in sup.inventory.state_root.rglob("*") if p.is_file()},
+    }
+
+
+def diagnostic_cli(sup, host, monkeypatch, capsys, action):
+    caught = []
+    def dispatch():
+        try:
+            return action()
+        except BaseException as exc:
+            caught.append((exc, diagnostic_effects(sup, host)))
+            raise
+    with monkeypatch.context() as patch:
+        patch.setattr(cli, "Controller", lambda inventory: SimpleNamespace(status=dispatch))
+        code = cli.main(["--inventory", str(sup.inventory.source), "status", "--json"])
+    captured = capsys.readouterr()
+    assert code == 2 and captured.out == ""
+    assert len(caught) == 1
+    error, before = caught[0]
+    assert diagnostic_effects(sup, host) == before
+    prefix = f"slotctl: {error}\n"
+    assert captured.err.startswith(prefix)
+    suffix = captured.err[len(prefix):]
+    assert suffix.startswith("slotctl diagnostics: "), "actual CLI must emit the exact witness receipt"
+    assert suffix.count("\n") == 1
+    raw = suffix.removeprefix("slotctl diagnostics: ").rstrip("\n")
+    assert len(raw.encode("utf-8")) <= 65536
+    payload = json.loads(raw, parse_constant=lambda bad: pytest.fail(f"non-strict JSON: {bad}"))
+    assert payload["schema"] == "slotctl-diagnostics/v1" and not payload["fallback"]
+    effect_receipt = dict(before)
+    effect_receipt["files"] = {
+        name: {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest(),
+               "base64": base64.b64encode(data).decode("ascii")}
+        for name, data in before["files"].items()
+    }
+    with capsys.disabled():
+        print(json.dumps({"diagnostic_receipt": payload, "primary": str(error),
+                          "effects_before_and_after": effect_receipt}, ensure_ascii=False))
+    return error, payload
+
+
+def diagnostic_graph_exact(error, payload):
+    """Independent small-graph oracle: own witnesses and actual edge identities."""
+    objects, expected_groups, expected_edges = {}, [], []
+    active = set()
+    def walk(exc):
+        group_id = len(objects)
+        objects[id(exc)] = group_id
+        active.add(id(exc))
+        expected_groups.append((type(exc).__name__, str(exc),
+                                [o.as_dict() for o in getattr(exc, "observations", ())]))
+        relations = ([] if exc.__cause__ is None else [("cause", "cause", exc.__cause__)])
+        relations += [("secondary", role, child) for role, child in getattr(exc, "secondary_errors", ())]
+        for relation, role, child in relations:
+            if id(child) in objects:
+                target = objects[id(child)]
+                disposition = "cycle" if id(child) in active else "shared"
+                expected_edges.append((group_id, target, relation, role, disposition))
+            else:
+                target = len(objects)
+                expected_edges.append((group_id, target, relation, role, "new"))
+                walk(child)
+        active.remove(id(exc))
+    walk(error)
+    assert payload["traversal_complete"] and payload["observations_complete"]
+    assert not payload["unvisited_content_unknown"] and not any(payload["omitted"].values())
+    assert [(g["class"], g["message"], [o["value"] for o in g["observations"]]) for g in payload["groups"]] == expected_groups
+    assert [(e["from"], e["to"], e["relation"], e["role"], e["disposition"]) for e in payload["edges"]] == expected_edges
+    for group in payload["groups"]:
+        for item in group["observations"]:
+            assert set(item["value"]) == {"state", "target", "operation", "observed_at", "returncode", "error_class", "errno", "observed_identity", "diagnostic_text"}
+
+
+def diagnostic_distinct_creation_rollback(host, monkeypatch):
+    real = host.run
+    calls = []
+    pid = host.next_pid
+    def selected(argv, **kwargs):
+        if argv[0] == "ps" and "-p" in argv and argv[2] == str(pid):
+            calls.append(list(argv))
+            code = errno.EPERM if len(calls) == 1 else errno.EACCES
+            raise PermissionError(code, "creation" if len(calls) == 1 else "rollback")
+        return real(argv, **kwargs)
+    monkeypatch.setattr(subprocess, "run", selected)
+
+
+def diagnostic_witness(label):
+    return state.Observation("unavailable", signature=f"signature {label}", detail=f"detail\n{label}",
+                             errno=errno.EPERM, target=f"target {label}", operation="test-external",
+                             observed_at="2026-10-15T00:00:00Z", returncode=7,
+                             error_class="PermissionError", identity={"label": label, "native": [1, "λ"]})
+
+
+@pytest.mark.parametrize("persistent", [False, True])
+def test_diagnostics_creation_cli(rig, monkeypatch, capsys, persistent):
+    _, sup, host = rig
+    real = host.run
+    failures = []
+    def selected(argv, **kwargs):
+        if argv[0] == "ps" and "-p" in argv and argv[2] == str(host.next_pid - 1):
+            if persistent or not failures:
+                failures.append(list(argv))
+                raise PermissionError(errno.EPERM, "distinct creation denial")
+        return real(argv, **kwargs)
+    monkeypatch.setattr(subprocess, "run", selected)
+    error, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: sup.start_backend(1))
+    diagnostic_graph_exact(error, payload)
+    if persistent:
+        assert error.secondary_errors[0][0] == "launch_rollback"
+        rollback = error.secondary_errors[0][1]
+        assert rollback.observations[0].operation == "ps-selected"
+        assert host.handles[0].terminations == 0 and host.handles[0].waits == []
+        assert read_json(sup.inventory.process_path("backend", 1))["phase"] == "uncertain_residual"
+        assert 1 in sup.capacity_census()["reserved_physical_slots"]
+    else:
+        assert error.observations[0].errno == errno.EPERM
+        assert payload["groups"][0]["observations"][0]["value"] == error.observations[0].as_dict(), "creation witness must survive unlink and reach stderr exactly"
+        assert host.handles[0].terminations == 1 and host.handles[0].waits == [5]
+        assert not sup.inventory.process_path("backend", 1).exists()
+    assert not host.signals
+
+
+@pytest.mark.parametrize("body_witness", [False, True])
+def test_diagnostics_paused_nested_cli(rig, monkeypatch, capsys, body_witness):
+    _, sup, host = rig
+    owned(sup, host, "proxy", 1, 880001)
+    body = SlotError("transition body", observations=(diagnostic_witness("body"),) if body_witness else ())
+    def action():
+        with sup.paused_backend(1):
+            diagnostic_distinct_creation_rollback(host, monkeypatch)
+            raise body
+    error, payload = diagnostic_cli(sup, host, monkeypatch, capsys, action)
+    assert error.__cause__ is body
+    assert len(error.secondary_errors) == 1, "paused production wrapper must retain actual secondary provenance"
+    role, restoration = error.secondary_errors[0]
+    assert role == "backend_restoration" and restoration.__cause__.observations
+    assert restoration.secondary_errors[0][0] == "launch_rollback"
+    assert restoration.secondary_errors[0][1].observations
+    assert restoration.__cause__.observations[0].errno == errno.EPERM
+    assert restoration.secondary_errors[0][1].observations[0].errno == errno.EACCES
+    diagnostic_graph_exact(error, payload)
+    assert host.handles[-1].terminations == 0 and host.handles[-1].waits == []
+    assert read_json(sup.inventory.process_path("backend", 1))["phase"] == "uncertain_residual"
+
+
+@pytest.mark.parametrize("body_witness", [False, True])
+def test_diagnostics_paired_nested_cli(host, downstream_repo, monkeypatch, capsys, body_witness):
+    down, public, _, _ = downstream_repo
+    monkeypatch.delenv("LEAN_SLOT_SKIP_SUPERVISOR", raising=False)
+    target, previous = Supervisor(down.inventory), Supervisor(public.inventory)
+    owned(target, host, "proxy", 1, 880101)
+    owned(previous, host, "backend", 1, 880102)
+    body = SlotError("paired body", observations=(diagnostic_witness("paired body"),) if body_witness else ())
+    def action():
+        with target.activating_from(1, previous):
+            diagnostic_distinct_creation_rollback(host, monkeypatch)
+            raise body
+    error, payload = diagnostic_cli(target, host, monkeypatch, capsys, action)
+    assert error.__cause__ is body
+    assert error.secondary_errors[0][0] == "paired_restoration"
+    restoration = error.secondary_errors[0][1]
+    assert restoration.__cause__.observations and restoration.secondary_errors[0][1].observations
+    assert restoration.secondary_errors[0][0] == "launch_rollback"
+    assert restoration.__cause__.observations[0].errno == errno.EPERM
+    assert restoration.secondary_errors[0][1].observations[0].errno == errno.EACCES
+    diagnostic_graph_exact(error, payload)
+    assert host.signals == [(880102, signal.SIGTERM)]
+    assert read_json(previous.inventory.process_path("backend", 1))["phase"] == "uncertain_residual"
+
+
+def test_diagnostics_counterpart_cli(host, downstream_repo, monkeypatch, capsys):
+    down, public, _, _ = downstream_repo
+    monkeypatch.delenv("LEAN_SLOT_SKIP_SUPERVISOR", raising=False)
+    target, previous = Supervisor(down.inventory), Supervisor(public.inventory)
+    owned(target, host, "proxy", 1, 880201)
+    owned(target, host, "backend", 1, 880202)
+    first = host.next_pid
+    real = host.run
+    denied = []
+    def selected(argv, **kwargs):
+        if argv[0] == "ps" and "-p" in argv:
+            pid = int(argv[2]) if "," not in argv[2] else -1
+            if (pid == first and not denied) or pid == first + 1:
+                denied.append(pid)
+                raise PermissionError(errno.EPERM, f"recovery refusal {pid}")
+        return real(argv, **kwargs)
+    monkeypatch.setattr(subprocess, "run", selected)
+    error, payload = diagnostic_cli(target, host, monkeypatch, capsys, lambda: target.restore_counterpart(1, previous))
+    assert error.secondary_errors[0][0] == "target_recovery"
+    assert error.__cause__.observations
+    assert error.secondary_errors[0][1].__cause__.observations
+    diagnostic_graph_exact(error, payload)
+    assert host.handles[0].terminations == 1 and host.handles[0].waits == [5]
+    assert host.handles[1].terminations == 0 and host.handles[1].waits == []
+    assert not previous.inventory.process_path("backend", 1).exists()
+    assert target.inventory.process_path("backend", 1).exists()
+
+
+def test_diagnostics_global_cleanup_cli(rig, monkeypatch, capsys):
+    _, sup, host = rig
+    real = host.popen
+    def later_failure(argv, **kwargs):
+        if "--port" in argv and argv[argv.index("--port") + 1] == "29102":
+            host.denied_pids.update(h.pid for h in host.handles)
+            raise PermissionError("later backend launch failure")
+        return real(argv, **kwargs)
+    monkeypatch.setattr(subprocess, "Popen", later_failure)
+    error, payload = diagnostic_cli(sup, host, monkeypatch, capsys, sup.start)
+    assert [role for role, _ in error.secondary_errors] == ["start_cleanup:proxy:2", "start_cleanup:backend:1", "start_cleanup:proxy:1"]
+    assert len({id(e) for _, e in error.secondary_errors}) == 3
+    diagnostic_graph_exact(error, payload)
+    assert not host.signals
+    assert all(sup.inventory.process_path(kind, number).exists() for kind, number in [("proxy", 1), ("backend", 1), ("proxy", 2), ("backend", 2)])
+
+
+def test_diagnostics_borrowed_cleanup_cli(rig, monkeypatch, capsys):
+    _, sup, host = rig
+    native = RuntimeError("external discovery failure")
+    cause = SlotError("external discovery cause", observations=(diagnostic_witness("discovery"),))
+    native.__cause__ = cause
+    class HTTP:
+        def __init__(self, *args, **kwargs):
+            pass
+        def request(self, *args, **kwargs):
+            host.denied_pids.add(host.handles[-1].pid)
+            raise native
+    monkeypatch.setattr(lifecycle.http.client, "HTTPConnection", HTTP)
+    error, payload = diagnostic_cli(sup, host, monkeypatch, capsys, sup._harvest_tool_list_unlocked)
+    assert error.__cause__ is native and error.secondary_errors[0][0] == "borrowed_cleanup"
+    diagnostic_graph_exact(error, payload)
+    assert not state.tool_cache_path(sup.inventory.state_root).exists()
+    assert sup.inventory.process_path("backend", 1).exists() and not host.signals
+
+
+def test_diagnostics_safe_borrow_cause_cli(rig, monkeypatch, capsys):
+    _, sup, host = rig
+    host.denied_pids.add(host.next_pid)
+    error, payload = diagnostic_cli(sup, host, monkeypatch, capsys, sup._harvest_tool_list_unlocked)
+    assert str(error).startswith("tool discovery cannot borrow safe capacity")
+    assert error.secondary_errors == () and error.__cause__ is not None
+    diagnostic_graph_exact(error, payload)
+    assert not state.tool_cache_path(sup.inventory.state_root).exists()
+
+
+def diagnostic_raise(error):
+    raise error
+
+
+@pytest.mark.parametrize("shape", ["primary", "secondary", "secondary-cause", "both"])
+def test_diagnostics_own_provenance_cli(rig, monkeypatch, capsys, shape):
+    _, sup, host = rig
+    first, second = diagnostic_witness("first"), diagnostic_witness("second")
+    secondary = SlotError("secondary", observations=(second,) if shape in {"secondary", "both"} else ())
+    if shape == "secondary-cause":
+        secondary.__cause__ = SlotError("secondary cause", observations=(second,))
+    root = SlotError("root", observations=(first,) if shape in {"primary", "both"} else (),
+                     secondary_errors=(("cleanup", secondary),))
+    error, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: diagnostic_raise(root))
+    diagnostic_graph_exact(error, payload)
+
+
+def test_diagnostics_shared_cycle_and_aggregate_limits(rig, monkeypatch, capsys):
+    _, sup, host = rig
+    witness = diagnostic_witness("graph")
+    shared = SlotError("shared", observations=(witness,))
+    middle = SlotError("middle", secondary_errors=(("shared", shared),))
+    root = SlotError("root", secondary_errors=(("middle", middle), ("shared again", shared)))
+    shared.__cause__ = root
+    error, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: diagnostic_raise(root))
+    diagnostic_graph_exact(error, payload)
+    assert [e["disposition"] for e in payload["edges"]] == ["new", "new", "cycle", "shared"]
+    # A wide repeated-reference graph still spends an inspection for every edge.
+    root = SlotError("wide", observations=(witness,), secondary_errors=tuple((str(i), shared) for i in range(20)))
+    shared.__cause__ = None
+    _, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: diagnostic_raise(root))
+    assert len(payload["groups"]) == 2 and len(payload["edges"]) == 16
+    assert payload["omitted"]["relationships"] == 4
+    assert payload["unvisited_content_unknown"] and not payload["traversal_complete"]
+    # Nested branching consumes the single aggregate group budget, not a depth cap.
+    nodes = [SlotError(str(i), observations=(witness,)) for i in range(12)]
+    for i in range(11):
+        nodes[i].__cause__ = nodes[i + 1]
+    root = SlotError("branch", secondary_errors=(("deep", nodes[0]), ("other", nodes[-1])))
+    _, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: diagnostic_raise(root))
+    assert len(payload["groups"]) == 8
+    assert payload["omitted"]["group_targets"] == 2
+    assert payload["unvisited_content_unknown"]
+    assert payload["inspection"]["discovered_observations"] == 7
+    # Omitted and invalid attempts consume the same observation budget globally.
+    bad = state.Observation("unavailable", identity=object())
+    child = SlotError("child", observations=(witness,) * 20)
+    root = SlotError("observations", observations=(bad,) * 20, secondary_errors=(("child", child),))
+    _, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: diagnostic_raise(root))
+    assert payload["inspection"]["observations"] == 32
+    assert payload["omitted"]["serialization"] == 20 and payload["omitted"]["observation_budget"] == 8
+    assert len(payload["groups"][1]["observations"]) == 12
+    assert payload["traversal_complete"] and not payload["observations_complete"]
+
+
+@pytest.mark.parametrize("bad_kind", ["object", "cycle", "deep", "nan", "infinity", "bad-key", "surrogate", "oversized"])
+def test_diagnostics_strict_whole_omissions_cli(rig, monkeypatch, capsys, bad_kind):
+    _, sup, host = rig
+    identity = object()
+    if bad_kind == "cycle":
+        identity = []; identity.append(identity)
+    elif bad_kind == "deep":
+        identity = []
+        for _ in range(80):
+            identity = [identity]
+    elif bad_kind == "nan":
+        identity = float("nan")
+    elif bad_kind == "infinity":
+        identity = float("inf")
+    elif bad_kind == "bad-key":
+        identity = {1: "must not silently stringify"}
+    elif bad_kind == "surrogate":
+        identity = "\ud800"
+    elif bad_kind == "oversized":
+        identity = "λ\n" * 70000
+    bad = state.Observation("unavailable", identity=identity)
+    small = diagnostic_witness("later small λ\n")
+    root = SlotError("strict", observations=(bad, small))
+    _, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: diagnostic_raise(root))
+    assert payload["groups"][0]["observations"] == [{"index": 1, "value": small.as_dict()}]
+    assert payload["omitted"]["bytes" if bad_kind == "oversized" else "serialization"] == 1
+    assert payload["inspection"]["observations"] == 2 and not payload["observations_complete"]
+    root = SlotError("all omitted", observations=(bad,))
+    _, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: diagnostic_raise(root))
+    assert payload["groups"][0]["observations"] == []
+    assert payload["inspection"]["discovered_observations"] == 1
+
+
+def test_diagnostics_utf8_boundary_and_presentation(rig, monkeypatch, capsys):
+    _, sup, host = rig
+    # Exact encoded UTF-8 boundary includes JSON quotes and escaped newlines.
+    value = "λ" * 32765 + "\n\n"
+    assert len(cli._strict_diagnostic_json(value, 65536).encode("utf-8")) == 65536
+    with pytest.raises(OverflowError):
+        cli._strict_diagnostic_json(value + "x", 65536)
+    # Find the actual envelope admission boundary; the metadata reserve is real.
+    def encoded(size):
+        witness = state.Observation("unavailable", identity="λ" * size, observed_at="fixed")
+        return json.loads(cli._exception_diagnostics(SlotError("boundary", observations=(witness,))))
+    lo, hi = 0, 65536
+    while lo + 1 < hi:
+        mid = (lo + hi) // 2
+        if encoded(mid)["groups"][0]["observations"]:
+            lo = mid
+        else:
+            hi = mid
+    admitted, omitted = encoded(lo), encoded(hi)
+    assert admitted["observations_complete"] and not omitted["observations_complete"]
+    assert omitted["omitted"]["bytes"] == 1
+    witness = state.Observation("unavailable", identity="λ" * lo, observed_at="fixed")
+    root = SlotError("boundary", observations=(witness,))
+    _, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: diagnostic_raise(root))
+    assert payload == admitted
+    long_error = type("X" * 150, (SlotError,), {})("λ\n" * 800, observations=(diagnostic_witness("exact"),))
+    root = SlotError("root", secondary_errors=(("role" * 100, long_error),))
+    _, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: diagnostic_raise(root))
+    group = payload["groups"][1]
+    assert group["class_truncated"] and len(group["class"]) == 128
+    assert group["message_truncated"] and len(group["message"]) == 1024
+    assert payload["edges"][0]["role_truncated"] and len(payload["edges"][0]["role"]) == 128
+    assert payload["observations_complete"]
+    assert group["observations"][0]["value"] == long_error.observations[0].as_dict()
+
+
+def test_diagnostics_compatibility_and_stderr_failure(rig, monkeypatch, capsys):
+    _, sup, host = rig
+    # Explicit cause/cycle and implicit witnessed context alone add no line.
+    for mode in ("legacy", "cycle", "context"):
+        error = SlotError("plain")
+        if mode == "cycle":
+            error.__cause__ = error
+        if mode == "context":
+            error.__context__ = SlotError("implicit", observations=(diagnostic_witness("hidden"),))
+        with monkeypatch.context() as patch:
+            patch.setattr(cli, "Controller", lambda inventory: SimpleNamespace(status=lambda: diagnostic_raise(error)))
+            assert cli.main(["--inventory", str(sup.inventory.source), "status", "--json"]) == 2
+        captured = capsys.readouterr()
+        assert captured.out == "" and captured.err == "slotctl: plain\n"
+    # Returned observations are ordinary successful JSON, not exception evidence.
+    result = {"observations": [diagnostic_witness("returned").as_dict()]}
+    with monkeypatch.context() as patch:
+        patch.setattr(cli, "Controller", lambda inventory: SimpleNamespace(status=lambda: result))
+        assert cli.main(["--inventory", str(sup.inventory.source), "status", "--json"]) == 0
+    captured = capsys.readouterr()
+    assert json.loads(captured.out) == result and captured.err == ""
+    class BrokenAddedStream:
+        def __init__(self):
+            self.writes = []
+        def write(self, value):
+            if value.startswith("slotctl diagnostics:"):
+                raise OSError("added stream unavailable")
+            self.writes.append(value)
+        def flush(self):
+            pass
+    stream = BrokenAddedStream()
+    error = SlotError("original", observations=(diagnostic_witness("stream"),))
+    with monkeypatch.context() as patch:
+        patch.setattr(cli, "Controller", lambda inventory: SimpleNamespace(status=lambda: diagnostic_raise(error)))
+        patch.setattr(cli.sys, "stderr", stream)
+        assert cli.main(["--inventory", str(sup.inventory.source), "status", "--json"]) == 2
+    assert "".join(stream.writes) == "slotctl: original\n"
+    # Normal production readiness and read-only CLI contracts remain successful.
+    sup.start_backend(1)
+    assert sup.process_state("backend", 1) == "running"
+    for command in (["supervisor", "status", "--json"], ["status", "--json"], ["doctor", "--json"]):
+        cli.main(["--inventory", str(sup.inventory.source), *command])
+        captured = capsys.readouterr()
+        assert "slotctl diagnostics:" not in captured.err
+        assert isinstance(json.loads(captured.out), dict)
+
+
+def test_diagnostics_paused_direct_secondary_cli(rig, monkeypatch, capsys):
+    _, sup, host = rig
+    owned(sup, host, "proxy", 1, 880301)
+    real = host.run
+    failures = []
+    def selected(argv, **kwargs):
+        if argv[0] == "ps" and "-p" in argv and argv[2] == str(host.next_pid - 1) and not failures:
+            failures.append(list(argv))
+            raise PermissionError(errno.EACCES, "direct secondary creation")
+        return real(argv, **kwargs)
+    body = SlotError("body without witnesses")
+    def action():
+        with sup.paused_backend(1):
+            monkeypatch.setattr(subprocess, "run", selected)
+            raise body
+    error, payload = diagnostic_cli(sup, host, monkeypatch, capsys, action)
+    secondary = error.secondary_errors[0][1]
+    assert error.__cause__ is body and not body.observations
+    assert secondary.__cause__ is None and secondary.secondary_errors == ()
+    assert secondary.observations[0].errno == errno.EACCES
+    diagnostic_graph_exact(error, payload)
+    assert not sup.inventory.process_path("backend", 1).exists()
+    assert host.handles[0].terminations == 1 and host.handles[0].waits == [5]
+
+
+def test_diagnostics_metadata_fallback_and_format_failure(rig, monkeypatch, capsys):
+    _, sup, host = rig
+    # Worst escaped metadata can fill the entire JSON allowance before payloads.
+    kind = type("\x01" * 128, (SlotError,), {})
+    nodes = [kind("\x02" * 1024, observations=(diagnostic_witness(str(i)),)) for i in range(8)]
+    for i in range(7):
+        nodes[i].secondary_errors = (("\x03" * 128, nodes[i + 1]),)
+    nodes[0].secondary_errors += tuple(("\x03" * 128, nodes[-1]) for _ in range(9))
+    root = nodes[0]
+    with monkeypatch.context() as patch:
+        patch.setattr(cli, "Controller", lambda inventory: SimpleNamespace(status=lambda: diagnostic_raise(root)))
+        assert cli.main(["--inventory", str(sup.inventory.source), "status", "--json"]) == 2
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    raw = captured.err.split("slotctl diagnostics: ", 1)[1].strip()
+    payload = json.loads(raw)
+    assert payload["fallback"] and payload["discovered_evidence_omitted"]
+    assert not payload["traversal_complete"] and not payload["observations_complete"]
+    assert len(raw.encode()) <= 65536
+    # A formatting failure in an observation stays local and omits that item.
+    class UnavailableObservation:
+        def as_dict(self):
+            raise ValueError("cannot format external evidence")
+    error = SlotError("format", observations=(UnavailableObservation(), diagnostic_witness("later")))
+    _, payload = diagnostic_cli(sup, host, monkeypatch, capsys, lambda: diagnostic_raise(error))
+    assert payload["omitted"]["serialization"] == 1
+    assert payload["groups"][0]["observations"][0]["value"] == error.observations[1].as_dict()
+    # No discovered witness in a budget-truncated graph adds no line or absence claim.
+    chain = [SlotError(str(i)) for i in range(9)]
+    chain[-1].observations = (diagnostic_witness("unvisited"),)
+    for previous, child in zip(chain, chain[1:]):
+        previous.__cause__ = child
+    assert cli._exception_diagnostics(chain[0]) is None
