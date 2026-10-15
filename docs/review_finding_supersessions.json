@@ -10807,6 +10807,21 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-l1-finite-tolerance:L1:1.1",
+      "status": "fixed",
+      "evidence": "Full affected source/claim review and exact rational algebra correct finite compatibility versus exact luminality, susceptibility factor two, redundant clauses/falsifiers, prior and recovery scope. Separately reviewed actual canonical figure label defines tau with identical nonmarkerJSON3traces2shapes; actual4pagePDF reviewed. Declared literal/abstract Verify is a regression floor, not science proof. Definitions/theorem statements/citations/metadata preserved; other source/proof/publication debt unaccepted.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "45c740f221c274d5af7fefce09b8d6a9ba1b5b2c",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from pathlib import Path;import re,sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text());bad=[t for t in [\"The one value that survives is the singleton\",\"three independently load-bearing conjuncts\",\"saturating the bound and isolating P3\"] if t in s];print(\"Known wrong-claim regression floor:\",bad);assert not bad; r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "declared": "cd \"$REPO\" && python3 -c 'from pathlib import Path;import re,sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text());bad=[t for t in [\"The one value that survives is the singleton\",\"three independently load-bearing conjuncts\",\"saturating the bound and isolating P3\"] if t in s];print(\"Known wrong-claim regression floor:\",bad);assert not bad; r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
