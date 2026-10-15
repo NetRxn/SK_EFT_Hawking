@@ -5806,20 +5806,51 @@ CITATION_REGISTRY = {
     },
 
     'Coutant2014': {
-        'authors': 'O.~Coutant and R.~Parentani',
-        'title': 'Phys.\\ Rev.\\ D',
-        'journal': None,
+        'authors': 'Coutant, A., and Parentani, R.',
+        'title': 'Hawking radiation with dispersion: The broadened horizon paradigm',
+        'journal': 'Phys. Rev. D',
         'volume': 90,
-        'page': None,
+        'page': '121501',
         'year': 2014,
-        'doi': None,
-        'arxiv': None,
-        'doi_verified': False,
+        'doi': '10.1103/PhysRevD.90.121501',
+        'arxiv': '1402.2514v2',
+        'doi_verified': True,
         'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/paper1_first_order/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf',
+        'used_in': ['papers/paper1_first_order/paper_draft.tex',
+                    'papers/E1/paper_draft.tex', 'papers/D1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
+        'notes': ('Metadata reconciled2026-10-15 against the arXiv v2 record linked '
+                  'to the journal DOI. Author preprint v2 read at equation level: '
+                  'Eq10 thermal mixing ratio uses the locally linear near-horizon, '
+                  'weak-dispersion momentum-space WKB approximation; Eq11 specifies '
+                  'its validity region. Profile perturbations enter through the '
+                  'broadened horizon. This does not derive the adopted quadratic '
+                  'temperature-shift ansatz or pi/6. Final journal body not read.'),
+    },
+
+    'CoutantWeinfurtner2018KdV': {
+        'authors': 'Coutant, A., and Weinfurtner, S.',
+        'title': 'Low-frequency analogue Hawking radiation: The Korteweg–de Vries model',
+        'journal': 'Phys. Rev. D',
+        'volume': 97,
+        'page': '025005',
+        'year': 2018,
+        'doi': '10.1103/PhysRevD.97.025005',
+        'arxiv': '1707.09651v2',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CoutantWeinfurtner2018KdV.pdf',
+        'used_in': ['papers/E1/paper_draft.tex', 'papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Publisher title/authors/DOI/year verified2026-10-15 against APS; '
+                  '2017 is submission year, not journal year. Author preprint v2 '
+                  'read at equation level. Weak-dispersive KdV model neglects '
+                  'co-propagating coupling. For the specified profile, Eqs39–40 '
+                  'give low-frequency T_eff/T_H=tanh(pi*q_r) and exponentially '
+                  'small smooth-limit departures. No nonzero leading local-D^2 '
+                  'temperature term or device-specific pi/6 is established by '
+                  'this result. Final journal body not read.'),
     },
 
     'CoutantParentani2010': {

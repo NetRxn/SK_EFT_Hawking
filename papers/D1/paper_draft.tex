@@ -53,8 +53,9 @@ crosses the exponentially falling thermal term at
 $\omega_\times = T_{\rm eff}\ln(1+1/\delta_{\rm diss})$, which is
 $6.44\,T_{\rm eff}$ at the projected $^{39}$K parameters and
 $10.65\,T_{\rm eff}$ at the $^{87}$Rb parameters, in both cases well below
-the dispersive cutoff. Which correction dominates is platform-dependent,
-so each platform yields a different leading observable: the crossover for
+the dispersive cutoff. At the adopted dispersive law and benchmark
+transport inputs, the correction hierarchy is platform-dependent,
+motivating different candidate observables: the crossover for
 condensates, a closed-form current-noise excess whose feasibility is
 independent of the quantum-critical conductance for the Dirac fluid, and
 for the polariton fluid a machine-checked boundary showing that the
@@ -110,13 +111,12 @@ that is neither old nor secure concerns the corrections. Every real
 fluid has an ultraviolet completion that modifies the dispersion
 relation, and every real fluid dissipates. Both effects shift the
 spectrum, and whether the shifts are universal is a question about the
-structure of the corrections rather than about the leading order. The
-answer developed here is that they are, in a specific sense: the
-dispersive correction depends on the ultraviolet completion only through
-one number, and the dissipative correction depends on the microscopic
-scattering only through the sum of two transport coefficients, which is
-what survives after the constraints of the Schwinger--Keldysh formalism
-are imposed.
+structure of the corrections rather than about the leading order. For
+dispersion, this paper adopts a phenomenological quadratic shift
+and verifies its algebraic consistency; it does not derive a universal
+physical correction across ultraviolet completions. Within the
+Schwinger--Keldysh construction, the dissipative shift depends on the
+sum of two transport coefficients that survive the imposed constraints.
 
 We develop this within one Schwinger--Keldysh effective field
 theory~\cite{CGL2017a,Crossley2017II,GloriosoLiu2018,Jana2020} and check
@@ -165,7 +165,8 @@ analogue.
 The paper proceeds as follows. Section~\ref{sec:eft} constructs the
 effective field theory of a dissipative horizon and derives the leading
 dissipative correction $\delta_{\rm diss} = (\gamma_1+\gamma_2)\kappa/c_s^2$
-and the dispersive correction $\delta_{\rm disp} = -(\pi/6)D^2$.
+and adopts the phenomenological dispersive correction
+$\delta_{\rm disp} = -(\pi/6)D^2$.
 Section~\ref{sec:higher} takes the gradient expansion to higher order:
 the coefficient count, the parity grading, the second-order positivity
 constraint, the optimality of the first-order condition, and the
@@ -490,10 +491,10 @@ above means $\gamma_1 = \gamma_2 = 0$: the correction vanishes exactly in
 the dissipationless theory and in no other case. And
 Eq.~\eqref{eq:delta-diss} is \emph{linear} in $\kappa$ at fixed material
 properties, a fact recorded separately as
-\texttt{KappaScaling.kappa\_scaling\_dissipative\_linear}. The dispersive
-correction of Sec.~\ref{sec:eft-disp} is quadratic in $\kappa$; the
-mismatch of exponents is what makes the two separable in a sweep, and
-Sec.~\ref{sec:hierarchy} quantifies where each dominates.
+\texttt{KappaScaling.kappa\_scaling\_dissipative\_linear}. The adopted dispersive
+correction of Sec.~\ref{sec:eft-disp} is quadratic in $\kappa$. Within
+that model, the different exponents permit separation in a sweep;
+Sec.~\ref{sec:hierarchy} compares the terms at the benchmark inputs.
 
 \subsection{The dispersive correction}
 \label{sec:eft-disp}
@@ -503,7 +504,8 @@ condensate that scale is the inverse healing length. The control
 parameter is the ratio of the horizon scale to the cutoff,
 $D = \kappa/(c_s\Lambda)$, and under the identification
 $\Lambda = 1/\xi$ appropriate to a condensate, $D = \kappa\xi/c_s$. The
-dispersive shift of the horizon temperature is taken to be
+dispersive shift of the horizon temperature is parameterized here by the
+phenomenological ansatz
 \begin{equation}
 \label{eq:delta-disp}
 \delta_{\mathrm{disp}} \;=\; -\frac{\pi}{6}\,D^{2},
@@ -513,6 +515,9 @@ dispersive shift of the horizon temperature is taken to be
 which is \texttt{KappaScaling.dispersiveCorrection}. It is negative, and
 quadratic in $\kappa$ at fixed material properties
 (\texttt{KappaScaling.kappa\_scaling\_dispersive\_quadratic}).
+The entire quadratic law, including its leading power, is a modelling
+choice; these arithmetic properties do not derive a physical
+temperature correction from a microscopic dispersion or horizon profile.
 
 The statement proved about Eq.~\eqref{eq:delta-disp} is
 \texttt{KappaScaling.dispersive\_correction\_bound}: for material
@@ -556,39 +561,31 @@ Eq.~\eqref{eq:delta-disp} is fixed here as part of the definition of
 $\delta_{\mathrm{disp}}$, and every statement about it in this paper is a
 statement about that definition.
 
-That is not a gap awaiting a source. No universal coefficient exists to be
-found, and the reason is visible in the near-horizon calculation itself.
-For a locally linear velocity profile $v \simeq -c_s + \kappa x$ with
-quartic dispersion, the Bogoliubov ratio is
-$\beta_\omega = e^{-\pi\omega/\kappa}\alpha_\omega$ exactly, so the
-temperature is $\kappa/2\pi$ with no $D^{2}$ term at any
-order~\cite{Coutant2014}; equivalently, in the Hamilton--Jacobi form the
-cubic dispersive term is entire in $k$ and contributes no residue, and the
-first surviving dispersive contribution to the tunneling exponent is cubic
-in $\omega$ with a magnitude set by a fourth-order coefficient of the
-velocity profile. The correction is therefore a non-thermal distortion
-sourced by the profile, not a rescaling of the temperature by a universal
-number, which is why the reported exponents differ between smooth and
-kinked profiles, and why the analytic coefficients derived for particular
-profiles elsewhere are stated by their authors to depend on the specific
-geometry. What is established is the $D^{2}$ \emph{scaling} of the leading
-effective-temperature correction in the adiabatic regime. The coefficient
-is a modelling choice, and this paper makes it once, explicitly, and
-carries it consistently.
-% RESOLVED 2026-08-15. The question "which source derives pi/6" is closed
-% NEGATIVE: none does, and none can, because no universal coefficient
-% exists. Corley & Jacobson (PRD 54, 1568), read at page level through
-% Sec. 5.2 from the local corpus, report numerically fitted powers of
-% T_H/k_0 whose EXPONENT is itself profile-dependent. Coutant & Parentani
-% 2014 -- correct reference PRD 90, 121501(R), arXiv:1402.2514, NOT
-% "PRD 89, 124004" which is an unrelated Kerr-Newman-NUT paper -- prove
-% T = kappa/2pi EXACTLY for the locally linear profile. Del Porro,
-% Liberati & Schneider (arXiv:2406.14603) derive 3/8 for a specific tanh
-% profile in a different parameter and state the coefficient "depends
-% crucially on the specific geometry". The D^2 scaling is Coutant &
-% Weinfurtner (PRD 2017), parametric. Standing recorded in
-% PARAMETER_PROVENANCE['DISPERSIVE_C1']; see
-% papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/.
+A locally linear near-horizon calculation illustrates why its assumptions
+matter. Coutant and Parentani obtain
+$\beta_\omega = e^{-\pi\omega/\kappa}\alpha_\omega$ in their
+Eq.~(10), after adopting a finite locally linear region, a momentum-space
+WKB approximation that neglects coupling to left-moving modes, and weak
+dispersion ($\kappa/\Lambda \ll 1$, $\omega/\Lambda \ll 1$).
+Their Eq.~(11) specifies the spatial validity region~\cite{Coutant2014}.
+This yields the Hawking temperature in that approximation; it is not an
+exact-at-all-orders statement for a general profile.
+
+Nor does the analytic low-frequency result of Coutant and Weinfurtner
+establish a leading quadratic law. In their weakly dispersive
+Korteweg--de Vries model, with co-propagating coupling neglected, a
+particular smooth profile gives
+$T_{\rm eff}/T_H = \tanh(\pi q_r)$, where $q_r$ is their asymptotic
+profile parameter. The approach to $T_H$ is exponentially small in the
+smooth limit [Eqs.~(39)--(40)]~\cite{CoutantWeinfurtner2018KdV}.
+Here $T_{\rm eff}$ is defined by the low-frequency limit of frequency
+times the emitted occupation, not a temperature fit to an arbitrary finite-frequency
+spectrum. An exponentially small departure may obey a loose quadratic
+upper bound, but does not establish a nonzero leading $D^2$ term.
+Equation~\eqref{eq:delta-disp} is therefore retained as an adopted
+phenomenological law, not as a consequence of those results. Within this
+law, rescaling its coefficient changes the dispersive numbers and can
+move their crossover with dissipation or reverse their ordering.
 
 The same cutoff supplies an upper frequency for the treatment. Above
 \begin{equation}
@@ -641,25 +638,24 @@ conclusion is the conjunction
 &\big|T_{\mathrm{eff}} - T_H(1+\delta_{\mathrm{diss}})\big|
    = T_H\,\tfrac{\pi}{6}\,D^{2}. \label{eq:univ-5}
 \end{align}
-No smallness assumption is required. An adiabaticity bound $D < 1$
-appears nowhere in the hypotheses, and the conclusions hold at every
-$D > 0$, which is strictly stronger than the same statement restricted to
-the adiabatic regime; only $D > 0$ is needed, since at $D = 0$ the
-dispersive correction vanishes and Eq.~\eqref{eq:univ-1} fails.
+No smallness assumption is required for these identities of the defined
+fields. An adiabaticity bound $D < 1$ appears nowhere in the hypotheses,
+and the algebraic conclusions hold at every $D > 0$. This does not extend
+the physical applicability of the adopted law beyond a regime in which
+it has been justified. At $D = 0$ the dispersive correction vanishes
+and Eq.~\eqref{eq:univ-1} fails.
 
-Equation~\eqref{eq:univ-5} is the universality statement, and its force
-lies in what does not appear on the right. A modified dispersion relation
-carries a shape function $F$ with $F(0)=1$ and $F$ continuous, defining
+Equation~\eqref{eq:univ-5} expresses the $F$-independence of the
+adopted temperature definition. A modified dispersion relation carries a
+shape function $F$ with $F(0)=1$ and $F$ continuous, defining
 $\omega^{2} = c_s^{2}k^{2}F(k^{2}/\Lambda^{2})$; it may be subluminal or
 superluminal, the Bogoliubov case $F(x) = 1+x$ being an instance
 (\texttt{HawkingUniversality.bogoliubov\_superluminal}). The function $F$
-occurs nowhere on the right-hand side of any of
-Eqs.~\eqref{eq:univ-1}--\eqref{eq:univ-5}. Once dissipation is accounted
-for by the shift $T_H \to T_H(1+\delta_{\mathrm{diss}})$, the entire
-residual dependence of the dressed temperature on the ultraviolet
-completion is the single number $(\pi/6)D^{2}$, the same number for every
-admissible modified dispersion relation. That is the sense in which
-universality is used in this paper, and no other.
+occurs nowhere on the right-hand side of
+Eqs.~\eqref{eq:univ-1}--\eqref{eq:univ-5}, because the definition assigns
+the dispersive shift the value $-(\pi/6)D^2$. This is a consistency
+property of that model, not a proof that distinct physical dispersions
+produce the same temperature shift.
 
 The honest framing of what has been established is this. The definition
 Eq.~\eqref{eq:teff-fields} builds the $F$-independence in, by assigning
@@ -673,9 +669,9 @@ that a witness could be chosen to satisfy. It does not establish
 $F$-independence by solving a mode equation with general $F$, and it is
 not offered as doing so. Read that way, the result is a consistency and
 closure statement about the correction structure of
-Eq.~\eqref{eq:teff-fields}, resting on the dispersive-robustness
-literature discussed in Sec.~\ref{sec:eft-disp} for the physical claim
-that a correction of this order is all there is.
+Eq.~\eqref{eq:teff-fields}. The literature discussed in
+Sec.~\ref{sec:eft-disp} does not establish that this quadratic law is the
+leading physical correction or exhausts the dispersive response.
 
 \section{Higher orders in the gradient expansion}
 \label{sec:higher}
@@ -759,11 +755,13 @@ second order. A homogeneous condensate has unbroken spatial parity and
 no second-order dissipative correction at all. A transonic background
 breaks parity by construction, since the flow profile $v(x)$ singles out
 a direction, so these coefficients switch on precisely when a horizon is
-present. Dispersive corrections, which enter through even powers of the
-adiabaticity parameter, survive parity and do not share this behaviour.
-Measuring a frequency-dependent deviation that turns off when the flow
-is made symmetric therefore separates the dissipative channel from the
-dispersive one without needing to know either coefficient.
+present. The adopted quadratic dispersive term is even in the adiabaticity
+parameter and does not share this behaviour within that model.
+Within this model, a frequency-dependent deviation that turns off when
+the flow is made symmetric can help distinguish the dissipative channel
+from the adopted dispersive term, provided other physical contributions
+to that change are controlled. The parity argument alone does not
+establish this separation for an arbitrary microscopic dispersion.
 
 We flag the formal status of the parity statement explicitly.
 \texttt{SecondOrderSK.secondOrder\_requires\_parity\_breaking} has the
@@ -1174,7 +1172,8 @@ Sec.~\ref{sec:eft-metric}, the two transport coefficients of
 Sec.~\ref{sec:eft-first} and the gradient expansion of
 Sec.~\ref{sec:higher} were all written for a superfluid with a
 transonic flow profile. This section evaluates the two corrections at
-benchmark parameters, establishes which of them dominates where, and
+benchmark parameters, compares their hierarchy within the adopted
+dispersive ansatz, and
 identifies the one configuration in which the crossover of
 Eq.~\eqref{eq:crossover} is within reach.
 
@@ -1199,8 +1198,8 @@ correction columns.
 \begin{table*}[!t]
 \centering
 \caption{Dispersive and dissipative corrections at benchmark
-configurations. $\delta_{\rm disp} = -(\pi/6)D^2$ is the leading
-dispersive correction of Eq.~\eqref{eq:delta-disp} and
+configurations. $\delta_{\rm disp} = -(\pi/6)D^2$ is the adopted
+phenomenological dispersive correction of Eq.~\eqref{eq:delta-disp} and
 $\delta_{\rm diss} = \Gamma_H/\kappa$ the leading dissipative
 correction of Eq.~\eqref{eq:delta-diss}; both are dimensionless
 fractional shifts of $T_{\rm eff}$ and are evaluated at $\omega=\kappa$
@@ -1224,30 +1223,34 @@ dissipative entry is the cavity decay ratio $\Gamma_{\rm pol}/\kappa$
 rather than a transport coefficient, and at the cavity the horizons were
 actually built in, with $\hbar\gamma \approx 80\,\mu$eV, it is
 $\approx 1.8$ at the smooth horizon rather than the value a perturbative
-treatment would need. Both expansion parameters are of order unity there,
-so neither entry is the leading term of a converging series and the
-comparison the column is for does not apply. Section~\ref{sec:polariton}
+treatment would need. The cavity decay ratio is not small and no
+controlled higher-order
+error estimate accompanies the adopted dispersive shift there, so these
+entries do not establish a perturbative hierarchy. Section~\ref{sec:polariton}
 develops this, and it is why that platform's contribution to this paper
 is a scope boundary rather than a spectrum. A cavity with
-$\tau_{\rm cav} = 300$~ps would bring the ratio to $0.05$ and restore the
-perturbative reading; no such cavity has yet carried a programmed
-horizon.
+$\tau_{\rm cav} = 300$~ps would bring the ratio to $0.05$, satisfying
+the adopted weak-decay criterion. That change alone does not establish
+control of dispersion or omitted terms; no such cavity has yet carried
+a programmed horizon.
 
-The condensate rows share a structure. Both corrections scale as
-$\kappa^2$ at fixed platform, $\delta_{\rm disp}$ through
-$D = \kappa\xi/c_s$ and $\delta_{\rm diss}$ through
-$\Gamma_H \propto (\kappa/c_s)^2$, so their ratio is independent of
-$\kappa$ within a given configuration and varies by orders of magnitude
-between configurations. This makes the ratio, not either correction
-separately, the quantity a single apparatus can vary and measure. A
-scattering-length sweep changes $\xi$ and $c_s$ at fixed geometry and
-moves the ratio without moving $\kappa$, which is the cleanest available
-handle on the dissipative sector.
+Within the adopted benchmark model, the dispersive shift is quadratic
+in $\kappa$ at fixed material parameters, while the fractional dissipative
+shift is linear in $\kappa$ at fixed positive transport sum. Although
+$\Gamma_H$ is quadratic in $\kappa$, dividing by $\kappa$ to obtain
+$\delta_{\rm diss}$ removes one power. The ratio of the dispersive
+magnitude to the dissipative shift is therefore proportional to
+$\kappa$, rather than independent of it, when those inputs are held
+fixed. A horizon-steepness sweep can vary this ratio within the model.
+A scattering-length sweep provides another handle by changing $\xi$
+and $c_s$ at fixed geometry, subject to accounting for any accompanying
+change in the transport coefficients.
 
 \subsection{Heidelberg as the one dissipation-dominated configuration}
 \label{sec:hier-heidelberg}
 
-Of the three condensate rows only one has $\delta_{\rm diss}$ larger
+At the adopted dispersive normalization, only one of the three
+condensate rows has $\delta_{\rm diss}$ larger
 than $|\delta_{\rm disp}|$, and it is larger by a factor $21.8$. That
 inversion, and not the absolute size of either correction, is what makes
 the $^{39}$K configuration the informative condensate target. Its
@@ -1505,14 +1508,13 @@ which the flow crosses the horizon. At the Dean values
 ($\kappa = 2\times10^{12}~\mathrm{s}^{-1}$, $\ell_{ee} = 51$~nm,
 $c_s = 4.4\times 10^{5}$~m/s) this is $D = 0.23$, verified as the
 numerical inequality $D < 1$ in
-\texttt{QuasiOneDReduction.dean\_adiabatic}. The horizon is resolved by
-roughly four mean free paths, so the mode conversion that produces the
-radiation happens where the hydrodynamic description is valid, whatever
-the microscopic theory does above the cutoff. The residual dispersive
-correction is then second order in $D$ and numerically small; that it is
-fourth order rather than second in the deep adiabatic regime is a tracked
-assumption (\texttt{QuasiOneDReduction.H\_AdiabaticRegimeCorrection}) and
-not a theorem, and nothing below rests on it.
+\texttt{QuasiOneDReduction.dean\_adiabatic}. The horizon scale is roughly four mean free paths. This scale separation
+motivates a hydrodynamic treatment but does not determine the leading
+dispersive correction from the microscopic theory. Our adopted quadratic
+law gives a numerically small shift at these inputs. A fourth-order
+correction in the deep adiabatic regime is separately tracked as an
+assumption (\texttt{QuasiOneDReduction.H\_AdiabaticRegimeCorrection}),
+not as a theorem or a derivation of that law; nothing below rests on it.
 
 \subsection{The noise spectrum and the cancellation of $\sigma_Q$}
 \label{sec:gr-noise}
@@ -1782,12 +1784,12 @@ prediction is developed in the companion letter~\cite{Roehm2026E2}.
 \section{Exciton-polariton microcavities}
 \label{sec:polariton}
 
-The condensate platform of Sec.~\ref{sec:hierarchy} and the Dirac fluid
-of Sec.~\ref{sec:graphene} both sit inside the regime the effective
-theory of Sec.~\ref{sec:eft} was constructed for: the gradient expansion
-converges, and damping is a small perturbation on the horizon dynamics.
-The exciton-polariton microcavity is the platform where that stops being
-true, and the purpose of this section is to say exactly where. Two of
+At the benchmark inputs for the condensate platform of
+Sec.~\ref{sec:hierarchy} and the Dirac fluid of
+Sec.~\ref{sec:graphene}, the adopted correction terms are small. This
+does not by itself establish convergence of a physical gradient
+expansion. The exciton-polariton microcavity instead exposes a failure
+of the weak-dissipation assumption, which this section quantifies. Two of
 the quantities that control the expansion, the dispersive parameter $D$
 and the ratio of the quasiparticle decay rate to the surface gravity,
 are of order unity at the parameters that have actually been measured.
@@ -1828,28 +1830,18 @@ $\xi \approx 3.4~\mu\mathrm{m}$ and $\xi \approx 4.0~\mu\mathrm{m}$
 downstream, at an effective polariton mass
 $m^* = 7.0\times10^{-35}~\mathrm{kg}$.
 
-The reservoir correction is what separates that number from a naive
-Bogoliubov estimate. Excitonic states that do not couple to light form a
-long-lived dark reservoir contributing an interaction energy $g_r n_r$
-to the polariton field. Falque \emph{et al.} fit their data with
-$g_r n_r \approx 1.84\,gn$, so the reservoir carries roughly $65\%$ of
-the total interaction blueshift. Only the condensate part enters the
-dynamic response: at the turning point of the bistability loop, where
-the dispersion is linear at low wavenumber, the sound speed is
-$c_s = \sqrt{\hbar gn/m^*}$. A fit ignoring the reservoir would assign
-the whole turning-point detuning to the condensate and would infer a
-sound speed larger by $\sqrt{1+1.84} \approx 1.7$, near
-$0.67~\mu\mathrm{m/ps}$. Reservoir-free modelling of polariton horizons
-has used values as high as $1.0~\mu\mathrm{m/ps}$, a factor $2.5$ above
-the measurement, and predictions scale steeply in $c_s$: the dispersive
-parameter goes as $1/c_s$ and the noise scale as $c_s^2$.
-% TODO: source not held in full text (Jacquet2022). The 1.0 um/ps
-% reservoir-free value is quoted from the polariton-horizon modelling
-% literature and has not been checked against that text.
-Sound speeds in this range are reported for other polariton
-condensates~\cite{Estrecho2021,Stepanov2019,Claude2023}.
-% TODO: sources not held in full text (Estrecho2021, Stepanov2019,
-% Claude2023); cited for corroboration of the measured range only.
+The reported sound speed already accounts for the reservoir in the
+spectral reconstruction. Falque \emph{et al.}\ take a long-lived dark
+exciton reservoir contribution $g_r n_r = 1.84\,gn$ when fitting the
+laboratory-frame dispersion. At the sonic turning point, the model has
+$c_s = \sqrt{\hbar gn/m^*}$ while the total detuning contains
+$gn+g_rn_r$~\cite{Falque2025,Claude2023}. Assigning that entire detuning
+to condensate interactions would increase the inferred sound speed by
+$\sqrt{1+1.84} \approx 1.7$ at fixed detuning. We use the reported sound speed directly, without applying another
+reservoir rescaling. Reservoir
+contributions to the distinction between dynamical sound speeds and
+estimates from the total blueshift have also been observed under other
+excitation conditions~\cite{Estrecho2021,Stepanov2019}.
 
 With the surface-gravity relation of Sec.~\ref{sec:eft-metric}, the two
 configurations give $T_H \approx 85~\mathrm{mK}$ and
@@ -1879,17 +1871,17 @@ parameters, not unity. Sonic-horizon formation and Hawking-type
 amplification are separate conditions here, and only the second is what
 an experiment sees.
 
-Second, the gradient expansion is barely convergent. The dispersive
-parameter $D = \xi\kappa/c_s$ evaluates to $0.59$ at the smooth horizon
-and $0.94$ at the steep reach, the latter using the healing length
-measured in the smooth configuration because the source does not quote
-$\xi$ separately for the steep one. The leading dispersive correction of
-Sec.~\ref{sec:eft-disp} is then $-18\%$ and $-46\%$ respectively. At the
-smooth horizon that is a large but controlled correction. At the steep
-reach the expansion parameter is not small, the next order is not
-obviously smaller than the one retained, and every steep-horizon number
-in this paper is leading-order only. Buying a factor $1.6$ in $T_H$ by
-steepening the horizon costs the expansion that produced the prediction.
+Second, there is no controlled higher-order error estimate for applying
+our adopted dispersive law at these parameters. The ratio
+$D = \xi\kappa/c_s$ evaluates to $0.59$ at the smooth horizon and
+$0.94$ at the steep reach, the latter using the healing length measured
+in the smooth configuration because the source does not quote $\xi$
+separately for the steep one. The phenomenological correction of
+Sec.~\ref{sec:eft-disp} is then $-18\%$ and $-46\%$ respectively.
+Their size alone proves neither convergence nor divergence of an
+underlying expansion. At the steep reach, $D$ is not small; the
+$1.6$-fold increase in $T_H$ therefore comes with greater uncertainty in
+using this ansatz, rather than a demonstrated bound on omitted terms.
 
 Finally, the driven-dissipative steady state is not cold. Its mean-field
 noise scale, $T_{\rm noise} = m^*c_s^2/k_B \approx 0.81~\mathrm{K}$,
@@ -2050,24 +2042,22 @@ $250$, and that exclusion is a theorem rather than a judgement.
 
 The question posed in Sec.~\ref{sec:intro} was whether the analog Hawking
 prediction depends on the microscopic constitution of the fluid. The
-answer this paper supports is a qualified no, and the qualification is
-the interesting part.
+leading kinematic spectrum is fixed by the surface gravity within the
+acoustic treatment. The corrections require a separate accounting of
+physical assumptions.
 
-The unqualified part is kinematic and was already understood: the
-leading spectrum is fixed by the surface gravity alone. What the
-construction here adds is that the leading \emph{corrections} are also
-insensitive to the microscopic content, in a specific and checkable
-sense. The dispersive correction depends on the ultraviolet completion
-only through the single number $(\pi/6)D^2$, with the shape of the
-modified dispersion relation appearing nowhere else, and this is the
-content of \texttt{HawkingUniversality.hawking\_universality}
-(Sec.~\ref{sec:eft-universality}). The dissipative correction depends on
-the microscopic scattering only through the sum $\gamma_1 + \gamma_2$,
-because nine candidate couplings collapse to two under normalisation,
-positivity and the Kubo--Martin--Schwinger condition, and the collapse is
-a theorem rather than a modelling choice
-(Sec.~\ref{sec:eft-first}). Two numbers stand between any fluid and its
-horizon spectrum.
+For dispersion, this paper adopts $\delta_{\rm disp}=-(\pi/6)D^2$ and
+verifies the consistency of the resulting temperature definition through
+\texttt{HawkingUniversality.hawking\_universality}
+(Sec.~\ref{sec:eft-universality}). The absence of an explicit dispersion
+shape function in that definition does not establish its absence from
+the physical correction. The dissipative shift in the stated
+Schwinger--Keldysh construction depends on $\gamma_1 + \gamma_2$,
+because the candidate couplings collapse to two under normalisation,
+positivity and the Kubo--Martin--Schwinger condition
+(Sec.~\ref{sec:eft-first}). These are distinct kinds of result: an
+adopted dispersive law with checked algebra, and a coefficient reduction
+under specified constraints.
 
 The structural corroboration is the transfer to a system that shares no
 microscopic physics with a condensate. Of the
@@ -2080,12 +2070,14 @@ than an argument, and it should be read as corroboration of a claim
 carried by the named theorems, not as a measurement of universality in
 its own right.
 
-The qualification is that the three platforms differ sharply in which
-correction dominates, and therefore in what an experiment should look
-for. Table~\ref{tab:hierarchy} makes this concrete: dispersive at
+At the adopted dispersive normalization and benchmark transport inputs,
+the three platforms differ sharply in which correction dominates. These
+conditional comparisons guide the proposed measurements; changing the
+dispersive law or its coefficient can change the hierarchy.
+Table~\ref{tab:hierarchy} makes this concrete: dispersive at
 $^{87}$Rb, dissipative at the projected $^{39}$K configuration and at the
-graphene nozzle, and comparable with opposite signs at the polariton
-smooth horizon. Universality of the framework does not imply uniformity
+graphene nozzle. Its as-built polariton row lies outside the weak-decay
+regime and supplies no perturbative hierarchy. Universality of the framework does not imply uniformity
 of the observable. Each platform accordingly delivers a different
 leading measurement. The condensate delivers the crossover frequency of
 Eq.~\eqref{eq:crossover}, at $6.44\,T_{\rm eff}$ in the one
@@ -2354,6 +2346,11 @@ Phys.~Rev.~D \textbf{54}, 1568 (1996).
 A.~Coutant and R.~Parentani,
 \emph{Hawking radiation with dispersion: the broadened horizon paradigm},
 Phys.~Rev.~D \textbf{90}, 121501(R) (2014), arXiv:1402.2514.
+
+\bibitem{CoutantWeinfurtner2018KdV}
+A.~Coutant and S.~Weinfurtner,
+\emph{Low frequency analogue Hawking radiation: The Korteweg--de Vries model},
+Phys.~Rev.~D \textbf{97}, 025005 (2018), arXiv:1707.09651.
 
 \bibitem{CoutantParentani2012}
 A.~Coutant, R.~Parentani, S.~Finazzi,

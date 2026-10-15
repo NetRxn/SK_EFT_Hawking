@@ -10481,6 +10481,74 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-source-propagation:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independently reviewed whole-law correction across E1/E2/D1 and shared documentation, with source-specific KdV result and qualified2014 approximation. Removed unmatched reservoir and temperature comparisons, corrected conditional scaling/order/projection statements, preserved executable AST and Lean proof bytes. Actual acquired source identities and scoped compile/length measurements are recorded in SOURCE_ASSESSMENT.md and SCOPED_REVIEW.md.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-source-propagation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; checks={\"papers/E1/paper_draft.tex\":[\"Neither the quadratic form nor its coefficient\", \"exponentially small\"],\"papers/E2/paper_draft.tex\":[\"The whole quadratic law is phenomenological\", \"can move the crossover\"],\"papers/D1/paper_draft.tex\":[\"The entire quadratic law\", \"not establish a nonzero leading\", \"proportional to\"],\"src/core/formulas.py\":[\"Both this quadratic\", \"modelling choices\"],\"src/core/provenance.py\":[\"ADOPTED PHENOMENOLOGICAL PARAMETRIZATION\", \"not evidence for a nonzero leading\"],\"lean/SKEFTHawking/KappaScaling.lean\":[\"The whole quadratic functional form\", \"not derive a device-specific\"]}; assert all(all(s in Path(p).read_text() for s in words) for p,words in checks.items())'",
+        "declared": "python3 -c 'from pathlib import Path; checks={\"papers/E1/paper_draft.tex\":[\"Neither the quadratic form nor its coefficient\", \"exponentially small\"],\"papers/E2/paper_draft.tex\":[\"The whole quadratic law is phenomenological\", \"can move the crossover\"],\"papers/D1/paper_draft.tex\":[\"The entire quadratic law\", \"not establish a nonzero leading\", \"proportional to\"],\"src/core/formulas.py\":[\"Both this quadratic\", \"modelling choices\"],\"src/core/provenance.py\":[\"ADOPTED PHENOMENOLOGICAL PARAMETRIZATION\", \"not evidence for a nonzero leading\"],\"lean/SKEFTHawking/KappaScaling.lean\":[\"The whole quadratic functional form\", \"not derive a device-specific\"]}; assert all(all(s in Path(p).read_text() for s in words) for p,words in checks.items())'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-source-propagation:E1:1.2",
+      "status": "fixed",
+      "evidence": "Independently reviewed whole-law correction across E1/E2/D1 and shared documentation, with source-specific KdV result and qualified2014 approximation. Removed unmatched reservoir and temperature comparisons, corrected conditional scaling/order/projection statements, preserved executable AST and Lean proof bytes. Actual acquired source identities and scoped compile/length measurements are recorded in SOURCE_ASSESSMENT.md and SCOPED_REVIEW.md.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-source-propagation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; e=Path(\"papers/E1/paper_draft.tex\").read_text(); d=Path(\"papers/D1/paper_draft.tex\").read_text(); assert \"already includes\" in e and \"do not establish a matched reservoir-free comparison\" in e and \"surface-gravity convention\" in e; assert \"factor of about two and a half\" not in e and r\"\\SI{0.1}{\\kelvin}\" not in e; assert \"fixed detuning\" in d and \"without applying another\" in d and r\"factor $2.5$\" not in d'",
+        "declared": "python3 -c 'from pathlib import Path; e=Path(\"papers/E1/paper_draft.tex\").read_text(); d=Path(\"papers/D1/paper_draft.tex\").read_text(); assert \"already includes\" in e and \"do not establish a matched reservoir-free comparison\" in e and \"surface-gravity convention\" in e; assert \"factor of about two and a half\" not in e and r\"\\SI{0.1}{\\kelvin}\" not in e; assert \"fixed detuning\" in d and \"without applying another\" in d and r\"factor $2.5$\" not in d'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-source-propagation:infra:2.1",
+      "status": "fixed",
+      "evidence": "The named slow extractor test now writes and reads pytest tmp_path. All three original assertion ASTs are unchanged. Independent actual slow run still fails on10stubs/3orphans and writes only temporary output; no repository artifact is left. The exact hygiene Verify passed independently; underlying citation failure is not closed or waived.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-source-propagation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import ast,subprocess; from pathlib import Path; p=\"tests/test_phase6i_wave1.py\"; name=\"test_extract_missing_bibkeys_emits_no_orphans\"; old=ast.parse(subprocess.check_output([\"git\",\"show\",\"953dbfc7e4f55436f3926f27a03436759e34ef9e:\"+p],text=True)); new=ast.parse(Path(p).read_text()); get=lambda t: next(n for n in t.body if isinstance(n,ast.FunctionDef) and n.name==name); a,b=get(old),get(new); asserts=lambda n:[ast.dump(x) for x in ast.walk(n) if isinstance(x,ast.Assert)]; assert len(asserts(a))==3 and asserts(a)==asserts(b); assert [x.arg for x in b.args.args]==[\"tmp_path\"]; expected=ast.dump(ast.parse(\"output = tmp_path / \"+repr(\"missing_stubs.json\")).body[0]); assert any(ast.dump(x)==expected for x in b.body); text=ast.unparse(b); assert \"str(output)\" in text and \"output.read_text\" in text and \".test_missing_stubs.json\" not in text; assert not Path(\"docs/.test_missing_stubs.json\").exists()'",
+        "declared": "python3 -c 'import ast,subprocess; from pathlib import Path; p=\"tests/test_phase6i_wave1.py\"; name=\"test_extract_missing_bibkeys_emits_no_orphans\"; old=ast.parse(subprocess.check_output([\"git\",\"show\",\"953dbfc7e4f55436f3926f27a03436759e34ef9e:\"+p],text=True)); new=ast.parse(Path(p).read_text()); get=lambda t: next(n for n in t.body if isinstance(n,ast.FunctionDef) and n.name==name); a,b=get(old),get(new); asserts=lambda n:[ast.dump(x) for x in ast.walk(n) if isinstance(x,ast.Assert)]; assert len(asserts(a))==3 and asserts(a)==asserts(b); assert [x.arg for x in b.args.args]==[\"tmp_path\"]; expected=ast.dump(ast.parse(\"output = tmp_path / \"+repr(\"missing_stubs.json\")).body[0]); assert any(ast.dump(x)==expected for x in b.body); text=ast.unparse(b); assert \"str(output)\" in text and \"output.read_text\" in text and \".test_missing_stubs.json\" not in text; assert not Path(\"docs/.test_missing_stubs.json\").exists()'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-dispersive-coefficient-normalization:infra:2.2",
+      "status": "fixed",
+      "evidence": "Both designated versioned full author preprints were acquired through the existing writer and independently inspected by hash, header, page count and actual equations. The2014 approximation/validity limits and2018 KdV exponential profile-specific temperature result corrected the earlier unsupported leading-D2 attribution across consumers. Registry/sidecar provenance is exact and truthful; final journal bodies were not read. The weak original OR-cache Verify passed, supplemented by BOTH substantive artifact anchors and independent scientific review in SCOPED_REVIEW.md.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-source-propagation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf",
+      "artifact_sha256": "96299d47d06bff45b3754ed5f74ae81077ac75d38b4558e0fe93301fcda236d2",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf",
+          "sha256": "96299d47d06bff45b3754ed5f74ae81077ac75d38b4558e0fe93301fcda236d2"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/CoutantWeinfurtner2018KdV.pdf",
+          "sha256": "7119b9564fa4fa9dda866f9843148c4be7d2e2643673080d423f8ae722664abb"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"from src.core.workspace import find_workspace; import pathlib; base=find_workspace()/'Lit-Search'; hits=[p.name for p in base.rglob('primary-sources/*') if 'CoutantWeinfurtner' in p.name or '1402.2514' in p.name or 'CoutantParentani2014' in p.name]; assert hits, 'neither Coutant-Weinfurtner 2017 nor Coutant-Parentani 2014 (arXiv:1402.2514) is cached, yet both now back the dispersive normalization'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"from src.core.workspace import find_workspace; import pathlib; base=find_workspace()/'Lit-Search'; hits=[p.name for p in base.rglob('primary-sources/*') if 'CoutantWeinfurtner' in p.name or '1402.2514' in p.name or 'CoutantParentani2014' in p.name]; assert hits, 'neither Coutant-Weinfurtner 2017 nor Coutant-Parentani 2014 (arXiv:1402.2514) is cached, yet both now back the dispersive normalization'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }

@@ -128,7 +128,7 @@ def damping_rate(k, omega, c_s, gamma_1, gamma_2, gamma_2_1=0.0, gamma_2_2=0.0,
 #: The dispersive coefficient c₁ in δ_disp = −c₁·D².
 #:
 #: ⚠️ THIS IS A DECLARED PROJECT NORMALIZATION, NOT A DERIVED CONSTANT.
-#: No source derives it, and no universal value exists — see
+#: The quadratic law is also adopted for these applications — see
 #: ``dispersive_correction`` below and PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
 #: Sourced from ``constants.EFT_PARAMS`` (Invariant #2) and re-exported here so
 #: that no consumer — module, script, test, Lean docstring or manuscript table —
@@ -138,65 +138,42 @@ DISPERSIVE_C1 = _EFT_PARAMS['DISPERSIVE_C1']
 
 def dispersive_correction(D):
     """
-    Dispersive correction to the effective Hawking temperature.
+    Adopted phenomenological fractional shift of the Hawking temperature.
 
     δ_disp = -c₁ · D²,  c₁ = DISPERSIVE_C1 = π/6
 
-    where D = κξ/c_s is the adiabaticity parameter.
+    where D = κξ/c_s is the adiabaticity parameter. Both this quadratic
+    functional form and its coefficient are modelling choices for the
+    applications here, not a physical derivation from the cited literature.
 
-    ⚠️ PROVENANCE — WHAT IS AND IS NOT ESTABLISHED.
+    Coutant & Weinfurtner, PRD 97, 025005 (2018; arXiv:1707.09651v2),
+    analyze a weak-dispersive KdV model with co-propagating coupling
+    neglected. For their specified profile, the low-frequency temperature
+    ratio is tanh(π q_r), with an exponentially small smooth-limit departure
+    (Eqs. 39–40). This does not establish a nonzero leading D² temperature
+    term or map that profile's parameters to a particular device's local D.
 
-    The D² SCALING is supported. Coutant & Weinfurtner (PRD 2017) obtain
-    analytic expressions in the KdV approximation and find the leading
-    correction to the effective temperature scales as O(ξ²κ²/c_s²) = O(D²)
-    in the adiabatic regime. That is a PARAMETRIC O(·) result.
+    Coutant & Parentani, PRD 90, 121501(R) (2014; arXiv:1402.2514v2), obtain
+    β_ω = exp(-πω/κ) α_ω for their near-horizon locally linear solution
+    within a weak-dispersion momentum-space WKB approximation that neglects
+    left-mover mixing. Their validity region and profile-perturbation
+    analysis must accompany this result; it is not an exact global
+    all-orders statement about arbitrary profiles.
 
-    The COEFFICIENT c₁ = π/6 is NOT derived anywhere, and no universal value
-    exists. A near-horizon Hamilton-Jacobi computation shows why. With
-    ω = (v(x)+c_s)k + (c_sξ²/8)k³ and x(u) = Σ c_n uⁿ the inverse profile
-    series, the tunneling exponent is 2π·Res_{k=0}[x dk], and only the terms
-    n ≡ 1 (mod 3) survive the residue:
+    Corley & Jacobson, PRD 54, 1568 (1996), report profile-dependent fitted
+    powers in a numerical robustness study. Neither that result nor
+    Finazzi & Parentani 2012 derives the law implemented here.
 
-        Res = ω·(c₁ᵖ - 4β c₄ᵖ ω² + 21 β² c₇ᵖ ω⁴ + ...),   β = c_sξ²/8
-
-    (cᵖ are the PROFILE series coefficients, not this module's c₁). The
-    leading term c₁ᵖ = 1/κ reproduces T_H = κ/2π exactly. The FIRST dispersive
-    term is -4β c₄ᵖ ω³: cubic in ω, so it is a non-thermal distortion rather
-    than a temperature rescaling, and its size is set by c₄ᵖ — a fourth-order
-    datum of the velocity profile. There is no universal number multiplying D².
-
-    That is not merely our own argument. Coutant & Parentani (PRD 90,
-    121501(R), 2014; arXiv:1402.2514) solve the near-horizon quartic-dispersion
-    mode equation for a locally linear profile v ≈ -1 + κx and obtain
-    β_ω = e^{-πω/κ}α_ω EXACTLY, i.e. T = κ/2π with NO D² correction at all at
-    that order. A nonzero correction appears in their §IV only once the
-    profile departs from linear (v = v₀ + δv), and is then set by δv — the
-    profile. Del Porro, Liberati & Schneider (arXiv:2406.14603) derive
-    κ(α) = κ_KH(1 ± (3/8)α²) for a specific tanh profile in a DIFFERENT
-    parameter α = Ω/Λ, and state in terms that its coefficient "depends
-    crucially on the specific geometry".
-
-    Corley & Jacobson (PRD 54, 1568, 1996) agrees: it is a NUMERICAL study
-    reporting fitted powers (T_H/k₀)^p with p ≈ 3 and 2 for smooth profiles at
-    two temperatures and p ≈ 1 for kinked ones — the power ITSELF is
-    profile-dependent. It contains no D² law and no π/6. Do NOT cite it, or
-    Finazzi & Parentani 2012, as the source of this coefficient.
-
-    π/6 is therefore fixed HERE, by definition, as the project's O(1)
-    normalization, and every statement about δ_disp in this repository and in
-    the manuscripts is a statement about that definition. The Lean
-    definition ``KappaScaling.dispersiveCorrection`` carries the same number.
+    The evaluator and Lean definition KappaScaling.dispersiveCorrection
+    share the adopted expression. Their bounds and quadratic factorization
+    are statements about that definition. Rescaling c₁ changes its values
+    and can move the crossover with dissipation; preserving a quadratic
+    form does not establish unchanged physical ordering.
 
     Lean: dispersive_correction_bound (KappaScaling.lean), bogoliubov_superluminal
     Aristotle: d65e3bba, 3eedcabb
-    Source: SCALING — Coutant & Weinfurtner, PRD 2017 (parametric O(D²), KdV,
-            adiabatic regime). COEFFICIENT — project normalization; see
-            PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
-    Robustness (NOT the coefficient): Corley & Jacobson, PRD 54, 1568 (1996);
-            Coutant & Parentani, PRD 90, 121501(R) (2014).
-            ⚠️ NOT "PRD 89, 124004" — that is an unrelated Kerr-Newman-NUT
-            paper; the misprint is still live at HawkingUniversality.lean:54,
-            WKBAnalysis.lean:175 and papers/D1/paper_draft.tex:561.
+    Source standing: adopted parametrization; see
+        PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
 
     Args:
         D: adiabaticity parameter (dimensionless)
@@ -979,8 +956,9 @@ def kappa_scaling_dispersive(kappa, xi, c_s):
 
     δ_disp(κ) = -(π/6) · (ξ·κ/c_s)²
 
-    At fixed BEC material properties (ξ, c_s constant), the dispersive
-    correction scales quadratically with kappa: |δ_disp| ∝ κ².
+    At fixed BEC material properties (ξ, c_s constant), this adopted
+    correction scales quadratically with kappa: |δ_disp| ∝ κ². This is
+    factorization of the defined ansatz, not a derived physical scaling law.
 
     This is equivalent to dispersive_correction(D) with D = ξκ/c_s.
 
@@ -1037,10 +1015,10 @@ def kappa_scaling_crossover(gamma_1, gamma_2, xi):
     Below κ_cross: dissipative correction dominates (linear in κ).
     Above κ_cross: dispersive correction dominates (quadratic in κ).
 
-    This crossover provides the experimental handle for the κ-scaling
-    test: measuring the spectrum at multiple κ values reveals the
-    transition from linear to quadratic scaling, confirming the EFT
-    prediction structure.
+    This is the crossover of the adopted correction definitions. A κ sweep
+    can test those model dependences; the algebra alone does not establish
+    a physical transition or its experimental accessibility. Changing the
+    adopted dispersive coefficient moves the crossover.
 
     Derivation: Set |δ_disp| = δ_diss:
         (π/6)(ξκ/c_s)² = (γ₁+γ₂)κ/c_s²
@@ -1274,9 +1252,9 @@ def dispersive_hawking_correction(D):
     """
     Dispersive correction to effective Hawking temperature, as a RATIO.
 
-    κ_eff/κ = 1 + δ_disp = 1 - c₁·D² + O(D⁴),  D = ξκ/c_s.
+    κ_eff/κ = 1 + δ_disp = 1 - c₁·D²,  D = ξκ/c_s.
 
-    This is the same physics as ``dispersive_correction``, expressed as the
+    This is the same adopted ansatz as ``dispersive_correction``, expressed as the
     ratio κ_eff/κ rather than as the fractional shift δ_disp. It DELEGATES to
     that function and does not restate the coefficient — Invariant #1, one
     home per formula.
@@ -1289,8 +1267,8 @@ def dispersive_hawking_correction(D):
     all three Lean modules. The duplicate is removed rather than reconciled.
     See papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/.
 
-    For the standing of c₁ itself — a declared project normalization, not a
-    derived or universal constant — read ``dispersive_correction``.
+    For the standing of both the adopted form and normalization,
+    read ``dispersive_correction``.
 
     Lean: dispersiveCorrection_in_unit_interval (StimulatedHawking.lean);
           KappaScaling.dispersiveCorrection carries the same π/6.
