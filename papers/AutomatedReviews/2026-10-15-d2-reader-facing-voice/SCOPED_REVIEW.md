@@ -16,4 +16,12 @@ Acceptance covers the prose repair and new focused finding only. Existing source
 
 ## Supported closure and separate audit
 
-Pending. The reviewed in-repository source will be committed before the existing closure writer is called, so its record can name the actual fix commit. A separate ledger audit is required before push/delivery.
+The reviewed source is committed at `721863e832490e5c97013320e73a1bbf3d95bcb6`, parent `ae6868b58031f05e8a69b8021bd9e1cded5df365`. The supported closure writer executed the declared Verify and appended exactly the new D2 finding, naming that actual in-repository fix commit. A separate independent audit accepted the record after a fresh snapshot check.
+
+All 1263 prior records and the ledger envelope remain identical, including dates and verification fields; exactly one new unique record gives 1264. All 15 historical duplicated IDs/excess records are preserved. The auditor verified the fix commit, parent, five authorized paths and accepted production hashes. Metadata/stages/manifests, registry/state, shared executable modules, Lean, figures, scripts and tests remain unchanged from the base.
+
+The auditor independently ran the exact declared/recorded scoped Verify once with full actual argv/cwd/UTC/return-code/stdout/stderr/source-hash capture. It passed the D2 assertion while printing the unsuppressed global voice FAIL for D12's same five unread-source disclosures. This is separate from the scientific/prose/pixel acceptance.
+
+An initial overstrict diagnostic compared a finalized evidence report to its earlier draft hash and stopped before Verify; the actual production matched. Its partial original tool result is preserved honestly and lacks original UTC/separate-stream capture. A NEW corrected preservation diagnostic subsequently passed with complete actual subprocess capture and unchanged source hashes; it is not represented as the original run or a reconstruction. The exact Verify was not repeated. Actual returned audit reasoning and both complete successful process receipts are preserved separately in ignored local evidence.
+
+This accepts closure integrity and preservation only. Global failures, unread-source/theorem/registration debt, dense identifiers/five existing overfull boxes and broader integration/publication/submission gates remain unwaived.

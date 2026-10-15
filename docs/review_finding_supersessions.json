@@ -10777,6 +10777,21 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-d2-reader-facing-voice:D2:1.1",
+      "status": "fixed",
+      "evidence": "Independent source-content/preservation/changed-page review accepted D2 present-tense scope at all fifteen main spans and one signatures input paragraph. Actual fix commit contains the prose repair and append-only retained history; equations, tables, figures, bibliography, citations, source TODOs and disclosures are unchanged. Scoped voice assertion passes while global D12/source, sentence and L1 abstract failures remain unwaived; see SCOPED_REVIEW.md.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "721863e832490e5c97013320e73a1bbf3d95bcb6",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_reader_facing_voice;r=check_bundle_reader_facing_voice();print(r);assert not any(d.name==\"D2\" and not d.passed for d in r.details), \"D2 still narrates its own editing history\"'",
+        "declared": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_reader_facing_voice;r=check_bundle_reader_facing_voice();print(r);assert not any(d.name==\"D2\" and not d.passed for d in r.details), \"D2 still narrates its own editing history\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
