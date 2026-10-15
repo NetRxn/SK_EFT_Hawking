@@ -1783,6 +1783,95 @@ theorem quarter_signed_matrices (E : Experiment) (hE : E.decay=1/2) (s : ℝ) (a
   push_cast
   ring
 
+theorem choice_history_error {H : Type*} [Fintype H] (A B : H → MatJ) (f : H → Bool) :
+    instrumentError A B (choiceReadout f)=historyError A B (fun h => if f h then 1 else 0) := by
+  simp only [instrumentError,readoutTable,choice_weight,historyError,choiceWeight]
+  congr 2
+  apply Finset.sum_congr rfl
+  intro h _
+  cases f h <;> simp
+
+/-- Strict positivity chooses hypothesis zero; exact ties choose one. -/
+def strictChoice {H : Type*} (A B : H → MatJ) (h : H) : Bool :=
+  decide (0 < (A h).trace.re-(B h).trace.re)
+
+theorem strict_choice_attains {H : Type*} [Fintype H] {A B : H → MatJ}
+    (hA : IsBranchFamily A) (hB : IsBranchFamily B) :
+    instrumentError A B (choiceReadout (strictChoice A B))=(1-familyHistoryVariation A B)/2 := by
+  rw [choice_history_error,historyError_eq hA,←signClassifier_score hA hB]
+  congr 2
+  apply Finset.sum_congr rfl
+  intro h _
+  unfold strictChoice signClassifier
+  by_cases hp : 0 < (A h).trace.re-(B h).trace.re
+  · simp [hp,le_of_lt hp]
+  · by_cases hz : (A h).trace.re-(B h).trace.re=0
+    · simp [hz]
+    · have hn : ¬0 ≤ (A h).trace.re-(B h).trace.re := by intro hge; exact hz (le_antisymm (le_of_not_gt hp) hge)
+      simp [hp,hn]
+
+def signalChoice (s η p q : ℝ) (h : History 3 2) : Bool :=
+  decide (0 < signWeight s h.1*(1-2*p)*contrast η q h.2.1)
+
+theorem signal_choice_is_strict (E : Experiment) (r : NoiseRates) (s : ℝ) :
+    signalChoice s E.decay r.p r.q=
+      strictChoice (noisyFamily E true r s false) (noisyFamily E true r s true) := by
+  funext h
+  unfold signalChoice strictChoice
+  rw [noisy_matrix,noisy_matrix,scalar_projection_trace,scalar_projection_trace,noisy_signed]
+
+theorem signal_choice_optimal (E : Experiment) (r : NoiseRates) {s : ℝ}
+    (hs : 0 ≤ s) (hs1 : s ≤ 1) :
+    instrumentError (noisyFamily E true r s false) (noisyFamily E true r s true)
+      (choiceReadout (signalChoice s E.decay r.p r.q))=
+      (1-s * |1-2*r.p| * ∑ j,|contrast E.decay r.q j|)/2 := by
+  rw [signal_choice_is_strict,strict_choice_attains (noisy_valid E true r hs hs1 false)
+    (noisy_valid E true r hs hs1 true),noisy_variation_distance,noisy_distance E r hs]
+
+theorem signal_decision_cells (E : Experiment) (r : NoiseRates) (s : ℝ) (hyp : Bool)
+    (a j : Q) (d : Fin 2) :
+    readoutTable (choiceReadout (signalChoice s E.decay r.p r.q)) (noisyFamily E true r s hyp)
+      (a,j,()) d =
+      (if d=0 then
+        (if 0 < signWeight s a*(1-2*r.p)*contrast E.decay r.q j then 1 else 0)
+      else (if 0 < signWeight s a*(1-2*r.p)*contrast E.decay r.q j then 0 else 1)) *
+        noisyCoefficient true s E.decay r.p r.q hyp a j := by
+  rw [noisy_decision_cells]
+  simp only [choiceWeight,signalChoice,decide_eq_true_eq]
+
+/-- Six independent normalized tables, including every zero cell and every tie. -/
+theorem concrete_six_tables (E : Experiment) (r : NoiseRates) {s : ℝ}
+    (hs : 0 ≤ s) (hs1 : s ≤ 1) :
+    ∀ hyp : Bool,
+    ((∀ h d,0 ≤ readoutTable (choiceReadout nominalChoice) (idealFamily E true s hyp) h d) ∧
+      (∑ h,∑ d,readoutTable (choiceReadout nominalChoice) (idealFamily E true s hyp) h d)=1) ∧
+    ((∀ h d,0 ≤ readoutTable (choiceReadout nominalChoice) (noisyFamily E true r s hyp) h d) ∧
+      (∑ h,∑ d,readoutTable (choiceReadout nominalChoice) (noisyFamily E true r s hyp) h d)=1) ∧
+    ((∀ h d,0 ≤ readoutTable (choiceReadout (signalChoice s E.decay r.p r.q))
+        (noisyFamily E true r s hyp) h d) ∧
+      (∑ h,∑ d,readoutTable (choiceReadout (signalChoice s E.decay r.p r.q))
+        (noisyFamily E true r s hyp) h d)=1) := by
+  intro hyp
+  exact ⟨choice_tables_normalized _ (ideal_valid E true hs hs1 hyp),
+    choice_tables_normalized _ (noisy_valid E true r hs hs1 hyp),
+    choice_tables_normalized _ (noisy_valid E true r hs hs1 hyp)⟩
+
+theorem quarter_signal_choice {s : ℝ} (hs : 0 < s) :
+    signalChoice s (1/2) (1/4) (1/4)=quarterChoice := by
+  funext ⟨a,j,u⟩
+  cases u
+  fin_cases a <;> fin_cases j <;>
+    norm_num [signalChoice,quarterChoice,signWeight,quarter_contrast,Matrix.cons_val_two,Fin.ext_iff] <;>
+    positivity
+
+theorem witness_feedback_events :
+    (idealFamily witnessExperiment true (1/4) false (1,0,())).trace.re-
+      (idealFamily witnessExperiment false (1/4) false (1,0,())).trace.re=5/32 ∧
+    (idealFamily witnessExperiment true (1/4) true (1,0,())).trace.re-
+      (idealFamily witnessExperiment false (1/4) true (1,0,())).trace.re=9/32 := by
+  rw [feedback_event_change,feedback_event_change,witness_decay]
+  norm_num [rootWeight,probability,Fin.ext_iff]
+
 /-! The environment in every theorem is exactly `Unit`. These are finite ordinary
 trace-norm and classical-history statements, with no extra-ancilla/diamond or
 weighted-history metric claim. The inherited positive quotients, carriers and
