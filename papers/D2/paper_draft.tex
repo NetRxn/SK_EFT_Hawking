@@ -72,15 +72,14 @@ Garc\'ia-Etxebarria--Montero $\mathbb{Z}_{16}$ Dai--Freed anomaly of a
 $\mathrm{Spin}^{\mathbb{Z}_4}$ structure vanishes exactly when the number
 of Weyl components is a multiple of sixteen, which fixes the content of
 one generation and places no condition at all on their number. These are
-constraints on different quantities, and the superseded version of this
-manuscript, which claimed the generation count was forced twice over, was
-wrong. What they do jointly is exclude the $\nu_R$-free Standard Model:
+constraints on different quantities, not two independent derivations of
+$N_f=3$. What they do jointly is exclude the $\nu_R$-free Standard Model:
 at fifteen components per generation the framing constraint reads
 $48 \mid 15 N_f$, equivalently $16 \mid N_f$, which is \emph{the same}
 condition the $\mathbb{Z}_{16}$ anomaly imposes, and either one alone
 already excludes the observed $N_f = 3$. The two conditions coincide
 rather than compose, so the relevant modulus is sixteen and not the
-$\operatorname{lcm}(16,3) = 48$ asserted previously. Wang treats this
+$\operatorname{lcm}(16,3) = 48$. Wang treats this
 case himself and supplies the missing $c_{-} = 3/2$ from an additional
 sector rather than reporting a contradiction. Independently of all of
 this, we give a kernel-complete, hypothesis-free proof that $8$ divides
@@ -135,14 +134,12 @@ neutrino, $16 N_f \equiv 0 \pmod{16}$ for \emph{every} $N_f$. The
 $\mathbb{Z}_{16}$ argument places no condition whatever on the number of
 generations.
 
-\paragraph{The correction this draft makes.}
-An earlier version of this manuscript asserted, in its abstract and
-introduction, that the generation count is forced twice over --- once by
-the modular argument and again, in the $\nu_R$-free case, by the
-$\mathbb{Z}_{16}$ argument, along two algebraic chains it described as
-entirely separate --- while its own \S2.4 stated the opposite.
-Table~\ref{tab:branches} settles it. Neither chain forces $N_f = 3$
-twice; the $\mathbb{Z}_{16}$ chain never yields $3\mathbb{Z}$ at all.
+\paragraph{Scope of the generation-count constraints.}
+Table~\ref{tab:branches} distinguishes the two chains. They do not
+independently force $N_f=3$. The $\mathbb{Z}_{16}$ chain constrains
+fermion content and, in the $\nu_R$-free branch, the generation count;
+it never yields $N_f\in3\mathbb{Z}$. The framing constraint in that
+branch gives the same condition rather than an independent one.
 
 \begin{table}[t]
 \caption{The two constraints, by branch. The $\mathbb{Z}_{16}$ condition
@@ -169,12 +166,11 @@ requires $N_f$ even and $24 \mid c_{-}$ becomes $48 \mid 15 N_f$;
 since $\gcd(15,48) = 3$ this is $16 \mid 5 N_f$, and since $\gcd(5,16)=1$
 it is $16 \mid N_f$ --- which is exactly the $\mathbb{Z}_{16}$ condition
 $15 N_f \equiv 0 \pmod{16}$. Either constraint alone excludes the
-observed $N_f = 3$. Section~\ref{sec:composition} works this out and
-retracts the $\operatorname{lcm}(16,3) = 48$ composition the earlier draft
-asserted, which was obtained by pairing the framing constraint evaluated
-at \emph{sixteen} components with the $\mathbb{Z}_{16}$ residue evaluated
-at \emph{fifteen}. Those are two different spectra and the arithmetic
-does not compose across them.
+observed $N_f = 3$. Section~\ref{sec:composition} derives this equivalence
+and explains why combining $16\mid N_f$ with $3\mid N_f$ mixes the
+framing constraint evaluated at \emph{sixteen} components with the
+$\mathbb{Z}_{16}$ residue evaluated at \emph{fifteen}. Those are two
+different spectra and the arithmetic does not compose across them.
 
 The exclusion is also not ours to claim against Wang. He treats the
 $\nu_R$-free case explicitly, notes the $45/15 = 3$ ratio in his own
@@ -203,8 +199,7 @@ deleted.
 Section~\ref{sec:modular} gives the framing-constraint derivation and its
 formal backing. Section~\ref{sec:z16-drinfeld} gives the
 $\mathbb{Z}_{16}$ content constraint, including a reconciliation of the
-$\mathbb{Z}_4$ generator's normalisation with the source's, which the
-earlier draft omitted. Section~\ref{sec:composition} composes them.
+$\mathbb{Z}_4$ generator's normalisation with the source's. Section~\ref{sec:composition} composes them.
 Section~\ref{sec:signatures} is the signature theorem.
 Section~\ref{sec:chirality-wall} audits the lattice chirality-wall
 material. Section~\ref{sec:sixteens} collects the several distinct
@@ -459,10 +454,9 @@ charge is
 X_{\rm ours} \;=\; 5(B-L) - 4Y
 \label{eq:our-generator}
 \end{equation}
-(\texttt{SMFermionData.z4ChargeRaw}). The superseded draft printed
-\eqref{eq:our-generator} and attributed it to
-\cite{GarciaEtxebarria2019} with no reconciling sentence, so a referee
-checking eq.~(4.13) found a different formula. We reconcile it here.
+(\texttt{SMFermionData.z4ChargeRaw}). Its relation to
+\cite{GarciaEtxebarria2019}'s eq.~(4.13) requires accounting for the
+different charge normalisations and conjugate multiplets.
 
 Reading Table~2 against the project's assignments species by species, the
 source's integer charges are
@@ -620,9 +614,8 @@ $\mathbb{Z}_4$ is the centre of $\mathrm{Spin}(10)$ and the result
 follows instead from $\Omega_5^{\mathrm{Spin}}(\mathrm{Spin}(10)) = 0$.
 
 \paragraph{What the library does not establish here.}
-The earlier draft attributed the hidden-sector conclusion to
-\texttt{Z16AnomalyComputation.hidden\_sector\_required}. That theorem's
-entire statement is
+\texttt{Z16AnomalyComputation.hidden\_sector\_required} has the entire
+statement
 \begin{equation}
 \forall a \in \mathbb{Z}/16,\; a \neq 0 \;\to\;
 \exists b,\; b \neq 0 \wedge a + b = 0 ,
@@ -680,13 +673,12 @@ $\mathbb{Z}_{16}$ anomaly impose the identical condition
 the observed $N_f = 3$. There is no composition to perform and no gain
 from having two arguments; there is one condition, reached twice.
 
-\subsection{Retraction of the $\operatorname{lcm}(16,3) = 48$ claim}
+\subsection{Why the two spectra do not yield a modulus-forty-eight constraint}
 
-The superseded draft asserted that the $\mathbb{Z}_{16}$ condition
-$16 \mid N_f$ and the framing condition $3 \mid N_f$ compose to
-$N_f \in 48\mathbb{Z}$, ``in tension with the observed $N_f = 3$,'' and
-cited \texttt{RokhlinBridge.constraints\_without\_nu\_R} as its
-discharge. Two things were wrong.
+Combining the $\mathbb{Z}_{16}$ condition $16 \mid N_f$ and the framing
+condition $3 \mid N_f$ into $N_f \in 48\mathbb{Z}$ is invalid for two
+reasons. Neither this cross-spectrum inference nor its physical
+interpretation follows from \texttt{RokhlinBridge.constraints\_without\_nu\_R}.
 
 First, the two conditions being composed belong to different spectra.
 $3 \mid N_f$ comes from $c_{-} = 8 N_f$, which presupposes
@@ -695,9 +687,7 @@ $\mathbb{Z}_{16}$ residue at \emph{fifteen}. One cannot take
 $\nu_R$ out of the anomaly and leave it in the central charge. Done
 consistently at fifteen components, as above, the framing constraint
 gives $16 \mid N_f$ and not $3 \mid N_f$, and the correct modulus is
-sixteen, not forty-eight. The stronger true statement replaces the
-weaker false one: the exclusion of $N_f = 3$ is available from either
-constraint separately.
+sixteen, not forty-eight. Either constraint separately excludes $N_f=3$.
 
 Second, \texttt{constraints\_without\_nu\_R} has the complete statement
 $\operatorname{lcm}(16,3) = 48$. It is a fact about two numerals. It
@@ -743,9 +733,9 @@ three.
 
 The constraints above are algebraic. Whether a lattice regularisation can
 realise a chiral spectrum satisfying them is a separate question, and the
-project formalises material bearing on it. This section reports that
-material at the strength the Lean statements actually carry, which is
-lower in places than the superseded draft claimed.
+project formalises material bearing on it. This section distinguishes
+the statements' mathematical content from the stronger claims their
+names might suggest.
 
 \subsection{The Golterman--Shamir conditions, and what evading them means}
 
@@ -901,10 +891,9 @@ $\mathrm{DG\_COEFF} = 4^2 \wedge 4 \neq 0 \wedge 2 \neq 0$, and
 Neither is cited above.
 
 \paragraph{The ``bridge theorems'' are consistency records.}
-The superseded draft described \texttt{ChiralityWallMaster} as containing
-bridge theorems establishing, for instance, ``that the GT construction
-violates exactly the GS conditions identified in Pillar 1, neither more
-nor fewer.'' The module's \dtwoChiralityWallMasterThms{} declarations are
+\texttt{ChiralityWallMaster} does not establish that the GT construction
+violates exactly the identified GS conditions, neither more nor fewer.
+The module's \dtwoChiralityWallMasterThms{} declarations are
 almost entirely arithmetic assertions about the fields of a record of
 integers: \texttt{bridge\_gs\_gt\_evasion} is $2 \le 9$,
 \texttt{pillar1\_nogo\_requires\_all} is $9 = 9$,
@@ -921,9 +910,8 @@ doing so.
 The chirality-wall program rests on one genuinely open hypothesis: that a
 $4{+}1$d SPT slab admits a gapped interface trivialisation exactly when
 its bulk anomaly cancels. In the library this is the tracked
-\texttt{Prop} \texttt{TPFConjecture} (in \texttt{SPTClassification},
-formerly \texttt{axiom gapped\_interface\_axiom}, converted to a tracked
-\texttt{Prop} on 2026-05-19), consumed by downstream theorems as an
+\texttt{Prop} \texttt{TPFConjecture} in \texttt{SPTClassification},
+consumed by downstream theorems as an
 explicit hypothesis parameter.
 
 Supporting evidence exists in lower dimensions.
@@ -937,15 +925,11 @@ dangling Majorana modes for the case of 8 Majorana chains.''} Where the
 construction fails is at four chains, where the only available quartic
 interaction leaves a doubly degenerate ground state.
 
-We flag this because the superseded draft got both halves backwards. It
-described the result as a reduction $\mathbb{Z} \to \mathbb{Z}_{16}$ and
-asserted that ``eight Majorana wires cannot be gapped without breaking
-time-reversal.'' The modulus is $8$, not $16$; the $\mathbb{Z}_{16}$ of
+This interacting-chain reduction has modulus $8$, not $16$, and eight
+chains are the case that \emph{can} be gapped. The $\mathbb{Z}_{16}$ of
 this paper belongs to the $\mathrm{Spin}^{\mathbb{Z}_4}$ five-bordism
-computation and is a different object in a different dimension and
-symmetry class; and eight chains are exactly the case that \emph{can} be
-gapped. The bibliography entry was also for a different paper by the
-same two authors, and is corrected below.
+computation, a different object in a different dimension and symmetry
+class.
 
 The library's model of the eight-Majorana system is a $16 \times 16$
 integer matrix $W$ (\texttt{FKGappedInterface}) with genuinely computed
@@ -976,10 +960,8 @@ Fidkowski--Kitaev's $\mathbb{Z}_8$, and the two must not be conflated.
 \section{Occurrences of sixteen}
 \label{sec:sixteens}
 
-The integer sixteen appears in this paper in several places, and it is
-worth saying which appearances are related and which are not, because the
-superseded draft enumerated four ``independent occurrences'' and let the
-enumeration do argumentative work it cannot do.
+The integer sixteen appears in several places, but an enumeration alone
+establishes neither independence nor a common origin.
 
 \begin{enumerate}
 \item \textbf{The Weyl count.} A $\nu_R$-completed generation has sixteen
@@ -1027,21 +1009,18 @@ sixteen components land on the trivial class
 (\texttt{sm\_realizes\_trivial\_kitaev\_class}). All are kernel-pure.
 \end{enumerate}
 
-\paragraph{A correction of attribution.}
-The superseded draft attributed item 4 to ``Kitaev's DIII period-16
-classification of free-fermion topological phases,'' citing the periodic
-table~\cite{Kitaev2009}. We have read that paper's Tables~1 and~2
-directly. Its subject is gapped phases of \emph{noninteracting}
+\paragraph{Distinct classifications.}
+Kitaev's periodic table~\cite{Kitaev2009}, Tables~1 and~2, concerns
+gapped phases of \emph{noninteracting}
 fermions classified by Bott periodicity; the periodicity is \emph{eight}
 in real $K$-theory and two in complex, the invariant groups running
 $\mathbb{Z}, \mathbb{Z}_2, \mathbb{Z}_2, 0, \mathbb{Z}, 0, 0, 0$ over
 $q \bmod 8$; class DIII in three dimensions carries a $\mathbb{Z}$
 invariant, exemplified there by $^3$He-$B$. No sixteen appears anywhere
-in that classification. The ``free-fermion'' half of the old phrase was
-right and the ``period-16 DIII'' half was wrong.
+in that classification.
 
-The sixteen is nonetheless real, and it is the sixteenfold way of
-Kitaev's anyon classification~\cite{Kitaev2006}: $\nu$ counts chiral
+The distinct sixteenfold way comes from Kitaev's anyon
+classification~\cite{Kitaev2006}: $\nu$ counts chiral
 Majorana edge modes, the anyon statistics depend on its residue modulo
 sixteen, and $c_- = \nu/2$ retains information beyond that residue.
 \texttt{KitaevSixteenFold} formalises the central-charge residue
@@ -1187,10 +1166,8 @@ hypothesis H2, the $A(1) \to A$ change-of-rings adjunction. The Lean
 module's own docstring states that H2 is \textbf{open} and that all four
 tracked hypotheses remain, and it carries a companion declaration
 explicitly renamed \texttt{h2\_discharged\_TODO : True} so that the name
-could not be misread. \textbf{H2 is open.} The superseded draft
-carried a subsection titled ``Discharging hypothesis H2'' concluding
-that only H1, H3 and H4 remained, while its own abstract said four; that
-subsection is deleted, not softened.
+could not be misread. All four tracked hypotheses H1--H4 remain;
+in particular, \textbf{H2 is open} and is not discharged by this identity.
 \item \texttt{Z16AnomalyComputation.hidden\_sector\_required}. Statement:
 every nonzero element of $\mathbb{Z}/16$ has a nonzero additive inverse.
 Registered as a statement about Standard-Model field content.
@@ -1315,8 +1292,8 @@ would make item 2 of \S\ref{sec:sixteens} internal rather than imported.
 The Smith homomorphism together with
 $\Omega_4^{\mathrm{Pin}^+} \cong \mathbb{Z}_{16}$ would decide whether
 items 3 and 4 of \S\ref{sec:sixteens} are related to items 1 and 2 at
-all --- which is the question the ``sixteen convergence'' framing
-presupposed an answer to.
+all; an enumeration of occurrences does not establish such a
+relationship.
 
 \subsection{Cross-bundle scope}
 
