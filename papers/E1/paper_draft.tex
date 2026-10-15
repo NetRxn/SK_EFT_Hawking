@@ -167,10 +167,10 @@ $2$ for smooth profiles and $p \simeq 1$ for kinked
 ones~\cite{CorleyJacobson1996}. What that literature establishes is the
 robustness of $T_H$, not a coefficient. The value $c_1 = \pi/6$ is
 therefore fixed here as a declared normalization of an $O(1)$
-profile-dependent quantity --- it is the single value carried by this
-project's computational and formal substrate, so that every $\delta_{\rm
-disp}$ quoted below and in the companion papers is the same statement
-about the same definition. A reader who prefers a different $O(1)$
+profile-dependent quantity. This value is used throughout the
+computational and formal definitions, so every $\delta_{\rm disp}$
+quoted below and in the companion papers uses the same normalization.
+A reader who prefers a different $O(1)$
 normalization should rescale every dispersive number in this paper by
 $c_1/(\pi/6)$; the quadratic $\kappa$-scaling and the
 dispersive-versus-dissipative ordering are unaffected.
@@ -230,39 +230,34 @@ that $\kappa$ is tunable, not a hotter black hole.
 %%   All four kernel-only; axiom closure {propext, Classical.choice,
 %%   Quot.sound}; no project-local axioms, no tracked Props.
 
-Polaritons leak. A quantum written into the fluid at the horizon
-decays at the cavity rate $\Gamma_{\rm pol} = 1/\tau_{\rm cav}$
-while it propagates to where it is read out, so the occupation the
-apparatus records is smaller than the occupation the horizon
-emitted by
+Propagation at decay rate $\Gamma_{\rm pol} = 1/\tau_{\rm cav}$
+reduces the emitted occupation by the factor
 \begin{equation}
 A = \exp\!\left(\frac{\Gamma_{\rm pol} L}{v_g}\right),
 \label{eq:attenuation}
 \end{equation}
 with $L$ the propagation distance and $v_g$ the group velocity.
-Recovering the intrinsic spectrum means dividing by $A$. Three
-elementary properties of Eq.~\eqref{eq:attenuation} are checked in
-Lean~4 for every parameter choice rather than a fitted one:
+The attenuation model relates emitted and measured occupations by
+\begin{equation}
+N_{\rm meas} = N_{\rm emit}/A,
+\qquad N_{\rm emit} = A N_{\rm meas}.
+\end{equation}
+Recovery multiplies by $A$. Lean~4 checks three properties of this
+defined factor for all admissible parameters:
 $A \geq 1$ always, so the recovery never deflates an inferred
 occupation (\texttt{attenuation\_ge\_one}); $A$ is monotone in
 $\Gamma_{\rm pol}$ at fixed geometry
-(\texttt{attenuation\_mono\_Gamma}); and $A = 1$ exactly at
-$\Gamma_{\rm pol} = 0$, the closed-system limit
+(\texttt{attenuation\_mono\_Gamma}); and $\Gamma_{\rm pol} = 0$ implies $A = 1$, the closed-system limit
 (\texttt{attenuation\_eq\_one\_at\_zero\_decay}).
+At zero propagation distance, $A = 1$ even with positive decay.
 
-The question is not whether $A$ can be divided out, but whether
-$\Gamma_{\rm pol}$ is small enough that what is being corrected is
-still the emission Eq.~\eqref{eq:T_H} describes. Dissipation
-enters the SK-EFT as an expansion in $\Gamma_{\rm pol}/\kappa$, and
-we take
+The SK-EFT dissipation expansion requires small
+$\Gamma_{\rm pol}/\kappa$. We impose
 \begin{equation}
 \Gamma_{\rm pol} < \input{tables/lkb_weak_dissipation_ratio.tex}\unskip\,\kappa
 \label{eq:weak_dissipation}
 \end{equation}
-as the condition under which the leading term is the answer. The
-cut in Eq.~\eqref{eq:weak_dissipation} is a declared convention, not
-a derived boundary; what is not conventional is the size of the gap
-between it and the device.
+as a declared validity convention, not a derived boundary.
 
 Falque \emph{et al.} measure a polariton decay rate
 $\hbar\gamma \approx \SI{80}{\micro\electronvolt}$, or
@@ -272,17 +267,13 @@ Against $\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ t
 \frac{\Gamma_{\rm pol}}{\kappa} = \input{tables/lkb_ratio_standard.tex}\unskip ,
 \label{eq:ratio_asbuilt}
 \end{equation}
-about eighteen times the cut. The as-built cavity is not weakly
-dissipative: over one healing length the recovery factor $A$ is
-already
-$\input{tables/lkb_atten_per_xi_standard.tex}\unskip$, because the exponent in
-Eq.~\eqref{eq:attenuation} per healing length is exactly the product
-$(\Gamma_{\rm pol}/\kappa)\,D$ of this Letter's two dimensionless
-parameters.
+about eighteen times the cut. Over one healing length, the exponent
+in Eq.~\eqref{eq:attenuation} is $(\Gamma_{\rm pol}/\kappa)D\,c_s/v_g$.
+Taking $v_g = c_s$ gives the recovery factor
+$\input{tables/lkb_atten_per_xi_standard.tex}\unskip$. The per-healing-length
+estimates here use this velocity identification.
 
-This is a cavity specification, and it is the one axis of the
-platform that is a fabrication choice rather than a physical limit.
-Holding the horizon fixed and varying only the mirror stack, a
+At fixed horizon, a
 \SI{100}{\pico\second} cavity gives
 $\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_long.tex}\unskip$ and a
 \SI{300}{\pico\second} cavity gives
@@ -293,11 +284,9 @@ is met from
   \input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}\;}
 \label{eq:tau_required}
 \end{equation}
-onward, where the per-healing-length recovery factor has fallen to
-$\input{tables/lkb_atten_per_xi_required.tex}\unskip$. Whether a GaAs
-microcavity at that lifetime is available to this group is a
-fabrication question rather than a physics one; the horizon itself
-does not need to change.
+onward, with per-healing-length recovery factor
+$\input{tables/lkb_atten_per_xi_required.tex}\unskip$. Availability of such a
+GaAs cavity remains a fabrication question; the horizon is unchanged.
 %% TODO: the claim that GaAs microcavities with tau_cav >= 143 ps are
 %% demonstrated is NOT made here, because it is not verified. The
 %% repo's PARAMETER_PROVENANCE cites Ballarini 2017 for long-lifetime
@@ -307,9 +296,8 @@ does not need to change.
 %% draft asserts availability. Filed nowhere else deliberately: this
 %% is a source-acquisition task, not a defect in the present text.
 
-Figure~\ref{fig:regime} places the device on that axis. The same
-criterion applied outside the GaAs family closes the other end of
-the range: the UPenn MoSe$_2$ nanocavity of Wang \emph{et
+Figure~\ref{fig:regime} locates the GaAs devices. Outside that family,
+the UPenn MoSe$_2$ nanocavity of Wang \emph{et
 al.}~\cite{WangKimBZHe2026PennTMDPolariton}, whose lower-polariton
 linewidth $\gamma_{\rm LP} = \SI{1.8}{\milli\electronvolt}$ implies
 $\Gamma_{\rm LP} \approx \SI{2.7e12}{\per\second}$, sits at
@@ -333,31 +321,22 @@ Falque \emph{et al.}~\cite{Falque2025}. The as-built
 \input{tables/lkb_tau_cav_ps_standard.tex}\unskip\,\si{\pico\second} device
 (``standard'') sits at $\input{tables/lkb_ratio_standard.tex}\unskip$, above unity,
 where the weak-dissipation expansion of
-Eq.~\eqref{eq:weak_dissipation} does not apply. The dotted line is
-$\Gamma_{\rm pol}/\kappa = 1/(\tau_{\rm cav}\kappa)$, the trajectory
-a longer cavity moves the device along at fixed horizon; it crosses
-the criterion at Eq.~\eqref{eq:tau_required}. The
+Eq.~\eqref{eq:weak_dissipation} does not apply. The dotted trajectory
+$\Gamma_{\rm pol}/\kappa = 1/(\tau_{\rm cav}\kappa)$ crosses the criterion
+at Eq.~\eqref{eq:tau_required}. The
 \SI{100}{\pico\second} (``long'') and \SI{300}{\pico\second}
 (``ultralong'') points are projected cavity generations, not
-measured devices. Shaded bands are the qualitative regimes the
-expansion passes through, coarsest at top.}
+measured devices. Shaded bands indicate qualitative validity regimes.}
 \label{fig:regime}
 \end{figure}
 
-Two consequences separate cleanly, and the rest of this Letter
-depends on the separation. What does \emph{not} depend on the
-cavity is anything fixed by $\kappa$ alone: the horizon exists, its
-steepness is measured, and Eqs.~\eqref{eq:T_H} and~\eqref{eq:gain}
-set the temperature and the shape of the gain spectrum, including
-the frequency at which the gain crosses any given threshold. What
-\emph{does} depend on the cavity is the claim that those leading-order
-expressions are the whole answer, and with it the quoted gain
-magnitudes, the recovery of an intrinsic occupation through
-Eq.~\eqref{eq:attenuation}, and the error bars on the window of
-\S V. The numbers in \S IV and \S V are therefore stated for a
-device satisfying Eq.~\eqref{eq:tau_required}; at the as-built
-cavity they are the correct target of the measurement, not a
-prediction of what it will return.
+The measured horizon fixes $\kappa$ independently of the cavity.
+The leading-order temperature and gain expressions,
+Eqs.~\eqref{eq:T_H} and~\eqref{eq:gain}, are predictions only when
+the dissipation expansion applies. The gain magnitudes, occupation
+recovery and window uncertainties in \S IV and \S V therefore assume
+Eq.~\eqref{eq:tau_required}. They are targets for an improved cavity,
+not predictions for the as-built device.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The stimulated-Hawking gain spectrum}

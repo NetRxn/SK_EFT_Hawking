@@ -59,3 +59,11 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-06-10 source-reconciliation pass post external-review remediation: single flagged source paper12_polariton carries the real committed change (5207b72b axiom-retirement note: gapped_interface_axiom retired into tracked Prop TPFConjecture); E1 counterpart is macro-driven (axiomcount=0 via counts.tex, already post-retirement) and E1's polariton-scope 'no new project-local axioms / no tracked Props' statements are consistent — NO residual divergence. Drifted source tables are byte-identical regen; E1 inputs no source tables. Sweep theme (E1 module-attribution fix Basic.SonicHorizon/AcousticMetric) applied in tandem 5207b72b; Vergeles/Halenka/Geurs not referenced (polariton-only letter). Standard DISCLOSURE_TEXT.md Variant A block inserted before bibliography (register-derived S1: 1 module / 5 theorems; pdflatex x2 clean). stage13_redo_required set true + freshness_stale deliberately retained by the reconciliation session (post-script metadata restore).
+
+## 2026-10-15 — Occupation-recovery direction and attenuation scope
+
+- Corrected §III to state the model relations `N_meas = N_emit/A` and `N_emit = A N_meas`, matching `polariton_spatial_attenuation`; the bound on the defined factor is distinguished from the physical recovery model in the matching apex claim.
+- Restricted the zero-decay statement to its proved implication and disclosed the permitted zero-distance case. Live imported Lean statements and axiom closures were checked against the exact main-compatible module hash.
+- Made the group-velocity identification explicit: the per-healing-length exponent is `(Gamma_pol/kappa) D c_s/v_g`, and the generated numerical estimates specialize to `v_g = c_s`.
+- Shortened the same attenuation section and its caption without changing generated device values, the declared validity cut, projected-cavity status or fabrication uncertainty. The normalization paragraph uses sentences in place of its reader-visible em-dash.
+- Focused findings and independent review evidence: `papers/AutomatedReviews/2026-10-15-e1-attenuation-recovery/`. Bundle-wide review statuses remain pending; this correction does not establish submission readiness.

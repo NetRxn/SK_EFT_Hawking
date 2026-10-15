@@ -10263,6 +10263,48 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-attenuation-recovery:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent focused review accepted recovery multiplication, the one-way zero-decay implication and explicit group-velocity assumption against exact main-compatible Python and imported Lean evidence. All three declared Verify commands pass; final isolated compile is clean and unchanged length ceiling passes. Acceptance is limited to these three findings; unrelated readiness failures remain unwaived.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-attenuation-recovery/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_ge_one'\"'\"')); assert r'\"'\"'N_{\\rm emit} = A N_{\\rm meas}'\"'\"' in t and r'\"'\"'N_{\\rm meas} = N_{\\rm emit}/A'\"'\"' in t; assert '\"'\"'multiplying'\"'\"' in c and '\"'\"'dividing'\"'\"' not in c'",
+        "declared": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_ge_one'\"'\"')); assert r'\"'\"'N_{\\rm emit} = A N_{\\rm meas}'\"'\"' in t and r'\"'\"'N_{\\rm meas} = N_{\\rm emit}/A'\"'\"' in t; assert '\"'\"'multiplying'\"'\"' in c and '\"'\"'dividing'\"'\"' not in c'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-attenuation-recovery:E1:1.2",
+      "status": "fixed",
+      "evidence": "Independent focused review accepted recovery multiplication, the one-way zero-decay implication and explicit group-velocity assumption against exact main-compatible Python and imported Lean evidence. All three declared Verify commands pass; final isolated compile is clean and unchanged length ceiling passes. Acceptance is limited to these three findings; unrelated readiness failures remain unwaived.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-attenuation-recovery/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_eq_one_at_zero_decay'\"'\"')); assert '\"'\"'exactly at'\"'\"' not in t and '\"'\"'exactly at'\"'\"' not in c; assert '\"'\"'zero propagation distance'\"'\"' in t'",
+        "declared": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_eq_one_at_zero_decay'\"'\"')); assert '\"'\"'exactly at'\"'\"' not in t and '\"'\"'exactly at'\"'\"' not in c; assert '\"'\"'zero propagation distance'\"'\"' in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-attenuation-recovery:E1:1.3",
+      "status": "fixed",
+      "evidence": "Independent focused review accepted recovery multiplication, the one-way zero-decay implication and explicit group-velocity assumption against exact main-compatible Python and imported Lean evidence. All three declared Verify commands pass; final isolated compile is clean and unchanged length ceiling passes. Acceptance is limited to these three findings; unrelated readiness failures remain unwaived.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-attenuation-recovery/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'v_g = c_s'\"'\"' in t and r'\"'\"'c_s/v_g'\"'\"' in t'",
+        "declared": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'v_g = c_s'\"'\"' in t and r'\"'\"'c_s/v_g'\"'\"' in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
