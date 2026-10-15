@@ -1212,4 +1212,586 @@ theorem witness_sign_noisy_tables (hyp : Bool) (a j : Q) (d : Fin 2) :
   cases hyp <;> fin_cases a <;> fin_cases j <;> fin_cases d <;>
     norm_num [witnessSignNoisy, witnessNoisyMass, choiceWeight, quarterChoice, Matrix.cons_val_two, Fin.ext_iff]
 
+/-! Reachability and the physical fixture, without conditioning on branch mass. -/
+theorem decay_lt_one (E : Experiment) (h : 0 < E.rate*E.duration) : E.decay < 1 := by
+  apply Real.exp_lt_one_iff.mpr
+  nlinarith
+
+theorem ideal_cells_positive (E : Experiment) (feedback : Bool) {s : ℝ}
+    (hs : 0 ≤ s) (hs1 : s < 1) (ht : 0 < E.rate*E.duration) (hyp : Bool) (a j : Q) :
+    0 < (idealFamily E feedback s hyp (a,j,())).trace.re := by
+  rw [ideal_matrix, scalar_projection_trace]
+  exact mul_pos (rootWeight_pos hs hs1 hyp a)
+    (row_pos (decay_mem E).1.le (decay_lt_one E ht) _ j)
+
+theorem noisy_cells_positive (E : Experiment) (feedback : Bool) (r : NoiseRates) {s : ℝ}
+    (hs : 0 ≤ s) (hs1 : s < 1) (ht : 0 < E.rate*E.duration) (hyp : Bool) (a j : Q) :
+    0 < (noisyFamily E feedback r s hyp (a,j,())).trace.re := by
+  rw [noisy_matrix, scalar_projection_trace]
+  have h0 := noisyWeight_pos hs hs1 r.hp r.hp1 hyp a
+  have h1 := noisyWeight_pos hs hs1 r.hp r.hp1 hyp (exchange a)
+  have hx := row_pos (decay_mem E).1.le (decay_lt_one E ht)
+    (if feedback && decide (a=1) then exchange a else a) j
+  have hy := row_pos (decay_mem E).1.le (decay_lt_one E ht)
+    (if feedback && decide (a=1) then exchange (exchange a) else exchange a) j
+  unfold noisyCoefficient
+  have hn := mul_nonneg (mul_nonneg (sub_nonneg.mpr r.hq1) h0.le) hx.le
+  by_cases hz : r.q=0
+  · simp only [hz, sub_zero, one_mul, zero_mul, add_zero]
+    exact mul_pos h0 hx
+  · have hp := mul_pos (mul_pos (lt_of_le_of_ne r.hq (Ne.symm hz)) h1) hy
+    linarith
+
+theorem witness_cells_positive (hyp : Bool) (a j : Q) :
+    0 < witnessIdealMass hyp a j ∧ 0 < witnessNoisyMass hyp a j := by
+  cases hyp <;> fin_cases a <;> fin_cases j <;>
+    norm_num [witnessIdealMass, witnessNoisyMass, Matrix.cons_val_two]
+
+theorem witness_tables_normalized (hyp : Bool) :
+    ((∀ a j d, 0 ≤ witnessNominalIdeal hyp a j d) ∧
+      (∑ a, ∑ j, ∑ d, witnessNominalIdeal hyp a j d)=1) ∧
+    ((∀ a j d, 0 ≤ witnessNominalNoisy hyp a j d) ∧
+      (∑ a, ∑ j, ∑ d, witnessNominalNoisy hyp a j d)=1) ∧
+    ((∀ a j d, 0 ≤ witnessSignNoisy hyp a j d) ∧
+      (∑ a, ∑ j, ∑ d, witnessSignNoisy hyp a j d)=1) := by
+  cases hyp <;> constructor
+  all_goals first
+    | constructor
+      · intro a j d
+        fin_cases a <;> fin_cases j <;> fin_cases d <;>
+          norm_num [witnessNominalIdeal, Matrix.cons_val_two]
+      · norm_num [witnessNominalIdeal, Fin.sum_univ_succ]
+    | constructor <;> constructor
+      all_goals first
+        | intro a j d
+          fin_cases a <;> fin_cases j <;> fin_cases d <;>
+            norm_num [witnessNominalNoisy, witnessSignNoisy, Matrix.cons_val_two]
+        | norm_num [witnessNominalNoisy, witnessSignNoisy, Fin.sum_univ_succ]
+
+theorem nominal_physical_optimum (E : Experiment) {s : ℝ} (hs : 0 ≤ s) (hs1 : s ≤ 1) :
+    IsLeast {x : ℝ | ∃ I : History 3 2 → FiniteInstrument J 2,
+      instrumentError (idealFamily E true s false) (idealFamily E true s true) I=x}
+      ((1-s)/2) := by
+  simpa only [ideal_distance E hs] using
+    physical_family_optimum (ideal_valid E true hs hs1 false) (ideal_valid E true hs hs1 true)
+
+theorem quarter_budgets : survival [quarterRates,zeroRates]=9/16 ∧
+    1-survival [quarterRates,zeroRates]=7/16 ∧
+    (([quarterRates,zeroRates].map (fun r => r.p+r.q)).sum)=1/2 ∧
+    (7/16:ℝ)<1/2 := by
+  norm_num [survival, FiniteAdaptiveMixtureSurvival.retention, quarterRates, zeroRates]
+
+/-- The actual physical policy invokes the generic certificate with identical inputs. -/
+theorem quarter_compiler_stability (E : Experiment) {s : ℝ} (hs : 0 ≤ s) (hs1 : s ≤ 1) :
+    |(1-branchDistance (idealFamily E true s false) (idealFamily E true s true))/2-
+      (1-branchDistance (noisyFamily E true quarterRates s false)
+        (noisyFamily E true quarterRates s true))/2| ≤ 7/16 ∧
+    |instrumentError (idealFamily E true s false) (idealFamily E true s true)
+        (choiceReadout nominalChoice)-
+      instrumentError (noisyFamily E true quarterRates s false)
+        (noisyFamily E true quarterRates s true) (choiceReadout nominalChoice)| ≤ 7/16 := by
+  have hA : IsDensityOperator (joint (alignedInput s E.frame false)) :=
+    joint_density (mixture_density hs hs1 (projection_density _ _))
+  have hB : IsDensityOperator (joint (alignedInput s E.frame true)) :=
+    joint_density (mixture_density hs hs1 (projection_density _ _))
+  have h := compiled_stability E.background (experimentPolicy E true) (experimentPolicy E true)
+    [quarterRates,zeroRates] [quarterRates,zeroRates] rfl rfl hA hB hA hB
+    (fun h => inducedEffect (choiceReadout nominalChoice h) 0)
+    (fun h => inducedEffect_admissible (choiceReadout nominalChoice h))
+    (fun _ => 0) (fun _ => by norm_num)
+  simp only [traceDist_self, mul_zero, zero_add, quarter_budgets.1] at h
+  norm_num only [show ((1-(9:ℝ)/16)+(1-9/16))/2=7/16 by norm_num] at h
+  constructor
+  · simpa only [idealFamily, noisyFamily, branchDistance, outputDistance, traceDist,
+      div_eq_mul_inv, Finset.mul_sum, mul_comm, one_mul] using h.1
+  · rw [arbitrary_readout_effect, arbitrary_readout_effect]
+    exact h.2.1
+
+theorem quarter_exact_perturbations (E : Experiment) (hE : E.decay=1/2) {s : ℝ}
+    (hs : 0 ≤ s) (hs1 : s ≤ 1) :
+    |instrumentError (noisyFamily E true quarterRates s false)
+        (noisyFamily E true quarterRates s true) (choiceReadout quarterChoice)-
+      instrumentError (idealFamily E true s false) (idealFamily E true s true)
+        (choiceReadout nominalChoice)|=35*s/96 ∧
+    |instrumentError (noisyFamily E true quarterRates s false)
+        (noisyFamily E true quarterRates s true) (choiceReadout nominalChoice)-
+      instrumentError (idealFamily E true s false) (idealFamily E true s true)
+        (choiceReadout nominalChoice)|=3*s/8 ∧
+    35*s/96 ≤ 7/16 ∧ 3*s/8 ≤ 7/16 := by
+  have h := quarter_compiler_stability E hs hs1
+  rw [ideal_distance E hs, quarter_distance E hE hs] at h
+  rw [nominal_error, quarter_transported_error E hE] at h
+  rw [nominal_error, quarter_sign_error E hE, quarter_transported_error E hE]
+  have h0 : (1-13*s/48)/2-(1-s)/2=35*s/96 := by ring
+  have h1 : (1-s/4)/2-(1-s)/2=3*s/8 := by ring
+  rw [h0, h1, abs_of_nonneg (by positivity), abs_of_nonneg (by positivity)]
+  rw [abs_sub_comm, h0, abs_of_nonneg (by positivity)] at h
+  rw [abs_sub_comm ((1-s)/2), h1, abs_of_nonneg (by positivity)] at h
+  exact ⟨rfl,rfl,h.1,h.2⟩
+
+def rootEvolution (B : Background) (p : ℝ) :=
+  mixKraus (controlledKraus B.b B.hbar 0 0 false)
+    (controlledKraus B.b B.hbar 0 0 true) p
+
+theorem root_evolution_action (B : Background) (r : NoiseRates) (s φ : ℝ) (hyp : Bool) :
+    krausMap (rootEvolution B r.p) (joint (alignedInput s φ hyp)) =
+      joint (((1-r.p:ℝ):ℂ) • alignedInput s φ hyp+
+        (r.p:ℂ) • alignedInput s φ (!hyp)) := by
+  rw [rootEvolution, mixKraus_action _ _ r.hp r.hp1]
+  simp only [controlled_action, unjoint_joint, channel_zero_time _ _ _ le_rfl,
+    control_aligned, Bool.false_eq_true, if_false, if_true]
+  ext ⟨i,u⟩ ⟨j,v⟩
+  cases u; cases v
+  simp [joint, Matrix.kroneckerMap_apply]
+
+theorem evolution_noise_changes_action (B : Background) (r : NoiseRates)
+    {s : ℝ} (hs : 0 < s) (hp : 0 < r.p) (φ : ℝ) :
+    krausMap (rootEvolution B r.p) (joint (alignedInput s φ false)) ≠
+      joint (alignedInput s φ false) := by
+  rw [root_evolution_action]
+  intro he
+  have h := congrArg (fun X : MatJ => ((readout φ).branch 0 (unjoint X)).trace.re) he
+  rw [unjoint_joint, unjoint_joint, FiniteInstrument.branch_add,
+    FiniteInstrument.branch_smul, FiniteInstrument.branch_smul,
+    aligned_readout, aligned_readout] at h
+  simp only [Matrix.trace_add, Matrix.trace_smul, (projection_density φ 0).2,
+    smul_eq_mul, mul_one, Complex.add_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
+    mul_zero, sub_zero, Bool.not_false] at h
+  norm_num [rootWeight, probability, Fin.ext_iff] at h
+  nlinarith [mul_pos hs hp]
+
+theorem instrument_noise_action (φ : ℝ) (r : NoiseRates) :
+    (mixInstrument (readout φ) (readout (φ+Real.pi)) r.q r.hq r.hq1).branch 0
+      (readProjection φ 0)=((1-r.q:ℝ):ℂ) • readProjection φ 0 := by
+  rw [mixInstrument_branch, readout_pi, readout_projection, readout_projection]
+  norm_num [exchange, Fin.ext_iff]
+  ext i j
+  simp [Matrix.smul_apply, Complex.real_smul]
+
+theorem instrument_noise_changes_action (φ : ℝ) (r : NoiseRates) (hq : 0 < r.q) :
+    (mixInstrument (readout φ) (readout (φ+Real.pi)) r.q r.hq r.hq1).branch 0
+      (readProjection φ 0) ≠ (readout φ).branch 0 (readProjection φ 0) := by
+  rw [instrument_noise_action, readout_projection]
+  norm_num only [ite_true, one_smul]
+  intro he
+  have h := congrArg (fun X : MatQ => X.trace.re) he
+  simp only [Matrix.trace_smul, (projection_density φ 0).2, smul_eq_mul, mul_one,
+    Complex.ofReal_re, Complex.one_re] at h
+  linarith
+
+theorem compiled_zero_depth (B : Background) (X Y : MatJ)
+    (hX : IsDensityOperator X) (hY : IsDensityOperator Y) :
+    survival []=1 ∧
+    outputDistance Q Unit 3 (ideal B .done) (noisy B .done [] rfl) X Y=traceDist X Y ∧
+    terminalState Q Unit 3 (ideal B .done) X=X ∧
+    historyVariation Q Unit 3 (ideal B .done) (noisy B .done [] rfl) X Y=0 := by
+  refine ⟨rfl,outputDistance_done Q Unit 3 X Y,?_,?_⟩
+  · simp [terminalState,ideal,run,history_card]
+  · simp [historyVariation,ideal,noisy,weight,run,hX.2,hY.2]
+
+theorem compiled_zero_noise_distance (B : Background) {n : ℕ} (P : Policy n)
+    (rs : List NoiseRates) (hlen : rs.length=n)
+    (hz : ∀ r∈rs, r.p=0 ∧ r.q=0) (X : MatJ) :
+    outputDistance Q Unit 3 (ideal B P) (noisy B P rs hlen) X X=0 := by
+  simp [outputDistance,compiled_zero_noise B P rs hlen hz,traceNorm_zero]
+
+theorem psd_zero_trace_input {X : MatJ} (hX : X.PosSemidef) (ht : X.trace=0) : X=0 :=
+  hX.trace_eq_zero_iff.mp ht
+
+theorem compiled_zero_trace_branches (B : Background) {n : ℕ} (P : Policy n)
+    (rs : List NoiseRates) (hlen : rs.length=n) {X : MatJ}
+    (hX : X.PosSemidef) (ht : X.trace=0) (h : History 3 n) :
+    run Q Unit 3 (ideal B P) h X=0 ∧ run Q Unit 3 (noisy B P rs hlen) h X=0 := by
+  rw [psd_zero_trace_input hX ht]
+  simp only [run_zero, and_self]
+
+theorem same_policy_equilibrium (B : Background) {n : ℕ} (P : Policy n)
+    (rs : List NoiseRates) (hlen : rs.length=n) (φ : ℝ) (h : History 3 n) :
+    run Q Unit 3 (ideal B P) h (joint (alignedInput 0 φ false))=
+      run Q Unit 3 (ideal B P) h (joint (alignedInput 0 φ true)) ∧
+    run Q Unit 3 (noisy B P rs hlen) h (joint (alignedInput 0 φ false))=
+      run Q Unit 3 (noisy B P rs hlen) h (joint (alignedInput 0 φ true)) := by
+  simp [alignedInput, mixture]
+
+theorem pure_initial_projection (φ : ℝ) (hyp : Bool) :
+    alignedInput 1 φ hyp=readProjection φ (if hyp then 1 else 0) ∧
+      rootWeight 1 hyp 2=0 := by
+  cases hyp <;> simp [alignedInput,mixture,rootWeight,probability,Fin.ext_iff]
+
+/-- Positive dose restores faithfulness even when the initial mixing parameter is one. -/
+theorem pure_initial_evolved_faithful (B : Background) (γ t : ℝ)
+    (hγ : 0 ≤ γ) (ht : 0 ≤ t) (hdose : 0 < γ*t) (hyp : Bool) :
+    (evolved B.b B.hbar γ t 1 hyp).PosDef ∧
+    0 < rootWeight (Real.exp (-γ*t)) hyp 2 := by
+  have hs : 0 ≤ Real.exp (-γ*t) := (Real.exp_pos _).le
+  have hs1 : Real.exp (-γ*t)<1 := Real.exp_lt_one_iff.mpr (by nlinarith)
+  constructor
+  · rw [evolved_formula _ _ _ _ _ hγ ht]
+    simp only [FiniteThreeLevelThermalPhase.retention, one_mul]
+    exact mixture_faithful hs hs1 (projection_density _ _).1
+  · exact rootWeight_pos hs hs1 hyp 2
+
+theorem pure_initial_evolved_endpoint (γ t : ℝ) :
+    Real.exp (-γ*t)=1 ↔ γ*t=0 := by
+  rw [Real.exp_eq_one_iff]
+  constructor <;> intro h <;> nlinarith
+
+theorem decay_finite (E : Experiment) : E.decay≠0 ∧
+    (E.decay=1 ↔ E.rate*E.duration=0) :=
+  ⟨ne_of_gt (decay_mem E).1,pure_initial_evolved_endpoint E.rate E.duration⟩
+
+theorem explicit_pulse_at_zero_wait (B : Background) (s φ : ℝ) (hyp : Bool) :
+    krausMap (controlledKraus B.b B.hbar 0 0 true) (joint (alignedInput s φ hyp))=
+      joint (alignedInput s φ (!hyp)) := by
+  rw [controlled_action,unjoint_joint,channel_zero_time _ _ _ le_rfl,control_aligned]
+  rfl
+
+theorem compiled_history_optima (B : Background) {n : ℕ} (PA PB : Policy n)
+    (rsA rsB : List NoiseRates) (lenA : rsA.length=n) (lenB : rsB.length=n)
+    {XA XB YA YB : MatJ} (hXA : IsDensityOperator XA) (hXB : IsDensityOperator XB)
+    (hYA : IsDensityOperator YA) (hYB : IsDensityOperator YB) :
+    IsLeast {x : ℝ | ∃ f : History 3 n → ℝ, (∀ h, f h∈Set.Icc (0:ℝ) 1) ∧
+      historyError (fun h => run Q Unit 3 (ideal B PA) h XA)
+        (fun h => run Q Unit 3 (ideal B PB) h XB) f=x}
+      ((1-historyVariation Q Unit 3 (ideal B PA) (ideal B PB) XA XB)/2) ∧
+    IsLeast {x : ℝ | ∃ f : History 3 n → ℝ, (∀ h, f h∈Set.Icc (0:ℝ) 1) ∧
+      historyError (fun h => run Q Unit 3 (noisy B PA rsA lenA) h YA)
+        (fun h => run Q Unit 3 (noisy B PB rsB lenB) h YB) f=x}
+      ((1-historyVariation Q Unit 3 (noisy B PA rsA lenA) (noisy B PB rsB lenB) YA YB)/2) :=
+  ⟨tree_history_isLeast _ _ hXA hXB,tree_history_isLeast _ _ hYA hYB⟩
+
+theorem compiled_hermitian_contraction (B : Background) {n : ℕ} (P : Policy n)
+    (rs : List NoiseRates) (hlen : rs.length=n) {X Y : MatJ}
+    (hX : X.IsHermitian) (hY : Y.IsHermitian) :
+    outputDistance Q Unit 3 (ideal B P) (ideal B P) X Y ≤ traceDist X Y ∧
+    outputDistance Q Unit 3 (noisy B P rs hlen) (noisy B P rs hlen) X Y ≤ traceDist X Y :=
+  ⟨outputDistance_common Q Unit 3 _ hX hY,outputDistance_common Q Unit 3 _ hX hY⟩
+
+theorem compiled_budget_domains (rs : List NoiseRates) {X Y : MatJ}
+    (hX : IsDensityOperator X) (hY : IsDensityOperator Y) :
+    survival rs∈Set.Icc (0:ℝ) 1 ∧
+    1-survival rs ≤ (rs.map (fun r => r.p+r.q)).sum ∧
+    survival rs*traceDist X Y+1-survival rs ≤ 1 :=
+  ⟨survival_mem rs,survival_additive rs,survival_bound_cap Q Unit rs hX hY⟩
+
+theorem evolved_aligned (B : Background) (γ t r : ℝ) (hγ : 0 ≤ γ) (ht : 0 ≤ t)
+    (hyp : Bool) : evolved B.b B.hbar γ t r hyp=
+      alignedInput (FiniteThreeLevelThermalPhase.retention r γ t) (theta B.b B.hbar t) hyp :=
+  evolved_formula _ _ _ _ _ hγ ht _
+
+theorem experiment_physical_inputs (E : Experiment) (γ t r : ℝ) (hγ : 0 ≤ γ) (ht : 0 ≤ t)
+    (hframe : E.frame=theta E.background.b E.background.hbar t) (hyp : Bool) (h : History 3 2)
+    (noise : NoiseRates) :
+    run Q Unit 3 (ideal E.background (experimentPolicy E true)) h
+        (joint (evolved E.background.b E.background.hbar γ t r hyp))=
+      idealFamily E true (FiniteThreeLevelThermalPhase.retention r γ t) hyp h ∧
+    run Q Unit 3 (noisy E.background (experimentPolicy E true) [noise,zeroRates] rfl) h
+        (joint (evolved E.background.b E.background.hbar γ t r hyp))=
+      noisyFamily E true noise (FiniteThreeLevelThermalPhase.retention r γ t) hyp h := by
+  rw [evolved_aligned _ _ _ _ hγ ht,←hframe]
+  exact ⟨rfl,rfl⟩
+
+theorem equal_terminal_error {A B : History 3 2 → MatJ} (hA : IsBranchFamily A)
+    (he : (∑ h,A h)=(∑ h,B h)) (F : MatJ) :
+    povmAvgError (∑ h,A h) (∑ h,B h) F=1/2 := by
+  rw [←he]
+  unfold povmAvgError
+  simp only [Matrix.sub_mul,Matrix.one_mul,Matrix.trace_sub,Complex.sub_re]
+  have ht : (∑ h,A h).trace.re=1 := by
+    simpa only [Matrix.trace_sum,Complex.re_sum] using hA.2
+  rw [ht]
+  ring
+
+theorem feedback_terminal_every_effect (E : Experiment) (r : NoiseRates) {s : ℝ}
+    (hs : 0 ≤ s) (hs1 : s ≤ 1) (F : MatJ) (_hF : IsBinaryPOVM F) :
+    povmAvgError (∑ h,idealFamily E true s false h) (∑ h,idealFamily E true s true h) F=1/2 ∧
+    povmAvgError (∑ h,noisyFamily E true r s false h) (∑ h,noisyFamily E true r s true h) F=1/2 :=
+  ⟨equal_terminal_error (ideal_valid E true hs hs1 false) (ideal_terminal_equal E s) F,
+    equal_terminal_error (noisy_valid E true r hs hs1 false) (noisy_terminal_equal E r s) F⟩
+
+theorem full_evolution_reversal (E : Experiment) (r : NoiseRates) (hp : r.p=1) (hq : r.q=0)
+    (s : ℝ) (hyp : Bool) : noisyFamily E true r s hyp=idealFamily E true s (!hyp) := by
+  funext h
+  rcases h with ⟨a,j,⟨⟩⟩
+  rw [noisy_matrix,ideal_matrix,hp,hq]
+  congr 1
+  have ha : a=0 ∨ a=1 ∨ a=2 := by fin_cases a <;> decide
+  rcases ha with rfl | rfl | rfl <;>
+    norm_num [noisyCoefficient,idealCoefficient,noisyWeight,exchange,feedbackIndex,Fin.ext_iff]
+
+theorem full_instrument_relabels (φ : ℝ) (r : NoiseRates) (hq : r.q=1) (a : Q) (X : MatQ) :
+    (mixInstrument (readout φ) (readout (φ+Real.pi)) r.q r.hq r.hq1).branch a X=
+      (readout φ).branch (exchange a) X := by
+  rw [mixInstrument_branch,hq,readout_pi]
+  simp
+
+theorem half_readout_retains_history (E : Experiment) (r : NoiseRates) (hq : r.q=1/2)
+    {s : ℝ} (hs : 0 < s) (hc : 1-2*r.p≠0) :
+    rootVariation (noisyFamily E true r s false) (noisyFamily E true r s true)=0 ∧
+    0 < branchDistance (noisyFamily E true r s false) (noisyFamily E true r s true) := by
+  have h := half_readout_distances E r hq hs.le
+  refine ⟨h.1,?_⟩
+  rw [h.2]
+  exact mul_pos (mul_pos hs (abs_pos.mpr hc)) (decay_mem E).1
+
+theorem full_rate_compiler_bound (B : Background) {n : ℕ} (P : Policy n)
+    (rs : List NoiseRates) (hlen : rs.length=n) (r : NoiseRates) (hr : r∈rs)
+    (hfull : r.p=1 ∨ r.q=1) {X Y : MatJ} (hX : IsDensityOperator X) (hY : IsDensityOperator Y) :
+    survival rs=0 ∧ outputDistance Q Unit 3 (ideal B P) (noisy B P rs hlen) X Y ≤ 1 := by
+  have hz := survival_full_rate rs r hr hfull
+  exact ⟨hz,by simpa only [hz,zero_mul,zero_add,sub_zero] using compiled_distance B P rs hlen hX hY⟩
+
+theorem impossible_histories_retained (E : Experiment) (r : NoiseRates) (hyp : Bool) (j : Q) :
+    idealFamily E true 1 hyp (2,j,())=0 ∧
+    noisyFamily E true r 1 hyp (2,j,())=0 := by
+  rw [ideal_matrix,noisy_matrix]
+  cases hyp <;> norm_num [idealCoefficient,noisyCoefficient,noisyWeight,rootWeight,
+    probability,exchange,Fin.ext_iff]
+
+theorem noise_populates_zero_cell (E : Experiment) (ht : 0 < E.rate*E.duration) :
+    idealFamily E true 1 false (1,0,())=0 ∧
+    0 < (noisyFamily E true quarterRates 1 false (1,0,())).trace.re := by
+  rw [ideal_matrix,noisy_matrix,scalar_projection_trace]
+  have h0 := row_pos (decay_mem E).1.le (decay_lt_one E ht) 0 0
+  have h1 := row_pos (decay_mem E).1.le (decay_lt_one E ht) 1 0
+  norm_num [idealCoefficient,noisyCoefficient,noisyWeight,rootWeight,probability,
+    exchange,feedbackIndex,quarterRates,Fin.ext_iff]
+  positivity
+
+/-- Classical root marginal, retaining its unnormalized aggregate matrices. -/
+def rootFamily (A : History 3 2 → MatJ) (a : Q) : MatJ := ∑ j,A (a,j,())
+
+theorem root_family_valid {A : History 3 2 → MatJ} (hA : IsBranchFamily A) :
+    IsBranchFamily (rootFamily A) := by
+  constructor
+  · intro a
+    exact Matrix.posSemidef_sum _ (fun j _ => hA.1 (a,j,()))
+  · have ht := hA.2
+    change (∑ h : Q × Q × Unit,(A h).trace.re)=1 at ht
+    simp only [Fintype.sum_prod_type,Fintype.sum_unique] at ht
+    simp only [rootFamily,Matrix.trace_sum,Complex.re_sum]
+    convert ht using 1
+    rfl
+
+theorem root_family_variation (A B : History 3 2 → MatJ) :
+    familyHistoryVariation (rootFamily A) (rootFamily B)=rootVariation A B := by
+  simp only [familyHistoryVariation,rootFamily,rootVariation,rootMarginal,
+    Matrix.trace_sum,Complex.re_sum]
+
+theorem root_family_history_error (A B : History 3 2 → MatJ) (f : Q → ℝ) :
+    historyError (rootFamily A) (rootFamily B) f=
+      historyError A B (fun h => f h.1) := by
+  unfold historyError rootFamily
+  simp only [Matrix.trace_sum,Complex.re_sum,Finset.mul_sum]
+  change _ = ((∑ h : Q × Q × Unit,f h.1*(B h).trace.re)+
+    (∑ h : Q × Q × Unit,(1-f h.1)*(A h).trace.re))/2
+  simp only [Fintype.sum_prod_type,Fintype.sum_unique]
+  rfl
+
+theorem first_label_optimum (E : Experiment) (r : NoiseRates) {s : ℝ}
+    (hs : 0 ≤ s) (hs1 : s ≤ 1) :
+    IsLeast {x : ℝ | ∃ f : Q → ℝ, (∀ a, f a∈Set.Icc (0:ℝ) 1) ∧
+      historyError (noisyFamily E true r s false) (noisyFamily E true r s true)
+        (fun h => f h.1)=x} ((1-s * |(1-2*r.p)*(1-2*r.q)|)/2) := by
+  simpa only [root_family_variation,root_family_history_error,noisy_root_variation E true r hs] using
+    historyError_isLeast (root_family_valid (noisy_valid E true r hs hs1 false))
+      (root_family_valid (noisy_valid E true r hs hs1 true))
+
+theorem quarter_compiler_additive (E : Experiment) {s : ℝ} (hs : 0 ≤ s) (hs1 : s ≤ 1) :
+    |(1-branchDistance (idealFamily E true s false) (idealFamily E true s true))/2-
+      (1-branchDistance (noisyFamily E true quarterRates s false)
+        (noisyFamily E true quarterRates s true))/2| ≤ 1/2 ∧
+    |instrumentError (idealFamily E true s false) (idealFamily E true s true)
+        (choiceReadout nominalChoice)-
+      instrumentError (noisyFamily E true quarterRates s false)
+        (noisyFamily E true quarterRates s true) (choiceReadout nominalChoice)| ≤ 1/2 := by
+  have hA : IsDensityOperator (joint (alignedInput s E.frame false)) :=
+    joint_density (mixture_density hs hs1 (projection_density _ _))
+  have hB : IsDensityOperator (joint (alignedInput s E.frame true)) :=
+    joint_density (mixture_density hs hs1 (projection_density _ _))
+  have h := compiled_additive_stability E.background (experimentPolicy E true) (experimentPolicy E true)
+    [quarterRates,zeroRates] [quarterRates,zeroRates] rfl rfl hA hB hA hB
+    (fun h => inducedEffect (choiceReadout nominalChoice h) 0)
+    (fun h => inducedEffect_admissible (choiceReadout nominalChoice h))
+    (fun _ => 0) (fun _ => by norm_num)
+  norm_num only [traceDist_self,zero_add,quarter_budgets.2.2.1,
+    show min (1:ℝ) (1/2)=1/2 by norm_num,show ((1:ℝ)/2+1/2)/2=1/2 by norm_num] at h
+  constructor
+  · simpa only [idealFamily,noisyFamily,branchDistance,outputDistance,traceDist,
+      div_eq_mul_inv,Finset.mul_sum,mul_comm,one_mul] using h.1
+  · rw [arbitrary_readout_effect,arbitrary_readout_effect]
+    exact h.2.1
+
+theorem witness_terminal_and_comparator :
+    traceDist (∑ h,idealFamily witnessExperiment true (1/4) false h)
+      (∑ h,idealFamily witnessExperiment true (1/4) true h)=0 ∧
+    traceDist (∑ h,noisyFamily witnessExperiment true quarterRates (1/4) false h)
+      (∑ h,noisyFamily witnessExperiment true quarterRates (1/4) true h)=0 ∧
+    traceDist (∑ h,idealFamily witnessExperiment false (1/4) false h)
+      (∑ h,idealFamily witnessExperiment false (1/4) true h)=1/8 ∧
+    traceDist (∑ h,noisyFamily witnessExperiment false quarterRates (1/4) false h)
+      (∑ h,noisyFamily witnessExperiment false quarterRates (1/4) true h)=1/16 := by
+  rw [ideal_terminal_equal,noisy_terminal_equal,traceDist_self,traceDist_self,
+    ideal_nonfeedback_distance _ (by norm_num),noisy_nonfeedback_distance _ _ (by norm_num),witness_decay]
+  norm_num [quarterRates]
+
+theorem witness_error_changes :
+    instrumentError (noisyFamily witnessExperiment true quarterRates (1/4) false)
+        (noisyFamily witnessExperiment true quarterRates (1/4) true) (choiceReadout nominalChoice)-
+      instrumentError (noisyFamily witnessExperiment true quarterRates (1/4) false)
+        (noisyFamily witnessExperiment true quarterRates (1/4) true) (choiceReadout quarterChoice)=1/384 ∧
+    |instrumentError (noisyFamily witnessExperiment true quarterRates (1/4) false)
+        (noisyFamily witnessExperiment true quarterRates (1/4) true) (choiceReadout quarterChoice)-
+      instrumentError (idealFamily witnessExperiment true (1/4) false)
+        (idealFamily witnessExperiment true (1/4) true) (choiceReadout nominalChoice)|=35/384 ∧
+    |instrumentError (noisyFamily witnessExperiment true quarterRates (1/4) false)
+        (noisyFamily witnessExperiment true quarterRates (1/4) true) (choiceReadout nominalChoice)-
+      instrumentError (idealFamily witnessExperiment true (1/4) false)
+        (idealFamily witnessExperiment true (1/4) true) (choiceReadout nominalChoice)|=3/32 := by
+  rw [quarter_transported_error _ witness_decay,quarter_sign_error _ witness_decay,nominal_error]
+  norm_num
+
+theorem witness_physical_H : thermalH witnessBackground.b≠0 ∧
+    ∀ z : ℂ,thermalH witnessBackground.b≠z • (1:MatQ) :=
+  ⟨thermalH_ne_zero witnessBackground.b_pos,thermalH_not_scalar witnessBackground.b_pos⟩
+
+theorem full_noise_distinguishes (E : Experiment) (r : NoiseRates) (hp : r.p=1) (hq : r.q=0)
+    {s : ℝ} (hs : 0 < s) :
+    survival [r,zeroRates]=0 ∧
+    branchDistance (noisyFamily E true r s false) (noisyFamily E true r s true)=s := by
+  constructor
+  · exact survival_full_rate _ r (by simp) (Or.inl hp)
+  · rw [full_evolution_reversal E r hp hq,full_evolution_reversal E r hp hq]
+    simpa only [Bool.not_false,Bool.not_true,branchDistance_comm] using ideal_distance E hs.le
+
+theorem psd_real_trace_zero {X : MatJ} (hX : X.PosSemidef) (ht : X.trace.re=0) : X=0 := by
+  apply hX.trace_eq_zero_iff.mp
+  have hc : star X.trace=X.trace := by
+    rw [←Matrix.trace_conjTranspose,hX.isHermitian.eq]
+  apply Complex.ext
+  · exact ht
+  · exact Complex.conj_eq_iff_im.mp hc
+
+theorem pure_initial_rank_one (φ : ℝ) (hyp : Bool) :
+    alignedInput 1 φ hyp=Matrix.vecMulVec (readVector φ (if hyp then 1 else 0))
+      (star (readVector φ (if hyp then 1 else 0))) := by
+  rw [(pure_initial_projection φ hyp).1,projection_rank_one]
+
+theorem aligned_third (s φ : ℝ) (hyp : Bool) :
+    alignedInput s φ hyp 2 2=((1-s)/6:ℝ) := by
+  cases hyp <;>
+    norm_num [alignedInput,mixture,equilibrium,three,density,projection_zero_entries,
+      projection_one_entries,Matrix.cons_val_two,GibbsReset.threeWeights] <;> ring
+
+theorem pure_initial_not_faithful (φ : ℝ) (hyp : Bool) :
+    ¬(alignedInput 1 φ hyp).PosDef := by
+  intro h
+  have hp := h.diag_pos (i:=2)
+  rw [aligned_third] at hp
+  norm_num at hp
+
+theorem evolved_pure_third_and_endpoint (B : Background) (γ t : ℝ)
+    (hγ : 0 ≤ γ) (ht : 0 ≤ t) (hyp : Bool) :
+    evolved B.b B.hbar γ t 1 hyp 2 2=((1-Real.exp (-γ*t))/6:ℝ) ∧
+    (evolved B.b B.hbar γ t 1 hyp 2 2=0 ↔ γ*t=0) ∧
+    (¬(evolved B.b B.hbar γ t 1 hyp).PosDef ↔ γ*t=0) := by
+  have he := evolved_aligned B γ t 1 hγ ht hyp
+  simp only [FiniteThreeLevelThermalPhase.retention,one_mul] at he
+  have hz : (((1-Real.exp (-γ*t))/6:ℝ):ℂ)=0 ↔ γ*t=0 := by
+    rw [Complex.ofReal_eq_zero]
+    constructor
+    · intro h
+      apply (pure_initial_evolved_endpoint γ t).mp
+      linarith
+    · intro h
+      rw [(pure_initial_evolved_endpoint γ t).mpr h]
+      norm_num
+  refine ⟨by rw [he,aligned_third],by rw [he,aligned_third]; exact hz,?_⟩
+  constructor
+  · intro hn
+    by_contra hz
+    exact hn (pure_initial_evolved_faithful B γ t hγ ht
+      (lt_of_le_of_ne (mul_nonneg hγ ht) (Ne.symm hz)) hyp).1
+  · intro hd
+    rw [he,(pure_initial_evolved_endpoint γ t).mpr hd]
+    exact pure_initial_not_faithful _ hyp
+
+theorem zero_attenuation_controls (E : Experiment) (h : E.rate=0 ∨ E.duration=0) : E.decay=1 :=
+  (decay_finite E).2.mpr (by rcases h with h|h <;> simp [h])
+
+/-- Both coherences involving the third level stay in the actual full channel. -/
+theorem full_channel_third_gaps (B : Background) (γ t : ℝ) (hγ : 0 ≤ γ) (ht : 0 ≤ t) :
+    krausMap (channelKraus B.b B.hbar γ t) (Matrix.single 0 2 1)=
+      (Real.exp (-γ*t):ℂ) • (Complex.exp (Complex.I*t*(Real.log 3/B.b/B.hbar:ℝ)) •
+        (Matrix.single 0 2 1:MatQ)) ∧
+    krausMap (channelKraus B.b B.hbar γ t) (Matrix.single 1 2 1)=
+      (Real.exp (-γ*t):ℂ) •
+        (Complex.exp (-Complex.I*t*((delta/B.b/B.hbar:ℝ)-(Real.log 3/B.b/B.hbar:ℝ))) •
+          (Matrix.single 1 2 1:MatQ)) := by
+  have h02 : (Matrix.single 0 2 1:MatQ).trace=0 := by
+    norm_num [Matrix.trace,Fin.sum_univ_succ,Matrix.single_apply,Fin.ext_iff]
+  have h12 : (Matrix.single 1 2 1:MatQ).trace=0 := by
+    norm_num [Matrix.trace,Fin.sum_univ_succ,Matrix.single_apply,Fin.ext_iff]
+  constructor <;>
+    rw [channel_action _ _ _ _ hγ ht,reset_action _ _ hγ ht]
+  · rw [h02,zero_smul,smul_zero,add_zero,phase_smul,phase_E02]
+  · rw [h12,zero_smul,smul_zero,add_zero,phase_smul,phase_E12]
+
+theorem zero_rate_preserves_physical_phase (B : Background) (t : ℝ) (ht : 0 ≤ t) (X : MatQ) :
+    krausMap (channelKraus B.b B.hbar 0 t) X=phase B.b B.hbar t X :=
+  channel_zero_rate _ _ _ ht X
+
+theorem compiled_physical_optima (B : Background) {n : ℕ} (PA PB : Policy n)
+    (rsA rsB : List NoiseRates) (lenA : rsA.length=n) (lenB : rsB.length=n)
+    {XA XB YA YB : MatJ} (hXA : IsDensityOperator XA) (hXB : IsDensityOperator XB)
+    (hYA : IsDensityOperator YA) (hYB : IsDensityOperator YB) :
+    IsLeast {x : ℝ | ∃ I : History 3 n → FiniteInstrument J 2,
+      instrumentError (fun h => run Q Unit 3 (ideal B PA) h XA)
+        (fun h => run Q Unit 3 (ideal B PB) h XB) I=x}
+      ((1-outputDistance Q Unit 3 (ideal B PA) (ideal B PB) XA XB)/2) ∧
+    IsLeast {x : ℝ | ∃ I : History 3 n → FiniteInstrument J 2,
+      instrumentError (fun h => run Q Unit 3 (noisy B PA rsA lenA) h YA)
+        (fun h => run Q Unit 3 (noisy B PB rsB lenB) h YB) I=x}
+      ((1-outputDistance Q Unit 3 (noisy B PA rsA lenA) (noisy B PB rsB lenB) YA YB)/2) := by
+  constructor
+  · simpa only [tree_branchDistance] using
+      physical_family_optimum (run_family _ hXA) (run_family _ hXB)
+  · simpa only [tree_branchDistance] using
+      physical_family_optimum (run_family _ hYA) (run_family _ hYB)
+
+theorem witness_prepared_distance :
+    traceDist (joint (evolved 1 1 1 (Real.log 2) (1/2) false))
+      (joint (evolved 1 1 1 (Real.log 2) (1/2) true))=1/4 := by
+  have he : traceDist (joint (evolved 1 1 1 (Real.log 2) (1/2) false))
+      (joint (evolved 1 1 1 (Real.log 2) (1/2) true))=
+      FiniteThreeLevelThermalPhase.retention (1/2) 1 (Real.log 2) :=
+    evolved_joint_distance 1 1 1 (Real.log 2) (by norm_num)
+      (Real.log_pos (by norm_num)).le (by norm_num)
+  rw [he]
+  norm_num [FiniteThreeLevelThermalPhase.retention,Real.exp_neg,Real.exp_log]
+
+theorem quarter_signed_matrices (E : Experiment) (hE : E.decay=1/2) (s : ℝ) (a j : Q) :
+    noisyFamily E true quarterRates s false (a,j,())-
+      noisyFamily E true quarterRates s true (a,j,())=
+      ((signWeight s a/2 * (![23/48,-1/48,2/48] j):ℝ):ℂ) •
+        joint (readProjection E.finalFrame j) := by
+  rw [noisy_signed_matrix,hE]
+  simp only [quarterRates]
+  rw [quarter_contrast]
+  norm_num
+  congr 1
+  push_cast
+  ring
+
+/-! The environment in every theorem is exactly `Unit`. These are finite ordinary
+trace-norm and classical-history statements, with no extra-ancilla/diamond or
+weighted-history metric claim. The inherited positive quotients, carriers and
+failure examples are unchanged. In particular `GibbsHistoryPreparationBounds`
+warm-up obstructions and `NontracialPhaseHistoryTransfer` quarter/half-kernel
+obstructions are not repaired by the positive ordinary branch remainders here.
+`FiniteGibbsClock.modular_eq_heisenberg` retains its faithful-state domain and
+signed time `-β*ℏ*s`; none of these policies infer a unique physical clock.
+No environment-memory, calibration, continuum, spectral-gap, quantum advantage,
+publication or whole-project acceptance follows from this finite construction. -/
+
 end SKEFTHawking.QuantumNetwork.FiniteThreeLevelAdaptiveReadout
