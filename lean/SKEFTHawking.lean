@@ -1,4 +1,3 @@
-import SKEFTHawking.QuantumNetwork.FiniteThreeLevelPositiveHistory
 import SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness
 import SKEFTHawking.FiniteNontracialHistoryConsistency
 import SKEFTHawking.FiniteNontracialPauliReflection
@@ -5316,6 +5315,7 @@ import SKEFTHawking.QuantumNetwork.FiniteThreeLevelEnvironmentLift
 import SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout
 import SKEFTHawking.QuantumNetwork.FiniteLocalChannelDepthObstruction
+import SKEFTHawking.QuantumNetwork.FiniteThreeLevelPositiveHistory
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
