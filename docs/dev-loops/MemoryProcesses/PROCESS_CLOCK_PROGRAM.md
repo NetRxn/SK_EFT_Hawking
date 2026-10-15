@@ -22,10 +22,11 @@ The four-wire local-channel foundation retains bounded acceptance at `d8afcf18`.
 The complete shallow-depth obstruction has source, compiled, canonical and
 committed-closing acceptance at `279e30e7`. Its universal product-input bound
 excludes empty and single-layer circuits. The exact normalized two-layer CNOT
-witness and correlated-initialization/global-preparation guards now have whole
-source acceptance and normal source absorption at `929caf4f`. Compiled inventories,
-canonical reconciliation and committed closing for that witness remain pending.
-A finite locality certificate supplies no computational-advantage claim.
+witness and correlated-initialization/global-preparation guards have complete
+bounded source, compiled, canonical and committed-closing acceptance through
+`0fe81fd6`. All original finite-locality obligations are covered, including
+representation invariance and the universal minimum depth of two. A finite
+locality certificate supplies no computational-advantage claim.
 
 `QuantumNetwork/FiniteThreeLevelPositiveHistory.lean` has complete bounded
 source, compiled, canonical and committed-closing acceptance at `4ca127bb`.
@@ -34,16 +35,25 @@ define an actual chronological positive-history kernel and its null quotient.
 Positive central retention represents every complex qutrit observable, including
 complete side reset; central reset retains the scalar quotient. The actual
 replacement instrument and the distinct Lüders failure example are included.
-The next target descends the actual thermal observable channel, proves its
-adjoint, generator and sharp norm on this quotient, and distinguishes positive
-inserted evolution from phase-bearing chronological kernels. Its whole thermal
-transfer contract is design-accepted and awaits fresh proof admission.
+`QuantumNetwork/FiniteThreeLevelHistoryTransfer.lean` now descends the actual
+thermal observable channel and proves its adjoint, generator and sharp centered
+operator norm on this quotient. Its actual chronological insertion distinguishes
+the positive reset kernel from phase-bearing probabilities and proves the sharp
+Hermiticity and positivity criteria. Whole source review, normal absorption,
+authoritative aggregate build and source/minimal/aggregate reconciliation pass.
+The existing canonical writers preserve every earlier complete record and add
+the new module's records; focused metadata and soundness checks pass. Fresh
+independent committed closing remains required before this increment is accepted
+as a whole.
 
 The subsequent retained-readout target represents the experiment's complete
 Born probabilities through inverse-sandwich state evaluation. It must consume
 both physical minimum theorems and the named attainers, rather than merely
 reproduce a shared decay factor. The reflection instrument, physical readout
-and retained carrier remain distinct. This evaluation bridge is planned.
+and retained carrier remain distinct. Whole implementation preparation covers
+both cuts, every measured branch, both decision columns and all degenerate ties.
+This evaluation bridge remains unimplemented; it requires completed thermal
+closing and fresh ordinary proof admission.
 
 The whole target retains all phase and reset obstructions. Phase-bearing
 chronological probabilities do not automatically give a Hermitian or positive
