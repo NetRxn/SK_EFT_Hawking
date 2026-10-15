@@ -10988,6 +10988,77 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-citation-coverage:infra:1.1",
+      "status": "fixed",
+      "evidence": "Twelve existing cited keys now resolve to source-verified internal identities or correctly versioned external references. Actual pinned PDF acquisitions and metadata-only Verlinde recovery preserve prior bytes/records; directly cited claims corrected. Independent source/pixel review,14focused tests and exact coverage-plus-complete-citation Verify pass; broader fidelity/layout/publication limits remain.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-citation-coverage/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf",
+      "artifact_sha256": "61c4da4e5f21112acee522fedbfd65bede2e567fea53eed8ac0e47e3b7c75f3e",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf",
+          "sha256": "61c4da4e5f21112acee522fedbfd65bede2e567fea53eed8ac0e47e3b7c75f3e"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf",
+          "sha256": "eb99541ee61044a6028edc53aad19dd80afed7e96778350a38420f36269e93ba"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf",
+          "sha256": "88f4a4eda6a956ab29554730908d916891933379fc7594c3f0a674b4f055bded"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json",
+          "sha256": "010f971d637b39e3e596f40a5d9fa326fbfff713e7b1a35cc79149f34a34e20e"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "declared": "cd \"$REPO\" && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e2-greybody-readout:E2:1.1",
+      "status": "fixed",
+      "evidence": "Independent source/model/whole-claim/pixel review accepted the E2-only infrared BEC citation and readout qualification, corrected arithmetic, leading-versus-corrected model distinction and regenerated canonical local figure; actual focused tests, compound Verify, compile and preserved-source receipts are documented in SOURCE_ASSESSMENT.md and SCOPED_REVIEW.md. Historical 2013 guard remains separate.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf",
+      "artifact_sha256": "889a60dc77aeb2005dbe0220c299b740c6b3a31168e8ad355500faf51771aec6",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf",
+          "sha256": "889a60dc77aeb2005dbe0220c299b740c6b3a31168e8ad355500faf51771aec6"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from pathlib import Path; t=Path(\"papers/E2/paper_draft.tex\").read_text(); assert \"AndersonBFP2014Graybody\" in t and \"AndersonBFP2013\" not in t; assert \"exterior asymptotic sound speed\" in t and \"finite-band error bound\" in t; assert \"0.99994\" in t and \"26.3\" in t; assert \"cannot independently identify\" in t and \"no achieved sensitivity\" in t; assert \"stays within a few percent\" not in t and \"first platform\" not in t' && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "declared": "cd \"$REPO\" && python3 -c 'from pathlib import Path; t=Path(\"papers/E2/paper_draft.tex\").read_text(); assert \"AndersonBFP2014Graybody\" in t and \"AndersonBFP2013\" not in t; assert \"exterior asymptotic sound speed\" in t and \"finite-band error bound\" in t; assert \"0.99994\" in t and \"26.3\" in t; assert \"cannot independently identify\" in t and \"no achieved sensitivity\" in t; assert \"stays within a few percent\" not in t and \"first platform\" not in t' && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-d2-reader-facing-voice:D2:1.1",
+      "status": "fixed",
+      "evidence": "Independent source-content/preservation/changed-page review accepted D2 present-tense scope at all fifteen main spans and one signatures input paragraph. Actual fix commit contains the prose repair and append-only retained history; equations, tables, figures, bibliography, citations, source TODOs and disclosures are unchanged. Scoped voice assertion passes while global D12/source, sentence and L1 abstract failures remain unwaived; see SCOPED_REVIEW.md.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "721863e832490e5c97013320e73a1bbf3d95bcb6",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_reader_facing_voice;r=check_bundle_reader_facing_voice();print(r);assert not any(d.name==\"D2\" and not d.passed for d in r.details), \"D2 still narrates its own editing history\"'",
+        "declared": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_reader_facing_voice;r=check_bundle_reader_facing_voice();print(r);assert not any(d.name==\"D2\" and not d.passed for d in r.details), \"D2 still narrates its own editing history\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
