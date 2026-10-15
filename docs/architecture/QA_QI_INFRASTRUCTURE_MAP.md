@@ -308,6 +308,14 @@ proxy because it costs a pytest collection, and it needs no more: a deleted file
 only works in one direction. Where the answer is cheap to recompute, recompute it** — which is
 why the rows above split into *mtime* and *content compare* at all, and why this row is now both.
 
+The source manifest writer `scripts/bundle_source_manifest.py` formats its source mtime
+as a UTC string to whole seconds. The separate freshness reader in
+`scripts/check_bundle_source_freshness.py` retains fractional seconds in a timezone-aware
+datetime and additionally excludes `bundle_metadata.json` and `append_log.json`.
+Both source-mtime readers filter hidden components and `__pycache__` relative to the selected source-paper directory, so checkout ancestors do not affect file eligibility.
+Missing, empty or wholly excluded source trees supply no timestamp. Manifest regeneration
+alone does not establish a completed lift or scientific freshness.
+
 ### 2.1 The module census — one derived answer, with no hand-written half
 
 `docs/MODULE_CENSUS.md` answers *what is this module, script or notebook* — the question this

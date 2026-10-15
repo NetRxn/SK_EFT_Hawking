@@ -10347,6 +10347,34 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-roster-reconciliation:E1:2.1",
+      "status": "fixed",
+      "evidence": "Both existing source-mtime readers now exclude hidden/cache components relative to the source tree, preserving precision and bookkeeping semantics. Independent review and 82 scoped tests accepted; tracked E1 metadata and manifest remain HEAD-identical. See PRODUCER_REVIEW.md and ADR-018; unrelated serializer failures remain open.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/PRODUCER_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import sys,tempfile; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); import bundle_source_manifest as m; d=tempfile.TemporaryDirectory(); m.PAPERS_DIR=Path(d.name)/'\"'\"'.worktree'\"'\"'/'\"'\"'papers'\"'\"'; p=m.PAPERS_DIR/'\"'\"'source'\"'\"'; p.mkdir(parents=True); (p/'\"'\"'paper_draft.tex'\"'\"').write_text('\"'\"'source'\"'\"'); assert m._last_source_modification('\"'\"'source'\"'\"') is not None'",
+        "declared": "python3 -c 'import sys,tempfile; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); import bundle_source_manifest as m; d=tempfile.TemporaryDirectory(); m.PAPERS_DIR=Path(d.name)/'\"'\"'.worktree'\"'\"'/'\"'\"'papers'\"'\"'; p=m.PAPERS_DIR/'\"'\"'source'\"'\"'; p.mkdir(parents=True); (p/'\"'\"'paper_draft.tex'\"'\"').write_text('\"'\"'source'\"'\"'); assert m._last_source_modification('\"'\"'source'\"'\"') is not None'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-roster-reconciliation:E1:2.2",
+      "status": "fixed",
+      "evidence": "Both existing source-mtime readers now exclude hidden/cache components relative to the source tree, preserving precision and bookkeeping semantics. Independent review and 82 scoped tests accepted; tracked E1 metadata and manifest remain HEAD-identical. See PRODUCER_REVIEW.md and ADR-018; unrelated serializer failures remain open.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/PRODUCER_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -m pytest tests/test_bundle_source_manifest.py -q",
+        "declared": "python3 -m pytest tests/test_bundle_source_manifest.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
