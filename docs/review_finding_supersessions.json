@@ -10945,6 +10945,34 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-dispersive-coefficient-normalization:infra:1.1",
+      "status": "fixed",
+      "evidence": "Notebook cell10 multiplies T_H by the canonical ratio exactly once; actual nbconvert saved all8 code cells, current ratio0.8146329435/T_eff69.3223mK. Independent full source/output/PNG review and exact Verify pass; no formula changes.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-polariton-notebook/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; nb=json.load(open('notebooks/Phase5d_Polariton_Technical.ipynb')); src=''.join(''.join(c.get('source',[])) for c in nb['cells']); assert 'T_H * (1 + correction)' not in src, 'notebook still adds 1 to the kappa_eff/kappa RATIO returned by dispersive_hawking_correction'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; nb=json.load(open('notebooks/Phase5d_Polariton_Technical.ipynb')); src=''.join(''.join(c.get('source',[])) for c in nb['cells']); assert 'T_H * (1 + correction)' not in src, 'notebook still adds 1 to the kappa_eff/kappa RATIO returned by dispersive_hawking_correction'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-polariton-notebook:infra:1.1",
+      "status": "fixed",
+      "evidence": "All15 notebook cells propagate reservoir-inclusive inputs, projected-device/necessary-decay and phenomenological-model qualifications, conditional calibrated SNR/noise limits and mean-field energy distinction. Actual saved outputs/PNGs independently accepted;11focused tests and declared Verify pass.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-polariton-notebook/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'import json; n=json.load(open(\"notebooks/Phase5d_Polariton_Technical.ipynb\")); m=\" \".join(\" \".join(\"\".join(c.get(\"source\",[])) for c in n[\"cells\"] if c[\"cell_type\"]==\"markdown\").split()); assert \"spectrally featureless\" not in m; assert \"3 independent measurements\" not in m; assert \"phenomenological\" in m; assert \"measured in-band noise budget\" in m'",
+        "declared": "cd \"$REPO\" && python3 -c 'import json; n=json.load(open(\"notebooks/Phase5d_Polariton_Technical.ipynb\")); m=\" \".join(\" \".join(\"\".join(c.get(\"source\",[])) for c in n[\"cells\"] if c[\"cell_type\"]==\"markdown\").split()); assert \"spectrally featureless\" not in m; assert \"3 independent measurements\" not in m; assert \"phenomenological\" in m; assert \"measured in-band noise budget\" in m'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
