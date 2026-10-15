@@ -319,10 +319,32 @@ resolver excludes generated helpers from the published author-written theorem ce
 These results establish the thermal foundation's integration within the growth target.
 They do not accept the remaining consumers or the complete growth target.
 
-The remaining consumer work connects phase-sensitive retained-memory observations
-to the accepted weighted history metric. Fixed and co-rotated instruments owe
-separate complete laws and attained optima. The target includes actual reflected-kernel
-nonpositivity under phase; dissipative positivity does not transfer to a
-unitary-composed map. Group and inverse laws belong to the phase isometry; the
-damped transfer retains its normality and adjoint obligations. The current two-rate
-contract, separately typed recursive-time contract and broader gates remain distinct.
+`QuantumNetwork/FiniteNontracialPhaseReadout.lean` supplies actual normalized
+fixed and co-rotated observations on the physical joint carrier. Full branch laws,
+physical decision tables and attained effect and randomized-history optima retain
+the signed relative phase. Quarter-turn observations can erase the distinction
+while the premeasurement states remain separated. Diagonal Keep/Flip chronology,
+genuine environment reset, system-only preparation, stationary and non-Hermitian
+controls remain explicit. A simultaneous nonzero-Hamiltonian timed witness uses
+the same actual normalized GKSL family and its complete readout tables.
+
+`FiniteNontracialPhaseHistoryTransfer.lean` descends the opposite observable phase
+to the existing weighted history quotient, including its scalar reset endpoint.
+The phase is an isometry with group and inverse laws. Its composition with actual
+noise is normal, with opposite-phase adjoint and unchanged singular damping;
+it does not acquire a dissipative group law. An actual phase-modified reflected
+tree has nonnegative normalized outcome weights. At positive central retention,
+quarter-turn history kernels fail Hermiticity, and half-turn kernels have a
+negative quadratic form despite being Hermitian. At zero central retention, the
+transfer is the identity on the scalar quotient and the kernel equals the original
+positive history kernel. The old positive metric is retained; no repaired Gram
+quotient or carrier identification is introduced.
+
+Both complete consumer sources passed independent whole mathematics, source and
+original-evidence review. Aggregate imports register them for production verification.
+Registered current-source compilation, exhaustive actual imported module and ordinary
+inventories, preservation of the canonical catalogue and all six derived metadata
+files, whole integration and final committed closing review, and required current-head
+project gates remain open. Source acceptance alone does not close the complete growth
+target. The current two-rate contract, separately typed recursive-time contract and
+broader scientific, paper, publication and apex gates remain distinct.
