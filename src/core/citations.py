@@ -3501,14 +3501,20 @@ CITATION_REGISTRY = {
         'page': '127--137',
         'year': 2022,
         'doi': '10.1007/s10909-022-02694-z',
-        'arxiv': None,
+        'arxiv': '2111.07817v4',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Volovik2022Counting.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Volovik2022Counting.pdf',
         'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
         'provides': [],
-        'notes': 'NG-mode counting for ADW symmetry breaking: 16 tetrad components → '
-                 '6 absorbed + 4 diffeo gauge + 2 graviton + 4 massive Higgs.',
+        'notes': 'Journal publication: 2022; held preprint: arXiv:2111.07817v4, submitted 15 Dec 2021. '
+                 'Section VIII (publisher section 8) distinguishes spin-connection NG absorption from '
+                 'tetrad Higgs modes: excluding four temporal tetrad components leaves six absorbed NG '
+                 'and six Higgs modes. In the stated unimodular setting, the Higgs sector has one '
+                 'massive J=0 mode and five J=2 components; spatial-coordinate constraints remove '
+                 'three J=2 components, leaving two massless helicity +/-2 waves. L1 uses this as '
+                 'model-specific counting context; its spin-2 second-sound assignment and '
+                 'susceptibility-dependent speed law are separate project assumptions.',
     },
     'Volovik2024Vestigial': {
         'authors': 'Volovik, G. E.',
@@ -3518,26 +3524,19 @@ CITATION_REGISTRY = {
         'page': '330--334',
         'year': 2024,
         'doi': '10.1134/S002136402460006X',
-        'arxiv': '2312.09435',
+        'arxiv': '2312.09435v1',
         'doi_verified': '2026-05-11',
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Volovik2024Vestigial.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Volovik2024Vestigial.pdf',
         'used_in': ['papers/paper23_linearized_efe/paper_draft.tex',
                     'papers/paper25_gravitational_waves/paper_draft.tex'],
         'provides': [],
-        'notes': 'Vestigial gravity: composite ⟨ē e⟩ condenses before tetrad ⟨e⟩. '
-                 'Phase 6a Wave 1 derivation is in the fully-condensed phase '
-                 'where this distinction is irrelevant. Wave 2 cites for the '
-                 'second-sound graviton identification. ⚠️ CORRECTED 2026-08-14 '
-                 '(review:2026-08-14-l1-stage13:L1:1.1): this paper does NOT '
-                 'contain that identification — its subject is the two-step '
-                 'transition and metric-before-tetrad condensation. The '
-                 'identification is advanced in `Volovik2026SecondSound` '
-                 '(arXiv:2601.00639) and `Volovik2024VacuumDecay` '
-                 '(arXiv:2410.04392). NOTE: same paper as '
-                 '`Volovik2024` (arXiv:2312.09435); the two keys exist for '
-                 'historical reasons in different paper drafts. Consolidate in '
-                 'a future pass.',
+        'notes': 'Journal publication: 2024; held preprint: arXiv:2312.09435v1, submitted 15 Dec 2023. '
+                 'Section III, Eqs. 18-23, proposes a fermionic-quartet metric order while the tetrad '
+                 'expectation vanishes, followed by nonzero tetrad order. L1 uses this for '
+                 'metric-before-tetrad background; its spin-2 second-sound assignment remains a '
+                 'separate project assumption. The existing Volovik2024 key describes the same work; '
+                 'both bibkeys are retained.',
     },
     'Volovik2026SecondSound': {
         'authors': 'Volovik, G. E.',
@@ -3547,26 +3546,19 @@ CITATION_REGISTRY = {
         'page': None,
         'year': 2026,
         'doi': None,
-        'arxiv': '2601.00639',
-        'doi_verified': True,
+        'arxiv': '2601.00639v1',
+        'doi_verified': None,
         'inprep': False,
         'primary_source_path':
-            'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2026SecondSound.abstract.txt',
+            'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2026SecondSound.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [],
-        'notes': 'THE actual source of the second-sound--graviton identification, '
-                 'registered 2026-08-14 to close review:2026-08-14-l1-stage13:L1:1.1, '
-                 'which found the identification misattributed to Volovik2024Vestigial. '
-                 'Derives s₂ = c EXACTLY on the de Sitter two-fluid background, '
-                 'independent of H — structural from the stiff-matter equation of '
-                 'state w_n = 1, not tunable — and records GW170817 as SATISFIED. '
-                 'Also leaves the graviton type open, describing a scalar mode, '
-                 'against L1 spin-2 assignment (which comes from the ADW Goldstone '
-                 'counting and is ours). ⚠️ TITLE PROVENANCE: taken from the project '
-                 'corpus (Lit-Search/Phase-5y, two independent files quote it), NOT '
-                 'from a fresh Crossref/arXiv fetch. Needs fresh-fetch confirmation '
-                 'and a primary_source_path before any Stage-13 green that depends '
-                 'on this bibitem metadata.',
+        'notes': 'Held preprint: arXiv:2601.00639v1, submitted 2 Jan 2026. Sections II-III, Eqs. 1-3 '
+                 'and 6-9, obtain s2=c within the de Sitter two-fluid thermodynamic model, using equal '
+                 'component densities, Cv=S and TS=2*rho_n*c^2. Section IV discusses several graviton '
+                 'interpretations and leaves the type open. L1 separately assumes a spin-2 substrate '
+                 'identification and c_GW=c*sqrt(chi_vest); its susceptibility constraint is scoped to '
+                 'that assumed law.',
     },
     'Volovik2024VacuumDecay': {
         'authors': 'Volovik, G. E.',
@@ -3574,21 +3566,22 @@ CITATION_REGISTRY = {
         'journal': None,
         'volume': None,
         'page': None,
-        'year': 2024,
+        'year': 2025,
         'doi': None,
-        'arxiv': '2410.04392',
-        'doi_verified': True,
+        'arxiv': '2410.04392v11',
+        'doi_verified': None,
         'inprep': False,
         'primary_source_path':
-            'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2024VacuumDecay.abstract.txt',
+            'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2024VacuumDecay.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Companion source for the second-sound--graviton identification; '
-                 'registered 2026-08-14 alongside `Volovik2026SecondSound` to close '
-                 'review:2026-08-14-l1-stage13:L1:1.1. Two-fluid de Sitter '
-                 'thermodynamics with a Zel\'dovich stiff-matter component. '
-                 '⚠️ TITLE PROVENANCE: same caveat as `Volovik2026SecondSound` — '
-                 'corpus-sourced, not fresh-fetched.',
+        'notes': 'Held preprint: arXiv:2410.04392v11, submitted 9 Nov 2025, titled From Landau '
+                 'two-fluid model to de Sitter Universe. The retained bibkey contains 2024, but this '
+                 'entry cites the 2025 edition; v1 (6 Oct 2024) was titled Two dark components of de '
+                 'Sitter Universe. Sections IV-V treat the equilibrium gravitational normal component '
+                 'as stiff matter and add a phenomenological assumption for its dynamics. L1 uses this '
+                 'edition for thermodynamic background; the specific second-sound collective-mode '
+                 'motivation is cited separately to Volovik2026SecondSound.',
     },
     # ── The 2017 GW170817-constraint sweep ────────────────────────────────
     # Four back-to-back PRLs (251301-251304, 18 Dec 2017) that turned the c_GW

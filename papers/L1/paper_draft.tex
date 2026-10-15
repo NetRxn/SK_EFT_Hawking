@@ -47,44 +47,40 @@ gravity generally.
 \section{Introduction}
 \label{sec:intro}
 
-Emergent gravity from fermionic-condensate substrates has converged on
-a tantalizing kinematic identification: the spin-2 graviton of the
-broken-symmetry phase is the second-sound mode of the vestigial
-fluid. Volovik's 2024 vestigial-fluid review~\cite{Volovik2024Vestigial}
-proposes this directly; Volovik~\cite{Volovik2022Counting} earlier
-made the spin counting explicit (six Goldstone modes absorbed by the
-spin connection in the Akama--Diakonov--Wetterich
-formulation~\cite{Akama1978,Diakonov2011,VladimirovDiakonov2012,%
-HebeckerWetterich2003,Wetterich2022}; two propagating helicities
-remain, identified with $h_+, h_\times$). The hydrodynamic claim is
-that the propagation equation of these two modes is the second-sound
-wave equation.
+Spinor-gravity constructions use composite vielbeins built from
+fermions~\cite{Diakonov2011,HebeckerWetterich2003}.
+Volovik proposes a vestigial phase with metric order preceding a
+nonzero tetrad expectation~\cite{Volovik2024Vestigial}.
+His symmetry-breaking analysis distinguishes absorbed
+Nambu--Goldstone modes from the Higgs-sector gravitational-wave
+modes, whose counting also uses coordinate
+constraints~\cite{Volovik2022Counting}.
+Here we assume that a metric-channel excitation of such a substrate
+can be identified with a spin-2 second-sound graviton.
 
-\paragraph{Whose claim is Eq.~\eqref{eq:cGW}.} The \emph{identification}
-is Volovik's; the susceptibility-dependent speed is ours. He advances
-it in~\cite{Volovik2026SecondSound,Volovik2024VacuumDecay} --- not in
-the vestigial-gravity note~\cite{Volovik2024Vestigial}, which concerns
-the two-step transition --- and on his own de~Sitter two-fluid
-background the Landau formula yields $s_2 = c$ \emph{exactly},
-independent of $H$: a structural consequence of the stiff-matter
-equation of state $w_n = 1$, not a tunable parameter, and hence
-GW170817-compatible at leading order. He leaves the spin assignment
-open, describing a scalar mode; the spin-2 assignment above comes from
-the ADW Goldstone counting and is likewise ours. Transplanting the
-identification onto the ADW substrate, whose metric-channel
-susceptibility we compute independently and which does \emph{not} fix
-$\chivest$, is what produces a $\chivest$-dependent speed:
+\paragraph{Motivation and assumed speed law.}
+Volovik applies Landau two-fluid hydrodynamics to a de~Sitter
+state in~\cite{Volovik2026SecondSound}.
+The underlying thermodynamic framework treats the gravitational
+normal component as stiff matter~\cite{Volovik2024VacuumDecay}.
+Within that de~Sitter model, the Landau formula and the stiff-component
+thermodynamic relations give $s_2=c$, independently of $H$.
+He discusses several possible graviton interpretations of this
+collective mode and leaves its type open.
+For the spin-2 substrate identification assumed here, we also assume
+the susceptibility-dependent speed law:
 \begin{equation}
   \cGW^2(\chivest) = c^2 \cdot \chivest, \qquad
   \cGW(\chivest) = c\sqrt{\chivest},
   \label{eq:cGW}
 \end{equation}
 where $\chivest$ is the metric-channel susceptibility of the
-vestigial phase. It is a \emph{free parameter} here, and constraining
-it is what this Letter does; the random-phase-approximation form our
-substrate models it with is set out in
-\texttt{VestigialSusceptibility.lean}, but no value of $\chivest$ is
-derived there or anywhere else in the project. The underlying
+assumed vestigial substrate.
+It is a free parameter in this calculation.
+The RPA form in \texttt{VestigialSusceptibility.lean} models it using
+unevaluated bare susceptibility and coupling inputs, so that form
+alone supplies no numerical value of $\chivest$.
+The underlying
 lattice-fermion framework is the one whose unitarity Vergeles
 establishes~\cite{Vergeles2025}. The identification is appealing in its
 brevity. In this Letter, Eq.~\eqref{eq:cGW} is an assumed kinematic speed law.
@@ -104,9 +100,10 @@ $\tau = 3 \times 10^{-15}$.
 
 This Letter formalizes Eq.~\eqref{eq:cGW}, places it head-to-head
 against GW170817, and reports the result. The conclusion is sharp:
-the leading-order Volovik identification survives GW170817 only on a
-sub-interval of the natural range $\chivest \in [0.1, 10]$ narrower
-than that range by more than 14 orders of magnitude. The
+this Letter's assumed susceptibility-dependent speed law is
+GW170817-compatible only on a sub-interval of our adopted range
+$\chivest \in [0.1,10]$ narrower than that range by more than
+14 orders of magnitude. The
 GW170817-compatible window $[(1-\tau)^2, (1+\tau)^2]$ has width
 $4\tau$ in $\chivest$ and sits strictly interior to our adopted range
 $[0.1, 10]$ about the anchor $\chivest = 1$.
@@ -363,37 +360,50 @@ interval. The finite-tolerance constraint alone does not select this
 mechanism or establish that a microscopic model realizes it.
 Phase~6 should examine whether such a fixed point is realized in the
 ADW broken phase.
-\item \textbf{Distinct metric-channel identification.} The
-``vestigial mode'' may not be the second-sound DOF at all but a
-separate UV-input metric channel whose dynamics could pin its
-susceptibility to unity. This was floated in~\cite{Volovik2022Counting};
-here it remains a model-building alternative. The missing dynamical
+\item \textbf{Distinct metric-channel identification.} We propose as an
+alternative that the ``vestigial mode'' is a separate UV-input metric
+channel rather than the second-sound DOF.
+Its dynamics could in principle pin its susceptibility to unity;
+this remains a model-building possibility. The missing dynamical
 bridge in this Letter does not establish that this alternative is
 more likely. Phase~6e (full nonlinear emergent action) is the natural
 venue for the disambiguation.
-\item \textbf{Frequency-dependent $\chivest$.} Eq.~\eqref{eq:cGW} is
-the leading term in a derivative expansion. If $\chivest$ varies
-with frequency, the leading-order constraint could in principle be
-relaxed by a near-cancellation in the LIGO band. The
-SK--EFT dispersion correction is the leading frequency dependence in
-the present framework, and this path is \emph{not} closed --- what we
-can say is conditional.
+\item \textbf{Frequency-dependent $\chivest$.} Equation~\eqref{eq:cGW} is
+an assumed frequency-independent kinematic law.
+A frequency-dependent susceptibility or a compensating correction
+in the LIGO band is a possible phenomenological extension.
+We consider the algebraic ansatz $\delta_{\rm disp}=\gamma\omega$,
+without asserting that it is the leading term of a matched
+microscopic derivative expansion.
+The formal probe is numerical $\omega=100$; interpreting it as a
+$100\,\mathrm{Hz}$ band and setting $\gamma=\Gamma_H/\cGW^2$ are
+modeling assumptions requiring physical normalization and
+microscopic matching.
 \texttt{vestigial\_dispersion\_below\_ligo\_at\_inspiral\_peak}
-takes $|\gamma| \leq 10^{-30}$ on $\Gamma_H/\cGW^2$ as a
-\emph{hypothesis} and proves that under it the correction at the
-$100\,\mathrm{Hz}$ inspiral peak stays inside the GW170817 tolerance.
-It proves nothing about whether that bound holds: $10^{-30}$ is a
-Phase~6a scaffold value, chosen so the correction would sit well below
-the cap, and it is neither derived nor measured. So a
-placeholder-sized correction would not relax the constraint; a larger
-one is not excluded. The general form is
-\texttt{dispersion\_within\_ligo\_iff}, a biconditional exchanging the
-correction's tolerance for $|\gamma| \leq \mathrm{tol}/\omega$;
+assumes $|\gamma|\leq10^{-30}$ and proves that
+$|\delta_{\rm disp}|$ at that numerical probe is below the
+GW170817 tolerance.
+The adopted $10^{-30}$ is a placeholder chosen to keep the
+correction below the cap; it is neither derived nor measured.
+In the further additive model
+$\delta_{\rm tot}=\delta_0+\delta_{\rm disp}$, with
+$\delta_0=\sqrt{\chivest}-1$, that assumed coefficient bound gives
+$|\delta_{\rm disp}|\leq B=10^{-28}$ at $\omega=100$.
+The reverse triangle inequality then excludes restoration of
+$|\delta_{\rm tot}|\leq\tau$ whenever $|\delta_0|>\tau+B$.
+Offsets just outside $\pm\tau$ can nevertheless become compatible
+through an oppositely signed correction within this bound.
+Larger corrections are not excluded by the placeholder theorem.
+For positive $\omega$, \texttt{dispersion\_within\_ligo\_iff}
+exchanges the correction's tolerance for
+$|\gamma|\leq\mathrm{tol}/\omega$.
 \texttt{dispersion\_correction\_abs\_bound},
 \texttt{dispersion\_correction\_linear\_in\_gamma} and
-\texttt{dispersion\_correction\_zero\_at\_no\_dissipation} fix its
-magnitude, additivity and no-dissipation limit. A derivation of
-$\Gamma_H$ from a microscopic matching is open.
+\texttt{dispersion\_correction\_zero\_at\_no\_dissipation} describe
+the product's magnitude, additivity in $\gamma$ and zero-coefficient
+limit.
+Deriving $\Gamma_H$ and the normalization of this ansatz from
+microscopic dynamics remains open.
 \end{enumerate}
 
 \paragraph{Comparison to the linearized-EFE wave.} The companion
@@ -437,14 +447,14 @@ J.~Low Temp.\ Phys.\ \textbf{207}, 127 (2022);
 DOI: 10.1007/s10909-022-02694-z.
 
 \bibitem{Volovik2026SecondSound}
-G.~E.~Volovik, ``Massless graviton in de Sitter as second sound,''
-arXiv:2601.00639 (2026). \emph{The source of the
-second-sound--graviton identification; derives $s_2 = c$ exactly and
-leaves the graviton type open.}
+G.~E.~Volovik, ``Massless graviton in de Sitter as second sound in
+two-fluid hydrodynamics,'' arXiv:2601.00639v1 (2026).
+\emph{Derives luminal second sound within its de~Sitter two-fluid
+model and discusses possible graviton interpretations.}
 
 \bibitem{Volovik2024VacuumDecay}
 G.~E.~Volovik, ``From Landau two-fluid model to de Sitter Universe,''
-arXiv:2410.04392 (2024).
+arXiv:2410.04392v11 (2025).
 
 \bibitem{Akama1978}
 K.~Akama, Prog.\ Theor.\ Phys.\ \textbf{60}, 1900 (1978);
