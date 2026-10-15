@@ -480,15 +480,17 @@ failed.
 findings this project filed itself. An entry written from a sample and never summed reads
 exactly like one written from a full count.
 
-The VERIFIES resolver is the worked example. Two rules gate it, each closing a direction the
-resolver could fail in: a ref rooted at a **module alias** is a Python module, never a Lean
-declaration (without this it fabricated Lean-targeted edges, resolving the *tail* of a Python
-name against Lean short names — `np.all` → `FaultTolerance.Pauli.all`); and a **dotted** ref
-resolves only as a full Lean name, never by its tail (without this it dropped test nodes,
-keying ids on `module::function` with the class omitted).
+The Lean VERIFIES branch rejects a reference rooted at a recorded Python module
+alias before exact membership and short lookup. Allowed dotted references resolve
+only as full Lean names; undotted names may use an unambiguous in-graph short match.
+Formula and Parameter selection takes precedence. A deduplicated Lean edge requires
+at least one valid supporting raw reference to that exact target.
 
-**Its consumer is `last_modified.py`'s VERIFIES propagation**, where a bad edge stamps an
-unrelated test file's mtime onto Lean nodes. No readiness gate consumes it — the gates read
+Class-qualified PythonTest IDs preserve distinct methods with the same name in
+different classes. This identity mechanism is separate from dotted reference resolution.
+
+**Its consumer is `last_modified.py`'s VERIFIES propagation**, where a bad edge propagates an
+unrelated test node's metadata timestamp onto Lean nodes. No readiness gate consumes it — the gates read
 `formula:` targets only.
 
 ⚠️ **A measurement is scoped by a predicate, and fixing what that predicate keyed on voids
