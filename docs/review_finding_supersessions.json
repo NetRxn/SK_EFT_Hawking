@@ -10549,6 +10549,150 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-edition-reconciliation:D1:1.1",
+      "status": "fixed",
+      "evidence": "Independent whole affected claim-set and rendered-artifact review accepted mean-field energy/noise separation and conditional calibrated gain/readout; exact Verify passed without asserting measured sensitivity.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from pathlib import Path; s=\" \".join(Path(\"papers/D1/paper_draft.tex\").read_text().split()); assert \"Its mean-field noise scale\" not in s; assert \"noise floor is spectrally featureless\" not in s; assert \"does not determine a mode occupation\" in s; assert \"measured in-band noise budget\" in s'",
+        "declared": "cd \"$REPO\" && python3 -c 'from pathlib import Path; s=\" \".join(Path(\"papers/D1/paper_draft.tex\").read_text().split()); assert \"Its mean-field noise scale\" not in s; assert \"noise floor is spectrally featureless\" not in s; assert \"does not determine a mode occupation\" in s; assert \"measured in-band noise budget\" in s'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent source and affected whole-claim review accepted generated normalization reconciliation, D1 nonthermal steep-scale propagation, absent stale E1 revision narration and valid table input/unit documentation; all four exact declared Verifies passed.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+      "artifact_sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+          "sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+          "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -q 'lkb_T_H_falque_norm_K' papers/E1/paper_draft.tex && grep -q 'lkb_norm_ratio' papers/E1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && grep -q 'lkb_T_H_falque_norm_K' papers/E1/paper_draft.tex && grep -q 'lkb_norm_ratio' papers/E1/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:1.2",
+      "status": "fixed",
+      "evidence": "Independent source and affected whole-claim review accepted generated normalization reconciliation, D1 nonthermal steep-scale propagation, absent stale E1 revision narration and valid table input/unit documentation; all four exact declared Verifies passed.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+      "artifact_sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+          "sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+          "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q 'lkb_T_H_steep_mK' papers/E1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q 'lkb_T_H_steep_mK' papers/E1/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:3.2",
+      "status": "fixed",
+      "evidence": "Independent source and affected whole-claim review accepted generated normalization reconciliation, D1 nonthermal steep-scale propagation, absent stale E1 revision narration and valid table input/unit documentation; all four exact declared Verifies passed.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+      "artifact_sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+          "sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+          "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q 'ported from E2' papers/E1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q 'ported from E2' papers/E1/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:3.3",
+      "status": "fixed",
+      "evidence": "Independent source and affected whole-claim review accepted generated normalization reconciliation, D1 nonthermal steep-scale propagation, absent stale E1 revision narration and valid table input/unit documentation; all four exact declared Verifies passed.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+      "artifact_sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+          "sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+          "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q 'SI{\\\\\\\\input{tables/<id>.tex}' papers/E1/tables.py",
+        "declared": "cd \"$REPO\" && ! grep -q 'SI{\\\\\\\\input{tables/<id>.tex}' papers/E1/tables.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-edition-reconciliation:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent source/artifact review accepted the exact 2011-v3 binding, preserved 2005 metadata/history and actual 2024-v4 bytes; actual consumer inventory and exact declared Verify passed.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+      "artifact_sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+          "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf",
+          "sha256": "78a12ecca758552297d305f8c964502ead3e39fa842394a8d5a4f3aba17f4759"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from src.core.citations import CITATION_REGISTRY as R; e=R[\"Barcelo2011\"]; assert (e[\"year\"],e[\"volume\"],e[\"page\"],e[\"doi\"],e[\"arxiv\"])==(2011,14,\"3\",\"10.12942/lrr-2011-3\",\"gr-qc/0505065v3\"); assert e[\"used_in\"]==[\"papers/E1/paper_draft.tex\"]; assert R[\"BarceloLRR2005\"][\"primary_source_path\"] is None'",
+        "declared": "cd \"$REPO\" && python3 -c 'from src.core.citations import CITATION_REGISTRY as R; e=R[\"Barcelo2011\"]; assert (e[\"year\"],e[\"volume\"],e[\"page\"],e[\"doi\"],e[\"arxiv\"])==(2011,14,\"3\",\"10.12942/lrr-2011-3\",\"gr-qc/0505065v3\"); assert e[\"used_in\"]==[\"papers/E1/paper_draft.tex\"]; assert R[\"BarceloLRR2005\"][\"primary_source_path\"] is None'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }

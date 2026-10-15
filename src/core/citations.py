@@ -371,18 +371,44 @@ CITATION_REGISTRY = {
         'arxiv': 'gr-qc/0505065',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf',
+        'primary_source_path': None,
         'used_in': [
             'src/core/transonic_background.py',
-            'papers/paper1_first_order/paper_draft.tex',
+            'lean/SKEFTHawking/AcousticMetric.lean',
         ],
         'provides': [],
-        'notes': 'Canonical review of analog gravity. Acoustic metric definition.',
+        'notes': ('2005 review metadata; current consumers cite this edition. '
+                  'No verified 2005 full body is held. Historical artifact '
+                  'Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf '
+                  'is arXiv gr-qc/0505065v4 (29 November 2024), not the 2005 body; '
+                  'its bytes and historical fetch record are preserved. '
+                  'The 2011 E1 reference is registered separately as Barcelo2011.'),
     },
 
     # ════════════════════════════════════════════════════════════════
     # Polariton analog gravity
     # ════════════════════════════════════════════════════════════════
+
+    'Barcelo2011': {
+        'authors': 'Barceló, C., Liberati, S., Visser, M.',
+        'title': 'Analogue Gravity',
+        'journal': 'Living Reviews in Relativity',
+        'volume': 14,
+        'page': '3',
+        'year': 2011,
+        'doi': '10.12942/lrr-2011-3',
+        'arxiv': 'gr-qc/0505065v3',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf',
+        'used_in': ['papers/E1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Published 2011 review metadata verified at the publisher. '
+                  'Held full author preprint v3, 12 May 2011; the journal body is '
+                  'not the cached artifact. Eqs. (61), (63)-(64) distinguish '
+                  'acceleration g_H from frequency kappa = g_H/c_H and give '
+                  'k_B T_H = hbar kappa/(2 pi). Not the 2005 or 2024 edition.'),
+    },
 
     'Falque2025': {
         'authors': 'Falque, K., Delhom, A., Glorieux, Q., Giacobino, E., Bramati, A., Jacquet, M. J.',

@@ -1191,9 +1191,9 @@ The polariton and graphene rows are order-of-magnitude estimates from
 their platform-specific treatments and use a platform-appropriate
 reading of $\delta_{\rm diss}$; for the polariton row it is the cavity
 decay ratio $\Gamma_{\rm pol}/\kappa$ rather than a transport
-coefficient. The $T_H$ column gives the nominal experimental
-temperature scale, not the smooth-model surface gravity that feeds the
-correction columns.
+coefficient. The temperature column gives a nominal scale; the steep
+polariton entry is only the formal gradient scale $\hbar\kappa/(2\pi k_B)$,
+since its measured spectrum is not thermal.
 
 \begin{table*}[!t]
 \centering
@@ -1201,17 +1201,20 @@ correction columns.
 configurations. $\delta_{\rm disp} = -(\pi/6)D^2$ is the adopted
 phenomenological dispersive correction of Eq.~\eqref{eq:delta-disp} and
 $\delta_{\rm diss} = \Gamma_H/\kappa$ the leading dissipative
-correction of Eq.~\eqref{eq:delta-diss}; both are dimensionless
-fractional shifts of $T_{\rm eff}$ and are evaluated at $\omega=\kappa$
-for the condensate rows.}
+correction of Eq.~\eqref{eq:delta-diss}. These are dimensionless
+fractional shifts of $T_{\rm eff}$ for the condensate rows, evaluated at
+$\omega=\kappa$. The polariton dissipative entries instead give the cavity
+validity ratio $\Gamma_{\rm pol}/\kappa$ outside weak decay, not a
+perturbative temperature shift. Its steep-horizon temperature entry is
+a formal gradient scale only.}
 \label{tab:hierarchy}
 \begin{tabular}{lcccc}\toprule
-Platform & $T_H$ & $\delta_\text{disp}$ & $\delta_\text{diss}$ & dominance \\\midrule
+Platform & temperature scale & $\delta_\text{disp}$ & $\delta_\text{diss}$ & dominance \\\midrule
 $^{87}$Rb BEC (Steinhauer/de~Nova) & $\sim 0.35$\,nK & $-8.53\times10^{-5}$ & $2.38\times10^{-5}$ & disp \\
 $^{39}$K BEC (Heidelberg, projected) & $\sim 1$\,nK & $-7.32\times10^{-5}$ & $1.59\times10^{-3}$ & \textbf{diss} \\
 spin-sonic BEC (Trento)    & $\sim 1$\,nK & $-9.89\times10^{-5}$ & $1.41\times10^{-5}$ & disp \\
 LKB polariton (smooth, $D=0.59$) & $\sim 85$\,mK & $-18\%$ & $180\%$ & \emph{neither} \\
-LKB polariton (steep, $D=0.94$)  & $\sim 134$\,mK & $-46\%$ & $110\%$ & \emph{neither} \\
+LKB polariton (steep, $D=0.94$)  & $\sim 134$\,mK (scale) & $-46\%$ & $110\%$ & \emph{neither} \\
 graphene (Dean, $D=0.23$)        & $\sim 2.4$\,K & $-2.8\%$ & $+6.5\%$ & \textbf{diss} \\
 \bottomrule
 \end{tabular}
@@ -1843,11 +1846,14 @@ contributions to the distinction between dynamical sound speeds and
 estimates from the total blueshift have also been observed under other
 excitation conditions~\cite{Estrecho2021,Stepanov2019}.
 
-With the surface-gravity relation of Sec.~\ref{sec:eft-metric}, the two
-configurations give $T_H \approx 85~\mathrm{mK}$ and
-$T_H \approx 134~\mathrm{mK}$, eight orders of magnitude above the
-atomic-condensate benchmark of Sec.~\ref{sec:hierarchy}, which is the
-platform's genuine advantage. One convention point must be stated
+With the surface-gravity relation of Sec.~\ref{sec:eft-metric}, the smooth
+configuration gives $T_H \approx 85~\mathrm{mK}$. The steep configuration's
+formal gradient scale is $\hbar\kappa/(2\pi k_B)\approx134~\mathrm{mK}$.
+Falque \emph{et al.}\ state that its spectrum is not thermal because
+nonlinear frequency dispersion dominates~\cite{Falque2025}; this scale
+therefore does not describe a measured Hawking temperature. The smooth
+scale is some eight orders above the atomic-condensate benchmark of
+Sec.~\ref{sec:hierarchy}. One convention point must be stated
 explicitly, because the primary source quotes a different figure: the
 Discussion of Ref.~\cite{Falque2025} reports a Hawking temperature of
 $3~\mathrm{K}$ for the smoothest horizon, which follows from the
@@ -1880,15 +1886,16 @@ separately for the steep one. The phenomenological correction of
 Sec.~\ref{sec:eft-disp} is then $-18\%$ and $-46\%$ respectively.
 Their size alone proves neither convergence nor divergence of an
 underlying expansion. At the steep reach, $D$ is not small; the
-$1.6$-fold increase in $T_H$ therefore comes with greater uncertainty in
-using this ansatz, rather than a demonstrated bound on omitted terms.
+$1.6$-fold increase in the measured gradient does not establish a hotter
+thermal spectrum or a bound on omitted terms in this ansatz.
 
-Finally, the driven-dissipative steady state is not cold. Its mean-field
-noise scale, $T_{\rm noise} = m^*c_s^2/k_B \approx 0.81~\mathrm{K}$,
-exceeds $T_H$ at the smooth horizon by an order of magnitude. That is
-the practical reason the spontaneous spectrum is hard on this platform,
-and why detection discussions in the polariton literature are stimulated
-rather than spontaneous.
+The mean-field energy expressed in temperature units is
+$T_{\rm mf}=m^*c_s^2/k_B\approx0.81~\mathrm{K}$.
+This scale does not determine a mode occupation, a thermodynamic
+temperature or a detected noise power spectrum. Its ratio to $T_H$
+therefore does not determine a spontaneous background-to-signal ratio.
+A detection estimate requires a measured in-band noise budget at the
+proposed operating point.
 
 \subsection{Attenuation, and where the model provably fails}
 \label{sec:pol-scope}
@@ -2000,9 +2007,9 @@ quietly, because nothing downstream ever recomputes them. Compiling one
 is the cheapest available way to stop that drift.
 
 The stimulated-detection estimate that motivates the polariton platform
-belongs in the same accounting, on the unverified side of it. A coherent
-probe at frequency $\omega$ incident on the horizon is amplified by
-anomalous Bogoliubov scattering, with emitted occupation
+belongs in the same accounting, on the unverified side of it. For a coherent
+probe at frequency $\omega$, we adopt the thermal response factor as a
+gain coefficient
 $G(\omega) = \Gamma(\omega)/[\exp(2\pi\omega/\kappa_{\rm eff})-1]$,
 where $\Gamma(\omega)$ is the greybody factor and
 $\kappa_{\rm eff} = \kappa(1+\delta_{\rm disp})$ carries the dispersive
@@ -2010,18 +2017,20 @@ correction of Sec.~\ref{sec:eft-disp}. Assuming unit greybody factor,
 $\Gamma(\omega) = 1$, the condition $G > 1/2$ reads
 $\exp(2\pi\omega/\kappa_{\rm eff}) < 3$, that is
 $\omega/\kappa_{\rm eff} < \ln 3/(2\pi) \approx 0.175$. That threshold
-holds only under the unit-greybody assumption stated in the same breath
-as it; a dispersive horizon delivers $\Gamma(\omega) < 1$ and moves the
-accessible window down. For shot-noise-limited detection of a probe
+holds only under the unit-greybody model, not a measured transmission
+profile. Even a constant nonunit $\Gamma$ changes the crossing to
+$\ln(1+2\Gamma)/(2\pi)$; a frequency-dependent factor can change its
+shape. Independent greybody calibration is required. For shot-noise-limited detection of a probe
 carrying $N_{\rm probe}$ photons per mode, a single-shot
 signal-to-noise ratio $\sqrt{N_{\rm probe}}\,G = 5$ needs
 $N_{\rm probe} = 25/G^2$, of order $10^2$ photons per mode at
-$G = 1/2$, which assumes mean-field probe operation, no loss between
-horizon and detector beyond Eq.~\eqref{eq:pol-atten}, and that the
-$0.81~\mathrm{K}$ noise floor is spectrally featureless across the probe
-window. None of this paragraph is machine-checked: the formalised
-polariton module contains no gain function, and the estimate is analytic
-throughout.
+$G = 1/2$ in this ideal readout model. Applying it to detected counts
+requires the collection and detection efficiencies, the transfer function
+and the measured in-band noise budget, including reservoir, pump and
+detector fluctuations. The mean-field energy supplies neither their
+spectrum nor a spectral-flatness assumption. These conditional gain and
+readout estimates are analytic; the formalised polariton module contains
+no gain function.
 % TODO: source not held in full text (Grisins2016), cited for the
 % stimulated-detection pathway in a flowing fluid of light; the gain
 % expression is stated from the framework of Sec. II, not attributed

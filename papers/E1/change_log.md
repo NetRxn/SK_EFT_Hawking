@@ -98,3 +98,7 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Removed the unsupported matched factor-2.5 reservoir comparison and introductory temperature range; retained Falque's reported parameters and distinguished other devices. A correction near one half no longer purports to prove divergence.
 - Reconciled the exact two source registry entries and acquired their versioned full author preprints through the existing writer. Final journal bodies were not read; matching metadata does not upgrade that status. Source assessment and focused findings are in `papers/AutomatedReviews/2026-10-15-publication-source-propagation/`.
 - Focused measurement: clean four-page compile, 3408/3750 word-equivalents, abstract 581/600 characters. Shared executable Python and Lean noncomment content are unchanged. Independent scientific review, artifact review and applicable merge gates remain distinct from these measurements; stale/pending stage fields and last_lift are preserved.
+
+## 2026-10-15: Edition and polariton claim reconciliation
+
+Bind the normalization reference to the published 2011 review and separately acquired arXiv v3, preserving the historical 2005 reference metadata and mismatched 2024 cache identity. Clarify table documentation and the steep formal gradient scale; no numerical evaluator changes.

@@ -168,3 +168,7 @@ deliberately not green while they stand. Findings at
 - Removed the unsupported reservoir factor-2.5 comparison, distinguished weak decay from control of omitted terms, and identified the as-built polariton row as outside a perturbative hierarchy.
 - Actual isolated compile measures 20 pages, zero TeX errors/unresolved references and 15 overfull boxes. An exact 953dbfc7 input-closure baseline also measures 20 pages/15overfull boxes; these existing layout defects are not waived. The existing compiler updates only compiled_pages from 11 to 20; stale/pending flags and last_lift remain unchanged. The 24-page floor remains an advisory shortfall.
 - Focused evidence is in `papers/AutomatedReviews/2026-10-15-publication-source-propagation/`. This bounded propagation is not whole-paper scientific, layout or publication acceptance; independent final review and merge gates remain separate.
+
+## 2026-10-15: Edition and polariton claim reconciliation
+
+Qualify the steep polariton gradient scale as nonthermal, distinguish cavity validity ratios from temperature shifts, and replace mean-field-energy noise inference with a conditional calibrated readout/noise budget. No executable formulas or proof statements changed.
