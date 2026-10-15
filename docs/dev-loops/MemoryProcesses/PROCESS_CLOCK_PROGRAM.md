@@ -19,25 +19,31 @@ exact imported minimal/aggregate agreement. Failed transport and integration
 operations remain distinct from their later successful validations.
 
 The four-wire local-channel foundation retains bounded acceptance at `d8afcf18`.
-The shallow-depth obstruction is source-accepted and normally absorbed at
-`58969d22`; its aggregate registration `3e85b4ec` passes the registered build.
-Its compiled inventories, canonical reconciliation and committed closing remain
-pending. The inherited next locality target is an actual two-layer CNOT
-construction attaining the target matrix, with correlated-initialization and
-unrestricted-preparation counterexamples. A finite locality certificate supplies
-no computational-advantage claim.
+The complete shallow-depth obstruction has source, compiled, canonical and
+committed-closing acceptance at `279e30e7`. Its universal product-input bound
+excludes empty and single-layer circuits. The exact normalized two-layer CNOT
+witness and correlated-initialization/global-preparation guards now have whole
+source acceptance and normal source absorption at `929caf4f`. Compiled inventories,
+canonical reconciliation and committed closing for that witness remain pending.
+A finite locality certificate supplies no computational-advantage claim.
 
-The next field/process target has complete enabling-design acceptance. It is
-planned, not implemented: fifteen concrete qutrit reflection effects at the
-existing nontracial equilibrium define an actual chronological positive-history
-kernel and its null quotient. Positive central retention must represent every
-complex qutrit observable, including complete side reset; central reset retains
-only the scalar quotient. Subsequent work descends the actual thermal observable
-channel and represents the retained experiment's complete Born probabilities
-through inverse-sandwich state evaluation. It must consume both physical minimum
-theorems as well as the named attainers, rather than merely reproduce a shared
-decay factor. The reflection instrument, physical readout and retained carrier
-remain distinct.
+`QuantumNetwork/FiniteThreeLevelPositiveHistory.lean` has complete bounded
+source, compiled, canonical and committed-closing acceptance at `4ca127bb`.
+Fifteen concrete reflection effects at the existing nontracial equilibrium
+define an actual chronological positive-history kernel and its null quotient.
+Positive central retention represents every complex qutrit observable, including
+complete side reset; central reset retains the scalar quotient. The actual
+replacement instrument and the distinct Lüders failure example are included.
+The next target descends the actual thermal observable channel, proves its
+adjoint, generator and sharp norm on this quotient, and distinguishes positive
+inserted evolution from phase-bearing chronological kernels. Its whole thermal
+transfer contract is design-accepted and awaits fresh proof admission.
+
+The subsequent retained-readout target represents the experiment's complete
+Born probabilities through inverse-sandwich state evaluation. It must consume
+both physical minimum theorems and the named attainers, rather than merely
+reproduce a shared decay factor. The reflection instrument, physical readout
+and retained carrier remain distinct. This evaluation bridge is planned.
 
 The whole target retains all phase and reset obstructions. Phase-bearing
 chronological probabilities do not automatically give a Hermitian or positive
