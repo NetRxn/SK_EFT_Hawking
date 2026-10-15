@@ -419,7 +419,7 @@ Each phase is independently reversible. A later phase may not weaken an earlier 
 
 ## Client-session value boundary (ST amendment)
 
-**Status: DRAFT SPECIFICATION / exact tracked-text review required before implementation.**
+**Status: implemented in source; integration and loaded-runtime admission are separate gates.**
 This amendment extends S-D/S-N/S-Q in the existing proxy. It does not certify
 implementation, source integration, scanner results or loaded runtime. The
 [design](../superpowers/specs/2026-10-15-lean-proxy-client-session-value-design.md)

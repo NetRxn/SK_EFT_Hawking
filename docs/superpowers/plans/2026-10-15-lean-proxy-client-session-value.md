@@ -1,8 +1,8 @@
 # Lean proxy client-session value plan
 
-Status: **DOCUMENT AUTHORING ONLY / fresh exact tracked-text review required before
-implementation.** No implementation, actual Handler test, mutation, source
-integration, scanner or native acceptance is recorded here. Contract:
+Status: **implementation and scoped controls exercised.** Source integration,
+project gates, current CodeQL assessment and native loading remain separate steps.
+Contract:
 [ADR-008 ST-1–ST-8](../../adrs/ADR-008-shared-lean-slot-control-plane.md#client-session-value-boundary-st-amendment),
 [design](../specs/2026-10-15-lean-proxy-client-session-value-design.md) and
 [operator guide](../../dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md#client-session-value-boundary).

@@ -1,8 +1,8 @@
 # Lean proxy client-session value design
 
-Status: **DRAFT SPECIFICATION / fresh exact tracked-text adversarial and intent
-review required before code.** Implementation, actual Handler verification, CodeQL
-recognition, source integration and native loading are unverified. This document
+Status: **implemented in source with scoped Handler verification.** Current project
+gates, CodeQL recognition, source integration and native loading each require
+separate evidence. This document
 alone authorizes no runtime operation. Normative decisions:
 [ADR-008 ST-1–ST-8](../../adrs/ADR-008-shared-lean-slot-control-plane.md#client-session-value-boundary-st-amendment).
 Execution order and owners: [plan](../plans/2026-10-15-lean-proxy-client-session-value.md).

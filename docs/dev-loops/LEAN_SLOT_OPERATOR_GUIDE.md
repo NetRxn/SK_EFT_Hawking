@@ -193,7 +193,7 @@ restart is what activates both.
 
 ## Client-session value boundary
 
-**Status: DRAFT SPECIFICATION / exact tracked-text review required before code.**
+**Status: implemented in source; scoped Handler checks do not establish loaded-runtime admission.**
 [ADR-008 ST-1–ST-8](../adrs/ADR-008-shared-lean-slot-control-plane.md#client-session-value-boundary-st-amendment),
 [design](../superpowers/specs/2026-10-15-lean-proxy-client-session-value-design.md)
 and [plan](../superpowers/plans/2026-10-15-lean-proxy-client-session-value.md)
