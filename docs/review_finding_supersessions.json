@@ -10755,6 +10755,28 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-e2-greybody-readout:E2:1.1",
+      "status": "fixed",
+      "evidence": "Independent source/model/whole-claim/pixel review accepted the E2-only infrared BEC citation and readout qualification, corrected arithmetic, leading-versus-corrected model distinction and regenerated canonical local figure; actual focused tests, compound Verify, compile and preserved-source receipts are documented in SOURCE_ASSESSMENT.md and SCOPED_REVIEW.md. Historical 2013 guard remains separate.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf",
+      "artifact_sha256": "889a60dc77aeb2005dbe0220c299b740c6b3a31168e8ad355500faf51771aec6",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf",
+          "sha256": "889a60dc77aeb2005dbe0220c299b740c6b3a31168e8ad355500faf51771aec6"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from pathlib import Path; t=Path(\"papers/E2/paper_draft.tex\").read_text(); assert \"AndersonBFP2014Graybody\" in t and \"AndersonBFP2013\" not in t; assert \"exterior asymptotic sound speed\" in t and \"finite-band error bound\" in t; assert \"0.99994\" in t and \"26.3\" in t; assert \"cannot independently identify\" in t and \"no achieved sensitivity\" in t; assert \"stays within a few percent\" not in t and \"first platform\" not in t' && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "declared": "cd \"$REPO\" && python3 -c 'from pathlib import Path; t=Path(\"papers/E2/paper_draft.tex\").read_text(); assert \"AndersonBFP2014Graybody\" in t and \"AndersonBFP2013\" not in t; assert \"exterior asymptotic sound speed\" in t and \"finite-band error bound\" in t; assert \"0.99994\" in t and \"26.3\" in t; assert \"cannot independently identify\" in t and \"no achieved sensitivity\" in t; assert \"stays within a few percent\" not in t and \"first platform\" not in t' && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }

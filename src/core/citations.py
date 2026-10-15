@@ -12957,6 +12957,23 @@ CITATION_REGISTRY = {
         'provides': [],
         'notes': 'Publisher bibliographic identity verified 2026-10-15. Full body not held or read in this package. Existing acquisition writer cached Crossref metadata only on 2026-10-15; no abstract or full body was acquired, so this does not back a source-content claim. No citation-class exemption is declared.',
     },
+
+    'AndersonBFP2014Graybody': {
+        'authors': 'P. R. Anderson, R. Balbinot, A. Fabbri, R. Parentani',
+        'title': 'Gray-body factor and infrared divergences in 1D BEC acoustic black holes',
+        'journal': 'Phys. Rev. D',
+        'volume': '90',
+        'page': '104044',
+        'year': 2014,
+        'doi': '10.1103/PhysRevD.90.104044',
+        'doi_verified': None,
+        'arxiv': '1404.3224v3',
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf',
+        'used_in': ['papers/E2/paper_draft.tex'],
+        'provides': ['Infrared transmission probability for the specified stationary 1D BEC model (Eq. 36)'],
+        'notes': 'Held arXiv:1404.3224v3 (8 January 2015), five actual PDF pages; distinct from PRD 87, 124018 (2013). v3 corrects published Eq. (21); the cited infrared result is Eq. (36), p. 3. Assumes hydrodynamic, transversely frozen elongated BEC with stationary constant flow velocity and density and smooth sound speed with fixed asymptotes (p. 2). c_R is the subsonic asymptotic sound speed. This source does not establish graphene transmission, finite-frequency quadratic roll-off, detector response or readout identifiability.',
+    },
 }
 
 
