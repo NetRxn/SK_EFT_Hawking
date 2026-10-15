@@ -42,9 +42,8 @@ the positive reset kernel from phase-bearing probabilities and proves the sharp
 Hermiticity and positivity criteria. Whole source review, normal absorption,
 authoritative aggregate build and source/minimal/aggregate reconciliation pass.
 The existing canonical writers preserve every earlier complete record and add
-the new module's records; focused metadata and soundness checks pass. Fresh
-independent committed closing remains required before this increment is accepted
-as a whole.
+the new module's records; focused metadata and soundness checks pass. Fresh independent whole committed review and ROOT acceptance cover QT1–QT4
+at `20d426ec`, including all guards and the strict centered-mode comparison.
 
 The subsequent retained-readout target represents the experiment's complete
 Born probabilities through inverse-sandwich state evaluation. It must consume
@@ -52,8 +51,7 @@ both physical minimum theorems and the named attainers, rather than merely
 reproduce a shared decay factor. The reflection instrument, physical readout
 and retained carrier remain distinct. Whole implementation preparation covers
 both cuts, every measured branch, both decision columns and all degenerate ties.
-This evaluation bridge remains unimplemented; it requires completed thermal
-closing and fresh ordinary proof admission.
+This evaluation bridge remains unimplemented; it requires fresh ordinary proof admission.
 
 The whole target retains all phase and reset obstructions. Phase-bearing
 chronological probabilities do not automatically give a Hermitian or positive
