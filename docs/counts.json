@@ -1,12 +1,12 @@
 {
-  "generated": "2026-10-14T21:49:42.683861",
+  "generated": "2026-10-15T00:39:37.819956",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 47573,
-    "theorems_total": 27145,
-    "theorems_substantive": 27119,
+    "total_declarations": 47748,
+    "theorems_total": 27262,
+    "theorems_substantive": 27236,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 27050,
+    "theorems_kernel_substantive": 27167,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2108,
+    "modules": 2109,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1320,6 +1320,7 @@
       "SKEFTHawking.QuantumNetwork.FiniteNontracialPhaseReadout",
       "SKEFTHawking.QuantumNetwork.FiniteNontracialSchedule",
       "SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase",
+      "SKEFTHawking.QuantumNetwork.FiniteThreeLevelThermalPhase",
       "SKEFTHawking.QuantumNetwork.GateFidelity",
       "SKEFTHawking.QuantumNetwork.GateFidelityBridge",
       "SKEFTHawking.QuantumNetwork.GaussianComplexMoment",
@@ -2126,7 +2127,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 14230,
+    "definitions": 14262,
     "structures": 496,
     "instances": 999,
     "inductives": 108,
