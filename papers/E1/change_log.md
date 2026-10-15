@@ -83,3 +83,11 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 
 - Closing section now explicitly identifies its role as “Conclusions and required measurements”; its scientific body is unchanged.
 - Freshness/pending metadata and prior source manifest were preserved; this declaration-only reconciliation does not certify a fresh lift. The worktree-path producer limitation is an open infra finding in `papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/E1.md` §2.1.
+
+## 2026-10-15 — Conditional detection model and calibrated testability
+
+- Recast the mean-field temperature-unit scalar as an energy scale, not an inferred occupation background or PSD. Retained Falque's actual modulation/bandwidth settings and made ideal SNR conditional on measured in-band noise and transfer/efficiency calibration.
+- Distinguished the dimensionless half-gain ratio from dimensional frequency, required independent greybody calibration for a shape test, and labeled the selected band as a working choice in effective-frequency units rather than a derived validity boundary.
+- Regenerated the two E1 figures from bounded canonical functions: measured/projected cavity status, explicit weak-loss threshold, consistent frequency coordinate, and conditional ideal sensitivity. No formula expressions, API or constants changed; a lowfrequency gain docstring was corrected.
+- Acquired the actual Amelio author preprintv2 through the existing exact-bibkey writer and reconciled its registry/sidecar provenance; the final journal body remains distinct. Claim/source and artifact evidence are in `papers/AutomatedReviews/2026-10-15-e1-detection-contract/`.
+- The earlier source-path infra limitation in the roster entry is subsequently closed through independently reviewed relative-path reader repairs. Bundle freshness/stage verdicts remain stale/pending; only measured compiled page count follows the new compile.

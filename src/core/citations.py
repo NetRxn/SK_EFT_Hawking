@@ -799,14 +799,17 @@ CITATION_REGISTRY = {
         'page': '064505',
         'year': 2020,
         'doi': '10.1103/PhysRevB.101.064505',
-        'arxiv': None,
-        'doi_verified': None,
+        'arxiv': '1905.05855v2',
+        'doi_verified': '2026-10-15',
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Amelio2020.json',
-        'used_in': ['papers/paper12_polariton/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Amelio2020.pdf',
+        'used_in': ['papers/paper12_polariton/paper_draft.tex', 'papers/E1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Acoustic metric in driven-dissipative polariton systems; '
-                 'weak-loss, long-wavelength limit.',
+        'notes': 'Publisher metadata verifies final DOI/title/venue. Author preprint '
+                 '1905.05855v2 (2019-06-13), linked to that DOI by arXiv, models '
+                 'reservoir/disorder-induced instability and loss of coherence '
+                 '(Sec. IV.C); it does not calibrate the Paris-LKB in-band noise. '
+                 'The preprint predates the final 2020 journal revision.',
     },
     'Jacquet2023QNM': {
         'authors': 'Jacquet, M. J., Giacomelli, L., Valnais, Q., Joly, M., Claude, F., Giacobino, E., Glorieux, Q., Carusotto, I., Bramati, A.',

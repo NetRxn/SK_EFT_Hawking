@@ -172,7 +172,7 @@ SCALARS = {
         'value': lambda: f'{polariton_hawking_temperature(_KAPPA_STEEP) * 1e3:.0f}',
     },
     'lkb_T_noise_K': {
-        'description': 'E1 §5: mean-field noise floor T_noise = m* c_s^2 / k_B, in K.',
+        'description': 'E1 §5: mean-field energy scale T_mf = m* c_s^2 / k_B, in K.',
         'value': lambda: f'{POLARITON_MASS * _C_S ** 2 / K_B:.2f}',
     },
 

@@ -49,7 +49,7 @@ For such a cavity and a saturated greybody factor, stimulated gain
 reaches one half at
 $\omega/\kappa_{\rm eff} = \input{tables/lkb_gain_threshold.tex}\unskip$,
 where $\kappa_{\rm eff}$ is the effective surface gravity.
-We specify a test window and required measurements.
+We give a working band and required calibrations.
 \end{abstract}
 
 \maketitle
@@ -81,14 +81,14 @@ not yet have is a prediction sharp enough to falsify, and a
 statement of the device conditions under which that prediction is
 entitled to be believed.
 
-This Letter supplies both. We evaluate the Schwinger-Keldysh
-effective-field-theory (SK-EFT) analog-Hawking spectrum at the
-published Paris-LKB parameters, and ask in the same expansion
-whether the cavity is quiet enough for that spectrum to be the
-leading behavior. The answer is that the horizon is already
-good enough and the cavity is not. Cavity loss, not surface gravity,
-is the gating parameter, and the gate closes at a lifetime we can
-name.
+This Letter quantifies a necessary device condition for the
+Schwinger-Keldysh effective-field-theory (SK-EFT) analog-Hawking
+spectrum to describe the published Paris-LKB parameters. The
+as-built cavity lies outside the weak-dissipation expansion. We
+derive the lifetime threshold at fixed horizon steepness and give
+conditional stimulated-gain targets for a longer-lived cavity.
+Testing them also requires a calibrated transfer function and
+noise budget.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Device parameters and the predicted Hawking temperature}
@@ -319,7 +319,7 @@ $\Gamma_{\rm pol}/\kappa = 1/(\tau_{\rm cav}\kappa)$ crosses the criterion
 at Eq.~\eqref{eq:tau_required}. The
 \SI{100}{\pico\second} (``long'') and \SI{300}{\pico\second}
 (``ultralong'') points are projected cavity generations, not
-measured devices. Shaded bands indicate qualitative validity regimes.}
+measured devices. Shaded bands indicate qualitative decay scales.}
 \label{fig:regime}
 \end{figure}
 
@@ -357,38 +357,35 @@ Eq.~\eqref{eq:delta_disp}. At the smooth horizon
 $\kappa_{\rm eff}/\kappa = \input{tables/lkb_kappa_eff_ratio_smooth.tex}\unskip$.
 
 Every number below assumes the greybody-saturation limit
-$\Gamma(\omega) \equiv 1$, and the statements that follow are
-universal in $\kappa$ only within that limit. The assumption is
-defensible in the low-frequency window
-$\omega \lesssim 0.3\,\kappa$ of interest here, where greybody
-corrections enter at $\mathcal{O}(\omega^2/\kappa^2)$ in the
-hydrodynamic regime and leave the plateau
-flat~\cite{Finazzi2012,Jacquet2023QNM}; it is not defensible outside
-it, and a measured $\Gamma(\omega)$ profile is one of the things the
-experiment would deliver.
+$\Gamma(\omega) \equiv 1$. This is an adopted model for the
+numerical illustration, not a measured transmission profile.
+The hydrodynamic approximation alone does not establish its
+accuracy over the chosen band. Independent calibration of
+$\Gamma(\omega)$ and the detection transfer function is required
+to test the predicted gain.
 
 Under it the gain falls monotonically from a low-frequency
 divergence: $G = \input{tables/lkb_gain_at_0p1.tex}\unskip$ at
 $\omega = 0.1\,\kappa_{\rm eff}$,
 $\input{tables/lkb_gain_at_0p3.tex}\unskip$ at $0.3\,\kappa_{\rm eff}$, and
 $\input{tables/lkb_gain_at_1.tex}\unskip$ at $\kappa_{\rm eff}$. Setting
-$G = 1/2$ inverts Eq.~\eqref{eq:gain} exactly, with no device
-parameter surviving:
+$G = 1/2$ inverts Eq.~\eqref{eq:gain} exactly, within this assumed limit:
 \begin{equation}
 \frac{\omega_{1/2}}{\kappa_{\rm eff}} = \frac{\ln 3}{2\pi}
   = \input{tables/lkb_gain_threshold.tex}\unskip .
 \label{eq:threshold}
 \end{equation}
-Equation~\eqref{eq:threshold} is the sharpest prediction in this
-Letter, because it is a pure number. Expressed in the surface
-gravity the experiment measures rather than in $\kappa_{\rm eff}$,
-it sits at $\omega_{1/2} = \input{tables/lkb_gain_threshold_absolute.tex}\unskip\,\kappa$
-at the smooth horizon, and the difference between
-$\input{tables/lkb_gain_threshold.tex}\unskip$ and
-$\input{tables/lkb_gain_threshold_absolute.tex}\unskip$ is exactly the dispersive
-correction. A measurement that locates the half-gain frequency
-therefore measures $\delta_{\rm disp}$, and through it $D$, without
-needing an absolute calibration of the probe.
+The dimensionless ratio in Eq.~\eqref{eq:threshold} is independent
+of $\kappa$ in the saturated-greybody model. The dimensional
+frequency still scales with $\kappa_{\rm eff}$. Expressed relative
+to the measured surface gravity, the adopted dispersive correction
+gives $\omega_{1/2}/\kappa =
+\input{tables/lkb_gain_threshold_absolute.tex}\unskip$ at the smooth
+horizon. A nonunit greybody factor shifts the crossing: even a
+constant $\Gamma$ gives
+$\omega_{1/2}/\kappa_{\rm eff}=\ln(1+2\Gamma)/(2\pi)$.
+Inferring a dispersive correction from this crossing therefore
+requires independent calibration of transmission and detected gain.
 
 \begin{figure}[t]
 \centering
@@ -398,120 +395,100 @@ gain $G(\omega)$ against normalized frequency, at the smooth-horizon
 $\kappa = \input{tables/lkb_kappa_smooth.tex}\unskip\,\mathrm{s}^{-1}$ and
 $D = \input{tables/lkb_D_smooth.tex}\unskip$ of Falque \emph{et al.}~\cite{Falque2025},
 in the greybody-saturation limit $\Gamma \equiv 1$. The abscissa is
-$\omega/\kappa$ with the dispersive correction \emph{not} folded in,
-so the plotted crossing of the dashed $G = 1/2$ line sits at
-$\ln(3)/2\pi = \input{tables/lkb_gain_threshold.tex}\unskip$; carrying
-$\kappa_{\rm eff}$ moves it to
-$\input{tables/lkb_gain_threshold_absolute.tex}\unskip$ in these units.
-At $G = 1/2$ a single shot with 100 probe photons per mode reaches
-$5\sigma$. The shading marks the upper bound
-$\omega \lesssim 0.30\,\kappa$ of Eq.~\eqref{eq:window}; it is drawn
-down to $\omega = 0$ because this Letter does not fix the window's
-lower edge.}
+$\omega/\kappa_{\rm eff}$, so the dashed $G=1/2$ crossing lies at
+$\ln(3)/(2\pi)=\input{tables/lkb_gain_threshold.tex}\unskip$.
+The ideal shot-noise model assigns $5\sigma$ to this gain with
+100 probe photons per mode; this is conditional on the calibrated
+readout, not demonstrated detector performance. Shading denotes
+the adopted working band of Eq.~\eqref{eq:window}, not a derived
+validity bound. Its unresolved lower edge is not shown.}
 \label{fig:gain}
 \end{figure}
 
-For a shot-noise-limited readout,
-$\mathrm{SNR} = \sqrt{N_{\rm shots} N_{\rm probe}}\;G(\omega)$, so
-$G = 1/2$ with $N_{\rm probe} = 100$ probe photons per mode is a
-single-shot $5\sigma$ detection. At
-$\omega = 0.1\,\kappa_{\rm eff}$ the same 100 photons give
-$\mathrm{SNR} = \input{tables/lkb_snr_at_0p1.tex}\unskip$. What matters is
-the scaling rather than any single figure: a spontaneous correlation
-signal at the $5\times 10^{-5}$ level needs of order $10^9$
-repetitions to resolve~\cite{Grisins2016,Jacquet2022}, and a
-stimulated measurement trades that repetition count for probe
-power.
+For an ideal shot-noise-limited readout we adopt
+$\mathrm{SNR}=\sqrt{N_{\rm shots}N_{\rm probe}}\;G(\omega)$.
+This model assigns a single-shot $5\sigma$ significance to
+$G=1/2$ with 100 probe photons per mode, and
+$\mathrm{SNR}=\input{tables/lkb_snr_at_0p1.tex}\unskip$ at
+$\omega=0.1\,\kappa_{\rm eff}$. These are conditional readout
+estimates. Applying them to detected counts requires the collection
+and detection efficiencies, transfer function and measured
+background to be included in the noise budget.
 
 %% ══════════════════════════════════════════════════════════════════
-\section{Noise floor and the falsifiable window}
+\section{Noise budget and the working frequency band}
 
-The polariton fluid is not cold. Its mean-field energy scale
-corresponds to
+The mean-field energy expressed in temperature units is
 \begin{equation}
-T_{\rm noise} = \frac{m^* c_s^2}{k_B} = \input{tables/lkb_T_noise_K.tex}\unskip\,\si{\kelvin},
+T_{\rm mf}=\frac{m^*c_s^2}{k_B}
+=\input{tables/lkb_T_noise_K.tex}\unskip\,\si{\kelvin}.
 \end{equation}
-an order of magnitude above $T_H$: in a spontaneous measurement the
-Hawking occupation would have to be dug out of a background ten
-times larger.
+This energy scale does not determine a mode occupation,
+a thermodynamic temperature or the detected noise power spectrum.
+Its ratio to $T_H$ therefore does not specify a spontaneous
+background-to-signal ratio.
 
-The stimulated measurement does not face that ratio, and the reason
-is spectral and phase structure rather than magnitude. The
-driven-dissipative background is broadband and phase-incoherent
-with the probe, whereas Eq.~\eqref{eq:gain} describes a response at
-the probe frequency, phase-locked to it. A narrowband
-phase-referenced readout therefore rejects the background by the
-ratio of its bandwidth to the detection bandwidth, and this is not
-a modification of the Paris-LKB apparatus but a description of it:
-the existing coherent probe spectroscopy already modulates the
-probe at \SI{5}{\mega\hertz} and detects in a \SI{300}{\hertz}
-bandwidth around that modulation~\cite{Falque2025}. What survives
-in that band is the probe's own shot noise, which is what the SNR
-above assumes; the background enters only through condensate
-amplitude fluctuations, spectrally flat across the
-window~\cite{Amelio2020} and so unable to mimic the Planckian shape
-of Eq.~\eqref{eq:gain}.
+Coherent probe spectroscopy offers a frequency-selective readout.
+Falque \emph{et al.} modulate the probe at
+\SI{5}{\mega\hertz} and filter the photodiode signal in a
+\SI{300}{\hertz} resolution bandwidth~\cite{Falque2025}.
+These settings characterize the readout; they do not establish
+that only probe shot noise survives in that band. The ideal SNR
+estimate requires a measured in-band noise budget at the proposed
+operating point. Reservoir and pump fluctuations, detector noise
+and any response correlated with the probe must be characterized.
+Reservoir-induced dynamical instability and loss of coherence can
+occur in the author-preprint model of Amelio and
+Carusotto~\cite{Amelio2020}; that result supplies no calibrated
+noise spectrum for this experiment. We assume neither spectral
+flatness nor automatic rejection of that background.
 
-That shape is what makes the prediction falsifiable. We give the
-window
+For illustration we adopt the working band
 \begin{equation}
-\boxed{\;\omega/\kappa \lesssim 0.30\;}
+\boxed{\;\omega/\kappa_{\rm eff}\lesssim 0.30\;}
 \label{eq:window}
 \end{equation}
-at the smooth horizon. The upper edge is derived: above it $D$ is
-no longer small against the frequencies being probed, the
-$\mathcal{O}(\omega^2/\kappa^2)$ greybody corrections that
-Eq.~\eqref{eq:gain} neglects stop being negligible, and
-$G$ has fallen to $\input{tables/lkb_gain_at_0p3.tex}\unskip$, near the point where
-the returned signal is no longer a large fraction of the probe. The
-lower edge is set by the apparatus, not by the theory: $G$ grows
-without bound as $\omega \to 0$, and what stops the window there is
-the frequency resolution of the probe scan and the finite spatial
-extent of the fluid. We do not fix it here, because fixing it
-requires the resolution figures for the tailored-profile
-configuration rather than for the one already
-published.
+at the smooth horizon. The upper edge is a working choice, not a
+derived hydrodynamic or greybody error bound. At that edge the
+saturated-greybody gain is
+$\input{tables/lkb_gain_at_0p3.tex}\unskip$. The usable interval must
+also satisfy measured dispersion, transmission and noise limits.
+Its lower edge depends on probe-scan resolution, fluid extent and
+low-frequency response; the model's divergence as $\omega\to0$
+does not establish an experimentally accessible signal there.
 
-Inside the window the prediction is over-determined, which is what
-gives it teeth. The three measured quantities $(c_s, \xi, \kappa)$
-enter $G(\omega)$ only through the single combination
-$\kappa_{\rm eff}$, so a measured gain profile is a one-parameter
-fit to a three-parameter set already fixed independently.
-Disagreement in the \emph{shape} of $G(\omega)$, as opposed to its
-overall scale, cannot be absorbed into the greybody factor, and
-falsifies the framework.
+Once $c_s$, $\xi$ and $\kappa$ are measured, the adopted dispersive
+normalization fixes $\kappa_{\rm eff}$. A gain-shape comparison is
+then a test of this conditional model only after independent
+calibration of the frequency-dependent greybody factor, transfer
+function and background. An unknown $\Gamma(\omega)$ in
+Eq.~\eqref{eq:gain} can change the shape as well as the scale.
+A discrepancy without those controls cannot isolate a failure of
+the predicted thermal factor.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Conclusions and required measurements}
 
-The horizon is built and its steepness is measured, so the analog
-Hawking temperature at the Paris-LKB platform is not an open
-theoretical question: Eq.~\eqref{eq:T_H} fixes it at
-$\input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$ from a
-quantity already in print. What is open is whether the leading-order
-spectrum is what the device emits, and that is decided by the
-mirror stack rather than by the optics that write the horizon. At
-$\Gamma_{\rm pol}/\kappa = \input{tables/lkb_ratio_standard.tex}\unskip$ the
-as-built cavity is outside the expansion; at
-$\tau_{\rm cav} \gtrsim \input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}$
-it is inside, and the same horizon then emits a spectrum whose
-half-gain frequency, Eq.~\eqref{eq:threshold}, is a pure number that
-no device parameter can move.
+The measured smooth horizon sets the standard temperature scale
+$T_H=\input{tables/lkb_T_H_smooth_mK.tex}\unskip\,\si{\milli\kelvin}$.
+At $\Gamma_{\rm pol}/\kappa=
+\input{tables/lkb_ratio_standard.tex}\unskip$, the as-built cavity
+is outside the weak-dissipation expansion. A fixed-horizon lifetime
+above about
+$\input{tables/lkb_tau_required_ps.tex}\unskip\,\si{\pico\second}$
+is necessary for the leading-order spectrum used here.
+Within that model and $\Gamma\equiv1$, the dimensionless ratio
+$\omega_{1/2}/\kappa_{\rm eff}$ in Eq.~\eqref{eq:threshold} is fixed;
+the frequency itself remains device-dependent.
 
-Two measurements would convert this from a prediction into a test,
-and both are within the existing apparatus. The first is the
-in-situ polariton decay rate $\Gamma_{\rm pol}$ and cavity lifetime
-$\tau_{\rm cav}$ at the tailored-profile configuration rather than
-at the homogeneous fluid, since Eq.~\eqref{eq:weak_dissipation} is
-evaluated there and the published
-$\hbar\gamma \approx \SI{80}{\micro\electronvolt}$ is not. The
-second is the probe-scan frequency resolution and the fluid's usable
-extent at that configuration, which is what would let the lower edge
-of Eq.~\eqref{eq:window} be fixed by the experiment instead of left
-open. Given a longer-lifetime cavity generation and its $\kappa$,
-the band edges follow from the same expressions used here, and we
-would recompute and circulate them before rather than after a
-measurement.
+A test requires the in-situ decay rate and cavity lifetime at the
+tailored horizon, the probe-scan resolution and usable fluid extent,
+and independent transmission, detector-response and noise
+calibrations. The first measurements locate the device in the
+assumed regime and delimit the accessible frequencies; the latter
+make the gain comparison identifiable. A longer lifetime meets a
+necessary expansion condition, while the full set of controls is
+needed to assess whether the emitted spectrum follows it.
 
 \begin{acknowledgments}
 Formal-verification layer built on Lean~4 (v\leantoolchain) with
@@ -586,14 +563,6 @@ Phys.\ Rev.\ B \textbf{107}, 174507 (2023).
 P.~Grisins \emph{et al.},
 Phys.\ Rev.\ B \textbf{94}, 144518 (2016).
 
-\bibitem{Jacquet2022}
-M.~Jacquet \emph{et al.},
-Eur.\ Phys.\ J.\ D \textbf{76}, 152 (2022).
-
-\bibitem{Finazzi2012}
-S.~Finazzi and R.~Parentani,
-Phys.\ Rev.\ D \textbf{85}, 124027 (2012).
-
 \bibitem{CorleyJacobson1996}
 S.~Corley and T.~Jacobson,
 Phys.\ Rev.\ D \textbf{54}, 1568 (1996).
@@ -602,13 +571,10 @@ Phys.\ Rev.\ D \textbf{54}, 1568 (1996).
 A.~Coutant and R.~Parentani,
 Phys.\ Rev.\ D \textbf{90}, 121501(R) (2014).
 
-\bibitem{Jacquet2023QNM}
-M.~Jacquet \emph{et al.},
-Phys.\ Rev.\ Lett.\ \textbf{130}, 111501 (2023).
-
 \bibitem{Amelio2020}
 I.~Amelio and I.~Carusotto,
-Phys.\ Rev.\ B \textbf{101}, 064505 (2020).
+Phys.\ Rev.\ B \textbf{101}, 064505 (2020);
+\href{https://arxiv.org/abs/1905.05855v2}{arXiv:1905.05855v2}.
 
 \bibitem{WangKimBZHe2026PennTMDPolariton}
 Z.~Wang, B.~Kim, B.~Zhen, and L.~He,

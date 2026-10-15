@@ -10375,6 +10375,112 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-detection-contract:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent scientific/source/pixel review accepted narrowed noise and readout assumptions, calibrated greybody identifiability, dimensionless threshold and adopted working band. Exact Verifies pass; actual two PNGs and rendered pages inspected. See SCOPED_REVIEW.md and SOURCE_ASSESSMENT.md; publication-stage/corpus gates remain pending.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'T_{\\rm mf}'\"'\"' in t and '\"'\"'does not determine a mode occupation'\"'\"' in t and '\"'\"'requires a measured in-band noise budget'\"'\"' in t'",
+        "declared": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'T_{\\rm mf}'\"'\"' in t and '\"'\"'does not determine a mode occupation'\"'\"' in t and '\"'\"'requires a measured in-band noise budget'\"'\"' in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-detection-contract:E1:1.2",
+      "status": "fixed",
+      "evidence": "Independent scientific/source/pixel review accepted narrowed noise and readout assumptions, calibrated greybody identifiability, dimensionless threshold and adopted working band. Exact Verifies pass; actual two PNGs and rendered pages inspected. See SCOPED_REVIEW.md and SOURCE_ASSESSMENT.md; publication-stage/corpus gates remain pending.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'dimensionless ratio'\"'\"' in t and '\"'\"'independent calibration'\"'\"' in t and '\"'\"'no device parameter can move'\"'\"' not in t and '\"'\"'cannot be absorbed into the greybody factor'\"'\"' not in t'",
+        "declared": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'dimensionless ratio'\"'\"' in t and '\"'\"'independent calibration'\"'\"' in t and '\"'\"'no device parameter can move'\"'\"' not in t and '\"'\"'cannot be absorbed into the greybody factor'\"'\"' not in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-detection-contract:E1:1.3",
+      "status": "fixed",
+      "evidence": "Independent scientific/source/pixel review accepted narrowed noise and readout assumptions, calibrated greybody identifiability, dimensionless threshold and adopted working band. Exact Verifies pass; actual two PNGs and rendered pages inspected. See SCOPED_REVIEW.md and SOURCE_ASSESSMENT.md; publication-stage/corpus gates remain pending.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'working band'\"'\"' in t and '\"'\"'The upper edge is derived'\"'\"' not in t and '\"'\"'optimal probe window'\"'\"' not in t'",
+        "declared": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'working band'\"'\"' in t and '\"'\"'The upper edge is derived'\"'\"' not in t and '\"'\"'optimal probe window'\"'\"' not in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-detection-contract:E1:2.1",
+      "status": "fixed",
+      "evidence": "Independent scientific/source/pixel review accepted narrowed noise and readout assumptions, calibrated greybody identifiability, dimensionless threshold and adopted working band. Exact Verifies pass; actual two PNGs and rendered pages inspected. See SCOPED_REVIEW.md and SOURCE_ASSESSMENT.md; publication-stage/corpus gates remain pending.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -m pytest tests/test_e1_publication_figures.py -q",
+        "declared": "python3 -m pytest tests/test_e1_publication_figures.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-detection-contract:E1:2.2",
+      "status": "fixed",
+      "evidence": "Existing exact-bibkey writer acquired validated arxiv1905.05855v2 PDF; actual saved10page bytes/version and pp7-8 read independently, hash pinned. Only existing Amelio registry/sidecar entry reconciled; publisher final-body remains unread and distinct. Source claim narrowed to actual preprint model. See SOURCE_ASSESSMENT.md and independent SCOPED_REVIEW.md.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-5w/primary-sources/Amelio2020.pdf",
+      "artifact_sha256": "d0d48fa5c6f9b87c4e0483f853bf8cb039156fe6a4ff78470d57188f67977781",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-5w/primary-sources/Amelio2020.pdf",
+          "sha256": "d0d48fa5c6f9b87c4e0483f853bf8cb039156fe6a4ff78470d57188f67977781"
+        }
+      ],
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; import hashlib,json; from src.core.citations import CITATION_REGISTRY; from src.core.workspace import find_workspace; e=CITATION_REGISTRY[\"Amelio2020\"]; p=find_workspace()/e[\"primary_source_path\"]; assert e[\"arxiv\"]==\"1905.05855v2\" and p.suffix==\".pdf\" and p.read_bytes().startswith(b\"%PDF\"); assert hashlib.sha256(p.read_bytes()).hexdigest()==\"d0d48fa5c6f9b87c4e0483f853bf8cb039156fe6a4ff78470d57188f67977781\"; s=json.loads(Path(\"docs/primary_sources_state.json\").read_text())[\"entries\"][\"Amelio2020\"]; assert s[\"tier_achieved\"]==\"arxiv-pdf\" and s[\"url_used\"]==\"https://arxiv.org/pdf/1905.05855v2\" and s[\"primary_source_path\"]==e[\"primary_source_path\"]'",
+        "declared": "python3 -c 'from pathlib import Path; import hashlib,json; from src.core.citations import CITATION_REGISTRY; from src.core.workspace import find_workspace; e=CITATION_REGISTRY[\"Amelio2020\"]; p=find_workspace()/e[\"primary_source_path\"]; assert e[\"arxiv\"]==\"1905.05855v2\" and p.suffix==\".pdf\" and p.read_bytes().startswith(b\"%PDF\"); assert hashlib.sha256(p.read_bytes()).hexdigest()==\"d0d48fa5c6f9b87c4e0483f853bf8cb039156fe6a4ff78470d57188f67977781\"; s=json.loads(Path(\"docs/primary_sources_state.json\").read_text())[\"entries\"][\"Amelio2020\"]; assert s[\"tier_achieved\"]==\"arxiv-pdf\" and s[\"url_used\"]==\"https://arxiv.org/pdf/1905.05855v2\" and s[\"primary_source_path\"]==e[\"primary_source_path\"]'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:2.2",
+      "status": "fixed",
+      "evidence": "Both exact E1 figure functions and actual exported PNGs corrected and independently pixel-reviewed. Measured/projected Paris points and weak-loss crossing are explicit; off-scale unrelated platform deliberately excluded. Effective-frequency axis and model qualifiers match captions; removed unsupported baked reference. Exact historical Verifies pass with REPO set. See 2026-10-15-e1-detection-contract/SCOPED_REVIEW.md; no other historical closure implied.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -q 'lkb_ratio_standard' papers/E1/paper_draft.tex && python3 -c \"import re,sys; c=open('papers/E1/paper_draft.tex').read(); m=re.search(r'\\\\\\\\caption\\[The weak-dissipation criterion.*?\\\\\\\\label\\{fig:regime\\}', c, re.S); sys.exit(0 if m and 'lkb_ratio_standard' in m.group(0) else 1)\"",
+        "declared": "cd \"$REPO\" && grep -q 'lkb_ratio_standard' papers/E1/paper_draft.tex && python3 -c \"import re,sys; c=open('papers/E1/paper_draft.tex').read(); m=re.search(r'\\\\\\\\caption\\[The weak-dissipation criterion.*?\\\\\\\\label\\{fig:regime\\}', c, re.S); sys.exit(0 if m and 'lkb_ratio_standard' in m.group(0) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:2.4",
+      "status": "fixed",
+      "evidence": "Both exact E1 figure functions and actual exported PNGs corrected and independently pixel-reviewed. Measured/projected Paris points and weak-loss crossing are explicit; off-scale unrelated platform deliberately excluded. Effective-frequency axis and model qualifiers match captions; removed unsupported baked reference. Exact historical Verifies pass with REPO set. See 2026-10-15-e1-detection-contract/SCOPED_REVIEW.md; no other historical closure implied.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -q 'Burkhard' src/core/visualizations.py && ! grep -q 'Burkhard' papers/E1/paper_draft.tex && exit 1 || exit 0",
+        "declared": "cd \"$REPO\" && grep -q 'Burkhard' src/core/visualizations.py && ! grep -q 'Burkhard' papers/E1/paper_draft.tex && exit 1 || exit 0",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }

@@ -1196,7 +1196,8 @@ def stimulated_hawking_gain(omega, kappa, greybody=1.0):
 
     For a coherent probe with n_in quanta at frequency ω, the anomalous
     (Hawking) channel output is G(ω) × n_in. The gain peaks at low
-    frequencies where G → Γ/(2πω/κ) and approaches 1 for ω ≪ κ.
+    frequencies where G ~ Γκ/(2πω) as ω/κ → 0. For fixed positive
+    Γ and κ this diverges as ω → 0; it does not approach unity.
 
     Lean: boseEinstein_pos, stimGain_pos, boseEinstein_strictAnti (StimulatedHawking.lean)
     Aristotle: 986b9f66
