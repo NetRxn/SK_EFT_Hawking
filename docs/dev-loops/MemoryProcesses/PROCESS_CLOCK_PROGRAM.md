@@ -317,7 +317,7 @@ metadata files passed independent whole integration review; normal metadata comm
 generated members retain their original catalogue flags, while the existing shared
 resolver excludes generated helpers from the published author-written theorem census.
 These results establish the thermal foundation's integration within the growth target.
-They do not accept the remaining consumers or the complete growth target.
+The foundation retains its separately recorded component acceptance.
 
 `QuantumNetwork/FiniteNontracialPhaseReadout.lean` supplies actual normalized
 fixed and co-rotated observations on the physical joint carrier. Full branch laws,
@@ -341,10 +341,21 @@ positive history kernel. The old positive metric is retained; no repaired Gram
 quotient or carrier identification is introduced.
 
 Both complete consumer sources passed independent whole mathematics, source and
-original-evidence review. Aggregate imports register them for production verification.
-Registered current-source compilation, exhaustive actual imported module and ordinary
-inventories, preservation of the canonical catalogue and all six derived metadata
-files, whole integration and final committed closing review, and required current-head
-project gates remain open. Source acceptance alone does not close the complete growth
-target. The current two-rate contract, separately typed recursive-time contract and
-broader scientific, paper, publication and apex gates remain distinct.
+original-evidence review. Their aggregate imports compile through the registered
+build. Exhaustive actual module-owned and separate ordinary inventories cover all
+295 readout and 156 history declarations. Generated members, unknown origins and
+literal private-name display differences remain explicit.
+
+The complete K1–K8 integration candidate passed independent review of all 46 scientific
+clauses and eight integration groups. Its canonical catalogue preserves every field
+of the preceding 47,160 records and adds 413 records, with 38 internal members
+explicitly excluded. All six metadata files reproduce the existing production
+derivations. Normal metadata commit `64e6aa58` preserves those reviewed bytes; its
+registered build passed 10,963 jobs with empty stderr. All 71 focused metadata tests
+and three separately measured fast checks passed; actual commit-hook skips remain
+recorded as skips.
+
+Final committed whole closing review and required current-head project gates remain
+open. Historical Python and validator failures remain unwaived. The current two-rate
+contract, separately typed recursive-time contract and broader scientific, paper,
+publication and apex gates remain distinct.
