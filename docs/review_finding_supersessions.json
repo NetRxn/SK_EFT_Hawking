@@ -11104,6 +11104,21 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-lean-proxy-client-session-value:infra:1.1",
+      "status": "fixed",
+      "evidence": "The existing Handler now validates one parsed visible-ASCII session value after authorization and before session consumers. Actual old-code and three sole production bypass controls demonstrate unsafe HTTP 200, exact restoration returns green, and the complete 118-case Handler matrix passes. This closes the bounded source defect only; primary integration, full project gates, current CodeQL and loaded native admission remain separate.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "12c54e6ac2833905eca6ee6180ebd609dd0a8c3b",
+      "verified_by": {
+        "command": "python -B -m pytest tests/test_lean_slots.py -k test_st_ -q -p no:cacheprovider",
+        "declared": "python -B -m pytest tests/test_lean_slots.py -k test_st_ -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
