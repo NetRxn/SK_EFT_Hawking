@@ -5314,6 +5314,7 @@ import SKEFTHawking.QuantumNetwork.FiniteThreeLevelAdaptiveReadout
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelEnvironmentLift
 import SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout
+import SKEFTHawking.QuantumNetwork.FiniteLocalChannelDepthObstruction
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
