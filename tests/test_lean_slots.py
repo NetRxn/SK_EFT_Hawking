@@ -620,6 +620,498 @@ def test_downstream_lease_pins_clean_paired_dependency(downstream_repo) -> None:
     assert controller.inventory.lease(2)["state"] == "ACTIVE"
 
 
+@pytest.fixture()
+def candidate_repo(downstream_repo, monkeypatch, request, isolated_process_observations):
+    """Distinct task/dependency refs, with ordinary public pinning in tmp repos."""
+    downstream, public, repo, worktrees = downstream_repo
+    public_main = run(public.repo, "git", "rev-parse", "main")
+    downstream_main = run(repo, "git", "rev-parse", "main")
+    run(public.repo, "git", "checkout", "-b", "reviewed-candidate")
+    run(repo, "git", "checkout", "-b", "research-task")
+    source = downstream.inventory.source
+    raw = json.loads(source.read_text())
+    raw["paired_dependency"]["base_ref"] = "reviewed-candidate"
+    source.write_text(json.dumps(raw))
+    run(repo, "git", "add", "config")
+    run(repo, "git", "commit", "-m", "select reviewed dependency")
+    downstream = Controller(Inventory.load(source))
+    task = run(repo, "git", "rev-parse", "HEAD")
+    old_epoch = None
+    if getattr(request, "param", None) == "old-epoch":
+        old_epoch = downstream.build()
+        assert old_epoch["fingerprint"]["commit_sha"] == task
+        assert old_epoch["fingerprint"]["public_dependency_sha"] == public_main
+    candidate = commit(public.repo, "candidate.txt", "reviewed dependency\n")
+    assert public_main != candidate and downstream_main != task
+    public_epoch = public.build()
+    assert public_epoch["fingerprint"]["commit_sha"] == candidate
+    # This fixture deliberately exercises cache-only preparation. The handoff test
+    # below enables the actual Supervisor before either role's preparation.
+    public.acquire(1, client="codex", base_ref="reviewed-candidate")
+    public.prepare(1)
+    assert public.inventory.lease(1)["prepared_epoch"] == public_epoch["epoch_id"]
+    public.release(1)
+    assert public.inventory.lease(1, required=False) is None
+    epoch = old_epoch or downstream.build()
+    rig = SimpleNamespace(
+        downstream=downstream, public=public, repo=repo, worktree=worktrees[0],
+        paired=public.inventory.worktree(1), public_main=public_main,
+        downstream_main=downstream_main, candidate=candidate, task=task,
+        epoch=epoch, public_epoch=public_epoch,
+    )
+    _candidate_mains(rig)
+    request.node.user_properties.append(("candidate_inputs", json.dumps({
+        "public_main_A": public_main, "candidate_B": candidate,
+        "downstream_main_C": downstream_main, "task_D": task,
+        "public_epoch": public_epoch, "downstream_epoch": epoch,
+    }, sort_keys=True)))
+
+    def final_evidence():
+        host = isolated_process_observations
+        request.node.user_properties.append(("candidate_exit", json.dumps({
+            "public_main": run(public.repo, "git", "rev-parse", "main"),
+            "downstream_main": run(repo, "git", "rev-parse", "main"),
+            "public_head": run(public.repo, "git", "rev-parse", "HEAD"),
+            "downstream_head": run(repo, "git", "rev-parse", "HEAD"),
+            "paired_head": run(rig.paired, "git", "rev-parse", "HEAD"),
+            "lease": downstream.inventory.lease(1, required=False),
+            "launches": host.launches, "signals": host.signals,
+            "commands": host.command_calls,
+        }, sort_keys=True)))
+
+    request.addfinalizer(final_evidence)
+    return rig
+
+
+def _candidate_mains(rig):
+    assert run(rig.public.repo, "git", "rev-parse", "main") == rig.public_main
+    assert run(rig.repo, "git", "rev-parse", "main") == rig.downstream_main
+
+
+def _candidate_snapshot(rig):
+    """Byte/ref preservation witness, excluding ignored runtime/cache state."""
+    result = {}
+    for root in (rig.public.repo, rig.repo, rig.paired, rig.worktree):
+        names = run(root, "git", "ls-files", "--cached", "--others", "--exclude-standard")
+        result[str(root)] = {
+            "head": run(root, "git", "rev-parse", "HEAD"),
+            "branch": run(root, "git", "branch", "--show-current"),
+            "refs": run(root, "git", "show-ref", "--heads"),
+            "status": run(root, "git", "status", "--porcelain=v1"),
+            "files": {name: (root / name).read_bytes() for name in names.splitlines()},
+        }
+    for ctl in (rig.public, rig.downstream):
+        epoch = ctl.inventory.epoch_path()
+        result[str(epoch)] = epoch.read_bytes() if epoch.exists() else None
+    return result
+
+
+def _candidate_acquire(rig, *, base="research-task", active=False):
+    lease = rig.downstream.acquire(1, client="codex", base_ref=base)
+    assert lease["base_sha"] == rig.task
+    assert lease["public_dependency_sha"] == rig.candidate
+    assert lease["state"] == "ACQUIRED"
+    if active:
+        rig.downstream.prepare(1)
+        lease = rig.downstream.inventory.lease(1)
+        assert lease["state"] == "ACTIVE"
+        assert lease["prepared_epoch"] == rig.epoch["epoch_id"]
+        assert run(rig.worktree, "git", "rev-parse", "HEAD") == rig.task
+    return lease
+
+
+def _candidate_call(rig):
+    gate = LeaseGate(rig.downstream.inventory, 1)
+    client, supplied_hash = gate.identify(None, "codex")
+    call = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
+                       "params": {"name": "lean_goal"}}).encode()
+    return lambda: gate.authorize(client, supplied_hash, call)
+
+
+def test_candidate_p1_distinct_task_and_dependency_epochs(candidate_repo):
+    rig = candidate_repo
+    lease = _candidate_acquire(rig, active=True)
+    assert lease["base_ref"] == "research-task"
+    assert rig.epoch["fingerprint"]["commit_sha"] == rig.task
+    assert rig.epoch["fingerprint"]["public_dependency_sha"] == rig.candidate
+    assert run(rig.paired, "git", "rev-parse", "HEAD") == rig.candidate
+    assert not run(rig.paired, "git", "status", "--porcelain=v1")
+    _candidate_call(rig)()
+    _candidate_mains(rig)
+
+
+def test_candidate_p2_absorb_with_actual_supervisor_handoff(
+    candidate_repo, monkeypatch, isolated_process_observations
+):
+    rig = candidate_repo
+    host = isolated_process_observations
+    monkeypatch.delenv("LEAN_SLOT_SKIP_SUPERVISOR")
+    public_sup = Supervisor(rig.public.inventory)
+    downstream_sup = Supervisor(rig.downstream.inventory)
+    public_sup.start_proxy(1)
+    # Repeat the public ordinary lifecycle with supervision enabled throughout.
+    rig.public.acquire(1, client="codex", base_ref="reviewed-candidate")
+    rig.public.prepare(1)
+    rig.public.release(1)
+    assert public_sup.process_state("backend", 1) == "running"
+    public_pid = json.loads(rig.public.inventory.process_path("backend", 1).read_text())["pid"]
+    before_handoff = len(host.launches)
+    _candidate_acquire(rig, active=True)
+    assert (public_pid, signal.SIGTERM) in host.signals
+    assert public_sup.process_state("backend", 1) == "down"
+    assert downstream_sup.process_state("backend", 1) == "running"
+    assert downstream_sup.backend_command(1) in host.launches[before_handoff:]
+    census = downstream_sup.capacity_census()
+    assert census["complete"] and not census["errors"] and not census["conflicts"]
+    source = commit(rig.worktree, "allowed.lean", "-- isolated allowed source\n")
+    ready = rig.downstream.ready(1)
+    assert ready["state"] == "READY_TO_ABSORB" and ready["ready_head"] == source
+    downstream_pid = json.loads(rig.downstream.inventory.process_path("backend", 1).read_text())["pid"]
+    result = rig.downstream.absorb(1)
+    assert result["integrated_head"] == source
+    assert run(rig.repo, "git", "rev-parse", "research-task") == source
+    assert (rig.repo / "allowed.lean").read_bytes() == b"-- isolated allowed source\n"
+    assert result["epoch"]["fingerprint"]["commit_sha"] == source
+    assert result["epoch"]["fingerprint"]["public_dependency_sha"] == rig.candidate
+    assert result["epoch"]["epoch_id"] != rig.epoch["epoch_id"]
+    assert rig.downstream.inventory.lease(1, required=False) is None
+    assert (downstream_pid, signal.SIGTERM) in host.signals
+    assert downstream_sup.process_state("backend", 1) == "down"
+    assert public_sup.process_state("backend", 1) == "running"
+    assert host.launches[-1] == public_sup.backend_command(1)
+    assert run(rig.paired, "git", "rev-parse", "HEAD") == rig.candidate
+    assert not run(rig.paired, "git", "status", "--porcelain=v1")
+    _candidate_mains(rig)
+
+
+def test_candidate_p3_no_change_normal_release(candidate_repo):
+    rig = candidate_repo
+    _candidate_acquire(rig, active=True)
+    before = _candidate_snapshot(rig)
+    rig.downstream.release(1)
+    assert rig.downstream.inventory.lease(1, required=False) is None
+    assert _candidate_snapshot(rig) == before
+    _candidate_mains(rig)
+
+
+@pytest.mark.parametrize("defect", ["configured-main", "other-primary", "dirty-primary"])
+def test_candidate_n1_n2_primary_dependency_guard(candidate_repo, defect):
+    rig = candidate_repo
+    if defect == "configured-main":
+        rig.downstream.inventory.raw["paired_dependency"]["base_ref"] = "main"
+    elif defect == "other-primary":
+        run(rig.public.repo, "git", "checkout", "main")
+    else:
+        (rig.public.repo / "protected.txt").write_text("retain primary work\n")
+    before = _candidate_snapshot(rig)
+    detail = "checkout is dirty" if defect == "dirty-primary" else "not on its configured base"
+    with pytest.raises(SlotError, match=detail):
+        _candidate_acquire(rig)
+    assert rig.downstream.inventory.lease(1, required=False) is None
+    assert _candidate_snapshot(rig) == before
+
+
+def test_candidate_public_primary_guard_compares_sha_not_branch(candidate_repo):
+    rig = candidate_repo
+    run(rig.public.repo, "git", "checkout", "-b", "same-reviewed-sha")
+    assert rig.public._dependency_primary_sha() is None  # public has no dependency
+    _candidate_acquire(rig, active=True)
+    _candidate_mains(rig)
+
+
+@pytest.mark.parametrize("defect", ["clean-sha", "dirty"])
+def test_candidate_n3_paired_pin_and_cleanliness(candidate_repo, defect):
+    rig = candidate_repo
+    if defect == "clean-sha":
+        run(rig.paired, "git", "reset", "--hard", rig.public_main)
+        assert not run(rig.paired, "git", "status", "--porcelain=v1")
+    else:
+        (rig.paired / "protected.lean").write_text("retain dependency work\n")
+    before = _candidate_snapshot(rig)
+    with pytest.raises(SlotError, match="not pinned" if defect == "clean-sha" else "is dirty"):
+        _candidate_acquire(rig)
+    assert rig.downstream.inventory.lease(1, required=False) is None
+    assert _candidate_snapshot(rig) == before
+
+
+@pytest.mark.parametrize("defect, detail", [
+    ("branch", "branch mismatch"),
+    ("realpath", "paired dependency path mismatch"),
+    ("primary-lake", "Lake dependency path mismatch"),
+    ("slot-lake", "Lake dependency path mismatch"),
+])
+def test_candidate_n4_independent_identity_and_paths(candidate_repo, defect, detail):
+    rig = candidate_repo
+    if defect == "branch":
+        run(rig.paired, "git", "checkout", "-b", "unexpected-paired-branch")
+    elif defect == "realpath":
+        link = rig.worktree.parent / "primary"
+        link.unlink()
+        link.symlink_to(rig.public.inventory.worktree(2), target_is_directory=True)
+    else:
+        root = rig.repo if defect == "primary-lake" else rig.worktree
+        lake = root / "lean" / "lakefile.toml"
+        lake.write_text(lake.read_text().replace("../../primary/lean", "../../wrong/lean"))
+    before = _candidate_snapshot(rig)
+    with pytest.raises(SlotError, match=detail):
+        _candidate_acquire(rig)
+    assert rig.downstream.inventory.lease(1, required=False) is None
+    assert _candidate_snapshot(rig) == before
+    if defect == "realpath":
+        assert (rig.worktree.parent / "primary").resolve() == rig.public.inventory.worktree(2)
+
+
+@pytest.mark.parametrize("candidate_repo", ["old-epoch"], indirect=True)
+def test_candidate_n5_old_dependency_epoch_does_not_match_new_pin(candidate_repo):
+    rig = candidate_repo
+    _candidate_acquire(rig)
+    assert rig.epoch["fingerprint"]["commit_sha"] == rig.task
+    assert rig.epoch["fingerprint"]["public_dependency_sha"] == rig.public_main
+    before = _candidate_snapshot(rig)
+    with pytest.raises(SlotError, match="no successful-build epoch matches"):
+        rig.downstream.prepare(1)
+    lease = rig.downstream.inventory.lease(1)
+    assert lease["state"] == "ACQUIRED" and lease["public_dependency_sha"] == rig.candidate
+    assert "prepared_epoch" not in lease
+    assert _candidate_snapshot(rig) == before
+
+
+@pytest.mark.parametrize("stage", ["acquired", "active-commit", "ready-commit"])
+def test_candidate_n6_dependency_advance_at_each_lifecycle_guard(candidate_repo, stage):
+    rig = candidate_repo
+    _candidate_acquire(rig, active=stage != "acquired")
+    if stage != "acquired":
+        source = commit(rig.worktree, "retained.lean", "-- preserve committed work\n")
+        assert source != rig.task
+        # The actual per-call gate's invariant covers the retained paired pin.
+        call = _candidate_call(rig)
+        call()
+        if stage == "ready-commit":
+            assert rig.downstream.ready(1)["ready_head"] == source
+    advanced = commit(rig.public.repo, "advanced.txt", "next public dependency\n")
+    assert advanced != rig.candidate
+    assert run(rig.paired, "git", "rev-parse", "HEAD") == rig.candidate
+    assert not run(rig.paired, "git", "status", "--porcelain=v1")
+    if stage == "active-commit":
+        call()  # ACTIVE, before the controller quarantines; primary is not checked.
+        assert rig.downstream.inventory.lease(1)["state"] == "ACTIVE"
+    before = _candidate_snapshot(rig)
+    operation = {"acquired": rig.downstream.prepare, "active-commit": rig.downstream.ready,
+                 "ready-commit": rig.downstream.absorb}[stage]
+    with pytest.raises(SlotError, match="paired dependency base advanced"):
+        operation(1)
+    lease = rig.downstream.inventory.lease(1)
+    assert lease["public_dependency_sha"] == rig.candidate and lease["base_sha"] == rig.task
+    assert lease["state"] == ("ACQUIRED" if stage == "acquired" else "QUARANTINED")
+    assert _candidate_snapshot(rig) == before
+    _candidate_mains(rig)
+
+
+@pytest.mark.parametrize("defect, detail", [
+    ("clean-sha", "paired dependency SHA changed"),
+    ("dirty", "paired dependency became dirty"),
+])
+def test_candidate_n7_gate_rechecks_actual_paired_git(candidate_repo, defect, detail):
+    rig = candidate_repo
+    _candidate_acquire(rig, active=True)
+    call = _candidate_call(rig)
+    call()
+    if defect == "clean-sha":
+        run(rig.paired, "git", "reset", "--hard", rig.public_main)
+        assert not run(rig.paired, "git", "status", "--porcelain=v1")
+    else:
+        (rig.paired / "protected.lean").write_text("retain dirty pin\n")
+    before = _candidate_snapshot(rig)
+    lease = rig.downstream.inventory.lease_path(1).read_bytes()
+    with pytest.raises(SlotError, match=detail):
+        call()
+    assert rig.downstream.inventory.lease_path(1).read_bytes() == lease
+    assert _candidate_snapshot(rig) == before
+
+
+def test_candidate_n8_task_ref_advance_rejects_prepare(candidate_repo):
+    rig = candidate_repo
+    _candidate_acquire(rig)
+    advanced = commit(rig.repo, "task-advance.lean", "-- new authoritative task\n")
+    assert advanced != rig.task
+    before = _candidate_snapshot(rig)
+    with pytest.raises(SlotError, match="base ref advanced after acquisition"):
+        rig.downstream.prepare(1)
+    lease = rig.downstream.inventory.lease(1)
+    assert lease["state"] == "QUARANTINED" and lease["base_sha"] == rig.task
+    assert lease["public_dependency_sha"] == rig.candidate
+    assert _candidate_snapshot(rig) == before
+
+
+@pytest.mark.parametrize("base_kind", ["sha", "alias"])
+def test_candidate_n8_absorb_requires_literal_task_branch(candidate_repo, base_kind):
+    rig = candidate_repo
+    run(rig.repo, "git", "branch", "task-alias", rig.task)
+    base = rig.task if base_kind == "sha" else "task-alias"
+    _candidate_acquire(rig, base=base, active=True)
+    source = commit(rig.worktree, "retained.lean", "-- retain actual ready commit\n")
+    assert rig.downstream.ready(1)["ready_head"] == source
+    before = _candidate_snapshot(rig)
+    lease_bytes = rig.downstream.inventory.lease_path(1).read_bytes()
+    with pytest.raises(SlotError, match="primary checkout is on 'research-task'; switch to"):
+        rig.downstream.absorb(1)
+    assert rig.downstream.inventory.lease_path(1).read_bytes() == lease_bytes
+    assert rig.downstream.inventory.lease(1)["state"] == "READY_TO_ABSORB"
+    assert _candidate_snapshot(rig) == before
+
+
+@pytest.mark.parametrize("defect", ["dirty", "failed-command"])
+def test_candidate_n9_failed_build_preserves_successful_epoch(
+    candidate_repo, isolated_process_observations, defect
+):
+    rig = candidate_repo
+    if defect == "dirty":
+        (rig.repo / "protected.lean").write_text("retain authoritative draft\n")
+        detail = "requires a clean committed primary"
+    else:
+        command = ["git", "rev-parse", "--verify", "missing-build-input"]
+        rig.downstream.inventory.raw["build"]["command"] = command
+        detail = r"authoritative build failed \(128\)"
+    before = _candidate_snapshot(rig)
+    with pytest.raises(SlotError, match=detail):
+        rig.downstream.build()
+    if defect == "failed-command":
+        assert isolated_process_observations.command_calls[-1] == command
+    assert _candidate_snapshot(rig) == before
+    assert rig.downstream.inventory.lease(1, required=False) is None
+
+
+@pytest.mark.parametrize("defect, detail", [
+    ("dirty-task", "dirty files remain"),
+    ("unabsorbed", "not contained"),
+    ("dirty-pair", "paired dependency wt1 is dirty"),
+    ("moved-pair", "not pinned"),
+])
+def test_candidate_n10_release_preserves_work_and_quarantine(candidate_repo, defect, detail):
+    rig = candidate_repo
+    _candidate_acquire(rig, active=True)
+    if defect == "dirty-task":
+        (rig.worktree / "protected.lean").write_text("retain task draft\n")
+    elif defect == "unabsorbed":
+        commit(rig.worktree, "protected.lean", "-- retain unabsorbed commit\n")
+    elif defect == "dirty-pair":
+        (rig.paired / "protected.lean").write_text("retain paired draft\n")
+    else:
+        commit(rig.paired, "protected.lean", "-- retain moved paired commit\n")
+    before = _candidate_snapshot(rig)
+    with pytest.raises(SlotError, match=detail):
+        rig.downstream.release(1)
+    lease = rig.downstream.inventory.lease(1)
+    assert lease["state"] == "QUARANTINED" and lease["public_dependency_sha"] == rig.candidate
+    assert _candidate_snapshot(rig) == before
+
+
+def test_candidate_n10_stop_only_reservation_preserves_lease(
+    candidate_repo, monkeypatch, isolated_process_observations
+):
+    from tests.test_lean_lifecycle_observation import rr_orphan, rr_retained_recovery, rr_session
+    rig = candidate_repo
+    rr_session(monkeypatch)
+    _candidate_acquire(rig, active=True)
+    rig.downstream._quarantine(1, rig.downstream.inventory.lease(1), "isolated recovery case")
+    monkeypatch.delenv("LEAN_SLOT_SKIP_SUPERVISOR")
+    host = isolated_process_observations
+    request = rr_orphan(rig.downstream, host)
+    path = rr_retained_recovery(rig.downstream, host, request)
+    retained = path.read_bytes()
+    before = _candidate_snapshot(rig)
+    lease = rig.downstream.inventory.lease_path(1).read_bytes()
+    signals = list(host.signals)
+    with pytest.raises(SlotError, match="pending stop-only recovery"):
+        rig.downstream.release(1)
+    assert rig.downstream.inventory.lease_path(1).read_bytes() == lease
+    assert path.read_bytes() == retained and host.signals == signals
+    assert _candidate_snapshot(rig) == before
+
+
+def test_candidate_p4_retained_pin_release_after_primary_advance(candidate_repo):
+    rig = candidate_repo
+    _candidate_acquire(rig, active=True)
+    commit(rig.public.repo, "advanced.txt", "new dependency outside retained window\n")
+    before = _candidate_snapshot(rig)
+    rig.downstream.release(1)
+    assert rig.downstream.inventory.lease(1, required=False) is None
+    assert _candidate_snapshot(rig) == before
+    assert run(rig.paired, "git", "rev-parse", "HEAD") == rig.candidate
+    _candidate_mains(rig)
+
+
+def test_candidate_n11_selected_source_and_alternate_domain(candidate_repo, monkeypatch, tmp_path):
+    from scripts.lean_slots import cli, state
+    rig = candidate_repo
+    selected = rig.downstream.inventory.source
+    monkeypatch.setenv("LEAN_SLOT_CONFIG", str(selected))
+    canonical = Inventory.load()
+    assert canonical.source == selected
+    assert canonical.repo_root == rig.repo
+    assert canonical.state_root == rig.public.inventory.state_root
+    assert canonical.paired_inventory().source == rig.public.inventory.source
+    assert canonical.paired_inventory().state_root == canonical.state_root
+    _candidate_acquire(rig)
+    original_lease = canonical.lease_path(1).read_bytes()
+    assert Controller().inventory.lease(1)["public_dependency_sha"] == rig.candidate
+    # The CLI's explicit selection is passed to the same Inventory loader.
+    args = cli.parser().parse_args(["--inventory", str(selected), "build"])
+    assert Inventory.load(args.inventory).source == selected
+    monkeypatch.delenv("LEAN_SLOT_CONFIG")
+    assert Inventory.load().source == Path(state.__file__).resolve().parents[2] / "config/lean-slots.public.json"
+    alternate = tmp_path / "alternate" / "config" / "slots.json"
+    alternate.parent.mkdir(parents=True)
+    alternate.write_text(json.dumps(canonical.raw))
+    monkeypatch.setenv("LEAN_SLOT_CONFIG", str(alternate))
+    monkeypatch.setenv("LEAN_SLOT_STATE_DIR", str(tmp_path / "alternate-state"))
+    copied = Inventory.load()
+    assert copied.source == alternate and copied.repo_root != canonical.repo_root
+    assert copied.state_root != canonical.state_root
+    assert copied.lease(1, required=False) is None
+    assert canonical.lease_path(1).read_bytes() == original_lease
+    # An alternate configured domain can load; it is not canonical availability.
+    assert Inventory.load(args.inventory).source == selected  # explicit beats env
+    with pytest.raises(SlotError, match="share one runtime state"):
+        canonical.paired_inventory()
+    monkeypatch.setenv("LEAN_SLOT_STATE_DIR", str(canonical.state_root))
+    assert canonical.paired_inventory().state_root == canonical.state_root
+    assert canonical.lease_path(1).read_bytes() == original_lease
+
+
+@pytest.mark.parametrize("defect, detail", [
+    ("slots", "exactly the global slots"),
+    ("role", "repo_role must be a nonempty string"),
+    ("absolute-pair", "inventory paths must be relative"),
+    ("same-role", "distinct repository roles"),
+])
+def test_candidate_n11_existing_inventory_domain_guards(candidate_repo, tmp_path, defect, detail):
+    rig = candidate_repo
+    raw = json.loads(rig.downstream.inventory.source.read_text())
+    if defect == "slots":
+        del raw["slots"]["3"]
+    elif defect == "role":
+        raw["repo_role"] = ""
+    elif defect == "absolute-pair":
+        raw["paired_dependency"]["inventory"] = str(rig.public.inventory.source)
+    else:
+        raw["repo_role"] = "public"
+    # An untracked ignored runtime copy can exercise schema/domain validation
+    # without changing either authoritative temporary source inventory.
+    path = tmp_path / "invalid-inventory.json"
+    path.write_text(json.dumps(raw))
+    before = _candidate_snapshot(rig)
+    with pytest.raises(SlotError, match=detail):
+        if defect in {"absolute-pair", "same-role"}:
+            # Keep the original source directory for relative dependency lookup.
+            from dataclasses import replace
+            replace(rig.downstream.inventory, raw=raw).paired_inventory()
+        else:
+            Inventory.load(path)
+    assert rig.downstream.inventory.lease(1, required=False) is None
+    assert _candidate_snapshot(rig) == before
+
+
 def test_downstream_acquire_refuses_dirty_or_unpinned_dependency(
     downstream_repo,
 ) -> None:
