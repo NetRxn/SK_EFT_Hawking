@@ -10792,6 +10792,21 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-l1-abstract-length:L1:1.1",
+      "status": "fixed",
+      "evidence": "Exact abstract shortened from1849 to443 against unchanged600 ceiling, conditional model/caveats preserved, token-identical display layout contains new overlap, actual4pagePDF independently reviewed. Five declared abstracts retained with16UNMEASURED/fourunverified; full L1 science/body/pointer limitations and broader gates remain unaccepted. Independent source/pixel review and actual existing global Verify support only this bounded length repair.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "ad6d7f78a4ca5408036c5d9fbf999c0edca4e22c",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "declared": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
