@@ -417,6 +417,114 @@ Each phase is independently reversible. A later phase may not weaken an earlier 
 - Pinned `lean-lsp-mcp` source at release 0.26.1 — fixed-root HTTP behavior, shared LSP client, session-scoped REPL, destructive `lean_build`, bearer authentication, and disabled-tool support.
 
 
+## Client-session value boundary (ST amendment)
+
+**Status: implemented in source; integration and loaded-runtime admission are separate gates.**
+This amendment extends S-D/S-N/S-Q in the existing proxy. It does not certify
+implementation, source integration, scanner results or loaded runtime. The
+[design](../superpowers/specs/2026-10-15-lean-proxy-client-session-value-design.md)
+and [plan](../superpowers/plans/2026-10-15-lean-proxy-client-session-value.md) bind
+its implementation and verification requirements.
+
+### Context and source constraints
+
+At source `d87df4da8943b7e6ad4d67733ad6941ee9b94e08`, inspected 2026-10-15,
+`scripts/lean_slots/proxy.py` already owns the parsed request, authentication and
+lease gate, offline initialization, `SessionBroker` translation and response echo.
+`Handler._handle` currently selects the first matching client session field after
+initialization and emits that value in the buffered response. The residue is an
+unvalidated selected client value and ambiguous repeated fields. Extend that
+boundary; retain the existing parser, broker and lease authority. Existing actual
+Handler tests in `tests/test_lean_slots.py` use in-memory `Wire` byte streams;
+their `_post` helper currently uses a dictionary and session truthiness, which
+cannot express repeated fields or distinguish absence from explicit empty.
+
+The configured protocol default is `2025-06-18`. Its
+[MCP session-management contract](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#session-management)
+requires visible ASCII session characters. [RFC 9110 field-value rules](https://www.rfc-editor.org/rfc/rfc9110.html#section-5.5)
+distinguish framing whitespace from the field value. Neither supplies a universal
+numeric session-length maximum. This amendment changes no protocol negotiation.
+Source UUID construction and existing fixture lengths are not a live token census.
+
+### Decisions
+
+- **ST-1 — One existing ingress boundary.** Add one pure
+  `_client_session_id(headers)` selector in `proxy.py`. Use case-insensitive
+  `headers.get_all("Mcp-Session-Id", [])`; do not select a first item from `items()`
+  or `get()`. No checker, registry, middleware stack, CLI or new lease authority.
+- **ST-2 — Presence and multiplicity are explicit.** Absence of a parsed field
+  returns `None`. A present field must be a singleton; reject all duplicates, including
+  identical values and mixed-case field names. Present empty or OWS-only is
+  invalid, never sessionless. A single comma-containing value is opaque data;
+  neither join nor split it. Upstream-coalesced origins are not recoverable here.
+- **ST-3 — Extract framing, preserve token identity.** Remove only outer SP and
+  HTAB (`strip(" \t")`), then require a nonempty sequence of code points
+  `0x21..0x7E` inclusive. Reject retained interior SP/HTAB, CR/LF, other C0 controls,
+  DEL and non-ASCII. Preserve case and all visible punctuation, including comma,
+  quotes and percent signs. No UUID/hex/HTTP-tchar grammar, generic whitespace
+  stripping, unfolding, decoding, normalization or repair. The safety claim is
+  about the selected parsed value; it does not reconstruct parser-erased raw folds.
+- **ST-4 — Preserve gate and error precedence.** In `_handle` select immediately
+  after successful existing identification/authorization, before
+  `wants_initialize`, minting, cache lookup, connection construction or broker work.
+  Handle selector failure separately from credential/lease `SlotError` handling:
+  HTTP 400 through `_deny` with the static detail `invalid Mcp-Session-Id header`,
+  no session echo and no later side effects. Preserve independently supplied
+  JSON-RPC request IDs through existing JSON serialization. Body/framing/JSON,
+  credential and lease failures keep their current precedence; invalid input is
+  not promised 400 before a successful gate. GET, POST and DELETE share this rule.
+  HEAD retains its current authentication/401-or-204 behavior and does not select,
+  consume or echo a client session.
+- **ST-5 — One canonical identity across consumers.** Reuse the selected value for
+  the broker key and buffered non-GET echo; remove the later first-value selection.
+  Only `None` maps to the existing `"\x00sessionless"` key. NUL cannot enter a client
+  token. Preserve local fresh UUID-hex minting on initialize with absent or valid
+  supplied input, unknown well-formed token adoption, repeated sessionless mapping
+  reuse and at most one stale-backend retry. The client header remains excluded
+  from forwarded headers; the backend receives its separately established session.
+  Lease/client/role/worktree/endpoint/dependency/process checks, disabled
+  `lean_build`, notification and offline behavior remain in their current owners.
+- **ST-6 — Retain parser limits without a lower token cap.** No truncation or lower
+  application length cap belongs to this fix. A CPython 3.14.8 parser measurement
+  accepts a canonical `Mcp-Session-Id: <token>\r\n` line with 65518 token bytes and
+  rejects 65519 at its 65536-byte line limit. That framing-specific example is not
+  a universal token maximum. Header-read limits are implementation constraints,
+  not MCP limits. Broker cardinality and accepted-token resource policy require
+  separate assessment; this amendment supplies no complete denial-of-service claim.
+- **ST-7 — Keep source boundaries explicit.** The buffered branch drops backend
+  session fields before echoing the selected client value. Backend initialize still
+  selects its returned session separately; GET still passes backend headers through.
+  Other forwarded request headers, backend response headers and reason phrases are
+  outside this selected-client-value guarantee. Do not infer blanket proxy/header
+  safety or a demonstrated response-splitting exploit from this specification.
+- **ST-8 — Source and native admission stay separate.** Reviewed source, tests,
+  commit and expected launch-source fingerprints do not reload or attest process
+  memory. ROOT alone coordinates any later transition after mathematical leases
+  and actual owned requests drain. Existing LO-5 known ownership, reliable FREE,
+  both-role backend/project/retained-descendant quiescence, target-slot then
+  lifecycle locking and independent loaded-code/native acceptance remain required.
+  No runtime action follows from this amendment.
+
+### Overlap, alternatives and consequences
+
+ST extends the S-Q client-value boundary; S-D/S-N gate and offline discovery rules
+remain authoritative. LO-5 and SF continue to own runtime replacement and expected
+launch-source evidence. Existing architecture-change adversarial and intent review
+apply to the exact ADR/design/plan/guide text before code, then to the complete
+implementation. Extend the existing actual Handler seam and prove the old folded
+value condition red with a successful scripted backend. Later authorized isolated
+production selection/duplicate/alphabet mutations must each turn their corresponding
+Handler controls red, then restore exact bytes through `scripts/seed_journal.py` and
+rerun green. Helper-only predicates are insufficient. Current test results and gate
+counts must be measured; historical runner receipts are not current acceptance.
+
+Rejected alternatives are UUID-only or minted-only recognition, duplicate winner
+selection or comma splitting, generic strip/unfold repair, arbitrary lower caps,
+pre-auth validation and a broad backend/HTTP sanitizer. Each changes an independent
+contract without being necessary for the selected-value correction. The design makes
+no population-shape assertion, so no population pilot is claimed. Existing full
+project, mathematical, publication and merged-wave gates remain unwaived.
+
 ## 2026-10-11 lifecycle observation amendment
 
 **Status:** The LO-1–LO-6 and native-domain source corrections are implemented and

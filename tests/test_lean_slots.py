@@ -1509,15 +1509,32 @@ def _serve_proxy(inventory, number: int):
     return make_handler(inventory, number), 0, lambda: None
 
 
-def _post(host, port: int, payload: dict, session: str | None = None):
+def _post(
+    host, port: int, payload: dict | None, session: str | None = None, *,
+    method: str = "POST", path: str = "/mcp?client=claude",
+    fields: list[tuple[str, str]] | None = None, raw_fields: bytes = b"",
+    raw_output: list[bytes] | None = None,
+):
+    """Drive the actual Handler with ordered fields and optional exact wire bytes.
+
+    Existing callers retain their response tuple. ``None`` omits the session;
+    an empty string deliberately sends a present-empty field. Raw output is
+    captured before HTTPResponse can normalize a defective header.
+    """
     import io
     import http.client
-    body = json.dumps(payload).encode()
-    headers = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream",
-               "Content-Length": str(len(body)), "Connection": "close"}
-    if session:
-        headers["Mcp-Session-Id"] = session
-    request = b"POST /mcp?client=claude HTTP/1.1\r\n" + b"".join(f"{key}: {value}\r\n".encode() for key, value in headers.items()) + b"\r\n" + body
+    body = json.dumps(payload).encode() if payload is not None else b""
+    headers = [("Content-Type", "application/json"),
+               ("Accept", "application/json, text/event-stream"),
+               ("Content-Length", str(len(body))), ("Connection", "close")]
+    if session is not None:
+        headers.append(("Mcp-Session-Id", session))
+    headers.extend(fields or [])
+    request = (
+        f"{method} {path} HTTP/1.1\r\n".encode("ascii")
+        + b"".join(f"{key}: {value}\r\n".encode("latin-1") for key, value in headers)
+        + raw_fields + b"\r\n" + body
+    )
     class Wire:
         def __init__(self, incoming):
             self.incoming, self.outgoing = incoming, bytearray()
@@ -1527,7 +1544,9 @@ def _post(host, port: int, payload: dict, session: str | None = None):
             self.outgoing.extend(data)
     wire = Wire(request)
     host(wire, ("127.0.0.1", 0), SimpleNamespace(server_name="isolated", server_port=0))
-    response = http.client.HTTPResponse(Wire(bytes(wire.outgoing)))
+    if raw_output is not None:
+        raw_output.append(bytes(wire.outgoing))
+    response = http.client.HTTPResponse(Wire(bytes(wire.outgoing)), method=method)
     response.begin()
     return response.status, {key.lower(): value for key, value in response.getheaders()}, response.read()
 
@@ -1621,3 +1640,519 @@ def test_an_unknown_client_session_is_adopted_not_refused() -> None:
     broker = SessionBroker("127.0.0.1", 1, "tok")
     broker._establish = lambda: "backend-x"  # type: ignore[method-assign]
     assert broker.backend_session("never-minted-by-this-proxy") == "backend-x"
+
+
+# ADR-008 ST: keep the actual Handler, broker and gate; simulate only transport.
+@pytest.fixture()
+def st_proxy(slot_repo, monkeypatch):
+    import io
+    from scripts.lean_slots import proxy
+
+    controller, _, _ = slot_repo
+    rig = SimpleNamespace(
+        inventory=controller.inventory, events=[], requests=[], brokers=[],
+        dispatch=[], established=0, offline=False, forbid_connection=False,
+    )
+    original_init = proxy.SessionBroker.__init__
+
+    def broker_init(broker, *args):
+        original_init(broker, *args)
+        rig.brokers.append(broker)
+
+    monkeypatch.setattr(proxy.SessionBroker, "__init__", broker_init)
+    for name in ("mint", "backend_session", "forget"):
+        original = getattr(proxy.SessionBroker, name)
+
+        def observed(broker, *args, _name=name, _original=original):
+            rig.events.append((_name, *args))
+            return _original(broker, *args)
+
+        monkeypatch.setattr(proxy.SessionBroker, name, observed)
+    original_cache = proxy.cached_tool_list
+
+    def cached(inventory):
+        rig.events.append(("cache",))
+        return original_cache(inventory)
+
+    monkeypatch.setattr(proxy, "cached_tool_list", cached)
+
+    class Response:
+        def __init__(self, status=200, body=b'{"result":{"ok":true}}', headers=()):
+            self.status, self.reason = status, "Scripted backend"
+            self.stream = io.BytesIO(body)
+            self.headers = list(headers)
+
+        def read(self, amount=-1):
+            return self.stream.read(amount)
+
+        def getheaders(self):
+            return self.headers
+
+    class Connection:
+        def __init__(self, host, port, timeout):
+            rig.events.append(("connection", host, port, timeout))
+            assert not rig.forbid_connection, "unexpected backend connection"
+
+        def request(self, method, path, body=None, headers=None):
+            if rig.offline:
+                raise OSError("scripted backend unavailable")
+            self.message = json.loads(body) if body else {}
+            self.record = dict(method=method, path=path, body=body,
+                               headers=dict(headers or {}))
+            rig.requests.append(self.record)
+
+        def getresponse(self):
+            method = self.message.get("method")
+            if method == "initialize":
+                token = f"backend-{rig.established}"
+                rig.established += 1
+                return Response(headers=[("Mcp-Session-Id", token)])
+            if method == "notifications/initialized":
+                return Response(status=202, body=b"")
+            if rig.dispatch:
+                return Response(*rig.dispatch.pop(0))
+            return Response()
+
+        def close(self):
+            rig.events.append(("close",))
+
+    monkeypatch.setattr(proxy.http.client, "HTTPConnection", Connection)
+    rig.handler, rig.port, _ = _serve_proxy(rig.inventory, 1)
+    return rig
+
+
+def _st_payload(method="ping", request_id="independent-request"):
+    return {"jsonrpc": "2.0", "id": request_id, "method": method}
+
+
+def _st_static_denial(result, wire, rig, request_id="independent-request"):
+    status, headers, body = result
+    assert status == 400, (
+        f"expected pre-backend refusal; wire={wire!r}; requests={rig.requests!r}; "
+        f"events={rig.events!r}"
+    )
+    assert "mcp-session-id" not in headers
+    assert b"\r\nMcp-Session-Id:" not in wire[0]
+    error = json.loads(body)
+    assert error["id"] == request_id
+    assert error["error"] == {
+        "code": -32001,
+        "message": "ADR-008 lease gate: invalid Mcp-Session-Id header",
+    }
+    assert rig.events == []
+    assert rig.requests == []
+    assert rig.brokers[0]._backend == {}
+
+
+def test_st_h06_folded_value_refuses_before_successful_backend(st_proxy):
+    """A retained fold must never reach buffered success or its session echo."""
+    rig = st_proxy
+    wire = []
+    result = _post(
+        rig.handler, 0, _st_payload(), raw_output=wire,
+        raw_fields=b"Mcp-Session-Id: alpha\r\n injected\r\n",
+    )
+    _st_static_denial(result, wire, rig)
+
+
+def _st_active(rig, **changes):
+    """Populate an isolated lease read by the real gate; no lifecycle operation."""
+    inv = rig.inventory
+    lease = {
+        "schema_version": 1, "slot": 1, "state": "ACTIVE", "client": "claude",
+        "repo_role": inv.repo_role, "worktree": str(inv.worktree(1)),
+        "endpoint": inv.slot(1)["endpoint_name"], "owner_kind": "session",
+    }
+    lease.update(changes)
+    atomic_json(inv.lease_path(1), lease)
+
+
+def _st_session_lines(wire):
+    return [line for line in wire[0].split(b"\r\n\r\n", 1)[0].split(b"\r\n")
+            if line.lower().startswith(b"mcp-session-id:")]
+
+
+def _st_success(result, wire, rig, token):
+    assert result[0] == 200
+    assert result[1]["mcp-session-id"] == token
+    assert _st_session_lines(wire) == [b"Mcp-Session-Id: " + token.encode("ascii")]
+    assert rig.brokers[-1]._backend == {token: f"backend-{rig.established - 1}"}
+    assert [(name, *args) for name, *args in rig.events if name == "backend_session"][-1] == (
+        "backend_session", token,
+    )
+    assert rig.requests[-1]["headers"]["Mcp-Session-Id"].startswith("backend-")
+
+
+@pytest.mark.parametrize("method", ["ping", "tools/call", "GET"])
+def test_st_h01_absent_reuses_sessionless_mapping(st_proxy, method):
+    rig = st_proxy
+    if method != "ping":
+        _st_active(rig)
+    payload = _st_payload(method if method != "GET" else "ping")
+    for _ in range(2):
+        wire = []
+        result = _post(rig.handler, 0, payload, method="GET" if method == "GET" else "POST",
+                       raw_output=wire)
+        assert result[0] == 200
+        assert "mcp-session-id" not in result[1]
+        assert _st_session_lines(wire) == []
+    assert rig.established == 1
+    assert rig.brokers[0]._backend == {"\x00sessionless": "backend-0"}
+    assert [e for e in rig.events if e[0] == "backend_session"] == [
+        ("backend_session", "\x00sessionless"), ("backend_session", "\x00sessionless"),
+    ]
+    assert len(rig.requests) == 4  # One handshake/notification, then two forwards.
+
+
+@pytest.mark.parametrize("token,request_id", [
+    ("", "independent-request"), (" \t ", "independent-request"),
+    ("bad\x00value", "bad\x00value"),
+])
+def test_st_h02_empty_and_independent_request_id(st_proxy, token, request_id):
+    rig = st_proxy
+    wire = []
+    result = _post(rig.handler, 0, _st_payload(request_id=request_id), token, raw_output=wire)
+    _st_static_denial(result, wire, rig, request_id)
+
+
+@pytest.mark.parametrize("fields", [
+    [("Mcp-Session-Id", "alpha"), ("Mcp-Session-Id", "alpha")],
+    [("Mcp-Session-Id", "alpha"), ("Mcp-Session-Id", "beta")],
+    [("mCp-SeSsIoN-Id", "alpha"), ("MCP-SESSION-ID", "alpha")],
+    [("Mcp-Session-Id", "alpha"), ("Mcp-Session-Id", "bad\x00value")],
+    [("Mcp-Session-Id", "bad\x00value"), ("Mcp-Session-Id", "alpha")],
+])
+def test_st_h03_all_duplicate_occurrences_refuse(st_proxy, fields):
+    rig = st_proxy
+    wire = []
+    result = _post(rig.handler, 0, _st_payload(), fields=fields, raw_output=wire)
+    _st_static_denial(result, wire, rig)
+
+
+@pytest.mark.parametrize("method", ["POST", "DELETE"])
+@pytest.mark.parametrize("token", [
+    "alpha", "0123456789abcdef" * 2, "never-minted-by-this-proxy",
+    "".join(chr(n) for n in range(0x21, 0x7F)), '"a,b:c/d"', "%0D%0A",
+])
+def test_st_h04_visible_ascii_is_opaque_on_buffered_success(st_proxy, method, token):
+    rig = st_proxy
+    wire = []
+    result = _post(rig.handler, 0, _st_payload(), token, method=method, raw_output=wire)
+    _st_success(result, wire, rig, token)
+    assert rig.requests[-1]["method"] == method
+
+
+def test_st_h05_only_outer_sp_htab_are_framing(st_proxy):
+    rig = st_proxy
+    wire = []
+    result = _post(rig.handler, 0, _st_payload(), " \tAlPhA\t ", raw_output=wire)
+    _st_success(result, wire, rig, "AlPhA")
+
+
+@pytest.mark.parametrize("token", ["a b", "a\tb", "\valpha", "alpha\f", "\xa0alpha\xa0"])
+def test_st_h05_other_whitespace_is_not_repaired(st_proxy, token):
+    rig = st_proxy
+    wire = []
+    result = _post(rig.handler, 0, _st_payload(), token, raw_output=wire)
+    _st_static_denial(result, wire, rig)
+
+
+@pytest.mark.parametrize("value", [
+    *(b"A" + bytes([n]) + b"Z" for n in range(0x20) if n not in {10, 13}),
+    b"A\x7fZ", b"A\x80Z", b"A\xe9Z", b"A\xffZ",
+    b"alpha\r\n beta", b"alpha\n beta", b"alpha\r beta", b"alpha\r\n ",
+], ids=lambda value: value.hex())
+def test_st_h06_retained_parsed_controls_refuse(st_proxy, value):
+    rig = st_proxy
+    wire = []
+    result = _post(rig.handler, 0, _st_payload(), raw_output=wire,
+                   raw_fields=b"Mcp-Session-Id: " + value + b"\r\n")
+    _st_static_denial(result, wire, rig)
+
+
+def test_st_h06_delete_retained_control_refuses(st_proxy):
+    rig = st_proxy
+    wire = []
+    result = _post(rig.handler, 0, _st_payload(), "A\x00Z", method="DELETE", raw_output=wire)
+    _st_static_denial(result, wire, rig)
+
+
+@pytest.mark.parametrize("raw_fields", [
+    b"Mcp-Session-Id:\r\n alpha\r\n",
+    b"Mcp-Session-Id: alpha\nbeta\r\n",
+    b"Mcp-Session-Id: alpha\rbeta\r\n",
+    b"Mcp-Session-Id: alpha\r\nX-Separate: value\r\n",
+])
+def test_st_h07_parser_erasure_does_not_become_token_suffix(st_proxy, raw_fields):
+    rig = st_proxy
+    wire = []
+    result = _post(rig.handler, 0, _st_payload(), raw_fields=raw_fields, raw_output=wire)
+    _st_success(result, wire, rig, "alpha")
+    if b"X-Separate" in raw_fields:
+        assert rig.requests[-1]["headers"]["X-Separate"] == "value"
+
+
+@pytest.mark.parametrize("length,expected", [(65518, 200), (65519, 431)])
+def test_st_h08_specific_canonical_field_line_boundary(st_proxy, length, expected):
+    import http.client
+    rig = st_proxy
+    assert http.client._MAXLINE == 65536  # This control is specific to this parser/framing.
+    wire = []
+    token = "a" * length
+    result = _post(rig.handler, 0, _st_payload(), token, raw_output=wire)
+    assert result[0] == expected
+    if expected == 200:
+        _st_success(result, wire, rig, token)
+    else:
+        assert _st_session_lines(wire) == []
+        assert rig.events == rig.requests == []
+        assert rig.brokers[0]._backend == {}
+
+
+@pytest.mark.parametrize("supplied", [None, "valid-client,token"])
+def test_st_h09_initialize_mints_locally_after_valid_selection(st_proxy, supplied):
+    rig = st_proxy
+    rig.forbid_connection = True
+    minted = []
+    for _ in range(2):
+        wire = []
+        result = _post(rig.handler, 0, _st_payload("initialize"), supplied, raw_output=wire)
+        assert result[0] == 200
+        token = result[1]["mcp-session-id"]
+        assert len(token) == 32 and all(c in "0123456789abcdef" for c in token)
+        assert token != supplied
+        assert _st_session_lines(wire) == [b"Mcp-Session-Id: " + token.encode()]
+        minted.append(token)
+    assert len(set(minted)) == 2
+    assert rig.events == [("mint",), ("cache",), ("mint",), ("cache",)]
+    assert rig.brokers[0]._backend == {token: "" for token in minted}
+    assert rig.requests == []
+
+
+@pytest.mark.parametrize("fields", [
+    [("Mcp-Session-Id", "")], [("Mcp-Session-Id", "A\x00Z")],
+    [("Mcp-Session-Id", "valid"), ("Mcp-Session-Id", "valid")],
+])
+def test_st_h09_invalid_initialize_precedes_mint_and_cache(st_proxy, fields):
+    rig = st_proxy
+    wire = []
+    result = _post(rig.handler, 0, _st_payload("initialize"), fields=fields, raw_output=wire)
+    _st_static_denial(result, wire, rig)
+
+
+@pytest.mark.parametrize("method", ["POST", "GET"])
+@pytest.mark.parametrize("defect,detail", [
+    ("unleased", "no active lease"), ("client", "another client"),
+    ("role", "repository-role mismatch"), ("worktree", "project-root mismatch"),
+    ("endpoint", "endpoint-identity mismatch"), ("process", "process owner identity"),
+    ("state", "not active"),
+])
+def test_st_h10_valid_token_cannot_grant_dispatch(st_proxy, method, defect, detail):
+    rig = st_proxy
+    changes = {
+        "client": {"client": "codex"}, "role": {"repo_role": "other"},
+        "worktree": {"worktree": "wrong"}, "endpoint": {"endpoint": "wrong"},
+        "process": {"owner_kind": "process", "owner_pid": 991001,
+                    "owner_signature": "stale identity"},
+        "state": {"state": "QUARANTINED"},
+    }
+    if defect != "unleased":
+        _st_active(rig, **changes[defect])
+    wire = []
+    result = _post(rig.handler, 0, _st_payload("tools/call"), "valid-token",
+                   method=method, raw_output=wire)
+    assert result[0] == 403
+    assert detail in json.loads(result[2])["error"]["message"]
+    assert _st_session_lines(wire) == []
+    assert rig.events == rig.requests == []
+
+
+def test_st_h10_disabled_build_remains_denied(st_proxy):
+    rig = st_proxy
+    _st_active(rig)
+    payload = {**_st_payload("tools/call"), "params": {"name": "lean_build"}}
+    result = _post(rig.handler, 0, payload, "valid-token")
+    assert result[0] == 403
+    assert "lean_build is disabled" in json.loads(result[2])["error"]["message"]
+    assert rig.events == rig.requests == []
+
+
+@pytest.mark.parametrize("defect,detail", [
+    ("sha", "paired dependency SHA changed"),
+    ("dirty", "paired dependency became dirty"),
+])
+def test_st_h10_actual_handler_rechecks_paired_dependency(st_proxy, downstream_repo, defect, detail):
+    rig = st_proxy
+    downstream, public, _, _ = downstream_repo
+    rig.inventory = downstream.inventory
+    rig.handler, _, _ = _serve_proxy(rig.inventory, 1)
+    paired = public.inventory.worktree(1)
+    dependency_sha = run(paired, "git", "rev-parse", "HEAD")
+    _st_active(rig, public_dependency_sha=dependency_sha)
+    payload = {**_st_payload("tools/call"),
+               "params": {"name": "lean_goal", "arguments": {}}}
+    wire = []
+    result = _post(rig.handler, 0, payload, "valid-token", raw_output=wire)
+    _st_success(result, wire, rig, "valid-token")
+    if defect == "sha":
+        _st_active(rig, public_dependency_sha="0" * 40)
+    else:
+        (paired / "changed.lean").write_text("isolated dependency change\n")
+    rig.events.clear()
+    rig.requests.clear()
+    wire = []
+    result = _post(rig.handler, 0, payload, "valid-token", raw_output=wire)
+    assert result[0] == 403
+    assert detail in json.loads(result[2])["error"]["message"]
+    assert _st_session_lines(wire) == []
+    assert rig.events == rig.requests == []
+
+
+def test_st_h10_valid_bearer_and_lease_dispatch_on_actual_handler(st_proxy):
+    from scripts.lean_slots.state import token_hash
+    rig = st_proxy
+    rig.inventory.raw["server"]["client_auth"] = "bearer"
+    credential = rig.inventory.token("claude")
+    _st_active(rig, token_hash=token_hash(credential))
+    payload = {**_st_payload("tools/call"),
+               "params": {"name": "lean_goal", "arguments": {}}}
+    wire = []
+    result = _post(rig.handler, 0, payload, "valid-token", raw_output=wire,
+                   fields=[("Authorization", f"Bearer {credential}")])
+    _st_success(result, wire, rig, "valid-token")
+    assert rig.requests[-1]["headers"]["Authorization"] != f"Bearer {credential}"
+
+
+def test_st_h11_unknown_token_is_adopted_after_broker_replacement(st_proxy):
+    rig = st_proxy
+    for _ in range(2):
+        wire = []
+        result = _post(rig.handler, 0, _st_payload(), "unknown-before-restart", raw_output=wire)
+        _st_success(result, wire, rig, "unknown-before-restart")
+        rig.handler, _, _ = _serve_proxy(rig.inventory, 1)
+    assert rig.established == 2
+    assert rig.brokers[0]._backend == {"unknown-before-restart": "backend-0"}
+    assert rig.brokers[1]._backend == {"unknown-before-restart": "backend-1"}
+
+
+@pytest.mark.parametrize("failure", [
+    (400, b"unknown session"), (404, b"unknown session"),
+    (200, b'{"error":{"code":-32602}}'),
+])
+@pytest.mark.parametrize("reject_again", [False, True])
+def test_st_h11_actual_handler_retries_only_once(st_proxy, failure, reject_again):
+    rig = st_proxy
+    rig.dispatch = [failure, failure if reject_again else (200, b"success")]
+    wire = []
+    result = _post(rig.handler, 0, _st_payload(), "AlPhA,token", raw_output=wire)
+    assert (result[0], result[2]) == (failure if reject_again else (200, b"success"))
+    assert _st_session_lines(wire) == [b"Mcp-Session-Id: AlPhA,token"]
+    assert rig.established == 2 and rig.dispatch == []
+    assert [e for e in rig.events if e[0] in {"backend_session", "forget"}] == [
+        ("backend_session", "AlPhA,token"), ("forget", "AlPhA,token"),
+        ("backend_session", "AlPhA,token"),
+    ]
+    assert [json.loads(x["body"])["method"] for x in rig.requests] == [
+        "initialize", "notifications/initialized", "ping",
+        "initialize", "notifications/initialized", "ping",
+    ]
+    forwarded = [x for x in rig.requests if json.loads(x["body"])["method"] == "ping"]
+    assert [x["headers"]["Mcp-Session-Id"] for x in forwarded] == ["backend-0", "backend-1"]
+    assert rig.brokers[0]._backend == {"AlPhA,token": "backend-1"}
+
+
+@pytest.mark.parametrize("method,expected", [
+    ("notifications/initialized", 202), ("tools/list", 200),
+    ("ping", 200), ("tools/call", 503),
+])
+def test_st_h12_offline_fallbacks_keep_existing_shapes(st_proxy, method, expected):
+    from scripts.lean_slots.state import tool_cache_path, tool_list_key
+    rig = st_proxy
+    rig.offline = True
+    tools = [{"name": "lean_goal", "inputSchema": {"type": "object"}}]
+    atomic_json(tool_cache_path(rig.inventory.state_root),
+                {"key": tool_list_key(rig.inventory.raw["server"]), "tools": tools})
+    if method == "tools/call":
+        _st_active(rig)
+    payload = _st_payload(method)
+    if method.startswith("notifications/"):
+        payload.pop("id")
+    result = _post(rig.handler, 0, payload, "valid-token")
+    assert result[0] == expected
+    assert "mcp-session-id" not in result[1]
+    if method == "notifications/initialized":
+        assert result[2] == b""
+        assert ("cache",) not in rig.events
+    elif method == "tools/list":
+        assert json.loads(result[2])["result"]["tools"] == tools
+        assert ("cache",) in rig.events
+    elif method == "ping":
+        assert json.loads(result[2])["result"] == {}
+    else:
+        assert "backend unavailable" in json.loads(result[2])["error"]["message"]
+
+
+def test_st_h12_invalid_discovery_precedes_cache_and_fallback(st_proxy):
+    rig = st_proxy
+    rig.offline = True
+    wire = []
+    result = _post(rig.handler, 0, _st_payload("tools/list"), "bad\x00value", raw_output=wire)
+    _st_static_denial(result, wire, rig)
+
+
+@pytest.mark.parametrize("auth,expected", [("trusted-local", 204), ("bearer-missing", 401),
+                                          ("bearer-valid", 204)])
+def test_st_h12_head_auth_does_not_consume_session(st_proxy, auth, expected, monkeypatch):
+    from scripts.lean_slots import proxy
+    rig = st_proxy
+    fields = []
+    if auth.startswith("bearer"):
+        rig.inventory.raw["server"]["client_auth"] = "bearer"
+        if auth == "bearer-valid":
+            fields.append(("Authorization", f"Bearer {rig.inventory.token('claude')}"))
+    def must_not_select(_headers):
+        pytest.fail("HEAD must not consume a session value")
+    monkeypatch.setattr(proxy, "_client_session_id", must_not_select)
+    wire = []
+    result = _post(rig.handler, 0, None, "bad\x00value", method="HEAD", raw_output=wire,
+                   fields=fields)
+    assert result[0] == expected and result[2] == b""
+    assert _st_session_lines(wire) == []
+    assert rig.events == rig.requests == []
+
+
+@pytest.mark.parametrize("method", ["POST", "DELETE", "GET"])
+def test_st_h13_backend_and_client_session_headers_have_distinct_owners(st_proxy, method):
+    rig = st_proxy
+    if method == "GET":
+        _st_active(rig)
+    rig.dispatch = [(200, b"stream-or-buffered", [
+        ("Mcp-Session-Id", "backend-header-a"),
+        ("mCp-SeSsIoN-Id", "backend-header-b"), ("X-Backend", "preserved"),
+    ])]
+    wire = []
+    result = _post(rig.handler, 0, _st_payload(), "client,token", method=method, raw_output=wire)
+    assert result[0] == 200 and result[2] == b"stream-or-buffered"
+    assert result[1]["x-backend"] == "preserved"
+    if method == "GET":
+        assert _st_session_lines(wire) == [b"Mcp-Session-Id: backend-header-a",
+                                           b"mCp-SeSsIoN-Id: backend-header-b"]
+    else:
+        _st_success(result, wire, rig, "client,token")
+    assert rig.requests[-1]["headers"]["Mcp-Session-Id"] == "backend-0"
+
+
+@pytest.mark.parametrize("bearer,expected", [(True, 401), (False, 403)])
+def test_st_h14_gate_failure_precedes_invalid_session(st_proxy, bearer, expected, monkeypatch):
+    from scripts.lean_slots import proxy
+    rig = st_proxy
+    if bearer:
+        rig.inventory.raw["server"]["client_auth"] = "bearer"
+    def must_not_select(_headers):
+        pytest.fail("auth/lease failure must precede session selection")
+    monkeypatch.setattr(proxy, "_client_session_id", must_not_select)
+    wire = []
+    result = _post(rig.handler, 0, _st_payload("tools/call"), "bad\x00value", raw_output=wire)
+    assert result[0] == expected
+    assert _st_session_lines(wire) == []
+    assert rig.events == rig.requests == []

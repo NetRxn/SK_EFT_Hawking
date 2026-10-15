@@ -191,6 +191,43 @@ restart is what activates both.
 
 ---
 
+## Client-session value boundary
+
+**Status: implemented in source; scoped Handler checks do not establish loaded-runtime admission.**
+[ADR-008 ST-1–ST-8](../adrs/ADR-008-shared-lean-slot-control-plane.md#client-session-value-boundary-st-amendment),
+[design](../superpowers/specs/2026-10-15-lean-proxy-client-session-value-design.md)
+and [plan](../superpowers/plans/2026-10-15-lean-proxy-client-session-value.md)
+specify the client-session boundary. Implementation, actual Handler controls,
+scanner recognition and loaded-runtime admission are not established by this text.
+
+The specified client header is absent or a singleton `Mcp-Session-Id`, selected
+case-insensitively. Absence stays sessionless; present empty/OWS-only and duplicate
+fields, even identical or differently cased, refuse after existing auth/lease gates.
+Only outer SP/HTAB is framing whitespace. The remaining nonempty token must be
+`0x21..0x7E`, preserving case and visible punctuation, including comma. No UUID-only
+syntax, generic repair or lower application length cap is specified. Parser-erased
+raw folding cannot be reconstructed; backend headers and GET passthrough retain a
+separate boundary.
+
+Malformed selected input after a successful gate must receive static HTTP 400
+without session echo or mint/cache/broker/backend work. Existing earlier body,
+credential and lease failures keep their precedence, and independently supplied
+JSON-RPC IDs keep their serialized values. GET, POST and DELETE share this ingress;
+HEAD remains auth/401-or-204 without session consumption or echo. Valid values use
+the same canonical broker key and buffered echo. S-Q local minting, unknown-token
+adoption, repeated sessionless mapping reuse and one stale-backend retry remain;
+a valid session token never grants lease authority.
+
+Review or integration of this source does not reload any proxy. ROOT preserves
+active mathematical work and coordinates any later lease/request-drain window under
+[LO-5 observation and replacement rules](#observation-failures-and-residual-resources).
+Known ownership, actual request completion, both-role quiescence, target-slot then
+lifecycle locking and separate loaded-code/native evidence remain mandatory. FREE,
+a closed socket, a timeout or expected launch-source fingerprint alone is insufficient.
+Unknown resources remain reserved. This amendment adds no lifecycle command or
+runtime permission; source, native, project and mathematical acceptance remain
+separate.
+
 ## Per-task orchestrator flow
 
 ✅ **The normal healthy lease lifecycle needs no routine client restart.** Acquire, prepare,
