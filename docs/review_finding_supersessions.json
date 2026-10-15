@@ -10305,6 +10305,20 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-abstract-contract:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent focused reviewer verified the current APS primary text, accepted the self-contained conditional abstract and reconciled its effective-surface-gravity definition. Exact Verify passes; existing proxy575/600 and rendered extraction468 characters are within the unchanged ceiling. Final clean compile and length3665/3750 pass; unrelated readiness failures remain unwaived.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-abstract-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import sys,json,re; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); from validation.checks.bundles_readiness import abstract_plain_text; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); a=re.search(r'\"'\"'\\\\begin\\{abstract\\}(.*?)\\\\end\\{abstract\\}'\"'\"',t,re.S).group(1); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=m['\"'\"'length_target'\"'\"']['\"'\"'abstract_ceiling'\"'\"']; assert c['\"'\"'ceiling'\"'\"']==600 and c['\"'\"'source_verified'\"'\"'] is True; assert len(abstract_plain_text(t))<=c['\"'\"'ceiling'\"'\"']; assert r'\"'\"'\\cite'\"'\"' not in a'",
+        "declared": "python3 -c 'import sys,json,re; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); from validation.checks.bundles_readiness import abstract_plain_text; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); a=re.search(r'\"'\"'\\\\begin\\{abstract\\}(.*?)\\\\end\\{abstract\\}'\"'\"',t,re.S).group(1); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=m['\"'\"'length_target'\"'\"']['\"'\"'abstract_ceiling'\"'\"']; assert c['\"'\"'ceiling'\"'\"']==600 and c['\"'\"'source_verified'\"'\"'] is True; assert len(abstract_plain_text(t))<=c['\"'\"'ceiling'\"'\"']; assert r'\"'\"'\\cite'\"'\"' not in a'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }

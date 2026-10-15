@@ -67,3 +67,9 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Made the group-velocity identification explicit: the per-healing-length exponent is `(Gamma_pol/kappa) D c_s/v_g`, and the generated numerical estimates specialize to `v_g = c_s`.
 - Shortened the same attenuation section and its caption without changing generated device values, the declared validity cut, projected-cavity status or fabrication uncertainty. The normalization paragraph uses sentences in place of its reader-visible em-dash.
 - Focused findings and independent review evidence: `papers/AutomatedReviews/2026-10-15-e1-attenuation-recovery/`. Bundle-wide review statuses remain pending; this correction does not establish submission readiness.
+
+## 2026-10-15 — Self-contained abstract within the declared PRL ceiling
+
+- Shortened the abstract and removed its numbered citation while retaining the body attribution, generated scalars, weak-dissipation condition and saturated-greybody assumption.
+- Reconciled abstract-limit provenance against the current APS author page and its linked February 2026 Style Guide, Abstract subsection (printed p.11 / PDF p.12). The existing 600-character ceiling is unchanged and is now primary-verified for PRL.
+- Focused evidence: `papers/AutomatedReviews/2026-10-15-e1-abstract-contract/`. This changes no bundle-wide review verdict or submission status.
