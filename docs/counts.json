@@ -1,12 +1,12 @@
 {
-  "generated": "2026-10-15T14:47:21.895395",
+  "generated": "2026-10-15T15:50:47.894363",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 48971,
-    "theorems_total": 28022,
-    "theorems_substantive": 27996,
+    "total_declarations": 49273,
+    "theorems_total": 28203,
+    "theorems_substantive": 28177,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 27927,
+    "theorems_kernel_substantive": 28108,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2115,
+    "modules": 2116,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1326,6 +1326,7 @@
       "SKEFTHawking.QuantumNetwork.FiniteThreeLevelCoherentReadout",
       "SKEFTHawking.QuantumNetwork.FiniteThreeLevelEnvironmentLift",
       "SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout",
+      "SKEFTHawking.QuantumNetwork.FiniteThreeLevelPositiveHistory",
       "SKEFTHawking.QuantumNetwork.FiniteThreeLevelThermalPhase",
       "SKEFTHawking.QuantumNetwork.GateFidelity",
       "SKEFTHawking.QuantumNetwork.GateFidelityBridge",
@@ -2133,9 +2134,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 14539,
+    "definitions": 14611,
     "structures": 502,
-    "instances": 1005,
+    "instances": 1012,
     "inductives": 109,
     "native_decide_decl_closure": 530,
     "native_decide_clusters": {
