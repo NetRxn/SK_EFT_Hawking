@@ -238,9 +238,9 @@ Two endpoint-falsifier theorems sharpen the exclusion of the extremes.
 
 The proofs use $\sqrt{1/10} \leq \sqrt{1/4} = 1/2$ and
 $\sqrt{10} \geq \sqrt{4} = 2$, both via \verb|Real.sqrt_le_sqrt|
-and \verb|Real.sqrt_sq|, closed by \verb|linarith|. These are
-\emph{decidable} inequalities at the level of Lean's real-number
-type. The bundled corollary
+and \verb|Real.sqrt_sq|, closed by \verb|linarith|. The Lean source
+supplies proofs of these two concrete real-number
+inequalities. The bundled corollary
 \verb|vestigial_natural_range_violates_ligo| asserts both endpoints
 fail \verb|LigoSatisfied| simultaneously.
 
