@@ -176,3 +176,73 @@ range happens to pin around 1 only by coincidence. GW170817 sees
 the latter, and its bound is too tight to absorb the natural-range
 spread.
 ```
+
+
+## 2026-10-15 — Scope H1 dynamics separately from conditional endpoint algebra
+
+Five manuscript passages now distinguish the assumed speed law and its endpoint constraints from the microscopic action, mode propagator and matter-coupling bridge not supplied by this Letter. The two allocated apex claim descriptions state conditional endpoint content and the actual nonzero-c hypothesis. Original displaced wording follows for provenance; this entry is append-only.
+
+### Scope the missing-dynamics claim to this Letter
+
+```latex
+As established by the present project's Phase~5y H1
+deep-research finding, however, it has \emph{never} been derived as
+a propagating degree of freedom from first principles. The
+identification is \emph{kinematic}, not dynamical: it specifies the
+dispersion relation of an assumed mode without deriving the mode
+itself.
+```
+
+### Scope the Lagrangian comparison
+
+```latex
+The
+vestigial-second-sound identification has no such Lagrangian. As
+Sec.~\ref{sec:intro} notes, $\cGW = c\sqrt{\chivest}$ is asserted
+kinematically: the mode is assumed rather than derived, so there are no
+operator coefficients for the bound to constrain and nothing to tune.
+```
+
+### Keep operator-mechanism claims conditional on the assumed law
+
+```latex
+A corollary worth stating plainly: because the argument never uses a
+Lagrangian, it is insensitive to the operator-level escape routes those
+Letters catalogue. Conformal rescaling, coefficient compensation and
+restriction to Horndeski's simplest terms all act on terms that the
+kinematic identification does not have.
+```
+
+### Separate endpoint algebra from microscopic derivation
+
+```latex
+\paragraph{Phase~5y H1 caveat as a Lean endpoint theorem.} The
+Phase 5y H1 deep research established that the Volovik identification
+is not a \emph{derivation}: there is no first-principles bound fixing
+the graviton-mode normalization in terms of the second-sound DOF.
+We formalize this caveat as the endpoint theorem
+\texttt{natural\_endpoints\_violate\_ligo\_window}: for $\chivest$
+at either natural-range endpoint $\{0.1, 10\}$, no $c$-rescaling
+gives a GW170817-compatible $\dccap$. The frame-independent form
+\texttt{natural\_endpoints\_violate\_ligo\_for\_every\_c}
+quantifies over all $c > 0$ explicitly, resting on
+\texttt{c\_GW\_relative\_deviation\_eq}. Both concern the two
+endpoints only; neither excludes interior values, and $\chivest = 1$
+satisfies the cap (\texttt{ligo\_satisfied\_at\_chi\_one}).
+```
+
+### Remove unsupported probability ranking of the alternative
+
+```latex
+separate UV-input metric channel whose susceptibility is naturally
+pinned to unity. This was floated in~\cite{Volovik2022Counting} and
+reads as the more likely interpretation under the Phase~5y H1
+negative-evidence result. Phase~6e (full nonlinear emergent action)
+is the natural venue for the disambiguation.
+```
+
+### Displaced apex claim descriptions
+
+- `SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window`: the Phase-5y H1 underdetermination caveat as an endpoint theorem: no c-rescaling reconciles either endpoint
+
+- `SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c`: the frame-independent form, quantifying over all c > 0 explicitly

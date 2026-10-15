@@ -87,12 +87,11 @@ substrate models it with is set out in
 derived there or anywhere else in the project. The underlying
 lattice-fermion framework is the one whose unitarity Vergeles
 establishes~\cite{Vergeles2025}. The identification is appealing in its
-brevity. As established by the present project's Phase~5y H1
-deep-research finding, however, it has \emph{never} been derived as
-a propagating degree of freedom from first principles. The
-identification is \emph{kinematic}, not dynamical: it specifies the
-dispersion relation of an assumed mode without deriving the mode
-itself.
+brevity. In this Letter, Eq.~\eqref{eq:cGW} is an assumed kinematic speed law.
+We constrain its free susceptibility without deriving a propagating
+second-sound mode from a microscopic action, its propagator, or its
+coupling to matter. This missing dynamical bridge is a limitation of
+the present calculation, not an impossibility result.
 
 The 2017 binary-neutron-star merger
 GW170817~\cite{Abbott2017GW170817} placed an extraordinarily tight
@@ -136,11 +135,10 @@ The present result is not a further entry in that list, and the
 difference is structural rather than one of degree. Every theory the
 2017 sweep reached has a Lagrangian from which a varying $\cGW$ is
 \emph{derived}; the constraint therefore lands on operator coefficients,
-and each Letter reports which coefficients survive. The
-vestigial-second-sound identification has no such Lagrangian. As
-Sec.~\ref{sec:intro} notes, $\cGW = c\sqrt{\chivest}$ is asserted
-kinematically: the mode is assumed rather than derived, so there are no
-operator coefficients for the bound to constrain and nothing to tune.
+and each Letter reports which coefficients survive. This Letter supplies no microscopic Lagrangian for the
+vestigial-second-sound identification. As Sec.~\ref{sec:intro} notes,
+$\cGW = c\sqrt{\chivest}$ is assumed kinematically, so this calculation
+does not constrain microscopic operator coefficients.
 What the bound constrains is $\chivest$: the compatible interval has
 roughly one part in $10^{15}$ of the width of our adopted order-unity
 window. This is an interval-width comparison, not a microscopic
@@ -149,11 +147,12 @@ prediction of $\chivest$ or a probability statement independent of a prior. The
 \emph{identification}, which is why it is stated as a ratio of two
 interval widths rather than as a surviving region of parameter space.
 
-A corollary worth stating plainly: because the argument never uses a
-Lagrangian, it is insensitive to the operator-level escape routes those
-Letters catalogue. Conformal rescaling, coefficient compensation and
-restriction to Horndeski's simplest terms all act on terms that the
-kinematic identification does not have. The three recovery paths in
+At fixed assumed Eq.~\eqref{eq:cGW}, this calculation constrains
+$\chivest$ rather than microscopic operator coefficients. It does not
+analyze whether the operator-level mechanisms discussed in those
+theories alter the effective speed law or its applicability. A
+microscopic realization would require that separate analysis.
+The three recovery paths in
 Sec.~\ref{sec:discussion} can supply a mechanism fixing $\chivest$
 within the compatible interval, or modify the identification or its
 leading-order assumptions. A fixed-point mechanism can preserve the
@@ -323,19 +322,19 @@ precisely the finite interval in Theorem~\ref{thm:bicond}, of width
 $4\tau=1.2\times10^{-14}$. Its probability mass depends on the prior;
 under a uniform prior on $[0.1,10]$ it is $4\tau/9.9$.
 
-\paragraph{Phase~5y H1 caveat as a Lean endpoint theorem.} The
-Phase 5y H1 deep research established that the Volovik identification
-is not a \emph{derivation}: there is no first-principles bound fixing
-the graviton-mode normalization in terms of the second-sound DOF.
-We formalize this caveat as the endpoint theorem
-\texttt{natural\_endpoints\_violate\_ligo\_window}: for $\chivest$
-at either natural-range endpoint $\{0.1, 10\}$, no $c$-rescaling
-gives a GW170817-compatible $\dccap$. The frame-independent form
+\paragraph{Endpoint constraints and the open dynamical bridge.}
+The theorem \texttt{natural\_endpoints\_violate\_ligo\_window}
+excludes $\chivest\in\{0.1,10\}$ under the assumed speed law.
+The relative-deviation form
 \texttt{natural\_endpoints\_violate\_ligo\_for\_every\_c}
-quantifies over all $c > 0$ explicitly, resting on
-\texttt{c\_GW\_relative\_deviation\_eq}. Both concern the two
-endpoints only; neither excludes interior values, and $\chivest = 1$
-satisfies the cap (\texttt{ligo\_satisfied\_at\_chi\_one}).
+uses \texttt{c\_GW\_relative\_deviation\_eq} and holds for every
+$c\ne0$, including the physical domain $c>0$. Both concern the
+two endpoints only; neither excludes interior values, and
+$\chivest=1$ satisfies the cap
+(\texttt{ligo\_satisfied\_at\_chi\_one}). These are conditional
+constraints on the assumed law. Neither theorem quantifies over
+microscopic actions, propagators or matter couplings, so neither
+establishes the absence or impossibility of a dynamical derivation.
 
 %% ================================================================
 \section{Discussion}
@@ -366,11 +365,12 @@ Phase~6 should examine whether such a fixed point is realized in the
 ADW broken phase.
 \item \textbf{Distinct metric-channel identification.} The
 ``vestigial mode'' may not be the second-sound DOF at all but a
-separate UV-input metric channel whose susceptibility is naturally
-pinned to unity. This was floated in~\cite{Volovik2022Counting} and
-reads as the more likely interpretation under the Phase~5y H1
-negative-evidence result. Phase~6e (full nonlinear emergent action)
-is the natural venue for the disambiguation.
+separate UV-input metric channel whose dynamics could pin its
+susceptibility to unity. This was floated in~\cite{Volovik2022Counting};
+here it remains a model-building alternative. The missing dynamical
+bridge in this Letter does not establish that this alternative is
+more likely. Phase~6e (full nonlinear emergent action) is the natural
+venue for the disambiguation.
 \item \textbf{Frequency-dependent $\chivest$.} Eq.~\eqref{eq:cGW} is
 the leading term in a derivative expansion. If $\chivest$ varies
 with frequency, the leading-order constraint could in principle be

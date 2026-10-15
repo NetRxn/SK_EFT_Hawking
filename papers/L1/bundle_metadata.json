@@ -48,12 +48,12 @@
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
-      "claims": "the Phase-5y H1 underdetermination caveat as an endpoint theorem: no c-rescaling reconciles either endpoint",
+      "claims": "The two adopted natural-range endpoints violate the conservative GW170817 cap under the assumed speed law; this is not a theorem about microscopic dynamics.",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
-      "claims": "the frame-independent form, quantifying over all c > 0 explicitly",
+      "claims": "For every nonzero c, the relative deviation at either adopted natural-range endpoint violates the conservative GW170817 cap under the assumed speed law.",
       "declared": "2026-08-07"
     },
     {
