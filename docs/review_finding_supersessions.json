@@ -10485,6 +10485,21 @@
         "enforced": true,
         "run_at": "2026-10-12"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-verifies-exact-alias:infra:1.1",
+      "status": "fixed",
+      "evidence": "scripts/build_graph.py rejects module aliases after Formula/Parameter priority and before exact or short Lean lookup. The independent existential-support guard preserves genuine and mixed references, exact precedence and ordered index identity. The complete reviewed source is normally committed and integrated; the declared Verify exercises persistent collision, real producer seed and mutant, full paired corpus, causal consumers and restoration on the current catalogue. This closes this software finding only; broader project and scientific gates remain separate.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "cc578d782d4d089548875e6214734b0c4cf75b51",
+      "verified_by": {
+        "command": "uv run python -m pytest -m '' tests/test_verifies_alias_guard.py -q -s",
+        "declared": "uv run python -m pytest -m '' tests/test_verifies_alias_guard.py -q -s",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
