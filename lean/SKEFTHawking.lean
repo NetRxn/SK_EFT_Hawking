@@ -5319,6 +5319,9 @@ import SKEFTHawking.QuantumNetwork.FiniteThreeLevelPositiveHistory
 import SKEFTHawking.QuantumNetwork.FiniteLocalChannelDepthWitness
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelHistoryTransfer
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelHistoryReadout
+import SKEFTHawking.QuantumNetwork.FiniteAdaptiveKrausRealization
+import SKEFTHawking.QuantumNetwork.FiniteThreeLevelStationaryStrategyReflection
+import SKEFTHawking.QuantumNetwork.FiniteThreeLevelStationaryStrategyExamples
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
