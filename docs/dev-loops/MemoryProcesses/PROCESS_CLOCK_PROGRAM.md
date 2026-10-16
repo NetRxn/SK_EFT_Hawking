@@ -58,8 +58,46 @@ Native minimal/aggregate output agrees byte-for-byte, and separately expanded
 ordinary checks retain the source printer distinctions. The existing canonical
 writers preserve every earlier complete record and order; all six derivations,
 focused metadata tests and direct soundness checks pass. Fresh independent whole
-committed closing and ROOT final acceptance remain pending. Broader project,
+committed review and ROOT acceptance cover QR1–QR2 at `00a19189`. Broader project,
 main-promotion and publication gates remain open.
+
+The stationary adaptive-strategy extension is integrated at `1a855a12`.
+`FiniteAdaptiveKrausRealization.lean` compiles arbitrary finite recursive
+histories and their actual Kraus branches, including dependent continuations,
+zero padding, recoding and append composition. Whole stationarity permits the
+normalized global reversed instrument. The actual chronological paired kernel
+is proved positive and normalized, with both original marginals, and reconstructs
+exactly the strategy's accessible observable range. Positive central retention
+preserves the effect span; central reset has rank one. The full adaptive family,
+rank-three computational strategy, rank-one done strategy, complex branch
+readouts and nonstationary preparation/feedback exclusions are included in the
+reflection and examples modules.
+
+Whole mathematical source and comprehensive native source-audit review pass.
+Normal absorption and the authoritative aggregate build pass. All 438 actual
+module-owned declarations reconcile across source and compiled minimal/aggregate
+contexts, including actual ownership of foreign generated names. One related
+name visible in the reflection aggregate is owned by the examples module and is
+retained separately. Every full raw type and metadata field agrees after the
+explicit owner comparison; default ordinary printer distinctions remain recorded.
+Canonical extraction preserves all 49,858 prior complete records and order,
+adding 330 records with exact project type/value dependency edges. All six
+canonical/counts/atlas derivations reproduce; 71 focused metadata tests and three
+direct soundness checks pass. The current substrate gate passes: 73 of 89 checks
+pass, with 16 paper-corpus failures retained and no Lean/Python substrate failure.
+Fresh whole committed closing review remains pending. ROOT's primary notebook owns bounded
+acceptance; these observations do not establish full-project or publication
+acceptance.
+
+The next scientific growth target is observable transfer on these exact strategy
+ranges, conditional on proved range invariance and realized by independently
+constructed inserted-channel histories. It must cover generic descent and
+choice independence, weighted adjoints and contraction, universal reset,
+invariant phase/thermal dynamics, arbitrary-depth full-range consumers,
+rank-deficient consumers and an actual noninvariant coarse-graining. A bounded
+modular-parameter comparison consumes the existing Gibbs-clock result; no
+physical-time calibration follows. This is a subsequent target, not an added
+condition for accepting the present strategy reconstruction package.
 
 The whole target retains all phase and reset obstructions. Phase-bearing
 chronological probabilities do not automatically give a Hermitian or positive
