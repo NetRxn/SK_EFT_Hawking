@@ -1,6 +1,6 @@
 # Finite processes, coherent interventions and clocks
 
-Status: stationary adaptive-strategy reconstruction has whole bounded local acceptance at `8fa1750d`. Observable transfer and actual inserted-channel histories are source-integrated with a registered aggregate build at `8a4ac2da`; their final committed closing review and ROOT acceptance remain pending. The next compressed-dynamics and derived-memory contract has independent mathematical review and ROOT contract acceptance, with no implementation acceptance yet. Earlier locally accepted calibrated-memory/coarse-graining components remain preserved.
+Status: stationary adaptive-strategy reconstruction has whole bounded local acceptance at `8fa1750d`. The complete observable transfer, actual inserted-channel histories and dynamics package has fresh whole committed review and ROOT bounded local acceptance at `7106e7dc`, following normal integration and the registered aggregate build. The next compressed-dynamics and derived-memory contract has independent mathematical review and ROOT contract acceptance, with no implementation acceptance yet. Earlier locally accepted calibrated-memory/coarse-graining components remain preserved. Broader project, security, main and publication gates remain separate and open.
 
 Root owns integration, slot admission and the primary notebook. Reviewed feature history is checkpointed remotely and exposed through draft integration PRs. Main merge and publication acceptance require their separate gates. Existing ADR-008 slots, continuity packets, planners and review writers govern execution. Workers read notebooks and report; they do not write the shared record.
 
@@ -114,10 +114,13 @@ counts and atlas producers reproduce, and focused metadata and direct soundness
 checks pass. Current broader validation reports 73 of 89 checks passing, with
 1,160 warnings and 16 paper-corpus failures. The substrate precheck passes with
 no Lean/Python-side failure; the full validator does not pass. All six derived
-metadata files remain unchanged through these checks. Final metadata
-commit/build, fresh whole committed closing review and ROOT bounded acceptance
-remain pending. A successful source build or metadata reconciliation does not
-close those obligations.
+metadata files remain unchanged through these checks. Normal metadata/program
+commit and registered build at `7106e7dc` pass. Fresh independent whole committed
+review and ROOT bounded acceptance cover every original S1–S5/E1–E4 clause and
+consumer at that head. The earlier standalone examples failure remains failed
+historical evidence with cause unestablished; current passing source and compiled
+observations are distinct. Audit-only unused-variable warnings are retained.
+This bounded acceptance supplies no full-project, main or publication clearance.
 
 The next whole growth contract C1–C5 connects these actual accessible ranges to
 compressed dynamics and a derived finite hidden-state memory equation. Construct
