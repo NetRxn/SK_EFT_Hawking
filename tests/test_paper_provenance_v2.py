@@ -26,7 +26,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from scripts.test_helpers import (  # noqa: E402
-    isolated_v2_state,
+    isolated_v2_state, isolated_papers_root, isolated_verification_log,
     make_v2_review,
     make_v2_sentence,
 )
@@ -36,7 +36,7 @@ from scripts.test_helpers import (  # noqa: E402
 
 
 @pytest.fixture
-def two_paper_v2_state():
+def two_paper_v2_state(tmp_path, monkeypatch):
     """Seed two v2 papers sharing one verbatim claim across both."""
     shared_quote = (
         "The acoustic horizon emits a thermal Hawking spectrum at "
@@ -64,7 +64,18 @@ def two_paper_v2_state():
         'paper_a': make_v2_review('paper_a', [s_shared_a, s_a]),
         'paper_b': make_v2_review('paper_b', [s_shared_b, s_b]),
     }
-    with isolated_v2_state(seed_papers=seeds) as (papers_root, log_path):
+    monkeypatch.setenv('SK_EFT_GRAPH_SOURCE', 'json')
+    import provenance_dashboard as dashboard
+    import build_graph
+    import readiness_gates
+    import psycopg
+    monkeypatch.setattr(psycopg, 'connect', lambda *a, **k: pytest.fail('unexpected DB connection'))
+    monkeypatch.setitem(dashboard.app.config, 'PG_SYNC_ENABLED', False)
+    for module in (dashboard, build_graph):
+        monkeypatch.setattr(module, 'PROJECT_ROOT', tmp_path)
+    monkeypatch.setattr(readiness_gates, 'PAPERS_DIR', tmp_path / 'papers')
+    with isolated_papers_root(tmp_path / 'papers', seed_from=seeds) as papers_root, \
+            isolated_verification_log(tmp_path / 'verification_log.jsonl') as log_path:
         yield {
             'papers_root': papers_root,
             'log_path': log_path,

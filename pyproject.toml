@@ -129,4 +129,6 @@ dev = [
     # Browser-driven e2e tests for the provenance dashboard (tests/e2e/).
     # Dev-only; never shipped. Chromium provisioned via `uv run playwright install chromium`.
     "playwright>=1.50",
+    # Direct import for the disposable browser fixture's diagnostic request handler.
+    "werkzeug>=3.0",
 ]

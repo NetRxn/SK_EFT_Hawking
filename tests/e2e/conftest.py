@@ -16,6 +16,11 @@ from the default `uv run pytest` run; invoke them with `-m e2e`.
 from __future__ import annotations
 
 import socket
+import os
+import json
+import hashlib
+import uuid
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -78,6 +83,7 @@ def dashboard_url():
         [sys.executable, str(DASHBOARD), "--port", str(port),
          "--no-browser", "--no-pg-sync"],
         cwd=str(PROJECT_ROOT),
+        env={**os.environ, 'SK_EFT_GRAPH_SOURCE': 'json'},
         stdout=log,
         stderr=subprocess.STDOUT,
     )
@@ -124,6 +130,61 @@ def page(_browser):
 
 
 @pytest.fixture
+def dummy_paper_evidence():
+    """Capture evidence outside pytest retention, before fixture cleanup."""
+    archive = (PROJECT_ROOT / "outputs" / "continuity" /
+               "round50-dashboard-fixture-evidence-r1" / "browser-runs" / uuid.uuid4().hex)
+    archive.mkdir(parents=True, exist_ok=False)
+    sources = ["tests/e2e/conftest.py", "tests/e2e/dummy_paper_server.py",
+               "tests/e2e/test_paper_provenance_tab.py", "scripts/datastar_helpers.py",
+               "scripts/provenance_dashboard.py", "scripts/templates/partials/paper_provenance_tab.html"]
+    source_hashes = {name: hashlib.sha256((PROJECT_ROOT / name).read_bytes()).hexdigest()
+                     for name in sources}
+    try:
+        yield archive
+    finally:
+        files = {path.name: {"sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                             "bytes": path.stat().st_size}
+                 for path in archive.iterdir() if path.is_file()}
+        with (archive / "manifest.json").open("x") as out:
+            json.dump({"source": source_hashes, "files": files}, out, indent=2)
+            out.write("\n")
+        print("Durable dummy evidence archive:", archive)
+
+
+@pytest.fixture
+def dummy_paper_network(page, dummy_paper_evidence):
+    """Preserve actual dummy-browser request/response/finish evidence."""
+    pg = page
+    network = []
+    journal = dummy_paper_evidence / "browser-network.jsonl"
+    journal.touch(exist_ok=False)
+    started = time.monotonic()
+    def observe(kind, value):
+        network.append({"at": time.monotonic() - started, "kind": kind,
+                        "url": value.url,
+                        "method": value.method if kind != "response" else value.request.method,
+                        "headers": value.headers,
+                        "status": value.status if kind == "response" else None})
+        with journal.open("a") as out:
+            out.write(json.dumps(network[-1]) + "\n")
+    subscriptions = []
+    for kind in ("request", "response", "requestfinished", "requestfailed"):
+        handler = lambda value, kind=kind: observe(kind, value)
+        pg.on(kind, handler)
+        subscriptions.append((kind, handler))
+    try:
+        yield network
+    finally:
+        for kind, handler in subscriptions:
+            pg.remove_listener(kind, handler)
+        with (dummy_paper_evidence / "browser-network.json").open("x") as out:
+            json.dump(network, out, indent=2)
+            out.write("\n")
+        print("Browser network evidence:", dummy_paper_evidence / "browser-network.json")
+
+
+@pytest.fixture
 def console_errors(page):
     """Collects console-error + uncaught-pageerror strings for the test's page.
 
@@ -137,6 +198,87 @@ def console_errors(page):
     )
     page.on("pageerror", lambda e: errors.append(f"pageerror: {e}"))
     return errors
+
+
+@pytest.fixture
+def dummy_paper_dashboard(tmp_path, monkeypatch, dummy_paper_evidence):
+    """Real CLI/server with disposable papers; no production corpus or database."""
+    monkeypatch.syspath_prepend(str(PROJECT_ROOT / "scripts"))
+    from test_helpers import make_v2_review, make_v2_sentence
+
+    root = tmp_path.resolve()
+    papers = root / "papers"
+    papers.mkdir()
+    (root / "docs").mkdir()
+    (root / "lean" / "SKEFTHawking").mkdir(parents=True)
+    shutil.copytree(PROJECT_ROOT / "src", root / "src",
+                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    (root / "scripts").mkdir()
+    shutil.copy2(PROJECT_ROOT / "scripts" / "review_figures.py",
+                 root / "scripts" / "review_figures.py")
+    quote = "This disposable sentence tests verification controls without claiming a scientific result."
+    sentences = {}
+    for name in ("paper_a", "paper_b", "paper_escape"):
+        paper = papers / name
+        paper.mkdir()
+        sentence = make_v2_sentence(name, quote=quote)
+        sentences[name] = sentence["id"]
+        (paper / "paper_draft.tex").write_text(
+            "\\title{Dummy " + name + "}\n\\begin{abstract}\n" + quote
+            + "\nA second disposable sentence provides sufficient abstract content.\n\\end{abstract}\n")
+        (paper / "claims_review.json").write_text(json.dumps(make_v2_review(name, [sentence])))
+        (paper / "prose_state.json").write_text(json.dumps({"paper": name, "sentences": {}}))
+        (paper / "audit_log.jsonl").write_text("")
+    (papers / "paper_a" / "prose_state.json").unlink()
+    (papers / "paper_a" / "prose_state.json").symlink_to(papers / "paper_b" / "prose_state.json")
+    outside_claims = root / "outside_claims.json"
+    (papers / "paper_escape" / "claims_review.json").rename(outside_claims)
+    (papers / "paper_escape" / "claims_review.json").symlink_to(outside_claims)
+    unsafe = papers / "paper_unsafe"
+    unsafe.mkdir()
+    (root / "outside.tex").write_text("OUTSIDE_DUMMY_MARKER")
+    (unsafe / "paper_draft.tex").symlink_to(root / "outside.tex")
+    (papers / "claim_clusters.json").write_text(json.dumps({"clusters": [{
+        "id": "cluster:dummy-papers", "match_kind": "exact", "confidence": 1.0,
+        "members": [sentences["paper_a"], sentences["paper_b"]],
+        "member_papers": ["paper_a", "paper_b"], "label": "Disposable matching sentences",
+    }]}))
+    port = _free_port()
+    log_path = root / "dashboard.log"
+    with log_path.open("w") as log:
+        proc = subprocess.Popen(
+            [sys.executable, "-B", str(Path(__file__).with_name("dummy_paper_server.py")),
+             str(root), str(port)], cwd=PROJECT_ROOT,
+            env={**os.environ, "SK_EFT_GRAPH_SOURCE": "json", "PYTHONDONTWRITEBYTECODE": "1"},
+            stdout=log, stderr=subprocess.STDOUT)
+        url = f"http://localhost:{port}"
+        try:
+            _wait_until_up(url + "/api/papers/list", proc, log_path)
+            yield {"url": url, "root": root, "sentences": sentences}
+        finally:
+            proc.terminate()
+            try:
+                proc.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait(timeout=5)
+            # Preserve actual bytes immediately after owned-child join, before
+            # tmp_path teardown or any pytest retention cleanup can run.
+            log.flush()
+            for name in ("server-observations.json", "server-stacks.log", "dashboard.log"):
+                if (root / name).exists():
+                    with (root / name).open("rb") as src, (dummy_paper_evidence / name).open("xb") as dst:
+                        shutil.copyfileobj(src, dst)
+            observations = json.loads((root / "server-observations.json").read_text())
+            print("Dummy paper server root:", root)
+            print("Dummy paper server observations:", json.dumps(observations, sort_keys=True))
+            print("Dummy paper server stacks:", (root / "server-stacks.log").read_text())
+            assert observations["db_connect_attempts"] == 0
+            assert observations["violations"] == []
+            assert observations["PG_SYNC_ENABLED"] is False
+            assert observations["graph_source"] == "json"
+            assert observations["server_exit"] is True
+            assert proc.returncode == 0
 
 
 # ═══════════════════════════════════════════════════════════════════════════════════════

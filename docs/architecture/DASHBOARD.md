@@ -53,6 +53,65 @@ inert — and the correction is worth keeping because *"the artifact is missing"
 does not work"* are exactly the two readings that a missing file cannot distinguish between.
 The log is a runtime artifact and is gitignored, alongside the harness's other per-run logs.
 
+## Paper artifact and query boundaries
+
+Paper-id-derived reads use one canonical boundary for the selected directory and
+the final resolved artifact under resolved `papers/`. This includes TeX, claims,
+figure review, prose state and audit data reached directly or through graph
+ingestion, readiness and sentence-state prerequisites. Preserve lexical paper
+identity, in-root links and each consumer's missing/empty/unmeasured result.
+Escaping, cyclic or unreadable targets must be refused before parsing. This
+resolve-then-read contract assumes cooperative local writers; it is not a
+descriptor-based defense against concurrent malicious link replacement.
+
+Sentence-state remains the sole prose/audit writer. Its read prerequisites use
+the same boundary without replacing lexical write destinations. Preserve locking,
+validation, audit-first mutation, atomic prose replacement and replay. Unsafe
+prerequisites fail before successful mutation or an escaping lock is created.
+Explicit CLI source-file arguments retain their separate input contract.
+
+The free-form Cypher console requires a separate explicit
+`SK_EFT_DASHBOARD_READ_DSN`. Every fresh connection must verify its actual
+restricted capability before user source: identity/role and effective object
+privileges, reviewed function EXECUTE denials including PUBLIC inheritance,
+creator/default ACLs, initialized AGE and actual transaction settings. Missing,
+unsafe or unknown capability returns generic503 with cleanup; the route never
+provisions, elevates, uses the mirror writer or caches an earlier admission.
+Provisioning the reader, preloading AGE and reviewing database-wide revocations
+are separate operational work.
+
+The administrator declares label creators through the role/database setting
+`sk_eft.dashboard_label_creators`: a nonempty comma-separated set of exact simple
+role names, with no duplicates or whitespace. Admission checks effective setting
+provenance against the applicable role-plus-database, role, then database catalog
+entries. The set includes every current graph-table and graph-schema owner; each
+declared creator needs combined global/schema defaults granting reader SELECT
+without mutation. Adding a creator requires reviewed provisioning. This checks
+declared configuration, not future administrator intent.
+
+AGE initialization uses an explicit applicable `session_preload_libraries`
+role/database declaration followed by a trusted tiny read on the same connection.
+Missing, duplicate or unavailable declarations fail closed. The reader does not
+gain privileged settings visibility; the actual transaction settings are checked
+immediately before user source.
+
+Retain the existing read-clause, stacking/comment, query-length and dollar-tag
+guards and the supported single-agtype output. The demonstrated AGE method uses
+a checked dollar literal, not bound Cypher source parameters. Enforce READ ONLY,
+transaction-local statement/lock limits and bounded result consumption. The
+selected database limits are five seconds and one second; return at most one
+thousand normal rows. A sentinel row beyond that ceiling produces400 without
+partial normal rows/count. Malformed inputs produce400 before connecting;
+configuration/admission failures produce503. End the transaction and close on
+every exit. These are database time/row limits, not value, byte, materialization,
+serialization or whole-request bounds.
+
+The [boundary design](../superpowers/specs/2026-10-16-dashboard-artifact-query-boundaries-design.md)
+and its [execution plan](../superpowers/plans/2026-10-16-dashboard-artifact-query-boundaries.md)
+specify the reviewed mechanism and complete acceptance cases. Source presence or
+disposable pilot evidence does not establish implementation, production
+provisioning, security closure or aggregate CodeQL success.
+
 ## Quick Start
 
 ```bash
@@ -283,6 +342,7 @@ Schema spans Phase 1 / 1.5 base types + Phase 5v Wave 2a readiness-system types 
 | File | Purpose |
 |------|---------|
 | `scripts/provenance_dashboard.py` | Flask app, data loading, API endpoints |
+| `scripts/datastar_helpers.py` | Datastar event streaming and request negotiation; connection framing belongs to the HTTP server |
 | `scripts/templates/dashboard.html` | Main template (nav + the tabs with no partial) |
 | `scripts/templates/partials/graph_tab.html` | D3 knowledge graph visualization |
 | `scripts/templates/partials/bundles_tab.html` · `chains_tab.html` · `paper_provenance_tab.html` · `qi_tab.html` · `readiness_tab.html` | the Datastar-driven tab bodies |
@@ -317,6 +377,9 @@ The Bundles tab consumes the same per-bundle aggregation that this script writes
 
 The Paper Provenance v2 tab and the Bundles tab both rely on a tightly enforced write-path discipline:
 
+- **Sentence control transport:** With the pinned Datastar action API, verification buttons, keyboard shortcuts and cluster propagation send explicit state/actor data with `payload`, then await the mutation before refreshing paper provenance. The HTTP handler validates the same JSON schema and still delegates to the sole sentence-state writer. One stable window-keyboard element dispatches an explicit `evt.key` switch, preserving the existing keys/actions. Arrow defaults are prevented only for matching arrows. Cluster propagation captures its source sentence before interpolated action URLs so the pinned expression rewriter resolves that signal.
+- **Disposable browser isolation:** The test server classifies lexical corpus origin and artifact identity before following links, then checks the resolved target against its disposable papers root. Refused attempts record both identities before raising. Relative artifact opens with an unknown directory context are refused without inventing a current-directory origin. Negative controls exercise renamed escaping targets, corpus-origin links and ambiguous directory-relative opens alongside allowed ordinary and in-root linked reads.
+- **SSE transport:** The shared response helper sets the event-stream type, disables caching and proxy buffering, and preserves generator streaming. It leaves the hop-by-hop Connection header to the HTTP server so a server that closes a response does not advertise conflicting keep-alive semantics.
 - **Sole writer for prose / audit state:** `scripts/sentence_state.py` (CLI). All mutations to `papers/<paper>/prose_state.json` and `papers/<paper>/audit_log.jsonl` route through this command — no free-form JSON edits, no ad-hoc scripts. Schema validation, file-lock, and atomic writes are enforced at this chokepoint.
 - **Cross-tab change-bus:** verification actions on artifacts (parameters / citations / axioms / hypotheses / aristotle runs / production runs) flow through `scripts/verification_state.py` → `docs/verification_log.jsonl`. ⚠️ **That store is a gitignored runtime artifact, absent from a clean checkout and written on first use** — measured 2026-08-12, when the ADR-012 P9a browser test clicked Confirm and the bus wrote its first event. This bullet read *"that file does not exist … a design that has never carried an event"*, which was a claim about the **mechanism** derived from the **artifact**, and those are the two readings a missing file cannot distinguish. What is genuinely unexercised is everything downstream: nothing yet *consumes* the events. The Parameters tab's confirm/reject flow and Paper Provenance v2's per-link verify buttons are both delegates of this same library API. Each event annotates `meta.last_modified_explicit` on the corresponding KG node, propagating upstream so dependent `Sentence` nodes flip to `NEEDS_RECHECK` automatically when their backing artifacts re-verify.
 - **`triggered_by` for cross-tab provenance:** verification events fired from a sentence's per-link UI carry `triggered_by: <source_sentence_id>`, so the audit trail surfaces "fired from sentence X's chain inspector" vs an opaque "Parameter X confirmed". Audit-log diffs render an inline `⚲ self` (self-triggered) or `↗ <other_sid>` badge. Field is `null` for events from the Parameters tab or the CLI.

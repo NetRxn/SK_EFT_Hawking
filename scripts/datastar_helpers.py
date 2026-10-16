@@ -65,7 +65,8 @@ def sse_response(
     The generator yields `SSE.patch_elements(...)` / `SSE.patch_signals(...)`
     values, each of which is already a complete SSE event terminated with
     `\\n\\n`. We str()-ify them for the wire. Headers prevent buffering by
-    proxies and browsers so the client sees each event as it fires.
+    proxies and browsers so the client sees each event as it fires. The HTTP
+    server owns connection framing and the hop-by-hop Connection header.
     """
     def stream():
         it = generator() if callable(generator) else generator
@@ -78,7 +79,6 @@ def sse_response(
         headers={
             "Cache-Control": "no-cache",
             "X-Accel-Buffering": "no",
-            "Connection": "keep-alive",
         },
     )
 
