@@ -1,6 +1,6 @@
 # Finite processes, coherent interventions and clocks
 
-Status: implementation and independent component reviews complete; the full aggregate Lean build passed at `5238bafc`. Final extraction, substrate gate and fresh independent integrated review passed. Root accepts this bounded increment locally. This program extends the locally accepted calibrated-memory/coarse-graining increment `bbdbe40d`.
+Status: stationary adaptive-strategy reconstruction has whole bounded local acceptance at `8fa1750d`. Observable transfer and actual inserted-channel histories are source-integrated with a registered aggregate build at `8a4ac2da`; their final committed closing review and ROOT acceptance remain pending. The next compressed-dynamics and derived-memory contract has independent mathematical review and ROOT contract acceptance, with no implementation acceptance yet. Earlier locally accepted calibrated-memory/coarse-graining components remain preserved.
 
 Root owns integration, slot admission and the primary notebook. Reviewed feature history is checkpointed remotely and exposed through draft integration PRs. Main merge and publication acceptance require their separate gates. Existing ADR-008 slots, continuity packets, planners and review writers govern execution. Workers read notebooks and report; they do not write the shared record.
 
@@ -85,19 +85,68 @@ adding 330 records with exact project type/value dependency edges. All six
 canonical/counts/atlas derivations reproduce; 71 focused metadata tests and three
 direct soundness checks pass. The current substrate gate passes: 73 of 89 checks
 pass, with 16 paper-corpus failures retained and no Lean/Python substrate failure.
-Fresh whole committed closing review remains pending. ROOT's primary notebook owns bounded
-acceptance; these observations do not establish full-project or publication
-acceptance.
+Fresh whole committed closing review and ROOT acceptance cover the complete
+stationary adaptive-strategy package at `8fa1750d`, including every original
+consumer and guard. ROOT's primary notebook records this bounded acceptance;
+it does not establish full-project or publication acceptance.
 
-The next scientific growth target is observable transfer on these exact strategy
-ranges, conditional on proved range invariance and realized by independently
-constructed inserted-channel histories. It must cover generic descent and
-choice independence, weighted adjoints and contraction, universal reset,
-invariant phase/thermal dynamics, arbitrary-depth full-range consumers,
-rank-deficient consumers and an actual noninvariant coarse-graining. A bounded
-modular-parameter comparison consumes the existing Gibbs-clock result; no
-physical-time calibration follows. This is a subsequent target, not an added
-condition for accepting the present strategy reconstruction package.
+`FiniteThreeLevelStationaryStrategyTransfer.lean` and its examples implement
+observable transfer on these exact strategy ranges, conditional on proved range
+invariance and realized by independently constructed inserted-channel histories.
+The whole S1–S5/E1–E4 target covers generic descent and choice independence,
+weighted adjoints and contraction, universal reset, invariant phase/thermal
+dynamics, arbitrary-depth full-range consumers, rank-deficient consumers and
+actual noninvariant coarse-graining. The selected-time phase criterion derives
+inverse invariance in finite dimension from invariance at that same time;
+all-time group and generator results keep their separate all-time premise.
+A bounded modular-parameter comparison consumes the existing Gibbs-clock result;
+no physical-time calibration follows.
+
+Whole scientific source review, normal absorption and the registered aggregate
+build pass at `8a4ac2da`. All actual module-owned declarations reconcile across
+source and both compiled contexts, including the foreign generated equation.
+Expanded raw types and dependency metadata agree; ordinary source printing
+differences remain explicit. Canonical extraction preserves all earlier complete
+records and their order. Every added record agrees with actual native owners,
+cache-free extractor-context type rendering, type/value project edges and core
+axioms. Command-context notation differences remain separately recorded. Existing
+counts and atlas producers reproduce, and focused metadata and direct soundness
+checks pass. Current broader validation reports 73 of 89 checks passing, with
+1,160 warnings and 16 paper-corpus failures. The substrate precheck passes with
+no Lean/Python-side failure; the full validator does not pass. All six derived
+metadata files remain unchanged through these checks. Final metadata
+commit/build, fresh whole committed closing review and ROOT bounded acceptance
+remain pending. A successful source build or metadata reconciliation does not
+close those obligations.
+
+The next whole growth contract C1–C5 connects these actual accessible ranges to
+compressed dynamics and a derived finite hidden-state memory equation. Construct
+the weighted orthogonal projection by transporting the feature-space projection
+through the existing sandwich map; bare observable coordinates are not an
+isometry. Compress arbitrary observable maps on the old quotient and prove the
+pairing with the actual normalized inserted-channel chronology under its stated
+commutation premise. For a phase group, derive the returning-hidden-coordinate
+composition defect, opposite-time adjoint and leakage identity. These statements
+do not assume that the accessible range is invariant.
+
+The existing binary strategy supplies the concrete consumer: its compressed
+phase multiplier, nonzero positive-time composition defect, signed-history
+pairing and nonpositive weighted projection must all be derived on the actual
+family. A weighted projection is not automatically a positive or completely
+positive matrix channel. Eliminate the hidden block of the actual phase dynamics
+to derive the memory convolution, including arbitrary initial hidden state.
+Prove the minimal four-dimensional invariant closure, its two-dimensional hidden
+part, explicit blocks, third-order visible recurrence and four-step return.
+The ambient projection kernel and the restricted hidden space remain distinct.
+Finite hidden-state realization does not establish a finite-lag or Markov law.
+
+This complete mathematical contract has independent review and ROOT contract
+acceptance. Implementation follows final acceptance of the present transfer
+package and ordinary admission against the current registered epoch. Single-pulse
+operational pairings do not by themselves describe repeated experiments: any
+recursive-pulse interpretation must derive the actual identity-instrument append
+chronology, with one central reset and no intermediate readout. No continuum
+theory, physical gap, calibrated clock or computational-advantage claim follows.
 
 The whole target retains all phase and reset obstructions. Phase-bearing
 chronological probabilities do not automatically give a Hermitian or positive
