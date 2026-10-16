@@ -48,6 +48,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+from functools import wraps
 import hashlib
 import json
 import os
@@ -71,9 +72,38 @@ PAPERS_ROOT = PROJECT_ROOT / "papers"
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 from bundle_registry import VALID_BUNDLE_TARGETS  # noqa: E402
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from src.core.paper_artifacts import safe_paper_dir, paper_artifact_path
+
+
+class _UnsafePaperArtifact(ValueError):
+    pass
+
+
+def _read_prerequisite(paper: str, name: str) -> Path:
+    target = paper_artifact_path(PAPERS_ROOT, paper, name, must_exist=False)
+    if target is None:
+        raise _UnsafePaperArtifact("unavailable paper prerequisite")
+    return target
+
+
+def _paper_read_errors(command):
+    """Refuse unavailable/malformed prerequisites before a successful command."""
+    @wraps(command)
+    def guarded(args):
+        try:
+            return command(args)
+        except (OSError, ValueError, RuntimeError, TypeError, KeyError, AttributeError) as exc:
+            print(f"sentence_state: unavailable or malformed paper prerequisite: {exc}",
+                  file=sys.stderr)
+            return 1
+    return guarded
 
 
 def paper_dir(paper: str) -> Path:
+    if safe_paper_dir(PAPERS_ROOT, paper) is None:
+        raise _UnsafePaperArtifact("unavailable selected paper directory")
     d = PAPERS_ROOT / paper
     if not d.is_dir():
         raise SystemExit(f"sentence_state: no such paper directory: {d}")
@@ -397,10 +427,13 @@ def validate_claims_review(data: dict) -> list[str]:
 # ────────────────────────────────────────────────────────────────────────────
 
 def _load_prose_state(paper: str) -> dict:
-    p = prose_state_path(paper)
+    p = _read_prerequisite(paper, "prose_state.json")
     if p.exists():
         with open(p) as f:
-            return json.load(f)
+            state = json.load(f)
+        if not isinstance(state, dict) or not isinstance(state.get('sentences'), dict):
+            raise ValueError("invalid prose state")
+        return state
     return {
         'paper': paper,
         'schema_version': 'v2',
@@ -443,7 +476,12 @@ class _Lock:
         self.fd: int | None = None
 
     def __enter__(self) -> '_Lock':
-        # Create lock file if missing
+        # Guard prerequisites and lock location before creating any lock. Keep
+        # lexical writer destinations; resolved targets are only used for reads.
+        paper_dir(self.paper)
+        for name in ("claims_review.json", "prose_state.json", "audit_log.jsonl",
+                     "prose_state.json.lock"):
+            _read_prerequisite(self.paper, name)
         lp = lock_path(self.paper)
         lp.parent.mkdir(parents=True, exist_ok=True)
         self.fd = os.open(str(lp), os.O_CREAT | os.O_RDWR, 0o644)
@@ -543,6 +581,7 @@ def _paper_from_sentence_id(sentence_id: str) -> str:
 # Subcommand: mark
 # ────────────────────────────────────────────────────────────────────────────
 
+@_paper_read_errors
 def cmd_mark(args: argparse.Namespace) -> int:
     sentence_id = args.sentence_id
     state_short = args.state
@@ -562,7 +601,7 @@ def cmd_mark(args: argparse.Namespace) -> int:
 
     with _Lock(paper):
         # Validate that claims_review.json has this sentence_id
-        cr_path = claims_review_path(paper)
+        cr_path = _read_prerequisite(paper, "claims_review.json")
         if not cr_path.exists():
             print(
                 f"sentence_state: {cr_path} does not exist; "
@@ -657,6 +696,7 @@ def cmd_normalize_quote(args: argparse.Namespace) -> int:
 # Subcommand: ingest_agent_run
 # ────────────────────────────────────────────────────────────────────────────
 
+@_paper_read_errors
 def cmd_ingest_agent_run(args: argparse.Namespace) -> int:
     """Validate a new claims_review.json and produce a diff report vs prior.
 
@@ -804,6 +844,7 @@ def _levenshtein_ratio(a: str, b: str) -> float:
 # Subcommand: supersede
 # ────────────────────────────────────────────────────────────────────────────
 
+@_paper_read_errors
 def cmd_supersede(args: argparse.Namespace) -> int:
     """Human confirms a prior finding is superseded (non-interactive path)."""
     prior_id = args.prior_finding_id
@@ -848,9 +889,10 @@ def cmd_supersede(args: argparse.Namespace) -> int:
 # Subcommand: tombstone-sweep (standalone; usually auto-run by ingest_agent_run)
 # ────────────────────────────────────────────────────────────────────────────
 
+@_paper_read_errors
 def cmd_tombstone_sweep(args: argparse.Namespace) -> int:
     paper = args.paper
-    cr_path = claims_review_path(paper)
+    cr_path = _read_prerequisite(paper, "claims_review.json")
     if not cr_path.exists():
         print(f"sentence_state: no claims_review.json at {cr_path}", file=sys.stderr)
         return 1
@@ -872,6 +914,7 @@ def cmd_tombstone_sweep(args: argparse.Namespace) -> int:
 # Subcommand: reconcile (interactive-ish — shows candidates)
 # ────────────────────────────────────────────────────────────────────────────
 
+@_paper_read_errors
 def cmd_rebuild_prose_state(args: argparse.Namespace) -> int:
     """Replay audit_log.jsonl into prose_state.json.
 
@@ -899,7 +942,7 @@ def cmd_rebuild_prose_state(args: argparse.Namespace) -> int:
       - Order: events processed in timestamp order (file order).
     """
     paper = args.paper
-    al_path = audit_log_path(paper)
+    al_path = _read_prerequisite(paper, "audit_log.jsonl")
     if not al_path.exists():
         print(json.dumps({
             'paper': paper, 'audit_events': 0, 'rebuilt_sentences': 0,
@@ -915,7 +958,9 @@ def cmd_rebuild_prose_state(args: argparse.Namespace) -> int:
             if not line:
                 continue
             try:
-                events.append(json.loads(line))
+                event = json.loads(line)
+                if isinstance(event, dict) and isinstance(event.get('meta', {}), dict):
+                    events.append(event)
             except json.JSONDecodeError as exc:
                 print(f"sentence_state rebuild: skipping malformed line: {exc}",
                       file=sys.stderr)
@@ -998,9 +1043,10 @@ def cmd_rebuild_prose_state(args: argparse.Namespace) -> int:
     return 1 if has_drift else 0
 
 
+@_paper_read_errors
 def cmd_reconcile(args: argparse.Namespace) -> int:
     paper = args.paper
-    cr_path = claims_review_path(paper)
+    cr_path = _read_prerequisite(paper, "claims_review.json")
     if not cr_path.exists():
         print(f"sentence_state: no claims_review.json at {cr_path}", file=sys.stderr)
         return 1

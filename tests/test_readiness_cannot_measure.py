@@ -36,6 +36,30 @@ import bundle_readiness as br  # noqa: E402
 import readiness_gates as rg  # noqa: E402
 
 
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _dummy_readiness_roots(tmp_path, monkeypatch):
+    import build_graph
+    import provenance_dashboard as dashboard
+    import sentence_state
+    import verification_state
+    import psycopg
+    (tmp_path / 'papers').mkdir()
+    monkeypatch.setenv('SK_EFT_GRAPH_SOURCE', 'json')
+    for module in (build_graph, dashboard):
+        monkeypatch.setattr(module, 'PROJECT_ROOT', tmp_path)
+    monkeypatch.setattr(rg, 'PAPERS_DIR', tmp_path / 'papers')
+    monkeypatch.setattr(br, 'PAPERS_DIR', tmp_path / 'papers')
+    monkeypatch.setattr(sentence_state, 'PAPERS_ROOT', tmp_path / 'papers')
+    monkeypatch.setattr(verification_state, 'LOG_PATH', tmp_path / 'verification_log.jsonl')
+    monkeypatch.setattr(verification_state, 'LOCK_PATH', tmp_path / 'verification_log.jsonl.lock')
+    monkeypatch.setitem(dashboard.app.config, 'PG_SYNC_ENABLED', False)
+    monkeypatch.setattr(build_graph, 'build_graph_json', lambda: {'nodes': [], 'links': []})
+    monkeypatch.setattr(psycopg, 'connect', lambda *a, **k: pytest.fail('unexpected DB connection'))
+
+
 class TestEvaluatorCrashIsBlocking:
 
     def test_evaluator_crash_blocks(self, monkeypatch):

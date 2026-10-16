@@ -39,6 +39,24 @@ Python registries          build_graph.py           Flask API          D3 visual
 
 **Python registries remain the source of truth.** The graph is extracted on demand by `build_graph.py` and served as JSON via Flask. The D3 visualization renders it interactively. PG+AGE is populated in parallel for Cypher-based traversal queries (dependency trees, blast radius).
 
+### Paper artifact ingestion
+
+Graph discovery and TeX/claims/figure-review/prose/audit ingestion share the
+dashboard's canonical final-artifact boundary under resolved `papers/`, including
+indirect readiness `paper_tex` reads. Validate the final target before parsing;
+preserve lexical paper identity when an allowed link reaches another paper in
+that root. Refused/unreadable text remains distinct from a readable empty draft,
+and readiness retains its existing unmeasured result. No separately unconfined
+ingestion path is an exception to this paper-artifact family contract.
+
+The boundary assumes cooperative local writers and does not promise a consistent
+multi-file snapshot or confinement against concurrent hostile link replacement.
+Registry and Lean metadata inputs retain their own owners. Graph extraction does
+not gain a writer, validator or alternate artifact registry. The
+[dashboard owner](architecture/DASHBOARD.md#paper-artifact-and-query-boundaries)
+owns the shared reader and separate restricted console connection requirements;
+the PG mirror writer retains its existing independent workflow.
+
 ### Lean Declaration Extraction
 
 Lean declarations are extracted via a meta-programming script (`lean/SKEFTHawking/ExtractDeps.lean`) that uses `Lean.Environment.collectAxioms` to compute transitive axiom dependencies. The Python wrapper (`scripts/extract_lean_deps.py`) manages staleness checking — re-extraction only happens when `.lean` files change. Output cached at `lean/lean_deps.json`.
