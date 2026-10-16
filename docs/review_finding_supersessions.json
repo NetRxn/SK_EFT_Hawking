@@ -11119,6 +11119,21 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-qa-zero-headroom:infra:1.1",
+      "status": "fixed",
+      "evidence": "Lowered only existing count and undeclared citation ratchets to measured90/77 and corrected an obsolete test ordinal. Fresh independent whole effects review confirms four original tests, actual production91/red90 and78/red77, exact bytes/mtime/full registry restoration and final90/77PASS. Terminal Git index-byte preservation is FAILED with causeUNKNOWN; the stat-cache-only exception and earlier exceptions remain unwaived. No scientific/source-fidelity/full-project acceptance.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "e81495e7125d8d9dca740e21c5841053261b613f",
+      "verified_by": {
+        "command": "uv run --no-sync python -m pytest -q -p no:cacheprovider 'tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[count_literals]' tests/test_always_pass_dispositions.py::TestCountLiteralRatchet::test_PRODUCTION_SEEDED_one_more_count_literal_fails_on_real_draft tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_the_undeclared_ceiling_has_ZERO_headroom tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_AWAY_a_declaration_turns_the_check_RED",
+        "declared": "uv run --no-sync python -m pytest -q -p no:cacheprovider 'tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[count_literals]' tests/test_always_pass_dispositions.py::TestCountLiteralRatchet::test_PRODUCTION_SEEDED_one_more_count_literal_fails_on_real_draft tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_the_undeclared_ceiling_has_ZERO_headroom tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_AWAY_a_declaration_turns_the_check_RED",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }
