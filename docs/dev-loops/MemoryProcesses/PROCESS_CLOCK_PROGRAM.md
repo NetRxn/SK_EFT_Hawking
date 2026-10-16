@@ -45,13 +45,21 @@ The existing canonical writers preserve every earlier complete record and add
 the new module's records; focused metadata and soundness checks pass. Fresh independent whole committed review and ROOT acceptance cover QT1–QT4
 at `20d426ec`, including all guards and the strict centered-mode comparison.
 
-The subsequent retained-readout target represents the experiment's complete
-Born probabilities through inverse-sandwich state evaluation. It must consume
-both physical minimum theorems and the named attainers, rather than merely
-reproduce a shared decay factor. The reflection instrument, physical readout
-and retained carrier remain distinct. Whole implementation preparation covers
-both cuts, every measured branch, both decision columns and all degenerate ties.
-This evaluation bridge remains unimplemented; it requires fresh ordinary proof admission.
+`QuantumNetwork/FiniteThreeLevelHistoryReadout.lean` implements the complete
+QR1–QR2 retained-readout bridge through inverse-sandwich state evaluation. It
+consumes both actual physical minimum theorems and named attainers, all measured
+and retained branch matrices, both decision columns and degenerate ties. The
+reflection instrument, physical readout and retained carrier remain distinct.
+Whole independent source review and ROOT source intake pass; normal source
+absorption is `fa2a9814`, followed by aggregate registration/build `54b8acc1`.
+All module-owned declarations reconcile across source and both compiled contexts,
+including explicit private-name, source-line and foreign generated-name maps.
+Native minimal/aggregate output agrees byte-for-byte, and separately expanded
+ordinary checks retain the source printer distinctions. The existing canonical
+writers preserve every earlier complete record and order; all six derivations,
+focused metadata tests and direct soundness checks pass. Fresh independent whole
+committed closing and ROOT final acceptance remain pending. Broader project,
+main-promotion and publication gates remain open.
 
 The whole target retains all phase and reset obstructions. Phase-bearing
 chronological probabilities do not automatically give a Hermitian or positive
