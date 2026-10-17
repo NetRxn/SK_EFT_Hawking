@@ -7,7 +7,8 @@ from playwright.sync_api import expect
 
 
 @pytest.mark.e2e
-def test_chains_list_populates(page, console_errors, dashboard_url):
+def test_chains_list_populates(page, console_errors, dummy_paper_dashboard, dummy_paper_network):
+    dashboard_url = dummy_paper_dashboard["url"]
     page.goto(f"{dashboard_url}/?tab=chains", wait_until="load")
     page.wait_for_function(
         "() => (document.getElementById('rs-chains-list')?.children.length || 0) > 0",

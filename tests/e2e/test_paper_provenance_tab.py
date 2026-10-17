@@ -1,6 +1,5 @@
 """Phase 3 — Paper Provenance tab: the sentence-level chain-of-backing inspector
-(Datastar SSE). Real-corpus cases only read; writer controls are exercised solely
-against the independent disposable dummy-paper server."""
+(Datastar SSE). All journeys use the independent disposable dummy-paper server."""
 from __future__ import annotations
 
 import pytest
@@ -9,7 +8,8 @@ from playwright.sync_api import expect
 
 
 @pytest.mark.e2e
-def test_paper_selector_present(page, dashboard_url):
+def test_paper_selector_present(page, dummy_paper_dashboard, dummy_paper_network):
+    dashboard_url = dummy_paper_dashboard["url"]
     page.goto(f"{dashboard_url}/?tab=paper", wait_until="load")
     sel = page.locator("#pp-wrap select").first
     expect(sel).to_be_visible()
@@ -17,7 +17,8 @@ def test_paper_selector_present(page, dashboard_url):
 
 
 @pytest.mark.e2e
-def test_selecting_paper_loads_prose(page, console_errors, dashboard_url):
+def test_selecting_paper_loads_prose(page, console_errors, dummy_paper_dashboard, dummy_paper_network):
+    dashboard_url = dummy_paper_dashboard["url"]
     page.goto(f"{dashboard_url}/?tab=paper", wait_until="load")
     page.locator("#pp-wrap select").first.select_option("D1")
     # Banner + prose body morph in via /api/papers/D1/provenance SSE.
