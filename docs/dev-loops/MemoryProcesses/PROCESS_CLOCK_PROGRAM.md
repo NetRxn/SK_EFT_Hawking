@@ -1,6 +1,6 @@
 # Finite processes, coherent interventions and clocks
 
-Status: stationary adaptive-strategy reconstruction retains whole bounded local acceptance at `8fa1750d`, and observable transfer with actual inserted-channel histories retains acceptance at `7106e7dc`. The complete compressed-dynamics and derived-memory C1–C5 increment has fresh whole committed review and ROOT bounded local acceptance at `1aad9f12`, following normal integration, the registered aggregate build, native/canonical reconciliation and current substrate checks. The next reviewed O1–O5 event-observability and robustness contract is unimplemented. Earlier locally accepted calibrated-memory/coarse-graining components remain preserved. Broader project, security, main and publication gates remain separate and open.
+Status: stationary adaptive-strategy reconstruction retains whole bounded local acceptance at `8fa1750d`, and observable transfer with actual inserted-channel histories retains acceptance at `7106e7dc`. The complete compressed-dynamics and derived-memory C1–C5 increment retains ROOT bounded local acceptance at `1aad9f12`. The complete O1–O5 event-observability and robustness increment has fresh whole committed review and ROOT bounded local acceptance at `5df8af2c`, following normal integration, the registered aggregate build, native/canonical reconciliation and current substrate checks. Earlier locally accepted calibrated-memory/coarse-graining components remain preserved. Broader project, security, main and publication gates remain separate and open.
 
 Root owns integration, slot admission and the primary notebook. Reviewed feature history is checkpointed remotely and exposed through draft integration PRs. Main merge and publication acceptance require their separate gates. Existing ADR-008 slots, continuity packets, planners and review writers govern execution. Workers read notebooks and report; they do not write the shared record.
 
@@ -163,16 +163,24 @@ it is not a full-project pass. Fresh whole committed closing review and ROOT
 acceptance cover the original complete C1–C5 contract and all twelve binding
 clarifications at `1aad9f12`.
 
-The next reviewed O1–O5 contract targets an ordinary bounded event on these same
-normalized binary histories. Derive the full actual inserted-Kraus joint law and
-the physical complete-reset baseline, then prove that the equal-label event attains
-the finite total-variation difference. Derive phase/reset response and sampled
-recurrence from the actual channel chronology. Prove a weighted directional
-channel-residual bound and its conversion to event/data-error margins, with actual
-nonzero retention perturbations, strict negative/positive phase consumers and both
-complete-reset endpoints. An explicit baseline inside the allowed error ball must
-remain a falsifier for uniform strict-sign claims. These are new proof obligations;
-no implementation or live proof admission follows from this roadmap.
+`FiniteThreeLevelCompressedMemoryObservability.lean` and its examples implement
+the complete O1–O5 contract on these same normalized binary histories. They derive
+the full actual inserted-Kraus joint law and physical complete-reset baseline,
+and prove that the equal-label event attains the finite total-variation difference.
+Phase/reset response and sampled recurrence follow from the actual channel
+chronology. The weighted directional channel-residual bound yields event/data-error
+margins, with actual nonzero retention and data perturbations, strict
+negative/positive phase consumers and both complete-reset endpoints. An actual
+baseline inside the allowed error ball falsifies uniform strict-sign claims.
+
+Whole scientific review, original-source/minimal/aggregate native reconciliation,
+canonical conservation and generated-metadata review pass. The registered build,
+current substrate checks, fresh independent whole committed closing review and
+ROOT acceptance cover every original O1–O5 obligation at `5df8af2c`, retaining all
+C1–C5/S1–S5/E1–E4 guards. The substrate gate retains sixteen paper-corpus failures;
+it does not establish a full-project pass. Security, main and publication
+acceptance remain separate. The sampled recurrence describes separate normalized
+experiments under uninterrupted ambient evolution.
 
 Single-pulse operational pairings do not by themselves describe repeated
 experiments: any recursive-pulse interpretation must derive the actual
