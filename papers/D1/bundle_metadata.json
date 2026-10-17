@@ -23,12 +23,12 @@
     },
     {
       "name": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity",
-      "claims": "§2.4 — T_H from the surface gravity; the relation every platform's temperature rests on",
+      "claims": "Surface-gravity convention: for any FluidBackground bg and SonicHorizon bg h, hawkingTemp h.surfaceGravity = h.surfaceGravity/(2*pi) by definition. SonicHorizon carries a positive free surfaceGravity field; this theorem does not identify it with a background derivative or derive a Hawking spectrum. The physical gradient identification is external input as disclosed in the manuscript.",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.HawkingUniversality.hawking_universality",
-      "claims": "§1 + §7.2 — the universality theorem the paper's central question is posed against: T_H = hbar kappa / 2 pi k_B controls the spectrum independently of the microscopic fluid",
+      "claims": "Algebraic properties of the defined universalEffectiveTemp for ModifiedDispersion with positive cs/cutoff, nonnegative DissipativeCoeffs, a SonicHorizon with positive surfaceGravity, and D>0: delta_disp<0, abs(delta_disp)=(pi/6)*D^2, delta_diss>=0 with zero iff both transport coefficients vanish, and the stated temperature-difference identity. Independence from the shape function F is built into the temperature definition; this does not derive microscopic universality or the adopted quadratic law.",
       "declared": "2026-08-07"
     },
     {
@@ -53,8 +53,13 @@
     },
     {
       "name": "SKEFTHawking.SecondOrderSK.fullSecondOrder_uniqueness",
-      "claims": "ABSTRACT + §3.2 — positivity forces gamma_{2,1} + gamma_{2,2} = 0, reducing four free second-order parameters to three",
+      "claims": "Within the fullSecondOrderAction model, beta>0, global satisfies_positivity_ext and FullSecondOrderKMS imply the existence of CombinedDissipativeCoeffs whose combinedDissipativeAction has the same Lagrangian for every SKFieldsExt configuration. The sum constraint on second-order coefficients is a separate truncation-dependent result, combined_positivity_constraint.",
       "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.SecondOrderSK.combined_positivity_constraint",
+      "claims": "For CombinedDissipativeCoeffs and beta>0, assume satisfies_positivity_ext of the specific combinedDissipativeAction for every SKFieldsExt configuration. Then gamma_2_1+gamma_2_2=0. This is a constraint at the stated noise-action truncation; adding omitted imaginary bilinears can alter the constraint. It is distinct from fullSecondOrder_uniqueness.",
+      "declared": "2026-10-16"
     },
     {
       "name": "SKEFTHawking.SKDoubling.firstOrder_KMS_optimal",
@@ -73,7 +78,7 @@
     },
     {
       "name": "SKEFTHawking.CGLTransform.cgl_fdr_general",
-      "claims": "ABSTRACT + §3.4 — the CGL master fluctuation-dissipation relation. This is what makes the KMS-mandated noise floor a THEOREM rather than an assumption",
+      "claims": "Conditional coefficient bookkeeping: for any derivative index j, beta>0 and the supplied FDR equality noise*beta=-b, cgl_fdr_general concludes noise=-b/beta. The FDR equality is a hypothesis; this theorem does not derive it, or the physical noise floor, from microscopic KMS dynamics.",
       "declared": "2026-08-07"
     },
     {
@@ -83,7 +88,7 @@
     },
     {
       "name": "SKEFTHawking.WKBConnection.turning_point_shift_pos_iff",
-      "claims": "§4.1 — the complex turning-point shift is positive iff the dissipative correction is non-zero. Exact to all orders in the SK-EFT",
+      "claims": "For ExactWKBParams with Gamma_H>=0, kappa>0 and cs>0, the defined turningPointShift=cs*Gamma_H/(2*kappa^2) is strictly positive iff Gamma_H>0. This proves positivity of the defined expression; it does not derive a physical turning point or all-orders SK-EFT validity.",
       "declared": "2026-08-07"
     },
     {
@@ -93,7 +98,7 @@
     },
     {
       "name": "SKEFTHawking.WKBConnection.unitarity_deficit_eq_decoherence",
-      "claims": "ABSTRACT + §4.3 — NON-PERTURBATIVE EFFECT 1: |alpha|^2 - |beta|^2 = 1 - delta_k. The final state of the analog Hawking process is not pure",
+      "claims": "For ExactWKBParams and ModifiedBogoliubov p, rearranges the supplied field alpha_sq-beta_sq=1-decoherenceParam p to 1-(alpha_sq-beta_sq)=decoherenceParam p. The modified-unitarity law is assumed in the carrier; no density operator or quantum-state purity claim is established by this theorem.",
       "declared": "2026-08-07"
     },
     {
@@ -108,27 +113,27 @@
     },
     {
       "name": "SKEFTHawking.WKBConnection.noise_floor_nonneg",
-      "claims": "ABSTRACT + §4.4 — NON-PERTURBATIVE EFFECT 2: the FDR-mandated noise floor is non-negative — present even with zero Hawking radiation",
+      "claims": "For ExactWKBParams with Gamma_H>=0 and kappa>0, noiseFloor p:=decoherenceParam p/2 is nonnegative. This is an algebraic property of the defined floor, independent of the Bogoliubov coefficients; physical FDR applicability remains the manuscript's stated external assumption.",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.noise_floor_eq_delta_diss",
-      "claims": "§4.4 — that floor equals delta_k/2 = Gamma_H/kappa; mandatory by KMS, not tunable",
+      "claims": "The identity noiseFloor p=Gamma_H/kappa follows by unfolding noiseFloor:=decoherenceParam/2 and decoherenceParam:=2*Gamma_H/kappa. Its physical interpretation as a mandatory noise floor is conditional on the separately supplied fluctuation-dissipation relation.",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.occupation_reduces_to_beta_sq",
-      "claims": "§4.5 — the total occupation is |beta|^2 plus the floor",
+      "claims": "Zero-damping specialization: for ExactWKBParams p, ModifiedBogoliubov p b and Gamma_H=0, totalOccupation p b=beta_sq. At finite damping the defined total is beta_sq/(1-decoherenceParam p)+noiseFloor p; the theorem does not assert beta_sq+noiseFloor at finite damping.",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.WKBConnection.noise_dominates_when_beta_small",
-      "claims": "ABSTRACT + §4.5 — NON-PERTURBATIVE EFFECT 3: the spectral floor — the crossover above which the noise floor dominates the exponentially-decaying Hawking term",
+      "claims": "Conditional dominance: for ExactWKBParams p and ModifiedBogoliubov p b, assume decoherenceParam p<1 and beta_sq<noiseFloor p*(1-decoherenceParam p). Then the defined hawkingOccupation p b is less than noiseFloor p. The theorem contains no frequency variable, exponential spectrum or crossover-frequency derivation.",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.PolaritonTier1.attenuation_ge_one",
-      "claims": "§6.3 — spatial attenuation >= 1 everywhere, the foundation under the stimulated-Hawking gain analysis",
+      "claims": "For PolaritonParams with Gamma_pol>=0, L>=0 and v_g>0, the defined attenuationFactor=exp(Gamma_pol*L/v_g) is at least one. This bounds the attenuation correction; it does not formalize the separate stimulated-gain threshold or detector/readout model.",
       "declared": "2026-08-07"
     },
     {
@@ -158,7 +163,7 @@
     },
     {
       "name": "SKEFTHawking.DiracFluidWKB.soundSpeed_lt_vF",
-      "claims": "§7.3 — the Dirac fluid is SUBLUMINAL, which is what eliminates the trans-Planckian problem that afflicts BEC analog Hawking",
+      "claims": "For GrapheneWKBParams with vF>0, the defined conformal sound speed soundSpeed=vF/sqrt(2) is less than vF. This is a constant-speed algebraic inequality; it does not establish the high-momentum collective dispersion, horizon robustness or removal of a trans-Planckian problem.",
       "declared": "2026-08-07"
     },
     {
@@ -168,12 +173,12 @@
     },
     {
       "name": "SKEFTHawking.GrapheneNoiseFormula.fdt_consistency",
-      "claims": "ABSTRACT + §7.5 — the closed-form noise spectrum's two independent derivations (Keldysh FDT and Landauer-Buttiker) agree, certified at the Lean level",
+      "claims": "Definitional unit-greybody identity: for real hbar_omega, sigma_Q and n_H, hawkingNoisePSD hbar_omega sigma_Q 1 n_H=2*hbar_omega*sigma_Q*n_H. The source proof unfolds the PSD and uses ring. This theorem evaluates one adopted algebraic formula; it does not compare two independently constructed physical derivations.",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GrapheneNoiseFormula.snr_independent_of_sigma_Q",
-      "claims": "§7.6 — the Lorenz-cancellation theorem: the SNR is independent of sigma_Q, which is what turns the measured Wiedemann-Franz violation into a cross-check of the noise prediction",
+      "claims": "Within the defined Hawking and Johnson-Nyquist PSDs, for sigma_Q1!=0, sigma_Q2!=0 and kB_T!=0, snrPerBin has the same value at the two conductances when all remaining arguments are fixed. This is cancellation of their shared factor; no Lorenz number, thermal conductivity or Wiedemann-Franz comparison occurs in the theorem.",
       "declared": "2026-08-07"
     }
   ],
