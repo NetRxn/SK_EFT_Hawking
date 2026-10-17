@@ -22,6 +22,7 @@ _DISCOVERY_METHODS = {
     "tools/list",
 }
 _HOP_HEADERS = {
+    "x-lean-checkpoint-smoke",
     "connection",
     "keep-alive",
     "proxy-authenticate",
@@ -97,6 +98,7 @@ class LeaseGate:
         body: bytes,
         *,
         http_method: str = "POST",
+        checkpoint_capability: str | None = None,
     ) -> None:
         messages = _messages(body)
         requires_lease = http_method == "GET"
@@ -109,6 +111,8 @@ class LeaseGate:
             if method and method not in _DISCOVERY_METHODS:
                 requires_lease = True
         if not requires_lease:
+            if checkpoint_capability is not None:
+                raise SlotError("internal checkpoint capability is only valid for matching proof smoke")
             return
         lease = self.inventory.lease(self.number, required=False)
         slot = self.inventory.slot(self.number)
@@ -135,6 +139,12 @@ class LeaseGate:
             if owner.state != "present" or not lease.get("owner_signature"):
                 raise SlotError(f"wt{self.number} process owner identity is {owner.state}", observations=(owner,))
         self._authorize_paired_dependency(lease)
+        from .checkpoints import authorize_readiness
+        try:
+            authorize_readiness(self.inventory, self.number, lease, body,
+                                http_method=http_method, capability=checkpoint_capability)
+        except (KeyError, TypeError, ValueError, AttributeError, OSError) as exc:
+            raise SlotError("checkpoint readiness is unavailable or malformed") from exc
 
     def _authorize_paired_dependency(self, lease: dict[str, Any]) -> None:
         paired = self.inventory.paired_inventory()
@@ -430,7 +440,12 @@ def make_handler(inventory: Inventory, number: int):
                 client, supplied_hash = gate.identify(
                     self.headers.get("Authorization"), client_hint
                 )
-                gate.authorize(client, supplied_hash, body, http_method=self.command)
+                internal = self.headers.get_all("X-Lean-Checkpoint-Smoke", [])
+                if len(internal) > 1:
+                    raise SlotError("repeated internal checkpoint capability header")
+                capability = internal[0] if internal else None
+                gate.authorize(client, supplied_hash, body, http_method=self.command,
+                               checkpoint_capability=capability)
             except SlotError as exc:
                 status = 401 if "credential" in str(exc) else 403
                 self._deny(status, str(exc), request_id)
@@ -475,6 +490,8 @@ def make_handler(inventory: Inventory, number: int):
             )
             try:
                 headers["Mcp-Session-Id"] = broker.backend_session(translation_key)
+                gate.authorize(client, supplied_hash, body, http_method=self.command,
+                               checkpoint_capability=capability)
                 connection.request(
                     self.command, request_url.path, body=body or None, headers=headers
                 )
@@ -491,6 +508,8 @@ def make_handler(inventory: Inventory, number: int):
                         connection = http.client.HTTPConnection(
                             backend_host, backend_port, timeout=180
                         )
+                        gate.authorize(client, supplied_hash, body, http_method=self.command,
+                                       checkpoint_capability=capability)
                         connection.request(
                             self.command, request_url.path,
                             body=body or None, headers=headers,
@@ -528,6 +547,8 @@ def make_handler(inventory: Inventory, number: int):
                         break
                     self.wfile.write(chunk)
                     self.wfile.flush()
+            except SlotError:
+                self._deny(403, "checkpoint/current lease admission changed before backend dispatch", request_id)
             except (OSError, http.client.HTTPException) as exc:
                 if not self.wfile.closed:
                     try:

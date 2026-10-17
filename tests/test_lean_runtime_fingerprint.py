@@ -22,7 +22,7 @@ from tests.test_lean_lifecycle_observation import owned
 
 
 MEMBERS = {"__init__.py", "state.py", "supervisor.py", "controller.py", "cli.py",
-           "proxy.py", "claude_config.py", "host_limits.py"}
+           "proxy.py", "claude_config.py", "host_limits.py", "checkpoints.py"}
 
 
 def import_package(root):

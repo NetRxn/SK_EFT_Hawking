@@ -910,13 +910,28 @@ refuses. Post-SIGTERM passive timeout retains its phase and last typed observati
 
 ### R4: bounded fresh-guard shutdown progress
 
-The accepted R3 source and its bounded controls are distinct from native pool
-acceptance. A populated normal release reached the ten-second stop deadline after
-one delivered SIGTERM; FREE did not mean backend absence. R4 corrects the source
-progress and observation costs; implementation review, ROOT execution and native
-normal-release acceptance remain pending.
+The shutdown observation extension is selected for candidate implementation.
+Source controls, whole isolated native acceptance, loaded-code admission and live
+operation remain distinct gates; this specification grants no live activation.
 
-Keep initial identity/ancestry refusals unchanged. Only after a successful SIGTERM
+Stable R4 decisions:
+
+- **R4-S1:** one helper-entry budget, at most three whole fresh observation attempts,
+  and strict coherent final usable evidence.
+- **R4-S2:** a structured scheduling-only discrepancy and bounded first/last
+  diagnostics; no generic exception or product-command retry.
+- **R4-S3:** unchanged exact identity, retained graph, new-descendant refusal,
+  final target, absence, ownership and capacity predicates.
+- **R4-S4:** preserved coherent selected-rc1 absence and mixed-family protocol.
+- **R4-F1:** exact fresh owned recursive fixture startup before listener readiness.
+- **R4-F2:** separate actual late-child refusal with zero new-family signals.
+
+Keep initial identity/ancestry refusals and the post-first-SIGTERM-only exit/reaping continuation unchanged. A shutdown-only observer may discard an inconclusive capable pass whose sole discrepancy is R versus S with an identical remaining native STAT suffix, then collect a completely new pass. This is observation resampling, not acceptance of either inconsistent view or a signal authorization. Both helpers have at most three total attempts per invocation. Enter observation_budget(10.0) exactly once at helper entry, around the entire helper invocation and all attempts. Its existing min(current, new) semantics preserve any earlier ambient deadline; when no ambient deadline exists, this supplies one ten-second absolute helper deadline. Check remaining budget before every subprocess/read and before returning usable evidence; no attempt, wait, nested helper or recovery path restarts it. CP quiescence/pre-quarantine and orphan fresh-family callers without a surrounding stop budget receive this same explicit helper bound. A usable result must satisfy every original strict predicate on one fresh coherent pass. Never combine views or reuse any pass across a durable write, signal, passive retry or return boundary.
+Family resampling requires successful bounded parsing and capable witnesses in all four views; exact selected membership; stable PID, PPID, birth and full command; equal generic selected/census rows; cross-format stable identity and complete rooted graph coherence; no new descendant beyond retained identities. Each differing native row must be exactly R/S with equal suffix, and every other native field must agree. Absence/presence drift, changing graph or identity, terminal/defunct/reparent transitions, unknown/other states or suffix changes, missing observers, malformed/denied/partial/duplicate/extra/oversized outputs, unexpected return codes or stderr are typed refusals, not resampling candidates. The single-PID native helper similarly resamples only a stable-identity R/S-only discrepancy after complete selected/census/witness validation; its caller retains all generic identity/family/final-target checks.
+At exhaustion or deadline, retain bounded first discrepancy and last observation context in existing typed refusal diagnostics. Do not restart a deadline, probe after expiry, swallow an arbitrary SlotError/rc2, extend pre-first-signal exit continuation, synthesize rows, adopt unknown descendants or relax exact final live-target and actual every-PID absence requirements. Registration, quarantine, original signatures, reservation, domain/owner/pin/provenance/capacity gates and all CP1-CP8 remain unchanged.
+Preserve the original selected-ps absence protocol: rc0 accompanies nonempty selected rows; rc1 with empty selected output is valid only when the complete capable census independently confirms every selected identity absent. Complete censuses must return0 with a known-present observer. Family requests with some absent and some present retained identities keep their original mixed-membership semantics (nonempty selection/rc0, exact selected/census membership, capable native and generic absence for each absent PID). Coherent absence returns immediately as absence, without a resampling attempt or inferred termination. Empty rc0, nonempty rc1, rc1 plus a census-present target, disagreement or missing capability remains refusal. No refusal becomes absence.
+
+Only after a successful SIGTERM
 in this invocation may a temporary exit-related refusal enter bounded passive
 re-observation and later resume the pending target. Resumption requires the entire
 retained family to satisfy the original classification again, followed by durable
@@ -950,3 +965,291 @@ command (pilot-informed, not a native guarantee), persistent refusal/no-extra-si
 negatives, nested terminal transitions, fresh evidence after persistence/signals,
 malformed/denied/partial/duplicate/extra/oversized batches, and first-cause retention.
 Preserve all nineteen prior mutation intents and add focused sole-guard controls.
+
+A typed deadline refusal still returns bounded already-collected diagnostic context;
+no usable observation or additional probe is permitted after expiry. The helper
+fallback is per invocation, not a new total budget for an entire CP transaction.
+
+Mechanical native positive fixtures must acknowledge the planned owned child
+family before exposing a backend listener. Use fresh per-launch generation-bound
+identity/parent/argv/birth acknowledgments for the actual middle and leaf; stale
+append-only node records and open ports are insufficient. Bound startup, preserve
+close-fd policy and refuse missing, dead, reused or wrong children without retrying
+a product command. A distinct deliberate late-child control creates a real child
+after durable graph reservation and requires the unchanged new-descendant refusal,
+zero signals to that new family, retained signatures/registry and quarantine.
+
+
+#### R4-F1-A: exclusive complete startup acknowledgment
+
+The standalone mechanical peer serializes its complete bounded startup object
+before publication. Hold the exact trusted control directory through a no-follow,
+close-on-exec directory descriptor; require current ownership and no group/other
+write, and recheck its pathname identity at readiness boundaries. Create a unique
+same-directory private stage with exclusive/no-follow/close-on-exec flags and mode
+0600. This invocation exposes no final entry before publishing its complete stage.
+An initially absent final remains absent during uncontended staging. A preexisting
+final or a concurrently published complete winner remains untouched; this invocation
+then collides with FileExistsError, without deleting, replacing, adopting or retrying
+invalid data from the existing object. Admit only
+complete bounded writes, an fsynced regular single-link private inode with exact
+size and stable identity, and an unexpired original deadline without cancellation.
+
+Publish by dirfd-relative native NO-REPLACE rename, preserving collision as
+FileExistsError and leaving any existing final object unchanged. Use the existing
+platform/ABI pattern without importing controller code: Linux renameat2 flag1,
+Darwin host-unit renameatx_np flag4. Actual support must be established on the ACK
+bind mount in the selected image and the host-unit filesystem before reliance.
+Unsupported APIs/filesystems, cross-device moves, permission or durability errors
+fail startup; no overwrite, check-then-rename, hard-link publication or retry of
+invalid data is permitted. Stage and final remain on one directory/device. The
+completed published inode remains single-link and is never modified afterward.
+Fsync the held parent before the publisher continues. Atomic content visibility
+alone does not prove parent-fsync completion, publisher survival or power-loss
+recovery. Deadline checks do not preempt uninterruptible filesystem operations.
+
+A prepublication error removes only this invocation's exactly identified staged
+inode, or retains that private stage as failure evidence. Never remove another
+stage or an existing final path. A postpublication failure preserves the complete
+final acknowledgment, even when parent fsync or later readiness fails.
+
+Readers use held trusted directory authority and no-follow/close-on-exec/nonblocking
+open. Require a regular single-link file, exact private mode/current UID and bounded
+stable size. Bound reads to maximum+1, require complete bytes equal to stable size,
+and compare inode/device/owner/mode/link count/size/mtime/ctime and directory-entry
+identity across acquisition/read. Reject FIFO, symlink, directory, oversized,
+short/growing/truncated data or substitution. Missing final name at initial open
+alone means not yet published. Missing/substituted entry or parent after acquisition
+is fatal consistency failure, including ENOENT; never turn it into another wait.
+Strict JSON/UTF-8/object validation and postparse deadline checks remain fatal on
+failure. No malformed-data or trust-error retry is added.
+
+Keep one absolute startup deadline through normal root/middle/leaf and every
+publication/read/identity/ready boundary. The waiter retries only initial missing
+final-name acquisition. After acknowledgment checks, recheck cancellation, the
+exact created child's poll/native PID/birth/start ticks/full argv/PPID, and deadline
+before return. Revalidate the full required owned recursive family before own
+readiness publication and root listener bind. These are fresh boundary checks,
+not a guarantee that a process cannot subsequently exit. Keep the existing distinct
+late-child negative's separately bounded leaf-start interval; never respawn or
+retry a product command to repair startup.
+
+One narrow owned-child finally covers publication/read failure, cancellation,
+missing root token/port, listener construction, serving exit and late-child wait
+failure. Terminate/wait only the unreaped exact direct-child Popen handle created
+by this fixture. Preserve the existing finite cleanup wait and any cleanup timeout
+as uncertainty; no guessed PID, nonchild signal, controller cleanup or inherited
+transaction descriptor is authorized. Existing server/thread cleanup stays owned.
+
+All original CP-1 through CP-8, R4-S1 through S4/F1/F2, selected-ps absence,
+identity/ancestry/graph/new-descendant/final-target/every-PID-absence, quarantine,
+lease/pin/owner/provenance/capacity, client auth/session and A-before-B-before-live
+contracts remain unchanged. This amendment repairs the mechanical peer only.
+
+Use production-seam controls for scheduler-only red then fresh coherent progress,
+persistent flapping, no-ambient and earlier-nested deadline, direct CP/orphan helper
+callers, valid all-absent/mixed-member results and simultaneous nondrift defects.
+Retain the original RR controls, all CP clauses, full current named/native/sole
+controls and independent A-before-B-before-live admission.
+
+
+## Proposed CP amendment — durable nonaccepting source checkpoints
+
+**Status: source candidate exists; the revised crash-recovery specification has
+independent review and is selected for implementation. Not admitted for live operation.**
+Prior source review and scoped tests do not establish abrupt-death recovery.
+Independent revised specification/implementation review, the complete isolated
+native pilot and explicit ROOT activation are required before CP becomes operative.
+The accepted S/LO/RR/SF rules continue to govern existing commands.
+
+### Context and measured constraints
+
+A long proof may have useful, unaccepted source while an upstream dependency needs
+integration. Source preservation, mathematical acceptance and capacity are separate
+states. Ordinary `release` in `scripts/lean_slots/controller.py` requires a supported
+lease state, clean worktree and containment in the existing integration/base refs;
+a dedicated preservation ref does not satisfy that predicate. `prepare` resets to
+a verified current base after ordinary admission. No existing command parks and
+restores unabsorbed source with its evidence. The operator guide owns current usage.
+
+The supervisor's expected-launch fingerprint binds actual imported package source
+and launcher selection. A candidate package using a canonical inventory still
+fails SF when the launcher selects different canonical source. Configuration
+selection alone therefore cannot authorize a candidate lifecycle operation.
+Existing owned-stop, quiescence and census internals have separate identity/native
+observations; their suitability for the narrow stop-only bootstrap below must be
+proved through production-path tests and an isolated native pilot.
+
+### Proposed decisions
+
+- **CP-1 — Preservation is not acceptance.** Extend the existing controller with an
+  explicit checkpoint transaction. It records the entire original task contract,
+  `sourceReady=false`, exact source and evidence. It cannot mark `ready`, absorb,
+  publish an epoch or certify a proof. Ordinary release/acquire containment and
+  READY_TO_ABSORB handling remain unchanged. Completed ready work uses absorption.
+- **CP-2 — Source is protected before reset.** ROOT may authorize an ordinary
+  source-only WIP commit after stopping all writers at a source-safe boundary. The
+  checkpoint requires a clean tracked/index state and complete classification of
+  nontracked material. It protects exact source through an exclusive dedicated Git
+  ref, verifies reachable objects and an exact tree/index/content manifest, and
+  durably copies the complete evidence/contract reference closure outside the
+  reusable worktree. Missing, unreadable, escaped, changed or unclassified content
+  blocks. Each preserved source entry MUST have actual durable bytes in the
+  protected WIP tree or an explicitly copied source payload, never only a hash.
+  Before reset and either resume route, reobserve destination entries and refuse
+  any tracked-target overwrite of retained ignored/nontracked files or directory
+  obstructions. Resolve such entries through ordinary source-safe ownership first;
+  never remove them automatically. Preserve originals; no `git clean`, ignored
+  cache portability or ref-only durability claim. Reset is allowed only on this
+  clean, fully preserved state.
+- **CP-3 — One journal, existing locks and ownership.** Place a versioned write-ahead
+  transaction journal under the existing canonical state root, with immutable
+  checkpoint storage in the owning repository's local private state. Bind exact
+  repository/common-Git identity, canonical inventory/domain/state root, slot,
+  owner/lease generation and bytes, base/dependency pins, candidate source/imports,
+  full original contract, source/index/evidence manifests and process observations.
+  Use target-slot then shared lifecycle lock. An explicit internal typed CP
+  transaction context selects the enhanced protocol at the existing directory-lock
+  owner, numbered-slot lock and supervisor lifecycle seams. Ordinary callers retain
+  their legacy directory protocol until separately admitted; CP never auto-retires
+  their records. Use a permanent `fcntl.flock(LOCK_EX | LOCK_NB)` sidecar and an atomically published complete
+  directory facade at the unchanged legacy lock pathname. The sidecar inode is
+  never replaced/unlinked; validate trusted parents, no-follow regular-file identity,
+  ownership/mode/link count and protocol. Prepare and fsync complete immutable
+  generation/native-owner/domain records before native dirfd-relative NO-REPLACE
+  publication. An existing empty or populated legacy directory must remain intact.
+  Darwin uses `renameatx_np(RENAME_EXCL)`; Linux uses `renameat2(RENAME_NOREPLACE)`.
+  Unsupported operations/filesystems refuse; ordinary rename/replace and
+  check-then-rename are not fallbacks. This is transaction recovery state,
+  not a second lease, capacity reservation or task-routing ledger.
+- **CP-4 — Drain, deny dispatch, stop, observe, reset.** Independently drain every
+  owned client and record completed requests; locks and a missing client process
+  are insufficient. Recheck exact source/lease/pins/manifests, then quarantine the
+  existing lease with a journal-bound checkpoint reason so proxy calls fail closed.
+  Stop only known owned backend families through existing RR identity/descendant
+  guards. Require capable repeated both-role endpoint/project/retained-child
+  absence and complete conflict-free global capacity evidence before clean reset
+  to the recorded contained base. No reset on unknown or residual occupancy.
+- **CP-5 — Canonical release stays separate.** Persist the verified reset and
+  ready-for-release phases before dropping locks. ROOT then invokes unchanged
+  canonical-primary `release`; it independently rechecks owner/state/pin/cleanliness
+  and ordinary containment and owns counterpart restoration and lease removal.
+  Do not recursively take its locks. Counterpart restoration may start a backend;
+  measure actual residual/counterpart state after release. Lease FREE alone never
+  proves free capacity. Failure retains journal, preserved source and reservations.
+- **CP-6 — Recovery never overwrites uncertainty.** Persist intent before effects
+  and completion after each durable boundary. Interrupted reset must be observed
+  against both exact original and contained-base states under renewed locks.
+  Unknown state stays quarantined. Recovery binds the original lease generation;
+  it cannot replay over another owner or recreate a released lease. Ref collision,
+  content drift, incomplete copy/fsync, failed stop or unavailable census refuses.
+  No automatic destructive rollback or checkpoint garbage collection.
+  Recovery first reacquires the stable sidecars and validates the exact recognized
+  facade generation, directory/member identities, complete bytes and native
+  mutator completion before inspecting or changing protected transaction source.
+  Retire the intact facade by NO-REPLACE move to unique retained history and fsync
+  its parents; never unlink its owner member and then rmdir. After retirement,
+  never touch that legacy pathname or perform another protected effect. Crash
+  before/after retirement cannot authorize replay over a subsequent owner.
+  Parent death or possession of the sidecar alone does not prove mutator completion:
+  Git/reset/merge/copier/hook/helper descendants may still write, and legacy callers
+  ignore the sidecar. Establish their launch identities before the first write,
+  retain guards across the admitted mutation family, and prove full completion
+  before facade retirement, including exception/timeout paths. Close guards rather
+  than explicitly unlocking a shared inherited description. Backend/proxy launches
+  do not retain transaction guards. Unknown/unbounded helpers or ambiguous raw
+  legacy directories refuse; legacy reconciliation needs a separately established
+  launch fence and complete native evidence, never PID absence or manual deletion.
+- **CP-7 — Resume uses fresh ordinary admission and completed readiness.** Acquire
+  and prepare an eligible slot canonically with current successful epochs and exact
+  current dependency pins. The guarded resume binds the new lease generation,
+  destination and current inputs, drains clients and durably quarantines before
+  source mutation. Stop known owned backends before restoration. Same-base restore
+  preserves exact source; changed-base restore merges preserved ancestry into the
+  current prepared base and records both manifests. No cherry-pick, force, stale
+  pin, cache copy or silent upstream replacement. Conflicts preserve checkpoint and
+  destination state. All historical evidence and full original proof obligations
+  remain subject to current revalidation; resume never grants acceptance.
+  After restored source/backend/current epoch and dependency plus existing
+  loaded-code/session/tool-policy admission pass, publish ACTIVE atomically with
+  pending resume-admission context in the SAME lease write. Bind checkpoint and
+  journal identity, canonical domain, lease generation/owner, source/smoke-file
+  hashes, current epoch/dependency and this transaction's native process identity.
+  A living long-lived lease owner is insufficient if the resume attempt died.
+  Actual LeaseGate denies ordinary proof dispatch and leased streams while this
+  context is pending, invalid or uncertain. Preserve existing lease-independent
+  discovery and session cleanup semantics; none grants proof authority.
+  The pending interval permits only the validated transaction's bounded matching
+  diagnostic smoke through the same normal proxy/tool/session gates. Use a fresh
+  per-attempt unguessable internal capability with only its digest durably stored
+  in the existing lease/journal. Bind it to this live native transaction and exact
+  matching file/tool/request shape; no arbitrary tool, code, batch or alternate
+  file. It is no CLI flag, purpose string, client session ID or ambient authority.
+  Do not log, reflect or forward its header to the backend. No one-shot claim is
+  made unless enforced; any supported transport retry remains bounded to this
+  exact smoke. Existing authentication and owner/dependency guards still apply.
+  Keep the order ACTIVE then matching proof smoke. Persist the completed resumed
+  journal and exact clean positive smoke receipt before atomically publishing the
+  same lease's completed admission context under renewed exact binding checks.
+  Retain its checkpoint/journal/receipt binding; do not erase the context as if this
+  were an ordinary never-resumed lease. Ordinary dispatch requires valid completed
+  admission; pending, missing/truncated/mismatched journal or receipt fails closed.
+  Heartbeat and ordinary lifecycle code preserve the context and cannot clear it
+  merely because state is ACTIVE. Completion records restored source at admission;
+  it does not forbid later ordinary authorized proof edits. Failure quarantines;
+  abrupt death before completion leaves denial without needing exception cleanup.
+  Recovery uses CP locks, recognized generation, mutator completion, current normal
+  admission and a new live attempt/capability plus fresh matching smoke. It cannot
+  reuse a dead attempt, recreate a lease or replay over a later owner. A death
+  after durable completed admission does not undo a proven successful resume.
+- **CP-8 — Narrow candidate bootstrap only.** A non-worktree ROOT orchestrator may
+  invoke a separately reviewed exact candidate checkpoint implementation from a
+  named ordinary source checkout solely for preservation, journal/quarantine,
+  known owned stop, native quiescence and clean reset. This exception requires an
+  exact source-only candidate commit/import manifest, unchanged canonical source,
+  explicit canonical inventory realpath/hash/domain and state root, verified owner
+  and original contracts, independent review and successful isolated native pilot.
+  Validate bindings before Controller construction or any state-root creation.
+  Reject default/copied/redirected inventory and runtime state/source overrides.
+  Candidate health/start/reload/prepare/absorb/build/release are forbidden; SF
+  mismatch remains visible and cannot be suppressed, rewritten or called healthy.
+  All starts, normal release and later resume use normally integrated canonical
+  code. The exception is not current activation authority.
+  Establish pilot evidence in order: (A) candidate as ordinary canonical code in
+  a new isolated OS/domain, proving the whole transaction/crash/resume matrix;
+  (B) a separate isolated old-canonical/exact-candidate bridge with unchanged
+  canonical commands, using independently accepted A evidence; (C) separately
+  admitted live preservation only after both pass. Bootstrap evidence binds exact
+  phase, candidate, domain and accepted receipts before constructor/state effects.
+  No prior-pilot boolean may be asserted for the run that is meant to establish it,
+  and no disposable-domain flag grants authority over a live canonical domain.
+
+### Overlap, alternatives and acceptance
+
+CP extends S-B's ROOT-owned lifecycle with one explicitly bounded candidate
+checkpoint bootstrap; it does not grant workers lifecycle authority. CP preserves
+S-C/S-H ownership and dependency direction, S-G epochs, S-I ancestry-safe absorption,
+S-L post-unlink reconciliation, S-Q session identity, LO quiescence/capacity/locks,
+RR known-owned stop and SF expected-source refusal. SF-7's earlier no-new-CLI scope
+continues to describe SF itself; CP is a separately reviewed controller extension.
+S-C's portability rule assumes no shell `flock` executable. The selected Python
+`fcntl.flock` API is a measured CP prerequisite on supported local Darwin/Linux
+filesystems; lease publication keeps its existing atomic protocol. Do not substitute
+POSIX record locking/`lockf` or blocking acquisition. Unsupported or uncertain
+semantics refuse before effects. CP rejects same-process reentry, excludes competing
+threads and forbids fork children from continuing or unlocking the parent transaction;
+only admitted mutation exec families inherit guards. Ordinary defaults and their
+existing lock nesting remain unchanged.
+
+Accepting any rescue ref in `_is_absorbed` would weaken ordinary release/reclaim;
+resetting dirty work or presenting a WIP commit as accepted would lose the task
+boundary. A new slot pool, service or parallel reservation ledger duplicates the
+existing controller. Simply pausing a backend leaves the lease and dependency
+window active. These alternatives are not selected.
+
+The [design](../superpowers/specs/2026-10-16-durable-lean-checkpoints-design.md)
+and [plan](../superpowers/plans/2026-10-16-durable-lean-checkpoints.md) define production
+seam tests, failure injection and native admission. No live proof lease may use CP
+until those separate gates pass. Upstream integration follows only after every
+affected downstream owner has safely exited its dependency window. Later canonical
+source changes follow ordinary LO/SF coordinated reload and fresh proof admission.

@@ -50,6 +50,7 @@ class Host:
         self.ps_calls = []
         self.ps_cost = 0.0  # Synthetic per-command elapsed time, never a native guarantee.
         self.command_calls = []
+        self.checkpoint_children = set()
         self.real_run = subprocess.run
         self.native_states = {}
         self.tcp_extra = []
@@ -83,7 +84,7 @@ class Host:
         if argv[0] != "ps":
             self.command_calls.append(list(argv))
             # Only disposable fixture Git/build commands are allowed to execute.
-            if argv[0] not in {"git", "/usr/bin/true", "cp"}:
+            if argv[0] not in {"git", "/usr/bin/true", "cp"} and Path(argv[0]).name != "git":
                 raise AssertionError(f"unexpected external subprocess: {argv}")
             # Real subprocess.run uses Popen; temporarily restore its OS implementation.
             saved = subprocess.Popen
@@ -93,6 +94,25 @@ class Host:
             finally:
                 subprocess.Popen = saved
         self.ps_calls.append(list(argv))
+        # CP's narrowly recognized start-barrier child is a real disposable Git
+        # process. Keep its actual birth/exec/exit in this external OS model;
+        # all backend/socket observations remain the explicitly synthetic Host.
+        for pid in tuple(self.checkpoint_children):
+            saved = subprocess.Popen
+            subprocess.Popen = self.real_popen
+            try:
+                native_child = self.real_run(["ps", "-p", str(pid), "-o", "pid=,ppid=,lstart=,stat=,command="], capture_output=True, text=True)
+            finally:
+                subprocess.Popen = saved
+            if native_child.returncode == 1 and not native_child.stdout:
+                self.remove(pid)
+                self.checkpoint_children.remove(pid)
+            else:
+                assert native_child.returncode == 0 and not native_child.stderr
+                fields = native_child.stdout.strip().split(None, 8)
+                assert len(fields) == 9 and int(fields[0]) == pid
+                self.add(pid, fields[8], ppid=int(fields[1]), signature=" ".join(fields[2:7]) + " " + fields[8])
+                self.native_states[pid] = fields[7]
         remaining = kwargs.get("timeout", 2.0)
         self.clock += min(self.ps_cost, remaining)
         if self.ps_cost > remaining:
@@ -157,6 +177,10 @@ class Host:
             self.after_signal(pid)
 
     def popen(self, argv, **kwargs):
+        if "-c" in argv and len(argv) > argv.index("-c") + 1 and "# lean-checkpoint-start-barrier/v1" in argv[argv.index("-c") + 1]:
+            handle = self.real_popen(argv, **kwargs)
+            self.checkpoint_children.add(handle.pid)
+            return handle
         self.launches.append(list(argv))
         if self.launch_failure:
             raise self.launch_failure
@@ -1892,7 +1916,7 @@ def test_rr2_exact_residual_retry(rig, monkeypatch, failure):
         atomic_json(ctl.inventory.source, value)
     _, error = captured(lambda: ctl.recover_orphan_backend_stop(1, **request, expected_residual_sha256=digest))
     if failure in {"none", "partial-absent", "all-absent"}:
-        assert error is None, repr(error)
+        assert error is None, {"error": repr(error), "current_capacity_after_refusal": sup.capacity_census()}
         assert not path.exists()
         assert bool(host.signals) == (failure != "all-absent")
     else:
@@ -2370,3 +2394,713 @@ def test_rr4_first_refusal_survives_deadline(rig, monkeypatch):
     assert isinstance(error, SlotError) and path.exists() and host.clock <= 10.00001
     assert "first refusal: post-write classification" in str(error) and "shutdown rooted ancestry changed after durable write" in str(error), "RR4 first transition cause survives the passive deadline"
     assert error.observations and any(row.state == "present" for row in error.observations), "RR4 first typed observations survive final unavailable evidence"
+
+
+def cp_native_context(tmp_path, *, quiescent=lambda: None):
+    """Mutex-only native fixture: no lease/controller/source/reset authority."""
+    root = tmp_path.resolve() / "cp-native-state"
+    root.mkdir(mode=0o700, exist_ok=True)
+    return state.CheckpointLockContext(root, {"state_root": str(root), "selected_slot": 1},
+            "native-control", "preserve", ("a" * 64,), ("b" * 64,), "c" * 64, quiescent)
+
+
+def test_cp_lock_complete_native_facade_retirement_and_legacy_default(tmp_path):
+    context = cp_native_context(tmp_path)
+    path = context.state_root / "locks/wt1.lock"
+    guard_identity = None
+    for _ in range(2):
+        context = cp_native_context(tmp_path)
+        with state.directory_lock(path, purpose="arbitrary ordinary-sounding text", checkpoint=context):
+            owner_bytes = (path / "owner.json").read_bytes()
+            record = json.loads(owner_bytes)
+            inode = path.stat().st_ino
+            assert record["protocol"] == "lean-checkpoint-lock/flock-v1"
+            assert record["directory"] == [path.stat().st_dev, inode]
+            assert record["birth"] == state.signature_birth(record["signature"])
+            guard = path.with_name(path.name + ".cp-guard")
+            if guard_identity is None:
+                guard_identity = guard.stat().st_ino
+            assert guard.stat().st_ino == guard_identity
+            assert not os.get_inheritable(context.held[0]["fd"])
+            with pytest.raises(SlotError, match="already locked"):
+                with state.directory_lock(path, purpose="legacy caller"):
+                    pytest.fail("ordinary mkdir overlapped the native CP holder")
+        assert not path.exists()
+        retired = path.parent / record["retirement"]
+        assert retired.stat().st_ino == inode and (retired / "owner.json").read_bytes() == owner_bytes
+        assert guard.stat().st_ino == guard_identity
+        with state.directory_lock(path, purpose="checkpoint recover resume"):
+            ordinary = json.loads((path / "owner.json").read_bytes())
+            assert set(ordinary) == {"pid", "purpose", "created_at"}, "purpose must never select CP mode"
+    assert len(list(path.parent.glob(".wt1.lock.cp-history-*"))) == 2
+
+
+@pytest.mark.parametrize("occupied", [False, True])
+def test_cp_lock_never_retires_empty_or_populated_raw_legacy_directory(tmp_path, occupied):
+    context = cp_native_context(tmp_path)
+    path = context.state_root / "locks/wt1.lock"
+    path.mkdir(parents=True)
+    if occupied:
+        (path / "owner.json").write_bytes(b'{"pid":999999,"purpose":"ordinary"}\n')
+    before = (path.stat().st_ino, {p.name: p.read_bytes() for p in path.iterdir()})
+    with pytest.raises((SlotError, PermissionError)):
+        with state.directory_lock(path, purpose="CP recover", checkpoint=context):
+            pytest.fail("CP reclaimed a raw legacy lock")
+    assert before == (path.stat().st_ino, {p.name: p.read_bytes() for p in path.iterdir()})
+
+
+def test_cp_lock_same_process_thread_fork_and_default_exec_policy(tmp_path):
+    import concurrent.futures
+    import sys
+    context = cp_native_context(tmp_path)
+    path = context.state_root / "locks/wt1.lock"
+    with state.directory_lock(path, purpose="native holder", checkpoint=context):
+        def contend():
+            with pytest.raises(SlotError, match="already held"):
+                with state.directory_lock(path, purpose="thread contender", checkpoint=cp_native_context(tmp_path)):
+                    pytest.fail("same-process open description was reused")
+        contend()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            executor.submit(contend).result(timeout=5)
+        fd = context.held[0]["fd"]
+        child = os.fork()
+        if child == 0:
+            try:
+                try:
+                    context.check()
+                except SlotError:
+                    pass
+                else:
+                    os._exit(80)
+                try:
+                    os.fstat(fd)
+                except OSError:
+                    os._exit(71)
+                os._exit(81)
+            except BaseException:
+                os._exit(82)
+        assert os.waitstatus_to_exitcode(os.waitpid(child, 0)[1]) == 71
+        # An ordinary long-lived exec gets no guard despite its parent holding it.
+        result = subprocess.run([sys.executable, "-B", "-c", "import os,sys;\ntry: os.fstat(int(sys.argv[1]))\nexcept OSError: sys.exit(71)\nsys.exit(81)", str(fd)], capture_output=True)
+        assert result.returncode == 71
+        context.check()
+
+
+def test_cp_lock_independent_process_contention_is_actual_nonblocking_flock(tmp_path):
+    """Real mutex-only processes; no lease/source/reset or backend authority."""
+    import sys
+    context = cp_native_context(tmp_path)
+    path = context.state_root / "locks/wt1.lock"
+    code = """import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from scripts.lean_slots import state
+root=Path(sys.argv[2])
+context=state.CheckpointLockContext(root,{'state_root':str(root),'selected_slot':1},'native-control','preserve',('a'*64,),('b'*64,),'c'*64,lambda:None)
+try:
+    with state.directory_lock(root/'locks/wt1.lock',purpose='independent native contender',checkpoint=context):
+        raise RuntimeError('overlapping native holder admitted')
+except state.SlotError as error:
+    print(str(error))
+    raise SystemExit(73)
+"""
+    with state.directory_lock(path, purpose="native holder", checkpoint=context):
+        child = subprocess.Popen([sys.executable, "-I", "-S", "-B", "-c", code,
+            str(Path(__file__).resolve().parents[1]), str(context.state_root)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        try:
+            try:
+                stdout, stderr = child.communicate(timeout=2)
+            except subprocess.TimeoutExpired:
+                child.terminate()  # Exact child handle created by this fixture.
+                child.communicate(timeout=5)
+                pytest.fail("checkpoint native acquisition blocked instead of failing EX|NB")
+            assert child.returncode == 73 and not stderr
+            assert b"native guard unavailable/contended" in stdout
+        finally:
+            if child.poll() is None:
+                child.terminate()
+                child.wait(timeout=5)
+        context.check()
+
+
+@pytest.mark.parametrize("death", ["lock-member-created", "lock-member-flushed", "lock-directory-flushed", "lock-staged", "lock-publication-effect", "lock-published", "lock-retire-intent", "lock-retired"])
+def test_cp_lock_true_os_exit_staging_publication_and_retirement(tmp_path, death):
+    context = cp_native_context(tmp_path)
+    path = context.state_root / "locks/wt1.lock"
+    child = os.fork()
+    if child == 0:
+        try:
+            context = cp_native_context(tmp_path)
+            def abrupt(phase):
+                if phase == death:
+                    os._exit(71)
+            context.boundary = abrupt
+            with state.directory_lock(path, purpose="native abrupt child", checkpoint=context):
+                pass
+            os._exit(80)
+        except BaseException:
+            os._exit(81)
+    assert os.waitstatus_to_exitcode(os.waitpid(child, 0)[1]) == 71
+    assert state.observe_process(child).state == "absent"
+    guard = path.with_name(path.name + ".cp-guard")
+    guard_inode = guard.stat().st_ino
+    if death == "lock-member-created":
+        partial = list(path.parent.glob(".wt1.lock.cp-stage-*"))
+        assert len(partial) == 1 and (partial[0] / "owner.json").read_bytes() == b""
+        with pytest.raises(SlotError, match="unrecognized"):
+            with state.directory_lock(path, purpose="partial reserved", checkpoint=cp_native_context(tmp_path)):
+                pytest.fail("incomplete staging was silently discarded")
+        assert partial[0].exists() and not path.exists()
+        return
+    if path.exists():
+        inode = path.stat().st_ino
+        data = (path / "owner.json").read_bytes()
+        with pytest.raises(state.CheckpointLockRetired, match="retry"):
+            with state.directory_lock(path, purpose="native recovered scope", checkpoint=cp_native_context(tmp_path)):
+                pytest.fail("protected work continued under a retired lock")
+        assert not path.exists()
+        history = path.parent / json.loads(data)["retirement"]
+        assert history.stat().st_ino == inode and (history / "owner.json").read_bytes() == data
+    with state.directory_lock(path, purpose="fresh interval", checkpoint=cp_native_context(tmp_path)):
+        assert guard.stat().st_ino == guard_inode
+    with state.directory_lock(path, purpose="unchanged legacy release fixture"):
+        assert "protocol" not in json.loads((path / "owner.json").read_bytes())
+
+
+@pytest.mark.parametrize("damage", ["extra-member", "member-inode", "guard-inode", "guard-hardlink", "guard-mode", "owner-nonce", "owner-generation", "owner-domain"])
+def test_cp_lock_substitution_refuses_and_preserves_unknown_bytes(tmp_path, damage):
+    context = cp_native_context(tmp_path)
+    path = context.state_root / "locks/wt1.lock"
+    with pytest.raises((SlotError, OSError)):
+        with state.directory_lock(path, purpose="damage fixture", checkpoint=context):
+            owner = path / "owner.json"
+            guard = path.with_name(path.name + ".cp-guard")
+            if damage == "extra-member":
+                (path / "unknown").write_bytes(b"preserve unknown bytes")
+            elif damage == "member-inode":
+                owner.rename(path / "original")
+                owner.write_bytes((path / "original").read_bytes())
+                owner.chmod(0o600)
+            elif damage == "guard-inode":
+                guard.rename(guard.with_suffix(".saved"))
+                guard.write_bytes(guard.with_suffix(".saved").read_bytes())
+                guard.chmod(0o600)
+            elif damage == "guard-hardlink":
+                os.link(guard, path.parent / "unknown-hardlink")
+            elif damage == "guard-mode":
+                guard.chmod(0o644)
+            else:
+                record = json.loads(owner.read_bytes())
+                record[damage.removeprefix("owner-")] = "d" * (48 if damage == "owner-nonce" else 64)
+                owner.write_text(json.dumps(record))
+            context.check()
+    assert path.exists(), "uncertain facade must not be retired in finally"
+
+
+def test_cp_holder_native_publication_follows_actual_member_directory_parent_flushes(tmp_path, monkeypatch):
+    context = cp_native_context(tmp_path)
+    path = context.state_root / "locks/wt1.lock"
+    real_fsync, real_rename = os.fsync, state._checkpoint_rename
+    flushed, publications = {}, []
+    def identity(fd):
+        info = os.fstat(fd)
+        return info.st_dev, info.st_ino
+    def record_flush(fd):
+        flushed[identity(fd)] = 1 + max(flushed.values(), default=0)
+        return real_fsync(fd)
+    def publish(parent, source, destination):
+        if ".cp-stage-" in source:
+            directory = os.open(source, os.O_RDONLY | os.O_DIRECTORY, dir_fd=parent)
+            member = os.open("owner.json", os.O_RDONLY, dir_fd=directory)
+            try:
+                holder, staged, enclosing = identity(member), identity(directory), identity(parent)
+                assert holder in flushed, "native publication preceded durable holder member"
+                assert staged in flushed, "native publication preceded durable holder directory"
+                assert flushed[holder] < flushed[staged] < flushed[enclosing], "native publication violated holder flush order"
+                publications.append((holder, staged, enclosing))
+            finally:
+                os.close(member)
+                os.close(directory)
+        return real_rename(parent, source, destination)
+    monkeypatch.setattr(os, "fsync", record_flush)
+    monkeypatch.setattr(state, "_checkpoint_rename", publish)
+    with state.directory_lock(path, purpose="actual durable publication fixture", checkpoint=context):
+        assert len(publications) == 1
+    assert len(publications) == 1 and not path.exists()
+
+
+@pytest.mark.parametrize("failure", [None, errno.EACCES, errno.EXDEV, errno.EOPNOTSUPP], ids=["symbol", "permission", "EXDEV", "unsupported-filesystem"])
+def test_cp_lock_native_api_refusal_never_falls_back(tmp_path, monkeypatch, failure):
+    context = cp_native_context(tmp_path)
+    path = context.state_root / "locks/wt1.lock"
+    class MissingAPI:
+        pass
+    api = MissingAPI()
+    if failure is not None:
+        def refused(*args):
+            state.ctypes.set_errno(failure)
+            return -1
+        api.renameatx_np = api.renameat2 = refused
+    monkeypatch.setattr(state.ctypes, "CDLL", lambda *args, **kwargs: api)
+    with pytest.raises(SlotError, match="native no-replace"):
+        with state.directory_lock(path, purpose="unsupported native API", checkpoint=context):
+            pytest.fail("ordinary rename fallback published a lock")
+    assert not path.exists()
+    assert len(list(path.parent.glob(".wt1.lock.cp-stage-*"))) == 1
+
+
+@pytest.mark.parametrize("populated", [False, True])
+def test_cp_native_noreplace_preserves_actual_empty_and_nonempty_destination_inodes(tmp_path, populated):
+    root = tmp_path.resolve()
+    source, destination = root / "source", root / "destination"
+    source.mkdir()
+    (source / "owner.json").write_bytes(b"complete staged owner\n")
+    destination.mkdir()
+    if populated:
+        (destination / "legacy.txt").write_bytes(b"destination owner\n")
+    before = destination.stat().st_ino, {p.name: p.read_bytes() for p in destination.iterdir()}
+    fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        with pytest.raises(SlotError, match="native no-replace"):
+            state._checkpoint_rename(fd, source.name, destination.name)
+    finally:
+        os.close(fd)
+    assert before == (destination.stat().st_ino, {p.name: p.read_bytes() for p in destination.iterdir()})
+    assert (source / "owner.json").read_bytes() == b"complete staged owner\n"
+
+
+def test_cp_publish_races_actual_legacy_mkdir_before_its_owner_write(tmp_path):
+    context = cp_native_context(tmp_path)
+    path = context.state_root / "locks/wt1.lock"
+    ready_read, ready_write = os.pipe()
+    go_read, go_write = os.pipe()
+    child = None
+    occupied_inode = []
+    def race(phase):
+        nonlocal child
+        if phase != "lock-staged":
+            return
+        child = os.fork()
+        if child == 0:
+            try:
+                os.close(ready_read)
+                os.close(go_write)
+                original = state.atomic_json
+                def delayed_owner(target, value):
+                    os.write(ready_write, b"R")
+                    assert os.read(go_read, 1) == b"G"
+                    original(target, value)
+                state.atomic_json = delayed_owner
+                with state.directory_lock(path, purpose="ordinary native fixture"):
+                    pass
+                os._exit(0)
+            except BaseException:
+                os._exit(3)
+        os.close(ready_write)
+        os.close(go_read)
+        assert os.read(ready_read, 1) == b"R"
+        occupied_inode.append(path.stat().st_ino)
+        assert list(path.iterdir()) == []
+    context.boundary = race
+    try:
+        with pytest.raises(SlotError, match="native no-replace"):
+            with state.directory_lock(path, purpose="CP fixture", checkpoint=context):
+                pytest.fail("CP publication overwrote an ordinary caller's empty mkdir window")
+        assert occupied_inode == [path.stat().st_ino]
+        assert list(path.iterdir()) == []
+    finally:
+        if child is not None:
+            os.write(go_write, b"G")
+            pid, status = os.waitpid(child, 0)
+            assert pid == child and os.waitstatus_to_exitcode(status) == 0
+        for fd in (ready_read, go_write):
+            os.close(fd)
+    assert not path.exists()
+
+
+@pytest.mark.parametrize("damage", ["state-permissions", "state-inode", "binding", "generation", "callback"])
+def test_cp_lock_admission_seal_and_trusted_root_refuse_before_publication(tmp_path, damage):
+    context = cp_native_context(tmp_path)
+    path = context.state_root / "locks/wt1.lock"
+    if damage == "state-permissions":
+        context.state_root.chmod(0o777)
+    elif damage == "state-inode":
+        context.state_root.rename(tmp_path / "preserved-original-state")
+        context.state_root.mkdir(mode=0o700)
+    elif damage == "binding":
+        context.binding["selected_slot"] = 2
+    elif damage == "generation":
+        context.generations = ("d" * 64,)
+    else:
+        context.quiescent = lambda: None
+    with pytest.raises(SlotError, match="changed after validation|root identity"):
+        with state.directory_lock(path, purpose="mutated context", checkpoint=context):
+            pytest.fail("unvalidated context published a facade")
+    assert not path.exists() and not path.parent.exists()
+
+
+def rr4_scheduler_seam(rig, monkeypatch, *, family, persistent=False, defect=None):
+    """Actual production readers consume independently rendered external views."""
+    _, sup, host = rig
+    path, pids, originals = rr4_live_family(sup, host, 3)
+    root = pids[0]
+    host.native_states[root] = "Ssl"
+    real_run = subprocess.run
+    selected_native_calls = []
+    def observe(argv, **kwargs):
+        result = real_run(argv, **kwargs)
+        selected_native = argv[:2] == ["ps", "-p"] and "stat=" in argv[-1]
+        if selected_native:
+            selected_native_calls.append(list(argv))
+            if persistent or len(selected_native_calls) == 1:
+                result.stdout = result.stdout.replace(f"{root} {host.rows[root][0]} Sun Oct 11 00:00:00 2026 Ssl ",
+                                                      f"{root} {host.rows[root][0]} Sun Oct 11 00:00:00 2026 Rsl ")
+        if defect and selected_native and len(selected_native_calls) == 1:
+            if defect == "stderr": result.stderr = "observer warning"
+            elif defect == "rc": result.returncode = 1
+            elif defect == "birth": result.stdout = result.stdout.replace("00:00:00", "00:00:01")
+            elif defect == "parent": result.stdout = result.stdout.replace(f"{root} {host.rows[root][0]} ", f"{root} 999991 ")
+            elif defect == "argv": result.stdout = result.stdout.replace(host.rows[root][1], "replaced full command")
+            elif defect == "suffix": result.stdout = result.stdout.replace("Rsl ", "Rs ")
+            elif defect == "terminal": result.stdout = result.stdout.replace("Rsl ", "Zsl ")
+            elif defect == "duplicate": result.stdout += result.stdout.splitlines()[0] + "\n"
+            elif defect == "extra": result.stdout += "999992 1 Sun Oct 11 00:00:00 2026 S unrelated selected\n"
+            elif defect == "malformed": result.stdout = "incomplete native row\n"
+            elif defect == "oversized": result.stdout = "x" * (state.MAX_OBSERVER_OUTPUT + 1)
+        return result
+    monkeypatch.setattr(subprocess, "run", observe)
+    identities = {pid: row[2] for pid, row in originals.items()}
+    def invoke():
+        if family:
+            snapshot, generic, native = state.observe_shutdown_family(identities, root)
+            return snapshot, generic, native
+        return state.observe_shutdown_process(root), None, None
+    return host, path, root, invoke, selected_native_calls
+
+
+@pytest.mark.parametrize("family", [False, True], ids=["single", "family"])
+def test_rr4_scheduler_discrepancy_requires_a_whole_fresh_coherent_pass(rig, monkeypatch, family):
+    host, path, root, invoke, selected = rr4_scheduler_seam(rig, monkeypatch, family=family)
+    before = path.read_bytes();start = len(host.ps_calls)
+    observed, generic, native = invoke()
+    assert observed.state == "present", "R/S-only inconclusive evidence must be discarded before a fresh strict coherent pass"
+    assert len(selected) == 2
+    calls = host.ps_calls[start:]
+    width = 4 if family else 2
+    assert len(calls) == width * 2 and calls[:width] == calls[width:], "every view is reread; batches cannot be mixed"
+    accepted = native[root].identity if family else observed.identity
+    assert accepted["native_state"] == "Ssl", "returned evidence is the coherent second pass, never normalized R/S"
+    assert path.read_bytes() == before and not host.signals
+
+
+@pytest.mark.parametrize("family", [False, True], ids=["single", "family"])
+def test_rr4_scheduler_persistent_discrepancy_has_hard_three_attempts(rig, monkeypatch, family):
+    host, path, _, invoke, selected = rr4_scheduler_seam(rig, monkeypatch, family=family, persistent=True)
+    before = path.read_bytes();start = len(host.ps_calls)
+    observed, _, _ = invoke()
+    assert observed.state == "unavailable" and len(selected) == 3
+    assert len(host.ps_calls)-start == (12 if family else 6)
+    assert observed.error_class == "ShutdownSchedulerDiscrepancy"
+    assert "first=" in observed.detail and "last=" in observed.detail and "attempt=3" in observed.detail
+    assert path.read_bytes() == before and not host.signals
+
+
+@pytest.mark.parametrize("family", [False, True], ids=["single", "family"])
+@pytest.mark.parametrize("defect", ["stderr", "rc", "birth", "parent", "argv", "suffix", "terminal", "duplicate", "extra", "malformed", "oversized"])
+def test_rr4_scheduler_discrepancy_cannot_mask_another_refusal(rig, monkeypatch, family, defect):
+    host, path, _, invoke, selected = rr4_scheduler_seam(rig, monkeypatch, family=family, defect=defect)
+    before = path.read_bytes()
+    observed, _, _ = invoke()
+    assert observed.state == "unavailable" and len(selected) == 1
+    assert path.read_bytes() == before and not host.signals
+
+
+@pytest.mark.parametrize("family", [False, True], ids=["single", "family"])
+@pytest.mark.parametrize("nested", [False, True], ids=["no-ambient", "earlier-ambient"])
+def test_rr4_scheduler_one_absolute_helper_budget(rig, monkeypatch, family, nested):
+    from contextlib import contextmanager
+    host, path, _, invoke, _ = rr4_scheduler_seam(rig, monkeypatch, family=family, persistent=True)
+    original = state.observation_budget;entries=[]
+    @contextmanager
+    def budget(seconds):
+        entries.append(seconds)
+        with original(seconds): yield
+    monkeypatch.setattr(state, "observation_budget", budget)
+    host.ps_cost = 1.75 if not nested else 1.0
+    before = path.read_bytes();start=len(host.ps_calls)
+    with original(2.5) if nested else nullcontext():
+        observed, _, _ = invoke()
+    assert entries == [10.0], "one helper-entry fallback, not a reset for each pass"
+    assert observed.state == "unavailable" and host.clock <= (2.5 if nested else 10.0)
+    assert len(host.ps_calls)-start <= (3 if nested else 6), "no probe starts after absolute expiry"
+    assert path.read_bytes() == before and not host.signals
+
+
+@pytest.mark.parametrize("family", [False, True], ids=["single", "family"])
+@pytest.mark.parametrize("mode", ["all-absent", "mixed", "present"])
+def test_rr4_scheduler_valid_absence_is_first_pass_evidence(rig, family, mode):
+    _, sup, host = rig
+    _, pids, originals = rr4_live_family(sup, host, 3)
+    if mode == "all-absent":
+        for pid in pids: host.remove(pid)
+    elif mode == "mixed": host.remove(pids[-1])
+    start=len(host.ps_calls)
+    if family:
+        snapshot,generic,native=state.observe_shutdown_family({pid:row[2] for pid,row in originals.items()},pids[0])
+        assert snapshot.state == "present"
+        for pid in pids:assert generic[pid].state == native[pid].state == ("present" if pid in host.rows else "absent")
+    else:
+        result=state.observe_shutdown_process(pids[-1])
+        assert result.state == ("present" if pids[-1] in host.rows else "absent")
+    assert len(host.ps_calls)-start == (4 if family else 2) and not host.signals
+
+
+@pytest.mark.parametrize("defect", ["missing-observer", "census-stderr", "generic-partial", "cross-format-birth", "new-child", "retained-identity", "reparented", "cycle", "absent-root", "terminal-ancestor"])
+def test_rr4_scheduler_family_checks_other_guards_before_discard(rig, monkeypatch, defect):
+    _, sup, host = rig
+    path,pids,originals=rr4_live_family(sup,host,3);root,parent,leaf=pids
+    host.native_states[root]="Ssl";identities={pid:row[2] for pid,row in originals.items()}
+    if defect=="new-child":host.add(999992,"new unretained native child",ppid=parent)
+    elif defect=="retained-identity":host.add(leaf,"replaced retained command",ppid=parent)
+    elif defect=="reparented":host.rows[leaf]=(1,*host.rows[leaf][1:])
+    elif defect=="cycle":host.rows[leaf]=(leaf,*host.rows[leaf][1:])
+    elif defect=="terminal-ancestor":host.native_states[parent]="Z"
+    elif defect=="absent-root":host.remove(root);host.native_states[parent]="Ssl"
+    real_run=subprocess.run;selected=[]
+    noisy=parent if defect=="absent-root" else root
+    def observe(argv,**kwargs):
+        result=real_run(argv,**kwargs);native="stat=" in argv[-1]
+        if argv[:2]==["ps","-p"] and native:
+            selected.append(True)
+            result.stdout=result.stdout.replace(f"{noisy} {host.rows[noisy][0]} Sun Oct 11 00:00:00 2026 Ssl ",
+                                                f"{noisy} {host.rows[noisy][0]} Sun Oct 11 00:00:00 2026 Rsl ")
+        if argv[:2]==["ps","-axo"]:
+            if native and defect=="missing-observer":result.stdout="\n".join(x for x in result.stdout.splitlines() if int(x.split()[0])!=os.getpid())+"\n"
+            elif native and defect=="census-stderr":result.stderr="census warning"
+            elif not native and defect=="generic-partial":result.stdout="\n".join(x for x in result.stdout.splitlines() if int(x.split()[0])!=leaf)+"\n"
+            elif native and defect=="cross-format-birth":result.stdout=result.stdout.replace(f"{root} {host.rows[root][0]} Sun Oct 11 00:00:00",f"{root} {host.rows[root][0]} Sun Oct 11 00:00:01")
+        return result
+    monkeypatch.setattr(subprocess,"run",observe);before=path.read_bytes()
+    snapshot,_,_=state.observe_shutdown_family(identities,root)
+    assert snapshot.state=="unavailable" and len(selected)==1,"a concurrent defect cannot be discarded as scheduling noise"
+    assert not host.signals and path.read_bytes()==before
+
+
+@pytest.mark.parametrize("family", [False,True],ids=["single","family"])
+@pytest.mark.parametrize("defect", ["empty-rc0","nonempty-rc1","absent-census-present","absent-no-witness"])
+def test_rr4_scheduler_invalid_absence_never_resamples(rig,monkeypatch,family,defect):
+    _,sup,host=rig;path,pids,originals=rr4_live_family(sup,host,3)
+    root=pids[0];real_run=subprocess.run;selected=[]
+    if defect in {"empty-rc0","absent-no-witness"}:
+        for pid in pids:host.remove(pid)
+    def observe(argv,**kwargs):
+        result=real_run(argv,**kwargs)
+        if argv[:2]==["ps","-p"]:
+            selected.append(True)
+            if defect=="empty-rc0":result.returncode=0
+            elif defect=="nonempty-rc1":result.returncode=1
+            elif defect=="absent-census-present":result.returncode=1;result.stdout=""
+        elif argv[:2]==["ps","-axo"] and defect=="absent-no-witness":
+            result.stdout="\n".join(line for line in result.stdout.splitlines() if int(line.split()[0])!=os.getpid())+"\n"
+        return result
+    monkeypatch.setattr(subprocess,"run",observe);before=path.read_bytes()
+    observed=state.observe_shutdown_family({pid:row[2] for pid,row in originals.items()},root)[0] if family else state.observe_shutdown_process(root)
+    assert observed.state=="unavailable" and len(selected)<=2
+    assert not host.signals and path.read_bytes()==before
+
+
+@pytest.mark.parametrize("family", [False,True],ids=["single","family"])
+def test_rr4_scheduler_expired_final_return_cannot_emit_usable_evidence(rig,monkeypatch,family):
+    _,sup,host=rig;_,pids,originals=rr4_live_family(sup,host,3)
+    name='_observe_shutdown_family_once' if family else '_observe_shutdown_process_once'
+    actual=getattr(state,name)
+    def finish(*args,**kwargs):
+        result=actual(*args,**kwargs)  # All actual production reads/parsing remain.
+        host.clock=10.0  # Processing consumes the remaining absolute helper time.
+        return result
+    monkeypatch.setattr(state,name,finish);start=len(host.ps_calls)
+    observed=state.observe_shutdown_family({pid:row[2] for pid,row in originals.items()},pids[0])[0] if family else state.observe_shutdown_process(pids[0])
+    assert observed.state=="unavailable" and observed.error_class=="TimeoutError"
+    assert len(host.ps_calls)-start==(4 if family else 2) and not host.signals
+    assert 'last=' in observed.detail and 'deadline expired' in observed.detail
+
+
+@pytest.mark.parametrize("boundary", ["persistence","signal"])
+def test_rr4_scheduler_progress_never_caches_evidence_across_effects(rig,monkeypatch,boundary):
+    _,sup,host=rig;path,pids,_=rr4_live_family(sup,host,3);root,parent,leaf=pids
+    host.native_states[root]='Ssl';real_run=subprocess.run;noise=[]
+    def observe(argv,**kwargs):
+        result=real_run(argv,**kwargs)
+        if argv[:2]==['ps','-p'] and ',' in argv[2] and 'stat=' in argv[-1] and not noise:
+            noise.append(True);result.stdout=result.stdout.replace(f'{root} {host.rows[root][0]} Sun Oct 11 00:00:00 2026 Ssl ',f'{root} {host.rows[root][0]} Sun Oct 11 00:00:00 2026 Rsl ')
+        return result
+    monkeypatch.setattr(subprocess,'run',observe);changed=[]
+    if boundary=='signal':
+        def after(pid):host.rows[parent]=(1,*host.rows[parent][1:]);changed.append(True)
+        host.after_signal=after
+    else:
+        real_sync=os.fsync;writes=0
+        def sync(fd):
+            nonlocal writes
+            real_sync(fd)
+            if state.stat.S_ISDIR(os.fstat(fd).st_mode):
+                writes+=1
+                if writes==2:host.rows[parent]=(1,*host.rows[parent][1:]);changed.append(True)
+        monkeypatch.setattr(os,'fsync',sync)
+    _,error=captured(lambda:sup.stop_backend(1))
+    assert noise and changed and isinstance(error,SlotError) and path.exists()
+    assert [pid for pid,_ in host.signals]==([leaf] if boundary=='signal' else [])
+
+
+@pytest.mark.parametrize("nested", [False, True], ids=["no-ambient", "earlier-ambient"])
+def test_rr4_orphan_fresh_family_uses_helper_budget_before_stop(rig,monkeypatch,nested):
+    from contextlib import contextmanager
+    ctl,_,host=rig;rr_session(monkeypatch);request=rr_orphan(ctl,host)
+    actual_budget=state.observation_budget;actual_run=subprocess.run;entries=[];before_publication=[]
+    @contextmanager
+    def budget(seconds):
+        prior=state._OBSERVATION_DEADLINE.get()
+        with actual_budget(seconds):
+            entries.append({'seconds':seconds,'prior':prior,'remaining':state.observation_timeout(100)})
+            yield
+    def observe(argv,**kwargs):
+        if argv[:2]==['ps','-p'] and 'stat=' in argv[-1] and not ctl.inventory.process_path('backend',1).exists():
+            before_publication.append(state.observation_timeout(100))
+        return actual_run(argv,**kwargs)
+    monkeypatch.setattr(state,'observation_budget',budget);monkeypatch.setattr(subprocess,'run',observe)
+    with actual_budget(0.25) if nested else nullcontext():
+        ctl.recover_orphan_backend_stop(1,**request)
+    expected=0.25 if nested else 10.0
+    assert before_publication and all(value==expected for value in before_publication)
+    assert entries[0]['prior']==(0.25 if nested else None)
+    assert all(row['seconds']==10.0 and row['remaining']<=expected for row in entries)
+    assert {pid for pid,_ in host.signals}=={row['pid'] for row in request['expected_family']}
+    assert not ctl.inventory.process_path('backend',1).exists() and not host.launches
+
+
+@pytest.mark.parametrize('family',[False,True],ids=['single','family'])
+def test_rr4_scheduler_first_discrepancy_survives_later_fatal_refusal(rig,monkeypatch,family):
+    host,path,root,invoke,selected=rr4_scheduler_seam(rig,monkeypatch,family=family)
+    actual_run=subprocess.run
+    def observe(argv,**kwargs):
+        result=actual_run(argv,**kwargs)
+        if argv[:2]==['ps','-p'] and 'stat=' in argv[-1] and len(selected)==2:
+            result.stderr='actual second pass capability refusal'
+        return result
+    monkeypatch.setattr(subprocess,'run',observe);before=path.read_bytes()
+    observed,_,_=invoke()
+    assert observed.state=='unavailable' and observed.error_class=='ValueError' and len(selected)==2
+    assert 'first=' in observed.detail and str(root) in observed.detail and 'Rsl' in observed.detail
+    assert 'last=attempt=2' in observed.detail and 'failed' in observed.detail
+    assert path.read_bytes()==before and not host.signals
+
+
+def r8_missing_middle_observer(host,monkeypatch,root,middle,active):
+    """Render four external views through the real reader; never replace it."""
+    actual_run=subprocess.run;views=[]
+    def observe(argv,**kwargs):
+        if active.get('activate_on_batch') and argv[:2]==['ps','-p'] and ',' in argv[2]:
+            host.remove(middle);active['at']=host.clock;active.pop('activate_on_batch')
+        record={'argv':list(argv),'at':host.clock,'signals_before':list(host.signals)}
+        try:result=actual_run(argv,**kwargs)
+        except BaseException as exc:
+            if 'at' in active and argv[0]=='ps':
+                views.append({**record,'exception':type(exc).__name__,'detail':str(exc)})
+            raise
+        if 'at' in active and argv[0]=='ps':
+            if argv[:2]==['ps','-p'] and ',' in argv[2] and 'stat=' in argv[-1]:
+                result.stdout=result.stdout.replace(f'{root} {host.rows[root][0]} Sun Oct 11 00:00:00 2026 Ssl ',
+                                                    f'{root} {host.rows[root][0]} Sun Oct 11 00:00:00 2026 Rsl ')
+            views.append({**record,'returncode':result.returncode,'stdout':result.stdout,'stderr':result.stderr})
+        return result
+    monkeypatch.setattr(subprocess,'run',observe)
+    return views
+
+
+def r8_observation_receipt(case,path,host,views,error=None):
+    # These are explicit modeled OS rows consumed by actual production readers,
+    # not claims of native/Lean execution. Preserve the real fixture registry.
+    print('R8_MISSING_ANCESTOR_RECEIPT '+json.dumps({'case':case,'external_views_are_modeled':True,
+          'views':views,'clock':host.clock,'signals':host.signals,'registry_bytes_hex':path.read_bytes().hex(),
+          'error':None if error is None else {'type':type(error).__name__,'detail':str(error)}}))
+
+
+@pytest.mark.parametrize('nested',[False,True],ids=['no-ambient','earlier-ambient'])
+def test_rr4_missing_retained_middle_is_typed_first_pass_refusal(rig,monkeypatch,nested):
+    _,sup,host=rig;path,pids,originals=rr4_live_family(sup,host,3);root,middle,leaf=pids
+    host.native_states[root]='Ssl';host.remove(middle);host.ps_cost=0.005
+    before=path.read_bytes();views=r8_missing_middle_observer(host,monkeypatch,root,middle,{'at':host.clock})
+    start=len(host.ps_calls);error=None
+    try:
+        with state.observation_budget(0.25) if nested else nullcontext():
+            snapshot,generic,native=state.observe_shutdown_family({pid:row[2] for pid,row in originals.items()},root)
+    except BaseException as exc:error=exc;raise
+    finally:r8_observation_receipt('direct-'+str(nested),path,host,views,error)
+    assert snapshot.state=='unavailable' and snapshot.error_class=='ValueError'
+    assert 'ancestor' in snapshot.detail and 'attempt=1' in snapshot.detail
+    assert len(host.ps_calls)-start==len(views)==4,'missing ancestry is fatal in this pass, never resampled'
+    assert sum('stat=' in row['argv'][-1] and row['argv'][1]=='-p' for row in views)==1
+    assert all(row['returncode']==0 and not row['stderr'] for row in views)
+    assert middle not in host.rows and host.rows[leaf][0]==middle
+    assert not generic and not native and not host.signals and path.read_bytes()==before
+
+
+@pytest.mark.parametrize('boundary',['initial-classification','post-durable-write'])
+@pytest.mark.parametrize('nested',[False,True],ids=['stop-budget','earlier-ambient'])
+def test_rr4_missing_retained_middle_supervisor_before_first_signal(rig,monkeypatch,boundary,nested):
+    _,sup,host=rig;path,pids,originals=rr4_live_family(sup,host,3);root,middle,leaf=pids
+    metadata=read_json(path);metadata['descendants']=[{'pid':pid,'signature':row[2]} for pid,row in originals.items()]
+    atomic_json(path,metadata);before=path.read_bytes();host.native_states[root]='Ssl';host.ps_cost=0.005
+    active={'activate_on_batch':True} if boundary=='initial-classification' else {}
+    views=r8_missing_middle_observer(host,monkeypatch,root,middle,active)
+    if boundary=='post-durable-write':
+        actual_sync=os.fsync
+        def sync(fd):
+            result=actual_sync(fd)
+            if ('at' not in active and state.stat.S_ISDIR(os.fstat(fd).st_mode) and
+                    os.fstat(fd).st_ino==path.parent.stat().st_ino):
+                current=read_json(path)
+                assert current['shutdown']['delivered_sigterm']==[]
+                host.remove(middle);active['at']=host.clock
+            return result
+        monkeypatch.setattr(os,'fsync',sync)
+    with state.observation_budget(0.8) if nested else nullcontext():
+        _,error=captured(lambda:sup.stop_backend(1))
+    r8_observation_receipt('supervisor-'+boundary+'-'+str(nested),path,host,views,error)
+    assert isinstance(error,SlotError),'missing middle must use the existing typed Supervisor refusal: '+repr(error)
+    assert 'shutdown ancestry unavailable' in str(error) and 'ancestor' in str(error)
+    assert len(views)==4 and not host.signals and path.exists() and not host.launches
+    current=read_json(path)
+    assert {row['pid']:row['signature'] for row in current['descendants']}=={pid:row[2] for pid,row in originals.items()}
+    if boundary=='initial-classification':assert path.read_bytes()==before
+    else:assert current['shutdown']['delivered_sigterm']==[]
+    assert middle not in host.rows and host.rows[leaf][0]==middle and host.clock<=(0.8 if nested else 10.0)
+
+
+@pytest.mark.parametrize('nested',[False,True],ids=['stop-budget','earlier-ambient'])
+def test_rr4_missing_retained_middle_after_first_signal_keeps_first_cause_and_budget(rig,monkeypatch,nested):
+    _,sup,host=rig;path,pids,originals=rr4_live_family(sup,host,4);root,middle,leaf,first_target=pids
+    host.native_states[root]='Ssl';host.ps_cost=0.005;active={}
+    views=r8_missing_middle_observer(host,monkeypatch,root,middle,active)
+    def after(pid):
+        assert pid==first_target,'no later signal may pass missing-ancestor refusal'
+        host.remove(middle);active['at']=host.clock
+    host.after_signal=after
+    # Only after the first typed missing-middle refusal, make later observation
+    # unavailable for another reason. Its first cause must still survive expiry.
+    def after_sleep():host.census_denied=True
+    host.after_sleep=after_sleep
+    with state.observation_budget(0.8) if nested else nullcontext():
+        _,error=captured(lambda:sup.stop_backend(1))
+    r8_observation_receipt('post-first-signal-'+str(nested),path,host,views,error)
+    assert isinstance(error,SlotError),'post-signal missing middle must preserve SlotError handling: '+repr(error)
+    assert 'post-SIGTERM passive observation failed' in str(error) and 'first refusal:' in str(error)
+    assert 'shutdown ancestry unavailable' in str(error) and 'ancestor' in str(error)
+    assert any(row.get('exception')=='PermissionError' for row in views),'later distinct refusal reached its actual reader seam'
+    assert sum('stat=' in row['argv'][-1] and row['argv'][1]=='-p' for row in views)==1,'fatal missing-middle pass cannot resample'
+    assert host.signals==[(first_target,signal.SIGTERM)] and not host.launches
+    current=read_json(path)
+    assert {row['pid']:row['signature'] for row in current['descendants']}=={pid:row[2] for pid,row in originals.items()}
+    assert [row['pid'] for row in current['shutdown']['delivered_sigterm']]==[first_target]
+    assert root in host.rows and leaf in host.rows and host.rows[leaf][0]==middle and middle not in host.rows
+    assert abs(host.clock-(0.8 if nested else 10.0))<0.00001,'one original absolute stop deadline, including every passive retry'

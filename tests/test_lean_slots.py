@@ -18,6 +18,65 @@ from scripts.lean_slots.state import atomic_json, process_start_signature
 from scripts.lean_slots.supervisor import Supervisor
 
 
+@pytest.mark.parametrize("damage", ["none","generation","node","pid","birth","argv","parent","exited","stale-only","deadline"])
+def test_fixture_recursive_startup_requires_exact_fresh_ack(tmp_path,monkeypatch,isolated_process_observations,damage):
+    from tests.fixtures import lean_checkpoint_native_peer as peer
+    host=isolated_process_observations;generation='a'*32;argv=['python','-B','owned-peer','--fixture-child','middle']
+    actual={'pid':900101,'ppid':900100,'birth':'Sun Oct 11 00:00:00 2026','start_ticks':'421','argv':argv}
+    value={'generation':generation,'node':'middle','identity':dict(actual),'children':[]}
+    value['identity']['argv']=list(argv)
+    if damage=='generation':value['generation']='b'*32
+    elif damage=='node':value['node']='leaf'
+    elif damage in {'pid','parent'}:value['identity']['pid' if damage=='pid' else 'ppid']+=1
+    elif damage=='birth':value['identity']['birth']='Sun Oct 11 00:00:01 2026'
+    elif damage=='argv':value['identity']['argv']=['python','unrelated']
+    path=tmp_path/f'startup-{generation}-middle.json'
+    if damage=='stale-only':path=tmp_path/f"startup-{'b'*32}-middle.json"
+    peer.publish_startup(path,value,1.0)
+    # Append-only historical rows are deliberately present but confer no readiness.
+    peer.append_record(tmp_path/'native-nodes.jsonl',value)
+    monkeypatch.setattr(peer,'native_identity',lambda pid,deadline:dict(actual))
+    child=SimpleNamespace(pid=actual['pid'],poll=lambda:0 if damage=='exited' else None)
+    if damage=='deadline':host.clock=1.0
+    if damage=='none':
+        assert peer.wait_startup(tmp_path,'middle',generation,child,argv,actual['ppid'],1.0,lambda:False)==value
+    else:
+        with pytest.raises(RuntimeError,match='generation|node|PID|birth|argv|parent|exited|deadline'):
+            peer.wait_startup(tmp_path,'middle',generation,child,argv,actual['ppid'],1.0,lambda:False)
+    assert not host.signals and not host.launches
+
+
+@pytest.mark.parametrize("damage", ["none","generation","parent","birth","argv","pid"])
+def test_fixture_recursive_leaf_reobserves_actual_owned_identity(tmp_path,monkeypatch,damage):
+    from tests.fixtures import lean_checkpoint_native_peer as peer
+    generation='c'*32;deadline=3.0
+    args=SimpleNamespace(lean_project_path=tmp_path,control_dir=tmp_path,fixture_leaf_delay=0.0,fixture_middle_delay=0.0,fixture_startup_timeout=5.0,fixture_late_child=False)
+    actual={'pid':900103,'ppid':900102,'birth':'Sun Oct 11 00:00:00 2026','start_ticks':'422','argv':peer.child_argv(args,'leaf',generation,deadline)}
+    value={'generation':generation,'node':'leaf','identity':dict(actual)}
+    if damage=='generation':value['generation']='d'*32
+    elif damage=='parent':value['identity']['ppid']=900199
+    elif damage=='birth':value['identity']['birth']='Sun Oct 11 00:00:01 2026'
+    elif damage=='argv':value['identity']['argv']=['different','full','argv']
+    elif damage=='pid':value['identity']['pid']=None
+    monkeypatch.setattr(peer,'native_identity',lambda pid,deadline:dict(actual))
+    if damage=='none':peer.validate_leaf(value,args,generation,actual['ppid'],deadline)
+    else:
+        with pytest.raises(RuntimeError,match='acknowledgment|identity|PID'):
+            peer.validate_leaf(value,args,generation,actual['ppid'],deadline)
+
+
+def test_fixture_startup_ack_is_exclusive_and_rejects_substitution(tmp_path):
+    from tests.fixtures import lean_checkpoint_native_peer as peer
+    path=tmp_path/'startup-owned.json';value={'fresh':'actual first bytes'}
+    peer.publish_startup(path,value,2.0);before=path.read_bytes()
+    with pytest.raises(FileExistsError):peer.publish_startup(path,{'replaced':True},2.0)
+    assert path.read_bytes()==before and peer.read_startup(path,2.0)==value
+    link=tmp_path/'startup-link.json';link.symlink_to(path)
+    with pytest.raises(OSError):peer.read_startup(link,2.0)
+    path.chmod(0o644)
+    with pytest.raises(RuntimeError,match='untrusted'):peer.read_startup(path,2.0)
+
+
 @pytest.fixture(autouse=True)
 def isolated_process_observations(monkeypatch, tmp_path):
     """Keep this policy suite off the actual host; all runtime state is tmp."""

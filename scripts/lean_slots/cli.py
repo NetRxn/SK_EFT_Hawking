@@ -84,8 +84,15 @@ def parser() -> argparse.ArgumentParser:
     ):
         command = commands.add_parser(name, help=help_text)
         command.add_argument("--slot", type=int, required=True)
+        if name == "prepare":
+            command.add_argument("--checkpoint-request", type=Path)
         if name == "reclaim":
             command.add_argument("--confirm-owner-gone", action="store_true")
+
+    checkpoint = commands.add_parser("checkpoint", help="preserve unfinished source without accepting it")
+    checkpoint.add_argument("action", choices=("preserve", "recover", "observe-release", "resume", "recover-resume"))
+    checkpoint.add_argument("--request", type=Path, required=True)
+    checkpoint.add_argument("--bootstrap", action="store_true", help="explicit reviewed candidate stop-only route")
 
     commands.add_parser(
         "build", help="run the serialized authoritative build and publish an epoch"
@@ -140,7 +147,20 @@ def main(argv: list[str] | None = None) -> int:
                 raise SlotError("supervisor start/stop/status are global; --slot is only valid for probe")
             if args.action == "probe" and args.slot is None:
                 raise SlotError("supervisor probe requires --slot")
-        inventory = Inventory.load(args.inventory)
+        checkpoint_request = None
+        if args.command == "checkpoint":
+            from .state import read_json
+            checkpoint_request = read_json(args.request)
+            if args.bootstrap:
+                if args.action not in {"preserve", "recover", "observe-release"}:
+                    raise SlotError("candidate checkpoint bootstrap is stop-only")
+                from .checkpoints import validate_bootstrap
+                inventory = validate_bootstrap(args.inventory, checkpoint_request, recover=args.action == "recover",
+                                               observe_release=args.action == "observe-release")
+            else:
+                inventory = Inventory.load(args.inventory)
+        else:
+            inventory = Inventory.load(args.inventory)
         controller = Controller(inventory)
         if args.command == "_proxy":
             serve(inventory, args.slot)
@@ -165,7 +185,16 @@ def main(argv: list[str] | None = None) -> int:
                 )
             )
         elif args.command == "prepare":
-            _json(controller.prepare(args.slot))
+            from .state import read_json
+            request = read_json(args.checkpoint_request) if args.checkpoint_request else None
+            _json(controller.prepare(args.slot, checkpoint_request=request))
+        elif args.command == "checkpoint":
+            if args.action in {"preserve", "recover"}:
+                _json(controller.checkpoint(checkpoint_request, recover=args.action == "recover", bootstrap=args.bootstrap))
+            elif args.action == "observe-release":
+                _json(controller.checkpoint_observe_release(checkpoint_request, bootstrap=args.bootstrap))
+            else:
+                _json(controller.checkpoint_resume(checkpoint_request, recover=args.action == "recover-resume"))
         elif args.command == "ready":
             _json(controller.ready(args.slot))
         elif args.command == "heartbeat":

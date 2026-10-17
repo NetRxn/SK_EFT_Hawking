@@ -4,6 +4,11 @@ from __future__ import annotations
 
 import hashlib
 import datetime
+import ctypes
+try:
+    import fcntl
+except ImportError:  # Ordinary legacy callers retain their portable protocol.
+    fcntl = None
 import stat
 import re
 import subprocess
@@ -12,9 +17,11 @@ import os
 import secrets
 import tempfile
 import time
+import threading
+import sys
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -96,6 +103,24 @@ def atomic_json(path: Path, value: dict[str, Any], mode: int = 0o600) -> None:
     atomic_write(path, json.dumps(value, indent=2, sort_keys=True) + "\n", mode)
 
 
+def fsync_directory(path: Path) -> None:
+    """Make a directory-entry boundary durable or refuse the transaction."""
+    try:
+        fd = os.open(path, os.O_RDONLY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+    except OSError as exc:
+        raise SlotError(f"directory durability unavailable: {path}: {exc}") from exc
+
+
+def durable_json(path: Path, value: dict[str, Any]) -> None:
+    """Atomic complete bytes plus directory durability for transaction journals."""
+    atomic_json(path, value)
+    fsync_directory(path.parent)
+
+
 def exclusive_json(path: Path, value: dict[str, Any]) -> None:
     """Create *path* exactly once using an atomic filesystem primitive."""
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -158,8 +183,18 @@ def observation_budget(seconds: float) -> Iterator[None]:
 
 
 @contextmanager
-def directory_lock(path: Path, *, purpose: str) -> Iterator[None]:
+def directory_lock(path: Path, *, purpose: str,
+                   checkpoint: CheckpointLockContext | None = None) -> Iterator[None]:
     """Portable fail-closed lock implemented by atomic directory creation."""
+    if checkpoint is not None:
+        if type(checkpoint) is not CheckpointLockContext:
+            raise SlotError("invalid internal checkpoint lock context")
+        try:
+            with checkpoint.hold(path, purpose=purpose):
+                yield
+        except OSError as exc:
+            raise SlotError(f"checkpoint lock filesystem observation/effect refused: {exc}") from exc
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     try:
         path.mkdir(mode=0o700)
@@ -181,6 +216,357 @@ def directory_lock(path: Path, *, purpose: str) -> Iterator[None]:
             path.rmdir()
         except OSError as exc:
             raise SlotError(f"could not remove {purpose} lock {path}: {exc}") from exc
+
+
+_CP_PROTOCOL = "lean-checkpoint-lock/flock-v1"
+_CP_HELD: dict[tuple[int, int], int] = {}
+_CP_THREADS = threading.Lock()
+
+
+def _checkpoint_after_fork() -> None:
+    # Closing a copied description does not unlock a surviving parent's/flock
+    # mutator's description. An arbitrary fork cannot continue the transaction.
+    global _CP_THREADS
+    for fd in tuple(_CP_HELD.values()):
+        try:
+            os.close(fd)
+        except OSError:
+            pass
+    _CP_HELD.clear()
+    _CP_THREADS = threading.Lock()
+
+
+if hasattr(os, "register_at_fork"):
+    os.register_at_fork(after_in_child=_checkpoint_after_fork)
+
+
+def _checkpoint_rename(parent: int, source: str, destination: str) -> None:
+    """The measured native no-replace operation; deliberately no fallback."""
+    symbol, flag = ("renameatx_np", 4) if sys.platform == "darwin" else ("renameat2", 1)
+    if sys.platform not in {"darwin", "linux"}:
+        raise SlotError("checkpoint no-replace filesystem API is unsupported")
+    try:
+        function = getattr(ctypes.CDLL(None, use_errno=True), symbol)
+    except AttributeError as exc:
+        raise SlotError("checkpoint native no-replace API is unavailable") from exc
+    function.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
+    function.restype = ctypes.c_int
+    if function(parent, os.fsencode(source), parent, os.fsencode(destination), flag):
+        number = ctypes.get_errno()
+        raise SlotError(f"checkpoint native no-replace {source} -> {destination}: {os.strerror(number)}")
+
+
+def _checkpoint_identity(value: os.stat_result) -> list[int]:
+    return [value.st_dev, value.st_ino]
+
+
+def _checkpoint_file(fd: int, *, directory: bool = False) -> os.stat_result:
+    value = os.fstat(fd)
+    valid_type = stat.S_ISDIR(value.st_mode) if directory else stat.S_ISREG(value.st_mode)
+    if (not valid_type or value.st_uid != os.getuid() or stat.S_IMODE(value.st_mode) != (0o700 if directory else 0o600)
+            or (not directory and value.st_nlink != 1)):
+        raise SlotError("checkpoint lock member type/owner/mode/link count is unsafe")
+    return value
+
+
+def _checkpoint_read_at(parent: int, name: str) -> tuple[bytes, list[int]]:
+    fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent)
+    try:
+        before = _checkpoint_file(fd)
+        if before.st_size > MAX_JSON_BYTES:
+            raise SlotError("checkpoint lock metadata exceeds bound")
+        data = os.read(fd, MAX_JSON_BYTES + 1)
+        after = os.fstat(fd)
+        entry = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        stamp = lambda value: (value.st_dev, value.st_ino, value.st_mode, value.st_size, value.st_mtime_ns, value.st_ctime_ns)
+        if stamp(before) != stamp(after) or _checkpoint_identity(entry) != _checkpoint_identity(before) or len(data) != before.st_size:
+            raise SlotError("checkpoint lock metadata changed while reading")
+        return data, _checkpoint_identity(before)
+    finally:
+        os.close(fd)
+
+
+class CheckpointLockRetired(SlotError):
+    """Exact abandoned scope preserved; retry starts a new acquisition interval."""
+
+
+@dataclass
+class CheckpointLockContext:
+    """Internal CP admission, never inferred from a purpose or ambient setting.
+
+    Construction is effect-free. The transaction supplies exact validated domain,
+    request and lease transitions, and the native mutation reconciliation reader.
+    The context is a lock capability only; all transaction authority is rechecked.
+    """
+    state_root: Path
+    binding: dict[str, Any]
+    transaction: str
+    operation: str
+    generations: tuple[str, ...]
+    lease_hashes: tuple[str, ...]
+    request_digest: str
+    quiescent: Any = field(repr=False)
+    pid: int = field(default_factory=os.getpid, init=False)
+    held: list[dict[str, Any]] = field(default_factory=list, init=False, repr=False)
+    _admitted: tuple = field(init=False, repr=False)
+    _root_identity: tuple = field(init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        if (self.state_root != self.state_root.resolve(strict=True) or
+                self.binding.get("state_root") != str(self.state_root) or
+                self.operation not in {"preserve", "recover", "observe-release", "resume", "recover-resume"} or
+                re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,79}", self.transaction) is None or
+                not self.generations or not self.lease_hashes or
+                any(re.fullmatch(r"[0-9a-f]{64}", value) is None for value in (*self.generations, *self.lease_hashes, self.request_digest)) or
+                not callable(self.quiescent)):
+            raise SlotError("invalid validated internal checkpoint context")
+        root = os.stat(self.state_root, follow_symlinks=False)
+        if not stat.S_ISDIR(root.st_mode) or root.st_uid != os.getuid() or stat.S_IMODE(root.st_mode) & 0o022:
+            raise SlotError("checkpoint state root is not privately owned")
+        self.binding = json.loads(json.dumps(self.binding))
+        self._root_identity = tuple(_checkpoint_identity(root))
+        self._admitted = self._admission_identity()
+
+    def _admission_identity(self) -> tuple:
+        return (str(self.state_root), canonical_digest(self.binding), self.transaction, self.operation,
+                self.generations, self.lease_hashes, self.request_digest, self.pid, id(self.quiescent))
+
+    def _validate_admission(self) -> None:
+        if self._admission_identity() != self._admitted:
+            raise SlotError("checkpoint internal context changed after validation")
+        root = os.stat(self.state_root, follow_symlinks=False)
+        if (not stat.S_ISDIR(root.st_mode) or root.st_uid != os.getuid() or
+                stat.S_IMODE(root.st_mode) & 0o022 or tuple(_checkpoint_identity(root)) != self._root_identity):
+            raise SlotError("checkpoint trusted state root identity/permissions changed")
+
+    def _domain(self) -> str:
+        return canonical_digest({key: value for key, value in self.binding.items() if key != "selected_slot"})
+
+    @staticmethod
+    def _guard_domain(binding: dict) -> str:
+        # The permanent inode belongs to the physical shared lock universe,
+        # rather than one role/slot/checkpoint or mutable implementation bytes.
+        if (not isinstance(binding.get("state_root"), str) or not isinstance(binding.get("domains", []), list) or
+                any(not isinstance(row, dict) or not isinstance(row.get("inventory"), dict) or
+                    not isinstance(row["inventory"].get("path"), str) or
+                    not isinstance(row.get("repo"), str) or not isinstance(row.get("state_root"), str)
+                    for row in binding.get("domains", []))):
+            raise SlotError("checkpoint lock physical domain metadata is malformed")
+        return canonical_digest({"state_root": binding["state_root"], "roots": sorted(
+            ({"inventory": row["inventory"]["path"], "repo": row["repo"], "state_root": row["state_root"]}
+             for row in binding.get("domains", [])), key=lambda row: row["inventory"])})
+
+    def check(self) -> None:
+        self._validate_admission()
+        if os.getpid() != self.pid:
+            raise SlotError("fork child cannot continue a checkpoint transaction")
+        for held in self.held:
+            parent = os.fstat(held["parent"])
+            current = os.stat(held["path"].parent, follow_symlinks=False)
+            if _checkpoint_identity(parent) != _checkpoint_identity(current):
+                raise SlotError("checkpoint trusted lock parent was substituted")
+            guard = _checkpoint_file(held["fd"])
+            entry = os.stat(held["guard_name"], dir_fd=held["parent"], follow_symlinks=False)
+            if _checkpoint_identity(guard) != _checkpoint_identity(entry):
+                raise SlotError("checkpoint permanent guard inode was substituted")
+            self._facade(held["parent"], held["path"].name, held["owner"], held["guard"])
+
+    def descriptors(self) -> tuple[int, ...]:
+        self.check()
+        if len(self.held) != 2:
+            raise SlotError("checkpoint mutation requires target-slot and lifecycle guards")
+        return tuple(value["fd"] for value in self.held)
+
+    def boundary(self, phase: str) -> None:
+        """Native crash seam; no runtime/environment selector."""
+
+    def _parent(self, path: Path) -> int:
+        if path.parent != self.state_root / "locks" or path.name not in {"supervisor.lock", "wt1.lock", "wt2.lock", "wt3.lock"}:
+            raise SlotError("checkpoint context cannot select another lock domain")
+        fd = os.open("/", os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+        try:
+            for component in path.parent.parts[1:]:
+                try:
+                    child = os.open(component, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=fd)
+                except FileNotFoundError:
+                    # Only the existing state owner's locks child may be created.
+                    if component != "locks" or _checkpoint_identity(os.fstat(fd)) != _checkpoint_identity(os.stat(self.state_root)):
+                        raise SlotError("checkpoint trusted parent is missing")
+                    os.mkdir(component, 0o700, dir_fd=fd)
+                    os.fsync(fd)
+                    child = os.open(component, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=fd)
+                os.close(fd)
+                fd = child
+            value = os.fstat(fd)
+            if value.st_uid != os.getuid() or stat.S_IMODE(value.st_mode) & 0o022:
+                raise SlotError("checkpoint lock parent is not privately owned")
+            return fd
+        except BaseException:
+            os.close(fd)
+            raise
+
+    def _facade(self, parent: int, name: str, expected: dict | None, guard: list[int], *, history: str | None = None) -> dict:
+        fd = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent)
+        try:
+            identity = _checkpoint_identity(_checkpoint_file(fd, directory=True))
+            if os.listdir(fd) != ["owner.json"]:
+                raise SlotError("checkpoint facade has unknown or missing members")
+            data, member = _checkpoint_read_at(fd, "owner.json")
+            try:
+                record = json.loads(data)
+            except (ValueError, UnicodeError) as exc:
+                raise SlotError("checkpoint facade metadata is unrecognized") from exc
+            keys = {"protocol", "nonce", "pid", "signature", "birth", "purpose", "domain", "domain_binding", "transaction", "operation", "generation", "lease_sha256", "request_digest", "guard", "directory", "member", "publication", "retirement"}
+            if (not isinstance(record, dict) or set(record) != keys or record.get("protocol") != _CP_PROTOCOL or
+                    record.get("directory") != identity or record.get("member") != member or
+                    record.get("guard") != guard or not isinstance(record.get("domain_binding"), dict) or
+                    record.get("domain") != canonical_digest(record["domain_binding"]) or
+                    self._guard_domain(record["domain_binding"]) != self._guard_domain(self.binding) or
+                    (history is None and record.get("domain") != self._domain()) or
+                    (history is None and (record.get("transaction") != self.transaction or record.get("generation") not in self.generations or
+                    record.get("lease_sha256") not in self.lease_hashes or record.get("request_digest") != self.request_digest)) or
+                    any(re.fullmatch(r"[0-9a-f]{64}", str(record.get(key))) is None for key in ("generation", "lease_sha256", "request_digest")) or
+                    re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,79}", str(record.get("transaction"))) is None or
+                    record.get("operation") not in {"preserve", "recover", "observe-release", "resume", "recover-resume"} or
+                    not record.get("signature") or signature_birth(record["signature"]) != record.get("birth") or
+                    record.get("publication") != (history or name) or
+                    record.get("retirement") != f".{history or name}.cp-history-{record.get('nonce')}" or
+                    (history is not None and name not in {record["retirement"], f".{history}.cp-stage-{record.get('nonce')}"}) or
+                    re.fullmatch(r"[0-9a-f]{48}", str(record.get("nonce"))) is None or
+                    type(record.get("pid")) is not int or record["pid"] <= 0 or
+                    (expected is not None and record != expected)):
+                raise SlotError("checkpoint facade protocol/domain/generation/inode mismatch")
+            return record
+        finally:
+            os.close(fd)
+
+    def _retire(self, parent: int, name: str, record: dict, guard: list[int]) -> None:
+        self._facade(parent, name, record, guard)
+        self.quiescent()
+        self.boundary("lock-retire-intent")
+        self._facade(parent, name, record, guard)
+        self.quiescent()
+        _checkpoint_rename(parent, name, record["retirement"])
+        # Only namespace durability remains; no protected work or legacy-path
+        # access is permitted after the retirement linearization point.
+        os.fsync(parent)
+        self.boundary("lock-retired")
+
+    @contextmanager
+    def hold(self, path: Path, *, purpose: str) -> Iterator[None]:
+        self._validate_admission()
+        if os.getpid() != self.pid:
+            raise SlotError("fork child cannot acquire a parent's checkpoint context")
+        if fcntl is None or sys.platform not in {"darwin", "linux"}:
+            raise SlotError("checkpoint selected native flock protocol is unsupported")
+        if (not self.held and path.name != f"wt{self.binding.get('selected_slot')}.lock") or (self.held and (len(self.held) != 1 or path.name != "supervisor.lock")):
+            raise SlotError("checkpoint lock order requires target slot then lifecycle")
+        parent = self._parent(path)
+        guard_name = path.name + ".cp-guard"
+        fd = None
+        registered = False
+        published = False
+        held = None
+        try:
+            encoded = (json.dumps({"protocol": _CP_PROTOCOL, "domain": self._guard_domain(self.binding), "path": str(path)}, sort_keys=True) + "\n").encode()
+            try:
+                fd = os.open(guard_name, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=parent)
+                if os.write(fd, encoded) != len(encoded):
+                    raise SlotError("checkpoint permanent sidecar initialization incomplete")
+                os.fsync(fd)
+                os.fsync(parent)
+            except FileExistsError:
+                fd = os.open(guard_name, os.O_RDWR | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent)
+            guard = _checkpoint_identity(_checkpoint_file(fd))
+            raw, identity = _checkpoint_read_at(parent, guard_name)
+            if raw != encoded or identity != guard or os.get_inheritable(fd):
+                raise SlotError("checkpoint permanent sidecar protocol/inode mismatch")
+            with _CP_THREADS:
+                key = tuple(guard)
+                if key in _CP_HELD:
+                    raise SlotError("checkpoint guard already held in this process/thread")
+                _CP_HELD[key] = fd
+                registered = True
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError as exc:
+                raise SlotError(f"checkpoint native guard unavailable/contended: {exc}") from exc
+            self.boundary("lock-guard-held")
+            self.quiescent()
+            current_guard = os.stat(guard_name, dir_fd=parent, follow_symlinks=False)
+            if _checkpoint_identity(current_guard) != guard:
+                raise SlotError("checkpoint guard changed after native acquisition")
+            for entry in os.listdir(parent):
+                if entry.startswith(f".{path.name}.cp-"):
+                    self._facade(parent, entry, None, guard, history=path.name)
+            try:
+                record = self._facade(parent, path.name, None, guard)
+            except FileNotFoundError:
+                record = None
+            if record is not None:
+                observation = observe_process(record["pid"], record["signature"])
+                if observation.state not in {"absent", "mismatch"}:
+                    raise SlotError("checkpoint abandoned facade native holder is not proven gone", observations=(observation,))
+                self._retire(parent, path.name, record, guard)
+                raise CheckpointLockRetired("checkpoint abandoned facade preserved in history; retry a fresh acquisition")
+            nonce = secrets.token_hex(24)
+            stage = f".{path.name}.cp-stage-{nonce}"
+            os.mkdir(stage, 0o700, dir_fd=parent)
+            stage_fd = os.open(stage, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent)
+            try:
+                member = os.open("owner.json", os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC, 0o600, dir_fd=stage_fd)
+                try:
+                    self.boundary("lock-member-created")
+                    observation = observe_process(os.getpid())
+                    signature = observation.signature
+                    if observation.state != "present" or not signature or not signature_birth(signature):
+                        raise SlotError("checkpoint holder native birth unavailable", observations=(observation,))
+                    record = {"protocol": _CP_PROTOCOL, "nonce": nonce, "pid": os.getpid(), "signature": signature,
+                              "birth": signature_birth(signature), "purpose": purpose, "domain": self._domain(),
+                              "domain_binding": {key: value for key, value in self.binding.items() if key != "selected_slot"},
+                              "transaction": self.transaction, "operation": self.operation, "generation": self.generations[0],
+                              "lease_sha256": self.lease_hashes[0], "request_digest": self.request_digest, "guard": guard,
+                              "directory": _checkpoint_identity(os.fstat(stage_fd)), "member": _checkpoint_identity(os.fstat(member)),
+                              "publication": path.name, "retirement": f".{path.name}.cp-history-{nonce}"}
+                    data = (json.dumps(record, sort_keys=True) + "\n").encode()
+                    if os.write(member, data) != len(data):
+                        raise SlotError("checkpoint incomplete holder write")
+                    os.fsync(member)
+                    self.boundary("lock-member-flushed")
+                finally:
+                    os.close(member)
+                os.fsync(stage_fd)
+                self.boundary("lock-directory-flushed")
+            finally:
+                os.close(stage_fd)
+            os.fsync(parent)
+            self.boundary("lock-staged")
+            _checkpoint_rename(parent, stage, path.name)
+            published = True
+            self.boundary("lock-publication-effect")
+            os.fsync(parent)
+            held = {"fd": fd, "parent": parent, "path": path, "guard_name": guard_name, "guard": guard, "owner": record}
+            self.held.append(held)
+            self.boundary("lock-published")
+            self.check()
+            yield
+        finally:
+            try:
+                if published and held is not None:
+                    self.check()
+                    self.quiescent()
+                    self._retire(parent, path.name, held["owner"], held["guard"])
+            finally:
+                if held in self.held:
+                    self.held.remove(held)
+                if registered:
+                    with _CP_THREADS:
+                        _CP_HELD.pop(key, None)
+                # Never LOCK_UN: a bounded admitted exec may retain this same
+                # open description after parent exception/death/timeout.
+                if fd is not None:
+                    os.close(fd)
+                os.close(parent)
 
 
 @dataclass(frozen=True)
@@ -425,6 +811,10 @@ class Inventory:
         """
         if touch_heartbeat:
             lease["heartbeat_at"] = now_iso()
+        if self.lease_path(number).exists():
+            previous = read_json(self.lease_path(number))
+            if previous.get("resume_admission") is not None and lease.get("resume_admission") != previous["resume_admission"]:
+                raise SlotError("ordinary lease writer cannot erase or change checkpoint readiness")
         atomic_json(self.lease_path(number), lease)
 
 
@@ -648,7 +1038,56 @@ def signature_birth(signature: str) -> str | None:
     return " ".join(signature.split()[:5]) if _signature_command(signature) is not None else None
 
 
+class ShutdownSchedulerDiscrepancy(ValueError):
+    """A fully checked pass differs only in same-suffix R versus S state."""
+
+    def __init__(self, differences: list[tuple[int, str, str]]):
+        self.context = repr(differences[:4])[:256]
+        super().__init__("inconclusive R/S-only shutdown observation " + self.context)
+
+
+def _shutdown_rs_only(selected: dict | None, complete: dict | None) -> bool:
+    if selected is None or complete is None:
+        return False
+    left, right = selected["native_state"], complete["native_state"]
+    return ({left[:1], right[:1]} == {"R", "S"} and left[1:] == right[1:] and
+            {key: value for key, value in selected.items() if key != "native_state"} ==
+            {key: value for key, value in complete.items() if key != "native_state"})
+
+
+def _shutdown_refusal_detail(detail: str, first: str | None, last: str, attempt: int) -> str:
+    # Diagnostic context is bounded and never reused as usable process evidence.
+    width = max(32, (DIAGNOSTIC_LIMIT - 72) // 3)
+    return (f"{detail[:width]}; first={str(first)[:width]}; "
+            f"last=attempt={attempt} {last[:width]}")
+
+
 def observe_shutdown_process(pid: int) -> Observation:
+    """At most three fresh native passes inside one absolute shutdown budget."""
+    first = None
+    progress = {"last": "entry"}
+    attempt = 0
+    with observation_budget(10.0):
+        try:
+            for attempt in range(1, 4):
+                observation_timeout()
+                try:
+                    result = _observe_shutdown_process_once(pid, progress)
+                except ShutdownSchedulerDiscrepancy as exc:
+                    first = exc.context if first is None else first
+                    if attempt == 3:
+                        raise
+                    continue
+                if result.state == "unavailable":
+                    return replace(result, detail=_shutdown_refusal_detail(result.detail, first, progress["last"], attempt))
+                observation_timeout()
+                return result
+        except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
+            return Observation("unavailable", detail=_shutdown_refusal_detail(str(exc), first, progress["last"], attempt),
+                               target=f"PID {pid}", operation="ps-shutdown-state", error_class=type(exc).__name__)
+
+
+def _observe_shutdown_process_once(pid: int, progress: dict) -> Observation:
     """Coherent native state for shutdown only; Z remains present, never absent."""
     target = f"PID {pid}"
     def refusal(detail, exc=None):
@@ -657,6 +1096,7 @@ def observe_shutdown_process(pid: int) -> Observation:
     if type(pid) is not int or pid <= 0:
         return refusal("invalid shutdown PID")
     def rows(output):
+        observation_timeout()
         if len(output) > MAX_OBSERVER_OUTPUT:
             raise ValueError("shutdown observation exceeds bound")
         result = {}
@@ -674,20 +1114,31 @@ def observe_shutdown_process(pid: int) -> Observation:
                               "native_state": native, "command": command}
         return result
     try:
+        progress["last"] = "before native selected"
         selected = subprocess.run(["ps", "-p", str(pid), "-o", "pid=,ppid=,lstart=,stat=,command="],
                                   check=False, capture_output=True, text=True, timeout=observation_timeout())
+        progress["last"] = f"native selected rc={selected.returncode} bytes={len(selected.stdout)}"
+        observation_timeout()
         census = subprocess.run(["ps", "-axo", "pid=,ppid=,lstart=,stat=,command="],
                                 check=False, capture_output=True, text=True, timeout=observation_timeout())
+        progress["last"] = f"native census rc={census.returncode} bytes={len(census.stdout)}"
+        observation_timeout()
         if selected.returncode not in (0, 1) or selected.stderr.strip() or census.returncode or census.stderr.strip():
             raise ValueError("native state observation failed")
         chosen, complete = rows(selected.stdout), rows(census.stdout)
         if os.getpid() not in complete or set(chosen) - {pid}:
             raise ValueError("native state census lacks witness or selected PID differs")
-        if bool(chosen) != (selected.returncode == 0) or chosen.get(pid) != complete.get(pid):
+        if bool(chosen) != (selected.returncode == 0):
+            raise ValueError("native state selected/census drift")
+        if chosen.get(pid) != complete.get(pid):
+            if _shutdown_rs_only(chosen.get(pid), complete.get(pid)):
+                raise ShutdownSchedulerDiscrepancy([(pid, chosen[pid]["native_state"], complete[pid]["native_state"])])
             raise ValueError("native state selected/census drift")
         observation_timeout()
         return Observation("present" if pid in complete else "absent", target=target,
                            operation="ps-shutdown-state", identity=complete.get(pid))
+    except ShutdownSchedulerDiscrepancy:
+        raise
     except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
         return refusal(str(exc), exc)
 
@@ -695,6 +1146,32 @@ def observe_shutdown_process(pid: int) -> Observation:
 
 def observe_shutdown_family(identities: dict[int, str], root: int, *,
                             max_identities: int = 4096) -> tuple[ProcessSnapshot, dict[int, Observation], dict[int, Observation]]:
+    """At most three complete fresh batches; only R/S-only passes are discarded."""
+    first = None
+    progress = {"last": "entry"}
+    attempt = 0
+    with observation_budget(10.0):
+        try:
+            for attempt in range(1, 4):
+                observation_timeout()
+                try:
+                    snapshot, generic, native = _observe_shutdown_family_once(identities, root, max_identities=max_identities, progress=progress)
+                except ShutdownSchedulerDiscrepancy as exc:
+                    first = exc.context if first is None else first
+                    if attempt == 3:
+                        raise
+                    continue
+                if snapshot.state == "unavailable":
+                    return replace(snapshot, detail=_shutdown_refusal_detail(snapshot.detail, first, progress["last"], attempt)), {}, {}
+                observation_timeout()
+                return snapshot, generic, native
+        except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
+            return ProcessSnapshot("unavailable", detail=_shutdown_refusal_detail(str(exc), first, progress["last"], attempt),
+                                   operation="ps-shutdown-family", error_class=type(exc).__name__, errno=getattr(exc, "errno", None)), {}, {}
+
+
+def _observe_shutdown_family_once(identities: dict[int, str], root: int, *,
+                                 max_identities: int, progress: dict) -> tuple[ProcessSnapshot, dict[int, Observation], dict[int, Observation]]:
     """One bounded shutdown-only pass; never retain its witnesses across effects.
 
     Generic signatures remain byte-exact. Native state is additional evidence,
@@ -712,10 +1189,15 @@ def observe_shutdown_family(identities: dict[int, str], root: int, *,
             raise ValueError("shutdown family request exceeds byte bound")
 
         def read(native, selected):
+            observation_timeout()
             fields = "pid=,ppid=,lstart=,stat=,command=" if native else "pid=,ppid=,lstart=,command="
             argv = ["ps", "-p", selection, "-o", fields] if selected else ["ps", "-axo", fields]
+            label = ("native" if native else "generic") + (" selected" if selected else " census")
+            progress["last"] = "before " + label
             value = subprocess.run(argv, check=False, capture_output=True, text=True,
                                    timeout=observation_timeout())
+            progress["last"] = f"{label} rc={value.returncode} bytes={len(value.stdout)}"
+            observation_timeout()
             if (value.returncode not in ((0, 1) if selected else (0,)) or value.stderr.strip() or
                     len(value.stdout) > MAX_OBSERVER_OUTPUT):
                 raise ValueError("shutdown family command failed/exceeded output bound")
@@ -763,11 +1245,16 @@ def observe_shutdown_family(identities: dict[int, str], root: int, *,
             for pid, row in native_complete.items()))
         if snapshot.descendants(root) != native_snapshot.descendants(root):
             raise ValueError("shutdown family cross-format rooted census drift")
-        generic, native = {}, {}
+        generic, native, differences = {}, {}, []
         for pid, signature in identities.items():
             row, terminal = complete.get(pid), native_complete.get(pid)
-            if selected.get(pid) != row or native_selected.get(pid) != terminal:
+            if selected.get(pid) != row:
                 raise ValueError("shutdown family selected/census drift")
+            if native_selected.get(pid) != terminal:
+                if _shutdown_rs_only(native_selected.get(pid), terminal):
+                    differences.append((pid, native_selected[pid]["native_state"], terminal["native_state"]))
+                else:
+                    raise ValueError("shutdown family selected/census drift")
             if ((row is None) != (terminal is None) or
                     row is not None and (row.ppid != terminal["ppid"] or
                                          signature_birth(row.signature) != terminal["birth"] or
@@ -777,8 +1264,37 @@ def observe_shutdown_family(identities: dict[int, str], root: int, *,
                                        row.signature if row else None, target=f"PID {pid}", operation="ps-shutdown-family-generic")
             native[pid] = Observation("present" if terminal is not None else "absent", target=f"PID {pid}",
                                       operation="ps-shutdown-family-native", identity=terminal)
+        if differences:
+            # A scheduling discrepancy cannot mask another retained-family defect.
+            rooted = snapshot.descendants(root)
+            if rooted - set(identities):
+                raise ValueError("shutdown family has unretained descendant during scheduling discrepancy")
+            if any(item.state == "mismatch" for item in generic.values()):
+                raise ValueError("shutdown family retained identity mismatch during scheduling discrepancy")
+            if (any(item.state == "present" for item in generic.values()) and
+                    (root not in complete or native_complete[root]["native_state"].startswith("Z"))):
+                raise ValueError("shutdown family root is not live during scheduling discrepancy")
+            for pid, item in generic.items():
+                if item.state == "absent":
+                    continue
+                ancestor, seen = pid, set()
+                while ancestor != root:
+                    if ancestor in seen or ancestor not in complete:
+                        raise ValueError("shutdown family incomplete/cyclic during scheduling discrepancy")
+                    seen.add(ancestor); ancestor = complete[ancestor].ppid
+                    if ancestor not in identities:
+                        raise ValueError("shutdown family reparented during scheduling discrepancy")
+                    if (ancestor not in complete or ancestor not in native_complete or
+                            generic[ancestor].state != "present" or
+                            native_complete[ancestor]["native_state"].startswith("Z")):
+                        raise ValueError("shutdown family ancestor is not independently present/exact/live during scheduling discrepancy")
+            if root in complete and complete[root].ppid in rooted:
+                raise ValueError("shutdown family root cycle during scheduling discrepancy")
+            raise ShutdownSchedulerDiscrepancy(differences)
         observation_timeout()
         return snapshot, generic, native
+    except ShutdownSchedulerDiscrepancy:
+        raise
     except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
         snapshot = ProcessSnapshot("unavailable", detail=str(exc), operation="ps-shutdown-family",
                                    error_class=type(exc).__name__, errno=getattr(exc, "errno", None))

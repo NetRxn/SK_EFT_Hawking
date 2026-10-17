@@ -572,13 +572,28 @@ paired acquisition. Passive post-SIGTERM timeout retains typed diagnostic eviden
 
 ### R4: bounded fresh-guard shutdown progress
 
-The accepted R3 source and its bounded controls are distinct from native pool
-acceptance. A populated normal release reached the ten-second stop deadline after
-one delivered SIGTERM; FREE did not mean backend absence. R4 corrects the source
-progress and observation costs; implementation review, ROOT execution and native
-normal-release acceptance remain pending.
+The shutdown observation extension is selected for candidate implementation.
+Source controls, whole isolated native acceptance, loaded-code admission and live
+operation remain distinct gates; this specification grants no live activation.
 
-Keep initial identity/ancestry refusals unchanged. Only after a successful SIGTERM
+Stable R4 decisions:
+
+- **R4-S1:** one helper-entry budget, at most three whole fresh observation attempts,
+  and strict coherent final usable evidence.
+- **R4-S2:** a structured scheduling-only discrepancy and bounded first/last
+  diagnostics; no generic exception or product-command retry.
+- **R4-S3:** unchanged exact identity, retained graph, new-descendant refusal,
+  final target, absence, ownership and capacity predicates.
+- **R4-S4:** preserved coherent selected-rc1 absence and mixed-family protocol.
+- **R4-F1:** exact fresh owned recursive fixture startup before listener readiness.
+- **R4-F2:** separate actual late-child refusal with zero new-family signals.
+
+Keep initial identity/ancestry refusals and the post-first-SIGTERM-only exit/reaping continuation unchanged. A shutdown-only observer may discard an inconclusive capable pass whose sole discrepancy is R versus S with an identical remaining native STAT suffix, then collect a completely new pass. This is observation resampling, not acceptance of either inconsistent view or a signal authorization. Both helpers have at most three total attempts per invocation. Enter observation_budget(10.0) exactly once at helper entry, around the entire helper invocation and all attempts. Its existing min(current, new) semantics preserve any earlier ambient deadline; when no ambient deadline exists, this supplies one ten-second absolute helper deadline. Check remaining budget before every subprocess/read and before returning usable evidence; no attempt, wait, nested helper or recovery path restarts it. CP quiescence/pre-quarantine and orphan fresh-family callers without a surrounding stop budget receive this same explicit helper bound. A usable result must satisfy every original strict predicate on one fresh coherent pass. Never combine views or reuse any pass across a durable write, signal, passive retry or return boundary.
+Family resampling requires successful bounded parsing and capable witnesses in all four views; exact selected membership; stable PID, PPID, birth and full command; equal generic selected/census rows; cross-format stable identity and complete rooted graph coherence; no new descendant beyond retained identities. Each differing native row must be exactly R/S with equal suffix, and every other native field must agree. Absence/presence drift, changing graph or identity, terminal/defunct/reparent transitions, unknown/other states or suffix changes, missing observers, malformed/denied/partial/duplicate/extra/oversized outputs, unexpected return codes or stderr are typed refusals, not resampling candidates. The single-PID native helper similarly resamples only a stable-identity R/S-only discrepancy after complete selected/census/witness validation; its caller retains all generic identity/family/final-target checks.
+At exhaustion or deadline, retain bounded first discrepancy and last observation context in existing typed refusal diagnostics. Do not restart a deadline, probe after expiry, swallow an arbitrary SlotError/rc2, extend pre-first-signal exit continuation, synthesize rows, adopt unknown descendants or relax exact final live-target and actual every-PID absence requirements. Registration, quarantine, original signatures, reservation, domain/owner/pin/provenance/capacity gates and all CP1-CP8 remain unchanged.
+Preserve the original selected-ps absence protocol: rc0 accompanies nonempty selected rows; rc1 with empty selected output is valid only when the complete capable census independently confirms every selected identity absent. Complete censuses must return0 with a known-present observer. Family requests with some absent and some present retained identities keep their original mixed-membership semantics (nonempty selection/rc0, exact selected/census membership, capable native and generic absence for each absent PID). Coherent absence returns immediately as absence, without a resampling attempt or inferred termination. Empty rc0, nonempty rc1, rc1 plus a census-present target, disagreement or missing capability remains refusal. No refusal becomes absence.
+
+Only after a successful SIGTERM
 in this invocation may a temporary exit-related refusal enter bounded passive
 re-observation and later resume the pending target. Resumption requires the entire
 retained family to satisfy the original classification again, followed by durable
@@ -612,3 +627,132 @@ command (pilot-informed, not a native guarantee), persistent refusal/no-extra-si
 negatives, nested terminal transitions, fresh evidence after persistence/signals,
 malformed/denied/partial/duplicate/extra/oversized batches, and first-cause retention.
 Preserve all nineteen prior mutation intents and add focused sole-guard controls.
+
+A typed deadline refusal still returns bounded already-collected diagnostic context;
+no usable observation or additional probe is permitted after expiry. The helper
+fallback is per invocation, not a new total budget for an entire CP transaction.
+
+Mechanical native positive fixtures must acknowledge the planned owned child
+family before exposing a backend listener. Use fresh per-launch generation-bound
+identity/parent/argv/birth acknowledgments for the actual middle and leaf; stale
+append-only node records and open ports are insufficient. Bound startup, preserve
+close-fd policy and refuse missing, dead, reused or wrong children without retrying
+a product command. A distinct deliberate late-child control creates a real child
+after durable graph reservation and requires the unchanged new-descendant refusal,
+zero signals to that new family, retained signatures/registry and quarantine.
+
+
+#### R4-F1-A: exclusive complete startup acknowledgment
+
+The standalone mechanical peer serializes its complete bounded startup object
+before publication. Hold the exact trusted control directory through a no-follow,
+close-on-exec directory descriptor; require current ownership and no group/other
+write, and recheck its pathname identity at readiness boundaries. Create a unique
+same-directory private stage with exclusive/no-follow/close-on-exec flags and mode
+0600. This invocation exposes no final entry before publishing its complete stage.
+An initially absent final remains absent during uncontended staging. A preexisting
+final or a concurrently published complete winner remains untouched; this invocation
+then collides with FileExistsError, without deleting, replacing, adopting or retrying
+invalid data from the existing object. Admit only
+complete bounded writes, an fsynced regular single-link private inode with exact
+size and stable identity, and an unexpired original deadline without cancellation.
+
+Publish by dirfd-relative native NO-REPLACE rename, preserving collision as
+FileExistsError and leaving any existing final object unchanged. Use the existing
+platform/ABI pattern without importing controller code: Linux renameat2 flag1,
+Darwin host-unit renameatx_np flag4. Actual support must be established on the ACK
+bind mount in the selected image and the host-unit filesystem before reliance.
+Unsupported APIs/filesystems, cross-device moves, permission or durability errors
+fail startup; no overwrite, check-then-rename, hard-link publication or retry of
+invalid data is permitted. Stage and final remain on one directory/device. The
+completed published inode remains single-link and is never modified afterward.
+Fsync the held parent before the publisher continues. Atomic content visibility
+alone does not prove parent-fsync completion, publisher survival or power-loss
+recovery. Deadline checks do not preempt uninterruptible filesystem operations.
+
+A prepublication error removes only this invocation's exactly identified staged
+inode, or retains that private stage as failure evidence. Never remove another
+stage or an existing final path. A postpublication failure preserves the complete
+final acknowledgment, even when parent fsync or later readiness fails.
+
+Readers use held trusted directory authority and no-follow/close-on-exec/nonblocking
+open. Require a regular single-link file, exact private mode/current UID and bounded
+stable size. Bound reads to maximum+1, require complete bytes equal to stable size,
+and compare inode/device/owner/mode/link count/size/mtime/ctime and directory-entry
+identity across acquisition/read. Reject FIFO, symlink, directory, oversized,
+short/growing/truncated data or substitution. Missing final name at initial open
+alone means not yet published. Missing/substituted entry or parent after acquisition
+is fatal consistency failure, including ENOENT; never turn it into another wait.
+Strict JSON/UTF-8/object validation and postparse deadline checks remain fatal on
+failure. No malformed-data or trust-error retry is added.
+
+Keep one absolute startup deadline through normal root/middle/leaf and every
+publication/read/identity/ready boundary. The waiter retries only initial missing
+final-name acquisition. After acknowledgment checks, recheck cancellation, the
+exact created child's poll/native PID/birth/start ticks/full argv/PPID, and deadline
+before return. Revalidate the full required owned recursive family before own
+readiness publication and root listener bind. These are fresh boundary checks,
+not a guarantee that a process cannot subsequently exit. Keep the existing distinct
+late-child negative's separately bounded leaf-start interval; never respawn or
+retry a product command to repair startup.
+
+One narrow owned-child finally covers publication/read failure, cancellation,
+missing root token/port, listener construction, serving exit and late-child wait
+failure. Terminate/wait only the unreaped exact direct-child Popen handle created
+by this fixture. Preserve the existing finite cleanup wait and any cleanup timeout
+as uncertainty; no guessed PID, nonchild signal, controller cleanup or inherited
+transaction descriptor is authorized. Existing server/thread cleanup stays owned.
+
+All original CP-1 through CP-8, R4-S1 through S4/F1/F2, selected-ps absence,
+identity/ancestry/graph/new-descendant/final-target/every-PID-absence, quarantine,
+lease/pin/owner/provenance/capacity, client auth/session and A-before-B-before-live
+contracts remain unchanged. This amendment repairs the mechanical peer only.
+
+Use production-seam controls for scheduler-only red then fresh coherent progress,
+persistent flapping, no-ambient and earlier-nested deadline, direct CP/orphan helper
+callers, valid all-absent/mixed-member results and simultaneous nondrift defects.
+Retain the original RR controls, all CP clauses, full current named/native/sole
+controls and independent A-before-B-before-live admission.
+
+
+## Proposed durable checkpoints — unavailable pending admission
+
+The [ADR-008 CP proposal](../adrs/ADR-008-shared-lean-slot-control-plane.md#proposed-cp-amendment--durable-nonaccepting-source-checkpoints)
+and its [design](../superpowers/specs/2026-10-16-durable-lean-checkpoints-design.md)
+have a source candidate; full abrupt-death recovery and staged native admission
+remain incomplete. Existing live commands and canonical-primary authority are unchanged.
+A backend pause, WIP commit or preservation ref is not a supported release route.
+Do not reset/reclaim dirty or unabsorbed source or edit a lease to simulate parking.
+
+The proposed route needs a reviewed exact candidate, isolated native pilot and
+separate ROOT admission. It would copy actual source/evidence bytes before a clean
+reset, deny dispatch through checkpoint/resume mutation, and retain ordinary
+canonical release/acquire/prepare and current epochs. Candidate stop-only bootstrap
+would be the explicit CP-8 exception; --inventory alone never grants it. Completed
+READY_TO_ABSORB work continues through normal absorption. No live usage command is
+provided before implementation and native admission. The candidate must preserve
+legacy directory-lock interlocking while recovering recognized complete generations;
+a stable advisory sidecar alone cannot exclude unchanged canonical callers. Unknown
+legacy directories remain reserved pending separately fenced reconciliation. Do not
+manually delete a lock or infer safety from holder PID absence.
+The enhanced protocol is internal to validated CP transactions. Ordinary prepare,
+build, integration, release and supervisor commands keep their legacy protocol;
+their records cannot be reclaimed by CP. A purpose string or CLI flag cannot grant
+the new protocol or any lifecycle authority.
+
+Native qualification first uses the candidate as ordinary canonical code in a new
+isolated OS/domain, then tests the old-canonical/candidate bridge in a separate
+isolated domain against independently accepted first-phase receipts. Live ROOT
+admission follows only after both pass. Separate directories or ports do not isolate
+the global capacity census, and no prior-pilot flag substitutes for actual evidence.
+
+Resume requires normally integrated canonical code and its current LO/SF admission.
+The CP proposal uses pending/completed resume context in the existing lease and
+journal: ACTIVE is published with pending context, only the validated transaction's
+internal matching diagnostic smoke is allowed, and ordinary proof dispatch remains
+denied until durable journal completion and completed lease admission. A living
+ROOT lease owner or tools/list success alone is insufficient. Internal capability
+material is not a command option and must not be printed, copied or replayed. Do not
+edit context/journal/lease bytes to simulate readiness; use supported guarded
+recovery after source-safe ownership and current normal admission. This proposed
+route remains unavailable until its full review/native/activation gates pass.

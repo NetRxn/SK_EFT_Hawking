@@ -9,6 +9,7 @@ import os
 import stat
 import shlex
 import shutil
+import secrets
 import subprocess
 import sys
 import tempfile
@@ -20,6 +21,7 @@ from typing import Any, Iterable
 from .state import (
     SCHEMA_VERSION,
     Inventory,
+    CheckpointLockContext,
     SlotError,
     atomic_json,
     atomic_write,
@@ -70,10 +72,11 @@ class Controller:
     def repo(self) -> Path:
         return self.inventory.repo_root
 
-    def _slot_lock(self, number: int):
+    def _slot_lock(self, number: int, *, checkpoint: CheckpointLockContext | None = None):
         return directory_lock(
             self.inventory.state_root / "locks" / f"wt{number}.lock",
             purpose=f"slot wt{number} operation",
+            checkpoint=checkpoint,
         )
 
     def _primary_sha(self, ref: str) -> str:
@@ -336,6 +339,7 @@ class Controller:
                 "endpoint": slot["endpoint_name"],
                 "state": "ACQUIRED",
                 "acquired_at": now_iso(),
+                "lease_generation": secrets.token_hex(24),
                 "heartbeat_at": now_iso(),
                 **self._owner(),
             }
@@ -492,8 +496,13 @@ class Controller:
             if temporary.exists():
                 shutil.rmtree(temporary)
 
-    def prepare(self, number: int) -> dict[str, Any]:
+    def prepare(self, number: int, *, checkpoint_request: dict[str, Any] | None = None) -> dict[str, Any]:
         with self._slot_lock(number):
+            if checkpoint_request is not None and (
+                    not isinstance(checkpoint_request, dict) or
+                    type(checkpoint_request.get("slot")) is not int or
+                    checkpoint_request["slot"] != number):
+                raise SlotError("checkpoint request slot must match prepare command slot")
             lease = self._lease_for_command(number, states={"ACQUIRED"})
             worktree, _ = self._assert_worktree_identity(number)
             if self._dirty(worktree):
@@ -518,18 +527,26 @@ class Controller:
 
             supervisor = Supervisor(self.inventory)
             paired_inventory = self.inventory.paired_inventory()
+            def reset_source():
+                if checkpoint_request is not None:
+                    from .checkpoints import CheckpointTransaction
+                    CheckpointTransaction(self, checkpoint_request).preflight(target_number=number)
+                    lease["checkpoint_preflight"] = {"id": checkpoint_request["id"], "base_sha": current_base,
+                                                      "contract_digest": canonical_digest(checkpoint_request["contract"])}
+                    self.inventory.save_lease(number, lease, touch_heartbeat=False)
+                _git(worktree, "reset", "--hard", current_base)
             try:
                 if os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
-                    _git(worktree, "reset", "--hard", current_base)
+                    reset_source()
                     self._replace_lake(number)
                 elif paired_inventory is not None:
                     paired_supervisor = Supervisor(paired_inventory)
                     with supervisor.activating_from(number, paired_supervisor):
-                        _git(worktree, "reset", "--hard", current_base)
+                        reset_source()
                         self._replace_lake(number)
                 else:
                     with supervisor.paused_backend(number):
-                        _git(worktree, "reset", "--hard", current_base)
+                        reset_source()
                         self._replace_lake(number)
             except Exception as exc:
                 self._quarantine(number, lease, f"prepare failed: {exc}")
@@ -539,6 +556,29 @@ class Controller:
             lease["prepared_at"] = now_iso()
             self.inventory.save_lease(number, lease)
             return lease
+
+    def checkpoint(self, request: dict[str, Any], *, recover: bool = False,
+                   bootstrap: bool = False) -> dict[str, Any]:
+        """Preserve unfinished source, deny dispatch and reach canonical release."""
+        from .checkpoints import CheckpointTransaction, validate_bootstrap
+        if bootstrap:
+            validate_bootstrap(self.inventory.source, request, recover=recover)
+        else:
+            CheckpointTransaction(self, request)._canonical()
+        return CheckpointTransaction(self, request, bootstrap=bootstrap).preserve(recover=recover)
+
+    def checkpoint_observe_release(self, request: dict[str, Any], *, bootstrap: bool = False) -> dict[str, Any]:
+        from .checkpoints import CheckpointTransaction, validate_bootstrap
+        if bootstrap:
+            validate_bootstrap(self.inventory.source, request, observe_release=True)
+        transaction = CheckpointTransaction(self, request, bootstrap=bootstrap)
+        if not bootstrap:
+            transaction._canonical()
+        return transaction.observe_release()
+
+    def checkpoint_resume(self, request: dict[str, Any], *, recover: bool = False) -> dict[str, Any]:
+        from .checkpoints import CheckpointTransaction
+        return CheckpointTransaction(self, request).resume(recover=recover)
 
     def ready(self, number: int) -> dict[str, Any]:
         with self._slot_lock(number):

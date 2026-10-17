@@ -23,6 +23,7 @@ from typing import Any, Iterator
 from .state import (
     SCHEMA_VERSION,
     Inventory,
+    CheckpointLockContext,
     SlotError,
     atomic_json,
     canonical_digest,
@@ -1205,6 +1206,11 @@ class Supervisor:
             os.fsync(directory)
         finally:
             os.close(directory)
+        # A checkpoint retains the exact RR identity/signal receipts before the
+        # ordinary stop removes its registry record. This grants no stop authority.
+        observer = getattr(self, "_checkpoint_stop_receipt", None)
+        if observer is not None:
+            observer(metadata)
         observation_timeout()
 
     def _stop_owned(self, kind: str, number: int, port: int, *, recovery_sha256=None) -> None:
@@ -1581,10 +1587,11 @@ class Supervisor:
         self._stop("proxy", number, int(self.inventory.slot(number)["proxy_port"]))
 
     @contextmanager
-    def lifecycle(self) -> Iterator[None]:
+    def lifecycle(self, *, checkpoint: CheckpointLockContext | None = None) -> Iterator[None]:
         with directory_lock(
             self.inventory.state_root / "locks" / "supervisor.lock",
             purpose="shared Lean endpoint lifecycle",
+            checkpoint=checkpoint,
         ):
             yield
 
@@ -1898,8 +1905,14 @@ class Supervisor:
             },
         )
 
-    def probe(self, number: int, *, client: str = "codex") -> dict[str, Any]:
+    def probe(self, number: int, *, client: str = "codex", proof_smoke_file: str | None = None,
+              checkpoint_smoke: Any = None) -> dict[str, Any]:
         """Exercise initialization, lease gating, and the no-build tool list."""
+        from .checkpoints import CheckpointSmokeContext, SMOKE_HEADER, validate_smoke_rpc
+        if checkpoint_smoke is not None:
+            if type(checkpoint_smoke) is not CheckpointSmokeContext or proof_smoke_file is None:
+                raise SlotError("probe requires validated internal checkpoint smoke context")
+            checkpoint_smoke.validate(proof_smoke_file)
         self.assert_healthy(number)
         slot = self.inventory.slot(number)
         host = str(self.inventory.raw["server"]["host"])
@@ -1910,17 +1923,23 @@ class Supervisor:
         if self.inventory.client_auth_mode == "bearer":
             headers["Authorization"] = f"Bearer {self.inventory.token(client)}"
 
+        proof_rpc = None
         def request(payload: dict[str, Any], session_id: str | None = None):
+            nonlocal proof_rpc
             connection = http.client.HTTPConnection(
                 host, int(slot["proxy_port"]), timeout=120
             )
             current = dict(headers)
             if session_id:
                 current["Mcp-Session-Id"] = session_id
+            if checkpoint_smoke is not None and payload.get("method") == "tools/call":
+                checkpoint_smoke.validate(proof_smoke_file)
+                current[SMOKE_HEADER] = checkpoint_smoke.capability
+            wire = json.dumps(payload)
             connection.request(
                 "POST",
                 f"/mcp?client={client}",
-                body=json.dumps(payload),
+                body=wire,
                 headers=current,
             )
             response = connection.getresponse()
@@ -1932,6 +1951,10 @@ class Supervisor:
                     f"MCP probe failed for wt{number} ({response.status}): "
                     f"{body.decode('utf-8', errors='replace')}"
                 )
+            if proof_smoke_file is not None and payload.get("method") == "tools/call":
+                validate_smoke_rpc(wire.encode(), body)
+                proof_rpc = {"request_hex": wire.encode().hex(), "response_hex": body.hex(),
+                             "request_sha256": sha256_bytes(wire.encode()), "response_sha256": sha256_bytes(body)}
             return (self._sse_json(body) if body else {}), response_headers
 
         initialized, response_headers = request(
@@ -1988,7 +2011,7 @@ class Supervisor:
                     "params": {
                         "name": "lean_diagnostic_messages",
                         "arguments": {
-                            "file_path": self.inventory.raw["server"]["probe_file"]
+                            "file_path": proof_smoke_file or self.inventory.raw["server"]["probe_file"]
                         },
                     },
                 },
@@ -1998,6 +2021,20 @@ class Supervisor:
                 raise SlotError(
                     f"active MCP dispatch failed for wt{number}: {diagnostics}"
                 )
+            if proof_smoke_file is not None:
+                result = diagnostics["result"]
+                structured = result.get("structuredContent")
+                if structured is None:
+                    content = result.get("content", [])
+                    if len(content) == 1 and content[0].get("type") == "text":
+                        try:
+                            structured = json.loads(content[0]["text"])
+                        except (ValueError, KeyError):
+                            structured = None
+                if (result.get("isError") or not isinstance(structured, dict) or
+                        structured.get("success") is not True or structured.get("timed_out") is not False or
+                        structured.get("items") != [] or structured.get("failed_dependencies") != []):
+                    raise SlotError("checkpoint matching proof smoke did not return clean successful current diagnostics")
             active_dispatch = True
         elif lease:
             active_dispatch = "skipped-nonmatching-lease"
@@ -2019,6 +2056,7 @@ class Supervisor:
             "lean_build_exposed": False,
             "active_dispatch": active_dispatch,
             "cleanup_status": cleanup.status,
+            **({"proof_rpc": proof_rpc} if proof_smoke_file is not None else {}),
         }
 
     def _resource_status(self, kind: str, number: int) -> dict[str, Any]:
