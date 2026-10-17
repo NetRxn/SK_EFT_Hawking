@@ -1,6 +1,6 @@
 # Finite processes, coherent interventions and clocks
 
-Status: stationary adaptive-strategy reconstruction has whole bounded local acceptance at `8fa1750d`. The complete observable transfer, actual inserted-channel histories and dynamics package has fresh whole committed review and ROOT bounded local acceptance at `7106e7dc`, following normal integration and the registered aggregate build. The next compressed-dynamics and derived-memory contract has independent mathematical review and ROOT contract acceptance, with no implementation acceptance yet. Earlier locally accepted calibrated-memory/coarse-graining components remain preserved. Broader project, security, main and publication gates remain separate and open.
+Status: stationary adaptive-strategy reconstruction retains whole bounded local acceptance at `8fa1750d`, and observable transfer with actual inserted-channel histories retains acceptance at `7106e7dc`. The complete compressed-dynamics and derived-memory C1–C5 increment has fresh whole committed review and ROOT bounded local acceptance at `1aad9f12`, following normal integration, the registered aggregate build, native/canonical reconciliation and current substrate checks. The next reviewed O1–O5 event-observability and robustness contract is unimplemented. Earlier locally accepted calibrated-memory/coarse-graining components remain preserved. Broader project, security, main and publication gates remain separate and open.
 
 Root owns integration, slot admission and the primary notebook. Reviewed feature history is checkpointed remotely and exposed through draft integration PRs. Main merge and publication acceptance require their separate gates. Existing ADR-008 slots, continuity packets, planners and review writers govern execution. Workers read notebooks and report; they do not write the shared record.
 
@@ -122,8 +122,9 @@ historical evidence with cause unestablished; current passing source and compile
 observations are distinct. Audit-only unused-variable warnings are retained.
 This bounded acceptance supplies no full-project, main or publication clearance.
 
-The next whole growth contract C1–C5 connects these actual accessible ranges to
-compressed dynamics and a derived finite hidden-state memory equation. Construct
+`FiniteThreeLevelCompressedStrategyMemory.lean` and its examples implement C1–C5:
+these actual accessible ranges connect to compressed dynamics and a derived finite
+hidden-state memory equation. Construct
 the weighted orthogonal projection by transporting the feature-space projection
 through the existing sandwich map; bare observable coordinates are not an
 isometry. Compress arbitrary observable maps on the old quotient and prove the
@@ -143,13 +144,42 @@ part, explicit blocks, third-order visible recurrence and four-step return.
 The ambient projection kernel and the restricted hidden space remain distinct.
 Finite hidden-state realization does not establish a finite-lag or Markov law.
 
-This complete mathematical contract has independent review and ROOT contract
-acceptance. Implementation follows final acceptance of the present transfer
-package and ordinary admission against the current registered epoch. Single-pulse
-operational pairings do not by themselves describe repeated experiments: any
-recursive-pulse interpretation must derive the actual identity-instrument append
-chronology, with one central reset and no intermediate readout. No continuum
-theory, physical gap, calibrated clock or computational-advantage claim follows.
+Whole scientific review, normal source integration and the registered aggregate
+build pass. Exact original-module source replay agrees with minimal and aggregate
+compiled contexts for every actual module-owned declaration, including the foreign
+generated equation. Raw and expanded types, flags, ordinary checks, direct
+statement/value dependencies and logical closures reconcile; compiler replacement
+closures retain their separate diagnostic scope. Actual traversal-order differences
+remain recorded. Canonical conservation preserves every earlier complete record and
+its order, and the standalone extractor context reproduces every retained new type,
+owner, kind, generated flag, dependency set and axiom set literally. Internal
+compiler helpers excluded by the emitter remain accounted for. Native type evidence
+includes raw type ASTs and expanded types. Value evidence consists of direct
+constant dependencies and transitive closures.
+
+Current metadata and direct grounding/soundness checks pass. The existing pure-Lean
+closing gate reports a clean substrate while retaining the paper-corpus failures;
+it is not a full-project pass. Fresh whole committed closing review and ROOT
+acceptance cover the original complete C1–C5 contract and all twelve binding
+clarifications at `1aad9f12`.
+
+The next reviewed O1–O5 contract targets an ordinary bounded event on these same
+normalized binary histories. Derive the full actual inserted-Kraus joint law and
+the physical complete-reset baseline, then prove that the equal-label event attains
+the finite total-variation difference. Derive phase/reset response and sampled
+recurrence from the actual channel chronology. Prove a weighted directional
+channel-residual bound and its conversion to event/data-error margins, with actual
+nonzero retention perturbations, strict negative/positive phase consumers and both
+complete-reset endpoints. An explicit baseline inside the allowed error ball must
+remain a falsifier for uniform strict-sign claims. These are new proof obligations;
+no implementation or live proof admission follows from this roadmap.
+
+Single-pulse operational pairings do not by themselves describe repeated
+experiments: any recursive-pulse interpretation must derive the actual
+identity-instrument append chronology, with one central reset and no intermediate
+readout. An event correlation does not identify a unique hidden carrier or provide
+full hidden-state tomography. No continuum theory, physical gap, calibrated clock,
+statistical sampling guarantee or computational-advantage claim follows.
 
 The whole target retains all phase and reset obstructions. Phase-bearing
 chronological probabilities do not automatically give a Hermitian or positive
