@@ -17,7 +17,7 @@ Nothing else belongs here.
 | `src/__init__.py` | SK-EFT Hawking: Dissipative EFT Corrections to Analog Hawking Radiation. |
 | `src/adw/__init__.py` | Akama-Diakonov-Wetterich (ADW) Mean-Field Gap Equation. |
 | `src/adw/fluctuations.py` | Fluctuation Analysis and Nambu-Goldstone Mode Counting, with a Vergeles mode-counting consistency check. |
-| `src/adw/gap_equation.py` | Gap Equation Solver for ADW Tetrad Condensation. |
+| `src/adw/gap_equation.py` | Bounded numerical exploration of an illustrative regulated scalar ansatz. |
 | `src/adw/ginzburg_landau.py` | Ginzburg-Landau Phase Classification for ADW Tetrad Condensation, and the G/G_c phase diagram. Key result: the isotropic B-phase is the ground state throughout — the anisotropic A-phase is never favoured — as in weak-coupling He-3. |
 | `src/adw/hubbard_stratonovich.py` | Hubbard-Stratonovich Decomposition of the ADW 8-Fermion Interaction. |
 | `src/adw/tetrad_gap_solver.py` | Tetrad Gap Equation Solver — Integral Formulation. |
@@ -275,7 +275,7 @@ Nothing else belongs here.
 | `scripts/phase6p_tgate_exact_frob.py` | Compute EXACT rational Frobenius² distance for the L=46 T-gate braid against ζ_40^k · T_NC target. |
 | `scripts/phase_bridge_validation.py` | Validate the Phase 6x Item G phase bridge BEFORE formalizing. |
 | `scripts/plugin_lifecycle.py` | The `skeft-qa` plugin's bind/refresh lifecycle — status, sync, and the mid-flight delta. |
-| `scripts/pre-commit-notebooks.sh` | Pre-commit hook: verify all notebooks execute without errors. |
+| `scripts/pre-commit-notebooks.sh` | Execute working notebooks named by the committing index (ACM), without env sync. Preserve GIT_DIR; notebook commits require an absolute existing interpreter in SKEFT_NOTEBOOK_PYTHON, separately admitted by ROOT. No source/index writes. Standalone/symlink calls require the same explicit committing Git context. |
 | `scripts/pre-commit-sync.sh` | L2 mechanical-sync commit gate (public-safe). Chained AFTER the leak-guard by the canonical installer. FAIL-OPEN by design: a missing toolchain or a transient crash NEVER blocks a commit. Auto-fixes cheap staleness; INCREMENTAL lean guard (never the clean ExtractDeps — that's /skeft-qa:sync); HARD-BLOCKS only genuine SOUNDNESS breakage, and only on `main`. |
 | `scripts/probe_rhmc_conditioning.py` | Is the L=8 near-zero fermion mode (kappa~1e7) a property of the OPERATOR or induced by the (trapped) CONFIG? |
 | `scripts/probe_rhmc_force_decomposition.py` | Force / spectrum decomposition probe — quantifies the payoff of the L=8 acceleration levers (multi-timescale pole-splitting, deflation) with measured numbers instead of estimates. |

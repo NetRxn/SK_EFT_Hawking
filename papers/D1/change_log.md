@@ -160,3 +160,10 @@ references or citations; below the 24-page floor. Eleven TODO comments mark
 claims whose primary source is not held in full text; the bundle is
 deliberately not green while they stand. Findings at
 `papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md`.
+
+
+## 2026-10-16 — Apex statement scope and coefficient-constraint attribution
+
+- Align fourteen apex claim descriptions with their actual source hypotheses and conclusions. Preserve the disclosed definitional Hawking-temperature identity, the conditional effective-temperature and FDR statements, and the scope of turning-point, attenuation, occupation/noise-floor and conductance identities. Algebraic identities do not certify independent physical derivations, state impurity, high-momentum robustness or a spectral crossover.
+- Retain fullSecondOrder_uniqueness as the action-representation result and separately register the existing combined_positivity_constraint for the coefficient-sum relation under positivity of the specified truncated imaginary action. The omitted imaginary terms remain a limitation of that relation.
+- Preserve all prior apex names/declaration dates and every other metadata field, including pending review stages and stale/redo status. The manuscript already describes the main formal limitations accurately and is unchanged. This source correction addresses existing D1 findings1.2,2.1 and2.6; it does not close those findings, repair the separately identified historical decider defects or certify a fresh Lean build, physical model, paper stage or publication readiness.

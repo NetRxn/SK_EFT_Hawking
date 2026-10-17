@@ -20,7 +20,7 @@ built) · [`CHECK_AUTHORING_GUIDE.md`](CHECK_AUTHORING_GUIDE.md) (what a new che
 
 | tier | trigger | what runs | blocks? |
 |---|---|---|---|
-| **0 — commit** | every `git commit` | leak/IP guard (staged diff) · `pre-commit-notebooks.sh` (**only staged `.ipynb`**) · `pre-commit-sync.sh`: incremental `lake build` if `.lean` staged, then a **short named list** of checks | **fail-open**; hard-blocks on `main` only |
+| **0 — commit** | every `git commit` | leak/IP guard (staged diff) · `pre-commit-notebooks.sh` (**only staged `.ipynb`**) · `pre-commit-sync.sh`: incremental `lake build` if `.lean` staged, then a **short named list** of checks | notebook execution/refusals can block on every branch; sync is fail-open and hard-blocks only on `main` |
 | **0.5 — iteration** | any time, mid-fix | `verify_scope.py` = only the steps the CHANGED PATHS are an input to, plus a printed `NOT CERTIFIED` block naming what it skipped | advisory; it is a claim about the change, never about the tree |
 | **1 — reviewer prechecks** | before dispatching an LLM reviewer | `gate_precheck.py s9` · `s10` | yes — do not spend reviewer budget on a stale tree |
 | **2 — wave close (paper)** | `/skeft-qa:wave-close` | `sync.py --full`, then `gate_precheck.py s13` = **full suite + `--force-latex`** | yes — no Stage-13 dispatch on a red tree |
@@ -37,9 +37,23 @@ sub-step's own reported duration.) It is safe only while it keeps saying what it
 scoped result must never be quoted as a gate result. `verify_scope.py --merge-gate` is the
 gate, and it additionally runs the four `CI_SKIP` checks that `--ci` cannot.
 
-**Tier 0 never runs the full suite** — it runs a named list, all Lean/substrate-side, so a
-red caused by paper content cannot block a commit. The list is in `pre-commit-sync.sh`; it
-is short by design and deliberately not restated here.
+**Tier 0 never runs the full suite.** The sync arm runs a short named Lean/substrate
+check list from `pre-commit-sync.sh`; paper-corpus checks are absent there. The separate
+notebook arm executes working notebooks selected by staged ACM names on every branch.
+It validates the committing checkout/index, refuses partial notebook or tracked `src/`
+staging, and uses an explicitly selected existing interpreter and ephemeral kernel with
+candidate import-origin observations. The custom kernel explicitly receives --HistoryManager.hist_file=:memory: and start/end guards observe/require actual history_file=:memory:. This narrows history persistence, without replacing IPYTHONDIR/profiles/startup or claiming general filesystem isolation. Actual driver/kernel argv selects separate initially
+empty per-run pycache prefixes with bytecode writes disabled; supported ordinary candidate
+source loaders and pre-import startup are checked, rather than treating source hashes or
+`-B` alone as proof of fresh execution. The production Git environment preserves its active
+context, admits/preserves inherited GIT_PAGER and explicitly uses git --no-pager -c diff.autoRefreshIndex=false on captured noninteractive helper queries. The validated active index raw digest is bound before staged-name inspection and checked before/after every subsequent helper query, including empty selection, then through execution. Index stat-cache changes are raw-byte changes and refuse acceptance; no persistent configuration, restaging or semantic-only waiver is used. Quiet-diff status alone does not prove a working-byte difference; exact active-index blob equality decides partial staging before execution. Selected source/notebook regular-file modes must also match unique active-index stage-zero mode records, with owner-executable bits and execution-end modes checked explicitly even when Git configuration ignores mode changes. It refuses other unsupported selectors/ambiguous relative common/config paths; fixture
+Git writes instead use a clean fixture-only environment and empty local hooks/templates.
+ROOT admits the bootstrap, selected existing environment and configuration boundary.
+It does not synchronize environments, delete shared caches or execute index snapshots. Missing/ambiguous targets and notebook failures block rather than skip.
+The script retains unique execution logs/receipts outside tracked notebooks. Its selection
+variable grants no runtime admission, and public source alone does not establish which
+implementation an installed chain calls. ROOT owns that transition and normal-checkpoint
+observation; the protective chain and sync arm retain their existing policies.
 
 ## 2. The question this document exists to answer
 
@@ -127,10 +141,14 @@ mild advisory.
 
 **The architecture implies far more enforcement than exists.** Three tiers:
 
-**Blocks.** The commit gate runs its short named list and only hard-blocks on `main`; it
-exits 0 in a worktree, on missing `uv`, and on any check crash. `.git/hooks/pre-commit` is
-local-only and uncommitted, so **a fresh clone has no mechanical gate at all.** The
-web-egress guard is the one unambiguously fail-closed control in the system.
+**Blocks.** The notebook arm can block every branch, including linked worktrees, on
+execution failure or an unresolved input/interpreter contract. Its passing receipt covers
+working files named by the active index and observed canonical source, not the whole tree
+or a physical/publication verdict. The main-oriented sync arm separately exits0 in linked
+worktrees and remains fail-open on missing toolchain/check crashes; its genuine failures
+hard-block only `main`. `.git/hooks/pre-commit` is local-only and uncommitted, so **a fresh
+clone has no mechanical gate at all.** Installation and actual invocation must be observed;
+neither a source edit nor a configuration record demonstrates a running protective chain.
 
 **Reports but never blocks.** A small set of checks are advisory *by design*, each with a
 stated reason and dispositioned individually in ADR-009 §Deferred. Their population is

@@ -34,17 +34,19 @@ We assemble a unified, formally verified assessment of how the
 substrate-condensation program developed in the SK--EFT Hawking series
 constrains dark matter (DM) and dark energy (DE). Five existing
 deep-paper drafts and one Phase~6m three-track Lean closure are
-consolidated. Five quantitative connections survive the consolidation:
+consolidated. The analysis connects substrate constraints to dark-sector claims:
 (i)~$\mathbb{Z}_{16}$ anomaly cancellation forces a hidden dark sector of
 charge $+3 \bmod 16$, with Wang's topological order (T-0) and three
 sterile Weyl fermions (S-0) as the minimal anomaly-canceling solutions;
-(ii)~ADW tetrad-condensation equilibrium reproduces the cosmological
-constant scale $\rho_{\rm vac}^{1/4} \sim T_{\rm dS} \sim
-\SI{}{\milli\electronvolt}$ at the order-of-magnitude level (the
-$\mathcal{O}(1)$ prefactor is deferred to Phase~6); (iii)~the
-Klinkhamer--Volovik oscillating vacuum is in $2.9$--$4.4\sigma$ tension
-with DESI~DR2 $(w_0, w_a)$, so the DE-dynamics claim is withdrawn while
-the $\Lambda$-magnitude claim is retained; (iv)~big-bang-nucleosynthesis
+(ii)~an illustrative regulated scalar ansatz is distinguished from its
+uncomputed microscopic ADW derivation; a separate vacuum-equilibrium
+construction motivates cancellation, while a nonzero present vacuum
+density requires an explicit
+physical model and supported inputs; no independent meV-scale prediction
+or accuracy estimate is established here; (iii)~a
+Klinkhamer--Volovik comparison with DESI requires a specified
+cosmological model and likelihood; the quoted DESI statistics do not
+establish a KV-model exclusion; (iv)~big-bang-nucleosynthesis
 (BBN) classification of Phase~5x DM candidates establishes
 $\mu \gtrsim \SI{}{\mega\electronvolt}$ at $T \approx \SI{1}{\mega\electronvolt}$
 as the necessary sufficiency condition for the fracton p-wave dipole
@@ -207,45 +209,102 @@ incompatibility theorem.
 \subsection{ADW Cosmological-constant magnitude}
 \label{subsec:adw-cc}
 
-The Abrikosov--Diakonov--Wetterich (ADW)~\cite{ADW2019,Diakonov2011,Vergeles2025} tetrad-condensation gap
-equation, formalized in \texttt{ADWMechanism.lean} and
-\texttt{CosmologicalConstant.lean}, exhibits a Volovik-style~\cite{Volovik2006,KV2008} equilibrium
-in which the tetrad determinant self-tunes to $\Lambda_{\rm eff} = 0$ in
-perfect Minkowski vacuum. Thermal perturbation by the matter sector
-generates a residual $\rho_{\rm vac} \sim T^4$ at the de Sitter
-temperature $T_{\rm dS} = H/\pi$ (which differs from the Gibbons--Hawking
-temperature by a factor of two). Quantitatively
+The Akama--Diakonov--Wetterich (ADW) composite-tetrad
+program~\cite{Diakonov2011} motivates scalar mean-field exploration
+and separate vacuum-equilibrium questions. The plotted scalar potential is
+an illustrative ansatz,
 \begin{equation}
-\rho_{\rm vac}^{1/4} \approx \mathcal{O}(1) \times T_{\rm dS}
-\sim \SI{}{\milli\electronvolt},
+ V_{\rm exact}(C)=\frac{C^2}{2G}-\frac{N_f}{16\pi^2}
+ \left[\Lambda^2C^2-C^4\ln\!\left(1+\frac{\Lambda^2}{C^2}\right)\right],
+ \label{eq:d5-adw-regulated}
 \end{equation}
-versus the observed $(\SI{2.3}{\milli\electronvolt})^4$. The mechanism
-reproduces the \emph{scale} of $\rho_{\rm vac}^{1/4}$ at the meV level
-without tuning; the specific $\mathcal{O}(1)$ coefficient requires a
-full $V_{\rm eff}$ parameterization and is deferred to Phase~6;
-see the CAUTION block in \texttt{CosmologicalConstant.lean}~L21--23. A
-prior ``$\approx 2.8$~meV'' / ``$20\%$ agreement'' claim is withdrawn
-in this revision (paper~17 Wave~10 remediation; D5 lift~2026-05-01).
+with positive supplied parameters and continuous $V_{\rm exact}(0)=0$.
+Its microscopic ADW Hubbard--Stratonovich/one-loop derivation is
+uncomputed. With $r=G/G_c$, $G_c=8\pi^2/(N_f\Lambda^2)$ and
+$z=C^2/\Lambda^2$, the exact nonzero stationary point obeys
+$1/r-1+2z\ln(1+1/z)-z/(1+z)=0$. Location and depth depend on the
+parameters. The exact origin is the minimum for $r\leq1$, strictly
+degenerate at equality; the positive minimum for $r>1$ is a scalar-model
+result, not a derived gravitational vacuum. A separate NJL fixed-point
+model shares the threshold but not the nonzero roots.
 
-The companion KV oscillating-vacuum mechanism predicts an oscillating
-$w(z)$. DESI~DR2 excludes $(w_0, w_a) = (-1, 0)$ at $2.9\sigma$
-(Pantheon+) and $4.4\sigma$ (DESY5); KV oscillations occur at
-Planck-scale period (${\sim}\SI{e-44}{\second}$), so $w_{\rm eff}$
-during any accessible epoch is $0$ (CDM-like), not phantom-crossing.
-For provenance: the quoted significances are single-parameter $w_0$
-distances of the KV effective-CDM prediction $(w_0, w_a) = (-1, 0)$
-from the DESI~DR2 $w_0 w_a$CDM posteriors~\cite{DESI2025}, whose BAO
-constraints extend the DR1 analysis~\cite{DESI2024},
+The numerical routine returns zero for $|C|<10^{-15}$ and evaluates the
+expression elsewhere in floating-point arithmetic. Exact strict-minimum,
+curvature and scaling claims concern the continuous ansatz. The real
+piecewise idealization of the guard is locally constant; it is not an
+assertion about unrestricted IEEE minima or derivatives. The numerical
+search window $10^{-6}\Lambda<C<\Lambda$ does not certify unrestricted
+stationarity/global optimality.
+
+A different determinant-based equilibrium construction motivates
+vacuum-energy cancellation.
+In the determinant-based model of Ref.~\cite{Volovik2021CombinedLorentz},
+stationarity yields zero vacuum energy in ideal Minkowski equilibrium
+when the matter sector and gravitational coupling are taken independent
+of the tetrad determinant. This source-level equilibrium argument does
+not supply a nonzero present vacuum density. Its imaginary-determinant
+$4+0$ thermodynamic temperature is distinct from a local de~Sitter
+temperature and from the CMB thermal energy.
+
+For the local de~Sitter temperature, Ref.~\cite{Volovik2024DeSitterThermodynamics},
+Eq.~(22), gives (in units $\hbar=c=k_B=1$)
+\begin{equation}
+ T_{\rm dS}=\frac{H}{\pi},\qquad
+ \rho_{\rm vac}=\frac{3H^2}{8\pi G}
+              =\frac{3\pi}{8G}T_{\rm dS}^2.
+\end{equation}
+Thus $\rho_{\rm vac}^{1/4}\propto G^{-1/4}T_{\rm dS}^{1/2}$,
+not $T_{\rm dS}$. The $T^4$ expression on p.~16 of the held author
+version concerns relativistic matter. The alternative stiff-matter
+relaxation scenario in Eqs.~(70)--(73) uses a phenomenological cosmic-age
+relation; it is not an independent derivation of a fixed $2.8$~meV input.
+A CMB thermal energy cannot be substituted for either temperature or for
+$\rho_{\rm vac}^{1/4}$ without a physical model and a unit-consistent
+relation. The nonzero ADW magnitude remains uncomputed in this assessment.
+
+The generic temperature identities, positivity and supplied-scale ratio
+in \texttt{CosmologicalConstant.lean}, and the potential results in
+\texttt{ADWMechanism.lean}, do not establish that magnitude. A prior
+``$\approx 2.8$~meV'' / ``$20\%$ agreement'' claim is withdrawn
+in this revision (paper~17 Wave~10 remediation; D5 lift~2026-05-01).
+That historical manuscript correction does not validate the remaining
+physical inputs. The reporting module leaves its independent prediction
+and accuracy uncomputed by default; an optional supplied-input ratio
+reports arithmetic rather than a derived cosmological prediction.
+
+The 2008 KV oscillating-vacuum mechanism~\cite{KV2008b} couples a four-form
+field to a variable gravitational coupling. At $\mu=\mu_0$, its
+large-time averaged density scales as $a^{-3}$ and its combined
+field--gravity response mimics CDM. This effective behavior differs from
+the $F$-field's own vacuum equation of state $w=-1$. The clustering
+properties remain open, and the authors identify acceleration and
+nucleosynthesis-expansion problems for this equilibrium extrapolation.
+They also exhibit a late de~Sitter stage for a small negative departure
+from $\mu_0$; these results do not fix a universal dark-energy CPL pair.
+
+The later stepwise-relaxation scenario~\cite{KV2011Plateaux} instead
+proposes locally approximately vacuum-like plateaux, $w\approx-1$,
+with a possibly long-lived present plateau if the relevant vacuum
+contributions have not equilibrated. Treating a plateau as constant
+over an observational interval is a conditional $\Lambda$-like
+idealization. This is distinct from the 2008 asymptotic effective-CDM
+branch and supplies no universal fitted CPL pair or KV likelihood.
+
+Separately, the DESI~DR2 $w_0 w_a$CDM analysis~\cite{DESI2025}
+extends the DR1 BAO analysis~\cite{DESI2024}. Its marginalized posteriors are
 $w_0 = -0.838 \pm 0.055$, $w_a = -0.62^{+0.22}_{-0.19}$
 (DESI+CMB+Pantheon$+$, Eq.~(26) of arXiv:2503.14738) and
 $w_0 = -0.752 \pm 0.057$, $w_a = -0.86^{+0.23}_{-0.20}$
-(DESI+CMB+DESY5, Eq.~(28)), i.e.\
+(DESI+CMB+DESY5, Eq.~(28)).
+The one-dimensional distances from $w_0=-1$ are
 $|{-1} - \bar{w}_0| / \sigma_{w_0} \simeq 2.9$ and $4.4$ respectively;
 DESI's own two-parameter $\Delta\chi^2_{\rm MAP}$ preference for
 $w_0 w_a$CDM over $\Lambda$CDM in the same data combinations is
 $2.8\sigma$ and $4.2\sigma$.
-The bundle therefore retains the $\Lambda$-magnitude claim and
-withdraws the DE-dynamics claim.
+These one-dimensional $w_0$ distances and the two-parameter model
+comparison have different statistical meanings. Neither is a
+KV-model exclusion significance; a KV comparison requires its own
+cosmological prediction and likelihood.
 
 \subsection{Honesty boundary: Derived vs MCC vs Heuristic}
 \label{subsec:honesty}
@@ -275,7 +334,9 @@ The MCC label flags content where Lean machine-verifies the
 \emph{consistency} of the classification asserted in prose, but does
 not independently re-derive the underlying physics bound. Each MCC
 content item is sourced individually to its deep-research memo. Upgrading
-MCC entries to Derived is a Phase~6 target.
+MCC entries to Derived is a Phase~6 target. The nonzero ADW vacuum
+magnitude is uncomputed: generic temperature and ratio theorems cannot
+supply a physical scale, an independent prediction or an accuracy band.
 
 \begin{figure}[t]
 \centering
@@ -326,15 +387,16 @@ and CDM (null). Five canonical mergers plotted as diamonds. Lean:
 \centering
 \includegraphics[width=\columnwidth]{figures/fig28_adw_effective_potential.png}
 \caption{\label{fig:adw-veff}
-ADW effective potential $V_{\rm eff}(C/\Lambda)/\Lambda^4$ from the
-Coleman--Weinberg gap equation, plotted for three coupling ratios:
-$G/G_c = 0.5$ (pre-geometric, dashed), $G/G_c = 1.0$ (critical, dotted),
-and $G/G_c = 2.0$ (full tetrad, solid). The full-tetrad branch develops
-a non-trivial minimum at $C/\Lambda \simeq 0.45$, signalling spontaneous
-emergence of the tetrad VEV. Critical-coupling positivity is established
-in Lean by \texttt{ADWMechanism.critical\_coupling\_pos}. In perfect
-Minkowski vacuum the Volovik tetrad-determinant self-tuning absorbs the
-condensate energy to $\Lambda_{\rm eff} = 0$. Lifted from paper17.}
+Illustrative regulated scalar ansatz, Eq.~\eqref{eq:d5-adw-regulated},
+with $\Lambda=1$, $N_f=4$, and $r=G/G_c=0.5,1,2$ (dashed, dotted,
+solid). The axes are $C/\Lambda$ and $V_{\rm num}(C)/\Lambda^4$;
+outside the origin guard the latter is $A F_r(z)$,
+$A=N_f/(16\pi^2)$, $z=C^2/\Lambda^2$,
+$F_r(z)=z(1/r-1)+z^2\ln(1+1/z)$. The exact critical origin is a
+degenerate minimum, and the supercritical minimum is parameter-dependent.
+Conditional positivity of $G_c$ does not derive this potential or a
+microscopic tetrad vacuum. The separate equilibrium cancellation argument
+does not make this plot a nonzero present-density prediction.}
 \end{figure}
 
 %% ─── End lift from paper17_dark_sector ───
@@ -484,6 +546,8 @@ SN1987A axion bound below the Planck-DM cosmological window).
 The substrate program's ADW-tetrad-condensation $\rho_{\rm vac}$
 contribution (§\ref{subsec:adw-cc}) and the Zhitnitsky topological
 contribution are both candidates for the observed $\rho_{\rm DE}$. The
+ADW amplitude is uncomputed here; the following conditional theorem does
+not determine it or establish simultaneous physical activation. The
 Lean theorem \texttt{H\_BothActiveGivesInconsistency} (tracked Prop)
 encodes the mutual-exclusivity falsifier: if both mechanisms are
 simultaneously active and additive without cancellation, the combined
@@ -662,23 +726,24 @@ ADW Volovik self-tuning}
 The Sakharov--Adler induced Newton-constant calibration
 ($G_N^{\rm emerg}$ from heat-kernel $a_2$) gives $G_N$ at the right
 scale to within a $\mathcal{O}(1)$ prefactor (D3~§17 + Decision Gate~E.2).
-But the cosmological-constant scale
-$\Lambda_{\rm obs} \sim \rho_{\rm vac}^{1/4} \sim \SI{}{\milli\electronvolt}$
-\emph{requires} either the §\ref{subsec:adw-cc} Volovik
-tetrad-determinant self-tuning, the §\ref{sec:paper32} Zhitnitsky
-topological-DE mechanism, or an analogous substrate-level cancellation;
-the heat-kernel expansion alone does not deliver it. This is the D5
-``CC-channel constraint'' verdict: the $a_0$ coefficient is the
-\emph{wrong} candidate for the observed CC; the substrate program's
-positive predictions sit elsewhere (vestigial-tetrad self-tuning at
-meV; topological-vacuum suppression at 120 orders below $M_P^4$).
+The observed vacuum-density scale is a separate physical problem:
+the heat-kernel expansion alone does not deliver it. The candidates in
+§\ref{subsec:adw-cc} and §\ref{sec:paper32}, or another substrate-level
+cancellation, require their own physical assessment. In particular,
+the ADW equilibrium argument does not establish a nonzero meV-scale
+prediction. This is the D5 ``CC-channel constraint'' verdict: the
+natural-parameter $a_0$ contribution fails to reproduce the observed CC;
+that failure does not validate a different mechanism or its amplitude.
 
 Together with Wave~1's Decision Gate~E.2 (heat-kernel
 $\leftrightarrow$ linearized-EFE Newton-constant calibration), Decision
 Gate~E.4 closes the structural assessment of the heat-kernel approach to
 the dark-sector CC channel: the program reproduces the classical CC
-problem on this channel, leaving the §\ref{subsec:adw-cc} +
-§\ref{sec:paper32} mechanisms as the load-bearing CC predictions.
+problem on this channel. This structural closure does not establish
+an ADW nonzero vacuum magnitude or a microscopic derivation of the
+illustrative scalar landscape; the candidate mechanisms in
+§\ref{subsec:adw-cc} and §\ref{sec:paper32} retain separate physical
+validation obligations.
 
 \begin{figure}[t]
 \centering
@@ -1305,34 +1370,39 @@ remains at the $1\sigma$-box edge. The closure programme thus has a
 2-3-year quantitative outlook even for the conditional CLEARED-R5
 candidates.
 
-\paragraph{Polariton substrate placement: bimodal-branch resolution
-(Phase~6v.3, 2026-05-26).}
+\paragraph{Operator-growth bounds and platform scope.}
 %% Provenance: Wave 6v.3 cross-reference into D5's substrate-constraints
 %% framing. Numerical anchor: src/dkm_polariton/polariton_occupation_bound.py.
 %% Lean: SKEFTHawking.DKMBootstrap.polariton_dkm_f3_holds_at_pump_below_threshold
 %% + polariton_inherits_graphene_uniqueness_result
 %% (lean/SKEFTHawking/DKMBootstrap/PolaritonF3Bound.lean).
-A complementary substrate-level finding that lives outside the
-dark-energy closure but completes the D5 \emph{substrate constraints
-by platform} picture: the Phase~6q DKM transport bootstrap's
-explicit open question on polariton-platform placement, left
-unresolved at Phase~6q close (\texttt{project\_phase6q\_complete\_2026\_05\_23}
-memory), has been resolved by Phase~6v Wave~6v.3. The UPenn
-nanocavity-polariton 4~fJ switching threshold pins the per-pulse
-per-mode photon count at $n_{\rm per\ pulse} \approx 1.44 \times 10^4$,
-some $70\times$ below the $n_{\rm threshold} \approx 10^6$ regime
-that breaks the F3 operator-growth axiom on continuum-bosonic
-substrates (Yin--Lucas, Kuwahara--Saito Lieb--Robinson-for-bosons).
-The polariton platform therefore takes the \emph{same} positive-
-uniqueness branch of the \texttt{PlatformBimodalOutcome} as graphene
-(formal statement \texttt{polariton\_inherits\_graphene\_uniqueness\_result}
-in \texttt{lean/SKEFTHawking/DKMBootstrap/PolaritonF3Bound.lean};
-kernel-only; no new project-local axioms). The D5 \emph{constraint
-landscape by platform} now reads: graphene + polariton on the
-positive-uniqueness branch; BEC Bogoliubov continuum-bosonic
-substrates on the sharpened-NO-GO branch (Phase~6q
-Wave~2b.4). This closes the explicit Phase~6q open question for
-the D5 substrate-constraints reading.
+A factorial-times-exponential operator-growth bound excludes
+super-factorial growth. The declaration
+\texttt{polariton\_dkm\_f3\_holds\_at\_pump\_below\_threshold}
+states this implication for an abstract commutator-norm sequence
+with $n_{\max}>0$ and the explicit hypothesis
+\texttt{IsBoundedByPolaritonPumpScale}. That hypothesis assumes
+the factorial-growth bound; it is not derived from a measured
+pump energy, photon number or pump-below-threshold condition.
+
+The normalized polariton, graphene and BEC parameter records all
+set $\tau=D=\chi=a=\varepsilon=1$. Their MIR witness reduces to
+$\tfrac12\le1$. The declaration
+\texttt{polariton\_inherits\_graphene\_uniqueness\_result}
+uses this witness without using its pump hypotheses.
+\texttt{PlatformBimodalOutcome} is an inclusive disjunction of that
+MIR bound and super-factorial growth; it does not establish an
+exclusive classification of physical platforms.
+
+The complementary concrete example in
+\texttt{BECBogoliubovBosonicGrowth} is the prescribed sequence
+$(2\kappa)!$. Its super-factorial-growth result concerns that
+sequence; a derivation from a BEC Hamiltonian remains a separate
+obligation. A physical platform assignment requires calibrated
+transport parameters and a justified relation between its
+Hamiltonian, occupation and operator-growth bound. A conversion
+from pulse energy to photon number does not supply that relation
+or establish a universal occupation threshold.
 
 The bundle ships at $\bundleTheorems$ Lean theorems / $\bundleModules$
 modules / zero active sorry / zero project-local axioms
@@ -1377,10 +1447,29 @@ F.~R.~Klinkhamer and G.~E.~Volovik, ``Self-tuning vacuum variable and
 cosmological constant,''
 Phys.\ Rev.\ D \textbf{77}, 085015 (2008), arXiv:0711.3170.
 
-\bibitem{ADW2019}
-A.~A.~Abrikosov~Jr.\ and F.~R.~Klinkhamer,
-``Tetrad condensation and emergent gravity,''
-Phys.\ Rev.\ D \textbf{99}, 105009 (2019).
+\bibitem{KV2008b}
+F.~R.~Klinkhamer and G.~E.~Volovik, ``Dynamic vacuum variable and
+equilibrium approach in cosmology,''
+Phys.\ Rev.\ D \textbf{78}, 063528 (2008), arXiv:0806.2805v7.
+
+\bibitem{Volovik2021CombinedLorentz}
+G.~E.~Volovik, ``Combined Lorentz Symmetry: Lessons from Superfluid
+${}^3$He,'' J.\ Low Temp.\ Phys.\ \textbf{206}, 1--15 (2022;
+online 2021), doi:10.1007/s10909-021-02630-7.
+The source assessed here is the 8-page author preprint
+arXiv:2011.06466v9 (May 2021), titled ``Combined Lorentz symmetry,''
+§§XI--XII; later author and publisher bodies were not assessed.
+
+\bibitem{Volovik2024DeSitterThermodynamics}
+G.~E.~Volovik, ``Thermodynamics and Decay of de Sitter Vacuum,''
+Symmetry \textbf{16}(6), 763 (2024), doi:10.3390/sym16060763.
+The source assessed here is arXiv:2312.02292v16,
+Eq.~(22), p.~16 and Eqs.~(70)--(73).
+
+\bibitem{KV2011Plateaux}
+F.~R.~Klinkhamer and G.~E.~Volovik, ``Dynamics of the quantum vacuum:
+Cosmology as relaxation to the equilibrium state,''
+J.\ Phys.\ Conf.\ Ser.\ \textbf{314}, 012004 (2011), arXiv:1102.3152v4.
 
 \bibitem{Diakonov2011}
 D.~Diakonov,

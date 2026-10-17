@@ -72,9 +72,9 @@
       "declared": "2026-08-07"
     },
     {
-      "name": "SKEFTHawking.DKMBootstrap.polariton_inherits_graphene_uniqueness_result",
-      "claims": "§13 — the platform cross-inheritance result named in the discussion — polariton_inherits_graphene_uniqueness_result",
-      "declared": "2026-08-07"
+      "name": "SKEFTHawking.DKMBootstrap.polariton_dkm_f3_holds_at_pump_below_threshold",
+      "claims": "Discussion: for an abstract commutator-norm sequence and n_max > 0, ASSUMING IsBoundedByPolaritonPumpScale commutatorNorm n_max implies NOT IsSuperFactorialUnbounded commutatorNorm. This explicitly assumes the factorial-times-exponential bound; no implication from pump < threshold, device energy or photon number to that bound is proved. It is not physical platform discrimination or a BEC-Hamiltonian no-go theorem.",
+      "declared": "2026-10-16"
     },
     {
       "name": "SKEFTHawking.DarkEnergyObstructionPrinciple.viability_iff_all_four",
@@ -352,6 +352,14 @@
       "declared": "2026-08-07"
     }
   ],
+  "apex_theorems_withdrawn_2026_10_16": [
+    {
+      "name": "SKEFTHawking.DKMBootstrap.polariton_inherits_graphene_uniqueness_result",
+      "claims": "§13 — the platform cross-inheritance result named in the discussion — polariton_inherits_graphene_uniqueness_result",
+      "declared": "2026-08-07",
+      "reason": "Withdrawn as a physical platform-discrimination apex. The proof selects the MIR witness on an all-ones normalized record and does not use its pump hypotheses; the BEC record has identical numerical fields. Original claims/declared fields are retained as history. The retained active result is only the explicitly assumed factorial-growth implication, not a physical platform assignment."
+    }
+  ],
   "tier": 1,
   "title": "Dark sector under substrate constraints",
   "target_journal": "PRD",
@@ -359,7 +367,7 @@
   "stage9_status": "pending",
   "stage10_status": "pending",
   "stage13_status": "pending",
-  "stage13_redo_required": false,
+  "stage13_redo_required": true,
   "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:25:34Z",
   "last_lift": "2026-05-12T13:00:00Z",

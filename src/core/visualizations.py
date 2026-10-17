@@ -2513,11 +2513,14 @@ def fig_exact_vs_perturbative() -> go.Figure:
 # ════════════════════════════════════════════════════════════════════
 
 def fig_adw_effective_potential() -> go.Figure:
-    """V_eff(C) for three coupling ratios: G/G_c = 0.5, 1.0, 2.0.
+    """Illustrative regulated scalar potential at r=G/G_c in {0.5,1,2}.
 
-    Shows the Coleman-Weinberg effective potential transitioning from
-    a single minimum at C=0 (pre-geometric) to a Mexican hat with
-    nontrivial minimum (full tetrad) as coupling increases.
+    Uses Lambda=1,N_f=4 and 200 C samples over [0,Lambda]. The ordinate
+    is V_num/Lambda⁴ = A F_r((C/Lambda)²) outside the absolute origin guard,
+    A=N_f/(16pi²), not F_r alone. The exact critical origin is a degenerate
+    minimum; the supercritical scalar minimum is parameter-dependent.
+    A microscopic HS/one-loop ADW derivation is UNCOMPUTED; no figure pixels,
+    exported-asset freshness or gravitational dynamics are established here.
     """
     from src.adw.gap_equation import (
         effective_potential, critical_coupling, effective_potential_landscape,
@@ -2528,9 +2531,9 @@ def fig_adw_effective_potential() -> go.Figure:
     G_c = critical_coupling(Lambda, N_f)
 
     ratios = [0.5, 1.0, 2.0]
-    labels = ["G/G<sub>c</sub> = 0.5 (pre-geometric)",
-              "G/G<sub>c</sub> = 1.0 (critical)",
-              "G/G<sub>c</sub> = 2.0 (full tetrad)"]
+    labels = ["G/G<sub>c</sub> = 0.5 (scalar origin minimum)",
+              "G/G<sub>c</sub> = 1.0 (degenerate scalar minimum)",
+              "G/G<sub>c</sub> = 2.0 (nonzero scalar minimum)"]
     colors_list = [COLORS["dispersive"], COLORS["horizon"], COLORS["dissipative"]]
     dashes = ["dash", "dot", "solid"]
 
@@ -2540,7 +2543,7 @@ def fig_adw_effective_potential() -> go.Figure:
         landscape = effective_potential_landscape(
             G=ratio * G_c, Lambda=Lambda, N_f=N_f, n_points=200,
         )
-        # Normalize by Lambda^4 for clean axis
+        # V/Lambda^4 retains A=N_f/(16pi²); it is A*F_r, not F_r alone.
         C_norm = landscape['C'] / Lambda
         V_norm = landscape['V_eff'] / Lambda**4
 
@@ -2557,7 +2560,7 @@ def fig_adw_effective_potential() -> go.Figure:
 
     apply_layout(fig,
         height=450, width=700,
-        title=dict(text="<b>ADW Effective Potential: Phase Transition</b>",
+        title=dict(text="<b>Regulated Scalar Mean-Field Ansatz</b>",
                    font=TITLE_FONT),
         legend=dict(x=0.35, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
     )
@@ -5367,10 +5370,14 @@ def fig_e8_cartan_heatmap() -> go.Figure:
 
 
 def fig_tetrad_gap_curve() -> go.Figure:
-    """Order parameter Δ*(G) vs coupling G: the gap equation phase transition.
+    """Bounded NJL numerical search output, not an exact saturating gap branch.
 
-    Shows the bifurcation at G = G_c: Δ = 0 for G < G_c, then Δ*(G) rises
-    continuously for G > G_c (second-order transition).
+    Uses Lambda=pi,N_f=2,400 ratios from 0 to 4. tetrad_gap_solution
+    bisects only up to Lambda without expanding/verifying an upper bracket
+    and may return a boundary value with a nonzero residual. Its apparent cap
+    is a computational limitation, not the exact NJL asymptote or merely a UV
+    caveat. A separate numerical root/bracket repair is owed. This producer
+    does not establish a microscopic ADW correspondence or figure freshness.
     """
     from src.core.formulas import tetrad_critical_coupling_integral, tetrad_gap_solution
 
@@ -5387,7 +5394,7 @@ def fig_tetrad_gap_curve() -> go.Figure:
     fig.add_trace(go.Scatter(
         x=G_ratios, y=Delta_values / Lambda,
         mode='lines', line=dict(color=COLORS['dispersive'], width=3),
-        name='Δ*(G) / Λ',
+        name='bounded NJL output / Λ',
     ))
 
     # Critical coupling marker
@@ -5396,29 +5403,31 @@ def fig_tetrad_gap_curve() -> go.Figure:
         showarrow=False, font=dict(size=13, family=FONT['family'], color=COLORS['dissipative']))
 
     # Phase labels
-    fig.add_annotation(x=0.4, y=0.1, text="<b>Pre-geometric</b><br>Δ = 0",
+    fig.add_annotation(x=0.4, y=0.1, text="<b>Trivial scalar output</b><br>Δ = 0",
         showarrow=False, font=dict(size=12, family=FONT['family']))
-    fig.add_annotation(x=2.5, y=0.6, text="<b>Tetrad condensed</b><br>Δ > 0",
+    fig.add_annotation(x=2.5, y=0.6, text="<b>Nonzero scalar output</b><br>Δ > 0",
         showarrow=False, font=dict(size=12, family=FONT['family']))
 
     apply_layout(fig, height=450, width=650,
-        title=dict(text="<b>Tetrad Gap Equation: Order Parameter vs Coupling</b>",
+        title=dict(text="<b>Bounded NJL Search Output</b>",
                    font=TITLE_FONT),
         xaxis=dict(title="G / G<sub>c</sub>", range=[0, 4]),
-        yaxis=dict(title="Δ* / Λ", range=[0, 1.1]),
+        yaxis=dict(title="bounded Δ / Λ", range=[0, 1.1]),
         legend=dict(x=0.02, y=0.98))
 
     fig.add_annotation(x=0.5, y=-0.13, xref='paper', yref='paper',
-        text="G<sub>c</sub> = 8π²/(N<sub>f</sub>Λ²) — first explicit tetrad gap equation (NJL-ADW correspondence)",
+        text="Separate scalar fixed-point model; bounded search is not a verified full-range root.",
         showarrow=False, font=dict(size=10, family=FONT['family'], color='gray'))
     return fig
 
 
 def fig_tetrad_gap_integral() -> go.Figure:
-    """Gap integral I(Δ) vs Δ: decreasing from I(0) = Λ²/(8π²) to 0.
+    """Separate NJL integral I(Delta) on a supplied UV cutoff, not I/I(0).
 
-    Shows the monotonically decreasing gap integral that controls the
-    phase transition structure.
+    Uses Lambda=pi and 300 samples from 0 to 3Lambda. The ordinate is
+    the raw integral I(Delta); normalization divides only the abscissa by
+    Lambda. This mathematical scalar integral does not establish physical
+    ADW derivation, a regulated-potential stationary root or asset freshness.
     """
     from src.core.formulas import tetrad_gap_integral as gap_integral
 
@@ -5441,7 +5450,7 @@ def fig_tetrad_gap_integral() -> go.Figure:
         showarrow=False, font=dict(size=11, family=FONT['family']))
 
     apply_layout(fig, height=400, width=600,
-        title=dict(text="<b>Gap Integral I(Δ): Monotonically Decreasing</b>",
+        title=dict(text="<b>Separate NJL Integral I(Δ)</b>",
                    font=TITLE_FONT),
         xaxis=dict(title="Δ / Λ"),
         yaxis=dict(title="I(Δ)"))

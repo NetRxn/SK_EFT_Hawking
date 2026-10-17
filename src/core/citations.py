@@ -1425,6 +1425,91 @@ CITATION_REGISTRY = {
                  'papers/paper17_dark_sector/paper_draft.tex:259 cites this key for the '
                  '"KV oscillating-vacuum mechanism" — filed as a wrong-target citation.',
     },
+    'KV2008b': {
+        'authors': 'Klinkhamer, F. R., Volovik, G. E.',
+        'title': 'Dynamic vacuum variable and equilibrium approach in cosmology',
+        'journal': 'Phys. Rev. D',
+        'volume': 78,
+        'page': '063528',
+        'year': 2008,
+        'doi': '10.1103/PhysRevD.78.063528',
+        'arxiv': '0806.2805',
+        'doi_verified': '2026-10-16',
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-5x/primary-sources/KV2008b.pdf',
+        'used_in': [
+            'papers/paper17_dark_sector/paper_draft.tex',
+            'papers/D5/paper_draft.tex',
+        ],
+        'provides': [],
+        'notes': ('Author preprint arXiv:0806.2805v7, 18 September 2008; '
+                  'title-page journal reference PRD 78, 063528. '
+                  'At mu=mu0 the studied asymptotic averaged density scales as a^-3; '
+                  'effective CDM-like behavior arises from F plus variable G, while '
+                  'the F-field itself has w=-1. Clustering remains open; acceleration '
+                  'and BBN limitations and a displaced-mu de Sitter branch are discussed. '
+                  'This is not a universal CPL dark-energy prediction or a DESI likelihood. '
+                  'DOI metadata verified against the official Crossref API on 2026-10-16: '
+                  'title, authors, journal, volume, article number and publication year.'),
+    },
+    'Volovik2021CombinedLorentz': {
+        'authors': 'Volovik, G. E.',
+        'title': 'Combined Lorentz Symmetry: Lessons from Superfluid 3He',
+        'journal': 'J. Low Temp. Phys.',
+        'volume': 206,
+        'page': '1-15',
+        'year': 2022,
+        'doi': '10.1007/s10909-021-02630-7',
+        'arxiv': '2011.06466',
+        'doi_verified': '2026-10-17',
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-5x/primary-sources/Volovik2021CombinedLorentz.pdf',
+        'used_in': ['papers/paper17_dark_sector/paper_draft.tex', 'papers/D5/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Journal identity verified from the official Crossref API on 2026-10-17: online 29 October 2021, print January 2022, volume 206 issues 1-2 pages 1-15. The key retains the preprint year; the record uses journal print year and expanded published title. Actual source read is the 8-page author preprint arXiv:2011.06466v9, May 2021, titled Combined Lorentz symmetry; sections XI-XII distinguish ideal Minkowski equilibrium (matter and G independent of determinant) from imaginary-determinant 4+0 thermodynamic temperature. Neither this record nor generic ratio algebra establishes an independent nonzero meV magnitude. Later v11 and the 15-page publisher body were not read. Held v9 PDF SHA256 aa28e69a491d09473b7f65287e0616f83e0ffc8620f07bded3f2135cb6f09d40; prospective canonical path requires separate source admission; DOI identity verification is not physical-input verification.',
+    },
+    'Volovik2024DeSitterThermodynamics': {
+        'authors': 'Volovik, G. E.',
+        'title': 'Thermodynamics and Decay of de Sitter Vacuum',
+        'journal': 'Symmetry',
+        'volume': 16,
+        'page': '763',
+        'year': 2024,
+        'doi': '10.3390/sym16060763',
+        'arxiv': '2312.02292',
+        'doi_verified': '2026-10-17',
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-5x/primary-sources/Volovik2024DeSitterThermodynamics.pdf',
+        'used_in': ['papers/paper17_dark_sector/paper_draft.tex', 'papers/D5/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Journal identity verified from the official Crossref API on 2026-10-17: Symmetry 16 issue 6 article 763, 18 June 2024. Actual physical reading is the 33-page author version arXiv:2312.02292v16, not an assertion that the publisher body or earlier author versions were read. Eq. (22) gives rho_vac = 3H^2/(8 pi G) = 3 pi T_dS^2/(8G) in natural units: density fourth root is not T_dS. Page 16 T^4 concerns relativistic matter. Eqs. (70)-(73) offer a phenomenological cosmic-age/stiff-matter alternative, not a derived fixed 2.8 meV input or module accuracy band. CMB thermal energy is distinct. Held v16 PDF SHA256 ccb521827e74df7d0d87a84af2bb7525a4b07ba5d87961efa2158b08193fae67; prospective canonical path requires separate source admission; no numerical provenance parameter is supplied by this entry.',
+    },
+    'KV2011Plateaux': {
+        'authors': 'Klinkhamer, F. R., Volovik, G. E.',
+        'title': 'Dynamics of the quantum vacuum: Cosmology as relaxation to the equilibrium state',
+        'journal': 'J. Phys. Conf. Ser.',
+        'volume': 314,
+        'page': '012004',
+        'year': 2011,
+        'doi': '10.1088/1742-6596/314/1/012004',
+        'arxiv': '1102.3152',
+        'doi_verified': '2026-10-16',
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-5x/primary-sources/KV2011Plateaux.pdf',
+        'used_in': [
+            'papers/paper17_dark_sector/paper_draft.tex',
+            'papers/D5/paper_draft.tex',
+        ],
+        'provides': [],
+        'notes': ('Author preprint arXiv:1102.3152v4, 1 October 2011. '
+                  'Sections 5-6 and Figure 1 propose stepwise vacuum relaxation: '
+                  'locally approximately w=-1 plateaux and a hypothetical long-lived '
+                  'present plateau from unequilibrated vacuum contributions. '
+                  'A constant plateau over an observational interval is a conditional '
+                  'Lambda-like idealization, not a universal fitted CPL pair or a KV '
+                  'likelihood. DOI metadata verified against the official Crossref API '
+                  'on 2026-10-16: title, authors, journal, volume, page and publication year.'),
+    },
     'Lean4': {
         'authors': 'de Moura, L., Ullrich, S.',
         'title': 'The Lean 4 theorem prover and programming language',
