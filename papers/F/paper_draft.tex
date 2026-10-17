@@ -2,6 +2,26 @@
 
 \usepackage{graphicx}
 \usepackage{hyperref}
+% Code identifiers may wrap without inserting or removing visible characters.
+% Keep each original argument intact for source-reference extraction.
+\usepackage{seqsplit}
+\let\layoutoriginaltexttt\texttt
+\makeatletter
+\protected\def\texttt#1{%
+  \begingroup
+  \ifmmode
+    \layoutoriginaltexttt{#1}%
+  \else
+    \in@{ }{#1}%
+    \ifin@
+      \layoutoriginaltexttt{#1}%
+    \else
+      \let\seqinsert\allowbreak
+      \layoutoriginaltexttt{\seqsplit{#1}}%
+    \fi
+  \fi
+  \endgroup}
+\makeatother
 \usepackage{amsmath, amssymb}
 \usepackage{booktabs}
 \usepackage{siunitx}
@@ -714,8 +734,10 @@ $\kappa$. The substrate-canonical prediction (computed via
 \texttt{stimulated\_hawking\_gain} in \texttt{src/core/formulas.py},
 the canonical formula registry) is
 \begin{equation}
-  G(\omega/\kappa = \ln 3 / (2\pi)) > 0.5,
-  \qquad N_{\mathrm{probe}} = 100\ \text{photons per mode}
+  \begin{gathered}
+  G(\omega/\kappa = \ln 3 / (2\pi)) > 0.5,\\
+  N_{\mathrm{probe}} = 100\ \text{photons per mode}
+  \end{gathered}
 \end{equation}
 for a $5\sigma$ detection at $\omega/\kappa \approx 0.175$. The
 $N_{\mathrm{probe}} = 100$ count is in reach of the Paris--LKB platform
@@ -1065,12 +1087,12 @@ ship the constraint at zero \texttt{sorry}. Bundle~L1 PRL splash
 extracts this as a stand-alone four-page submission.
 
 The three closures, taken together, force the substrate to the ADW
-tetrad-condensation channel: the alternative emergent-gravity
-mechanisms are ruled out either structurally (gauge erasure;
-fracton diff-invariance no-go), at quantitative magnitude (Wen-ADW
-deficit), or --- for the vestigial graviton --- conditionally, absent
-a mechanism pinning $\chi_{\mathrm{vest}}$ to unity, which GW170817
-confines it to within $3\times 10^{-15}$.
+tetrad-condensation channel. The structural exclusions are gauge erasure and the
+fracton diff-invariance no-go; the quantitative-magnitude exclusion is
+the Wen-ADW deficit. For the vestigial
+graviton the exclusion is conditional: it holds absent a mechanism
+pinning $\chi_{\mathrm{vest}}$ to unity, which GW170817 confines it to
+within $3\times 10^{-15}$.
 
 \subsection{Four cleared decision gates}
 

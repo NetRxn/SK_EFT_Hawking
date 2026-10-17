@@ -2,6 +2,26 @@
 
 \usepackage{graphicx}
 \usepackage{hyperref}
+% Code identifiers may wrap without inserting or removing visible characters.
+% Keep each original argument intact for source-reference extraction.
+\usepackage{seqsplit}
+\let\layoutoriginaltexttt\texttt
+\makeatletter
+\protected\def\texttt#1{%
+  \begingroup
+  \ifmmode
+    \layoutoriginaltexttt{#1}%
+  \else
+    \in@{ }{#1}%
+    \ifin@
+      \layoutoriginaltexttt{#1}%
+    \else
+      \let\seqinsert\allowbreak
+      \layoutoriginaltexttt{\seqsplit{#1}}%
+    \fi
+  \fi
+  \endgroup}
+\makeatother
 \usepackage{amsmath, amssymb}
 \usepackage{booktabs}
 
@@ -44,9 +64,9 @@ so the relative bound falls below $\tfrac12$, then transferred from the Schwartz
 operator's closure by a graph-limit extension lemma that Mathlib does not contain and that we state
 for arbitrary unbounded operators. To our knowledge this is the first unconditional formalization of
 essential self-adjointness of a molecular many-body Coulomb Hamiltonian in any proof assistant. We
-report it alongside two further formalized layers ---
-non-equilibrium Green's-function transport and Lindblad open-system dynamics --- and one we could not
-complete, the Hohenberg--Kohn and Levy--Lieb variational theorems of density-functional theory. The
+report it alongside two further formalized layers:
+non-equilibrium Green's-function transport and Lindblad open-system dynamics. We also report one
+layer we could not complete, the Hohenberg--Kohn and Levy--Lieb variational theorems of density-functional theory. The
 comparison is the paper's second contribution. All four layers are kernel-pure, with axiom profile
 exactly $\{\texttt{propext},\,\texttt{Classical.choice},\,\texttt{Quot.sound}\}$ and no
 \texttt{sorry}; three terminate in a constructed witness and one does not. We argue that this last
@@ -64,10 +84,11 @@ the expensive direction, and is exactly what the abstract variational layer does
 
 The $N$-electron molecular Coulomb Hamiltonian
 \begin{equation}
-H \;=\; \mathcal{T} + \mathcal{V},
-\qquad
-\mathcal{V}(x) = -\sum_{i=1}^{N}\sum_{p}\frac{Z_{p}}{|x_{i}-R_{p}|}
-\;+\; \sum_{i<j}\frac{1}{|x_{i}-x_{j}|},
+\begin{aligned}
+H &\;=\; \mathcal{T} + \mathcal{V},\\
+\mathcal{V}(x) &= -\sum_{i=1}^{N}\sum_{p}\frac{Z_{p}}{|x_{i}-R_{p}|}\\
+&\;+\; \sum_{i<j}\frac{1}{|x_{i}-x_{j}|},
+\end{aligned}
 \label{eq:molecular-H}
 \end{equation}
 with $\mathcal{T}$ the kinetic operator, $x_{i}\in\mathbb{R}^{3}$ the electron coordinates and
@@ -80,12 +101,14 @@ closed, and the closing is Kato's theorem.
 
 Our first result is a machine-checked proof of that closure, carrying no hypotheses:
 \begin{equation}
-\thm{molecularHamiltonian\_essSelfAdjoint} :
-\quad \mathrm{IsSelfAdjoint}\bigl(\overline{\mathcal{T}} + \mathcal{V}\bigr),
+\begin{gathered}
+\thm{molecularHamiltonian\_essSelfAdjoint} :\\
+\mathrm{IsSelfAdjoint}\bigl(\overline{\mathcal{T}} + \mathcal{V}\bigr),
+\end{gathered}
 \label{eq:apex}
 \end{equation}
-whose signature takes the electron count $N$, the mass $m$, a proof that $0<m$, and the nuclei ---
-and nothing else. There is no analytic-hypothesis argument, no tracked proposition, and no
+whose signature takes the electron count $N$, the mass $m$, a proof that $0<m$, and the nuclei.
+These are its only arguments. There is no analytic-hypothesis argument, no tracked proposition, and no
 project-local axiom. To our knowledge it is the first unconditional formalization of essential
 self-adjointness of a molecular many-body Coulomb Hamiltonian in any proof assistant.
 Section~\ref{sec:molecular} is its proof, and it is the longest section here because reaching
@@ -98,9 +121,9 @@ Formalizing physics has two costs, and they are routinely conflated. One is prov
 other is connecting the theorem to the object it is supposed to be about. The second is the binding
 cost, and it is invisible in the report that formalization projects habitually publish.
 
-A \Lean{} declaration can be kernel-pure --- depending on nothing beyond the three standard classical
-axioms, containing no \texttt{sorry}, passing every mechanical check a verification pipeline applies
---- and still establish nothing whatever about any physical system. The mechanism is mundane. One
+A \Lean{} declaration can depend on nothing beyond the three standard classical axioms, contain no
+\texttt{sorry}, and pass every mechanical check a verification pipeline applies. It can be kernel-pure
+in all these senses and still establish nothing whatever about any physical system. The mechanism is mundane. One
 defines a structure whose fields are the physical content, states a theorem over that structure, and
 derives the conclusion from the fields. The derivation is honest and the kernel is satisfied. But if
 nothing ever inhabits the structure, the theorem has been proved about a shape, not about a system.
@@ -120,8 +143,8 @@ not. And the one that does not is the most physically celebrated of them.
 self-adjointness, Eq.~\eqref{eq:apex}, via an in-tree Kato--Rellich development. A theorem about the
 operator itself, with no abstract carrier between statement and system.
 \item \textbf{The DFT variational layer} (Sec.~\ref{sec:dft-scope}): Hohenberg--Kohn uniqueness and
-the variational principle, and the Levy--Lieb constrained-search functional --- proved over abstract
-structures carrying the Rayleigh--Ritz inequalities, the non-degeneracy of the ground state and the
+the variational principle, and the Levy--Lieb constrained-search functional. These results are proved
+over abstract structures carrying the Rayleigh--Ritz inequalities, the non-degeneracy of the ground state and the
 constrained-search decomposition \emph{as fields}. \textbf{Nothing inhabits those structures, and
 nothing connects them to Eq.~\eqref{eq:apex}.} This is the negative case, and we make no
 density-functional-theory novelty claim of any kind.
@@ -161,7 +184,7 @@ Sec.~\ref{sec:lindblad}.
 
 Every theorem reported here has transitive axiom dependency, as given by \Lean{}'s
 \texttt{\#print axioms}, exactly $\{\texttt{propext},\,\texttt{Classical.choice},\,
-\texttt{Quot.sound}\}$ --- the three standard classical axioms underlying Mathlib --- with no
+\texttt{Quot.sound}\}$. These are the three standard classical axioms underlying Mathlib. The results use no
 project-local axioms, no \texttt{sorry}, no \texttt{native\_decide}, and no proof relying on a raised
 elaborator heartbeat limit. The last is a proof-architecture constraint rather than a logical one: a
 proof that needs the limit raised is a proof that has not been decomposed.
@@ -180,7 +203,7 @@ Purity and discharge are both properties of a proof. Neither is a property of th
 and neither detects the failure mode of Sec.~\ref{sec:inhabitance-thesis}.
 
 We therefore report a third property. A layer is \emph{inhabited} when the development constructs a
-witness of the data the layer quantifies over --- when some concrete object is exhibited satisfying
+witness of the data the layer quantifies over. Such a witness is a concrete object exhibited to satisfy
 the layer's hypotheses, so that its conclusions apply to something. A layer that is pure, discharged
 and uninhabited has proved a conditional whose antecedent is not known to be satisfiable by anything
 in the development, and whose conclusions are therefore about a shape.
@@ -197,7 +220,7 @@ axiom profile, so that property separates nothing. The inhabitance column does.}
 Layer / apex statement & Hypotheses in signature & Witness constructed \\
 \colrule
 Molecular Hamiltonian (\S\ref{sec:molecular})
-  & none --- all three discharged
+  & none; all three are discharged
   & n/a: about the operator itself \\
 \quad \thm{molecularHamiltonian\_essSelfAdjoint} & & \\[2pt]
 DFT variational (\S\ref{sec:dft-scope})
@@ -232,14 +255,14 @@ number enters the verified layer at any point.
 
 \subsection{The criterion and what it demands}
 
-The Kato--Rellich criterion states that if $A$ is self-adjoint and $B$ symmetric with $A$-relative
-bound $a<1$ --- meaning that for some $b\ge0$
+The Kato--Rellich criterion applies when $A$ is self-adjoint and $B$ is symmetric with an $A$-relative
+bound $a<1$. The relative-bound condition means that for some $b\ge0$
 \begin{equation}
 \|Bu\| \;\le\; a\,\|Au\| \;+\; b\,\|u\|
 \qquad \text{for all } u\in\mathcal{D}(A)
 \label{eq:relbound}
 \end{equation}
---- then $A+B$ is self-adjoint. Mathlib does not supply essential self-adjointness in this form, so
+Under these hypotheses, $A+B$ is self-adjoint. Mathlib does not supply essential self-adjointness in this form, so
 we build the criterion in-tree.
 
 Applying it to Eq.~\eqref{eq:molecular-H} requires three inputs, each now a proven kernel-pure
@@ -259,8 +282,8 @@ PhysLib's kinetic operator is a nonzero real scalar multiple of the momentum-squ
 scaling argument on closures the question reduces to that operator
 (\thm{kineticOperator\_isSelfAdjoint\_closure}). We establish it through a dense-range criterion: a
 densely defined symmetric $S$ for which $S\pm i\mu$ have dense range has self-adjoint closure. The
-route matters for cost --- it avoids needing a Plancherel-unitary bridge, which would have been
-considerably more expensive than the dense-range argument.
+route matters for cost because it avoids needing a Plancherel-unitary bridge. Such a bridge would have
+been considerably more expensive than the dense-range argument.
 
 \subsection{The single-electron seed estimate}
 \label{sec:seed}
@@ -303,7 +326,7 @@ We construct, for each electron index, a measure-preserving linear change of coo
 $\mathbb{R}^{3N}$ into the singular $\mathbb{R}^{3}$ fibre and the spectator directions, and verify
 that it carries Schwartz functions to Schwartz functions. This requires showing the map has temperate
 growth (\thm{hasTemperateGrowth\_fiber}), is an isometry (\thm{isometry\_fiber}) and is antilipschitz
-(\thm{antilipschitz\_fiber}) --- the three conditions under which the induced composition operator is
+(\thm{antilipschitz\_fiber}). These are the three conditions under which the induced composition operator is
 well defined on $\mathcal{S}$ (\thm{fiberSchwartz}). None of this is difficult mathematics and all of
 it is load-bearing: without it there is no object to which Eq.~\eqref{eq:seed} can be applied.
 
@@ -362,14 +385,16 @@ a \;=\; 2m\,C_{\mathrm{tr}}\,\varepsilon
 \label{eq:a-value}
 \end{equation}
 with $b=C_{\mathrm{tr}}C$ (\thm{coulomb\_isRelBounded\_core}). Landing below $\tfrac12$ rather than
-merely below $1$ costs nothing --- the $4$ in Eq.~\eqref{eq:eps-choice} could have been a $2$ --- and
-leaves margin, worth having in a formalized bound where a later refactor might otherwise silently
-consume it.
+merely below $1$ costs nothing. The $4$ in Eq.~\eqref{eq:eps-choice} could have been a $2$, and the choice
+leaves margin. That margin is worth having in a formalized bound where a later refactor might otherwise
+silently consume it.
 
 We emphasise the logical form of the packaged statement:
 \begin{equation}
-\exists\, a,b:\;\; 0\le a \,\wedge\, a<1 \,\wedge\, 0\le b \,\wedge\,
+\begin{gathered}
+\exists\, a,b:\;\; 0\le a \,\wedge\, a<1 \,\wedge\, 0\le b \,\wedge\,\\
 \mathrm{IsRelBounded}\bigl(\overline{\mathcal{T}},\,\mathcal{V},\,a,\,b\bigr)
+\end{gathered}
 \label{eq:coulomb-relbound}
 \end{equation}
 (\thm{coulomb\_isRelBounded}). The quantifier is existential: the constants are \emph{produced} by
@@ -384,8 +409,8 @@ domain of $\overline{\mathcal{T}}$, which is larger. Bridging that is a separate
 does not have it:
 \begin{equation}
 \begin{split}
-&A \text{ closable},\;\; B \text{ closed},\;\; a,b\ge0,\;\;
-  \mathrm{IsRelBounded}(A,B,a,b)\\
+&A \text{ closable},\;\; B \text{ closed},\;\; a,b\ge0,\\
+&\quad \mathrm{IsRelBounded}(A,B,a,b)\\
 &\qquad \Longrightarrow\;\; \mathrm{IsRelBounded}(\overline{A},B,a,b)
 \end{split}
 \label{eq:extend}
@@ -408,8 +433,8 @@ as multiplication by a real function.
 We flag Eq.~\eqref{eq:extend} as the piece of this development most likely to be reused outside this
 paper. It is stated for an arbitrary pair of unbounded operators on a complex Hilbert space, makes no
 reference to Coulomb potentials or molecular systems, and is needed by \emph{any} Kato--Rellich
-application that establishes its bound on a convenient core --- which is the normal situation. It is
-Mathlib-grade infrastructure that Mathlib happens not to carry.
+application that establishes its bound on a convenient core. Establishing the bound on such a core is
+the normal situation. It is Mathlib-grade infrastructure that Mathlib happens not to carry.
 
 \subsection{The apex}
 
@@ -451,8 +476,8 @@ implication of the equivalence is the non-degeneracy field returned unchanged; a
 ground-state field returned unchanged. Two of three conjuncts are hypotheses handed back.
 
 Levy--Lieb is thinner still. $F_{\mathrm{LL}}[n]$ is \emph{defined} as the infimum of the
-kinetic-plus-interaction energy over the density fibre, so \thm{levyLieb\_functional} --- that
-$F_{\mathrm{LL}}[n]$ is a lower bound for states in that fibre --- is one \texttt{ciInf\_le} and
+kinetic-plus-interaction energy over the density fibre, so \thm{levyLieb\_functional} asserts that
+$F_{\mathrm{LL}}[n]$ is a lower bound for states in that fibre. Its proof is one \texttt{ciInf\_le} and
 contains no density-functional content whatever. \thm{levyLieb\_eq\_HK\_on\_vrep} is an antisymmetry
 argument concluding $F_{\mathrm{LL}}[n]=(T{+}V_{ee})[\psi_{0}]$ from the hypothesis that $\psi_{0}$
 minimises the fibre. We note that no Hohenberg--Kohn functional occurs anywhere in that statement,
@@ -466,8 +491,8 @@ say so in their own headers (\src{HohenbergKohnUniqueness.lean:19--21},
 \src{HohenbergKohnVariational.lean:26--27}).
 
 Supplying an inhabitant from the molecular Hamiltonian is the substantive missing step. It requires
-the Rayleigh--Ritz inequalities as \emph{theorems} about that operator --- hence a ground state, hence
-spectral theory on the self-adjoint $\overline{\mathcal{T}}+\mathcal{V}$ that Eq.~\eqref{eq:apex}
+the Rayleigh--Ritz inequalities as \emph{theorems} about that operator. This in turn requires a ground state,
+and hence spectral theory on the self-adjoint $\overline{\mathcal{T}}+\mathcal{V}$ that Eq.~\eqref{eq:apex}
 provides but that we have not developed further. That is the honest statement of the gap, and it is
 why this section makes no claim.
 
@@ -475,8 +500,8 @@ why this section makes no claim.
 
 The failure is not an accident of effort, and this is the part we think generalises. The structures'
 fields are variational inequalities. As hypotheses they cost nothing: one writes them into a
-structure and they are available. As theorems about a specific operator they are expensive --- they
-are essentially the existence and characterisation of a ground state. The gap between the cheap and
+structure and they are available. Establishing them as theorems about a specific operator is expensive,
+since they are essentially the existence and characterisation of a ground state. The gap between the cheap and
 the expensive direction is exactly the gap Eq.~\eqref{eq:apex} spent this paper's longest section
 crossing, for a strictly weaker statement about the same operator.
 
@@ -525,8 +550,8 @@ The self-energy in this development is not a free parameter. It is
 \end{equation}
 a scalar multiple of the identity, and the Dyson form $(G^{R})^{-1}=E\mathbf{1}-H-\Sigma$ is proved
 for exactly this $\Sigma$ (\thm{retardedArg\_eq\_sub\_selfEnergy}). Equation~\eqref{eq:negf-spectral}
-is therefore established in the structureless limit --- energy-independent broadening, identical on
-every site --- and not for a general site- and energy-dependent lead self-energy. A referee should
+is therefore established in the structureless limit of energy-independent broadening identical on
+every site. It is not established for a general site- and energy-dependent lead self-energy. A referee should
 read Eq.~\eqref{eq:negf-spectral} with that restriction attached. Extending this layer to a general
 Hermitian-decomposable $\Sigma$ is well defined and is not done here. The transmission layer below
 carries no such restriction.
@@ -591,8 +616,8 @@ G \;\le\; n\,G_{0}
 usual physical framing: it assumes only $\tau_{i}\le1$ and $G_{0}\ge0$, not $\tau_{i}\ge0$, so it
 holds on a strictly larger domain than $\tau_{i}\in[0,1]$ would give it.
 
-Equation~\eqref{eq:quantum-bound} is stated as a refutation --- a conductance strictly exceeding
-$n\,G_{0}$ is impossible (\thm{conductance\_quantization\_falsifier}) --- and instantiated: a
+Equation~\eqref{eq:quantum-bound} is stated as a refutation: a conductance strictly exceeding
+$n\,G_{0}$ is impossible (\thm{conductance\_quantization\_falsifier}). It is also instantiated: a
 two-channel point contact cannot carry three conductance quanta
 (\thm{two\_channel\_no\_three\_quanta}), decided by \texttt{norm\_num}. The falsifier is the
 contrapositive of the bound and carries no content the bound lacks; its value is that it fixes the
@@ -692,10 +717,10 @@ in Table~\ref{tab:inhabitance}.
 \section{Related work and priority}
 \label{sec:related}
 
-A prior-art reconnaissance across the interactive-theorem-prover ecosystem --- \Lean{}/Mathlib,
-Coq/Rocq, Isabelle/HOL including the Archive of Formal Proofs, Agda, HOL Light and Mizar; see
-Ref.~\cite{survey2021} and the records archived with this work --- found no existing formalization of
-the molecular self-adjointness, transport or open-system results reported here.
+A prior-art reconnaissance across the interactive-theorem-prover ecosystem found no existing
+formalization of the molecular self-adjointness, transport or open-system results reported here.
+The ecosystems surveyed were \Lean{}/Mathlib, Coq/Rocq, Isabelle/HOL including the Archive of Formal
+Proofs, Agda, HOL Light and Mizar; see Ref.~\cite{survey2021} and the records archived with this work.
 
 We make three priority claims and no others.
 
@@ -712,10 +737,10 @@ witness. Equation~\eqref{eq:landauer} itself is a definition and we claim no pri
 down.
 
 \emph{Third,} the Lindblad \emph{generator and Markovian dynamical semigroup} of
-Sec.~\ref{sec:lindblad}. The carve-out here is essential: quantum \emph{channels} --- CPTP maps, Choi
-matrices, superoperators --- already exist in \Lean{}'s PhysLib quantum-information
-layer~\cite{leanQI2025}, in Coq's CoqQ~\cite{coqq2022} and in Isabelle/AFP~\cite{isabelleCBO}, and we
-build on that substrate rather than replacing it. Our contribution is the generator
+Sec.~\ref{sec:lindblad}. The carve-out here is essential. Quantum \emph{channels} already exist in
+\Lean{}'s PhysLib quantum-information layer~\cite{leanQI2025}, in Coq's CoqQ~\cite{coqq2022} and in
+Isabelle/AFP~\cite{isabelleCBO}. These existing descriptions include CPTP maps, Choi matrices and
+superoperators. We build on that substrate rather than replacing it. Our contribution is the generator
 $\mathcal{L}=-i[H,\cdot]+\mathcal{D}$, complete positivity of $\mathcal{D}$, and the one-parameter
 semigroup above them.
 
@@ -739,8 +764,8 @@ Every layer has the same axiom profile. Every layer is \texttt{sorry}-free. Two 
 disclosed hypothesis discharged from their signatures. On the measurements a formalization project
 usually publishes, the four are indistinguishable.
 
-They are not indistinguishable. Two terminate in a constructed object --- a two-channel point
-contact, a damped two-level atom --- about which a specific false statement has been ruled out by
+They are not indistinguishable. Two terminate in constructed objects: a two-channel point
+contact and a damped two-level atom. About each, a specific false statement has been ruled out by
 exact arithmetic. One is a theorem about the operator itself, needing no carrier at all, which is the
 strongest position of the four. And one quantifies over structures that nothing in the development
 inhabits, so that its conclusions, while correctly derived, apply to no object we have exhibited.
@@ -753,7 +778,7 @@ reporting only purity is reporting the easier half.
 
 \emph{The hazard concentrates where the physics is inequalities.} A structure field costs nothing to
 assume and can be very expensive to prove about a specific operator. Layers whose content is
-variational --- exactly the celebrated ones --- are therefore the most exposed, and
+variational are therefore the most exposed. These are exactly the celebrated ones, and
 Sec.~\ref{sec:dft-scope} is the instance.
 
 \emph{Inhabitance is mechanically checkable, and we did not have it.} Whether a structure is
@@ -774,9 +799,9 @@ of Eq.~\eqref{eq:decay-envelope} and the \texttt{norm\_num} witnesses, and nothi
 \label{sec:conclusion}
 
 We have proved, machine-checked and unconditionally, that the $N$-electron molecular Coulomb
-Hamiltonian is essentially self-adjoint, by a Kato--Rellich development built in-tree whose reusable
-component --- relative boundedness transferring from a core to an operator's closure --- is stated for
-arbitrary unbounded operators and is absent from Mathlib. Alongside it we have formalized NEGF
+Hamiltonian is essentially self-adjoint, by a Kato--Rellich development built in-tree. Its reusable
+component transfers relative boundedness from a core to an operator's closure. That component is stated
+for arbitrary unbounded operators and is absent from Mathlib. Alongside it we have formalized NEGF
 transport through a refutable conductance bound and Lindblad dynamics through an instantiated
 amplitude-damping model, and we have reported, as a result rather than a caveat, that our
 density-functional-theory layer is uninhabited.
