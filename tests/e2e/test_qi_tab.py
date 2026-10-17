@@ -7,7 +7,8 @@ from playwright.sync_api import expect
 
 
 @pytest.mark.e2e
-def test_qi_register_populates(page, console_errors, dashboard_url):
+def test_qi_register_populates(page, console_errors, dummy_paper_dashboard, dummy_paper_network):
+    dashboard_url = dummy_paper_dashboard["url"]
     page.goto(f"{dashboard_url}/?tab=qi", wait_until="load")
     expect(page.locator("#qi-root h2")).to_contain_text("Process Health")
     # Summary morphs in via SSE; "QI items" appears whether the count is 0 or N.

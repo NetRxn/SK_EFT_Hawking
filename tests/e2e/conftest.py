@@ -130,10 +130,10 @@ def page(_browser):
 
 
 @pytest.fixture
-def dummy_paper_evidence():
+def dummy_paper_evidence(request):
     """Capture evidence outside pytest retention, before fixture cleanup."""
     archive = (PROJECT_ROOT / "outputs" / "continuity" /
-               "round50-dashboard-fixture-evidence-r1" / "browser-runs" / uuid.uuid4().hex)
+               "round54-dashboard-four-sse-guarded-fixtures-r1" / "browser-runs" / uuid.uuid4().hex)
     archive.mkdir(parents=True, exist_ok=False)
     sources = ["tests/e2e/conftest.py", "tests/e2e/dummy_paper_server.py",
                "tests/e2e/test_paper_provenance_tab.py", "scripts/datastar_helpers.py",
@@ -147,7 +147,7 @@ def dummy_paper_evidence():
                              "bytes": path.stat().st_size}
                  for path in archive.iterdir() if path.is_file()}
         with (archive / "manifest.json").open("x") as out:
-            json.dump({"source": source_hashes, "files": files}, out, indent=2)
+            json.dump({"test": request.node.nodeid, "source": source_hashes, "files": files}, out, indent=2)
             out.write("\n")
         print("Durable dummy evidence archive:", archive)
 
@@ -218,17 +218,38 @@ def dummy_paper_dashboard(tmp_path, monkeypatch, dummy_paper_evidence):
                  root / "scripts" / "review_figures.py")
     quote = "This disposable sentence tests verification controls without claiming a scientific result."
     sentences = {}
-    for name in ("paper_a", "paper_b", "paper_escape"):
+    # More than ten real selector entries and a full >50-cell readiness matrix
+    # are supplied as disposable data, rather than lowering the browser assertions.
+    names = ("paper_a", "paper_b", "paper_escape", "D1") + tuple(
+        f"fixture_{i}" for i in range(9))
+    for name in names:
         paper = papers / name
         paper.mkdir()
         sentence = make_v2_sentence(name, quote=quote)
         sentences[name] = sentence["id"]
         (paper / "paper_draft.tex").write_text(
-            "\\title{Dummy " + name + "}\n\\begin{abstract}\n" + quote
+            "\\title{Dummy Hawking browser fixture " + name + "}\n\\begin{abstract}\n" + quote
             + "\nA second disposable sentence provides sufficient abstract content.\n\\end{abstract}\n")
         (paper / "claims_review.json").write_text(json.dumps(make_v2_review(name, [sentence])))
         (paper / "prose_state.json").write_text(json.dumps({"paper": name, "sentences": {}}))
         (paper / "audit_log.jsonl").write_text("")
+    # The actual graph extractor reads this dummy metadata. It is never a
+    # compiled declaration or evidence about the scientific source tree.
+    (root / "lean" / "lean_deps.json").write_text(json.dumps([{
+        "name": "SKEFTHawking.AcousticMetric.browser_fixture_only",
+        "module": "SKEFTHawking.AcousticMetric", "kind": "theorem",
+        "type": "True", "axiom_deps_project": [], "axiom_deps_core": [],
+        "name_deps_project": [], "name_deps_extracted": True,
+        "name_deps_timed_out": False,
+    }]))
+    reviews = papers / "AutomatedReviews" / "dummy-browser"
+    reviews.mkdir(parents=True)
+    (reviews / "fixture.md").write_text(
+        "---\npaper: D1\nbundle_target: D1\nreview_date: 2026-01-01\n---\n"
+        "### 1.1 — Disposable browser finding\n\n"
+        "- **Severity:** minor\n- **Lane:** infra\n- **Gate:** FixPropagation\n"
+        "- **Location:** papers/D1/paper_draft.tex\n"
+        "- **Observed:** Synthetic fixture exercises the actual QI reader.\n")
     (papers / "paper_a" / "prose_state.json").unlink()
     (papers / "paper_a" / "prose_state.json").symlink_to(papers / "paper_b" / "prose_state.json")
     outside_claims = root / "outside_claims.json"
@@ -270,6 +291,9 @@ def dummy_paper_dashboard(tmp_path, monkeypatch, dummy_paper_evidence):
                     with (root / name).open("rb") as src, (dummy_paper_evidence / name).open("xb") as dst:
                         shutil.copyfileobj(src, dst)
             observations = json.loads((root / "server-observations.json").read_text())
+            (dummy_paper_evidence / "cleanup.json").write_text(json.dumps({
+                "pid": proc.pid, "returncode": proc.returncode,
+                "joined": proc.poll() is not None}, indent=2) + "\n")
             print("Dummy paper server root:", root)
             print("Dummy paper server observations:", json.dumps(observations, sort_keys=True))
             print("Dummy paper server stacks:", (root / "server-stacks.log").read_text())
@@ -290,7 +314,7 @@ PROVENANCE_PATH = (Path(__file__).resolve().parent.parent.parent
 
 
 @pytest.fixture(autouse=True)
-def _provenance_registry_guard():
+def _provenance_registry_guard(request):
     """Restore `src/core/provenance.py` after every e2e test. **Autouse, deliberately.**
 
     ⚠️ **THIS BECAME NECESSARY THE MOMENT `/verify` STARTED PERSISTING.** `test_parameters_tab
@@ -315,6 +339,13 @@ def _provenance_registry_guard():
     means a killed e2e run leaves a repairable record instead of manufactured provenance
     evidence, one `git add` away from being believed by the P1 `ParameterProvenance` gate.
     """
+    if "dummy_paper_dashboard" in request.fixturenames:
+        # Guarded journeys cannot reach the real parameter writer. Assert
+        # immutability without journalling/restoring an unowned tracked file.
+        original = PROVENANCE_PATH.read_bytes()
+        yield
+        assert PROVENANCE_PATH.read_bytes() == original
+        return
     import subprocess
     import sys
     root = PROVENANCE_PATH.parent.parent.parent

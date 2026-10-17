@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import faulthandler
+import importlib
 import time
 import os
 from pathlib import Path
@@ -80,6 +81,21 @@ def main() -> None:
     verification_state.LOG_PATH = root / "docs" / "verification_log.jsonl"
     verification_state.LOCK_PATH = root / "docs" / "verification_log.lock"
 
+    # Reuse the whole-template fixture's import-bound path isolation before
+    # CLI prewarm or any request. These are real readers over synthetic files.
+    for name in ("dashboard_flow", "bundle_readiness", "check_bundle_source_freshness",
+                 "bundle_migration", "dashboard_attention", "dashboard_loops", "datastar_bundles",
+                 "qi_register", "extract_lean_deps", "scripts.extract_lean_deps",
+                 "atlas_view"):
+        module = importlib.import_module(name)
+        for attr, value in list(vars(module).items()):
+            if isinstance(value, Path) and value.is_relative_to(project):
+                target = root / value.relative_to(project)
+                setattr(module, attr, target)
+                record.setdefault("bindings", []).append({"module": name, "name": attr,
+                    "source": str(value), "target": str(target)})
+    dashboard.app.config["PG_SYNC_ENABLED"] = False
+
     def forbidden_connect(*args, **kwargs):
         record["db_connect_attempts"] += 1
         save()
@@ -115,6 +131,10 @@ def main() -> None:
 
     @dashboard.app.after_request
     def observe_paper_request(response):
+        if response.mimetype == "text/event-stream":
+            record.setdefault("sse_responses", []).append({"path": request.path,
+                "status": response.status_code, "headers": dict(response.headers)})
+            save()
         if request.path.startswith("/api/papers/"):
             record.setdefault("paper_requests", []).append({
                 "method": request.method, "path": request.path,
