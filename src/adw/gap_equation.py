@@ -1,30 +1,26 @@
-"""Gap Equation Solver for ADW Tetrad Condensation.
+"""Bounded numerical exploration of an illustrative regulated scalar ansatz.
 
-Solves the self-consistent gap equation for the tetrad VEV:
-    delta S_eff / delta e^a_mu = 0
+The canonical potential is
+    V_exact(C)=C²/(2G)-N_f[Lambda²C²-C⁴log(1+Lambda²/C²)]/(16pi²),
+with its continuous origin value zero and positive supplied G,Lambda,N_f.
+A microscopic ADW Hubbard-Stratonovich/one-loop derivation of this scalar
+model is UNCOMPUTED; partial bosonization in the literature does not specify
+this particular expression. TetradField.flat_spacetime adopts a Lorentzian
+background, so the returned signature is kinematic input, not derived gravity.
 
-The effective potential after one-loop fermion integration:
-    V_eff(C) = C^2/(2G) - (N_f/16pi^2)[Lambda^2 C^2 - C^4 ln(Lambda^2/C^2 + 1)]
+Production V_num is flat at zero for |C|<1e-15, an absolute C guard. Exact
+threshold/minimum/curvature/scaling statements concern V_exact;
+the idealized real piecewise prescription is locally constant inside its guard.
+No derivative of an unrestricted IEEE-valued program is asserted. The coefficient
+changes sign at G_c=8pi²/(N_f Lambda²). At equality the exact origin is a
+strict degenerate minimum. Above it an exact positive scalar root exists,
+but the minimizer searches only (1e-6 Lambda,Lambda) and compares its
+candidate with zero. Success/global_minimum/is_minimum fields do not certify
+unrestricted stationarity/global optimality or the microscopic field theory.
+The separate NJL fixed-point integral shares G_c, not nonzero stationary roots.
 
-where C = |det(e)|^(1/4) parameterizes the tetrad magnitude.
-
-The gap equation dV_eff/dC = 0 has:
-    - Trivial solution C = 0 (pre-geometric phase) — always exists
-    - Nontrivial solution C != 0 (tetrad condensation) — exists iff G > G_c
-
-Critical coupling:
-    G_c = 8 pi^2 / (N_f Lambda^2)
-
-Derived from d^2V_eff/dC^2|_{C=0} = 0 with the HS tree-level
-potential V_tree = C^2/(2G).
-
-Phase classification follows Vladimirov-Diakonov (2012) and Volovik (2024):
-    - Pre-geometric: e = 0, g = 0
-    - Vestigial metric: <E^a_mu> = 0 but <E^a_mu E^b_nu> != 0 (metric exists)
-    - Full tetrad: <E^a_mu> = C * delta^a_mu != 0 (gravity + fermion coupling)
-
-Lean: ADWMechanism.lean (critical_coupling_pos, gap_nontrivial_above_Gc,
-       phase_classification, lorentzian_signature_automatic)
+Existing phase labels and conditional algebra are retained as model metadata;
+they do not establish full tetrad dynamics, physical gravity or vacuum magnitude.
 """
 
 from dataclasses import dataclass
@@ -41,7 +37,7 @@ from src.adw.hubbard_stratonovich import TetradField
 
 
 class PhaseType(Enum):
-    """Classification of gravitational phases."""
+    """Adopted phase labels, not a derivation of microscopic gravity."""
     PRE_GEOMETRIC = "pre_geometric"       # e = 0, g = 0
     VESTIGIAL_METRIC = "vestigial_metric"  # <e> = 0 but <ee> != 0
     FULL_TETRAD = "full_tetrad"            # <e> != 0, g != 0
@@ -72,7 +68,7 @@ class GapEquationParams:
 
     @property
     def coupling_ratio(self) -> float:
-        """G / G_c — condensation occurs for ratio > 1."""
+        """G/G_c, the exact scalar-ansatz bifurcation parameter."""
         return self.G / self.G_c
 
 
@@ -84,7 +80,7 @@ class TetradSolution:
         C: Tetrad magnitude |det(e)|^(1/4)
         tetrad: The full tetrad field
         V_eff: Effective potential at the solution
-        is_minimum: Whether this is a minimum (not saddle point)
+        is_minimum: Legacy scalar classification flag; not a global-optimality certificate
         phase: Phase classification
         is_lorentzian: Whether induced metric has Lorentzian signature
     """
@@ -104,7 +100,7 @@ class GapEquationResult:
         params: Input parameters
         trivial_solution: The C=0 (pre-geometric) solution
         nontrivial_solution: The C!=0 solution (None if G < G_c)
-        global_minimum: Which solution is the global minimum
+        global_minimum: Lower-energy candidate among zero and the bounded optimizer result
         phase: Phase of the global minimum
         G_c: Critical coupling
         coupling_ratio: G / G_c
@@ -121,36 +117,28 @@ class GapEquationResult:
 
 
 def effective_potential(C: float, G: float, Lambda: float, N_f: int) -> float:
-    """Effective potential V_eff(C). Delegates to canonical formulas.py.
+    """Guarded numerical scalar ansatz; delegates to canonical formulas.py.
 
-    Lean: effective_potential_structure
+    Physical derivation is UNCOMPUTED. The |C|<1e-15 zero branch differs
+    from the continuous exact ansatz; no new Lean potential proof is claimed.
     """
     return _canonical_V_eff(C, G, Lambda, N_f)
 
 
 def effective_potential_derivative(C: float, G: float, Lambda: float,
                                    N_f: int) -> float:
-    """Derivative dV_eff/dC — utility for verification and visualization.
+    """Signed derivative utility for the written scalar ansatz outside its guard.
 
-    NOTE: The solver (solve_gap_equation) uses minimize_scalar on V_eff
-    directly, not brentq on this derivative. This function is provided
-    for tests and analytical checks but is not in the solver path.
+    Returns zero on |C|<1e-15, matching the flat numerical interval.
+    Outside it, the analytic expression differentiates V_exact; do not infer
+    differentiability across the guard boundary or full floating-point accuracy.
+    Evenness of the potential requires an odd signed derivative. The bounded
+    minimizer uses V_num directly and does not call this utility.
 
-    dV_eff/dC = C/G - (N_f/16pi^2)[2 Lambda^2 C - 4C^3 ln(Lambda^2/C^2+1)
-                                      + 2C^3 Lambda^2/(Lambda^2 + C^2)]
-
-    The gap equation is dV_eff/dC = 0.
-
-    Args:
-        C: Tetrad magnitude
-        G: ADW coupling constant
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-
-    Returns:
-        dV_eff/dC
+    dV/dC = C/G - (N_f/16pi²)[2Lambda²C-4C³log(1+Lambda²/C²)
+                              +2C³Lambda²/(Lambda²+C²)].
     """
-    if C < 1e-15:
+    if abs(C) < 1e-15:
         return 0.0
 
     dV_tree = C / G
@@ -174,26 +162,21 @@ def critical_coupling(Lambda: float, N_f: int) -> float:
 
 
 def curvature_at_origin(G: float, Lambda: float, N_f: int) -> float:
-    """Curvature d²V/dC²|_{C=0}. Delegates to canonical formulas.py."""
+    """Theoretical V_exact curvature coefficient; not the flat V_num derivative."""
     return _canonical_curv(G, Lambda, N_f)
 
 
 def solve_gap_equation(params: GapEquationParams) -> GapEquationResult:
-    """Solve the gap equation and classify the phase.
+    """Minimize V_num in a fixed positive window and compare with zero.
 
-    Strategy:
-    1. Check if G > G_c (necessary for nontrivial solution)
-    2. Find the nontrivial minimum by minimizing V_eff(C)
-    3. Compare V_eff at C=0 and C=C_min to determine global minimum
-    4. Classify phase and check success criteria
+    For positive supplied parameters, the nontrivial search is bounded to
+    (1e-6 Lambda,Lambda). Exact ansatz roots can lie below/above that window
+    or inside the absolute numerical guard. Optimizer success and the legacy
+    global_minimum/is_minimum labels do not certify unrestricted stationarity
+    or a global minimum. The selected flat tetrad/signature is an adopted
+    ansatz; no microscopic ADW derivation or physical gravity is computed.
 
-    Lean: gap_nontrivial_above_Gc
-
-    Args:
-        params: Gap equation parameters (G, Lambda, N_f)
-
-    Returns:
-        GapEquationResult with complete analysis.
+    Existing return fields and numerical search policy are retained.
     """
     G, Lambda, N_f = params.G, params.Lambda, params.N_f
     G_c = params.G_c
@@ -204,7 +187,7 @@ def solve_gap_equation(params: GapEquationParams) -> GapEquationResult:
         C=0.0,
         tetrad=TetradField.zero(),
         V_eff=0.0,
-        is_minimum=(ratio <= 1.0),  # minimum when G < G_c
+        is_minimum=(ratio <= 1.0),  # exact-ansatz threshold classification
         phase=PhaseType.PRE_GEOMETRIC,
         is_lorentzian=False,
     )
@@ -213,7 +196,7 @@ def solve_gap_equation(params: GapEquationParams) -> GapEquationResult:
     global_min = trivial
 
     if ratio > 1.0:
-        # Nontrivial solution exists: find it by minimizing V_eff
+        # Search for a candidate only within the fixed positive cutoff window.
         C_max = Lambda  # Search up to the cutoff scale
         result = minimize_scalar(
             lambda c: effective_potential(c, G, Lambda, N_f),
@@ -238,7 +221,7 @@ def solve_gap_equation(params: GapEquationParams) -> GapEquationResult:
             # Compare with trivial solution
             if V_min < 0:  # V(0) = 0, so V_min < 0 means nontrivial wins
                 global_min = nontrivial
-                trivial.is_minimum = False  # Origin is now a local max
+                trivial.is_minimum = False  # Exact-ansatz instability; legacy scalar flag
 
     # Classify phase
     phase = global_min.phase
@@ -320,16 +303,11 @@ def vestigial_metric_condition(G: float, G_c: float) -> bool:
 
 def effective_potential_landscape(G: float, Lambda: float, N_f: int,
                                   n_points: int = 200) -> dict:
-    """Compute V_eff(C) over a range of C values for plotting.
+    """Sample the guarded scalar potential over C in [0,Lambda].
 
-    Args:
-        G: ADW coupling constant
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-        n_points: Number of evaluation points
-
-    Returns:
-        Dictionary with 'C' and 'V_eff' arrays, plus metadata.
+    The absolute |C|<1e-15 guard can affect scaling at very small Lambda.
+    Returns actual C/V_eff arrays and supplied parameter metadata; neither
+    the grid nor metadata establishes physical ADW derivation or convergence.
     """
     C_values = np.linspace(0, Lambda, n_points)
     V_values = np.array([effective_potential(c, G, Lambda, N_f) for c in C_values])

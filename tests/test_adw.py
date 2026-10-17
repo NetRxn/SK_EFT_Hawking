@@ -656,3 +656,184 @@ class TestCrossModuleConsistency:
 
         # But structural obstacles remain for emergent fermions
         assert len(fluct.obstacles) == 4
+
+
+class TestRegulatedScalarCorrespondence:
+    """Conditional scalar/producer controls; no microscopic ADW derivation."""
+
+    @pytest.mark.parametrize("Lambda,N_f,ratio", [(1.0, 4, 0.5), (2.0, 6, 2.0)])
+    @pytest.mark.parametrize("x", [0.05, 0.3, 0.8])
+    def test_signed_derivative_matches_finite_difference_outside_guard(self, Lambda, N_f, ratio, x):
+        G = ratio * critical_coupling(Lambda, N_f)
+        h = 1e-6 * Lambda
+        for C in (x * Lambda, -x * Lambda):
+            slope = (effective_potential(C + h, G, Lambda, N_f)
+                     - effective_potential(C - h, G, Lambda, N_f)) / (2 * h)
+            assert effective_potential_derivative(C, G, Lambda, N_f) == pytest.approx(
+                slope, rel=2e-5, abs=1e-9 * Lambda**3,
+            )
+        positive = effective_potential_derivative(x * Lambda, G, Lambda, N_f)
+        negative = effective_potential_derivative(-x * Lambda, G, Lambda, N_f)
+        assert negative == pytest.approx(-positive, rel=1e-12, abs=1e-12)
+
+    def test_negative_derivative_branch_is_not_a_flat_sentinel(self):
+        G = 0.5 * critical_coupling(1.0, 4)
+        assert effective_potential_derivative(-0.3, G, 1.0, 4) < 0
+        assert effective_potential_derivative(0.3, G, 1.0, 4) > 0
+
+    @pytest.mark.parametrize("ratio", [0.5, 1.0, 2.0])
+    def test_origin_guard_is_distinct_from_theoretical_curvature(self, ratio):
+        G = ratio * critical_coupling(1.0, 4)
+        for C in (-5e-16, 0.0, 5e-16):
+            assert effective_potential(C, G, 1.0, 4) == 0.0
+            assert effective_potential_derivative(C, G, 1.0, 4) == 0.0
+        if ratio != 1.0:
+            assert curvature_at_origin(G, 1.0, 4) != 0.0
+        # Zero returns concern admitted points, not an IEEE derivative theorem.
+
+    def test_exact_critical_ansatz_is_positive_away_from_guard(self):
+        Lambda, N_f = 1.0, 4
+        G = critical_coupling(Lambda, N_f)
+        A = N_f / (16 * np.pi**2)
+        assert curvature_at_origin(G, Lambda, N_f) == pytest.approx(0.0, abs=1e-12)
+        for C in (0.1, 0.5, 1.0):
+            expected = A * C**4 * np.log1p(Lambda**2 / C**2)
+            assert effective_potential(C, G, Lambda, N_f) > 0
+            assert effective_potential(C, G, Lambda, N_f) == pytest.approx(expected)
+
+    @pytest.mark.parametrize("ratio", [0.5, 1.0, 2.0])
+    def test_normalized_parameter_scaling_outside_absolute_guard(self, ratio):
+        reference = None
+        for Lambda, N_f in ((1.0, 4), (2.0, 6), (0.5, 8)):
+            C = 0.3 * Lambda
+            G = ratio * critical_coupling(Lambda, N_f)
+            A = N_f / (16 * np.pi**2)
+            normalized = effective_potential(C, G, Lambda, N_f) / (A * Lambda**4)
+            if reference is None:
+                reference = normalized
+            else:
+                assert normalized == pytest.approx(reference, rel=1e-12, abs=1e-12)
+
+    def test_absolute_guard_prevents_unrestricted_scaling_claim(self):
+        ratio, x, N_f = 0.5, 0.5, 4
+        ordinary = effective_potential(x, ratio * critical_coupling(1.0, N_f), 1.0, N_f)
+        tiny_Lambda = 1e-16
+        guarded = effective_potential(
+            x * tiny_Lambda, ratio * critical_coupling(tiny_Lambda, N_f), tiny_Lambda, N_f,
+        )
+        assert ordinary > 0
+        assert guarded == 0.0
+
+    def test_actual_bounded_solver_selected_regime_has_interior_stationary_candidate(self):
+        Lambda, N_f = 1.0, 4
+        A = N_f / (16 * np.pi**2)
+        G = 2.0 * critical_coupling(Lambda, N_f)
+        result = full_gap_analysis(G, Lambda, N_f)
+        candidate = result.nontrivial_solution
+        assert candidate is not None
+        # At r=2 the unique exact positive root is in x=C/Lambda in (1/4,3/4).
+        # The sign bracket and energy checks exclude the trivial/lower-edge branch.
+        left, right = 0.25 * Lambda, 0.75 * Lambda
+        assert effective_potential_derivative(left, G, Lambda, N_f) < 0
+        assert effective_potential_derivative(right, G, Lambda, N_f) > 0
+        assert left < candidate.C < right
+        assert candidate.V_eff == pytest.approx(
+            effective_potential(candidate.C, G, Lambda, N_f), rel=1e-12, abs=1e-12,
+        )
+        assert candidate.V_eff < min(
+            0.0, effective_potential(left, G, Lambda, N_f),
+            effective_potential(right, G, Lambda, N_f),
+        )
+        # Proposed dimensionless residual budget; no tolerance/runtime acceptance yet.
+        # R=F'_2(x^2), R'(x)>1/32 on this bracket, so |R|<=1e-4 implies
+        # |x-x_exact|<0.0032 by the mean-value theorem within the bracket.
+        residual_budget = 1e-4
+        residual = effective_potential_derivative(candidate.C, G, Lambda, N_f) / (
+            2 * A * Lambda**2 * candidate.C
+        )
+        assert abs(residual) <= residual_budget
+        # This selected interior case does not qualify all couplings/search windows.
+
+    def test_near_origin_impostor_fails_dimensionless_stationarity_budget(self):
+        Lambda, N_f = 1.0, 4
+        A = N_f / (16 * np.pi**2)
+        G = 2.0 * critical_coupling(Lambda, N_f)
+        impostor = 2e-6 * Lambda
+        slope = effective_potential_derivative(impostor, G, Lambda, N_f)
+        assert 1e-6 * Lambda < impostor < Lambda
+        assert effective_potential(impostor, G, Lambda, N_f) < 0
+        assert abs(slope) < 1e-5  # The former absolute criterion accepts this point.
+        residual = slope / (2 * A * Lambda**2 * impostor)
+        assert residual < -0.49
+        assert abs(residual) > 1e-4
+
+    def test_exact_root_can_lie_above_the_existing_solver_window(self):
+        boundary_ratio = 1 / (1.5 - 2 * np.log(2.0))
+        G = (2 * boundary_ratio) * critical_coupling(1.0, 4)
+        assert effective_potential_derivative(1.0, G, 1.0, 4) < 0
+        # The exact potential is still decreasing at the current upper endpoint.
+        result = full_gap_analysis(G, 1.0, 4)
+        assert result.nontrivial_solution is not None
+        assert result.nontrivial_solution.C <= 1.0
+        assert effective_potential_derivative(result.nontrivial_solution.C, G, 1.0, 4) < 0
+        # A legacy optimizer/classification flag is not a stationarity certificate.
+
+    def test_regulated_stationarity_and_actual_njl_residual_are_distinct(self):
+        from src.core.formulas import tetrad_gap_integral, tetrad_gap_solution
+
+        Lambda, N_f = 1.0, 4
+        G = 2.0 * critical_coupling(Lambda, N_f)
+        C = 0.3
+        u = Lambda**2 / C**2
+        difference = (effective_potential_derivative(C, G, Lambda, N_f) / C
+                      - (1 / G - N_f * tetrad_gap_integral(C, Lambda, N_f)))
+        expected = N_f * C**2 / (8 * np.pi**2) * (np.log1p(u) - u / (1 + u))
+        assert difference > 0
+        assert difference == pytest.approx(expected)
+        njl = tetrad_gap_solution(G, Lambda, N_f)
+        scalar = full_gap_analysis(G, Lambda, N_f).nontrivial_solution.C
+        assert scalar < njl < Lambda
+        assert 1 / G - N_f * tetrad_gap_integral(njl, Lambda, N_f) == pytest.approx(0.0, abs=1e-9)
+        assert effective_potential_derivative(njl, G, Lambda, N_f) > 0
+
+    def test_actual_figure_parameters_samples_and_retained_A_normalization(self):
+        from src.core.visualizations import fig_adw_effective_potential
+
+        figure = fig_adw_effective_potential()
+        assert len(figure.data) == 3
+        assert "Ansatz" in figure.layout.title.text
+        Lambda, N_f = 1.0, 4
+        A = N_f / (16 * np.pi**2)
+        for trace, ratio in zip(figure.data, (0.5, 1.0, 2.0)):
+            G = ratio * critical_coupling(Lambda, N_f)
+            landscape = effective_potential_landscape(G, Lambda, N_f, n_points=200)
+            np.testing.assert_allclose(trace.x, np.linspace(0, 1, 200))
+            np.testing.assert_allclose(trace.y, landscape["V_eff"] / Lambda**4)
+            assert "full tetrad" not in trace.name
+            # Independent critical simplification keeps A in the actual ordinate.
+            if ratio == 1.0:
+                x = np.asarray(trace.x)[1:]
+                expected = A * x**4 * np.log1p(1 / x**2)
+                np.testing.assert_allclose(np.asarray(trace.y)[1:], expected, rtol=1e-9, atol=1e-12)
+        # Figure construction is not export/pixel freshness or physical validation.
+
+    def test_actual_njl_producer_labels_and_raw_integral_ordinate(self):
+        from src.core.formulas import tetrad_gap_integral
+        from src.core.visualizations import fig_tetrad_gap_curve, fig_tetrad_gap_integral
+
+        curve = fig_tetrad_gap_curve()
+        assert "Bounded NJL" in curve.layout.title.text
+        assert "bounded" in curve.data[0].name
+        annotations = " ".join(a.text for a in curve.layout.annotations)
+        assert "bounded search is not a verified full-range root" in annotations
+        assert "first explicit" not in annotations
+        assert "Tetrad condensed" not in annotations
+        assert len(curve.data[0].x) == 400
+        integral = fig_tetrad_gap_integral()
+        trace = integral.data[0]
+        assert len(trace.x) == 300
+        Lambda = np.pi
+        expected = [tetrad_gap_integral(x * Lambda, Lambda) for x in trace.x]
+        np.testing.assert_allclose(trace.y, expected)
+        assert trace.y[0] == pytest.approx(1 / 8)
+        # This controls actual producer wiring/raw units, not solver correctness.

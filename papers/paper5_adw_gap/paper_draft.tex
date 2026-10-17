@@ -18,18 +18,16 @@ A fermion bootstrap test at Level~2}
 \date{\today}
 
 \begin{abstract}
-We investigate whether the Akama-Diakonov-Wetterich (ADW) mechanism for
-emergent gravity can operate with emergent Dirac fermions from Wen's
-string-net condensation. Starting from the ADW 8-fermion cosmological
-term, we perform a Hubbard-Stratonovich decomposition with the tetrad
-$e^a_\mu$ as auxiliary field, integrate out fermions at one loop to
-obtain the Coleman-Weinberg effective potential $V_{\rm eff}(C)$, and
-solve the resulting gap equation. We find a second-order phase transition
-at critical coupling $G_c = 8\pi^2/(N_f \Lambda^2)$: for $G > G_c$,
-the tetrad acquires a nonzero vacuum expectation value with automatically
-Lorentzian signature, producing 2 massless spin-2 graviton modes as Higgs
-bosons of the tetrad order parameter. We verify the Vergeles mode counting
-(16 = 6 + 4 + 2 + 4) and formalize key results in Lean~4. However, we
+An illustrative regulated scalar mean-field ansatz has a continuous
+onset of nonzero scalar minima at $G_c=8\pi^2/(N_f\Lambda^2)$.
+We compare this landscape with a separate NJL fixed-point model that
+shares its threshold but has different nonzero solutions. A microscopic
+Hubbard--Stratonovich or one-loop derivation of the scalar ansatz from
+the Akama--Diakonov--Wetterich (ADW) interaction remains uncomputed.
+The adopted flat tetrad has Lorentzian signature by construction; this
+scalar calculation does not derive gravity or a spin-2 spectrum.
+Vergeles mode bookkeeping (16 = 6 + 4 + 2 + 4) and conditional algebra
+are treated separately from that physical derivation. However, we
 identify four structural obstacles---a ${\sim}6{,}000\times$ perturbative coupling
 deficit from Wen's emergent QED, the spin-connection gap, Grassmann-bosonic
 incompatibility, Nielsen-Ninomiya doubling, and the cosmological constant
@@ -64,10 +62,11 @@ fields. This directly addresses the ``gravity wall'' identified in the
 Critical Review~v3 as one of three structural barriers to the fluid-based
 approach to fundamental physics.
 
-The key question is whether the mean-field gap equation
-$\delta S_{\rm eff}/\delta e^a_\mu = 0$
-admits a nontrivial solution with Lorentzian signature, and whether the
-fluctuation spectrum contains the expected massless spin-2 graviton.
+The physical question is whether a microscopic effective action admits
+a nontrivial tetrad and the required fluctuation spectrum. Here the
+regulated scalar landscape and NJL fixed-point equation are adopted
+models. Their conditional solutions do not answer the full field
+variation $\delta S_{\rm eff}/\delta e^a_\mu=0$ or derive a spin-2 spectrum.
 
 \section{Wen's Emergent QED}
 
@@ -87,7 +86,7 @@ equalization mechanism~\cite{Roy2016} drives all velocities ($v_F$, $v_B$,
 $c$) toward a common terminal velocity under RG flow, restoring emergent
 Lorentz invariance in the deep IR.
 
-\section{ADW Interaction and Hubbard-Stratonovich Decomposition}
+\section{ADW Interaction and an Adopted Auxiliary-Field Ansatz}
 
 The ADW cosmological term is an 8-fermion interaction:
 \begin{equation}
@@ -98,55 +97,85 @@ where $\Theta^a = \frac{i}{2}[\bar\Psi \gamma^a D_\mu \Psi
 - D_\mu \bar\Psi \gamma^a \Psi] dx^\mu$ is bilinear in the spinor field
 (which has mass dimension zero in this framework).
 
-Introducing the auxiliary tetrad $e^a_\mu$ via Hubbard-Stratonovich
-transformation converts the action to quadratic form in fermions:
+We adopt the following auxiliary-field action to motivate a scalar
+mean-field exploration. Its exact Hubbard--Stratonovich equivalence to
+the displayed multifermion interaction, including measure, field content
+and regulator, is not derived here:
 \begin{equation}
 S = \int d^4x \, \det(e) \, \bar\Psi \gamma^a e_a^{\ \mu} D_\mu \Psi
   + \frac{1}{2G} \int d^4x \, {\rm Tr}(e^T \eta \, e).
 \end{equation}
-The first term is the Dirac action in curved spacetime; the second is
-the tree-level tetrad potential.
+The first term has Dirac kinetic form on an adopted tetrad background;
+the second is a supplied quadratic auxiliary potential. Partial
+bosonization in spinor gravity does not by itself establish this
+particular action or its scalar reduction.
 
 \section{Effective Potential and Gap Equation}
 
-Integrating out $N_f$ Dirac fermion species at one loop gives the
-Coleman-Weinberg effective potential for the tetrad magnitude
-$C = |\det(e)|^{1/4}$:
+For positive supplied $G,\Lambda,N_f$, use the illustrative regulated
+scalar ansatz $V_{\rm exact}(0)=0$ (continuous extension) and, for $C\ne0$,
+with $C$ representing an adopted tetrad magnitude:
 \begin{equation}
-V_{\rm eff}(C) = \frac{C^2}{2G}
+V_{\rm exact}(C) = \frac{C^2}{2G}
   - \frac{N_f}{16\pi^2}\left[\Lambda^2 C^2
   - C^4 \ln\!\left(\frac{\Lambda^2}{C^2} + 1\right)\right].
 \label{eq:veff}
 \end{equation}
 
-The curvature at the origin $d^2 V_{\rm eff}/dC^2|_{C=0}$ changes sign
-at the critical coupling:
+A microscopic fermion-determinant derivation of Eq.~\eqref{eq:veff}
+remains uncomputed. Its theoretical origin curvature
+$V_{\rm exact}''(0)=1/G-N_f\Lambda^2/(8\pi^2)$ changes sign at
 \begin{equation}
 G_c = \frac{8\pi^2}{N_f \Lambda^2}.
 \end{equation}
 
-For $G > G_c$, the origin becomes unstable and $V_{\rm eff}$ develops a
-nontrivial minimum at $C_{\rm min} > 0$ with $V_{\rm eff}(C_{\rm min}) < 0$.
-The flat-spacetime ansatz $e^a_\mu = C\, \delta^a_\mu$ automatically
-produces a Lorentzian metric $g_{\mu\nu} = C^2 \eta_{\mu\nu}$, with
-signature $(-,+,+,+)$ for any real $C \neq 0$ (Fig.~\ref{fig:veff}).
+Set $A=N_f/(16\pi^2)$, $r=G/G_c$ and $z=C^2/\Lambda^2$.
+Then $V_{\rm exact}/(A\Lambda^4)=F_r(z)$ with
+\begin{equation}
+ F_r(z)=z(1/r-1)+z^2\ln(1+1/z).
+\end{equation}
+Its nonzero stationary point obeys
+\begin{equation}
+ \frac1r-1+2z\ln(1+1/z)-\frac{z}{1+z}=0.
+ \label{eq:regulated_stationarity}
+\end{equation}
+For $r\leq1$ the exact magnitude-domain minimum is the origin, strict
+and degenerate at equality. For $r>1$ there is one positive scalar
+minimum with negative potential, dependent on $r,\Lambda,N_f$.
+The flat ansatz $e^a_\mu=C\delta^a_\mu$ gives
+$g_{\mu\nu}=C^2\eta_{\mu\nu}$ for nonzero real $C$. Its Lorentzian
+signature is an adopted kinematic choice, not dynamically selected by
+Eq.~\eqref{eq:veff}.
+
+The numerical potential returns zero for $|C|<10^{-15}$, otherwise
+using Eq.~\eqref{eq:veff} in floating-point arithmetic. The guard's real
+piecewise idealization is locally constant, so the exact ansatz's
+strict-minimum/curvature/scaling properties do not describe the full
+numerical program. The minimizer searches only
+$10^{-6}\Lambda<C<\Lambda$; its success flag is not a certificate of
+unrestricted stationarity or global optimality. Exact roots can leave
+either end of that window, and the absolute guard need not scale with
+$\Lambda$.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig28_adw_effective_potential.png}
-\caption{Effective potential $V_{\rm eff}(C)$ at three coupling ratios.
-Below $G_c$: single minimum at $C = 0$ (pre-geometric). At $G_c$:
-inflection point. Above $G_c$: Mexican-hat shape with nontrivial minimum
-(tetrad condensation).}
+\caption{Illustrative regulated scalar ansatz with $\Lambda=1$,
+$N_f=4$ and $r=0.5,1,2$ (dashed, dotted, solid). The axes are
+$C/\Lambda$ and $V_{\rm num}(C)/\Lambda^4=A F_r(z)$ outside the
+origin guard. The exact critical origin is a strict degenerate minimum;
+the supercritical scalar minimum satisfies
+Eq.~\eqref{eq:regulated_stationarity}. This landscape does not derive
+a microscopic tetrad vacuum or gravitational spectrum.}
 \label{fig:veff}
 \end{figure}
 
 \section{Explicit Gap Equation: NJL Integral Formulation}
 
-The V$_{\rm eff}$ treatment above determines $G_c$ but does not yield the
-self-consistent gap equation directly. We now derive this by rewriting the
-stationarity condition $\partial V_{\rm eff}/\partial C = 0$ as a fixed-point
-equation in the NJL sense.
+Consider a separate NJL fixed-point model. It shares $G_c$ with the
+regulated scalar ansatz, but it is not a rewriting of
+Eq.~\eqref{eq:regulated_stationarity}. The microscopic ADW identification
+of either scalar model remains uncomputed.
 
 Define the one-loop integral (density of states $c_4 = 1/(4\pi^2)$):
 \begin{equation}
@@ -155,7 +184,16 @@ I(\Delta) = \frac{c_4}{2}\!\left[\Lambda^2 - \Delta^2 \ln\!\left(1 + \frac{\Lamb
 \end{equation}
 The gap equation is then $\Delta = G \cdot N_f \cdot \Delta \cdot I(\Delta)$,
 with critical coupling $G_c = 1/(N_f \cdot I(0)) = 8\pi^2/(N_f \Lambda^2)$,
-matching the V$_{\rm eff}$ result~(\ref{eq:veff}) exactly.
+matching only the threshold of Eq.~\eqref{eq:veff}. For $\Delta=C>0$,
+\begin{equation}
+ \frac{V_{\rm exact}'(C)}{C}-\left[\frac1G-N_fI(C)\right]
+ =\frac{N_fC^2}{8\pi^2}
+ \left[\ln(1+u)-\frac{u}{1+u}\right]>0,
+ \qquad u=\frac{\Lambda^2}{C^2}.
+\end{equation}
+Thus their nonzero roots differ. Writing $L(z)=z\ln(1+1/z)$, the NJL
+root solves $L(z_N)=1-1/r$ and is strictly larger than the regulated
+stationary root at fixed $r>1$.
 
 This integral formulation provides additional structure:
 \begin{itemize}
@@ -167,29 +205,36 @@ This integral formulation provides additional structure:
   from $\Delta = 0$ (second-order transition).
 \end{itemize}
 
-The Aristotle theorem prover disproved the naive claim $\Delta^*(G) \leq \Lambda$
-via counterexample: for $G = 1/(c_4(1 - \ln 2)/2)$, $N_f = 1$, $\Lambda = 1$,
-the gap $\Delta = 1$ satisfies the fixed-point equation, showing the solution
-can reach the cutoff. This means the gap equation is valid as an algebraic
-self-consistency condition, but $\Delta > \Lambda$ signals that the one-loop
-truncation is no longer reliable---the physics requires UV completion.
+For $G=1/[c_4(1-\ln2)/2]$, $N_f=1$, $\Lambda=1$, the NJL
+fixed point $\Delta=1$ reaches the cutoff. This equality refutes the
+commented strict target $\Delta^*<\Lambda$ in
+\texttt{TetradGapEquation.lean}; equality alone does not refute a different,
+non-strict $\Delta^*\leq\Lambda$ bound. Separately, since $L$ increases
+from zero to one, its positive root diverges as $r\to\infty$; it crosses
+the cutoff at $r=1/(1-\ln2)$ and exceeds it at larger coupling. These are
+conditional algebraic statements, not physical reliability beyond the UV cutoff.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_tetrad_gap_curve.png}
-\caption{Gap solution $\Delta^*/\Lambda$ vs.\ coupling ratio $G/G_c$
-from the NJL integral formulation. The nontrivial branch emerges
-continuously at $G_c$ (second-order transition). For $G/G_c \gg 1$,
-the solution approaches $\Lambda$.}
+\caption{Bounded NJL numerical output $\Delta/\Lambda$ vs.\ $G/G_c$,
+with $\Lambda=\pi$, $N_f=2$. The producer uses a bisection interval ending
+at $\Lambda$ without enlarging its upper bracket; an apparent cutoff cap
+is not saturation of the exact NJL root. The exact algebraic branch
+emerges continuously at $G_c$, can exceed the cutoff and has no finite
+cutoff asymptote. Beyond-cutoff continuation does not establish physical
+applicability, and the plotted bounded output is not a full-range root
+certificate.}
 \label{fig:gap_curve}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_tetrad_gap_integral.png}
-\caption{Gap integral $I(\Delta)/I(0)$ vs.\ $\Delta/\Lambda$.
-Strictly decreasing from $I(0) = c_4 \Lambda^2/2$ to zero as
-$\Delta \to \infty$. The self-consistency condition
+\caption{Gap integral $I(\Delta)$ vs.\ $\Delta/\Lambda$ at $\Lambda=\pi$.
+The exact separate NJL integral decreases from $I(0)=c_4\Lambda^2/2$
+to zero as $\Delta\to\infty$; the producer samples its guarded numerical
+evaluator. The self-consistency condition
 $G \cdot N_f \cdot I(\Delta^*) = 1$ fixes the gap.}
 \label{fig:gap_integral}
 \end{figure}
@@ -255,8 +300,9 @@ massless graviton, and massive Higgs modes.}
 
 \section{Structural Obstacles for Emergent Fermions}
 
-While the gap equation succeeds at mean-field level, four structural
-obstacles prevent a complete emergent fermion bootstrap:
+The illustrative scalar and NJL models leave the microscopic tetrad
+derivation open. Additional structural obstacles prevent a complete
+emergent fermion bootstrap:
 
 \begin{enumerate}
 \item \textbf{Perturbative coupling deficit (${\sim}6{,}000\times$)}: The
@@ -350,28 +396,29 @@ Aristotle automated prover (run \texttt{79e07d55}); 1 disproved by counterexampl
 
 \section{Conclusions}
 
-We have derived the explicit NJL-type gap equation for tetrad condensation
-in the ADW mechanism.
-The integral formulation~(\ref{eq:gap_integral}) reproduces the
-V$_{\rm eff}$ critical coupling $G_c = 8\pi^2/(N_f \Lambda^2)$ exactly, and
-provides rigorous existence (via IVT), uniqueness (for $G < G_c$), and
-monotonicity of the nontrivial branch. The Aristotle automated theorem prover
-proved 9 of 10 gap equation theorems and disproved one (boundedness by
-$\Lambda$), revealing that the one-loop approximation becomes unreliable when
-$\Delta$ approaches the cutoff.
+The regulated scalar ansatz and separate NJL fixed-point model share
+$G_c=8\pi^2/(N_f\Lambda^2)$ but have distinct nonzero roots.
+Their conditional algebra does not establish a microscopic
+Hubbard--Stratonovich/fermion-determinant derivation, dynamically select
+Lorentzian signature or derive a gravitational spectrum. The exact scalar
+minimum is parameter-dependent; the guarded numerical routine and its
+fixed search interval require separate convergence/domain qualification.
+The NJL root's continuation beyond the cutoff is an applicability warning,
+not a reliable UV prediction.
 
-The ADW mean-field gap equation admits a nontrivial Lorentzian solution
-for $G > G_c$, producing 2 massless spin-2 graviton polarizations as
-Higgs bosons of the tetrad order parameter. The Vergeles mode counting is
-verified both numerically and formally (37 theorems across two Lean modules,
-zero \texttt{sorry}).
+Reported formal existence, uniqueness and monotonicity results concern
+the stipulated NJL equation; the automated boundedness record and Vergeles
+mode-count bookkeeping remain separate from this scalar-potential
+correspondence; those formal results concern stipulated equations,
+not a microscopic derivation of the regulated potential.
 
 However, the emergent fermion bootstrap at Level~2 faces four structural
 obstacles, the most quantitatively severe being the ${\sim}6{,}000\times$
 perturbative coupling deficit (\texttt{coupling\_ratio\_small}, proved).
-This is a \emph{qualified positive result}: the mechanism works at
-mean-field level (and is NLO-exact: $\alpha_1 = 0$), but the perturbative
-path from Wen's emergent QED to ADW condensation is closed. Two non-perturbative
+The conditional mean-field/NJL results, including the stated NLO
+classification $\alpha_1=0$, do not complete that physical derivation.
+The perturbative path from Wen's emergent QED to ADW condensation remains
+subject to the coupling obstacle. Two non-perturbative
 routes remain open: (1)~Abelian instantons in monopole backgrounds generating
 unsuppressed 8-fermion vertices~\cite{Csaki2024}, and (2)~the Volovik
 Fermi-point route where topology rather than coupling strength drives gauge

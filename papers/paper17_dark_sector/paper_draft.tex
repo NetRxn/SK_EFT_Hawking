@@ -25,14 +25,15 @@ infrastructure developed in the SK-EFT Hawking research program—%
 Schwinger--Keldysh dissipative EFT, tetrad condensation (ADW), vestigial
 gravity phase structure, $\mathbb{Z}_{16}$ anomaly computation, and
 fracton formalization—constrains dark matter (DM) and dark energy (DE).
-Four connections are quantitative and machine-verified: (i)~$\mathbb{Z}_{16}$
+We distinguish quantitative connections from unresolved physical inputs: (i)~$\mathbb{Z}_{16}$
 anomaly cancellation forces a hidden sector of charge $+3 \bmod 16$, with
 Wang's topological order (T-0) and three sterile Weyl fermions (S-0) as
-the minimal solutions; (ii)~ADW tetrad-condensation equilibrium yields
-$\rho_{\rm vac} \sim T^4 \sim (\mathrm{meV})^4$, reproducing the
-observed cosmological-constant scale at the order-of-magnitude level
-(the $\mathcal{O}(1)$ prefactor is deferred to Phase 6; a prior
-``$20\%$'' agreement claim is withdrawn in this revision); (iii)~fracton dark
+the minimal solutions; (ii)~an illustrative regulated scalar ansatz is
+separated from a microscopic ADW derivation, which remains uncomputed;
+a distinct zero-vacuum-energy equilibrium construction motivates further
+modeling, but a nonzero present density
+requires a specified physical model and supported inputs; no independent
+meV magnitude or predictive accuracy is computed here; (iii)~fracton dark
 matter is compatible with $3{+}1$D gravity through the gapless p-wave
 dipole superfluid phase, subject to a condensate condition $\mu \gtrsim
 \SI{}{\mega\electronvolt}$ at big bang nucleosynthesis (BBN); and
@@ -45,9 +46,9 @@ smoking gun. Every Phase 5x dark-matter candidate is Standard-Model gauge single
 given deep-research $\sigma_{\rm DD}$ bounds for each candidate,
 collectively below the current nuclear-recoil direct detection floor,
 $\log_{10}\sigma_{\rm DD}(\SI{}{\centi\meter\squared}) \leq -50$.
-The Klinkhamer--Volovik (KV) oscillating vacuum is in $2.9{-}4.4\sigma$
-tension with DESI DR2 $(w_0, w_a)$; we retain the $\Lambda$-magnitude
-prediction and withdraw the DE-dynamics claim. Structural claims split
+The equilibrium branch of the Klinkhamer--Volovik (KV) oscillating
+vacuum has asymptotic effective CDM-like expansion. A comparison
+with DESI dark-energy constraints requires a specified model and likelihood. Structural claims split
 into two Lean classes: \emph{derived} theorems whose proofs consume
 physics assumptions (SM-singlet from fracton--YM, equation-of-state
 distinctness from the rationals $w\!\in\!\{-1, 0, 1/3\}$, FG tree-level
@@ -94,11 +95,13 @@ hidden sector of charge~$+3 \bmod 16$—the remainder after three generations
 contribute~$-3$. The hidden sector can be a topologically-ordered gapped
 phase (T-0) or a minimal particle solution (S-0: three sterile Weyl
 fermions).
-\item \emph{Tetrad condensation and the cosmological constant.}~The ADW
-gap equation~\cite{ADW2019,Diakonov2011}—a Volovik-style mean-field
-equation for emergent gravity—has a critical point at $C_0 = \Lambda
-e^{-1/4}$ with $V_{\rm eff}(C_0) = -\Lambda^4 / (4e)$. The residual
-equilibrium value after thermal perturbation is~$\rho_{\rm vac} \sim T^4$.
+\item \emph{Tetrad condensation and the cosmological constant.}~Composite
+tetrads motivate an illustrative regulated scalar mean-field
+ansatz~\cite{Diakonov2011}. Its nonzero stationary point and depth depend
+on the supplied coupling, cutoff and species count; they are not a
+universal closed-form scale. A microscopic ADW derivation is uncomputed.
+A nonzero present density also needs a response or cosmological evolution
+model and supported scale inputs~\cite{Volovik2021CombinedLorentz,Volovik2024DeSitterThermodynamics}.
 \item \emph{Fracton dark matter.}~Our earlier formalization of
 non-Abelian fracton obstructions~\cite{FractonNonAbelian2025} proves that fracton
 topological phases cannot support Yang--Mills, so any fracton DM must be
@@ -117,12 +120,13 @@ $3{-}5\sigma$ detection of the sonic-boom feature—a forecast the
 recent BK review~\cite{BK2025} explicitly omits.
 \end{itemize}
 
-The heuristic claim is the KV oscillating-vacuum mechanism for dynamical
-dark energy. It predicts~$(w_0, w_a) = (-1, 0)$ under cosmological
-averaging, which is in~$2.9{-}4.4\sigma$ tension with DESI
-DR2~\cite{DESI2024,DESI2025}. We therefore separate the $\Lambda$-magnitude
-claim (kept) from the DE-dynamics claim (withdrawn), and point to QCD
-topological dark energy~\cite{VanWaerbeke2025} as a DESI-compatible bridge.
+The 2008 KV oscillating-vacuum mechanism~\cite{KV2008b} couples a four-form
+vacuum variable to a field-dependent gravitational coupling. At the
+equilibrium chemical potential, its large-time solution has an averaged
+energy density proportional to $a^{-3}$ and effective CDM-like expansion.
+This result does not specify a CPL dark-energy prediction or a DESI
+likelihood. Equilibrium self-tuning and the cosmological evolution of
+this dynamical model are separate questions.
 
 An additional driver for re-examining the dark sector comes from the $H_0$
 tension. The H0DN Collaboration (April 2026) reports
@@ -199,54 +203,95 @@ determine the dark sector, and the constraint surface is now machine-verified.
 \section{Cosmological Constant from Tetrad Condensation}
 \label{sec:adw-cc}
 
-The ADW mean-field gap equation~\cite{ADW2019,Diakonov2011} describes
-emergent gravity as a condensate of tetrad bilinears. The effective
-potential is
+Composite tetrads~\cite{Diakonov2011} motivate the scalar magnitude
+parameter $C$ in the illustrative regulated mean-field ansatz
 \begin{equation}
-V_{\rm eff}(C) = \frac{C^4}{4} \ln \frac{C}{\Lambda} - \frac{C^4}{16},
+ V_{\rm exact}(C)=\frac{C^2}{2G}-A\left[\Lambda^2C^2
+ -C^4\ln\!\left(1+\frac{\Lambda^2}{C^2}\right)\right],
+ \qquad A=\frac{N_f}{16\pi^2},
+ \label{eq:adw-regulated}
 \end{equation}
-with critical point at $C_0 = \Lambda e^{-1/4}$ and depth
-$V_{\rm eff}(C_0) = -\Lambda^4 / (4e)$. The Lean theorem
-\texttt{critical\_coupling\_pos} in \texttt{ADWMechanism.lean} (21
-theorems, shipped in Phase~5) verifies positivity of the critical
-coupling; Phase 5x Wave~3 adds
-\texttt{CosmologicalConstant.lean} with the Volovik-style equilibrium
-residual, pinning the quantitative $\Lambda$-magnitude assessment.
+with positive supplied $G,\Lambda,N_f$ and continuous
+$V_{\rm exact}(0)=0$. A microscopic Hubbard--Stratonovich or one-loop
+ADW derivation of this particular scalar expression is uncomputed.
+Its stationary point is a property of this adopted scalar model, not a
+solution of the full tetrad field theory.
+
+Set $G_c=8\pi^2/(N_f\Lambda^2)$, $r=G/G_c$ and
+$z=C^2/\Lambda^2$. The exact nonzero stationary point satisfies
+\begin{equation}
+ \frac1r-1+2z\ln(1+1/z)-\frac{z}{1+z}=0.
+ \label{eq:adw-stationary}
+\end{equation}
+For $r\leq1$ the exact origin is the magnitude-domain minimum; at
+$r=1$ it is a strict degenerate minimum, not an inflection point.
+For $r>1$ the exact model has one positive minimum whose location and
+depth depend on the parameters. A separate NJL fixed-point model shares
+$G_c$ but has different nonzero roots.
+
+The numerical routine returns zero for $|C|<10^{-15}$ and uses the
+regulated expression in floating-point arithmetic elsewhere. Its
+idealized real piecewise guard is locally constant; exact strict-minimum,
+curvature and scaling statements do not describe the whole numerical
+program. The minimizer searches only
+$10^{-6}\Lambda<C<\Lambda$; a successful bounded result is not an
+unrestricted stationary/global-minimum certificate.
+\texttt{critical\_coupling\_pos} supplies conditional positivity of the
+adopted $G_c$, while \texttt{CosmologicalConstant.lean} supplies generic
+temperature, quartic and positive-input ratio algebra. These facts do not
+derive this scalar potential, its physical vacuum response or an
+independent magnitude input.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig28_adw_effective_potential.png}
 \caption{\label{fig:adw_veff}
-ADW effective potential $V_{\rm eff}(C)$ from the gap equation. Critical
-point at $C_0 = \Lambda e^{-1/4}$ (Lean:
-\texttt{critical\_coupling\_pos}); depth $-\Lambda^4/(4e)$. In perfect
-Minkowski vacuum Volovik's tetrad-determinant self-tuning absorbs this to
-$\Lambda_{\rm eff} = 0$.}
+Illustrative regulated scalar potential, Eq.~\eqref{eq:adw-regulated},
+with $\Lambda=1$, $N_f=4$ and $r=G/G_c=0.5,1,2$ (dashed, dotted,
+solid). The axes are $x=C/\Lambda$ and
+$V_{\rm num}(C)/\Lambda^4=A F_r(x^2)$ outside the origin guard,
+where $F_r(z)=z(1/r-1)+z^2\ln(1+1/z)$. The exact critical origin is a
+degenerate minimum; the supercritical minimum satisfies
+Eq.~\eqref{eq:adw-stationary}. A scalar minimum does not establish
+microscopic tetrad condensation or a nonzero present vacuum density.}
 \end{figure}
 
-Volovik's key observation~\cite{Volovik2006,KV2008} is that in perfect
-Minkowski vacuum the tetrad determinant self-adjusts so that
-$\Lambda_{\rm eff} = 0$. Thermal perturbation by the matter sector
-generates a residual $\rho_{\rm vac} \sim T^4$ at the scale of the
-effective cosmological horizon. Quantitatively, at
-$T = T_{\rm dS} = H/\pi$ (which differs from the Gibbons--Hawking
-temperature by a factor of two---a point on which deep research
-agrees), the residual is
+The tetrad-determinant construction~\cite{Volovik2021CombinedLorentz}
+admits a zero-$\Lambda$ matter-free Minkowski equilibrium under stated
+assumptions, including neglect of determinant dependence in the matter
+action and gravitational coupling. Its imaginary-$e=i\beta$ extension
+uses a Euclidean $4{+}0$ thermodynamic temperature, not an automatically
+identified CMB or $3{+}1$ local de~Sitter temperature. A nonzero present
+density requires further response or dynamical input.
+
+In the Einstein-gravity/local-temperature description of
+Ref.~\cite{Volovik2024DeSitterThermodynamics}, Eq.~(22) instead gives,
+in units $\hbar=c=k_B=1$,
 \begin{equation}
-\rho_{\rm vac}^{1/4} \approx \mathcal{O}(1) \times T_{\rm dS}
-\sim \mathrm{meV}
+\rho_{\rm vac}=\frac{3H^2}{8\pi G}
+              =\frac{3\pi}{8G}T_{\rm dS}^2,
+\qquad T_{\rm dS}=H/\pi.
 \end{equation}
-versus the observed $(\SI{2.3}{\milli\electronvolt})^4$. The mechanism
-reproduces the \emph{scale} of $\rho_{\rm vac}^{1/4}$ at the meV level
-without tuning; the specific $\mathcal{O}(1)$ coefficient requires a
-full $V_{\rm eff}$ parameterization and is deferred to Phase 6 --- see
-the CAUTION block in \texttt{CosmologicalConstant.lean} L21--23
-(``the specific numerical identity requires a particular $V_{\rm eff}$
-parameterization and is deferred pending full ADW renormalization
-infrastructure''). Previous drafts quoted ``$\approx 2.8$~meV'' and
+Thus $E_{\rm vac}\equiv\rho_{\rm vac}^{1/4}$ scales as
+$G^{-1/4}T_{\rm dS}^{1/2}$, not as $T_{\rm dS}$ with an unspecified
+order-one prefactor. The source's $T^4$ scaling on p.~16 concerns
+created relativistic matter, not this vacuum density. The CMB thermal
+energy $k_B T_{\rm CMB}$ is a third distinct scale. A metric-prefix
+correction or fitted prefactor cannot supply the missing physical map.
+
+The same source's speculative stiff-matter/two-fluid scenario,
+Eqs.~(70)--(73), offers a late-time density of order $M_{\rm Pl}^2/t^2$
+under phenomenological exchange and late-time assumptions. This is
+concrete alternative context, not this repository's completed independent
+$2.8$~meV ADW computation or a predictive-accuracy result. The nonzero
+magnitude remains uncomputed rather than inferred from example inputs.
+
+Previous drafts quoted ``$\approx 2.8$~meV'' and
 ``$20\%$ agreement'' without disclosing that the $\mathcal{O}(1)$
 prefactor is fit rather than computed; we withdraw that number in this
-revision (paper 17 Wave 10 remediation). Cross-reference:
+revision (paper 17 Wave 10 remediation). That withdrawal does not
+validate a remaining scale identification or the module's input provenance.
+Cross-reference:
 \texttt{T\_dS\_double\_TGH} proves $T_{\rm dS} = 2 T_{\rm GH}$ and
 \texttt{lambda\_magnitude\_ratio\_pos} proves positivity of the
 magnitude ratio (for $T_p, T_o > 0$) in \texttt{CosmologicalConstant.lean}.
@@ -255,21 +300,33 @@ The tautological \texttt{lambda\_magnitude\_ratio\_exact}
 function composed with equal arguments) does \emph{not} support the
 physics agreement claim and was erroneously cited in a prior draft.
 
-\paragraph*{KV and DESI—honest reframe.}
-The companion KV oscillating-vacuum mechanism~\cite{KV2008} would
-predict an oscillating $w(z)$. But DESI DR2~\cite{DESI2024,DESI2025}
-excludes $(w_0, w_a) = (-1, 0)$---KV's time-averaged prediction---at
-$2.9\sigma$ (Pantheon+) and $4.4\sigma$ (DESY5). KV oscillations are
-Planck-scale in period (${\sim}\SI{e-44}{\second}$), not cosmological;
-so $w_{\rm eff}$ during any accessible epoch is~$0$ (CDM-like), not
-phantom-crossing. Resolutions in the RVM family~\cite{Sola2023} with
-$\nu \sim \num{e-3}$ can accommodate DESI, but Volovik-motivated
-$\nu \sim \num{e-122}$ is too small by~$10^{82}$. We therefore
-\emph{withdraw} the ``KV explains DESI dynamics'' claim and \emph{keep}
-the~$\Lambda$-magnitude claim. The strongest DESI-compatible bridge
-from the ADW framework is the QCD topological dark
-energy of Van~Waerbeke--Zhitnitsky~\cite{VanWaerbeke2025} with zero
-free parameters; DESI DR3 (2026--2027) will be decisive.
+\paragraph*{Oscillating vacuum and dark-energy constraints.}
+The 2008 KV oscillating-vacuum mechanism~\cite{KV2008b} is studied in a model
+with a four-form field $F$ and a variable gravitational coupling $G(F)$.
+For the equilibrium chemical potential $\mu=\mu_0$, the asymptotic
+averaged density scales as $\langle\rho_V\rangle\propto a^{-3}$.
+The effective $w=0$ describes the combined $F$-field and gravitational
+response in an equivalent standard FRW expansion; the $F$-field's own
+vacuum equation of state is $w=-1$. The clustering properties of this
+effective matter component remain open.
+
+A small negative departure from $\mu_0$ can instead lead to a late
+de~Sitter stage. The authors also identify acceleration and
+nucleosynthesis-expansion problems for the equilibrium extrapolation.
+These branch-specific results do not establish a prediction
+$(w_0,w_a)=(-1,0)$ for dark energy or a no-go for every realization.
+The later stepwise-relaxation scenario~\cite{KV2011Plateaux} instead
+proposes locally approximately vacuum-like plateaux, $w\approx-1$,
+with a possibly long-lived present plateau if the relevant vacuum
+contributions have not equilibrated. Treating a plateau as constant
+over an observational interval is a conditional $\Lambda$-like
+idealization. This is distinct from the 2008 asymptotic effective-CDM
+branch and supplies no universal fitted CPL pair or KV likelihood.
+
+DESI's dark-energy analyses~\cite{DESI2024,DESI2025} compare specified
+cosmological models. Their likelihood significances cannot be assigned
+to the KV model without a corresponding expansion and perturbation
+calculation and a fit to the same data.
 
 %% ================================================================
 \section{Fracton Dark Matter and the Viability Matrix}
@@ -580,8 +637,8 @@ scoring function; see Table~\ref{tab:honesty}.}
   next-gen dwarfs, JWST rotation curves & W7 & viable (conditional) \\
 3 & EP violation, STEP-class & $\eta \sim \num{e-18}$ (vestigial) &
   STEP mission & Phase 6 (W6 gated) & blocked (MC gate) \\
-4 & DESI DR3 $w(z)$ & evolving dark energy & DESI 2026--2027 & W3 &
-  KV withdrawn; QCD-topological bridge \\
+4 & DESI $w(z)$ & model-specific dark-energy fit & DESI & W3 &
+  KV comparison requires a forward model \\
 5 & Direct nuclear recoil & null result & DARWIN & all kinds (CC2) &
   predicted null \\
 \bottomrule
@@ -716,8 +773,8 @@ Fracton cosmological $w=0$ (dust)
   & MCC (\texttt{fracton\_cosmo\_dust\_pressureless}; $w$ defined to zero) \\
 SFDM merger S/N matches W1b Table~6 & Empirical (calibration) \\
 BK has no quantitative merger forecast & Empirical (literature) \\
-KV oscillating vacuum in Level D tension with DESI & Empirical (W1b) \\
-ADW Volovik $\Lambda$-magnitude at the meV scale & Heuristic (W3 memo; $\mathcal{O}(1)$ prefactor Phase 6) \\
+KV comparison with DESI & Model-dependent; no likelihood derived \\
+ADW nonzero present-density magnitude & Uncomputed (model, physical scales and input provenance required) \\
 Fracton DM viable in p-wave phase (BBN) & Heuristic (W7 Drilldown) \\
 $\mathbb{Z}_{16}$ forces vestigial relics to carry~$+3$ & Heuristic (Phase~6) \\
 \bottomrule
@@ -774,14 +831,18 @@ collected in Table~\ref{tab:honesty} (MCC entries), to be invisible to
 nuclear-recoil direct detection. Strengthening these bounds from
 classification-level (MCC) to derivation-level is a Phase~6 target.
 
-Second, the ADW $\Lambda$-magnitude result reproduces the meV scale of
-$\rho_{\rm vac}^{1/4}$ without tuning. We withdraw the prior
-``$20\%$-agreement'' quantification pending a Phase~6 full-$V_{\rm eff}$
-calculation of the $\mathcal{O}(1)$ coefficient; for now the claim is
-scale-matching (``the meV scale emerges naturally from the condensation
-equilibrium, without fine-tuning''). We honestly separate this scale-
-matching from the withdrawn KV dynamics claim and note the
-QCD-topological-DE pathway as a DESI-compatible alternative.
+Second, the regulated scalar landscape is an illustrative ansatz whose
+microscopic ADW derivation remains uncomputed. Its parameter-dependent
+minimum is distinct from a derived tetrad vacuum or cosmological amplitude.
+The nonzero ADW vacuum-density magnitude remains uncomputed.
+The source-level equilibrium construction, local de~Sitter temperature,
+thermal-matter density and vacuum-density fourth root are distinct.
+The prior ``$20\%$-agreement'' claim remains withdrawn; a missing
+gravitational scale or physical response cannot be replaced by an
+unspecified order-one coefficient. A future magnitude calculation needs
+explicit dynamics, unit conventions and independently supported inputs.
+This status supplies neither a KV likelihood nor a no-go for the
+phenomenological alternatives discussed in the cited sources.
 
 Third, the SFDM cluster-merger forecast is the Paper~17 money plot and
 fills a confirmed gap in the most recent comprehensive BK review.
@@ -829,13 +890,28 @@ p-wave programs whose results Paper~17 synthesizes.
 \bibitem{CGL2017b} P.~Glorioso, M.~Crossley, H.~Liu, JHEP \textbf{09}, 096 (2017).
 \bibitem{Volovik2006} G.~E.~Volovik, JETP Lett.\ \textbf{82}, 319 (2005).
 \bibitem{KV2008} F.~R.~Klinkhamer and G.~E.~Volovik, Phys.\ Rev.\ D \textbf{77}, 085015 (2008).
+\bibitem{KV2008b} F.~R.~Klinkhamer and G.~E.~Volovik, ``Dynamic vacuum variable and equilibrium approach in cosmology,'' Phys.\ Rev.\ D \textbf{78}, 063528 (2008), arXiv:0806.2805v7.
+\bibitem{Volovik2021CombinedLorentz}
+G.~E.~Volovik, ``Combined Lorentz Symmetry: Lessons from Superfluid
+${}^3$He,'' J.\ Low Temp.\ Phys.\ \textbf{206}, 1--15 (2022;
+online 2021), doi:10.1007/s10909-021-02630-7.
+The source assessed here is the 8-page author preprint
+arXiv:2011.06466v9 (May 2021), titled ``Combined Lorentz symmetry,''
+§§XI--XII; later author and publisher bodies were not assessed.
+
+\bibitem{Volovik2024DeSitterThermodynamics}
+G.~E.~Volovik, ``Thermodynamics and Decay of de Sitter Vacuum,''
+Symmetry \textbf{16}(6), 763 (2024), doi:10.3390/sym16060763.
+The source assessed here is arXiv:2312.02292v16,
+Eq.~(22), p.~16 and Eqs.~(70)--(73).
+
+\bibitem{KV2011Plateaux} F.~R.~Klinkhamer and G.~E.~Volovik, ``Dynamics of the quantum vacuum: Cosmology as relaxation to the equilibrium state,'' J.\ Phys.\ Conf.\ Ser.\ \textbf{314}, 012004 (2011), arXiv:1102.3152v4.
 \bibitem{Lean4} L.~de~Moura and S.~Ullrich, CADE \textbf{28}, 625 (2021).
 \bibitem{Mathlib} The mathlib Community, CPP \textbf{2020}, 367 (2020).
 \bibitem{Wan2019} Z.~Wan, J.~Wang, and Y.~Zheng, Phys.\ Rev.\ D \textbf{100}, 085012 (2019).
 \bibitem{Wang2020} J.~Wang, Phys.\ Rev.\ Research \textbf{2}, 013189 (2020).
 \bibitem{Wang2021} J.~Wang, Mod.\ Phys.\ Lett.\ A \textbf{36}, 2130008 (2021).
 \bibitem{Garcia-Etxebarria2019} I.~Garc{\'i}a-Etxebarria and M.~Montero, JHEP \textbf{08}, 003 (2019).
-\bibitem{ADW2019} A.~A.~Abrikosov~Jr.\ and F.~R.~Klinkhamer, Phys.\ Rev.\ D \textbf{99}, 105009 (2019).
 \bibitem{Diakonov2011} D.~Diakonov, Mod.\ Phys.\ Lett.\ A \textbf{26}, 2439 (2011).
 \bibitem{BK2015} L.~Berezhiani and J.~Khoury, Phys.\ Rev.\ D \textbf{92}, 103510 (2015), arXiv:1507.01019.
 \bibitem{BK2025} L.~Berezhiani, G.~Cintia, V.~De~Luca, and J.~Khoury, Phys.\ Rep.\ (2025) arXiv:2505.23900.

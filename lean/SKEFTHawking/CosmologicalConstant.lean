@@ -42,9 +42,13 @@ deferred Phase 6 work per the Phase 5x roadmap.
 - Lit-Search/Phase-5x/Volovik cosmological constant deep research
   (2026-04 Phase 5x Wave 1 Task 2, Wave 1b Task 7)
 - docs/roadmaps/Phase5x_Roadmap.md Wave 3
-- Volovik, JLTP 2025 (de Sitter double temperature mechanism)
-- Klinkhamer-Volovik, PRD 2024 (oscillating vacuum, ⚡W1b: Level D
-  tension with DESI DR2 — see W1b correction in roadmap)
+- Volovik, arXiv:2312.02292v16 (local de Sitter temperature and Eq. 22)
+- Klinkhamer-Volovik, PRD 78, 063528 (2008), arXiv:0806.2805v7:
+  dynamical four-form equilibrium/perturbed-chemical-potential branches.
+- Klinkhamer-Volovik, J. Phys. Conf. Ser. 314, 012004 (2011),
+  arXiv:1102.3152v4: distinct stepwise-relaxation/approximate-plateau scenario.
+  Neither source supplies a universal fitted CPL pair or KV-DESI likelihood;
+  the model fit and exclusion significance remain uncomputed here.
 -/
 
 import Mathlib
@@ -70,7 +74,7 @@ Derived from the "modified spatial translation" symmetry
 processes (ionization, proton decay) via the KMS condition at this
 temperature — distinct from the Gibbons-Hawking horizon temperature.
 
-See Volovik JLTP 2025. Formalization of the KMS / symmetry derivation
+See arXiv:2312.02292v16. Formalization of the KMS / symmetry derivation
 is deferred to Phase 6 pending de Sitter axioms in Mathlib.
 -/
 noncomputable def de_sitter_temperature_volovik (H : ℝ) : ℝ :=
@@ -178,23 +182,25 @@ theorem quartic_CW_C_sq_pos {A B : ℝ} (hA : 0 < A) (hB : 0 < B) :
   have h2B : 0 < 2 * B := by positivity
   exact div_pos hA h2B
 
-/-! ## 3. Λ magnitude bound (W1b surviving empirical hook) -/
+/-! ## 3. Supplied-scale fourth-power ratio -/
 
 /--
-**Λ magnitude ratio**: the ratio of ADW-predicted vacuum energy
-density to the observed Planck ΛCDM value.
+**Supplied-scale ratio**: fourth powers of two explicitly supplied
+energy scales in matching units. No physical ADW scale is derived here.
+The historical argument assigning 2.8 meV and an accuracy band is not
+established by this definition or its positivity theorem.
 
-Volovik's argument predicts `ρ_vac ~ T⁴` with T the dominant IR
-scale; with `T ≈ 2.8 meV` this gives ρ_vac ~ (2.8 meV)⁴ versus
-the observed `Ω_Λ H₀² M_Pl² / (3)` ~ (2.3 meV)⁴. The ratio is
-`(2.8/2.3)⁴ ≈ 2.20`, i.e. ~20% accuracy on the scale — the
-tightest "structural" coincidence for the cosmological constant
-in any known mechanism.
+The CMB thermal energy, local de Sitter temperature and vacuum-density
+fourth root are distinct. In arXiv:2312.02292v16 Eq. (22), natural units
+give rho_vac = 3 H²/(8 pi G) = 3 pi T_dS²/(8 G), not T_dS⁴. A specified
+physical model and supported inputs are needed for a nonzero magnitude.
 
-W1b-corrected claim: this is the surviving empirical hook of the
-ADW / Klinkhamer-Volovik framework after DESI DR2 excluded the
-oscillating-vacuum prediction of evolving w(z). See Phase 5x W1b
-deep research.
+This definition is arithmetic on supplied scales, not a KV forward model
+or DESI likelihood. The 2008 dynamical equilibrium and perturbed-chemical-
+potential branches differ from the later stepwise plateau scenario. Bare
+field, coupled effective homogeneous and plateau equations of state must
+not be conflated with a fitted dark-energy CPL pair. No KV exclusion
+significance is established here; ADW magnitude provenance is separate.
 -/
 noncomputable def lambda_magnitude_ratio (T_predicted T_observed : ℝ) : ℝ :=
   (T_predicted / T_observed)^4
@@ -206,10 +212,9 @@ theorem lambda_magnitude_ratio_pos {Tp To : ℝ} (hTp : 0 < Tp) (hTo : 0 < To) :
   positivity
 
 /--
-The Λ ratio equals 1 when predicted matches observed — the
-"exact" limit that the ADW mechanism approaches but does not
-achieve. The actual W1b value (2.8 meV / 2.3 meV)⁴ ≈ 2.20 is
-20% accuracy.
+The supplied-scale ratio equals 1 for equal positive inputs.
+This algebraic identity does not establish an empirical ADW limit,
+a physical amplitude, or an accuracy estimate.
 -/
 theorem lambda_magnitude_ratio_exact {T : ℝ} (hT : 0 < T) :
     lambda_magnitude_ratio T T = 1 := by
@@ -226,7 +231,7 @@ Summary theorem for the Cosmological Constant module.
 
     Ships the algebraic backbone of roadmap T1 (double-temperature)
     and T3 (quartic CW critical point) plus the Λ magnitude-ratio
-    utilities for W1b-corrected claims. Full T2 (Volovik equilibrium)
+    utilities for explicitly supplied inputs. Full T2 (Volovik equilibrium)
     and the numerical T3 specialization to the ADW `V_eff` require
     thermodynamic / RG infrastructure not in Mathlib; tracked as
     Phase 6 deferred work in the Phase 5x roadmap.
