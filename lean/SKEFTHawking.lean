@@ -5328,6 +5328,8 @@ import SKEFTHawking.QuantumNetwork.FiniteThreeLevelCompressedStrategyMemory
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelCompressedStrategyMemoryExamples
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelCompressedMemoryObservability
 import SKEFTHawking.QuantumNetwork.FiniteThreeLevelCompressedMemoryObservabilityExamples
+import SKEFTHawking.QuantumNetwork.FiniteThreeLevelAppendedMemory
+import SKEFTHawking.QuantumNetwork.FiniteThreeLevelAppendedMemoryExamples
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
