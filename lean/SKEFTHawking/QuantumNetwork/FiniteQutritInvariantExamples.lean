@@ -139,14 +139,14 @@ variable (E : Type*) [Fintype E] [DecidableEq E]
 /-- A system block for fixed spectator row and column, complex-linear on all inputs. -/
 def block (e f : E) : Matrix (Q × E) (Q × E) ℂ →ₗ[ℂ] Mat where
   toFun X := fun a b => X (a,e) (b,f)
-  map_add' X Y := rfl
-  map_smul' c X := rfl
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
 
 def matrixCarrier : Submodule ℂ (Matrix (Q × E) (Q × E) ℂ) where
   carrier := {X | ∀ e f, block E e f X ∈ symmetricCarrier}
   zero_mem' := by intro e f; simp
-  add_mem' := by intro X Y hX hY e f; simpa using (hX e f).add (hY e f)
-  smul_mem' := by intro c X hX e f; simpa using (hX e f).smul c
+  add_mem' := by intro _ _ hX hY e f; simpa using (hX e f).add (hY e f)
+  smul_mem' := by intro _ _ hX e f; simpa using (hX e f).smul _
 
 def matrixCone : Set (Matrix (Q × E) (Q × E) ℂ) :=
   {X | X ∈ matrixCarrier E ∧ X.PosSemidef}
@@ -157,7 +157,7 @@ theorem amplified_sandwich_block (A : Mat) (X : Matrix (Q × E) (Q × E) ℂ)
       (A ⊗ₖ (1 : Matrix E E ℂ))ᴴ) = A * block E e f X * Aᴴ := by
   ext i j
   simp [block, Matrix.mul_apply, Fintype.sum_prod_type,
-    Matrix.conjTranspose_kronecker, Matrix.kronecker_apply, Matrix.one_apply]
+    Matrix.conjTranspose_kronecker, Matrix.one_apply]
 
 theorem amplified_kraus_block {k : ℕ} (K : Fin k → Mat)
     (X : Matrix (Q × E) (Q × E) ℂ) (e f : E) :

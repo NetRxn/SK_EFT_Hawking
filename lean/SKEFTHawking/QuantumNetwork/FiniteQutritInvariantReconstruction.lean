@@ -246,7 +246,7 @@ theorem prefix_features (i : Index) :
 def suffixFunctional (i : Index) : FeatureSpace →ₗ[ℂ] ℂ where
   toFun q := (effect i * (U q : Mat)).trace
   map_add' q r := by simp [map_add, Matrix.mul_add, Matrix.trace_add]
-  map_smul' c q := by simp [map_smul, Matrix.mul_smul, Matrix.trace_smul]
+  map_smul' c q := by simp [map_smul, Matrix.trace_smul]
 
 theorem suffix_inner (i : Index) (q : FeatureSpace) :
     suffixFunctional i q = 3 * ⟪feature i,q⟫_ℂ := by
@@ -352,12 +352,12 @@ def zeroExtend : (Setting → ℂ) →ₗ[ℂ] (Index → ℂ) where
     ext i
     refine Fin.lastCases ?_ (fun j => ?_) i
     · change (0 : ℂ) = 0 + 0; simp
-    · simp [Pi.add_apply, Pi.smul_apply, Fin.lastCases_castSucc]
+    · simp [Pi.add_apply, Fin.lastCases_castSucc]
   map_smul' a c := by
     ext i
     refine Fin.lastCases ?_ (fun j => ?_) i
     · change (0 : ℂ) = a • 0; simp
-    · simp [Pi.add_apply, Pi.smul_apply, Fin.lastCases_castSucc]
+    · simp [Pi.smul_apply, Fin.lastCases_castSucc]
 
 theorem zeroExtend_combination (c : Setting → ℂ) :
     combination (zeroExtend c) = FiniteQutritPhysicalMemoryExamples.operatorCombination c := by

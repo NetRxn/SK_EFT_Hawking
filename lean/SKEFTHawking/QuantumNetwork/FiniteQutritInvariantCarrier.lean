@@ -124,7 +124,7 @@ def symmetricCarrier : Submodule ℂ Mat where
   carrier := {X | X.IsSymm}
   zero_mem' := Matrix.isSymm_zero
   add_mem' := fun hX hY => hX.add hY
-  smul_mem' := fun c X hX => hX.smul c
+  smul_mem' := fun c _ hX => hX.smul c
 
 @[simp] theorem mem_symmetricCarrier (X : Mat) :
     X ∈ symmetricCarrier ↔ X.IsSymm := Iff.rfl
@@ -172,7 +172,7 @@ theorem outcome_symmetric (j : Setting) (a : Fin 2) : (outcomeOperator j a).IsSy
 def systemBranch (j : Setting) (a : Fin 2) : Mat →ₗ[ℂ] Mat where
   toFun X := outcomeOperator j a * X * outcomeOperator j a
   map_add' X Y := by simp only [Matrix.mul_add, Matrix.add_mul]
-  map_smul' c X := by simp [Matrix.mul_smul, Matrix.smul_mul]
+  map_smul' c X := by simp
 
 theorem branch_invariant (j : Setting) (a : Fin 2) {X : Mat}
     (hX : X ∈ symmetricCarrier) : systemBranch j a X ∈ symmetricCarrier := by
@@ -236,7 +236,7 @@ theorem combination_inverse (X : symmetricCarrier) :
   fin_cases a <;> fin_cases b <;>
     simp [combination, effectCoefficients, effect, projector, escape_matrix,
       Fin.sum_univ_succ, Matrix.cons_val_two, Matrix.cons_val_three,
-      Matrix.cons_val_four, vec6_last, Matrix.smul_apply, smul_eq_mul,
+      Matrix.cons_val_four, vec6_last, smul_eq_mul,
       h10, h20, h21] <;> ring
 
 theorem coefficients_inverse (c : Index → ℂ) : effectCoefficients (combination c) = c := by
@@ -244,7 +244,7 @@ theorem coefficients_inverse (c : Index → ℂ) : effectCoefficients (combinati
   fin_cases i <;>
     simp [combination, effectCoefficients, effect, projector, escape_matrix,
       Fin.sum_univ_succ, Matrix.cons_val_two, Matrix.cons_val_three,
-      Matrix.cons_val_four, vec6_last, Matrix.smul_apply, smul_eq_mul] <;> ring
+      Matrix.cons_val_four, vec6_last, smul_eq_mul] <;> ring
 
 def effectEquiv : (Index → ℂ) ≃ₗ[ℂ] symmetricCarrier where
   toFun c := ⟨combination c, combination_mem c⟩
@@ -293,8 +293,7 @@ theorem prefix_systemState (i : Index) :
   fin_cases i
   all_goals try {
     simp [prefixWord, prefixFirst, prefixSecond, prefixHistory, effect,
-      systemRun, systemBranch, outcomeOperator, hr, Matrix.mul_smul,
-      Matrix.smul_mul, projector_idempotent, Matrix.cons_val_two,
+      systemRun, systemBranch, outcomeOperator, hr, projector_idempotent, Matrix.cons_val_two,
       Matrix.cons_val_three, Matrix.cons_val_four, vec6_last, Fin.ext_iff]
   }
   change systemRun [4,3] (0,1,()) rho = (1/3 : ℂ) • escape
