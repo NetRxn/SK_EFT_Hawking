@@ -291,9 +291,10 @@ def dummy_paper_dashboard(tmp_path, monkeypatch, dummy_paper_evidence):
                     with (root / name).open("rb") as src, (dummy_paper_evidence / name).open("xb") as dst:
                         shutil.copyfileobj(src, dst)
             observations = json.loads((root / "server-observations.json").read_text())
-            (dummy_paper_evidence / "cleanup.json").write_text(json.dumps({
-                "pid": proc.pid, "returncode": proc.returncode,
-                "joined": proc.poll() is not None}, indent=2) + "\n")
+            with (dummy_paper_evidence / "cleanup.json").open("x", encoding="utf-8") as out:
+                json.dump({"pid": proc.pid, "returncode": proc.returncode,
+                           "joined": proc.poll() is not None}, out, indent=2)
+                out.write("\n")
             print("Dummy paper server root:", root)
             print("Dummy paper server observations:", json.dumps(observations, sort_keys=True))
             print("Dummy paper server stacks:", (root / "server-stacks.log").read_text())
