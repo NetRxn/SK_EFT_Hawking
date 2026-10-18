@@ -501,4 +501,20 @@ theorem clipped_inverse_error {ω t : ℝ} (hω : 0 < ω) (ht : t ∈ interval �
     (div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left
       (clip_contract (calibration_range hω ht)) (by norm_num)) hω.le)
 
+theorem conditional_state {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ) (a : A)
+    (ha : 0 < mass ω t a) :
+    ((mass ω t a:ℂ)⁻¹) • (Q a * rho ω ℏ t * Q a) = Q a := by
+  rw [sandwich hℏ, smul_smul, inv_mul_cancel₀ (Complex.ofReal_ne_zero.mpr ha.ne'), one_smul]
+
+theorem born_variation (ω t s : ℝ) :
+    (∑ a : A, |mass ω t a-mass ω s a|)/2 = |p ω t-p ω s| := by
+  simp [Fin.sum_univ_two, mass, abs_sub_comm]
+
+theorem born_variation_bound {ω : ℝ} (hω : 0 ≤ ω) (t s : ℝ) :
+    (∑ a : A, |mass ω t a-mass ω s a|)/2 ≤ min 1 (ω*|t-s|/2) := by
+  rw [born_variation]
+  apply le_min
+  · exact (p_phase_bound ω ω t s).trans (min_le_left _ _)
+  · exact calibration_upper hω t s
+
 end SKEFTHawking.QuantumNetwork.FiniteClockHandReadout

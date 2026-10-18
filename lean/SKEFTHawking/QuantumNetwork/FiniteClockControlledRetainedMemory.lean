@@ -611,4 +611,55 @@ theorem keep_reduced_records {ω ℏ : ℝ} (hω : ω ≠ 0) (hℏ : ℏ ≠ 0) 
       FiniteQutritRetainedClock.amplifiedJointIterate F (n+1) (handTrace F Z) := by
   rw [keep_all_records F hω hℏ, handTrace_insert, FiniteClockHandReadout.Q_trace, one_smul]
 
+theorem branch_difference_norm_frequency {ℏ ℏ' : ℝ} (hℏ : ℏ ≠ 0) (hℏ' : ℏ' ≠ 0)
+    (ω ω' t s : ℝ) (a : A) (i : Fin 11) {Z : FullMat F} (hZ : Z.PosSemidef) :
+    traceNorm ((step F ω ℏ t hℏ).branch S F 22 (outcomeEquiv (a,i)) Z -
+      (step F ω' ℏ' s hℏ').branch S F 22 (outcomeEquiv (a,i)) Z) =
+      |FiniteClockHandReadout.p ω t-FiniteClockHandReadout.p ω' s| *
+        (dataBranch F a i (handTrace F Z)).trace.re := by
+  rw [branch_action, branch_action, ← sub_smul, ← Complex.ofReal_sub, traceNorm_real_smul]
+  rw [traceNorm_posSemidef (insert_positive F
+    (dataBranch_positive F a i (handTrace_positive F hZ)) (FiniteClockHandReadout.Q_density a).1)]
+  rw [insert_trace, FiniteClockHandReadout.Q_trace, mul_one]
+  congr 1
+  fin_cases a <;> simp [FiniteClockHandReadout.mass, abs_sub_comm]
+
+theorem stepDistance_frequency_exact {ℏ ℏ' : ℝ} (hℏ : ℏ ≠ 0) (hℏ' : ℏ' ≠ 0)
+    (ω ω' t s : ℝ) {Z : FullMat F} (hZ : Z.PosSemidef) :
+    FiniteAdaptiveMapPerturbation.stepDistance S F 22 (step F ω ℏ t hℏ) (step F ω' ℏ' s hℏ') Z =
+      |FiniteClockHandReadout.p ω t-FiniteClockHandReadout.p ω' s| * Z.trace.re := by
+  unfold FiniteAdaptiveMapPerturbation.stepDistance
+  rw [← outcomeEquiv.sum_comp]
+  simp only [Fintype.sum_prod_type, branch_difference_norm_frequency F hℏ hℏ' ω ω' t s _ _ hZ,
+    ← Finset.mul_sum, ← Complex.re_sum, dataBranch_sum_trace, handTrace_trace, Fin.sum_univ_two]
+  norm_num [Complex.mul_re]
+  <;> ring
+
+theorem localError_frequency {ℏ ℏ' : ℝ} (hℏ : ℏ ≠ 0) (hℏ' : ℏ' ≠ 0)
+    (ω ω' t s : ℝ) :
+    FiniteAdaptiveMapPerturbation.LocalError S F 22 (step F ω ℏ t hℏ) (step F ω' ℏ' s hℏ')
+      (min 1 (|ω*t-ω'*s|/2)) := by
+  refine ⟨le_min (by norm_num) (by positivity), fun Z hZ => ?_⟩
+  rw [stepDistance_frequency_exact F hℏ hℏ' _ _ _ _ hZ.1, hZ.2, Complex.one_re, mul_one]
+  exact FiniteClockHandReadout.p_phase_bound ω ω' t s
+
+theorem localError_frequency_duration {ω ℏ ℏ' : ℝ} (hω : 0 ≤ ω)
+    (hℏ : ℏ ≠ 0) (hℏ' : ℏ' ≠ 0) (ω' t s : ℝ) :
+    FiniteAdaptiveMapPerturbation.LocalError S F 22 (step F ω ℏ t hℏ) (step F ω' ℏ' s hℏ')
+      (min 1 ((ω*|t-s|+|ω-ω'|*|s|)/2)) := by
+  refine ⟨le_min (by norm_num) (by positivity), fun Z hZ => ?_⟩
+  rw [stepDistance_frequency_exact F hℏ hℏ' _ _ _ _ hZ.1, hZ.2, Complex.one_re, mul_one]
+  exact FiniteClockHandReadout.frequency_duration_bound hω t s
+
+theorem zero_mass_error {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t s : ℝ)
+    {Z : FullMat F} (hZ : Z.PosSemidef) (hz : Z.trace=0) :
+    FiniteAdaptiveMapPerturbation.stepDistance S F 22 (step F ω ℏ t hℏ) (step F ω ℏ s hℏ) Z = 0 := by
+  rw [stepDistance_exact F hℏ _ _ _ hZ, hz, Complex.zero_re, mul_zero]
+
+theorem branches_density {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ)
+    {Z : FullMat F} (hZ : IsDensityOperator Z) :
+    IsDensityOperator (∑ k, (step F ω ℏ t hℏ).branch S F 22 k Z) := by
+  refine ⟨Matrix.posSemidef_sum _ (fun k _ => branch_positive F hℏ _ _ k hZ.1), ?_⟩
+  rw [Matrix.trace_sum, branches_trace, hZ.2]
+
 end SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory
