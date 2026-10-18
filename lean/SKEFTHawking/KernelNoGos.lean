@@ -890,6 +890,14 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    ambient nonselfadjoint CPTP embeddings.
    backing: `physical_input`, `half_not_physical`, `half_trace_one`, `no_positive_extension`
 
+47. `qutrit-transfer-positive-homogeneous-semigroup` [counterexample]
+   The actual normalized ten-Kraus qutrit transfer has a complex-linear PSD-preserving square root, or is
+   time one of a homogeneous positive system semigroup. Both claims are false on the full complex matrix
+   algebra: all signed roots are excluded without assuming trace preservation, self-adjointness or feature
+   invariance. The actual transfer remains unital and CPTP. Time-dependent CPTP paths, discrete iteration
+   and retained-environment constructions are outside this no-go.
+   backing: `no_ambient_positive_square_root`, `no_ambient_CP_square_root`, `no_ambient_positive_semigroup`, `no_ambient_CPTP_semigroup`, `actual_channel_nonvacuity`
+
 -/
 import SKEFTHawking.BordismGroup
 import SKEFTHawking.CharSurfacePDBundled
@@ -934,6 +942,7 @@ import SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamLocalHom
 import SKEFTHawking.PinPlusTraceLeafGate
 import SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo
 import SKEFTHawking.PinPlusTraceSeamTransferNoGo
+import SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction
 import SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction
 import SKEFTHawking.RokhlinArfNoGo
 import SKEFTHawking.SingularFaceLocalHomologyVanish
@@ -1326,5 +1335,20 @@ alias nogo_half_trace_one := SKEFTHawking.QuantumNetwork.FiniteQutritFractionalO
 
 /-- NO-GO [`qutrit-euclidean-interpolation-preserves-physical-cone`] — do NOT re-derive. FALSE: The actual six-feature Euclidean half-step preserves the inherited physical qutrit positive cone. Backing refutation: `SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction.no_positive_extension`. -/
 alias nogo_no_positive_extension := SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction.no_positive_extension
+
+/-- NO-GO [`qutrit-transfer-positive-homogeneous-semigroup`] — do NOT re-derive. FALSE: The actual normalized ten-Kraus qutrit transfer has a complex-linear PSD-preserving square root, or is time one of a homogeneous positive system semigroup. Backing refutation: `SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_positive_square_root`. -/
+alias nogo_no_ambient_positive_square_root := SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_positive_square_root
+
+/-- NO-GO [`qutrit-transfer-positive-homogeneous-semigroup`] — do NOT re-derive. FALSE: The actual normalized ten-Kraus qutrit transfer has a complex-linear PSD-preserving square root, or is time one of a homogeneous positive system semigroup. Backing refutation: `SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_CP_square_root`. -/
+alias nogo_no_ambient_CP_square_root := SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_CP_square_root
+
+/-- NO-GO [`qutrit-transfer-positive-homogeneous-semigroup`] — do NOT re-derive. FALSE: The actual normalized ten-Kraus qutrit transfer has a complex-linear PSD-preserving square root, or is time one of a homogeneous positive system semigroup. Backing refutation: `SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_positive_semigroup`. -/
+alias nogo_no_ambient_positive_semigroup := SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_positive_semigroup
+
+/-- NO-GO [`qutrit-transfer-positive-homogeneous-semigroup`] — do NOT re-derive. FALSE: The actual normalized ten-Kraus qutrit transfer has a complex-linear PSD-preserving square root, or is time one of a homogeneous positive system semigroup. Backing refutation: `SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_CPTP_semigroup`. -/
+alias nogo_no_ambient_CPTP_semigroup := SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_CPTP_semigroup
+
+/-- NO-GO [`qutrit-transfer-positive-homogeneous-semigroup`] — do NOT re-derive. FALSE: The actual normalized ten-Kraus qutrit transfer has a complex-linear PSD-preserving square root, or is time one of a homogeneous positive system semigroup. Backing refutation: `SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.actual_channel_nonvacuity`. -/
+alias nogo_actual_channel_nonvacuity := SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.actual_channel_nonvacuity
 
 end SKEFTHawking.KernelNoGos

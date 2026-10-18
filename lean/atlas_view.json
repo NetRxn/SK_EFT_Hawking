@@ -273683,6 +273683,22 @@
       "false_statement": "The flipped carrier (Bor = CharPairBorRealized: GeoRealizationTied with derived bases + computed kernels + pinned provider) supports the KT non-split content \u2014 the abstract compact-T2 membrane suffices; no explicit tether of the realization's Q to the bordism's W is needed. FALSE (W-A gate ROUND 6, Fable, 2026-07-15, kernel-encoded \u2014 ROUND 6 OF THE DEFERRED-TIE PATTERN): GeoRealizationTied has NO tether to b.W (Q is an arbitrary compact-T2 TopCat \u2014 not a manifold, not in W). Consequences, kernel-checked: (1) CharPairBorRealized.transport \u2014 any realized witness transports VERBATIM to ANY bordism between the same ends; (2) isT2DataBordant_pinPlusCharPair_factors \u2014 the structured relation FACTORS as (\u2203 unstructured T2 bordism) \u2227 ends-only HasEndsRealization, so given a provider, hwu filters NOTHING at the relation level; (3) ktNonSplit_false_of_e8 \u2014 ONE mathematically-TRUE abstract hypothesis (E8MembraneRealization: a compact-T2 pair with the e\u2088-graph H\u2081-kernel \u2014 constructible as 8 RP\u00b2's + an arc tree + four 2-cells, only missing CW/MV machinery in-tree) reproduces the ENTIRE pre-flip refutation chain (8\u2022[RP\u2074] = 0, binders jointly unsatisfiable, addOrderOf \u2223 8). KTNonSplit is mathematically FALSE on the untethered shape; W-D binder discharge must NOT open on it (an apparent discharge = an error elsewhere). Positive gate evidence retained: idRealizationTied blocked ONLY by hlag (not_jointLagrangian_bot); the un-reversed in-tree doubling blocked by htaylor (unreversed_double_diag_not_taylorLeg); in-tree engines reach only homeo-graph/block-diagonal kernels (e\u2088 unreachable at the in-tree horizon) \u2014 the exploit needs the abstract-Q freedom, which is exactly what the tether removes. FROZEN ROUND-6 SPEC: (1) THE W-TETHER \u2014 CharPairBorRealized gains \u03b9W : C(Q, b.W) (honest form a closed embedding) with commuting glue (real.\u03b9, hom\u03c3/hom\u03c4, the ends' emb, b's boundary structure); (2) manifold discipline on Q (charted/dimension certificates \u2014 abstract compact-T2 admits CW pathologies); (3) provider-quantification fix (CharPairWProviderPinned's \u2200-all-bordisms wadm is likely UNINHABITABLE \u2014 pinned hwu is impossible on w\u2082(W) \u2260 0 bordisms \u2014 risking vacuity in BOTH directions; restrict to the op-bordism family actually consumed or per-op admissibility data). Then round-7 re-gate."
     },
     {
+      "id": "qutrit-transfer-positive-homogeneous-semigroup",
+      "backing_theorems": [
+        "SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_positive_square_root",
+        "SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_CP_square_root",
+        "SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_positive_semigroup",
+        "SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_CPTP_semigroup",
+        "SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.actual_channel_nonvacuity"
+      ],
+      "frontier_impact": 0,
+      "kernel_pure": false,
+      "registered": true,
+      "fork_id": "qutrit-transfer-positive-homogeneous-semigroup",
+      "nogo_kind": "counterexample",
+      "false_statement": "The actual normalized ten-Kraus qutrit transfer has a complex-linear PSD-preserving square root, or is time one of a homogeneous positive system semigroup. Both claims are false on the full complex matrix algebra: all signed roots are excluded without assuming trace preservation, self-adjointness or feature invariance. The actual transfer remains unital and CPTP. Time-dependent CPTP paths, discrete iteration and retained-environment constructions are outside this no-go."
+    },
+    {
       "id": "SKEFTHawking.VestigialInflationNoGo.InflationParams.MPlRed_pos",
       "module": "SKEFTHawking.VestigialInflationNoGo",
       "frontier_impact": 7,
@@ -278488,8 +278504,8 @@
     "apex_ids": [
       "hyp:H_PMNSAnglesFromExactSubstrate"
     ],
-    "obstruction_nodes": 519,
-    "registered_obstructions": 46,
+    "obstruction_nodes": 520,
+    "registered_obstructions": 47,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 498,
       "TRUE:PROVED": 29698,
