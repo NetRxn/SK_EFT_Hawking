@@ -2,6 +2,26 @@
 
 \usepackage{graphicx}
 \usepackage{hyperref}
+% Code identifiers may wrap without inserting or removing visible characters.
+% Keep each original argument intact for source-reference extraction.
+\usepackage{seqsplit}
+\let\layoutoriginaltexttt\texttt
+\makeatletter
+\protected\def\texttt#1{%
+  \begingroup
+  \ifmmode
+    \layoutoriginaltexttt{#1}%
+  \else
+    \in@{ }{#1}%
+    \ifin@
+      \layoutoriginaltexttt{#1}%
+    \else
+      \let\seqinsert\allowbreak
+      \layoutoriginaltexttt{\seqsplit{#1}}%
+    \fi
+  \fi
+  \endgroup}
+\makeatother
 \usepackage{amsmath, amssymb, amsfonts}
 \usepackage{booktabs}
 \usepackage{siunitx}
@@ -1010,11 +1030,13 @@ itself machine-checked.
 Matching across the shifted turning point gives the Bogoliubov ratio in
 the familiar form with a dressed surface gravity,
 \begin{equation}
+\begin{gathered}
 \left|\frac{\beta(\omega)}{\alpha(\omega)}\right|^2
   = \exp\!\left(-\frac{2\pi\omega}{\kappa_{\rm eff}(\omega)}\right),
-\quad
+\\
 \kappa_{\rm eff}(\omega)
   = \frac{\kappa}{1 + \delta_{\rm disp} + \delta_{\rm diss}(\omega)} ,
+\end{gathered}
 \label{eq:bogo-ratio}
 \end{equation}
 but it does not preserve the normalisation. A mode traversing the
@@ -1191,9 +1213,10 @@ The polariton and graphene rows are order-of-magnitude estimates from
 their platform-specific treatments and use a platform-appropriate
 reading of $\delta_{\rm diss}$; for the polariton row it is the cavity
 decay ratio $\Gamma_{\rm pol}/\kappa$ rather than a transport
-coefficient. The temperature column gives a nominal scale; the steep
-polariton entry is only the formal gradient scale $\hbar\kappa/(2\pi k_B)$,
-since the predicted Hawking spectrum is not thermal~\cite{Falque2025}.
+coefficient. The temperature column gives the scale used for each comparison.
+For the smooth polariton horizon it is the nominal surface-gravity scale,
+rather than a measured emission temperature. The steep polariton spectrum
+is nonthermal, so no temperature is assigned to it~\cite{Falque2025}.
 
 \begin{table*}[!t]
 \centering
@@ -1205,8 +1228,7 @@ correction of Eq.~\eqref{eq:delta-diss}. These are dimensionless
 fractional shifts of $T_{\rm eff}$ for the condensate rows, evaluated at
 $\omega=\kappa$. The polariton dissipative entries instead give the cavity
 validity ratio $\Gamma_{\rm pol}/\kappa$ outside weak decay, not a
-perturbative temperature shift. Its steep-horizon temperature entry is
-a formal gradient scale only.}
+perturbative temperature shift. No temperature is assigned to its steep-horizon entry.}
 \label{tab:hierarchy}
 \begin{tabular}{lcccc}\toprule
 Platform & temperature scale & $\delta_\text{disp}$ & $\delta_\text{diss}$ & dominance \\\midrule
@@ -1214,7 +1236,7 @@ $^{87}$Rb BEC (Steinhauer/de~Nova) & $\sim 0.35$\,nK & $-8.53\times10^{-5}$ & $2
 $^{39}$K BEC (Heidelberg, projected) & $\sim 1$\,nK & $-7.32\times10^{-5}$ & $1.59\times10^{-3}$ & \textbf{diss} \\
 spin-sonic BEC (Trento)    & $\sim 1$\,nK & $-9.89\times10^{-5}$ & $1.41\times10^{-5}$ & disp \\
 LKB polariton (smooth, $D=0.59$) & $\sim 85$\,mK & $-18\%$ & $180\%$ & \emph{neither} \\
-LKB polariton (steep, $D=0.94$)  & $\sim 134$\,mK (scale) & $-46\%$ & $110\%$ & \emph{neither} \\
+LKB polariton (steep, $D=0.94$)  & nonthermal & $-46\%$ & $110\%$ & \emph{neither} \\
 graphene (Dean, $D=0.23$)        & $\sim 2.4$\,K & $-2.8\%$ & $+6.5\%$ & \textbf{diss} \\
 \bottomrule
 \end{tabular}
@@ -1637,10 +1659,12 @@ $W = 1~\mu$m, and electron temperature $T_e = 150$~K. The surface gravity
 following from the gradient length,
 $\kappa \approx c_s/L \approx 2\times10^{12}~\mathrm{s}^{-1}$, gives
 \begin{equation}
+\begin{gathered}
 T_H \;=\; \frac{\hbar\kappa}{2\pi k_B} \;\approx\; 2.4~\mathrm{K},
-\qquad
+\\
 \omega_H \;=\; \frac{k_B T_H}{\hbar} \;\approx\;
 3.14\times10^{11}~\mathrm{s}^{-1},
+\end{gathered}
 \end{equation}
 a Hawking frequency near $50$~GHz, squarely inside the band of ordinary
 microwave noise thermometry. The temperature is linear in the velocity
@@ -1847,15 +1871,17 @@ estimates from the total blueshift have also been observed under other
 excitation conditions~\cite{Estrecho2021,Stepanov2019}.
 
 With the surface-gravity relation of Sec.~\ref{sec:eft-metric}, the smooth
-configuration gives $T_H \approx 85~\mathrm{mK}$. The steep configuration's
+configuration gives the nominal scale $T_H \approx 85~\mathrm{mK}$,
+not a measured emission temperature. The steep configuration's
 formal gradient scale is $\hbar\kappa/(2\pi k_B)\approx134~\mathrm{mK}$.
-Falque \emph{et al.}\ state that its spectrum is not thermal because
-nonlinear frequency dispersion dominates~\cite{Falque2025}; this scale
-therefore does not describe a measured Hawking temperature. The smooth
-scale is some eight orders above the atomic-condensate benchmark of
-Sec.~\ref{sec:hierarchy}. One convention point must be stated
-explicitly, because the primary source quotes a different figure: the
-Discussion of Ref.~\cite{Falque2025} reports a Hawking temperature of
+In arXiv version~2, Falque \emph{et al.}\ state that its spectrum is
+not thermal because nonlinear frequency dispersion dominates~\cite{Falque2025};
+the formal gradient scale is therefore not assigned a Hawking-temperature
+interpretation. The smooth scale is some eight orders above the
+atomic-condensate benchmark of Sec.~\ref{sec:hierarchy}. One convention
+point must be stated explicitly, because the primary source quotes a
+different figure: the Discussion in the same version of
+Ref.~\cite{Falque2025} reports a Hawking temperature of
 $3~\mathrm{K}$ for the smoothest horizon, which follows from the
 Boltzmann exponent $\omega/2\pi\kappa$ written in their Eq.~(9) rather
 than the $2\pi\omega/\kappa$ used throughout this paper. The two differ
@@ -2170,7 +2196,7 @@ axioms; \aristotleproved{} of the library's theorems were closed by the
 automated prover. The results reachable from this paper's claims comprise
 \bundleTheorems{}~theorems across \bundleModules{}~modules.
 
-\begin{table}[h]
+\begin{table*}[t]
 \centering
 \caption{Status of the Lean results cited in the body.
 \emph{Derived}: the conclusion constrains something the hypotheses do not
@@ -2228,9 +2254,9 @@ Result & Sec. & Status \\
 \texttt{polariton\_tier1\_fails\_tmds} & \ref{sec:pol-scope} & demarcation \\
 \end{tabular}
 \end{ruledtabular}
-\end{table}
+\end{table*}
 
-Three claims in the body have no entry above because they have no formal
+Three claims in the body have no entry in Table~\ref{tab:status} because they have no formal
 representative, and they are listed here rather than left to inference.
 The identification of the monomial index set with the independent
 transport coefficients at order $N$ (Sec.~\ref{sec:higher-count}) is an
@@ -2240,7 +2266,7 @@ physics input, carried in the library as a structure field
 (Sec.~\ref{sec:wkb-unitarity}). The stimulated-gain threshold of
 Sec.~\ref{sec:pol-scope} is an analytic estimate derived in the text and
 not formalised. All three are load-bearing for at least one prediction,
-and none is presented above as verified.
+and none is presented in Table~\ref{tab:status} as verified.
 
 \begin{thebibliography}{99}
 
@@ -2283,7 +2309,9 @@ Nature \textbf{569}, 688 (2019).
 K.~Falque \emph{et al.},
 \emph{Polariton Fluids as Quantum Field Theory Simulators on Tailored
 Curved Spacetimes},
-Phys.~Rev.~Lett.~\textbf{135}, 023401 (2025), arXiv:2311.01392.
+Phys.~Rev.~Lett.~\textbf{135}, 023401 (2025),
+\href{https://doi.org/10.1103/t5dh-rx6w}{doi:10.1103/t5dh-rx6w};
+arXiv:2311.01392v2.
 
 \bibitem{Giacobino2025}
 E.~Giacobino, M.~J.~Jacquet,

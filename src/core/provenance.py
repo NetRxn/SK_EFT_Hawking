@@ -463,7 +463,7 @@ PARAMETER_PROVENANCE = {
         'source': 'Falque et al., PRL 135, 023401 (2025)',
         'detail': 'Page 4: "we extract the effective polariton mass at the working '
                   'point, m* = 7.0 × 10⁻³⁵ kg." Fitted from measured spectrum.',
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'llm_verified_date': '2026-03-31',
         'llm_verified_notes': 'LLM read arXiv:2311.01392 (Falque 2025). Page 4, Section III: '
                               '"m* = 7.0 × 10⁻³⁵ kg" — extracted from measured polariton spectrum. '
@@ -494,7 +494,7 @@ PARAMETER_PROVENANCE = {
                   'Root cause: excitonic reservoir absorbs 50-75% of blueshift without '
                   'contributing to dynamic c_s. Correct formula: c_s = sqrt(g·n_condensate/m*), '
                   'NOT sqrt(ΔE_total/m*).',
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'llm_verified_date': '2026-04-13',
         'llm_verified_notes': 'Re-read Falque full text (arXiv:2311.01392v2) 2026-04-13. '
                               'c_s = 0.40 µm/ps confirmed in §IV.1. Adopting Falque\'s value '
@@ -518,7 +518,7 @@ PARAMETER_PROVENANCE = {
                   '4.0 µm downstream, showing the spatial variation). Using the measured '
                   'upstream value directly is more faithful to the primary source than '
                   'deriving from c_s.',
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'llm_verified_date': '2026-04-13',
         'llm_verified_notes': 'Falque §IV.1 reports ξ ≈ 3.4 µm upstream, 4.0 µm downstream. '
                               'We adopt the upstream value as the reference since horizon '
@@ -546,7 +546,7 @@ PARAMETER_PROVENANCE = {
                   'value (1.1e11 s⁻¹) for maximum T_H, or (c) parametrize all three '
                   'configurations. Paper 12 numerics for T_H, D, G(ω) need to be '
                   'recomputed downstream.',
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'llm_verified_date': '2026-04-13',
         'llm_verified_notes': 'Re-verified against arXiv:2311.01392v2 full text. The '
                               'prior 2026-03-31 LLM reading — which claimed "Falque '
@@ -573,7 +573,7 @@ PARAMETER_PROVENANCE = {
         'detail': 'Falque 2025 reports ℏγ ≈ 80 µeV → γ = 1.2e11 s⁻¹ → τ ≈ 8 ps. '
                   '100 ps is a projected value for a next-generation long-lifetime cavity. '
                   'Such cavities exist (e.g., Ballarini 2017) but Falque did not use one.',
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'llm_verified_date': '2026-03-31',
         'llm_verified_notes': 'LLM read Falque 2025 (arXiv:2311.01392) page 9: '
                               '"ℏγ ≈ 80 µeV" → τ ≈ 8 ps, NOT 100 ps. The 100 ps value '
