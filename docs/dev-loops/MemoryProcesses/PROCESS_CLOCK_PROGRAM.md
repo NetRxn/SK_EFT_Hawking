@@ -107,6 +107,50 @@ general strategy norm, empirical time calibration, continuum reconstruction or
 physical mass gap. All earlier stationary, observable, compressed, operational,
 adaptive and retained-memory objectives remain in scope.
 
+### Persistent measured hand
+
+`FinitePersistentMeasuredHand.lean`, `FinitePersistentMeasuredHandErrors.lean`
+and `FinitePersistentMeasuredHandExamples.lean` retain the measured hand between
+interventions. The actual normalized instrument acts on arbitrary complex joint
+inputs and correlated finite spectators. Its first extraction keeps the hand
+coherences; subsequent measured sectors obey the derived posterior transition
+law. All chronological records and every policy prefix remain explicit.
+
+The unrestricted local error is bounded sharply by
+`abs(sin((theta-phi)/2))` times PSD input mass, with normalized product and
+entangled attainers. The sharper difference of fresh Born probabilities applies
+only on the proved posterior sectors. An actual physical input with equal fresh
+probabilities and recorded distance one excludes using that sharper bound on
+general first inputs. The new instrument consumes both generic and reachable
+sector perturbation bounds for actual terminal effects and readouts.
+
+The same physical input, durations and terminal projector give persistent event
+probability `7/8` versus fresh `19/20`, gap `3/40`. The complete two-step table
+retains every microbranch, including structural and dynamical zeros. Bounded
+duration errors preserve gap `11/200`. Reachable adaptive policies, prepared
+old-history recovery with an odd half-turn followed by arbitrary full turns,
+and a same-multiset three-tick order comparison use the actual constructed
+instrument. Empty spectators, zero mass, zero depth, disturbance, stationary
+Gibbs preparation, nonunitality and reset order keep their separate guards.
+
+Whole independent scientific source and exhaustive compiled-native reviews pass.
+The package is normally registered and integrated at `f5c1cb1e`, with an
+authoritative aggregate build. Actual integrated-primary signatures, axioms and
+metadata reconcile with the reviewed candidate; complete logical and compiler
+closure populations agree with traversal-order differences disclosed. Safe
+logical proofs use only the existing core axioms. Generated partial recursive
+siblings and compiler replacements remain separately classified. The primary
+notebook owns canonical reconciliation, current project checks, final bounded
+acceptance and delivery status; these are separate from source review and
+normal integration.
+
+This is a finite externally sequenced persistent measured-hand protocol. The
+earlier fresh-hand result retains its own input and recovery scope. Autonomous
+clock dynamics, an empirical elapsed-time calibration, a homogeneous continuous
+joint semigroup, universal minimum memory, continuum reconstruction and a
+physical mass gap remain open. Continue the original retained-memory and
+adaptive programme after this integration cycle.
+
 ### Adaptive readout and finite locality
 
 The adaptive qutrit and correlated-environment foundations are integrated.
