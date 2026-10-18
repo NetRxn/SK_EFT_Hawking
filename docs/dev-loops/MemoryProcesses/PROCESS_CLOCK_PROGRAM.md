@@ -39,7 +39,7 @@ The actual half-step sends a physical trace-one input outside the inherited posi
 
 `FiniteQutritAmbientRootObstruction` now excludes every complex-linear PSD-preserving square root of the actual normalized ten-Kraus transfer on the entire complex qutrit matrix algebra. The full nine-dimensional decomposition retains the repeated off-diagonal eigenvalues and excludes both signs on the relevant simple eigenlines. Positivity forces the identity scalar; trace preservation, self-adjointness and feature invariance are not premises. Homogeneous positive/CP/CPTP same-system semigroup exclusions retain actual channel nonvacuity, integer histories and correlated finite spectators. Whole scientific/native/canonical integration review, normal absorption, registered builds and actual primary/canonical reconciliation pass. Current project gates and final bounded owner acceptance remain separate. Time-dependent CPTP paths and retained-environment dilations are not excluded.
 
-`FiniteQutritFeatureGibbs` consumes the existing finite Gibbs/log/modular engine on the normalized six-feature endomorphism algebra. Every finite real beta, beta0 identity/6, feature trace(T)=4, beta1 density=T/4 and the signed modular/Heisenberg parameter comparison are retained. This density is not a physical qutrit state; the parameter supplies no calibrated elapsed time. Continuum reconstruction, physical gap and original retained-memory/adaptive objectives remain open. Finish current PR qualification before the next growth assignment, retaining the original scopes.
+`FiniteQutritFeatureGibbs` consumes the existing finite Gibbs/log/modular engine on the normalized six-feature endomorphism algebra. Every finite real beta, beta0 identity/6, feature trace(T)=4, beta1 density=T/4 and the signed modular/Heisenberg parameter comparison are retained. This density is not a physical qutrit state; the parameter supplies no calibrated elapsed time. Continuum reconstruction, physical gap and original retained-memory/adaptive objectives remain open. Close each bounded review and integration cycle through the existing integration PRs, retaining the original scopes and separate main and publication gates.
 
 `FiniteQutritRetainedClock.lean` implements the complete retained two-sector clock
 contract and is normally integrated at `25ce2698`. Its eleven individually
@@ -56,12 +56,58 @@ Whole independent source and compiled-native review passed. Normal absorption,
 authoritative aggregate build and integrated-primary audit preserve all 302
 ordinary declarations and their logical and compiler dependency traversals.
 Canonical refresh at `6662a99a` preserves all 52,320 earlier declaration records
-and adds 240 records. Current project checks and whole integrated bounded
-acceptance remain pending. Physical dimension three, feature dimension six and
+and adds 240 records. The complete retained-clock package has whole bounded integrated acceptance at
+`d329a0a7`, following current substrate qualification and whole committed review.
+Broader project, security, main and publication gates remain separate and open. Physical dimension three, feature dimension six and
 joint clock dimension six remain distinct. A parity register is not a calibrated
 duration or unbounded tick count. Continue the original adaptive and
 retained-memory programme after this integration cycle; continuous joint dynamics
 and universal minimum memory remain separate objectives.
+
+### Coherent hand and controlled retained-memory protocol
+
+`FiniteClockHandReadout.lean`, `FiniteClockControlledRetainedMemory.lean` and
+`FiniteClockControlledRetainedMemoryExamples.lean` implement the complete finite
+coherent-hand protocol. The independently defined nondegenerate two-level
+Hamiltonian generates the actual unitary and Born law
+`p(t) = (1 - cos(omega*t))/2`. On the closed interval
+`[pi/(3*omega), 2*pi/(3*omega)]`, the model has an explicit inverse, endpoint
+range and two-sided error bounds. Clipping, periodic aliases, measurement
+disturbance and stationary Gibbs controls keep deterministic model calibration
+distinct from empirical elapsed-time calibration.
+
+The actual square instrument retains all 22 outcomes and four internal Kraus
+labels on the qutrit, old parity register and new hand. Its branch identity holds
+on every complex input with arbitrary correlated finite spectators. The exact
+PSD-mass local error has coefficient one. Complete policies cover every prefix,
+including unreachable ones, and consume the existing adaptive perturbation and
+physical decision bounds. The concrete adaptive fixture has distinct third-node
+durations on reachable histories at every depth of at least three.
+
+The complete two-round table retains all 484 histories and dynamically zero
+microbranches. The same physical qutrit projector gives probabilities `19/20`
+and `17/20`; bounded duration errors preserve a gap of at least `9/100`.
+Keeping every old chronological record recovers the previous parity, quotient,
+inherited-cone and nine-density results through the actual hand reduction.
+Zero-depth coherences, persistent versus replaced hands, nonunital feedback,
+reset order, empty spectators and all previous negative controls remain explicit.
+
+Whole independent scientific and native review, normal registered integration
+at `3153094e`, actual primary reconciliation and canonical conservation pass.
+Canonical metadata commit `ea98070a` preserves every earlier complete catalogue
+record and its order. Actual generated recursive compiler siblings remain
+separate from safe logical proof closure. The primary notebook records current
+project qualification and bounded owner acceptance; source, native and canonical
+checks do not establish main or publication clearance.
+
+This is a finite, externally sequenced fresh-hand protocol. It supplies no
+persistent or autonomous clock, cost-free realization, homogeneous continuous
+joint semigroup, universal minimum memory, arbitrary-history Markov law,
+general strategy norm, empirical time calibration, continuum reconstruction or
+physical mass gap. All earlier stationary, observable, compressed, operational,
+adaptive and retained-memory objectives remain in scope.
+
+### Adaptive readout and finite locality
 
 The adaptive qutrit and correlated-environment foundations are integrated.
 `QuantumNetwork/FiniteThreeLevelMemoryReadout.lean` now has whole source,
