@@ -1084,4 +1084,191 @@ theorem recovered_nine_probe_defect {ω ℏ : ℝ} (hω : ω ≠ 0) (hℏ : ℏ 
   · rw [recoveredJoint_old hω hℏ]
     exact hd
 
+def truncatePolicy : {n : ℕ} → Policy n → (k : ℕ) → k ≤ n → Policy k
+  | _, _, 0, _ => .done
+  | 0, .done, k+1, h => False.elim (Nat.not_succ_le_zero k h)
+  | _+1, .node t next, k+1, h => .node t
+      (fun a => truncatePolicy (next a) k (Nat.le_of_succ_le_succ h))
+
+theorem adaptive_prefix_truncation {ω : ℝ} (hω : 0 < ω) (n : ℕ) :
+    truncatePolicy (adaptivePolicy hω (n+2)) 2 (by omega) = adaptivePolicy hω 1 := by
+  rfl
+
+theorem adaptive_full_reachable {ω ℏ : ℝ} (hω : 0 < ω) (hℏ : ℏ ≠ 0) (n : ℕ)
+    {σ : FiniteClockHandReadout.Mat} (hσ : σ.trace=1) :
+    0 < (run S Unit 22 (policyTree Unit ω ℏ hℏ
+      (truncatePolicy (adaptivePolicy hω (n+2)) 2 (by omega)))
+      (firstRecord,secondLeftRecord,()) (input σ)).trace.re ∧
+    0 < (run S Unit 22 (policyTree Unit ω ℏ hℏ
+      (truncatePolicy (adaptivePolicy hω (n+2)) 2 (by omega)))
+      (firstRecord,secondRightRecord,()) (input σ)).trace.re ∧
+    durationAt (adaptivePolicy hω (n+2)) ((0 : Fin (n+1)).succ.succ)
+      (firstRecord,secondLeftRecord,()) ≠
+    durationAt (adaptivePolicy hω (n+2)) ((0 : Fin (n+1)).succ.succ)
+      (firstRecord,secondRightRecord,()) := by
+  rw [adaptive_prefix_truncation]
+  have hh := adaptive_prefix_weights hω hℏ hσ
+  exact ⟨by rw [hh.1]; norm_num, by rw [hh.2]; norm_num, adaptive_third_distinct hω n⟩
+
+def newEvenRecord (n : ℕ) (h : History 10 n) : History 22 (2*n) :=
+  injectRecord (2*n) (FiniteQutritRetainedClock.evenRecord n h)
+def newOddRecord (n : ℕ) (h : History 10 n) : History 22 (2*n+1) :=
+  injectRecord (2*n+1) (FiniteQutritRetainedClock.oddRecord n h)
+
+def newEvenPatternEquiv (n : ℕ) : History 10 n ≃ Set.range (newEvenRecord n) :=
+  Equiv.ofInjective _ ((injectRecord_injective (2*n)).comp
+    (FiniteQutritRetainedClock.evenRecord_injective n))
+def newOddPatternEquiv (n : ℕ) : History 10 n ≃ Set.range (newOddRecord n) :=
+  Equiv.ofInjective _ ((injectRecord_injective (2*n+1)).comp
+    (FiniteQutritRetainedClock.oddRecord_injective n))
+
+instance newEvenPatternFintype (n : ℕ) : Fintype (Set.range (newEvenRecord n)) :=
+  Fintype.ofEquiv _ (newEvenPatternEquiv n)
+instance newOddPatternFintype (n : ℕ) : Fintype (Set.range (newOddRecord n)) :=
+  Fintype.ofEquiv _ (newOddPatternEquiv n)
+
+theorem new_even_pattern_card (n : ℕ) : Fintype.card (Set.range (newEvenRecord n)) = 10^n := by
+  rw [← Fintype.card_congr (newEvenPatternEquiv n)]
+  exact history_card 10 n
+
+theorem new_odd_pattern_card (n : ℕ) : Fintype.card (Set.range (newOddRecord n)) = 10^n := by
+  rw [← Fintype.card_congr (newOddPatternEquiv n)]
+  exact history_card 10 n
+
+theorem policy_aggregate_density {ω ℏ : ℝ} (hℏ : ℏ ≠ 0) {n : ℕ} (P : Policy n)
+    {Z : FullMat F} (hZ : IsDensityOperator Z) :
+    IsDensityOperator (∑ h, run S F 22 (policyTree F ω ℏ hℏ P) h Z) := by
+  refine ⟨Matrix.posSemidef_sum _ (fun h _ => run_posSemidef S F 22 _ h hZ.1), ?_⟩
+  rw [Matrix.trace_sum, sum_trace, hZ.2]
+
+theorem finalState_density {ω ℏ : ℝ} (hω : 0 < ω) (hℏ : ℏ ≠ 0) (t : Duration) :
+    IsDensityOperator (finalState ω t) := by
+  rw [← two_round_sum hω hℏ t FiniteClockHandReadout.rhoPlus_density.2]
+  exact policy_aggregate_density Unit hℏ _ (input_density FiniteClockHandReadout.rhoPlus_density)
+
+theorem empty_spectator_no_density (Z : FullMat Empty) : ¬IsDensityOperator Z := by
+  intro hz
+  have ht : Z.trace=0 := by simp [Matrix.trace]
+  have hh := hz.2
+  rw [ht] at hh
+  exact zero_ne_one hh
+
+theorem identical_policy_error {ω ℏ : ℝ} (hℏ : ℏ ≠ 0) {n : ℕ} (P : Policy n)
+    {Z : FullMat F} (hZ : IsDensityOperator Z) (e : History 22 n → FullMat F) :
+    FiniteAdaptiveReadoutDiscrimination.readoutError
+      (fun h => run S F 22 (policyTree F ω ℏ hℏ P) h Z)
+      (fun h => run S F 22 (policyTree F ω ℏ hℏ P) h Z) e = 1/2 :=
+  FiniteAdaptiveReadoutRobustness.identical_family_error
+    (FiniteAdaptiveReadoutDiscrimination.run_family (policyTree F ω ℏ hℏ P) hZ) e
+
+theorem handTrace_sum {I : Type*} [Fintype I] (Z : I → FullMat F) :
+    handTrace F (∑ i, Z i) = ∑ i, handTrace F (Z i) := by
+  ext ⟨b,f⟩ ⟨d,g⟩
+  simp [handTrace, Matrix.sum_apply, Finset.sum_comm]
+
+theorem handTrace_smul (c : ℂ) (Z : FullMat F) :
+    handTrace F (c • Z) = c • handTrace F Z := by
+  ext ⟨b,f⟩ ⟨d,g⟩
+  simp [handTrace, Finset.mul_sum]
+  ring
+
+theorem cycle_handTrace {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ) (Z : FullMat F) :
+    handTrace F (cycle F ω ℏ t hℏ Z) =
+      (FiniteClockHandReadout.p ω t:ℂ) • FiniteQutritRetainedClock.amplified F (handTrace F Z) +
+      ((1-FiniteClockHandReadout.p ω t:ℝ):ℂ) • FiniteQutritRetainedClock.amplified F
+        (krausMap (fun c => FiniteQutritRetainedClock.L c ⊗ₖ (1 : Matrix F F ℂ)) (handTrace F Z)) := by
+  rw [cycle, handTrace_sum, ← outcomeEquiv.sum_comp]
+  simp only [Fintype.sum_prod_type, branch_action, handTrace_smul, handTrace_insert,
+    FiniteClockHandReadout.Q_trace, one_smul, Fin.sum_univ_two, FiniteClockHandReadout.mass,
+    show (1:A) ≠ 0 by decide, if_false, if_pos rfl, ite_true]
+  rw [← Finset.smul_sum, ← Finset.smul_sum, dataBranch_keep_sum, dataBranch_reset_sum]
+
+theorem reset_product (X : DataMat) (σ : Matrix F F ℂ) :
+    krausMap (fun c => FiniteQutritRetainedClock.L c ⊗ₖ (1 : Matrix F F ℂ)) (X ⊗ₖ σ) =
+      FiniteQutritRetainedClock.resetClock X ⊗ₖ σ := by
+  rw [← FiniteQutritRetainedClock.reset_kraus_action]
+  simp only [krausMap, Matrix.conjTranspose_kronecker, Matrix.conjTranspose_one,
+    ← Matrix.mul_kronecker_mul, Matrix.one_mul, Matrix.mul_one]
+  ext ⟨b,f⟩ ⟨d,g⟩
+  simp [Matrix.sum_apply, Finset.sum_mul]
+  ring
+
+theorem actual_dataChannel_reduction {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ)
+    (Z : FullMat Unit) (X : DataMat) (hX : handTrace Unit Z = X ⊗ₖ (1 : Matrix Unit Unit ℂ)) :
+    handTrace Unit (cycle Unit ω ℏ t hℏ Z) =
+      dataChannel (FiniteClockHandReadout.p ω t) X ⊗ₖ (1 : Matrix Unit Unit ℂ) := by
+  rw [cycle_handTrace Unit hℏ, hX, reset_product, FiniteQutritRetainedClock.amplified_product,
+    FiniteQutritRetainedClock.amplified_product]
+  simp only [dataChannel, Matrix.add_kronecker, Matrix.smul_kronecker]
+
+theorem resetOld_normalized : IsKrausChannel (fun c : A =>
+    (FiniteQutritRetainedClock.L c ⊗ₖ (1 : Matrix A A ℂ)) ⊗ₖ (1 : Matrix Unit Unit ℂ)) := by
+  unfold IsKrausChannel
+  simp only [Matrix.conjTranspose_kronecker, Matrix.conjTranspose_one,
+    ← Matrix.mul_kronecker_mul, Matrix.one_mul]
+  have hs : (∑ c : A, (((FiniteQutritRetainedClock.L c)ᴴ * FiniteQutritRetainedClock.L c) ⊗ₖ
+      (1 : Matrix A A ℂ)) ⊗ₖ (1 : Matrix Unit Unit ℂ)) =
+      ((∑ c : A, (FiniteQutritRetainedClock.L c)ᴴ * FiniteQutritRetainedClock.L c) ⊗ₖ
+        (1 : Matrix A A ℂ)) ⊗ₖ (1 : Matrix Unit Unit ℂ) := by
+    ext ⟨⟨b,u⟩,f⟩ ⟨⟨d,w⟩,g⟩
+    simp [Matrix.sum_apply, Finset.sum_mul]
+    ring
+  rw [hs, FiniteQutritRetainedClock.L_normalized, Matrix.one_kronecker_one, Matrix.one_kronecker_one]
+
+theorem resetOld_density {Z : FullMat Unit} (hZ : IsDensityOperator Z) :
+    IsDensityOperator (resetOld Z) :=
+  ⟨krausMap_posSemidef _ hZ.1, (trace_krausMap resetOld_normalized Z).trans hZ.2⟩
+
+def dataMarginal (Z : FullMat Unit) : DataMat :=
+  Matrix.of (fun b d => handTrace Unit Z (b,()) (d,()))
+
+theorem dataMarginal_reindex (Z : FullMat Unit) :
+    handTrace Unit Z = dataMarginal Z ⊗ₖ (1 : Matrix Unit Unit ℂ) := by
+  ext ⟨b,f⟩ ⟨d,g⟩
+  cases f; cases g
+  simp [dataMarginal]
+
+theorem actual_dataChannel {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ) (Z : FullMat Unit) :
+    dataMarginal (cycle Unit ω ℏ t hℏ Z) =
+      dataChannel (FiniteClockHandReadout.p ω t) (dataMarginal Z) := by
+  have hh := actual_dataChannel_reduction hℏ ω t Z (dataMarginal Z) (dataMarginal_reindex Z)
+  ext b d
+  have he := congrFun (congrFun hh (b,())) (d,())
+  simpa [dataMarginal] using he
+
+theorem dataMarginal_density {Z : FullMat Unit} (hZ : IsDensityOperator Z) :
+    IsDensityOperator (dataMarginal Z) := by
+  refine ⟨(handTrace_positive Unit hZ.1).submatrix (fun b => (b,())), ?_⟩
+  have hh := (handTrace_trace Unit Z).trans hZ.2
+  rw [dataMarginal_reindex, Matrix.trace_kronecker] at hh
+  simpa [Matrix.trace] using hh
+
+theorem actual_dataChannel_density {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ)
+    {Z : FullMat Unit} (hZ : IsDensityOperator Z) :
+    IsDensityOperator (dataChannel (FiniteClockHandReadout.p ω t) (dataMarginal Z)) := by
+  rw [← actual_dataChannel hℏ ω t Z]
+  exact dataMarginal_density (branches_density Unit hℏ ω t hZ)
+
+theorem recovered_even_word {ω ℏ : ℝ} (hω : ω ≠ 0) (hℏ : ℏ ≠ 0)
+    (n : ℕ) (hn : 1 ≤ n) (h : History 10 n) (Y : Matrix (Q × F) (Q × F) ℂ)
+    (σ : FiniteClockHandReadout.Mat) (hσ : σ.trace=1) :
+    run S F 22 (keepTree F ω ℏ hℏ (2*n)) (newEvenRecord n h)
+      (insert F (FiniteQutritRetainedClock.amplifiedPreparation F 0 Y) σ) =
+    insert F (FiniteQutritRetainedClock.amplifiedPreparation F 0
+      ((FiniteQutritRetainedClock.tenWord n h ⊗ₖ (1 : Matrix F F ℂ)) * Y *
+        (FiniteQutritRetainedClock.tenWord n h ⊗ₖ (1 : Matrix F F ℂ))ᴴ)) (FiniteClockHandReadout.Q 0) := by
+  rw [newEvenRecord, recovered_even_record F hω hℏ n hn h Y σ hσ,
+    FiniteQutritRetainedClock.ten_history_word]
+
+theorem recovered_odd_word {ω ℏ : ℝ} (hω : ω ≠ 0) (hℏ : ℏ ≠ 0)
+    (n : ℕ) (h : History 10 n) (Y : Matrix (Q × F) (Q × F) ℂ)
+    (σ : FiniteClockHandReadout.Mat) (hσ : σ.trace=1) :
+    run S F 22 (keepTree F ω ℏ hℏ (2*n+1)) (newOddRecord n h)
+      (insert F (FiniteQutritRetainedClock.amplifiedPreparation F 0 Y) σ) =
+    insert F (FiniteQutritRetainedClock.amplifiedPreparation F 1
+      ((FiniteQutritRetainedClock.tenWord n h ⊗ₖ (1 : Matrix F F ℂ)) * Y *
+        (FiniteQutritRetainedClock.tenWord n h ⊗ₖ (1 : Matrix F F ℂ))ᴴ)) (FiniteClockHandReadout.Q 0) := by
+  rw [newOddRecord, recovered_odd_record F hω hℏ n h Y σ hσ,
+    FiniteQutritRetainedClock.ten_history_word]
+
 end SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples
