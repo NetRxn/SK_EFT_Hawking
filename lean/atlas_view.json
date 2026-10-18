@@ -123991,7 +123991,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 26
+      "frontier_impact": 27
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveMapPerturbation.lifted_prepare_zero_reset",
@@ -124612,7 +124612,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveMapPerturbation.outputDistance_one",
@@ -124621,7 +124621,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveMapPerturbation.outputDistance_one_positive",
@@ -124666,7 +124666,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 11
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveMapPerturbation.pairedErrors_changed_input",
@@ -126403,7 +126403,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutDiscrimination.effectTable_total",
@@ -126412,7 +126412,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutDiscrimination.environmentX_action",
@@ -127267,7 +127267,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 72
+      "frontier_impact": 76
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutDiscrimination.scalar_effect_admissible",
@@ -127438,7 +127438,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness.branchDistance_comm",
@@ -127897,7 +127897,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness.identical_family_history_error",
@@ -128626,7 +128626,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness.transported_readout_probabilities",
@@ -128653,7 +128653,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 27
+      "frontier_impact": 29
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteAdaptiveReadoutRobustness.tree_budget_stability",
@@ -128944,6 +128944,2265 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.M_normalized",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.Policy.brecOn.eq",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.W_complete",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.W_isometry",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.arm_normalized",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.baseBranch_action",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.branch_action",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 8
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.branch_difference_norm",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.branch_difference_norm_frequency",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.branch_positive",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.branches_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.branches_trace",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.dataBranch_block",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.dataBranch_keep",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.dataBranch_positive",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.dataBranch_reset",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.dataBranch_sum_trace",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.data_action_keep",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.data_action_reset",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.data_normalized",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.discarded_sandwich",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.forbidden_run",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.handTrace_block",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.handTrace_insert",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 11
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.handTrace_positive",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.handTrace_rectangular",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.handTrace_trace",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.handVector_outer",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.hand_gram",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.hand_operator_entry",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.injectRecord_injective",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.injected_run",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.insert_positive",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.insert_reindex",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.insert_sum",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.insert_trace",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 7
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.keep_all_records",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.keep_branch",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.keep_reduced_records",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.keep_zero_depth",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.lifted_sandwich_block",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.localError_exact",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.localError_frequency",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.localError_frequency_duration",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.policy_capped",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.policy_event_error",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.policy_falsePositive",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.policy_optimalReadout_stability",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.policy_pairedErrors",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.selected_sandwich",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.stepDistance_exact",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.stepDistance_frequency_exact",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.step_branch_block",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.terminalProbability_mem",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.zero_mass_error",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.actual_dataChannel",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.actual_dataChannel_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.actual_dataChannel_reduction",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.adaptive_errors",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.adaptive_full_reachable",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.adaptive_prefix_truncation",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.adaptive_prefix_weights",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.adaptive_same_event_error",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.adaptive_second_marginals",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.adaptive_second_prefix",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.adaptive_third_distinct",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.adaptive_third_left",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.adaptive_third_right",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.afterFirst_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.aliasTime_nonneg",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.alias_forbidden_run",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "OBSTRUCTION",
+      "atlas_status": "OBSTRUCTION",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.alias_injected_run",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.alias_recovery",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.amplified_prepare_one",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.amplified_prepare_zero",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.attained_gap",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.attained_left",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.attained_right",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.controlled_then_keep",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.controlled_then_keep_event",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.cycle_add",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.cycle_handTrace",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.cycle_insert",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.cycle_prepare_one",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.cycle_prepare_zero",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.cycle_smul",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.dataBranch_keep_sum",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.dataBranch_reset_sum",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.dataChannel_actual",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.dataChannel_not_unital",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.dataChannel_one",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.dataMarginal_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.dataMarginal_reindex",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.duration_error",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.empty_spectator_no_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.event0_entry",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.eventValue_add",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.eventValue_real_smul",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.event_distance",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.event_effect",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.event_hermitian",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.event_idempotent",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.event_prepare",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.event_prepare_complex",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.feedback_errors",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.finalState_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.finalState_event",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.first_branch",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.first_controlled_event",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.first_marginal",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.full_turn_zero",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.handTrace_smul",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.handTrace_sum",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.identical_policy_error",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.input_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.insert_add",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.insert_smul",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.insert_tensor",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.insert_zero",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.keep_then_controlled",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.keptData_old",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.micro_pair",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.micro_positive",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.micro_sum",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.micro_weight",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.new_even_pattern_card",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.new_odd_pattern_card",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.noisy_gap",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.noisy_order",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.old_reduce_prepare",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.policy_aggregate_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.positive_injected_run",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.prepareData_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.prepareData_entry",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.prepareData_sum",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.prepareData_tensor",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recorded_distance",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recoveredJoint_old",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 7
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_arbitrary_even",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_arbitrary_odd",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_even",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_even_record",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_even_word",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_forbidden_even",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "OBSTRUCTION",
+      "atlas_status": "OBSTRUCTION",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_forbidden_odd",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "OBSTRUCTION",
+      "atlas_status": "OBSTRUCTION",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_nine_probe_defect",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_odd",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_odd_record",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_odd_word",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_quotient_even",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_quotient_odd",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_quotient_physical",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_reset_gap",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.resetOld_add",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.resetOld_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.resetOld_normalized",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.resetOld_prepare",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.resetOld_smul",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.resetOld_tensor",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.reset_before_both_event",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.reset_product",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.rho0_sandwich",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.secondState_sum",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.second_arm_trace",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.second_branch",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.ten_branch",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.twoPolicy_errors",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.twoPolicy_event_error",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.two_round_event",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.two_round_normalized",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.two_round_sum",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.two_round_table",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.unitQutrit_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.unit_mass_branch",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.unit_mass_run",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.zero_mass_not_free",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.zero_mass_two_cycles",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.H_hermitian",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.H_nondegenerate",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.Q_adjoint",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.Q_complete",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.Q_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.Q_mul",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.Q_trace",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 20
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.R_normalized",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.R_sandwich",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.U_adjoint",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.U_conjugation",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.U_diagonal",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.U_group",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.U_phase",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.U_unitary",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.born",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.born_complex",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.born_variation",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.born_variation_bound",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.calibration_image",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.calibration_lower",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.calibration_lower_ordered",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.calibration_range",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.calibration_strictMono",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.calibration_upper",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.clip_contract",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.clip_mem",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.clipped_inverse_error",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.computational_readout",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.conditional_state",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.diagonal_born",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.discard_prepare",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.disturbance_absOp",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.disturbance_keep",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.disturbance_matrix",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.disturbance_quarter",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.disturbance_zero",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.frequency_duration_bound",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.g_sandwich",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.gibbs_diagonal",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.gibbs_readout",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.gibbs_stationary",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.interval_phase",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.inverse_error",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.inverse_interval",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.inverse_p",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.keep_alias",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.mass_nonneg",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.mass_sum",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.measurement_disturbance",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_hasDerivAt",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_inverse",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_keep",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_le_one",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_left",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_nonneg",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_periodic",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_phase_bound",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_quarter",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_reflection",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_right",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.p_zero",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.persistent_quarter",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.persistent_replaced_variation",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.replaced_quarter",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.rhoPlus_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.rhoPlus_eq",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.rho_C",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.rho_density",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.rho_entries",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.sandwich",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.scalar_hand",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.sin_calibration",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.sqrt_two_square",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockHandReadout",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteGibbsClock.E01_ne_zero",
       "module": "SKEFTHawking.QuantumNetwork.FiniteGibbsClock",
       "atlas_kind": "TRUE",
@@ -129094,7 +131353,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteGibbsClock.expCoeff_adjoint",
@@ -129148,7 +131407,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteGibbsClock.gibbs_energy_shift",
@@ -129436,7 +131695,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 27
+      "frontier_impact": 28
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteGibbsClock.twoLevel_nontrivial",
@@ -129616,7 +131875,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInstrument.sum_weight",
@@ -129661,7 +131920,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.Step.branch_posSemidef",
@@ -129670,7 +131929,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 7
+      "frontier_impact": 8
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.Step.branch_smul",
@@ -129679,7 +131938,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 19
+      "frontier_impact": 20
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.Step.branch_zero",
@@ -129688,7 +131947,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 10
+      "frontier_impact": 12
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.Step.normalized",
@@ -129706,7 +131965,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.Tree.brecOn.eq",
@@ -129760,7 +132019,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 9
+      "frontier_impact": 12
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.localStep_branch",
@@ -129769,7 +132028,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 21
+      "frontier_impact": 23
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.no_future_signaling",
@@ -129787,7 +132046,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 37
+      "frontier_impact": 38
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.prefix_marginal",
@@ -129814,7 +132073,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 15
+      "frontier_impact": 16
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.run_smul",
@@ -129832,7 +132091,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 12
+      "frontier_impact": 13
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.sum_trace",
@@ -129841,7 +132100,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 11
+      "frontier_impact": 12
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.sum_weight",
@@ -137779,7 +140038,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.C_diagonalPart",
@@ -137806,7 +140065,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 17
+      "frontier_impact": 18
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.C_full_period",
@@ -138058,7 +140317,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.V_diagonal",
@@ -138067,7 +140326,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.V_mul_neg",
@@ -138094,7 +140353,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.actual_generator",
@@ -140722,7 +142981,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 7
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritAveragedTransfer.kraus_normalized",
@@ -143791,7 +146050,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 240
+      "frontier_impact": 243
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritInvariantReconstruction.no_future_signaling",
@@ -144160,7 +146419,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 19
+      "frontier_impact": 20
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritPhysicalMemory.projector_idempotent",
@@ -144169,7 +146428,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 17
+      "frontier_impact": 18
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritPhysicalMemory.projector_trace",
@@ -145123,7 +147382,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.D_positive",
@@ -145132,7 +147391,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.D_rectangular",
@@ -145177,7 +147436,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.J_embed_zero",
@@ -145186,7 +147445,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 10
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.J_offdiagonal",
@@ -145204,7 +147463,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.J_positive",
@@ -145213,7 +147472,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.J_trace",
@@ -145240,7 +147499,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.K_unital",
@@ -145258,7 +147517,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.P_sum",
@@ -145375,7 +147634,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.amplifiedJointIterate_block",
@@ -145420,7 +147679,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.amplified_normalized",
@@ -145447,7 +147706,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.amplified_trace",
@@ -145465,7 +147724,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.arbitrary_odd",
@@ -145474,7 +147733,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.attained_gap",
@@ -145483,7 +147742,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.block_one",
@@ -145564,7 +147823,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.embed_trace",
@@ -145672,7 +147931,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.forbidden_odd_branch",
@@ -145681,7 +147940,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.generic_closure_impossible",
@@ -145699,7 +147958,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.generic_positive_root",
@@ -145735,7 +147994,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.label_none_value",
@@ -145780,7 +148039,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.none_one_branch",
@@ -145789,7 +148048,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.none_zero_branch",
@@ -145798,7 +148057,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.oddRecord_injective",
@@ -145825,7 +148084,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.permitted_even_word",
@@ -145843,7 +148102,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.permitted_odd_word",
@@ -145888,7 +148147,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.preparation_entry",
@@ -145897,7 +148156,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.preparation_reindex",
@@ -145915,7 +148174,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.probes_span",
@@ -145933,7 +148192,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.quotient_odd",
@@ -145942,7 +148201,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.quotient_physical_even",
@@ -145951,7 +148210,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.quotient_physical_odd",
@@ -145960,7 +148219,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.record_branch",
@@ -145969,7 +148228,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.record_branch_block",
@@ -145996,7 +148255,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.reduced_not_semigroup",
@@ -146050,7 +148309,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.reduction_trace",
@@ -146077,7 +148336,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.reset_amplified_normalized",
@@ -146149,7 +148408,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.reset_not_unital",
@@ -146167,7 +148426,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.reset_positive",
@@ -146221,7 +148480,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.rhoI_density",
@@ -146275,7 +148534,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.some_zero_branch",
@@ -146284,7 +148543,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.span_backward",
@@ -146311,7 +148570,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.spectator_reduced_odd",
@@ -146320,7 +148579,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.star_delta",
@@ -146338,7 +148597,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.systemIterate_block",
@@ -146365,7 +148624,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.transferIterate_left",
@@ -146383,7 +148642,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.unit_entry",
@@ -182806,7 +185065,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 17
+      "frontier_impact": 18
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.absOp_posSemidef",
@@ -182815,7 +185074,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 16
+      "frontier_impact": 17
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.absOp_unitary_conj",
@@ -185830,7 +188089,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 17
+      "frontier_impact": 18
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.isChannelStep_krausMap",
@@ -186100,7 +188359,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.isSymmetric_inner_self_eq_sum",
@@ -186199,7 +188458,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.krausMap_composeKraus",
@@ -186235,7 +188494,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 41
+      "frontier_impact": 42
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.krausMap_isHermitian",
@@ -186253,7 +188512,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 21
+      "frontier_impact": 23
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.krausMap_sandwichedRenyi_DPI",
@@ -186271,7 +188530,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 14
+      "frontier_impact": 15
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.krausMap_sub",
@@ -187702,7 +189961,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 18
+      "frontier_impact": 19
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.posSemidef_fromBlocks_topLeft",
@@ -189412,7 +191671,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 8
+      "frontier_impact": 9
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.sum_kronecker_left",
@@ -189952,7 +192211,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 28
+      "frontier_impact": 30
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceDist_step_le",
@@ -190141,7 +192400,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 18
+      "frontier_impact": 19
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_ge_abs_re_trace",
@@ -190339,7 +192598,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 22
+      "frontier_impact": 24
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceNorm_pt2_bellDiagState",
@@ -190582,7 +192841,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 23
+      "frontier_impact": 24
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.trace_kron_one_mul_diamondWitness",
@@ -279752,6 +282011,36 @@
       "false_statement": ""
     },
     {
+      "id": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.alias_forbidden_run",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "frontier_impact": 0,
+      "kernel_pure": true,
+      "registered": false,
+      "fork_id": null,
+      "nogo_kind": "",
+      "false_statement": ""
+    },
+    {
+      "id": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_forbidden_even",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "frontier_impact": 0,
+      "kernel_pure": true,
+      "registered": false,
+      "fork_id": null,
+      "nogo_kind": "",
+      "false_statement": ""
+    },
+    {
+      "id": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples.recovered_forbidden_odd",
+      "module": "SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples",
+      "frontier_impact": 0,
+      "kernel_pure": true,
+      "registered": false,
+      "fork_id": null,
+      "nogo_kind": "",
+      "false_statement": ""
+    },
+    {
       "id": "SKEFTHawking.QuantumNetwork.FiniteLocalChannelDepthObstruction.eventEffect_probability",
       "module": "SKEFTHawking.QuantumNetwork.FiniteLocalChannelDepthObstruction",
       "frontier_impact": 0,
@@ -280530,18 +282819,18 @@
     }
   },
   "summary": {
-    "theorem_nodes": 30383,
+    "theorem_nodes": 30634,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
     "apex_ids": [
       "hyp:H_PMNSAnglesFromExactSubstrate"
     ],
-    "obstruction_nodes": 555,
+    "obstruction_nodes": 558,
     "registered_obstructions": 47,
     "by_kind_status": {
-      "OBSTRUCTION:OBSTRUCTION": 538,
-      "TRUE:PROVED": 29845,
+      "OBSTRUCTION:OBSTRUCTION": 541,
+      "TRUE:PROVED": 30093,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
