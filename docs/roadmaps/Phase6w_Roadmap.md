@@ -2,6 +2,8 @@
 
 ## Technical Roadmap — May 2026
 
+**Current B2 status — 2026-10-18: original physical/native/complexity/Chern objectives remain BUILD.** The [forest-rank/exact-marginal construction](../audits/2026-10-17-publication-substance-construction/B2_FOREST_RANK_EXACT_MARGINALS.md) and [full independent review](../audits/2026-10-17-publication-substance-construction/reviews/B2_FOREST_RANK_EXACT_MARGINALS.md) accept all-pairs finite-forest certificates and conditional exact normalized marginals with full-assignment constants. Safe full-array horizon is max(1,n), not diameter; the five-node singleton/unitfactor/initial2 path needs five sweeps at diameter four. Literal q^|V| assignment loops do not become polynomial algorithms. Actual tensor/observable/readout, computable precision/complexity and genuine Chern remain substantive work. Historical source/build and D7 placement records below are retained at their original scopes.
+
 *Prepared 2026-05-25 PM. Approved 2026-05-25 PM per strategy synthesis decision D-8.*
 
 **Trigger condition:** The Phase 6v strategy synthesis (`temporary/working-docs/phase6v/Phase6v_Strategy_Synthesis.md`) initially packed the Tindall/Sels + Aalto material into a single Phase 6v wave (former 6v.7 "KZM-Unruh bridge") plus parked the deeper sub-claims (A1a, A1b, A1c) in the follow-up list. Second-pass LoE review surfaced that the combined ambition is genuinely a multi-wave program (~16–21 sessions) — too large for a single Phase 6v wave but too coherent to scatter across the follow-up list. User direction D-8 authorized a separate Phase 6w to fully scope the material.
@@ -36,17 +38,17 @@
 
 ## Wave catalog — Phase 6w (7 waves; Tindall/Sels + Aalto thread)
 
-**Status legend:** ✅ SHIPPED / 🟡 IN-PROGRESS / 📝 WORKING DOC / ⏳ NOT STARTED.
+**Historical source-delivery legend:** dated SHIPPED entries are source milestones, not current physical/native/Chern B2 completion. Accepted manual forest progress and current full-strength BUILD are stated above.
 
 | Wave | Title | Status | Bundle absorption | LoE |
 |---|---|---|---|---|
 | **Wave 6w.1** | Kibble-Zurek-Unruh bridge (foundation; lifted from former Phase 6v.7) | ✅ SHIPPED 2026-05-26 PM | D1 + E1 + E2 reinforcement | 1 sess |
-| **Wave 6w.2** | Belief propagation on tensor networks — Mathlib substrate | ✅ SHIPPED 2026-05-26 PM | I1 substrate; later D7 candidate | 1 sess |
-| **Wave 6w.3** | LDP-controlled classical-simulability sub-claim (former A1a) | ✅ SHIPPED 2026-05-26 PM | D1 cross-bridge to LDP/ + I-bundle section | 1 sess |
-| **Wave 6w.4** | Chebyshev tensor-network + aperiodic-lattice substrate | ✅ SHIPPED 2026-05-26 PM | I1 substrate; later D7 candidate | 1 sess |
-| **Wave 6w.5** | Categorical-Chern ↔ real-space-Chern bridge theorem (former A1b) | ✅ SHIPPED 2026-05-26 PM | D4 extension + SPTClassification | 1 sess |
-| **Wave 6w.6** | Combined classical-simulability demarcation for analog Hawking (former A1c) | ✅ SHIPPED 2026-05-26 PM | **D7 spin-out: YES** per user conditional-authorization (generality criterion met); D7 lift via Wave 6w.7 | 1 sess |
-| **Wave 6w.7** | D1 / E1 / E2 absorption + **D7 bundle spin-out** + self-conducted Stage-13 review | ✅ SHIPPED 2026-05-26 PM | D7 bundle CREATED + D1/E1/E2 cross-bridges + self-audit GREEN | 1 sess |
+| **Wave 6w.2** | Belief propagation on tensor networks — Mathlib substrate | Historical source shipped May26; full B2 BUILD | I1 substrate; later D7 candidate | 1 sess |
+| **Wave 6w.3** | LDP-controlled classical-simulability sub-claim (former A1a) | Historical source shipped May26; full B2 BUILD | D1 cross-bridge to LDP/ + I-bundle section | 1 sess |
+| **Wave 6w.4** | Chebyshev tensor-network + aperiodic-lattice substrate | Historical source shipped May26; full B2 BUILD | I1 substrate; later D7 candidate | 1 sess |
+| **Wave 6w.5** | Categorical-Chern ↔ real-space-Chern bridge theorem (former A1b) | Historical source shipped May26; full B2 BUILD | D4 extension + SPTClassification | 1 sess |
+| **Wave 6w.6** | Combined classical-simulability demarcation for analog Hawking (former A1c) | Historical source shipped May26; full B2 BUILD | **D7 spin-out: YES** per user conditional-authorization (generality criterion met); D7 lift via Wave 6w.7 | 1 sess |
+| **Wave 6w.7** | D1 / E1 / E2 absorption + **D7 bundle spin-out** + self-conducted Stage-13 review | Historical source shipped May26; full B2 BUILD | D7 bundle CREATED + D1/E1/E2 cross-bridges + self-audit GREEN | 1 sess |
 
 **Total estimated effort:** ~16–21 sessions across 7 waves.
 
@@ -101,12 +103,12 @@
 
 ### Wave 6w.3 — LDP-controlled classical-simulability sub-claim (former A1a)
 
-**Goal:** Headline theorem from Wave 6w.2 substrate: **BP convergence on a PEPS tensor network is governed by the LDP rate function of the loop-correction terms; classical simulability of the underlying dynamics holds when this rate function is below a computable threshold.** Connect to Tindall/Sels's empirical D-Wave-Advantage2 comparison; identify the threshold parameter regime.
+**Goal:** Headline theorem from Wave 6w.2 substrate: **Original physical target: derive convergence/error and a computable simulation threshold from actual dynamical loop corrections. Current Bernoulli four-cycle-density Legendre-rate source is genuine progress, not that physical/complexity theorem.** Connect to Tindall/Sels's empirical D-Wave-Advantage2 comparison; identify the threshold parameter regime.
 
 **Bundle target:** D1 cross-bridge to LDP/ + new I-bundle section (later D7 candidate).
 **Key substrate:** Wave 6w.2 BP substrate + existing LDP/.
 **Deliverables:**
-1. Theorem `bp_convergence_iff_ldp_below_threshold` (precise statement TBD at Stage 1).
+1. Original physical target remains BUILD. Current `fourCycleFree_nonneg_iff_ldp_rate_zero` is a combinatorial screen; ranked BP convergence separately consumes a certificate. The accepted forest construction advances that bridge at manual scope.
 2. Numerical cross-check against Tindall/Sels-extracted KZM exponent.
 3. Paper-draft section (target bundle TBD per D7 spin-out decision).
 
@@ -138,7 +140,7 @@
 **Bundle target:** D1 + E1 + E2 + (possibly D7 if spin-out triggers).
 **Key substrate:** Waves 6w.3 + 6w.5.
 **Deliverables:**
-1. Theorem `analog_hawking_quantum_advantage_demarcation` (precise statement TBD at Stage 1 of this wave).
+1. Original physical demarcation remains BUILD. Actual `analog_hawking_fourCycleFree_demarcation` is a structural screen; its tree companion assumes a certificate. Neither proves quantum advantage or polynomial complexity.
 2. **D7 spin-out decision** per "Bundle architecture decision" section above.
 
 ### Wave 6w.7 — D1/E1/E2 absorption + (optional) D7 bundle spin-out + Stage-13 review
