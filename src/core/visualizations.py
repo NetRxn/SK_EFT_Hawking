@@ -3144,7 +3144,7 @@ def fig_polariton_regime_map():
     ))
     labels = {
         'Paris_standard': ('Standard (measured)', 'circle', 'top right'),
-        'Paris_long': ('Long (projected)', 'diamond-open', 'top left'),
+        'Paris_long': ('Long (projected)', 'diamond-open', 'top right'),
         'Paris_ultralong': ('Ultralong (projected)', 'diamond-open', 'bottom left'),
     }
     for name, (label, symbol, position) in labels.items():
@@ -3153,25 +3153,30 @@ def fig_polariton_regime_map():
             x=[data['tau_cav_ps']], y=[data['Gamma_pol_over_kappa']],
             mode="markers+text", name=label, text=[label], textposition=position,
             marker=dict(size=12, color=COLORS['dispersive'], symbol=symbol,
-                        line=dict(width=2)), textfont=dict(size=12), showlegend=False,
+                        line=dict(width=2)), textfont=dict(size=20), showlegend=False,
         ))
     # Text traces preserve data-space placement on logarithmic axes.
     fig.add_trace(go.Scatter(
-        x=[900, 900, 900], y=[5, 0.5, 0.018], mode="text",
+        x=[900, 900, 500], y=[5, 0.5, 0.018], mode="text",
         text=["Strong decay", "Intermediate decay", "Weak decay"],
-        textposition="middle left", textfont=dict(size=12, color="grey"),
+        textposition=["middle left", "middle left", "bottom left"],
+        textfont=dict(size=20, color="grey"),
         showlegend=False, hoverinfo="skip",
     ))
-    apply_layout(fig, height=500, width=700,
-        title=dict(text="<b>Polariton decay and cavity lifetime</b>", font=TITLE_FONT),
-        xaxis=dict(title="Cavity lifetime τ [ps]", type="log", range=[0, 3], dtick=1),
-        yaxis=dict(title="Γ<sub>pol</sub> / κ", type="log", range=[-2, 1], dtick=1),
-        margin=dict(l=75, r=25, t=55, b=135))
-    fig.add_annotation(x=0.5, y=-0.34, xref="paper", yref="paper",
-        text=f"κ = {kappa:.1e} s⁻¹; adopted criterion Γ<sub>pol</sub>/κ &lt; 0.1"
-             f" requires τ &gt; {tau_criterion_ps:.0f} ps<br>"
-             "Shading: qualitative decay scales; projected cavities are not measurements",
-        showarrow=False, font=dict(size=12, family=FONT['family']))
+    apply_layout(fig, height=500, width=600,
+        title=dict(text="<b>Polariton decay and cavity lifetime</b>",
+                   font=dict(family=FONT['family'], size=22)),
+        xaxis=dict(title="Cavity lifetime τ [ps]", type="log", range=[0, 3], dtick=1,
+                   title_font=dict(size=20), tickfont=dict(size=20)),
+        yaxis=dict(title="Γ<sub>pol</sub> / κ", type="log", range=[-2, 1], dtick=1,
+                   title_font=dict(size=20), tickfont=dict(size=20)),
+        margin=dict(l=85, r=25, t=60, b=180, autoexpand=False),
+        font=dict(family=FONT['family'], size=20))
+    fig.add_annotation(x=0.5, y=-0.28, xref="paper", yref="paper", yanchor="top",
+        text=f"κ = {kappa:.1e} s⁻¹; adopted criterion<br>"
+             f"Γ<sub>pol</sub>/κ &lt; 0.1 requires τ &gt; {tau_criterion_ps:.0f} ps<br>"
+             "Shading: qualitative decay scales;<br>projected cavities are not measurements",
+        showarrow=False, font=dict(size=20, family=FONT['family']))
     return fig
 
 
@@ -5441,23 +5446,31 @@ def fig_stimulated_hawking_spectrum() -> go.Figure:
         mode='markers', marker=dict(color=COLORS['dissipative'], size=9),
         name='Half gain', showlegend=False,
     ))
-    fig.add_annotation(x=half_gain_ratio, y=np.log10(0.5),
-        text="G = 1/2 at ln(3)/(2π) ≈ 0.175", ax=130, ay=-35,
-        arrowhead=2, font=dict(size=12))
+    fig.add_annotation(x=0.98, y=0.60, xref='paper', yref='paper',
+        text="G = 1/2 at ln(3)/(2π) ≈ 0.175", xanchor='right',
+        yanchor='middle', showarrow=False, font=dict(size=20))
     fig.add_vrect(x0=0, x1=0.3, fillcolor=COLORS['dispersive'], opacity=0.08,
         line_width=0)
-    fig.add_annotation(x=0.02, y=0.98, xref='paper', yref='paper',
+    fig.add_annotation(x=0.98, y=0.98, xref='paper', yref='paper',
         text="Shading: adopted working band<br>Lower edge unspecified",
-        xanchor='left', yanchor='top', showarrow=False, font=dict(size=12))
-    apply_layout(fig, height=500, width=700,
-        title=dict(text="<b>Stimulated Hawking gain: Γ ≡ 1 model</b>", font=TITLE_FONT),
-        xaxis=dict(title="ω / κ<sub>eff</sub>", range=[0, 1.6]),
-        yaxis=dict(title="G(ω)", type="log", range=[-4.5, 1.5], dtick=1),
-        margin=dict(l=75, r=25, t=55, b=135), showlegend=False)
-    fig.add_annotation(x=0.5, y=-0.34, xref='paper', yref='paper',
-        text="Ideal shot-noise model: G = 1/2 gives SNR = 5 for 100 probe photons/mode in one shot"
-             "<br>Requires calibrated transfer and in-band noise; no measured sensitivity claimed",
-        showarrow=False, font=dict(size=12, family=FONT['family']))
+        xanchor='right', yanchor='top', align='right', showarrow=False,
+        font=dict(size=20))
+    apply_layout(fig, height=450, width=600,
+        title=dict(text="<b>Stimulated Hawking gain: Γ ≡ 1 model</b>",
+                   font=dict(family=FONT['family'], size=22)),
+        xaxis=dict(title="ω / κ<sub>eff</sub>", range=[0, 1.6],
+                   title_font=dict(size=20), tickfont=dict(size=20)),
+        yaxis=dict(title="G(ω)", type="log", range=[-4.5, 1.5], dtick=1,
+                   title_font=dict(size=20), tickfont=dict(size=20)),
+        margin=dict(l=75, r=25, t=60, b=180, autoexpand=False),
+        font=dict(family=FONT['family'], size=20), showlegend=False)
+    fig.add_annotation(x=0.5, y=-0.32, xref='paper', yref='paper',
+        yanchor='top',
+        text="Ideal shot-noise model: G = 1/2 gives SNR = 5"
+             "<br>for 100 probe photons/mode in one shot"
+             "<br>Requires calibrated transfer and in-band noise;"
+             "<br>no measured sensitivity claimed",
+        showarrow=False, font=dict(size=20, family=FONT['family']))
     return fig
 
 

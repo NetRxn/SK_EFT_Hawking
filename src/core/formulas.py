@@ -172,7 +172,7 @@ def dispersive_correction(D):
 
     Lean: dispersive_correction_bound (KappaScaling.lean), bogoliubov_superluminal
     Aristotle: d65e3bba, 3eedcabb
-    Source standing: adopted parametrization; see
+    Source: adopted parametrization; see
         PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
 
     Args:
@@ -1169,11 +1169,12 @@ def polariton_hawking_temperature(kappa):
 # ════════════════════════════════════════════════════════════════════
 
 def stimulated_hawking_gain(omega, kappa, greybody=1.0):
-    """
-    Stimulated Hawking amplification G(ω) = Γ(ω) / (exp(2πω/κ) - 1).
+    """Stimulated Hawking amplification G(ω) = Γ(ω) / (exp(2πω/κ) - 1).
 
-    For a coherent probe with n_in quanta at frequency ω, the anomalous
-    (Hawking) channel output is G(ω) × n_in. The gain peaks at low
+    Within the adopted anomalous-channel response, a coherent probe with
+    n_in quanta is assigned output G(ω) × n_in. Physical transmission,
+    mode normalization and detector coupling require separate matching.
+    The gain peaks at low
     frequencies where G ~ Γκ/(2πω) as ω/κ → 0. For fixed positive
     Γ and κ this diverges as ω → 0; it does not approach unity.
 
@@ -1184,7 +1185,7 @@ def stimulated_hawking_gain(omega, kappa, greybody=1.0):
     Args:
         omega: Probe frequency [s⁻¹] (must be > 0)
         kappa: Surface gravity [s⁻¹]
-        greybody: Greybody factor Γ(ω) ∈ (0,1], default 1 (non-dispersive limit)
+        greybody: Greybody factor Γ(ω) ∈ (0,1], default 1 (adopted saturated transmission)
 
     Returns:
         G(ω) — stimulated Hawking gain (dimensionless)
@@ -1195,12 +1196,14 @@ def stimulated_hawking_gain(omega, kappa, greybody=1.0):
 
 
 def stimulated_hawking_snr(omega, kappa, n_probe, n_shots=1, greybody=1.0):
-    """
-    Signal-to-noise ratio for stimulated Hawking detection.
+    """Ideal shot-noise SNR assigned to the adopted stimulated-gain model.
 
     SNR = sqrt(N_shots · N_probe) · G(ω)
 
-    For 5σ detection: N_shots · N_probe ≥ 25 / G(ω)².
+    The model assigns SNR >= 5 when N_shots · N_probe >= 25 / G(ω)².
+    This is not a measured detector significance or sensitivity. Collection
+    and detection efficiency, transmission, background covariance and the
+    physical in-band noise spectrum require independent calibration.
 
     Lean: snr_pos, snr_sqrt_scaling, detection_threshold (StimulatedHawking.lean)
     Aristotle: 986b9f66
@@ -1221,8 +1224,12 @@ def stimulated_hawking_snr(omega, kappa, n_probe, n_shots=1, greybody=1.0):
 
 
 def stimulated_hawking_spectrum(kappa, n_points=200, omega_max_ratio=3.0, greybody=1.0):
-    """
-    Compute the stimulated Hawking gain spectrum G(ω) over a range of frequencies.
+    """Sample the adopted stimulated-gain model over a positive frequency range.
+
+    This returns the scalar response for the supplied kappa and greybody,
+    not a derived detector PSD or an error-controlled device validity band.
+    The returned temperature is the defined hbar*kappa/(2*pi*k_B) scale;
+    a physical thermal interpretation requires matching to a thermal spectrum.
 
     Source: Deep research Phase-5d, combining Grisins (2016) + Burkhard (2025)
 
@@ -1249,8 +1256,7 @@ def stimulated_hawking_spectrum(kappa, n_points=200, omega_max_ratio=3.0, greybo
 
 
 def dispersive_hawking_correction(D):
-    """
-    Dispersive correction to effective Hawking temperature, as a RATIO.
+    """Dispersive correction to effective Hawking temperature, as a RATIO.
 
     κ_eff/κ = 1 + δ_disp = 1 - c₁·D²,  D = ξκ/c_s.
 
@@ -1259,13 +1265,8 @@ def dispersive_hawking_correction(D):
     that function and does not restate the coefficient — Invariant #1, one
     home per formula.
 
-    ⚠️ HISTORY. Until 2026-08-15 this function carried its own hardcoded
-    ``c1 = 1.0``, a second and divergent implementation of a formula that
-    ``dispersive_correction`` already owned with c₁ = π/6. The two disagreed
-    by a factor of 1.91 (at D = 0.595: 0.646 here vs 0.815 there), and the
-    π/6 branch was the one used by every test, gate, script, manuscript and
-    all three Lean modules. The duplicate is removed rather than reconciled.
-    See papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/.
+    Coefficient normalization and source distinctions are recorded in
+    papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/.
 
     For the standing of both the adopted form and normalization,
     read ``dispersive_correction``.

@@ -417,7 +417,7 @@ CITATION_REGISTRY = {
         'volume': 135,
         'page': '023401',
         'year': 2025,
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'arxiv': '2311.01392',
         'doi_verified': None,
         'inprep': False,
@@ -435,7 +435,13 @@ CITATION_REGISTRY = {
                  'three measured κ values (0.07, 0.08, 0.11 ps⁻¹) across smooth '
                  'and steep horizon configurations; c_s = 0.40 μm/ps; '
                  'ξ ≈ 3.4 μm upstream, 4.0 μm downstream. LLM-re-verified '
-                 'against full text 2026-04-13 (Phase 5u Wave 3).',
+                 'against full text 2026-04-13 (Phase 5u Wave 3). Held PDF is '
+                 'arXiv:2311.01392v2 (2024-07-05), 13 pages. Its Discussion '
+                 'and Eq. (9) support the temperature-normalization and '
+                 'steep-horizon nonthermality statements in D1/E1. Journal '
+                 'identity and DOI checked against Crossref 2026-10-17; '
+                 'publisher/accepted bodies were not acquired, so equivalence '
+                 'of those bodies with the held preprint is not established.',
     },
     'Giacobino2025': {
         'authors': 'Giacobino, E., Jacquet, M. J.',
