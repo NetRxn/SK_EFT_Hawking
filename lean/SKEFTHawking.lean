@@ -5343,6 +5343,7 @@ import SKEFTHawking.QuantumNetwork.FiniteQutritEuclideanTransfer
 import SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction
 import SKEFTHawking.QuantumNetwork.FiniteQutritFeatureGibbs
 import SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction
+import SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
