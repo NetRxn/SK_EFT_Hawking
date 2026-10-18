@@ -41,7 +41,27 @@ The actual half-step sends a physical trace-one input outside the inherited posi
 
 `FiniteQutritFeatureGibbs` consumes the existing finite Gibbs/log/modular engine on the normalized six-feature endomorphism algebra. Every finite real beta, beta0 identity/6, feature trace(T)=4, beta1 density=T/4 and the signed modular/Heisenberg parameter comparison are retained. This density is not a physical qutrit state; the parameter supplies no calibrated elapsed time. Continuum reconstruction, physical gap and original retained-memory/adaptive objectives remain open. Finish current PR qualification before the next growth assignment, retaining the original scopes.
 
-The next complete proof assignment is the reviewed retained two-sector clock construction. Its eleven individually recorded Kraus operators must act on every complex joint input and arbitrary correlated finite spectators. The target includes rectangular preparation, the actual second-factor partial trace, all parity and arbitrary-input formulas with the zero-depth coherence guard, and every chronological record including impossible leaves. Permitted alternating patterns are not positive-weight leaf counts. The actual reset is CPTP and idempotent but nonunital, with an attained two-tick event gap `1/5`. Generic closure exclusion must consume the ambient theorem and exhibit a defect on one of nine normalized physical density probes. This is manual/contract acceptance only; no clock implementation is claimed. Physical dimension three, feature dimension six and joint clock dimension six remain distinct. A parity register is not a calibrated duration or unbounded tick count; continuous joint dynamics and universal minimum memory remain separate objectives.
+`FiniteQutritRetainedClock.lean` implements the complete retained two-sector clock
+contract and is normally integrated at `25ce2698`. Its eleven individually
+recorded Kraus operators act on every complex joint input and arbitrary correlated
+finite spectators. Rectangular preparation, actual second-factor partial trace,
+all parity formulas and the zero-depth coherence guard are proved. Every
+chronological record, including impossible leaves, is retained; permitted
+alternating patterns are not positive-weight leaf counts. The actual reset is
+CPTP and idempotent but nonunital, with an attained two-tick event gap `1/5`.
+Generic closure exclusion consumes the ambient theorem and exhibits a defect on
+one of nine normalized physical density probes.
+
+Whole independent source and compiled-native review passed. Normal absorption,
+authoritative aggregate build and integrated-primary audit preserve all 302
+ordinary declarations and their logical and compiler dependency traversals.
+Canonical refresh at `6662a99a` preserves all 52,320 earlier declaration records
+and adds 240 records. Current project checks and whole integrated bounded
+acceptance remain pending. Physical dimension three, feature dimension six and
+joint clock dimension six remain distinct. A parity register is not a calibrated
+duration or unbounded tick count. Continue the original adaptive and
+retained-memory programme after this integration cycle; continuous joint dynamics
+and universal minimum memory remain separate objectives.
 
 The adaptive qutrit and correlated-environment foundations are integrated.
 `QuantumNetwork/FiniteThreeLevelMemoryReadout.lean` now has whole source,
