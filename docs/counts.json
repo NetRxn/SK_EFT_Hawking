@@ -1,12 +1,12 @@
 {
-  "generated": "2026-10-18T00:31:05.447667",
+  "generated": "2026-10-18T03:33:26.924720",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 52252,
-    "theorems_total": 30196,
-    "theorems_substantive": 30170,
+    "total_declarations": 52320,
+    "theorems_total": 30236,
+    "theorems_substantive": 30210,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 30101,
+    "theorems_kernel_substantive": 30141,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2142,
+    "modules": 2143,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -1325,6 +1325,7 @@
       "SKEFTHawking.QuantumNetwork.FiniteNontracialSchedule",
       "SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase",
       "SKEFTHawking.QuantumNetwork.FinitePhysicalMemoryDimension",
+      "SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction",
       "SKEFTHawking.QuantumNetwork.FiniteQutritAveragedExamples",
       "SKEFTHawking.QuantumNetwork.FiniteQutritAveragedMixing",
       "SKEFTHawking.QuantumNetwork.FiniteQutritAveragedTransfer",
@@ -2160,7 +2161,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 15188,
+    "definitions": 15203,
     "structures": 505,
     "instances": 1022,
     "inductives": 109,
