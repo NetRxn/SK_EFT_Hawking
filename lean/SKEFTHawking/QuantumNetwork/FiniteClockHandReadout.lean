@@ -353,4 +353,152 @@ theorem g_sandwich {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ) (a : A) (X : Mat)
   simpa only [rho, Matrix.mul_assoc] using
     congrArg (fun Y : Mat => X.trace • Y) (sandwich hℏ ω t a)
 
+def measured (ω ℏ t : ℝ) : Mat := ∑ a : A, Q a * rho ω ℏ t * Q a
+
+def disturbance (θ : ℝ) : Mat := !![0, Complex.I*Real.sin θ/2; -Complex.I*Real.sin θ/2, 0]
+
+theorem disturbance_matrix {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ) :
+    rho ω ℏ t-measured ω ℏ t = disturbance (ω*t) := by
+  simp only [measured, sandwich hℏ, Fin.sum_univ_two]
+  rw [rho_entries hℏ]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Q, mass, p, disturbance] <;> push_cast <;> ring
+
+theorem disturbance_absOp (θ : ℝ) :
+    absOp (disturbance θ) = ((|Real.sin θ|/2:ℝ):ℂ) • (1 : Mat) := by
+  have hs : ((|Real.sin θ|:ℝ):ℂ)^2 = (Real.sin θ:ℂ)^2 := by exact_mod_cast sq_abs (Real.sin θ)
+  apply posSemidef_eq_of_mul_self_eq (absOp_posSemidef _)
+  · exact Matrix.PosSemidef.one.smul (Complex.zero_le_real.mpr (by positivity))
+  · rw [absOp_mul_self]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [disturbance, Matrix.mul_apply, Matrix.conjTranspose_apply, Fin.sum_univ_two,
+        Matrix.one_apply] <;> push_cast <;>
+      simp only [← Complex.ofReal_sin, map_ofNat, Complex.star_def, Complex.conj_ofReal] <;> ring_nf <;>
+      simp [Complex.I_sq, Complex.ofReal_pow, Complex.ofReal_sin, hs] <;> ring
+
+theorem measurement_disturbance {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ) :
+    traceDist (rho ω ℏ t) (measured ω ℏ t) = |Real.sin (ω*t)|/2 := by
+  rw [traceDist, disturbance_matrix hℏ, traceNorm_eq_trace_absOp, disturbance_absOp,
+    Matrix.trace_smul]
+  norm_num [Matrix.trace, Fin.sum_univ_two, Complex.mul_re]
+  <;> ring
+
+theorem disturbance_quarter {ω ℏ : ℝ} (hω : ω ≠ 0) (hℏ : ℏ ≠ 0) :
+    traceDist (rho ω ℏ (Real.pi/(2*ω))) (measured ω ℏ (Real.pi/(2*ω))) = 1/2 := by
+  rw [measurement_disturbance hℏ]
+  have he : ω*(Real.pi/(2*ω)) = Real.pi/2 := by field_simp <;> ring
+  rw [he, Real.sin_pi_div_two]; norm_num
+
+theorem disturbance_zero {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω : ℝ) :
+    traceDist (rho ω ℏ 0) (measured ω ℏ 0) = 0 := by
+  rw [measurement_disturbance hℏ]; simp
+
+theorem disturbance_keep {ω ℏ : ℝ} (hω : ω ≠ 0) (hℏ : ℏ ≠ 0) :
+    traceDist (rho ω ℏ (Real.pi/ω)) (measured ω ℏ (Real.pi/ω)) = 0 := by
+  rw [measurement_disturbance hℏ, mul_div_cancel₀ Real.pi hω, Real.sin_pi]; norm_num
+
+theorem computational_readout {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ) (a : A) :
+    ((Matrix.single a a 1 * rho ω ℏ t).trace).re = 1/2 := by
+  rw [rho_entries hℏ]
+  fin_cases a <;> norm_num [Matrix.single, Matrix.mul_apply, Matrix.trace, Fin.sum_univ_two]
+
+theorem scalar_hand (ℏ t : ℝ) (hℏ : ℏ ≠ 0) :
+    ((Q 0 * rho 0 ℏ t).trace).re = 0 := by
+  rw [born hℏ]; simp [mass, p]
+
+theorem U_conjugation {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω t : ℝ) (X : Mat) :
+    U ω ℏ t * X * (U ω ℏ t)ᴴ = FiniteNontracialThermalPhase.C (ω*t) X := by
+  simp only [U_phase hℏ, FiniteNontracialThermalPhase.V_adjoint]
+  simp [FiniteNontracialThermalPhase.V, FiniteNontracialThermalPhase.C, FiniteGibbsClock.conjugate]
+
+theorem gibbs_diagonal (ω ℏ β : ℝ) :
+    FiniteGibbsClock.gibbs (H ω ℏ) β =
+      Matrix.diagonal (fun i => FiniteGibbsClock.gibbs (H ω ℏ) β i i) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [FiniteGibbsClock.gibbs, FiniteGibbsClock.boltzmann, H, FiniteGibbsClock.twoLevel,
+      ← Matrix.diagonal_smul, Matrix.exp_diagonal]
+
+theorem gibbs_stationary {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω β t : ℝ) :
+    U ω ℏ t * FiniteGibbsClock.gibbs (H ω ℏ) β * (U ω ℏ t)ᴴ =
+      FiniteGibbsClock.gibbs (H ω ℏ) β := by
+  rw [U_conjugation hℏ, gibbs_diagonal ω ℏ β,
+    FiniteNontracialThermalPhase.C_diagonal]
+
+theorem diagonal_born (d : A → ℂ) (a : A) :
+    (Q a * Matrix.diagonal d).trace = (1/2:ℂ) * (Matrix.diagonal d).trace := by
+  simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, Fin.sum_univ_two]
+  fin_cases a <;> simp [Q] <;> ring
+
+theorem gibbs_readout {ℏ : ℝ} (hℏ : ℏ ≠ 0) (ω β t : ℝ) (a : A) :
+    ((Q a * (U ω ℏ t * FiniteGibbsClock.gibbs (H ω ℏ) β * (U ω ℏ t)ᴴ)).trace).re = 1/2 := by
+  rw [gibbs_stationary hℏ]
+  have h := FiniteGibbsClock.gibbs_density (H_hermitian ω ℏ) β
+  conv_lhs => rw [gibbs_diagonal ω ℏ β]
+  rw [diagonal_born, ← gibbs_diagonal ω ℏ β, h.2]
+  norm_num
+
+theorem p_quarter {ω : ℝ} (hω : ω ≠ 0) : p ω (Real.pi/(2*ω)) = 1/2 := by
+  have he : ω*(Real.pi/(2*ω)) = Real.pi/2 := by field_simp <;> ring
+  rw [p, he, Real.cos_pi_div_two]; norm_num
+
+def persistentTable (ω ℏ t : ℝ) (a b : A) : ℝ :=
+  ((Q b * (Q a * rho ω ℏ t * Q a) * Q b).trace).re
+
+def replacedTable (ω ℏ t : ℝ) (a b : A) : ℝ :=
+  (∑ r : A, g ω ℏ 0 b r * (Q a * rho ω ℏ t * Q a) * (g ω ℏ 0 b r)ᴴ).trace.re
+
+theorem persistent_quarter {ω ℏ : ℝ} (hω : ω ≠ 0) (hℏ : ℏ ≠ 0) (a b : A) :
+    persistentTable ω ℏ (Real.pi/(2*ω)) a b = if a=b then 1/2 else 0 := by
+  rw [persistentTable, sandwich hℏ]
+  fin_cases a <;> fin_cases b <;>
+    norm_num [mass, p_quarter hω, Q, Matrix.mul_apply, Matrix.trace, Fin.sum_univ_two]
+
+theorem replaced_quarter {ω ℏ : ℝ} (hω : ω ≠ 0) (hℏ : ℏ ≠ 0) (a b : A) :
+    replacedTable ω ℏ (Real.pi/(2*ω)) a b = if b=1 then 1/2 else 0 := by
+  rw [replacedTable, g_sandwich hℏ, sandwich hℏ]
+  fin_cases a <;> fin_cases b <;>
+    norm_num [mass, p_quarter hω, p_zero, Matrix.trace_smul, Q_trace]
+
+theorem persistent_replaced_variation {ω ℏ : ℝ} (hω : ω ≠ 0) (hℏ : ℏ ≠ 0) :
+    (∑ a : A, ∑ b : A, |persistentTable ω ℏ (Real.pi/(2*ω)) a b -
+      replacedTable ω ℏ (Real.pi/(2*ω)) a b|)/2 = 1/2 := by
+  simp only [persistent_quarter hω hℏ, replaced_quarter hω hℏ, Fin.sum_univ_two]
+  norm_num
+
+theorem keep_alias {ω : ℝ} (hω : ω ≠ 0) (k : ℕ) :
+    p ω (Real.pi/ω+(k:ℝ)*(2*Real.pi/ω)) = 1 := by
+  induction k with
+  | zero => simpa using p_keep hω
+  | succ k ih =>
+    rw [Nat.cast_succ, add_mul, one_mul, ← add_assoc, p_periodic hω, ih]
+
+/-- Clipping specifies the extension used for observations outside the calibrated range. -/
+def clip (q : ℝ) : ℝ := max (1/4) (min (3/4) q)
+
+theorem clip_mem (q : ℝ) : clip q ∈ Set.Icc (1/4) (3/4) := by
+  constructor
+  · exact le_max_left _ _
+  · exact max_le (by norm_num) (min_le_left _ _)
+
+theorem clip_contract {q r : ℝ} (hr : r ∈ Set.Icc (1/4) (3/4)) : |clip q-r| ≤ |q-r| := by
+  unfold clip
+  rcases le_total q (1/4) with h | h
+  · rw [min_eq_right (by linarith : q ≤ 3/4), max_eq_left h,
+      abs_of_nonpos (by linarith [hr.1]), abs_of_nonpos (by linarith [hr.1])]
+    linarith
+  · rcases le_total q (3/4) with h' | h'
+    · rw [min_eq_right h', max_eq_right h]
+    · rw [min_eq_left h', max_eq_right (by norm_num),
+        abs_of_nonneg (by linarith [hr.2]), abs_of_nonneg (by linarith [hr.2])]
+      linarith
+
+theorem clipped_inverse_error {ω t : ℝ} (hω : 0 < ω) (ht : t ∈ interval ω) (q : ℝ) :
+    |inverse ω (clip q)-t| ≤ 4*|q-p ω t|/ω := by
+  exact (inverse_error hω ht (clip_mem q)).trans
+    (div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left
+      (clip_contract (calibration_range hω ht)) (by norm_num)) hω.le)
+
 end SKEFTHawking.QuantumNetwork.FiniteClockHandReadout
