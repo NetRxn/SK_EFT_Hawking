@@ -5336,6 +5336,9 @@ import SKEFTHawking.QuantumNetwork.FiniteQutritPhysicalMemoryExamples
 import SKEFTHawking.QuantumNetwork.FiniteQutritInvariantCarrier
 import SKEFTHawking.QuantumNetwork.FiniteQutritInvariantReconstruction
 import SKEFTHawking.QuantumNetwork.FiniteQutritInvariantExamples
+import SKEFTHawking.QuantumNetwork.FiniteQutritAveragedTransfer
+import SKEFTHawking.QuantumNetwork.FiniteQutritAveragedMixing
+import SKEFTHawking.QuantumNetwork.FiniteQutritAveragedExamples
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
