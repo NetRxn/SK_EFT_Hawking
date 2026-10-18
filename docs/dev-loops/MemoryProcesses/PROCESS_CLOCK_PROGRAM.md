@@ -6,7 +6,7 @@ Root owns integration, slot admission and the primary notebook. Reviewed feature
 
 ## Current finite growth and integration
 
-### Qutrit invariant completion and the next transfer target
+### Qutrit invariant completion and transfer successors
 
 The actual physical-memory construction retains its bounded acceptance at
 `d7193e43`: physical Hilbert dimension three and selected positive-kernel feature
@@ -16,7 +16,7 @@ is implemented in `FiniteQutritInvariantCarrier.lean`,
 `FiniteQutritInvariantExamples.lean`, normally absorbed at `1eaf8d96`.
 Whole independent mathematical/source review and the actual compiled logical
 audit pass. Canonical refresh at `6d97f932` preserves all earlier declaration
-records; current gates and integrated closing acceptance are still pending.
+records. Its subsequent bounded source/native/canonical/integrated local acceptance at `b05efe2f` is retained; broader project and publication gates remain separate.
 
 The original prefix [4,3]/01 actually escapes the old five-span. Six actual
 two-command prefixes and suffixes yield the common-cut kernel with determinant
@@ -30,22 +30,14 @@ corresponding system-block carrier. Physical three, selected five and reachable
 six remain distinct, and all earlier chronology, zero-mass and retained-resource
 controls are preserved.
 
-The next independently reviewed bounded contract is the actual uniform average
-`T(X)=(1/5) sum_j(Pj*X*Pj+(I-Pj)*X*(I-Pj))`, with setting and outcome records
-explicitly discarded at each independent step. Prove its normalized ten-Kraus
-realization, positive self-adjoint weighted-Hilbert transfer, exact symmetric
-spectrum and sharp trace-zero contraction 9/10. Transfer it through the genuine
-quotient and derive the actual selected prefix/suffix joint-weight difference
-`(1/3)*(9/10)^n` for every natural n. This is a reviewed proof contract, not an
-implemented result or an added prerequisite for the preceding completion.
+The actual uniform average
+`T(X)=(1/5) sum_j(Pj*X*Pj+(I-Pj)*X*(I-Pj))` is implemented and locally accepted at `b05efe2f`. Setting and outcome records are discarded at every step. Its normalized ten-Kraus realization, weighted positive self-adjoint transfer, exact six-eigenbasis, sharp trace-zero contraction9/10 and actual all-n joint-weight difference `(1/3)*(9/10)^n` are proved. Spectator contraction is relative to system partial trace; globally trace-zero spectator operators can remain fixed.
 
-For a retained spectator the spectral target is relative to system partial
-trace on the restricted matrix carrier. Globally trace-zero spectator operators
-can remain fixed. The optional full-ambient spectral extension is later growth.
-The finite dimensionless gap target 1/10 supplies no elapsed-time calibration,
-arbitrary record-conditioned Markov law, continuum field theory, physical gap,
-quantum advantage or frontier-apex completion. Broader security, main and
-publication gates remain separate.
+The Euclidean successor (source `6b0238f4`, normal integration `5ec80239`) constructs the normalized genuine feature unitary, spectral-log generator, actual exponential and full complex temporal Gram kernel. Actual integer histories retain nonnegative normalized Kraus weights. All finite spectator, empty-space and relative sharpness clauses are preserved. Whole independent scientific review, final native compilation and integrated-primary logical proof audits pass. Existing canonical writers and the generated no-go fence are reconciled; current pair builds and substrate soundness checks pass. Expanded project, security, main and publication gates remain separate.
+
+The actual half-step sends a physical trace-one input outside the inherited positive cone, with a diagonal entry below `-11/7500`. `FiniteQutritFractionalObstruction` supplies the precise positive-extension and weighted self-adjoint principal-root obstructions, registered in the existing no-go registry. This does not exclude arbitrary ambient nonselfadjoint CPTP embeddings. Hilbert positivity, Gram positivity and physical density positivity remain distinct.
+
+`FiniteQutritFeatureGibbs` consumes the existing finite Gibbs/log/modular engine on the normalized six-feature endomorphism algebra. Every finite real beta, beta0 identity/6, feature trace(T)=4, beta1 density=T/4 and the signed modular/Heisenberg parameter comparison are retained. This density is not a physical qutrit state; the parameter supplies no calibrated elapsed time. Continuum reconstruction, physical gap and original retained-memory/adaptive objectives remain open. Finish current PR qualification before the next growth assignment, retaining the original scopes.
 
 The adaptive qutrit and correlated-environment foundations are integrated.
 `QuantumNetwork/FiniteThreeLevelMemoryReadout.lean` now has whole source,

@@ -9,6 +9,15 @@ The dated wave ships below remain historical delivery records. **Wave6v.3 physic
 **Scientific construction owner:** Physics Publication Remediation, explicitly accepted in the primary publication-remediation notebook r40 (2026-10-17). This is current author acceptance, not a historic assignment or a native lease. Completion requires the actual construction, independent scientific review and the existing recorded closure; ROOT retains shared-primary/native admission, integration and protected Git/main authority. No target reduction or deferral is granted.
 
 
+## Finite feature and recursive-time integration — 2026-10-18
+
+The actual invariant reconstruction and normalized averaged transfer retain bounded local acceptance at `b05efe2f`. Their Euclidean/physical-cone/Gibbs successor is implemented in `FiniteQutritEuclideanTransfer`, `FiniteQutritFractionalObstruction` and `FiniteQutritFeatureGibbs` (source `6b0238f4`, normal integration `5ec80239`). Whole independent scientific review, actual final compilation and integrated-primary logical proof audits pass. Canonical records and the generated no-go fence are reconciled through existing writers; matching public/dependent builds and substrate soundness checks pass. Expanded project, security, main and publication gates remain separate.
+
+The normalized genuine quotient supports the spectral generator, sharp relative Euclidean contraction, full complex temporal Gram kernel and actual integer joint-probability consumers. Finite spectator and empty-space controls remain. The actual half-step fails the inherited physical positive cone on a trace-one input; the existing no-go registry records that precise obstruction, without excluding arbitrary ambient nonselfadjoint CPTP embeddings.
+
+The feature Hamiltonian now consumes the finite Gibbs/spectral-log/modular substrate on the actual six-feature endomorphism algebra. Its faithful finite-beta density and modular parameter are distinct from physical qutrit density and measured elapsed time. Original physical-clock, continuum and physical-gap objectives remain open. See [the process-clock program](../dev-loops/MemoryProcesses/PROCESS_CLOCK_PROGRAM.md) for evidence and continuation boundaries.
+
+
 ## Technical Roadmap — May 2026
 
 *Prepared 2026-05-25, following the External Quantum Findings opportunity-scan synthesis. Approved 2026-05-25 PM.*
