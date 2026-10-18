@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import json
+
 import hashlib
 import os
+import stat
 import shlex
 import shutil
 import subprocess
@@ -24,10 +27,13 @@ from .state import (
     directory_lock,
     exclusive_json,
     now_iso,
-    process_matches,
-    process_start_signature,
+    require_process_signature,
+    observe_process,
+    observe_directory,
+    observe_path,
     read_json,
     token_hash,
+    sha256_bytes,
 )
 
 
@@ -218,7 +224,7 @@ class Controller:
             return {
                 "owner_kind": "process",
                 "owner_pid": pid,
-                "owner_signature": process_start_signature(pid),
+                "owner_signature": require_process_signature(pid),
             }
         # A slot lease outlives any one CLI invocation, so the owner must be the driving
         # session, not the shell that happened to run `acquire`. `LEAN_SLOT_OWNER_SESSION`
@@ -241,7 +247,7 @@ class Controller:
         return {
             "owner_kind": "process",
             "owner_pid": pid,
-            "owner_signature": process_start_signature(pid),
+            "owner_signature": require_process_signature(pid),
         }
 
     def _lease_for_command(
@@ -307,6 +313,7 @@ class Controller:
 
     def acquire(self, number: int, *, client: str, base_ref: str) -> dict[str, Any]:
         with self._slot_lock(number):
+            self._assert_no_stop_only_reservation(number)  # RR preserve FREE retry authority.
             if self.inventory.lease(number, required=False) is not None:
                 existing = self.inventory.lease(number)
                 raise SlotError(
@@ -587,8 +594,137 @@ class Controller:
             self.inventory.save_lease(number, lease)
             return lease
 
+    def recover_orphan_backend_stop(self, number: int, *, expected_root: dict[str, Any],
+                                   expected_family: list[dict[str, Any]], authorization: dict[str, Any],
+                                   expected_residual_sha256: str | None = None) -> None:
+        """Explicit operator-approved stop only; normal lifecycle never calls this.
+
+        The receiving controller owns the backend target. A declared paired lease
+        is validated by its actual controller, never by relaxing role equality.
+        """
+        from .supervisor import Supervisor
+        sup = Supervisor(self.inventory)
+        if (not isinstance(expected_root, dict) or set(expected_root) != {"pid", "signature"} or
+                not isinstance(expected_family, list) or not expected_family or len(expected_family) > 4096 or
+                any(not isinstance(row, dict) for row in expected_family) or not isinstance(authorization, dict)):
+            raise SlotError("invalid explicit recovery request shape")
+        # Copy bounded request values so later caller mutation cannot change approval.
+        try:
+            encoded = json.dumps({"root": expected_root, "family": expected_family, "authorization": authorization})
+            if len(encoded) > 262144:
+                raise ValueError("recovery request exceeds bound")
+            request = json.loads(encoded)
+        except (TypeError, ValueError) as exc:
+            raise SlotError(f"invalid recovery request: {exc}") from exc
+        expected_root, expected_family, authorization = request["root"], request["family"], request["authorization"]
+        self.inventory.slot(number)
+
+        def authority():
+            inventories, errors = sup._role_inventories()
+            if errors:
+                raise SlotError("recovery canonical role universe unavailable: " + "; ".join(errors))
+            targets = [inv for inv in inventories if inv.repo_role == self.inventory.repo_role]
+            if (len(targets) != 1 or targets[0].source != self.inventory.source or
+                    sup._inventory_domain(targets[0]) != sup._inventory_domain(self.inventory)):
+                raise SlotError("recovery target canonical inventory/domain changed")
+            current = self._owner()
+            if current.get("owner_kind") != "session":
+                raise SlotError("operator recovery requires a driving session owner")
+            owner_binding = None
+            lease = self.inventory.lease(number, required=False)
+            if lease is not None:
+                owners = [inv for inv in inventories if inv.repo_role == lease.get("repo_role")]
+                if len(owners) != 1:
+                    raise SlotError("recovery lease owner is not a unique canonical role")
+                owner_inv = owners[0]
+                if owner_inv.state_root != self.inventory.state_root or lease.get("slot") != number:
+                    raise SlotError("recovery owner shared state/physical slot mismatch")
+                owner = self if owner_inv.source == self.inventory.source else Controller(owner_inv)
+                if owner_inv.repo_role != self.inventory.repo_role:
+                    pair = owner_inv.paired_inventory()
+                    if pair is None or pair.source != self.inventory.source or sup._inventory_domain(pair) != sup._inventory_domain(self.inventory):
+                        raise SlotError("recovery owner lacks the declared target pairing")
+                elif sup._inventory_domain(owner_inv) != sup._inventory_domain(self.inventory):
+                    raise SlotError("recovery same-role domain mismatch")
+                verified = owner._lease_for_command(number, states={"QUARANTINED"})
+                if owner._owner() != current:
+                    raise SlotError("recovery target and lease-owner driving sessions differ")
+                worktree, _ = owner._assert_worktree_identity(number)
+                if owner._dirty(worktree):
+                    raise SlotError("recovery lease-owner worktree is dirty")
+                absorbed, why = owner._is_absorbed(worktree, verified)
+                if not absorbed:
+                    raise SlotError(f"recovery lease-owner work unabsorbed: {why}")
+                owner._assert_paired_dependency(number, verified.get("public_dependency_sha"), require_primary_match=False)
+                owner_binding = {"inventory_source": str(owner_inv.source), "repo_role": owner_inv.repo_role,
+                                 "inventory_domain": sup._inventory_domain(owner_inv),
+                                 "worktree": str(owner_inv.worktree(number)), "state_root": str(owner_inv.state_root),
+                                 "slot": number, "public_dependency_sha": verified.get("public_dependency_sha"),
+                                 "lease_sha256": sha256_bytes(owner_inv.lease_path(number).read_bytes())}
+            else:
+                worktree, _ = self._assert_worktree_identity(number)
+                if self._dirty(worktree):
+                    raise SlotError("FREE recovery worktree is dirty")
+                integration = self._primary_sha(str(self.inventory.raw.get("integration_ref", "main")))
+                contained = _run(["git", "merge-base", "--is-ancestor", "HEAD", integration], cwd=worktree, check=False)
+                if contained.returncode:
+                    raise SlotError("FREE recovery work is not contained")
+            binding = {"owner_session_hash": current["owner_session_hash"],
+                       "backend_target": sup.recovery_target(number), "lease_owner": owner_binding}
+            for key, value in binding.items():
+                if authorization.get(key) != value:
+                    raise SlotError(f"recovery authorization {key} mismatch")
+            if (authorization.get("requests_drained") is not True or authorization.get("dispatch_frozen") is not True or
+                    any(not isinstance(authorization.get(key), str) or not authorization[key].strip() for key in ("approval_ref", "drain_receipt"))):
+                raise SlotError("recovery lacks explicit approval and completed-request drain evidence")
+
+        with self._slot_lock(number):
+            with sup.lifecycle():
+                authority()
+                sup._recover_orphan_backend_stop_unlocked(
+                    number, expected_root=expected_root, expected_family=expected_family,
+                    authorization=authorization, expected_residual_sha256=expected_residual_sha256,
+                    revalidate_authority=authority,
+                )
+
+    def _assert_no_stop_only_reservation(self, number: int) -> None:
+        """Preserve new-origin lease pins; legacy managed release semantics stay intact."""
+        from .supervisor import Supervisor
+        sup = Supervisor(self.inventory)
+        with sup.lifecycle():
+            records, observed = observe_directory(self.inventory.state_root / "processes")
+            if observed.state == "unavailable":
+                raise SlotError("lease transition recovery provenance unavailable", observations=(observed,))
+            for path in records:
+                if not path.name.endswith(f"-wt{number}-backend.json"):
+                    continue
+                witness = observe_path(path)
+                if witness.state != "present" or witness.identity["mode"] != stat.S_IFREG:
+                    raise SlotError("lease transition recovery record unavailable", observations=(witness,))
+                record = read_json(path)  # Bounded capable raw provenance selection only.
+                if "record_origin" not in record and "recovery" not in record:
+                    if (type(record.get("schema_version")) is int and record["schema_version"] == SCHEMA_VERSION and record.get("kind") == "backend" and
+                            type(record.get("slot")) is int and record["slot"] == number and
+                            isinstance(record.get("repo_role"), str) and record["repo_role"] and
+                            path == self.inventory.state_root / "processes" / f"{record['repo_role']}-wt{number}-backend.json"):
+                        continue  # Genuine legacy provenance; normal resource readers remain strict.
+                    raise SlotError("lease transition cannot classify legacy process provenance")
+                if record.get("record_origin") != "operator_stop_only":
+                    raise SlotError("lease transition unknown/malformed recovery origin")
+                # New-origin reservations protect the physical slot in both directions,
+                # including a downstream backend when this caller is its public pair.
+                inventories, errors = sup._role_inventories()
+                if errors:
+                    raise SlotError("lease transition recovery role universe unavailable: " + "; ".join(errors))
+                targets = [inv for inv in inventories if inv.process_path("backend", number) == path]
+                if len(targets) != 1:
+                    raise SlotError("lease transition recovery target is not a declared unique domain")
+                Supervisor(targets[0])._validate_record(record, "backend", number)
+                raise SlotError("pending stop-only recovery preserves original lease authority")
+
     def release(self, number: int) -> None:
         with self._slot_lock(number):
+            self._assert_no_stop_only_reservation(number)  # RR preserve original quarantine pins.
             lease = self._lease_for_command(
                 number, states={"ACQUIRED", "ACTIVE", "QUARANTINED"}
             )
@@ -681,7 +817,8 @@ class Controller:
         except (SlotError, OSError) as exc:  # pragma: no cover - defensive
             print(
                 f"slotctl: wt{number} released, but its backend could not be stopped "
-                f"({exc}); run `slotctl supervisor start` to reconcile",
+                f"({exc}); resource remains reserved; diagnose ownership/observation before any coordinated reload; "
+                f"observations={json.dumps([item.as_dict() for item in getattr(exc, 'observations', ())], sort_keys=True)}",
                 file=sys.stderr,
             )
 
@@ -720,10 +857,9 @@ class Controller:
                     "whose owner is gone."
                 )
             if lease.get("owner_kind") == "process":
-                if process_matches(
-                    int(lease.get("owner_pid", 0)), lease.get("owner_signature")
-                ):
-                    raise SlotError(f"wt{number} owner process is still alive")
+                owner = observe_process(int(lease.get("owner_pid", 0)), lease.get("owner_signature"))
+                if owner.state != "absent":
+                    raise SlotError(f"wt{number} owner is not confirmed absent ({owner.state})")
             elif lease.get("owner_kind") == "session" and not confirm_owner_gone:
                 raise SlotError(
                     f"wt{number} has a session owner; rerun with --confirm-owner-gone only after "
@@ -851,6 +987,9 @@ class Controller:
                 return {"integrated_head": slot_head, "epoch": epoch}
 
     def status(self) -> dict[str, Any]:
+        from .supervisor import Supervisor
+        runtime = Supervisor(self.inventory).status()
+        runtime_slots = {item["slot"]: item for item in runtime["slots"]}
         slots: list[dict[str, Any]] = []
         for number in (1, 2, 3):
             lease = self.inventory.lease(number, required=False)
@@ -859,6 +998,10 @@ class Controller:
                 "repo_role": self.inventory.repo_role,
                 "worktree": str(self.inventory.worktree(number)),
                 "lease": lease,
+                "proxy_state": runtime_slots[number]["proxy_state"],
+                "backend_state": runtime_slots[number]["backend_state"],
+                "resources": runtime_slots[number]["resources"],
+                "resource_reserved": number in runtime["reserved_physical_slots"],
             }
             try:
                 worktree, slot = self._assert_worktree_identity(number)
@@ -876,6 +1019,12 @@ class Controller:
             "schema_version": SCHEMA_VERSION,
             "repo_role": self.inventory.repo_role,
             "state_root": str(self.inventory.state_root),
+            "capacity_complete": runtime["capacity_complete"],
+            "capacity_errors": runtime["capacity_errors"],
+            "capacity_observations": runtime["capacity_observations"],
+            "capacity_conflicts": runtime["capacity_conflicts"],
+            "reserved_physical_slots": runtime["reserved_physical_slots"],
+            "global_running_backends": runtime["global_running_backends"],
             "slots": slots,
         }
 
@@ -1133,19 +1282,21 @@ class Controller:
         running_backends = int(supervisor["global_running_backends"])
         record(
             "heavy_backend_limit",
-            running_backends <= int(self.inventory.raw["max_active_slots"]),
+            supervisor.get("capacity_complete", False)
+            and not supervisor.get("capacity_conflicts")
+            and len(supervisor.get("reserved_physical_slots", [])) <= int(self.inventory.raw["max_active_slots"]),
             f"{running_backends}/3 running",
         )
         for item in supervisor["slots"]:
             expected_backend = self.inventory.backend_expected(int(item["slot"]))
             record(
                 f"wt{item['slot']}.endpoint",
-                item["proxy_running"] and item["backend_running"] == expected_backend,
+                item["proxy_running"] and item["backend_running"] == expected_backend
+                and item.get("backend_state") in {"running", "down"},
                 (
-                    "proxy is ALIVE but running stale code/configuration — run "
-                    "`slotctl supervisor stop` then `start`; it is serving, not dead"
+                    "proxy is ALIVE but stale; diagnose and coordinate a drained root reload window"
                     if item.get("proxy_state") == "stale"
-                    else f"proxy={item['proxy_running']} backend={item['backend_running']} "
+                    else f"proxy={item.get('proxy_state')} backend={item.get('backend_state')} "
                     f"expected_backend={expected_backend}"
                 ),
             )

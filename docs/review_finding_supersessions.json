@@ -10263,6 +10263,877 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-09-13-canonical-extractor-stack:infra:1.1",
+      "status": "fixed",
+      "evidence": "Replaced only the four cache pretty-serialization expressions with Json.compress. Independently reviewed original --run stack failure after array construction, exact real-cache JSON and original-reader roundtrips, authoritative cold/warm canonical byte equality at SHA256 2d9fa74c29580213743d520de3c7b405bd96060d26d10f466a94b929cd759ccd, 92 additions with no prior record changes/removals, and 15 extraction regression tests. Local evidence: round19-extractor-final-review.json and cold-warm-equivalence receipt in root continuity. Full mathematical round gate and closure remain pending.",
+      "superseded_by": null,
+      "date": "2026-09-13",
+      "commit": "59ca7c07",
+      "verified_by": {
+        "command": "python3 scripts/extract_lean_deps.py",
+        "declared": "python3 scripts/extract_lean_deps.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-09-13"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:1",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:2",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:3",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:4",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:5",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-lifecycle-observation:infra:6",
+      "status": "fixed",
+      "evidence": "Integrated source preserves typed capable observations and registration uncertainty (F1), backend quiescence before mutation and guarded actual borrowing with no-borrow cache hits (F2), transactional prelaunch provenance and narrow owned rollback (F3), physical occupancy and residual reservations (F4), early rejected ignored global CLI slot flags (F5), and branch-name absorption versus SHA acquisition/preparation/contained release with truthful post-unlink warnings (F6). Exact whole independent source and finding reviews accepted; current integrated four-file suite269 and private overlay16 passed. This writer executes every declared source Verify. Native admission, RPC drain, loaded runtime and original20 test/18 validator failures remain separately pending or unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py tests/test_lean_slots.py tests/test_codex_lean_slot_policy.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-native-domain-census:supervisor:1",
+      "status": "fixed",
+      "evidence": "Integrated shared supervisor observes the canonical primary and Git-proven linked-worktree native process domains and fails closed on unavailable or conflicting observations (ND1). Exact native project ancestry and endpoint occupancy feed physical global reservations, including unresolved listeners and residual project trees without adopting or signalling them (ND2). Whole independent source R4 and canonical findings R2 accepted; current integrated four-file gate269 and private overlay16 passed. This existing writer executes each declared source Verify. Actual runtime reload, client RPC drain, matching leases/MCP and native admission remain separate; original20 full-test and18 validator failures are unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-native-domain-census:supervisor:2",
+      "status": "fixed",
+      "evidence": "Integrated shared supervisor observes the canonical primary and Git-proven linked-worktree native process domains and fails closed on unavailable or conflicting observations (ND1). Exact native project ancestry and endpoint occupancy feed physical global reservations, including unresolved listeners and residual project trees without adopting or signalling them (ND2). Whole independent source R4 and canonical findings R2 accepted; current integrated four-file gate269 and private overlay16 passed. This existing writer executes each declared source Verify. Actual runtime reload, client RPC drain, matching leases/MCP and native admission remain separate; original20 full-test and18 validator failures are unwaived.",
+      "superseded_by": "Local whole source R4 review sha256676b0782580972fe1b011dbfaa27e31fcaf67a45c6919982e28fd916f9571c9d; whole canonical findings R2 review sha25612f1847e81af9204aa57ae3b9c4272dd2c4aa35efbd4b74d5d55c69c506e4ae0",
+      "date": "2026-10-11",
+      "commit": "39f8e544b2b8f6eabe1ad488b4c152ddf7141a30",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_lifecycle_observation.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-11"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-shared-runtime-source-fingerprint:supervisor:1",
+      "status": "fixed",
+      "evidence": "Complete runtime source fingerprint repairs independently accepted; ROOT verified 56 baseline/red/restored triads, 52 distinct production images, 168 command captures and exact source restoration. Whole current review SHA256 30dfc344de4b7abc301b272ee4abad595159672c317028f02bc7b7ebdd7af97e; current primary five-module check 469 PASS. Source closure only: full project gates and loaded native runtime, ownership, request drain, lease and reconnect remain separately unadmitted.",
+      "superseded_by": null,
+      "date": "2026-10-12",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py tests/test_lean_slots.py tests/test_lean_lifecycle_observation.py tests/test_codex_lean_slot_policy.py tests/test_architecture_claims.py -q",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py tests/test_lean_slots.py tests/test_lean_lifecycle_observation.py tests/test_codex_lean_slot_policy.py tests/test_architecture_claims.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-shared-runtime-source-fingerprint:supervisor:2",
+      "status": "fixed",
+      "evidence": "Complete runtime source fingerprint repairs independently accepted; ROOT verified 56 baseline/red/restored triads, 52 distinct production images, 168 command captures and exact source restoration. Whole current review SHA256 30dfc344de4b7abc301b272ee4abad595159672c317028f02bc7b7ebdd7af97e; current primary five-module check 469 PASS. Source closure only: full project gates and loaded native runtime, ownership, request drain, lease and reconnect remain separately unadmitted.",
+      "superseded_by": null,
+      "date": "2026-10-12",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py -q -k \"fp_34 or fp_37\"",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py -q -k \"fp_34 or fp_37\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-shared-runtime-source-fingerprint:supervisor:3",
+      "status": "fixed",
+      "evidence": "Complete runtime source fingerprint repairs independently accepted; ROOT verified 56 baseline/red/restored triads, 52 distinct production images, 168 command captures and exact source restoration. Whole current review SHA256 30dfc344de4b7abc301b272ee4abad595159672c317028f02bc7b7ebdd7af97e; current primary five-module check 469 PASS. Source closure only: full project gates and loaded native runtime, ownership, request drain, lease and reconnect remain separately unadmitted.",
+      "superseded_by": null,
+      "date": "2026-10-12",
+      "verified_by": {
+        "command": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py -q -k \"fp_35 or fp_37\"",
+        "declared": ".venv/bin/python3 -m pytest tests/test_lean_runtime_fingerprint.py -q -k \"fp_35 or fp_37\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-runner-recovery:source:1",
+      "status": "fixed",
+      "evidence": "Shutdown-only terminal evidence, fresh ancestry and final live guards, bounded family observations and guarded stop-only orphan recovery are independently reviewed and integrated at 6db2cde. ROOT executed 26 meaningful sole-guard mutations with exact restoration, candidate 390-pass regression and canonical-primary 391-pass regression. Original managed and orphan families were stopped with owner, work and dependency pins retained; all three public normal cycles, two repeat reconnect cycles and paired native HTTP cycles passed with warning-free releases. Fresh canonical public and paired doctor/status checks passed with FREE leases, current front doors, absent backends and complete zero-reserved capacity. See review-r4.md and the ROOT final native-admission receipt c81b1ccbbb6ecf64055776a78dada2a96ee024ad78bea387ebe452eb103490a7. Full-project FAST completion, broader historical failures, merged-wave and publication gates remain open; no scientific acceptance is implied.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md",
+      "date": "2026-10-12",
+      "commit": "6db2cde4036587627f07077a67868809aa856f34",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr1",
+        "declared": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr1",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-runner-recovery:source:2",
+      "status": "fixed",
+      "evidence": "Shutdown-only terminal evidence, fresh ancestry and final live guards, bounded family observations and guarded stop-only orphan recovery are independently reviewed and integrated at 6db2cde. ROOT executed 26 meaningful sole-guard mutations with exact restoration, candidate 390-pass regression and canonical-primary 391-pass regression. Original managed and orphan families were stopped with owner, work and dependency pins retained; all three public normal cycles, two repeat reconnect cycles and paired native HTTP cycles passed with warning-free releases. Fresh canonical public and paired doctor/status checks passed with FREE leases, current front doors, absent backends and complete zero-reserved capacity. See review-r4.md and the ROOT final native-admission receipt c81b1ccbbb6ecf64055776a78dada2a96ee024ad78bea387ebe452eb103490a7. Full-project FAST completion, broader historical failures, merged-wave and publication gates remain open; no scientific acceptance is implied.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md",
+      "date": "2026-10-12",
+      "commit": "6db2cde4036587627f07077a67868809aa856f34",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr2",
+        "declared": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr2",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-12-lean-runner-recovery:source:R4",
+      "status": "fixed",
+      "evidence": "The legacy review parser also mints the historical R4 progress heading as an advisory finding. Its bounded fresh-guard progress correction is independently reviewed at exact 6db2cde source and exercised by 391 canonical-primary runner regressions, 26 sole-guard red/exact-restore green controls and actual warning-free populated native releases. The accepted full contract retains strict whole-family identity and terminal-presence qualifications, the shared ten-second deadline, fresh observations after durable writes and signals, actual every-PID absence and final project/endpoint/capacity gates. Review-r4.md and native-admission-r1.json record scoped source and public native acceptance; broader project and merged-wave gates remain open. This closure adds no scientific acceptance and preserves the original advisory text.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md",
+      "date": "2026-10-12",
+      "commit": "6db2cde4036587627f07077a67868809aa856f34",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_lean_lifecycle_observation.py -q -k rr4",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-12"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-verifies-exact-alias:infra:1.1",
+      "status": "fixed",
+      "evidence": "scripts/build_graph.py rejects module aliases after Formula/Parameter priority and before exact or short Lean lookup. The independent existential-support guard preserves genuine and mixed references, exact precedence and ordered index identity. The complete reviewed source is normally committed and integrated; the declared Verify exercises persistent collision, real producer seed and mutant, full paired corpus, causal consumers and restoration on the current catalogue. This closes this software finding only; broader project and scientific gates remain separate.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "cc578d782d4d089548875e6214734b0c4cf75b51",
+      "verified_by": {
+        "command": "uv run python -m pytest -m '' tests/test_verifies_alias_guard.py -q -s",
+        "declared": "uv run python -m pytest -m '' tests/test_verifies_alias_guard.py -q -s",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-d7-current-theorem-regression:infra:1.1",
+      "status": "fixed",
+      "evidence": "D7 regression now checks the current verbatim theorem, exact generated declaration and existing resolver while rejecting the obsolete phantom in three citation forms; complete independent review accepted the bounded repair and the declared seven-test class passes.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "06c7d8eb",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "declared": ".venv/bin/python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-attenuation-recovery:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent focused review accepted recovery multiplication, the one-way zero-decay implication and explicit group-velocity assumption against exact main-compatible Python and imported Lean evidence. All three declared Verify commands pass; final isolated compile is clean and unchanged length ceiling passes. Acceptance is limited to these three findings; unrelated readiness failures remain unwaived.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-attenuation-recovery/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_ge_one'\"'\"')); assert r'\"'\"'N_{\\rm emit} = A N_{\\rm meas}'\"'\"' in t and r'\"'\"'N_{\\rm meas} = N_{\\rm emit}/A'\"'\"' in t; assert '\"'\"'multiplying'\"'\"' in c and '\"'\"'dividing'\"'\"' not in c'",
+        "declared": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_ge_one'\"'\"')); assert r'\"'\"'N_{\\rm emit} = A N_{\\rm meas}'\"'\"' in t and r'\"'\"'N_{\\rm meas} = N_{\\rm emit}/A'\"'\"' in t; assert '\"'\"'multiplying'\"'\"' in c and '\"'\"'dividing'\"'\"' not in c'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-attenuation-recovery:E1:1.2",
+      "status": "fixed",
+      "evidence": "Independent focused review accepted recovery multiplication, the one-way zero-decay implication and explicit group-velocity assumption against exact main-compatible Python and imported Lean evidence. All three declared Verify commands pass; final isolated compile is clean and unchanged length ceiling passes. Acceptance is limited to these three findings; unrelated readiness failures remain unwaived.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-attenuation-recovery/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_eq_one_at_zero_decay'\"'\"')); assert '\"'\"'exactly at'\"'\"' not in t and '\"'\"'exactly at'\"'\"' not in c; assert '\"'\"'zero propagation distance'\"'\"' in t'",
+        "declared": "python3 -c 'import json; from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=next(a['\"'\"'claims'\"'\"'] for a in m['\"'\"'apex_theorems'\"'\"'] if a['\"'\"'name'\"'\"'].endswith('\"'\"'.attenuation_eq_one_at_zero_decay'\"'\"')); assert '\"'\"'exactly at'\"'\"' not in t and '\"'\"'exactly at'\"'\"' not in c; assert '\"'\"'zero propagation distance'\"'\"' in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-attenuation-recovery:E1:1.3",
+      "status": "fixed",
+      "evidence": "Independent focused review accepted recovery multiplication, the one-way zero-decay implication and explicit group-velocity assumption against exact main-compatible Python and imported Lean evidence. All three declared Verify commands pass; final isolated compile is clean and unchanged length ceiling passes. Acceptance is limited to these three findings; unrelated readiness failures remain unwaived.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-attenuation-recovery/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'v_g = c_s'\"'\"' in t and r'\"'\"'c_s/v_g'\"'\"' in t'",
+        "declared": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'v_g = c_s'\"'\"' in t and r'\"'\"'c_s/v_g'\"'\"' in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-abstract-contract:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent focused reviewer verified the current APS primary text, accepted the self-contained conditional abstract and reconciled its effective-surface-gravity definition. Exact Verify passes; existing proxy575/600 and rendered extraction468 characters are within the unchanged ceiling. Final clean compile and length3665/3750 pass; unrelated readiness failures remain unwaived.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-abstract-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import sys,json,re; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); from validation.checks.bundles_readiness import abstract_plain_text; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); a=re.search(r'\"'\"'\\\\begin\\{abstract\\}(.*?)\\\\end\\{abstract\\}'\"'\"',t,re.S).group(1); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=m['\"'\"'length_target'\"'\"']['\"'\"'abstract_ceiling'\"'\"']; assert c['\"'\"'ceiling'\"'\"']==600 and c['\"'\"'source_verified'\"'\"'] is True; assert len(abstract_plain_text(t))<=c['\"'\"'ceiling'\"'\"']; assert r'\"'\"'\\cite'\"'\"' not in a'",
+        "declared": "python3 -c 'import sys,json,re; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); from validation.checks.bundles_readiness import abstract_plain_text; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); a=re.search(r'\"'\"'\\\\begin\\{abstract\\}(.*?)\\\\end\\{abstract\\}'\"'\"',t,re.S).group(1); m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); c=m['\"'\"'length_target'\"'\"']['\"'\"'abstract_ceiling'\"'\"']; assert c['\"'\"'ceiling'\"'\"']==600 and c['\"'\"'source_verified'\"'\"'] is True; assert len(abstract_plain_text(t))<=c['\"'\"'ceiling'\"'\"']; assert r'\"'\"'\\cite'\"'\"' not in a'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-roster-reconciliation:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent focused review accepted the substantive module relevance assessment and stronger-backing limits against source-matching imported statements. Existing writer appended one rationale-bearing deregistration event with all original events preserved; metadata and prior manifest remain unchanged. Both exact Verify commands pass; clean compile/length and heading layout were verified. Producer finding2.1 and unrelated scientific/readiness issues remain open.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import sys,json,subprocess; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); from bundle_append import net_registered_modules; p='\"'\"'papers/E1/append_log.json'\"'\"'; d=json.loads(Path(p).read_text()); b=json.loads(subprocess.check_output(['\"'\"'git'\"'\"','\"'\"'show'\"'\"','\"'\"'6e2642ece56abbbbd9da43f7bb29bd20633c013d:'\"'\"'+p],text=True)); assert d['\"'\"'events'\"'\"'][:len(b['\"'\"'events'\"'\"'])]==b['\"'\"'events'\"'\"']; r,_=net_registered_modules(d['\"'\"'events'\"'\"']); assert not set(['\"'\"'PolaritonPhase5u'\"'\"', '\"'\"'DispersionAndPolariton'\"'\"', '\"'\"'GrapheneHawking'\"'\"', '\"'\"'WKBConnection'\"'\"', '\"'\"'SoftTheorems.NoiseFloorPrediction'\"'\"', '\"'\"'KerrSchild.PolaritonCrossBridge'\"'\"', '\"'\"'KerrSchild.SingleCopy'\"'\"']) & r; m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); assert m['\"'\"'last_lift'\"'\"']=='\"'\"'2026-05-31T17:24:48Z'\"'\"' and m['\"'\"'freshness_stale'\"'\"'] is True; assert all(m[k]=='\"'\"'pending'\"'\"' for k in ['\"'\"'stage9_status'\"'\"','\"'\"'stage10_status'\"'\"','\"'\"'stage13_status'\"'\"'])'",
+        "declared": "python3 -c 'import sys,json,subprocess; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); from bundle_append import net_registered_modules; p='\"'\"'papers/E1/append_log.json'\"'\"'; d=json.loads(Path(p).read_text()); b=json.loads(subprocess.check_output(['\"'\"'git'\"'\"','\"'\"'show'\"'\"','\"'\"'6e2642ece56abbbbd9da43f7bb29bd20633c013d:'\"'\"'+p],text=True)); assert d['\"'\"'events'\"'\"'][:len(b['\"'\"'events'\"'\"'])]==b['\"'\"'events'\"'\"']; r,_=net_registered_modules(d['\"'\"'events'\"'\"']); assert not set(['\"'\"'PolaritonPhase5u'\"'\"', '\"'\"'DispersionAndPolariton'\"'\"', '\"'\"'GrapheneHawking'\"'\"', '\"'\"'WKBConnection'\"'\"', '\"'\"'SoftTheorems.NoiseFloorPrediction'\"'\"', '\"'\"'KerrSchild.PolaritonCrossBridge'\"'\"', '\"'\"'KerrSchild.SingleCopy'\"'\"']) & r; m=json.loads(Path('\"'\"'papers/E1/bundle_metadata.json'\"'\"').read_text()); assert m['\"'\"'last_lift'\"'\"']=='\"'\"'2026-05-31T17:24:48Z'\"'\"' and m['\"'\"'freshness_stale'\"'\"'] is True; assert all(m[k]=='\"'\"'pending'\"'\"' for k in ['\"'\"'stage9_status'\"'\"','\"'\"'stage10_status'\"'\"','\"'\"'stage13_status'\"'\"'])'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-roster-reconciliation:E1:1.2",
+      "status": "fixed",
+      "evidence": "Independent focused review accepted the substantive module relevance assessment and stronger-backing limits against source-matching imported statements. Existing writer appended one rationale-bearing deregistration event with all original events preserved; metadata and prior manifest remain unchanged. Both exact Verify commands pass; clean compile/length and heading layout were verified. Producer finding2.1 and unrelated scientific/readiness issues remain open.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'\\section{Conclusions and required measurements}'\"'\"' in t'",
+        "declared": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'\\section{Conclusions and required measurements}'\"'\"' in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-roster-reconciliation:E1:2.1",
+      "status": "fixed",
+      "evidence": "Both existing source-mtime readers now exclude hidden/cache components relative to the source tree, preserving precision and bookkeeping semantics. Independent review and 82 scoped tests accepted; tracked E1 metadata and manifest remain HEAD-identical. See PRODUCER_REVIEW.md and ADR-018; unrelated serializer failures remain open.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/PRODUCER_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import sys,tempfile; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); import bundle_source_manifest as m; d=tempfile.TemporaryDirectory(); m.PAPERS_DIR=Path(d.name)/'\"'\"'.worktree'\"'\"'/'\"'\"'papers'\"'\"'; p=m.PAPERS_DIR/'\"'\"'source'\"'\"'; p.mkdir(parents=True); (p/'\"'\"'paper_draft.tex'\"'\"').write_text('\"'\"'source'\"'\"'); assert m._last_source_modification('\"'\"'source'\"'\"') is not None'",
+        "declared": "python3 -c 'import sys,tempfile; from pathlib import Path; sys.path.insert(0,'\"'\"'scripts'\"'\"'); import bundle_source_manifest as m; d=tempfile.TemporaryDirectory(); m.PAPERS_DIR=Path(d.name)/'\"'\"'.worktree'\"'\"'/'\"'\"'papers'\"'\"'; p=m.PAPERS_DIR/'\"'\"'source'\"'\"'; p.mkdir(parents=True); (p/'\"'\"'paper_draft.tex'\"'\"').write_text('\"'\"'source'\"'\"'); assert m._last_source_modification('\"'\"'source'\"'\"') is not None'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-roster-reconciliation:E1:2.2",
+      "status": "fixed",
+      "evidence": "Both existing source-mtime readers now exclude hidden/cache components relative to the source tree, preserving precision and bookkeeping semantics. Independent review and 82 scoped tests accepted; tracked E1 metadata and manifest remain HEAD-identical. See PRODUCER_REVIEW.md and ADR-018; unrelated serializer failures remain open.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/PRODUCER_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -m pytest tests/test_bundle_source_manifest.py -q",
+        "declared": "python3 -m pytest tests/test_bundle_source_manifest.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-detection-contract:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent scientific/source/pixel review accepted narrowed noise and readout assumptions, calibrated greybody identifiability, dimensionless threshold and adopted working band. Exact Verifies pass; actual two PNGs and rendered pages inspected. See SCOPED_REVIEW.md and SOURCE_ASSESSMENT.md; publication-stage/corpus gates remain pending.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'T_{\\rm mf}'\"'\"' in t and '\"'\"'does not determine a mode occupation'\"'\"' in t and '\"'\"'requires a measured in-band noise budget'\"'\"' in t'",
+        "declared": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert r'\"'\"'T_{\\rm mf}'\"'\"' in t and '\"'\"'does not determine a mode occupation'\"'\"' in t and '\"'\"'requires a measured in-band noise budget'\"'\"' in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-detection-contract:E1:1.2",
+      "status": "fixed",
+      "evidence": "Independent scientific/source/pixel review accepted narrowed noise and readout assumptions, calibrated greybody identifiability, dimensionless threshold and adopted working band. Exact Verifies pass; actual two PNGs and rendered pages inspected. See SCOPED_REVIEW.md and SOURCE_ASSESSMENT.md; publication-stage/corpus gates remain pending.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'dimensionless ratio'\"'\"' in t and '\"'\"'independent calibration'\"'\"' in t and '\"'\"'no device parameter can move'\"'\"' not in t and '\"'\"'cannot be absorbed into the greybody factor'\"'\"' not in t'",
+        "declared": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'dimensionless ratio'\"'\"' in t and '\"'\"'independent calibration'\"'\"' in t and '\"'\"'no device parameter can move'\"'\"' not in t and '\"'\"'cannot be absorbed into the greybody factor'\"'\"' not in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-detection-contract:E1:1.3",
+      "status": "fixed",
+      "evidence": "Independent scientific/source/pixel review accepted narrowed noise and readout assumptions, calibrated greybody identifiability, dimensionless threshold and adopted working band. Exact Verifies pass; actual two PNGs and rendered pages inspected. See SCOPED_REVIEW.md and SOURCE_ASSESSMENT.md; publication-stage/corpus gates remain pending.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'working band'\"'\"' in t and '\"'\"'The upper edge is derived'\"'\"' not in t and '\"'\"'optimal probe window'\"'\"' not in t'",
+        "declared": "python3 -c 'from pathlib import Path; t=Path('\"'\"'papers/E1/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'working band'\"'\"' in t and '\"'\"'The upper edge is derived'\"'\"' not in t and '\"'\"'optimal probe window'\"'\"' not in t'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-detection-contract:E1:2.1",
+      "status": "fixed",
+      "evidence": "Independent scientific/source/pixel review accepted narrowed noise and readout assumptions, calibrated greybody identifiability, dimensionless threshold and adopted working band. Exact Verifies pass; actual two PNGs and rendered pages inspected. See SCOPED_REVIEW.md and SOURCE_ASSESSMENT.md; publication-stage/corpus gates remain pending.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -m pytest tests/test_e1_publication_figures.py -q",
+        "declared": "python3 -m pytest tests/test_e1_publication_figures.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e1-detection-contract:E1:2.2",
+      "status": "fixed",
+      "evidence": "Existing exact-bibkey writer acquired validated arxiv1905.05855v2 PDF; actual saved10page bytes/version and pp7-8 read independently, hash pinned. Only existing Amelio registry/sidecar entry reconciled; publisher final-body remains unread and distinct. Source claim narrowed to actual preprint model. See SOURCE_ASSESSMENT.md and independent SCOPED_REVIEW.md.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-5w/primary-sources/Amelio2020.pdf",
+      "artifact_sha256": "d0d48fa5c6f9b87c4e0483f853bf8cb039156fe6a4ff78470d57188f67977781",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-5w/primary-sources/Amelio2020.pdf",
+          "sha256": "d0d48fa5c6f9b87c4e0483f853bf8cb039156fe6a4ff78470d57188f67977781"
+        }
+      ],
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; import hashlib,json; from src.core.citations import CITATION_REGISTRY; from src.core.workspace import find_workspace; e=CITATION_REGISTRY[\"Amelio2020\"]; p=find_workspace()/e[\"primary_source_path\"]; assert e[\"arxiv\"]==\"1905.05855v2\" and p.suffix==\".pdf\" and p.read_bytes().startswith(b\"%PDF\"); assert hashlib.sha256(p.read_bytes()).hexdigest()==\"d0d48fa5c6f9b87c4e0483f853bf8cb039156fe6a4ff78470d57188f67977781\"; s=json.loads(Path(\"docs/primary_sources_state.json\").read_text())[\"entries\"][\"Amelio2020\"]; assert s[\"tier_achieved\"]==\"arxiv-pdf\" and s[\"url_used\"]==\"https://arxiv.org/pdf/1905.05855v2\" and s[\"primary_source_path\"]==e[\"primary_source_path\"]'",
+        "declared": "python3 -c 'from pathlib import Path; import hashlib,json; from src.core.citations import CITATION_REGISTRY; from src.core.workspace import find_workspace; e=CITATION_REGISTRY[\"Amelio2020\"]; p=find_workspace()/e[\"primary_source_path\"]; assert e[\"arxiv\"]==\"1905.05855v2\" and p.suffix==\".pdf\" and p.read_bytes().startswith(b\"%PDF\"); assert hashlib.sha256(p.read_bytes()).hexdigest()==\"d0d48fa5c6f9b87c4e0483f853bf8cb039156fe6a4ff78470d57188f67977781\"; s=json.loads(Path(\"docs/primary_sources_state.json\").read_text())[\"entries\"][\"Amelio2020\"]; assert s[\"tier_achieved\"]==\"arxiv-pdf\" and s[\"url_used\"]==\"https://arxiv.org/pdf/1905.05855v2\" and s[\"primary_source_path\"]==e[\"primary_source_path\"]'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:2.2",
+      "status": "fixed",
+      "evidence": "Both exact E1 figure functions and actual exported PNGs corrected and independently pixel-reviewed. Measured/projected Paris points and weak-loss crossing are explicit; off-scale unrelated platform deliberately excluded. Effective-frequency axis and model qualifiers match captions; removed unsupported baked reference. Exact historical Verifies pass with REPO set. See 2026-10-15-e1-detection-contract/SCOPED_REVIEW.md; no other historical closure implied.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -q 'lkb_ratio_standard' papers/E1/paper_draft.tex && python3 -c \"import re,sys; c=open('papers/E1/paper_draft.tex').read(); m=re.search(r'\\\\\\\\caption\\[The weak-dissipation criterion.*?\\\\\\\\label\\{fig:regime\\}', c, re.S); sys.exit(0 if m and 'lkb_ratio_standard' in m.group(0) else 1)\"",
+        "declared": "cd \"$REPO\" && grep -q 'lkb_ratio_standard' papers/E1/paper_draft.tex && python3 -c \"import re,sys; c=open('papers/E1/paper_draft.tex').read(); m=re.search(r'\\\\\\\\caption\\[The weak-dissipation criterion.*?\\\\\\\\label\\{fig:regime\\}', c, re.S); sys.exit(0 if m and 'lkb_ratio_standard' in m.group(0) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:2.4",
+      "status": "fixed",
+      "evidence": "Both exact E1 figure functions and actual exported PNGs corrected and independently pixel-reviewed. Measured/projected Paris points and weak-loss crossing are explicit; off-scale unrelated platform deliberately excluded. Effective-frequency axis and model qualifiers match captions; removed unsupported baked reference. Exact historical Verifies pass with REPO set. See 2026-10-15-e1-detection-contract/SCOPED_REVIEW.md; no other historical closure implied.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-e1-detection-contract/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -q 'Burkhard' src/core/visualizations.py && ! grep -q 'Burkhard' papers/E1/paper_draft.tex && exit 1 || exit 0",
+        "declared": "cd \"$REPO\" && grep -q 'Burkhard' src/core/visualizations.py && ! grep -q 'Burkhard' papers/E1/paper_draft.tex && exit 1 || exit 0",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-source-propagation:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independently reviewed whole-law correction across E1/E2/D1 and shared documentation, with source-specific KdV result and qualified2014 approximation. Removed unmatched reservoir and temperature comparisons, corrected conditional scaling/order/projection statements, preserved executable AST and Lean proof bytes. Actual acquired source identities and scoped compile/length measurements are recorded in SOURCE_ASSESSMENT.md and SCOPED_REVIEW.md.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-source-propagation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; checks={\"papers/E1/paper_draft.tex\":[\"Neither the quadratic form nor its coefficient\", \"exponentially small\"],\"papers/E2/paper_draft.tex\":[\"The whole quadratic law is phenomenological\", \"can move the crossover\"],\"papers/D1/paper_draft.tex\":[\"The entire quadratic law\", \"not establish a nonzero leading\", \"proportional to\"],\"src/core/formulas.py\":[\"Both this quadratic\", \"modelling choices\"],\"src/core/provenance.py\":[\"ADOPTED PHENOMENOLOGICAL PARAMETRIZATION\", \"not evidence for a nonzero leading\"],\"lean/SKEFTHawking/KappaScaling.lean\":[\"The whole quadratic functional form\", \"not derive a device-specific\"]}; assert all(all(s in Path(p).read_text() for s in words) for p,words in checks.items())'",
+        "declared": "python3 -c 'from pathlib import Path; checks={\"papers/E1/paper_draft.tex\":[\"Neither the quadratic form nor its coefficient\", \"exponentially small\"],\"papers/E2/paper_draft.tex\":[\"The whole quadratic law is phenomenological\", \"can move the crossover\"],\"papers/D1/paper_draft.tex\":[\"The entire quadratic law\", \"not establish a nonzero leading\", \"proportional to\"],\"src/core/formulas.py\":[\"Both this quadratic\", \"modelling choices\"],\"src/core/provenance.py\":[\"ADOPTED PHENOMENOLOGICAL PARAMETRIZATION\", \"not evidence for a nonzero leading\"],\"lean/SKEFTHawking/KappaScaling.lean\":[\"The whole quadratic functional form\", \"not derive a device-specific\"]}; assert all(all(s in Path(p).read_text() for s in words) for p,words in checks.items())'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-source-propagation:E1:1.2",
+      "status": "fixed",
+      "evidence": "Independently reviewed whole-law correction across E1/E2/D1 and shared documentation, with source-specific KdV result and qualified2014 approximation. Removed unmatched reservoir and temperature comparisons, corrected conditional scaling/order/projection statements, preserved executable AST and Lean proof bytes. Actual acquired source identities and scoped compile/length measurements are recorded in SOURCE_ASSESSMENT.md and SCOPED_REVIEW.md.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-source-propagation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; e=Path(\"papers/E1/paper_draft.tex\").read_text(); d=Path(\"papers/D1/paper_draft.tex\").read_text(); assert \"already includes\" in e and \"do not establish a matched reservoir-free comparison\" in e and \"surface-gravity convention\" in e; assert \"factor of about two and a half\" not in e and r\"\\SI{0.1}{\\kelvin}\" not in e; assert \"fixed detuning\" in d and \"without applying another\" in d and r\"factor $2.5$\" not in d'",
+        "declared": "python3 -c 'from pathlib import Path; e=Path(\"papers/E1/paper_draft.tex\").read_text(); d=Path(\"papers/D1/paper_draft.tex\").read_text(); assert \"already includes\" in e and \"do not establish a matched reservoir-free comparison\" in e and \"surface-gravity convention\" in e; assert \"factor of about two and a half\" not in e and r\"\\SI{0.1}{\\kelvin}\" not in e; assert \"fixed detuning\" in d and \"without applying another\" in d and r\"factor $2.5$\" not in d'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-source-propagation:infra:2.1",
+      "status": "fixed",
+      "evidence": "The named slow extractor test now writes and reads pytest tmp_path. All three original assertion ASTs are unchanged. Independent actual slow run still fails on10stubs/3orphans and writes only temporary output; no repository artifact is left. The exact hygiene Verify passed independently; underlying citation failure is not closed or waived.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-source-propagation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "python3 -c 'import ast,subprocess; from pathlib import Path; p=\"tests/test_phase6i_wave1.py\"; name=\"test_extract_missing_bibkeys_emits_no_orphans\"; old=ast.parse(subprocess.check_output([\"git\",\"show\",\"953dbfc7e4f55436f3926f27a03436759e34ef9e:\"+p],text=True)); new=ast.parse(Path(p).read_text()); get=lambda t: next(n for n in t.body if isinstance(n,ast.FunctionDef) and n.name==name); a,b=get(old),get(new); asserts=lambda n:[ast.dump(x) for x in ast.walk(n) if isinstance(x,ast.Assert)]; assert len(asserts(a))==3 and asserts(a)==asserts(b); assert [x.arg for x in b.args.args]==[\"tmp_path\"]; expected=ast.dump(ast.parse(\"output = tmp_path / \"+repr(\"missing_stubs.json\")).body[0]); assert any(ast.dump(x)==expected for x in b.body); text=ast.unparse(b); assert \"str(output)\" in text and \"output.read_text\" in text and \".test_missing_stubs.json\" not in text; assert not Path(\"docs/.test_missing_stubs.json\").exists()'",
+        "declared": "python3 -c 'import ast,subprocess; from pathlib import Path; p=\"tests/test_phase6i_wave1.py\"; name=\"test_extract_missing_bibkeys_emits_no_orphans\"; old=ast.parse(subprocess.check_output([\"git\",\"show\",\"953dbfc7e4f55436f3926f27a03436759e34ef9e:\"+p],text=True)); new=ast.parse(Path(p).read_text()); get=lambda t: next(n for n in t.body if isinstance(n,ast.FunctionDef) and n.name==name); a,b=get(old),get(new); asserts=lambda n:[ast.dump(x) for x in ast.walk(n) if isinstance(x,ast.Assert)]; assert len(asserts(a))==3 and asserts(a)==asserts(b); assert [x.arg for x in b.args.args]==[\"tmp_path\"]; expected=ast.dump(ast.parse(\"output = tmp_path / \"+repr(\"missing_stubs.json\")).body[0]); assert any(ast.dump(x)==expected for x in b.body); text=ast.unparse(b); assert \"str(output)\" in text and \"output.read_text\" in text and \".test_missing_stubs.json\" not in text; assert not Path(\"docs/.test_missing_stubs.json\").exists()'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-dispersive-coefficient-normalization:infra:2.2",
+      "status": "fixed",
+      "evidence": "Both designated versioned full author preprints were acquired through the existing writer and independently inspected by hash, header, page count and actual equations. The2014 approximation/validity limits and2018 KdV exponential profile-specific temperature result corrected the earlier unsupported leading-D2 attribution across consumers. Registry/sidecar provenance is exact and truthful; final journal bodies were not read. The weak original OR-cache Verify passed, supplemented by BOTH substantive artifact anchors and independent scientific review in SCOPED_REVIEW.md.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-source-propagation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf",
+      "artifact_sha256": "96299d47d06bff45b3754ed5f74ae81077ac75d38b4558e0fe93301fcda236d2",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf",
+          "sha256": "96299d47d06bff45b3754ed5f74ae81077ac75d38b4558e0fe93301fcda236d2"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/CoutantWeinfurtner2018KdV.pdf",
+          "sha256": "7119b9564fa4fa9dda866f9843148c4be7d2e2643673080d423f8ae722664abb"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"from src.core.workspace import find_workspace; import pathlib; base=find_workspace()/'Lit-Search'; hits=[p.name for p in base.rglob('primary-sources/*') if 'CoutantWeinfurtner' in p.name or '1402.2514' in p.name or 'CoutantParentani2014' in p.name]; assert hits, 'neither Coutant-Weinfurtner 2017 nor Coutant-Parentani 2014 (arXiv:1402.2514) is cached, yet both now back the dispersive normalization'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"from src.core.workspace import find_workspace; import pathlib; base=find_workspace()/'Lit-Search'; hits=[p.name for p in base.rglob('primary-sources/*') if 'CoutantWeinfurtner' in p.name or '1402.2514' in p.name or 'CoutantParentani2014' in p.name]; assert hits, 'neither Coutant-Weinfurtner 2017 nor Coutant-Parentani 2014 (arXiv:1402.2514) is cached, yet both now back the dispersive normalization'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-edition-reconciliation:D1:1.1",
+      "status": "fixed",
+      "evidence": "Independent whole affected claim-set and rendered-artifact review accepted mean-field energy/noise separation and conditional calibrated gain/readout; exact Verify passed without asserting measured sensitivity.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from pathlib import Path; s=\" \".join(Path(\"papers/D1/paper_draft.tex\").read_text().split()); assert \"Its mean-field noise scale\" not in s; assert \"noise floor is spectrally featureless\" not in s; assert \"does not determine a mode occupation\" in s; assert \"measured in-band noise budget\" in s'",
+        "declared": "cd \"$REPO\" && python3 -c 'from pathlib import Path; s=\" \".join(Path(\"papers/D1/paper_draft.tex\").read_text().split()); assert \"Its mean-field noise scale\" not in s; assert \"noise floor is spectrally featureless\" not in s; assert \"does not determine a mode occupation\" in s; assert \"measured in-band noise budget\" in s'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent source and affected whole-claim review accepted generated normalization reconciliation, D1 nonthermal steep-scale propagation, absent stale E1 revision narration and valid table input/unit documentation; all four exact declared Verifies passed.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+      "artifact_sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+          "sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+          "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -q 'lkb_T_H_falque_norm_K' papers/E1/paper_draft.tex && grep -q 'lkb_norm_ratio' papers/E1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && grep -q 'lkb_T_H_falque_norm_K' papers/E1/paper_draft.tex && grep -q 'lkb_norm_ratio' papers/E1/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:1.2",
+      "status": "fixed",
+      "evidence": "Independent source and affected whole-claim review accepted generated normalization reconciliation, D1 nonthermal steep-scale propagation, absent stale E1 revision narration and valid table input/unit documentation; all four exact declared Verifies passed.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+      "artifact_sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+          "sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+          "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q 'lkb_T_H_steep_mK' papers/E1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q 'lkb_T_H_steep_mK' papers/E1/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:3.2",
+      "status": "fixed",
+      "evidence": "Independent source and affected whole-claim review accepted generated normalization reconciliation, D1 nonthermal steep-scale propagation, absent stale E1 revision narration and valid table input/unit documentation; all four exact declared Verifies passed.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+      "artifact_sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+          "sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+          "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q 'ported from E2' papers/E1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q 'ported from E2' papers/E1/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-e1-stage10-redraft:E1:3.3",
+      "status": "fixed",
+      "evidence": "Independent source and affected whole-claim review accepted generated normalization reconciliation, D1 nonthermal steep-scale propagation, absent stale E1 revision narration and valid table input/unit documentation; all four exact declared Verifies passed.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+      "artifact_sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-5w/primary-sources/Falque2025.pdf",
+          "sha256": "c430ff83eaf35a4b56dc40a9f64306a66c2221fe3337400cb27981da1bf011bf"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+          "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q 'SI{\\\\\\\\input{tables/<id>.tex}' papers/E1/tables.py",
+        "declared": "cd \"$REPO\" && ! grep -q 'SI{\\\\\\\\input{tables/<id>.tex}' papers/E1/tables.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-edition-reconciliation:E1:1.1",
+      "status": "fixed",
+      "evidence": "Independent source/artifact review accepted the exact 2011-v3 binding, preserved 2005 metadata/history and actual 2024-v4 bytes; actual consumer inventory and exact declared Verify passed.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-edition-reconciliation/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+      "artifact_sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+          "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf",
+          "sha256": "78a12ecca758552297d305f8c964502ead3e39fa842394a8d5a4f3aba17f4759"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from src.core.citations import CITATION_REGISTRY as R; e=R[\"Barcelo2011\"]; assert (e[\"year\"],e[\"volume\"],e[\"page\"],e[\"doi\"],e[\"arxiv\"])==(2011,14,\"3\",\"10.12942/lrr-2011-3\",\"gr-qc/0505065v3\"); assert e[\"used_in\"]==[\"papers/E1/paper_draft.tex\"]; assert R[\"BarceloLRR2005\"][\"primary_source_path\"] is None'",
+        "declared": "cd \"$REPO\" && python3 -c 'from src.core.citations import CITATION_REGISTRY as R; e=R[\"Barcelo2011\"]; assert (e[\"year\"],e[\"volume\"],e[\"page\"],e[\"doi\"],e[\"arxiv\"])==(2011,14,\"3\",\"10.12942/lrr-2011-3\",\"gr-qc/0505065v3\"); assert e[\"used_in\"]==[\"papers/E1/paper_draft.tex\"]; assert R[\"BarceloLRR2005\"][\"primary_source_path\"] is None'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-dispersive-coefficient-normalization:infra:1.1",
+      "status": "fixed",
+      "evidence": "Notebook cell10 multiplies T_H by the canonical ratio exactly once; actual nbconvert saved all8 code cells, current ratio0.8146329435/T_eff69.3223mK. Independent full source/output/PNG review and exact Verify pass; no formula changes.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-polariton-notebook/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; nb=json.load(open('notebooks/Phase5d_Polariton_Technical.ipynb')); src=''.join(''.join(c.get('source',[])) for c in nb['cells']); assert 'T_H * (1 + correction)' not in src, 'notebook still adds 1 to the kappa_eff/kappa RATIO returned by dispersive_hawking_correction'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; nb=json.load(open('notebooks/Phase5d_Polariton_Technical.ipynb')); src=''.join(''.join(c.get('source',[])) for c in nb['cells']); assert 'T_H * (1 + correction)' not in src, 'notebook still adds 1 to the kappa_eff/kappa RATIO returned by dispersive_hawking_correction'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-polariton-notebook:infra:1.1",
+      "status": "fixed",
+      "evidence": "All15 notebook cells propagate reservoir-inclusive inputs, projected-device/necessary-decay and phenomenological-model qualifications, conditional calibrated SNR/noise limits and mean-field energy distinction. Actual saved outputs/PNGs independently accepted;11focused tests and declared Verify pass.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-polariton-notebook/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'import json; n=json.load(open(\"notebooks/Phase5d_Polariton_Technical.ipynb\")); m=\" \".join(\" \".join(\"\".join(c.get(\"source\",[])) for c in n[\"cells\"] if c[\"cell_type\"]==\"markdown\").split()); assert \"spectrally featureless\" not in m; assert \"3 independent measurements\" not in m; assert \"phenomenological\" in m; assert \"measured in-band noise budget\" in m'",
+        "declared": "cd \"$REPO\" && python3 -c 'import json; n=json.load(open(\"notebooks/Phase5d_Polariton_Technical.ipynb\")); m=\" \".join(\" \".join(\"\".join(c.get(\"source\",[])) for c in n[\"cells\"] if c[\"cell_type\"]==\"markdown\").split()); assert \"spectrally featureless\" not in m; assert \"3 independent measurements\" not in m; assert \"phenomenological\" in m; assert \"measured in-band noise budget\" in m'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-flow-request-graph-reuse:infra:1.1",
+      "status": "fixed",
+      "evidence": "Reuses the complete current graph through the existing Flow claims, aggregation and gate readers, retaining fail-closed P1 evaluation, standalone loading, cache invalidation and configured PG scheduling. Independent whole implementation review found no mandatory repairs. Required scoped pytest verification exercises the unchanged browser timeout and journaled production cache invalidation. Broader gates and merged-wave acceptance remain required.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "55ec38977c378e15545156e1eda16c78fb91606b",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest -m '' tests/test_dashboard_flow.py tests/test_readiness_cannot_measure.py tests/test_d5_bundles_readiness.py::TestProducerDemotesGreenOnBlockedP1 tests/test_dashboard_graph_cache.py tests/test_template_contract.py tests/e2e/test_operator_panes.py::test_a_non_verdict_cell_is_not_painted_as_a_verdict -q",
+        "declared": ".venv/bin/python -m pytest -m '' tests/test_dashboard_flow.py tests/test_readiness_cannot_measure.py tests/test_d5_bundles_readiness.py::TestProducerDemotesGreenOnBlockedP1 tests/test_dashboard_graph_cache.py tests/test_template_contract.py tests/e2e/test_operator_panes.py::test_a_non_verdict_cell_is_not_painted_as_a_verdict -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-publication-citation-coverage:infra:1.1",
+      "status": "fixed",
+      "evidence": "Twelve existing cited keys now resolve to source-verified internal identities or correctly versioned external references. Actual pinned PDF acquisitions and metadata-only Verlinde recovery preserve prior bytes/records; directly cited claims corrected. Independent source/pixel review,14focused tests and exact coverage-plus-complete-citation Verify pass; broader fidelity/layout/publication limits remain.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-publication-citation-coverage/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf",
+      "artifact_sha256": "61c4da4e5f21112acee522fedbfd65bede2e567fea53eed8ac0e47e3b7c75f3e",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf",
+          "sha256": "61c4da4e5f21112acee522fedbfd65bede2e567fea53eed8ac0e47e3b7c75f3e"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf",
+          "sha256": "eb99541ee61044a6028edc53aad19dd80afed7e96778350a38420f36269e93ba"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf",
+          "sha256": "88f4a4eda6a956ab29554730908d916891933379fc7594c3f0a674b4f055bded"
+        },
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json",
+          "sha256": "010f971d637b39e3e596f40a5d9fa326fbfff713e7b1a35cc79149f34a34e20e"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "declared": "cd \"$REPO\" && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-e2-greybody-readout:E2:1.1",
+      "status": "fixed",
+      "evidence": "Independent source/model/whole-claim/pixel review accepted the E2-only infrared BEC citation and readout qualification, corrected arithmetic, leading-versus-corrected model distinction and regenerated canonical local figure; actual focused tests, compound Verify, compile and preserved-source receipts are documented in SOURCE_ASSESSMENT.md and SCOPED_REVIEW.md. Historical 2013 guard remains separate.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf",
+      "artifact_sha256": "889a60dc77aeb2005dbe0220c299b740c6b3a31168e8ad355500faf51771aec6",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf",
+          "sha256": "889a60dc77aeb2005dbe0220c299b740c6b3a31168e8ad355500faf51771aec6"
+        }
+      ],
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from pathlib import Path; t=Path(\"papers/E2/paper_draft.tex\").read_text(); assert \"AndersonBFP2014Graybody\" in t and \"AndersonBFP2013\" not in t; assert \"exterior asymptotic sound speed\" in t and \"finite-band error bound\" in t; assert \"0.99994\" in t and \"26.3\" in t; assert \"cannot independently identify\" in t and \"no achieved sensitivity\" in t; assert \"stays within a few percent\" not in t and \"first platform\" not in t' && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "declared": "cd \"$REPO\" && python3 -c 'from pathlib import Path; t=Path(\"papers/E2/paper_draft.tex\").read_text(); assert \"AndersonBFP2014Graybody\" in t and \"AndersonBFP2013\" not in t; assert \"exterior asymptotic sound speed\" in t and \"finite-band error bound\" in t; assert \"0.99994\" in t and \"26.3\" in t; assert \"cannot independently identify\" in t and \"no achieved sensitivity\" in t; assert \"stays within a few percent\" not in t and \"first platform\" not in t' && python3 -m pytest tests/test_phase6i_wave1.py::test_no_missing_from_registry tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans -m '' -q && python3 -c 'import sys; sys.path.insert(0,\"scripts\"); from validate import check_citation_primary_sources_present; r=check_citation_primary_sources_present(); assert r.passed, r'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-d2-reader-facing-voice:D2:1.1",
+      "status": "fixed",
+      "evidence": "Independent source-content/preservation/changed-page review accepted D2 present-tense scope at all fifteen main spans and one signatures input paragraph. Actual fix commit contains the prose repair and append-only retained history; equations, tables, figures, bibliography, citations, source TODOs and disclosures are unchanged. Scoped voice assertion passes while global D12/source, sentence and L1 abstract failures remain unwaived; see SCOPED_REVIEW.md.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "721863e832490e5c97013320e73a1bbf3d95bcb6",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_reader_facing_voice;r=check_bundle_reader_facing_voice();print(r);assert not any(d.name==\"D2\" and not d.passed for d in r.details), \"D2 still narrates its own editing history\"'",
+        "declared": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_reader_facing_voice;r=check_bundle_reader_facing_voice();print(r);assert not any(d.name==\"D2\" and not d.passed for d in r.details), \"D2 still narrates its own editing history\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-l1-abstract-length:L1:1.1",
+      "status": "fixed",
+      "evidence": "Exact abstract shortened from1849 to443 against unchanged600 ceiling, conditional model/caveats preserved, token-identical display layout contains new overlap, actual4pagePDF independently reviewed. Five declared abstracts retained with16UNMEASURED/fourunverified; full L1 science/body/pointer limitations and broader gates remain unaccepted. Independent source/pixel review and actual existing global Verify support only this bounded length repair.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "ad6d7f78a4ca5408036c5d9fbf999c0edca4e22c",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "declared": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-l1-finite-tolerance:L1:1.1",
+      "status": "fixed",
+      "evidence": "Full affected source/claim review and exact rational algebra correct finite compatibility versus exact luminality, susceptibility factor two, redundant clauses/falsifiers, prior and recovery scope. Separately reviewed actual canonical figure label defines tau with identical nonmarkerJSON3traces2shapes; actual4pagePDF reviewed. Declared literal/abstract Verify is a regression floor, not science proof. Definitions/theorem statements/citations/metadata preserved; other source/proof/publication debt unaccepted.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "45c740f221c274d5af7fefce09b8d6a9ba1b5b2c",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from pathlib import Path;import re,sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text());bad=[t for t in [\"The one value that survives is the singleton\",\"three independently load-bearing conjuncts\",\"saturating the bound and isolating P3\"] if t in s];print(\"Known wrong-claim regression floor:\",bad);assert not bad; r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "declared": "cd \"$REPO\" && python3 -c 'from pathlib import Path;import re,sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text());bad=[t for t in [\"The one value that survives is the singleton\",\"three independently load-bearing conjuncts\",\"saturating the bound and isolating P3\"] if t in s];print(\"Known wrong-claim regression floor:\",bad);assert not bad; r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-l1-h1-dynamics:L1:1.1",
+      "status": "fixed",
+      "evidence": "Exact five-span H1 correction and only two exclusively allocated apex claims descriptions are implemented in source commit 2e33bf664b30ed77f08793168028128ae88307f7. Fresh independent complete affected scientific/source and all-four-page rendering review accepts the bounded repair; actual final reasoning body SHA256 361c1f888ae08211446123e915b4517f27882b486a8ace96848a93d7ecfc0e07. Exact declared lexical/metadata/abstract Verify is a structural regression floor, not a dynamics proof. Preservation, actual four-page/six-overfull isolated compilation and existing scoped manuscript checks are retained; stale catalogs and broader gates remain unaccepted.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-15-l1-h1-dynamics/SCOPED_REVIEW.md",
+      "date": "2026-10-15",
+      "commit": "2e33bf664b30ed77f08793168028128ae88307f7",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'from pathlib import Path;import re,json,sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text());bad=[x for x in [\"We formalize this caveat as the endpoint theorem\",\"because the argument never uses a Lagrangian, it is insensitive\",\"reads as the more likely interpretation under\"] if x in s];print(\"Known H1 wrong-inference floor:\",bad);assert not bad;m=json.loads(Path(\"papers/L1/bundle_metadata.json\").read_text());rows=[x for x in m[\"apex_theorems\"] if x[\"name\"].endswith((\"natural_endpoints_violate_ligo_window\",\"natural_endpoints_violate_ligo_for_every_c\"))];assert len(rows)==2;assert all(\"underdetermination caveat as an endpoint theorem\" not in x[\"claims\"] and \"quantifying over all c > 0 explicitly\" not in x[\"claims\"] for x in rows);r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "declared": "cd \"$REPO\" && python3 -c 'from pathlib import Path;import re,json,sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text());bad=[x for x in [\"We formalize this caveat as the endpoint theorem\",\"because the argument never uses a Lagrangian, it is insensitive\",\"reads as the more likely interpretation under\"] if x in s];print(\"Known H1 wrong-inference floor:\",bad);assert not bad;m=json.loads(Path(\"papers/L1/bundle_metadata.json\").read_text());rows=[x for x in m[\"apex_theorems\"] if x[\"name\"].endswith((\"natural_endpoints_violate_ligo_window\",\"natural_endpoints_violate_ligo_for_every_c\"))];assert len(rows)==2;assert all(\"underdetermination caveat as an endpoint theorem\" not in x[\"claims\"] and \"quantifying over all c > 0 explicitly\" not in x[\"claims\"] for x in rows);r=check_bundle_abstract_length();print(r);assert r.passed'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-lean-proxy-client-session-value:infra:1.1",
+      "status": "fixed",
+      "evidence": "The existing Handler now validates one parsed visible-ASCII session value after authorization and before session consumers. Actual old-code and three sole production bypass controls demonstrate unsafe HTTP 200, exact restoration returns green, and the complete 118-case Handler matrix passes. This closes the bounded source defect only; primary integration, full project gates, current CodeQL and loaded native admission remain separate.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "12c54e6ac2833905eca6ee6180ebd609dd0a8c3b",
+      "verified_by": {
+        "command": "python -B -m pytest tests/test_lean_slots.py -k test_st_ -q -p no:cacheprovider",
+        "declared": "python -B -m pytest tests/test_lean_slots.py -k test_st_ -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-qa-zero-headroom:infra:1.1",
+      "status": "fixed",
+      "evidence": "Lowered only existing count and undeclared citation ratchets to measured90/77 and corrected an obsolete test ordinal. Fresh independent whole effects review confirms four original tests, actual production91/red90 and78/red77, exact bytes/mtime/full registry restoration and final90/77PASS. Terminal Git index-byte preservation is FAILED with causeUNKNOWN; the stat-cache-only exception and earlier exceptions remain unwaived. No scientific/source-fidelity/full-project acceptance.",
+      "superseded_by": null,
+      "date": "2026-10-15",
+      "commit": "e81495e7125d8d9dca740e21c5841053261b613f",
+      "verified_by": {
+        "command": "uv run --no-sync python -m pytest -q -p no:cacheprovider 'tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[count_literals]' tests/test_always_pass_dispositions.py::TestCountLiteralRatchet::test_PRODUCTION_SEEDED_one_more_count_literal_fails_on_real_draft tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_the_undeclared_ceiling_has_ZERO_headroom tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_AWAY_a_declaration_turns_the_check_RED",
+        "declared": "uv run --no-sync python -m pytest -q -p no:cacheprovider 'tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[count_literals]' tests/test_always_pass_dispositions.py::TestCountLiteralRatchet::test_PRODUCTION_SEEDED_one_more_count_literal_fails_on_real_draft tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_the_undeclared_ceiling_has_ZERO_headroom tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_AWAY_a_declaration_turns_the_check_RED",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-15"
+      }
     }
   ]
 }

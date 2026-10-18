@@ -79,3 +79,8 @@ root = "SKEFTHawking.AxiomAudit"
 # AI-Defect-Defense-Layer P4 axiom_closure_allowlist gate (Invariant #15 backstop).
 # Run interpreted (same macOS native-link caveat as extractDeps):
 #   lake env lean --run SKEFTHawking/AxiomAudit.lean
+
+# Bounded upstream classical-uniqueness closure; preserve its implicit-variable policy.
+[[lean_lib]]
+name = "NavierStokes"
+leanOptions = { autoImplicit = true }

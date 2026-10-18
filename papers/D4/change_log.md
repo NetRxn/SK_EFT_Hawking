@@ -115,3 +115,7 @@ All four recorded in `docs/review_finding_supersessions.json`. Post-remediation:
 - Substantive prose: UNCHANGED — no claims, counts, citations, or Lean references touched; stage13_redo_required remains false.
 - Compile gate: pdflatex ×2 clean, zero errors (31pp / 394440B).
 - Metadata note: the Prose-revision-bookkeeping event above auto-bumped `last_lift` and cleared `freshness_stale`; both fields were deliberately restored (`last_lift=2026-05-31T15:37:22Z`, `freshness_stale=true`) per the reconciliation-task constraint that the staleness signal must persist.
+
+## 2026-10-15 — Citation identity and source-fidelity reconciliation
+
+Registered the existing compilation companion key against current D8; aligned its author with that manuscript. Registered Verlinde1988 through the existing acquisition route as Crossref metadata only, preserving the unread-body/name-attribution boundary. Updated compiled_pages only from the actual isolated compiler measurement. Scoped review and evidence: `../AutomatedReviews/2026-10-15-publication-citation-coverage/`. Broader publication gates remain pending.

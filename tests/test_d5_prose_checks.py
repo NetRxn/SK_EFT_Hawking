@@ -88,3 +88,34 @@ class TestSpelledOutCensusFigures:
             f"{n} spelled-out census figures against a ceiling of {CEIL}. If the corpus "
             f"improved, LOWER the ceiling in the same commit. ⚠️ If it grew, do NOT raise "
             f"it — bind the new figure to a macro or name the mechanism instead.")
+
+    def test_PRODUCTION_SEEDED_one_more_spelled_census_fails_on_real_draft(self):
+        """The configured guard must detect new debt in its actual input corpus."""
+        import re
+        from seed_journal import seeded_mutation
+        from src.core.constants import SPELLED_CENSUS_CEILING
+
+        assert _H.PAPERS_DIR.resolve() == (SK_ROOT / "papers").resolve()
+        draft = _H.PAPERS_DIR / "D6" / "paper_draft.tex"
+        original = draft.read_bytes()
+        before = pp.check_spelled_out_census_figures()
+        summary = next(d for d in before.details if d.name == "summary")
+        total = int(re.match(r"(\d+) spelled-out", summary.message).group(1))
+        def matches(text):
+            body = re.sub(r"(?<!\\)%.*", "", text)
+            return len(pp._SPELLED_CENSUS.findall(re.sub(r"\s+", " ", body)))
+        draft_count = matches(draft.read_text(encoding="utf-8"))
+        assert before.measured and before.passed and total == SPELLED_CENSUS_CEILING, (
+            "precondition: the real spelled-census guard is green with no headroom")
+
+        with seeded_mutation(draft, lambda t: t + "\nninety-nine checks.\n",
+                             reason="prove one new spelled census trips the real guard"):
+            assert matches(draft.read_text(encoding="utf-8")) == draft_count + 1
+            seeded = pp.check_spelled_out_census_figures()
+            summary = next(d for d in seeded.details if d.name == "summary")
+            assert not seeded.passed and not summary.passed
+            assert summary.message.startswith(f"{total + 1} spelled-out")
+            assert "EXCEEDS by 1" in summary.message
+            assert any(d.name == "ratchet" and not d.passed for d in seeded.details)
+        assert draft.read_bytes() == original, "journal must restore exact draft bytes"
+        assert pp.check_spelled_out_census_figures().passed, "restored real guard must be green"

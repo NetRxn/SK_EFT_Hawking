@@ -4,6 +4,14 @@
 This guide is the operator's copy for the shared three-slot control plane, which **Codex and
 Claude Code both use**. A slot may be driven by either client, never by two writers at once.
 
+> **Observation and live admission:** The [lifecycle amendment](../adrs/ADR-008-shared-lean-slot-control-plane.md#2026-10-11-lifecycle-observation-amendment)
+> is implemented and independently accepted for bounded source/test/evidence scope.
+> ROOT canonical evidence records source integration and current project-gate outcomes;
+> source review does not certify loaded runtime. `FREE` describes the lease only, and
+> registry counts alone do not establish capacity. Keep unknown resources reserved
+> and caches untouched. See the recovery section for existing API scope and separate
+> ownership, quiescence, client-drain and live-loading gates.
+
 ---
 
 ## Host requirements — read this before a full swarm
@@ -24,7 +32,7 @@ uv run python scripts/slotctl.py doctor
 A shortfall is reported with the exact command to run, e.g. on macOS:
 
 ```bash
-sudo sysctl -w kern.maxvnodes=786432
+sudo sysctl -w kern.maxvnodes=1048576
 ```
 
 ### Why this needs a boot-time job, not just the command above
@@ -47,7 +55,7 @@ sudo tee /Library/LaunchDaemons/local.leanslots.maxvnodes.plist >/dev/null <<'PL
   <array>
     <string>/usr/sbin/sysctl</string>
     <string>-w</string>
-    <string>kern.maxvnodes=786432</string>
+    <string>kern.maxvnodes=1048576</string>
   </array>
   <key>RunAtLoad</key><true/>
 </dict>
@@ -79,13 +87,14 @@ and delete the file.
 
 ### Other machines, other platforms
 
-**This is a public repository, and the value above is right for one workstation, not for
-every host.** The requirement is declared data, not code, in `config/lean-slots.public.json`:
+**The value above is the shipped reference-host floor, not a measurement of a current
+machine.** Follow the selected inventory's doctor remedy and measure the target before
+declaring its requirement. The requirement is data in `config/lean-slots.public.json`:
 
 ```json
 "host_limits": [
-  {"platform": "Darwin", "sysctl": "kern.maxvnodes", "minimum": 786432,
-   "why": "...", "remedy": "sudo sysctl -w kern.maxvnodes=786432"}
+  {"platform": "Darwin", "sysctl": "kern.maxvnodes", "minimum": 1048576,
+   "why": "...", "remedy": "sudo sysctl -w kern.maxvnodes=1048576"}
 ]
 ```
 
@@ -112,9 +121,13 @@ server, and the semaphore caps that at three.
 ## One-time activation
 
 From the primary `SK_EFT_Hawking` checkout — **always the primary**, never a worktree.
-`slotctl` resolves its inventory, state root and lease directory from the current working
-directory, so running it inside a slot addresses a different control plane and reports every
-slot `FREE`.
+`Inventory.load` selects an explicit `--inventory` path first, then `LEAN_SLOT_CONFIG`,
+then the inventory beside the loaded controller module. The chosen config resolves its
+repository root relative to the config location and derives the workspace/state root;
+`LEAN_SLOT_STATE_DIR` can override that state root. CWD alone does not select authority.
+A controller module or copied config loaded from a worktree can resolve a different
+domain, so run the primary controller with its verified canonical inventory. A displayed
+`FREE` state is lease evidence for that selected domain, not process absence.
 
 ```bash
 uv run python scripts/slotctl.py config render --scope both          # Codex
@@ -144,14 +157,33 @@ Bearer authentication is banked for a future shared-user deployment. To use it, 
 launching shell. Token rotation is invalid in trusted-local mode and must never occur while
 leases are active.
 
-Changing `server.client_auth` — **or editing anything under `scripts/lean_slots/`** — requires
-a front-door restart so the proxies load the new code: `supervisor stop`, then
-`supervisor start`. The supervisor fingerprints the loaded proxy implementation and inventory,
-so a plain `supervisor start` fails closed rather than silently reusing stale policy.
+A proxy uses changed `server.client_auth` or `scripts/lean_slots/` code only after a
+verified front-door reload. `supervisor stop` followed by `supervisor start` is global:
+ROOT must coordinate a window with every active owner and client request drained,
+actual process ownership known and capable capacity/quiescence evidence sufficient
+for safe operations. Existing root internal number APIs permit a conditional known
+owned proxy replacement only under the gates in the observation section below.
+This adds no targeted CLI verb. A source edit or configuration render does not reload
+running proxies, and source integration alone does not authorize a reload.
+The supervisor compares recorded launch-source/configuration inputs with current
+expected inputs; this does not attest process-memory code. Earlier enumeration
+was inventory-local and did not fully cover externally imported shared code. The
+accepted SF implementation below covers that source contract and is present in the
+primary checkout. Current project gates and separately measured native loading
+remain open. A plain
+`supervisor start` refuses detected stale reuse; an unchanged incomplete digest is
+not proof that imported shared code is current.
 
-⚠️ A proxy running stale code is reported by `doctor` as `proxy=False` **while its port is
-still open and serving**. If a `prepare` fails with an unhealthy proxy, restart the supervisor
-before investigating anything else.
+⚠️ An unhealthy proxy observation does not establish stale code as its cause. If `prepare`
+fails with an unhealthy proxy, first perform bounded authorized read-only diagnosis of
+process identity, registration, port observations and physical-slot capacity. Distinguish a
+verified stale fingerprint from unavailable observations or unknown current ownership.
+Keep unknown or unobservable processes untouched and their physical numbers reserved;
+do not blindly stop/start the supervisor or reset/replace a project cache. Even a verified
+stale fingerprint permits a global reload only in the root-coordinated safe window above.
+The observation correction below is implemented and accepted for bounded source scope.
+ROOT canonical evidence records integration; loaded-runtime admission is separate and
+unverified.
 
 **Restart the client after the first render** so the endpoints attach — MCP servers are
 attached at session start, and for Claude the plugin cache is a content-hashed snapshot, so a
@@ -159,11 +191,51 @@ restart is what activates both.
 
 ---
 
+## Client-session value boundary
+
+**Status: implemented in source; scoped Handler checks do not establish loaded-runtime admission.**
+[ADR-008 ST-1–ST-8](../adrs/ADR-008-shared-lean-slot-control-plane.md#client-session-value-boundary-st-amendment),
+[design](../superpowers/specs/2026-10-15-lean-proxy-client-session-value-design.md)
+and [plan](../superpowers/plans/2026-10-15-lean-proxy-client-session-value.md)
+specify the client-session boundary. Implementation, actual Handler controls,
+scanner recognition and loaded-runtime admission are not established by this text.
+
+The specified client header is absent or a singleton `Mcp-Session-Id`, selected
+case-insensitively. Absence stays sessionless; present empty/OWS-only and duplicate
+fields, even identical or differently cased, refuse after existing auth/lease gates.
+Only outer SP/HTAB is framing whitespace. The remaining nonempty token must be
+`0x21..0x7E`, preserving case and visible punctuation, including comma. No UUID-only
+syntax, generic repair or lower application length cap is specified. Parser-erased
+raw folding cannot be reconstructed; backend headers and GET passthrough retain a
+separate boundary.
+
+Malformed selected input after a successful gate must receive static HTTP 400
+without session echo or mint/cache/broker/backend work. Existing earlier body,
+credential and lease failures keep their precedence, and independently supplied
+JSON-RPC IDs keep their serialized values. GET, POST and DELETE share this ingress;
+HEAD remains auth/401-or-204 without session consumption or echo. Valid values use
+the same canonical broker key and buffered echo. S-Q local minting, unknown-token
+adoption, repeated sessionless mapping reuse and one stale-backend retry remain;
+a valid session token never grants lease authority.
+
+Review or integration of this source does not reload any proxy. ROOT preserves
+active mathematical work and coordinates any later lease/request-drain window under
+[LO-5 observation and replacement rules](#observation-failures-and-residual-resources).
+Known ownership, actual request completion, both-role quiescence, target-slot then
+lifecycle locking and separate loaded-code/native evidence remain mandatory. FREE,
+a closed socket, a timeout or expected launch-source fingerprint alone is insufficient.
+Unknown resources remain reserved. This amendment adds no lifecycle command or
+runtime permission; source, native, project and mathematical acceptance remain
+separate.
+
 ## Per-task orchestrator flow
 
-✅ **The lease lifecycle is drivable from inside a live session. No restart, ever.** Acquire,
-prepare, dispatch, absorb and release all work against a session that attached while the slot was
-idle — which means an agent, a skill, or a `/goal` loop can run the whole thing unattended.
+✅ **The normal healthy lease lifecycle needs no routine client restart.** Acquire, prepare,
+dispatch, absorb and release can use one live session that attached while the slot was idle,
+provided the runtime is healthy/current and the lease, ownership and capacity gates hold.
+This supports unattended normal work; it does not remove the coordinated reload window
+for code/auth changes or authorize a restart when observations are unavailable. Follow the
+read-only diagnosis and root-coordinated window requirements above when the runtime fails.
 
 This was not always true, and the history is worth one line because the fix generalises. Until
 2026-08-15 the front door answered `initialize` without minting an `Mcp-Session-Id`, so a client
@@ -273,3 +345,270 @@ correct: quarantine is fail-closed by design. Capacity returns when its owner re
 
 The shared runtime state defaults to `<workspace>/.lean-slots/` and may be overridden for tests
 or alternate layouts with `LEAN_SLOT_STATE_DIR`.
+
+
+## Observation failures and residual resources
+
+The implemented, independently source-reviewed controller rejects `--slot` with
+`supervisor start`, `stop` and `status` before inventory loading or action. These verbs
+remain global. `supervisor probe --slot N` requires and uses that slot. No targeted
+start/stop/status CLI is introduced. ROOT canonical evidence records source integration;
+a running older proxy does not acquire this policy from changed source. Live loading
+requires separate measured admission.
+
+`FREE` means the lease record was removed after the normal clean/containment checks.
+It does not mean the backend has stopped. Current nonfatal stop warnings must remain
+visible. “Down”, a missing process JSON or the registered global count is not proof
+of host absence when observation is denied. Preserve originals and source bytes;
+never delete process registration, fabricate a signature, bypass the supervisor,
+force a dirty reset or create a fourth backend. Ordinary lifecycle paths cannot
+adopt/signal an unknown PID. The explicit owner-authorized stop-only exception below
+requires its own complete fresh gates and does not authorize healthy reuse.
+
+If observation is unavailable or a backend listener is unknown, keep its physical
+number reserved and its project cache untouched. Root may collect bounded authorized
+read-only process/listener identity evidence and inspect existing public logs. This
+is diagnosis, not process-management authority. Repeat start/release/prepare cycles
+and an all-slot restart are not a substitute for reliable observation. A global
+code/config restart described earlier in this guide requires active owners to drain
+and root to coordinate the window; a fresh source file does not mean a live proxy or
+backend reloaded it.
+
+For normal integration, acquire with the **actual branch name currently checked out
+in primary** and a matching published epoch. Current `absorb` compares that branch
+name with the lease's literal `base_ref`; a commit SHA may resolve for preparation
+but is not a supported branch-name match for absorption. There is no retarget verb.
+On mismatch, preserve exact work through the canonical recovery process; do not
+spoof the primary branch or edit the lease. Fresh leases/slots require fresh current
+runtime and integration evidence even when the preserved source bytes are identical.
+
+The [LO-1–LO-6 design](../superpowers/specs/2026-10-11-lean-lifecycle-observation-design.md),
+[plan](../superpowers/plans/2026-10-11-lean-lifecycle-observation.md) and
+[native-domain design](../superpowers/specs/2026-10-12-lean-native-domain-census-design.md)
+describe the implemented correction and its bounded source review. Capable Git identity
+excludes only proven linked copies of a matching canonical primary domain; genuine
+conflicts and same-primary aliases remain. Complete process ancestry traverses generic
+intermediates without merging independent services under a nonproject manager. Stored
+generic/reparented descendant reservations survive independently. Denied or incomplete
+observations remain unavailable evidence and block unsafe admission.
+
+A conditional known-owned proxy replacement requires target-slot then lifecycle lock,
+reliable FREE and a complete capable current census, with both-role backend/project/
+retained-descendant absence. Under the held lifecycle lock use existing unlocked
+number internals; public wrappers would reacquire that nonreentrant lock. Freeze ROOT
+dispatch/probes and account for actual completed owned requests. Recheck exact proxy
+identity, listener and all-state TCP, native threads and state-directory membership
+before and after the eligible operation. Unknown numbers remain reserved and untouched.
+
+An idle session, closed backend endpoint, FREE lease or a socket-operation timeout
+does not prove handler completion. TCP/thread samples are supplementary observations
+at their timestamps: an outside HTTP request can race them, and daemon handler threads
+are not joined by server close. Unaccounted activity blocks replacement. Replacing a
+proxy loses its in-memory session map; S-Q backend rotation under a persistent proxy
+does not guarantee active-client continuity through proxy replacement. Expected and
+recorded source fingerprints, separate loaded-code evidence, initialize/list/unleased
+denial, matching lease dispatch and subsequent
+release/reconnect/recovery and paired epoch validation require separate measured gates.
+
+Existing mathematical acceptance and broader project gates remain separate. Original
+failed gates remain unwaived; their dated counts are historical evidence, not a standing
+current-failure census. Bounded source review alone does not certify primary integration or live admission.
+
+
+## Shared-runtime fingerprint coverage
+
+**WHOLE SOURCE IMPLEMENTATION ACCEPTED / SOURCE FINDINGS CLOSED / CURRENT PROJECT GATES AND NATIVE ADMISSION PENDING.** The
+[SF design](../superpowers/specs/2026-10-12-shared-runtime-source-fingerprint-design.md)
+and [plan](../superpowers/plans/2026-10-12-shared-runtime-source-fingerprint.md)
+extend the existing fingerprint to mandatory actual imported package source,
+launcher-route coherence and separate deterministic local/shared namespaces.
+Missing, denied, incoherent, dynamic/unsupported or observed-drifting source is
+unavailable. A launcher-defined shared-path override is accepted only when its
+actual supported complete entry template and capable selected package agree with
+loaded module origins; the environment value alone is not authority. Transparent
+selected-cli fail-fast guards and source-defined default-inventory setdefault are
+covered by the accepted bounded grammar, with exact aliases/order/captured effects.
+Only literal or bounded selected-Path f-string guard messages are supported; dynamic
+expressions and extra statements remain unsupported. Validation and actual Popen
+must use one captured environment, preserving explicit inventory precedence and the
+applicable backend-token addition; a later external selection change must not be
+silently recaptured for launch. A bounded expanduser().resolve() template is supported
+only for genuine recognized Path sources: bare tilde/tilde-slash consumes the same
+valid capable captured HOME passed to Popen; absolute non-tilde no-op is independent
+of HOME. Named-user, missing/invalid/unavailable home or unsupported transforms
+refuse. No ambient user/home fallback, new environment API or child probe is added.
+Actual home/path capability and alias/source reobservation remain required; no
+home string or source digest grants process authority.
+
+The admitted source contract covers mandatory imported shared source; do not use an
+unchanged inventory-local legacy digest to certify that code. A source digest
+describes expected/recorded launch inputs rather than running process memory or
+completed client requests. No old process record may be
+rewritten to make it current. This adds no lifecycle command and permits no reload,
+unknown-PID adoption or signals. Follow the existing ownership/quiescence/drain and
+separate loaded-code/MCP/lease/reconnect/paired-epoch gates above.
+
+
+Supported parent indices must exist on the actual recognized Path; missing parents
+give typed unavailable evidence before pending/Popen. Relevant loaded qualified
+origins, including same-source aliases, are capped at 1024 before native observations.
+The complete module-dictionary discovery cost remains proportional to that dictionary.
+The accepted source implementation and its native assertion controls cover these
+bounds. Current project gates and separately measured native admission remain open;
+no process record rewrite, adoption or signal follows from source acceptance.
+
+
+Supported source string/Path conversions and selected source-defined fallbacks retain
+same-operand transform provenance. Aliases, conversions, literal joins, expansion and
+resolution retain cumulative parent operations across the complete recipe, capped at
+four; parents[index] consumes index + 1. Parent/join-derived operands can use their
+own admitted expansion while retaining that cumulative budget. Inactive defaults and
+selector fallbacks validate eagerly. These rules require typed source refusal before
+pending/Popen with existing witnesses/records/reservations preserved. The complete source implementation, ROOT native assertion mutation/restoration
+controls and independent whole source review are accepted, and the reviewed files
+are present in the primary checkout. Current project gates, normal commit and
+separately measured native admission remain open. Historical originals and
+qualifying/invalid evidence remain retained.
+
+
+## Owned-shutdown and orphan-stop procedure
+
+**Scoped source and native recovery accepted (2026-10-12).**
+The internal stop-only API and shutdown correction at `6db2cde` passed independent
+whole-source review, 391 primary runner regressions and 26 meaningful mutation/restore
+controls. Public slots 1/2/3 passed real diagnostics and warning-free release; 1/2
+also passed fresh reconnect cycles. Canonical public and paired audits found FREE
+leases, current front doors, absent backends and complete capacity without conflicts.
+See the [re-review](../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/review-r4.md)
+and [native admission](../../papers/AutomatedReviews/2026-10-12-lean-runner-recovery/native-admission-r1.json).
+Historical candidate checkpoints below are retained; broader gates remain open.
+There is no new CLI command.
+[ADR-008 RR-1–RR-4](../adrs/ADR-008-shared-lean-slot-control-plane.md#owned-shutdown-and-operator-authorized-orphan-recovery)
+and the [complete design](../superpowers/specs/2026-10-12-owned-lean-shutdown-and-orphan-recovery-design.md)
+govern this extension. Whole-design review and ROOT intake accepted the contract.
+ROOT must obtain bounded source acceptance before using it on native resources.
+An existing explicit operator authorization suffices within its recorded scope;
+routine recovery does not require repeatedly asking for the same permission.
+
+A retained native zombie is still a present process. Shutdown may use a separate
+native-state observation to recognize its terminal state while keeping generic
+identity mismatch visible and its original signature intact. The child is never
+signalled. Only independently exact live owned ancestors may receive the existing
+bounded `SIGTERM` sequence, ordered by ancestry. Legacy `lstart` is coarse birth
+evidence, not a race-free generation guarantee; missing native state, a bare
+`<defunct>` command, a lost root, reparenting or ambiguous identity cannot justify
+signalling. Require every retained PID actually absent and all normal quiescence
+guards satisfied before removing registration. Retain timeout/refusal evidence.
+
+For an unregistered backend, the internal API is
+`Controller.recover_orphan_backend_stop(...)`; it has no CLI spelling. Keep
+`supervisor start`, `stop` and `status` global, and `probe --slot N` unchanged.
+The canonical primary controller and matching repository interpreter remain
+mandatory. Both authority objects include `inventory_domain`, the existing canonical
+`Supervisor._inventory_domain` digest; a same-path domain change invalidates approval
+and retry. The reserved record retains bounded `admission_observations` and
+`error_observations`, separately from original identities and signal-delivery receipts.
+ROOT performs this sequence only after source acceptance:
+
+1. Bind existing operator approval to the exact slot/domain, expected full root
+   and family signatures and driving session, with separate `backend_target` and
+   actual `lease_owner` identities. Bind both canonical inventories/roles/worktrees,
+   shared state root/physical number and original dependency pin. Preserve original
+   witnesses. Freeze
+   dispatch/probes and account for completed requests; absent established TCP alone
+   does not prove handler completion. Inspect clean work and containment using
+   existing controller checks, preserving all quarantine/source evidence.
+2. Acquire target-slot then the single lifecycle lock. Reobserve the configured
+   project, unique complete family, exact expected identities, registry absence,
+   unique correct listener, all-state TCP and capacity/domain evidence. Refuse an
+   ACTIVE or other transitional lease. Allow only FREE or this session's matching
+   QUARANTINED lease, with clean contained work. Resolve a different-role owner only
+   through its genuine declared pairing to the target, same shared state root and
+   physical number. Use that actual owner's unchanged `_lease_for_command` and
+   work/containment checks; verify clean paired target path and recorded dependency
+   SHA without replacing the pin with a later primary HEAD. Backend family/listener/
+   record authority stays with the target. A legitimate paired quarantine alone is
+   not a conflict; arbitrary foreign roles and opposing active backends are refused.
+   FREE uses target containment with no synthesized owner. Opposing ownership, ambiguous roots,
+   foreign listeners, unavailable evidence and any drift block the operation.
+3. Before the first signal, exclusively publish and sync the existing process-path
+   reservation marked `operator_stop_only`, phase `uncertain_residual`. This is
+   explicit stop authority, never a reconstructed launch record: no runtime
+   fingerprint, token or `running` claim. Stop only the guarded family. Preserve
+   the durable record on interruption or failure; do not erase or restamp it.
+4. A deliberate retry uses the same API, an exact expected residual SHA-256 and
+   matching original target/lease-owner authorities and owner/authorization scope.
+   Recheck pairing, both worktrees, shared state root/number and unchanged dependency
+   pin. Repeat all fresh gates and preserve original signatures. Managed, foreign,
+   unknown or unmatched existing records
+   are refusals. Ordinary start/prepare/status cannot convert this record into
+   healthy managed service or silently resume recovery.
+5. Declare stopped only after actual every-PID absence and endpoint/project/registry/
+   capacity quiescence. Then use the actual lease-owner controller's normal release of a clean contained
+   quarantine, current authoritative build/epoch, acquire/prepare, matching native
+   MCP diagnostics, no-change release, and subsequent reconnect/capacity checks.
+   Measure each affected slot; FREE alone is never pool restoration.
+
+The recovery API neither starts/reloads services nor changes leases, caches, branches
+or epochs. No raw signals, process-group signals, `SIGKILL` or nonchild `waitpid`
+are substitutes. Proxy replacement, if separately necessary, retains the existing
+coordinated request-drain and LO-5 gates. The finding/plan separate source correction
+from native acceptance and leave broader failed project/paper gates unwaived.
+
+While a stop-only residual exists, ordinary acquisition/release refuses before
+changing the original FREE state or quarantined lease bytes, including the actual
+paired owner. Retry uses the original authorization and exact current residual hash;
+a failed ordinary lease operation does not mint new authority. Normal lease actions
+resume after complete recovery. Legacy managed release warnings remain unchanged.
+The combined retained/root/discovered shutdown graph is limited to 4096 identities;
+absent retained identities still count. Observed parent drift before a signal refuses.
+
+R3 preserves legacy lease behavior when bounded readable process provenance has no
+origin/recovery fields. This does not loosen status, prepare, capacity or stop record
+validation. Explicit malformed origins and opaque provenance refuse; recovery
+reservations cover every declared role at the physical slot, including reverse
+paired acquisition. Passive post-SIGTERM timeout retains typed diagnostic evidence.
+
+
+### R4: bounded fresh-guard shutdown progress
+
+The accepted R3 source and its bounded controls are distinct from native pool
+acceptance. A populated normal release reached the ten-second stop deadline after
+one delivered SIGTERM; FREE did not mean backend absence. R4 corrects the source
+progress and observation costs; implementation review, ROOT execution and native
+normal-release acceptance remain pending.
+
+Keep initial identity/ancestry refusals unchanged. Only after a successful SIGTERM
+in this invocation may a temporary exit-related refusal enter bounded passive
+re-observation and later resume the pending target. Resumption requires the entire
+retained family to satisfy the original classification again, followed by durable
+persistence, fresh whole-family state/PPID comparison and the final exact live-target
+check. While any required descendant is reparented, mismatched, unqualified terminal
+or unavailable, no further signal is authorized. An exact live parent alone does
+not bypass its descendants. An eligible native Z remains present and never receives
+a signal; actual absence may permit fresh parent progress. Root absence with
+survivors never permits chasing them. Delivery receipts contain only this attempt's
+successful signals and do not prove termination or historical parent identity.
+
+A shutdown-only family observation may batch bounded generic/native selected and
+complete-census commands within one classification. Preserve original full generic
+signatures and native PID/PPID/birth/STAT/command. Require capable known-observer
+censuses, complete parsing, no extra/duplicate selected rows, selected/census and
+cross-format coherence; absence needs all capable views. Generic observe_process
+and ordinary readers retain their existing semantics. Never reuse a batch across
+a durable write, signal or passive retry. Reject oversized requests/output rather
+than truncating; the combined identity bound remains 4096, including absent IDs.
+
+The same absolute ten-second budget includes every observation, persistence and
+wait. Retain a bounded first refusal phase/target/typed observations alongside the
+last passive observations in timeout diagnostics, without new probes after expiry.
+Unregistration still requires actual absence of every retained PID and all existing
+endpoint/project/registry/capacity checks. Ownership, exact retry hash, lease/pin/
+domain preservation, stop-only provenance and all broader gates are unchanged.
+
+R4 controls use production methods, real isolated JSON and external OS seams:
+five/six-PID asynchronous exit chains with a synthetic 0.035-second cost per ps
+command (pilot-informed, not a native guarantee), persistent refusal/no-extra-signal
+negatives, nested terminal transitions, fresh evidence after persistence/signals,
+malformed/denied/partial/duplicate/extra/oversized batches, and first-cause retention.
+Preserve all nineteen prior mutation intents and add focused sole-guard controls.

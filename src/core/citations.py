@@ -371,18 +371,44 @@ CITATION_REGISTRY = {
         'arxiv': 'gr-qc/0505065',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf',
+        'primary_source_path': None,
         'used_in': [
             'src/core/transonic_background.py',
-            'papers/paper1_first_order/paper_draft.tex',
+            'lean/SKEFTHawking/AcousticMetric.lean',
         ],
         'provides': [],
-        'notes': 'Canonical review of analog gravity. Acoustic metric definition.',
+        'notes': ('2005 review metadata; current consumers cite this edition. '
+                  'No verified 2005 full body is held. Historical artifact '
+                  'Lit-Search/Phase-1-and-Background/primary-sources/BarceloLRR2005.pdf '
+                  'is arXiv gr-qc/0505065v4 (29 November 2024), not the 2005 body; '
+                  'its bytes and historical fetch record are preserved. '
+                  'The 2011 E1 reference is registered separately as Barcelo2011.'),
     },
 
     # ════════════════════════════════════════════════════════════════
     # Polariton analog gravity
     # ════════════════════════════════════════════════════════════════
+
+    'Barcelo2011': {
+        'authors': 'Barceló, C., Liberati, S., Visser, M.',
+        'title': 'Analogue Gravity',
+        'journal': 'Living Reviews in Relativity',
+        'volume': 14,
+        'page': '3',
+        'year': 2011,
+        'doi': '10.12942/lrr-2011-3',
+        'arxiv': 'gr-qc/0505065v3',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf',
+        'used_in': ['papers/E1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Published 2011 review metadata verified at the publisher. '
+                  'Held full author preprint v3, 12 May 2011; the journal body is '
+                  'not the cached artifact. Eqs. (61), (63)-(64) distinguish '
+                  'acceleration g_H from frequency kappa = g_H/c_H and give '
+                  'k_B T_H = hbar kappa/(2 pi). Not the 2005 or 2024 edition.'),
+    },
 
     'Falque2025': {
         'authors': 'Falque, K., Delhom, A., Glorieux, Q., Giacobino, E., Bramati, A., Jacquet, M. J.',
@@ -799,14 +825,17 @@ CITATION_REGISTRY = {
         'page': '064505',
         'year': 2020,
         'doi': '10.1103/PhysRevB.101.064505',
-        'arxiv': None,
-        'doi_verified': None,
+        'arxiv': '1905.05855v2',
+        'doi_verified': '2026-10-15',
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Amelio2020.json',
-        'used_in': ['papers/paper12_polariton/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Amelio2020.pdf',
+        'used_in': ['papers/paper12_polariton/paper_draft.tex', 'papers/E1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Acoustic metric in driven-dissipative polariton systems; '
-                 'weak-loss, long-wavelength limit.',
+        'notes': 'Publisher metadata verifies final DOI/title/venue. Author preprint '
+                 '1905.05855v2 (2019-06-13), linked to that DOI by arXiv, models '
+                 'reservoir/disorder-induced instability and loss of coherence '
+                 '(Sec. IV.C); it does not calibrate the Paris-LKB in-band noise. '
+                 'The preprint predates the final 2020 journal revision.',
     },
     'Jacquet2023QNM': {
         'authors': 'Jacquet, M. J., Giacomelli, L., Valnais, Q., Joly, M., Claude, F., Giacobino, E., Glorieux, Q., Carusotto, I., Bramati, A.',
@@ -3472,14 +3501,20 @@ CITATION_REGISTRY = {
         'page': '127--137',
         'year': 2022,
         'doi': '10.1007/s10909-022-02694-z',
-        'arxiv': None,
+        'arxiv': '2111.07817v4',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Volovik2022Counting.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Volovik2022Counting.pdf',
         'used_in': ['papers/paper23_linearized_efe/paper_draft.tex'],
         'provides': [],
-        'notes': 'NG-mode counting for ADW symmetry breaking: 16 tetrad components → '
-                 '6 absorbed + 4 diffeo gauge + 2 graviton + 4 massive Higgs.',
+        'notes': 'Journal publication: 2022; held preprint: arXiv:2111.07817v4, submitted 15 Dec 2021. '
+                 'Section VIII (publisher section 8) distinguishes spin-connection NG absorption from '
+                 'tetrad Higgs modes: excluding four temporal tetrad components leaves six absorbed NG '
+                 'and six Higgs modes. In the stated unimodular setting, the Higgs sector has one '
+                 'massive J=0 mode and five J=2 components; spatial-coordinate constraints remove '
+                 'three J=2 components, leaving two massless helicity +/-2 waves. L1 uses this as '
+                 'model-specific counting context; its spin-2 second-sound assignment and '
+                 'susceptibility-dependent speed law are separate project assumptions.',
     },
     'Volovik2024Vestigial': {
         'authors': 'Volovik, G. E.',
@@ -3489,26 +3524,19 @@ CITATION_REGISTRY = {
         'page': '330--334',
         'year': 2024,
         'doi': '10.1134/S002136402460006X',
-        'arxiv': '2312.09435',
+        'arxiv': '2312.09435v1',
         'doi_verified': '2026-05-11',
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Volovik2024Vestigial.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Volovik2024Vestigial.pdf',
         'used_in': ['papers/paper23_linearized_efe/paper_draft.tex',
                     'papers/paper25_gravitational_waves/paper_draft.tex'],
         'provides': [],
-        'notes': 'Vestigial gravity: composite ⟨ē e⟩ condenses before tetrad ⟨e⟩. '
-                 'Phase 6a Wave 1 derivation is in the fully-condensed phase '
-                 'where this distinction is irrelevant. Wave 2 cites for the '
-                 'second-sound graviton identification. ⚠️ CORRECTED 2026-08-14 '
-                 '(review:2026-08-14-l1-stage13:L1:1.1): this paper does NOT '
-                 'contain that identification — its subject is the two-step '
-                 'transition and metric-before-tetrad condensation. The '
-                 'identification is advanced in `Volovik2026SecondSound` '
-                 '(arXiv:2601.00639) and `Volovik2024VacuumDecay` '
-                 '(arXiv:2410.04392). NOTE: same paper as '
-                 '`Volovik2024` (arXiv:2312.09435); the two keys exist for '
-                 'historical reasons in different paper drafts. Consolidate in '
-                 'a future pass.',
+        'notes': 'Journal publication: 2024; held preprint: arXiv:2312.09435v1, submitted 15 Dec 2023. '
+                 'Section III, Eqs. 18-23, proposes a fermionic-quartet metric order while the tetrad '
+                 'expectation vanishes, followed by nonzero tetrad order. L1 uses this for '
+                 'metric-before-tetrad background; its spin-2 second-sound assignment remains a '
+                 'separate project assumption. The existing Volovik2024 key describes the same work; '
+                 'both bibkeys are retained.',
     },
     'Volovik2026SecondSound': {
         'authors': 'Volovik, G. E.',
@@ -3518,26 +3546,19 @@ CITATION_REGISTRY = {
         'page': None,
         'year': 2026,
         'doi': None,
-        'arxiv': '2601.00639',
-        'doi_verified': True,
+        'arxiv': '2601.00639v1',
+        'doi_verified': None,
         'inprep': False,
         'primary_source_path':
-            'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2026SecondSound.abstract.txt',
+            'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2026SecondSound.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [],
-        'notes': 'THE actual source of the second-sound--graviton identification, '
-                 'registered 2026-08-14 to close review:2026-08-14-l1-stage13:L1:1.1, '
-                 'which found the identification misattributed to Volovik2024Vestigial. '
-                 'Derives s₂ = c EXACTLY on the de Sitter two-fluid background, '
-                 'independent of H — structural from the stiff-matter equation of '
-                 'state w_n = 1, not tunable — and records GW170817 as SATISFIED. '
-                 'Also leaves the graviton type open, describing a scalar mode, '
-                 'against L1 spin-2 assignment (which comes from the ADW Goldstone '
-                 'counting and is ours). ⚠️ TITLE PROVENANCE: taken from the project '
-                 'corpus (Lit-Search/Phase-5y, two independent files quote it), NOT '
-                 'from a fresh Crossref/arXiv fetch. Needs fresh-fetch confirmation '
-                 'and a primary_source_path before any Stage-13 green that depends '
-                 'on this bibitem metadata.',
+        'notes': 'Held preprint: arXiv:2601.00639v1, submitted 2 Jan 2026. Sections II-III, Eqs. 1-3 '
+                 'and 6-9, obtain s2=c within the de Sitter two-fluid thermodynamic model, using equal '
+                 'component densities, Cv=S and TS=2*rho_n*c^2. Section IV discusses several graviton '
+                 'interpretations and leaves the type open. L1 separately assumes a spin-2 substrate '
+                 'identification and c_GW=c*sqrt(chi_vest); its susceptibility constraint is scoped to '
+                 'that assumed law.',
     },
     'Volovik2024VacuumDecay': {
         'authors': 'Volovik, G. E.',
@@ -3545,21 +3566,22 @@ CITATION_REGISTRY = {
         'journal': None,
         'volume': None,
         'page': None,
-        'year': 2024,
+        'year': 2025,
         'doi': None,
-        'arxiv': '2410.04392',
-        'doi_verified': True,
+        'arxiv': '2410.04392v11',
+        'doi_verified': None,
         'inprep': False,
         'primary_source_path':
-            'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2024VacuumDecay.abstract.txt',
+            'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2024VacuumDecay.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Companion source for the second-sound--graviton identification; '
-                 'registered 2026-08-14 alongside `Volovik2026SecondSound` to close '
-                 'review:2026-08-14-l1-stage13:L1:1.1. Two-fluid de Sitter '
-                 'thermodynamics with a Zel\'dovich stiff-matter component. '
-                 '⚠️ TITLE PROVENANCE: same caveat as `Volovik2026SecondSound` — '
-                 'corpus-sourced, not fresh-fetched.',
+        'notes': 'Held preprint: arXiv:2410.04392v11, submitted 9 Nov 2025, titled From Landau '
+                 'two-fluid model to de Sitter Universe. The retained bibkey contains 2024, but this '
+                 'entry cites the 2025 edition; v1 (6 Oct 2024) was titled Two dark components of de '
+                 'Sitter Universe. Sections IV-V treat the equilibrium gravitational normal component '
+                 'as stiff matter and add a phenomenological assumption for its dynamics. L1 uses this '
+                 'edition for thermodynamic background; the specific second-sound collective-mode '
+                 'motivation is cited separately to Volovik2026SecondSound.',
     },
     # ── The 2017 GW170817-constraint sweep ────────────────────────────────
     # Four back-to-back PRLs (251301-251304, 18 Dec 2017) that turned the c_GW
@@ -5803,20 +5825,51 @@ CITATION_REGISTRY = {
     },
 
     'Coutant2014': {
-        'authors': 'O.~Coutant and R.~Parentani',
-        'title': 'Phys.\\ Rev.\\ D',
-        'journal': None,
+        'authors': 'Coutant, A., and Parentani, R.',
+        'title': 'Hawking radiation with dispersion: The broadened horizon paradigm',
+        'journal': 'Phys. Rev. D',
         'volume': 90,
-        'page': None,
+        'page': '121501',
         'year': 2014,
-        'doi': None,
-        'arxiv': None,
-        'doi_verified': False,
+        'doi': '10.1103/PhysRevD.90.121501',
+        'arxiv': '1402.2514v2',
+        'doi_verified': True,
         'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/paper1_first_order/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf',
+        'used_in': ['papers/paper1_first_order/paper_draft.tex',
+                    'papers/E1/paper_draft.tex', 'papers/D1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
+        'notes': ('Metadata reconciled2026-10-15 against the arXiv v2 record linked '
+                  'to the journal DOI. Author preprint v2 read at equation level: '
+                  'Eq10 thermal mixing ratio uses the locally linear near-horizon, '
+                  'weak-dispersion momentum-space WKB approximation; Eq11 specifies '
+                  'its validity region. Profile perturbations enter through the '
+                  'broadened horizon. This does not derive the adopted quadratic '
+                  'temperature-shift ansatz or pi/6. Final journal body not read.'),
+    },
+
+    'CoutantWeinfurtner2018KdV': {
+        'authors': 'Coutant, A., and Weinfurtner, S.',
+        'title': 'Low-frequency analogue Hawking radiation: The Korteweg–de Vries model',
+        'journal': 'Phys. Rev. D',
+        'volume': 97,
+        'page': '025005',
+        'year': 2018,
+        'doi': '10.1103/PhysRevD.97.025005',
+        'arxiv': '1707.09651v2',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CoutantWeinfurtner2018KdV.pdf',
+        'used_in': ['papers/E1/paper_draft.tex', 'papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Publisher title/authors/DOI/year verified2026-10-15 against APS; '
+                  '2017 is submission year, not journal year. Author preprint v2 '
+                  'read at equation level. Weak-dispersive KdV model neglects '
+                  'co-propagating coupling. For the specified profile, Eqs39–40 '
+                  'give low-frequency T_eff/T_H=tanh(pi*q_r) and exponentially '
+                  'small smooth-limit departures. No nonzero leading local-D^2 '
+                  'temperature term or device-specific pi/6 is established by '
+                  'this result. Final journal body not read.'),
     },
 
     'CoutantParentani2010': {
@@ -12692,6 +12745,228 @@ CITATION_REGISTRY = {
     # Auto-stubs from \bibitem blocks (Phase 6i Wave 1 backfill)
     # ════════════════════════════════════════════════════════════════
 
+
+    # Exact citing-key identities reconciled against current sources (2026-10-15).
+    'CompanionCompilation': {
+        'authors': 'Roehm, John',
+        'title': 'Kernel-Verified Universal Quantum Gate Compilation: Alphabet-Agnostic Solovay--Kitaev across Dimensions',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D9/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D8/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'CompanionFaultTolerance': {
+        'authors': 'Roehm, John G.',
+        'title': 'Minimal Hypotheses for the Aliferis--Gottesman--Preskill Threshold Recursion, Machine-Checked in Lean 4',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D9/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D6/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'CompanionStochastic': {
+        'authors': 'Roehm, John',
+        'title': "Verified Stochastic Calculus and Large-Deviation Foundations for Lean 4 / Mathlib4: A Predicate-Substrate Library for the Stochastic Integral, Quadratic Variation, Itô's Lemma, and Large-Deviation Principles, with a Typeclass Bridge to Schwinger--Keldysh Effective Field Theory",
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D9/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/I3/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'Roehm2026TQC': {
+        'authors': 'Roehm, John',
+        'title': 'Machine-checked universality of the Fibonacci braid representation, with a graded verification of the surrounding modular-tensor-category apparatus',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D3/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D4/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD8Compilation': {
+        'authors': 'Roehm, John',
+        'title': 'Kernel-Verified Universal Quantum Gate Compilation: Alphabet-Agnostic Solovay--Kitaev across Dimensions',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D4/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D8/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD4Topological': {
+        'authors': 'Roehm, John',
+        'title': 'Machine-checked universality of the Fibonacci braid representation, with a graded verification of the surrounding modular-tensor-category apparatus',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D4/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD6FaultTolerant': {
+        'authors': 'Roehm, John G.',
+        'title': 'Minimal Hypotheses for the Aliferis--Gottesman--Preskill Threshold Recursion, Machine-Checked in Lean 4',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D6/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'RoehmD9Certification': {
+        'authors': 'Roehm, John',
+        'title': 'Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate',
+        'journal': 'in preparation',
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': True,
+        'primary_source_path': None,
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Internal companion manuscript identity verified against papers/D9/paper_draft.tex title and author, 2026-10-15. Existing citing key retained. No external deposit or publication identity is established; no external primary-source artifact is claimed.',
+    },
+
+    'FinazziLiberatiSindoni2012': {
+        'authors': 'Finazzi, S., Liberati, S., Sindoni, L.',
+        'title': 'Cosmological Constant: A Lesson from Bose-Einstein Condensates',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 108,
+        'page': '071101',
+        'year': 2012,
+        'doi': '10.1103/PhysRevLett.108.071101',
+        'arxiv': '1103.4841',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf',
+        'used_in': ['papers/D3/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Existing citing-key alias of FinazziLiberatiSindoni2012PRL; New key-named artifact acquired through the existing writer from the exact pinned preprint URL on 2026-10-15; bytes match the preserved canonical artifact. Held body is arXiv:1103.4841v2, 28 February 2012; the separate proceedings source 1204.3039 is not substituted.',
+    },
+
+    'Kitaev2006': {
+        'authors': 'Kitaev, A.',
+        'title': 'Anyons in an exactly solved model and beyond',
+        'journal': 'Annals of Physics',
+        'volume': 321,
+        'page': '2-111',
+        'year': 2006,
+        'doi': '10.1016/j.aop.2005.10.005',
+        'arxiv': 'cond-mat/0506438',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf',
+        'used_in': ['papers/D2/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Existing citing-key alias of KitaevHonest2006; New key-named artifact acquired through the existing writer from the exact pinned preprint URL on 2026-10-15; bytes match the preserved canonical artifact. Held body is arXiv:cond-mat/0506438v3, 1 January 2008, distinct from the 2006 publication metadata.',
+    },
+
+    'Wang2026TMDPolariton': {
+        'authors': 'Wang, Z., Kim, B., Zhen, B., He, L.',
+        'title': 'Strongly Nonlinear Nanocavity Exciton Polaritons in Gate-Tunable Monolayer Semiconductors',
+        'journal': 'PRL',
+        'volume': 136,
+        'page': '146901',
+        'year': 2026,
+        'doi': '10.1103/gc15-qsvf',
+        'arxiv': '2411.16635',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf',
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Existing citing-key alias of WangKimBZHe2026PennTMDPolariton; New key-named artifact acquired through the existing writer from the exact pinned preprint URL on 2026-10-15; bytes match the preserved canonical artifact. Held body is arXiv:2411.16635v1 (2024), authors Wang/He/Kim/Zhen; published metadata has author order Wang/Kim/Zhen/He. The published body was read online for the cited linewidths, but is not the cached file. No identity of all parameters across revisions is asserted.',
+    },
+
+    'Verlinde1988': {
+        'authors': 'Verlinde, Erik',
+        'title': 'Fusion rules and modular transformations in 2D conformal field theory',
+        'journal': 'Nuclear Physics B',
+        'volume': 300,
+        'page': '360-376',
+        'year': 1988,
+        'doi': '10.1016/0550-3213(88)90603-7',
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json',
+        'used_in': ['papers/D4/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Publisher bibliographic identity verified 2026-10-15. Full body not held or read in this package. Existing acquisition writer cached Crossref metadata only on 2026-10-15; no abstract or full body was acquired, so this does not back a source-content claim. No citation-class exemption is declared.',
+    },
+
+    'AndersonBFP2014Graybody': {
+        'authors': 'P. R. Anderson, R. Balbinot, A. Fabbri, R. Parentani',
+        'title': 'Gray-body factor and infrared divergences in 1D BEC acoustic black holes',
+        'journal': 'Phys. Rev. D',
+        'volume': '90',
+        'page': '104044',
+        'year': 2014,
+        'doi': '10.1103/PhysRevD.90.104044',
+        'doi_verified': None,
+        'arxiv': '1404.3224v3',
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf',
+        'used_in': ['papers/E2/paper_draft.tex'],
+        'provides': ['Infrared transmission probability for the specified stationary 1D BEC model (Eq. 36)'],
+        'notes': 'Held arXiv:1404.3224v3 (8 January 2015), five actual PDF pages; distinct from PRD 87, 124018 (2013). v3 corrects published Eq. (21); the cited infrared result is Eq. (36), p. 3. Assumes hydrodynamic, transversely frozen elongated BEC with stationary constant flow velocity and density and smooth sound speed with fixed asymptotes (p. 2). c_R is the subsonic asymptotic sound speed. This source does not establish graphene transmission, finite-frequency quadratic roll-off, detector response or readout identifiability.',
+    },
 }
 
 

@@ -97,3 +97,7 @@ narrate the correction; this entry is the record):
 certification against published transmon parameters, the results the formalization owns, the
 failure taxonomy, and related formalizations. Cut: the five-layer framing, the QEC interface
 subsection, the library-contribution appendix. Compiles clean at 14 pages (advisory floor 24).
+
+## 2026-10-15 — Citation identity and source-fidelity reconciliation
+
+Reconciled the three existing compilation, conditional threshold-recursion and stochastic-calculus companion bibliography entries with actual D8/D6/I3 identities and internal draft status. Registered the existing citing keys without external publication identifiers. Scoped review and evidence: `../AutomatedReviews/2026-10-15-publication-citation-coverage/`. Broader publication gates remain pending.

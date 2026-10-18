@@ -160,3 +160,23 @@ references or citations; below the 24-page floor. Eleven TODO comments mark
 claims whose primary source is not held in full text; the bundle is
 deliberately not green while they stand. Findings at
 `papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md`.
+
+## 2026-10-15 — Propagation of the adopted dispersive law
+
+- Scoped the entire quadratic dispersive ansatz, its interpretation and benchmark hierarchy as adopted model structure. Replaced the unsupported leading-quadratic attribution with the actual profile-specific KdV result and qualified the 2014 approximation. Definition-level theorem statements and numerical benchmarks remain unchanged.
+- Propagated that standing through the abstract, introduction, model interpretation, hierarchy and synthesis. Corrected the comparison text: the stated fractional dissipative term is linear in kappa at fixed transport, so its ratio to the adopted quadratic term depends on kappa.
+- Removed the unsupported reservoir factor-2.5 comparison, distinguished weak decay from control of omitted terms, and identified the as-built polariton row as outside a perturbative hierarchy.
+- Actual isolated compile measures 20 pages, zero TeX errors/unresolved references and 15 overfull boxes. An exact 953dbfc7 input-closure baseline also measures 20 pages/15overfull boxes; these existing layout defects are not waived. The existing compiler updates only compiled_pages from 11 to 20; stale/pending flags and last_lift remain unchanged. The 24-page floor remains an advisory shortfall.
+- Focused evidence is in `papers/AutomatedReviews/2026-10-15-publication-source-propagation/`. This bounded propagation is not whole-paper scientific, layout or publication acceptance; independent final review and merge gates remain separate.
+
+## 2026-10-15: Edition and polariton claim reconciliation
+
+Qualify the steep polariton gradient scale as nonthermal, distinguish cavity validity ratios from temperature shifts, and replace mean-field-energy noise inference with a conditional calibrated readout/noise budget. No executable formulas or proof statements changed.
+
+## 2026-10-15: Predicted versus measured spectrum
+
+Distinguish the nonthermal Hawking spectrum predicted in Falque et al.'s discussion from the measured fluid profiles and excitation dispersions. Remove the unsupported measurement attribution in the benchmark paragraph and matching review evidence. Numeric inputs, formulas, proofs, closures and stage fields are unchanged.
+
+## 2026-10-15 — Citation identity and source-fidelity reconciliation
+
+Corrected Wang2026TMDPolariton bibliography to the actual published title, author order and DOI; registry notes distinguish the held 2024-v1 author preprint from the published body. No numerical inputs or platform claims changed. Scoped review and evidence: `../AutomatedReviews/2026-10-15-publication-citation-coverage/`. Broader publication gates remain pending.

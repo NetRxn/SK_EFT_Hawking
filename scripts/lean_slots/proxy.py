@@ -12,7 +12,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
-from .state import Inventory, SlotError, read_json, token_hash, tool_cache_path, tool_list_key
+from .state import Inventory, SlotError, read_json, token_hash, tool_cache_path, tool_list_key, observe_process
 
 
 _DISCOVERY_METHODS = {
@@ -31,6 +31,23 @@ _HOP_HEADERS = {
     "transfer-encoding",
     "upgrade",
 }
+
+
+def _client_session_id(headers) -> str | None:
+    """Select one opaque visible-ASCII client value (ADR-008 ST-1–ST-3).
+
+    Only outer HTTP SP/HTAB is framing. Repeated or malformed parsed values
+    refuse before any session consumer; absent alone denotes sessionless.
+    """
+    values = headers.get_all("Mcp-Session-Id", [])
+    if not values:
+        return None
+    if len(values) != 1:
+        raise ValueError("invalid Mcp-Session-Id header")
+    token = values[0].strip(" \t")
+    if not token or any(not 0x21 <= ord(char) <= 0x7E for char in token):
+        raise ValueError("invalid Mcp-Session-Id header")
+    return token
 
 
 def _messages(body: bytes) -> list[dict[str, Any]]:
@@ -113,6 +130,10 @@ class LeaseGate:
             raise SlotError(f"wt{self.number} project-root mismatch")
         if lease.get("endpoint") != slot["endpoint_name"]:
             raise SlotError(f"wt{self.number} endpoint-identity mismatch")
+        if lease.get("owner_kind") == "process":
+            owner = observe_process(int(lease.get("owner_pid", 0)), lease.get("owner_signature"))
+            if owner.state != "present" or not lease.get("owner_signature"):
+                raise SlotError(f"wt{self.number} process owner identity is {owner.state}", observations=(owner,))
         self._authorize_paired_dependency(lease)
 
     def _authorize_paired_dependency(self, lease: dict[str, Any]) -> None:
@@ -414,6 +435,11 @@ def make_handler(inventory: Inventory, number: int):
                 status = 401 if "credential" in str(exc) else 403
                 self._deny(status, str(exc), request_id)
                 return
+            try:
+                client_session = _client_session_id(self.headers)
+            except ValueError:
+                self._deny(400, "invalid Mcp-Session-Id header", request_id)
+                return
             # ADR-008 S-Q: the FRONT DOOR answers `initialize` and mints the session,
             # whether or not a backend is up. Never forwarded — forwarding is what tied a
             # client's session to a backend lifetime and made `prepare` fatal to it.
@@ -443,11 +469,7 @@ def make_handler(inventory: Inventory, number: int):
             # broken — the exact tax S-Q exists to remove, re-introduced for anyone who
             # was already connected. The sentinel keeps them on one shared backend
             # session rather than handshaking per call.
-            client_session = next(
-                (v for k, v in self.headers.items() if k.lower() == "mcp-session-id"),
-                None,
-            )
-            translation_key = client_session or "\x00sessionless"
+            translation_key = "\x00sessionless" if client_session is None else client_session
             connection = http.client.HTTPConnection(
                 backend_host, backend_port, timeout=180
             )

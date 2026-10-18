@@ -128,7 +128,7 @@ def damping_rate(k, omega, c_s, gamma_1, gamma_2, gamma_2_1=0.0, gamma_2_2=0.0,
 #: The dispersive coefficient c₁ in δ_disp = −c₁·D².
 #:
 #: ⚠️ THIS IS A DECLARED PROJECT NORMALIZATION, NOT A DERIVED CONSTANT.
-#: No source derives it, and no universal value exists — see
+#: The quadratic law is also adopted for these applications — see
 #: ``dispersive_correction`` below and PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
 #: Sourced from ``constants.EFT_PARAMS`` (Invariant #2) and re-exported here so
 #: that no consumer — module, script, test, Lean docstring or manuscript table —
@@ -138,65 +138,42 @@ DISPERSIVE_C1 = _EFT_PARAMS['DISPERSIVE_C1']
 
 def dispersive_correction(D):
     """
-    Dispersive correction to the effective Hawking temperature.
+    Adopted phenomenological fractional shift of the Hawking temperature.
 
     δ_disp = -c₁ · D²,  c₁ = DISPERSIVE_C1 = π/6
 
-    where D = κξ/c_s is the adiabaticity parameter.
+    where D = κξ/c_s is the adiabaticity parameter. Both this quadratic
+    functional form and its coefficient are modelling choices for the
+    applications here, not a physical derivation from the cited literature.
 
-    ⚠️ PROVENANCE — WHAT IS AND IS NOT ESTABLISHED.
+    Coutant & Weinfurtner, PRD 97, 025005 (2018; arXiv:1707.09651v2),
+    analyze a weak-dispersive KdV model with co-propagating coupling
+    neglected. For their specified profile, the low-frequency temperature
+    ratio is tanh(π q_r), with an exponentially small smooth-limit departure
+    (Eqs. 39–40). This does not establish a nonzero leading D² temperature
+    term or map that profile's parameters to a particular device's local D.
 
-    The D² SCALING is supported. Coutant & Weinfurtner (PRD 2017) obtain
-    analytic expressions in the KdV approximation and find the leading
-    correction to the effective temperature scales as O(ξ²κ²/c_s²) = O(D²)
-    in the adiabatic regime. That is a PARAMETRIC O(·) result.
+    Coutant & Parentani, PRD 90, 121501(R) (2014; arXiv:1402.2514v2), obtain
+    β_ω = exp(-πω/κ) α_ω for their near-horizon locally linear solution
+    within a weak-dispersion momentum-space WKB approximation that neglects
+    left-mover mixing. Their validity region and profile-perturbation
+    analysis must accompany this result; it is not an exact global
+    all-orders statement about arbitrary profiles.
 
-    The COEFFICIENT c₁ = π/6 is NOT derived anywhere, and no universal value
-    exists. A near-horizon Hamilton-Jacobi computation shows why. With
-    ω = (v(x)+c_s)k + (c_sξ²/8)k³ and x(u) = Σ c_n uⁿ the inverse profile
-    series, the tunneling exponent is 2π·Res_{k=0}[x dk], and only the terms
-    n ≡ 1 (mod 3) survive the residue:
+    Corley & Jacobson, PRD 54, 1568 (1996), report profile-dependent fitted
+    powers in a numerical robustness study. Neither that result nor
+    Finazzi & Parentani 2012 derives the law implemented here.
 
-        Res = ω·(c₁ᵖ - 4β c₄ᵖ ω² + 21 β² c₇ᵖ ω⁴ + ...),   β = c_sξ²/8
-
-    (cᵖ are the PROFILE series coefficients, not this module's c₁). The
-    leading term c₁ᵖ = 1/κ reproduces T_H = κ/2π exactly. The FIRST dispersive
-    term is -4β c₄ᵖ ω³: cubic in ω, so it is a non-thermal distortion rather
-    than a temperature rescaling, and its size is set by c₄ᵖ — a fourth-order
-    datum of the velocity profile. There is no universal number multiplying D².
-
-    That is not merely our own argument. Coutant & Parentani (PRD 90,
-    121501(R), 2014; arXiv:1402.2514) solve the near-horizon quartic-dispersion
-    mode equation for a locally linear profile v ≈ -1 + κx and obtain
-    β_ω = e^{-πω/κ}α_ω EXACTLY, i.e. T = κ/2π with NO D² correction at all at
-    that order. A nonzero correction appears in their §IV only once the
-    profile departs from linear (v = v₀ + δv), and is then set by δv — the
-    profile. Del Porro, Liberati & Schneider (arXiv:2406.14603) derive
-    κ(α) = κ_KH(1 ± (3/8)α²) for a specific tanh profile in a DIFFERENT
-    parameter α = Ω/Λ, and state in terms that its coefficient "depends
-    crucially on the specific geometry".
-
-    Corley & Jacobson (PRD 54, 1568, 1996) agrees: it is a NUMERICAL study
-    reporting fitted powers (T_H/k₀)^p with p ≈ 3 and 2 for smooth profiles at
-    two temperatures and p ≈ 1 for kinked ones — the power ITSELF is
-    profile-dependent. It contains no D² law and no π/6. Do NOT cite it, or
-    Finazzi & Parentani 2012, as the source of this coefficient.
-
-    π/6 is therefore fixed HERE, by definition, as the project's O(1)
-    normalization, and every statement about δ_disp in this repository and in
-    the manuscripts is a statement about that definition. The Lean
-    definition ``KappaScaling.dispersiveCorrection`` carries the same number.
+    The evaluator and Lean definition KappaScaling.dispersiveCorrection
+    share the adopted expression. Their bounds and quadratic factorization
+    are statements about that definition. Rescaling c₁ changes its values
+    and can move the crossover with dissipation; preserving a quadratic
+    form does not establish unchanged physical ordering.
 
     Lean: dispersive_correction_bound (KappaScaling.lean), bogoliubov_superluminal
     Aristotle: d65e3bba, 3eedcabb
-    Source: SCALING — Coutant & Weinfurtner, PRD 2017 (parametric O(D²), KdV,
-            adiabatic regime). COEFFICIENT — project normalization; see
-            PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
-    Robustness (NOT the coefficient): Corley & Jacobson, PRD 54, 1568 (1996);
-            Coutant & Parentani, PRD 90, 121501(R) (2014).
-            ⚠️ NOT "PRD 89, 124004" — that is an unrelated Kerr-Newman-NUT
-            paper; the misprint is still live at HawkingUniversality.lean:54,
-            WKBAnalysis.lean:175 and papers/D1/paper_draft.tex:561.
+    Source standing: adopted parametrization; see
+        PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
 
     Args:
         D: adiabaticity parameter (dimensionless)
@@ -979,8 +956,9 @@ def kappa_scaling_dispersive(kappa, xi, c_s):
 
     δ_disp(κ) = -(π/6) · (ξ·κ/c_s)²
 
-    At fixed BEC material properties (ξ, c_s constant), the dispersive
-    correction scales quadratically with kappa: |δ_disp| ∝ κ².
+    At fixed BEC material properties (ξ, c_s constant), this adopted
+    correction scales quadratically with kappa: |δ_disp| ∝ κ². This is
+    factorization of the defined ansatz, not a derived physical scaling law.
 
     This is equivalent to dispersive_correction(D) with D = ξκ/c_s.
 
@@ -1037,10 +1015,10 @@ def kappa_scaling_crossover(gamma_1, gamma_2, xi):
     Below κ_cross: dissipative correction dominates (linear in κ).
     Above κ_cross: dispersive correction dominates (quadratic in κ).
 
-    This crossover provides the experimental handle for the κ-scaling
-    test: measuring the spectrum at multiple κ values reveals the
-    transition from linear to quadratic scaling, confirming the EFT
-    prediction structure.
+    This is the crossover of the adopted correction definitions. A κ sweep
+    can test those model dependences; the algebra alone does not establish
+    a physical transition or its experimental accessibility. Changing the
+    adopted dispersive coefficient moves the crossover.
 
     Derivation: Set |δ_disp| = δ_diss:
         (π/6)(ξκ/c_s)² = (γ₁+γ₂)κ/c_s²
@@ -1196,7 +1174,8 @@ def stimulated_hawking_gain(omega, kappa, greybody=1.0):
 
     For a coherent probe with n_in quanta at frequency ω, the anomalous
     (Hawking) channel output is G(ω) × n_in. The gain peaks at low
-    frequencies where G → Γ/(2πω/κ) and approaches 1 for ω ≪ κ.
+    frequencies where G ~ Γκ/(2πω) as ω/κ → 0. For fixed positive
+    Γ and κ this diverges as ω → 0; it does not approach unity.
 
     Lean: boseEinstein_pos, stimGain_pos, boseEinstein_strictAnti (StimulatedHawking.lean)
     Aristotle: 986b9f66
@@ -1273,9 +1252,9 @@ def dispersive_hawking_correction(D):
     """
     Dispersive correction to effective Hawking temperature, as a RATIO.
 
-    κ_eff/κ = 1 + δ_disp = 1 - c₁·D² + O(D⁴),  D = ξκ/c_s.
+    κ_eff/κ = 1 + δ_disp = 1 - c₁·D²,  D = ξκ/c_s.
 
-    This is the same physics as ``dispersive_correction``, expressed as the
+    This is the same adopted ansatz as ``dispersive_correction``, expressed as the
     ratio κ_eff/κ rather than as the fractional shift δ_disp. It DELEGATES to
     that function and does not restate the coefficient — Invariant #1, one
     home per formula.
@@ -1288,8 +1267,8 @@ def dispersive_hawking_correction(D):
     all three Lean modules. The duplicate is removed rather than reconciled.
     See papers/AutomatedReviews/2026-08-15-dispersive-coefficient-normalization/.
 
-    For the standing of c₁ itself — a declared project normalization, not a
-    derived or universal constant — read ``dispersive_correction``.
+    For the standing of both the adopted form and normalization,
+    read ``dispersive_correction``.
 
     Lean: dispersiveCorrection_in_unit_interval (StimulatedHawking.lean);
           KappaScaling.dispersiveCorrection carries the same π/6.
@@ -12425,3 +12404,604 @@ def memory_binary_robustness_reference(t, a, b, q, *, d0=0.0, d1=0.0,
             "observed_separation": abs(observed[1]-observed[0]),
             "ideal_bound": min(1., distances.sum()),
             "observed_bound": min(1., distances.sum()+allowances.sum())}
+
+
+def memory_partial_interaction(state, exchange_probability):
+    """Apply the probabilistic channel C_t(rho)=(1-t)rho+t SWAP(rho).
+
+    Tensor order is (S,E), and 0 <= t <= 1. This is an incoherent mixture
+    of identity and SWAP, not a coherent partial-SWAP unitary. It accepts
+    correlated density matrices using the numerical guard _memory_joint_state.
+    Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.partialInteractionKraus_eq
+    Aristotle: manual
+
+    The exact Kraus map is the mathematical reference; complex128 execution
+    and the tolerance-based density check are not numerically certified.
+    """
+    rho = _memory_joint_state(state)
+    t = float(exchange_probability)
+    if not np.isfinite(t) or not 0 <= t <= 1:
+        raise ValueError("exchange_probability must be finite and in [0,1]")
+    return (1-t)*rho + t*memory_swap(rho)
+
+
+def memory_partial_interaction_reference(t, p):
+    """Run both basis histories through C_t, imperfect S reset, then C_t.
+
+    p in [0,1] is the probability of skipping the S reset. The control resets
+    E perfectly AFTER that same imperfect S reset and BEFORE the second C_t.
+    The two channel applications use fresh probabilistic mixtures, not one
+    shared random SWAP choice. A>B alone is not the exclusion criterion.
+    Returned trajectories are joint matrices, with first factor S. Each
+    history retains both the pre-control reset state and the control input.
+
+    Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.partialRetained_probability,
+          SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.partialControl_probability,
+          SKEFTHawking.QuantumNetwork.FiniteMemoryProcess.partialPostReset_traceDist
+    Aristotle: manual
+
+    Exact outcome-one separations are A=t^2+p(1-t)^2 (retained) and
+    B=p(1-t)^2 (control). Post-reset system distance from |0><0| is zero
+    for history zero and r=p(1-t) for history one. The common-system-channel
+    bound is r, giving excess A-r=t(t-p(1-t)). Positive exact excess excludes
+    a common system-only continuation reproducing both histories; nonpositive
+    excess does not establish absent memory. The control may retain a signal.
+
+    All returned estimates are computed from matrix trajectories, including
+    eigensolver trace distances. No boolean witness verdict is returned:
+    roundoff and the existing probability clipping/normalization have no
+    certified error budget. These basis dynamics admit classical memory and
+    demonstrate neither quantum advantage nor unusual time structure.
+    """
+    t, p = float(t), float(p)
+    if not (np.isfinite(t) and np.isfinite(p) and 0 <= t <= 1 and 0 <= p <= 1):
+        raise ValueError("t and p must be finite and in [0,1]")
+    reference = np.diag([1., 0.]).astype(np.complex128)
+    histories = []
+    for history in (0, 1):
+        initial = np.zeros((4, 4), dtype=np.complex128)
+        initial[2*history, 2*history] = 1
+        interacted = memory_partial_interaction(initial, t)
+        reset = memory_reset_system(interacted, p)
+        reduced = np.trace(reset.reshape(2, 2, 2, 2), axis1=1, axis2=3)
+        control_input = memory_swap(memory_reset_system(memory_swap(reset)))
+        retained = memory_partial_interaction(reset, t)
+        control = memory_partial_interaction(control_input, t)
+        histories.append({
+            "initial": initial, "after_interaction": interacted,
+            "after_reset": reset, "reset_system_state": reduced,
+            "control_input": control_input, "retained_final": retained,
+            "control_final": control,
+            "retained_probabilities": memory_system_probabilities(retained),
+            "control_probabilities": memory_system_probabilities(control),
+        })
+    distances = np.array([
+        .5*np.abs(np.linalg.eigvalsh(h["reset_system_state"]-reference)).sum()
+        for h in histories])
+    retained_separation = abs(histories[1]["retained_probabilities"][1]
+                              - histories[0]["retained_probabilities"][1])
+    control_separation = abs(histories[1]["control_probabilities"][1]
+                             - histories[0]["control_probabilities"][1])
+    bound = min(1., distances.sum())
+    return {"t": t, "p": p, "histories": histories, "reference": reference,
+            "reset_trace_distances": distances, "memoryless_bound": bound,
+            "retained_separation": retained_separation,
+            "control_separation": control_separation,
+            "retained_control_difference": retained_separation-control_separation,
+            "criterion_margin": retained_separation-bound}
+
+
+def memory_sampling_certificate(*, n0, n1, count0, count1, rho0, rho1, alpha,
+                                eps0=0, eps1=0, delta0=0, delta1=0,
+                                exponent_cap=4096):
+    """Exact arithmetic report for a pre-specified fixed-sample binary test.
+
+    Each history has n_h > 0 IID binary trials with a fresh preparation and
+    environment per complete trial. The groups need not be independent of each
+    other. Counts, sample sizes and exponent_cap must be Python ints (not bool).
+    Radii, budgets and alpha accept only Python int or fractions.Fraction;
+    floats, strings and Decimal are rejected rather than silently converted.
+    Radii are positive, budgets nonnegative, and 0 < alpha < 1.
+
+    Put j_h = floor(2*n_h*rho_h**2), k_h = min(j_h, exponent_cap), and
+    beta = min(1, 2/2**k_0 + 2/2**k_1). Hoeffding and exp(1) >= 2 give
+    simultaneous failure probability at most beta. B = min(1,eps0+eps1)
+    + delta0 + delta1 bounds the true observed gap under the common normalized
+    system-channel/common binary-effect null with valid reset and bias budgets.
+    The strict margin is |count0/n0-count1/n1| - B - rho0 - rho1.
+    Arithmetic rejection requires BOTH beta <= alpha and strict margin > 0.
+    A non-rejection does not establish the null or absence of memory.
+
+    Lean: SKEFTHawking.QuantumNetwork.BinaryMemorySampling.BoundedTrials.empirical_tail_dyadic,
+          SKEFTHawking.QuantumNetwork.BinaryMemorySampling.joint_failure_dyadic,
+          SKEFTHawking.QuantumNetwork.BinaryMemorySampling.common_channel_false_positive,
+          SKEFTHawking.QuantumNetwork.BinaryMemorySampling.certified_false_positive
+    Aristotle: manual
+    This implementation is not Lean-extracted or a certified Python runtime.
+    It does not verify IID sampling, preparations, the comparison channel/effect,
+    or physical/calibration budgets. Calibration failure needs a separate bound.
+    Sample sizes, radii, budgets, intervention/effect and decision rule must be
+    fixed before observing outcomes: optional stopping and selected multiple
+    tests are outside this contract.
+
+    exponent_cap is an engineering resource limit in [0,4096], bounding each
+    allocated dyadic denominator to at most 4097 bits. It caps DOWNWARD only,
+    so it can increase beta (lose confidence), never strengthen confidence.
+    Input integer/rational bit sizes are otherwise caller-controlled. The
+    returned report exposes both uncapped and used exponents and cap flags.
+    Proportions, bounds and margins are Fraction values, with no float step.
+    """
+    from fractions import Fraction
+
+    for name, value in (("n0", n0), ("n1", n1), ("count0", count0),
+                        ("count1", count1), ("exponent_cap", exponent_cap)):
+        if type(value) is not int:
+            raise TypeError(f"{name} must be a Python int, not bool")
+    if n0 <= 0 or n1 <= 0:
+        raise ValueError("sample sizes must be positive")
+    if not (0 <= count0 <= n0 and 0 <= count1 <= n1):
+        raise ValueError("each count must lie between zero and its sample size")
+    if not 0 <= exponent_cap <= 4096:
+        raise ValueError("exponent_cap must lie in [0,4096]")
+    rationals = {}
+    for name, value in (("rho0", rho0), ("rho1", rho1), ("alpha", alpha),
+                        ("eps0", eps0), ("eps1", eps1),
+                        ("delta0", delta0), ("delta1", delta1)):
+        if type(value) not in (int, Fraction):
+            raise TypeError(f"{name} must be a Python int or Fraction")
+        rationals[name] = Fraction(value)
+    rho0, rho1, alpha = (rationals[k] for k in ("rho0", "rho1", "alpha"))
+    eps0, eps1, delta0, delta1 = (
+        rationals[k] for k in ("eps0", "eps1", "delta0", "delta1"))
+    if rho0 <= 0 or rho1 <= 0:
+        raise ValueError("sampling radii must be positive")
+    if min(eps0, eps1, delta0, delta1) < 0:
+        raise ValueError("reset and observation-bias budgets must be nonnegative")
+    if not 0 < alpha < 1:
+        raise ValueError("alpha must lie strictly between zero and one")
+
+    exponent0 = (2*n0*rho0**2).__floor__()
+    exponent1 = (2*n1*rho1**2).__floor__()
+    used0, used1 = min(exponent0, exponent_cap), min(exponent1, exponent_cap)
+    beta = min(Fraction(1), Fraction(2, 1 << used0) + Fraction(2, 1 << used1))
+    bound = min(Fraction(1), eps0+eps1) + delta0 + delta1
+    proportion0, proportion1 = Fraction(count0, n0), Fraction(count1, n1)
+    gap = abs(proportion0-proportion1)
+    threshold = bound+rho0+rho1
+    margin = gap-threshold
+    confidence_sufficient = beta <= alpha
+    positive_margin = margin > 0
+    return {
+        "n0": n0, "n1": n1, "count0": count0, "count1": count1,
+        **rationals,
+        "proportion0": proportion0, "proportion1": proportion1,
+        "exponent0": exponent0, "exponent1": exponent1,
+        "used_exponent0": used0, "used_exponent1": used1,
+        "exponent_cap": exponent_cap,
+        "exponent_capped0": used0 < exponent0,
+        "exponent_capped1": used1 < exponent1,
+        "failure_bound": beta, "memoryless_bound": bound,
+        "empirical_gap": gap, "rejection_threshold": threshold,
+        "strict_margin": margin, "confidence_sufficient": confidence_sufficient,
+        "positive_margin": positive_margin,
+        "reject_common_channel": confidence_sufficient and positive_margin,
+    }
+
+
+def memory_calibrated_sampling_certificate(*, groups, alpha, exponent_cap=4096):
+    """Exact six-group calibration and memory-test arithmetic.
+
+    groups has exactly false_positive, false_negative, reset0, reset1, main0,
+    main1, each containing n, count, radius. False-negative counts are reported
+    zeros for a trusted one standard; all other counts are reported ones.
+    Counts/n/cap are strict Python integers, radii/alpha strict int or Fraction.
+    The stable readout model is Q(x)=a*(1-x)+(1-b)*x. Reset states must be
+    independently justified diagonal states; counts cannot establish this.
+    Fixed protocols, trusted standards, within-group independent complete trials
+    and readout stability remain assumptions. Cross-group independence is unused.
+
+    Ua=min(1,A+sa), Ub=min(1,B+sb), d=max(Ua,Ub),
+    eps_h=min(1,Ch+sh+Ub), Bhat=min(1,eps0+eps1)+2*d.
+    Reject only if the main empirical gap exceeds Bhat+rho0+rho1 AND the
+    combined six-group failure bound meets alpha. All decisions use Fractions.
+    No conditioning on estimated budgets or main-only confidence is performed.
+
+    Lean: SKEFTHawking.QuantumNetwork.BinaryMemoryCalibration.certified_common_channel_false_positive
+    Aristotle: manual
+    Mathematical theorem and Python implementation review are separate evidence;
+    this is not Lean-extracted code or an experimental applicability verifier.
+    The downward exponent cap has the same conservative meaning as in
+    memory_sampling_certificate. Input rational bit lengths are caller-controlled.
+    """
+    from fractions import Fraction
+
+    names = ("false_positive", "false_negative", "reset0", "reset1", "main0", "main1")
+    if type(groups) is not dict or set(groups) != set(names):
+        raise ValueError("groups must contain exactly the six named calibration/test groups")
+    reports = {}
+    # Reuse the established strict input validation and dyadic arithmetic. Only
+    # individual group fields are retained, never its two-group decision.
+    for first, second in zip(names[::2], names[1::2]):
+        for name in (first, second):
+            if type(groups[name]) is not dict or set(groups[name]) != {"n", "count", "radius"}:
+                raise ValueError(f"{name} must contain exactly n, count, radius")
+        a, b = groups[first], groups[second]
+        pair = memory_sampling_certificate(
+            n0=a["n"], n1=b["n"], count0=a["count"], count1=b["count"],
+            rho0=a["radius"], rho1=b["radius"], alpha=alpha, exponent_cap=exponent_cap)
+        for i, name in enumerate((first, second)):
+            exponent = pair[f"exponent{i}"]
+            used = pair[f"used_exponent{i}"]
+            reports[name] = {
+                "n": groups[name]["n"], "count": groups[name]["count"],
+                "radius": Fraction(groups[name]["radius"]),
+                "proportion": pair[f"proportion{i}"], "exponent": exponent,
+                "used_exponent": used, "exponent_capped": used < exponent,
+                "tail_bound": min(Fraction(1), Fraction(2, 1 << used)),
+            }
+    ua = min(Fraction(1), reports["false_positive"]["proportion"] + reports["false_positive"]["radius"])
+    ub = min(Fraction(1), reports["false_negative"]["proportion"] + reports["false_negative"]["radius"])
+    d = max(ua, ub)
+    eps = [min(Fraction(1), reports[f"reset{h}"]["proportion"] + reports[f"reset{h}"]["radius"] + ub) for h in (0, 1)]
+    bound = min(Fraction(1), sum(eps)) + 2*d
+    gap = abs(reports["main0"]["proportion"] - reports["main1"]["proportion"])
+    threshold = bound + reports["main0"]["radius"] + reports["main1"]["radius"]
+    calibration = min(Fraction(1), sum(reports[name]["tail_bound"] for name in names[:4]))
+    sampling = min(Fraction(1), sum(reports[name]["tail_bound"] for name in names[4:]))
+    beta = min(Fraction(1), calibration + sampling)
+    confident, positive = beta <= alpha, gap > threshold
+    return {
+        "groups": reports, "alpha": Fraction(alpha), "exponent_cap": exponent_cap,
+        "false_positive_upper": ua, "false_negative_upper": ub,
+        "readout_bias_bound": d, "eps0": eps[0], "eps1": eps[1],
+        "memoryless_bound": bound, "empirical_gap": gap,
+        "rejection_threshold": threshold, "strict_margin": gap-threshold,
+        "calibration_failure_bound": calibration, "sampling_failure_bound": sampling,
+        "failure_bound": beta, "confidence_sufficient": confident,
+        "positive_margin": positive, "reject_common_channel": confident and positive,
+    }
+
+
+def memory_history_approximation(*, inputs, retentions, initial, cutoff, reference=0):
+    """Exact diagonal collision-memory trajectory and suffix approximation.
+
+    Each chronological fresh input bit b drives a retained memory by
+    r <- lambda*r + (1-lambda)*b, realized by identity/SWAP mixing with
+    SWAP probability 1-lambda and discarding the fresh system. cutoff is the
+    number of most-recent rounds replayed from reference, not a time index.
+    The full and truncated trajectories are computed independently.
+    Arbitrary quantum inputs are covered by the theorem; this exact executable
+    example restricts initial/reference states to diagonal Bernoulli laws.
+
+    Lean: SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining.suffix_prediction_bound
+    Aristotle: manual
+    Bound is the product of suffix retentions; worst-case suffix-only prediction
+    error is at least half that product for arbitrary orthogonal memories at the
+    truncation boundary, not necessarily states reachable through a fixed prefix. Retained
+    measurement records, adaptive controls and arbitrary process compression are
+    outside the model. Full and suffix replay cost N and cutoff scalar updates;
+    both use constant-size state. This is no general simulation-speedup claim.
+    int/Fraction inputs are exact; floats and booleans are refused.
+    """
+    from fractions import Fraction
+
+    if type(inputs) not in (list, tuple) or type(retentions) not in (list, tuple):
+        raise TypeError("inputs and retentions must be lists or tuples")
+    if len(inputs) != len(retentions):
+        raise ValueError("one retention is required per input")
+    if type(cutoff) is not int or not 0 <= cutoff <= len(inputs):
+        raise ValueError("cutoff must be an integer in [0, number of rounds]")
+    if any(type(b) is not int or b not in (0, 1) for b in inputs):
+        raise ValueError("each input must be the integer zero or one")
+    for value in (initial, reference, *retentions):
+        if type(value) not in (int, Fraction):
+            raise TypeError("probabilities must be Python int or Fraction")
+        if not 0 <= value <= 1:
+            raise ValueError("probabilities must lie in [0,1]")
+    initial, reference = Fraction(initial), Fraction(reference)
+    retentions = tuple(map(Fraction, retentions))
+    full = initial
+    for bit, retention in zip(inputs, retentions):
+        full = retention*full + (1-retention)*bit
+    truncated = reference
+    bound = Fraction(1)
+    start = len(inputs)-cutoff
+    prefix = initial
+    for bit, retention in zip(inputs[:start], retentions[:start]):
+        prefix = retention*prefix + (1-retention)*bit
+    for bit, retention in zip(inputs[start:], retentions[start:]):
+        truncated = retention*truncated + (1-retention)*bit
+        bound *= retention
+    return {
+        "full_probability": full, "truncated_probability": truncated,
+        "prefix_probability": prefix, "reference_probability": reference,
+        "absolute_error": abs(full-truncated), "error_bound": bound,
+        "exact_error_from_prefix": bound*abs(prefix-reference),
+        "suffix_pair_minimax_lower_bound": bound/2,
+        "full_updates": len(inputs), "suffix_updates": cutoff,
+        "cutoff": cutoff,
+    }
+
+
+def finite_intervention_process(*, system_dim, environment_dim, outcome_count,
+                                initial, protocol):
+    """Evaluate a fixed-depth local-instrument tree using exact rational matrices.
+
+    Matrix entries are strict Python ints/Fractions, or (real, imag) pairs of
+    those types. A node has exactly evolution, instrument, next: a normalized
+    joint Kraus list, outcome-indexed equal-length local Kraus lists, and one
+    child per outcome. None is a leaf. Joint evolution precedes the local
+    instrument. Finite classical feedback is permitted through distinct children.
+    Cycles, ragged depth, malformed dimensions and nonphysical inputs are refused.
+    No branch is normalized: impossible outcomes stay zero, without division.
+
+    Lean: SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.normalized_weights,
+          SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.no_future_signaling
+    Aristotle: manual
+    Exact arithmetic implementation, separately reviewed, not Lean-extracted.
+    Full enumeration has outcome_count**depth leaves; all prefix states are
+    retained in this diagnostic report. Input size and rational bit lengths are
+    caller-controlled. This is not a general comb representation or device test.
+    Output matrices use rational (real, imag) pairs and weights are Fractions.
+    """
+    from fractions import Fraction
+    import sympy as sp
+
+    for name, value in (("system_dim", system_dim), ("environment_dim", environment_dim),
+                        ("outcome_count", outcome_count)):
+        if type(value) is not int or value <= 0:
+            raise ValueError(f"{name} must be a positive Python int")
+    dim = system_dim * environment_dim
+
+    def rational(x):
+        if type(x) not in (int, Fraction):
+            raise TypeError("exact entries require Python int or Fraction, never float/bool")
+        f = Fraction(x)
+        return sp.Rational(f.numerator, f.denominator)
+
+    def scalar(x):
+        if type(x) is tuple and len(x) == 2:
+            return rational(x[0]) + sp.I*rational(x[1])
+        return rational(x)
+
+    def matrix(x, d):
+        if type(x) not in (list, tuple) or len(x) != d:
+            raise ValueError("matrix has the wrong row dimension")
+        if any(type(row) not in (list, tuple) or len(row) != d for row in x):
+            raise ValueError("matrix has the wrong column dimension")
+        return sp.ImmutableMatrix([[scalar(v) for v in row] for row in x])
+
+    def family(xs, d):
+        if type(xs) not in (list, tuple):
+            raise TypeError("Kraus families must be lists or tuples")
+        return tuple(matrix(x, d) for x in xs)
+
+    def normalized(ks, d):
+        total = sum((k.H*k for k in ks), sp.zeros(d)).applyfunc(sp.expand)
+        if total != sp.eye(d):
+            raise ValueError("Kraus operators are not exactly normalized")
+
+    rho = matrix(initial, dim)
+    if rho != rho.H or sp.trace(rho) != 1 or rho.is_positive_semidefinite is not True:
+        raise ValueError("initial must be an exact Hermitian PSD trace-one matrix")
+    active = set()
+
+    def compile_node(node):
+        if node is None:
+            return None, 0
+        if type(node) is not dict or set(node) != {"evolution", "instrument", "next"}:
+            raise ValueError("node requires exactly evolution, instrument, next")
+        if id(node) in active:
+            raise ValueError("protocol contains a cycle")
+        active.add(id(node))
+        try:
+            evolution = family(node["evolution"], dim)
+            normalized(evolution, dim)
+            ins, nxt = node["instrument"], node["next"]
+            if (type(ins) not in (list, tuple) or type(nxt) not in (list, tuple)
+                    or len(ins) != outcome_count or len(nxt) != outcome_count):
+                raise ValueError("instrument and children must have the fixed outcome count")
+            local = tuple(family(xs, system_dim) for xs in ins)
+            if len({len(xs) for xs in local}) != 1:
+                raise ValueError("pad outcome Kraus families to a common rank with zero matrices")
+            normalized(tuple(k for xs in local for k in xs), system_dim)
+            lifted = tuple(tuple(sp.kronecker_product(k, sp.eye(environment_dim))
+                                  for k in xs) for xs in local)
+            children = [compile_node(child) for child in nxt]
+            if len({depth for _, depth in children}) != 1:
+                raise ValueError("every leaf must have the same fixed depth")
+            return (evolution, lifted, tuple(child for child, _ in children)), children[0][1]+1
+        finally:
+            active.remove(id(node))
+
+    compiled, depth = compile_node(protocol)
+
+    def fraction(x):
+        x = sp.expand(x)
+        if x.is_Rational is not True:
+            raise ArithmeticError("internal exact result is not rational")
+        return Fraction(int(x.p), int(x.q))
+
+    def export(x):
+        return tuple(tuple((fraction(sp.re(x[i, j])), fraction(sp.im(x[i, j])))
+                           for j in range(dim)) for i in range(dim))
+
+    def apply(ks, x):
+        return sum((k*x*k.H for k in ks), sp.zeros(dim)).applyfunc(sp.expand)
+
+    branches, leaves = {}, []
+
+    def visit(node, history, x):
+        branches[history] = {"state": export(x), "weight": fraction(sp.trace(x))}
+        if node is None:
+            leaves.append(history)
+            return
+        evolution, instrument, children = node
+        evolved = apply(evolution, x)
+        for outcome, (ks, child) in enumerate(zip(instrument, children)):
+            visit(child, history+(outcome,), apply(ks, evolved))
+
+    visit(compiled, (), rho)
+    marginals = {h: Fraction(0) for h in branches}
+    for leaf in leaves:
+        for length in range(len(leaf)+1):
+            marginals[leaf[:length]] += branches[leaf]["weight"]
+    return {"branches": branches, "leaves": tuple(leaves), "prefix_marginals": marginals,
+            "total_probability": marginals[()], "depth": depth, "arity": outcome_count,
+            "leaf_count": len(leaves), "enumeration": "all histories; exponential in depth"}
+
+
+def coherent_memory_process(*, c=None, s=None):
+    """Exact coherent-SWAP experiments, all evaluated by finite_intervention_process.
+
+    U=c I-i s SWAP, c**2+s**2=1; defaults c=3/5,s=4/5. Coefficients are
+    strict int/Fraction. Reports distinguish uninterrupted interference, a local
+    resolved Z intervention, changed future evolution, reset memory and a
+    joint reset control. The feedback example has both initial outcomes possible.
+    Comparing these protocols does not exclude every classical hidden-state or
+    entanglement-breaking explanation; reset contrast alone also has an
+    incoherent-mixture realization.
+
+    Lean: SKEFTHawking.QuantumNetwork.CoherentMemoryProcess.interference_contrast,
+          SKEFTHawking.QuantumNetwork.CoherentMemoryProcess.reset_probability,
+          SKEFTHawking.QuantumNetwork.CoherentMemoryProcess.coherent_readout_equivalence,
+          SKEFTHawking.QuantumNetwork.CoherentMemoryProcess.reset_readout_equivalence
+    Aristotle: manual
+    Exact executable model, not Lean-extracted or empirical evidence. The Lean
+    constants and readout bridges cover the default c=3/5,s=4/5 example; other
+    rational coefficient choices are separately tested computational instances.
+    """
+    from fractions import Fraction as F
+    c, s = F(3, 5) if c is None else c, F(4, 5) if s is None else s
+    if type(c) not in (int, F) or type(s) not in (int, F):
+        raise TypeError("c and s must be exact int or Fraction")
+    c, s = F(c), F(s)
+    if c*c+s*s != 1:
+        raise ValueError("c squared plus s squared must equal one exactly")
+    ident = lambda d: [[int(i == j) for j in range(d)] for i in range(d)]
+    zero = [[0, 0], [0, 0]]
+    z = [[[1, 0], [0, 0]], [[0, 0], [0, 1]]]
+    reset = [[[1, 0], [0, 0]], [[0, 1], [0, 0]]]
+    u = [[(c*int(i == j), -s*int(i == (j % 2)*2+j//2)) for j in range(4)] for i in range(4)]
+    zz = [[z[0]], [z[1]]]
+    identity_instrument = [[ident(2)], [zero]]
+    reset_instrument = [reset, [zero, zero]]
+    node = lambda evolution, instrument, children: {
+        "evolution": evolution, "instrument": instrument, "next": children}
+    read = lambda evolution: node(evolution, zz, [None, None])
+    initial = lambda b: [[int(i == j == 2*b) for j in range(4)] for i in range(4)]
+    evaluate = lambda protocol, rho: finite_intervention_process(
+        system_dim=2, environment_dim=2, outcome_count=2, initial=rho, protocol=protocol)
+    uninterrupted = evaluate(node([u], identity_instrument, [read([u]), read([u])]), initial(1))
+    measured = evaluate(node([u], zz, [read([u]), read([u])]), initial(1))
+    future_identity = evaluate(node([u], zz, [read([ident(4)]), read([ident(4)])]), initial(1))
+    retained = tuple(evaluate(node([u], reset_instrument, [read([u]), read([u])]), initial(b))
+                     for b in (0, 1))
+    # A physical joint reset channel, followed by U, explicitly clears both factors.
+    reset_joint = [[[int(i == 0 and j == k) for j in range(4)] for i in range(4)]
+                   for k in range(4)]
+    control = tuple(evaluate(node([u], reset_instrument,
+                        [node(reset_joint, identity_instrument, [read([u]), read([u])])]*2), initial(b))
+                    for b in (0, 1))
+    prepare = lambda b: [[[int(i == b and j == k) for j in range(2)] for i in range(2)] for k in range(2)]
+    feedback_children = [node([ident(4)], [prepare(b) if a == b else [zero, zero]
+                            for a in (0, 1)], [None, None]) for b in (0, 1)]
+    mixed = [[F(1, 2)*int(i == j and i in (0, 2)) for j in range(4)] for i in range(4)]
+    feedback = evaluate(node([ident(4)], zz, feedback_children), mixed)
+    final_one = lambda report: sum((report["branches"][h]["weight"] for h in report["leaves"]
+                                    if h[-1] == 1), F(0))
+    return {"c": c, "s": s, "uninterrupted": uninterrupted, "measured": measured,
+            "future_identity": future_identity, "retained": retained, "control": control,
+            "feedback": feedback, "uninterrupted_one": final_one(uninterrupted),
+            "measured_one": final_one(measured),
+            "interference_contrast": final_one(measured)-final_one(uninterrupted),
+            "retained_one": tuple(map(final_one, retained)), "control_one": tuple(map(final_one, control))}
+
+
+def finite_gibbs_clock(*, hamiltonian, observable, beta, hbar, modular_time):
+    """Numerical diagnostic of finite Gibbs modular versus Heisenberg evolution.
+
+    Uses Hermitian H, positive beta/hbar and real modular_time. The observable
+    may be any finite complex matrix. sigma_s(X)=rho**(i*s) X rho**(-i*s)
+    equals alpha_t(X) at t=-beta*hbar*s. Gibbs weights are energy-shifted for
+    stability; log(rho) is independently reconstructed from rho's eigensystem.
+    Observable and H are not mutated. Near-Hermitian H is symmetrized only within
+    a fixed roundoff tolerance, whose residual is reported. Underflow, numerical
+    rank loss, and unresolvable log spectra are refused, not called faithful.
+
+    Lean: SKEFTHawking.QuantumNetwork.FiniteGibbsClock.modular_eq_heisenberg,
+          SKEFTHawking.QuantumNetwork.FiniteGibbsClock.matrixLog_gibbs
+    Aristotle: manual
+    Floating diagnostics are not certified error bounds or a numerical proof.
+    The exact finite theorem does not certify the input model or eigensolver.
+    """
+    import numbers
+    import numpy as np
+
+    scalars = {}
+    for name, value in (("beta", beta), ("hbar", hbar), ("modular_time", modular_time)):
+        if isinstance(value, (bool, np.bool_)) or not isinstance(value, numbers.Real):
+            raise TypeError(f"{name} must be a finite real scalar")
+        scalars[name] = float(value)
+        if not np.isfinite(scalars[name]):
+            raise ValueError(f"{name} must be finite")
+    beta, hbar, modular_time = (scalars[k] for k in ("beta", "hbar", "modular_time"))
+    if beta <= 0 or hbar <= 0:
+        raise ValueError("beta and hbar must be positive")
+    H, X = np.asarray(hamiltonian, dtype=complex), np.asarray(observable, dtype=complex)
+    if H.ndim != 2 or H.shape[0] == 0 or H.shape[0] != H.shape[1] or X.shape != H.shape:
+        raise ValueError("H must be nonempty square and observable must match its shape")
+    if not np.all(np.isfinite(H)) or not np.all(np.isfinite(X)):
+        raise ValueError("matrices must have finite entries")
+    scale = max(1., np.linalg.norm(H, ord='fro'))
+    hermitian_residual = float(np.linalg.norm(H-H.conj().T, ord='fro'))
+    if not np.isfinite(scale) or hermitian_residual > 64*np.finfo(float).eps*scale:
+        raise ValueError("hamiltonian must be Hermitian within roundoff")
+    H = (H+H.conj().T)/2
+    energies, vectors = np.linalg.eigh(H)
+    with np.errstate(over='ignore', under='ignore', invalid='ignore'):
+        shifted = -beta*(energies-energies.min())
+        weights = np.exp(shifted)
+        probabilities = weights/weights.sum()
+    # A positive exact Gibbs eigenvalue can be numerically indistinguishable
+    # from zero: require a conservative spectral resolution margin.
+    floor = 64*H.shape[0]*np.finfo(float).eps
+    if not np.all(np.isfinite(probabilities)) or probabilities.min() <= floor:
+        raise ValueError("Gibbs spectrum loses numerical faithfulness/resolution")
+    rho = (vectors*probabilities)@vectors.conj().T
+    rho_values, rho_vectors = np.linalg.eigh(rho)
+    if rho_values.min() <= floor or not np.all(np.isfinite(rho_values)):
+        raise ValueError("reconstructed Gibbs state has unresolved rank")
+    log_values = np.log(rho_values)
+    log_rho = (rho_vectors*log_values)@rho_vectors.conj().T
+    physical_time = -beta*hbar*modular_time
+    with np.errstate(over='ignore', invalid='ignore'):
+        modular_phases = modular_time*log_values
+        # Scalar energy shifts have no effect on observable conjugation.
+        physical_phases = (physical_time/hbar)*(energies-energies.min())
+    if (not np.isfinite(physical_time) or not np.all(np.isfinite(modular_phases))
+            or not np.all(np.isfinite(physical_phases))):
+        raise ValueError("time/phase calculation overflowed")
+    Um = (rho_vectors*np.exp(1j*modular_phases))@rho_vectors.conj().T
+    Uh = (vectors*np.exp(1j*physical_phases))@vectors.conj().T
+    modular = Um@X@Um.conj().T
+    heisenberg = Uh@X@Uh.conj().T
+    if not np.all(np.isfinite(modular)) or not np.all(np.isfinite(heisenberg)):
+        raise ValueError("observable evolution overflowed")
+    identity = np.eye(H.shape[0])
+    predicted_log = (vectors*(shifted-np.log(weights.sum())))@vectors.conj().T
+    report = {**scalars, "physical_time": physical_time, "gibbs_state": rho,
+            "gibbs_eigenvalues": rho_values, "matrix_log": log_rho,
+            "modular_unitary": Um, "heisenberg_unitary": Uh,
+            "modular_observable": modular, "heisenberg_observable": heisenberg,
+            "comparison_residual": float(np.linalg.norm(modular-heisenberg, ord='fro')),
+            "normalization_residual": float(abs(np.trace(rho)-1)),
+            "hermitian_input_residual": hermitian_residual,
+            "matrix_log_residual": float(np.linalg.norm(log_rho-predicted_log, ord='fro')),
+            "modular_unitarity_residual": float(np.linalg.norm(Um.conj().T@Um-identity, ord='fro')),
+            "heisenberg_unitarity_residual": float(np.linalg.norm(Uh.conj().T@Uh-identity, ord='fro')),
+            "spectral_resolution_floor": floor, "evidence_kind": "floating numerical diagnostic"}
+
+    if any(not np.isfinite(value) for key, value in report.items() if key.endswith("residual")):
+        raise ValueError("numerical diagnostic residual overflowed")
+    return report

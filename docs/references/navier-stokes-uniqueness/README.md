@@ -1,0 +1,174 @@
+# Bounded classical uniqueness backport
+
+This directory records the upstream attribution and exact source closure for the
+67 vendored modules under `lean/NavierStokes`. Source and original pins are in
+`source-manifest.json`; Apache-2.0 license is preserved verbatim in `LICENSE`.
+Port modifications are listed in the manifest and marked in the affected source files.
+
+The separate `NavierStokes` Lean library preserves upstream `autoImplicit=true`.
+Its root imports only `NavierStokes.R3.WholeSpaceUniqueness`. Euler, Comparator
+and challenge modules are outside the selected closure. The project stays on its
+existing coupled Lean/Mathlib/PhysLib/REPL 4.32 pins.
+
+The bounded closure compiles on the existing pins at `4390030d`: the project
+build passed 10,911 jobs. Four files required the disclosed proof-normalization
+adaptations; independent review confirmed unchanged theorem statements.
+Original source hashes, import-closure completeness and the license were verified.
+The elaborated axiom closure of `classical_uniqueness_on_Icc` contains exactly
+`propext`, `Classical.choice`, and `Quot.sound`. This measured compatibility
+supports the bounded backport without a coordinated toolchain upgrade.
+
+Model-specific consumers must explicitly transport coordinates, derivatives,
+support, measure and energy, and discharge the theorem's hypotheses.
+The theorem concerns smooth classical flows with a compact reference and a
+finite-energy competitor; it does not establish global or weak-solution uniqueness.
+
+## Quantitative stability consumer
+
+`SKEFTHawking.ClassicalFlowStability` derives nonzero-initial-error stability
+from this closure's actual equal-force equations, pressure recovery and localized
+energy identity. The squared L2 difference obeys `E(t) ≤ E(0) exp(2Gt)` when `G`
+bounds the reference gradient; compact smooth reference support supplies a finite
+nonnegative coefficient. Weighted initial energy is dominated by actual initial
+energy before cutoff exhaustion. Zero initial error recovers pointwise uniqueness.
+
+The six named theorems passed independent scientific review and raw standard-axiom
+audits at `66eff70a`. The public aggregate includes this module at `b01e09e0` and
+passed the authoritative build, epoch
+`e373db382f79e373d00935c3433a60008b64918d7eac85cff1b336494a3ac756`.
+The vendored source and provenance manifest are unchanged. Canonical extraction
+adds exactly the six named stability records with ordinary core axioms and no
+project axioms or dependency timeouts. Independent integrated review passed at
+`4fcc7af1`; the final `s13-lean` gate passed in 445.7 seconds, retaining the same
+19 unresolved paper-corpus failures. This quantitative consumer is accepted locally;
+no publication or broader flow-regularity claim follows.
+
+## Continuous-gradient stability
+
+`ClassicalFlowTimeStability.lean` proves the actual energy bound
+`E(t) <= E(0) exp(2 integral_0^t g)` for continuous nonnegative reference-gradient
+envelopes. The localized PDE estimate has a cutoff error constant independent of
+time and radius. An integrating factor supplies the scalar estimate, and cutoff
+exhaustion transfers it to the actual squared L2 difference. Equal residuals,
+smoothness, compact reference support and the finite-energy competitor remain
+explicit. The vendored closure and its provenance are unchanged.
+
+Constant envelopes recover the existing coefficient. For `g(t)=A+Bt`, the
+actual PDE consumer has exponent `2At+Bt^2`; with positive initial error and
+positive slope at an interior time, it is strictly smaller than the slab-maximum
+estimate. This is a quantitative stability result, not an existence theorem.
+
+Independent review accepted source `63794e0c`: all six existing stability
+statements are preserved, one time-dependent cutoff-rate helper is added, and
+the new module supplies nine theorems. All 16 current named declarations have
+raw ordinary-core-axiom audits and clean source scans. Combined-source diagnostics
+and post-build standalone module diagnostics pass. Aggregate `363508f6` passes
+the authoritative build. Canonical and final gate acceptance is recorded below
+when complete.
+
+Post-build canonical extraction contains 41,912 records, adding 55: ten new
+fluid declarations and 45 block-expectation records (42 named and three generated
+support records). No prior record was removed. The preserved pressure-flux theorem
+now depends on the new time-gradient helper; only its immediate proof-dependency
+fields change, with its type and axiom fields unchanged. All added and changed
+closures have ordinary core axioms, no project axioms and no dependency timeout.
+Independent integrated review accepted `81adc133`. The substrate gate passed in
+443.4 seconds, reporting 70/89 checks and 1,146 warnings. Its 19 paper-corpus
+failures exactly match the preceding accepted cycle and remain unresolved.
+Independent gate reconciliation passed. Root accepts this increment locally;
+closure edits affect documentation only. Publication and main promotion remain
+separate.
+
+## Restarted windows and chaining — accepted locally
+
+`ClassicalFlowWindowStability.lean` transports actual velocity and pressure fields
+by time translation. Its `Window` structure records the smoothness, support,
+finite-energy, divergence, equal-residual and continuous-gradient obligations on
+an arbitrary ordered interval. The actual energy estimate starts at that window's
+initial time. Coincident endpoints are handled directly.
+
+Two-window and finite-partition consumers use the actual intermediate energies.
+Each window may have its own compact support, energy bound and continuous
+envelope. The exponent sums the window integrals; continuity across unmatched
+envelope endpoints is not assumed. Restriction and exact splitting recover the
+unsplit estimate for a continuous envelope. The zero-based API is recovered.
+This remains an equal-force classical-flow theorem.
+
+Source `3d4cbcc7`, integrated as `9680b090`, passed independent scientific review.
+All 20 authored declarations and 14 constructor/projections have raw ordinary
+axiom audits, with clean diagnostics and source verification. Source SHA256:
+`0ec8ceaae78881917e130bbe7289069ad484827319c4cb4bb150063b1241c587`.
+This increment is accepted locally after independent source, integrated inventory,
+build and gate review. The aggregate at `970f0745` preserves all 20 authored
+window declarations and 14 constructor/projection audits. Canonical extraction
+adds 37 window records: the constructor is omitted from that view, with four
+additional generated records. No prior canonical records change or disappear;
+all new closures use ordinary core axioms without dependency timeouts. The public
+substrate gate passes in 447.0 seconds with the same 19 unresolved paper-corpus
+failures and 1,146 warnings. Publication readiness is not established.
+
+The next localized forcing candidate adds the actual residual-work term and an
+eta-weighted squared-L2 work bound. Its source review is separate from this
+acceptance. Existing pressure recovery assumes equal residuals, so full unequal-
+force whole-space stability still requires a justified pressure estimate.
+
+## Unequal-residual localized balance — accepted locally
+
+`ClassicalFlowForcedLocalized.lean` derives the actual residual difference
+and its positive-sign work term in the compactly weighted difference-energy
+balance. Smooth slab hypotheses supply local work integrability and the actual
+energy derivative. With eta positive, a cutoff between zero and one, and an
+explicitly square-integrable residual difference, Young's inequality bounds
+twice the absolute work by eta times weighted energy plus the squared L2 force
+norm divided by eta. Equal residuals recover the original localized balance.
+
+An accelerating constant velocity supplies a genuine nonzero-residual witness
+and exact localized work/energy derivative. That constant force is not globally
+L2. Existing whole-space pressure recovery requires equal residuals, so this
+increment does not claim unequal-force whole-space stability.
+
+Source `2e3f9aa9`, integrated unchanged as `a80477ec`, passed independent full
+source review and exact raw ordinary-core-axiom audits for 24 authored and nine
+generated declarations. Source diagnostics and scans are clean. Three audit-only
+auxiliary-name warnings were reconciled separately. Root accepts this increment
+locally after independent source, integrated inventory/build and gate review at
+`b79adf09`. Canonical extraction adds 27 records: all 24 authored declarations
+and three generated helpers; six further audited auxiliaries are absent from
+that view. No prior record changes or disappears. Added closures have ordinary
+core axioms and no dependency timeout. The complete public increment adds 114
+records. Its substrate gate passes in 447.9 seconds with the same 19 unresolved
+paper-corpus failures, 70/89 checks and 1,146 warnings.
+
+The next isolated fluid package targets actual global forced stability under
+uniform compact support of the velocity difference, explicit square-integrable
+forcing and a continuous forcing-energy envelope. Source implementation, integrated inventory/build and final substrate review
+pass locally. No global noncompact pressure-recovery result is implied.
+
+## Compact-difference forced global stability — accepted locally
+
+`ClassicalFlowForcedCompact.lean` proves the actual whole-space energy identity
+and integrating-factor forcing convolution when the velocity difference has one
+compact spatial support throughout the time slab. Individual velocities and
+pressure need not be compactly supported. Force-square integrability and its
+continuous energy envelope are explicit. Integration by parts uses compactness
+of the transported scalar, and the pressure term cancels against the compact
+divergence-free difference.
+
+The estimate handles zero-length intervals. Equal residuals recover the exact
+zero-force exponent without the Young-inequality penalty. A smooth compact
+stream field is divergence-free and equals a coordinate vector near the origin;
+its accelerating velocity has calculated nonzero compact forcing, positive
+energy and an actual application of the stability theorem. This is conditional
+classical stability at unit viscosity, not existence or general noncompact
+unequal-force pressure recovery.
+
+Candidate `6d2468db`, integrated unchanged as `31a56a35`, passed independent
+full-source and semantic review. All 46 authored declarations have exact ordinary
+raw axiom audits; diagnostics and source scan are clean. Root accepts the increment locally after aggregate, canonical and independent
+integrated/gate review at `c6ad2948`. Canonical extraction adds all 46 authored
+declarations and five generated helpers. No old record changes or disappears,
+and every new closure has ordinary core axioms without a dependency timeout.
+The full public cycle adds 593 canonical records. Its substrate gate passes in
+439.4 seconds, with 70/89 checks, 1,146 warnings and the same 19 unresolved paper
+failures. This acceptance does not include publication or general noncompact
+unequal-force pressure recovery.
