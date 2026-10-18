@@ -76,6 +76,27 @@
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-06-10T20:23:52Z",
       "notes": "2026-06-10 source-reconciliation pass post external-review remediation: single flagged source paper12_polariton carries the real committed change (5207b72b axiom-retirement note: gapped_interface_axiom retired into tracked Prop TPFConjecture); E1 counterpart is macro-driven (axiomcount=0 via counts.tex, already post-retirement) and E1's polariton-scope 'no new project-local axioms / no tracked Props' statements are consistent — NO residual divergence. Drifted source tables are byte-identical regen; E1 inputs no source tables. Sweep theme (E1 module-attribution fix Basic.SonicHorizon/AcousticMetric) applied in tandem 5207b72b; Vergeles/Halenka/Geurs not referenced (polariton-only letter). Standard DISCLOSURE_TEXT.md Variant A block inserted before bibliography (register-derived S1: 1 module / 5 theorems; pdflatex x2 clean). stage13_redo_required set true + freshness_stale deliberately retained by the reconciliation session (post-script metadata restore)."
+    },
+    {
+      "date": "2026-10-15T12:22:59Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "PolaritonPhase5u",
+        "DispersionAndPolariton",
+        "GrapheneHawking",
+        "WKBConnection",
+        "SoftTheorems.NoiseFloorPrediction",
+        "KerrSchild.PolaritonCrossBridge",
+        "KerrSchild.SingleCopy"
+      ],
+      "deregistration_rationale": "Current E1 no longer contains the registered ringdown/single-copy, graphene comparison or Wilson-independent FDR occupation-floor sections. PolaritonPhase5u, DispersionAndPolariton, KerrSchild.PolaritonCrossBridge and KerrSchild.SingleCopy have no source file or built module record at the pinned base. Direct full-source/history review plus source-matching imported inspection of the three built modules shows GrapheneHawking supplies generic arithmetic and a definitional temperature identity; SoftTheorems.NoiseFloorPrediction defines an occupation floor delta_k/2 and Wilson invariance, not the E1 mean-field energy temperature; WKBConnection uses an assumed modified-unitarity carrier and decoherence occupation not asserted by E1. KappaScaling was inspected as stronger matching arithmetic for the adopted correction but supplies no universal coefficient or physical noise derivation; the manuscript already discloses the normalization and no new formal claim is introduced. The retained explicit verification claims continue to cite PolaritonTier1 and declare their apexes. This event reconciles historical direct registrations; it does not remove Lean source, change scientific scope or certify bundle freshness. See papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/E1.md for source pins and independent review.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-10-15T12:22:59Z",
+      "notes": "Current E1 no longer contains the registered ringdown/single-copy, graphene comparison or Wilson-independent FDR occupation-floor sections. PolaritonPhase5u, DispersionAndPolariton, KerrSchild.PolaritonCrossBridge and KerrSchild.SingleCopy have no source file or built module record at the pinned base. Direct full-source/history review plus source-matching imported inspection of the three built modules shows GrapheneHawking supplies generic arithmetic and a definitional temperature identity; SoftTheorems.NoiseFloorPrediction defines an occupation floor delta_k/2 and Wilson invariance, not the E1 mean-field energy temperature; WKBConnection uses an assumed modified-unitarity carrier and decoherence occupation not asserted by E1. KappaScaling was inspected as stronger matching arithmetic for the adopted correction but supplies no universal coefficient or physical noise derivation; the manuscript already discloses the normalization and no new formal claim is introduced. The retained explicit verification claims continue to cite PolaritonTier1 and declare their apexes. This event reconciles historical direct registrations; it does not remove Lean source, change scientific scope or certify bundle freshness. See papers/AutomatedReviews/2026-10-15-e1-roster-reconciliation/E1.md for source pins and independent review."
     }
   ]
 }

@@ -1,41 +1,30 @@
-"""Table and scalar specs for the E1 bundle (Paris-LKB polariton device).
+"""Table and scalar specs for the E1 Paris-LKB polariton device.
 
-Every device parameter E1 quotes — sound speed, healing length, both horizon
-steepnesses, both Fresnel-like dispersion ratios, both Hawking temperatures and
-the mean-field noise temperature — was a hand-typed ``\\SI{...}`` literal in the
-draft, repeated at four to six sites each (abstract, §2, §3, §5, the Fig.~2
-caption, §7). The device-parameter table on the old lines 118--130 was a
-hand-written ``tabular``. Nothing bound any of them to
-``src/core/constants.py``, so a change to the platform record would have left
-the manuscript quoting the superseded numbers with no gate noticing:
-``numerical_literals`` only counts literals against a frozen ceiling and
-``bundle_tables_use_pipeline`` reads the ``\\input{tables/}`` form, which E1 did
-not use.
+Device parameters come from ``src/core/constants.py`` and derived values
+from the canonical evaluators in ``src/core/formulas.py``. These include
+dispersion ratios, the smooth-horizon Hawking temperature, the formal
+steep-horizon gradient scale and the mean-field energy in temperature units.
+The latter two do not establish a thermal spectrum or a measured noise floor.
 
 Each entry renders to ``papers/E1/tables/<id>.tex``. Scalars are one-line
-snippets the draft pulls in as ``\\input{tables/<id>.tex}\\unskip``; the table
-renders a complete ``tabular`` the draft wraps in its own ``center`` envelope.
-
-Regenerate after any change to constants or formulas, or to this spec:
+snippets; the device table renders a complete ``tabular`` for the draft's
+``center`` envelope. Regenerate through the existing renderer:
 
     uv run python scripts/render_paper_tables.py --paper E1
 
-Provenance of every value below:
+Provenance:
 
-* ``POLARITON_PLATFORMS['Paris_standard']`` in ``src/core/constants.py`` — the
-  Falque et al.\\ 2025 §IV.1 measured record (``c_s``, ``xi``, ``kappa``).
-* ``FALQUE_STEEP_HORIZON_KAPPA`` — the steep-horizon reach, same source.
-* ``formulas.polariton_hawking_temperature`` — ``T_H = hbar*kappa/(2*pi*k_B)``.
-* ``POLARITON_MASS`` — the mean-field noise floor ``T_noise = m* c_s^2 / k_B``.
+* ``POLARITON_PLATFORMS['Paris_standard']``: Falque et al. 2025 measured
+  ``c_s``, ``xi`` and ``kappa``.
+* ``FALQUE_STEEP_HORIZON_KAPPA``: the steep-horizon reach, same source.
+* ``formulas.polariton_hawking_temperature``: ``hbar*kappa/(2*pi*k_B)``;
+  a temperature interpretation requires a thermal spectrum.
+* ``POLARITON_MASS``: mean-field energy scale ``T_mf = m* c_s^2 / k_B``.
 
-⚠️ The downstream healing length (4.0 um) is NOT here. It has no record in
-``constants.py``; binding it to a Python re-derivation would assert a freshness
-relation that does not exist. It stays an inline literal until it is entered as
-a provenanced parameter.
-
-⚠️ Every value line is emitted without a trailing unit so the draft keeps
-control of ``siunitx`` formatting; call sites read
-``\\SI{\\input{tables/<id>.tex}\\unskip}{<unit>}``.
+The downstream healing length (4.0 um) has no ``constants.py`` record and
+remains an inline manuscript value rather than a generated parameter.
+Value lines carry no trailing unit. Use separate input and unit commands:
+``\\input{tables/<id>.tex}\\unskip\\,\\si{<unit>}``.
 """
 
 from __future__ import annotations
@@ -78,20 +67,14 @@ def _dispersion_ratio(kappa: float) -> float:
 
 
 def _delta_disp(kappa: float) -> float:
-    """``delta_disp = -c_1 D^2`` — the leading dispersive correction.
+    """Adopted phenomenological shift delta_disp = -c_1 D^2.
 
-    Delegates to the canonical evaluator. This module does NOT retype the
-    numeral: ``c_1`` lives once, in ``formulas.DISPERSIVE_C1``, and every
-    number this bundle prints for the dispersive channel is whatever that
-    evaluator returns.
-
-    ``kappa_eff/kappa = 1 + delta_disp``, which is
-    ``formulas.dispersive_hawking_correction`` — as of 2026-08-15 the same
-    function, since the duplicate that hardcoded ``c_1 = 1.0`` was removed
-    (E1 finding 2.1). ``c_1 = pi/6`` is a DECLARED PROJECT NORMALIZATION of
-    an O(1) profile-dependent coefficient, not a derived constant; the draft
-    says so at Eq. (delta_disp) and the standing is recorded in
-    ``PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1']``.
+    Both the entire functional law and its coefficient are adopted here;
+    neither a nonzero leading quadratic coefficient nor a controlled
+    higher-order remainder has been derived for this device. Values delegate
+    to the canonical evaluator and its single DISPERSIVE_C1 normalization.
+    kappa_eff/kappa = 1 + delta_disp is the same parametrization, not an
+    independent physical derivation. See EFT.DISPERSIVE_C1 provenance.
     """
     return dispersive_correction(_dispersion_ratio(kappa))
 
@@ -167,12 +150,12 @@ SCALARS = {
         'value': lambda: f'{polariton_hawking_temperature(_KAPPA_SMOOTH) * 1e3:.0f}',
     },
     'lkb_T_H_steep_mK': {
-        'description': 'E1 abstract and §5: Hawking temperature at the steep '
-                       'horizon, in mK.',
+        'description': 'Formal steep-horizon gradient scale hbar*kappa/(2*pi*k_B), '
+                       'in mK; not a measured thermal temperature.',
         'value': lambda: f'{polariton_hawking_temperature(_KAPPA_STEEP) * 1e3:.0f}',
     },
     'lkb_T_noise_K': {
-        'description': 'E1 §5: mean-field noise floor T_noise = m* c_s^2 / k_B, in K.',
+        'description': 'E1 §5: mean-field energy scale T_mf = m* c_s^2 / k_B, in K.',
         'value': lambda: f'{POLARITON_MASS * _C_S ** 2 / K_B:.2f}',
     },
 
@@ -222,14 +205,14 @@ SCALARS = {
     'lkb_atten_per_xi_standard': {
         'description': 'E1 §3: exp(Gamma_pol xi / c_s) = exp(ratio*D), the '
                        'occupation-recovery factor per healing length of '
-                       'propagation, at the as-built cavity.',
+                       'propagation, at the as-built cavity, assuming v_g = c_s.',
         'value': lambda: (
             f"{math.exp(_LKB['Gamma_pol_over_kappa'] * _dispersion_ratio(_KAPPA_SMOOTH)):.1f}"
         ),
     },
     'lkb_atten_per_xi_required': {
         'description': 'E1 §3: the same recovery factor per healing length at '
-                       'the weak-dissipation boundary Gamma_pol = 0.1 kappa.',
+                       'the weak-dissipation boundary Gamma_pol = 0.1 kappa, assuming v_g = c_s.',
         'value': lambda: (
             f'{math.exp(_WEAK_DISSIPATION_RATIO * _dispersion_ratio(_KAPPA_SMOOTH)):.2f}'
         ),
@@ -251,22 +234,23 @@ SCALARS = {
     # drifting apart; importing c_1 is what stops the bundle drifting from
     # the substrate.
     'lkb_delta_disp_smooth': {
-        'description': 'E1 §2: leading dispersive correction -c_1 D^2 at the '
+        'description': 'E1 §2: adopted phenomenological shift -c_1 D^2 at the '
                        'smooth horizon (signed).',
         'value': lambda: f'{_delta_disp(_KAPPA_SMOOTH):.2f}',
     },
     'lkb_delta_disp_steep': {
-        'description': 'E1 §2: leading dispersive correction at the steep horizon '
+        'description': 'E1 §2: adopted phenomenological shift at the steep horizon '
                        '(signed).',
         'value': lambda: f'{_delta_disp(_KAPPA_STEEP):.2f}',
     },
     'lkb_kappa_eff_ratio_smooth': {
-        'description': 'E1 §4: kappa_eff/kappa = 1 + delta_disp at the smooth horizon.',
+        'description': 'E1 §4: adopted kappa_eff/kappa = 1 + delta_disp at the smooth horizon.',
         'value': lambda: f'{1.0 + _delta_disp(_KAPPA_SMOOTH):.2f}',
     },
     'lkb_gain_threshold': {
         'description': 'E1 §4: ln(3)/(2 pi) — the omega/kappa_eff at which the '
-                       'Gamma=1 gain reaches 1/2. Exact, device-independent.',
+                       'Gamma=1 adopted gain reaches 1/2. The dimensionless crossing is conditional; '
+                       'the dimensional frequency scales with kappa_eff and changes for nonunit greybody.',
         'value': lambda: f'{math.log(3.0) / (2.0 * math.pi):.3f}',
     },
     'lkb_gain_threshold_absolute': {
@@ -298,8 +282,8 @@ SCALARS = {
         'value': lambda: f'{stimulated_hawking_gain(1.0, 1.0):.4f}',
     },
     'lkb_snr_at_0p1': {
-        'description': 'E1 §4: single-shot SNR at omega = 0.1 kappa_eff with '
-                       '100 probe photons per mode.',
+        'description': 'E1 §4: ideal shot-noise SNR at omega = 0.1 kappa_eff with '
+                       '100 probe photons per mode; not calibrated detector significance.',
         'value': lambda: f'{stimulated_hawking_snr(0.1, 1.0, 100, 1):.0f}',
     },
 

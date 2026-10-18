@@ -59,8 +59,8 @@ def _pp_list_papers() -> list[dict]:
     if not papers_dir.exists():
         return out
     for paper_dir in sorted(papers_dir.iterdir()):
-        tex = paper_dir / 'paper_draft.tex'
-        if not tex.exists():
+        tex = _paper_artifact(paper_dir.name, 'paper_draft.tex')
+        if tex is None or not tex.is_file():
             continue
         paper_id = paper_dir.name
         cr = _pp_load_claims_review(paper_id)
@@ -82,24 +82,18 @@ from markupsafe import escape as _esc          # noqa: E402 — HTML-escape refl
 from urllib.parse import quote as _urlquote     # noqa: E402 — encode redirect query values
 
 
+# The selected-directory mechanism is promoted to the shared final-target reader.
+from src.core.paper_artifacts import (  # noqa: E402
+    safe_paper_dir, paper_artifact_path, confined_paper_path,
+)
+
+
 def _safe_paper_dir(paper_id):
-    """Path-injection guard (py/path-injection). Resolve ``papers/<paper_id>``
-    and confine it under ``papers/`` via realpath + containment, rejecting any
-    id that is not a single safe path component. Returns the resolved ``Path``
-    or ``None`` (caller treats ``None`` like a missing paper). Every
-    user-``paper_id``-derived filesystem path MUST route through this."""
-    if (not isinstance(paper_id, str) or not paper_id
-            or paper_id in ('.', '..')
-            or '/' in paper_id or '\\' in paper_id or '\x00' in paper_id):
-        return None
-    papers = (PROJECT_ROOT / 'papers').resolve()
-    try:
-        target = (papers / paper_id).resolve()
-    except (OSError, ValueError):
-        return None
-    if target != papers and papers not in target.parents:
-        return None
-    return target
+    return safe_paper_dir(PROJECT_ROOT / 'papers', paper_id)
+
+
+def _paper_artifact(paper_id, *parts):
+    return paper_artifact_path(PROJECT_ROOT / 'papers', paper_id, *parts)
 
 
 def _json_error(exc, status, public_msg, **extra):
@@ -686,7 +680,7 @@ def load_lean_theorems():
     return theorems
 
 
-def load_paper_claims():
+def load_paper_claims(*, graph=None):
     """Load per-paper claim analysis. For each paper on disk, merges
     declared PAPER_DEPENDENCIES metadata with auto-extracted PaperClaim
     nodes from the graph (covers papers without PAPER_DEPENDENCIES
@@ -707,7 +701,8 @@ def load_paper_claims():
     # + extract_cites_*_edges inline, which re-ran all heavy Lean/paper
     # parsing for every request to `/` — the dashboard's "hang on reload"
     # behavior was traced to this path (Phase 5v Wave 9a fix, 2026-04-24).
-    graph = get_cached_graph()
+    if graph is None:
+        graph = get_cached_graph()
     claim_nodes = [n for n in graph['nodes'] if n['type'] == 'PaperClaim']
     claims_by_paper: dict[str, list[dict]] = {}
     for cn in claim_nodes:
@@ -738,11 +733,14 @@ def load_paper_claims():
                     lean_names.add(name)
 
     for paper_dir in sorted(papers_dir.iterdir()):
-        tex_file = paper_dir / "paper_draft.tex"
-        if not tex_file.exists():
+        tex_file = _paper_artifact(paper_dir.name, "paper_draft.tex")
+        if tex_file is None:
             continue
 
-        tex = tex_file.read_text()
+        try:
+            tex = tex_file.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
         tex_lines = tex.splitlines()
         line_count = len(tex_lines)
 
@@ -798,8 +796,9 @@ def load_paper_claims():
             })
 
         # --- Figures ---
-        fig_dir = paper_dir / "figures"
-        fig_count = len(list(fig_dir.glob("*.png"))) if fig_dir.exists() else 0
+        safe_fig_dir = _paper_artifact(paper_dir.name, "figures")
+        fig_count = sum(_paper_artifact(paper_dir.name, "figures", f.name) is not None
+                        for f in safe_fig_dir.glob("*.png")) if safe_fig_dir else 0
         has_fbox = '\\fbox{\\parbox' in tex
 
         # --- Bibliography check ---
@@ -1302,16 +1301,37 @@ def index():
         target = '/?tab=paper' + (f'&paper={paper_arg}' if paper_arg else '')
         return redirect(target, code=302)
 
+    tab = request.args.get('tab', 'parameters')
+    # Used by every render: load the label reader before the common graph lookup.
+    from dashboard_attention import label_of as _label_of
+
+    # Keep first-import failures inside the same sanitized boundary as pane builds.
+    # No graph is acquired until the selected pane's real reader imports are loaded.
+    flow_reader = None
+    flow_error = None
+    if tab == 'flow':
+        try:
+            import importlib
+            flow_reader = importlib.import_module('dashboard_flow')
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            flow_error = {'error': 'failed to build the flow pane (see server log)'}
+
     params = load_parameters()
     formulas = load_formulas()
     theorems = load_lean_theorems()
-    papers = load_paper_claims()
+    graph = None
+    if flow_reader is not None:
+        graph = get_cached_graph()
+        papers = load_paper_claims(graph=graph)
+    else:
+        papers = load_paper_claims()
     citations = load_citations()
     summary = compute_summary(params, formulas, theorems)
 
     # Load proof architecture data for the lean/proof-arch tab
     proof_arch = None
-    tab = request.args.get('tab', 'parameters')
     if tab == 'lean':
         try:
             proof_arch = load_proof_architecture()
@@ -1389,18 +1409,20 @@ def index():
     # here would undo the module's whole refusal — so the except branch carries an
     # `error` key and the partial renders it as an error.
     flow_board = attention = loops = None
-    # The Attention pane resolves each item's label through the PRODUCER's map, since the
-    # five feeds are five stores with five different label keys. Passing the resolver keeps
-    # that vocabulary next to the code that mints the sources.
-    from dashboard_attention import label_of as _label_of
     _panes = {'flow': ('dashboard_flow', 'flow_board'),
               'attention': ('dashboard_attention', 'attention'),
               'loops': ('dashboard_loops', 'loops_panel')}
     if tab in _panes:
         _modname, _fn = _panes[tab]
         try:
-            import importlib
-            _built = getattr(importlib.import_module(_modname), _fn)()
+            if tab == 'flow':
+                _built = (flow_error if flow_error is not None else flow_reader.flow_board(
+                    by_bundle=flow_reader.load_aggregate(graph=graph),
+                    gate_nodes=[n for n in graph['nodes']
+                                if n.get('type') == 'ReadinessGate']))
+            else:
+                import importlib
+                _built = getattr(importlib.import_module(_modname), _fn)()
         except Exception:
             import traceback
             traceback.print_exc()
@@ -1934,7 +1956,7 @@ def api_integrity():
 # Read-only Cypher endpoint (Phase 5v Wave 9f)
 # ──────────────────────────────────────────────────────────────
 #
-# Exposes parameterised Cypher queries against the AGE-backed graph
+# Exposes free-form read queries against the AGE-backed graph
 # (database: sk_eft_provenance, graph: sk_eft). Dashboard subgraph
 # endpoints route through this when SK_EFT_GRAPH_SOURCE=pg; scripts
 # and notebooks can use it directly via HTTP.
@@ -1943,12 +1965,11 @@ def api_integrity():
 #   - Only SELECT/MATCH/RETURN allowed. CREATE / DELETE / MERGE / SET /
 #     REMOVE / DROP all rejected with 400. Keeps this endpoint read-only
 #     even if an authenticated client goes rogue.
-#   - Query length capped at 4000 chars. AGE doesn't do automatic timeout
-#     per-query, so big queries are the main DoS vector.
-#   - Parameters passed as a dict; values are escaped through psycopg's
-#     parameter binding for the outer SELECT, not inlined into the
-#     Cypher body. The Cypher body itself is a literal — callers must
-#     validate their own query strings.
+#   - Query length is capped at 4000 chars. The dedicated reader uses
+#     transaction-local statement/lock limits and a bounded row fetch.
+#   - Static catalog admission precedes user source on every fresh connection.
+#     The Cypher body uses a checked random dollar delimiter; it is not bound
+#     query source. Provisioning and function policy belong to dashboard_queries.
 
 _CYPHER_READ_ONLY_RX = re.compile(
     r'\b(CREATE|DELETE|MERGE|SET|REMOVE|DROP|DETACH|TRUNCATE|INSERT|UPDATE|'
@@ -1966,11 +1987,13 @@ def api_cypher():
 
     POST body (JSON): ``{"query": "MATCH (n:LeanTheorem) WHERE ... RETURN n LIMIT 50"}``
 
-    Response: ``{"rows": [[...], ...], "columns": ["n"], "ms": 42.3, "count": N}``
-    or ``{"error": "...", "hint": "..."}`` with HTTP 400/500.
+    Response: ``{"rows": ["agtype", ...], "ms": 42.3, "count": N, "query": "..."}``
+    or a safe error with HTTP 400/500/503.
     """
-    body = request.get_json(silent=True) or {}
-    query = (body.get('query') or '').strip()
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict) or not isinstance(body.get('query'), str):
+        return jsonify({'error': 'POST body must contain a string query'}), 400
+    query = body['query'].strip()
 
     if not query:
         return jsonify({"error": "missing 'query' field in POST body"}), 400
@@ -1992,47 +2015,33 @@ def api_cypher():
     except ImportError:
         return jsonify({"error": "psycopg not installed in the dashboard venv"}), 500
 
-    t0 = __import__('time').monotonic()
+    from src.core.dashboard_queries import (
+        reader_endpoint, execute_read_query, ReadUnavailable, QueryOverflow, QueryRejected,
+    )
+    t0 = time.monotonic()
     try:
-        with psycopg.connect(
-            "host=localhost port=5433 dbname=sk_eft_provenance "
-            "user=sk_eft password=sk_eft_local",
-            connect_timeout=5,
-        ) as conn, conn.cursor() as cur:
-            cur.execute("LOAD 'age'")
-            cur.execute("SET search_path = ag_catalog, '$user', public")
-
-            # AGE's Cypher wrapper requires us to declare each returned
-            # column's label as `agtype` in the outer SELECT. We can't
-            # introspect the return shape from Python, so we ask AGE to
-            # wrap the whole result in a single agtype column — the
-            # caller gets stringified agtype values back and parses them
-            # themselves. That's the simplest reliable path.
-            # SECURITY (py/sql-injection): this is an INTENTIONAL read-only Cypher console — the
-            # user query MUST be inlined into AGE's cypher('graph', $tag$ … $tag$) block (AGE does
-            # not accept the Cypher as a bind parameter), so true parameterization is impossible by
-            # design. Breakout into raw SQL requires terminating the dollar-quote; we use a RANDOM,
-            # unguessable tag (a fixed `$$` is escapable — an odd-count `$` run survives a naive
-            # replace) and refuse the astronomically-unlikely query that contains it. Layered with
-            # the read-only verb denylist + stacking/comment denylist + 4000-char cap + localhost-
-            # only binding. The residual CodeQL alert is an accepted triage (a guard CodeQL can't
-            # verify), not a missing fix.
-            import secrets
-            _dq = "cyq" + secrets.token_hex(8)            # random dollar-quote tag, per request
-            if f"${_dq}$" in query:                       # impossible in practice; refuse anyway
-                return jsonify({"error": "query rejected"}), 400
-            wrapped = (
-                f"SELECT agtype_out(r) FROM cypher('sk_eft', ${_dq}$ "
-                f"{query} "
-                f"${_dq}$) AS (r agtype)"
-            )
-            cur.execute(wrapped)
-            rows = cur.fetchall()
-    except psycopg.OperationalError as exc:
-        return _json_error(exc, 503, "database unreachable",
-                           hint="Confirm docker container is running "
-                                "(port 5433, sk_eft_provenance DB).")
+        endpoint = reader_endpoint(psycopg)
+        rows = execute_read_query(psycopg, endpoint, query)
+    except ReadUnavailable as exc:
+        logger.exception("dashboard reader admission unavailable")
+        return _json_error(exc, 503, "read query service unavailable")
+    except (QueryOverflow, QueryRejected) as exc:
+        return jsonify({'error': str(exc)}), 400
     except Exception as exc:
+        logger.exception("dashboard Cypher request failed")
+        cause = getattr(exc, 'sqlstate', None)
+        if cause == '57014':
+            return _json_error(exc, 400, "query time limit exceeded")
+        if cause == '55P03':
+            return _json_error(exc, 400, "query lock wait limit exceeded")
+        if cause in ('42501', '25006'):
+            return _json_error(exc, 400, "query not permitted")
+        if cause and cause[:2] in ('08', '53', '57', '58'):
+            return _json_error(exc, 503, "read query service unavailable")
+        if cause and cause[:2] in ('22', '23', '42'):
+            return _json_error(exc, 400, "cypher query failed")
+        if cause is None and isinstance(exc, psycopg.OperationalError):
+            return _json_error(exc, 503, "read query service unavailable")
         return _json_error(exc, 500, "cypher execution failed")
 
     t1 = __import__('time').monotonic()
@@ -2775,12 +2784,12 @@ def _pp_compute_stale_findings(
 
 def _pp_load_claims_review(paper_id: str) -> dict | None:
     """Load `papers/<paper>/claims_review.json` if present."""
-    d = _safe_paper_dir(paper_id)                       # path-injection guard
-    path = (d / 'claims_review.json') if d else None
+    path = _paper_artifact(paper_id, 'claims_review.json')
     if path is None or not path.exists():
         return None
     try:
-        return json.loads(path.read_text())
+        data = json.loads(path.read_text())
+        return data if isinstance(data, dict) else None
     except Exception as exc:
         logger.warning("Failed to parse claims_review for %s: %s", paper_id, exc)
         return None
@@ -2788,12 +2797,12 @@ def _pp_load_claims_review(paper_id: str) -> dict | None:
 
 def _pp_load_figure_review(paper_id: str) -> dict | None:
     """Load `papers/<paper>/figures/figure_review_report.json` if present."""
-    d = _safe_paper_dir(paper_id)                       # path-injection guard
-    path = (d / 'figures' / 'figure_review_report.json') if d else None
+    path = _paper_artifact(paper_id, 'figures', 'figure_review_report.json')
     if path is None or not path.exists():
         return None
     try:
-        return json.loads(path.read_text())
+        data = json.loads(path.read_text())
+        return data if isinstance(data, dict) else None
     except Exception as exc:
         logger.warning("Failed to parse figure_review for %s: %s", paper_id, exc)
         return None
@@ -2823,12 +2832,15 @@ def _pp_load_prose_state(paper_id: str) -> dict:
        "sentences": {<sentence_id>: {"human_state", "human_ratified_at",
                                      "human_ratified_by", "human_notes"}}}
     """
-    d = _safe_paper_dir(paper_id)                       # path-injection guard
-    path = (d / 'prose_state.json') if d else None
+    path = _paper_artifact(paper_id, 'prose_state.json')
     if path is None or not path.exists():
         return {'version': 1, 'paper': paper_id, 'sentences': {}}
     try:
         data = json.loads(path.read_text())
+        if (not isinstance(data, dict)
+                or not isinstance(data.get('sentences', {}), dict)
+                or any(not isinstance(v, dict) for v in data.get('sentences', {}).values())):
+            raise ValueError('invalid prose state')
     except Exception as exc:
         logger.warning("Failed to parse prose_state for %s: %s", paper_id, exc)
         return {'version': 1, 'paper': paper_id, 'sentences': {}}
@@ -2842,8 +2854,7 @@ def _pp_load_audit_log(paper_id: str, *, limit: int = 0) -> list[dict]:
     ``limit`` — if > 0, return only the most recent N events.
     Skips malformed lines with a warning rather than failing the whole load.
     """
-    d = _safe_paper_dir(paper_id)                       # path-injection guard
-    path = (d / 'audit_log.jsonl') if d else None
+    path = _paper_artifact(paper_id, 'audit_log.jsonl')
     if path is None or not path.exists():
         return []
     events: list[dict] = []
@@ -2854,7 +2865,10 @@ def _pp_load_audit_log(paper_id: str, *, limit: int = 0) -> list[dict]:
                 if not line.strip():
                     continue
                 try:
-                    events.append(json.loads(line))
+                    event = json.loads(line)
+                    if (isinstance(event, dict) and isinstance(event.get('meta', {}), dict)
+                            and isinstance(event.get('target', {}), dict)):
+                        events.append(event)
                 except json.JSONDecodeError as exc:
                     logger.warning(
                         "audit_log %s line %d malformed: %s", paper_id, lineno, exc
@@ -3208,7 +3222,8 @@ def _pp_build_data_v2(paper_id: str, cr: dict, fr: dict | None,
     # Title parse — share with v1 path below
     title = ''
     try:
-        tex_src = tex_path.read_text(errors='replace')
+        target = confined_paper_path(PROJECT_ROOT / 'papers', tex_path)
+        tex_src = target.read_text(errors='replace') if target else ''
         m = re.search(r'\\title\s*\{', tex_src)
         if m:
             depth = 1
@@ -3472,8 +3487,8 @@ def api_papers_list():
     if not papers_dir.exists():
         return jsonify({'papers': []})
     for paper_dir in sorted(papers_dir.iterdir()):
-        tex = paper_dir / 'paper_draft.tex'
-        if not tex.exists():
+        tex = _paper_artifact(paper_dir.name, 'paper_draft.tex')
+        if tex is None or not tex.is_file():
             continue
         paper_id = paper_dir.name
         cr = _pp_load_claims_review(paper_id)
@@ -3501,8 +3516,8 @@ def _pp_build_data(paper_id: str) -> dict | None:
     paper_dir = _safe_paper_dir(paper_id)               # path-injection guard
     if paper_dir is None:
         return None
-    tex = paper_dir / 'paper_draft.tex'                 # confined → safe for _pp_build_data_v2 too
-    if not tex.exists():
+    tex = _paper_artifact(paper_id, 'paper_draft.tex')
+    if tex is None or not tex.is_file():
         return None
 
     cr = _pp_load_claims_review(paper_id)
@@ -4003,7 +4018,10 @@ def _pp_extract_abstract(tex_path: Path) -> str:
     """Pull `\\begin{abstract}...\\end{abstract}` from a paper .tex. Returns
     an empty string if not found or the file can't be read."""
     try:
-        src = tex_path.read_text(errors='replace')
+        target = confined_paper_path(PROJECT_ROOT / 'papers', tex_path)
+        if target is None:
+            return ''
+        src = target.read_text(errors='replace')
     except Exception:
         return ''
     m = re.search(r'\\begin\{abstract\}(.*?)\\end\{abstract\}', src, re.DOTALL)
@@ -4134,8 +4152,7 @@ def _pp_paper_body_html(data: dict, active_claim: str) -> str:
     # Render abstract; fall back to a placeholder if none available.
     # path-injection guard (defense-in-depth — paper_id is vetted upstream, but build
     # the path locally through the same confinement so it can't regress on refactor).
-    _pdir = _safe_paper_dir(paper_id)
-    tex_path = (_pdir / 'paper_draft.tex') if _pdir else None
+    tex_path = _paper_artifact(paper_id, 'paper_draft.tex')
     abstract_raw = _pp_extract_abstract(tex_path) if tex_path else ''
     if abstract_raw:
         # Build a {bibkey: claim_id} lookup so \cite{Bibkey} renders
@@ -4819,9 +4836,9 @@ def _pp_v2_sentence_inspector_html(data: dict, active_sentence: str) -> str:
     for short, label, key, hint in _PP_V2_STATE_BUTTONS:
         post_expr = (
             f"@post(`/api/papers/${{$activePaper}}/sentences/{esc(sid)}/verify`, "
-            f"{{contentType:'json', body: JSON.stringify({{state:'{short}', "
-            f"actor:'user:dashboard'}})}}); "
-            f"@get(`/api/papers/${{$activePaper}}/provenance`)"
+            f"{{contentType:'json', payload: {{state:'{short}', "
+            f"actor:'user:dashboard'}}}}).then(() => "
+            f"@get(`/api/papers/${{$activePaper}}/provenance`))"
         )
         btn_html_parts.append(
             f'<button class="pp-state-btn pp-state-btn--{esc(short)}" '
@@ -4902,14 +4919,15 @@ def _pp_v2_sentence_inspector_html(data: dict, active_sentence: str) -> str:
         # default to the active sentence's current state. Advanced
         # one-click UX with state pre-pick is a 10f-followup.
         propagate_expr = (
+            "let sourceSentence = $activeSentence; "
             "let st = prompt('Propagate which state to other "
             "{n_other} member(s)?\\n\\nverified | interpretive | needs_fix | needs_recheck', "
             "'{cur_state}'); "
             "if (st && ['verified','interpretive','needs_fix','needs_recheck'].includes(st)) {{ "
             "@post(`/api/papers/${{$activePaper}}/clusters/{cid}/propagate`, "
-            "{{contentType:'json', body: JSON.stringify({{state: st, "
-            "source_sentence: $activeSentence, actor: 'user:dashboard'}})}}); "
-            "@get(`/api/papers/${{$activePaper}}/provenance`); "
+            "{{contentType:'json', payload: {{state: st, "
+            "source_sentence: sourceSentence, actor: 'user:dashboard'}}}}).then(() => "
+            "@get(`/api/papers/${{$activePaper}}/provenance`)); "
             "}}"
         ).format(
             n_other=n_other,

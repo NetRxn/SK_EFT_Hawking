@@ -55,7 +55,9 @@ Nothing else belongs here.
 | `src/core/aristotle_submit.py` | src/core/aristotle_submit.py — SafeAristotleRunner (ADR-006). |
 | `src/core/citations.py` | Citation Registry — Canonical bibliography for the SK-EFT Hawking project. |
 | `src/core/constants.py` | Single source of truth for physical constants, experimental parameters, and the Plotly color palette used across the SK-EFT Hawking project. It is also the home of the Aristotle theorem registry (ARISTOTLE_THEOREMS). |
+| `src/core/dashboard_queries.py` | Per-connection admission and bounded reads for the existing AGE console. |
 | `src/core/formulas.py` | Canonical implementations of every formula verified by Lean/Aristotle. |
+| `src/core/paper_artifacts.py` | Canonical final-target boundary for paper-derived artifact reads. |
 | `src/core/provenance.py` | Parameter Provenance Registry |
 | `src/core/provenance_writer.py` | The single per-entry writer for `PARAMETER_PROVENANCE` human-verification fields. |
 | `src/core/sm_anomaly.py` | Standard Model Anomaly Computation in ℤ₁₆. |
@@ -382,7 +384,7 @@ Nothing else belongs here.
 | `notebooks/Phase5d_MTC_Stakeholder.ipynb` | First Verified Modular Tensor Categories: What It Means for Quantum Computing — **Phase 5d Wave 4 — Stakeholder Summary** **Date:** April 2026 |
 | `notebooks/Phase5d_MTC_Technical.ipynb` | Phase 5d Wave 4: SU(2)_k MTC Instances — Technical Notebook — **Wave:** 5d-W4 (Ising + Fibonacci MTC) **Date:** April 2026 **Paper:** Paper 11 — *U_q(sl_2) in Lean 4* |
 | `notebooks/Phase5d_Polariton_Stakeholder.ipynb` | Polariton Hawking Radiation: What We Can Detect and How — **Phase 5d Wave 5 — Stakeholder Summary** **Date:** April 2026 |
-| `notebooks/Phase5d_Polariton_Technical.ipynb` | Phase 5d Wave 5: Polariton Hawking Radiation — Technical Notebook — **Wave:** 5d-W5 (Polariton Paper) **Date:** April 2026 **Paper:** Paper 12 — *Stimulated Hawking Radiation in Polariton BEC* |
+| `notebooks/Phase5d_Polariton_Technical.ipynb` | Polariton Hawking response: conditional technical notebook — **Scope:** Paris-LKB inputs and projected cavity lifetimes, using the canonical numerical functions. |
 | `notebooks/Phase5d_TetradGap_Stakeholder.ipynb` | Can Gravity Emerge from Fermion Condensation? — In superconductors, electrons pair up below a critical temperature, forming a condensate that carries current without resistance. The **gap equation** predicts when this condensation occurs. |
 | `notebooks/Phase5d_TetradGap_Technical.ipynb` | Phase 5d: Tetrad Gap Equation — Technical Notebook — This notebook derives and solves the NJL-type gap equation for the tetrad VEV in the ADW mechanism — the first time this equation has been explicitly written down for the tetrad channel. |
 | `notebooks/Phase5e_BraidedMTC_Stakeholder.ipynb` | First Verified Braided Fusion Categories and Knot Invariants — **Phase 5e — Stakeholder Summary** **Date:** April 2026 |

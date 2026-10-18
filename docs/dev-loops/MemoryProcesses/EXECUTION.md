@@ -71,3 +71,7 @@ failures from this increment. Integration is authorized using the passed
 substrate gate and independent reviews, with those failures disclosed. This
 scoped acceptance does not modify the merge script, raise corpus ratchets,
 change paper readiness, or certify a green full pytest run.
+
+## Reset-sensitive extension
+
+The subsequent [partial-interaction increment](PARTIAL_INTERACTION.md) adds a probabilistic identity/SWAP model where reset failure changes the signal, with an exact residual-system comparison bound. Its acceptance and local-only integration boundary are recorded in that owning plan.

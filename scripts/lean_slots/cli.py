@@ -31,7 +31,18 @@ def _status_human(value: dict[str, Any]) -> None:
         dirty = item.get("dirty") or []
         suffix = f" dirty={len(dirty)}" if dirty else ""
         error = f" error={item['error']}" if item.get("error") else ""
-        print(f"wt{item['slot']}: {state}{owner}{suffix}{error}")
+        resources = f" proxy={item.get('proxy_state', 'unavailable')} backend={item.get('backend_state', 'unavailable')} reserved={item.get('resource_reserved', False)}"
+        print(f"wt{item['slot']}: {state}{owner}{resources}{suffix}{error}")
+        for kind, resource in item.get("resources", {}).items():
+            print(f"  {kind}: phase={resource['record_phase']} identity={resource['identity_authority']} process={resource['process_observation']} endpoint={resource['endpoint_observation']}")
+            for witness in resource.get("observations", []):
+                if witness["state"] in {"unavailable", "mismatch"}:
+                    print(f"  {kind}: observation={json.dumps(witness, sort_keys=True)}")
+            for error in resource["errors"]:
+                print(f"  {kind}: {error}")
+    print(f"capacity_complete={value.get('capacity_complete', False)} reserved={value.get('reserved_physical_slots', [])} conflicts={value.get('capacity_conflicts', [])}")
+    for error in value.get("capacity_errors", []):
+        print(f"capacity: {error}")
 
 
 def _doctor_human(value: dict[str, Any]) -> None:
@@ -124,6 +135,11 @@ def parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
+        if args.command == "supervisor":
+            if args.action != "probe" and args.slot is not None:
+                raise SlotError("supervisor start/stop/status are global; --slot is only valid for probe")
+            if args.action == "probe" and args.slot is None:
+                raise SlotError("supervisor probe requires --slot")
         inventory = Inventory.load(args.inventory)
         controller = Controller(inventory)
         if args.command == "_proxy":
@@ -202,9 +218,16 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 for item in value["slots"]:
                     print(
-                        f"wt{item['slot']}: proxy={item['proxy_running']} "
-                        f"backend={item['backend_running']}"
+                        f"wt{item['slot']}: lease={item['lease_state']} proxy={item['proxy_state']} "
+                        f"backend={item['backend_state']} reserved={item['slot'] in value['reserved_physical_slots']}"
                     )
+                    for kind, resource in item.get("resources", {}).items():
+                        print(f"  {kind}: phase={resource['record_phase']} identity={resource['identity_authority']} process={resource['process_observation']} endpoint={resource['endpoint_observation']}")
+                        for error in resource["errors"]:
+                            print(f"  {kind}: {error}")
+                print(f"capacity_complete={value['capacity_complete']} reserved={value['reserved_physical_slots']} conflicts={value['capacity_conflicts']}")
+                for error in value["capacity_errors"]:
+                    print(f"capacity: {error}")
         else:  # pragma: no cover - argparse enforces command selection
             raise SlotError(f"unsupported command: {args.command}")
         return 0

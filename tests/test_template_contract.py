@@ -49,6 +49,10 @@ the panel ``<div>``'s ``active`` class as emitted by the server, not a substring
 from __future__ import annotations
 
 import ast
+import importlib
+import json
+import runpy
+import shutil
 import re
 import sys
 from pathlib import Path
@@ -252,10 +256,94 @@ def _tab_to_partial(dashboard_src: str) -> dict[str, str]:
 # ══════════════════════════════════════════════════════════════════════════════════════
 
 @pytest.fixture(scope="module")
-def dash():
-    """The real dashboard module (and therefore the real Flask app)."""
-    import provenance_dashboard
-    return provenance_dashboard
+def dash(tmp_path_factory):
+    """Real templates and routes over a disposable project, with observed isolation."""
+    root = tmp_path_factory.mktemp("template-project").resolve()
+    (root / "papers" / "dummy").mkdir(parents=True)
+    (root / "docs").mkdir()
+    (root / "lean" / "SKEFTHawking").mkdir(parents=True)
+    shutil.copytree(PROJECT_ROOT / "src", root / "src",
+                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    (root / "scripts").mkdir()
+    shutil.copy2(SCRIPTS_DIR / "review_figures.py", root / "scripts" / "review_figures.py")
+    shutil.copy2(PROJECT_ROOT / "docs" / "PAPER_DRAFT_MAPPING.md",
+                 root / "docs" / "PAPER_DRAFT_MAPPING.md")
+    (root / "papers" / "dummy" / "paper_draft.tex").write_text(
+        "\\title{Disposable template paper}\n\\begin{abstract}\n"
+        "Disposable prose exercises real server rendering without a scientific claim.\n"
+        "\\end{abstract}\n")
+    record = {"violations": [], "db_connect_attempts": 0, "bindings": []}
+    observations = root / "template-observations.json"
+
+    def save():
+        observations.write_text(json.dumps(record, indent=2) + "\n")
+
+    hook = runpy.run_path(str(PROJECT_ROOT / "tests" / "e2e" / "dummy_paper_server.py"))[
+        "paper_fixture_audit"](PROJECT_ROOT, root, record, save)
+    measuring = True
+
+    def audit(event, args):
+        if measuring:
+            hook(event, args)
+
+    sys.addaudithook(audit)
+    try:
+        with pytest.MonkeyPatch.context() as patch:
+            patch.setenv("SK_EFT_GRAPH_SOURCE", "json")
+            patch.delenv("SK_EFT_DASHBOARD_READ_DSN", raising=False)
+            import provenance_dashboard
+            import build_graph
+            import readiness_gates
+            import sentence_state
+            import sentence_findings
+            import verification_state
+            import psycopg
+            for module in (provenance_dashboard, build_graph, readiness_gates,
+                           sentence_state, sentence_findings):
+                patch.setattr(module, "PROJECT_ROOT", root)
+            patch.setattr(build_graph, "LEAN_DIR", root / "lean" / "SKEFTHawking")
+            patch.setattr(readiness_gates, "PAPERS_DIR", root / "papers")
+            patch.setattr(sentence_state, "PAPERS_ROOT", root / "papers")
+            patch.setattr(verification_state, "LOG_PATH", root / "docs" / "verification_log.jsonl")
+            patch.setattr(verification_state, "LOCK_PATH", root / "docs" / "verification_log.lock")
+            # These readers bind paths at import time. Rebase every Path under their
+            # original project, including derived REVIEWS_DIR/AUDITS_DIR/HEATMAP_PATH.
+            for name in ("dashboard_flow", "bundle_readiness", "check_bundle_source_freshness",
+                         "bundle_migration", "dashboard_attention", "dashboard_loops", "datastar_bundles"):
+                module = importlib.import_module(name)
+                for attr, value in list(vars(module).items()):
+                    if isinstance(value, Path) and value.is_relative_to(PROJECT_ROOT):
+                        target = root / value.relative_to(PROJECT_ROOT)
+                        patch.setattr(module, attr, target)
+                        record["bindings"].append({"module": name, "name": attr,
+                                                   "source": str(value), "target": str(target)})
+            patch.setitem(provenance_dashboard.app.config, "PG_SYNC_ENABLED", False)
+
+            def forbidden_connect(*args, **kwargs):
+                record["db_connect_attempts"] += 1
+                save()
+                raise AssertionError("Database forbidden in template contract fixture")
+
+            patch.setattr(psycopg, "connect", forbidden_connect)
+            provenance_dashboard._invalidate_graph_cache()
+            try:
+                yield provenance_dashboard
+            finally:
+                record["PG_SYNC_ENABLED"] = provenance_dashboard.app.config["PG_SYNC_ENABLED"]
+                record["graph_source"] = provenance_dashboard._graph_source()
+                save()
+                print("Template isolation observations:", json.dumps(record, sort_keys=True))
+                # Evidence survives assertion failures. Disable only this fixture's
+                # audit callback before pytest removes its own temporary directory.
+                measuring = False
+                provenance_dashboard._invalidate_graph_cache()
+                assert record["violations"] == []
+                assert record["db_connect_attempts"] == 0
+                assert record["PG_SYNC_ENABLED"] is False
+                assert record["graph_source"] == "json"
+    finally:
+        measuring = False
+        save()
 
 
 @pytest.fixture(scope="module")
@@ -538,3 +626,29 @@ def test_the_retired_papers_tab_still_redirects(dash):
     resp = dash.app.test_client().get("/?tab=papers")
     assert resp.status_code == 302
     assert resp.headers["Location"].startswith("/?tab=paper")
+
+
+def test_flow_first_import_failure_is_a_sanitized_error_pane(monkeypatch, dash):
+    """Early reader preparation keeps the existing pane failure boundary."""
+    import importlib
+    import provenance_dashboard as dash
+    for name in ('load_parameters', 'load_formulas', 'load_lean_theorems',
+                 'load_paper_claims', 'load_citations'):
+        monkeypatch.setattr(dash, name, lambda: [])
+    original_import = importlib.import_module
+    attempted = []
+    def fail_flow(name, *args, **kwargs):
+        if name == 'dashboard_flow':
+            attempted.append(name)
+            raise ImportError('sensitive-reader-path-do-not-render')
+        return original_import(name, *args, **kwargs)
+    monkeypatch.setattr(importlib, 'import_module', fail_flow)
+    monkeypatch.setitem(dash.app.config, 'PG_SYNC_ENABLED', False)
+    response = dash.app.test_client().get('/?tab=flow')
+    html = response.get_data(as_text=True)
+    assert response.status_code == 200
+    assert attempted == ['dashboard_flow']
+    assert 'failed to build the flow pane (see server log)' in html
+    assert 'sensitive-reader-path-do-not-render' not in html
+    assert 'Traceback' not in html
+    assert 'class="flow-cell flow-green"' not in html

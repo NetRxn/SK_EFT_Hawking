@@ -61,10 +61,10 @@ kernel. Theorem~\ref{thm:eight-dvd} is the Lean~4 declaration
 above with $\sigma$ interpreted as the honest Sylvester signature of the
 real form and not as a free integer parameter, and whose proof carries no
 hypothesis, no project-local axiom and no appeal to native compilation.
-Two classical inputs were once carried as explicit hypotheses of the
-reduction, namely a local-global statement for indefinite forms and a
-modularity statement for definite ones. Both are now theorems in the same
-library, so the divisibility is unconditional rather than reduced.
+The reduction uses two classical inputs: a local-global statement for
+indefinite forms and a modularity statement for definite ones. Both are
+supplied as theorems in the same library; the divisibility statement
+therefore carries neither as an external hypothesis.
 
 Second, the route is non-circular in a sense that can be checked
 mechanically rather than argued informally. It does not compute the

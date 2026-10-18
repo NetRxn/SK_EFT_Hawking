@@ -6,7 +6,8 @@ from playwright.sync_api import expect
 
 
 @pytest.mark.e2e
-def test_readiness_heatmap_populates(page, console_errors, dashboard_url):
+def test_readiness_heatmap_populates(page, console_errors, dummy_paper_dashboard, dummy_paper_network):
+    dashboard_url = dummy_paper_dashboard["url"]
     page.goto(f"{dashboard_url}/?tab=readiness", wait_until="load")
     # The heatmap fills in via the /api/readiness SSE morph.
     page.wait_for_selector("#readiness-heatmap td", timeout=20000)
@@ -16,7 +17,8 @@ def test_readiness_heatmap_populates(page, console_errors, dashboard_url):
 
 
 @pytest.mark.e2e
-def test_readiness_h2_has_no_stale_paper_count(page, dashboard_url):
+def test_readiness_h2_has_no_stale_paper_count(page, dummy_paper_dashboard, dummy_paper_network):
+    dashboard_url = dummy_paper_dashboard["url"]
     page.goto(f"{dashboard_url}/?tab=readiness", wait_until="load")
     h2 = page.locator("#readiness-root h2").inner_text()
     # Was hard-coded "11 gates × 15 papers" while the live count is ~42.

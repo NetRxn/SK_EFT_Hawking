@@ -62,56 +62,36 @@ PARAMETER_PROVENANCE = {
         'value': 0.5235987755982988,  # pi/6
         'unit': 'dimensionless (coefficient of D^2)',
         'tier': 'ASSUMED',
-        'source': 'PROJECT NORMALIZATION. Scaling only: Coutant & Weinfurtner, '
-                  'PRD 2017 (leading T_eff correction is O(xi^2 kappa^2/c_s^2) = O(D^2), '
-                  'KdV approximation, adiabatic regime).',
-        'detail': ('The coefficient c_1 in delta_disp = -c_1 D^2, D = xi*kappa/c_s. '
-                   'THE D^2 SCALING IS SUPPORTED; THE COEFFICIENT IS NOT DERIVED, and no '
-                   'universal value exists. Near-horizon Hamilton-Jacobi: with '
-                   'omega = (v(x)+c_s)k + (c_s xi^2/8)k^3 and the inverse-profile series '
-                   'x(u) = sum_n c^p_n u^n, the tunneling exponent is 2*pi*Res_{k=0}[x dk] '
-                   '= 2*pi*omega*(c^p_1 - 4*beta*c^p_4*omega^2 + 21*beta^2*c^p_7*omega^4 + ...) '
-                   'with beta = c_s xi^2/8 — only n = 1 (mod 3) survives the residue. The '
-                   'leading term c^p_1 = 1/kappa gives T_H = kappa/2pi EXACTLY (hence the '
-                   'robustness result), and the first dispersive term is -4*beta*c^p_4*omega^3: '
-                   'CUBIC in omega, so a non-thermal distortion rather than a temperature '
-                   'rescaling, with magnitude set by c^p_4 — a fourth-order datum of the '
-                   'velocity profile. Nothing universal multiplies D^2. pi/6 is therefore '
-                   'FIXED BY DEFINITION as this project\'s O(1) normalization; every claim '
-                   'about delta_disp in this repo and in E1/E2/D1 is a claim about that '
-                   'definition, and the manuscripts now say so.'),
+        'source': 'ADOPTED PHENOMENOLOGICAL PARAMETRIZATION: delta_disp = -c_1 D^2, '
+                  'c_1 = pi/6. Neither the quadratic form nor this coefficient is '
+                  'derived for these applications by the cited robustness studies.',
+        'detail': ('Both the functional form and coefficient are modelling choices. '
+                   'The Python evaluator and Lean definition share the expression; '
+                   'their bounds and factorization concern that definition. '
+                   'Coutant & Weinfurtner, PRD 97, 025005 (2018), arXiv:1707.09651v2, '
+                   'Eqs.39–40 give a profile-specific low-frequency temperature ratio '
+                   'tanh(pi*q_r), with an exponentially small smooth-limit departure '
+                   'in a weak-dispersive KdV model neglecting co-propagating coupling. '
+                   'This is not evidence for a nonzero leading local-D^2 temperature '
+                   'term. Coutant & Parentani, PRD 90, 121501(R) (2014), '
+                   'arXiv:1402.2514v2, Eq.10 gives the thermal mixing ratio within '
+                   'their locally linear near-horizon, weak-dispersion momentum-space '
+                   'WKB approximation; Eq.11 and the profile-perturbation analysis '
+                   'limit its interpretation. Corley & Jacobson (1996) report '
+                   'profile-dependent fitted powers, not this adopted law. '
+                   'Changing c_1 can move dispersive/dissipative ordering and crossover.'),
         'doi': None,
         'llm_verified_date': '2026-08-15',
-        'llm_verified_notes': ('Entry created 2026-08-15 resolving E1 finding 2.1 and D1 '
-                               'finding 1.3. ⚠️ DO NOT ATTRIBUTE pi/6 TO CORLEY & JACOBSON: '
-                               'PRD 54, 1568 (1996) was read at page level through Sec. 5.2 '
-                               'from Lit-Search/Phase-4/primary-sources/CorleyJacobson1996.pdf. '
-                               'It is a NUMERICAL study reporting fitted powers (T_H/k_0)^p — '
-                               'p ~ 3 and 2 for smooth profiles at two temperatures, p ~ 1 for '
-                               'kinked ones, i.e. the POWER ITSELF is profile-dependent — with '
-                               'no D^2 law and no pi/6 anywhere in it. Finazzi & Parentani, '
-                               'PRD 85, 124027 (2012) is also NOT a source for it: their regime '
-                               'parameter is D = kappa*L/Lambda, carrying the profile length '
-                               'scale L, a different quantity from xi*kappa/c_s, and their '
-                               'analytic coefficients there are 1/6 and 3*sqrt(3)/8 multiplying '
-                               'D LINEARLY. Independently corroborated 2026-08-15 by a '
-                               'research-scout sweep of five primary sources at equation level: '
-                               'Coutant & Parentani (PRD 90, 121501(R), 2014; arXiv:1402.2514) '
-                               'solve the near-horizon quartic-dispersion mode equation for a '
-                               'locally linear profile and get beta = exp(-pi*omega/kappa)*alpha '
-                               'EXACTLY — T = kappa/2pi with NO D^2 term — with a correction '
-                               'appearing only once the profile departs from linear; and Del '
-                               'Porro, Liberati & Schneider (arXiv:2406.14603) get '
-                               'kappa(alpha) = kappa_KH(1 +/- (3/8)alpha^2) for a specific tanh '
-                               'profile in a DIFFERENT parameter alpha = Omega/Lambda, stating '
-                               'that the coefficient "depends crucially on the specific '
-                               'geometry". The scout found NO paper anywhere stating pi/6. '
-                               '⚠️ CITATION: the correct Coutant-Parentani 2014 reference is '
-                               'PRD 90, 121501(R), NOT "PRD 89, 124004" (an unrelated '
-                               'Kerr-Newman-NUT paper). That misprint was corrected in '
-                               'WKBAnalysis.lean:61 in 2026-04 but is STILL LIVE at '
-                               'HawkingUniversality.lean:54, WKBAnalysis.lean:175 and '
-                               'papers/D1/paper_draft.tex:561 — filed as a finding.'),
+        'llm_verified_notes': ('Entry created 2026-08-15 resolving E1 finding2.1 and D1 '
+                               'finding1.3. That historical review identified pi/6 as a project '
+                               'normalization and withdrew its attribution to Corley & '
+                               'Jacobson (1996) or Finazzi & Parentani (2012). The subsequent '
+                               '2026-10-15 primary-body assessment also withdrew the '
+                               'claimed leading-D^2 support from Coutant & Weinfurtner '
+                               '(journal2018, submission2017), and qualified the 2014 '
+                               'near-horizon result by its stated approximations. '
+                               'The earlier date is retained as history, not a new '
+                               'human verification or cache-fidelity certification.'),
         'human_verified_date': None,
         'human_verified_notes': None,
         'notes': ('Canonical home: src/core/formulas.DISPERSIVE_C1, consumed by '
@@ -483,7 +463,7 @@ PARAMETER_PROVENANCE = {
         'source': 'Falque et al., PRL 135, 023401 (2025)',
         'detail': 'Page 4: "we extract the effective polariton mass at the working '
                   'point, m* = 7.0 × 10⁻³⁵ kg." Fitted from measured spectrum.',
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'llm_verified_date': '2026-03-31',
         'llm_verified_notes': 'LLM read arXiv:2311.01392 (Falque 2025). Page 4, Section III: '
                               '"m* = 7.0 × 10⁻³⁵ kg" — extracted from measured polariton spectrum. '
@@ -514,7 +494,7 @@ PARAMETER_PROVENANCE = {
                   'Root cause: excitonic reservoir absorbs 50-75% of blueshift without '
                   'contributing to dynamic c_s. Correct formula: c_s = sqrt(g·n_condensate/m*), '
                   'NOT sqrt(ΔE_total/m*).',
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'llm_verified_date': '2026-04-13',
         'llm_verified_notes': 'Re-read Falque full text (arXiv:2311.01392v2) 2026-04-13. '
                               'c_s = 0.40 µm/ps confirmed in §IV.1. Adopting Falque\'s value '
@@ -538,7 +518,7 @@ PARAMETER_PROVENANCE = {
                   '4.0 µm downstream, showing the spatial variation). Using the measured '
                   'upstream value directly is more faithful to the primary source than '
                   'deriving from c_s.',
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'llm_verified_date': '2026-04-13',
         'llm_verified_notes': 'Falque §IV.1 reports ξ ≈ 3.4 µm upstream, 4.0 µm downstream. '
                               'We adopt the upstream value as the reference since horizon '
@@ -566,7 +546,7 @@ PARAMETER_PROVENANCE = {
                   'value (1.1e11 s⁻¹) for maximum T_H, or (c) parametrize all three '
                   'configurations. Paper 12 numerics for T_H, D, G(ω) need to be '
                   'recomputed downstream.',
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'llm_verified_date': '2026-04-13',
         'llm_verified_notes': 'Re-verified against arXiv:2311.01392v2 full text. The '
                               'prior 2026-03-31 LLM reading — which claimed "Falque '
@@ -593,7 +573,7 @@ PARAMETER_PROVENANCE = {
         'detail': 'Falque 2025 reports ℏγ ≈ 80 µeV → γ = 1.2e11 s⁻¹ → τ ≈ 8 ps. '
                   '100 ps is a projected value for a next-generation long-lifetime cavity. '
                   'Such cavities exist (e.g., Ballarini 2017) but Falque did not use one.',
-        'doi': '10.1103/PhysRevLett.135.023401',
+        'doi': '10.1103/t5dh-rx6w',
         'llm_verified_date': '2026-03-31',
         'llm_verified_notes': 'LLM read Falque 2025 (arXiv:2311.01392) page 9: '
                               '"ℏγ ≈ 80 µeV" → τ ≈ 8 ps, NOT 100 ps. The 100 ps value '

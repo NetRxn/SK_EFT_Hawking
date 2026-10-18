@@ -1600,7 +1600,7 @@ BIBITEM_TITLE_DRIFT_CEILING = 7
 #: pushes the count over this ceiling, turning the check red. **Lower this as entries are
 #: established; back-filling `citation_class` onto the residue to lower it reproduces the very
 #: defect it records.**
-CITATION_UNDECLARED_CLASS_CEILING = 78
+CITATION_UNDECLARED_CLASS_CEILING = 77
 
 # ═══════════════════════════════════════════════════════════════════════
 # Axiom metadata — historical record (all axioms now removed)
@@ -3005,7 +3005,7 @@ NATIVE_DECIDE_BUNDLE_DEBT = {
 # `2026-06-08-2240-internal-adversarial:D2:9.1` predicted. Note that finding
 # asserted these literals "slip past count_literals"; measured against the
 # check they did not — all twelve matched, and removing them is the -12 here.
-COUNT_LITERAL_CEILING = 95       # hardcoded "N theorems/modules/sorry" in paper prose
+COUNT_LITERAL_CEILING = 90       # hardcoded "N theorems/modules/sorry" in paper prose
 
 #: Census figures written in WORDS ("fourteen stages") rather than digits. **MAY ONLY
 #: FALL.** Measured 2026-08-15 over every `papers/*/paper_draft.tex`: 72 across 23 drafts,
@@ -3017,7 +3017,7 @@ COUNT_LITERAL_CEILING = 95       # hardcoded "N theorems/modules/sorry" in paper
 #: ratchet would push it far past 95 and force a re-baseline of a shared constant across
 #: drafts nobody is remediating, which is how a ceiling ends up raised to whatever a
 #: widened pattern produced. Two kinds, two constants, neither absorbing the other's debt.
-SPELLED_CENSUS_CEILING = 71
+SPELLED_CENSUS_CEILING = 67
                                  # 107 -> 106 on 2026-08-11: the I1 restructuring deleted a
                                  # count literal from prose. Lowered in the same commit, per
                                  # the rule above — a ratchet that keeps headroom stops being one.
@@ -3221,6 +3221,26 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
     # Populated by the 2026-06-13 W2 triage of the proxy_body_audit flagged set.
 
     # ---- definitional records (legitimate trivial-by-design) ----
+    'eventReadout_count': {
+        'lean_name': 'eventReadout_count', 'module': 'FiniteAdaptiveGibbsReadout',
+        'category': 'definitional',
+        'reason': 'Extracts the fixed count field of the binary projective instrument: '
+                  'one Kraus operator per outcome. It is a computation rule, not a '
+                  'discrimination bound, history count or proof of instrument normalization.',
+        'discloses': 'docs/audits/2026-09-11-finite-positive-kernel.md '
+                     'section Event readout computation rule; operational content is '
+                     'proved by eventTable_complete, three_full_history_variation and eventPhysical_error.',
+    },
+    'extendPull_identity': {
+        'lean_name': 'extendPull_identity', 'module': 'FinitePauliHistoryConsistency',
+        'category': 'definitional',
+        'reason': 'Records the empty-list equation of the recursive coefficient pullback: '
+                  'extendPull rs [] F is defined to be F. This is a computation rule, '
+                  'not a derivation of history-kernel positivity or extension compatibility.',
+        'discloses': 'docs/audits/2026-09-11-finite-positive-kernel.md '
+                     'section Empty-extension computation rules; substantive preservation '
+                     'is proved by historySynthesis_extendPull and history_pairing_extendPull.',
+    },
     'extBordismBridge_hypotheses_are_vacuous': {
         'lean_name': 'extBordismBridge_hypotheses_are_vacuous', 'module': 'ExtBordismBridge',
         'category': 'definitional',
@@ -5281,6 +5301,45 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
             "and `powerSNR_smul_eq_budget_sq` (the correct `c != 0` form). Do not transport the "
             "corrected power-domain statement back into the amplitude domain, which is the shape "
             "this fork bans.",
+        'memory': None,
+    },
+    'qutrit_euclidean_interpolation_preserves_physical_cone': {
+        'fork_id': 'qutrit-euclidean-interpolation-preserves-physical-cone',
+        'backing_theorems': [
+            'SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction.physical_input',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction.half_not_physical',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction.half_trace_one',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction.no_positive_extension',
+        ],
+        'nogo_kind': 'counterexample',
+        'false_statement': (
+            'The actual six-feature Euclidean half-step preserves the inherited '
+            'physical qutrit positive cone. The physical trace-one input feature 1 '
+            'retains trace one but acquires a negative diagonal entry. No positive '
+            'ambient linear extension agrees with this half-step on every feature. '
+            'This does not exclude arbitrary ambient nonselfadjoint CPTP embeddings.'
+        ),
+        'memory': None,
+    },
+    'qutrit_transfer_admits_positive_homogeneous_semigroup': {
+        'fork_id': 'qutrit-transfer-positive-homogeneous-semigroup',
+        'backing_theorems': [
+            'SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_positive_square_root',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_CP_square_root',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_positive_semigroup',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_CPTP_semigroup',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.actual_channel_nonvacuity',
+        ],
+        'nogo_kind': 'counterexample',
+        'false_statement': (
+            'The actual normalized ten-Kraus qutrit transfer has a complex-linear '
+            'PSD-preserving square root, or is time one of a homogeneous positive '
+            'system semigroup. Both claims are false on the full complex matrix '
+            'algebra: all signed roots are excluded without assuming trace '
+            'preservation, self-adjointness or feature invariance. The actual '
+            'transfer remains unital and CPTP. Time-dependent CPTP paths, discrete '
+            'iteration and retained-environment constructions are outside this no-go.'
+        ),
         'memory': None,
     },
 }

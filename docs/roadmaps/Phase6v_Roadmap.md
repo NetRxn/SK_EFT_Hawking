@@ -1,10 +1,32 @@
 # Phase 6v: External Substrate Alignment & D6 Bundle Creation
 
+## Current construction successors — 2026-10-17
+
+The dated wave ships below remain historical delivery records. **Wave6v.3 physical pump/growth/transport/BEC placement remains OPEN BUILD** under Phase6q Wave2b.4/B.3 and `review:2026-08-15-e1-stage10-redraft:E1:2.3`; see the current scientific-status section in `Phase6v/Wave_6v.3_Roadmap.md`. Photon-count arithmetic and a conditional MIR witness do not close that original physical goal.
+
+**D6's end-to-end semantic composition (original remediation B5) also remains OPEN BUILD.** Credit the delivered AGP failure-set/probability and concatenation results. The successor must construct a concrete code/noise/decoder and prove good-implies-correct for an actual encoded channel, then compose it with a correct compiler and error budget. First milestone: one nontrivial decoded logical gate with a proved correctable-error condition. Independent QEC/compiler review must assess the common carrier and real semantic composition; a conjunction of component results is insufficient. This does not reopen unrelated wave mathematics.
+
+**Scientific construction owner:** Physics Publication Remediation, explicitly accepted in the primary publication-remediation notebook r40 (2026-10-17). This is current author acceptance, not a historic assignment or a native lease. Completion requires the actual construction, independent scientific review and the existing recorded closure; ROOT retains shared-primary/native admission, integration and protected Git/main authority. No target reduction or deferral is granted.
+
+
+## Finite feature and recursive-time integration — 2026-10-18
+
+The actual invariant reconstruction and normalized averaged transfer retain bounded local acceptance at `b05efe2f`. Their Euclidean/physical-cone/Gibbs successor is implemented in `FiniteQutritEuclideanTransfer`, `FiniteQutritFractionalObstruction` and `FiniteQutritFeatureGibbs` (source `6b0238f4`, normal integration `5ec80239`). Whole independent scientific review, actual final compilation and integrated-primary logical proof audits pass. Canonical records and the generated no-go fence are reconciled through existing writers; matching public/dependent builds and substrate soundness checks pass. Expanded project, security, main and publication gates remain separate.
+
+The normalized genuine quotient supports the spectral generator, sharp relative Euclidean contraction, full complex temporal Gram kernel and actual integer joint-probability consumers. Finite spectator and empty-space controls remain. The actual half-step fails the inherited physical positive cone on a trace-one input; its original restricted positive-extension and principal-root obstructions retain that precise scope.
+
+The successor `FiniteQutritAmbientRootObstruction` proves that the actual normalized ten-Kraus transfer has no complex-linear PSD-preserving square root on the full complex qutrit matrix algebra. Both signed roots are excluded without trace, unitality, self-adjointness or feature-invariance premises. Homogeneous positive/CP/CPTP same-system semigroup consumers retain actual channel nonvacuity, integer histories and correlated finite spectators. Whole scientific/native/canonical integration review, normal absorption, registered builds, actual primary auditing and canonical conservation pass. Current project qualification and final bounded owner acceptance remain separate. Time-dependent CPTP paths and retained-environment dilations are outside this no-go.
+
+The feature Hamiltonian now consumes the finite Gibbs/spectral-log/modular substrate on the actual six-feature endomorphism algebra. Its faithful finite-beta density and modular parameter are distinct from physical qutrit density and measured elapsed time. Original physical-clock, continuum and physical-gap objectives remain open. See [the process-clock program](../dev-loops/MemoryProcesses/PROCESS_CLOCK_PROGRAM.md) for evidence and continuation boundaries.
+
+The next whole proof target is the independently reviewed retained two-sector clock design: an actual eleven-Kraus joint channel, heterogeneous preparation and actual second-factor reduction, every depth and chronological record with correlated spectators, a nonunital physical reset with attained event gap `1/5`, and generic reset-closure exclusion with all nine physical density probes. This is manual/contract acceptance only, not an implemented clock module. The register carries parity, not calibrated elapsed time or an unbounded count. Continuous joint evolution and universal minimum memory remain separate objectives.
+
+
 ## Technical Roadmap — May 2026
 
 *Prepared 2026-05-25, following the External Quantum Findings opportunity-scan synthesis. Approved 2026-05-25 PM.*
 
-**Trigger condition:** External opportunity-scan dispatch (April–May 2026 quantum-computing literature) surfaced 11 candidate research threads with strong overlap with the project's existing substrate. Pareto ranking selected 7 actionable waves for Phase 6v + 1 wave (former 6v.7) lifted into Phase 6w as a separate multi-wave program. Full synthesis lives in the private decision-record repo (cross-cutting public+private strategy artifact); this public roadmap is self-contained for Phase 6v public-side execution.
+**Trigger condition:** External opportunity-scan dispatch (April–May 2026 quantum-computing literature) surfaced 11 candidate research threads with strong overlap with the project's existing substrate. Pareto ranking selected 7 actionable waves for Phase 6v + 1 wave (former 6v.7) lifted into Phase 6w as a separate multi-wave program. This public roadmap is self-contained for Phase 6v public-side execution.
 
 **Headline goal:** ship the FT-QC frontier alignment (gauging QEC + Shor T-gate count + APM-LDPC + W-state QFT) under a **new bundle D6 — "Formally Verified Fault-Tolerant Quantum Computation Substrate"** (15th publication target), plus resolve the Phase 6q polariton open question, plus deliver an authoritative NbRe SOTA classification, plus add Penn TMD demarcation to E1.
 
@@ -148,7 +170,7 @@ All five sub-waves kernel-only `[propext, Classical.choice, Quot.sound]`. Projec
 | Wave | Title | Status | Bundle absorption | LoE |
 |---|---|---|---|---|
 | **Wave 6v.4** | Penn TMD polariton regime demarcation (E1 lift) | ✅ SHIPPED 2026-05-26 | E1 §2 paragraph + Lean theorem | 0.5–1 sess |
-| **Wave 6v.3** | DKM F3 polariton occupancy bound (Phase 6q follow-on) | ✅ SHIPPED 2026-05-26 | D5 §13 + E1 §2 (Wave 6v.4 cite chain) | 1–2 sess |
+| **Wave 6v.3** | DKM F3 polariton occupancy bound (Phase 6q follow-on) | Historical conditional delivery ✅ SHIPPED 2026-05-26; physical BUILD OPEN | D5 §13 + E1 §2 (Wave 6v.4 cite chain) | 1–2 sess |
 | **Wave 6v.1** | Williamson/Yoder gauging QEC formalization — **CREATES D6 BUNDLE** | ✅ SHIPPED 2026-05-26 | D6 §3 (CREATED) + I1 cross-bridge | 1.5 sess |
 | **Wave 6v.2** | Google ECC-256 T-gate count bound for Shor circuits | ✅ SHIPPED 2026-05-26 | D6 §5 (populated) + D4 + I1 cross-bridges | 2–3 sess |
 | **Wave 6v.5** | APM-LDPC code substrate + hashing-bound LDP sub-wave | ✅ SHIPPED 2026-05-26 | D6 §4 (populated) + I1 | 4 sess |
@@ -170,7 +192,7 @@ All five sub-waves kernel-only `[propext, Classical.choice, Quot.sound]`. Projec
 
 ## Wave-by-wave detail
 
-Each wave's headline goal + bundle-target + key substrate is summarized below. Per-wave roadmaps (`docs/roadmaps/Phase6v/Wave_6v.<N>_Roadmap.md`) are created at each wave's Stage 1 and become the canonical compaction-survivability handoff. Full Pareto/synthesis rationale lives in the private cross-cutting decision-record repo.
+Each wave's headline goal + bundle-target + key substrate is summarized below. Per-wave roadmaps (`docs/roadmaps/Phase6v/Wave_6v.<N>_Roadmap.md`) are created at each wave's Stage 1 and become the canonical compaction-survivability handoff.
 
 ### Wave 6v.4 — Penn TMD polariton regime demarcation
 
