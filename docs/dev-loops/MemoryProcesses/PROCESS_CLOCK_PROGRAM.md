@@ -6,6 +6,47 @@ Root owns integration, slot admission and the primary notebook. Reviewed feature
 
 ## Current finite growth and integration
 
+### Qutrit invariant completion and the next transfer target
+
+The actual physical-memory construction retains its bounded acceptance at
+`d7193e43`: physical Hilbert dimension three and selected positive-kernel feature
+dimension five have different meanings. The successor invariant reconstruction
+is implemented in `FiniteQutritInvariantCarrier.lean`,
+`FiniteQutritInvariantReconstruction.lean` and
+`FiniteQutritInvariantExamples.lean`, normally absorbed at `1eaf8d96`.
+Whole independent mathematical/source review and the actual compiled logical
+audit pass. Canonical refresh at `6d97f932` preserves all earlier declaration
+records; current gates and integrated closing acceptance are still pending.
+
+The original prefix [4,3]/01 actually escapes the old five-span. Six actual
+two-command prefixes and suffixes yield the common-cut kernel with determinant
+1/23328. Their states span the least reachable complex transpose-symmetric
+operator carrier, of dimension six. The existing genuine positive-kernel
+quotient reconstructs that carrier with weighted Hilbert-Schmidt metric, correct
+feature/state scaling and all-word/append agreement. The actual original and
+noisy branches preserve its inherited cone. Arbitrary correlated ambient inputs
+retain complete positivity; six-coordinate restriction applies only to the
+corresponding system-block carrier. Physical three, selected five and reachable
+six remain distinct, and all earlier chronology, zero-mass and retained-resource
+controls are preserved.
+
+The next independently reviewed bounded contract is the actual uniform average
+`T(X)=(1/5) sum_j(Pj*X*Pj+(I-Pj)*X*(I-Pj))`, with setting and outcome records
+explicitly discarded at each independent step. Prove its normalized ten-Kraus
+realization, positive self-adjoint weighted-Hilbert transfer, exact symmetric
+spectrum and sharp trace-zero contraction 9/10. Transfer it through the genuine
+quotient and derive the actual selected prefix/suffix joint-weight difference
+`(1/3)*(9/10)^n` for every natural n. This is a reviewed proof contract, not an
+implemented result or an added prerequisite for the preceding completion.
+
+For a retained spectator the spectral target is relative to system partial
+trace on the restricted matrix carrier. Globally trace-zero spectator operators
+can remain fixed. The optional full-ambient spectral extension is later growth.
+The finite dimensionless gap target 1/10 supplies no elapsed-time calibration,
+arbitrary record-conditioned Markov law, continuum field theory, physical gap,
+quantum advantage or frontier-apex completion. Broader security, main and
+publication gates remain separate.
+
 The adaptive qutrit and correlated-environment foundations are integrated.
 `QuantumNetwork/FiniteThreeLevelMemoryReadout.lean` now has whole source,
 compiled, canonical and committed-closing acceptance at `6476175c`. The actual
