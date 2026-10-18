@@ -5345,6 +5345,10 @@ import SKEFTHawking.QuantumNetwork.FiniteQutritFeatureGibbs
 import SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction
 import SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock
 
+import SKEFTHawking.QuantumNetwork.FiniteClockHandReadout
+import SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory
+import SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 
@@ -5373,7 +5377,3 @@ Blueprint+sorry: algebraic identities are fully formalized; PDE well-posedness,
 asymptotic analysis, and derivative expansion convergence are left as `sorry`.
 The `sorry` gaps are documented and flagged for Aristotle automated filling.
 -/
-
-import SKEFTHawking.QuantumNetwork.FiniteClockHandReadout
-import SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory
-import SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples
