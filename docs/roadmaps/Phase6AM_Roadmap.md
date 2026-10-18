@@ -116,26 +116,10 @@ no Fannes/Audenaert file in the pinned tree. So adoption does **not** discharge 
     axiom closure is not `{propext, Classical.choice, Quot.sound}`.
 
 ### Wave 4 — quantum-FDT (Callen–Welton) amplifier/detector floor *(closes 6AN W4 residual)*
-- **What:** Phase 6AN W4 (`QuantumNetwork/FDTNoiseFloor.lean`) used the *classical* Johnson–Nyquist
-  floor `S_JN = 4 kB_T σ_Q`. Replace it with the **exact quantum (Callen–Welton) floor**
-  `(ℏω/2)·coth(ℏω / 2kB_T)` — **derived, not assumed** — by instantiating a `CanonicalEnsemble` over the
-  quantum-harmonic-oscillator level spectrum `Eₙ = ℏω(n+½)` and computing its `meanEnergy`
-  (`Z = e^{-βℏω/2}/(1−e^{-βℏω})`, `⟨E⟩ = −∂_β log Z = (ℏω/2)coth(βℏω/2)`) via PhysLib's
-  `CanonicalEnsemble.{meanEnergy,partitionFunction}` (consumed by FQN).
-- **Real-world reason:** the amplifier/detector operating points that consume the 6AN W4 bound live in
-  the cryogenic-mK / GHz regime where `ℏω ≳ kB_T`. There the classical `4kB_Tσ` floor is the **wrong
-  asymptote** (it → 0, missing the zero-point `ℏω/2` that actually dominates). The quantum floor is the
-  physically correct certificate floor for that regime.
-- **Stays a cited hypothesis (the one textbook tracked hypothesis in the 6AN line — by design):** the
-  **Caves** phase-insensitive-amplifier added-noise inequality `A ≥ ℏω/2`. It requires the bosonic CCR
-  ladder algebra `[a,a†]=1`, which PhysLib does **not** provide (its `CreateAnnihilate` is a 2-element
-  Wick-ordering label, `card = 2` — verified — not the ladder algebra), and a from-scratch CCR build is
-  disproportionate to the certificate value. So: the **floor is derived**; the **added-noise inequality
-  is cited**. This is a genuine wall, not an effort deferral — document it as such.
-- **Gate (strength-pinned):** `(ℏω/2)coth(βℏω/2)` derived from the PhysLib `CanonicalEnsemble` HO mean
-  energy (FQN invoked in proof), kernel-pure; a theorem that the quantum floor **strictly exceeds** the
-  classical `4kB_Tσ`-equivalent in the `ℏω > 0` / `ℏω ≳ kB_T` regime; the 6AN detector/amplifier
-  operating-point results re-anchored on the quantum floor (companion theorems). `#print axioms` clean.
+- **What:** retain the genuine PhysLib `CanonicalEnsemble` QHO mean energy `(ℏω/2)coth(βℏω/2)` and its kernel results. It is an energy, not a current PSD. The independently accepted [B6 response/FDT construction](../audits/2026-10-17-publication-substance-construction/B6_QHO_RESPONSE_FDT.md) now derives finite forced-Hamiltonian response and ordered/symmetric spectral FDT, with a derivative-first cutoff and explicit finite-band causal bath; its full review is linked there.
+- **Actual electrical objective:** for a declared Hermitian charge/current voltage port, the note derives one-sided symmetric Hz noise (ω=2πf>0) `2ℏω coth(βℏω/2) ReY(ω)`, approaching `4kB_T ReY` classically. This is conditional model mathematics. Actual D9 port/state/bath/admittance, units, detector weighting/calibration/ENBW and a nonempty operating band remain BUILD. No energy is added to a PSD, no normally ordered detector vacuum floor or finite resonant line height is inferred.
+- **Caves:** the existing added-noise hypothesis remains a hypothesis. The full gain-dependent phase-insensitive amplifier input/output and added-noise construction is separate; neither QHO energy nor the B6 equilibrium response proof discharges it. Missing library machinery or effort is not an infeasibility finding or approved deferral.
+- **Original strength-pinned objective retained:** a derived quantum response/noise floor and correct detector/amplifier operating-point bridge, with independent native/source/axiom validation. The mean-energy theorem alone does not meet that full physical/native gate. B6 manual acceptance includes the compact-bath distributional contact `D²χ=θk″+Jδ₀`, ordinary derivatives away from zero and distributional convergence through zero. Actual native/operator/device and Caves completion remain OPEN.
 - **Depends on:** W1 only (PhysLib importable). Independent of the W2/W3 QI bridge — can run in parallel.
 
 ### Wave 5 — Ross–Selinger O(log 1/ε) optimal Clifford+T synthesis *(closes 6AN W5 residual)*
@@ -266,8 +250,7 @@ The previous from-scratch DPI/modular-operator plan is retained only in version 
 
 ## Execution status (2026-06-09 — pre-adversarial-review snapshot; gates above are UNCHANGED)
 
-- **W1 ✅ / W2 ✅ (`599c3be9`) / W3 ✅ (`c7fc6863`) / W4 ✅ (`b0bd8a8b`)** — meet their strength gates
-  (per prior-session verification + #print axioms FQN checks).
+- **W1/W2/W3 historical verification receipts** (`599c3be9`, `c7fc6863`) are retained. **W4 `b0bd8a8b` is the genuine thermodynamic QHO receipt**, not native physical-PSD/operating-point completion. Accepted B6 manual response/FDT supplies further mathematics; its actual native/device and Caves interfaces remain OPEN.
 - **W6 ✅ COMPLETE (`846f2ccf`)** — `SharpFannesAudenaert.lean`: `sharp_fannes_classical`
   (`|H(p)−H(q)| ≤ qaryEntropy d T`, maximal-coupling + per-column `spreading_bound` + `sum_g_le_binEntropy`
   conditional-entropy Jensen, the finite-Fano layer built from scratch) and the **fully unconditional**
@@ -308,7 +291,7 @@ The previous from-scratch DPI/modular-operator plan is retained only in version 
   A dedicated `/goal` (structural KMM purity); not a wall, not dropped.
 
 **Net (adversarial review 2026-06-09, fresh-context Opus 4.8 subagent — independently confirmed):**
-W2, W3, W4, W6 **genuinely meet their strength-pinned gates and are kernel-pure** `{propext,
+W2, W3 and W6 retain the historical gate/kernel review below; W4 retains its genuine QHO mean-energy kernel result but not full physical response/PSD/operating-point completion. Those historical kernel results are **kernel-pure** `{propext,
 Classical.choice, Quot.sound}` (verified by independent `#print axioms` on 13 headlines; W3 routes around
 the PhysLib `Relative.lean` sorry; W6 maximal-coupling math checked correct). **W5 does NOT meet its gate
 as written** — the efficiency headlines remain (a) conditional on the residual existence and (b) carry the
@@ -343,9 +326,9 @@ No axioms added anywhere; no Mathlib-pin bump; never pushed.
 > the W5 section + the "Next /goal" tracks below as the current truth; this review paragraph is the
 > as-of-review snapshot it supersedes.
 
-## ✅ PHASE 6AM CLOSED (2026-06-09, user-approved)
+## Historical Phase6AM closure receipt (2026-06-09, user-approved)
 
-Value-bearing work complete and gate-met (W2, W3, W4 per their original gates; **W6** fully — sharp
+Historical closure receipt (W2/W3 per their recorded gates; W4 genuine QHO mean energy retained, with physical response/PSD/operating-point/Caves/native completion still OPEN; **W6** fully — sharp
 Fannes–Audenaert `log(d−1)`, `hAud` discharged, unconditional, kernel-pure; **W5** per the amended gate —
 O(log 1/ε) efficiency + axiom-free §6-gate `Prop`). All kernel-pure `{propext, Classical.choice, Quot.sound}`
 where claimed (independently `#print axioms`-verified by the closure adversarial review); lib + ExtractDeps

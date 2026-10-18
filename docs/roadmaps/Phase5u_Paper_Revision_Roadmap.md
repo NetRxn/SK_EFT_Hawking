@@ -253,7 +253,11 @@ making any observed correction cleanly attributable to dissipation.
 
 ---
 
-## Track B — Paper 12 Polariton Parameter Resolution
+## Track B — E1/Paper 12 response, noise and device matching; historical parameter-revision record
+
+**Current E1 scientific status:** The [passive Hamiltonian-bath construction](../audits/2026-10-17-publication-substance-construction/E1_HAMILTONIAN_BATH_MEMORY_MARKOV_ERROR.md) and [complete independent review](../audits/2026-10-17-publication-substance-construction/reviews/E1_HAMILTONIAN_BATH_MEMORY_MARKOV_ERROR.md) accept actual finite/compact-continuum Fock/Weyl dynamics, positive thermal/quasifree states, exact memory/ordered noise/CCR/force response, the distinct coupled-equilibrium FDT and explicit positive-band response/filtered-noise Markov errors with a nontrivial decay-time scaling. This is the passive B=0 instance only (gamma_prior=2gamma, A=hbar*omega0 before rotation). It does not establish the general paired/Kerr/density-phonon material model, actual spatial horizon or calibrated readout/band. Next match those actual inputs and ports, propagate reduction/occupation/missing-band/window/response/squeezing errors into the separately reviewed total-flux photocurrent covariance and fixed inference criterion, and establish a nonempty identifiable device interval. Existing source/provenance corrections remain distinct from this physical BUILD and native proof.
+
+**Historical April parameter-revision record:** Waves3–6 below record the dated decisions, numerical runs and source readings then made; their old measured/leading/detection labels are not renewed physical/provenance acceptance. Current accepted source-qualified E1/D1 provenance and manuscript corrections retain their own exact evidence.
 
 ### Wave 3 — Resolve Falque κ primary-source disagreement [Pipeline: Stage 1 provenance]
 
@@ -673,7 +677,7 @@ All tracks are independent; maximum parallelism.
 | Wave 21 | Invariant 12: Lean-grounding audit | 3-4 h | 🔵 C (HIGH VALUE) | OPEN — uncovered by Wave 1 investigation |
 | Wave 22 | Paper 1 CITATION_REGISTRY reconciliation | 2 h (P1) / 4-6 h (all) | 🟡 B | OPEN — discovered by Wave 1d claims-reviewer |
 
-**Progress 2026-04-13 / 2026-04-14**: **ALL 17 substantive Phase 5u waves complete** (Wave 1a-1f, 2, 3, 4, 5, 6, 7-13). Paper 1 and Paper 12 body text now both consistent with the pipeline, their Lean anchors, and their cited primary sources.
+**Historical edit progress, 2026-04-13 / 2026-04-14:** seventeen then-defined substantive revision waves were recorded complete (Wave1a–1f,2,3,4,5,6,7–13). This is a dated paper-edit receipt, not current acceptance of physical bath/noise derivation or of every old parameter/dispersive/detection label. Current E1 response/noise/device BUILD and the independently accepted manual scope are stated in Track B.
 
 **Follow-up delegations completed (2026-04-14 morning):**
 - Paper 12 `physics-qa:claims-reviewer` re-run (post-Wave-4): 2 FAIL + 12 WARN + 35 PASS; both FAILs fixed inline (stale "1318 theorems" → 2237+; `Giacobino2025` added to `CITATION_REGISTRY` with full metadata). Metadata drift cleaned: `PAPER_DEPENDENCIES['paper12_polariton'].key_claims` resynced with Wave-4 values; Paris_long "Perturbative" label corrected to "Borderline" in Platform-Comparison table (aligned with `tier1_regime='borderline'` from Γ_pol/κ = 0.143).
@@ -695,7 +699,9 @@ All tracks are independent; maximum parallelism.
 
 ---
 
-## What Success Looks Like
+## Original revision success criteria and current physical acceptance boundary
+
+For E1, consistent source values and honest prose are necessary and do not discharge device response/noise/readout. The accepted passive Hamiltonian/error theorem is a manual model result; paired/Kerr/phonon/material/spatial/horizon matching, quantum optical ports and total-flux counting/calibration, native consumers and a nonempty error-controlled detection band remain required. The original revision criteria below are retained.
 
 - Paper 1 Table 1 matches current pipeline to <0.5%; claims-reviewer passes with zero FAIL.
 - Paper 12 parameters (c_s, κ, T_H, D) are consistent between abstract / table / constants.py / provenance — and defensibly match primary sources.
@@ -734,7 +740,7 @@ All tracks are independent; maximum parallelism.
 
 **Goal.** Convert the Paris LKB (Falque / Bramati / Giacobino) polariton-Hawking observation track from passive monitoring into an active experimental-partnership engagement. Produce a 1-page experimental proposal piggybacking Paper 12 (polariton analog Hawking) that gives the Paris group concrete predictions consumable in their next experimental run, and establish a feedback channel for adjusting the predictions to match their device parameters.
 
-**Rationale (Phase 6 gap-analysis).** The Paris polariton group has the most promising near-term Hawking-detection track (negative-energy-partner modes already observed; spontaneous Hawking detection plausible within 1–2 years per Phase 6 gap-analysis). The SK-EFT program has the only formal noise-floor prediction (`n_noise = δ_k/2` from Phase 1–3 exact WKB), the only formal stimulated-Hawking amplification analysis (Phase 5d `StimulatedHawking.lean`, 11 thms, 7 sorry), and the only formal Tier-A polariton platform-comparison data (Phase 5 `PolaritonTier1.lean`). Closing this loop with a concrete experimental proposal is highest-leverage outreach for Paper 12.
+**Current scientific rationale.** The polariton response/noise/readout programme now has independently accepted manual mean-field/material, quadratic Markov, phonon, modulated-photocurrent and passive Hamiltonian-bath increments. Their declared assumptions differ and must actually be matched. A retarded response or mode energy does not give a measured detector PSD; bath thermality does not imply equilibrium FDT for the pumped system; an occupation floor is not a calibrated optical noise temperature. The original device-specific prediction and experimental partnership remain goals, not established sensitivity or unique/first formal results.
 
 **Trigger condition (outreach gate):** This wave activates after:
 - (P1) Paper 12 (polariton analog Hawking) drafted to the standard reachable for an experimentally-actionable cover letter.
@@ -754,7 +760,7 @@ All tracks are independent; maximum parallelism.
 - New: `tests/test_paris_lkb_predictions.py` — 6+ tests verifying the band against published Paris-LKB device parameters.
 - New figure: `figures/fig_paris_lkb_hawking_prediction_band.{png,html}` — predicted spectrum + noise floor for the Paris LKB device.
 
-**No new Lean module** — reuses `PolaritonTier1.lean`. Parameter audit is Python-side.
+**Existing native anchors may be reused after their exact hypotheses and observable conventions are matched.** The accepted manual Hamiltonian/error construction still needs native objects and proofs; existing `PolaritonTier1.lean` references and a Python parameter audit do not by themselves provide the actual device bath, optical channel, total counting covariance or calibrated band.
 
 **Output:** Closed prediction band: predicted T_H, n_noise, ω-spectrum range, signal-to-noise estimate at the Paris-LKB device parameters with explicit error budget.
 
@@ -822,4 +828,4 @@ All tracks are independent; maximum parallelism.
 - Outreach memo (sub-wave 21.3).
 - Joint-paper draft (sub-wave 21.4, conditional).
 
-*Append-only addition 2026-04-28. Status: OPEN, awaiting user authorization Gate U.21 for the cover letter draft. Highest-leverage near-term experimental-partnership action per Phase 6 gap-analysis.*
+*Original partnership wave added2026-04-28. Current scientific status: OPEN BUILD with the accepted manual increments and remaining device/native obligations above. Existing Gate U.21 for the cover-letter draft/outreach remains intact; no authorization to contact others, submit or publish is inferred. That external gate does not defer the already authorized in-repository scientific construction. No completed partnership or usable device band is asserted.*

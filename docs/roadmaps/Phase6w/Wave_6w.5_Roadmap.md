@@ -2,7 +2,7 @@
 
 **Phase:** 6w
 **Wave:** 6w.5 (Aalto-style bridge: fusion-category Chern data ↔ Chebyshev-TN real-space Chern marker)
-**Status:** ✅ SHIPPED 2026-05-26 PM. 6 substantive theorems in `lean/SKEFTHawking/ChernBridge.lean` (substantively distinct crystalline c0+c1 vs quasicrystalline c0-c1 limits + difference = 2c1 substantive identity + biconditional with c1 = 0). Build clean 8712 jobs; headlines kernel-only.
+**Current status — 2026-10-18:** actual two-coefficient Chebyshev identities are valid algebraic source, not a constructed genuine categorical/real-space Chern invariant. Historical May26 source/build/kernel reports remain credited. Full physical Chern/marker construction is a separate B2 BUILD and is not discharged by forest results.
 **Bundle target:** D4 extension + SPTClassification extension.
 **LoE:** ~2-3 sessions per Phase6w_Roadmap.md.
 
@@ -23,26 +23,24 @@ chebyshevT_eval_neg_one identities + AperiodicLattice predicates.
 ## Substantive deliverables
 
 * `categoricalChernExpansion c_0 c_1` — a 2-coefficient Chebyshev
-  expansion encoding the categorical Chern data (`c_0` topological
-  background, `c_1` invariant contribution).
+  expansion on two adopted real coefficients; no constructed categorical Chern class or topological identification follows.
 * `realSpaceChernAt e x` — evaluate the Chebyshev expansion at the
   band edge `x ∈ {-1, +1}`.
 * **HEADLINE Theorem 1**
   `categorical_chern_eq_real_space_chern_crystalline`:
   `realSpaceChernAt (categoricalChernExpansion c_0 c_1) 1 = c_0 + c_1`
-  (crystalline limit; Brillouin-zone Chern number reduces to the
-  band-edge sum at `x = 1`).
+  (evaluation at x=1; identifying it with a crystalline Brillouin-zone Chern number remains BUILD).
 * **HEADLINE Theorem 2**
   `categorical_chern_eq_real_space_chern_quasicrystalline`:
   `realSpaceChernAt (categoricalChernExpansion c_0 c_1) (-1) = c_0 - c_1`
-  (quasicrystalline limit; the band-edge difference at `x = -1`).
+  (evaluation at x=-1; physical quasicrystalline-marker identification remains BUILD).
 * **Substantive Theorem 3** `crystalline_minus_quasicrystalline_bridge`:
   the DIFFERENCE between the two limits exactly equals `2 c_1` —
-  substantive structural identity ratifying the bridge.
+  valid polynomial identity, not a constructed topological bridge.
 
-## Acceptance criteria (Wave 6w.5)
+## Historical source receipts and remaining physical acceptance
 
-- ✅ Both headlines + ≥1 substantive companion shipped.
+- Historical delivery includes the polynomial identities and companions. Genuine Chern/marker construction and physical comparison remain BUILD.
 - ✅ Headlines substantively distinct (crystalline ≠ quasicrystalline
   proof outcomes; both use Wave 6w.4 substrate non-trivially).
 - ✅ Module builds clean; zero new project-local axioms; zero sorries.

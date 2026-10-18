@@ -1,5 +1,16 @@
 # Phase 6a: Gravitational Dynamics — Linearized EFE, GW, BH Entropy, FLRW, Four Laws, Positive Mass
 
+## Current L1 scientific successors — 2026-10-17
+
+**Original remediation B3 and the Wave2 physical mode/transport objectives remain OPEN BUILD.** The historical 6a.2 SHIPPED/end-to-end and O.1 RESOLVED records below describe conditional algebra/software and a scoped research disposition, not a physical metric susceptibility, propagating graviton or matched transport law. Keep the original goals and real interval/endpoint algebra. The finite-tolerance compatible interval is not empty; a witness at chi=1 and the old deleted caveat-theorem reference do not derive a physical realization.
+
+**Accepted substantive milestone:** the exact sharp-four-momentum-cutoff scalar bubble and remainder bounds, plus conditional RPA-zero analysis, were independently accepted in `publication-substance-ownership-audit-20261017-r1/construction-L1-bubble-r1/CONSTRUCTION.md` SHA256 `9ad73436a0ae121725b60c12e39b856dbad6f58cf832176f984f6654d2b69053`, independent-review/REVIEW.md SHA256 `0f13436bf9fc191647a15bf2d39510308b84d5fbae161699056a85331bc4afb7`. This is a manual scalar construction, not a fresh native or numerical result and not the physical B3 window. It retains the exact finite-cutoff terms; the stable-side response diverges near its pole, so positivity alone does not imply a finite interval.
+
+Next milestones: derive the actual metric-channel operator/source/projector, regulator and normalization to chi_vest and independently justified parameter/stability conditions deriving the original stated O(Lambda²/16pi²) normalization so [0.1,10] is a RESULT; a different computed interval requires the operator’s specific evidence-backed disposition, not automatic substitution; derive a stable constrained quadratic propagator, physical spin/polarization and matter coupling rather than label second sound a graviton; derive actual transport/Kubo coefficients, units, Hz/angular-frequency matching and a controlled observational band. Independent physics/response and mathematical review must check these bridges without choosing chi=1 or a tiny gamma to satisfy the desired cap. Link Phase5y H1 and Phase6e as historical dependencies, not executor/acceptance receipts. This L1 transport problem is distinct from the ONE shared D1/E1/E2 dispersive-law construction.
+
+**Scientific construction owner:** Physics Publication Remediation, explicitly accepted in the primary publication-remediation notebook r40 (2026-10-17). This is current author acceptance, not a historic assignment or a native lease. Completion requires the actual construction, independent scientific review and the existing recorded closure; ROOT retains shared-primary/native admission, integration and protected Git/main authority. No target reduction or deferral is granted.
+
+
 ## Technical Roadmap — April 2026
 
 *Prepared 2026-04-24 | Derived from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0 (2026-04-22) §4. The "consolidation half" of the post-SK-EFT program — everything about gravity that does not require a full nonlinear effective action derivation (those land in Phase 6e).*
@@ -176,7 +187,7 @@ FLRW follows as a symmetry reduction — once linearized EFE are proved, the Fri
 
 ## Track B: Gravitational Waves (6a.2) — **SHIPPED 2026-04-25**
 
-**Status:** Track B Wave 2 closed end-to-end. Pipeline through Stage 12.
+**Historical delivery status:** Track B Wave 2 closed end-to-end. Pipeline through Stage 12. **Current B3/mode/transport constructions remain OPEN**, as specified above.
 - `GravitationalWaves.lean`: 17 theorems, 0 sorry, 0 new axioms.
 - `src/gravitational_waves/`: 4 Python modules + 43 pytest cases.
 - `papers/paper25_gravitational_waves/`: PRD draft, 4 pages, 421 KB, compiles clean.
@@ -1001,7 +1012,7 @@ previously called "low-utility/high-effort":
 
 ## Open Questions
 
-**O.1 — RESOLVED 2026-04-25.** Second-sound-graviton identification is not derived as a propagating DOF per Phase 5y H1. Wave 2 shipped in "use-as-identified" mode with explicit caveat theorem `second_sound_graviton_not_derived_DOF`. The natural-range falsification result is the load-bearing finding: Wave 2 *negatively* resolves the identification at leading order, opening Phase 6e (full nonlinear emergent action) or a Phase 5y H1 follow-up wave to provide a derived-DOF χ_vest = 1 mechanism.
+**O.1 — Historical disposition: RESOLVED 2026-04-25; current physical successors OPEN (2026-10-17).** Second-sound-graviton identification is not derived as a propagating DOF per Phase 5y H1. Wave 2 shipped in "use-as-identified" mode with explicit caveat theorem `second_sound_graviton_not_derived_DOF`. The natural-range falsification result is the load-bearing finding: Wave 2 *negatively* resolves the identification at leading order, opening Phase 6e (full nonlinear emergent action) or a Phase 5y H1 follow-up wave to provide a derived-DOF χ_vest = 1 mechanism.
 
 **O.2 — RESOLVED 2026-04-26.** MTC horizon BC for 6a.3 ships in Outcome-3 tracked-hypothesis mode (`H_HorizonBoundaryCondition` Lean Prop bundle with five falsifier theorems) + Outcome-2 SU(2)_k sub-corollary (Kaul-Majumdar -3/2 closed form under `gaussianSaddleAsymptotic` axiom + Immirzi γ tuning). Per the deep-research return verdict: no published derivation pins a specific MTC at a 4D BH horizon in an ADW substrate, so the choice is a research-level conjecture flagged in the module + paper. The Walker-Wang anomaly-inflow conjecture (Z₂ time-reversal bulk → boundary chiral c_- mod 8) is the natural derivation path for future work.
 

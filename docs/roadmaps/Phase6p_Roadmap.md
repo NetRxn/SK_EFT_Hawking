@@ -1,12 +1,14 @@
 # Phase 6p: Fault-Tolerant Quantum Computation on the Topological Substrate (G5 AGP + FKLW)
 
-## Technical Roadmap — May 2026
+## Technical Roadmap — original May 2026 scope; current B5 operational milestone and remaining construction
 
 *Prepared 2026-05-12 at Phase 6o close. Sources: planning conversation 2026-05-12 (4-phase scoping pass); user direction "find good fits for our pipeline & investigate directions that may lead to strengthening of the program and investigations that could plausibly make significant contributions to the physics/math/qc communities, and/or contribute meaningful no-gos"; `Lit-Search/_Exploratory/Phase 6n+ Foundational Backing Assessment...md` (existing) §G5 surfacing AGP + FKLW as the natural "industrial reach" extension of D4's topological substrate.*
 
 **Trigger condition:** Phase 6p opens at Phase 6o close (2026-05-08 Wave 4a SHIPPED; 14/14 bundles green; first-claim language scrubbed 2026-05-12). Phase 6p consumes Phase 5c/5i/5p categorical chain + Phase 6n Wave 1b SymTFT audit as substrates: paper11 (`Uqsl2`, `Uqsl3`, generic `Uqg`), paper14 (Ising + Fibonacci MTC + Müger center + decidable number-field arithmetic), paper16_wrt_tqft (Temperley-Lieb + Jones-Wenzl + Kirby moves + WRT formula + Fibonacci universality), and the broader SymTFTAudit/DrinfeldCenter/PseudoUnitary/WittClass stack.
 
 **Status (2026-05-12, Phase 6p stub):** **Roadmap stub committed at Track / Wave level**. Three Tracks, six Waves. Convention matches Phase 6n/6o.
+
+**Current B5/D6 scientific status:** [Operational code/measurement/compiler construction](../audits/2026-10-17-publication-substance-construction/B5_OPERATIONAL_CODE_MEASUREMENT_COMPILER.md) and its [complete independent review](../audits/2026-10-17-publication-substance-construction/reviews/B5_OPERATIONAL_CODE_MEASUREMENT_COMPILER.md) have scoped manual acceptance. Actual Steane distance/syndrome/CPTP recovery with references, Clifford/T-injection instruments, actual H/T/CNOT density and finite compiler semantics give error at most alpha+N*w*(21*p)^(2^l)/21 under ideal encoding/control/recovery/preparation/measurement/feed-forward and fresh independent storage flags. Determine N,w from the actual compiled word before choosing the level. The all-real selector is not the effective algorithm; the latter requires computably represented target entries and positive tolerance. This is not the AGP35235 noisy-gadget theorem or physical Fibonacci-braid implementation. Next construct verified noisy syndrome extraction and magic preparation/distillation, gadget good-to-correct/higher-fault/acceptance/overlap semantics, actual carrier and native consumers. Original full B5 remains BUILD; dated source/build receipts below retain their historical scopes.
 
 **Project rule (carried from Phase 6n/6o; user direction reaffirmed 2026-05-12):** **No PM / time / phase-cost estimates** anywhere in this roadmap. **No manuscript drafting at this phase** — Phase 6p stays at math/physics/Lean-substrate / infrastructure level; notes/outlines/working docs are fine. **No Mathlib PR drafts at this phase** — anything that might end up upstream is built internally first, using Mathlib naming/style conventions to make future PRs easier when authorized.
 
@@ -357,15 +359,15 @@ Six core waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; su
 |---|---|---|---|---|---|
 | **Track 1 — AGP threshold theorem** | | | | | |
 | **Wave 1a** | AGP substrate analysis + threshold-theorem predicate scaffolding | ✅ **SHIPPED** (1a.1 DR returned; 1a.2 working doc + 1a.3 cross-prover survey) | DEFERRED (G15 pending) | **D.2 / D.4 candidate** | none |
-| **Wave 1b** | AGP concatenated distance-3 threshold theorem (AGP 2006 on Steane [[7,1,3]]; ε₀ > 2.73 × 10⁻⁵) | ✅ **SHIPPED** (1b.1 + 1b.2 + 1b.3 + 1b.4; 10 modules under `FaultTolerance/`) | DEFERRED (G15 pending) | **D.2 / D.4 candidate** | none |
+| **Wave 1b** | AGP concatenated distance-3 threshold target | Historical native parameter/probability/scalar substrate shipped; actual operational ideal-control independent-storage theorem manually accepted with coefficient21. Noisy gadgets, AGP575/35235 instantiation and native operational theorem remain BUILD. | Original absorption gate retained | **D.2 / D.4 candidate** | none |
 | **Track 2 — FKLW Fibonacci-anyon density** | | | | | |
 | **Wave 2a** | Fibonacci-anyon density substrate analysis + BraidGroup + BridgeProp predicate scaffolding | ✅ **SHIPPED** (2a.1 DR returned; 2a.2 BraidGroup; 2a.3 BridgeProp AXIOM) | DEFERRED (G15 pending) | **D.2** | none |
 | **Wave 2b** | FKLW density theorem (quintet SU(5) scaffold via BridgeProp axiom; SolovayKitaev predicate AXIOM) | ✅ **SHIPPED** (2b.2 SolovayKitaev AXIOM; 2b.3 quintet scaffold via block-extension) | DEFERRED (G15 pending) | **D.2** | none |
 | **Track 3 — Applications + cross-bridges** | | | | | |
-| **Wave 3a** | Concrete BHSZ braid-word compilation on Fibonacci MTC (Rouabah Hadamard at ε~10⁻³ via QCyc40 substrate; composition CONDITIONAL on p_eff < p_th_AGP) | ✅ **SHIPPED** (3a.1 DR returned; 3a.2 QCyc40 + GateCompilation; 3a.3 FaultTolerantUQC conditional composition) | DEFERRED (G15 pending) | **D.2 / D.4 candidate** | none |
+| **Wave 3a** | Concrete gate compilation and fault-tolerant composition on intended Fibonacci carrier | Historical syntax/density/scalar composition shipped; actual qubit code/instrument/compiler/storage-channel composition manually accepted. Physical braid carrier, noisy-gadget composition and native operational bridge remain BUILD. | Original absorption gate retained | **D.2 / D.4 candidate** | none |
 | **Wave 3b** | Cross-bridge to D4 / new-bundle decision + flagship-F positioning | ✅ **SHIPPED** (3b.1 working doc `wave_3b_bundle_decision.md`; awaits user G15 call) | DEFERRED (G15 pending) | **D.2** | 🔒 **YES** (G15 user-authorization gate) |
 | **Track 4 — Axiom elimination + deferral completion (added 2026-05-12 AM, all 7 waves SHIPPED 2026-05-12 PM via PR #17)** | | | | | |
-| **Wave 1c** | MeasureTheory-grounded NoiseModel (Bernoulli-product bridge to LocalStochasticNoise; zero new axioms; 290 LoC) | ✅ **SHIPPED** PR #17 commit `ad0057a` | n/a | **D.2 / I1** | none |
+| **Wave 1c** | Noise-model/measure bridge target | Historical parameter/conditional substrate shipped PR #17, commit `ad0057a`. Actual finite-product independent-storage flags and their derived correct-channel semantics are now manually constructed; native implementation of that operational model remains BUILD. | n/a | **D.2 / I1** | none |
 | **Wave 2b.3.2** | Quintet spanning conjuncts via iterated commutators | ⚠️ **PARTIAL SHIPPED** (8/24 conjuncts, 180 LoC, PR #17) — full 24 in **2b.3.2-followup** in-tree sub-wave (needs HZBS Fig 4 4-strand F-symbols; DR `20260512_phase6p_wave_2b32_HZBS_fig4_4strand_fsymbols.md` dropped 2026-05-12 PM) | n/a | **D.2** | none |
 | **Wave 2c** | FKLW density bridge axiom-elim via Aharonov-Arad (architectural closure) | ✅ **SHIPPED** PR #17 ~385 LoC; `bridge_axiom_FKLW` retired→theorem; residual `bridge_axiom_FKLW_general` strictly weaker (`1 ≤ d` guard); citation corrected (arXiv:quant-ph/0605181) | n/a | **D.2** | 🔒 G16 obtained 2026-05-12 |
 | **Wave 2d** | Solovay-Kitaev axiom-elim (Dawson-Nielsen) + same-day audit-corrected substantive followup | ✅ **SHIPPED + SUBSTANTIVE FOLLOWUP** PR #17 ~1084 LoC; `sk_axiom_Dawson_Nielsen` eliminated (headline standard-kernel-only with honest P5 existential-unfolding docstring); residual `bch_order_2_axiom` TIGHTENED to Hermitian + norm-bound matching D-N Lemma 3 exactly; `dn_single_refinement_substantive` non-trivially consumes axiom; `DNRecurrence` encodes 5-fold branching + 3/2 exponent | n/a | **D.2** | 🔒 G17 obtained 2026-05-12 |
@@ -414,7 +416,7 @@ Six core waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; su
 - Wave 3a depends on Waves 2a-2b (gate compilation needs the density theorem operational).
 - Wave 3b depends on all prior waves (cross-bridge / positioning decisions need the content shipped).
 
-**Coherent sub-narrative.** The two tracks form a "fault-tolerant QC complete-stack" deliverable on the program's existing topological substrate. AGP threshold theorem says: *if* physical errors are below a threshold, arbitrarily long quantum computation is possible by concatenating error-correcting codes. FKLW density says: Fibonacci anyons can approximate any unitary to arbitrary precision via braiding. Together they give the **algebraic stack** for topologically-protected fault-tolerant universal quantum computation — directly readable as "what the program's MTC infrastructure enables, in QC terms."
+**Coherent sub-narrative.** The original target remains a fault-tolerant QC stack on the program's intended topological substrate. True density and conditional real-recursion results are retained, but their conjunction alone does not give a code, decoder, measurement instrument or implemented noisy channel. The accepted manual operational construction now provides these objects for ideal controls and independent storage faults, with all21 child pairs covered and the actual compiler length included in its reference-stable budget. It does not transfer the AGP35,235 count to that model or identify H/T/CNOT with a physical anyon carrier. Noisy-gadget fault containment, acceptance/overlap analysis and physical/native matching remain required for the full stack.
 
 **Recommended next-up order (post-DR-return, 2026-05-12):**
 
@@ -589,9 +591,9 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 1b — AGP concatenated distance-3 threshold theorem ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog: 1b.1 + 1b.2 + 1b.3 + 1b.4 shipped; 10 modules under `FaultTolerance/`; bundle absorption DEFERRED pending G15). G4/G5 (AGP §-pin + Reichardt 2006 comparison) remain quality-improvement caveats — not Phase 6p blockers (A_CNOT=36000 conservative value yields ε₀ > 2.77e-5 > DR commitment 2.73e-5).
+## Wave 1b — AGP concatenated distance-3 threshold: historical native substrate, accepted manual ideal-control storage theorem; full noisy-gadget/native target OPEN
 
-**Sub-wave decomposition (DR-locked-in 2026-05-12 per Wave 1a.1 return §6d):**
+**Original sub-wave objectives (DR-locked-in 2026-05-12 per Wave 1a.1 return §6d):** The targets below retain their full strength. Historical source shipment is not proof that their operational code/gadget/noise semantics have been implemented. The accepted manual theorem supplies actual code/recovery/compiler semantics only for ideal controls and independent storage faults; its derived coefficient21 is not the AGP count.
 
 - **Wave 1b.1 — Steane code substrate.** `Basic.lean`, `StabilizerCode.lean`, `SteaneCode.lean`: Pauli substrate + [[7,1,3]] code; `decide` proof of code parameters. Vendor minimal Pauli substrate in-tree to mitigate `inQWIRE/LeanQuantum` v0.x volatility (DR risk R2). ~400 LoC. Depends on Mathlib4 only. **Gate G4 / G5 resolution required at Wave 1b.1 close** (AGP §-number re-pin + A_CNOT verification against PDF + Reichardt 2006 LNCS 4051 alternative-A comparison).
 - **Wave 1b.2 — Noise model + extended rectangle.** `NoiseModel.lean`, `ExRec.lean`: `IsLocalStochastic` predicate; 1-Ga / 1-Rec / ex-Rec structures; correctness predicate (rectangle followed by ideal decoder ≡ ideal decoder followed by ideal gate). ~650 LoC. Depends on 1b.1.
@@ -677,9 +679,9 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 3a — Concrete fault-tolerant gate compilation on Fibonacci MTC substrate ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog: 3a.1 DR returned + 3a.2 QCyc40 + GateCompilation + 3a.3 FaultTolerantUQC conditional composition all shipped). Track 4 follow-ups (3a.2.2 + 3a.2.3) also shipped via PR #17. Remaining T-gate ε ≤ 10⁻³ tightening (R5.6 GA-SK) flagged separable; not blocking.
+## Wave 3a — Concrete fault-tolerant gate compilation: historical source shipment and accepted manual qubit operational milestone; intended physical/noisy-gadget/native composition OPEN
 
-**Sub-wave decomposition (DR-locked-in 2026-05-12; canonical inputs + composition framing committed):**
+**Original sub-wave objectives (DR-locked-in 2026-05-12; canonical inputs + composition framing committed):** Actual returned words, approximation norms/order/phase, physical carrier and implemented noisy channel must be connected. The accepted manual H/T/CNOT compiler and ideal-control storage theorem provide a concrete composition primitive, not an automatic physical-braid or AGP-gadget instantiation.
 
 - **Wave 3a.1 (deep-research dispatch) — ✅ COMPLETE.** DR return at `Lit-Search/Phase-6p/6p-Wave 3a.1 — BHSZ Brick-Wall Braid-Word Compilations for Fibonacci Anyons.md`. Headline: **Hadamard GO at ε ~ 10⁻³ via Rouabah 2020 30-crossing braid; CNOT requires manual transcription from HZBS 2007 Fig 15; T-gate generate via KBS algorithm; Q(ζ₄₀) cyclotomic substrate; composition theorem CONDITIONAL on `p_eff < p_th_AGP` (not unconditional).** See §G "DR-return state snapshot" Wave 3a.1 paragraph for full commitments. **CRITICAL CITATION CORRECTION:** "Bonesteel-DiVincenzo PRL 105, 027001 (2010)" does NOT exist; correct is PRB 86, 165113 (2012) / arXiv:1206.6048, which **explicitly disclaims fault-tolerance threshold analysis** — community-lore "topological protection ⇒ AGP threshold" is NOT a primary-source theorem.
 - **Wave 3a.2 (Lean explicit gate compilation) — ⏳ NOT STARTED.** Two new modules:
@@ -747,7 +749,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 1c — MeasureTheory-grounded NoiseModel ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog row 366: PR #17 commit `ad0057a`, 290 LoC, zero new axioms). Bernoulli-product bridge to LocalStochasticNoise.
+## Wave 1c — Noise-model bridge: historical parameter/conditional source shipment and accepted manual finite-product storage model; native operational instantiation OPEN
 
 **Sub-wave decomposition:**
 
