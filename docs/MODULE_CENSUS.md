@@ -55,7 +55,9 @@ Nothing else belongs here.
 | `src/core/aristotle_submit.py` | src/core/aristotle_submit.py — SafeAristotleRunner (ADR-006). |
 | `src/core/citations.py` | Citation Registry — Canonical bibliography for the SK-EFT Hawking project. |
 | `src/core/constants.py` | Single source of truth for physical constants, experimental parameters, and the Plotly color palette used across the SK-EFT Hawking project. It is also the home of the Aristotle theorem registry (ARISTOTLE_THEOREMS). |
+| `src/core/dashboard_queries.py` | Per-connection admission and bounded reads for the existing AGE console. |
 | `src/core/formulas.py` | Canonical implementations of every formula verified by Lean/Aristotle. |
+| `src/core/paper_artifacts.py` | Canonical final-target boundary for paper-derived artifact reads. |
 | `src/core/provenance.py` | Parameter Provenance Registry |
 | `src/core/provenance_writer.py` | The single per-entry writer for `PARAMETER_PROVENANCE` human-verification fields. |
 | `src/core/sm_anomaly.py` | Standard Model Anomaly Computation in ℤ₁₆. |
