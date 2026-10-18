@@ -5303,6 +5303,24 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
             "this fork bans.",
         'memory': None,
     },
+    'qutrit_euclidean_interpolation_preserves_physical_cone': {
+        'fork_id': 'qutrit-euclidean-interpolation-preserves-physical-cone',
+        'backing_theorems': [
+            'SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction.physical_input',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction.half_not_physical',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction.half_trace_one',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction.no_positive_extension',
+        ],
+        'nogo_kind': 'counterexample',
+        'false_statement': (
+            'The actual six-feature Euclidean half-step preserves the inherited '
+            'physical qutrit positive cone. The physical trace-one input feature 1 '
+            'retains trace one but acquires a negative diagonal entry. No positive '
+            'ambient linear extension agrees with this half-step on every feature. '
+            'This does not exclude arbitrary ambient nonselfadjoint CPTP embeddings.'
+        ),
+        'memory': None,
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════
