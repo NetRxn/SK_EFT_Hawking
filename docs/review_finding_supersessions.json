@@ -11134,6 +11134,81 @@
         "enforced": true,
         "run_at": "2026-10-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-16-dashboard-consumer-boundaries:infra:1.1",
+      "status": "fixed",
+      "evidence": "The source correction is present in 9aa8a5bf602072894db7fb1d62917bb3aee32225, with exclusive-create cleanup evidence follow-up in 782ae5cca9d9c665e0f1a359f053b46600feedda. An independent entire-package recheck found the original bounded contract satisfied, including final artifact and lexical-writer guards, actual native dummy-browser payload/key/audit/propagation/reload/SSE observations, and real disposable AGE function/catalog/column-admission, row, timeout, lock, cleanup and recovery controls. The declared Verify is executed by the canonical writer below; its regression scope does not replace the independently reviewed actual browser/database evidence. Cooperative filesystem writers, finite trusted database policy and source-cohort attribution limits remain. The separate exact-head CodeQL aggregate remains failed; no scanner dismissal, full-project, production, main or publication acceptance follows.",
+      "superseded_by": null,
+      "date": "2026-10-18",
+      "commit": "782ae5cca9d9c665e0f1a359f053b46600feedda",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest tests/test_paper_artifact_boundaries.py tests/test_dashboard_read_queries.py tests/test_readiness_cannot_measure.py tests/test_readiness_gate_evaluators.py -q -p no:cacheprovider",
+        "declared": ".venv/bin/python -B -m pytest tests/test_paper_artifact_boundaries.py tests/test_dashboard_read_queries.py tests/test_readiness_cannot_measure.py tests/test_readiness_gate_evaluators.py -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-17"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-16-dashboard-consumer-boundaries:infra:1.2",
+      "status": "fixed",
+      "evidence": "The source correction is present in 9aa8a5bf602072894db7fb1d62917bb3aee32225, with exclusive-create cleanup evidence follow-up in 782ae5cca9d9c665e0f1a359f053b46600feedda. An independent entire-package recheck found the original bounded contract satisfied, including final artifact and lexical-writer guards, actual native dummy-browser payload/key/audit/propagation/reload/SSE observations, and real disposable AGE function/catalog/column-admission, row, timeout, lock, cleanup and recovery controls. The declared Verify is executed by the canonical writer below; its regression scope does not replace the independently reviewed actual browser/database evidence. Cooperative filesystem writers, finite trusted database policy and source-cohort attribution limits remain. The separate exact-head CodeQL aggregate remains failed; no scanner dismissal, full-project, production, main or publication acceptance follows.",
+      "superseded_by": null,
+      "date": "2026-10-18",
+      "commit": "782ae5cca9d9c665e0f1a359f053b46600feedda",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest -m e2e tests/e2e/test_paper_provenance_tab.py::test_sentence_controls_persist_only_to_dummy_papers -q -p no:cacheprovider",
+        "declared": ".venv/bin/python -B -m pytest -m e2e tests/e2e/test_paper_provenance_tab.py::test_sentence_controls_persist_only_to_dummy_papers -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-17"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-16-dashboard-consumer-boundaries:infra:1.3",
+      "status": "fixed",
+      "evidence": "The source correction is present in 9aa8a5bf602072894db7fb1d62917bb3aee32225, with exclusive-create cleanup evidence follow-up in 782ae5cca9d9c665e0f1a359f053b46600feedda. An independent entire-package recheck found the original bounded contract satisfied, including final artifact and lexical-writer guards, actual native dummy-browser payload/key/audit/propagation/reload/SSE observations, and real disposable AGE function/catalog/column-admission, row, timeout, lock, cleanup and recovery controls. The declared Verify is executed by the canonical writer below; its regression scope does not replace the independently reviewed actual browser/database evidence. Cooperative filesystem writers, finite trusted database policy and source-cohort attribution limits remain. The separate exact-head CodeQL aggregate remains failed; no scanner dismissal, full-project, production, main or publication acceptance follows.",
+      "superseded_by": null,
+      "date": "2026-10-18",
+      "commit": "782ae5cca9d9c665e0f1a359f053b46600feedda",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest -m e2e tests/e2e/test_paper_provenance_tab.py::test_sentence_controls_persist_only_to_dummy_papers -q -p no:cacheprovider",
+        "declared": ".venv/bin/python -B -m pytest -m e2e tests/e2e/test_paper_provenance_tab.py::test_sentence_controls_persist_only_to_dummy_papers -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-17"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-16-dashboard-consumer-boundaries:infra:1.4",
+      "status": "fixed",
+      "evidence": "The source correction is present in 9aa8a5bf602072894db7fb1d62917bb3aee32225, with exclusive-create cleanup evidence follow-up in 782ae5cca9d9c665e0f1a359f053b46600feedda. An independent entire-package recheck found the original bounded contract satisfied, including final artifact and lexical-writer guards, actual native dummy-browser payload/key/audit/propagation/reload/SSE observations, and real disposable AGE function/catalog/column-admission, row, timeout, lock, cleanup and recovery controls. The declared Verify is executed by the canonical writer below; its regression scope does not replace the independently reviewed actual browser/database evidence. Cooperative filesystem writers, finite trusted database policy and source-cohort attribution limits remain. The separate exact-head CodeQL aggregate remains failed; no scanner dismissal, full-project, production, main or publication acceptance follows.",
+      "superseded_by": null,
+      "date": "2026-10-18",
+      "commit": "782ae5cca9d9c665e0f1a359f053b46600feedda",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest tests/test_paper_artifact_boundaries.py::test_dummy_server_actual_audit_retains_lexical_identity -q -p no:cacheprovider",
+        "declared": ".venv/bin/python -B -m pytest tests/test_paper_artifact_boundaries.py::test_dummy_server_actual_audit_retains_lexical_identity -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-17"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-16-dashboard-consumer-boundaries:infra:1.5",
+      "status": "fixed",
+      "evidence": "The source correction is present in 9aa8a5bf602072894db7fb1d62917bb3aee32225, with exclusive-create cleanup evidence follow-up in 782ae5cca9d9c665e0f1a359f053b46600feedda. An independent entire-package recheck found the original bounded contract satisfied, including final artifact and lexical-writer guards, actual native dummy-browser payload/key/audit/propagation/reload/SSE observations, and real disposable AGE function/catalog/column-admission, row, timeout, lock, cleanup and recovery controls. The declared Verify is executed by the canonical writer below; its regression scope does not replace the independently reviewed actual browser/database evidence. Cooperative filesystem writers, finite trusted database policy and source-cohort attribution limits remain. The separate exact-head CodeQL aggregate remains failed; no scanner dismissal, full-project, production, main or publication acceptance follows.",
+      "superseded_by": null,
+      "date": "2026-10-18",
+      "commit": "782ae5cca9d9c665e0f1a359f053b46600feedda",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest -m e2e tests/e2e/test_paper_provenance_tab.py::test_sentence_controls_persist_only_to_dummy_papers -q -p no:cacheprovider",
+        "declared": ".venv/bin/python -B -m pytest -m e2e tests/e2e/test_paper_provenance_tab.py::test_sentence_controls_persist_only_to_dummy_papers -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-17"
+      }
     }
   ]
 }
