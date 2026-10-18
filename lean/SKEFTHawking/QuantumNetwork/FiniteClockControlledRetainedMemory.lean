@@ -646,7 +646,7 @@ theorem localError_frequency {ℏ ℏ' : ℝ} (hℏ : ℏ ≠ 0) (hℏ' : ℏ' �
 theorem localError_frequency_duration {ω ℏ ℏ' : ℝ} (hω : 0 ≤ ω)
     (hℏ : ℏ ≠ 0) (hℏ' : ℏ' ≠ 0) (ω' t s : ℝ) :
     FiniteAdaptiveMapPerturbation.LocalError S F 22 (step F ω ℏ t hℏ) (step F ω' ℏ' s hℏ')
-      (min 1 ((ω*|t-s|+|ω-ω'|*|s|)/2)) := by
+      (min 1 ((ω*|t-s|+|ω-ω'| * |s|)/2)) := by
   refine ⟨le_min (by norm_num) (by positivity), fun Z hZ => ?_⟩
   rw [stepDistance_frequency_exact F hℏ hℏ' _ _ _ _ hZ.1, hZ.2, Complex.one_re, mul_one]
   exact FiniteClockHandReadout.frequency_duration_bound hω t s
