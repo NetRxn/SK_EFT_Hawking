@@ -5321,6 +5321,27 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         ),
         'memory': None,
     },
+    'qutrit_transfer_admits_positive_homogeneous_semigroup': {
+        'fork_id': 'qutrit-transfer-positive-homogeneous-semigroup',
+        'backing_theorems': [
+            'SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_positive_square_root',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_CP_square_root',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_positive_semigroup',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.no_ambient_CPTP_semigroup',
+            'SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction.actual_channel_nonvacuity',
+        ],
+        'nogo_kind': 'counterexample',
+        'false_statement': (
+            'The actual normalized ten-Kraus qutrit transfer has a complex-linear '
+            'PSD-preserving square root, or is time one of a homogeneous positive '
+            'system semigroup. Both claims are false on the full complex matrix '
+            'algebra: all signed roots are excluded without assuming trace '
+            'preservation, self-adjointness or feature invariance. The actual '
+            'transfer remains unital and CPTP. Time-dependent CPTP paths, discrete '
+            'iteration and retained-environment constructions are outside this no-go.'
+        ),
+        'memory': None,
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════

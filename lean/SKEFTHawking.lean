@@ -5342,6 +5342,7 @@ import SKEFTHawking.QuantumNetwork.FiniteQutritAveragedExamples
 import SKEFTHawking.QuantumNetwork.FiniteQutritEuclideanTransfer
 import SKEFTHawking.QuantumNetwork.FiniteQutritFractionalObstruction
 import SKEFTHawking.QuantumNetwork.FiniteQutritFeatureGibbs
+import SKEFTHawking.QuantumNetwork.FiniteQutritAmbientRootObstruction
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

@@ -1355,3 +1355,11 @@ chain, and encoding it in Lean costs more than it saves).**
 - killed_by: `FiniteQutritFractionalObstruction.physical_input`, `half_not_physical`, `half_trace_one`, and `no_positive_extension` (kernel-checked).
 - reason: The actual six-feature Euclidean half-step sends the physical density `feature 1` to a trace-one feature whose physical matrix has diagonal entry `theta < -11/7500`. It therefore fails the inherited positive cone and admits no positive ambient linear extension agreeing on every feature. Hilbert positivity and temporal Gram positivity remain valid. This bounded counterexample does not exclude arbitrary ambient nonselfadjoint CPTP embeddings; integer Kraus experiments remain positive. See `KERNEL_NOGO_REGISTRY['qutrit_euclidean_interpolation_preserves_physical_cone']`.
 - created_ts: 2026-10-18T00:00:00Z
+
+## qutrit-transfer-positive-homogeneous-semigroup
+- verdict: dead
+- tier: agent-reviewed
+- authored_by: kernel-no-go
+- killed_by: `FiniteQutritAmbientRootObstruction.no_ambient_positive_square_root`, `no_ambient_CP_square_root`, `no_ambient_positive_semigroup`, `no_ambient_CPTP_semigroup`, and `actual_channel_nonvacuity` (kernel-checked).
+- reason: The actual normalized ten-Kraus qutrit transfer has no complex-linear PSD-preserving square root on the full three-by-three matrix algebra. The three ambient simple diagonal eigenlines force every root's action on actual trace-one PSD coordinate projectors; each choice of root signs contradicts a nonnegative physical diagonal. Positivity derives unitality of a putative root rather than assuming it. A homogeneous positive system semigroup with this time-one channel would supply a forbidden half-time square root, so positive, CP and CPTP homogeneous embeddings are excluded without continuity or generator assumptions. The transfer itself remains unital and CPTP, and all natural integer experiments remain physical. Time-dependent CPTP paths, distinct positive factors and retained-environment constructions are outside this no-go; no calibrated physical clock, continuum or mass-gap conclusion follows. See `KERNEL_NOGO_REGISTRY['qutrit_transfer_admits_positive_homogeneous_semigroup']`.
+- created_ts: 2026-10-18T00:00:00Z
