@@ -5348,6 +5348,9 @@ import SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock
 import SKEFTHawking.QuantumNetwork.FiniteClockHandReadout
 import SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory
 import SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemoryExamples
+import SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand
+import SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHandErrors
+import SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHandExamples
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
