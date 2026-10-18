@@ -5341,10 +5341,12 @@ def fig_e8_cartan_heatmap() -> go.Figure:
 
 
 def fig_tetrad_gap_curve() -> go.Figure:
-    """Order parameter Δ*(G) vs coupling G: the gap equation phase transition.
+    """Numerical scalar NJL roots through r=4; failures propagate.
 
-    Shows the bifurcation at G = G_c: Δ = 0 for G < G_c, then Δ*(G) rises
-    continuously for G > G_c (second-order transition).
+    Lambda=pi,N_f=2 and400 source samples are retained. The canonical
+    solver uses a checked log-domain bracket rather than a cutoff cap.
+    Above-cutoff continuation is not physical UV validation or an ADW
+    derivation; solver/test evidence and asset freshness remain separate.
     """
     from src.core.formulas import tetrad_critical_coupling_integral, tetrad_gap_solution
 
@@ -5361,7 +5363,7 @@ def fig_tetrad_gap_curve() -> go.Figure:
     fig.add_trace(go.Scatter(
         x=G_ratios, y=Delta_values / Lambda,
         mode='lines', line=dict(color=COLORS['dispersive'], width=3),
-        name='Δ*(G) / Λ',
+        name='NJL model root / Λ',
     ))
 
     # Critical coupling marker
@@ -5370,20 +5372,20 @@ def fig_tetrad_gap_curve() -> go.Figure:
         showarrow=False, font=dict(size=13, family=FONT['family'], color=COLORS['dissipative']))
 
     # Phase labels
-    fig.add_annotation(x=0.4, y=0.1, text="<b>Pre-geometric</b><br>Δ = 0",
+    fig.add_annotation(x=0.4, y=0.1, text="<b>Trivial scalar output</b><br>Δ = 0",
         showarrow=False, font=dict(size=12, family=FONT['family']))
-    fig.add_annotation(x=2.5, y=0.6, text="<b>Tetrad condensed</b><br>Δ > 0",
+    fig.add_annotation(x=2.5, y=0.6, text="<b>Nonzero scalar output</b><br>Δ > 0",
         showarrow=False, font=dict(size=12, family=FONT['family']))
 
     apply_layout(fig, height=450, width=650,
-        title=dict(text="<b>Tetrad Gap Equation: Order Parameter vs Coupling</b>",
+        title=dict(text="<b>Numerical NJL Model Roots</b>",
                    font=TITLE_FONT),
         xaxis=dict(title="G / G<sub>c</sub>", range=[0, 4]),
-        yaxis=dict(title="Δ* / Λ", range=[0, 1.1]),
+        yaxis=dict(title="Δ / Λ"),
         legend=dict(x=0.02, y=0.98))
 
     fig.add_annotation(x=0.5, y=-0.13, xref='paper', yref='paper',
-        text="G<sub>c</sub> = 8π²/(N<sub>f</sub>Λ²) — first explicit tetrad gap equation (NJL-ADW correspondence)",
+        text="Separate scalar fixed-point model; numerical continuation is not physical UV validation or an ADW derivation.",
         showarrow=False, font=dict(size=10, family=FONT['family'], color='gray'))
     return fig
 

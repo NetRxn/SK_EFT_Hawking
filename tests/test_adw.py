@@ -656,3 +656,31 @@ class TestCrossModuleConsistency:
 
         # But structural obstacles remain for emergent fermions
         assert len(fluct.obstacles) == 4
+
+
+class TestNJLContinuationConsumer:
+    """Canonical NJL curve/integral propagation; separate from ADW scalar physics."""
+    def test_actual_njl_producer_labels_and_raw_integral_ordinate(self):
+        from src.core.formulas import tetrad_gap_integral
+        from src.core.visualizations import fig_tetrad_gap_curve, fig_tetrad_gap_integral
+
+        curve = fig_tetrad_gap_curve()
+        assert "Numerical NJL" in curve.layout.title.text
+        assert "NJL model root" in curve.data[0].name
+        annotations = " ".join(a.text for a in curve.layout.annotations)
+        assert "numerical continuation is not physical UV validation or an ADW derivation" in annotations
+        assert "first explicit" not in annotations
+        assert "Tetrad condensed" not in annotations
+        assert len(curve.data[0].x) == 400
+        assert curve.data[0].x[-1] == pytest.approx(4)
+        assert curve.data[0].y[0] == 0
+        assert curve.data[0].y[-1] > 1
+        displayed_range = curve.layout.yaxis.range
+        assert displayed_range is None or displayed_range[1] >= max(curve.data[0].y)
+        integral = fig_tetrad_gap_integral()
+        trace = integral.data[0]
+        assert len(trace.x) == 300
+        Lambda = np.pi
+        expected = [tetrad_gap_integral(x * Lambda, Lambda) for x in trace.x]
+        np.testing.assert_allclose(trace.y, expected)
+        assert trace.y[0] == pytest.approx(1 / 8)
