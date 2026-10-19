@@ -610,6 +610,7 @@ import SKEFTHawking.AlgebraicRokhlin
 import SKEFTHawking.E8Literal
 import SKEFTHawking.SpinBordism
 import SKEFTHawking.TetradGapEquation
+import SKEFTHawking.TetradGapNumericalBridge
 import SKEFTHawking.ScalarRungInterpretation
 import SKEFTHawking.BHLGaugeEmbedding
 import SKEFTHawking.MajoranaRung
