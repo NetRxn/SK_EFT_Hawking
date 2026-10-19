@@ -12923,7 +12923,7 @@ CITATION_REGISTRY = {
         'arxiv': '1404.3224v3',
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf',
-        'used_in': ['papers/E2/paper_draft.tex'],
+        'used_in': ['papers/D1/paper_draft.tex', 'papers/E2/paper_draft.tex', 'papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': ['Infrared transmission probability for the specified stationary 1D BEC model (Eq. 36)'],
         'notes': 'Held arXiv:1404.3224v3 (8 January 2015), five actual PDF pages; distinct from PRD 87, 124018 (2013). v3 corrects published Eq. (21); the cited infrared result is Eq. (36), p. 3. Assumes hydrodynamic, transversely frozen elongated BEC with stationary constant flow velocity and density and smooth sound speed with fixed asymptotes (p. 2). c_R is the subsonic asymptotic sound speed. This source does not establish graphene transmission, finite-frequency quadratic roll-off, detector response or readout identifiability.',
     },

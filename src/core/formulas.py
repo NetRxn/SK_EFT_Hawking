@@ -146,13 +146,16 @@ def dispersive_correction(D):
 
     ⚠️ PROVENANCE — WHAT IS AND IS NOT ESTABLISHED.
 
-    The D² SCALING is supported. Coutant & Weinfurtner (PRD 2017) obtain
-    analytic expressions in the KdV approximation and find the leading
-    correction to the effective temperature scales as O(ξ²κ²/c_s²) = O(D²)
-    in the adiabatic regime. That is a PARAMETRIC O(·) result.
+    The entire quadratic law is adopted, including a nonzero leading D²
+    term. The cited profile-specific KdV literature does not establish that
+    functional law or error regime for the target devices. The physical
+    profile/dispersion derivation remains BUILD, not merely its coefficient.
+    In particular, an exponentially small smooth-profile departure does not
+    establish a nonzero leading quadratic term.
 
-    The COEFFICIENT c₁ = π/6 is NOT derived anywhere, and no universal value
-    exists. A near-horizon Hamilton-Jacobi computation shows why. With
+    The coefficient c₁ = π/6 is fixed here by convention; the physical law
+    and coefficient are not derived by this function. The following
+    profile-specific Hamilton-Jacobi example does not give a universal law. With
     ω = (v(x)+c_s)k + (c_sξ²/8)k³ and x(u) = Σ c_n uⁿ the inverse profile
     series, the tunneling exponent is 2π·Res_{k=0}[x dk], and only the terms
     n ≡ 1 (mod 3) survive the residue:
@@ -183,20 +186,18 @@ def dispersive_correction(D):
     Finazzi & Parentani 2012, as the source of this coefficient.
 
     π/6 is therefore fixed HERE, by definition, as the project's O(1)
-    normalization, and every statement about δ_disp in this repository and in
-    the manuscripts is a statement about that definition. The Lean
+    normalization in this evaluator. Its numerical result is conditional
+    on the full adopted law; other physical claims need separate support. The Lean
     definition ``KappaScaling.dispersiveCorrection`` carries the same number.
 
     Lean: dispersive_correction_bound (KappaScaling.lean), bogoliubov_superluminal
     Aristotle: d65e3bba, 3eedcabb
-    Source: SCALING — Coutant & Weinfurtner, PRD 2017 (parametric O(D²), KdV,
-            adiabatic regime). COEFFICIENT — project normalization; see
-            PARAMETER_PROVENANCE['EFT.DISPERSIVE_C1'].
-    Robustness (NOT the coefficient): Corley & Jacobson, PRD 54, 1568 (1996);
-            Coutant & Parentani, PRD 90, 121501(R) (2014).
-            ⚠️ NOT "PRD 89, 124004" — that is an unrelated Kerr-Newman-NUT
-            paper; the misprint is still live at HawkingUniversality.lean:54,
-            WKBAnalysis.lean:175 and papers/D1/paper_draft.tex:561.
+    Source: the whole quadratic law and coefficient are adopted here.
+            Coutant & Weinfurtner, arXiv:1707.09651v2 (profile-specific KdV), and
+            Coutant & Parentani, PRD 90, 121501(R) (2014), provide model
+            context, not a target-device nonzero D² law or its error bound.
+            PRD 89,124004 is an unrelated Kerr-Newman-NUT paper; no
+            unowned Lean/source locator correction is claimed here.
 
     Args:
         D: adiabaticity parameter (dimensionless)
@@ -605,9 +606,14 @@ def conformal_kinematic_viscosity(eta_over_sT, c_s):
 
     ν = η·v_F²/w = (η/(sT))·v_F² = 2·(η/(sT))·c_s²
 
-    The two forms are identical for a conformal fluid, where c_s = v_F/√2. The
-    c_s form is preferred because c_s is *measured* on both graphene platforms
-    while v_F is a band parameter defined only for the monolayer.
+    The two scalar forms agree under the supplied identity c_s = v_F/√2.
+    Bilayer also has a density-dependent band Fermi velocity; an ideal
+    degenerate parabolic carrier can satisfy the same squared-speed identity.
+    That coincidence does not derive relativistic inertia w/v_F² or justify
+    this viscosity substitution for a bilayer device. A supplied or
+    source-estimated sound speed is not necessarily an independent measurement.
+    Actual density/temperature/gate/current/inertia matching and its physical
+    error remain BUILD; no monolayer velocity is transferred by this identity.
 
     Why v_F² and not c_s² alone: in relativistic hydrodynamics the momentum
     density is w/v_F², so ν = η/(w/v_F²). The sound-attenuation coefficient
@@ -674,27 +680,24 @@ def turning_point_shift(Gamma_H, kappa, c_s):
 # ════════════════════════════════════════════════════════════════════
 
 def decoherence_parameter(Gamma_H, kappa):
-    """
-    Decoherence parameter for the modified Bogoliubov relation.
+    """Evaluate the adopted scalar delta_k = 2*Gamma_H/kappa.
 
-    δ_k = 2 · Γ_H / κ = 2 · δ_diss
-
-    This measures the probability of phonon absorption during horizon
-    crossing. The factor of 2 arises from the two traversals of the
-    dissipative region on the SK contour (retarded + advanced branches).
-
-    Modified unitarity: |α|² - |β|² = 1 - δ_k
+    It equals twice the supplied first-order damping fraction. Positivity
+    alone does not make it an absorption probability: this scalar has no
+    upper-one guarantee. A physical channel, crossing-time convention,
+    bath/state and normalization must establish any probability meaning.
+    The two-contour-branch story is motivation, not this evaluator's proof.
+    The existing nonpositive-kappa fallback is preserved.
 
     Lean: decoherence_nonneg, decoherence_double_delta_diss,
           decoherence_zero_iff (WKBConnection.lean)
-    Source: original
+    Source: original (adopted modified-unitarity parameter)
 
     Args:
-        Gamma_H: damping rate at horizon [s⁻¹]
-        kappa: surface gravity [s⁻¹]
-
+        Gamma_H: supplied damping rate [s^-1].
+        kappa: supplied surface-gravity frequency [s^-1].
     Returns:
-        δ_k (dimensionless, non-negative)
+        Dimensionless supplied-model parameter.
     """
     if kappa <= 0:
         return 0.0
@@ -702,26 +705,30 @@ def decoherence_parameter(Gamma_H, kappa):
 
 
 def fdr_noise_floor(delta_k, omega=None, T_env=0.0):
-    """
-    FDR/KMS-mandated noise floor.
+    """Evaluate the separately adopted occupation-floor ansatz.
 
-    n_noise = δ_k / 2  (at T_env = 0)
+    At T_env=0 the definition is n_noise=delta_k/2. Generic KMS/FDR
+    relates appropriate quantum response and noise under its state,
+    observable and ordering hypotheses; it does not determine this specific
+    mode/receiver occupation from delta_k alone. Modified unitarity also
+    does not derive this floor. Physical channel/bath/state/normalization
+    matching and calibrated error remain BUILD.
 
-    The fluctuation-dissipation relation requires that dissipation
-    is accompanied by noise. At zero environment temperature,
-    n_noise = δ_k/2 = Γ_H/κ = δ_diss.
+    The finite-temperature coth continuation and existing guards are
+    retained numerical conventions. Here omega and T_env must use the
+    same natural-frequency units; an SI Kelvin temperature requires an
+    explicit physical hbar/k_B conversion outside this evaluator.
 
     Lean: noise_floor_nonneg, noise_floor_eq_delta_diss,
           noise_floor_zero_iff (WKBConnection.lean)
-    Source: original
+    Source: original (adopted occupation convention)
 
     Args:
-        delta_k: decoherence parameter
-        omega: mode frequency (unused at T_env=0, for future extension)
-        T_env: environment temperature (default 0)
-
+        delta_k: supplied dimensionless damping parameter.
+        omega: mode frequency in the same units as T_env.
+        T_env: natural-frequency temperature, default zero.
     Returns:
-        n_noise (dimensionless, non-negative)
+        Adopted nonnegative scalar floor under its existing guards.
     """
     if delta_k <= 0:
         return 0.0
@@ -6560,42 +6567,53 @@ def dirac_fluid_dissipation_window(T_H_K, l_mr_m, v_F=1.0e6):
 
 
 def graphene_hawking_noise_psd(omega, sigma_Q_SI, T_H_K, greybody=1.0):
-    """Current noise PSD from analog Hawking radiation in graphene.
+    """Adopted leading current-noise model for analog Hawking studies.
 
-    The Hawking-induced excess current noise at a bilayer-graphene
-    de Laval nozzle, derived from both Keldysh and Landauer-Büttiker
-    with Bogoliubov mixing (symmetrized emission convention):
+    This function evaluates the supplied electrical-noise ansatz
 
-        ΔS_I(ω) = 2 ℏω σ_Q Γ(ω) n_H(ω)
+        ΔS_I(ω) = 2 ℏω σ_Q Γ(ω) n_H(ω),
 
-    where:
-        ℏω     = photon energy [J]
-        σ_Q    = quantum-critical conductance [S]
-        Γ(ω)   = greybody transmission factor (≤ 1)
-        n_H(ω) = 1/(exp(ℏω/k_BT_H) - 1) = Hawking occupation
+    with n_H = 1/(exp(ℏω/k_B T_H) - 1). The declared convention is a
+    one-sided symmetrized PSD per ordinary hertz, evaluated at the
+    angular-frequency argument omega = 2 pi f. The expression's units
+    are [J] × [S] = [A²·s] = [A²/Hz]; units alone do not establish
+    physical current coupling, spectral ordering or normalization.
 
-    Units: [J] × [S] × [1] × [1] = [A²·s] = [A²/Hz]  ✓
+    sigma_Q_SI is a supplied conductance factor. Its identification
+    with the actual bilayer current response, acoustic-channel weight
+    or terminal admittance is not derived here. A specified charged
+    acoustic Gaussian channel can have this functional form for one
+    populated direction under the stated readout convention; that
+    does not establish its applicability or sigma_Q matching in the
+    device. Transmission, incoming state, additional correlated noise,
+    detector transfer and independent calibration remain required.
 
-    The previously used prefactor (2e²/π) is DIMENSIONALLY WRONG:
-    [C²] × [S] × [s⁻¹] = [A⁴·s⁴/(kg·m²)] ≠ [A²/Hz].
-    The error is the substitution ℏ → e²/π, introducing an extraneous
-    conductance quantum 2e²/h ≈ 77.5 μS.
+    Historical Keldysh-FDT and multichannel Bogoliubov analogies motivate
+    this adopted model; they do not establish a microscopic bilayer
+    Landauer-Büttiker/Keldysh derivation or equivalence. Those physical
+    constructions and an identifiable error-controlled detection band
+    remain separate BUILD obligations. No equilibrium FDT for a driven
+    state or calibrated sensitivity follows from evaluating this formula.
+
+    The previously used prefactor (2e²/π) was dimensionally wrong:
+    substituting ℏ -> e²/π inserts an extraneous conductance quantum.
+    Correcting that error does not supply the missing physical derivation.
 
     Lean: SKEFTHawking.GrapheneNoiseFormula.grapheneNoisePSD_dimensional;
           SKEFTHawking.GrapheneNoiseFormula.hawkingNoisePSD_pos
-    Source: Derived in Lit-Search/Phase-5w/5w-landauer-buttiker-noise.md
-            Keldysh route: Callen-Welton FDT + mode-resolved F_u(ω)
-            Landauer route: Büttiker multichannel + Bogoliubov mixing
-            (Anantram & Datta PRB 53, 16390 structural template)
+    These algebraic/dimensional statements are not physical derivations.
+    Source: Lit-Search/Phase-5w/5w-landauer-buttiker-noise.md
+    This historical research motivates the adopted electrical model.
 
     Args:
         omega: Angular frequency [s⁻¹] (scalar or array).
-        sigma_Q_SI: Quantum-critical conductance [S].
-        T_H_K: Hawking temperature [K].
-        greybody: Greybody factor Γ(ω), scalar or array (default 1.0 = step horizon).
+        sigma_Q_SI: Supplied quantum-critical conductance factor [S].
+        T_H_K: Assumed Hawking temperature [K].
+        greybody: Adopted transmission factor Γ(ω), scalar or array
+            (default 1.0); actual device transmission must be established.
 
     Returns:
-        ΔS_I [A²/Hz] (same shape as omega).
+        Adopted ΔS_I [A²/Hz] (same shape as omega), under the convention above.
     """
     from src.core.constants import HBAR, K_B
     n_H = 1.0 / (np.exp(HBAR * omega / (K_B * T_H_K)) - 1.0)
@@ -6651,27 +6669,23 @@ def graphene_channel_cutoff_energy(n, W, c_s):
 
 
 def graphene_channel_spectrum_sum(beta, greybody):
-    """Total occupation summed over open transverse channels.
+    """Evaluate the supplied elementwise channel-array product sum.
 
-    Each open channel n contributes β_n · Γ_n(ω) to the total Hawking
-    occupation:
-
-        n_total(ω) = Σ_{n: ω > ω_⊥(n)} β_n(ω) · Γ_n(ω)
-
-    The result is non-negative when all β_n and Γ_n are non-negative,
-    and bounded by Γ_max · Σ β_n when each Γ_n ≤ Γ_max.
+    This function does not identify physical open transverse channels,
+    derive their occupations/transmission or apply a frequency threshold.
+    The caller supplies and matches the arrays. It is not called by the
+    current src/graphene/wkb_spectrum.py producer. Its scalar structural
+    bounds require the corresponding nonnegative/bounded inputs.
 
     Lean: SKEFTHawking.DiracFluidWKB.channelSpectrumSum,
           channelSpectrumSum_nonneg, channelSpectrumSum_bounded_uniform
-    Source: Sum-over-channels structural form consumed by
-            src/graphene/wkb_spectrum.py.
+    Source: supplied-array algebra.
 
     Args:
-        beta: |β_n|² array (per-channel Bogoliubov, non-negative).
-        greybody: Γ_n array (per-channel transmission factor ≤ 1).
-
+        beta: supplied occupation/weight array.
+        greybody: supplied transmission/weight array.
     Returns:
-        Σ_n β_n · Γ_n (scalar).
+        float sum_n beta_n*greybody_n under NumPy broadcasting.
     """
     return float(np.sum(np.asarray(beta) * np.asarray(greybody)))
 
@@ -6691,71 +6705,67 @@ def graphene_channel_spectrum_sum(beta, greybody):
 
 
 def greybody_zero_freq(c_R, v):
-    """Zero-frequency greybody factor for a 1D acoustic horizon.
+    """Adopted zero-frequency transmission scalar, 4*c_R*v/(c_R+v)^2.
 
-    Γ(ω→0) = 4·c_R·v / (c_R + v)²
-
-    Profile-independent; follows from solving the Schwarzschild-time mode
-    equation at ω=0 exactly and matching to asymptotic WKB forms
-    (Anderson-Balbinot-Fabbri-Parentani, PRD 87). For the Dean graphene
-    nozzle with c_R ≈ c_s and v ≈ c_s near the horizon, Γ₀ ≈ 0.9994.
-
-    Note: 1D acoustic horizons have Γ₀ ≠ 0 even at ω=0 (unlike 4D
-    Schwarzschild where Γ ∝ ω²). This is the "topological" reason the
-    cumulative SNR remains finite in the IR.
+    The infrared expression is derived for the specified stationary, constant
+    flow/density, transversely frozen hydrodynamic BEC model in Anderson et al.,
+    PRD 90,104044 (2014), arXiv:1404.3224v3 Eq.36. c_R is its subsonic asymptotic
+    sound speed. This does not derive bilayer electrical transmission or current.
+    For supplied v/c_R=0.985, the scalar is 157600/157609, about 0.99994;
+    equality at c_R=v is algebraic impedance matching, not a physical profile
+    or finite-frequency theorem. Positive-speed inputs give [0,1].
 
     Lean: .greybody_zero_freq_le_one (T1)
     Aristotle: manual
-    Source: Anderson et al., PRD 87, 124018 (2013), Eq. 15
+    Source: Anderson et al., PRD 90,104044 (2014), Eq36; held arXiv1404.3224v3
 
     Parameters
     ----------
     c_R : float or array
-        Speed of sound on the subsonic (right) side of the horizon [m/s].
+        Supplied subsonic-asymptotic sound speed [m/s].
     v : float or array
-        Flow velocity at the horizon [m/s]. Must be ≤ c_R for subsonic side.
+        Supplied positive flow speed [m/s]; physical matching remains owed.
 
     Returns
     -------
     float or array
-        Γ₀ ∈ [0, 1]. Equals 1 exactly iff v = c_R (step-horizon limit).
+        Defined scalar; for positive speeds it equals 1 iff v=c_R.
     """
     denom = (c_R + v) ** 2
     return 4.0 * c_R * v / denom
 
 
 def greybody_smooth_profile(omega, c_R, v, omega_max):
-    """Frequency-dependent greybody factor for a smooth 1D velocity profile.
+    """Adopted quadratic transmission model, not a derived bilayer greybody law.
 
-    Γ(ω) ≈ Γ₀ · [1 - (ω/ω_max)²],   ω ≪ ω_max
+    Gamma=Gamma0*[1-(omega/omega_max)^2], clipped to [0,1]. The whole
+    frequency dependence is phenomenological. The BEC infrared result in
+    Anderson et al., PRD 90,104044 (2014), Eq36 establishes neither this roll-off
+    nor a physical finite-band error bound for graphene. Clipping protects this
+    evaluator's range; it does not qualify inputs above a physical cutoff.
+    With D=kappa*l_disp/c_s and omega_H=kappa/(2*pi), the defined cutoff below
+    implies relative suppression 4*D/pi^2 at 4*omega_H, about 9.4 percent for the
+    literal D=51/220. Actual platform-derived lengths are separate inputs.
 
-    WKB expansion of the effective potential for a linear-ramp profile
-    (Anderson et al. Eq. 15). Valid in the adiabatic regime D ≪ 1 where
-    D = κ·l_disp/c_s. For the Dean graphene nozzle D = 0.232 (Block 1 §1.4
-    of the deep research).
-
-    Clamped to [0, 1] to guard against ω > ω_max edge cases (outside the
-    detection band in practice).
-
-    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (T1 at ω=0)
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (T1 at omega=0)
     Aristotle: manual
-    Source: Anderson et al., PRD 87, 124018 (2013), §V-VI
+    Source: adopted finite-frequency model; Anderson et al.2014 Eq36 for BEC IR only
 
     Parameters
     ----------
     omega : float or array
         Angular frequency [rad/s].
     c_R : float
-        Subsonic-side sound speed [m/s].
+        Supplied subsonic-asymptotic sound speed [m/s].
     v : float
-        Horizon flow velocity [m/s].
+        Supplied flow speed [m/s].
     omega_max : float
-        Dispersive UV cutoff [rad/s]; see ``dispersive_uv_cutoff``.
+        Adopted cutoff scale [rad/s]; see dispersive_uv_cutoff.
 
     Returns
     -------
     float or array
-        Γ(ω) ∈ [0, 1].
+        Clipped model transmission in [0,1], not a calibrated device response.
     """
     gamma_0 = greybody_zero_freq(c_R, v)
     correction = 1.0 - (omega / omega_max) ** 2
@@ -6764,107 +6774,90 @@ def greybody_smooth_profile(omega, c_R, v, omega_max):
 
 
 def dispersive_uv_cutoff(kappa, c_s, l_disp):
-    """Dispersive UV cutoff frequency above which Hawking radiation is suppressed.
+    """Adopted cutoff scale sqrt(kappa*c_s/l_disp), in angular frequency.
 
-    ω_max = √(κ · c_s / l_disp)
-
-    Universal form for subluminal dispersion (Macher-Parentani;
-    Finazzi-Parentani). For the Dean graphene nozzle with l_disp = l_ee
-    (electron-electron mean free path), ω_max/ω_H ≈ 13.4 — well above
-    the detection band.
+    This prescription is not a universal subluminal-dispersion law or a proved
+    physical bilayer detection-band edge. With D=kappa*l_disp/c_s and
+    omega_H=kappa/(2*pi), it gives exactly
+    (omega_max/omega_H)^2=4*pi^2/D. The literal manuscript inputs 2e12/s,
+    4.4e5m/s and 51 nm give D=51/220 and omega_max/omega_H about 13.
+    Rounded D=0.23 and the platform's separately derived length are different
+    inputs; neither supplies an independent 7.8 fit. Physical dispersion,
+    transmission, error regime and a usable band remain BUILD.
 
     Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (pending — PDE gap, tracked
         hypothesis rather than theorem; see H_DispersiveUVCutoff)
     Aristotle: manual
-    Source: Macher & Parentani, PRD 80, 043601 (2009); Finazzi &
-        Parentani, PRD 83, 084010 (2011)
+    Source: adopted cutoff prescription; Macher & Parentani PRD 80,043601 (2009)
+        and Finazzi & Parentani PRD 83,084010 (2011) are model context, not a
+        derivation of the target-device scale.
 
     Parameters
     ----------
     kappa : float
-        Surface gravity [1/s].
+        Supplied horizon gradient [1/s].
     c_s : float
-        Sound speed [m/s].
+        Supplied sound speed [m/s].
     l_disp : float
-        Dispersive length scale [m] (healing length in BEC; electronic
-        mean free path l_ee in a Dirac fluid).
+        Supplied dispersive length [m]; identifying it with a bilayer
+        electron-electron length requires independent physical matching.
 
     Returns
     -------
     float
-        ω_max [rad/s].
+        Adopted omega_max [rad/s].
     """
     return np.sqrt(kappa * c_s / l_disp)
 
 
 def dean_adiabaticity_parameter(kappa, l_disp, c_s):
-    """Dean / Finazzi-Parentani adiabaticity parameter.
+    """Evaluate D=kappa*l_disp/c_s at supplied inputs.
 
-    D = κ · l_disp / c_s
+    The literal Dean illustration gives D=51/220, about0.232.
+    D<1 is a model scale criterion, not a proof of physical WKB validity,
+    an O(D**4) remainder, convergence or a detector band. Profile-specific
+    results and their different adiabaticity parameters cannot be
+    transferred to the target device without an explicit construction.
 
-    D < 1 places the horizon in the adiabatic regime where dispersive
-    corrections to the Hawking temperature are O(D⁴). D ∼ 1 is the
-    abrupt regime with strong modifications. For the Dean graphene
-    nozzle D = 0.232 (adiabatic).
-
-    Lean: .dean_adiabatic (T4)
+    Lean: .dean_adiabatic (T4), scalar supplied-input inequality.
     Aristotle: manual
-    Source: Finazzi & Parentani, PRD 83, 084010 (2011), §III
+    Source: scale comparison motivated by Finazzi-Parentani;
+            target profile/state/mode/error matching remains BUILD.
 
-    Parameters
-    ----------
-    kappa : float
-        Surface gravity [1/s].
-    l_disp : float
-        Dispersive length [m].
-    c_s : float
-        Sound speed [m/s].
-
-    Returns
-    -------
-    float
+    Args:
+        kappa: supplied frequency [s^-1].
+        l_disp: supplied dispersive length [m].
+        c_s: supplied sound speed [m/s].
+    Returns:
         Dimensionless D.
     """
     return kappa * l_disp / c_s
 
 
 def quasi1d_correction_bound(omega, omega_perp, L, W, l_ee):
-    """Upper bound on fractional error in Γ from quasi-1D approximation.
+    """Evaluate a sum of two supplied quasi-1D envelope expressions.
 
-    |δΓ/Γ|_2D→1D  ≤  (l_ee/W)²  +  (ω/ω_⊥)² · exp(-2π·L/W)
-
-    Two contributions:
-      (a) Surface-gravity transverse-profile correction: (l_ee/W)².
-          Bounds |δκ/κ| under a flow-profile monotonicity assumption.
-      (b) Evanescent transverse-mode leakage: (ω/ω_⊥)²·exp(-2πL/W).
-          Sub-threshold (ω < ω_⊥) transverse modes decay exponentially
-          over the throat length L with slope 2π/W.
-
-    For the Dean graphene nozzle at ω = ω_H this bound evaluates to
-    ~1.8% (Block 2 §2.3 of the deep research).
+    value=(l_ee/W)**2+(omega/omega_perp)**2*exp(-2*pi*L/W).
+    To interpret it as an actual fractional-error bound requires the
+    physical surface and evanescent bounds as separate hypotheses.
+    Lean quasi1D_validity_bound adds those supplied inequalities; it
+    does not derive the target transverse profile, Helmholtz/scattering
+    solution, frequency domain or measured error. The historical roughly
+    1.8percent illustration is an envelope evaluation, not certification.
 
     Lean: .quasi1D_validity_bound (T5)
     Aristotle: manual
-    Source: Dudley-Anderson-Balbinot-Fabbri Eq. for transverse mode
-        structure; aggregated in Lit-Search/Phase-5w/Greybody...md §2.3
+    Source: adopted envelope combination; specific BEC infrared results
+            do not establish bilayer transverse/error matching.
 
-    Parameters
-    ----------
-    omega : float or array
-        Detection-band angular frequency [rad/s].
-    omega_perp : float
-        First transverse-mode threshold ω_⊥ = π·c_s/W [rad/s].
-    L : float
-        Throat length [m].
-    W : float
-        Channel width [m].
-    l_ee : float
-        Electron-electron mean free path [m].
-
-    Returns
-    -------
-    float or array
-        Dimensionless upper bound on |δΓ/Γ|. Always non-negative.
+    Args:
+        omega: supplied angular frequency [rad/s].
+        omega_perp: supplied transverse threshold [rad/s].
+        L: length [m].
+        W: width [m].
+        l_ee: mean-free-path model input [m].
+    Returns:
+        Supplied dimensionless envelope sum.
     """
     surface_gravity_term = (l_ee / W) ** 2
     evanescent_term = (omega / omega_perp) ** 2 * np.exp(-2.0 * np.pi * L / W)

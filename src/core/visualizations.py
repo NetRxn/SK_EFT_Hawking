@@ -6811,12 +6811,13 @@ def fig_fk_dimensional_ladder() -> go.Figure:
 
 
 def fig_graphene_hawking_temperature_sweep():
-    """Fig 102: Hawking temperature vs constriction length for graphene platforms.
+    """Fig 102: adopted Hawking-temperature curves versus constriction length.
 
-    Shows T_H as a function of nozzle throat length L for both monolayer
-    (c_s = v_F/√2) and bilayer (c_s = 440 km/s) graphene.  Marks the
-    four platform configurations from GRAPHENE_PLATFORMS.  Includes
-    horizontal lines for T_ambient and T_imp as detection thresholds.
+    Uses the unchanged monolayer c_s = v_F/sqrt(2) and adopted bilayer
+    c_s = 440 km/s inputs and marks the acoustic platform configurations.
+    The 150 K reference is a cited high-bias electron-temperature estimate,
+    not the bath temperature; 80 K is an adopted disorder reference.
+    Neither horizontal line certifies detection or a calibrated usable band.
     """
     from src.core.formulas import dirac_fluid_hawking_from_geometry
     from src.core.constants import GRAPHENE_PLATFORMS
@@ -6834,12 +6835,12 @@ def fig_graphene_hawking_temperature_sweep():
 
     fig.add_trace(go.Scatter(
         x=L_nm, y=T_H_mono,
-        name='Monolayer (c_s = v_F/√2)',
+        name='Monolayer (adopted c_s = v_F/√2)',
         line=dict(color=COLORS['steel_blue'], width=2.5),
     ))
     fig.add_trace(go.Scatter(
         x=L_nm, y=T_H_bi,
-        name='Bilayer (c_s ≈ 440 km/s)',
+        name='Bilayer (adopted c_s ≈ 440 km/s)',
         line=dict(color=COLORS['amber'], width=2.5, dash='dash'),
     ))
 
@@ -6867,11 +6868,14 @@ def fig_graphene_hawking_temperature_sweep():
 
     # Reference lines
     fig.add_hline(y=150, line_dash='dot', line_color='grey',
-                  annotation_text='T_ambient (Dean, 150 K)',
+                  annotation_text='Estimated high-bias electron T ≈ 150 K',
                   annotation_position='top right')
+    # Log-axis annotation ink uses log10; the physical line stays at 150 K.
+    fig.layout.annotations[-1].y = np.log10(150)
     fig.add_hline(y=80, line_dash='dot', line_color='lightgrey',
-                  annotation_text='T_imp ≈ 80 K',
+                  annotation_text='Adopted disorder reference T_imp ≈ 80 K',
                   annotation_position='bottom right')
+    fig.layout.annotations[-1].y = np.log10(80)
 
     apply_layout(fig,
         xaxis=dict(title='Nozzle throat length L (nm)', type='log'),
@@ -6885,12 +6889,13 @@ def fig_graphene_hawking_temperature_sweep():
 
 
 def fig_graphene_dissipation_window():
-    """Fig 103: Dissipation window ω_H/Γ_mr vs T_H for different l_mr.
+    """Fig 103: adopted weak-loss ratios omega_H/Gamma versus model T_H.
 
-    Shows the ratio of Hawking frequency to momentum-relaxation rate
-    as a function of T_H for three sample qualities (l_mr = 1, 5, 15 μm).
-    The horizontal line at ratio = 1 marks the detection threshold.
-    Platform configurations are marked.
+    Keeps the momentum-relaxation curves for l_mr = 1, 5, 15 micrometres
+    and the existing viscous diagnostic and platform markers. Ratio = 1
+    is a necessary weak-loss model boundary, not a detection threshold.
+    Physical current transfer, noise, identifiability and a calibrated
+    nonempty usable band remain BUILD.
     """
     from src.core.formulas import dirac_fluid_dissipation_window
     from src.core.constants import GRAPHENE_PLATFORMS
@@ -6910,10 +6915,12 @@ def fig_graphene_dissipation_window():
             line=dict(color=color, width=2),
         ))
 
-    # Detection threshold
+    # Necessary weak-loss model boundary; not a detection certificate
     fig.add_hline(y=1.0, line_dash='dash', line_color='black',
-                  annotation_text='ω_H = Γ_mr (detection threshold)',
+                  annotation_text='ω_H = Γ_mr (necessary weak-loss model boundary)',
                   annotation_position='top left')
+    # The dashed line stays at physical ratio 1; only its label uses log10.
+    fig.layout.annotations[-1].y = np.log10(1)
 
     # Platform markers — momentum relaxation
     for name, plat in GRAPHENE_PLATFORMS.items():
@@ -6951,7 +6958,7 @@ def fig_graphene_dissipation_window():
     fig.add_trace(go.Scatter(
         x=np.array(_visc_T)[_order], y=np.array(_visc_r)[_order],
         mode='markers+lines',
-        name='ω_H / Γ_H (viscous — binding)',
+        name='ω_H / Γ_H (viscous — model diagnostic)',
         marker=dict(size=11, color=COLORS['amber'], symbol='square'),
         line=dict(color=COLORS['amber'], width=2, dash='dot'),
     ))
@@ -6968,17 +6975,13 @@ def fig_graphene_dissipation_window():
 
 
 def fig_graphene_noise_spectrum():
-    """Fig 104: Current noise power spectrum S_I(ω) for Dean bilayer nozzle.
+    """Fig104: adopted current-noise model for the supplied Dean parameters.
 
-    Shows S_Hawking (excess noise from analog Hawking radiation),
-    S_thermal (Johnson-Nyquist background), and S_total on log-log axes.
-    Marks the characteristic Hawking frequency ω_H and the optimal
-    detection band.
-
-    Phase 5w W10c: the signal uses the realistic frequency-dependent
-    greybody Γ(ω) from `greybody_smooth_profile` (with Γ₀ ≈ 0.9994
-    per Anderson et al. PRD 87, Lean `QuasiOneDReduction.T1`), not the
-    Γ = 1 upper bound.
+    Draws the three unchanged compute_graphene_spectrum arrays. Transmission,
+    occupation/floor and thermal background are model inputs, not calibrated
+    device noise. The cyclic f_H marker is omega_H/(2*pi); shading is the
+    sampled peak/e SNR criterion, not a validated detection/physical-error band.
+    No BEC infrared result proves the finite-frequency bilayer transfer.
     """
     from src.graphene.wkb_spectrum import compute_graphene_spectrum
 
@@ -6989,38 +6992,41 @@ def fig_graphene_noise_spectrum():
 
     fig.add_trace(go.Scatter(
         x=f_GHz, y=spec.S_thermal,
-        name='S_thermal (Johnson-Nyquist)',
+        name='S_thermal (model)',
         line=dict(color=COLORS['dissipative'], width=2, dash='dash'),
     ))
     fig.add_trace(go.Scatter(
         x=f_GHz, y=spec.S_hawking,
-        name='S_Hawking (analog radiation)',
+        name='S_Hawking (model)',
         line=dict(color=COLORS['steel_blue'], width=2.5),
     ))
     fig.add_trace(go.Scatter(
         x=f_GHz, y=spec.S_total,
-        name='S_total',
+        name='S_total (model)',
         line=dict(color='black', width=1, dash='dot'),
     ))
 
-    # Mark ω_H
+    # Mark cyclic f_H=omega_H/(2*pi)
     omega_H_GHz = spec.omega_H / (2 * np.pi * 1e9)
     fig.add_vline(x=omega_H_GHz, line_dash='dot', line_color='grey',
-                  annotation_text=f'ω_H ≈ {omega_H_GHz:.0f} GHz',
+                  annotation_text=f'f_H ≈ {omega_H_GHz:.0f} GHz',
                   annotation_position='top right')
+    # Plotly annotations use log10 coordinates on this logarithmic x axis.
+    fig.layout.annotations[-1].x = np.log10(omega_H_GHz)
 
-    # Detection window
+    # Model peak/e window
     f_lo, f_hi = spec.freq_window_Hz[0] / 1e9, spec.freq_window_Hz[1] / 1e9
     fig.add_vrect(x0=f_lo, x1=f_hi,
                   fillcolor='rgba(46,134,171,0.08)', line_width=0,
-                  annotation_text='detection band',
+                  annotation_text='sampled model SNR > peak/e',
                   annotation_position='top left')
+    fig.layout.annotations[-1].x = np.log10(f_lo)
 
     apply_layout(fig,
         xaxis=dict(title='Frequency (GHz)', type='log',
                    range=[np.log10(0.3), np.log10(600)]),
         yaxis=dict(title='S_I (A²/Hz)', type='log'),
-        title=dict(text=f'Noise Power Spectrum — Dean Bilayer Nozzle '
+        title=dict(text=f'Adopted Noise Model — Dean Parameters '
                         f'(T_H = {spec.T_H_K:.1f} K, D = {spec.D:.2f})',
                    font=TITLE_FONT),
         height=500, width=750,
@@ -7029,15 +7035,13 @@ def fig_graphene_noise_spectrum():
 
 
 def fig_graphene_snr_frequency():
-    """Fig 105: Per-bin SNR vs frequency for the Dean bilayer nozzle.
+    """Fig105: sampled model signal/background ratio for supplied Dean parameters.
 
-    Shows the frequency dependence of the Hawking-to-thermal signal ratio.
-    The SNR is roughly flat at low frequencies (both Hawking and thermal
-    scale similarly) and drops exponentially above ω_H.
-
-    Phase 5w W10c: uses the realistic greybody Γ(ω) ≈ Γ₀ = 0.9994 (Lean
-    `QuasiOneDReduction.greybody_zero_freq_le_one`, Anderson et al.
-    PRD 87), not the `Γ=1` upper bound.
+    The corrected occupation includes the existing floor and roll-off. The
+    displayed Gamma0*T_H/(2*T_ambient) is a separate leading Planck low-frequency
+    reference, not an identity for this curve. The BEC IR scalar and conditional
+    Lean bounds do not certify bilayer sensitivity or a finite-width error.
+    Physical transfer/state/noise/calibration remain BUILD.
     """
     from src.graphene.wkb_spectrum import compute_graphene_spectrum
     from src.core.formulas import greybody_zero_freq
@@ -7054,7 +7058,7 @@ def fig_graphene_snr_frequency():
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=f_GHz, y=spec.snr_per_bin,
-        name='SNR per bin',
+        name='Model SNR per bin',
         line=dict(color=COLORS['steel_blue'], width=2),
         fill='tozeroy',
         fillcolor='rgba(46,134,171,0.15)',
@@ -7062,13 +7066,15 @@ def fig_graphene_snr_frequency():
 
     omega_H_GHz = spec.omega_H / (2 * np.pi * 1e9)
     fig.add_vline(x=omega_H_GHz, line_dash='dot', line_color='grey',
-                  annotation_text=f'ω_H ≈ {omega_H_GHz:.0f} GHz')
+                  annotation_text=f'f_H ≈ {omega_H_GHz:.0f} GHz')
+    # Only annotation coordinates are logarithmic; trace/shape x values stay in GHz.
+    fig.layout.annotations[-1].x = np.log10(omega_H_GHz)
 
     fig.add_annotation(
         x=np.log10(2), y=np.log10(spec.peak_snr * 0.3),
-        text=f'Peak SNR/bin ≈ {spec.peak_snr:.1e}<br>'
-             f'SNR = Γ₀ T_H/(2T_amb) ≈ {gamma_0 * spec.T_H_K/(2*spec.T_ambient_K):.3f}<br>'
-             f'(Γ₀ ≈ {gamma_0:.4f}, quasi-1D corr. ≤ 1.8%)',
+        text=f'Sampled model peak/bin ≈ {spec.peak_snr:.1e}<br>'
+             f'Leading low-frequency reference ≈ {gamma_0 * spec.T_H_K/(2*spec.T_ambient_K):.3f}<br>'
+             f'(adopted Γ₀ ≈ {gamma_0:.4f}; physical width error unqualified)',
         showarrow=False, font=dict(size=10),
         xref='x', yref='y',
     )
@@ -7078,7 +7084,7 @@ def fig_graphene_snr_frequency():
                    range=[np.log10(0.3), np.log10(600)]),
         yaxis=dict(title='S_Hawking / S_thermal (per bin)', type='log',
                    exponentformat='power'),
-        title=dict(text='Detection Signal-to-Noise — Dean Bilayer Nozzle',
+        title=dict(text='Adopted Signal-to-Noise Model — Dean Parameters',
                    font=TITLE_FONT),
         height=450, width=700,
     )

@@ -1,17 +1,16 @@
-"""Hawking noise spectrum for graphene Dirac fluid platforms.
+"""Adopted graphene current-noise model and ideal statistics.
 
-Computes the current noise power spectrum S_I(ω) near a sonic horizon
-in graphene, adapting the BEC WKB connection formula via the quasi-1D
-block-diagonal reduction (DiracFluidMetric.lean).
+The numerical carrier uses supplied platform parameters, a phenomenological
+dispersive law/cutoff, clipped transmission and corrected occupation/floor.
+A block-diagonal metric and constant sound-speed substitution do not establish
+bilayer current coupling, finite-frequency dispersion, horizon scattering or
+microscopic Landauer/Keldysh agreement. The BEC infrared scalar is motivation
+under its own assumptions. Actual contacts, state/correlated noise, detector
+ordering, calibration and an identifiable nonempty physical band remain BUILD.
 
-The key adaptation from BEC:
-- c_s → v_F/√2 (conformal Dirac fluid)
-- Superluminal Bogoliubov dispersion → subluminal (more robust)
-- Transport coefficients from viscosity η/s rather than Beliaev damping
-- Detection channel: current noise S_I(ω) rather than density correlations
-- Thermal background: Johnson-Nyquist at T_ambient >> T_H
-
-Phase 5w Wave 4.
+Legacy protocol fields such as feasible/eft_valid report model criteria only;
+they are not actual device validation or physical noise/error certificates.
+Phase5w Wave4 numerical defaults and APIs remain unchanged.
 """
 
 import numpy as np
@@ -88,13 +87,18 @@ def compute_graphene_spectrum(
     n_points: int = 300,
     omega_max_ratio: float = 10.0,
 ) -> GrapheneNoiseSpectrum:
-    """Compute the full current noise spectrum for a graphene platform.
+    """Compute the adopted current-noise model for a graphene platform.
 
     The noise power spectral density has two components:
     1. Johnson-Nyquist thermal noise: S_JN(ω) = 4 k_B T_amb σ_Q  [A²/Hz]
     2. Hawking excess noise: ΔS_I(ω) = 2 ℏω σ_Q Γ(ω) n_H(ω)   [A²/Hz]
 
     The Hawking occupation includes dispersive and dissipative corrections.
+    The electrical response is adopted: target bilayer current coupling,
+    contact/channel normalization and equivalence of microscopic Keldysh and
+    scattering derivations remain to be established. Transmission, circuit
+    transfer and background require independent calibration; modeled SNR and
+    integration times do not establish achieved sensitivity.
 
     Args:
         platform_name: key in GRAPHENE_PLATFORMS
@@ -147,25 +151,25 @@ def compute_graphene_spectrum(
     # Johnson-Nyquist: S_JN = 4 k_B T σ_Q (white noise in the hydro regime)
     S_thermal = 4 * K_B * T_ambient * sigma_Q_SI * np.ones_like(omega)
 
-    # Hawking noise PSD: excess current noise from pair production
-    # Derived via Keldysh + Landauer-Büttiker with Bogoliubov mixing:
+    # Adopted excess-current response, motivated by Keldysh/FDT and
+    # Landauer-Büttiker/Bogoliubov analogies. Physical bilayer current coupling,
+    # contact/channel normalization and microscopic route equivalence remain
+    # construction obligations; this multiplication does not derive them:
     #   ΔS_I(ω) = 2 ℏω σ_Q Γ(ω) n_Hawking(ω)    [A²/Hz]
     #
-    # Phase 5w Wave 10b (2026-04-22): realistic frequency-dependent Γ(ω)
-    # replaces the Γ=1 upper bound. Closed-form per Anderson-Balbinot-Fabbri-
-    # Parentani (PRD 87) + WKB smooth-profile expansion:
-    #   Γ₀ = 4 c_R v / (c_R + v)²    (zero-freq, profile-independent)
-    #   Γ(ω) ≈ Γ₀ · [1 - (ω/ω_max)²] (adiabatic regime D≪1)
-    #   ω_max = √(κ c_s / l_ee)      (dispersive UV cutoff)
-    # For Dean nozzle: Γ₀ ≈ 0.9994, ω_max/ω_H ≈ 7.8 (SNR ratio ≈ 0.999).
-    #
-    # See Lit-Search/Phase-5w/Greybody Factor and Quasi-1D Validity...md
-    # and Lean SKEFTHawking.QuasiOneDReduction for formalization.
+    # Adopted finite-frequency transmission: Gamma0 from the specified BEC IR
+    # expression (Anderson et al., PRD90,104044/2014, Eq36), then a model
+    # quadratic roll-off and cutoff. No bilayer scattering derivation follows.
+    # Gamma0 at v/c_R=0.985 is about0.99994. With omega_H=kappa/(2*pi),
+    # (omega_max/omega_H)^2=4*pi^2/D and suppression at4*omega_H is4*D/pi^2.
+    # Literal51nm gives D=51/220, about9.4percent; the actual platform l_ee
+    # is derived separately. Neither an independent7.8 fit nor a flat band.
+    # Lean scalar bounds and a supplied envelope do not derive physical errors.
     from src.core.formulas import (
         greybody_smooth_profile, dispersive_uv_cutoff,
     )
-    # Dean platform has measured / deep-research geometry; PROJECTED
-    # Monolayer platforms fall back to typical hydrodynamic-regime values.
+    # Supplied model geometry/lengths require device matching; projected
+    # monolayer branches retain their existing fallback values.
     l_ee = plat.get('l_ee_nm', 30) * 1e-9                          # m
     v_ratio = plat.get('v_over_c_s_horizon', 0.985)                # dimensionless
     v_horizon = v_ratio * c_s                                       # m/s
@@ -202,10 +206,10 @@ def compute_graphene_spectrum(
     else:
         integration_time_cumulative = np.inf
 
-    # Report the cumulative (more physically meaningful) as primary
+    # Report the full-grid ideal cumulative statistic as the legacy primary
     integration_time = integration_time_cumulative
 
-    # Detection frequency window: where SNR > peak_snr / e
+    # Sampled model window: SNR > peak_snr/e, not a physical validity band
     threshold = peak_snr / np.e
     above = snr_per_bin > threshold
     if np.any(above):
@@ -243,9 +247,11 @@ def compute_graphene_spectrum(
 
 
 def detection_protocol_summary(platform_name: str) -> dict:
-    """Generate a detection protocol summary for experimentalists.
+    """Report legacy model criteria and ideal statistics, not measured feasibility.
 
-    Returns a dict suitable for printing or including in a paper/proposal.
+    feasible is only the existing integration-time threshold; eft_valid is only
+    D<1. Neither supplies physical transmission, noise calibration or an
+    error-controlled band. Numerical fields and defaults remain unchanged.
     """
     spec = compute_graphene_spectrum(platform_name)
 
@@ -273,7 +279,7 @@ def detection_protocol_summary(platform_name: str) -> dict:
         },
         'comparison_to_BEC': {
             'T_H_ratio': spec.T_H_K / 3.5e-10,  # vs Steinhauer T_H ~ 0.35 nK
-            'dispersion_type': 'subluminal (more robust than BEC superluminal)',
+            'dispersion_type': 'assumed subluminal model; bilayer dispersion and robustness unestablished',
         },
         'recommended_measurement': 'Current noise PSD S_I(ω) via Johnson noise thermometry '
                                     '(Kim group, Harvard: 5.5 mK sensitivity)',

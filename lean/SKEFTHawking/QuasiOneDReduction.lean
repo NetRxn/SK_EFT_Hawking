@@ -1,56 +1,31 @@
-/-
-Phase 5w Wave 10b: Quasi-1D Reduction + Realistic Greybody Bounds
+/-!
+Phase5w Wave10b: supplied quasi-1D envelopes and infrared algebra.
 
-Formalizes the algebraic content of the quasi-1D approximation for the
-graphene de Laval nozzle Hawking radiation.  The PDE-analysis content
-(smooth profile existence, ω_max derivation from subluminal dispersion,
-Coutant-Parentani spectral robustness) is captured as two tracked `Prop`
-hypotheses pending future formalization — matching the precedent set by
-`CenterFunctor.lean` (`H_CF1_center_functor`, `H_CF2_center_equivalence`)
-and `CenterFunctorZ2Equiv.lean` (`H_CFZ2_sq_e`, `H_CFZ2_sq_a`).
+T1 bounds the defined scalar4*c_R*v/(c_R+v)^2 by0 and1; equality means
+c_R=v, not a step-horizon limit. The physical source is Anderson,
+Balbinot,Fabbri,Parentani, PRD90,104044(2014), arXiv1404.3224v3,
+Eq36, in its specified BEC infrared setting. It does not derive bilayer
+transmission or a finite-band/nozzle response.
 
-## Main results
+T2/T3/T5 assume actual surface/evanescent error envelopes as h_bound,
+h_surf,h_evan. Algebra/positive exponentials alone do not prove those
+physical hypotheses. T4 uses the supplied kappa2e12,l_ee51nm,c_s4.4e5
+and proves D=51/220<1, not an O(D^4) remainder or device validity.
 
-- **T1 `greybody_zero_freq_bounds`**: the profile-independent
-  zero-frequency greybody `Γ₀ = 4 c_R v / (c_R + v)²` satisfies
-  `0 ≤ Γ₀ ≤ 1` for positive c_R, v, with equality Γ₀ = 1 iff c_R = v
-  (step-horizon limit). Derived by AM-GM: `4 c_R v ≤ (c_R + v)²`.
-- **T2 `surface_gravity_correction_bound`**: the quasi-1D surface-gravity
-  correction is bounded by `(l_ee / W)²`. Stated as the algebraic bound
-  assuming the transverse flow-profile monotonicity hypothesis.
-- **T3 `evanescent_bound`**: the transverse-mode evanescent leakage
-  correction is bounded by `(ω / ω_⊥)² · exp(-2π·L/W)`. Follows from
-  the Helmholtz equation for a sub-threshold transverse mode.
-- **T4 `dean_adiabatic`**: the Dean graphene nozzle adiabaticity
-  parameter `D = κ·l_ee/c_s < 1` for the specific Dean values
-  (κ = 2e12, l_ee = 51 nm, c_s = 4.4e5) — `norm_num` over rationals.
-- **T5 `quasi1D_validity_bound`**: the combined bound adds T2 and T3.
+The two H_* definitions are parameterized propositions about caller-
+supplied temperatures/cutoff/constants, not inhabited physical theorems.
+Their BUILD requires a selected profile/mode/state/PDE analysis and error
+bounds, not merely future Mathlib support. Original quantitative objectives
+remain owed. For the adopted quadratic cutoff law,
+(omega_max/omega_H)^2=4*pi^2/D and rolloff at4*omega_H is4D/pi^2,
+about9.4percent at literal D=51/220. Neither flat transmission nor
+a physical safety band follows. The separate supplied envelope evaluation
+roughly1.8percent is not a measured/derived error certificate.
 
-## Tracked hypotheses (PDE gaps)
-
-- `H_AdiabaticRegimeCorrection`: the dispersive correction to T_H in the
-  adiabatic regime D ≪ 1 is O(D⁴). Requires Finazzi-Parentani ODE
-  perturbation theory not currently in Mathlib.
-- `H_DispersiveUVCutoff`: the UV cutoff scales as `ω_max ~ √(κ·c_s/l_ee)`.
-  Requires the subluminal BdG dispersion relation treated as a PDE
-  spectral problem.
-
-## References
-
-- Deep research: `Lit-Search/Phase-5w/Greybody Factor and Quasi-1D
-  Validity for the Graphene de Laval Nozzle.md` Blocks 1-2, §4.2.
-- Anderson, Balbinot, Fabbri, Parentani, PRD 87, 124018 (2013).
-- Finazzi & Parentani, PRD 83, 084010 (2011).
-- Macher & Parentani, PRD 80, 043601 (2009).
-- Dudley, Anderson, Balbinot, Fabbri — transverse mode structure.
-
-## Python companions
-
-- `src.core.formulas.greybody_zero_freq`
-- `src.core.formulas.greybody_smooth_profile`
-- `src.core.formulas.dispersive_uv_cutoff`
-- `src.core.formulas.dean_adiabaticity_parameter`
-- `src.core.formulas.quasi1d_correction_bound`
+Python companions retain greybody_zero_freq,greybody_smooth_profile,
+dispersive_uv_cutoff,dean_adiabaticity_parameter,quasi1d_correction_bound.
+Finazzi-Parentani PRD83,084010(2011), Macher-Parentani PRD80,043601(2009)
+and transverse-mode research are motivation with their own assumptions.
 -/
 
 import Mathlib
@@ -76,7 +51,7 @@ theorem greybody_zero_freq_le_one (c_R v : ℝ) (hc : c_R > 0) (hv : v > 0) :
   have h : (c_R - v)^2 ≥ 0 := sq_nonneg _
   nlinarith [h]
 
-/-- **T1c (greybody_zero_freq_eq_one)**: Γ₀ = 1 iff c_R = v (step-horizon limit). -/
+/-- **T1c (greybody_zero_freq_eq_one)**: Γ₀ = 1 iff c_R = v, solely a scalar equality. -/
 theorem greybody_zero_freq_eq_one (c_R v : ℝ) (hc : c_R > 0) (hv : v > 0) :
     4 * c_R * v / (c_R + v)^2 = 1 ↔ c_R = v := by
   have h_denom_pos : (c_R + v)^2 > 0 := by positivity
@@ -98,22 +73,11 @@ Non-negativity of the algebraic upper bound `(l_ee/W)²` used in T2.
 theorem surface_gravity_coefficient_nonneg (l_ee W : ℝ) :
     0 ≤ (l_ee / W)^2 := sq_nonneg _
 
-/--
-**T2 (surface_gravity_correction_bound)**: the fractional surface-gravity
-correction from the quasi-1D approximation is upper-bounded by `(l_ee/W)²`.
-
-Parameterized over an abstract `δκ_over_κ : ℝ` representing the actual
-deviation. The PDE content — that transverse averaging of a Poiseuille
-profile yields this bound with an O(1) prefactor — is taken as a load-bearing
-hypothesis `h_bound`. The theorem strengthens the bound to also give
-`|δκ/κ| < 1` in the hydrodynamic regime `l_ee < W`, showing that the
-correction never saturates the trivial upper bound.
-
-For the Dean device (`l_ee = 51 nm`, `W = 1 μm`) the coefficient is
-`(51/1000)² ≈ 2.6·10⁻³`, giving `δκ/κ ≤ 0.26%`.
-
-See Block 2 §2.2 of the deep research for the Poiseuille flow derivation.
--/
+/-- Supplied error |delta_kappa/kappa|<=(l_ee/W)^2 implies the stated
+    pair of inequalities under0<=l_ee<W. h_bound IS the physical bound,
+    not a result of this proof. At literal51nm/1um its envelope is about
+    0.0026; interpreting it as target0.26percent error needs an actual
+    transverse-profile derivation and normalization. -/
 theorem surface_gravity_correction_bound
     (δκ_over_κ l_ee W : ℝ) (hW : W > 0) (h_lee_lt_W : l_ee < W) (h_lee : 0 ≤ l_ee)
     (h_bound : |δκ_over_κ| ≤ (l_ee / W)^2) :
@@ -139,8 +103,8 @@ theorem evanescent_coefficient_nonneg (ω ω_perp L W : ℝ) :
 
 /--
 The evanescent suppression factor `exp(-2π · L / W)` is strictly less
-than 1 whenever the channel is longer than zero (`L > 0`). This encodes
-the physical exponential decay of sub-threshold transverse modes.
+than1 under the supplied L>0,W>0. This algebra does not derive a
+physical transverse-mode decay law, its normalization or threshold.
 -/
 theorem evanescent_factor_lt_one (L W : ℝ) (hW : W > 0) (hL : 0 < L) :
     Real.exp (-2 * Real.pi * L / W) < 1 := by
@@ -149,22 +113,11 @@ theorem evanescent_factor_lt_one (L W : ℝ) (hW : W > 0) (hL : 0 < L) :
   have h_num_neg : -2 * Real.pi * L < 0 := by nlinarith [h_pi_pos, hL]
   exact div_neg_of_neg_of_pos h_num_neg hW
 
-/--
-**T3 (evanescent_bound)**: for sub-threshold transverse modes (`ω < ω_⊥`),
-the correction to the greybody factor from evanescent leakage is
-upper-bounded by `(ω / ω_⊥)² · exp(-2π · L / W)`.
-
-Parameterized over an abstract `δΓ_over_Γ : ℝ`. The PDE content — that a
-Helmholtz mode below cutoff decays exponentially over a channel of length
-L with decay rate 2π/W — is taken as a load-bearing hypothesis `h_bound`.
-The theorem strengthens the bound by pointing out that the decaying
-factor makes the full bound strictly less than `(ω/ω_⊥)²` when `L > 0`.
-
-For the Dean device at `ω = ω_H`, `(ω_H/ω_⊥)² ≈ 0.06` and
-`exp(-2π L / W) ≈ 0.284`, giving δΓ/Γ ≤ 1.5%.
-
-See Block 2 §2.3 of the deep research.
--/
+/-- Consequences of supplied |delta_Gamma/Gamma|<=
+    (omega/omega_perp)^2*exp(-2*pi*L/W). The physical mode/Helmholtz
+    decay, threshold domain and amplitude normalization are h_bound,
+    not derived from exp positivity. Historical0.06,0.284 and about
+    1.5percent are illustrative envelope evaluations, not target errors. -/
 theorem evanescent_bound
     (δΓ_over_Γ ω ω_perp L W : ℝ) (_hωp : ω_perp > 0) (hW : W > 0)
     (hL : 0 < L)
@@ -186,17 +139,9 @@ theorem evanescent_bound
 
 /-! ## 4. T4 — Dean graphene nozzle adiabaticity -/
 
-/--
-**T4 (dean_adiabatic)**: the Dean graphene nozzle adiabaticity parameter
-`D = κ · l_ee / c_s` is strictly less than 1.
-
-Uses the Dean-specific values: κ = 2×10¹² s⁻¹, l_ee = 51 nm = 5.1×10⁻⁸ m,
-c_s = 4.4×10⁵ m/s. Yields D = 0.23181... < 1 via `norm_num`.
-
-This places the Dean device in the adiabatic regime, supporting the
-`O(D⁴)` dispersive correction claim tracked as
-`H_AdiabaticRegimeCorrection`.
--/
+/-- The literal supplied kappa=2e12s^-1,l_ee=51nm,c_s=4.4e5m/s
+    gives D=51/220<1. This rational inequality does not prove
+    H_AdiabaticRegimeCorrection, physical adiabaticity or a useful band. -/
 theorem dean_adiabatic :
     (2 * 10^12 : ℝ) * (51 * 10^(-9 : ℤ)) / (4.4 * 10^5) < 1 := by
   norm_num
@@ -213,23 +158,10 @@ theorem quasi1D_coefficient_nonneg (ω ω_perp L W l_ee : ℝ) :
     evanescent_coefficient_nonneg ω ω_perp L W
   linarith
 
-/--
-**T5 (quasi1D_validity_bound)**: the total fractional error in the
-greybody factor from quasi-1D approximation, `|δΓ_2D - δΓ_1D|/Γ_1D`, is
-upper-bounded by the sum of the surface-gravity correction (T2) and
-evanescent leakage (T3) bounds:
-
-    |δΓ_2D - δΓ_1D| / Γ_1D  ≤  (l_ee/W)²  +  (ω/ω_⊥)² · exp(-2π·L/W)
-
-Per the deep research Block 2 §2.3, for the Dean nozzle
-(`l_ee = 51 nm`, `W = 1 μm`, `L = 200 nm`, `ω_⊥ ≈ 4.46·ω_H`) this sum
-evaluates to ≈ 0.0026 + 0.015 ≈ **1.8% at ω = ω_H**, bounded by
-(1 + e^{-2π}) ≈ 1.002 (trivial bound from coefficient decomposition) and
-tighter at smaller ω.
-
-The theorem takes the component bounds from T2 and T3 as load-bearing
-hypotheses and produces the combined bound by triangle inequality.
--/
+/-- Add the two supplied physical envelope hypotheses h_surf,h_evan.
+    No target2D-to1D theorem or relative-error identification is derived.
+    The historical51nm,1um,200nm/roughly1.8percent evaluation is
+    conditional on those hypotheses and their actual frequency domain. -/
 theorem quasi1D_validity_bound
     (δκ_over_κ δΓ_over_Γ_evan ω ω_perp L W l_ee : ℝ)
     (_hωp : ω_perp > 0) (_hW : W > 0) (_hL : 0 < L)
@@ -241,52 +173,23 @@ theorem quasi1D_validity_bound
 
 /-! ## 6. Tracked hypotheses for PDE-analysis content -/
 
-/--
-**Tracked hypothesis (PDE gap)**: for a specific device configuration
-— i.e., specific physical Hawking temperatures `T_H_exact` and
-`T_H_leading` produced by the full Bogoliubov-de Gennes spectral
-problem and its leading-order approximation — the fractional deviation
-is bounded by `C_const · D⁴` where `D = κ · l_ee / c_s` is the
-adiabaticity parameter. Requires Finazzi-Parentani ODE perturbation
-theory (PRD 83, 084010 §III) not currently in Mathlib.
-
-**Parameterization discipline.** `T_H_exact`, `T_H_leading`, and
-`C_const` are **parameters** of the Prop, not universally-quantified
-inside it. Universal quantification over `T_H` values would produce a
-vacuously false Prop: given any small `D`, choose `T_H_exact = 1`,
-`T_H_leading = 0.1` → `|diff| / T_H_leading = 9 ≰ C · D⁴`. The caller
-supplies the specific pair `(T_H_exact, T_H_leading)` produced by
-their device and asserts the bound for that specific pair.
-
-Eliminable once Mathlib acquires the BdG eigenvalue perturbation
-machinery. Zero downstream dependencies — only Paper 16's quantitative
-Dean-specific T_H correction claim cites it.
--/
+/-- A parameterized proposition asserting a C_const*D^4 deviation for
+    the supplied T_H_exact,T_H_leading and positive inputs.
+    The bound is not constructed, inhabited or established for bilayer
+    physics. A caller must derive it for an actual profile/state/mode/
+    error regime. Missing Mathlib infrastructure is cost, not route closure.
+    Existing finite-order physical research obligations remain BUILD. -/
 def H_AdiabaticRegimeCorrection
     (kappa c_s l_ee C_const T_H_exact T_H_leading : ℝ) : Prop :=
   kappa > 0 → c_s > 0 → l_ee > 0 → C_const > 0 → T_H_leading > 0 →
     |T_H_exact - T_H_leading| / T_H_leading ≤
       C_const * (kappa * l_ee / c_s)^4
 
-/--
-**Tracked hypothesis (PDE gap)**: for a specific device-determined UV
-cutoff frequency `ω_max` and a specific theoretical scale constant `C`,
-the cutoff matches the Macher-Parentani scaling `ω_max ≈ C ·
-√(κ·c_s/l_ee)` to within 10%. Requires the subluminal quartic BdG
-dispersion relation treated as a PDE spectral problem
-(Macher-Parentani, PRD 80, 043601).
-
-**Parameterization discipline.** `ω_max` and `C` are **parameters** of
-the Prop, not universally-quantified inside it. Universal
-quantification over `ω_max` with an inner `∃C` absorption would make
-the Prop vacuous for any positive `ω_max` (just pick `C := ω_max /
-√(κ·c_s/l_ee)`). The caller supplies the specific pair `(ω_max, C)`
-produced by their PDE analysis and asserts the 10% agreement.
-
-Eliminable once Mathlib acquires the BdG spectral formalism for
-quartic dispersion. Zero downstream dependencies — only Paper 16's
-quantitative ω_max/ω_H ≈ 13.4 detection-band-safety claim cites it.
--/
+/-- A parameterized proposition asserting10percent agreement between
+    supplied omega_max and C*sqrt(kappa*c_s/l_ee). No target cutoff,
+    subluminal BdG spectrum or C calibration is derived. At the adopted
+    C=1 model, the reference ratio is2*pi/sqrt(D), about13 for literal
+    D=51/220; actual device safety/error matching remains BUILD. -/
 def H_DispersiveUVCutoff
     (kappa c_s l_ee ω_max C : ℝ) : Prop :=
   kappa > 0 → c_s > 0 → l_ee > 0 → C > 0 → ω_max > 0 →
@@ -295,19 +198,11 @@ def H_DispersiveUVCutoff
 
 /-! ## 7. Module summary -/
 
-/-! ## Module summary
-
-Summary theorem for the Quasi-1D Reduction module. Records the fact that
-we have 5 formalized algebraic bounds (T1 three parts + T2 + T3 + T4 + T5)
-plus 2 tracked hypotheses (H_AdiabaticRegimeCorrection,
-H_DispersiveUVCutoff) for the PDE-analysis content.
-
-Paper-claim mapping:
-  - "Γ₀ ≈ 0.9994" → T1b + numerical evaluation in Python
-  - "Γ(ω) remains ≈ Γ₀ across detection band" → T1b + T3 + H_DispersiveUVCutoff
-  - "Dean nozzle in adiabatic regime (D < 1)" → T4
-  - "Quasi-1D correction ≤ few percent" → T5 + Python-evaluated numerics
-  - "Dispersive T_H correction is O(D⁴)" → H_AdiabaticRegimeCorrection
+/-!
+Module summary: T1 scalar infrared bounds; T2/T3/T5 consequences of
+supplied physical envelopes; T4 literal D<1; two unproved parameterized
+physical H_* obligations. These are not a flat finite band, a calibrated
+bilayer theorem, an O(D^4) remainder or a physical detection certificate.
 -/
 end QuasiOneDReduction
 end SKEFTHawking
