@@ -269,3 +269,75 @@ def test_registry_writing_lanes_carry_the_one_writer_rule():
             assert g.get("registry_rule") is None, (
                 f"{g['lane']} carries a registry rule it has no reason to obey; a rule that "
                 f"applies to everything is read as boilerplate and ignored where it matters")
+
+
+@pytest.fixture(params=["canonical", "managed"])
+def active_target_checkout(tmp_path, monkeypatch, request):
+    """Different active/canonical copies make cross-checkout redirection observable."""
+    workspace = tmp_path / "workspace"
+    canonical = workspace / "SK_EFT_Hawking"
+    managed = workspace / ".codex-python-worktrees" / "publication-portability"
+    active, foreign = (canonical, managed) if request.param == "canonical" else (managed, canonical)
+    for root, content in ((active, "active"), (foreign, "foreign")):
+        for rel in (F1, F2):
+            path = root / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content)
+    monkeypatch.setattr(orch, "PROJECT_ROOT", active)
+    return active, foreign
+
+
+def test_active_checkout_target_spellings_compose_and_deduplicate(active_target_checkout):
+    active, _ = active_target_checkout
+    raw = f"`SK_EFT_Hawking/{F1}:1-3`, `{F2}`, `{active / F1}:9`, `{F1}`"
+    assert orch.target_files(raw) == [F1, F2]
+    assert (active / orch.target_files(f"SK_EFT_Hawking/{F1}")[0]).read_text() == "active"
+
+
+def test_logical_prefix_never_falls_back_to_foreign_copy(active_target_checkout):
+    active, foreign = active_target_checkout
+    (active / F1).unlink()
+    assert (foreign / F1).is_file()
+    assert orch.target_files(f"SK_EFT_Hawking/{F1}") == []
+
+
+@pytest.mark.parametrize("spelling", ["missing", "directory", "basename", "foreign", "traversal", "prefixed-traversal", "symlink", "other-prefix"])
+def test_active_checkout_target_refusals(active_target_checkout, spelling):
+    active, foreign = active_target_checkout
+    outside = active.parent / "escape.py"
+    outside.write_text("outside")
+    (active / "directory.py").mkdir()
+    (active / "outward.py").symlink_to(foreign / F1)
+    raw = {
+        "missing": "src/core/absent.py",
+        "directory": "directory.py",
+        "basename": "formulas.py",
+        "foreign": str(foreign / F1),
+        "traversal": "src/../../escape.py",
+        "prefixed-traversal": "SK_EFT_Hawking/../escape.py",
+        "symlink": "outward.py",
+        "other-prefix": f"OtherRepository/{F1}",
+    }[spelling]
+    assert orch.target_files(raw) == []
+
+
+def test_active_target_aliases_preserve_lane_and_concurrent_file_partition(active_target_checkout, monkeypatch):
+    nodes = [
+        _f("alias", target=f"SK_EFT_Hawking/{F1}"),
+        _f("lean", lane="lean", target=f"{F1}:4-8"),
+        _f("mixed", target=f"{F1}, {F2}"),
+        _f("other", target=F2),
+    ]
+    monkeypatch.setattr(orch, "_load_open_findings", lambda: (nodes, {n["id"] for n in nodes}, set()))
+    monkeypatch.setattr(orch, "lean_slots", lambda: ["wt1"])
+    result = orch.plan(slots=10)
+    alias = next(g for g in result["dispatch"] if "alias" in g["findings"])
+    assert set(alias["findings"]) == {"alias", "lean"}
+    assert alias["lane"] == "lean"
+    assert alias["gates"] == orch.LANE_PROFILE["lean"]["gates"]
+    held = [f for group in result["dispatch"] for f in group["files"]]
+    assert len(held) == len(set(held)) and set(held) == {F1, F2}
+    queued = next(g for g in result["queued_groups"] if "mixed" in g["findings"])
+    assert set(queued["files"]) == {F1, F2}
+    assert "held by a dispatched group" in queued["deferred"]
+    assert {fid for g in result["dispatch"] + result["queued_groups"] for fid in g["findings"]} == {n["id"] for n in nodes}
