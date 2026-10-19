@@ -184183,7 +184183,43 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.critical_lt_cutoffCoupling",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.cutoffCoupling_eq_critical_div",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.cutoffCoupling_pos",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.cutoff_is_fixed",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.TetradGapEquation.c\u2084_pos",
@@ -184193,6 +184229,42 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.existsUnique_positive_fixed",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.exists_supercritical_initial_bracket",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.exists_upper_bracket_beyond_cutoff",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.gapIntegral_at_cutoff",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.TetradGapEquation.gapIntegral_le_I0",
@@ -184219,7 +184291,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 7
     },
     {
       "fqn": "SKEFTHawking.TetradGapEquation.gapIntegral_strictAnti",
@@ -184228,7 +184300,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 5
     },
     {
       "fqn": "SKEFTHawking.TetradGapEquation.gapIntegral_tendsto_zero",
@@ -184237,7 +184309,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.TetradGapEquation.gapOperator_self_map",
@@ -184264,7 +184336,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.TetradGapEquation.gap_solution_monotone",
@@ -184273,7 +184345,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.TetradGapEquation.gap_trivial_unique_subcritical",
@@ -184291,11 +184363,146 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.njlBisectStep_bracket",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.njlBisectStep_width",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.njlBisect_bracket",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.njlBisect_midpoint_error",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.njlBisect_width",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.TetradGapEquation.njl_tetrad_correspondence",
       "module": "SKEFTHawking.TetradGapEquation",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.no_positive_fixed_at_or_below_critical",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.one_sub_log_two_pos",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.positive_fixed_above_cutoff",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.positive_fixed_below_cutoff",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.positive_fixed_cutoff_trichotomy",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.positive_fixed_iff_reduced_zero",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.positive_fixed_mem_bracket",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.positive_fixed_unique",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.reducedGapFn_strictAntiOn",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.TetradGapEquation.reduced_sign_at_positive_fixed",
+      "module": "SKEFTHawking.TetradGapNumericalBridge",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -211401,7 +211608,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 22851,
+    "theorem_nodes": 22874,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -211412,7 +211619,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 398,
-      "TRUE:PROVED": 22453,
+      "TRUE:PROVED": 22476,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
