@@ -127,6 +127,26 @@ ran.
 
 ---
 
+### Figure structural checks and rendered acceptance
+
+`scripts/review_figures.py --check` constructs registered figures in memory, applies
+structural checks, writes `figures/structural_checks.json` and returns nonzero for ordinary
+severity-error `CheckIssue` results. Stage-9 prechecks do not automatically execute this
+writing CLI. Its selected `_paper5_selected_consistency_issues` helper belongs to that
+existing FigureSpec/producer/structural route; it is not a registered `validate.py` check
+and must not acquire a parallel registry, dispatcher or readiness evaluator.
+
+The selected scalar consumer uses canonical capped certificate decoding and parameter
+replay against independently fixed inputs, model, requests and resource policy. Its
+contract binds the complete original population, plotted values, errors, hovers and
+visible qualification; matching hidden metadata is insufficient. The component-category
+consumer binds assignments and their negative spectrum qualification. Numerical replay,
+independent mathematical oracles, rendered readability/caption review and physical
+construction have separate acceptance evidence. Structural success alone closes none of
+the microscopic, native or publication obligations. The governing
+[selected-consumer design](../superpowers/specs/2026-10-19-adw-selected-certificate-checker-design.md)
+records the implementation and review boundary.
+
 ## 1.5 The execution and enforcement layers — what the review planes do NOT cover
 
 The planes above describe agents that **judge** artifacts. Two other agent classes act on the

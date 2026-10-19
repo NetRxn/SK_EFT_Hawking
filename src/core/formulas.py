@@ -745,101 +745,842 @@ def fdr_noise_floor(delta_k, omega=None, T_env=0.0):
 # ADW gap equation (ADWMechanism.lean)
 # ════════════════════════════════════════════════════════════════════
 
-def adw_effective_potential(C, G, Lambda, N_f):
+from fractions import Fraction as _ADWFraction
+from numbers import Real as _ADWReal, Rational as _ADWRational
+from math import isfinite as _adw_isfinite, isqrt as _adw_isqrt
+from dataclasses import dataclass as _adw_dataclass
+
+
+class ADWScalarUnresolved(ArithmeticError):
+    """Valid inputs whose requested numerical certificate was not obtained.
+
+    Threshold uncertainty, finite work/bit budgets and output representation
+    refuse explicitly. This is never an origin minimum or physics verdict.
     """
-    Effective potential for tetrad condensation.
 
-    V_eff(C) = C²/(2G) - (N_f/16π²)[Λ²C² - C⁴ ln(Λ²/C² + 1)]
 
-    The first term is the tree-level HS potential.
-    The second term is the one-loop Coleman-Weinberg contribution
-    from integrating out N_f Dirac fermions in the tetrad background.
+class _ADWWork:
+    def __init__(self, max_work, max_bits):
+        for name, value in (("max_work", max_work), ("max_bits", max_bits)):
+            if type(value) is not int or value < 1:
+                raise ValueError(name + " must be a positive integer")
+        self.limit, self.bits, self.used = max_work, max_bits, 0
 
-    Lean: critical_coupling_pos (ADWMechanism.lean) — V_eff structure verified via G_c positivity
-    Aristotle: manual
-    Source: Diakonov, arXiv:1109.0091 (2011); Wetterich, PRD 70, 105004 (2004)
+    def take(self, *values):
+        self.used += 1
+        if self.used > self.limit:
+            raise ADWScalarUnresolved("finite rational work budget exhausted")
+        for value in values:
+            if isinstance(value, _ADWFraction):
+                # Public Rational inputs are normalized by _adw_exact first.
+                # Untrusted receipt payloads must not perform NumPy integer
+                # arithmetic or crash this pre-replay size admission.
+                if type(value.numerator) is not int or type(value.denominator) is not int:
+                    raise ValueError("canonical Python-integer Fraction witness components required")
+                size = max(abs(value.numerator).bit_length(), value.denominator.bit_length())
+            elif isinstance(value, int):
+                size = abs(value).bit_length()
+            else:
+                continue
+            if size > self.bits:
+                raise ADWScalarUnresolved("finite rational bit budget exhausted")
 
-    Args:
-        C: Tetrad magnitude (order parameter)
-        G: ADW coupling constant
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
 
-    Returns:
-        V_eff(C)
+def _adw_exact(value, name, *, positive=False):
+    """Exact supplied rational, with no nonzero-to-zero or rounding conversion.
+
+    Rational Real inputs retain their original numerator/denominator. Other
+    Real scalars must supply an exact as_integer_ratio or compare equal to
+    their finite binary64 conversion. Arrays/complex/bools are not scalars.
+    This arithmetic N_f domain does not license fractional physical species.
     """
-    # ⚠️ `abs(C)`, NOT `C`. This read `if C < 1e-15`, which caught EVERY negative
-    # tetrad magnitude and returned 0.0 — flattening the entire negative branch of a
-    # DOUBLE WELL to zero. Every term above is even in `C` (`C²`, `C⁴`, and `C²`
-    # inside the log), so `V(-C) = V(C)` identically; measured before the fix:
-    #     V(+0.5, G=1, Λ=10, N_f=4) = -0.49876809672521716
-    #     V(-0.5, …)                =  0.0
-    # The guard's only job is the `Λ²/C²` division at the origin, which is a
-    # statement about |C|.
-    #
-    # LATENT, not observed: every caller today samples C >= 0 only —
-    # `gap_equation.py:334` `np.linspace(0, Lambda, n_points)`, the minimizer's
-    # `bounds=(1e-6 * Lambda, C_max)` at `gap_equation.py:220`, and
-    # `ginzburg_landau.py:683` `np.linspace(0.5, 5.0, …)`. So no published figure
-    # or solver result was wrong. The fix is to keep it that way if a caller ever
-    # sweeps the full double well; `test_effective_potential_even_in_C` is the guard.
-    if abs(C) < 1e-15:
+    if isinstance(value, (bool, np.bool_)) or not isinstance(value, _ADWReal):
+        raise ValueError(name + " must be a finite real scalar, not bool/array")
+    if isinstance(value, _ADWRational):
+        result = _ADWFraction(int(value.numerator), int(value.denominator))
+    else:
+        try:
+            ratio = value.as_integer_ratio()
+        except AttributeError:
+            try:
+                binary = float(value)
+            except (TypeError, ValueError, OverflowError) as exc:
+                raise ValueError(name + " has no admitted exact representation") from exc
+            if not _adw_isfinite(binary) or binary != value:
+                raise ValueError(name + " would lose its supplied real value")
+            ratio = binary.as_integer_ratio()
+        except (ValueError, OverflowError) as exc:
+            raise ValueError(name + " must be finite") from exc
+        try:
+            result = _ADWFraction(*ratio)
+        except (TypeError, ValueError, ZeroDivisionError) as exc:
+            raise ValueError(name + " has an invalid exact ratio") from exc
+        result = _ADWFraction(int(result.numerator), int(result.denominator))
+        if result != value:
+            raise ValueError(name + " exact ratio does not retain its supplied value")
+    if positive and result <= 0:
+        raise ValueError(name + " must be positive")
+    return result
+
+
+def _adw_interval_product(left, right):
+    values = [a * b for a in left for b in right]
+    return min(values), max(values)
+
+
+def _adw_atan_bounds(t, terms, work):
+    total, power, square = _ADWFraction(0), t, t*t
+    for j in range(terms):
+        work.take(total, power)
+        total += (-1 if j % 2 else 1) * power / (2*j + 1)
+        power *= square
+    following = (-1 if terms % 2 else 1) * power / (2*terms + 1)
+    return min(total, total + following), max(total, total + following)
+
+
+def _adw_pi_bounds(terms, work):
+    a = _adw_atan_bounds(_ADWFraction(1, 5), terms, work)
+    b = _adw_atan_bounds(_ADWFraction(1, 239), terms, work)
+    result = 16*a[0] - 4*b[1], 16*a[1] - 4*b[0]
+    work.take(*result)
+    if not 0 < result[0] <= result[1]:
+        raise ADWScalarUnresolved("contradictory pi enclosure")
+    return result
+
+
+def _adw_log_series(v, terms, work):
+    total, power, square = _ADWFraction(0), v, v*v
+    for j in range(terms):
+        work.take(total, power)
+        total += 2*power/(2*j+1)
+        power *= square
+    # Terms j=0,...,terms-1; first omitted power is 2*terms+1.
+    tail = 2*power/((2*terms+1)*(1-square))
+    return total, total + tail
+
+
+def _adw_log_bounds(x, terms, work):
+    if x < 1:
+        raise ValueError("internal logarithm range must be at least one")
+    k, y = 0, x
+    while y >= 2:
+        work.take(y)
+        y /= 2
+        k += 1
+    v = (y-1)/(y+1)
+    a, b = _adw_log_series(v, terms, work)
+    c, d = _adw_log_series(_ADWFraction(1, 3), terms, work)
+    result = a+k*c, b+k*d
+    work.take(*result)
+    return result
+
+
+def _adw_J_bounds(z, terms, work):
+    if z <= 0:
+        raise ValueError("J requires positive z")
+    if z >= 1:
+        q = 1/(1+z)
+        power, total = q*q, _ADWFraction(0)
+        for j in range(terms):
+            work.take(total, power)
+            total += 2*power/((j+2)*(j+3))
+            power *= q
+        tail = 2*power/((terms+2)*(terms+3)*(1-q))
+        lo, hi = total, total+tail
+    else:
+        lo_log, hi_log = _adw_log_bounds(1+1/z, terms, work)
+        lo = 1-2*z*hi_log+z/(1+z)
+        hi = 1-2*z*lo_log+z/(1+z)
+    lo, hi = max(_ADWFraction(0), lo), min(_ADWFraction(1), hi)
+    if lo > hi:
+        raise ADWScalarUnresolved("contradictory positive-kernel enclosure")
+    work.take(lo, hi)
+    return lo, hi
+
+
+def _adw_residual_bounds(z, r, terms, work):
+    if z == 0:
+        return 1/r[1]-1, 1/r[0]-1
+    jlo, jhi = _adw_J_bounds(z, terms, work)
+    return 1/r[1]-jhi, 1/r[0]-jlo
+
+
+def _adw_sqrt_bounds(x, bits, work):
+    if x < 0:
+        raise ValueError("square-root enclosure requires nonnegative input")
+    if x == 0:
+        return _ADWFraction(0), _ADWFraction(0)
+    scaled = (x.numerator << (2*bits)) // x.denominator
+    work.take(scaled)
+    k = _adw_isqrt(scaled)
+    denominator = 1 << bits
+    lo = _ADWFraction(k, denominator)
+    if lo*lo == x:
+        return lo, lo
+    return lo, _ADWFraction(k+1, denominator)
+
+
+def _adw_parameter_ratio(params, pi):
+    G, cutoff, species = params
+    numerator = G*species*cutoff*cutoff/8
+    return numerator/(pi[1]*pi[1]), numerator/(pi[0]*pi[0])
+
+
+def _adw_energy_bounds(c, cutoff, species, r, pi, terms, work):
+    if c == 0:
+        return _ADWFraction(0), _ADWFraction(0)
+    z = (c/cutoff)**2
+    lo, hi = _adw_log_bounds(1+1/z, terms, work)
+    normalized = z*(1/r[1]-1)+z*z*lo, z*(1/r[0]-1)+z*z*hi
+    a = species/(16*pi[1]*pi[1]), species/(16*pi[0]*pi[0])
+    result = _adw_interval_product(a, normalized)
+    result = result[0]*cutoff**4, result[1]*cutoff**4
+    work.take(*result)
+    return result
+
+
+def _adw_binary_midpoint(interval, name, *, nonzero=False):
+    try:
+        value = float((interval[0]+interval[1])/2)
+    except (ValueError, OverflowError) as exc:
+        raise ADWScalarUnresolved(name + " is not binary64 representable") from exc
+    if not _adw_isfinite(value) or (nonzero and value == 0):
+        raise ADWScalarUnresolved(name + " overflow/positive-branch underflow")
+    exact = _ADWFraction.from_float(value)
+    error = max(abs(exact-interval[0]), abs(exact-interval[1]))
+    return value, exact, error
+
+
+def _adw_decimal(integer):
+    """Canonical decimal text without changing Python's global int limit."""
+    if integer == 0:
+        return "0"
+    sign, value = ("-" if integer < 0 else ""), abs(integer)
+    chunks = []
+    while value:
+        value, remainder = divmod(value, 1000000000)
+        chunks.append(remainder)
+    return sign+str(chunks[-1])+"".join(f"{v:09d}" for v in reversed(chunks[:-1]))
+
+
+def _adw_read_decimal(text, policy):
+    if type(text) is not str or not text or len(text) > policy.bits:
+        raise ValueError("bounded decimal integer string required")
+    negative = text.startswith("-")
+    digits = text[1:] if negative else text
+    if (not digits or any(ch not in "0123456789" for ch in digits) or
+            (len(digits) > 1 and digits[0] == "0") or (negative and digits == "0")):
+        raise ValueError("canonical decimal integer syntax")
+    value = 0
+    for offset in range(0, len(digits), 9):
+        chunk = digits[offset:offset+9]
+        value = value*(10**len(chunk))+int(chunk)
+        policy.take(value)
+    return -value if negative else value
+
+
+@_adw_dataclass(frozen=True)
+class ADWScalarEnclosure:
+    """Immutable numerical witness, not a native theorem or physical result.
+
+    Fractions refer to exact supplied values; the output float has its own
+    explicit rounding distance. model disambiguates physical-parameter pi
+    arithmetic from an explicitly supplied exact dimensionless ratio.
+    """
+    model: str
+    branch: str
+    inputs: tuple
+    pi_interval: tuple
+    r_interval: tuple
+    z_interval: tuple
+    initial_z_interval: tuple
+    trace: tuple
+    magnitude_interval: tuple
+    C: float
+    returned_magnitude_error: _ADWFraction
+    requested_atol: _ADWFraction
+    requested_rtol: _ADWFraction
+    requested_energy_atol: _ADWFraction
+    requested_energy_rtol: _ADWFraction
+    residual_interval: tuple
+    energy_interval: tuple
+    V_eff: float
+    energy_rounding_error: _ADWFraction
+    energy_gap_upper: _ADWFraction
+    work_used: int
+    terms: int
+    max_work: int
+    max_bits: int
+
+    def as_dict(self):
+        """JSON-safe snapshot; no float conversion of rational bounds."""
+        def rational(x):
+            return {"numerator": _adw_decimal(x.numerator), "denominator": _adw_decimal(x.denominator)}
+        names = ("inputs", "pi_interval", "r_interval", "z_interval", "initial_z_interval",
+                 "magnitude_interval", "residual_interval", "energy_interval")
+        out = {name: [rational(x) for x in getattr(self, name)] for name in names}
+        out["trace"] = [dict(terms=t[0], a=rational(t[1]), b=rational(t[2]),
+                             u=rational(t[3]), flo=rational(t[4]), fhi=rational(t[5]),
+                             decision=t[6]) for t in self.trace]
+        for name in ("returned_magnitude_error", "requested_atol", "requested_rtol",
+                     "requested_energy_atol", "requested_energy_rtol",
+                     "energy_rounding_error", "energy_gap_upper"):
+            out[name] = rational(getattr(self, name))
+        for name in ("model", "branch", "C", "V_eff", "work_used", "terms", "max_work", "max_bits"):
+            out[name] = getattr(self, name)
+        return out
+
+
+def _adw_distance_bracket(a, b, u, distance, work):
+    """Outward dyadic mesh enclosure of a certified root-distance interval.
+
+    With 0<distance<(b-a)/4, mesh<=width/16 gives new width<5*width/8.
+    The caller supplies the derivative/residual proof of the root distance;
+    semantic replay reconstructs this same exact operation under external caps.
+    """
+    if any(type(x) is not _ADWFraction for x in (a, b, u, distance)):
+        raise ValueError("exact Fraction distance-step payload required")
+    work.take(a, b, u, distance)
+    width = b-a
+    if not (0 <= a < b and u == (a+b)/2 and 0 < distance < width/4):
+        raise ValueError("strict contracting scalar distance-step premise")
+    work.take(width)
+    if width.denominator.bit_length()+4 > work.bits:
+        raise ADWScalarUnresolved("distance mesh exceeds external bit budget")
+    denominator = width.denominator << 4
+    work.take(denominator)
+    endpoints = (u-distance, u+distance)
+    work.take(*endpoints)
+    # Admit the worst-case integer products BEFORE allocation, with no cap lift.
+    for endpoint in endpoints:
+        if abs(endpoint.numerator).bit_length()+denominator.bit_length() > work.bits:
+            raise ADWScalarUnresolved("distance rounding product exceeds external bit budget")
+    left = endpoints[0].numerator*denominator // endpoints[0].denominator
+    right = -((-endpoints[1].numerator*denominator) // endpoints[1].denominator)
+    work.take(left, right)
+    lower = max(a, _ADWFraction(left, denominator))
+    upper = min(b, _ADWFraction(right, denominator))
+    work.take(lower, upper)
+    if not (a <= lower <= endpoints[0] <= endpoints[1] <= upper <= b and
+            upper-lower < 5*width/8):
+        raise ValueError("outward scalar distance enclosure/progress invariant")
+    return lower, upper
+
+
+def _adw_minimum(inputs, model, atol, rtol, energy_atol, energy_rtol, max_work, max_bits):
+    work = _ADWWork(max_work, max_bits)
+    for x in inputs:
+        work.take(x)
+    atol = _adw_exact(atol, "atol")
+    rtol = _adw_exact(rtol, "rtol")
+    if atol < 0 or rtol < 0 or atol+rtol == 0:
+        raise ValueError("nonnegative tolerances with at least one positive required")
+    energy_atol = _adw_exact(energy_atol, "energy_atol")
+    energy_rtol = _adw_exact(energy_rtol, "energy_rtol")
+    if energy_atol < 0 or energy_rtol < 0 or energy_atol+energy_rtol == 0:
+        raise ValueError("nonnegative energy tolerances with at least one positive required")
+    work.take(atol, rtol, energy_atol, energy_rtol)
+    terms = 4
+    cutoff, species = inputs[1:]
+    def parameters(n):
+        pi = _adw_pi_bounds(n, work)
+        ratio = ((inputs[0], inputs[0]) if model == "exact-ratio" else
+                 _adw_parameter_ratio(inputs, pi))
+        work.take(*ratio)
+        return pi, ratio
+    while True:
+        pi, ratio = parameters(terms)
+        if ratio[1] <= 1:
+            zero = _ADWFraction(0)
+            return ADWScalarEnclosure(model, "origin", inputs, pi, ratio,
+                (zero, zero), (zero, zero), (), (zero, zero), 0.0, zero, atol, rtol,
+                energy_atol, energy_rtol, (1/ratio[1]-1, 1/ratio[0]-1), (zero, zero), 0.0,
+                zero, zero, work.used, terms, max_work, max_bits)
+        if ratio[0] > 1:
+            break
+        # Exact intended threshold is unresolved, never replaced by rounded r.
+        terms *= 2
+        work.take(terms)
+    a, b = _ADWFraction(0), _ADWFraction(1)
+    while b*b < 2*ratio[1]/3:
+        work.take(b)
+        b *= 2
+    initial = (a, b)
+    trace = []
+    iteration = 0
+    while True:
+        work.take(a, b)
+        bits = 32+8*iteration
+        clo = cutoff*_adw_sqrt_bounds(a, bits, work)[0]
+        chi = cutoff*_adw_sqrt_bounds(b, bits, work)[1]
+        if clo > 0 and chi-clo <= atol+rtol*clo:
+            c, exact_c, rounding_error = _adw_binary_midpoint((clo, chi), "magnitude", nonzero=True)
+            if rounding_error <= atol+rtol*abs(exact_c):
+                zc = (exact_c/cutoff)**2
+                residual = _adw_residual_bounds(zc, ratio, terms, work)
+                energy = _adw_energy_bounds(exact_c, cutoff, species, ratio, pi, terms, work)
+                if energy[1] < 0:
+                    value, _, value_error = _adw_binary_midpoint(energy, "minimum energy", nonzero=True)
+                    enlarged_upper = max(b, zc)
+                    mu = 2/(3*(enlarged_upper+1)**3)
+                    radius = max(abs(residual[0]), abs(residual[1]))
+                    a_hi = species/(16*pi[0]*pi[0])
+                    gap = a_hi*cutoff**4*radius*radius/(2*mu)
+                    work.take(gap)
+                    energy_budget = energy_atol+energy_rtol*abs(_ADWFraction.from_float(value))
+                    if value_error+gap <= energy_budget and value_error <= abs(_ADWFraction.from_float(value))/(1 << 40):
+                        return ADWScalarEnclosure(model, "positive", inputs, pi, ratio,
+                            (a, b), initial, tuple(trace), (clo, chi), c, rounding_error, atol, rtol,
+                            energy_atol, energy_rtol, residual, energy, value, value_error, gap,
+                            work.used, terms, max_work, max_bits)
+                    if value_error > min(energy_budget/4, abs(_ADWFraction.from_float(value))/(1 << 40)):
+                        terms *= 2
+                        pi, ratio = parameters(terms)
+                        continue
+                    # Residual/root error dominates: further bracket contraction.
+                else:
+                    terms *= 2
+                    pi, ratio = parameters(terms)
+                    continue
+        u, width = (a+b)/2, b-a
+        flo, fhi = _adw_residual_bounds(u, ratio, terms, work)
+        old_a, old_b = a, b
+        if fhi < 0:
+            decision = "negative"
+            a = u
+        elif flo > 0:
+            decision = "positive"
+            b = u
+        else:
+            radius = max(abs(flo), abs(fhi))
+            mu = 2/(3*(b+1)**3)
+            if radius == 0:
+                decision = "zero"
+                a = b = u
+            elif radius/mu < width/4:
+                decision = "distance"
+                a, b = _adw_distance_bracket(a, b, u, radius/mu, work)
+            else:
+                terms *= 2
+                pi, ratio = parameters(terms)
+                continue
+        trace.append((terms, old_a, old_b, u, flo, fhi, decision))
+        iteration += 1
+
+
+def adw_scalar_minimum(G, Lambda, N_f, *, atol=0, rtol=1e-10,
+                       energy_atol=0, energy_rtol=1e-8,
+                       max_work=200000, max_bits=100000):
+    """Unrestricted magnitude minimum of the exact supplied-parameter ansatz.
+
+    Encloses true pi; G/Gc computed with a platform float is NOT its input r.
+    Returns a numerical enclosure or explicit finite-resource/representation
+    refusal. On signed real C the positive branch represents BOTH +/- minima.
+    Microscopic ADW, physical field range/gravity and native backing uncomputed.
+    """
+    values = tuple(_adw_exact(x, name, positive=True) for x, name in
+                   ((G, "G"), (Lambda, "Lambda"), (N_f, "N_f")))
+    return _adw_minimum(values, "supplied-parameters-exact-pi", atol, rtol,
+                        energy_atol, energy_rtol, max_work, max_bits)
+
+
+def adw_scalar_minimum_ratio(r, Lambda=1, N_f=4, *, atol=0, rtol=1e-10,
+                             energy_atol=0, energy_rtol=1e-8,
+                             max_work=200000, max_bits=100000):
+    """Different declared target: exact supplied dimensionless r, not G/Gc.
+
+    Supports the exact critical r=1 control without pretending a rounded
+    machine Gc is exact 8*pi^2/(N_f*Lambda^2). Not used by physical wrappers.
+    """
+    values = tuple(_adw_exact(x, name, positive=True) for x, name in
+                   ((r, "r"), (Lambda, "Lambda"), (N_f, "N_f")))
+    return _adw_minimum(values, "exact-ratio", atol, rtol,
+                        energy_atol, energy_rtol, max_work, max_bits)
+
+
+def adw_scalar_residual_enclosure(z, r, *, terms=16, max_work=200000, max_bits=100000):
+    """Exact-ratio normalized residual interval; no guessed sign at a root."""
+    z, r = _adw_exact(z, "z"), _adw_exact(r, "r", positive=True)
+    if z < 0 or type(terms) is not int or terms < 1:
+        raise ValueError("nonnegative z and positive integer terms required")
+    work = _ADWWork(max_work, max_bits)
+    work.take(z, r)
+    return _adw_residual_bounds(z, (r, r), terms, work)
+
+
+def adw_scalar_value_enclosure(C, G, Lambda, N_f, *, terms=16,
+                              max_work=200000, max_bits=100000):
+    """Rational enclosure of unguarded V_exact at the exact supplied C."""
+    values = tuple(_adw_exact(x, name, positive=True) for x, name in
+                   ((G, "G"), (Lambda, "Lambda"), (N_f, "N_f")))
+    c = _adw_exact(C, "C")
+    if type(terms) is not int or terms < 1:
+        raise ValueError("positive integer terms required")
+    work = _ADWWork(max_work, max_bits)
+    for x in values+(c,):
+        work.take(x)
+    pi = _adw_pi_bounds(terms, work)
+    return _adw_energy_bounds(c, values[1], values[2],
+        _adw_parameter_ratio(values, pi), pi, terms, work)
+
+
+def _adw_value_or_derivative(C, G, Lambda, N_f, derivative, rtol, max_work, max_bits):
+    inputs = tuple(_adw_exact(x, name, positive=True) for x, name in
+                   ((G, "G"), (Lambda, "Lambda"), (N_f, "N_f")))
+    c = _adw_exact(C, "C")
+    tolerance = _adw_exact(rtol, "rtol", positive=True)
+    work = _ADWWork(max_work, max_bits)
+    for x in inputs+(c,):
+        work.take(x)
+    if c == 0:
         return 0.0
-    V_tree = C**2 / (2.0 * G)
-    prefactor = N_f / (16.0 * np.pi**2)
-    ratio_sq = Lambda**2 / C**2
-    V_1loop = -prefactor * (Lambda**2 * C**2 - C**4 * np.log(ratio_sq + 1.0))
-    return V_tree + V_1loop
+    sign, c = (-1 if c < 0 else 1), abs(c)
+    Gq, cutoff, species = inputs
+    terms = 4
+    while True:
+        pi = _adw_pi_bounds(terms, work)
+        ratio = _adw_parameter_ratio(inputs, pi)
+        if derivative:
+            z = (c/cutoff)**2
+            f = _adw_residual_bounds(z, ratio, terms, work)
+            prefactor = species*cutoff*cutoff*c/(8*pi[1]*pi[1]), species*cutoff*cutoff*c/(8*pi[0]*pi[0])
+            interval = _adw_interval_product(prefactor, f)
+        else:
+            interval = _adw_energy_bounds(c, cutoff, species, ratio, pi, terms, work)
+        # A sign is never guessed from a zero-containing finite interval.
+        if interval[0] > 0 or interval[1] < 0 or interval == (0, 0):
+            value, exact, error = _adw_binary_midpoint(interval, "scalar derivative" if derivative else "scalar potential", nonzero=interval != (0, 0))
+            if error <= tolerance*abs(exact):
+                return sign*value if derivative else value
+        terms *= 2
+        work.take(terms)
+
+
+def adw_effective_potential(C, G, Lambda, N_f):
+    """Continuous even regulated scalar ansatz; no absolute near-origin guard.
+
+    Rational supplied values and true pi/log intervals bound numerical error.
+    Returns a finite binary64 value with absolute error <=2^-40 times the
+    absolute returned value, or ADWScalarUnresolved on budget/representation/
+    sign uncertainty. Only C=0
+    has the exact origin-zero shortcut. This is illustrative scalar physics;
+    the microscopic HS/ADW/gravity derivation and native proof are UNCOMPUTED.
+    Existing critical_coupling_pos grounding proves neither this numerical
+    implementation nor the physical potential.
+
+    Lean: critical_coupling_pos (ADWMechanism.lean)
+    Aristotle: manual
+    """
+    return _adw_value_or_derivative(C, G, Lambda, N_f, False,
+                                   _ADWFraction(1, 1 << 40), 200000, 100000)
+
+
+def adw_effective_potential_derivative(C, G, Lambda, N_f):
+    """Odd derivative of the continuous exact ansatz, with sign-or-error.
+
+    Uses 2*A*Lambda^2*C*f_r((C/Lambda)^2), not a finite flat interval or
+    a raw-small-slope root criterion. Numerical refusal is not stationarity.
+    """
+    return _adw_value_or_derivative(C, G, Lambda, N_f, True,
+                                   _ADWFraction(1, 1 << 40), 200000, 100000)
+
+
+def _adw_validate_scalar_enclosure(certificate, first_input, Lambda, N_f, expected_model, *,
+                                  atol=0, rtol=1e-10, energy_atol=0, energy_rtol=1e-8,
+                                  max_work=200000, max_bits=100000):
+    """Check the finite rational witness at the real wrapper/producer boundary.
+
+    Replays actual sign/distance steps and exact interval arithmetic; it is
+    not a native theorem, an external signature, or a physical calibration.
+    Refuses malformed fields, lost rounding or forged input/status/energy.
+    Uses a separate finite budget; verification exhaustion also refuses.
+    """
+    if type(certificate) is not ADWScalarEnclosure:
+        raise ValueError("canonical scalar certificate type required")
+    c = certificate
+    if expected_model not in ("supplied-parameters-exact-pi", "exact-ratio"):
+        raise ValueError("facade-owned scalar target model required")
+    if c.model != expected_model:
+        raise ValueError("scalar certificate supplied-input/model mismatch")
+    work = _ADWWork(max_work, max_bits)
+    if (type(c.max_work) is not int or type(c.max_bits) is not int or
+            not 0 < c.max_work <= max_work or not 0 < c.max_bits <= max_bits):
+        raise ValueError("certificate cannot raise external verification budgets")
+    for name in ("inputs", "pi_interval", "r_interval", "z_interval",
+                 "initial_z_interval", "magnitude_interval", "residual_interval", "energy_interval"):
+        row = getattr(c, name)
+        expected = 3 if name == "inputs" else 2
+        if type(row) is not tuple or len(row) != expected or any(type(v) is not _ADWFraction for v in row):
+            raise ValueError("scalar certificate rational tuple protocol")
+        work.take(*row)
+        if expected == 2 and row[0] > row[1]:
+            raise ValueError("scalar certificate reversed interval")
+    for name in ("requested_atol", "requested_rtol", "requested_energy_atol",
+                 "requested_energy_rtol", "returned_magnitude_error",
+                 "energy_rounding_error", "energy_gap_upper"):
+        if type(getattr(c, name)) is not _ADWFraction:
+            raise ValueError("scalar certificate nonnegative rational error required")
+        work.take(getattr(c, name))
+        if getattr(c, name) < 0:
+            raise ValueError("scalar certificate nonnegative rational error required")
+    inputs = tuple(_adw_exact(x, name, positive=True) for x, name in
+                   ((first_input, "r" if expected_model == "exact-ratio" else "G"),
+                    (Lambda, "Lambda"), (N_f, "N_f")))
+    if c.inputs != inputs:
+        raise ValueError("scalar certificate supplied-input/model mismatch")
+    expected_accuracy = tuple(_adw_exact(x, name) for x, name in
+        ((atol, "atol"), (rtol, "rtol"), (energy_atol, "energy_atol"), (energy_rtol, "energy_rtol")))
+    if (c.requested_atol, c.requested_rtol, c.requested_energy_atol, c.requested_energy_rtol) != expected_accuracy:
+        raise ValueError("certificate changed external accuracy request")
+    if (c.requested_atol+c.requested_rtol <= 0 or
+            c.requested_energy_atol+c.requested_energy_rtol <= 0 or
+            type(c.terms) is not int or c.terms < 1):
+        raise ValueError("scalar certificate precision protocol")
+    if type(c.work_used) is not int or not 0 < c.work_used <= c.max_work:
+        raise ValueError("scalar certificate finite work protocol")
+    if c.terms > max_work or type(c.trace) is not tuple or len(c.trace) > max_work:
+        raise ValueError("scalar receipt exceeds trusted replay shape cap")
+    # Preflight the complete in-memory transcript before any series replay;
+    # a typed object does not confer size/protocol authority.
+    for witness in c.trace:
+        if type(witness) is not tuple or len(witness) != 7:
+            raise ValueError("scalar trace protocol")
+        n, aa, bb, u, flo, fhi, decision = witness
+        if (type(n) is not int or not 0 < n <= max_work or
+                any(type(v) is not _ADWFraction for v in (aa, bb, u, flo, fhi)) or
+                decision not in ("negative", "positive", "zero", "distance")):
+            raise ValueError("scalar trace bounded rational protocol")
+        work.take(n, aa, bb, u, flo, fhi)
+    pi = _adw_pi_bounds(c.terms, work)
+    ratio = ((inputs[0], inputs[0]) if expected_model == "exact-ratio" else
+             _adw_parameter_ratio(inputs, pi))
+    if c.pi_interval != pi or c.r_interval != ratio:
+        raise ValueError("scalar certificate pi/ratio mismatch")
+    if type(c.C) is not float or type(c.V_eff) is not float or not all(_adw_isfinite(v) for v in (c.C, c.V_eff)):
+        raise ValueError("scalar certificate finite binary outputs required")
+    cutoff, species = inputs[1:]
+    if c.branch == "origin":
+        zero = _ADWFraction(0)
+        if (ratio[1] > 1 or c.C != 0 or c.V_eff != 0 or c.trace != () or
+                any(row != (zero, zero) for row in (c.z_interval, c.initial_z_interval,
+                    c.magnitude_interval, c.energy_interval)) or
+                any(value != 0 for value in (c.returned_magnitude_error,
+                    c.energy_rounding_error, c.energy_gap_upper)) or
+                c.residual_interval != (1/ratio[1]-1, 1/ratio[0]-1)):
+            raise ValueError("not a certified scalar origin")
+        return c
+    if c.branch != "positive" or ratio[0] <= 1 or c.C <= 0 or c.V_eff >= 0:
+        raise ValueError("not a certified positive scalar branch")
+    a, b = c.initial_z_interval
+    if a != 0 or b < 1 or b.denominator != 1 or b.numerator & (b.numerator-1) or b*b < 2*ratio[1]/3:
+        raise ValueError("invalid scalar unrestricted initial bracket")
+    if type(c.trace) is not tuple:
+        raise ValueError("immutable scalar trace required")
+    for witness in c.trace:
+        if type(witness) is not tuple or len(witness) != 7:
+            raise ValueError("scalar trace protocol")
+        n, aa, bb, u, flo, fhi, decision = witness
+        if type(n) is not int or n < 1 or any(type(v) is not _ADWFraction for v in (aa, bb, u, flo, fhi)):
+            raise ValueError("scalar trace rational protocol")
+        if (aa, bb) != (a, b) or u != (a+b)/2 or not 0 < u:
+            raise ValueError("scalar trace bracket chain mismatch")
+        pp = _adw_pi_bounds(n, work)
+        rr = ((inputs[0], inputs[0]) if expected_model == "exact-ratio" else
+              _adw_parameter_ratio(inputs, pp))
+        if (flo, fhi) != _adw_residual_bounds(u, rr, n, work):
+            raise ValueError("scalar trace residual mismatch")
+        if decision == "negative" and fhi < 0:
+            a = u
+        elif decision == "positive" and flo > 0:
+            b = u
+        elif decision in ("zero", "distance") and flo <= 0 <= fhi:
+            radius, mu = max(abs(flo), abs(fhi)), 2/(3*(b+1)**3)
+            if decision == "zero" and radius == 0:
+                a = b = u
+            elif decision == "distance" and radius/mu < (b-a)/4:
+                a, b = _adw_distance_bracket(a, b, u, radius/mu, work)
+            else:
+                raise ValueError("uncertified scalar distance step")
+        else:
+            raise ValueError("guessed scalar residual sign")
+    if c.z_interval != (a, b) or not 0 <= a <= b:
+        raise ValueError("scalar final bracket mismatch")
+    lo, hi = c.magnitude_interval
+    if not 0 < lo <= hi or lo*lo > cutoff*cutoff*a or hi*hi < cutoff*cutoff*b:
+        raise ValueError("scalar magnitude does not enclose root")
+    exact_c = _ADWFraction.from_float(c.C)
+    error = max(abs(exact_c-lo), abs(exact_c-hi))
+    if c.returned_magnitude_error != error or error > c.requested_atol+c.requested_rtol*abs(exact_c):
+        raise ValueError("scalar returned magnitude rounding exceeds budget")
+    zc = (exact_c/cutoff)**2
+    residual = _adw_residual_bounds(zc, ratio, c.terms, work)
+    energy = _adw_energy_bounds(exact_c, cutoff, species, ratio, pi, c.terms, work)
+    value_error = max(abs(_ADWFraction.from_float(c.V_eff)-energy[0]),
+                      abs(_ADWFraction.from_float(c.V_eff)-energy[1]))
+    mu = 2/(3*(max(b, zc)+1)**3)
+    gap = species/(16*pi[0]*pi[0])*cutoff**4*max(abs(residual[0]), abs(residual[1]))**2/(2*mu)
+    if (c.residual_interval != residual or c.energy_interval != energy or energy[1] >= 0 or
+            c.energy_rounding_error != value_error or c.energy_gap_upper != gap or
+            value_error+gap > c.requested_energy_atol+c.requested_energy_rtol*abs(_ADWFraction.from_float(c.V_eff))):
+        raise ValueError("scalar returned-point energy/error mismatch")
+    return c
+
+
+def adw_validate_scalar_enclosure(certificate, G, Lambda, N_f, *,
+                                  atol=0, rtol=1e-10, energy_atol=0, energy_rtol=1e-8,
+                                  max_work=200000, max_bits=100000):
+    """Trusted parameter facade: exact-ratio receipts cannot substitute here."""
+    return _adw_validate_scalar_enclosure(certificate, G, Lambda, N_f,
+        "supplied-parameters-exact-pi", atol=atol, rtol=rtol,
+        energy_atol=energy_atol, energy_rtol=energy_rtol,
+        max_work=max_work, max_bits=max_bits)
+
+
+def adw_validate_scalar_enclosure_ratio(certificate, r, Lambda=1, N_f=4, *,
+                                        atol=0, rtol=1e-10, energy_atol=0, energy_rtol=1e-8,
+                                        max_work=200000, max_bits=100000):
+    """Explicit different target facade for exact dimensionless-r controls.
+
+    This API is not used by the supplied-parameter wrapper or Fig29.
+    """
+    return _adw_validate_scalar_enclosure(certificate, r, Lambda, N_f,
+        "exact-ratio", atol=atol, rtol=rtol, energy_atol=energy_atol,
+        energy_rtol=energy_rtol, max_work=max_work, max_bits=max_bits)
+
+
+def adw_scalar_enclosure_from_dict(record, *, max_work=200000, max_bits=100000):
+    """Parse an untrusted JSON snapshot without accepting its scientific claim.
+
+    Caller must then run adw_validate_scalar_enclosure with the actual inputs.
+    Decimal integer strings are canonical, bounds remain exact Fractions, and
+    resource limits cannot be raised by a supplied record.
+    """
+    fields = set(ADWScalarEnclosure.__dataclass_fields__)
+    if type(record) is not dict or set(record) != fields:
+        raise ValueError("complete scalar certificate field set required")
+    if record["model"] not in ("supplied-parameters-exact-pi", "exact-ratio") or record["branch"] not in ("origin", "positive"):
+        raise ValueError("unknown scalar certificate target/branch")
+    policy = _ADWWork(max_work, max_bits)
+    if (type(record["max_work"]) is not int or type(record["max_bits"]) is not int or
+            not 0 < record["max_work"] <= max_work or not 0 < record["max_bits"] <= max_bits):
+        raise ValueError("certificate cannot raise admitted resource limits")
+    def rational(x):
+        if type(x) is not dict or set(x) != {"numerator", "denominator"}:
+            raise ValueError("canonical rational object required")
+        n, d = x["numerator"], x["denominator"]
+        if type(n) is not str or type(d) is not str or max(len(n), len(d)) > max_bits:
+            raise ValueError("bounded decimal integer strings required")
+        nn, dd = _adw_read_decimal(n, policy), _adw_read_decimal(d, policy)
+        if dd <= 0:
+            raise ValueError("positive rational denominator required")
+        q = _ADWFraction(nn, dd)
+        if q.numerator != nn or q.denominator != dd:
+            raise ValueError("reduced canonical rational required")
+        policy.take(q)
+        return q
+    for name in ("C", "V_eff"):
+        if type(record[name]) is not float or not _adw_isfinite(record[name]):
+            raise ValueError("finite binary scalar outputs required")
+    if (type(record["terms"]) is not int or not 0 < record["terms"] <= max_work or
+            type(record["work_used"]) is not int or
+            not 0 < record["work_used"] <= record["max_work"]):
+        raise ValueError("bounded scalar terms/work telemetry required")
+    values = dict(record)
+    for name in ("inputs", "pi_interval", "r_interval", "z_interval", "initial_z_interval",
+                 "magnitude_interval", "residual_interval", "energy_interval"):
+        row = record[name]
+        if type(row) is not list or len(row) != (3 if name == "inputs" else 2):
+            raise ValueError("scalar rational row protocol")
+        values[name] = tuple(rational(x) for x in row)
+    for name in ("requested_atol", "requested_rtol", "requested_energy_atol", "requested_energy_rtol",
+                 "returned_magnitude_error", "energy_rounding_error", "energy_gap_upper"):
+        values[name] = rational(record[name])
+    trace = record["trace"]
+    if type(trace) is not list or len(trace) > max_work:
+        raise ValueError("bounded scalar trace list required")
+    parsed = []
+    for row in trace:
+        if type(row) is not dict or set(row) != {"terms", "a", "b", "u", "flo", "fhi", "decision"}:
+            raise ValueError("scalar trace field set")
+        if (type(row["terms"]) is not int or not 0 < row["terms"] <= max_work or
+                row["decision"] not in ("negative", "positive", "zero", "distance")):
+            raise ValueError("bounded scalar trace terms/decision required")
+        parsed.append((row["terms"], *(rational(row[k]) for k in ("a", "b", "u", "flo", "fhi")), row["decision"]))
+    values["trace"] = tuple(parsed)
+    return ADWScalarEnclosure(**values)
+
+
+def adw_scalar_enclosure_from_json(text, *, max_work=200000, max_bits=100000,
+                                  max_text_bytes=8000000):
+    """Canonical textual boundary: duplicate keys/nonfinite tokens refuse.
+
+    Object parsing cannot recover duplicate keys after another JSON loader
+    silently overwrote them. Serialized external receipts enter here first.
+    Text/work/bit caps are supplied by the consumer, never by the receipt.
+    """
+    import json
+    if type(max_text_bytes) is not int or max_text_bytes < 1:
+        raise ValueError("positive text byte cap required")
+    if type(text) is not str or len(text) > max_text_bytes or len(text.encode('utf8')) > max_text_bytes:
+        raise ValueError("bounded UTF8 scalar certificate text required")
+    policy = _ADWWork(max_work, max_bits)
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            policy.take()
+            if key in result:
+                raise ValueError("duplicate scalar certificate JSON key")
+            result[key] = value
+        return result
+    def integer(value):
+        return _adw_read_decimal(value, policy)
+    def binary(value):
+        result = float(value)
+        if not _adw_isfinite(result):
+            raise ValueError("nonfinite scalar certificate JSON number")
+        return result
+    def constant(value):
+        raise ValueError("nonfinite scalar certificate JSON token")
+    record = json.loads(text, object_pairs_hook=unique, parse_int=integer,
+                        parse_float=binary, parse_constant=constant)
+    return adw_scalar_enclosure_from_dict(record, max_work=max_work, max_bits=max_bits)
 
 
 def adw_critical_coupling(Lambda, N_f):
-    """
-    Critical coupling for tetrad condensation.
+    """Theoretical origin-curvature threshold of the exact scalar ansatz.
 
-    G_c = 8π² / (N_f · Λ²)
+    G_c = 8π²/(N_f Λ²), for positive Λ and N_f.
+    It zeros the coefficient 1/G - N_f Λ²/(8π²) of V_exact, not a
+    phase oracle for rounded G/G_c. For G>G_c the exact
+    ansatz has nonzero scalar minima; this is not a microscopic ADW derivation.
 
-    Derived from d²V_eff/dC²|_{C=0} = 0 with V_eff = C²/(2G) - (N_f/16π²)[...].
-    For G > G_c, the origin becomes unstable and the effective potential
-    develops a nontrivial minimum at C ≠ 0 (tetrad condensation).
+    The returned machine coefficient is a compatibility diagnostic; the
+    enclosure solver classifies supplied G using true-pi intervals. The
+    recorded grounding supplies conditional positivity only.
+    Physical HS/one-loop ADW identification remains UNCOMPUTED.
 
     Lean: critical_coupling_pos (ADWMechanism.lean)
-    Source: Diakonov, arXiv:1109.0091 (2011); Wetterich, PRD 70, 105004 (2004)
-
-    Args:
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-
-    Returns:
-        G_c (positive)
     """
     return 8.0 * np.pi**2 / (N_f * Lambda**2)
 
 
 def adw_curvature_at_origin(G, Lambda, N_f):
-    """
-    Second derivative of V_eff at C=0 (curvature at the origin).
+    """Legacy floating diagnostic of theoretical continuous-origin curvature.
 
-    d²V_eff/dC²|_{C=0} = 1/G - N_f · Λ² / (8π²)
+    V_exact''(0) = 1/G - N_f Λ²/(8π²), for positive supplied parameters.
+    It is positive below G_c, zero at G_c and negative above G_c. At G_c
+    the exact origin is a strict degenerate minimum, not an inflection point.
+    The canonical potential now evaluates the continuous ansatz with explicit
+    enclosure/refusal. This legacy floating coefficient is a diagnostic, not
+    the true-pi threshold classifier or a derivation of vestigial ordering,
+    a correlation length or a microscopic gravitational phase.
 
-    Positive for G < G_c (origin is a minimum, pre-geometric).
-    Zero at G = G_c (phase transition).
-    Negative for G > G_c (origin is unstable, tetrad condenses).
-
-    In the vestigial phase analysis, this curvature determines the
-    metric correlation length: ξ_metric ~ 1/√curvature. As curvature → 0
-    near G_c, metric correlations grow, producing vestigial ordering.
+    The recorded grounding concerns the conditional coefficient. The run
+    identifier is historical; no new native validation is supplied here.
+    Physical HS/one-loop ADW identification remains UNCOMPUTED.
 
     Lean: curvature_zero_at_Gc (ADWMechanism.lean)
     Aristotle: f8de66d1
-    Source: Diakonov, arXiv:1109.0091 (2011); Wetterich, PRD 70, 105004 (2004)
-
-    Args:
-        G: ADW coupling constant
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-
-    Returns:
-        d²V_eff/dC²|_{C=0}
     """
     return 1.0 / G - N_f * Lambda**2 / (8.0 * np.pi**2)
 
@@ -12562,3 +13303,233 @@ def memory_binary_robustness_reference(t, a, b, q, *, d0=0.0, d1=0.0,
             "observed_separation": abs(observed[1]-observed[0]),
             "ideal_bound": min(1., distances.sum()),
             "observed_bound": min(1., distances.sum()+allowances.sum())}
+
+
+# Adopted origin Gaussian numerical provider. Native backing remains uncomputed.
+from src.core.constants import (ADW_ORIGIN_PROXY_DELTA as _ADW_ORIGIN_PROXY_DELTA,
+                                ADW_ORIGIN_PROXY_ALPHA as _ADW_ORIGIN_PROXY_ALPHA)
+
+@_adw_dataclass(frozen=True)
+class ADWOriginProxyEnclosure:
+    """Adopted Gaussian numerical witness, not physical susceptibility error.
+
+    Origin branch evidence is verified at consumption; work_used is unverified
+    generation telemetry. Each displayed output has its own rounding bound.
+    """
+    model: str
+    inputs: tuple
+    lattice: tuple
+    volume: int
+    delta: object
+    alpha: object
+    pi_interval: tuple
+    raw_curvature_interval: tuple
+    curvature_interval: tuple
+    temperature_interval: tuple
+    intervals: tuple
+    values: tuple
+    errors: tuple
+    phase: str
+    branch_evidence: str
+    threshold: object
+    requests: tuple
+    terms: int
+    max_work: int
+    max_bits: int
+    work_used: int
+
+    def as_dict(self):
+        from dataclasses import fields
+        from fractions import Fraction
+        def encode(value):
+            if type(value) is Fraction:
+                return dict(numerator=_adw_decimal(value.numerator),denominator=_adw_decimal(value.denominator))
+            if type(value) is tuple:
+                return [encode(x) for x in value]
+            return value
+        return {f.name:encode(getattr(self,f.name)) for f in fields(self)}
+
+def _adw_origin_power(base,exponent,work):
+    """Positive integer volume with declared intermediate size/work checks."""
+    result=1;factor=base
+    work.take(base,exponent)
+    while exponent:
+        work.take(result,factor,exponent)
+        if exponent%2:
+            result*=factor;work.take(result)
+        exponent//=2
+        if exponent:
+            factor*=factor;work.take(factor)
+    return result
+
+def _adw_origin_at_terms(inputs,lattice,certificate,terms,work,policy,requests):
+    """Exact correlated-pi-safe bounds, or None when precision must refine."""
+    from fractions import Fraction
+    d,L=lattice;temperature=inputs[3]
+    if certificate.branch!='origin' or certificate.inputs!=inputs[:3]:
+        raise ValueError('matching verified scalar origin required')
+    for v in inputs+requests:work.take(v)
+    volume=_adw_origin_power(L,d,work)
+    delta=_adw_exact(_ADW_ORIGIN_PROXY_DELTA,'adopted delta',positive=True)
+    alpha=_adw_exact(_ADW_ORIGIN_PROXY_ALPHA,'adopted alpha')
+    pi=_adw_pi_bounds(terms,work)
+    G,cutoff,species=inputs[:3];b=species*cutoff*cutoff/8
+    raw=(1/G-b/(pi[0]*pi[0]),1/G-b/(pi[1]*pi[1]))
+    work.take(b,delta,alpha,*raw)
+    if raw[1]<0:
+        raise ValueError('verified scalar origin contradicts curvature enclosure')
+    # The intersection is justified by actual canonical origin evidence, not
+    # a numerical floor or a claim that pi has a tighter rational bound.
+    curvature=(max(raw[0],Fraction(0)),raw[1])
+    temp=(max(temperature,cutoff/(4*pi[1])),max(temperature,cutoff/(4*pi[0])))
+    threshold=(1+alpha)*b*G
+    work.take(*curvature,*temp,threshold)
+    phase=('vestigial' if pi[1]*pi[1]<threshold else
+           'pre_geometric' if pi[0]*pi[0]>=threshold else None)
+    if phase is None:
+        return None
+    qs=(Fraction(d*d,volume),Fraction(d*d),Fraction(d,volume))
+    intervals=[];values=[];errors=[]
+    for q in qs:
+        bounds=(q*temp[0]/(curvature[1]+delta),q*temp[1]/(curvature[0]+delta))
+        work.take(q,*bounds)
+        value,represented,error=_adw_binary_midpoint(bounds,'adopted origin proxy',nonzero=True)
+        work.take(represented,error)
+        if value<=0:
+            raise ValueError('positive adopted origin proxy required')
+        if error>requests[0]+requests[1]*abs(represented):
+            return None
+        intervals.append(bounds);values.append(value);errors.append(error)
+    return ADWOriginProxyEnclosure('adopted-origin-gaussian-exact-pi',inputs,(d,L),volume,
+        delta,alpha,pi,raw,curvature,temp,tuple(intervals),tuple(values),tuple(errors),phase,
+        'verified matching scalar origin; kappa>=0 intersection',threshold,requests,terms,
+        policy['max_work'],policy['max_bits'],work.used)
+
+def _adw_origin_preflight(c,work):
+    from fractions import Fraction
+    from math import isfinite
+    if type(c) is not ADWOriginProxyEnclosure:
+        raise ValueError('canonical adopted-origin witness required')
+    for name in ('model','phase','branch_evidence'):
+        if type(getattr(c,name)) is not str:
+            raise ValueError('origin concrete string protocol')
+    if (c.model!='adopted-origin-gaussian-exact-pi' or
+            c.phase not in ('pre_geometric','vestigial') or
+            c.branch_evidence!='verified matching scalar origin; kappa>=0 intersection'):
+        raise ValueError('known adopted-origin model/phase/evidence required before replay')
+    for name,length in (('inputs',4),('requests',2),('pi_interval',2),
+        ('raw_curvature_interval',2),('curvature_interval',2),('temperature_interval',2)):
+        row=getattr(c,name)
+        if type(row) is not tuple or len(row)!=length or any(type(v) is not Fraction for v in row):
+            raise ValueError('origin exact rational tuple protocol')
+        work.take(*row)
+    if type(c.lattice) is not tuple or len(c.lattice)!=2 or any(type(v) is not int or v<1 for v in c.lattice):
+        raise ValueError('origin lattice protocol')
+    work.take(*c.lattice)
+    for name in ('volume','terms','max_work','max_bits','work_used'):
+        if type(getattr(c,name)) is not int or getattr(c,name)<1:
+            raise ValueError('origin positive integer protocol')
+        work.take(getattr(c,name))
+    if any(type(v) is not Fraction for v in (c.delta,c.alpha,c.threshold)):
+        raise ValueError('origin convention/threshold rational protocol')
+    work.take(c.delta,c.alpha,c.threshold)
+    if (type(c.intervals) is not tuple or len(c.intervals)!=3 or
+            any(type(row) is not tuple or len(row)!=2 or any(type(v) is not Fraction for v in row) for row in c.intervals)):
+        raise ValueError('origin proxy interval protocol')
+    for row in c.intervals:work.take(*row)
+    if type(c.values) is not tuple or len(c.values)!=3 or any(type(v) is not float or not isfinite(v) or v<=0 for v in c.values):
+        raise ValueError('origin finite positive binary output protocol')
+    for value in c.values:work.take(Fraction.from_float(value))
+    if type(c.errors) is not tuple or len(c.errors)!=3 or any(type(v) is not Fraction for v in c.errors):
+        raise ValueError('origin nonnegative rational output-error protocol')
+    work.take(*c.errors)
+    if any(v<0 for v in c.errors):
+        raise ValueError('origin nonnegative rational output-error protocol')
+
+def _adw_origin_inputs(G,Lambda,N_f,d,L,temperature,work):
+    """Primitive exact input/lattice admission; no domain object dependency."""
+    from numbers import Integral
+    for name,value in (('d',d),('L',L)):
+        if isinstance(value,(bool,np.bool_)) or not isinstance(value,Integral) or value<=0:
+            raise ValueError(name+' must be a positive integer')
+    lattice=(int(d),int(L));work.take(*lattice)
+    inputs=tuple(_adw_exact(v,k,positive=True) for v,k in ((G,'G'),(Lambda,'Lambda'),(N_f,'N_f')))
+    temp=_adw_exact(temperature,'temperature');work.take(*inputs,temp)
+    if temp<0:raise ValueError('temperature must be nonnegative')
+    return inputs+(temp,),lattice
+
+
+def _adw_origin_requests(atol,rtol,work):
+    requests=(_adw_exact(atol,'origin_atol'),_adw_exact(rtol,'origin_rtol'))
+    work.take(*requests)
+    if any(x<0 for x in requests) or sum(requests)<=0:
+        raise ValueError('nonnegative origin tolerances with one positive required')
+    return requests
+
+
+def _adw_origin_scalar(inputs,certificate,policy):
+    if certificate is None:
+        certificate=adw_scalar_minimum(*inputs[:3],**policy)
+    certificate=adw_validate_scalar_enclosure(certificate,*inputs[:3],**policy)
+    if certificate.branch!='origin':
+        raise ValueError('adopted-origin witness requires actual scalar origin')
+    return certificate
+
+
+def adw_validate_origin_proxy_enclosure(c,G,Lambda,N_f,*,d=4,L=32,temperature=0,
+        scalar_enclosure=None,origin_atol=0,origin_rtol=1e-10,atol=0,rtol=1e-10,
+        energy_atol=0,energy_rtol=1e-8,max_work=200000,max_bits=100000):
+    """Replay the adopted Gaussian proxy at actual primitive inputs and policy.
+
+    Formula: kappa=1/G-N_f*Lambda**2/(8*pi**2); site proxy
+    d**2*max(T,Lambda/(4*pi))/(L**d*(kappa+adopted_delta)).
+    Native theorem and Aristotle run uncomputed; no admission is claimed.
+    Source: project-adopted Euclidean Gaussian model, not microscopic RPA.
+    Complete typed/model/payload admission precedes ALL scalar/pi replay.
+    """
+    from dataclasses import fields
+    work=_ADWWork(max_work,max_bits)
+    _adw_origin_preflight(c,work)
+    policy=dict(atol=atol,rtol=rtol,energy_atol=energy_atol,energy_rtol=energy_rtol,
+                max_work=max_work,max_bits=max_bits)
+    requests=_adw_origin_requests(origin_atol,origin_rtol,work)
+    if (c.requests!=requests or c.max_work!=max_work or c.max_bits!=max_bits or
+            c.terms>max_work or c.work_used>max_work):
+        raise ValueError('origin witness cannot alter trusted accuracy/resource policy')
+    inputs,lattice=_adw_origin_inputs(G,Lambda,N_f,d,L,temperature,work)
+    if c.inputs!=inputs or c.lattice!=lattice:
+        raise ValueError('origin witness actual-parameter/lattice mismatch')
+    certificate=_adw_origin_scalar(inputs,scalar_enclosure,policy)
+    expected=_adw_origin_at_terms(inputs,lattice,certificate,c.terms,work,policy,requests)
+    if expected is None:
+        raise ValueError('origin witness precision does not establish requested bounds/label')
+    for field in fields(c):
+        if field.name!='work_used' and getattr(c,field.name)!=getattr(expected,field.name):
+            raise ValueError('origin witness semantic field mismatch: '+field.name)
+    return c
+
+
+def adw_origin_proxy(G,Lambda,N_f,*,d=4,L=32,temperature=0,scalar_enclosure=None,
+        origin_atol=0,origin_rtol=1e-10,atol=0,rtol=1e-10,energy_atol=0,energy_rtol=1e-8,
+        max_work=200000,max_bits=100000):
+    """One canonical adopted-origin Gaussian enclosure, or explicit refusal.
+
+    Bounds site/extensive/expected-Gram eigenvalue proxies with true pi,
+    supplied scalar-origin evidence, adopted delta and strict alpha label.
+    Native theorem and Aristotle run uncomputed; no stage/gate acceptance.
+    No physical susceptibility, Lorentzian metric or model error is inferred.
+    """
+    work=_ADWWork(max_work,max_bits)
+    inputs,lattice=_adw_origin_inputs(G,Lambda,N_f,d,L,temperature,work)
+    requests=_adw_origin_requests(origin_atol,origin_rtol,work)
+    policy=dict(atol=atol,rtol=rtol,energy_atol=energy_atol,energy_rtol=energy_rtol,
+                max_work=max_work,max_bits=max_bits)
+    certificate=_adw_origin_scalar(inputs,scalar_enclosure,policy)
+    terms=4
+    while True:
+        work.take(terms)
+        result=_adw_origin_at_terms(inputs,lattice,certificate,terms,work,policy,requests)
+        if result is not None:
+            return adw_validate_origin_proxy_enclosure(result,G,Lambda,N_f,d=d,L=L,temperature=temperature,
+                scalar_enclosure=certificate,origin_atol=origin_atol,origin_rtol=origin_rtol,**policy)
+        terms*=2

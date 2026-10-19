@@ -1,28 +1,15 @@
-"""Mean-field analysis for vestigial gravity. The phase classification is
-curvature-based, via `adw_curvature_at_origin` from `formulas.py`.
+"""Adopted mean-field proxies with a canonical scalar branch. The adopted Gaussian proxy now carries distinct true-pi numerical bounds. Its physical identification and vestigial gravity remain BUILD; no numerical minimum proves them.
 
-Extends the Phase 3 gap equation analysis to include the metric
-correlator <e^a_mu e^b_nu>. The vestigial phase exists where
-the tetrad VEV is zero but the metric correlator is nonzero.
-
-The mean-field self-consistency equations:
-    C_tetrad = <e^a_mu>     (tetrad VEV)
-    G_metric = <e^a_mu e^b_nu>  (metric correlator)
-
-Phase classification:
-    C_tetrad = 0, G_metric = 0    -> pre-geometric
-    C_tetrad = 0, G_metric != 0   -> vestigial metric
-    C_tetrad != 0, G_metric != 0  -> full tetrad
-
-Reference: Volovik, JETP Lett. 119, 330 (2024) — vestigial phase
-Reference: Vladimirov-Diakonov, PRD 86, 104019 (2012) — cavity method
-"""
+Reference: Volovik, JETP Lett. 119, 330 (2024) — retained literature context.
+Reference: Vladimirov-Diakonov, PRD 86, 104019 (2012) — retained literature context."""
 
 from dataclasses import dataclass
 import numpy as np
 from scipy.optimize import minimize_scalar, brentq
 from src.adw.gap_equation import effective_potential, critical_coupling
-from src.core.formulas import adw_curvature_at_origin
+from src.core.formulas import (adw_curvature_at_origin,
+    ADWOriginProxyEnclosure as OriginProxyEnclosure, adw_origin_proxy,
+    adw_validate_origin_proxy_enclosure)
 
 
 @dataclass
@@ -62,13 +49,13 @@ class MeanFieldResult:
 
     Attributes:
         params: Input parameters.
-        C_tetrad: Tetrad VEV magnitude.
-        G_metric: Metric correlator magnitude.
+        C_tetrad: Certified scalar coordinate approximation, not a physical VEV derivation.
+        G_metric: Adopted metric proxy; origin curvature model is not physically certified.
         V_eff: Effective potential at the solution.
         phase: Phase classification string.
         is_vestigial: Whether we are in the vestigial phase.
         metric_eigenvalues: Eigenvalues of the mean-field metric.
-        is_lorentzian: Whether the metric has Lorentzian signature.
+        is_lorentzian: None because physical signature is uncomputed; positivity is a separate diagnostic.
     """
     params: MeanFieldParams
     C_tetrad: float
@@ -77,286 +64,180 @@ class MeanFieldResult:
     phase: str
     is_vestigial: bool
     metric_eigenvalues: np.ndarray
-    is_lorentzian: bool
+    is_lorentzian: bool | None  # None: physical signature is uncomputed
+    scalar_enclosure: object = None
+    scalar_metric_interval: tuple | None = None
+    scalar_metric_error: object = None
+    physical_signature_status: str = "uncomputed"
+    metric_positive_definite: bool | None = None
+    origin_proxy_enclosure: object = None
+    origin_proxy_interval: tuple | None = None
+    origin_proxy_error: object = None
 
 
-def mean_field_gap_equation(params: MeanFieldParams) -> float:
-    """Solve for the tetrad VEV in mean-field.
 
-    This wraps the Phase 3 gap equation to get C_tetrad.
+def _mean_policy(accuracy):
+    """Separate scalar requests from explicit adopted-origin numerical requests."""
+    from src.core.formulas import _adw_exact
+    supplied=dict(accuracy)
+    requests=tuple(_adw_exact(supplied.pop(k,default),k) for k,default in
+        (("origin_atol",0),("origin_rtol",1e-10)))
+    if any(x<0 for x in requests) or sum(requests)<=0:
+        raise ValueError('nonnegative origin tolerances with one positive required')
+    policy=dict(atol=0,rtol=1e-10,energy_atol=0,energy_rtol=1e-8,max_work=200000,max_bits=100000)
+    unknown=set(supplied)-set(policy)
+    if unknown:
+        raise TypeError('unknown mean-field accuracy keywords: '+','.join(sorted(unknown)))
+    policy.update(supplied)
+    return policy,requests
 
-    Args:
-        params: Mean-field parameters.
 
-    Returns:
-        C_tetrad (tetrad VEV magnitude, 0 if below G_c).
+def _validate_origin_proxy_enclosure(c,params,certificate,**accuracy):
+    """Thin actual-parameter facade; canonical preflight precedes scalar replay."""
+    policy,requests=_mean_policy(accuracy)
+    return adw_validate_origin_proxy_enclosure(c,params.G,params.Lambda,params.N_f,
+        d=params.d,L=params.L,temperature=params.temperature,scalar_enclosure=certificate,
+        origin_atol=requests[0],origin_rtol=requests[1],**policy)
+
+
+def _origin_receipt(params,certificate,origin_enclosure=None,**accuracy):
+    policy,requests=_mean_policy(accuracy)
+    if origin_enclosure is not None:
+        return _validate_origin_proxy_enclosure(origin_enclosure,params,certificate,**accuracy)
+    return adw_origin_proxy(params.G,params.Lambda,params.N_f,d=params.d,L=params.L,
+        temperature=params.temperature,scalar_enclosure=certificate,
+        origin_atol=requests[0],origin_rtol=requests[1],**policy)
+
+
+def _scalar_receipt(params, certificate=None, **accuracy):
+    """Actual scalar policy; distinct origin requests never leak to its facade."""
+    from src.core.formulas import adw_scalar_minimum, adw_validate_scalar_enclosure
+    policy,_=_mean_policy(accuracy)
+    if certificate is None:
+        certificate=adw_scalar_minimum(params.G,params.Lambda,params.N_f,**policy)
+    return adw_validate_scalar_enclosure(certificate,params.G,params.Lambda,params.N_f,**policy)
+
+
+def _mean_binary(value, name, *, nonzero=False):
+    from src.core.formulas import _adw_binary_midpoint
+    return _adw_binary_midpoint((value,value),name,nonzero=nonzero)[0]
+
+
+def _mean_lattice(params):
+    from numbers import Integral
+    from src.core.formulas import _adw_exact
+    for name in ('d','L'):
+        value=getattr(params,name)
+        if isinstance(value,(bool,np.bool_)) or not isinstance(value,Integral) or value<=0:
+            raise ValueError(name+' must be a positive integer')
+    temperature=_adw_exact(params.temperature,'temperature')
+    if temperature<0:
+        raise ValueError('temperature must be nonnegative')
+    return int(params.d),int(params.L),temperature
+
+
+def _origin_fluctuation(params, *, extensive, scalar_enclosure=None, origin_enclosure=None, **accuracy):
+    """True-pi adopted Gaussian proxy with its distinct numerical witness."""
+    result=_origin_receipt(params,scalar_enclosure,origin_enclosure,**accuracy)
+    return result.values[1 if extensive else 0]
+
+
+def _scalar_metric(certificate, volume=1):
+    from fractions import Fraction
+    q=Fraction.from_float(certificate.C)
+    return _mean_binary(q*q*volume,'scalar metric proxy',nonzero=certificate.branch=='positive')
+
+
+def mean_field_gap_equation(params: MeanFieldParams, *, scalar_enclosure=None, **accuracy) -> float:
+    """Return the canonical scalar magnitude or propagate explicit refusal.
+
+    This is an adopted scalar coordinate, not a physical tetrad derivation.
     """
-    G, Lambda, N_f = params.G, params.Lambda, params.N_f
-    G_c = params.G_c
-
-    if params.coupling_ratio <= 1.0:
-        return 0.0
-
-    # Find minimum of V_eff(C)
-    result = minimize_scalar(
-        lambda c: effective_potential(c, G, Lambda, N_f),
-        bounds=(1e-6 * Lambda, Lambda),
-        method='bounded',
-    )
-
-    if result.success and result.x > 1e-10 * Lambda:
-        V_min = effective_potential(result.x, G, Lambda, N_f)
-        if V_min < 0:
-            return result.x
-
-    return 0.0
+    return _scalar_receipt(params,scalar_enclosure,**accuracy).C
 
 
-def mean_field_metric_correlator(params: MeanFieldParams) -> float:
-    """Compute the metric correlator in mean-field.
+def mean_field_metric_correlator(params: MeanFieldParams, *, scalar_enclosure=None, origin_enclosure=None, **accuracy) -> float:
+    """Adopted proxy; origin numerical error is distinct from physical error."""
+    if origin_enclosure is not None:
+        return _origin_fluctuation(params,extensive=False,scalar_enclosure=scalar_enclosure,origin_enclosure=origin_enclosure,**accuracy)
+    certificate=_scalar_receipt(params,scalar_enclosure,**accuracy)
+    _mean_lattice(params)
+    if certificate.branch=='positive':
+        if origin_enclosure is not None:raise ValueError('positive scalar has no origin witness')
+        return _scalar_metric(certificate)
+    return _origin_fluctuation(params,extensive=False,scalar_enclosure=certificate,origin_enclosure=origin_enclosure,**accuracy)
 
-    The metric correlator <e^a_mu e^b_nu> receives contributions from:
-    1. Tetrad VEV: <e>^2 (present in Phase III)
-    2. Fluctuations: <(e - <e>)^2> (present in Phases II and III)
 
-    In the vestigial phase, <e> = 0 but fluctuations give a nonzero
-    metric. The fluctuation contribution is computed from the second
-    derivative of the effective potential at C = 0:
+def _total_metric_correlator(params: MeanFieldParams, *, scalar_enclosure=None, origin_enclosure=None, **accuracy) -> float:
+    """Extensive adopted proxy, independently rounded with the same receipt."""
+    if origin_enclosure is not None:
+        return _origin_fluctuation(params,extensive=True,scalar_enclosure=scalar_enclosure,origin_enclosure=origin_enclosure,**accuracy)
+    certificate=_scalar_receipt(params,scalar_enclosure,**accuracy)
+    d,L,_=_mean_lattice(params)
+    if certificate.branch=='positive':
+        if origin_enclosure is not None:raise ValueError('positive scalar has no origin witness')
+        return _scalar_metric(certificate,L**d)
+    return _origin_fluctuation(params,extensive=True,scalar_enclosure=certificate,origin_enclosure=origin_enclosure,**accuracy)
 
-        <e^2> ~ N_f * T / |d^2V/dC^2|_{C=0}|
 
-    For the Euclidean pilot, "temperature" is the lattice coupling.
+def _classify_phase(C: float, params: MeanFieldParams, *, scalar_enclosure=None, origin_enclosure=None, **accuracy) -> str:
+    """Actual scalar branch, then the strict true-pi adopted alpha classifier."""
+    from src.core.formulas import _adw_exact
+    if origin_enclosure is not None:
+        _validate_origin_proxy_enclosure(origin_enclosure,params,scalar_enclosure,**accuracy)
+    certificate=_scalar_receipt(params,scalar_enclosure,**accuracy)
+    if _adw_exact(C,'C')!=_adw_exact(certificate.C,'returned C'):
+        raise ValueError('C does not match the actual scalar receipt')
+    if certificate.branch=='positive':
+        if origin_enclosure is not None:raise ValueError('positive scalar has no origin witness')
+        return 'full_tetrad'
+    return _origin_receipt(params,certificate,origin_enclosure,**accuracy).phase
 
-    Args:
-        params: Mean-field parameters.
 
-    Returns:
-        G_metric (metric correlator magnitude).
-    """
-    G, Lambda, N_f = params.G, params.Lambda, params.N_f
-    d = params.d
+def vestigial_phase_window(Lambda: float, N_f: int, n_points: int=50, **accuracy) -> dict:
+    """Original complete adopted-model grid; numerical refusal never skips."""
+    from numbers import Integral
+    if isinstance(n_points,(bool,np.bool_)) or not isinstance(n_points,Integral) or n_points<1:
+        raise ValueError('positive integer n_points required')
+    G_c=critical_coupling(Lambda,N_f)
+    ratios=np.linspace(0.5,2.0,n_points)
+    C_values=[];G_metric_values=[];phases=[];certificates=[];origins=[]
+    for index,r in enumerate(ratios):
+        params=MeanFieldParams(G=r*G_c,Lambda=Lambda,N_f=N_f)
+        try:
+            cert=_scalar_receipt(params,**accuracy)
+            origin=_origin_receipt(params,cert,**accuracy) if cert.branch=='origin' else None
+            metric=mean_field_metric_correlator(params,scalar_enclosure=cert,origin_enclosure=origin,**accuracy)
+            phase=_classify_phase(cert.C,params,scalar_enclosure=cert,origin_enclosure=origin,**accuracy)
+        except Exception as exc:
+            exc.add_note(f'mean-field sample {index}, requested ratio {r}')
+            raise
+        C_values.append(cert.C);G_metric_values.append(metric);phases.append(phase)
+        certificates.append(cert.as_dict());origins.append(None if origin is None else origin.as_dict())
+    indices=[i for i,p in enumerate(phases) if p=='vestigial']
+    return dict(coupling_ratios=ratios,C_tetrad=np.array(C_values),G_metric=np.array(G_metric_values),
+        phases=phases,vestigial_min=ratios[indices[0]] if indices else 0.0,
+        vestigial_max=ratios[indices[-1]] if indices else 0.0,vestigial_exists=bool(indices),
+        scalar_enclosures=certificates,origin_proxy_enclosures=origins,
+        physical_phase_status='uncomputed adopted curvature model')
 
-    # Tetrad VEV contribution
-    C = mean_field_gap_equation(params)
 
-    if C > 1e-10:
-        # Full tetrad phase: metric comes from VEV + fluctuations
-        # g ~ C^2 + fluctuation correction
-        metric_vev = C ** 2
-        # Fluctuation correction is subleading
-        return metric_vev
-
-    # No tetrad VEV: check for vestigial phase
-    # Curvature at origin: d^2V/dC^2|_{C=0} = 1/G - N_f Lambda^2 / (8 pi^2)
-    curvature = adw_curvature_at_origin(G, Lambda, N_f)
-
-    if curvature > 0:
-        # Origin is a minimum — compute per-site metric fluctuations.
-        #
-        # The mean-field metric correlator per site is:
-        #   M_g = d² * T_eff / (V * curvature)
-        # where V = L^d is the lattice volume.
-        #
-        # Physical interpretation:
-        #   - Pre-geometric (weak coupling): curvature is large, M_g ~ 1/V → 0
-        #     as V → ∞. Fluctuations are thermal noise, not vestigial order.
-        #   - Vestigial (near G_c): curvature → 0, so M_g diverges even with
-        #     the 1/V suppression. The TOTAL correlator M_g * V diverges,
-        #     signaling vestigial ordering.
-        #
-        # The vestigial criterion is: M_g * V > threshold, i.e.,
-        # d² * T_eff / curvature > threshold — independent of V.
-        # This is the standard condensed-matter criterion for vestigial
-        # order (Fernandes et al. 2019).
-        T_eff = max(params.temperature, Lambda / (4 * np.pi))  # zero-point
-        V = params.L ** d  # lattice volume
-
-        # Per-site metric correlator (intensive quantity)
-        metric_fluct_per_site = d**2 * T_eff / (V * (curvature + 1e-30))
-
-        # Total (extensive) correlator — used for vestigial ordering criterion
-        # M_total = d² * T_eff / curvature  (V-independent)
-        # We return per-site for the order parameter plot, but phase
-        # classification uses the total correlator (see classify_phase).
-        return metric_fluct_per_site
+def full_mean_field_analysis(G: float, Lambda: float, N_f: int=4, **accuracy) -> MeanFieldResult:
+    """One scalar solve and one reused origin witness when that branch applies."""
+    from fractions import Fraction
+    params=MeanFieldParams(G=G,Lambda=Lambda,N_f=N_f)
+    cert=_scalar_receipt(params,**accuracy)
+    origin=_origin_receipt(params,cert,**accuracy) if cert.branch=='origin' else None
+    metric=mean_field_metric_correlator(params,scalar_enclosure=cert,origin_enclosure=origin,**accuracy)
+    phase=_classify_phase(cert.C,params,scalar_enclosure=cert,origin_enclosure=origin,**accuracy)
+    d,_,_=_mean_lattice(params)
+    if cert.branch=='positive':
+        metric_eigs=np.array([metric]*d)
+        interval=tuple(x*x for x in cert.magnitude_interval)
+        metric_error=max(abs(Fraction.from_float(metric)-x) for x in interval)
     else:
-        # Origin is unstable: curvature < 0 with C = 0 means we're at the
-        # onset of condensation. Return large metric to signal vestigial.
-        return abs(curvature) * Lambda**2
-
-
-def _total_metric_correlator(params: MeanFieldParams) -> float:
-    """Compute the total (extensive) metric correlator for phase classification.
-
-    Unlike the per-site correlator returned by mean_field_metric_correlator(),
-    this is V-independent and is the correct quantity for the vestigial
-    ordering criterion:
-        M_total = d² * T_eff / curvature   (diverges as curvature → 0)
-
-    Returns:
-        Total correlator (V-independent). Used for phase classification.
-    """
-    G, Lambda, N_f = params.G, params.Lambda, params.N_f
-    d = params.d
-
-    C = mean_field_gap_equation(params)
-    if C > 1e-10:
-        # Full tetrad: total correlator is C² × V (extensive)
-        # For classification, we just return a large value
-        return C**2 * params.L**d
-
-    curvature = adw_curvature_at_origin(G, Lambda, N_f)
-    if curvature > 0:
-        T_eff = max(params.temperature, Lambda / (4 * np.pi))
-        return d**2 * T_eff / (curvature + 1e-30)
-    else:
-        return abs(curvature) * Lambda**2 * params.L**d
-
-
-def _classify_phase(C: float, params: MeanFieldParams) -> str:
-    """Classify the gravitational phase using the curvature criterion.
-
-    - Full tetrad: C > 0 (below G_c, the gap equation has no solution)
-    - Vestigial: C = 0 but curvature is small enough that the metric
-      correlation length ξ ~ 1/√curvature exceeds the lattice spacing.
-      In practice: curvature < curvature_vestigial (a fraction of 1/G_c).
-    - Pre-geometric: C = 0 and curvature is large (strong restoring force,
-      short correlation length, no collective metric order).
-
-    The vestigial criterion: the curvature at the origin must be less than
-    a fraction of the critical value 1/G_c. We use 0.3 × (1/G_c) as the
-    threshold — below this, the correlation length has grown to ~2× its
-    weak-coupling value, indicating the onset of vestigial order.
-
-    Args:
-        C: Tetrad VEV magnitude.
-        params: Mean-field parameters.
-
-    Returns:
-        Phase string: "full_tetrad", "vestigial", or "pre_geometric".
-    """
-    Lambda = params.Lambda
-    N_f = params.N_f
-
-    if C > 1e-10 * Lambda:
-        return "full_tetrad"
-
-    # Curvature at origin: d²V/dC²|_{C=0} = 1/G - N_f Λ²/(8π²)
-    curvature = adw_curvature_at_origin(params.G, Lambda, N_f)
-
-    # Critical curvature (at G = G_c, curvature = 0)
-    # At weak coupling (G << G_c): curvature ≈ 1/G_c (maximum)
-    G_c = critical_coupling(Lambda, N_f)
-    curvature_max = 1.0 / G_c
-
-    if curvature <= 0:
-        # At or beyond the transition — vestigial or full tetrad
-        return "vestigial"
-
-    # Vestigial criterion: curvature has dropped below 30% of its
-    # weak-coupling value, meaning the correlation length has grown
-    # significantly and metric correlations are developing.
-    vestigial_fraction = 0.3
-    if curvature < vestigial_fraction * curvature_max:
-        return "vestigial"
-
-    return "pre_geometric"
-
-
-def vestigial_phase_window(Lambda: float, N_f: int,
-                           n_points: int = 50) -> dict:
-    """Compute the coupling window where the vestigial phase exists.
-
-    Scans G/G_c and identifies where:
-    - C_tetrad = 0 (no tetrad VEV)
-    - G_metric > threshold (metric correlator nonzero)
-
-    The vestigial window is between G_vestigial_min and G_c.
-
-    Args:
-        Lambda: UV cutoff.
-        N_f: Number of fermion species.
-        n_points: Number of coupling values to scan.
-
-    Returns:
-        Dict with coupling_ratios, C_tetrad, G_metric, phase labels,
-        and vestigial window boundaries.
-    """
-    G_c = critical_coupling(Lambda, N_f)
-    ratios = np.linspace(0.5, 2.0, n_points)
-
-    C_values = []
-    G_metric_values = []
-    phases = []
-
-    for r in ratios:
-        params = MeanFieldParams(G=r * G_c, Lambda=Lambda, N_f=N_f)
-        C = mean_field_gap_equation(params)
-        G_m = mean_field_metric_correlator(params)
-
-        C_values.append(C)
-        G_metric_values.append(G_m)
-        phases.append(_classify_phase(C, params))
-
-    # Find vestigial window
-    vestigial_indices = [i for i, p in enumerate(phases) if p == "vestigial"]
-    if vestigial_indices:
-        vestigial_min = ratios[vestigial_indices[0]]
-        vestigial_max = ratios[vestigial_indices[-1]]
-    else:
-        vestigial_min = vestigial_max = 0.0
-
-    return {
-        'coupling_ratios': ratios,
-        'C_tetrad': np.array(C_values),
-        'G_metric': np.array(G_metric_values),
-        'phases': phases,
-        'vestigial_min': vestigial_min,
-        'vestigial_max': vestigial_max,
-        'vestigial_exists': len(vestigial_indices) > 0,
-    }
-
-
-def full_mean_field_analysis(G: float, Lambda: float,
-                             N_f: int = 4) -> MeanFieldResult:
-    """Run the complete mean-field analysis.
-
-    Args:
-        G: ADW coupling constant.
-        Lambda: UV cutoff.
-        N_f: Number of fermion species.
-
-    Returns:
-        MeanFieldResult with full analysis.
-    """
-    params = MeanFieldParams(G=G, Lambda=Lambda, N_f=N_f)
-
-    C = mean_field_gap_equation(params)
-    G_m = mean_field_metric_correlator(params)
-    V = effective_potential(C, G, Lambda, N_f) if C > 0 else 0.0
-
-    # Phase classification (uses total correlator, not per-site)
-    phase = _classify_phase(C, params)
-    is_vestigial = (phase == "vestigial")
-
-    # Metric eigenvalues (isotropic mean-field: all equal)
-    d = params.d
-    if C > 0:
-        metric_eigs = np.array([C**2] * d)
-    elif G_m > 0:
-        metric_eigs = np.array([G_m / d] * d)
-    else:
-        metric_eigs = np.zeros(d)
-
-    is_lorentzian = bool(np.all(metric_eigs > 0))
-
-    return MeanFieldResult(
-        params=params,
-        C_tetrad=C,
-        G_metric=G_m,
-        V_eff=V,
-        phase=phase,
-        is_vestigial=is_vestigial,
-        metric_eigenvalues=metric_eigs,
-        is_lorentzian=is_lorentzian,
-    )
+        metric_eigs=np.array([origin.values[2]]*d)
+        interval=metric_error=None  # no scalar-positive or physical certificate invented
+    return MeanFieldResult(params,cert.C,metric,cert.V_eff,phase,phase=='vestigial',metric_eigs,
+        None,cert,interval,metric_error,'uncomputed',bool(np.all(metric_eigs>0)),origin,
+        None if origin is None else origin.intervals[0],None if origin is None else origin.errors[0])
