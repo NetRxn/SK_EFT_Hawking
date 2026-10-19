@@ -1,37 +1,7 @@
-"""Ginzburg-Landau Phase Classification for ADW Tetrad Condensation, and the
-G/G_c phase diagram. Key result: the isotropic B-phase is the ground state
-throughout — the anisotropic A-phase is never favoured — as in weak-coupling
-He-3.
+"""Adopted diagonal GL/scalar ansatz and He3 analog labels. The truncated polynomial and n*V_exact are distinct approximations. Scalar numerical certificates do not derive the microscopic invariant coefficients, physical He3 ordering, tetrad state or gravity.
 
-Extends the ADW/He-3 structural analogy from qualitative to quantitative
-by computing the Ginzburg-Landau beta_i analogs for the tetrad effective
-potential and classifying ADW phases by analogy to He-3 A-phase and B-phase.
-
-The physics:
-In He-3 superfluid, the order parameter is a complex 3x3 matrix A_{ai}
-(spin x orbital), and the GL free energy contains five quartic invariants
-{beta_1, ..., beta_5}. Different values of the beta_i select different
-ground states: the isotropic B-phase (BW state) or the anisotropic
-A-phase (ABM state) with gap nodes.
-
-For the ADW tetrad e^a_mu (4x4 real matrix), the analogous GL expansion
-near the critical coupling G_c is:
-
-    F_GL = alpha(G) * Tr(e e^T) + sum_i beta_i * I_i(e)
-
-where I_i are invariant polynomials under SO(3,1) x GL(4), and the
-coefficients alpha, beta_i are computed by expanding V_eff(C) from the
-Coleman-Weinberg potential around the critical point.
-
-Phase classification:
-    - "B-phase" (isotropic): e^a_mu = C * delta^a_mu (all gaps equal)
-      Analogous to He-3 B (Balian-Werthamer state)
-    - "A-phase" (anisotropic): e^a_mu has gap nodes in some directions
-      Analogous to He-3 A (Anderson-Brinkman-Morel state)
-    - "Polar" phase: one direction condensed, three gapped
-
-Lean: ADWMechanism.lean (gl_expansion_structure, phase_classification)
-"""
+Existing attribution does not certify this numerical implementation:
+Lean: ADWMechanism.lean (gl_expansion_structure, phase_classification)"""
 
 from dataclasses import dataclass, field
 from enum import Enum
@@ -121,7 +91,7 @@ class PhaseClassification:
         phase_type: GLPhaseType enum value
         order_parameter_structure: Description of the tetrad structure
         free_energy: GL free energy at this phase
-        is_ground_state: Whether this is the global minimum
+        is_ground_state: Selected representative within the adopted scalar diagonal ansatz
         he3_analog: Name of the analogous He-3 phase
     """
     phase_name: str
@@ -130,6 +100,9 @@ class PhaseClassification:
     free_energy: float
     is_ground_state: bool
     he3_analog: str
+    scalar_enclosure: object = None
+    scalar_energy_interval: tuple | None = None
+    scalar_energy_error: object = None
 
 
 @dataclass
@@ -138,8 +111,8 @@ class GLPhaseDiagram:
 
     Attributes:
         coupling_ratios: Array of G/G_c values
-        phase_boundaries: List of (ratio, from_phase, to_phase) transitions
-        ground_state_sequence: List of (ratio_range, phase_type) pairs
+        phase_boundaries: Legacy nominal reference labels; not certified transition locations
+        ground_state_sequence: Contiguous sampled ranges and model labels, not a continuous phase theorem
         alpha_values: GL alpha coefficient at each coupling
         free_energies_B: B-phase free energy at each coupling
         free_energies_A: A-phase free energy at each coupling
@@ -152,6 +125,10 @@ class GLPhaseDiagram:
     free_energies_B: np.ndarray
     free_energies_A: np.ndarray
     free_energies_polar: np.ndarray
+    scalar_enclosures: list | None = None
+    sampled_transition_brackets: list | None = None
+    scalar_energy_errors: dict | None = None
+    boundary_status: str = "nominal_reference_only"
 
 
 @dataclass
@@ -341,46 +318,14 @@ def invariant_polynomials() -> list[InvariantPolynomial]:
 
 
 def compute_gl_coefficients(G: float, Lambda: float, N_f: int) -> GLCoefficients:
-    """Compute Ginzburg-Landau coefficients from the Coleman-Weinberg potential.
+    """Adopted finite-scale GL coefficients, not a microscopic matrix derivation.
 
-    The effective potential V_eff(C) is expanded near C = 0:
-        V_eff = (1/2) alpha * C^2 + (1/4) beta_eff * C^4 + ...
-
-    The quadratic coefficient:
-        alpha = 1/G - N_f Lambda^2 / (8 pi^2) = 1/G - 1/G_c
-
-    The quartic coefficient comes from the fourth derivative of V_eff at C=0.
-    For the Coleman-Weinberg potential with logarithmic running:
-
-        V_eff(C) = C^2/(2G) - (N_f/16pi^2)[Lambda^2 C^2 - C^4 ln(Lambda^2/C^2 + 1)]
-
-    Expanding ln(Lambda^2/C^2 + 1) = ln(Lambda^2/C^2) + C^2/Lambda^2 + ...
-    for C << Lambda:
-
-        V_eff ~ (alpha/2) C^2 + (N_f / 16 pi^2) C^4 [ln(C^2/Lambda^2) - 1/2]
-
-    The quartic part has logarithmic running, so we evaluate the effective
-    beta at the condensation scale C ~ C_min.
-
-    Distribution among the five invariants:
-    The Coleman-Weinberg potential is a function of |det(e)|^(1/4) = C,
-    which for the isotropic ansatz e = C * delta gives:
-        Tr(e e^T) = 4 C^2
-        All quartic invariants are polynomials in C^2
-
-    The key structural result: the CW potential favors the isotropic
-    (B-phase) ansatz because it maximizes the fermion determinant
-    (all eigenvalues of the Dirac operator are equal).
+    Diagnostic curvature, C_eval=0.1*Lambda and invariant weights remain
+    chosen conventions. Minima of n*alpha*C²+n²*beta*C⁴ are degenerate across
+    positive n; the separate n*V scalar model has multiplicity ordering.
+    Neither relation constructs physical He3 matching or a new native proof.
 
     Lean: gl_alpha_sign_change, gl_beta_from_cw
-
-    Args:
-        G: ADW coupling constant
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-
-    Returns:
-        GLCoefficients with the computed values.
     """
     G_c = critical_coupling(Lambda, N_f)
 
@@ -388,59 +333,40 @@ def compute_gl_coefficients(G: float, Lambda: float, N_f: int) -> GLCoefficients
     # alpha = d^2 V_eff / dC^2 |_{C=0} = 1/G - N_f Lambda^2 / (8 pi^2)
     alpha = curvature_at_origin(G, Lambda, N_f)
 
-    # Quartic coefficient from CW potential fourth derivative
-    # d^4 V_eff / dC^4 |_{C->0} ~ (N_f / 4 pi^2) * [ln(Lambda^2/C^2) - 3]
-    # This has a logarithmic divergence as C -> 0, reflecting the
-    # Coleman-Weinberg logarithmic running. We regulate by evaluating
-    # at C_eval = epsilon * Lambda where epsilon is a small scale.
-    #
-    # For the GL analysis what matters is the SIGN and relative magnitudes
-    # of the beta_i, not their absolute values. We extract the effective
-    # quartic coupling by fitting V_eff near the minimum.
+    # With A=N_f/(16*pi²), the continuous scalar expansion is
+    # V=(alpha/2)*C²+A*C⁴*log(Lambda²/C²)+A*C⁶/Lambda²+O(C⁸/Lambda⁴).
+    # Its fourth derivative is A*(24*log(Lambda²/C²)-100)+O(C²/Lambda²),
+    # not a finite Taylor quartic coefficient at the origin. The weights
+    # below are adopted finite-scale conventions, not this divergent limit.
     prefactor_cw = N_f / (16.0 * np.pi**2)
 
-    # Effective quartic coefficient at the condensation scale
-    # From V_eff expansion: beta_eff ~ (N_f / 4 pi^2) * ln(Lambda / C_min)
-    # For G > G_c, the condensation scale is C_min / Lambda ~ exp(-1/(2*epsilon))
-    # where epsilon = (G - G_c) / G_c
-    #
-    # We compute beta_eff from the CW potential:
-    # The quartic term in V_eff = prefactor * C^4 * ln(Lambda^2/C^2 + 1)
-    # Evaluate at C_eval = 0.1 * Lambda — a convention choice that places
-    # the evaluation point deep inside the GL regime (C << Lambda).
-    # The beta_eff depends logarithmically on C_eval/Lambda, so the
-    # qualitative phase structure is insensitive to this choice.
+    # Exact scalar stationarity is delta=2*z*log(1+1/z)-z/(1+z),
+    # delta=1-1/r,z=C²/Lambda². No BCS essential-scale formula is used.
+    # The chosen evaluation scale C_eval=0.1*Lambda gives A*log101.
+    # Its physical/microscopic GL normalization and invariant allocation
+    # remain active BUILD; the executable historical choices are preserved.
     C_eval = 0.1 * Lambda
     ratio = Lambda / C_eval
     beta_eff = prefactor_cw * np.log(ratio**2 + 1.0)
 
     # Distribution among invariants:
     # For the real tetrad, only 3 invariants are independent (I_1=I_5, I_2=I_3).
-    # The CW potential depends only on det(e) and Tr(e e^T), which constrains:
+    # Their algebraic identities do not derive the physical coefficient weights:
     #
-    # The isotropic CW potential distributes as:
-    #   beta_1: Tr(e e^T)^2 term — from expanding C^4 = (Tr(e e^T)/4)^2
-    #   beta_2: Tr((e e^T)^2) — from the determinant expansion
+    # The adopted invariant-weight convention is:
+    #   beta_1: chosen weight; C⁴=(Tr(e e^T)/4)² on the isotropic ansatz
+    #   beta_2: chosen weight of Tr((e e^T)²), no derived determinant claim
     #   beta_3 = beta_2 (real-field identity)
-    #   beta_4: Tr((e^T e)^2) — from internal Lorentz contraction
+    #   beta_4: chosen weight of Tr((e^T e)²), not a derived Lorentz contraction
     #   beta_5 = beta_1 (real-field identity)
     #
-    # The relative weight favoring B-phase over A-phase:
-    # F_B = alpha * 4C^2 + beta_eff * 16 C^4
-    # F_A = alpha * 3C^2 + beta_eff * 9 C^4
-    # The B-phase has lower energy when alpha < 0 and beta_eff > 0,
-    # because |alpha|/beta_eff determines the condensation magnitude:
-    # C_min^2 = |alpha| / (2 * 4 * beta_eff) for B-phase (4 equal components)
-    # C_min^2 = |alpha| / (2 * 3 * beta_eff) for A-phase (3 equal components)
-    # V_min_B = -alpha^2 / (4 * 4 * beta_eff) = -alpha^2 / (16 beta_eff)
-    # V_min_A = -alpha^2 / (4 * 3 * beta_eff) = -alpha^2 / (12 beta_eff)
-    # Since 1/16 < 1/12, the B-phase has LOWER free energy.
-    #
-    # This is the ADW analog of weak-coupling He-3 where the B-phase is
-    # also the ground state.
+    # For the stated truncated polynomial, C_min²=-alpha/(2*n*beta_eff)
+    # and F_min=-alpha²/(4*beta_eff), independent positive n. It cannot
+    # establish a B/A ordering. The separate n*V_exact model below uses
+    # positive multiplicity of one scalar minimum; physical matching is BUILD.
 
     # Distribute beta_eff among the five invariants.
-    # The CW potential structure (via det(e) and Tr(e e^T)) gives:
+    # Retained finite-scale convention; not a microscopic determinant derivation:
     beta_1 = beta_eff / 16.0   # Coefficient of I_1 = (Tr(e e^T))^2
     beta_2 = beta_eff / 4.0    # Coefficient of I_2 = Tr((e e^T)^2)
     beta_3 = beta_2            # I_3 = I_2 for real fields
@@ -466,155 +392,117 @@ def compute_gl_coefficients(G: float, Lambda: float, N_f: int) -> GLCoefficients
 # ═══════════════════════════════════════════════════════════════════
 
 
-def _gl_free_energy(alpha: float, beta_eff: float, C: float,
-                    n_condensed: int) -> float:
-    """GL free energy for an ansatz with n_condensed equal eigenvalues.
 
-    For e^a_mu = C * diag(1,...,1, 0,...,0) with n_condensed nonzero entries:
-        F = alpha * n * C^2 + beta_eff * n^2 * C^4
+class GLUnboundedBelow(ArithmeticError):
+    """The valid polynomial has no finite global minimum; not solver failure."""
 
-    where n = n_condensed and the quartic invariants evaluate to n^2 C^4.
 
-    Args:
-        alpha: Quadratic GL coefficient
-        beta_eff: Effective quartic coefficient
-        C: Tetrad magnitude per condensed direction
-        n_condensed: Number of condensed directions (4=B, 3=A, 2=polar)
+def _gl_count(n):
+    from numbers import Integral
+    if isinstance(n,(bool,np.bool_)) or not isinstance(n,Integral) or n<0:
+        raise ValueError('n_condensed must be a nonnegative integer')
+    return int(n)
 
-    Returns:
-        GL free energy.
+
+@dataclass(frozen=True)
+class GLScalarMinimum:
+    """Numerical scalar-ansatz energy; not a microscopic phase certificate."""
+    n_condensed: int
+    free_energy: float
+    energy_interval: tuple
+    energy_error: object
+    scalar_enclosure: object=None
+
+
+def _gl_scalar_receipt(G,Lambda,N_f,certificate=None,**accuracy):
+    from src.core.formulas import adw_scalar_minimum,adw_validate_scalar_enclosure
+    policy=dict(atol=0,rtol=1e-10,energy_atol=0,energy_rtol=1e-8,max_work=200000,max_bits=100000)
+    policy.update(accuracy)
+    if certificate is None:
+        certificate=adw_scalar_minimum(G,Lambda,N_f,**policy)
+    return adw_validate_scalar_enclosure(certificate,G,Lambda,N_f,**policy)
+
+
+def _full_cw_minimum(G,Lambda,N_f,n_condensed,*,scalar_enclosure=None,**accuracy):
+    """Scale the actual scalar minimum and report its full resulting error.
+
+    [n*(Elo-gap),n*Ehi] encloses n*Vstar; binary n*V_eff rounding is
+    included by exact endpoint distance. Accuracy arguments govern the
+    underlying scalar solve. This record reports the scaled bound, rather
+    than silently promising the same unscaled absolute tolerance.
     """
-    n = n_condensed
-    return alpha * n * C**2 + beta_eff * n**2 * C**4
+    from fractions import Fraction
+    from src.core.formulas import _adw_exact,_adw_binary_midpoint
+    n=_gl_count(n_condensed)
+    for name,value in (('G',G),('Lambda',Lambda),('N_f',N_f)):
+        _adw_exact(value,name,positive=True)
+    if n==0:
+        return GLScalarMinimum(0,0.0,(Fraction(0),Fraction(0)),Fraction(0),None)
+    cert=_gl_scalar_receipt(G,Lambda,N_f,scalar_enclosure,**accuracy)
+    if cert.branch=='origin':
+        return GLScalarMinimum(n,0.0,(Fraction(0),Fraction(0)),Fraction(0),cert)
+    interval=(n*(cert.energy_interval[0]-cert.energy_gap_upper),n*cert.energy_interval[1])
+    q=n*Fraction.from_float(cert.V_eff)
+    value,represented,_=_adw_binary_midpoint((q,q),'scaled scalar minimum energy',nonzero=True)
+    error=max(abs(represented-x) for x in interval)
+    return GLScalarMinimum(n,value,interval,error,cert)
 
 
-def _gl_minimized_free_energy(alpha: float, beta_eff: float,
-                               n_condensed: int) -> float:
-    """GL free energy minimized over C for fixed ansatz type.
+def _gl_free_energy(alpha: float,beta_eff: float,C: float,n_condensed: int) -> float:
+    """Evaluate n*alpha*C²+n²*beta*C⁴; finite signed C, integer n>=0."""
+    from src.core.formulas import _adw_exact,_adw_binary_midpoint
+    a,b,c=(_adw_exact(x,k) for x,k in ((alpha,'alpha'),(beta_eff,'beta'),(C,'C')))
+    n=_gl_count(n_condensed)
+    q=n*a*c*c+n*n*b*c**4
+    return _adw_binary_midpoint((q,q),'GL polynomial',nonzero=q!=0)[0]
 
-    Minimizing F = alpha * n * C^2 + beta_eff * n^2 * C^4:
-        C_min^2 = -alpha / (2 * n * beta_eff)     (requires alpha < 0, beta_eff > 0)
-        F_min = -alpha^2 * n / (4 * n^2 * beta_eff) = -alpha^2 / (4 * n * beta_eff)
 
-    Lower n gives lower (more negative) F_min, so the A-phase and polar
-    phases have more negative GL free energy per invariant count.
-    HOWEVER, this is the GL approximation. The full CW potential (which
-    includes the logarithmic running) favors the B-phase because the
-    fermion determinant is maximized by equal eigenvalues.
+def _gl_minimized_free_energy(alpha: float,beta_eff: float,n_condensed: int) -> float:
+    """Global minimum of the stated polynomial, with explicit domain outcomes.
 
-    Args:
-        alpha: Quadratic GL coefficient (must be < 0 for condensation)
-        beta_eff: Effective quartic coefficient (must be > 0 for stability)
-        n_condensed: Number of condensed directions
-
-    Returns:
-        Minimized GL free energy (negative for condensed phase).
+    For n>0,beta>0,alpha<0: C²=-alpha/(2*n*beta) and
+    F_min=-alpha²/(4*beta), independent n. For alpha>=0 minimum0.
+    beta0/alpha0 is flat; beta0/alpha>0 has originminimum0.
+    beta<0 or beta0/alpha<0 is unbounded below for positive n.
+    n0 is constantzero. No finite minimum is invented for an unstable form.
     """
-    if alpha >= 0 or beta_eff <= 0:
+    from src.core.formulas import _adw_exact,_adw_binary_midpoint
+    a,b=(_adw_exact(x,k) for x,k in ((alpha,'alpha'),(beta_eff,'beta')))
+    n=_gl_count(n_condensed)
+    if n==0:
         return 0.0
-
-    n = n_condensed
-    return -alpha**2 / (4.0 * n * beta_eff)
-
-
-def _full_cw_free_energy(G: float, Lambda: float, N_f: int,
-                          n_condensed: int) -> float:
-    """Full Coleman-Weinberg free energy minimized for a given phase ansatz.
-
-    Goes beyond the GL truncation to use the exact V_eff(C), evaluated
-    for the ansatz e = C * diag(1,...,1,0,...,0) with n_condensed
-    nonzero entries.
-
-    The full V_eff for an ansatz with n condensed directions each at scale C:
-        V = n * [C^2/(2G) - (N_f/16pi^2)(Lambda^2 C^2 - C^4 ln(Lambda^2/C^2 + 1))]
-
-    The factor of n accounts for the trace over condensed directions.
-
-    Args:
-        G: ADW coupling
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-        n_condensed: Number of condensed directions
-
-    Returns:
-        Minimized free energy for this ansatz.
-    """
-    n = n_condensed
-    if n == 0:
+    if b<0 or (b==0 and a<0):
+        raise GLUnboundedBelow('truncated GL polynomial is unbounded below')
+    if a>=0:
         return 0.0
-
-    # For n condensed directions, each carrying VEV C:
-    # V_total = n * V_eff_per_direction(C)
-    # where V_eff_per_direction is the single-component CW potential.
-    # Find the minimum over C.
-
-    from scipy.optimize import minimize_scalar
-
-    def v_total(C):
-        if C < 1e-15:
-            return 0.0
-        v_per = effective_potential(C, G, Lambda, N_f)
-        return n * v_per
-
-    result = minimize_scalar(v_total, bounds=(1e-8 * Lambda, Lambda),
-                              method='bounded')
-
-    if result.success and result.fun < 0:
-        return float(result.fun)
-    return 0.0
+    q=-a*a/(4*b)
+    return _adw_binary_midpoint((q,q),'GL minimum',nonzero=True)[0]
 
 
-def classify_gl_phases(coefficients: GLCoefficients) -> list[PhaseClassification]:
-    """Classify GL phases and determine the ground state.
+def _full_cw_free_energy(G: float,Lambda: float,N_f: int,n_condensed: int,*,scalar_enclosure=None,**accuracy) -> float:
+    """Compatibility float of n times the SAME unrestricted scalar minimum.
 
-    Evaluates the free energy for each phase ansatz using both the
-    GL approximation and the full CW potential, then determines which
-    phase is the ground state.
+    Use _full_cw_minimum for scaled interval/error/receipt; n0 is specialzero.
+    Physical multi-component/He3 adequacy remains uncomputed.
+    """
+    return _full_cw_minimum(G,Lambda,N_f,n_condensed,scalar_enclosure=scalar_enclosure,**accuracy).free_energy
 
-    The key result: the B-phase (isotropic) is always the ground state
-    for the single-component CW potential, analogous to weak-coupling
-    He-3 where the B-phase wins.
+
+def classify_gl_phases(coefficients: GLCoefficients, **accuracy) -> list[PhaseClassification]:
+    """Classify within n*V scalar ansatz, not physical He3/matrix phase space.
+
+    Positive scalar branch gives4v*<3v*<2v*<0. Origin chooses the existing
+    pre-geometric representative among coincident zero configurations.
+    Preserved historical gl_b_phase_ground_state is not this numerical proof.
 
     Lean: gl_b_phase_ground_state
-
-    Args:
-        coefficients: GL coefficients from compute_gl_coefficients
-
-    Returns:
-        List of PhaseClassification for each phase.
     """
-    G = coefficients.G
-    Lambda = coefficients.Lambda
-    N_f = coefficients.N_f
-    alpha = coefficients.alpha
-
-    # Effective quartic coefficient for GL comparison
-    beta_eff = coefficients.beta_2  # Representative quartic scale
-
-    # Compute free energies using full CW potential
-    f_B = _full_cw_free_energy(G, Lambda, N_f, 4)
-    f_A = _full_cw_free_energy(G, Lambda, N_f, 3)
-    f_polar = _full_cw_free_energy(G, Lambda, N_f, 2)
-    f_planar = f_A  # Degenerate with A-phase in diagonal approximation (see _planar_phase_tetrad)
-
-    # Pre-geometric phase: F = 0 always
-    f_pre = 0.0
-
-    # Determine ground state
-    # When all free energies are zero (G < G_c, no condensation), the
-    # pre-geometric phase is the ground state by definition.
-    min_condensed = min(f_B, f_A, f_polar)
-    if min_condensed < -1e-15:
-        # A condensed phase has lower energy than pre-geometric
-        if f_B <= f_A and f_B <= f_polar:
-            ground_state_type = GLPhaseType.B_PHASE
-        elif f_A <= f_polar:
-            ground_state_type = GLPhaseType.A_PHASE
-        else:
-            ground_state_type = GLPhaseType.POLAR
-    else:
-        # No condensation: pre-geometric wins
-        ground_state_type = GLPhaseType.PRE_GEOMETRIC
+    G,Lambda,N_f=coefficients.G,coefficients.Lambda,coefficients.N_f
+    cert=_gl_scalar_receipt(G,Lambda,N_f,**accuracy)
+    records={n:_full_cw_minimum(G,Lambda,N_f,n,scalar_enclosure=cert,**accuracy) for n in (2,3,4)}
+    f_B,f_A,f_polar=(records[n].free_energy for n in (4,3,2))
+    f_pre=0.0
+    ground_state_type=GLPhaseType.B_PHASE if cert.branch=='positive' else GLPhaseType.PRE_GEOMETRIC
 
     phases = [
         PhaseClassification(
@@ -622,6 +510,8 @@ def classify_gl_phases(coefficients: GLCoefficients) -> list[PhaseClassification
             phase_type=GLPhaseType.B_PHASE,
             order_parameter_structure="e^a_mu = C * delta^a_mu (all 4 directions equal)",
             free_energy=f_B,
+            scalar_enclosure=cert, scalar_energy_interval=records[4].energy_interval,
+            scalar_energy_error=records[4].energy_error,
             is_ground_state=(ground_state_type == GLPhaseType.B_PHASE),
             he3_analog="He-3 B (Balian-Werthamer): isotropic gap, time-reversal invariant",
         ),
@@ -630,6 +520,8 @@ def classify_gl_phases(coefficients: GLCoefficients) -> list[PhaseClassification
             phase_type=GLPhaseType.A_PHASE,
             order_parameter_structure="e^a_mu = C * diag(1,1,1,0) (one gap node)",
             free_energy=f_A,
+            scalar_enclosure=cert, scalar_energy_interval=records[3].energy_interval,
+            scalar_energy_error=records[3].energy_error,
             is_ground_state=(ground_state_type == GLPhaseType.A_PHASE),
             he3_analog="He-3 A (Anderson-Brinkman-Morel): axial gap node, chiral",
         ),
@@ -638,6 +530,8 @@ def classify_gl_phases(coefficients: GLCoefficients) -> list[PhaseClassification
             phase_type=GLPhaseType.POLAR,
             order_parameter_structure="e^a_mu = C * diag(1,1,0,0) (two gap nodes)",
             free_energy=f_polar,
+            scalar_enclosure=cert, scalar_energy_interval=records[2].energy_interval,
+            scalar_energy_error=records[2].energy_error,
             is_ground_state=(ground_state_type == GLPhaseType.POLAR),
             he3_analog="He-3 polar: equatorial line node, non-chiral",
         ),
@@ -646,6 +540,7 @@ def classify_gl_phases(coefficients: GLCoefficients) -> list[PhaseClassification
             phase_type=GLPhaseType.PRE_GEOMETRIC,
             order_parameter_structure="e^a_mu = 0 (no condensation)",
             free_energy=f_pre,
+            scalar_enclosure=cert, scalar_energy_interval=(0,0), scalar_energy_error=0,
             is_ground_state=(ground_state_type == GLPhaseType.PRE_GEOMETRIC),
             he3_analog="Normal state (no Cooper pairing)",
         ),
@@ -659,64 +554,40 @@ def classify_gl_phases(coefficients: GLCoefficients) -> list[PhaseClassification
 # ═══════════════════════════════════════════════════════════════════
 
 
-def compute_phase_diagram(Lambda: float, N_f: int,
-                           n_points: int = 50) -> GLPhaseDiagram:
-    """Compute the GL phase diagram as a function of G/G_c.
+def compute_phase_diagram(Lambda: float,N_f: int,n_points: int=50,**accuracy) -> GLPhaseDiagram:
+    """Actual sampled scalar branches; nominal r1 is only a reference label.
 
-    Scans the coupling ratio from below G_c (pre-geometric) to well
-    above G_c (condensed), computing the ground state at each point.
-
-    The result: for G < G_c, the pre-geometric phase wins (alpha > 0).
-    For G > G_c, the B-phase (isotropic) is the ground state because
-    the CW potential is maximized by equal eigenvalues.
-
-    Lean: gl_phase_diagram_structure
-
-    Args:
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-        n_points: Number of coupling values to scan
-
-    Returns:
-        GLPhaseDiagram with phase boundaries and ground state sequence.
+    Actual supplied binary G/truepi certificates determine each row. The
+    returned transition brackets describe sampled changes, not exact physical
+    boundaries. Original polynomial coefficients remain adopted diagnostics.
     """
-    G_c = critical_coupling(Lambda, N_f)
-
-    # Scan from 0.5 G_c to 5.0 G_c
-    ratios = np.linspace(0.5, 5.0, n_points)
-    alpha_vals = np.zeros(n_points)
-    f_B_vals = np.zeros(n_points)
-    f_A_vals = np.zeros(n_points)
-    f_polar_vals = np.zeros(n_points)
-
-    for i, ratio in enumerate(ratios):
-        G = ratio * G_c
-        coeffs = compute_gl_coefficients(G, Lambda, N_f)
-        alpha_vals[i] = coeffs.alpha
-
-        f_B_vals[i] = _full_cw_free_energy(G, Lambda, N_f, 4)
-        f_A_vals[i] = _full_cw_free_energy(G, Lambda, N_f, 3)
-        f_polar_vals[i] = _full_cw_free_energy(G, Lambda, N_f, 2)
-
-    # Find phase boundary: where alpha changes sign (ratio = 1)
-    # The pre-geometric -> B-phase transition occurs at G/G_c = 1
-    boundaries = [(1.0, "pre_geometric", "B_phase")]
-
-    # Ground state sequence
-    ground_states: list[tuple[tuple[float, float], GLPhaseType]] = [
-        ((0.5, 1.0), GLPhaseType.PRE_GEOMETRIC),
-        ((1.0, 5.0), GLPhaseType.B_PHASE),
-    ]
-
-    return GLPhaseDiagram(
-        coupling_ratios=ratios,
-        phase_boundaries=boundaries,
-        ground_state_sequence=ground_states,
-        alpha_values=alpha_vals,
-        free_energies_B=f_B_vals,
-        free_energies_A=f_A_vals,
-        free_energies_polar=f_polar_vals,
-    )
+    from numbers import Integral
+    if isinstance(n_points,(bool,np.bool_)) or not isinstance(n_points,Integral) or n_points<1:
+        raise ValueError('positive integer n_points required')
+    G_c=critical_coupling(Lambda,N_f)
+    ratios=np.linspace(0.5,5.0,n_points)
+    alpha_vals=[];energies={n:[] for n in (2,3,4)};errors={n:[] for n in (2,3,4)}
+    certificates=[];states=[];transitions=[]
+    for i,r in enumerate(ratios):
+        G=r*G_c
+        try:
+            coefficients=compute_gl_coefficients(G,Lambda,N_f)
+            cert=_gl_scalar_receipt(G,Lambda,N_f,**accuracy)
+            records={n:_full_cw_minimum(G,Lambda,N_f,n,scalar_enclosure=cert,**accuracy) for n in (2,3,4)}
+        except Exception as exc:
+            exc.add_note(f'GL scalar sample {i}, requested ratio {r}')
+            raise
+        alpha_vals.append(coefficients.alpha);certificates.append(cert)
+        states.append(GLPhaseType.B_PHASE if cert.branch=='positive' else GLPhaseType.PRE_GEOMETRIC)
+        for n in (2,3,4):energies[n].append(records[n].free_energy);errors[n].append(records[n].energy_error)
+        if i and states[i]!=states[i-1]:transitions.append((float(ratios[i-1]),float(r),states[i-1].value,states[i].value))
+    sequence=[];start=0
+    for i in range(1,len(states)+1):
+        if i==len(states) or states[i]!=states[start]:
+            sequence.append(((float(ratios[start]),float(ratios[i-1])),states[start]));start=i
+    return GLPhaseDiagram(ratios,[(1.0,'pre_geometric','B_phase')],sequence,np.array(alpha_vals),
+        np.array(energies[4]),np.array(energies[3]),np.array(energies[2]),certificates,transitions,errors,
+        'nominal_reference_only; actual changes enclosed by sampled_transition_brackets')
 
 
 # ═══════════════════════════════════════════════════════════════════

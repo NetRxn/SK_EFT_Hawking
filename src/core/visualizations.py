@@ -2513,11 +2513,16 @@ def fig_exact_vs_perturbative() -> go.Figure:
 # ════════════════════════════════════════════════════════════════════
 
 def fig_adw_effective_potential() -> go.Figure:
-    """V_eff(C) for three coupling ratios: G/G_c = 0.5, 1.0, 2.0.
+    """Illustrative scalar potential at nominal G/G_c in {0.5,1,2}.
 
-    Shows the Coleman-Weinberg effective potential transitioning from
-    a single minimum at C=0 (pre-geometric) to a Mexican hat with
-    nontrivial minimum (full tetrad) as coupling increases.
+    Uses Lambda=1,N_f=4 and 200 C samples over [0,Lambda], with supplied
+    G=ratio*machine_G_c. Nominal ratio1 is a diagnostic reference; it is
+    not the exact true-pi critical point. The ordinate is
+    V_exact/Lambda⁴ = A F_r((C/Lambda)²), A=N_f/(16pi²), with r formed
+    from the actual supplied G and true pi. At the exact critical value
+    the origin is degenerate; that statement does not identify this sample.
+    A microscopic HS/one-loop ADW derivation is UNCOMPUTED; no figure pixels,
+    exported-asset freshness or gravitational dynamics are established here.
     """
     from src.adw.gap_equation import (
         effective_potential, critical_coupling, effective_potential_landscape,
@@ -2528,9 +2533,9 @@ def fig_adw_effective_potential() -> go.Figure:
     G_c = critical_coupling(Lambda, N_f)
 
     ratios = [0.5, 1.0, 2.0]
-    labels = ["G/G<sub>c</sub> = 0.5 (pre-geometric)",
-              "G/G<sub>c</sub> = 1.0 (critical)",
-              "G/G<sub>c</sub> = 2.0 (full tetrad)"]
+    labels = ["G/G<sub>c</sub> = 0.5 (scalar origin minimum)",
+              "nominal G/G<sub>c</sub> = 1.0 (machine reference)",
+              "G/G<sub>c</sub> = 2.0 (nonzero scalar minimum)"]
     colors_list = [COLORS["dispersive"], COLORS["horizon"], COLORS["dissipative"]]
     dashes = ["dash", "dot", "solid"]
 
@@ -2540,7 +2545,7 @@ def fig_adw_effective_potential() -> go.Figure:
         landscape = effective_potential_landscape(
             G=ratio * G_c, Lambda=Lambda, N_f=N_f, n_points=200,
         )
-        # Normalize by Lambda^4 for clean axis
+        # V/Lambda^4 retains A=N_f/(16pi²); it is A*F_r, not F_r alone.
         C_norm = landscape['C'] / Lambda
         V_norm = landscape['V_eff'] / Lambda**4
 
@@ -2550,6 +2555,15 @@ def fig_adw_effective_potential() -> go.Figure:
             line=dict(color=color, width=2.5, dash=dash),
         ))
 
+    fig.update_layout(meta=dict(
+        scalar_model="continuous adopted regulated scalar ansatz",
+        parameter_status="supplied G from nominal machine-Gc references",
+        Lambda=Lambda, N_f=N_f, diagnostic_G_c=G_c,
+        nominal_coupling_ratios=ratios,
+        supplied_couplings=[ratio * G_c for ratio in ratios],
+        samples_per_curve=200,
+        ratio_one_status="diagnostic reference; exact criticality not inferred",
+    ))
     fig.add_hline(y=0, line=dict(color="rgba(0,0,0,0.2)", width=1))
 
     fig.update_xaxes(title_text="C / \u039B", range=[0, 1])
@@ -2557,7 +2571,7 @@ def fig_adw_effective_potential() -> go.Figure:
 
     apply_layout(fig,
         height=450, width=700,
-        title=dict(text="<b>ADW Effective Potential: Phase Transition</b>",
+        title=dict(text="<b>Regulated Scalar Mean-Field Ansatz</b>",
                    font=TITLE_FONT),
         legend=dict(x=0.35, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
     )
@@ -2566,107 +2580,227 @@ def fig_adw_effective_potential() -> go.Figure:
 
 
 def fig_adw_phase_diagram() -> go.Figure:
-    """Phase diagram: tetrad VEV C/Lambda vs coupling ratio G/G_c.
+    """Actual ordered scan of enclosed scalar minima; refusal never zero-fills.
 
-    Shows pre-geometric phase (C=0) below G_c and full tetrad phase
-    (C>0) above, with vestigial metric window near G_c.
+    PROPOSED certified-scalar-v1 transport must be jointly adopted with the
+    real selected checker/spec. Scalar globality is not microscopic gravity.
     """
     from src.adw.gap_equation import full_gap_analysis, critical_coupling
+    from src.core.formulas import (
+        adw_validate_scalar_enclosure, ADWScalarEnclosure, _adw_exact, _adw_decimal,
+    )
+    from numbers import Real
+    from math import isfinite
+    from textwrap import fill
     import numpy as np
+
+    def finite(value):
+        return (not isinstance(value, (bool, np.bool_)) and isinstance(value, Real)
+                and isfinite(float(value)))
+
+    def same_snapshot(value, expected):
+        # Compare the actual dictionary mirror without coercion/serialization:
+        # bool/int/float equality must not erase canonical receipt types.
+        if type(value) is not type(expected):
+            return False
+        if type(expected) is dict:
+            return (all(type(k) is str for k in value) and value.keys() == expected.keys()
+                    and all(same_snapshot(value[k], expected[k]) for k in expected))
+        if type(expected) is list:
+            return (len(value) == len(expected)
+                    and all(same_snapshot(a, b) for a, b in zip(value, expected)))
+        return value == expected
 
     Lambda, N_f = 1.0, 4
     G_c = critical_coupling(Lambda, N_f)
-
+    if not finite(G_c) or G_c <= 0:
+        raise ValueError("Fig29 requires a finite positive diagnostic G_c")
+    accuracy = dict(atol=0, rtol=1e-10, energy_atol=0, energy_rtol=1e-8,
+                    max_work=200000, max_bits=100000)
+    accuracy_names = ("atol", "rtol", "energy_atol", "energy_rtol")
+    rational_accuracy = tuple(_adw_exact(accuracy[k], k) for k in accuracy_names)
+    def rational_record(value):
+        return dict(numerator=_adw_decimal(value.numerator), denominator=_adw_decimal(value.denominator))
+    accuracy_rationals = {k: rational_record(q) for k, q in zip(accuracy_names, rational_accuracy)}
     ratios = np.linspace(0.1, 5.0, 100)
-    C_values = []
-    for r in ratios:
-        result = full_gap_analysis(G=r * G_c, Lambda=Lambda, N_f=N_f)
-        if result.nontrivial_solution and result.phase.value == "full_tetrad":
-            C_values.append(result.nontrivial_solution.C / Lambda)
+    C_values, rows, hover = [], [], []
+    def rational_text(value):
+        return _adw_decimal(value.numerator)+"/"+_adw_decimal(value.denominator)
+    for index, r in enumerate(ratios):
+        G = r*G_c
+        try:
+            result = full_gap_analysis(G=G, Lambda=Lambda, N_f=N_f, **accuracy)
+        except Exception as exc:
+            exc.add_note(f"Fig29 row {index}, requested ratio {r}, actual G {G}: stopped before any partial figure")
+            raise
+        status = getattr(result, "scalar_status", None)
+        diag = getattr(result, "search_diagnostics", None)
+        prefix = f"Fig29 row {index}, ratio {r}, status {status}"
+        if status not in ("certified_origin", "certified_scalar_minimum") or not isinstance(diag, dict):
+            raise ValueError(prefix+": missing or unresolved scalar result")
+        certificate = getattr(result, "scalar_enclosure", None)
+        if type(certificate) is not ADWScalarEnclosure:
+            raise ValueError(prefix+": missing canonical scalar enclosure")
+        requested = (certificate.requested_atol, certificate.requested_rtol,
+                     certificate.requested_energy_atol, certificate.requested_energy_rtol)
+        if (requested != rational_accuracy or certificate.max_work != accuracy["max_work"] or
+                certificate.max_bits != accuracy["max_bits"]):
+            raise ValueError(prefix+": altered accuracy/resource request")
+        try:
+            adw_validate_scalar_enclosure(certificate, G, Lambda, N_f, **accuracy)
+        except Exception as exc:
+            exc.add_note(prefix+f", actual G {G}: certificate replay refused")
+            raise
+        represented = G/G_c  # Diagnostic ONLY; never the phase oracle.
+        if (not finite(result.G_c) or result.G_c != G_c or
+                not finite(result.coupling_ratio) or result.coupling_ratio != represented or
+                not finite(result.params.G) or result.params.G != G or
+                not finite(result.params.Lambda) or result.params.Lambda != Lambda or
+                not finite(result.params.N_f) or result.params.N_f != N_f):
+            raise ValueError(prefix+": supplied/represented input mismatch")
+        required_diagnostics = {
+            "search_attempted", "bounds", "candidate_cutoff", "optimizer_success",
+            "optimizer_status", "optimizer_message", "C", "V_eff", "C_validity",
+            "V_eff_validity", "candidate_window", "selected", "stationarity",
+            "globality", "certificate",
+        }
+        success = getattr(result, "success_criteria", None)
+        success_names = ("nontrivial_exists", "lorentzian_signature",
+                         "is_global_minimum", "coupling_above_critical")
+        if not required_diagnostics <= diag.keys():
+            raise ValueError(prefix+": missing required compatibility diagnostic")
+        if (type(success) is not dict or not set(success_names) <= success.keys()
+                or any(type(success[k]) is not bool for k in success_names)):
+            raise ValueError(prefix+": missing or nonboolean success criteria")
+        if (diag.get("stationarity") != "enclosed_exact_ansatz" or
+                diag.get("globality") != "unrestricted_scalar_ansatz" or
+                diag.get("C_validity") != "finite" or diag.get("V_eff_validity") != "finite" or
+                diag.get("bounds") is not None or diag.get("candidate_cutoff") is not None or
+                any(diag.get(k) is not None for k in ("optimizer_success", "optimizer_status", "optimizer_message")) or
+                not same_snapshot(diag["certificate"], certificate.as_dict())):
+            raise ValueError(prefix+": certificate/transport scope mismatch")
+        if status == "certified_origin":
+            trivial = result.trivial_solution
+            if (certificate.branch != "origin" or certificate.r_interval[1] > 1 or
+                    result.nontrivial_solution is not None or trivial is None or
+                    result.global_minimum is not trivial or trivial.phase.value != "pre_geometric" or
+                    result.phase.value != "pre_geometric" or trivial.is_minimum is not True or
+                    not finite(trivial.C) or trivial.C != certificate.C or trivial.C != 0 or
+                    not finite(trivial.V_eff) or trivial.V_eff != certificate.V_eff or trivial.V_eff != 0 or
+                    diag.get("search_attempted") is not False or diag.get("selected") is not False or
+                    diag.get("candidate_window") != "not_applicable" or
+                    not finite(diag.get("C")) or diag["C"] != 0 or
+                    not finite(diag.get("V_eff")) or diag["V_eff"] != 0 or
+                    success["nontrivial_exists"] is not False or
+                    success["lorentzian_signature"] is not False or
+                    success["is_global_minimum"] is not True or
+                    success["coupling_above_critical"] is not False):
+                raise ValueError(prefix+": not a genuine certified origin")
+            value = 0.0
         else:
-            C_values.append(0.0)
-
+            sol = result.nontrivial_solution
+            trivial = result.trivial_solution
+            if (certificate.branch != "positive" or certificate.r_interval[0] <= 1 or
+                    sol is None or result.global_minimum is not sol or sol.is_minimum is not True or
+                    sol.phase.value != "full_tetrad" or result.phase.value != "full_tetrad" or
+                    not finite(sol.C) or sol.C != certificate.C or sol.C <= 0 or
+                    not finite(sol.V_eff) or sol.V_eff != certificate.V_eff or sol.V_eff >= 0 or
+                    not finite(diag["C"]) or diag["C"] != sol.C or
+                    not finite(diag["V_eff"]) or diag["V_eff"] != sol.V_eff or
+                    trivial is None or trivial is sol or
+                    not finite(trivial.C) or trivial.C != 0 or
+                    not finite(trivial.V_eff) or trivial.V_eff != 0 or
+                    trivial.phase.value != "pre_geometric" or trivial.is_minimum is not False or
+                    success["nontrivial_exists"] is not True or
+                    success["lorentzian_signature"] is not bool(sol.is_lorentzian) or
+                    success["is_global_minimum"] is not True or
+                    success["coupling_above_critical"] is not True or
+                    diag.get("search_attempted") is not True or diag.get("selected") is not True or
+                    diag.get("candidate_window") != "unrestricted"):
+                raise ValueError(prefix+": inconsistent certified scalar selection")
+            value = float(sol.C/Lambda)
+            if not finite(value) or value <= 0:
+                raise ValueError(prefix+": invalid selected ordinate")
+        C_values.append(value)
+        snapshot = certificate.as_dict()
+        rows.append(dict(index=index, ratio=float(r), G=float(G),
+                         represented_ratio=float(represented), status=status,
+                         r_interval=snapshot["r_interval"], C=certificate.C, V_eff=certificate.V_eff,
+                         magnitude_error=snapshot["returned_magnitude_error"],
+                         energy_error=rational_record(certificate.energy_rounding_error+certificate.energy_gap_upper),
+                         display_error=snapshot["returned_magnitude_error"],
+                         C_over_Lambda=value, diagnostics=dict(diag), certificate=snapshot))
+        hover.append([status, diag["candidate_window"], float(represented), certificate.model,
+                      rational_text(certificate.r_interval[0]), rational_text(certificate.r_interval[1]),
+                      rational_text(certificate.returned_magnitude_error),
+                      rational_text(certificate.energy_rounding_error+certificate.energy_gap_upper)])
     fig = go.Figure()
-
     fig.add_trace(go.Scatter(
-        x=ratios, y=C_values,
-        mode="lines", name="C / \u039B",
-        line=dict(color=COLORS["dissipative"], width=3),
-        fill="tozeroy",
-        fillcolor="rgba(230,57,70,0.1)",
-    ))
-
-    # Mark G_c
+        x=ratios.tolist(), y=C_values, mode="lines+markers", name="Scalar C / Λ",
+        meta=dict(role="paper5_scalar_scan"), customdata=hover,
+        hovertemplate="requested r=%{x}<br>C/Λ=%{y}<br>%{customdata[0]}"
+                      "<br>domain=%{customdata[1]}<br>represented r=%{customdata[2]}"
+                      "<br>model=%{customdata[3]}<br>r lower=%{customdata[4]}<br>r upper=%{customdata[5]}"
+                      "<br>magnitude error=%{customdata[6]}<br>energy error=%{customdata[7]}<extra></extra>",
+        marker=dict(symbol=["circle"]*100, size=6),
+        line=dict(color=COLORS["dissipative"], width=3)))
     fig.add_vline(x=1.0, line=dict(color=COLORS["horizon"], width=2, dash="dash"),
-                  annotation_text="G = G<sub>c</sub>",
-                  annotation_position="top",
-                  annotation_font=dict(size=12))
-
-    # Phase labels
-    fig.add_annotation(x=0.5, y=0.15, text="Pre-geometric<br>(e = 0)",
-                       showarrow=False, font=dict(size=13, color=COLORS["dispersive"]))
-    fig.add_annotation(x=3.0, y=0.5, text="Full tetrad<br>(e \u2260 0, Lorentzian)",
-                       showarrow=False, font=dict(size=13, color=COLORS["dissipative"]))
-
-    fig.update_xaxes(title_text="G / G<sub>c</sub>")
-    fig.update_yaxes(title_text="C / \u039B (tetrad VEV)", range=[0, 1.0])
-
-    apply_layout(fig,
-        height=450, width=700,
-        title=dict(text="<b>ADW Phase Diagram: Tetrad Condensation</b>",
-                   font=TITLE_FONT),
-    )
-
+                  annotation_text="nominal r=1 (diagnostic)", annotation_position="top right")
+    fig.update_xaxes(title_text="G / diagnostic G<sub>c</sub> (requested ratio)", tickfont=dict(size=22, color="black"))
+    fig.update_yaxes(title_text="C / Λ (scalar ansatz)", tickfont=dict(size=22, color="black"))
+    apply_layout(fig, height=650, width=650,
+                 title=dict(text="Enclosed scalar minima", font=dict(size=24, color="black")))
+    fig.update_layout(font=dict(size=22, color="black"), margin=dict(l=85, r=25, t=70, b=300),
+        meta=dict(paper5_scalar_scan=dict(schema="certified-scalar-v1", Lambda=Lambda,
+                  N_f=N_f, G_c=float(G_c), accuracy=accuracy, accuracy_rationals=accuracy_rationals,
+                  ratios=ratios.tolist(), rows=rows)))
+    fig.add_annotation(x=0, y=-0.45, xref="paper", yref="paper", xanchor="left", yanchor="top",
+        showarrow=False, align="left", font=dict(size=22, color="black"),
+        text=fill("This scan approximates minima of the illustrative scalar ansatz with certified numerical error; "
+                  "it does not derive a vestigial metric phase, dynamical signature or physical gravity.",
+                  width=42).replace("\n", "<br>"))
     return fig
 
 
 def fig_adw_ng_mode_decomposition() -> go.Figure:
-    """Bar chart: tetrad component decomposition in 4D.
-
-    16 = 6 (spin connection) + 4 (diffeomorphisms) + 2 (graviton) + 4 (massive)
-    """
+    """Display assigned d=4 component categories, not a physical spectrum."""
     from src.adw.fluctuations import classify_ng_modes
+    from numbers import Integral
+    from textwrap import fill
+    import numpy as np
 
     modes = classify_ng_modes(4)
-
-    names = []
-    counts = []
-    colors_list = []
-    mode_colors = {
-        "absorbed": COLORS["cross"],
-        "pure_gauge": COLORS["sensitivity"],
-        "massless_graviton": COLORS["Steinhauer"],
-        "massive_higgs": COLORS["Trento"],
-    }
-
-    for m in modes:
-        names.append(m.mode_type.value.replace("_", " ").title())
-        counts.append(m.count)
-        colors_list.append(mode_colors.get(m.mode_type.value, "#999999"))
-
+    ids = ["absorbed", "massless_graviton", "massive_higgs", "pure_gauge"]
+    expected = [6, 2, 4, 4]
+    labels = ["Spin-<br>connection<br>assignment", "Spin-2<br>assignment",
+              "Massive<br>assignment", "Gauge<br>assignment"]
+    if len(modes) != 4 or [m.mode_type.value for m in modes] != ids:
+        raise ValueError("Fig30 requires the four ordered assigned category IDs")
+    counts = [m.count for m in modes]
+    if (any(isinstance(c, (bool, np.bool_)) or not isinstance(c, Integral) or c < 0 for c in counts)
+            or counts != expected or sum(counts) != 16):
+        raise ValueError("Fig30 requires paired d=4 assigned category counts")
+    colors_list = [COLORS["cross"], COLORS["Steinhauer"], COLORS["Trento"], COLORS["sensitivity"]]
     fig = go.Figure()
-
-    fig.add_trace(go.Bar(
-        x=names, y=counts,
-        marker_color=colors_list,
-        text=[str(c) for c in counts],
-        textposition="outside",
-        textfont=dict(size=14, color="black"),
-    ))
-
-    # Annotate total
-    fig.add_annotation(x=1.5, y=15, text="Total: 16 = 4<sup>2</sup>",
-                       showarrow=False, font=dict(size=13))
-
-    fig.update_xaxes(title_text="Mode Type")
-    fig.update_yaxes(title_text="Count", range=[0, 18])
-
-    apply_layout(fig,
-        height=450, width=650,
-        title=dict(text="<b>Tetrad Mode Decomposition (Vergeles Counting)</b>",
-                   font=TITLE_FONT),
-    )
-
+    fig.add_trace(go.Bar(x=labels, y=counts, customdata=ids,
+                        meta=dict(role="paper5_component_counts"),
+                        marker_color=colors_list, text=[str(c) for c in counts],
+                        textposition="outside", textfont=dict(size=22, color="black")))
+    fig.add_annotation(x=1, y=1.02, xref="paper", yref="paper", xanchor="right",
+                       text="Total assigned components: 16", showarrow=False,
+                       font=dict(size=22, color="black"))
+    fig.update_xaxes(title_text="Assigned category", tickfont=dict(size=22, color="black"))
+    fig.update_yaxes(title_text="Component count", range=[0, 8], tickfont=dict(size=22, color="black"))
+    apply_layout(fig, height=650, width=650,
+                 title=dict(text="Assigned tetrad components", font=dict(size=24, color="black")))
+    fig.update_layout(font=dict(size=22, color="black"), margin=dict(l=85, r=25, t=70, b=300),
+                      meta=dict(paper5_component_count=dict(schema="assigned-components-v1",
+                                dimension=4, category_ids=ids, counts=counts)))
+    fig.add_annotation(x=0, y=-0.45, xref="paper", yref="paper", xanchor="left", yanchor="top",
+                       showarrow=False, align="left", font=dict(size=22, color="black"),
+                       text=fill("Assigned component categories for d=4; these counts do not determine "
+                                 "a fluctuation spectrum, masses, spin-2 dynamics or physical "
+                                 "gravitational degrees of freedom.", width=42).replace("\n", "<br>"))
     return fig
 
 
@@ -3318,61 +3452,69 @@ def fig_chirality_wall_status():
 
 
 def fig_gl_phase_diagram():
-    """Fig 40: GL phase diagram — B-phase, A-phase, and pre-geometric regions.
+    """Fig40: sampled n*V scalar ansatz, not quartic/He3 phase physics.
 
-    Shows the ground state energy as a function of coupling G/G_c for
-    each phase classification.
+    Original60-point grid is retained. Refusal aborts rather than omitting rows.
     """
-    from src.adw.ginzburg_landau import compute_phase_diagram
-
-    diagram = compute_phase_diagram(Lambda=1.0, N_f=4, n_points=60)
-
-    fig = go.Figure()
-
-    # Pre-geometric: F = 0 for all couplings
-    fig.add_trace(go.Scatter(
-        x=list(diagram.coupling_ratios),
-        y=[0.0] * len(diagram.coupling_ratios),
-        mode="lines",
-        name="Pre-geometric",
-        line=dict(color='#8D99AE', width=2.5, dash="dash"),
-    ))
-
-    fig.add_trace(go.Scatter(
-        x=list(diagram.coupling_ratios),
-        y=list(diagram.free_energies_B),
-        mode="lines",
-        name="B-phase (isotropic)",
-        line=dict(color=COLORS['Steinhauer'], width=2.5),
-    ))
-
-    fig.add_trace(go.Scatter(
-        x=list(diagram.coupling_ratios),
-        y=list(diagram.free_energies_A),
-        mode="lines",
-        name="A-phase (anisotropic)",
-        line=dict(color=COLORS['Heidelberg'], width=2.5),
-    ))
-
-    fig.add_trace(go.Scatter(
-        x=list(diagram.coupling_ratios),
-        y=list(diagram.free_energies_polar),
-        mode="lines",
-        name="Polar",
-        line=dict(color=COLORS['Trento'], width=2.5),
-    ))
-
-    fig.add_vline(x=1.0, line=dict(color="black", width=1, dash="dash"),
-                  annotation_text="G<sub>c</sub>", annotation_position="top")
-
-    apply_layout(fig,
-        height=450, width=700,
-        title=dict(text="<b>Ginzburg-Landau Phase Diagram</b>", font=TITLE_FONT),
-        xaxis_title="G / G<sub>c</sub>",
-        yaxis_title="F<sub>GL</sub> / \u039B<sup>4</sup>",
-        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
-    )
-
+    from fractions import Fraction
+    from src.adw.ginzburg_landau import compute_phase_diagram, critical_coupling
+    from src.core.formulas import adw_validate_scalar_enclosure, _adw_decimal
+    from src.vestigial.phase_diagram import _phase_normalize
+    Lambda,N_f=1.0,4
+    diagram=compute_phase_diagram(Lambda=Lambda,N_f=N_f,n_points=60)
+    ratios=list(diagram.coupling_ratios)
+    expected=list(np.linspace(0.5,5.0,60))
+    if ratios!=expected or diagram.scalar_enclosures is None or len(diagram.scalar_enclosures)!=60:
+        raise ValueError('complete original60-row GL population required')
+    curves={4:list(diagram.free_energies_B),3:list(diagram.free_energies_A),2:list(diagram.free_energies_polar)}
+    if any(len(v)!=60 for v in curves.values()) or type(diagram.scalar_energy_errors) is not dict or set(diagram.scalar_energy_errors)!={2,3,4} or any(len(v)!=60 for v in diagram.scalar_energy_errors.values()):
+        raise ValueError('complete scaled energy/error populations required')
+    G_c=critical_coupling(Lambda,N_f)
+    metadata=[];errors={n:[] for n in (2,3,4)};values={n:[] for n in (2,3,4)}
+    states=[];transitions=[]
+    def rational(x):
+        return dict(numerator=_adw_decimal(x.numerator),denominator=_adw_decimal(x.denominator))
+    for i,(r,cert) in enumerate(zip(ratios,diagram.scalar_enclosures)):
+        try:
+            adw_validate_scalar_enclosure(cert,r*G_c,Lambda,N_f)
+            states.append('B_phase' if cert.branch=='positive' else 'pre_geometric')
+            row=dict(requested_ratio=float(r),scalar_enclosure=cert.as_dict(),energies={})
+            for n in (2,3,4):
+                actual=curves[n][i]
+                if type(actual) is not float and not isinstance(actual,np.floating):
+                    raise ValueError('finite nonboolean energy value required')
+                if not np.isfinite(actual) or float(actual)!=float(n*Fraction.from_float(cert.V_eff)):
+                    raise ValueError('scaled scalar energy mismatch')
+                target=(n*(cert.energy_interval[0]-cert.energy_gap_upper),n*cert.energy_interval[1])
+                error=max(abs(Fraction.from_float(float(actual))-x) for x in target)
+                if type(diagram.scalar_energy_errors[n][i]) is not Fraction or diagram.scalar_energy_errors[n][i]!=error:
+                    raise ValueError('scaled energy uncertainty mismatch')
+                # Signed energy normalization uses the same positive-scale identity.
+                sign=-1 if actual<0 else 1
+                magnitude=tuple(-x for x in reversed(target)) if sign<0 else target
+                y,bound,e=_phase_normalize(abs(float(actual)),magnitude,Lambda,4)
+                values[n].append(sign*y);errors[n].append(_adw_decimal(e.numerator)+'/'+_adw_decimal(e.denominator))
+                signed=tuple(-x for x in reversed(bound)) if sign<0 else bound
+                row['energies'][str(n)]=dict(interval=[rational(x) for x in signed],absolute_error=rational(e))
+            metadata.append(row)
+        except Exception as exc:
+            exc.add_note(f'GL figure row {i}, requested ratio {r}')
+            raise
+        if i and states[i]!=states[i-1]:transitions.append((float(ratios[i-1]),float(r),states[i-1],states[i]))
+    if diagram.sampled_transition_brackets!=transitions or not diagram.boundary_status.startswith('nominal_reference_only'):
+        raise ValueError('sampled/nominal boundary evidence mismatch')
+    fig=go.Figure()
+    fig.add_trace(go.Scatter(x=ratios,y=[0.0]*60,mode='lines',name='n=0: constantzero',line=dict(color='#8D99AE',dash='dash')))
+    for n,label,color in [(4,'n=4 scalar ansatz (B label)',COLORS['Steinhauer']),(3,'n=3 scalar ansatz (A label)',COLORS['Heidelberg']),(2,'n=2 scalar ansatz (polar label)',COLORS['Trento'])]:
+        fig.add_trace(go.Scatter(x=ratios,y=values[n],mode='lines',name=label,line=dict(color=color,width=2.5),
+            customdata=errors[n],hovertemplate='requested G/Gc=%{x}<br>nV/Λ⁴=%{y}<br>absolute error=%{customdata}<extra></extra>'))
+    fig.add_vline(x=1.0,line=dict(color='black',dash='dash'),annotation_text='nominal reference only')
+    apply_layout(fig,height=520,width=850,title=dict(text='<b>Adopted n·V scalar minima</b>',font=TITLE_FONT),
+        xaxis_title='Requested G / diagnostic Gc',yaxis_title='n V / Λ⁴ (scalar ansatz)',legend=dict(x=0.02,y=0.98))
+    fig.add_annotation(x=.5,y=-.24,xref='paper',yref='paper',showarrow=False,
+        text='Not the truncated quartic or a microscopic He3/physical phase derivation.<br>Nominal r=1 is a reference; actual sampled changes are recorded in metadata.')
+    fig.update_layout(margin=dict(b=125),meta=dict(model='adopted nV scalar ansatz',rows=metadata,
+        sampled_transition_brackets=transitions,boundary_status=diagram.boundary_status,physical_phase_status='uncomputed'))
     return fig
 
 
@@ -3478,67 +3620,61 @@ def fig_vestigial_effective_potential():
 
 
 def fig_vestigial_phase_diagram():
-    """Fig 42: Vestigial gravity phase diagram from mean-field scan."""
-    from src.vestigial.phase_diagram import scan_coupling
-
-    result = scan_coupling(
-        method="mean_field", Lambda=1.0, N_f=4,
-        coupling_range=(0.3, 3.0), n_points=60,
-    )
-
-    fig = make_subplots(rows=1, cols=2,
-                        subplot_titles=["Order parameters",
-                                        "Phase classification"])
-
-    fig.add_trace(go.Scatter(
-        x=list(result.coupling_ratios),
-        y=list(result.tetrad_values),
-        mode="lines", name="Tetrad VEV",
-        line=dict(color=COLORS['Steinhauer'], width=2.5),
-    ), row=1, col=1)
-
-    fig.add_trace(go.Scatter(
-        x=list(result.coupling_ratios),
-        y=list(result.metric_values),
-        mode="lines", name="Metric correlator",
-        line=dict(color=COLORS['Trento'], width=2.5),
-    ), row=1, col=1)
-
-    phase_colors = {
-        'pre_geometric': '#8D99AE',
-        'vestigial': COLORS['Trento'],
-        'full_tetrad': COLORS['Steinhauer'],
-    }
-    y_phase = [1 if p == 'full_tetrad' else (0.5 if p == 'vestigial' else 0)
-               for p in result.phases]
-
-    fig.add_trace(go.Scatter(
-        x=list(result.coupling_ratios),
-        y=y_phase,
-        mode="lines",
-        name="Phase",
-        line=dict(color="black", width=2),
-        fill="tozeroy",
-        fillcolor="rgba(46,134,171,0.1)",
-    ), row=1, col=2)
-
-    fig.add_vline(x=1.0, line=dict(color="black", width=1, dash="dash"),
-                  row=1, col=1)
-    fig.add_vline(x=1.0, line=dict(color="black", width=1, dash="dash"),
-                  row=1, col=2)
-
-    fig.update_xaxes(title_text="G / G<sub>c</sub>", row=1, col=1)
-    fig.update_xaxes(title_text="G / G<sub>c</sub>", row=1, col=2)
-    fig.update_yaxes(title_text="Magnitude / \u039B", row=1, col=1)
-    fig.update_yaxes(title_text="Phase (0=pre, 0.5=vestigial, 1=full)", row=1, col=2)
-
-    apply_layout(fig,
-        height=400, width=850,
-        title=dict(text="<b>Vestigial Gravity: Mean-Field Phase Diagram</b>",
-                   font=TITLE_FONT),
-        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
-    )
-
+    """Fig42: actual60-row scalar/proxy scan; physical phases remain uncomputed."""
+    from src.vestigial.phase_diagram import scan_coupling, _phase_point_from_mean_field, _phase_transport_equal
+    from src.core.formulas import _adw_decimal
+    from src.adw.gap_equation import critical_coupling
+    result=scan_coupling(method='mean_field',Lambda=1.0,N_f=4,coupling_range=(0.3,3.0),n_points=60)
+    ratios=list(result.coupling_ratios)
+    if not _phase_transport_equal(tuple(ratios),tuple(np.linspace(.3,3.,60))) or len(result.points)!=60 or not _phase_transport_equal(result.method,'mean_field'):
+        raise ValueError('complete original60-row mean-field population required')
+    if any(len(v)!=60 for v in (result.tetrad_values,result.metric_values,result.phases)):
+        raise ValueError('complete mean-field output populations required')
+    G_c=critical_coupling(1.,4);rows=[]
+    def rational(x):
+        return None if x is None else dict(numerator=_adw_decimal(x.numerator),denominator=_adw_decimal(x.denominator))
+    fields=('coupling_ratio','phase','tetrad_vev','metric_mag','scalar_inputs','tetrad_interval','tetrad_error',
+        'metric_interval','metric_error','is_lorentzian','physical_signature_status','metric_positive_definite',
+        'origin_metric_interval','origin_metric_error')
+    for i,(r,point) in enumerate(zip(ratios,result.points)):
+        try:
+            expected=_phase_point_from_mean_field(point.mean_field_result,r,r*G_c,1.,4)
+            if not _phase_transport_equal(point.method,'mean_field') or point.scalar_enclosure is not expected.scalar_enclosure or point.origin_proxy_enclosure is not expected.origin_proxy_enclosure or any(not _phase_transport_equal(getattr(point,k),getattr(expected,k)) for k in fields):
+                raise ValueError('mean-field point/source/uncertainty mismatch')
+            if (not _phase_transport_equal(result.tetrad_values[i],point.tetrad_vev) or not _phase_transport_equal(result.metric_values[i],point.metric_mag) or not _phase_transport_equal(result.phases[i],point.phase)):
+                raise ValueError('mean-field array/point mismatch')
+            rows.append(dict(requested_ratio=float(r),scalar_enclosure=point.scalar_enclosure.as_dict(),
+                tetrad_interval=[rational(x) for x in point.tetrad_interval],tetrad_error=rational(point.tetrad_error),
+                metric_interval=None if point.metric_interval is None else [rational(x) for x in point.metric_interval],
+                metric_error=rational(point.metric_error),physical_signature_status=point.physical_signature_status,
+                is_lorentzian=point.is_lorentzian,metric_positive_definite=point.metric_positive_definite,
+                adopted_origin_proxy=None if point.origin_proxy_enclosure is None else point.origin_proxy_enclosure.as_dict(),
+                adopted_origin_metric_interval=None if point.origin_metric_interval is None else [rational(x) for x in point.origin_metric_interval],
+                adopted_origin_metric_error=rational(point.origin_metric_error)))
+        except Exception as exc:
+            exc.add_note(f'vestigial figure row {i}, requested ratio {r}')
+            raise
+    transitions=[(float(ratios[i-1]),float(ratios[i]),result.phases[i-1],result.phases[i]) for i in range(1,60) if result.phases[i]!=result.phases[i-1]]
+    if result.sampled_transition_brackets!=transitions:
+        raise ValueError('sampled label brackets mismatch')
+    fig=make_subplots(rows=1,cols=2,subplot_titles=['Normalized scalar/proxy','Adopted model labels'])
+    for values,key,name,color in [(result.tetrad_values,'tetrad_error','Scalar C / Λ',COLORS['Steinhauer']),(result.metric_values,'metric_error','Metric proxy / Λ²',COLORS['Trento'])]:
+        hover=[row[key]['numerator']+'/'+row[key]['denominator'] if row[key] is not None else
+            'physical uncertainty uncomputed; adopted-origin numerical error='+
+            row['adopted_origin_metric_error']['numerator']+'/'+row['adopted_origin_metric_error']['denominator'] for row in rows]
+        fig.add_trace(go.Scatter(x=ratios,y=list(values),mode='lines',name=name,line=dict(color=color,width=2.5),
+            customdata=hover,hovertemplate='requested G/Gc=%{x}<br>normalized value=%{y}<br>absolute error=%{customdata}<extra></extra>'),row=1,col=1)
+    y_phase=[{'pre_geometric':0,'vestigial':.5,'full_tetrad':1}[p] for p in result.phases]
+    fig.add_trace(go.Scatter(x=ratios,y=y_phase,mode='lines',name='Adopted curvature/scalar label',line=dict(color='black')),row=1,col=2)
+    for col in (1,2):fig.add_vline(x=1.,line=dict(color='black',dash='dash'),annotation_text='nominal reference',row=1,col=col)
+    fig.update_xaxes(title_text='Requested G / diagnostic Gc')
+    fig.update_yaxes(title_text='C/Λ and proxy/Λ²',row=1,col=1)
+    fig.update_yaxes(title_text='Model label: 0 / 0.5 / 1',row=1,col=2)
+    apply_layout(fig,height=510,width=900,title=dict(text='<b>Adopted scalar / curvature-proxy scan</b>',font=TITLE_FONT))
+    fig.add_annotation(x=.5,y=-.27,xref='paper',yref='paper',showarrow=False,
+        text='Positive proxy ≠ Lorentzian signature; physical signature remains uncomputed.<br>Sampled model labels do not derive metric phases, EP violation or physical gravity.')
+    fig.update_layout(margin=dict(b=130),meta=dict(rows=rows,sampled_transition_brackets=transitions,
+        boundary_status=result.boundary_status,physical_phase_status='uncomputed',physical_signature_status='uncomputed'))
     return fig
 
 

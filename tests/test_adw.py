@@ -602,7 +602,7 @@ class TestCrossModuleConsistency:
         only C in [0.01, 0.1, 0.5] — all positive — and every production caller
         sweeps C >= 0, so nothing exercised the broken half.
 
-        Deleting the `abs()` in `formulas.adw_effective_potential` must fail this.
+        The continuous canonical evaluator must preserve this signed evenness; no flat guard remains.
         """
         for C in [1e-3, 0.01, 0.1, 0.5, 1.0, 3.7]:
             v_pos = adw_effective_potential(C, G=20.0, Lambda=1.0, N_f=4)
@@ -616,7 +616,7 @@ class TestCrossModuleConsistency:
             adw_effective_potential(-C, G=20.0, Lambda=1.0, N_f=4)
             for C in [0.01, 0.1, 0.5, 1.0]
         ) < 0.0
-        # The origin stays guarded against the Lambda^2/C^2 division.
+        # The exact origin uses the proved continuous zero extension.
         assert adw_effective_potential(0.0, G=20.0, Lambda=1.0, N_f=4) == 0.0
 
     def test_broken_generators_matches_formulas(self):

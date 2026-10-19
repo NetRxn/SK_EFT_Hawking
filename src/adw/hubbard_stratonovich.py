@@ -1,28 +1,7 @@
-"""Hubbard-Stratonovich Decomposition of the ADW 8-Fermion Interaction.
+"""ADW auxiliary-field descriptors and adopted scalar evaluation. The numerical split below is not a derivation of the full regulated8fermion HS action, channel normalization, matrix state or gravity. Those original objectives remain BUILD; no universal primary-literature absence is asserted. The retained Maitiniyazi et al.2024/NJL analogy is context, not a derived channel.
 
-Implements the decomposition of the ADW cosmological term into a
-quadratic fermion action coupled to the auxiliary tetrad field.
-
-The ADW action:
-    S_micro = (1/24) epsilon_{abcd} int Theta^a ^ Theta^b ^ Theta^c ^ Theta^d
-
-where Theta^a = (i/2)[psi_bar gamma^a D_mu psi - D_mu psi_bar gamma^a psi] dx^mu
-is bilinear in psi. The wedge product of four such 1-forms produces an
-8-fermion interaction.
-
-The HS decomposition introduces the auxiliary tetrad e^a_mu:
-    exp(-G int (8-fermion)) -> int De exp(-S_Yukawa[e,psi] - S_pot[e])
-
-After decomposition, the fermion action becomes the Dirac action in
-curved spacetime:
-    S_fermion = int d^4x det(e) psi_bar gamma^a e_a^mu partial_mu psi
-
-No published paper has performed this decomposition explicitly for the
-full 8-fermion interaction. We follow the closest approach (Maitiniyazi
-et al. 2024) and the NJL/BCS structural analogy.
-
-Lean: ADWMechanism.lean (hs_reduces_to_dirac, tetrad_components)
-"""
+Existing attribution does not certify this evaluation or physical derivation:
+Lean: ADWMechanism.lean (hs_reduces_to_dirac, tetrad_components)"""
 
 from dataclasses import dataclass, field
 import numpy as np
@@ -230,59 +209,72 @@ def hubbard_stratonovich_decompose(action: ADWAction) -> HSDecomposition:
     )
 
 
-def fermion_effective_action(tetrad: TetradField, N_f: int, Lambda: float,
-                              G: float) -> dict:
-    """Compute the effective action after integrating out fermions.
+def fermion_effective_action(tetrad: TetradField,N_f: int,Lambda: float,G: float,*,
+                              rtol=2.0**-40,max_work=200000,max_bits=100000) -> dict:
+    """Numerical split of the adopted scalar ansatz, not an HS derivation.
 
-    S_eff[e] = S_pot(e) - N_f * Tr ln[gamma^a e_a^mu D_mu]
-
-    The one-loop fermion determinant generates (Sakharov induced gravity):
-    - Einstein-Hilbert term ~ M_P^2 R (from log divergence)
-    - Cosmological constant ~ Lambda^4 (from quartic divergence)
-    - Higher-curvature corrections ~ R^2 (from finite parts)
-
-    For the gap equation analysis, we work with the flat-space effective
-    potential V_eff(C) where C parameterizes the tetrad magnitude.
+    Canonical total is evaluated directly; exact tree is subtracted from
+    rational total bounds to enclose the loop column. Rounded columns need
+    not reconstruct a tiny total accurately; their discrepancy is recorded.
+    The matrix-to-scalar reduction/physical determinant remain BUILD.
+    Existing fermion_determinant_structure proves neither this evaluation
+    nor a microscopic action. No derivatives are returned by this API.
 
     Lean: fermion_determinant_structure
-
-    Args:
-        tetrad: The background tetrad field.
-        N_f: Number of Dirac fermion species.
-        Lambda: UV cutoff.
-        G: ADW coupling constant.
-
-    Returns:
-        Dictionary with V_tree, V_1loop, V_eff, and their derivatives.
     """
-    C = tetrad.magnitude
-
-    # Tree-level potential: V_tree = C^2 / (2G)
-    V_tree = C**2 / (2.0 * G) if G > 0 else 0.0
-
-    # One-loop Coleman-Weinberg potential from fermion determinant
-    # V_1loop = -(N_f / 16 pi^2) [Lambda^2 C^2 - C^4 ln(Lambda^2/C^2 + 1)]
-    # For C << Lambda: V_1loop ~ -(N_f / 16 pi^2) Lambda^2 C^2
-    #                            + (N_f / 16 pi^2) C^4 ln(C^2/Lambda^2)
-    prefactor = N_f / (16.0 * np.pi**2)
-
-    if C > 1e-15:
-        ratio_sq = Lambda**2 / C**2
-        V_1loop = -prefactor * (Lambda**2 * C**2 - C**4 * np.log(ratio_sq + 1.0))
+    from itertools import permutations
+    from fractions import Fraction
+    from src.core.formulas import (_adw_exact,_ADWWork,_adw_pi_bounds,
+        _adw_parameter_ratio,_adw_energy_bounds,_adw_binary_midpoint,ADWScalarUnresolved)
+    inputs=tuple(_adw_exact(x,k,positive=True) for x,k in ((G,'G'),(Lambda,'Lambda'),(N_f,'N_f')))
+    tolerance=_adw_exact(rtol,'rtol',positive=True)
+    work=_ADWWork(max_work,max_bits)
+    for x in inputs:work.take(x)
+    components=np.asarray(tetrad.components)
+    if components.shape!=(4,4):raise ValueError('actual4x4 tetrad required')
+    matrix=tuple(tuple(_adw_exact(components[i,j],'tetrad component') for j in range(4)) for i in range(4))
+    # Exact finite binary-rational determinant disambiguates genuine singular
+    # matrices from a nonzero determinant lost by the legacy floating property.
+    for row in matrix:
+        for value in row:work.take(value)
+    determinant=Fraction(0)
+    for p in permutations(range(4)):
+        term=Fraction(1)
+        for i in range(4):term*=matrix[i][p[i]];work.take(term)
+        inversions=sum(p[i]>p[j] for i in range(4) for j in range(i+1,4))
+        determinant+=(-1 if inversions%2 else 1)*term;work.take(determinant)
+    if determinant==0:
+        c=Fraction(0)
     else:
-        V_1loop = 0.0
-
-    V_eff = V_tree + V_1loop
-
-    return {
-        'C': C,
-        'V_tree': V_tree,
-        'V_1loop': V_1loop,
-        'V_eff': V_eff,
-        'N_f': N_f,
-        'Lambda': Lambda,
-        'G': G,
-    }
+        try:
+            c=_adw_exact(tetrad.magnitude,'represented magnitude')
+        except (ValueError,OverflowError,FloatingPointError) as exc:
+            raise ADWScalarUnresolved('matrix scalar-coordinate representation unresolved') from exc
+        if c<0:raise ValueError('nonnegative represented magnitude required')
+    # A legacy nonzero determinant collapsing to0 is numerical refusal; an
+    # exact singular nonzero matrix correctly has scalarcoordinate0.
+    if determinant!=0 and c==0:
+        raise ADWScalarUnresolved('nonzero exact determinant lost in represented magnitude')
+    tree=c*c/(2*inputs[0]);work.take(tree)
+    terms=4
+    while True:
+        pi=_adw_pi_bounds(terms,work)
+        total=_adw_energy_bounds(c,inputs[1],inputs[2],_adw_parameter_ratio(inputs,pi),pi,terms,work)
+        intervals={'V_tree':(tree,tree),'V_1loop':(total[0]-tree,total[1]-tree),'V_eff':total}
+        represented={};errors={};ready=True
+        for name,interval in intervals.items():
+            if not(interval==(0,0) or interval[0]>0 or interval[1]<0):ready=False;break
+            value,q,error=_adw_binary_midpoint(interval,name,nonzero=interval!=(0,0))
+            if error>tolerance*abs(q):ready=False;break
+            represented[name]=value;errors[name]=error
+        if ready:
+            discrepancy=abs(Fraction.from_float(represented['V_tree'])+Fraction.from_float(represented['V_1loop'])-Fraction.from_float(represented['V_eff']))
+            return dict(C=float(c),N_f=N_f,Lambda=Lambda,G=G,**represented,
+                scalar_model='supplied represented C; continuous adopted scalar ansatz',
+                scalar_inputs=inputs,matrix_determinant_exact=determinant,scalar_coordinate_status='represented magnitude; general fourth-root error uncomputed',
+                value_intervals=intervals,rounding_errors=errors,split_discrepancy=discrepancy,
+                split_discrepancy_bound=sum(errors.values()),terms=terms,work_used=work.used)
+        terms*=2;work.take(terms)
 
 
 def composite_tetrad_operator(psi: str = "Psi") -> str:

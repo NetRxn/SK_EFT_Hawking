@@ -6891,3 +6891,9 @@ def get_all_experiments():
         bg = solve_transonic_background(params)
         results[name] = (params, bg)
     return results
+
+
+# Adopted Euclidean origin-proxy conventions; NOT measured susceptibility,
+# physical transport or microscopic model parameters. Preserve binary64 values.
+ADW_ORIGIN_PROXY_DELTA = 1e-30
+ADW_ORIGIN_PROXY_ALPHA = 0.3

@@ -14,7 +14,7 @@ Usage
     # Generate only, skip structural checks:
     python scripts/review_figures.py --generate
 
-    # Run structural checks on existing PNGs:
+    # Check regenerated in-memory figure data (no image exports):
     python scripts/review_figures.py --check
 
     # Produce manifest only (for LLM agent):
@@ -350,7 +350,7 @@ FIGURE_REGISTRY: list[FigureSpec] = [
     FigureSpec(
         name="fig29_adw_phase_diagram",
         function="fig_adw_phase_diagram",
-        caption="Phase diagram: tetrad VEV vs coupling ratio G/G_c.",
+        caption="Certified numerical minima of the illustrative scalar ansatz vs requested coupling ratio.",
         needs_experiments=False,
         expected_traces=1,
         expected_axes={"xaxis": "G", "yaxis": "C"},
@@ -360,10 +360,10 @@ FIGURE_REGISTRY: list[FigureSpec] = [
     FigureSpec(
         name="fig30_adw_ng_modes",
         function="fig_adw_ng_mode_decomposition",
-        caption="Vergeles mode counting: tetrad DOF decomposition in 4D.",
+        caption="Assigned tetrad component categories in 4D; not a physical fluctuation spectrum.",
         needs_experiments=False,
         expected_traces=1,
-        expected_axes={"xaxis": "Mode"},
+        expected_axes={"xaxis": "Assigned"},
         physics_checks=[],
         color_keys=[],
     ),
@@ -2383,6 +2383,329 @@ class CheckIssue:
     message: str
 
 
+def _paper5_selected_consistency_issues(spec, fig_dict):
+    """Bind selected visible scalar/assignment data to externally owned inputs.
+
+    Canonical bounded decoding and parameter replay establish numerical receipt
+    consistency. Physical interpretation and rendered readability need review.
+    """
+    if spec.name not in ("fig29_adw_phase_diagram", "fig30_adw_ng_modes"):
+        return []
+    import re
+    from fractions import Fraction
+    from numbers import Real
+    import numpy as np
+    from src.adw.gap_equation import critical_coupling
+    from src.core.formulas import (
+        adw_scalar_enclosure_from_dict, adw_validate_scalar_enclosure,
+        _adw_decimal,
+    )
+
+    def require(condition, message):
+        if not condition:
+            raise ValueError(message)
+
+    def same(value, expected):
+        # Transport type is part of the contract: bool/int/float are distinct.
+        if type(value) is not type(expected):
+            return False
+        if type(expected) is dict:
+            return (value.keys() == expected.keys()
+                    and all(type(k) is str for k in value)
+                    and all(same(value[k], expected[k]) for k in expected))
+        if type(expected) is list:
+            return len(value) == len(expected) and all(same(a, b) for a, b in zip(value, expected))
+        return value == expected
+
+    def rational(q):
+        return dict(numerator=_adw_decimal(q.numerator), denominator=_adw_decimal(q.denominator))
+
+    def rational_text(q):
+        return _adw_decimal(q.numerator)+"/"+_adw_decimal(q.denominator)
+
+    def overlay(defaults, supplied):
+        require(type(defaults) is dict and type(supplied) is dict, "Plotly property dictionary required")
+        result = dict(defaults)
+        for key, value in supplied.items():
+            result[key] = (overlay(result[key], value)
+                           if type(result.get(key)) is dict and type(value) is dict else value)
+        return result
+
+    def declared_visible(item, *, trace=False):
+        require(type(item) is dict, "visible item dictionary required")
+        visible = item.get("visible", True)
+        require(type(visible) is bool or (trace and visible == "legendonly"), "invalid declared visibility")
+        opacity = item.get("opacity", 1)
+        require(isinstance(opacity, Real) and not isinstance(opacity, (bool, np.bool_))
+                and np.isfinite(opacity) and 0 <= opacity <= 1,
+                "invalid declared opacity")
+        return visible is True and opacity > 0
+
+    def text(value):
+        require(type(value) is str, "visible text must be a string")
+        return " ".join(re.sub(r"<br\s*/?>", " ", value, flags=re.I).split())
+
+    def no_extra_literal_text(properties, *, allowed=(), skipped=(), path=()):
+        # Check nested literal text as well as the top-level title. Numeric
+        # coordinates, metadata and already-bound/hidden inventories are skipped.
+        if type(properties) is dict:
+            for key, value in properties.items():
+                target = path+(key,)
+                if target in skipped or target in allowed:
+                    continue
+                if key in ("text", "texttemplate", "hovertext", "hovertemplate",
+                           "ticktext", "tickprefix", "ticksuffix", "labelalias"):
+                    require(value is None or (type(value) is str and value == "")
+                            or (type(value) in (dict, list, tuple) and len(value) == 0),
+                            "unrecognized visible literal text at "+".".join(map(str, target)))
+                no_extra_literal_text(value, allowed=allowed, skipped=skipped, path=target)
+        elif type(properties) is list:
+            for index, value in enumerate(properties):
+                no_extra_literal_text(value, allowed=allowed, skipped=skipped, path=path+(index,))
+
+    def visible_contract(sentence, reference):
+        # A fixed selected-figure text inventory, not a natural-language oracle.
+        # Explicit values override template defaults; omitted valid properties
+        # retain Plotly's visible/opaque/hoverable initial state.
+        template = layout.get("template", {})
+        require(type(template) is dict, "resolved template dictionary required")
+        inherited = template.get("layout", {})
+        effective_layout = overlay(inherited, {k: v for k, v in layout.items() if k != "template"})
+        defaults = effective_layout.get("annotationdefaults", {})
+        annotations = layout.get("annotations", [])
+        template_annotations = inherited.get("annotations", [])
+        require(type(annotations) is list and type(template_annotations) is list, "annotation list required")
+        require(all(type(a) is dict for a in template_annotations), "template annotation dictionary required")
+        names = [a.get("name") for a in template_annotations]
+        require(len([n for n in names if n is not None]) == len(set(n for n in names if n is not None)),
+                "ambiguous named template annotations")
+        resolved, consumed = [], set()
+        for annotation in annotations:
+            require(type(annotation) is dict, "annotation dictionary required")
+            name = annotation.get("templateitemname")
+            base = {}
+            if name is not None:
+                require(name in names, "unknown named annotation template")
+                index = names.index(name)
+                base = template_annotations[index]
+                consumed.add(index)
+            resolved.append(overlay(overlay(defaults, base), annotation))
+        resolved.extend(overlay(defaults, a) for i, a in enumerate(template_annotations) if i not in consumed)
+        visible_texts = []
+        for annotation in resolved:
+            # Opacity does not disable pointer events. Unknown hover/click text
+            # cannot be carried by a transparent annotation either.
+            require(annotation.get("clicktoshow", False) is False,
+                    "selected annotation cannot be hover/click-triggered")
+            require(annotation.get("hovertext", "") in (None, ""),
+                    "unrecognized annotation hover text")
+            if declared_visible(annotation):
+                visible_texts.append(text(annotation.get("text", "")))
+        require(sorted(visible_texts) == sorted([sentence, reference]),
+                "complete visible qualification/reference text inventory missing or altered")
+        require(effective_layout.get("hovermode", "closest") in
+                ("closest", "x", "y", "x unified", "y unified"), "selected figure hover is disabled")
+        for axis_name in ("xaxis", "yaxis"):
+            axis = effective_layout.get(axis_name, {})
+            require(axis.get("visible", True) is True and axis.get("showticklabels", True) is True,
+                    "required visible axis labels are hidden")
+            require(axis.get("ticktext") in (None, []), "unrecognized custom axis tick text")
+        require(effective_layout.get("title", {}).get("subtitle", {}).get("text", "") in (None, ""),
+                "unrecognized visible subtitle")
+        for key, axis in effective_layout.items():
+            if re.fullmatch(r"[xy]axis\d+", key) and axis.get("visible", True) is not False:
+                require(axis.get("title", {}).get("text", "") in (None, "") and axis.get("ticktext") in (None, []),
+                        "unrecognized additional axis text")
+        legend = effective_layout.get("legend", {})
+        if effective_layout.get("showlegend", True) is not False and legend.get("visible", True) is not False:
+            require(legend.get("title", {}).get("text", "") in (None, ""), "unrecognized visible legend title")
+        for key in ("updatemenus", "sliders"):
+            require(all(control.get("visible", True) is False for control in effective_layout.get(key, [])),
+                    "unrecognized visible selected-figure control")
+        for shape in effective_layout.get("shapes", []):
+            effective_shape = overlay(effective_layout.get("shapedefaults", {}), shape)
+            declared_visible(effective_shape)  # validate flags even for hidden shapes
+            if effective_shape.get("visible", True) is not False:
+                require(effective_shape.get("label", {}).get("text", "") in (None, "")
+                        and effective_shape.get("label", {}).get("texttemplate", "") in (None, "")
+                        and effective_shape.get("showlegend", False) is False,
+                        "unrecognized visible shape label")
+        no_extra_literal_text(effective_layout,
+            allowed=(("title", "text"), ("xaxis", "title", "text"), ("yaxis", "title", "text")),
+            skipped=(("meta",), ("annotations",), ("annotationdefaults",), ("shapes",),
+                     ("shapedefaults",), ("updatemenus",), ("sliders",))+
+                    ((("legend",),) if effective_layout.get("showlegend", True) is False
+                      or legend.get("visible", True) is False else ()))
+        # The expected figures have one visible trace; hidden decorations cannot
+        # replace it. Inspect inherited trace properties as well as local fields.
+        visible_traces = []
+        counters = {}
+        role = "paper5_scalar_scan" if spec.name == "fig29_adw_phase_diagram" else "paper5_component_counts"
+        for trace in traces:
+            kind = trace.get("type")
+            prototypes = template.get("data", {}).get(kind, [])
+            require(type(prototypes) is list, "trace template list required")
+            index = counters.get(kind, 0)
+            counters[kind] = index+1
+            prototype = prototypes[index % len(prototypes)] if prototypes else {}
+            effective = overlay(prototype, trace)
+            # legendonly and opacity=0 can still expose legend/hover text.
+            # Only visible=False makes an unrecognized decoration fully absent.
+            require(effective.get("meta", {}).get("role") == role or effective.get("visible", True) is False,
+                    "unrecognized extra trace can expose legend/hover text")
+            if declared_visible(effective, trace=True):
+                visible_traces.append((trace, effective))
+        require(len(visible_traces) == 1, "exactly one effectively visible selected data trace required")
+        original, effective = visible_traces[0]
+        no_extra_literal_text(effective,
+            allowed=(("text",), ("texttemplate",), ("hovertemplate",), ("hovertext",)),
+            skipped=(("meta",), ("customdata",), ("x",), ("y",)))
+        require(effective.get("meta", {}).get("role") == role, "selected data trace is hidden")
+        require(effective.get("xaxis", "x") == "x" and effective.get("yaxis", "y") == "y",
+                "selected data must use its required visible axes")
+        hover = effective.get("hoverinfo", "all")
+        hovers = hover if type(hover) is list else [hover]
+        require(type(hover) is not list or len(hover) == (100 if role == "paper5_scalar_scan" else 4),
+                "point hover coverage changed")
+        for value in hovers:
+            require(type(value) is str and value not in ("skip", "none", ""), "selected data hover is disabled")
+            flags = set(value.split("+"))
+            require(flags <= {"all", "x", "y", "z", "text", "name"}, "unknown hover flags")
+            if role == "paper5_component_counts":
+                require("all" in flags or {"x", "y"} <= flags, "assigned category/count hover is missing")
+        require(effective.get("hovertext", "") in (None, ""), "unrecognized selected trace hover text")
+        if role == "paper5_scalar_scan":
+            require(effective.get("hoveron", "points") in ("points", "points+fills"), "scalar point hover is disabled")
+            require(effective.get("text", "") in (None, "") and effective.get("texttemplate", "") in (None, ""),
+                    "unrecognized scalar trace text")
+            # A template cannot replace the explicit authenticated hover.
+            require(effective.get("hovertemplate") == original.get("hovertemplate"), "inherited scalar hover changed")
+        else:
+            require(effective.get("name", "") in (None, "") and effective.get("hovertemplate", "") in (None, ""),
+                    "unrecognized assigned trace name/hover template")
+            require(effective.get("texttemplate", "") in (None, "", "%{text}"), "assigned count text template changed")
+            position = effective.get("textposition", "auto")
+            positions = position if type(position) is list else [position]
+            require((type(position) is not list or len(position) == 4)
+                    and all(p in ("auto", "inside", "outside") for p in positions), "assigned count text hidden or changed")
+            opacity = effective.get("marker", {}).get("opacity", 1)
+            opacities = opacity if type(opacity) is list else [opacity]
+            require(type(opacity) is not list or len(opacity) == 4, "assigned point opacity coverage changed")
+            require(all(isinstance(o, Real) and not isinstance(o, (bool, np.bool_))
+                        and np.isfinite(o) and 0 < o <= 1 for o in opacities),
+                    "assigned bars are effectively transparent")
+
+    context = spec.name
+    try:
+        require(type(fig_dict) is dict, "figure dictionary required")
+        layout, traces = fig_dict["layout"], fig_dict["data"]
+        require(type(layout) is dict and type(traces) is list, "layout/trace protocol")
+        if spec.name == "fig29_adw_phase_diagram":
+            visible_contract("This scan approximates minima of the illustrative scalar ansatz with certified numerical error; it does not derive a vestigial metric phase, dynamical signature or physical gravity.",
+                             "nominal r=1 (diagnostic)")
+            require(layout["title"]["text"] == "Enclosed scalar minima"
+                    and layout["xaxis"]["title"]["text"] == "G / diagnostic G<sub>c</sub> (requested ratio)"
+                    and layout["yaxis"]["title"]["text"] == "C / Λ (scalar ansatz)",
+                    "scalar/requested-input title and axes required")
+            cutoff, species = 1.0, 4
+            gc = float(critical_coupling(cutoff, species))
+            require(np.isfinite(gc) and gc > 0, "invalid canonical diagnostic critical coupling")
+            policy = dict(atol=0, rtol=1e-10, energy_atol=0, energy_rtol=1e-8,
+                          max_work=200000, max_bits=100000)
+            accuracy = {k: rational(Fraction(policy[k])) for k in
+                        ("atol", "rtol", "energy_atol", "energy_rtol")}
+            grid = np.linspace(0.1, 5.0, 100).tolist()
+            meta = layout["meta"]["paper5_scalar_scan"]
+            require(type(meta) is dict and set(meta) == {
+                "schema", "Lambda", "N_f", "G_c", "accuracy", "accuracy_rationals", "ratios", "rows"},
+                "complete scalar scan metadata required")
+            expected = dict(schema="certified-scalar-v1", Lambda=cutoff, N_f=species,
+                            G_c=gc, accuracy=policy, accuracy_rationals=accuracy, ratios=grid)
+            require(all(same(meta[k], v) for k, v in expected.items()),
+                    "external scalar model/grid/input/accuracy/resource policy mismatch")
+            scans = [t for t in traces if t.get("meta", {}).get("role") == "paper5_scalar_scan"]
+            require(len(scans) == 1, "exactly one scalar scan trace required")
+            trace = scans[0]
+            require(same(trace["meta"], dict(role="paper5_scalar_scan"))
+                    and trace["type"] == "scatter" and trace["mode"] == "lines+markers"
+                    and trace["name"] == "Scalar C / Λ", "scalar trace type/name/role changed")
+            require(same(trace["x"], grid) and type(trace["y"]) is list and len(trace["y"]) == 100
+                    and type(trace["customdata"]) is list and len(trace["customdata"]) == 100
+                    and type(meta["rows"]) is list and len(meta["rows"]) == 100,
+                    "full original ordered 100-row population required")
+            require(trace["hovertemplate"] == (
+                "requested r=%{x}<br>C/Λ=%{y}<br>%{customdata[0]}"
+                "<br>domain=%{customdata[1]}<br>represented r=%{customdata[2]}"
+                "<br>model=%{customdata[3]}<br>r lower=%{customdata[4]}<br>r upper=%{customdata[5]}"
+                "<br>magnitude error=%{customdata[6]}<br>energy error=%{customdata[7]}<extra></extra>"),
+                "visible hover roles/labels changed")
+            for i, (ratio, y, row, hover) in enumerate(zip(grid, trace["y"], meta["rows"], trace["customdata"])):
+                context = f"row {i}"
+                require(type(row) is dict and set(row) == {
+                    "index", "ratio", "G", "represented_ratio", "status", "r_interval", "C", "V_eff",
+                    "magnitude_error", "energy_error", "display_error", "C_over_Lambda", "diagnostics", "certificate"},
+                    "complete scalar row schema required")
+                G = ratio*gc
+                represented = G/gc
+                # Decoder and expected input/policy checks precede costly replay.
+                cert = adw_scalar_enclosure_from_dict(row["certificate"],
+                    max_work=policy["max_work"], max_bits=policy["max_bits"])
+                require(cert.model == "supplied-parameters-exact-pi"
+                        and cert.inputs == (Fraction(G), Fraction(cutoff), Fraction(species))
+                        and cert.max_work == policy["max_work"] and cert.max_bits == policy["max_bits"]
+                        and (cert.requested_atol, cert.requested_rtol, cert.requested_energy_atol,
+                             cert.requested_energy_rtol) == tuple(Fraction(policy[k]) for k in accuracy),
+                        "receipt changed external supplied-input/model/request/caps")
+                snapshot = cert.as_dict()
+                require(same(row["certificate"], snapshot), "canonical certificate transport required")
+                positive = cert.branch == "positive"
+                status = "certified_scalar_minimum" if positive else "certified_origin"
+                window = "unrestricted" if positive else "not_applicable"
+                energy_error = cert.energy_rounding_error+cert.energy_gap_upper
+                diagnostics = dict(search_attempted=positive, bounds=None, candidate_cutoff=None,
+                    optimizer_success=None, optimizer_status=None, optimizer_message=None,
+                    C=cert.C, V_eff=cert.V_eff, C_validity="finite", V_eff_validity="finite",
+                    candidate_window=window, selected=positive, stationarity="enclosed_exact_ansatz",
+                    globality="unrestricted_scalar_ansatz", certificate=snapshot)
+                expected_row = dict(index=i, ratio=ratio, G=G, represented_ratio=represented,
+                    status=status, r_interval=snapshot["r_interval"], C=cert.C, V_eff=cert.V_eff,
+                    magnitude_error=snapshot["returned_magnitude_error"], energy_error=rational(energy_error),
+                    display_error=snapshot["returned_magnitude_error"], C_over_Lambda=float(cert.C/cutoff),
+                    diagnostics=diagnostics, certificate=snapshot)
+                require(same(row, expected_row), "row/input/status/error/diagnostic binding mismatch")
+                require(same(y, expected_row["C_over_Lambda"]), "ordinate differs from verified returned magnitude")
+                require(same(hover, [status, window, represented, cert.model,
+                    rational_text(cert.r_interval[0]), rational_text(cert.r_interval[1]),
+                    rational_text(cert.returned_magnitude_error), rational_text(energy_error)]),
+                    "hover/status/model/interval/error binding mismatch")
+                adw_validate_scalar_enclosure(cert, G, cutoff, species, **policy)
+        else:
+            visible_contract("Assigned component categories for d=4; these counts do not determine a fluctuation spectrum, masses, spin-2 dynamics or physical gravitational degrees of freedom.",
+                             "Total assigned components: 16")
+            ids = ["absorbed", "massless_graviton", "massive_higgs", "pure_gauge"]
+            counts = [6, 2, 4, 4]
+            labels = ["Spin-<br>connection<br>assignment", "Spin-2<br>assignment",
+                      "Massive<br>assignment", "Gauge<br>assignment"]
+            require(same(layout["meta"]["paper5_component_count"],
+                dict(schema="assigned-components-v1", dimension=4, category_ids=ids, counts=counts)),
+                "assigned dimension/category/count pairing changed")
+            bars = [t for t in traces if t.get("meta", {}).get("role") == "paper5_component_counts"]
+            require(len(bars) == 1, "exactly one assigned component trace required")
+            bar = bars[0]
+            require(bar["type"] == "bar" and same(bar["meta"], dict(role="paper5_component_counts"))
+                    and same(bar["x"], labels) and same(bar["y"], counts)
+                    and same(bar["customdata"], ids) and same(bar["text"], [str(c) for c in counts]),
+                    "bar/category/count mismatch; this is not a spectrum oracle")
+            require(layout["title"]["text"] == "Assigned tetrad components"
+                    and layout["xaxis"]["title"]["text"] == "Assigned category"
+                    and layout["yaxis"]["title"]["text"] == "Component count"
+                    and sum(a.get("text") == "Total assigned components: 16" for a in layout["annotations"]) == 1,
+                    "assigned component title/axes/total required")
+    except (KeyError, TypeError, ValueError, AttributeError, IndexError, ArithmeticError) as exc:
+        return [CheckIssue(spec.name, "error", "paper5_selected_consistency", f"{context}: {exc}")]
+    return []
+
+
 def run_structural_checks() -> list[CheckIssue]:
     """Run automated structural checks on generated figures."""
     from src.core.visualizations import (
@@ -2746,6 +3069,7 @@ def run_structural_checks() -> list[CheckIssue]:
             continue
 
         fig_dict = fig.to_dict()
+        issues.extend(_paper5_selected_consistency_issues(spec, fig_dict))
 
         # Check 1: minimum trace count
         n_traces = len(fig_dict.get("data", []))
@@ -2855,7 +3179,7 @@ def main() -> int:
     parser.add_argument("--generate", action="store_true",
                         help="Generate PNGs only (skip checks)")
     parser.add_argument("--check", action="store_true",
-                        help="Run structural checks only (no generation)")
+                        help="Check in-memory figure data only (no image export)")
     parser.add_argument("--manifest", action="store_true",
                         help="Produce manifest only (for LLM agent)")
     args = parser.parse_args()
