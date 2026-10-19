@@ -21,9 +21,9 @@ DOI 10.1126/science.adx2728; arXiv:2503.05693): belief propagation is
 the contraction/optimization engine on lattice-specific PEPS/PEPO tensor
 networks evolving disordered TFIM dynamics through the Kibble-Zurek
 quantum phase transition. The "approximately tree-like" structure of
-short-range correlations that makes BP accurate on PEPS is captured
-here at the type level via `FactorGraph` + `BPMessages` + the
-variable-to-factor update map `bpVariableUpdate`.
+short-range correlations motivates the finite carrier `FactorGraph`,
+`BPMessages` and `bpVariableUpdate`. These types do not establish PEPS
+accuracy, a physical tensor encoding or computational advantage.
 
 ## Substantive content (Wave 6w.2 sub-session 2a)
 
@@ -59,12 +59,14 @@ variable-to-factor update map `bpVariableUpdate`.
   update at the first summand `times` the multiplicative correction
   — substantive product-of-sums-style identity over finite alphabets.
 
-The downstream substrate (factor-to-variable update, combined BP
-iteration, Bethe free energy, and the four-cycle-free structural
-predicate feeding the loop-density Cramér rate function) lands in
-sub-sessions 2b/2c/2d per the Wave 6w.2 roadmap. (No BP dynamical-
-convergence theorem is shipped: the substrate characterizes the
-four-cycle-free / zero-loop-density boundary, not iteration dynamics.)
+The module also defines factor-to-variable updates, combined iteration,
+beliefs, Bethe free energy and a four-cycle-free structural predicate.
+Its rank-local engine proves actual finite-horizon BP stabilization from
+a supplied certificate. `BeliefPropagationForest` constructs that
+certificate from genuine finite incidence acyclicity and proves a safe
+graph-size horizon. Four-cycle absence alone does not supply acyclicity.
+Normalized exact marginals and physical tensor/complexity bridges remain
+separate constructive obligations.
 
 ## References
 
@@ -259,10 +261,12 @@ variable `u ∈ ∂a \ {v}` (the "cavity" structure).
 
 To keep the substrate finite-dimensional and decidable, we parameterize
 each factor by a real-valued weight function `factorWeight : α → (ν → X) → ℝ`
-on the full variable assignment type. In a true tensor-network setting
-this would restrict to `y` on `∂a` only; the extra arguments are
-ignored by the canonical factor (a sound modeling choice for finite
-factor graphs).
+on the full variable assignment type. No encoded premise requires it to
+ignore variables outside `∂a`. Local-table interpretation requires an
+explicit scope-locality hypothesis. Even with locality, summing complete
+assignments carries alphabet-cardinality multiplicities compared with a
+local cavity sum. Their effect and positive normalization must be proved
+before identifying these updates with probability marginals.
 -/
 
 /-- The set of *other* variables (excluding `v`) incident to factor
@@ -426,11 +430,14 @@ factor-to-variable messages (un-normalized):
 
   `b_v(x_v) := ∏_{a : G.incidence a v = true} m[a → v](x_v)`.
 
-At a BP fixed point with finite factor graph, this product computes
-the marginal of the joint distribution restricted to `v`, up to a
-normalization constant. The downstream LDP-saddle-point
-characterization (Wave 6w.3) phrases BP convergence in terms of
-beliefs rather than raw messages.
+This definition alone does not identify a fixed-point belief with a
+probability marginal. A constructive forest probability theorem must
+supply scope-local factors, nonnegative weights, a genuine positive joint
+partition, full-assignment multiplicities and positive normalization.
+Nonlocal weights and zero partition cannot be covered by an unconditional
+marginal claim. That native probability bridge remains BUILD separately
+from the actual stabilization theorem. Downstream belief predicates do
+not supply these missing hypotheses or constructions.
 -/
 
 /-- The set of factors incident to a given variable. -/
@@ -587,9 +594,11 @@ theorem variableEntropy_contrib_zero
 
       `b_a(y) := f_a(y) · ∏_{v ∈ incidentVars a} m[v → a](y v)`.
 
-    At a BP fixed point with finite factor graph, `b_a` computes the
-    marginal of the joint distribution restricted to the factor's
-    neighborhood, up to a normalization constant. -/
+    This finite product is a definition, not an exact marginal theorem.
+    The forest probability bridge still owes scope locality, nonnegative
+    weights, a true positive partition, full-assignment multiplicity and
+    positive-normalizer proofs. An arbitrary fixed point or nonlocal
+    full-assignment weight does not establish that interpretation. -/
 noncomputable def factorBelief {ν α X : Type*}
     [Fintype ν] [DecidableEq ν]
     {G : FactorGraph ν α} (m : BPMessages ν α G X)
@@ -718,18 +727,13 @@ theorem betheFreeEnergy_factor_belief_congr
 
 /-! ## Four-cycle-free predicate (sub-session 2d substrate)
 
-**Honesty note (remediation B-04, 2026-07-17).** The predicate below was
-previously named `IsTreeFactorGraph` and its docstring claimed that the
-absence of 4-cycles "is the structural tree condition for bipartite
-factor graphs." That claim is FALSE: forbidding 4-cycles is strictly
-weaker than acyclicity. A bipartite 6-cycle
-`v₁–a₁–v₂–a₂–v₃–a₃–v₁` has no 4-cycle yet is cyclic, and the predicate
-imposes no connectivity requirement either. There is no BP-convergence
-theorem in this substrate (the `bp_converges_on_trees_in_diameter_rounds`
-once named here was never proved); every downstream result is proved
-about the 4-cycle-free condition only. The predicate and every
-downstream name/docstring have therefore been renamed to the honest
-narrower condition `IsFourCycleFreeFactorGraph`. -/
+Four-cycle absence is strictly weaker than genuine incidence acyclicity:
+a bipartite six-cycle can be four-cycle-free, and connectivity is not
+required here. Results consuming this predicate have only that structural
+hypothesis. Actual BP stabilization is proved separately from a rank
+certificate below; `BeliefPropagationForest` constructs one from genuine
+finite acyclicity. No convergence theorem follows from this four-cycle
+screen alone. -/
 
 /-- A factor graph is **four-cycle-free** if no pair of distinct
     variables `u ≠ v` shares a pair of distinct incident factors
@@ -929,9 +933,9 @@ theorem isAcyclicFactorGraph_imp_fourCycleFree {ν α : Type*}
 
 /-! ## Abstract finite-horizon rank-local convergence engine (B-04)
 
-This section proves the *mathematical heart* of "belief propagation
-converges on trees in at most (diameter) rounds": a **rank-local**
-iteration reaches a fixed point in finitely many rounds. It is a
+This section proves that a **rank-local** iteration reaches a fixed point
+in finitely many rounds. Its bound is determined by the supplied rank,
+not by graph diameter. It is a
 self-contained, reusable result about any discrete iteration
 `step : (E → β) → (E → β)` on coordinates indexed by a finite type `E`
 equipped with a rank `rank : E → ℕ`, under the single hypothesis that one
@@ -945,10 +949,11 @@ freezes exactly one round after all the coordinates it reads). Hence the
 whole iteration reaches a fixed point after `(max rank) + 1` rounds and
 stays there (`rankLocalStep_converges`).
 
-Instantiated for BP on an acyclic factor graph (next section), `E` is the
-set of directed message endpoints, `rank` is the subtree depth "behind"
-each directed edge, `step` is one synchronous BP sweep, and `(max rank)`
-is the graph's diameter — recovering the classical statement. -/
+For the BP instantiation below, `E` retains all directed variable/factor
+pairs, including nonincident pairs; `step` is an actual synchronous sweep.
+`BeliefPropagationForest` constructs cut-component-cardinality ranks and
+bounds the horizon by `max 1 (|V|+|A|)`. Its five-node path needs five
+sweeps on the full carrier despite incidence diameter four. -/
 
 /-- **Rank-locality.** One round of `step` at coordinate `e` depends only
     on the coordinates of strictly smaller rank: whenever two states agree
@@ -988,9 +993,10 @@ theorem rankLocalStep_coord_stable {E β : Type*}
   intro e n hn
   exact key (rank e) e rfl n hn
 
-/-- The **convergence horizon**: one more than the maximum coordinate
-    rank. For BP on a tree with `rank` the subtree depth, this is the
-    diameter (+1) — the round count in which BP converges. -/
+/-- The **convergence horizon** is one more than the maximum supplied
+    coordinate rank, with value one on an empty coordinate type.
+    Certificate ranks can be increased, so this is not a diameter formula.
+    The separately constructed forest rank has a graph-size bound. -/
 def convergenceHorizon {E : Type*} [Fintype E] (rank : E → ℕ) : ℕ :=
   (Finset.univ.sup rank) + 1
 
@@ -1023,9 +1029,9 @@ theorem rankLocalStep_converges {E β : Type*} [Fintype E]
 /-! ## BP convergence on acyclic factor graphs (B-04)
 
 This section instantiates the abstract engine on the *actual* `bpUpdate`
-dynamics, proving that on an acyclic factor graph BP reaches a genuine BP
-fixed point in a bounded number of rounds — the `bp_converges_on_trees_…`
-theorem the old phantom docstring reference promised but never delivered.
+dynamics. A supplied rank certificate gives bounded full-array
+stabilization and a genuine fixed point. `BeliefPropagationForest`
+constructs the certificate from genuine finite incidence acyclicity.
 
 The BP message state is flattened onto the coordinate type
 `MsgEndpoint ν α = (ν × α) ⊕ (α × ν)` of directed message endpoints
@@ -1034,15 +1040,15 @@ value type `X → ℝ`. One synchronous BP sweep `bpUpdate` transports to a
 `bpStep` on the flattened state (`flattenMsg_bpUpdate`,
 `flattenMsg_iterate`).
 
-The acyclicity is supplied as a **topological rank certificate**
-(`BPRankCert`): a rank on directed endpoints such that the message OUT of
-a node strictly exceeds the ranks of the messages feeding INTO it. On an
-acyclic factor graph such a rank exists — it is the subtree depth behind
-each directed edge (deriving it from `IsAcyclicFactorGraph` is the one
-remaining gap, documented at `bp_converges_on_ranked_acyclic`). The
-certificate is exactly the hypothesis under which `bpStep` is rank-local
-(`bpStep_rankLocal`), so the engine gives convergence in
-`convergenceHorizon cert.rank` rounds — the graph diameter. -/
+The **topological rank certificate** (`BPRankCert`) assigns each outgoing
+coordinate a rank strictly above its incoming dependencies. It supplies
+`bpStep_rankLocal`, and hence stabilization at
+`convergenceHorizon cert.rank = sup(rank)+1`. Ranks include nonincident
+outgoing coordinates and are not required to be minimal or geometric.
+The finite-forest constructor, safe graph-size bound, arbitrary-cycle
+converse and diameter-four/five-sweep control live in
+`BeliefPropagationForest`. This module does not identify the fixed point
+with exact normalized marginals. -/
 
 /-- Directed message endpoints of a factor graph: `inl (v,a)` is the
     variable→factor endpoint `v→a`; `inr (a,v)` is the factor→variable
@@ -1106,17 +1112,18 @@ theorem flattenMsg_iterate {ν α X : Type*}
 /-- **Topological rank certificate** for an acyclic factor graph: a rank
     on directed message endpoints such that the message OUT of a node
     strictly exceeds the ranks of every message feeding INTO it. Concretely
-    `rank` is the subtree depth behind each directed edge; such a rank
-    exists exactly when the factor graph is acyclic (a cycle would force a
-    directed endpoint to outrank itself). The two fields are precisely the
-    hypotheses under which `bpStep` is rank-local:
+    the rank need not be minimal and includes nonincident outgoing pairs.
+    For finite carriers, `SKEFTHawking.BeliefPropagation.nonempty_bpRankCert_iff_acyclic`
+    proves certificate existence equivalent to genuine incidence acyclicity.
+    Its constructor uses cut-component cardinality, not an assumed depth.
+    The two fields are precisely the hypotheses under which `bpStep` is rank-local:
 
     * `var_gt`: the `v→a` message reads the `b→v` messages of other factors
       `b ≠ a` at `v`, so `rank (b→v) < rank (v→a)`;
     * `fac_gt`: the `a→v` message reads the `u→a` messages of other
       variables `u ≠ v` at `a`, so `rank (u→a) < rank (a→v)`. -/
 structure BPRankCert {ν α : Type*} (G : FactorGraph ν α) where
-  /-- Rank of each directed message endpoint (subtree depth behind it). -/
+  /-- Natural rank of every directed coordinate, including nonincident pairs. -/
   rank : MsgEndpoint ν α → ℕ
   /-- The `v→a` message outranks every incoming `b→v` message (`b ≠ a`). -/
   var_gt : ∀ (v : ν) (a b : α), b ≠ a → G.incidence b v = true →
@@ -1187,31 +1194,22 @@ theorem flattenMsg_injective {ν α X : Type*} {G : FactorGraph ν α} :
   have := congrArg (unflattenMsg G) h
   rwa [unflattenMsg_flattenMsg, unflattenMsg_flattenMsg] at this
 
-/-- **BP converges on a ranked-acyclic factor graph in ≤ diameter rounds.**
-    Given a topological rank certificate `cert` for `G` (which exists
-    exactly when `G` is acyclic — its `rank` is the subtree depth behind
-    each directed edge), synchronous belief propagation from ANY initial
-    message bundle `m` reaches a genuine BP fixed point after
-    `convergenceHorizon cert.rank` sweeps — the graph diameter — and stays
-    there. Concretely: (i) all iterates past the horizon coincide with the
-    horizon iterate, and (ii) the horizon iterate is a `IsBPFixedPoint`.
+/-- **Actual BP stabilization under a rank certificate.** For arbitrary
+    real factor weights and any initial message array, all iterates after
+    `convergenceHorizon cert.rank` equal that iterate, which is a genuine
+    `bpUpdate` fixed point. The proof transports rank-local convergence
+    through the actual flatten/unflatten update correspondence.
 
-    This is the genuine `bp_converges_on_trees_…` result the old phantom
-    docstring reference promised: a non-vacuous fixed-point convergence
-    statement about the *actual* `bpUpdate` dynamics, obtained by
-    transporting the abstract `rankLocalStep_converges` engine through the
-    `flattenMsg`/`unflattenMsg` correspondence, with rank-locality supplied
-    by `bpStep_rankLocal`.
+    This supplied-certificate horizon is `sup(rank)+1`, not graph diameter.
+    `SKEFTHawking.BeliefPropagation.bpRankCertForest` constructs a certificate from
+    genuine finite incidence acyclicity, and `bp_converges_on_forest`
+    provides the safe graph-size horizon. The actual five-node path
+    controls in that module refute a diameter-four whole-array bound.
 
-    **Remaining gap (documented, B-04).** The one piece not proved here is
-    the *existence* of a `BPRankCert G` from `IsAcyclicFactorGraph G` — i.e.
-    that an acyclic bipartite incidence graph admits the subtree-depth rank
-    with the two strict-monotonicity properties. That is a finite
-    well-founded construction (leaf-stripping / component-size on the
-    forest); once discharged, this theorem specializes to
-    `IsAcyclicFactorGraph G → (BP converges …)` with no certificate
-    hypothesis. The convergence *dynamics* — the mathematically substantive
-    part — is fully proved. -/
+    Probability/cavity interpretation is separate: scope locality,
+    nonnegative weights, genuine positive joint partition, full-assignment
+    multiplicities and positive normalization still require their native
+    constructive bridge. Stabilization alone does not prove marginals. -/
 theorem bp_converges_on_ranked_acyclic {ν α X : Type*}
     [Fintype ν] [Fintype α] [Fintype X]
     [DecidableEq ν] [DecidableEq α] [DecidableEq X]

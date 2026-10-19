@@ -4254,6 +4254,7 @@ import SKEFTHawking.KibbleZurekUnruh
 -- factorization, fixed-point stability. Consumed by Wave 6w.3 LDP-
 -- controlled simulability headline.
 import SKEFTHawking.BeliefPropagation
+import SKEFTHawking.BeliefPropagationForest
 
 -- Phase 6w Wave 6w.3 LDP-controlled classical-simulability headline
 -- (A1a follow-up; review-2026-06-05 D7-EV3 continuous-rate upgrade).
