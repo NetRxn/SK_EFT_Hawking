@@ -1,12 +1,12 @@
 {
-  "generated": "2026-10-18T15:30:15.881195",
+  "generated": "2026-10-19T12:06:35.549224",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 53438,
-    "theorems_total": 30896,
-    "theorems_substantive": 30870,
+    "total_declarations": 53469,
+    "theorems_total": 30919,
+    "theorems_substantive": 30893,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 30801,
+    "theorems_kernel_substantive": 30824,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2150,
+    "modules": 2151,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -2115,6 +2115,7 @@
       "SKEFTHawking.TemperleyLieb",
       "SKEFTHawking.TetradFormalism",
       "SKEFTHawking.TetradGapEquation",
+      "SKEFTHawking.TetradGapNumericalBridge",
       "SKEFTHawking.TgateFibBraid",
       "SKEFTHawking.ThetaDefiniteDischarge",
       "SKEFTHawking.ThetaModularWeight",
@@ -2168,7 +2169,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 15448,
+    "definitions": 15453,
     "structures": 505,
     "instances": 1028,
     "inductives": 115,
