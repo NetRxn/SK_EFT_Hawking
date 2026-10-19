@@ -26,7 +26,7 @@ reaches~$c_s$---a condition already achieved by the Dean group at Columbia
 (Geurs~\textit{et~al.}, 2025) in a bilayer graphene de~Laval nozzle.
 
 For the Dean bilayer nozzle, we predict $T_H \approx \SI{2.4}{\kelvin}$
-(nine orders of magnitude above BEC), with a well-controlled EFT expansion
+(nine orders of magnitude above BEC), with adopted EFT correction estimates
 (adiabaticity $D = 0.23$, dispersive correction $\delta_{\rm disp} = -2.8\%$).
 The dissipative correction $\delta_{\rm diss} \approx +6.5\%$ is the larger
 of the two and carries the opposite sign, so the corrections partially
@@ -36,25 +36,33 @@ $\kappa = \SI{2e12}{\per\second}$. The Hawking
 signal manifests as excess current noise $\Delta S_I \approx
 \SI{e-26}{\ampere\squared/\hertz}$ across a \SIrange{0.5}{85}{\giga\hertz}
 band---roughly 1\% of the thermal Johnson-Nyquist background---extractable
-via broadband correlation analysis. The corrected noise formula
+via broadband correlation analysis. The adopted noise response
 $\Delta S_I(\omega) = 2\hbar\omega\,\sigma_Q\,\Gamma(\omega)\,n_H(\omega)$,
-derived independently from Keldysh FDT and Landauer-B\"uttiker with
-Bogoliubov mixing, gives statistical integration times under one second
-for $5\sigma$ discovery. The greybody factor is computed in closed form
-as $\Gamma_0 = 4 c_R v/(c_R+v)^2 \approx 0.99994$ for the Dean nozzle
-(Anderson et al., PRD 87), with quasi-1D finite-width corrections
-bounded at $\le 1.8\%$ at $\omega_H$, making the measurement
-systematics-limited rather than statistics-limited.
+motivated by Keldysh FDT and Landauer-B\"uttiker/Bogoliubov analogies,
+gives model statistical integration times under one second for $5\sigma$
+under the assumed electrical coupling and readout. Target bilayer current
+coupling, contact/channel normalization and microscopic route equivalence
+remain to be derived; transmission, circuit transfer and background require
+independent calibration. We adopt the BEC infrared scalar
+$\Gamma_0=4c_Rv/(c_R+v)^2\approx0.99994$ at the supplied speed ratio;
+its source does not derive bilayer transmission or finite-frequency
+roll-off. The supplied quasi-1D envelope's $1.8\%$ illustration is not a
+physical finite-width certificate. No achieved sensitivity or usable
+physical band follows from these assumptions.
 
-We classify transport coefficients for the 2+1D charged conformal fluid:
-2~independent first-order coefficients ($\eta$, $\sigma_Q$) matching the
-1+1D BEC count, but ${\sim}9$ at second order (vs.\ 2~in BEC), reflecting
-the richer tensor structure of 2+1D. The giant Wiedemann-Franz violation
+For the stated charged conformal assumptions, the first-order roster
+contains 2~coefficients ($\eta$, $\sigma_Q$), matching the numerical
+1+1D BEC count. The independent charged 2+1D second-order basis,
+integration-by-parts quotient and applicable KMS/positivity constraints
+remain to be constructed; the earlier approximate nine count is unestablished. The giant Wiedemann-Franz violation
 ($L/L_0 > 200\times$, Majumdar~\textit{et~al.}, 2025) arises from two-channel
 transport: charge ($\sigma_Q$) and heat ($\kappa_{\rm th} \propto s^2/\sigma_Q$),
-consistent with the SK-EFT two-channel structure. All predictions are
-formally verified in Lean~4 (58~theorems, zero sorry) and derive from
-a computation pipeline with 153~tests.
+consistent with the SK-EFT two-channel structure. The adopted formulas
+have scalar and algebraic Lean~4 checks (58~theorems, zero sorry), with
+numerical illustrations from a Python computation pipeline.
+No test cardinality or fresh test-run receipt is asserted here.
+These checks do not derive the physical electrical response or establish
+microscopic route equivalence or calibrated detection sensitivity.
 \end{abstract}
 
 \maketitle
@@ -81,9 +89,9 @@ temperature. Papers~1--4 of this series applied this framework to 1+1D BEC
 phonon hydrodynamics, establishing: (i)~a transport coefficient counting
 formula ${\rm count}(N) = \lfloor(N{+}1)/2\rfloor + 1$; (ii)~CGL
 fluctuation-dissipation relations (FDR) constraining noise from dissipation;
-(iii)~an exact WKB connection formula for the Hawking spectrum with
-dispersive and dissipative corrections; and (iv)~formal verification of all
-results in Lean~4.
+(iii)~adopted WKB/Bogoliubov and noise carriers with scalar corrections;
+and (iv)~formal checks of stated algebraic hypotheses/consequences. These
+do not complete physical mode/state or observable-error derivations.
 
 In this paper, we extend the SK-EFT framework to the \emph{graphene Dirac
 fluid}---a natively relativistic 2+1D system where electron-hole
@@ -104,12 +112,11 @@ sound speed $c_s = v_F/\sqrt{2}$, confirming the conformal equation of state.
 
 The predicted Hawking temperature for the Dean nozzle, $T_H \approx
 \SI{2.4}{\kelvin}$, is \emph{nine orders of magnitude} larger than in BEC.
-Moreover, graphene's dispersion corrections are \emph{subluminal} (many-body
-Coulomb renormalization makes $v_F(k)$ increase at small~$k$), unlike BEC's
-superluminal Bogoliubov dispersion. This makes the Hawking temperature formula
-\emph{more robust}: high-momentum modes propagate slower than low-momentum
-modes and cannot escape the horizon, eliminating the trans-Planckian
-complications of BEC.
+A constant relation $c_s<v_F$ does not establish the sign of the
+large-$k$ collective dispersion, nor eliminate microscopic sensitivity
+of the Hawking spectrum. Subluminal dispersion can be studied as a
+separate model; its actual bilayer validity, cutoff and controlled error
+must be derived at the operating point.
 
 %% ================================================================
 \section{Acoustic Metric for the Dirac Fluid}
@@ -160,18 +167,20 @@ G^{2\times 2}_{(t,x)} & 0 \\ 0 & g_{yy}
 \end{equation}
 where $g_{yy} = \Omega^2$ decouples, and the $(t,x)$ block has the same
 algebraic structure as the BEC acoustic metric with $c_s \to v_F/\sqrt{2}$.
-This is the key structural simplification: \emph{all 1+1D Hawking
-calculations---WKB connection formula, Bogoliubov coefficients, dissipative
-corrections---apply directly} to the $(t,x)$ sector, with the transverse
-greybody factor as the only genuinely new 2+1D effect.
+This permits algebraic reuse on corresponding parameter records, not
+transfer of the BEC physical PDE, EOS/transport, quantum state, boundaries,
+normalized scattering or electrical observable. Actual bilayer matching
+and reduction errors remain required; transverse transmission is one
+part of that duty, not the only new physical effect.
 
-The quasi-1D approximation holds when the nozzle width $W$ satisfies
-$W \gg l_{\rm ee}$ (transverse hydrodynamic regime) and the flow has no
-transverse component at the symmetry axis ($v_y = 0$). For the Dean device
-($W \sim \SI{1}{\micro\meter}$, $l_{\rm ee} \sim \SI{50}{\nano\meter}$),
-$W/l_{\rm ee} \sim 20$, comfortably satisfying this criterion. Finite-width
-corrections modify the transverse greybody factor but not $T_H$ at leading
-order.
+A prospective quasi-1D reduction requires transverse hydrodynamics
+($W\gg l_{\rm ee}$) and the actual flow/boundary problem; $v_y=0$ on
+the symmetry axis alone does not establish it. For the supplied Dean
+illustration ($W\sim\SI{1}{\micro\meter}$,
+$l_{\rm ee}\sim\SI{50}{\nano\meter}$), $W/l_{\rm ee}\sim20$ is a
+scale comparison, not an error bound. Finite width can affect the
+inferred gradient, state and observable as well as transmission; the
+block identity does not protect a physical leading temperature.
 
 This block-diagonalization is formally proved in Lean~4
 (\texttt{diracFluidMetric\_y\_offdiag\_zero},
@@ -182,25 +191,33 @@ This block-diagonalization is formally proved in Lean~4
 
 Our primary target---the Dean group bilayer nozzle---uses \emph{bilayer}
 graphene, which has quadratic (not linear) band touching and is not
-strictly conformal. However, in the hydrodynamic regime ($T \gg T_{\rm imp}$,
-$\omega \ll \Gamma_{\rm ee}$), the transport properties are governed by the
-collective Dirac fluid, not the single-particle band structure. The
-experimentally measured sound speed $c_s \approx \SI{440}{\kilo\meter/\second}$
-in bilayer~\cite{Geurs2025} is an empirical input, not derived from the
-conformal EOS. The acoustic metric~\eqref{eq:metric} and Hawking temperature
-formula~\eqref{eq:T_H} depend only on $c_s$ (not on its derivation from a
-specific EOS), so they apply to bilayer with $c_s$ taken from experiment.
+strictly conformal. A proposed hydrodynamic regime ($T\gg T_{\rm imp}$,
+$\omega\ll\Gamma_{\rm ee}$) does not remove the band dependence of
+its thermodynamics, inertia and current. Their actual collective
+constitutive closure must be matched rather than assumed to be a
+relativistic Dirac fluid. The
+$c_s\approx\SI{440}{\kilo\meter/\second}$ reference in
+Ref.~\cite{Geurs2025} is a source-calculated Fermi-liquid estimate
+at a specified typical carrier density, not an independent measured
+sound speed or a derivation from a conformal EOS. Its use here is
+an adopted input; actual density, temperature and gate matching remain
+required. The acoustic metric~\eqref{eq:metric} and Hawking temperature
+formula~\eqref{eq:T_H} can be evaluated at that supplied $c_s$.
+Their physical bilayer applicability requires actual constitutive,
+inertia/current, gate/boundary and state matching, not only a speed
+substitution.
 
-The conformal assumption \emph{does} affect: (i)~bulk viscosity $\zeta$,
-which is nonzero in bilayer but expected to be small in the hydrodynamic
-regime ($\zeta/\eta \lesssim 0.1$, comparable to conformal symmetry
-breaking in QCD near $T_c$~\cite{Romatschke2010}); (ii)~the specific
-values of second-order transport coefficients. These enter at subleading
-order and do not affect $T_H$ or $\delta_{\rm disp}$ at leading order.
-Where our predictions are bilayer-specific (Table~\ref{tab:platforms}),
-we use the measured $c_s$ directly rather than the conformal formula.
+The conformal assumption affects bulk viscosity and higher-order
+transport. The capped QCD-inspired illustration
+$\zeta/\eta\lesssim0.1$~\cite{Romatschke2010} is an adopted
+fixed-input model estimate, not an established upper bound for
+this bilayer device. It supplies no bound on the physical effect
+of nonconformality on $T_H$, $\delta_{\rm disp}$ or the detector
+error. The actual bilayer constitutive/inertia/current reduction,
+including the heat/charge response and uncertainty, remains BUILD.
+Bilayer-specific illustrations retain their supplied sound-speed
+input rather than deriving it from a conformal EOS.
 
-%% ================================================================
 \section{Hawking Temperature and Dissipative Corrections}
 \label{sec:hawking}
 
@@ -212,12 +229,14 @@ T_H = \frac{\hbar \kappa}{2\pi k_B}, \qquad
 \kappa = \left|\frac{dv}{dx}\right|_{\rm horizon},
 \label{eq:T_H}
 \end{equation}
-which is \emph{universal}---independent of the embedding dimension or the
-specific fluid---and assumes a stationary horizon. Bias voltage fluctuations
-on experimental time scales ($\gtrsim \SI{1}{\micro\second}$) are
-adiabatically slow compared to the Hawking time $\tau_H = 1/\kappa \sim
-\SI{1}{\pico\second}$, so the stationarity assumption is well justified.
-For a smooth nozzle of throat length~$L$: $\kappa \approx c_s / L$.
+as the adopted acoustic expression under stationary mode/state and horizon
+hypotheses. Its scalar form contains no embedding-dimension argument;
+physical bilayer applicability still requires those actual hypotheses.
+Bias variations on scales $\gtrsim\SI{1}{\micro\second}$ are slow
+relative to the supplied $\tau_H=1/\kappa\sim\SI{1}{\pico\second}$,
+a necessary scale comparison, not a complete stationarity/noise certificate.
+For the smooth-nozzle illustration $\kappa\approx c_s/L$ is adopted;
+the actual heated profile and gradient require independent determination.
 
 Table~\ref{tab:platforms} and Fig.~\ref{fig:T_sweep} show $T_H$ for four
 graphene geometries. The Dean bilayer nozzle ($L \sim \SI{200}{\nano\meter}$,
@@ -226,20 +245,25 @@ $c_s \approx \SI{440}{\kilo\meter/\second}$) gives $T_H \approx
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig102_graphene_hawking_T_sweep.png}
-\caption{Analog Hawking temperature vs.\ nozzle throat length for monolayer
-(solid blue, $c_s = v_F/\sqrt{2}$) and bilayer (dashed amber,
+\caption{Adopted numerical analog-Hawking-temperature curves vs.\
+supplied nozzle throat length for monolayer (solid blue,
+$c_s = v_F/\sqrt{2}$) and bilayer (dashed amber,
 $c_s \approx \SI{440}{\kilo\meter/\second}$) graphene. Diamond markers
-show the four platform configurations from Table~\ref{tab:platforms}.
-Horizontal lines: $T_{\rm amb} = \SI{150}{\kelvin}$ (Dean operating
-temperature) and $T_{\rm imp} \approx \SI{80}{\kelvin}$ (disorder scale).}
+show the four adopted geometry configurations from Table~\ref{tab:platforms}.
+Horizontal references: $T_{\rm amb} = \SI{150}{\kelvin}$ (the symbol
+here denotes the cited source-estimated high-bias electron-temperature
+reference, not a measured ambient bath temperature) and
+$T_{\rm imp} \approx \SI{80}{\kelvin}$ (adopted disorder scale).
+Physical profile, operating-state and calibration matching remain BUILD.}
 \label{fig:T_sweep}
 \end{figure}
 
 \begin{table}[t]
 \caption{Platform comparison: graphene constriction geometries and BEC.
-All predictions from the SK-EFT framework with formally verified correction
-bounds. $\omega_H/\Gamma_{\rm diss}$ is the dissipation window (ratio $>1$
-required for detection).}
+Numerical illustrations use the adopted SK-EFT formulas and supplied
+parameters; scalar/algebraic checks do not certify their physical correction
+errors. $\omega_H/\Gamma_{\rm diss}$ is a model dissipation ratio (ratio $>1$
+is necessary for the proposed weak-loss regime, not sufficient for detection).}
 \label{tab:platforms}
 \begin{ruledtabular}
 \begin{tabular}{lccccc}
@@ -255,23 +279,22 @@ BEC (Steinhauer) & $3.5{\times}10^{-10}$ & 0.013 & $\gg 1$ & computed$^\ddagger$
 $^\dagger$Marginal; improves to ${\sim}5$ with cleaner samples
 ($l_{\rm mr} \sim \SI{15}{\micro\meter}$).
 $^\ddagger$Macher \& Parentani~\cite{CoutantParentani2010}; closed-form
-for step-like BEC horizons. No analogous calculation exists for graphene
+for step-like BEC horizons. This paper supplies no corresponding microscopic graphene calculation
 nozzle geometries.}
 \end{table}
 
 \subsection{Dispersive correction}
 
-The leading correction to $T_H$ comes from the finite EFT cutoff. The
-adiabaticity parameter $D = \kappa l_{\rm ee}/c_s$, where $l_{\rm ee} =
-\hbar v_F / (k_B T)$ is the electron-electron scattering length, controls
-the derivative expansion:
+We adopt the full phenomenological dispersive correction below,
+including its nonzero quadratic leading term. With the model estimate
+$l_{\rm ee}=\hbar v_F/(k_BT)$ and $D=\kappa l_{\rm ee}/c_s$,
 \begin{equation}
 \delta_{\rm disp} = -\frac{\pi}{6} D^2.
 \label{eq:delta_disp}
 \end{equation}
 For the Dean nozzle at $T = \SI{150}{\kelvin}$: $l_{\rm ee} \approx
 \SI{51}{\nano\meter}$, $D \approx 0.23$, $\delta_{\rm disp} \approx -2.8\%$.
-The EFT is well-controlled.
+This is an adopted-model parameter estimate, not a controlled physical-error certificate.
 
 The correction is \emph{negative} (cooling): the effective temperature is
 $T_{\rm eff} = T_H(1 + \delta_{\rm disp}) \approx \SI{2.36}{\kelvin}$.
@@ -285,7 +308,11 @@ The dissipative correction from viscous damping at the horizon is
 \delta_{\rm diss} = \frac{\Gamma_H}{\kappa}, \qquad
 \Gamma_H = \nu \left(\frac{\kappa}{c_s}\right)^2,
 \end{equation}
-where $\nu$ is the momentum-diffusion constant. Because the momentum
+where $\nu$ is an illustrative momentum-diffusion closure. Its
+relativistic form below does not derive the quadratic-band bilayer
+momentum susceptibility or viscosity; expressing it in measured $c_s$
+does not supply that matching. Actual charge--energy transport remains
+BUILD. Because the momentum
 density of a relativistic fluid is $w/v_F^2$,
 \begin{equation}
 \nu = \frac{\eta\,v_F^2}{w} = \frac{\eta}{s T}\,v_F^2
@@ -303,9 +330,8 @@ $4/3$ is the $d = 3$ value. With $\eta/s \approx 4 \times \hbar/(4\pi k_B)$
 Writing $\eta/(sT)$, a \emph{time}, in place of $\nu$ omits the
 velocity$^2$ and understates $\delta_{\rm diss}$ by eleven orders of
 magnitude. Restored, the dissipative correction exceeds the dispersive
-$-2.8\%$ and cancels part of it, leaving a net $+3.7\%$. Graphene is
-therefore the platform where the SK-EFT's dissipative channel is a
-percent-level measurable rather than a formal refinement.
+$-2.8\%$ and cancels part of it, leaving a net $+3.7\%$. These percent-scale model terms require physical bilayer transport
+matching and uncertainty bounds before being interpreted as measurable corrections.
 
 %% ================================================================
 \section{Noise Spectrum and Detection Protocol}
@@ -313,35 +339,51 @@ percent-level measurable rather than a formal refinement.
 
 \subsection{Current noise power spectrum}
 
-The Hawking radiation manifests as excess current noise at frequencies
-$\omega \sim k_B T_H / \hbar \approx \SI{51}{\giga\hertz}$. We derive the
-noise PSD via two independent routes---Keldysh FDT and Landauer-B\"uttiker
-with Bogoliubov mixing---both yielding the same result
-(Sec.~\ref{sec:lean}).
+We model a Hawking contribution to the electrical-noise response at frequencies
+$\omega\sim k_BT_H/\hbar$, with cyclic
+$f_H=\omega_H/(2\pi)\approx\SI{51}{\giga\hertz}$. The adopted
+noise PSD is motivated by Keldysh FDT and Landauer-B\"uttiker/Bogoliubov
+analogies. The physical target-current coupling, contact/channel normalization
+and equivalence of microscopic derivations require construction; neither
+analogy nor the scalar identity in Sec.~\ref{sec:lean} establishes them.
 
-\textit{Keldysh route.}---The Callen-Welton
+\textit{Keldysh analogy.}---The equilibrium Callen-Welton
 FDT~\cite{CallenWelton1951} gives the symmetrized noise
 $S_I(\omega) = \hbar\omega\coth(\hbar\omega/2k_BT)\,\mathrm{Re}\,G(\omega)$.
-At a sonic horizon, pair creation replaces the thermal $\coth$ by the
-mode-resolved distribution $F_u(\omega) = 1 + 2\Gamma(\omega)\,n_H(\omega)$,
+For the adopted response we model the pair contribution with the
+mode-resolved distribution $F_u(\omega) = 1 + 2\Gamma(\omega)\,n_H(\omega)$
+in place of the thermal $\coth$,
 where $\Gamma(\omega) \leq 1$ is the greybody transmission
-factor~\cite{AndersonBFP2013}. The \emph{excess} over the vacuum floor is:
+factor~\cite{AndersonBFP2014Graybody}. An equilibrium identity alone does not
+establish this distribution or its electrical-current weight at the driven
+nozzle. Its modeled \emph{excess} over the vacuum floor motivates the
+response below.
 
-\textit{Landauer route.}---B\"uttiker's multichannel noise
-formula~\cite{Blanter2000}, generalized to Bogoliubov-mixing channels
-following Anantram and Datta~\cite{AnantramDatta1996}, gives the identical
-result. For a 2D conductor with $N_{\rm eff} = \sigma_Q h/(2e^2)$ effective
-channels:
+\textit{Scattering analogy.}---B\"uttiker's multichannel noise
+formula~\cite{Blanter2000} and Bogoliubov-mixing
+channels~\cite{AnantramDatta1996} motivate the adopted response. For a 2D conductor we use
+$N_{\rm eff} = \sigma_Q h/(2e^2)$ as an assumed effective channel
+normalization. A physical bilayer scattering-current derivation, including
+contacts, horizon state and circuit transfer, and its agreement with a
+microscopic Keldysh calculation remain required. Under these assumptions,
 \begin{equation}
 \boxed{\;\Delta S_I(\omega) = 2\hbar\omega\,\sigma_Q\,\Gamma(\omega)\,
 n_H(\omega)\;}
 \label{eq:noise_psd}
 \end{equation}
-where $\sigma_Q \approx 4\,e^2/h$ is the quantum-critical conductance
-(for the Dean device), $\Gamma(\omega)$ is the analog-horizon greybody
-factor, and $n_H(\omega) = [e^{\hbar\omega/k_BT_H} - 1]^{-1}$ is the
-Hawking occupation number (with dispersive and dissipative corrections
-entering through $\kappa_{\rm eff}$; see Sec.~\ref{sec:hawking}).
+where $\sigma_Q\approx4\,e^2/h$ is the supplied conductance reference
+for the Dean device and $\Gamma(\omega)$ is an adopted transmission.
+The leading occupation is $[e^{\hbar\omega/k_BT_H}-1]^{-1}$.
+The plotted corrected numerical carrier instead uses
+$T_{\rm eff}=T_H(1+q)$ with $q=\delta_{\rm disp}+\delta_{\rm diss}$,
+then divides its bare Planck factor by $1-\delta_k$ and adds the
+separate floor. It is distinct from the formal ratio/modified-unitarity
+carrier in D1; physical current/state/normalization matching is required.
+
+The Lean identity \texttt{GrapheneNoiseFormula.fdt\_consistency} substitutes
+unit greybody factor into the defined product and simplifies it by ring
+normalization. It does not derive a current observable, a physical
+fluctuation-dissipation relation or equality of microscopic routes.
 
 The \emph{dimensional consistency} of Eq.~\eqref{eq:noise_psd} is
 $[\hbar\omega]\times[\sigma_Q] = \SI{}{\joule}\times\SI{}{\siemens} =
@@ -354,124 +396,117 @@ not $J{\cdot}s$), off by a factor of $2e^2/h \approx \SI{77.5}{\micro\siemens}$
 noise level by several orders of magnitude relative to that incorrect
 expression.
 
-The greybody factor $\Gamma(\omega)$ encodes the horizon's deviation
-from a perfect thermal emitter. For a one-dimensional acoustic black
-hole with a smooth velocity profile, Anderson, Balbinot, Fabbri, and
-Parentani~\cite{AndersonBFP2013} proved analytically that the
-zero-frequency limit is profile-independent and near unity,
+The infrared scalar
 \begin{equation}
 \Gamma_0 \;=\; \frac{4\,c_R\,v}{(c_R + v)^2},
 \label{eq:gamma0}
 \end{equation}
-which contrasts with four-dimensional Schwarzschild
-($\Gamma \propto \omega^2$). For the Dean bilayer nozzle
-($v \approx 0.985\,c_s$, $c_R \approx c_s$) this gives
-$\Gamma_0 \approx 0.99994$. The frequency dependence in the adiabatic
-regime ($D = \kappa\,l_{ee}/c_s = 0.23 < 1$) is
-$\Gamma(\omega) \approx \Gamma_0[1 - (\omega/\omega_{\max})^2]$ with
-$\omega_{\max} = \sqrt{\kappa c_s/l_{ee}}$ the dispersive UV cutoff, so
-$\Gamma$ remains within a few per cent of $\Gamma_0$ throughout the
-detection band. The quasi-1D finite-width correction
-$|\delta\Gamma/\Gamma| \le (l_{ee}/W)^2 + (\omega/\omega_\perp)^2
-e^{-2\pi L/W}$ bounds the 2D-to-1D deviation at $\le 1.8\%$ at
-$\omega_H$; formally verified in Lean module
-\texttt{QuasiOneDReduction} (theorems T1--T5; 12 theorems total in the module). Numerical predictions
-below use this realistic $\Gamma(\omega)$ rather than the
-$\Gamma = 1$ upper bound, giving a corrected cumulative SNR of $98.8\%$
-of the step-horizon value.
+is derived by Anderson \emph{et al.}~\cite{AndersonBFP2014Graybody},
+Eq.~36, for the specified transversely frozen hydrodynamic BEC with
+stationary constant velocity/density and smooth sound speed approaching
+fixed asymptotes.
+Its profile-independence statement is an infrared result within that
+model, not a graphene transfer or finite-band theorem. Adopting
+$v/c_R=0.985$ gives $157600/157609\approx0.99994$.
+We separately adopt $\Gamma(\omega)=\Gamma_0[1-(\omega/\omega_{\max})^2]$,
+clipped to $[0,1]$, and $\omega_{\max}=\sqrt{\kappa c_s/l_{ee}}$.
+With $\omega_H=\kappa/(2\pi)$, the literal $51$~nm inputs give
+$D=51/220$ and $(\omega_{\max}/\omega_H)^2=4\pi^2/D$, about
+$13\,\omega_H$. Suppression at $4\omega_H$ is
+$4D/\pi^2=51/(55\pi^2)\approx9.4\%$, not a few-percent flatness
+bound. Rounded $D=0.23$ and the platform's derived length are separate
+input conventions. Neither source nor clipping proves this physical law.
 
-The detection band is also separated from the lowest transverse-channel
-cutoff $\omega_\perp(0) = c_s\,\pi/W$. For the Dean nozzle
-($W = \SI{1}{\micro\meter}$, $c_s = \SI{4.4e5}{\meter/\second}$) one has
-$\omega_\perp(0) \approx \SI{1.38e12}{\per\second}$, exceeding $4\,\omega_H$
-across the entire $[0,\,4\omega_H]$ SNR-cumulative integration window. This
-factor-of-four separation is formally verified in Lean
-(\texttt{DiracFluidWKB.dean\_lowest\_channel\_above\_four\_omega\_H}) and
-guarantees the quasi-1D treatment is parametrically safe: no transverse
-mode is open in the detection band. The block-diagonal binding
-$c_s = v_F/\sqrt{2}$ that lets all 1+1D WKB machinery apply per channel
-(via \texttt{DiracFluidWKB.toExactWKB}) is similarly verified, with
-the subluminal property $c_s < v_F$ shipped as
-\texttt{DiracFluidWKB.soundSpeed\_lt\_vF}---the algebraic foundation
-of the more-robust-horizon claim (subluminal high-momentum modes
-cannot escape; cf.\ Sec.~\ref{sec:hawking}).
+The supplied envelope
+$|\delta\Gamma/\Gamma|\le(l_{ee}/W)^2+(\omega/\omega_\perp)^2e^{-2\pi L/W}$
+gives an illustrative value near $1.8\%$ at $\omega_H$ for the assumed
+geometry. \texttt{QuasiOneDReduction.quasi1D\_validity\_bound} adds two
+assumed physical bounds; it does not derive them, match boundary modes or
+prove an actual device error. Scalar positivity and supplied-envelope
+results in the12-theorem module cannot certify finite-band transmission.
+Any quoted $98.8\%$ cumulative-SNR comparison is an inherited model
+statistic, not a measured transmission or new runtime result.
 
-The thermal background is Johnson-Nyquist:
+For assumed Dirichlet channels, $\omega_\perp(0)=c_s\pi/W\approx
+\SI{1.38e12}{\per\second}$ at $W=\SI{1}{\micro\meter}$ and
+$c_s=\SI{4.4e5}{\meter/\second}$. The named Lean literal inequality
+places this above $4\omega_H$, not a factor of four above that upper
+edge. Matching actual transverse dynamics, boundary conditions and the
+frequency window remains required. The algebraic parameter map
+\texttt{DiracFluidWKB.toExactWKB} and constant-speed inequality
+\texttt{soundSpeed\_lt\_vF} do not derive physical scattering, high-$k$
+dispersion, current/readout or trans-Planckian robustness.
+
+The illustrative thermal background is the adopted white Johnson--Nyquist model:
 $S_{\rm thermal} = 4 k_B T_{\rm amb} \sigma_Q \approx
 \SI{1.3e-24}{\ampere\squared/\hertz}$.
 
-With the realistic $\Gamma(\omega) \approx \Gamma_0 \approx 0.99994$
+With the adopted $\Gamma(\omega)$ and infrared reference $\Gamma_0 \approx 0.99994$
 [Eq.~\eqref{eq:gamma0}], the Hawking signal $\Delta S_I \approx
 \SI{e-26}{\ampere\squared/\hertz}$ at the peak, sitting approximately
 two orders of magnitude below the thermal floor (Fig.~\ref{fig:spectrum}).
-The Hawking excess has a \emph{distinct spectral shape}---Planck at
-$T_H$---while the thermal background is white (frequency-independent in the
-hydrodynamic regime). Correlation analysis exploits this shape difference.
+The raw excess is weighted by $\omega\Gamma(\omega)$ and the
+chosen occupation. Even its leading constant-transmission reference
+has shape $x/(e^x-1)$, with $x=\hbar\omega/(k_BT_H)$, rather than a
+Planck occupation. The corrected curve additionally contains the
+$T_{\rm eff}$ shift, multiplier and floor; a white background
+subtraction does not remove these factors.
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig104_graphene_noise_spectrum.png}
-\caption{Current noise power spectral density for the Dean bilayer
-nozzle (realistic greybody $\Gamma_0 \approx 0.99994$ per
-Eq.~\eqref{eq:gamma0}).
-$\Delta S_I$ (blue) sits ${\sim}2$ orders below the Johnson-Nyquist
-background $S_{\rm thermal}$ (amber dashed). The Hawking signal is flat
-below $\omega_H \approx \SI{51}{\giga\hertz}$ and Boltzmann-suppressed
-above. Shaded region: detection band (\SIrange{0.5}{85}{\giga\hertz}).}
+\caption{Adopted corrected current-noise model at supplied Dean inputs,
+with the existing effective-temperature occupation, multiplier and added
+floor, quadratic transmission and white background. It is distinct from
+the leading Planck formula alone. The cyclic scale is
+$f_H=\omega_H/(2\pi)\approx\SI{51}{\giga\hertz}$.
+Shading denotes sampled SNR above its peak divided by $e$, not the
+illustrative \SIrange{0.5}{85}{\giga\hertz} receiver target or a physical
+validity band. Actual transmission, current/contact transfer, state/noise
+and detector calibration remain required.}
 \label{fig:spectrum}
 \end{figure}
 
 \subsection{Detection feasibility}
 
-The per-bin signal-to-noise ratio $\Delta S_I/S_{\rm thermal} \approx
-\Gamma_0 T_H/(2T_{\rm amb})$ is approximately $8 \times 10^{-3}$
-(using $\Gamma_0 \approx 0.99994$) at low frequencies, independent of
-$\sigma_Q$ (the conductance cancels in the ratio; Lean theorem
-\texttt{snr\_independent\_of\_sigma\_Q}).
-The cumulative SNR scales as
-${\rm SNR}_{\rm cumul}^2 = \sum_i {\rm SNR}_{{\rm bin},i}^2 \cdot \Delta f
-\cdot t$,
-exploiting the full detection bandwidth (\SIrange{0.5}{85}{\giga\hertz},
-${\sim}300$ independent bins) via bandwidth-cumulative integration.
+The leading Planck low-frequency reference is
+$\Gamma_0T_H/(2T_{\rm amb})\approx8\times10^{-3}$ for the supplied
+inputs. Conductance cancellation in this common-PSD model assumes
+nonzero conductance and temperature and fixed remaining arguments;
+it does not make the actual measurement independent of physical transfer,
+background noise or normalization. The corrected occupation/floor changes
+the numerical curve from this separate leading reference.
+The ideal radiometer statistic is
+${\rm SNR}_{\rm cumul}^2=\sum_i{\rm SNR}_{{\rm bin},i}^2\Delta f\,t$,
+with $t={\rm SNR}_{\rm target}^2/[\sum_i{\rm SNR}_{{\rm bin},i}^2\Delta f]$.
+It requires Gaussian noise and independent frequency bins.
+The existing default computation samples300 points over
+$[0.01,10]\omega_H$ (roughly \SIrange{0.5}{507}{\giga\hertz}), not
+only the proposed \SIrange{0.5}{85}{\giga\hertz} receiver window or
+$[0.5,4]\omega_H$. Full-grid model statistics must not be silently
+assigned to either narrower band.
 
-The radiometer equation gives the statistical integration time
-$t = [{\rm SNR}_{\rm target}^2] / [\sum_i {\rm SNR}_{{\rm bin},i}^2
-\cdot \Delta f]$.
-With the realistic $\Gamma_0 \approx 0.99994$
-[Eq.~\eqref{eq:gamma0}, Lean
-\texttt{QuasiOneDReduction.greybody\_zero\_freq\_le\_one}]:
-$t_{5\sigma} < \SI{1}{\milli\second}$, essentially unchanged from the
-$\Gamma=1$ step-horizon upper bound. Even with a pessimistic
-$\Gamma = 0.01$ (two orders below the derived value), the 5$\sigma$
-integration time remains under \SI{1}{\second}. In all physically
-plausible regimes, \emph{detection is limited by systematic calibration,
-not by photon statistics} (Fig.~\ref{fig:snr}).
-
-These estimates assume the ideal radiometer equation (Gaussian noise,
-independent frequency bins). Practical limiting factors include:
-(i)~amplifier noise temperature $T_N \sim
-\SI{2}{\kelvin}$--\SI{5}{\kelvin}$ for cryogenic HEMTs at GHz frequencies,
-adding ${\sim}3\%$ to the effective noise floor at $T_{\rm amb} =
-\SI{150}{\kelvin}$ (but becoming dominant if $T_{\rm amb}$ is reduced
-toward $T_H$); (ii)~the residual frequency dependence of
-$\Gamma(\omega)$, whose deviation from $\Gamma_0$ is bounded by
-$(\omega/\omega_{\max})^2 \le 0.6\%$ at $\omega_H$ and sub-percent
-everywhere in the detection band
-(Lean \texttt{QuasiOneDReduction.quasi1D\_validity\_bound});
-(iii)~1/$f$ noise from contacts; (iv)~non-Gaussian fluctuations near
-quantum criticality. These factors may increase the effective integration
-time by orders of magnitude beyond the statistical limit, but the margin
-is large: even $10^4\times$ degradation leaves the measurement feasible
-within a single session.
+The reported $t_{5\sigma}<\SI{1}{\milli\second}$ illustration and
+under-\SI{1}{\second} estimate at supplied $\Gamma=0.01$ are ideal
+statistics, not measured sensitivity or evidence of physical feasibility.
+Even a $10^4$ statistical degradation factor supplies no systematic-error
+bound. The illustrative HEMT scale \SIrange{2}{5}{\kelvin} at
+$T_{\rm amb}=\SI{150}{\kelvin}$, transfer drift, contact $1/f$ noise and
+non-Gaussian correlations require actual characterization. The adopted
+roll-off is about $0.6\%$ at $\omega_H$ and $9.4\%$ at $4\omega_H$
+for literal $D=51/220$; a supplied quasi-1D envelope is not a proof of
+sub-percent physical error over that band. The full current/scattering,
+correlated state/noise, calibration and error-controlled nonempty-band
+construction remains BUILD, without a systematics-limited conclusion.
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig105_graphene_snr_frequency.png}
-\caption{Per-bin signal-to-noise ratio $\Delta S_I/S_{\rm thermal}$
-vs.\ frequency for the Dean bilayer nozzle (realistic
-$\Gamma_0 \approx 0.99994$, quasi-1D correction
-$\le 1.8\%$). The ratio is
-${\sim}8\times 10^{-3}$ below $\omega_H$ (approximately $T_H/2T_{\rm amb}$)
-and drops exponentially above. Detection is statistics-limited only for
-$\Gamma \lesssim 10^{-3}$.}
+\caption{Sampled ratio in the adopted corrected signal/background model.
+The separate leading Planck reference tends to
+$\Gamma_0T_H/(2T_{\rm amb})\approx8\times10^{-3}$ at low frequency;
+it is not an exact identity for a curve with corrected occupation/floor
+and frequency-dependent transmission. The cyclic marker is $f_H$.
+No physical finite-width bound, achieved sensitivity or validated
+statistics-versus-systematics threshold is established by this plot.}
 \label{fig:snr}
 \end{figure}
 
@@ -487,16 +522,19 @@ Hawking radiation in an electronic system.
 The ratio $\omega_H / \Gamma_{\rm mr} \approx 1.6$ for the Dean nozzle
 (where $\Gamma_{\rm mr} = v_F / l_{\rm mr}$ is the momentum-relaxation rate)
 indicates the Hawking modes are marginally above the dissipative floor.
-Cleaner samples ($l_{\rm mr} \sim \SI{15}{\micro\meter}$) push this to
-${\sim}5$, comfortably in the detectable regime (Fig.~\ref{fig:dissipation}).
+Cleaner samples ($l_{\rm mr} \sim \SI{15}{\micro\meter}$) give the
+illustrative ratio ${\sim}5$ (Fig.~\ref{fig:dissipation}). Exceeding unity
+is a necessary weak-loss model criterion, not a sufficient detection or
+noise-calibration condition; it supplies no physical sensitivity threshold.
 
 \begin{figure}[t]
 \includegraphics[width=\columnwidth]{../../figures/phase5w/fig103_graphene_dissipation_window.png}
 \caption{Dissipation window $\omega_H/\Gamma_{\rm mr}$ vs.\ Hawking
 temperature for three sample qualities. The Dean nozzle ($T_H \approx
 \SI{2.4}{\kelvin}$, $l_{\rm mr} = \SI{5}{\micro\meter}$) is marginally
-above the detection threshold (dashed line, ratio~$= 1$). Cleaner samples
-and shorter constrictions improve the window.}
+above the necessary weak-loss model reference (dashed line, ratio~$= 1$).
+Cleaner samples and shorter constrictions increase that ratio; the plot
+does not establish a calibrated physical detection threshold.}
 \label{fig:dissipation}
 \end{figure}
 
@@ -520,36 +558,49 @@ coincidence, since the 1+1D formula arises from a scalar sector while the
 entirely different: BEC has bulk damping ($\gamma_1$) and flow-dependent
 damping ($\gamma_2$); graphene has shear viscosity and charge conductivity.
 
-\subsection{Second-order: dramatically richer}
+\subsection{Second-order basis: outstanding construction}
 
-At second order, the BRSSS classification~\cite{BRSSS2008} adapted to 2+1D
-with charge gives approximately 9~independent coefficients (after the
-Haack-Yarom identity $2\eta\tau_\pi - 4\lambda_1 - \lambda_2 = 0$ reduces
-the tensor sector by one), compared to only 2~in 1+1D BEC. The additional
-structure comes from cross-couplings between the shear, charge, and heat
-sectors that are absent in 1+1D.
+At second order, tensor, vector and scalar structures must be
+classified in the actual charged 2+1D theory. The BRSSS
+framework~\cite{BRSSS2008} motivates that construction, but does not
+supply the charged 2+1D count used here. In particular, the
+Haack--Yarom relation is a result for a restricted holographic class
+in boundary spacetime dimension greater than three; in three
+spacetime dimensions its shear-squared traceless tensor vanishes,
+so its associated coefficient cannot be used to remove one member
+of the present roster.\footnote{Haack--Yarom, arXiv:0811.1794v1,
+Introduction, Eqs.~(6)--(9), especially the dimension restriction
+following Eq.~(9).} The earlier approximate count of nine is
+therefore not established by that reduction. Constructing the
+independent charged 2+1D basis, its integration-by-parts quotient
+and applicable KMS/positivity constraints remains BUILD.
 
-No closed-form counting formula analogous to ${\rm count}(N) =
-\lfloor(N{+}1)/2\rfloor + 1$ exists for 2+1D---one must enumerate tensor
-structures order by order.
+The scalar index formula ${\rm count}(N)=
+\lfloor(N{+}1)/2\rfloor+1$ supplies no independent physical
+2+1D classification here. The required charged tensor/vector/scalar
+structures and their relations must be constructed order by order.
 
 %% ================================================================
 \section{Wiedemann-Franz Violation}
 \label{sec:wf}
 
-The Dirac fluid near CNP exhibits a giant Wiedemann-Franz violation because
-charge and heat are carried by nearly independent channels. The Lorenz ratio
+The reported large Wiedemann--Franz violation near the charge
+neutrality point motivates a physical heat/charge response calculation.
+For comparison, the scalar ansatz used in the present algebra is
 \begin{equation}
 L = \frac{\kappa_{\rm th}}{\sigma T} = \frac{v_F^2 s^2}{\sigma_Q^2 T}
 \label{eq:lorenz}
 \end{equation}
-diverges as $n \to 0$ because $\sigma_Q$ remains finite (quantum critical)
-while the thermal conductivity $\kappa_{\rm th} \propto s^2$ grows with
-entropy density squared. Equation~\eqref{eq:lorenz} is the $n = 0$ limit;
-in practice, thermally excited carriers provide an intrinsic density
-$n_0 \sim s\sqrt{\sigma_Q}/v_F$ that regularizes the divergence, giving
-a finite but large $L/L_0$. Majumdar~\textit{et~al.}\ measured
-$L/L_0 > 200$ at the CNP~\cite{Majumdar2025}.
+where the rightmost expression is supplied, rather than derived
+from the device response matrix. At fixed positive $v_F,s,\sigma_Q,T$
+it has no density dependence and stays finite as $n\to0$.
+Finiteness of $\sigma_Q$ alone therefore proves no neutrality
+divergence or physical density regularization. Deriving the actual
+Lorenz ratio requires charge/heat current normalization, momentum
+relaxation, density/temperature/disorder dependence and contact
+conditions. Those remain BUILD. The reported measurement
+$L/L_0>200$ near CNP~\cite{Majumdar2025} is a separate experimental
+comparison, not a consequence of this scalar ansatz.
 
 In the SK-EFT framework, this two-channel structure is natural: the retarded
 Green's functions for charge and energy currents are independent, with the
@@ -563,31 +614,47 @@ input.
 \section{Strong-Coupling Regime and Viscosity Bound}
 \label{sec:viscosity}
 
-The KSS viscosity bound $\eta/s \geq \hbar/(4\pi k_B)$~\cite{KSS2005}
-is universal for quantum fluids. Majumdar~\textit{et~al.}\ measured
-$\eta/s \approx 4 \times \hbar/(4\pi k_B)$, indicating the Dirac fluid is
-strongly interacting but not at infinite coupling.
+The KSS value $\hbar/(4\pi k_B)$~\cite{KSS2005} is a useful
+strong-coupling comparison reference under its theory assumptions,
+not a universal lower bound for all quantum fluids.
+Higher-derivative holographic examples already violate that
+unqualified assertion.\footnote{Brigante et al.,
+arXiv:0712.0805, abstract; this is a counterexample to universality,
+not a viscosity measurement or model for graphene.}
+The reported $\eta/s\approx4\times\hbar/(4\pi k_B)$ comparison
+does not alone calibrate bilayer transport or determine its coupling
+regime; the actual state, constitutive matching and errors remain owed.
 
-The EFT expansion parameter for the graphene Dirac fluid is
-$\omega l_{\rm ee} / c_s \sim k_B T \cdot l_{\rm ee} / (\hbar c_s)$.
-At $T = \SI{100}{\kelvin}$: $l_{\rm ee} \sim \SI{76}{\nano\meter}$,
-$c_s \sim \SI{710}{\kilo\meter/\second}$, giving the expansion parameter
-${\sim}0.1$ at frequencies $\omega \sim \omega_H$. The derivative expansion
-is marginally convergent, with $\delta_{\rm disp} \approx -3\%$ at the Dean
-nozzle geometry.
+The frequency ratio is $\omega l_{\rm ee}/c_s$, whereas the adopted
+horizon parameter is $D=\kappa l_{\rm ee}/c_s$. At
+$\omega=\omega_H=\kappa/(2\pi)$ the former is $D/(2\pi)$.
+Substituting $\omega=k_BT/\hbar$ instead selects that temperature's
+thermal frequency; ambient $T=\SI{100}{\kelvin}$ is not the Hawking
+frequency. The illustrative $l_{\rm ee}\sim\SI{76}{\nano\meter}$,
+$c_s\sim\SI{710}{\kilo\meter/\second}$ use their own model convention,
+not proof of a ${\sim}0.1$ Hawking-frequency ratio. The adopted Dean law
+gives $\delta_{\rm disp}\approx-3\%$; size alone proves no physical
+convergence or per-order remainder.
 
-For monolayer constrictions narrower than ${\sim}\SI{50}{\nano\meter}$,
-$D > 1$ and the perturbative expansion breaks down. This sets a
-\emph{minimum constriction length} for reliable EFT predictions, formally
-proved in Lean~4 (\texttt{eft\_validity\_bound}, \texttt{eft\_expansion\_perturbative}).
+For the supplied monolayer constrictions narrower than
+${\sim}\SI{50}{\nano\meter}$, $D>1$ fails the retained model criterion;
+all platforms and numerical results remain. The actual
+\texttt{eft\_validity\_bound} and \texttt{eft\_expansion\_perturbative}
+compare the defined quadratic scalar under supplied $D$ hypotheses.
+They derive no higher-coefficient sequence, reliable minimum physical
+device length or observable error. Actual action/basis, transport/state
+and controlled error at each requested finite order remain BUILD.
 
 %% ================================================================
 \section{Formal Verification}
 \label{sec:lean}
 
-All results in this paper are formally verified in the Lean~4 proof
-assistant, building on the Mathlib library. Table~\ref{tab:lean} summarizes
-the new modules.
+The Lean~4 formalization checks the stated scalar and algebraic formulas
+and bounds, building on Mathlib. It does not establish the target bilayer
+electrical-current coupling, contact/channel normalization, microscopic
+route equivalence or calibrated readout. Table~\ref{tab:lean} summarizes
+the modules; these checks do not turn adopted response inputs into a
+physical derivation.
 
 \begin{table}[t]
 \caption{Lean~4 formalization for graphene SK-EFT (Phase~5w).}
@@ -599,9 +666,9 @@ Module & Theorems & Key result \\
 \texttt{DiracFluidMetric} & 9 & 3$\times$3 metric, block-diag \\
 \texttt{GrapheneHawking} & 6 & $T_{\rm eff}$ positivity, EFT bound \\
 \texttt{DiracFluidSK} & 9 & Transport counting, WF, KSS \\
-\texttt{GrapheneNoiseFormula} & 8 & Noise PSD, FDT, greybody \\
+\texttt{GrapheneNoiseFormula} & 8 & Adopted PSD/greybody scalar identities \\
 \texttt{QuasiOneDReduction} & 12 & Greybody $\Gamma_0$, quasi-1D bound \\
-\texttt{DiracFluidWKB} & 14 & Subluminal, transverse-mode gap, sum-over-channels \\
+\texttt{DiracFluidWKB} & 14 & Speed ordering, supplied channel bounds/algebra \\
 \hline
 Total new & 58 & Zero sorry \\
 Reused (1+1D) & 109 of 119 available & 92\% unmodified \\
@@ -633,16 +700,25 @@ $T_{\rm amb} \lesssim \SI{150}{\kelvin}$.
 nozzle throat using Johnson noise thermometry
 (\SIrange{0.5}{85}{\giga\hertz}).
 
-\item \textbf{Analysis:} Subtract the frequency-independent thermal
-background $S_{\rm thermal} = 4k_B T \sigma_Q$. The residual should follow
-a Planck distribution at $T_H \approx \SI{2.4}{\kelvin}$ (bilayer).
+\item \textbf{Analysis:} Calibrate and subtract the adopted white
+background $S_{\rm thermal}=4k_BT\sigma_Q$, then fit the actual
+raw-PSD template with transmission, $T_{\rm eff}$, multiplier and
+floor. A Planck-occupation test additionally divides out the calibrated
+$2\hbar\omega\sigma_Q\Gamma(\omega)$ response and treats the
+separate floor and normalization explicitly. The leading
+$T_H\approx\SI{2.4}{\kelvin}$ is not the corrected raw PSD's
+Planck temperature.
 
-\item \textbf{Integration:} Statistical limit $< \SI{1}{\second}$ for
-$5\sigma$ ($\Gamma \geq 0.01$); practical time dominated by systematic
-calibration.
+\item \textbf{Integration:} Ideal model statistical estimate
+$< \SI{1}{\second}$ for $5\sigma$ ($\Gamma \geq 0.01$), subject to the
+Gaussian independent-bin estimator and adopted response assumptions above.
+Practical integration time and the relative statistical/systematic limits
+require actual transfer, background and calibration-error evidence.
 
-\item \textbf{Verification:} Vary the nozzle geometry (bias voltage) and
-confirm $T_H \propto \kappa \propto 1/L$.
+\item \textbf{Verification:} Determine the actual sonic gradient
+while changing bias or geometry and compare a calibrated spectrum.
+$T_H\propto\kappa$ is the reference relation; $\kappa\propto1/L$
+requires an extra fixed-profile scaling assumption, not bias alone.
 \end{enumerate}
 
 The Kim group's noise thermometer ($\SI{5.5}{\milli\kelvin}$ sensitivity)
@@ -657,25 +733,35 @@ horizon, Majumdar~\textit{et~al.}'s precision transport data, and the
 maturity of the SK-EFT Lean framework---creates a concrete opportunity for
 an observation of analog Hawking radiation in an electronic system.
 The predicted temperature $T_H \approx \SI{2.4}{\kelvin}$ is nine orders
-of magnitude above BEC, the EFT is well-controlled ($D = 0.23$), and the
-corrected noise formula---derived from both Keldysh FDT and
-Landauer-B\"uttiker with Bogoliubov mixing---gives a signal roughly 1\%
-of the thermal background, making detection statistics-limited only for
-greybody factors below ${\sim}10^{-3}$. Relative to BEC, graphene
-offers dramatically higher $T_H$ and subluminal dispersion but has a
-marginal dissipation window ($\omega_H/\Gamma_{\rm mr} \approx 1.6$) and
-a greybody factor $\Gamma_0 \approx 0.99994$ derived in closed form
+of magnitude above BEC, the adopted parameter is $D = 0.23$, and the
+adopted noise response---motivated by Keldysh FDT and
+Landauer-B\"uttiker/Bogoliubov analogies---gives a modeled signal roughly 1\%
+of the thermal background. Its ideal radiometer estimates assume Gaussian
+noise, independent frequency bins, the adopted electrical response and a
+specified bandwidth; they supply no calibrated statistics-versus-systematics
+boundary. Relative to BEC, the supplied graphene inputs give a much higher
+illustrative $T_H$. Subluminal collective dispersion is a separate assumed
+model whose physical bilayer validity and error regime remain to be derived.
+The model also has a marginal dissipation ratio
+($\omega_H/\Gamma_{\rm mr} \approx 1.6$) and
+an adopted infrared scalar $\Gamma_0 \approx 0.99994$
 [Eq.~\eqref{eq:gamma0}] (Table~\ref{tab:platforms}); the
-two platforms are complementary rather than competing.
+two platforms are complementary rather than competing. A physical bilayer
+current/noise kernel, independently normalized contacts and circuit transfer,
+the two microscopic derivations with their agreement, and calibrated
+transmission/background remain required before these model statistics
+can establish a usable detection band or sensitivity.
 
-The deeper theoretical finding is that for graphene, the \emph{dispersive}
-correction dominates the \emph{dissipative} correction by 11~orders of
-magnitude. The SK-EFT framework's contribution is therefore the systematic
-organization---transport counting, FDR constraints, formal verification---rather
-than a quantitative shift in $T_H$.  The 2+1D transport classification
-reveals a dramatically richer structure than 1+1D (${\sim}9$ coefficients at
-second order vs.\ 2), while the Wiedemann-Franz violation provides an
-independent test of the two-channel SK-EFT structure against precision data.
+The adopted numerical models give dissipative $+6.5\%$ and dispersive
+$-2.8\%$ terms at the stated inputs, leaving $+3.7\%$. They do not
+support the old claim of dispersive dominance by11 orders of magnitude;
+that comparison used the dimensionally incorrect damping scale. The full
+quadratic dispersive law and bilayer viscosity/current matching remain
+constructive obligations. The charged 2+1D second-order basis
+and its independence, integration-by-parts and KMS/positivity analysis
+remain BUILD; no approximate nine-coefficient classification is
+established here. The stated first-order roster and the reported
+Wiedemann--Franz measurements do not establish the physical noise response.
 
 To our knowledge, no existing program combines systematic derivative
 expansion (SK-EFT), electronic analog gravity predictions, and
@@ -686,10 +772,11 @@ yield the device-specific noise spectrum predictions needed for
 experimental design.
 
 \begin{acknowledgments}
-Computation pipeline formally verified with 58~new Lean~4 theorems
-(zero sorry), building on 109~reused theorems from the 1+1D BEC
-framework. All numerical predictions generated by a 103-test
-Python pipeline.
+The historical source inventory reports58~new Lean~4 scalar/algebraic
+theorems (zero sorry) and109~reused1+1D results, alongside Python
+computational illustrations. No test cardinality is asserted. The
+historical theorem inventory is not a fresh build/test receipt, physical
+response derivation or executed-notebook/experimental qualification.
 \end{acknowledgments}
 
 \begin{thebibliography}{99}
@@ -736,7 +823,9 @@ Python pipeline.
 
 \bibitem{AnantramDatta1996} M.~P.~Anantram and S.~Datta, Phys. Rev. B \textbf{53}, 16390 (1996).
 
-\bibitem{AndersonBFP2013} P.~R.~Anderson, R.~Balbinot, A.~Fabbri, and R.~Parentani, Phys. Rev. D \textbf{87}, 124018 (2013).
+\bibitem{AndersonBFP2014Graybody} P.~R.~Anderson, R.~Balbinot, A.~Fabbri, and R.~Parentani,
+\emph{Gray-body factor and infrared divergences in 1D BEC acoustic black holes},
+Phys. Rev. D \textbf{90},104044 (2014), arXiv:1404.3224v3.
 
 \end{thebibliography}
 
