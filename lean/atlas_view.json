@@ -5119,7 +5119,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.BeliefPropagation.BPRankCert.var_gt",
@@ -5128,7 +5128,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.BeliefPropagation.IsBPFixedPoint_iff_all_iterates_invariant",
@@ -5266,13 +5266,31 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.BeliefPropagation.bpVertexRank_lt",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.bp_converges_on_forest",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.BeliefPropagation.bp_converges_on_ranked_acyclic",
       "module": "SKEFTHawking.BeliefPropagation",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.BeliefPropagation.bp_converges_on_star",
@@ -5282,6 +5300,33 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.convergenceHorizon_forest_empty_factors",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.convergenceHorizon_forest_empty_variables",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.convergenceHorizon_forest_le",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.BeliefPropagation.factorBelief_nonneg_of_inputs_nonneg",
@@ -5309,6 +5354,123 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_acyclic",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_all_nonincident_ranks",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_constructed_horizon",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_constructed_nonincident_rank",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_horizon",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_nonincident_rank",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_not_fixed_at_four",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_reachable_from_right",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_sweep_five",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_sweep_four",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_sweeps_through_four",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_two_strict_fields",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.fiveNodePath_update_chain",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.BeliefPropagation.flattenMsg_bpUpdate",
@@ -5347,6 +5509,51 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.BeliefPropagation.forestBranch_of_not_adj",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.forestBranch_ssubset_next",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.forestBranch_subset_next",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.forestEdgeRank_add_one_le",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.forestEdgeRank_lt_next",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.BeliefPropagation.fourCycleFree_of_pairwise_factors",
       "module": "SKEFTHawking.BeliefPropagation",
       "atlas_kind": "TRUE",
@@ -5362,11 +5569,29 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.BeliefPropagation.isAcyclicFactorGraph_imp_fourCycleFree",
       "module": "SKEFTHawking.BeliefPropagation",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.isAcyclicFactorGraph_of_bpRankCert",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.isAcyclic_of_strict_edgeRank",
+      "module": "SKEFTHawking.BeliefPropagationForest",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -5381,6 +5606,42 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.mem_forestBranch_self",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.no_bpRankCert_of_incidence_cycle",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.nonempty_bpRankCert_iff_acyclic",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.BeliefPropagation.not_mem_forestBranch_of_adj",
+      "module": "SKEFTHawking.BeliefPropagationForest",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.BeliefPropagation.rankLocalStep_converges",
@@ -211401,7 +211662,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 22851,
+    "theorem_nodes": 22880,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -211412,7 +211673,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 398,
-      "TRUE:PROVED": 22453,
+      "TRUE:PROVED": 22482,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
