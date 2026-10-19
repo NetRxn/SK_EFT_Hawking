@@ -143,10 +143,10 @@ inflection point. Above $G_c$: Mexican-hat shape with nontrivial minimum
 
 \section{Explicit Gap Equation: NJL Integral Formulation}
 
-The V$_{\rm eff}$ treatment above determines $G_c$ but does not yield the
-self-consistent gap equation directly. We now derive this by rewriting the
-stationarity condition $\partial V_{\rm eff}/\partial C = 0$ as a fixed-point
-equation in the NJL sense.
+Consider a separate NJL fixed-point model. It shares $G_c$ with the
+regulated scalar ansatz, but it is not a rewriting of the stationarity
+condition for Eq.~\eqref{eq:veff}. The microscopic ADW identification
+of either scalar model remains uncomputed.
 
 Define the one-loop integral (density of states $c_4 = 1/(4\pi^2)$):
 \begin{equation}
@@ -155,7 +155,17 @@ I(\Delta) = \frac{c_4}{2}\!\left[\Lambda^2 - \Delta^2 \ln\!\left(1 + \frac{\Lamb
 \end{equation}
 The gap equation is then $\Delta = G \cdot N_f \cdot \Delta \cdot I(\Delta)$,
 with critical coupling $G_c = 1/(N_f \cdot I(0)) = 8\pi^2/(N_f \Lambda^2)$,
-matching the V$_{\rm eff}$ result~(\ref{eq:veff}) exactly.
+matching only the threshold of Eq.~\eqref{eq:veff}. For $\Delta=C>0$,
+\begin{equation}
+ \frac{V_{\rm eff}'(C)}{C}-\left[\frac1G-N_fI(C)\right]
+ =\frac{N_fC^2}{8\pi^2}
+ \left[\ln(1+u)-\frac{u}{1+u}\right]>0,
+ \qquad u=\frac{\Lambda^2}{C^2}.
+\end{equation}
+Thus their nonzero roots differ. Writing $r=G/G_c$ and
+$L(z)=z\ln(1+1/z)$, the NJL
+root solves $L(z_N)=1-1/r$ and is strictly larger than the regulated
+stationary root at fixed $r>1$.
 
 This integral formulation provides additional structure:
 \begin{itemize}
@@ -167,29 +177,49 @@ This integral formulation provides additional structure:
   from $\Delta = 0$ (second-order transition).
 \end{itemize}
 
-The Aristotle theorem prover disproved the naive claim $\Delta^*(G) \leq \Lambda$
-via counterexample: for $G = 1/(c_4(1 - \ln 2)/2)$, $N_f = 1$, $\Lambda = 1$,
-the gap $\Delta = 1$ satisfies the fixed-point equation, showing the solution
-can reach the cutoff. This means the gap equation is valid as an algebraic
-self-consistency condition, but $\Delta > \Lambda$ signals that the one-loop
-truncation is no longer reliable---the physics requires UV completion.
+For $G=1/[c_4(1-\ln2)/2]$, $N_f=1$, $\Lambda=1$, the NJL
+fixed point $\Delta=1$ reaches the cutoff. This equality refutes the
+commented strict target $\Delta^*<\Lambda$ in
+\texttt{TetradGapEquation.lean}; equality alone does not refute a different,
+non-strict $\Delta^*\leq\Lambda$ bound. Separately, since $L$ increases
+from zero to one, its positive root diverges as $r\to\infty$; it crosses
+the cutoff at $r=1/(1-\ln2)$ and exceeds it at larger coupling. These are
+conditional algebraic statements, not physical reliability beyond the UV cutoff.
+
+
+For $z=(\Delta/\Lambda)^2$, the normalized positive kernel is
+$B(z)=I/I(0)=\int_0^1 u/(u+z)\,du$. For $r>1$,
+$\max(0,r/2-1)<z_*<r/2$; choosing the wider upper bracket $z=r$
+gives $rB(r)-1<-1/2$. The numerical solver checks finite endpoint
+signs and bisects $\ln z$, requiring both a logarithmic equation residual
+and an interval-width budget. Unresolved near-critical inputs, stagnation,
+nonconvergence and unrepresentable positive outputs raise failures.
+The represented critical coefficient defines the routine's binary equality
+convention; these numerical policies do not certify the exact threshold
+side for arbitrarily close real inputs or physical reliability above $\Lambda$.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_tetrad_gap_curve.png}
-\caption{Gap solution $\Delta^*/\Lambda$ vs.\ coupling ratio $G/G_c$
-from the NJL integral formulation. The nontrivial branch emerges
-continuously at $G_c$ (second-order transition). For $G/G_c \gg 1$,
-the solution approaches $\Lambda$.}
+\caption{Numerical roots of the scalar NJL model, $\Delta/\Lambda$
+vs.\ $G/G_c$, with $\Lambda=\pi$, $N_f=2$ and 400 source samples through
+$r=4$. The exact branch emerges continuously at $G_c$, exceeds the cutoff
+at sufficiently large coupling and has no finite cutoff asymptote.
+The numerical routine uses a checked logarithmic bracket and explicit
+convergence or failure budgets; a finite result is not an unrestricted
+accuracy certificate. Numerical continuation is not physical UV validation
+or a microscopic ADW derivation.}
 \label{fig:gap_curve}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_tetrad_gap_integral.png}
-\caption{Gap integral $I(\Delta)/I(0)$ vs.\ $\Delta/\Lambda$.
-Strictly decreasing from $I(0) = c_4 \Lambda^2/2$ to zero as
-$\Delta \to \infty$. The self-consistency condition
+\caption{Gap integral $I(\Delta)$ vs.\ $\Delta/\Lambda$ at $\Lambda=\pi$.
+The exact separate NJL integral decreases from $I(0)=c_4\Lambda^2/2$
+to zero as $\Delta\to\infty$; the producer samples a ratio-based
+evaluator with stable small- and large-gap branches and explicit
+representability failures. The self-consistency condition
 $G \cdot N_f \cdot I(\Delta^*) = 1$ fixes the gap.}
 \label{fig:gap_integral}
 \end{figure}

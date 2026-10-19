@@ -62,7 +62,7 @@ class TestGapCurve:
 
 
 class TestCrossValidation:
-    """Tests that integral and V_eff formulations agree."""
+    """Threshold coefficient comparison only, not full-model equivalence."""
 
     def test_Gc_match(self):
         """G_c from both formulations must match exactly."""
@@ -190,3 +190,61 @@ class TestSusceptibility:
         chi4 = susceptibility_from_correlator(C, L=4)
         chi8 = susceptibility_from_correlator(C, L=8)
         assert abs(chi8 / chi4 - 8**4 / 4**4) < 0.01
+
+
+class TestGapCurveNumericalContract:
+    def test_zero_singleton_and_constant_ranges_are_valid(self):
+        single = compute_gap_curve(1.0, G_min_ratio=0, G_max_ratio=10, n_points=1)
+        assert single.G_values.tolist() == [0.0]
+        assert single.Delta_values.tolist() == [0.0]
+        constant = compute_gap_curve(1.0, G_min_ratio=2, G_max_ratio=2, n_points=3)
+        assert np.all(constant.G_values == constant.G_values[0])
+        assert np.all(constant.Delta_values == constant.Delta_values[0])
+        assert constant.Delta_values[0] > 0
+
+    def test_wrapper_reaches_true_above_cutoff_witness(self):
+        ratio = 1 / (1 - 4 * np.log(5 / 4))
+        result = compute_gap_curve(1.0, N_f=2, G_min_ratio=ratio, G_max_ratio=ratio, n_points=1)
+        assert result.Delta_values[0] == pytest.approx(2, rel=2e-10)
+        full = compute_gap_curve(np.pi, G_min_ratio=0, G_max_ratio=10, n_points=12)
+        assert full.Delta_values[0] == 0
+        assert full.Delta_values[-1] > full.Lambda
+
+    @pytest.mark.parametrize("kwargs", [
+        {"n_points": 0}, {"n_points": True}, {"n_points": 1.5},
+        {"G_min_ratio": -1}, {"G_max_ratio": np.inf},
+        {"G_min_ratio": 3, "G_max_ratio": 2}, {"G_min_ratio": True},
+    ])
+    def test_invalid_curve_domains(self, kwargs):
+        with pytest.raises(ValueError):
+            compute_gap_curve(1.0, **kwargs)
+
+    def test_canonical_refusal_is_not_replaced_with_zero(self, monkeypatch):
+        import src.adw.tetrad_gap_solver as solver
+        def refused(*args, **kwargs):
+            raise ArithmeticError("controlled canonical refusal")
+        monkeypatch.setattr(solver, "tetrad_gap_solution", refused)
+        with pytest.raises(ArithmeticError, match="controlled canonical refusal"):
+            solver.compute_gap_curve(1.0, n_points=1)
+
+
+class TestGapCurveOriginalScalarAdmission:
+    @pytest.mark.parametrize("sign", [1, -1])
+    def test_original_rational_ratio_is_refused_not_replaced_by_zero(self, sign):
+        from fractions import Fraction
+        epsilon = Fraction(sign, 10**400)
+        # Small cutoff gives a large finite Gc; the exact endpoint product
+        # can be representable even though epsilon itself is not binary64.
+        with pytest.raises(ValueError):
+            compute_gap_curve(1e-150, G_min_ratio=epsilon, G_max_ratio=epsilon, n_points=1)
+
+    def test_actual_wrapper_preserves_true_zeros_and_positive_subnormal_ratio(self):
+        from fractions import Fraction
+        for zero in (0.0, -0.0, Fraction(0, 1)):
+            result = compute_gap_curve(1.0, G_min_ratio=zero, G_max_ratio=zero, n_points=1)
+            assert result.G_values.tolist() == [0.0]
+            assert result.Delta_values.tolist() == [0.0]
+        smallest = np.nextafter(0.0, 1.0)
+        result = compute_gap_curve(1e-150, G_min_ratio=smallest, G_max_ratio=smallest, n_points=1)
+        assert np.isfinite(result.G_values[0]) and result.G_values[0] > 0
+        assert result.Delta_values[0] == 0  # Genuine subcritical root, not zeroed input.
