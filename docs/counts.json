@@ -1,12 +1,12 @@
 {
-  "generated": "2026-10-19T12:06:35.549224",
+  "generated": "2026-10-19T15:06:48.876507",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 53469,
-    "theorems_total": 30919,
-    "theorems_substantive": 30893,
+    "total_declarations": 53530,
+    "theorems_total": 30948,
+    "theorems_substantive": 30922,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 30824,
+    "theorems_kernel_substantive": 30853,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2151,
+    "modules": 2152,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -56,6 +56,7 @@
       "SKEFTHawking.BdGHamiltonian",
       "SKEFTHawking.BdGHamiltonianNbRe",
       "SKEFTHawking.BeliefPropagation",
+      "SKEFTHawking.BeliefPropagationForest",
       "SKEFTHawking.BlochBundle",
       "SKEFTHawking.BlockSignature",
       "SKEFTHawking.BocksteinIntegralLift",
@@ -2169,7 +2170,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 15453,
+    "definitions": 15467,
     "structures": 505,
     "instances": 1028,
     "inductives": 115,
