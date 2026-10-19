@@ -10263,6 +10263,21 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-08-12-substrate-lane-refile:substrate-lane-refile:1",
+      "status": "fixed",
+      "evidence": "Original critical NJL cutoff-cap mismatch repaired in ce4e0b28: checked uncapped roots or explicit refusal, all consumer propagation and residual regressions, independent numerical/native/whole12/whole18 reviews. Exact-real critical/cutoff/bracket bridge and declared complete120-case Verify support this scoped fix. See papers/AutomatedReviews/2026-10-19-njl-root-bracket-repair/SCOPED_REVIEW.md. Full40-failure/CI-floor/CI_SKIP/tree merge gates remain FAILED; no physical ADW, full IEEE, main or bundle acceptance.",
+      "superseded_by": null,
+      "date": "2026-10-19",
+      "commit": "ce4e0b2821d34e28883894cc1e12f033e99ac9cc",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "declared": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-19"
+      }
     }
   ]
 }
