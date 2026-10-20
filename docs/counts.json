@@ -1,6 +1,6 @@
 {
-  "generated": "2026-09-09T15:02:39.247080",
-  "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
+  "generated": "2026-10-20T09:15:27.739259",
+  "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/lean/lean_deps.json",
   "lean": {
     "total_declarations": 41034,
     "theorems_total": 22851,
@@ -2080,7 +2080,7 @@
   "python": {
     "python_modules": 138,
     "test_files": 205,
-    "pytest_cases": 6891,
+    "pytest_cases": 6973,
     "notebooks": 91,
     "papers": 42,
     "figures": 170

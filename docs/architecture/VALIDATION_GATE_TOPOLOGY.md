@@ -98,7 +98,7 @@ What matters here is the gap between a gate's *name* and its *computation*.
 | `CitationIntegrity` | 1 | ✅ | `\bibitem{}` keys ⊆ `PrimarySource` nodes. **Registry coverage only** — no DOI/title/author match; `READINESS_GATES.md` says the same and routes each content claim to the check that does verify it |
 | `CrossPaperConsistency` | 1 | ✅ | `CONTRADICTS` edges (**no emitter**) + cross-paper `REPORTS` value disagreement |
 | `ParameterProvenance` | 1 | ✅ | every `DEPENDS_ON → param:*` has `human_verified_date` |
-| `ComputationCorrectness` | 1 | ✅ | grounded formulas have a non-`{bounds,unknown}` `VERIFIES` edge |
+| `ComputationCorrectness` | 1 | ✅ | ADR-009 D6 specifies structural public-function extraction and resolved Formula/PythonTest supported-kind coverage; incomplete declarations block unmeasured, undeclared populations remain open/unmeasured. Design accepted; implementation under review, not numerical execution or physical validation |
 | `LeanProofSubstance` | 1 | ✅ | cited theorems ∌ `PlaceholderMarker` |
 | `AssumptionDisclosure` | 1 | ✅ | each consumed hypothesis appears as a lowercased substring of the tex (heuristic by design) |
 | `NarrativeGrounding` | 1 | ✅ | every `interesting` ProseClaim has ≥1 `SUPPORTS` (**no emitter**) — so it blocks only papers carrying such a claim and passes vacuously for the rest |
@@ -114,10 +114,15 @@ AST and fails on any dead type not disclosed there.
 
 ⚠️ **"can block" here means the mechanized check, not the policy.** `NumericalFreshness`
 and `FirstClaimVerification` have `passed` and `needs-recheck` as their only reachable
-states, so neither can fail `readiness_submission_gate`, which counts only P1-not-passed
-and P2-`blocked`. The submission *policy* in `READINESS_GATES.md` is stricter — it requires
-GREEN, which a `needs-recheck` gate withholds — and that stricter rule is enforced by the
-operator, not the suite. Both documents state this gap; neither should be read alone.
+states, so neither can fail `readiness_submission_gate`, which rejects `blocked`
+gates at either priority. Outstanding P1 states can remain mechanically advisory.
+A P1 G4 `open`/`measured=False` is YELLOW, not evidence that all P1 passed.
+The submission *policy* in `READINESS_GATES.md` still requires GREEN; the operator
+enforces that stricter rule. ADR-009 D6 specifies correction of the existing consumer's
+misleading YELLOW text and reports serialized G4 measurement/notes without changing
+classification, partition buckets or the check's verdict. Its source/test plan
+covers the actual producer→evaluator→serialization→consumer path; no new gate or
+independent population registry is introduced.
 
 An evaluator that **raises** records `state='blocked'`, not `open`. This matters because
 `open` aggregates to YELLOW: a crashed gate recorded as `open` is indistinguishable from a
@@ -165,6 +170,19 @@ registry and the kernel no-go registry.
 Until 2026-08-08 neither was true: nothing gated on the two fields and nothing wrote `green` to
 any `stage*_status`, so every green was a hand edit, which is how a bundle sat at
 `stage13_status: green` with `stage9_status: not_started`.
+
+**Inventory portability repair — whole measured architecture checkpoint accepted.** The existing
+`architecture_inventory.py` collector now queries Git-resolved, checkout-anchored
+metadata with an independent target administrative identity and stable logical origins;
+the [accepted design](../superpowers/specs/2026-10-20-architecture-inventory-worktree-design.md)
+retains its complete test/control contract. Configuration and on-disk presence remain
+distinct from runtime loading/enforcement; no private hook body is read or executed.
+Whole design/intent and independent source reviews accepted their bounded scopes.
+ROOT established the reviewed canonical baseline; both actual production-reader
+fault controls passed red/restore-green, and the full inventory module passed.
+Whole actual-evidence review accepted this bounded checkpoint. Current complete
+delivery qualification still precedes shipping/closure.
+
 
 ## 6. Field ownership — who writes what
 

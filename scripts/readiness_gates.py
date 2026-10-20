@@ -24,7 +24,8 @@ Gates (priority order — P1 before P2):
    10. FirstClaimVerification  — "first in proof assistant" ledger-backed
    11. FixPropagation          — ReviewFindings fixed/propagated
 
-Paper aggregate: red if any P1 blocked, yellow if any P2 open, green otherwise.
+Paper aggregate: red if any gate is blocked; other outstanding states can be
+yellow/advisory. Human submission requires all gates passed (GREEN).
 
 The module is self-contained: takes a graph dict produced by
 `build_graph.build_graph_json()` and returns a list of ReadinessGate node
@@ -424,112 +425,105 @@ def _eval_parameter_provenance(paper: dict, idx: GraphIndex) -> GateResult:
 
 
 def _eval_computation_correctness(paper: dict, idx: GraphIndex) -> GateResult:
-    """Gate 4 (P1): ComputationCorrectness — the k_H² failure mode.
+    """Gate 4: declared Formula coverage through typed supported test edges.
 
-    For each Formula this paper GROUNDED_IN, check the Formula's
-    incoming VERIFIES edges. If NO test has test_kind ∈ {golden,
-    identity, roundtrip}, and it has only bounds-only coverage, block
-    the gate.
+    This is static coverage, not fresh execution or numerical/physical validation.
+    An incomplete target population is blocked and unmeasured; an undeclared
+    population is open and unmeasured. Complete negative coverage is measured.
     """
     paper_key = paper['id'].replace('paper:', '', 1)
     r = GateResult(gate='ComputationCorrectness', paper=paper_key, priority=1)
 
-    # Formulas this paper depends on: follow CLAIMS→PaperClaim→GROUNDED_IN→Formula
     formula_ids: set[str] = set()
     for claim_edge in idx.outgoing(paper['id'], 'CLAIMS'):
-        claim_id = claim_edge['target']
-        for ge in idx.outgoing(claim_id, 'GROUNDED_IN'):
-            if ge['target'].startswith('formula:'):
-                formula_ids.add(ge['target'])
+        for edge in idx.outgoing(claim_edge['target'], 'GROUNDED_IN'):
+            if edge['target'].startswith('formula:'):
+                formula_ids.add(edge['target'])
+    for name in paper.get('meta', {}).get('formulas', []):
+        formula_ids.add(f'formula:{name}')
 
-    # Also include formulas listed in the paper's meta['formulas']
-    for f_name in paper.get('meta', {}).get('formulas', []):
-        formula_ids.add(f'formula:{f_name}')
-
-    bounds_only: list[str] = []
-    no_tests: list[str] = []
-    strong: list[str] = []
-    # ⚠️ Formulas the paper names that are NOT IN THE GRAPH are dropped by the
-    # `continue` below. They must be COUNTED, not silently skipped: the evidence
-    # line reported `len(formula_ids)` as the number examined while the three
-    # buckets summed to fewer, so the gate asserted test coverage of formulas it
-    # had never looked at. A self-refuting evidence string ("6 formulas ... 1
-    # strong, 0 bounds-only, 0 no tests") is the only thing that made it visible.
-    absent: list[str] = []
-    for fid in formula_ids:
-        if fid not in idx.by_id:
+    absent, wrong_type, strong, insufficient, no_valid_test = [], [], [], [], []
+    for fid in sorted(formula_ids):
+        node = idx.by_id.get(fid)
+        if node is None:
             absent.append(fid)
             continue
-        v_edges = [e for e in idx.incoming(fid, 'VERIFIES')]
-        if not v_edges:
-            no_tests.append(fid)
+        if node.get('type') != 'Formula':
+            wrong_type.append(fid)
             continue
-        kinds = {e.get('test_kind', 'unknown') for e in v_edges}
-        if kinds - {'bounds', 'unknown'} == set():
-            bounds_only.append(fid)
-        else:
+        valid_edges = [
+            edge for edge in idx.incoming(fid, 'VERIFIES')
+            if idx.by_id.get(edge['source'], {}).get('type') == 'PythonTest'
+        ]
+        if any(edge.get('test_kind') in ('golden', 'identity', 'roundtrip')
+               for edge in valid_edges):
             strong.append(fid)
+        elif valid_edges:
+            insufficient.append(fid)
+        else:
+            no_valid_test.append(fid)
 
-    # The four buckets now partition `formula_ids` exactly: strong + bounds_only
-    # + no_tests + absent == len(formula_ids). If that ever stops holding, the
-    # line is lying again.
-    assert len(strong) + len(bounds_only) + len(no_tests) + len(absent) == len(formula_ids)
+    assert sum(map(len, (absent, wrong_type, strong, insufficient, no_valid_test))) == len(formula_ids)
     r.evidence.append(
-        f'{len(formula_ids)} formulas grounding paper claims '
-        f'({len(strong)} with golden/identity/roundtrip, '
-        f'{len(bounds_only)} bounds-only, {len(no_tests)} no tests, '
-        f'{len(absent)} NOT IN GRAPH — not examined)'
+        f'{len(formula_ids)} declared formulas: {len(strong)} supported, '
+        f'{len(insufficient)} valid but insufficient, {len(no_valid_test)} no valid test, '
+        f'{len(absent)} absent, {len(wrong_type)} wrong type'
     )
-    if absent:
-        r.evidence.append(
-            f'⚠️ {len(absent)} named formula(s) absent from the graph, so this '
-            f'gate says NOTHING about their test coverage: '
-            f'{", ".join(sorted(absent)[:5])}'
-            + (' …' if len(absent) > 5 else '')
-        )
+    # Keep complete identity lists here; to_node_payload owns the single display cap.
+    for label, members in (('supported', strong),
+                           ('insufficient test kind', insufficient),
+                           ('no valid PythonTest', no_valid_test),
+                           ('absent Formula', absent),
+                           ('wrong node type', wrong_type)):
+        r.evidence.extend(f'{label}: {fid}' for fid in members)
 
-    # R-06 WARN: surface formulas this paper grounds on whose Lean grounding does
-    # NOT resolve to a real theorem (graph verification 'unverified') or is only a
-    # definitional record — the honest-label distinction. This is advisory (it does
-    # not change the test-coverage blocking semantics above) but makes an
-    # unresolved formula mapping visible instead of silently accepted.
     unresolved_grounding = sorted(
-        fid.replace('formula:', '', 1)
-        for fid in formula_ids
-        if fid in idx.by_id and idx.by_id[fid].get('verification') == 'unverified'
+        fid.replace('formula:', '', 1) for fid in formula_ids
+        if idx.by_id.get(fid, {}).get('type') == 'Formula'
+        and idx.by_id[fid].get('verification') == 'unverified'
     )
     definitional_grounding = sorted(
-        fid.replace('formula:', '', 1)
-        for fid in formula_ids
-        if fid in idx.by_id
+        fid.replace('formula:', '', 1) for fid in formula_ids
+        if idx.by_id.get(fid, {}).get('type') == 'Formula'
         and idx.by_id[fid].get('verification') == 'definitional-record'
     )
     if unresolved_grounding:
         r.evidence.append(
             f'WARN: {len(unresolved_grounding)} grounding formula(s) have no '
-            f'resolving Lean theorem (unverified): '
-            f'{", ".join(unresolved_grounding[:10])}'
+            f'resolving Lean theorem (unverified): {", ".join(unresolved_grounding)}'
         )
     if definitional_grounding:
         r.evidence.append(
             f'NOTE: {len(definitional_grounding)} grounding formula(s) are '
-            f'definitional records (not independent derivations): '
-            f'{", ".join(definitional_grounding[:10])}'
+            f'definitional records (not independent derivations): {", ".join(definitional_grounding)}'
         )
-    if bounds_only or no_tests:
-        r.blockers = (
-            [f'bounds-only: {b.replace("formula:","",1)}' for b in bounds_only] +
-            [f'no tests: {b.replace("formula:","",1)}' for b in no_tests]
-        )
+    r.blockers = (
+        [f'absent Formula: {fid}' for fid in absent]
+        + [f'wrong node type (expected Formula): {fid}' for fid in wrong_type]
+        + [f'insufficient test kind: {fid}' for fid in insufficient]
+        + [f'no valid PythonTest: {fid}' for fid in no_valid_test]
+    )
+    if absent or wrong_type:
         r.state = 'blocked'
-        r.notes = (f'{len(bounds_only)} formulas bounds-only + '
-                   f'{len(no_tests)} formulas untested')
+        r.measured = False
+        r.notes = (
+            f'incomplete declared population: {len(absent)} absent, '
+            f'{len(wrong_type)} wrong type; resolved-member coverage is partial, '
+            'not a complete measurement'
+        )
     elif not formula_ids:
         r.state = 'open'
-        r.notes = 'no grounded formulas — nothing to verify'
+        r.measured = False
+        r.notes = ('coverage NOT ASSESSED: no declared formulas; '
+                   'source-grounded mapping remains owed')
+    elif insufficient or no_valid_test:
+        r.state = 'blocked'
+        r.notes = (f'{len(insufficient)} formulas with insufficient test kinds; '
+                   f'{len(no_valid_test)} without a valid PythonTest edge')
     else:
         r.state = 'passed'
-        r.notes = f'all {len(formula_ids)} grounded formulas have substantive tests'
+        r.notes = (f'all {len(formula_ids)} declared formulas have typed supported '
+                   'static test coverage; execution and scientific validation are separate')
     return r
 
 
