@@ -10323,6 +10323,20 @@
         "enforced": true,
         "run_at": "2026-10-20"
       }
+    },
+    {
+      "finding_id": "review:2026-10-20-graph-cache-io-state:infra:1",
+      "status": "fixed",
+      "evidence": "Only syscall-reported ENOENT now has stable known-absence fingerprints; all other file/list OSError states stay nonmatching. Whole source/runtime/production-control review accepted at SHA256 bb17482848ad6c01ab5c8fab12fb11c9517058b9b6234fa3762149608067e5e8. Production6224b6e6 and tests ca2f064a retain original9/14 prefix. Actual complete52 passed and genuine old directory/file branches separately gave0/1/0 with exact restoration and empty seed journals. This existing writer runs current declared whole-module Verify. Closure is only infra cache defect; full repository/default/CI/native/scientific/publication/main acceptance remains owed.",
+      "superseded_by": null,
+      "date": "2026-10-20",
+      "verified_by": {
+        "command": "uv run python -m pytest -q tests/test_dashboard_graph_cache.py",
+        "declared": "uv run python -m pytest -q tests/test_dashboard_graph_cache.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-20"
+      }
     }
   ]
 }

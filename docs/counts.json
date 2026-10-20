@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-20T09:15:27.739259",
+  "generated": "2026-10-20T14:03:42.367395",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/lean/lean_deps.json",
   "lean": {
     "total_declarations": 41034,
@@ -2080,7 +2080,7 @@
   "python": {
     "python_modules": 138,
     "test_files": 205,
-    "pytest_cases": 6973,
+    "pytest_cases": 7016,
     "notebooks": 91,
     "papers": 42,
     "figures": 170
