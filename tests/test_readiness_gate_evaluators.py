@@ -242,3 +242,106 @@ class TestVacuousPassesAreCorroborated:
                 f"{fn} no longer cross-checks the draft — its empty-population "
                 f"PASS is uncorroborated again, and cannot tell 'not applicable' "
                 f"from 'extraction failed'")
+
+
+class TestG4DeclaredTypedCoverage:
+    def _run(self, declared=(), nodes=(), edges=(), claim_targets=()):
+        paper = {"id": "paper:unit", "type": "Paper", "name": "unit",
+                 "meta": {"formulas": list(declared)}}
+        claims = ([{"id": "claim:unit:0", "type": "PaperClaim", "meta": {}}]
+                  if claim_targets else [])
+        links = list(edges)
+        if claim_targets:
+            links += [{"source": paper["id"], "target": "claim:unit:0", "type": "CLAIMS"}]
+            links += [{"source": "claim:unit:0", "target": f"formula:{name}",
+                       "type": "GROUNDED_IN"} for name in claim_targets]
+        return rg._eval_computation_correctness(
+            paper, rg.GraphIndex({"nodes": [paper] + claims + list(nodes), "links": links}))
+
+    @staticmethod
+    def _formula(name):
+        return {"id": f"formula:{name}", "type": "Formula", "verification": "unverified"}
+
+    @staticmethod
+    def _test(name="test", kind="PythonTest"):
+        return {"id": name, "type": kind}
+
+    @staticmethod
+    def _edge(target, source="test", kind="golden"):
+        return {"source": source, "target": f"formula:{target}",
+                "type": "VERIFIES", "test_kind": kind}
+
+    @pytest.mark.parametrize("metadata,claims", [(("x",), ()), ((), ("x",)),
+                                                (("x", "x"), ("x", "x"))])
+    @pytest.mark.parametrize("kind", ["golden", "identity", "roundtrip"])
+    def test_exact_union_supported_kinds(self, metadata, claims, kind):
+        r = self._run(metadata, [self._formula("x"), self._test()],
+                      [self._edge("x", kind=kind)], claims)
+        assert (r.state, r.measured, r.priority) == ("passed", True, 1)
+        assert r.blockers == []
+        assert sum(x == "supported: formula:x" for x in r.evidence) == 1
+        assert "1 declared formulas:" in r.evidence[0]
+        assert "unverified" in " ".join(r.evidence)
+
+    def test_undeclared_is_open_unmeasured(self):
+        r = self._run()
+        assert (r.state, r.measured) == ("open", False)
+        assert "NOT ASSESSED" in r.notes and "mapping remains owed" in r.notes
+
+    @pytest.mark.parametrize("wrong", [False, True])
+    def test_absent_and_wrong_type_block_unmeasured(self, wrong):
+        nodes = [{"id": "formula:ExactCase", "type": "Parameter"}] if wrong else []
+        r = self._run(["ExactCase"], nodes)
+        assert (r.state, r.measured) == ("blocked", False)
+        assert len(r.blockers) == 1 and "formula:ExactCase" in r.blockers[0]
+        assert ("wrong node type" if wrong else "absent Formula") in r.blockers[0]
+
+    def test_full_mixed_partition_preserves_resolved_evidence(self):
+        nodes = [self._formula(n) for n in ["strong", "weak", "orphan"]]
+        nodes += [self._test(), {"id": "formula:wrong", "type": "Parameter"}]
+        r = self._run(["strong", "weak", "orphan", "missing", "wrong"], nodes,
+                      [self._edge("strong"), self._edge("weak", kind="bounds"),
+                       self._edge("orphan", source="absent")])
+        assert (r.state, r.measured) == ("blocked", False)
+        assert len(r.blockers) == 4
+        assert "supported: formula:strong" in r.evidence
+        assert "insufficient test kind: formula:weak" in r.evidence
+        assert "no valid PythonTest: formula:orphan" in r.evidence
+        assert "absent Formula: formula:missing" in r.evidence
+        assert "wrong node type: formula:wrong" in r.evidence
+
+    @pytest.mark.parametrize("node_type,source_exists,kind", [
+        ("PythonTest", True, "bounds"), ("PythonTest", True, "unknown"),
+        ("PythonTest", True, "arbitrary"), ("Formula", True, "golden"),
+        ("Paper", True, "identity"), ("PythonTest", False, "roundtrip"),
+        ("PythonTest", True, None),
+    ])
+    def test_unsupported_or_untyped_edges_are_not_correctness(
+            self, node_type, source_exists, kind):
+        nodes = [self._formula("x")]
+        if source_exists:
+            nodes.append(self._test(kind=node_type))
+        r = self._run(["x"], nodes, [self._edge("x", kind=kind)])
+        assert (r.state, r.measured) == ("blocked", True)
+        assert len(r.blockers) == 1
+        assert ("insufficient" if source_exists and node_type == "PythonTest"
+                else "no valid PythonTest") in r.blockers[0]
+
+    def test_no_edges_is_complete_negative(self):
+        r = self._run(["x"], [self._formula("x")])
+        assert (r.state, r.measured) == ("blocked", True)
+        assert r.blockers == ["no valid PythonTest: formula:x"]
+
+    def test_supported_survives_extra_invalid_edges_and_is_counted_once(self):
+        r = self._run(["x"], [self._formula("x"), self._test()],
+                      [self._edge("x"), self._edge("x", kind="bounds"),
+                       self._edge("x", source="absent"),
+                       self._edge("x", kind="roundtrip")])
+        assert (r.state, r.measured) == ("passed", True)
+        assert r.evidence.count("supported: formula:x") == 1
+
+    def test_exact_case_is_not_a_tail_or_lowercase_alias(self):
+        r = self._run(["Exact"], [self._formula("exact"), self._test()],
+                      [self._edge("exact")])
+        assert (r.state, r.measured) == ("blocked", False)
+        assert "formula:Exact" in r.blockers[0]

@@ -161,3 +161,377 @@ class TestTheSeam:
                 "a finding was filed and the dashboard's graph does not contain it")
         restored = pd.get_cached_graph(sync_pg=False)
         assert expected not in {n["id"] for n in restored["nodes"]}
+
+
+# These controls extend the original real-build/seam module above. Syscall
+# exceptions below are path-specific semantic fixtures, not native host faults.
+import errno  # noqa: E402
+import os  # noqa: E402
+
+
+@pytest.fixture
+def io_state_inputs(tmp_path, monkeypatch, warmed):
+    """Record real successful and attempted missing opens through the owner.
+
+    A local read-set dictionary keeps these temporary observations from changing
+    the real warmed graph's retained population after this test finishes.
+    Imported repository code remains in every fingerprint by the normal owner.
+    """
+    tmp_path = tmp_path.resolve()
+    anchor = tmp_path / "anchor.txt"
+    anchor.write_bytes(b"recorded anchor")
+    missing = tmp_path / "optional" / "input.json"
+    monkeypatch.setattr(pd, "_READ_SET", dict(pd._READ_SET))
+    with pd._record_build_reads():
+        anchor.read_bytes()
+        with pytest.raises(FileNotFoundError) as caught:
+            missing.read_bytes()
+        assert caught.value.errno == errno.ENOENT
+    assert str(anchor) in pd._READ_SET["paths"]
+    assert str(missing) in pd._READ_SET["paths"]
+    assert str(missing.parent) in pd._READ_SET["dirs"]
+    return {"anchor": anchor, "file": missing, "directory": missing.parent}
+
+
+class TestKnownAbsenceIsAnObservation:
+
+    @pytest.mark.parametrize("kind", ["file", "directory"])
+    def test_recorded_known_absence_repeats_without_an_error_warning(
+            self, io_state_inputs, caplog, kind):
+        target = str(io_state_inputs[kind])
+        caplog.clear()
+        first, second = pd._graph_fingerprint(), pd._graph_fingerprint()
+        assert first == second, "a known missing input disabled the real key"
+        assert next(row for row in first if row[0] == target) == next(
+            row for row in second if row[0] == target)
+        assert not any(target in record.getMessage()
+                       and "forcing a rebuild" in record.getMessage()
+                       for record in caplog.records)
+
+    def test_missing_empty_nonempty_removed_and_recreated_directory(
+            self, io_state_inputs):
+        directory = io_state_inputs["directory"]
+        missing = pd._graph_fingerprint()
+        missing_entry = next(row for row in missing if row[0] == str(directory))
+        directory.mkdir()
+        empty = pd._graph_fingerprint()
+        empty_entry = next(row for row in empty if row[0] == str(directory))
+        assert empty_entry == (str(directory), ())
+        assert missing_entry != empty_entry and missing != empty
+        child = directory / "new-child.txt"
+        child.write_bytes(b"new")
+        nonempty = pd._graph_fingerprint()
+        nonempty_entry = next(row for row in nonempty if row[0] == str(directory))
+        assert nonempty_entry != empty_entry and nonempty != empty
+        child.unlink()
+        emptied = pd._graph_fingerprint()
+        assert next(row for row in emptied if row[0] == str(directory)) == empty_entry
+        assert emptied != nonempty
+        directory.rmdir()
+        removed = pd._graph_fingerprint()
+        assert next(row for row in removed if row[0] == str(directory)) == missing_entry
+        assert removed != emptied
+        directory.mkdir()
+        recreated = pd._graph_fingerprint()
+        assert next(row for row in recreated if row[0] == str(directory)) == empty_entry
+        assert recreated != removed
+
+    def test_missing_empty_nonempty_removed_and_recreated_file(
+            self, io_state_inputs):
+        target = io_state_inputs["file"]
+        missing = pd._graph_fingerprint()
+        missing_entry = next(row for row in missing if row[0] == str(target))
+        target.parent.mkdir()
+        target.write_bytes(b"")
+        empty = pd._graph_fingerprint()
+        empty_entry = next(row for row in empty if row[0] == str(target))
+        assert empty_entry[2] == 0
+        assert empty_entry != missing_entry and empty != missing
+        target.write_bytes(b"nonempty")
+        nonempty = pd._graph_fingerprint()
+        nonempty_entry = next(row for row in nonempty if row[0] == str(target))
+        assert nonempty_entry != empty_entry and nonempty != empty
+        target.unlink()
+        removed = pd._graph_fingerprint()
+        assert next(row for row in removed if row[0] == str(target)) == missing_entry
+        assert removed != nonempty
+        target.write_bytes(b"")
+        recreated = pd._graph_fingerprint()
+        assert next(row for row in recreated if row[0] == str(target)) != missing_entry
+        assert recreated != removed
+
+    def test_same_size_write_with_changed_nanosecond_mtime_moves_file_entry(
+            self, io_state_inputs):
+        target = io_state_inputs["anchor"]
+        before = pd._graph_fingerprint()
+        before_entry = next(row for row in before if row[0] == str(target))
+        observed = target.stat()
+        target.write_bytes(b"X" * observed.st_size)
+        os.utime(target, ns=(observed.st_atime_ns,
+                             observed.st_mtime_ns + 1_000_000_000))
+        after = pd._graph_fingerprint()
+        after_entry = next(row for row in after if row[0] == str(target))
+        assert after_entry[2] == before_entry[2]
+        assert after_entry[1] != before_entry[1]
+        assert after_entry != before_entry and after != before
+
+    def test_real_graph_with_recorded_missing_input_keeps_its_cached_identity(
+            self, tmp_path, monkeypatch, warmed):
+        """The wrapper adds a read; the original full graph builder still runs.
+
+        This is an actual recorded build and consumer, with PG off, not a fake
+        graph or a preinstalled green fingerprint. No missing directory is made.
+        """
+        import build_graph as bg
+
+        missing = tmp_path.resolve() / "never-created" / "optional.json"
+        real_builder = bg.build_graph_json
+
+        def build_with_missing_read(*, sync_pg=False):
+            with pytest.raises(FileNotFoundError) as caught:
+                missing.read_bytes()
+            assert caught.value.errno == errno.ENOENT
+            return real_builder(sync_pg=sync_pg)
+
+        monkeypatch.setattr(pd, "_READ_SET", dict(pd._READ_SET))
+        monkeypatch.setattr(pd, "_GRAPH_CACHE", dict(pd._GRAPH_CACHE))
+        monkeypatch.setattr(bg, "build_graph_json", build_with_missing_read)
+        first = pd.get_cached_graph(force_rebuild=True, sync_pg=False)
+        assert str(missing) in pd._READ_SET["paths"]
+        assert str(missing.parent) in pd._READ_SET["dirs"]
+        before = pd._graph_fingerprint()
+        second = pd.get_cached_graph(sync_pg=False)
+        assert pd._graph_fingerprint() == before
+        assert second is first, "known absence prevented a real cached-object hit"
+
+
+class TestUnavailableIOCannotCertifyFreshness:
+
+    @pytest.mark.parametrize("operation,kind", [("stat", "file"),
+                                               ("listdir", "directory")])
+    @pytest.mark.parametrize("error", [
+        pytest.param(errno.EACCES, id="EACCES"),
+        pytest.param(errno.EPERM, id="EPERM"),
+        pytest.param(errno.ENFILE, id="ENFILE"),
+        pytest.param(errno.EMFILE, id="EMFILE"),
+        pytest.param(errno.EIO, id="EIO"),
+        pytest.param(errno.ELOOP, id="ELOOP"),
+        pytest.param(errno.ENOTDIR, id="ENOTDIR"),
+        *([pytest.param(errno.ESTALE, id="ESTALE")]
+          if hasattr(errno, "ESTALE") else []),
+        pytest.param(987654, id="unrecognized-errno"),
+        pytest.param(None, id="opaque-OSError"),
+        pytest.param("no-errno-FileNotFoundError", id="class-without-errno"),
+        pytest.param("contradictory-FileNotFoundError", id="class-with-EACCES"),
+    ])
+    def test_unknown_repeat_and_unknown_to_missing_or_present_never_match(
+            self, io_state_inputs, monkeypatch, caplog, operation, kind, error):
+        """Inject only the selected syscall/path; all other observations are real.
+
+        File unknown-repeat and unknown-to-ENOENT are the old file-branch
+        false-hit countermodels. Looking at the affected entry prevents another
+        directory change from making these assertions pass accidentally.
+        """
+        target = io_state_inputs[kind]
+        original = getattr(pd.os, operation)
+        fault = {"active": False, "error": error}
+
+        def selected_path_fault(path, *args, **kwargs):
+            if (isinstance(path, (str, bytes, os.PathLike))
+                    and os.fsdecode(os.fspath(path)) == str(target)
+                    and fault["active"]):
+                if fault["error"] == "no-errno-FileNotFoundError":
+                    raise FileNotFoundError("synthetic class without errno")
+                if fault["error"] == "contradictory-FileNotFoundError":
+                    raise FileNotFoundError(errno.EACCES, "synthetic class", str(target))
+                if fault["error"] is None:
+                    raise OSError("synthetic opaque observation")
+                raise OSError(fault["error"], "synthetic syscall observation", str(target))
+            return original(path, *args, **kwargs)
+
+        monkeypatch.setattr(pd.os, operation, selected_path_fault)
+        missing = pd._graph_fingerprint()
+        missing_entry = next(row for row in missing if row[0] == str(target))
+        caplog.clear()
+        fault["active"] = True
+        unknown_first = pd._graph_fingerprint()
+        unknown_second = pd._graph_fingerprint()
+        first_entry = next(row for row in unknown_first if row[0] == str(target))
+        second_entry = next(row for row in unknown_second if row[0] == str(target))
+        assert first_entry != second_entry and unknown_first != unknown_second
+        assert first_entry != missing_entry and unknown_first != missing
+        assert any(str(target) in record.getMessage()
+                   and "forcing a rebuild" in record.getMessage()
+                   for record in caplog.records)
+        fault["error"] = errno.EIO if error != errno.EIO else errno.EACCES
+        different_unknown = pd._graph_fingerprint()
+        assert next(row for row in different_unknown if row[0] == str(target)) != second_entry
+        fault["active"] = False
+        known_missing = pd._graph_fingerprint()
+        known_missing_entry = next(row for row in known_missing if row[0] == str(target))
+        assert known_missing_entry == missing_entry
+        assert second_entry != known_missing_entry and unknown_second != known_missing
+        if kind == "file":
+            target.parent.mkdir()
+            target.write_bytes(b"present")
+        else:
+            target.mkdir()
+        present = pd._graph_fingerprint()
+        present_entry = next(row for row in present if row[0] == str(target))
+        fault["active"] = True
+        unknown_from_present = pd._graph_fingerprint()
+        from_present_entry = next(row for row in unknown_from_present
+                                  if row[0] == str(target))
+        assert from_present_entry != present_entry and unknown_from_present != present
+        fault["active"] = False
+        restored_present = pd._graph_fingerprint()
+        assert next(row for row in restored_present if row[0] == str(target)) == present_entry
+        assert from_present_entry != present_entry and unknown_from_present != restored_present
+
+    @pytest.mark.parametrize("operation,kind", [("stat", "file"),
+                                               ("listdir", "directory")])
+    def test_FileNotFoundError_is_stable_only_with_reported_ENOENT(
+            self, io_state_inputs, monkeypatch, operation, kind):
+        target = io_state_inputs[kind]
+        original = getattr(pd.os, operation)
+
+        def known_missing(path, *args, **kwargs):
+            if (isinstance(path, (str, bytes, os.PathLike))
+                    and os.fsdecode(os.fspath(path)) == str(target)):
+                raise FileNotFoundError(errno.ENOENT, "known missing", str(target))
+            return original(path, *args, **kwargs)
+
+        before = pd._graph_fingerprint()
+        monkeypatch.setattr(pd.os, operation, known_missing)
+        first, second = pd._graph_fingerprint(), pd._graph_fingerprint()
+        assert first == second and first == before
+
+    def test_real_intermediate_file_is_unknown_for_stat_and_listing(
+            self, io_state_inputs, tmp_path):
+        obstruction = tmp_path.resolve() / "not-a-directory"
+        obstruction.write_bytes(b"file")
+        blocked = obstruction / "input.json"
+        with pd._record_build_reads():
+            io_state_inputs["anchor"].read_bytes()
+            with pytest.raises(NotADirectoryError) as caught:
+                blocked.read_bytes()
+            assert caught.value.errno == errno.ENOTDIR
+        assert str(blocked) in pd._READ_SET["paths"]
+        assert str(obstruction) in pd._READ_SET["dirs"]
+        first, second = pd._graph_fingerprint(), pd._graph_fingerprint()
+        for target in (blocked, obstruction):
+            assert next(row for row in first if row[0] == str(target)) != next(
+                row for row in second if row[0] == str(target))
+        assert first != second
+
+
+class TestRecordedPopulationAndFailSafes:
+
+    @pytest.mark.parametrize("paths", [None, (), []],
+                             ids=["unavailable", "empty-tuple", "empty-list"])
+    def test_unavailable_or_empty_population_stays_nonmatching(
+            self, monkeypatch, warmed, paths):
+        monkeypatch.setattr(pd, "_READ_SET", {"paths": paths, "dirs": None})
+        first, second = pd._graph_fingerprint(), pd._graph_fingerprint()
+        assert first != second
+        assert first is not None and second is not None
+
+    def test_failed_finalization_discards_the_previous_population(
+            self, io_state_inputs, monkeypatch):
+        def fail_finalization(captured, started_ns):
+            raise OSError(errno.EIO, "synthetic recorder finalization fault")
+
+        monkeypatch.setattr(pd, "_finalise_read_set", fail_finalization)
+        with pd._record_build_reads():
+            io_state_inputs["anchor"].read_bytes()
+        assert pd._READ_SET == {"paths": None, "dirs": None}
+        assert pd._RECORDED_READS is None
+        assert pd._graph_fingerprint() != pd._graph_fingerprint()
+
+    def test_no_captured_reads_discards_the_previous_population(
+            self, io_state_inputs):
+        pd._finalise_read_set(set(), pd.time.time_ns())
+        assert pd._READ_SET == {"paths": None, "dirs": None}
+        assert pd._graph_fingerprint() != pd._graph_fingerprint()
+
+    def test_existing_mtime_during_build_predicate_discards_the_population(
+            self, io_state_inputs):
+        """Exercise the actual predicate with a controlled start timestamp.
+
+        This is not a native concurrent-write experiment or an atomic-snapshot
+        claim. The real current artifact is newer than the supplied start.
+        """
+        anchor = io_state_inputs["anchor"]
+        pd._finalise_read_set({str(anchor)}, anchor.stat().st_mtime_ns - 1)
+        assert pd._READ_SET == {"paths": None, "dirs": None}
+        assert pd._graph_fingerprint() != pd._graph_fingerprint()
+
+    def test_actual_recorded_inputs_and_loaded_graph_code_remain_in_the_key(
+            self, io_state_inputs):
+        key_paths = {row[0] for row in pd._graph_fingerprint()}
+        assert str(io_state_inputs["anchor"]) in key_paths
+        assert str(io_state_inputs["file"]) in key_paths
+        assert str(io_state_inputs["directory"]) in key_paths
+        builder = str((PROJECT_ROOT / "scripts" / "build_graph.py").resolve())
+        assert builder in pd._loaded_repo_module_sources()
+        assert builder in key_paths, "already-imported graph code left the actual key"
+
+    def test_actual_recorder_keeps_every_nested_repo_ancestor(
+            self, tmp_path, monkeypatch, io_state_inputs):
+        """A bounded fixture repo exercises the existing ancestor owner itself."""
+        tmp_path = tmp_path.resolve()
+        monkeypatch.setattr(pd, "PROJECT_ROOT", tmp_path)
+        missing = tmp_path / "first" / "second" / "third" / "input.json"
+        with pd._record_build_reads():
+            with pytest.raises(FileNotFoundError):
+                missing.read_bytes()
+        assert str(missing) in pd._READ_SET["paths"]
+        expected = {str(tmp_path), str(tmp_path / "first"),
+                    str(tmp_path / "first" / "second"),
+                    str(tmp_path / "first" / "second" / "third")}
+        assert set(pd._READ_SET["dirs"]) == expected
+
+    def test_dangling_file_lookup_changes_when_its_watched_target_is_created(
+            self, io_state_inputs, tmp_path):
+        target = io_state_inputs["file"]
+        alias = tmp_path.resolve() / "alias.json"
+        alias.symlink_to(target)
+        with pd._record_build_reads():
+            io_state_inputs["anchor"].read_bytes()
+            for path in (alias, target):
+                with pytest.raises(FileNotFoundError) as caught:
+                    path.read_bytes()
+                assert caught.value.errno == errno.ENOENT
+        assert str(target) in pd._READ_SET["paths"]
+        assert str(alias) in pd._READ_SET["paths"]
+        before = pd._graph_fingerprint()
+        assert before == pd._graph_fingerprint()
+        target.parent.mkdir()
+        target.write_bytes(b"target exists")
+        after = pd._graph_fingerprint()
+        for path in (alias, target):
+            assert next(row for row in before if row[0] == str(path)) != next(
+                row for row in after if row[0] == str(path))
+        assert before != after
+
+    def test_external_dangling_directory_tracks_its_raw_alias_parent(
+            self, io_state_inputs, tmp_path):
+        """An external failed open watches its raw alias directory parent."""
+        target = tmp_path.resolve() / "missing-directory"
+        alias = tmp_path.resolve() / "directory-alias"
+        alias.symlink_to(target, target_is_directory=True)
+        with pd._record_build_reads():
+            io_state_inputs["anchor"].read_bytes()
+            with pytest.raises(FileNotFoundError):
+                (alias / "input.json").read_bytes()
+        assert str(alias) in pd._READ_SET["dirs"]
+        before = pd._graph_fingerprint()
+        before_entry = next(row for row in before if row[0] == str(alias))
+        assert before_entry == (str(alias), '<missing>')
+        assert before == pd._graph_fingerprint()
+        target.mkdir()
+        after = pd._graph_fingerprint()
+        after_entry = next(row for row in after if row[0] == str(alias))
+        assert after_entry == (str(alias), ())
+        assert before_entry != after_entry
+        assert before != after

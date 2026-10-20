@@ -294,6 +294,21 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
 | `Lit-Search/Phase-*/primary-sources/<bibkey>.{pdf,abstract.txt,json}` | `back_fill_primary_sources.py` (`.pdf`/`.tex`/`.abstract.txt`) + `convert_inprep_citations.py` (self-deposit `.json` stubs) | **none** — additive; a cached source is never re-fetched. Per-bibkey fetch verdicts in the `docs/primary_sources_state.json` sidecar | **no** — an explicit acquisition run |
 
+**Git-hook inventory repair — whole measured architecture checkpoint accepted.** The existing surface
+inventory writer/check pair remains the sole owner. Its [accepted design](../superpowers/specs/2026-10-20-architecture-inventory-worktree-design.md)
+replaces checkout-local administrative-path guessing with Git's own anchored path
+query and preserves metadata membership, deterministic public logical locators and
+explicit refusal of unreadable or foreign context. Plugin registrations and Git
+file metadata are configuration/catalog observations; neither proves that a hook is
+loaded or running. No private hook contents or machine paths enter the census.
+Independent whole architecture design/intent and source reviews accepted their
+bounded scopes. ROOT established the reviewed corrected baseline through the
+existing canonical writer. Both actual production-reader fault controls passed
+red/restore-green, and the full inventory module passed. Independent whole
+implementation/evidence review accepted this bounded checkpoint. Current complete
+delivery qualification still precedes shipping/closure; catalog fidelity does not
+establish runtime activation.
+
 ⚠️ **`counts.json`'s key is a hybrid because an mtime-max is blind in one direction, and it
 shipped that way.** Deleting a file leaves every surviving file's mtime untouched, so the
 maximum does not move and the artifact reports fresh while publishing a count one too high —

@@ -108,7 +108,7 @@ checks read. See `validate._CANONICAL_ORDER`.
 | 63 | `notebook_stored_outputs_current` | `freshness` | Bundle companion notebooks' STORED outputs equal what their code produces |
 | 64 | `notebook_markdown_retracted_claims` | `freshness` | Bundle companion notebooks' MARKDOWN cells carry no retracted claim |
 | 65 | `readiness_verdicts_agree` | `bundles_readiness` | The heatmap and the submission gate return the same per-bundle verdict |
-| 66 | `readiness_submission_gate` | `bundles_readiness` | Every paper has all P1 readiness gates passed (Phase 5v Wave 4) |
+| 66 | `readiness_submission_gate` | `bundles_readiness` | No paper has a blocked readiness gate; report outstanding state and measurement |
 | 67 | `citation_primary_sources_present` | `citations` | Every cited external bibitem has a primary-source cache, its fidelity tier is decided by what the file holds rather than by its extension so an abstract-only or metadata-only cache is flagged rather than counted as the source, and exemption is claimed by a declared citation_class rather than inferred from absent metadata |
 | 68 | `provenance_doi_in_registry` | `citations` | PARAMETER_PROVENANCE source DOIs resolve to CITATION_REGISTRY bibkeys |
 | 69 | `bundle_consistency` | `bundles_readiness` | Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries |
@@ -163,6 +163,10 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 
 ## Hooks — 7
 
+Git catalog lookup: `git-path:hooks`; observed target: `directory`.
+Git command cells are logical catalog locators, not hook body text or paths
+under this checkout. Manifest/file metadata does not establish runtime activation.
+
 | kind | event | matcher | command |
 |---|---|---|---|
 | claude-code | `PreCompact` | `*` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_precompact.py" 2>/dev/null || true` |
@@ -171,7 +175,7 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 | claude-code | `PreToolUse` | `AskUserQuestion` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_question_guard.py" 2>/dev/null || true` |
 | claude-code | `PreToolUse` | `WebSearch|WebFetch` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_web_egress_guard.py" || printf '%s' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionR` |
 | claude-code | `PreToolUse` | `Bash` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_worker_shell_guard.py" || printf '{}'` |
-| git | `pre-commit` | `-` | `.git/hooks/pre-commit` |
+| git | `pre-commit` | `-` | `git-path:hooks/pre-commit` |
 
 ## Agents — 10
 

@@ -1491,3 +1491,134 @@ class TestSeedMarkerDoesNotSuppressMinting:
             "gate. This is the leg that matters: a fabricated finding is only harmful "
             "because it lands open."
         )
+
+
+class TestStructuralFormulaPopulation:
+    """Use the real extractor; source text is data, never imported."""
+
+    def test_canonical_population_equals_independent_module_ast(self):
+        import ast
+        source = (PROJECT_ROOT / "src/core/formulas.py").read_text()
+        expected = [n.name for n in ast.parse(source).body
+                    if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+                    and not n.name.startswith("_")]
+        actual = extract_formula_nodes()
+        assert expected
+        assert [n["name"] for n in actual] == expected
+        assert [n["id"] for n in actual] == ["formula:" + n for n in expected]
+        assert len(set(n["id"] for n in actual)) == len(expected)
+
+    def test_complete_legacy_node_dictionaries_survive_enumeration(self, monkeypatch):
+        import re
+        import scripts.build_graph as bg
+        source = (PROJECT_ROOT / "src/core/formulas.py").read_text()
+        legacy = [(m.group(1), m.start()) for m in
+                  re.finditer(r"^def\s+([a-z_][a-z0-9_]*)\s*\(", source, re.MULTILINE)
+                  if not m.group(1).startswith("_")]
+        actual = bg.extract_formula_nodes()
+        # The historical population uses the actual producer metadata path too.
+        # The frozen before/after full-corpus receipt independently checks all
+        # original dictionaries across this implementation's source transition.
+        with monkeypatch.context() as patch:
+            patch.setattr(bg, "_formula_source_definitions", lambda s, p: legacy)
+            old = bg.extract_formula_nodes()
+        current = {n["id"]: n for n in actual}
+        assert old and len(old) < len(actual)
+        assert all(current[n["id"]] == n for n in old)
+        assert [n["id"] for n in actual if n["id"] in {x["id"] for x in old}] == [
+            n["id"] for n in old]
+
+    def _source(self, tmp_path, monkeypatch, source):
+        import scripts.build_graph as bg
+        p = tmp_path / "src/core"
+        p.mkdir(parents=True)
+        (p / "formulas.py").write_text(source)
+        monkeypatch.setattr(bg, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(bg, "_lean_ref_resolution_index", lambda: frozenset())
+        monkeypatch.setattr(bg, "_definitional_record_grounding_shorts", lambda: frozenset())
+        return bg
+
+    def test_actual_extractor_handles_structure_case_decorators_and_unicode(
+            self, tmp_path, monkeypatch):
+        bg = self._source(tmp_path, monkeypatch, '''import imported
+alias = imported
+text = """def fabricated(): pass still a string"""
+def _private(): pass
+def lower():
+    """Lower description.
+    Lean: Some.real
+    Source: Actual source
+    """
+    def nested(): pass
+@decorator
+def MixedCase():
+    """Mixed description."""
+    pass
+async def Ωmega():
+    """Async description."""
+    pass
+class Example:
+    def method(self): pass
+''')
+        nodes = bg.extract_formula_nodes()
+        assert [n["name"] for n in nodes] == ["lower", "MixedCase", "Ωmega"]
+        assert nodes[0] == {
+            "id": "formula:lower", "type": "Formula", "label": "lower",
+            "name": "lower", "verification": "verified",
+            "detail": "Lower description.",
+            "meta": {
+                "lean_refs": ["Some.real"], "lean_refs_resolved": [],
+                "lean_refs_dangling": [], "lean_resolution_checked": False,
+                "aristotle_refs": [], "source_refs": ["Actual source"],
+            },
+        }
+        assert [n["detail"] for n in nodes] == [
+            "Lower description.", "Mixed description.", "Async description."]
+
+    @pytest.mark.parametrize("source,match", [
+        ("def broken(: pass", "Cannot enumerate Formula"),
+        ("def Same(): pass\\ndef Same(): pass\\n", "Duplicate public Formula identity"),
+    ])
+    def test_parse_and_duplicate_are_diagnosed_not_empty(
+            self, tmp_path, monkeypatch, source, match):
+        bg = self._source(tmp_path, monkeypatch, source.replace("\\n", "\n"))
+        with pytest.raises(ValueError, match=match):
+            bg.extract_formula_nodes()
+
+    def test_unreadable_source_is_not_empty(self, tmp_path, monkeypatch):
+        import scripts.build_graph as bg
+        monkeypatch.setattr(bg, "PROJECT_ROOT", tmp_path)
+        with pytest.raises(FileNotFoundError):
+            bg.extract_formula_nodes()
+
+    def test_added_formula_reaches_real_verifies_and_grounding_edges(self, monkeypatch):
+        import scripts.build_graph as bg
+        from src.core.provenance import PAPER_DEPENDENCIES
+        formulas = bg.extract_formula_nodes()
+        claims = bg.extract_paper_claim_nodes()
+        tests = bg.extract_python_test_nodes()
+        parameters = bg.extract_parameter_nodes()
+        ids = {n["id"] for n in formulas + claims + tests + parameters}
+        grounded = bg.extract_grounded_in_edges(ids)
+        verifies = bg.extract_verifies_edges(ids)
+        formula_by_name = {n["name"]: n["id"] for n in formulas}
+        expected_grounded = {
+            (f"claim:{key}:{i}", formula_by_name[name])
+            for key, row in PAPER_DEPENDENCIES.items()
+            for i in range(len(row.get("key_claims", [])))
+            for name in row.get("formulas", [])
+            if f"claim:{key}:{i}" in ids and name in formula_by_name
+        }
+        assert {(e["source"], e["target"]) for e in grounded} == expected_grounded
+        test_by_id = {n["id"]: n for n in tests}
+        assert verifies
+        for edge in verifies:
+            if not edge["target"].startswith("formula:"):
+                continue
+            test = test_by_id[edge["source"]]
+            name = edge["target"].removeprefix("formula:")
+            refs = test["meta"]["referenced_names"]
+            assert name in refs or any(
+                ref.rpartition(".")[0] in {"F", "formulas", "src.core.formulas"}
+                and ref.rpartition(".")[2] == name for ref in refs)
+            assert edge["test_kind"] == test["meta"]["test_kind"]
