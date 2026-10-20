@@ -605,5 +605,380 @@ theorem branchWeight_factor {ν α X : Type*}
     ((incidenceGraph_inl_inr_adj G w a).mpr haw)
     ((incidenceGraph_inl_inr_adj G u a).mpr hau) (by simpa using huw)
 
+/-- Restriction and gluing on a finite scope, with every coordinate owned by
+    exactly one actual block. No exterior coordinates are counted. -/
+noncomputable def scopePartitionEquiv {U I X : Type*}
+    (s : Finset U) (blocks : I → Finset U)
+    (sub : ∀ i, blocks i ⊆ s) (cover : ∀ u ∈ s, ∃! i, u ∈ blocks i) :
+    (s → X) ≃ ((i : I) → blocks i → X) := by
+  classical
+  exact
+    { toFun := fun y i u => y ⟨u, sub i u.property⟩
+      invFun := fun z u => z (Classical.choose (cover u u.property))
+        ⟨u, (Classical.choose_spec (cover u u.property)).1⟩
+      left_inv := fun y => by funext u; rfl
+      right_inv := fun z => by
+        funext i u
+        rcases u with ⟨u, hu⟩
+        have hi : i = Classical.choose (cover u (sub i hu)) :=
+          (Classical.choose_spec (cover u (sub i hu))).2 i hu
+        dsimp only
+        congr 1
+        · exact hi.symm
+        · have hblocks : blocks (Classical.choose (cover u (sub i hu))) = blocks i :=
+            congrArg blocks hi.symm
+          exact (Subtype.heq_iff_coe_eq (fun x => by rw [hblocks])).mpr rfl }
+
+/-- Product-of-sums for an actual finite scope partition, with no multiplicity
+    from variables outside the scope. -/
+theorem sum_prod_scope_partition {U I X : Type*}
+    [Fintype I] [Fintype X] [DecidableEq U] [DecidableEq I]
+    (s : Finset U) (blocks : I → Finset U)
+    (sub : ∀ i, blocks i ⊆ s) (cover : ∀ u ∈ s, ∃! i, u ∈ blocks i)
+    (f : (i : I) → (blocks i → X) → ℝ) :
+    (∑ y : s → X, ∏ i, f i (fun u => y ⟨u, sub i u.property⟩)) =
+      ∏ i, ∑ z : blocks i → X, f i z := by
+  classical
+  rw [Fintype.prod_sum]
+  exact (scopePartitionEquiv s blocks sub cover).sum_comp (fun z => ∏ i, f i (z i))
+
+/-- Actual boundary-conditioned sums factor over a genuine scope partition
+    when each summand uses only its block and the shared fixed boundary. -/
+theorem sum_prod_scope_boundary {U I X : Type*}
+    [Fintype I] [Fintype X] [DecidableEq U] [DecidableEq I]
+    (s : Finset U) (blocks : I → Finset U)
+    (sub : ∀ i, blocks i ⊆ s) (cover : ∀ u ∈ s, ∃! i, u ∈ blocks i)
+    (F : I → (U → X) → ℝ) (v : U) (ξ : X) (background : U → X)
+    (hF : ∀ i, DependsOn (insert v (blocks i)) (F i)) :
+    (∑ y : s → X, ∏ i,
+      F i (Function.update (extendScope s y background) v ξ)) =
+      ∏ i, ∑ z : blocks i → X,
+        F i (Function.update (extendScope (blocks i) z background) v ξ) := by
+  classical
+  rw [← sum_prod_scope_partition s blocks sub cover
+    (fun i z => F i (Function.update (extendScope (blocks i) z background) v ξ))]
+  apply Finset.sum_congr rfl
+  intro y _
+  apply Finset.prod_congr rfl
+  intro i _
+  apply hF i
+  intro u hu
+  rcases Finset.mem_insert.mp hu with huv | hub
+  · subst u
+    simp
+  · by_cases huv : u = v <;>
+      simp [Function.update, extendScope, huv, hub, sub i hub]
+
+/-- Incoming branches own disjoint sets of actual variable coordinates. -/
+theorem branchVariables_disjoint_incoming {ν α : Type*} [Fintype ν] [Fintype α]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G) {x y z : ν ⊕ α}
+    (hyx : (incidenceGraph G).Adj y x) (hzx : (incidenceGraph G).Adj z x)
+    (hzy : z ≠ y) : Disjoint (branchVariables G z x) (branchVariables G y x) := by
+  classical
+  apply Finset.disjoint_left.mpr
+  intro u hu hu'
+  exact Finset.disjoint_left.mp
+    (forestBranch_disjoint_incoming (incidenceGraph G) hG hyx hzx hzy)
+    (by simpa [branchVariables] using hu) (by simpa [branchVariables] using hu')
+
+/-- Boundary-conditioned product-of-sums over a disjoint finite union of
+    actual variable blocks. -/
+theorem sum_prod_biUnion_boundary {U I X : Type*}
+    [Fintype X] [DecidableEq U] [DecidableEq I]
+    (s : Finset I) (blocks : I → Finset U)
+    (hd : (s : Set I).PairwiseDisjoint blocks)
+    (F : I → (U → X) → ℝ) (v : U) (ξ : X) (background : U → X)
+    (hF : ∀ i ∈ s, DependsOn (insert v (blocks i)) (F i)) :
+    (∑ y : s.biUnion blocks → X, ∏ i ∈ s,
+      F i (Function.update (extendScope (s.biUnion blocks) y background) v ξ)) =
+      ∏ i ∈ s, ∑ z : blocks i → X,
+        F i (Function.update (extendScope (blocks i) z background) v ξ) := by
+  classical
+  let sub : ∀ i : s, blocks i ⊆ s.biUnion blocks :=
+    fun i u hu => Finset.mem_biUnion.mpr ⟨i, i.property, hu⟩
+  have cover : ∀ u ∈ s.biUnion blocks, ∃! i : s, u ∈ blocks i := by
+    intro u hu
+    obtain ⟨i, hi, hui⟩ := Finset.mem_biUnion.mp hu
+    refine ⟨⟨i, hi⟩, hui, ?_⟩
+    intro j hj
+    apply Subtype.ext
+    by_contra hne
+    exact Finset.disjoint_left.mp (hd j.property hi hne) hj hui
+  have h := sum_prod_scope_boundary (s.biUnion blocks) (fun i : s => blocks i)
+    sub cover (fun i : s => F i) v ξ background (fun i => hF i i.property)
+  have hp : ∀ y : s.biUnion blocks → X,
+      (∏ i : s, F i (Function.update (extendScope (s.biUnion blocks) y background) v ξ)) =
+        ∏ i ∈ s, F i (Function.update (extendScope (s.biUnion blocks) y background) v ξ) :=
+    fun y => Finset.prod_coe_sort s
+      (fun i => F i (Function.update (extendScope (s.biUnion blocks) y background) v ξ))
+  have hq : (∏ i : s, ∑ z : blocks i → X,
+      F i (Function.update (extendScope (blocks i) z background) v ξ)) =
+        ∏ i ∈ s, ∑ z : blocks i → X,
+          F i (Function.update (extendScope (blocks i) z background) v ξ) :=
+    Finset.prod_coe_sort s (fun i => ∑ z : blocks i → X,
+      F i (Function.update (extendScope (blocks i) z background) v ξ))
+  simpa only [hp, hq] using h
+
+/-- The genuine variable-to-factor cavity SUM recurrence, obtained by
+    partitioning actual erased side assignments and using scope locality. -/
+theorem cavitySum_variable {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G)
+    (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (v : ν) (a : α) (ξ : X) (background : ν → X) :
+    cavitySum G f (Sum.inl v) (Sum.inr a) v ξ background =
+      ∏ b ∈ otherFactors G v a,
+        cavitySum G f (Sum.inr b) (Sum.inl v) v ξ background := by
+  classical
+  unfold cavitySum
+  simp_rw [branchWeight_variable G hG f v a]
+  rw [branchVariables_variable_eq_insert_biUnion G hG v a,
+    Finset.erase_insert_eq_erase, Finset.erase_biUnion]
+  apply sum_prod_biUnion_boundary
+  · intro b hb c hc hbc
+    apply Finset.disjoint_left.mpr
+    intro u hu hu'
+    have h := branchVariables_disjoint_incoming G hG
+      ((incidenceGraph_inl_inr_adj G v c).mpr (Finset.mem_filter.mp hc).2.2).symm
+      ((incidenceGraph_inl_inr_adj G v b).mpr (Finset.mem_filter.mp hb).2.2).symm
+      (by simpa using hbc)
+    exact Finset.disjoint_left.mp h (Finset.mem_of_mem_erase hu) (Finset.mem_of_mem_erase hu')
+  · intro b hb z z' hz
+    apply branchWeight_dependsOn_boundary G f hf (Sum.inr b) (Sum.inl v) v b Sym2.eq_swap z z'
+    intro u hu
+    apply hz
+    by_cases huv : u = v <;> simp_all
+
+/-- Separate a genuine branch assignment into its root value and all other
+    coordinates. The root is counted once and the remainder is an erased scope. -/
+noncomputable def scopeRootEquiv {U X : Type*} [DecidableEq U]
+    (s : Finset U) (u : U) (hu : u ∈ s) :
+    (s → X) ≃ X × (s.erase u → X) := by
+  classical
+  exact
+    { toFun := fun y => (y ⟨u, hu⟩, fun w => y ⟨w, Finset.mem_of_mem_erase w.property⟩)
+      invFun := fun p w => if h : (w : U) = u then p.1
+        else p.2 ⟨w, Finset.mem_erase.mpr ⟨h, w.property⟩⟩
+      left_inv := fun y => by
+        funext w
+        rcases w with ⟨w, hw⟩
+        dsimp only
+        split_ifs with h
+        · subst w; rfl
+        · rfl
+      right_inv := fun p => by
+        rcases p with ⟨x, z⟩
+        exact Prod.ext (by simp)
+          (by funext w; rcases w with ⟨w, hw⟩; simp [Finset.ne_of_mem_erase hw]) }
+
+/-- A branch sum with its root value exposed is a genuine finite Fubini sum. -/
+theorem sum_scope_root {U X : Type*} [Fintype X] [DecidableEq U]
+    (s : Finset U) (u : U) (hu : u ∈ s) (F : (s → X) → ℝ) :
+    (∑ y : s → X, F y) = ∑ x : X, ∑ z : s.erase u → X,
+      F ((scopeRootEquiv s u hu).symm (x, z)) := by
+  classical
+  simpa only [Fintype.sum_prod_type] using ((scopeRootEquiv s u hu).symm.sum_comp F).symm
+
+/-- Simultaneously split every actual branch assignment into its root state
+    and its erased remainder, without dropping the joint root-state carrier. -/
+noncomputable def rootAssignmentsEquiv {U I X : Type*} [DecidableEq U]
+    (blocks : I → Finset U) (root : I → U) (hr : ∀ i, root i ∈ blocks i) :
+    ((i : I) → blocks i → X) ≃
+      (I → X) × ((i : I) → (blocks i).erase (root i) → X) := by
+  classical
+  exact
+    { toFun := fun y =>
+        (fun i => (scopeRootEquiv (blocks i) (root i) (hr i) (y i)).1,
+         fun i => (scopeRootEquiv (blocks i) (root i) (hr i) (y i)).2)
+      invFun := fun p i => (scopeRootEquiv (blocks i) (root i) (hr i)).symm (p.1 i, p.2 i)
+      left_inv := fun y => by
+        funext i
+        exact (scopeRootEquiv (blocks i) (root i) (hr i)).symm_apply_apply (y i)
+      right_inv := fun p => by
+        rcases p with ⟨x, z⟩
+        exact Prod.ext
+          (funext fun i => congrArg Prod.fst
+            ((scopeRootEquiv (blocks i) (root i) (hr i)).apply_symm_apply (x i, z i)))
+          (funext fun i => congrArg Prod.snd
+            ((scopeRootEquiv (blocks i) (root i) (hr i)).apply_symm_apply (x i, z i))) }
+
+/-- Keep a coupled function of the incoming root states inside the outer
+    sum while independently summing each branch's remaining coordinates. -/
+theorem sum_prod_root_coupled {U I X : Type*}
+    [Fintype I] [Fintype X] [DecidableEq U] [DecidableEq I]
+    (blocks : I → Finset U) (root : I → U) (hr : ∀ i, root i ∈ blocks i)
+    (H : (I → X) → ℝ) (F : (i : I) → (blocks i → X) → ℝ) :
+    (∑ y : (i : I) → blocks i → X,
+      H (fun i => y i ⟨root i, hr i⟩) * ∏ i, F i (y i)) =
+      ∑ x : I → X, H x * ∏ i, ∑ z : (blocks i).erase (root i) → X,
+        F i ((scopeRootEquiv (blocks i) (root i) (hr i)).symm (x i, z)) := by
+  classical
+  let e := rootAssignmentsEquiv (X := X) blocks root hr
+  have he := (e.symm.sum_comp
+    (fun y => H (fun i => y i ⟨root i, hr i⟩) * ∏ i, F i (y i))).symm
+  trans ∑ p : (I → X) × ((i : I) → (blocks i).erase (root i) → X),
+    H p.1 * ∏ i, F i ((scopeRootEquiv (blocks i) (root i) (hr i)).symm (p.1 i, p.2 i))
+  · simpa [e, rootAssignmentsEquiv, scopeRootEquiv] using he
+  · rw [Fintype.sum_prod_type]
+    simp_rw [Fintype.prod_sum, Finset.mul_sum]
+
+/-- Every variable on a factor side avoids the external variable boundary
+    of an actual edge. This makes boundary erasure exact, not a new count. -/
+theorem boundary_not_mem_factor_branch {ν α : Type*} [Fintype ν] [Fintype α]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G) (a : α) (v : ν)
+    (hav : G.incidence a v = true) :
+    v ∉ branchVariables G (Sum.inr a) (Sum.inl v) := by
+  classical
+  simpa [branchVariables] using not_mem_forestBranch_of_adj (incidenceGraph G) hG
+    ((incidenceGraph_inl_inr_adj G v a).mpr hav).symm
+
+/-- Recombining a root and its erased assignment is precisely the original
+    finite-scope extension followed by one boundary update. -/
+theorem extendScope_root_split {U X : Type*} [DecidableEq U]
+    (s : Finset U) (u : U) (hu : u ∈ s) (x : X)
+    (z : s.erase u → X) (background : U → X) :
+    extendScope s ((scopeRootEquiv s u hu).symm (x, z)) background =
+      Function.update (extendScope (s.erase u) z background) u x := by
+  classical
+  funext w
+  by_cases hwu : w = u <;> by_cases hws : w ∈ s <;>
+    simp_all [extendScope, scopeRootEquiv, Function.update]
+
+/-- The complete finite-scope root-coupled sum identity. The source coupling
+    stays inside the outer root-state sum; locality justifies only the inner
+    independent branch sums. -/
+theorem sum_prod_scope_root_coupled {U I X : Type*}
+    [Fintype I] [Fintype X] [DecidableEq U] [DecidableEq I]
+    (s : Finset U) (blocks : I → Finset U)
+    (sub : ∀ i, blocks i ⊆ s) (cover : ∀ u ∈ s, ∃! i, u ∈ blocks i)
+    (root : I → U) (hr : ∀ i, root i ∈ blocks i)
+    (H : (I → X) → ℝ) (F : I → (U → X) → ℝ)
+    (hF : ∀ i, DependsOn (blocks i) (F i)) (background : U → X) :
+    (∑ y : s → X, H (fun i => y ⟨root i, sub i (hr i)⟩) *
+      ∏ i, F i (extendScope s y background)) =
+      ∑ x : I → X, H x * ∏ i, ∑ z : (blocks i).erase (root i) → X,
+        F i (Function.update (extendScope ((blocks i).erase (root i)) z background) (root i) (x i)) := by
+  classical
+  let g : (i : I) → (blocks i → X) → ℝ :=
+    fun i z => F i (extendScope (blocks i) z background)
+  have hloc : ∀ (y : s → X) i,
+      F i (extendScope s y background) = g i (fun u => y ⟨u, sub i u.property⟩) := by
+    intro y i
+    apply hF i
+    intro u hu
+    simp [extendScope, hu, sub i hu]
+  have he := (scopePartitionEquiv (X := X) s blocks sub cover).sum_comp
+    (fun z => H (fun i => z i ⟨root i, hr i⟩) * ∏ i, g i (z i))
+  have hleft : (∑ y : s → X, H (fun i => y ⟨root i, sub i (hr i)⟩) *
+      ∏ i, F i (extendScope s y background)) =
+        ∑ z : (i : I) → blocks i → X,
+          H (fun i => z i ⟨root i, hr i⟩) * ∏ i, g i (z i) := by
+    simp_rw [hloc]
+    exact he
+  rw [hleft, sum_prod_root_coupled blocks root hr H g]
+  simp_rw [g, extendScope_root_split]
+
+/-- A variable-side weight is local to its actual side variables: the source
+    variable already belongs to that side. -/
+theorem branchWeight_variable_dependsOn {ν α X : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq ν]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (u : ν) (a : α) :
+    DependsOn (branchVariables G (Sum.inl u) (Sum.inr a))
+      (branchWeight G f (Sum.inl u) (Sum.inr a)) := by
+  classical
+  have hu : u ∈ branchVariables G (Sum.inl u) (Sum.inr a) := by
+    simpa [branchVariables] using mem_forestBranch_self (incidenceGraph G) (Sum.inl u) (Sum.inr a)
+  simpa only [Finset.insert_eq_of_mem hu] using
+    branchWeight_dependsOn_boundary G f hf (Sum.inl u) (Sum.inr a) u a rfl
+
+/-- The genuine factor-to-variable cavity SUM recurrence. The original
+    source factor remains coupled to all incoming root values. -/
+theorem cavitySum_factor {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G)
+    (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (a : α) (v : ν) (hav : G.incidence a v = true)
+    (ξ : X) (background : ν → X) :
+    cavitySum G f (Sum.inr a) (Sum.inl v) v ξ background =
+      ∑ x : otherVars G a v → X,
+        f a (Function.update (extendScope (otherVars G a v) x background) v ξ) *
+          ∏ u : otherVars G a v,
+            cavitySum G f (Sum.inl (u : ν)) (Sum.inr a) u (x u) background := by
+  classical
+  let S := branchVariables G (Sum.inr a) (Sum.inl v)
+  let blocks : otherVars G a v → Finset ν :=
+    fun u => branchVariables G (Sum.inl (u : ν)) (Sum.inr a)
+  have sub : ∀ i, blocks i ⊆ S := by
+    intro i w hw
+    dsimp [S]
+    rw [branchVariables_factor_eq_biUnion G hG a v]
+    exact Finset.mem_biUnion.mpr ⟨i, i.property, hw⟩
+  have cover : ∀ w ∈ S, ∃! i : otherVars G a v, w ∈ blocks i := by
+    intro w hw
+    have hw' : w ∈ (otherVars G a v).biUnion
+        (fun u => branchVariables G (Sum.inl u) (Sum.inr a)) := by
+      simpa only [S, branchVariables_factor_eq_biUnion G hG a v] using hw
+    obtain ⟨i, hi, hwi⟩ := Finset.mem_biUnion.mp hw'
+    refine ⟨⟨i, hi⟩, hwi, ?_⟩
+    intro j hj
+    apply Subtype.ext
+    by_contra hne
+    exact Finset.disjoint_left.mp (branchVariables_disjoint_incoming G hG
+      ((incidenceGraph_inl_inr_adj G i a).mpr (Finset.mem_filter.mp hi).2.2)
+      ((incidenceGraph_inl_inr_adj G j a).mpr (Finset.mem_filter.mp j.property).2.2)
+      (by simpa using hne)) hj hwi
+  have hr : ∀ i : otherVars G a v, (i : ν) ∈ blocks i := by
+    intro i
+    simpa [blocks, branchVariables] using
+      mem_forestBranch_self (incidenceGraph G) (Sum.inl (i : ν)) (Sum.inr a)
+  let F : otherVars G a v → (ν → X) → ℝ :=
+    fun u => branchWeight G f (Sum.inl (u : ν)) (Sum.inr a)
+  let H : (otherVars G a v → X) → ℝ :=
+    fun x => f a (Function.update (extendScope (otherVars G a v) x background) v ξ)
+  have hF : ∀ i, DependsOn (blocks i) (F i) :=
+    fun i => branchWeight_variable_dependsOn G f hf i a
+  have hsource : ∀ y : S → X,
+      f a (Function.update (extendScope S y background) v ξ) =
+        H (fun i => y ⟨i, sub i (hr i)⟩) := by
+    intro y
+    apply hf a
+    intro w hw
+    by_cases hwv : w = v
+    · subst w
+      simp
+    · have hwo : w ∈ otherVars G a v := by
+        simp only [otherVars, Finset.mem_filter, Finset.mem_univ, true_and]
+        exact ⟨hwv, by simpa [factorScope] using hw⟩
+      have hws := sub ⟨w, hwo⟩ (hr ⟨w, hwo⟩)
+      simp [Function.update, extendScope, hwv, hwo, hws]
+  have hterm : ∀ y : S → X,
+      branchWeight G f (Sum.inr a) (Sum.inl v)
+        (Function.update (extendScope S y background) v ξ) =
+          H (fun i => y ⟨i, sub i (hr i)⟩) * ∏ i, F i (extendScope S y background) := by
+    intro y
+    rw [branchWeight_factor G hG f a v, hsource y]
+    congr 1
+    trans ∏ i : otherVars G a v, F i (Function.update (extendScope S y background) v ξ)
+    · exact (Finset.prod_coe_sort (otherVars G a v) (fun u =>
+        branchWeight G f (Sum.inl u) (Sum.inr a)
+          (Function.update (extendScope S y background) v ξ))).symm
+    · apply Finset.prod_congr rfl
+      intro i _
+      apply hF i
+      intro w hw
+      have hwv : w ≠ v := by
+        intro h
+        subst w
+        exact boundary_not_mem_factor_branch G hG a v hav (sub i hw)
+      simp [Function.update, hwv]
+  have hsum := sum_prod_scope_root_coupled S blocks sub cover
+    (fun i : otherVars G a v => (i : ν)) hr H F hF background
+  rw [cavitySum, Finset.erase_eq_of_notMem (boundary_not_mem_factor_branch G hG a v hav)]
+  change (∑ y : S → X, branchWeight G f (Sum.inr a) (Sum.inl v)
+    (Function.update (extendScope S y background) v ξ)) = _
+  simp_rw [hterm]
+  exact hsum
+
 end Probability
 end SKEFTHawking.BeliefPropagation
