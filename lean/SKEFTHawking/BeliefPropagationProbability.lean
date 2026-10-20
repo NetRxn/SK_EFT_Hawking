@@ -980,5 +980,779 @@ theorem cavitySum_factor {ν α X : Type*}
   simp_rw [hterm]
   exact hsum
 
+/-- Fixing a root in an actual scope sum leaves exactly its erased assignment
+    domain, with no extra alphabet or exterior multiplicity. -/
+theorem sum_fixed_scope {U X : Type*} [Fintype X] [DecidableEq U] [DecidableEq X]
+    (s : Finset U) (v : U) (hv : v ∈ s) (ξ : X)
+    (F : (U → X) → ℝ) (background : U → X) :
+    (∑ y : s → X with y ⟨v, hv⟩ = ξ, F (extendScope s y background)) =
+      ∑ z : s.erase v → X,
+        F (Function.update (extendScope (s.erase v) z background) v ξ) := by
+  classical
+  simp only [Finset.sum_filter]
+  rw [sum_scope_root s v hv]
+  simp_rw [extendScope_root_split]
+  simp [scopeRootEquiv]
+
+/-- The actual full-assignment factor update is its coupled incoming-root
+    sum times the exact exterior-assignment multiplicity. -/
+theorem bpFactorUpdate_root_reduction {ν α X : Type*}
+    [Fintype ν] [Fintype X] [DecidableEq ν] [DecidableEq X]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (m : BPMessages ν α G X) (a : α) (v : ν) (hav : G.incidence a v = true)
+    (ξ : X) (background : ν → X) :
+    bpFactorUpdate m f a v ξ = extensionMultiplicity (X := X) (factorScope G a) *
+      ∑ z : otherVars G a v → X,
+        f a (Function.update (extendScope (otherVars G a v) z background) v ξ) *
+          ∏ u : otherVars G a v, m.varToFactor u a (z u) := by
+  classical
+  have hv : v ∈ factorScope G a := by simp [factorScope, hav]
+  rw [bpFactorUpdate_scope_reduction G f hf m a v hv ξ background]
+  rw [sum_fixed_scope (factorScope G a) v hv ξ
+    (fun y => f a y * ∏ u ∈ otherVars G a v, m.varToFactor u a (y u)) background]
+  have he : (factorScope G a).erase v = otherVars G a v := by
+    ext u; simp [factorScope, otherVars]
+  rw [he]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro z _
+  congr 1
+  rw [← Finset.prod_coe_sort (otherVars G a v)]
+  apply Finset.prod_congr rfl
+  intro u _
+  have huv : (u : ν) ≠ v := (Finset.mem_filter.mp u.property).2.1
+  simp [Function.update, extendScope, huv, u.property]
+
+/-- Explicit source-scaled cavity values on the unchanged all-pairs carrier.
+    Cavity semantics will be asserted only on actual incident coordinates. -/
+noncomputable def scaledCavityMessages {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [DecidableEq ν]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (background : ν → X) :
+    BPMessages ν α G X where
+  varToFactor v a ξ := branchMultiplier (X := X) G (Sum.inl v) (Sum.inr a) *
+    cavitySum G f (Sum.inl v) (Sum.inr a) v ξ background
+  factorToVar a v ξ := branchMultiplier (X := X) G (Sum.inr a) (Sum.inl v) *
+    cavitySum G f (Sum.inr a) (Sum.inl v) v ξ background
+
+/-- The original variable update reproduces the explicit source-scaled cavity
+    value by the two derived variable recurrences. -/
+theorem scaledCavityMessages_variable_update {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G)
+    (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (background : ν → X) (v : ν) (a : α) (ξ : X) :
+    bpVariableUpdate (scaledCavityMessages G f background) v a ξ =
+      (scaledCavityMessages G f background).varToFactor v a ξ := by
+  classical
+  simp only [bpVariableUpdate, scaledCavityMessages]
+  rw [Finset.prod_mul_distrib, branchMultiplier_variable G hG v a,
+    cavitySum_variable G hG f hf v a ξ background]
+
+/-- The original complete-assignment factor update reproduces the source-scaled
+    cavity value on an actual incident edge, including every exterior multiplicity. -/
+theorem scaledCavityMessages_factor_update {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G)
+    (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (background : ν → X) (a : α) (v : ν) (hav : G.incidence a v = true) (ξ : X) :
+    bpFactorUpdate (scaledCavityMessages G f background) f a v ξ =
+      (scaledCavityMessages G f background).factorToVar a v ξ := by
+  classical
+  rw [bpFactorUpdate_root_reduction G f hf _ a v hav ξ background]
+  simp only [scaledCavityMessages, Finset.prod_mul_distrib]
+  rw [branchMultiplier_factor G hG a v, cavitySum_factor G hG f hf a v hav ξ background]
+  rw [← Finset.prod_coe_sort (otherVars G a v)
+    (fun u => branchMultiplier (X := X) G (Sum.inl u) (Sum.inr a))]
+  rw [mul_assoc]
+  congr 1
+  rw [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro z _
+  ring
+
+/-- Every coordinate consumed by the original update is incident, even when
+    the outgoing coordinate itself is not incident. -/
+theorem bpUpdate_congr_incident {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ)
+    (m m' : BPMessages ν α G X)
+    (hvar : ∀ v a, G.incidence a v = true → m.varToFactor v a = m'.varToFactor v a)
+    (hfac : ∀ a v, G.incidence a v = true → m.factorToVar a v = m'.factorToVar a v) :
+    bpUpdate m f = bpUpdate m' f := by
+  apply flattenMsg_injective
+  funext e ξ
+  rcases e with ⟨v, a⟩ | ⟨a, v⟩
+  · change bpVariableUpdate m v a ξ = bpVariableUpdate m' v a ξ
+    apply Finset.prod_congr rfl
+    intro b hb
+    rw [hfac b v (Finset.mem_filter.mp hb).2.2]
+  · change bpFactorUpdate m f a v ξ = bpFactorUpdate m' f a v ξ
+    apply Finset.sum_congr rfl
+    intro y _
+    congr 1
+    apply Finset.prod_congr rfl
+    intro u hu
+    rw [hvar u a (Finset.mem_filter.mp hu).2.2]
+
+/-- One actual source sweep supplies nonincident coordinates and gives a full
+    fixed point; its incident coordinates retain the proved cavity values. -/
+theorem scaledCavityMessages_update_fixed {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G)
+    (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f) (background : ν → X) :
+    IsBPFixedPoint (bpUpdate (scaledCavityMessages G f background) f) f := by
+  unfold IsBPFixedPoint
+  apply bpUpdate_congr_incident
+  · intro v a _
+    funext ξ
+    exact scaledCavityMessages_variable_update G hG f hf background v a ξ
+  · intro a v hav
+    funext ξ
+    exact scaledCavityMessages_factor_update G hG f hf background a v hav ξ
+
+/-- Genuine rank induction makes the original full-array fixed point unique,
+    independently of the initial messages or signs of the factor weights. -/
+theorem bpFixedPoint_unique {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (cert : BPRankCert G) (f : α → (ν → X) → ℝ)
+    (m m' : BPMessages ν α G X) (hm : IsBPFixedPoint m f) (hm' : IsBPFixedPoint m' f) :
+    m = m' := by
+  have hs : bpStep G f (flattenMsg m) = flattenMsg m := by rw [← flattenMsg_bpUpdate, hm]
+  have hs' : bpStep G f (flattenMsg m') = flattenMsg m' := by rw [← flattenMsg_bpUpdate, hm']
+  have key : ∀ r : ℕ, ∀ e : MsgEndpoint ν α,
+      cert.rank e = r → flattenMsg m e = flattenMsg m' e := by
+    intro r
+    induction r using Nat.strong_induction_on with
+    | _ r ih =>
+      intro e he
+      rw [← congrFun hs e, ← congrFun hs' e]
+      apply bpStep_rankLocal cert f
+      intro e' he'
+      exact ih (cert.rank e') (by omega) e' rfl
+  apply flattenMsg_injective
+  funext e
+  exact key (cert.rank e) e rfl
+
+/-- Every arbitrary-initial actual iterate beyond the constructed forest
+    horizon equals the explicitly constructed full source fixed point. -/
+theorem bpIterate_eq_cavity_completion {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G)
+    (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f) (background : ν → X)
+    (m : BPMessages ν α G X) (n : ℕ)
+    (hn : max 1 (Fintype.card ν + Fintype.card α) ≤ n) :
+    (fun m' => bpUpdate m' f)^[n] m = bpUpdate (scaledCavityMessages G f background) f := by
+  rw [(bp_converges_on_forest G hG f m).1 n hn]
+  exact bpFixedPoint_unique G (bpRankCertForest G hG) f _ _
+    (bp_converges_on_forest G hG f m).2 (scaledCavityMessages_update_fixed G hG f hf background)
+
+/-- The actual variables in the connected component of a variable vertex.
+    The diagonal cut deletes no incidence edge. -/
+noncomputable def componentVariables {ν α : Type*} [Fintype ν] [Fintype α]
+    (G : FactorGraph ν α) (v : ν) : Finset ν :=
+  branchVariables G (Sum.inl v) (Sum.inl v)
+
+/-- The actual factor vertices in the same connected component. -/
+noncomputable def componentFactors {ν α : Type*} [Fintype ν] [Fintype α]
+    (G : FactorGraph ν α) (v : ν) : Finset α :=
+  branchFactors G (Sum.inl v) (Sum.inl v)
+
+/-- Every factor in a whole component has all of its actual scope there. -/
+theorem factorScope_subset_component {ν α : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq ν]
+    (G : FactorGraph ν α) (v : ν) (a : α) (ha : a ∈ componentFactors G v) :
+    factorScope G a ⊆ componentVariables G v := by
+  classical
+  intro u hu
+  have ha' : Sum.inr a ∈ forestBranch (incidenceGraph G) (Sum.inl v) (Sum.inl v) := by
+    simpa [componentFactors, branchFactors] using ha
+  have hau : G.incidence a u = true := by simpa [factorScope] using hu
+  rcases adjacent_mem_branch_or_cut (incidenceGraph G) ha'
+    ((incidenceGraph_inl_inr_adj G u a).mpr hau).symm with hin | he
+  · simpa [componentVariables, branchVariables] using hin
+  · simp at he
+
+/-- A factor outside the selected component cannot depend on any variable
+    inside it; disconnected components remain genuine independent scopes. -/
+theorem factorScope_subset_component_compl {ν α : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq ν]
+    (G : FactorGraph ν α) (v : ν) (a : α) (ha : a ∉ componentFactors G v) :
+    factorScope G a ⊆ (componentVariables G v)ᶜ := by
+  classical
+  intro u hu
+  simp only [Finset.mem_compl]
+  intro hum
+  have hu' : Sum.inl u ∈ forestBranch (incidenceGraph G) (Sum.inl v) (Sum.inl v) := by
+    simpa [componentVariables, branchVariables] using hum
+  have hau : G.incidence a u = true := by simpa [factorScope] using hu
+  rcases adjacent_mem_branch_or_cut (incidenceGraph G) hu'
+    ((incidenceGraph_inl_inr_adj G u a).mpr hau) with hin | he
+  · exact ha (by simpa [componentFactors, branchFactors] using hin)
+  · simp at he
+
+/-- All factors of a variable's component are covered once by its genuine
+    incoming incident branches, including an isolated variable's empty cover. -/
+theorem componentFactors_eq_biUnion {ν α : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G) (v : ν) :
+    componentFactors G v = (incidentFactors G v).biUnion
+      (fun a => branchFactors G (Sum.inr a) (Sum.inl v)) := by
+  classical
+  ext b
+  simp only [componentFactors, Finset.mem_biUnion, branchFactors, incidentFactors,
+    Finset.mem_filter, Finset.mem_univ, true_and]
+  constructor
+  · intro hb
+    rcases (mem_forestBranch_iff_source_or_incoming (incidenceGraph G) hG
+      (Sum.inl v) (Sum.inl v) (Sum.inr b)).mp hb with he | ⟨z, hz, _, hbz⟩
+    · cases he
+    · rcases z with u | c
+      · have hn : ¬(incidenceGraph G).Adj (Sum.inl u) (Sum.inl v) := by
+          simp [incidenceGraph, SimpleGraph.fromRel_adj]
+        exact (hn hz).elim
+      · exact ⟨c, (incidenceGraph_inl_inr_adj G v c).mp hz.symm, hbz⟩
+  · rintro ⟨c, hcv, hbc⟩
+    exact forestBranch_subset_next (incidenceGraph G) hG
+      ((incidenceGraph_inl_inr_adj G v c).mpr hcv).symm (by simp) hbc
+
+/-- The selected variable and all incoming branch variables cover its entire
+    component, with the source variable included exactly once after erasure. -/
+theorem componentVariables_eq_insert_biUnion {ν α : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G) (v : ν) :
+    componentVariables G v = insert v ((incidentFactors G v).biUnion
+      (fun a => branchVariables G (Sum.inr a) (Sum.inl v))) := by
+  classical
+  ext u
+  simp only [componentVariables, Finset.mem_insert, Finset.mem_biUnion, branchVariables,
+    incidentFactors, Finset.mem_filter, Finset.mem_univ, true_and]
+  constructor
+  · intro hu
+    rcases (mem_forestBranch_iff_source_or_incoming (incidenceGraph G) hG
+      (Sum.inl v) (Sum.inl v) (Sum.inl u)).mp hu with he | ⟨z, hz, _, huz⟩
+    · exact Or.inl (by simpa using he)
+    · right
+      rcases z with w | a
+      · have hn : ¬(incidenceGraph G).Adj (Sum.inl w) (Sum.inl v) := by
+          simp [incidenceGraph, SimpleGraph.fromRel_adj]
+        exact (hn hz).elim
+      · exact ⟨a, (incidenceGraph_inl_inr_adj G v a).mp hz.symm, huz⟩
+  · rintro (rfl | ⟨a, hav, hua⟩)
+    · exact mem_forestBranch_self _ _ _
+    · exact forestBranch_subset_next (incidenceGraph G) hG
+        ((incidenceGraph_inl_inr_adj G v a).mpr hav).symm (by simp) hua
+
+/-- Any genuine product over the component's factors splits over its
+    disjoint incoming factor branches, without repeating a source factor. -/
+theorem prod_componentFactors {ν α : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G) (v : ν) (w : α → ℝ) :
+    (∏ b ∈ componentFactors G v, w b) =
+      ∏ a ∈ incidentFactors G v, ∏ b ∈ branchFactors G (Sum.inr a) (Sum.inl v), w b := by
+  classical
+  rw [componentFactors_eq_biUnion G hG v]
+  apply Finset.prod_biUnion
+  intro a ha b hb hab
+  have hav : G.incidence a v = true := (Finset.mem_filter.mp ha).2
+  have hbv : G.incidence b v = true := (Finset.mem_filter.mp hb).2
+  exact branchFactors_disjoint_incoming G hG
+    ((incidenceGraph_inl_inr_adj G v b).mpr hbv).symm
+    ((incidenceGraph_inl_inr_adj G v a).mpr hav).symm (by simpa using hab)
+
+/-- Splitting all assignments of the selected component at its variable root
+    gives precisely the product of its genuine incoming cavity sums. -/
+theorem cavitySum_component {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G)
+    (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (v : ν) (ξ : X) (background : ν → X) :
+    cavitySum G f (Sum.inl v) (Sum.inl v) v ξ background =
+      ∏ a ∈ incidentFactors G v,
+        cavitySum G f (Sum.inr a) (Sum.inl v) v ξ background := by
+  classical
+  have hw : ∀ z : ν → X, branchWeight G f (Sum.inl v) (Sum.inl v) z =
+      ∏ a ∈ incidentFactors G v, branchWeight G f (Sum.inr a) (Sum.inl v) z := by
+    intro z
+    exact prod_componentFactors G hG v (fun b => f b z)
+  unfold cavitySum
+  simp_rw [hw]
+  change (∑ y : (componentVariables G v).erase v → X, ∏ a ∈ incidentFactors G v,
+    branchWeight G f (Sum.inr a) (Sum.inl v)
+      (Function.update (extendScope ((componentVariables G v).erase v) y background) v ξ)) = _
+  rw [componentVariables_eq_insert_biUnion G hG v,
+    Finset.erase_insert_eq_erase, Finset.erase_biUnion]
+  apply sum_prod_biUnion_boundary
+  · intro a ha b hb hab
+    apply Finset.disjoint_left.mpr
+    intro u hu hu'
+    have h := branchVariables_disjoint_incoming G hG
+      ((incidenceGraph_inl_inr_adj G v b).mpr (Finset.mem_filter.mp hb).2).symm
+      ((incidenceGraph_inl_inr_adj G v a).mpr (Finset.mem_filter.mp ha).2).symm
+      (by simpa using hab)
+    exact Finset.disjoint_left.mp h (Finset.mem_of_mem_erase hu) (Finset.mem_of_mem_erase hu')
+  · intro a ha z z' hz
+    apply branchWeight_dependsOn_boundary G f hf (Sum.inr a) (Sum.inl v) v a Sym2.eq_swap z z'
+    intro u hu
+    apply hz
+    by_cases huv : u = v <;> simp_all
+
+/-- Actual late-iterate beliefs equal the true whole-component numerator
+    times the source's strictly positive component multiplicity, not an assumed normalization. -/
+theorem variableBelief_iterate_component {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G)
+    (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f) (background : ν → X)
+    (m : BPMessages ν α G X) (n : ℕ)
+    (hn : max 1 (Fintype.card ν + Fintype.card α) ≤ n) (v : ν) (ξ : X) :
+    variableBelief ((fun m' => bpUpdate m' f)^[n] m) v ξ =
+      branchMultiplier (X := X) G (Sum.inl v) (Sum.inl v) *
+        cavitySum G f (Sum.inl v) (Sum.inl v) v ξ background := by
+  classical
+  rw [bpIterate_eq_cavity_completion G hG f hf background m n hn]
+  unfold variableBelief
+  trans ∏ a ∈ incidentFactors G v, (scaledCavityMessages G f background).factorToVar a v ξ
+  · apply Finset.prod_congr rfl
+    intro a ha
+    exact scaledCavityMessages_factor_update G hG f hf background a v
+      (Finset.mem_filter.mp ha).2 ξ
+  · simp only [scaledCavityMessages, Finset.prod_mul_distrib]
+    rw [← cavitySum_component G hG f hf v ξ background]
+    congr 1
+    exact (prod_componentFactors G hG v
+      (fun b => extensionMultiplicity (X := X) (factorScope G b))).symm
+
+/-- Restrict and glue actual assignments on a finite scope and its exact
+    complement, retaining disconnected and empty assignment domains. -/
+noncomputable def scopeComplementEquiv {U X : Type*} [Fintype U] [DecidableEq U]
+    (s : Finset U) : (U → X) ≃ (s → X) × ((sᶜ : Finset U) → X) := by
+  classical
+  refine
+    { toFun := fun y => (fun u => y u, fun u => y u)
+      invFun := fun p u => if h : u ∈ s then p.1 ⟨u, h⟩ else p.2 ⟨u, Finset.mem_compl.mpr h⟩
+      left_inv := ?_
+      right_inv := ?_ }
+  · intro y
+    funext u
+    dsimp only
+    split_ifs <;> rfl
+  · intro p
+    apply Prod.ext
+    · funext u
+      simp only [dif_pos u.property]
+    · funext u
+      have hu : (u : U) ∉ s := Finset.mem_compl.mp u.property
+      simp [hu]
+
+/-- Genuine finite-assignment factorization across a scope and its complement;
+    neither side receives the other's exterior-assignment multiplicity. -/
+theorem sum_mul_dependsOn_compl {U X : Type*}
+    [Fintype U] [Fintype X] [DecidableEq U]
+    (s : Finset U) (F H : (U → X) → ℝ)
+    (hF : DependsOn s F) (hH : DependsOn sᶜ H) (background : U → X) :
+    (∑ y : U → X, F y * H y) =
+      (∑ z : s → X, F (extendScope s z background)) *
+        ∑ w : (sᶜ : Finset U) → X, H (extendScope sᶜ w background) := by
+  classical
+  let e := scopeComplementEquiv (X := X) s
+  have he := Fintype.sum_equiv e (fun y => F y * H y)
+    (fun p => F (extendScope s p.1 background) * H (extendScope sᶜ p.2 background)) (by
+      intro y
+      apply congrArg₂ (· * ·)
+      · apply hF
+        intro u hu
+        simp [e, scopeComplementEquiv, extendScope, hu]
+      · apply hH
+        intro u hu
+        simp [e, scopeComplementEquiv, extendScope, hu])
+  rw [he, Fintype.sum_prod_type]
+  simp_rw [← Finset.mul_sum]
+  rw [← Finset.sum_mul]
+
+/-- The exact global fixed-root numerator factors into its component's
+    erased-root sum and the full partition of the complementary variables. -/
+theorem sum_boundary_mul_dependsOn_compl {U X : Type*}
+    [Fintype U] [Fintype X] [DecidableEq U] [DecidableEq X]
+    (s : Finset U) (F H : (U → X) → ℝ)
+    (hF : DependsOn s F) (hH : DependsOn sᶜ H)
+    (v : U) (hv : v ∈ s) (ξ : X) (background : U → X) :
+    (∑ y : U → X with y v = ξ, F y * H y) =
+      (∑ z : s.erase v → X,
+        F (Function.update (extendScope (s.erase v) z background) v ξ)) *
+          ∑ w : (sᶜ : Finset U) → X, H (extendScope sᶜ w background) := by
+  classical
+  have hg : DependsOn s (fun y => if y v = ξ then F y else 0) := by
+    intro y z hyz
+    change (if y v = ξ then F y else 0) = (if z v = ξ then F z else 0)
+    rw [hyz v hv, hF y z hyz]
+  have h := sum_mul_dependsOn_compl s (fun y => if y v = ξ then F y else 0) H hg hH background
+  have ev : ∀ z : s → X, extendScope s z background v = z ⟨v, hv⟩ := by
+    intro z; simp [extendScope, hv]
+  simp only [ite_mul, zero_mul, ev] at h
+  rw [← Finset.sum_filter, ← Finset.sum_filter, sum_fixed_scope] at h
+  exact h
+
+/-- Original factors outside the selected component, retaining isolated
+    factors and every other connected component. -/
+noncomputable def outsideWeight {ν α X : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq α]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (v : ν) (y : ν → X) : ℝ :=
+  ∏ a ∈ (componentFactors G v)ᶜ, f a y
+
+/-- The actual component product depends only on its own variables. -/
+theorem componentWeight_dependsOn {ν α X : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq ν]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f) (v : ν) :
+    DependsOn (componentVariables G v) (branchWeight G f (Sum.inl v) (Sum.inl v)) := by
+  classical
+  intro y z hyz
+  apply Finset.prod_congr rfl
+  intro a ha
+  apply hf a
+  intro u hu
+  exact hyz u (factorScope_subset_component G v a ha hu)
+
+/-- Complementary factors depend only on complementary variables, so their
+    partition cannot silently include a second copy of the selected component. -/
+theorem outsideWeight_dependsOn {ν α X : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f) (v : ν) :
+    DependsOn (componentVariables G v)ᶜ (outsideWeight G f v) := by
+  classical
+  intro y z hyz
+  apply Finset.prod_congr rfl
+  intro a ha
+  apply hf a
+  intro u hu
+  exact hyz u (factorScope_subset_component_compl G v a (Finset.mem_compl.mp ha) hu)
+
+/-- The original joint weight factors into the selected component and all
+    other components; isolated constant factors remain in the complement. -/
+theorem jointWeight_component_mul_outside {ν α X : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq α]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (v : ν) (y : ν → X) :
+    jointWeight f y = branchWeight G f (Sum.inl v) (Sum.inl v) y * outsideWeight G f v y := by
+  classical
+  exact (Finset.prod_mul_prod_compl (componentFactors G v) (fun a => f a y)).symm
+
+/-- Actual finite partition on the selected component's own variables. -/
+noncomputable def componentPartition {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [DecidableEq ν]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (v : ν) (background : ν → X) : ℝ :=
+  ∑ z : componentVariables G v → X,
+    branchWeight G f (Sum.inl v) (Sum.inl v) (extendScope (componentVariables G v) z background)
+
+/-- Actual partition over exactly the complementary variables and factors. -/
+noncomputable def outsidePartition {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (v : ν) (background : ν → X) : ℝ :=
+  ∑ z : ((componentVariables G v)ᶜ : Finset ν) → X,
+    outsideWeight G f v (extendScope (componentVariables G v)ᶜ z background)
+
+/-- The true global partition factors over a selected component and every
+    remaining component, with all assignment coordinates counted exactly once. -/
+theorem partition_component_mul_outside {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (v : ν) (background : ν → X) :
+    partition f = componentPartition G f v background * outsidePartition G f v background := by
+  classical
+  unfold partition
+  simp_rw [jointWeight_component_mul_outside G f v]
+  convert sum_mul_dependsOn_compl (componentVariables G v) _ _
+    (componentWeight_dependsOn G f hf v) (outsideWeight_dependsOn G f hf v) background using 1 <;>
+    congr 1
+  ext y
+  simp
+
+/-- True global variable numerators retain the complete partition of every
+    other component, including isolated variables and constant factors. -/
+theorem marginalWeight_component_mul_outside {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (v : ν) (ξ : X) (background : ν → X) :
+    marginalWeight f v ξ = cavitySum G f (Sum.inl v) (Sum.inl v) v ξ background *
+      outsidePartition G f v background := by
+  classical
+  have hv : v ∈ componentVariables G v := by
+    simpa [componentVariables, branchVariables] using
+      mem_forestBranch_self (incidenceGraph G) (Sum.inl v) (Sum.inl v)
+  unfold marginalWeight
+  simp_rw [jointWeight_component_mul_outside G f v]
+  convert sum_boundary_mul_dependsOn_compl (componentVariables G v) _ _
+    (componentWeight_dependsOn G f hf v) (outsideWeight_dependsOn G f hf v)
+    v hv ξ background using 1 <;> congr 1
+  ext y
+  simp
+
+/-- Nonnegative original factors and a genuinely positive global partition
+    force both actual component partitions positive, even with zero factor entries. -/
+theorem componentPartitions_pos {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (hnonneg : ∀ a y, 0 ≤ f a y) (hZ : 0 < partition f)
+    (v : ν) (background : ν → X) :
+    0 < componentPartition G f v background ∧ 0 < outsidePartition G f v background := by
+  classical
+  have hc : 0 ≤ componentPartition G f v background :=
+    Finset.sum_nonneg (fun z _ => Finset.prod_nonneg (fun a _ => hnonneg a _))
+  have ho : 0 ≤ outsidePartition G f v background :=
+    Finset.sum_nonneg (fun z _ => Finset.prod_nonneg (fun a _ => hnonneg a _))
+  have hp : 0 < componentPartition G f v background * outsidePartition G f v background := by
+    rw [← partition_component_mul_outside G f hf v background]
+    exact hZ
+  constructor
+  · by_contra hn
+    have hz := le_antisymm (le_of_not_gt hn) hc
+    rw [hz, zero_mul] at hp
+    exact (lt_irrefl 0) hp
+  · by_contra hn
+    have hz := le_antisymm (le_of_not_gt hn) ho
+    rw [hz, mul_zero] at hp
+    exact (lt_irrefl 0) hp
+
+/-- Summing the genuine component numerators over the root state gives
+    exactly its true partition, with no division by individual messages. -/
+theorem sum_cavitySum_component {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [DecidableEq ν]
+    (G : FactorGraph ν α) (f : α → (ν → X) → ℝ) (v : ν) (background : ν → X) :
+    (∑ ξ, cavitySum G f (Sum.inl v) (Sum.inl v) v ξ background) =
+      componentPartition G f v background := by
+  classical
+  have hv : v ∈ componentVariables G v := by
+    simpa [componentVariables, branchVariables] using
+      mem_forestBranch_self (incidenceGraph G) (Sum.inl v) (Sum.inl v)
+  symm
+  unfold componentPartition
+  rw [sum_scope_root (componentVariables G v) v hv]
+  simp_rw [extendScope_root_split]
+  rfl
+
+/-- The actual late-iterate belief normalizer is positive from the genuine
+    global partition and nonnegative factors, permitting individual zero messages. -/
+theorem variableBelief_normalizer_pos {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [Nonempty X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G)
+    (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (hnonneg : ∀ a y, 0 ≤ f a y) (hZ : 0 < partition f) (background : ν → X)
+    (m : BPMessages ν α G X) (n : ℕ)
+    (hn : max 1 (Fintype.card ν + Fintype.card α) ≤ n) (v : ν) :
+    0 < ∑ ξ, variableBelief ((fun m' => bpUpdate m' f)^[n] m) v ξ := by
+  classical
+  simp_rw [variableBelief_iterate_component G hG f hf background m n hn v]
+  rw [← Finset.mul_sum, sum_cavitySum_component]
+  exact mul_pos (branchMultiplier_pos G (Sum.inl v) (Sum.inl v))
+    (componentPartitions_pos G f hf hnonneg hZ v background).1
+
+/-- Exact global marginal of the ORIGINAL complete-assignment BP algorithm
+    on every finite forest, from arbitrary initial arrays beyond its proved horizon.
+    Only actual global-partition positivity is assumed; individual messages may be zero. -/
+theorem normalized_variableBelief_eq_global_marginal {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X] [Nonempty X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (hG : IsAcyclicFactorGraph G)
+    (f : α → (ν → X) → ℝ) (hf : ScopeLocal G f)
+    (hnonneg : ∀ a y, 0 ≤ f a y) (hZ : 0 < partition f)
+    (m : BPMessages ν α G X) (n : ℕ)
+    (hn : max 1 (Fintype.card ν + Fintype.card α) ≤ n) (v : ν) (ξ : X) :
+    variableBelief ((fun m' => bpUpdate m' f)^[n] m) v ξ /
+      (∑ η, variableBelief ((fun m' => bpUpdate m' f)^[n] m) v η) =
+        normalizedMarginal f v ξ := by
+  classical
+  let background : ν → X := fun _ => Classical.choice (inferInstance : Nonempty X)
+  have hC := branchMultiplier_pos (X := X) G (Sum.inl v) (Sum.inl v)
+  obtain ⟨hc, ho⟩ := componentPartitions_pos G f hf hnonneg hZ v background
+  simp_rw [variableBelief_iterate_component G hG f hf background m n hn v]
+  rw [← Finset.mul_sum, sum_cavitySum_component]
+  unfold normalizedMarginal
+  rw [marginalWeight_component_mul_outside G f hf v ξ background,
+    partition_component_mul_outside G f hf v background]
+  field_simp [ne_of_gt hC, ne_of_gt hc, ne_of_gt ho]
+
+/-- Native zero-partition control on the actual three-node source tree:
+    neither the actual BP belief nor totalized real division supplies a probability law. -/
+theorem zeroPartition_control
+    (m : BPMessages (Fin 2) (Fin 1) starFactorGraph Bool) :
+    partition (ν := Fin 2) (α := Fin 1) (X := Bool) (fun _ _ => 0) = 0 ∧
+      (∑ ξ, variableBelief (bpUpdate m (fun _ _ => 0)) 0 ξ) = 0 ∧
+      (∑ ξ, normalizedMarginal (ν := Fin 2) (α := Fin 1)
+        (fun _ (_ : Fin 2 → Bool) => 0) 0 ξ) = 0 := by
+  simp [partition, jointWeight, normalizedMarginal, marginalWeight,
+    variableBelief, bpUpdate, bpFactorUpdate, incidentFactors, starFactorGraph]
+
+/-- Actual four-node path u-a-v-b used to test the necessity of locality. -/
+def nonlocalControlGraph : FactorGraph (Fin 2) (Fin 2) where
+  incidence a v := if a = 0 then true else v = 1
+
+/-- The second factor illegally reads u although its incidence scope is only v. -/
+def nonlocalControlWeight (a : Fin 2) (y : Fin 2 → Bool) : ℝ :=
+  if a = 0 then 1 else if y 0 = false then 1 else 0
+
+/-- Explicit values for every original coordinate, including both nonedges. -/
+def nonlocalControlMessages : BPMessages (Fin 2) (Fin 2) nonlocalControlGraph Bool where
+  varToFactor _ a _ := if a = 0 then 1 else 2
+  factorToVar a v ξ := if a = 0 then 2 else if v = 1 then 1 else if ξ = false then 4 else 0
+
+/-- Both source certificate fields hold on the four-node path; no forest
+    assumption is inserted into the nonlocal countercontrol. -/
+def nonlocalControlCert : BPRankCert nonlocalControlGraph := by
+  let r : MsgEndpoint (Fin 2) (Fin 2) → ℕ := fun e => match e with
+    | Sum.inl (v, a) => if a = 0 then if v = 0 then 0 else 1 else if v = 0 then 3 else 2
+    | Sum.inr (a, v) => if a = 0 then if v = 0 then 2 else 1 else if v = 0 then 3 else 0
+  refine { rank := r, var_gt := ?_, fac_gt := ?_ }
+  · intro v a b hba hb
+    fin_cases v <;> fin_cases a <;> fin_cases b <;> simp_all [r, nonlocalControlGraph]
+  · intro a v u huv hu
+    fin_cases a <;> fin_cases v <;> fin_cases u <;> simp_all [r, nonlocalControlGraph]
+
+/-- Exact four-assignment enumeration used only to check the native binary
+    countercontrols against the original complete-assignment sums. -/
+theorem sum_finTwo_bool [Fintype (Fin 2 → Bool)] (F : (Fin 2 → Bool) → ℝ) :
+    (∑ y, F y) = F ![false, false] + F ![false, true] +
+      F ![true, false] + F ![true, true] := by
+  have h := ((finTwoArrowEquiv Bool).symm.sum_comp F).symm
+  simpa [Fintype.sum_prod_type, finTwoArrowEquiv, add_comm, add_assoc] using h
+
+/-- Kernel-checked fixed point of the actual complete-assignment update for
+    the nonlocal factor model; its nonincident coordinates are included. -/
+theorem nonlocalControl_fixed : IsBPFixedPoint nonlocalControlMessages nonlocalControlWeight := by
+  unfold IsBPFixedPoint
+  apply flattenMsg_injective
+  funext e ξ
+  rcases e with ⟨v, a⟩ | ⟨a, v⟩
+  · fin_cases v <;> fin_cases a <;> cases ξ <;>
+      norm_num [flattenMsg, bpUpdate, bpVariableUpdate, otherFactors,
+        nonlocalControlGraph, nonlocalControlMessages, Finset.prod_filter, Fin.prod_univ_succ]
+  · simp only [flattenMsg, bpUpdate, bpFactorUpdate, Finset.sum_filter]
+    rw [sum_finTwo_bool]
+    simp only [otherVars, Finset.prod_filter, Fin.prod_univ_succ]
+    fin_cases a <;> fin_cases v <;> cases ξ <;>
+      norm_num [nonlocalControlGraph, nonlocalControlMessages, nonlocalControlWeight]
+
+/-- A genuine forest, nonnegative weights, positive partition and actual fixed
+    point still fail marginal correctness if the necessary scope locality is removed. -/
+theorem nonlocalControl_counterexample :
+    IsAcyclicFactorGraph nonlocalControlGraph ∧
+      (∀ a y, 0 ≤ nonlocalControlWeight a y) ∧
+      0 < partition nonlocalControlWeight ∧
+      IsBPFixedPoint nonlocalControlMessages nonlocalControlWeight ∧
+      ¬ ScopeLocal nonlocalControlGraph nonlocalControlWeight ∧
+      variableBelief nonlocalControlMessages 0 false /
+        (∑ ξ, variableBelief nonlocalControlMessages 0 ξ) ≠
+          normalizedMarginal nonlocalControlWeight 0 false := by
+  classical
+  have hz : partition nonlocalControlWeight = 2 := by
+    unfold partition
+    simp only [sum_finTwo_bool]
+    norm_num [jointWeight, nonlocalControlWeight, Fin.prod_univ_succ]
+  have hm : marginalWeight nonlocalControlWeight 0 false = 2 := by
+    unfold marginalWeight
+    simp only [Finset.sum_filter, sum_finTwo_bool]
+    norm_num [jointWeight, nonlocalControlWeight, Fin.prod_univ_succ]
+  have hb : ∀ ξ, variableBelief nonlocalControlMessages 0 ξ = 2 := by
+    intro ξ
+    simp only [variableBelief, incidentFactors, Finset.prod_filter, Fin.prod_univ_succ]
+    norm_num [nonlocalControlGraph, nonlocalControlMessages]
+  refine ⟨isAcyclicFactorGraph_of_bpRankCert nonlocalControlCert, ?_, ?_,
+    nonlocalControl_fixed, ?_, ?_⟩
+  · intro a y
+    unfold nonlocalControlWeight
+    split_ifs <;> norm_num
+  · rw [hz]; norm_num
+  · intro hl
+    have he := hl 1 ![false, false] ![true, false] (by
+      intro v hv
+      fin_cases v <;> simp_all [factorScope, nonlocalControlGraph])
+    norm_num [nonlocalControlWeight] at he
+  · simp_rw [hb]
+    norm_num [normalizedMarginal, hz, hm]
+
+/-- One unary component, one isolated variable and one isolated constant factor. -/
+def disconnectedControlGraph : FactorGraph (Fin 2) (Fin 2) where
+  incidence a v := a = 0 ∧ v = 0
+
+/-- A zero local entry is allowed; the isolated factor contributes five to Z. -/
+def disconnectedControlWeight (a : Fin 2) (y : Fin 2 → Bool) : ℝ :=
+  if a = 0 then if y 0 = false then 0 else 3 else 5
+
+/-- Constructed all-pairs rank for the actual disconnected control graph. -/
+def disconnectedControlCert : BPRankCert disconnectedControlGraph := by
+  let r : MsgEndpoint (Fin 2) (Fin 2) → ℕ := fun e => match e with
+    | Sum.inl (v, a) => if v = 0 ∧ a = 1 then 1 else 0
+    | Sum.inr (a, v) => if a = 0 ∧ v = 1 then 1 else 0
+  refine { rank := r, var_gt := ?_, fac_gt := ?_ }
+  · intro v a b hba hb
+    fin_cases v <;> fin_cases a <;> fin_cases b <;> simp_all [r, disconnectedControlGraph]
+  · intro a v u huv hu
+    fin_cases a <;> fin_cases v <;> fin_cases u <;> simp_all [r, disconnectedControlGraph]
+
+/-- Positive native control with an isolated variable, an isolated factor,
+    an individual zero message and source multiplicity two. All values refer
+    to the actual global model and original update, from any initial messages. -/
+theorem disconnectedControl_values
+    (m : BPMessages (Fin 2) (Fin 2) disconnectedControlGraph Bool) :
+    IsAcyclicFactorGraph disconnectedControlGraph ∧
+      ScopeLocal disconnectedControlGraph disconnectedControlWeight ∧
+      (∀ a y, 0 ≤ disconnectedControlWeight a y) ∧
+      partition disconnectedControlWeight = 30 ∧
+      extensionMultiplicity (X := Bool) (factorScope disconnectedControlGraph 0) = 2 ∧
+      variableBelief (bpUpdate m disconnectedControlWeight) 0 false = 0 ∧
+      (∑ ξ, variableBelief (bpUpdate m disconnectedControlWeight) 0 ξ) = 6 ∧
+      (∀ ξ, variableBelief (bpUpdate m disconnectedControlWeight) 1 ξ = 1) ∧
+      normalizedMarginal disconnectedControlWeight 0 true = 1 ∧
+      normalizedMarginal disconnectedControlWeight 1 true = 1 / 2 := by
+  classical
+  have hz : partition disconnectedControlWeight = 30 := by
+    unfold partition
+    simp only [sum_finTwo_bool]
+    norm_num [jointWeight, disconnectedControlWeight, Fin.prod_univ_succ]
+  have hm0 : marginalWeight disconnectedControlWeight 0 true = 30 := by
+    unfold marginalWeight
+    simp only [Finset.sum_filter, sum_finTwo_bool]
+    norm_num [jointWeight, disconnectedControlWeight, Fin.prod_univ_succ]
+  have hm1 : marginalWeight disconnectedControlWeight 1 true = 15 := by
+    unfold marginalWeight
+    simp only [Finset.sum_filter, sum_finTwo_bool]
+    norm_num [jointWeight, disconnectedControlWeight, Fin.prod_univ_succ]
+  have hfac : ∀ ξ, bpFactorUpdate m disconnectedControlWeight 0 0 ξ = if ξ = false then 0 else 6 := by
+    intro ξ
+    simp only [bpFactorUpdate, Finset.sum_filter, sum_finTwo_bool,
+      otherVars, Finset.prod_filter, Fin.prod_univ_succ]
+    cases ξ <;> norm_num [disconnectedControlGraph, disconnectedControlWeight]
+  have hb0 : ∀ ξ, variableBelief (bpUpdate m disconnectedControlWeight) 0 ξ =
+      if ξ = false then 0 else 6 := by
+    intro ξ
+    simp only [variableBelief, incidentFactors, Finset.prod_filter, Fin.prod_univ_succ]
+    simpa [disconnectedControlGraph, bpUpdate] using hfac ξ
+  have hb1 : ∀ ξ, variableBelief (bpUpdate m disconnectedControlWeight) 1 ξ = 1 := by
+    intro ξ
+    simp [variableBelief, incidentFactors, disconnectedControlGraph]
+  refine ⟨isAcyclicFactorGraph_of_bpRankCert disconnectedControlCert, ?_, ?_, hz,
+    ?_, ?_, ?_, hb1, ?_, ?_⟩
+  · intro a y z hyz
+    fin_cases a
+    · have h0 := hyz 0 (by simp [factorScope, disconnectedControlGraph])
+      simp [disconnectedControlWeight, h0]
+    · simp [disconnectedControlWeight]
+  · intro a y
+    unfold disconnectedControlWeight
+    split_ifs <;> norm_num
+  · have he : factorScope disconnectedControlGraph 0 = {0} := by
+      ext u
+      fin_cases u <;> simp [factorScope, disconnectedControlGraph]
+    rw [he]
+    norm_num [extensionMultiplicity]
+  · simp [hb0]
+  · simp_rw [hb0]; norm_num
+  · norm_num [normalizedMarginal, hz, hm0]
+  · norm_num [normalizedMarginal, hz, hm1]
+
 end Probability
 end SKEFTHawking.BeliefPropagation
