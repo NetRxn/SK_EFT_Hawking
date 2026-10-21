@@ -527,7 +527,7 @@ project, mathematical, publication and merged-wave gates remain unwaived.
 
 ## 2026-10-11 lifecycle observation amendment
 
-**Status:** The LO-1–LO-6 and native-domain source corrections are implemented and
+**Status:** The original LO-1–LO-6 and native-domain source corrections are implemented and
 independently accepted for bounded source/test/evidence scope. ROOT canonical evidence
 records documentation/source integration and current project-gate outcomes; source
 review alone does not certify them. Live activation and proof-slot admission remain
@@ -618,6 +618,78 @@ and the full forensic review remain root-owned evidence, not new process authori
   `absorb`, add retargeting or hand-edit leases to make a mismatch pass. Preserve exact
   sources/commits through the existing recovery process and revalidate fresh runtime.
 
+
+<a id="lo3-creation-admission-extension"></a>
+
+### LO-3a–LO-3e creation-admission extension
+
+**Status: WHOLE SOURCE, ISOLATED RUNTIME AND PRODUCTION CONTROLS ACCEPTED;
+CANONICAL DELIVERY AND SHARED NATIVE ADMISSION PENDING.** Genuine independent whole
+review and ROOT intake accept the current implementation, complete targeted suites
+and meaningful sole-production regression/exact-restoration controls. The explicit
+missing live-client configuration case remains unmeasured. This bounded acceptance
+does not establish broader fast/project gates, canonical committed primary source,
+loaded proxy/backend code, drained requests, available lanes or matching native
+lease/MCP/paired admission. The lifecycle specification and plan retain the full
+construction and remaining delivery sequence. No extra slot, lifecycle verb,
+registry or runtime permission is added.
+
+- **LO-3a — Preserve the failed pair, not a reconstructed sample.** Extend the existing
+  Observation and pending-record diagnostic envelope to retain bounded same-call
+  selected/census comparison inputs, capability/return-code/timing evidence and
+  explicit truncation/length/hash metadata under specification §5.1's exact additive
+  Observation/PairV1/startup_evidence grammar. Absent is not null, bool is not int,
+  and unretained full-text hashes remain supplied evidence, never verified identity.
+  Ordinary v2 records have record_origin/recovery absent; no managed-origin tag. Decoded text and parsed comparison
+  operands are labelled as such, not claimed as original OS bytes. Diagnostics,
+  including an unverified target PID, never supply managed identity. Preserve the
+  first refusal, terminal failure and rollback evidence; failed evidence publication
+  cannot erase the original durable reservation.
+- **LO-3b — Reobserve only the exact initial creation.** Under the existing lifecycle
+  lock, only the exact just-returned unreaped Popen handle and unchanged pending
+  launch token may reattempt initial identity capture. Retry eligibility requires
+  both individually valid selected/census target signatures present but unequal,
+  with a structured coherence-drift reason and no supplied expected signature.
+  Missing/absent targets, permission/tool/parse/bound/capability failure and identity
+  mismatch remain refusals. Every accepted sample still passes the unchanged full
+  generic observer; no lstart-only comparison, guessed signature, replacement-PID
+  adoption or exception for ordinary lease/proxy/stop/status consumers.
+- **LO-3c — One explicit startup admission allowance.** Reallocate the existing configured
+  startup_timeout_seconds allowance, currently used as a fresh port-readiness timer,
+  into one local absolute deadline initialized immediately before this Popen.
+  The effective bound is exactly min(local deadline, actual enclosing ContextVar
+  deadline), or local when there is no enclosing deadline. All explicit checks,
+  capture/reobservation, diagnostic/signature IO/publication, readiness, sleeps and
+  final running admission use that same effective bound, including both sides of
+  durable writes. Local allowance/deadline remain diagnostic, never added grace. Never append a second allowance
+  or reset the timer per attempt/stage. This is a tightening of readiness
+  timing, not a current whole-prepare deadline or a universal hard wall around
+  spawn/filesystem/kernel calls. A late returning operation is failure, not success;
+  use pre/post publication checks and existing guarded rollback.
+- **LO-3d — Cleanup retains its own authority and opportunity.** Leave the expired
+  startup observation context before rollback, restoring the real enclosing
+  deadline even when already expired; never replace it with None or new grace.
+  Preserve the existing independent
+  wrapper and descendant cleanup waits and every full-identity/ancestry/quiescence
+  gate. The exact-created-handle fallback still requires a previously coherent
+  signature and cannot mint initial ownership or discharge unknown descendants.
+  No timeout/diagnostic record grants signal, unlink, reuse or lease authority.
+- **LO-3e — Qualify the entire original contract.** Before code, obtain whole nonauthor
+  review of ADR/spec/plan/guide and a separate literal-intent assessment. After code,
+  prove meaningful production-path positives/negatives and actual sole-production
+  regression/restoration controls, preserving the original LO/SF/RR tests and
+  source state. ROOT separately admits current-source loading, normal real-branch
+  lease/prepare/MCP/release/reconnect and paired/capacity evidence before shared
+  native activation or proof-slot admission. Repeated successful starts alone do not
+  prove an earlier cause fixed.
+  Original scientific, project, closure and protected-main gates remain separate.
+
+This extends LO-3's pending transaction only. LO-1's unavailable/mismatch meanings,
+LO-2 quiescence, LO-4 capacity, LO-5 scope/drain/loading, LO-6 lease/integration and
+SF/RR ownership/deadlines are unchanged. Earlier coarse identity witnesses retain
+their genuine precision. Incident particulars and causal uncertainty belong in the
+finding/immutable local evidence, not a new operator exception.
+
 ### Overlap and compatibility
 
 `LO-1`–`LO-4` strengthen the evidence that S-A/S-D/S-G already need; they retain
@@ -646,8 +718,10 @@ alone does not repair the running supervisor or release quarantined capacity.
 ### Acceptance and rollout gate
 
 Whole specification and implementation reviews accepted the bounded source contract,
-including the original lifecycle decisions and native-domain corrections. Meaningful
-sole production mutants and restored-source suites substantiate that bounded scope.
+including the original lifecycle decisions and native-domain corrections. The startup
+extension also has independent isolated runtime/control acceptance as stated above.
+Meaningful sole-production mutants and restored-source suites substantiate that
+bounded scope; canonical committed source and shared native loading are distinct.
 Independent review of reconciled authorities, current policy/architecture and project
 gates, ROOT integration and the existing finding-closure writer remain required.
 Existing failing tests/validators remain unwaived; scoped checks do not establish a

@@ -407,19 +407,31 @@ def test_control_07_postlaunch_failure_owned_rollback(rig, monkeypatch):
     assert sup.process_state("backend", 1) == "running"
     # Persistent disk failure after Popen must not disable exact-owned cleanup.
     attempts = []
+    publication_faults = []
     def fail_after_first(source, dest):
         if str(dest).endswith("public-wt2-backend.json"):
             attempts.append(json.loads(Path(source).read_text())["phase"])
             if len(attempts) >= 2:
-                raise PermissionError("persistent registration failure")
+                fault = PermissionError("persistent registration failure")
+                publication_faults.append(fault)
+                raise fault
         return real_replace(source, dest)
     with monkeypatch.context() as patch:
         patch.setattr(state.os, "replace", fail_after_first)
-        with pytest.raises(PermissionError, match="persistent registration failure"):
+        with pytest.raises(SlotError, match="persistent registration failure.*diagnostic publication failed.*owned cleanup completed") as persistent:
             sup.start_backend(2)
     assert host.handles[-1].terminations == 1 and host.handles[-1].waits == [5]
     assert not sup.inventory.process_path("backend", 2).exists()
     assert len(attempts) >= 3
+    assert len(publication_faults) == 2
+    assert persistent.value.__cause__ is publication_faults[0]
+    assert isinstance(persistent.value.__cause__, PermissionError)
+    observations = persistent.value.observations
+    assert [item.operation for item in observations] == ["startup-signature_write", "rollback-diagnostic-write"]
+    assert [item.error_class for item in observations] == ["PermissionError", "PermissionError"]
+    assert [item.errno for item in observations] == [fault.errno for fault in publication_faults]
+    assert [item.detail for item in observations] == [str(fault) for fault in publication_faults]
+    assert 2 not in sup.capacity_census()["reserved_physical_slots"]
     # An unavailable census still allows valid exact wrapper cleanup, but cannot
     # certify its descendants absent or clear the durable reservation.
     census_writes = []
@@ -2370,3 +2382,995 @@ def test_rr4_first_refusal_survives_deadline(rig, monkeypatch):
     assert isinstance(error, SlotError) and path.exists() and host.clock <= 10.00001
     assert "first refusal: post-write classification" in str(error) and "shutdown rooted ancestry changed after durable write" in str(error), "RR4 first transition cause survives the passive deadline"
     assert error.observations and any(row.state == "present" for row in error.observations), "RR4 first typed observations survive final unavailable evidence"
+
+
+# LA-C1–C12: actual production methods, external Host/OS/clock/IO seams only.
+# SOURCE-ONLY author delivery: these controls have NOT been run by the author.
+def _la_drift(host, *, once=True):
+    pid = host.next_pid
+    old = 'Sun Oct 11 00:00:00 2026 isolated earlier creation command'
+    host.selected_results[pid] = SimpleNamespace(returncode=0, stdout=old, stderr='')
+    if once:
+        def after():
+            if pid in host.rows:
+                host.selected_results.pop(pid, None)
+        host.after_census = after
+    return pid, old
+
+
+def _la_record(sup, number=1):
+    return read_json(sup.inventory.process_path('backend', number))
+
+
+def test_la_c1_exact_creation_pair_stabilizes_once(rig):
+    _, sup, host = rig
+    pid, old = _la_drift(host)
+    sup.start_backend(1)
+    record = _la_record(sup); v = record['startup_evidence']
+    assert len(host.launches) == 1 and record['pid'] == pid
+    assert record['signature'] == host.rows[pid][2] != old
+    assert v['stage'] == 'complete' and v['creation_attempts'] == 2
+    assert v['creation_succeeded'] and v['failure_count'] == 1
+    assert v['first_failure_ref'] == v['last_failure_ref'] == 1
+    pair = v['failures'][0]['diagnostics']
+    assert pair['selected']['operand']['prefix'] == old
+    assert pair['census']['operand']['prefix'] == record['signature']
+    assert pair['selected']['capable'] and pair['census']['capable']
+    assert pair['expected_signature_supplied'] is False
+    assert host.launch_reservations[0][0]['phase'] == 'launch_pending'
+    assert 'pid' not in host.launch_reservations[0][0]
+    assert 'signature' not in host.launch_reservations[0][0]
+    state.validate_startup_evidence(record)
+
+
+def test_la_c2_persistent_drift_consumes_one_bound(rig, monkeypatch):
+    _, sup, host = rig
+    sup.inventory.raw['server']['startup_timeout_seconds'] = 0.25
+    host.ps_cost = 0.02
+    pid, _ = _la_drift(host, once=False)
+    process_path = sup.inventory.process_path('backend', 1)
+    popen, external_run, replace = subprocess.Popen, subprocess.run, state.os.replace
+    launches, failed_writes, watchdog = [], [], []
+    watching = [True]
+    def launch(*args, **kwargs):
+        launches.append(host.clock)
+        return popen(*args, **kwargs)
+    def finite_watchdog():
+        # Independent of every emitted deadline. Two rollback ps commands may
+        # consume .04 after admission, but resetting admission must still stop.
+        if watching[0] and launches and host.clock > launches[0] + 0.25 + 0.04 + 1e-9:
+            watchdog.append(host.clock)
+            raise AssertionError('external finite startup watchdog exceeded')
+    def command(argv, **kwargs):
+        finite_watchdog()
+        return external_run(argv, **kwargs)
+    def write(source, destination):
+        if Path(destination) == process_path:
+            value = json.loads(Path(source).read_text())
+            if value.get('startup_evidence', {}).get('stage') == 'failed':
+                failed_writes.append(host.clock)
+        return replace(source, destination)
+    monkeypatch.setattr(subprocess, 'Popen', launch)
+    monkeypatch.setattr(subprocess, 'run', command)
+    monkeypatch.setattr(state.os, 'replace', write)
+    host.after_sleep = finite_watchdog
+    with pytest.raises(SlotError, match='residual retained') as failure:
+        sup.start_backend(1)
+    watching[0] = False
+    v = _la_record(sup)['startup_evidence']
+    assert v['stage'] == 'failed' and not v['creation_succeeded']
+    assert v['failure_count'] == v['creation_attempts'] >= 2
+    assert v['failures'][0]['id'] == 1
+    assert v['failures'][-1]['id'] == v['failure_count']
+    assert v['updated']['mono'] >= v['effective_deadline']
+    assert len(launches) == 1 and v['started']['mono'] == launches[0]
+    assert v['configured_seconds'] == 0.25
+    assert v['local_deadline'] == launches[0] + 0.25
+    assert v['enclosing_deadline'] is None and v['effective_deadline'] == launches[0] + 0.25
+    assert launches[0] + 0.25 <= v['terminal']['at']['mono'] <= launches[0] + 0.25 + 1e-9
+    assert failed_writes and max(failed_writes) <= launches[0] + 0.25 + 0.04 + 1e-9
+    assert not watchdog, 'a reset/enlarged production bound must trip this independent finite oracle'
+    assert v['terminal']['error']['error_class'] == 'TimeoutError'
+    assert len(failure.value.observations) == 4
+    assert failure.value.observations[0].reason == 'selected_census_signature_drift'
+    assert failure.value.observations[-2].error_class == 'TimeoutError'
+    assert len(host.launches) == 1 and not host.signals
+    assert host.handles[0].terminations == 0 and pid in host.rows
+    assert 1 in sup.capacity_census()['reserved_physical_slots']
+
+
+@pytest.mark.parametrize('case', ['selected_denied', 'selected_timeout', 'stderr', 'nonzero',
+                                  'malformed', 'missing_target', 'absent', 'duplicate',
+                                  'oversized', 'no_observer', 'census_denied'])
+def test_la_c3_ineligible_views_never_retry(rig, monkeypatch, case):
+    _, sup, host = rig
+    pid = host.next_pid; real = host.run
+    def external(argv, **kw):
+        if argv[0] != 'ps' or pid not in host.rows:
+            return real(argv, **kw)
+        selected = '-p' in argv and argv[2] == str(pid)
+        if selected:
+            if case == 'selected_denied': raise PermissionError(errno.EPERM, 'selected denied')
+            if case == 'selected_timeout': raise subprocess.TimeoutExpired(argv, kw['timeout'])
+            if case == 'stderr': return SimpleNamespace(returncode=0, stdout=host.rows[pid][2], stderr='warning')
+            if case == 'nonzero': return SimpleNamespace(returncode=3, stdout='', stderr='')
+            if case == 'malformed': return SimpleNamespace(returncode=0, stdout='partial identity', stderr='')
+            if case == 'absent':
+                host.remove(pid)
+                return SimpleNamespace(returncode=1, stdout='', stderr='')
+        if '-axo' in argv:
+            if case == 'census_denied': raise PermissionError(errno.EPERM, 'census denied')
+            value = real(argv, **kw)
+            rows = value.stdout.splitlines(keepends=True)
+            if case == 'missing_target': rows = [z for z in rows if not z.startswith(str(pid) + ' ')]
+            if case == 'no_observer': rows = [z for z in rows if not z.startswith(str(os.getpid()) + ' ')]
+            if case == 'duplicate': rows += [z for z in rows if z.startswith(str(pid) + ' ')]
+            if case == 'oversized': return SimpleNamespace(returncode=0, stdout='x' * (state.MAX_OBSERVER_OUTPUT + 1), stderr='')
+            return SimpleNamespace(returncode=value.returncode, stdout=''.join(rows), stderr=value.stderr)
+        return real(argv, **kw)
+    monkeypatch.setattr(subprocess, 'run', external)
+    with pytest.raises(SlotError): sup.start_backend(1)
+    record = _la_record(sup)
+    assert record['phase'] != 'running' and len(host.launches) == 1
+    assert not host.signals and host.handles[0].terminations == 0
+    if 'startup_evidence' in record:
+        assert record['startup_evidence']['creation_attempts'] == 1
+        assert record['startup_evidence']['failure_count'] <= 1
+
+
+@pytest.mark.parametrize('during_pair', [False, True])
+def test_la_c4_reaped_handle_cannot_adopt_replacement(rig, during_pair):
+    _, sup, host = rig
+    pid = host.next_pid
+    def replace():
+        if host.handles and pid in host.rows:
+            host.handles[-1].returncode = 0
+            host.rows[pid] = (1, 'unrelated replacement', 'Sun Oct 11 00:00:01 2026 unrelated replacement')
+    if during_pair:
+        host.after_census = replace
+    else:
+        host.after_poll = lambda handle: replace()
+    with pytest.raises(SlotError) as error: sup.start_backend(1)
+    record = _la_record(sup)
+    assert record['phase'] != 'running' and 'signature' not in record
+    assert not host.signals and host.handles[0].terminations == 0
+    assert len(host.launches) == 1 and host.rows[pid][1] == 'unrelated replacement'
+    assert error.value.__cause__ is not None
+
+
+@pytest.mark.parametrize('write_stage', ['creation', 'readiness', 'complete'])
+def test_la_c5_late_write_only_uses_actual_outer_bound(rig, monkeypatch, write_stage):
+    import sys
+    _, sup, host = rig
+    sup.inventory.raw['server']['startup_timeout_seconds'] = 45
+    if write_stage == 'creation': _la_drift(host, once=False)
+    path = sup.inventory.process_path('backend', 1)
+    replace = state.os.replace; late = []; returned_guards = []
+    start = host.clock
+    def delayed(source, destination):
+        value = json.loads(Path(source).read_text()) if Path(destination) == path else {}
+        result = replace(source, destination)
+        if not late and value.get('startup_evidence', {}).get('stage') == write_stage:
+            # Only this external returned write consumes the remaining bound.
+            host.clock = start + 1.1
+            late.append(value)
+        return result
+    def trace(frame, event, arg):
+        if event == 'call' and late and frame.f_code.co_name == '_startup_deadline':
+            returned_guards.append((frame.f_locals['deadline'], frame.f_back.f_code.co_name))
+    monkeypatch.setattr(state.os, 'replace', delayed)
+    old_trace = sys.getprofile(); sys.setprofile(trace)
+    try:
+        with state.observation_budget(1) as outer:
+            with pytest.raises(SlotError) as error: sup.start_backend(1)
+            assert state._OBSERVATION_DEADLINE.get() == outer
+    finally:
+        sys.setprofile(old_trace)
+    assert state._OBSERVATION_DEADLINE.get() is None
+    assert len(late) == 1 and returned_guards[0] == (start + 1, 'publish')
+    record = _la_record(sup); v = record['startup_evidence']
+    assert v['stage'] == 'failed' and record['phase'] == 'uncertain_residual'
+    assert v['terminal']['phase'] == {'creation': 'diagnostic_write', 'readiness': 'signature_write', 'complete': 'running_write'}[write_stage]
+    assert v['terminal']['error']['error_class'] == 'TimeoutError'
+    assert 'startup admission deadline expired' in str(error.value)
+    assert not host.signals and host.handles[0].terminations == 0
+    assert len(host.launches) == 1 and 'ACTIVE' not in str(record)
+
+
+def test_la_c6_same_call_unicode_full_hash_and_supplied_suffix(rig):
+    import copy
+    import hashlib
+    _, _, host = rig
+    pid = 899106
+    full = 'Sun Oct 11 00:00:00 2026 ' + 'α🙂' * 1500
+    other = 'Sun Oct 11 00:00:00 2026 ' + 'β🙂' * 1500
+    host.add(pid, other.split('2026 ', 1)[1], signature=other)
+    host.selected_results[pid] = SimpleNamespace(returncode=0, stdout=full, stderr='')
+    before = len(host.ps_calls); obs = state.observe_process(pid)
+    assert len(host.ps_calls) - before == 2
+    assert obs.state == 'unavailable' and obs.reason == 'selected_census_signature_drift'
+    pair = obs.diagnostics
+    assert len((json.dumps(pair, sort_keys=True, indent=2, ensure_ascii=True, allow_nan=False) + '\n').encode()) <= 65536
+    for key, original in [('selected', full), ('census', other)]:
+        text = pair[key]['operand']
+        assert text['utf8_bytes'] == len(original.encode('utf-8'))
+        assert text['sha256'] == hashlib.sha256(original.encode('utf-8')).hexdigest()
+        assert text['truncated'] and text['hash_scope'] == 'full_unretained'
+        assert len(text['prefix'].encode('utf-8')) <= 2048 and original.startswith(text['prefix'])
+    supplied = copy.deepcopy(pair)
+    supplied['selected']['operand']['sha256'] = '0' * 64
+    # Reader cannot verify an unretained suffix; structure is not identity.
+    state.validate_process_pair(supplied, obs.reason, obs.state, obs.observed_at)
+    assert obs.signature is None and obs.identity is None
+    assert 'diagnostics' not in state.Observation('unavailable').as_dict()
+    with pytest.raises(ValueError): state.Observation('unavailable', reason='selected_failure')
+
+
+@pytest.mark.parametrize('failure_stage', ['prelaunch', 'creation', 'readiness', 'complete', 'residual', 'interrupt'])
+def test_la_c7_actual_publication_fault_preserves_reservation_or_owned_cleanup(rig, monkeypatch, failure_stage):
+    _, sup, host = rig
+    if failure_stage in {'creation', 'residual'}:
+        _la_drift(host, once=False)
+        sup.inventory.raw['server']['startup_timeout_seconds'] = 0.12
+    path = sup.inventory.process_path('backend', 1); replace = state.os.replace; failed = []
+    def fail(source, destination):
+        value = json.loads(Path(source).read_text()) if Path(destination) == path else {}
+        stage = value.get('startup_evidence', {}).get('stage')
+        match = ((failure_stage == 'prelaunch' and value and stage is None) or
+                 failure_stage == stage or
+                 (failure_stage == 'residual' and stage == 'failed') or
+                 (failure_stage == 'interrupt' and stage == 'readiness'))
+        if match:
+            failed.append(value)
+            if failure_stage == 'interrupt': raise KeyboardInterrupt('isolated write interruption')
+            raise PermissionError(errno.EACCES, 'isolated publication fault')
+        return replace(source, destination)
+    monkeypatch.setattr(state.os, 'replace', fail)
+    with pytest.raises((SlotError, PermissionError, KeyboardInterrupt)):
+        sup.start_backend(1)
+    assert failed and not host.signals
+    if failure_stage == 'prelaunch':
+        assert not host.launches and not path.exists()
+    elif failure_stage in {'creation', 'residual'}:
+        assert path.exists() and _la_record(sup)['phase'] != 'running'
+        record = _la_record(sup)
+        assert 'signature' not in record and host.handles[0].terminations == 0
+        state.validate_startup_evidence(record)
+        if failure_stage == 'creation':
+            v = record['startup_evidence']
+            assert v['first_failure_ref'] == 1 and v['terminal']['phase'] == 'diagnostic_write'
+            assert v['terminal']['error']['error_class'] == 'PermissionError'
+            assert v['terminal']['error']['errno'] == errno.EACCES
+            assert v['rollback'] is not None
+    else:
+        assert len(host.launches) == 1 and host.handles[0].terminations == 1
+        assert host.handles[0].waits == [5] and not path.exists()
+
+
+@pytest.mark.parametrize('seam', ['replace', 'fsync'])
+@pytest.mark.parametrize('outcome', ['cleanup', 'residual', 'two-reporting-faults'])
+def test_la_c7_each_actual_publication_cause_survives_guarded_cleanup(rig, monkeypatch, seam, outcome):
+    _, sup, host = rig
+    path = sup.inventory.process_path('backend', 1)
+    original = PermissionError(errno.EIO, 'original coherent-write fault')
+    first_report = PermissionError(errno.EACCES, 'first reporting fault')
+    last_report = OSError(errno.ENOSPC, 'later reporting fault')
+    if outcome == 'residual':
+        _la_drift(host, once=False)
+        sup.inventory.raw['server']['startup_timeout_seconds'] = 0.12
+    if outcome == 'two-reporting-faults':
+        host.retain_on_terminate = True
+    replace, fsync, mkstemp = state.os.replace, state.os.fsync, state.tempfile.mkstemp
+    temporary = {}; raised = []; durable = []
+    def inspect(source):
+        value = json.loads(Path(source).read_text())
+        stage = value.get('startup_evidence', {}).get('stage')
+        if outcome != 'residual' and stage == 'readiness':
+            raised.append(original); durable.append(path.read_bytes()); raise original
+        if stage == 'failed':
+            fault = last_report if first_report in raised else first_report
+            raised.append(fault); durable.append(path.read_bytes()); raise fault
+    def allocate(*args, **kwargs):
+        fd, name = mkstemp(*args, **kwargs)
+        if Path(name).parent == path.parent:
+            temporary[fd] = Path(name)
+        return fd, name
+    def replace_file(source, destination):
+        if Path(destination) == path:
+            inspect(source)
+        return replace(source, destination)
+    def sync(fd):
+        source = temporary.get(fd)
+        if source is not None and source.exists():
+            inspect(source)
+        return fsync(fd)
+    if seam == 'replace':
+        monkeypatch.setattr(state.os, 'replace', replace_file)
+    else:
+        monkeypatch.setattr(state.tempfile, 'mkstemp', allocate)
+        monkeypatch.setattr(state.os, 'fsync', sync)
+    with pytest.raises(SlotError) as failed:
+        sup.start_backend(1)
+    error = failed.value; observations = error.observations
+    assert not host.signals and len(host.launches) == 1
+    if outcome == 'residual':
+        assert isinstance(error.__cause__, TimeoutError)
+        assert raised == [first_report]
+        assert [x.operation for x in observations[-3:]] == ['startup-diagnostic_write', 'rollback_identity', 'residual_write']
+        assert observations[-1].error_class == 'PermissionError' and observations[-1].errno == errno.EACCES
+        assert observations[-1].detail == str(first_report)
+        assert host.handles[0].terminations == 0 and not host.handles[0].waits
+    else:
+        assert error.__cause__ is original, 'the exact original startup exception remains the cause'
+        assert observations[0].error_class == 'PermissionError' and observations[0].errno == errno.EIO
+        assert observations[0].detail == str(original) and observations[0].operation == 'startup-signature_write'
+        assert observations[1].operation == 'rollback-diagnostic-write'
+        assert observations[1].error_class == 'PermissionError' and observations[1].errno == errno.EACCES
+        assert observations[1].detail == str(first_report)
+        assert host.handles[0].terminations == 1 and host.handles[0].waits == [5]
+        if outcome == 'cleanup':
+            assert raised == [original, first_report] and len(observations) == 2
+            assert not path.exists() and host.handles[0].pid not in host.rows
+        else:
+            assert raised == [original, first_report, last_report]
+            assert len(observations) == 4
+            assert observations[2].operation == 'rollback_wait' and observations[2].error_class == 'TimeoutExpired'
+            assert observations[3].operation == 'residual_write'
+            assert observations[3].error_class == 'OSError' and observations[3].errno == errno.ENOSPC
+            assert observations[3].detail == str(last_report)
+            assert host.handles[0].pid in host.rows
+    if outcome != 'cleanup':
+        assert path.read_bytes() == durable[0] == durable[-1], 'failed writes preserve the earlier durable reservation'
+        assert _la_record(sup)['phase'] != 'running'
+        assert 1 in sup.capacity_census()['reserved_physical_slots']
+
+
+@pytest.mark.parametrize('seam', ['replace', 'fsync'])
+@pytest.mark.parametrize('wait_failure', [False, True])
+@pytest.mark.parametrize('reporting', [None, 'interrupt', 'exit'])
+def test_la_c7_census_cause_precedes_wait_and_reporting_causes(rig, monkeypatch, seam, wait_failure, reporting):
+    _, sup, host = rig
+    path = sup.inventory.process_path('backend', 1)
+    original = PermissionError(errno.EIO, 'original readiness publication')
+    census = PermissionError(errno.EPERM, 'actual rollback census denial')
+    early = KeyboardInterrupt('early reporting interruption') if reporting == 'interrupt' else SystemExit('early reporting exit')
+    late = SystemExit('late reporting exit') if reporting == 'interrupt' else KeyboardInterrupt('late reporting interruption')
+    replace, fsync, mkstemp = state.os.replace, state.os.fsync, state.tempfile.mkstemp
+    temporary, attempts, durable = {}, [], []
+    host.retain_on_terminate = wait_failure
+    def inspect(source):
+        value = json.loads(Path(source).read_text())
+        stage = value.get('startup_evidence', {}).get('stage')
+        if stage == 'readiness':
+            durable.append(path.read_bytes())
+            host.census_result = census
+            raise original
+        if stage == 'failed':
+            attempts.append(value)
+            if reporting:
+                raise early if len(attempts) == 1 else late
+    def allocate(*args, **kwargs):
+        fd, name = mkstemp(*args, **kwargs)
+        if Path(name).parent == path.parent:
+            temporary[fd] = Path(name)
+        return fd, name
+    def replace_file(source, destination):
+        if Path(destination) == path:
+            inspect(source)
+        return replace(source, destination)
+    def sync(fd):
+        source = temporary.get(fd)
+        if source is not None and source.exists():
+            inspect(source)
+        return fsync(fd)
+    if seam == 'replace':
+        monkeypatch.setattr(state.os, 'replace', replace_file)
+    else:
+        monkeypatch.setattr(state.tempfile, 'mkstemp', allocate)
+        monkeypatch.setattr(state.os, 'fsync', sync)
+    with pytest.raises(SlotError, match='residual retained') as failed:
+        sup.start_backend(1)
+    observations = failed.value.observations
+    assert failed.value.__cause__ is original
+    assert observations[0].operation == 'startup-signature_write'
+    assert observations[0].error_class == 'PermissionError' and observations[0].errno == errno.EIO
+    assert observations[0].detail == str(original)
+    assert observations[1].operation == 'rollback_census'
+    assert observations[1].error_class == 'PermissionError' and observations[1].errno == errno.EPERM
+    assert observations[1].detail == str(census)
+    expected = ['startup-signature_write', 'rollback_census']
+    if reporting:
+        expected.append('rollback-diagnostic-write')
+        assert observations[2].error_class == type(early).__name__ and observations[2].detail == str(early)
+    if wait_failure:
+        expected.append('rollback_wait')
+        wait = next(x for x in observations if x.operation == 'rollback_wait')
+        assert wait.error_class == 'TimeoutExpired' and wait.errno is None
+        assert 'timed out after 5 seconds' in wait.detail
+    if reporting:
+        expected.append('residual_write')
+        assert observations[-1].error_class == type(late).__name__ and observations[-1].detail == str(late)
+    assert [x.operation for x in observations] == expected, 'no deferred re-raise duplicate or lost later cause'
+    assert len(attempts) == 2 and len(durable) == 1
+    for value in attempts:
+        rollback = value['startup_evidence']['rollback']
+        assert rollback['phase'] == 'rollback_census'
+        assert rollback['error']['error_class'] == 'PermissionError' and rollback['error']['errno'] == errno.EPERM
+        assert rollback['error']['message']['prefix'] == str(census)
+        state.validate_startup_evidence(value)
+    assert not host.signals and len(host.launches) == 1
+    assert host.handles[0].terminations == 1 and host.handles[0].waits == [5]
+    assert (host.handles[0].pid in host.rows) is wait_failure
+    if reporting:
+        assert path.read_bytes() == durable[0], 'both reporting failures retain the actual earlier reservation'
+    else:
+        assert _la_record(sup)['phase'] == 'uncertain_residual'
+        assert _la_record(sup)['startup_evidence']['rollback']['phase'] == 'rollback_census'
+    assert 1 in sup.capacity_census()['reserved_physical_slots']
+
+
+@pytest.mark.parametrize('seam', ['replace', 'fsync'])
+@pytest.mark.parametrize('reporting_failure', [False, True])
+@pytest.mark.parametrize('mode', ['identity', 'later-identity', 'child-exit', 'child-remains', 'quiescence'])
+def test_la_c7_every_rollback_native_witness_survives(rig, monkeypatch, seam, reporting_failure, mode):
+    _, sup, host = rig
+    path = sup.inventory.process_path('backend', 1)
+    original = PermissionError(errno.EIO, 'original coherent publication')
+    native = PermissionError(errno.EPERM, 'actual rollback native refusal')
+    later = PermissionError(errno.EBUSY, 'later wrapper selected refusal')
+    first_report = PermissionError(errno.EACCES, 'early diagnostic publication refusal')
+    last_report = OSError(errno.ENOSPC, 'residual publication refusal')
+    pid, child = host.next_pid, host.next_pid + 100
+    replace, fsync, mkstemp = state.os.replace, state.os.fsync, state.tempfile.mkstemp
+    popen, kill = subprocess.Popen, os.kill
+    temporary, writes, durable = {}, [], []
+    def after_census():
+        if pid not in host.rows:
+            host.census_result = native
+    def inspect(source):
+        value = json.loads(Path(source).read_text())
+        stage = value.get('startup_evidence', {}).get('stage')
+        if stage == 'readiness':
+            durable.append(path.read_bytes())
+            if mode == 'identity':
+                host.selected_results[pid] = native
+            elif mode == 'later-identity':
+                host.census_result = native
+            elif mode in {'child-exit', 'child-remains'}:
+                host.add(child, 'independently populated owned child', ppid=pid)
+            else:
+                host.after_census = after_census
+            raise original
+        if stage == 'failed':
+            writes.append(value)
+            if mode == 'later-identity' and len(writes) == 1:
+                host.selected_results[pid] = later
+            if reporting_failure:
+                raise last_report if value.get('phase') == 'uncertain_residual' else first_report
+    def launch(*args, **kwargs):
+        handle = popen(*args, **kwargs)
+        wait = handle.wait
+        def waited(timeout=None):
+            result = wait(timeout=timeout)
+            if mode == 'child-exit':
+                host.selected_results[child] = native
+            return result
+        handle.wait = waited
+        return handle
+    def signal_child(target, sig):
+        if target == child:
+            assert sig == signal.SIGTERM
+            host.signals.append((target, sig))  # Real external host retains this owned child.
+            return
+        return kill(target, sig)
+    def allocate(*args, **kwargs):
+        fd, name = mkstemp(*args, **kwargs)
+        if Path(name).parent == path.parent:
+            temporary[fd] = Path(name)
+        return fd, name
+    def replace_file(source, destination):
+        if Path(destination) == path:
+            inspect(source)
+        return replace(source, destination)
+    def sync(fd):
+        source = temporary.get(fd)
+        if source is not None and source.exists():
+            inspect(source)
+        return fsync(fd)
+    monkeypatch.setattr(subprocess, 'Popen', launch)
+    monkeypatch.setattr(os, 'kill', signal_child)
+    if seam == 'replace':
+        monkeypatch.setattr(state.os, 'replace', replace_file)
+    else:
+        monkeypatch.setattr(state.tempfile, 'mkstemp', allocate)
+        monkeypatch.setattr(state.os, 'fsync', sync)
+    with pytest.raises(SlotError, match='residual retained') as failed:
+        sup.start_backend(1)
+    error = failed.value; observations = error.observations
+    assert error.__cause__ is original
+    assert observations[0].operation == 'startup-signature_write'
+    assert observations[0].error_class == 'PermissionError' and observations[0].errno == errno.EIO
+    assert observations[0].detail == str(original)
+    expected_phase = {'identity': 'rollback_identity', 'later-identity': 'rollback_census',
+                      'child-exit': 'rollback_wait', 'child-remains': 'rollback_wait',
+                      'quiescence': 'rollback_quiescence'}[mode]
+    if mode == 'child-remains':
+        actual = [x for x in observations if x.operation == 'rollback_wait']
+        assert any(x.state == 'present' and x.signature == host.rows[child][2] for x in actual)
+        assert actual and all(x.error_class is None and x.errno is None for x in actual)
+        assert 'rollback descendants remain after bounded wait' in str(error)
+    else:
+        actual = [x for x in observations if x.operation == expected_phase and x.error_class == 'PermissionError']
+        assert len(actual) == 1 and actual[0].errno == errno.EPERM and actual[0].detail == str(native)
+        assert actual[0].target and actual[0].observed_at
+    if mode == 'later-identity':
+        subsequent = [x for x in observations if x.operation == 'rollback_signal']
+        assert len(subsequent) == 1 and subsequent[0].error_class == 'PermissionError'
+        assert subsequent[0].errno == errno.EBUSY and subsequent[0].detail == str(later)
+        assert observations.index(actual[0]) < observations.index(subsequent[0])
+        assert 'rollback wrapper identity changed/unavailable' in str(error)
+    assert 'rollback contexts:' in str(error), 'native operation and real wrapper context remain independently visible'
+    assert 'ps-' in str(error)
+    residual = writes[-1]
+    assert residual['phase'] == 'uncertain_residual'
+    rollback = residual['startup_evidence']['rollback']
+    assert rollback['phase'] == expected_phase
+    assert rollback['error']['error_class'] == ('SlotError' if mode == 'child-remains' else 'PermissionError')
+    assert rollback['error']['errno'] == (None if mode == 'child-remains' else errno.EPERM)
+    if mode != 'child-remains':
+        assert rollback['error']['message']['prefix'] == str(native)
+    state.validate_startup_evidence(residual)
+    if reporting_failure:
+        assert observations[-1].operation == 'residual_write'
+        assert observations[-1].error_class == 'OSError' and observations[-1].errno == errno.ENOSPC
+        assert observations[-1].detail == str(last_report)
+        assert path.read_bytes() == durable[0], 'all failed reports preserve the actual prior reservation'
+    else:
+        assert _la_record(sup)['startup_evidence']['rollback'] == rollback
+    assert len(host.launches) == 1
+    if mode in {'identity', 'later-identity'}:
+        assert not host.signals and host.handles[0].terminations == 0 and not host.handles[0].waits
+    else:
+        assert host.handles[0].terminations == 1 and host.handles[0].waits == [5]
+        assert host.signals == ([(child, signal.SIGTERM)] if mode.startswith('child-') else [])
+        assert pid not in host.rows
+    assert 1 in sup.capacity_census()['reserved_physical_slots']
+
+
+_LA_BAD_STARTUP = [
+    ('null_envelope', ('startup_evidence',), None),
+    ('extra_key', ('startup_evidence', 'unexpected'), True),
+    ('null_version', ('startup_evidence', 'version'), None),
+    ('bool_version', ('startup_evidence', 'version'), True),
+    ('future_version', ('startup_evidence', 'version'), 2),
+    ('bool_allowance', ('startup_evidence', 'configured_seconds'), True),
+    ('nan_allowance', ('startup_evidence', 'configured_seconds'), float('nan')),
+    ('inf_deadline', ('startup_evidence', 'effective_deadline'), float('inf')),
+    ('wrong_effective', ('startup_evidence', 'effective_deadline'), 999),
+    ('wrong_local', ('startup_evidence', 'local_deadline'), 999),
+    ('bool_attempt', ('startup_evidence', 'creation_attempts'), True),
+    ('negative_count', ('startup_evidence', 'failure_count'), -1),
+    ('wrong_count', ('startup_evidence', 'failure_count'), 5),
+    ('wrong_stage', ('startup_evidence', 'stage'), 'unknown'),
+    ('false_success', ('startup_evidence', 'creation_succeeded'), False),
+    ('bool_reference', ('startup_evidence', 'first_failure_ref'), True),
+    ('dangling_reference', ('startup_evidence', 'last_failure_ref'), 9),
+    ('wrong_token', ('startup_evidence', 'launch_token'), '0' * 32),
+    ('null_origin', ('record_origin',), None),
+    ('null_recovery', ('recovery',), None),
+    ('false_origin', ('record_origin',), 'managed'),
+    ('bad_utc', ('startup_evidence', 'started', 'utc'), '2026-02-30T00:00:00Z'),
+    ('nonascii_utc', ('startup_evidence', 'started', 'utc'), '２０２６-10-20T00:00:00Z'),
+    ('bad_mono', ('startup_evidence', 'updated', 'mono'), -1),
+    ('wrong_regression', ('startup_evidence', 'utc_regressed'), True),
+    ('pair_extra', ('startup_evidence', 'failures', 0, 'diagnostics', 'unexpected'), 0),
+    ('pair_version_bool', ('startup_evidence', 'failures', 0, 'diagnostics', 'version'), True),
+    ('pair_pid_bool', ('startup_evidence', 'failures', 0, 'diagnostics', 'pid'), True),
+    ('pair_expected', ('startup_evidence', 'failures', 0, 'diagnostics', 'expected_signature_supplied'), True),
+    ('bad_reason', ('startup_evidence', 'failures', 0, 'reason'), 'unknown'),
+    ('bad_state', ('startup_evidence', 'failures', 0, 'state'), 'present'),
+    ('null_selected', ('startup_evidence', 'failures', 0, 'diagnostics', 'selected'), None),
+    ('false_capability', ('startup_evidence', 'failures', 0, 'diagnostics', 'selected', 'capable'), False),
+    ('bool_rc', ('startup_evidence', 'failures', 0, 'diagnostics', 'selected', 'returncode'), False),
+    ('fake_errno', ('startup_evidence', 'failures', 0, 'diagnostics', 'selected', 'errno'), 13),
+    ('fake_error', ('startup_evidence', 'failures', 0, 'diagnostics', 'selected', 'error_class'), 'ToolFailure'),
+    ('bool_ppid', ('startup_evidence', 'failures', 0, 'diagnostics', 'census', 'target_ppid'), False),
+    ('hash', ('startup_evidence', 'failures', 0, 'diagnostics', 'selected', 'operand', 'sha256'), '0' * 64),
+    ('scope', ('startup_evidence', 'failures', 0, 'diagnostics', 'selected', 'operand', 'hash_scope'), 'full_unretained'),
+    ('surrogate', ('startup_evidence', 'failures', 0, 'diagnostics', 'selected', 'operand', 'prefix'), '\ud800'),
+]
+
+
+def _la_set(value, keys, replacement):
+    for key in keys[:-1]: value = value[key]
+    value[keys[-1]] = replacement
+
+
+def _la_bad_record_through_consumers(sup, host, value, name):
+    """Independent current-file/effect oracle, not a replacement reader verdict."""
+    import copy
+    import hashlib
+    from seed_journal import seeded_mutation
+    path = sup.inventory.process_path('backend', 1)
+    original, original_stat = path.read_bytes(), path.stat()
+    roots = [sup.inventory.state_root] + [sup.inventory.worktree(n) for n in (1, 2, 3)]
+    def disk():
+        result = {}
+        for root in roots:
+            for item in root.rglob('*'):
+                if item == path:
+                    continue
+                st = item.lstat()
+                if item.is_symlink():
+                    result[str(item)] = ('link', st.st_mode, os.readlink(item))
+                elif item.is_file():
+                    result[str(item)] = ('file', st.st_mode, st.st_mtime_ns,
+                                         hashlib.sha256(item.read_bytes()).hexdigest())
+        return result
+    before_disk = disk()
+    before_effects = (forbidden_counts(host), copy.deepcopy(host.rows), dict(host.ports),
+                      [(h.pid, h.returncode, h.terminations, list(h.waits)) for h in host.handles])
+    with seeded_mutation(
+            path, value if isinstance(value, bytes) else json.dumps(value).encode(),
+            reason='LA-C8 invalid record through actual consumers: ' + name) as journal_original:
+        assert journal_original == original
+        assert path.stat().st_mode == original_stat.st_mode
+        bad_bytes = path.read_bytes()
+        if not isinstance(value, bytes):
+            with pytest.raises(SlotError, match='invalid process record'):
+                sup._validate_record(value, 'backend', 1)
+        with pytest.raises(SlotError):
+            sup._read_metadata('backend', 1)
+        status = sup.status()
+        assert status['slots'][0]['resources']['backend']['state'] == 'unavailable', name
+        assert not status['capacity_complete'] and 1 in status['reserved_physical_slots'], name
+        capacity = sup.capacity_census()
+        assert not capacity['complete'] and 1 in capacity['reserved_physical_slots'], name
+        with pytest.raises(SlotError):
+            sup.stop_backend(1)
+        assert path.read_bytes() == bad_bytes, name
+        assert disk() == before_disk, (name, 'lease/cache/other-file mutation')
+        assert (forbidden_counts(host), host.rows, host.ports,
+                [(h.pid, h.returncode, h.terminations, list(h.waits)) for h in host.handles]) == before_effects, name
+    assert path.read_bytes() == original and path.stat().st_mtime_ns == original_stat.st_mtime_ns
+    assert path.stat().st_mode == original_stat.st_mode
+
+
+def test_la_c8_independent_grammar_reaches_actual_consumers(rig):
+    import copy
+    from seed_journal import seeded_mutation
+    _, sup, host = rig
+    _la_drift(host); sup.start_backend(1)
+    path = sup.inventory.process_path('backend', 1)
+    valid = _la_record(sup); original = path.read_bytes(); original_stat = path.stat()
+    state.validate_startup_evidence(valid)
+    before = forbidden_counts(host)
+    for name, keys, replacement in _LA_BAD_STARTUP:
+        value = copy.deepcopy(valid); _la_set(value, keys, replacement)
+        with seeded_mutation(
+                path, json.dumps(value).encode(),
+                reason='LA-C8 independent grammar through actual consumers: ' + name) as journal_original:
+            assert journal_original == original
+            assert path.stat().st_mode == original_stat.st_mode
+            bad_bytes = path.read_bytes()
+            with pytest.raises(SlotError, match='invalid process record'):
+                sup._validate_record(value, 'backend', 1)
+            status = sup.status()
+            assert status['slots'][0]['resources']['backend']['state'] == 'unavailable', name
+            assert not status['capacity_complete'] and 1 in status['reserved_physical_slots'], name
+            with pytest.raises(SlotError): sup.stop_backend(1)
+            assert path.read_bytes() == bad_bytes and forbidden_counts(host) == before, name
+        assert path.read_bytes() == original and path.stat().st_mtime_ns == original_stat.st_mtime_ns
+        assert path.stat().st_mode == original_stat.st_mode
+    assert sup.process_state('backend', 1) == 'running'
+    # Genuine legacy absence, not null or invalid-field normalization.
+    legacy = copy.deepcopy(valid); legacy.pop('startup_evidence')
+    assert sup._validate_record(legacy, 'backend', 1) == legacy
+    legacy['startup_evidence'] = None
+    with pytest.raises(SlotError): sup._validate_record(legacy, 'backend', 1)
+    class ObjectSubclass(dict): pass
+    v = copy.deepcopy(valid); v['startup_evidence'] = ObjectSubclass(v['startup_evidence'])
+    with pytest.raises(ValueError): state.validate_startup_evidence(v)
+
+
+def test_la_c8_semantic_pairs_refs_and_typed_faults(rig):
+    import copy
+    import hashlib
+    _, sup, host = rig
+    _la_drift(host, once=False)
+    sup.inventory.raw['server']['startup_timeout_seconds'] = 0.12
+    with pytest.raises(SlotError): sup.start_backend(1)
+    valid = _la_record(sup); state.validate_startup_evidence(valid)
+    cases = []
+    for field, bad in [('error_class', ''), ('error_class', 'not a class'), ('errno', True), ('errno', 2**60)]:
+        v = copy.deepcopy(valid); v['startup_evidence']['terminal']['error'][field] = bad; cases.append(v)
+    for field, bad in [('observation_ref', 99), ('phase', 'rollback_signal'), ('at', {'utc': 'bad', 'mono': 0})]:
+        v = copy.deepcopy(valid); v['startup_evidence']['terminal'][field] = bad; cases.append(v)
+    v = copy.deepcopy(valid); v['startup_evidence']['failures'].append(copy.deepcopy(v['startup_evidence']['failures'][0])); cases.append(v)
+    v = copy.deepcopy(valid); v['startup_evidence']['failures'].reverse(); cases.append(v)
+    v = copy.deepcopy(valid); del v['startup_evidence']['rollback']; cases.append(v)
+    v = copy.deepcopy(valid); v['startup_evidence']['failures'][0]['diagnostics']['census']['observer_witness'] += 1; cases.append(v)
+    # Correct hashes/lengths isolate the full operand strip/parse/equality guards.
+    for text in [' Sun Oct 11 00:00:00 2026 leading whitespace', 'not a process signature']:
+        v = copy.deepcopy(valid); operand = v['startup_evidence']['failures'][0]['diagnostics']['selected']['operand']
+        operand.update(prefix=text, utf8_bytes=len(text.encode()), sha256=hashlib.sha256(text.encode()).hexdigest(), truncated=False, hash_scope='full_retained'); cases.append(v)
+    v = copy.deepcopy(valid)
+    pair = v['startup_evidence']['failures'][0]['diagnostics']; pair['selected']['operand'] = copy.deepcopy(pair['census']['operand']); cases.append(v)
+    for value in cases:
+        with pytest.raises(ValueError): state.validate_startup_evidence(value)
+        _la_bad_record_through_consumers(sup, host, value, 'existing-semantic-case')
+    # Complete actual first and last refusals remain in the original valid object.
+    assert valid['startup_evidence']['failures'][0]['id'] == 1
+    assert valid['startup_evidence']['terminal']['error']['error_class'] == 'TimeoutError'
+
+
+def test_la_c8_required_keys_bindings_phases_and_times_reach_actual_consumers(rig):
+    import copy
+    from seed_journal import journalled
+    _, sup, host = rig
+    _la_drift(host, once=False)
+    sup.inventory.raw['server']['startup_timeout_seconds'] = 0.45
+    host.ps_cost = 0.02
+    with pytest.raises(SlotError): sup.start_backend(1)
+    valid = _la_record(sup)
+    state.validate_startup_evidence(valid)
+    cases = []
+    # Explicit normative key lists; never import private validator key constants.
+    required = [
+        ((), ['launch_token', 'initiator_pid', 'process_schema_version']),
+        (('startup_evidence',), ['version', 'launch_token', 'observer_pid', 'configured_seconds',
+         'started', 'local_deadline', 'enclosing_deadline', 'effective_deadline', 'stage',
+         'creation_attempts', 'creation_succeeded', 'failure_count', 'failures',
+         'first_failure_ref', 'last_failure_ref', 'terminal', 'rollback', 'updated', 'utc_regressed']),
+        (('startup_evidence', 'failures', 0), ['id', 'stage', 'attempt', 'state', 'reason', 'observed_at', 'diagnostics']),
+        (('startup_evidence', 'failures', 0, 'diagnostics'), ['version', 'pid', 'expected_signature_supplied', 'span', 'selected', 'census']),
+    ]
+    for probe in ('selected', 'census'):
+        keys = ('startup_evidence', 'failures', 0, 'diagnostics', probe)
+        required.append((keys, ['operation', 'span', 'state', 'capable', 'returncode', 'error_class',
+                               'errno', 'diagnostic', 'operand', 'target_ppid', 'observer_witness']))
+        for text in ('operand', 'diagnostic'):
+            required.append((keys + (text,), ['prefix', 'utf8_bytes', 'sha256', 'truncated', 'hash_scope']))
+        required.append((keys + ('span',), ['start', 'end', 'utc_regressed']))
+        for stamp in ('start', 'end'):
+            required.append((keys + ('span', stamp), ['utc', 'mono']))
+    for fault in ('terminal', 'rollback'):
+        required.append((('startup_evidence', fault), ['phase', 'at', 'error', 'observation_ref']))
+        required.append((('startup_evidence', fault, 'at'), ['utc', 'mono']))
+        required.append((('startup_evidence', fault, 'error'), ['error_class', 'errno', 'message']))
+        required.append((('startup_evidence', fault, 'error', 'message'), ['prefix', 'utf8_bytes', 'sha256', 'truncated', 'hash_scope']))
+    for stamp in ('started', 'updated'):
+        required.append((('startup_evidence', stamp), ['utc', 'mono']))
+    required.append((('startup_evidence', 'failures', 0, 'diagnostics', 'span'), ['start', 'end', 'utc_regressed']))
+    for stamp in ('start', 'end'):
+        required.append((('startup_evidence', 'failures', 0, 'diagnostics', 'span', stamp), ['utc', 'mono']))
+    for keys, fields in required:
+        for field in fields:
+            value = copy.deepcopy(valid); target = value
+            for key in keys: target = target[key]
+            del target[field]
+            cases.append(('missing-' + repr(keys + (field,)), value))
+    mutations = [
+        ('parent-legacy-version-with-StartupV1', ('process_schema_version',), 1),
+        ('initiator-binding', ('initiator_pid',), valid['initiator_pid'] + 1),
+        ('observer-binding', ('startup_evidence', 'observer_pid'), valid['initiator_pid'] + 1),
+        ('initiator-bool', ('initiator_pid',), True),
+        ('observer-bool', ('startup_evidence', 'observer_pid'), True),
+        ('count-versus-attempt', ('startup_evidence', 'creation_attempts'), 0),
+        ('creation-attempt', ('startup_evidence', 'failures', 0, 'attempt'), 2),
+        ('creation-id', ('startup_evidence', 'failures', 0, 'id'), 2),
+        ('unknown-failure-stage', ('startup_evidence', 'failures', 0, 'stage'), 'readiness'),
+        ('final-without-success', ('startup_evidence', 'failures', -1, 'stage'), 'final'),
+        ('false-complete', ('startup_evidence', 'stage'), 'complete'),
+        ('false-readiness', ('startup_evidence', 'stage'), 'readiness'),
+        ('wrong-parent-phase', ('phase',), 'running'),
+        ('negative-enclosing', ('startup_evidence', 'enclosing_deadline'), -1),
+        ('bool-enclosing', ('startup_evidence', 'enclosing_deadline'), True),
+        ('updated-before-start', ('startup_evidence', 'updated', 'mono'), valid['startup_evidence']['started']['mono'] / 2),
+        ('terminal-before-refusal', ('startup_evidence', 'terminal', 'at', 'mono'), valid['startup_evidence']['started']['mono']),
+        ('rollback-before-terminal', ('startup_evidence', 'rollback', 'at', 'mono'), valid['startup_evidence']['started']['mono']),
+        ('first-pair-outside-start', ('startup_evidence', 'failures', 0, 'diagnostics', 'span', 'start', 'mono'), -1),
+        ('last-pair-outside-updated', ('startup_evidence', 'failures', -1, 'diagnostics', 'span', 'end', 'mono'), 1e6),
+        ('selected-after-census', ('startup_evidence', 'failures', 0, 'diagnostics', 'selected', 'span', 'end', 'mono'), valid['startup_evidence']['failures'][0]['diagnostics']['census']['span']['start']['mono'] + 0.001),
+        ('wrong-observation-utc', ('startup_evidence', 'failures', 0, 'observed_at'), '2026-10-01T00:00:00Z'),
+        ('parent-pid-binding', ('pid',), host.handles[0].pid + 1),
+        ('last-pid-binding', ('startup_evidence', 'failures', -1, 'diagnostics', 'pid'), host.handles[0].pid + 1),
+        ('fault-reference-bool', ('startup_evidence', 'rollback', 'observation_ref'), True),
+        ('fault-reference-dropped', ('startup_evidence', 'terminal', 'observation_ref'), 2),
+    ]
+    for name, keys, replacement in mutations:
+        value = copy.deepcopy(valid); _la_set(value, keys, replacement); cases.append((name, value))
+    assert valid['startup_evidence']['failure_count'] > 2, 'dropped-middle reference has an actual missing id2'
+    for name, value in cases:
+        with pytest.raises(ValueError): state.validate_startup_evidence(value)
+        _la_bad_record_through_consumers(sup, host, value, name)
+    _la_bad_record_through_consumers(sup, host, b'{"startup_evidence":"\xff"}', 'invalid-UTF8-file')
+    assert sup._read_metadata('backend', 1)[0] == valid
+    truncated = copy.deepcopy(valid)
+    operand = truncated['startup_evidence']['failures'][0]['diagnostics']['selected']['operand']
+    operand.update(prefix=operand['prefix'][:1], truncated=True, hash_scope='full_unretained', sha256='0' * 64)
+    path = sup.inventory.process_path('backend', 1); original = path.read_bytes(); original_stat = path.stat()
+    with journalled(path, reason='LA-C8 truncated then legacy actual record readers') as journal_original:
+        assert journal_original == original
+        path.write_text(json.dumps(truncated))
+        assert path.stat().st_mode == original_stat.st_mode
+        assert sup._read_metadata('backend', 1)[0] == truncated, 'unretained suffix hash is supplied, not verified'
+        legacy = copy.deepcopy(valid); legacy.pop('startup_evidence')
+        path.write_text(json.dumps(legacy))
+        assert path.stat().st_mode == original_stat.st_mode
+        assert sup._read_metadata('backend', 1)[0] == legacy, 'absent legacy field remains accepted'
+    assert path.read_bytes() == original and path.stat().st_mtime_ns == original_stat.st_mtime_ns
+    assert path.stat().st_mode == original_stat.st_mode
+
+
+@pytest.mark.parametrize('prior_capture', [False, True])
+def test_la_c9_only_prior_capture_enables_narrow_wrapper_cleanup(rig, monkeypatch, prior_capture):
+    _, sup, host = rig
+    path = sup.inventory.process_path('backend', 1)
+    if prior_capture:
+        replace = state.os.replace
+        def lose_census(source, destination):
+            value = json.loads(Path(source).read_text()) if Path(destination) == path else {}
+            result = replace(source, destination)
+            if value.get('startup_evidence', {}).get('stage') == 'readiness':
+                host.census_denied = True
+            return result
+        monkeypatch.setattr(state.os, 'replace', lose_census)
+    else:
+        host.after_poll = lambda handle: setattr(host, 'census_denied', True)
+    with pytest.raises(SlotError, match='residual retained'): sup.start_backend(1)
+    record = _la_record(sup); v = record['startup_evidence']
+    assert record['phase'] == 'uncertain_residual'
+    assert v['creation_succeeded'] is prior_capture
+    assert host.handles[0].terminations == int(prior_capture)
+    assert host.handles[0].waits == ([5] if prior_capture else [])
+    assert not host.signals and len(host.launches) == 1
+    assert 1 in sup.capacity_census()['reserved_physical_slots']
+    if prior_capture:
+        assert v['terminal']['phase'] == 'final_observation'
+        assert v['failures'][-1]['stage'] == 'final'
+        assert v['failures'][-1]['diagnostics']['census']['error_class'] == 'PermissionError'
+    else:
+        assert 'signature' not in record
+        assert v['terminal']['phase'] == 'creation'
+
+
+def test_la_c10_ordinary_owner_reclaim_proxy_and_stop_stay_strict(rig):
+    from scripts.lean_slots.proxy import LeaseGate
+    ctl, sup, host = rig
+    pid = os.getpid()
+    old = 'Sun Oct 11 00:00:00 2026 differing owner command'
+    host.selected_results[pid] = SimpleNamespace(returncode=0, stdout=old, stderr='')
+    calls = len(host.ps_calls); result = state.observe_process(pid)
+    assert len(host.ps_calls) - calls == 2 and result.state == 'unavailable'
+    assert result.reason == 'selected_census_signature_drift' and result.signature is None
+    with pytest.raises(SlotError, match='identity unavailable'): ctl.acquire(1, client='codex', base_ref='main')
+    assert ctl.inventory.lease(1, required=False) is None and not host.launches
+    host.selected_results.pop(pid)
+    ctl.build(); ctl.acquire(1, client='codex', base_ref='main')
+    lease = ctl.inventory.lease(1); lease['heartbeat_at'] = '2000-01-01T00:00:00Z'
+    ctl.inventory.save_lease(1, lease, touch_heartbeat=False); frozen = ctl.inventory.lease_path(1).read_bytes()
+    host.selected_results[pid] = SimpleNamespace(returncode=0, stdout=old, stderr='')
+    calls = len(host.ps_calls)
+    with pytest.raises(SlotError, match='not confirmed absent'): ctl.reclaim(1)
+    assert len(host.ps_calls) - calls == 2 and ctl.inventory.lease_path(1).read_bytes() == frozen
+    host.selected_results.pop(pid)
+    owned(sup, host, 'proxy', 1, 899110)
+    ctl.prepare(1)
+    body = json.dumps({'jsonrpc': '2.0', 'id': 1, 'method': 'tools/call', 'params': {'name': 'lean_goal', 'arguments': {}}}).encode()
+    gate = LeaseGate(ctl.inventory, 1); gate.authorize('codex', None, body)
+    frozen = ctl.inventory.lease_path(1).read_bytes()
+    host.selected_results[pid] = SimpleNamespace(returncode=0, stdout=old, stderr='')
+    with pytest.raises(SlotError, match='owner'): gate.authorize('codex', None, body)
+    assert ctl.inventory.lease_path(1).read_bytes() == frozen
+    record = _la_record(sup); record_path = sup.inventory.process_path('backend', 1)
+    unchanged = record_path.read_bytes(); before = forbidden_counts(host)
+    host.selected_results[record['pid']] = SimpleNamespace(returncode=0, stdout=old, stderr='')
+    with pytest.raises(SlotError): sup.stop_backend(1)
+    assert record_path.read_bytes() == unchanged and forbidden_counts(host) == before
+    assert sup.process_state('backend', 1) == 'unavailable'
+
+
+def test_la_c11_completed_history_survives_real_stop_park_prepare_release(rig, monkeypatch):
+    import copy
+    ctl, sup, host = rig
+    ctl.build(); ctl.acquire(1, client='codex', base_ref='main')
+    owned(sup, host, 'proxy', 1, 899111)
+    sup.start_backend(1)
+    path = sup.inventory.process_path('backend', 1)
+    original = copy.deepcopy(_la_record(sup)['startup_evidence'])
+    replace = state.os.replace; ordinary_stop_records = []
+    def observe_write(source, destination):
+        value = json.loads(Path(source).read_text()) if Path(destination) == path else {}
+        if 'shutdown' in value:
+            ordinary_stop_records.append(value)
+        return replace(source, destination)
+    monkeypatch.setattr(state.os, 'replace', observe_write)
+    with sup.paused_backend(1):
+        assert sup.process_state('backend', 1) == 'down'
+    assert ordinary_stop_records
+    assert all(row['phase'] == 'running' and row['startup_evidence'] == original for row in ordinary_stop_records)
+    # Original stop changes descendants/shutdown, not startup history or phase.
+    assert _la_record(sup)['startup_evidence']['stage'] == 'complete'
+    ctl.prepare(1)
+    assert ctl.inventory.lease(1)['state'] == 'ACTIVE'
+    ctl.release(1)
+    assert ctl.inventory.lease(1, required=False) is None
+
+
+def test_la_c11_paired_restore_with_new_startup_records(host, downstream_repo, monkeypatch):
+    down, public, _, _ = downstream_repo
+    monkeypatch.delenv('LEAN_SLOT_SKIP_SUPERVISOR', raising=False)
+    target, previous = Supervisor(down.inventory), Supervisor(public.inventory)
+    previous.start_proxy(1); previous.start_backend(1)
+    before = read_json(previous.inventory.process_path('backend', 1))
+    assert before['startup_evidence']['stage'] == 'complete'
+    entered = []
+    with target.activating_from(1, previous):
+        entered.append('cache work after both roles quiescent')
+    assert entered and target.process_state('backend', 1) == 'running'
+    target.restore_counterpart(1, previous)
+    assert previous.process_state('backend', 1) == 'running'
+    assert target.process_state('backend', 1) == 'down'
+    assert previous.capacity_census()['complete']
+    assert read_json(previous.inventory.process_path('backend', 1))['launch_token'] != before['launch_token']
+
+
+@pytest.mark.parametrize('bad', [True, False, 0, -1, float('nan'), float('inf'), None, '1'])
+def test_la_c12_invalid_allowance_refuses_before_reservation(rig, bad):
+    _, sup, host = rig
+    sup.inventory.raw['server']['startup_timeout_seconds'] = bad
+    calls = len(host.ps_calls)
+    with pytest.raises(ValueError): sup.start_backend(1)
+    assert not host.launches and not sup.inventory.process_path('backend', 1).exists()
+    # Capacity checks can precede _spawn; none may turn invalid T into a launch.
+    assert len(host.ps_calls) >= calls
+
+
+def test_la_c12_default_and_nested_deadline_restore_exactly(rig):
+    _, sup, host = rig
+    sup.inventory.raw['server'].pop('startup_timeout_seconds')
+    sup.start_backend(1)
+    v = _la_record(sup)['startup_evidence']
+    assert v['configured_seconds'] == 45
+    assert v['local_deadline'] == v['started']['mono'] + 45
+    assert v['effective_deadline'] == v['local_deadline']
+    assert state._OBSERVATION_DEADLINE.get() is None
+    start = host.clock
+    with state.observation_budget(1) as outer:
+        with state.observation_budget(deadline=start + 45) as effective:
+            assert effective == outer == start + 1
+        assert state._OBSERVATION_DEADLINE.get() == outer
+        host.clock = outer + 0.1
+        launches = len(host.launches)
+        with pytest.raises((SlotError, TimeoutError)):
+            sup.start_backend(2)
+        assert len(host.launches) == launches
+        assert state._OBSERVATION_DEADLINE.get() == outer
+    assert state._OBSERVATION_DEADLINE.get() is None
+
+
+def test_la_c5_controller_cannot_activate_after_late_final_write(rig, monkeypatch):
+    ctl, sup, host = rig
+    ctl.build(); ctl.acquire(1, client='codex', base_ref='main')
+    owned(sup, host, 'proxy', 1, 899115)
+    path = sup.inventory.process_path('backend', 1)
+    replace = state.os.replace; late = []
+    start = host.clock
+    def delayed(source, destination):
+        value = json.loads(Path(source).read_text()) if Path(destination) == path else {}
+        result = replace(source, destination)
+        if not late and value.get('startup_evidence', {}).get('stage') == 'complete':
+            host.clock = start + 1.1
+            late.append(value)
+        return result
+    monkeypatch.setattr(state.os, 'replace', delayed)
+    with state.observation_budget(1) as outer:
+        with pytest.raises(SlotError, match='startup admission deadline expired'):
+            ctl.prepare(1)
+        assert state._OBSERVATION_DEADLINE.get() == outer
+    assert len(late) == 1
+    assert ctl.inventory.lease(1)['state'] == 'QUARANTINED'
+    assert _la_record(sup)['phase'] == 'uncertain_residual'
+    assert _la_record(sup)['startup_evidence']['terminal']['phase'] == 'running_write'
+    assert not host.signals and host.handles[-1].terminations == 0

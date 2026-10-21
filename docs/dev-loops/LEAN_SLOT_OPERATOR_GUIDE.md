@@ -415,6 +415,121 @@ failed gates remain unwaived; their dated counts are historical evidence, not a 
 current-failure census. Bounded source review alone does not certify primary integration or live admission.
 
 
+
+### Creation-identity admission extension
+
+**WHOLE SOURCE, ISOLATED RUNTIME AND PRODUCTION CONTROLS ACCEPTED;
+CANONICAL DELIVERY AND SHARED NATIVE ADMISSION PENDING.** Genuine nonauthor whole
+review and ROOT intake accept the current [LO-3a–LO-3e implementation](../adrs/ADR-008-shared-lean-slot-control-plane.md#lo3-creation-admission-extension),
+complete targeted isolated suites and sole-production regression/exact-restoration
+controls. The explicit missing live-client configuration case remains unmeasured.
+The [wire/identity contract](../superpowers/specs/2026-10-11-lean-lifecycle-observation-design.md#lo3-creation-admission-design)
+and [delivery work package](../superpowers/plans/2026-10-11-lean-lifecycle-observation.md#lo3-creation-admission-plan)
+still require broader fast/project gates, canonical source delivery and separately
+measured shared process loading, request drain and native admission. No runtime
+reload, new command or present retry grant follows from bounded acceptance.
+
+The specified behavior stays within one owned pending launch and exact unreaped Popen
+handle. Only individually valid present selected/census signatures that disagree
+may trigger a bounded new observation; successful admission still requires a genuine
+full coherent pair. Missing/absent, denied, malformed, oversized, incapable or mismatched
+identity remains refusal. Ordinary lease/reclaim/proxy/status/capacity/stop consumers
+retain their strict observer and original guards. Never manufacture a signature from
+argv, a port, coarse birth, diagnostic text or a reused PID.
+
+The same-call failed pair is retained as bounded, explicitly decoded/parsed diagnostic
+evidence with lengths/hashes/truncation and first/last/terminal error context.
+The specification freezes exact Observation/PairV1/envelope fields, null/type/version
+rules, deduplicated references and ordinary v2 absent-origin/token binding; it is
+not an author-chosen schema at coding time. A retained full prefix permits hash/content
+checking; a truncated prefix cannot verify an unretained suffix/full hash and remains
+explicitly supplied diagnostic evidence. It is not managed identity or a reconstructed
+earlier sample. A startup_evidence envelope
+uses the existing pending record; absence remains legacy-compatible, malformed data
+remains unavailable/reserved, and diagnostic write failure cannot erase reservation.
+Do not infer a historical exec race from a generic coherence error or extend one
+cleanup receipt's zero-signal audit to another invocation.
+
+| Timing | Pre-extension semantics | Reviewed startup semantics; shared native admission pending |
+|---|---|---|
+| Startup allowance | Fresh configured port-readiness timer begins in _wait_port | One local allowance begins immediately before Popen; min(local deadline, actual enclosing deadline) governs capture, IO/publication, readiness, sleeps and final admission |
+| Observation | Existing per-command bound and any tighter enclosing budget | Same existing context and exact effective bound for every check, including before/after durable IO, no reset or hidden extra allowance |
+| Cleanup | Existing independent guarded launch rollback; distinct RR whole-stop budget | Exit only startup context and restore the real enclosing deadline, even expired; preserve original guarded cleanup without manufactured grace |
+
+This explicitly reallocates/tightens readiness timing; it is not a whole-prepare
+deadline or an interrupting hard wall for filesystem/Popen/kernel calls. Late return
+cannot be reported as successful startup/ACTIVE; existing guarded rollback and durable
+residual rules apply. A write returning after a tighter enclosing deadline fails
+admission even if no later observation runs; checking only the local allowance is
+incorrect. Cleanup restores the actual outer context and cannot discard an expired
+outer bound to force fallback, signals or clearance. FREE, a closed port, a timeout or retained diagnostic PID still
+does not authorize adoption, signals, record deletion, cache mutation or another slot.
+
+After implementation/evidence acceptance, ROOT uses fresh actual ownership/capacity,
+clean/contained source and matching branch/dependency/epoch evidence. Changing shared
+controller source can make old proxy fingerprints stale; do not rewrite process
+records or declare loaded code from a digest. Coordinate any necessary known-owned
+loading under existing request-drain, target-slot then lifecycle and both-role
+quiescence rules, preserving peers/unabsorbed work. Qualify real ordinary lease/
+prepare/MCP/release/reconnect and required paired/session/capacity paths with actual
+same-call diagnostics. Healthy retries alone do not establish the former cause fixed.
+
+No global restart around an active owner, unchanged prepare campaign, extra backend,
+lease edit, branch spoof or reset is a substitute. Existing canonical finding closure,
+full project gates, protected-main and human publication decisions remain separate.
+
+### Guarded source delivery before shared native admission
+
+Bounded isolated acceptance applies to its exact source and controls. A fresh primary
+command imports primary's current files; an already running proxy retains its loaded
+modules. Neither is made current by a reviewed file in another checkout. Compare the
+complete source/base lineage, actual imports and pending diff before delivery; do not
+attribute a later native refusal to the new implementation without that binding and
+its actual same-call observations. Missing historical operands leave the cause unknown.
+
+ROOT follows the existing owners in this order:
+
+1. Obtain fresh independent whole review of the reconciled documents, current source
+   and retained runtime/control evidence. Run the broader fast suite using the bare
+   `uv run python -m pytest -q`, which includes both repository and plugin testpaths
+   under the configured markers. Run change-appropriate verification through
+   `uv run python scripts/verify_scope.py` and retain its explicit NOT CERTIFIED
+   scope. Required full merge/publication gates remain separate; no skipped case or
+   unrelated red is relabelled accepted.
+2. Use normal protected Git to checkpoint the exact reviewed source/tests/documents.
+   Verify complete base ancestry, prerequisites, exact path diff and clean target;
+   do not merge an unrelated frontier branch wholesale, cherry-pick, force/reset,
+   bypass hooks or move primary to make transport easier. A missing prerequisite
+   requires the existing reviewed dependency/integration process, not a new release
+   or retarget contract. A local checkpoint is not canonical closure or main merge.
+3. Reconcile all actual leases, owners, unabsorbed commits, paired dependency pins,
+   physical capacity and completed requests before any runtime transition. Keep peer
+   work at its exact source/owner/dependency state. On the clean committed canonical
+   primary, use the existing `uv run python scripts/slotctl.py build` to publish the
+   matching authoritative build epoch. A changed source digest is expected-input
+   evidence, never proof that a persistent process loaded it.
+4. Use fresh `status --json` and `doctor --json`, actual process/source identities and
+   request completion to admit any required loading operation. Freeze owned dispatch
+   and probes; preserve target-slot then lifecycle locking and complete both-role
+   backend/project/retained-descendant quiescence. Use only the existing eligible
+   known-owned number internals, or global supervisor verbs after every affected
+   owner and request is drained. Unknown ownership or activity blocks replacement;
+   a timeout, endpoint snapshot, FREE lease or source fingerprint cannot waive it.
+5. Only at the admitted current source and epoch, acquire an eligible existing number
+   with the actual primary branch name, prepare, then perform matching native MCP
+   diagnostics/goal work. Preserve exact native observations, source/epoch and any
+   pending/running/residual transition. Complete ordinary no-change release or
+   ready/absorb as appropriate, then reconnect and required paired/session/capacity
+   controls. A safely refused prepare is not a proof dispatch or restored pool.
+
+Failure retains actual errors, earlier reservations and all unabsorbed work. Use
+normal owning-session release only when its existing clean/containment/resource
+checks admit it; no manual record deletion, reclaim, signal or branch edit repairs
+missing evidence. Any source rollback uses an independently reviewed protected
+checkpoint and repeats loading/drain/native gates; never restamp old process records.
+Existing finding Verify/closure writers, full gates and reviewed main delivery still
+apply. Scientific, formal, material and manuscript acceptance remains separate.
+
 ## Shared-runtime fingerprint coverage
 
 **WHOLE SOURCE IMPLEMENTATION ACCEPTED / SOURCE FINDINGS CLOSED / CURRENT PROJECT GATES AND NATIVE ADMISSION PENDING.** The

@@ -9,6 +9,53 @@ Depends on [ADR-008 LO-1–LO-6](../../adrs/ADR-008-shared-lean-slot-control-pla
 and the [whole design](../specs/2026-10-11-lean-lifecycle-observation-design.md).
 This plan is a reviewable next-work contract, not authorization to operate current PIDs.
 
+**Startup extension:** the S-A–S-E package under LO-3a–LO-3e has genuine independent
+whole source, complete targeted isolated runtime and meaningful sole-production
+regression/exact-restoration acceptance, recorded by ROOT. The explicit missing
+live-client configuration case remains unmeasured. Broader fast/project gates,
+canonical delivery and shared native loading/admission remain owed. Early reaped-
+handle diagnostics preserve the identity-unavailable classification and actual
+creation/rollback phase without asserting an observed mismatch or weakening refusal.
+Actual native witness fields and genuine absent native errors are conserved;
+rendered wrapper/detail/message/context text intentionally changes. Historical
+failed receipts remain failed at their original pins. No native use is authorized.
+
+The deadline fixture forwards unrelated raw native file replacements without decoding
+them. It must exercise the real launch and preserve every configured-bound, watchdog,
+terminal, witness and capacity predicate. The persistent-publication fixture preserves
+its operational assertions and additionally checks exact original native cause and
+ordered reporting observations under the existing `SlotError` aggregate contract.
+Neither correction changes production lifecycle code, increases a budget or supplies
+native admission. Keep both prior failed identities and all other required controls.
+
+## Durable adverse-metadata fixture migration
+
+Use the existing seed-journal primitives for all same-family persisted record
+mutations in `tests/test_lean_lifecycle_observation.py`: one bad image in
+`_la_bad_record_through_consumers`, each C8 independent-grammar image, and the C8
+required-key truncated/legacy multiwrite window. Capture actual original bytes/stat
+first. Keep exact raw-byte payloads and existing live-consumer assertions under
+`seeded_mutation` or, for the multiwrite test-exclusive path, `journalled`. Let the
+existing owner restore; do not move a bare-finally restore, disguise its write,
+change the scanner, add an exemption, or introduce another recovery mechanism.
+
+Bind each context's yielded original bytes to the independently captured original.
+Keep every original invalid/legacy/truncated input, assertion, error expectation,
+consumer/effect witness and timing budget. The existing backup/entry/fsync ordering,
+next-session orphan repair and residue guard own durability. Content-only in-place
+writes must retain full mode, with actual full `st_mode` assertions before consumers
+and after restoration plus exact original bytes/nsmtime checks. The journal has no
+mode reconstruction capability; no chmod/replace/delete mutation is admitted here.
+`seeded_mutation` owns its existing path lock; `journalled` supplies the existing
+exclusive-fixture multiwrite custody and must not be described as adding that lock.
+
+First update this plan and design, then migrate all listed mutation windows coherently.
+Fresh whole nonauthor source/custody/original-intent review precedes ROOT execution of
+the complete startup and seed-residue modules and meaningful durability/effect controls.
+Keep the actual failed broad profile and every remaining failure/skip at its own scope;
+no test or scientific acceptance, native loading, source delivery or main follows from
+this source-only amendment.
+
 ## Global constraints and acceptance sequence
 
 Keep the existing three physical slots, root-only builds/lifecycle/integration,
@@ -175,6 +222,223 @@ unit mocks do not replace these facts. Preserve prior code/config and all origin
 incident evidence; rollback cannot bypass uncertain occupancy. Root supplies separate
 runtime admission and canonical integration review, with unresolved qualifications.
 
+
+<a id="lo3-creation-admission-plan"></a>
+
+## LO-3a–LO-3e startup extension — document-first work package
+
+**WHOLE SOURCE, ISOLATED RUNTIME AND PRODUCTION CONTROLS ACCEPTED;
+CANONICAL DELIVERY AND SHARED NATIVE ADMISSION PENDING.** Original Phases A–E and
+historical receipts retain their original LO/SF/RR scope. Whole design review
+preceded implementation; genuine nonauthor whole source/runtime review and ROOT
+intake now accept the complete targeted suites and sole-production regression/
+exact-restoration controls. The missing live-client configuration case remains
+unmeasured. The complete contract stays specification §5.1 and ADR-008 LO-3a–LO-3e.
+Broader fast/project verification, independent review of current authorities,
+canonical closure/checkpoint, shared loading/native qualification and protected main
+remain separate required steps. Bounded acceptance grants no process authority.
+
+### S-A: independently admit the coherent specification
+
+ROOT freezes current primary architecture, this complete ADR/spec/plan/guide package,
+source pins and the accepted bounded analysis. A genuine nonauthor reviews all four
+documents against current State/Supervisor/Controller/proxy and original LO/SF/RR,
+then separately assesses literal operator intent. Resolve substantive findings through
+author repair and whole rereview before code. The source checkout is not a Lean lane.
+No new population-shape assertion is made; a synthetic transition is a control, not
+proof of a historical exec cause or a host-wide population claim.
+
+### S-B: one existing-owner implementation after design acceptance
+
+| Existing owner | Coherent responsibility | Compatibility/evidence |
+|---|---|---|
+| state.py Observation/observe_process | Exact §5.1 additive Observation/PairV1 grammar and same-call evidence; existing budget yields effective min(local, actual enclosing) | Generic states/signatures and all relative callers unchanged; no extra ps/census producer |
+| supervisor.py _spawn/_wait_port/_validate_record | Exact-handle initial-only stabilization; one effective bound through all IO/pre-post writes/success; exact StartupV1 reader grammar; restore real outer context before rollback | One Popen/token/reservation; no initial authoritative PID/signature until coherent capture; legacy records and all destructive readers remain strict |
+| Existing controller/proxy/capacity/status/stop/borrow/paired consumers | Review actual callers and preserve their behavior; edit only if coherent implementation proves a necessary compatible change | No generic retry, process-owner/reclaim relaxation, lease/base/cache mutation or new lifecycle API |
+| Existing lifecycle/slots/policy/runtime-fingerprint/architecture tests | Actual production methods over external OS/clock/IO seams and real disposable records | No mocked acceptance verdict, weakened old assertion/timeout, new skip/xfail or helper-only oracle |
+| ADR/spec/plan/guide | Reconcile every statement changed by implementation before same accepted checkpoint | Proposed/source/control/native/main statuses remain distinct; shared books stay ROOT-only |
+
+No validator/doctor family, registry, service, hook or new configuration knob is planned.
+If code requires one, revise and independently review the design and derive its live
+registration/non-vacuity obligations before expanding implementation.
+
+### S-C: decisive controls and actual sole-production regressions
+
+Use the existing Host/external OS seam with genuine production State/Supervisor/Controller
+entry points and actual disposable record files. Preserve all original LO/SF/RR controls,
+especially post-Popen write/identity failure, reaped-handle reuse, pending timeout,
+process-owner/reclaim, paired transitions and bounded stop. No real incident PID,
+production cache/datastore or host service is used by isolated tests.
+
+| ID | Required actual production path and independent oracle | Sole production regression which must turn it red |
+|---|---|---|
+| LA-C1 | Individually valid unequal selected/census signatures then a full coherent pair: old source refuses; repaired path admits once, one Popen, pending precedes launch, exact final observed signature | Restore the one-shot creation refusal while retaining diagnostic/other code |
+| LA-C2 | Persistent signature drift: actual bounded command/sleep costs reach D_effective, no running/ACTIVE, first/last witnesses and reservation survive | Reset the effective bound/remaining allowance per iteration |
+| LA-C3 | Missing row/value, absence, denied/timed-out/stderr/nonzero/malformed/duplicate/oversized/no-observer views: no retry or invented identity | Admit an ineligible unavailable reason as drift |
+| LA-C4 | Exit/reap and same-PID replacement between attempts: no adoption, termination or late signature reuse; original reservation survives | Omit exact unreaped-handle viability gate |
+| LA-C5 | Capture/IO/readiness/final use min(local,enclosing), including late-write-only outer expiry with no later observation; no startup success/ACTIVE and guarded residual | Substitute local for effective bound at the actually exercised production success boundary |
+| LA-C6 | Actual same-call PairV1 and exact TextV1 grammar, scalar/escaped bounds and enforceable full-retained versus supplied truncated hashes | Drop/replace first pair, recapture it or falsely mark unretained content verified |
+| LA-C7 | Prelaunch/signature/diagnostic/running/residual write failures and interruption: no pre-reservation Popen; typed first+terminal+rollback causes and earlier reservation survive | Erase first cause/reservation on diagnostic IO failure |
+| LA-C8 | Independent grammar-derived legacy/valid/semantically malformed StartupV1 through actual status/capacity/stop readers, with absent origins and exact token/refs/counts | Bypass the particular semantic validator or trust diagnostic identity/free-invalid data |
+| LA-C9 | Later census loss after genuine capture: only original exact-created-handle fallback can reap wrapper; unknown descendants retain occupancy | Enable fallback from an initial failed pair |
+| LA-C10 | Owner/reclaim/proxy/ordinary stop/status/borrow/paired paths see the same drift and remain strict; no generic observer retry | Leak creation-only retry/relaxed matching into ordinary owner path |
+| LA-C11 | Normal successful launch/prepare/park/rewarm/release, late global-start failure, all existing descendant/quiescence/rollback controls | Skip a retained-identity/final-quiescence check |
+| LA-C12 | Startup allowance bool/nonfinite/nonpositive invalidity refuses before Popen, positive/default semantics preserved; nested tighter budget never widened | Accept invalid T or replace an enclosing tighter deadline |
+
+#### Independent grammar and late-write oracles
+
+LA-C6/7/8 cases derive from the accepted §5.1 wire grammar, not implementation-selected
+fixtures. Exercise actual _validate_record/_read_metadata/status/capacity/stop through
+real disposable files: absent legacy field; valid v1 evidence; present null; missing/
+extra keys; unsupported versions; bool-as-int/number; invalid enums/error fields/
+probe capability; invalid origin/recovery presence including explicit null; token and
+initiator mismatch; dangling/duplicate/out-of-order refs; inconsistent attempt/failure/
+stage/time/deadline combinations; malformed UTF-8/lone surrogates and escaped byte bounds.
+Test complete multibyte prefixes with recomputable length/hash, invalid retained hashes,
+and truncated text with syntactically valid but unretained full hash explicitly labelled
+supplied, never expected to be verifiable from the prefix. Source tests know the actual
+full external text and independently verify producer hashes without changing the reader
+oracle. Each LA-C8 semantic mutant must bypass its actual production reader guard with
+unchanged assertions, not mutate a fixture or redefine the schema after code.
+
+Drive every semantic variant and missing required key through the real current-file
+reader path, not only the payload helper. Include independent parent initiator/observer
+binding, phase, count, timestamp and retained-reference complements. Retain exact bad
+bytes and reserved capacity, and independently observe no launch, termination, signal,
+lease or cache mutation. Reinstall exact fixture bytes/mode/mtime and establish valid
+and legacy behavior afterward. Helper-only controls remain supplemental.
+
+LA-C7 includes distinguishable original and subsequent publication exceptions at the
+actual replace/fsync seams. Exercise both safe cleanup success and unresolved residual
+paths. Assert typed outward observations in occurrence order and the original cause,
+not merely reservation retention or a nonzero outcome. A failed retained-evidence
+write must not erase a later cleanup cause or cause cleanup to be skipped.
+Cross genuine prior coherent creation with later complete-census denial and both
+successful wrapper wait and retained-row wait failure. Assert the native census
+type/errno/detail and original rollback_census operation before later reporting/wait
+causes, and the first durable rollback fault whenever publication succeeds. Include
+KeyboardInterrupt/SystemExit at the reporting seams, independently of interruption
+of the original startup write. Deferred failure re-raise must not duplicate evidence.
+Carry genuine native witnesses through generic rollback identity/pre-effect/exit and
+quiescence refusals as well as deferred census failures. External controls independently
+deny selected observations before effects, after an earlier census failure, after a
+safe child TERM/wrapper wait, and at final quiescence. Preserve actual None error classes
+and all structured fields; first persisted native failure selection excludes benign
+present/absent facts. Failed reporting retains exact earlier reservation and every cause.
+
+LA-C2 independently captures the external Popen clock, literal configured allowance
+and original effective deadline. A finite external ps/sleep watchdog bounds the
+admission attempts even under a sole-production reset/enlargement regression; separate
+permitted rollback costs from that admission bound. Producer-field consistency remains
+an additional assertion. StartupV1 current-file controls include missing and legacy1
+parent process versions through all existing readers, capacity and destructive paths.
+
+LA-C5/12 include diagnostic, coherent-signature and final-running durable writes which
+return late under a real tighter outer observation_budget. For example, local45,
+outer deadline1, all prior observations complete by0.9, real file replacement returns
+at1.1. Impose latency only at external OS replace/fsync seams while actual production
+atomic_json and guards execute; do not patch their verdict. Each case independently
+asserts effective-bound refusal immediately on return, original first/terminal evidence
+and preserved reservation/outer context. No subsequent observation failure may be the
+reason the control passes. Call-level tracing of actual stage entries, without replacing
+their implementations, may assert that no next readiness/observation/success stage was
+entered after the late return.
+
+The final-running case directly exercises the actual start_backend/_spawn producer
+entry under the lifecycle lock so no later assert_healthy/Controller check masks its
+last success boundary. It must reject returned startup success with no later observation;
+a separate normal Controller integration case asserts no ACTIVE lease. A sole production
+change from effective to local bound at the genuine exercised success guard must make
+that same fixed final-running control red, then exact source restoration green. Do not
+claim this mutant from a subprocess-timeout-only case or a redundant guard whose later
+correct check masks it. Include expired-outer restoration negatives: no reset to None,
+no new grace or selected-only fallback around the real enclosing expiry, no guessed
+signal/clearance when safe cleanup cannot be proved. Preserve original independent
+cleanup opportunity only when the genuine restored authority permits it.
+
+Each behavior test seeds only external samples/IO/clock effects; it must not mock
+observe_process/_spawn/admission/quiescence/health to a verdict. Independently assert
+real files/full identities, event/call counters, elapsed allowance, no forbidden
+signals, capacity and original/terminal error fields. A test catching a fixture guard
+alone does not qualify the production implementation.
+
+For every listed sole regression, ROOT executes the same actual production-path command
+positive→sole-source-regression-red→restored-positive (actual rc0/1/0). Journal the
+production source mutation through existing seed_journal before any touch; preserve
+the exact patch, fresh interpreter/source origin, command/raw channels and full
+bytes/mode/nsmtime restoration with empty seed journal. A mutant in a test/helper,
+another checkout or already imported old module is not the repaired production seam.
+Keep the test oracle and original suite fixed throughout.
+
+### S-D: whole implementation/evidence acceptance
+
+After genuine nonauthor whole design acceptance and ROOT code grant, execute the current
+lifecycle/slots/Codex-policy/runtime-fingerprint/paired/architecture suites using the
+matching repository interpreter and existing canonical commands. Preserve full actual
+results, failures and original asserts; run required appropriate fast/project gates
+and diff checks. No historical test count is a current pass, and no failure is waived.
+
+A genuine nonauthor review covers the whole original LO/SF/RR producer-consumer contract,
+new diagnostic/initial-capture/timing/cleanup paths, actual tests/0-1-0 receipts and
+source restoration, then separately literal intent. ROOT reconciles current source
+and recorded evidence; a local source checkpoint is neither runtime nor main acceptance.
+
+### Protected source delivery and broader verification
+
+The accepted isolated startup evidence does not replace the broader fast suite or
+source transport. ROOT first obtains independent whole review of these current
+owner documents against the complete source/runtime/control evidence. Run the bare
+`uv run python -m pytest -q` for both configured testpaths and the existing
+`uv run python scripts/verify_scope.py` for the actual changed paths; retain its
+NOT CERTIFIED limits. The full `--merge-gate` and wave/submission requirements still
+apply when their delivery checkpoint requires them. Preserve every actual failure
+and the explicit unmeasured live-client configuration case.
+
+Checkpoint only the exact reviewed production, test and describing paths through
+ordinary protected Git, with complete preimage/base/prerequisite reconciliation.
+Inspect the entire proposed ancestry before publication; an unrelated frontier
+branch is not an infrastructure delivery unit. Do not cherry-pick, force/reset,
+change primary's branch, hand-edit a lease or add retarget/release APIs. Missing
+prerequisites go through the existing coherent dependency/integration review.
+Normal hooks and single-writer finding Verify/closure remain required; a source
+checkpoint alone establishes neither main nor native acceptance.
+
+Once the reviewed source is in a clean committed canonical primary, the existing
+`uv run python scripts/slotctl.py build` publishes its matching authoritative epoch.
+Before any shared loading or dispatch, reconcile actual owners, unabsorbed work,
+completed requests, both-role capacity and exact paired dependency state. Follow
+S-E and the [operator sequence](../../dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md#guarded-source-delivery-before-shared-native-admission).
+A process-memory loading claim requires actual native source/call/identity evidence,
+not merely expected source bytes or an epoch. Preserve the prior checkpoint for
+reviewed rollback; rollback must repeat the same drain/quiescence/loading gates.
+
+### S-E: ROOT current-source loading and native qualification
+
+Only after source/evidence acceptance, ROOT refreshes capable real status/doctor/capacity,
+own clean/contained work, actual branch/base/dependency/epoch and peer ownership.
+Preserve unabsorbed commits and completed owned requests. No fourth backend, unchanged
+prepare retry campaign, manual record/lease edit, branch spoof, dirty reset or copied cache.
+
+Shared state/supervisor code changes affect expected runtime fingerprints, including
+persistent proxies importing that code. ROOT must separately coordinate source loading
+through original LO-5 request drain, exact owner, target-slot then lifecycle locks,
+both-role/project/retained-family quiescence and verified source origins. Source hashes
+describe inputs, not process-memory loading; do not restamp old records. Unknown or
+unaccounted activity blocks replacement, not the independent non-runtime work.
+
+Under an admitted current-source window, perform a genuine ordinary actual-branch
+acquire/prepare/matching-MCP/no-change release/reconnect cycle on an eligible existing
+number, plus required paired/capacity/session observations. Retain same-call target
+diagnostics, event order, exact source/fingerprint/epoch, pending→running or residual,
+every relevant PID/endpoint/project/registry and cleanup/reap evidence. If an isolated
+owned native exec/failed-start control is admitted, it must actually exercise the
+mechanism, never old incident PIDs. Later healthy attempts alone do not prove historical
+causality; record whether stabilization was exercised or remains causally unqualified.
+
+Finish through existing finding Verify/canonical closure, current full gates, corrected
+authorities, normal Git discipline and protected main. Human publication acceptance and
+all original scientific BUILD obligations remain separate and full strength.
+
 ## Termination and preservation
 
 The original doc-first specification and bounded implementation have independent
@@ -185,3 +449,35 @@ admission or stated activation blocker. Existing findings use supported closure 
 this plan creates no ledger/notebook writer. Original research streams, full theorem
 contracts and failed gates are unchanged. Any unknown-process recovery or API expansion
 beyond this contract needs a new evidence/decision package rather than silent scope drift.
+
+
+### Current bounded acceptance and remaining delivery
+
+The source candidate extends existing Observation and strict process observation
+with same-call PairV1 diagnostics and exact reader validation, and the existing
+launch owner with StartupV1, one effective deadline and creation-only exact-handle
+stabilization. No generic identity, native-state parser, controller or proxy policy
+is relaxed. Existing ordinary stop methods preserve running phase and immutable
+completed startup history while adding shutdown evidence; only an actual failed
+startup constructs failed startup evidence. This observation does not amend the
+wire contract.
+
+LA-C1–LA-C12 are authored in the existing lifecycle control module. They include
+actual producer/record-reader seams, full decoded-input hash and Unicode checks,
+malformed grammar and strict ordinary consumers, original-handle cleanup, normal
+and paired transitions, invalid allowance and exact outer-context restoration.
+LA-C5 separately exercises direct backend startup and Controller prepare; only
+the returned record write advances the external clock past the actual outer
+deadline. The direct final-running-write control observes the first returned guard
+so a later health check cannot hide the decisive effective-bound check.
+
+The complete current targeted suites and meaningful production regression/restoration
+controls have independent whole source/runtime acceptance and ROOT intake. Original
+control meanings, independent configured-bound watchdog and exact native-cause
+predicates remain; wrapper rendering is not immutable native evidence. The explicit
+live-client configuration skip remains unmeasured. This accepted isolated increment
+does not claim current shared process loading or admission. Follow S-D/S-E for the
+broader fast/project checks, current-document review, protected source checkpoint,
+canonical clean-primary build/epoch and separately guarded native transition.
+Historical failures remain at their original pins, and scientific BUILD/publication
+obligations require their own evidence, independent review and recorded closure.

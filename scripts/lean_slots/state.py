@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import hashlib
+import math
+import copy
 import datetime
 import stat
 import re
@@ -147,12 +149,24 @@ def observation_timeout(limit: float = 2.0) -> float:
 
 
 @contextmanager
-def observation_budget(seconds: float) -> Iterator[None]:
+def observation_budget(seconds: float | None = None, *, deadline: float | None = None) -> Iterator[float]:
+    """Install/yield one effective bound; reset only this context on exit."""
     current = _OBSERVATION_DEADLINE.get()
-    deadline = time.monotonic() + seconds
-    token = _OBSERVATION_DEADLINE.set(min(current, deadline) if current is not None else deadline)
+    if current is not None:
+        _wire_number(current, minimum=0)
+    if deadline is None:
+        if seconds is None:
+            raise ValueError("observation budget requires an allowance or deadline")
+        _wire_number(seconds)
+        deadline = time.monotonic() + seconds
+    else:
+        if seconds is not None:
+            raise ValueError("observation budget accepts one bound")
+    _wire_number(deadline, minimum=0)
+    effective = min(current, deadline) if current is not None else deadline
+    token = _OBSERVATION_DEADLINE.set(effective)
     try:
-        yield
+        yield effective
     finally:
         _OBSERVATION_DEADLINE.reset(token)
 
@@ -473,16 +487,23 @@ class Observation:
     returncode: int | None = None
     error_class: str | None = None
     identity: Any = None
+    reason: str | None = None
+    diagnostics: dict | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "detail", str(self.detail)[:DIAGNOSTIC_LIMIT])
+        if self.reason is not None or self.diagnostics is not None:
+            validate_process_pair(self.diagnostics, self.reason, self.state, self.observed_at)
 
     def as_dict(self) -> dict[str, Any]:
-        return {"state": self.state, "target": self.target, "operation": self.operation,
+        value = {"state": self.state, "target": self.target, "operation": self.operation,
                 "observed_at": self.observed_at, "returncode": self.returncode,
                 "error_class": self.error_class, "errno": self.errno,
                 "observed_identity": self.identity if self.identity is not None else self.signature,
                 "diagnostic_text": self.detail}
+        if self.reason is not None:
+            value.update(reason=self.reason, diagnostics=self.diagnostics)
+        return value
 
 
 def observe_path(path: Path) -> Observation:
@@ -613,34 +634,72 @@ def process_snapshot() -> ProcessSnapshot:
 
 
 def observe_process(pid: int, signature: str | None = None) -> Observation:
+    """Strict generic identity; same-call diagnostics never relax this verdict."""
     target = f"PID {pid}"
-    def observed(state: str, value: str | None = None, detail: str = "", *, result=None, exc=None):
-        return Observation(state, value, detail, getattr(exc, "errno", None), target=target,
-                           operation="ps-selected", returncode=result.returncode if result else None,
-                           error_class=type(exc).__name__ if exc else None)
+    started = diagnostic_stamp()
+    selected = census_probe = None
+    def observed(state, value=None, detail="", *, result=None, exc=None, reason=None):
+        end = diagnostic_stamp()
+        args = dict(target=target, operation="ps-selected", observed_at=end["utc"],
+                    returncode=result.returncode if result is not None else None,
+                    error_class=type(exc).__name__ if exc is not None else None)
+        if state == "present":
+            return Observation(state, value, detail, getattr(exc, "errno", None), **args)
+        pair = {"version": 1, "pid": pid if type(pid) is int and pid > 0 else None,
+                "expected_signature_supplied": signature is not None,
+                "span": diagnostic_span(started, end), "selected": selected, "census": census_probe}
+        try:
+            pair = bound_diagnostics(pair, 65536)
+            return Observation(state, value, detail, getattr(exc, "errno", None),
+                               reason=reason, diagnostics=pair, **args)
+        except (ValueError, UnicodeError, OverflowError) as failure:
+            # A nonrepresentable diagnostic cannot authorize creation retry. Retain
+            # the actual ordinary state and visible failure, never fake a pair.
+            return Observation(state, value, f"{detail}; diagnostic unavailable: {failure}",
+                               getattr(exc, "errno", None), **args)
     if type(pid) is not int or pid <= 0:
-        return observed("unavailable", detail="no authoritative positive integer PID")
+        return observed("unavailable", detail="no authoritative positive integer PID", reason="invalid_target")
+    before = diagnostic_stamp()
+    def selected_view(state, detail="", *, result=None, exc=None, operand=None):
+        return diagnostic_probe("ps-selected", before, diagnostic_stamp(), state,
+                                detail=detail, result=result, exc=exc, operand=operand)
     try:
         result = subprocess.run(["ps", "-p", str(pid), "-o", "lstart=", "-o", "command="],
                                 check=False, capture_output=True, text=True, timeout=observation_timeout())
     except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
-        return observed("unavailable", detail=str(exc), exc=exc)
-    if len(result.stdout) > MAX_OBSERVER_OUTPUT:
-        return observed("unavailable", detail="selected process output exceeds bound", result=result)
+        selected = selected_view("unavailable", str(exc), exc=exc)
+        return observed("unavailable", detail=str(exc), exc=exc, reason="selected_failure")
     value = result.stdout.strip()
-    if result.stderr.strip() or result.returncode not in {0, 1}:
-        return observed("unavailable", detail=f"ps exit {result.returncode}: {result.stderr.strip()}", result=result)
-    if value and (result.returncode != 0 or _signature_command(value) is None):
-        return observed("unavailable", detail="malformed/partial/ambiguous selected process identity", result=result)
+    detail = None
+    if len(result.stdout) > MAX_OBSERVER_OUTPUT:
+        detail = "selected process output exceeds bound"
+    elif result.stderr.strip() or result.returncode not in {0, 1}:
+        detail = f"ps exit {result.returncode}: {result.stderr.strip()}"
+    elif value and (result.returncode != 0 or _signature_command(value) is None):
+        detail = "malformed/partial/ambiguous selected process identity"
+    if detail is not None:
+        selected = selected_view("unavailable", detail, result=result, operand=value)
+        return observed("unavailable", detail=detail, result=result, reason="selected_failure")
+    selected = selected_view("present" if value else "absent", result=result, operand=value)
+    before = diagnostic_stamp()
     census = process_snapshot()
+    row = next((item for item in census.rows if item.pid == pid), None) if census.state == "present" else None
+    census_probe = diagnostic_probe("ps-census", before, diagnostic_stamp(),
+                                    "unavailable" if census.state != "present" else "present" if row else "absent",
+                                    detail=census.detail, result=census,
+                                    operand=row.signature if row else None,
+                                    ppid=row.ppid if row else None,
+                                    witness=os.getpid() if census.state == "present" else None)
     if census.state != "present":
-        return observed("unavailable", detail=f"coherent process census unavailable: {census.detail}", result=result)
-    row = next((item for item in census.rows if item.pid == pid), None)
+        return observed("unavailable", detail=f"coherent process census unavailable: {census.detail}",
+                        result=result, reason="census_failure")
     if not value and row is None:
-        return observed("absent", detail="confirmed absent in capable process census", result=result)
+        return observed("absent", detail="confirmed absent in capable process census", result=result, reason="confirmed_absent")
     if not value or row is None or row.signature != value:
-        return observed("unavailable", detail="selected/census target identity inconsistent", result=result)
-    return observed("mismatch" if signature and value != signature else "present", value, result=result)
+        reason = "selected_census_signature_drift" if value and row else "selected_census_presence_drift"
+        return observed("unavailable", detail="selected/census target identity inconsistent", result=result, reason=reason)
+    return observed("mismatch" if signature and value != signature else "present", value,
+                    result=result, reason="signature_mismatch" if signature and value != signature else None)
 
 
 def signature_birth(signature: str) -> str | None:
@@ -855,7 +914,8 @@ def _observe_created_handle(process: Any, signature: str) -> Observation:
                            target=target, operation="ps-created-handle")
     try:
         result = subprocess.run(["ps", "-p", str(pid), "-o", "lstart=", "-o", "command="],
-                                check=False, capture_output=True, text=True, timeout=2)
+                                check=False, capture_output=True, text=True, timeout=observation_timeout())
+        observation_timeout()
     except (OSError, subprocess.TimeoutExpired, UnicodeError, ValueError) as exc:
         return Observation("unavailable", detail=str(exc), errno=getattr(exc, "errno", None),
                            target=target, operation="ps-created-handle", error_class=type(exc).__name__)
@@ -884,3 +944,340 @@ def require_process_signature(pid: int) -> str:
 def process_matches(pid: int, signature: str | None) -> bool:
     """Observed match only, never authority to delete or reclaim when false."""
     return bool(signature and observe_process(pid, signature).state == "present")
+
+
+# LO-3a diagnostic grammar. These are existing-state payload helpers, never a
+# second process observer, ownership registry, or a persisted retry capability.
+_WIRE_INT = 2**53 - 1
+_PAIR_KEYS = {'version', 'pid', 'expected_signature_supplied', 'span', 'selected', 'census'}
+_REASONS = {'invalid_target', 'selected_failure', 'census_failure',
+            'selected_census_presence_drift', 'selected_census_signature_drift',
+            'confirmed_absent', 'signature_mismatch'}
+_TERMINAL_PHASES = {'spawn', 'handle', 'creation', 'diagnostic_write', 'signature_write',
+                    'readiness', 'final_observation', 'running_write', 'deadline'}
+_ROLLBACK_PHASES = {'rollback_identity', 'rollback_census', 'rollback_signal',
+                    'rollback_wait', 'rollback_quiescence', 'residual_write'}
+_STARTUP_KEYS = {'version', 'launch_token', 'observer_pid', 'configured_seconds', 'started',
+                 'local_deadline', 'enclosing_deadline', 'effective_deadline', 'stage',
+                 'creation_attempts', 'creation_succeeded', 'failure_count', 'failures',
+                 'first_failure_ref', 'last_failure_ref', 'terminal', 'rollback', 'updated',
+                 'utc_regressed'}
+
+
+def _wire_require(ok: bool, detail: str = 'invalid startup diagnostic structure') -> None:
+    if not ok:
+        raise ValueError(detail)
+
+
+def _wire_object(value, keys) -> None:
+    _wire_require(type(value) is dict and set(value) == set(keys), 'diagnostic keys/type')
+
+
+def _wire_int(value, minimum=-_WIRE_INT) -> None:
+    _wire_require(type(value) is int and minimum <= value <= _WIRE_INT, 'diagnostic integer')
+
+
+def _wire_number(value, minimum=None, positive=False) -> None:
+    _wire_require(type(value) in (int, float), 'diagnostic numeric type')
+    try:
+        finite = math.isfinite(value)
+    except OverflowError:
+        finite = False
+    _wire_require(finite and (minimum is None or value >= minimum) and
+                  (not positive or value > 0), 'diagnostic finite numeric domain')
+
+
+def _wire_utc(value):
+    _wire_require(type(value) is str and re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z', value) is not None,
+                  'diagnostic UTC')
+    return datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ')
+
+
+def _wire_stamp(value) -> None:
+    _wire_object(value, {'utc', 'mono'})
+    _wire_utc(value['utc']); _wire_number(value['mono'], minimum=0)
+
+
+def _wire_span(value) -> None:
+    _wire_object(value, {'start', 'end', 'utc_regressed'})
+    _wire_stamp(value['start']); _wire_stamp(value['end'])
+    _wire_require(value['start']['mono'] <= value['end']['mono'] and
+                  type(value['utc_regressed']) is bool and
+                  value['utc_regressed'] == (_wire_utc(value['end']['utc']) < _wire_utc(value['start']['utc'])),
+                  'diagnostic span order')
+
+
+def _wire_within(inner, outer) -> None:
+    _wire_require(outer['start']['mono'] <= inner['start']['mono'] <= inner['end']['mono'] <= outer['end']['mono'],
+                  'diagnostic nested span')
+
+
+def diagnostic_stamp() -> dict:
+    value = {'utc': now_iso(), 'mono': time.monotonic()}
+    _wire_stamp(value)
+    return value
+
+
+def diagnostic_span(start, end) -> dict:
+    value = {'start': start, 'end': end, 'utc_regressed': _wire_utc(end['utc']) < _wire_utc(start['utc'])}
+    _wire_span(value)
+    return value
+
+
+def diagnostic_text(value: str) -> dict:
+    _wire_require(type(value) is str, 'diagnostic text type')
+    data = value.encode('utf-8', errors='strict')
+    prefix = data[:2048].decode('utf-8', errors='ignore')
+    truncated = len(prefix.encode('utf-8')) != len(data)
+    return {'prefix': prefix, 'utf8_bytes': len(data), 'sha256': sha256_bytes(data),
+            'truncated': truncated, 'hash_scope': 'full_unretained' if truncated else 'full_retained'}
+
+
+def _wire_text(value, *, operand=False) -> str | None:
+    _wire_object(value, {'prefix', 'utf8_bytes', 'sha256', 'truncated', 'hash_scope'})
+    _wire_require(type(value['prefix']) is str, 'diagnostic prefix type')
+    data = value['prefix'].encode('utf-8', errors='strict')
+    _wire_int(value['utf8_bytes'], minimum=0)
+    _wire_require(type(value['hash_scope']) is str and len(data) <= 2048 and type(value['truncated']) is bool and
+                  type(value['sha256']) is str and re.fullmatch(r'[0-9a-f]{64}', value['sha256']) is not None,
+                  'diagnostic text/hash bound')
+    if value['truncated']:
+        _wire_require(value['hash_scope'] == 'full_unretained' and value['utf8_bytes'] > len(data),
+                      'diagnostic supplied truncation')
+        return None  # Its missing suffix/full hash is NOT verified by the reader.
+    _wire_require(value['hash_scope'] == 'full_retained' and value['utf8_bytes'] == len(data) and
+                  value['sha256'] == sha256_bytes(data), 'diagnostic retained hash')
+    if operand:
+        _wire_require(value['prefix'] == value['prefix'].strip(), 'diagnostic stripped operand')
+    return value['prefix']
+
+
+def diagnostic_encoding(value) -> bytes:
+    return (json.dumps(value, sort_keys=True, indent=2, ensure_ascii=True, allow_nan=False) + '\n').encode('utf-8')
+
+
+def bound_diagnostics(value: dict, limit: int) -> dict:
+    """Deterministic scalar-prefix reduction; full lengths/hashes never change."""
+    result = copy.deepcopy(value)
+    texts = []
+    def visit(node, path=()):
+        if type(node) is dict:
+            if set(node) == {'prefix', 'utf8_bytes', 'sha256', 'truncated', 'hash_scope'}:
+                _wire_text(node); texts.append((path, node))
+            else:
+                for key in sorted(node): visit(node[key], path + (str(key),))
+        elif type(node) is list:
+            for index, row in enumerate(node): visit(row, path + (str(index),))
+    visit(result)
+    while len(diagnostic_encoding(result)) > limit:
+        available = [(path, text) for path, text in texts if text['prefix']]
+        _wire_require(bool(available), 'diagnostic fixed metadata exceeds encoded bound')
+        path, text = min(available, key=lambda item: (-len(item[1]['prefix'].encode('utf-8')), item[0]))
+        text['prefix'] = text['prefix'][:-1]
+        text['truncated'] = True; text['hash_scope'] = 'full_unretained'
+    return result
+
+
+def diagnostic_probe(operation, start, end, state, *, detail='', result=None, exc=None,
+                     operand=None, ppid=None, witness=None) -> dict:
+    # ProcessSnapshot already carries the actual caught Python class/errno. Never
+    # invent a ToolFailure type for a completed nonzero native return code.
+    error_class = type(exc).__name__ if exc is not None else getattr(result, 'error_class', None)
+    error_errno = getattr(exc, 'errno', None) if exc is not None else getattr(result, 'errno', None)
+    return {'operation': operation, 'span': diagnostic_span(start, end), 'state': state,
+            'capable': state != 'unavailable', 'returncode': None if error_class else getattr(result, 'returncode', None),
+            'error_class': error_class, 'errno': error_errno,
+            'diagnostic': diagnostic_text(str(detail)[:DIAGNOSTIC_LIMIT]),
+            'operand': diagnostic_text(operand) if operand is not None else None,
+            'target_ppid': ppid, 'observer_witness': witness}
+
+
+def _wire_probe(value, operation, span, observer_pid=None) -> str | None:
+    _wire_object(value, {'operation', 'span', 'state', 'capable', 'returncode', 'error_class',
+                         'errno', 'diagnostic', 'operand', 'target_ppid', 'observer_witness'})
+    _wire_require(type(value['operation']) is str and value['operation'] == operation and
+                  type(value['capable']) is bool and type(value['state']) is str and value['state'] in {'present', 'absent', 'unavailable'}, 'diagnostic probe classification')
+    _wire_span(value['span']); _wire_within(value['span'], span)
+    for key in ('returncode', 'errno'):
+        if value[key] is not None: _wire_int(value[key])
+    if value['error_class'] is not None:
+        _wire_require(type(value['error_class']) is str and
+                      re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,127}', value['error_class']) is not None and
+                      value['returncode'] is None, 'diagnostic caught error')
+    else:
+        _wire_require(value['errno'] is None and value['returncode'] is not None, 'diagnostic actual result')
+    diagnostic = _wire_text(value['diagnostic'])
+    operand = _wire_text(value['operand'], operand=True) if value['operand'] is not None else None
+    if value['capable']:
+        _wire_require(value['state'] in {'present', 'absent'} and value['error_class'] is None and
+                      diagnostic == '', 'diagnostic capable probe')
+        if value['state'] == 'present':
+            _wire_require(value['returncode'] == 0 and value['operand'] is not None, 'diagnostic present operand')
+            if operand is not None: _wire_require(_signature_command(operand) is not None, 'diagnostic full signature')
+        elif operation == 'ps-selected':
+            _wire_require(value['returncode'] in (0, 1) and operand == '', 'diagnostic selected absence')
+        else:
+            _wire_require(value['returncode'] == 0 and value['operand'] is None and value['target_ppid'] is None,
+                          'diagnostic census absence')
+    else:
+        _wire_require(value['state'] == 'unavailable', 'diagnostic incapable probe')
+    if operation == 'ps-selected':
+        _wire_require(value['target_ppid'] is None and value['observer_witness'] is None, 'diagnostic selected fields')
+    elif value['capable']:
+        _wire_int(value['observer_witness'], minimum=1)
+        if observer_pid is not None: _wire_require(value['observer_witness'] == observer_pid, 'diagnostic observer binding')
+        if value['state'] == 'present': _wire_int(value['target_ppid'], minimum=0)
+    else:
+        _wire_require(value['operand'] is None and value['target_ppid'] is None and value['observer_witness'] is None,
+                      'diagnostic unavailable census fields')
+    return operand
+
+
+def _validate_process_pair(pair, reason, state, observed_at, observer_pid=None) -> None:
+    _wire_object(pair, _PAIR_KEYS)
+    _wire_require(type(pair['version']) is int and pair['version'] == 1 and
+                  type(pair['expected_signature_supplied']) is bool and type(reason) is str and reason in _REASONS,
+                  'diagnostic pair version/reason')
+    _wire_require(type(state) is str, 'diagnostic state type')
+    _wire_utc(observed_at)
+    _wire_span(pair['span']); _wire_require(observed_at == pair['span']['end']['utc'], 'diagnostic observation time')
+    selected, census = pair['selected'], pair['census']
+    if reason == 'invalid_target':
+        _wire_require(state == 'unavailable' and pair['pid'] is None and selected is None and census is None,
+                      'diagnostic invalid target')
+    else:
+        _wire_int(pair['pid'], minimum=1)
+        so = _wire_probe(selected, 'ps-selected', pair['span'], observer_pid)
+        co = None
+        if census is not None:
+            _wire_require(selected['capable'], 'diagnostic census before selected capability')
+            co = _wire_probe(census, 'ps-census', pair['span'], observer_pid)
+            _wire_require(selected['span']['end']['mono'] <= census['span']['start']['mono'], 'diagnostic probe order')
+        if reason == 'selected_failure':
+            _wire_require(state == 'unavailable' and not selected['capable'] and census is None)
+        elif reason == 'census_failure':
+            _wire_require(state == 'unavailable' and selected['capable'] and census is not None and not census['capable'])
+        else:
+            _wire_require(census is not None and selected['capable'] and census['capable'])
+            statuses = (selected['state'], census['state'])
+            if reason == 'selected_census_presence_drift':
+                _wire_require(state == 'unavailable' and set(statuses) == {'present', 'absent'})
+            elif reason == 'confirmed_absent':
+                _wire_require(state == 'absent' and statuses == ('absent', 'absent'))
+            else:
+                _wire_require(statuses == ('present', 'present'))
+                if reason == 'selected_census_signature_drift':
+                    _wire_require(state == 'unavailable' and (so is None or co is None or so != co))
+                else:
+                    _wire_require(state == 'mismatch' and pair['expected_signature_supplied'] and
+                                  (so is None or co is None or so == co))
+    _wire_require(len(diagnostic_encoding(pair)) <= 65536, 'diagnostic encoded pair bound')
+
+
+def diagnostic_error(exc: BaseException) -> dict:
+    return {'error_class': type(exc).__name__, 'errno': getattr(exc, 'errno', None),
+            'message': diagnostic_text(str(exc))}
+
+
+def _wire_fault(value, phases, retained, span):
+    _wire_object(value, {'phase', 'at', 'error', 'observation_ref'})
+    _wire_require(type(value['phase']) is str and value['phase'] in phases, 'diagnostic fault phase')
+    _wire_stamp(value['at']); _wire_require(span['start']['mono'] <= value['at']['mono'] <= span['end']['mono'])
+    _wire_object(value['error'], {'error_class', 'errno', 'message'})
+    error = value['error']
+    _wire_require(type(error['error_class']) is str and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,127}', error['error_class']) is not None)
+    if error['errno'] is not None: _wire_int(error['errno'])
+    _wire_text(error['message'])
+    ref = value['observation_ref']
+    if ref is not None:
+        _wire_int(ref, minimum=1); _wire_require(ref in retained, 'diagnostic dangling fault reference')
+
+
+def _validate_startup_evidence(parent: dict) -> None:
+    """Validate optional evidence in the existing process reader; never authority."""
+    if 'startup_evidence' not in parent:
+        return
+    v = parent['startup_evidence']
+    _wire_object(v, _STARTUP_KEYS)
+    _wire_require(type(parent.get('schema_version')) is int and parent['schema_version'] == 1 and
+                  type(parent.get('process_schema_version')) is int and parent['process_schema_version'] == 2 and
+                  'record_origin' not in parent and 'recovery' not in parent, 'startup parent origin/version')
+    for token in (parent.get('launch_token'), v['launch_token']):
+        _wire_require(type(token) is str and re.fullmatch(r'[0-9a-f]{32}', token) is not None, 'startup token')
+    _wire_int(parent.get('initiator_pid'), minimum=1); _wire_int(v['observer_pid'], minimum=1)
+    _wire_require(v['launch_token'] == parent['launch_token'] and v['observer_pid'] == parent['initiator_pid'])
+    _wire_require(type(v['version']) is int and v['version'] == 1 and type(v['creation_succeeded']) is bool)
+    _wire_number(v['configured_seconds'], positive=True); _wire_stamp(v['started']); _wire_stamp(v['updated'])
+    span = diagnostic_span(v['started'], v['updated'])
+    _wire_require(type(v['utc_regressed']) is bool and v['utc_regressed'] == span['utc_regressed'])
+    for key in ('local_deadline', 'effective_deadline'): _wire_number(v[key], minimum=0)
+    if v['enclosing_deadline'] is not None: _wire_number(v['enclosing_deadline'], minimum=0)
+    _wire_require(v['local_deadline'] == v['started']['mono'] + v['configured_seconds'] and
+                  v['effective_deadline'] == (v['local_deadline'] if v['enclosing_deadline'] is None else
+                                              min(v['local_deadline'], v['enclosing_deadline'])), 'startup effective bound')
+    _wire_int(v['creation_attempts'], minimum=0); _wire_int(v['failure_count'], minimum=0)
+    _wire_require(type(v['failures']) is list and len(v['failures']) <= 2)
+    c = v['creation_attempts'] - int(v['creation_succeeded'])
+    q = int(bool(v['failures']) and v['failures'][-1].get('stage') == 'final') if all(type(z) is dict for z in v['failures']) else -1
+    _wire_require(c >= 0 and q in (0, 1) and v['failure_count'] == c + q and (not q or v['creation_succeeded']), 'startup attempts/count')
+    expected = [] if not v['failure_count'] else [1] if v['failure_count'] == 1 else [1, v['failure_count']]
+    actual = []
+    last_end = None
+    pids = set()
+    for failure in v['failures']:
+        _wire_object(failure, {'id', 'stage', 'attempt', 'state', 'reason', 'observed_at', 'diagnostics'})
+        _wire_int(failure['id'], minimum=1); _wire_int(failure['attempt'], minimum=1)
+        _wire_require(type(failure['stage']) is str and type(failure['state']) is str and
+                      failure['stage'] in {'creation', 'final'} and failure['state'] in {'unavailable', 'absent', 'mismatch'})
+        if failure['stage'] == 'creation':
+            _wire_require(failure['id'] == failure['attempt'] <= c and not failure['diagnostics']['expected_signature_supplied'] and
+                          failure['reason'] != 'signature_mismatch', 'startup creation failure')
+        else: _wire_require(failure['id'] == c + 1 and failure['attempt'] == 1)
+        validate_process_pair(failure['diagnostics'], failure['reason'], failure['state'], failure['observed_at'], v['observer_pid'])
+        fs = failure['diagnostics']['span']; _wire_within(fs, span)
+        if last_end is not None: _wire_require(last_end <= fs['start']['mono'], 'startup failure order')
+        last_end = fs['end']['mono']; actual.append(failure['id'])
+        if failure['diagnostics']['pid'] is not None: pids.add(failure['diagnostics']['pid'])
+    _wire_require(actual == expected and v['first_failure_ref'] == (expected[0] if expected else None) and
+                  v['last_failure_ref'] == (expected[-1] if expected else None), 'startup retained failure references')
+    for ref in (v['first_failure_ref'], v['last_failure_ref']):
+        if ref is not None: _wire_int(ref, minimum=1)
+    _wire_require(len(pids) <= 1 and ('pid' not in parent or not pids or pids == {parent['pid']}), 'startup diagnostic target binding')
+    if v['creation_succeeded']:
+        _wire_int(parent.get('pid'), minimum=1)
+        _wire_require(type(parent.get('signature')) is str and _signature_command(parent['signature']) is not None, 'startup coherent parent identity')
+    else: _wire_require('signature' not in parent, 'startup unverified signature')
+    if v['terminal'] is not None:
+        _wire_fault(v['terminal'], _TERMINAL_PHASES, expected, span)
+        if last_end is not None: _wire_require(v['terminal']['at']['mono'] >= last_end, 'startup terminal before refusal')
+    if v['rollback'] is not None:
+        _wire_require(v['terminal'] is not None)
+        _wire_fault(v['rollback'], _ROLLBACK_PHASES, expected, span)
+        _wire_require(v['rollback']['at']['mono'] >= v['terminal']['at']['mono'], 'startup rollback order')
+    if q:
+        _wire_require(v['terminal'] is not None and v['terminal']['phase'] == 'final_observation' and
+                      v['terminal']['observation_ref'] == expected[-1])
+    _wire_require(type(v['stage']) is str and v['stage'] in {'creation', 'readiness', 'final', 'complete', 'failed'})
+    if v['stage'] == 'failed':
+        _wire_require(v['terminal'] is not None and parent.get('phase') in {'launch_pending', 'uncertain_residual'})
+    else:
+        _wire_require(v['terminal'] is None and v['rollback'] is None and not q and v['updated']['mono'] <= v['effective_deadline'])
+        if v['stage'] == 'creation':
+            _wire_require(not v['creation_succeeded'] and parent.get('phase') == 'launch_pending' and 'pid' not in parent and 'signature' not in parent)
+        else:
+            _wire_require(v['creation_succeeded'] and parent.get('phase') == ('running' if v['stage'] == 'complete' else 'launch_pending'))
+    _wire_require(len(diagnostic_encoding(v)) <= 196608, 'startup encoded envelope bound')
+
+
+def validate_process_pair(pair, reason, state, observed_at, observer_pid=None) -> None:
+    try:
+        _validate_process_pair(pair, reason, state, observed_at, observer_pid)
+    except (KeyError, TypeError, AttributeError, OverflowError, UnicodeError) as exc:
+        raise ValueError("malformed process diagnostic payload") from exc
+
+
+def validate_startup_evidence(parent: dict) -> None:
+    try:
+        _validate_startup_evidence(parent)
+    except (KeyError, TypeError, AttributeError, OverflowError, UnicodeError) as exc:
+        raise ValueError("malformed startup diagnostic payload") from exc

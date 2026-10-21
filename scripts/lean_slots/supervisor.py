@@ -47,6 +47,14 @@ from .state import (
     observe_tcp_sockets,
     signature_birth,
     _signature_command,
+    _OBSERVATION_DEADLINE,
+    _wire_number,
+    diagnostic_stamp,
+    diagnostic_span,
+    diagnostic_error,
+    diagnostic_text,
+    bound_diagnostics,
+    validate_startup_evidence,
 )
 
 
@@ -585,6 +593,84 @@ class _RuntimeSourcePass:
 MAX_SHUTDOWN_IDENTITIES = 4096  # One bound for retained/root/discovered persisted identities.
 
 
+def _startup_deadline(deadline: float) -> None:
+    if time.monotonic() >= deadline:
+        raise TimeoutError("startup admission deadline expired")
+
+
+class _StartupEvidence:
+    """One in-memory exact launch transaction; persisted data is diagnostic only."""
+    def __init__(self, pending, allowance, started, enclosing):
+        local = started['mono'] + allowance
+        _wire_number(local, minimum=0)
+        if enclosing is not None:
+            _wire_number(enclosing, minimum=0)
+        self.local = local
+        self.effective = local if enclosing is None else min(local, enclosing)
+        self.pending = pending
+        self.first = self.last = None
+        self.observations = []
+        self.value = {'version': 1, 'launch_token': pending['launch_token'],
+                      'observer_pid': pending['initiator_pid'], 'configured_seconds': allowance,
+                      'started': started, 'local_deadline': local, 'enclosing_deadline': enclosing,
+                      'effective_deadline': self.effective, 'stage': 'creation',
+                      'creation_attempts': 0, 'creation_succeeded': False, 'failure_count': 0,
+                      'failures': [], 'first_failure_ref': None, 'last_failure_ref': None,
+                      'terminal': None, 'rollback': None, 'updated': started, 'utc_regressed': False}
+
+    def refusal(self, observation, stage):
+        if observation.reason is None or observation.diagnostics is None:
+            raise SlotError('launch refusal lacks representable same-call evidence', observations=(observation,))
+        self.value['failure_count'] += 1
+        number = self.value['failure_count']
+        failure = {'id': number, 'stage': stage,
+                   'attempt': self.value['creation_attempts'] if stage == 'creation' else 1,
+                   'state': observation.state, 'reason': observation.reason,
+                   'observed_at': observation.observed_at, 'diagnostics': observation.diagnostics}
+        if self.first is None:
+            self.first = failure
+            self.observations.append(observation)
+        self.last = failure
+        self.value.update(failures=[self.first] if number == 1 else [self.first, failure],
+                          first_failure_ref=1, last_failure_ref=number)
+        self.observations[:] = self.observations[:1] if number == 1 else [self.observations[0], observation]
+
+    def fault(self, exc, phase, *, rollback=False, witness=None):
+        reference = self.value['last_failure_ref']
+        try:
+            error = diagnostic_error(exc) if witness is None else {
+                'error_class': witness.error_class or type(exc).__name__, 'errno': witness.errno,
+                'message': diagnostic_text(witness.detail)}
+            fault = {'phase': phase, 'at': diagnostic_stamp(), 'error': error,
+                     'observation_ref': reference}
+        except (ValueError, UnicodeError, OverflowError):
+            # Reporting cannot disable guarded cleanup. Invalid new evidence is
+            # never persisted as legacy/free state; retain the earlier record.
+            return
+        self.value['rollback' if rollback else 'terminal'] = fault
+
+    def snapshot(self, stage):
+        self.value['stage'] = stage
+        self.value['updated'] = diagnostic_stamp()
+        self.value['utc_regressed'] = diagnostic_span(self.value['started'], self.value['updated'])['utc_regressed']
+        return bound_diagnostics(self.value, 196608)
+
+    def publish(self, path, stage):
+        _startup_deadline(self.effective)
+        self.pending['startup_evidence'] = self.snapshot(stage)
+        validate_startup_evidence(self.pending)
+        _startup_deadline(self.effective)
+        atomic_json(path, self.pending)
+        # This is also the final producer success boundary for a running write.
+        # No later observer/Controller check may hide a missing effective guard.
+        _startup_deadline(self.effective)
+
+    def retain_failed(self, path):
+        self.pending['startup_evidence'] = self.snapshot('failed')
+        validate_startup_evidence(self.pending)
+        atomic_json(path, self.pending)
+
+
 class Supervisor:
     def __init__(self, inventory: Inventory | None = None):
         self.inventory = inventory or Inventory.load()
@@ -671,6 +757,10 @@ class Supervisor:
                                       owner["state_root"] != str(self.inventory.state_root) or owner["slot"] != number or
                                       not isinstance(owner["inventory_domain"], str) or len(owner["inventory_domain"]) != 64):
                 invalid("invalid recovery lease-owner authority")
+        try:
+            validate_startup_evidence(value)
+        except ValueError as exc:
+            invalid(f"startup evidence invalid: {exc}")
         return value  # Preserve legacy fields/bytes; never manufacture or silently drop pins.
 
     def recovery_target(self, number: int) -> dict[str, Any]:
@@ -1012,23 +1102,23 @@ class Supervisor:
                 try:
                     arguments = shlex.split(row.command)
                 except ValueError as exc:
-                    raise SlotError("proxy command observation unavailable") from exc
+                    raise SlotError("proxy command observation unavailable", observations=tuple(witnesses)) from exc
                 if wrapper in arguments and "_proxy" in arguments and "--inventory" in arguments and "--slot" in arguments:
                     try:
                         inventory = arguments[arguments.index("--inventory") + 1]
                         slot = arguments[arguments.index("--slot") + 1]
                     except IndexError as exc:
-                        raise SlotError("proxy command observation incomplete") from exc
+                        raise SlotError("proxy command observation incomplete", observations=tuple(witnesses)) from exc
                     if slot == str(number):
                         if inventory not in aliases:
-                            raise SlotError(f"proxy wt{number} unclassified fixed-slot wrapper remains")
+                            raise SlotError(f"proxy wt{number} unclassified fixed-slot wrapper remains", observations=tuple(witnesses))
                         # Same-domain aliases count once but retain every filename
                         # for observation; no missing record authorizes adoption.
-                        raise SlotError(f"proxy wt{number} fixed-inventory wrapper remains (inventory={inventory})")
+                        raise SlotError(f"proxy wt{number} fixed-inventory wrapper remains (inventory={inventory})", observations=tuple(witnesses))
         if kind == "backend":
             project = str(self.inventory.lean_root(number))
             if any(project in row.command for row in census.rows):
-                raise SlotError(f"backend wt{number} fixed-project process remains")
+                raise SlotError(f"backend wt{number} fixed-project process remains", observations=tuple(witnesses))
             invs, errors = self._role_inventories(observations=witnesses)
             mapped = set()
             for row in census.rows:
@@ -1037,19 +1127,33 @@ class Supervisor:
             if errors or any(any(mark in row.command for mark in ("lean-lsp-mcp", "lake serve", "lean --server", "lean --worker")) and row.pid not in mapped for row in census.rows):
                 raise SlotError("fixed-project descendant quiescence unavailable", observations=tuple(witnesses))
 
-    def _wait_port(self, host: str, port: int, *, open_: bool) -> None:
-        deadline = time.monotonic() + float(self.inventory.raw["server"].get("startup_timeout_seconds", 45))
+    def _wait_port(self, host: str, port: int, *, open_: bool, deadline: float | None = None) -> None:
+        if deadline is None:
+            deadline = time.monotonic() + float(self.inventory.raw["server"].get("startup_timeout_seconds", 45))
+            expected = "present" if open_ else "absent"
+            while time.monotonic() < deadline:
+                seen = _port_observation(host, port)
+                if seen.state == "unavailable":
+                    raise SlotError(f"port observation unavailable: {seen.detail}", observations=(seen,))
+                if seen.state == expected:
+                    return
+                time.sleep(0.1)
+            raise SlotError(f"timed out waiting for {host}:{port} to {expected}")
         expected = "present" if open_ else "absent"
-        while time.monotonic() < deadline:
+        while True:
+            _startup_deadline(deadline)
             seen = _port_observation(host, port)
+            _startup_deadline(deadline)
             if seen.state == "unavailable":
                 raise SlotError(f"port observation unavailable: {seen.detail}", observations=(seen,))
             if seen.state == expected:
                 return
-            time.sleep(0.1)
-        raise SlotError(f"timed out waiting for {host}:{port} to {expected}")
+            time.sleep(min(0.1, max(0, deadline - time.monotonic())))
+            _startup_deadline(deadline)
 
     def _spawn(self, kind: str, number: int, command: list[str], port: int) -> None:
+        allowance = self.inventory.raw["server"].get("startup_timeout_seconds", 45)
+        _wire_number(allowance, positive=True)  # Before reservation or Popen; bool is not numeric.
         environment = self._capture_runtime_environment()
         fingerprint = self._runtime_inputs(kind, number, command, environment)
         metadata = self._metadata(kind, number)
@@ -1071,39 +1175,120 @@ class Supervisor:
                    "inventory_source": str(self.inventory.source), "project": str(self.inventory.lean_root(number)),
                    "command": command, "runtime_fingerprint": fingerprint, "port": port,
                    "started_at": now_iso(), "initiator_pid": os.getpid()}
-        atomic_json(path, pending)  # A failed reservation must precede and prevent Popen.
+        atomic_json(path, pending)
         process = None
         creation_signature = None
+        startup = None
+        phase = 'spawn'
         try:
             if kind == "backend":
                 environment["LEAN_LSP_MCP_TOKEN"] = self.inventory.backend_token(number)
             log_path = self.inventory.log_path(kind, number)
             log_path.parent.mkdir(parents=True, exist_ok=True)
             with log_path.open("ab", buffering=0) as log:
-                process = subprocess.Popen(command, cwd=self.inventory.repo_root, env=environment,
-                                           stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
-                                           start_new_session=True)
-            pending["pid"] = process.pid
-            created = observe_process(process.pid)
-            if created.state != "present" or not created.signature or getattr(process, "returncode", None) is not None:
-                raise SlotError("new process coherent creation identity unavailable", observations=(created,))
-            creation_signature = created.signature
-            pending["signature"] = creation_signature
-            atomic_json(path, pending)
-            self._wait_port(str(self.inventory.raw["server"]["host"]), port, open_=True)
-            seen = observe_process(process.pid)
-            if seen.state == "present":
-                creation_signature = seen.signature
-            if process.poll() is not None or seen.state != "present" or not seen.signature:
-                raise SlotError("new process identity unavailable")
-            pending.update(phase="running", signature=seen.signature)
-            atomic_json(path, pending)
+                started = diagnostic_stamp()  # Immediately before this one Popen.
+                startup = _StartupEvidence(pending, allowance, started, _OBSERVATION_DEADLINE.get())
+                with observation_budget(deadline=startup.local) as effective:
+                    if effective != startup.effective:
+                        raise SlotError('startup context effective deadline changed')
+                    _startup_deadline(effective)
+                    process = subprocess.Popen(command, cwd=self.inventory.repo_root, env=environment,
+                                               stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
+                                               start_new_session=True)
+                    log.close()  # Include returned spawn/log IO, not an unchecked final close.
+                    _startup_deadline(effective)
+                    while True:
+                        phase = 'handle'
+                        _startup_deadline(effective)
+                        if process.poll() is not None:
+                            raise SlotError('identity unavailable: new creation handle exited/reaped; no identity adoption')
+                        phase = 'creation'
+                        startup.value['creation_attempts'] += 1
+                        created = observe_process(process.pid)  # Actual local expected signature is None.
+                        if created.state != 'present':
+                            startup.refusal(created, 'creation')
+                        if process.poll() is not None:
+                            phase = 'handle'
+                            raise SlotError('identity unavailable: creation handle exited/reaped during observation', observations=(created,))
+                        if created.state == 'present' and created.signature:
+                            creation_signature = created.signature
+                            startup.value['creation_succeeded'] = True
+                            pending.update(pid=process.pid, signature=creation_signature)
+                            _startup_deadline(effective)
+                            phase = 'signature_write'
+                            startup.publish(path, 'readiness')
+                            break
+                        _startup_deadline(effective)
+                        if not (created.state == 'unavailable' and created.reason == 'selected_census_signature_drift'
+                                and created.diagnostics is not None
+                                and created.diagnostics['expected_signature_supplied'] is False
+                                and created.diagnostics['pid'] == process.pid):
+                            raise SlotError('new process coherent creation identity unavailable', observations=(created,))
+                        phase = 'diagnostic_write'
+                        startup.publish(path, 'creation')  # No top-level PID/signature during retry.
+                        _startup_deadline(effective)
+                        time.sleep(min(0.1, max(0, effective - time.monotonic())))
+                        _startup_deadline(effective)
+                    phase = 'readiness'
+                    self._wait_port(str(self.inventory.raw['server']['host']), port, open_=True, deadline=effective)
+                    _startup_deadline(effective)
+                    phase = 'final_observation'
+                    seen = observe_process(process.pid)
+                    if seen.state != 'present':
+                        startup.refusal(seen, 'final')
+                    if seen.state == 'present' and seen.signature:
+                        creation_signature = seen.signature
+                        pending['signature'] = seen.signature
+                    _startup_deadline(effective)
+                    if process.poll() is not None or seen.state != 'present' or not seen.signature:
+                        raise SlotError('new process final identity unavailable', observations=(seen,))
+                    phase = 'running_write'
+                    pending['phase'] = 'running'
+                    startup.publish(path, 'complete')
         except BaseException as original:
             rollback_error = None
+            rollback_phase = 'rollback_identity'
+            reporting = []
+            rollback_contexts = []
+            terminal = Observation('unavailable', detail=str(original), errno=getattr(original, 'errno', None),
+                                   target=f'{kind} wt{number}', operation=f'startup-{phase}',
+                                   error_class=type(original).__name__)
+            def retain_cause(exc, operation, *, native=False):
+                witnesses = tuple(getattr(exc, 'observations', ())) if native else ()
+                if witnesses:
+                    for witness in witnesses:
+                        reporting.append(Observation(witness.state, signature=witness.signature,
+                                                     detail=witness.detail, errno=witness.errno,
+                                                     target=witness.target, operation=operation,
+                                                     observed_at=witness.observed_at, returncode=witness.returncode,
+                                                     identity=witness.identity, error_class=witness.error_class,
+                                                     reason=witness.reason, diagnostics=witness.diagnostics))
+                else:
+                    reporting.append(Observation('unavailable', detail=str(exc), errno=getattr(exc, 'errno', None),
+                                                 target=str(path), operation=operation,
+                                                 error_class=type(exc).__name__))
+            def retain_rollback(exc, operation, *, native=False):
+                nonlocal rollback_error
+                first_new = len(reporting)
+                retain_cause(exc, operation, native=native)
+                context = Observation('unavailable', detail=str(exc)).detail
+                native_operations = [w.operation for w in getattr(exc, 'observations', ())]
+                rollback_contexts.append((operation, context, native_operations))
+                if rollback_error is None:
+                    rollback_error = exc
+                    if startup is not None:
+                        actual = next((w for w in reporting[first_new:]
+                                       if w.state in {'unavailable', 'mismatch'} and w.error_class is not None), None)
+                        startup.fault(exc, operation, rollback=True,
+                                      witness=actual if native else None)
+            pending['phase'] = 'launch_pending'
+            if startup is not None:
+                startup.fault(original, phase)
             if process is not None:
                 try:
                     if getattr(process, "returncode", None) is not None and not creation_signature:
-                        raise SlotError("rollback created handle already reaped without identity; reservation retained")
+                        raise SlotError("rollback created handle already reaped without identity; reservation retained; identity unavailable/mismatch")
+                    observation_timeout()
                     identity = observe_process(process.pid, creation_signature or pending.get("signature"))
                     if identity.state == "unavailable" and creation_signature:
                         identity = _observe_created_handle(process, creation_signature)
@@ -1112,6 +1297,7 @@ class Supervisor:
                     # An observation/write failure cannot disable bounded cleanup of a
                     # valid exact creation handle. Descendant uncertainty still retains
                     # the prelaunch reservation after cleanup rather than declaring free.
+                    rollback_phase = 'rollback_census'
                     snapshot = process_snapshot()
                     descendant_error = None
                     descendants = []
@@ -1120,29 +1306,40 @@ class Supervisor:
                     elif identity.state == "present":
                         root = next((row for row in snapshot.rows if row.pid == process.pid), None)
                         if root is None or root.signature != identity.signature:
-                            descendant_error = SlotError("rollback wrapper census identity inconsistent")
+                            descendant_error = SlotError("rollback wrapper census identity inconsistent", observations=(snapshot.as_observation(),))
                         for row in snapshot.rows:
                             if descendant_error is None and row.pid in snapshot.descendants(process.pid):
                                 expected = identity.signature if row.pid == process.pid else row.signature
                                 seen = observe_process(row.pid, expected)
                                 if seen.state != "present" or not seen.signature:
-                                    descendant_error = SlotError("rollback descendant identity unavailable/mismatch")
+                                    descendant_error = SlotError("rollback descendant identity unavailable/mismatch", observations=(seen,))
                                     break
                                 descendants.append({"pid": row.pid, "signature": expected})
+                    if descendant_error is not None:
+                        retain_rollback(descendant_error, rollback_phase, native=True)
                     pending.update(phase="launch_pending", descendants=descendants)
                     try:
-                        atomic_json(path, pending)
-                    except (OSError, SlotError):
-                        pass  # Earlier pending reservation remains durable during cleanup.
+                        if startup is not None:
+                            startup.retain_failed(path)
+                        else:
+                            atomic_json(path, pending)
+                    except BaseException as exc:
+                        # Keep the earlier durable reservation and the actual failed
+                        # publication cause while independently safe cleanup proceeds.
+                        retain_cause(exc, 'rollback-diagnostic-write')
+                    rollback_phase = 'rollback_signal'
                     if descendant_error is None:
                         for child in descendants:
                             if child["pid"] == process.pid:
                                 continue
                             check = observe_process(child["pid"], child["signature"])
                             if check.state != "present":
-                                descendant_error = SlotError("rollback child identity changed/unavailable")
+                                descendant_error = SlotError("rollback child identity changed/unavailable", observations=(check,))
+                                retain_rollback(descendant_error, rollback_phase, native=True)
                                 break
+                            observation_timeout()
                             os.kill(child["pid"], signal.SIGTERM)
+                            observation_timeout()
                     # Check the original creation identity again immediately before
                     # using its unreaped handle; never signal a guessed replacement PID.
                     check = observe_process(process.pid, identity.signature)
@@ -1151,34 +1348,59 @@ class Supervisor:
                     if check.state not in {"present", "absent"}:
                         raise SlotError("rollback wrapper identity changed/unavailable", observations=(check,))
                     if process.poll() is None:
+                        observation_timeout()
                         process.terminate()
+                        observation_timeout()
+                    rollback_phase = 'rollback_wait'
+                    observation_timeout()
                     process.wait(timeout=5)
+                    observation_timeout()
                     if descendant_error is not None:
                         raise descendant_error
                     deadline = time.monotonic() + 5
                     while True:
                         seen = [observe_process(child["pid"], child["signature"]) for child in descendants]
                         if any(item.state in {"unavailable", "mismatch"} for item in seen):
-                            raise SlotError("rollback descendant exit observation unavailable/mismatch")
+                            raise SlotError("rollback descendant exit observation unavailable/mismatch", observations=tuple(seen))
                         if all(item.state == "absent" for item in seen):
                             break
                         if time.monotonic() >= deadline:
-                            raise SlotError("rollback descendants remain after bounded wait")
+                            raise SlotError("rollback descendants remain after bounded wait", observations=tuple(seen))
                         time.sleep(0.1)
+                    rollback_phase = 'rollback_quiescence'
                     self._assert_quiescent(kind, number)
+                    observation_timeout()
                     path.unlink(missing_ok=True)
                 except BaseException as exc:
-                    rollback_error = exc
+                    if exc is not rollback_error:
+                        retain_rollback(exc, rollback_phase, native=True)
             else:
                 # Popen never returned a handle: conservatively retain pending evidence.
-                rollback_error = SlotError("launch did not return an owned handle")
+                retain_rollback(SlotError("launch did not return an owned handle"), rollback_phase)
             if rollback_error is not None:
+                if process is not None:
+                    pending.setdefault('pid', process.pid)  # Original raw residual, never signature authority.
+                # First rollback fault was recorded at detection; subsequent causes
+                # remain ordered outward evidence and cannot change that phase.
                 pending.update(phase="uncertain_residual", error=str(original), rollback_error=str(rollback_error))
                 try:
-                    atomic_json(path, pending)
-                except (OSError, SlotError):
-                    pass  # The earlier durable pending record continues to reserve this slot.
-                raise SlotError(f"launch failed: {original}; residual retained: {rollback_error}") from original
+                    if startup is not None:
+                        startup.retain_failed(path)
+                    else:
+                        atomic_json(path, pending)
+                except BaseException as exc:
+                    retain_cause(exc, 'residual_write')
+                refused = tuple(startup.observations) if startup is not None else ()
+                if not refused:
+                    refused = tuple(getattr(original, 'observations', ()))
+                raise SlotError(f"launch failed: {original}; residual retained: {rollback_error}; rollback contexts: {rollback_contexts}",
+                                observations=(*refused, terminal, *reporting)) from original
+            if reporting:
+                refused = tuple(startup.observations) if startup is not None else ()
+                if not refused:
+                    refused = tuple(getattr(original, 'observations', ()))
+                raise SlotError(f"launch failed: {original}; diagnostic publication failed; owned cleanup completed",
+                                observations=(*refused, terminal, *reporting)) from original
             raise
 
     def _confirm_stop_quiescence(self, kind: str, number: int) -> None:
