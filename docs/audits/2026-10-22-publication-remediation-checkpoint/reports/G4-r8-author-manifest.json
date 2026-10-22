@@ -1,0 +1,1045 @@
+{
+  "task": "publication-G4-r7-complete-coherent-implementation-author-20261021-r8",
+  "created_utc": "2026-10-22T00:21:52.773715+00:00",
+  "status": "Complete UNREVIEWED Q candidate handback; whole independent review/ROOT intake/actual production controls/scientific A remain pending",
+  "nonrecursive_outputs": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/outputs/continuity/G4-r7-complete-coherent-implementation-author-20261021-r8/FIRST.json",
+      "sha256": "39dc833a76b5cb99f888a587267065b356509d85549b8da8ec6c1485ff5615df",
+      "bytes": 932,
+      "mode": 33188,
+      "mtime_ns": 1792624637420425517
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/outputs/continuity/G4-r7-complete-coherent-implementation-author-20261021-r8/MODEL.md",
+      "sha256": "9fcfaa7d29358df366f39600c1b55b66fefcd8da0c04bfd0505cf6b7807ed1fa",
+      "bytes": 471,
+      "mode": 33188,
+      "mtime_ns": 1792624652821273856
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/outputs/continuity/G4-r7-complete-coherent-implementation-author-20261021-r8/CONSTRUCTION.md",
+      "sha256": "2e0a0ae6824879e1a8feeab5a3999ca7c6dff47a3b59875d5ee022b5cb39e2c9",
+      "bytes": 853,
+      "mode": 33188,
+      "mtime_ns": 1792624652821413732
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/outputs/continuity/G4-r7-complete-coherent-implementation-author-20261021-r8/REPORT.md",
+      "sha256": "913deac360311bf764c010e7a628ceedf76fe10aaf0bd5018db8dfc229ac8b20",
+      "bytes": 13589,
+      "mode": 33188,
+      "mtime_ns": 1792628466338937448
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/outputs/continuity/G4-r7-complete-coherent-implementation-author-20261021-r8/commands.json",
+      "sha256": "5378ca79b04369ff76f36757e0deff6b6efe59d5d1aa2ba488081b7931fe166f",
+      "bytes": 144376,
+      "mode": 33188,
+      "mtime_ns": 1792628385846724940
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/outputs/continuity/G4-r7-complete-coherent-implementation-author-20261021-r8/control-construction.json",
+      "sha256": "95c34669e3da25ba40ad252557df8f9af16809cbb9fba7a0ef9763fdd10a036a",
+      "bytes": 1261280,
+      "mode": 33188,
+      "mtime_ns": 1792628385836012477
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/outputs/continuity/G4-r7-complete-coherent-implementation-author-20261021-r8/evidence.json",
+      "sha256": "d379f3f3f17ad55e72c68183e177e0e915c0f7b1f45fdd6d7660ba893f629605",
+      "bytes": 174408,
+      "mode": 33188,
+      "mtime_ns": 1792628385846020645
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/outputs/continuity/G4-r7-complete-coherent-implementation-author-20261021-r8/source-proposal.json",
+      "sha256": "d60a6c353e2626826d67fec24d39f929d00044f90a28e9b58c239bae5ae7583d",
+      "bytes": 7360260,
+      "mode": 33188,
+      "mtime_ns": 1792628385753090116
+    }
+  ],
+  "candidate_sources": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/docs/KNOWLEDGE_GRAPH.md",
+      "sha256": "11e33a8c6b3b4a6661d4a018d64c5ccde14f734ef01778f04303bb42d8b1bb2e",
+      "bytes": 35743,
+      "mode": 33188,
+      "mtime_ns": 1792624713447827184
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/docs/READINESS_GATES.md",
+      "sha256": "6523df8e9c3543aa3f91f36f5a46b31de27fd404e36f78bb947b2ffe0893eea6",
+      "bytes": 29398,
+      "mode": 33188,
+      "mtime_ns": 1792625458562094065
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/docs/adrs/ADR-009-validation-suite-modularization.md",
+      "sha256": "92900f46a18dcb9d929f3c617a2b289df50b759752cef63ee86909317008e032",
+      "bytes": 85708,
+      "mode": 33188,
+      "mtime_ns": 1792624713448233977
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/docs/architecture/QA_QI_INFRASTRUCTURE_MAP.md",
+      "sha256": "7248c94f07d1c2c0e36453efaa0c88835dfd9ca73ee0304e7198b77ac184fda5",
+      "bytes": 45232,
+      "mode": 33188,
+      "mtime_ns": 1792624713448362519
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/docs/architecture/VALIDATION_ARCHITECTURE.md",
+      "sha256": "9c6bdbe4e0ea328540b7ee97dea8db324cd4b7427c3b8e8d165813dd56cb5d1b",
+      "bytes": 30131,
+      "mode": 33188,
+      "mtime_ns": 1792624713448488061
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/docs/architecture/VALIDATION_GATE_TOPOLOGY.md",
+      "sha256": "c3954ab7724d6551b0cad5f86ef40f71cc0becf697d0bf9a278a70712690ec90",
+      "bytes": 21484,
+      "mode": 33188,
+      "mtime_ns": 1792624713448610270
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/docs/superpowers/plans/2026-10-19-g4-declared-population.md",
+      "sha256": "cda9d01b8a7b81e1d331b9f44255a72c2e707aa06b042d943713a8587152c4e5",
+      "bytes": 11016,
+      "mode": 33188,
+      "mtime_ns": 1792624713448852604
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/docs/superpowers/specs/2026-10-19-g4-declared-population-design.md",
+      "sha256": "5343d565c9efc8115b1b35f5502ddd8a137ba2dcb93073029825263f9b22cc70",
+      "bytes": 21674,
+      "mode": 33188,
+      "mtime_ns": 1792627361746956729
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/scripts/build_graph.py",
+      "sha256": "2e97409e0495156924f190054a900c418333479536c0b606443cac909818d943",
+      "bytes": 243677,
+      "mode": 33188,
+      "mtime_ns": 1792627290423734244
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/scripts/computation_analysis.py",
+      "sha256": "1d4b10a2019bb828b17d66a45ee385ed33e46da5b31cde23671cf012cfdfb5df",
+      "bytes": 85509,
+      "mode": 33188,
+      "mtime_ns": 1792627823931449003
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/scripts/readiness_gates.py",
+      "sha256": "d1fc43082c97dd70b479b3a01ca54c476b4f57e98a6ec539c2cee604d16236e1",
+      "bytes": 60646,
+      "mode": 33188,
+      "mtime_ns": 1792628205770521594
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/scripts/validation/checks/lean_statements.py",
+      "sha256": "8aa18c6a18706a5a577dd3d308fb9c7f4886a8325a8e5752d025801d9613cb4e",
+      "bytes": 44915,
+      "mode": 33188,
+      "mtime_ns": 1792628205747829828
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/src/core/provenance.py",
+      "sha256": "6051c8486debb22e0548c9e17ec061f1670843ab57ce261372633e9ffef6d6e6",
+      "bytes": 293305,
+      "mode": 33188,
+      "mtime_ns": 1792625156061633930
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/tests/test_build_graph.py",
+      "sha256": "0994c143f9ae6a563215fb4bb8b8da6b05a3a6a9045b12d2807b5dc3288e9178",
+      "bytes": 80579,
+      "mode": 33188,
+      "mtime_ns": 1792627677307821112
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/tests/test_build_graph_memo.py",
+      "sha256": "7af1c9eb33f68fc82bea93e3797259798fed3002a0848d09d668a7e3a4664172",
+      "bytes": 15965,
+      "mode": 33188,
+      "mtime_ns": 1792627126414871803
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/tests/test_computation_coverage.py",
+      "sha256": "4840b971ab5c3bbfc7a38876f39e85393945cc6d73e90031c5cc0fcd7f2c76d9",
+      "bytes": 683888,
+      "mode": 33188,
+      "mtime_ns": 1792627677312271840
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/tests/test_readiness_cannot_measure.py",
+      "sha256": "cd79dc4074efd5173c4be9dc52335ec666715fe11fedbed6a48a41380e4ad5c9",
+      "bytes": 13108,
+      "mode": 33188,
+      "mtime_ns": 1792628061300630358
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/tests/test_readiness_gate_evaluators.py",
+      "sha256": "b18e3c6a266879da4906b2e3211e2829847016c66de6a207aebac05d76e2f3a3",
+      "bytes": 20022,
+      "mode": 33188,
+      "mtime_ns": 1792627290424088954
+    }
+  ],
+  "excluded_from_self_seal": [
+    "manifest.json",
+    "FINAL.json"
+  ],
+  "original_first_raw": [
+    {
+      "path": "/private/tmp/publication-G4-r8-FIRST-8ylpp0eq/invocation.json",
+      "sha256": "39dc833a76b5cb99f888a587267065b356509d85549b8da8ec6c1485ff5615df",
+      "bytes": 932
+    },
+    {
+      "path": "/private/tmp/publication-G4-r8-FIRST-8ylpp0eq/returncode",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "/private/tmp/publication-G4-r8-FIRST-8ylpp0eq/stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/private/tmp/publication-G4-r8-FIRST-8ylpp0eq/stdout",
+      "sha256": "aaf7911b511a0b9828c2823f4077e196fc7ffb9df9956d5263d00ba1414bc073",
+      "bytes": 198
+    }
+  ],
+  "all12_actual_raw_attempts": [
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-01-8bbh5nsr/invocation.json",
+        "sha256": "b56ee4bfd43c6715c579a0b2700ca55dbf8b28a96a1dee2409397212d2d5cb8c",
+        "bytes": 577
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-01-8bbh5nsr/returncode",
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "bytes": 2
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-01-8bbh5nsr/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-01-8bbh5nsr/stdout",
+        "sha256": "244bae0f816e482e11fb2cfa74788e8c2ce58f6d4efa4cbe6f89274a1423fe31",
+        "bytes": 1149
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-01-8bbh5nsr/terminal.json",
+        "sha256": "5fa74a34768b1ae245df752e28420a05d61be993f6aee936653ddf8c27a12fca",
+        "bytes": 672
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-02-n4nommnj/invocation.json",
+        "sha256": "4bb7557a492b9731cd25dc81bb5a74679ec1d9b4fba7c27defcab1dc53e97b9b",
+        "bytes": 568
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-02-n4nommnj/pid",
+        "sha256": "ba75e6190f20139c6310480901438882e60cd1f3f0b65e502724773604da3f49",
+        "bytes": 5
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-02-n4nommnj/returncode",
+        "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "bytes": 1
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-02-n4nommnj/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-02-n4nommnj/stdout",
+        "sha256": "c0a5ef6d9aeff32c48da5244ca0ea4e044c2e01eee79f2068987dfa7e0d50d94",
+        "bytes": 5799
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-02-n4nommnj/terminal.json",
+        "sha256": "cb76b0ba897dd915648d5c88e82446fb486b066edcb1c74abd137b18201ce677",
+        "bytes": 669
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-03-xjco3sbe/invocation.json",
+        "sha256": "cad84992862c6b5a6cb614f76dadc90913b5c2b9a32ecb735b2970439db3c211",
+        "bytes": 568
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-03-xjco3sbe/pid",
+        "sha256": "eef8c52780f4af3a252627ce9cafd6fca75d2e29aa24227f55c9c3b226157e6e",
+        "bytes": 5
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-03-xjco3sbe/returncode",
+        "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "bytes": 1
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-03-xjco3sbe/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-03-xjco3sbe/stdout",
+        "sha256": "a128cc7b35e229d7e57c507e1b7864e6bb36f366637fdf657a4f624b7980df7a",
+        "bytes": 2743
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-03-xjco3sbe/terminal.json",
+        "sha256": "269976948da55dce9d73a83408c6c7eb2eef0b6d0cf724b1385bd204d4b700d2",
+        "bytes": 669
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-04-ysw9heei/invocation.json",
+        "sha256": "8c6b8b2816eb5fbcda63dd90c2de2612f521018782e4ed37dbc74cd919ebec57",
+        "bytes": 568
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-04-ysw9heei/pid",
+        "sha256": "83bf0959d455cecf2991d8f137b3a4032d4e3e090f96fed247dda73099d34893",
+        "bytes": 5
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-04-ysw9heei/returncode",
+        "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "bytes": 1
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-04-ysw9heei/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-04-ysw9heei/stdout",
+        "sha256": "3bfba2b5d7c297809f14909b8b9736107e7f62c57d800107803f7eb3c5bc0e35",
+        "bytes": 1552
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-04-ysw9heei/terminal.json",
+        "sha256": "4702d2c1f012baaa6c2abe2a225aa9fe81dbf7de57c88478982d07c9959b96e6",
+        "bytes": 669
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-05-n51pk266/invocation.json",
+        "sha256": "a63c251639ddbe2fd0c9a4cf9aecb2fd89a83176cad2a571ca5731c95f89a192",
+        "bytes": 621
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-05-n51pk266/pid",
+        "sha256": "dbc74e3a5f6fa5936464b234c9e574dbf1b49298efbc08821082b22689aa50e4",
+        "bytes": 5
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-05-n51pk266/returncode",
+        "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "bytes": 1
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-05-n51pk266/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-05-n51pk266/stdout",
+        "sha256": "9eece923797d2b09558bc38ec52bd25897fa71ad2fc5b7a09ab7974ee91a8f55",
+        "bytes": 3781
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-05-n51pk266/terminal.json",
+        "sha256": "eacb8563406b955396e490f6bbcf745de166ed526dec9ca150db0164cb1371be",
+        "bytes": 722
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-06-b0my9bad/invocation.json",
+        "sha256": "195f6931c587ebcfbc2b37ba8a95dde426ba6d3d08c51f7fe94d55757d5af8b3",
+        "bytes": 568
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-06-b0my9bad/pid",
+        "sha256": "567461c6470e6c00ccc7cab079fb191fc11b394c1474fb1dbea9f3e2be9244a8",
+        "bytes": 5
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-06-b0my9bad/returncode",
+        "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+        "bytes": 1
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-06-b0my9bad/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-06-b0my9bad/stdout",
+        "sha256": "e1ff1ede82b241300a96bf23c913511b73422b477d53cb838e655054a852b3df",
+        "bytes": 99
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-06-b0my9bad/terminal.json",
+        "sha256": "4c49eb9ed6d4d024485e83e873c73103393053d827c059f09586b54af3e18ef0",
+        "bytes": 669
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-07-3k1pw5mk/invocation.json",
+        "sha256": "b145ddaed40ac60c4107b674cff2f9a08b4a10d09fe9d4dc8ed7cb17a439b8c7",
+        "bytes": 818
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-07-3k1pw5mk/pid",
+        "sha256": "c58dd5735ce86acbfd758720178780f7d112629099c8eb2c51ad87e5d64dfa14",
+        "bytes": 5
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-07-3k1pw5mk/returncode",
+        "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "bytes": 1
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-07-3k1pw5mk/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-07-3k1pw5mk/stdout",
+        "sha256": "9a19a73689f38417f01dcd3f154df08b26754294a601101d78a4ef740f5c090f",
+        "bytes": 21211
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-07-3k1pw5mk/terminal.json",
+        "sha256": "7ec07f38f5f68b46bb9ed3ca08d94ebbb054a6cd52d894371c2fb23f8d587755",
+        "bytes": 920
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-08-jge2r3fg/invocation.json",
+        "sha256": "b4b6e0360fd13e7414895163375a9351f524d604a4302e68f3d2beecd864dc64",
+        "bytes": 818
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-08-jge2r3fg/pid",
+        "sha256": "2f2c1d560b71f8459906f92d0442bb57deba20d2fe876d16d72d672336c4f271",
+        "bytes": 5
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-08-jge2r3fg/returncode",
+        "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "bytes": 1
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-08-jge2r3fg/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-08-jge2r3fg/stdout",
+        "sha256": "23095210d890e19dfd75b84bfb08fcaf15fc2a38c69a8161aaa55720b8ed7f47",
+        "bytes": 1445
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-08-jge2r3fg/terminal.json",
+        "sha256": "4414249a523a5d2934232dffd10274cf7e05cb53184f66d7a49deef473bbc0af",
+        "bytes": 920
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-09-t3q_v5h_/invocation.json",
+        "sha256": "c54b92cc5f90d9c1519ade07c596674e7532f1e6f76f9d6b765be960630e787a",
+        "bytes": 867
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-09-t3q_v5h_/pid",
+        "sha256": "da413465a029ebf65659f8cfe165842dd8ba26f5aa4b3d90b95fae329b96c4d4",
+        "bytes": 5
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-09-t3q_v5h_/returncode",
+        "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "bytes": 1
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-09-t3q_v5h_/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-09-t3q_v5h_/stdout",
+        "sha256": "6453a46920866a16260ea625946887fd9590fb6133fe0662649deeefcc93dc64",
+        "bytes": 3507
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-09-t3q_v5h_/terminal.json",
+        "sha256": "669e9b8e8b75f2e84bb13d4f83df2a13c96393fba21065c8726ef6462ccabe13",
+        "bytes": 969
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-10-hbpevaby/invocation.json",
+        "sha256": "5bd2e34377a12e58f92847c6bba4d54f49267cc9aafac20a868dc9476b0f4dbf",
+        "bytes": 867
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-10-hbpevaby/pid",
+        "sha256": "837e06f90b9c5de465a32ed0616c98f0226d18fdea3fde814c4ec9e5831623b5",
+        "bytes": 5
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-10-hbpevaby/returncode",
+        "sha256": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+        "bytes": 1
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-10-hbpevaby/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-10-hbpevaby/stdout",
+        "sha256": "81558feb3866b67fae19a3e1e4ce66cbd9a9efbf902f9b2ae81a8c6f740c5b83",
+        "bytes": 695
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-10-hbpevaby/terminal.json",
+        "sha256": "f03ed0929747205cea4b4d08140785cae7c4f1777aef220ef69f706eaf0a34af",
+        "bytes": 967
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-11-81tie5ix/invocation.json",
+        "sha256": "88cb4758b0698cbaa7236c8f69276621da4b39eaeb535eabad61be24a7ebe62b",
+        "bytes": 868
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-11-81tie5ix/pid",
+        "sha256": "08522c5013e3d75f69bc4a4e2444bcf4e7b06d177136b9d453426a44015b5a7b",
+        "bytes": 6
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-11-81tie5ix/returncode",
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "bytes": 2
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-11-81tie5ix/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-11-81tie5ix/stdout",
+        "sha256": "9ac5ac0c51677bd912341b88fd6d4d4857e91c17da5e1b019ce118d9971d6e2b",
+        "bytes": 181
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-11-81tie5ix/terminal.json",
+        "sha256": "0e42fca968f787cea00a6f2400d7f1517d8cff779cefa6c78df24723cecc4b51",
+        "bytes": 179
+      }
+    },
+    {
+      "invocation.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-12-3acehddc/invocation.json",
+        "sha256": "4714cbdf6a8407882fa417e771a5f8d6ce9fa77eef3f6570c12f975193aa125e",
+        "bytes": 868
+      },
+      "pid": {
+        "path": "/private/tmp/publication-G4-r8-unit-12-3acehddc/pid",
+        "sha256": "169ba7aa7315b5a670da183d3480f2bfaa8f85e0d37497c36eba905992d8b70c",
+        "bytes": 6
+      },
+      "returncode": {
+        "path": "/private/tmp/publication-G4-r8-unit-12-3acehddc/returncode",
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "bytes": 2
+      },
+      "stderr": {
+        "path": "/private/tmp/publication-G4-r8-unit-12-3acehddc/stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stdout": {
+        "path": "/private/tmp/publication-G4-r8-unit-12-3acehddc/stdout",
+        "sha256": "9ac5ac0c51677bd912341b88fd6d4d4857e91c17da5e1b019ce118d9971d6e2b",
+        "bytes": 181
+      },
+      "terminal.json": {
+        "path": "/private/tmp/publication-G4-r8-unit-12-3acehddc/terminal.json",
+        "sha256": "4effb7104334a653f775b4be0b7419cd3af536480799a3b8aa86bc8aa13d2c30",
+        "bytes": 180
+      }
+    }
+  ],
+  "original_packet": {
+    "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r7-complete-coherent-implementation-author-20261021-r8.json",
+    "sha256": "ca1aae82ae677e545ca5bfe61ba081f743d99e52b6a8b2a67ae0089a0a29a406",
+    "bytes": 29430,
+    "mode": 33152,
+    "mtime_ns": 1792624598741531888
+  },
+  "current_unchanged_reference_pins": [
+    {
+      "label": "roadmap",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/audits/2026-08-01-publication-readiness/REMEDIATION_PLAN.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/audits/2026-08-01-publication-readiness/REMEDIATION_PLAN.md",
+        "kind": "file",
+        "sha256": "8a99167d6ca4ab98195f539a7ddb8ca66fbe2ae4ed8dbabae119384b932204e6"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/audits/2026-08-01-publication-readiness/REMEDIATION_PLAN.md",
+        "sha256": "8a99167d6ca4ab98195f539a7ddb8ca66fbe2ae4ed8dbabae119384b932204e6",
+        "bytes": 19936
+      },
+      "unchanged": true
+    },
+    {
+      "label": "notebook",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-remediation-notebook.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-remediation-notebook.md",
+        "kind": "file",
+        "sha256": "5e284054c506e0dbd39daf6b4dcd9585070d2a0de6b017ec353862e2699a24b2"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-remediation-notebook.md",
+        "sha256": "5e284054c506e0dbd39daf6b4dcd9585070d2a0de6b017ec353862e2699a24b2",
+        "bytes": 313183
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[0]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/AGENTS.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/AGENTS.md",
+        "kind": "file",
+        "sha256": "be95697d83810ffb7a384c6be0616b726287b57a38db68ce3275b8b3efacab7b"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/AGENTS.md",
+        "sha256": "be95697d83810ffb7a384c6be0616b726287b57a38db68ce3275b8b3efacab7b",
+        "bytes": 3444
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[1]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/CLAUDE.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/CLAUDE.md",
+        "kind": "file",
+        "sha256": "8b285a18bc34b4bba4dede0e2b9bb40c2262f9eda5fab546c0206d9f92e8ad48"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/CLAUDE.md",
+        "sha256": "8b285a18bc34b4bba4dede0e2b9bb40c2262f9eda5fab546c0206d9f92e8ad48",
+        "bytes": 24018
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[2]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md",
+        "kind": "file",
+        "sha256": "393da185686533d92a466da3dec0501f2c88e3e46dfad6d4d378915caf1bdf22"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md",
+        "sha256": "393da185686533d92a466da3dec0501f2c88e3e46dfad6d4d378915caf1bdf22",
+        "bytes": 56206
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[3]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-008-shared-lean-slot-control-plane.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-008-shared-lean-slot-control-plane.md",
+        "kind": "file",
+        "sha256": "8b783a2a2698dd2e9e5808f992fbb2a8115a89454d34a4926c78843d4b21a164"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-008-shared-lean-slot-control-plane.md",
+        "sha256": "8b783a2a2698dd2e9e5808f992fbb2a8115a89454d34a4926c78843d4b21a164",
+        "bytes": 92920
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[4]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-017-codex-continuity.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-017-codex-continuity.md",
+        "kind": "file",
+        "sha256": "bbb5c52cff5f8269b6007e6faa170ad74d0fae790a71705abc0c4925d152de29"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-017-codex-continuity.md",
+        "sha256": "bbb5c52cff5f8269b6007e6faa170ad74d0fae790a71705abc0c4925d152de29",
+        "bytes": 2868
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[5]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/CODEX_CONTINUITY.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/CODEX_CONTINUITY.md",
+        "kind": "file",
+        "sha256": "6276f6e4912bc46d63fa7b1e7bba102882ee68e08e4157572aa581ead6c1ba46"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/CODEX_CONTINUITY.md",
+        "sha256": "6276f6e4912bc46d63fa7b1e7bba102882ee68e08e4157572aa581ead6c1ba46",
+        "bytes": 4457
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[6]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r7-whole-construction-design-lead-acceptance-20261021-r1.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r7-whole-construction-design-lead-acceptance-20261021-r1.json",
+        "kind": "file",
+        "sha256": "994f606846bce953ad04096b9b82bb3526594baab64ef60e1c5ab82f407ae143"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r7-whole-construction-design-lead-acceptance-20261021-r1.json",
+        "sha256": "994f606846bce953ad04096b9b82bb3526594baab64ef60e1c5ab82f407ae143",
+        "bytes": 2058
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[7]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r6-full-technical-design-author-lead-intake-20261021-r1.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r6-full-technical-design-author-lead-intake-20261021-r1.json",
+        "kind": "file",
+        "sha256": "26cbfec282c730a3b002538b3e2ae03dfcc9e94b1418742342514c6fd3778faa"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r6-full-technical-design-author-lead-intake-20261021-r1.json",
+        "sha256": "26cbfec282c730a3b002538b3e2ae03dfcc9e94b1418742342514c6fd3778faa",
+        "bytes": 2766
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[8]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r6-whole-semantic-control-construction-review-20261021-r7.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r6-whole-semantic-control-construction-review-20261021-r7.json",
+        "kind": "file",
+        "sha256": "b7e51d5aa508d419421f075b322201e12769d86fef6aa27cbe53fe8c5ddaaaae"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r6-whole-semantic-control-construction-review-20261021-r7.json",
+        "sha256": "b7e51d5aa508d419421f075b322201e12769d86fef6aa27cbe53fe8c5ddaaaae",
+        "bytes": 78486
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[9]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/REPORT.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/REPORT.md",
+        "kind": "file",
+        "sha256": "4c46b73bc04e75e0e983391f6dcc0790112d78436b4ba2abfd820cfedfd76986"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/REPORT.md",
+        "sha256": "4c46b73bc04e75e0e983391f6dcc0790112d78436b4ba2abfd820cfedfd76986",
+        "bytes": 25314
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[10]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/CONSTRUCTION.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/CONSTRUCTION.md",
+        "kind": "file",
+        "sha256": "dc81600d61e538bb28819d18e758e7a0c7a9a706058ecbac72ac34064f7c2274"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/CONSTRUCTION.md",
+        "sha256": "dc81600d61e538bb28819d18e758e7a0c7a9a706058ecbac72ac34064f7c2274",
+        "bytes": 917
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[11]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/coverage-design.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/coverage-design.json",
+        "kind": "file",
+        "sha256": "637257813b02fd6854182f5c4f7bd8fca175b16dbe3ca090b3455d8199aa9b4c"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/coverage-design.json",
+        "sha256": "637257813b02fd6854182f5c4f7bd8fca175b16dbe3ca090b3455d8199aa9b4c",
+        "bytes": 1393206
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[12]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/evidence.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/evidence.json",
+        "kind": "file",
+        "sha256": "81de1e006dd0f9a0b3b895eda5ddd2e00a3e3a8bb1c94eb123cd6e4ab62e8d30"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/evidence.json",
+        "sha256": "81de1e006dd0f9a0b3b895eda5ddd2e00a3e3a8bb1c94eb123cd6e4ab62e8d30",
+        "bytes": 184337
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[13]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/manifest.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/manifest.json",
+        "kind": "file",
+        "sha256": "77047707c0953f3882e55b597f85303c3b7c6985e1f149e7cc458768a9adb4b0"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/manifest.json",
+        "sha256": "77047707c0953f3882e55b597f85303c3b7c6985e1f149e7cc458768a9adb4b0",
+        "bytes": 5088
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[14]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/FINAL.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/FINAL.json",
+        "kind": "file",
+        "sha256": "3db7a01903300ac62b7e2fda76407dbaf06bfe33c4c9740425b0415789d2d490"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r5-complete-semantic-control-construction-author-20261021-r6/FINAL.json",
+        "sha256": "3db7a01903300ac62b7e2fda76407dbaf06bfe33c4c9740425b0415789d2d490",
+        "bytes": 3630
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[15]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/REPORT.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/REPORT.md",
+        "kind": "file",
+        "sha256": "715da6106c3557374966d6dfa9d708956a3339a70ad885bc352b7a00a69cdd2c"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/REPORT.md",
+        "sha256": "715da6106c3557374966d6dfa9d708956a3339a70ad885bc352b7a00a69cdd2c",
+        "bytes": 26592
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[16]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/evidence.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/evidence.json",
+        "kind": "file",
+        "sha256": "b33f9da2280f194dff6fac059dac27b07f4a98c476e7bfe54c5354eb807bdf97"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/evidence.json",
+        "sha256": "b33f9da2280f194dff6fac059dac27b07f4a98c476e7bfe54c5354eb807bdf97",
+        "bytes": 116860
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[17]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/manifest.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/manifest.json",
+        "kind": "file",
+        "sha256": "1c396b4537eb6af7e4c563318787348cc24330f6fc702c344b15347a5e99173c"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/manifest.json",
+        "sha256": "1c396b4537eb6af7e4c563318787348cc24330f6fc702c344b15347a5e99173c",
+        "bytes": 3378
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[18]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/FINAL.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/FINAL.json",
+        "kind": "file",
+        "sha256": "af42a3d3a35f214418a58b8878246218ab7903d9a4e124991c9b2b16726343ce"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r6-whole-semantic-control-construction-review-20261021-r7/FINAL.json",
+        "sha256": "af42a3d3a35f214418a58b8878246218ab7903d9a4e124991c9b2b16726343ce",
+        "bytes": 5341
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[19]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/PRE_DECISIONS.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/PRE_DECISIONS.md",
+        "kind": "file",
+        "sha256": "3ef9c74f50f1e5985596c12c8ad3fb53ac551e64ef24ba4e7a8df6cd4a160282"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/PRE_DECISIONS.md",
+        "sha256": "3ef9c74f50f1e5985596c12c8ad3fb53ac551e64ef24ba4e7a8df6cd4a160282",
+        "bytes": 15799
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[20]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/plugins/skeft-qa/skills/architecture-change/SKILL.md",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/plugins/skeft-qa/skills/architecture-change/SKILL.md",
+        "kind": "file",
+        "sha256": "d57e5bde2ac84c34672adce940ab41376f7574c1531522163db4b171db5e2d15"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/plugins/skeft-qa/skills/architecture-change/SKILL.md",
+        "sha256": "d57e5bde2ac84c34672adce940ab41376f7574c1531522163db4b171db5e2d15",
+        "bytes": 7977
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[21]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/build_graph.py",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/build_graph.py",
+        "kind": "file",
+        "sha256": "ee8f7aca221f57d96177c2e3e8a88b2d0f931ecf77fb0e9957771b1e5722ed4f"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/build_graph.py",
+        "sha256": "ee8f7aca221f57d96177c2e3e8a88b2d0f931ecf77fb0e9957771b1e5722ed4f",
+        "bytes": 240361
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[22]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/scripts/build_graph.py",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/scripts/build_graph.py",
+        "kind": "file",
+        "sha256": "872d7dc205a2971487f8cedde2112142bee58c82c89212ba6eb5c6ecb46f7a81"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/scripts/build_graph.py",
+        "sha256": "872d7dc205a2971487f8cedde2112142bee58c82c89212ba6eb5c6ecb46f7a81",
+        "bytes": 241511
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[23]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/src/core/formulas.py",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/src/core/formulas.py",
+        "kind": "file",
+        "sha256": "816aa624fe00f75e21b42f7de63de18a97cd12be9dcaff4a0f79e6cd97e646cf"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/src/core/formulas.py",
+        "sha256": "816aa624fe00f75e21b42f7de63de18a97cd12be9dcaff4a0f79e6cd97e646cf",
+        "bytes": 492142
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[24]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/tests/test_bilayer_two_band_state.py",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/tests/test_bilayer_two_band_state.py",
+        "kind": "file",
+        "sha256": "58436a451145533bd9daa47b11379fa0306d2ff0380193267413bc6eff405fd2"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/tests/test_bilayer_two_band_state.py",
+        "sha256": "58436a451145533bd9daa47b11379fa0306d2ff0380193267413bc6eff405fd2",
+        "bytes": 29107
+      },
+      "unchanged": true
+    },
+    {
+      "label": "authority[25]",
+      "original": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-notebook-r102-map-r37-curation-20261021-r1.json",
+        "input_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-notebook-r102-map-r37-curation-20261021-r1.json",
+        "kind": "file",
+        "sha256": "add8b6aad17fd21a3bda288139429cd83f6c7d17f616d071dcd684282c22faa7"
+      },
+      "current": {
+        "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-notebook-r102-map-r37-curation-20261021-r1.json",
+        "sha256": "add8b6aad17fd21a3bda288139429cd83f6c7d17f616d071dcd684282c22faa7",
+        "bytes": 2716
+      },
+      "unchanged": true
+    }
+  ],
+  "unit09_frozen_bounded_assessment": {
+    "path": "/private/tmp/publication-G4-r8-unit09-custody-FROZEN-y8sat1hz/assessment.json",
+    "sha256": "3057d2f41958f700b3722b8a2c81d32c1d367bb9ec1ad8712095ef1b6d0ff13d",
+    "bytes": 45171,
+    "mode": 33188,
+    "mtime_ns": 1792627630051817254
+  },
+  "unit09_ROOT_bounded_intake": {
+    "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r8-unplanned-unit09-bounded-custody-lead-intake-20261021-r1.json",
+    "sha256": "ae084530bbc1a4f9102a37911270bde68751f6ce5abe3a7568599639aa52a7b5",
+    "bytes": 5572
+  },
+  "custody_limit": "Transient native reach unit09 UNKNOWN; no full historical admin/ref/output baseline invented",
+  "expected_FINAL_changed": [
+    "owned-files",
+    "source"
+  ],
+  "freeze_rule": "All18sources and8preterminal leaves sealed before sole actual canonicalFINAL. No reads or writes after FINAL.json except communication."
+}

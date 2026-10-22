@@ -1,0 +1,27 @@
+{
+  "task": "publication-E2-M120-whole-applied-consumer-source-runtime-review-20261021-r121",
+  "at": "2026-10-21T21:20:22.794870+00:00",
+  "seal_scope": "Five preterminal artifacts; nonrecursive; excludes manifest itself and FINAL. Actual sole FINAL follows; no post-FINAL observers.",
+  "artifacts": {
+    "FIRST.json": {
+      "sha256": "8619916a5097e5b3c9d43867f722e820acc135174b8a3b43b39c09aff6e8de7b",
+      "bytes": 1814
+    },
+    "MODEL.md": {
+      "sha256": "a8aa5c4627ee3c7ec00140ad7be49b58db3b752dbff562e3e7072db8fb102bb5",
+      "bytes": 2441
+    },
+    "REPORT.md": {
+      "sha256": "5ff22c08181900b3f7baf5aee038d15cbd9903bd05750f3c4b129377b16a797f",
+      "bytes": 26240
+    },
+    "commands.json": {
+      "sha256": "5abb1a1fe08a539de33fdf28ae9460e0efc73b8b269145e3d8bcfe3f8c185b35",
+      "bytes": 3599
+    },
+    "evidence.json": {
+      "sha256": "8a485c07c966e5b1b0fd9eb23bea6113806c8ea818723e12ba6c44e9991b4899",
+      "bytes": 9825759
+    }
+  }
+}

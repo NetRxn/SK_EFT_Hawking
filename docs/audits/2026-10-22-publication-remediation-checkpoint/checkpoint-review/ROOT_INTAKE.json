@@ -1,0 +1,65 @@
+{
+  "at": "2026-10-22T14:48:57.459214+00:00",
+  "ROOT_intake": "Full r1 and r2 reports read; whole r2 documentary scope ACCEPTED, all handback seals and actual FINAL verified. CHECKPOINT-MINOR-1 remedied. No scientific finding/stage writer invoked; original scientific obligations unchanged.",
+  "reviewed_composition": "65 original dossier files;14 exact reviewer handback copies plus this administrative receipt added after review freeze.",
+  "r2_verdict": "ACCEPT_WHOLE_DOCUMENTARY_CHECKPOINT_R2_ONLY",
+  "copies": [
+    {
+      "path": "checkpoint-review/r1/FIRST.json",
+      "sha256": "3babf5a5da770fe91227d6c5a1252b10e9e9528cdcbf27d83ff6b243f715d7fb"
+    },
+    {
+      "path": "checkpoint-review/r1/MODEL.md",
+      "sha256": "be8cfab3a164a72e45f939ce008bcd30a073682a3d51b6a8cdde5cb28cb743cf"
+    },
+    {
+      "path": "checkpoint-review/r1/REPORT.md",
+      "sha256": "b00879782c8d179e8509a030fce88a53ea2712f24f019a1f923f9dc6514b1d5e"
+    },
+    {
+      "path": "checkpoint-review/r1/commands.json",
+      "sha256": "692f09ec8d7265cf9e3d577aedce57a15d1a55213726b6a19623573f717731b6"
+    },
+    {
+      "path": "checkpoint-review/r1/evidence.json",
+      "sha256": "688c90197087d9cde4c5fbbf7ddb50d9a6d6c4e2cb2207355f7a7688e172cd54"
+    },
+    {
+      "path": "checkpoint-review/r1/manifest.json",
+      "sha256": "9c7469a02186856167d04c660d08f857a9e7a69f180ae0d51fa12e4455ce6db9"
+    },
+    {
+      "path": "checkpoint-review/r1/FINAL.json",
+      "sha256": "5a9a9dd3baf1f67e15b759660fdb1dcf8334bc64463438677f61ec1bbe3c8c7d"
+    },
+    {
+      "path": "checkpoint-review/r2/FIRST.json",
+      "sha256": "bdbe3d436bbb47b78952c3c8fda30f69ad467c7a8e3d8132bf00886ae8ac2f17"
+    },
+    {
+      "path": "checkpoint-review/r2/MODEL.md",
+      "sha256": "fa8a281ed5622dbb617783bfea4dc35a864f938fa73e32be60f353cffff820d4"
+    },
+    {
+      "path": "checkpoint-review/r2/REPORT.md",
+      "sha256": "20a5e58dd41f4490bb5a6da06dd09e0755cd9a789d9d832c989469c50318d1f6"
+    },
+    {
+      "path": "checkpoint-review/r2/commands.json",
+      "sha256": "6146396050e8b780ae1cc8d5a2b776d2e4355660e39cea73befcc74ef9277e83"
+    },
+    {
+      "path": "checkpoint-review/r2/evidence.json",
+      "sha256": "1aa2ab86c08ec3bb76dae54e7bab2426122c04c9507a25c007718e8a545f8e04"
+    },
+    {
+      "path": "checkpoint-review/r2/manifest.json",
+      "sha256": "02afce8f20321bed5ec28e77e1f9fa2bfab16688a0d32001e209e6f92ec0488f"
+    },
+    {
+      "path": "checkpoint-review/r2/FINAL.json",
+      "sha256": "48433eb82a62d8e2811e68832ef254bab95b3a37882295a22a26551f5827480c"
+    }
+  ],
+  "limits": "H100/NS110 unreviewed author DATA, G4 seven MAJORs OPEN, M135 incomplete; no source/runtime/resource/project/main/publication acceptance. Commit/push/PR still pending at this record."
+}
