@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "-B",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/codex_continuity.py",
+    "check",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-wrapup-checkpoint-whole-review-20261022-r1.json"
+  ],
+  "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-resume-checkpoint-20261022",
+  "environment_override": {
+    "GIT_OPTIONAL_LOCKS": "0"
+  },
+  "start": "2026-10-22T14:18:01.559285+00:00",
+  "end": "2026-10-22T14:18:01.824064+00:00",
+  "duration_ns": 264699291,
+  "returncode": 0,
+  "raw_directory": "/private/tmp/publication-wrapup-review-FIRST-2jj_sibk",
+  "stdout": "{\n  \"fresh\": true,\n  \"changed\": [],\n  \"task\": \"publication-wrapup-checkpoint-whole-review-20261022-r1\",\n  \"meaning\": \"Input snapshot matches; no execution or completion authority.\"\n}\n",
+  "stderr": "",
+  "stdout_hex": "7b0a2020226672657368223a20747275652c0a2020226368616e676564223a205b5d2c0a2020227461736b223a20227075626c69636174696f6e2d7772617075702d636865636b706f696e742d77686f6c652d7265766965772d32303236313032322d7231222c0a2020226d65616e696e67223a2022496e70757420736e617073686f74206d6174636865733b206e6f20657865637574696f6e206f7220636f6d706c6574696f6e20617574686f726974792e220a7d0a",
+  "stderr_hex": "",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-wrapup-checkpoint-whole-review-20261022-r1.json"
+}

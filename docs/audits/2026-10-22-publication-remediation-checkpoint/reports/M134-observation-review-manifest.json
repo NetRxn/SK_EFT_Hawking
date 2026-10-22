@@ -1,0 +1,46 @@
+{
+  "task": "publication-E2-M133-whole-observation-correction-review-20261021-r134",
+  "verdict": "ACCEPT_WHOLE_M133_DERIVED_OBSERVATION_CORRECTION_FOR_M132_MINOR1",
+  "scope": "Metadata-only immutable derived actual observations; all202 originals preserved, bounded prior science retained without new scientific/output/gate/closure/main acceptance",
+  "mandatory_findings": [],
+  "minor_findings": [],
+  "artifacts": {
+    "FIRST.json": {
+      "sha256": "6e04c602046ebecded3dc526683b1004267c9020df73082c36af172ed724f5c6",
+      "bytes": 1878
+    },
+    "MODEL.md": {
+      "sha256": "21a984994325ab92bb20c70b73d85c3b90b4c2963e9a13a4387e5bfa27d7266f",
+      "bytes": 792
+    },
+    "REPORT.md": {
+      "sha256": "a80235ac061927701b183e098f49094d7f714877c0ba0b25eeb403890a478815",
+      "bytes": 15258
+    },
+    "commands.json": {
+      "sha256": "5ec856eec19a98119bcd0c75674ef876ed989505c5c994253c779eb2f5153aad",
+      "bytes": 2905
+    },
+    "evidence.json": {
+      "sha256": "80655b11f61d1e2d7aa73c2f87941998b36b367e33b60ad05351200c358b5308",
+      "bytes": 9967308
+    }
+  },
+  "nonrecursive": true,
+  "excluded": [
+    "manifest.json",
+    "FINAL.json"
+  ],
+  "preseal_currentness": {
+    "at": "2026-10-21T23:29:00.449693+00:00",
+    "fixed_known_state_checks": 20697,
+    "changed": [],
+    "all231pins8authorseals202originalfullstates5M132reviewseals_exact": true,
+    "all51independentrows169companions62XMLsourceattribution_exact": true,
+    "full20111knownsourceadmin31heldrefs23owners4rawindexes_conserved": true,
+    "actualM133FIRST_DERIVE_FINAL_and_reviewFIRST_originalraw_exact": true,
+    "root_embedded_parser_literal_exact": true,
+    "no_new_scientific_or_native_census_claim": true
+  },
+  "terminal_protocol": "All five preterminal artifacts fixed before soleactualFINAL. Original separate rawrc/stdout/stderr/invocation/times before interpretation; onlyFINALafter thenfreeze/no postobservers"
+}

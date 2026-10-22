@@ -1,0 +1,88 @@
+{
+  "task": "publication-G4-r7-complete-coherent-implementation-author-20261021-r8",
+  "sole_actual_FINAL": {
+    "argv": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "-B",
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/codex_continuity.py",
+      "check",
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-G4-r7-complete-coherent-implementation-author-20261021-r8.json"
+    ],
+    "cwd": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019",
+    "environment_override": {
+      "GIT_OPTIONAL_LOCKS": "0",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "start_utc": "2026-10-22T00:21:52.774315+00:00",
+    "end_utc": "2026-10-22T00:21:52.943167+00:00",
+    "duration_ns": 168857417,
+    "returncode": 1
+  },
+  "raw_directory": "/private/tmp/publication-G4-r8-FINAL-iq1z4vrl",
+  "original_stdout_hex": "7b0a2020226672657368223a2066616c73652c0a2020226368616e676564223a205b0a20202020226f776e65642d66696c6573222c0a2020202022736f75726365220a20205d2c0a2020227461736b223a20227075626c69636174696f6e2d47342d72372d636f6d706c6574652d636f686572656e742d696d706c656d656e746174696f6e2d617574686f722d32303236313032312d7238222c0a2020226d65616e696e67223a20225265636f6e63696c696174696f6e2072657175697265643b206c656164206d75737420696e73706563742063757272656e7420696e7075747320616e64206578706c696369746c792069737375652061206e6577207265766973696f6e2e220a7d0a",
+  "original_stderr_hex": "",
+  "raw_seals": [
+    {
+      "path": "/private/tmp/publication-G4-r8-FINAL-iq1z4vrl/invocation.json",
+      "sha256": "27ce4842205dad00bc30a7369eecd2ea7b2d6c645fc8aca99762ccf1312047c8",
+      "bytes": 804,
+      "mode": 33188,
+      "mtime_ns": 1792628512774401277
+    },
+    {
+      "path": "/private/tmp/publication-G4-r8-FINAL-iq1z4vrl/stdout",
+      "sha256": "e6861c289a120d70ad9a490eb8d9fe9c532a932b4f33b9102116f407b3fd999c",
+      "bytes": 267,
+      "mode": 33188,
+      "mtime_ns": 1792628512938467074
+    },
+    {
+      "path": "/private/tmp/publication-G4-r8-FINAL-iq1z4vrl/stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": 33188,
+      "mtime_ns": 1792628512774520069
+    },
+    {
+      "path": "/private/tmp/publication-G4-r8-FINAL-iq1z4vrl/returncode",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2,
+      "mode": 33188,
+      "mtime_ns": 1792628512943430637
+    },
+    {
+      "path": "/private/tmp/publication-G4-r8-FINAL-iq1z4vrl/terminal.json",
+      "sha256": "ab9c21c8ab6dfff743e8f013571aa0f19ccfceb877c7c84bfb9752c7e5a5f6a9",
+      "bytes": 900,
+      "mode": 33188,
+      "mtime_ns": 1792628512943574221
+    }
+  ],
+  "manifest_seal": {
+    "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/outputs/continuity/G4-r7-complete-coherent-implementation-author-20261021-r8/manifest.json",
+    "sha256": "f1d83767a3901ce20305701e1e9220a8e39474a4cf31f5c821982d6dc7239eee",
+    "bytes": 55031,
+    "mode": 33188,
+    "mtime_ns": 1792628512774188860
+  },
+  "observation": {
+    "fresh": false,
+    "changed": [
+      "owned-files",
+      "source"
+    ],
+    "task": "publication-G4-r7-complete-coherent-implementation-author-20261021-r8",
+    "meaning": "Reconciliation required; lead must inspect current inputs and explicitly issue a new revision."
+  },
+  "stderr_empty": true,
+  "reconciliation": {
+    "matches_expected_owned_candidate_edits": true,
+    "expected": [
+      "owned-files",
+      "source"
+    ],
+    "no_packet_refresh_or_replay": true,
+    "meaning": "Expected owned source/output changes require lead reconciliation; actual checker result is not scientific/source/runtime/closure acceptance."
+  },
+  "terminal_rule": "All assigned Q sources and outputs now frozen after this write. No post-FINAL reads, census, checker replay or mutation. Fresh whole independent implementation/source/scientific/control/unit-evidence review and ROOT intake mandatory. Unit09 transient native reach remains UNKNOWN."
+}

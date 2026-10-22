@@ -1,0 +1,1541 @@
+{
+  "at": "2026-10-22T14:39:01.072515+00:00",
+  "packages": [
+    {
+      "label": "G4-r8-author",
+      "original_directory": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-g4-absence-20261019/outputs/continuity/G4-r7-complete-coherent-implementation-author-20261021-r8",
+      "full_source_DATA_package": true,
+      "original_files": 10,
+      "original_bytes": 9015568,
+      "included_files": 10,
+      "archive": "evidence/G4-r8-author.tar.gz",
+      "archive_bytes": 2345822,
+      "archive_sha256": "2c0091a241d11af2a7224e37eb01abfaf9cbfb9ec289ae6ba6f73ed14321c818",
+      "included_seals": [
+        {
+          "path": "FIRST.json",
+          "bytes": 932,
+          "sha256": "39dc833a76b5cb99f888a587267065b356509d85549b8da8ec6c1485ff5615df"
+        },
+        {
+          "path": "evidence.json",
+          "bytes": 174408,
+          "sha256": "d379f3f3f17ad55e72c68183e177e0e915c0f7b1f45fdd6d7660ba893f629605"
+        },
+        {
+          "path": "MODEL.md",
+          "bytes": 471,
+          "sha256": "9fcfaa7d29358df366f39600c1b55b66fefcd8da0c04bfd0505cf6b7807ed1fa"
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 13589,
+          "sha256": "913deac360311bf764c010e7a628ceedf76fe10aaf0bd5018db8dfc229ac8b20"
+        },
+        {
+          "path": "source-proposal.json",
+          "bytes": 7360260,
+          "sha256": "d60a6c353e2626826d67fec24d39f929d00044f90a28e9b58c239bae5ae7583d"
+        },
+        {
+          "path": "commands.json",
+          "bytes": 144376,
+          "sha256": "5378ca79b04369ff76f36757e0deff6b6efe59d5d1aa2ba488081b7931fe166f"
+        },
+        {
+          "path": "control-construction.json",
+          "bytes": 1261280,
+          "sha256": "95c34669e3da25ba40ad252557df8f9af16809cbb9fba7a0ef9763fdd10a036a"
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 55031,
+          "sha256": "f1d83767a3901ce20305701e1e9220a8e39474a4cf31f5c821982d6dc7239eee"
+        },
+        {
+          "path": "FINAL.json",
+          "bytes": 4368,
+          "sha256": "512858a3e951de75e5f388ab7b55f3a7d55cf5468ad50b9a8c67b0244c359cd7"
+        },
+        {
+          "path": "CONSTRUCTION.md",
+          "bytes": 853,
+          "sha256": "2e0a0ae6824879e1a8feeab5a3999ca7c6dff47a3b59875d5ee022b5cb39e2c9"
+        }
+      ],
+      "omitted_local_large_evidence": []
+    },
+    {
+      "label": "G4-r9-review",
+      "original_directory": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r8-whole-coherent-implementation-review-20261022-r9",
+      "full_source_DATA_package": true,
+      "original_files": 7,
+      "original_bytes": 268460,
+      "included_files": 7,
+      "archive": "evidence/G4-r9-review.tar.gz",
+      "archive_bytes": 44326,
+      "archive_sha256": "8c8800c3032ead46da8f000559c4cfc1e4c19a9fcccad8182086de68eef4fdaa",
+      "included_seals": [
+        {
+          "path": "FIRST.json",
+          "bytes": 1539,
+          "sha256": "74d2d8685d4293a96cc8055271abeb604572bf4b86716922f8e5eedadba0c604"
+        },
+        {
+          "path": "evidence.json",
+          "bytes": 206421,
+          "sha256": "762fc9f3f205912984391919cfabe214e486a1becb63cc59b8b5979336029c0a"
+        },
+        {
+          "path": "MODEL.md",
+          "bytes": 1734,
+          "sha256": "64bdc727d41990790305c932e739777cdeea6480ad9be8bb74ae63bb136aaf6c"
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 35360,
+          "sha256": "6bba357971fc87a10d4e6d6d362be6a0d5736df147748b063a06f7c5ceb5820f"
+        },
+        {
+          "path": "commands.json",
+          "bytes": 8424,
+          "sha256": "2b889ffa12adbac940463739864990a6d10878f00d26831305575b796ac3372d"
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 6411,
+          "sha256": "df0865f8f3714b5418152b317824cb748e80ee889a75a62d871b12c2f1a07097"
+        },
+        {
+          "path": "FINAL.json",
+          "bytes": 8571,
+          "sha256": "649c7602212dc470e6e5ef41f973dff5c9abfd656f3848e4698ae10c6f0ed64f"
+        }
+      ],
+      "omitted_local_large_evidence": []
+    },
+    {
+      "label": "H100-author",
+      "original_directory": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-integrated-science-20261019/outputs/continuity/hook-H99-complete-current-admission-repair-author-20261022-r100",
+      "full_source_DATA_package": true,
+      "original_files": 12,
+      "original_bytes": 23396367,
+      "included_files": 12,
+      "archive": "evidence/H100-author.tar.gz",
+      "archive_bytes": 4756304,
+      "archive_sha256": "86582dd553d698a264917611a0b2ca2b0756769267fb490a5c0de7a378e5a256",
+      "included_seals": [
+        {
+          "path": "FIRST.json",
+          "bytes": 1860,
+          "sha256": "31064b6f69b35fac6ac92d723ff04bd3c435617afb0c89fc0bd13e03e18e534e"
+        },
+        {
+          "path": "evidence.json",
+          "bytes": 4310717,
+          "sha256": "fccc68eece3bf37612acfc938d381ec2cd4ab4b852c2e5b02595c8ebafcc2f5a"
+        },
+        {
+          "path": "MODEL.md",
+          "bytes": 935,
+          "sha256": "a476eb3eeb013b2622aeed5b9676cb38536dd86e34d2222696a64936ce8aece0"
+        },
+        {
+          "path": "execution-config-DATA.json",
+          "bytes": 4871819,
+          "sha256": "c6ff789f33cfacc6b38344db63bd6706990e279ad5fb4ee4c70e167335708c11"
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 17359,
+          "sha256": "b67f2d85e96ae745afcfd77f6e959e04e7c5bca71d8a08ef28c4d9684ff1d784"
+        },
+        {
+          "path": "admission-construction.json",
+          "bytes": 14408,
+          "sha256": "8b3bde1ca24a93af0d8b56b4b29823f80782434d56ad67b8f1d6a564bbca9aec"
+        },
+        {
+          "path": "commands.json",
+          "bytes": 3126,
+          "sha256": "7efc1145c83f6dbf3d628df24a4958229050c201ff4cc9cdada0037b45046461"
+        },
+        {
+          "path": "inert-admission-cases.json",
+          "bytes": 14080005,
+          "sha256": "63b8243554d86bff594004b9da37ff3b7050761eb6fdd6c11bb465d352390920"
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 52760,
+          "sha256": "140fc38d46cb3e9f1bfc4bb5c0969b1edca3911d1fb1fba75a3a381448626e51"
+        },
+        {
+          "path": "FINAL.json",
+          "bytes": 2054,
+          "sha256": "4996036bf8fcf16f3cb128ef92ff2f7142fc615e78fe89dc2657b1b9e77d9ac7"
+        },
+        {
+          "path": "driver.py",
+          "bytes": 27857,
+          "sha256": "8e27ad2838765f0bdef3e7939c91c9ed88dbb304e4783e92979202fd899ee1c8"
+        },
+        {
+          "path": "CONSTRUCTION.md",
+          "bytes": 13467,
+          "sha256": "db06fd18c3db917cb4e77f4b56605e5bdcfa8178f4a9c2b691812be2bf5eb69c"
+        }
+      ],
+      "omitted_local_large_evidence": []
+    },
+    {
+      "label": "NS110-author",
+      "original_directory": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/native-NS109-complete-current-admission-and-recovery-author-20261021-r110",
+      "full_source_DATA_package": true,
+      "original_files": 15,
+      "original_bytes": 148560840,
+      "included_files": 15,
+      "archive": "evidence/NS110-author.tar.gz",
+      "archive_bytes": 35997760,
+      "archive_sha256": "5ca430e3693eaeceeb6d489fbb22816a03cd32437759a2afb7a34b664db82c7b",
+      "included_seals": [
+        {
+          "path": "FIRST.json",
+          "bytes": 1923,
+          "sha256": "c1718855f790de5adf0aad68e4666259eae67df86702cffc9a7402ec199d72f1"
+        },
+        {
+          "path": "evidence.json",
+          "bytes": 11732945,
+          "sha256": "e2c9e760833102edd30452d434390d1b0022b185be72e647f0d714e5f51c14ef"
+        },
+        {
+          "path": "source-images.json",
+          "bytes": 77662811,
+          "sha256": "8c3c01219bed156cc0210493730839f870056aa2be634aee67607c597c338d5f"
+        },
+        {
+          "path": "MODEL.md",
+          "bytes": 1313,
+          "sha256": "c42687df2f380dd078f4967fe29ec0e240b2ccce0dda6a1566b5e4dffd7d55ed"
+        },
+        {
+          "path": "control-bindings.json",
+          "bytes": 3696903,
+          "sha256": "ba67a3f4de64a265ca36d30eabfe185018bc4453545076078a40612e734d3077"
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 37596,
+          "sha256": "e03172de5dceec8f846e7620b0ca18677f4e9ad89235c810cc41fc82db47b451"
+        },
+        {
+          "path": "commands.json",
+          "bytes": 176275,
+          "sha256": "e8d787b20fdb5384b04bf9318dbdabc4eecd5de4c2476ea3d296cb6c4770632d"
+        },
+        {
+          "path": "independent-journal-observer.py",
+          "bytes": 98984,
+          "sha256": "5afd34f10e39d06b1b082bd4610b97cfc7cc565e4f49c57791e656a9b9d53e82"
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 6284,
+          "sha256": "62159f7c448590986442fa3170784073bce750facd8844f4f83a14df41a9494b"
+        },
+        {
+          "path": "resource-control-harness.py",
+          "bytes": 125090,
+          "sha256": "622201679e1f5af815d5ba911c89bef6d45a363431fdde95c81151b3ef6db7e7"
+        },
+        {
+          "path": "FINAL.json",
+          "bytes": 2282,
+          "sha256": "08390ebe165ca14fa05890d1d895cb84ebddad67823887b0bf47d0af329a826f"
+        },
+        {
+          "path": "intent-coverage.json",
+          "bytes": 362099,
+          "sha256": "8500e284e75d8d76dfc832bfcf5ba0de8e62c1b3a4a0550a096b8edcbee4af2e"
+        },
+        {
+          "path": "recovery-dispositions.json",
+          "bytes": 222148,
+          "sha256": "17c385392379208af94c7a22a5d27449396f51ad816970a4a71a546f194ece65"
+        },
+        {
+          "path": "CONSTRUCTION.md",
+          "bytes": 12332,
+          "sha256": "79ceb1e70226d2a9c9c068eaa5b13a44c29dca9c6ca34641c45429d88bbe1d6a"
+        },
+        {
+          "path": "execution-binding-DATA.json",
+          "bytes": 54421855,
+          "sha256": "7d35eea9d87139c3c3331f2bda737eca143b1de1d293f26bd2143ab15b7254a2"
+        }
+      ],
+      "omitted_local_large_evidence": []
+    },
+    {
+      "label": "M135-incomplete-author",
+      "original_directory": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/outputs/continuity/E2-full-scientific-computation-population-author-20261022-r135",
+      "full_source_DATA_package": true,
+      "original_files": 12,
+      "original_bytes": 711870,
+      "included_files": 12,
+      "archive": "evidence/M135-incomplete-author.tar.gz",
+      "archive_bytes": 123792,
+      "archive_sha256": "347fb7cb64dbdce8d26ac682f7be66905b2f8f16608159cecdb981ffed7cc621",
+      "included_seals": [
+        {
+          "path": "FIRST.json",
+          "bytes": 1385,
+          "sha256": "295d286823984948f08ecdb28fc788955c324284a397a7a44c9514d69f929ed3"
+        },
+        {
+          "path": "evidence.json",
+          "bytes": 1175,
+          "sha256": "cf04de2f7c3ece1459e0619d7ae634296527f8c72ec31a1d58ff0bfd7dbc3616"
+        },
+        {
+          "path": "support-obligations.json",
+          "bytes": 55832,
+          "sha256": "a74830385dc803181c2d8cfb6028e9cf5d321fad41b9ce10c01df07d751d28eb"
+        },
+        {
+          "path": "MODEL.md",
+          "bytes": 900,
+          "sha256": "046ecc24e2206956af9f5af139ecbbb8f800ea042f92ba2d317d8391212f49d0"
+        },
+        {
+          "path": "source-inventory.json",
+          "bytes": 26761,
+          "sha256": "ddf7a6994734df063898a6df74d95db400825997a8d6858a2b4a15bbfda5ea94"
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 3681,
+          "sha256": "adef0e23a24b530dd95b7788f62054fd5ec810fcbc4b19232acd8d5607f94275"
+        },
+        {
+          "path": "legacy-identity.json",
+          "bytes": 2992,
+          "sha256": "21982ad8284f0692252b5dbbf9520d7ee9dabe42c30376b9f63fab2aa948392b"
+        },
+        {
+          "path": "population-draft.json",
+          "bytes": 612998,
+          "sha256": "b5958e1c19cbebd705e7397ea617966325139f0468f4f3dfa90cec5b629e6308"
+        },
+        {
+          "path": "commands.json",
+          "bytes": 1018,
+          "sha256": "92da577052a47aa386424ad8d16eb48e49db2d89904d81dd64b06d260c8786fb"
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 1498,
+          "sha256": "6c6246980f01352a02e17e7930984f307f001a9d4cb1f529154c6eea769bcadd"
+        },
+        {
+          "path": "FINAL.json",
+          "bytes": 1708,
+          "sha256": "995cad3838cd46d16e09cd0bead93a184ebc92efb8b1b3ef46c32eb7f96869e3"
+        },
+        {
+          "path": "CONSTRUCTION.md",
+          "bytes": 1922,
+          "sha256": "444015794e1bfd31f5c0765671156276e722d58d2fbc10a764381c3288f786eb"
+        }
+      ],
+      "omitted_local_large_evidence": []
+    },
+    {
+      "label": "M130-actual-consumer-campaign",
+      "original_directory": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-documentary-main-20261018/outputs/continuity/E2-current-M-all20-consumer-controls-root-20261021-r130",
+      "full_source_DATA_package": false,
+      "original_files": 204,
+      "original_bytes": 457245493,
+      "included_files": 202,
+      "archive": "evidence/M130-actual-consumer-campaign.tar.gz",
+      "archive_bytes": 113319,
+      "archive_sha256": "f3c648b85a5480e1b3ed1936628185af659271995689e71aa155d970f00e3e20",
+      "included_seals": [
+        {
+          "path": "final-full520.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "FIRST.json",
+          "bytes": 1115,
+          "sha256": "425de17ea38917ddc7ddc4711e2c9ee7604248d4af7796b199b2537e95fc6001"
+        },
+        {
+          "path": "evidence.json",
+          "bytes": 110723,
+          "sha256": "1a716e00db9604c143f9624b3911d168eb0f41b979b689cb0e26a80fa96acc44"
+        },
+        {
+          "path": "C08-hbar-defaulted-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-hbar-defaulted-restored.xml",
+          "bytes": 1972,
+          "sha256": "60fc830db6650a2ed9af0b3b45d60d8c457602d49f1f734bc42a52881ab89c41"
+        },
+        {
+          "path": "C03a-current-sign-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C09-render-Dean-dagger-removed-red.xml",
+          "bytes": 5179,
+          "sha256": "9180b5e9f1f34dabb388a1bb885923ecd1b3931b3f85ab98c1c3534648ab8814"
+        },
+        {
+          "path": "C03a-current-sign-red.xml",
+          "bytes": 19067,
+          "sha256": "2bd85e4d4b25e655c3849539f7908183d28fc22e472e15b398575635e504e6e0"
+        },
+        {
+          "path": "C09-render-mono50-star-removed-red.stdout",
+          "bytes": 3380,
+          "sha256": "d9cf9602fb587c1665d877ba4ba1b17110d6918aaab3d8ddafe679f721c69f8d"
+        },
+        {
+          "path": "C08-precision-defaulted-red.stdout",
+          "bytes": 2376,
+          "sha256": "0fa82f4369a6ee1e6c80dffb02449b5fd645acf1fb688dd0645194ac1990d1e7"
+        },
+        {
+          "path": "C09-render-mono50-star-removed-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C04-figure-electron-hole-charge-swap-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C09-render-Dean-dagger-removed-baseline.stdout",
+          "bytes": 31,
+          "sha256": "a651518323886824de9b8b5aebe208f95bd7312041341fcf56cd12c59ef6d820"
+        },
+        {
+          "path": "C03a-current-sign-red.stdout",
+          "bytes": 14180,
+          "sha256": "ec2816692398a395b5d45706b8210528bb65855a9ae1e25b678e2d43eb8448cf"
+        },
+        {
+          "path": "C09-mono50-star-removed-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C05-absolute-Gac-factor-two-red.stdout",
+          "bytes": 12880,
+          "sha256": "acdb896475a4e861e19663af8f8d18a2af7418ca504559c5a6cacfaee52e27bc"
+        },
+        {
+          "path": "C06b-momentum-factor-two-baseline.xml",
+          "bytes": 1972,
+          "sha256": "6bfb56020871fba40824aebc7b351beb331f59976b67b80f88dd144524d3d2e3"
+        },
+        {
+          "path": "C06b-momentum-factor-two-red.xml",
+          "bytes": 28251,
+          "sha256": "dc2d0684984a5cdf488b080bb0ef878c6ebd2c1173467747f2564e35c10d50a4"
+        },
+        {
+          "path": "C08-degeneracy-defaulted-red.xml",
+          "bytes": 4186,
+          "sha256": "bea82efc865bbd686d1200f04edcfbd5a29ddac3db7e90795334d80a4f759aac"
+        },
+        {
+          "path": "C06a-displacement-factor-two-red.stdout",
+          "bytes": 20485,
+          "sha256": "e9c185bd45957d92f18d237b1b9a51b2fb8f3162a25c11bee8b8568d512e6160"
+        },
+        {
+          "path": "C01-inertia-signed-density-baseline.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C01-inertia-signed-density-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C07a-compression-sign-restored.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C08-degeneracy-defaulted-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C09-Dean-dagger-removed-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C04-figure-electron-hole-charge-swap-restored.xml",
+          "bytes": 1972,
+          "sha256": "8d89aa86afb2c9c5dfd2330019b8535cc46a8175d4c2c8a935298f019f25ec22"
+        },
+        {
+          "path": "C09-mono50-star-removed-restored.xml",
+          "bytes": 1972,
+          "sha256": "c74d8254585b597a5677246b059192f35ed67e059d9923f6a515bfe006d21641"
+        },
+        {
+          "path": "C09-render-BEC-ddagger-removed-red.xml",
+          "bytes": 5179,
+          "sha256": "f15f2727f53eb823c34b497f2869beaa89816717b2f987229d6c3a005c16eef7"
+        },
+        {
+          "path": "C06a-displacement-factor-two-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C08-kB-defaulted-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-Dean-dagger-removed-restored.xml",
+          "bytes": 1972,
+          "sha256": "880d10600fa4eeadc9f3921ec6ff698b2f7b19336939d8c0e2d43c27b6dfcef1"
+        },
+        {
+          "path": "wrapper.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-precision-defaulted-restored.xml",
+          "bytes": 1972,
+          "sha256": "66c3872d925d8be0844c2aad91c7576ee076d359017065504602e38d2201d6b8"
+        },
+        {
+          "path": "C09-BEC-ddagger-removed-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C07b-current-velocity-sign-baseline.xml",
+          "bytes": 1972,
+          "sha256": "3a805494878a7ca62567b54b41ebee088d19ac5969451146abdce95d610f4bc0"
+        },
+        {
+          "path": "origins.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-render-BEC-ddagger-removed-red.stdout",
+          "bytes": 3380,
+          "sha256": "fb1370c20401f43f5e7f781c3d867c724523e966515c4b658a99f9e628f2754c"
+        },
+        {
+          "path": "C02-full-H-diagonal-only-restored.xml",
+          "bytes": 1972,
+          "sha256": "5eecab4019dcb4ff5cbb1a769d44b63926b9bb7347c2a43128343bbf67421dea"
+        },
+        {
+          "path": "C06b-momentum-factor-two-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "MODEL.md",
+          "bytes": 602,
+          "sha256": "0063ea23e47d834717aadc1095fdab75f1025141e7300d9d83c5d713c658727d"
+        },
+        {
+          "path": "C02-full-H-diagonal-only-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C05-absolute-Gac-factor-two-restored.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C09-mono50-star-removed-red.xml",
+          "bytes": 3510,
+          "sha256": "a53282def862a5ca261c3496bbe5237edfa5863d09cb507f752eae99554269dd"
+        },
+        {
+          "path": "C09-render-Dean-dagger-removed-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-hbar-defaulted-red.stdout",
+          "bytes": 2376,
+          "sha256": "c1378250d5de1a5033cf015dbdf0b8bbce202022158c5ee892a5b9a12e4f4052"
+        },
+        {
+          "path": "initial-full520.stdout",
+          "bytes": 12722,
+          "sha256": "c8b4b749149b699227d722764ae9c261502526a1a1d66ba63b7af8436bae9829"
+        },
+        {
+          "path": "C03b-current-width-omitted-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-precision-defaulted-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C02-full-H-diagonal-only-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C09-render-BEC-ddagger-removed-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C07a-compression-sign-red.stdout",
+          "bytes": 22764,
+          "sha256": "89b71a125ef6092eec808f2d3eed6744c15cf8eef403dfc226b9e3bac768ebf8"
+        },
+        {
+          "path": "fault-DATA-controls.json",
+          "bytes": 2245,
+          "sha256": "812c519d19216dd7fafc72256a1727886ba3311914710efaeb3c560c03b92275"
+        },
+        {
+          "path": "C06b-momentum-factor-two-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C07b-current-velocity-sign-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C03b-current-width-omitted-red.xml",
+          "bytes": 21770,
+          "sha256": "374c7d0e2d6030454fea9056c71a7f4bddafb3b53c50209712e175f277894197"
+        },
+        {
+          "path": "C09-BEC-ddagger-removed-restored.xml",
+          "bytes": 1972,
+          "sha256": "dff74d7f1ed1f29c75255ad2f294abe5561f995af817a5cbea3646f81ead2b4b"
+        },
+        {
+          "path": "C08-hbar-defaulted-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "initial-full520.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C03b-current-width-omitted-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 2234,
+          "sha256": "5fc1ee5933b6f631fd2d3e3d91da31c94fb094c03b806d67cc68c759a2237454"
+        },
+        {
+          "path": "C07b-current-velocity-sign-red.xml",
+          "bytes": 19284,
+          "sha256": "656932feefb476e71609e88895748c7acda2ea79614c746e97ffa75018930651"
+        },
+        {
+          "path": "C08-precision-defaulted-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-hbar-defaulted-baseline.xml",
+          "bytes": 1972,
+          "sha256": "b8f2b7cbbad260cac367a8025fa4fa24109b9e268b73a34d0f4f94f80a2a8cf5"
+        },
+        {
+          "path": "C09-render-Dean-dagger-removed-red.stdout",
+          "bytes": 3380,
+          "sha256": "ccc146e2ed7dd1e54fc29fc06bc98e03bcf4665b39fddbbd739d76b8bb57aedc"
+        },
+        {
+          "path": "C07b-current-velocity-sign-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C06b-momentum-factor-two-red.stdout",
+          "bytes": 21277,
+          "sha256": "5d1ec044c23e20e3f8f53963d4c608e92e7f9e71a0664a39d5547dfc1cd045b8"
+        },
+        {
+          "path": "C07a-compression-sign-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-render-BEC-ddagger-removed-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C02-full-H-diagonal-only-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "origins.stdout",
+          "bytes": 2952,
+          "sha256": "77a02ba62f7814d309e119893d9a06955477a2c257f7934c2e332ae35cad9cd5"
+        },
+        {
+          "path": "C06b-momentum-factor-two-baseline.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C09-render-BEC-ddagger-removed-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "wrapper.stdout",
+          "bytes": 44289,
+          "sha256": "22ef1c5a85b5f2ac4f4c2b8a84367f2d80a88cb8b921827f9cf6cd2df310ef37"
+        },
+        {
+          "path": "C09-BEC-ddagger-removed-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C06b-momentum-factor-two-restored.xml",
+          "bytes": 1972,
+          "sha256": "67986b47153cb3740abfd250ed4d8686d879751577ede0816a48b3c292b344c0"
+        },
+        {
+          "path": "C09-mono50-star-removed-baseline.xml",
+          "bytes": 1972,
+          "sha256": "fbecc68aa6335b25affa7eba12b230b5e9a56053de532a518a0e6971a6f7af62"
+        },
+        {
+          "path": "C02-full-H-diagonal-only-red.stdout",
+          "bytes": 17642,
+          "sha256": "f9c0ec11f28342da67a77f8b579b64a9bc78ce480be5b1131e9f527c29866763"
+        },
+        {
+          "path": "C08-precision-defaulted-red.xml",
+          "bytes": 4186,
+          "sha256": "c65a935f328d45b8f4545d712a943a949443b3a3daef0e1d007761367d53e31e"
+        },
+        {
+          "path": "C05-absolute-Gac-factor-two-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-Dean-dagger-removed-baseline.xml",
+          "bytes": 1972,
+          "sha256": "469d264ecf9a8d469769c9d37dd5e051eb4a821aa357fdc645d7828e549fa214"
+        },
+        {
+          "path": "C04-figure-electron-hole-charge-swap-baseline.xml",
+          "bytes": 1972,
+          "sha256": "f807d616ae274accc2d66a706863d34b811e43ea280cd8d2c899133df7ed1c15"
+        },
+        {
+          "path": "C01-inertia-signed-density-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C01-inertia-signed-density-red.stdout",
+          "bytes": 18674,
+          "sha256": "33ac53380aaf6bdb550211181eef4a442bd46eb5aa1517636a8691e41a9180c3"
+        },
+        {
+          "path": "C06a-displacement-factor-two-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C07a-compression-sign-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-Dean-dagger-removed-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C02-full-H-diagonal-only-baseline.xml",
+          "bytes": 1972,
+          "sha256": "74a3f76d848fee3fc7ef0001cb4e2af6b9a5b4831b4a1b0631c0635af0d36e27"
+        },
+        {
+          "path": "C08-degeneracy-defaulted-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C05-absolute-Gac-factor-two-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-mono50-star-removed-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-precision-defaulted-baseline.xml",
+          "bytes": 1972,
+          "sha256": "7c029d63e81305ee640ae079d91eec86bb57fa60a6f9b7435d0b7f61b2f07883"
+        },
+        {
+          "path": "C07b-current-velocity-sign-restored.xml",
+          "bytes": 1972,
+          "sha256": "835662f63e365040863bb457f49a4343f5f886ca01a3754657b67d0b0fcecfa4"
+        },
+        {
+          "path": "C06a-displacement-factor-two-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-kB-defaulted-restored.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C08-kB-defaulted-red.xml",
+          "bytes": 4186,
+          "sha256": "312709cbe479a463f45d13dca122d37d7533fd5da046c146fd3dce79f58f3a71"
+        },
+        {
+          "path": "C08-hbar-defaulted-red.xml",
+          "bytes": 4186,
+          "sha256": "07e3f4d41e777fe79e890c230d6a3466cedd9c31cf90c93aea84ee87955a9470"
+        },
+        {
+          "path": "C03a-current-sign-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-hbar-defaulted-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C05-absolute-Gac-factor-two-red.xml",
+          "bytes": 17783,
+          "sha256": "5068fd1ef7808b5ce903c747cc8e290c2e42cfd7e94c946e372c4b51e01d91cc"
+        },
+        {
+          "path": "final-full520.stdout",
+          "bytes": 12722,
+          "sha256": "09b3c9173f8048dd5c861bd0d7699c0d60fa0f792fc78d5fe84460e0dec1165d"
+        },
+        {
+          "path": "C09-render-Dean-dagger-removed-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C03a-current-sign-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C04-figure-electron-hole-charge-swap-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-BEC-ddagger-removed-baseline.xml",
+          "bytes": 1972,
+          "sha256": "dc8ea233be0fd0baf83da1924370c1ca6dbeb806568b3a69e8f2ac36a997aef1"
+        },
+        {
+          "path": "commands.json",
+          "bytes": 130208,
+          "sha256": "2dc339f23c874b17e87f5ccaddfe1afba500f9edefb5e6eeff89c12cf87d87d8"
+        },
+        {
+          "path": "C09-render-mono50-star-removed-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-render-mono50-star-removed-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-precision-defaulted-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C05-absolute-Gac-factor-two-baseline.stdout",
+          "bytes": 31,
+          "sha256": "a651518323886824de9b8b5aebe208f95bd7312041341fcf56cd12c59ef6d820"
+        },
+        {
+          "path": "C09-Dean-dagger-removed-red.stdout",
+          "bytes": 2001,
+          "sha256": "c2ff9b134db8a185ff9fcedfc79d5ad7fd669b274436e48ce452e1325b1b575f"
+        },
+        {
+          "path": "C03b-current-width-omitted-baseline.xml",
+          "bytes": 1972,
+          "sha256": "60a7c51bb15c9f879fd5a164f05dd56c05dd0d1f0773d9da355ecbbc6d0c2ec7"
+        },
+        {
+          "path": "C06b-momentum-factor-two-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-degeneracy-defaulted-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-kB-defaulted-restored.xml",
+          "bytes": 1972,
+          "sha256": "d02362bfbea62ecf52fd9200e30b7dfd9f1c1c22325fab0631b84eb47bbcd110"
+        },
+        {
+          "path": "C09-BEC-ddagger-removed-baseline.stdout",
+          "bytes": 31,
+          "sha256": "a651518323886824de9b8b5aebe208f95bd7312041341fcf56cd12c59ef6d820"
+        },
+        {
+          "path": "accepted-driver.py",
+          "bytes": 21670,
+          "sha256": "71da694c3144f696bf946c781431d009b67b0dd118dd1d3777789e9653f2468e"
+        },
+        {
+          "path": "C08-degeneracy-defaulted-baseline.xml",
+          "bytes": 1972,
+          "sha256": "d9324f3a97ad08d8923873fbf9260ec3b6f5cfd6a7cdd120c40e6d4204e78439"
+        },
+        {
+          "path": "binding-DATA-controls.json",
+          "bytes": 492,
+          "sha256": "8bda5fc517c3c318f1cf1457da6a4a82c3fc2b584cb6a121541fd3f1fdb50e45"
+        },
+        {
+          "path": "C01-inertia-signed-density-red.xml",
+          "bytes": 26416,
+          "sha256": "0c6769eaceafe5c481d697a3e5a64be6ed29ea4b4474f17fb4354630b994faa5"
+        },
+        {
+          "path": "C07b-current-velocity-sign-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-render-Dean-dagger-removed-restored.xml",
+          "bytes": 1972,
+          "sha256": "2062636f3c15009d7159a7bc7ba807353c5af534eb10a89afc1d1203c552bbc6"
+        },
+        {
+          "path": "C09-render-mono50-star-removed-restored.xml",
+          "bytes": 1972,
+          "sha256": "942f80b612b7e8efe01d03894ed376509d18dcf411f43058e8410871379f04b2"
+        },
+        {
+          "path": "C09-BEC-ddagger-removed-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C07b-current-velocity-sign-red.stdout",
+          "bytes": 14315,
+          "sha256": "24dc9d2a2615c9fe2be628960361d53e2659530b953e91867db653a6fd517445"
+        },
+        {
+          "path": "C02-full-H-diagonal-only-baseline.stdout",
+          "bytes": 31,
+          "sha256": "1a2a571df7a3d5f23c68867f401d562f2d578e95f9c3a04013958805451f7669"
+        },
+        {
+          "path": "C09-render-BEC-ddagger-removed-restored.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C08-kB-defaulted-red.stdout",
+          "bytes": 2376,
+          "sha256": "c812993df0b56989789af4356a8bcce84ce7f92928fca24122b0743927627162"
+        },
+        {
+          "path": "C03b-current-width-omitted-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-precision-defaulted-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C06a-displacement-factor-two-baseline.xml",
+          "bytes": 1972,
+          "sha256": "6548856fe582817b4cdf9f72e888b4cb053e4aec9a6c37ae9c3899b07bf94471"
+        },
+        {
+          "path": "C04-figure-electron-hole-charge-swap-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C09-render-Dean-dagger-removed-restored.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C07a-compression-sign-restored.xml",
+          "bytes": 1972,
+          "sha256": "95dc4d99147b8ce50dafc647a14f37c9669786bf5e12e0e20c986ca0c20b6a18"
+        },
+        {
+          "path": "C09-render-mono50-star-removed-baseline.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C03b-current-width-omitted-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C04-figure-electron-hole-charge-swap-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C03a-current-sign-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C08-hbar-defaulted-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C03a-current-sign-restored.xml",
+          "bytes": 1972,
+          "sha256": "e8020254fe3ec8e2891474519d4f8e8a0fd3c6c9a392c7b1c41bf4b815379020"
+        },
+        {
+          "path": "C09-render-BEC-ddagger-removed-restored.xml",
+          "bytes": 1972,
+          "sha256": "f7d5e967a7fb77d9014cf68b4b05e3adf65c8abe5734346888e9a2046d43dfe8"
+        },
+        {
+          "path": "C06a-displacement-factor-two-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 31631,
+          "sha256": "3baf0aefe24cc6a6ccfc853724b7daf9d2c7871086c0fbdddcfefa56e383c351"
+        },
+        {
+          "path": "C08-kB-defaulted-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C01-inertia-signed-density-restored.stdout",
+          "bytes": 31,
+          "sha256": "1a2a571df7a3d5f23c68867f401d562f2d578e95f9c3a04013958805451f7669"
+        },
+        {
+          "path": "C07a-compression-sign-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C09-Dean-dagger-removed-baseline.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C05-absolute-Gac-factor-two-baseline.xml",
+          "bytes": 1972,
+          "sha256": "8b0c832cde4b5301545103049bb195713050fe058af138f0f13a1edb08eed6eb"
+        },
+        {
+          "path": "C01-inertia-signed-density-restored.xml",
+          "bytes": 1972,
+          "sha256": "31253cbc681e925863f60bfaf9a7635a66bfd5c41c84b6b964114794094a87ae"
+        },
+        {
+          "path": "C08-degeneracy-defaulted-restored.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C09-mono50-star-removed-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "final-full520.xml",
+          "bytes": 79920,
+          "sha256": "fde592e2a4dab822cc20e84762b24168f94b216ed136759179c3398f8ce2dd6c"
+        },
+        {
+          "path": "C09-mono50-star-removed-restored.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C07a-compression-sign-red.xml",
+          "bytes": 29582,
+          "sha256": "daadcda4c364c65a0562d5cb915cb50b3f9e7243c53aab9a2f826f8e755bb9bf"
+        },
+        {
+          "path": "C06a-displacement-factor-two-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-kB-defaulted-baseline.stdout",
+          "bytes": 31,
+          "sha256": "a651518323886824de9b8b5aebe208f95bd7312041341fcf56cd12c59ef6d820"
+        },
+        {
+          "path": "C09-mono50-star-removed-red.stdout",
+          "bytes": 1878,
+          "sha256": "f298e9e5109aed1c282ed076e6fac897e88335132c16bd09bb3134ee4af7921a"
+        },
+        {
+          "path": "C09-mono50-star-removed-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-kB-defaulted-baseline.xml",
+          "bytes": 1972,
+          "sha256": "3ee67dc10a7cef5a5c6376b9cd0a1ddb42ff415ca771a2a0a11fdd6c5c7438b8"
+        },
+        {
+          "path": "C08-degeneracy-defaulted-restored.xml",
+          "bytes": 1972,
+          "sha256": "8de1c9ef2d62a1279cdac730256846996fc912b9265acd524a280cb1765a502e"
+        },
+        {
+          "path": "C09-Dean-dagger-removed-red.xml",
+          "bytes": 3640,
+          "sha256": "d591c5b9920a96d14770d103d77def857a50d5feceab58411cdcb56fa8cc85bf"
+        },
+        {
+          "path": "C03b-current-width-omitted-restored.xml",
+          "bytes": 1972,
+          "sha256": "1fefe66509d89156e094ef46d1b4e338b2a24e832954bcd706efb8a1e96cd59f"
+        },
+        {
+          "path": "C01-inertia-signed-density-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C07a-compression-sign-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-degeneracy-defaulted-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-Dean-dagger-removed-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "FINAL.json",
+          "bytes": 1292,
+          "sha256": "bcc821d77081421dbdf5e97a33afd570d84365dca06a550d4b3cc273ccf8ea20"
+        },
+        {
+          "path": "C03b-current-width-omitted-red.stdout",
+          "bytes": 15466,
+          "sha256": "3714d6295049983841f69b0f3ef51dfc9974df8c77736c885c1f34efc35ee318"
+        },
+        {
+          "path": "C09-render-mono50-star-removed-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-render-Dean-dagger-removed-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C04-figure-electron-hole-charge-swap-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-render-Dean-dagger-removed-baseline.xml",
+          "bytes": 1972,
+          "sha256": "50e9c201434a2f049bdbc0d3099d3c3dbbe2c352089a202cfc0ca6e33c2775cb"
+        },
+        {
+          "path": "C09-render-mono50-star-removed-baseline.xml",
+          "bytes": 1972,
+          "sha256": "c3cc2609e68379565aa03e3125c6466c851dfbbbfc9fc8c9a6169727aa20aec5"
+        },
+        {
+          "path": "C02-full-H-diagonal-only-red.xml",
+          "bytes": 24018,
+          "sha256": "0eb05f9ade868ace4404db08bab5aaabf07b3dc5afadf9a9fe35db5d755fd70a"
+        },
+        {
+          "path": "C09-BEC-ddagger-removed-red.xml",
+          "bytes": 3809,
+          "sha256": "efa040e57d3b13c1971f9659df0f6cfa3705f19e973167b4eb5cbeb9ca4a6157"
+        },
+        {
+          "path": "C06a-displacement-factor-two-restored.xml",
+          "bytes": 1972,
+          "sha256": "483564fb1733d1884aa2fa7fc33c4e13dd1c24f0858f3249c2cc64a49386ac0a"
+        },
+        {
+          "path": "C04-figure-electron-hole-charge-swap-red.stdout",
+          "bytes": 1014,
+          "sha256": "90ad430f92d7d98611d3c9da7b2feb41dfe29a2ecd4eb84d16f5946e6e9a1617"
+        },
+        {
+          "path": "C08-hbar-defaulted-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        },
+        {
+          "path": "C03a-current-sign-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-render-BEC-ddagger-removed-restored.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C02-full-H-diagonal-only-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C07a-compression-sign-baseline.xml",
+          "bytes": 1972,
+          "sha256": "00b9042d103e4df61f88a2994fdee9f6ec176e3dd334efaeebdd44abe59c59a6"
+        },
+        {
+          "path": "C07b-current-velocity-sign-restored.stdout",
+          "bytes": 31,
+          "sha256": "01480cc26823a8fe8740c1f1edc066d4f4177b0127fe5e0422457a3889a95512"
+        },
+        {
+          "path": "C09-render-mono50-star-removed-red.xml",
+          "bytes": 5179,
+          "sha256": "b5fd40cb75076a131e04c9c1498a20bad70281bfc7e56aff5ab8180cbc9b445b"
+        },
+        {
+          "path": "C09-BEC-ddagger-removed-red.stdout",
+          "bytes": 2149,
+          "sha256": "71f576f4d5fa0e668f4f6c8d5bb821afd48c238ff9978f872545a38e43dfe90b"
+        },
+        {
+          "path": "C07b-current-velocity-sign-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C03a-current-sign-baseline.xml",
+          "bytes": 1972,
+          "sha256": "723421d7128f0efdfd3b02814d518a6e6cf12bd8ca6e66c5fd77b9415683a4a4"
+        },
+        {
+          "path": "initial-full520.xml",
+          "bytes": 79920,
+          "sha256": "1417ae106bd03addd25a588ab01ba0c629610bb42c5b5293708efd0f2da633fd"
+        },
+        {
+          "path": "C08-kB-defaulted-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C03b-current-width-omitted-baseline.stdout",
+          "bytes": 31,
+          "sha256": "ee5eb7d426ae437ad92135a271edb54851094c5dd70ef48f51096f05b7f1b15f"
+        },
+        {
+          "path": "C08-precision-defaulted-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C04-figure-electron-hole-charge-swap-red.xml",
+          "bytes": 2646,
+          "sha256": "10f501721a06ebf76d53d8268d39ad79f89ad9faaabb9405c32e89ab8fb29abc"
+        },
+        {
+          "path": "CONSTRUCTION.md",
+          "bytes": 1968,
+          "sha256": "48f4b89320f728aa376dd3056875f1ca11fc8757375ab49eeda25c82dd218612"
+        },
+        {
+          "path": "wrapper-execution.json",
+          "bytes": 1182,
+          "sha256": "e04bfbc948838f0e8209d2d42c4549018b4aee19f3a0bed9436dd5657f7d7b46"
+        },
+        {
+          "path": "C09-Dean-dagger-removed-red.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C09-render-BEC-ddagger-removed-baseline.xml",
+          "bytes": 1972,
+          "sha256": "b0012946c18f6d3ce6e9a1d617b7c8cef17f14653d112c50a73cc552f9a415d6"
+        },
+        {
+          "path": "C05-absolute-Gac-factor-two-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C08-degeneracy-defaulted-red.stdout",
+          "bytes": 2376,
+          "sha256": "94d6eb7169aea44d62a406a7b523f7ad05701ef5db97ac8a928c5a66dfacd4c5"
+        },
+        {
+          "path": "C09-BEC-ddagger-removed-baseline.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "C06a-displacement-factor-two-red.xml",
+          "bytes": 27294,
+          "sha256": "641ee77468d75501bf92b075077024b96039c0c57c8a3a0afbf9487e9b599e4e"
+        },
+        {
+          "path": "C05-absolute-Gac-factor-two-restored.xml",
+          "bytes": 1972,
+          "sha256": "e8390bf4e6197c7d95dd613ead320040fe46a088dd4be56e5da843a7492bccef"
+        },
+        {
+          "path": "C01-inertia-signed-density-baseline.xml",
+          "bytes": 1972,
+          "sha256": "78a1b7a5416dd9088cb0e3871c49ab6960c806638b94304ab1e5cabc3b3f6dfc"
+        },
+        {
+          "path": "C06b-momentum-factor-two-restored.stdout",
+          "bytes": 31,
+          "sha256": "5c2fe115d134ec1e10b7590ab38112a1e744eb9d55cb1a1f63f4574c1fab0b33"
+        }
+      ],
+      "omitted_local_large_evidence": [
+        {
+          "path": "runtime.json",
+          "bytes": 446597634,
+          "sha256": "3c44600416f05f9bf00a6a1e621109c4b2fe3ee273ad081e4d257a3592989023"
+        },
+        {
+          "path": "execution-config.json",
+          "bytes": 9586132,
+          "sha256": "ac7c36f1280a53b52e1707067d13068507fcdc970dff0dad213f315208a7296a"
+        }
+      ]
+    },
+    {
+      "label": "M121-applied-review",
+      "original_directory": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/E2-M120-whole-applied-consumer-source-runtime-review-20261021-r121",
+      "full_source_DATA_package": false,
+      "original_files": 7,
+      "original_bytes": 9863691,
+      "included_files": 6,
+      "archive": "evidence/M121-applied-review.tar.gz",
+      "archive_bytes": 15685,
+      "archive_sha256": "e964a19b1933153956cc40499f087d98f1355cab6c6046511cd21a752c1e3b57",
+      "included_seals": [
+        {
+          "path": "FIRST.json",
+          "bytes": 1814,
+          "sha256": "8619916a5097e5b3c9d43867f722e820acc135174b8a3b43b39c09aff6e8de7b"
+        },
+        {
+          "path": "MODEL.md",
+          "bytes": 2441,
+          "sha256": "a8aa5c4627ee3c7ec00140ad7be49b58db3b752dbff562e3e7072db8fb102bb5"
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 26240,
+          "sha256": "5ff22c08181900b3f7baf5aee038d15cbd9903bd05750f3c4b129377b16a797f"
+        },
+        {
+          "path": "commands.json",
+          "bytes": 3599,
+          "sha256": "5abb1a1fe08a539de33fdf28ae9460e0efc73b8b269145e3d8bcfe3f8c185b35"
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 971,
+          "sha256": "69510b56df4e63e4486cee4863e7526029d39b3b0f816f2f58682bc690773188"
+        },
+        {
+          "path": "FINAL.json",
+          "bytes": 2867,
+          "sha256": "d73d421b4253dd7af6d3c8cfe71b4ee04be953a2ebaafd85a947368622c57cb0"
+        }
+      ],
+      "omitted_local_large_evidence": [
+        {
+          "path": "evidence.json",
+          "bytes": 9825759,
+          "sha256": "8a485c07c966e5b1b0fd9eb23bea6113806c8ea818723e12ba6c44e9991b4899"
+        }
+      ]
+    },
+    {
+      "label": "M132-consumer-science-review",
+      "original_directory": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/E2-M130-whole-actual-consumer-scientific-review-20261021-r132",
+      "full_source_DATA_package": false,
+      "original_files": 7,
+      "original_bytes": 10911240,
+      "included_files": 6,
+      "archive": "evidence/M132-consumer-science-review.tar.gz",
+      "archive_bytes": 19052,
+      "archive_sha256": "cc8ff094761e4f265f8e491f550ad2658941eb68b6351a83d46a8396267898f6",
+      "included_seals": [
+        {
+          "path": "FIRST.json",
+          "bytes": 1901,
+          "sha256": "55ee61fdb77e3520c006bee574947a8cbc490dafb4d7f404a103cc48988d6788"
+        },
+        {
+          "path": "MODEL.md",
+          "bytes": 853,
+          "sha256": "6798eeda3d25268f9ba573310f85a3765f8842475a93d92419de7c4b9a56b4bc"
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 34024,
+          "sha256": "38edaf76a27dfdb2ade327af050afb512021acbdcfc8f04649c1773e7fa03aae"
+        },
+        {
+          "path": "commands.json",
+          "bytes": 6250,
+          "sha256": "fb5c85bbca002efd8e97c9694be2097f92deba1649bd67ed34c80b1af0b40ac6"
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 3400,
+          "sha256": "db61c6119127d6ef3c7293d51d2e718b3ed111d5987d39223cea788e1e70b0fc"
+        },
+        {
+          "path": "FINAL.json",
+          "bytes": 5258,
+          "sha256": "d42a7083f6929367c2cd74001e6a37b79e9b542dddd24944e286b9b89e15c19d"
+        }
+      ],
+      "omitted_local_large_evidence": [
+        {
+          "path": "evidence.json",
+          "bytes": 10859554,
+          "sha256": "b556e9727f8d6d9d719d16d441fb88d4382988213ba8f77d573273a75136588a"
+        }
+      ]
+    },
+    {
+      "label": "M134-observation-review",
+      "original_directory": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/E2-M133-whole-observation-correction-review-20261021-r134",
+      "full_source_DATA_package": false,
+      "original_files": 7,
+      "original_bytes": 9993683,
+      "included_files": 6,
+      "archive": "evidence/M134-observation-review.tar.gz",
+      "archive_bytes": 10009,
+      "archive_sha256": "3edbae3cef1768eed9028f674a448e6ae6b40357369b4ee2d82e909cc94e5669",
+      "included_seals": [
+        {
+          "path": "FIRST.json",
+          "bytes": 1878,
+          "sha256": "6e04c602046ebecded3dc526683b1004267c9020df73082c36af172ed724f5c6"
+        },
+        {
+          "path": "MODEL.md",
+          "bytes": 792,
+          "sha256": "21a984994325ab92bb20c70b73d85c3b90b4c2963e9a13a4387e5bfa27d7266f"
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 15258,
+          "sha256": "a80235ac061927701b183e098f49094d7f714877c0ba0b25eeb403890a478815"
+        },
+        {
+          "path": "commands.json",
+          "bytes": 2905,
+          "sha256": "5ec856eec19a98119bcd0c75674ef876ed989505c5c994253c779eb2f5153aad"
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 1922,
+          "sha256": "4ddcbdd5a00c817b373f8944b07e34703f935353bac29f75d53ce20ee55c4404"
+        },
+        {
+          "path": "FINAL.json",
+          "bytes": 3620,
+          "sha256": "6a6d8f669491a9a3a3836b320423de0fee849aaa0fdcbe48d752e6e90f8bb878"
+        }
+      ],
+      "omitted_local_large_evidence": [
+        {
+          "path": "evidence.json",
+          "bytes": 9967308,
+          "sha256": "80655b11f61d1e2d7aa73c2f87941998b36b367e33b60ad05351200c358b5308"
+        }
+      ]
+    }
+  ],
+  "limitations": "Full source-DATA packages are complete. Runtime selections include every original file <=2MB, including separate suffixed stdout/stderr, FIRST/commands/evidence and actual XML where present. Large original custody/expanded analysis bodies >2MB remain machine-local only where individually listed as omitted. Their hashes do not supply missing bytes or acceptance. No synthetic authority is live."
+}

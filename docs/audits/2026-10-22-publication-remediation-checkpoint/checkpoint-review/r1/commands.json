@@ -1,0 +1,110 @@
+{
+  "schema": "reviewer-command-description-log/v1",
+  "scope": "Descriptions link actual tool transcript chunks; exact executed shell text/output remains there. This JSON is not a fabricated independent raw transcript or an exhaustive OS event log.",
+  "interpreter": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+  "flags": [
+    "-B"
+  ],
+  "candidate_execution": false,
+  "operations": [
+    {
+      "chunk": "123b08",
+      "description": "Sole canonical FIRST via subprocess.run with original separate raw capture before interpretation",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunks": [
+        "5993a5",
+        "cea948",
+        "7be270",
+        "b899d9",
+        "e35966",
+        "e85154",
+        "07a571",
+        "42dcbf"
+      ],
+      "description": "Earlier full packet/authorities/dossier/report/schema reads and full75/source14/ref27 independent DATA checks; broad displays sometimes clipped, later targeted reads supplement them",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "3417d2",
+      "description": "Inspect evidence and status schemas as stdlib JSON/text DATA",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "c80092",
+      "description": "Verify all nine evidence archives/member seals,62XML totals and table source DATA; broad output clipped",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "dc10da",
+      "description": "Read complete displayed gate tables/candidate deltas and frozen receipt/restoration schemas",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "e31c42",
+      "description": "Exact all27 flat archive-copy checks,462gate cells and M135/NS110 report bodies",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "62533c",
+      "description": "Read raw-availability statement, actual inline FINAL channels, remaining NS110 and complete G4 author REPORT",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "b563a1",
+      "description": "Read full M130/H100/M134 reports and source/remote scope objects",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "80c405",
+      "description": "Successful59old/27new/86postref exact comparison then read-only wrong source/manifest.json path FileNotFoundError; actual traceback preserved in tool transcript",
+      "actual_tool_exit": 1
+    },
+    {
+      "chunk": "8bb917",
+      "description": "Recover packet schema, full G4 report beginning and M121/M132 documentary boundaries",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "576904",
+      "description": "Read exact packet owned leaves/required whole scope",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "634687",
+      "description": "Resolve exact pinned source-checkpoints manifest path and tracker authority/gate caveats",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "c8de5d",
+      "description": "Read remaining M121/M132 whole report scientific/conservation context as documentary DATA; broad output clipped",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "83774a",
+      "description": "Read clipped M132 lifecycle interval separately, verify complete source-capture duplicate and WT2 disposition",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "1ba973",
+      "description": "Check immutable FIRST/MODEL/current source archive/state/merge and in-flight schema",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "4e73f8",
+      "description": "Exact source archive expected membership, complete frozen receipt and FIRST original invocation/raw names",
+      "actual_tool_exit": 0
+    },
+    {
+      "chunk": "50864e",
+      "description": "Independent comprehensive current75 pins,14sourcearchives/209files,9evidencearchives/130files,27copies,62XML full cohorts,462gates,27remote mappings and original FIRST raw; exclusive evidence writer",
+      "actual_tool_exit": 0
+    },
+    {
+      "description": "This exclusive REPORT/commands write under assigned ignored ownership; no target repair",
+      "status": "current DATA write"
+    }
+  ],
+  "pending_final_protocol": "One canonical subprocess.run from assignedD/GIT0, durable separate raw original channels/rc/invocation/times before interpretation, then exclusive FINAL as last owned write/freeze; actual result belongs to FINAL, not predicted here."
+}

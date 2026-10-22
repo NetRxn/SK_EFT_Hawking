@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-22T14:03:12.478707+00:00",
+  "records": [
+    {
+      "task": "G4r9",
+      "status": "FROZEN_REPORT_AND_PRETERMINAL_SEALS_RECEIVED",
+      "whole_REPORT_personally_read": true,
+      "report_sha256": "6bba357971fc87a10d4e6d6d362be6a0d5736df147748b063a06f7c5ceb5820f",
+      "manifest_sha256": "df0865f8f3714b5418152b317824cb748e80ee889a75a62d871b12c2f1a07097",
+      "FINAL_sha256": "649c7602212dc470e6e5ef41f973dff5c9abfd656f3848e4698ae10c6f0ed64f",
+      "seals": 5,
+      "source_acceptance": false,
+      "technical_code_intake": "G4 engine and production reviewed; other whole intake partial",
+      "finding_disposition": "REQUEST_CHANGES_SEVEN_MAJOR_FULL_STRENGTH"
+    },
+    {
+      "task": "H100",
+      "status": "FROZEN_REPORT_AND_PRETERMINAL_SEALS_RECEIVED",
+      "whole_REPORT_personally_read": true,
+      "report_sha256": "b67f2d85e96ae745afcfd77f6e959e04e7c5bca71d8a08ef28c4d9684ff1d784",
+      "manifest_sha256": "140fc38d46cb3e9f1bfc4bb5c0969b1edca3911d1fb1fba75a3a381448626e51",
+      "FINAL_sha256": "4996036bf8fcf16f3cb128ef92ff2f7142fc615e78fe89dc2657b1b9e77d9ac7",
+      "seals": 10,
+      "source_acceptance": false,
+      "technical_code_intake": "PENDING_WHOLE_NEW_SOURCE_REVIEW_AND_ROOT_TECHNICAL_INTAKE",
+      "finding_disposition": "AUTHOR_UNREVIEWED_NO_RUNTIME_GRANT"
+    },
+    {
+      "task": "NS110",
+      "status": "FROZEN_REPORT_AND_PRETERMINAL_SEALS_RECEIVED",
+      "whole_REPORT_personally_read": true,
+      "report_sha256": "e03172de5dceec8f846e7620b0ca18677f4e9ad89235c810cc41fc82db47b451",
+      "manifest_sha256": "62159f7c448590986442fa3170784073bce750facd8844f4f83a14df41a9494b",
+      "FINAL_sha256": "08390ebe165ca14fa05890d1d895cb84ebddad67823887b0bf47d0af329a826f",
+      "seals": 13,
+      "source_acceptance": false,
+      "technical_code_intake": "PENDING_WHOLE_NEW_SOURCE_REVIEW_AND_ROOT_TECHNICAL_INTAKE",
+      "finding_disposition": "AUTHOR_UNREVIEWED_NO_RUNTIME_GRANT"
+    }
+  ],
+  "NS110_correction": "Prior ROOT undefined file_state diagnosis was incomplete: frozen NS108 already had file_state=state. Current source directly calls state, not repair of an undefined global. Source DATA remains unaccepted.",
+  "M135": "FROZEN_INCOMPLETE_AUTHOR_27groups34main_occurrences0acceptedpairs",
+  "all_agents_terminal": true
+}

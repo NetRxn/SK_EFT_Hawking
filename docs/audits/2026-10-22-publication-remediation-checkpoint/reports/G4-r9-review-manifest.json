@@ -1,0 +1,147 @@
+{
+  "task": "publication-G4-r8-whole-coherent-implementation-review-20261022-r9",
+  "created_utc": "2026-10-22T00:35:53.760214+00:00",
+  "verdict": "REQUEST_CHANGES",
+  "mandatory_findings": [
+    {
+      "id": "G4-r9-M1",
+      "severity": "MAJOR",
+      "mandatory": true,
+      "title": "Raw population/pair semantic observation remains authority-gated",
+      "locations": [
+        "scripts/computation_analysis.py:1069",
+        "scripts/computation_analysis.py:1246",
+        "scripts/build_graph.py:3528"
+      ],
+      "basis": "current source/accepted whole construction DATA trace; no reviewer candidate execution",
+      "report": "REPORT.md"
+    },
+    {
+      "id": "G4-r9-M2",
+      "severity": "MAJOR",
+      "mandatory": true,
+      "title": "Finite cost/shape and per-file refusal boundaries incomplete",
+      "locations": [
+        "scripts/computation_analysis.py:675",
+        "scripts/computation_analysis.py:997",
+        "scripts/build_graph.py:1607"
+      ],
+      "basis": "current source/accepted whole construction DATA trace; no reviewer candidate execution",
+      "report": "REPORT.md"
+    },
+    {
+      "id": "G4-r9-M3",
+      "severity": "MAJOR",
+      "mandatory": true,
+      "title": "Slice/chained condition/Boolean assertion/refusal guard semantics fabricate support",
+      "locations": [
+        "scripts/computation_analysis.py:447",
+        "scripts/computation_analysis.py:467",
+        "scripts/computation_analysis.py:861",
+        "scripts/computation_analysis.py:1317"
+      ],
+      "basis": "current source/accepted whole construction DATA trace; no reviewer candidate execution",
+      "report": "REPORT.md"
+    },
+    {
+      "id": "G4-r9-M4",
+      "severity": "MAJOR",
+      "mandatory": true,
+      "title": "Tolerance and exact relative denominator budget qualification unsound",
+      "locations": [
+        "scripts/computation_analysis.py:799",
+        "scripts/computation_analysis.py:818",
+        "scripts/computation_analysis.py:1302"
+      ],
+      "basis": "current source/accepted whole construction DATA trace; no reviewer candidate execution",
+      "report": "REPORT.md"
+    },
+    {
+      "id": "G4-r9-M5",
+      "severity": "MAJOR",
+      "mandatory": true,
+      "title": "Unknown effects/decorators/callback and canonical binding certainty incomplete",
+      "locations": [
+        "scripts/computation_analysis.py:579",
+        "scripts/computation_analysis.py:698",
+        "scripts/computation_analysis.py:719",
+        "scripts/computation_analysis.py:997"
+      ],
+      "basis": "current source/accepted whole construction DATA trace; no reviewer candidate execution",
+      "report": "REPORT.md"
+    },
+    {
+      "id": "G4-r9-M6",
+      "severity": "MAJOR",
+      "mandatory": true,
+      "title": "Multiple producer bindings collapse during witness emission",
+      "locations": [
+        "scripts/build_graph.py:4600",
+        "scripts/readiness_gates.py:553"
+      ],
+      "basis": "current source/accepted whole construction DATA trace; no reviewer candidate execution",
+      "report": "REPORT.md"
+    },
+    {
+      "id": "G4-r9-M7",
+      "severity": "MAJOR",
+      "mandatory": true,
+      "title": "Test-wide canonical reference skip removes genuine scoped Lean support",
+      "locations": [
+        "scripts/build_graph.py:4513"
+      ],
+      "basis": "current source/accepted whole construction DATA trace; no reviewer candidate execution",
+      "report": "REPORT.md"
+    }
+  ],
+  "nonrecursive_outputs": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r8-whole-coherent-implementation-review-20261022-r9/FIRST.json",
+      "sha256": "74d2d8685d4293a96cc8055271abeb604572bf4b86716922f8e5eedadba0c604",
+      "bytes": 1539,
+      "mode": 33188,
+      "mtime_ns": 1792628668156487316
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r8-whole-coherent-implementation-review-20261022-r9/MODEL.md",
+      "sha256": "64bdc727d41990790305c932e739777cdeea6480ad9be8bb74ae63bb136aaf6c",
+      "bytes": 1734,
+      "mode": 33188,
+      "mtime_ns": 1792628668156604233
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r8-whole-coherent-implementation-review-20261022-r9/REPORT.md",
+      "sha256": "6bba357971fc87a10d4e6d6d362be6a0d5736df147748b063a06f7c5ceb5820f",
+      "bytes": 35360,
+      "mode": 33188,
+      "mtime_ns": 1792629277754146618
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r8-whole-coherent-implementation-review-20261022-r9/commands.json",
+      "sha256": "2b889ffa12adbac940463739864990a6d10878f00d26831305575b796ac3372d",
+      "bytes": 8424,
+      "mode": 33188,
+      "mtime_ns": 1792629353740216523
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-main-baseline-20261019/outputs/continuity/G4-r8-whole-coherent-implementation-review-20261022-r9/evidence.json",
+      "sha256": "762fc9f3f205912984391919cfabe214e486a1becb63cc59b8b5979336029c0a",
+      "bytes": 206421,
+      "mode": 33188,
+      "mtime_ns": 1792629353759864598
+    }
+  ],
+  "excludes": [
+    "manifest.json",
+    "FINAL.json"
+  ],
+  "review_scope": "Entire coherent candidate source/scientific-purpose/control/compatibility/unit/custody review. Accepted design DATA not implemented sufficiently. ROOT intake/repair allocation pending; author frozen; no runtime/scientific/gate/main/publication acceptance.",
+  "preterminal_currentness": {
+    "at": "2026-10-22T00:35:53.757962+00:00",
+    "all62_input_pins_fullstate_exact": true,
+    "author8output18source12rawattempt5FINALraw_seals_exact": true,
+    "source_changes_by_reviewer": false,
+    "allseven_MAJORS_retained": true
+  },
+  "terminal_rule": "Next and last observer is one sole actual canonical FINAL. Preserve raw first, write FINAL and freeze allseven leaves without postobservers/replay."
+}

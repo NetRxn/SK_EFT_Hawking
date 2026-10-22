@@ -1,0 +1,193 @@
+{
+  "at": "2026-10-22T14:16:12.658272+00:00",
+  "status": "PASS",
+  "source_archives": 14,
+  "source_bytes_and_full_modes_restored": true,
+  "all_split_indexes_reconstructed": true,
+  "validation": "All14 combined source restores matched exact bytes/kind/full modes; all14 original semantic indexes independently replayed from base plus staged patch using isolated temporary GIT_INDEX_FILE. No original source/index/ref or project runtime changed.",
+  "original_failure": "Initial source restore correctly rejected0644-versus0600 full permission mismatch; r2 explicitly restores recorded full mode metadata. Failedr1 preserved locally.",
+  "rows": [
+    {
+      "worktree": "publication-b2-main-20261019",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 16,
+        "untracked_paths": 3,
+        "probe": "/private/tmp/publication-checkpoint-restore-lzg3xyv5",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "5b24a9d2c60e45c7217078f7cdd61230aff66040c7e0cc47be5128d0856aa8b0",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-d1-d5-scope-20261016",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 51,
+        "untracked_paths": 13,
+        "probe": "/private/tmp/publication-checkpoint-restore-bpy89cce",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "ab71503c837d56acee10ba74c7881a616aa2c0b7cc885651a98b170acca483a8",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-d11-g4-20261019",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 31,
+        "untracked_paths": 13,
+        "probe": "/private/tmp/publication-checkpoint-restore-9s2yd115",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "a5afb07701cf6f1e9cdaeeecce2c044ef2fc10384396de1cc04033a1bb400dcd",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-documentary-intake-20261018",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 1,
+        "untracked_paths": 0,
+        "probe": "/private/tmp/publication-checkpoint-restore-ecffcj2_",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "f89c9bd8e53f85a30289980acc03517b5f3b6b697c70992c34b99548fa64f2c0",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-documentary-main-20261018",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 121,
+        "untracked_paths": 69,
+        "probe": "/private/tmp/publication-checkpoint-restore-mavbpwuo",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "83ebb321d9384643fd938eae3f0cbd5eb5f9c594fc498a1e073ebc25bddb10ac",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-e1-verify-20261016",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 5,
+        "untracked_paths": 3,
+        "probe": "/private/tmp/publication-checkpoint-restore-t0_kz3ww",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "c9fcda75c5663435ef00e106b5321132e746cfb4ad2688e4a857085b5daefc54",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-e2-metric-checkpoint-20261021",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 6,
+        "untracked_paths": 5,
+        "probe": "/private/tmp/publication-checkpoint-restore-6smxzfsz",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "0f20e59900503bc00293c87f3afdbc387fa7008ad6425807ca52e18d160022d7",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-g4-absence-20261019",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 16,
+        "untracked_paths": 2,
+        "probe": "/private/tmp/publication-checkpoint-restore-qhiohny5",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "0dd97d6049b59e3d436d2e9c7c86ea0517fc559edef434893321ce4593b659a8",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-integrated-science-20261019",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 46,
+        "untracked_paths": 5,
+        "probe": "/private/tmp/publication-checkpoint-restore-yv25frib",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "e1cbacb8960d240aecaabad61f6da0c123507432aca59d533cd933d3f8c4fa03",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-native-startup-20261020",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 14,
+        "untracked_paths": 3,
+        "probe": "/private/tmp/publication-checkpoint-restore-e_sqqnny",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "0361e5e1c173bd3f79414d68e2950ab77cb9b95ffdfb14f8aac0b91d4b882161",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-njl-integration-20261019",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 0,
+        "untracked_paths": 1,
+        "probe": "/private/tmp/publication-checkpoint-restore-_jqgp2nb",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "1a166e879889b851a1a9b2c646f5a60446f5d049b44f1f78e83880461999f335",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "publication-worktree-portability-20261019",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 1,
+        "untracked_paths": 0,
+        "probe": "/private/tmp/publication-checkpoint-restore-g0vu0o_s",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "4322e9a30af9f82b3e02c71e15b049fd97da7f40926c46b7d9b9fa1d1776263d",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "session-token-design-20261015",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 12,
+        "untracked_paths": 4,
+        "probe": "/private/tmp/publication-checkpoint-restore-ahdm4jtk",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "dbd031e92455f51ec46ad876a04a6172e96ac812bce6ded733257a1f75f5ff5a",
+      "original_index_and_source_untouched": true
+    },
+    {
+      "worktree": "slot-checkpoint-resume-20261016",
+      "source_restore": {
+        "result": "PASS",
+        "tracked_paths": 13,
+        "untracked_paths": 0,
+        "probe": "/private/tmp/publication-checkpoint-restore-mg8ei19t",
+        "mtime_note": "Source bytes/kind/modes verified; original mtimes are recorded but fresh clone mtimes do not preserve runtime freshness acceptance"
+      },
+      "split_index_replay": "PASS_FROM_EXACT_BASE_PLUS_STAGED_PATCH_IN_ISOLATED_INDEX",
+      "semantic_index_sha256": "13a09385ed6424d04834885956c1c63ad00a20aeaea0e11ec590a265920bb51f",
+      "original_index_and_source_untouched": true
+    }
+  ]
+}
