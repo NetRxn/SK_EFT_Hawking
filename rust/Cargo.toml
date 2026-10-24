@@ -14,7 +14,7 @@ crate-type = ["cdylib"]  # Python extension module
 pyo3 = { version = "0.29", features = ["extension-module"] }  # 0.29+ closes RUSTSEC PyList/PyTuple nth OOB-read + new_closure Sync bound
 numpy = "0.29"       # PyO3 numpy integration for zero-copy array access (tracks the pyo3 minor)
 rand = "0.9.3"       # 0.9.3+ closes RUSTSEC-2026-0097 (custom-logger soundness)
-rand_chacha = "0.9"  # deterministic seeded RNG (reproducible trajectories)
+rand_chacha = "0.10"  # deterministic seeded RNG (reproducible trajectories)
 
 [profile.release]
 opt-level = 3
