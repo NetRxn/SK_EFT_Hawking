@@ -45,7 +45,7 @@ dependencies = [
     "jinja2>=3.1",
     # Datastar SDK — dashboard reactive layer (replaces HTMX/vanilla-JS).
     # Reference: docs/references/Datastar_Dashboard_Reference.md
-    "datastar-py>=0.5",
+    "datastar-py>=1.0.2",
     # Provenance knowledge graph (database connectivity)
     "psycopg[binary]>=3.2",
     # HTTP client (citation primary-source fetcher; arXiv + Crossref + ADS)
