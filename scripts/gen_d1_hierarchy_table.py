@@ -30,6 +30,16 @@ already route ``constants.py -> solver -> Beliaev`` through
 ``D`` and ``gamma_dim``. We reuse them verbatim so the generator and the
 validated pipeline cannot diverge.
 
+The crossover coefficient is omega_x/T_eff(omega_x), where the thermal
+T_eff = kappa_eff(omega_x)/(2*pi), not the bare T_H = kappa/(2*pi) and
+not the temperature fitted to the total (thermal plus noise) occupation.
+The public key ``omega_cross_over_TH`` retains its historical name for
+compatibility; its value, also exposed as ``ln_arg``, is this coefficient
+in units of T_eff. The UV cutoff is separately reported in bare T_H units.
+Comparing those two coefficients is a leading-order accessibility indicator;
+the actual frequency-dependent occupation crossing is checked independently
+for all three benchmarks in ``tests/test_d1_hierarchy_table.py``.
+
 Usage::
 
     uv run python scripts/gen_d1_hierarchy_table.py            # print table + LaTeX rows
@@ -94,11 +104,11 @@ def compute_bec_hierarchy() -> dict[str, dict]:
         delta_diss           Gamma_H/kappa = gamma_dim (dimensionless)
         ratio                delta_diss / |delta_disp|
         dominance            'disp' | 'diss' | 'comparable'
-        ln_arg               ln(2 / delta_diss)
-        omega_cross_over_TH  crossover frequency in units of T_H (= ln_arg)
-        omega_max_over_TH    dispersive UV cutoff in units of T_H
-        spectral_floor       delta_diss / 2  (FDR noise floor n_noise)
-        cross_below_cutoff   omega_cross_over_TH < omega_max_over_TH
+        ln_arg               legacy alias for omega_cross_over_TH
+        omega_cross_over_TH  legacy name: omega_x/T_eff = ln(1 + 1/delta_diss)
+        omega_max_over_TH    dispersive UV cutoff in bare T_H = kappa/(2*pi)
+        spectral_floor       delta_diss (zero-environment-temperature FDR floor)
+        cross_below_cutoff   leading-order nominal-scale accessibility indicator
         T_H_nominal_label    LaTeX label for the (published) T_H column
     """
     out: dict[str, dict] = {}
@@ -109,7 +119,7 @@ def compute_bec_hierarchy() -> dict[str, dict]:
         delta_diss = plat.gamma_dim                    # Gamma_H/kappa (horizon)
         ratio = delta_diss / abs(delta_disp)
         # ⚠️ THE NOISE FLOOR IS delta_diss, NOT delta_diss/2 — and halving it twice is
-        # what produced a crossover too high by exactly ln 2 for three review cycles.
+        # what produced the historical factor-two error in the floor.
         #
         # `SKEFTHawking.WKBConnection.noise_floor_eq_delta_diss` states
         # `noiseFloor p = p.Gamma_H / p.kappa`, and its docstring gives the whole chain:
@@ -124,11 +134,11 @@ def compute_bec_hierarchy() -> dict[str, dict]:
         # ⚠️ Do NOT halve the floor here, and do NOT approximate this as ln(2/delta_diss).
         # Both re-apply the halving `noise_floor_eq_delta_diss` has already taken, and the
         # two errors are consistent with each other — a halved floor and a ln(2/X)
-        # crossover agree line-by-line while running high by exactly ln 2. The Lean
+        # crossover agree line-by-line while running high by approximately ln 2. The Lean
         # statement, not the pipeline's internal agreement, settles which form is right.
         #
-        # Heidelberg: delta_diss = 1.585e-3 gives 6.44, matching the charter's "~6 T_H".
-        ln_arg = math.log(1.0 + 1.0 / delta_diss)
+        # This is omega_x/T_eff(omega_x), not omega_x divided by the bare T_H.
+        crossover = math.log(1.0 + 1.0 / delta_diss)
         omega_max_over_TH = plat.omega_max / plat.T_H
         out[name] = {
             "D": D,
@@ -136,13 +146,13 @@ def compute_bec_hierarchy() -> dict[str, dict]:
             "delta_diss": delta_diss,
             "ratio": ratio,
             "dominance": _dominance(ratio),
-            "ln_arg": ln_arg,
-            "omega_cross_over_TH": ln_arg,
+            "ln_arg": crossover,
+            "omega_cross_over_TH": crossover,
             "omega_max_over_TH": omega_max_over_TH,
             # n_noise = Gamma_H/kappa = delta_diss (noise_floor_eq_delta_diss). The
             # delta_k/2 halving is inside that identity, not on top of it.
             "spectral_floor": delta_diss,
-            "cross_below_cutoff": ln_arg < omega_max_over_TH,
+            "cross_below_cutoff": bool(crossover < omega_max_over_TH),
             "T_H_nominal_label": T_H_NOMINAL_LABEL[name],
         }
     return out
@@ -192,7 +202,7 @@ def render_latex_rows() -> str:
 def _print_human(hier: dict[str, dict]) -> None:
     hdr = (
         f"{'Platform':<12s} {'D':>10s} {'delta_disp':>13s} {'delta_diss':>13s} "
-        f"{'ratio':>8s} {'dom':>10s} {'ln(2/diss)':>11s} {'wmax/T_H':>9s} "
+        f"{'ratio':>8s} {'dom':>10s} {'wx/T_eff':>11s} {'wmax/T_H':>9s} "
         f"{'floor':>11s}"
     )
     print(hdr)
@@ -226,11 +236,15 @@ def main() -> None:
     _print_human(hier)
     print("\n--- LaTeX tabular rows (paste into Tab. tab:hierarchy) ---")
     print(render_latex_rows())
-    print("\n--- Heidelberg crossover sentence numbers ---")
-    heid = hier["Heidelberg"]
-    print(f"  delta_diss = {fmt_sci_latex(heid['delta_diss'])}  "
-          f"=> omega_x = T_H ln(2/delta_diss) ~ {heid['ln_arg']:.2f} T_H  "
-          f"(UV cutoff ~ {heid['omega_max_over_TH']:.0f} T_H)")
+    print("\n--- Platform crossover coefficients (zero environment temperature) ---")
+    print("  T_eff = kappa_eff(omega_x)/(2*pi); T_H = kappa/(2*pi).")
+    print("  T_eff is the thermal-component scale, not a fit to total occupation.")
+    print("  With frequency-dependent kappa_eff, omega_x is an implicit crossing.")
+    for name, row in hier.items():
+        print(f"  {name}: delta_diss = {fmt_sci_latex(row['delta_diss'])}  "
+              f"=> omega_x = T_eff ln(1+1/delta_diss) ~ "
+              f"{row['omega_cross_over_TH']:.2f} T_eff  "
+              f"(UV cutoff ~ {row['omega_max_over_TH']:.0f} T_H)")
 
 
 if __name__ == "__main__":

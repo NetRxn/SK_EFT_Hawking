@@ -19,8 +19,14 @@ Coverage:
 from __future__ import annotations
 
 import math
+import json
+import os
+import re
+import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 SK_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SK_ROOT))
@@ -231,3 +237,169 @@ class TestGenerator:
         # all three crossovers sit below the dispersive UV cutoff
         for name in ("Steinhauer", "Heidelberg", "Trento"):
             assert h[name]["cross_below_cutoff"]
+
+
+# Finding 1.1: use the actual occupation producer as an independent numerical
+# witness. Repeating log(1 + 1/d) here would let a shared factor-two error pass.
+from src.wkb import spectrum as _spectrum  # noqa: E402
+from src.wkb.connection_formula import exact_connection_formula  # noqa: E402
+from src.wkb.bogoliubov import modified_bogoliubov_coefficients  # noqa: E402
+
+_BEC_FACTORIES = {
+    "Steinhauer": _spectrum.steinhauer_platform,
+    "Heidelberg": _spectrum.heidelberg_platform,
+    "Trento": _spectrum.trento_platform,
+}
+
+
+def _occupation(platform, omega):
+    conn = exact_connection_formula(
+        omega, platform.kappa, platform.c_s, platform.xi,
+        platform.gamma_1, platform.gamma_2,
+        platform.gamma_2_1, platform.gamma_2_2,
+        platform.gamma_3_1, platform.gamma_3_2, platform.gamma_3_3,
+    )
+    return conn, modified_bogoliubov_coefficients(conn, T_env=0.0)
+
+
+def _physical_crossing(platform):
+    """Bracket the actual Hawking/floor equality, without a logarithmic formula."""
+    lo, hi = 0.1 * platform.T_H, 20.0 * platform.T_H
+    assert _occupation(platform, lo)[1].n_hawking > _occupation(platform, lo)[1].n_noise
+    assert _occupation(platform, hi)[1].n_hawking < _occupation(platform, hi)[1].n_noise
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        _, bog = _occupation(platform, mid)
+        if bog.n_hawking > bog.n_noise:
+            lo = mid
+        else:
+            hi = mid
+    omega = (lo + hi) / 2
+    conn, bog = _occupation(platform, omega)
+    return omega, conn, bog
+
+
+def _generator_cli(*flags):
+    env = dict(os.environ, PYTHONPATH=str(SK_ROOT), PYTHONDONTWRITEBYTECODE="1")
+    result = subprocess.run(
+        [sys.executable, "-B", str(SK_ROOT / "scripts/gen_d1_hierarchy_table.py"), *flags],
+        cwd=SK_ROOT, env=env, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, (result.returncode, result.stdout, result.stderr)
+    return result.stdout
+
+
+class TestFinding11PhysicalContract:
+    @pytest.mark.parametrize("name", _BEC_FACTORIES)
+    def test_actual_occupation_crosses_reported_floor_at_reported_coefficient(self, name):
+        platform = _BEC_FACTORIES[name]()
+        row = compute_bec_hierarchy()[name]
+        omega, conn, bog = _physical_crossing(platform)
+        thermal_temperature = conn.kappa_eff.kappa_eff / (2 * math.pi)
+        assert conn.uv_suppression == 1.0
+        assert 0 < bog.delta_k < 1
+        assert math.isclose(row["spectral_floor"], bog.n_noise, rel_tol=1e-12)
+        assert math.isclose(bog.n_noise, conn.turning_point.Gamma_H / platform.kappa,
+                            rel_tol=1e-12)
+        assert math.isclose(bog.n_hawking, bog.n_noise, rel_tol=1e-12)
+        assert math.isclose(row["omega_cross_over_TH"], omega / thermal_temperature,
+                            rel_tol=1e-12)
+        assert row["ln_arg"] == row["omega_cross_over_TH"]
+        # Nominal T_H and the temperature fitted to TOTAL occupation are each
+        # different from the thermal temperature entering the Planck component.
+        assert not math.isclose(thermal_temperature, platform.T_H, rel_tol=1e-8)
+        assert not math.isclose(thermal_temperature, bog.T_eff, rel_tol=1e-8)
+        assert row["cross_below_cutoff"] == (omega < platform.omega_max)
+        assert _occupation(platform, 0.99 * omega)[1].n_hawking > bog.n_noise
+        assert _occupation(platform, 1.01 * omega)[1].n_hawking < bog.n_noise
+
+    def test_json_cli_is_complete_and_preserves_numeric_schema(self):
+        rows = json.loads(_generator_cli("--json"))
+        assert set(rows) == set(_BEC_FACTORIES)
+        assert rows == compute_bec_hierarchy()
+        for row in rows.values():
+            assert type(row["cross_below_cutoff"]) is bool
+            assert all(math.isfinite(row[key]) for key in (
+                "D", "delta_disp", "delta_diss", "ratio", "ln_arg",
+                "omega_cross_over_TH", "omega_max_over_TH", "spectral_floor"))
+
+    def test_human_cli_reports_all_platforms_with_correct_thermal_units(self):
+        text = _generator_cli()
+        header = text.splitlines()[0]
+        assert "wx/T_eff" in header and "wmax/T_H" in header
+        assert "T_eff = kappa_eff(omega_x)/(2*pi)" in text
+        assert "T_H = kappa/(2*pi)" in text
+        rows = compute_bec_hierarchy()
+        for name, row in rows.items():
+            line = next(line for line in text.splitlines() if line.startswith(name + " "))
+            cells = line.split()
+            assert math.isclose(float(cells[6]), row["omega_cross_over_TH"], rel_tol=1e-5)
+            assert math.isclose(float(cells[8]), row["spectral_floor"], rel_tol=1e-4)
+            sentence = next(line for line in text.splitlines() if line.startswith("  " + name + ":"))
+            assert "omega_x = T_eff ln(1+1/delta_diss)" in sentence
+            coefficient = re.search(r"~ ([0-9.]+) T_eff", sentence)
+            assert coefficient
+            assert math.isclose(float(coefficient[1]), row["omega_cross_over_TH"], rel_tol=0.0008)
+
+    def test_latex_cli_preserves_all_platform_corrections_and_nominal_labels(self):
+        text = _generator_cli("--latex")
+        assert len(text.splitlines()) == len(_BEC_FACTORIES)
+        for name, row in compute_bec_hierarchy().items():
+            cells = next(line for line in text.splitlines() if name in line).split("&")
+            assert cells[1].strip() == row["T_H_nominal_label"]
+            for idx, key in ((2, "delta_disp"), (3, "delta_diss")):
+                assert math.isclose(_parse_latex_number(cells[idx]), row[key], rel_tol=0.005)
+
+    def test_manuscript_all_platform_floor_crossover_and_scale_context(self):
+        text = (SK_ROOT / "papers/D1/paper_draft.tex").read_text()
+        # Bound the scientific comparison to the hierarchy's explicit platform
+        # sequence; the existing live gate independently checks all table cells.
+        section = text.split(r"\label{sec:hier-heidelberg}", 1)[1].split(r"\subsection", 1)[0]
+        comparison = section.split("All three sit", 1)[0]
+        coefficients = re.findall(r"([\d.]+)\\,T_\{\\rm eff\}", comparison)
+        assert len(coefficients) == 3
+        floors = re.findall(r"([\d.]+)\\times10\^\{(-?\d+)\}", section)
+        assert len(floors) == 3
+        for name, coefficient, floor in zip(
+                ("Heidelberg", "Steinhauer", "Trento"), coefficients, floors, strict=True):
+            row = compute_bec_hierarchy()[name]
+            assert math.isclose(float(coefficient), row["omega_cross_over_TH"], rel_tol=0.0008)
+            assert math.isclose(float(floor[0]) * 10 ** int(floor[1]), row["spectral_floor"], rel_tol=0.005)
+        # Also check every repeated numeric crossover in the actual abstract,
+        # crossover section and conclusion, rather than only the table vicinity.
+        all_coefficients = re.findall(r"([\d.]+)\\,T_\{\\rm eff\}", text)
+        assert len(all_coefficients) >= 3
+        expected = [row["omega_cross_over_TH"] for row in compute_bec_hierarchy().values()]
+        assert all(any(math.isclose(float(c), want, rel_tol=0.0008) for want in expected)
+                   for c in all_coefficients)
+        abstract = text.split(r"\begin{abstract}", 1)[1].split(r"\end{abstract}", 1)[0]
+        crossover_section = text.split(r"\label{sec:wkb-crossover}", 1)[1].split(r"\figuredeferred", 1)[0]
+        conclusion = text.split("The condensate delivers the crossover frequency", 1)[1].split(
+            "The Dirac fluid delivers", 1)[0]
+        for context, names in ((abstract, ("Heidelberg", "Steinhauer")),
+                               (crossover_section, ("Heidelberg", "Steinhauer")),
+                               (conclusion, ("Heidelberg",))):
+            claims = re.findall(r"([\d.]+)\\,T_\{\\rm eff\}", context)
+            assert len(claims) == len(names), "missing or wrong-unit crossover claim"
+            for coefficient, name in zip(claims, names, strict=True):
+                assert math.isclose(float(coefficient), compute_bec_hierarchy()[name]["omega_cross_over_TH"],
+                                    rel_tol=0.0008)
+        cutoffs = re.search(
+            r"\\omega_\{\\rm max\} = ([\d.]+)\\,T_H\$, \$([\d.]+)\\,T_H\$ and \$([\d.]+)\\,T_H",
+            section)
+        assert cutoffs, "missing bare-T_H cutoff comparison"
+        for name, cutoff in zip(("Heidelberg", "Steinhauer", "Trento"), cutoffs.groups(), strict=True):
+            platform = _BEC_FACTORIES[name]()
+            assert math.isclose(float(cutoff), platform.omega_max / platform.T_H, rel_tol=0.005)
+        assert check_d1_hierarchy_table().passed
+
+    def test_charter_binds_each_crossover_to_its_platform_and_thermal_scale(self):
+        text = (SK_ROOT / "docs/PAPER_STRATEGY.md").read_text()
+        d1_content = next(line for line in text.splitlines()
+                          if line.startswith("Content: SK-EFT corrections"))
+        for name, row in compute_bec_hierarchy().items():
+            claim = re.search(r"" + name + r"[^;()]*?([\d.]+) T_eff", d1_content)
+            assert claim, f"missing platform-specific thermal crossover: {name}"
+            assert math.isclose(float(claim[1]), row["omega_cross_over_TH"], rel_tol=0.0008)
+        assert "T_eff = kappa_eff(omega_x)/(2*pi)" in d1_content
+        assert "T_H = kappa/(2*pi)" in d1_content
