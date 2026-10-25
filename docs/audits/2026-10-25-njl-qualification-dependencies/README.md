@@ -6,6 +6,17 @@ inventory collector in linked worktrees. Earlier checkpoints repaired the D7
 citation regression and existing bounds, and composed existing metadata,
 managed-worktree and citation dependencies.
 
+## Latest lifecycle repair after df42dc90
+
+[The lifecycle repair](LIFECYCLE_REPAIR.md) replaces only three invalid Stage-10
+strings in D6/D8/D10 with the existing `pending-redo` value. All historical
+reviews, dates, notes and scientific requirements are conserved; no new verdict
+or finding closure is recorded. The baseline failure reproduces, then 82 scoped
+tests pass with one existing skip and the canonical ordering check passes across
+all 21 bundles. One previously failing fast-test identity now passes; the other
+16 remain from the preceding broad run and have not been rerun after this repair.
+Full CI/main and scientific acceptance remain open.
+
 ## Current claim bindings and inventory increment
 
 The [independent two-file claim review](CLAIM_BINDINGS_REVIEW.md) accepts the exact

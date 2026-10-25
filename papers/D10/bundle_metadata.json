@@ -172,7 +172,7 @@
   "target_journal": "PRD | PRX Quantum | J. Chem. Phys.",
   "phase7_subphase": "6BA-BC",
   "stage9_status": "pending",
-  "stage10_status": "redrafted-2026-08-17",
+  "stage10_status": "pending-redo",
   "stage13_status": "pending",
   "stage13_redo_required": true,
   "freshness_stale": true,

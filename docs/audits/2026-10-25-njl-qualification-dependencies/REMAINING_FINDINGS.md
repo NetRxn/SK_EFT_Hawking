@@ -1,5 +1,16 @@
 # Remaining qualification findings — October25
 
+## Latest lifecycle delta after df42dc90
+
+The D6/D8/D10 Stage-10 vocabulary defect reproduces and is repaired through the
+existing JSON writer: only the three invalid values change to `pending-redo`.
+Fresh review remains required and no verdict is invented. Complete state/order
+classes plus serializer/review-writer modules report 82 passes and one existing
+skip; the canonical no-memo ordering check passes for all 21 bundles. One of the
+17 previous fast failure identities now passes. The other 16 have not been
+rerun after this narrow repair. See [scope and actual receipts](LIFECYCLE_REPAIR.md).
+No scientific closure, main acceptance or full portfolio remeasurement follows.
+
 ## Current repair delta after ec53782f
 
 Two existing claim bindings are independently accepted. Three original grounded
