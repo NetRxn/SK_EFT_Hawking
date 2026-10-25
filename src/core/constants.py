@@ -1600,7 +1600,7 @@ BIBITEM_TITLE_DRIFT_CEILING = 7
 #: pushes the count over this ceiling, turning the check red. **Lower this as entries are
 #: established; back-filling `citation_class` onto the residue to lower it reproduces the very
 #: defect it records.**
-CITATION_UNDECLARED_CLASS_CEILING = 78
+CITATION_UNDECLARED_CLASS_CEILING = 75
 
 # ═══════════════════════════════════════════════════════════════════════
 # Axiom metadata — historical record (all axioms now removed)

@@ -10278,6 +10278,34 @@
         "enforced": true,
         "run_at": "2026-10-19"
       }
+    },
+    {
+      "finding_id": "review:2026-10-19-managed-worktree-paths:infra:1.1",
+      "status": "fixed",
+      "evidence": "Existing active-checkout target parser and workspace-owned cache invariant repaired using accepted9edf7c8f composition; original RED/GREEN and production controls independently reviewed in the whole24 review de345a5c. Exact declared Verify commands pass on current NJL candidate with prepared Python and unchanged populations/refusals. Existing43754623 extractor tmp_path isolation retained. This closes only the two portability defects; full merge qualification, physical BUILDs and inherited scientific/source propagation R1 remain open.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/SCOPED_REVIEW.md",
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+        "declared": "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-19-managed-worktree-paths:infra:1.2",
+      "status": "fixed",
+      "evidence": "Existing active-checkout target parser and workspace-owned cache invariant repaired using accepted9edf7c8f composition; original RED/GREEN and production controls independently reviewed in the whole24 review de345a5c. Exact declared Verify commands pass on current NJL candidate with prepared Python and unchanged populations/refusals. Existing43754623 extractor tmp_path isolation retained. This closes only the two portability defects; full merge qualification, physical BUILDs and inherited scientific/source propagation R1 remain open.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/SCOPED_REVIEW.md",
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py",
+        "declared": "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
     }
   ]
 }
