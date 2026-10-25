@@ -314,11 +314,11 @@ class TestFormulaTestCoverage:
         # a replacement must be STRONGER than what it replaces.
         #
         # The house idiom is a count frozen at what the corpus actually reaches, and
-        # lowered — never raised — when the debt shrinks. 35 of 347 formulas have
-        # bounds-only coverage today. If that grows, someone added a formula with no
+        # lowered — never raised — when the debt shrinks. If bounds-only coverage
+        # grows, someone added a formula with no
         # golden/identity test and this fires; if it shrinks, lower the number in the
         # same commit that earns it.
-        BOUNDS_ONLY_CEILING = 35
+        BOUNDS_ONLY_CEILING = 34
 
         assert len(bounds_only) <= BOUNDS_ONLY_CEILING, (
             f"{len(bounds_only)} of {covered} covered formulas have bounds-only "

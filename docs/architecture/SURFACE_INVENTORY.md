@@ -163,6 +163,10 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 
 ## Hooks — 7
 
+Git catalog lookup: `git-path:hooks`; observed target: `directory`.
+Git command cells are logical catalog locators, not hook body text or paths
+under this checkout. Manifest/file metadata does not establish runtime activation.
+
 | kind | event | matcher | command |
 |---|---|---|---|
 | claude-code | `PreCompact` | `*` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_precompact.py" 2>/dev/null || true` |
@@ -171,7 +175,7 @@ success; for a `blocked` default it is a blocker no evidence supports. Guarded b
 | claude-code | `PreToolUse` | `AskUserQuestion` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_question_guard.py" 2>/dev/null || true` |
 | claude-code | `PreToolUse` | `WebSearch|WebFetch` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_web_egress_guard.py" || printf '%s' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionR` |
 | claude-code | `PreToolUse` | `Bash` | `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_worker_shell_guard.py" || printf '{}'` |
-| git | `pre-commit` | `-` | `.git/hooks/pre-commit` |
+| git | `pre-commit` | `-` | `git-path:hooks/pre-commit` |
 
 ## Agents — 10
 
@@ -215,7 +219,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `constants.TRACKED_HYPOTHESIS_NON_LOAD_BEARING` | 0 |
 | `provenance.PARAMETER_PROVENANCE` | 211 |
 | `provenance.PAPER_DEPENDENCIES` | 17 |
-| `citations.CITATION_REGISTRY` | 664 |
+| `citations.CITATION_REGISTRY` | 678 |
 
 ## Publication roster — 21 bundles, 21 with declared apexes
 

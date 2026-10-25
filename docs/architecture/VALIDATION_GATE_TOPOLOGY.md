@@ -166,6 +166,13 @@ Until 2026-08-08 neither was true: nothing gated on the two fields and nothing w
 any `stage*_status`, so every green was a hand edit, which is how a bundle sat at
 `stage13_status: green` with `stage9_status: not_started`.
 
+**Inventory portability.** The existing inventory collector uses Git-resolved
+metadata anchored to the target checkout and its administrative identity. The
+[D1–D5 design](../superpowers/specs/2026-10-20-architecture-inventory-worktree-design.md)
+preserves the complete source and authentic-control contract. Catalog membership
+and manifest configuration do not establish runtime loading or enforcement.
+Current independent source and actual-evidence review remain required.
+
 ## 6. Field ownership — who writes what
 
 A recurring failure mode is a check telling you to run a script that cannot fix the field.

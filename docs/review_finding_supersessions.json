@@ -10263,6 +10263,77 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-08-12-substrate-lane-refile:substrate-lane-refile:1",
+      "status": "fixed",
+      "evidence": "Original critical NJL cutoff-cap mismatch repaired in ce4e0b28: checked uncapped roots or explicit refusal, all consumer propagation and residual regressions, independent numerical/native/whole12/whole18 reviews. Exact-real critical/cutoff/bracket bridge and declared complete120-case Verify support this scoped fix. See papers/AutomatedReviews/2026-10-19-njl-root-bracket-repair/SCOPED_REVIEW.md. Full40-failure/CI-floor/CI_SKIP/tree merge gates remain FAILED; no physical ADW, full IEEE, main or bundle acceptance.",
+      "superseded_by": null,
+      "date": "2026-10-19",
+      "commit": "ce4e0b2821d34e28883894cc1e12f033e99ac9cc",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "declared": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-19"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-19-managed-worktree-paths:infra:1.1",
+      "status": "fixed",
+      "evidence": "Existing active-checkout target parser and workspace-owned cache invariant repaired using accepted9edf7c8f composition; original RED/GREEN and production controls independently reviewed in the whole24 review de345a5c. Exact declared Verify commands pass on current NJL candidate with prepared Python and unchanged populations/refusals. Existing43754623 extractor tmp_path isolation retained. This closes only the two portability defects; full merge qualification, physical BUILDs and inherited scientific/source propagation R1 remain open.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/SCOPED_REVIEW.md",
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+        "declared": "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-19-managed-worktree-paths:infra:1.2",
+      "status": "fixed",
+      "evidence": "Existing active-checkout target parser and workspace-owned cache invariant repaired using accepted9edf7c8f composition; original RED/GREEN and production controls independently reviewed in the whole24 review de345a5c. Exact declared Verify commands pass on current NJL candidate with prepared Python and unchanged populations/refusals. Existing43754623 extractor tmp_path isolation retained. This closes only the two portability defects; full merge qualification, physical BUILDs and inherited scientific/source propagation R1 remain open.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/SCOPED_REVIEW.md",
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py",
+        "declared": "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-d7-current-theorem-regression:infra:1.1",
+      "status": "fixed",
+      "evidence": "Current K exact06c7d8eb two-path integration reproduces original1FAIL3PASS then7PASS for the declared complete citation class. Independent current source/generated-type/manuscript/control review48be8dcd accepts only this regression scope. Existing writer enforces the exact declared seven-test Verify; original numerical/proof/physicalB2 obligations and fullmodule149vs117 failure remain open. No new theorem or main/publication acceptance.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/D7_REVIEW.md",
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "declared": ".venv/bin/python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-25-njl-inventory-portability:infra:1.1",
+      "status": "fixed",
+      "evidence": "Independent whole source/intent f56d9c18, A1 readback788f1cbf, whole current baseline/control/export evidencebd197d56 and documentary readbackede326bb accepted. Existing Git-context inventory component preserves known shared pre-commit metadata; both real journalled production faults cause targeted RED and exact bytes/fullmode/nsmtime restoreGREEN with empty journal. Current mandatory registrations pass; full affected declared Verify is executed here. No hook activation, full-CI/main/scientific/publication acceptance or original physical BUILD closure is claimed. See docs/audits/2026-10-25-njl-qualification-dependencies/INVENTORY_REPAIR.md and immutable independent reports.",
+      "superseded_by": null,
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest -m '' tests/test_architecture_inventory.py tests/test_architecture_claims.py tests/test_validate_public_surface.py::TestExternalSurface -q",
+        "declared": ".venv/bin/python -B -m pytest -m '' tests/test_architecture_inventory.py tests/test_architecture_claims.py tests/test_validate_public_surface.py::TestExternalSurface -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
     }
   ]
 }
