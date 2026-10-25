@@ -10306,6 +10306,20 @@
         "enforced": true,
         "run_at": "2026-10-25"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-d7-current-theorem-regression:infra:1.1",
+      "status": "fixed",
+      "evidence": "Current K exact06c7d8eb two-path integration reproduces original1FAIL3PASS then7PASS for the declared complete citation class. Independent current source/generated-type/manuscript/control review48be8dcd accepts only this regression scope. Existing writer enforces the exact declared seven-test Verify; original numerical/proof/physicalB2 obligations and fullmodule149vs117 failure remain open. No new theorem or main/publication acceptance.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/D7_REVIEW.md",
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "declared": ".venv/bin/python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
     }
   ]
 }

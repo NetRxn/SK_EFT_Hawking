@@ -1,4 +1,29 @@
-# Remaining qualification findings — October25 current diagnostic
+# Remaining qualification findings — October25
+
+## Current repair delta after e340bf42
+
+The source-backed D7 regression and seven existing bound-maintenance failures
+have actual repaired controls and independent scoped acceptance. D7's test
+finding was canonically closed after its declared check passed. The count and
+vacuity ceilings are lower; the scored-population floor is higher. No check or
+scientific acceptance requirement was weakened.
+
+The other21 identities from the diagnostic below await fresh measurement after
+this increment; the whole-CI identity is also outstanding. The numeral check
+still reports33 discrepancies against31 in the retained canonical observation.
+Its predicate and ceiling are unchanged. Full merge qualification, original
+scientific BUILDs and the inherited MAJOR R1 remain OPEN.
+
+The complete56-command Verify-format proposal is DATA ONLY, unapplied and
+unaccepted. Canonical source now contains275 Verify lines, including the new D7
+finding, with the same56 malformed lines. Its static overlay has no malformed
+lines, but that is not an integrated result. Inverted D8 exit statuses, E2's
+peak-versus-plateau contradiction and workspace path, D7's mixed-main input and
+masked validator exit status, and other incomplete scientific proxies require
+substantive reconciliation. Preserve the original constructions and operator
+decision boundaries; do not obtain closure through a formatting pass.
+
+## Earlier diagnostic at e340bf42 — historical, not remeasured
 
 The next selected run measured29 failures in69.47s, with no tracked source byte
 changes. Ten other original failing identities passed in the complete affected

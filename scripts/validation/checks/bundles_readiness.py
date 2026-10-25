@@ -3383,7 +3383,8 @@ _CLAIM_NUMERAL_RE = re.compile(r"(?<![\w.^])(\d+\.\d+|\d{2,})(?![\w])")
 #: proving the quantity; never by widening the noise list above.
 APEX_CLAIM_NUMERAL_CEILING = 31
 
-#: Down-only floor on how many apex claims this check actually SCORES.
+#: Minimum scored apex population: increase to retain full measured coverage.
+#: A decrease requires a named population withdrawal or measurement rationale.
 #:
 #: MEASURED 2026-08-15: **639**, every declared apex across all 21 bundles, all of which
 #: resolve.
@@ -3411,7 +3412,7 @@ APEX_CLAIM_NUMERAL_CEILING = 31
 #: SAME declaration hours earlier; it was the ONE apex the two bundles shared, so the
 #: E1/E2 overlap is now zero — which is what the 2026-08-08 rejected-merge adjudication
 #: wants and had not got. Measured 634 across the 21 bundles before lowering.
-APEX_CLAIMS_SCORED_FLOOR = 634
+APEX_CLAIMS_SCORED_FLOOR = 636
 
 
 @register_check(
@@ -3637,7 +3638,7 @@ _APEX_VACUITY_DISCLOSURE_RE = re.compile(
 #: re-derived and PRINTED BY NAME on every run, disclosed and undisclosed alike, and no
 #: per-declaration exemption key exists to grant. Lower it by strengthening the theorem or
 #: by withdrawing the apex; never by adding a name anywhere.
-APEX_VACUITY_CEILING = 20
+APEX_VACUITY_CEILING = 19
 
 #: …of which the bundle's own `claims` string does not SAY the declaration is thin.
 #: **A RATCHET — it may only fall.**
@@ -3845,7 +3846,7 @@ def check_apex_claims_not_vacuous() -> CheckResult:
 
     # EVERY flagged row, by name, on every run. This is what makes the two ceilings
     # ratchets rather than suppression: nothing leaves the population, and a reader of
-    # the output can see exactly which twenty-one rows the number is made of.
+    # the output can see exactly which flagged rows the number is made of.
     for code, short, registers, disc in flagged:
         details.append(Detail(
             "apex_content_free", True,
