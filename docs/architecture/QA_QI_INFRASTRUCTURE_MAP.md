@@ -294,6 +294,14 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
 | `Lit-Search/Phase-*/primary-sources/<bibkey>.{pdf,abstract.txt,json}` | `back_fill_primary_sources.py` (`.pdf`/`.tex`/`.abstract.txt`) + `convert_inprep_citations.py` (self-deposit `.json` stubs) | **none** — additive; a cached source is never re-fetched. Per-bibkey fetch verdicts in the `docs/primary_sources_state.json` sidecar | **no** — an explicit acquisition run |
 
+**Git-hook catalog.** The existing inventory writer and freshness check own the
+metadata observation. The [D1–D5 design](../superpowers/specs/2026-10-20-architecture-inventory-worktree-design.md)
+binds Git's lookup to the target checkout and administrative context, preserves
+configured catalog membership and reports unreadable or foreign context explicitly.
+Stable logical locators keep private paths and hook bodies out of the census.
+Manifest registrations and on-disk metadata do not establish runtime activation.
+Current source, canonical baseline and actual-control review precede delivery.
+
 ⚠️ **`counts.json`'s key is a hybrid because an mtime-max is blind in one direction, and it
 shipped that way.** Deleting a file leaves every surviving file's mtime untouched, so the
 maximum does not move and the artifact reports fresh while publishing a count one too high —

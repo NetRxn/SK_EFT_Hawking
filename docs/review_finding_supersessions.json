@@ -10320,6 +10320,20 @@
         "enforced": true,
         "run_at": "2026-10-25"
       }
+    },
+    {
+      "finding_id": "review:2026-10-25-njl-inventory-portability:infra:1.1",
+      "status": "fixed",
+      "evidence": "Independent whole source/intent f56d9c18, A1 readback788f1cbf, whole current baseline/control/export evidencebd197d56 and documentary readbackede326bb accepted. Existing Git-context inventory component preserves known shared pre-commit metadata; both real journalled production faults cause targeted RED and exact bytes/fullmode/nsmtime restoreGREEN with empty journal. Current mandatory registrations pass; full affected declared Verify is executed here. No hook activation, full-CI/main/scientific/publication acceptance or original physical BUILD closure is claimed. See docs/audits/2026-10-25-njl-qualification-dependencies/INVENTORY_REPAIR.md and immutable independent reports.",
+      "superseded_by": null,
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest -m '' tests/test_architecture_inventory.py tests/test_architecture_claims.py tests/test_validate_public_surface.py::TestExternalSurface -q",
+        "declared": ".venv/bin/python -B -m pytest -m '' tests/test_architecture_inventory.py tests/test_architecture_claims.py tests/test_validate_public_surface.py::TestExternalSurface -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
     }
   ]
 }

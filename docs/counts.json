@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-19T12:56:26.519523",
+  "generated": "2026-10-25T10:15:55.434130",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-njl-integration-20261019/lean/lean_deps.json",
   "lean": {
     "total_declarations": 41065,
@@ -2081,7 +2081,7 @@
   "python": {
     "python_modules": 138,
     "test_files": 205,
-    "pytest_cases": 6970,
+    "pytest_cases": 7041,
     "notebooks": 91,
     "papers": 42,
     "figures": 170

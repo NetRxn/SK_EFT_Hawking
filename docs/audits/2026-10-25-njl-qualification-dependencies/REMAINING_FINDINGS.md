@@ -1,6 +1,43 @@
 # Remaining qualification findings — October25
 
-## Current repair delta after e340bf42
+## Current repair delta after ec53782f
+
+Two existing claim bindings are independently accepted. Three original grounded
+claim failures now pass; complete grounded/vacuity plus serializer coverage is
+82PASS1existingSKIP, with every tracked byte conserved. The numeral discrepancy
+population is31 at unchanged ceiling31. The original scientific findings and
+full-strength physical BUILDs are not closed by these metadata corrections.
+
+The existing inventory component now preserves the real Git catalog, with both
+authentic faults RED and exact restoration GREEN. Whole current-evidence review and documentary readback accept the source and
+controls. The existing closure writer successfully ran the declared check and
+recorded the narrow infra finding fixed, preserving all1238 previous records. Three full affected modules report156PASS and
+one existing numerical-literal FAIL:149 versus117. The current fast remeasurement below records17 remaining source failures, all
+from the earlier selected diagnostic; do not confuse the historical table with
+the complete fresh failure record.
+The inventory identity now has current passing evidence and independent narrow
+closure. This is not a newly-green bundle count.
+
+The complete56-command semantic enabling proposal remains DATA-only under
+independent review. Readout success cannot replace a substantive decider while
+BUILD is owed. No proposed command has run, and current public review source
+has not been replaced.
+
+## Current fast-suite remeasurement
+
+The configured default fast run reports7112PASS23FAIL9SKIP92DESELECT. Six
+sandbox-dependent failures pass in the same-source focused host-access rerun;
+17 source failures remain, all exact members of the original selected diagnostic.
+See [the complete current failure identities and scope](FAST_QUALIFICATION.json).
+This supersedes the earlier “not all remeasured” qualification for these17 fast
+identities. The original whole-CI/slow/native/full merge gates remain unrun.
+No new physical or bundle acceptance follows from this remeasurement.
+
+The count artifacts were synchronized afterward through their existing writer;
+only the Python case census and generated timestamp changed, and repeated writing
+is byte-stable. Original Lean/scientific counts and extraction bytes are conserved.
+
+## Prior repair delta after e340bf42 — ec53782f
 
 The source-backed D7 regression and seven existing bound-maintenance failures
 have actual repaired controls and independent scoped acceptance. D7's test

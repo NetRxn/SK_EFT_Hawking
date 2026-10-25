@@ -20,8 +20,8 @@ fact** and writes `docs/architecture/SURFACE_INVENTORY.md`. A check
 the inventory cannot silently drift from the system it describes.
 
 ⚠️ **Nothing here is hand-listed.** Every population below is read from the artifact that
-owns it — the check registry, the gate roster, the plugin manifest, the AST of the graph
-builder. If a section needs a literal, that is a defect in this script, not a shortcut to
+owns it — the check registry, the gate roster, the plugin manifest, Git-resolved
+hook-file metadata, the AST of the graph builder. If a section needs a literal, that is a defect in this script, not a shortcut to
 take: a hand-listed inventory of a system whose whole failure mode is silent drift would be
 the failure mode wearing a lab coat.
 """
@@ -30,6 +30,9 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import os
+import stat
+import subprocess
 import sys
 import re
 from pathlib import Path
@@ -135,8 +138,67 @@ def graph_types() -> dict:
     }
 
 
-def hooks() -> list[dict]:
-    """Claude-Code hooks from the plugin manifest, plus git hooks on disk."""
+def _git_query(args: list[str], *, env: dict[str, str] | None = None,
+               git_dir: Path | None = None) -> str:
+    """One bounded metadata query; refusal never becomes an empty catalog.
+
+    Do not include private absolute paths/config diagnostics in the public error.
+    """
+    command = ["git", "--no-optional-locks", "-C", str(PROJECT_ROOT)]
+    if git_dir is not None:
+        command += ["--git-dir", str(git_dir)]
+    command += ["rev-parse", *args]
+    try:
+        result = subprocess.run(command, env=env, capture_output=True,
+                                text=True, encoding="utf-8", timeout=10)
+    except (OSError, UnicodeError, subprocess.TimeoutExpired):
+        raise RuntimeError("Git hook metadata query unavailable") from None
+    if result.returncode:
+        raise RuntimeError("Git hook metadata query failed")
+    # Git paths may contain spaces, but a multi-line/empty/control-bearing answer
+    # is not an unambiguous catalog location. Do not strip valid path spaces.
+    value = result.stdout.removesuffix("\n")
+    if not value or any(ord(c) < 32 or ord(c) == 127 for c in value):
+        raise RuntimeError("Git hook metadata query returned an ambiguous path")
+    return value
+
+
+def _git_path(args: list[str], **kwargs) -> Path:
+    value = _git_query(args, **kwargs)
+    if not Path(value).is_absolute():
+        raise RuntimeError("Git hook metadata query requires absolute-path support")
+    try:
+        return Path(value).resolve()
+    except (OSError, RuntimeError):
+        raise RuntimeError("Git hook metadata path cannot be resolved") from None
+
+
+def _git_hook_directory() -> Path:
+    """Bind actual inherited context to an independent target-admin anchor.
+
+    Git resolves the explicit checkout .git entry; we do not parse a gitfile.
+    Only repository-location selectors are removed for this identity anchor,
+    never ordinary config/precedence. Actual queries retain the full environment.
+    Thus two equally redirected inherited answers cannot validate each other.
+    """
+    anchor_env = dict(os.environ)
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"):
+        anchor_env.pop(name, None)
+    anchor = _git_path(["--resolve-git-dir", str(PROJECT_ROOT / ".git")],
+                       env=anchor_env)
+    common = _git_path(["--path-format=absolute", "--git-common-dir"],
+                       env=anchor_env, git_dir=anchor)
+    actual_top = _git_path(["--path-format=absolute", "--show-toplevel"])
+    actual_dir = _git_path(["--absolute-git-dir"])
+    actual_common = _git_path(["--path-format=absolute", "--git-common-dir"])
+    if (actual_top != PROJECT_ROOT.resolve() or actual_dir != anchor
+            or actual_common != common):
+        raise RuntimeError("Git hook metadata belongs to a foreign repository context")
+    return _git_path(["--path-format=absolute", "--git-path", "hooks"])
+
+
+def _plugin_hooks() -> list[dict]:
+    """Public manifest rows, preserving their original membership and values."""
     out: list[dict] = []
     manifest = PLUGIN / "hooks" / "hooks.json"
     if manifest.exists():
@@ -151,14 +213,46 @@ def hooks() -> list[dict]:
                                 "matcher": entry.get("matcher", "*"),
                                 "command": h.get("command", "")[:200],
                                 "timeout": h.get("timeout")})
-    git_hooks = PROJECT_ROOT / ".git" / "hooks"
-    if git_hooks.is_dir():
-        for f in sorted(git_hooks.iterdir()):
-            if f.is_file() and not f.name.endswith(".sample"):
-                out.append({"kind": "git", "event": f.name,
-                            "matcher": "-", "command": str(
-                                f.relative_to(PROJECT_ROOT)), "timeout": None})
     return out
+
+
+def _hook_inventory() -> tuple[list[dict], dict[str, str]]:
+    """Catalog configuration/file metadata only, never activation or hook bodies."""
+    out = _plugin_hooks()
+    directory = _git_hook_directory()
+    context = {"lookup": "git-path:hooks", "directory_state": "directory"}
+    try:
+        initial = directory.stat()
+    except FileNotFoundError:
+        context["directory_state"] = "absent"
+        return out, context
+    except NotADirectoryError:
+        context["directory_state"] = "non-directory"
+        return out, context
+    except OSError:
+        raise RuntimeError("Git hook catalog metadata is unreadable") from None
+    if not stat.S_ISDIR(initial.st_mode):
+        context["directory_state"] = "non-directory"
+        return out, context
+    try:
+        for entry in sorted(directory.iterdir()):
+            info = entry.stat()  # follows symlink metadata, never reads its body
+            if stat.S_ISREG(info.st_mode) and not entry.name.endswith(".sample"):
+                out.append({"kind": "git", "event": entry.name,
+                            "matcher": "-", "command": "git-path:hooks/" + entry.name,
+                            "timeout": None})
+        final = directory.stat()
+    except OSError:
+        raise RuntimeError("Git hook catalog could not be read completely") from None
+    identity = lambda x: (x.st_dev, x.st_ino, x.st_mtime_ns, x.st_ctime_ns)
+    if identity(initial) != identity(final):
+        raise RuntimeError("Git hook catalog changed during observation")
+    return out, context
+
+
+def hooks() -> list[dict]:
+    """Public plugin and Git-resolved on-disk catalog; not an activation verdict."""
+    return _hook_inventory()[0]
 
 
 def _frontmatter(path: Path) -> dict:
@@ -273,9 +367,10 @@ def bundles() -> list[dict]:
 
 
 def collect() -> dict:
-    return {"checks": checks(), "gates": gates(), "graph": graph_types(),
-            "hooks": hooks(), **agents_and_commands(),
-            "registries": registries(), "bundles": bundles()}
+    inventory = {"checks": checks(), "gates": gates(), "graph": graph_types()}
+    rows, context = _hook_inventory()  # one observation for rows and context
+    return {**inventory, "hooks": rows, "git_hook_context": context,
+            **agents_and_commands(), "registries": registries(), "bundles": bundles()}
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -381,6 +476,12 @@ def render(inv: dict) -> str:
 
     h = inv["hooks"]
     a(f"## Hooks — {len(h)}")
+    a("")
+    context = inv["git_hook_context"]
+    a(f"Git catalog lookup: `{context['lookup']}`; observed target: "
+      f"`{context['directory_state']}`.")
+    a("Git command cells are logical catalog locators, not hook body text or paths")
+    a("under this checkout. Manifest/file metadata does not establish runtime activation.")
     a("")
     a("| kind | event | matcher | command |")
     a("|---|---|---|---|")
