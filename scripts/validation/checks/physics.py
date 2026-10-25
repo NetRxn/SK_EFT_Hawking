@@ -576,6 +576,9 @@ def check_f_hierarchy_claims() -> CheckResult:
     corrected sentences PASS. The polariton (−19 %) and graphene (−2.8 %)
     values are deliberately NOT matched here: they belong to other
     platforms/modules and would false-positive against the Heidelberg row.
+    The spectral-floor item must carry the complete thermal Planck law,
+    its dressed-temperature definition and the crossover's leading and
+    result scales; numerical proximity to a bare-T_H coefficient is insufficient.
     """
     import re as _re
     import math as _math
@@ -627,33 +630,57 @@ def check_f_hierarchy_claims() -> CheckResult:
         details.append(Detail(label, ok, msg))
         all_pass = all_pass and ok
 
-    # Crossover sentence: ω_× = T_H ln(1 + 1/δ_diss) ≈ Y T_H.
-    #
-    # ⚠️ SUPERSEDED FORM: this required `ln(2/δ_diss)` and asserted Y against a
-    # re-derived `log(2.0 / δ_diss)`. Both were wrong by exactly ln 2 — the FDR
-    # floor is δ_diss, not δ_diss/2, because the halving is already inside
-    # `WKBConnection.noise_floor_eq_delta_diss` (`noiseFloor p = Gamma_H/kappa`).
-    # The sibling `d1_hierarchy_table` carried the identical defect, so the two
-    # gates corroborated each other while both were wrong, and a Stage-13
-    # REQUIRED that flagged it in May 2026 went unclosed three times because
-    # fixing the papers would have turned both gates red.
-    #
-    # Y is now compared against the evaluator's own `omega_cross_over_TH`, so
-    # the formula lives in exactly one place and this check cannot drift from it.
-    cm = _re.search(
-        r"\\ln\\!?\s*\\left\(\s*1\s*\+\s*1/\\delta_\{\\mathrm\{diss\}\}\s*\\right\)"
-        r"\s*\\approx\s*([\d.]+)\\,\s*T_H", text)
+    # Bind the physical law and units within the actual spectral-floor item.
+    # The legacy omega_cross_over_TH key is omega_x/T_eff, not omega_x/T_H.
+    # Numeric proximity at the unchanged tolerance cannot decide that identity.
+    from validation._tex import _strip_tex_comments
+
+    visible = _strip_tex_comments(text)
+    floor_items = list(_re.finditer(
+        r"\\item\s+\\textbf\{Spectral floor at\b.*?(?=\\item\b|\\end\{enumerate\}|\Z)",
+        visible, _re.DOTALL))
+    floor_text = floor_items[0].group(0) if len(floor_items) == 1 else ""
+    compact = _re.sub(r"\s+", "", floor_text)
+    identities = [
+        ("heidelberg.planck",
+         r"$\left(e^{\omega/T_{\rm eff}(\omega)}-1\right)^{-1}$"),
+        ("heidelberg.thermal_scale",
+         r"$T_{\rm eff}(\omega) = \kappa_{\rm eff}(\omega)/(2\pi)$"),
+        ("heidelberg.bare_scale", r"$T_H = \kappa/(2\pi)$"),
+        ("heidelberg.noise_floor",
+         r"$n_{\mathrm{noise}} = \delta_k/2 = (2\Gamma_H/\kappa)/2 = \Gamma_H/\kappa = \delta_{\mathrm{diss}}$"),
+    ]
+    for label, identity in identities:
+        ok = _re.sub(r"\s+", "", identity) in compact
+        details.append(Detail(label, ok,
+                              "expected thermal/floor identity present" if ok else
+                              "expected identity missing or wrong in the unique spectral-floor item"))
+        all_pass = all_pass and ok
+
+    # Require the entire equality, including its leading thermal factor and
+    # result units, rather than matching a logarithm followed by any close value.
+    prefix = _re.sub(r"\s+", "",
+        r"$\omega_\times = T_{\rm eff}(\omega_\times) \ln\!\left(1 + 1/\delta_{\mathrm{diss}}\right) \approx")
+    suffix = _re.sub(r"\s+", "", r"\, T_{\rm eff}(\omega_\times)$")
+    cm = _re.search(_re.escape(prefix) + r"([\d.]+)" + _re.escape(suffix), compact)
     if not cm:
         details.append(Detail(
             "heidelberg.crossover", False,
-            "expected ω_× = T_H ln(1 + 1/δ_diss) ≈ Y T_H sentence not found. NOTE: "
-            "the ln(2/δ_diss) form is SUPERSEDED and incorrect; if the draft still "
-            "carries it, the draft is what must change."))
+            "expected omega_x = T_eff(omega_x) ln(1 + 1/delta_diss) "
+            "approximately Y T_eff(omega_x) in the unique spectral-floor item; "
+            "bare T_H, a halved floor or a partial/mixed-scale law is not this observable"))
         all_pass = False
     else:
         y_ok, y_msg = _rel_ok(float(cm.group(1)), heid["omega_cross_over_TH"])
         details.append(Detail("heidelberg.crossover", y_ok, y_msg))
         all_pass = all_pass and y_ok
+
+    heading = _re.search(
+        r"\$\\omega_\\times\\simeq([\d.]+)\\,T_\{\\rmeff\}\$forHeidelberg", compact)
+    heading_ok, heading_msg = _rel_ok(float(heading.group(1)) if heading else None,
+                                    heid["omega_cross_over_TH"])
+    details.append(Detail("heidelberg.crossover_heading", heading_ok, heading_msg))
+    all_pass = all_pass and heading_ok
 
     return CheckResult(passed=all_pass, details=details)
 
