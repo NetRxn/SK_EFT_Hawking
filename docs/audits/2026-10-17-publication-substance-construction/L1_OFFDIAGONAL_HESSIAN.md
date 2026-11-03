@@ -31,3 +31,11 @@ On a 2×2×1×1 torus with separate time and propagation axes, set g₁ = g₂ =
 The [exact composition check](l1_time_space_source_control.py) uses the previously reviewed longitudinal Q₄, with Q₄(1,1) = 6477/32, and the exact local transverse moments. At t = s = 1 and h = k = 0, the time-separated mixed two-point derivative is zero and the mixed fourth derivative of log Z is 864/2159. A local trace-only control gives zero for both separated derivatives and 6/43 for the local second derivative. The fourth derivative is in once-pair source coordinates and is multiplied by four for Frobenius-unit cross sources.
 
 Independent review checked factorization, saturation, the prior polynomial, and exact derivatives. This is an externally sourced, zero-interaction fourth cumulant. The interacting source-free two-point response and transport extraction remain open.
+
+## Interacting pure-g₂ support and one-point symmetry
+
+At zero sources and g₁ = 0, the [four-site support enumeration](l1_interacting_support.py) tracks site saturation and center charge of actual links, including repeated link occurrences. It finds 73,295,320 ordered normalization candidates at degree eight. For the degree-six cross numerator, the same-site, nearest time, nearest space, and diagonal support counts are 51,930, 0, 0, and 92,160. Empty support proves an exact numerator zero. Positive counts bound candidate support and still require coefficient evaluation.
+
+Conjugate every link and transform both Grassmann factors by the constant Pin matrix γ₄. This exchanges chiral Haar factors and preserves the Berezin measure. The internal frame rotation has determinant −1, leaves metric sources invariant, and flips γ₅ in the conjugated action trace. Hence the odd pure-g₂ coefficients vanish even with arbitrary metric sources. In particular both degree-seven one-point numerators vanish. With g₁ present the symmetry reverses both couplings together.
+
+Independent review reran the support enumeration and checked the Pin change of variables. The connected nearest cross response is zero wherever the full source-free normalization is nonzero. The support count alone does not establish that domain. Nonlocal surviving coefficients, full normalization and physical transport remain open.
