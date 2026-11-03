@@ -22,3 +22,36 @@ The countercontrol applies to finite Euclidean samples in this spectral class. T
 ## Independent review
 
 The independent adversarial reviewer `/root/l1_transport_review` verified the causal sign and time kernel, exact atom example, scaled Cauchy invertibility, and positive band compensation. The result is existential for admissible positive spectra with matched contacts. Physical tensor realization and the L1 transport finding remain open.
+
+## Positive transfer test for the literal four-site plus channel
+
+Take either extended axis as Euclidean time, with spacing `a` and
+period `2a`. Use the two spatial sites and the same Hermitian matched
+plus operator at both times, in the time-reflection-even channel, with a common nonzero real source factor.
+The reviewed nearest-time plus numerator vanishes. Translation gives
+the same diagonal-separation numerator in both off-diagonal entries.
+The Pin symmetry kills the one-point term. At real nonzero `g2` and
+where the source-free denominator `Z` is nonzero, the connected
+cross-time matrix therefore has zero diagonal and off-diagonal
+`d = (-3113/27648) g2^6/Z` times the squared source factor.
+
+A positive thermal transfer representation requires this matrix to be
+positive semidefinite. For a spatial linear combination `O_f` of
+centered operators, its quadratic form is
+`Tr(e^(-aH) O_f† e^(-aH) O_f)/Z_thermal`, the squared Hilbert–Schmidt
+norm of `e^(-aH/2) O_f e^(-aH/2)` divided by `Z_thermal > 0`.
+A positive semidefinite matrix with zero diagonal has zero
+off-diagonal entries. Here `d` is nonzero for every finite nonzero
+`Z`. Coincident-time contact subtractions cannot alter the half-period
+matrix. If the literal denominator vanishes, its normalized connected
+response is undefined.
+
+This obstruction applies to the literal pure-g₂ torus channel with
+the specified matching. It leaves physical operator mixing, a different
+regulator or state, and the continuum response as separate construction
+tasks. See the [exact numerator and nearest-time controls](L1_OFFDIAGONAL_HESSIAN.md).
+
+Independent review verified the half-period Gram identity, translation,
+the exact numerator inputs and the support of allowed contact terms.
+The obstruction applies for either sign of a real denominator and
+also excludes a complex off-diagonal entry in the symmetric matrix.
