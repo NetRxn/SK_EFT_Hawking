@@ -239,6 +239,37 @@
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-deregister-2026-11-03T16:46:26Z",
       "notes": "The first-order lift uses DissipativeCorrection as a topic label for Eq. delta-diss. Both the original and current drafts cite SecondOrderSK.deltaDissFromTransport_eq, whose exact owner is already registered. The historical lift and current claim remain recorded."
+    },
+    {
+      "date": "2026-11-03T18:44:32Z",
+      "source_paper": "paper1_first_order",
+      "lift_action": "Reconcile module registration",
+      "bundle_section_inserted": "sec:eft-disp",
+      "insertion_point_hint": "sec:eft-disp",
+      "new_top_level_section": false,
+      "new_section_rationale": "",
+      "lean_modules_referenced": [
+        "SKEFTHawking.KappaScaling"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-11-03T18:44:32Z",
+      "notes": "Register the exact owner cited by the D1 dispersive subsection for the adopted model, its quadratic scaling and bound."
+    },
+    {
+      "date": "2026-11-03T18:44:32Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "DispersiveCorrection"
+      ],
+      "deregistration_rationale": "The historical first-order lift used a topic label. The manuscript cites SKEFTHawking.KappaScaling for the adopted model, its quadratic scaling and bound. The physical derivation is a separate open obligation.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-03T18:44:32Z",
+      "notes": "The historical first-order lift used a topic label. The manuscript cites SKEFTHawking.KappaScaling for the adopted model, its quadratic scaling and bound. The physical derivation is a separate open obligation."
     }
   ]
 }
