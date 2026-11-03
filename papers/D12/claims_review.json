@@ -4393,7 +4393,7 @@
     "Gate9_NumericalFreshness"
    ],
    "rewrite_of": null,
-   "tombstone": false,
+   "tombstone": true,
    "bundle_destination": "D12",
    "bundle_section_hint": "responsivity-and-noise-floors",
    "lift_action": "Lift-section",
@@ -4407,6 +4407,41 @@
     "completeness": "full"
    },
    "delta_pct": 0.0
+  },
+  {
+   "id": "sentence:D12:responsivity-and-noise-floors:1d300282",
+   "raw_id_parts": {
+    "paper": "D12",
+    "section_slug": "responsivity-and-noise-floors",
+    "quote_hash": "1d300282",
+    "hash_algorithm": "sha256_first_8"
+   },
+   "section": "responsivity-and-noise-floors",
+   "section_ordinal": 13,
+   "tex_line_start": 441,
+   "tex_line_end": 445,
+   "quote": "For $1 + \\mathcal{L} \\neq 0$, the corrected result is \\begin{equation} \\mathrm{NEP}_J \\;=\\; |1 - \\mathcal{L}|\\cdot \\mathrm{NEP}_J^{\\rm naive}, \\end{equation} formalized as \\thm{johnsonNEP\\_eq\\_abs\\_one\\_sub\\_loopGain\\_mul\\_naive}.",
+   "quote_normalized": "for $1 + \\mathcal{l} \\neq 0$, the corrected result is \\begin{equation} nep_j \\;=\\; |1 - \\mathcal{l}|\\cdot nep_j^{\\rm naive}, \\end{equation} formalized as \\thm{johnsonnep\\_eq\\_abs\\_one\\_sub\\_loopgain\\_mul\\_naive}.",
+   "type": "numeric",
+   "finding_classes": [],
+   "agent_verdict": "INFO",
+   "agent_notes": "Author re-anchor pending independent claim review. The explicit condition matches the nonzero denominator premise of the indexed Lean statement.",
+   "agent_run_id": "publication-r6-d12-johnson-premise:65a0df23",
+   "gates_invoked": [],
+   "rewrite_of": "sentence:D12:responsivity-and-noise-floors:bae3e554",
+   "tombstone": false,
+   "bundle_destination": "D12",
+   "bundle_section_hint": "responsivity-and-noise-floors",
+   "lift_action": "Lift-section",
+   "chain_proposed": {
+    "links": [
+     {
+      "kind": "theorem",
+      "target": "SKEFTHawking.Electrothermal.ETFModel.johnsonNEP_eq_abs_one_sub_loopGain_mul_naive"
+     }
+    ],
+    "completeness": "partial"
+   }
   },
   {
    "id": "sentence:D12:responsivity-and-noise-floors:ed305ed6",
