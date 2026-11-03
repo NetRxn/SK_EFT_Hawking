@@ -915,3 +915,54 @@ gives `3150767387/8100` for the partial normalization and
 small-component sums await independent reproduction. There are
 2,425 normalization words and 1,046 cross-weight words outside
 this elimination, so the partial signs do not settle either full sum.
+
+After private elimination, the remaining words group by the
+number of distinct plaquettes still coupled. Two plaquettes
+remain in 1,488 normalization words and 544 cross-weight words.
+Four remain in 425 and 214, respectively. Eight remain in 512
+and 288. In the two-plaquette group the cross support is 368
+correlated-eight, 32 correlated-six, 64 same-singleton
+mixed-chain and 80 small-component words. A shared-link
+two-plaquette kernel would therefore address more than half
+the remaining cross support. This census does not determine
+which of those contractions are equal after tree fixing.
+
+The same-singleton mixed-chain block also transfers by a separate
+conditional law. With fixed transverse links X,Y and private
+extended Haar link U, the literal plaquette is `U Y U† X†`
+and the closed one is `X† U† Y U`. Both conjugates of Y have
+the same conjugation-invariant law. Moving X† from left to right
+conjugates the random factor by X and preserves that law. The
+two private extended links are independent, so the conditional
+joint moment agrees at fixed shared transverse links. Independent
+incidence review found the extended links absent from every
+coframe and other plaquette in all 128 words. The remaining
+singleton commutator is private. The same-singleton normalization
+163 and weighted cross subtotal 326 therefore transfer. Together
+with the opposite-singleton results the full mixed-chain sector
+contributes 325 and 2, respectively, in the closed ordering.
+
+Adding the private-conjugator rule to the iterative incidence
+pass selects 5,778 of 6,451 normalization words and 1,868 of
+2,160 cross-weight words. For a mixed plaquette with one
+extended and one collapsed axis, the added rule requires that
+its extended link occurs only in that plaquette, exactly twice.
+It selects all small-component, mixed-chain and correlated
+words, 60 of 64 checkerboard words, and four source-neutral
+mixed-cycle words, in addition to the earlier full sectors.
+The remaining 292 cross-weight words are 128 plaquette-wire,
+160 mixed-cycle and four checkerboard. Independent enumeration reproduced these totals and all
+remaining sector counts.
+
+For the all-local word, the transverse coframe saturation is
+unchanged. The curvature dependence is the same character
+polynomial on each time-space plaquette in either ordering.
+The exposed-link criterion for proper face subsets is unchanged.
+For the full adjoint surface, an explicit index scan assigned a
+cyclic trace index at each face corner. Each shared link identifies
+the two pairs of indices in opposite orientation and contributes
+1/3. Both matrix orders give four free index loops from eight
+link integrations, hence factor 3⁴/3⁸ = 1/81. The normalization
+contribution 104978 therefore transfers to the closed ordering.
+Its shear weights vanish. Independent review obtained the same
+closed-order result by Schur orthogonality on the periodic cell complex.
