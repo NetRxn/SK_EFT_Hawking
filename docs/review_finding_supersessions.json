@@ -10739,6 +10739,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-05-31-bundle-stage13:D8:1.1",
+      "status": "fixed",
+      "evidence": "Independent review traced the original rename through D8 citation, bibliography, D4 and registry. Scratch BibTeX resolved AharonovArad2011 to the consistent 2011 article, DOI and arXiv identity. Fixed-state verification checks active consumers and leaves historical receipts intact. The separate Hietala carryover remains open.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "d83ff8b6",
+      "verified_by": {
+        "command": "python3 -B -c 'import re; from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; read=lambda p:re.sub(r\"(?m)^\\s*%.*$\",\"\",Path(p).read_text()); k=\"AharonovArad2011\"; old=\"AharonovArad2017\"; t=read(\"papers/D8/paper_draft.tex\"); b=read(\"papers/D8/bibliography.bib\"); keys={x.strip() for group in re.findall(r\"\\\\cite\\{([^}]+)\\}\",t) for x in group.split(\",\")}; entry=b.split(\"@article{\"+k+\",\"); assert k in keys and old not in keys and r\"\\bibliography{bibliography}\" in t and len(entry)==2; row=entry[1].split(\"\\n}\",1)[0]; assert re.search(r\"year\\s*=\\s*\\{2011\\}\",row) and r[k][\"doi\"] in row and r[k][\"arxiv\"] in row and r[k][\"year\"]==2011 and old not in r; d4=read(\"papers/D4/paper_draft.tex\"); assert d4.count(r\"\\bibitem{\"+k+\"}\")==1 and old not in d4'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
