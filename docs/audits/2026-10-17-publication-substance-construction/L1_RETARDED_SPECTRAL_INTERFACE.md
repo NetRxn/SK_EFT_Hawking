@@ -604,3 +604,45 @@ the separate contact and product totals, and the compatibility
 ratio. The replay independently computed occurrence squares and
 ordered-pair weights before symmetry reduction and reused the
 existing exact kernels. This verifies the scalar finite pair.
+
+### Coframe-only variation versus simultaneous pullback
+
+Write the local continuum-form curvature term as the wedge
+contraction `ε^{klμν} F_{kl} T_μ T_ν`, with internal contractions
+suppressed. For a world-index matrix A acting on each covariant
+slot, transform both `T → AT` and `F → AFAᵀ`. The contraction
+then gains exactly `det A`, by the four-index alternating-tensor
+identity. With `A=exp(jE)` and traceless E this gives zero first and
+second derivatives pointwise. For diagonal E the same check is
+termwise: the curvature multiplier is
+`exp(j(λ_k+λ_l))`, the coframe multiplier is its inverse, and
+their product is one.
+
+This is an algebraic pullback control. At finite lattice spacing,
+plaquette holonomies need a separately specified response to a
+physical background metric. The fixed-holonomy dressed operator
+varies only the coframe slots and gives the nonzero response
+calculated above. The simultaneous pullback calculation therefore
+identifies a curvature variation that would cancel it. Physical
+matching must derive which curvature response the regulator
+actually implements. Independent review verified the alternating
+tensor identity and this distinction.
+
+A geometric test of this control is to keep a smooth connection
+one-form fixed and move the edges of an infinitesimal plaquette.
+For constant diagonal A, its k,l tangent vectors become
+`a exp(jλ_k) e_k` and `a exp(jλ_l) e_l`. The leading holonomy
+increment is their oriented area times the curvature component,
+`a² exp(j(λ_k+λ_l)) F_{kl}`, with errors of order a³ for smooth
+bounded connection and curvature derivatives near the base point.
+Thus moving the edges produces the compensating curvature
+multiplier at leading order if the coframes are also evaluated
+on the moved tangent basis. This tests a geometric change of
+basis at fixed fields. It does not specify the functional variation
+at fixed lattice coordinates, including the measure and regulator,
+needed for a physical stress operator. The two constructions
+can already differ in their leading response. Independent review
+verified the area factor for the oriented loop convention. Bounds on
+source derivatives require a remainder uniform with its first two
+source derivatives. The pointwise small-loop estimate supplies no
+bound on the integrated quantum response.
