@@ -288,3 +288,25 @@ and the mixed two-point numerator has degrees 0, 2. The
 connected response is therefore even in g₁ and differs from the
 pure-g₂ response by O(g₁²) at fixed nonzero g₂. Computing the
 allowed coefficients would give a quantitative sign domain. Independent review verified the Pin premise and the parity refinement.
+
+### Coefficient certificate for the finite-volume interval
+
+Write `x = g₁/g₂²` and `y = x²`. After extracting the powers of g₂,
+write the partition polynomial as `z(y) = z₀ + z₂y + z₄y²`, the
+mixed second derivative as `u(y) = u₀ + u₂y`, and the two first
+derivatives as `x v(y)` and `x w(y)`, with v and w linear in y.
+The normalized response is `g₂⁻² P(y)/z(y)²`, where
+`P = zu − yvw` has degree at most three and `P(0) < 0`.
+
+This also gives a certificate without assuming reality away from
+zero. Form the real polynomial
+`Q(y) = Re[P(y) conjugate(z(y))²]`, with `Q(0) < 0`.
+Let `S_z` be the sum of the absolute nonconstant coefficients of
+z and `S_Q` the corresponding sum for Q. For
+`0 ≤ y ≤ min(1, z₀/(2S_z), |Q(0)|/(2S_Q))`, omit any ratio with
+zero denominator. Then `|z(y)| ≥ z₀/2` and `Q(y) ≤ Q(0)/2 < 0`,
+by bounding each positive power of y by y. The response has
+negative real part because its real part is `g₂⁻² Q(y)/|z(y)|⁴`.
+The certificate requires the actual coefficients or verified
+upper bounds on the two sums. No numerical radius is claimed.
+Independent review verified the coupling powers and the real-part bound.
