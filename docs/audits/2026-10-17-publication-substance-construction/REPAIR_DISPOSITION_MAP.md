@@ -192,8 +192,13 @@ with a derived physical source and regulator, tested on the
 retained observable span. The pure-g₂ cross term between the
 composite and dressed sources vanishes by Pin. The assigned
 [leading mixed-coupling contraction](l1_mixed_g1_support.py)
-has 96 nonzero tagged support terms before Haar–Berezin
-evaluation. Its amplitude tests the two finite sources' overlap.
+has 24 candidate terms after exact source-link and transport
+cancellations. The cubic term is independently excluded. The
+[determinant tensor](l1_mixed_g1_determinant_tensor.cpp) is
+reproducible at `4ebd86673`. The reference worker owns the first
+curvature center and final join. A separate worker owns the second
+curvature center. The mixed amplitude tests the two finite sources'
+overlap and requires independent review after assembly.
 Physical normalization and the B3 susceptibility window remain
 separate acceptance requirements.
 
