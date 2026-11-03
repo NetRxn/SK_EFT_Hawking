@@ -403,3 +403,19 @@ This identity leaves the signed magnitude to the contraction.
 
 Independent review reran the symbolic control and verified the
 sitewise top exterior change of variables.
+
+## Uniform mixed-plane cycle
+
+The [edge tensor](l1_normalization_uniform_mixed_edge.py) integrates the
+degree-four curvature/transport link jointly and the curvature-only
+link by its second moment. The [cycle contraction](l1_normalization_uniform_mixed_trace.py)
+saturates each site against its singleton frame moments and evaluates
+the signed sparse trace for both possible common singleton axes.
+The run reproduces 32 words and exact subtotal `6947573/884736`.
+The intermediate sparse products are bounded before signed 64-bit
+arithmetic, and the final trace uses arbitrary-precision integers.
+Independent review reproduced the 32 disjoint incidences from the
+physical edge-anchor choices, and checked the world signs, trace
+multiplicities and integer bounds. A [direct quartic control](l1_normalization_uniform_mixed_control.py)
+matches all 64 exterior terms in each of four edge polynomials.
+This leaves 704 unevaluated words.
