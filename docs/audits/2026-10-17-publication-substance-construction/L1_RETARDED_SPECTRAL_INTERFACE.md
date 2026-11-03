@@ -129,3 +129,10 @@ requires a strict inequality and independently fixed static weight
 has zero bare second derivative. The contact in this bound is a
 separate matching term whose coefficient must follow from the
 physical source coupling.
+
+The full bare staggered equal-time value is now
+`A_raw = α² (10179913/32)/(D g₂²)`. With zero matched contact the
+ratio `B/A_raw = 3113/8795444832` lies strictly between zero and one.
+Thus the bare projected pair admits a finite-gap scalar thermal
+realization. The actual matched contact, operator, static component,
+and physical state still require independent construction.

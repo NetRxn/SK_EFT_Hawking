@@ -547,3 +547,12 @@ totaling `1134`. Independent reruns verified both disjoint sectors
 and the signed joins. Together they complete all 145 source-decoupled
 words with exact subtotal `318843`. The remaining 40 words require
 the joint source kernel and correlated action contraction.
+
+The [coupled source evaluator](l1_equal_time_coupled.py) covers the
+last 40 words. Four direct quaternion quadrature checks reproduce
+the reduced center tensor in both scalar and vector channels
+([control](l1_equal_time_center_control.py)). Independent exact
+reruns give coupled subtotal `-23063/32`. The preliminary zero
+receipt projected out the outer site before including both central
+frames and is superseded. The full bare equal-time numerator is
+`(10179913/32) g₂⁶` across all 185 words.
