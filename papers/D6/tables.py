@@ -26,8 +26,12 @@ _ADVERSARIAL_PAIRS = (
 )
 
 
+def _adversarial_count():
+    return sum(sum(row) for row in _ADVERSARIAL_PAIRS)
+
+
 def _count_rows():
-    adversarial = sum(sum(row) for row in _ADVERSARIAL_PAIRS)
+    adversarial = _adversarial_count()
     # AGP omit the first two location types when storage faults are neglected.
     no_storage = sum(sum(row[2:]) for row in _ADVERSARIAL_PAIRS[2:])
     # Eq. (19) absorbs the cubic term, then Eq. (35) conditions on acceptance.
@@ -82,4 +86,32 @@ TABLES = {
             ('\\verb|AGP/Threshold|', 'Eqs.~\\eqref{eq:threshold-def},~\\eqref{eq:threshold-numeric}'),
         ],
     ),
+}
+
+
+# AGP Eq. (45), in units of 10^-5.
+_DEPOLARIZING_LEVEL_ONE_MANTISSA = 9.376
+
+
+SCALARS = {
+    "agp_pair_inverse": {
+        "description": "Reciprocal of the AGP Eq. (31) pair count, rounded",
+        "value": lambda: rf"{1e5 / _adversarial_count():.3f} \times 10^{{-5}}",
+    },
+    "agp_theorem3_threshold": {
+        "description": "AGP 2006 Theorem 3 guaranteed threshold",
+        "value": r"2.73 \times 10^{-5}",
+    },
+    "agp_eq36_threshold": {
+        "description": "AGP 2006 Eq. (36) stated threshold lower bound",
+        "value": r"2.739 \times 10^{-5}",
+    },
+    "agp_eq45_depolarizing": {
+        "description": "AGP 2006 Eq. (45) level-one depolarizing estimate",
+        "value": lambda: rf"{_DEPOLARIZING_LEVEL_ONE_MANTISSA:.3f} \times 10^{{-5}}",
+    },
+    "agp_eq45_depolarizing_rounded": {
+        "description": "AGP 2006 Eq. (45) level-one estimate, rounded for the caption",
+        "value": lambda: rf"{_DEPOLARIZING_LEVEL_ONE_MANTISSA:.1f} \times 10^{{-5}}",
+    },
 }

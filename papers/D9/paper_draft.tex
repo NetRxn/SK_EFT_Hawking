@@ -927,8 +927,8 @@ fidelity of $98.25\%$ at an integration window of $48$\,ns, and $99.2\%$
 at $88$\,ns, the latter stated to be limited predominantly by the qubit
 lifetime. Their fidelity is defined as $F = 1 - P(e|g) - P(g|e)$, so the
 uniform-prior averaged assignment error of Theorem~\ref{thm:combined} is
-$\varepsilon_{\mathrm{avg}} = (1-F)/2$, giving $8.75\times10^{-3}$ at
-$48$\,ns and $4.0\times10^{-3}$ at $88$\,ns.
+$\varepsilon_{\mathrm{avg}} = (1-F)/2$, giving $\input{tables/walter_assignment_48ns.tex}$ at
+$48$\,ns and $\input{tables/walter_assignment_88ns.tex}$ at $88$\,ns.
 
 The thermal branch is inactive at these parameters. At $10$\,mK and
 $6.316$\,GHz the dimensionless ratio is
@@ -954,13 +954,13 @@ inactive.
 
 \emph{Formula layer.} Theorem~\ref{thm:combined} then gives
 $\varepsilon_{\mathrm{avg}} \ge p_{\mathrm{decay}}/2 \ge
-5.72\times10^{-3}$.
+\input{tables/walter_relaxation_floor_88ns.tex}$.
 
 \emph{The reported value is below the floor.} The measured
-$\varepsilon_{\mathrm{avg}} = 4.0\times10^{-3}$ is smaller than the
-proven floor $5.72\times10^{-3}$. At the $48$\,ns point the same
-computation gives a floor of $3.14\times10^{-3}$ against a measured
-$8.75\times10^{-3}$, comfortably satisfied. The certificate holds at the
+$\varepsilon_{\mathrm{avg}} = \input{tables/walter_assignment_88ns.tex}$ is smaller than the
+proven floor $\input{tables/walter_relaxation_floor_88ns.tex}$. At the $48$\,ns point the same
+computation gives a floor of approximately $\input{tables/walter_relaxation_floor_48ns.tex}$ against a measured
+$\input{tables/walter_assignment_48ns.tex}$, comfortably satisfied. The certificate holds at the
 short window and fails at the long one.
 
 \subsection{Reading the failure}
