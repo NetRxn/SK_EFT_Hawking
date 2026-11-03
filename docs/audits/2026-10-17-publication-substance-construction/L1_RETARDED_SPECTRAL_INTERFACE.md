@@ -1163,3 +1163,17 @@ The remaining contribution is entirely private curvature. The
 private paired and repeated sectors contain words of counts zero,
 two and four, so their total normalizations cannot substitute for
 the weighted sum. Their exact closed-order replay is assigned.
+
+The private replay returned 439344 for the 176 paired words and
+907200 for the 320 repeated words. It counts occurrences before
+canonicalizing the private kernel plans and uses the reviewed
+closed-order transfer for those kernels. See
+[l1_affine_private_moment.py](l1_affine_private_moment.py).
+Adding the previously resolved sectors gives raw extended-plane
+moment 1929911588377/884736 and normalized moment
+4631787812104800/1252309350145403. The full common affine
+metric-source derivative of log Z is then
+−2308832294491350/1252309350145403. Thus the affine and
+exponential prescriptions have opposite full static signs in
+this finite model despite identical connected first vertices.
+Independent review of this assembly is pending.
