@@ -166,3 +166,30 @@ choices for each of four extended site pairs. It also checked the
 incoming and outgoing Haar second moments and the antisymmetric
 curvature covariance. The exterior join retains the shared Grassmann
 sites and their signs.
+
+## Equal-extent world-axis swaps
+
+The normalization enumerator also partitions the support under
+translations and swaps within the two equal-extent axis pairs.
+Reordering the curvature axes reverses the plaquette, sending the
+traceless chiral curvature projection to its negative. Reordering
+the frame axes exchanges the two degree-two factors and changes the
+sign of the antisymmetric internal contraction. These signs cancel
+the corresponding changes in the world epsilon when restoring sorted
+indices. Thus a world reflection changes each action factor by the
+common orientation sign. Eight factors cancel it. Link Haar variables
+and whole eight-generator site blocks are merely permuted.
+
+The resulting 652 representatives have orbit sizes 1, 2, 4, 8 and
+16 with counts 5, 17, 117, 283 and 230. Independent verification of
+this further reduction is pending.
+
+## Opposite-site fourth powers
+
+The [quartic sector evaluator](l1_normalization_opposed_fourth.py)
+covers all 32 multisets with multiplicity profile `(4,4)`. Each is
+supported on two opposite centers with disjoint Haar variables.
+The degree-four quadrature and the commutator curvature moment produce
+38 exterior terms per center after selecting local saturation.
+The exact exterior join gives `20339/129600` per word after the two
+`4!` factors, or `20339/4050` in total. Independent review is pending.

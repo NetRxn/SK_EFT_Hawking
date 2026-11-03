@@ -1,6 +1,6 @@
 """Enumerate the degree-eight pure-g2 normalization support."""
 from collections import Counter, defaultdict
-from itertools import combinations, combinations_with_replacement
+from itertools import combinations, combinations_with_replacement, product
 from math import factorial, lcm, prod
 
 from l1_interacting_support import TERMS, forward, half, match
@@ -34,6 +34,29 @@ def translated_support(indices):
                      for x, k, l, u, v in labels))
         for shift in range(4)
     }
+
+
+def world_axis_orbit(indices):
+    """Images under translations and swaps of equal-extent axes."""
+    lookup = {label: index for index, (_, _, label) in enumerate(TERMS)}
+    labels = [TERMS[index][2] for index in indices]
+    orbit = set()
+    for swap_extended, swap_transverse, shift in product(range(2), range(2), range(4)):
+        axes = (swap_extended, 1 - swap_extended,
+                2 + swap_transverse, 3 - swap_transverse)
+
+        def site(x):
+            return (((x >> 1) | ((x & 1) << 1)) if swap_extended else x) ^ shift
+
+        image = []
+        for x, k, l, u, v in labels:
+            mu, nu = (axis for axis in range(4) if axis not in (k, l))
+            if axes[mu] > axes[nu]:
+                u, v = v, u
+            first, second = sorted((axes[k], axes[l]))
+            image.append(lookup[site(x), first, second, site(u), site(v)])
+        orbit.add(tuple(sorted(image)))
+    return orbit
 
 
 def link_degrees(indices):
@@ -107,3 +130,11 @@ if __name__ == "__main__":
     print("multisets", sum(profiles.values()), "ordered", ordered)
     print("candidate tree reduction", len(trees), sorted(tree_degrees.items()))
     print("common denominator including factorials", denominator_scale)
+    unassigned = support.copy()
+    axis_orbits = Counter()
+    while unassigned:
+        orbit = world_axis_orbit(min(unassigned))
+        assert orbit <= unassigned
+        unassigned.difference_update(orbit)
+        axis_orbits[len(orbit)] += 1
+    print("world-axis orbit sizes", sorted(axis_orbits.items()))
