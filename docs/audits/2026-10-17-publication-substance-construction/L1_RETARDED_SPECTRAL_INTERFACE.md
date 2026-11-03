@@ -1281,3 +1281,16 @@ s to vanish, contradicting the same-site coefficient. The
 result would apply to the specified linear composite source.
 The dressed source, physical matching and continuum limit
 remain separate constructions.
+
+The closed diagonal replay now resolves the eight residual orbits.
+With the source commutator ordered as V†U†VU, the exact source
+table has 432 coefficients over denominator 18 and 5,184
+adjacency edges. The Gaussian-rational join gives
+(−3563/3072, 0) for the real and imaginary parts of the residual
+subtotal. The earlier center tests retained the same 320 and
+608 supported slices. All 320 same-center slices vanish and
+the 24 nonzero mixed-center entries reverse sign. These center
+identities do not by themselves carry over the shifted join,
+which uses the reordered source tensor. The residual subtotal
+excludes that shifted contribution and the full closed diagonal
+coefficient awaits the shifted replay and elimination review.
