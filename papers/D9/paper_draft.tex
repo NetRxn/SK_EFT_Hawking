@@ -1428,23 +1428,22 @@ one hypothesis per physical claim and a certain flatness of tone. What it
 buys is that a reader can audit the boundary of the deductive content
 without reading Lean.
 
-What this paper does not contain: gate-synthesis and compilation theory,
-which is the subject of Ref.~\cite{CompanionCompilation} and which
-consumes Sec.~\ref{sec:protocol} for its channel-level certificate,
+Gate synthesis and compilation theory are outside the scope of this paper.
+Ref.~\cite{CompanionCompilation} covers that theory and uses Sec.~\ref{sec:protocol} for its channel-level certificate,
 including the Kronecker-with-identity operator-norm bound
 $\opnorm{A\otimes\mathbf 1} \le \opnorm{A}$
 (\lean{l2\_opNorm\_kronecker\_one\_le}) that its ancilla-register
-argument needs and that it reports as an upstream candidate; the logical
-layer of fault tolerance, Ref.~\cite{CompanionFaultTolerance}, to which
-the abstract code-distance suppression results
+argument needs and that it reports as an upstream candidate.
+Ref.~\cite{CompanionFaultTolerance} covers the logical layer of fault
+tolerance. The abstract code-distance suppression results
 (\lean{logicalErrorBound\_antitone\_distance},
-\lean{logicalErrorBound\_tendsto\_zero}) are our interface; the
-large-deviation foundations of Ref.~\cite{CompanionStochastic}, whose
-compatibility with our linear-response rate function is
-\lean{linearResponseRateFunctionCentered\_is\_ldp\_certified} and whose
-tail bound away from the fluctuation-dissipation-pinned mean is
-\lean{fdt\_rare\_event\_tail\_is\_ldp\_certified}; and runtime tooling,
-vendor-specific parameter fits, or experimental data analysis. The corpus
+\lean{logicalErrorBound\_tendsto\_zero}) provide the interface to that work.
+Ref.~\cite{CompanionStochastic} covers the large-deviation foundations.
+Compatibility with our linear-response rate function is certified by
+\lean{linearResponseRateFunctionCentered\_is\_ldp\_certified}. The
+tail bound away from the fluctuation-dissipation-pinned mean is certified by
+\lean{fdt\_rare\_event\_tail\_is\_ldp\_certified}. This paper also omits runtime tooling,
+vendor-specific parameter fits, and experimental data analysis. The corpus
 is a mathematical substrate, and its numerical companion pipeline is part
 of the public repository's automated validation suite.
 
