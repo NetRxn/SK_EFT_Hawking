@@ -500,11 +500,14 @@ Clifford$+$CCZ ($T$-free) & $\su 8$ & $\mathrm{tr} = 1/\sqrt2$ not an algebraic 
 \end{ruledtabular}
 \end{table}
 
-\figuredeferred{fig:d8-coverage}{the existing alphabet-by-dimension coverage
-figure shows a Fibonacci row, which Ref.~\cite{RoehmD4Topological} owns and
-this paper no longer claims; recutting it against
-Table~\ref{tab:alphabets} requires a regenerated figure from the project's
-canonical visualization module}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/d8_fig1_alphabet_dimension_map.png}
+\caption{The alphabet and target-group pairs in Table~\ref{tab:alphabets}.
+Blue denotes a density argument from a sub-alphabet or a per-qubit route.
+Amber identifies the $T$-free construction in which CCZ is essential.}
+\label{fig:d8-coverage}
+\end{figure*}
 
 The two Read--Rezayi rows are the sharpest evidence for the interface claim,
 because their number theory is genuinely unlike the Clifford$+T$ case and the
@@ -819,11 +822,20 @@ Kliuchnikov--Maslov--Mosca & $1$ & nothing & two \\
 \end{ruledtabular}
 \end{table}
 
-\figuredeferred{fig:d8-length-comparison}{a figure comparing the three verified
-length bounds as functions of precision, plotted directly from the theorem
-statements of this section, requires a plotting function in the project's
-canonical visualization module; the bounds themselves are proved and appear in
-Table~\ref{tab:mechanisms}}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/d8_fig4_length_comparison.png}
+\caption{Word-length bounds from the three mechanisms in
+Table~\ref{tab:mechanisms}. The balanced commutator bound uses the
+target accuracy within its proved domain. For successful
+Ross--Selinger grid search, the middle panel plots the increment
+$8k$ above the symbolic overhead $N_3$, against the first-column
+precision $\delta=(1+\sqrt{2})/\sqrt{2}^{\,k}$. The ancilla-assisted
+KMM bound uses squared output-state error up to a unit global
+phase, for normalized inputs with initialized ancillas. These
+coordinates represent different guarantees.}
+\label{fig:d8-length-comparison}
+\end{figure*}
 
 \subsection{The grid route and its one hypothesis}
 \label{sec:length-rs}

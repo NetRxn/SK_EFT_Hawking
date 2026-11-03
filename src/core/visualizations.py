@@ -14429,19 +14429,18 @@ def fig_d8_alphabet_dimension_map() -> go.Figure:
     Schematic: which gate alphabets are kernel-verified at which dimension
     SU(d), color-coded by the mechanism that supplies density. Blue =
     sub-alphabet / per-qubit route; amber = essential non-Clifford resource
-    (the Phase 6z T-free CCZ-essential route). All entries kernel-pure.
+    (the T-free CCZ-essential route).
     """
     blue = COLORS["steel_blue"]
     amber = COLORS["amber"]
     # (alphabet label, dimension d, mechanism color, note)
     rows = [
-        ("Fibonacci anyons",          2, blue,  "golden-ratio trace"),
-        ("Clifford+T",                2, blue,  "Niven: √2·sin(π/8)"),
+        ("Clifford+T",                2, blue,  "√2·sin(π/8)"),
         ("Read–Rezayi SU(2)₅",        2, blue,  "Chebyshev T₇"),
         ("Read–Rezayi SU(2)₇",        2, blue,  "triple-angle"),
         ("Trapped-ion (MS)",          4, blue,  "Brylinski–Brylinski"),
-        ("Clifford+T (3-qubit)",      8, blue,  "Aaronson–Gottesman (CCZ over-complete)"),
-        ("Clifford+CCZ (literal)",    8, amber, "T-free — CCZ essential"),
+        ("Clifford+CCZ (with T)",      8, blue,  "H, T, CNOT density"),
+        ("Clifford+CCZ (T-free)",    8, amber, "CCZ essential"),
     ]
     dims = [2, 4, 8]
     dim_x = {2: 0, 4: 1, 8: 2}
@@ -14452,26 +14451,27 @@ def fig_d8_alphabet_dimension_map() -> go.Figure:
             x=[dim_x[d]], y=[y], mode="markers+text",
             marker=dict(size=26, color=color, line=dict(width=1.5, color="#333")),
             text=[f"  {note}"], textposition="middle right",
-            textfont=dict(size=11, color="#333"),
+            textfont=dict(size=20, color="#333"),
             cliponaxis=False,  # let row notes extend into the right margin without truncation
             hovertext=[f"{label} — SU({d}) — {note}"], hoverinfo="text",
             showlegend=False,
         ))
         fig.add_annotation(x=-0.55, y=y, text=label, showarrow=False,
-                           xanchor="right", font=dict(size=12, color="#222"))
+                           xanchor="right", font=dict(size=20, color="#222"))
     fig.add_trace(go.Scatter(x=[None], y=[None], mode="markers",
-        marker=dict(size=14, color=blue), name="density from sub-alphabet / per-qubit route"))
+        marker=dict(size=14, color=blue), name="Sub-alphabet or per-qubit density"))
     fig.add_trace(go.Scatter(x=[None], y=[None], mode="markers",
-        marker=dict(size=14, color=amber), name="non-Clifford resource essential (T-free CCZ)"))
+        marker=dict(size=14, color=amber), name="Essential CCZ"))
     fig.update_xaxes(tickvals=[0, 1, 2], ticktext=["SU(2)", "SU(4)", "SU(8)"],
-                     range=[-2.4, 2.7], title="target group dimension",
+                     range=[-2.4, 2.7], title="Target group",
                      showgrid=True, gridcolor="#eee", zeroline=False)
     fig.update_yaxes(range=[-0.7, len(rows) - 0.3], showticklabels=False,
                      showgrid=False, zeroline=False)
     fig.update_layout(
-        title="D8 Fig. 1 — Kernel-verified universal compilation: alphabet × dimension coverage",
+        title="Alphabet and target-group coverage",
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
-        height=520, width=1060, margin=dict(l=210, r=300, t=110, b=60),
+        height=540, width=1060, margin=dict(l=245, r=230, t=110, b=80),
+        font=dict(size=20),
         plot_bgcolor="white",
     )
     return fig
@@ -14523,6 +14523,54 @@ def fig_d8_su8_density_duality() -> go.Figure:
         title="Two complementary density mechanisms for SU(8)",
         height=500, width=900, margin=dict(l=30, r=30, t=90, b=30),
         plot_bgcolor="white", showlegend=False,
+    )
+    return fig
+
+
+def fig_d8_length_comparison() -> go.Figure:
+    """D8 word-length bounds on their respective theorem error coordinates.
+
+    Ross–Selinger displays the increment above its symbolic overhead N₃.
+    Its curve is conditional on grid success. The three coordinates do
+    not furnish a common error metric.
+    """
+    # SolovayKitaevLengthBound.skLength_at_skLevel_polylog_le
+    epsilon_0 = 1 / (8 * 1024**2)
+    epsilon = np.geomspace(epsilon_0, 1e-14, 100)
+    balanced_bound = SK_LENGTH_CONST * np.log(1 / epsilon)**SK_LENGTH_EXPONENT
+
+    k = np.arange(16, 97)
+    inverse_two_k = np.exp2(-k.astype(float))
+    # LogLengthHeadline.rossSelinger_log_length_explicit
+    grid_precision = (1 + np.sqrt(2)) * np.sqrt(inverse_two_k)
+    grid_increment = 8 * k
+    # KMMUniversal.kmm_universal_headline
+    state_error_sq = 9 * (2 * inverse_two_k**2 + 2 * np.sqrt(2) * inverse_two_k)
+    ancilla_bound = 50400 * k + 812
+
+    fig = make_subplots(
+        rows=1, cols=3, horizontal_spacing=0.13,
+        subplot_titles=("Balanced commutator", "Ross–Selinger grid", "KMM synthesis"),
+    )
+    for col, x, y, xlabel, ylabel, color in (
+        (1, epsilon, balanced_bound, "Target ε", "Word length bound", COLORS["steel_blue"]),
+        (2, grid_precision, grid_increment, "Column precision δ", "Bound − N₃", COLORS["amber"]),
+        (3, state_error_sq, ancilla_bound, "Squared state error", "Word length bound", COLORS["steel_blue"]),
+    ):
+        fig.add_trace(go.Scatter(x=x, y=y, mode="lines", line=dict(color=color, width=3)),
+                      row=1, col=col)
+        fig.update_xaxes(type="log", autorange="reversed", title_text=xlabel, row=1, col=col)
+        fig.update_yaxes(title_text=ylabel, row=1, col=col)
+    for col, exponents in enumerate(((-7, -10, -13), (-3, -8, -13), (-4, -14, -24)), 1):
+        fig.update_xaxes(
+            tickvals=[10.0**power for power in exponents],
+            ticktext=[f"10<sup>{power}</sup>" for power in exponents],
+            tickangle=0, row=1, col=col,
+        )
+    fig.update_annotations(font=dict(size=24))
+    fig.update_layout(
+        width=1200, height=450, showlegend=False, template="plotly_white",
+        font=dict(size=24), margin=dict(l=115, r=35, t=65, b=100),
     )
     return fig
 
