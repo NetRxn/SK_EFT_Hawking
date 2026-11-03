@@ -4061,7 +4061,8 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Balbinot2005PRD.pdf',
-        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex', 'papers/D3/paper_draft.tex'],
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex', 'papers/D3/paper_draft.tex',
+                    'papers/L3/paper_draft.tex'],
         'provides': ['Eq. (Tsonic): T(t) = (ℏc/2π)·κ·[1 − (563/720π)·ε·κ³·c·A_0·t] '
                      '— linear-in-t cooling under Hawking backreaction for a SONIC '
                      'hole in a Laval nozzle, one-dimensional flow, at CONSTANT '
@@ -10535,8 +10536,8 @@ CITATION_REGISTRY = {
         'arxiv': 'gr-qc/0405096',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/D3/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Balbinot2005.pdf',
+        'used_in': ['papers/F/paper_draft.tex'],
         'provides': ['Letter companion to Balbinot2005PRD on backreaction in acoustic '
                      '(sonic) black holes: the emission temperature DECREASES as the '
                      'hole radiates, unlike Schwarzschild.'],
@@ -10548,11 +10549,9 @@ CITATION_REGISTRY = {
                  'group\'s companion PRD (Balbinot2005PRD, gr-qc/0405098) computes a '
                  'constant-sound-speed Laval-nozzle sonic hole whose cooling law is '
                  'linear in t (Eq. Tsonic), explicitly deferring the '
-                 'Bose-Einstein-condensate case. ⚠️ NO PRIMARY SOURCE IS HELD for '
-                 'this PRL (primary_source_path is None, doi_verified is None), so no '
-                 'equation-level claim may be attached to it until gr-qc/0405096 is '
-                 'acquired; cite Balbinot2005PRD for equation content. Used by D3 §6 '
-                 'and F.',
+                 'Bose-Einstein-condensate case. The held PRL preprint is '
+                 'gr-qc/0405096v2. F cites it for acoustic cooling. '
+                 'D3 and L3 cite the companion PRD for equation content.',
     },
     'BardeenCarterHawking1973': {
         'authors': 'Bardeen, J. M., Carter, B., Hawking, S. W.',
