@@ -1,0 +1,14 @@
+# Independent D7/E2 ingestion r2 readback
+
+**Accept the two reviewed r2 documents for tracked copy, followed by target-image qualification.** The prior closure and routing objections are resolved at the documentary ingestion scope.
+
+FIRST checked the original absolute `publication-d7-e2-ingestion-pilot-20261103-r2.json` from the D2 worktree. Exit 0, `fresh=true`, `changed=[]`. I used the two pilot Markdown files as authority. I did not rely on the pre-lane JSON snapshot.
+
+- Reversing only the fail-closed Verify lines and their inserted spacing, the two dependencies and operator field, and the historical-label renames reconstructs both complete r1 documents byte for byte. All 22 historical command payloads are retained unchanged and outside executable Verify metadata. The five IMPORTANT→required mappings and all original finding content are preserved.
+- The actual extractor on a disposable corpus mirror emitted 1,885 nodes, with all 1,861 original nodes exactly conserved. All 24 recovered IDs are open with the same identity/severity as r1. D7 contributes 1 critical, 10 major and 2 minor. E2 contributes 2 critical, 7 major and 2 minor. Every new Verify field extracts the same single failing placeholder. Its successful print path explicitly exits 1, and a failed print also returns nonzero. By inspection of the unchanged closer, fixed fails and a different override is refused. The lead's separate actual-closer probe reports refusal for all 24 fixed attempts and all 24 true overrides. I did not execute the closer.
+- Eleven unmapped legacy lanes now extract as unclassified, while their labels remain as historical text. The 10 substrate and 3 Lean lane declarations survive. The actual classifier reports 11 dispatchable, 2 blocked and 11 unrouted. D7 09 and 11 are blocked by the exact minted open D7 10 ID. D7 12 retains its conditional decision and extracts `needs_operator=queue` while remaining unclassified. No new unresolved Blocked-by reference appears. Dispatchable classification alone supplies no execution or slot authority.
+- Tracked application still needs exact-copy readback, current readiness and metadata measurement, and recording of the exposed D7/E2 blocker counts against unchanged ceilings. Keep all recovered findings open until their substantive checks and dispositions receive independent review. The preserved historical diagnostics, including D7 mixed-source and grep commands and E2 peak/acquisition commands, remain historical evidence.
+
+I used static file comparisons and the actual read-only extractor/classifier on a temporary corpus mirror. No historical diagnostic, finding command, Lean operation, source edit or Git mutation was performed. The only owned write is this report. No closure, scientific, main or publication acceptance follows.
+
+FINAL checked the original packet and returned exit 1, `fresh=false`, `changed=["owned-files"]` only.
