@@ -1474,3 +1474,13 @@ labels with each oppositely sliced nonzero shear tag and tests
 the same site degrees and link-center parity. None passes both.
 Thus the leading g₁g₂⁵ contraction is the only remaining
 coefficient in the raw mixed numerator on this lattice.
+
+The cubic zero also follows from site degrees alone. Each
+determinant contributes six degrees at its center and one at
+each extended neighbor. A center at site 0 exceeds the four
+degrees left by the composite insertion. A repeated center
+exceeds eight. The three centers must therefore be 1, 2 and 3,
+leaving degree deficits (2,1,1,0). A tagged mixed curvature
+vertex has one collapsed frame and one extended frame, giving
+three degrees at its center. Neither allowed tag center on
+the opposite time slice (1 or 3) has that capacity.
