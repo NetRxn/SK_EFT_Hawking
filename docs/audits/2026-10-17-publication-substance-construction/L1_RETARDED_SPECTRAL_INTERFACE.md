@@ -811,3 +811,53 @@ closed-path evaluator. The reduction applies to complete
 internal contractions, so individual gamma-index summands
 cannot be fixed separately on this argument. Independent review
 verified the reduction for invariant Berezin top coefficients.
+
+A modular control reused the eight labels and seed 1 of
+`l1_tree_covariance_control.cpp` with the reversed plaquette
+matrix product and the endpoint law above. The top coefficient
+was 28318 modulo 65537 both before and after a one-site rotation.
+A separate scratch run set the tree links (0,0), (0,1), (1,1)
+to identity. Starting from root gauge G₀=I, each directed
+tree edge x→y sets G_y=G_x U_xy⁻¹. Transforming all links
+by the endpoint law again gave 28318 and verified all three
+tree identities explicitly. Both runs check the fixed-link
+top coefficient of one complete word. The integrated
+closed-path normalization and response remain open.
+
+Reversing the plaquette product preserves link incidence and site
+degrees. On the 6,451 support candidates, optimizing over the 32
+extended-link spanning trees gives remaining degree counts
+`{30:160,32:212,34:328,36:2565,38:1784,40:1120,42:282}`.
+On the 2,160 words with nonzero dressed cross multiplier, the
+counts are `{30:40,32:64,34:176,36:1072,38:536,40:272}`.
+These are upper degrees before further cancellations and
+give the contraction budget after tree fixing. The support
+conditions leave the signed Haar coefficients to be evaluated.
+
+### Exact reuse for the private-curvature sectors
+
+The two private-curvature reductions give a direct comparison
+between literal and closed ordering. At each elimination step,
+a link that occurs once in the common plaquette and nowhere in
+the remaining word makes that plaquette conditionally Haar,
+in either multiplication order. Its two curvature insertions
+therefore have the same joint Haar moment. When both links of a
+singleton commutator are private, the original product
+`U V U⁻¹ V⁻¹` and the reversed product `V⁻¹ U⁻¹ V U`
+have the same distribution by `(U,V)→(V⁻¹,U⁻¹)`.
+The elimination order depends only on incidence and is unchanged.
+After these integrations the remaining coframe contractions are
+identical. This argument requires that both factors of each pair
+use the same oriented plaquette and that the eliminated links are
+absent from every remaining coframe.
+
+The two disjoint sectors selected by the existing coverage
+classifier then inherit the normalization contributions
+`8071653/32` and `535869/4` and the dressed cross subtotals
+`−121389/2` and `−72441`, respectively. Since the source weights
+are fixed by the world labels, equal-time contact and product
+subtotals carry over by the same wordwise argument. This is a
+partial comparison. The sectors without private elimination
+still require a closed-order calculation. Independent review
+verified the conditional Haar argument, classifier incidence
+and all transferred subtotals.
