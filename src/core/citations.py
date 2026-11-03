@@ -3835,7 +3835,7 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Sen2013Schwarzschild.pdf',
-        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex', 'papers/D3/paper_draft.tex'],
         'provides': ['Heat-kernel result for 4D Schwarzschild: c_log = +(212/45 − 3) ≈ +1.71',
                      'Explicit disagreement with the Cardy-saddle/Kaul-Majumdar −3/2'],
         'notes': 'Falsifiability anchor — establishes that −3/2 is NOT universal. '
@@ -4060,7 +4060,7 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/Balbinot2005PRD.pdf',
-        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex'],
+        'used_in': ['papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex', 'papers/D3/paper_draft.tex'],
         'provides': ['Eq. (Tsonic): T(t) = (ℏc/2π)·κ·[1 − (563/720π)·ε·κ³·c·A_0·t] '
                      '— linear-in-t cooling under Hawking backreaction for a SONIC '
                      'hole in a Laval nozzle, one-dimensional flow, at CONSTANT '
@@ -10820,10 +10820,10 @@ CITATION_REGISTRY = {
         'arxiv': '2402.10190',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/D3/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/KehleUnger2024.pdf',
+        'used_in': ['papers/F/paper_draft.tex'],
         'provides': ['Smooth one-parameter families of solutions to Einstein-Maxwell-Vlasov interpolating between dispersion and collapse; critical solution = extremal black hole'],
-        'notes': 'arXiv:2402.10190 (Feb 2024). Companion 2022 paper (arXiv:2211.15742) gives the explicit third-law disproof; D3 cites the 2024 critical-phenomenon paper.',
+        'notes': 'arXiv:2402.10190 (Feb 2024). Companion 2022 paper (arXiv:2211.15742) gives the explicit third-law disproof.',
     },
     'KlinkhamerManton1984': {
         'authors': 'Klinkhamer, F. R., Manton, N. S.',
@@ -10981,7 +10981,7 @@ CITATION_REGISTRY = {
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': None,
-        'used_in': ['papers/D3/paper_draft.tex'],
+        'used_in': ['papers/F/paper_draft.tex'],
         'provides': ['Logarithmic correction coefficient -45/2 for non-extremal Schwarzschild BH entropy; disagrees with Kaul-Majumdar -3/2'],
         'notes': 'JHEP issue 04 (April 2013).',
     },
