@@ -10679,6 +10679,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-12-legacy-compile-triage:legacy-compile-triage:8",
+      "status": "fixed",
+      "evidence": "Independent render review SHA-256 f7946024f59e54625e0be164b48d5e7dd0ebcac387968fc3b2ebe9ebaadb9311. Exact declared compile reproduced four baseline Unicode errors and passes on candidate. Eight-page PDF retains all three PROVED labels and math omega; zero TeX errors or unresolved references, two overfull boxes.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "32e55589",
+      "verified_by": {
+        "command": "uv run python scripts/compile_bundle_pdf.py paper2_second_order",
+        "declared": "uv run python scripts/compile_bundle_pdf.py paper2_second_order",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
