@@ -136,6 +136,8 @@ Derive physical dispersion and profile/state to flux-normalized in/out scatterin
 
 ### L1: three distinct obligations
 
+The independently reviewed [spectral interface](L1_RETARDED_SPECTRAL_INTERFACE.md) gives positive counterexamples with identical finite Euclidean samples and different retarded absorption. The physical transport build now requires dynamical data or a justified spectral restriction in addition to matched normalization and contact subtraction.
+
 [Conditional retarded transport construction](L1_RETARDED_TRANSPORT_MATCHING.md) separates linear attenuation from quadratic real dispersion for a specified pole and bounds the fixed-frequency group slowness. Independent adversarial review accepted the conditional result. Microscopic retarded tensor and observational propagation matching remain open.
 
 **Reduced B3 reference, 3 November 2026.** An independent direct Grassmann wedge [reference](l1_reduced_wedge_reference.py), rerun by the lead with the repository Python environment, reproduced the manually derived `F(1,0)=135/32` and `F(1,1)=27/2`. The reduced Haar reconstruction gives `999/16` and contribution `D_B=444`. Chirality swap, chiral sign, zero source, odd orientation, longitudinal rescaling, coupling removal, and the off-probe quartic identity passed. From the repository root run `.venv/bin/python docs/audits/2026-10-17-publication-substance-construction/l1_reduced_wedge_reference.py`. Direct checks of the original all-link contractions and physical tensor, volume, and RPA coupling matching remain open.
