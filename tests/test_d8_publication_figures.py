@@ -61,3 +61,25 @@ def test_d8_length_bounds_preserve_distinct_error_contracts():
     assert fig.layout.xaxis2.title.text == "Column precision δ"
     assert fig.layout.yaxis2.title.text == "Bound − N₃"
     assert fig.layout.xaxis3.title.text == "Squared state error"
+
+
+def test_d8_generated_table_bindings():
+    from scripts.paper_tables import render_table
+    from scripts.render_paper_tables import _load_spec
+    from scripts.validation._tex import _strip_tex_comments
+
+    paper = Path(__file__).resolve().parents[1] / "papers" / "D8"
+    draft = _strip_tex_comments((paper / "paper_draft.tex").read_text())
+    tables = _load_spec(paper / "tables.py")["tables"]
+    assert set(tables) == {"results", "alphabets", "mechanisms", "reusable"}
+    for name, spec in tables.items():
+        label = rf"\label{{tab:{name}}}"
+        assert draft.count(label) == 1
+        after = draft.split(label, 1)[1].lstrip()
+        wrapper = r"\begin{ruledtabular}"
+        assert after.startswith(wrapper)
+        include = rf"\input{{tables/{name}.tex}}"
+        after = after.removeprefix(wrapper).lstrip()
+        assert after.startswith(include)
+        assert after.removeprefix(include).lstrip().startswith(r"\end{ruledtabular}")
+        assert (paper / "tables" / f"{name}.tex").read_bytes() == render_table(spec).encode()
