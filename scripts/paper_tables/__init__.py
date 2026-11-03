@@ -99,12 +99,17 @@ class Span:
 def render_table(spec: dict) -> str:
     """Render a single table spec to a LaTeX tabular block.
 
+    Optional rules_after lists one-based body row indices for section rules.
+
     Returns a string ending in a newline, suitable for writing to a
     `.tex` snippet the paper can `\\input{}`.
     """
     rows_fn: Callable[[], list[dict]] = spec['rows']
     columns: list[Col] = spec['columns']
     rows = rows_fn()
+    rules_after = tuple(spec.get('rules_after', ()))
+    if any(type(index) is not int or not 1 <= index < len(rows) for index in rules_after):
+        raise ValueError('rules_after must contain one-based indices between body rows')
 
     align_spec = ''.join(c.align for c in columns)
     lines: list[str] = []
@@ -118,7 +123,7 @@ def render_table(spec: dict) -> str:
     lines.append(r'\hline')
     lines.append(' & '.join(c.header for c in columns) + r' \\')
     lines.append(r'\hline')
-    for row in rows:
+    for index, row in enumerate(rows, start=1):
         cells: list[str] = []
         skip: set[str] = set()
         for col in columns:
@@ -150,6 +155,8 @@ def render_table(spec: dict) -> str:
             else:
                 cells.append(col.cell(row))
         lines.append(' & '.join(cells) + r' \\')
+        if index in rules_after:
+            lines.append(r'\hline')
     lines.append(r'\hline')
     lines.append(r'\end{tabular}')
     return '\n'.join(lines) + '\n'

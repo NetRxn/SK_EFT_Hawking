@@ -619,40 +619,13 @@ it is the route Sec.~\ref{sec:rb} recommends in place of a benchmark
 average.
 
 \begin{table}
-\caption{Exact diamond distances to the identity, closed by an explicit
-dual witness. Every row is an equality, not a bound. The last two rows
-are the non-covariant cases, where equality is not available and the
-entry is what is proven.}
+\caption{Diamond distances to the identity. The first eight rows give
+equalities established by explicit dual witnesses. The final two rows
+give bounds for the non-covariant cases.}
 \label{tab:exact}
 \begin{ruledtabular}
 \footnotesize
-\begin{tabular}{lll}
-Channel & $\ddist(\Phi,\mathrm{id})$ & Declaration \\
-\colrule
-Dephasing $\gamma$ & $\gamma$ &
-  \lean{diamondDist\_dephasing\_eq} \\
-Depolarizing $p$ & $p$ &
-  \lean{diamondDist\_depolarizing\_eq} \\
-Pauli $\mathbf p$ & $1-p_0$ &
-  \lean{diamondDist\_pauliKraus\_eq} \\
-Two-qubit Pauli & $1-p_{00}$ &
-  \lean{diamondDist\_twoQubitPauliKraus\_eq} \\
-Qutrit Weyl & $1-p_0$ &
-  \lean{diamondDist\_weylKraus\_eq} \\
-Unitary error basis & $1-p_0$ &
-  \lean{diamondDist\_errorBasisKraus\_eq} \\
-Cyclic-shift leakage & leakage prob. &
-  \lean{diamondDist\_shiftLeakage\_eq} \\
-Readout bit-flip $q$ & $q$ &
-  \lean{diamondDist\_spamBitFlip\_eq} \\
-\colrule
-Amp.\ damping $\gamma$ &
-  $[\gamma/2,\,\gamma{+}1{-}\sqrt{1{-}\gamma}]$ &
-  \lean{diamondDist\_ampDamp\_ge},
-  \lean{\ldots\_le} \\
-Gen.\ amp.\ damping & $\ge (1-N)\gamma$ &
-  \lean{diamondDist\_genAmpDamp\_bracket} \\
-\end{tabular}
+\input{tables/exact.tex}
 \end{ruledtabular}
 \end{table}
 

@@ -43,4 +43,25 @@ TABLES = {
             ('4. Kernel-checked, empty', 'nothing to close', 'retract the claim'),
         ],
     ),
+    'exact': _table(
+        'D9 diamond-distance equalities and bounds',
+        [
+            Col('channel', 'Channel', align="l"),
+            Col('distance', '$\\ddist(\\Phi,\\mathrm{id})$', align="l"),
+            Col('declaration', 'Declaration', align="l"),
+        ],
+        [
+            ('Dephasing $\\gamma$', '$\\gamma$', '\\lean{diamondDist\\_dephasing\\_eq}'),
+            ('Depolarizing $p$', '$p$', '\\lean{diamondDist\\_depolarizing\\_eq}'),
+            ('Pauli $\\mathbf p$', '$1-p_0$', '\\lean{diamondDist\\_pauliKraus\\_eq}'),
+            ('Two-qubit Pauli', '$1-p_{00}$', '\\lean{diamondDist\\_twoQubitPauliKraus\\_eq}'),
+            ('Qutrit Weyl', '$1-p_0$', '\\lean{diamondDist\\_weylKraus\\_eq}'),
+            ('Unitary error basis', '$1-p_0$', '\\lean{diamondDist\\_errorBasisKraus\\_eq}'),
+            ('Cyclic-shift leakage', 'leakage prob.', '\\lean{diamondDist\\_shiftLeakage\\_eq}'),
+            ('Readout bit-flip $q$', '$q$', '\\lean{diamondDist\\_spamBitFlip\\_eq}'),
+            ('Amp.\\ damping $\\gamma$', '$[\\gamma/2,\\,\\gamma{+}1{-}\\sqrt{1{-}\\gamma}]$', '\\lean{diamondDist\\_ampDamp\\_ge}, \\lean{\\ldots\\_le}'),
+            ('Gen.\\ amp.\\ damping', '$\\ge (1-N)\\gamma$', '\\lean{diamondDist\\_genAmpDamp\\_bracket}'),
+        ],
+    ),
 }
+TABLES['exact']['rules_after'] = (8,)
