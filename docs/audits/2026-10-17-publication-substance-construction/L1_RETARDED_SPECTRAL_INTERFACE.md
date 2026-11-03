@@ -1267,11 +1267,13 @@ joint private projection changes the quaternion order from
 matched all six retained source-coordinate classes and every
 gamma/Berezin entry, with 104 nonzeros per scalar case and 96
 per vector chirality. This gives the coupled subtotal −23063/32
-and full same-site coefficient s = 10179913/32. The direct
-closed coupled replay and independent review of this transfer
-argument are pending.
+and full same-site coefficient s = 10179913/32. The direct closed coupled replay reproduced the exact 40-word
+histogram and subtotal. Its full reduced-tensor comparison
+changed 48 raw curvature entries and retained equality in all
+six source classes at both centers. Independent review of this
+transfer argument is pending.
 
-If confirmed, the same-site coefficient decides the faithful
+The same-site coefficient decides the faithful
 finite thermal test regardless of the diagonal result. With n
 zero, half-period positivity forces d to vanish. Faithfulness
 then requires the centered operator to vanish and consequently
