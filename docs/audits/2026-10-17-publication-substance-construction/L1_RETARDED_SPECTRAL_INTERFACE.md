@@ -1072,3 +1072,31 @@ sum, before the four-layout multiplier.
 
 The checkpoint replay of X1 exited successfully and reproduced
 `6491/196608` with zero imaginary part.
+
+### Zero mode of the closed-path source Hessian
+
+Let the two slice sources be (j_0,j_a), with the spatial weighting
+held fixed as in the finite replay. Time translation gives equal
+diagonals, and the first derivatives vanish by the polarization
+exchange symmetry. Using the table above, the Hessian of log Z has
+diagonal A+C and off-diagonal B, where A is the normalized
+operator product, C the normalized contact, and B the half-period
+entry. The common-source path (j_0=j_a=j) therefore gives
+`d² log Z/dj² = 2(A+B+C)`. Exact rational assembly yields:
+
+| Quantity | Value |
+| --- | ---: |
+| Contact C | 2610477947964300/1252309350145403 |
+| Contact-subtracted zero-mode eigenvalue A+B | 2638724394208500/1252309350145403 |
+| Full zero-mode eigenvalue A+B+C | 477200212924800/113846304558673 |
+| Full common-source second derivative | 954400425849600/113846304558673 |
+
+For an action source constant over a physical Euclidean time length
+β and spatial volume V, the static log-partition Hessian density
+uses the common-source derivative divided by βV. A linear
+identification `j = αh` contributes a further factor α².
+This conversion is conditional on identifying the replay's spatial
+weighting with the intended physical polarization. The physical
+source may also vary links, measure, and regulator and thereby
+change the contact and connected terms. Neither eigenvalue in the
+table identifies the B3 bare bubble without that matching.
