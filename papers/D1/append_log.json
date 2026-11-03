@@ -224,6 +224,21 @@
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-deregister-2026-11-03T16:43:22Z",
       "notes": "The three labels name topics in the 2026-05-04 lift rather than module identities. Current canonical owners are registered separately and the original lift stays in the log."
+    },
+    {
+      "date": "2026-11-03T16:46:26Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "DissipativeCorrection"
+      ],
+      "deregistration_rationale": "The first-order lift uses DissipativeCorrection as a topic label for Eq. delta-diss. Both the original and current drafts cite SecondOrderSK.deltaDissFromTransport_eq, whose exact owner is already registered. The historical lift and current claim remain recorded.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-03T16:46:26Z",
+      "notes": "The first-order lift uses DissipativeCorrection as a topic label for Eq. delta-diss. Both the original and current drafts cite SecondOrderSK.deltaDissFromTransport_eq, whose exact owner is already registered. The historical lift and current claim remain recorded."
     }
   ]
 }

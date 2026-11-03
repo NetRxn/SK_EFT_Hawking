@@ -176,3 +176,10 @@ deliberately not green while they stand. Findings at
 - Stage-13 redo required: no (no content changed — this records a dependency the
   draft already does not have)
 - Rationale: The three labels name topics in the 2026-05-04 lift rather than module identities. Current canonical owners are registered separately and the original lift stays in the log.
+
+## 2026-11-03 — Deregister-lean-modules
+
+- Modules deregistered: `DissipativeCorrection`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: The first-order lift uses DissipativeCorrection as a topic label for Eq. delta-diss. Both the original and current drafts cite SecondOrderSK.deltaDissFromTransport_eq, whose exact owner is already registered. The historical lift and current claim remain recorded.
