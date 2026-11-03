@@ -10604,6 +10604,36 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:6",
+      "status": "fixed",
+      "evidence": "Independent publisher and live bibitem review SHA-256 4274d1f8776046fe9cd17cb07e232fa0ad3cea386d20abed15c14d97375d270d. Current registry and manuscript agree with publication. Citation suite 56 passed.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "61986967",
+      "verified_by": {
+        "command": "uv run python -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as C; r=C['\"'\"'Adler2024'\"'\"']; assert (r['\"'\"'page'\"'\"'],r['\"'\"'doi'\"'\"'])==('\"'\"'80--85'\"'\"','\"'\"'10.1038/s41586-024-08188-0'\"'\"'); t=Path('\"'\"'papers/paper3_gauge_erasure/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'Adler2024'\"'\"' in t and '\"'\"'{636}, 80 (2024)'\"'\"' in t.split(r'\"'\"'\\bibitem{Adler2024}'\"'\"')[1].split(r'\"'\"'\\bibitem'\"'\"')[0]'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:10",
+      "status": "fixed",
+      "evidence": "Independent publisher and live bibitem review SHA-256 4274d1f8776046fe9cd17cb07e232fa0ad3cea386d20abed15c14d97375d270d. Current registry and manuscript agree with publication. Citation suite 56 passed.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "61986967",
+      "verified_by": {
+        "command": "uv run python -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as C; r=C['\"'\"'Tong2022'\"'\"']; assert (r['\"'\"'year'\"'\"'],r['\"'\"'page'\"'\"'],r['\"'\"'doi'\"'\"'])==(2022,'\"'\"'001'\"'\"','\"'\"'10.1007/JHEP07(2022)001'\"'\"'); t=Path('\"'\"'papers/paper7_chirality_formal/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'001 (2022)'\"'\"' in t.split(r'\"'\"'\\bibitem{Tong2022}'\"'\"')[1].split(r'\"'\"'\\bibitem'\"'\"')[0]'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
