@@ -445,3 +445,13 @@ The checkpoint rerun matched the exact totals and all four direct
 vertex controls. The deduplicated denominator subtotal is now
 `11306987999776927/19110297600` over 5,971 words. The remaining
 480 words still determine the full signed result.
+
+The [joint source kernel](l1_equal_time_joint_source_weights.py)
+covers the other 92 action words, with degree two on each source
+link. The local square terms use the separately integrated link
+moments, and the cross term retains the signed exterior join of
+the two weighted metric insertions. Exact checks give 73 nonzero
+entries out of 1,296, invariance under link exchange, and the
+single-link kernel after either chiral sphere contraction. The
+checkpoint rerun matches the independent construction. All 184
+non-benchmark words now have source tensors for their action joins.
