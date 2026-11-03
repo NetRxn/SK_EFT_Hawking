@@ -159,6 +159,16 @@ The independently reviewed [spectral interface](L1_RETARDED_SPECTRAL_INTERFACE.m
 **Reduced B3 reference, 3 November 2026.** An independent direct Grassmann wedge [reference](l1_reduced_wedge_reference.py), rerun by the lead with the repository Python environment, reproduced the manually derived `F(1,0)=135/32` and `F(1,1)=27/2`. The reduced Haar reconstruction gives `999/16` and contribution `D_B=444`. Chirality swap, chiral sign, zero source, odd orientation, longitudinal rescaling, coupling removal, and the off-probe quartic identity passed. From the repository root run `.venv/bin/python docs/audits/2026-10-17-publication-substance-construction/l1_reduced_wedge_reference.py`. Direct checks of the original all-link contractions and physical tensor, volume, and RPA coupling matching remain open.
 
 
+The [closed-path metric-source calculation](L1_RETARDED_SPECTRAL_INTERFACE.md#metric-amplitude-and-the-linear-path-contact)
+now evaluates both static source prescriptions in the same finite pure-g₂
+regulator. The independently reviewed exponential conversion and the
+author-replayed affine contact give opposite full static signs, with
+identical connected first vertices. Independent review of the final affine
+assembly at `5280cb77a` is in progress. The next physical acceptance
+step is to derive the metric and regulator variation that fixes the
+contact prescription and spatial tensor normalization. This finite
+calculation supplies neither the physical bare bubble nor the RPA coupling.
+
 Original B3/L1-02 and Phase6a/5y/6e remain full-strength BUILD. These are distinct from the shared D1/E1/E2 quadratic law.
 
 | Missing construction | Current work / next substantive action | Acceptance reviewer and required evidence |
