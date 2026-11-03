@@ -4,7 +4,7 @@ The independent exact runs reproduced the two-site contributions A = 2922 and mi
 
 The local contraction reconstructs the axial bilinears using the existing wedge engine. Six antisymmetric basis values equal 3, and all fifteen basis-pair sums equal 6. Omitting one orientation changes the selected value to 13/8. The exact center-parity enumeration kills all 81 mixed terms and leaves nine terms each for A and B. The direct SU(2) commutator covariance is (2/9) times the identity and verifies the curvature input to B.
 
-The independent adversarial reviewer reran all three checks and accepted the scoped contractions. The rest of B still uses the reduced reference. The unpruned full contraction, physical tensor matching, and susceptibility window remain open. Mutation controls are in-memory comparisons.
+The independent adversarial reviewer reran all three checks and accepted the scoped contractions. The subsequent [direct B calculation](l1_direct_b_haar.py) independently integrates all eight endpoint coordinates using joint chiral Haar moments. Its direct four-index curvature contraction gives 592/3 before the directional factor 9/4, yielding B = 444. The equivalent reduced polynomial integrates to 999/16. Omitting an endpoint changes the latter to 27/2. The independent reviewer reran the computation and verified the endpoint independence and exact polynomial agreement. Both routes share wedge-sign and Haar helpers and use the separately verified curvature covariance. The unpruned full contraction, physical tensor matching, and susceptibility window remain open. Mutation controls are in-memory comparisons.
 
 Run these files with the repository Python environment:
 

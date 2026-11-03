@@ -136,7 +136,7 @@ Derive physical dispersion and profile/state to flux-normalized in/out scatterin
 
 ### L1: three distinct obligations
 
-Independent review accepted the [direct Haar readback](L1_DIRECT_HAAR_READBACK.md) for A = 2922, mixed = 0, and the B curvature input. The remaining B factor uses the reduced reference, and physical tensor matching remains open.
+Independent review accepted the [direct Haar readback](L1_DIRECT_HAAR_READBACK.md) for A = 2922, mixed = 0, and the B curvature input. The reviewed direct endpoint and four-index calculation now also reproduces B = 444. The unpruned contraction and physical tensor matching remain open.
 
 The independently reviewed [sourced Ward witness](L1_WARD_RESIDUAL_WITNESS.md) detects omission of the literal action variation for a constructed observable insertion. Its Haar norm is strictly positive by full support. Source-only susceptibility and physical matching remain open.
 
