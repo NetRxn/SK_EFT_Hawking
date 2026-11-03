@@ -18,6 +18,12 @@ Use the existing continuity notebooks and assignment records for exact candidate
 
 Record agreed priority changes here. If L1 needs a longer research cycle, keep its construction active and record the decision to move L3 into the lead delivery position. Order the remaining bundles before this queue runs low, using the publication strategy and canonical readiness evidence. This entry records priorities and milestones. New dispatches and acceptance receipts belong in their existing records.
 
+### Current delivery checkpoints
+
+- **L1 lead.** The [finite tensor and source controls](L1_OFFDIAGONAL_HESSIAN.md) contain the reviewed two-site response, four-site controls, and exact pure-g₂ selection rules. At checkpoint `37e1a402`, the diagonal plus numerator has 86 surviving multisets in 19 orbits. The next construction evaluates an isolated center with mixed curvature planes. Full normalization, physical operator/contact matching, and retarded response remain open.
+- **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing, regenerated four-page PDF, and canonical finding §3.2 closure anchored to `d54f2e0c`. The current Letter still needs its broader review and qualification.
+- **NJL parallel integration.** [Checkpoint `fc9555ac`](https://github.com/NetRxn/SK_EFT_Hawking/commit/fc9555ac) contains the focused solver, reviewed Paper 5 render, and hook-verified Phase 5d notebooks. The terminal comparison of `b92e8db5` against main baseline `ce194cdc` has zero candidate-only failing test IDs. The configured fast suite on the render/notebook head and full merge qualification remain open.
+
 ## Accountable author, independent review and integration
 
 **Accepted scientific construction owner: Physics Publication Remediation lead (`/root`).** The lead accepts the full outstanding constructions below, beyond prose coordination. The initial acceptance was recorded at notebook r40; current scoped progress is reconciled against notebook r56 and the exact accepted source/review lineages below. This does not establish a historical private assignment. Each returned result needs independent verification; a proposed action is not an attempt or accepted result.
