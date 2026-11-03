@@ -502,3 +502,53 @@ these two uniform observables, the mixed half-period Gram is
 diagonal. Its dressed direction passes the scalar test given the
 assembled weighted sum, and the enlarged span containing the
 literal direction still fails positivity. Independent review verified the selection rule at pure g₂.
+
+For a retained single real combination `M = α L + β X` of the
+literal uniform plus operator and the unit-amplitude dressed
+operator in these source coordinates, the zero mixed entry gives
+the exact scalar sign criterion
+
+    α²/g₂² ≤ β² · 1563566443/99616.
+
+This follows from the two diagonal entries and is conditional on
+the assembled dressed subtotal. If the physical source retains
+both operators separately, the negative literal direction remains.
+The inequality constrains the required source match without fixing
+its coefficients or constructing a thermal representation.
+
+### Equal-time dressed product and local contact support
+
+For slice zero, let `B_0` be the sum of the squares of the individual
+occurrence weights on that slice. The quadratic action insertion
+has weight `B_0`, while the equal-time product of first insertions
+has weight `A_0² − B_0`. Their sum is the Hessian weight `A_0²`.
+The first moment is zero at pure g₂. The equal-time two-point test
+uses the product with the local action contact removed.
+
+On the same exact support with e=1, the counts of nonzero weights
+are 4,092 for the contact, 3,964 for the product and 2,770 for the
+Hessian. In particular X2, Y2 and diagonal mixed words contribute
+to the product and contact separately even though they cancel in
+the Hessian. An equal-time calculation restricted to nonzero
+Hessian weights would therefore omit required contributions.
+These are support counts. Exact coefficient sums and independent
+verification remain open.
+
+The checkerboard and wire sectors have constant (contact, product)
+weights within each class at e=1. The 64 words in each class give
+(4,12) for checkerboard, (2,2) for X1 and Y1, and (2,−2) for X2
+and Y2. Applying these weights to their exact normalization sums
+gives partial raw contact `19591665287/7962624` and partial raw
+operator product `58774395085/7962624`. The other equal-time
+sectors and independent reproduction remain open.
+
+### Independent cross-time reproduction
+
+At `24960a1c`, the independent reviewer reproduced all six
+remaining weighted subtotals. The replay independently counted
+original-label weights before symmetry reduction and reused the
+existing exact contraction kernels. Together with the earlier
+checkerboard, wire and mixed-cycle checks, this verifies the
+ten-sector assembly. The result supplies a positive half-period
+scalar for the specified dressed operator. Physical metric matching
+and equal-time thermal tests remain open.
