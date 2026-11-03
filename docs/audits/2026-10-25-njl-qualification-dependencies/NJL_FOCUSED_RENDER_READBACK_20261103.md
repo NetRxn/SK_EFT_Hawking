@@ -48,3 +48,11 @@ registry population of 677. Independent review checked default,
 relative, and absolute hook path resolution, then passed all 26
 architecture inventory tests. This qualifies the scoped inventory
 repair. The full focused suite needs a new exact-head receipt.
+
+At `e965a552`, the combined scoped inventory, workspace, citation, and
+solver suites passed 306 with one deselected. Two independent corpus
+measurements reproduced 91 hardcoded count literals and 67 spelled-out
+census figures. Lowering their ceilings from 95 and 71 restores zero
+headroom. Both exact failed node IDs and the related spelled-out census
+controls now pass with the existing predicates. Other ratchets remain
+open.
