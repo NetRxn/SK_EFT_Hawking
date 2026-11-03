@@ -3733,7 +3733,7 @@
     "Gate9_NumericalFreshness"
    ],
    "rewrite_of": null,
-   "tombstone": false,
+   "tombstone": true,
    "bundle_destination": "D12",
    "bundle_section_hint": "electrothermal-detector-physics",
    "lift_action": "Lift-section",
@@ -3755,6 +3755,49 @@
     "completeness": "full"
    },
    "delta_pct": 0.0
+  },
+  {
+   "id": "sentence:D12:electrothermal-detector-physics:365a877b",
+   "raw_id_parts": {
+    "paper": "D12",
+    "section_slug": "electrothermal-detector-physics",
+    "quote_hash": "365a877b",
+    "hash_algorithm": "sha256_first_8"
+   },
+   "section": "electrothermal-detector-physics",
+   "section_ordinal": 11,
+   "tex_line_start": 392,
+   "tex_line_end": 393,
+   "quote": "Right: the Johnson noise-equivalent-power correction $|1-\\mathcal{L}|$, which is an equality rather than a direction (a positive ETF-unaware budget \\emph{overstates} on $0 < \\mathcal{L} < 2$) and which is stability-blind.",
+   "quote_normalized": "right: the johnson noise-equivalent-power correction $|1-\\mathcal{l}|$, which is an equality rather than a direction (a positive etf-unaware budget overstates on $0 < \\mathcal{l} < 2$) and which is stability-blind.",
+   "type": "numeric",
+   "finding_classes": [],
+   "agent_verdict": "INFO",
+   "agent_notes": "Author re-anchor for the Johnson noise premise repair. Independent review pending.",
+   "agent_run_id": "publication-r6-d12-johnson-premises:35d9eeb6",
+   "gates_invoked": [],
+   "rewrite_of": "sentence:D12:electrothermal-detector-physics:c92492f0_b",
+   "tombstone": false,
+   "bundle_destination": "D12",
+   "bundle_section_hint": "electrothermal-detector-physics",
+   "lift_action": "Lift-section",
+   "chain_proposed": {
+    "links": [
+     {
+      "kind": "theorem",
+      "target": "SKEFTHawking.Electrothermal.ETFModel.johnsonNEP_eq_abs_one_sub_loopGain_mul_naive"
+     },
+     {
+      "kind": "theorem",
+      "target": "SKEFTHawking.Electrothermal.ETFModel.johnsonNEP_correction_magnitude_loses_stability_information"
+     },
+     {
+      "kind": "formula",
+      "target": "johnson_nep_correction_factor"
+     }
+    ],
+    "completeness": "partial"
+   }
   },
   {
    "id": "sentence:D12:the-model-and-its-dichotomy:b76b412a",
@@ -4351,7 +4394,7 @@
     "Gate8_NoveltyFraming"
    ],
    "rewrite_of": null,
-   "tombstone": false,
+   "tombstone": true,
    "bundle_destination": "D12",
    "bundle_section_hint": "responsivity-and-noise-floors",
    "lift_action": "Lift-section",
@@ -4367,6 +4410,45 @@
      }
     ],
     "completeness": "full"
+   }
+  },
+  {
+   "id": "sentence:D12:responsivity-and-noise-floors:4fbf4e6b",
+   "raw_id_parts": {
+    "paper": "D12",
+    "section_slug": "responsivity-and-noise-floors",
+    "quote_hash": "4fbf4e6b",
+    "hash_algorithm": "sha256_first_8"
+   },
+   "section": "responsivity-and-noise-floors",
+   "section_ordinal": 13,
+   "tex_line_start": 439,
+   "tex_line_end": 441,
+   "quote": "For $R\\neq0$, \\thm{johnsonCurrentPSD\\_eq\\_johnsonNyquist} is a genuine fluctuation--dissipation citation at conductance $1/R$. For $R\\neq0$, $G\\neq0$ and $1+\\mathcal{L}\\neq0$, \\thm{johnson\\_transfer\\_eq} \\emph{derives} the transfer factor from the coupled small-signal pair.",
+   "quote_normalized": "for $r\\neq0$, \\thm{johnsoncurrentpsd\\_eq\\_johnsonnyquist} is a genuine fluctuation--dissipation citation at conductance $1/r$. for $r\\neq0$, $g\\neq0$ and $1+\\mathcal{l}\\neq0$, \\thm{johnson\\_transfer\\_eq} derives the transfer factor from the coupled small-signal pair.",
+   "type": "theorem-ref",
+   "finding_classes": [],
+   "agent_verdict": "INFO",
+   "agent_notes": "Author re-anchor for the Johnson noise premise repair. Independent review pending.",
+   "agent_run_id": "publication-r6-d12-johnson-premises:35d9eeb6",
+   "gates_invoked": [],
+   "rewrite_of": "sentence:D12:responsivity-and-noise-floors:93d31acc",
+   "tombstone": false,
+   "bundle_destination": "D12",
+   "bundle_section_hint": "responsivity-and-noise-floors",
+   "lift_action": "Lift-section",
+   "chain_proposed": {
+    "links": [
+     {
+      "kind": "theorem",
+      "target": "SKEFTHawking.Electrothermal.ETFModel.johnsonCurrentPSD_eq_johnsonNyquist"
+     },
+     {
+      "kind": "theorem",
+      "target": "SKEFTHawking.Electrothermal.ETFModel.johnson_transfer_eq"
+     }
+    ],
+    "completeness": "partial"
    }
   },
   {
@@ -4492,7 +4574,7 @@
     "Gate4_ComputationCorrectness"
    ],
    "rewrite_of": null,
-   "tombstone": false,
+   "tombstone": true,
    "bundle_destination": "D12",
    "bundle_section_hint": "responsivity-and-noise-floors",
    "lift_action": "Lift-section",
@@ -4510,6 +4592,45 @@
     "completeness": "full"
    },
    "delta_pct": 0.0
+  },
+  {
+   "id": "sentence:D12:responsivity-and-noise-floors:46983609",
+   "raw_id_parts": {
+    "paper": "D12",
+    "section_slug": "responsivity-and-noise-floors",
+    "quote_hash": "46983609",
+    "hash_algorithm": "sha256_first_8"
+   },
+   "section": "responsivity-and-noise-floors",
+   "section_ordinal": 13,
+   "tex_line_start": 446,
+   "tex_line_end": 448,
+   "quote": "For $1+\\mathcal{L}\\neq0$ and a positive naive NEP, the naive budget \\emph{overstates} whenever $|1-\\mathcal{L}| < 1$, and \\thm{johnsonNEPNaive\\_lt\\_johnsonNEP\\_iff} states the boundary exactly, with the extreme case \\thm{johnsonNEP\\_naive\\_overstates\\_at\\_unit\\_loopGain}.",
+   "quote_normalized": "for $1+\\mathcal{l}\\neq0$ and a positive naive nep, the naive budget overstates whenever $|1-\\mathcal{l}| < 1$, and \\thm{johnsonnepnaive\\_lt\\_johnsonnep\\_iff} states the boundary exactly, with the extreme case \\thm{johnsonnep\\_naive\\_overstates\\_at\\_unit\\_loopgain}.",
+   "type": "numeric",
+   "finding_classes": [],
+   "agent_verdict": "INFO",
+   "agent_notes": "Author re-anchor for the Johnson noise premise repair. Independent review pending.",
+   "agent_run_id": "publication-r6-d12-johnson-premises:35d9eeb6",
+   "gates_invoked": [],
+   "rewrite_of": "sentence:D12:responsivity-and-noise-floors:20ae8dbc",
+   "tombstone": false,
+   "bundle_destination": "D12",
+   "bundle_section_hint": "responsivity-and-noise-floors",
+   "lift_action": "Lift-section",
+   "chain_proposed": {
+    "links": [
+     {
+      "kind": "theorem",
+      "target": "SKEFTHawking.Electrothermal.ETFModel.johnsonNEPNaive_lt_johnsonNEP_iff"
+     },
+     {
+      "kind": "theorem",
+      "target": "SKEFTHawking.Electrothermal.ETFModel.johnsonNEP_naive_overstates_at_unit_loopGain"
+     }
+    ],
+    "completeness": "partial"
+   }
   },
   {
    "id": "sentence:D12:responsivity-and-noise-floors:5004a587",
@@ -4535,7 +4656,7 @@
     "Gate9_NumericalFreshness"
    ],
    "rewrite_of": null,
-   "tombstone": false,
+   "tombstone": true,
    "bundle_destination": "D12",
    "bundle_section_hint": "responsivity-and-noise-floors",
    "lift_action": "Lift-section",
@@ -4557,6 +4678,49 @@
     "completeness": "full"
    },
    "delta_pct": 0.0
+  },
+  {
+   "id": "sentence:D12:responsivity-and-noise-floors:9c5bd418",
+   "raw_id_parts": {
+    "paper": "D12",
+    "section_slug": "responsivity-and-noise-floors",
+    "quote_hash": "9c5bd418",
+    "hash_algorithm": "sha256_first_8"
+   },
+   "section": "responsivity-and-noise-floors",
+   "section_ordinal": 13,
+   "tex_line_start": 448,
+   "tex_line_end": 450,
+   "quote": "The factor is $|1-\\mathcal{L}|$ and not $|1+\\mathcal{L}|$, because Johnson noise is not pure output noise: the Johnson EMF also perturbs the dissipated Joule power and returns through $dI/dT$, and the two electrothermal effects partially cancel. At $\\mathcal{L}=3$ the corrected NEP is twice the naive NEP (\\thm{speedupWitness\\_johnsonNEP\\_double}).",
+   "quote_normalized": "the factor is $|1-\\mathcal{l}|$ and not $|1+\\mathcal{l}|$, because johnson noise is not pure output noise: the johnson emf also perturbs the dissipated joule power and returns through $di/dt$, and the two electrothermal effects partially cancel. at $\\mathcal{l}=3$ the corrected nep is twice the naive nep (\\thm{speedupwitness\\_johnsonnep\\_double}).",
+   "type": "numeric",
+   "finding_classes": [],
+   "agent_verdict": "INFO",
+   "agent_notes": "Author re-anchor for the Johnson noise premise repair. Independent review pending.",
+   "agent_run_id": "publication-r6-d12-johnson-premises:35d9eeb6",
+   "gates_invoked": [],
+   "rewrite_of": "sentence:D12:responsivity-and-noise-floors:5004a587",
+   "tombstone": false,
+   "bundle_destination": "D12",
+   "bundle_section_hint": "responsivity-and-noise-floors",
+   "lift_action": "Lift-section",
+   "chain_proposed": {
+    "links": [
+     {
+      "kind": "theorem",
+      "target": "SKEFTHawking.Electrothermal.ETFModel.speedupWitness_johnsonNEP_double"
+     },
+     {
+      "kind": "theorem",
+      "target": "SKEFTHawking.Electrothermal.speedupWitness_loopGain"
+     },
+     {
+      "kind": "formula",
+      "target": "johnson_nep_correction_factor"
+     }
+    ],
+    "completeness": "partial"
+   }
   },
   {
    "id": "sentence:D12:responsivity-and-noise-floors:6a9ff797",
