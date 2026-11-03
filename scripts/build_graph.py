@@ -3190,18 +3190,23 @@ def extract_backed_by_edges(node_ids: set) -> list[dict]:
                 if kind == 'formula':
                     candidates = [f'formula:{target}']
                 elif kind in ('theorem', 'axiom'):
-                    # Prefer short-name resolution. ``_resolve_lean_short``
-                    # also accepts already-qualified names like
-                    # ``SKEFTHawking.Module.thm`` and yields ``lean:<full>``.
-                    resolved = _resolve_lean_short(target, node_ids)
-                    if resolved:
-                        candidates = [resolved]
+                    if target.strip().startswith('module:'):
+                        # A typed module ID cannot be rebound to a declaration
+                        # with the same final component. Preserve unknown IDs
+                        # as missing targets rather than changing their kind.
+                        module_id = _module_id_for_ref(target, node_ids)
+                        candidates = [module_id or target.strip()]
                     else:
-                        # Fall back to a whole-module backing reference: a claim
-                        # citing module ``X`` resolves to its LeanModule node
-                        # instead of becoming a missing_target dangling edge.
-                        mod_id = _module_id_for_ref(target, node_ids)
-                        candidates = [mod_id] if mod_id else [f'lean:{target}']
+                        # Legacy declaration references retain precedence over
+                        # unprefixed whole-module references.
+                        resolved = _resolve_lean_short(target, node_ids)
+                        if resolved:
+                            candidates = [resolved]
+                        else:
+                            # Legacy unprefixed module forms retain their
+                            # fallback after declaration resolution.
+                            mod_id = _module_id_for_ref(target, node_ids)
+                            candidates = [mod_id] if mod_id else [f'lean:{target}']
                 elif kind == 'parameter':
                     candidates = [f'param:{target}']
                 elif kind == 'citation':
@@ -3422,7 +3427,12 @@ def _module_id_for_ref(target: str, node_ids: set) -> str | None:
     """Map a 'whole module' backing reference to its LeanModule node id, if one
     exists. Handles the claims-reviewer's surface forms: ``X (module)``,
     ``X_module``, ``SKEFTHawking.X``, bare ``X``, and full nested paths ``A.B``.
-    Returns None if the normalized form is not a known module node."""
+    Canonical ``module:...`` IDs use exact membership; compatibility suffixes
+    and namespace normalization apply only to unprefixed legacy forms.
+    Returns None if the resulting form is not a known module node."""
+    typed = target.strip()
+    if typed.startswith('module:'):
+        return typed if typed in node_ids else None
     base = re.sub(r'\s*\([^)]*\)\s*$', '', target).strip()
     base = re.sub(r'_module$', '', base)
     if not base:

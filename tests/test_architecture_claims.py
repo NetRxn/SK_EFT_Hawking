@@ -580,3 +580,24 @@ def test_adr012_logical_repository_prefix_denotes_active_checkout(tmp_path, monk
     files = orchestrate.target_files("SK_EFT_Hawking/src/target.py, src/target.py:1-2")
     assert files == ["src/target.py"]
     assert (active / files[0]).read_text() == str(active)
+
+
+@pytest.mark.parametrize("paths,expected", [
+    (["papers/F/paper_draft.tex"], 1),
+    (["papers/F/paper_draft.tex", "papers/D1/paper_draft.tex"], 1),
+    (["papers/F/bundle_metadata.json"], 0),
+    (["papers/D1/paper_draft.tex"], 0),
+    (["lean/lean_deps.json"], 0),
+    (["docs/README.md"], 0),
+])
+def test_f_manuscript_scope_reaches_its_actual_numerical_reader(paths, expected):
+    _claim("VALIDATION_ARCHITECTURE.md",
+           "**A path maps to a step only where the path is a real INPUT to it.**")
+    from verify_scope import _plan
+
+    steps, _ = _plan(paths)
+    calls = [argv for _, argv in steps
+             if any(a == "--check" and b == "f_hierarchy_claims"
+                    for a, b in zip(argv, argv[1:]))]
+    assert len(calls) == expected
+    assert all("--no-memo" in argv for argv in calls)
