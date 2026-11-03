@@ -1853,7 +1853,7 @@
     "Gate5_LeanProofSubstance"
    ],
    "rewrite_of": null,
-   "tombstone": false,
+   "tombstone": true,
    "bundle_destination": "D12",
    "bundle_section_hint": "the-folklore-floor-fails-in-two-directions",
    "lift_action": "Lift-section",
@@ -1865,6 +1865,42 @@
      }
     ],
     "completeness": "full"
+   },
+   "delta_pct": 0.0
+  },
+  {
+   "id": "sentence:D12:the-folklore-floor-fails-in-two-directions:bcc5a89f",
+   "raw_id_parts": {
+    "paper": "D12",
+    "section_slug": "the-folklore-floor-fails-in-two-directions",
+    "quote_hash": "bcc5a89f",
+    "hash_algorithm": "sha256_first_8"
+   },
+   "section": "the-folklore-floor-fails-in-two-directions",
+   "section_ordinal": 5,
+   "tex_line_start": 224,
+   "tex_line_end": 231,
+   "quote": "\\paragraph{Exponentially fail-open as an average-error screen.} For nonnegative counts, \\thm{folkloreGap\\_split} proves the exponentiated identity. Combining its two factors with the exponential addition law and using injectivity gives \\begin{equation} (N_a - N_b) - (\\sqrt{N_a}-\\sqrt{N_b})^2 \\;=\\; 2\\sqrt{N_b}\\,(\\sqrt{N_a}-\\sqrt{N_b}), \\end{equation} so the Le Cam exponent beats the folklore exponent by exactly twice the baseline amplitude times the amplitude separation.",
+   "quote_normalized": "\\paragraph{exponentially fail-open as an average-error screen.} for nonnegative counts, \\thm{folkloregap\\_split} proves the exponentiated identity. combining its two factors with the exponential addition law and using injectivity gives \\begin{equation} (n_a - n_b) - (\\sqrt{n_a}-\\sqrt{n_b})^2 \\;=\\; 2\\sqrt{n_b}\\,(\\sqrt{n_a}-\\sqrt{n_b}), \\end{equation} so the le cam exponent beats the folklore exponent by exactly twice the baseline amplitude times the amplitude separation.",
+   "type": "numeric",
+   "finding_classes": [],
+   "agent_verdict": "INFO",
+   "agent_notes": "Author re-anchor pending independent claim review. The linked theorem assumes nonnegative counts and proves equality of exponentials. The live display follows by exponential addition, injectivity and rearrangement.",
+   "agent_run_id": "publication-r6-d12-author-reanchor:1795cc9a",
+   "gates_invoked": [],
+   "rewrite_of": "sentence:D12:the-folklore-floor-fails-in-two-directions:525de555",
+   "tombstone": false,
+   "bundle_destination": "D12",
+   "bundle_section_hint": "the-folklore-floor-fails-in-two-directions",
+   "lift_action": "Lift-section",
+   "chain_proposed": {
+    "links": [
+     {
+      "kind": "theorem",
+      "target": "SKEFTHawking.Detection.folkloreGap_split"
+     }
+    ],
+    "completeness": "partial"
    },
    "delta_pct": 0.0
   },
