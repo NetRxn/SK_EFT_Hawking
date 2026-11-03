@@ -1,6 +1,6 @@
 {
-  "generated": "2026-11-03T10:52:35.966380",
-  "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-polariton-recovery-20261103/lean/lean_deps.json",
+  "generated": "2026-11-03T10:57:39.086118",
+  "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-njl-integration-20261019/lean/lean_deps.json",
   "lean": {
     "total_declarations": 41065,
     "theorems_total": 22874,

@@ -10364,6 +10364,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-dispersive-coefficient-normalization:infra:1.1",
+      "status": "fixed",
+      "evidence": "Technical notebook applies the canonical dispersive ratio once. Exact merged NJL execution reproduced all five streams and both Plotly and PNG outputs, including the 69.3 mK conditional model scale. E1 and Paper 12 figure consumers independently reviewed. Physical calibration and dispersion derivation remain open.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/POLARITON_CONSUMER_READBACK.md",
+      "date": "2026-11-03",
+      "commit": "e3e08eff",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; nb=json.load(open('notebooks/Phase5d_Polariton_Technical.ipynb')); src=''.join(''.join(c.get('source',[])) for c in nb['cells']); assert 'T_H * (1 + correction)' not in src, 'notebook still adds 1 to the kappa_eff/kappa RATIO returned by dispersive_hawking_correction'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; nb=json.load(open('notebooks/Phase5d_Polariton_Technical.ipynb')); src=''.join(''.join(c.get('source',[])) for c in nb['cells']); assert 'T_H * (1 + correction)' not in src, 'notebook still adds 1 to the kappa_eff/kappa RATIO returned by dispersive_hawking_correction'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
