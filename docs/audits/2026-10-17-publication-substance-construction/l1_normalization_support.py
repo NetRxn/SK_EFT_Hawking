@@ -1,7 +1,7 @@
 """Enumerate the degree-eight pure-g2 normalization support."""
 from collections import Counter, defaultdict
-from itertools import combinations_with_replacement
-from math import factorial, prod
+from itertools import combinations, combinations_with_replacement
+from math import factorial, lcm, prod
 
 from l1_interacting_support import TERMS, forward, half, match
 
@@ -49,19 +49,53 @@ def link_degrees(indices):
     return degrees
 
 
+def extended_link_trees():
+    links = [(site, axis) for site in range(4) for axis in range(2)]
+    for tree in combinations(links, 3):
+        components = [{site} for site in range(4)]
+        for site, axis in tree:
+            left = next(group for group in components if site in group)
+            right = next(group for group in components if forward(site, axis) in group)
+            if left != right:
+                left.update(right)
+                components.remove(right)
+        if len(components) == 1:
+            yield tree
+
+
+def haar_scale(degree):
+    """Common denominator for normalized Spin(4) moments on a single link."""
+    def sphere_scale(n):
+        return prod(range(4, 4 + n, 2))
+
+    return lcm(*(sphere_scale(left) * sphere_scale(degree - left)
+                 for left in range(0, degree + 1, 2)))
+
+
 if __name__ == "__main__":
     profiles = Counter()
     ordered = 0
     support = set(normalization_support())
     orbits = Counter()
     maximum_degrees = Counter()
+    denominator_scale = 1
+    tree_degrees = Counter()
+    trees = tuple(extended_link_trees())
     for indices in sorted(support):
+        multiplicities = Counter(indices).values()
         orbit = translated_support(indices)
         assert orbit <= support
         if indices == min(orbit):
             orbits[len(orbit)] += 1
-            maximum_degrees[max(link_degrees(indices).values())] += 1
-        multiplicities = Counter(indices).values()
+            incidence = link_degrees(indices)
+            degrees = incidence.values()
+            remaining_degree = 48 - max(sum(incidence[link] for link in tree)
+                                        for tree in trees)
+            tree_degrees[remaining_degree] += 1
+            maximum_degrees[max(degrees)] += 1
+            weight_scale = prod(map(factorial, multiplicities))
+            denominator_scale = lcm(denominator_scale,
+                                    weight_scale * prod(map(haar_scale, degrees)))
         profiles[tuple(sorted(multiplicities, reverse=True))] += 1
         ordered += factorial(8) // prod(map(factorial, multiplicities))
     assert ordered == match(half(4), 0, (8,) * 4)[0]
@@ -71,3 +105,5 @@ if __name__ == "__main__":
     print("translation orbit sizes", sorted(orbits.items()))
     print("maximum per-link degree by orbit", sorted(maximum_degrees.items()))
     print("multisets", sum(profiles.values()), "ordered", ordered)
+    print("candidate tree reduction", len(trees), sorted(tree_degrees.items()))
+    print("common denominator including factorials", denominator_scale)

@@ -102,3 +102,31 @@ dynamic program, verified uniqueness of the sorted split, and checked the
 translation count by Burnside's lemma using fixed counts 6,451, 185, 185,
 and 211. The review checked the action orientation and exponential
 multiplicity conventions. Denominator evaluation remains open.
+
+For an integer contraction in the original link coordinates, a single
+Spin(4) link admits moment scales 4, 48, 192 and 11,520 in degrees two
+through eight. These are the least common multiples of products of the
+two normalized quaternion moment denominators over even chiral degree
+splits. Multiplying by the multiset factorials and taking the least
+common multiple over the inventory gives 53,851,443,515,311,584,706,560,000.
+
+A candidate contraction reduction is to fix an extended-link spanning
+tree before expanding each multiset. For a gauge-invariant Berezin
+integrand, tree link variables can be absorbed by site rotations, with
+unit Berezin Jacobian and unchanged normalized Haar measures on the
+remaining links. For this reduction, gauge covariance must be checked
+for the individual origin-labelled frame blocks as well as the summed
+action. The support enumerator profiles the 32 possible trees and
+reports the smallest remaining total polynomial degree for each orbit.
+The profile ranges from 30 to 42, down from 48 before fixing links.
+This profile measures possible savings. It does not apply gauge fixing
+or evaluate any signed integral.
+
+Independent review obtained the same common scale by enumerating reduced
+quaternion moment denominators and taking the least common multiple over
+all 6,451 multisets. In the evaluator convention that absorbs 16 into
+each action factor, this scale clears the scaled sum. The original sum
+uses the additional factor 16⁸. A nonzero residue modulo 65537 would
+certify nonzero normalization without recovering the exact signed value,
+since the prime divides neither scale. Retain both imaginary-unit
+embeddings when resolving complex coefficients.
