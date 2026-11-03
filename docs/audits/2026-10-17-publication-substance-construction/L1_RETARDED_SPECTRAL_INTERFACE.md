@@ -232,3 +232,28 @@ uniform operator and test its full mixed Gram data. Independent
 review verified the chain rule and identified the need for the same
 map at both times. With different real coefficients the cross-time
 factor would be their product, which could reverse the sign.
+
+### Mixed-channel acceptance test
+
+At half-period write the candidate uniform metric operator as
+`M = α L + X`, with `L` the literal uniform plus operator, real α, and
+`X` the net additional uniform contribution. For Hermitian
+operators with a real symmetric half-period form, set
+`d = B(L,L) < 0`, `b = B(L,X)`, and `c = B(X,X)`.
+A necessary scalar test for matching is
+`2αb + c ≥ α²|d|`. A coincident-time term cannot contribute to
+any entry of this test.
+
+If the proposed physical observable space includes both M and X,
+and α is nonzero, it also contains L = (M − X)/α. Its half-period
+Gram matrix then has a negative direction regardless of b and c.
+A projected construction may retain M alone, but it must derive
+that restriction from the physical observable algebra and test M
+with the other retained observables. Passing the scalar inequality
+only tests a single vector. For a finite set of additional retained observables
+with Gram block G and cross vector v, positivity requires G ≥ 0,
+v in the range of G, and B(M,M) ≥ v† G⁺ v. These conditions follow
+by minimizing the Gram quadratic form over the additional
+observables, including its nullspace. Independent review verified
+the expansion, negative direction, and singular-block criterion.
+These checks establish positivity only on the tested half-period span.
