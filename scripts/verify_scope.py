@@ -195,6 +195,16 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
     if d2_table_inputs.intersection(paths):
         steps.append(("D2 generated table parity",
                       ["uv", "run", "python", "-m", "pytest", "tests/test_sm_anomaly.py", "-q"]))
+    d8_table_inputs = {
+        "papers/D8/paper_draft.tex", "papers/D8/tables.py",
+        "papers/D8/tables/results.tex", "papers/D8/tables/alphabets.tex",
+        "papers/D8/tables/mechanisms.tex", "papers/D8/tables/reusable.tex",
+        "scripts/render_paper_tables.py", "scripts/paper_tables/__init__.py",
+    }
+    if d8_table_inputs.intersection(paths):
+        steps.append(("D8 generated table parity",
+                      ["uv", "run", "python", "-B", "-m", "pytest", "-q",
+                       "tests/test_d8_publication_figures.py::test_d8_generated_table_bindings"]))
     if "papers/F/paper_draft.tex" in paths:
         # This reader checks F's actual hierarchy/crossover prose against the
         # canonical producer; a manuscript-only edit does not run the suite.
@@ -216,7 +226,6 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
                        # above can see, since both judge PROOFS.
                        "--check", "vacuous_statement_audit",
                        "--check", "existential_witness_disclosure", "--no-memo"]))
-
     not_certified = []
     if touched["rust"]:
         not_certified.append(

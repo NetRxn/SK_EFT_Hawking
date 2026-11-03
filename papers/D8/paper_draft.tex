@@ -148,24 +148,7 @@ Table~\ref{tab:results} is the map.
 their hypotheses in the theorem statement; unconditional ones have none.}
 \label{tab:results}
 \begin{ruledtabular}
-\begin{tabular}{llc}
-Result & Statement & Conditional \\
-\colrule
-SK over an abstract alphabet & Thm~\ref{thm:substrate} & yes \\
-Logarithm with named radius & Thm~\ref{thm:mercator} & no \\
-SK at arbitrary $\su d$ & Thm~\ref{thm:sud} & yes \\
-Clifford$+T$ density & Thm~\ref{thm:accpt} & no \\
-Clifford$+T$ compilation & Thm~\ref{thm:cliffordt} & no \\
-$T$-free density at $\su 8$ & Thm~\ref{thm:literal} & no \\
-Clifford-only is not dense & Thm~\ref{thm:notdense} & no \\
-Toffoli-count lower bound & Thm~\ref{thm:toffoli} & no \\
-Compiler correctness & Thm~\ref{thm:compile} & no \\
-Grid-route length, exponent $1$ & Thm~\ref{thm:rslength} & yes \\
-Grid route from the hypothesis & Thm~\ref{thm:rssynth} & yes \\
-Ancilla route, exponent $1$ & Thm~\ref{thm:kmm} & no \\
-Operator norm to diamond & Thm~\ref{thm:akn} & no \\
-End-to-end channel certificate & Thm~\ref{thm:capstone} & no \\
-\end{tabular}
+\input{tables/results.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -448,9 +431,10 @@ $5^{n(\varepsilon)} = (\log 1/\varepsilon)^{\gamma}$ with
 \[
   \gamma \;=\; \frac{\log 5}{\log (3/2)} \;\approx\; 3.97 ,
 \]
-which agrees with the value reported for the balanced-commutator algorithm by
-Selinger~\cite{Selinger2015} and by Kliuchnikov, Maslov and
-Mosca~\cite{KMM2013ancilla}. The exponent is defined once and referenced by
+which is the gate-sequence length exponent in Dawson and Nielsen's
+Eq.~(8)~\cite{DawsonNielsen2006}. Their Eq.~(9) gives the separate
+classical runtime exponent for compressed output. Later comparisons
+also discuss this length scaling~\cite{Selinger2015,KMM2013ancilla}. The exponent is defined once and referenced by
 every dimension-generic module, so the value cannot drift between the statement
 of Theorem~\ref{thm:sud} and the instantiations that consume it. The frequently
 quoted $\log 5/\log 2 \approx 2.32$ corresponds to a quadratic contraction
@@ -480,31 +464,25 @@ problem. This section is the evidence. The measure of the claim is not how many
 alphabets appear but how much of each one's work is alphabet-specific, so
 Table~\ref{tab:alphabets} is organized by that column.
 
-\begin{table}
+\begin{table*}[t]
 \caption{What each alphabet supplies. Every entry inherits the recursion, the
 net, the Baker--Campbell--Hausdorff estimate and the Cartan step from
 Theorem~\ref{thm:substrate} or Theorem~\ref{thm:sud}. The rightmost column is
 the whole of the alphabet-specific work.}
 \label{tab:alphabets}
 \begin{ruledtabular}
-\begin{tabular}{lll}
-Alphabet & Target & Alphabet-specific input \\
-\colrule
-Clifford$+T$ & $\su 2$ & $\sqrt 2 \sin(\pi/8)$ not an algebraic integer \\
-Read--Rezayi $k=5$ & $\su 2$ & Chebyshev factorization of $T_7(x)+1$ \\
-Read--Rezayi $k=7$ & $\su 2$ & triple-angle collapse at $\cos(\pi/9)$ \\
-Trapped-ion M\o lmer--S\o rensen & $\su 4$ & Brylinski entangling criterion \\
-Clifford$+$CCZ (with $T$) & $\su 8$ & density of the $\{H,T,\mathrm{CNOT}\}$ part \\
-Clifford$+$CCZ ($T$-free) & $\su 8$ & $\mathrm{tr} = 1/\sqrt2$ not an algebraic integer \\
-\end{tabular}
+\input{tables/alphabets.tex}
 \end{ruledtabular}
-\end{table}
+\end{table*}
 
-\figuredeferred{fig:d8-coverage}{the existing alphabet-by-dimension coverage
-figure shows a Fibonacci row, which Ref.~\cite{RoehmD4Topological} owns and
-this paper no longer claims; recutting it against
-Table~\ref{tab:alphabets} requires a regenerated figure from the project's
-canonical visualization module}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/d8_fig1_alphabet_dimension_map.png}
+\caption{The alphabet and target-group pairs in Table~\ref{tab:alphabets}.
+Blue denotes a density argument from a sub-alphabet or a per-qubit route.
+Amber identifies the $T$-free construction in which CCZ is essential.}
+\label{fig:d8-coverage}
+\end{figure*}
 
 The two Read--Rezayi rows are the sharpest evidence for the interface claim,
 because their number theory is genuinely unlike the Clifford$+T$ case and the
@@ -804,26 +782,29 @@ verified here, and no one of them dominates the others. Each buys the exponent
 at a different price, and the three prices are the honest content of this
 section.
 
-\begin{table}
+\begin{table*}[t]
 \caption{The three verified compilation mechanisms. No mechanism is best on
 every axis; the table is the comparison a compiler author actually needs.}
 \label{tab:mechanisms}
 \begin{ruledtabular}
-\begin{tabular}{llll}
-Mechanism & Exponent & Conditional on & Ancillas \\
-\colrule
-Balanced commutator & $3.97$ & nothing & none \\
-Ross--Selinger grid & $1$ & Hypothesis~\ref{hyp:residual} & none \\
-Kliuchnikov--Maslov--Mosca & $1$ & nothing & two \\
-\end{tabular}
+\input{tables/mechanisms.tex}
 \end{ruledtabular}
-\end{table}
+\end{table*}
 
-\figuredeferred{fig:d8-length-comparison}{a figure comparing the three verified
-length bounds as functions of precision, plotted directly from the theorem
-statements of this section, requires a plotting function in the project's
-canonical visualization module; the bounds themselves are proved and appear in
-Table~\ref{tab:mechanisms}}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/d8_fig4_length_comparison.png}
+\caption{Word-length bounds from the three mechanisms in
+Table~\ref{tab:mechanisms}. The balanced commutator bound uses the
+target accuracy within its proved domain. For successful
+Ross--Selinger grid search, the middle panel plots the increment
+$8k$ above the symbolic overhead $N_3$, against the first-column
+precision $\delta=(1+\sqrt{2})/\sqrt{2}^{\,k}$. The ancilla-assisted
+KMM bound uses squared output-state error up to a unit global
+phase, for normalized inputs with initialized ancillas. These
+coordinates represent different guarantees.}
+\label{fig:d8-length-comparison}
+\end{figure*}
 
 \subsection{The grid route and its one hypothesis}
 \label{sec:length-rs}
@@ -1262,22 +1243,13 @@ Lemma~\ref{lem:somekills} is \lean{someKills\_of\_orthogonal}.
 Several components of this development are general-purpose and are absent from
 Mathlib at the pin used here.
 
-\begin{table}[h]
+\begin{table*}[t]
 \caption{Components with use beyond this development.}
 \label{tab:reusable}
 \begin{ruledtabular}
-\begin{tabular}{ll}
-Component & Where it arises \\
-\colrule
-Banach-algebra logarithm, named radius & Theorem~\ref{thm:mercator} \\
-Euclidean domain instance for $\mathbb Z[\zeta_8]$ & Sec.~\ref{sec:length-appc} \\
-Euler $Z$--$X$--$Z$ decomposition of $\su 2$ & Sec.~\ref{sec:length-kmm} \\
-Dimension-generic BCH order-two cubic estimate & Sec.~\ref{sec:substrate} \\
-$\su d$ Cartan density-from-witness lemma & Sec.~\ref{sec:sud} \\
-Matrix-exponential local homeomorphism at $\mathbf 1$ & Sec.~\ref{sec:sud} \\
-\end{tabular}
+\input{tables/reusable.tex}
 \end{ruledtabular}
-\end{table}
+\end{table*}
 
 The elimination of compiled evaluation described in Sec.~\ref{sec:trust} is a
 precondition for any of these being contributed upstream, since

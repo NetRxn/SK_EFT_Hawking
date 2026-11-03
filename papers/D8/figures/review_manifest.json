@@ -4,13 +4,13 @@
     {
       "name": "d8_fig1_alphabet_dimension_map",
       "png": "d8_fig1_alphabet_dimension_map.png",
-      "caption": "Coverage map: 5 alphabets across SU(2)/SU(4)/SU(8); blue=sub-alphabet/per-qubit density route, amber=T-free CCZ-essential. 7 rows, 2-entry legend.",
+      "caption": "Six alphabet and target-group pairs from Table alphabets, with the T-free CCZ route identified.",
       "expected_properties": [
         "SU(2)",
         "SU(4)",
         "SU(8)",
-        "Clifford+CCZ (literal)",
-        "Fibonacci"
+        "Clifford+CCZ (T-free)",
+        "Essential CCZ"
       ]
     },
     {
@@ -34,6 +34,17 @@
         "word length",
         "error",
         "3.97"
+      ]
+    },
+    {
+      "name": "d8_fig4_length_comparison",
+      "png": "d8_fig4_length_comparison.png",
+      "caption": "Three theorem-specific word-length bounds with distinct error coordinates and symbolic Ross–Selinger overhead.",
+      "expected_properties": [
+        "Target ε",
+        "Column precision δ",
+        "Squared state error",
+        "Bound − N₃"
       ]
     }
   ]

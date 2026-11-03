@@ -5824,6 +5824,30 @@ CITATION_REGISTRY = {
         'notes': 'Auto-generated stub from \\bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
     },
 
+    'CoutantWeinfurtner2018KdV': {
+        'authors': 'Coutant, A., and Weinfurtner, S.',
+        'title': 'Low-frequency analogue Hawking radiation: The Korteweg–de Vries model',
+        'journal': 'Phys. Rev. D',
+        'volume': 97,
+        'page': '025005',
+        'year': 2018,
+        'doi': '10.1103/PhysRevD.97.025005',
+        'arxiv': '1707.09651v2',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CoutantWeinfurtner2018KdV.pdf',
+        'used_in': ['papers/E1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Publisher title/authors/DOI/year verified2026-10-15 against APS; '
+                  '2017 is submission year, not journal year. Author preprint v2 '
+                  'read at equation level. Weak-dispersive KdV model neglects '
+                  'co-propagating coupling. For the specified profile, Eqs39–40 '
+                  'give low-frequency T_eff/T_H=tanh(pi*q_r) and exponentially '
+                  'small smooth-limit departures. No nonzero leading local-D^2 '
+                  'temperature term or device-specific pi/6 is established by '
+                  'this result. Final journal body not read.'),
+    },
+
     'CoutantParentani2010': {
         'authors': 'A.~Coutant and R.~Parentani, Phys. Rev. D , 024009 (2010)',
         'title': '',
@@ -6488,14 +6512,14 @@ CITATION_REGISTRY = {
         'volume': 6,
         'page': '81-95',
         'year': 2006,
-        'doi': None,
+        'doi': '10.26421/QIC6.1-6',
         'arxiv': 'quant-ph/0505030',
-        'doi_verified': None,
+        'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf',
         'used_in': ['papers/D4/paper_draft.tex', 'papers/D8/paper_draft.tex'],
         'provides': [],
-        'notes': 'Canonical reference for the polylogarithmic length bound of the Solovay-Kitaev algorithm. Cited in D4 §9 Stage 10.E prose alongside KitaevShenVyalyi2002 (existence form) and AharonovArad2011 (group-commutator substrate). No DOI: QIC vol. 6 (Rinton Press) does not register article DOIs; arXiv quant-ph/0505030 is the canonical locator.',
+        'notes': 'Author v2 §3.3, Eq. (8), gives log(5)/log(3/2) for gate-sequence length. Eq. (9) gives log(3)/log(3/2) for classical runtime. Publisher DOI verified against Crossref.',
     },
 
     'KitaevShenVyalyi2002': {
