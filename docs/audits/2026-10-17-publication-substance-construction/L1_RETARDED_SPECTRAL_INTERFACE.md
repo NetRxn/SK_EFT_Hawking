@@ -579,3 +579,28 @@ The ratio of half-period to equal-time product is
 The finite pair passes the scalar two-time compatibility test.
 Independent reproduction, physical operator matching and
 reconstruction from further time samples remain open.
+
+### Conditional low-frequency weight bound
+
+In any positive thermal realization of the contact-subtracted
+pair, normalize the Lehmann weights by the equal-time value A,
+including static weight as an atom at frequency zero. The
+half-period ratio is the expectation of `sech(aν)` under this
+probability measure. For every cutoff `ν_c ≥ 0`, monotonicity
+of sech yields
+
+    weight([0, ν_c]) ≤ min(1, (B/A) cosh(a ν_c)).
+
+In particular the static fraction is at most B/A. At unit shear
+in the four-site pure-g₂ model, the assembled ratio gives a bound
+of about 0.1424 percent on the static fraction, conditional on
+such a realization. The scalar one-gap model saturates the
+low-frequency bound at its gap. The bound does not determine
+the spectrum or establish a positive physical state. Independent
+review is pending.
+
+Independent reproduction confirmed all 13 sector contributions,
+the separate contact and product totals, and the compatibility
+ratio. The replay independently computed occurrence squares and
+ordered-pair weights before symmetry reduction and reused the
+existing exact kernels. This verifies the scalar finite pair.
