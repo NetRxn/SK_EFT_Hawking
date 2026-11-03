@@ -493,3 +493,12 @@ words, with 156 connected and four split size-`(2,6)` words. It
 checked the Haar scales, signed exterior joins and branch symmetry.
 The four split words complete that shape population. The subtotal
 over 6,195 accounted words is `11270712702218527/19110297600`.
+
+The [one-shared-link evaluator](l1_equal_time_shared_quartic.py)
+covers 48 additional words with exact subtotal `168399/2`. The
+[double-shared chain](l1_equal_time_double_shared.py) covers 16
+additional words with subtotal `1323`. Both retain the joint quartic
+Haar weights and signed exterior complements. Independent exact
+reruns reproduced the totals, the factorial weights and the disjoint
+populations. The equal-time subtotal is `254772` over 97 words.
+The remaining 48 source-decoupled and 40 joint-source words are open.
