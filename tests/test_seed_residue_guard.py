@@ -378,6 +378,30 @@ class TestTheJournalSurvivesAKill:
                 pass                                        # pragma: no cover
         assert not _probe_doc("unmarked.md").exists()
 
+    def test_journalled_exclusive_until_restore(self, tmp_path, monkeypatch):
+        victim = tmp_path / "victim"
+        victim.write_bytes(b"original")
+        lock = sj._path_lock
+        monkeypatch.setattr(sj, "_path_lock", lambda path: lock(path, timeout=0.05))
+        with sj.journalled(victim, reason="first"):
+            victim.write_bytes(b"seed")
+            with pytest.raises(TimeoutError):
+                with sj.journalled(victim, reason="second"):
+                    pytest.fail("second caller entered during the first seed")
+            assert victim.read_bytes() == b"seed"
+        assert victim.read_bytes() == b"original"
+
+    def test_relative_review_path_cannot_bypass_seed_guard(self, monkeypatch):
+        monkeypatch.chdir(SK_ROOT)
+        target = (REVIEWS / "2026-08-12-0200-citation-integrity" / "D10.md")
+        target = target.relative_to(SK_ROOT)
+        with pytest.raises(ValueError, match="seeded_mutation"):
+            with sj.journalled(target, reason="relative journal probe"):
+                pytest.fail("relative corpus path was admitted")
+        with pytest.raises(ValueError, match="SEEDED"):
+            with sj.seeded_mutation(target, b"unmarked", reason="relative seed probe"):
+                pytest.fail("unmarked corpus seed was admitted")
+
     def test_journalled_REFUSES_the_review_corpus(self):
         """`journalled` cannot enforce the marker — it never sees the content — so it must
         not accept a corpus path at all. Otherwise it is the hole in the invariant."""
