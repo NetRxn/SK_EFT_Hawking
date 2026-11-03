@@ -10574,6 +10574,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-dispersive-coefficient-normalization:infra:2.1",
+      "status": "fixed",
+      "evidence": "Independent citation review SHA-256 621260aad3580f700445bc51fb318e1538343de932c47ad75c9540682674da85. Exact Verify reproduced one unqualified incorrect article number on baseline and zero on candidate. arXiv:1402.2514 and DOI 10.1103/PhysRevD.90.121501 confirm article identity. Bytes outside docstring conserved. Exact-source declaration index qualification remains separate.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "4467cf10",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import pathlib,re; bad=[f'{p}:{s.count(chr(10),0,m.start())+1}' for p in pathlib.Path('lean').rglob('*.lean') for s in [p.read_text()] for m in re.finditer('124004', s) if 'earlier draft' not in s[max(0,m.start()-220):m.start()]]; assert not bad, f'PRD 89, 124004 asserted as the reference (not annotated as the known misprint) at: {bad}'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import pathlib,re; bad=[f'{p}:{s.count(chr(10),0,m.start())+1}' for p in pathlib.Path('lean').rglob('*.lean') for s in [p.read_text()] for m in re.finditer('124004', s) if 'earlier draft' not in s[max(0,m.start()-220):m.start()]]; assert not bad, f'PRD 89, 124004 asserted as the reference (not annotated as the known misprint) at: {bad}'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
