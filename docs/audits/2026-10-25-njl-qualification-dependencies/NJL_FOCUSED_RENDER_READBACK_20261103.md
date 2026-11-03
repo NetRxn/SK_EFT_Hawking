@@ -118,3 +118,17 @@ and compared sorted unresolved tuples of paper, claim ID, link kind
 and target. All 111 tuples matched the baseline with multiplicity.
 This is inherited review-corpus debt. The gate remains red against
 ceiling 109, and the bundle-readiness failure group remains open.
+
+The readiness replay compared all emitted details from
+`bundle_lean_module_coverage`, `bundle_stage13_claim_consistent`,
+`bundle_sentence_length`, `apex_theorem_claims_grounded` and
+`apex_claims_not_vacuous` on the candidate and `ce194cdc`.
+The only emitted difference was the unattributed open required
+population, which fell from 57 to 56 against ceiling 44. The
+undeclared subset fell from 22 to 21. The declared but unmapped
+subset stayed at 35 and 74 findings still reached bundle aggregation.
+The differential measures emitted details. Three supersession
+records were added across the candidate history, including the
+critical NJL finding. This replay does not isolate their individual
+contributions to the net population change. Merge qualification
+and publication readiness remain open.
