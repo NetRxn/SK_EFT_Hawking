@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-03T11:25:57.210196",
+  "generated": "2026-11-03T11:30:39.608278",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-d1-scalars-20261103/lean/lean_deps.json",
   "lean": {
     "total_declarations": 41065,
@@ -2088,6 +2088,7 @@
   },
   "aristotle": {
     "aristotle_proved": 313,
-    "aristotle_runs": 40
+    "aristotle_runs": 39,
+    "aristotle_manual": 9
   }
 }
