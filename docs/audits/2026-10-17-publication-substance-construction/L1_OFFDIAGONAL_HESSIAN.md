@@ -455,3 +455,14 @@ entries out of 1,296, invariance under link exchange, and the
 single-link kernel after either chiral sphere contraction. The
 checkpoint rerun matches the independent construction. All 184
 non-benchmark words now have source tensors for their action joins.
+
+The [checkerboard repeated mixed cycle](l1_normalization_repeated_mixed_cycle.py)
+covers 64 more words, disjoint from the all-distinct mixed cycle.
+For each edge it retains the joint degree-six moment when the
+curvature and transport use the same physical link. The alternative
+anchor factors into quartic curvature and quadratic transport
+moments. Independent review reconstructed the incidence and checked
+three same- and mixed-chirality projection pairs by direct symbolic
+quaternion moments. The exact checkpoint trace gives
+`136051531/221184` with zero imaginary component. The denominator
+now has 416 unevaluated words.
