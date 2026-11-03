@@ -450,3 +450,55 @@ weighted subtotal is −72441 at unit shear amplitude. Together
 with the two preceding subtotals this covers 778 of the 2,160
 contributing words. Independent reproduction and the seven
 remaining sectors are open.
+
+The private-repeated replay covers 1,120 normalization words,
+of which 504 carry a nonzero cross-time multiplier. Across 11
+contraction plans it reproduced the unweighted sum `8071653/32`
+and gave the weighted subtotal `−121389/2` at unit shear amplitude.
+This brings the evaluated cross-time support to 1,282 of 2,160
+words. The subtotal awaits independent reproduction.
+
+The existing correlated contraction evaluator gave weighted
+subtotals `652/3` (32 six-component words) and `13453205/108`
+(494 eight-component words), grouped in 19 plans. The checkerboard
+replay found the same multiplier 16 on all 64 words, giving
+`136051531/13824` from its verified unweighted sector. X1 and Y1
+each have multiplier −4 on all 64 words. Their orientation sums
+are `31543/10616832` and zero respectively, with four layouts per
+orientation sum. Their combined weighted subtotal is
+`−31543/663552`. These weighted subtotals await independent
+reproduction. Only the 160 contributing mixed-cycle words remain
+to evaluate.
+
+The fresh mixed-cycle replay reproduced both nonzero plane
+coefficients, `6947573/1769472` and `147830509/84934656` per
+16 orientations. The weighted layout multiplicity is 32 for
+each class, yielding `481314013/2654208` with zero imaginary part.
+Summing all ten weighted sectors gives `1563566443/884736`.
+The one-point terms vanish by the verified transverse exchange.
+Dividing by the exact source-free normalization gives the
+connected uniform half-period response
+`33773035168800/11270712996006127 > 0` at e=1 and pure g₂.
+This establishes the scalar sign in the specified regulator
+subject to independent reproduction of the weighted contractions.
+Independent review reproduced the checkerboard, wire and mixed-cycle
+weights and the rational assembly. The other six weighted contractions
+still await independent reproduction. The physical match and positivity
+on any larger retained observable space remain open.
+
+### Mixed entry with the literal uniform operator at pure g₂
+
+The mixed half-period entry of the literal metric insertion and
+the curvature-dressed insertion vanishes by the same Pin change
+of variables used for the literal one-point test. Both insertions
+have Grassmann degree four. The dressed insertion counts as one
+S2 factor and changes sign under Pin, while the literal insertion
+is invariant. Saturation requires six ordinary S2 factors in
+addition to the tagged one, so the total of seven S2 factors is
+odd. The mixed numerator changes sign and vanishes after
+Haar–Berezin integration. The literal one-point term is also zero.
+There is no shared contact at distinct times. Thus on the span of
+these two uniform observables, the mixed half-period Gram is
+diagonal. Its dressed direction passes the scalar test given the
+assembled weighted sum, and the enlarged span containing the
+literal direction still fails positivity. Independent review verified the selection rule at pure g₂.
