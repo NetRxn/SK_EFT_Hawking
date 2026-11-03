@@ -231,3 +231,13 @@ and counts them once. With the previous transport terms, the evaluator
 covers 528 multisets with subtotal `2005445321/259200`. The separate
 104,978 all-local contribution is outside this subtotal. The full
 normalization is open.
+
+## Repeated commutator curvature
+
+The component evaluator covers 168 further multisets made from
+four-factor components with two squared labels sharing the same
+commutator curvature. It integrates the common curvature with its
+fourth moment and retains a joint fourth moment for any shared
+transport link. The clean consolidated run gives `188663/2700`
+for these terms and `2023556969/259200` across the 696 covered
+multisets. The independent review of this increment is pending.

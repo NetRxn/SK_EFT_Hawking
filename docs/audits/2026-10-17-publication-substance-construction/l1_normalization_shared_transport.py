@@ -6,7 +6,7 @@ from itertools import product,permutations
 from math import factorial,prod
 from l1_normalization_disjoint_sector import quat,adj,pair,site
 from l1_normalization_opposed_fourth import (
-    nodes,tuples,fourth_T,curv_moment,L,
+    nodes,tuples,fourth_T,curv_moment,L,vec_moment,
 )
 from l1_normalization_support import TERMS, forward, normalization_support
 from l1_direct_b_haar import R,diag,gamma,bilinear,add,scale,wedge,haar_moment
@@ -37,7 +37,7 @@ def component_multisets():
 
 
 def supported(component):
-    if mixed_links(component) or same_links(component):
+    if mixed_links(component) or same_links(component) or comm_links(component):
         return True
     counts = Counter(component)
     labels = tuple(counts)
@@ -200,6 +200,63 @@ def same_component(x,y,k):
     # integration is stored with denominator 48².
     return out,(8**2*4**4*3)**2*48**2
 
+def comm_links(comp):
+    if sorted(Counter(comp).values()) != [2, 2]:
+        return False
+    a,b=sorted(set(comp))
+    x,k,l,u,v=TERMS[a][2];y,q,r,m,n=TERMS[b][2]
+    return x==y and (k,l,q,r)==(2,3,2,3)
+
+def curvature_basis(K,T):
+    poly={}
+    for (c,d),ls in L.items():
+        for (e,f),rs in L.items():
+            for a,v in ls:
+                for b,z in rs:
+                    k=tuple(sorted((a,b)))
+                    poly[k]=add(poly.get(k,{}),scale(wedge(K[c][e],T[d][f]),v*z))
+    return poly
+
+@cache
+def W(x,axis):
+    return curvature_basis(pair(x,axis),local_pair(x))
+
+@cache
+def comm_weight(ab,cd):
+    q=ab+cd
+    l=tuple(z for z in q if z<3);r=tuple(z-3 for z in q if z>=3)
+    if len(l)%2:return 0
+    t=2025*vec_moment(l)*vec_moment(r)
+    assert t.denominator==1
+    return int(t)
+
+def comm_square(A):
+    # At the same center the two factors each use four generators there.
+    # Discard duplicate masks before the quartic curvature pairing.
+    return add(*(scale(wedge(a,b),comm_weight(i,j)) for i,a in A.items()
+                 for j,b in A.items() if comm_weight(i,j)))
+
+@cache
+def comm_base(shared):
+    x=0
+    if not shared:
+        return comm_square(curvature_basis(pair(x,0),pair(x,1))),2025*(8**2*4**4)**2
+    out={}
+    K=pair(x,1)
+    for l,r,w in nodes():
+        U=diag(quat(l),quat(r));Ud=diag(quat(adj(l)),quat(adj(r)))
+        T=pair_fixed(x,0,x,U,Ud)
+        out=add(out,scale(comm_square(curvature_basis(T,K)),w))
+    return out,2025*(8*4**2*8**2)**2*96
+
+@cache
+def comm_component(labels):
+    x,k,l,u,v=labels[0];_,_,_,a,b=labels[1]
+    assert (u,v)!=(a,b)
+    shared=(u==a or v==b)
+    p,q=comm_base(shared)
+    return translate(p,lambda z:x ^ (((z&1)<<1)|((z&2)>>1)) if v==b else x^z),q
+
 @cache
 def component(comp):
     labels=tuple(TERMS[i][2] for i in sorted(set(comp)))
@@ -207,6 +264,8 @@ def component(comp):
     if len(labels)==1:
         p,q=quartic_component()
         return translate(p,lambda x:x^labels[0][0]),q
+    if comm_links(comp):
+        return comm_component(labels)
     if mixed_links(comp):
         return mixed_component(labels)
     if same_links(comp):
@@ -242,7 +301,8 @@ def main():
         ps,qs=zip(*map(component,comps))
         t=F(top_product(ps),w*prod(qs))
         shape=tuple(sorted(map(len,comps)))
-        family = ("same singleton" if any(map(same_links, comps))
+        family = ("shared commutator" if any(map(comm_links, comps))
+                  else "same singleton" if any(map(same_links, comps))
                   else "mixed singleton" if any(map(mixed_links, comps))
                   else "one shared link" if any(len(set(c)) == 2 for c in comps)
                   else "disjoint")
