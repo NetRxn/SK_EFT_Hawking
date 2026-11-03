@@ -433,3 +433,20 @@ existing component evaluator and top wedge product to each word,
 divided by its repeated-label factorials and component moment
 denominators, and multiplied by `A_0 A_a`. The subtotal awaits
 independent reproduction. The other nine sectors remain open.
+
+The mixed-chain replay reproduced the unweighted sector sum 325
+over 256 words. At unit shear amplitude, 64 same-singleton words
+contribute 326 and 64 opposite-singleton words contribute −324,
+giving an exact weighted subtotal of 2. The weighting was applied
+to the original labels before using translated contraction
+representatives. Independent reproduction of this subtotal is
+pending.
+
+The private-paired run grouped 458 selected words by their existing
+canonical contraction plan, curvature-reduction count and factorial.
+Within each of the 18 groups it summed the signed original-label
+weights before multiplying by the exact plan contraction. The
+weighted subtotal is −72441 at unit shear amplitude. Together
+with the two preceding subtotals this covers 778 of the 2,160
+contributing words. Independent reproduction and the seven
+remaining sectors are open.
