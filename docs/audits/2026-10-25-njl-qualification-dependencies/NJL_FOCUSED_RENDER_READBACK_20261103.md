@@ -31,3 +31,11 @@ establish the current exact-head slot result. The runs used different
 checkout paths and report different skip counts. The focused candidate
 remains unqualified for merge pending investigation of the attribution
 increase and disposition of the remaining failures.
+
+The exact finding-set comparison traced the increase to managed-worktree
+findings 1.1 and 1.2 entering open while the NJL substrate finding
+closed. Both path repairs were already independently reviewed. On
+`cd018f44`, the combined declared suites passed 80 with one deselected,
+and the canonical closure writer reran each declared verifier before
+recording both closures. The unattributed test now measures 56 against
+44. The remaining over-ceiling findings still require disposition.

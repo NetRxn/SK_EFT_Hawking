@@ -10278,6 +10278,36 @@
         "enforced": true,
         "run_at": "2026-10-19"
       }
+    },
+    {
+      "finding_id": "review:2026-10-19-managed-worktree-paths:infra:1.1",
+      "status": "fixed",
+      "evidence": "Active checkout target resolution repaired at 0b601254 and independently reviewed. The declared orchestrator verifier passes on focused head cd018f44.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-19-managed-worktree-paths/SCOPED_REVIEW.md",
+      "date": "2026-11-03",
+      "commit": "0b601254",
+      "verified_by": {
+        "command": "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+        "declared": "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-19-managed-worktree-paths:infra:1.2",
+      "status": "fixed",
+      "evidence": "Shared-cache path resolution independently reviewed at 0b601254. The independently reviewed citation composition at f28cc370 clears the remaining whole-Verify citation failure.",
+      "superseded_by": "papers/AutomatedReviews/2026-10-19-managed-worktree-paths/SCOPED_REVIEW.md",
+      "date": "2026-11-03",
+      "commit": "cd018f44",
+      "verified_by": {
+        "command": "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py",
+        "declared": "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
