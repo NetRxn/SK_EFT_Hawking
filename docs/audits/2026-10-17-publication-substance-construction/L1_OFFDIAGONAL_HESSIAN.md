@@ -159,3 +159,10 @@ coefficient 27,252,495,206,055,936 in units of `9216^-4`. Each multiset
 contributes `17/72` after its four `2!` factors. The sector adds
 `34/9` to the pure-g₂ degree-eight normalization. It is distinct from
 the all-local sector above. The remaining signed sectors are open.
+
+Independent review reproduced the exact coefficient and checked the
+16-word membership by link incidence and by counting the two anchor
+choices for each of four extended site pairs. It also checked the
+incoming and outgoing Haar second moments and the antisymmetric
+curvature covariance. The exterior join retains the shared Grassmann
+sites and their signs.
