@@ -552,3 +552,30 @@ checkerboard, wire and mixed-cycle checks, this verifies the
 ten-sector assembly. The result supplies a positive half-period
 scalar for the specified dressed operator. Physical metric matching
 and equal-time thermal tests remain open.
+
+The exact small-component equal-time replay evaluated 368 words.
+At e=1 it gives raw contact `2924675/96` and raw operator product
+`1466837/48`. The same pass reproduced the cross-time control
+`8999/96`. These equal-time subtotals await independent reproduction.
+
+The private-curvature replays reproduced both cross-time controls.
+Their equal-time (contact, product) subtotals are
+`(4303005/8, 3856815/8)` for private repeated and
+`(301833, 229392)` for private paired. All 160 diagonal-mixed words
+have `A_0=0` and `B_0=2`. Their previously verified normalization
+sum `−40213/16` therefore gives contact `−40213/8` and product
+`40213/8`. These equal-time results await independent reproduction.
+
+The last (contact, product) pairs are `(650,652)` for mixed chain,
+`(30943735159/191102976,3710873777/191102976)` for mixed cycle,
+`(652/3,1304/3)` for correlated six and
+`(38961401/108,26207303/54)` for correlated eight.
+All four reproduce their cross-time controls. The full raw contact
+is `234940237883935/191102976` and the full raw operator product is
+`237137274962921/191102976`. The contact-subtracted normalized
+equal-time value is `23713727496292100/11270712996006127`.
+The ratio of half-period to equal-time product is
+`337730351688/237137274962921`, strictly between zero and one.
+The finite pair passes the scalar two-time compatibility test.
+Independent reproduction, physical operator matching and
+reconstruction from further time samples remain open.
