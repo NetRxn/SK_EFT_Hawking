@@ -10514,6 +10514,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.9",
+      "status": "fixed",
+      "evidence": "The exact Lean declaration is an rfl unfolding at the prescribed depth and the metadata now discloses that. The two related claims match their theorem scope. Exact Verify and both production apex checks passed. Independent readback SHA256 85cb6a72246e1ea732bf80c1969b1f37dc0e75a47ab4b11b20a21d9922ec4eff.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "5772a02d",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if t['name'].endswith('cliffordTCompile_eq_recursion')][0]; sys.exit(0 if 'definitional' in e['claims'].lower() else 1)\"",
+        "declared": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if t['name'].endswith('cliffordTCompile_eq_recursion')][0]; sys.exit(0 if 'definitional' in e['claims'].lower() else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
