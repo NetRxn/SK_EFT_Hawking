@@ -55,3 +55,23 @@ Independent review verified the half-period Gram identity, translation,
 the exact numerator inputs and the support of allowed contact terms.
 The obstruction applies for either sign of a real denominator and
 also excludes a complex off-diagonal entry in the symmetric matrix.
+
+### Operator mixing and momentum projection
+
+An invertible change of source basis acts by congruence on the
+half-period matrix. For real nonzero `d` this preserves a negative
+direction. For nonreal `d` it preserves the failure of Hermiticity. Adding more
+operators while retaining the tested ones also retains the original
+matrix as a principal submatrix. In a positive enlargement any
+zero-diagonal source must have zero mixed half-period entries with
+every added operator, by the two-by-two principal minor test.
+
+A projection that discards directions is a separate test. On the
+two-site spatial torus the normalized constant and staggered modes
+have half-period values `d` and `-d`, respectively. Thus for a real
+nonzero denominator, precisely one mode passes this positivity test.
+In particular the nonzero spatial momentum mode passes if `Z > 0`
+under the stated common real source matching. This single inequality
+does not establish a positive transfer state. A projected physical
+construction needs an independently derived operator and projection,
+its full mixed half-period Gram matrix, and time-dependent data.

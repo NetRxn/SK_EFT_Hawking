@@ -261,3 +261,16 @@ include the previously evaluated all-local word. Evaluate the other
 5,576 using the original link variables. Factor each action into its
 curvature and two frame blocks to eliminate link moments before
 forming large exterior products.
+
+## Six-factor transport chains
+
+The [chain evaluator](l1_normalization_six_transport.py) integrates
+each shared link with its joint fourth moment. Eliminating the two
+outer centers reduces each shared-link tensor from 3,952 exterior
+terms to 336, and the middle contraction leaves 84. The
+[direct moment control](l1_normalization_six_moment_control.py)
+reproduces three shared-link entries coefficient by coefficient using
+exact symbolic Haar moments. The 64 distinct `(2,6)` multisets
+contribute `3/8` each, including factorial weights, for subtotal
+`24`. Independent review checked all 64 incidences and normalization
+factors. This sector is separate from the 874 smaller-component words.
