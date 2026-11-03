@@ -1552,3 +1552,30 @@ undetermined. Fixing c requires a metric matching condition,
 such as matching the response of independently normalized
 matter to the same background. The family gives a control
 for that construction, not a prescription for choosing c.
+
+### Matter calibration control for the collapsed transverse axes
+
+For a minimally coupled real scalar probe, discretize the
+kinetic term with periodic forward differences and the inverse
+background metric. Use a fixed coordinate cell volume and the
+diagonal background g(h) = exp(hP). This background has
+determinant one at every site, and its inverse components along
+the two extended axes are one. The transverse forward
+differences vanish identically on a 2×2×1×1 lattice. The
+mass term also has no strain dependence because the volume
+factor is one. Thus the entire scalar probe action, including
+its quadratic contact, is independent of h even if h varies
+over the extended directions. This statement assumes a
+source-independent scalar measure and the usual periodic
+identification without transverse twist.
+
+This probe cannot fix the shear normalization on the current
+regulator. A minimally coupled scalar calibration needs a
+transverse kinetic mode, for example by extending a transverse
+direction and using a probe with nonzero momentum along it.
+Then the derivative of the probe kinetic term measures the
+difference of the two transverse gradient squares. Even with
+that calibration, fixing c requires a joint observable or a
+microscopic coupling that ties the calibrated probe strain to
+the same composite metric. A separately added scalar action
+has no dependence on c.
