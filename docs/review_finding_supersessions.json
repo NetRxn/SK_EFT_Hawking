@@ -10334,6 +10334,36 @@
         "enforced": true,
         "run_at": "2026-10-25"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d1-stage10-redraft:D1:1.1",
+      "status": "fixed",
+      "evidence": "The actual three BEC crossover results use the thermal effective scale and the full dissipative floor; canonical output, charter, flagship consumer and guard agree. The original physical BUILD obligations remain separate.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/D1_F_CONTROL_READBACK.md",
+      "date": "2026-11-03",
+      "commit": "2e56926994ed296e0f513ccab7a286b259e18141",
+      "verified_by": {
+        "command": "uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider",
+        "declared": "uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-25-njl-module-reference-resolution:infra:1.1",
+      "status": "fixed",
+      "evidence": "Exact typed module IDs resolve before legacy declaration lookup; fourteen actual references resolve while all 2313 link identities remain and genuinely unknown module targets are refused.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/MODULE_ROUTING_REVIEW.md",
+      "date": "2026-11-03",
+      "commit": "f56431a5326e5ffd1a64a37313aa2cc2bb3efc12",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest tests/test_chain_canonicalize.py tests/test_d5_reviews.py::TestChainBackingTargetsResolve -q",
+        "declared": ".venv/bin/python -B -m pytest tests/test_chain_canonicalize.py tests/test_d5_reviews.py::TestChainBackingTargetsResolve -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
