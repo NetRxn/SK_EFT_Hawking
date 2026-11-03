@@ -28,11 +28,10 @@ current noise, a low-frequency plateau $2k_BT_H\sigma_Q$ falling off above
 $\omega_H$. At the de~Laval nozzle of Geurs \emph{et al.}, at an assumed
 gradient $\kappa = \SI{2e12}{\per\second}$, this is
 \SI{1.2e-26}{\ampere\squared/\hertz}, separated by shape from a
-$100\times$ larger Johnson--Nyquist background. Dispersive and viscous
-corrections are comparable and opposite, making graphene the one platform
-where dissipation is measurable. Their net sign flips between the two
-electron-electron lengths in circulation, so we state the gradient and
-transport inputs as assumptions.
+$100\times$ larger Johnson--Nyquist background. With an adopted
+quadratic dispersive law, dispersive and viscous shifts are comparable
+and opposite; their net sign changes between two electron-electron
+length estimates. The law, gradient and transport inputs remain assumptions.
 \end{abstract}
 
 \maketitle
@@ -175,21 +174,21 @@ could return.
 %% ══════════════════════════════════════════════════════════════════
 \section{The two leading corrections}
 
-The dispersive correction is governed by the adiabaticity parameter
+We parameterize the dispersive correction using
 $D = \kappa\,l_{\rm ee}/c_s$, with $l_{\rm ee}$ the electron-electron
-scattering length at which hydrodynamics gives out:
-$\delta_{\rm disp} = -c_1 D^2$ with $c_1 = O(1)$, following Finazzi and
-Parentani~\cite{Finazzi2012}. The coefficient depends on the horizon
-profile and is not universal. This work's positivity result,
+scattering length at which hydrodynamics gives out, and adopt
+$\delta_{\rm disp} = -c_1 D^2$ with $c_1 = \pi/6$.
+The whole quadratic law is phenomenological: neither its power nor its
+coefficient is derived from this device's dispersion and profile.
+This work's positivity result,
 \texttt{GrapheneHawking.graphene\_T\_eff\_positive}, states
 $\forall T_H, D: 0 < T_H \wedge D^2 < 6/\pi \Rightarrow
 0 < T_H(1 - \tfrac{\pi}{6}D^2)$, proved for the particular choice
-$c_1 = \pi/6$ with both hypotheses used. Our spectrum pipeline uses the
-same $\pi/6$, which is now the single canonical value in this project's
-constants, imported rather than retyped wherever it is used. We display
-$c_1$ rather than absorb it, so that adopting a different profile's
-coefficient rescales every dispersive number here by $c_1/(\pi/6)$ and
-leaves the qualitative conclusions untouched.
+$c_1 = \pi/6$ with both hypotheses used. This certifies positivity
+of the defined temperature, not the physical ansatz. The pipeline uses
+the same canonical $\pi/6$. Changing $c_1$ rescales
+the dispersive shifts by $c_1/(\pi/6)$ and can move the crossover with
+dissipation or change which contribution dominates.
 
 At the electron temperature $T_{\rm e} = \SI{150}{\kelvin}$ that
 Ref.~\cite{Geurs2025} estimates the device reaches under high bias, with
@@ -231,20 +230,22 @@ viscous window $\omega_H/\Gamma_H$ shrinks as the horizon steepens, so
 narrowing the constriction to raise $T_H$ closes the detection window
 rather than opening it.
 
-The two channels partially cancel, leaving
-$T_{\rm eff}/T_H - 1 = +3.7\%$, a shift \emph{above} $T_H$. This is what
-the Schwinger--Keldysh organization buys: at a few percent each, both
-corrections sit inside the derivative expansion's domain, so their relative
-size is a prediction rather than an extrapolation to the edge of validity.
-The smooth-horizon polariton configuration of Falque \emph{et al.}\ has
-$\delta_{\rm disp} \approx -19\%$ against $\delta_{\rm diss} \approx 14\%$
-at the same $c_1$: comparable too, but neither small.
+Within this model, the channels partially cancel, leaving
+$T_{\rm eff}/T_H - 1 = +3.7\%$, \emph{above} $T_H$. Small terms
+neither establish the leading physical behavior nor bound omitted terms.
+For a projected
+\SI{100}{\pico\second} cavity at the smooth-horizon parameters of
+Falque \emph{et al.}, the same quadratic ansatz gives
+$\delta_{\rm disp} \approx -19\%$ against
+$\delta_{\rm diss} \approx 14\%$. These comparable values describe
+the projection, not the as-built cavity.
 
 The \emph{sign} of the net shift is not yet a prediction. It is $+3.7\%$ at
 $l_{\rm ee} = \SI{51}{\nano\meter}$, $c_1 = \pi/6$; $-4.3\%$ at
 Ref.~\cite{Geurs2025}'s \SI{100}{\nano\meter}; and $+1.1\%$ at $c_1 = 1$.
-A measured $l_{\rm ee}$ and a profile-specific $c_1$ are what make the sign
-falsifiable. The magnitude, a few percent, is robust across all four.
+These conditional shifts require a measured $l_{\rm ee}$ and a
+device-specific dispersive calculation before their sign is a physical
+prediction; they supply no general error bound.
 
 Two scope conditions attach to the transport inputs.
 Ref.~\cite{Majumdar2025} observes $\sigma_Q \to 4e^2/h$ only for
@@ -302,21 +303,27 @@ monotonically: it does \emph{not} peak at $\omega_H$. The plateau is
 halving at $\omega = 1.6\,\omega_H$ and independent of the detector's
 tuning, which is why the discriminant is shape.
 
-The greybody factor encodes departure from a perfect thermal emitter. For a
-smooth $1{+}1$D acoustic horizon the zero-frequency limit is
-profile-independent, $\Gamma_0 = 4 c_R v/(c_R+v)^2$~\cite{AndersonBFP2013},
-% TODO: this closed form and its profile-independence are attributed to
-% Anderson, Balbinot, Fabbri and Parentani, PRD 87, 124018 (2013), which is
-% NOT held in Lit-Search/Phase-*/primary-sources/ and has not been read at
-% page level. Verify against the primary before submission.
-giving $\Gamma_0 = 0.99995$ at $v = 0.985c_s$, $c_R \approx c_s$, so the
-prefactor of Eq.~\eqref{eq:noise_psd} is effectively $\sigma_Q$. In the
-adiabatic regime
-$\Gamma(\omega) \approx \Gamma_0[1 - (\omega/\omega_{\max})^2]$ with
-$\omega_{\max} = \sqrt{\kappa c_s/l_{\rm ee}} \approx 7.8\,\omega_H$, so
-$\Gamma$ stays within a few percent of $\Gamma_0$ across the band. Its
-frequency dependence is the largest device-specific unknown in the
-spectrum's shape, which is what the discriminant is built on.
+Anderson \emph{et al.}~\cite{AndersonBFP2014Graybody}, Eq.~(36), derive
+$\Gamma_0=4c_Rv/(c_R+v)^2$ in the infrared for a hydrodynamic,
+transversely frozen BEC with stationary constant flow and density and
+smooth sound speed approaching fixed asymptotes. Here $c_R$ is the
+exterior asymptotic sound speed. Profile independence holds within this
+model at $\omega\to0$; it establishes neither graphene transmission nor
+finite-frequency behavior. Adopting $c_R\approx c_s$ and $v/c_R=0.985$
+gives $\Gamma_0=0.99994$, an illustrative matching assumption.
+We also adopt the quadratic roll-off
+$\Gamma(\omega)\approx\Gamma_0[1-(\omega/\omega_{\max})^2]$, with
+$\omega_{\max}=\sqrt{\kappa c_s/l_{\rm ee}}$.
+Since $\omega_H=\kappa/(2\pi)$, this prescription implies
+$(\omega_{\max}/\omega_H)^2=4\pi^2/D$. The literal inputs
+$\kappa=\SI{2e12}{\per\second}$, $c_s=\SI{4.4e5}{\meter/\second}$
+and $l_{\rm ee}=\SI{51}{\nano\meter}$ give $D=51/220$ and
+$\omega_{\max}/\omega_H\approx13$. At $4\omega_H$ relative
+suppression is exactly $4D/\pi^2=51/(55\pi^2)\approx9.4\%$.
+Rounded $D=0.23$ and the numerical platform's separately derived
+$l_{\rm ee}\approx\SI{50.92}{\nano\meter}$ are distinct input conventions;
+no independent $7.8\,\omega_H$ fit is supplied. The
+cited infrared result supplies no finite-band error bound.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Detection and the falsifiable window}
@@ -354,9 +361,11 @@ The window over which the prediction is cleanest is
 Below it the plateau carries no shape information and the measurement
 degenerates into an amplitude comparison against an uncalibrated
 background; above it the greybody roll-off and the transverse-channel edge
-enter. Inside it the dispersive expansion stays perturbative, $\Gamma$
-stays within a few percent of $\Gamma_0$, and the lowest transverse channel
-is closed at the assumed $W$.
+enter. Inside it the adopted dispersive shift is small at the chosen inputs,
+the adopted quadratic roll-off gives at most the relative suppression computed
+above at the upper edge, and the lowest transverse channel is closed at the
+assumed $W$. This suppression follows from the model and carries no
+independent transmission error bound.
 
 A measured $\Delta S_I(\omega)$ in this band fixes $T_H$ from the Planckian
 shape and $\sigma_Q$ from the plateau height independently, so one spectrum
@@ -402,15 +411,16 @@ $\kappa = \SI{2e12}{\per\second}$ it radiates at \SI{2.43}{\kelvin}, nine
 orders of magnitude above atomic BEC and roughly twenty times above the
 polariton platform on a common normalization, and the signal is a
 \SI{1.2e-26}{\ampere\squared/\hertz} Planckian excess separated from a
-white background by shape over $\omega/\omega_H \in [0.5,4]$. What
-distinguishes the platform is that the dispersive and dissipative channels
-are comparable, opposite, and both small, so their ratio is a quantitative
-prediction rather than an extrapolation.
+white background by shape over $\omega/\omega_H \in [0.5,4]$. For the
+adopted quadratic dispersive law and transport inputs, the
+dispersive and dissipative shifts are comparable, opposite and small.
+Their ratio is a conditional model outcome; establishing the physical
+dispersive response requires a device-specific calculation.
 
 That prediction is gated on three inputs the experiment has not supplied.
 The velocity gradient at the sonic point fixes the entire frequency scale,
 and is why our temperature differs from Ref.~\cite{Geurs2025}'s own
-estimate by a factor of five. The electron-electron length fixes the sign
+estimate by a factor of five. Within the adopted law, the electron-electron length fixes the sign
 of the net shift. The machine-checked chain
 (\texttt{DiracFluidMetric}, \texttt{DiracFluidWKB},
 \texttt{GrapheneHawking}, \texttt{GrapheneNoiseFormula},
@@ -474,15 +484,13 @@ N.~Bili\'c, Class.\ Quant.\ Grav.\ \textbf{16}, 3953 (1999).
 \bibitem{Romatschke2010}
 P.~Romatschke, Int.\ J.\ Mod.\ Phys.\ E \textbf{19}, 1 (2010).
 
-\bibitem{Finazzi2012}
-S.~Finazzi and R.~Parentani, Phys.\ Rev.\ D \textbf{85}, 124027 (2012).
-
 \bibitem{CallenWelton1951}
 H.~B.~Callen and T.~A.~Welton, Phys.\ Rev.\ \textbf{83}, 34 (1951).
 
-\bibitem{AndersonBFP2013}
-P.~R.~Anderson, R.~Balbinot, A.~Fabbri, and R.~Parentani, Phys.\ Rev.\ D
-\textbf{87}, 124018 (2013).
+\bibitem{AndersonBFP2014Graybody}
+P.~R.~Anderson, R.~Balbinot, A.~Fabbri, and R.~Parentani,
+``Gray-body factor and infrared divergences in 1D BEC acoustic black holes,''
+Phys.\ Rev.\ D \textbf{90}, 104044 (2014), arXiv:1404.3224v3.
 
 \bibitem{Blanter2000}
 Ya.~M.~Blanter and M.~B\"uttiker, Phys.\ Rep.\ \textbf{336}, 1 (2000).

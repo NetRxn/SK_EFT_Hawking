@@ -30,7 +30,7 @@
 \date{\today}
 
 \begin{abstract}
-We present a systematic computation of dissipative corrections to Hawking radiation in Bose--Einstein condensate (BEC) analog gravity using the Schwinger--Keldysh effective field theory framework. Starting from Son's superfluid effective action and extending it with Schwinger--Keldysh doubling to capture gradient-dominated dissipation, we derive the modified dispersion relation and compute corrections to the Hawking temperature in transonic (sonic black hole) backgrounds. The main result is the explicit formula
+We present a systematic computation of dissipative corrections to Hawking radiation in Bose--Einstein condensate (BEC) analog gravity using the Schwinger--Keldysh effective field theory framework. Starting from a nonrelativistic superfluid action and extending it with Schwinger--Keldysh doubling to capture gradient-dominated dissipation, we derive the modified dispersion relation and compute corrections to the Hawking temperature in transonic (sonic black hole) backgrounds. The main result is the explicit formula
 \begin{equation*}
 T_{\text{eff}} = T_H \left(1 + \delta_{\text{disp}} + \delta_{\text{diss}} + \delta_{\text{cross}}\right),
 \end{equation*}
@@ -54,22 +54,21 @@ The present work addresses this gap by computing the \textit{first} dissipative 
 
 Our approach combines three recent developments:
 \begin{enumerate}
-\item \textbf{Son's superfluid EFT} \cite{Son2002}: the symmetry-breaking and EFT framework for phonons in superfluids valid in the hydrodynamic regime. Son (hep-ph/0204199) constructs this action for a \emph{relativistic} superfluid; the non-relativistic adaptation used here---the Madelung/Galilean form---follows Endlich \textit{et al.}~(\emph{Phys.\ Rev.\ D} \textbf{88}, 105001, 2013).
+\item \textbf{Son's superfluid EFT} \cite{Son2002}: the symmetry-breaking and EFT framework for phonons in superfluids valid in the hydrodynamic regime. Son derives a Goldstone effective action for a \emph{relativistic} superfluid. We use that symmetry-breaking logic and specify our nonrelativistic density--phase model separately.
 \item \textbf{Schwinger--Keldysh formalism for dissipative media} \cite{Crossley2017,Jana2020}: A general framework for systematically including dissipation via gradient expansion and transport coefficients.
 \item \textbf{Analog Hawking radiation in BECs} \cite{Coutant2014,Steinhauer2019}: Controlled experiments where surface gravity, flow profiles, and microscopic properties are tunable.
 \end{enumerate}
 
-The plan of the paper is as follows. In \S\ref{sec:son}, we review Son's superfluid action and derive the acoustic metric in phonon form. In \S\ref{sec:sk}, we extend to the Schwinger--Keldysh framework and write the dissipative superfluid action in first-order form. In \S\ref{sec:background}, we establish the transonic background (sonic black hole) and derive the modified wave equation for phonons near the Hawking frequency. In \S\ref{sec:results}, we present the main analytical and numerical results. Finally, in \S\ref{sec:discussion}, we discuss implications for universality and future experiments.
+The plan of the paper is as follows. In \S\ref{sec:son}, we introduce the nonrelativistic superfluid action and derive the acoustic metric in phonon form. In \S\ref{sec:sk}, we extend to the Schwinger--Keldysh framework and write the dissipative superfluid action in first-order form. In \S\ref{sec:background}, we establish the transonic background (sonic black hole) and derive the modified wave equation for phonons near the Hawking frequency. In \S\ref{sec:results}, we present the main analytical and numerical results. Finally, in \S\ref{sec:discussion}, we discuss implications for universality and future experiments.
 
-\section{Son's Superfluid EFT and the Acoustic Metric}
+\section{The Superfluid Action and the Acoustic Metric}
 \label{sec:son}
 
 \subsection{The Superfluid Action}
 
-Following Son's EFT framework \cite{Son2002}---originally formulated for
-a relativistic superfluid---and its non-relativistic Madelung adaptation
-\cite{Son2002}, the action of a non-relativistic superfluid starts from the
-Galilean-invariant structure of the superfluid phase and density:
+Son's relativistic EFT~\cite{Son2002} motivates organizing the dynamics
+around the superfluid phase. For the BEC calculation we take the following
+nonrelativistic Madelung-form density--phase action as the starting model:
 \begin{equation}
 \label{eq:son_action}
 S = \int d^3 x \, dt \left[ n(\partial_t \phi + \vec{v} \cdot \nabla \phi) - P(n, \phi) \right].
@@ -509,9 +508,9 @@ We thank the developers of Lean~4 and Mathlib for the formal verification infras
 
 \bibitem{Jacobson1996} T.~Jacobson, \textit{Phys.\ Rev.\ D} \textbf{53}, 7082 (1996).
 
-\bibitem{Son2002} D.~T.~Son, hep-ph/0204199; see also S.~Endlich, A.~Nicolis, R.~A.~Porto, and J.~Wang, \textit{Phys.\ Rev.\ D} \textbf{88}, 105001 (2013).
+\bibitem{Son2002} D.~T.~Son, \emph{Low-Energy Quantum Effective Action for Relativistic Superfluids}, arXiv:hep-ph/0204199 (2002).
 
-\bibitem{Coutant2014} O.~Coutant and R.~Parentani, \textit{Phys.\ Rev.\ D} \textbf{90}, 121501(R) (2014).
+\bibitem{Coutant2014} A.~Coutant and R.~Parentani, \textit{Phys.\ Rev.\ D} \textbf{90}, 121501(R) (2014).
 
 \bibitem{Crossley2017} M.~Crossley, P.~Glorioso, and H.~Liu, \textit{JHEP} \textbf{1709}, 095 (2017).
 
@@ -519,7 +518,7 @@ We thank the developers of Lean~4 and Mathlib for the formal verification infras
 
 \bibitem{Steinhauer2019} J.~Steinhauer, \textit{Nat.\ Phys.} \textbf{12}, 959 (2016); J.~R.~Mu\~noz de Nova, K.~Golubkov, V.~I.~Kolobov, and J.~Steinhauer, \textit{Nature} \textbf{569}, 688 (2019).
 
-\bibitem{Berti2025} A.~Berti, J.~Fernandes, S.~Butera, A.~Recati, M.~Wouters, and I.~Carusotto, Comptes Rendus Physique \textbf{25}, 1--36 (2025); arXiv:2408.17292; DOI: 10.5802/crphys.226.
+\bibitem{Berti2025} A.~Berti, L.~Fernandes, S.~Butera, A.~Recati, M.~Wouters, and I.~Carusotto, Comptes Rendus Physique \textbf{25}, S2, 181--216 (2024), first online 20 January 2025; DOI: 10.5802/crphys.226; arXiv:2408.17292.
 
 \bibitem{Zaremba1999} E.~Zaremba, T.~Nikuni, and A.~Griffin, \textit{J.\ Low Temp.\ Phys.} \textbf{116}, 277 (1999). [Kinetic theory for BEC.]
 

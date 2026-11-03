@@ -226,8 +226,8 @@ theorem trivial_fixed_point (G N_f Λ : ℝ) :
   ring
 
 /-
-The gap operator maps [0, Λ] to [0, Λ] when 0 < G and 0 < Λ.
-(Self-mapping property needed for IVT application.)
+The gap operator is nonnegative on nonnegative gaps for positive parameters.
+The conclusion supplies no upper bound or invariant interval [0, Λ].
 -/
 theorem gapOperator_self_map (G N_f Λ Δ : ℝ) (hG : 0 < G) (hN : 0 < N_f)
     (hΛ : 0 < Λ) (hΔ : 0 ≤ Δ) (hΔΛ : Δ ≤ Λ) :
@@ -267,9 +267,11 @@ theorem gap_trivial_unique_subcritical (G N_f Λ : ℝ)
 
 Proof strategy (IVT): Define g(Δ) = G·N_f·I(Δ) − 1.
 - g(0) = G/G_c − 1 > 0 (since G > G_c)
-- g(Λ) → negative for large enough Λ (since I(Λ) → 0)
-- g is continuous (since I is continuous)
-By IVT, ∃ Δ* ∈ (0, Λ) with g(Δ*) = 0, i.e., Δ* = f_G(Δ*).
+- for fixed Λ, g(Δ) tends to -1 as Δ tends to infinity
+- choose an unrestricted Δ₀ > 0 with g(Δ₀) < 0
+- g is continuous on [0, Δ₀]
+By IVT, ∃ Δ* ∈ (0, Δ₀) with g(Δ*) = 0, i.e., Δ* = f_G(Δ*).
+The endpoint Δ₀ is not the UV cutoff Λ; the root can exceed Λ.
 -/
 theorem gap_nontrivial_exists (G N_f Λ : ℝ)
     (hG : 0 < G) (hN : 0 < N_f) (hΛ : 0 < Λ)
@@ -432,7 +434,7 @@ theorem gapIntegral_le_I0 (Δ Λ : ℝ) (hΔ : 0 ≤ Δ) (hΛ : 0 < Λ) :
   · rw [ le_antisymm ( le_of_not_gt hΔ_pos ) hΔ ]
 
 /-
-Lower bound on I(Δ): I(Δ) ≥ c₄·Λ²/(2(Λ²+Δ²)) for Δ ≥ 0.
+Lower bound on I(Δ): I(Δ) ≥ c₄·Λ⁴/(4(Λ²+Δ²)) for Δ ≥ 0.
 
 This provides two-sided control on the gap integral, enabling
 explicit bounds on G_c.

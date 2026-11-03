@@ -10263,6 +10263,595 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-08-12-substrate-lane-refile:substrate-lane-refile:1",
+      "status": "fixed",
+      "evidence": "Original critical NJL cutoff-cap mismatch repaired in ce4e0b28: checked uncapped roots or explicit refusal, all consumer propagation and residual regressions, independent numerical/native/whole12/whole18 reviews. Exact-real critical/cutoff/bracket bridge and declared complete120-case Verify support this scoped fix. See papers/AutomatedReviews/2026-10-19-njl-root-bracket-repair/SCOPED_REVIEW.md. Full40-failure/CI-floor/CI_SKIP/tree merge gates remain FAILED; no physical ADW, full IEEE, main or bundle acceptance.",
+      "superseded_by": null,
+      "date": "2026-10-19",
+      "commit": "ce4e0b2821d34e28883894cc1e12f033e99ac9cc",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "declared": "uv run python -m pytest tests/test_tetrad_gap.py tests/test_tetrad_gap_solver.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-19"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-19-managed-worktree-paths:infra:1.1",
+      "status": "fixed",
+      "evidence": "Existing active-checkout target parser and workspace-owned cache invariant repaired using accepted9edf7c8f composition; original RED/GREEN and production controls independently reviewed in the whole24 review de345a5c. Exact declared Verify commands pass on current NJL candidate with prepared Python and unchanged populations/refusals. Existing43754623 extractor tmp_path isolation retained. This closes only the two portability defects; full merge qualification, physical BUILDs and inherited scientific/source propagation R1 remain open.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/SCOPED_REVIEW.md",
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+        "declared": "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-19-managed-worktree-paths:infra:1.2",
+      "status": "fixed",
+      "evidence": "Existing active-checkout target parser and workspace-owned cache invariant repaired using accepted9edf7c8f composition; original RED/GREEN and production controls independently reviewed in the whole24 review de345a5c. Exact declared Verify commands pass on current NJL candidate with prepared Python and unchanged populations/refusals. Existing43754623 extractor tmp_path isolation retained. This closes only the two portability defects; full merge qualification, physical BUILDs and inherited scientific/source propagation R1 remain open.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/SCOPED_REVIEW.md",
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py",
+        "declared": "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-15-d7-current-theorem-regression:infra:1.1",
+      "status": "fixed",
+      "evidence": "Current K exact06c7d8eb two-path integration reproduces original1FAIL3PASS then7PASS for the declared complete citation class. Independent current source/generated-type/manuscript/control review48be8dcd accepts only this regression scope. Existing writer enforces the exact declared seven-test Verify; original numerical/proof/physicalB2 obligations and fullmodule149vs117 failure remain open. No new theorem or main/publication acceptance.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/D7_REVIEW.md",
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": ".venv/bin/python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "declared": ".venv/bin/python -m pytest tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-25-njl-inventory-portability:infra:1.1",
+      "status": "fixed",
+      "evidence": "Independent whole source/intent f56d9c18, A1 readback788f1cbf, whole current baseline/control/export evidencebd197d56 and documentary readbackede326bb accepted. Existing Git-context inventory component preserves known shared pre-commit metadata; both real journalled production faults cause targeted RED and exact bytes/fullmode/nsmtime restoreGREEN with empty journal. Current mandatory registrations pass; full affected declared Verify is executed here. No hook activation, full-CI/main/scientific/publication acceptance or original physical BUILD closure is claimed. See docs/audits/2026-10-25-njl-qualification-dependencies/INVENTORY_REPAIR.md and immutable independent reports.",
+      "superseded_by": null,
+      "date": "2026-10-25",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest -m '' tests/test_architecture_inventory.py tests/test_architecture_claims.py tests/test_validate_public_surface.py::TestExternalSurface -q",
+        "declared": ".venv/bin/python -B -m pytest -m '' tests/test_architecture_inventory.py tests/test_architecture_claims.py tests/test_validate_public_surface.py::TestExternalSurface -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-10-25"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d1-stage10-redraft:D1:1.1",
+      "status": "fixed",
+      "evidence": "The actual three BEC crossover results use the thermal effective scale and the full dissipative floor; canonical output, charter, flagship consumer and guard agree. The original physical BUILD obligations remain separate.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/D1_F_CONTROL_READBACK.md",
+      "date": "2026-11-03",
+      "commit": "2e56926994ed296e0f513ccab7a286b259e18141",
+      "verified_by": {
+        "command": "uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider",
+        "declared": "uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-10-25-njl-module-reference-resolution:infra:1.1",
+      "status": "fixed",
+      "evidence": "Exact typed module IDs resolve before legacy declaration lookup; fourteen actual references resolve while all 2313 link identities remain and genuinely unknown module targets are refused.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/MODULE_ROUTING_REVIEW.md",
+      "date": "2026-11-03",
+      "commit": "f56431a5326e5ffd1a64a37313aa2cc2bb3efc12",
+      "verified_by": {
+        "command": ".venv/bin/python -B -m pytest tests/test_chain_canonicalize.py tests/test_d5_reviews.py::TestChainBackingTargetsResolve -q",
+        "declared": ".venv/bin/python -B -m pytest tests/test_chain_canonicalize.py tests/test_d5_reviews.py::TestChainBackingTargetsResolve -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-dispersive-coefficient-normalization:infra:1.1",
+      "status": "fixed",
+      "evidence": "Technical notebook applies the canonical dispersive ratio once. Exact merged NJL execution reproduced all five streams and both Plotly and PNG outputs, including the 69.3 mK conditional model scale. E1 and Paper 12 figure consumers independently reviewed. Physical calibration and dispersion derivation remain open.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/POLARITON_CONSUMER_READBACK.md",
+      "date": "2026-11-03",
+      "commit": "e3e08eff",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; nb=json.load(open('notebooks/Phase5d_Polariton_Technical.ipynb')); src=''.join(''.join(c.get('source',[])) for c in nb['cells']); assert 'T_H * (1 + correction)' not in src, 'notebook still adds 1 to the kappa_eff/kappa RATIO returned by dispersive_hawking_correction'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; nb=json.load(open('notebooks/Phase5d_Polariton_Technical.ipynb')); src=''.join(''.join(c.get('source',[])) for c in nb['cells']); assert 'T_H * (1 + correction)' not in src, 'notebook still adds 1 to the kappa_eff/kappa RATIO returned by dispersive_hawking_correction'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.4",
+      "status": "fixed",
+      "evidence": "The author v2 full text Eq. (8) supports the exact length attribution and Eq. (9) gives the separate classical runtime. Corrected D4/D8 paragraphs and source registry; both existing Lean consumers agree with the primary source. The independently reviewed fixed-state check rejects swapped equation roles.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/D8_ATTRIBUTION_VERIFY_READBACK.md",
+      "date": "2026-11-03",
+      "commit": "c880151f",
+      "verified_by": {
+        "command": "uv run python -B -m pytest tests/test_d5_citations.py::test_dawson_nielsen_length_provenance -q -p no:cacheprovider",
+        "declared": "uv run python -B -m pytest tests/test_d5_citations.py::test_dawson_nielsen_length_provenance -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.8",
+      "status": "fixed",
+      "evidence": "Regenerated the six-row coverage figure and the three theorem-specific word-length panels, preserved the conditional and distinct error contracts, and bound both PNGs to their manuscript labels. Independent exact PDF and PNG readback verified placement and pixel identity.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/D8_FIGURE_READBACK.md",
+      "date": "2026-11-03",
+      "commit": "0bc56063",
+      "verified_by": {
+        "command": "uv run python -B -m pytest tests/test_d8_publication_figures.py -q -p no:cacheprovider",
+        "declared": "uv run python -B -m pytest tests/test_d8_publication_figures.py -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-apex-claims-unbacked:infra:1.6",
+      "status": "fixed",
+      "evidence": "D2 now contributes zero flagged literals. Reviewed D1, D6 and D9 source bindings reduced the live corpus to 115 and tightened the ceiling to 115. The original declared test and independent pinned 5febc3ca readback passed. Scope is the numerical literal ratchet.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "451d5e27",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_validate_public_surface.py -q -k \"ceiling_matches_the_live_population\"",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_validate_public_surface.py -q -k \"ceiling_matches_the_live_population\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-apex-claims-unbacked:infra:1.7",
+      "status": "fixed",
+      "evidence": "The original D1 command-span defect was repaired by the independently reviewed normalization. Subsequent D8 semantic Verify repairs preserve the command contract. Exact declared validation and independent pinned 5febc3ca readback both found 279 entries and zero violations. This verifies the command format, not execution of all 279 commands.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "be0b4fa4",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python scripts/validate.py --check review_verify_is_one_command --no-archive",
+        "declared": "cd \"$REPO\" && uv run python scripts/validate.py --check review_verify_is_one_command --no-archive",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-12-substrate-lane-refile:substrate-lane-refile:7",
+      "status": "fixed",
+      "evidence": "Independent readback 606292be21d9835388ab0f48ff2e8a16b99ac1864ab10c8bcbffbe213502c471 verifies 313 automated entries, 39 distinct runs, and 9 manual entries, JSON/TeX parity and manuscript propagation. Exact declared counts_fresh passed. Forced sweep: all 21 publication targets and all four changed legacy consumers compiled. The 15 failures elsewhere in the legacy corpus remain open. No blanket compile acceptance.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "fd894720",
+      "verified_by": {
+        "command": "uv run python scripts/validate.py --check counts_fresh",
+        "declared": "uv run python scripts/validate.py --check counts_fresh",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.1",
+      "status": "fixed",
+      "evidence": "D4 retains the Fibonacci-specific contribution; D8 owns the generic route. Removed the contradictory charter clause. Independent review on df581450 confirmed zero apex overlap and ran the exact Verify.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "df581450",
+      "verified_by": {
+        "command": "python3 -c \"t=open('docs/PAPER_STRATEGY.md').read(); l=[x for x in t.split(chr(10)) if 'D4** retains the Fibonacci' in x][0]; import sys; sys.exit(0 if ('re-pointed to D8' not in l) else 1)\"",
+        "declared": "python3 -c \"t=open('docs/PAPER_STRATEGY.md').read(); l=[x for x in t.split(chr(10)) if 'D4** retains the Fibonacci' in x][0]; import sys; sys.exit(0 if ('re-pointed to D8' not in l) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.2",
+      "status": "fixed",
+      "evidence": "Registered both exact Read–Rezayi compiler declarations, corrected the manuscript proof to the trace-integrality argument, and verified both indexed theorem types and the stated tolerance regime. Exact Verify and independent readback passed.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "df581450",
+      "verified_by": {
+        "command": "python3 -c \"import json; m=json.load(open('papers/D8/bundle_metadata.json')); ns=[t['name'] for t in m['apex_theorems']]; import sys; sys.exit(0 if any('rr5' in n for n in ns) and any('rr7' in n for n in ns) else 1)\"",
+        "declared": "python3 -c \"import json; m=json.load(open('papers/D8/bundle_metadata.json')); ns=[t['name'] for t in m['apex_theorems']]; import sys; sys.exit(0 if any('rr5' in n for n in ns) and any('rr7' in n for n in ns) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.3",
+      "status": "fixed",
+      "evidence": "D8 records the Kronecker bound as consumed from D9 certification; D9 prose now states that ownership. Both manuscripts compiled and the independent exact Verify passed. Review SHA256 90d3a8f062b361c0206b95845931ebd6e9f6e4420468e0cab5625614654fce07.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "df581450",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if 'l2_opNorm_kronecker_one_le' in t['name']][0]; sys.exit(1 if 'upstream' in e['claims'] else 0)\"",
+        "declared": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if 'l2_opNorm_kronecker_one_le' in t['name']][0]; sys.exit(1 if 'upstream' in e['claims'] else 0)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.5",
+      "status": "fixed",
+      "evidence": "Three version-pinned primary PDFs verified against their digests, Appendix C and synthesis attributions reconciled, and nine summary labels corrected. Exact declared existence check passed from the sibling workspace checkout. Independent review SHA256 e406ea059961329e479317d8938161a0c170dd9fbf59a06a59d6bd9ab9a54d52. Source links and acquisition evidence are in D8_PRIMARY_SOURCE_INTAKE_20261103.md; the local cache contains the full texts.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "0124198d",
+      "verified_by": {
+        "command": "test -f ../Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+        "declared": "test -f ../Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.9",
+      "status": "fixed",
+      "evidence": "The exact Lean declaration is an rfl unfolding at the prescribed depth and the metadata now discloses that. The two related claims match their theorem scope. Exact Verify and both production apex checks passed. Independent readback SHA256 85cb6a72246e1ea732bf80c1969b1f37dc0e75a47ab4b11b20a21d9922ec4eff.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "5772a02d",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if t['name'].endswith('cliffordTCompile_eq_recursion')][0]; sys.exit(0 if 'definitional' in e['claims'].lower() else 1)\"",
+        "declared": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if t['name'].endswith('cliffordTCompile_eq_recursion')][0]; sys.exit(0 if 'definitional' in e['claims'].lower() else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.6",
+      "status": "fixed",
+      "evidence": "Itemized all 18 active citation keys, verified them against the 20-entry bibliography, and updated the reviewer prompt to use the live roster. Preserved the historical verdict as dated evidence and separately named current gaps. Exact Verify passed. Independent readback SHA256 707a97f71b9f3b07ed9972bbfea5be732cf73684199e44451f0756d65a17a39f.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "57bfac5f",
+      "verified_by": {
+        "command": "grep -A 12 '^## D8' docs/audits/stage13_attribution_sweep_2026-06-10.md | grep -c '^|'",
+        "declared": "grep -A 12 '^## D8' docs/audits/stage13_attribution_sweep_2026-06-10.md | grep -c '^|'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-seeded-mutation-seeder-vs-seeder-race:infra:1.1",
+      "status": "fixed",
+      "evidence": "Independent review SHA-256 4b2aae975e87430c9a0f7c5f104aba20eab987b945b614fb0fb6c69d26dea054. Baseline reproduced both defects. Candidate seed suite 30 passed and declared Verify 5 passed, 25 deselected. Existing and absent journalled branches exclude competing seeders through restoration. Absolute, relative and symlink corpus aliases checked.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "542ce5cb",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_seed_residue_guard.py -q -k \"concurrent or race or exclusive\"",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_seed_residue_guard.py -q -k \"concurrent or race or exclusive\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-12-legacy-compile-triage:legacy-compile-triage:14",
+      "status": "fixed",
+      "evidence": "Independent render review SHA-256 8f60ea000d991d69c1c5049b0405c096d305a27cfac3c79bccf9e8ee2f68a276. Forced and declared compiles yielded 5 pages, 0 fatal and 0 unresolved, one overfull box; numbered theorem and all eight count values confirmed in rendered text. Count binding review SHA-256 c0cc18f5b8ae0a41f9fd870bd7c820516e41716cd47518d43c0d891c221904be.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "5ee35daa",
+      "verified_by": {
+        "command": "uv run python scripts/compile_bundle_pdf.py paper8_chirality_master",
+        "declared": "uv run python scripts/compile_bundle_pdf.py paper8_chirality_master",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-dispersive-coefficient-normalization:infra:2.1",
+      "status": "fixed",
+      "evidence": "Independent citation review SHA-256 621260aad3580f700445bc51fb318e1538343de932c47ad75c9540682674da85. Exact Verify reproduced one unqualified incorrect article number on baseline and zero on candidate. arXiv:1402.2514 and DOI 10.1103/PhysRevD.90.121501 confirm article identity. Bytes outside docstring conserved. Exact-source declaration index qualification remains separate.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "4467cf10",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import pathlib,re; bad=[f'{p}:{s.count(chr(10),0,m.start())+1}' for p in pathlib.Path('lean').rglob('*.lean') for s in [p.read_text()] for m in re.finditer('124004', s) if 'earlier draft' not in s[max(0,m.start()-220):m.start()]]; assert not bad, f'PRD 89, 124004 asserted as the reference (not annotated as the known misprint) at: {bad}'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import pathlib,re; bad=[f'{p}:{s.count(chr(10),0,m.start())+1}' for p in pathlib.Path('lean').rglob('*.lean') for s in [p.read_text()] for m in re.finditer('124004', s) if 'earlier draft' not in s[max(0,m.start()-220):m.start()]]; assert not bad, f'PRD 89, 124004 asserted as the reference (not annotated as the known misprint) at: {bad}'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-dispersive-coefficient-normalization:infra:2.2",
+      "status": "fixed",
+      "evidence": "Independent custody and final propagation reviews SHA-256 f81a99c28ff95a04ce4ff0c661917fc870666fc20f2d5fa06ee1b0aafce50125 and b5fc310ec5e703aaa3a04d64889200790accc53883e97c7d7da5dba08be6b628. Both versioned PDFs held and registry identity checked. CW v2 Eqs. 39–40 do not establish a leading local quadratic temperature law; attribution corrected across provenance, code comments and consumer manuscripts. D1/E2 forced compiles 21/5 pages, zero errors and unresolved references. Device-level construction and exact-source Lean extraction remain open.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "202aaa44",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"from src.core.workspace import find_workspace; import pathlib; base=find_workspace()/'Lit-Search'; hits=[p.name for p in base.rglob('primary-sources/*') if 'CoutantWeinfurtner' in p.name or '1402.2514' in p.name or 'CoutantParentani2014' in p.name]; assert hits, 'neither Coutant-Weinfurtner 2017 nor Coutant-Parentani 2014 (arXiv:1402.2514) is cached, yet both now back the dispersive normalization'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"from src.core.workspace import find_workspace; import pathlib; base=find_workspace()/'Lit-Search'; hits=[p.name for p in base.rglob('primary-sources/*') if 'CoutantWeinfurtner' in p.name or '1402.2514' in p.name or 'CoutantParentani2014' in p.name]; assert hits, 'neither Coutant-Weinfurtner 2017 nor Coutant-Parentani 2014 (arXiv:1402.2514) is cached, yet both now back the dispersive normalization'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:6",
+      "status": "fixed",
+      "evidence": "Independent publisher and live bibitem review SHA-256 4274d1f8776046fe9cd17cb07e232fa0ad3cea386d20abed15c14d97375d270d. Current registry and manuscript agree with publication. Citation suite 56 passed.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "61986967",
+      "verified_by": {
+        "command": "uv run python -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as C; r=C['\"'\"'Adler2024'\"'\"']; assert (r['\"'\"'page'\"'\"'],r['\"'\"'doi'\"'\"'])==('\"'\"'80--85'\"'\"','\"'\"'10.1038/s41586-024-08188-0'\"'\"'); t=Path('\"'\"'papers/paper3_gauge_erasure/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'Adler2024'\"'\"' in t and '\"'\"'{636}, 80 (2024)'\"'\"' in t.split(r'\"'\"'\\bibitem{Adler2024}'\"'\"')[1].split(r'\"'\"'\\bibitem'\"'\"')[0]'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:10",
+      "status": "fixed",
+      "evidence": "Independent publisher and live bibitem review SHA-256 4274d1f8776046fe9cd17cb07e232fa0ad3cea386d20abed15c14d97375d270d. Current registry and manuscript agree with publication. Citation suite 56 passed.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "61986967",
+      "verified_by": {
+        "command": "uv run python -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as C; r=C['\"'\"'Tong2022'\"'\"']; assert (r['\"'\"'year'\"'\"'],r['\"'\"'page'\"'\"'],r['\"'\"'doi'\"'\"'])==(2022,'\"'\"'001'\"'\"','\"'\"'10.1007/JHEP07(2022)001'\"'\"'); t=Path('\"'\"'papers/paper7_chirality_formal/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'001 (2022)'\"'\"' in t.split(r'\"'\"'\\bibitem{Tong2022}'\"'\"')[1].split(r'\"'\"'\\bibitem'\"'\"')[0]'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:11",
+      "status": "fixed",
+      "evidence": "Independent final registry review SHA-256 a152518e6ba8a9a4ee66f9961b7b4b56c99ac932ffab3c0938f39790dce1ed8d. Held publisher cover verifies volume 25 S2 (2024), pages 181–216, first online 20 January 2025, issue date 27 October 2026. Both draft bibitems and registry agree.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "d68c89b7",
+      "verified_by": {
+        "command": "uv run python -c 'exec(\"from pathlib import Path\\nfrom src.core.citations import CITATION_REGISTRY\\nr=CITATION_REGISTRY['\"'\"'Berti2025'\"'\"']\\nassert (r['\"'\"'volume'\"'\"'],r['\"'\"'year'\"'\"'],r['\"'\"'page'\"'\"'],r['\"'\"'doi'\"'\"'])==(25,2024,'\"'\"'181--216'\"'\"','\"'\"'10.5802/crphys.226'\"'\"')\\nassert '\"'\"'Fernandes, L.'\"'\"' in r['\"'\"'authors'\"'\"'] and '\"'\"'papers/paper1_first_order/paper_draft.tex'\"'\"' in r['\"'\"'used_in'\"'\"']\\nfor path,key in [('\"'\"'paper1_first_order'\"'\"','\"'\"'Berti2025'\"'\"'),('\"'\"'paper2_second_order'\"'\"','\"'\"'Berti:2025'\"'\"')]:\\n    t=Path('\"'\"'papers'\"'\"',path,'\"'\"'paper_draft.tex'\"'\"').read_text()\\n    line=next(l for l in t.splitlines() if l.startswith(chr(92)+'\"'\"'bibitem{'\"'\"'+key+'\"'\"'}'\"'\"'))\\n    assert all(s in line for s in ('\"'\"'{25}, S2, 181--216 (2024)'\"'\"','\"'\"'20 January 2025'\"'\"','\"'\"'10.5802/crphys.226'\"'\"'))\\n\")'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:5",
+      "status": "fixed",
+      "evidence": "Independent source and exact manuscript readback SHA-256 ecdf155240870e65b793c40964f7ff2145914746e16a25a7dfffb47132140a. Verified the current primary citation and preserved all equations.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "a1c9c459",
+      "verified_by": {
+        "command": "uv run python -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as C; r=C['\"'\"'Volovik2024'\"'\"']; assert r['\"'\"'title'\"'\"']=='\"'\"'Fermionic quartet and vestigial gravity'\"'\"' and r['\"'\"'arxiv'\"'\"']=='\"'\"'2312.09435'\"'\"'; files=[Path('\"'\"'papers'\"'\"',n,'\"'\"'paper_draft.tex'\"'\"') for n in ('\"'\"'paper5_adw_gap'\"'\"','\"'\"'paper6_vestigial'\"'\"')]; assert all('\"'\"'Fermionic quartet and vestigial gravity'\"'\"' in p.read_text().split(chr(92)+'\"'\"'bibitem{Volovik2024}'\"'\"')[1].split(chr(92)+'\"'\"'bibitem'\"'\"')[0] for p in files)'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:7",
+      "status": "fixed",
+      "evidence": "Independent source and exact manuscript readback SHA-256 ecdf155240870e65b793c40964f7ff2145914746e16a25a7dfffb47132140a. Verified the current primary citation and preserved all equations.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "a1c9c459",
+      "verified_by": {
+        "command": "uv run python -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as C; assert '\"'\"'Relativistic Superfluids'\"'\"' in C['\"'\"'Son2002'\"'\"']['\"'\"'title'\"'\"']; a=Path('\"'\"'papers/paper1_first_order/paper_draft.tex'\"'\"').read_text(); b=Path('\"'\"'papers/paper2_second_order/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'nonrelativistic Madelung-form density--phase action as the starting model'\"'\"' in a and '\"'\"'Son derives a Goldstone effective action'\"'\"' in a; assert all('\"'\"'Relativistic Superfluids'\"'\"' in t for t in (a,b)) and all('\"'\"'105001'\"'\"' not in t.split(chr(92)+'\"'\"'bibitem{'\"'\"'+k+'\"'\"'}'\"'\"')[1].split(chr(92)+'\"'\"'bibitem'\"'\"')[0] for t,k in ((a,'\"'\"'Son2002'\"'\"'),(b,'\"'\"'Son:2002'\"'\"')))'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-12-legacy-compile-triage:legacy-compile-triage:8",
+      "status": "fixed",
+      "evidence": "Independent render review SHA-256 f7946024f59e54625e0be164b48d5e7dd0ebcac387968fc3b2ebe9ebaadb9311. Exact declared compile reproduced four baseline Unicode errors and passes on candidate. Eight-page PDF retains all three PROVED labels and math omega; zero TeX errors or unresolved references, two overfull boxes.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "32e55589",
+      "verified_by": {
+        "command": "uv run python scripts/compile_bundle_pdf.py paper2_second_order",
+        "declared": "uv run python scripts/compile_bundle_pdf.py paper2_second_order",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:3.1",
+      "status": "fixed",
+      "evidence": "Independent R2 review verified the physics title, left-panel legend and visually distinct right-hand trace. Poppler confirmed PDF page 2 embeds the regenerated PNG pixel for pixel. The delivery commit preserves all three reviewed file blobs exactly. The exact declared Verify passed and forced compilation on the reviewed source produced four pages with zero TeX errors or unresolved references. Section 3.2 remains open.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "cf149b0d",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-31-bundle-stage13:D8:6.2",
+      "status": "fixed",
+      "evidence": "The May 31 rerun section 6.2 independently verified the manuscript correction. Current D8 cites the Lean theorem for entry rationality and attributes the stronger dyadic result separately. Independent R2 review on e4ee5e6a confirmed the exact IsRatℂ proposition and that the three revised source comments agree, with every executable byte conserved. The fixed-state source check verifies the current manuscript binding and Lean commentary. This is a scope correction; no new dyadic theorem or native run is claimed.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "e4ee5e6a",
+      "verified_by": {
+        "command": "python3 -B -c 'from pathlib import Path; d=Path(\"papers/D8/paper_draft.tex\").read_text(); a=Path(\"lean/SKEFTHawking/FKLW/MukhopadhyayToffoliUnconditional.lean\").read_text(); b=Path(\"lean/SKEFTHawking/FKLW/MukhopadhyayCCZConjugation.lean\").read_text(); assert r\"rationality \\lean{channelRep\\_interp\\_isRat}\" in d and \"Mukhopadhyay\" in d[d.index(\"word are rational\"):d.index(\"The bound concerns exactly\")]; assert \"IsRatℂ (channelRep (interp gs) r s) := by\" in a and \"has rational (dyadic) entries\" not in a and \"each entry lies in\" not in a; assert \"(`ℚ` entries), and the **unconditional**\" in b'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-31-bundle-stage13:D8:6.1",
+      "status": "fixed",
+      "evidence": "Independent R2 review confirmed both hypotheses at first mention and the compatible free-word length prerequisite wherever density is described as the remaining requirement. The exact formal theorem and concrete witnesses were preserved. D8 compiled at 13 pages with four inherited overfull boxes and zero TeX errors or unresolved references.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "18cbe853",
+      "verified_by": {
+        "command": "python3 -B -c 'from pathlib import Path; t=Path(\"papers/D8/paper_draft.tex\").read_text(); a=t[t.index(r\"\\begin{abstract}\"):t.index(r\"\\end{abstract}\")]; assert \"dense and has compatible word length\" in a; assert \"a density witness and compatible word length\" in t and \"density witness and nothing else\" not in t; assert \"Once compatible free-word length is in place\" in t and \"For an alphabet with compatible free-word length\" in t; assert \"universal gate set with compatible\\nfree-word length\" in t; assert \"If $\\\\mathrm{gs}$ is dense and its word length is compatible\" in t'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-31-bundle-stage13:D8:1.1",
+      "status": "fixed",
+      "evidence": "Independent review traced the original rename through D8 citation, bibliography, D4 and registry. Scratch BibTeX resolved AharonovArad2011 to the consistent 2011 article, DOI and arXiv identity. Fixed-state verification checks active consumers and leaves historical receipts intact. The separate Hietala carryover remains open.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "d83ff8b6",
+      "verified_by": {
+        "command": "python3 -B -c 'import re; from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; read=lambda p:re.sub(r\"(?m)^\\s*%.*$\",\"\",Path(p).read_text()); k=\"AharonovArad2011\"; old=\"AharonovArad2017\"; t=read(\"papers/D8/paper_draft.tex\"); b=read(\"papers/D8/bibliography.bib\"); keys={x.strip() for group in re.findall(r\"\\\\cite\\{([^}]+)\\}\",t) for x in group.split(\",\")}; entry=b.split(\"@article{\"+k+\",\"); assert k in keys and old not in keys and r\"\\bibliography{bibliography}\" in t and len(entry)==2; row=entry[1].split(\"\\n}\",1)[0]; assert re.search(r\"year\\s*=\\s*\\{2011\\}\",row) and r[k][\"doi\"] in row and r[k][\"arxiv\"] in row and r[k][\"year\"]==2011 and old not in r; d4=read(\"papers/D4/paper_draft.tex\"); assert d4.count(r\"\\bibitem{\"+k+\"}\")==1 and old not in d4'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-31-bundle-stage13:D8:1.2",
+      "status": "fixed",
+      "evidence": "Independent readback verified the three DOI identities and true flags requested by the original finding, tracing Aharonov–Arad to d83ff8b6 and the remaining flags to 856a5dac. This closure covers the named DOI booleans. Other citation coverage and arXiv verification remain separate.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "856a5dac",
+      "verified_by": {
+        "command": "python3 -B -c 'from src.core.citations import CITATION_REGISTRY as r; import sys; pairs=[x.split(\"=\",1) for x in sys.argv[1:]]; assert all(r[k][\"doi\"]==d and r[k][\"doi_verified\"] is True for k,d in pairs)' AharonovArad2011=10.1088/1367-2630/13/3/035019 ReadRezayi1999=10.1103/PhysRevB.59.8084 AaronsonGottesman2004=10.1103/PhysRevA.70.052328",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-31-1500-bundle-stage13-rerun:D8:1.2",
+      "status": "fixed",
+      "evidence": "Independent readback verified the original three DOI identities and flags plus the two added by the rerun, Hietala and Lewis. The current published DOI records trace to 992674db. This closure covers the historical DOI-flag request. Portfolio citation and arXiv verification remain separate.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "992674db",
+      "verified_by": {
+        "command": "python3 -B -c 'from src.core.citations import CITATION_REGISTRY as r; import sys; pairs=[x.split(\"=\",1) for x in sys.argv[1:]]; assert all(r[k][\"doi\"]==d and r[k][\"doi_verified\"] is True for k,d in pairs)' AharonovArad2011=10.1088/1367-2630/13/3/035019 ReadRezayi1999=10.1103/PhysRevB.59.8084 AaronsonGottesman2004=10.1103/PhysRevA.70.052328 Hietala2020VOQC=10.1145/3434318 Lewis2021VerifQC=10.1145/3624483",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-31-1500-bundle-stage13-rerun:D8:1.2",
+      "status": "fixed",
+      "evidence": "All five independently reviewed DOI identities and verification flags still match. The active Hietala key changed to Hietala2021VOQC and retains DOI 10.1145/3434318 and the same verified flag. The earlier execution remains in the ledger.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "3d0c910d",
+      "amends_prior": {
+        "reason": "Rebind the verifier to the renamed Hietala citation key and preserve the prior execution as history.",
+        "superseded_record": {
+          "status": "fixed",
+          "commit": "992674db",
+          "date": "2026-11-03"
+        }
+      },
+      "verified_by": {
+        "command": "python3 -B -c 'from src.core.citations import CITATION_REGISTRY as r; pairs={\"AharonovArad2011\":\"10.1088/1367-2630/13/3/035019\",\"ReadRezayi1999\":\"10.1103/PhysRevB.59.8084\",\"AaronsonGottesman2004\":\"10.1103/PhysRevA.70.052328\",\"Hietala2021VOQC\":\"10.1145/3434318\",\"Lewis2021VerifQC\":\"10.1145/3624483\"}; assert all(r[k][\"doi\"]==d and r[k][\"doi_verified\"] is True for k,d in pairs.items())'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-31-1500-bundle-stage13-rerun:D8:1.3",
+      "status": "fixed",
+      "evidence": "Independent review confirmed the active Hietala2021VOQC key in both D6 and D8 and the AharonovArad2011 key in D8. Both complete citation scans pass. The DOI, source artifact path and historical verification cache remain intact. The verifier explicitly requires both live Hietala citations, so absence of the old key alone cannot pass.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "3d0c910d",
+      "verified_by": {
+        "command": "python3 -B -c 'import re; from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; pairs={\"Hietala2021VOQC\":(2021,\"10.1145/3434318\"),\"AharonovArad2011\":(2011,\"10.1088/1367-2630/13/3/035019\")}; assert all((r[k][\"year\"],r[k][\"doi\"])==v for k,v in pairs.items()); h=\"Hietala2021VOQC\"; old=\"Hietala2020VOQC\"; assert old not in r; d6=Path(\"papers/D6/paper_draft.tex\").read_text(); d8=Path(\"papers/D8/paper_draft.tex\").read_text(); b=Path(\"papers/D8/bibliography.bib\").read_text(); assert all(r\"\\cite{\"+h+\"}\" in t and r\"\\cite{\"+old+\"}\" not in t for t in (d6,d8)); assert r\"\\bibitem{\"+h+\"}\" in d6 and \"@article{\"+h+\",\" in b and \"AharonovArad2011}\" in d8 and \"@article{AharonovArad2011,\" in b' && python3 -B scripts/check_undefined_citations.py D6 && python3 -B scripts/check_undefined_citations.py D8",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d3-stage10-redraft:D3:3.2",
+      "status": "fixed",
+      "evidence": "Independent source review confirmed that the Lean theorem proves homogeneity and that the metadata and current manuscript attribute only homogeneity to it. The normalized value is stated separately and matches the definition with its spinor trace factor. The original declared verifier also passed. This closure concerns the attribution and normalization, with microscopic cosmological-constant derivation outside its scope.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "154ad49c",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; m=json.load(open('papers/D3/bundle_metadata.json')); a=[x for x in m['apex_theorems'] if x['name'].endswith('a0_dirac_linear')][0]; assert 'a0 = N_f' not in a['claims'], 'claims string still asserts a value the statement does not fix'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; m=json.load(open('papers/D3/bundle_metadata.json')); a=[x for x in m['apex_theorems'] if x['name'].endswith('a0_dirac_linear')][0]; assert 'a0 = N_f' not in a['claims'], 'claims string still asserts a value the statement does not fix'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d3-stage10-redraft:D3:2.4",
+      "status": "fixed",
+      "evidence": "Independent final readback checked active citation consumers and held Sen, Balbinot and Kehle–Unger PDFs. Sen now uses one active source-backed entry. The Balbinot PRL and PRD are distinct works with distinct held sources and accurate consumers. The original Verify passed. Israel section 1.3 and F scientific scope remain separate.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "b6515c67fc2202b34d75dc7511d9c07975b6bda3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q 'cite{Sen2013}' papers/D3/paper_draft.tex && ! grep -q 'cite{Balbinot2005}' papers/D3/paper_draft.tex && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; assert C['KehleUnger2024'].get('primary_source_path'), 'KehleUnger2024 path still unrecorded while the PDF is on disk'\"",
+        "declared": "cd \"$REPO\" && ! grep -q 'cite{Sen2013}' papers/D3/paper_draft.tex && ! grep -q 'cite{Balbinot2005}' papers/D3/paper_draft.tex && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; assert C['KehleUnger2024'].get('primary_source_path'), 'KehleUnger2024 path still unrecorded while the PDF is on disk'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }

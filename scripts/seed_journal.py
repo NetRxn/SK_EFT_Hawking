@@ -284,6 +284,11 @@ def outstanding(*, include_live: bool = False) -> list[dict]:
 # seeding
 # ────────────────────────────────────────────────────────────────────────────────
 
+def _in_review_corpus(path: Path) -> bool:
+    return (path.absolute().is_relative_to(REVIEW_CORPUS.absolute())
+            or path.resolve().is_relative_to(REVIEW_CORPUS.resolve()))
+
+
 def _require_marker(path: Path, seeded: bytes) -> None:
     """A seed into the review corpus must be self-identifying.
 
@@ -292,9 +297,7 @@ def _require_marker(path: Path, seeded: bytes) -> None:
     the seed at write time is the only place this can be enforced cheaply; afterwards the
     seed is already in the tree.
     """
-    try:
-        path.relative_to(REVIEW_CORPUS)
-    except ValueError:
+    if not _in_review_corpus(path):
         return
     if SEED_MARKER.encode() not in seeded:
         raise ValueError(
@@ -332,48 +335,45 @@ def journalled(
     in the invariant that `seed_residue_absent` depends on.
     """
     path = Path(path)
-    try:
-        path.relative_to(REVIEW_CORPUS)
-    except ValueError:
-        pass
-    else:
+    if _in_review_corpus(path):
         raise ValueError(
             f"journalled() cannot take a review-corpus path ({path}): a seed there must "
             f"carry {SEED_MARKER!r} so residue is readable from the corpus, and only "
             f"seeded_mutation()/seeded_artifact() can enforce that. Use one of those.")
-    if not path.is_file():
-        if not allow_absent:
-            raise FileNotFoundError(
-                f"journalled() targets an existing file; {path} is not one. Pass "
-                f"allow_absent=True if the caller may CREATE it (a runtime artifact such "
-                f"as `docs/verification_log.jsonl`, absent in a clean checkout), and the "
-                f"restore then means DELETE.")
-        # Absent now → the caller may create it → the restore is a removal. Recorded as a
-        # `creation` entry, which is the same shape `seeded_artifact` writes, so `_restore`
-        # needs no special case and repair-after-a-kill is one code path.
-        created_dirs: list[str] = []
-        probe = path.parent
-        while not probe.exists():
-            created_dirs.append(str(probe))
-            probe = probe.parent
-        entry = {
-            "id": uuid.uuid4().hex, "kind": "creation", "path": str(path), "backup": "",
-            "sha256": "", "mtime_ns": 0, "atime_ns": 0, "preserve_mtime": False,
-            "created_dirs": created_dirs, "reason": reason, "test": _current_test(),
-            "pid": os.getpid(), "started": datetime.now(timezone.utc).isoformat(),
-        }
-        _write_entry(entry)
+    with _path_lock(path):
+        if not path.is_file():
+            if not allow_absent:
+                raise FileNotFoundError(
+                    f"journalled() targets an existing file; {path} is not one. Pass "
+                    f"allow_absent=True if the caller may CREATE it (a runtime artifact such "
+                    f"as `docs/verification_log.jsonl`, absent in a clean checkout), and the "
+                    f"restore then means DELETE.")
+            # Absent now → the caller may create it → the restore is a removal. Recorded as a
+            # `creation` entry, which is the same shape `seeded_artifact` writes, so `_restore`
+            # needs no special case and repair-after-a-kill is one code path.
+            created_dirs: list[str] = []
+            probe = path.parent
+            while not probe.exists():
+                created_dirs.append(str(probe))
+                probe = probe.parent
+            entry = {
+                "id": uuid.uuid4().hex, "kind": "creation", "path": str(path), "backup": "",
+                "sha256": "", "mtime_ns": 0, "atime_ns": 0, "preserve_mtime": False,
+                "created_dirs": created_dirs, "reason": reason, "test": _current_test(),
+                "pid": os.getpid(), "started": datetime.now(timezone.utc).isoformat(),
+            }
+            _write_entry(entry)
+            try:
+                yield b""
+            finally:
+                _restore(entry)
+            return
+
+        entry = _open_entry(path, reason=reason, preserve_mtime=preserve_mtime)
         try:
-            yield b""
+            yield bytes(Path(entry["backup"]).read_bytes())
         finally:
             _restore(entry)
-        return
-
-    entry = _open_entry(path, reason=reason, preserve_mtime=preserve_mtime)
-    try:
-        yield bytes(Path(entry["backup"]).read_bytes())
-    finally:
-        _restore(entry)
 
 
 def _open_entry(path: Path, *, reason: str, preserve_mtime: bool) -> dict:
@@ -432,15 +432,15 @@ def seeded_mutation(
     `tests/test_unscannable_input_guard.py`.
     """
     path = Path(path)
-    if not path.is_file():
-        raise FileNotFoundError(
-            f"seeded_mutation targets an existing production artifact; {path} is not a "
-            f"file. Use seeded_artifact() to create one.")
-
     # ⚠️ The lock opens BEFORE the read. The race this closes is that a second seeder
     # captures the first's seed AS its original, so locking only the write leaves the
     # defect intact.
     with _path_lock(path):
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"seeded_mutation targets an existing production artifact; {path} is not a "
+                f"file. Use seeded_artifact() to create one.")
+
         original = path.read_bytes()
         entry = _open_entry(path, reason=reason, preserve_mtime=preserve_mtime)
 

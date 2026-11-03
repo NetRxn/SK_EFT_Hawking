@@ -170,9 +170,11 @@ structure TurningPoint where
     shift is δx_imag = c_s · Γ_H / (2 · κ²). Dimensions: c_s has units
     [L/T], Γ_H and κ have units [1/T], so δx_imag has units [L]. ✓
 
-    The proof requires complex WKB analysis (Stokes lines, connection
-    formulas across the complex turning point); see Coutant-Parentani
-    PRD 89, 124004 (2014). The Lean statement only asserts existence of
+    A derivation of the dissipative shift would require complex WKB analysis
+    (Stokes lines and connection formulas across the complex turning point).
+    For dispersive horizon broadening, see Coutant and Parentani,
+    Phys. Rev. D 90, 121501(R) (2014), arXiv:1402.2514.
+    The Lean statement only asserts existence of
     a TurningPoint with the right x_imag — a pure witness construction.
     The substantive equation is captured by the formula appearing in
     the statement and is cross-checked numerically against

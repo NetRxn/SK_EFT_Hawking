@@ -78,7 +78,7 @@ theorem channelSde2_clifford_le (c : Fin 9) (M : Matrix (Fin 8) (Fin 8) ℂ) :
   rw [channelSde2, channelSde2, channelRep_mul]
   exact matrixSde2_signedPerm_mul_le (gateMatrix_clifford_channelRep_isSignedPerm c) (channelRep M)
 
-/-! ## E — Lemma 3.10: every Clifford+CCZ word's channel rep has rational (dyadic) entries -/
+/-! ## E — Lemma 3.10 (rational form): every Clifford+CCZ word's channel rep has rational entries -/
 
 theorem isRatℂ_one : IsRatℂ 1 := ⟨1, by simp⟩
 
@@ -110,8 +110,9 @@ theorem isRatℂ_matrix_mul {n : Type*} [Fintype n] {A B : Matrix n n ℂ}
   rw [Matrix.mul_apply]
   exact isRatℂ_sum _ _ fun k _ => isRatℂ_mul (hA i k) (hB k j)
 
-/-- **Lemma 3.10 (rational form)**: every Clifford+CCZ gate word's channel rep has rational entries (each
-entry lies in `ℤ[1/2] ⊂ ℚ`). By induction: the identity is `{0,1}`-valued, each Clifford generator's
+/-- **Lemma 3.10 (rational form)**: every Clifford+CCZ gate word's channel rep has rational entries.
+Mukhopadhyay's lemma gives the stronger dyadic conclusion. The rationality proof proceeds by
+induction: the identity is `{0,1}`-valued, each Clifford generator's
 channel rep is a signed permutation (`{0,±1}`), `CCZ`'s is half-integer, and matrix multiplication
 preserves rationality. This supplies the rationality hypothesis of `hCCZ`. -/
 theorem channelRep_interp_isRat (gs : List CliffordCCZGate) (r s : Fin 4 × Fin 4 × Fin 4) :

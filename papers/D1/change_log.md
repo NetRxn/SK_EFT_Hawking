@@ -160,3 +160,26 @@ references or citations; below the 24-page floor. Eleven TODO comments mark
 claims whose primary source is not held in full text; the bundle is
 deliberately not green while they stand. Findings at
 `papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md`.
+
+## 2026-11-03 — Reconcile module registration from `paper2_second_order` (sec:higher)
+
+- Source title: Second-order SK-EFT historical lift
+- Lift action: Reconcile module registration
+- Insertion point: sec:higher
+- Anchor: sec:higher
+- Stage-13 redo required: yes
+- Notes: Resolve three historical topic labels against the current cited declarations and aggregate imports. Registry-only reconciliation. The existing redo remains pending.
+
+## 2026-11-03 — Deregister-lean-modules
+
+- Modules deregistered: `KMSOptimality`, `SecondOrderPositivity`, `TransportCounting`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: The three labels name topics in the 2026-05-04 lift rather than module identities. Current canonical owners are registered separately and the original lift stays in the log.
+
+## 2026-11-03 — Deregister-lean-modules
+
+- Modules deregistered: `DissipativeCorrection`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: The first-order lift uses DissipativeCorrection as a topic label for Eq. delta-diss. Both the original and current drafts cite SecondOrderSK.deltaDissFromTransport_eq, whose exact owner is already registered. The historical lift and current claim remain recorded.

@@ -641,9 +641,10 @@ def caveats(rows: list[dict], cov: dict, census: dict) -> list[str]:
     out.append(
         f"The registered Lean module list is HAND-TYPED at lift time and is not evidence "
         f"the modules exist: {n_unbuilt} registration(s) across {n_bundles} bundle(s) "
-        f"resolve to no module in the Lean build (TODO-D50). They are registrations of "
-        f"substrate that was planned and not built, and they can only be repaid by "
-        f"removing the registration. Nothing on this board guards that field."
+        "do not resolve under their registered names in the current Lean declaration "
+        "index (TODO-D50). Reconcile the original lift, exact declarations, imports "
+        "and built dependencies before changing a registration or concluding that "
+        "substrate is missing."
         + (f" {cov['lean_registrations_unmeasured']} bundle(s) could not be measured at "
            f"all (unreadable append_log.json)."
            if cov["lean_registrations_unmeasured"] else ""))

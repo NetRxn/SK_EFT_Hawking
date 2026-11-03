@@ -663,18 +663,24 @@ exact-WKB closure:
   fluctuation-dissipation relation forces a noise-floor amplitude
   that is independent of the platform-specific dispersion data; the
   noise floor is the substrate's universal experimental signature.
-\item \textbf{Spectral floor at $\omega \sim 6 T_H$ for Heidelberg.}
+\item \textbf{Spectral floor at $\omega_\times \simeq 6.44\,T_{\rm eff}$ for Heidelberg.}
   The exact-WKB closure produces a spectral-density floor onto which
   the thermal Hawking tail settles once the thermal occupation
-  $\left(e^{\omega/T_H}-1\right)^{-1}$ falls to the FDR floor. That floor
+  $\left(e^{\omega/T_{\rm eff}(\omega)}-1\right)^{-1}$ falls to the FDR floor at zero environment temperature. That floor
   is $\delta_{\mathrm{diss}}$, not $\delta_{\mathrm{diss}}/2$: the
   factor of two is already taken inside
   $n_{\mathrm{noise}} = \delta_k/2 = (2\Gamma_H/\kappa)/2 = \Gamma_H/\kappa
   = \delta_{\mathrm{diss}}$
-  (\texttt{WKBConnection.noise\_floor\_eq\_delta\_diss}). The crossover is
+  (\texttt{WKBConnection.noise\_floor\_eq\_delta\_diss}). The thermal scale is
+  $T_{\rm eff}(\omega) = \kappa_{\rm eff}(\omega)/(2\pi)$, distinct from
+  the bare scale $T_H = \kappa/(2\pi)$ used for the ultraviolet cutoff.
+  Here $T_{\rm eff}$ refers to the thermal component, rather than a
+  temperature fitted to the total occupation including noise. The crossover is
   therefore
-  $\omega_\times = T_H \ln\!\left(1 + 1/\delta_{\mathrm{diss}}\right)
-  \approx 6.44\, T_H$ for Heidelberg.
+  $\omega_\times = T_{\rm eff}(\omega_\times) \ln\!\left(1 + 1/\delta_{\mathrm{diss}}\right)
+  \approx 6.44\, T_{\rm eff}(\omega_\times)$ for Heidelberg.
+  The frequency dependence of $\kappa_{\rm eff}$ makes this an implicit
+  equation for $\omega_\times$.
 \end{enumerate}
 
 The three non-perturbative effects are encoded in
@@ -1156,10 +1162,11 @@ SU(2)$_k$ Chern--Simons coefficient~\cite{KaulMajumdar2000} and the
 $O(1)$ constant follows from the substrate's MTC and horizon-boundary
 structure (its detailed identification with a specific topological-order
 anomaly-match coefficient is downstream of the substrate's MTC choice
-and is not the load-bearing content of D3 \S 7). The Sen 4D
-Schwarzschild logarithmic-correction coefficient $-45/2$~\cite{Sen2013}
-\emph{disagrees} with the Kaul--Majumdar SU(2)$_k$ $-3/2$ at
-quantitative precision; the substrate's choice of MTC is structurally
+and is not the load-bearing content of D3 \S 7). For four-dimensional
+Schwarzschild black holes in pure gravity, Sen's rotational-singlet result is
+$\Delta S=(212/45-3)\log a=(77/45)\log a$~\cite{Sen2013Schwarzschild}.
+Since $A\propto a^2$, the coefficient of $\log A$ is $77/90$, opposite in
+sign to the Kaul--Majumdar coefficient. The substrate's choice of MTC is structurally
 selected by the abelian-MTC falsifier
 (\texttt{abelian\_MTC\_falsifies\_H\_HorizonBoundaryCondition}). This
 is the cross-bridge to Bundle~D4
@@ -1679,7 +1686,7 @@ evidence that something is wrong with the substrate analysis:
   Hard-to-discharge sub-lemmas surfaced during a Lean development
   cycle can be submitted to the Aristotle automated theorem prover
   (\cite{Roehm2026Strategy}, paper15 / Bundle~I1), which closes them
-  on the Aristotle-pinned toolchain ($\sim 322$ Aristotle-proved
+  on the Aristotle-pinned toolchain (\aristotleproved{} Aristotle-proved
   theorems contribute to the project total). The Aristotle layer is
   optional but reduces the manual proof effort substantially on
   intricate algebraic obstructions.
@@ -2515,7 +2522,7 @@ A.~D.~Sakharov,
 gravitation,''
 Sov.\ Phys.\ Dokl.\ \textbf{12}, 1040 (1968).
 
-\bibitem{Sen2013}
+\bibitem{Sen2013Schwarzschild}
 A.~Sen,
 ``Logarithmic corrections to Schwarzschild and other non-extremal black
 hole entropy in different dimensions,''
