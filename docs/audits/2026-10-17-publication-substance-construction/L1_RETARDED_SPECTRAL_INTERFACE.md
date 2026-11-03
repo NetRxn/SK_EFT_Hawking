@@ -1211,3 +1211,24 @@ replay has been assigned. For physical B3, the remaining match
 must fix Z_G, source and operator mixing, the spatial tensor
 projection, and any regulator-dependent contact, then establish
 the scaling regime and the separate RPA coupling.
+
+Independent review of `7a6b80478` verified the linear source
+normalization. Write s, p, n and d for the pure-g₂⁶ raw connected
+plus coefficients at coincident, nearest spatial, nearest temporal
+and diagonal separation. The one-point term vanishes by transverse
+exchange. The half-period spatial Fourier eigenvalues are n±d
+times Z_G²/(2a⁴g₂²Z₈), with positive closed normalization Z₈.
+Thus a nonzero real matching coefficient requires n ≥ |d|.
+The equal-time eigenvalues have the same factor multiplying s±p.
+For a faithful finite positive thermal realization each sector
+must either have both moments zero or satisfy
+0 < n±d ≤ s±p. These checks concern the two scalar spatial
+sectors. Full transfer positivity and physical matching require
+additional evidence.
+
+The diagonal replay recovered the existing original-order modular
+control and found a different residue with the closed order.
+Of 128 support words, 30 vanish by a private-link center parity
+in either ordering. The remaining 98 require closed-order tensor
+checks or exact joins. The modular control does not determine the
+sign of d or the status of the transfer test.
