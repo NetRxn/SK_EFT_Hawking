@@ -10754,6 +10754,36 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-05-31-bundle-stage13:D8:1.2",
+      "status": "fixed",
+      "evidence": "Independent readback verified the three DOI identities and true flags requested by the original finding, tracing Aharonov–Arad to d83ff8b6 and the remaining flags to 856a5dac. This closure covers the named DOI booleans. Other citation coverage and arXiv verification remain separate.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "856a5dac",
+      "verified_by": {
+        "command": "python3 -B -c 'from src.core.citations import CITATION_REGISTRY as r; import sys; pairs=[x.split(\"=\",1) for x in sys.argv[1:]]; assert all(r[k][\"doi\"]==d and r[k][\"doi_verified\"] is True for k,d in pairs)' AharonovArad2011=10.1088/1367-2630/13/3/035019 ReadRezayi1999=10.1103/PhysRevB.59.8084 AaronsonGottesman2004=10.1103/PhysRevA.70.052328",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-31-1500-bundle-stage13-rerun:D8:1.2",
+      "status": "fixed",
+      "evidence": "Independent readback verified the original three DOI identities and flags plus the two added by the rerun, Hietala and Lewis. The current published DOI records trace to 992674db. This closure covers the historical DOI-flag request. Portfolio citation and arXiv verification remain separate.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "992674db",
+      "verified_by": {
+        "command": "python3 -B -c 'from src.core.citations import CITATION_REGISTRY as r; import sys; pairs=[x.split(\"=\",1) for x in sys.argv[1:]]; assert all(r[k][\"doi\"]==d and r[k][\"doi_verified\"] is True for k,d in pairs)' AharonovArad2011=10.1088/1367-2630/13/3/035019 ReadRezayi1999=10.1103/PhysRevB.59.8084 AaronsonGottesman2004=10.1103/PhysRevA.70.052328 Hietala2020VOQC=10.1145/3434318 Lewis2021VerifQC=10.1145/3624483",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
