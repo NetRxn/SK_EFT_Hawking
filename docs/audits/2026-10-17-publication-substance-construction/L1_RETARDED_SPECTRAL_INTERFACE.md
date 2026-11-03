@@ -1522,3 +1522,33 @@ This is the finite overlap in the stated source coordinates.
 Physical matching still has to derive the source combination,
 its dimensions, the regulator response and its retained
 observable space.
+
+### Local gauge invariance and the metric-source ambiguity
+
+Consider a single site strain h with the coframe deformation
+exp(hP/2), P = diag(0,0,1,−1)/√2, in the closed action.
+Add a linear term c h D, where D = G₂₂−G₃₃ at that site
+and c is a real coefficient in lattice units. Both terms
+are invariant under internal site gauge rotations for arbitrary
+h. The coframe rotates internally in every world component,
+the world strain commutes with that rotation, and D contracts
+the internal indices of the two frames. The Haar and Berezin
+measures are independent of c and h. Hence the internal
+gauge Ward identity holds for the whole family, including
+at nonuniform h, while its metric derivative changes by cD.
+
+For common strain on a slice, the first vertex is
+X/(2√2) + c√2 L in the source convention above. The added
+linear term does not change the bare second vertex. At
+pure g₂ the uniform half-period response is consequently
+
+    B_X/8 + 2c² B_L,
+
+where B_X is positive and B_L is negative. Thus two members
+of the same internally gauge-invariant source family can
+give opposite uniform half-period signs. The finite Ward
+test constrains the gauge transformation law but leaves c
+undetermined. Fixing c requires a metric matching condition,
+such as matching the response of independently normalized
+matter to the same background. The family gives a control
+for that construction, not a prescription for choosing c.
