@@ -502,3 +502,31 @@ Haar weights and signed exterior complements. Independent exact
 reruns reproduced the totals, the factorial weights and the disjoint
 populations. The equal-time subtotal is `254772` over 97 words.
 The remaining 48 source-decoupled and 40 joint-source words are open.
+
+## Final plaquette-wire classes
+
+The [coverage check](l1_normalization_coverage.py) partitions all
+6,451 supported words and leaves four 64-word plaquette-wire
+classes after the previous contractions. The
+[wire evaluator](l1_normalization_plaquette_wire.py) retains both
+chiral plaquette traces through each shared edge, then closes each
+trace at its own curvature insertion. For the four cases run with
+arguments `1 2 2 3 3`, `1 2 3 2 3`, `0 2 2 3 3`, and
+`0 2 3 2 3`. Each run sums 16 edge assignments. Each plane orbit
+has multiplicity four.
+
+Independent review reproduced the orientation sums
+`31543/10616832`, `55565/63700992`, zero, and zero, and verified
+the four disjoint plane orbits against the residual incidence.
+The weighted increment is `244823/15925248`. Adding it to the
+6,195-word subtotal gives the full source-free normalization
+
+`Z = (11270712996006127/19110297600) g₂⁸`.
+
+This is positive for real nonzero g₂. The verified raw diagonal
+plus numerator then gives connected diagonal-separation response
+`-2151705600/(11270712996006127 g₂²)` in the stated lattice source
+coordinates. The staggered half-period mode has the opposite sign.
+The site-resolved positive-transfer obstruction remains. For the
+projected mode, the equal-time contraction, contact matching, and
+physical state still need verification.
