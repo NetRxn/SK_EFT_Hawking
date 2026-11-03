@@ -75,3 +75,31 @@ under the stated common real source matching. This single inequality
 does not establish a positive transfer state. A projected physical
 construction needs an independently derived operator and projection,
 its full mixed half-period Gram matrix, and time-dependent data.
+
+### Two-time test for the staggered mode
+
+For a centered Hermitian staggered operator, write `A = C(0)` after
+matching and subtracting local contacts, and `B = C(a)`. In a finite
+faithful thermal model the Lehmann weights give `A = s + Σ w_j` and
+`B = s + Σ w_j sech(a ν_j)`, where `s ≥ 0` is static weight and
+positive-frequency pairs have `w_j > 0` and `ν_j > 0`. With fixed
+`s`, a realization exists for `A = B = s` or `s < B < A`. The
+strict case is realized by a two-level transition of gap
+`arcosh((A-s)/(B-s))/a` and an independent static centered spin
+with variance `s`. Thus a two-time pass permits dynamics but leaves
+the retarded spectrum underdetermined.
+
+The staggered half-period numerator is already known. Its equal-time
+numerator reduces to the same-site plus square because the nearest-space
+term vanishes. The [support enumerator](l1_interacting_support.py) gives
+185 multisets (51,930 ordered terms) for that degree-six contraction.
+The source-map second derivative multiplied by the metric one-point
+function vanishes by Pin symmetry. An independently matched local
+quadratic contact can still shift `A`, so the raw equal-time Hessian
+alone cannot qualify this test.
+
+Independent review derived the half-period factor from each unordered
+Lehmann pair and verified the one-gap construction. It also reproduced
+the 185 unique support words and their multiplicities with a separate
+ordered count. The equal-time value and its contact subtraction remain
+open.

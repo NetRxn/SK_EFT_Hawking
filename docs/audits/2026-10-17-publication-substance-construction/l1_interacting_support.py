@@ -1,6 +1,7 @@
 """Pure-g2 center/saturation support for the original 2x2x1x1 torus."""
 from collections import Counter
-from itertools import combinations, product
+from itertools import combinations, combinations_with_replacement, product
+from math import factorial, prod
 
 SITES=range(4)
 AXES=range(4)
@@ -59,12 +60,33 @@ def match(halves,target_parity,target_counts):
                 first=witness[(p,c)]+witness[needed]
     return total,first
 
+def same_site_quadratic_support():
+    """Degree-six action words after two local metric insertions at site 0."""
+    candidates = [(parity, counts, label) for parity, counts, label in TERMS
+                  if counts[0] == 0]
+    for indices in combinations_with_replacement(range(len(candidates)), 6):
+        parity = 0
+        counts = [0] * 4
+        for index in indices:
+            term_parity, degree, _ = candidates[index]
+            parity ^= term_parity
+            counts = [a + b for a, b in zip(counts, degree)]
+        if parity == 0 and counts == [0, 8, 8, 8]:
+            yield tuple(candidates[index][2] for index in indices)
+
+
 def main():
     halves3=half(3)
     halves4=half(4)
     print('half-state counts',len(halves3[0]),len(halves4[0]))
     norm=match(halves4,0,(8,)*4)
     print('Z pure-g2^8',norm)
+    local = list(same_site_quadratic_support())
+    local_ordered = sum(factorial(6) // prod(map(factorial, Counter(word).values()))
+                        for word in local)
+    assert local_ordered == match(halves3, 0, (0, 8, 8, 8))[0]
+    print("same-site quadratic multisets", len(local), "ordered", local_ordered)
+
     def shear(x):
         return link(x,2)^link(x,3)
     for b in SITES:
