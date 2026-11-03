@@ -1073,7 +1073,7 @@ sum, before the four-layout multiplier.
 The checkpoint replay of X1 exited successfully and reproduced
 `6491/196608` with zero imaginary part.
 
-### Zero mode of the closed-path source Hessian
+### Zero temporal mode of the closed-path source Hessian
 
 Let the two slice sources be (j_0,j_a), with the spatial weighting
 held fixed as in the finite replay. Time translation gives equal
@@ -1100,6 +1100,11 @@ weighting with the intended physical polarization. The physical
 source may also vary links, measure, and regulator and thereby
 change the contact and connected terms. Neither eigenvalue in the
 table identifies the B3 bare bubble without that matching.
+
+Independent review of `912195889` verified the two symmetries
+and reproduced all four fractions. The zero mode refers to time
+at the replay's fixed spatial weighting. Spatial momentum and
+physical volume normalization require separate matching.
 
 ### Metric amplitude and the linear-path contact
 
