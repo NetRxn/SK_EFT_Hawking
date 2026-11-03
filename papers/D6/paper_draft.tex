@@ -42,7 +42,7 @@ double-exponential bound into a statement about a failure \emph{probability}
 rather than about a real sequence defined to satisfy its own recursion. At the
 malignant-pair count Aliferis, Gottesman and Preskill report for the Steane CNOT
 extended rectangle the chain discharges a numerical certificate exceeding
-$2.73 \times 10^{-5}$. The scope is the combinatorial half of their argument:
+$\input{tables/agp_theorem3_threshold.tex}$. The scope is the combinatorial half of their argument:
 the malignant-pair count enters as a literal rather than an enumeration, the
 lemma that a good extended rectangle correctly simulates its ideal gate is a
 hypothesis rather than a theorem, and the satisfiability witness for the
@@ -595,7 +595,8 @@ $A_{\rm CNOT}\varepsilon_L < 1$, so concatenation suppresses without bound. The
 numerical certificate \texttt{steaneAGPThreshold\_gt} is discharged by
 \texttt{norm\_num} rather than quoted,
 \begin{equation}
-  \frac{1}{A_{\rm CNOT}} \;=\; 2.838 \times 10^{-5} \;>\; 2.73 \times 10^{-5},
+  \frac{1}{A_{\rm CNOT}} > \input{tables/agp_theorem3_threshold.tex},
+  \qquad \frac{1}{A_{\rm CNOT}} \simeq \input{tables/agp_pair_inverse.tex},
   \label{eq:threshold-numeric}
 \end{equation}
 and \texttt{agp\_threshold\_steane\_numerical} bundles it with
@@ -612,9 +613,9 @@ chain is
   \;\longrightarrow\; A''_{\rm CNOT} \approx 36\,511,
   \label{eq:agp-chain}
 \end{equation}
-with $\varepsilon_0^{\rm AGP} = 1/A''_{\rm CNOT} \ge 2.739 \times 10^{-5}$,
+with $\varepsilon_0^{\rm AGP} = 1/A''_{\rm CNOT} \ge \input{tables/agp_eq36_threshold.tex}$,
 which is~\cite[Eq.~(36)]{AGP2006} and rounds down to the
-$2.73 \times 10^{-5}$ of their Theorem~3. The first correction absorbs the
+$\input{tables/agp_theorem3_threshold.tex}$ of their Theorem~3. The first correction absorbs the
 \emph{cubic} term of their single-level bound: AGP's estimate is
 $A_{\rm CNOT}\varepsilon^2 + B_{\rm CNOT}\varepsilon^3$ with
 $B_{\rm CNOT} = \binom{575}{3}$, and $A'$ is the constant for which the pure
@@ -631,8 +632,8 @@ those pairs, so Eq.~\eqref{eq:threshold-def} is the right constant for the
 quantity actually bounded. The triple-fault contribution AGP's $B$ term carries,
 and the ancilla-acceptance conditioning, are not modelled here at all. A reader
 should therefore take Eq.~\eqref{eq:threshold-numeric} as certifying the
-threshold of the pair-failure recursion, and should take $2.739 \times 10^{-5}$,
-not $2.838 \times 10^{-5}$, as AGP's rigorous threshold for the full argument.
+threshold of the pair-failure recursion, and should take $\input{tables/agp_eq36_threshold.tex}$,
+not $\input{tables/agp_pair_inverse.tex}$, as AGP's rigorous threshold for the full argument.
 Extending the derivation to the cubic term is arithmetic on the same chain
 rather than a new argument, and it is not done here.
 
@@ -642,7 +643,7 @@ rectangle, and the inverse of each. The last two rows are the corrected
 constants of Eq.~\eqref{eq:agp-chain}, and $1/A''$ is AGP's published rigorous
 threshold. The inverses in the first two rows are uncorrected, so they are not
 AGP's thresholds for those models; for depolarizing noise AGP quote
-$9.4 \times 10^{-5}$ and say explicitly that it is not a rigorous bound. The
+$\protect\input{tables/agp_eq45_depolarizing_rounded.tex}\protect\unskip$ and say explicitly that it is not a rigorous bound. The
 spread across rows is the model-dependence of the constant, not an uncertainty
 in it.}
 \label{tab:counts}
@@ -663,7 +664,7 @@ any refinement of the enumeration can only raise it.
 \paragraph{On the number that circulates alongside it.} A threshold near
 $10^{-4}$ is frequently quoted for concatenated distance-three codes. It is a
 heuristic estimate, not a rigorous bound, and AGP are explicit that their own
-depolarizing-noise figure of $9.376 \times 10^{-5}$ is likewise ``not a rigorous
+depolarizing-noise figure of $\input{tables/agp_eq45_depolarizing.tex}$ is likewise ``not a rigorous
 lower bound on the accuracy threshold''. Eq.~\eqref{eq:threshold-numeric} and the
 AGP chain Eq.~\eqref{eq:agp-chain} are rigorous and roughly a factor of four
 smaller, and the gap between the two is a statement about proof technique rather
