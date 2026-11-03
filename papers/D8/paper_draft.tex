@@ -49,9 +49,8 @@ holding of the same compiled word. To our knowledge this is the first
 kernel-verified quantitative Solovay--Kitaev theorem at general dimension in
 any proof assistant; the enabling step is a Banach-algebra matrix logarithm
 with an explicit convergence radius, which removes a circular dependency that
-blocks the naive lift. Because the two hypotheses are the only alphabet-specific
-input, a gate set enters the verified theory by supplying a density witness, and
-we discharge four such witnesses, at $\su 2$, $\su 4$ and $\su 8$. At $\su 8$ we
+blocks the naive lift. For gate sets with compatible word length, density is
+the remaining hypothesis. We discharge four density witnesses, at $\su 2$, $\su 4$ and $\su 8$. At $\su 8$ we
 settle the role of the doubly controlled-$Z$ gate: it is sufficient for density
 with no $T$ gate present, it is necessary, since the Clifford group alone has
 finite image under the channel representation, and it is priced, by a
@@ -83,14 +82,15 @@ literature, proved one gate set at a time.
 This paper reports a machine-checked development, in the Lean~4 proof
 assistant, that answers all three, and that answers the first in a form which
 is reusable rather than per-alphabet. Its organizing observation is that of the
-ingredients in a Solovay--Kitaev proof, only one is alphabet-specific. The
+ingredients in a Solovay--Kitaev proof with compatible word length, only the
+density proof needs to be supplied separately for each alphabet. The
 density argument that a discrete gate set does not close up into a finite group
 depends on the gate set. The $\varepsilon_0$-net, the balanced group-commutator
 recursion, the Baker--Campbell--Hausdorff estimate controlling it, and the
 Cartan step from a one-parameter subgroup to the whole group do not. Separating
-them yields a substrate over an abstract generating set, into which an alphabet
-enters by supplying a density witness and nothing else
-(Sec.~\ref{sec:substrate}), and which lifts to the special unitary group
+them yields a substrate over an abstract generating set with two requirements:
+a density witness and compatible word length
+(Sec.~\ref{sec:substrate}). The substrate lifts to the special unitary group
 $\su d$ of arbitrary dimension once an obstruction involving convergence radii
 is removed (Sec.~\ref{sec:sud}). To our knowledge, the resulting statement is
 the first kernel-verified quantitative Solovay--Kitaev theorem at general
@@ -167,7 +167,7 @@ generated group is dense, a geometric recursion on the group manifold near the
 identity, and a number-theoretic obstruction establishing that the discrete
 alphabet does not close up into a finite group.
 
-Only the third of these is alphabet-specific. That observation is the
+Once compatible free-word length is in place, only the third of these is alphabet-specific. That observation is the
 organizing principle of this work, and the substrate below is what it buys:
 the first two ingredients are proved once, quantified over an abstract gate
 set, and a new alphabet inherits a quantitative compiler by supplying a single
@@ -309,8 +309,9 @@ for one alphabet, and only one, in Sec.~\ref{sec:compiler}.
 \subsection{The alphabet-specific residue, worked once}
 \label{sec:substrate-cliffordt}
 
-What an alphabet must supply is a density witness, and in practice the density
-witness reduces to showing that some word has infinite order. We work the
+For an alphabet with compatible free-word length, the remaining requirement
+is a density witness. Here the proof reduces to showing that some word has
+infinite order. We work the
 canonical fault-tolerant case, Clifford$+T$, in full, because it is the pattern
 every later alphabet reuses.
 
@@ -1180,8 +1181,8 @@ guarantee, without which the ancilla route does not reach the channel layer.
 
 The methodological claim is the one worth carrying forward. By separating what
 is alphabet-specific from what is not, and lifting the latter to arbitrary
-dimension, the cost of verifying a new universal gate set reduces to a single
-density witness, and Sec.~\ref{sec:alphabets} shows that witnesses as different
+dimension, the cost of verifying a new universal gate set with compatible
+free-word length reduces to a density witness, and Sec.~\ref{sec:alphabets} shows that witnesses as different
 as an algebraic-integer obstruction, a Chebyshev factorization, a triple-angle
 identity and an entangling-gate criterion all pass through the same interface
 unchanged. The $\su 8$ result suggests a further use: formal verification here
