@@ -1,17 +1,16 @@
 # L1 retarded tensor spectral interface
 
-**Open normalization correction.** The expanded private-link census
-dropped singleton dependencies retained by conditional Haar projection.
-Retaining them gives 5,718 transferable normalization words and
-1,812 transferable cross-support words. Only four checkerboard words
-transfer by this census. A direct replay of all 64 checkerboard words
-returned 5039025/8192, exactly matching the earlier subtotal. It uses
-the closed product X†U†YU and includes both the joint fourth moment
-and the split second moments. Independent review is assigned. Treat the historical assembled closed denominator, dressed
-response, normalized composite magnitudes, coupling interval, and
-composite–dressed threshold below as provisional until the correction
-is independently verified. The raw composite same-site and diagonal numerators
-were computed separately.
+**Verified normalization correction.** Conditional Haar projection
+retains singleton link dependencies. Independent enumeration confirmed
+5,718 transferable normalization words and 1,812 transferable cross
+words. Only four checkerboard words transfer by this census. The
+independent all-64 direct closed checkerboard replay at `76704b872`
+gave 5039025/8192 and the literal control gave 136051531/221184,
+both exactly real. The earlier numerical subtotal survives. The
+four newly excluded mixed-cycle words already have direct closed
+coverage. This supersedes the earlier transfer counts and restores
+the downstream denominator, dressed response and coupling bound.
+The raw composite numerators were computed separately.
 
 
 Assume a matched stationary equilibrium state and a reciprocal Hermitian tensor channel. Project the once-pair sources into transverse-traceless polarizations after fixing operator normalization, mixing, and off-diagonal weights. Use the response convention (R(t)=+i\theta(t)\langle[Q(t),Q(0)]\rangle) for a source Hamiltonian `H' = −jQ`. After subtracting matched local contact terms and treating any static-only zero mode separately, a positive semidefinite spectral measure on positive frequencies gives
