@@ -257,3 +257,34 @@ by minimizing the Gram quadratic form over the additional
 observables, including its nullspace. Independent review verified
 the expansion, negative direction, and singular-block criterion.
 These checks establish positivity only on the tested half-period span.
+
+### Stability under a small second action coupling
+
+At fixed real nonzero g₂, the finite-volume partition function and
+the first and mixed second source derivatives are polynomials in g₁.
+Berezin saturation makes the exponential expansion finite, and Haar
+integration acts linearly on each coefficient. The normalized
+connected uniform half-period response is therefore a rational
+function of g₁ near zero, since the verified partition value at zero
+is strictly positive. Its real part is continuous and strictly
+negative at zero. It remains negative on an open interval about
+zero, even if reality has yet to be established for all mixed
+coefficients. A Hermitian positive transfer realization would have a
+real nonnegative value there, so the same literal uniform channel
+fails throughout that interval. This argument gives neither a
+quantitative radius nor a conclusion at arbitrary g₁ or at larger
+volume. Independent review verified the continuity argument and the
+saturation bounds. Homogeneity gives the response as g₂⁻² times a
+rational function of g₁/g₂², so the open interval can be taken in that
+ratio at this fixed volume.
+
+In the four-site degree-32 extraction, an action monomial
+`g₁^m g₂^n` with k metric insertions obeys `2m+n+k=8`.
+The simultaneous Pin sign reversal of both action couplings
+preserves the metric insertions, so only even `m+n` survive.
+Consequently m has the parity of k. The denominator has only
+g₁ degrees 0, 2, 4, each one-point numerator has degrees 1, 3,
+and the mixed two-point numerator has degrees 0, 2. The
+connected response is therefore even in g₁ and differs from the
+pure-g₂ response by O(g₁²) at fixed nonzero g₂. Computing the
+allowed coefficients would give a quantitative sign domain. Independent review verified the Pin premise and the parity refinement.
