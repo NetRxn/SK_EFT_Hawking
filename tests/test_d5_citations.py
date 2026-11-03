@@ -1015,3 +1015,40 @@ class TestExemptionIsClaimedNotInferred:
             encoding="utf-8"), "the registry looks mutated without its declarations"
         assert "10.9999/seeded-by-test" not in self.REG.read_text(encoding="utf-8"), (
             "a seeded DOI survived in the tracked registry — the restore did not run")
+
+
+def test_dawson_nielsen_length_provenance():
+    key = "DawsonNielsen2006"
+    citation = _cit.CITATION_REGISTRY[key]
+    state = json.loads((SK_ROOT / "docs/primary_sources_state.json").read_text())
+    source = state["entries"][key]
+    assert citation["doi"].lower() == "10.26421/qic6.1-6"
+    assert citation["doi_verified"] is True
+    assert source["url_used"] == "https://arxiv.org/pdf/quant-ph/0505030v2"
+    assert source["tier_achieved"] == "arxiv-pdf"
+    assert source["primary_source_path"] == citation["primary_source_path"]
+    assert citation["primary_source_path"].endswith(f"/{key}.pdf")
+
+    from validation._tex import _strip_tex_comments
+
+    expected = {
+        "D4": (
+            r"Dawson and Nielsen obtain this gate-sequence length exponent in "
+            r"Eq.~(8) of Ref.~\cite{DawsonNielsen2006}. Their Eq.~(9) gives the "
+            r"separate classical runtime exponent"
+        ),
+        "D8": (
+            r"which is the gate-sequence length exponent in Dawson and Nielsen's "
+            r"Eq.~(8)~\cite{DawsonNielsen2006}. Their Eq.~(9) gives the separate "
+            r"classical runtime exponent"
+        ),
+    }
+    for code, attribution in expected.items():
+        draft = (SK_ROOT / "papers" / code / "paper_draft.tex").read_text()
+        assert attribution in " ".join(_strip_tex_comments(draft).split())
+
+    lean = SK_ROOT / "lean/SKEFTHawking/FKLW"
+    for module in ("GenericSUdSkLengthExponent", "SolovayKitaevLengthBound"):
+        source_text = (lean / f"{module}.lean").read_text()
+        assert "Dawson-Nielsen" in source_text
+        assert "Real.log 5 / Real.log (3 / 2)" in source_text
