@@ -1467,3 +1467,10 @@ separate second moments. The determinant tensor evaluation is
 assigned. A fixed-link modular control for one (4,2) candidate
 survives a single-link projection. It does not settle the full
 Haar contraction or the signed sum.
+
+The cubic g₁³g₂ term vanishes on this regulator. The support
+replay combines each of the 816 unordered triples of determinant
+labels with each oppositely sliced nonzero shear tag and tests
+the same site degrees and link-center parity. None passes both.
+Thus the leading g₁g₂⁵ contraction is the only remaining
+coefficient in the raw mixed numerator on this lattice.

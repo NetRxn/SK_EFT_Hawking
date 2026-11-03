@@ -60,8 +60,22 @@ def composite_link_incidence(det, word):
     return (0, 2) in links, (0, 3) in links
 
 
+def cubic_support():
+    for determinants in combinations_with_replacement(tuple(determinant_terms()), 3):
+        for index, (parity, degrees, label) in enumerate(TERMS):
+            if not tags((index,))[0]:
+                continue
+            if parity ^ determinants[0][0] ^ determinants[1][0] ^ determinants[2][0]:
+                continue
+            if tuple(map(sum, zip(degrees, *(term[1] for term in determinants)))) == TARGET:
+                yield tuple(term[2] for term in determinants), label
+
+
 def main():
     start=perf_counter()
+    cubic = list(cubic_support())
+    assert not cubic
+    print('cubic determinant support', len(cubic))
     populations=Counter()
     signed_weights=Counter()
     tagged_ordered=Counter()
