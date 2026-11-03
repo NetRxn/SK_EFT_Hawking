@@ -56,3 +56,25 @@ census figures. Lowering their ceilings from 95 and 71 restores zero
 headroom. Both exact failed node IDs and the related spelled-out census
 controls now pass with the existing predicates. Other ratchets remain
 open.
+
+At `da343f91`, the five previously sandbox-sensitive Lean-slot fixture
+tests passed with local loopback and process inspection available.
+No production slot was used. A separate prose-reference diagnostic
+compared the empty candidate dependency checkout against the exact
+PhysLib revision from its Lake manifest,
+`c48433678e8fb6306ebcd48453300c8e16058a62`. The existing resolver
+classifies `MatrixMap.of_kraus_CP` as `PHYSLIB` when supplied that
+source. It then reports zero unresolved active-bundle references and
+90 legacy references against ceiling 90, compared with one and 94
+without PhysLib. This was a diagnostic override of the dependency
+path. Qualification still needs the canonical check with its pinned
+dependency provisioned on the candidate.
+
+The unmodified canonical `prose_theorem_reference_coverage` check
+also passed on `da343f91` with the exact pinned PhysLib source
+temporarily linked at its expected candidate-local Lake path. It
+scanned all 21 bundles and reported zero unresolved failures, two
+drift advisories, and one documented waiver. The legacy leg measured
+90 against ceiling 90. The temporary link was removed. This run
+establishes dependency-aware prose reference coverage on the measured
+head. Full merge qualification remains open.
