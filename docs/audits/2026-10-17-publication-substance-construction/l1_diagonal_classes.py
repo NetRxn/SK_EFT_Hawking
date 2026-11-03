@@ -64,3 +64,23 @@ def multiplicities(ii):
 for ii, images in sorted(orbits.items()):
     m=multiplicities(ii)
     print('profile',len(images),len(m),Counter(m.values()), tuple(m[x,d] for x in (0,3) for d in (2,3)))
+def two_edge_zero(ii,x):
+    m=multiplicities(ii)
+    for i in ii:
+        site,k,l,u,v=TERMS[i][2]
+        if (site,k,l)!=(x,2,3):
+            continue
+        needed={(u,0),(v,1)}
+        if any(m[z]!=2 for z in needed): continue
+        others=set()
+        for j in ii:
+            if j==i: continue
+            y,k,l,a,b=TERMS[j][2]
+            axes=[d for d in range(4) if d not in (k,l)]
+            for z,d in zip((a,b),axes):
+                if (z,d) in needed and y==forward(x,d):
+                    others.add((z,d))
+        if others==needed:return True
+zero=[ii for ii in remain if any(two_edge_zero(ii,x) for x in (0,3))]
+print('two edge local tensor zero:',len(zero),'of',len(remain),'; remaining orbits',
+      sum(ii not in zero for ii in orbits))
