@@ -78,11 +78,10 @@ entirely unmechanized. **This is the single largest ungated seam in the map.**
 `except Exception: return None`, so an unreadable or absent roadmap is indistinguishable from
 one with nothing to say.
 
-⚠️ **Placement concern.** The graph schema is declared in `docs/KNOWLEDGE_GRAPH.md`, with a
-delta in `temporary/working-docs/sentence_kg_schema_delta.md` and a parallel edge table inside
-`docs/roadmaps/Phase5v_Roadmap.md`. The canonical statement of the graph's shape lives outside
-`docs/architecture/` — in a phase roadmap and a working doc — which is a plausible root cause
-of "we don't know our own system."
+The current graph schema, including the sentence and audit node and
+edge tables, is declared in [Knowledge Graph](../KNOWLEDGE_GRAPH.md).
+[Phase 5v](../roadmaps/Phase5v_Roadmap.md) records the implementation
+history. The canonical schema lives outside this architecture map.
 
 ---
 
