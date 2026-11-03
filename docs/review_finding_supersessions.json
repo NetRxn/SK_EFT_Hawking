@@ -10454,6 +10454,51 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.1",
+      "status": "fixed",
+      "evidence": "D4 retains the Fibonacci-specific contribution; D8 owns the generic route. Removed the contradictory charter clause. Independent review on df581450 confirmed zero apex overlap and ran the exact Verify.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "df581450",
+      "verified_by": {
+        "command": "python3 -c \"t=open('docs/PAPER_STRATEGY.md').read(); l=[x for x in t.split(chr(10)) if 'D4** retains the Fibonacci' in x][0]; import sys; sys.exit(0 if ('re-pointed to D8' not in l) else 1)\"",
+        "declared": "python3 -c \"t=open('docs/PAPER_STRATEGY.md').read(); l=[x for x in t.split(chr(10)) if 'D4** retains the Fibonacci' in x][0]; import sys; sys.exit(0 if ('re-pointed to D8' not in l) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.2",
+      "status": "fixed",
+      "evidence": "Registered both exact Read–Rezayi compiler declarations, corrected the manuscript proof to the trace-integrality argument, and verified both indexed theorem types and the stated tolerance regime. Exact Verify and independent readback passed.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "df581450",
+      "verified_by": {
+        "command": "python3 -c \"import json; m=json.load(open('papers/D8/bundle_metadata.json')); ns=[t['name'] for t in m['apex_theorems']]; import sys; sys.exit(0 if any('rr5' in n for n in ns) and any('rr7' in n for n in ns) else 1)\"",
+        "declared": "python3 -c \"import json; m=json.load(open('papers/D8/bundle_metadata.json')); ns=[t['name'] for t in m['apex_theorems']]; import sys; sys.exit(0 if any('rr5' in n for n in ns) and any('rr7' in n for n in ns) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.3",
+      "status": "fixed",
+      "evidence": "D8 records the Kronecker bound as consumed from D9 certification; D9 prose now states that ownership. Both manuscripts compiled and the independent exact Verify passed. Review SHA256 90d3a8f062b361c0206b95845931ebd6e9f6e4420468e0cab5625614654fce07.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "df581450",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if 'l2_opNorm_kronecker_one_le' in t['name']][0]; sys.exit(1 if 'upstream' in e['claims'] else 0)\"",
+        "declared": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if 'l2_opNorm_kronecker_one_le' in t['name']][0]; sys.exit(1 if 'upstream' in e['claims'] else 0)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
