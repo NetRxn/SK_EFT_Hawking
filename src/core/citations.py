@@ -5840,7 +5840,7 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CoutantWeinfurtner2018KdV.pdf',
-        'used_in': ['papers/E1/paper_draft.tex'],
+        'used_in': ['papers/D1/paper_draft.tex', 'papers/E1/paper_draft.tex'],
         'provides': [],
         'notes': ('Publisher title/authors/DOI/year verified2026-10-15 against APS; '
                   '2017 is submission year, not journal year. Author preprint v2 '
