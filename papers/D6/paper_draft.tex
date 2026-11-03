@@ -567,8 +567,7 @@ they report is
   \label{eq:acnot}
 \end{equation}
 malignant pairs, obtained as the sum of the entries of a lower-triangular
-$7 \times 7$ matrix in~\cite[\S8.3]{AGP2006}, immediately following that
-section's Eq.~(32). Like Eq.~\eqref{eq:mcnot} it is model-contingent, and the
+$7 \times 7$ matrix in~\cite[\S8.3, Eq.~(31)]{AGP2006}. Like Eq.~\eqref{eq:mcnot} it is model-contingent, and the
 contingency is large: the same section gives $A_{\rm CNOT} = 22\,701$ if storage
 faults are neglected and $A_{\rm CNOT} \approx 7\,183$ for depolarizing noise
 rather than adversarial independent stochastic noise. Eq.~\eqref{eq:acnot} is
@@ -648,15 +647,7 @@ spread across rows is the model-dependence of the constant, not an uncertainty
 in it.}
 \label{tab:counts}
 \begin{ruledtabular}
-\begin{tabular}{lrl}
-Count & Value & Inverse \\
-\colrule
-$A_{\rm CNOT}$, depolarizing noise & $\approx 7\,183$ & $1.39\times10^{-4}$ \\
-$A_{\rm CNOT}$, no storage faults & $22\,701$ & $4.41\times10^{-5}$ \\
-$A_{\rm CNOT}$, Eq.~\eqref{eq:acnot} & $35\,235$ & $2.84\times10^{-5}$ \\
-$A'_{\rm CNOT}$, cubic term absorbed & $\approx 36\,108$ & $2.77\times10^{-5}$ \\
-$A''_{\rm CNOT}$, ancilla acceptance & $\approx 36\,511$ & $2.74\times10^{-5}$ \\
-\end{tabular}
+\input{tables/counts.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -790,19 +781,7 @@ imports.
 \caption{Modules in the capstone's dependency closure, and what each contributes.}
 \label{tab:modules}
 \begin{ruledtabular}
-\begin{tabular}{ll}
-Module & Contributes \\
-\colrule
-\verb|Basic| & shared definitions \\
-\verb|StabilizerCode| & stabilizer substrate \\
-\verb|SteaneCode| & the $[[7,1,3]]$ instance \\
-\verb|Counting| & Eqs.~\eqref{eq:mcnot},~\eqref{eq:acnot}; well-formedness \\
-\verb|MalignantUnionBound| & Lemmas~\ref{lem:union}--\ref{lem:submul} \\
-\verb|Concatenation| & the level sequence \\
-\verb|DoubleExp| & Eq.~\eqref{eq:double-exp} \\
-\verb|ConcatenatedComposition| & Theorem~\ref{thm:levels}; the capstones \\
-\verb|AGP/Threshold| & Eqs.~\eqref{eq:threshold-def},~\eqref{eq:threshold-numeric} \\
-\end{tabular}
+\input{tables/modules.tex}
 \end{ruledtabular}
 \end{table}
 

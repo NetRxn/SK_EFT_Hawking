@@ -40,6 +40,15 @@ def _hierarchy_rows():
     return [dict(zip(_FIELDS, cells, strict=True)) for cells in rows]
 
 
+def _table(description, columns, rows):
+    fields = [column.field for column in columns]
+    return {
+        "description": description,
+        "columns": columns,
+        "rows": lambda: [dict(zip(fields, row, strict=True)) for row in rows],
+    }
+
+
 TABLES = {
     "hierarchy": {
         "description": "D1 correction hierarchy at the registered benchmark inputs",
@@ -52,4 +61,57 @@ TABLES = {
             Col("dominance", "dominance"),
         ],
     },
+    'status': _table(
+        'D1 manuscript table status',
+        [
+            Col('result', 'Result', align='l'),
+            Col('section', 'Sec.', align='l'),
+            Col('status', 'Status', align='l'),
+        ],
+        [
+            ('\\texttt{acousticMetric\\_det}', '\\ref{sec:eft-metric}', 'derived'),
+            ('\\texttt{acoustic\\_metric\\_lorentzian}', '\\ref{sec:eft-metric}', 'derived'),
+            ('\\texttt{acousticMetric\\_inv\\_correct}', '\\ref{sec:eft-metric}', 'derived'),
+            ('\\texttt{hawking\\_temp\\_from\\_surface\\_gravity}', '\\ref{sec:eft-metric}', 'definitional'),
+            ('\\texttt{firstOrder\\_uniqueness}', '\\ref{sec:eft-first}', 'derived'),
+            ('\\texttt{deltaDissFromTransport\\_eq}', '\\ref{sec:eft-first}', 'definitional'),
+            ('\\texttt{deltaDissFromTransport\\_zero\\_iff}', '\\ref{sec:eft-first}', 'derived'),
+            ('\\texttt{hawking\\_universality}', '\\ref{sec:eft-universality}', 'derived'),
+            ('\\texttt{transport\\_coefficient\\_count}', '\\ref{sec:higher-count}', 'derived'),
+            ('\\texttt{firstOrder\\_count}, \\texttt{secondOrder\\_count}', '\\ref{sec:higher-count}', 'derived'),
+            ('\\texttt{thirdOrder\\_count}', '\\ref{sec:higher-count}', 'derived'),
+            ('\\texttt{secondOrder\\_count\\_with\\_parity}', '\\ref{sec:higher-parity}', 'derived'),
+            ('\\texttt{secondOrder\\_requires\\_parity\\_breaking}', '\\ref{sec:higher-parity}', 'definitional'),
+            ('\\texttt{fullSecondOrder\\_uniqueness}', '\\ref{sec:higher-positivity}', 'derived'),
+            ('\\texttt{combined\\_positivity\\_constraint}', '\\ref{sec:higher-positivity}', 'derived'),
+            ('\\texttt{firstOrder\\_KMS\\_optimal}', '\\ref{sec:higher-optimal}', 'derived'),
+            ('\\texttt{firstOrder\\_altSign\\_uniqueness\\_test}', '\\ref{sec:higher-optimal}', 'derived'),
+            ('\\texttt{cgl\\_fdr\\_general}', '\\ref{sec:higher-fdr}', 'conditional'),
+            ('\\texttt{einstein\\_relation}', '\\ref{sec:higher-fdr}', 'conditional'),
+            ('\\texttt{cgl\\_implies\\_secondOrderKMS}', '\\ref{sec:higher-fdr}', 'conditional'),
+            ('\\texttt{turning\\_point\\_shift\\_pos\\_iff}', '\\ref{sec:wkb-turning}', 'definitional'),
+            ('\\texttt{turning\\_point\\_shift\\_eq\\_decoherence}', '\\ref{sec:wkb-turning}', 'definitional'),
+            ('\\texttt{unitarity\\_deficit\\_eq\\_decoherence}', '\\ref{sec:wkb-unitarity}', 'definitional'),
+            ('\\texttt{standard\\_unitarity\\_recovered}', '\\ref{sec:wkb-unitarity}', 'definitional'),
+            ('\\texttt{decoherence\\_nonneg}, \\texttt{\\_zero\\_iff}', '\\ref{sec:wkb-unitarity}', 'definitional'),
+            ('\\texttt{noise\\_floor\\_eq\\_delta\\_diss}', '\\ref{sec:wkb-crossover}', 'definitional'),
+            ('\\texttt{noise\\_floor\\_nonneg}', '\\ref{sec:wkb-crossover}', 'definitional'),
+            ('\\texttt{occupation\\_reduces\\_to\\_beta\\_sq}', '\\ref{sec:wkb-crossover}', 'definitional'),
+            ('\\texttt{total\\_occupation\\_nonneg}', '\\ref{sec:wkb-crossover}', 'derived'),
+            ('\\texttt{noise\\_dominates\\_when\\_beta\\_small}', '\\ref{sec:wkb-crossover}', 'definitional'),
+            ('\\texttt{diracFluidMetric\\_gtt\\_vanishes}', '\\ref{sec:gr-metric}', 'derived'),
+            ('\\texttt{diracFluidMetric\\_y\\_offdiag\\_zero}', '\\ref{sec:gr-metric}', 'definitional'),
+            ('\\texttt{diracFluidMetric\\_txBlock\\_lorentzian\\_at\\_horizon}', '\\ref{sec:gr-metric}', 'derived'),
+            ('\\texttt{quasi1D\\_validity\\_bound}', '\\ref{sec:gr-metric}', 'conditional'),
+            ('\\texttt{soundSpeed\\_lt\\_vF}', '\\ref{sec:gr-subluminal}', 'derived'),
+            ('\\texttt{hawkingNoisePSD\\_greybody\\_mono}', '\\ref{sec:gr-noise}', 'derived'),
+            ('\\texttt{snr\\_sigma\\_Q\\_cancels}', '\\ref{sec:gr-noise}', 'derived'),
+            ('\\texttt{snr\\_independent\\_of\\_sigma\\_Q}', '\\ref{sec:gr-noise}', 'derived'),
+            ('\\texttt{fdt\\_consistency}', '\\ref{sec:gr-noise}', 'definitional'),
+            ('\\texttt{dean\\_lowest\\_channel\\_above\\_four\\_omega\\_H}', '\\ref{sec:gr-detect}', 'derived'),
+            ('\\texttt{attenuation\\_ge\\_one}, \\texttt{\\_mono\\_Gamma}', '\\ref{sec:pol-scope}', 'derived'),
+            ('\\texttt{attenuation\\_eq\\_one\\_at\\_zero\\_decay}', '\\ref{sec:pol-scope}', 'definitional'),
+            ('\\texttt{polariton\\_tier1\\_fails\\_tmds}', '\\ref{sec:pol-scope}', 'demarcation'),
+        ],
+    ),
 }
