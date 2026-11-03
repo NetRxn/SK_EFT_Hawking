@@ -1325,3 +1325,24 @@ some open neighborhood of zero. This yields an obstruction for
 the specified composite insertion beyond the pure-g₂ line once
 the diagonal calculation is verified. It gives no quantitative
 range in g₁ and does not select the physical metric insertion.
+
+The coupling neighborhood can be expressed in a dimensionless
+ratio. The four-site top degree is 32, each composite insertion
+has degree four, and the g₁ and g₂ action vertices have degrees
+eight and four. For nonzero g₂, put x = g₁/g₂². Saturation gives
+Z = g₂⁸ P(x), with degree at most four, and the two-insertion
+numerator N = g₂⁶ Q(x), with degree at most three. Transverse
+exchange kills the one-point term for both interactions when
+the determinant vertex is included with its alternating world
+contraction. Thus the uniform covariance is proportional to
+Q(x)/(g₂² P(x)) on this symmetric finite regulator. If
+P(x) = p₀ + Σ pᵢxⁱ and Q(x) = q₀ + Σ qᵢxⁱ, with p₀ positive
+and q₀ negative, a sufficient sign interval is
+
+    |x| < min(1, p₀/(2Σ|pᵢ|), |q₀|/(2Σ|qᵢ|)).
+
+Omit a bound whose sum is zero. The triangle inequality keeps
+P within half its zero-coupling value and the real part of Q
+below q₀/2. This identifies which mixed-coupling coefficients
+would turn continuity into a certified interval. The current
+replay determines the constant terms only.
