@@ -35,6 +35,7 @@ sys.path.insert(0, str(SK_ROOT / "scripts"))
 import validate as v
 import validate_helpers as _H  # noqa: E402
 from validate import _parse_latex_number, check_d1_hierarchy_table  # noqa: E402
+from validation.checks.physics import read_d1_floor_prose  # noqa: E402
 from scripts.gen_d1_hierarchy_table import (  # noqa: E402
     compute_bec_hierarchy,
     fmt_sci_latex,
@@ -228,12 +229,18 @@ class TestGeneratedHierarchyBinding:
 
         draft = SK_ROOT / "papers/D1/paper_draft.tex"
         table = draft.parent / "tables/hierarchy.tex"
+        floor = draft.parent / "tables/bec_floor_heidelberg.tex"
         check = v.check_d1_hierarchy_table
         assert check().passed
         for path, old, new in (
             (table, r"-8.53\times10^{-5}", r"-8.53\times10^{-4}"),
             (table, r"+6.5\%", r"+9.5\%"),
             (draft, r"\input{tables/hierarchy.tex}", r"\input{tables/not_hierarchy.tex}"),
+            (floor, r"1.59\times10^{-3}", r"1.59\times10^{-4}"),
+            (draft, r"\delta_{\rm diss} = \input{tables/bec_floor_heidelberg.tex}",
+             r"\delta_{\rm diss} = \input{tables/bec_floor_steinhauer.tex}"),
+            (draft, r"\delta_{\rm diss} = \input{tables/bec_floor_heidelberg.tex}",
+             r"\delta_{\rm diss} = \input{tables/bec_floor_missing.tex}"),
         ):
             source = path.read_text(encoding="utf-8")
             assert source.count(old) == 1
@@ -373,7 +380,7 @@ class TestFinding11PhysicalContract:
                 assert math.isclose(_parse_latex_number(cells[idx]), row[key], rel_tol=0.005)
 
     def test_manuscript_all_platform_floor_crossover_and_scale_context(self):
-        text = (SK_ROOT / "papers/D1/paper_draft.tex").read_text()
+        text = read_d1_floor_prose(SK_ROOT / "papers/D1/paper_draft.tex")
         # Bound the scientific comparison to the hierarchy's explicit platform
         # sequence; the existing live gate independently checks all table cells.
         section = text.split(r"\label{sec:hier-heidelberg}", 1)[1].split(r"\subsection", 1)[0]

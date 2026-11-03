@@ -417,6 +417,33 @@ def _parse_latex_number(cell: str):
         return None
 
 
+def read_d1_floor_prose(paper_path):
+    """Read live D1 prose with its generated spectral-floor scalars inlined."""
+    import re
+
+    from validation._tex import _strip_tex_comments
+
+    text = _strip_tex_comments(paper_path.read_text(encoding="utf-8"))
+    pattern = re.compile(r"\\input\{tables/(bec_floor_[^{}]+)\.tex\}")
+    if not pattern.search(text):
+        return text
+
+    from scripts.render_paper_tables import _load_spec, _render_scalar
+
+    specs = _load_spec(paper_path.parent / "tables.py")["scalars"]
+
+    def read_scalar(match):
+        key = match[1]
+        if key not in specs:
+            raise ValueError(f"unknown D1 floor scalar {key}")
+        actual = (paper_path.parent / "tables" / f"{key}.tex").read_text(encoding="utf-8")
+        if actual != _render_scalar(specs[key]):
+            raise ValueError(f"D1 floor scalar {key} differs from canonical render")
+        return _strip_tex_comments(actual).strip()
+
+    return pattern.sub(read_scalar, text)
+
+
 @register_check("d1_hierarchy_table",
                 "D1 BEC hierarchy table + crossover match the canonical evaluator")
 def check_d1_hierarchy_table() -> CheckResult:
@@ -547,7 +574,11 @@ def check_d1_hierarchy_table() -> CheckResult:
         r"\\delta_\{?\\rm\s+diss\}?\s*=\s*([^$]+?)\s*\$?\s*gives\s*"
         r"\$?\\omega_\\times\s*\\simeq\s*([\d.]+)\\,\s*T_\{?\\rm\s+eff\}?",
         _re.DOTALL)
-    matches = list(cross_re.finditer(text))
+    try:
+        crossover_prose = read_d1_floor_prose(paper_path)
+    except Exception as exc:
+        return CheckResult(passed=False, error=f"D1 floor scalar binding failed: {exc}")
+    matches = list(cross_re.finditer(crossover_prose))
     if not matches:
         details.append(Detail(
             "crossover.present", False,
