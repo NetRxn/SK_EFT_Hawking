@@ -466,3 +466,13 @@ three same- and mixed-chirality projection pairs by direct symbolic
 quaternion moments. The exact checkpoint trace gives
 `136051531/221184` with zero imaginary component. The denominator
 now has 416 unevaluated words.
+
+The [equal-time incidence reduction](l1_equal_time_structural.py)
+integrates private plaquette links before the source join. It makes
+145 words source-independent, leaving 40 that still need the joint
+source kernel. The [private frame-pair evaluator](l1_equal_time_private_pairs.py)
+covers 33 words with six independent frame pairs. Independent
+review reproduced the action factors, weights, and signed top
+extraction. The subtotal is `338499/2`, including the earlier
+122,472 benchmark. The 32 new words add `93555/2`. The other
+112 source-independent and 40 joint-source words remain open.
