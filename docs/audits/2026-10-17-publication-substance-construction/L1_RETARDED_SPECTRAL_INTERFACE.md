@@ -1323,8 +1323,8 @@ continuous near g₁ = 0 because the closed partition function
 there is positive. Its real part therefore remains negative on
 some open neighborhood of zero. This yields an obstruction for
 the specified composite insertion beyond the pure-g₂ line once
-the diagonal calculation is verified. It gives no quantitative
-range in g₁ and does not select the physical metric insertion.
+the diagonal calculation is verified. Continuity alone gives no quantitative range in g₁. The
+physical metric insertion requires separate matching.
 
 ### Conservative interval for the closed ordering
 
@@ -1353,3 +1353,8 @@ is g₂²|z|⁴. This interval is conditional on verification of
 the closed diagonal constant and applies to the specified
 finite source. It is a conservative bound rather than an
 estimate of a physical coupling range.
+
+Independent review of `12c43c544` verified the saturation degrees,
+transfer of the exterior norm bound, and the strict margins on z
+and R throughout the stated interval. Acceptance of the diagonal
+constant remains a separate replay review.
