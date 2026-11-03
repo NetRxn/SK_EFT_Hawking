@@ -1439,3 +1439,11 @@ The other 32 words touch both source links. A conditional
 projection can eliminate its private integration variable while
 retaining dependence on the other links in the projected tensor.
 Subsequent reductions must use that retained dependence.
+
+The corrected census and all-64 checkerboard replay are tracked
+at `76704b872`. A separate support enumeration confirmed every
+checkerboard word has cross, contact and product weights
+(16, 4, 12). Consequently the direct subtotal contributes
+5039025/512, 5039025/2048 and 15117075/2048 to those three
+raw numerators. The agreement of the unweighted subtotal thus
+propagates to all three weighted totals for this sector.
