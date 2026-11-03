@@ -181,8 +181,9 @@ common orientation sign. Eight factors cancel it. Link Haar variables
 and whole eight-generator site blocks are merely permuted.
 
 The resulting 652 representatives have orbit sizes 1, 2, 4, 8 and
-16 with counts 5, 17, 117, 283 and 230. Independent verification of
-this further reduction is pending.
+16 with counts 5, 17, 117, 283 and 230. Independent review reproduced
+the partition for every member and verified the curvature, frame, and
+orientation signs.
 
 ## Opposite-site fourth powers
 
@@ -192,4 +193,6 @@ supported on two opposite centers with disjoint Haar variables.
 The degree-four quadrature and the commutator curvature moment produce
 38 exterior terms per center after selecting local saturation.
 The exact exterior join gives `20339/129600` per word after the two
-`4!` factors, or `20339/4050` in total. Independent review is pending.
+`4!` factors, or `20339/4050` in total. Independent review reproduced the coefficient,
+checked all 330 homogeneous fourth moments of the signed cubature, and
+derived the needed commutator moments directly.
