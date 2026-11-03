@@ -1446,3 +1446,24 @@ checkerboard word has cross, contact and product weights
 5039025/512, 5039025/2048 and 15117075/2048 to those three
 raw numerators. The agreement of the unweighted subtotal thus
 propagates to all three weighted totals for this sector.
+
+The 32 remaining words contain one site-0 curvature factor
+with label (0,2,3,u,v). Counting all action and determinant
+occurrences of the two transport links (u,0) and (v,1)
+gives eight words in each degree profile (2,2), (2,4), (4,2)
+and (4,4). In the (2,2) class both links occur only in frame
+factors. The existing two-link antisymmetric Haar tensor
+therefore removes these eight terms before inserting the
+curvature coefficient.
+
+The 24 candidates left can be joined by site. The site-0
+composite and commutator use the existing closed residual
+source tensor, with two extended frame boundaries. Site 3
+uses the determinant tensor, with its two singleton frame
+factors paired against incident curvature legs. Sites 1 and 2
+supply two mixed curvature vertices each. Shared extended
+links require fourth Haar moments and split links require
+separate second moments. The determinant tensor evaluation is
+assigned. A fixed-link modular control for one (4,2) candidate
+survives a single-link projection. It does not settle the full
+Haar contraction or the signed sum.
