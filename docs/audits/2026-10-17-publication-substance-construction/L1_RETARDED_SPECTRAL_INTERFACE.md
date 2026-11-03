@@ -597,7 +597,7 @@ of about 0.1424 percent on the static fraction, conditional on
 such a realization. The scalar one-gap model saturates the
 low-frequency bound at its gap. The bound does not determine
 the spectrum or establish a positive physical state. Independent
-review is pending.
+review verified the bound and its one-gap saturation.
 
 Independent reproduction confirmed all 13 sector contributions,
 the separate contact and product totals, and the compatibility
@@ -646,3 +646,47 @@ verified the area factor for the oriented loop convention. Bounds on
 source derivatives require a remainder uniform with its first two
 source derivatives. The pointwise small-loop estimate supplies no
 bound on the integrated quantum response.
+
+### Source contract for a background extension
+
+The held primary [Diakonov 2011, arXiv:1109.0091v1](https://arxiv.org/abs/1109.0091v1)
+specifies the Euclidean grid in §III, the independent link and
+plaquette variables in Eqs. (13) and (17), the composite tetrad
+in Eq. (23), the lattice interactions in Eqs. (24)–(25), and the
+Berezin and normalized Haar integrals in Eqs. (26)–(27).
+The metric is a tetrad composite. These lattice equations specify
+the zero-source measure and action. They supply no independent
+background-metric family whose first and second variations would
+select between the literal composite insertion, the fixed-holonomy
+coframe variation, and a simultaneous pullback. Those prescriptions
+agree at zero source and give different derivatives. A physical
+extension needs an independent matching condition on the
+background family and its source-dependent measure or regulator.
+
+### Local Legendre transform for the specified dressed source
+
+Let W(j) be the finite log partition function for the two
+slice sources, and let C be the normalized quadratic contact.
+With contact subtraction `W_sub(j)=W(j)−C(j_0²+j_a²)/2`,
+the zero-source Hessian has diagonal A and off-diagonal B,
+where A is the verified equal-time product and B the verified
+half-period response. Time translation fixes the equality of the
+diagonal entries. Since A>B>0, its eigenvalues A+B and A−B
+are strictly positive. In a real neighborhood where W_sub is
+defined, the inverse function theorem gives a local source
+as a function of the contact-subtracted conjugate response
+`φ=∇W_sub(j)`. The Legendre transform
+`Γ(φ)=j·φ−W_sub(j)` then has Hessian
+`(A²−B²)⁻¹ [[A,−B],[−B,A]]` at the source-free point.
+
+The [fixed-link reality identity](L1_OFFDIAGONAL_HESSIAN.md#reality-of-fixed-link-top-coefficients)
+applies to every labelled action coefficient. The dressed source
+multiplies each coefficient by a real exponential for real j,
+so the finite sum is real analytic. The verified positive
+partition value at zero gives a neighborhood with positive Z
+and real analytic W. This establishes a local inverse response
+for the specified finite source prescription.
+Converting it to the physical L1 susceptibility requires the
+operator normalization, volume and time units, and a background
+source match. Independent review verified the contact subtraction,
+reality argument and inverse Hessian.
