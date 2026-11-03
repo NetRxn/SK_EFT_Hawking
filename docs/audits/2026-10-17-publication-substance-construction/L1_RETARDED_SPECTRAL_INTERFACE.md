@@ -1484,3 +1484,17 @@ leaving degree deficits (2,1,1,0). A tagged mixed curvature
 vertex has one collapsed frame and one extended frame, giving
 three degrees at its center. Neither allowed tag center on
 the opposite time slice (1 or 3) has that capacity.
+
+Independent review verified the Pin and transverse exchange
+signs, the invariant Berezin and Haar measures, and the vanishing
+one-point subtraction. A separate ordered enumeration tested
+65,536 cubic words. Both the site saturation test alone and
+the link-center parity test alone excluded every word.
+
+The determinant-center output has 50,176 distinct nonzero
+coordinate/mask rows, with 12,544 per extended anchor pair.
+Every mask has site degrees (0,1,1,6). The maximum absolute
+Gaussian integer component is 128. The physical denominator
+for this tensor is 4096 from the four frame factors and two
+quadratic Haar projections. The remaining join uses the two
+open extended coordinates and the source tensor at site 0.
