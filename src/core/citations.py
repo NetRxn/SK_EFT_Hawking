@@ -910,21 +910,24 @@ CITATION_REGISTRY = {
 
     'Berti2025': {
         'authors': 'Berti, A., Fernandes, J., Butera, S., Recati, A., Wouters, M., Carusotto, I.',
-        'title': 'Analog Hawking radiation from a spin-sonic horizon in a two-component BEC',
+        'title': 'Analog Hawking radiation from a spin-sonic horizon in a two-component Bose–Einstein condensate',
         'journal': 'Comptes Rendus Physique',
         'volume': 25,
-        'page': '1--36',
-        'year': 2025,
+        'page': '181--216',
+        'year': 2024,
         'doi': '10.5802/crphys.226',
         'arxiv': '2408.17292',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Berti2025.pdf',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Berti2024CRPhys25S2.pdf',
         'used_in': [
             'src/core/transonic_background.py',
         ],
         'provides': [],
-        'notes': 'THEORETICAL PROPOSAL only. No experimental parameters published. '
+        'notes': 'Final publisher cover gives volume 25, special issue S2 (2024), pp. 181–216. '
+                 'First online 2025-01-20; issue dated 2026-10-27. '
+                 'The separately held Berti2025.pdf is arXiv v1. '
+                 'THEORETICAL PROPOSAL only. No experimental parameters published. '
                  'Trento Na-23 spin-sonic experiment has not been realized.',
     },
 
