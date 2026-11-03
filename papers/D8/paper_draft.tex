@@ -685,17 +685,13 @@ $\mathrm{sde}_2(\widehat U)$ readable as a smallest-denominator exponent in a
 dyadic ring rather than merely as the $2$-part of a rational denominator. The
 lower bound holds either way.
 
-Two scope statements. The bound is stated for unitaries exactly implementable
-in Clifford$+$CCZ, which is the domain on which $T^{\mathrm{of}}$ is meaningful.
-And the matching upper bound, that is minimality, is not addressed: establishing
-it requires the meet-in-the-middle search behind Mukhopadhyay's Conjecture~4.8,
-and the lower bound stands on its own without it.
-% TODO: Mukhopadhyay2024 (arXiv:2401.08950) is held as a project-authored
-% abstract summary, not as source text. The section, lemma and conjecture
-% numbers cited here follow the formalization's internal cross-references and
-% have not been checked against the paper itself. Acquire the primary source
-% before this bundle goes green. The same applies to KMM2013 (arXiv:1206.5236),
-% cited in Sec.~\ref{sec:length-rs} and likewise held only as a summary.
+The bound concerns exactly implementable Clifford$+$CCZ unitaries.
+Mukhopadhyay's Lemma~3.10 gives the dyadic entry statement; the Clifford
+signed-permutation property is Fact~3.9~\cite{Mukhopadhyay2024}.
+We prove a lower bound and leave the exact minimum open.
+Mukhopadhyay's Conjecture~4.8 concerns the size of the intermediate sets
+and retention of an optimal decomposition in the divide-and-select search.
+The lower bound here does not use that conjecture.
 
 \section{From existence to an algorithm}
 \label{sec:compiler}
@@ -820,8 +816,8 @@ For $z$-rotations, Ross and Selinger~\cite{RossSelinger2016} achieve the
 optimal exponent by reducing approximate synthesis to a lattice problem over
 the ring $\mathbb Z[\omega]$, $\omega = e^{i\pi/4}$, and then solving an exact
 synthesis problem over $\mathbb Z[\omega][1/\sqrt 2]$ in the manner of
-Kliuchnikov, Maslov and Mosca~\cite{KMM2013}. We verify the efficiency layer of
-that route.
+Kliuchnikov, Maslov and Mosca~\cite[Theorem~1 and Algorithm~1]{KMM2013}.
+We verify the word-length bound for the route when the finder succeeds.
 
 \begin{theorem}[Grid-route length]
 \label{thm:rslength}
@@ -853,17 +849,16 @@ delivers the full conclusion of Theorem~\ref{thm:rslength} with
 $\lvert W\rvert \le N_3 + 8k$.
 \end{theorem}
 
-Theorem~\ref{thm:rssynth} isolates the gap exactly. What is known about
-Hypothesis~\ref{hyp:residual} is this. The source
-literature discharges it as a randomized algorithm under a prime-distribution
-assumption, which appears as Hypothesis~8.3 of Ref.~\cite{RossSelinger2016} and,
-in the same form, as Hypothesis~29 of Ref.~\cite{Selinger2015}. An
-unconditional discharge would require the existence of relative norms of
-prescribed form in growing windows, which is a short-interval statement in
-analytic number theory. Hypothesis~\ref{hyp:residual} is strictly weaker than
-the prime-distribution assumption, since it asks for a relative norm rather
-than a prime. It is open in the formalized-mathematics ecosystem, and in its
-primality form it is open in the literature.
+Theorem~\ref{thm:rssynth} uses the bounded witness in
+Hypothesis~\ref{hyp:residual} as its explicit completeness input.
+Ross and Selinger's Algorithm~7.6 instead enumerates grid candidates and
+tests residual norm equations. Their Hypothesis~8.3 models primality of
+integers produced by that algorithm, and Proposition~8.8 uses it for the
+expected performance without a factoring oracle~\cite{RossSelinger2016}.
+This source result concerns the search over candidates. It does not supply
+a bounded residual witness for the candidate in
+Hypothesis~\ref{hyp:residual}. Establishing that witness remains open in
+this development.
 
 Hypothesis~\ref{hyp:residual} appears in the statement of every theorem that
 consumes it. It is never an axiom, so the zero-project-local-axiom property of
@@ -965,12 +960,9 @@ Lemma~\ref{lem:grid} is what makes the asymmetric case usable, in which a tiny
 $\varepsilon$-region is paired against a large disk and neither interval alone
 meets the naive bound while their product does.
 
-% TODO: RossSelinger2016 (arXiv:1403.2975) is not held by this project in any
-% form; the Appendix-C lemma numbering, the Hypothesis 8.3 reference and the
-% Lemma 4.4 attribution above are taken from the formalization's internal
-% cross-references and from secondary deep-research notes, not from the paper.
-% The mathematical statements are the formalization's own and are kernel-checked;
-% the attributions are not verified. Acquire the primary source before green.
+The product condition is Ross and Selinger's Lemma~4.4
+for the two intervals in the conjugate-embedding grid
+problem~\cite{RossSelinger2016}.
 
 \subsection{The ancilla route, unconditionally}
 \label{sec:length-kmm}
