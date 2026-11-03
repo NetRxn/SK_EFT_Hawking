@@ -55,3 +55,28 @@ The [dual-embedding support enumerator](l1_sparse_center_parity_dual.cpp) reduce
 The next [mixed-curvature center](l1_sparse_center_mixed_dual.cpp) has [608 supported slices](l1_sparse_center_mixed_parity_dual.cpp). The [indexed projection receipt](l1_sparse_mixed_projection_indexed.txt) has 24 nonzero entries. The [Gaussian rational join](l1_mixed_center_contract.py) contracts 72 ordered slice pairs and gives 25/49152 for the representative, with zero imaginary component. The six action factors are distinct and their exponential weight is one. The two-member orbit contributes 25/24576 to the degree-six unnormalized diagonal plus numerator. Independent review reproduced the nonzero center entries and the full complex contraction. Eighteen orbits remain, so the total numerator may differ or vanish.
 
 The independently reviewed [shifted two-center calculation](l1_shift_group_contract.py) evaluates all eleven orbits in this family. The six exact center receipts are checked by [l1_shift_receipt_verify.py](l1_shift_receipt_verify.py). Three shifted same-curvature tensors vanish on their 320 supported slices each. Three shifted mixed-curvature tensors match the reviewed base on all 608 slices each, including 24 nonzero entries. Four same-curvature orbits contribute zero. The seven mixed-curvature orbits contribute 25/1536 in total, including the previously evaluated two-member orbit. Eight orbits and 36 multisets remain. The full numerator and denominator are open.
+
+## Full raw diagonal plus numerator
+
+The remaining eight orbits (36 multisets) contribute `-3563/27648`.
+With the shifted family, the coefficient of `g2^6` in the unnormalized
+diagonal plus numerator on the pure-`g2` torus is `-3113/27648`.
+The support accounting is 182 + 28 + 14 eliminated, 50 shifted, and 36
+residual, for 310 multisets. The pin kills the one-point term.
+Independent review rebuilt both batched families and matched every row
+(16,256 same and 34,048 mixed), then checked all 432 nonzero source
+covariance entries against a direct nested Haar sum. The normalized
+response requires the full degree-eight denominator. Physical retarded
+matching and B3 acceptance remain open.
+
+To reproduce, set `audit` to the absolute path of this audit directory
+and run from a scratch directory. The generated row tables are scratch
+outputs.
+
+```sh
+c++ -std=c++17 -O3 "$audit/l1_residual_batched.cpp" -o l1_residual_batched
+./l1_residual_batched 0 > l1_residual_batched_same.out
+./l1_residual_batched 1 > l1_residual_batched_mixed.out
+python3 "$audit/l1_residual_sparse_sources.py"
+python3 "$audit/l1_residual_source_control.py"
+```
