@@ -222,6 +222,28 @@ class TestEachFailureGroundCarriesTheVerdictAlone:
         assert failed == {"crossover[0].coefficient"}, sorted(failed)
 
 
+class TestGeneratedHierarchyBinding:
+    def test_actual_generated_cell_and_include_are_checked(self):
+        from seed_journal import seeded_mutation
+
+        draft = SK_ROOT / "papers/D1/paper_draft.tex"
+        table = draft.parent / "tables/hierarchy.tex"
+        check = v.check_d1_hierarchy_table
+        assert check().passed
+        for path, old, new in (
+            (table, r"-8.53\times10^{-5}", r"-8.53\times10^{-4}"),
+            (table, r"+6.5\%", r"+9.5\%"),
+            (draft, r"\input{tables/hierarchy.tex}", r"\input{tables/not_hierarchy.tex}"),
+        ):
+            source = path.read_text(encoding="utf-8")
+            assert source.count(old) == 1
+            with seeded_mutation(path, source.replace(old, new),
+                                 reason="D1 actual generated hierarchy binding"):
+                assert not check().passed
+            assert path.read_text(encoding="utf-8") == source
+            assert check().passed
+
+
 class TestGenerator:
     def test_idempotent(self):
         assert compute_bec_hierarchy() == compute_bec_hierarchy()

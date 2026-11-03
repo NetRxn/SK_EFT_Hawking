@@ -462,12 +462,36 @@ def check_d1_hierarchy_table() -> CheckResult:
         return rel <= TOL, f"paper={got:.4g}, canon={want:.4g}, rel={rel:.2%}"
 
     # --- (1) The three BEC table rows -----------------------------------
-    tbl = _re.search(
-        r"\\label\{tab:hierarchy\}.*?\\begin\{tabular\}(.*?)\\end\{tabular\}",
-        text, _re.DOTALL)
+    from validation._tex import _strip_tex_comments
+    label = r"\label{tab:hierarchy}"
+    source = _strip_tex_comments(text)
+    if source.count(label) != 1:
+        return CheckResult(passed=False, error="expected one D1 hierarchy label")
+    table_source = source.split(label, 1)[1].lstrip()
+    include = r"\input{tables/hierarchy.tex}"
+    if table_source.startswith(include):
+        include_path = paper_path.parent / "tables" / "hierarchy.tex"
+        if not include_path.is_file():
+            return CheckResult(passed=False, error="D1 hierarchy include missing")
+        from scripts.paper_tables import render_table
+        from scripts.render_paper_tables import _load_spec
+
+        try:
+            spec = _load_spec(paper_path.parent / "tables.py")
+            expected = render_table(spec["tables"]["hierarchy"]).encode("utf-8")
+            actual = include_path.read_bytes()
+        except Exception as exc:
+            return CheckResult(passed=False, error=f"D1 hierarchy render failed: {exc}")
+        exact = actual == expected
+        details.append(Detail("hierarchy.generated", exact,
+                              "bound table matches canonical render" if exact else
+                              "bound table differs from canonical render"))
+        all_pass = all_pass and exact
+        table_source = _strip_tex_comments(actual.decode("utf-8")).lstrip()
+    tbl = _re.match(
+        r"\\begin\{tabular\}(.*?)\\end\{tabular\}", table_source, _re.DOTALL)
     if not tbl:
-        return CheckResult(passed=False,
-                           error="tab:hierarchy tabular block not found in D1 draft")
+        return CheckResult(passed=False, error="D1 hierarchy table not bound to label")
     body = tbl.group(1)
     rows = [r for r in body.split(r"\\") if "&" in r]
 

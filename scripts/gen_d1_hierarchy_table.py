@@ -172,8 +172,8 @@ def fmt_sci_latex(x: float, sig: int = 3) -> str:
     return rf"${mant_str}\times10^{{{exp}}}$"
 
 
-def render_latex_rows() -> str:
-    """Emit the three BEC ``tabular`` rows for the D1 hierarchy table.
+def bec_hierarchy_cells() -> list[tuple[str, str, str, str, str]]:
+    """Compute the three formatted BEC rows for the D1 hierarchy table.
 
     Column order matches the draft:
         Platform & T_H & delta_disp & delta_diss & dominance
@@ -185,18 +185,23 @@ def render_latex_rows() -> str:
         "Heidelberg": r"$^{39}$K BEC (Heidelberg, projected)",
         "Trento": r"spin-sonic BEC (Trento)",
     }
-    lines = []
+    rows = []
     for name in PLATFORM_FACTORIES:
         h = hier[name]
         disp = fmt_sci_latex(h["delta_disp"])
         diss = fmt_sci_latex(h["delta_diss"])
         dom = h["dominance"]
         dom_cell = rf"\textbf{{{dom}}}" if dom == "diss" else dom
-        lines.append(
-            f"{labels[name]:<38s} & {h['T_H_nominal_label']} & "
-            f"{disp} & {diss} & {dom_cell} \\\\"
-        )
-    return "\n".join(lines)
+        rows.append((labels[name], h["T_H_nominal_label"], disp, diss, dom_cell))
+    return rows
+
+
+def render_latex_rows() -> str:
+    """Keep the existing CLI row format backed by the shared formatted cells."""
+    return "\n".join(
+        f"{label:<38s} & " + " & ".join(cells) + r" \\"
+        for label, *cells in bec_hierarchy_cells()
+    )
 
 
 def _print_human(hier: dict[str, dict]) -> None:
