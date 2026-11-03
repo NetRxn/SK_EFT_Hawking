@@ -390,7 +390,7 @@ class-restricted form. In the power domain the sign does drop out, but $c = 0$ d
 \caption{Left: the effective time constant $\tau_{\rm eff} = \tau/(1+\mathcal{L})$ across the
 stability dichotomy \thm{etf\_stable\_iff}. On the unstable branch it is \emph{negative}; reading it
 through an absolute value inverts the physics. Right: the Johnson noise-equivalent-power correction
-$|1-\mathcal{L}|$, which is an equality rather than a direction (the ETF-unaware budget \emph{overstates} on $0 < \mathcal{L} < 2$) and which is stability-blind.}
+$|1-\mathcal{L}|$, which is an equality rather than a direction (a positive ETF-unaware budget \emph{overstates} on $0 < \mathcal{L} < 2$) and which is stability-blind.}
 \label{fig:etf}
 \end{figure*}
 
@@ -436,19 +436,18 @@ temperature-per-power map is composed. Their ratio is \thm{responsivity\_etf\_co
 (\thm{responsivity\_opposite\_sign\_of\_unstable}), so a magnitude-only treatment loses genuine
 information (\thm{responsivity\_magnitudeOnly\_loses\_stability\_information}).
 
-For noise, \thm{johnsonCurrentPSD\_eq\_johnsonNyquist} is a genuine fluctuation--dissipation citation
-at the electrical conductance, and \thm{johnson\_transfer\_eq} \emph{derives} the transfer factor
+For $R\neq0$, \thm{johnsonCurrentPSD\_eq\_johnsonNyquist} is a genuine fluctuation--dissipation citation
+at conductance $1/R$. For $R\neq0$, $G\neq0$ and $1+\mathcal{L}\neq0$, \thm{johnson\_transfer\_eq} \emph{derives} the transfer factor
 from the coupled small-signal pair. For $1 + \mathcal{L} \neq 0$, the corrected result is
 \begin{equation}
 \mathrm{NEP}_J \;=\; |1 - \mathcal{L}|\cdot \mathrm{NEP}_J^{\rm naive},
 \end{equation}
 formalized as \thm{johnsonNEP\_eq\_abs\_one\_sub\_loopGain\_mul\_naive}. Three features of it are
-easy to get wrong. It is an \emph{equality}, not a direction: the naive budget \emph{overstates}
+easy to get wrong. For $1+\mathcal{L}\neq0$ and a positive naive NEP, the naive budget \emph{overstates}
 whenever $|1-\mathcal{L}| < 1$, and \thm{johnsonNEPNaive\_lt\_johnsonNEP\_iff} states the boundary
 exactly, with the extreme case \thm{johnsonNEP\_naive\_overstates\_at\_unit\_loopGain}. The factor
 is $|1-\mathcal{L}|$ and not $|1+\mathcal{L}|$, because Johnson noise is not pure output noise: the Johnson EMF also perturbs the dissipated Joule power and returns through $dI/dT$, and the two
-electrothermal effects partially cancel. At $\mathcal{L}=3$ an ETF-unaware budget is therefore low
-by exactly two, not four (\thm{speedupWitness\_johnsonNEP\_double}). And the factor is
+electrothermal effects partially cancel. At $\mathcal{L}=3$ the corrected NEP is twice the naive NEP (\thm{speedupWitness\_johnsonNEP\_double}). And the factor is
 stability-blind: \thm{johnsonNEP\_correction\_magnitude\_loses\_stability\_information} exhibits two
 models with the same correction on opposite sides of \thm{etf\_stable\_iff}.
 
