@@ -966,3 +966,45 @@ link integrations, hence factor 3⁴/3⁸ = 1/81. The normalization
 contribution 104978 therefore transfers to the closed ordering.
 Its shear weights vanish. Independent review obtained the same
 closed-order result by Schur orthogonality on the periodic cell complex.
+
+The four residual checkerboard words form one orbit under
+extended and transverse axis exchanges. In these words all
+four extended links share curvature and coframe transport.
+The closed-order scratch evaluator retained only the joint
+link moment in the repeated-cycle kernel and reversed the
+curvature product before the exact trace. It gives real
+normalization `315015/8192` for the four words and weighted
+cross contribution `315015/512`. The largest certified sparse
+multiplication bound is below 2⁶³. A literal shared-only
+control is in progress to isolate the corresponding four
+words from the earlier 64-word sector total.
+
+The literal shared-only checkerboard control gives
+`8503261/221184`, so replacing those four words changes the
+normalization by `67/6912` and the cross numerator by `67/432`.
+The full closed-order checkerboard normalization is
+`136053675/221184`.
+
+The closed mixed-cycle replay replaced the joint extended-link
+projection of `U Y U† X†` with `X† U† Y U`, retaining the
+same Haar scales and transport tensors. For the four original
+layout classes in lexicographic order it gives
+`19981/4096`, `2900539/1572864`, `7356675/2097152`, and
+`172649/55296` per sixteen orientations, all real. The full
+256-word normalization is `1246110337/28311552`. This covers
+the four words already eligible for reuse as well as the
+252 residual words. Independent review of the closed-order
+projection and assembly is pending.
+
+Applying the independently enumerated source weights to these
+four closed mixed-cycle coefficients gives cross subtotal
+`10573243/49152`, contact `1246110337/7077888`, and operator
+product `276436655/7077888`.
+
+For the diagonal-mixed sector, an independent scratch evaluator
+changed the curvature projection to the closed order and replayed
+the original order as a control. A raw coefficient changed sign
+under reversal, but all 160 reduced local Haar tensor rows and
+the final per-case contractions matched exactly. Thus its
+normalization `−40213/16`, contact `−40213/8` and product
+`40213/8` carry over. The cross weight vanishes.
