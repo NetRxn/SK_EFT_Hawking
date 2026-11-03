@@ -1,0 +1,10 @@
+# Independent D8 wide-table layout review
+
+**Disposition.** Accept the three-float layout repair for a scoped checkpoint. The candidate removes the inherited table overflow and I found no mandatory regression in the inspected layout.
+
+- The continuity packet was fresh on entry. The one-file diff against `4232709e` changes exactly three opening and three closing float delimiters. Alphabet coverage, compilation mechanisms and reusable components use top-positioned full-width tables. Captions, labels, include paths, table data, figure sources and prose are unchanged. The results table remains single-column. `git diff --check` passed.
+- I compared both canonical PDFs with Poppler text extraction and compared both TeX auxiliary label records. Tables I–IV remain numbered I–IV and move from pages 2, 5, 8 and 12 to pages 2, 6, 9 and 13 respectively. Figure labels, numbering and pages remain 1–4 on pages 4, 6, 7 and 9. Table II now sits above its coverage plot on p6 and Table III above its word-length comparison on p9. Table IV moves to the top of p13 above the bibliography continuation, one page after its source discussion. The p6, p7, p9 and p13 rasters show legible captions and intact table rows, column boundaries and nearby plots with no new clipping or overlaps.
+- Canonical compile remains 13 pages with zero TeX errors, unresolved PDF references or dropped class options. Direct log comparison shows exactly the three table alignment warnings removed (64.95735, 12.57686 and 23.13358 pt). The four remaining warnings retain their original widths (72.90727, 10.76086, 222.76361 and 159.76416 pt).
+- Canonical baseline PDF SHA-256 is `d598fe12b70c603af5d67eaeb1adc16b9934781ea0180b069439ad812904c9d8`. Canonical candidate PDF SHA-256 is `2a6dbf6137845cbeeb66a8fdae76e4059034227348fef4083945bbc5816474ba`, matching the checkout PDF.
+
+This review covers the three table floats and neighboring figure placement. The original table migration review remains applicable to source conservation. The four other warnings remain outside this repair. Only this report was written in the checkout.

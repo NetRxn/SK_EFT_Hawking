@@ -464,7 +464,7 @@ problem. This section is the evidence. The measure of the claim is not how many
 alphabets appear but how much of each one's work is alphabet-specific, so
 Table~\ref{tab:alphabets} is organized by that column.
 
-\begin{table}
+\begin{table*}[t]
 \caption{What each alphabet supplies. Every entry inherits the recursion, the
 net, the Baker--Campbell--Hausdorff estimate and the Cartan step from
 Theorem~\ref{thm:substrate} or Theorem~\ref{thm:sud}. The rightmost column is
@@ -473,7 +473,7 @@ the whole of the alphabet-specific work.}
 \begin{ruledtabular}
 \input{tables/alphabets.tex}
 \end{ruledtabular}
-\end{table}
+\end{table*}
 
 \begin{figure*}[t]
 \centering
@@ -782,14 +782,14 @@ verified here, and no one of them dominates the others. Each buys the exponent
 at a different price, and the three prices are the honest content of this
 section.
 
-\begin{table}
+\begin{table*}[t]
 \caption{The three verified compilation mechanisms. No mechanism is best on
 every axis; the table is the comparison a compiler author actually needs.}
 \label{tab:mechanisms}
 \begin{ruledtabular}
 \input{tables/mechanisms.tex}
 \end{ruledtabular}
-\end{table}
+\end{table*}
 
 \begin{figure*}[t]
 \centering
@@ -1243,13 +1243,13 @@ Lemma~\ref{lem:somekills} is \lean{someKills\_of\_orthogonal}.
 Several components of this development are general-purpose and are absent from
 Mathlib at the pin used here.
 
-\begin{table}[h]
+\begin{table*}[t]
 \caption{Components with use beyond this development.}
 \label{tab:reusable}
 \begin{ruledtabular}
 \input{tables/reusable.tex}
 \end{ruledtabular}
-\end{table}
+\end{table*}
 
 The elimination of compiled evaluation described in Sec.~\ref{sec:trust} is a
 precondition for any of these being contributed upstream, since
