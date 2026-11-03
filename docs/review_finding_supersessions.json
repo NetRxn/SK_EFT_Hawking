@@ -10709,6 +10709,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-05-31-bundle-stage13:D8:6.2",
+      "status": "fixed",
+      "evidence": "The May 31 rerun section 6.2 independently verified the manuscript correction. Current D8 cites the Lean theorem for entry rationality and attributes the stronger dyadic result separately. Independent R2 review on e4ee5e6a confirmed the exact IsRatℂ proposition and that the three revised source comments agree, with every executable byte conserved. The fixed-state source check verifies the current manuscript binding and Lean commentary. This is a scope correction; no new dyadic theorem or native run is claimed.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "e4ee5e6a",
+      "verified_by": {
+        "command": "python3 -B -c 'from pathlib import Path; d=Path(\"papers/D8/paper_draft.tex\").read_text(); a=Path(\"lean/SKEFTHawking/FKLW/MukhopadhyayToffoliUnconditional.lean\").read_text(); b=Path(\"lean/SKEFTHawking/FKLW/MukhopadhyayCCZConjugation.lean\").read_text(); assert r\"rationality \\lean{channelRep\\_interp\\_isRat}\" in d and \"Mukhopadhyay\" in d[d.index(\"word are rational\"):d.index(\"The bound concerns exactly\")]; assert \"IsRatℂ (channelRep (interp gs) r s) := by\" in a and \"has rational (dyadic) entries\" not in a and \"each entry lies in\" not in a; assert \"(`ℚ` entries), and the **unconditional**\" in b'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
