@@ -10263,6 +10263,21 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:3.2",
+      "status": "fixed",
+      "evidence": "Independent exact-head review verified all 101 crossing samples, branch shading, and the corrected tracked PNG and four-page PDF. Scope is the L3 right panel.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "ac3ef2d6",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import numpy as n; from src.core.visualizations import fig_T_H_evolution_regime_partition as f; p=f(); assert len(p.data)==4; a,b=p.data[2:]; x=n.asarray(a.x); y=n.asarray(a.y); c=n.asarray(b.y); assert n.array_equal(x,b.x) and n.allclose(c,1); assert (x==1).sum()==1 and n.allclose(y[x==1],c[x==1]); assert n.all(y[x<1]<c[x<1]) and n.all(y[x>1]>c[x>1]); assert [(s.x0,s.x1) for s in p.layout.shapes]==[(0,1),(1,2),(1,1)]\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import numpy as n; from src.core.visualizations import fig_T_H_evolution_regime_partition as f; p=f(); assert len(p.data)==4; a,b=p.data[2:]; x=n.asarray(a.x); y=n.asarray(a.y); c=n.asarray(b.y); assert n.array_equal(x,b.x) and n.allclose(c,1); assert (x==1).sum()==1 and n.allclose(y[x==1],c[x==1]); assert n.all(y[x<1]<c[x<1]) and n.all(y[x>1]>c[x>1]); assert [(s.x0,s.x1) for s in p.layout.shapes]==[(0,1),(1,2),(1,1)]\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
