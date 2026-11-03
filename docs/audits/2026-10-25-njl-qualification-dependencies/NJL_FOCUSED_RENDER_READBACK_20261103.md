@@ -15,3 +15,19 @@ The configured `python -m pytest -q` suite ran in the same repository Python env
 The render-and-notebook revision fc9555ac finished with 7,020 passed, 45 failed, eight skipped and 92 deselected. The sole added failed ID relative to b92e8db5 was the module-census freshness test. Regenerating the census at 5f9dc015 changed only the Technical notebook summary row and the exact failed test then passed. Five shared slot tests also passed with scoped loopback/process access, and the shared Python census test passed with the existing environment and UV_NO_SYNC=1. Full qualification still requires disposition of the remaining inherited failures.
 
 The focused citation composition adds 13 historically reviewed registry entries, five acquisition records and the corresponding active bibliography updates. Independent review matched the held artifact hashes and accepted active-corpus source fidelity. The canonical primary-source check passed with 516 cited keys, zero missing registry keys and zero required cache artifacts. The measured undeclared count and ceiling both equal 76. Citation and Wave 1 tests passed 78 with one deselected. D4 bundle files and the finding ledger are excluded from this composition. The unused historical 2005 Barceló key has no declared full-text path. Filename discovery can still find its held 2024 v4 artifact, so edition-aware discovery remains owed if that key returns to a manuscript.
+
+## Exact focused head fast suite
+
+The configured fast suite at `f28cc370` ran with the existing repository
+Python environment and `UV_NO_SYNC=1`. It finished with 7,069 passed,
+34 failed, eight skipped and 92 deselected. Comparing the two terminal summaries with
+the recorded `ce194cdc` baseline gives 34 shared failing node IDs, 11
+baseline-only IDs and zero candidate-only IDs. This comparison does
+not establish equal failure magnitudes. The open unattributed blocker
+count rose from 57 to 58 against a ceiling of 44. The numerical literal
+population is 149 against 117 on both measured heads. Five shared
+slot failures are sandbox-sensitive. Earlier scoped passes do not
+establish the current exact-head slot result. The runs used different
+checkout paths and report different skip counts. The focused candidate
+remains unqualified for merge pending investigation of the attribution
+increase and disposition of the remaining failures.
