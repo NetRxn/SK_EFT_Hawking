@@ -17,6 +17,7 @@
 %% All headline theorems kernel-pure {propext, Classical.choice, Quot.sound}; 0 project-local axioms.
 
 \newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\leanbreak}[1]{{\def\_{\char`\_\allowbreak}\texttt{#1}}}
 \newcommand{\su}[1]{\mathrm{SU}(#1)}
 \newcommand{\sud}{\mathfrak{su}(d)}
 \newcommand{\opn}[1]{\lVert #1 \rVert}
@@ -489,29 +490,28 @@ because their number theory is genuinely unlike the Clifford$+T$ case and the
 interface absorbs it unchanged. We give both.
 
 \paragraph{Read--Rezayi at $k=5$.} The Read--Rezayi states at filling
-$\nu = k/(k+2)$ are the non-Abelian fractional quantum Hall family beyond
-Fibonacci~\cite{ReadRezayi1999}. At $k = 5$ the relevant braid generator has
-trace $2\cos(\pi/7)$, and the obstruction is that $\cos(\pi/7)$ satisfies a
-cubic rather than a quadratic. The route is the Chebyshev identity
+$\nu=k/(k+2)$ extend the non-Abelian fractional quantum Hall
+family~\cite{ReadRezayi1999}. The product $H_{\rm SU}T_{\rm RR5}$ has trace
+$\sqrt{2}\sin(\pi/14)$, whose square is $1-\cos(\pi/7)$.
+Finite order would make the trace, and hence $x=\cos(\pi/7)$, an algebraic
+integer. The factorization
 \[
-  T_7(x) + 1 \;=\; (x+1)\,\big(8x^3 - 4x^2 - 4x + 1\big)^2 ,
+  T_7(x)+1=(x+1)\big(8x^3-4x^2-4x+1\big)^2
 \]
-whose right-hand factor is the minimal polynomial of $2\cos(\pi/7)$ up to
-normalization. A finite-order element would force $2\cos(\pi/7)$ into a
-cyclotomic field of degree incompatible with that cubic, so the element has
-infinite order and the density witness follows.
+gives $2x^3-x^2-x=-1/4$ at this $x$. The left side would be integral,
+but a rational algebraic integer must be an integer. This proves
+infinite order (\lean{H\_SU\_mul\_T\_RR5\_infinite\_order}).
 
-\paragraph{Read--Rezayi at $k=7$.} At $k = 7$ the corresponding angle is
-$\pi/9$, and the obstruction is different in kind: it is not that the minimal
-polynomial has large degree but that the triple-angle identity
-$\cos(3\cdot \pi/9) = \cos(\pi/3) = 1/2$ pins $\cos(\pi/9)$ as a root of
-$4x^3 - 3x = 1/2$, which is irreducible over $\mathbb{Q}$. The same
-finite-order contradiction then applies.
+\paragraph{Read--Rezayi at $k=7$.} For $H_{\rm SU}T_{\rm RR7}$ the
+trace is $\sqrt{2}\sin(\pi/18)$, so finite order would again force
+$x=\cos(\pi/9)$ to be an algebraic integer. This time the triple-angle
+identity gives $4x^3-3x=1/2$, the rational noninteger contradiction
+(\lean{H\_SU\_mul\_T\_RR7\_infinite\_order}).
 
-Neither argument touches the recursion, the net, the
-Baker--Campbell--Hausdorff estimate or the Cartan step. Both produce a
-quantitative compilation theorem of the shape of Theorem~\ref{thm:cliffordt},
-unconditionally.
+The respective Pauli case analyses complete the density witnesses.
+Both alphabets then instantiate the same constructive compiler and
+polylogarithmic length bound for $0<\varepsilon\le\varepsilon_0$.
+The exact compilation declarations are listed in the proof index.
 
 \paragraph{Trapped-ion M\o lmer--S\o rensen at $\su 4$.} The two-qubit gate set
 realized on production trapped-ion hardware consists of single-qubit rotations
@@ -1219,6 +1219,12 @@ Theorem~\ref{thm:substrate} is \lean{GenericSU2} and \lean{GenericSUd}
 Theorem~\ref{thm:mercator} is \lean{exp\_matrixMercatorLog};
 Theorem~\ref{thm:sud} is
 \lean{solovayKitaev\_dawson\_nielsen\_quantitative\_generic\_sud\_strict\_constructive\_tight};
+the Read--Rezayi compilation declarations are
+\begin{quote}
+\footnotesize
+\leanbreak{solovayKitaev\_dawson\_nielsen\_quantitative\_rr5\_strict\_constructive\_tight}\par
+\leanbreak{solovayKitaev\_dawson\_nielsen\_quantitative\_rr7\_strict\_constructive\_tight}.
+\end{quote}
 Theorem~\ref{thm:literal} is \lean{cliffordCCZLiteral\_dense};
 Theorem~\ref{thm:notdense} is \lean{cliffordOnly\_not\_dense};
 Theorem~\ref{thm:toffoli} is \lean{channelSde2\_le\_toffoliCost}, with entry

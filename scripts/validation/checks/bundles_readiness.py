@@ -3608,7 +3608,8 @@ APEX_CLAIM_NUMERAL_CEILING = 31
 #: SAME declaration hours earlier; it was the ONE apex the two bundles shared, so the
 #: E1/E2 overlap is now zero — which is what the 2026-08-08 rejected-merge adjudication
 #: wants and had not got. Measured 634 across the 21 bundles before lowering.
-APEX_CLAIMS_SCORED_FLOOR = 636
+#: 636 -> 638 (2026-11-03): D8 registers both Read–Rezayi compiler theorems.
+APEX_CLAIMS_SCORED_FLOOR = 638
 
 
 @register_check(

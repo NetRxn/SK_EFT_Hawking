@@ -153,7 +153,7 @@
     },
     {
       "name": "SKEFTHawking.QuantumNetwork.KroneckerOpNorm.l2_opNorm_kronecker_one_le",
-      "claims": "§10 — the Kronecker-with-identity operator-norm bound; a named Mathlib-upstream candidate",
+      "claims": "§10 — consumes the Kronecker-with-identity operator-norm bound from D9’s certification layer",
       "declared": "2026-08-07"
     },
     {
@@ -175,6 +175,16 @@
       "name": "SKEFTHawking.FKLW.GenericSU2.diamondDist_cliffordTCompile_le",
       "claims": "ABSTRACT + §10 — the capstone: compiling to accuracy eps bounds the compiled word's PHYSICAL CHANNEL within diamond distance sqrt2*eps, with no unverified step between algorithm and channel",
       "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_rr5_strict_constructive_tight",
+      "claims": "Read–Rezayi level 5 — the specialized constructive compiler achieves the requested error and the polylogarithmic word-length bound in the stated tolerance regime",
+      "declared": "2026-11-03"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_rr7_strict_constructive_tight",
+      "claims": "Read–Rezayi level 7 — the specialized constructive compiler achieves the requested error and the polylogarithmic word-length bound in the stated tolerance regime",
+      "declared": "2026-11-03"
     }
   ],
   "tier": 1,
