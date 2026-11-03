@@ -8866,7 +8866,7 @@ def fig_log_correction_signature():
 
 
 def fig_T_H_evolution_regime_partition():
-    """Phase 6a Wave 5: T_H(t) evaporation regime partition.
+    """Hawking temperature evolution in the two evaporation regimes.
 
     Plots the time-evolution of Hawking temperature under Hawking-radiation
     backreaction in two regimes:
@@ -8978,7 +8978,7 @@ def fig_T_H_evolution_regime_partition():
         go.Scatter(
             x=alpha_grid, y=delta_grid,
             mode="lines",
-            line=dict(color=COLORS["steel_blue"], width=3),
+            line=dict(color="rgba(60,60,60,0.9)", width=3, dash="dashdot"),
             name="δ_ADW = (α_ADW − 1)·Λ_UV",
             showlegend=False,
         ),
@@ -9020,6 +9020,7 @@ def fig_T_H_evolution_regime_partition():
             ),
             font=TITLE_FONT,
         ),
+        legend=dict(x=0.02, y=0.98, xanchor="left", yanchor="top"),
         height=600,
         width=1100,
         margin=dict(t=110, b=80),
