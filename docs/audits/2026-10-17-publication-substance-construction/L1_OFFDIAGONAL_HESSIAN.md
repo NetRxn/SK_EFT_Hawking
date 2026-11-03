@@ -530,3 +530,12 @@ coordinates. The staggered half-period mode has the opposite sign.
 The site-resolved positive-transfer obstruction remains. For the
 projected mode, the equal-time contraction, contact matching, and
 physical state still need verification.
+
+The [shared-quadratic pair evaluator](l1_equal_time_shared_quadratic_pair.py)
+covers 24 more words with two shared links of degree two. It uses
+the exact coordinate covariance on each shared link and a signed
+integer top complement. Independent reruns give `1701/16` for
+each of 16 words with a remote commutator and `15309/2` for each
+of eight with all three curvatures integrated privately. The
+subtotal is `62937`. These words are disjoint from the prior
+quartic sectors.
