@@ -196,3 +196,21 @@ The exact exterior join gives `20339/129600` per word after the two
 `4!` factors, or `20339/4050` in total. Independent review reproduced the coefficient,
 checked all 330 homogeneous fourth moments of the signed cubature, and
 derived the needed commutator moments directly.
+
+## Four-factor components sharing one transport link
+
+The [component evaluator](l1_normalization_shared_transport.py)
+integrates private transport links by second moments and the shared
+link by its joint fourth moment. Four cached symmetry representatives
+cover the 32 distinct shared components. Signed exterior joins of
+the integrated components give `56/3` from 64 multisets with component
+sizes `(2,2,4)` and `12` from 32 multisets with sizes `(4,4)`, for a
+new contribution of `92/3`. The same assembly reproduces the two
+earlier disjoint transport sectors.
+
+Independent source review checked membership, the signed quartic rule,
+the per-center scale `1/4608`, and the exterior relabeling sign.
+The remaining connected sectors still require evaluation.
+
+The independent exact rerun reproduced both new subtotals and both
+previous transport sectors.
