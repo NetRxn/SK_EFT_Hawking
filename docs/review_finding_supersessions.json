@@ -10529,6 +10529,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.6",
+      "status": "fixed",
+      "evidence": "Itemized all 18 active citation keys, verified them against the 20-entry bibliography, and updated the reviewer prompt to use the live roster. Preserved the historical verdict as dated evidence and separately named current gaps. Exact Verify passed. Independent readback SHA256 707a97f71b9f3b07ed9972bbfea5be732cf73684199e44451f0756d65a17a39f.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "57bfac5f",
+      "verified_by": {
+        "command": "grep -A 12 '^## D8' docs/audits/stage13_attribution_sweep_2026-06-10.md | grep -c '^|'",
+        "declared": "grep -A 12 '^## D8' docs/audits/stage13_attribution_sweep_2026-06-10.md | grep -c '^|'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
