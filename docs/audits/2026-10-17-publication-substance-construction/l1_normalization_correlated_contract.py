@@ -5,7 +5,7 @@ from itertools import product
 from dataclasses import dataclass
 from l1_normalization_shared_transport import pair,local_pair,L,add,wedge,scale,cross_weight
 from l1_normalization_transport_cycle import ORDERED,M,edge_base,DIM,poly_int,signed_mul,wedge_sign
-from l1_normalization_correlated_cases import census
+from l1_normalization_correlated_cases import census, size_six_census
 
 TOP=(1<<32)-1
 ONE={0:(1,0)}
@@ -203,4 +203,13 @@ def main():
         print('paired blocks',len(ps),'multiplicity',n,'factorial',f,'terms',a,b,
               'representative',v,flush=True)
     print('parts',parts,'total',total,'counts',counts,flush=True)
+def size_six_total():
+    total = F(0)
+    cases = size_six_census()
+    for ((plan, pairs), haar, commutator, weight), population in cases.items():
+        value, _, _ = scalar(plan, pairs)
+        total += population * value * 2**haar * F(16, 9)**commutator / weight
+    return sum(cases.values()), total
+
+
 if __name__=='__main__':main()

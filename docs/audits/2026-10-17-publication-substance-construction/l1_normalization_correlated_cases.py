@@ -75,6 +75,25 @@ def census():
         p,h,c=r
         n[canonical(plan_for(ii),p),h,c,prod(factorial(k) for k in Counter(ii).values())]+=1
     return n
+def size_six_census():
+    from l1_normalization_six_mixed_chain import classify as mixed_chain
+
+    cases = Counter()
+    for components in component_multisets():
+        if sorted(map(len, components)) != [2, 6]:
+            continue
+        if mixed_chain(max(components, key=len)) is not None:
+            continue
+        indices = [index for part in components for index in part]
+        classification = classify(indices)
+        if classification is None:
+            continue
+        pairs, haar, commutator = classification
+        weight = prod(factorial(n) for n in Counter(indices).values())
+        cases[canonical(plan_for(indices), pairs), haar, commutator, weight] += 1
+    return cases
+
+
 if __name__=='__main__':
     n=census()
     print('cases',sum(n.values()),'canonical plans',len({k[0] for k in n}),'rows',len(n))

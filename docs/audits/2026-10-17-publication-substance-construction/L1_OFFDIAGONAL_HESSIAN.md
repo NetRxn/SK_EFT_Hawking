@@ -377,3 +377,11 @@ its disjointness from earlier sectors.
 These increments bring the accounted population to 5,651 with signed
 subtotal `153322180909/259200`. The full denominator still requires
 the remaining 800 words.
+
+The same ordered contraction covers the last 64 size-`(2,6)`
+words. The census excludes the 128 matching words already counted
+in the mixed-plane chain family. The remaining words form one
+canonical plan and contribute `163/96` each, totaling `326/3`.
+Run `size_six_total()` from the contraction module to reproduce
+the result. Both the scratch and checkpoint runs agree. The
+remaining 736 words are fully link-connected.
