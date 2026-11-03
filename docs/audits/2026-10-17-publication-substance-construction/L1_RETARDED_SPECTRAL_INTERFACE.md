@@ -1046,9 +1046,22 @@ cross `−6491/12288`, contact `345625/884736` and product
 The transverse exchange cancellation also holds in the closed
 ordering because it preserves the ordered matrix factor sequence
 while reversing the world epsilon and source weights. The positive
-ratio below one passes the finite scalar two-time test. The complete
-assembly and wire implementation still require independent review.
-Physical background-source matching remains open.
+ratio below one passes the finite scalar two-time test.
+
+Independent scoped review of `340074356` accepted the closed wire
+implementation and rational assembly. The reviewer independently reran
+X1 and Y2, recovering `6491/196608` and exact zero, and inspected the X2
+and Y1 receipts. A noncommuting matrix control distinguished the
+original trace order from the reversed order and confirmed the
+transpose implementation. The reviewer recomputed the non-wire, wire,
+and full totals and normalized ratios.
+
+The next B3 acceptance step is to match the dressed lattice insertion
+to the physical metric source, including its tensor projection and
+units. The reviewed two-time ratio is a scalar moment check. Positive
+transfer, a physically normalized zero-frequency bubble, and the
+separate RPA coupling still require evidence before evaluating the
+susceptibility window.
 
 The [closed wire replay](l1_normalization_closed_wire.py) uses
 the same argument tuples as the literal evaluator. Run with the
