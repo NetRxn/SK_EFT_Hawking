@@ -304,3 +304,22 @@ exact checkpoint run gives 163 from 128 same-singleton words and 162
 from 128 distinct-singleton words. Independent source review verified
 all incidences, shared Haar moments, and factorial weights. The signed
 increment is 325.
+
+## All-transverse-curvature transport cycle
+
+The [cycle evaluator](l1_normalization_transport_cycle.py) contracts
+all 752 words with two transverse-curvature labels per site. It
+integrates the actual shared links before saturating each vertex.
+The split-edge slot swaps leave one invariant parity around a fully
+split cycle. The two eight-word parity classes give distinct
+per-word coefficients `32/27` and `28/27`, an exact check that the
+cycle pairing is retained.
+
+The exact run gives `38842/81` across the family. The 184 smaller
+component words and 64 pure six-factor chains were already counted.
+The increment is 504 words with subtotal `32380/81`, disjoint from
+the mixed-plane chains. Independent review reconstructed the
+population from endpoint choices and checked overlap, Haar scaling,
+and site elimination signs. The deduplicated subtotal including
+the all-local word is `29468413009/259200` across 1,699 words.
+The other 4,752 signed contributions remain open.
