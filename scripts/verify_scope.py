@@ -167,6 +167,10 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
                        # substrate checks that move its other input.
                        "--check", "apex_claims_not_vacuous",
                        "--check", "spelled_out_census_figures"]))
+    if touched["papers"] or "docs/counts.tex" in paths:
+        steps.append(("bundle sentence length",
+                      ["uv", "run", "python", "scripts/validate.py",
+                       "--check", "bundle_sentence_length", "--no-memo"]))
     if touched["papers"] or touched["lean"]:
         # Claims supply the targets; Lean sources and lean/lean_deps.json supply
         # their module membership. Mixed changes require one fresh measurement.

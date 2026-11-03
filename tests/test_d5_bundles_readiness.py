@@ -25,6 +25,8 @@ MUTATION-VERIFIED 2026-08-04 — 12 mutations, all CAUGHT, clean negative contro
 """
 from __future__ import annotations
 
+import pytest
+
 #: The roster-literal threshold, pinned as a test-side literal so production
 #: cannot move it without a deliberate, reviewed edit here.
 _EXPECTED_ROSTER_THRESHOLD = 6
@@ -2033,6 +2035,140 @@ class TestSentenceLengthRatchet:
         msg = next(d.message for d in res.details if d.name == "over_100_words")
         live = int(msg.split()[0])
         assert live == SENTENCE_OVER_100_CEILING, (live, SENTENCE_OVER_100_CEILING)
+
+    @pytest.mark.parametrize("caption", [
+        r"\caption{%s}",
+        r"\caption[Short caption]{%s}",
+        r"\caption{\textbf{%s}}",
+    ])
+    def test_long_caption_in_real_draft_counts_as_prose(self, caption):
+        from seed_journal import seeded_mutation
+        from validation.checks import bundles_readiness as br
+
+        draft = br._H.PAPERS_DIR / "D9" / "paper_draft.tex"
+        original = draft.read_text(encoding="utf-8")
+
+        def count():
+            detail = next(d for d in br.check_bundle_sentence_length().details
+                          if d.name == "over_100_words")
+            return int(detail.message.split()[0])
+
+        assert self._run().passed
+        before = count()
+        prose = " ".join(["caption"] * 121) + "."
+        end = r"\begin{thebibliography}"
+        assert original.count(end) == 1
+        insertion = "\n" + r"\begin{figure}" + "\n" + caption % prose + "\n" + r"\end{figure}" + "\n"
+        with seeded_mutation(draft, original.replace(end, insertion + end),
+                             reason="real overlength caption must remain measurable"):
+            observed = count()
+            assert not self._run().passed
+        assert draft.read_text(encoding="utf-8") == original
+        assert count() == before
+        assert self._run().passed
+        assert observed == before + 1
+
+
+    def test_prose_in_actual_counts_input_remains_measurable(self):
+        from seed_journal import seeded_mutation
+        from bundle_registry import BUNDLE_CODES
+        from validation.checks import bundles_readiness as br
+
+        path = br._H.DOCS_DIR / "counts.tex"
+        original = path.read_text(encoding="utf-8")
+        consumers = sum(path in br._reader_visible_sources(
+            br._H.PAPERS_DIR / code / "paper_draft.tex") for code in BUNDLE_CODES)
+        assert consumers > 0
+
+        def count():
+            detail = next(d for d in br.check_bundle_sentence_length().details
+                          if d.name == "over_100_words")
+            return int(detail.message.split()[0])
+
+        before = count()
+        seed = original + "\n. " + " ".join(["prose"] * 121) + ".\n"
+        with seeded_mutation(path, seed, reason="visible prose in generated input"):
+            observed = count()
+        assert path.read_text(encoding="utf-8") == original
+        assert count() == before
+        assert observed == before + consumers
+
+
+    @pytest.mark.parametrize(("opener", "expected_delta"), [
+        (r"\begin{lstlisting}[language=]", 2),
+        (r"\begin{lstlisting}[escapeinside={(*@}{@*)}]", 3),
+        (r"\begin{lstlisting}[caption={%s}]", 3),
+    ])
+    def test_real_listing_keeps_prose_flanks_and_visible_options(self, opener, expected_delta):
+        from seed_journal import seeded_mutation
+        from validation.checks import bundles_readiness as br
+
+        draft = br._H.PAPERS_DIR / "I3" / "paper_draft.tex"
+        original = draft.read_text(encoding="utf-8")
+
+        def count():
+            detail = next(d for d in self._run().details if d.name == "over_100_words")
+            return int(detail.message.split()[0])
+
+        before = count()
+        prose = " ".join(["prose"] * 121) + "."
+        if "%s" in opener:
+            opener %= prose
+            code = "short code"
+        else:
+            code = " ".join(["code"] * 121) + "." + "\n" + r"\begin{thebibliography}{literal}"
+        end = r"\begin{thebibliography}"
+        assert original.count(end) == 1
+        seed = "\n".join(("", prose, opener, code, r"\end{lstlisting}", prose, ""))
+        with seeded_mutation(draft, original.replace(end, seed + end),
+                             reason="real listing must preserve surrounding and caption prose"):
+            observed = count()
+        assert draft.read_text(encoding="utf-8") == original
+        assert count() == before
+        assert observed == before + expected_delta
+
+
+    def test_real_included_prose_still_trips_sentence_gate(self):
+        from seed_journal import seeded_mutation
+        from validation.checks import bundles_readiness as br
+
+        root = br._H.PAPERS_DIR / "I1"
+        included = root / "tables" / "table1_stages.tex"
+        assert included in br._reader_visible_sources(root / "paper_draft.tex")
+        original = included.read_text(encoding="utf-8")
+        seed = original + "\n. " + " ".join(["included"] * 121) + ".\n"
+        assert self._run().passed
+        with seeded_mutation(included, seed, reason="included prose must remain measurable"):
+            result = self._run()
+            assert not result.passed
+            detail = next(d for d in result.details if d.name == "over_100_words")
+            assert "5 sentence(s)" in detail.message
+        assert included.read_text(encoding="utf-8") == original
+        assert self._run().passed
+
+
+    @pytest.mark.parametrize(("fragment", "delta"), [
+        (r"\lstinline|\caption{%s}|", 0),
+        (r"\verb|50%%| \caption{%s}", 1),
+    ])
+    def test_inline_literal_does_not_change_caption_boundaries(self, fragment, delta):
+        from seed_journal import seeded_mutation
+        from validation.checks import bundles_readiness as br
+
+        draft = br._H.PAPERS_DIR / "I3" / "paper_draft.tex"
+        original = draft.read_text(encoding="utf-8")
+        boundary = r"\begin{thebibliography}"
+        assert original.count(boundary) == 1
+        prose = " ".join(["caption"] * 121) + "."
+        seed = original.replace(boundary, "\n. " + fragment % prose + "\n" + boundary)
+        assert self._run().passed
+        with seeded_mutation(draft, seed, reason="inline literal and active caption boundary"):
+            result = self._run()
+            detail = next(d for d in result.details if d.name == "over_100_words")
+            assert int(detail.message.split()[0]) == 4 + delta
+            assert result.passed == (delta == 0)
+        assert draft.read_text(encoding="utf-8") == original
+        assert self._run().passed
 
 
 class TestTheOpenRequiredPopulationRatchets:
