@@ -1326,26 +1326,30 @@ the specified composite insertion beyond the pure-g₂ line once
 the diagonal calculation is verified. It gives no quantitative
 range in g₁ and does not select the physical metric insertion.
 
-The coupling neighborhood can be expressed in a dimensionless
-ratio. The four-site top degree is 32, each composite insertion
-has degree four, and the g₁ and g₂ action vertices have degrees
-eight and four. For nonzero g₂, put x = g₁/g₂². Saturation gives
-Z = g₂⁸ P(x), with degree at most four, and the two-insertion
-numerator N = g₂⁶ Q(x), with degree at most three. Transverse
-exchange kills the one-point term for both interactions when
-the determinant vertex is included with its alternating world
-contraction. Thus the uniform covariance is proportional to
-Q(x)/(g₂² P(x)) on this symmetric finite regulator. If
-P(x) = p₀ + Σ pᵢxⁱ and Q(x) = q₀ + Σ qᵢxⁱ, with p₀ positive
-and q₀ negative, a sufficient sign interval is
+### Conservative interval for the closed ordering
 
-    |x| < min(1, p₀/(2Σ|pᵢ|), |q₀|/(2Σ|qᵢ|)).
+Use x = g₁/g₂². Degree-32 saturation gives Z = g₂⁸ z(x),
+the two one-point numerators g₂⁷ v(x) and g₂⁷ w(x), and the
+two-point numerator g₂⁶ u(x). The degrees are at most four
+for z and three for each of v, w and u. Keep the one-point
+subtraction at mixed coupling. Its constant term vanishes by
+the already checked pure-g₂ symmetry.
 
-Omit a bound whose sum is zero. The triangle inequality keeps
-P within half its zero-coupling value and the real part of Q
-below q₀/2. Even for complex coefficients, Re(Q conjugate(P))
-is strictly negative: the real product is below −|q₀|p₀/4
-and the imaginary product has magnitude below |q₀|p₀/4.
-This identifies which mixed-coupling coefficients
-would turn continuity into a certified interval. The current
-replay determines the constant terms only.
+The exterior norm bounds above transfer to the closed action:
+reordering unitary plaquette factors preserves the bound on
+their trace, and no coframe or composite coefficient changes.
+In the unnormalized uniform plus convention, every polynomial
+coefficient has modulus at most B = 2¹⁹². For
+R = Re[(zu − vw) conjugate(z)²], the coefficient norm satisfies
+
+    ||R||₁ ≤ (5B·4B + 4B·4B)(5B)² = 900B⁴ < 2⁷⁷⁸.
+
+The pure-g₂ constants give z(0) > 1 and R(0) < −1.
+For |x| ≤ 2⁻⁸⁰⁰ the change in z is at most 5B |x|,
+and the change in R at most 2⁷⁷⁸ |x|. Hence z stays nonzero
+and R remains negative. The real part of the normalized
+connected response has the sign of R, since its denominator
+is g₂²|z|⁴. This interval is conditional on verification of
+the closed diagonal constant and applies to the specified
+finite source. It is a conservative bound rather than an
+estimate of a physical coupling range.
