@@ -301,6 +301,37 @@
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-deregister-2026-11-03T18:46:39Z",
       "notes": "The WKB lift used two topic labels for the spectrum and floor algebra. The original Paper 4 formal verification section and current D1 cite the registered WKBConnection module for occupation reduction, noise floor and the dominance inequality. The frequency-resolved physical spectrum and figure obligations remain open."
+    },
+    {
+      "date": "2026-11-03T18:47:25Z",
+      "source_paper": "paper16_graphene_sk_eft",
+      "lift_action": "Reconcile module registration",
+      "bundle_section_inserted": "sec:graphene",
+      "insertion_point_hint": "sec:graphene",
+      "new_top_level_section": false,
+      "new_section_rationale": "",
+      "lean_modules_referenced": [
+        "SKEFTHawking.DiracFluidMetric"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-11-03T18:47:25Z",
+      "notes": "Register the exact owner of the cited metric, conformal sound speed and off-diagonal identity."
+    },
+    {
+      "date": "2026-11-03T18:47:25Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "GrapheneDirac"
+      ],
+      "deregistration_rationale": "The companion lift used GrapheneDirac as a topic label. The cited metric and sound-speed definitions belong to SKEFTHawking.DiracFluidMetric. The separately registered DiracFluidWKB owns the wave-mechanical bridge. The physical assumptions and graphene readout obligations remain open.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-03T18:47:25Z",
+      "notes": "The companion lift used GrapheneDirac as a topic label. The cited metric and sound-speed definitions belong to SKEFTHawking.DiracFluidMetric. The separately registered DiracFluidWKB owns the wave-mechanical bridge. The physical assumptions and graphene readout obligations remain open."
     }
   ]
 }
