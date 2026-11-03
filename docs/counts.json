@@ -1,6 +1,6 @@
 {
-  "generated": "2026-11-03T11:10:50.949196",
-  "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-d8-figures-20261103/lean/lean_deps.json",
+  "generated": "2026-11-03T11:13:51.147986",
+  "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.codex-python-worktrees/publication-njl-integration-20261019/lean/lean_deps.json",
   "lean": {
     "total_declarations": 41065,
     "theorems_total": 22874,

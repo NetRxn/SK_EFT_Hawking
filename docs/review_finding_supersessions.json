@@ -10379,6 +10379,36 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.4",
+      "status": "fixed",
+      "evidence": "The author v2 full text Eq. (8) supports the exact length attribution and Eq. (9) gives the separate classical runtime. Corrected D4/D8 paragraphs and source registry; both existing Lean consumers agree with the primary source. The independently reviewed fixed-state check rejects swapped equation roles.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/D8_ATTRIBUTION_VERIFY_READBACK.md",
+      "date": "2026-11-03",
+      "commit": "c880151f",
+      "verified_by": {
+        "command": "uv run python -B -m pytest tests/test_d5_citations.py::test_dawson_nielsen_length_provenance -q -p no:cacheprovider",
+        "declared": "uv run python -B -m pytest tests/test_d5_citations.py::test_dawson_nielsen_length_provenance -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.8",
+      "status": "fixed",
+      "evidence": "Regenerated the six-row coverage figure and the three theorem-specific word-length panels, preserved the conditional and distinct error contracts, and bound both PNGs to their manuscript labels. Independent exact PDF and PNG readback verified placement and pixel identity.",
+      "superseded_by": "docs/audits/2026-10-25-njl-qualification-dependencies/D8_FIGURE_READBACK.md",
+      "date": "2026-11-03",
+      "commit": "0bc56063",
+      "verified_by": {
+        "command": "uv run python -B -m pytest tests/test_d8_publication_figures.py -q -p no:cacheprovider",
+        "declared": "uv run python -B -m pytest tests/test_d8_publication_figures.py -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
