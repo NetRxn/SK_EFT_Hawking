@@ -1358,3 +1358,30 @@ Independent review of `12c43c544` verified the saturation degrees,
 transfer of the exterior norm bound, and the strict margins on z
 and R throughout the stated interval. Acceptance of the diagonal
 constant remains a separate replay review.
+
+### Mixed composite and coframe half-period response
+
+Use the uniform slice composite L and the dressed first vertex X
+on opposite slices. The mixed Hessian of the joint generating
+functional inserts their connected product. The separate linear
+composite source and coframe source give no mixed bare contact.
+The metric-amplitude conversion on the dressed leg is 1/(2√2).
+The composite leg uses the linear source normalization above.
+
+At pure g₂ the mixed coefficient vanishes. The two degree-four
+insertions leave six untagged S2 factors. Under internal Pin,
+the composite is even and each of the six S2 factors and the
+tagged dressed S2 are odd. This makes the mixed numerator odd.
+The first symmetry-allowed term is the degree-32 coefficient of
+
+    g₁ g₂⁵ L (∂S2) S4 S2⁴ / 4!
+
+with the tag on the opposite slice. The next allowed term is
+g₁³ g₂ L (∂S2) S4³ / 3!. The combined transverse-axis exchange
+and internal Pin preserves the action and makes each source odd,
+so the one-point terms vanish. Exact evaluation of the leading
+allowed coefficient must retain the original action factorials
+and the tagged mixed-plane weight before symmetry reduction.
+A nonzero result would measure overlap of these finite sources.
+The physical metric matching must still derive which operator
+combination is sourced and how the regulator responds.
