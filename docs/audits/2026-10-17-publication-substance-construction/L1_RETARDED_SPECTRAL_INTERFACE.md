@@ -993,8 +993,9 @@ layout classes in lexicographic order it gives
 `172649/55296` per sixteen orientations, all real. The full
 256-word normalization is `1246110337/28311552`. This covers
 the four words already eligible for reuse as well as the
-252 residual words. Independent review of the closed-order
-projection and assembly is pending.
+252 residual words. Independent replay reproduced all four
+coefficients and verified the passive-edge first moment on all
+16 quaternion basis pairs.
 
 Applying the independently enumerated source weights to these
 four closed mixed-cycle coefficients gives cross subtotal
@@ -1008,3 +1009,53 @@ under reversal, but all 160 reduced local Haar tensor rows and
 the final per-case contractions matched exactly. Thus its
 normalization `−40213/16`, contact `−40213/8` and product
 `40213/8` carry over. The cross weight vanishes.
+
+Subtracting the literal wire sector and replacing the checkerboard
+and mixed-cycle values gives the closed non-wire subtotals:
+
+| Quantity | Exact non-wire subtotal |
+| --- | ---: |
+| Normalization | 1252308935395403/2123366400 |
+| Cross numerator | 796813043/442368 |
+| Contact numerator | 966843377209/786432 |
+| Equal-time product numerator | 2927667245669/2359296 |
+
+The wire replay reverses the source trace by transposing its
+link factors and the base-site gamma block while retaining the
+edge traversal. It also reverses the mixed projection and the
+Y singleton commutator. The X1 and X2 orientation sums are
+`6491/196608` and `111949/7077888`. Each class has four layouts.
+The above totals exclude
+all four wire classes until they can be assembled together.
+
+Both Y orientation sums finished at exact zero. The 256-word
+closed wire contribution is normalization `345625/1769472`,
+cross `−6491/12288`, contact `345625/884736` and product
+`121727/884736`. Adding it to the non-wire totals gives:
+
+| Quantity | Complete closed-order value at e=1 |
+| --- | ---: |
+| Normalization divided by g₂⁸ | 1252309350145403/2123366400 |
+| Raw cross numerator divided by g₂⁸ | 796579367/442368 |
+| Raw contact divided by g₂⁸ | 8701593159881/7077888 |
+| Raw equal-time operator product divided by g₂⁸ | 8783002710823/7077888 |
+| Normalized half-period response | 3823580961600/1252309350145403 |
+| Normalized equal-time operator product | 239536437567900/113846304558673 |
+| Half-period to equal-time ratio | 12745269872/8783002710823 |
+
+The transverse exchange cancellation also holds in the closed
+ordering because it preserves the ordered matrix factor sequence
+while reversing the world epsilon and source weights. The positive
+ratio below one passes the finite scalar two-time test. The complete
+assembly and wire implementation still require independent review.
+Physical background-source matching remains open.
+
+The [closed wire replay](l1_normalization_closed_wire.py) uses
+the same argument tuples as the literal evaluator. Run with the
+repository Python environment and arguments `1 2 2 3 3`,
+`1 2 3 2 3`, `0 2 2 3 3`, and `0 2 3 2 3` for X1, X2, Y1,
+and Y2, respectively. Each invocation reports the exact orientation
+sum, before the four-layout multiplier.
+
+The checkpoint replay of X1 exited successfully and reproduced
+`6491/196608` with zero imaginary part.
