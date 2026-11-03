@@ -10559,6 +10559,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-12-legacy-compile-triage:legacy-compile-triage:14",
+      "status": "fixed",
+      "evidence": "Independent render review SHA-256 8f60ea000d991d69c1c5049b0405c096d305a27cfac3c79bccf9e8ee2f68a276. Forced and declared compiles yielded 5 pages, 0 fatal and 0 unresolved, one overfull box; numbered theorem and all eight count values confirmed in rendered text. Count binding review SHA-256 c0cc18f5b8ae0a41f9fd870bd7c820516e41716cd47518d43c0d891c221904be.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "5ee35daa",
+      "verified_by": {
+        "command": "uv run python scripts/compile_bundle_pdf.py paper8_chirality_master",
+        "declared": "uv run python scripts/compile_bundle_pdf.py paper8_chirality_master",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
