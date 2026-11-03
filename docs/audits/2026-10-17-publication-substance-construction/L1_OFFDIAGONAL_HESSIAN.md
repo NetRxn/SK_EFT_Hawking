@@ -96,3 +96,9 @@ and eight in 66. An evaluator for quadratic and quartic Haar moments
 therefore covers the link degree requirements of the first group.
 Degree six and eight moments are required for the rest. These counts
 specify the integration domain and do not evaluate the signed sum.
+
+Independent review reproduced the ordered count with a separate half-state
+dynamic program, verified uniqueness of the sorted split, and checked the
+translation count by Burnside's lemma using fixed counts 6,451, 185, 185,
+and 211. The review checked the action orientation and exponential
+multiplicity conventions. Denominator evaluation remains open.
