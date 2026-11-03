@@ -1270,8 +1270,12 @@ per vector chirality. This gives the coupled subtotal −23063/32
 and full same-site coefficient s = 10179913/32. The direct closed coupled replay reproduced the exact 40-word
 histogram and subtotal. Its full reduced-tensor comparison
 changed 48 raw curvature entries and retained equality in all
-six source classes at both centers. Independent review of this
-transfer argument is pending.
+six source classes at both centers. Independent review of
+`04e107a2c` reran the transfer control, confirmed all 12 tensor
+equalities and the 41/104/40 incidence split, and verified the
+conditional Haar substitutions for the decoupled terms. The
+author's direct closed replay supplies the 40-word subtotal.
+The independent control checked its transfer by tensor equality.
 
 The same-site coefficient decides the faithful
 finite thermal test regardless of the diagonal result. With n

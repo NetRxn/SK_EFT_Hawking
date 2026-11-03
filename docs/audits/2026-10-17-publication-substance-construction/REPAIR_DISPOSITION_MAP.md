@@ -172,8 +172,8 @@ calculation supplies neither the physical bare bubble nor the RPA coupling.
 The [linear composite-metric source](L1_RETARDED_SPECTRAL_INTERFACE.md#linear-composite-metric-source-on-the-closed-action)
 has independently verified nearest-time and nearest-space zeros.
 The closed same-site replay gives a nonzero equal-time coefficient.
-Subject to independent verification of the same-site transfer,
-this rules out a faithful positive thermal realization of this
+Independent verification of the same-site transfer at
+`04e107a2c` rules out a faithful positive thermal realization of this
 finite linear source, regardless of the ongoing diagonal replay.
 The next constructive test is a matched metric operator with a
 derived physical source and regulator, checked on its retained
