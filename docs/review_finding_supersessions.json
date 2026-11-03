@@ -10634,6 +10634,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:11",
+      "status": "fixed",
+      "evidence": "Independent final registry review SHA-256 a152518e6ba8a9a4ee66f9961b7b4b56c99ac932ffab3c0938f39790dce1ed8d. Held publisher cover verifies volume 25 S2 (2024), pages 181–216, first online 20 January 2025, issue date 27 October 2026. Both draft bibitems and registry agree.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "d68c89b7",
+      "verified_by": {
+        "command": "uv run python -c 'exec(\"from pathlib import Path\\nfrom src.core.citations import CITATION_REGISTRY\\nr=CITATION_REGISTRY['\"'\"'Berti2025'\"'\"']\\nassert (r['\"'\"'volume'\"'\"'],r['\"'\"'year'\"'\"'],r['\"'\"'page'\"'\"'],r['\"'\"'doi'\"'\"'])==(25,2024,'\"'\"'181--216'\"'\"','\"'\"'10.5802/crphys.226'\"'\"')\\nassert '\"'\"'Fernandes, L.'\"'\"' in r['\"'\"'authors'\"'\"'] and '\"'\"'papers/paper1_first_order/paper_draft.tex'\"'\"' in r['\"'\"'used_in'\"'\"']\\nfor path,key in [('\"'\"'paper1_first_order'\"'\"','\"'\"'Berti2025'\"'\"'),('\"'\"'paper2_second_order'\"'\"','\"'\"'Berti:2025'\"'\"')]:\\n    t=Path('\"'\"'papers'\"'\"',path,'\"'\"'paper_draft.tex'\"'\"').read_text()\\n    line=next(l for l in t.splitlines() if l.startswith(chr(92)+'\"'\"'bibitem{'\"'\"'+key+'\"'\"'}'\"'\"'))\\n    assert all(s in line for s in ('\"'\"'{25}, S2, 181--216 (2024)'\"'\"','\"'\"'20 January 2025'\"'\"','\"'\"'10.5802/crphys.226'\"'\"'))\\n\")'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
