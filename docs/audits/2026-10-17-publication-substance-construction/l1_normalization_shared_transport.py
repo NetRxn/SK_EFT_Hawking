@@ -6,10 +6,10 @@ from itertools import product,permutations
 from math import factorial,prod
 from l1_normalization_disjoint_sector import quat,adj,pair,site
 from l1_normalization_opposed_fourth import (
-    nodes,tuples,fourth_T,curv_moment,
+    nodes,tuples,fourth_T,curv_moment,L,
 )
 from l1_normalization_support import TERMS, forward, normalization_support
-from l1_direct_b_haar import R,diag,gamma,bilinear,add,scale,wedge
+from l1_direct_b_haar import R,diag,gamma,bilinear,add,scale,wedge,haar_moment
 
 def factor_links(label):
     x, k, l, u, v = label
@@ -37,6 +37,8 @@ def component_multisets():
 
 
 def supported(component):
+    if mixed_links(component) or same_links(component):
+        return True
     counts = Counter(component)
     labels = tuple(counts)
     if any(TERMS[index][2][1:3] != (2, 3) for index in labels):
@@ -112,6 +114,92 @@ def shared_component(labels):
     # with raw factor 4T, and one shared polynomial in raw 8T.
     return out,4608**2*96
 
+def mixed_links(comp):
+    if sorted(Counter(comp).values()) != [2, 2]:
+        return False
+    a,b=sorted(set(comp))
+    x,k,l,u,v=TERMS[a][2];y,q,r,m,n=TERMS[b][2]
+    shared=LINKS[a]&LINKS[b]
+    return k==q and k<2 and l!=r and x^y==1<<k and shared=={(x,r),(y,l)}
+
+def same_links(comp):
+    if sorted(Counter(comp).values()) != [2, 2]:
+        return False
+    a,b=sorted(set(comp))
+    x,k,l,u,v=TERMS[a][2];y,q,r,m,n=TERMS[b][2]
+    shared=LINKS[a]&LINKS[b]
+    return k==q and k<2 and l==r and x^y==1<<k and shared=={(x,l),(y,l)}
+
+@cache
+def local_pair(x):
+    K=[[{} for _ in range(4)] for _ in range(4)]
+    for j,s in product(range(4),(-1,1)):
+        l=[int(k==j) for k in range(4)]
+        r=[s*z for z in l]
+        U=diag(quat(l),quat(r));Ud=diag(quat(adj(l)),quat(adj(r)))
+        delta=Ud-U
+        T=[bilinear(g*delta+delta*g,x,x) for g in gamma]
+        for a,b in product(range(4),repeat=2):
+            K[a][b]=add(K[a][b],wedge(T[a],T[b]))
+    return K
+
+@cache
+def mixed_component(labels):
+    x,k,l,*_=labels[0];y,_,r,*_=labels[1]
+    a=square(pair(x,1-k),local_pair(x))
+    b=square(pair(y,1-k),local_pair(y))
+    # Curvature Haar covariance 2, two private/shared independent link
+    # quadratics each divided by 8, four T factors each divided by 4.
+    return wedge(a,b),8192**2
+
+@cache
+def W(x,axis):
+    K,T=pair(x,axis),local_pair(x)
+    poly={}
+    for (c,d),ls in L.items():
+        for (e,f),rs in L.items():
+            for a,v in ls:
+                for b,z in rs:
+                    k=tuple(sorted((a,b)))
+                    poly[k]=add(poly.get(k,{}),scale(wedge(K[c][e],T[d][f]),v*z))
+    return poly
+
+def conditional(a,b):
+    """Three times E[p_a p_b | X,Y], sparse list of (X,Y coordinate words)."""
+    v=(a//3)*4+a%3+1
+    z=(b//3)*4+b%3+1
+    s=(a//3)*4
+    t=(b//3)*4
+    if s!=t:return [((v,z),(s,t),3)]
+    out=[((v,z),(s,s),4),((v,z),(),-1)]
+    if a==b:out += [((),(),1),((),(s,s),-1)]
+    return out
+
+@cache
+def wordmoment(word):
+    m=tuple(word.count(i) for i in range(8))
+    return haar_moment(m[:4])*haar_moment(m[4:])
+
+@cache
+def cross_weight(k,l):
+    t=F(0)
+    for x,y,a in conditional(*k):
+        for u,v,b in conditional(*l):
+            t+=a*b*wordmoment(tuple(sorted(x+v)))*wordmoment(tuple(sorted(y+u)))
+    t*=48**2
+    assert t.denominator==1
+    return int(t)
+
+@cache
+def same_component(x,y,k):
+    A,B=W(x,1-k),W(y,1-k)
+    out=add(*(scale(wedge(a,b),cross_weight(i,j)) for i,a in A.items() for j,b in B.items()
+              if cross_weight(i,j)))
+    # Per square, both T second moments were stored with denominator
+    # 8²×4⁴ and conditional covariance with denominator 3. Shared X/Y
+    # integration is stored with denominator 48².
+    return out,(8**2*4**4*3)**2*48**2
+
 @cache
 def component(comp):
     labels=tuple(TERMS[i][2] for i in sorted(set(comp)))
@@ -119,6 +207,10 @@ def component(comp):
     if len(labels)==1:
         p,q=quartic_component()
         return translate(p,lambda x:x^labels[0][0]),q
+    if mixed_links(comp):
+        return mixed_component(labels)
+    if same_links(comp):
+        return same_component(labels[0][0], labels[1][0], labels[0][1])
     orb=label_orbit(labels)
     rep=min(orb)
     p,q=shared_component(rep)
@@ -150,11 +242,15 @@ def main():
         ps,qs=zip(*map(component,comps))
         t=F(top_product(ps),w*prod(qs))
         shape=tuple(sorted(map(len,comps)))
-        key=(shape,any(len(set(c))==2 for c in comps))
+        family = ("same singleton" if any(map(same_links, comps))
+                  else "mixed singleton" if any(map(mixed_links, comps))
+                  else "one shared link" if any(len(set(c)) == 2 for c in comps)
+                  else "disjoint")
+        key = shape, family
         totals[key]+=t
         pop[key]+=1
     for key,n in sorted(pop.items()):
         print('component sizes; shared-label case',key,'multisets',n,'exact signed sum',totals[key])
-    print('new exact tranche',sum(total for k,total in totals.items() if k[1]))
+    print('total covered', sum(pop.values()), 'exact signed sum', sum(totals.values()))
     print('cached shared representatives',shared_component.cache_info())
 if __name__=='__main__':main()

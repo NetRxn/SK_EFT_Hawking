@@ -214,3 +214,20 @@ The remaining connected sectors still require evaluation.
 
 The independent exact rerun reproduced both new subtotals and both
 previous transport sectors.
+
+## Shared singleton curvature links
+
+The same evaluator covers 384 additional multisets with adjacent
+mixed-plane squares. For distinct singleton axes, private Haar links
+make the two curvature covariances independent. For the same singleton
+axis, the code conditions each curvature on the shared pair and
+integrates their joint polynomial. The independent check recovered the
+same- and cross-chirality norm controls `41/72` and `9/16`.
+
+Independent evaluation and the consolidated checkpoint both give
+`63369/32` from 160 mixed-only multisets and `2195447/384` from 224
+same-containing multisets. The latter includes 64 with both structures
+and counts them once. With the previous transport terms, the evaluator
+covers 528 multisets with subtotal `2005445321/259200`. The separate
+104,978 all-local contribution is outside this subtotal. The full
+normalization is open.
