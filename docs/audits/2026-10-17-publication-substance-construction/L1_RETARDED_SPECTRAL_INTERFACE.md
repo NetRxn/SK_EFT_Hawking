@@ -1594,7 +1594,8 @@ momentum magnitude along axis 2 or axis 3 and identical other
 components. The inverse-propagator splitting is exactly
 −2 p̂² sinh(h/√2). Its slope at zero is −√2 p̂² and its
 second derivative at zero vanishes. The two individual
-quadratic vertices are equal, each p̂²/2. These give separate
+second derivatives of K are equal, each p̂²/2. The corresponding
+Taylor coefficients are p̂²/4. These give separate
 linear and quadratic calibration checks in the declared scalar
 action. The splitting calibrates the strain felt by the probe.
 It leaves the coefficient c in the gravitational generating
@@ -1606,6 +1607,10 @@ verified the first-vertex normalization, the pure-g₂ sign
 change and the nonuniform site gauge symmetry. Its scope is
 the internal Ward identity. Background metric matching and
 thermal positivity impose additional conditions.
+
+Independent review of `a842701ac` and `2226852ab` verified the
+collapsed-axis zero, the Fourier splitting and both derivatives
+for the stated periodic scalar measure.
 
 A joint-response test can isolate the missing matter coupling.
 At zero interaction let D_x be the composite shear and O_x the
