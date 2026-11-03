@@ -95,3 +95,15 @@ verification tests, two bundle-table checks and two numerical-literal
 checks. The last four span the corresponding prose, ratchet and
 public-surface test modules. The failure comparison measures node
 identity. The required merge checks remain open.
+
+The table and numerical-literal failures were traced beyond node IDs.
+For all 21 bundles, the ordered comment-stripped tabular blocks are
+identical to `ce194cdc`. The existing table check counts 15 across
+D1 (2), D2 (2), D4 (1), D6 (2), D8 (4), D9 (3) and D10 (1)
+against ceiling 1. The canonical numerical scanner also returns the
+same per-draft multisets of matched strings across the full candidate
+draft inventory as on the baseline, totaling 149 against ceiling 117.
+Both checks remain red. These comparisons isolate inherited corpus
+debt for the existing table generation and numerical provenance
+workflows. The other readiness and review failure groups still
+require their own source-level comparisons.
