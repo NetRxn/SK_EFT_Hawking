@@ -1231,7 +1231,11 @@ def check_bundle_lean_module_coverage() -> CheckResult:
             continue
         # `\_` -> `_` so an escaped identifier matches its declared form; then drop
         # commented-out LaTeX, which is not part of the published claim.
-        body = _strip_tex_comments(tex.read_text(errors="replace").replace("\\_", "_"))
+        body = "\n".join(
+            _strip_tex_comments(source.read_text(errors="replace").replace("\\_", "_"))
+            for source in _H.draft_input_closure(tex, live_input_root=tex.parent)
+            if source.suffix == ".tex" and source.is_file()
+        )
         owned = _declarations_by_module()
 
         def _reached(m: str) -> bool:
