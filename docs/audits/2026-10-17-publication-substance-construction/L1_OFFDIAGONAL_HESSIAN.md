@@ -476,3 +476,17 @@ review reproduced the action factors, weights, and signed top
 extraction. The subtotal is `338499/2`, including the earlier
 122,472 benchmark. The 32 new words add `93555/2`. The other
 112 source-independent and 40 joint-source words remain open.
+
+## Diagonal mixed normalization sector
+
+The [diagonal mixed evaluator](l1_normalization_diagonal_mixed.py)
+handles 160 words with a private-Haar time-space square at one
+corner, a transverse curvature pair at the opposite corner, and
+mixed curvature pairs on the remaining corners. It integrates the
+mixed centers into two boundary tensors before their signed exterior
+join. The exact subtotal is `-40213/16`. This sector includes
+negative contributions. The remaining 256 words require the
+source-plaquette traces coupled to the mixed centers.
+
+The checkpoint rerun reproduced the signed subtotal. Independent
+verification of this increment remains pending.
