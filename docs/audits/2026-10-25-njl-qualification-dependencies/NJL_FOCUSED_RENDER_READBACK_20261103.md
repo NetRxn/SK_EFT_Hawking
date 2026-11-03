@@ -78,3 +78,20 @@ drift advisories, and one documented waiver. The legacy leg measured
 90 against ceiling 90. The temporary link was removed. This run
 establishes dependency-aware prose reference coverage on the measured
 head. Full merge qualification remains open.
+
+### Terminal fast-suite differential
+
+Candidate `4f029ab8e2afd8a42ff8acebb68d6883c1331ae8` completed with
+7,080 passed, 24 failed, 8 skipped and 92 deselected in 984.67 seconds.
+The run used the exact pinned PhysLib source at the candidate-local
+Lake path. Comparing sorted pytest failure node IDs shows zero
+additions against both `f28cc370` (34 failures) and `ce194cdc`
+(45 failures). The ten IDs removed relative to `f28cc370` cover the
+architecture inventory, five slot fixtures, two prose-reference
+checks and two count checks.
+
+The 24 remaining failures are 16 bundle-readiness tests, four review
+verification tests, two bundle-table checks and two numerical-literal
+checks. The last four span the corresponding prose, ratchet and
+public-surface test modules. The failure comparison measures node
+identity. The required merge checks remain open.
