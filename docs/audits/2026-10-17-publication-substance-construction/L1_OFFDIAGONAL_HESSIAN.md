@@ -539,3 +539,11 @@ each of 16 words with a remote commutator and `15309/2` for each
 of eight with all three curvatures integrated privately. The
 subtotal is `62937`. These words are disjoint from the prior
 quartic sectors.
+
+The [four-shared quadratic evaluator](l1_equal_time_four_quadratic_factor.py)
+gives eight exact zeros. The [mixed shared evaluator](l1_equal_time_mixed_factor.py)
+gives `567/8` for each of 16 words across four symmetry orbits,
+totaling `1134`. Independent reruns verified both disjoint sectors
+and the signed joins. Together they complete all 145 source-decoupled
+words with exact subtotal `318843`. The remaining 40 words require
+the joint source kernel and correlated action contraction.
