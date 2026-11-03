@@ -690,3 +690,39 @@ Converting it to the physical L1 susceptibility requires the
 operator normalization, volume and time units, and a background
 source match. Independent review verified the contact subtraction,
 reality argument and inverse Hessian.
+
+### Exact dependence on a curvature-source prescription
+
+For the diagonal shear, define a local algebraic extension
+indexed by real c. Multiply the curvature trace in plane k,l
+by `exp(c j_t (λ_k+λ_l))` at its center slice t, while
+retaining the coframe shear and the zero-source measure.
+This gauge-inert scalar preserves the transformation law of the
+underlying term, including its existing local covariance defect.
+It does not assert that the rescaled trace comes from a
+deformed compact-group plaquette. The complementary coframe
+indices give the inverse multiplier at c=1, so every term
+has net multiplier `exp((1−c) j_t (λ_μ+λ_ν))`.
+Consequently the finite partition functions obey the exact identity
+
+    Z_c(j_0,j_a) = Z_0((1−c)j_0,(1−c)j_a),
+
+where the subscript zero labels the coframe-only prescription.
+The first insertion scales by 1−c, and the quadratic contact,
+equal-time product and half-period response all scale by (1−c)².
+For c≠1 the scalar compatibility ratio is unchanged. At c=1
+both samples vanish and their ratio is undefined. Thus the
+positive finite sign test cannot determine the normalization
+of the background source. An independent background matching
+condition must fix that coefficient. Independent review verified the
+exact identity and derivative scaling under the fixed measure.
+
+Even a first-order matching condition leaves independent
+contact data. For example, adding
+`κ(j_0²+j_a²)/2` to the finite exponent preserves the zero-source
+measure and all first action insertions. It shifts the diagonal
+log-partition Hessian by κ, with no change to the distinct-slice
+Hessian or to the operator product obtained after subtracting the
+full quadratic insertion. This field-independent local term is a
+source counterterm. Its freedom shows why a background matching
+condition must also specify the quadratic source convention.
