@@ -1294,3 +1294,30 @@ identities do not by themselves carry over the shifted join,
 which uses the reordered source tensor. The residual subtotal
 excludes that shifted contribution and the full closed diagonal
 coefficient awaits the shifted replay and elimination review.
+
+### Full closed diagonal result and stability
+
+The eleven shifted orbits contributed 25/1536. The closed support
+lists matched the original ones. Four same-center groups vanished.
+For the seven mixed groups the two reversed center signs canceled
+in the join, giving 25/49152 per word. The 28 isolated transport
+zeros precede curvature insertion, and the 14 isolated center
+zeros use the replayed closed zero tensor. The eight residual
+orbits contributed −3563/3072. Their sum gives d = −1171/1024,
+with zero imaginary part. The two original-order batched controls
+also reproduced the earlier receipts. Independent review of the
+full closed diagonal assembly is pending.
+
+Since n = 0, the uniform half-period covariance eigenvalue is
+
+    −(2428185600/1252309350145403) Z_G²/(2a⁴g₂²).
+
+The staggered eigenvalue has the opposite sign. For fixed real
+nonzero g₂ and Z_G, the finite integrals and source derivatives
+are polynomials in g₁. The normalized uniform covariance is
+continuous near g₁ = 0 because the closed partition function
+there is positive. Its real part therefore remains negative on
+some open neighborhood of zero. This yields an obstruction for
+the specified composite insertion beyond the pure-g₂ line once
+the diagonal calculation is verified. It gives no quantitative
+range in g₁ and does not select the physical metric insertion.
