@@ -351,3 +351,29 @@ flags with no closed-cycle constraint.
 The deduplicated subtotal is now `129573113509/259200` over 3,611
 words. The 2,840 remaining signed words can still affect the sign and
 nonvanishing of the normalization.
+
+## Correlated curvature pairs and odd commutator zeros
+
+The [incidence classifier](l1_normalization_correlated_cases.py)
+selects 1,240 additional connected words. After private-link
+integration, each retains one or two isolated opposing curvature pairs.
+The [ordered contraction](l1_normalization_correlated_contract.py)
+keeps both ordered gamma ports of each conditional covariance, attaches
+transport moments, and joins complementary exterior masks. The exact
+checkpoint result is `3343619/54` for 1,072 one-pair words and
+`4277609/144` for 168 two-pair words, totaling `39581779/432`.
+Independent review checked the disjoint incidence, covariance symmetry
+under port reversal, forest slot swaps, and rational scaling.
+
+The [odd commutator census](l1_normalization_odd_commutator.py) selects
+800 distinct pure transverse-curvature words with site counts
+`(1,1,3,3)`. At any odd site, exchanging its two independent singleton
+links sends the commutator to its inverse and reverses its traceless
+curvature vector. The transport factors only use extended links, so
+the Haar-preserving exchange negates the integrand. Each word vanishes
+exactly. Independent review reproduced the population and checked
+its disjointness from earlier sectors.
+
+These increments bring the accounted population to 5,651 with signed
+subtotal `153322180909/259200`. The full denominator still requires
+the remaining 800 words.
