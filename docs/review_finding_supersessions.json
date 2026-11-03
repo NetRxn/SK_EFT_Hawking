@@ -10409,6 +10409,36 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-apex-claims-unbacked:infra:1.6",
+      "status": "fixed",
+      "evidence": "D2 now contributes zero flagged literals. Reviewed D1, D6 and D9 source bindings reduced the live corpus to 115 and tightened the ceiling to 115. The original declared test and independent pinned 5febc3ca readback passed. Scope is the numerical literal ratchet.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "451d5e27",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_validate_public_surface.py -q -k \"ceiling_matches_the_live_population\"",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_validate_public_surface.py -q -k \"ceiling_matches_the_live_population\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-apex-claims-unbacked:infra:1.7",
+      "status": "fixed",
+      "evidence": "The original D1 command-span defect was repaired by the independently reviewed normalization. Subsequent D8 semantic Verify repairs preserve the command contract. Exact declared validation and independent pinned 5febc3ca readback both found 279 entries and zero violations. This verifies the command format, not execution of all 279 commands.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "be0b4fa4",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python scripts/validate.py --check review_verify_is_one_command --no-archive",
+        "declared": "cd \"$REPO\" && uv run python scripts/validate.py --check review_verify_is_one_command --no-archive",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
