@@ -336,3 +336,18 @@ Independent review reversed the curvature elimination order, recovered
 the same 1,408 words, and reran all exact contractions. The 288 overlaps
 reproduce the earlier subtotals. The 1,120 new words contribute
 `8071653/32`. The signed full denominator remains open.
+
+The [paired-label extension](l1_normalization_paired_curvature.py)
+also allows different frame endpoints for two factors sharing a
+curvature plane. Its [ordered path evaluator](l1_normalization_paired_paths.py)
+contracts 824 words. The 32 overlapping words reproduce 54. The 792
+new words contribute `535869/4`, including 108 from 64 size-`(2,6)`
+words and `535437/4` from 728 connected words. Independent review
+reversed the Haar elimination order and verified the same selected
+population, actual link incidences and factorials. The remaining
+transport graphs are forests, so local slot swaps can remove pairing
+flags with no closed-cycle constraint.
+
+The deduplicated subtotal is now `129573113509/259200` over 3,611
+words. The 2,840 remaining signed words can still affect the sign and
+nonvanishing of the normalization.
