@@ -1309,8 +1309,11 @@ zeros precede curvature insertion, and the 14 isolated center
 zeros use the replayed closed zero tensor. The eight residual
 orbits contributed −3563/3072. Their sum gives d = −1171/1024,
 with zero imaginary part. The two original-order batched controls
-also reproduced the earlier receipts. Independent review of the
-full closed diagonal assembly is pending.
+also reproduced the earlier receipts. Independent review rebuilt the closed evaluator at `9d4012c47`
+and reproduced the shifted and residual subtotals and full
+coefficient. The corrected validator at `e41960619` checked
+all 3,712 fresh projection receipts against the submitted slices,
+including each of the 320 unindexed base zeros.
 
 Since n = 0, the uniform half-period covariance eigenvalue is
 
@@ -1401,8 +1404,7 @@ Rescaling the sources rescales the coefficients. The full
 two-source span still contains a negative direction. A physical
 construction retaining a single combination must derive its
 coefficients and the restriction on the retained observable
-span. The numeric threshold inherits the diagonal replay's
-pending independent verification.
+span. The numeric threshold uses the independently reproduced diagonal coefficient.
 
 The [support replay](l1_mixed_g1_support.py) fixes the composite
 at site 0 and tags the opposite time slice, sites 1 and 3. Spatial
