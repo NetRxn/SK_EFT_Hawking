@@ -136,3 +136,33 @@ ratio `B/A_raw = 3113/8795444832` lies strictly between zero and one.
 Thus the bare projected pair admits a finite-gap scalar thermal
 realization. The actual matched contact, operator, static component,
 and physical state still require independent construction.
+
+### Regulated metric source and its quadratic contact
+
+For an explicit comparison model, take an N-component real Gaussian
+with inverse propagator `K_j = pᵀ exp(-2jE) p + r`, where `E` is a
+constant traceless, Frobenius-unit symmetric polarization. Hold the
+coordinate momentum ball fixed. Differentiating the Gaussian log
+partition function gives `N/2 Tr[G K' G K' - G K'']`, where
+`K' = -2pᵀEp` and `K'' = 4pᵀE²p` at zero source. In four dimensions
+the angular averages of `(pᵀEp)²` and `pᵀE²p` are `p⁴/12` and
+`p²/4`. The static response density is therefore
+
+`(N/6) ∫ p⁴/(p²+r)² - (N/2) ∫ p²/(p²+r)`,
+
+with both integrals over the fixed ball using `d⁴p/(2π)⁴`.
+The second term is the quadratic contact from this source action.
+If the cutoff ball is instead defined by `pᵀ exp(-2jE) p ≤ Λ²`, the
+determinant-one momentum substitution makes the constant-source
+partition function independent of `j`. The cutoff boundary
+contributions then cancel the fixed-ball response. This calculation
+fixes the contact for each specified comparison model. Matching the
+literal lattice shear to a microscopic metric action and regulator
+remains open.
+
+For `r > 0`, the fixed-ball radial integrand is
+`-N/(96π²) d[p⁶/(p²+r)]/dp`. The response is exactly
+`-N Λ⁶/[96π²(Λ²+r)]`. The moving-cutoff cancellation concerns
+constant sources. A time-dependent contact would require the full
+regulator prescription. Independent review verified the Gaussian
+derivatives, both angular averages and the momentum substitution.

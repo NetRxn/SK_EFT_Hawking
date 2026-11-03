@@ -556,3 +556,8 @@ reruns give coupled subtotal `-23063/32`. The preliminary zero
 receipt projected out the outer site before including both central
 frames and is superseded. The full bare equal-time numerator is
 `(10179913/32) g₂⁶` across all 185 words.
+
+The [unsymmetrized control](l1_equal_time_coupled_full_control.py)
+reruns all 40 coupled words individually, verifies the private-link
+incidence used in the reduction, and reproduces the complete signed
+histogram and subtotal without orbit weights.
