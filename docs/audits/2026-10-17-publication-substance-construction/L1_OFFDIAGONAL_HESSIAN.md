@@ -240,4 +240,6 @@ commutator curvature. It integrates the common curvature with its
 fourth moment and retains a joint fourth moment for any shared
 transport link. The clean consolidated run gives `188663/2700`
 for these terms and `2023556969/259200` across the 696 covered
-multisets. The independent review of this increment is pending.
+multisets. Independent review reproduced the exact subtotal, verified
+the two-square multiplicities and common curvature fourth moment, and
+checked the separate private and shared transport normalization factors.
