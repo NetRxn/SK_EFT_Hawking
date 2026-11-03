@@ -1403,3 +1403,14 @@ construction retaining a single combination must derive its
 coefficients and the restriction on the retained observable
 span. The numeric threshold inherits the diagonal replay's
 pending independent verification.
+
+The [support replay](l1_mixed_g1_support.py) fixes the composite
+at site 0 and tags the opposite time slice, sites 1 and 3. Spatial
+translation supplies the contribution with the other composite
+site. Saturation and link center parity leave 192 multisets.
+The signed coframe tag sum eliminates 96, leaving 48 with
+weight +2 and 48 with weight −2. Among the 96 weighted words
+the determinant sits at site 3 in 64 and at site 2 in 32.
+The signed weights must multiply the original per-word
+Haar–Berezin amplitudes and factorials. Equal counts with
+opposite tags alone cannot cancel the coefficient.
