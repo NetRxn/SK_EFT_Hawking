@@ -4,11 +4,13 @@
 dropped singleton dependencies retained by conditional Haar projection.
 Retaining them gives 5,718 transferable normalization words and
 1,812 transferable cross-support words. Only four checkerboard words
-transfer by this census. A full closed checkerboard replay is in
-progress. Treat the historical assembled closed denominator, dressed
+transfer by this census. A direct replay of all 64 checkerboard words
+returned 5039025/8192, exactly matching the earlier subtotal. It uses
+the closed product X†U†YU and includes both the joint fourth moment
+and the split second moments. Independent review is assigned. Treat the historical assembled closed denominator, dressed
 response, normalized composite magnitudes, coupling interval, and
 composite–dressed threshold below as provisional until the correction
-is propagated. The raw composite same-site and diagonal numerators
+is independently verified. The raw composite same-site and diagonal numerators
 were computed separately.
 
 
