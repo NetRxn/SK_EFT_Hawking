@@ -10649,6 +10649,36 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:5",
+      "status": "fixed",
+      "evidence": "Independent source and exact manuscript readback SHA-256 ecdf155240870e65b793c40964f7ff2145914746e16a25a7dfffb47132140a. Verified the current primary citation and preserved all equations.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "a1c9c459",
+      "verified_by": {
+        "command": "uv run python -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as C; r=C['\"'\"'Volovik2024'\"'\"']; assert r['\"'\"'title'\"'\"']=='\"'\"'Fermionic quartet and vestigial gravity'\"'\"' and r['\"'\"'arxiv'\"'\"']=='\"'\"'2312.09435'\"'\"'; files=[Path('\"'\"'papers'\"'\"',n,'\"'\"'paper_draft.tex'\"'\"') for n in ('\"'\"'paper5_adw_gap'\"'\"','\"'\"'paper6_vestigial'\"'\"')]; assert all('\"'\"'Fermionic quartet and vestigial gravity'\"'\"' in p.read_text().split(chr(92)+'\"'\"'bibitem{Volovik2024}'\"'\"')[1].split(chr(92)+'\"'\"'bibitem'\"'\"')[0] for p in files)'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-04-10:CitationReview-01:7",
+      "status": "fixed",
+      "evidence": "Independent source and exact manuscript readback SHA-256 ecdf155240870e65b793c40964f7ff2145914746e16a25a7dfffb47132140a. Verified the current primary citation and preserved all equations.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "a1c9c459",
+      "verified_by": {
+        "command": "uv run python -c 'from pathlib import Path; from src.core.citations import CITATION_REGISTRY as C; assert '\"'\"'Relativistic Superfluids'\"'\"' in C['\"'\"'Son2002'\"'\"']['\"'\"'title'\"'\"']; a=Path('\"'\"'papers/paper1_first_order/paper_draft.tex'\"'\"').read_text(); b=Path('\"'\"'papers/paper2_second_order/paper_draft.tex'\"'\"').read_text(); assert '\"'\"'nonrelativistic Madelung-form density--phase action as the starting model'\"'\"' in a and '\"'\"'Son derives a Goldstone effective action'\"'\"' in a; assert all('\"'\"'Relativistic Superfluids'\"'\"' in t for t in (a,b)) and all('\"'\"'105001'\"'\"' not in t.split(chr(92)+'\"'\"'bibitem{'\"'\"'+k+'\"'\"'}'\"'\"')[1].split(chr(92)+'\"'\"'bibitem'\"'\"')[0] for t,k in ((a,'\"'\"'Son2002'\"'\"'),(b,'\"'\"'Son:2002'\"'\"')))'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
