@@ -190,6 +190,40 @@
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-06-10T20:23:44Z",
       "notes": "2026-06-10 source-reconciliation pass post external-review remediation: 4 flagged sources triaged — paper12_polariton + paper4_wkb_connection carry the real committed change (5207b72b axiom-retirement note: gapped_interface_axiom retired into tracked Prop TPFConjecture) with NO D1 counterpart claim (D1 axiom-count prose is macro-driven via counts.tex; all D1 'axiom' mentions are SK-EFT physics axioms); paper1_first_order + paper2_second_order are mtime-only (auto-regenerated tables byte-identical to committed content, zero commits since last_lift). Sweep themes (Geurs scope c574c1d0, 93% reuse 67157912, theorem renames 5207b72b) verified already applied in tandem to D1; Vergeles/Halenka not referenced. Standard DISCLOSURE_TEXT.md Variant A block inserted before bibliography (register-derived; pdflatex x2 clean). stage13_redo_required set true + freshness_stale deliberately retained by the reconciliation session (post-script metadata restore)."
+    },
+    {
+      "date": "2026-11-03T16:43:22Z",
+      "source_paper": "paper2_second_order",
+      "lift_action": "Reconcile module registration",
+      "bundle_section_inserted": "sec:higher",
+      "insertion_point_hint": "sec:higher",
+      "new_top_level_section": false,
+      "new_section_rationale": "",
+      "lean_modules_referenced": [
+        "SKEFTHawking.SKDoubling",
+        "SKEFTHawking.SecondOrderSK"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-11-03T16:43:22Z",
+      "notes": "Resolve three historical topic labels against the current cited declarations and aggregate imports."
+    },
+    {
+      "date": "2026-11-03T16:43:22Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "KMSOptimality",
+        "SecondOrderPositivity",
+        "TransportCounting"
+      ],
+      "deregistration_rationale": "The three labels name topics in the 2026-05-04 lift rather than module identities. Current canonical owners are registered separately and the original lift stays in the log.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-03T16:43:22Z",
+      "notes": "The three labels name topics in the 2026-05-04 lift rather than module identities. Current canonical owners are registered separately and the original lift stays in the log."
     }
   ]
 }
