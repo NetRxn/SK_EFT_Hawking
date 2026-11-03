@@ -876,10 +876,12 @@ number theory actually lives.
 Here $\dagger$ is the ring automorphism of $\mathbb Z[\omega]$ sending
 $\omega \mapsto \omega^{-1}$, an element $\xi$ of the fixed ring
 $\mathbb Z[\sqrt 2]$ is \emph{doubly positive} when it is positive under both
-real embeddings $\sqrt 2 \mapsto \pm\sqrt 2$, and $\xi$ is
-\emph{$\dagger$-decomposable} when it is a relative norm $t^{\dagger}t$ for some
-$t \in \mathbb Z[\omega]$. Solvability is thus decomposability, and the chain
-below reduces decomposability to a congruence condition on prime factors.
+real embeddings $\sqrt 2 \mapsto \pm\sqrt 2$ (allowing zero in the
+formal predicate). An element $\xi$ is \emph{$\dagger$-decomposable} when
+$\xi=u t^{\dagger}t$ for some $t\in\mathbb Z[\omega]$ and unit
+$u\in\mathbb Z[\sqrt 2]^\times$. This permits a unit factor in the norm
+equation. The next steps remove that factor when the signs permit it
+and reduce the decomposability question to prime-power cases.
 
 \begin{lemma}[Units]
 \label{lem:c2}
@@ -900,10 +902,14 @@ $t^{\dagger}t = \xi$ is solvable in $\mathbb Z[\omega]$ if and only if $\xi$ is
 doubly positive and $\dagger$-decomposable.
 \end{lemma}
 
-Double positivity is necessary because a relative norm is a sum of squares under
-each real embedding. That it is, with decomposability, also sufficient is the
-content, and it is a biconditional rather than an implication, which is what
-lets the grid search reject a candidate rather than merely fail to accept it.
+A relative norm is nonnegative under both real embeddings. For a
+nonzero decomposable element with those signs, the unit factor is
+positive under both embeddings, so it is a square by Lemma~\ref{lem:c2}.
+Absorbing its square root into $t$ gives an exact solution; zero has
+the solution $t=0$. This is the integral-ring version of
+Ross and Selinger's Lemma~C.16. Their statement uses the dyadic rings,
+and the denominator-clearing step in their Lemma~C.17 is outside
+this formalization~\cite{RossSelinger2016}.
 
 \begin{lemma}[Multiplicativity]
 \label{lem:c19}
@@ -915,19 +921,21 @@ Lemma~\ref{lem:c19} is what turns the criterion into a decision procedure: it
 reduces a question about $\xi$ to independent questions about the prime powers
 in its factorization. The two lemmas that follow answer those questions.
 
-\begin{lemma}[The obstruction at $p \equiv 7 \bmod 8$]
+\begin{lemma}[Prime-case construction and obstruction]
 \label{lem:c20}
-An element whose norm is a power of a prime $p \equiv 7 \pmod 8$ is not
-$\dagger$-decomposable when that power is odd, and for a prime dividing the
-norm squared there is a constructive decomposition in the remaining cases.
+Let $\xi$ be prime in $\mathbb Z[\sqrt 2]$. If its image in
+$\mathbb Z[\omega]$ divides $w^{\dagger}w$ but does not divide
+$w-w^{\dagger}$, the gcd of that image with $w$ supplies a
+$\dagger$-decomposition. Separately, if the norm of $\xi$ is
+$\pm p^m$ with $p>0$, $p\equiv 7\pmod 8$ and $m$ odd, then
+$\xi$ is not $\dagger$-decomposable.
 \end{lemma}
 
-The congruence class is not arbitrary: $2$ ramifies in $\mathbb Z[\sqrt 2]$ and
-the splitting of an odd prime $p$ is governed by whether $2$ is a quadratic
-residue modulo $p$, which holds exactly for $p \equiv \pm 1 \pmod 8$. The
-residue class $7 \bmod 8$ is the one where $p$ splits in $\mathbb Z[\sqrt 2]$
-but the resulting primes fail to be relative norms from $\mathbb Z[\omega]$, and
-a mod-$8$ count of the valuation is what detects it.
+The gcd implication formalizes a construction used in Ross and
+Selinger's Lemma~C.20. Their full criterion is stated for a prime
+$\xi$ and the rational prime below it. The formal obstruction instead
+takes the norm explicitly and uses the impossibility of a sum of
+two squares congruent to $7$ modulo $8$.
 
 \begin{lemma}[Even-power criterion]
 \label{lem:c21}
@@ -935,9 +943,11 @@ For $\xi$ of norm $\pm p$ with $p \equiv 7 \pmod 8$, the power $\xi^m$ is
 $\dagger$-decomposable if and only if $m$ is even.
 \end{lemma}
 
-Lemma~\ref{lem:c21} is again a biconditional, and it closes the chain: combined
-with Lemma~\ref{lem:c19} it decides decomposability for any $\xi$ whose
-factorization is known, which is what the grid finder needs at each candidate.
+Lemma~\ref{lem:c21} decides this norm case. Lemma~\ref{lem:c19}
+combines prime-power decisions once the coprime factors and their
+case hypotheses are supplied. The bounded grid finder checks a
+candidate residual directly and does not require a factorization
+algorithm.
 
 The greatest-common-divisor machinery these lemmas consume requires that
 $\mathbb Z[\omega] = \mathbb Z[\zeta_8]$ be a Euclidean domain, an instance
