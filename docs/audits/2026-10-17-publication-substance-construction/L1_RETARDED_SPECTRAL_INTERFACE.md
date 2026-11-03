@@ -196,3 +196,12 @@ obtained the zero-frequency response
 `−NΛ⁵/[30π²√(Λ²+r)]` by a radial total derivative and the
 low-frequency coefficient
 `−N/60 ∫ p⁴/e⁵ d³p/(2π)³` multiplying `Ω²`.
+
+For the retarded convention `χ_R(t) = −i θ(t) ⟨[O(t),O(0)]⟩`
+with Fourier transform using `exp(+iωt)`, the dynamical sector is
+the negative of the continued Euclidean connected response. At
+positive frequency its weight is `−Im χ_R = N p_*⁵/(60π e_*)`,
+where `e_* = ω/2` and `p_*² = ω²/4 − r`. It is supported on
+`2√r < ω < 2√(Λ²+r)`. Independent review reproduced the delta
+function Jacobian `8p_*` and the retarded sign. The instantaneous
+quadratic term has no spectral discontinuity.
