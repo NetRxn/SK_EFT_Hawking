@@ -162,9 +162,9 @@ The independently reviewed [spectral interface](L1_RETARDED_SPECTRAL_INTERFACE.m
 The [closed-path metric-source calculation](L1_RETARDED_SPECTRAL_INTERFACE.md#metric-amplitude-and-the-linear-path-contact)
 now evaluates both static source prescriptions in the same finite pure-g₂
 regulator. The independently reviewed exponential conversion and the
-author-replayed affine contact give opposite full static signs, with
-identical connected first vertices. Independent review of the final affine
-assembly at `5280cb77a` is in progress. The next physical acceptance
+independently replayed affine contact give opposite full static signs,
+with identical connected first vertices. Scoped review at `5280cb77a`
+reproduced both private moments and the exact assembly. The next physical acceptance
 step is to derive the metric and regulator variation that fixes the
 contact prescription and spatial tensor normalization. This finite
 calculation supplies neither the physical bare bubble nor the RPA coupling.

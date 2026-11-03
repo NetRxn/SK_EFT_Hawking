@@ -1176,4 +1176,6 @@ metric-source derivative of log Z is then
 −2308832294491350/1252309350145403. Thus the affine and
 exponential prescriptions have opposite full static signs in
 this finite model despite identical connected first vertices.
-Independent review of this assembly is pending.
+Independent review at `5280cb77a` reran both private sectors,
+verified their original-label multiplicity factorials, and reproduced
+the raw moment, normalized moment, and affine response exactly.
