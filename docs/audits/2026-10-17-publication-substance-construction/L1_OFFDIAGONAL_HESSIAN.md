@@ -428,3 +428,20 @@ review reproduced the eight diagonal degree-two entries, with
 The separate chiral sphere contractions recover the lower moments
 and the scalar 21. This removes the local source site from those
 action contractions. Their action-dependent integrals remain open.
+
+The [general mixed-plane cycle](l1_normalization_mixed_cycle.py)
+retains the physical singleton axis on each edge port and integrates
+the joint local singleton moments. Its 16 plane assignments reduce
+to four symmetry classes, each summed over 16 extended-link
+orientations. The uniform class reproduces the prior 32 words.
+The full 256-word sum is `30943735159/764411904`, so the 224 new
+words add `24941032087/764411904`. The [vertex control](l1_normalization_mixed_vertex_control.py)
+checks the real and imaginary entries for both axis assignments
+against direct exact quadrature.
+
+Independent review reconstructed all 256 assignments from link
+incidence and checked the signed vertex ordering and Haar scales.
+The checkpoint rerun matched the exact totals and all four direct
+vertex controls. The deduplicated denominator subtotal is now
+`11306987999776927/19110297600` over 5,971 words. The remaining
+480 words still determine the full signed result.
