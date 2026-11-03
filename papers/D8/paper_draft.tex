@@ -545,16 +545,15 @@ $T$, and what it costs.
 
 \subsection{Sufficient, with \texorpdfstring{$T$}{T}: the over-complete route}
 
-Take the alphabet $\{H, T, \mathrm{CNOT}, \mathrm{CCZ}\}$. Density follows from
-the $\{H, T, \mathrm{CNOT}\}$ part alone: single-qubit Clifford$+T$ is dense in
-each qubit's $\su 2$ by Theorem~\ref{thm:accpt}, and CNOT couples the factors,
-in the manner of the stabilizer analysis of Aaronson and
-Gottesman~\cite{AaronsonGottesman2004}. Feeding that witness through
-Theorem~\ref{thm:sud} gives an unconditional compilation theorem at $\su 8$.
-
-We flag the scope of that result rather than leaving it to be discovered. In
-this route CCZ is present in the alphabet and absent from the proof. The
-theorem says the alphabet is universal; it says nothing about CCZ.
+Take the alphabet $\{H, T, \mathrm{CNOT}, \mathrm{CCZ}\}$. The
+density witness uses the $\{H,T,\mathrm{CNOT}\}$ sub-alphabet.
+The single-qubit Clifford$+T$ flows, conjugated by CNOT and local
+Clifford gates, supply the spanning tensor-Pauli tangents and their
+one-parameter flows (\lean{cliffordCCZSU8\_v4\_witness\_tracked\_holds}).
+The specialized compilation theorem
+{\footnotesize\lean{cliffordCCZSU8\_solovayKitaev\_headline\_unconditional}}
+applies the generic bridge to that witness. This route leaves CCZ
+available in the alphabet but needs no CCZ generator for density.
 
 \subsection{Sufficient, without \texorpdfstring{$T$}{T}: the CCZ-seeded route}
 
@@ -616,9 +615,11 @@ The proof is the channel representation. Write $\widehat U$ for the matrix of
 the map $P \mapsto U P U^{\dagger}$ in the Pauli basis. On the Clifford group
 this map sends Pauli operators to Pauli operators up to sign, so $\widehat U$
 is a signed permutation matrix. Signed permutation matrices of fixed size form
-a finite group, so the image of the Clifford group under the channel
-representation is finite, and a subgroup with finite image cannot be dense in
-$\su 8$.
+a finite, closed set. By continuity, the image of the closure of the
+Clifford-only group is still in that set. The seed's channel
+representation has infinite order (\lean{channelRep\_seedSU8\_pow\_ne\_one}),
+so the image of $\su 8$ contains infinitely many distinct seed powers.
+The Clifford-only closure therefore cannot be all of $\su 8$.
 
 Taken together, Theorems~\ref{thm:literal} and~\ref{thm:notdense} settle the
 role of CCZ at $\su 8$: it is not over-complete, and the two density routes of
@@ -631,7 +632,7 @@ alphabets, one of which is universal only because CCZ is in it.
 \caption{Two formally verified density mechanisms for the same target $\su 8$.
 The upper route is $T$-based, with CCZ present in the alphabet and absent from
 the proof. The lower route is $T$-free, with density seeded by
-$\mathrm{CCZ}\cdot(H\otimes H\otimes H)$ and spread by Clifford conjugation
+$\mathrm{CCZ}\cdot(H\otimes H\otimes H)$ and spread by Pauli projection and Clifford conjugation
 across the $63$ non-identity Pauli operators. The converse
 (Theorem~\ref{thm:notdense}) establishes that the Clifford group alone has
 finite image under the channel representation, so CCZ is the resource that
