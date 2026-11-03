@@ -5808,20 +5808,24 @@ CITATION_REGISTRY = {
     },
 
     'Coutant2014': {
-        'authors': 'O.~Coutant and R.~Parentani',
-        'title': 'Phys.\\ Rev.\\ D',
-        'journal': None,
+        'authors': 'Coutant, A., and Parentani, R.',
+        'title': 'Hawking radiation with dispersion: The broadened horizon paradigm',
+        'journal': 'Phys. Rev. D',
         'volume': 90,
-        'page': None,
+        'page': '121501',
         'year': 2014,
-        'doi': None,
-        'arxiv': None,
-        'doi_verified': False,
+        'doi': '10.1103/PhysRevD.90.121501',
+        'arxiv': '1402.2514v2',
+        'doi_verified': True,
         'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/paper1_first_order/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf',
+        'used_in': ['papers/paper1_first_order/paper_draft.tex',
+                    'papers/D1/paper_draft.tex', 'papers/E1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
+        'notes': ('Published-version preprint v2, equations 4–11. The near-horizon '
+                  'p-space analysis assumes a locally linear region and gives '
+                  'dispersive broadening. Device calibration and a dissipative WKB '
+                  'shift require separate derivations.'),
     },
 
     'CoutantWeinfurtner2018KdV': {
