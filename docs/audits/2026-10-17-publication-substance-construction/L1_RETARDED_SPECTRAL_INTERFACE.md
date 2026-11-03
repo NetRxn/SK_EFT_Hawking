@@ -340,3 +340,39 @@ The preceding certificate therefore applies for
 coarse and concerns only the specified four-site regulator and
 uniform source normalization. Independent review verified the
 coframe, action and source norms and the resulting interval.
+
+### Candidate curvature-dressed operator from coframe shear
+
+A different source prescription can be tested on the existing action.
+At each site replace the world-index coframe by
+`T(j) = exp(jE) T`, with real traceless symmetric spatial E extended
+by zero on time. Hold the plaquette holonomies and integration
+measure fixed. The S4 density is unchanged because it is a
+determinant and `det exp(jE) = 1`. Write the local S2 density as
+the curvature-weighted bilinear `B(T,T)`, with B symmetrized
+in its two arguments. Its first source derivative is
+`2 B(ET,T)` and its second is
+`2 B(E²T,T) + 2 B(ET,ET)`. For a spatially uniform slice source,
+sum these expressions over the sites of that slice. The second
+expression gives the local quadratic insertion. At distinct slices
+the Hessian instead measures the connected correlation of the two
+curvature-dressed first derivatives.
+
+This source acts on the action rather than inserting the literal
+quadratic metric composite. It supplies a concrete uniform operator
+and contact to evaluate in the finite regulator. Because it holds
+curvature holonomies fixed, its identification with a background
+metric variation still requires a derivation. Its Gram matrix,
+continuum normalization are open. Independent review verified the determinant
+invariance and both source derivatives. The full action inserts g₂
+times each first or second derivative above.
+
+For diagonal plus polarization with entries (0,0,e,−e), each S2
+term has source multiplier exp[j(λ_μ+λ_ν)] on its coframe pair.
+Only mixed extended/transverse curvature planes carry a nonzero
+weight, since the complementary curvature axes have opposite sum.
+At pure g₂ the distinct-slice numerator therefore uses two tagged
+mixed-plane vertices and six ordinary S2 vertices. An exact
+transverse exchange symmetry sending E to −E would kill the
+one-point terms. This symmetry must be checked on the oriented
+finite action and measure before using that simplification.
