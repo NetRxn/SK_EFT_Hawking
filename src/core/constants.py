@@ -1538,7 +1538,7 @@ REVIEW_CORPUS_DOC_FLOOR = 404
 #:
 #: A RATCHET: bundles hard-fail, legacy drafts are frozen and may only shrink. A NEW
 #: broken legacy draft FAILS; raising this needs a stated reason in the same commit.
-LEGACY_DRAFT_LATEX_BROKEN_CEILING = 11
+LEGACY_DRAFT_LATEX_BROKEN_CEILING = 10
 
 #: Legacy (non-bundle) drafts carrying a `\ref` whose `\label` exists nowhere in the
 #: draft's input closure — each renders as a literal `??` to a reader.
