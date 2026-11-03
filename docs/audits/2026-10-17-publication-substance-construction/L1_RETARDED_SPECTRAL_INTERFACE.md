@@ -205,3 +205,30 @@ where `e_* = ω/2` and `p_*² = ω²/4 − r`. It is supported on
 `2√r < ω < 2√(Λ²+r)`. Independent review reproduced the delta
 function Jacobian `8p_*` and the retarded sign. The instantaneous
 quadratic term has no spectral discontinuity.
+
+### Translation constraint on the uniform metric source map
+
+Consider a real source map that commutes with spatial translations,
+uses the same time-local map at each Euclidean time, fixes zero
+source, and couples only to the literal plus channel. At zero source
+its first derivative commutes
+with the exchange of the two spatial sites. Hence it sends the
+uniform metric source into the uniform lattice direction and the
+staggered source into the staggered direction. The mixed second
+derivative of the source map between times 0 and a is zero by time
+locality. Any separate coincident-time quadratic source term also
+vanishes in that mixed derivative.
+
+For real nonzero g₂ the verified pure-g₂ denominator is positive.
+The uniform direction therefore has a negative half-period Hessian
+entry d. A nonzero real uniform matching coefficient multiplies
+that entry by its square and preserves its sign. A zero coefficient
+instead removes the linear response. Thus this class of source maps
+cannot turn the positive staggered control into a positive uniform
+metric response. A candidate using a staggered internal carrier
+must derive how physical translations act on that carrier. A
+candidate using additional operators must derive the physical
+uniform operator and test its full mixed Gram data. Independent
+review verified the chain rule and identified the need for the same
+map at both times. With different real coefficients the cross-time
+factor would be their product, which could reverse the sign.
