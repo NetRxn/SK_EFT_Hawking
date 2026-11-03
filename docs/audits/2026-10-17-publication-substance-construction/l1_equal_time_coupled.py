@@ -44,13 +44,16 @@ def longitudinal(x,d,z,l,r):
 
 
 @cache
-def projected_curvature(a,b,rotation_coordinate,ch,local_coord):
-    q=mul(UNIT[rotation_coordinate],adj(UNIT[local_coord]))
+def projected_curvature(a,b,rotation_coordinate,ch,local_coord,*,closed=False):
+    transported = UNIT[rotation_coordinate]
+    local_dagger = adj(UNIT[local_coord])
+    # The private conjugator and its inverse have the same Haar law.
+    q = mul(local_dagger, transported) if closed else mul(transported, local_dagger)
     return sum(w*q[j%3+1] for j,w in L[a,b] if j//3==ch)
 
 
 @cache
-def local_center(x,source_type):
+def local_center(x,source_type,*,closed=False):
     i,j=source_type
     chi,chj=i//4,j//4
     rotations=(0,) if i%4==0 else (1,2,3)
@@ -61,8 +64,8 @@ def local_center(x,source_type):
         for a,b in ALL_INDICES:
             # First action curvature uses source 2 and local 2, with its
             # transverse T on link 3. The second interchanges 2 and 3.
-            C=add(*(scale(B[d],projected_curvature(a,d,r,chi,p)) for d in AXES))
-            D=add(*(scale(A[e],projected_curvature(b,e,r,chj,q)) for e in AXES))
+            C=add(*(scale(B[d],projected_curvature(a,d,r,chi,p,closed=closed)) for d in AXES))
+            D=add(*(scale(A[e],projected_curvature(b,e,r,chj,q,closed=closed)) for e in AXES))
             out[a,b]=add(out[a,b],scale(wedge(C,D),mult))
     return {idx:sparse_int(poly) for idx,poly in out.items()}
 
@@ -103,7 +106,7 @@ def add_projected(out, local, x, center_frames, remote_frames, weight):
 
 
 @cache
-def branch(x,axis,xlinks,ylinks):
+def branch(x,axis,xlinks,ylinks,*,closed=False):
     multiplicities=Counter(xlinks+ylinks)
     keys=sorted(multiplicities)
     assert sorted(multiplicities.values()) in ([2,2],[4])
@@ -116,7 +119,7 @@ def branch(x,axis,xlinks,ylinks):
         C,D=(longitudinal(3,axis,z,*settings[z][:2]) for z in ylinks)
         left,right=pair_product(A,B),pair_product(C,D)
         for t in TYPES:
-            add_projected(outcomes[t],local_center(x,t),x,left,right,weight)
+            add_projected(outcomes[t],local_center(x,t,closed=closed),x,left,right,weight)
     return outcomes,denominator
 
 
@@ -140,15 +143,15 @@ def join(A,B):
     return val
 
 
-def solve(word):
+def solve(word,*,closed=False):
     slots=defaultdict(list)
     for term in word:slots[term[0]].append(term)
     assert set(slots)=={1,2,3} and all(len(v)==2 for v in slots.values())
     assert [t[1:3] for t in slots[1]]==[(0,2),(0,3)]
     assert [t[1:3] for t in slots[2]]==[(1,2),(1,3)]
     assert all(t[1:3]==(2,3) for t in slots[3])
-    A,da=branch(1,1,tuple(t[3] for t in slots[1]),tuple(t[4] for t in slots[3]))
-    B,db=branch(2,0,tuple(t[3] for t in slots[2]),tuple(t[3] for t in slots[3]))
+    A,da=branch(1,1,tuple(t[3] for t in slots[1]),tuple(t[4] for t in slots[3]),closed=closed)
+    B,db=branch(2,0,tuple(t[3] for t in slots[2]),tuple(t[3] for t in slots[3]),closed=closed)
     result=F(0)
     for t,u in product(TYPES,repeat=2):
         h=source_mix(t,u)
@@ -161,7 +164,7 @@ def solve(word):
     return result*F(16,9*denom)
 
 
-def main():
+def main(*,closed=False):
     words={tuple(sorted(w)) for w in same_site_quadratic_support() if not reduce_source_dependence(w)[1]}
     assert len(words)==40
     results=Counter()
@@ -170,9 +173,11 @@ def main():
         orbit={tuple(sorted(transform(t,a,b) for t in w)) for a,b in product((False,True),repeat=2)}
         assert orbit<=words
         words-=orbit
-        result=solve(w)
+        result=solve(w,closed=closed)
         results[result]+=len(orbit)
         print('orbit',len(orbit),w,result,flush=True)
     print('coupled',sorted(results.items()),'subtotal',sum(v*n for v,n in results.items()),flush=True)
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    from sys import argv
+    main(closed='--closed' in argv[1:])

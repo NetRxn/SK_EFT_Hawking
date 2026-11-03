@@ -8,7 +8,7 @@ from l1_equal_time_structural import (
 )
 
 
-def main():
+def main(*,closed=False):
     outcomes = Counter()
     for word in same_site_quadratic_support():
         _, removed = reduce_source_dependence(word)
@@ -23,7 +23,7 @@ def main():
                 (x, axis, 2), (x, axis, 3)
             }
             assert all(incidence(x, axis, j).count(key) == 2 for j in (2, 3))
-        value = solve(word)
+        value = solve(word,closed=closed)
         outcomes[value] += 1
         print('word', word, 'value', value, flush=True)
     assert sum(outcomes.values()) == 40
@@ -33,4 +33,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    from sys import argv
+    main(closed="--closed" in argv[1:])
