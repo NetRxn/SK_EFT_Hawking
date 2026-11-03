@@ -169,6 +169,17 @@ step is to derive the metric and regulator variation that fixes the
 contact prescription and spatial tensor normalization. This finite
 calculation supplies neither the physical bare bubble nor the RPA coupling.
 
+The [linear composite-metric source](L1_RETARDED_SPECTRAL_INTERFACE.md#linear-composite-metric-source-on-the-closed-action)
+has independently verified nearest-time and nearest-space zeros.
+The closed same-site replay gives a nonzero equal-time coefficient.
+Subject to independent verification of the same-site transfer,
+this rules out a faithful positive thermal realization of this
+finite linear source, regardless of the ongoing diagonal replay.
+The next constructive test is a matched metric operator with a
+derived physical source and regulator, checked on its retained
+observable span. The finite result supplies an exclusion control
+for that match.
+
 Original B3/L1-02 and Phase6a/5y/6e remain full-strength BUILD. These are distinct from the shared D1/E1/E2 quadratic law.
 
 | Missing construction | Current work / next substantive action | Acceptance reviewer and required evidence |
