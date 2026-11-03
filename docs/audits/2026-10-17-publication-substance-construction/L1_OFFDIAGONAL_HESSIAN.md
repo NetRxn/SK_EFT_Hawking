@@ -385,3 +385,21 @@ canonical plan and contribute `163/96` each, totaling `326/3`.
 Run `size_six_total()` from the contraction module to reproduce
 the result. Both the scratch and checkpoint runs agree. The
 remaining 736 words are fully link-connected.
+
+## Reality of fixed-link top coefficients
+
+In the literal chiral basis, let `J = diag(iσ₂,iσ₂)`. The
+[symbolic control](l1_link_reality_control.py) verifies that complex
+conjugation of every gamma matrix, the chirality matrix, a generic
+real-coordinate Spin(4) link and its adjoint equals conjugation by
+the same `J`. Trace factors therefore equal their conjugates.
+Each frame bilinear with conjugated coefficient matrices is obtained
+by replacing the row of barred variables by `bar ψ J` and the
+column of unbarred variables by `J⁻¹ ψ`. This sitewise substitution
+has unit top exterior determinant. Products of labelled action
+factors and real metric sources therefore have real top coefficients
+for each link configuration. The Haar integral preserves reality.
+This identity leaves the signed magnitude to the contraction.
+
+Independent review reran the symbolic control and verified the
+sitewise top exterior change of variables.
