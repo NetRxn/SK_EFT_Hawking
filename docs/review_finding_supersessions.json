@@ -10544,6 +10544,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-seeded-mutation-seeder-vs-seeder-race:infra:1.1",
+      "status": "fixed",
+      "evidence": "Independent review SHA-256 4b2aae975e87430c9a0f7c5f104aba20eab987b945b614fb0fb6c69d26dea054. Baseline reproduced both defects. Candidate seed suite 30 passed and declared Verify 5 passed, 25 deselected. Existing and absent journalled branches exclude competing seeders through restoration. Absolute, relative and symlink corpus aliases checked.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "542ce5cb",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -m pytest tests/test_seed_residue_guard.py -q -k \"concurrent or race or exclusive\"",
+        "declared": "cd \"$REPO\" && uv run python -m pytest tests/test_seed_residue_guard.py -q -k \"concurrent or race or exclusive\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
