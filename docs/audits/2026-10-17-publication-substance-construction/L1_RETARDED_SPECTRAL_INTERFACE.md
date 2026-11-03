@@ -1147,3 +1147,19 @@ curvature plane is the pair of extended directions. A common
 transverse dilation changes scalar word weights and preserves
 the closed-order Haar–Berezin kernels and support. The existing
 transverse exchange preserves n₂ and cannot supply its moment.
+
+Independent review of the metric conversion at `cef5bf63d`
+reproduced the amplitude factor 1/8, the affine path correction,
+and the reduction to the extended-plane count. A support census
+using the canonical sector classifier found 913 of 6,451 words
+with nonzero weight for that count. Of these, 832 have count two,
+80 have count four, and one has count eight.
+
+The all-local word has count eight. Every diagonal-mixed and wire
+word has count two. Their joint contribution to the raw count
+numerator is therefore
+`8 × 104978 + 2 × (−40213/16 + 345625/1769472)`.
+The remaining contribution is entirely private curvature. The
+private paired and repeated sectors contain words of counts zero,
+two and four, so their total normalizations cannot substitute for
+the weighted sum. Their exact closed-order replay is assigned.
