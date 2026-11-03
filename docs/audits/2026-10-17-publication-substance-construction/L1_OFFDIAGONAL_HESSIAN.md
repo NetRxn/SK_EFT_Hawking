@@ -274,3 +274,25 @@ exact symbolic Haar moments. The 64 distinct `(2,6)` multisets
 contribute `3/8` each, including factorial weights, for subtotal
 `24`. Independent review checked all 64 incidences and normalization
 factors. This sector is separate from the 874 smaller-component words.
+
+## Equal-time plus benchmark
+
+The 185 same-site support words separate by action degree on the two
+local transverse source links. The populations for degrees `(0,0)`,
+`(0,2)`, `(2,0)`, `(0,4)`, `(4,0)` and `(2,2)` are 1, 20, 20,
+26, 26 and 92. The sole `(0,0)` word squares the time-space
+curvature action at each of the other three sites. The local source
+integral is 21. Each action pair gives 24 times the two chiral
+curvature weights, with a factor `1/2!` from the exponential.
+Every nonempty adjoint face selection is a proper subset of the
+four-face tiling and has a singly exposed link. Its Haar average
+vanishes. The remaining trivial curvature weight is `(3/2)^3`.
+The saturated site blocks commute, giving contribution
+`21 × (24/2)^3 × (3/2)^3 = 122472` to the raw equal-time numerator.
+This evaluates one word. The remaining contractions and physical
+contact subtraction are open.
+
+The [benchmark script](l1_equal_time_local_benchmark.py) checks the
+incidence census and all seven exposed-edge cases. Independent review
+reproduced the source moment, local action pairing, and positive
+site-block join sign.
