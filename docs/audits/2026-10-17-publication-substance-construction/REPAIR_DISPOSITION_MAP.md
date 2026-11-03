@@ -173,12 +173,22 @@ The [linear composite-metric source](L1_RETARDED_SPECTRAL_INTERFACE.md#linear-co
 has independently verified nearest-time and nearest-space zeros.
 The closed same-site replay gives a nonzero equal-time coefficient.
 Independent verification of the same-site transfer at
-`04e107a2c` rules out a faithful positive thermal realization of this
-finite linear source, regardless of the ongoing diagonal replay.
-The next constructive test is a matched metric operator with a
-derived physical source and regulator, checked on its retained
-observable span. The finite result supplies an exclusion control
-for that match.
+`04e107a2c` rules out faithful positive thermal realization of this
+finite linear source. The independent [diagonal replay](L1_CLOSED_COMPOSITE_DIAGONAL_REPLAY.md),
+recorded at `56d773bcb`, also directly gives a negative uniform
+half-period eigenvalue. Together with the independently reviewed
+coupling bound, this sign persists for |g₁/g₂²| ≤ 2⁻⁸⁰⁰ on the
+specified four-site regulator.
+
+The next constructive milestone is a matched metric operator
+with a derived physical source and regulator, tested on the
+retained observable span. The pure-g₂ cross term between the
+composite and dressed sources vanishes by Pin. The assigned
+[leading mixed-coupling contraction](l1_mixed_g1_support.py)
+has 96 nonzero tagged support terms before Haar–Berezin
+evaluation. Its amplitude tests the two finite sources' overlap.
+Physical normalization and the B3 susceptibility window remain
+separate acceptance requirements.
 
 Original B3/L1-02 and Phase6a/5y/6e remain full-strength BUILD. These are distinct from the shared D1/E1/E2 quadratic law.
 
