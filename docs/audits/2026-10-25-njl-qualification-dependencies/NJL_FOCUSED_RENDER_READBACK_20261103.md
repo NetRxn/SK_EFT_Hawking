@@ -107,3 +107,14 @@ Both checks remain red. These comparisons isolate inherited corpus
 debt for the existing table generation and numerical provenance
 workflows. The other readiness and review failure groups still
 require their own source-level comparisons.
+
+The review checks also reproduced the same failing details. The
+candidate scanned 275 verification lines versus 272 on the baseline,
+with the same 56 malformed lines reported. The severity and lane
+failure details matched, and both scans reported zero unresolved
+blocked-by links. To compare beyond the backing-link display limit,
+the replay used the existing graph index, link iterator and resolver
+and compared sorted unresolved tuples of paper, claim ID, link kind
+and target. All 111 tuples matched the baseline with multiplicity.
+This is inherited review-corpus debt. The gate remains red against
+ceiling 109, and the bundle-readiness failure group remains open.
