@@ -1,6 +1,22 @@
 # Publication scientific repair and accepted ownership
 
-Created 17 October 2026; B5/E1 source checkpoint 18 October 2026. **Original scientific objectives retained; affected BUILD obligations OPEN.** This is a reconciliation of the existing findings, owning roadmaps and accepted assignments, not a second task queue. The publication remediation plan §0–1 and PD-5 govern. Accurate source/algebra corrections remain; they do not discharge missing scientific construction. No scientific deferral or reduced scope is approved here.
+Created 17 October 2026; B5/E1 source checkpoint 18 October 2026. **Original scientific objectives retained; affected BUILD obligations OPEN.** This is a reconciliation of the existing findings, owning roadmaps and accepted assignments, with the agreed portfolio priority order below. The publication remediation plan §0–1 and PD-5 govern. Accurate source/algebra corrections remain; they do not discharge missing scientific construction. No scientific deferral or reduced scope is approved here.
+
+## Remediation priority and resume point
+
+Agreed 3 November 2026. **Lead bundle: L1. Next delivery milestone: an independently verified L1 candidate through the canonical gates and ready for final human review.** This queue sets remediation order. Submission order remains an operator decision under the [publication strategy](../../PAPER_STRATEGY.md#3-sequencing--order-of-submission-and-dependencies).
+
+1. **L1** — Swarm B3 susceptibility normalization and window, microscopic dynamics and matter coupling, and physical transport/frequency matching with units and error bounds. Start from the recorded regulated-scalar construction. Run claim, figure and manuscript work alongside the builds, then reevaluate the affected stages on the integrated candidate.
+2. **L3** — Reconcile Paper 27's historical acceptance with L3's current findings and exact proof backing. Polish L3 and record the accepted evidence D3 can consume. Start the reconciliation in parallel as capacity permits.
+3. **D3** — Integrate the accepted L3 content and close D3's own scientific and propagation findings.
+4. **L2 → D2** — Advance the letter and its deep companion in that order. Dispatch shared proof and review work once.
+5. **D1 → E1/E2** — Lead with the shared physics. Track one dispersive derivation across all three consumers, with separate device calibration, transmission and detection-band obligations.
+
+**Parallel integration checkpoint: NJL/ADW.** Resume the reviewed NJL root/bracket repair from its existing qualification record. Use the exact test differential to isolate remaining merge blockers and deliver the qualified checkpoint incrementally to main. Keep the separate ADW scalar-domain and microscopic correspondence findings open through their own acceptance process.
+
+Use the existing continuity notebooks and assignment records for exact candidates, finding IDs, owners, independent reviewers and next actions. Dispatch fresh cloud agents through Dot using the repository's agent roles where inputs can travel. Use controlled local capacity for Lean, local computations and untracked research as required. Before declaring Lean substrate absent, use the repository's search-before-prove guidance on the correct branch and dependency pin.
+
+Record agreed priority changes here. If L1 needs a longer research cycle, keep its construction active and record the decision to move L3 into the lead delivery position. Order the remaining bundles before this queue runs low, using the publication strategy and canonical readiness evidence. This entry records priorities and milestones. New dispatches and acceptance receipts belong in their existing records.
 
 ## Accountable author, independent review and integration
 
@@ -119,6 +135,11 @@ Original parent: Phase5 §1A and shared physical dispersion/temperature producer
 Derive physical dispersion and profile/state to flux-normalized in/out scattering/occupation, low-frequency scale and controlled remainder. Next extend the accepted source-qualified chiral KdV logistic-profile result to its physical reduction/greybody and finite-frequency error domain. [Accepted first profile calculation](SHARED_DISPERSIVE_PROFILE.md), independent review `ecb42b186111aa9b0cb69f30fad1fd792319d168fd89d9e131404dc0a3ef2a0b`, obtains an explicit exponentially small low-frequency correction for that declared model. It is neither a universal replacement nor device-level infeasibility. Fresh independent source/scattering review, numerical/native admission and actual consumer propagation are required. A proof after assuming T=T_H(1-cD²), or an O(D²) bound alone, does not supply a nonzero leading quadratic coefficient.
 
 ### L1: three distinct obligations
+
+[Conditional retarded transport construction](L1_RETARDED_TRANSPORT_MATCHING.md) separates linear attenuation from quadratic real dispersion for a specified pole and bounds the fixed-frequency group slowness. Independent adversarial review accepted the conditional result. Microscopic retarded tensor and observational propagation matching remain open.
+
+**Reduced B3 reference, 3 November 2026.** An independent direct Grassmann wedge [reference](l1_reduced_wedge_reference.py), rerun by the lead with the repository Python environment, reproduced the manually derived `F(1,0)=135/32` and `F(1,1)=27/2`. The reduced Haar reconstruction gives `999/16` and contribution `D_B=444`. Chirality swap, chiral sign, zero source, odd orientation, longitudinal rescaling, coupling removal, and the off-probe quartic identity passed. From the repository root run `.venv/bin/python docs/audits/2026-10-17-publication-substance-construction/l1_reduced_wedge_reference.py`. Direct checks of the original all-link contractions and physical tensor, volume, and RPA coupling matching remain open.
+
 
 Original B3/L1-02 and Phase6a/5y/6e remain full-strength BUILD. These are distinct from the shared D1/E1/E2 quadratic law.
 
