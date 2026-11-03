@@ -243,3 +243,21 @@ for these terms and `2023556969/259200` across the 696 covered
 multisets. Independent review reproduced the exact subtotal, verified
 the two-square multiplicities and common curvature fourth moment, and
 checked the separate private and shared transport normalization factors.
+
+## Complete two- and four-factor link components
+
+The component evaluator adds 178 multisets with a four-distinct-label
+component. It pairs the four endpoint choices at a single center by
+rows and columns, or uses paired incoming and outgoing frames at
+adjacent centers. Their signed contribution is `37483/240`. This
+includes the 24 words that also contain a repeated-commutator component,
+with each word counted once in the complete sum.
+
+Independent review checked the component incidence, both integration
+rules, the antisymmetry signs, and the exact subtotal. The complete
+two- and four-factor link-component population is 874 multisets with
+subtotal `2064038609/259200`. The 5,577 words with larger link components
+include the previously evaluated all-local word. Evaluate the other
+5,576 using the original link variables. Factor each action into its
+curvature and two frame blocks to eliminate link moments before
+forming large exterior products.

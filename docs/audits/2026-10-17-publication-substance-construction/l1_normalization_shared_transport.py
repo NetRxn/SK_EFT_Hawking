@@ -37,6 +37,8 @@ def component_multisets():
 
 
 def supported(component):
+    if len(component) == len(set(component)) == 4:
+        return True
     if mixed_links(component) or same_links(component) or comm_links(component):
         return True
     counts = Counter(component)
@@ -257,6 +259,80 @@ def comm_component(labels):
     p,q=comm_base(shared)
     return translate(p,lambda z:x ^ (((z&1)<<1)|((z&2)>>1)) if v==b else x^z),q
 
+def canonical_2x2(a,b,c,d):
+    return tuple(sorted((tuple(sorted((a,b))),tuple(sorted((c,d))))))
+
+@cache
+def distinct_center_base():
+    K,L1=pair(0,0),pair(0,1)
+    weights=Counter()
+    # 2x2 endpoint grid: first transport pairs by row, second by column.
+    for labs in product((p for p in L if L[p]),repeat=4):
+        w=curv_moment(tuple(sorted(labs)))
+        if not w:continue
+        a,b=zip(*labs)
+        weights[canonical_2x2(*a),canonical_2x2(b[0],b[2],b[1],b[3])]+=w
+    @cache
+    def merge(Kaxis,tag):
+        M=K if Kaxis==0 else L1
+        a,b=tag
+        return wedge(M[a[0]][a[1]],M[b[0]][b[1]])
+    out=add(*(scale({m:v for m,v in wedge(merge(0,a),merge(1,b)).items() if m&255==255},w)
+              for (a,b),w in weights.items() if w))
+    return out,2025*(8*4**2)**4
+
+@cache
+def cross_pair(x,axis):
+    y=x^(1<<axis)
+    K=[[{} for _ in range(4)] for _ in range(4)]
+    for j,s in product(range(4),(-1,1)):
+        l=[int(k==j) for k in range(4)]
+        r=[s*z for z in l]
+        U=diag(quat(l),quat(r));Ud=diag(quat(adj(l)),quat(adj(r)))
+        T=[add(bilinear(g*Ud,x,y),scale(bilinear(U*g,y,x),-1)) for g in gamma]
+        S=[add(bilinear(Ud*g,x,y),scale(bilinear(g*U,y,x),-1)) for g in gamma]
+        for a,b in product(range(4),repeat=2):
+            K[a][b]=add(K[a][b],wedge(T[a],S[b]))
+    return K
+
+@cache
+def distinct_pair_base():
+    K,L1=cross_pair(0,0),cross_pair(1,0)
+    M,N=pair(0,1),pair(1,1)
+    out={}
+    @cache
+    def shared(a,c,g,e):
+        return wedge(K[a][c],L1[g][e])
+    @cache
+    def private(b,f,d,h):
+        return wedge(M[b][f],N[d][h])
+    for a,b,c,d in product(range(4),repeat=4):
+        if a==b or c==d:continue
+        for (e,f,sg),(g,h,sh) in product(((a,b,1),(b,a,-1)),((c,d,1),(d,c,-1))):
+            out=add(out,scale(wedge(shared(a,c,g,e),private(b,f,d,h)),sg*sh))
+    # Independent curvature covariances (16/9)^2; all four T links have
+    # second-moment 8-node normalization and eight factors of 1/4.
+    return out,81*1048576
+
+@cache
+def distinct_component(labels):
+    x=labels[0][0]
+    sites=set(t[0] for t in labels)
+    assert all(t[1:3]==(2,3) for t in labels)
+    if len(sites)==1:
+        assert {(t[3],t[4]) for t in labels}==set(product((x,x^1),(x,x^2)))
+        p,q=distinct_center_base()
+        return translate(p,lambda z:z^x),q
+    y,=sites-{x}
+    assert x^y in (1,2)
+    axis=0 if x^y==1 else 1
+    for z in sites:
+        ends=[t[3:] for t in labels if t[0]==z]
+        assert len(ends)==2 and {e[axis] for e in ends}=={x,y}
+        assert len({e[1-axis] for e in ends})==1
+    p,q=distinct_pair_base()
+    return translate(p,lambda z:x ^ (((z&1)<<1)|((z&2)>>1)) if axis else x^z),q
+
 @cache
 def component(comp):
     labels=tuple(TERMS[i][2] for i in sorted(set(comp)))
@@ -264,6 +340,8 @@ def component(comp):
     if len(labels)==1:
         p,q=quartic_component()
         return translate(p,lambda x:x^labels[0][0]),q
+    if len(labels) == 4:
+        return distinct_component(labels)
     if comm_links(comp):
         return comm_component(labels)
     if mixed_links(comp):
@@ -301,7 +379,8 @@ def main():
         ps,qs=zip(*map(component,comps))
         t=F(top_product(ps),w*prod(qs))
         shape=tuple(sorted(map(len,comps)))
-        family = ("shared commutator" if any(map(comm_links, comps))
+        family = ("four distinct labels" if any(len(set(c)) == 4 for c in comps)
+                  else "shared commutator" if any(map(comm_links, comps))
                   else "same singleton" if any(map(same_links, comps))
                   else "mixed singleton" if any(map(mixed_links, comps))
                   else "one shared link" if any(len(set(c)) == 2 for c in comps)
