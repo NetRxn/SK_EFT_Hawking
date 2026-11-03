@@ -6661,7 +6661,7 @@ CITATION_REGISTRY = {
         'notes': 'Exact synthesis of single-qubit Clifford+T unitaries over Z[1/sqrt2, i]; algorithmic-synthesis route (future work, out of D8 verified-existence scope). arXiv ID verified 2026-05-31.',
     },
 
-    'Hietala2020VOQC': {
+    'Hietala2021VOQC': {
         'authors': 'Hietala, K. and Rand, R. and Hung, S.-H. and Wu, X. and Hicks, M.',
         'title': 'A verified optimizer for quantum circuits',
         'journal': 'Proc. ACM Program. Lang. (POPL)',
