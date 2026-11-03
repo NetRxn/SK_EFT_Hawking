@@ -1343,6 +1343,9 @@ and q₀ negative, a sufficient sign interval is
 
 Omit a bound whose sum is zero. The triangle inequality keeps
 P within half its zero-coupling value and the real part of Q
-below q₀/2. This identifies which mixed-coupling coefficients
+below q₀/2. Even for complex coefficients, Re(Q conjugate(P))
+is strictly negative: the real product is below −|q₀|p₀/4
+and the imaginary product has magnitude below |q₀|p₀/4.
+This identifies which mixed-coupling coefficients
 would turn continuity into a certified interval. The current
 replay determines the constant terms only.
