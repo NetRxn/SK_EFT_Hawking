@@ -80,3 +80,19 @@ c++ -std=c++17 -O3 "$audit/l1_residual_batched.cpp" -o l1_residual_batched
 python3 "$audit/l1_residual_sparse_sources.py"
 python3 "$audit/l1_residual_source_control.py"
 ```
+
+## Degree-eight normalization support
+
+Run `python3 l1_normalization_support.py` from this directory to enumerate
+the denominator support. Each sorted eight-tuple has a unique sorted
+four-plus-four split. Matching equal parity and complementary site degrees
+leaves 6,451 multisets. Their multinomial weights reconstruct the separate
+ordered count of 73,295,320. The exponential expansion weights each
+multiset by the reciprocal product of its multiplicity factorials.
+
+Translations partition the support into 1,758 orbits. The largest
+polynomial degree on any one link is four in 1,267 orbits, six in 425,
+and eight in 66. An evaluator for quadratic and quartic Haar moments
+therefore covers the link degree requirements of the first group.
+Degree six and eight moments are required for the rest. These counts
+specify the integration domain and do not evaluate the signed sum.
