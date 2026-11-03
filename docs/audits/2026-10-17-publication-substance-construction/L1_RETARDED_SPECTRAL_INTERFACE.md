@@ -1256,3 +1256,26 @@ second condition without depending on the diagonal replay.
 This criterion applies to the composite insertion in the
 specified finite model and leaves a dressed or mixed physical
 operator as a separate construction.
+
+The same-site calculation gives a separate route to deciding the
+finite transfer test. The 145 source-decoupled words transfer by
+private single-occurrence Haar projection. Any remaining squared
+local commutator is independent of the source and frames and has
+the same Haar law in both orders. For the 40 coupled words the
+joint private projection changes the quaternion order from
+(Ad_U Y) X† to X† (Ad_(U†) Y). An exact local tensor comparison
+matched all six retained source-coordinate classes and every
+gamma/Berezin entry, with 104 nonzeros per scalar case and 96
+per vector chirality. This gives the coupled subtotal −23063/32
+and full same-site coefficient s = 10179913/32. The direct
+closed coupled replay and independent review of this transfer
+argument are pending.
+
+If confirmed, the same-site coefficient decides the faithful
+finite thermal test regardless of the diagonal result. With n
+zero, half-period positivity forces d to vanish. Faithfulness
+then requires the centered operator to vanish and consequently
+s to vanish, contradicting the same-site coefficient. The
+result would apply to the specified linear composite source.
+The dressed source, physical matching and continuum limit
+remain separate constructions.
