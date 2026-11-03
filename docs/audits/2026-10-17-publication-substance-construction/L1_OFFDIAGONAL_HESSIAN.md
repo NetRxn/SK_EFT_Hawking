@@ -323,3 +323,16 @@ population from endpoint choices and checked overlap, Haar scaling,
 and site elimination signs. The deduplicated subtotal including
 the all-local word is `29468413009/259200` across 1,699 words.
 The other 4,752 signed contributions remain open.
+
+## Private-curvature elimination
+
+The [incidence reduction](l1_normalization_private_curvature.py) removes
+a squared curvature if an otherwise unused link occurs once in its
+plaquette, making the plaquette conditionally Haar. A commutator square
+can instead be integrated when both its links are private. The
+[exact path contraction](l1_normalization_private_paths.py) retains
+the remaining transport moments and signed Grassmann joins.
+Independent review reversed the curvature elimination order, recovered
+the same 1,408 words, and reran all exact contractions. The 288 overlaps
+reproduce the earlier subtotals. The 1,120 new words contribute
+`8071653/32`. The signed full denominator remains open.
