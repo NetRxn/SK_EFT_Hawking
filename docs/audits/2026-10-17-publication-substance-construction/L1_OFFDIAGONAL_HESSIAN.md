@@ -140,3 +140,22 @@ unit Berezin determinant. The discrepancy is consistent with the
 opposite link orientation used by the extended frame blocks. Continue
 the signed contraction in the original link variables. This control
 does not test invariance after summing the full action.
+
+Independent review rebuilt the control and reproduced both residues.
+It verified the word is in the normalization support with weight one,
+the start-left/end-right Wilson link law, and the unit determinant of
+the spin rotation. The conclusion concerns pointwise termwise covariance.
+
+## Link-disjoint transport squares
+
+The [exact sector evaluator](l1_normalization_disjoint_sector.py)
+identifies 16 multisets with a squared transverse curvature factor at
+each site and bijective assignments of both extended transport link
+anchors. The four factors share Grassmann sites but have disjoint Haar
+variables. Switching an anchor replaces the raw frame by its negative
+with the link inverted, so the squared factor has the same integral.
+Contracting the four degree-eight exterior tensors gives integer top
+coefficient 27,252,495,206,055,936 in units of `9216^-4`. Each multiset
+contributes `17/72` after its four `2!` factors. The sector adds
+`34/9` to the pure-g₂ degree-eight normalization. It is distinct from
+the all-local sector above. The remaining signed sectors are open.
