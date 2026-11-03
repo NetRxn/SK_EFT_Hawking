@@ -1232,3 +1232,17 @@ Of 128 support words, 30 vanish by a private-link center parity
 in either ordering. The remaining 98 require closed-order tensor
 checks or exact joins. The modular control does not determine the
 sign of d or the status of the transfer test.
+
+The nearest-time support replay returned 128 words, with
+source-link incidence (2,0) and (0,2) for 64 words each.
+Reordering the plaquette factors changes neither the site degree
+nor the link-incidence multiset. Thus each word still has a
+source site whose two transverse links are absent from every
+action factor. Their identical one-link conditional Haar
+integrals cancel the plus insertion coefficientwise, giving
+n = 0. The closed-order transfer argument now hinges on d.
+Any nonzero real d gives one negative eigenvalue in the
+half-period spatial Fourier block. If d vanishes, both
+half-period eigenvalues vanish and faithful positive thermal
+transfer additionally requires zero equal-time weight.
+Independent review of the nearest-time extension is assigned.
