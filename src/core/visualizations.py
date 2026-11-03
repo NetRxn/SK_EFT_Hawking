@@ -5394,7 +5394,7 @@ def fig_tetrad_gap_curve() -> go.Figure:
 
     # Critical coupling marker
     fig.add_vline(x=1.0, line=dict(color=COLORS['dissipative'], width=1.5, dash='dash'))
-    fig.add_annotation(x=1.0, y=0.85, text="G = G<sub>c</sub>",
+    fig.add_annotation(x=1.08, y=0.85, xanchor="left", text="G = G<sub>c</sub>",
         showarrow=False, font=dict(size=13, family=FONT['family'], color=COLORS['dissipative']))
 
     # Phase labels
@@ -5408,9 +5408,9 @@ def fig_tetrad_gap_curve() -> go.Figure:
                    font=TITLE_FONT),
         xaxis=dict(title="G / G<sub>c</sub>", range=[0, 4]),
         yaxis=dict(title="Δ / Λ"),
-        legend=dict(x=0.02, y=0.98))
+        legend=dict(x=0.02, y=0.98), margin=dict(b=110))
 
-    fig.add_annotation(x=0.5, y=-0.13, xref='paper', yref='paper',
+    fig.add_annotation(x=0.5, y=-0.25, xref='paper', yref='paper',
         text="Separate scalar fixed-point model; numerical continuation is not physical UV validation or an ADW derivation.",
         showarrow=False, font=dict(size=10, family=FONT['family'], color='gray'))
     return fig
