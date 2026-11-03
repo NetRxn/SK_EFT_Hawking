@@ -1,5 +1,7 @@
 """Qualitative D9 manuscript tables."""
 
+from fractions import Fraction
+
 from scripts.paper_tables import Col
 
 
@@ -65,3 +67,43 @@ TABLES = {
     ),
 }
 TABLES['exact']['rules_after'] = (8,)
+
+
+# Walter et al., Phys. Rev. Applied 7, 054020 (2017). Times are in ns.
+_READOUT_LIFETIME_NS = 7600
+_READOUT_FIDELITY = {48: Fraction(9825, 10000), 88: Fraction(992, 1000)}
+
+
+def _assignment_error(window_ns):
+    return (1 - _READOUT_FIDELITY[window_ns]) / 2
+
+
+def _relaxation_floor(window_ns):
+    # Lower enclosure r/(1+r), with the uniform-prior factor of one half.
+    return Fraction(window_ns, 2 * (_READOUT_LIFETIME_NS + window_ns))
+
+
+def _milliscale(value, digits):
+    return rf"{float(value * 1000):.{digits}f}\times10^{{-3}}"
+
+
+SCALARS = {
+    "walter_assignment_48ns": {
+        "description": "Uniform-prior assignment error from Walter et al. at 48 ns",
+        "value": lambda: _milliscale(_assignment_error(48), 2),
+    },
+    "walter_assignment_88ns": {
+        "description": "Uniform-prior assignment error from Walter et al. at 88 ns",
+        "value": lambda: _milliscale(_assignment_error(88), 1),
+    },
+    "walter_relaxation_floor_48ns": {
+        "description": "Conditional 48 ns relaxation floor, rounded to nearest",
+        "value": lambda: _milliscale(_relaxation_floor(48), 2),
+    },
+    "walter_relaxation_floor_88ns": {
+        "description": "Conditional 88 ns relaxation floor, rounded down",
+        "value": lambda: _milliscale(
+            Fraction(_relaxation_floor(88) * 100_000 // 1, 100_000), 2
+        ),
+    },
+}
