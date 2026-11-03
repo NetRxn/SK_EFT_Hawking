@@ -29,12 +29,13 @@ def cases():
     return ans
 
 @cache
-def p_coeff(alpha,a,b):
+def p_coeff(alpha,a,b,closed_order=False):
     ch,v=divmod(alpha,3)
     X,Y=unit(a%4),unit(b%4)
     out=Counter()
     for i,j in product(range(4),repeat=2):
-        q=mul(mul(unit(i),Y),mul(adj(unit(j)),adj(X)))
+        q = (mul(mul(adj(X), adj(unit(i))), mul(Y, unit(j)))
+             if closed_order else mul(mul(unit(i),Y),mul(adj(unit(j)),adj(X))))
         out[tuple(sorted((4*ch+i,4*ch+j)))]+=q[v+1]
     return tuple((z,w) for z,w in out.items() if w)
 
@@ -58,10 +59,10 @@ def projection(word):
     return tuple(out.items())
 
 @cache
-def raw_edge_projection(a,b,x,y):
+def raw_edge_projection(a,b,x,y,closed_order=False):
     weights=Counter()
-    for i,p in p_coeff(a,x[0],y[0]):
-        for j,q in p_coeff(b,x[1],y[1]):
+    for i,p in p_coeff(a,x[0],y[0],closed_order):
+        for j,q in p_coeff(b,x[1],y[1],closed_order):
             for ij,w in projection(tuple(sorted(i+j))):
                 weights[ij]+=p*q*w
     return tuple((k,z) for k,z in weights.items() if z)
@@ -72,14 +73,14 @@ def tt(i,j,p,q):
     return poly_int(wedge(t_basis(i)[1][p],t_basis(j)[1][q]))
 
 @cache
-def edge():
+def edge(closed_order=False):
     out={}
     pairs=tuple(combinations_with_replacement(range(4),2))
     for a,b in combinations_with_replacement(range(6),2):
         xch,ych=a//3,b//3
         coord=tuple(product(range(4*xch,4*xch+4),range(4*ych,4*ych+4)))
         for x,y in product(coord,repeat=2):
-            terms=raw_edge_projection(a,b,x,y)
+            terms=raw_edge_projection(a,b,x,y,closed_order)
             if not terms:continue
             X,Y=tuple(sorted(x)),tuple(sorted(y))
             for p,q in pairs:
@@ -93,8 +94,8 @@ def edge():
 def parity(w):
     return (1<<w[0])^(1<<w[1])
 
-def assemble():
-    E=edge()
+def assemble(closed_order=False):
+    E=edge(closed_order)
     a_labels=sorted({A for A,B in E})
     b_labels=sorted({B for A,B in E})
     ids=[{v:i for i,v in enumerate(rows)} for rows in (a_labels,b_labels)]
@@ -124,9 +125,9 @@ def assemble():
           'vertex nnz',tuple(x.nnz for x in B),flush=True)
     return A,B
 
-if __name__=='__main__':
+def run(closed_order=False):
     print('checkerboard repeated mixed census',cases(),flush=True)
-    E,V=assemble()
+    E,V=assemble(closed_order)
     T=multiply(E,V)
     z=trace4(T)
     # E joint/split moment denominator 192, two raw T factors /16.
@@ -136,3 +137,12 @@ if __name__=='__main__':
     den=(192*16*128*48)**4*16
     out=tuple(F(4*x,den) for x in z)
     print('raw exact Gaussian trace',z,'64-case checkerboard sector',out,flush=True)
+
+
+if __name__ == "__main__":
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument("--closed", action="store_true")
+    args = parser.parse_args()
+    run(args.closed)
