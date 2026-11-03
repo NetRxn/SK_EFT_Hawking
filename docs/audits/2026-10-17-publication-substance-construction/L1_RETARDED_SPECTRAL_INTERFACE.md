@@ -1579,3 +1579,30 @@ that calibration, fixing c requires a joint observable or a
 microscopic coupling that ties the calibrated probe strain to
 the same composite metric. A separately added scalar action
 has no dependence on c.
+
+For a constant strain and a periodic scalar lattice with both
+transverse axes extended, the Fourier inverse propagator is
+
+    K_h(p) = m² + p̂₀² + p̂₁²
+             + exp(−h/√2) p̂₂² + exp(h/√2) p̂₃²,
+    p̂_i² = 4 sin²(p_i a/2)/a².
+
+This follows by squaring the forward-difference multiplier
+(exp(i p_i a)−1)/a. In a transverse square with at least two
+sites on each axis, compare modes with equal nonzero transverse
+momentum magnitude along axis 2 or axis 3 and identical other
+components. The inverse-propagator splitting is exactly
+−2 p̂² sinh(h/√2). Its slope at zero is −√2 p̂² and its
+second derivative at zero vanishes. The two individual
+quadratic vertices are equal, each p̂²/2. These give separate
+linear and quadratic calibration checks in the declared scalar
+action. The splitting calibrates the strain felt by the probe.
+It leaves the coefficient c in the gravitational generating
+functional free unless the microscopic joint action specifies
+how the scalar feels the composite geometry.
+
+Independent review of the preceding internal gauge argument
+verified the first-vertex normalization, the pure-g₂ sign
+change and the nonuniform site gauge symmetry. Its scope is
+the internal Ward identity. Background metric matching and
+thermal positivity impose additional conditions.
