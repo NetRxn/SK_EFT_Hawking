@@ -296,3 +296,11 @@ The [benchmark script](l1_equal_time_local_benchmark.py) checks the
 incidence census and all seven exposed-edge cases. Independent review
 reproduced the source moment, local action pairing, and positive
 site-block join sign.
+
+The [mixed-plane chain evaluator](l1_normalization_six_mixed_chain.py)
+adds 256 disjoint `(2,6)` words. It joins a pair of mixed-plane squares
+to a transverse curvature square through a shared extended link. The
+exact checkpoint run gives 163 from 128 same-singleton words and 162
+from 128 distinct-singleton words. Independent source review verified
+all incidences, shared Haar moments, and factorial weights. The signed
+increment is 325.
