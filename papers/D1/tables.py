@@ -4,7 +4,11 @@ The non-BEC rows are model evaluations at the registered inputs. The adopted
 dispersion law and Dean transport calibration have separate open obligations.
 """
 
-from scripts.gen_d1_hierarchy_table import bec_hierarchy_cells
+from scripts.gen_d1_hierarchy_table import (
+    bec_hierarchy_cells,
+    compute_bec_hierarchy,
+    fmt_sci_latex,
+)
 from scripts.paper_tables import Col
 from src.core.constants import FALQUE_STEEP_HORIZON_KAPPA, POLARITON_PLATFORMS
 from src.core.formulas import dispersive_correction, hawking_temperature
@@ -114,4 +118,25 @@ TABLES = {
             ('\\texttt{polariton\\_tier1\\_fails\\_tmds}', '\\ref{sec:pol-scope}', 'demarcation'),
         ],
     ),
+}
+
+
+def _spectral_floor(platform):
+    floor = compute_bec_hierarchy()[platform]["spectral_floor"]
+    return fmt_sci_latex(floor).removeprefix("$").removesuffix("$")
+
+
+SCALARS = {
+    "bec_floor_heidelberg": {
+        "description": "D1 projected Heidelberg BEC benchmark spectral floor",
+        "value": lambda: _spectral_floor("Heidelberg"),
+    },
+    "bec_floor_steinhauer": {
+        "description": "D1 Steinhauer BEC benchmark spectral floor",
+        "value": lambda: _spectral_floor("Steinhauer"),
+    },
+    "bec_floor_trento": {
+        "description": "D1 Trento spin-sonic BEC benchmark spectral floor",
+        "value": lambda: _spectral_floor("Trento"),
+    },
 }
