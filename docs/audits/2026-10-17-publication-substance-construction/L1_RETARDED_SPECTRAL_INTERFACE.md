@@ -1385,3 +1385,21 @@ and the tagged mixed-plane weight before symmetry reduction.
 A nonzero result would measure overlap of these finite sources.
 The physical metric matching must still derive which operator
 combination is sourced and how the regulator responds.
+
+For a pure-g₂ comparison, take L to be the raw composite plus
+sum over the two spatial sites divided by √2, and X the derivative
+with respect to the unrescaled uniform coframe parameter j.
+The diagonal half-period Gram entries are d/(g₂²Z₈) and
+(796579367/442368)/Z₈, respectively. Pin makes the off-diagonal
+entry zero in both directions. A proposed source αL+βX therefore
+passes the nonnegative scalar half-period test precisely when
+
+    α² ≤ (796579367/505872) g₂² β².
+
+This is a constraint in the stated lattice source coordinates.
+Rescaling the sources rescales the coefficients. The full
+two-source span still contains a negative direction. A physical
+construction retaining a single combination must derive its
+coefficients and the restriction on the retained observable
+span. The numeric threshold inherits the diagonal replay's
+pending independent verification.
