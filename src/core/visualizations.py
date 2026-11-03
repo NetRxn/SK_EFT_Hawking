@@ -14438,7 +14438,7 @@ def fig_d8_alphabet_dimension_map() -> go.Figure:
         ("Clifford+T",                2, blue,  "√2·sin(π/8)"),
         ("Read–Rezayi SU(2)₅",        2, blue,  "Chebyshev T₇"),
         ("Read–Rezayi SU(2)₇",        2, blue,  "triple-angle"),
-        ("Trapped-ion (MS)",          4, blue,  "Brylinski–Brylinski"),
+        ("Trapped-ion (MS)",          4, blue,  "π/2 entangler on even grid"),
         ("Clifford+CCZ (with T)",      8, blue,  "H, T, CNOT density"),
         ("Clifford+CCZ (T-free)",    8, amber, "CCZ essential"),
     ]

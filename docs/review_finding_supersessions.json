@@ -10454,6 +10454,96 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.1",
+      "status": "fixed",
+      "evidence": "D4 retains the Fibonacci-specific contribution; D8 owns the generic route. Removed the contradictory charter clause. Independent review on df581450 confirmed zero apex overlap and ran the exact Verify.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "df581450",
+      "verified_by": {
+        "command": "python3 -c \"t=open('docs/PAPER_STRATEGY.md').read(); l=[x for x in t.split(chr(10)) if 'D4** retains the Fibonacci' in x][0]; import sys; sys.exit(0 if ('re-pointed to D8' not in l) else 1)\"",
+        "declared": "python3 -c \"t=open('docs/PAPER_STRATEGY.md').read(); l=[x for x in t.split(chr(10)) if 'D4** retains the Fibonacci' in x][0]; import sys; sys.exit(0 if ('re-pointed to D8' not in l) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.2",
+      "status": "fixed",
+      "evidence": "Registered both exact Read–Rezayi compiler declarations, corrected the manuscript proof to the trace-integrality argument, and verified both indexed theorem types and the stated tolerance regime. Exact Verify and independent readback passed.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "df581450",
+      "verified_by": {
+        "command": "python3 -c \"import json; m=json.load(open('papers/D8/bundle_metadata.json')); ns=[t['name'] for t in m['apex_theorems']]; import sys; sys.exit(0 if any('rr5' in n for n in ns) and any('rr7' in n for n in ns) else 1)\"",
+        "declared": "python3 -c \"import json; m=json.load(open('papers/D8/bundle_metadata.json')); ns=[t['name'] for t in m['apex_theorems']]; import sys; sys.exit(0 if any('rr5' in n for n in ns) and any('rr7' in n for n in ns) else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.3",
+      "status": "fixed",
+      "evidence": "D8 records the Kronecker bound as consumed from D9 certification; D9 prose now states that ownership. Both manuscripts compiled and the independent exact Verify passed. Review SHA256 90d3a8f062b361c0206b95845931ebd6e9f6e4420468e0cab5625614654fce07.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "df581450",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if 'l2_opNorm_kronecker_one_le' in t['name']][0]; sys.exit(1 if 'upstream' in e['claims'] else 0)\"",
+        "declared": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if 'l2_opNorm_kronecker_one_le' in t['name']][0]; sys.exit(1 if 'upstream' in e['claims'] else 0)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.5",
+      "status": "fixed",
+      "evidence": "Three version-pinned primary PDFs verified against their digests, Appendix C and synthesis attributions reconciled, and nine summary labels corrected. Exact declared existence check passed from the sibling workspace checkout. Independent review SHA256 e406ea059961329e479317d8938161a0c170dd9fbf59a06a59d6bd9ab9a54d52. Source links and acquisition evidence are in D8_PRIMARY_SOURCE_INTAKE_20261103.md; the local cache contains the full texts.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "0124198d",
+      "verified_by": {
+        "command": "test -f ../Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+        "declared": "test -f ../Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.9",
+      "status": "fixed",
+      "evidence": "The exact Lean declaration is an rfl unfolding at the prescribed depth and the metadata now discloses that. The two related claims match their theorem scope. Exact Verify and both production apex checks passed. Independent readback SHA256 85cb6a72246e1ea732bf80c1969b1f37dc0e75a47ab4b11b20a21d9922ec4eff.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "5772a02d",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if t['name'].endswith('cliffordTCompile_eq_recursion')][0]; sys.exit(0 if 'definitional' in e['claims'].lower() else 1)\"",
+        "declared": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if t['name'].endswith('cliffordTCompile_eq_recursion')][0]; sys.exit(0 if 'definitional' in e['claims'].lower() else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.6",
+      "status": "fixed",
+      "evidence": "Itemized all 18 active citation keys, verified them against the 20-entry bibliography, and updated the reviewer prompt to use the live roster. Preserved the historical verdict as dated evidence and separately named current gaps. Exact Verify passed. Independent readback SHA256 707a97f71b9f3b07ed9972bbfea5be732cf73684199e44451f0756d65a17a39f.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "57bfac5f",
+      "verified_by": {
+        "command": "grep -A 12 '^## D8' docs/audits/stage13_attribution_sweep_2026-06-10.md | grep -c '^|'",
+        "declared": "grep -A 12 '^## D8' docs/audits/stage13_attribution_sweep_2026-06-10.md | grep -c '^|'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }

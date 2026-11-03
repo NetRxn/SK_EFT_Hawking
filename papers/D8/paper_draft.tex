@@ -17,6 +17,7 @@
 %% All headline theorems kernel-pure {propext, Classical.choice, Quot.sound}; 0 project-local axioms.
 
 \newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\leanbreak}[1]{{\def\_{\char`\_\allowbreak}\texttt{#1}}}
 \newcommand{\su}[1]{\mathrm{SU}(#1)}
 \newcommand{\sud}{\mathfrak{su}(d)}
 \newcommand{\opn}[1]{\lVert #1 \rVert}
@@ -108,9 +109,9 @@ through the channel representation.
 The second question, circuit length, is Sec.~\ref{sec:length}. Three verified
 mechanisms reach it, and none dominates: the commutator recursion is
 unconditional at exponent $\approx 3.97$; the Ross--Selinger grid
-route~\cite{RossSelinger2016} reaches the optimal exponent $1$ but rests on a
-number-theoretic existence that is open, which we isolate as a single stated
-hypothesis rather than an atmosphere of caveats; and the
+route~\cite{RossSelinger2016} reaches exponent $1$ when the bounded
+finder succeeds. A stated residual-witness hypothesis suffices for
+success; and the
 Kliuchnikov--Maslov--Mosca ancilla route~\cite{KMM2013ancilla} reaches exponent
 $1$ unconditionally, at the price of two ancillas and a weaker form of
 contract. Between the first and second questions sits a third thing a compiler
@@ -489,45 +490,41 @@ because their number theory is genuinely unlike the Clifford$+T$ case and the
 interface absorbs it unchanged. We give both.
 
 \paragraph{Read--Rezayi at $k=5$.} The Read--Rezayi states at filling
-$\nu = k/(k+2)$ are the non-Abelian fractional quantum Hall family beyond
-Fibonacci~\cite{ReadRezayi1999}. At $k = 5$ the relevant braid generator has
-trace $2\cos(\pi/7)$, and the obstruction is that $\cos(\pi/7)$ satisfies a
-cubic rather than a quadratic. The route is the Chebyshev identity
+$\nu=k/(k+2)$ extend the non-Abelian fractional quantum Hall
+family~\cite{ReadRezayi1999}. The product $H_{\rm SU}T_{\rm RR5}$ has trace
+$\sqrt{2}\sin(\pi/14)$, whose square is $1-\cos(\pi/7)$.
+Finite order would make the trace, and hence $x=\cos(\pi/7)$, an algebraic
+integer. The factorization
 \[
-  T_7(x) + 1 \;=\; (x+1)\,\big(8x^3 - 4x^2 - 4x + 1\big)^2 ,
+  T_7(x)+1=(x+1)\big(8x^3-4x^2-4x+1\big)^2
 \]
-whose right-hand factor is the minimal polynomial of $2\cos(\pi/7)$ up to
-normalization. A finite-order element would force $2\cos(\pi/7)$ into a
-cyclotomic field of degree incompatible with that cubic, so the element has
-infinite order and the density witness follows.
+gives $2x^3-x^2-x=-1/4$ at this $x$. The left side would be integral,
+but a rational algebraic integer must be an integer. This proves
+infinite order (\lean{H\_SU\_mul\_T\_RR5\_infinite\_order}).
 
-\paragraph{Read--Rezayi at $k=7$.} At $k = 7$ the corresponding angle is
-$\pi/9$, and the obstruction is different in kind: it is not that the minimal
-polynomial has large degree but that the triple-angle identity
-$\cos(3\cdot \pi/9) = \cos(\pi/3) = 1/2$ pins $\cos(\pi/9)$ as a root of
-$4x^3 - 3x = 1/2$, which is irreducible over $\mathbb{Q}$. The same
-finite-order contradiction then applies.
+\paragraph{Read--Rezayi at $k=7$.} For $H_{\rm SU}T_{\rm RR7}$ the
+trace is $\sqrt{2}\sin(\pi/18)$, so finite order would again force
+$x=\cos(\pi/9)$ to be an algebraic integer. This time the triple-angle
+identity gives $4x^3-3x=1/2$, the rational noninteger contradiction
+(\lean{H\_SU\_mul\_T\_RR7\_infinite\_order}).
 
-Neither argument touches the recursion, the net, the
-Baker--Campbell--Hausdorff estimate or the Cartan step. Both produce a
-quantitative compilation theorem of the shape of Theorem~\ref{thm:cliffordt},
-unconditionally.
+The respective Pauli case analyses complete the density witnesses.
+Both alphabets then instantiate the same constructive compiler and
+polylogarithmic length bound for $0<\varepsilon\le\varepsilon_0$.
+The exact compilation declarations are listed in the proof index.
 
-\paragraph{Trapped-ion M\o lmer--S\o rensen at $\su 4$.} The two-qubit gate set
-realized on production trapped-ion hardware consists of single-qubit rotations
-together with the M\o lmer--S\o rensen entangling gate at a discrete grid of
-angles. Here the density witness is supplied not by a trace obstruction but by
-the Brylinski--Brylinski criterion~\cite{Brylinski2002}: a two-qubit gate $V$,
-together with all single-qubit gates, generates a dense subgroup of $\su 4$ if
-and only if $V$ is \emph{primitive}, meaning it maps some product state to an
-entangled one. The M\o lmer--S\o rensen gate at any angle that is not a
-multiple of $\pi$ is entangling by inspection of its action on
-$\lvert 00\rangle$, so the criterion applies directly and the alphabet-specific
-work reduces to exhibiting one such angle in the grid. The resulting
-compilation theorem holds for every even grid resolution $N > 0$ and is
-unconditional. This row is the strongest evidence that the interface is not
-tuned to number theory: the witness here is geometric, and it enters through
-the same predicate as the others.
+\paragraph{Trapped-ion M\o lmer--S\o rensen at $\su 4$.}
+The Brylinski--Brylinski universality criterion uses an
+\emph{imprimitive} two-qubit gate, one that takes some product state to
+an entangled state, together with all single-qubit gates
+\cite[Theorem~1.3]{Brylinski2002}. In the formal alphabet the
+M\o lmer--S\o rensen angles lie on a grid. For positive even resolution
+$N$, the grid includes $\pi/2$. Conjugation by that entangler, together
+with the local flows, supplies the flows along the spanning tensor-Pauli
+tangents (\lean{trappedIonSU4\_v4\_witness\_tracked\_holds}).
+The resulting density witness yields the specialized compilation theorem
+for that grid
+({\footnotesize\leanbreak{trappedIonSU4\_solovayKitaev\_headline\_unconditional}}).
 
 \paragraph{Clifford$+$CCZ at $\su 8$.} The three-qubit case admits two density
 mechanisms that are structurally different, and the contrast between them is
@@ -545,16 +542,15 @@ $T$, and what it costs.
 
 \subsection{Sufficient, with \texorpdfstring{$T$}{T}: the over-complete route}
 
-Take the alphabet $\{H, T, \mathrm{CNOT}, \mathrm{CCZ}\}$. Density follows from
-the $\{H, T, \mathrm{CNOT}\}$ part alone: single-qubit Clifford$+T$ is dense in
-each qubit's $\su 2$ by Theorem~\ref{thm:accpt}, and CNOT couples the factors,
-in the manner of the stabilizer analysis of Aaronson and
-Gottesman~\cite{AaronsonGottesman2004}. Feeding that witness through
-Theorem~\ref{thm:sud} gives an unconditional compilation theorem at $\su 8$.
-
-We flag the scope of that result rather than leaving it to be discovered. In
-this route CCZ is present in the alphabet and absent from the proof. The
-theorem says the alphabet is universal; it says nothing about CCZ.
+Take the alphabet $\{H, T, \mathrm{CNOT}, \mathrm{CCZ}\}$. The
+density witness uses the $\{H,T,\mathrm{CNOT}\}$ sub-alphabet.
+The single-qubit Clifford$+T$ flows, conjugated by CNOT and local
+Clifford gates, supply the spanning tensor-Pauli tangents and their
+one-parameter flows (\lean{cliffordCCZSU8\_v4\_witness\_tracked\_holds}).
+The specialized compilation theorem
+{\footnotesize\lean{cliffordCCZSU8\_solovayKitaev\_headline\_unconditional}}
+applies the generic bridge to that witness. This route leaves CCZ
+available in the alphabet but needs no CCZ generator for density.
 
 \subsection{Sufficient, without \texorpdfstring{$T$}{T}: the CCZ-seeded route}
 
@@ -572,28 +568,34 @@ no per-qubit infinite-order element to find, because every single-qubit element
 of this alphabet is Clifford and the single-qubit Clifford group is finite. The
 argument instead runs globally, in four steps.
 
-First, the seed. Consider $\mathrm{CCZ}\cdot(H\otimes H\otimes H)$. Its
-normalized trace is $1/\sqrt 2$, which is not an algebraic integer, so by the
-argument of Sec.~\ref{sec:substrate-cliffordt} the seed has infinite order.
+First, the seed. The ordinary trace of
+$\mathrm{CCZ}\cdot(H\otimes H\otimes H)$ is $1/\sqrt 2$
+(\lean{litSeed\_trace}). The special-unitary representative changes the
+trace by a root-of-unity factor. Its trace is still not an algebraic integer
+(\lean{seedSU8\_trace\_not\_isIntegral}), so the seed has infinite order.
 
 Second, from infinite order to a flow. Compactness of $\su 8$ turns the
 infinite-order seed into an accumulation point at the identity, and the Cartan
-step converts that into a one-parameter subgroup whose generator is a nonzero
-element $X$ of the Lie algebra $\mathfrak{su}(8)$.
+step produces a one-parameter subgroup with nonzero tangent
+$X\in\mathfrak{su}(8)$ (\lean{seedSU8\_first\_flow}).
 
-Third, spreading. Expand $X$ in the Pauli basis. Since $X$ is traceless and
-nonzero it has a nonzero coefficient on some non-identity Pauli operator
-$P$. The Clifford group acts on the $63$ non-identity Pauli operators of three
-qubits by conjugation, and that action is transitive. Conjugating the flow
-generated by $X$ by Clifford elements therefore transports the component along
-$P$ to every one of the $63$ Pauli directions.
+Third, isolate and spread a Pauli direction. A traceless nonzero $X$ has a
+nonzero coefficient on some non-identity Pauli direction. The real span of
+its Clifford conjugates is invariant under Pauli conjugation. A
+character-weighted sum of these conjugations isolates that single Pauli
+component (\lean{pauli\_twirl}). Clifford conjugation then carries the
+isolated line to every non-identity Pauli line, giving a span equal to
+$\mathfrak{su}(8)$ (\lean{cliffOrbit\_spans\_su8}).
 
-Fourth, closing. The $63$ non-identity Pauli operators span $\mathfrak{su}(8)$.
-A closed connected subgroup of a compact connected Lie group whose Lie algebra
-is the whole algebra is the whole group, so the closure of the generated
-subgroup is $\su 8$, which is Definition~\ref{def:dense}. Feeding
-Theorem~\ref{thm:literal} through Theorem~\ref{thm:sud} gives an unconditional
-$T$-free compilation theorem at $\su 8$.
+Fourth, closing. A finite spanning subfamily of the Clifford orbit supplies
+the closure witness: each orbit element is the tangent of a flow in the
+closure of the generated group. The Cartan discharge gives density
+(\lean{cliffordCCZLiteral\_dense}) for the formal alphabet
+\lean{cliffordCCZLiteralGeneratingSetSU8}. The ten letters generate
+the free word group (\lean{cliffordCCZLiteralGens\_generate}).
+The specialized compilation result
+{\footnotesize\lean{cliffordCCZLiteral\_solovayKitaev\_headline\_unconditional}}
+uses the density witness and the generic bridge.
 
 \subsection{Necessary: the Clifford group alone is finite}
 
@@ -610,9 +612,11 @@ The proof is the channel representation. Write $\widehat U$ for the matrix of
 the map $P \mapsto U P U^{\dagger}$ in the Pauli basis. On the Clifford group
 this map sends Pauli operators to Pauli operators up to sign, so $\widehat U$
 is a signed permutation matrix. Signed permutation matrices of fixed size form
-a finite group, so the image of the Clifford group under the channel
-representation is finite, and a subgroup with finite image cannot be dense in
-$\su 8$.
+a finite, closed set. By continuity, the image of the closure of the
+Clifford-only group is still in that set. The seed's channel
+representation has infinite order (\lean{channelRep\_seedSU8\_pow\_ne\_one}),
+so the image of $\su 8$ contains infinitely many distinct seed powers.
+The Clifford-only closure therefore cannot be all of $\su 8$.
 
 Taken together, Theorems~\ref{thm:literal} and~\ref{thm:notdense} settle the
 role of CCZ at $\su 8$: it is not over-complete, and the two density routes of
@@ -625,7 +629,7 @@ alphabets, one of which is universal only because CCZ is in it.
 \caption{Two formally verified density mechanisms for the same target $\su 8$.
 The upper route is $T$-based, with CCZ present in the alphabet and absent from
 the proof. The lower route is $T$-free, with density seeded by
-$\mathrm{CCZ}\cdot(H\otimes H\otimes H)$ and spread by Clifford conjugation
+$\mathrm{CCZ}\cdot(H\otimes H\otimes H)$ and spread by Pauli projection and Clifford conjugation
 across the $63$ non-identity Pauli operators. The converse
 (Theorem~\ref{thm:notdense}) establishes that the Clifford group alone has
 finite image under the channel representation, so CCZ is the resource that
@@ -678,17 +682,13 @@ $\mathrm{sde}_2(\widehat U)$ readable as a smallest-denominator exponent in a
 dyadic ring rather than merely as the $2$-part of a rational denominator. The
 lower bound holds either way.
 
-Two scope statements. The bound is stated for unitaries exactly implementable
-in Clifford$+$CCZ, which is the domain on which $T^{\mathrm{of}}$ is meaningful.
-And the matching upper bound, that is minimality, is not addressed: establishing
-it requires the meet-in-the-middle search behind Mukhopadhyay's Conjecture~4.8,
-and the lower bound stands on its own without it.
-% TODO: Mukhopadhyay2024 (arXiv:2401.08950) is held as a project-authored
-% abstract summary, not as source text. The section, lemma and conjecture
-% numbers cited here follow the formalization's internal cross-references and
-% have not been checked against the paper itself. Acquire the primary source
-% before this bundle goes green. The same applies to KMM2013 (arXiv:1206.5236),
-% cited in Sec.~\ref{sec:length-rs} and likewise held only as a summary.
+The bound concerns exactly implementable Clifford$+$CCZ unitaries.
+Mukhopadhyay's Lemma~3.10 gives the dyadic entry statement; the Clifford
+signed-permutation property is Fact~3.9~\cite{Mukhopadhyay2024}.
+We prove a lower bound and leave the exact minimum open.
+Mukhopadhyay's Conjecture~4.8 concerns the size of the intermediate sets
+and retention of an optimal decomposition in the divide-and-select search.
+The lower bound here does not use that conjecture.
 
 \section{From existence to an algorithm}
 \label{sec:compiler}
@@ -813,8 +813,8 @@ For $z$-rotations, Ross and Selinger~\cite{RossSelinger2016} achieve the
 optimal exponent by reducing approximate synthesis to a lattice problem over
 the ring $\mathbb Z[\omega]$, $\omega = e^{i\pi/4}$, and then solving an exact
 synthesis problem over $\mathbb Z[\omega][1/\sqrt 2]$ in the manner of
-Kliuchnikov, Maslov and Mosca~\cite{KMM2013}. We verify the efficiency layer of
-that route.
+Kliuchnikov, Maslov and Mosca~\cite[Theorem~1 and Algorithm~1]{KMM2013}.
+We verify the word-length bound for the route when the finder succeeds.
 
 \begin{theorem}[Grid-route length]
 \label{thm:rslength}
@@ -846,17 +846,16 @@ delivers the full conclusion of Theorem~\ref{thm:rslength} with
 $\lvert W\rvert \le N_3 + 8k$.
 \end{theorem}
 
-Theorem~\ref{thm:rssynth} isolates the gap exactly. What is known about
-Hypothesis~\ref{hyp:residual} is this. The source
-literature discharges it as a randomized algorithm under a prime-distribution
-assumption, which appears as Hypothesis~8.3 of Ref.~\cite{RossSelinger2016} and,
-in the same form, as Hypothesis~29 of Ref.~\cite{Selinger2015}. An
-unconditional discharge would require the existence of relative norms of
-prescribed form in growing windows, which is a short-interval statement in
-analytic number theory. Hypothesis~\ref{hyp:residual} is strictly weaker than
-the prime-distribution assumption, since it asks for a relative norm rather
-than a prime. It is open in the formalized-mathematics ecosystem, and in its
-primality form it is open in the literature.
+Theorem~\ref{thm:rssynth} uses the bounded witness in
+Hypothesis~\ref{hyp:residual} as its explicit completeness input.
+Ross and Selinger's Algorithm~7.6 instead enumerates grid candidates and
+tests residual norm equations. Their Hypothesis~8.3 models primality of
+integers produced by that algorithm, and Proposition~8.8 uses it for the
+expected performance without a factoring oracle~\cite{RossSelinger2016}.
+This source result concerns the search over candidates. It does not supply
+a bounded residual witness for the candidate in
+Hypothesis~\ref{hyp:residual}. Establishing that witness remains open in
+this development.
 
 Hypothesis~\ref{hyp:residual} appears in the statement of every theorem that
 consumes it. It is never an axiom, so the zero-project-local-axiom property of
@@ -874,10 +873,12 @@ number theory actually lives.
 Here $\dagger$ is the ring automorphism of $\mathbb Z[\omega]$ sending
 $\omega \mapsto \omega^{-1}$, an element $\xi$ of the fixed ring
 $\mathbb Z[\sqrt 2]$ is \emph{doubly positive} when it is positive under both
-real embeddings $\sqrt 2 \mapsto \pm\sqrt 2$, and $\xi$ is
-\emph{$\dagger$-decomposable} when it is a relative norm $t^{\dagger}t$ for some
-$t \in \mathbb Z[\omega]$. Solvability is thus decomposability, and the chain
-below reduces decomposability to a congruence condition on prime factors.
+real embeddings $\sqrt 2 \mapsto \pm\sqrt 2$ (allowing zero in the
+formal predicate). An element $\xi$ is \emph{$\dagger$-decomposable} when
+$\xi=u t^{\dagger}t$ for some $t\in\mathbb Z[\omega]$ and unit
+$u\in\mathbb Z[\sqrt 2]^\times$. This permits a unit factor in the norm
+equation. The next steps remove that factor when the signs permit it
+and reduce the decomposability question to prime-power cases.
 
 \begin{lemma}[Units]
 \label{lem:c2}
@@ -898,10 +899,14 @@ $t^{\dagger}t = \xi$ is solvable in $\mathbb Z[\omega]$ if and only if $\xi$ is
 doubly positive and $\dagger$-decomposable.
 \end{lemma}
 
-Double positivity is necessary because a relative norm is a sum of squares under
-each real embedding. That it is, with decomposability, also sufficient is the
-content, and it is a biconditional rather than an implication, which is what
-lets the grid search reject a candidate rather than merely fail to accept it.
+A relative norm is nonnegative under both real embeddings. For a
+nonzero decomposable element with those signs, the unit factor is
+positive under both embeddings, so it is a square by Lemma~\ref{lem:c2}.
+Absorbing its square root into $t$ gives an exact solution; zero has
+the solution $t=0$. This is the integral-ring version of
+Ross and Selinger's Lemma~C.16. Their statement uses the dyadic rings,
+and the denominator-clearing step in their Lemma~C.17 is outside
+this formalization~\cite{RossSelinger2016}.
 
 \begin{lemma}[Multiplicativity]
 \label{lem:c19}
@@ -913,19 +918,21 @@ Lemma~\ref{lem:c19} is what turns the criterion into a decision procedure: it
 reduces a question about $\xi$ to independent questions about the prime powers
 in its factorization. The two lemmas that follow answer those questions.
 
-\begin{lemma}[The obstruction at $p \equiv 7 \bmod 8$]
+\begin{lemma}[Prime-case construction and obstruction]
 \label{lem:c20}
-An element whose norm is a power of a prime $p \equiv 7 \pmod 8$ is not
-$\dagger$-decomposable when that power is odd, and for a prime dividing the
-norm squared there is a constructive decomposition in the remaining cases.
+Let $\xi$ be prime in $\mathbb Z[\sqrt 2]$. If its image in
+$\mathbb Z[\omega]$ divides $w^{\dagger}w$ but does not divide
+$w-w^{\dagger}$, the gcd of that image with $w$ supplies a
+$\dagger$-decomposition. Separately, if the norm of $\xi$ is
+$\pm p^m$ with $p>0$, $p\equiv 7\pmod 8$ and $m$ odd, then
+$\xi$ is not $\dagger$-decomposable.
 \end{lemma}
 
-The congruence class is not arbitrary: $2$ ramifies in $\mathbb Z[\sqrt 2]$ and
-the splitting of an odd prime $p$ is governed by whether $2$ is a quadratic
-residue modulo $p$, which holds exactly for $p \equiv \pm 1 \pmod 8$. The
-residue class $7 \bmod 8$ is the one where $p$ splits in $\mathbb Z[\sqrt 2]$
-but the resulting primes fail to be relative norms from $\mathbb Z[\omega]$, and
-a mod-$8$ count of the valuation is what detects it.
+The gcd implication formalizes a construction used in Ross and
+Selinger's Lemma~C.20. Their full criterion is stated for a prime
+$\xi$ and the rational prime below it. The formal obstruction instead
+takes the norm explicitly and uses the impossibility of a sum of
+two squares congruent to $7$ modulo $8$.
 
 \begin{lemma}[Even-power criterion]
 \label{lem:c21}
@@ -933,9 +940,11 @@ For $\xi$ of norm $\pm p$ with $p \equiv 7 \pmod 8$, the power $\xi^m$ is
 $\dagger$-decomposable if and only if $m$ is even.
 \end{lemma}
 
-Lemma~\ref{lem:c21} is again a biconditional, and it closes the chain: combined
-with Lemma~\ref{lem:c19} it decides decomposability for any $\xi$ whose
-factorization is known, which is what the grid finder needs at each candidate.
+Lemma~\ref{lem:c21} decides this norm case. Lemma~\ref{lem:c19}
+combines prime-power decisions once the coprime factors and their
+case hypotheses are supplied. The bounded grid finder checks a
+candidate residual directly and does not require a factorization
+algorithm.
 
 The greatest-common-divisor machinery these lemmas consume requires that
 $\mathbb Z[\omega] = \mathbb Z[\zeta_8]$ be a Euclidean domain, an instance
@@ -958,12 +967,9 @@ Lemma~\ref{lem:grid} is what makes the asymmetric case usable, in which a tiny
 $\varepsilon$-region is paired against a large disk and neither interval alone
 meets the naive bound while their product does.
 
-% TODO: RossSelinger2016 (arXiv:1403.2975) is not held by this project in any
-% form; the Appendix-C lemma numbering, the Hypothesis 8.3 reference and the
-% Lemma 4.4 attribution above are taken from the formalization's internal
-% cross-references and from secondary deep-research notes, not from the paper.
-% The mathematical statements are the formalization's own and are kernel-checked;
-% the attributions are not verified. Acquire the primary source before green.
+The product condition is Ross and Selinger's Lemma~4.4
+for the two intervals in the conjugate-embedding grid
+problem~\cite{RossSelinger2016}.
 
 \subsection{The ancilla route, unconditionally}
 \label{sec:length-kmm}
@@ -1212,6 +1218,12 @@ Theorem~\ref{thm:substrate} is \lean{GenericSU2} and \lean{GenericSUd}
 Theorem~\ref{thm:mercator} is \lean{exp\_matrixMercatorLog};
 Theorem~\ref{thm:sud} is
 \lean{solovayKitaev\_dawson\_nielsen\_quantitative\_generic\_sud\_strict\_constructive\_tight};
+the Read--Rezayi compilation declarations are
+\begin{quote}
+\footnotesize
+\leanbreak{solovayKitaev\_dawson\_nielsen\_quantitative\_rr5\_strict\_constructive\_tight}\par
+\leanbreak{solovayKitaev\_dawson\_nielsen\_quantitative\_rr7\_strict\_constructive\_tight}.
+\end{quote}
 Theorem~\ref{thm:literal} is \lean{cliffordCCZLiteral\_dense};
 Theorem~\ref{thm:notdense} is \lean{cliffordOnly\_not\_dense};
 Theorem~\ref{thm:toffoli} is \lean{channelSde2\_le\_toffoliCost}, with entry

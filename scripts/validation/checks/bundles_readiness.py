@@ -3577,7 +3577,7 @@ _CLAIM_NUMERAL_RE = re.compile(r"(?<![\w.^])(\d+\.\d+|\d{2,})(?![\w])")
 #: that no machine-readable statement in their chain carries, and that can only be
 #: strengthened. Lower it by restating the claim over what the theorem proves, or by
 #: proving the quantity; never by widening the noise list above.
-APEX_CLAIM_NUMERAL_CEILING = 31
+APEX_CLAIM_NUMERAL_CEILING = 29
 
 #: Minimum scored apex population: increase to retain full measured coverage.
 #: A decrease requires a named population withdrawal or measurement rationale.
@@ -3608,7 +3608,8 @@ APEX_CLAIM_NUMERAL_CEILING = 31
 #: SAME declaration hours earlier; it was the ONE apex the two bundles shared, so the
 #: E1/E2 overlap is now zero — which is what the 2026-08-08 rejected-merge adjudication
 #: wants and had not got. Measured 634 across the 21 bundles before lowering.
-APEX_CLAIMS_SCORED_FLOOR = 636
+#: 636 -> 638 (2026-11-03): D8 registers both Read–Rezayi compiler theorems.
+APEX_CLAIMS_SCORED_FLOOR = 638
 
 
 @register_check(
@@ -3846,7 +3847,7 @@ APEX_VACUITY_CEILING = 19
 #: ceiling and NOT out of `APEX_VACUITY_CEILING` — so being honest is never room to add
 #: another. Remediation is per bundle and needs the draft read beside the metadata:
 #: `papers/AutomatedReviews/2026-08-15-apex-claims-unbacked/infra.md`.
-APEX_UNDISCLOSED_VACUITY_CEILING = 15
+APEX_UNDISCLOSED_VACUITY_CEILING = 14
 
 
 @register_check(

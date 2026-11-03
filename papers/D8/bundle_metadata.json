@@ -23,7 +23,7 @@
     },
     {
       "name": "SKEFTHawking.FKLW.TrappedIonSU4.trappedIonSU4_solovayKitaev_headline_unconditional",
-      "claims": "§4 — the trapped-ion Molmer-Sorensen instantiation at SU(4), density via the Brylinski-Brylinski entangling criterion",
+      "claims": "The trapped-ion compiler headline for a positive even grid resolution follows from a density witness built from local and entangler-conjugated flows.",
       "declared": "2026-08-07"
     },
     {
@@ -33,7 +33,7 @@
     },
     {
       "name": "SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZLiteral_dense",
-      "claims": "§5 Route B — T-FREE density from the seed CCZ*(H⊗H⊗H), whose trace 1/sqrt2 is not an algebraic integer, spread across su(8) by Clifford-conjugation irreducibility over the 63 non-identity Pauli lines",
+      "claims": "The T-free Clifford and CCZ generating set is dense. The seed trace and Pauli-orbit dimension come from the separate trace and spanning declarations discussed in the manuscript.",
       "declared": "2026-08-07"
     },
     {
@@ -58,7 +58,7 @@
     },
     {
       "name": "SKEFTHawking.FKLW.GenericSU2.cliffordTCompile_eq_recursion",
-      "claims": "§7 — termination / finite depth: the compiler equals the structural DN recursion at explicit finite depth",
+      "claims": "The definitional unfolding of the Clifford and T compiler into the Dawson–Nielsen recursion at its prescribed depth. Termination is structural in the depth parameter.",
       "declared": "2026-08-07"
     },
     {
@@ -88,7 +88,7 @@
     },
     {
       "name": "SKEFTHawking.RossSelinger.gridFindT_isSome_of_residual",
-      "claims": "§8 — the conditionality made precise: grid-finder success is IMPLIED by a single number-theoretic existence (Ross Problem 3.2.4)",
+      "claims": "A residual norm witness satisfying the finder’s explicit height bound guarantees that the bounded grid finder returns a result.",
       "declared": "2026-08-07"
     },
     {
@@ -153,7 +153,7 @@
     },
     {
       "name": "SKEFTHawking.QuantumNetwork.KroneckerOpNorm.l2_opNorm_kronecker_one_le",
-      "claims": "§10 — the Kronecker-with-identity operator-norm bound; a named Mathlib-upstream candidate",
+      "claims": "§10 — consumes the Kronecker-with-identity operator-norm bound from D9’s certification layer",
       "declared": "2026-08-07"
     },
     {
@@ -175,6 +175,16 @@
       "name": "SKEFTHawking.FKLW.GenericSU2.diamondDist_cliffordTCompile_le",
       "claims": "ABSTRACT + §10 — the capstone: compiling to accuracy eps bounds the compiled word's PHYSICAL CHANNEL within diamond distance sqrt2*eps, with no unverified step between algorithm and channel",
       "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_rr5_strict_constructive_tight",
+      "claims": "Read–Rezayi level 5 — the specialized constructive compiler achieves the requested error and the polylogarithmic word-length bound in the stated tolerance regime",
+      "declared": "2026-11-03"
+    },
+    {
+      "name": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_rr7_strict_constructive_tight",
+      "claims": "Read–Rezayi level 7 — the specialized constructive compiler achieves the requested error and the polylogarithmic word-length bound in the stated tolerance regime",
+      "declared": "2026-11-03"
     }
   ],
   "tier": 1,
@@ -198,8 +208,8 @@
   "last_stage9_review": "2026-05-31T14:45:00Z",
   "stage9_review_doc": "papers/D8/figures/figure_review_report.json",
   "stage9_round1_findings": "2 cosmetic Fig-1 text-truncation defects; fixed (cliponaxis + margin + note reword); re-review GREEN",
-  "blockers_open": 6,
-  "advisories_open": 17,
+  "blockers_open": 1,
+  "advisories_open": 14,
   "audit_log_path": "papers/D8/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "creation_authorization": "Pipeline Invariant #14 user authorization 2026-05-31; consolidates the Phase 6p/6t/6u/6x/6x′/6y/6z verified-quantum-compilation corpus that had outgrown the D4 §9.x showcase container.",
@@ -230,14 +240,14 @@
     "SKEFTHawking.FKLW.GenericSU2.diamondDist_cliffordTCompile_le"
   ],
   "notes": "fresh-authored as a synthesis-driven new composition (no per-paper-draft sources to lift; sourceless per PAPER_DRAFT_MAPPING.md, D.4 path). Substrate is the FKLW/* + Mukhopadhyay/* + SolovayKitaev* Lean module families. Late absorption 2026-06-10 (D.4 x4): Phase 6AM-W5 / 6AN-W5 / 6AO T1-T3 / 6AP-W3+W3b verified-synthesis layer (FKLW/RossSelinger/*, FKLW/CliffordTCompiler, FKLW/CompiledGateDiamond, QuantumNetwork/{KroneckerOpNorm,UnitaryDiamond,MatrixNormBridge}); stage13_redo_required=true pending the queued Stage-F reviewer triple. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 10 anchors: 3 SUPPORTED / 7 CAVEAT(abstract-only cache) / 0 NOT-SUPPORTED. AKN Lemma 12.6 diamond bound, KMM Lagrange-4-square, GilesSelinger column lemma all full-text verified; RS deep lemmas via verbatim DR. | 2026-08-15 STAGE-10 FULL REDRAFT: spine restructured from a nine-item contribution inventory to three questions (existence / length / physical cost); every headline now a stated theorem rather than a Lean identifier; the generating-set interface written down (it was asserted four times and argued zero); Fibonacci REMOVED as a D8 contribution and ceded to D4 by citation (apex sets share zero declarations); the five-alphabet count retired for a per-alphabet-input table; SU(8) density merged with the Toffoli bound (necessary/sufficient/priced by one representation); Ross-Selinger merged with KMM into one length section with its conditionality as a numbered Hypothesis; 3.97 exponent re-cited from DawsonNielsen (held abstract says 'approximately 2') to Selinger2015 + KMM2013ancilla (both full-text held, both state 3.97 verbatim); Mathlib-portfolio section cut to an appendix table. 9 findings filed. Two % TODO markers disclose unheld primary sources (RossSelinger2016, KMM2013, Mukhopadhyay2024) and correctly hold the bundle off green.",
-  "open_findings": 23,
+  "open_findings": 15,
   "blocked_p1_gates": [
     "FixPropagation",
     "LeanProofSubstance",
     "NarrativeGrounding"
   ],
   "readiness": "RED",
-  "readiness_last_computed": "2026-08-15",
+  "readiness_last_computed": "2026-11-03",
   "length_target": {
     "unit": "pages",
     "floor": 27,
