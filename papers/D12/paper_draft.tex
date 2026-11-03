@@ -221,8 +221,9 @@ $(N_b,N_a) = (5,10)$, against the true
 $e^5 = \input{tables/folklore_undershoot_exact.tex}\unskip\ldots$ The correct constrained statement is
 \thm{poisson\_darkBaseline\_miss\_floor}, which the folklore form omits the hypothesis of.
 
-\paragraph{Exponentially fail-open as an average-error screen.} The algebraic core is an identity,
-\thm{folkloreGap\_split}:
+\paragraph{Exponentially fail-open as an average-error screen.} For nonnegative counts,
+\thm{folkloreGap\_split} proves the exponentiated identity. Combining its two factors
+with the exponential addition law and using injectivity gives
 \begin{equation}
 (N_a - N_b) - (\sqrt{N_a}-\sqrt{N_b})^2 \;=\; 2\sqrt{N_b}\,(\sqrt{N_a}-\sqrt{N_b}),
 \end{equation}
