@@ -169,6 +169,14 @@ step is to derive the metric and regulator variation that fixes the
 contact prescription and spatial tensor normalization. This finite
 calculation supplies neither the physical bare bubble nor the RPA coupling.
 
+**Open correction to the closed finite normalization.** A private
+Haar transfer census omitted dependencies retained after conditional
+projection. The full checkerboard replay is assigned. The closed
+denominator and quantities derived from it, including the dressed
+response and quantitative coupling interval, are provisional pending
+reassembly and independent verification. The separate raw composite
+numerator evidence remains available.
+
 The [linear composite-metric source](L1_RETARDED_SPECTRAL_INTERFACE.md#linear-composite-metric-source-on-the-closed-action)
 has independently verified nearest-time and nearest-space zeros.
 The closed same-site replay gives a nonzero equal-time coefficient.
