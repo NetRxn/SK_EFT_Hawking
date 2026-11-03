@@ -200,10 +200,12 @@ composite and dressed sources vanishes by Pin. The assigned
 has 24 candidate terms after exact source-link and transport
 cancellations. The cubic term is independently excluded. The
 [determinant tensor](l1_mixed_g1_determinant_tensor.cpp) is
-reproducible at `4ebd86673`. The reference worker owns the first
-curvature center and final join. A separate worker owns the second
-curvature center. The mixed amplitude tests the two finite sources'
-overlap and requires independent review after assembly.
+reproducible at `4ebd86673`. The full [mixed replay](l1_mixed_g1_replay.py) at `8e569c8ba`
+independently reproduced the exact fixed-site coefficient −15/2048.
+The lead owns the next B3 milestone: derive the physical source
+variation and retained operator space, using the verified finite
+covariances as constraints. The mixed amplitude supplies overlap
+in the specified lattice coordinates.
 Physical normalization and the B3 susceptibility window remain
 separate acceptance requirements.
 

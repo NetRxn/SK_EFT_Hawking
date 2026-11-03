@@ -1506,8 +1506,9 @@ the raw tensor sign and the tag, so the contributions add.
 The result at one fixed composite site is
 −(15/2048) g₁g₂⁵, with zero imaginary part. The all-16 endpoint
 replay also returned zero for the four modes excluded by the
-isolated-link argument. This is author replay evidence pending
-independent verification.
+isolated-link argument. Independent review ran a clean replay of `8e569c8ba`,
+reproduced both nonzero modes and all zeros, and checked the
+wedge signs, source denominators and factorial weights.
 
 For L = (D₀+D₂)/√2 and the unrescaled dressed slice derivative,
 spatial translation multiplies the fixed-site numerator by √2.
