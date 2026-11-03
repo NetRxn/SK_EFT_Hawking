@@ -2539,6 +2539,19 @@ class TestLeanModuleDeregistration:
         r = bru.check_bundle_lean_module_coverage()
         assert r.passed, [d.message for d in r.details if not d.passed]
 
+    def test_only_live_included_tex_counts_as_module_reach(self, tmp_path, monkeypatch):
+        events = [{"lean_modules_referenced": ["ADWMechanism"]}]
+        self._setup(tmp_path, monkeypatch, {"D1": (events, r"\input{tables/body}")})
+        monkeypatch.setattr(bru, "LEAN_MODULE_ABSENT_CEILING", 0)
+        paper = tmp_path / "papers" / "D1"
+        tables = paper / "tables"
+        tables.mkdir()
+        (tables / "body.tex").write_text("% " + r"\input{tables/evidence}" + "\n")
+        (tables / "evidence.tex").write_text("ADWMechanism")
+        assert not bru.check_bundle_lean_module_coverage().passed
+        (tables / "body.tex").write_text(r"\input{tables/evidence}")
+        assert bru.check_bundle_lean_module_coverage().passed
+
     def test_the_drop_is_REPORTED_even_when_the_check_is_green(self, tmp_path, monkeypatch):
         """Visibility is half the design. A silent drop and a declared drop must not
         look the same in the gate's output, or 'deliberate' means nothing."""
