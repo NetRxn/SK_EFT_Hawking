@@ -103,3 +103,29 @@ Lehmann pair and verified the one-gap construction. It also reproduced
 the 185 unique support words and their multiplicities with a separate
 ordered count. The equal-time value and its contact subtraction remain
 open.
+
+### Finite frequency contrast
+
+Translation invariance and the exact nearest-time and nearest-space
+zeros give the four Fourier eigenvalues of the literal Hessian as
+`H_on + (-1)^(n_t+n_x) d`, with each Fourier index in `{0,1}`.
+Here `H_on` is the same-site entry and `d` is the normalized
+diagonal-separation entry. Consequently the frequency contrast at
+zero spatial momentum, between temporal characters one and zero, is
+`4303411200/(11270712996006127 g₂²)` in the stated source coordinates.
+At staggered spatial momentum the contrast has the opposite sign.
+A term supported strictly at coincident lattice time is independent
+of the temporal character and cancels in this contrast. The two
+discrete samples still leave the retarded spectrum underdetermined.
+
+Write the full same-site raw numerator as `n₀ g₂⁶`, the verified
+normalization as `D g₂⁸`, and the common real source match as `α`.
+For a contact `C` subtracted from the matched equal-time value, the
+two-time inequality gives the upper bound
+`C ≤ α² (n₀ - 3113/27648)/(D g₂²)`.
+Equality leaves only a static contribution. Finite-frequency weight
+requires a strict inequality and independently fixed static weight
+`0 ≤ s < B`. The literal source enters the exponent linearly and
+has zero bare second derivative. The contact in this bound is a
+separate matching term whose coefficient must follow from the
+physical source coupling.
