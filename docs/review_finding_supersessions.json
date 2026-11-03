@@ -10589,6 +10589,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-dispersive-coefficient-normalization:infra:2.2",
+      "status": "fixed",
+      "evidence": "Independent custody and final propagation reviews SHA-256 f81a99c28ff95a04ce4ff0c661917fc870666fc20f2d5fa06ee1b0aafce50125 and b5fc310ec5e703aaa3a04d64889200790accc53883e97c7d7da5dba08be6b628. Both versioned PDFs held and registry identity checked. CW v2 Eqs. 39–40 do not establish a leading local quadratic temperature law; attribution corrected across provenance, code comments and consumer manuscripts. D1/E2 forced compiles 21/5 pages, zero errors and unresolved references. Device-level construction and exact-source Lean extraction remain open.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "202aaa44",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"from src.core.workspace import find_workspace; import pathlib; base=find_workspace()/'Lit-Search'; hits=[p.name for p in base.rglob('primary-sources/*') if 'CoutantWeinfurtner' in p.name or '1402.2514' in p.name or 'CoutantParentani2014' in p.name]; assert hits, 'neither Coutant-Weinfurtner 2017 nor Coutant-Parentani 2014 (arXiv:1402.2514) is cached, yet both now back the dispersive normalization'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"from src.core.workspace import find_workspace; import pathlib; base=find_workspace()/'Lit-Search'; hits=[p.name for p in base.rglob('primary-sources/*') if 'CoutantWeinfurtner' in p.name or '1402.2514' in p.name or 'CoutantParentani2014' in p.name]; assert hits, 'neither Coutant-Weinfurtner 2017 nor Coutant-Parentani 2014 (arXiv:1402.2514) is cached, yet both now back the dispersive normalization'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
