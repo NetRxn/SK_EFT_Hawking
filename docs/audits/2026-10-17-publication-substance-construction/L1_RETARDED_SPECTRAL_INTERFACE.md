@@ -1100,3 +1100,28 @@ weighting with the intended physical polarization. The physical
 source may also vary links, measure, and regulator and thereby
 change the contact and connected terms. Neither eigenvalue in the
 table identifies the B3 bare bubble without that matching.
+
+### Metric amplitude and the linear-path contact
+
+For the replay generator E = diag(0,0,1,−1), set P = E/√2.
+If the frame shear is interpreted as a background coframe
+A = exp(jE), its Euclidean metric is AᵀA = exp(2jE).
+Thus the Frobenius-unit metric perturbation has linear
+amplitude h = 2√2 j. Under this coframe identification the
+common-source response along the exponential metric path,
+per βV, is 119300053231200/(113846304558673 βV).
+This fixes the kinematic factor for the specified prescription.
+
+An affine metric path I+hP has the same tangent but uses the
+coframe (I+hP)^(1/2). The exponential and affine coframes have
+the expansions I+hP/2+h²P²/8 and I+hP/2−h²P²/8,
+respectively. Consequently, at fixed links and measure, the
+affine-path second derivative differs from the exponential-path
+second derivative by −DW[I](P²)/2, where W[A] is log Z with the
+common coframe deformation. This one-point term is a transverse
+dilation response. Polarization exchange reverses P and leaves
+P² invariant, so the vanishing shear one-point function does
+not remove this contact. The connected first-vertex contribution
+is identical on the two paths. Physical matching must specify
+the metric path and account for its contact as well as any
+link, regulator, or measure variation.
