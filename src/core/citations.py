@@ -909,7 +909,7 @@ CITATION_REGISTRY = {
     # ════════════════════════════════════════════════════════════════
 
     'Berti2025': {
-        'authors': 'Berti, A., Fernandes, J., Butera, S., Recati, A., Wouters, M., Carusotto, I.',
+        'authors': 'Berti, A., Fernandes, L., Butera, S., Recati, A., Wouters, M., Carusotto, I.',
         'title': 'Analog Hawking radiation from a spin-sonic horizon in a two-component Bose–Einstein condensate',
         'journal': 'Comptes Rendus Physique',
         'volume': 25,
@@ -922,6 +922,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Berti2024CRPhys25S2.pdf',
         'used_in': [
             'src/core/transonic_background.py',
+            'papers/paper1_first_order/paper_draft.tex',
         ],
         'provides': [],
         'notes': 'Final publisher cover gives volume 25, special issue S2 (2024), pp. 181–216. '
