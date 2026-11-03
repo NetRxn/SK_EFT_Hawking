@@ -362,7 +362,7 @@ This source acts on the action rather than inserting the literal
 quadratic metric composite. It supplies a concrete uniform operator
 and contact to evaluate in the finite regulator. Because it holds
 curvature holonomies fixed, its identification with a background
-metric variation still requires a derivation. Its Gram matrix,
+metric variation still requires a derivation. Its Gram matrix and
 continuum normalization are open. Independent review verified the determinant
 invariance and both source derivatives. The full action inserts g₂
 times each first or second derivative above.
@@ -376,3 +376,60 @@ mixed-plane vertices and six ordinary S2 vertices. An exact
 transverse exchange symmetry sending E to −E would kill the
 one-point terms. This symmetry must be checked on the oriented
 finite action and measure before using that simplification.
+
+The pure-g₂ calculation can reuse the exact normalization support.
+For a supported multiset w of eight S2 terms, let C_w denote its
+existing Haar–Berezin weight including the action factorial.
+For time slice t define A_t(w) as the sum of λ_μ+λ_ν over all
+occurrences centered on that slice. The deformed partition function
+divided by g₂⁸ is exactly
+
+    Σ_w C_w exp(j_0 A_0(w) + j_a A_a(w)).
+
+The shear rescales each term by a scalar and preserves its center
+parities and site degrees, so the 6,451-word support remains complete.
+The half-period connected response is
+
+    Σ_w C_w A_0 A_a / Σ_w C_w
+      − (Σ_w C_w A_0)(Σ_w C_w A_a)/(Σ_w C_w)^2.
+
+This weighting includes the multiplicity of repeated vertices
+automatically. In the diagonal same-slice derivative A_t² includes
+both tags on one occurrence, which is the quadratic contact, and
+tags on distinct occurrences. The weights C_w are signed and the
+formula does not assume a positive probability measure. The
+sector subtotals alone do not determine these moments because
+A_t can vary within a sector. Exact weighted evaluation is in progress. Independent review
+verified the reweighting, factorial treatment and contact term.
+
+A support-only pass using `component_multisets()` from
+`l1_normalization_coverage.py` reproduced 6,451 words. For time
+axis zero, slice is the low bit of the center site index. Setting
+e=1 for the count, add `−(λ_k+λ_l)` at the center slice for each
+occurrence with curvature labels k,l. Exactly 2,160 words have
+nonzero cross-time multiplier. They split into small components
+192, mixed chain 128, private repeated 504, private paired 458,
+correlated six 32, correlated eight 494, mixed cycle 160,
+checkerboard 64, X1 64 and Y1 64. All other sectors contribute
+zero to the raw cross moment. The count tests support only.
+It supplies neither the weighted contraction nor a sign.
+
+For pure g₂, swapping the two length-one transverse directions
+permutes their link variables at each site and leaves the time
+slices fixed. The world epsilon in S2 contributes a minus sign
+under that relabeling. All surviving words have eight S2 factors,
+so the resulting sign is positive on the saturated coefficient.
+The link Haar measure is unchanged and no fermion sites are
+permuted. The swap exchanges the transverse diagonal shear
+entries, sending both A_t to −A_t. Consequently each raw
+first source moment vanishes at pure g₂. This argument leaves
+the product A_0 A_a invariant and does not fix its sign.
+Independent review verified the orientation sign, Haar invariance
+and all ten support counts.
+
+The first exact weighted subtotal is `8999/96` for the 192
+small-component words, using e=1. The calculation applied the
+existing component evaluator and top wedge product to each word,
+divided by its repeated-label factorials and component moment
+denominators, and multiplied by `A_0 A_a`. The subtotal awaits
+independent reproduction. The other nine sectors remain open.
