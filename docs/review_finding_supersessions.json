@@ -10499,6 +10499,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.5",
+      "status": "fixed",
+      "evidence": "Three version-pinned primary PDFs verified against their digests, Appendix C and synthesis attributions reconciled, and nine summary labels corrected. Exact declared existence check passed from the sibling workspace checkout. Independent review SHA256 e406ea059961329e479317d8938161a0c170dd9fbf59a06a59d6bd9ab9a54d52. Source links and acquisition evidence are in D8_PRIMARY_SOURCE_INTAKE_20261103.md; the local cache contains the full texts.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "0124198d",
+      "verified_by": {
+        "command": "test -f ../Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+        "declared": "test -f ../Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf && test -f ../Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
