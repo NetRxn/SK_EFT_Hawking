@@ -10784,6 +10784,44 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-05-31-1500-bundle-stage13-rerun:D8:1.2",
+      "status": "fixed",
+      "evidence": "All five independently reviewed DOI identities and verification flags still match. The active Hietala key changed to Hietala2021VOQC and retains DOI 10.1145/3434318 and the same verified flag. The earlier execution remains in the ledger.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "3d0c910d",
+      "amends_prior": {
+        "reason": "Rebind the verifier to the renamed Hietala citation key and preserve the prior execution as history.",
+        "superseded_record": {
+          "status": "fixed",
+          "commit": "992674db",
+          "date": "2026-11-03"
+        }
+      },
+      "verified_by": {
+        "command": "python3 -B -c 'from src.core.citations import CITATION_REGISTRY as r; pairs={\"AharonovArad2011\":\"10.1088/1367-2630/13/3/035019\",\"ReadRezayi1999\":\"10.1103/PhysRevB.59.8084\",\"AaronsonGottesman2004\":\"10.1103/PhysRevA.70.052328\",\"Hietala2021VOQC\":\"10.1145/3434318\",\"Lewis2021VerifQC\":\"10.1145/3624483\"}; assert all(r[k][\"doi\"]==d and r[k][\"doi_verified\"] is True for k,d in pairs.items())'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
+    },
+    {
+      "finding_id": "review:2026-05-31-1500-bundle-stage13-rerun:D8:1.3",
+      "status": "fixed",
+      "evidence": "Independent review confirmed the active Hietala2021VOQC key in both D6 and D8 and the AharonovArad2011 key in D8. Both complete citation scans pass. The DOI, source artifact path and historical verification cache remain intact. The verifier explicitly requires both live Hietala citations, so absence of the old key alone cannot pass.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "3d0c910d",
+      "verified_by": {
+        "command": "python3 -B -c 'import re; from pathlib import Path; from src.core.citations import CITATION_REGISTRY as r; pairs={\"Hietala2021VOQC\":(2021,\"10.1145/3434318\"),\"AharonovArad2011\":(2011,\"10.1088/1367-2630/13/3/035019\")}; assert all((r[k][\"year\"],r[k][\"doi\"])==v for k,v in pairs.items()); h=\"Hietala2021VOQC\"; old=\"Hietala2020VOQC\"; assert old not in r; d6=Path(\"papers/D6/paper_draft.tex\").read_text(); d8=Path(\"papers/D8/paper_draft.tex\").read_text(); b=Path(\"papers/D8/bibliography.bib\").read_text(); assert all(r\"\\cite{\"+h+\"}\" in t and r\"\\cite{\"+old+\"}\" not in t for t in (d6,d8)); assert r\"\\bibitem{\"+h+\"}\" in d6 and \"@article{\"+h+\",\" in b and \"AharonovArad2011}\" in d8 and \"@article{AharonovArad2011,\" in b' && python3 -B scripts/check_undefined_citations.py D6 && python3 -B scripts/check_undefined_citations.py D8",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
