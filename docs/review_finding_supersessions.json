@@ -10724,6 +10724,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-05-31-bundle-stage13:D8:6.1",
+      "status": "fixed",
+      "evidence": "Independent R2 review confirmed both hypotheses at first mention and the compatible free-word length prerequisite wherever density is described as the remaining requirement. The exact formal theorem and concrete witnesses were preserved. D8 compiled at 13 pages with four inherited overfull boxes and zero TeX errors or unresolved references.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "18cbe853",
+      "verified_by": {
+        "command": "python3 -B -c 'from pathlib import Path; t=Path(\"papers/D8/paper_draft.tex\").read_text(); a=t[t.index(r\"\\begin{abstract}\"):t.index(r\"\\end{abstract}\")]; assert \"dense and has compatible word length\" in a; assert \"a density witness and compatible word length\" in t and \"density witness and nothing else\" not in t; assert \"Once compatible free-word length is in place\" in t and \"For an alphabet with compatible free-word length\" in t; assert \"universal gate set with compatible\\nfree-word length\" in t; assert \"If $\\\\mathrm{gs}$ is dense and its word length is compatible\" in t'",
+        "declared": null,
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
