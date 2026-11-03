@@ -10439,6 +10439,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-12-substrate-lane-refile:substrate-lane-refile:7",
+      "status": "fixed",
+      "evidence": "Independent readback 606292be21d9835388ab0f48ff2e8a16b99ac1864ab10c8bcbffbe213502c471 verifies 313 automated entries, 39 distinct runs, and 9 manual entries, JSON/TeX parity and manuscript propagation. Exact declared counts_fresh passed. Forced sweep: all 21 publication targets and all four changed legacy consumers compiled. The 15 failures elsewhere in the legacy corpus remain open. No blanket compile acceptance.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "fd894720",
+      "verified_by": {
+        "command": "uv run python scripts/validate.py --check counts_fresh",
+        "declared": "uv run python scripts/validate.py --check counts_fresh",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
