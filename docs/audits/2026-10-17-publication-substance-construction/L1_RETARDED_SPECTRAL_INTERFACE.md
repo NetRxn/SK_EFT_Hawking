@@ -1416,3 +1416,12 @@ the determinant sits at site 3 in 64 and at site 2 in 32.
 The signed weights must multiply the original per-word
 Haar–Berezin amplitudes and factorials. Equal counts with
 opposite tags alone cannot cancel the coefficient.
+
+The source-link incidence check removes another 64 words exactly.
+Neither transverse link at site 0 appears in their action factors.
+The two source terms therefore have equal conditional Haar
+integrals and cancel before the remaining links are integrated.
+The other 32 words touch both source links. A conditional
+projection can eliminate its private integration variable while
+retaining dependence on the other links in the projected tensor.
+Subsequent reductions must use that retained dependence.
