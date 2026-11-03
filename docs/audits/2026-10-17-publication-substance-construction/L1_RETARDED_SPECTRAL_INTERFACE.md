@@ -1130,3 +1130,20 @@ not remove this contact. The connected first-vertex contribution
 is identical on the two paths. Physical matching must specify
 the metric path and account for its contact as well as any
 link, regulator, or measure variation.
+
+The affine contact can be isolated without a new Haar integral.
+Let n₂(w) count the vertices with two transverse coframe slots in
+a word w, and n₁(w) those with one. At fixed links and measure,
+DW[I](P²) is the normalized signed moment of n₁/2+n₂, since
+P² has diagonal entries (0,0,1/2,1/2). The common-source
+quadratic contact 2C counts n₁, because the square of the
+generator weight is one on a mixed coframe pair and zero
+otherwise. The affine-path static Hessian is therefore
+
+    (A+B−C)/4 − (Σ_w C_w n₂(w))/(2 Σ_w C_w).
+
+This leaves one new exact moment, counting the vertices whose
+curvature plane is the pair of extended directions. A common
+transverse dilation changes scalar word weights and preserves
+the closed-order Haar–Berezin kernels and support. The existing
+transverse exchange preserves n₂ and cannot supply its moment.
