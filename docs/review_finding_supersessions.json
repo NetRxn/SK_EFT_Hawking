@@ -10822,6 +10822,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d3-stage10-redraft:D3:3.2",
+      "status": "fixed",
+      "evidence": "Independent source review confirmed that the Lean theorem proves homogeneity and that the metadata and current manuscript attribute only homogeneity to it. The normalized value is stated separately and matches the definition with its spinor trace factor. The original declared verifier also passed. This closure concerns the attribution and normalization, with microscopic cosmological-constant derivation outside its scope.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "154ad49c",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; m=json.load(open('papers/D3/bundle_metadata.json')); a=[x for x in m['apex_theorems'] if x['name'].endswith('a0_dirac_linear')][0]; assert 'a0 = N_f' not in a['claims'], 'claims string still asserts a value the statement does not fix'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; m=json.load(open('papers/D3/bundle_metadata.json')); a=[x for x in m['apex_theorems'] if x['name'].endswith('a0_dirac_linear')][0]; assert 'a0 = N_f' not in a['claims'], 'claims string still asserts a value the statement does not fix'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
