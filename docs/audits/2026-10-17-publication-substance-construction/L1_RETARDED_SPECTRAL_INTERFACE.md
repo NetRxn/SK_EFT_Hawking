@@ -310,3 +310,33 @@ negative real part because its real part is `g₂⁻² Q(y)/|z(y)|⁴`.
 The certificate requires the actual coefficients or verified
 upper bounds on the two sums. No numerical radius is claimed.
 Independent review verified the coupling powers and the real-part bound.
+
+### Conservative explicit interval from exterior coefficient norms
+
+Use the sum of absolute exterior coefficients at fixed links. This
+norm is submultiplicative under wedge multiplication. Each coframe
+has norm at most 16, since its two hopping blocks have 16 entries
+each, and each entry of an anticommutator of two unitary matrices
+has modulus at most 2 before the factor 1/4. Coincident blocks
+obey the same bound by the triangle inequality. Each curvature
+trace has modulus at most 4, canceled in the bound by the
+S2 prefactor 1/4. Thus the four-site action vertices
+have norms bounded by `4·24·16⁴` for S4 and
+`4·24·16·16²` for S2, using all internal pairs in S2.
+Each uniform plus source insertion uses two quadratic coframe
+products at each of two sites, with norm at most `4·16²` for
+the unnormalized sum. Unit normalization can only decrease it.
+All three bounds are below `2²⁴`.
+
+Each coefficient in z, u, v or w is a top coefficient with at most
+eight such factors, divided by the action factorials and integrated
+against normalized Haar. Its modulus is at most `B = 2¹⁹²`.
+The coefficient sums satisfy `||z||₁ ≤ 3B`, `||u||₁ ≤ 2B`,
+and `||v||₁, ||w||₁ ≤ 2B`. Hence `||P||₁ ≤ 10B²` and
+`||Q||₁ ≤ 90B⁴ < 2⁷⁷⁵`. The known pure-g₂ values give
+`z₀ > 1` and `|Q(0)| = z₀³ |u₀| > 1`.
+The preceding certificate therefore applies for
+`|g₁/g₂²| ≤ 2⁻⁴⁰⁰`, since `y ≤ 2⁻⁸⁰⁰`. This bound is deliberately
+coarse and concerns only the specified four-site regulator and
+uniform source normalization. Independent review verified the
+coframe, action and source norms and the resulting interval.
