@@ -74,7 +74,7 @@ and run from a scratch directory. The generated row tables are scratch
 outputs.
 
 ```sh
-c++ -std=c++17 -O3 "$audit/l1_residual_batched.cpp" -o l1_residual_batched
+c++ -std=c++20 -O3 "$audit/l1_residual_batched.cpp" -o l1_residual_batched
 ./l1_residual_batched 0 > l1_residual_batched_same.out
 ./l1_residual_batched 1 > l1_residual_batched_mixed.out
 python3 "$audit/l1_residual_sparse_sources.py"
@@ -130,3 +130,13 @@ uses the additional factor 16⁸. A nonzero residue modulo 65537 would
 certify nonzero normalization without recovering the exact signed value,
 since the prime divides neither scale. Retain both imaginary-unit
 embeddings when resolving complex coefficients.
+
+The [tree covariance control](l1_tree_covariance_control.cpp) rules out
+applying this shortcut multiset by multiset to the literal action.
+Build with `c++ -std=c++20 -O3`. A one-site Spin(4) rotation under the
+Wilson link law changes a supported multiset's top exterior coefficient
+from 36,770 to 10,060 modulo 65,537. The spin change of variables has
+unit Berezin determinant. The discrepancy is consistent with the
+opposite link orientation used by the extended frame blocks. Continue
+the signed contraction in the original link variables. This control
+does not test invariance after summing the full action.

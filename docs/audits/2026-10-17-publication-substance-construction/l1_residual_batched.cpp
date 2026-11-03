@@ -289,4 +289,5 @@ int main(int argc,char**argv){
         for(auto z:v)if(z!=static_cast<long long>(z))throw runtime_error("receipt too wide");
         cout<<"variant "<<k<<" exact slice "<<(key&7)<<" "<<((key>>3)&7)<<" "<<((key>>6)&255)<<" "<<((key>>14)&255)<<" "<<((key>>22)&3)<<" "<<((key>>24)&3)<<" scaled Gaussian ("<<static_cast<long long>(v[0])<<","<<static_cast<long long>(v[1])<<")/5308416\n";
     }
+    return 0;
 }
