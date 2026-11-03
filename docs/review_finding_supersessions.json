@@ -10694,6 +10694,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:3.1",
+      "status": "fixed",
+      "evidence": "Independent R2 review verified the physics title and legend scoped inside the left panel. The right-hand substrate trace is charcoal dash-dot and distinct from both legend swatches. Poppler confirmed PDF page 2 embeds the regenerated PNG pixel for pixel including transparency. The exact declared Verify passed and forced compilation produced four pages with zero TeX errors or unresolved references. Section 3.2 remains open.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "13eb5081",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
