@@ -136,6 +136,8 @@ Derive physical dispersion and profile/state to flux-normalized in/out scatterin
 
 ### L1: three distinct obligations
 
+The [full-action coefficient reference](l1_full_action_reference.py) reproduces the selected signed coefficient with two extraction orders. The literal action changes from `i*g2/2` to `-i*g2/2`, while the closed-path control retains `i*g2/2` in both cases. Each extraction scans 625 bases and 15,000 ordered tuples per case. The lead reproduced the calculation. The endpoint-omission control is insensitive for this monomial, so a distinct endpoint-sensitive coefficient and independent review of the executable remain owed.
+
 The independently reviewed [spectral interface](L1_RETARDED_SPECTRAL_INTERFACE.md) gives positive counterexamples with identical finite Euclidean samples and different retarded absorption. The physical transport build now requires dynamical data or a justified spectral restriction in addition to matched normalization and contact subtraction.
 
 [Conditional retarded transport construction](L1_RETARDED_TRANSPORT_MATCHING.md) separates linear attenuation from quadratic real dispersion for a specified pole and bounds the fixed-frequency group slowness. Independent adversarial review accepted the conditional result. Microscopic retarded tensor and observational propagation matching remain open.
