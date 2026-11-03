@@ -15,3 +15,11 @@ For a Frobenius-unit symmetric shear, the once-pair coordinate of a physical sou
 The next finite tensor target uses the site-resolved sources G₂₃ and G₂₂−G₃₃, where e is direction 1 and the remaining spatial polarization plane is 2–3. For signed action terms g₁A + g₂B of degrees eight and four, the degree-sixteen top extraction gives Z_u from G_u(g₁g₂AB + g₂³B³/6) and Z_uv from G_uG_v(g₁A + g₂²B²/2). Evaluate the connected combination Z_uv/Z − Z_u Z_v/Z² before projecting the symmetric and antisymmetric lattice characters.
 
 Independent adversarial review checked the transversality and once-pair factors. This result gives a finite static projection and specifies the missing nonzero-momentum channels.
+
+## Independently verified transverse block
+
+The [support enumeration](l1_transverse_support.py) excludes the linear and g₁ quadratic terms. The [exact numerator calculation](l1_transverse_top.py) gives local moments H² = 9 and D² = 21 for H = G₂₃ and D = G₂₂−G₃₃. Three opposite-site curvature squares and the action factorial multiply these moments by 54. Dividing by the finite partition function gives the site-diagonal log Hessians 27/(187g₂²) and 63/(187g₂²), respectively.
+
+Exchange of the two selected transverse directions makes the same-site mixed coefficient odd. The only intersite cross survivor has complementary curvature links separate from the source links. Haar averaging of the longitudinal conjugations leaves a zero mixed scalar-vector moment for each independent complementary link. All other intersite terms vanish by support. Independent review checked these zero contributions and reproduced the diagonal moments.
+
+The coincident-link frame is {γ,U†−U}/4. A separate exact spherical quadrature gives the diagonal fourth moment 75/2 and detects the earlier incorrect frame expression, which yields 15/4. The corrected block has two positive but unequal responses. Frobenius-unit cross and plus polarizations give conditional source densities 54Z_Q²/(187g₂²) and 63Z_Q²/(374g₂²) for either two-site Fourier character. Physical operator matching, contact subtraction, larger volumes and real-time continuation remain open.
