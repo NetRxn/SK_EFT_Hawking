@@ -1245,4 +1245,14 @@ Any nonzero real d gives one negative eigenvalue in the
 half-period spatial Fourier block. If d vanishes, both
 half-period eigenvalues vanish and faithful positive thermal
 transfer additionally requires zero equal-time weight.
-Independent review of the nearest-time extension is assigned.
+Independent review of `9b4101e88` reproduced the full nearest
+census (11,520 ordered terms) and verified the coefficientwise
+Haar cancellation. The same proof gives p = 0 by exchange
+of the two extended axes. Hence a faithful finite thermal
+representation for the full two-sector composite block requires
+both d = 0 and s = 0. The diagonal replay tests the first
+condition. An independent same-site calculation tests the
+second condition without depending on the diagonal replay.
+This criterion applies to the composite insertion in the
+specified finite model and leaves a dressed or mixed physical
+operator as a separate construction.
