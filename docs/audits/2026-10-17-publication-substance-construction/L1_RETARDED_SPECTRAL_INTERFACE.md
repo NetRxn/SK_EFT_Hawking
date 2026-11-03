@@ -1498,3 +1498,26 @@ Gaussian integer component is 128. The physical denominator
 for this tensor is 4096 from the four frame factors and two
 quadratic Haar projections. The remaining join uses the two
 open extended coordinates and the source tensor at site 0.
+
+The exact four-site tensor join found two nonzero endpoint
+modes in the canonical transverse pattern, each 15/16384.
+Its tag is −2. The transverse-exchanged pattern reverses both
+the raw tensor sign and the tag, so the contributions add.
+The result at one fixed composite site is
+−(15/2048) g₁g₂⁵, with zero imaginary part. The all-16 endpoint
+replay also returned zero for the four modes excluded by the
+isolated-link argument. This is author replay evidence pending
+independent verification.
+
+For L = (D₀+D₂)/√2 and the unrescaled dressed slice derivative,
+spatial translation multiplies the fixed-site numerator by √2.
+The one-point subtraction vanishes by the reviewed symmetry.
+Writing the exact partition function as g₂⁸ z(g₁/g₂²), the
+mixed covariance for g₂ ≠ 0 and nonzero partition function is
+
+    −15√2 g₁ / (2048 g₂³ z(g₁/g₂²)).
+
+This is the finite overlap in the stated source coordinates.
+Physical matching still has to derive the source combination,
+its dimensions, the regulator response and its retained
+observable space.
