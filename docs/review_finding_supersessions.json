@@ -10263,6 +10263,21 @@
         "enforced": true,
         "run_at": "2026-08-15"
       }
+    },
+    {
+      "finding_id": "review:2026-10-15-l1-abstract-length:L1:1.1",
+      "status": "fixed",
+      "evidence": "Independent review accepted the exact abstract and display restoration and inspected the four-page PDF. The canonical L1 detail passes at 443 of 600 configured characters. The unverified ceiling provenance, E1 global failure, and existing layout warnings remain open.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "593d70bb",
+      "verified_by": {
+        "command": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;r=check_bundle_abstract_length();print(r);assert any(d.name==\"within_ceiling\" and d.passed and d.message.startswith(\"L1:\") for d in r.details)'",
+        "declared": "cd \"$REPO\" && python3 -c 'import sys;sys.path.insert(0,\"scripts\");from validation.checks.bundles_readiness import check_bundle_abstract_length;r=check_bundle_abstract_length();print(r);assert any(d.name==\"within_ceiling\" and d.passed and d.message.startswith(\"L1:\") for d in r.details)'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
