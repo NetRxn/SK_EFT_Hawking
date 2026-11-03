@@ -378,13 +378,13 @@ These increments bring the accounted population to 5,651 with signed
 subtotal `153322180909/259200`. The full denominator still requires
 the remaining 800 words.
 
-The same ordered contraction covers the last 64 size-`(2,6)`
+The same ordered contraction covers 64 further size-`(2,6)`
 words. The census excludes the 128 matching words already counted
 in the mixed-plane chain family. The remaining words form one
 canonical plan and contribute `163/96` each, totaling `326/3`.
 Run `size_six_total()` from the contraction module to reproduce
 the result. Both the scratch and checkpoint runs agree. The
-remaining 736 words are fully link-connected.
+remaining 736 words include four split words evaluated below.
 
 ## Reality of fixed-link top coefficients
 
@@ -488,5 +488,8 @@ join. The exact subtotal is `-40213/16`. This sector includes
 negative contributions. The remaining 256 words require the
 source-plaquette traces coupled to the mixed centers.
 
-The checkpoint rerun reproduced the signed subtotal. Independent
-verification of this increment remains pending.
+Independent review reproduced the subtotal and the 160 disjoint
+words, with 156 connected and four split size-`(2,6)` words. It
+checked the Haar scales, signed exterior joins and branch symmetry.
+The four split words complete that shape population. The subtotal
+over 6,195 accounted words is `11270712702218527/19110297600`.
