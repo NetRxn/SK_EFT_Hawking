@@ -726,3 +726,43 @@ Hessian or to the operator product obtained after subtracting the
 full quadratic insertion. This field-independent local term is a
 source counterterm. Its freedom shows why a background matching
 condition must also specify the quadratic source convention.
+
+### Gauge average as an exact finite control
+
+The existing literal coefficient controls exhibit a local Wilson-law
+covariance failure. For the finite regulator one can nevertheless
+form the invariant weight `P(exp S)(q)=∫dg exp(S(g·q))`, using
+independent normalized Spin(4) Haar at each site. The link Haar
+and site Berezin measures are invariant under this change of
+variables. For every gauge-invariant insertion O, changing
+variables separately at each g gives
+
+    ∫dq O(q) P(exp S)(q) = ∫dq O(q) exp(S(q)).
+
+Thus projection at the weight level preserves the zero-source
+partition function and invariant correlators, including any
+source whose full insertion is invariant. For a general source
+the joint weight must be projected with its source present.
+Projecting the action before exponentiating is a different
+operation. The projected weight can be nonlocal or signed and
+does not establish reflection positivity. In particular this
+identity cannot transfer the dressed-operator result to a
+different covariant action. Independent review verified the measure
+change of variables and both projected source derivatives.
+
+In particular, let `W_0=exp S(0)`, `J_t=∂_t S(0)` and
+`K_{tu}=∂_t∂_u S(0)`. Before integrating over lattice variables,
+the projected source derivatives are
+
+    ∂_t P(W)|₀ = P(W₀ J_t)
+    ∂_t∂_u P(W)|₀ = P(W₀ (J_t J_u + K_tu)).
+
+This identity needs no division of Grassmann-valued weights.
+Replacing the second line by a product of separately averaged
+insertions would discard their shared gauge-orbit correlations.
+Even when `K_tu=0` for distinct slices in the literal source,
+the projected joint derivative is the orbit average of their
+product with the original weight. The positive-state test for
+a covariant observable must use its own specified insertion
+and measure. This calculation does not identify it with the
+projected response.
