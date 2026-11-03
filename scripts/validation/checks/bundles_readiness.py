@@ -1306,12 +1306,12 @@ def check_bundle_lean_module_coverage() -> CheckResult:
         n_ghost = sum(len(v) for v in unbuilt.values())
         details.append(Detail(
             "unbuilt", True,
-            f"{n_ghost} of those, across {len(unbuilt)} bundle(s), resolve to NO module "
-            f"in the Lean build and so can never be repaid by citing them — they are "
-            f"registrations of substrate that was planned and not built "
-            f"({'; '.join(f'{c}: {len(v)}' for c, v in sorted(unbuilt.items()))}). "
-            f"Repay by removing the registration, not by writing prose about them "
-            f"(TODO-D50)", warning=True))
+            f"{n_ghost} of those, across {len(unbuilt)} bundle(s), do not resolve "
+            f"under their registered names in the current Lean declaration index "
+            f"({'; '.join(f'{c}: {', '.join(v)}' for c, v in sorted(unbuilt.items()))}). "
+            "Reconcile the original lift, exact declarations, imports and built "
+            "dependencies before changing a registration or concluding that "
+            "substrate is missing (TODO-D50)", warning=True))
 
     # ⚠️ **DEREGISTRATIONS ARE REPORTED ON EVERY RUN, INCLUDING A GREEN ONE.** That is
     # half of what makes dropping a dependency *visible* rather than silent: the ledger
