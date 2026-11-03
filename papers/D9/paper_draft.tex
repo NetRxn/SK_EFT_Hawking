@@ -471,22 +471,7 @@ worst case or a complete description of the channel.}
 \label{tab:whatcertifies}
 \begin{ruledtabular}
 \footnotesize
-\begin{tabular}{lll}
-Datum & Certifies $\ddist$ & Route \\
-\colrule
-Readout error prob. & exactly &
-  Table~\ref{tab:exact} \\
-Pauli error weights & exactly &
-  Table~\ref{tab:exact} \\
-Reconstructed Choi & from above &
-  Thm.~\ref{thm:sdp} \\
-Choi, spectral bound only & from above, loosely &
-  Thm.~\ref{thm:sandwich} \\
-Compiler accuracy $\varepsilon$ & from above &
-  \lean{diamondDist\_unitaryKraus\_le} \\
-$F_{\mathrm{avg}}$ (benchmark) & \emph{from below only} &
-  Thm.~\ref{thm:rblower} \\
-\end{tabular}
+\input{tables/whatcertifies.tex}
 \end{ruledtabular}
 \end{table}
 
@@ -1350,14 +1335,7 @@ caveats is not a substitute for separating them.}
 \label{tab:classes}
 \begin{ruledtabular}
 \footnotesize
-\begin{tabular}{lll}
-Class & Closed by & Response \\
-\colrule
-1. Identification & literature & disclose, keep visible \\
-2. Library gap & work & schedule, or cite and say so \\
-3. Impossibility & nothing & state as a negative result \\
-4. Kernel-checked, empty & nothing to close & retract the claim \\
-\end{tabular}
+\input{tables/classes.tex}
 \end{ruledtabular}
 \end{table}
 

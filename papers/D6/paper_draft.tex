@@ -790,19 +790,7 @@ imports.
 \caption{Modules in the capstone's dependency closure, and what each contributes.}
 \label{tab:modules}
 \begin{ruledtabular}
-\begin{tabular}{ll}
-Module & Contributes \\
-\colrule
-\verb|Basic| & shared definitions \\
-\verb|StabilizerCode| & stabilizer substrate \\
-\verb|SteaneCode| & the $[[7,1,3]]$ instance \\
-\verb|Counting| & Eqs.~\eqref{eq:mcnot},~\eqref{eq:acnot}; well-formedness \\
-\verb|MalignantUnionBound| & Lemmas~\ref{lem:union}--\ref{lem:submul} \\
-\verb|Concatenation| & the level sequence \\
-\verb|DoubleExp| & Eq.~\eqref{eq:double-exp} \\
-\verb|ConcatenatedComposition| & Theorem~\ref{thm:levels}; the capstones \\
-\verb|AGP/Threshold| & Eqs.~\eqref{eq:threshold-def},~\eqref{eq:threshold-numeric} \\
-\end{tabular}
+\input{tables/modules.tex}
 \end{ruledtabular}
 \end{table}
 
