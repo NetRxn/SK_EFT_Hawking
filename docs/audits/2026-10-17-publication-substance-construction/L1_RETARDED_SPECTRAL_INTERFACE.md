@@ -861,3 +861,57 @@ partial comparison. The sectors without private elimination
 still require a closed-order calculation. Independent review
 verified the conditional Haar argument, classifier incidence
 and all transferred subtotals.
+
+The same distribution argument works for any number of
+occurrences of a common oriented plaquette. An incidence pass
+counted each distinct plaquette once when tracking link use,
+but counted every coframe occurrence. It repeatedly removed a
+plaquette with one private single-use port, or a singleton
+commutator whose two links were both private. The pass removed
+all plaquettes for 4,026 words, of which 1,114 carry nonzero
+cross-time weight. Beyond the two previously reviewed private
+sectors it selects 128 mixed-chain, 800 odd-commutator,
+64 pure-chain, 618 small-component and 504 transport-cycle
+increment words. Of those additional words, 64 mixed-chain and
+88 small-component words have nonzero cross weight. Their
+incidence counts were independently reproduced. Their
+coefficient subtotals require the sector-level checks below.
+
+In mixed chain the complete elimination selects exactly the
+128 opposite-singleton words. Half have zero cross multiplier
+and half have multiplier −4. Their existing per-word value
+`81/64` gives normalization 162 and cross subtotal −324.
+The same-singleton half requires a new closed-order contraction.
+
+The pure-chain, transport-cycle increment, and odd-commutator
+sectors are fully selected by the reviewed incidence pass. Their
+exact normalization subtotals are `24`, `32380/81`, and zero,
+respectively. All three use only transverse curvature planes
+and their diagonal plus source weights vanish on both slices.
+The remaining 618 selected small-component words are being
+replayed with all four coefficient weights.
+
+A second incidence scan minimized each word's product of Haar
+denominator scales over the 32 trees, then included its repeated
+label factorial. In the evaluator convention with the action
+factor 16 absorbed at every vertex, the least common multiple
+of these bounds is `7791007453025402880000`. The largest
+single-word bound is `486937965814087680000`. The common scale
+has residue 26548 modulo 65537. The unscaled action adds the
+factor 16⁸, also invertible at this prime. Thus exact modular
+integration can certify a nonzero rational result if it returns
+a nonzero residue. These are denominator controls, not a
+computed normalization residue or a sign test.
+
+The small-component replay finished with 618 selected words and
+88 nonzero cross weights. Its exact (normalization, cross,
+contact, product) subtotals are
+`(142007171/64800, −62073/8, 62073/8, 0)`. For the 128
+opposite-singleton mixed-chain words the corresponding subtotals
+are `(162, −324, 324, 0)`. Including the previously accepted
+private-curvature sectors and the three source-neutral sectors
+gives `3150767387/8100` for the partial normalization and
+`−1129749/8` for the partial cross numerator. The new weighted
+small-component sums await independent reproduction. There are
+2,425 normalization words and 1,046 cross-weight words outside
+this elimination, so the partial signs do not settle either full sum.
