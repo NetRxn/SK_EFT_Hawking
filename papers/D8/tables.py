@@ -48,7 +48,7 @@ TABLES = {
             ('Clifford$+T$', '$\\su 2$', '$\\sqrt 2 \\sin(\\pi/8)$ not an algebraic integer'),
             ('Read--Rezayi $k=5$', '$\\su 2$', 'Chebyshev factorization of $T_7(x)+1$'),
             ('Read--Rezayi $k=7$', '$\\su 2$', 'triple-angle collapse at $\\cos(\\pi/9)$'),
-            ('Trapped-ion M\\o lmer--S\\o rensen', '$\\su 4$', 'Brylinski entangling criterion'),
+            ('Trapped-ion M\\o lmer--S\\o rensen', '$\\su 4$', '$\\pi/2$ entangler on the even grid'),
             ('Clifford$+$CCZ (with $T$)', '$\\su 8$', 'density of the $\\{H,T,\\mathrm{CNOT}\\}$ part'),
             ('Clifford$+$CCZ ($T$-free)', '$\\su 8$', '$\\mathrm{tr} = 1/\\sqrt2$ not an algebraic integer'),
         ],

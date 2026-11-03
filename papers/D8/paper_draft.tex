@@ -109,9 +109,9 @@ through the channel representation.
 The second question, circuit length, is Sec.~\ref{sec:length}. Three verified
 mechanisms reach it, and none dominates: the commutator recursion is
 unconditional at exponent $\approx 3.97$; the Ross--Selinger grid
-route~\cite{RossSelinger2016} reaches the optimal exponent $1$ but rests on a
-number-theoretic existence that is open, which we isolate as a single stated
-hypothesis rather than an atmosphere of caveats; and the
+route~\cite{RossSelinger2016} reaches exponent $1$ when the bounded
+finder succeeds. A stated residual-witness hypothesis suffices for
+success; and the
 Kliuchnikov--Maslov--Mosca ancilla route~\cite{KMM2013ancilla} reaches exponent
 $1$ unconditionally, at the price of two ancillas and a weaker form of
 contract. Between the first and second questions sits a third thing a compiler
@@ -513,21 +513,18 @@ Both alphabets then instantiate the same constructive compiler and
 polylogarithmic length bound for $0<\varepsilon\le\varepsilon_0$.
 The exact compilation declarations are listed in the proof index.
 
-\paragraph{Trapped-ion M\o lmer--S\o rensen at $\su 4$.} The two-qubit gate set
-realized on production trapped-ion hardware consists of single-qubit rotations
-together with the M\o lmer--S\o rensen entangling gate at a discrete grid of
-angles. Here the density witness is supplied not by a trace obstruction but by
-the Brylinski--Brylinski criterion~\cite{Brylinski2002}: a two-qubit gate $V$,
-together with all single-qubit gates, generates a dense subgroup of $\su 4$ if
-and only if $V$ is \emph{primitive}, meaning it maps some product state to an
-entangled one. The M\o lmer--S\o rensen gate at any angle that is not a
-multiple of $\pi$ is entangling by inspection of its action on
-$\lvert 00\rangle$, so the criterion applies directly and the alphabet-specific
-work reduces to exhibiting one such angle in the grid. The resulting
-compilation theorem holds for every even grid resolution $N > 0$ and is
-unconditional. This row is the strongest evidence that the interface is not
-tuned to number theory: the witness here is geometric, and it enters through
-the same predicate as the others.
+\paragraph{Trapped-ion M\o lmer--S\o rensen at $\su 4$.}
+The Brylinski--Brylinski universality criterion uses an
+\emph{imprimitive} two-qubit gate, one that takes some product state to
+an entangled state, together with all single-qubit gates
+\cite[Theorem~1.3]{Brylinski2002}. In the formal alphabet the
+M\o lmer--S\o rensen angles lie on a grid. For positive even resolution
+$N$, the grid includes $\pi/2$. Conjugation by that entangler, together
+with the local flows, supplies the flows along the spanning tensor-Pauli
+tangents (\lean{trappedIonSU4\_v4\_witness\_tracked\_holds}).
+The resulting density witness yields the specialized compilation theorem
+for that grid
+({\footnotesize\leanbreak{trappedIonSU4\_solovayKitaev\_headline\_unconditional}}).
 
 \paragraph{Clifford$+$CCZ at $\su 8$.} The three-qubit case admits two density
 mechanisms that are structurally different, and the contrast between them is

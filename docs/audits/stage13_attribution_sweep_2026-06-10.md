@@ -123,7 +123,7 @@ pass rather than guessed. The citation resolves correctly for E1's use either wa
 | --- | --- | --- |
 | AKN1998 | Operator-norm to channel-distance conversion | Held full text; Lemma 12.6 identified in the historical sweep. |
 | AharonovArad2011 | Compilation and approximation context | Abstract cache available; current source passage comparison remains open. |
-| Brylinski2002 | Primitive/nonprimitive gate universality criterion | Project summary only; compare the precise criterion and local-gate assumptions with the primary text. |
+| Brylinski2002 | Primitive/nonprimitive gate universality criterion | Author v1, Theorem 1.3, states the imprimitive-gate criterion with all local gates. The formal grid witness supplies the separate density proof. |
 | DawsonNielsen2006 | Recursion, length exponent and separate runtime exponent | Author v2 full text, §3.3 Eqs. (8) and (9), independently reviewed in the D8 1.4 repair. |
 | GilesSelinger2013 | Column synthesis and scope comparison | Held full text; column lemma identified in the historical sweep. |
 | Hietala2020VOQC | Related verified circuit optimizer | Project summary only; current source passage comparison remains open. |
