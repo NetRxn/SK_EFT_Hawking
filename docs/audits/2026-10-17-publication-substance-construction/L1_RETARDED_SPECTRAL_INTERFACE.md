@@ -166,3 +166,33 @@ For `r > 0`, the fixed-ball radial integrand is
 constant sources. A time-dependent contact would require the full
 regulator prescription. Independent review verified the Gaussian
 derivatives, both angular averages and the momentum substitution.
+
+### Time-dependent spatial shear with a fixed spatial cutoff
+
+For a separate comparison with continuous Euclidean time, use
+`K_j = -∂_τ² + pᵀ exp(-2j(τ)E)p + r` and a fixed three-dimensional
+spatial momentum ball. Here `E` is spatial, traceless and has unit
+Frobenius norm. At zero temperature let `e = √(p²+r)`. The two
+linear source vertices contribute `2N(pᵀEp)²/[e(Ω²+4e²)]` to the
+frequency-space Hessian integrand, since the Fourier transform of
+`G_p(τ)² = exp(-2e|τ|)/(4e²)` is `1/[e(Ω²+4e²)]`.
+The quadratic vertex contributes `-N pᵀE²p/e`, using the equal-time
+propagator `1/(2e)`. This term is instantaneous under the specified
+source action and cutoff.
+
+Angular averaging gives the response density
+`N ∫ [4p⁴/(15e(Ω²+4e²)) - p²/(3e)] d³p/(2π)³`.
+Subtracting the zero-frequency response cancels the contact and gives
+`-N Ω²/15 ∫ p⁴/[e³(Ω²+4e²)] d³p/(2π)³`.
+The contrast is strictly negative for nonzero real Ω, positive N and
+positive cutoff. This comparison is at zero spatial momentum and uses
+a spatial cutoff. The earlier four-dimensional cutoff calculation
+uses a different regulator. The microscopic lattice operator match
+remains open.
+
+Independent analytic review reproduced the Fourier transform, vertex
+factors, angular moments and sign. For `r > 0` the reviewer also
+obtained the zero-frequency response
+`−NΛ⁵/[30π²√(Λ²+r)]` by a radial total derivative and the
+low-frequency coefficient
+`−N/60 ∫ p⁴/e⁵ d³p/(2π)³` multiplying `Ω²`.
