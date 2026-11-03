@@ -16,6 +16,11 @@ import l1_shift_group_contract as shifted
 
 AUDIT = Path(__file__).resolve().parent
 SLICE = re.compile(r"^slice ([0-9 ]+)$", re.MULTILINE)
+EXACT = re.compile(
+    r"\bexact(?: slice (\d+ \d+ \d+ \d+))? "
+    r"scaled Gaussian \((-?\d+),(-?\d+)\)/5308416$",
+    re.MULTILINE,
+)
 ZERO = (Fraction(0), Fraction(0))
 
 
@@ -35,6 +40,18 @@ def compile_evaluators(output, closed):
         )
 
 
+def validate_projection_receipt(receipt, row, base_same):
+    matches = EXACT.findall(receipt)
+    if len(matches) != 1:
+        raise ValueError(f"Expected one exact projection receipt for {row}")
+    index, real, imaginary = matches[0]
+    if base_same:
+        if index or (int(real), int(imaginary)) != (0, 0):
+            raise ValueError(f"Expected unindexed exact zero for {row}")
+    elif index.split() != row:
+        raise ValueError(f"Projection receipt index {index!r} differs from {row}")
+
+
 def project(output, key, stem, suffix, expected, pool):
     parity = stem + ("_parity" if suffix else "_parity_dual")
     parity_output = subprocess.check_output(
@@ -46,9 +63,11 @@ def project(output, key, stem, suffix, expected, pool):
     (output / f"{key}.slices").write_text(parity_output)
 
     def evaluate(row):
-        return subprocess.check_output(
+        receipt = subprocess.check_output(
             [str(output / (stem + "_dual")), *row, *suffix], text=True,
         )
+        validate_projection_receipt(receipt, row, base_same=key == "same")
+        return receipt
 
     path = output / f"{key}.out"
     with path.open("w") as stream:
