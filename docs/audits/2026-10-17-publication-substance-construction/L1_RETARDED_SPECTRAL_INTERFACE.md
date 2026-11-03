@@ -766,3 +766,48 @@ product with the original weight. The positive-state test for
 a covariant observable must use its own specified insertion
 and measure. This calculation does not identify it with the
 projected response.
+
+### Local covariance of the closed-path source candidate
+
+Use the endpoint convention of the existing
+[coefficient reference](l1_full_action_reference.py):
+`U_{xy} → g_y U_{xy} g_x⁻¹`. In the closed ordering, the
+rightmost factor traverses the first edge. Intermediate gauge
+factors cancel pairwise around the plaquette, leaving
+`P_x → g_x P_x g_x⁻¹`. Each coframe block transports its
+neighbor spinor to x before contraction with the gamma matrix
+at x, or transports the corresponding barred spinor in the
+reverse contraction. Under the site gauge change the four
+blocks therefore give the same internal vector rotation at x.
+The gamma-contracted frame transforms by conjugation at x.
+The closed-path curvature trace with two frame factors is
+invariant because the chirality matrix commutes with Spin(4).
+The determinant term is invariant under the internal proper
+rotation.
+
+A world-index shear commutes with the internal rotation,
+so replacing the frames by exp(jE)T in this closed ordering
+gives a locally invariant sourced action for any site source.
+Its differentiated action has the same local form as the
+dressed-source construction but uses closed-path curvature.
+This gives an explicit candidate whose response can be
+evaluated independently. Its normalization and weighted
+correlations cannot use the literal signed coefficients
+without new comparison. Independent review verified all four
+coframe blocks, the plaquette ordering and the sourced action.
+
+For any fixed spanning tree of extended links, choose the gauge
+at the root to be the identity and choose the remaining gauges
+recursively so every tree link becomes the identity. At fixed
+tree link values this is a sitewise determinant-one Berezin change
+of variables. It acts on every remaining link by fixed left and
+right multiplications, preserving its Haar integral. If each
+labelled action factor is the complete internal contraction at
+its center, it transforms invariantly on its own. The same
+tree change of variables then applies to each such word before
+integrating tree links, which now contribute unit Haar volume.
+This allows the existing tree-incidence profile to guide the
+closed-path evaluator. The reduction applies to complete
+internal contractions, so individual gamma-index summands
+cannot be fixed separately on this argument. Independent review
+verified the reduction for invariant Berezin top coefficients.
