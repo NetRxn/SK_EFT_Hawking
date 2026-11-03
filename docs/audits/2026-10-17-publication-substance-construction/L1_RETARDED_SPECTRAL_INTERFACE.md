@@ -1606,3 +1606,24 @@ verified the first-vertex normalization, the pure-g₂ sign
 change and the nonuniform site gauge symmetry. Its scope is
 the internal Ward identity. Background metric matching and
 thermal positivity impose additional conditions.
+
+A joint-response test can isolate the missing matter coupling.
+At zero interaction let D_x be the composite shear and O_x the
+scalar shear vertex from the calibrated kinetic action, with
+both operators centered in their respective measures. Use the
+exponent convention +λ Σ_x D_x O_x for a candidate local joint
+interaction. If the measures factorize at λ = 0, then
+
+    ∂_λ Cov(D_y,O_z)|₀
+      = Σ_x Cov_geometry(D_y,D_x) Cov_scalar(O_z,O_x).
+
+This follows by differentiating the normalized expectation
+and factoring its four insertions at zero interaction. The
+subtractions in the connected derivative vanish there by
+centering. For translation-invariant measures the Fourier
+transform is the product of the two covariance kernels in
+matched lattice coordinates. This is a first-order check for
+the stated candidate interaction. It requires both kernels on
+the same extended regulator. The independent probe alone gives
+zero mixed covariance and cannot measure λ. A physical match
+must justify the joint interaction and its normalization.
