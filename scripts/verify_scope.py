@@ -187,6 +187,14 @@ def _plan(paths: list[str]) -> tuple[list[tuple[str, list[str]]], list[str]]:
         steps.append(("D1 hierarchy table",
                       ["uv", "run", "python", "scripts/validate.py",
                        "--check", "d1_hierarchy_table", "--no-memo"]))
+    d2_table_inputs = {
+        "papers/D2/paper_draft.tex", "papers/D2/tables.py", "papers/D2/tables/branches.tex",
+        "papers/D2/tables/z4.tex", "scripts/render_paper_tables.py",
+        "scripts/paper_tables/__init__.py", "src/core/constants.py", "src/core/formulas.py",
+    }
+    if d2_table_inputs.intersection(paths):
+        steps.append(("D2 generated table parity",
+                      ["uv", "run", "python", "-m", "pytest", "tests/test_sm_anomaly.py", "-q"]))
     if "papers/F/paper_draft.tex" in paths:
         # This reader checks F's actual hierarchy/crossover prose against the
         # canonical producer; a manuscript-only edit does not run the suite.
