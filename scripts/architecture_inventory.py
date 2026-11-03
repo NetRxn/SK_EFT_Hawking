@@ -31,6 +31,7 @@ import argparse
 import ast
 import json
 import sys
+import subprocess
 import re
 from pathlib import Path
 
@@ -151,13 +152,18 @@ def hooks() -> list[dict]:
                                 "matcher": entry.get("matcher", "*"),
                                 "command": h.get("command", "")[:200],
                                 "timeout": h.get("timeout")})
-    git_hooks = PROJECT_ROOT / ".git" / "hooks"
-    if git_hooks.is_dir():
-        for f in sorted(git_hooks.iterdir()):
-            if f.is_file() and not f.name.endswith(".sample"):
-                out.append({"kind": "git", "event": f.name,
-                            "matcher": "-", "command": str(
-                                f.relative_to(PROJECT_ROOT)), "timeout": None})
+    result = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-path", "hooks"],
+        cwd=PROJECT_ROOT, capture_output=True, text=True,
+    )
+    if result.returncode == 0:
+        git_hooks = Path(result.stdout.strip())
+        if git_hooks.is_dir():
+            for hook in sorted(git_hooks.iterdir()):
+                if hook.is_file() and not hook.name.endswith(".sample"):
+                    out.append({"kind": "git", "event": hook.name,
+                                "matcher": "-", "command": f"git hook run {hook.name}",
+                                "timeout": None})
     return out
 
 

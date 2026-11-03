@@ -311,3 +311,28 @@ class TestDocumentsAnswerTheirQuestion:
         assert mutated != f"**Answers:** {q}"
         # a verbatim comparison must reject the mutated form
         assert f"**Answers:** {q}" not in mutated.replace(f"**Answers:** {q}", "X", 1)
+
+
+def test_linked_checkout_inventories_git_resolved_hooks(inv_mod, monkeypatch, tmp_path):
+    import subprocess
+
+    primary = tmp_path / "primary"
+    linked = tmp_path / "linked"
+    subprocess.run(["git", "init", "-q", str(primary)], check=True)
+
+    def git(*args):
+        subprocess.run(["git", "-C", str(primary), *args], check=True)
+
+    git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+        "commit", "-q", "--allow-empty", "-m", "Fixture")
+    git("worktree", "add", "-q", "--detach", str(linked))
+    hook_dir = primary / "managed-hooks"
+    hook_dir.mkdir()
+    hook = hook_dir / "pre-commit"
+    hook.write_text("#!/bin/sh\nexit 0\n")
+    hook.chmod(0o755)
+    git("config", "core.hooksPath", str(hook_dir))
+    monkeypatch.setattr(inv_mod, "PROJECT_ROOT", linked)
+    assert [row["event"] for row in inv_mod.hooks() if row["kind"] == "git"] == [
+        "pre-commit"
+    ]

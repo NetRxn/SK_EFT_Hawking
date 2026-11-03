@@ -39,3 +39,12 @@ closed. Both path repairs were already independently reviewed. On
 and the canonical closure writer reran each declared verifier before
 recording both closures. The unattributed test now measures 56 against
 44. The remaining over-ceiling findings still require disposition.
+
+The architecture inventory writer now asks Git for the active hook
+directory. Before the repair the linked-worktree regression missed the
+configured hook and the generated inventory could falsely pass with
+six hooks. The repaired writer retains seven and records the citation
+registry population of 677. Independent review checked default,
+relative, and absolute hook path resolution, then passed all 26
+architecture inventory tests. This qualifies the scoped inventory
+repair. The full focused suite needs a new exact-head receipt.
