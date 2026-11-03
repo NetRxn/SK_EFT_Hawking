@@ -17,7 +17,7 @@ def add_indices(e,*inds):
 empty=(0,)*8
 
 @cache
-def curv(a,b):
+def curv(a,b,closed_order=False):
     if a==b:return ()
     basis=[eye(2)]+[-I*p for p in pauli]
     dag=[eye(2)]+[I*p for p in pauli]
@@ -27,7 +27,9 @@ def curv(a,b):
     for ch in range(2):
         cut=test[2*ch:2*ch+2,2*ch:2*ch+2]
         for i,j,k,l in product(range(4),repeat=4):
-            z=(basis[i]*basis[j]*dag[k]*dag[l]*cut).trace().expand()
+            loop = (dag[l]*dag[k]*basis[j]*basis[i] if closed_order
+                    else basis[i]*basis[j]*dag[k]*dag[l])
+            z=(loop*cut).trace().expand()
             if not z:continue
             x=add_indices(empty,4*ch+i,4*ch+k)
             y=add_indices(empty,4*ch+j,4*ch+l)

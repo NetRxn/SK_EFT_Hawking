@@ -17,10 +17,10 @@ def external_moments(x):
         if z:out.append((i,j,z))
     return tuple(out)
 
-def source_table():
+def source_table(closed_order=False):
     table=defaultdict(lambda:[F(0),F(0)])
     for a,b in combinations(range(4),2):
-        for x,y,z in curv(a,b):
+        for x,y,z in curv(a,b,closed_order):
             ey=moments(y)
             for m,g in G.items():
                 for e,c in g.items():
@@ -50,9 +50,9 @@ def adjacency(table):
             out[i,u,b].append(((j,w,a),tuple(-z for z in val)))
     return out,den
 
-def read(family):
+def read(family, path=None):
     tensors=defaultdict(dict)
-    for line in open('l1_residual_batched_'+family+'.out'):
+    for line in open(path or 'l1_residual_batched_'+family+'.out'):
         m=search(r'variant (\d+) exact slice (\d+) (\d+) (\d+) (\d+) (\d+) (\d+) scaled Gaussian \((-?\d+),(-?\d+)\)/5308416',line)
         assert m
         v,a,b,u,w,c,d,r,i=map(int,m.groups())

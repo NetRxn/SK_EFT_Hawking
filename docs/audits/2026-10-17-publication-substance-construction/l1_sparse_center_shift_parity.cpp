@@ -18,6 +18,7 @@ Ext wedge(const Ext&a,const Ext&b){Ext c;for(auto [u,v]:a)if(v)for(auto [w,z]:b)
 Ext bil(Mat a,int x,int y){Ext b;for(int i=0;i<4;i++)for(int j=0;j<4;j++)if(a[i][j]){uint32_t u=1u<<(8*x+i),v=1u<<(8*y+4+j);b[u|v]=mod(sign(u,v)*a[i][j]);}return b;}
 int fwd(int x,int d){return d<2?x^(1<<d):x;}
 Mat g[4],g5,U[4][4],Ud[4][4];
+#include "l1_diagonal_plaquette_order.h"
 int epsilon(int k,int l,int m,int n){array<int,4>a={k,l,m,n};int s=1;for(int i=0;i<4;i++)for(int j=i+1;j<4;j++)if(a[i]>a[j])s=-s;return s;}
 void setup(int seed){
     array<array<array<int,2>,2>,4> pauli={{{{{0,1},{1,0}}},{{{0,P-I},{I,0}}},{{{1,0},{0,P-1}}},{{{1,0},{0,1}}}}};
@@ -60,7 +61,7 @@ Ext source(int x){
 Ext action(array<int,5> l){
     auto [x,k,n,u,v]=l;
     vector<int> a;for(int d=0;d<4;d++)if(d!=k&&d!=n)a.push_back(d);
-    Mat p=mul(mul(U[x][k],U[fwd(x,k)][n]),mul(Ud[fwd(x,n)][k],Ud[x][n]));
+    Mat p=diagonal_plaquette(U[x][k],U[fwd(x,k)][n],Ud[fwd(x,n)][k],Ud[x][n]);
     Ext r;
     for(int c=0;c<4;c++)for(int d=0;d<4;d++)if(c!=d){
         Mat m=mul(mul(p,mul(g[c],g[d])),g5);
@@ -110,10 +111,10 @@ Poly build(int k,int l,int ex0,int ex1,uint32_t allowed){
         array<int,4> q{};
         q[k]=a*8+b;
         if(k<2){
-            p=mul(mul(Q[a],Q[k==0?ex0:ex1]),mul(Qd[b],Qd[j]));
+            p=diagonal_plaquette(Q[a],Q[k==0?ex0:ex1],Qd[b],Qd[j]);
             q[l]=j;
         } else {
-            p=mul(mul(Q[a],Q[j]),mul(Qd[b],Qd[h]));
+            p=diagonal_plaquette(Q[a],Q[j],Qd[b],Qd[h]);
             q[l]=j*8+h;
         }
         for(int c=0;c<4;c++)for(int d=0;d<4;d++)if(c!=d){
