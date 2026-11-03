@@ -10837,6 +10837,21 @@
         "enforced": true,
         "run_at": "2026-11-03"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d3-stage10-redraft:D3:2.4",
+      "status": "fixed",
+      "evidence": "Independent final readback checked active citation consumers and held Sen, Balbinot and Kehle–Unger PDFs. Sen now uses one active source-backed entry. The Balbinot PRL and PRD are distinct works with distinct held sources and accurate consumers. The original Verify passed. Israel section 1.3 and F scientific scope remain separate.",
+      "superseded_by": null,
+      "date": "2026-11-03",
+      "commit": "b6515c67fc2202b34d75dc7511d9c07975b6bda3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q 'cite{Sen2013}' papers/D3/paper_draft.tex && ! grep -q 'cite{Balbinot2005}' papers/D3/paper_draft.tex && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; assert C['KehleUnger2024'].get('primary_source_path'), 'KehleUnger2024 path still unrecorded while the PDF is on disk'\"",
+        "declared": "cd \"$REPO\" && ! grep -q 'cite{Sen2013}' papers/D3/paper_draft.tex && ! grep -q 'cite{Balbinot2005}' papers/D3/paper_draft.tex && uv run python -c \"from src.core.citations import CITATION_REGISTRY as C; assert C['KehleUnger2024'].get('primary_source_path'), 'KehleUnger2024 path still unrecorded while the PDF is on disk'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-03"
+      }
     }
   ]
 }
