@@ -1179,3 +1179,35 @@ this finite model despite identical connected first vertices.
 Independent review at `5280cb77a` reran both private sectors,
 verified their original-label multiplicity factorials, and reproduced
 the raw moment, normalized moment, and affine response exactly.
+
+### Linear composite-metric source on the closed action
+
+For the existing plus polarization P = diag(0,0,1,−1)/√2,
+define Q_x = Z_G (G₂₂(x)−G₃₃(x))/(√2 a²) using the
+dimensionless lattice composite and a real matching coefficient
+Z_G. For spacing a in every direction, add
+a⁴ Σ_x J_x Q_x to the exponent of the closed action. The source
+does not change the link or Berezin integration measure. In this
+specified generating functional the first derivative inserts
+a⁴ Q_x, and the second derivative of log Z inserts the connected
+covariance multiplied by a⁸. There is no bare quadratic vertex
+for this linear source.
+
+For a common J and a translation-invariant four-site lattice,
+divide the second derivative by βV = 4a⁴. The resulting
+zero-momentum static covariance density is
+a⁴ Σ_y ⟨Q₀ Q_y⟩_c. More generally the Fourier transform weights
+each summand by exp(−ik·y). The Legendre stiffness is the inverse
+on a nonsingular source block. Invertibility of that Euclidean
+block alone does not imply a positive thermal transfer
+representation, which also constrains the cross-time block.
+
+The two derivatives of this linear composite source are distinct
+from the curvature-dressed first vertex and the dilation contact
+of the fixed-link coframe family. Comparing the two requires a
+closed-action composite covariance, with the original-order
+contraction as a control. The closed-action diagonal-separation
+replay has been assigned. For physical B3, the remaining match
+must fix Z_G, source and operator mixing, the spatial tensor
+projection, and any regulator-dependent contact, then establish
+the scaling regime and the separate RPA coupling.
