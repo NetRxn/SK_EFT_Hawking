@@ -1632,3 +1632,23 @@ the stated candidate interaction. It requires both kernels on
 the same extended regulator. The independent probe alone gives
 zero mixed covariance and cannot measure λ. A physical match
 must justify the joint interaction and its normalization.
+
+For the free real scalar with positive mass, the connected
+uniform shear covariance is available exactly. The uniform
+vertex is O = −φᵀK'φ/2 for the exponent −φᵀKφ/2.
+Wick contraction gives
+
+    Var(O) = (1/2) Tr[(K⁻¹K')²]
+           = (1/4) Σ_p (p̂₃²−p̂₂²)²/K₀(p)².
+
+The sum uses all lattice momenta. Equivalently it is the trace
+over real field coordinates, with conjugate momentum pairs
+accounting for two real modes. The quadratic action contact
+is separate from this covariance. At unit spacing and mass on
+the 2×2×2×2 torus, each squared lattice momentum is 0 or 4.
+Summing the 16 exact terms gives 193312/342225. The covariance
+per site is 12082/342225 in this convention. It vanishes on the
+collapsed transverse torus and is strictly positive on the
+extended example. This supplies the scalar factor in the
+zero-momentum joint test. The corresponding geometry kernel
+must be evaluated on the same extended lattice.
