@@ -419,3 +419,12 @@ physical edge-anchor choices, and checked the world signs, trace
 multiplicities and integer bounds. A [direct quartic control](l1_normalization_uniform_mixed_control.py)
 matches all 64 exterior terms in each of four edge polynomials.
 This leaves 704 unevaluated words.
+
+The [single-link equal-time kernel](l1_equal_time_source_weights.py)
+integrates the unused source link in 92 words: 40 with active link
+degree two and 52 with active link degree four. Independent exact
+review reproduced the eight diagonal degree-two entries, with
+`(75,87,87,87)/16` in each chirality, and 36 nonzero quartic entries.
+The separate chiral sphere contractions recover the lower moments
+and the scalar 21. This removes the local source site from those
+action contractions. Their action-dependent integrals remain open.
