@@ -2477,3 +2477,22 @@ reproduced the exact single-site coefficient. The two-position
 replay at `00a6572f2` checks the local identity needed for
 the eight-word subtotal. This uses identical upper blocks
 with the lower anchor choices held fixed.
+
+Independent review accepted the eight-word subtotal at
+`00a6572f2`. It replayed all 42 channel comparisons and
+verified the independent outgoing links at each local site.
+The ordered embeddings into the four upper blocks preserve
+the exterior tensor coefficientwise. This holds with the
+lower network fixed. Either upper sheet can be punctured,
+and there are eight distinct choices of the missing
+repeated action vertex.
+
+For this fixed replacement, the two diagonal terms in
+`(G22(x)-G33(x))^2` vanish before Haar integration. Removing
+the repeated action vertex removes degree four at x and
+degree two at each of the distinct neighbors x XOR 4 and
+x XOR 8. A same-anchor square restores degree four at x
+and four at one neighbor, yielding degrees ten and six
+at those neighbors. The top form requires degree eight
+at both. This degree argument is specific to the fixed
+remaining action word and the outgoing source anchors.
