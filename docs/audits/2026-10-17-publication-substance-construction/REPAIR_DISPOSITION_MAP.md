@@ -95,7 +95,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   covers 11 all-protected orbits with independently reduced receipts.
   The [full all-protected subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-all-protected-two-face-subtotal)
   now covers all 23 orbits and both checkerboards, with independent
-  receipt reduction including all deletion rows. The
+  receipt reduction including all deletion rows. The subsequent tree
+  run matched the fused normalization and both retained-source terms
+  on orbits 1 and 2, covering both fused layouts. The
   [three-face deletion replay](L1_RETARDED_SPECTRAL_INTERFACE.md#three-face-deletion-subtotal-and-remaining-core-geometry)
   evaluates all five deletion orbits. The verified three-face
   tree leaves one upper probe per face. The
@@ -120,15 +122,18 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   the larger sums. Orbits 10 and [0](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-zero-normalization-and-source)
   now have class-weighted normalization and source values, including
   their four deletion terms.
-  Its direct all-probe comparison is pending. The retained-source factor
+  The direct all-probe comparison for orbit 10 is pending. The retained-source factor
   replay covers all 75 core-preserving replacements across the
   larger-core representatives. Its local source controls match.
   The six-face deletion replay routes all six omissions to four-face
-  joins. The fixed-probe comparison passed for deletion 4.
-  Finish the full-orbit sums. General center counts remain open.
+  joins. The [full class-weighted deletion 4 result](L1_RETARDED_SPECTRAL_INTERFACE.md#full-class-weighted-six-face-deletion-4)
+  passed independent receipt review. The earlier direct comparison
+  covered one fixed probe. Finish the other five deletion sums,
+  the remaining eight four-face orbits, and the original six-face
+  core. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 
-- **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing and canonical finding §3.2 closure. The next bounded substrate package is §2.2–2.4. Derive Schwarzschild heating from a differentiable decreasing mass profile and acoustic cooling from the explicit source profile, then relate the applicable profiles to the regime hypotheses. Keep the finite-step monotonicity result separate from strict derivative signs. Reuse the partition-linked `δ` corollary already present as `delta_ADW_nonzero_iff_alpha_ADW_ne_one` in the pinned consumer module. For the length identity, use `G_N_emerg_eval p * M_c p = 1 / p.Λ_UV`; the bare Sakharov coupling gives `1 / (p.α_ADW * p.Λ_UV)`. Reconcile the manuscript lead-in with the emergent coupling. The exact identity still needs native proof discovery and validation. The four-laws construction in §2.1 remains open. A differential Schwarzschild area first law is a viable component of that larger obligation. For the acoustic second law, source inspection at `ff5c2614` identified `GloriosoLiu.entropy_current_exists` and `noetherEntropyDensity_nonneg_of_SKEFTAxioms` as reuse candidates. The latter establishes density positivity under the SK axioms. The local-law module defines its divergence as the imaginary Lagrangian, whereas L3 takes the physical entropy divergence as a scalar input. Search by type in the pinned consumer context for a current and divergence identification before dispatching the acoustic construction. The source inspection leaves this search incomplete. The mapped Paper 27 review IDs require individual lifecycle reconciliation, and the manuscript still requires fresh Stage 13 after its redraft.
+- **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing and canonical finding §3.2 closure. The next bounded substrate package is §2.2–2.4. Derive Schwarzschild heating from a differentiable decreasing mass profile and acoustic cooling from the explicit source profile, then relate the applicable profiles to the regime hypotheses. Keep the finite-step monotonicity result separate from strict derivative signs. Reuse the partition-linked `δ` corollary already present as `delta_ADW_nonzero_iff_alpha_ADW_ne_one` in the pinned consumer module. For the length identity, use `G_N_emerg_eval p * M_c p = 1 / p.Λ_UV`; the bare Sakharov coupling gives `1 / (p.α_ADW * p.Λ_UV)`. The independently reviewed and rendered [L3 manuscript correction](https://github.com/NetRxn/SK_EFT_Hawking/commit/4de686400) records that cancellation on the research checkpoint. The exact identity still needs native proof discovery and validation. The four-laws construction in §2.1 remains open. A differential Schwarzschild area first law is a viable component of that larger obligation. For the acoustic second law, source inspection at `ff5c2614` identified `GloriosoLiu.entropy_current_exists` and `noetherEntropyDensity_nonneg_of_SKEFTAxioms` as reuse candidates. The latter establishes density positivity under the SK axioms. The local-law module defines its divergence as the imaginary Lagrangian, whereas L3 takes the physical entropy divergence as a scalar input. Search by type in the pinned consumer context for a current and divergence identification before dispatching the acoustic construction. The source inspection leaves this search incomplete. The mapped Paper 27 review IDs require individual lifecycle reconciliation, and the manuscript still requires fresh Stage 13 after its redraft.
   The focused main-based [draft PR #112](https://github.com/NetRxn/SK_EFT_Hawking/pull/112)
   carries independently reviewed §3.2 closure at `5780a47b`.
   The exact base `ce194cdc4` and candidate have identical
