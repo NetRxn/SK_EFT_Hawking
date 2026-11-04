@@ -2264,3 +2264,13 @@ Setting the mixed links to identity as a separate control gives
 `46798847841893967231713280` in each column, matching the
 independent character replay. The unrestricted join still needs
 the pure transverse integrations.
+
+The [dual-column strip replay](l1_extended_overlap_pure_strip.py)
+implements the pure pair projection with two temporal pair indices
+at each endpoint. Its fixed nonpure-anchor branch emits 165,540
+nonzero coefficients over 648 curvature label quadruples. The
+largest quadruple has 256 entries, and the two endpoints use 484
+and 1,096 paired states. Each coefficient carries a common
+denominator 4. The mixed-anchor branch retains its four spatial
+coordinates for the cycle join. The strip replay checks an
+intermediate tensor, with the paired-node cycle still to be closed.
