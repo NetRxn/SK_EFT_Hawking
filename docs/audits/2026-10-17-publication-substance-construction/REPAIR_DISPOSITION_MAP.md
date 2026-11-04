@@ -86,7 +86,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   tree leaves one upper probe per face. The
   [three-face normalization replay](L1_RETARDED_SPECTRAL_INTERFACE.md#three-face-tree-normalization-replay)
   joins the disjoint base and the shared pure upper tensor first.
-  Complete its exact replay and add the retained-source terms.
+  The retained-source replay covers all eight core-preserving replacements
+  per orbit. Complete both exact replays and reconcile their totals.
   The four-face deletion replay reduces all 40 removals to two-face
   joins, with a single source replacement at the original removed plane.
   Complete the weighted subtotal and the original four-face contraction. General center counts remain open.

@@ -8,13 +8,13 @@ from math import factorial
 
 from l1_direct_b_haar import add, scale, wedge
 from l1_extended_four_face_gauge_join import IDENTITY, dual_mixed, mixed_rows
-from l1_extended_mixed_center_census import EVEN, curvature_boundary, orbits, words_with_mixed_count
+from l1_extended_mixed_center_census import AXES, EVEN, curvature_boundary, orbits, words_with_mixed_count
 from l1_extended_mixed_center_gamma import COMPONENTS, gamma_block
 from l1_extended_mixed_curvature_core import PAIRS, face_tensor
 from l1_extended_mixed_frame_moment import SCALE
-from l1_extended_one_face_gauge_join import live_pair
+from l1_extended_one_face_gauge_join import check_removals, live_pair, source_frame
 from l1_extended_opposed_source import summed_fourth
-from l1_extended_protected_center import protected_center
+from l1_extended_protected_center import protected_center, summed_protected_source
 from l1_extended_two_face_gamma_join import remote_environment
 from l1_extended_two_face_tree import close_upper, fixed_frame_pair, upper_factor
 from l1_extended_two_mixed_centers import remap
@@ -56,20 +56,25 @@ def upper_probes(face, edges, live, tree):
 
 
 @cache
-def disjoint_row(components):
-    peeled = live_pair(None)
+def disjoint_row(components, source=False):
+    if source:
+        edge = source_frame(None)
+        peeled = wedge(edge, remap(edge, (0, 2)))
+    else:
+        peeled = live_pair(None)
     residual = remap(fixed_frame_pair(components), (0, 3, 4))
     return {mask >> 8: value for mask, value in wedge(peeled, residual).items()
             if mask & 255 == 255}
 
 
 @cache
-def pure_row(first, last):
-    return {mask >> 8: value for mask, value in protected_center((first, last)).items()
+def pure_row(first, last, source=False):
+    tensor = summed_protected_source if source else protected_center
+    return {mask >> 8: value for mask, value in tensor((first, last)).items()
             if mask & 255 == 255}
 
 
-def coefficient(pattern, faces, protected, base, reverse):
+def coefficient(pattern, faces, protected, base, reverse, source=False):
     upper, tree = geometry(faces, protected, reverse)
     (shared, shared_items), = [(x, sorted(items)) for x, items in upper.items() if len(items) == 2]
     (single, single_items), = [(x, items) for x, items in upper.items() if len(items) == 1]
@@ -98,30 +103,45 @@ def coefficient(pattern, faces, protected, base, reverse):
     assert pattern[EVEN.index(shared)] == (tuple(axis for axis, _, _ in shared_items),) * 2
     assert len(set(pattern[EVEN.index(single)])) == 1
     shared_probes = [upper_probes(face, faces[face], edge, tree) for _, face, edge in shared_items]
-    grouped = {}
-    for key, (probe, weight) in shared_probes[1 - side].items():
-        rows = []
-        for label, (other, other_weight) in shared_probes[side].items():
-            args = (other, probe) if side == 0 else (probe, other)
-            pure = remap(pure_row(*args), shared_sites)
-            local = remap(disjoint_row(label), disjoint_sites)
-            rows.append(scale(wedge(pure, local), weight * other_weight))
-        grouped[key] = add(*rows)
+    def group_rows(replace_pure=False, replace_disjoint=False):
+        grouped = {}
+        for key, (probe, weight) in shared_probes[1 - side].items():
+            rows = []
+            for label, (other, other_weight) in shared_probes[side].items():
+                args = (other, probe) if side == 0 else (probe, other)
+                pure = remap(pure_row(*args, source=replace_pure), shared_sites)
+                local = remap(disjoint_row(label, source=replace_disjoint), disjoint_sites)
+                rows.append(scale(wedge(pure, local), weight * other_weight))
+            grouped[key] = add(*rows)
+        return grouped
 
+    grouped = group_rows()
     _, single_sites, single_rows, single_divisor = upper_factor(
         pattern, single_face, faces[single_face], protected, reverse)
     coupled = {shared, single, disjoint, overlapping}
     keep, env = remote_environment(pattern, coupled)
-    left, right = (grouped, single_rows) if ordered[0] == shared_face else (single_rows, grouped)
-    channels = tuple(product(left, right))
+    shared_first = ordered[0] == shared_face
+    changed_single = {}
+    if source:
+        _, _, changed_single, _ = upper_factor(
+            pattern, single_face, faces[single_face], protected, reverse, source=True)
+    single_keys = single_rows.keys() | changed_single.keys()
+    channels = tuple(product(grouped, single_keys) if shared_first else product(single_keys, grouped))
     first = mixed_rows(base, overlap_sites, channels)
-    dual = dual_mixed(keep, env, first, set(shared_sites) | set(disjoint_sites) | set(single_sites))
-    real = imag = 0
-    for x, y in channels:
-        re, im = close_upper(left[x], right[y], dual[x, y])
-        real += re
-        imag += im
-    assert imag == 0
+    sites = set(shared_sites) | set(disjoint_sites) | set(single_sites)
+    dual = dual_mixed(keep, env, first, sites)
+
+    def close(grouped_rows, singles, boundary):
+        left, right = (grouped_rows, singles) if shared_first else (singles, grouped_rows)
+        real = imag = 0
+        for x, y in product(left, right):
+            re, im = close_upper(left[x], right[y], boundary[x, y])
+            real += re
+            imag += im
+        assert imag == 0
+        return real
+
+    real = close(grouped, single_rows, dual)
     divisor = single_divisor * 48 * SCALE**4 * 4**8 * factorial(4)
     divisor *= 48 * SCALE**8 * 4**8 * factorial(2)**2
     divisor *= SCALE**4 * 4**4 * 96**2 * 8**4 * factorial(2)**2
@@ -129,27 +149,58 @@ def coefficient(pattern, faces, protected, base, reverse):
         if x not in coupled:
             divisor *= 96**4 * 8**8
             divisor *= 48 * factorial(4) if p == q else 48**2 * factorial(2)**2
-    return Fraction(real, divisor)
+    normal = Fraction(real, divisor)
+    if not source:
+        return normal
+    source_keep, source_env = remote_environment(pattern, coupled, source=True)
+    assert source_keep == keep
+    remote_dual = dual_mixed(keep, source_env, first, sites)
+    remote = close(grouped, single_rows, remote_dual)
+    upper_term = (close(grouped, changed_single, dual)
+                  - 24 * close(group_rows(replace_pure=True), single_rows, dual))
+    disjoint_term = -192 * close(group_rows(replace_disjoint=True), single_rows, dual)
+    return normal, tuple(Fraction(term, 6 * divisor) for term in (remote, upper_term, disjoint_term))
 
 
-def main(reverse):
+def main(reverse, source):
     base = cache(gamma_block(None, None, summed_fourth(1)))
     total = Fraction()
     count = population = 0
+    subtotals = [Fraction() for _ in range(3)]
     for pattern, multiplicity in orbits(words_with_mixed_count(3)):
         faces, protected = curvature_boundary(pattern)
         if len(faces) != 3:
             continue
-        result = coefficient(pattern, faces, protected, base, reverse)
+        if source:
+            check_removals(pattern)
+            retained = 0
+            for x, planes in zip(EVEN, pattern, strict=True):
+                for plane in set(planes):
+                    omitted = (x, *(axis for axis in AXES if axis not in plane))
+                    if omitted in faces:
+                        continue
+                    assert curvature_boundary(pattern, omitted=omitted) == (faces, protected)
+                    retained += 1
+            assert retained == 8
+        result = coefficient(pattern, faces, protected, base, reverse, source)
+        if source:
+            result, terms = result
+            print("source orbit", count, "remote, upper, base", *terms, flush=True)
+            for i, term in enumerate(terms):
+                subtotals[i] += 2 * multiplicity * term
         print("orbit", count, "multiplicity", multiplicity, "normalization", result, flush=True)
         total += 2 * multiplicity * result
         count += 1
         population += multiplicity
     assert (count, population) == (5, 960)
     print("three-face normalization, both checkerboards", total, flush=True)
+    if source:
+        print("three-face retained source, both checkerboards", *subtotals, flush=True)
 
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--reverse-upper", action="store_true")
-    main(parser.parse_args().reverse_upper)
+    parser.add_argument("--source", action="store_true")
+    args = parser.parse_args()
+    main(args.reverse_upper, args.source)

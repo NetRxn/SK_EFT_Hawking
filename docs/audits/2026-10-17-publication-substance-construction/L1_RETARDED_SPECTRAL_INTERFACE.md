@@ -4153,3 +4153,22 @@ The first four-face deletion, at face `(3,2,3)` in orbit zero,
 gave `−40832373647928076171875/288230376151711744` before orbit
 and checkerboard weighting in both upper-link choices. The other
 deletion rows still enter the full replay.
+
+#### Three-face retained-source replay
+
+The `--source` option verifies all eight substitutions per
+representative that preserve the three residual faces and their
+protected links. Five are remote, two are at pure upper centers,
+and one replaces the peeled plane at the disjoint base. The
+three residual-face deletions are in the separate peeling
+subtotal.
+
+The replay contracts each replacement once. The remote exterior
+environment carries its existing signed weights. The upper
+replacement uses `−2 × 4!/2!` and the disjoint base uses
+`−2 × 48 × 2!`. Both protected frames of the removed peeled
+plane become fixed-link source factors, while the complementary
+frame still carries the live face's components. The join
+includes channels present only in the source upper tensor.
+Independent review and the 40-case incidence replay confirmed
+the coverage and weights. The numerical subtotal is pending.
