@@ -5840,7 +5840,11 @@ the gamma labels and retains the shared edge's endpoint relation
 through the site-13 and site-15 checks. This support test excludes
 1,055,232 of 1,179,648 tuples, leaving 124,416 possible survivors.
 Both nonempty B maps in the verified slice are excluded at this
-stage. The surviving candidates still require signed evaluation.
+stage. The independently reviewed [source support replay](l1_unpaired_source_support.py)
+reproduces the count and four known-zero controls without scratch
+imports. Its deterministic iterator provides the signed replay's
+candidate order. The surviving candidates still require signed
+evaluation.
 
 Run [the signed slice replay](l1_unpaired_signed_slice.py) with
 the repository Python environment to reproduce the complete zero
