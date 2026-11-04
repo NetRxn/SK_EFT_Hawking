@@ -2168,3 +2168,13 @@ sheet scalar divided by `8^16 * 4^32 * 2^8`, including the sixteen
 raw second-moment factors and the repeated-vertex weights. Reordering
 whole site blocks has even parity here because each site population
 in the upper factor is even.
+
+A lower-column replay matched 8,736 fixed original masks against
+216 upper complements. The 31,488 compatible pairs reduce to
+9,088 live mixed masks carrying 59,312 Gaussian coefficients.
+The measured direct continuation still has 170,968,703,152
+products over curvature labels. The column contraction therefore
+splits the fixed mixed pair at the two crossing Grassmann bits.
+Each upper-projected block absorbs its own fixed vertex and
+retains only the incoming and outgoing bit indices, an 8 by 8
+interface. The exact factored replay is in progress.
