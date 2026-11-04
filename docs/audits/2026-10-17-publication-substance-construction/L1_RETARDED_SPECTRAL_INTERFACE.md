@@ -5997,3 +5997,14 @@ zeros and 116 nonempty B maps. Twelve maps were checked
 against the unfactored signed route. The contiguous interval
 `[640,4736)` has 3,596 exact zeros and 500 nonempty maps.
 Resume the B census at index 4736 and keep A closures separate.
+
+The indexed environment query completes one exact A subshard
+of the two-tuple grouping. It fixes `q(15,3)=5`, selecting
+the first tuple, with `γ(9,0)=(0,0)`, `γ(9,1)=(1,)`, and
+`q(9,1)=1`. Independent review checked that the remaining
+label and exterior sums are retained. The run checked 46,944
+site-11-compatible products, queried 1,888 distinct exact
+environment complements, and found no nonzero matches.
+This subshard has raw Gaussian scalar `(0,0)`. The receipt's
+final scalar label refers to the pinned subshard. The wider
+cuts reached the cap and the full two-tuple scalar remains open.
