@@ -1,13 +1,14 @@
 """Two-source replacements of the disjoint opposed 16-site normalization word."""
 from collections import Counter
 from fractions import Fraction
+from functools import cache
 from itertools import combinations_with_replacement, product
 from math import factorial
 
 from l1_direct_b_haar import R, add, bilinear, diag, gamma, scale, wedge
-from l1_extended_opposed import center, curvature, geometry
+from l1_extended_opposed import center, curvature, geometry, staged_center
 from l1_normalization_disjoint_sector import adj, quat
-from l1_normalization_opposed_fourth import nodes
+from l1_normalization_opposed_fourth import fourth_T, nodes, tuples
 
 
 def frame(direction, reverse, left, right):
@@ -20,17 +21,43 @@ def frame(direction, reverse, left, right):
             for g in gamma]
 
 
+def action_frame(direction, anchor, left, right):
+    if anchor == 0:
+        return frame(direction, False, left, right)
+    y = 1 << direction
+    u = diag(quat(left), quat(right))
+    ud = diag(quat(adj(left)), quat(adj(right)))
+    return [add(bilinear(ud * g, y, 0), scale(bilinear(g * u, 0, y), -1))
+            for g in gamma]
+
+
+@cache
+def fourth_action(direction, anchor):
+    if anchor == 0:
+        return fourth_T(direction)
+    out = {labels: {} for labels in tuples}
+    for left, right, weight in nodes():
+        t = action_frame(direction, anchor, left, right)
+        pairs = {(a, b): wedge(t[a], t[b]) for a, b in PAIRS}
+        for a, b, c, d in tuples:
+            out[a, b, c, d] = add(out[a, b, c, d],
+                                   scale(wedge(pairs[a, b], pairs[c, d]), weight))
+    return out
+
+
 PAIRS = tuple(combinations_with_replacement(range(4), 2))
 
 
-def source_frames(direction):
+@cache
+def source_frames(direction, anchor=0):
     second = {pair: {} for pair in PAIRS}
     shared = {pair: {} for pair in PAIRS}
     reverse_source = {}
     for left, right, weight in nodes():
-        t = frame(direction, False, left, right)
-        reverse_t = frame(direction, True, left, right)
-        g = add(*(wedge(v, v) for v in t))
+        t = action_frame(direction, anchor, left, right)
+        shared_t = frame(direction, bool(anchor), left, right)
+        reverse_t = frame(direction, not anchor, left, right)
+        g = add(*(wedge(v, v) for v in shared_t))
         reverse_source = add(reverse_source,
                              scale(add(*(wedge(v, v) for v in reverse_t)), weight))
         for a, b in PAIRS:
@@ -38,8 +65,9 @@ def source_frames(direction):
             second[a, b] = add(second[a, b], scale(pair, weight))
             shared[a, b] = add(shared[a, b], scale(wedge(pair, g), weight))
     # Both maps use 96² times Haar and 8⁴ times physical frame degree.
-    return ({p: scale(v, 96) for p, v in shared.items()},
+    maps = ({p: scale(v, 96) for p, v in shared.items()},
             {p: wedge(v, reverse_source) for p, v in second.items()})
+    return maps if anchor == 0 else maps[::-1]
 
 
 def modified_center(a, b):
@@ -79,6 +107,28 @@ def check_source_support(active):
         assert matched == expected
 
 
+def anchor_sector(denominator):
+    anchors = tuple(product(range(2), repeat=2))
+    normal = {a: staged_center(fourth_action(0, a[0]), fourth_action(1, a[1]))[0]
+              for a in anchors}
+    layer_norm = sum(Fraction(close(p, q), denominator**2 * factorial(4)**2)
+                     for p, q in product(normal.values(), repeat=2))
+    layer_source = Counter()
+    for a in anchors:
+        first, second = (source_frames(direction, anchor)
+                         for direction, anchor in enumerate(a))
+        for u, v in product(range(2), repeat=2):
+            row = modified_center(first[u], second[v])
+            signed = sum(close(row, other) for other in normal.values())
+            # Two choices of altered center and two orders of the sources.
+            layer_source[(u << 2) | (v << 3)] += Fraction(
+                -4 * signed, 48 * 96**4 * 8**8 * denominator * factorial(2) * factorial(4))
+    print("anchor-sector normalization", layer_norm**4)
+    values = {r: 4 * layer_norm**3 * value for r, value in sorted(layer_source.items())}
+    print("anchor-sector numerator by offset", values)
+    print("anchor-sector numerator", sum(values.values()))
+
+
 def main():
     active = geometry()
     check_source_support(active)
@@ -100,7 +150,8 @@ def main():
         print("offset", offset, "center terms", len(row),
               "layer coefficient", value, "lattice coefficient", weight * value)
         total += value
-    print("two-source selected-word contribution", weight * total)
+    print("two-source selected-word contribution", weight * total, flush=True)
+    anchor_sector(denominator)
 
 
 if __name__ == "__main__":

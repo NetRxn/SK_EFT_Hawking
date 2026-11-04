@@ -2910,3 +2910,30 @@ reproduced the four layer coefficients and subtotal, and checked the
 private-link parity, distinct directed anchors, and factorials.
 This is a second exact selected-word numerator contribution. Other
 action-word sectors and the full signed denominator remain open.
+
+### Sum over the repeated anchor choices
+
+The same replay now sums all four directed frame-anchor choices at
+each of the eight active centers, for 65,536 assignments at fixed
+curvature plane and checkerboard. The four vertices at any center
+use a single repeated anchor choice. The transverse undirected edges
+are distinct across active centers, so the directed choices preserve
+the disjoint-link factorization. The reversed action coframe and the
+source based at the other endpoint keep their distinct matrix
+orderings.
+
+Each transverse layer sums the 16 opposed-center anchor pairs. For
+the source layer, the remaining two action vertices at the affected
+center use the same anchor pair and the sources can occupy either
+directed link on each incident edge. The replay then sums four
+possible affected layers and multiplies by the three unchanged layer
+factors. The sector normalization is
+`14657531890869140625/72057594037927936`. Each of separations
+0, 4, 8 and 12 contributes
+`-15830134442138671875/2251799813685248` to the numerator.
+Their sum is `-15830134442138671875/562949953421312`.
+Independent review reproduced the normalization and all four
+separation coefficients. The equality across separations follows from
+this anchor sum.
+Mixed anchor choices within a center's repeated vertices and
+other curvature words are outside this sector.
