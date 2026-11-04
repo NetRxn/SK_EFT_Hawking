@@ -1,4 +1,4 @@
-"""Exact normalization and source numerator for one-face three-mixed-center cores."""
+"""Exact normalization and source numerator for supported one-face cores."""
 from argparse import ArgumentParser
 from collections import Counter
 from fractions import Fraction
@@ -81,7 +81,7 @@ def local_pure(source=False):
     return protected_center((None, None))
 
 
-def coefficient(pattern, face, edges, source=False):
+def coefficient(pattern, face, edges, source=False, *, both=False):
     x, k, l = face
     opposite = x ^ (1 << k) ^ (1 << l)
     first, last = pattern[EVEN.index(x)]
@@ -107,12 +107,12 @@ def coefficient(pattern, face, edges, source=False):
         return int(raw.const().x)
 
     raw = close(mixed, pure, environment)
-    if source:
+    if source or both:
         source_keep, source_environment = remote_environment(pattern, {x, opposite}, source=True)
         assert source_keep == keep
-        raw = (close(mixed, pure, source_environment)
-               - 24 * close(mixed, remap(local_pure(True), pure_sites), environment)
-               - 96 * factorial(2) * close(remap(local_mixed(True), sites), pure, environment))
+        source_raw = (close(mixed, pure, source_environment)
+                      - 24 * close(mixed, remap(local_pure(True), pure_sites), environment)
+                      - 96 * factorial(2) * close(remap(local_mixed(True), sites), pure, environment))
     # Four protected frame edges use two directed Haar scales each.
     divisor = (SCALE**4 * 4**4 * 96**2 * 8**4 * 48 * factorial(2)**2)
     divisor *= 48 * SCALE**4 * 4**8 * factorial(4)
@@ -120,14 +120,17 @@ def coefficient(pattern, face, edges, source=False):
         if y not in (x, opposite):
             divisor *= 96**4 * 8**8
             divisor *= 48 * factorial(4) if p == q else 48**2 * factorial(2)**2
-    return Fraction(raw, divisor * (6 if source else 1))
+    if both:
+        return Fraction(raw, divisor), Fraction(source_raw, 6 * divisor)
+    return Fraction(source_raw, 6 * divisor) if source else Fraction(raw, divisor)
 
 
 def deleted_face_coefficient(pattern, face, normal, shared, disjoint):
     assert not curvature_boundary(pattern, omitted=face)[0]
     frame_scale = 96**4 * 8**8
-    divisor = (48 * frame_scale * factorial(4))**5
-    divisor *= (48**2 * frame_scale * factorial(2)**2)**3
+    pure = sum(a == b for a, b in pattern)
+    divisor = (48 * frame_scale * factorial(4))**pure
+    divisor *= (48**2 * frame_scale * factorial(2)**2)**(len(pattern) - pure)
     raw = source_total(pattern, tensors(pattern, normal, shared, disjoint), only_faces={face})
     return Fraction(raw, 6 * divisor)
 
@@ -254,14 +257,66 @@ def main(deleted_face=False, retained_face=False):
     print(f"one-face {label}, both checkerboards", total)
 
 
+def four_mixed_pure_upper():
+    words = {pattern for pattern in words_with_mixed_count(4)
+             if sum(not set(a) & set(b) for a, b in pattern) == 1}
+    selected = []
+    one_face_count = 0
+    for pattern, multiplicity in orbits(words):
+        faces, protected = curvature_boundary(pattern)
+        if len(faces) != 1:
+            continue
+        index = one_face_count
+        one_face_count += 1
+        (face, edges), = faces.items()
+        x, k, l = face
+        first, second = pattern[EVEN.index(x)]
+        opposite = x ^ (1 << k) ^ (1 << l)
+        assert edges <= protected and not set(first) & set(second) and (k, l) in (first, second)
+        if pattern[EVEN.index(opposite)] != ((k, l),) * 2:
+            continue
+        assert all(set(a) & set(b) for y, (a, b) in zip(EVEN, pattern, strict=True) if y not in (x, opposite))
+        assert multiplicity == 192 and sum(a == b for a, b in pattern) == 4
+        check_removals(pattern, expected_count=12)
+        omissions = {(y, *(axis for axis in AXES if axis not in plane))
+                     for y, planes in zip(EVEN, pattern, strict=True) for plane in set(planes)}
+        assert len(omissions) == 12 and face in omissions
+        for omitted in omissions:
+            assert curvature_boundary(pattern, omitted=omitted) == (
+                {} if omitted == face else faces, protected,
+            )
+        selected.append((index, multiplicity, pattern, face, edges))
+    assert one_face_count == 44 and [row[0] for row in selected] == [3, 4, 13, 14, 15, 16]
+    print("four-mixed one-face pure-upper coverage", len(selected), "orbits,",
+          sum(row[1] for row in selected), "words per checkerboard", flush=True)
+    fourth = summed_fourth(1)
+    normal, _ = staged_center(summed_fourth(0), fourth)
+    shared = mixed_center(fourth)
+    disjoint = disjoint_center()
+    totals = [Fraction() for _ in range(3)]
+    for index, multiplicity, pattern, face, edges in selected:
+        norm, retained = coefficient(pattern, face, edges, both=True)
+        deleted = deleted_face_coefficient(pattern, face, normal, shared, disjoint)
+        print("four-mixed one-face pure-upper orbit", index, "multiplicity", multiplicity,
+              "normalization", norm, "retained source", retained, "deleted source", deleted, flush=True)
+        for i, value in enumerate((norm, retained, deleted)):
+            totals[i] += 2 * multiplicity * value
+    print("four-mixed one-face pure-upper both checkerboards normalization/retained/deleted",
+          *totals, flush=True)
+    print("four-mixed one-face pure-upper fixed-shear numerator", sum(totals[1:]), flush=True)
+
+
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--deleted-face-source", action="store_true")
     mode.add_argument("--retained-face-source", action="store_true")
     mode.add_argument("--surviving-face-source", action="store_true")
+    mode.add_argument("--four-mixed-pure-upper", action="store_true")
     args = parser.parse_args()
-    if args.surviving_face_source:
+    if args.four_mixed_pure_upper:
+        four_mixed_pure_upper()
+    elif args.surviving_face_source:
         replay_surviving_faces()
     else:
         main(args.deleted_face_source, args.retained_face_source)

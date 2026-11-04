@@ -5057,3 +5057,25 @@ Independent receipt review checked sequential orbit IDs, multiplicities,
 and every stratum subtotal. This completes the peelable subset of the
 four-mixed sector. The 987 nonpeelable orbits and physical matching
 remain open.
+
+#### Four-mixed one-face pure-upper subtotal
+
+The `--four-mixed-pure-upper` replay exited zero on local IDs 3, 4,
+13, 14, 15, and 16 of the one-disjoint one-face census. Each has a
+disjoint mixed base, a matching pure upper center, and four protected
+face links. All other mixed centers have overlapping frames. The
+run checks 12 source omissions per orbit, with 11 preserving the
+core and one peeling it completely. Each representative has 192
+words per checkerboard, giving 1,152 words per board.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `1022804892165847798828125/1125899906842624` |
+| Retained source | `−5314137510513438276328125/1125899906842624` |
+| Deleted source | `−3553702798836427734375/8796093022208` |
+| Full fixed-shear numerator | `−5769011468764501026328125/1125899906842624` |
+
+Independent static and census review checked the four-pure and
+four-mixed deletion divisor, the omission guards, and compatibility
+with the existing three-mixed replay. Receipt reduction covers this
+six-orbit subset of the nonpeelable four-mixed sector.
