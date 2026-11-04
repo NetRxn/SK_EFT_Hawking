@@ -6,17 +6,18 @@ from itertools import product
 from math import factorial
 
 from l1_direct_b_haar import add, scale, wedge
-from l1_extended_four_face_gauge_join import IDENTITY, dot, dual_mixed, mixed_rows
+from l1_extended_four_face_gauge_join import IDENTITY, dual_mixed, mixed_rows
 from l1_extended_mixed_center_census import (
     EVEN, curvature_boundary, orbits, swap_patterns, words_with_mixed_count,
 )
-from l1_extended_mixed_center_gamma import COMPONENTS, gamma_block, opposite_center, opposite_source
+from l1_extended_mixed_center_gamma import COMPONENTS, face_channels, gamma_block, opposite_center, opposite_source
 from l1_extended_mixed_curvature_core import PAIRS, face_tensor
-from l1_extended_mixed_frame_moment import SCALE
+from l1_extended_mixed_frame_moment import SCALE, frame_edge
 from l1_extended_opposed_source import summed_fourth
 from l1_extended_protected_center import protected_center, summed_protected_source
 from l1_extended_two_face_gamma_join import remote_environment
 from l1_extended_two_mixed_centers import remap
+from l1_reduced_wedge_reference import wedge_sign
 
 
 @cache
@@ -31,12 +32,17 @@ def upper_tensor(pure, positions, probe, source):
     return opposite_center(probes, fixed=(fixed,))
 
 
-def upper_factor(pattern, face, edges, protected, reverse, source=False):
+def upper_links(face, edges, protected):
     x, k, l = face
     center = x ^ (1 << k) ^ (1 << l)
     upper = tuple(sorted(((y, a) for y, a in edges & protected
                           if y ^ (1 << a) == center), key=lambda edge: edge[1]))
     assert len(upper) == 2
+    return center, upper
+
+
+def upper_factor(pattern, face, edges, protected, reverse, source=False):
+    center, upper = upper_links(face, edges, protected)
     if reverse:
         upper = upper[::-1]
     planes = pattern[EVEN.index(center)]
@@ -67,17 +73,83 @@ def upper_factor(pattern, face, edges, protected, reverse, source=False):
     return center, sites, rows, divisor
 
 
+@cache
+def fixed_frame_pair(components):
+    rows = []
+    for (a, b), weight in face_channels(components).items():
+        first = fixed_second_frame(a)
+        second = remap(fixed_second_frame(b), (0, 2))
+        rows.append(scale(wedge(first, second), weight))
+    return add(*rows)
+
+
+@cache
+def fixed_second_frame(labels):
+    return frame_edge(labels, 0, None)
+
+
+@cache
+def disjoint_base(first, last):
+    joined = wedge(fixed_frame_pair(first), remap(fixed_frame_pair(last), (0, 3, 4)))
+    return {mask: value for mask, value in joined.items() if mask & 255 == 255}
+
+
+def check_disjoint_tree(faces, protected, reverse):
+    links = set.union(*faces.values())
+    live = {upper_links(face, edges, protected)[1][int(reverse)]
+            for face, edges in faces.items()}
+    tree = links - live
+    vertices = {v for x, axis in links for v in (x, x ^ (1 << axis))}
+    reached = {min(vertices)}
+    for _ in tree:
+        for x, axis in tree:
+            y = x ^ (1 << axis)
+            if x in reached or y in reached:
+                reached.update((x, y))
+    assert len(live) == 2 and len(tree) == 6 and len(vertices) == 7
+    assert reached == vertices
+
+
+def close_upper(left, right, dual):
+    """Pair the two upper rows with only the masks supported by the dual."""
+    real = imag = 0
+    for a, value in left.items():
+        r, i = int(value.const().x), int(value.const().y)
+        for mask, (u, v) in dual.items():
+            if mask & a != a:
+                continue
+            b = mask ^ a
+            other = right.get(b)
+            if other is None:
+                continue
+            s, j = int(other.const().x), int(other.const().y)
+            sign = wedge_sign(a, b)
+            real += sign * ((r*s - i*j)*u - (r*j + i*s)*v)
+            imag += sign * ((r*s - i*j)*v + (r*j + i*s)*u)
+    return real, imag
+
+
 def coefficient(pattern, faces, protected, base, reverse=False, source=False):
     site, = {f[0] for f in faces}
     p, q = pattern[EVEN.index(site)]
-    common, = set(p) & set(q)
-    a, b = sorted(set(p) ^ set(q))
-    ordered = [next(f for f in faces if axis not in f[1:]) for axis in (a, b)]
+    if set(p) & set(q):
+        common, = set(p) & set(q)
+        a, b = sorted(set(p) ^ set(q))
+        directions = (a, common, b)
+        ordered = [next(f for f in faces if axis not in f[1:]) for axis in (a, b)]
+        base_divisor = SCALE**4 * 4**4 * 96**2 * 8**4 * factorial(2)**2
+    else:
+        directions = p + q
+        ordered = [(site, *q), (site, *p)]
+        assert set(ordered) == set(faces)
+        check_disjoint_tree(faces, protected, reverse)
+        base = disjoint_base
+        base_divisor = SCALE**8 * 4**8 * factorial(2)**2
     left, right = [upper_factor(pattern, face, faces[face], protected, reverse) for face in ordered]
     coupled = {site, left[0], right[0]}
     assert len(coupled) == 3
     keep, env = remote_environment(pattern, coupled)
-    sites = tuple(site ^ (1 << i) for i in (a, common, b))
+    sites = tuple(site ^ (1 << i) for i in directions)
     changed = None
     if source:
         changed = [upper_factor(pattern, face, faces[face], protected, reverse, source=True)[2]
@@ -91,16 +163,14 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False):
     def close(lhs, rhs, boundary):
         total = imag = 0
         for x, y in product(lhs, rhs):
-            row = wedge(lhs[x], rhs[y])
-            values = {m: (int(v.const().x), int(v.const().y)) for m, v in row.items()}
-            re, im = dot(boundary[x, y], values)
+            re, im = close_upper(lhs[x], rhs[y], boundary[x, y])
             total += re
             imag += im
         assert imag == 0
         return total
 
     total = close(left[2], right[2], dual)
-    divisor = left[3] * right[3] * SCALE**4 * 4**4 * 96**2 * 8**4 * factorial(2)**2
+    divisor = left[3] * right[3] * base_divisor
     for x, (p, q) in zip(EVEN, pattern, strict=True):
         if x not in coupled:
             divisor *= 96**4 * 8**8
@@ -117,15 +187,15 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False):
     return normal, Fraction(remote, 6 * divisor), Fraction(upper, 6 * divisor)
 
 
-def main(control, reverse, source, orbit):
+def main(control, reverse, source, orbit, all_protected):
     words = swap_patterns() if control else words_with_mixed_count(3)
-    base = cache(gamma_block(None, None, summed_fourth(1)))
+    base = disjoint_base if all_protected else cache(gamma_block(None, None, summed_fourth(1)))
     total = Fraction()
     count = population = eligible = 0
     remote = upper = Fraction()
     for pattern, multiplicity in orbits(words):
         faces, protected = curvature_boundary(pattern)
-        if len(faces) != 2 or len(set.union(*faces.values()) - protected) != 1:
+        if len(faces) != 2 or len(set.union(*faces.values()) - protected) != (0 if all_protected else 1):
             continue
         index = eligible
         eligible += 1
@@ -141,7 +211,12 @@ def main(control, reverse, source, orbit):
         total += 2 * multiplicity * result
         count += 1
         population += multiplicity
-    expected_count, expected_population = (3, 576) if control else (80, 15072)
+    if control:
+        expected_count, expected_population = 3, 576
+    elif all_protected:
+        expected_count, expected_population = 23, 3744
+    else:
+        expected_count, expected_population = 80, 15072
     assert eligible == expected_count
     if orbit is None:
         assert (count, population) == (expected_count, expected_population)
@@ -165,6 +240,10 @@ if __name__ == "__main__":
     mode.add_argument("--control-source", action="store_true", help="replay the two-mixed retained-source controls")
     parser.add_argument("--reverse-upper", action="store_true")
     parser.add_argument("--orbit", type=int, help="evaluate a single numbered orbit")
+    parser.add_argument("--all-protected", action="store_true",
+                        help="select the 23 all-protected three-mixed orbits")
     args = parser.parse_args()
+    if args.all_protected and not (args.candidate or args.candidate_source):
+        parser.error("--all-protected requires --candidate or --candidate-source")
     main(not (args.candidate or args.candidate_source), args.reverse_upper,
-         args.control_source or args.candidate_source, args.orbit)
+         args.control_source or args.candidate_source, args.orbit, args.all_protected)

@@ -4036,3 +4036,52 @@ the other six centers provide the exterior complement. Independent
 incidence enumeration found 42 mixed-upper and four pure-upper
 roles across the 46 removal cases. The exact weighted subtotal
 requires the full replay.
+
+#### All-protected two-face tree contraction
+
+In the 23 all-protected orbits the residual squares meet only at
+their disjoint mixed base. Leaving one upper link live per square
+gives a six-link tree on seven vertices. Both choices of upper link
+pass the tree check on all 23 orbits. Each face supplies the gamma
+weights for the complementary pair of fixed frame axes at the base.
+The four fixed frame edges give the base divisor
+`192⁸ × 4⁸ × (2!)²`. There is no free-link Haar moment.
+
+The [two-face tree replay](l1_extended_two_face_tree.py) selects
+these orbits with `--candidate --all-protected` for normalization
+or `--candidate-source --all-protected` for the retained-face
+source. The base removals are accounted for separately by the
+surviving-face replay. Independent review checked that the upper
+and remote source replacements preserve both faces. The exact
+normalization and source sums remain pending.
+
+#### Corrected balanced two-mixed numerator
+
+The repaired remote-source loop completed with all 36 probe
+weights. Its mixed-class representative is
+`−1865103607177734375/288230376151711744`. The corrected fused
+subtotal on the first orbit is
+`−303011585478349365234375/2251799813685248` across both
+checkerboards, exactly matching the first tree orbit. All three
+tree orbit values are identical, giving the remote subtotal
+`−909034756435048095703125/2251799813685248`.
+
+Adding the corrected remote, protected-upper and deleted-face
+terms gives the revised two-face numerator
+`−23686434889301885009765625/36028797018963968`.
+Together with the peelable and four-face source terms, the
+balanced two-mixed numerator is
+`−2335659522779963714530517578125/18446744073709551616`.
+These replace the earlier fused and combined source values for
+this sector.
+
+Independent arithmetic reproduced both corrected numerator sums
+and gives the balanced two-mixed numerator-to-normalization ratio
+`−5832562966198281588/1098025562845132579`.
+
+The surviving-face source replay completed all 23 all-protected
+orbits. Summing both possible deletions in each orbit gives the
+fixed-shear subtotal `−1494543246329579853515625/562949953421312`
+across both checkerboards. This adds the base removals for the
+all-protected family. The normalization and source insertions
+that retain both faces remain open.
