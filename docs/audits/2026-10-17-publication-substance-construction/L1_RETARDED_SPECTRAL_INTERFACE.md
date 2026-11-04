@@ -1902,3 +1902,11 @@ direction has 380 nonzero post-Haar entries, at most 38 masks
 per tuple, and the join peaks at 38 masks. Four independent
 layers give the fourth power of this result. Mixed-plane
 couplings between layers still require a separate contraction.
+
+Independent review of `f9aabb718` reproduced both layer
+values and the sparse counts. It verified the two single-anchor
+terms, six two-plus-two assignments, the relative rescaling
+24 for the second-moment products, and the action factorials.
+The next assigned test retains a mixed-plane link between
+sheets and measures the post-Haar boundary of that coupled
+join. The verified layer is a control for the split projection.
