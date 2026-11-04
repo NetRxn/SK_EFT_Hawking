@@ -1910,3 +1910,16 @@ terms, six two-plus-two assignments, the relative rescaling
 The next assigned test retains a mixed-plane link between
 sheets and measures the post-Haar boundary of that coupled
 join. The verified layer is a control for the split projection.
+
+The [inter-sheet replay](l1_extended_inter_sheet.py) switches
+centers 0 and 6 to plane (0,2). It sums both frame anchors.
+Every curvature plaquette still has a private port, even
+though four link variables are shared by curvature and frame
+factors. Conditional Haar integration removes the curvature
+dependence while retaining those frame variables. The
+resulting four-center cycle has 38 rows at every boundary
+and contributes 21690819140625/34359738368. Two remaining
+two-center cycles reproduce the prior anchor-summed value.
+The unswitched control also reproduces four independent
+layers. Independent review is pending. A loop with no
+private curvature port remains the next test.
