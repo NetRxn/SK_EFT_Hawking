@@ -52,7 +52,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   family. The [four-face source replay](L1_RETARDED_SPECTRAL_INTERFACE.md#completed-four-face-source-numerator)
   closes its numerator as well. The even-multiplicity census gives
   the next sector sizes. Extend the signed evaluator to three or more
-  mixed centers and the other multiplicities. General center counts
+  mixed centers and the other multiplicities. The
+  [three-mixed-center replay](L1_RETARDED_SPECTRAL_INTERFACE.md#peelable-words-with-exactly-three-mixed-centers)
+  now evaluates normalization and source for the 95 peelable orbits.
+  Next contract the 132 residual-core orbits, starting with the
+  one-face cores. General center counts
   remain open.
   The full word sum, physical matching and B3 remain open.
 

@@ -3711,3 +3711,60 @@ multiplicities and four action vertices per active center.
 The sectors with three or more mixed centers, other plane
 multiplicities, and general center counts still enter the
 unrestricted sums.
+
+### Peelable words with exactly three mixed centers
+
+The complementary-degree join retains the actual plane labels when
+evaluating this sector. It gives 41,760 words on one checkerboard.
+Axis permutations and parity-preserving translations partition them
+into the following orbits. The core size counts faces left after
+removing faces with private, unprotected links.
+
+| Core size | Disjoint-pair centers | Orbits | Words per checkerboard |
+| ---: | ---: | ---: | ---: |
+| 0 | 0 | 73 | 13,920 |
+| 0 | 1 | 22 | 3,744 |
+| 1 | 1 | 13 | 2,208 |
+| 2 | 0 | 80 | 15,072 |
+| 2 | 1 | 23 | 3,744 |
+| 3 | 1 | 5 | 960 |
+| 4 | 0 | 10 | 1,920 |
+| 6 | 0 | 1 | 192 |
+
+At a center with disjoint frame pairs, the product of two independent
+second-curvature tensors has four frame edges. Each carries its own
+second frame moment. Saturation at the active site leaves degree two
+at each of its four passive neighbors. The normalization divisor for
+this center is the same as for overlapping pairs:
+`48² × 96⁴ × 8⁸ × (2!)²`.
+
+Independent execution of the [census replay](l1_extended_mixed_center_census.py)
+with `--three-mixed-normalization` reproduced the following peelable
+normalization subtotals across both checkerboards.
+
+| Disjoint-pair centers | Normalization |
+| ---: | ---: |
+| 0 | `916382184034353565166015625/36028797018963968` |
+| 1 | `52039623692311411728515625/18014398509481984` |
+
+The `--three-mixed-source` replay reproduced these normalization
+subtotals and evaluated the numerator for a fixed shear pair. At a
+disjoint center it replaces one plane's two action slots by two
+outgoing source factors, each summed over its two endpoint anchors.
+The surviving plane retains its second-curvature moment. Relative to
+the normalization divisor the source substitution requires a factor
+of `48 × 2!` in addition to the signed ordered-insertion factor.
+Independent review checked the combinatorics and replayed both local
+source variants, including the passive-site permutation and exterior
+degrees.
+
+| Disjoint-pair centers | Source numerator |
+| ---: | ---: |
+| 0 | `-309232389767181283276171875/2251799813685248` |
+| 1 | `-36159881747516299859765625/2251799813685248` |
+
+The next contraction target is the 132 residual-core orbits,
+representing 24,096 words per checkerboard. The one-face cores
+provide a first check for the disjoint frame pairs with protected
+links. Full lattice normalization and the physical B3 matching
+remain open.
