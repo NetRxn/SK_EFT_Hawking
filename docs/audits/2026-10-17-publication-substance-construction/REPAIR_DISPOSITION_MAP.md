@@ -219,6 +219,22 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   ceiling of 147. This parser repair does not retire the inherited
   failure on this base. Reconcile actual manuscript and substrate
   reach before repeating the exact-base merge qualification.
+  On the separate research branch, [the roster correction](https://github.com/NetRxn/SK_EFT_Hawking/commit/18a242372)
+  records the historical `EntropicGravityDarkEnergy` entry as
+  deregistered. The live manuscript, lift date, stale freshness flag,
+  and stage verdicts are preserved. L3 goes from four absent
+  registrations to three, and the research branch total from 170 to
+  169 against the unchanged ceiling of 147. The exact-main gate
+  comparison above is separate.
+  The remaining L3 registrations are `GloriosoLiu.Axioms`,
+  `GloriosoLiu.SecondOrderProjection`, and `SKDoubling`. They point
+  to the open entropy-current construction. The imported formal
+  divergence returns the imaginary action independently of its
+  current argument. The physical acoustic entropy-flux divergence
+  therefore needs an on-shell identification in the manuscript's
+  background, with matched transport coefficients and boundary
+  conventions. Keep the three registrations and the four-laws
+  obligation open while that identification is developed.
   A separate composition trial on `ce194cdc4` combined the
   serializer, D7 regression, managed paths, inventory and citation
   fixes with the generated tables and reviewed polariton source
