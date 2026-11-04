@@ -57,7 +57,7 @@ def orbits(words):
         yield representative, len(images)
 
 
-def curvature_core(pattern):
+def curvature_boundary(pattern):
     protected = set()
     faces = {}
     for x, pairs in zip(EVEN, pattern, strict=True):
@@ -71,9 +71,13 @@ def curvature_core(pattern):
         private = next((x for x, face in faces.items()
                         if any(counts[e] == 1 and e not in protected for e in face)), None)
         if private is None:
-            return len(faces)
+            return faces, protected
         del faces[private]
-    return 0
+    return faces, protected
+
+
+def curvature_core(pattern):
+    return len(curvature_boundary(pattern)[0])
 
 
 def tensors(pattern, normal, shared):

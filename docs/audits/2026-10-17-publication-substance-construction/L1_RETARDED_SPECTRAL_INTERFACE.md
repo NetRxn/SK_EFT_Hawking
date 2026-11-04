@@ -3159,3 +3159,26 @@ curvature orbits.
 Independent review reproduced the full census and normalization and
 checked the source contraction against the exact 192-word control.
 The full source aggregate was executed locally.
+
+### Conditional kernels for the six joint curvature orbits
+
+The [conditional core replay](l1_extended_mixed_curvature_core.py)
+retains the directed links used by the frames. For the three two-face
+cores the remaining faces share one unprotected link. For the
+three four-face cores the unprotected links form a four-edge cycle
+on the faces. Each unprotected link occurs once in each incident
+holonomy and twice in each incident curvature square. Its join is
+therefore an exact fourth-moment contraction of two coordinate
+pairs. When the cycle closes, the last two partial tensors share
+two live links and both Haar factors must be applied.
+
+The replay compares coordinate-pair contraction with direct
+fourth-order cubature of the same conditional integrals for all
+six representatives, including cross-chirality labels. Independent
+review reproduced all 18 controls. In a fixed
+unit-quaternion slice the same-chirality control gives 1/24, 1/24
+and 1/8 for the two-face cores and 41/10368 for each four-face core.
+One cross-chirality control is negative, −1/16. The conditional
+kernel integrates the unprotected links. The next calculation
+must keep the protected link dependence through the frame join
+and integrate those links jointly to obtain the sector coefficients.
