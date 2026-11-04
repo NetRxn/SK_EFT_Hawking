@@ -5185,8 +5185,19 @@ deletions each remove the core and use the peelable deletion
 evaluator. Orbit 32 uses a separate remote environment because
 it has a disjoint remote center.
 
-The source and geometry are reviewed. Exact contraction evidence is
-pending. The first replay uses `--orbit 0 --probe-classes`. Check
-normalization and retained and deleted source weights against a
-second tree choice before expanding numerical coverage. This
-section records the runnable candidate and census only.
+Orbit 0 exited zero with `--orbit 0 --probe-classes` and with
+`--reverse-upper` added. The two receipts agree byte for byte.
+Independent exact reduction checked the factor of `2 × 192`
+and all source weights. This closes the representative's
+192 words per checkerboard.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `86452182234420759179296875/72057594037927936` |
+| Remote source | `−8964673780431276484734375/2251799813685248` |
+| Upper source | `−126138712725514102559765625/72057594037927936` |
+| Deleted source | `−15392181136584814453125/17592186044416` |
+| Full fixed-shear numerator | `−476054647634766350071265625/72057594037927936` |
+
+The remaining 159 representatives require exact replay. Use
+`--orbit-range 1 4 --probe-classes` for the next three.
