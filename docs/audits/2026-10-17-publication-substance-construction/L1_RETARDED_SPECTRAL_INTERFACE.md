@@ -2517,3 +2517,14 @@ ratios are 24 and 36. With the relative Haar denominator of 24,
 the reweights are 1 and 3/2 by mask. The lower contraction must
 use these reweighted complements to determine the separated
 subtotal. Independent review of this intermediate is pending.
+
+Independent review accepted the separated upper tensor at
+`a1eee3c4a`. All diagonal maps at both endpoints are identical.
+The raw relative factor is `(96 * 2^4 * 8^2) / 8^4 = 24`.
+The [half-column writer](l1_extended_overlap_lower_half_dump.py)
+accepts `--separated-half 0` or `--separated-half 1` to
+replace one local upper complement. The replacement carries
+an extra factor of two to keep every coefficient integral.
+The first regenerated half pair matched the scratch input
+byte for byte. The first modified column has 2,321,664 rows.
+The second position is being evaluated separately.

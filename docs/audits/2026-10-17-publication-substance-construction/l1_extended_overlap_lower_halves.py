@@ -32,8 +32,8 @@ def fixed_pair():
                 addg(out[m|n],(a,b),s*r,s*i)
     return {m:{k:z for k,z in row.items() if any(z)} for m,row in out.items()}
 
-def complement_project(pair):
-    U=signed_lower_complements()
+def complement_project(pair, complements=None):
+    U = signed_lower_complements() if complements is None else complements
     out=defaultdict(dict)
     tested=0
     for m,alpha in pair.items():
