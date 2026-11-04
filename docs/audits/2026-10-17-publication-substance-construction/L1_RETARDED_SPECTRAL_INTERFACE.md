@@ -5784,3 +5784,19 @@ cut labels are fixed, the full shard is a bilinear exterior closure
 of the A and B halves. The empty B map therefore gives exact zero
 for this shard. It provides a regression for a lower support
 projection.
+
+The independently reviewed lower projection first contracts the
+signed lower environment to four gamma keys and 336 rows. It
+matches the shared gamma label on edge `(7,3)` before projecting
+the site-7 masks of degrees 4, 2, and 2. An empty complement
+test certifies an exact zero. The lower projection excludes
+654,336 full tuples and overlaps the upper exclusion on 334,080.
+Their union excludes 919,296 of 1,179,648 tuples, leaving 260,352
+for further evaluation. The lower projection excludes the
+signed-zero `q(5,1)=5` control above. The all-one and
+`q(15,1)=5` signed zeros still pass both projections.
+
+The two projections can currently match different rows of the
+shared edge. Retaining its site-7 and site-15 bytes together
+gives a stronger necessary support condition. The full signed
+coefficient remains open.
