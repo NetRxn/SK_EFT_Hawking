@@ -216,8 +216,7 @@ regulator, the independently reproduced scalar connected variance per
 site is 12082/342225. A verified geometry word contributes
 (61875/262144)⁴ to the signed partition sum. The lead owns the full
 geometry partition and covariance calculation and the derivation of
-a physical matching law. The scalar affine contact is in independent
-review. These results preserve the original B3 acceptance target.
+a physical matching law. Independent review reproduced the scalar affine contact. These results preserve the original B3 acceptance target.
 
 Original B3/L1-02 and Phase6a/5y/6e remain full-strength BUILD. These are distinct from the shared D1/E1/E2 quadratic law.
 

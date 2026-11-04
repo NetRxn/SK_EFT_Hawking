@@ -1809,4 +1809,5 @@ therefore 193312/342225 + 4 − (21824/3315)/2 =
 7407044/5817825. The connected vertex variance is the first
 term and the rest is the quadratic contact. This checks the
 affine matter source independently of the unknown geometry
-kernel. The numeric contact awaits independent verification.
+kernel. Independent exact enumeration at `57ad93dbd` reproduced the
+contact 2348/3315 and the full affine Hessian.
