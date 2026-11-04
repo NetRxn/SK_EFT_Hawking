@@ -2573,3 +2573,19 @@ curvature channels coincide within each case and all
 off-diagonal channels vanish. The 288 additional masks must
 be tested against the lower tensors. The lower and final
 signed joins remain in progress.
+
+The [lower–upper reuse control](l1_extended_source_low_upper_control.py)
+checks all 78,144 half-tensor entries at both local sites and in
+both half positions. The unshared replacement equals the physical
+separated upper tensor S. The shared replacement equals
+`(5 S - 3 B)/2`, where B is the baseline tensor. These equalities
+hold coefficientwise after removing the extra factor of two in
+the shared and separated integer inputs. Linearity of the
+remaining contraction gives the shared lower–upper subtotal
+`-275754484759350057237/19807040628566084398385987584`.
+Adding the eight unshared terms, the same-site terms, and the
+separated upper terms gives
+`-762318335292037598091/19807040628566084398385987584`
+for all degree- and parity-compatible replacements of the
+selected action word. Independent review of the complete
+selected-word result remains pending.
