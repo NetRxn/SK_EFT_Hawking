@@ -2353,3 +2353,15 @@ with its index, weight, pair count, nonzero count, signed numerator,
 and elapsed time. The first two representatives reproduced the
 unreduced scheduler values with weights 2 and 6. A complete sum
 requires every index exactly once, weighted by its orbit size.
+
+The [orbit reducer](l1_extended_overlap_sum_orbits.py) regenerates
+the schedule from the same column rows, rejects missing or duplicate
+indices and inconsistent weights or pair counts, and only then sums
+the signed numerators. A two-index replay matched exact arithmetic
+and exercised the incomplete, duplicate and inconsistent controls.
+
+The all-left signature replay completed 218,921,616 weighted
+candidate pairs in 121 seconds. Its raw subtotal before global
+chirality doubling is
+`493558895505829437085178565821657728079248882488555076558258176`.
+This is one complete signature, with the others still owed.
