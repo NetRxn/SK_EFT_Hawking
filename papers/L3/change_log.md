@@ -103,3 +103,11 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - The existing annotation overlap and the other figure copies remain
   open for visual review and propagation. Full Stage-13 review and the
   physical construction remain due.
+
+## 2026-11-04 — Separate the blue annotation from the cooling curve
+
+- Independent review confirmed the annotation clears both curves and the
+  plotted data are identical. Refreshed the canonical PNG, the L3 PNG and
+  the four-page PDF. The canonical compile passed.
+- D3 and Paper 27 retain the older right panel. Their figure and caption
+  updates require a separate coordinated review. Stage 13 remains due.

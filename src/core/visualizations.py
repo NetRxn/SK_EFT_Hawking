@@ -8953,7 +8953,7 @@ def fig_T_H_evolution_regime_partition():
     )
     # Heat-capacity-sign annotations
     fig.add_annotation(
-        x=2.0, y=0.25,
+        x=2.0, y=0.65,
         text="dT_H/dt < 0<br>(cools toward asymptotic<br>extremality, infinite t-evap)",
         showarrow=False,
         font=dict(size=10, color=COLORS["steel_blue"]),
