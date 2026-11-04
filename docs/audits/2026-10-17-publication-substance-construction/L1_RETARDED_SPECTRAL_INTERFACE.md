@@ -2674,3 +2674,14 @@ difference source. Its 35 determinant-product monomials
 reproduce the independent exterior coefficients
 23,923,344, 1,703,040 and 324,480 at source powers zero through
 two. Full lattice Wick and Haar contractions remain open.
+
+Independent review accepted `b92bfa301`. It checked the
+formal identity over a characteristic-zero coefficient ring
+with symmetric covariance and commuting even coframes,
+and reproduced the three signed control coefficients. The
+[fixed-link checkerboard replay](l1_extended_wick_checkerboard_control.py)
+also checks the full 64 by 64 hopping matrix with both
+anchor orientations. Its exact determinant equals the product
+of the squared norms of the two 16 by 16 chiral determinants.
+The factors share auxiliary variables. Their Wick expectation
+must still be evaluated jointly with the link Haar integrals.
