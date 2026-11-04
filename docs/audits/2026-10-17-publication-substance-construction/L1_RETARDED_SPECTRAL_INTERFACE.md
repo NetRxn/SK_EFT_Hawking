@@ -5486,7 +5486,24 @@ calculation is independent of the tree flag.
 | Surviving-face source | `−13478814619913963671875/17592186044416` |
 | Full fixed-shear numerator | `−351688313349368205736078125/72057594037927936` |
 
-The next replay range is `[1,6)`.
+##### All-protected disjoint-base batch covering orbits 1–5
+
+The probe-class evaluator at `d40c986cd` exited zero for
+`--four-mixed-all-protected-disjoint-base --orbit-range 1 6 --probe-classes`.
+The five orbits cover 960 words per checkerboard. Independent receipt
+review reproduced each subtotal using weight 384 per orbit across both
+checkerboards and one surviving-face term per base deletion.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `13084196796353149600735546875/4611686018427387904` |
+| Remote source | `−10963236487976088236081578125/1152921504606846976` |
+| Upper source | `−4649602685840543796905109375/1152921504606846976` |
+| Surviving-face source | `−355210877489031889453125/140737488355328` |
+| Full fixed-shear numerator | `−4630681670551695317846671875/288230376151711744` |
+
+Orbits 0–5 now have reviewed receipts. The next range is `[6,11)`.
+
 The companion
 `--four-mixed-all-protected-disjoint-base-remaining` route covers
 the other 32 orbits and 4,896 words per checkerboard. It generalizes
