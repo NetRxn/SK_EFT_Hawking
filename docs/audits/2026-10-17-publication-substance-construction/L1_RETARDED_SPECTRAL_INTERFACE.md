@@ -3126,3 +3126,36 @@ and the roles have distinct frame pairs. The summed orbit numerator
 is `-30936106083595922314453125/2251799813685248`.
 Independent review reproduced both endpoint tables and independently
 enumerated the frame-pair multiplicities.
+
+### Census and contraction of balanced two-mixed-center words
+
+The [census replay](l1_extended_mixed_center_census.py) covers four
+vertices at each checkerboard center, with exactly two centers split
+2+2 across distinct planes and the others using one plane. In units
+of two vertices the pure centers give even passive degrees. The
+symmetric differences of the two mixed centers' passive neighbor
+pairs must therefore coincide. Distinct active centers share at
+most two passive neighbors, so the symmetric difference has size
+two and each mixed center has one unchanged frame axis. Choosing
+opposite endpoints at the two changed centers gives a balanced
+pure assignment. The replay reverses these reciprocal swaps from
+the known balanced assignments and deduplicates the resulting words.
+
+Per checkerboard, the census gives 12,192 fully peelable words,
+576 words with two unpeeled curvature faces, and 384 words with
+four. Parity-preserving translations and axis permutations reduce
+these classes to 73, three and three orbits, respectively.
+The joint cases require explicit curvature and frame moments.
+
+For all 73 peelable orbits the replay contracts the signed exterior
+tensors exactly. It sums the four source endpoint choices at each
+eligible removed plane before contracting. Averaging the six shear
+pairs over axis permutations gives the contribution for the fixed
+shear. Both checkerboards together give normalization
+`2923108773834037462646484375/144115188075855872` and source numerator
+`-30307783239724343994140625/281474976710656`. The totals include
+the earlier selected 192-word orbit and exclude the six joint
+curvature orbits.
+Independent review reproduced the full census and normalization and
+checked the source contraction against the exact 192-word control.
+The full source aggregate was executed locally.
