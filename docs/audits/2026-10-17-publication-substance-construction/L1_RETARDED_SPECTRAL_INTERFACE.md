@@ -5100,3 +5100,26 @@ weights, and all 12 omission types per representative.
 Independent receipt reduction reproduced all sums. The existing
 one-disjoint and three-mixed paths retain their environment builder.
 The review did not rerun those contractions.
+
+#### Four-mixed overlapping-upper orbit 0
+
+The one-disjoint census gives orbit 0 multiplicity 192 per
+checkerboard. Its residual face is `(12, 1, 2)`; upper center 10
+carries overlapping planes `((0, 2), (1, 2))` with the exclusive
+and common directions in the live pair. Of 12 distinct source
+omissions, 11 retain the core and one clears it. The contraction
+joins the fixed base and projected upper tensor against the
+indexed remote environment. Of the five retained component pairs,
+only `(0, 0)` and `(3, 3)` contribute, with identical real values.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `60630985510941167578125/70368744177664` |
+| Retained source | `−633070085839488357609375/140737488355328` |
+| Deleted source | `−13478814619913963671875/35184372088832` |
+| Full fixed-shear numerator | `−686985344319144212296875/140737488355328` |
+
+Independent review reduced the raw retained-source and normalization
+receipt, checked the geometry and orbit weight, and reran the
+deleted-face evaluator. The remaining overlapping-upper coefficients
+require their own replay.

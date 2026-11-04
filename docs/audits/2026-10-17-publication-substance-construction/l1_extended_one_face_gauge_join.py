@@ -7,7 +7,7 @@ from itertools import combinations, product
 from math import factorial
 
 from l1_direct_b_haar import R, add, scale, wedge
-from l1_extended_four_face_gauge_join import IDENTITY, dot, dual_mixed, mixed_rows
+from l1_extended_four_face_gauge_join import IDENTITY, dot, dual_mixed, indexed_mixed_dual, mixed_rows
 from l1_extended_mixed_center_census import (
     AXES, EVEN, curvature_boundary, disjoint_center, orbits, source_total, tensors,
     words_with_mixed_count,
@@ -19,7 +19,7 @@ from l1_extended_opposed import staged_center
 from l1_extended_opposed_source import summed_fourth
 from l1_extended_protected_center import protected_center, summed_protected_source
 from l1_extended_two_face_gamma_join import remote_environment, remote_source_replacements
-from l1_extended_two_face_tree import upper_factor
+from l1_extended_two_face_tree import close_upper, upper_factor
 from l1_extended_two_mixed_centers import (
     contract_boundary, mixed_center, remap, second_channels, second_sum, source_only,
 )
@@ -331,6 +331,128 @@ def four_mixed_pure_upper(disjoint_count=1):
     print(label, "fixed-shear numerator", sum(totals[1:]), flush=True)
 
 
+@cache
+def overlap_base_row(components, source=False):
+    if source:
+        edge = source_frame(None)
+        peeled = wedge(edge, remap(edge, (0, 2)))
+    else:
+        peeled = live_pair(None)
+    return {mask: value for mask, value in wedge(peeled, residual_pair(components)).items()
+            if mask & 255 == 255}
+
+
+def overlap_upper_coefficient(pattern, face, edges, protected):
+    x, k, l = face
+    base_axes = (k, l, *(a for a in AXES if a not in (k, l)))
+    base_sites = tuple(x ^ (1 << a) for a in base_axes)
+    upper, upper_sites, ordinary, upper_divisor = upper_factor(
+        pattern, face, edges, protected, False, probe_classes=True,
+    )
+    _, _, changed, source_divisor = upper_factor(
+        pattern, face, edges, protected, False, source=True, probe_classes=True,
+    )
+    assert source_divisor == upper_divisor
+    coupled = {x, upper}
+    keep, environment = remote_environment(pattern, coupled)
+    source_keep, source_environment = remote_environment(pattern, coupled, source=True)
+    assert source_keep == keep
+    dual = indexed_mixed_dual(keep, environment, set(upper_sites))
+    source_dual = indexed_mixed_dual(keep, source_environment, set(upper_sites))
+    totals = [[0, 0] for _ in range(4)]
+    unit = {0: R.one}
+    for components in sorted(ordinary.keys() | changed.keys()):
+        key = (components,)
+        row = mixed_rows(overlap_base_row, base_sites, (key,))[key]
+        source_row = mixed_rows(lambda c: overlap_base_row(c, True), base_sites, (key,))[key]
+        boundary = dual(row)
+        upper_row = ordinary.get(components, {})
+        terms = (
+            close_upper(upper_row, unit, boundary),
+            close_upper(upper_row, unit, source_dual(row)),
+            close_upper(changed.get(components, {}), unit, boundary),
+            close_upper(upper_row, unit, dual(source_row)),
+        )
+        for subtotal, (re, im) in zip(totals, terms, strict=True):
+            subtotal[0] += re
+            subtotal[1] += im
+    assert all(im == 0 for _, im in totals)
+    norm, remote, upper_source, base_source = (re for re, _ in totals)
+    # The fixed base edges carry the peeled plane; its complementary
+    # frame pair is unprobed and still weighted by the residual face.
+    divisor = upper_divisor * 48 * SCALE**4 * 4**4 * 96**2 * 8**4 * factorial(2)**2
+    for y, (first, second) in zip(EVEN, pattern, strict=True):
+        if y not in coupled:
+            divisor *= 96**4 * 8**8
+            divisor *= 48 * factorial(4) if first == second else 48**2 * factorial(2)**2
+    return Fraction(norm, divisor), Fraction(remote + upper_source - 192 * base_source, 6 * divisor)
+
+
+def four_mixed_overlap_upper(orbit=None):
+    words = {pattern for pattern in words_with_mixed_count(4)
+             if sum(not set(a) & set(b) for a, b in pattern) == 1}
+    selected = []
+    incidence = Counter()
+    one_face_count = 0
+    for pattern, multiplicity in orbits(words):
+        faces, protected = curvature_boundary(pattern)
+        if len(faces) != 1:
+            continue
+        index = one_face_count
+        one_face_count += 1
+        (face, edges), = faces.items()
+        x, k, l = face
+        upper = x ^ (1 << k) ^ (1 << l)
+        base_planes = pattern[EVEN.index(x)]
+        first, last = pattern[EVEN.index(upper)]
+        assert edges <= protected and not set.intersection(*map(set, base_planes))
+        assert (k, l) in base_planes
+        if first == last:
+            assert first == (k, l)
+            continue
+        common = set(first) & set(last)
+        assert len(common) == 1 and {k, l} <= set(first) | set(last)
+        assert all(set(a) & set(b) for y, (a, b) in zip(EVEN, pattern, strict=True)
+                   if y not in (x, upper))
+        assert multiplicity == 192 and sum(a == b for a, b in pattern) == 4
+        check_removals(pattern, expected_count=12)
+        for y, planes in zip(EVEN, pattern, strict=True):
+            for plane in set(planes):
+                omitted = (y, *(axis for axis in AXES if axis not in plane))
+                assert curvature_boundary(pattern, omitted=omitted) == (
+                    {} if omitted == face else faces, protected,
+                )
+        incidence[len(common & {k, l})] += 1
+        selected.append((index, multiplicity, pattern, face, edges, protected))
+    assert one_face_count == 44 and incidence == {0: 23, 1: 15}
+    if orbit is not None:
+        selected = [row for row in selected if row[0] == orbit]
+        if not selected:
+            raise ValueError(f"one-disjoint one-face orbit {orbit} has no supported overlap upper")
+    label = "four-mixed one-face overlap-upper"
+    if orbit is not None:
+        label += f" selected {orbit}"
+    print(label, "coverage", len(selected), "orbits,",
+          sum(row[1] for row in selected), "words per checkerboard", flush=True)
+    fourth = summed_fourth(1)
+    normal, _ = staged_center(summed_fourth(0), fourth)
+    shared = mixed_center(fourth)
+    disjoint = disjoint_center()
+    totals = [Fraction() for _ in range(3)]
+    for index, multiplicity, pattern, face, edges, protected in selected:
+        norm, retained = overlap_upper_coefficient(pattern, face, edges, protected)
+        if index == 0:
+            assert norm == Fraction(20210328503647055859375, 9007199254740992)
+            assert retained == Fraction(-211023361946496119203125, 18014398509481984)
+        deleted = deleted_face_coefficient(pattern, face, normal, shared, disjoint)
+        print(label, "orbit", index, "multiplicity", multiplicity,
+              "normalization", norm, "retained source", retained, "deleted source", deleted, flush=True)
+        for i, value in enumerate((norm, retained, deleted)):
+            totals[i] += 2 * multiplicity * value
+    print(label, "both checkerboards normalization/retained/deleted", *totals, flush=True)
+    print(label, "fixed-shear numerator", sum(totals[1:]), flush=True)
+
+
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
@@ -339,8 +461,15 @@ if __name__ == "__main__":
     mode.add_argument("--surviving-face-source", action="store_true")
     mode.add_argument("--four-mixed-pure-upper", action="store_true")
     mode.add_argument("--four-mixed-pure-upper-d2", action="store_true")
+    mode.add_argument("--four-mixed-overlap-upper", action="store_true")
+    parser.add_argument("--overlap-orbit", type=int,
+                        help="select one orbit by its one-disjoint one-face census ID")
     args = parser.parse_args()
-    if args.four_mixed_pure_upper or args.four_mixed_pure_upper_d2:
+    if args.overlap_orbit is not None and not args.four_mixed_overlap_upper:
+        parser.error("--overlap-orbit requires --four-mixed-overlap-upper")
+    if args.four_mixed_overlap_upper:
+        four_mixed_overlap_upper(args.overlap_orbit)
+    elif args.four_mixed_pure_upper or args.four_mixed_pure_upper_d2:
         four_mixed_pure_upper(2 if args.four_mixed_pure_upper_d2 else 1)
     elif args.surviving_face_source:
         replay_surviving_faces()
