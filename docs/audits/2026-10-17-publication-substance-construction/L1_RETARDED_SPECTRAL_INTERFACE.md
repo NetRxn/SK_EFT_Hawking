@@ -4800,3 +4800,21 @@ All 36 rows of the real orbit-zero control group and their divisor
 matched the reference exactly. A separate complex cancellation and
 reuse control passed independent review. The control does not measure
 full-orbit runtime or peak memory.
+
+#### Four-face orbit zero normalization and source
+
+The class-weighted `--full-orbit 0 --retained-source` replay exited
+zero. The normalization per representative is
+`458873528424254506142578125/1180591620717411303424` and the
+retained fixed-shear numerator is
+`−450242679556860068724609375/295147905179352825856`.
+The four tracked deletion rows sum to
+`−10407087279062881787109375/18446744073709551616`.
+Independent review reconciled the two orbit enumerations and the
+four faces `(3,2,3)`, `(3,1,3)`, `(5,2,3)`, and `(5,1,2)`.
+
+Weighting 192 words per checkerboard gives normalization
+`1376620585272763518427734375/9223372036854775808` and full
+fixed-shear numerator
+`−1850268228065598531955078125/2305843009213693952`.
+Independent review reproduced the arithmetic from the receipts.

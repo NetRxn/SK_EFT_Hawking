@@ -117,8 +117,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The sparse equality join matches the literal fixed-probe result.
   Trees selected by projected center key counts reduce the first
   full-probe workload to 5,544 keys at its largest center. Complete
-  that orbit and then the larger sums. Orbit 10 now has class-weighted
-  normalization and source values, including the four deletion terms.
+  the larger sums. Orbits 10 and [0](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-zero-normalization-and-source)
+  now have class-weighted normalization and source values, including
+  their four deletion terms.
   Its direct all-probe comparison is pending. The retained-source factor
   replay covers all 75 core-preserving replacements across the
   larger-core representatives. Its local source controls match.
