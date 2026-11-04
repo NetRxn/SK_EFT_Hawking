@@ -296,13 +296,13 @@ def main(control, reverse, source, orbit, all_protected, probe_classes, orbit_ra
 
 def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None, *,
                             component_remotes=False, compare_component_remotes=False,
-                            split_disjoint_upper=False, census_only=False):
+                            family="overlap-base", census_only=False):
     from l1_extended_one_face_gauge_join import (
         check_removals, deleted_face_coefficient, disjoint_upper_factor,
     )
     from l1_two_face_remote_components import ComponentRemotes
 
-    expected = 25 if split_disjoint_upper else 160
+    expected = 160 if family == "overlap-base" else 25
     start, stop = orbit_range or ((orbit, orbit + 1) if orbit is not None else (0, expected))
     if not 0 <= start < stop <= expected:
         raise ValueError(f"orbit interval [{start}, {stop}) exceeds the {expected} eligible orbits")
@@ -327,11 +327,17 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
             (planes, incoming) for planes, (_, incoming) in zip(upper_planes, uppers, strict=True)
             if not set.intersection(*map(set, planes))
         ]
-        if bool(disjoint_uppers) != split_disjoint_upper:
+        same_plane_uppers = sum(
+            tuple(sorted(axis for _, axis in incoming)) in planes
+            for planes, incoming in disjoint_uppers
+        )
+        orbit_family = "overlap-base"
+        if disjoint_uppers:
+            orbit_family = "same-plane-disjoint-upper" if same_plane_uppers else "split-disjoint-upper"
+        if orbit_family != family:
             continue
-        if any(any(sum(axis in plane for _, axis in incoming) != 1 for plane in planes)
-               for planes, incoming in disjoint_uppers):
-            continue
+        if family == "same-plane-disjoint-upper":
+            assert len(disjoint_uppers) == same_plane_uppers == 1
         assert first != last and len(set.intersection(*faces.values())) == 1
         assert set.intersection(*faces.values()) == free
         assert {tuple(a for a in AXES if a not in face[1:]) for face in faces} == {first, last}
@@ -353,15 +359,17 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
         kinds[len(disjoint_uppers), sum(a != b for a, b in upper_planes)] += 1
         eligible.append((pattern, multiplicity, faces, protected, remote_disjoint))
     assert len(eligible) == expected
-    if split_disjoint_upper:
-        assert all(row[1] == 192 for row in eligible)
-        assert kinds == {(1, 2): 19, (1, 1): 5, (2, 2): 1} and not disjoint_remote_count
-    else:
+    if family == "overlap-base":
         assert sum(row[1] for row in eligible) == 30624
         assert kinds == {(0, 2): 93, (0, 1): 64, (0, 0): 3} and disjoint_remote_count == 1
+    else:
+        assert all(row[1] == 192 for row in eligible) and not disjoint_remote_count
+        if family == "split-disjoint-upper":
+            assert kinds == {(1, 2): 19, (1, 1): 5, (2, 2): 1}
+        else:
+            assert kinds == {(1, 2): 22, (1, 1): 3}
 
     selected = eligible[start:stop]
-    family = "split-disjoint-upper" if split_disjoint_upper else "overlap-base"
     label = f"four-mixed two-face {family} [{start}, {stop})"
     print(label, "coverage", len(selected), "orbits,",
           sum(row[1] for row in selected), "words per checkerboard", flush=True)
@@ -383,14 +391,16 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
         return
 
     def build_upper(pattern, face, edges, protected, reverse, source, omitted, *, probe_classes):
-        center, _ = upper_links(face, edges, protected)
+        center, incoming = upper_links(face, edges, protected)
         first, second = pattern[EVEN.index(center)]
         if set(first) & set(second):
             return upper_factor(pattern, face, edges, protected, reverse, source, omitted,
                                 probe_classes=probe_classes)
-        assert split_disjoint_upper and omitted is None
+        assert family != "overlap-base" and omitted is None
+        same_plane = tuple(sorted(axis for _, axis in incoming)) in (first, second)
+        assert same_plane == (family == "same-plane-disjoint-upper")
         return disjoint_upper_factor(pattern, face, edges, protected, reverse, source,
-                                     probe_classes=probe_classes)
+                                     probe_classes=probe_classes, same_plane=same_plane)
     remotes = ComponentRemotes() if component_remotes or compare_component_remotes else None
     if compare_component_remotes:
         if any(row[-1] for row in selected):
@@ -453,6 +463,7 @@ if __name__ == "__main__":
     mode.add_argument("--four-face-deleted-source", action="store_true")
     mode.add_argument("--four-mixed-overlap-base", action="store_true")
     mode.add_argument("--four-mixed-split-disjoint-upper", action="store_true")
+    mode.add_argument("--four-mixed-same-plane-disjoint-upper", action="store_true")
     parser.add_argument("--census-only", action="store_true",
                         help="check four-mixed geometry and omissions without evaluating tensors")
     parser.add_argument("--reverse-upper", action="store_true")
@@ -475,16 +486,21 @@ if __name__ == "__main__":
         parser.error("remote component modes require --four-mixed-overlap-base")
     if args.compare_component_remotes and args.orbit is None and args.orbit_range is None:
         parser.error("--compare-component-remotes requires an explicit orbit selection")
-    if args.census_only and not (args.four_mixed_overlap_base or args.four_mixed_split_disjoint_upper):
+    family = next((name for selected, name in (
+        (args.four_mixed_overlap_base, "overlap-base"),
+        (args.four_mixed_split_disjoint_upper, "split-disjoint-upper"),
+        (args.four_mixed_same_plane_disjoint_upper, "same-plane-disjoint-upper"),
+    ) if selected), None)
+    if args.census_only and family is None:
         parser.error("--census-only requires a four-mixed two-face mode")
     if args.census_only and (args.component_remotes or args.compare_component_remotes):
         parser.error("--census-only does not evaluate remote components")
-    if args.four_mixed_overlap_base or args.four_mixed_split_disjoint_upper:
+    if family is not None:
         four_mixed_overlap_base(
             args.reverse_upper, args.probe_classes, args.orbit, args.orbit_range,
             component_remotes=args.component_remotes,
             compare_component_remotes=args.compare_component_remotes,
-            split_disjoint_upper=args.four_mixed_split_disjoint_upper,
+            family=family,
             census_only=args.census_only,
         )
     elif args.four_face_deleted_source:

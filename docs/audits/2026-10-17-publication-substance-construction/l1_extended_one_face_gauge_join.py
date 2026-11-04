@@ -368,17 +368,52 @@ def disjoint_upper_tensor(probe, source):
                disjoint_upper_row(live, disjoint_upper_pair(None, True)))
 
 
-def disjoint_upper_factor(pattern, face, edges, protected, reverse, source=False, *, probe_classes):
+@cache
+def same_plane_disjoint_pair(probes, source=False):
+    """Contract the frame pair with both anchor-1 links protected."""
+    first, second = probes
+    if source:
+        left = opposite_source_edge(1, (first,))
+        right = remap(opposite_source_edge(1, (second,)), (0, 2))
+        return wedge(left, right)
+    labels = integrated_pair()
+    left = {g: frame_edge(g, 1, first) for g in labels}
+    right = {g: remap(frame_edge(g, 1, second), (0, 2)) for g in labels}
+    return add(*(scale(wedge(left[tuple(sorted(a))], right[b]), weight)
+                 for a, b, weight in second_channels()))
+
+
+@cache
+def same_plane_disjoint_upper_tensor(probe, source):
+    live = same_plane_disjoint_pair((probe, None))
+    plain = disjoint_pair()
+    if not source:
+        return disjoint_upper_row(live, plain)
+    unprotected_source = add(source_only(0), source_only(1))
+    unprotected_source = wedge(unprotected_source, remap(unprotected_source, (0, 2)))
+    return add(disjoint_upper_row(same_plane_disjoint_pair((probe, None), True), plain),
+               disjoint_upper_row(live, unprotected_source))
+
+
+def disjoint_upper_factor(pattern, face, edges, protected, reverse, source=False, *,
+                          probe_classes, same_plane=False):
     upper, links = upper_links(face, edges, protected)
     if reverse:
         links = links[::-1]
     planes = pattern[EVEN.index(upper)]
     assert not set(planes[0]) & set(planes[1])
-    axes = []
-    for _, axis in links:
-        plane, = (plane for plane in planes if axis in plane)
-        other, = set(plane) - {axis}
-        axes.extend((axis, other))
+    protected_axes = tuple(axis for _, axis in links)
+    if same_plane:
+        assert tuple(sorted(protected_axes)) in planes
+        axes = protected_axes + tuple(axis for axis in AXES if axis not in protected_axes)
+        tensor = same_plane_disjoint_upper_tensor
+    else:
+        axes = []
+        for axis in protected_axes:
+            plane, = (plane for plane in planes if axis in plane)
+            other, = set(plane) - {axis}
+            axes.extend((axis, other))
+        tensor = disjoint_upper_tensor
     assert set(axes) == set(AXES)
     sites = tuple(upper ^ (1 << axis) for axis in axes)
     fixed = dict.fromkeys(edges - {links[0]}, IDENTITY)
@@ -386,7 +421,7 @@ def disjoint_upper_factor(pattern, face, edges, protected, reverse, source=False
     rows = {}
     for components in COMPONENTS:
         terms = face_tensor(face, links[:1], fixed, components)
-        local = add(*(scale(disjoint_upper_tensor(PAIRS[i], source),
+        local = add(*(scale(tensor(PAIRS[i], source),
                             weight * multiplicities[PAIRS[i]])
                       for (i,), weight in terms.items() if PAIRS[i] in multiplicities))
         if local:
@@ -412,6 +447,25 @@ def check_disjoint_upper_traces():
         assert disjoint_upper_row(source, traced) == scale(summed_source_tensor(4), ratio**2)
         assert disjoint_upper_row(traced, source) == scale(summed_source_tensor(5), ratio**2)
     print("disjoint-upper two-chirality action and source traces passed", flush=True)
+
+
+def check_same_plane_disjoint_upper_traces():
+    ratio = SCALE**2 * 4**2 // (96 * 8**2)
+    assert ratio == 96
+    plain = disjoint_pair()
+    source_pair = add(source_only(0), source_only(1))
+    source_pair = wedge(source_pair, remap(source_pair, (0, 2)))
+    for chiralities in product((0, 4), repeat=2):
+        probes = list(product(*[[(i, i) for i in range(start, start + 4)]
+                                for start in chiralities]))
+        traced = add(*(same_plane_disjoint_pair(pair) for pair in probes))
+        source = add(*(same_plane_disjoint_pair(pair, True) for pair in probes))
+        assert traced == scale(plain, ratio**2)
+        assert source == scale(source_pair, ratio**2)
+        assert disjoint_upper_row(traced, plain) == scale(disjoint_center(), ratio**2)
+        assert disjoint_upper_row(source, plain) == scale(summed_source_tensor(4), ratio**2)
+        assert disjoint_upper_row(traced, source_pair) == scale(summed_source_tensor(5), ratio**2)
+    print("same-plane disjoint-upper action and both source placements passed", flush=True)
 
 
 def overlap_upper_coefficient(pattern, face, edges, protected, *, factor=upper_factor):
@@ -562,6 +616,7 @@ if __name__ == "__main__":
         parser.error("--disjoint-upper-orbit requires --four-mixed-disjoint-upper")
     if args.upper_trace_controls:
         check_disjoint_upper_traces()
+        check_same_plane_disjoint_upper_traces()
     elif args.four_mixed_disjoint_upper:
         four_mixed_overlap_upper(args.disjoint_upper_orbit, disjoint_upper=True)
     elif args.four_mixed_overlap_upper:

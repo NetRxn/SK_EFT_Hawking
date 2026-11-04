@@ -5391,6 +5391,28 @@ multiplicity 192, totaling 1,536 words per checkerboard.
 The covered prefix comprises 17 orbits and 3,264 words per
 checkerboard. The final range is `[17,25)`.
 
+#### Four-mixed two-face same-plane disjoint-upper orbit 0
+
+The `--four-mixed-same-plane-disjoint-upper` route selects 25
+orbits and 4,800 words per checkerboard. At least one disjoint
+upper puts both protected incoming edges in the same frame
+plane. Its ordinary tensor and both source placements recover
+the unprobed disjoint tensors at scale `96²` under all four
+chirality trace combinations. Independent review checked both
+tree choices, the source weights, and all 12 omissions.
+
+Orbit 0 with `--probe-classes` exited zero under both tree
+choices and produced identical receipts. Independent exact
+reduction checked the factor of `2 × 192`.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `9096369489972317654296875/18014398509481984` |
+| Remote source | `−943421736919176905203125/562949953421312` |
+| Upper source | `−14720276927261829617578125/18014398509481984` |
+| Deleted source | `−1619173292222865234375/4398046511104` |
+| Full fixed-shear numerator | `−51541906313620346584078125/18014398509481984` |
+
 ### Exact temporal transfer control for the scalar probe
 
 Keep periodic spatial forward differences and let the temporal
