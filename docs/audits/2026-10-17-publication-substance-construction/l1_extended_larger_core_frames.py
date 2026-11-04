@@ -137,16 +137,18 @@ def probe_slice(faces, tree, live):
     return components, probes
 
 
-def contract_slice(pattern, slots, components, probes):
+def contract_slice(pattern, slots, components, probes, replacement=None):
     divisor = 1
     terms = {}
     for center, planes in zip(EVEN, pattern, strict=True):
-        directions, local, denominator = center_tensor(center, planes, slots[center], components, probes)
+        removed = replacement[1] if replacement is not None and center == replacement[0] else None
+        based = {face: labels for face, labels in components.items() if face[0] == center}
+        directions, local, denominator = center_tensor(center, planes, slots[center], based, probes, removed)
         terms[center] = remap(local, (center, *(center ^ (1 << axis) for axis in directions)))
         divisor *= denominator
     result = contract(terms)
     assert result.is_ground and not result.const().y
-    return Fraction(int(result.const().x), divisor)
+    return Fraction(int(result.const().x), divisor * (6 if replacement is not None else 1))
 
 
 def face_factor(face, edges, tree, live, selection=None):
@@ -237,18 +239,21 @@ def close_factors(factors):
     return real
 
 
-def contract_factors(pattern, slots, faces, tree, live, selection=None, retained=None):
+def contract_factors(pattern, slots, faces, tree, live, selection=None, retained=None,
+                     replacement=None):
+    assert retained is None or replacement is None
     curvature = face_factors(faces, tree, live, selection)
     factors = list(curvature)
     divisors = {}
     for center, planes in zip(EVEN, pattern, strict=True):
-        factor, denominator = center_factor(center, planes, slots[center], curvature)
+        removed = replacement[1] if replacement is not None and center == replacement[0] else None
+        factor, denominator = center_factor(center, planes, slots[center], curvature, removed)
         factors.append(factor)
         divisors[center] = denominator
     occurrences = Counter(key for axes, _ in factors for key in axes)
     assert set(occurrences.values()) == {2}
     divisor = prod(divisors.values())
-    normal = Fraction(close_factors(list(factors)), divisor)
+    normal = Fraction(close_factors(list(factors)), divisor * (6 if replacement is not None else 1))
     if retained is None:
         return normal
 
@@ -315,6 +320,48 @@ def verify_local_tensors():
     print("pure and mixed local tensors agree with the established replays", flush=True)
 
 
+def replay_six_deletions(first_slice, deletion_index):
+    total = Fraction()
+    count = 0
+    for pattern, multiplicity in orbits(words_with_mixed_count(3)):
+        faces, protected = curvature_boundary(pattern)
+        if len(faces) != 6:
+            continue
+        assert multiplicity == 192
+        check_removals(pattern)
+        for index, omitted in enumerate(faces):
+            if deletion_index is not None and index != deletion_index:
+                continue
+            rest, protection = curvature_boundary(pattern, omitted=omitted)
+            assert len(rest) == 4 and protection == protected
+            assert omitted[0] not in {f[0] for f in rest}
+            assert len(set.union(*rest.values()) - protection) == 2
+            slots, tree, live = layout(pattern, rest, protection, minimize_keys=True)
+            center, k, l = omitted
+            plane = tuple(a for a in AXES if a not in (k, l))
+            replacement = center, plane
+            print("six-face deletion", index, omitted, "projected keys",
+                  tree_key_cost(rest)(tree, live), flush=True)
+            selection = None
+            if first_slice:
+                components, probes = probe_slice(rest, tree, live)
+                selection = {face: (components[face], *(PAIR_INDEX[probes[e]] for e in sorted(edges & live)))
+                             for face, edges in rest.items()}
+            value = contract_factors(pattern, slots, rest, tree, live, selection, replacement=replacement)
+            if first_slice:
+                direct = contract_slice(pattern, slots, components, probes, replacement)
+                assert value == direct
+                print("fixed-probe six-face deletion control", value, flush=True)
+            else:
+                print("six-face deletion source", index, value, flush=True)
+                total += 2 * multiplicity * value
+            count += 1
+    assert count == (6 if deletion_index is None else 1)
+    if not first_slice:
+        label = "six-face deletion subtotal" if deletion_index is None else "selected six-face deletion"
+        print(label, "both checkerboards", total, flush=True)
+
+
 def main(first_slice=False, full_orbit=None, tree_costs=False, source=False):
     counts = Counter()
     completed_full = False
@@ -375,7 +422,16 @@ if __name__ == "__main__":
     full.add_argument("--full-orbit", type=int, choices=range(11))
     parser.add_argument("--tree-costs", action="store_true")
     parser.add_argument("--retained-source", action="store_true")
+    parser.add_argument("--six-deletions", action="store_true")
+    parser.add_argument("--deletion-index", type=int, choices=range(6))
     args = parser.parse_args()
+    if args.deletion_index is not None and not args.six_deletions:
+        parser.error("--deletion-index requires --six-deletions")
+    if args.six_deletions:
+        if args.full_orbit is not None or args.retained_source or args.tree_costs or args.local_controls or args.source_controls:
+            parser.error("--six-deletions is separate from original-core replays")
+        replay_six_deletions(args.first_slice, args.deletion_index)
+        raise SystemExit
     if args.retained_source and args.full_orbit is None:
         parser.error("--retained-source requires --full-orbit or --full-first")
     main(args.first_slice, args.full_orbit, args.tree_costs, args.retained_source)

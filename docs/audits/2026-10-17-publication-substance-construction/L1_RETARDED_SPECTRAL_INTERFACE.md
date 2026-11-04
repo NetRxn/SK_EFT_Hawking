@@ -4316,3 +4316,28 @@ Independent review checked the placement and weights and
 reproduced six direct fixed-identity source wedge controls.
 The local comparisons to the earlier probed tensors and the
 full-orbit contractions are pending.
+
+#### Six-face deletions and all-protected replay capacity
+
+The generic retained-source local tensors match the established
+pure and both mixed source replacements exactly. The
+`--six-deletions` replay applies the same local source tensor
+to the original removed plane. Every omission leaves four faces
+at the other two bases, two free links, and the original protection.
+The removed center has no surviving residual components. The replay
+keeps the original plane multiplicities and applies the signed
+source factor and six-shear average once. Each orbit is weighted
+by 192 per checkerboard.
+
+The six reduced cores pass the tree and routing checks. The
+largest projected center table has 69,696 keys for the four
+omissions at centers 9 and 12, and 5,544 for the two at center
+15. The fixed-probe comparison for deletion 4 uses both the
+literal exterior contraction and the sparse factor join.
+The fixed-probe and full sums remain pending.
+
+The two earlier eager all-protected normalization processes
+were stopped after each reached roughly 12 GiB resident memory
+without producing its first orbit. The streamed first-orbit
+replay replaces them and records its memory and elapsed time.
+The full all-protected normalization is still open.
