@@ -2602,3 +2602,30 @@ lower–upper column SHA-256s are
 and `b8b70a2ef3e28b618d9c02231ddc4352cd4a1cd53d66311348d692049b0a7eb8`.
 The next scope is the full action-word census for both the
 normalization and the two-source numerator.
+
+### Full action-word support and aggregation
+
+The [repeated-vertex census](l1_extended_repeated_support.cpp)
+restricts to one action variant repeated twice per site. Each
+site then requires two incoming frame incidences. The two
+checkerboard classes give independent counts of 2,970 plane
+assignments. Each plane assignment has four frame-anchor
+choices per site, with even link parity from repetition.
+This subclass alone has 37,885,477,021,286,400 distinct
+saturated, Haar-even multisets. The count concerns support
+conditions. The signed coefficients can cancel or vanish.
+
+For the ordered support count, first fix center-plane
+multiplicities. At an undirected frame edge with F frame
+occurrences, changing one anchor toggles both directed link
+parities. Let p and q be the two curvature parities. If F is
+positive, feasibility requires `p XOR q = F mod 2` and gives
+`2^(F-1)` anchor assignments. If F is zero, both p and q must
+vanish. These factors multiply independently across frame
+edges for a fixed labeled center-plane word. The number of
+center-plane orderings is the multinomial coefficient. The
+source quartics shift the target site degrees and add even
+link powers. This removes explicit anchor enumeration from
+the support count. The signed evaluator still has to sum
+the corresponding exterior and Haar tensors with their
+actual coefficients and factorial weights.
