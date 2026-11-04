@@ -14,6 +14,15 @@ Agreed 3 November 2026. **Lead bundle: L1. Next delivery milestone: an independe
 
 **Parallel integration checkpoint: NJL/ADW.** Resume the reviewed NJL root/bracket repair from its existing qualification record. Use the exact test differential to isolate remaining merge blockers and deliver the qualified checkpoint incrementally to main. Keep the separate ADW scalar-domain and microscopic correspondence findings open through their own acceptance process.
 
+The critical NJL finding has a canonical closure on the candidate at
+[`b92e8db5c`](https://github.com/NetRxn/SK_EFT_Hawking/commit/b92e8db5c).
+Remote readback on November 4 confirmed [draft PR #94](https://github.com/NetRxn/SK_EFT_Hawking/pull/94)
+at `115e00122` contains that closure. Its main base `ce194cdc4` lacks
+the closure commit. CodeQL passed at the draft head. The broad test
+receipt in the PR predates subsequent edits. The next delivery
+checkpoint requires a current repository merge-gate result and a
+separate disposition of any failures against the exact main base.
+
 Use the existing continuity notebooks and assignment records for exact candidates, finding IDs, owners, independent reviewers and next actions. Dispatch fresh cloud agents through Dot using the repository's agent roles where inputs can travel. Use controlled local capacity for Lean, local computations and untracked research as required.
 
 **Lean substrate discovery before proof dispatch.** Follow the [Lean worker instructions](../../../.claude/plugins/skeft-qa/agents/lean-worker.md) and invoke the [Lean 4 skill](https://github.com/cameronfreer/lean4-skills/blob/main/plugins/lean4/skills/lean4/SKILL.md). Use the installed skill locally or the upstream instructions in a fresh cloud session. Pin the candidate commit, check its imports, and reconcile built dependencies against `lean/lean_deps.json`. Search project and Mathlib declarations by statement and type using Lean LSP and the skill's search tools. Check likely matches in the actual consumer import context. Older text searches can miss fully qualified names and signatures that begin on a subsequent line. Verify any “follow-on pending” docstring against current declarations and Git history. Record the checked commit, import context, matches, and remaining proof gap in the existing assignment or continuity notebook before opening a new proof task. If LSP or the pinned dependencies are unavailable, record the search as incomplete.
