@@ -1890,3 +1890,15 @@ nonzero result with an admissible prime certifies nonzero
 rational amplitude. Reconstructing signs and normalized
 covariances requires rational reconstruction with a bound or
 a separate argument. A zero residue alone is inconclusive.
+
+The [split-layer replay](l1_extended_split_layer.py) sums both
+endpoint frame choices at each opposed center in the restricted
+(0,1)-plane sector. Integrating independent endpoint links
+before assembly leaves only the fourth moments and the six
+two-slot products of second moments. The replay reproduces the
+one-anchor control and gives 9995625/131072 for the full
+anchor-summed layer, including the action factorials. Each
+direction has 380 nonzero post-Haar entries, at most 38 masks
+per tuple, and the join peaks at 38 masks. Four independent
+layers give the fourth power of this result. Mixed-plane
+couplings between layers still require a separate contraction.
