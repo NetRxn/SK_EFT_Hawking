@@ -3211,3 +3211,24 @@ moment implementation.
 The remaining join must combine these exterior tensors with the
 open coordinate-pair indices of each curvature core. The completed
 frame tensors alone do not give the joint orbit totals.
+
+### Protected-frame attachment on fixed gamma slices
+
+The [frame-attachment replay](l1_extended_mixed_frame_join.py) attaches
+all six protected frame edges in each two-face core. It uses gamma
+labels equal to the frame-axis labels and chooses a compatible
+curvature component from the nonzero Dirac trace entries. Each face
+retains the raw coordinate pair of the shared unprotected link until
+the two exterior factors join. The signed contraction has 600 entries
+on each face boundary and 84 entries after the shared-link Haar
+projection, in each of the three orbits. Reversing the attachment
+order and swapping the joined factors preserves every coefficient.
+Independent review reproduced the two-face result.
+
+The coordinate scale for this fixed-label boundary is
+`48 × 192¹² × 4²⁰` before the Dirac trace weights and remaining frames and action factors.
+The contraction preserves exact Gaussian integers and uses a
+complement lookup for sites whose fixed degrees add to eight.
+The cycle implementation also accepts four-face inputs. Its full
+four-face replay and the sum over gamma labels and remaining exterior
+factors are separate from the verified two-face controls.
