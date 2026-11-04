@@ -5955,3 +5955,15 @@ without dividing before the scalar contraction. The grouped
 scalar remains open. A broader contraction can carry all
 seven cut labels in one sparse B factor and eliminate them
 against their four owning A center tables.
+
+A separate two-tuple test shares an exact 36-row B map. The
+two tuples differ only at `q(7,3)` and `q(15,3)`. Independent
+review verified that eliminating their paired selector through
+A centers 3 and 11 gives the same 41,472 signed rows as the
+explicit sum of the two frozen products. Joining that factor
+to the bridge edge `(3,3)` exceeded the 120,000-row cap before
+closing a site. Keeping the selector sparse deferred the
+expansion, but the subsequent bridge join still reached the
+cap without closing either endpoint. The scalar remains open.
+Close an endpoint in the bridge join before emitting the
+intermediate rows.
