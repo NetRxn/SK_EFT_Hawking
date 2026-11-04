@@ -4558,3 +4558,22 @@ The complete signed maps agree, including the exact cancellation case.
 This checks the local two-anchor frame tensor used in the all-protected
 calculation. It does not evaluate the upper-center tensor or the orbit
 subtotal.
+
+#### Independent orbit-zero upper-center channel
+
+The [upper-channel oracle](l1_orbit0_upper_oracle.py) uses face
+`(12,1,3)` of all-protected orbit zero, with upper center 6,
+live link `(4,1)`, fixed upper link `(14,3)`, and neighboring sites
+`(4,7,14)` in exclusive, common, exclusive order. For curvature
+components `(0,0)`, the remaining plaquette is the inverse live link,
+and the two spatial signs cancel. The surviving probe `(1,1)` has
+weight one, in agreement with the production face tensor.
+
+The independent edge enumeration and trace covariance give 18 peeled
+gamma weight groups. The complete Gaussian exterior map agrees with
+the production upper tensor for this probe, with 86 nonzero masks,
+14 positive components and 72 negative components. The local grades
+are `(8,2,4,2)` and the mixed upper row divisor is
+`121029087867608368152576`. The oracle reuses the independent frame
+control's matrix and sphere helpers. Other curvature components and
+the global exterior contraction are outside this comparison.
