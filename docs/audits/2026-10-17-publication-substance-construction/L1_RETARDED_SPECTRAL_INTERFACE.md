@@ -2295,3 +2295,16 @@ bounds the absolute raw numerator by a 261-bit integer. A product
 of pairwise coprime moduli greater than twice that integer allows
 unique signed reconstruction. This bound precedes exterior and
 upper normalization.
+
+The [signed gauge-block replay](l1_extended_overlap_gauge_block.py)
+evaluates the entire all-left block with both shared coordinate
+pairs (0,0). The two exterior columns each contribute 1,641
+rows. The factored gauge kernel has 100 paired temporal states
+and gives 2,247,513 nonzero products in the 2,692,881 candidate
+row pairs. The gauge dot products are bounded by 97,221,869,568,
+so the sparse Gram calculation fits signed int64. Exterior
+coefficients and their signed accumulation use Python integers.
+The exact value after `48^8 * 4^4` is
+`1959689171103691034414437601649194086717980672` before exterior
+and upper normalization. The other coordinate and chirality
+blocks remain part of the required signed sum.
