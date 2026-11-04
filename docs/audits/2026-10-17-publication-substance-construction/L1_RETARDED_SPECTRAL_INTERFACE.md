@@ -5390,3 +5390,27 @@ contrast. This calculation checks the common-lattice mixed
 contraction and source normalization. Matching the physical
 geometry ensemble, joint coupling, and inverse pole remains
 separate.
+
+### Axial and temporal source-pair support on the common regulator
+
+The `l1_extended_offset_pair_census.py` replay fixes the first
+source origin at zero and the second at offset 1 or 2. It counts
+a restricted family of 30-action label multisets with one repeated
+center-plane label at each of 15 sites. Each ordered same-axis
+source choice gives 4,138,344 multisets per offset. Each ordered
+mixed-axis choice gives 3,769,740, for 15,816,168 source-labeled
+cases per offset before anchor choice or action ordering.
+
+After dividing exterior degrees by two, the two sources contribute
+one unit at each endpoint. Every paired action center uses two
+local units and sends one unit along each frame direction. The
+checkerboard halves satisfy independent incoming demands. Axis
+exchange checks each of the 16 omitted-center bins. The explicit
+witness and its exchanged image have 20 occupied undirected frame
+edges and 60 binary anchor choices subject to one parity condition
+per occupied edge. The existing anchor census independently
+reproduces the resulting `2^40` assignments. Independent review
+checked the degree count, parity rule, and axis exchange.
+
+These counts establish structural support. The next step is the
+signed exterior and Haar contraction for the predeclared witness.
