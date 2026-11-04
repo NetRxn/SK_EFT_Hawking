@@ -1858,3 +1858,17 @@ diagonal, uniform sum and affine contact. The connected
 kernel is signed by separation. In particular the offset
 that changes both transverse bits gives −2993/1292850.
 The mixed contraction must retain this sign.
+
+For the extended geometry covariance, translation reduces
+the two-source numerator to one source at the origin and
+one at an offset r. Exchange of axes 0 and 1 preserves D.
+Exchange of axes 2 and 3 reverses both D insertions. Each
+exchange reverses the world epsilon in S2, and the numerator
+has 30 such vertices, so the action sign is even. Relabeling
+site blocks preserves the top-form orientation. Thus the
+16 offsets reduce to nine classes (i,j), the Hamming weights
+in the two extended-axis pairs (0,1) and (2,3). The uniform
+numerator is 16 times the sum over the nine representative
+coefficients with weights binom(2,i) binom(2,j). This reduction
+applies to the full signed integral and keeps the origin and
+the doubly transverse separation in distinct classes.
