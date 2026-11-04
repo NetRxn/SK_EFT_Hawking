@@ -5172,3 +5172,21 @@ agrees with its separate replay.
 This subtotal includes orbit 0. Together with the pure-upper and
 disjoint-upper subtotals it completes all 57 four-mixed one-face
 orbits and 10,752 words per checkerboard. Larger cores remain open.
+
+#### Four-mixed two-face overlap-base replay
+
+The opt-in `--four-mixed-overlap-base` route selects 160 orbits
+with one free link and a shared overlapping base, covering 30,624
+words per checkerboard. The upper pairs are 93 overlap/overlap,
+64 overlap/pure, and 3 pure/pure. Independent source and census
+review checked both tree choices and all 12 omissions per orbit.
+Ten retain the same core and protection. The two base-face
+deletions each remove the core and use the peelable deletion
+evaluator. Orbit 32 uses a separate remote environment because
+it has a disjoint remote center.
+
+The source and geometry are reviewed. Exact contraction evidence is
+pending. The first replay uses `--orbit 0 --probe-classes`. Check
+normalization and retained and deleted source weights against a
+second tree choice before expanding numerical coverage. This
+section records the runnable candidate and census only.
