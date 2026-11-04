@@ -1695,3 +1695,20 @@ nonzero exterior coefficient or signed integral. A practical
 exact contraction must impose saturation during tensor
 assembly and integrate each link before summing over its
 boundary states.
+
+For the selected doubled (0,1)-plane word, the link measure
+separates into four curvature layers at fixed (x₂,x₃) and
+four frame layers at fixed (x₀,x₁). The curvature uses only
+links along axes 0 and 1. The frame factors and their
+Grassmann generators use only axes 2 and 3. At each site
+the two copies of the action term leave two open curvature
+component indices, each contracted against a frame bilinear.
+Taking the local top coefficient on each transverse frame
+layer and integrating its links therefore yields four
+frame tensors. Integrating each curvature layer yields four
+curvature tensors, with one paired component index for each
+intersection between the two layer families. This reduces
+the selected 128-generator integral to a finite eight-tensor
+join. The repeated-label factorial is (2!)¹⁶. Evaluation of
+this witness is assigned. Even an exact nonzero value would
+establish one term of the signed partition sum.
