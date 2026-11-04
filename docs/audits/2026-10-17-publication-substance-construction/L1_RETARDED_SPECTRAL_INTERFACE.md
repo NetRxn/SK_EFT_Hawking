@@ -6008,3 +6008,10 @@ environment complements, and found no nonzero matches.
 This subshard has raw Gaussian scalar `(0,0)`. The receipt's
 final scalar label refers to the pinned subshard. The wider
 cuts reached the cap and the full two-tuple scalar remains open.
+
+The resumable B run pinned to `76bba72b0` has an independently
+verified snapshot over `[4736,22144)`. Seventeen contiguous
+1,024-row receipts cover 17,408 distinct tuples. Their hashes
+match the run log. There are 15,199 exact zeros and 2,209
+nonempty B maps awaiting A closure, with no caps in this
+snapshot. The live run continues beyond this recorded interval.
