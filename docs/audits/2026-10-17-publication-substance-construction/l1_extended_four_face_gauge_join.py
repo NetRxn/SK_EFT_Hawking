@@ -9,6 +9,7 @@ from l1_direct_b_haar import R, add, scale
 from l1_extended_mixed_center_census import EVEN, curvature_boundary, orbits, swap_patterns, words_with_mixed_count
 from l1_extended_mixed_center_gamma import COMPONENTS, gamma_block
 from l1_extended_mixed_curvature_core import PAIRS, PAIR_INDEX, face_tensor
+from l1_extended_mixed_frame_join import preceding_parity
 from l1_extended_mixed_frame_moment import SCALE
 from l1_extended_opposed_source import summed_fourth
 from l1_extended_two_face_gamma_join import pure_table, remote_environment
@@ -164,16 +165,22 @@ def indexed_mixed_dual(keep, environment, second_sites):
     indexed = defaultdict(list)
     for mask, value in environment.items():
         assert value.is_ground
-        indexed[mask & fixed].append((mask, int(value.const().x), int(value.const().y)))
+        assert mask & ~keep == 0
+        indexed[mask & fixed].append((mask, preceding_parity(mask),
+                                      int(value.const().x), int(value.const().y)))
 
     def dual(poly):
         row = defaultdict(lambda: [0, 0])
         for a, (r, i) in poly.items():
-            for b, u, j in indexed[fixed ^ (a & fixed)]:
+            assert a & ~keep == 0
+            a_complement = keep ^ a
+            a_parity = (a & preceding_parity(a_complement)).bit_count() & 1
+            for b, b_prefix, u, j in indexed[fixed ^ (a & fixed)]:
                 if a & b:
                     continue
-                target = keep ^ (a | b)
-                sign = wedge_sign(a, target) * wedge_sign(a | target, b)
+                target = a_complement ^ b
+                # The two contributions involving B combine to target & prefix(B).
+                sign = -1 if (a_parity ^ (target & b_prefix).bit_count()) & 1 else 1
                 value = row[target]
                 value[0] += sign*(r*u - i*j)
                 value[1] += sign*(r*j + i*u)

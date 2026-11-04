@@ -4359,3 +4359,22 @@ agree at the selected fixed probes:
 `−22081446205224609375/2305843009213693952` before orbit and
 checkerboard weighting. The full live-probe sum for this
 deletion and the other five deletion sums remain open.
+
+#### Exact exterior sign in the streamed dual
+
+For disjoint base and environment masks `A` and `B` inside
+the retained mask, the complementary mask is `T = keep xor A xor B`.
+The sign of the ordered product `A ∧ T ∧ B` can be evaluated
+from the parity of `A & prefix(keep xor A)` and
+`T & prefix(B)`, where `prefix` gives the exclusive prefix parity
+of a mask. This follows from XOR linearity of prefix parity and
+`A | T = keep xor B`. The dual indexes the environment prefix
+once and uses one parity calculation per surviving inner pair.
+
+Independent verification checked 39,366 disjoint assignments
+and exact complex contraction fixtures on sparse supports.
+A synthetic three-site fixture produced 103,681 identical
+nonzero dual entries. Its measured CPU time was 0.268 seconds
+with the reference sign routine and 0.134 seconds with the
+prefix calculation. The established two-face orbit control
+is running with the new kernel. Full-orbit timing remains open.
