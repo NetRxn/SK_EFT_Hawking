@@ -55,3 +55,10 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Findings filed: `papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md`
   (2 blocker, 5 required, 8 recommended). The two blockers are the
   primary-source misreadings above; both propagate beyond L3.
+
+## 2026-11-04 — Deregister-lean-modules
+
+- Modules deregistered: `EntropicGravityDarkEnergy`
+- Stage-13 redo required: no (no content changed — this records a dependency the
+  draft already does not have)
+- Rationale: The August L3 redraft removed the ancillary Phase 6m Verlinde discussion. The live L3 draft does not rely on this module. The L3 four-laws obligations and separate Phase 6m result remain tracked.
