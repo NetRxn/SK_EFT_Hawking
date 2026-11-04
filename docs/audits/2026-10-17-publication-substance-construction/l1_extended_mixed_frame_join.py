@@ -1,16 +1,19 @@
 """Attach protected frame tensors on fixed gamma slices of the curvature cores."""
 from argparse import ArgumentParser
 from collections import defaultdict
+from fractions import Fraction
 from functools import cache
 from itertools import product
-from math import prod
+from math import factorial, prod
 
-from l1_direct_b_haar import add, scale, wedge
+from l1_direct_b_haar import R, add, scale, wedge
 from l1_extended_mixed_center_census import EVEN, curvature_boundary, orbits, swap_patterns
 from l1_extended_mixed_curvature_core import PAIRS, face_tensor
-from l1_extended_mixed_frame_moment import frame_edge
+from l1_extended_mixed_frame_moment import SCALE, frame_edge
+from l1_extended_opposed import curvature, staged_center
+from l1_extended_opposed_source import summed_fourth
 from l1_extended_overlap_strip import HAAR
-from l1_extended_two_mixed_centers import remap
+from l1_extended_two_mixed_centers import contract, mixed_center, remap, second_sum
 from l1_normalization_opposed_fourth import L
 from l1_reduced_wedge_reference import wedge_sign
 
@@ -113,6 +116,73 @@ def translated_factors(factors, shift):
     return translated
 
 
+@cache
+def unprobed_frame(axis, degree):
+    moments = second_sum(0) if degree == 2 else summed_fourth(0)
+    return moments[(axis,) * degree]
+
+
+@cache
+def remote_center(pairs):
+    first, second = pairs
+    common = summed_fourth(1)
+    if first == second:
+        normal, _ = staged_center(summed_fourth(0), common)
+        return normal, first
+    axis, = set(first) & set(second)
+    a, b = sorted(set(first) ^ set(second))
+    return mixed_center(common), (a, axis, b)
+
+
+def saturate_slice(pattern, faces, attached, result, free_count, shift, *, sum_remote=False):
+    core = {mask: R.ground_new(R.domain.dtype(re, im))
+            for mask, (re, im) in result.items()}
+    terms = {-1: remap(core, tuple(x ^ shift for x in range(16)))}
+    used = set()
+    divisor = 48**free_count
+    weight = 1
+    summed = 0
+    for x, pairs in zip(EVEN, pattern, strict=True):
+        axes = sorted(set().union(*map(set, pairs)))
+        incident = {(site, axis) for axis in axes for site in (x, x ^ (1 << axis))}
+        if sum_remote and not incident & attached.keys() and not any(f[0] == x for f in faces):
+            poly, directions = remote_center(pairs)
+            terms[x] = remap(poly, (x, *(x ^ (1 << axis) for axis in directions)))
+            divisor *= 96**4 * 8**8
+            for pair in set(pairs):
+                divisor *= 48 * factorial(2 * pairs.count(pair))
+            summed += 1
+            continue
+        for a, b in set(pairs):
+            n = 2 * pairs.count((a, b))
+            k, l = (axis for axis in range(4) if axis not in (a, b))
+            if (x, k, l) in faces:
+                _, trace_weight = L[a, b][0]
+                weight *= trace_weight**n
+            else:
+                weight *= curvature(((a, b),) * n)
+                divisor *= 48
+            divisor *= factorial(n)
+        for axis in axes:
+            y = x ^ (1 << axis)
+            degree = 2 * sum(axis in pair for pair in pairs)
+            used_links = attached.keys() & {(x, axis), (y, axis)}
+            if used_links:
+                assert len(used_links) == 1
+                used.update(used_links)
+                divisor *= SCALE**2 * 4**degree
+            else:
+                terms[x, axis] = remap(unprobed_frame(axis, degree), (x, y))
+                divisor *= 96**(degree // 2) * 8**degree
+    assert used == attached.keys()
+    # Stable integer keys keep the contraction tie-break homogeneous.
+    factors = tuple(terms.values())
+    raw = contract(dict(enumerate(factors)))
+    assert raw == contract(dict(enumerate(factors[::-1])))
+    assert raw.is_ground and not raw.const().y
+    return Fraction(weight * int(raw.const().x), divisor), summed
+
+
 def main(face_count):
     previous = None
     for pattern, multiplicity in orbits(swap_patterns()):
@@ -135,6 +205,7 @@ def main(face_count):
             boundaries.append((open_links, integer))
         print("faces", len(faces), "orbit", multiplicity, "input boundary entries",
               [sum(map(len, row.values())) for _, row in boundaries], flush=True)
+        shift = 0
         if face_count == 4:
             # These cores differ only by translations, checked on the
             # complete attached input before reusing the first closure.
@@ -153,6 +224,11 @@ def main(face_count):
         print("faces", len(faces), "orbit", multiplicity, "face boundary sizes",
               [sum(map(len, row.values())) for _, row in boundaries],
               "joined exterior entries", len(result), flush=True)
+        coefficient, _ = saturate_slice(pattern, faces, frames, result, len(free), shift)
+        print("saturated fixed-label coefficient", coefficient, flush=True)
+        coefficient, summed = saturate_slice(
+            pattern, faces, frames, result, len(free), shift, sum_remote=True)
+        print("remote gamma sum at", summed, "centers", coefficient, flush=True)
 
 
 

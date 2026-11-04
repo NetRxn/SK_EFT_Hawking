@@ -3243,3 +3243,33 @@ so that translation carries no exterior sign.
 The raw scale here is `48⁴ × 192¹⁶ × 4²⁴`. The remaining gamma
 labels, Dirac trace weights and exterior factors still have to be
 summed to obtain an orbit coefficient.
+
+### Full exterior closure and remote gamma sums
+
+The same replay now joins the unprobed frame tensors to the retained
+core exterior boundary and saturates all 128 generators. It applies
+the peeled-face Haar moments, the selected residual Dirac trace
+weights, and the factorial of each repeated face. The translated
+four-face core is mapped back before attaching the remaining frames.
+Reversing the factor order preserves the saturated coefficient.
+
+A second contraction sums every gamma channel at a center if its
+faces have all peeled and neither directed anchor of any of its frame
+edges occurs in the attached core. These centers use the existing
+full pure- or mixed-plane tensors. This leaves the gamma channels
+at coupled centers fixed. Independent review reproduced the two-face
+fixed-label coefficients and checked the gate and normalization of
+the remote sums.
+
+| Core | Fixed-label coefficient | Remote centers summed | Partial gamma sum |
+| --- | ---: | ---: | ---: |
+| Two faces, each representative | `1579577626270265625/1237940039285380274899124224` | 5 | `8885124147770244140625/37778931862957161709568` |
+| Four faces, first representative | `390359454918280734375/9903520314283042199192993792` | 4 | `243974659323925458984375/2417851639229258349412352` |
+| Four faces, second representative | `88199871071686734375/19807040628566084398385987584` | 4 | `55124919419804208984375/4835703278458516698824704` |
+| Four faces, third representative | `83950203115186734375/19807040628566084398385987584` | 4 | `52468876946991708984375/4835703278458516698824704` |
+
+The four-face exterior boundaries coincide after translation.
+The coefficients differ once the remaining frame factors are included.
+The remaining gamma channels at the protected-edge centers and the
+other residual curvature components are needed for complete orbit
+coefficients.
