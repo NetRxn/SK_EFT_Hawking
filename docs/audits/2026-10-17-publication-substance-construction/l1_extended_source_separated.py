@@ -1,7 +1,7 @@
 """Upper separated-source replacement, with shared-link exact Haar-four."""
 from collections import Counter
 from fractions import Fraction
-from itertools import combinations_with_replacement,product
+from itertools import combinations, combinations_with_replacement,product
 from l1_direct_b_haar import add,bilinear,diag,gamma,scale,wedge
 from l1_equal_time_int_contract import sparse_int
 from l1_extended_overlap_upper_block import L,block,pair
@@ -51,23 +51,43 @@ def twice_signed_lower_complements():
 
 
 def degree_census():
-    upper = range(8, 16)
-
-    def vertex_degree(site):
-        return Counter({site: 2, site ^ 4: 1, site ^ 8: 1})
+    def vertex_degree(site, plane_axis):
+        return Counter({site: 2, site ^ (1 << (3 - plane_axis)): 1, site ^ 8: 1})
 
     def source_degree(site, axis):
         return Counter({site: 2, site ^ (1 << axis): 2})
 
-    matches = []
-    for u, v in combinations_with_replacement(upper, 2):
-        removed = vertex_degree(u) + vertex_degree(v)
-        for x, y in combinations_with_replacement(upper, 2):
-            for a, b in product((2, 3), repeat=2):
-                if source_degree(x, a) + source_degree(y, b) == removed:
-                    matches.append((u, v, x, y, a, b))
-    assert len(matches) == 24
-    assert sum(x != y for _, _, x, y, _, _ in matches) == 8
+    def link_parity(site, plane_axis):
+        frame_axis = 3 - plane_axis
+        anchor = site if site >= 8 else site & ~(1 << frame_axis)
+        return {
+            (site, 0), (site ^ (1 << plane_axis), 0),
+            (site, plane_axis), (site ^ 1, plane_axis),
+            (anchor, frame_axis), (site, 3),
+        }
+
+    vertices = [(x, a) for x in range(8) for a in (1, 2)]
+    vertices += [(x, 1) for x in range(8, 16) for _ in range(2)]
+    removals = sorted(set(combinations(vertices, 2)))
+    degrees = {}
+    for x, y in combinations_with_replacement(range(16), 2):
+        for a, b in product((2, 3), repeat=2):
+            key = tuple(sorted((source_degree(x, a) + source_degree(y, b)).items()))
+            degrees.setdefault(key, []).append((x, y, a, b))
+
+    candidates = []
+    for u, v in removals:
+        key = tuple(sorted((vertex_degree(*u) + vertex_degree(*v)).items()))
+        for placement in degrees.get(key, ()):
+            candidates.append((u, v, placement))
+    assert len(removals) == 284 and len(candidates) == 104
+    # The original word has even degree on each link, and each source adds two.
+    matches = [row for row in candidates if link_parity(*row[0]) == link_parity(*row[1])]
+    assert all(u == v and u[0] >= 8 for u, v, _ in matches)
+    assert Counter((x >= 8, x == y) for _, _, (x, y, _, _) in matches) == {
+        (True, True): 16, (True, False): 8, (False, False): 16,
+    }
+    print("104 degree-compatible placements, 40 also pass Haar parity")
     return matches
 
 

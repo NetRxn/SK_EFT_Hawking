@@ -2545,6 +2545,17 @@ blocks. Its complete receipt has SHA-256
 The [source reducer](l1_extended_source_sum.py) removes the
 extra factor of two and reproduces the eight separated terms
 `-45709102752653698569/4951760157141521099596496896`.
-Together the 24 ordered upper placements contribute
+Together the eight grouped same-site and eight grouped separated upper terms contribute
 `-151863719761036373289/9903520314283042199192993792`.
 Independent review of the completed signed sum is pending.
+
+The expanded degree and Haar-parity census covers the 284
+distinct ways to remove two vertices from this fixed action word.
+It finds 104 degree-compatible placements, counting distinct
+source sites once and retaining both axis orders at coincident
+sites. Link parity leaves 40 such placements. Each removes both
+repeated vertices at one upper site. They comprise 16 coincident
+axis orders, eight separated upper pairs, and 16 low/upper
+pairs. Restoring both source orders for distinct sites gives
+64 ordered contributions. The low/upper family is the remaining
+sum for this fixed action word. The census covers this word only.
