@@ -1942,5 +1942,10 @@ The exact bounded coefficient is
 2686789328589557725241742448284154145239249/79407184549937850344905113600000000.
 It differs from the independent-Haar control, which the same
 frame tensors reproduce when supplied independent moments.
-Independent review is pending. This sector has shared
-curvature links but no shared curvature/frame link variables.
+Independent review of `1a7f330b7` reproduced the coefficient
+and independently counted four free index loops and eight Schur
+edge pairings, verifying the inverse fourth power of the
+representation dimension. It also checked the local gauge
+rotation and the two chiral radial character expansions.
+This sector has shared curvature links but no shared
+curvature/frame link variables.
