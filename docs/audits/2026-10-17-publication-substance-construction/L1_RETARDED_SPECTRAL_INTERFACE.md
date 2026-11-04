@@ -1712,3 +1712,16 @@ the selected 128-generator integral to a finite eight-tensor
 join. The repeated-label factorial is (2!)¹⁶. Evaluation of
 this witness is assigned. Even an exact nonzero value would
 establish one term of the signed partition sum.
+
+A second selected word admits an exact evaluation. Use four
+identical (0,1)-plane vertices at each even-parity site, with
+both transverse frame links based at the center. The eight
+curvature plaquettes have disjoint links. Their holonomies
+are independent Haar in either ordering. On each transverse
+layer the two opposed centers jointly saturate its 32
+generators. The [exact replay](l1_extended_opposed.py) integrates
+the curvature fourth moments and reuses the transverse fourth
+frame tensors. Each opposed pair contributes 61875/262144
+including its repetition factorials. The full word contributes
+(61875/262144)⁴, strictly positive. This verifies one term of
+the signed partition sum. The sum may contain cancellations.
