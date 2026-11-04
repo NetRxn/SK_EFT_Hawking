@@ -2,7 +2,7 @@
 from collections import Counter
 from fractions import Fraction
 from functools import cache
-from itertools import combinations_with_replacement, product
+from itertools import combinations, combinations_with_replacement, product
 from math import factorial
 
 from l1_direct_b_haar import R, add, bilinear, diag, gamma, scale, wedge
@@ -129,6 +129,52 @@ def anchor_sector(denominator):
     print("anchor-sector numerator", sum(values.values()))
 
 
+def summed_fourth(direction):
+    second = [{pair: {} for pair in PAIRS} for _ in range(2)]
+    for left, right, weight in nodes():
+        for anchor, moments in enumerate(second):
+            t = action_frame(direction, anchor, left, right)
+            for a, b in PAIRS:
+                moments[a, b] = add(moments[a, b], scale(wedge(t[a], t[b]), weight))
+    fourth = [fourth_action(direction, anchor) for anchor in range(2)]
+    result = {}
+    for labels in tuples:
+        terms = [scale(moments[labels], 96) for moments in fourth]
+        for first in combinations(range(4), 2):
+            a = tuple(labels[i] for i in first)
+            b = tuple(labels[i] for i in range(4) if i not in first)
+            terms.append(wedge(second[0][a], second[1][b]))
+        result[labels] = add(*terms)
+    return result
+
+
+def mixed_anchor_sector():
+    normal, _ = staged_center(summed_fourth(0), summed_fourth(1))
+    denominator = 48 * 96**4 * 8**8
+    layer_norm = Fraction(close(normal, normal), denominator**2 * factorial(4)**2)
+    sources = [[source_frames(direction, anchor) for anchor in range(2)]
+               for direction in range(2)]
+    values = {}
+    for u, v in product(range(2), repeat=2):
+        # On either edge the two surviving action factors must share an
+        # anchor, since the source is even on its directed link.
+        a, b = ({p: add(*(maps[endpoint][p] for maps in tables)) for p in PAIRS}
+                for tables, endpoint in zip(sources, (u, v), strict=True))
+        changed = modified_center(a, b)
+        layer_source = Fraction(-4 * close(changed, normal),
+                                denominator**2 * factorial(2) * factorial(4))
+        values[(u << 2) | (v << 3)] = 4 * layer_norm**3 * layer_source
+    normalization = layer_norm**4
+    numerator = sum(values.values())
+    print("mixed-anchor normalization", normalization)
+    print("mixed-anchor numerator by offset", values)
+    print("mixed-anchor numerator", numerator)
+    # Six planes and two translations contribute to normalization.
+    # Source degree matching selects the (0,1) curvature plane.
+    print("homogeneous-plane orbit normalization", 12 * normalization)
+    print("homogeneous-plane orbit numerator", 2 * numerator)
+
+
 def main():
     active = geometry()
     check_source_support(active)
@@ -152,6 +198,7 @@ def main():
         total += value
     print("two-source selected-word contribution", weight * total, flush=True)
     anchor_sector(denominator)
+    mixed_anchor_sector()
 
 
 if __name__ == "__main__":

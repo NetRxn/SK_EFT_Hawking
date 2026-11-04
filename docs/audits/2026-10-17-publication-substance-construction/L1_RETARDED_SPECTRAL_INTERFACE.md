@@ -2937,3 +2937,30 @@ separation coefficients. The equality across separations follows from
 this anchor sum.
 Mixed anchor choices within a center's repeated vertices and
 other curvature words are outside this sector.
+
+### Mixed anchors and the homogeneous opposed orbit
+
+For a fourth moment of the sum of the two action anchors, the two
+uniform terms and all six labeled two-plus-two assignments survive
+directed-link parity. The mixed terms factor into two independent
+second moments, including when gamma labels repeat. The replay
+brings all terms to the same `96² × 8⁴` frame scale. In the source
+layer, the insertion has even degree on its directed link. The two
+surviving action factors on each edge must therefore use the same
+anchor, with both choices included.
+
+Independent review reproduced the one-checkerboard normalization
+`9982511481025756988525390625/295147905179352825856` and numerator
+`-151675751259254608154296875/144115188075855872`. The four separation
+coefficients are equal. Permutations and translations give twelve
+equal normalization terms over the six planes and two checkerboards.
+For the specified shear, same-center deficits require both frame
+directions to be 2 and 3. Distinct-center removals still have odd
+curvature-link parity because each source is even on its link.
+Only the two checkerboards with curvature plane (0,1) contribute to
+the numerator. Independent review checked these orbit factors.
+
+The remaining plane-homogeneous configurations with nonalternating
+opposed pairs across transverse layers can share curvature links.
+They require a joint curvature contraction. Other action sectors
+and the unrestricted lattice sums remain open.
