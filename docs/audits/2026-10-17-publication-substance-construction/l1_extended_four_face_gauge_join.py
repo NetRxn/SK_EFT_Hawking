@@ -145,24 +145,32 @@ def dot(a, b):
     return re, im
 
 
-def coefficient(pattern, faces, protected, probe, table, common, reuse):
+def coefficient(pattern, faces, protected, probe, table, common, reuse, *, source_table=None):
     mixed, pure, tree, live = geometry(pattern, faces, protected)
     pure_items = [sorted(items) for _, items in sorted(pure.items())]
     pure_sites = [tuple(x ^ (1 << a) for a, _, _ in items)
                   for x, items in zip(sorted(pure), pure_items, strict=True)]
     assert set(pure_sites[0]) == set(pure_sites[1])
-    factors = []
-    for i, items in enumerate(pure_items):
-        if any(live in faces[face] for _, face, _ in items):
-            factors.append(pure_factor(faces, tree, live, probe, items, table))
-        else:
-            if i not in reuse:
-                reuse[i] = pure_factor(faces, tree, live, probe, items, table)
-            factors.append(reuse[i])
+    def build_factors(table, kind):
+        factors = []
+        for i, items in enumerate(pure_items):
+            key = kind, i
+            if any(live in faces[face] for _, face, _ in items):
+                factors.append(pure_factor(faces, tree, live, probe, items, table))
+            else:
+                if key not in reuse:
+                    reuse[key] = pure_factor(faces, tree, live, probe, items, table)
+                factors.append(reuse[key])
+        return factors
+
+    factors = build_factors(table, "normal")
+    changed = build_factors(source_table, "source") if source_table is not None else ({}, {})
     order = [f for items in pure_items for _, f, _ in items]
     layouts = [mixed_layout(pattern, faces, x, live, probe, common) for x in sorted(mixed)]
     slot = [tuple(order.index(f) for f in layout[0]) for layout in layouts]
-    supports = [tuple({key[i] for key in factor} for i in range(2)) for factor in factors]
+    keys_by_side = [set(normal) | set(source)
+                    for normal, source in zip(factors, changed, strict=True)]
+    supports = [tuple({key[i] for key in keys} for i in range(2)) for keys in keys_by_side]
     channels = (*supports[0], *supports[1])
     if "dual" not in reuse:
         keep, environment = remote_environment(pattern, mixed | pure.keys())
@@ -171,21 +179,38 @@ def coefficient(pattern, faces, protected, probe, table, common, reuse):
         assert live[0] == max(mixed)
         first = mixed_rows(layouts[0][2], layouts[0][1], product(COMPONENTS, repeat=2))
         reuse["dual"] = dual_mixed(keep ^ pure_mask, environment, first, layouts[1][1])
+        if source_table is not None:
+            source_keep, source_environment = remote_environment(pattern, mixed | pure.keys(), source=True)
+            assert source_keep == keep and not any(mask & pure_mask for mask in source_environment)
+            reuse["source dual"] = dual_mixed(keep ^ pure_mask, source_environment, first, layouts[1][1])
     second = mixed_rows(layouts[1][2], layouts[1][1], product(*(channels[i] for i in slot[1])))
     dual = reuse["dual"]
-    re = im = 0
+    totals = [[0, 0] for _ in range(3)]
     mixed_cache = {}
-    for a, b in product(*factors):
-        u, v = close_pure(factors[0][a], factors[1][b], pure_sites[0] != pure_sites[1])
-        if not (u or v):
+    swapped = pure_sites[0] != pure_sites[1]
+    for a, b in product(*keys_by_side):
+        left, right = factors[0].get(a, {}), factors[1].get(b, {})
+        normal = close_pure(left, right, swapped)
+        if source_table is not None:
+            u, v = close_pure(changed[0].get(a, {}), right, swapped)
+            w, z = close_pure(left, changed[1].get(b, {}), swapped)
+            source = u + w, v + z
+        else:
+            source = 0, 0
+        if not any(normal) and not any(source):
             continue
         keys = tuple(tuple((a + b)[i] for i in indices) for indices in slot)
         if keys not in mixed_cache:
-            mixed_cache[keys] = dot(dual[keys[0]], second[keys[1]])
-        r, j = mixed_cache[keys]
-        re += u*r - v*j
-        im += u*j + v*r
-    assert not im
+            ordinary = dot(dual[keys[0]], second[keys[1]])
+            remote = (dot(reuse["source dual"][keys[0]], second[keys[1]])
+                      if source_table is not None else (0, 0))
+            mixed_cache[keys] = ordinary, remote
+        ordinary, remote = mixed_cache[keys]
+        for total, (u, v), (r, j) in zip(totals, (normal, normal, source),
+                                        (ordinary, remote, ordinary), strict=True):
+            total[0] += u*r - v*j
+            total[1] += u*j + v*r
+    assert all(not im for _, im in totals)
     divisor = (48 * SCALE**4 * 4**8 * factorial(4))**2
     divisor *= (SCALE**4 * 4**4 * 96**2 * 8**4 * factorial(2)**2)**2
     for x, pairs in zip(EVEN, pattern, strict=True):
@@ -193,7 +218,9 @@ def coefficient(pattern, faces, protected, probe, table, common, reuse):
             divisor *= 96**4 * 8**8
             for pair in set(pairs):
                 divisor *= 48 * factorial(2 * pairs.count(pair))
-    return Fraction(re, divisor), tuple(map(len, factors))
+    normal, remote, protected_source = (Fraction(re, divisor) for re, _ in totals)
+    # Two source orders, opposite shear signs, and 4!/2! at the changed pure center.
+    return (normal, remote, -24 * protected_source), tuple(map(len, factors))
 
 
 def main():
@@ -202,27 +229,44 @@ def main():
     mode.add_argument("--probe", type=int, choices=range(len(PAIRS)))
     mode.add_argument("--probe-classes", action="store_true")
     parser.add_argument("--orbit", type=int, choices=range(3))
+    parser.add_argument("--source", action="store_true")
     args = parser.parse_args()
     common = summed_fourth(1)
     table = pure_table()
-    total = Fraction()
+    source_table = pure_table(True) if args.source else None
+    totals = [Fraction() for _ in range(3)]
     probes = [(i, 1) for i in (range(len(PAIRS)) if args.probe is None else (args.probe,))]
     if args.probe_classes:
         probes = [(PAIR_INDEX[pair], weight) for pair, weight in PROBE_CLASSES]
         assert sum(weight for _, weight in probes) == len(PAIRS)
     representatives = ((p, n, f, pr) for p, n in orbits(swap_patterns())
                        for f, pr in (curvature_boundary(p),) if len(f) == 4)
+    completed = 0
     for i, (pattern, multiplicity, faces, protected) in enumerate(representatives):
         if args.orbit is not None and i != args.orbit:
             continue
         reuse = {}
+        subtotals = [Fraction() for _ in range(3)]
         for probe, weight in probes:
-            value, rows = coefficient(pattern, faces, protected, probe, table, common, reuse)
+            values, rows = coefficient(pattern, faces, protected, probe, table, common, reuse,
+                                       source_table=source_table)
             print("orbit", i, "probe", PAIRS[probe], "class weight", weight, "pure rows", rows,
-                  "coefficient", value, flush=True)
-            total += 2 * multiplicity * weight * value
+                  "coefficients", values if args.source else values[0], flush=True)
+            for j, value in enumerate(values):
+                subtotals[j] += weight * value
+        for j, subtotal in enumerate(subtotals):
+            totals[j] += 2 * multiplicity * subtotal
+        completed += 1
+        if args.probe is None:
+            print("orbit", i, "unweighted subtotals",
+                  tuple(subtotals) if args.source else subtotals[0], flush=True)
+    assert completed == (3 if args.orbit is None else 1)
     if args.probe is None and args.orbit is None:
-        print("four-face normalization, both checkerboards", total)
+        print("four-face normalization, both checkerboards", totals[0])
+        if args.source:
+            assert totals[0] == Fraction(252979770023001810375732421875, 73786976294838206464)
+            print("four-face remote source, both checkerboards", totals[1] / 6)
+            print("four-face protected source, both checkerboards", totals[2] / 6)
 
 
 if __name__ == "__main__":

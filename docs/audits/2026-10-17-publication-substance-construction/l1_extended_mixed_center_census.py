@@ -1,8 +1,9 @@
 """Balanced checkerboard words with exactly two centers split 2+2."""
+from argparse import ArgumentParser
 from collections import Counter, defaultdict
 from fractions import Fraction
 from functools import cache
-from itertools import permutations, product
+from itertools import combinations_with_replacement, permutations, product
 from math import factorial
 
 from l1_extended_mixed_plane import AXES, EVEN, PAIRS, patterns
@@ -133,6 +134,34 @@ def source_total(pattern, original, only_faces=None):
     return total
 
 
+def even_center_counts():
+    passive = tuple(x ^ 1 for x in EVEN)
+    options = {}
+    for x in EVEN:
+        rows = []
+        for first, second in combinations_with_replacement(PAIRS, 2):
+            incidence = Counter(x ^ (1 << a) for pair in (first, second) for a in pair)
+            rows.append((tuple(incidence[y] for y in passive), int(first != second)))
+        options[x] = rows
+
+    def half(centers):
+        support = defaultdict(Counter)
+        for words in product(*(options[x] for x in centers)):
+            degree = tuple(sum(column) for column in zip(*(row for row, _ in words)))
+            if max(degree) <= 4:
+                support[degree][sum(mixed for _, mixed in words)] += 1
+        return support
+
+    left, right = half(EVEN[:4]), half(EVEN[4:])
+    result = Counter()
+    for degree, counts in left.items():
+        other = tuple(4 - n for n in degree)
+        for a, b in product(counts, right.get(other, ())):
+            result[a + b] += counts[a] * right[other][b]
+    assert result[0] == 2970 and result[1] == 0 and result[2] == len(swap_patterns())
+    return dict(sorted(result.items()))
+
+
 def main():
     patterns = swap_patterns()
     selected = defaultdict(list)
@@ -173,4 +202,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument("--even-center-census", action="store_true")
+    if parser.parse_args().even_center_census:
+        print("balanced words by mixed-center count", even_center_counts())
+    else:
+        main()

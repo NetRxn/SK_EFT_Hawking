@@ -3648,3 +3648,66 @@ Independent removal enumeration also checked that the remaining
 source terms come from the two protected pure and four remote
 pure centers in each representative. The four removals at mixed
 centers are already in the deleted-face subtotal.
+
+### Completed four-face source numerator
+
+The `--source --probe-classes` replay inserts the source tensor
+at one protected pure center at a time, or contracts the ordinary
+pure centers with the summed remote-source environment. The
+retained-core cases use the same tree gauge and twelve probe
+classes as normalization. For a protected pure center the
+common divisor is corrected by −24, accounting for the two
+opposite-sign ordered source insertions and 4!/2!. Remote
+adjustments are already included in the source environment.
+The full source run also reproduced the exact four-face
+normalization coefficient.
+
+The probe-summed, all-shear source subtotals before orbit weighting
+are:
+
+| Multiplicity per checkerboard | Remote source | Protected source |
+| ---: | ---: | ---: |
+| 96 | `-122777718908600388373681640625/590295810358705651712` | `-15373615982220589928466796875/147573952589676412928` |
+| 192 | `-53368148060444543994140625/2305843009213693952` | `-434199464206081244384765625/36893488147419103232` |
+| 96 | `-51024442902222429931640625/2305843009213693952` | `-413278757800081244384765625/36893488147419103232` |
+
+For both checkerboards and the fixed shear pair, the remote
+subtotal is `-163164468098516936961181640625/18446744073709551616`
+and the protected subtotal is
+`-20500326727069564861083984375/4611686018427387904`.
+Including the independently replayed deleted-face terms gives the
+complete four-face numerator
+`-337281185718066541405517578125/18446744073709551616`.
+Independent arithmetic reproduced the weighted subtotals. Including
+the peelable and two-face terms gives the numerator
+for the full balanced family with exactly two mixed centers:
+`-2335660581346345132780517578125/18446744073709551616`.
+
+### Size of the remaining even-multiplicity checkerboard sector
+
+The mixed-center census with `--even-center-census` now splits
+the eight centers into two halves, counts their passive degrees,
+and joins against complementary degrees. Each center has two
+unordered plane slots, each representing two action vertices.
+In those units the target passive degree is four. The exact
+counts on one checkerboard are:
+
+| Mixed centers | Balanced words |
+| ---: | ---: |
+| 0 | 2,970 |
+| 1 | 0 |
+| 2 | 13,152 |
+| 3 | 41,760 |
+| 4 | 224,436 |
+| 5 | 607,776 |
+| 6 | 1,279,872 |
+| 7 | 1,502,112 |
+| 8 | 1,065,933 |
+
+Independent replay reproduced these counts. The total is
+4,738,011 on each checkerboard. This counts geometric degree
+support before signed evaluation. It covers even plane
+multiplicities and four action vertices per active center.
+The sectors with three or more mixed centers, other plane
+multiplicities, and general center counts still enter the
+unrestricted sums.
