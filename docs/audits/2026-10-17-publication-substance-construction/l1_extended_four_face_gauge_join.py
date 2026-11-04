@@ -113,15 +113,16 @@ def mixed_rows(block, sites, channels):
     return rows
 
 
-def dual_mixed(keep, environment, first, second_sites):
+def indexed_mixed_dual(keep, environment, second_sites):
     second_mask = sum(255 << (8*x) for x in second_sites)
+    assert second_mask & ~keep == 0
     fixed = keep ^ second_mask
     indexed = defaultdict(list)
     for mask, value in environment.items():
         assert value.is_ground
         indexed[mask & fixed].append((mask, int(value.const().x), int(value.const().y)))
-    out = {}
-    for key, poly in first.items():
+
+    def dual(poly):
         row = defaultdict(lambda: [0, 0])
         for a, (r, i) in poly.items():
             for b, u, j in indexed[fixed ^ (a & fixed)]:
@@ -132,8 +133,13 @@ def dual_mixed(keep, environment, first, second_sites):
                 value = row[target]
                 value[0] += sign*(r*u - i*j)
                 value[1] += sign*(r*j + i*u)
-        out[key] = {mask: tuple(value) for mask, value in row.items() if any(value)}
-    return out
+        return {mask: tuple(value) for mask, value in row.items() if any(value)}
+    return dual
+
+
+def dual_mixed(keep, environment, first, second_sites):
+    dual = indexed_mixed_dual(keep, environment, second_sites)
+    return {key: dual(poly) for key, poly in first.items()}
 
 
 def dot(a, b):

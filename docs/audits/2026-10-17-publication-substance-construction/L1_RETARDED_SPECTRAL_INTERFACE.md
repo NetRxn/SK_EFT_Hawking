@@ -4172,3 +4172,24 @@ frame still carries the live face's components. The join
 includes channels present only in the source upper tensor.
 Independent review and the 40-case incidence replay confirmed
 the coverage and weights. The numerical subtotal is pending.
+
+#### Streamed exterior contraction
+
+The two- and three-face joins index the exterior environment
+once and construct a single dual row for each component channel.
+They accumulate the ordinary contraction and each applicable
+upper or base source replacement before releasing that row.
+The remote-source environment is contracted separately. Sparse
+pairing visits the smaller of the right-factor support and the
+dual support and preserves exact Gaussian-integer arithmetic.
+
+An independent explicit exterior-inversion oracle reproduced
+seven dual rows and the full channel sums, including keys present
+only in source rows. Both sparse pairing branches matched the
+same signed Gaussian-integer fixture. The established first
+two-face orbit is the full-orbit control for the streamed path.
+The running earlier replays remain comparison evidence. The first
+three-face orbit in the earlier path gave
+`164441394041669509962041015625/604462909807314587353088`
+before orbit and checkerboard weighting. The five-orbit subtotal
+and full-workload performance comparison remain pending.

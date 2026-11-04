@@ -7,7 +7,7 @@ from itertools import product
 from math import factorial
 
 from l1_direct_b_haar import add, scale, wedge
-from l1_extended_four_face_gauge_join import IDENTITY, dual_mixed, mixed_rows
+from l1_extended_four_face_gauge_join import IDENTITY
 from l1_extended_mixed_center_census import AXES, EVEN, curvature_boundary, orbits, words_with_mixed_count
 from l1_extended_mixed_center_gamma import COMPONENTS, gamma_block
 from l1_extended_mixed_curvature_core import PAIRS, face_tensor
@@ -16,7 +16,7 @@ from l1_extended_one_face_gauge_join import check_removals, live_pair, source_fr
 from l1_extended_opposed_source import summed_fourth
 from l1_extended_protected_center import protected_center, summed_protected_source
 from l1_extended_two_face_gamma_join import remote_environment
-from l1_extended_two_face_tree import close_upper, fixed_frame_pair, upper_factor
+from l1_extended_two_face_tree import close_channels, fixed_frame_pair, upper_factor
 from l1_extended_two_mixed_centers import remap
 
 
@@ -125,23 +125,17 @@ def coefficient(pattern, faces, protected, base, reverse, source=False):
     if source:
         _, _, changed_single, _ = upper_factor(
             pattern, single_face, faces[single_face], protected, reverse, source=True)
-    single_keys = single_rows.keys() | changed_single.keys()
-    channels = tuple(product(grouped, single_keys) if shared_first else product(single_keys, grouped))
-    first = mixed_rows(base, overlap_sites, channels)
     sites = set(shared_sites) | set(disjoint_sites) | set(single_sites)
-    dual = dual_mixed(keep, env, first, sites)
 
-    def close(grouped_rows, singles, boundary):
-        left, right = (grouped_rows, singles) if shared_first else (singles, grouped_rows)
-        real = imag = 0
-        for x, y in product(left, right):
-            re, im = close_upper(left[x], right[y], boundary[x, y])
-            real += re
-            imag += im
-        assert imag == 0
-        return real
+    def ordered_rows(grouped_rows, singles):
+        return (grouped_rows, singles) if shared_first else (singles, grouped_rows)
 
-    real = close(grouped, single_rows, dual)
+    terms = [ordered_rows(grouped, single_rows)]
+    if source:
+        terms.extend((ordered_rows(grouped, changed_single),
+                      ordered_rows(group_rows(replace_pure=True), single_rows),
+                      ordered_rows(group_rows(replace_disjoint=True), single_rows)))
+    real, *retained = close_channels(base, overlap_sites, keep, env, sites, terms)
     divisor = single_divisor * 48 * SCALE**4 * 4**8 * factorial(4)
     divisor *= 48 * SCALE**8 * 4**8 * factorial(2)**2
     divisor *= SCALE**4 * 4**4 * 96**2 * 8**4 * factorial(2)**2
@@ -154,11 +148,10 @@ def coefficient(pattern, faces, protected, base, reverse, source=False):
         return normal
     source_keep, source_env = remote_environment(pattern, coupled, source=True)
     assert source_keep == keep
-    remote_dual = dual_mixed(keep, source_env, first, sites)
-    remote = close(grouped, single_rows, remote_dual)
-    upper_term = (close(grouped, changed_single, dual)
-                  - 24 * close(group_rows(replace_pure=True), single_rows, dual))
-    disjoint_term = -192 * close(group_rows(replace_disjoint=True), single_rows, dual)
+    remote, = close_channels(base, overlap_sites, keep, source_env, sites, terms[:1])
+    single_term, shared_term, base_term = retained
+    upper_term = single_term - 24 * shared_term
+    disjoint_term = -192 * base_term
     return normal, tuple(Fraction(term, 6 * divisor) for term in (remote, upper_term, disjoint_term))
 
 

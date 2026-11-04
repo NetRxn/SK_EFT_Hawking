@@ -6,7 +6,7 @@ from itertools import product
 from math import factorial
 
 from l1_direct_b_haar import add, scale, wedge
-from l1_extended_four_face_gauge_join import IDENTITY, dual_mixed, mixed_rows
+from l1_extended_four_face_gauge_join import IDENTITY, indexed_mixed_dual, mixed_rows
 from l1_extended_mixed_center_census import (
     EVEN, curvature_boundary, orbits, swap_patterns, words_with_mixed_count,
 )
@@ -118,22 +118,41 @@ def check_disjoint_tree(faces, protected, reverse):
 
 
 def close_upper(left, right, dual):
-    """Pair the two upper rows with only the masks supported by the dual."""
+    """Pair exterior products with the sparse dual using exact integers."""
     real = imag = 0
     for a, value in left.items():
         r, i = int(value.const().x), int(value.const().y)
-        for mask, (u, v) in dual.items():
-            if mask & a != a:
-                continue
-            b = mask ^ a
-            other = right.get(b)
-            if other is None:
+        if len(right) <= len(dual):
+            pairs = ((b, other, dual.get(a | b)) for b, other in right.items() if not a & b)
+        else:
+            pairs = ((mask ^ a, right.get(mask ^ a), weight)
+                     for mask, weight in dual.items() if mask & a == a)
+        for b, other, weight in pairs:
+            if other is None or weight is None:
                 continue
             s, j = int(other.const().x), int(other.const().y)
+            u, v = weight
             sign = wedge_sign(a, b)
             real += sign * ((r*s - i*j)*u - (r*j + i*s)*v)
             imag += sign * ((r*s - i*j)*v + (r*j + i*s)*u)
     return real, imag
+
+
+def close_channels(base, base_sites, keep, env, upper_sites, terms):
+    """Reuse one environment index and release each dual row after contraction."""
+    dual = indexed_mixed_dual(keep, env, upper_sites)
+    channels = set().union(*(set(product(left, right)) for left, right in terms))
+    totals = [[0, 0] for _ in terms]
+    for key in sorted(channels):
+        row = dual(mixed_rows(base, base_sites, (key,))[key])
+        x, y = key
+        for (left, right), subtotal in zip(terms, totals, strict=True):
+            if x in left and y in right:
+                re, im = close_upper(left[x], right[y], row)
+                subtotal[0] += re
+                subtotal[1] += im
+    assert all(im == 0 for _, im in totals)
+    return tuple(re for re, _ in totals)
 
 
 def coefficient(pattern, faces, protected, base, reverse=False, source=False, omitted=None):
@@ -172,22 +191,11 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False, om
     if source:
         changed = [upper_factor(pattern, face, faces[face], protected, reverse, source=True)[2]
                    for face in ordered]
-    channels = tuple(product(set(left[2]) | (changed[0].keys() if changed else set()),
-                             set(right[2]) | (changed[1].keys() if changed else set())))
-    first = mixed_rows(base, sites, channels)
     upper_sites = set(left[1]) | set(right[1])
-    dual = dual_mixed(keep, env, first, upper_sites)
-
-    def close(lhs, rhs, boundary):
-        total = imag = 0
-        for x, y in product(lhs, rhs):
-            re, im = close_upper(lhs[x], rhs[y], boundary[x, y])
-            total += re
-            imag += im
-        assert imag == 0
-        return total
-
-    total = close(left[2], right[2], dual)
+    terms = [(left[2], right[2])]
+    if changed is not None:
+        terms.extend(((changed[0], right[2]), (left[2], changed[1])))
+    total, *upper_terms = close_channels(base, sites, keep, env, upper_sites, terms)
     divisor = left[3] * right[3] * base_divisor
     for x, (p, q) in zip(EVEN, pattern, strict=True):
         if x not in coupled:
@@ -198,10 +206,8 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False, om
         return normal
     source_keep, source_env = remote_environment(pattern, coupled, source=True)
     assert source_keep == keep
-    remote_dual = dual_mixed(keep, source_env, first, upper_sites)
-    remote = close(left[2], right[2], remote_dual)
-    # A source pair replaces two of the four slots at exactly one upper center.
-    upper = close(changed[0], right[2], dual) + close(left[2], changed[1], dual)
+    remote, = close_channels(base, sites, keep, source_env, upper_sites, terms[:1])
+    upper = sum(upper_terms)
     return normal, Fraction(remote, 6 * divisor), Fraction(upper, 6 * divisor)
 
 
