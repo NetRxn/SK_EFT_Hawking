@@ -2589,3 +2589,16 @@ separated upper terms gives
 for all degree- and parity-compatible replacements of the
 selected action word. Independent review of the complete
 selected-word result remains pending.
+
+Independent review accepted the complete selected-word sum at
+`1ec500284`. Its fully ordered census checked 284 removals,
+192 degree matches and 64 parity survivors, 16 per source family.
+It verified the fixed low-link normalization, the common `-2`
+factor for grouped sources and the half-tensor identities at all
+four placements. A separate full-column check also reproduced
+both linear identities on all 2,321,664 coefficients. The two
+lower–upper column SHA-256s are
+`848994f93cf75af43a45d2b87990983065d6daed06cb20e1041467b6bdf844ea`
+and `b8b70a2ef3e28b618d9c02231ddc4352cd4a1cd53d66311348d692049b0a7eb8`.
+The next scope is the full action-word census for both the
+normalization and the two-source numerator.
