@@ -5375,6 +5375,22 @@ checked the factor of `2 × 192` and each source component.
 | Deleted source | `−6260468676577400390625/35184372088832` |
 | Full fixed-shear numerator | `−388689797671924702921875/281474976710656` |
 
+#### Split disjoint-upper orbits 1–16
+
+Both disjoint batches exited zero. Each has eight orbits with
+multiplicity 192, totaling 1,536 words per checkerboard.
+
+| Both-checkerboard contribution | Orbits 1–8 | Orbits 9–16 |
+| --- | ---: | ---: |
+| Normalization | `731349799555229623828125/562949953421312` | `1623332554948730499609375/4503599627370496` |
+| Remote source | `−604920139176228343171875/140737488355328` | `−671731128266467689703125/562949953421312` |
+| Upper source | `−591690214428681835546875/281474976710656` | `−164068337504921143640625/281474976710656` |
+| Deleted source | `−16647517293294076171875/17592186044416` | `−9208999138893591796875/35184372088832` |
+| Full fixed-shear numerator | `−2067890769473843740640625/281474976710656` | `−1147211789498607445734375/562949953421312` |
+
+The covered prefix comprises 17 orbits and 3,264 words per
+checkerboard. The final range is `[17,25)`.
+
 ### Exact temporal transfer control for the scalar probe
 
 Keep periodic spatial forward differences and let the temporal

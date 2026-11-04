@@ -157,7 +157,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   covers all 160 orbits and 30,624 words per checkerboard.
   The [split disjoint-upper route](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-two-face-split-disjoint-upper-orbit-0)
   covers a separate 25-orbit family. Its first orbit has matching
-  exact coefficients under both tree choices.
+  exact coefficients under both tree choices. The [batches through
+  orbit 16](L1_RETARDED_SPECTRAL_INTERFACE.md#split-disjoint-upper-orbits-116)
+  bring coverage to 17 orbits and 3,264 words per checkerboard.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)
