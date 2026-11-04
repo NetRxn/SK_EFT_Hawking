@@ -1985,3 +1985,15 @@ sixteen mixed-chirality products. The physical scale uses
 the fourth-moment denominator 48 and two factors of 1/4
 from the frames. The full motif still requires joining the
 remaining link and exterior boundaries.
+
+Independent review of `72842b97f` reproduced all counts and
+the rank. The Haar matrix is the Gram matrix of quadratic
+polynomials on S³×S³. The common norm supplies the scalar
+channel and the norm difference supplies its sole null
+direction. Same-chirality fourth moments give weight 2
+per pairing in the 48-scaled matrix, while mixed second
+moments give weight 3. The review verified the reversed
+frame anchor and absence of an extra factorial in collecting
+ordered coordinates into symmetric monomials. The next
+assigned contraction uses the spanning-tree reduction to
+measure the two remaining mixed cycle boundaries.
