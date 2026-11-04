@@ -134,8 +134,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   also passed receipt review, as did [deletion 2](L1_RETARDED_SPECTRAL_INTERFACE.md#full-class-weighted-six-face-deletion-2).
   [Deletion 3](L1_RETARDED_SPECTRAL_INTERFACE.md#full-class-weighted-six-face-deletion-3)
   also passed receipt review. The [complete six-deletion subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-six-face-deletion-subtotal)
-  now includes deletion 5. The original six-face core is running on
-  both the original and the opt-in joint-probe route. The
+  now includes deletion 5. The joint-probe replay completes the
+  [three-mixed subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-three-mixed-subtotal)
+  for 227 orbits and 41,760 words per checkerboard. The
   [complete four-mixed peelable subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-four-mixed-peelable-subtotal)
   covers 327 orbits and 51,696 words per checkerboard, with independent
   receipt reduction. The [pure-upper one-face subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-one-face-pure-upper-subtotal)
@@ -152,8 +153,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   has independent source and census review for 160 orbits and 30,624
   words per checkerboard. Orbit 0 has exact matching contractions on
   both tree choices. Orbits 1–3 have independently checked exact
-  subtotals. The [batches through orbit 111](L1_RETARDED_SPECTRAL_INTERFACE.md#two-face-overlap-base-orbits-80111)
-  bring coverage to 112 orbits and 21,504 words per checkerboard.
+  subtotals. The [batches through orbit 127](L1_RETARDED_SPECTRAL_INTERFACE.md#two-face-overlap-base-orbits-112127)
+  bring coverage to 128 orbits and 24,576 words per checkerboard.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)

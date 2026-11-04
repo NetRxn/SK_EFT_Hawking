@@ -5028,6 +5028,25 @@ original core contributes its normalization and five retained
 source insertions, each weighted by 384. Do not add the six
 deletions again.
 
+#### Complete three-mixed subtotal
+
+The joint-probe replay of original six-face orbit 9 exited zero.
+The per-representative normalization was
+`40507039180322706181640625/295147905179352825856`
+and the retained numerator was
+`−64881605749841979451171875/147573952589676412928`.
+Multiply each by 384 and add to the preceding subtotals. The
+preceding numerator already includes all six deletions.
+
+| Both-checkerboard contribution for 227 orbits | Exact value |
+| --- | ---: |
+| Normalization | `238792184953388175545921337890625/4722366482869645213696` |
+| Full fixed-shear numerator | `−80967233808498023239980251953125/295147905179352825856` |
+
+This covers all 41,760 words per checkerboard with exactly three
+mixed centers. The original unquotiented replay is a separate
+cross-check.
+
 #### Four-mixed two-disjoint peelable subtotal
 
 The `--four-mixed-peelable 2` replay exited zero with all 13
@@ -5298,6 +5317,22 @@ and 3,072 words per checkerboard. The weighted sums are:
 
 The covered prefix comprises 112 orbits and 21,504 words per
 checkerboard. The next range is `[112,128)`.
+
+#### Two-face overlap-base orbits 112–127
+
+The component replay exited zero on 16 orbits and 3,072 words
+per checkerboard.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `1264222082024857004150390625/1152921504606846976` |
+| Remote source | `−1050749499456705588646359375/288230376151711744` |
+| Upper source | `−445177953012018609629015625/288230376151711744` |
+| Deleted source | `−224929025117258291015625/281474976710656` |
+| Full fixed-shear numerator | `−215781846773599586034421875/36028797018963968` |
+
+The covered prefix comprises 128 orbits and 24,576 words per
+checkerboard. The final ranges are `[128,144)` and `[144,160)`.
 
 ### Exact temporal transfer control for the scalar probe
 
