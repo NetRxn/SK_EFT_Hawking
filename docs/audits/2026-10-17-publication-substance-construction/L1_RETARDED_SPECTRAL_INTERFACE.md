@@ -2404,7 +2404,7 @@ The unrestricted run uses the verified lower-column SHA-256
 Its half-open output ranges are [0,2) and [2,11) under
 `91bc5e71d`, [11,66) under `09552bf0d` with parity pruning,
 and [66,35084) under `4bb50163c` after the empty-strip packing
-repair. The final range is still in progress. Independent review
+repair. Independent review
 replayed indices 65 and 66 across the repair boundary and matched
 negative index 10747 with plain Python-integer accumulation.
 The packing repair preserves row, column and coefficient order
@@ -2412,3 +2412,24 @@ semantics. The reducer applies `48^8 * 4^4` for curvature,
 `(48 * 4^16)^2` for the lower frames, and
 `8^16 * 4^32 * 2^8` for the upper frames and repeated vertices,
 then multiplies by the squared upper-sheet factor.
+
+The unrestricted run completed all 35,084 orbit records.
+The exact reducer validated the unique indices, weights and pair
+counts covering 589,194 blocks and 94,748,063,904 candidate pairs.
+It returned raw signed numerator
+`4549345865844500133837056022073964680182394381773293174409658368`.
+After all curvature, exterior and upper scales, the selected
+finite motif coefficient is
+`1057574865922986076396613/3696469150265516934764386546876416`.
+
+| Half-open shard | Records | SHA-256 |
+| --- | ---: | --- |
+| [0,2) | 2 | `d487deadea8c31337cecc5ac5ffcceaff79a30e3e0422f9b07b7f4ecbe277b32` |
+| [2,11) | 9 | `c0d4aa7fb4885a3be2bd5e3752f44a4d72894197aa9df94e8b6a189777bebbde` |
+| [11,66) | 55 | `a94d6412e0793b1abe95a0c138ef3a1b84406daf1e823c73e89d07e796e8280e` |
+| [66,35084) | 35,018 | `7f3a9f22590f96a728b01dd49cb7cd822b0affe2b66a38c43d99e6fc5ba41d1d` |
+
+The shard digests include elapsed-time fields. A fresh run can
+compare the first five fields independently of timing. The full
+sum is ready for independent result review. The selected motif
+still needs to be placed in the full physical matching calculation.
