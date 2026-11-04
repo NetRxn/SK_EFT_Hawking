@@ -4699,3 +4699,24 @@ Independent receipt review reproduced these sums and matched the
 available tree overlaps for normalization (0, 1, 4, 5, 6, 8) and
 source (0, 1). The other 12 orbits and sector-wide retained sum
 remain open. The source-deletion terms are tracked separately.
+
+#### Fused replay for three crossing remote pairs
+
+The opt-in companion also accepts mixed-upper orbit IDs 2, 13–19,
+21 and 22. Each remote pair meets both upper tensors. The join checks
+the partition of the six upper sites and closes common-site masks
+against exact complements. Only the four exclusive sites can receive
+base coefficients. The retained-source product uses one replacement
+across the three open factors and the closed scalar. Pure-upper
+orbits 3 and 12 continue to use the tree replay.
+
+Integrated controls on orbits 2 and 14 exited zero in 48.177 seconds,
+including a bounded comparison with the expanded dual. Orbit 2
+reproduced its recorded normalization and scratch source terms
+exactly. Orbit 14 tests common sites on different crossing pairs.
+On one actual channel slice of 64 base coefficients, the expanded
+dual reproduced all six Gaussian join values for ordinary and
+remote environments against the ordinary and two upper replacement
+rows. This control is a slice of the full orbit 14 calculation.
+Independent review also matched a separate signed exterior oracle
+and verified the 11 same-side, ten crossing, and two pure-upper IDs.

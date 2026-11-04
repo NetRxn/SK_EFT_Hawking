@@ -1,4 +1,4 @@
-"""Opt-in same-side component replay for the all-protected two-face family."""
+"""Opt-in component replay for the all-protected two-face family."""
 from argparse import ArgumentParser
 from fractions import Fraction
 from functools import cache
@@ -22,6 +22,11 @@ CONTROLS = {
         Fraction(1460729721830618365576171875, 590295810358705651712),
         Fraction(-36888186278621288225390625, 4611686018427387904),
         Fraction(-1039919139505603564453125, 288230376151711744),
+    ),
+    2: (
+        Fraction(528111682107330805576171875, 590295810358705651712),
+        Fraction(-13303693999582087250390625, 4611686018427387904),
+        Fraction(-374240228781168017578125, 288230376151711744),
     ),
     8: (
         Fraction(330053836700073321826171875, 1180591620717411303424),
@@ -77,7 +82,8 @@ def geometry(pattern, faces, protected):
         uppers.append((center, tuple(center ^ (1 << axis) for axis in axes)))
     coupled = {base, *(center for center, _ in uppers)}
     open_sites = set().union(*(set(sites) for _, sites in uppers))
-    if len(open_sites) != 6 or not {base ^ (1 << axis) for axis in p + q} <= open_sites:
+    exclusive_sites = {site for _, sites in uppers for site in (sites[0], sites[2])}
+    if len(open_sites) != 6 or {base ^ (1 << axis) for axis in p + q} != exclusive_sites:
         return None
     remote = {x: pairs for x, pairs in zip(EVEN, pattern, strict=True) if x not in coupled}
     if not all(a == b for a, b in remote.values()):
@@ -87,6 +93,10 @@ def geometry(pattern, faces, protected):
     active = [mask for mask in groups.values() if mask]
     if len(active) != 3 or len(set(active)) != 3:
         return None
+    upper_sites = tuple(sites for _, sites in uppers)
+    if all(sum(bool(byte(mask, site)) for site in sites) == 1
+           for mask in active for sites in upper_sites):
+        return coupled, open_sites, remote, incidence, groups, upper_sites, True
     roles = []
     for _, (a, c, b) in uppers:
         choices = [(q, c, w) for q, w in ((a, b), (b, a)) if site_mask((q, c)) in active]
@@ -95,7 +105,7 @@ def geometry(pattern, faces, protected):
         roles.append(choices[0])
     if set(active) != {*(site_mask(role[:2]) for role in roles), site_mask(role[2] for role in roles)}:
         return None
-    return coupled, open_sites, remote, incidence, groups, tuple(roles)
+    return coupled, open_sites, remote, incidence, groups, tuple(roles), False
 
 
 def gaussian(row):
@@ -131,7 +141,7 @@ def local_sign(a, t, b):
 
 
 def remote_components(pattern, geometry):
-    coupled, open_sites, remote, incidence, groups, _ = geometry
+    coupled, open_sites, remote, incidence, groups, _, _ = geometry
     keep = site_mask(open_sites)
     terms = {}
     for x, pairs in remote.items():
@@ -156,9 +166,9 @@ def remote_components(pattern, geometry):
 
 
 class FusedJoin:
-    def __init__(self, pattern, layout):
+    def configure(self, pattern, layout):
         self.pattern = pattern
-        self.coupled, self.open_sites, _, _, _, self.roles = layout
+        self.coupled, self.open_sites, _, _, _, self.roles, _ = layout
         self.keep = site_mask(self.open_sites)
         self.scalar = UNIT, ZERO
         active = {}
@@ -168,12 +178,17 @@ class FusedJoin:
             else:
                 assert set(normal) <= {0} and set(source) <= {0}
                 self.scalar = dual_mul(self.scalar, (normal.get(0, ZERO), source.get(0, ZERO)))
+        assert sum(active) == self.keep
+        self.transforms = {}
+        self.contractions = {}
+        return active
+
+    def __init__(self, pattern, layout):
+        active = self.configure(pattern, layout)
         self.own = [active[site_mask(role[:2])] for role in self.roles]
         normal, source = active[site_mask(role[2] for role in self.roles)]
         self.cross = [(m, (normal.get(m, ZERO), source.get(m, ZERO)))
                       for m in sorted(normal.keys() | source.keys())]
-        self.transforms = {}
-        self.contractions = {}
 
     def environment(self, pattern, coupled, *, source=False, only_face=None):
         assert pattern == self.pattern and coupled == self.coupled and only_face is None
@@ -252,6 +267,76 @@ class FusedJoin:
         return tuple(re for re, _ in totals)
 
 
+class AllCrossJoin(FusedJoin):
+    """Project the three disjoint remote pairs between opposite uppers."""
+
+    def __init__(self, pattern, layout):
+        self.cross = []
+        for mask, (normal, source) in self.configure(pattern, layout).items():
+            i, = (i for i, site in enumerate(self.roles[0]) if byte(mask, site))
+            j, = (j for j, site in enumerate(self.roles[1]) if byte(mask, site))
+            u, v = self.roles[0][i], self.roles[1][j]
+            rows = [(byte(m, u), byte(m, v), (normal.get(m, ZERO), source.get(m, ZERO)))
+                    for m in normal.keys() | source.keys()]
+            self.cross.append((i, j, u, v, rows))
+        # Common sites require an exact complement, so test those pairs first.
+        self.cross.sort(key=lambda row: -((row[0] == 1) + (row[1] == 1)))
+        self.options = cache(self.options)
+
+    def options(self, index, left, right):
+        i, j, u, v, rows = self.cross[index]
+        result = []
+        for a, b, weight in rows:
+            if a & left or b & right:
+                continue
+            A, B = 255 ^ left ^ a, 255 ^ right ^ b
+            if (i == 1 and A) or (j == 1 and B):
+                continue
+            sign = local_sign(A, left, a) * local_sign(B, right, b)
+            result.append(((A << (8 * u)) | (B << (8 * v)),
+                           tuple(signed(w, sign) for w in weight)))
+        return result
+
+    def transform(self, side, upper):
+        key = side, id(upper)
+        if key not in self.transforms:
+            sites = self.roles[side]
+            footprint = site_mask(sites)
+            prepared = []
+            for mask, coef in gaussian(upper).items():
+                assert not mask & ~footprint
+                parts = tuple(byte(mask, site) for site in sites)
+                assert tuple(part.bit_count() for part in parts) == (2, 4, 2)
+                prepared.append((parts, coef))
+            self.transforms[key] = upper, prepared
+        stored, prepared = self.transforms[key]
+        assert stored is upper
+        return prepared
+
+    def contract(self, key, left, right, base):
+        index = key, id(left), id(right)
+        if index not in self.contractions:
+            normal = source = ZERO
+            for l, u in self.transform(0, left):
+                for r, v in self.transform(1, right):
+                    choices = []
+                    for k, (i, j, *_) in enumerate(self.cross):
+                        rows = self.options(k, l[i], r[j])
+                        if not rows:
+                            break
+                        choices.append(rows)
+                    if len(choices) != 3:
+                        continue
+                    for (a, first), (b, second), (c, third) in product(*choices):
+                        weight = base.get(a | b | c)
+                        if weight is not None:
+                            n, s = dual_mul(dual_mul(first, second), third)
+                            coef = mul(mul(u, v), weight)
+                            normal, source = plus(normal, mul(coef, n)), plus(source, mul(coef, s))
+            self.contractions[index] = dual_mul((normal, source), self.scalar)
+        return self.contractions[index]
+
+
 def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--orbit", type=int, action="append", required=True)
@@ -269,7 +354,7 @@ def main():
         layout = geometry(pattern, faces, protected)
         if layout is None:
             parser.error(f"orbit {index} requires the existing tree contraction")
-        fused = FusedJoin(pattern, layout)
+        fused = (AllCrossJoin if layout[-1] else FusedJoin)(pattern, layout)
         normal, remote, upper = coefficient(
             pattern, faces, protected, disjoint_base, source=True, probe_classes=True,
             environment=fused.environment, close=fused.close,
