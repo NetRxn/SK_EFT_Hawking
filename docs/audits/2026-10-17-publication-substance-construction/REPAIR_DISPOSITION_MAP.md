@@ -61,8 +61,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The [deleted-face replay](L1_RETARDED_SPECTRAL_INTERFACE.md#source-deletion-in-the-three-mixed-center-two-face-cores)
   evaluates the two source removals that restore peeling in each
   free-link orbit. Normalization and retained-face sources extend
-  the prior two-face join to mixed opposite centers. The all-protected case requires two live
-  holonomies at a disjoint mixed base. General center counts remain open.
+  the prior two-face join to mixed opposite centers. The
+  [opposite-center replay](L1_RETARDED_SPECTRAL_INTERFACE.md#mixed-opposite-center-tensors-for-the-free-link-two-face-join)
+  verifies both mixed tensor scales and a five-link spanning tree
+  for all 80 free-link orbits. Next join the two live upper probes
+  to the fixed-base tensor and the remote exterior environment.
+  The all-protected case requires two live holonomies at a disjoint mixed base. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 
 - **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing and canonical finding §3.2 closure. The next bounded substrate package is §2.2–2.4. Derive Schwarzschild heating from a differentiable decreasing mass profile and acoustic cooling from the explicit source profile, then relate the applicable profiles to the regime hypotheses. Keep the finite-step monotonicity result separate from strict derivative signs. Supply the partition-linked `δ` corollary and exact `G_N M_c = 1/Λ_UV` length identity. The four-laws construction in §2.1 remains open. A differential Schwarzschild area first law is a viable component of that larger obligation. For the acoustic second law, source inspection at `ff5c2614` identified `GloriosoLiu.entropy_current_exists` and `noetherEntropyDensity_nonneg_of_SKEFTAxioms` as reuse candidates. The latter establishes density positivity under the SK axioms. The local-law module defines its divergence as the imaginary Lagrangian, whereas L3 takes the physical entropy divergence as a scalar input. Search by type in the pinned consumer context for a current and divergence identification before dispatching the acoustic construction. The source inspection leaves this search incomplete. The mapped Paper 27 review IDs require individual lifecycle reconciliation, and the manuscript still requires fresh Stage 13 after its redraft.

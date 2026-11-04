@@ -1,4 +1,5 @@
 """Local gamma sum at a mixed center with two residual faces."""
+from argparse import ArgumentParser
 from collections import Counter
 from functools import cache
 from itertools import combinations_with_replacement, product
@@ -6,8 +7,8 @@ from itertools import combinations_with_replacement, product
 from l1_direct_b_haar import add, scale, wedge
 from l1_extended_mixed_frame_moment import SCALE, frame_edge
 from l1_extended_opposed_source import PAIRS, summed_fourth
-from l1_extended_two_mixed_centers import mixed_center, remap, second_sum
-from l1_normalization_opposed_fourth import L
+from l1_extended_two_mixed_centers import mixed_center, remap, second_channels, second_sum
+from l1_normalization_opposed_fourth import L, tuples
 
 COMPONENTS = tuple(combinations_with_replacement(range(6), 2))
 
@@ -68,6 +69,100 @@ def gamma_block(first_probe, last_probe, common):
     return components
 
 
+@cache
+def peeled_channels():
+    weights = Counter()
+    for a, b, weight in second_channels():
+        weights[tuple(sorted(a)), b] += weight
+    return dict(weights)
+
+
+def opposite_center(probes, *, fixed=()):
+    """Axes are exclusive, common, exclusive. Fixed slots are one-based."""
+    assert all(probes[i - 1] is None for i in fixed)
+    first, common, last = (
+        opposite_edge(i, (probe,) if probe is not None or i in fixed else None)
+        for i, probe in enumerate(probes, start=1)
+    )
+    weights = peeled_channels()
+    return contract_gamma(first, common, last, weights, weights)
+
+
+@cache
+def opposite_edge(site, probes):
+    labels = tuples if site == 2 else PAIRS
+    if probes is None:
+        if site == 2:
+            return summed_fourth(1)
+        table = second_sum(0)
+    else:
+        table = {g: add(*(frame_edge(g, 1, probe) for probe in probes)) for g in labels}
+    return {g: remap(poly, (0, site)) for g, poly in table.items()}
+
+
+def verify_opposite_geometry():
+    from l1_extended_mixed_center_census import (
+        EVEN, curvature_boundary, orbits, words_with_mixed_count,
+    )
+    from l1_extended_two_face_gamma_join import pure_links
+
+    count = Counter()
+    for pattern, _ in orbits(words_with_mixed_count(3)):
+        faces, protected = curvature_boundary(pattern)
+        links = set().union(*faces.values())
+        if len(faces) != 2 or len(links - protected) != 1:
+            continue
+        base, = {face[0] for face in faces}
+        live = set()
+        for face, edges in faces.items():
+            upper, _, center = pure_links(face, edges, protected)
+            live.add(upper[0])
+            planes = pattern[EVEN.index(center)]
+            degrees = tuple(sorted(2 * sum(a in p for p in planes) for _, a in upper))
+            count[degrees] += 1
+        tree = links - live
+        reached = {base}
+        for _ in tree:
+            for x, a in tree:
+                y = x ^ (1 << a)
+                if x in reached or y in reached:
+                    reached.update((x, y))
+        vertices = {y for x, a in links for y in (x, x ^ (1 << a))}
+        assert len(live) == 2 and len(tree) == 5 and len(vertices) == 6
+        assert reached == vertices
+    assert count == {(2, 2): 104, (2, 4): 44, (4, 4): 12}
+    print("80 spanning tree checks passed, role counts", dict(count), flush=True)
+
+
+def verify_opposite():
+    verify_opposite_geometry()
+    weights = peeled_channels()
+    reference = mixed_center(opposite_edge(2, None))
+    for protected in ((1, 3), (1, 2), (2, 3)):
+        for chirality in (0, 1):
+            diagonal = tuple((i, i) for i in range(4 * chirality, 4 * chirality + 4))
+            first, common, last = (
+                opposite_edge(site, diagonal if site in protected else None)
+                for site in (1, 2, 3)
+            )
+            value = contract_gamma(first, common, last, weights, weights)
+            degree = sum(4 if i == 2 else 2 for i in protected)
+            raw_scale = 96**(degree // 2) * 8**degree
+            probe_scale = SCALE**(2 * len(protected)) * 4**degree
+            assert scale(value, raw_scale) == scale(reference, probe_scale)
+        row = opposite_center(tuple((0, 0) if site in protected else None for site in (1, 2, 3)))
+        assert row
+        assert all(tuple(((mask >> (8 * i)) & 255).bit_count() for i in range(4))
+                   == (8, 2, 4, 2) for mask in row)
+        live, fixed = protected
+        probes = tuple((0, 0) if site == live else None for site in (1, 2, 3))
+        fixed_row = opposite_center(probes, fixed=(fixed,))
+        assert fixed_row
+        assert all(mask & 255 == 255 for mask in fixed_row)
+        print("protected slots", protected, "exact trace match, live and fixed row entries",
+              len(row), len(fixed_row), flush=True)
+
+
 def verify_norm(common):
     reference = mixed_center(common)
     # Independent Haar on each face selects identical components and
@@ -116,4 +211,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument("--opposite-center", action="store_true")
+    if parser.parse_args().opposite_center:
+        verify_opposite()
+    else:
+        main()

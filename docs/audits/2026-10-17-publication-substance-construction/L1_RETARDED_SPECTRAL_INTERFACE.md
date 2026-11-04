@@ -3848,3 +3848,40 @@ protected fourth and one protected second frame moment, and 104
 overlapping mixed roles with two protected second frame moments.
 The ordinary normalization and retained-face source joins for this
 family require these mixed opposite-center tensors.
+
+### Mixed opposite-center tensors for the free-link two-face join
+
+The two curvature faces at an overlapping mixed base share one
+unprotected link. Each face has one protected link at the base and
+two at its opposite center. Keeping one opposite-center link per
+face live leaves five links. The incidence replay verifies that
+these five form a spanning tree on six vertices in all 80 orbits.
+The full closed integral can therefore fix both base probes, the
+free link, and the other upper link of each face to identity.
+Each residual curvature component pair then selects a quadratic
+probe on its face's remaining live link.
+
+The [mixed-center replay](l1_extended_mixed_center_gamma.py)
+with `--opposite-center` constructs the opposite-center tensor in
+exclusive, common, exclusive axis order. Both of that center's
+curvature faces peel, so the two gamma weights are the ordinary
+second Haar channels. The protected links are on the passive
+anchors. The protected frame factors use the joint moment scale
+`192² × 4^d` for degree `d`. The unprobed exclusive frame uses
+`96 × 8²`, and the unprobed common frame uses `96² × 8⁴`.
+Multiplying the frame scales by `48² × (2!)²` accounts for the
+two peeled curvature moments and the action multiplicities.
+The active exterior degree is eight and the three passive
+degrees are two, four, and two.
+
+The chiral diagonal traces remove the two probes and recover
+the previously evaluated overlapping mixed tensor after scale
+conversion. The replay tests both exclusive slots together and
+each pairing of the common slot with an exclusive slot.
+All six trace controls passed. The representative two-probe and
+one-live/one-fixed rows contain 86 exterior entries for the
+exclusive pair and 96 for each common-exclusive pair. Independent
+review reproduced the spanning-tree census and checked the
+fixed-link prescription and frame scales. The global normalization
+and retained-face source contraction for these orbits still require
+joining both upper factors to the mixed base and remote centers.
