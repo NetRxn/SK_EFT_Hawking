@@ -6015,3 +6015,12 @@ verified snapshot over `[4736,22144)`. Seventeen contiguous
 match the run log. There are 15,199 exact zeros and 2,209
 nonempty B maps awaiting A closure, with no caps in this
 snapshot. The live run continues beyond this recorded interval.
+
+An independently reviewed outer-key support census for the
+two-word group has 6,144 label-compatible keys. Preserving
+the paired exterior bytes at sites 2, 9, and 11 excludes
+3,840 keys and leaves 2,304 possible signed contributions.
+The four-label prefix `(q153,g90,g91,q91)` partitions these
+into 144 blocks of 16 retained keys each. One block is
+already verified zero by the pinned environment query.
+The remaining 143 blocks require exact signed evaluation.
