@@ -293,8 +293,10 @@ def main(control, reverse, source, orbit, all_protected, probe_classes, orbit_ra
             assert expected_count * upper == count * Fraction(-5907501623989865478515625, 36028797018963968)
 
 
-def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None):
+def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None, *,
+                            component_remotes=False, compare_component_remotes=False):
     from l1_extended_one_face_gauge_join import check_removals, deleted_face_coefficient
+    from l1_two_face_remote_components import ComponentRemotes
 
     start, stop = orbit_range or ((orbit, orbit + 1) if orbit is not None else (0, 160))
     if not 0 <= start < stop <= 160:
@@ -345,6 +347,19 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
     label = f"four-mixed two-face overlap-base [{start}, {stop})"
     print(label, "coverage", len(selected), "orbits,",
           sum(row[1] for row in selected), "words per checkerboard", flush=True)
+    remotes = ComponentRemotes() if component_remotes or compare_component_remotes else None
+    if compare_component_remotes:
+        if any(row[-1] for row in selected):
+            raise ValueError("component map control excludes the disjoint remote fallback")
+        for index, (pattern, _, faces, protected, _) in enumerate(selected, start):
+            coupled = {face[0] for face in faces}
+            coupled.update(upper_links(face, edges, protected)[0] for face, edges in faces.items())
+            keep, normal, source = remotes.maps(pattern, coupled)
+            assert (keep, normal) == remote_environment(pattern, coupled)
+            assert (keep, source) == remote_environment(pattern, coupled, source=True)
+            print("component remote maps exact", index, len(normal), len(source),
+                  remotes.component_rows.cache_info(), flush=True)
+        return
     fourth = summed_fourth(1)
     base = cache(gamma_block(None, None, fourth))
     normal, _ = staged_center(summed_fourth(0), fourth)
@@ -376,7 +391,9 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
             assert curvature_boundary(pattern, omitted=omitted) == (
                 {} if omitted in faces else faces, protected,
             )
-        environment = disjoint_environment if remote_disjoint else remote_environment
+        environment = disjoint_environment if remote_disjoint else (
+            remotes.environment if remotes is not None else remote_environment
+        )
         norm, remote, upper = coefficient(pattern, faces, protected, base, reverse, source=True,
                                           probe_classes=probe_classes, environment=environment)
         deleted = sum(deleted_face_coefficient(pattern, face, normal, shared, disjoint) for face in faces)
@@ -405,11 +422,24 @@ if __name__ == "__main__":
     parser.add_argument("--all-protected", action="store_true",
                         help="select the 23 all-protected three-mixed orbits")
     parser.add_argument("--probe-classes", action="store_true", help="weight one live link by its probe classes")
+    remote_mode = parser.add_mutually_exclusive_group()
+    remote_mode.add_argument("--component-remotes", action="store_true",
+                             help="reuse exact remote component maps for the four-mixed overlap-base route")
+    remote_mode.add_argument("--compare-component-remotes", action="store_true",
+                             help="compare only exact remote maps with the existing evaluator")
     args = parser.parse_args()
     if args.all_protected and not (args.candidate or args.candidate_source):
         parser.error("--all-protected requires --candidate or --candidate-source")
+    if (args.component_remotes or args.compare_component_remotes) and not args.four_mixed_overlap_base:
+        parser.error("remote component modes require --four-mixed-overlap-base")
+    if args.compare_component_remotes and args.orbit is None and args.orbit_range is None:
+        parser.error("--compare-component-remotes requires an explicit orbit selection")
     if args.four_mixed_overlap_base:
-        four_mixed_overlap_base(args.reverse_upper, args.probe_classes, args.orbit, args.orbit_range)
+        four_mixed_overlap_base(
+            args.reverse_upper, args.probe_classes, args.orbit, args.orbit_range,
+            component_remotes=args.component_remotes,
+            compare_component_remotes=args.compare_component_remotes,
+        )
     elif args.four_face_deleted_source:
         if args.orbit is not None or args.orbit_range is not None:
             parser.error("orbit selection is unavailable for the four-face deletion replay")

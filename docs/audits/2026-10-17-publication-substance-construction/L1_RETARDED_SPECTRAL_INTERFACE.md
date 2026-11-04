@@ -5214,3 +5214,19 @@ in all four fields, and orbits 2 and 3 match each other.
 
 Exact receipts now cover four of 160 representatives. The next
 nonoverlapping batch uses `--orbit-range 4 8 --probe-classes`.
+
+For this family, `--component-remotes` reuses exact disconnected
+remote components within one replay. The legacy path remains the
+default and handles connected and disjoint-remote cases. Independent
+review checked site relabeling signs, source linearity, and cache
+scope. The complete ordinary and source maps matched the legacy
+calculation in the orbit 0 and 1 fixtures. The tracked end-to-end
+orbit 1 replay exited zero and matched the legacy row in every
+field. The warmed orbit 1 scratch benchmark took 0.47 s for remote
+assembly versus 81.87 s for the two legacy maps. This timing covers
+the remote stage only.
+
+Use separate contiguous orbit ranges for parallel replay. Keep
+ranges disjoint when accumulating exact totals. The first factored
+batch uses `--orbit-range 8 16 --probe-classes --component-remotes`
+while the legacy batch covers `--orbit-range 4 8`.
