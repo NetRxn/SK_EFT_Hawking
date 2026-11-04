@@ -15,7 +15,7 @@ def vector(a,b,c,d):
     q=mul(mul(qadj(unit(a)),qadj(unit(b))),mul(unit(c),unit(d)))
     return q[1:]
 
-def rows():
+def rows(staged=False):
     # Faces (4,0,1) and (5,0,1). Let A=U(4,1), B=U(5,1).
     # Closed loops A† U(6,0)† B U(4,0), B† U(7,0)† A U(5,0).
     for ca,cb in product(range(2),repeat=2):
@@ -31,10 +31,26 @@ def rows():
                     if not va:continue
                     for j,vb in enumerate(beta):
                         if not vb:continue
-                        for r,z in HAAR[pa]:
-                            for s,t in HAAR[pb]:
-                                channels[3*i+j][r,s]+=va*vb*z*t
+                        if staged:
+                            channels[3*i+j][pa,pb]+=va*vb
+                        else:
+                            for r,z in HAAR[pa]:
+                                for s,t in HAAR[pb]:
+                                    channels[3*i+j][r,s]+=va*vb*z*t
             for i,c in enumerate(channels):
+                if staged:
+                    # Project A against its frame pair, leaving B's raw
+                    # curvature coordinates open until the second projection.
+                    boundary=Counter()
+                    for (pa,pb),weight in c.items():
+                        if weight:
+                            for r,z in HAAR[pa]:
+                                boundary[r,pb]+=weight*z
+                    c=Counter()
+                    for (r,pb),weight in boundary.items():
+                        if weight:
+                            for s,t in HAAR[pb]:
+                                c[r,s]+=weight*t
                 nz={key:w for key,w in c.items() if w}
                 if nz:yield (ca,cb,u,v,w,x,i),nz
 
@@ -134,7 +150,9 @@ if __name__=='__main__':
     print('tree',sorted(fixed_tree()),flush=True)
     pop=Counter(); columns=defaultdict(set);peak=0
     values=Counter()
-    for key,row in rows():
+    for (key,row),staged in zip(rows(),rows(staged=True),strict=True):
+        if (key,row)!=staged:
+            raise AssertionError(f"staged strip mismatch at {key}")
         ch=key[:2]
         pop[ch,'rows']+=1
         pop[ch,'nnz']+=len(row)

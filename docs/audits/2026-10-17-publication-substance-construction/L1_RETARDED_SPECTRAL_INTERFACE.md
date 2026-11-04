@@ -2797,3 +2797,22 @@ center saturation. The disjoint opposed word is separate from the
 35,084-record shared-link motif. The next shared-link control needs
 to retain open link moment indices until both incident factors are
 joined.
+
+### Staged projection on the two shared links
+
+The [mixed-link strip replay](l1_extended_overlap_strip.py) now sums
+the two curvature faces in their raw coordinate-pair basis. It applies
+the fourth-moment map on the first shared link against that link's
+frame-coordinate pair, retains the second link's raw curvature pair,
+and then applies the second fourth-moment map. Each link contributes
+one factor of 48 in the integer numerator convention. Frame-coordinate
+labels remain open for the subsequent exterior attachment.
+
+The staged and simultaneous projections agree on all 9,216 nonzero
+rows and all 226,944 signed entries. Independent review reproduced the signed equality and exact rank 455.
+The fixed-frame composition replay also completed with 432 and 288
+nonzero outputs for its two boundary choices. Both projections use
+the same quaternion and moment tables, so their agreement checks
+elimination order and boundary indexing. The strip covers two faces
+of the shared-link motif. Full source insertion and unrestricted
+lattice normalization remain open.
