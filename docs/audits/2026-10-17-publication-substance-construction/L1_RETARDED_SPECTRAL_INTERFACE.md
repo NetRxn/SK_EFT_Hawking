@@ -4538,3 +4538,23 @@ its final subtotal and returned status 1, with no diagnostic in its
 captured log. The comparison establishes agreement of the emitted values.
 Direct command exit status, the other 22 normalization orbits, and
 the retained-source subtotal remain open.
+
+#### Independent protected intersite frame control
+
+Run [the direct exterior oracle](l1_protected_edge_oracle.py) against
+`frame_edge`. It builds both directed anchors from explicit chiral
+quaternion and gamma matrices, enumerates all 16⁴ coordinate assignments,
+counts exterior inversions directly, and evaluates exact sphere moments
+at scale 192². It imports the production frame function only as the
+comparison target.
+
+| Gamma labels | Probe | Haar-live assignments | Nonzero exterior masks | Positive / negative components |
+| --- | --- | ---: | ---: | ---: |
+| (0, 0, 1, 1) | Off-diagonal (0, 4) | 176 | 16 | 8 / 8 |
+| (0, 0, 1, 1) | Fixed identity | 384 | 58 | 32 / 26 |
+| (0, 1, 2, 3) | (1, 2) | 176 | 0 | 0 / 0 |
+
+The complete signed maps agree, including the exact cancellation case.
+This checks the local two-anchor frame tensor used in the all-protected
+calculation. It does not evaluate the upper-center tensor or the orbit
+subtotal.
