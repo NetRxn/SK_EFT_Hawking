@@ -283,9 +283,12 @@ def main(control, reverse, source, orbit, all_protected, probe_classes):
     if source:
         print("candidate retained source, both checkerboards", remote, upper, flush=True)
     if control:
-        expected = (Fraction(8997242104792619384765625, 72057594037927936)
-                    / (3 if orbit is not None else 1))
-        assert total == expected, f"tree control differs from fused control by {total - expected}"
+        scale_orbits = 3 if orbit is not None else 1
+        expected = Fraction(8997242104792619384765625, 72057594037927936)
+        assert scale_orbits * total == expected, (total, scale_orbits, expected)
+        if source:
+            assert scale_orbits * remote == Fraction(-909034756435048095703125, 2251799813685248)
+            assert scale_orbits * upper == Fraction(-5907501623989865478515625, 36028797018963968)
 
 
 if __name__ == "__main__":

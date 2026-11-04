@@ -4486,3 +4486,14 @@ Remote replacements use the same weighted upper factor. The
 default remains the direct sum, including the three-face callers.
 The class-weighted normalization and retained-source control for
 two-mixed orbit zero is running.
+
+The two-mixed orbit-zero class control completed. Across both
+checkerboards it gives normalization
+`2999080701597539794921875/72057594037927936`, remote source
+`−303011585478349365234375/2251799813685248`, and upper source
+`−1969167207996621826171875/36028797018963968`.
+Independent reduction of the corrected fused probe classes
+reproduced all three values, as did the direct tree replay.
+The tree control now asserts both source values as well as
+normalization. A class-weighted first-orbit comparison is
+running for the all-protected three-mixed family.
