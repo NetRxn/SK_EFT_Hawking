@@ -2206,3 +2206,14 @@ x0,x4,x2,x6. Translate sites by XOR 1 for the other column.
 The lower denominator is `48 * 4^16` per column. The upper
 blocks retain their separate normalization. The remaining
 curvature-only join has yet to be evaluated.
+
+Independent review accepted `6de1392e6` for the exterior
+contraction. The reviewer regenerated both half files and the
+mixed input, compiled the exact commit, and reproduced every
+row byte for byte. The output SHA-256 was
+`3f15a76fc3ae9af4f3340cfc14626feebee2839c0fb25ead9cf2750ee37bf702`.
+Review checked the packed curvature order, the reversed crossing
+channel, the exterior signs and the denominator. The two stages
+performed 216,702,848 and 1,351,772,160 products without checked
+overflow or imaginary output. The acceptance covers the exterior
+contraction through the column boundary.
