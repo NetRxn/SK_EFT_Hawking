@@ -55,9 +55,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   mixed centers and the other multiplicities. The
   [three-mixed-center replay](L1_RETARDED_SPECTRAL_INTERFACE.md#peelable-words-with-exactly-three-mixed-centers)
   now evaluates normalization and source for the 95 peelable orbits.
-  Next contract the 132 residual-core orbits, starting with the
-  one-face cores. General center counts
-  remain open.
+  The [one-face tree-gauge replay](L1_RETARDED_SPECTRAL_INTERFACE.md#one-face-cores-with-three-mixed-centers)
+  covers 13 more orbits. The next core family contains 103 two-face
+  orbits, 80 with one free link and 23 with all links protected.
+  The free-link case extends the prior two-face join to mixed
+  opposite centers. The all-protected case requires two live
+  holonomies at a disjoint mixed base. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 
 - **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing and canonical finding §3.2 closure. The next bounded substrate package is §2.2–2.4. Derive Schwarzschild heating from a differentiable decreasing mass profile and acoustic cooling from the explicit source profile, then relate the applicable profiles to the regime hypotheses. Keep the finite-step monotonicity result separate from strict derivative signs. Supply the partition-linked `δ` corollary and exact `G_N M_c = 1/Λ_UV` length identity. The four-laws construction in §2.1 remains open. A differential Schwarzschild area first law is a viable component of that larger obligation. For the acoustic second law, source inspection at `ff5c2614` identified `GloriosoLiu.entropy_current_exists` and `noetherEntropyDensity_nonneg_of_SKEFTAxioms` as reuse candidates. The latter establishes density positivity under the SK axioms. The local-law module defines its divergence as the imaginary Lagrangian, whereas L3 takes the physical entropy divergence as a scalar input. Search by type in the pinned consumer context for a current and divergence identification before dispatching the acoustic construction. The source inspection leaves this search incomplete. The mapped Paper 27 review IDs require individual lifecycle reconciliation, and the manuscript still requires fresh Stage 13 after its redraft.

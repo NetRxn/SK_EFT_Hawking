@@ -3768,3 +3768,56 @@ representing 24,096 words per checkerboard. The one-face cores
 provide a first check for the disjoint frame pairs with protected
 links. Full lattice normalization and the physical B3 matching
 remain open.
+
+### One-face cores with three mixed centers
+
+The 13 one-face orbits cover 2,208 words per checkerboard. In
+each orbit the face is based at the disjoint mixed center. Its
+two base links carry the frame of the peeled face, and its two
+upper links carry the frame of the opposite pure center. Thus
+all four links are protected. Independent incidence enumeration
+verified this geometry and the source removal parity.
+
+The [one-face replay](l1_extended_one_face_gauge_join.py) fixes
+three links of the square to identity in the complete integral.
+The live base link supplies the residual face's quaternion pair.
+The two protected frames at the mixed base use the second Haar
+moment of the peeled face. Its complementary frame uses the
+component labels of the residual face. The opposite pure frame
+uses the same fixed-link tensor as the four-face replay. The
+remaining six centers supply the exterior complement. The
+tree-fixed links contribute no curvature Haar factor.
+
+The exact normalization subtotal across both checkerboards is
+`9946437304000029521484375/4503599627370496`. Independent review
+checked the gauge choice, frame labels, divisor and exterior signs.
+
+Each orbit admits 11 source removal types after site and link
+parity. Each removes two slots from one plane at one center. One
+deletes the residual face, one changes the peeled plane at the
+base, one changes the opposite pure center, and eight change
+remote centers. The `--deleted-face-source` replay verifies that
+deleting the face leaves an empty core and gives the fixed-shear
+subtotal `-552933221560551123046875/562949953421312`.
+
+For the retained-face replay the opposite pure and remote source
+insertions reuse the two- and four-face tensors. The source at the
+mixed base replaces the peeled-plane frame pair with two outgoing
+source factors, keeping the probe on the live link. The two
+chiral traces of the new probed edge recover the unprobed source
+tensor exactly. The base replacement carries the signed adjustment
+`−2 × 48 × 2!`, and the opposite pure replacement carries
+`−2 × 4!/2!`. The remote boundary sums one replacement at a
+time with its own adjustment. Independent review checked these
+weights and the canonical square remap.
+
+The `--retained-face-source` exact replay completed all 13
+orbits. Across both checkerboards the fixed-shear subtotal is
+`-50909654198214352297265625/4503599627370496`. Adding the
+deleted-face term gives the full one-face numerator
+`-55333119970698761281640625/4503599627370496`.
+
+The next 103 two-face orbits separate into 80 with one free link
+and 23 with every link protected. The remaining three-, four-,
+and six-face orbits and other multiplicity sectors still contribute
+to the full lattice sums.
