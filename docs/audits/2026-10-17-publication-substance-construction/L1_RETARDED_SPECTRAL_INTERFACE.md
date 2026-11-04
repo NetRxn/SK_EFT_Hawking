@@ -6054,3 +6054,11 @@ its positive counterpart. The combined subtotal for 2–10
 equals prefix 3 alone, with zero imaginary part. The generic
 footer describes the unresolved full group, while all nine
 requested prefixes have exact terminal receipts.
+
+The resumed bulk run replaced the 800-row partial chunk
+with its complete 1,024-row receipt. Independent review
+verified four contiguous chunks in `[33408,37504)` and
+their logged hashes. They contain 3,588 exact zeros and
+508 nonempty B maps. The combined verified bulk range
+`[4736,37504)` covers 32,768 distinct tuples, with 28,622
+exact zeros and 4,146 nonempty maps awaiting A closure.
