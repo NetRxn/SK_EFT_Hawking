@@ -90,8 +90,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   per orbit. Complete both exact replays and reconcile their totals.
   The four-face deletion replay reduces all 40 removals to two-face
   joins, with a single source replacement at the original removed plane.
-  The weighted four-face deletion subtotal is complete. Finish
-  its alternate-gauge comparison and the original four-face contraction.
+  Both gauge choices reproduce the weighted four-face deletion
+  subtotal exactly. Finish the original four-face contraction.
   The larger-core spanning trees and directed-anchor trace controls
   supply the live-link and fixed-link inputs for the four- and six-face joins.
   The larger-core frame replay verifies the directed routing and a

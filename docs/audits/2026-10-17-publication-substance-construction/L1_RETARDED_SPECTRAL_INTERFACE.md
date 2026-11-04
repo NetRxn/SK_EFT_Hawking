@@ -4276,8 +4276,9 @@ The four-face deletion replay completed 40 terms, four per
 representative. Independent reduction of the exact rows gave
 the same fixed-shear subtotal across both checkerboards:
 `−194729223170660245751953125/144115188075855872`.
-The alternate upper-link replay supplies a separate gauge
-comparison. The ordinary four-face normalization and
+The independent alternate upper-link replay completed all 40
+terms and reproduced this subtotal exactly. The ordinary
+four-face normalization and
 source insertions that retain the full core remain open.
 
 The sparse factor join reproduced the literal first four-face
