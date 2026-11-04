@@ -210,6 +210,15 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   reviewed predecessor packages qualify against current main, then
   requalify the scoped L3 candidate on that integrated base. The
   composed candidate's retry is narrower than a fresh merge gate.
+  An exact-base isolation check exported `ce194cdc4` and applied only
+  the three source and test paths from `3f1e7dcee`, excluding generated
+  count files. The nested live-input regression fails with the exact
+  base helpers and passes with the candidate helpers. The production
+  `bundle_lean_module_coverage` check reports the same 185 registered
+  but absent modules across 18 bundles on both trees, against the
+  ceiling of 147. This parser repair does not retire the inherited
+  failure on this base. Reconcile actual manuscript and substrate
+  reach before repeating the exact-base merge qualification.
   A separate composition trial on `ce194cdc4` combined the
   serializer, D7 regression, managed paths, inventory and citation
   fixes with the generated tables and reviewed polariton source
