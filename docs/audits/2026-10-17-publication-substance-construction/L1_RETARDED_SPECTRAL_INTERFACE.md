@@ -4442,3 +4442,12 @@ Independent verification checked the signs, the same-center sum,
 and exclusion of double insertions. The literal-versus-joint
 fixed-probe comparison for orbit 10 is running. Full numerical
 retained-source results remain open.
+
+The orbit 10 fixed-probe control completed. The joint contraction
+gives normalization `6771437162655380859375/147573952589676412928`
+and fixed-shear retained numerator
+`−26526433675651611328125/147573952589676412928`.
+The literal exterior contraction reproduced the normalization,
+and summing the seven literal one-replacement contractions
+reproduced the retained numerator exactly. These are fixed-probe
+values before orbit and checkerboard weighting.
