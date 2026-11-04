@@ -5151,3 +5151,24 @@ end-to-end replay includes the off-diagonal probe classes.
 The separately launched orbit 0 replay agrees with the full replay.
 This completes the six disjoint-upper orbits and 960 words per
 checkerboard.
+
+#### Complete four-mixed one-face overlapping-upper subtotal
+
+The full `--four-mixed-overlap-upper` run at `7de45d708` exited
+zero on all 38 overlapping-upper orbits. It covers 23 with two
+exclusive directions and 15 with one common and one exclusive
+direction. Every representative carries 192 words per checkerboard.
+The replay checks 12 distinct source omissions per orbit, with 11
+preserving the core and one peeling it completely. The orbit 0 row
+agrees with its separate replay.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `194263487986590298451953125/36028797018963968` |
+| Retained source | `−15789074324733835579265625/562949953421312` |
+| Deleted source | `−337317426020214256640625/140737488355328` |
+| Full fixed-shear numerator | `−17138344028814692605828125/562949953421312` |
+
+This subtotal includes orbit 0. Together with the pure-upper and
+disjoint-upper subtotals it completes all 57 four-mixed one-face
+orbits and 10,752 words per checkerboard. Larger cores remain open.

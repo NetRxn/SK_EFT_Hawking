@@ -142,12 +142,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   covers six nonpeelable orbits and 1,152 words per checkerboard.
   The [two-disjoint pure-upper subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-two-disjoint-one-face-pure-upper-subtotal)
   covers seven more and 1,344 words per checkerboard.
-  The [first overlapping-upper orbit](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-overlapping-upper-orbit-0)
-  covers 192 more words per checkerboard with exact retained and deleted
-  source terms. The [disjoint-upper subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-one-face-disjoint-upper-subtotal)
-  completes six more orbits and 960 words per checkerboard. The other
-  967 nonpeelable four-mixed orbits and general center
-  counts remain open.
+  The [complete overlapping-upper subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-four-mixed-one-face-overlapping-upper-subtotal)
+  covers 38 orbits and 7,296 words per checkerboard, including the
+  previously checkpointed orbit 0. The [disjoint-upper subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-one-face-disjoint-upper-subtotal)
+  covers six more orbits and 960 words per checkerboard. This completes
+  all 57 one-face orbits. The 930 nonpeelable four-mixed orbits with
+  larger cores and general center counts remain open.
   The full word sum, physical matching and B3 remain open.
 
 - **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing and canonical finding §3.2 closure. The next bounded substrate package is §2.2–2.4. Derive Schwarzschild heating from a differentiable decreasing mass profile and acoustic cooling from the explicit source profile, then relate the applicable profiles to the regime hypotheses. Keep the finite-step monotonicity result separate from strict derivative signs. Reuse the partition-linked `δ` corollary already present as `delta_ADW_nonzero_iff_alpha_ADW_ne_one` in the pinned consumer module. For the length identity, use `G_N_emerg_eval p * M_c p = 1 / p.Λ_UV`; the bare Sakharov coupling gives `1 / (p.α_ADW * p.Λ_UV)`. The independently reviewed and rendered [L3 manuscript correction](https://github.com/NetRxn/SK_EFT_Hawking/commit/4de686400) records that cancellation on the research checkpoint. The exact identity still needs native proof discovery and validation. The four-laws construction in §2.1 remains open. A differential Schwarzschild area first law is a viable component of that larger obligation. For the acoustic second law, source inspection at `ff5c2614` identified `GloriosoLiu.entropy_current_exists` and `noetherEntropyDensity_nonneg_of_SKEFTAxioms` as reuse candidates. The latter establishes density positivity under the SK axioms. The local-law module defines its divergence as the imaginary Lagrangian, whereas L3 takes the physical entropy divergence as a scalar input. Search by type in the pinned consumer context for a current and divergence identification before dispatching the acoustic construction. The source inspection leaves this search incomplete. The mapped Paper 27 review IDs require individual lifecycle reconciliation, and the manuscript still requires fresh Stage 13 after its redraft.
