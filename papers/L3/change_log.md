@@ -90,3 +90,16 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
   scratch build rendered all four pages with zero errors, overfull boxes,
   unresolved references, or dropped class options. The tracked PDF
   refresh remains pending.
+
+## 2026-11-04 — Refresh the L3 figure and PDF
+
+- The manuscript names the falsifier section in prose. The figure producer
+  identifies the blue curve as a representative exponential. Independent
+  review confirmed the plotted values are unchanged.
+- Regenerated the L3 figure at 3300 × 1800 pixels and rebuilt the tracked
+  four-page PDF with the canonical compiler. The fresh compile reported
+  zero errors, overfull boxes, unresolved references, and dropped options.
+  Both corrections were confirmed in the render.
+- The existing annotation overlap and the other figure copies remain
+  open for visual review and propagation. Full Stage-13 review and the
+  physical construction remain due.

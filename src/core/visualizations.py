@@ -8876,9 +8876,9 @@ def fig_T_H_evolution_regime_partition():
       as evaporates), finite t-evap. Plotted as a function of normalized
       time using a representative evaporation trajectory.
     - Acoustic branch (M < M_c): Balbinot et al. PRD 71, 064019 (2005)
-      Eq. (Tsonic) gives strict monotone decay; leading-order exponential
-      `T_H(t) = T_H,0 · exp(-t/τ_cool)` per `wkb/backreaction.py`. T → 0
-      at infinite time (`t ~ 1/T³` extrapolation per Balbinot 2005).
+      Eq. (Tsonic) gives a negative leading-order slope. The plotted
+      T_H(t) = T_H,0 · exp(-t/τ_cool) is a representative exponential
+      with an infinite-time zero-temperature limit.
       Scope: Balbinot's computation is a SONIC hole in a Laval nozzle at
       constant sound speed, not a Bose-Einstein condensate (the authors
       defer the condensate case explicitly).
@@ -8938,7 +8938,7 @@ def fig_T_H_evolution_regime_partition():
             x=t_grid_acoustic, y=T_H_acoustic,
             mode="lines",
             line=dict(color=COLORS["steel_blue"], width=3),
-            name="Acoustic / sonic (Balbinot 2005)",
+            name="Sonic (representative exponential)",
         ),
         row=1, col=1,
     )
