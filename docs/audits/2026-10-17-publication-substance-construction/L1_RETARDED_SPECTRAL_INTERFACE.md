@@ -1672,3 +1672,26 @@ translation invariance. Thus the unit-mass scalar example
 fixes its factor to 12082/342225. The two geometry coefficients
 and a physical matching law remain to be established on the
 extended regulator.
+
+Independent review verified the scalar Wick contraction and
+the joint-response normalization. With the unnormalized Fourier
+transform the relative-coordinate convolution gives
+C̃_D(p) C̃_O(−p). Translation-invariant autocovariances are
+even, so this is also the same-momentum product. The covariance
+of the two uniform sums has one extra factor of volume.
+
+The four-site word enumerator does not scale directly to the
+16-site geometry. There are 384 labelled curvature terms before
+selection: 16 centers, six planes and four endpoint choices.
+Degree and center parity alone do not eliminate all words.
+For example, choose a fixed curvature plane (0,1) and include
+the same labelled vertex twice at each site. Each vertex gives
+two degrees at its center and one at each neighbor along axes
+2 and 3. With the doubled vertices, every site receives four
+local degrees and two from each of those neighbors. All link
+multiplicities are even because each label occurs twice.
+This is a support witness only. It does not establish a
+nonzero exterior coefficient or signed integral. A practical
+exact contraction must impose saturation during tensor
+assembly and integrate each link before summing over its
+boundary states.
