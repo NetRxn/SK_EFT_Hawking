@@ -2152,9 +2152,9 @@ in low, low, upper, upper site order. The four translated blocks
 therefore contract with complementary lower masks of populations
 (6,6,2,2). No upper curvature label has to cross that interface.
 Each upper sheet uses the squared-curvature weight
-`(6 - chi_L - chi_R)/4`, where the two characters are fundamental.
+`(6 - chi_L - chi_R)/4`, where the two characters are spin-one adjoint characters.
 Character orthogonality leaves the constant channel and two
-fundamental channels, giving `(6/4)^4 + 2*(1/4)^4/3^4 =
+spin-one channels, giving `(6/4)^4 + 2*(1/4)^4/3^4 =
 52489/10368` per sheet. The full upper factor uses its square and
 the repeated-vertex factor `1/2^8`. Independent verification
 and the final exterior contraction remain open.
@@ -2458,3 +2458,10 @@ resulting candidate numerator term is
 `-60445514255728976151/79228162514264337593543950336`.
 Independent review of the insertion anchors and normalization
 is pending. The term belongs to one selected source word.
+
+The replay checks both positions within an upper block, for 42
+exact channel comparisons. Translating the selected replacement
+across the eight upper sites gives eight distinct missing
+action-vertex choices with the same coefficient. The subtotal
+for this specified family is
+`-60445514255728976151/9903520314283042199192993792`.

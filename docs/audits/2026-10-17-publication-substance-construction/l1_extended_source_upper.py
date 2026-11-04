@@ -23,11 +23,15 @@ def join(A,B):
     return {k:v for k,v in out.items() if v}
 
 if __name__=='__main__':
-    baseline=block(0,0,0,0)
-    src=source_product(2)
-    print('source polynomial masks',len(src))
-    for a,b in combinations_with_replacement(range(6),2):
-        res=join(src,frame_pair(3,a,b))
-        ratios={Fraction(v,baseline[k]) for k,v in res.items() if k in baseline}
-        print((a,b),'rows',len(res),'baseline support',res.keys()==baseline.keys(),
-              'ratio',sorted(ratios),flush=True)
+    baseline = block(0, 0, 0, 0)
+    for site in (2, 3):
+        source = source_product(site)
+        other = 5 - site
+        for a, b in combinations_with_replacement(range(6), 2):
+            result = join(source, frame_pair(other, a, b))
+            assert result == (baseline if a == b else {}), (site, a, b)
+        print(f"Site {site}: six diagonal blocks match and 15 off-diagonals vanish")
+    z = Fraction(1057574865922986076396613, 3696469150265516934764386546876416)
+    term = -4 * Fraction(27, 8) / Fraction(52489, 10368) * z
+    print("Selected term", term)
+    print("Eight upper-site terms", 8 * term)
