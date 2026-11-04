@@ -5443,6 +5443,27 @@ verified eight orbits and 1,536 words per checkerboard.
 The covered prefix comprises nine orbits and 1,728 words per
 checkerboard. The next range is `[9,17)`.
 
+#### All-protected disjoint-base two-face candidate
+
+The `--four-mixed-all-protected-disjoint-base` route selects 35
+orbits and 6,720 words per checkerboard from the larger 67-orbit
+family. Its upper and remote centers fit the existing tensor
+builders. The two disjoint base faces share a vertex and no links.
+Both tree choices pass the geometry census and all 12 omission
+guards for every representative. Ten omissions preserve both
+faces and the protection set. Each of the two base omissions
+leaves one all-protected face and uses the surviving-face source
+contraction. Independent source review checked that each omission
+enters once and that the previous replay routes remain available.
+
+The first exact contraction is pending. Replay it with
+`--four-mixed-all-protected-disjoint-base --orbit 0 --probe-classes`
+and compare the retained-source tree with `--reverse-upper`.
+The surviving-face calculation is independent of that flag.
+The remaining 32 geometries require disjoint upper or remote
+handling, including a formerly coupled upper that becomes remote
+when its face is removed.
+
 ### Exact temporal transfer control for the scalar probe
 
 Keep periodic spatial forward differences and let the temporal

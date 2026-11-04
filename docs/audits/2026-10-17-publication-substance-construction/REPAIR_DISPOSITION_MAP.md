@@ -162,6 +162,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   matching exact coefficients under both tree choices.
   The [same-plane batch through orbit 8](L1_RETARDED_SPECTRAL_INTERFACE.md#same-plane-disjoint-upper-orbits-18)
   brings verified coverage to nine orbits and 1,728 words per checkerboard.
+  The [all-protected disjoint-base candidate](L1_RETARDED_SPECTRAL_INTERFACE.md#all-protected-disjoint-base-two-face-candidate)
+  passed independent source and census review for 35 orbits and
+  6,720 words per checkerboard. Exact coefficients are pending.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)

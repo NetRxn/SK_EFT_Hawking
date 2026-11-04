@@ -298,11 +298,12 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
                             component_remotes=False, compare_component_remotes=False,
                             family="overlap-base", census_only=False):
     from l1_extended_one_face_gauge_join import (
-        check_removals, deleted_face_coefficient, disjoint_upper_factor,
+        check_removals, deleted_face_coefficient, disjoint_upper_factor, surviving_face_coefficient,
     )
     from l1_two_face_remote_components import ComponentRemotes
 
-    expected = 160 if family == "overlap-base" else 25
+    all_protected = family == "all-protected-disjoint-base"
+    expected = {"overlap-base": 160, "all-protected-disjoint-base": 35}.get(family, 25)
     start, stop = orbit_range or ((orbit, orbit + 1) if orbit is not None else (0, expected))
     if not 0 <= start < stop <= expected:
         raise ValueError(f"orbit interval [{start}, {stop}) exceeds the {expected} eligible orbits")
@@ -315,11 +316,11 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
             continue
         links = set.union(*faces.values())
         free = links - protected
-        if len(free) != 1:
+        if len(free) != (0 if all_protected else 1):
             continue
         site, = {face[0] for face in faces}
         first, last = pattern[EVEN.index(site)]
-        if not set(first) & set(last):
+        if bool(set(first) & set(last)) == all_protected:
             continue
         uppers = [upper_links(face, edges, protected) for face, edges in faces.items()]
         upper_planes = [pattern[EVEN.index(center)] for center, _ in uppers]
@@ -332,28 +333,37 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
             for planes, incoming in disjoint_uppers
         )
         orbit_family = "overlap-base"
-        if disjoint_uppers:
+        if all_protected:
+            if disjoint_uppers:
+                continue
+            orbit_family = family
+        elif disjoint_uppers:
             orbit_family = "same-plane-disjoint-upper" if same_plane_uppers else "split-disjoint-upper"
         if orbit_family != family:
             continue
         if family == "same-plane-disjoint-upper":
             assert len(disjoint_uppers) == same_plane_uppers == 1
-        assert first != last and len(set.intersection(*faces.values())) == 1
+        assert first != last
         assert set.intersection(*faces.values()) == free
         assert {tuple(a for a in AXES if a not in face[1:]) for face in faces} == {first, last}
         coupled = {site, *(center for center, _ in uppers)}
         assert len(coupled) == 3 and sum(a == b for a, b in pattern) == 4
-        tree = links - {upper[reverse] for _, upper in uppers}
-        vertices = {y for x, a in links for y in (x, x ^ (1 << a))}
-        reached = {site}
-        for _ in tree:
-            for x, a in tree:
-                y = x ^ (1 << a)
-                if x in reached or y in reached:
-                    reached.update((x, y))
-        assert len(tree) == len(vertices) - 1 and reached == vertices
+        if all_protected:
+            check_disjoint_tree(faces, protected, reverse)
+        else:
+            tree = links - {upper[reverse] for _, upper in uppers}
+            vertices = {y for x, a in links for y in (x, x ^ (1 << a))}
+            reached = {site}
+            for _ in tree:
+                for x, a in tree:
+                    y = x ^ (1 << a)
+                    if x in reached or y in reached:
+                        reached.update((x, y))
+            assert len(tree) == len(vertices) - 1 and reached == vertices
         remote_disjoint = sum(not set(a) & set(b) for x, (a, b) in zip(EVEN, pattern, strict=True)
                               if x not in coupled)
+        if all_protected and remote_disjoint:
+            continue
         assert remote_disjoint in (0, 1)
         disjoint_remote_count += remote_disjoint
         kinds[len(disjoint_uppers), sum(a != b for a, b in upper_planes)] += 1
@@ -362,6 +372,9 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
     if family == "overlap-base":
         assert sum(row[1] for row in eligible) == 30624
         assert kinds == {(0, 2): 93, (0, 1): 64, (0, 0): 3} and disjoint_remote_count == 1
+    elif all_protected:
+        assert sum(row[1] for row in eligible) == 6720 and not disjoint_remote_count
+        assert kinds == {(0, 2): 26, (0, 1): 9}
     else:
         assert all(row[1] == 192 for row in eligible) and not disjoint_remote_count
         if family == "split-disjoint-upper":
@@ -380,9 +393,11 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
                      for x, planes in zip(EVEN, pattern, strict=True) for plane in set(planes)}
         assert len(omissions) == 12 and faces.keys() <= omissions
         for omitted in omissions:
-            assert curvature_boundary(pattern, omitted=omitted) == (
-                {} if omitted in faces else faces, protected,
-            )
+            expected_faces = faces
+            if omitted in faces:
+                expected_faces = ({face: edges for face, edges in faces.items() if face != omitted}
+                                  if all_protected else {})
+            assert curvature_boundary(pattern, omitted=omitted) == (expected_faces, protected)
 
     if census_only:
         for pattern, _, faces, protected, _ in selected:
@@ -444,7 +459,13 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
         norm, remote, upper = coefficient(pattern, faces, protected, base, reverse, source=True,
                                           probe_classes=probe_classes, environment=environment,
                                           upper_builder=build_upper)
-        deleted = sum(deleted_face_coefficient(pattern, face, normal, shared, disjoint) for face in faces)
+        if all_protected:
+            # Each of the two base deletions leaves the other original face.
+            deleted = sum(surviving_face_coefficient(pattern, face, edges, protected)
+                          for face, edges in faces.items())
+        else:
+            deleted = sum(deleted_face_coefficient(pattern, face, normal, shared, disjoint)
+                          for face in faces)
         print(label, "orbit", index, "multiplicity", multiplicity, "normalization", norm,
               "remote source", remote, "upper source", upper, "deleted source", deleted, flush=True)
         for i, value in enumerate((norm, remote, upper, deleted)):
@@ -464,6 +485,7 @@ if __name__ == "__main__":
     mode.add_argument("--four-mixed-overlap-base", action="store_true")
     mode.add_argument("--four-mixed-split-disjoint-upper", action="store_true")
     mode.add_argument("--four-mixed-same-plane-disjoint-upper", action="store_true")
+    mode.add_argument("--four-mixed-all-protected-disjoint-base", action="store_true")
     parser.add_argument("--census-only", action="store_true",
                         help="check four-mixed geometry and omissions without evaluating tensors")
     parser.add_argument("--reverse-upper", action="store_true")
@@ -488,6 +510,7 @@ if __name__ == "__main__":
         parser.error("--compare-component-remotes requires an explicit orbit selection")
     family = next((name for selected, name in (
         (args.four_mixed_overlap_base, "overlap-base"),
+        (args.four_mixed_all_protected_disjoint_base, "all-protected-disjoint-base"),
         (args.four_mixed_split_disjoint_upper, "split-disjoint-upper"),
         (args.four_mixed_same_plane_disjoint_upper, "same-plane-disjoint-upper"),
     ) if selected), None)
