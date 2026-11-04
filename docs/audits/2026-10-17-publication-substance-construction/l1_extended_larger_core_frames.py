@@ -272,26 +272,70 @@ def center_factor(center, planes, slots, faces, removed=None):
     return (axes, rows), divisor
 
 
-def close_factors(factors):
-    while len(factors) > 1:
-        def score(pair):
-            a, b = (factors[i] for i in pair)
-            return (not bool(set(a[0]) & set(b[0])),
-                    sum(map(len, a[1].values())) * sum(map(len, b[1].values())))
+def add_factors(first, second):
+    axes, left = first
+    other, right = second
+    assert axes == other
+    if not left or not right:
+        return axes, left or right
+    rows = {key: dict(poly) for key, poly in left.items()}
+    for key, poly in right.items():
+        row = rows.setdefault(key, {})
+        for mask, (re, im) in poly.items():
+            r, i = row.get(mask, (0, 0))
+            if r + re or i + im:
+                row[mask] = r + re, i + im
+            else:
+                row.pop(mask, None)
+        if not row:
+            del rows[key]
+    return axes, rows
 
-        i, j = min(combinations(range(len(factors)), 2), key=score)
-        merged = join_factors(factors[i], factors[j], match_labels=True)
-        if not merged[1]:
-            return 0
-        factors.pop(j)
-        factors[i] = merged
-    axes, rows = factors[0]
+
+def factor_pair(factors, sources=None):
+    sizes = [sum(map(len, rows.values())) for _, rows in factors]
+    if sources is not None:
+        sizes = [n + sum(map(len, rows.values()))
+                 for n, (_, rows) in zip(sizes, sources, strict=True)]
+    scopes = [set(axes) for axes, _ in factors]
+
+    def score(pair):
+        i, j = pair
+        return (not bool(scopes[i] & scopes[j]), sizes[i] * sizes[j])
+
+    return min(combinations(range(len(factors)), 2), key=score)
+
+
+def closed_value(factor):
+    axes, rows = factor
     assert not axes
+    if not rows:
+        return 0
     mask = sum(255 << (8 * (x ^ 1)) for x in EVEN)
     assert rows.keys() == {()} and rows[()].keys() == {mask}
     real, imag = rows[()][mask]
     assert imag == 0
     return real
+
+
+def close_factors(factors, sources=None):
+    while len(factors) > 1:
+        i, j = factor_pair(factors, sources)
+        left, right = factors[i], factors[j]
+        merged = join_factors(left, right, match_labels=True)
+        if sources is not None:
+            # Keep exactly one source replacement in the merged block.
+            source = add_factors(join_factors(sources[i], right, match_labels=True),
+                                 join_factors(left, sources[j], match_labels=True))
+            sources.pop(j)
+            sources[i] = source
+        if not merged[1] and (sources is None or not sources[i][1]):
+            return 0 if sources is None else (0, 0)
+        factors.pop(j)
+        factors[i] = merged
+    normal = closed_value(factors[0])
+    return normal if sources is None else (normal, closed_value(sources[0]))
+
 
 
 def contract_factors(pattern, slots, faces, tree, live, selection=None, retained=None,
@@ -312,23 +356,18 @@ def contract_factors(pattern, slots, faces, tree, live, selection=None, retained
     occurrences = Counter(key for axes, _ in factors for key in axes)
     assert set(occurrences.values()) == {2}
     divisor = prod(divisors.values())
-    normal = Fraction(close_factors(list(factors)), divisor * (6 if replacement is not None else 1))
     if retained is None:
-        return normal
+        return Fraction(close_factors(factors), divisor * (6 if replacement is not None else 1))
 
-    source_total = 0
+    sources = [(axes, {}) for axes, _ in factors]
     for center, plane in retained:
         position = EVEN.index(center)
         factor, denominator = center_factor(center, pattern[position], slots[center], curvature, plane)
         assert denominator == divisors[center]
-        changed = list(factors)
         index = len(curvature) + position
-        assert changed[index][0] == factor[0]
-        changed[index] = factor
-        value = close_factors(changed)
-        source_total += value
-        print("retained source", center, plane, Fraction(value, 6 * divisor), flush=True)
-    return normal, Fraction(source_total, 6 * divisor)
+        sources[index] = add_factors(sources[index], factor)
+    normal, numerator = close_factors(factors, sources)
+    return Fraction(normal, divisor), Fraction(numerator, 6 * divisor)
 
 
 def retained_planes(pattern, faces, protected):

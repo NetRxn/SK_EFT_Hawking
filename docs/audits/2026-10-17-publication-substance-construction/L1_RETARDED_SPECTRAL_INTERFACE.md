@@ -4424,3 +4424,21 @@ in the other four-face orbits from 69,696 to 22,176. In the
 six-face orbit it reduces the maximum from 1,463,616 to
 348,480. These are counts before exterior pruning. The full
 class-weighted numerical comparison remains open.
+
+#### Joint normalization and retained-source contraction
+
+The larger-core join now carries an ordinary channel and a
+single-replacement source channel. Combining two blocks multiplies
+their ordinary factors and adds the two products with a source in
+exactly one block. Terms with a source in both blocks are excluded.
+All replacements at the same center share their label scope and
+divisor and are added before joining. The final source channel
+therefore equals the sum of separate one-replacement contractions,
+with the six-shear average applied after closure.
+
+Exact controls reproduced separate contractions and kept
+source-only keys when ordinary entries were absent or canceled.
+Independent verification checked the signs, the same-center sum,
+and exclusion of double insertions. The literal-versus-joint
+fixed-probe comparison for orbit 10 is running. Full numerical
+retained-source results remain open.
