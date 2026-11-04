@@ -5443,6 +5443,21 @@ verified eight orbits and 1,536 words per checkerboard.
 The covered prefix comprises nine orbits and 1,728 words per
 checkerboard. The next range is `[9,17)`.
 
+#### Complete two-face same-plane disjoint-upper subtotal
+
+The final `[9,17)` and `[17,25)` runs exited zero. Independent
+exact reduction verified all 25 distinct orbit IDs and all
+weighted receipt columns. The full family covers 4,800 words per
+checkerboard at multiplicity 192 per representative.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `324776379618735246516796875/144115188075855872` |
+| Remote source | `−268347609756070565052515625/36028797018963968` |
+| Upper source | `−262154042372930087183484375/72057594037927936` |
+| Deleted source | `−28849875224747677734375/17592186044416` |
+| Full fixed-shear numerator | `−917018350805637705288515625/72057594037927936` |
+
 #### All-protected disjoint-base two-face candidate
 
 The `--four-mixed-all-protected-disjoint-base` route selects 35

@@ -157,11 +157,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   covers all 160 orbits and 30,624 words per checkerboard.
   The [complete split disjoint-upper subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-two-face-split-disjoint-upper-subtotal)
   covers all 25 orbits and 4,800 words per checkerboard.
-  The [same-plane disjoint-upper route](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-two-face-same-plane-disjoint-upper-orbit-0)
-  covers the other 25 disjoint-upper orbits. Its first orbit has
-  matching exact coefficients under both tree choices.
-  The [same-plane batch through orbit 8](L1_RETARDED_SPECTRAL_INTERFACE.md#same-plane-disjoint-upper-orbits-18)
-  brings verified coverage to nine orbits and 1,728 words per checkerboard.
+  The [complete same-plane disjoint-upper subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-two-face-same-plane-disjoint-upper-subtotal)
+  covers the other 25 disjoint-upper orbits and 4,800 words per
+  checkerboard.
   The [all-protected disjoint-base candidate](L1_RETARDED_SPECTRAL_INTERFACE.md#all-protected-disjoint-base-two-face-candidate)
   passed independent source and census review for 35 orbits and
   6,720 words per checkerboard. Exact coefficients are pending.
