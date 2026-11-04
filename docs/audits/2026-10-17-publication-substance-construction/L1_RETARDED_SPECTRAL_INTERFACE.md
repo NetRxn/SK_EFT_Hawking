@@ -3103,5 +3103,26 @@ plane multiplicities are even. The replay enumerates 192 distinct
 images, giving normalization contribution
 `370536502729421164306640625/144115188075855872`. This orbit has
 two planes at two centers and is disjoint from the one-plane-per-center
-sector. Its source numerator and the other mixed-center words
+sector. Other mixed-center words
 remain open.
+
+The same replay now evaluates the two-source numerator for this orbit.
+Removing action vertices from two different based faces leaves an
+odd directed curvature link. Each outgoing source has even degree
+on its link, so only two removals from the same face survive. Degree
+matching requires one source on each complementary frame edge.
+At a mixed center the surviving face retains its two frames. The
+shared frame edge carries two action factors and one source, and the
+removed face's other edge carries a source alone. The implementation
+keeps the two directed endpoint choices separate on each edge.
+
+For either frame-pair role, all four endpoint choices give equal
+coefficients after summing the eligible affected centers. For the
+baseline pair each is
+`-53430265908021716455078125/576460752303423488`. For the secondary
+pair each is `-8441946259170128173828125/576460752303423488`.
+Each role matches the specified shear on 32 of the 192 images,
+and the roles have distinct frame pairs. The summed orbit numerator
+is `-30936106083595922314453125/2251799813685248`.
+Independent review reproduced both endpoint tables and independently
+enumerated the frame-pair multiplicities.

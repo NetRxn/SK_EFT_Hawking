@@ -8,7 +8,7 @@ from math import factorial
 from l1_direct_b_haar import R, add, scale, wedge
 from l1_extended_mixed_plane import EVEN
 from l1_extended_opposed import curvature, staged_center
-from l1_extended_opposed_source import PAIRS, action_frame, summed_fourth
+from l1_extended_opposed_source import PAIRS, action_frame, frame, modified_center, source_frames, summed_fourth
 from l1_normalization_opposed_fourth import nodes
 
 
@@ -108,6 +108,57 @@ def contract(terms):
     return state.get(0, R.zero)
 
 
+@cache
+def source_edge(direction, endpoint):
+    a, b = (source_frames(direction, anchor)[endpoint] for anchor in (0, 1))
+    return {pair: add(a[pair], b[pair]) for pair in PAIRS}
+
+
+@cache
+def source_only(endpoint):
+    return add(*(scale(add(*(wedge(t, t) for t in frame(0, bool(endpoint), left, right))), weight)
+                 for left, right, weight in nodes()))
+
+
+def mixed_source_center(removed_site, common_endpoint, other_endpoint):
+    # Of the two noncommon local sites 1 and 3, one carries the
+    # remaining action frame and the other a source on its own edge.
+    survivor = 4 - removed_site
+    second = second_sum(0)
+    common = source_edge(1, common_endpoint)
+    out = {}
+    for pair, other, weight in second_channels():
+        # The second curvature tensor is symmetric under exchanging its
+        # frame axes (both factors reverse sign).
+        out = add(out, scale(wedge(remap(second[other], (0, survivor)),
+                                   common[tuple(sorted(pair))]), weight))
+    g = remap(source_only(other_endpoint), (0, removed_site))
+    return {m: c for m, c in wedge(out, g).items() if m & 255 == 255}
+
+
+def numerator(terms, denominator, baseline_axes):
+    values = Counter()
+    removed_site = 3 if baseline_axes else 1
+    for common, other in product(range(2), repeat=2):
+        mixed = mixed_source_center(removed_site, common, other)
+        normal = modified_center(source_edge(0, common), source_edge(1, other)) if baseline_axes else {}
+        for x in EVEN:
+            changed = dict(terms)
+            if x in (0, 9):
+                changed[x] = remap(mixed, (x, x ^ 1, x ^ 4, x ^ 8))
+                adjustment = 48 * factorial(2)
+            elif baseline_axes:
+                changed[x] = remap(normal, (x, x ^ 4, x ^ 8))
+                adjustment = factorial(4) // factorial(2)
+            else:
+                continue
+            raw = contract(changed)
+            assert raw.is_ground and not raw.const().y
+            # Opposite shear signs and two ordered source assignments.
+            values[common, other] += Fraction(-2 * adjustment * int(raw.const().x), denominator)
+    return values
+
+
 def main():
     check_word()
     common = summed_fourth(1)
@@ -129,7 +180,15 @@ def main():
     coefficient = Fraction(int(raw.const().x), denominator)
     print("two mixed centers coefficient", coefficient)
     size = orbit_size()
-    print("axis-permutation and translation orbit", size, size * coefficient)
+    print("axis-permutation and translation orbit", size, size * coefficient, flush=True)
+    baseline = numerator(terms, denominator, True)
+    secondary = numerator(terms, denominator, False)
+    print("baseline-plane source by endpoint", dict(baseline))
+    print("secondary-plane source by endpoint", dict(secondary))
+    # A specified unordered frame pair occurs in one sixth of each
+    # orbit role. The baseline and secondary pairs are distinct.
+    assert size % 6 == 0
+    print("orbit source numerator", (size // 6) * (sum(baseline.values()) + sum(secondary.values())))
 
 
 if __name__ == "__main__":
