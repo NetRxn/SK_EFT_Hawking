@@ -4451,3 +4451,20 @@ The literal exterior contraction reproduced the normalization,
 and summing the seven literal one-replacement contractions
 reproduced the retained numerator exactly. These are fixed-probe
 values before orbit and checkerboard weighting.
+
+#### Completed free-link three-mixed normalization
+
+The tree replay completed all 80 free-link two-face orbits.
+The orbit sizes sum to 15,072 words per checkerboard. Applying
+both checkerboard weights gives the exact normalization subtotal
+`290879065364323137721259765625/18446744073709551616`.
+Independent arithmetic reproduced the subtotal. The first 19
+normalization rows from the retained-source replay match the
+normalization-only replay exactly. The retained-source
+subtotal and the all-protected normalization remain open.
+
+The complete class-weighted probe sum for four-face orbit 10
+gives `280809426113170260908203125/1180591620717411303424`
+before orbit and checkerboard weighting. The all-probe comparison
+and the joint retained-source sum are running. This is a
+single-orbit result.

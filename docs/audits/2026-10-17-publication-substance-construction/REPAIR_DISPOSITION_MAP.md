@@ -71,7 +71,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   reconcile the two-mixed normalization. Replay both retained-face
   source cases. Both now agree with the tree calculation, closing
   the corrected balanced two-mixed numerator.
-  Complete the 80-orbit tree replay for the three-mixed normalization.
+  The 80-orbit free-link normalization is complete. Finish
+  its retained-source subtotal and the all-protected normalization.
   The mixed upper-source construction is in the same replay.
   Its chiral trace controls pass. The corrected fused protected-source
   subtotal matches the pure-upper tree result, and the corrected
