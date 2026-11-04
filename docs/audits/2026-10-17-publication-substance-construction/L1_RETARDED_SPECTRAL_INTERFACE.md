@@ -1734,5 +1734,10 @@ permutation can reverse the world epsilon, but there are
 Relabeling whole site blocks of eight Grassmann generators
 also has even sign. Translation exchanges center parities.
 Thus this orbit contributes 12(61875/262144)⁴ to the signed
-sum, subject to independent verification of the base witness.
+sum, using the independently verified base witness.
 The remaining orbits can still cancel that contribution.
+
+Independent review of `9c9e7dfa9` reproduced the exact opposed
+pair and full word values, verified the disjoint Haar ports
+and even Grassmann block signs, and checked the distinction
+between gamma-slot multiplicities and action factorials.
