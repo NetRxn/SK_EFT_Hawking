@@ -2816,3 +2816,19 @@ the same quaternion and moment tables, so their agreement checks
 elimination order and boundary indexing. The strip covers two faces
 of the shared-link motif. Full source insertion and unrestricted
 lattice normalization remain open.
+
+The [early frame attachment replay](l1_extended_overlap_mixed_strip_control.py)
+applies each Haar map to its actual fixed-mask frame slice, then attaches
+the first slice before closing the second link. It retains the raw
+second-link coordinate pair during the intermediate contraction. Each
+output is accumulated with exact integer real and imaginary parts.
+The full signed maps agree coefficientwise with late frame attachment
+for both tested boundary pairs, with 432 and 288 nonzero rows.
+This tests actual frame data at fixed exterior masks. The exterior
+join over all masks and the unrestricted action-word sum are separate.
+The previously accepted selected-word source numerator at `1ec500284`
+provides a signed end-to-end control for an unrestricted evaluator.
+
+Independent review also reproduced a mixed-phase slice with 432 purely
+imaginary outputs. It checked the positive exterior interleaving sign
+and the combined integer scale `48² × 4⁸`.

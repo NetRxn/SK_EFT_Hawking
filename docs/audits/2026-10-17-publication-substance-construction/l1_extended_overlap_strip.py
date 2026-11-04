@@ -15,7 +15,7 @@ def vector(a,b,c,d):
     q=mul(mul(qadj(unit(a)),qadj(unit(b))),mul(unit(c),unit(d)))
     return q[1:]
 
-def rows(staged=False):
+def rows(staged=False, *, raw=False):
     # Faces (4,0,1) and (5,0,1). Let A=U(4,1), B=U(5,1).
     # Closed loops A† U(6,0)† B U(4,0), B† U(7,0)† A U(5,0).
     for ca,cb in product(range(2),repeat=2):
@@ -31,14 +31,14 @@ def rows(staged=False):
                     if not va:continue
                     for j,vb in enumerate(beta):
                         if not vb:continue
-                        if staged:
+                        if staged or raw:
                             channels[3*i+j][pa,pb]+=va*vb
                         else:
                             for r,z in HAAR[pa]:
                                 for s,t in HAAR[pb]:
                                     channels[3*i+j][r,s]+=va*vb*z*t
             for i,c in enumerate(channels):
-                if staged:
+                if staged and not raw:
                     # Project A against its frame pair, leaving B's raw
                     # curvature coordinates open until the second projection.
                     boundary=Counter()
