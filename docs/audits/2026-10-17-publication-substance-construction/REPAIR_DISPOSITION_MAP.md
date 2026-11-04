@@ -73,6 +73,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   the corrected balanced two-mixed numerator.
   The 80-orbit free-link normalization is complete. Finish
   its retained-source subtotal and the all-protected normalization.
+  The [range replay](L1_RETARDED_SPECTRAL_INTERFACE.md#free-link-retained-source-range-control)
+  matches the direct normalization and both source terms exactly on
+  orbit 21. Use disjoint intervals for remaining free-link work when
+  additional compute is available.
   The mixed upper-source construction is in the same replay.
   Its chiral trace controls pass. The corrected fused protected-source
   subtotal matches the pure-upper tree result, and the corrected

@@ -4513,3 +4513,16 @@ With 192 words per checkerboard, this representative contributes
 normalization `842428278339510782724609375/9223372036854775808`
 and numerator `−1131203772282945911220703125/2305843009213693952`.
 The all-probe comparison and remaining larger-core orbits are open.
+
+#### Free-link retained-source range control
+
+Run `l1_extended_two_face_tree.py --candidate-source --probe-classes
+--orbit-range 21 22` to reproduce orbit 21 with the class-weighted
+contraction. The interval is half-open and preserves the full census
+orbit numbering. The unweighted normalization `458812262505811520302734375/1180591620717411303424`,
+remote source `-11455499507026972447265625/9223372036854775808`, and upper source
+`-40832373647928076171875/72057594037927936` match the direct contraction exactly.
+The partial totals multiply each by 384, accounting for 192 words per
+checkerboard. This comparison qualifies the range replay on one free-link
+orbit. The full retained-source sum still requires one row per orbit,
+with disjoint intervals covering [0, 80) and the existing census check.

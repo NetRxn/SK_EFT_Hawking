@@ -243,7 +243,12 @@ def replay_four_face_deletions(reverse, probe_classes):
     print("four-face deletion subtotal, both checkerboards", total, flush=True)
 
 
-def main(control, reverse, source, orbit, all_protected, probe_classes):
+def main(control, reverse, source, orbit, all_protected, probe_classes, orbit_range=None):
+    expected_count, expected_population = ((3, 576) if control else
+                                           (23, 3744) if all_protected else (80, 15072))
+    start, stop = orbit_range or ((orbit, orbit + 1) if orbit is not None else (0, expected_count))
+    if not 0 <= start < stop <= expected_count:
+        raise ValueError(f"orbit interval [{start}, {stop}) exceeds the {expected_count} eligible orbits")
     words = swap_patterns() if control else words_with_mixed_count(3)
     base = disjoint_base if all_protected else cache(gamma_block(None, None, summed_fourth(1)))
     total = Fraction()
@@ -255,7 +260,7 @@ def main(control, reverse, source, orbit, all_protected, probe_classes):
             continue
         index = eligible
         eligible += 1
-        if orbit is not None and index != orbit:
+        if not start <= index < stop:
             continue
         result = coefficient(pattern, faces, protected, base, reverse, source,
                              probe_classes=probe_classes)
@@ -268,27 +273,21 @@ def main(control, reverse, source, orbit, all_protected, probe_classes):
         total += 2 * multiplicity * result
         count += 1
         population += multiplicity
-    if control:
-        expected_count, expected_population = 3, 576
-    elif all_protected:
-        expected_count, expected_population = 23, 3744
+    assert eligible == expected_count and count == stop - start
+    if (start, stop) == (0, expected_count):
+        assert population == expected_population
+        scope = "both checkerboards"
     else:
-        expected_count, expected_population = 80, 15072
-    assert eligible == expected_count
-    if orbit is None:
-        assert (count, population) == (expected_count, expected_population)
-    else:
-        assert count == 1
-    print("candidate normalization, both checkerboards", total, flush=True)
+        scope = f"both checkerboards, orbit interval [{start}, {stop})"
+    print("candidate normalization", scope, total, flush=True)
     if source:
-        print("candidate retained source, both checkerboards", remote, upper, flush=True)
+        print("candidate retained source", scope, remote, upper, flush=True)
     if control:
-        scale_orbits = 3 if orbit is not None else 1
         expected = Fraction(8997242104792619384765625, 72057594037927936)
-        assert scale_orbits * total == expected, (total, scale_orbits, expected)
+        assert expected_count * total == count * expected, (total, count, expected)
         if source:
-            assert scale_orbits * remote == Fraction(-909034756435048095703125, 2251799813685248)
-            assert scale_orbits * upper == Fraction(-5907501623989865478515625, 36028797018963968)
+            assert expected_count * remote == count * Fraction(-909034756435048095703125, 2251799813685248)
+            assert expected_count * upper == count * Fraction(-5907501623989865478515625, 36028797018963968)
 
 
 if __name__ == "__main__":
@@ -300,7 +299,10 @@ if __name__ == "__main__":
     mode.add_argument("--control-source", action="store_true", help="replay the two-mixed retained-source controls")
     mode.add_argument("--four-face-deleted-source", action="store_true")
     parser.add_argument("--reverse-upper", action="store_true")
-    parser.add_argument("--orbit", type=int, help="evaluate a single numbered orbit")
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--orbit", type=int, help="evaluate a single numbered orbit")
+    selection.add_argument("--orbit-range", type=int, nargs=2, metavar=("START", "STOP"),
+                           help="evaluate a half-open interval of numbered orbits")
     parser.add_argument("--all-protected", action="store_true",
                         help="select the 23 all-protected three-mixed orbits")
     parser.add_argument("--probe-classes", action="store_true", help="weight one live link by its probe classes")
@@ -308,10 +310,10 @@ if __name__ == "__main__":
     if args.all_protected and not (args.candidate or args.candidate_source):
         parser.error("--all-protected requires --candidate or --candidate-source")
     if args.four_face_deleted_source:
-        if args.orbit is not None:
-            parser.error("--orbit is unavailable for the four-face deletion replay")
+        if args.orbit is not None or args.orbit_range is not None:
+            parser.error("orbit selection is unavailable for the four-face deletion replay")
         replay_four_face_deletions(args.reverse_upper, args.probe_classes)
     else:
         main(not (args.candidate or args.candidate_source), args.reverse_upper,
              args.control_source or args.candidate_source, args.orbit, args.all_protected,
-             args.probe_classes)
+             args.probe_classes, args.orbit_range)
