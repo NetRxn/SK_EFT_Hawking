@@ -124,7 +124,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   [2](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-2-normalization-and-source),
   [3](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-3-normalization-and-source),
   [4](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-4-and-six-face-deletion-1),
-  and [5](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-5-normalization-and-source)
+  [5](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-5-normalization-and-source),
+  and [6](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-6-normalization-and-source)
   now have class-weighted normalization and source values, including
   their four deletion terms.
   The direct all-probe comparison for orbit 10 is pending. The retained-source factor
@@ -137,7 +138,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   and [deletion 1](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-4-and-six-face-deletion-1)
   also passed receipt review, as did [deletion 2](L1_RETARDED_SPECTRAL_INTERFACE.md#full-class-weighted-six-face-deletion-2).
   Finish the other two deletion sums,
-  the remaining three four-face orbits, and the original six-face
+  the remaining two four-face orbits, and the original six-face
   core. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 

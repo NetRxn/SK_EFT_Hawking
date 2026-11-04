@@ -4924,3 +4924,15 @@ and class edge `(9,1)`. The raw fixed-shear source
 `−5434959528221923828125/281474976710656` across both checkerboards.
 The process had ended when inspected. Its exit status was unavailable.
 The review checked the emitted receipt without rerunning the contraction.
+
+#### Four-face orbit 6 normalization and source
+
+The `--full-orbit 6 --retained-source --integer-gamma` replay exited
+zero. Independent receipt review matched the four-only orbit 6
+deletions for faces `(5,1,3)`, `(5,0,3)`, `(12,0,1)`, and `(12,1,3)`.
+The raw deletion sum is `−619097397441737255859375/1152921504606846976`.
+Adding the retained term gives
+`−18383954389091815587890625/9223372036854775808` per representative.
+Weighting 192 words per checkerboard gives normalization
+`1310289118862622881220703125/9223372036854775808` and full numerator
+`−55151863167275446763671875/72057594037927936`.
