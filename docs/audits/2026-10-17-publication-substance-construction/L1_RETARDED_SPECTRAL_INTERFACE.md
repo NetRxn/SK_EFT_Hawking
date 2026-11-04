@@ -5296,3 +5296,41 @@ matched inverse pole kernel at nonzero
 spatial momentum under a specified pole convention. The scalar
 shear susceptibility alone supplies neither that coefficient nor
 a real speed correction at physical frequencies.
+
+### Nonzero spatial character and contact dependence of the inverse secant
+
+On the unit 2⁴ scalar torus, put the nonzero spatial momentum
+on axis 1. This flips bit 1 of a spatial momentum and leaves
+the two transverse vertex factors unchanged. The time kernel
+is the momentum-pair sum of w_p C_p(τ) C_(p⊕e₁)(τ), divided
+by the spatial volume. Independently, the real-space route
+multiplies the connected Wick kernel by the spatial character
+(−1)^(r₁) before summing each time slice. Both methods give
+154/5265 at coincidence and 8/5265 at the half period, hence
+temporal eigenvalues 162/5265 and 146/5265. The affine bare
+contact remains 587/13260 at coincident time, independent of
+spatial character because it is local.
+
+The closed geometry regulator 2×2×1×1 has a separate exact
+nonzero-momentum control. In raw source units at pure g₂ put
+A₀ = s/(g₂² Z₈) and B = −d/(g₂² Z₈) > 0 for the staggered
+spatial character. Here s is the reviewed same-site value at
+04e107a2c, d the reviewed diagonal value at 9d4012c47, and Z₈
+the closed normalization coefficient, with full normalization
+`g₂⁸ Z₈`. The same-time cross-space and same-space half-period
+covariances both vanish. With a coincident-time contact
+subtraction C the temporal eigenvalues are A₀−C±B. Their
+Nyquist-minus-zero contrast is −2B for every C. In contrast,
+the inverse secant in squared lattice frequency is
+
+    (a_t²/4) · 2B / [(A₀−C)²−B²].
+
+The replay compares C=0 and C=(A₀−B)/2. Both have strictly
+positive temporal eigenvalues and the same direct contrast.
+The second gives a strictly larger inverse secant. These
+choices test contact sensitivity and are not physical matching
+prescriptions. The staggered mode is not the uniform metric
+channel. The Nyquist secant is a finite-lattice number and does
+not determine a low-frequency inverse pole or Γ_H. The scalar
+and geometry torus extents differ, so these controls cannot be
+multiplied into a matched joint response.

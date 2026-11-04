@@ -156,7 +156,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   bring coverage to 16 orbits and 3,072 words per checkerboard.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
-  kernel with the affine contact separated. The matched geometry
+  kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)
+  verifies a contact-independent direct contrast and a contact-dependent
+  inverse secant in the separate geometry regulator. The matched geometry
   inverse pole and physical frequency calibration remain open.
   The full word sum, physical matching and B3 remain open.
 
