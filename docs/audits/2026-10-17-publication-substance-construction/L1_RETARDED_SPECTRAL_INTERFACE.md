@@ -5929,3 +5929,17 @@ B-only contraction took 0.90 seconds after setup. A scalar
 can reuse a primitive contraction only after verifying the
 corresponding frozen A factors or retaining their coordinate
 dependence in the sum.
+
+The larger B-only run completed the contiguous survivor range
+`[640,2688)` and 218 separately indexed tuples in
+`[2688,3712)` before the wall-time limit. Independent review
+verified all 2,266 indices and outcomes. There are 1,999 exact
+zeros and 267 nonempty signed maps. Index 2688 is still due.
+The nonempty maps have four distinct exact values and one
+primitive map up to signed integer scale. All 267 frozen A
+input signatures are distinct, including after factorwise
+scale normalization. Those input signatures do not establish
+distinct scalar outputs. A possible grouping preserves the
+common primitive B, fixes the frozen inputs at centers 1, 3,
+and 9, and sums the appropriately weighted center-11 maps
+before completing the A closure.
