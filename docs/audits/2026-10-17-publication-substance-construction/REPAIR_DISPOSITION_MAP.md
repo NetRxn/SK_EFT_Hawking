@@ -224,6 +224,16 @@ site is 12082/342225. A verified geometry word contributes
 geometry partition and covariance calculation and the derivation of
 a physical matching law. Independent review reproduced the scalar affine contact. These results preserve the original B3 acceptance target.
 
+The extended geometry work now has two independently verified
+contraction controls. The [mixed-plane join](l1_extended_inter_sheet.py)
+preserves frame dependencies on shared links when private curvature
+ports exist. The [coupled-sheet join](l1_extended_coupled_curvature.py)
+handles curvature loops without private ports when frame links
+are disjoint. The reference worker is testing a saturated
+configuration that combines both conditions. The acceptance
+target remains the full partition and geometry covariance,
+with the latter reduced to nine relative-position classes.
+
 Original B3/L1-02 and Phase6a/5y/6e remain full-strength BUILD. These are distinct from the shared D1/E1/E2 quadratic law.
 
 | Missing construction | Current work / next substantive action | Acceptance reviewer and required evidence |
