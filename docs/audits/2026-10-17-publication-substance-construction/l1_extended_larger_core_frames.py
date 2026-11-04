@@ -6,14 +6,15 @@ from functools import cache
 from itertools import combinations, product
 from math import factorial, prod
 
-from l1_direct_b_haar import scale
+from l1_direct_b_haar import add, scale, wedge
 from l1_extended_four_face_gauge_join import IDENTITY, larger_core_tree
 from l1_extended_mixed_center_census import AXES, EVEN, curvature_boundary, orbits, words_with_mixed_count
 from l1_extended_mixed_center_gamma import COMPONENTS, contract_gamma, face_channels, gamma_block, peeled_channels
 from l1_extended_mixed_curvature_core import PAIRS as PROBE_PAIRS, PAIR_INDEX, face_tensor
 from l1_extended_mixed_frame_join import join_factors
-from l1_extended_mixed_frame_moment import SCALE, frame_edge_moments
-from l1_extended_opposed import staged_center
+from l1_extended_mixed_frame_moment import SCALE, anchored, frame_edge_moments, source_edge_moments
+from l1_extended_one_face_gauge_join import check_removals
+from l1_extended_opposed import close_second_frame, staged_center
 from l1_extended_opposed_source import PAIRS, summed_fourth
 from l1_extended_two_mixed_centers import contract, remap
 from l1_normalization_opposed_fourth import tuples
@@ -44,7 +45,44 @@ def edge_table(degree, moments, slot):
     return {g: remap(frame_edge_moments(g, moments), (0, slot)) for g in labels}
 
 
-def center_tensor(center, planes, slots, components, probes):
+@cache
+def source_edge_table(moments, slot):
+    return {labels: remap(add(*(source_edge_moments(labels, moments, endpoint)
+                               for endpoint in range(2))), (0, slot))
+            for labels in PAIRS}
+
+
+@cache
+def source_only_table(moments, slot):
+    terms = []
+    for endpoint, gamma in product(range(2), range(4)):
+        terms.append(wedge(*(anchored(anchor, (), moments[anchor],
+                                     gamma if endpoint == anchor else None)
+                            for anchor in range(2))))
+    return remap(add(*terms), (0, slot))
+
+
+def source_center_tensor(planes, directions, moments, removed):
+    channels = peeled_channels()
+    if planes[0] == planes[1]:
+        first, second = (source_edge_table(m, i) for i, m in enumerate(moments, 1))
+        boundary = {b: add(*(scale(first[a], weight) for (a, key), weight in channels.items()
+                             if key == b))
+                    for b in PAIRS}
+        return scale(close_second_frame(boundary, second), -24)
+
+    removed_slot = 0 if directions[0] in removed else 2
+    survivor = 2 - removed_slot
+    common = source_edge_table(moments[1], 2)
+    other = edge_table(2, moments[survivor], survivor + 1)
+    source = source_only_table(moments[removed_slot], removed_slot + 1)
+    retained = add(*(scale(wedge(common[a], other[b]), weight)
+                     for (a, b), weight in channels.items()))
+    return {mask: -192 * value for mask, value in wedge(retained, source).items()
+            if mask & 255 == 255}
+
+
+def center_tensor(center, planes, slots, components, probes, removed=None):
     first, last = planes
     if first == last:
         directions = first
@@ -55,8 +93,13 @@ def center_tensor(center, planes, slots, components, probes):
     moments = [tuple(probes[state] if state else state for state in slots[axis])
                for axis in directions]
     degrees = [2 * sum(axis in p for p in planes) for axis in directions]
-    tensors = [edge_table(d, m, i) for i, (d, m) in enumerate(zip(degrees, moments, strict=True), 1)]
     divisor = SCALE**(2 * len(directions)) * 4**sum(degrees)
+    if removed is not None:
+        assert removed in planes and not components
+        curvature_scale = 48 * factorial(4) if first == last else 48**2 * factorial(2)**2
+        return directions, source_center_tensor(planes, directions, moments, removed), divisor * curvature_scale
+
+    tensors = [edge_table(d, m, i) for i, (d, m) in enumerate(zip(degrees, moments, strict=True), 1)]
     if first == last:
         k, l = (axis for axis in AXES if axis not in first)
         assert (center, k, l) not in components
@@ -149,7 +192,7 @@ def tree_key_cost(faces):
     return score
 
 
-def center_factor(center, planes, slots, faces):
+def center_factor(center, planes, slots, faces, removed=None):
     projections = [projected_keys(center, factor) for factor in faces]
     axes = tuple(axis for keys, _ in projections for axis in keys)
     rows = {}
@@ -159,7 +202,7 @@ def center_factor(center, planes, slots, faces):
         components = {axis: value for axis, value in zip(axes, key, strict=True) if len(axis) == 3}
         probes = {axis: PROBE_PAIRS[value] for axis, value in zip(axes, key, strict=True)
                   if len(axis) == 2}
-        directions, local, scale_factor = center_tensor(center, planes, slots, components, probes)
+        directions, local, scale_factor = center_tensor(center, planes, slots, components, probes, removed)
         assert divisor is None or divisor == scale_factor
         divisor = scale_factor
         if local:
@@ -194,17 +237,66 @@ def close_factors(factors):
     return real
 
 
-def contract_factors(pattern, slots, faces, tree, live, selection=None):
+def contract_factors(pattern, slots, faces, tree, live, selection=None, retained=None):
     curvature = face_factors(faces, tree, live, selection)
     factors = list(curvature)
-    divisor = 1
+    divisors = {}
     for center, planes in zip(EVEN, pattern, strict=True):
         factor, denominator = center_factor(center, planes, slots[center], curvature)
         factors.append(factor)
-        divisor *= denominator
+        divisors[center] = denominator
     occurrences = Counter(key for axes, _ in factors for key in axes)
     assert set(occurrences.values()) == {2}
-    return Fraction(close_factors(factors), divisor)
+    divisor = prod(divisors.values())
+    normal = Fraction(close_factors(list(factors)), divisor)
+    if retained is None:
+        return normal
+
+    source_total = 0
+    for center, plane in retained:
+        position = EVEN.index(center)
+        factor, denominator = center_factor(center, pattern[position], slots[center], curvature, plane)
+        assert denominator == divisors[center]
+        changed = list(factors)
+        index = len(curvature) + position
+        assert changed[index][0] == factor[0]
+        changed[index] = factor
+        value = close_factors(changed)
+        source_total += value
+        print("retained source", center, plane, Fraction(value, 6 * divisor), flush=True)
+    return normal, Fraction(source_total, 6 * divisor)
+
+
+def retained_planes(pattern, faces, protected):
+    check_removals(pattern)
+    retained = []
+    for center, planes in zip(EVEN, pattern, strict=True):
+        for plane in sorted(set(planes)):
+            omitted = (center, *(a for a in AXES if a not in plane))
+            if omitted in faces:
+                continue
+            assert curvature_boundary(pattern, omitted=omitted) == (faces, protected)
+            retained.append((center, plane))
+    assert len(retained) == 11 - len(faces)
+    return retained
+
+
+
+def verify_source_tensors():
+    from l1_extended_mixed_center_gamma import opposite_source
+    from l1_extended_protected_center import summed_protected_source
+
+    live = (1, 0)
+    probes = {live: (0, 0)}
+    pure_slots = {0: ((), live), 1: ((), None)}
+    _, actual, _ = center_tensor(0, ((0, 1),) * 2, pure_slots, {}, probes, (0, 1))
+    assert actual and actual == scale(summed_protected_source(((0, 0), None)), -24)
+    mixed_slots = {0: ((), live), 1: ((), ()), 2: ((), None)}
+    for plane, removed in (((0, 1), 1), ((1, 2), 3)):
+        _, actual, _ = center_tensor(0, ((0, 1), (1, 2)), mixed_slots, {}, probes, plane)
+        reference = opposite_source(removed, ((0, 0), None, None), fixed=(3,))
+        assert actual and scale(actual, 4) == scale(reference, -192)
+    print("pure and both mixed source replacements match established tensors", flush=True)
 
 
 def verify_local_tensors():
@@ -223,7 +315,7 @@ def verify_local_tensors():
     print("pure and mixed local tensors agree with the established replays", flush=True)
 
 
-def main(first_slice=False, full_orbit=None, tree_costs=False):
+def main(first_slice=False, full_orbit=None, tree_costs=False, source=False):
     counts = Counter()
     completed_full = False
     for pattern, multiplicity in orbits(words_with_mixed_count(3)):
@@ -241,6 +333,7 @@ def main(first_slice=False, full_orbit=None, tree_costs=False):
             if not counts:
                 assert (baseline, optimized) == ((199584, 205189), (69696, 70213))
             print("projected keys", len(faces), baseline, optimized, flush=True)
+        retained = retained_planes(pattern, faces, protected)
         components, probes = probe_slice(faces, tree, live)
         if first_slice and not counts:
             direct = contract_slice(pattern, slots, components, probes)
@@ -252,8 +345,12 @@ def main(first_slice=False, full_orbit=None, tree_costs=False):
         if run_full:
             score = tree_key_cost(faces)
             print("full orbit", full_orbit, "projected keys", score(tree, live), flush=True)
-            print("full orbit", full_orbit, "normalization", contract_factors(
-                pattern, slots, faces, tree, live), flush=True)
+            result = contract_factors(pattern, slots, faces, tree, live,
+                                      retained=retained if source else None)
+            if source:
+                result, numerator = result
+                print("full orbit", full_orbit, "retained numerator", numerator, flush=True)
+            print("full orbit", full_orbit, "normalization", result, flush=True)
             completed_full = True
         for center, planes in zip(EVEN, pattern, strict=True):
             if any(state != () for states in slots[center].values() for state in states):
@@ -271,12 +368,18 @@ def main(first_slice=False, full_orbit=None, tree_costs=False):
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--local-controls", action="store_true")
+    parser.add_argument("--source-controls", action="store_true")
     parser.add_argument("--first-slice", action="store_true")
     full = parser.add_mutually_exclusive_group()
     full.add_argument("--full-first", dest="full_orbit", action="store_const", const=0)
     full.add_argument("--full-orbit", type=int, choices=range(11))
     parser.add_argument("--tree-costs", action="store_true")
+    parser.add_argument("--retained-source", action="store_true")
     args = parser.parse_args()
-    main(args.first_slice, args.full_orbit, args.tree_costs)
+    if args.retained_source and args.full_orbit is None:
+        parser.error("--retained-source requires --full-orbit or --full-first")
+    main(args.first_slice, args.full_orbit, args.tree_costs, args.retained_source)
     if args.local_controls:
         verify_local_tensors()
+    if args.source_controls:
+        verify_source_tensors()

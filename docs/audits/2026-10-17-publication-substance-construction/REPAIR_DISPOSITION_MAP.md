@@ -100,7 +100,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The sparse equality join matches the literal fixed-probe result.
   Trees selected by projected center key counts reduce the first
   full-probe workload to 5,544 keys at its largest center. Complete
-  that orbit and then the larger sums. General center counts remain open.
+  that orbit and then the larger sums. The retained-source factor
+  replay covers all 75 core-preserving replacements across the
+  larger-core representatives. Complete the source controls and
+  full-orbit sums. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 
 - **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing and canonical finding §3.2 closure. The next bounded substrate package is §2.2–2.4. Derive Schwarzschild heating from a differentiable decreasing mass profile and acoustic cooling from the explicit source profile, then relate the applicable profiles to the regime hypotheses. Keep the finite-step monotonicity result separate from strict derivative signs. Supply the partition-linked `δ` corollary and exact `G_N M_c = 1/Λ_UV` length identity. The four-laws construction in §2.1 remains open. A differential Schwarzschild area first law is a viable component of that larger obligation. For the acoustic second law, source inspection at `ff5c2614` identified `GloriosoLiu.entropy_current_exists` and `noetherEntropyDensity_nonneg_of_SKEFTAxioms` as reuse candidates. The latter establishes density positivity under the SK axioms. The local-law module defines its divergence as the imaginary Lagrangian, whereas L3 takes the physical entropy divergence as a scalar input. Search by type in the pinned consumer context for a current and divergence identification before dispatching the acoustic construction. The source inspection leaves this search incomplete. The mapped Paper 27 review IDs require individual lifecycle reconciliation, and the manuscript still requires fresh Stage 13 after its redraft.

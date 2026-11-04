@@ -4292,3 +4292,27 @@ face as independent. The first orbit's maximum falls from
 has 1,463,616 keys at its largest center after tree selection.
 These counts precede exterior pruning. The first complete
 probe sum uses the smaller four-face orbit via `--full-orbit 10`.
+
+#### Larger-core retained-source factors
+
+The retained-source census finds seven replacements in each
+four-face orbit, five pure and two mixed. The six-face orbit
+has five pure replacements. All 75 representative replacements
+preserve the residual faces and protected links. Core-face
+deletions are evaluated separately.
+
+The sparse replay's `--retained-source` option replaces one
+center factor at a time. It retains the original label scope
+and divisor. A pure replacement gives two action slots and a
+source on each frame edge, with the signed factor `−24`.
+A mixed replacement leaves the surviving exclusive frame
+unchanged, adds a source to the common frame, and puts a
+source-only factor on the removed exclusive edge. Its factor
+is `−192`. The directed moments distinguish fixed, live, and
+independent links for each of the two source anchors. The
+result divides the all-axis numerator by six.
+
+Independent review checked the placement and weights and
+reproduced six direct fixed-identity source wedge controls.
+The local comparisons to the earlier probed tensors and the
+full-orbit contractions are pending.
