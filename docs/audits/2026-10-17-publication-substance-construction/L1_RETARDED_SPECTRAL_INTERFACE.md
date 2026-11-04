@@ -2332,3 +2332,15 @@ This run reused the fixed left path across all three blocks.
 The scheduler provides an exact baseline and bounded slices for
 verification. The remaining cost motivates checking additional
 symmetries before running the unrestricted sum.
+
+The [signed rotation replay](l1_extended_overlap_rotation_check.py)
+checks all exterior coefficients under two quaternion rotation
+generators in each chirality. All four signed comparisons match.
+Conjugation preserves the gauge contractions, and the coordinate
+signs appear in both the exterior and gauge factors and cancel.
+The [orbit census](l1_extended_overlap_schedule_orbits.py) combines
+these rotations with global chirality interchange. It selects
+35,084 representatives, covering all 589,194 blocks and
+94,748,063,904 candidate pairs with orbit weights. Evaluating
+the representatives still requires 5,166,551,904 candidate
+pairs, 32 left kernels and 1,600 right kernels.
