@@ -2528,3 +2528,23 @@ an extra factor of two to keep every coefficient integral.
 The first regenerated half pair matched the scratch input
 byte for byte. The first modified column has 2,321,664 rows.
 The second position is being evaluated separately.
+
+Both modified lower columns have 2,321,664 rows and identical
+SHA-256 `0efc3eeb5329ae9499e36b22c77346542da36c360498beee41ca5fb74caffd41`.
+The local upper endpoint maps are identical. The time-bit
+translation exchanges columns while preserving the anchor
+convention. Before pinning the temporal root, a residual gauge
+transformation permits either column's root to be fixed.
+
+The [separated orbit replay](l1_extended_source_orbits.py) takes
+the baseline and modified column files, a half-open index range,
+and the baseline orbit shards. It records 34,314 parity zeros,
+450 coefficientwise proportional blocks and 320 recomputed
+blocks. Its complete receipt has SHA-256
+`bf6102da684a4c3ee03809de143d195b7c7d8021de3acaabe4bc0305899f9d65`.
+The [source reducer](l1_extended_source_sum.py) removes the
+extra factor of two and reproduces the eight separated terms
+`-45709102752653698569/4951760157141521099596496896`.
+Together the 24 ordered upper placements contribute
+`-151863719761036373289/9903520314283042199192993792`.
+Independent review of the completed signed sum is pending.
