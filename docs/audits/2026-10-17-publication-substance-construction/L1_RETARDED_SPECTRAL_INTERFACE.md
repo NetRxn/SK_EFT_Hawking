@@ -4912,3 +4912,15 @@ Adding the retained term gives
 Weighting 192 words per checkerboard gives normalization
 `48217872201553281708984375/576460752303423488` and full numerator
 `−130138225825289022333984375/288230376151711744`.
+
+#### Full class-weighted six-face deletion 2
+
+The `--six-deletions --deletion-index 2` receipt reports the final
+subtotal for omitting `(12,1,3)` and replacing frame `(0,2)` at site
+12. Independent review checked the surviving faces `(9,0,1)`,
+`(9,0,2)`, `(15,0,1)`, and `(15,1,2)`, unchanged protection,
+and class edge `(9,1)`. The raw fixed-shear source
+`−1811653176073974609375/36028797018963968` times 384 gives
+`−5434959528221923828125/281474976710656` across both checkerboards.
+The process had ended when inspected. Its exit status was unavailable.
+The review checked the emitted receipt without rerunning the contraction.
