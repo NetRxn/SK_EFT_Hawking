@@ -3,13 +3,15 @@ from argparse import ArgumentParser
 from collections import Counter
 from fractions import Fraction
 from functools import cache
+from itertools import combinations, product
 from math import factorial
 
 from l1_direct_b_haar import scale
 from l1_extended_four_face_gauge_join import IDENTITY, larger_core_tree
 from l1_extended_mixed_center_census import AXES, EVEN, curvature_boundary, orbits, words_with_mixed_count
 from l1_extended_mixed_center_gamma import COMPONENTS, contract_gamma, face_channels, gamma_block, peeled_channels
-from l1_extended_mixed_curvature_core import PAIR_INDEX, face_tensor
+from l1_extended_mixed_curvature_core import PAIRS as PROBE_PAIRS, PAIR_INDEX, face_tensor
+from l1_extended_mixed_frame_join import join_factors
 from l1_extended_mixed_frame_moment import SCALE, frame_edge_moments
 from l1_extended_opposed import staged_center
 from l1_extended_opposed_source import PAIRS, summed_fourth
@@ -103,6 +105,87 @@ def contract_slice(pattern, slots, components, probes):
     return Fraction(int(result.const().x), divisor)
 
 
+def face_factors(faces, tree, live, selection=None):
+    factors = []
+    for face, edges in faces.items():
+        active = tuple(sorted(edges & live))
+        fixed = dict.fromkeys(edges & tree, IDENTITY)
+        rows = {}
+        for labels in COMPONENTS:
+            for keys, value in face_tensor(face, active, fixed, labels).items():
+                key = (labels, *keys)
+                if selection is None or key == selection[face]:
+                    rows[key] = {0: (value, 0)}
+        assert rows
+        factors.append(((face, *active), rows))
+    return factors
+
+
+def center_factor(center, planes, slots, faces):
+    live = {state for states in slots.values() for state in states if state}
+    projections = []
+    for axes, rows in faces:
+        indices = tuple(i for i, key in enumerate(axes)
+                        if (i == 0 and key[0] == center) or key in live)
+        if indices:
+            projections.append((tuple(axes[i] for i in indices),
+                                sorted({tuple(row[i] for i in indices) for row in rows})))
+    axes = tuple(axis for keys, _ in projections for axis in keys)
+    rows = {}
+    divisor = None
+    for projected in product(*(keys for _, keys in projections)):
+        key = tuple(value for group in projected for value in group)
+        components = {axis: value for axis, value in zip(axes, key, strict=True) if len(axis) == 3}
+        probes = {axis: PROBE_PAIRS[value] for axis, value in zip(axes, key, strict=True)
+                  if len(axis) == 2}
+        directions, local, scale_factor = center_tensor(center, planes, slots, components, probes)
+        assert divisor is None or divisor == scale_factor
+        divisor = scale_factor
+        if local:
+            assert all(mask & 255 == 255 and value.is_ground for mask, value in local.items())
+            mapped = remap({mask >> 8: value for mask, value in local.items()},
+                           tuple(center ^ (1 << i) for i in directions))
+            rows[key] = {mask: (int(value.const().x), int(value.const().y))
+                         for mask, value in mapped.items()}
+    assert divisor is not None
+    return (axes, rows), divisor
+
+
+def close_factors(factors):
+    while len(factors) > 1:
+        def score(pair):
+            a, b = (factors[i] for i in pair)
+            return (not bool(set(a[0]) & set(b[0])),
+                    sum(map(len, a[1].values())) * sum(map(len, b[1].values())))
+
+        i, j = min(combinations(range(len(factors)), 2), key=score)
+        merged = join_factors(factors[i], factors[j], match_labels=True)
+        if not merged[1]:
+            return 0
+        factors.pop(j)
+        factors[i] = merged
+    axes, rows = factors[0]
+    assert not axes
+    mask = sum(255 << (8 * (x ^ 1)) for x in EVEN)
+    assert rows.keys() == {()} and rows[()].keys() == {mask}
+    real, imag = rows[()][mask]
+    assert imag == 0
+    return real
+
+
+def contract_factors(pattern, slots, faces, tree, live, selection=None):
+    curvature = face_factors(faces, tree, live, selection)
+    factors = list(curvature)
+    divisor = 1
+    for center, planes in zip(EVEN, pattern, strict=True):
+        factor, denominator = center_factor(center, planes, slots[center], curvature)
+        factors.append(factor)
+        divisor *= denominator
+    occurrences = Counter(key for axes, _ in factors for key in axes)
+    assert set(occurrences.values()) == {2}
+    return Fraction(close_factors(factors), divisor)
+
+
 def verify_local_tensors():
     pure_slots = {0: ((), ()), 1: ((), ())}
     directions, tensor, divisor = center_tensor(0, ((0, 1), (0, 1)), pure_slots, {}, {})
@@ -119,7 +202,7 @@ def verify_local_tensors():
     print("pure and mixed local tensors agree with the established replays", flush=True)
 
 
-def main(first_slice=False):
+def main(first_slice=False, full_first=False):
     counts = Counter()
     for pattern, multiplicity in orbits(words_with_mixed_count(3)):
         faces, protected = curvature_boundary(pattern)
@@ -128,7 +211,15 @@ def main(first_slice=False):
         slots, tree, live = layout(pattern, faces, protected)
         components, probes = probe_slice(faces, tree, live)
         if first_slice and not counts:
-            print("first four-face probe slice", contract_slice(pattern, slots, components, probes), flush=True)
+            direct = contract_slice(pattern, slots, components, probes)
+            print("first four-face probe slice", direct, flush=True)
+            selected = {face: (components[face], *(PAIR_INDEX[probes[e]] for e in sorted(edges & live)))
+                        for face, edges in faces.items()}
+            assert contract_factors(pattern, slots, faces, tree, live, selected) == direct
+            print("fixed-probe factor join agrees", flush=True)
+        if full_first and not counts:
+            print("first four-face full normalization", contract_factors(
+                pattern, slots, faces, tree, live), flush=True)
         for center, planes in zip(EVEN, pattern, strict=True):
             if any(state != () for states in slots[center].values() for state in states):
                 if planes[0] != planes[1]:
@@ -145,7 +236,8 @@ if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--local-controls", action="store_true")
     parser.add_argument("--first-slice", action="store_true")
+    parser.add_argument("--full-first", action="store_true")
     args = parser.parse_args()
-    main(args.first_slice)
+    main(args.first_slice, args.full_first)
     if args.local_controls:
         verify_local_tensors()

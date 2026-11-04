@@ -4239,3 +4239,33 @@ then selects one component pair with unit coefficient. The
 `--first-slice` option also contracts the eight exterior tensors
 for the first four-face orbit. This slice supplies a control for
 a later sum over all live probes. The complete sum is open.
+
+#### Larger-core sparse probe sum
+
+The local pure and mixed frame controls agree exactly with the
+earlier replays after converting the frame divisors. The literal
+first four-face probe slice gives
+`354031776851001767578125/18889465931478580854784`.
+
+The sparse replay associates each face's residual component pair
+and live-link probes with the center tensors that use them.
+Each label connects one face factor to one center factor.
+Shared labels join by equality because the center tensor already
+includes the probe's Haar moment. The exterior contraction uses
+the same signed sparse multiplication as the earlier frame joins.
+Independent review checked the projections in all 11 orbits and
+reproduced an exact signed complex fixture with an overlapping
+mask excluded. The fixed-probe comparison with the literal slice
+is running.
+
+The first orbit's four face factors have 300, 21, 21, and 300
+nonzero rows. One center has 199,584 candidate projected keys
+before testing its exterior support. The `--full-first` route
+constructs the full factors. Its runtime and peak memory remain
+unqualified, and the full normalization remains open.
+
+A first-orbit tree search restricted to at most two live links per
+face found another valid tree with a maximum of 69,696 projected
+keys at any center and 70,213 in total. These are candidate counts
+before exterior pruning. Use projected center key counts when
+selecting trees for the complete replay.

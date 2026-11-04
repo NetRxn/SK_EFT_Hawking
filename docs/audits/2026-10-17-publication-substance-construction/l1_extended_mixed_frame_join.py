@@ -69,7 +69,7 @@ def wedge_accumulate(out, left, index, full, weight):
                 out[a | b] = old_r + signed*(r*s - i*j), old_i + signed*(r*j + i*s)
 
 
-def join_factors(first, second):
+def join_factors(first, second, *, match_labels=False):
     axes, left = first
     other, right = second
     common = tuple(e for e in axes if e in other)
@@ -87,11 +87,13 @@ def join_factors(first, second):
             index[mask & full].append((mask, preceding_parity(mask), coefficient))
         lookup[tuple(q[i] for i in bi)].append((q, index))
     for p, poly in left.items():
-        for moments in product(*(HAAR[PAIRS[p[i]]] for i in ai)):
-            indices, weights = zip(*moments, strict=True)
+        choices = (((p[i], 1),) if match_labels else HAAR[PAIRS[p[i]]] for i in ai)
+        for moments in product(*choices):
+            indices = tuple(index for index, _ in moments)
+            weight = prod(w for _, w in moments)
             for q, value in lookup[indices]:
                 dest = tuple(p[i] for i in la) + tuple(q[i] for i in ra)
-                wedge_accumulate(output[dest], poly, value, full, prod(weights))
+                wedge_accumulate(output[dest], poly, value, full, weight)
     open_links = tuple(axes[i] for i in la) + tuple(other[i] for i in ra)
     reduced = {k: {m: v for m, v in row.items() if any(v)} for k, row in output.items()}
     return open_links, {k: v for k, v in reduced.items() if v}
