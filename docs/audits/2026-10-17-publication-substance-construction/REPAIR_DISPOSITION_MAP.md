@@ -119,15 +119,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The sparse equality join matches the literal fixed-probe result.
   Trees selected by projected center key counts reduce the first
   full-probe workload to 5,544 keys at its largest center. Complete
-  the larger sums. Orbits 10, [0](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-zero-normalization-and-source),
-  [1](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-1-normalization-and-source),
-  [2](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-2-normalization-and-source),
-  [3](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-3-normalization-and-source),
-  [4](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-4-and-six-face-deletion-1),
-  [5](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-5-normalization-and-source),
-  and [6](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-6-normalization-and-source)
-  now have class-weighted normalization and source values, including
-  their four deletion terms.
+  the larger sums. The [complete four-face subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-four-face-subtotal)
+  combines all ten normalization and retained-source rows and all
+  40 deletion rows, with independent receipt reduction.
   The direct all-probe comparison for orbit 10 is pending. The retained-source factor
   replay covers all 75 core-preserving replacements across the
   larger-core representatives. Its local source controls match.
@@ -138,9 +132,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   and [deletion 1](L1_RETARDED_SPECTRAL_INTERFACE.md#four-face-orbit-4-and-six-face-deletion-1)
   also passed receipt review, as did [deletion 2](L1_RETARDED_SPECTRAL_INTERFACE.md#full-class-weighted-six-face-deletion-2).
   [Deletion 3](L1_RETARDED_SPECTRAL_INTERFACE.md#full-class-weighted-six-face-deletion-3)
-  also passed receipt review. Finish deletion 5,
-  the remaining two four-face orbits, and the original six-face
-  core. General center counts remain open.
+  also passed receipt review. Finish deletion 5 and the original
+  six-face core. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 
 - **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing and canonical finding §3.2 closure. The next bounded substrate package is §2.2–2.4. Derive Schwarzschild heating from a differentiable decreasing mass profile and acoustic cooling from the explicit source profile, then relate the applicable profiles to the regime hypotheses. Keep the finite-step monotonicity result separate from strict derivative signs. Reuse the partition-linked `δ` corollary already present as `delta_ADW_nonzero_iff_alpha_ADW_ne_one` in the pinned consumer module. For the length identity, use `G_N_emerg_eval p * M_c p = 1 / p.Λ_UV`; the bare Sakharov coupling gives `1 / (p.α_ADW * p.Λ_UV)`. The independently reviewed and rendered [L3 manuscript correction](https://github.com/NetRxn/SK_EFT_Hawking/commit/4de686400) records that cancellation on the research checkpoint. The exact identity still needs native proof discovery and validation. The four-laws construction in §2.1 remains open. A differential Schwarzschild area first law is a viable component of that larger obligation. For the acoustic second law, source inspection at `ff5c2614` identified `GloriosoLiu.entropy_current_exists` and `noetherEntropyDensity_nonneg_of_SKEFTAxioms` as reuse candidates. The latter establishes density positivity under the SK axioms. The local-law module defines its divergence as the imaginary Lagrangian, whereas L3 takes the physical entropy divergence as a scalar input. Search by type in the pinned consumer context for a current and divergence identification before dispatching the acoustic construction. The source inspection leaves this search incomplete. The mapped Paper 27 review IDs require individual lifecycle reconciliation, and the manuscript still requires fresh Stage 13 after its redraft.

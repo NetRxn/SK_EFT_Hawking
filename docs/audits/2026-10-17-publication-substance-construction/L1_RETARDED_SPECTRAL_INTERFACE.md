@@ -4947,3 +4947,23 @@ protection, and class edge `(9,1)`. The raw fixed-shear source
 `−695763167656519775390625/36028797018963968` across both checkerboards.
 The residual face geometry is shared with deletion 2, while the
 source plane differs.
+
+#### Complete four-face subtotal
+
+The integer replays for larger-core orbits 7 and 8 exited zero.
+Independent review matched their deletion receipts and the whole
+census. Larger-core IDs 0–8 and 10 map to four-only IDs 0–9 in
+order. Each has 192 words per checkerboard, for 1,920 per board.
+
+| Both-checkerboard contribution | Normalization | Full source numerator |
+| --- | ---: | ---: |
+| Orbit 7 | `340982603779997760908203125/9223372036854775808` | `−14235544765209909216796875/72057594037927936` |
+| Orbit 8 | `842363672069868038349609375/9223372036854775808` | `−1131146564525152047158203125/2305843009213693952` |
+| All ten orbits | `2145163737913113504814453125/2305843009213693952` | `−11545743096830174649943359375/2305843009213693952` |
+
+The retained subtotal is `−8430075526099610717912109375/2305843009213693952`.
+The 40 deletion rows contribute
+`−194729223170660245751953125/144115188075855872`.
+Independent review reproduced all sums from the receipts without
+rerunning the full contractions. This subtotal covers the
+four-face cores and their source deletions.
