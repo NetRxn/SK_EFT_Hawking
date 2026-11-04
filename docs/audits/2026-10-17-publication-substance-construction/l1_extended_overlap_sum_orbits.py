@@ -24,6 +24,14 @@ def sum_shards(plan, paths):
     return sum(results.values())
 
 
+def normalized_motif(raw):
+    curvature = Fraction(raw, 48**8 * 4**4)
+    lower_frames = (48 * 4**16)**2
+    upper_frames = 8**16 * 4**32 * 2**8
+    upper_sheets = Fraction(52489, 10368)**2
+    return curvature * upper_sheets / (lower_frames * upper_frames)
+
+
 if __name__ == "__main__":
     groups = exterior(argv[1])
     plan = {
@@ -37,3 +45,4 @@ if __name__ == "__main__":
     assert abs(raw) <= numerator_bound(argv[1])
     print("raw numerator", raw)
     print("after curvature normalization", Fraction(raw, 48**8 * 4**4))
+    print("normalized finite motif", normalized_motif(raw))
