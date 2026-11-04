@@ -105,20 +105,21 @@ def summed_source_tensor(removed_local_site):
                  for u, v in product(range(2), repeat=2)))
 
 
+def source_variants(first, second):
+    if first == second:
+        return first, [(0, factorial(4) // factorial(2), first)]
+    common, = set(first) & set(second)
+    a, b = sorted(set(first) ^ set(second))
+    return (a, common, b), [(1, 48 * factorial(2), (a, common)),
+                            (3, 48 * factorial(2), (b, common))]
+
+
 def source_total(pattern, original, only_faces=None):
     # Sum over all six choices of shear axes. Axis permutations in
     # an orbit make the contribution to any fixed choice one sixth.
     total = 0
     for x, (first, second) in zip(EVEN, pattern, strict=True):
-        if first == second:
-            axes = first
-            variants = [(0, factorial(4) // factorial(2), first)]
-        else:
-            common, = set(first) & set(second)
-            a, b = sorted(set(first) ^ set(second))
-            axes = (a, common, b)
-            variants = [(1, 48 * factorial(2), (a, common)),
-                        (3, 48 * factorial(2), (b, common))]
+        axes, variants = source_variants(first, second)
         sites = (x, *(x ^ (1 << a) for a in axes))
         for local, adjustment, frame in variants:
             k, l = (axis for axis in AXES if axis not in frame)

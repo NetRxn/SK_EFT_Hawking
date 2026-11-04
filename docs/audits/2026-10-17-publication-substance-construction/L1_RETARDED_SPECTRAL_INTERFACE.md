@@ -3524,3 +3524,32 @@ edges use separate passive-site bytes, with a degree profile of
 (8,4,4) after central saturation. All three tested endpoint
 configurations recovered 38 entries against independent frame
 references for the two directions.
+
+### Two-face source terms at remote centers
+
+The `--remote-source` replay replaces one of the five remote
+center tensors at a time and sums the six eligible removed-plane
+choices. Each replacement preserves the passive degrees and uses
+the original protected frame links. It retains the complete
+two-face core. The resulting boundary has the same 84 masks as
+normalization, but the weights change by two distinct ratios, so
+the source coefficient requires its own contraction.
+
+The fixed-probe controls compare the direct full-lattice source
+sum with the fused closure. They agree at
+`-84154409757059326171875/590295810358705651712` for the scalar
+probe assignment and `-621701202392578125/9444732965739290427392`
+for the mixed assignment. They share local source tensors and
+therefore check the contraction and placement.
+
+The complete probe-class replay gives the same-chirality diagonal
+coefficient `-302980142310624755859375/1152921504606846976`,
+off-diagonal coefficient `-8433277130126953125/288230376151711744`
+and mixed coefficient `-8082115631103515625/1152921504606846976`.
+All three canonical source inputs agree exactly. Applying the
+probe weights, orbit multiplicities, both checkerboards and the
+six-shear average gives the independently checked subtotal
+`-909140718614003173828125/2251799813685248`.
+Together with the deleted-face terms, the exact two-face source
+subtotal is `-1111289291260956298828125/2251799813685248`.
+The source replacements at the two protected pure centers remain open.
