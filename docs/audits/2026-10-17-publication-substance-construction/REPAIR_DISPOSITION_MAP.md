@@ -152,8 +152,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   has independent source and census review for 160 orbits and 30,624
   words per checkerboard. Orbit 0 has exact matching contractions on
   both tree choices. Orbits 1–3 have independently checked exact
-  subtotals. The [batches through orbit 79](L1_RETARDED_SPECTRAL_INTERFACE.md#two-face-overlap-base-orbits-4879)
-  bring coverage to 80 orbits and 15,360 words per checkerboard.
+  subtotals. The [batches through orbit 111](L1_RETARDED_SPECTRAL_INTERFACE.md#two-face-overlap-base-orbits-80111)
+  bring coverage to 112 orbits and 21,504 words per checkerboard.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)
