@@ -3299,3 +3299,28 @@ of each right-hand mask for the exact wedge sign. Ten thousand
 The four-face path compares the full translated input geometry
 and frame tables before reusing the attached closure. The expanded
 four-face component sum remains to be qualified.
+
+### Gamma sum at a pure center with two protected edges
+
+The [paired-probe replay](l1_extended_protected_center.py) now sums
+all local gamma assignments at a pure center while retaining one
+curvature coordinate pair on each of its two frame edges. In all six
+cores, a protected pure center has both protected links directed
+from the passive endpoints. Its own curvature face has already
+peeled, so its fourth moment can contract the local gamma labels
+before the external probe indices are joined.
+
+The replay first eliminates the gamma tuple of one frame, then
+reuses that partial tensor across probes on the second frame.
+It uses the existing staged exterior projection. The integer
+scale before the action factorial is `48 × 192⁴ × 4⁸`.
+Summing the diagonal probes of either chirality on both edges
+reproduces the 38-entry unprobed tensor at the adjusted scale.
+Independent review reproduced a norm control and checked both
+directed anchors, multiplicities and remapping. The exhaustive
+local run computed all 1,296 probe pairs. Of these, 488 have
+nonzero rows, with 16,480 exterior entries in total.
+
+This tensor supplies the pure-center factors for the joint
+contraction. Its two open probes must still be joined to the
+residual curvature faces and to the mixed-center gamma tensors.

@@ -35,23 +35,41 @@ def center():
           sum(n > 0 for n in sizes), "second-frame labels", flush=True)
     return out,48*96**2*8**8
 
-def staged_center(A, B, moment=curvature):
-    """Contract curvature against the first frame before joining the second."""
-    out = {}
-    boundary_sizes = []
+@cache
+def center_weights(moment):
+    weights = {}
     for b in tuples:
-        boundary = {}
         orderings = set(permutations(b))
+        terms = []
         for a in tuples:
             multiplicity = factorial(4)//prod(factorial(k) for k in Counter(a).values())
             weight = sum(moment(tuple(sorted(zip(a, y)))) for y in orderings)
             if weight:
-                boundary = add(boundary, scale(A[a], multiplicity * weight))
-        boundary_sizes.append(len(boundary))
+                terms.append((a, multiplicity * weight))
+        weights[b] = terms
+    return weights
+
+
+def stage_first_frame(first, moment=curvature):
+    """Eliminate the first gamma tuple while retaining the second."""
+    return {b: add(*(scale(first[a], weight) for a, weight in terms if first[a]))
+            for b, terms in center_weights(moment).items()}
+
+
+def close_second_frame(boundary, second):
+    out = {}
+    for b, poly in boundary.items():
         # The second frame still contributes to the center mask.
-        saturated = {m: c for m, c in wedge(boundary, B[b]).items() if m & 255 == 255}
+        saturated = {m: c for m, c in wedge(poly, second[b]).items() if m & 255 == 255}
         out = add(out, saturated)
-    return out, boundary_sizes
+    return out
+
+
+def staged_center(A, B, moment=curvature):
+    """Contract curvature against the first frame before joining the second."""
+    boundary = stage_first_frame(A, moment)
+    return close_second_frame(boundary, B), list(map(len, boundary.values()))
+
 
 def pair_value():
     pol,den=center()
