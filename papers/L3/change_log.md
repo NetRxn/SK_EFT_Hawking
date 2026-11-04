@@ -62,3 +62,16 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Stage-13 redo required: no (no content changed — this records a dependency the
   draft already does not have)
 - Rationale: The August L3 redraft removed the ancillary Phase 6m Verlinde discussion. The live L3 draft does not rely on this module. The L3 four-laws obligations and separate Phase 6m result remain tracked.
+
+## 2026-11-04 — Clarify the sonic-profile parameters
+
+- Source: Balbinot, Fagnocchi and Fabbri, Phys. Rev. D 71, 064019 (2005).
+- Correction: `A_0` is the nozzle throat area and `c^2\kappa` is the
+  unperturbed sonic surface gravity in the source convention. The
+  leading-order formula and its stated range of applicability are unchanged.
+- Scoped verification: independent source review confirmed the parameter
+  definitions against the primary text. A forced canonical scratch build
+  rendered all four pages without errors, overfull boxes, or unresolved
+  references.
+- Stage-13 redo required: yes. The tracked PDF refresh and full bundle review
+  remain pending.
