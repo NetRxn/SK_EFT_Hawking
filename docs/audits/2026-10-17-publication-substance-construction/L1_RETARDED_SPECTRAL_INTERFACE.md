@@ -5875,3 +5875,17 @@ those checks and excludes factor assembly. The final join
 for nonempty blocks remains to be exercised. Classify the
 repeated lower blocks across the guarded domain before
 contracting the remaining survivors.
+
+The completed signed lower-block census covers all 3,072 keys
+of `(1,2,3,5,6,7) × range(8)³` in order
+`(q51,q71,q73,q153)`. The wall-limited prefix `[0,1600)` and
+resumed suffix `[1600,3072)` have no overlap or gap. Independent
+receipt review found 1,436 signed-empty keys, 820 support-empty
+skips with zero candidate lifts, and 816 nonempty signed maps.
+Empty signed maps exclude 46,944 additional tuples among the
+124,416 source-support survivors. This leaves 77,472 tuples
+for the remaining joins. The count makes no extra deduction
+for earlier signed batches because those can overlap these
+exclusions. Next join the upper and middle signed blocks once
+per suffix before matching the exact site-5 and site-15
+complements against the lower maps.
