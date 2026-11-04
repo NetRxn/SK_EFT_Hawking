@@ -5967,3 +5967,11 @@ expansion, but the subsequent bridge join still reached the
 cap without closing either endpoint. The scalar remains open.
 Close an endpoint in the bridge join before emitting the
 intermediate rows.
+
+A follow-up completed the missing 806 B evaluations in
+`[2688,3712)`. Independent review checked all indices against
+the previous 218 receipts and verified 1,024 distinct tuples
+with no gap or overlap. The complete interval has 880 exact
+zeros and 144 nonempty B maps. With the preceding interval,
+`[640,3712)` now has 2,688 exact zeros and 384 nonempty maps
+whose A closures remain due. The next untouched B index is 3712.
