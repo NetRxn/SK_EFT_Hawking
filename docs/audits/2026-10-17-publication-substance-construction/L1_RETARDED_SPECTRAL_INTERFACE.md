@@ -2111,3 +2111,10 @@ For the next join, add (5,0,1) and project (4,1) and (5,1)
 with the frame tensors. The (4,0,1) plaquette was already
 absorbed at U6. Using the entire earlier mixed-link strip here
 would count that plaquette twice.
+
+The right boundary can also be grouped before the mixed-frame join.
+For an off-diagonal U6 pair, add its two ordered right tensors
+coefficient by coefficient because the corresponding left tensors
+are equal. After removing zero coefficients this gives 2,083,968
+entries in 36 symmetric channels, with at most 62,208 entries in
+one channel. This is an exact reindexing with the same Haar weight.
