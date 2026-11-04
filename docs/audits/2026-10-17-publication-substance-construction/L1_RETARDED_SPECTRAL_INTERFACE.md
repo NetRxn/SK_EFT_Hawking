@@ -2251,3 +2251,16 @@ components by summing the two independent second moments directly.
 It reproduces all 144 nonzero components and every zero. Each
 expression is multilinear in X, Y, Z, and T, so the basis check
 covers arbitrary quaternion inputs in the common-chirality block.
+
+The [corrected temporal cycle replay](l1_extended_overlap_column_time.py)
+takes the full lower column dump, retains all six path labels,
+integrates the temporal and mixed links, and fixes the eight pure
+transverse links to identity. It yields 132 even-column and 30
+odd-column boundary entries, with 64 live join assignments.
+Before exterior and upper normalization, its value after the
+temporal Haar denominator is
+`475206911416848403432581016416162736561360748937216`.
+Setting the mixed links to identity as a separate control gives
+`46798847841893967231713280` in each column, matching the
+independent character replay. The unrestricted join still needs
+the pure transverse integrations.
