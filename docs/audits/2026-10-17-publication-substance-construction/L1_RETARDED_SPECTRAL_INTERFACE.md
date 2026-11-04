@@ -3324,3 +3324,31 @@ nonzero rows, with 16,480 exterior entries in total.
 This tensor supplies the pure-center factors for the joint
 contraction. Its two open probes must still be joined to the
 residual curvature faces and to the mixed-center gamma tensors.
+
+### Gamma sum at a mixed center with two residual faces
+
+The [mixed-center gamma replay](l1_extended_mixed_center_gamma.py)
+sums all local frame gamma labels while retaining one coordinate
+pair on each protected edge and one curvature-component pair on
+each residual face. The incidence check covers all six cores.
+Both exclusive axes use protected links based at the mixed center.
+The common axis has no probe and uses the existing anchor-summed
+fourth frame moment.
+
+The face weights enumerate ordered gamma and curvature occurrences
+before folding the symmetric labels. Exchanging common and exclusive
+axes reverses both Dirac traces and preserves their product.
+The integer frame scale is `192⁴ × 4⁴ × 96² × 8⁴`.
+The residual curvature link moments and the two repeated-face
+factorials enter when joining the core. Independent review
+reproduced the two norm controls, which integrate independent Haar
+faces as a check and recover the previously verified 84-entry
+mixed-center tensor. At scalar-coordinate probes the replay found
+111 live component rows with 4,278 exterior entries. At the
+mixed-chirality probes it found 291 rows with 41,904 entries.
+
+Both pure- and mixed-center gamma factors are now available. The
+joint orbit calculation still has to join their open probe and
+component indices against the residual curvature factors and
+close the exterior masks. The mixed-center replay exercises two
+probe pairs and does not enumerate the entire two-probe table.
