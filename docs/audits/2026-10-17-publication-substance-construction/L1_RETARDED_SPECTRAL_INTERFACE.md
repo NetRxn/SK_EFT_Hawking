@@ -2652,3 +2652,25 @@ The fourth step reaches the one-million-state cap after
 complete center labels even in the support-only calculation.
 The signed construction needs earlier link and exterior
 elimination. The cutoff gives no bound on the physical result.
+
+For signed aggregation, collect the actual quadratic coframe
+bilinears in a vector B. The action and source are quadratic in B,
+with a symmetric coefficient matrix C depending on the links
+and couplings. Formal Wick contraction of the auxiliary variables
+with covariance C sends `exp(J·B)` to `exp(Bᵀ C B/2)`.
+The top exterior coefficient at fixed J is a fermion determinant.
+There are four barred and four unbarred generators per site,
+so changing from grouped to site order gives even parity.
+On the extended bipartite lattice the fermion matrix has blocks
+`[0,A;−A†,0]` for real J and fixed unitary links. Its determinant
+is `det(A) det(A†)`, with A of size 32. The Wick covariance can
+be indefinite, so the fixed-J determinant sign gives no sign
+bound after Wick contraction.
+
+The [exact Wick control](l1_extended_wick_det_control.py)
+uses the actual coframe endpoint matrices on a nontrivial
+fixed link and an indefinite covariance with a diagonal
+difference source. Its 35 determinant-product monomials
+reproduce the independent exterior coefficients
+23,923,344, 1,703,040 and 324,480 at source powers zero through
+two. Full lattice Wick and Haar contractions remain open.
