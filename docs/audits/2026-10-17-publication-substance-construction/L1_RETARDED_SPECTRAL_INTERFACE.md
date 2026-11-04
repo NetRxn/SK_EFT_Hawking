@@ -2284,3 +2284,14 @@ transverse factors `48^8 * 4^4`, the sector contributes
 `55210154735836356378659569767502493257826304` before the
 remaining exterior and upper scales. This is one signed sector
 of the full sum. The other curvature labels remain to be contracted.
+
+The [curvature numerator bound](l1_extended_overlap_curvature_bound.py)
+uses the exact column coefficient sum with a conservative factor
+of two for off-diagonal coordinate pairs. Each quaternion
+coordinate and curvature vector component has absolute value at
+most one under normalized Haar measure. Squaring the column bound
+and applying the curvature denominator `48^8 * 4^4` therefore
+bounds the absolute raw numerator by a 261-bit integer. A product
+of pairwise coprime moduli greater than twice that integer allows
+unique signed reconstruction. This bound precedes exterior and
+upper normalization.
