@@ -2320,3 +2320,15 @@ interchange of the two chiral factors. Haar moments and quaternion
 multiplication are identical in the two factors. The full gauge
 contraction can therefore pair globally flipped blocks with equal
 contributions. The unrestricted block scheduler remains open.
+
+The [unrestricted scheduler](l1_extended_overlap_scheduler.py)
+enumerates 589,194 compatible coordinate and chirality blocks,
+covering 94,748,063,904 candidate signed exterior pairs. It sums
+all raw mixed placements for each block before its sparse Gram
+products. The replay with `--signature 00000000 00000000 --limit 3`
+completed 8,075,361 pairs in three blocks and returned raw subtotal
+`36470954866014950021831666988213349744589679523499452051488768`.
+This run reused the fixed left path across all three blocks.
+The scheduler provides an exact baseline and bounded slices for
+verification. The remaining cost motivates checking additional
+symmetries before running the unrestricted sum.
