@@ -5123,3 +5123,31 @@ Independent review reduced the raw retained-source and normalization
 receipt, checked the geometry and orbit weight, and reran the
 deleted-face evaluator. The remaining overlapping-upper coefficients
 require their own replay.
+
+#### Four-mixed one-face disjoint-upper subtotal
+
+The `--four-mixed-disjoint-upper` replay exited zero on IDs 0,
+8, 9, 10, 11, and 12 of the two-disjoint one-face census. Their
+multiplicities are 96, 192, 192, 192, 96, and 192 per checkerboard.
+The two protected upper edges lie in different frame planes.
+Each upper source placement replaces one plane's ordinary pair.
+The evaluator checks all 12 distinct omissions per orbit. Eleven
+retain the face and one deletes it.
+
+The `--upper-trace-controls` checks recover the unprobed ordinary
+tensor and both individual source tensors at scale `96²` with either
+chiral diagonal trace on the protected edges. Independent source
+review checked the actual plane slot remapping, the `−192` factor
+for each source placement, and the common `/6` source weight. The
+end-to-end replay includes the off-diagonal probe classes.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `204592677545270281640625/562949953421312` |
+| Retained source | `−274444149839920168921875/140737488355328` |
+| Deleted source | `−22732519727252253515625/140737488355328` |
+| Full fixed-shear numerator | `−74294167391793105609375/35184372088832` |
+
+The separately launched orbit 0 replay agrees with the full replay.
+This completes the six disjoint-upper orbits and 960 words per
+checkerboard.
