@@ -2398,3 +2398,17 @@ opposite signature also gives zero. The excluded even
 signature has strip parities (1,1,0,0), which disagree at
 unfixed nodes. This control does not impose a constraint
 at the pinned temporal root.
+
+The unrestricted run uses the verified lower-column SHA-256
+`3f15a76fc3ae9af4f3340cfc14626feebee2839c0fb25ead9cf2750ee37bf702`.
+Its half-open output ranges are [0,2) and [2,11) under
+`91bc5e71d`, [11,66) under `09552bf0d` with parity pruning,
+and [66,35084) under `4bb50163c` after the empty-strip packing
+repair. The final range is still in progress. Independent review
+replayed indices 65 and 66 across the repair boundary and matched
+negative index 10747 with plain Python-integer accumulation.
+The packing repair preserves row, column and coefficient order
+semantics. The reducer applies `48^8 * 4^4` for curvature,
+`(48 * 4^16)^2` for the lower frames, and
+`8^16 * 4^32 * 2^8` for the upper frames and repeated vertices,
+then multiplies by the squared upper-sheet factor.
