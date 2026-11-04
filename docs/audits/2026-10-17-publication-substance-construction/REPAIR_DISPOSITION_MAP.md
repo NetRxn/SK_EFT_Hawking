@@ -153,8 +153,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   has independent source and census review for 160 orbits and 30,624
   words per checkerboard. Orbit 0 has exact matching contractions on
   both tree choices. Orbits 1–3 have independently checked exact
-  subtotals. The [batches through orbit 127](L1_RETARDED_SPECTRAL_INTERFACE.md#two-face-overlap-base-orbits-112127)
-  bring coverage to 128 orbits and 24,576 words per checkerboard.
+  subtotals. The [complete overlap-base subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-four-mixed-two-face-overlap-base-subtotal)
+  covers all 160 orbits and 30,624 words per checkerboard.
   The [split disjoint-upper route](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-two-face-split-disjoint-upper-orbit-0)
   covers a separate 25-orbit family. Its first orbit has matching
   exact coefficients under both tree choices.

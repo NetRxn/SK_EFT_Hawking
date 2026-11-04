@@ -5334,6 +5334,26 @@ per checkerboard.
 The covered prefix comprises 128 orbits and 24,576 words per
 checkerboard. The final ranges are `[128,144)` and `[144,160)`.
 
+#### Complete four-mixed two-face overlap-base subtotal
+
+The final ranges `[128,144)` and `[144,160)` exited zero and
+cover 2,976 and 3,072 words per checkerboard, respectively.
+Independent exact reduction combined every raw row from orbit 0
+through orbit 159. Each representative has multiplicity 192
+except one of weight 96. The totals cover 30,624 words per
+checkerboard, with no overlaps between replay ranges.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `74607956790591063781423828125/2305843009213693952` |
+| Remote source | `−31051312008454048046727796875/288230376151711744` |
+| Upper source | `−26657370007909238984681390625/576460752303423488` |
+| Deleted source | `−6630998493398806937109375/281474976710656` |
+| Full fixed-shear numerator | `−102340278939298091685336984375/576460752303423488` |
+
+This closes the 160-orbit overlap-base replay. The disjoint-upper
+and other two-face families contribute separately.
+
 #### Four-mixed two-face split disjoint-upper orbit 0
 
 The `--four-mixed-split-disjoint-upper` route covers 25 orbits
