@@ -2685,3 +2685,15 @@ anchor orientations. Its exact determinant equals the product
 of the squared norms of the two 16 by 16 chiral determinants.
 The factors share auxiliary variables. Their Wick expectation
 must still be evaluated jointly with the link Haar integrals.
+
+The [joint local Taylor and Haar cut](l1_wick_haar_cut.cpp)
+retains all 18 action labels of a two-site, three-collapsed-axis
+lattice and integrates one Spin(4) link with seven links fixed.
+It joins complementary exterior masks while applying spherical
+moments. Modulo 65,537, the three source coefficients are
+63,737, zero and 30,791. A separate accumulation order forms
+the global exterior polynomial first and gives the same residues.
+The quadratic source join uses 270 signed monomial products.
+This pilot checks an interleaved contraction on a restricted
+cut. It leaves the other link integrations and the 16-site
+coefficient calculation open.
