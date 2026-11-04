@@ -5391,6 +5391,20 @@ multiplicity 192, totaling 1,536 words per checkerboard.
 The covered prefix comprises 17 orbits and 3,264 words per
 checkerboard. The final range is `[17,25)`.
 
+#### Complete two-face split disjoint-upper subtotal
+
+The final `[17,25)` replay exited zero. Independent reduction of
+all four receipts found each of the 25 orbits exactly once, with
+multiplicity 192 and 4,800 words per checkerboard.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `646614016397387045715234375/288230376151711744` |
+| Remote source | `−16722632967480093321140625/2251799813685248` |
+| Upper source | `−65231747951097610871859375/18014398509481984` |
+| Deleted source | `−57442652890073595703125/35184372088832` |
+| Full fixed-shear numerator | `−228423449970656038440984375/18014398509481984` |
+
 #### Four-mixed two-face same-plane disjoint-upper orbit 0
 
 The `--four-mixed-same-plane-disjoint-upper` route selects 25

@@ -155,11 +155,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   both tree choices. Orbits 1–3 have independently checked exact
   subtotals. The [complete overlap-base subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-four-mixed-two-face-overlap-base-subtotal)
   covers all 160 orbits and 30,624 words per checkerboard.
-  The [split disjoint-upper route](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-two-face-split-disjoint-upper-orbit-0)
-  covers a separate 25-orbit family. Its first orbit has matching
-  exact coefficients under both tree choices. The [batches through
-  orbit 16](L1_RETARDED_SPECTRAL_INTERFACE.md#split-disjoint-upper-orbits-116)
-  bring coverage to 17 orbits and 3,264 words per checkerboard.
+  The [complete split disjoint-upper subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-two-face-split-disjoint-upper-subtotal)
+  covers all 25 orbits and 4,800 words per checkerboard.
   The [same-plane disjoint-upper route](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-two-face-same-plane-disjoint-upper-orbit-0)
   covers the other 25 disjoint-upper orbits. Its first orbit has
   matching exact coefficients under both tree choices.
