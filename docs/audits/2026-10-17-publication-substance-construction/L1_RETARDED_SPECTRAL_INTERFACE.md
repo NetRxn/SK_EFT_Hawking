@@ -5889,3 +5889,15 @@ for earlier signed batches because those can overlap these
 exclusions. Next join the upper and middle signed blocks once
 per suffix before matching the exact site-5 and site-15
 complements against the lower maps.
+
+The first 128 tuples after signed lower-block pruning exercised
+the site-13-closed upper and middle join. Independent review
+confirmed the ordered roster and exact signed B-side agreement
+with the unfactored route for the first 16 tuples. That control
+includes four nonempty maps. Across the batch, 102 tuples
+resolved to exact zero. The other 26 produced nonempty
+source-absorbed B maps and hit the A-side product cap when
+closing site 3. The available subtotal covers the 102 zeros
+only. Separate B-side classification from A-side closure so
+the A caps do not interrupt the B census. Group by the right
+block's fixed coordinates to reuse its signed map.
