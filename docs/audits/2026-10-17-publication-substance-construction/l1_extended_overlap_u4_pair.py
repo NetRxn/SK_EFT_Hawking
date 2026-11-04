@@ -40,6 +40,23 @@ def projected_slots():
         yield slot, {key: value for key, value in boundary.items() if value}
 
 
+def symmetric_slots():
+    """Sum the ordered right tensors paired with equal left factors."""
+    pending = {}
+    for (a, b), boundary in projected_slots():
+        if a == b:
+            yield (a, b), boundary
+            continue
+        pair = (min(a, b), max(a, b))
+        if pair not in pending:
+            pending[pair] = boundary
+            continue
+        combined = Counter(pending.pop(pair))
+        combined.update(boundary)
+        yield pair, {key: value for key, value in combined.items() if value}
+    assert not pending
+
+
 if __name__ == "__main__":
     start = perf_counter()
     counts = [len(boundary) for _, boundary in projected_slots()]
@@ -47,4 +64,9 @@ if __name__ == "__main__":
     assert sum(counts) == 2_737_152
     assert max(counts) == 54_432
     print(f"{len(counts)} slots, {sum(counts):,} entries, peak {max(counts):,}")
+    symmetric_counts = [len(boundary) for _, boundary in symmetric_slots()]
+    assert (len(symmetric_counts), sum(symmetric_counts), max(symmetric_counts)) == (
+        36, 2_083_968, 62_208
+    )
+    print(f"{len(symmetric_counts)} symmetric slots, {sum(symmetric_counts):,} entries")
     print(f"Elapsed {perf_counter() - start:.2f} s")
