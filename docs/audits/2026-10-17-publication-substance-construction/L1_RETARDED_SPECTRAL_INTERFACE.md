@@ -1997,3 +1997,14 @@ frame anchor and absence of an extra factorial in collecting
 ordered coordinates into symmetric monomials. The next
 assigned contraction uses the spanning-tree reduction to
 measure the two remaining mixed cycle boundaries.
+
+An explicit tree consists of the eight (x,3) links for
+x=0,…,7, the link (0,0), and (x,1), (x,2), (x⊕2,2) for
+x=0,1. A union check confirms the 15 links connect all
+16 sites with no cycle. After fixing the tree, the two
+shared links are (4,1) and (5,1). They belong to the same
+two longitudinal plaquettes and can be projected jointly.
+Of 24 distinct plaquettes, the counts with one through four
+live ports are 2, 4, 2 and 16. A separate curvature-only
+projection at (2,0) couples four incident faces. These two
+patches are being evaluated before assembly of the motif.
