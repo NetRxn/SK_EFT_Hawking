@@ -132,7 +132,7 @@ def deleted_face_coefficient(pattern, face, normal, shared, disjoint):
     return Fraction(raw, 6 * divisor)
 
 
-def check_removals(pattern):
+def check_removals(pattern, *, expected_count=11):
     def edge(x, axis):
         return min(x, x ^ (1 << axis)), axis
 
@@ -152,7 +152,7 @@ def check_removals(pattern):
         if all(n % 2 == 0 for n in degree.values()) and support(x, first) == support(y, second):
             survivors.add(((x, first), (y, second)))
     expected = {(slot, slot) for slot in slots}
-    assert survivors == expected and len(survivors) == 11
+    assert survivors == expected and len(survivors) == expected_count
 
 
 def check_source_trace():

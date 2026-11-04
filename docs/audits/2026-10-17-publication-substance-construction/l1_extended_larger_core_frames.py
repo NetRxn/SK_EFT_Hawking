@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from collections import Counter
 from fractions import Fraction
 from functools import cache, lru_cache
-from itertools import combinations, product
+from itertools import combinations, permutations, product
 from math import factorial, prod
 
 from l1_direct_b_haar import R, add, scale, wedge
@@ -271,6 +271,52 @@ def class_face_factors(faces, tree, live):
     return edge, factors
 
 
+def six_face_joint_probe_weights(faces, slots, curvature, class_edge):
+    """Quotient the two exclusive probes under the fixed common probe's stabilizer."""
+    center = 12
+    links = ((8, 2), (12, 0), (12, 1))
+    if (set(faces) != {(9, 0, 1), (9, 0, 2), (12, 1, 3), (12, 0, 3), (15, 0, 1), (15, 1, 2)}
+            or class_edge != links[0]
+            or slots[center] != {0: (links[1], None), 1: (links[2], None), 2: ((), links[0])}):
+        raise ValueError("unsupported six-face joint-probe topology")
+    projections = [projected_keys(center, factor) for factor in curvature]
+    axes = tuple(axis for labels, _ in projections for axis in labels)
+    scopes = {labels: len(keys) for labels, keys in projections if labels}
+    if scopes != {((8, 2),): 5, ((12, 1, 3), (12, 1)): 264, ((12, 0, 3), (12, 0)): 264}:
+        raise ValueError("unsupported six-face projected probe scopes")
+    indices = tuple(axes.index(link) for link in links)
+    counts = Counter(tuple(row[i] for i in indices) for row in grouped_projection_keys(projections))
+    expected_classes = {(1, 1), (1, 2), (1, 5), (5, 5), (5, 6)}
+    if {PROBE_PAIRS[c] for c, _, _ in counts} != expected_classes:
+        raise ValueError("unsupported six-face common probe classes")
+
+    # Proper signed permutations in each chirality realize all imaginary
+    # coordinate permutations. Curvature and frame probe signs cancel
+    # after the full contraction. Preserve the selected common class and
+    # apply the ordered exclusive-pair multiplicity exactly once.
+    transforms = []
+    for a, b in product(permutations((1, 2, 3)), repeat=2):
+        coordinates = (0, *a, 4, *(4 + i for i in b))
+        transforms.append(tuple(PAIR_INDEX[tuple(sorted(coordinates[i] for i in pair))]
+                                for pair in PROBE_PAIRS))
+
+    weights = {}
+    for (c, u, v), count in counts.items():
+        orbit = {(g[u], g[v]) for g in transforms if g[c] == c}
+        if any(counts.get((c, a, b)) != count for a, b in orbit):
+            raise ValueError("joint probe orbit does not preserve projected key counts")
+        if (u, v) == min(orbit):
+            weights[c, u, v] = len(orbit)
+    original = sum(counts.values())
+    retained = sum(counts[key] for key in weights)
+    reconstructed = sum(counts[key] * weight for key, weight in weights.items())
+    if (original, retained, reconstructed, len(counts), len(weights)) != (
+        348480, 102564, 348480, 6480, 2006,
+    ):
+        raise ValueError("unexpected six-face joint probe census")
+    return center, links, weights, (original, retained, reconstructed, len(counts), len(weights))
+
+
 def tree_key_cost(faces):
     @cache
     def projection_sizes(face, active):
@@ -300,11 +346,15 @@ def grouped_projection_keys(projections):
             yield tuple(value for key in projected for value in key)
 
 
-def center_factor(center, planes, slots, faces, removed=None, *, integer_gamma=False):
+def center_factor(center, planes, slots, faces, removed=None, *, integer_gamma=False, joint_probes=None):
     projections = [projected_keys(center, factor) for factor in faces]
     axes = tuple(axis for keys, _ in projections for axis in keys)
     rows = {}
     divisor = None
+    if joint_probes is not None:
+        assert removed is None
+        links, weights = joint_probes
+        probe_indices = tuple(axes.index(link) for link in links)
     use_integer = integer_gamma and removed is None and planes[0] != planes[1]
     gamma_sum = contract_integer_gamma if use_integer else contract_gamma_products
 
@@ -314,6 +364,11 @@ def center_factor(center, planes, slots, faces, removed=None, *, integer_gamma=F
         return integer_exterior(exterior) if use_integer else exterior
 
     for key in grouped_projection_keys(projections):
+        weight = 1
+        if joint_probes is not None:
+            weight = weights.get(tuple(key[i] for i in probe_indices), 0)
+            if not weight:
+                continue
         components = {axis: value for axis, value in zip(axes, key, strict=True) if len(axis) == 3}
         probes = {axis: PROBE_PAIRS[value] for axis, value in zip(axes, key, strict=True)
                   if len(axis) == 2}
@@ -326,7 +381,7 @@ def center_factor(center, planes, slots, faces, removed=None, *, integer_gamma=F
             assert all(mask & 255 == 255 and value.is_ground for mask, value in local.items())
             mapped = remap({mask >> 8: value for mask, value in local.items()},
                            tuple(center ^ (1 << i) for i in directions))
-            rows[key] = {mask: (int(value.const().x), int(value.const().y))
+            rows[key] = {mask: (weight * int(value.const().x), weight * int(value.const().y))
                          for mask, value in mapped.items()}
     assert divisor is not None
     return (axes, rows), divisor
@@ -399,19 +454,30 @@ def close_factors(factors, sources=None):
 
 
 def contract_factors(pattern, slots, faces, tree, live, selection=None, retained=None,
-                     replacement=None, use_classes=True, *, integer_gamma=False):
+                     replacement=None, use_classes=True, *, integer_gamma=False, joint_probe_classes=False):
     assert retained is None or replacement is None
+    if joint_probe_classes and (selection is not None or replacement is not None or not use_classes):
+        raise ValueError("joint probe classes require the original six-face class-weighted core")
     if selection is None and use_classes:
         edge, curvature = class_face_factors(faces, tree, live)
         print("probe classes at", edge, "projected keys", projected_cost(curvature), flush=True)
     else:
         curvature = face_factors(faces, tree, live, selection)
+    joint_center = None
+    joint_probes = None
+    if joint_probe_classes:
+        joint_center, links, weights, census = six_face_joint_probe_weights(faces, slots, curvature, edge)
+        if retained is not None and any(center == joint_center for center, _ in retained):
+            raise ValueError("joint-probe center cannot carry a source replacement")
+        joint_probes = links, weights
+        print("joint probe census original/retained/reconstructed keys and moment counts", *census, flush=True)
     factors = list(curvature)
     divisors = {}
     for center, planes in zip(EVEN, pattern, strict=True):
         removed = replacement[1] if replacement is not None and center == replacement[0] else None
         factor, denominator = center_factor(
             center, planes, slots[center], curvature, removed, integer_gamma=integer_gamma,
+            joint_probes=joint_probes if center == joint_center else None,
         )
         factors.append(factor)
         divisors[center] = denominator
@@ -524,7 +590,7 @@ def replay_six_deletions(first_slice, deletion_index, use_classes):
 
 
 def main(first_slice=False, full_orbit=None, tree_costs=False, source=False, use_classes=True,
-         *, integer_gamma=False):
+         *, integer_gamma=False, joint_probe_classes=False):
     counts = Counter()
     completed_full = False
     for pattern, multiplicity in orbits(words_with_mixed_count(3)):
@@ -558,7 +624,7 @@ def main(first_slice=False, full_orbit=None, tree_costs=False, source=False, use
             print("full orbit", full_orbit, "projected keys", score(tree, live), flush=True)
             result = contract_factors(pattern, slots, faces, tree, live,
                                       retained=retained if source else None, use_classes=use_classes,
-                                      integer_gamma=integer_gamma)
+                                      integer_gamma=integer_gamma, joint_probe_classes=joint_probe_classes)
             if source:
                 result, numerator = result
                 print("full orbit", full_orbit, "retained numerator", numerator, flush=True)
@@ -589,12 +655,16 @@ if __name__ == "__main__":
     parser.add_argument("--retained-source", action="store_true")
     parser.add_argument("--integer-gamma", action="store_true",
                         help="accumulate grouped ordinary mixed rows with Gaussian integers")
+    parser.add_argument("--joint-probe-classes", action="store_true",
+                        help="quotient both exclusive probes on original six-face orbit 9")
     parser.add_argument("--six-deletions", action="store_true")
     parser.add_argument("--deletion-index", type=int, choices=range(6))
     parser.add_argument("--all-probes", action="store_true", help="use the direct probe sum for comparison")
     args = parser.parse_args()
     if args.deletion_index is not None and not args.six_deletions:
         parser.error("--deletion-index requires --six-deletions")
+    if args.joint_probe_classes and (args.full_orbit != 9 or args.all_probes or args.six_deletions):
+        parser.error("--joint-probe-classes requires class-weighted --full-orbit 9")
     if args.six_deletions:
         if args.full_orbit is not None or args.retained_source or args.tree_costs or args.local_controls or args.source_controls or args.integer_gamma:
             parser.error("--six-deletions is separate from original-core replays")
@@ -605,7 +675,8 @@ if __name__ == "__main__":
     if args.integer_gamma and args.full_orbit is None:
         parser.error("--integer-gamma requires --full-orbit or --full-first")
     main(args.first_slice, args.full_orbit, args.tree_costs, args.retained_source,
-         not args.all_probes, integer_gamma=args.integer_gamma)
+         not args.all_probes, integer_gamma=args.integer_gamma,
+         joint_probe_classes=args.joint_probe_classes)
     if args.local_controls:
         verify_local_tensors()
     if args.source_controls:

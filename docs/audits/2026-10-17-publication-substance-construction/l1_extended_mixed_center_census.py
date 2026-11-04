@@ -244,6 +244,46 @@ def three_mixed(source=False):
               {k: str(Fraction(2 * v, 6 * denominator)) for k, v in sorted(numerators.items())})
 
 
+def four_mixed_disjoint_peelable():
+    from l1_extended_one_face_gauge_join import check_removals
+
+    words = {pattern for pattern in words_with_mixed_count(4)
+             if all(a == b or not set(a) & set(b) for a, b in pattern)}
+    selected = [(pattern, multiplicity) for pattern, multiplicity in orbits(words)
+                if not curvature_core(pattern)]
+    assert len(selected) == 4 and sum(n for _, n in selected) == 144
+    normal, _ = staged_center(summed_fourth(0), summed_fourth(1))
+    disjoint = disjoint_center()
+    frame_scale = 96**4 * 8**8
+    denominator = (48 * frame_scale * factorial(4))**4
+    denominator *= (48**2 * frame_scale * factorial(2)**2)**4
+    total = numerator = 0
+    for index, (pattern, multiplicity) in enumerate(selected):
+        check_removals(pattern, expected_count=12)
+        faces, protected = curvature_boundary(pattern)
+        assert not faces
+        for x, planes in zip(EVEN, pattern, strict=True):
+            for plane in set(planes):
+                omitted = (x, *(a for a in AXES if a not in plane))
+                assert curvature_boundary(pattern, omitted=omitted) == (faces, protected)
+        terms = tensors(pattern, normal, {}, disjoint)
+        raw = contract(terms)
+        assert raw.is_ground and not raw.const().y
+        value = int(raw.const().x)
+        source = source_total(pattern, terms)
+        total += multiplicity * value
+        numerator += multiplicity * source
+        print("four-mixed all-disjoint peelable orbit", index, "multiplicity", multiplicity,
+              "normalization", Fraction(value, denominator),
+              "source", Fraction(source, 6 * denominator), flush=True)
+    print("four-mixed all-disjoint peelable coverage", len(selected), "orbits,",
+          sum(n for _, n in selected), "words per checkerboard")
+    print("four-mixed all-disjoint peelable normalization, both checkerboards",
+          Fraction(2 * total, denominator))
+    print("four-mixed all-disjoint peelable numerator, both checkerboards",
+          Fraction(2 * numerator, 6 * denominator))
+
+
 def main():
     patterns = swap_patterns()
     selected = defaultdict(list)
@@ -288,8 +328,11 @@ if __name__ == "__main__":
     parser.add_argument("--even-center-census", action="store_true")
     parser.add_argument("--three-mixed-normalization", action="store_true")
     parser.add_argument("--three-mixed-source", action="store_true")
+    parser.add_argument("--four-mixed-disjoint-peelable", action="store_true")
     args = parser.parse_args()
-    if args.three_mixed_normalization or args.three_mixed_source:
+    if args.four_mixed_disjoint_peelable:
+        four_mixed_disjoint_peelable()
+    elif args.three_mixed_normalization or args.three_mixed_source:
         three_mixed(args.three_mixed_source)
     elif args.even_center_census:
         print("balanced words by mixed-center count", even_center_counts())

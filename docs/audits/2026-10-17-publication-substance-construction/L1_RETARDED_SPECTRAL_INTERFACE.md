@@ -4976,3 +4976,40 @@ class-weighted source receipt. This reproduces the normalization,
 remote source and upper source with the direct sum over probes,
 including the exact weights for both checkerboards. It qualifies
 the comparison for this representative.
+
+#### Complete six-face deletion subtotal
+
+Deletion 5 exited zero. Omitting `(15,1,2)` produces raw fixed-shear
+source `−915708720021982470703125/18446744073709551616` and weighted
+subtotal `−2747126160065947412109375/144115188075855872`. Independent
+review checked the geometry and factor of 384 for all six deletion
+receipts. Their combined value is `−32331342365480126953125/281474976710656`.
+The original six-face core contributes separately.
+
+#### Joint probe classes for the original six-face core
+
+The opt-in `--full-orbit 9 --joint-probe-classes` path groups the
+ordered exclusive probes by the stabilizer of the existing common
+probe representative. It applies each orbit weight once. The
+independent census verified 2,006 representatives for 6,480 probe
+triples. The largest factor has 102,564 projected keys after
+grouping, with weights recovering all 348,480 keys.
+
+A rotated fixed-label pair reproduced the exact nonzero normalization
+`27130079114482421875/2361183241434822606848` and one retained source
+`−134816675478515625/18446744073709551616` at center 0, plane `(0,1)`.
+That control covers one insertion. The full quotient replay and
+comparison with the existing path are pending.
+
+#### Four-mixed all-disjoint peelable subtotal
+
+The `--four-mixed-disjoint-peelable` replay exited zero. Its four
+orbit weights are 48, 48, 24 and 24 per checkerboard. Independent
+enumeration recovered 144 fully peelable words from 24,300 balanced
+all-disjoint words. Each representative has 12 source variants and
+each omission preserves protection and full peeling. Independent
+review checked the normalization scale, fixed-shear factor and
+checkerboard weighting, reproducing the both-checkerboard
+normalization `840586565680766015625/70368744177664` and numerator
+`−161126273244493265625/2199023255552`. This covers four of the
+1,314 four-mixed representatives.
