@@ -2746,9 +2746,32 @@ c++ -std=c++20 -O3 l1_wick_haar_cut.cpp -o /tmp/l1-wick-haar-power
 /tmp/l1-wick-haar-power 2 1 1 65537 256 1
 ```
 
-Next, retain a polynomial in the second link after projecting the first,
-then compare sequential elimination against these exact coefficients.
-Extending to the full lattice requires revisiting exponent and
+The same paired replay now also projects the site-0 link first,
+accumulating a polynomial in the site-1 link before applying its Haar
+moment. At the first prime and embedding, 334,508, 58,104 and 41,144
+signed products survive the first projection. They combine into 401,
+919 and 578 nonzero monomials, respectively. The executable checks
+equality to the direct joint projection before emitting each CRT
+residue, including the withheld prime. The one-link invocation still
+gives its original raw residues. Independent review reproduced the
+residues and boundary counts and verified the exterior sign at
+saturation. This cut closes both Wick centers and saturates all
+exterior masks before the first link projection. A full-lattice cut
+through an unfinished Wick center must also retain unmatched
+auxiliary indices.
+
+On the full lattice, an elimination schedule must close a link only
+after its last contributing factor and project a site onto its top
+exterior component only after its last contributing factor. Until
+then the boundary must retain both chiral moment exponents on each
+open directed link and the actual exterior occupancy on each open
+site, with signs carried in the coefficients. Keep source order and
+its signed insertion weights through the join. A support count that
+keeps only parity and degrees cannot perform this contraction. The
+next full-geometry control is to compare this elimination order with
+the existing selected 16-site normalization motif before admitting
+all center-plane factors.
+Extending the staged calculation requires revisiting exponent and
 denominator bounds and evaluating the joint contraction over the
 remaining links and centers. The physical susceptibility and its
 window remain open.

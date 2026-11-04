@@ -52,12 +52,30 @@ struct Paired {
             for(auto i=e.begin();i!=e.end();)if(i->second.empty())i=e.erase(i);else++i;
     }
 };
+// Project the low eight coordinates, keeping a polynomial in the second link.
+void project_first_link(Poly& boundary,const Ext& A,const Ext& B,uint64_t& live){
+    for(const auto& [mask,p]:A){
+        unsigned complement=mask^65535;
+        auto it=B.find(complement);
+        if(it==B.end())continue;
+        int parity=sign(mask,complement);
+        for(auto [k,v]:p)for(auto [l,w]:it->second){
+            Key combined=k+l;
+            int moment=haar(combined&0xffffffffULL);
+            if(moment){
+                ++live;
+                accumulate(boundary,combined>>32,1LL*parity*v*w*moment);
+            }
+        }
+    }
+}
 int main(int argc,char**argv){
     int active=argc>1?stoi(argv[1]):2,seed=argc>2?stoi(argv[2]):1;
     bool dense=argc>3?stoi(argv[3]):false;
     if(argc>4)P=stoi(argv[4]);
     if(argc>5)I=stoi(argv[5]);
-    setup(argc>6 && stoi(argv[6]) ? -1 : 0,active,seed,dense);
+    bool two_links=argc>6 && stoi(argv[6]);
+    setup(two_links ? -1 : 0,active,seed,dense);
     Paired left(0),right(1);
     array<Paired*,2> side{&left,&right};
     int fact[5]={1,1,2,6,24};
@@ -86,6 +104,17 @@ int main(int argc,char**argv){
         int val=0;uint64_t products=0;
         for(int i=0;i<=4-h;++i)for(int j=0;j<=h;++j)
             val=mod(val+haar_join(left.out[i][j],right.out[4-h-i][h-j],products));
+        if(two_links){
+            Poly boundary;
+            uint64_t live=0;
+            for(int i=0;i<=4-h;++i)for(int j=0;j<=h;++j)
+                project_first_link(boundary,left.out[i][j],right.out[4-h-i][h-j],live);
+            int staged=0;
+            for(auto [k,v]:boundary)staged=mod(staged+1LL*v*haar(k<<32));
+            if(staged!=val)throw runtime_error("staged versus joint Haar mismatch");
+            cout<<"staged "<<h<<' '<<staged<<" first live "<<live
+                <<" boundary terms "<<boundary.size()<<endl;
+        }
         cout<<"coefficient "<<h<<' '<<val<<" products "<<products<<" moments "<<moment_cache.size()<<endl;
     }
 }
