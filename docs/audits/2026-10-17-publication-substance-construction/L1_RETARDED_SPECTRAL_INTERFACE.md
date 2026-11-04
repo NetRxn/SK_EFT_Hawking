@@ -5334,6 +5334,27 @@ per checkerboard.
 The covered prefix comprises 128 orbits and 24,576 words per
 checkerboard. The final ranges are `[128,144)` and `[144,160)`.
 
+#### Four-mixed two-face split disjoint-upper orbit 0
+
+The `--four-mixed-split-disjoint-upper` route covers 25 orbits
+and 4,800 words per checkerboard. Each disjoint upper has one
+protected incoming edge in each of its two frame planes. Both
+tree choices pass the census and all 12 omission guards.
+The other 25 disjoint-upper geometries require a same-plane
+upper tensor and are outside this replay.
+
+Orbit 0 with `--probe-classes` gave identical receipts with
+and without `--reverse-upper`. Independent exact reduction
+checked the factor of `2 × 192` and each source component.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `274791598594085450390625/1125899906842624` |
+| Remote source | `−113728389777910330171875/140737488355328` |
+| Upper source | `−111149268703484839453125/281474976710656` |
+| Deleted source | `−6260468676577400390625/35184372088832` |
+| Full fixed-shear numerator | `−388689797671924702921875/281474976710656` |
+
 ### Exact temporal transfer control for the scalar probe
 
 Keep periodic spatial forward differences and let the temporal

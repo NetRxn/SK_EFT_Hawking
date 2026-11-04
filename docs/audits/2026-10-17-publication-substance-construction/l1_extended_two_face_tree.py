@@ -162,7 +162,8 @@ def close_channels(base, base_sites, keep, env, upper_sites, terms):
 
 
 def coefficient(pattern, faces, protected, base, reverse=False, source=False, omitted=None,
-                probe_classes=False, *, environment=remote_environment, close=close_channels):
+                probe_classes=False, *, environment=remote_environment, close=close_channels,
+                upper_builder=upper_factor):
     assert not (source and omitted is not None)
     site, = {f[0] for f in faces}
     p, q = pattern[EVEN.index(site)]
@@ -181,7 +182,7 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False, om
         base_divisor = SCALE**8 * 4**8 * factorial(2)**2
     def upper(side, *, source=False, omitted=None):
         face = ordered[side]
-        return upper_factor(pattern, face, faces[face], protected, reverse, source, omitted,
+        return upper_builder(pattern, face, faces[face], protected, reverse, source, omitted,
                             probe_classes=probe_classes and side == 0)
 
     left, right = upper(0), upper(1)
@@ -294,13 +295,17 @@ def main(control, reverse, source, orbit, all_protected, probe_classes, orbit_ra
 
 
 def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None, *,
-                            component_remotes=False, compare_component_remotes=False):
-    from l1_extended_one_face_gauge_join import check_removals, deleted_face_coefficient
+                            component_remotes=False, compare_component_remotes=False,
+                            split_disjoint_upper=False, census_only=False):
+    from l1_extended_one_face_gauge_join import (
+        check_removals, deleted_face_coefficient, disjoint_upper_factor,
+    )
     from l1_two_face_remote_components import ComponentRemotes
 
-    start, stop = orbit_range or ((orbit, orbit + 1) if orbit is not None else (0, 160))
-    if not 0 <= start < stop <= 160:
-        raise ValueError(f"orbit interval [{start}, {stop}) exceeds the 160 eligible orbits")
+    expected = 25 if split_disjoint_upper else 160
+    start, stop = orbit_range or ((orbit, orbit + 1) if orbit is not None else (0, expected))
+    if not 0 <= start < stop <= expected:
+        raise ValueError(f"orbit interval [{start}, {stop}) exceeds the {expected} eligible orbits")
     eligible = []
     kinds = Counter()
     disjoint_remote_count = 0
@@ -318,7 +323,14 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
             continue
         uppers = [upper_links(face, edges, protected) for face, edges in faces.items()]
         upper_planes = [pattern[EVEN.index(center)] for center, _ in uppers]
-        if any(not set(a) & set(b) for a, b in upper_planes):
+        disjoint_uppers = [
+            (planes, incoming) for planes, (_, incoming) in zip(upper_planes, uppers, strict=True)
+            if not set.intersection(*map(set, planes))
+        ]
+        if bool(disjoint_uppers) != split_disjoint_upper:
+            continue
+        if any(any(sum(axis in plane for _, axis in incoming) != 1 for plane in planes)
+               for planes, incoming in disjoint_uppers):
             continue
         assert first != last and len(set.intersection(*faces.values())) == 1
         assert set.intersection(*faces.values()) == free
@@ -338,15 +350,47 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
                               if x not in coupled)
         assert remote_disjoint in (0, 1)
         disjoint_remote_count += remote_disjoint
-        kinds[sum(a != b for a, b in upper_planes)] += 1
+        kinds[len(disjoint_uppers), sum(a != b for a, b in upper_planes)] += 1
         eligible.append((pattern, multiplicity, faces, protected, remote_disjoint))
-    assert len(eligible) == 160 and sum(row[1] for row in eligible) == 30624
-    assert kinds == {2: 93, 1: 64, 0: 3} and disjoint_remote_count == 1
+    assert len(eligible) == expected
+    if split_disjoint_upper:
+        assert all(row[1] == 192 for row in eligible)
+        assert kinds == {(1, 2): 19, (1, 1): 5, (2, 2): 1} and not disjoint_remote_count
+    else:
+        assert sum(row[1] for row in eligible) == 30624
+        assert kinds == {(0, 2): 93, (0, 1): 64, (0, 0): 3} and disjoint_remote_count == 1
 
     selected = eligible[start:stop]
-    label = f"four-mixed two-face overlap-base [{start}, {stop})"
+    family = "split-disjoint-upper" if split_disjoint_upper else "overlap-base"
+    label = f"four-mixed two-face {family} [{start}, {stop})"
     print(label, "coverage", len(selected), "orbits,",
           sum(row[1] for row in selected), "words per checkerboard", flush=True)
+
+    def check_deletions(pattern, faces, protected):
+        check_removals(pattern, expected_count=12)
+        omissions = {(x, *(axis for axis in AXES if axis not in plane))
+                     for x, planes in zip(EVEN, pattern, strict=True) for plane in set(planes)}
+        assert len(omissions) == 12 and faces.keys() <= omissions
+        for omitted in omissions:
+            assert curvature_boundary(pattern, omitted=omitted) == (
+                {} if omitted in faces else faces, protected,
+            )
+
+    if census_only:
+        for pattern, _, faces, protected, _ in selected:
+            check_deletions(pattern, faces, protected)
+        print(label, "geometry and omission census passed", flush=True)
+        return
+
+    def build_upper(pattern, face, edges, protected, reverse, source, omitted, *, probe_classes):
+        center, _ = upper_links(face, edges, protected)
+        first, second = pattern[EVEN.index(center)]
+        if set(first) & set(second):
+            return upper_factor(pattern, face, edges, protected, reverse, source, omitted,
+                                probe_classes=probe_classes)
+        assert split_disjoint_upper and omitted is None
+        return disjoint_upper_factor(pattern, face, edges, protected, reverse, source,
+                                     probe_classes=probe_classes)
     remotes = ComponentRemotes() if component_remotes or compare_component_remotes else None
     if compare_component_remotes:
         if any(row[-1] for row in selected):
@@ -383,19 +427,13 @@ def four_mixed_overlap_base(reverse, probe_classes, orbit=None, orbit_range=None
 
     totals = [Fraction() for _ in range(4)]
     for index, (pattern, multiplicity, faces, protected, remote_disjoint) in enumerate(selected, start):
-        check_removals(pattern, expected_count=12)
-        omissions = {(x, *(axis for axis in AXES if axis not in plane))
-                     for x, planes in zip(EVEN, pattern, strict=True) for plane in set(planes)}
-        assert len(omissions) == 12 and faces.keys() <= omissions
-        for omitted in omissions:
-            assert curvature_boundary(pattern, omitted=omitted) == (
-                {} if omitted in faces else faces, protected,
-            )
+        check_deletions(pattern, faces, protected)
         environment = disjoint_environment if remote_disjoint else (
             remotes.environment if remotes is not None else remote_environment
         )
         norm, remote, upper = coefficient(pattern, faces, protected, base, reverse, source=True,
-                                          probe_classes=probe_classes, environment=environment)
+                                          probe_classes=probe_classes, environment=environment,
+                                          upper_builder=build_upper)
         deleted = sum(deleted_face_coefficient(pattern, face, normal, shared, disjoint) for face in faces)
         print(label, "orbit", index, "multiplicity", multiplicity, "normalization", norm,
               "remote source", remote, "upper source", upper, "deleted source", deleted, flush=True)
@@ -414,6 +452,9 @@ if __name__ == "__main__":
     mode.add_argument("--control-source", action="store_true", help="replay the two-mixed retained-source controls")
     mode.add_argument("--four-face-deleted-source", action="store_true")
     mode.add_argument("--four-mixed-overlap-base", action="store_true")
+    mode.add_argument("--four-mixed-split-disjoint-upper", action="store_true")
+    parser.add_argument("--census-only", action="store_true",
+                        help="check four-mixed geometry and omissions without evaluating tensors")
     parser.add_argument("--reverse-upper", action="store_true")
     selection = parser.add_mutually_exclusive_group()
     selection.add_argument("--orbit", type=int, help="evaluate a single numbered orbit")
@@ -434,11 +475,17 @@ if __name__ == "__main__":
         parser.error("remote component modes require --four-mixed-overlap-base")
     if args.compare_component_remotes and args.orbit is None and args.orbit_range is None:
         parser.error("--compare-component-remotes requires an explicit orbit selection")
-    if args.four_mixed_overlap_base:
+    if args.census_only and not (args.four_mixed_overlap_base or args.four_mixed_split_disjoint_upper):
+        parser.error("--census-only requires a four-mixed two-face mode")
+    if args.census_only and (args.component_remotes or args.compare_component_remotes):
+        parser.error("--census-only does not evaluate remote components")
+    if args.four_mixed_overlap_base or args.four_mixed_split_disjoint_upper:
         four_mixed_overlap_base(
             args.reverse_upper, args.probe_classes, args.orbit, args.orbit_range,
             component_remotes=args.component_remotes,
             compare_component_remotes=args.compare_component_remotes,
+            split_disjoint_upper=args.four_mixed_split_disjoint_upper,
+            census_only=args.census_only,
         )
     elif args.four_face_deleted_source:
         if args.orbit is not None or args.orbit_range is not None:

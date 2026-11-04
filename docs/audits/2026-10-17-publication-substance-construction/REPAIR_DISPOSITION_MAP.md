@@ -155,6 +155,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   both tree choices. Orbits 1–3 have independently checked exact
   subtotals. The [batches through orbit 127](L1_RETARDED_SPECTRAL_INTERFACE.md#two-face-overlap-base-orbits-112127)
   bring coverage to 128 orbits and 24,576 words per checkerboard.
+  The [split disjoint-upper route](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-two-face-split-disjoint-upper-orbit-0)
+  covers a separate 25-orbit family. Its first orbit has matching
+  exact coefficients under both tree choices.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)
