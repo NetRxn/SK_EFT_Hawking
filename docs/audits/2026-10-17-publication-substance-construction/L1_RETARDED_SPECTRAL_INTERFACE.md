@@ -2217,3 +2217,19 @@ channel, the exterior signs and the denominator. The two stages
 performed 216,702,848 and 1,351,772,160 products without checked
 overflow or imaginary output. The acceptance covers the exterior
 contraction through the column boundary.
+
+For the curvature-only join, incidence counting gives four
+private degree-four axis-0 links per column. Each of the 16
+transverse links occurs once in each column before tree fixing.
+Group the faces into four strips along the undirected transverse
+square. In each strip the two pure transverse links A and B
+appear in faces of the form `P=A† X B Y` and `Q=B† Z A T`.
+With normalized Haar measure set `A=X B Y P†`. Then
+`Q=B† Z X B Y P† T`. Averaging the conjugation over B gives
+the scalar part of ZX in each chiral quaternion factor.
+For common chirality the projected vector-coordinate pair is
+`-scalar(ZX) * vec_j(Y e_i T) / 4`, by the second moment of P.
+Opposite chirality integrates to zero by independence and
+centering. This removes the pure transverse pair analytically
+before the time-link cycle. Exact coordinate controls and the
+remaining network contraction are pending.
