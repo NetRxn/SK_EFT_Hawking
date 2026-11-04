@@ -1766,3 +1766,25 @@ as c, giving a possible dimensional matching observable if the
 mass is fixed independently. The effective actions leave that
 microscopic normalization to be derived.
 [Vestigial gravity and Maxwell proposal, Eq. (19)](https://arxiv.org/abs/2312.09435v2)
+
+### Polynomial scalar coupling about a nondegenerate background
+
+On the finite Euclidean lattice, take a positive body metric
+ḡ and a degree-four even Grassmann perturbation δg built from
+the composite. For X = ḡ⁻¹δg, every entry of X is nilpotent
+in the finite Grassmann algebra. The inverse of ḡ+δg is the
+terminating Neumann series in X times ḡ⁻¹. Its volume is
+√det(ḡ) times the terminating binomial expansion of
+√det(I+X). These define an exact polynomial matter coupling
+with a positive body scalar quadratic form for positive mass.
+At each order the scalar integrals reduce to Gaussian moments.
+
+At first order the kinetic density varies by
+√det(ḡ)[tr(X) ḡ⁻¹/2 − ḡ⁻¹δg ḡ⁻¹], and the volume
+varies by √det(ḡ) tr(X)/2. For a traceless perturbation
+δg = λ D P at ḡ = I this gives the joint term λ D O
+in the scalar exponent, with O the probe shear vertex
+defined above. This constructs a lattice family in which
+the joint-response test applies. The positive body and λ
+are inputs to the family. Deriving the physical background
+and matching λ to the gravity source remain B3 obligations.
