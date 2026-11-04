@@ -5013,3 +5013,29 @@ checkerboard weighting, reproducing the both-checkerboard
 normalization `840586565680766015625/70368744177664` and numerator
 `−161126273244493265625/2199023255552`. This covers four of the
 1,314 four-mixed representatives.
+
+#### Three-mixed subtotal before the original six-face contribution
+
+The exact census has 227 orbits and 41,760 words per checkerboard.
+The completed non-six-face cores cover 226 orbits and 41,568 words.
+Across both checkerboards their normalization is
+`238543309704664272839141337890625/4722366482869645213696` and
+their full numerator is `−80883502865629918910161751953125/295147905179352825856`.
+Adding all six deletion terms once gives the current numerator
+`−80917404735282144599761751953125/295147905179352825856`.
+Independent review recomputed each constituent subtotal. The remaining
+original core contributes its normalization and five retained
+source insertions, each weighted by 384. Do not add the six
+deletions again.
+
+#### Four-mixed two-disjoint peelable subtotal
+
+The `--four-mixed-peelable 2` replay exited zero with all 13
+representatives, covering 1,536 words per checkerboard. Both-board
+normalization is `9181537442128001953125/17592186044416` and the
+fixed-shear source numerator is `−53309602963571608265625/17592186044416`.
+The replay checks 12 source removal types per representative.
+The existing all-disjoint command remains an alias for stratum 4.
+Independent review reproduced the census, all row weights, exact
+receipt sums and source-removal parity. It checked the original
+default and alias dispatch without rerunning the contractions.
