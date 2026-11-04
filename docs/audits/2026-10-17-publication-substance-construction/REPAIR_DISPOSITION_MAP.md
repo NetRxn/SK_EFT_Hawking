@@ -67,10 +67,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   for all 80 free-link orbits. The
   [tree join control](L1_RETARDED_SPECTRAL_INTERFACE.md#two-face-tree-join-control-discrepancy)
   exposed crossed base probes in the earlier fused calculation.
-  Revalidate with unequal-probe direct controls, replay the corrected
-  fused normalization and both retained-face source cases, and
-  reconcile the affected two-mixed totals before admitting the
-  three-mixed normalization.
+  Unequal-probe direct controls and the corrected fused probe sum
+  reconcile the two-mixed normalization. Replay both retained-face
+  source cases before closing the corrected two-mixed numerator.
+  Complete the 80-orbit tree replay for the three-mixed normalization.
   The all-protected case requires two live holonomies at a disjoint mixed base. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 

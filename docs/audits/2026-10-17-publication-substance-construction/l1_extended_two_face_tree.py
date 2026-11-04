@@ -14,21 +14,23 @@ from l1_extended_mixed_center_gamma import COMPONENTS, gamma_block, opposite_cen
 from l1_extended_mixed_curvature_core import PAIRS, face_tensor
 from l1_extended_mixed_frame_moment import SCALE
 from l1_extended_opposed_source import summed_fourth
-from l1_extended_protected_center import protected_center
+from l1_extended_protected_center import protected_center, summed_protected_source
 from l1_extended_two_face_gamma_join import pure_links, remote_environment
 from l1_extended_two_mixed_centers import remap
 
 
 @cache
-def upper_tensor(pure, positions, probe):
+def upper_tensor(pure, positions, probe, source):
     if pure:
-        return protected_center((probe, None) if positions == (1, 2) else (None, probe))
+        tensor = summed_protected_source if source else protected_center
+        return tensor((probe, None) if positions == (1, 2) else (None, probe))
+    assert not source
     live, fixed = positions
     probes = tuple(probe if i == live else None for i in (1, 2, 3))
     return opposite_center(probes, fixed=(fixed,))
 
 
-def upper_factor(pattern, face, edges, protected, reverse):
+def upper_factor(pattern, face, edges, protected, reverse, source=False):
     upper, _, center = pure_links(face, edges, protected)
     if reverse:
         upper = upper[::-1]
@@ -46,7 +48,7 @@ def upper_factor(pattern, face, edges, protected, reverse):
     rows = {}
     for components in COMPONENTS:
         terms = face_tensor(face, upper[:1], fixed, components)
-        poly = add(*(scale(upper_tensor(p == q, positions, PAIRS[i]), weight)
+        poly = add(*(scale(upper_tensor(p == q, positions, PAIRS[i], source), weight)
                      for (i,), weight in terms.items()))
         if poly:
             assert all(mask & 255 == 255 for mask in poly)
@@ -57,7 +59,7 @@ def upper_factor(pattern, face, edges, protected, reverse):
     return center, sites, rows, divisor
 
 
-def coefficient(pattern, faces, protected, base, reverse=False):
+def coefficient(pattern, faces, protected, base, reverse=False, source=False):
     site, = {f[0] for f in faces}
     p, q = pattern[EVEN.index(site)]
     common, = set(p) & set(q)
@@ -68,51 +70,80 @@ def coefficient(pattern, faces, protected, base, reverse=False):
     assert len(coupled) == 3
     keep, env = remote_environment(pattern, coupled)
     sites = tuple(site ^ (1 << i) for i in (a, common, b))
-    channels = tuple(product(left[2], right[2]))
+    changed = None
+    if source:
+        changed = [upper_factor(pattern, face, faces[face], protected, reverse, source=True)[2]
+                   for face in ordered]
+    channels = tuple(product(set(left[2]) | (changed[0].keys() if changed else set()),
+                             set(right[2]) | (changed[1].keys() if changed else set())))
     first = mixed_rows(base, sites, channels)
-    dual = dual_mixed(keep, env, first, set(left[1]) | set(right[1]))
-    total = imag = 0
-    for x, y in channels:
-        row = wedge(left[2][x], right[2][y])
-        values = {m: (int(v.const().x), int(v.const().y)) for m, v in row.items()}
-        re, im = dot(dual[x, y], values)
-        total += re
-        imag += im
-    assert imag == 0
+    upper_sites = set(left[1]) | set(right[1])
+    dual = dual_mixed(keep, env, first, upper_sites)
+
+    def close(lhs, rhs, boundary):
+        total = imag = 0
+        for x, y in product(lhs, rhs):
+            row = wedge(lhs[x], rhs[y])
+            values = {m: (int(v.const().x), int(v.const().y)) for m, v in row.items()}
+            re, im = dot(boundary[x, y], values)
+            total += re
+            imag += im
+        assert imag == 0
+        return total
+
+    total = close(left[2], right[2], dual)
     divisor = left[3] * right[3] * SCALE**4 * 4**4 * 96**2 * 8**4 * factorial(2)**2
     for x, (p, q) in zip(EVEN, pattern, strict=True):
         if x not in coupled:
             divisor *= 96**4 * 8**8
             divisor *= 48 * factorial(4) if p == q else 48**2 * factorial(2)**2
-    return Fraction(total, divisor)
+    normal = Fraction(total, divisor)
+    if changed is None:
+        return normal
+    source_keep, source_env = remote_environment(pattern, coupled, source=True)
+    assert source_keep == keep
+    remote_dual = dual_mixed(keep, source_env, first, upper_sites)
+    remote = close(left[2], right[2], remote_dual)
+    # A source pair replaces two of the four slots at exactly one upper center.
+    upper = -24 * (close(changed[0], right[2], dual) + close(left[2], changed[1], dual))
+    return normal, Fraction(remote, 6 * divisor), Fraction(upper, 6 * divisor)
 
 
-def main(control, reverse):
+def main(control, reverse, source):
     words = swap_patterns() if control else words_with_mixed_count(3)
     base = cache(gamma_block(None, None, summed_fourth(1)))
     total = Fraction()
     count = population = 0
+    remote = upper = Fraction()
     for pattern, multiplicity in orbits(words):
         faces, protected = curvature_boundary(pattern)
         if len(faces) != 2 or len(set.union(*faces.values()) - protected) != 1:
             continue
-        result = coefficient(pattern, faces, protected, base, reverse)
+        result = coefficient(pattern, faces, protected, base, reverse, source)
+        if source:
+            result, remote_row, upper_row = result
+            remote += 2 * multiplicity * remote_row
+            upper += 2 * multiplicity * upper_row
+            print("source orbit", count, multiplicity, remote_row, upper_row, flush=True)
         print(count, multiplicity, result, flush=True)
         total += 2 * multiplicity * result
         count += 1
         population += multiplicity
     assert (count, population) == ((3, 576) if control else (80, 15072))
     print("candidate normalization, both checkerboards", total, flush=True)
+    if source:
+        print("candidate retained source, both checkerboards", remote, upper, flush=True)
     if control:
-        expected = Fraction(8998309550740190185546875, 72057594037927936)
+        expected = Fraction(8997242104792619384765625, 72057594037927936)
         assert total == expected, f"tree control differs from fused control by {total - expected}"
 
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
-    mode.add_argument("--control", action="store_true", help="compare to the established fused subtotal (default)")
+    mode.add_argument("--control", action="store_true", help="compare to the corrected fused subtotal (default)")
     mode.add_argument("--candidate", action="store_true", help="emit provisional three-mixed orbit values")
+    mode.add_argument("--control-source", action="store_true", help="replay the two-mixed retained-source controls")
     parser.add_argument("--reverse-upper", action="store_true")
     args = parser.parse_args()
-    main(not args.candidate, args.reverse_upper)
+    main(not args.candidate, args.reverse_upper, args.control_source)

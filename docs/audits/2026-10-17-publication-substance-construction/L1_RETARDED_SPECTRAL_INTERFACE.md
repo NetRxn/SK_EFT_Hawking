@@ -3941,3 +3941,33 @@ The correction affects the earlier fused normalization and the
 remote and protected retained-face source replays. Their totals
 and the combined two-mixed totals that include them require fresh
 evaluation. Deleted-face terms use the separate peeling calculation.
+
+#### Corrected two-face normalization
+
+All three unequal-probe comparisons passed. The two nonzero
+direct and fused values were
+`240622240501324951171875/37778931862957161709568` and
+`−107288360595703125/4722366482869645213696`. After crossing the
+base probes, the alternate tree with both live links at the base
+reproduced the upper-live value on the first orbit.
+
+The corrected fused class replay gives
+`999553002659690185546875/73786976294838206464` for each chiral
+diagonal, `15642642974853515625/18446744073709551616` for each
+chiral off-diagonal, and
+`729823150634765625/2305843009213693952` for the mixed class.
+The weighted sum matches the tree value
+`999693567199179931640625/9223372036854775808` on the first
+representative. The three tree values agree exactly, so the
+corrected subtotal across both checkerboards is
+`8997242104792619384765625/72057594037927936`.
+Adding the peelable and four-face normalization gives the corrected
+balanced two-mixed normalization
+`1758824638141336633500732421875/73786976294838206464`.
+
+The retained-source replay uses the same corrected probe mapping.
+The tree control separately replaces one remote or pure upper
+center at a time. The upper replacement carries `−2 × 4!/2!`,
+and the remote boundary already carries the corresponding source
+weights. Both source subtotals are divided by six for a fixed
+shear. The source replays are pending.
