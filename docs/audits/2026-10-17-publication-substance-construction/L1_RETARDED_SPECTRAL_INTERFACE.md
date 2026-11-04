@@ -5901,3 +5901,15 @@ closing site 3. The available subtotal covers the 102 zeros
 only. Separate B-side classification from A-side closure so
 the A caps do not interrupt the B census. Group by the right
 block's fixed coordinates to reuse its signed map.
+
+The next B-only batch evaluates 512 tuples disjoint from all
+128 previous attempts. It groups them by the right block's
+coordinates. Independent review verified 437 exact empty
+maps and 75 nonempty maps, with no B-side caps. The nonempty
+results contain eight distinct signed maps and five primitive
+maps under signed integer rescaling. The grouping compares
+full coefficient tuples. Digests identify the receipt rows.
+B-only contraction took 0.90 seconds after setup. A scalar
+can reuse a primitive contraction only after verifying the
+corresponding frozen A factors or retaining their coordinate
+dependence in the sum.
