@@ -2719,3 +2719,36 @@ coefficients are 385,114,112, 1,081,344 and 88,408,064,
 all real. This resolves the exact one-link dense control.
 The unrestricted lattice still requires the joint contraction
 of the other links and centers.
+
+### Two independent link integrations
+
+On the same dense cut, the paired replay with the final argument set to
+`1` integrates both axis-2 links, at sites 0 and 1, leaving six fixed.
+It retains all 18 action labels. Four independent sphere moment factors
+replace two. Each quartic factor uses at most two occurrences of active
+links, so the top exterior coefficient has total active degree at most
+eight. Sixteen four-bit exponents suffice for this cut.
+
+The paired local join and the separate global exterior accumulation
+give residues 8,647, 56 and 29,951 modulo 65,537. The rational lift
+(`--two-links`) gives real unit coefficients **287,430,656, 229,376 and
+83,791,872**. The four-sphere denominator LCM is 11,520 and the
+176-bit reconstruction passes the withheld prime 65,293. Independent
+review recompiled both evaluators, checked the exponent and denominator
+bounds, and reproduced the residues and exact coefficients.
+
+Replay with a C++20 compiler, from this directory:
+
+```sh
+c++ -std=c++20 -O3 l1_wick_haar_paired.cpp -o /tmp/l1-wick-haar-paired
+python3 l1_wick_haar_cut_crt.py /tmp/l1-wick-haar-paired --two-links
+c++ -std=c++20 -O3 l1_wick_haar_cut.cpp -o /tmp/l1-wick-haar-power
+/tmp/l1-wick-haar-power 2 1 1 65537 256 1
+```
+
+Next, retain a polynomial in the second link after projecting the first,
+then compare sequential elimination against these exact coefficients.
+Extending to the full lattice requires revisiting exponent and
+denominator bounds and evaluating the joint contraction over the
+remaining links and centers. The physical susceptibility and its
+window remain open.

@@ -57,7 +57,7 @@ int main(int argc,char**argv){
     bool dense=argc>3?stoi(argv[3]):false;
     if(argc>4)P=stoi(argv[4]);
     if(argc>5)I=stoi(argv[5]);
-    setup(0,active,seed,dense);
+    setup(argc>6 && stoi(argv[6]) ? -1 : 0,active,seed,dense);
     Paired left(0),right(1);
     array<Paired*,2> side{&left,&right};
     int fact[5]={1,1,2,6,24};

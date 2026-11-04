@@ -1,5 +1,6 @@
 """Certified rational lift of both Gaussian-integer embeddings of the cut."""
 from fractions import Fraction
+from itertools import product
 from math import lcm,prod,isqrt
 from subprocess import check_output
 from sys import argv
@@ -7,8 +8,11 @@ from concurrent.futures import ThreadPoolExecutor
 
 def sphere_denominator(n):
     return prod(range(4,4+n,2))
-H=lcm(*(sphere_denominator(a)*sphere_denominator(b)
-        for a in range(0,9,2) for b in range(0,9-a,2)))
+two_links = len(argv) > 2 and argv[2] == "--two-links"
+spheres = 4 if two_links else 2
+H = lcm(*(prod(map(sphere_denominator, degrees))
+          for degrees in product(range(0, 9, 2), repeat=spheres)
+          if sum(degrees) <= 8))
 scale=24*H
 # Every scaled link has polynomial row l1 norm <=8. A coframe contributes
 # <=4 matrix bilinears of norm <=4*8. Closed plaquette trace <=4*8^4.
@@ -25,7 +29,7 @@ def residues(p):
     root=next(i for i in range(1,p) if i*i%p==p-1)
     result=[]
     for r in (root,p-root):
-        output=check_output([argv[1],"2","1","1",str(p),str(r)],text=True)
+        output=check_output([argv[1],"2","1","1",str(p),str(r),str(int(two_links))],text=True)
         result.append([int(s.split()[2]) for s in output.splitlines() if s.startswith('coefficient ')])
     a,b=result
     return p,[(scale*(x+y)*pow(2,-1,p)%p,scale*(x-y)*pow(2*root,-1,p)%p)

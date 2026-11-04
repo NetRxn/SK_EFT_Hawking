@@ -8,7 +8,7 @@
 #include <vector>
 using namespace std;
 int P=65537,I=256;
-using Key=uint32_t;
+using Key=uint64_t;
 using Poly=unordered_map<Key,int>;
 using Ext=unordered_map<uint16_t,Poly>;
 using Mat=array<array<Poly,4>,4>;
@@ -60,8 +60,8 @@ void setup(int active_site,int active_axis,int seed,bool dense){
     g5=mm(mm(g[0],g[1]),mm(g[2],g[3]));
     for(int x=0;x<2;++x)for(int a=0;a<4;++a)for(int c=0;c<2;++c){
         array<Poly,4> q;
-        if(x==active_site&&a==active_axis){
-            for(int j=0;j<4;++j)q[j][1u<<(4*(4*c+j))]=dense?2:1;
+        if((active_site<0||x==active_site)&&a==active_axis){
+            for(int j=0;j<4;++j)q[j][1ULL<<(4*((active_site<0?8*x:0)+4*c+j))]=dense?2:1;
         } else {
             if(dense){
                 unsigned u=(seed+1)*2654435761u+(x+1)*16777619u+(a+1)*1140071485u+(c+1)*3525937633u;
@@ -130,7 +130,7 @@ unordered_map<Key,int> moment_cache;
 int haar(Key p){
     auto f=moment_cache.find(p);if(f!=moment_cache.end())return f->second;
     int n=1,den=1;
-    for(int c=0;c<2;++c){
+    for(int c=0;c<4;++c){
         int sum=0;
         for(int j=0;j<4;++j){
             int e=(p>>(4*(4*c+j)))&15;
@@ -161,7 +161,7 @@ int main(int argc,char** argv){
     bool dense=argc>3?stoi(argv[3]):false;
     if(argc>4)P=stoi(argv[4]);
     if(argc>5)I=stoi(argv[5]);
-    setup(0,active,seed,dense);
+    setup(argc>6 && stoi(argv[6]) ? -1 : 0,active,seed,dense);
     array<array<array<Ext,3>,5>,2> W;
     Ext S[2],D[2];
     int factorial[5]={1,1,2,6,24};
