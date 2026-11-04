@@ -4497,3 +4497,19 @@ reproduced all three values, as did the direct tree replay.
 The tree control now asserts both source values as well as
 normalization. A class-weighted first-orbit comparison is
 running for the all-protected three-mixed family.
+
+#### Four-face orbit 10 class-weighted normalization and source
+
+The joint source run reproduced the class-weighted normalization
+`280809426113170260908203125/1180591620717411303424`
+and gives the retained fixed-shear numerator
+`−275006875764888102568359375/295147905179352825856`
+before orbit and checkerboard weighting. The four deletion rows
+for this representative are orbit 9 of the four-face-only replay.
+They sum to `−12757631041178400146484375/36893488147419103232`.
+The resulting numerator per representative is
+`−377067924094315303740234375/295147905179352825856`.
+With 192 words per checkerboard, this representative contributes
+normalization `842428278339510782724609375/9223372036854775808`
+and numerator `−1131203772282945911220703125/2305843009213693952`.
+The all-probe comparison and remaining larger-core orbits are open.
