@@ -2126,5 +2126,12 @@ nonzero complex coefficients across 36 rows and 175,104 distinct
 boundary keys. The unprojected and projected row ranks over Q(i)
 are both 35. Every projected exterior mask has local site
 populations (3,3,1,1). The replay emits the integer real and
-imaginary components separately. Independent review and joining
-these tensors to the curvature boundary remain pending.
+imaginary components separately. Independent review accepted
+the reversed upper anchor, exterior signs, and denominator
+`48 * 4^4` at `018c2a823`. The independent replay was byte-identical
+to the author dump. A [direct quartic cubature control](l1_extended_overlap_mixed_frames_control.py)
+also reproduced the entire exterior-mask maps for five fixed
+coordinate and curvature slices, including cross-chirality pairs.
+The join to the curvature boundary remains open. Feed the projected
+frame tensors the raw shared-link curvature coordinates so each
+link is integrated once.
