@@ -1811,3 +1811,26 @@ term and the rest is the quadratic contact. This checks the
 affine matter source independently of the unknown geometry
 kernel. Independent exact enumeration at `57ad93dbd` reproduced the
 contact 2348/3315 and the full affine Hessian.
+
+Integrating the candidate scalar exactly produces a geometry
+weight det(K[D]/K₀)⁻¹/² relative to the scalar vacuum. The
+positive body makes the finite Grassmann log and determinant
+expansions well defined. For K[D] = K₀ + λ A[D] + λ² B[D²]
+through second order and C = K₀⁻¹, its exponent is
+
+    −λ Tr(C A)/2
+    + λ² (Tr(C A C A)/4 − Tr(C B)/2).
+
+Here A is linear in the site shear, and B contains the affine
+density and mass-volume terms. On the symmetric periodic
+regulator the linear trace vanishes coefficientwise because
+the two transverse gradient expectations agree. The
+second-order term is a degree-eight geometry interaction.
+Its nonlocal part is half the connected scalar shear kernel
+and its local part is half the affine scalar contact kernel.
+For a uniform ordinary strain used as a check, summing
+the kernels gives half the independently reviewed affine
+Hessian as the quadratic log-weight coefficient. This
+matter-induced interaction is a calculable candidate in the
+chosen source family. Its coefficient in physical units
+still depends on the microscopic identification of λ.
