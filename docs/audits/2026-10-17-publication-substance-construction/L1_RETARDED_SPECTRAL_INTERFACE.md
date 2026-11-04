@@ -2995,3 +2995,48 @@ and numerator `-1061730258814782257080078125/72057594037927936`.
 Independent review confirmed the incidence census and the conditional
 Haar argument. These totals already include the two disjoint
 checkerboard patterns.
+
+### Joint curvature integral for the constant layer patterns
+
+The [torus replay](l1_extended_opposed_torus.py) handles the two
+constant patterns. Each fills two separate four-face curvature
+slices. Within a slice, independent gauge rotations at the four
+base sites conjugate the corresponding holonomies independently.
+The curvature links are separate from the transverse frames, so the
+average can be taken coefficientwise before frame attachment.
+Only the scalar radii of the two chiral imaginary quaternion vectors
+remain after this angular average.
+
+Expand the resulting radial polynomials in SU(2) characters.
+For scalar coordinate q₀, the needed characters are
+`1`, `4q₀²−1` and `16q₀⁴−12q₀²+1`. The sum of the chiral spins
+is at most two for a fourth moment and one at a source center.
+Opposite orientations at every shared edge let Schur orthogonality
+identify a common representation throughout each connected slice.
+The eight link integrations contribute dimension to power −8,
+and the four vertex index loops contribute dimension to power 4,
+giving dimension to power −4 per chirality. This is the torus
+character contraction, as in the [finite-lattice character formula](https://arxiv.org/html/1901.09830#S2).
+
+The two slices have separate link measures. Their characters couple
+through the four transverse frame layers, so the replay takes the
+fourth power of each fixed-channel layer contraction before summing
+channels. For the source it replaces one layer, retaining the two
+action factors at the affected center, and sums the four placements,
+two affected centers per layer and two source orders. The trivial
+channel reproduces the independent-Haar normalization and numerator
+at every source offset.
+
+Independent review reproduced the normalization and source coefficients
+for one constant pattern. The normalization agrees with the earlier
+coupled-curvature replay at `1a7f330b7`. The two patterns are
+translations, so they have equal coefficients. Combining them with
+the fourteen peelable patterns and the plane multiplicities gives
+the complete homogeneous opposed family:
+
+- Normalization: `21486793742471357002066547707988743988989249/6617265379161487528742092800000000`.
+- Two-source numerator: `-1048423566519771992133385501445/62257761248769736704`.
+
+The four source offsets contribute equally in this family. Other
+curvature-plane assignments and center multiplicities still enter the
+unrestricted lattice sums.

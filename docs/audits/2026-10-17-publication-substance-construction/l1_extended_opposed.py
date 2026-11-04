@@ -35,7 +35,7 @@ def center():
           sum(n > 0 for n in sizes), "second-frame labels", flush=True)
     return out,48*96**2*8**8
 
-def staged_center(A, B):
+def staged_center(A, B, moment=curvature):
     """Contract curvature against the first frame before joining the second."""
     out = {}
     boundary_sizes = []
@@ -44,7 +44,7 @@ def staged_center(A, B):
         orderings = set(permutations(b))
         for a in tuples:
             multiplicity = factorial(4)//prod(factorial(k) for k in Counter(a).values())
-            weight = sum(curvature(tuple(sorted(zip(a, y)))) for y in orderings)
+            weight = sum(moment(tuple(sorted(zip(a, y)))) for y in orderings)
             if weight:
                 boundary = add(boundary, scale(A[a], multiplicity * weight))
         boundary_sizes.append(len(boundary))

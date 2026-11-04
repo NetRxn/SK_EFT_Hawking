@@ -70,10 +70,10 @@ def source_frames(direction, anchor=0):
     return maps if anchor == 0 else maps[::-1]
 
 
-def modified_center(a, b):
+def modified_center(a, b, moment=curvature):
     out = {}
     for i, j, k, l in product(range(4), repeat=4):
-        weight = curvature(tuple(sorted(((i, k), (j, l)))))
+        weight = moment(tuple(sorted(((i, k), (j, l)))))
         if weight:
             out = add(out, scale(wedge(a[tuple(sorted((i, j)))],
                                        b[tuple(sorted((k, l)))]), weight))
