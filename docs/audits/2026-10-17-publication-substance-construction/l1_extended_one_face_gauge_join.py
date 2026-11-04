@@ -18,10 +18,10 @@ from l1_extended_mixed_frame_moment import SCALE, anchored, frame_edge
 from l1_extended_opposed import staged_center
 from l1_extended_opposed_source import summed_fourth
 from l1_extended_protected_center import protected_center, summed_protected_source
-from l1_extended_two_face_gamma_join import remote_environment
+from l1_extended_two_face_gamma_join import remote_environment, remote_source_replacements
 from l1_extended_two_face_tree import upper_factor
 from l1_extended_two_mixed_centers import (
-    mixed_center, remap, second_channels, second_sum, source_only,
+    contract_boundary, mixed_center, remap, second_channels, second_sum, source_only,
 )
 from l1_reduced_wedge_reference import wedge_sign
 
@@ -81,7 +81,7 @@ def local_pure(source=False):
     return protected_center((None, None))
 
 
-def coefficient(pattern, face, edges, source=False, *, both=False):
+def coefficient(pattern, face, edges, source=False, *, both=False, environment_builder=remote_environment):
     x, k, l = face
     opposite = x ^ (1 << k) ^ (1 << l)
     first, last = pattern[EVEN.index(x)]
@@ -94,7 +94,7 @@ def coefficient(pattern, face, edges, source=False, *, both=False):
     mixed = remap(local_mixed(), sites)
     pure = remap(local_pure(), pure_sites)
     active = (255 << (8*x)) | (255 << (8*opposite))
-    keep, environment = remote_environment(pattern, {x, opposite})
+    keep, environment = environment_builder(pattern, {x, opposite})
 
     def close(left, right, env):
         raw = R.zero
@@ -108,7 +108,7 @@ def coefficient(pattern, face, edges, source=False, *, both=False):
 
     raw = close(mixed, pure, environment)
     if source or both:
-        source_keep, source_environment = remote_environment(pattern, {x, opposite}, source=True)
+        source_keep, source_environment = environment_builder(pattern, {x, opposite}, source=True)
         assert source_keep == keep
         source_raw = (close(mixed, pure, source_environment)
                       - 24 * close(mixed, remap(local_pure(True), pure_sites), environment)
@@ -257,9 +257,13 @@ def main(deleted_face=False, retained_face=False):
     print(f"one-face {label}, both checkerboards", total)
 
 
-def four_mixed_pure_upper():
+def four_mixed_pure_upper(disjoint_count=1):
+    expected = {1: (44, [3, 4, 13, 14, 15, 16]), 2: (13, [1, 2, 3, 4, 5, 6, 7])}
+    expected_count, expected_indices = expected[disjoint_count]
+    label = ("four-mixed one-face pure-upper" if disjoint_count == 1
+             else "four-mixed one-face pure-upper d2")
     words = {pattern for pattern in words_with_mixed_count(4)
-             if sum(not set(a) & set(b) for a, b in pattern) == 1}
+             if sum(not set(a) & set(b) for a, b in pattern) == disjoint_count}
     selected = []
     one_face_count = 0
     for pattern, multiplicity in orbits(words):
@@ -275,7 +279,9 @@ def four_mixed_pure_upper():
         assert edges <= protected and not set(first) & set(second) and (k, l) in (first, second)
         if pattern[EVEN.index(opposite)] != ((k, l),) * 2:
             continue
-        assert all(set(a) & set(b) for y, (a, b) in zip(EVEN, pattern, strict=True) if y not in (x, opposite))
+        remote_disjoint = sum(not set(a) & set(b) for y, (a, b) in zip(EVEN, pattern, strict=True)
+                              if y not in (x, opposite))
+        assert remote_disjoint == disjoint_count - 1
         assert multiplicity == 192 and sum(a == b for a, b in pattern) == 4
         check_removals(pattern, expected_count=12)
         omissions = {(y, *(axis for axis in AXES if axis not in plane))
@@ -286,24 +292,43 @@ def four_mixed_pure_upper():
                 {} if omitted == face else faces, protected,
             )
         selected.append((index, multiplicity, pattern, face, edges))
-    assert one_face_count == 44 and [row[0] for row in selected] == [3, 4, 13, 14, 15, 16]
-    print("four-mixed one-face pure-upper coverage", len(selected), "orbits,",
+    assert one_face_count == expected_count and [row[0] for row in selected] == expected_indices
+    print(label, "coverage", len(selected), "orbits,",
           sum(row[1] for row in selected), "words per checkerboard", flush=True)
     fourth = summed_fourth(1)
     normal, _ = staged_center(summed_fourth(0), fourth)
     shared = mixed_center(fourth)
     disjoint = disjoint_center()
+    def disjoint_environment(pattern, coupled, *, source=False):
+        # The disjoint center's four second moments use the same total
+        # 96^4 * 8^8 frame scale as the overlapping center's 2+4+2 moments.
+        open_sites = {x ^ (1 << axis) for x in coupled
+                      for plane in pattern[EVEN.index(x)] for axis in plane}
+        keep = sum(255 << (8 * x) for x in open_sites)
+        terms = {x: row for x, row in tensors(pattern, normal, shared, disjoint).items()
+                 if x not in coupled}
+        if not source:
+            return keep, contract_boundary(terms, keep)
+        replacements = list(remote_source_replacements(pattern, terms, coupled))
+        disjoint_center_site, = (x for x in terms
+                                 if not set.intersection(*map(set, pattern[EVEN.index(x)])))
+        assert len(replacements) == 9
+        assert sum(row[disjoint_center_site] is not terms[disjoint_center_site] and weight == -192
+                   for row, weight in replacements) == 2
+        return keep, add(*(scale(contract_boundary(row, keep), weight) for row, weight in replacements))
+
+    environment = disjoint_environment if disjoint_count == 2 else remote_environment
     totals = [Fraction() for _ in range(3)]
     for index, multiplicity, pattern, face, edges in selected:
-        norm, retained = coefficient(pattern, face, edges, both=True)
+        norm, retained = coefficient(pattern, face, edges, both=True, environment_builder=environment)
         deleted = deleted_face_coefficient(pattern, face, normal, shared, disjoint)
-        print("four-mixed one-face pure-upper orbit", index, "multiplicity", multiplicity,
+        print(label, "orbit", index, "multiplicity", multiplicity,
               "normalization", norm, "retained source", retained, "deleted source", deleted, flush=True)
         for i, value in enumerate((norm, retained, deleted)):
             totals[i] += 2 * multiplicity * value
-    print("four-mixed one-face pure-upper both checkerboards normalization/retained/deleted",
+    print(label, "both checkerboards normalization/retained/deleted",
           *totals, flush=True)
-    print("four-mixed one-face pure-upper fixed-shear numerator", sum(totals[1:]), flush=True)
+    print(label, "fixed-shear numerator", sum(totals[1:]), flush=True)
 
 
 if __name__ == "__main__":
@@ -313,9 +338,10 @@ if __name__ == "__main__":
     mode.add_argument("--retained-face-source", action="store_true")
     mode.add_argument("--surviving-face-source", action="store_true")
     mode.add_argument("--four-mixed-pure-upper", action="store_true")
+    mode.add_argument("--four-mixed-pure-upper-d2", action="store_true")
     args = parser.parse_args()
-    if args.four_mixed_pure_upper:
-        four_mixed_pure_upper()
+    if args.four_mixed_pure_upper or args.four_mixed_pure_upper_d2:
+        four_mixed_pure_upper(2 if args.four_mixed_pure_upper_d2 else 1)
     elif args.surviving_face_source:
         replay_surviving_faces()
     else:

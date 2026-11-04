@@ -140,7 +140,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   covers 327 orbits and 51,696 words per checkerboard, with independent
   receipt reduction. The [pure-upper one-face subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-one-face-pure-upper-subtotal)
   covers six nonpeelable orbits and 1,152 words per checkerboard.
-  The other 981 nonpeelable four-mixed orbits and general center
+  The [two-disjoint pure-upper subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-two-disjoint-one-face-pure-upper-subtotal)
+  covers seven more and 1,344 words per checkerboard.
+  The other 974 nonpeelable four-mixed orbits and general center
   counts remain open.
   The full word sum, physical matching and B3 remain open.
 

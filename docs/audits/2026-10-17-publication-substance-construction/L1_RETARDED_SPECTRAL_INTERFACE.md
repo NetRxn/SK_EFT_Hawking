@@ -5079,3 +5079,24 @@ Independent static and census review checked the four-pure and
 four-mixed deletion divisor, the omission guards, and compatibility
 with the existing three-mixed replay. Receipt reduction covers this
 six-orbit subset of the nonpeelable four-mixed sector.
+
+#### Four-mixed two-disjoint one-face pure-upper subtotal
+
+The `--four-mixed-pure-upper-d2` replay exited zero on local IDs 1–7
+of the two-disjoint one-face census. Each has multiplicity 192 per
+checkerboard. The additional disjoint center is remote and carries
+four degree-two Haar edge moments at the same total frame scale as
+the overlapping center's degree-two, degree-four, degree-two moments.
+Independent review checked the two disjoint source slots, their
+weights, and all 12 omission types per representative.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `91191729675557436328125/140737488355328` |
+| Retained source | `−244688210038443385546875/70368744177664` |
+| Deleted source | `−10139009570861044921875/35184372088832` |
+| Full fixed-shear numerator | `−264966229180165475390625/70368744177664` |
+
+Independent receipt reduction reproduced all sums. The existing
+one-disjoint and three-mixed paths retain their environment builder.
+The review did not rerun those contractions.
