@@ -4577,3 +4577,33 @@ are `(8,2,4,2)` and the mixed upper row divisor is
 `121029087867608368152576`. The oracle reuses the independent frame
 control's matrix and sphere helpers. Other curvature components and
 the global exterior contraction are outside this comparison.
+
+#### Complete three-face retained-source subtotal
+
+The `l1_extended_three_face_tree.py --source` replay emitted all five
+representatives and the final totals. Each representative has multiplicity
+192 per checkerboard. The separate normalization replay matches all five
+rows exactly. The following source terms are before checkerboard weighting.
+
+| Orbit | Remote | Upper | Disjoint base |
+| ---: | ---: | ---: | ---: |
+| 0 | `-13630750028099597498888671875/18889465931478580854784` | `-13114241078168807566147265625/37778931862957161709568` | `-2283906895445079193623046875/18889465931478580854784` |
+| 1 | `-13642470306291136991080078125/18889465931478580854784` | `-13108952032956743514584765625/37778931862957161709568` | `-2283025189125526598408203125/18889465931478580854784` |
+| 2 | `-5211288149646161870553515625/18889465931478580854784` | `-5047779401092483059659765625/37778931862957161709568` | `-881715212310860401376953125/18889465931478580854784` |
+| 3 | `-94360101758479878416015625/590295810358705651712` | `-5709566239230037250390625/73786976294838206464` | `-7920133264392871728515625/295147905179352825856` |
+| 4 | `-94225261756078179685546875/590295810358705651712` | `-5709566239230037250390625/73786976294838206464` | `-7920133264392871728515625/295147905179352825856` |
+
+After weighting each row by 384, the retained-source column totals are
+`−115557720349508262659316796875/147573952589676412928`,
+`−111352705023568776854375390625/295147905179352825856`, and
+`−19387273064171261323974609375/147573952589676412928`.
+Adding the separately replayed three-face deletion subtotal
+`−778235981974605966796875/2251799813685248` gives a fixed-shear
+numerator of `−483247638480303378100958203125/295147905179352825856`.
+The normalization is `1395884377237587968864619140625/4722366482869645213696`.
+These are the three-face sector contributions to the full word sum.
+Independent review at `4ad372d3b` checked the replay source, all five
+normalization rows, the eight retained and three deletion variants per
+orbit, and the exact weighting and reduction. It reused the tracked
+deletion subtotal. This review did not rerun the underlying contractions
+or verify the terminal process exit.

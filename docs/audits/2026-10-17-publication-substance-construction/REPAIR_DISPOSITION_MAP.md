@@ -96,8 +96,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   [three-face normalization replay](L1_RETARDED_SPECTRAL_INTERFACE.md#three-face-tree-normalization-replay)
   joins the disjoint base and the shared pure upper tensor first.
   The retained-source replay covers all eight core-preserving replacements
-  per orbit. The normalization subtotal is complete. Finish
-  the retained-source replay and reconcile its normalization rows.
+  per orbit. The [completed three-face subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-three-face-retained-source-subtotal)
+  combines all five retained-source rows with the deletion subtotal.
+  Independent receipt review reproduced the weighting and numerator.
   The four-face deletion replay reduces all 40 removals to two-face
   joins, with a single source replacement at the original removed plane.
   Both gauge choices reproduce the weighted four-face deletion
