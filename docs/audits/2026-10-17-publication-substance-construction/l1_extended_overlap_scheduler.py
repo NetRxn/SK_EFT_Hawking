@@ -92,9 +92,10 @@ def checked(A,B):
 def pack(rows):
     vals=[];indices=[];ptr=[0]
     for row in rows:
-        a,b=row.nonzero()
-        vals.extend(np.asarray(row[a,b]).ravel())
-        indices.extend(a*N+b)
+        row = row.tocoo()
+        keep = row.data != 0
+        vals.extend(row.data[keep])
+        indices.extend(row.row[keep] * N + row.col[keep])
         ptr.append(len(vals))
     return csr_matrix((np.array(vals,dtype=np.int64),np.array(indices,dtype=np.int32),np.array(ptr,dtype=np.int32)),
                       shape=(6561,N*N))
