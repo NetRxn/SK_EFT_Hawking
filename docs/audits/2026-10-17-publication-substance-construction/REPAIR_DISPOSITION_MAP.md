@@ -74,7 +74,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The [80-orbit free-link subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-free-link-two-face-subtotal)
   now includes normalization and the full fixed-shear numerator, with
   independent receipt reduction and direct orbit-41 agreement.
-  Finish the all-protected normalization and retained-source sums.
+  The all-protected subtotal below completes the other two-face sector.
   The [range replay](L1_RETARDED_SPECTRAL_INTERFACE.md#free-link-retained-source-range-control)
   matches the direct normalization and both source terms exactly on
   orbit 21. Use disjoint intervals for remaining free-link work when
@@ -93,7 +93,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The [independent intersite frame control](L1_RETARDED_SPECTRAL_INTERFACE.md#independent-protected-intersite-frame-control) checks three complete local signed maps.
   The [same-side fused subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-same-side-fused-range)
   covers 11 all-protected orbits with independently reduced receipts.
-  Complete the other 12 normalization and retained-source rows. The
+  The [full all-protected subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-all-protected-two-face-subtotal)
+  now covers all 23 orbits and both checkerboards, with independent
+  receipt reduction including all deletion rows. The
   [three-face deletion replay](L1_RETARDED_SPECTRAL_INTERFACE.md#three-face-deletion-subtotal-and-remaining-core-geometry)
   evaluates all five deletion orbits. The verified three-face
   tree leaves one upper probe per face. The
