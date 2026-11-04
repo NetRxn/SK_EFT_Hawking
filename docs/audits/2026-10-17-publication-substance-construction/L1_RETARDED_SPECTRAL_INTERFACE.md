@@ -5773,3 +5773,14 @@ predeclared word. Run the replay with the repository Python environment.
 Signed evaluation of the surviving tuples remains open. Retaining
 the coupled site-5 and site-7 masks can strengthen the exclusion
 before that evaluation.
+
+A separate signed control fixes `q(5,1)=5` and all six other
+coordinates to 1. This tuple survives the upper projection.
+Independent review confirmed that the cached seven-factor B
+calculation and the direct 20-factor B calculation use the same
+eight action centers and twelve frame edges. Both find an empty
+join at site 7 with zero compatible products. Once all seven
+cut labels are fixed, the full shard is a bilinear exterior closure
+of the A and B halves. The empty B map therefore gives exact zero
+for this shard. It provides a regression for a lower support
+projection.
