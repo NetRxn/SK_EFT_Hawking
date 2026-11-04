@@ -160,6 +160,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The [same-plane disjoint-upper route](L1_RETARDED_SPECTRAL_INTERFACE.md#four-mixed-two-face-same-plane-disjoint-upper-orbit-0)
   covers the other 25 disjoint-upper orbits. Its first orbit has
   matching exact coefficients under both tree choices.
+  The [same-plane batch through orbit 8](L1_RETARDED_SPECTRAL_INTERFACE.md#same-plane-disjoint-upper-orbits-18)
+  brings verified coverage to nine orbits and 1,728 words per checkerboard.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)
@@ -171,7 +173,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   verifies separate axial and temporal structural support. The [signed
   temporal witness](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-signed-coefficient-for-the-selected-temporal-word)
   has an independently reviewed nonzero coefficient for one word and
-  ordered source pair. The complete offset sum and matched geometry
+  ordered source pair. The [two-deviation paired subfamily](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-two-deviation-paired-subfamily-at-temporal-offset-1)
+  has a verified exact fixed-origin shear subtotal. The complete offset
+  sum and matched geometry
   inverse pole and physical frequency calibration remain open.
   The full word sum, physical matching and B3 remain open.
 

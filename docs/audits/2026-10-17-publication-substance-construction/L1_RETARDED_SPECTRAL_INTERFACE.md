@@ -5427,6 +5427,22 @@ reduction checked the factor of `2 × 192`.
 | Deleted source | `−1619173292222865234375/4398046511104` |
 | Full fixed-shear numerator | `−51541906313620346584078125/18014398509481984` |
 
+#### Same-plane disjoint-upper orbits 1–8
+
+The `[1,9)` replay exited zero. Independent exact reduction
+verified eight orbits and 1,536 words per checkerboard.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `32867576630546856162890625/36028797018963968` |
+| Remote source | `−6783590580408946247203125/2251799813685248` |
+| Upper source | `−53184937577933388357421875/36028797018963968` |
+| Deleted source | `−5841260874538962890625/8796093022208` |
+| Full fixed-shear numerator | `−185648191406588120312671875/36028797018963968` |
+
+The covered prefix comprises nine orbits and 1,728 words per
+checkerboard. The next range is `[9,17)`.
+
 ### Exact temporal transfer control for the scalar probe
 
 Keep periodic spatial forward differences and let the temporal
@@ -5598,3 +5614,26 @@ It establishes a nonzero contribution for one word and one
 ordered source pair. The full shear coefficient still requires
 summing the other source pairs and action words, including their
 signs, and normalizing in the full geometry ensemble.
+
+#### Complete two-deviation paired subfamily at temporal offset 1
+
+The `l1_extended_offset_witness_k2.py` replay counts and evaluates
+the paired words with exactly two frame-plane deviations from
+`(0,1)`. With the first origin fixed, there are four words for
+ordered source axes `(2,2)` and two for `(2,3)`. The other
+axis choices follow by transverse exchange. Every word leaves
+two disjoint four-face curvature tori. The same-axis cases
+jointly integrate the action and source on their shared Haar
+edge. The exterior join checks complementary masks before
+multiplication and retains components that share a gamma label.
+
+The repository replay exited zero and matched all six reviewed
+scratch coefficients. Exact controls cover the local Haar trace,
+curvature channels, indexed exterior signs and disconnected
+components. The same-axis subtotal is
+`247348708021702592193669/70368744177664` and the unsigned
+mixed-axis subtotal is `16670281986745651878525/70368744177664`.
+The fixed-origin shear contribution is twice their difference,
+`28834803254369617539393/4398046511104` before `g₂³⁰`.
+The factor of two is from the source-axis symmetry. Other paired
+and unpaired words and full-ensemble normalization remain open.
