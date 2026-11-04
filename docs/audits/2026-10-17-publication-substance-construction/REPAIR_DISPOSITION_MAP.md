@@ -165,9 +165,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   6,720 words per checkerboard. The companion route passed the same
   review for the remaining 32 orbits and 4,896 words per checkerboard.
   Orbit 0 of the 35-orbit route passed independent receipt reduction
-  and matched exactly under both tree choices. The companion route's
-  first coefficient passed receipt reduction and awaits its own
-  alternate-tree comparison.
+  and matched exactly under both tree choices. Orbit 0 of the
+  companion route passed the same checks. Both routes are replaying
+  the next five orbits.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)

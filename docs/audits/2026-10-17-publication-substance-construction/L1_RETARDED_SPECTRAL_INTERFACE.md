@@ -5496,7 +5496,19 @@ upper of that face enters the surviving-face remote calculation.
 Both tree choices passed the census and all omission guards.
 Independent source review checked each source weight, normalization,
 and preservation of the existing paths. Orbit 0 of this companion
-route is running with `--probe-classes`; numerical evidence is pending.
+route exited zero with `--probe-classes` under both tree choices.
+The receipts agree byte for byte. Independent reduction verified
+96 words per checkerboard and total weight 192.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `6515328353360571938671875/36028797018963968` |
+| Remote source | `−5663194737178488619359375/9007199254740992` |
+| Upper source | `−1190421454183976991796875/4503599627370496` |
+| Surviving-face source | `−353894419130628515625/2199023255552` |
+| Full fixed-shear numerator | `−9493589186305497002953125/9007199254740992` |
+
+The next companion replay range is `[1,6)`.
 
 ### Exact temporal transfer control for the scalar probe
 
