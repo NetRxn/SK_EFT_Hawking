@@ -2274,3 +2274,13 @@ and 1,096 paired states. Each coefficient carries a common
 denominator 4. The mixed-anchor branch retains its four spatial
 coordinates for the cycle join. The strip replay checks an
 intermediate tensor, with the paired-node cycle still to be closed.
+
+The [all-link zero-label control](l1_extended_overlap_all_links_alpha0.py)
+closes the full Haar network for the sector in which all exterior
+curvature labels are zero. It integrates the eight pure transverse
+links, eight temporal links, and both mixed links. Of 256 candidate
+mixed assignments, 16 contribute. After the temporal and pure
+transverse factors `48^8 * 4^4`, the sector contributes
+`55210154735836356378659569767502493257826304` before the
+remaining exterior and upper scales. This is one signed sector
+of the full sum. The other curvature labels remain to be contracted.
