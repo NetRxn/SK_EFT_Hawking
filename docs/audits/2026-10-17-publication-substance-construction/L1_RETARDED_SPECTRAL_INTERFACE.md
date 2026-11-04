@@ -4868,3 +4868,17 @@ Weighting 192 words per checkerboard gives
 `−2746821510959113037109375/144115188075855872`.
 Independent review reproduced the weighting. A full direct-probe
 rerun was outside the receipt review.
+
+#### Four-face orbit 3 normalization and source
+
+The `--full-orbit 3 --retained-source --integer-gamma` replay exited
+zero with normalization `2370001036358775322265625/18446744073709551616`
+and retained source `−2342587495855294599609375/4611686018427387904`
+per representative. The four deletion rows for faces `(9,0,1)`,
+`(9,0,2)`, `(15,1,3)`, and `(15,1,2)` contribute
+`−107877634645257861328125/576460752303423488` per representative.
+Independent review matched the two orbit enumerations and the
+weight of 192 words per checkerboard. Across both checkerboards,
+normalization is `7110003109076325966796875/144115188075855872`
+and the full numerator is `−9616825719052072470703125/36028797018963968`.
+The independent check reduced the receipts.
