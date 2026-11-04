@@ -46,6 +46,16 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   reviewed predecessor packages qualify against current main, then
   requalify the scoped L3 candidate on that integrated base. The
   composed candidate's retry is narrower than a fresh merge gate.
+  A separate composition trial on `ce194cdc4` combined the
+  serializer, D7 regression, managed paths, inventory and citation
+  fixes with the generated tables and reviewed polariton source
+  reconciliation. It regenerated the architecture inventory and
+  counts. The 43-node inherited-failure replay returned 12 passes
+  and 31 failures, including five environment-dependent slot
+  fixtures. The remaining corpus failures include reach, review
+  populations, prose, and count and table ratchets. This trial
+  confirms source compatibility for those patches and remains
+  separate from the broader NJL qualification history.
 
 ## Accountable author, independent review and integration
 
