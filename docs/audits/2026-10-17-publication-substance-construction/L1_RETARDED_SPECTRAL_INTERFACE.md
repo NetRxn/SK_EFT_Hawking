@@ -5231,6 +5231,25 @@ ranges disjoint when accumulating exact totals. The first factored
 batch uses `--orbit-range 8 16 --probe-classes --component-remotes`
 while the legacy batch covers `--orbit-range 4 8`.
 
+#### Two-face overlap-base orbits 4–15
+
+Both disjoint batches exited zero. Independent exact reduction
+checked each row's multiplicity of 192 per checkerboard and all
+four weighted totals. Orbits 4–7 use the legacy evaluator and
+8–15 use the reviewed component evaluator at `3be37b34e`.
+
+| Both-checkerboard contribution | Orbits 4–7 | Orbits 8–15 |
+| --- | ---: | ---: |
+| Normalization | `68610804300455546731640625/18014398509481984` | `4256897144834508794089453125/1152921504606846976` |
+| Remote source | `−113619082978295704954828125/9007199254740992` | `−3562892705058510616568578125/288230376151711744` |
+| Upper source | `−200137616867989925553515625/36028797018963968` | `−1509041228534878338159609375/288230376151711744` |
+| Deleted source | `−48731921872847349609375/17592186044416` | `−378816735106141991015625/140737488355328` |
+| Full fixed-shear numerator | `−754416924776764117372828125/36028797018963968` | `−1461937651772691938082046875/72057594037927936` |
+
+The reviewed batches bring two-face coverage to 16 orbits and
+3,072 words per checkerboard. The next component replay ranges
+are `[16,32)` and `[32,48)`.
+
 ### Exact temporal transfer control for the scalar probe
 
 Keep periodic spatial forward differences and let the temporal
