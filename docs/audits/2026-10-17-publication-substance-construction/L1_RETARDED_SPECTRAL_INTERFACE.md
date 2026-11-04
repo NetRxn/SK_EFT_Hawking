@@ -1826,11 +1826,28 @@ density and mass-volume terms. On the symmetric periodic
 regulator the linear trace vanishes coefficientwise because
 the two transverse gradient expectations agree. The
 second-order term is a degree-eight geometry interaction.
-Its nonlocal part is half the connected scalar shear kernel
-and its local part is half the affine scalar contact kernel.
+Its connected part, including the diagonal, is half the scalar
+shear covariance kernel. Its bare contact part is local and is
+half the affine scalar contact kernel.
 For a uniform ordinary strain used as a check, summing
 the kernels gives half the independently reviewed affine
 Hessian as the quadratic log-weight coefficient. This
 matter-induced interaction is a calculable candidate in the
 chosen source family. Its coefficient in physical units
 still depends on the microscopic identification of λ.
+
+Independent review verified the determinant expansion and
+the uniform coefficient 3703522/5817825. The connected kernel
+can also be evaluated at every separation. On the unit
+2⁴ torus, index sites and momenta by four bits. Define
+
+    G(r) = (1/16) Σ_p (−1)^popcount(p & r)/(1+4 popcount(p)),
+    H_ij(r) = G(r⊕e_i⊕e_j) − G(r⊕e_i) − G(r⊕e_j) + G(r),
+
+where e_i is bit i. H is the covariance of the two forward
+differences. Wick contraction gives the connected kernel
+K(r) = (H₂₂²+H₃₃²−H₂₃²−H₃₂²)/4. Exact enumeration gives
+K(0)=208123/11635650 and Σ_r K(r)=12082/342225, reproducing
+the uniform per-site variance. The local affine contact
+adds 587/13260 at r=0 only. These formulas fix the scalar
+kernel for the matched-lattice contraction at all separations.
