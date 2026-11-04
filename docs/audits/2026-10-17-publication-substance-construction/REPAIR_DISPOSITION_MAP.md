@@ -164,9 +164,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   passed independent source and census review for 35 orbits and
   6,720 words per checkerboard. The companion route passed the same
   review for the remaining 32 orbits and 4,896 words per checkerboard.
-  The first 35-orbit route coefficient has passed receipt reduction
-  and awaits the alternate-tree comparison. The companion route's
-  first exact contraction is pending.
+  Orbit 0 of the 35-orbit route passed independent receipt reduction
+  and matched exactly under both tree choices. The companion route's
+  first coefficient passed receipt reduction and awaits its own
+  alternate-tree comparison.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)
@@ -179,7 +180,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   temporal witness](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-signed-coefficient-for-the-selected-temporal-word)
   has an independently reviewed nonzero coefficient for one word and
   ordered source pair. The [two-deviation paired subfamily](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-two-deviation-paired-subfamily-at-temporal-offset-1)
-  has a verified exact fixed-origin shear subtotal. The complete offset
+  has a verified exact fixed-origin shear subtotal, as does the
+  [three-deviation paired subfamily](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-three-deviation-paired-subfamily-at-temporal-offset-1)
+  with 12 words and the protected-square factor. The complete offset
   sum and matched geometry
   inverse pole and physical frequency calibration remain open.
   The full word sum, physical matching and B3 remain open.

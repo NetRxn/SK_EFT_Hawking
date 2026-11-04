@@ -5471,10 +5471,22 @@ leaves one all-protected face and uses the surviving-face source
 contraction. Independent source review checked that each omission
 enters once and that the previous replay routes remain available.
 
-The first exact contraction is pending. Replay it with
+Orbit 0 replayed with
 `--four-mixed-all-protected-disjoint-base --orbit 0 --probe-classes`
-and compare the retained-source tree with `--reverse-upper`.
-The surviving-face calculation is independent of that flag.
+and again with `--reverse-upper`. Both runs exited zero and their
+receipts agree byte for byte. Independent exact reduction verified
+the weight of 384 across both checkerboards. The surviving-face
+calculation is independent of the tree flag.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `62074824594543350433984375/72057594037927936` |
+| Remote source | `−6432756072704477288859375/2251799813685248` |
+| Upper source | `−90630894339657337292578125/72057594037927936` |
+| Surviving-face source | `−13478814619913963671875/17592186044416` |
+| Full fixed-shear numerator | `−351688313349368205736078125/72057594037927936` |
+
+The next replay range is `[1,6)`.
 The companion
 `--four-mixed-all-protected-disjoint-base-remaining` route covers
 the other 32 orbits and 4,896 words per checkerboard. It generalizes
@@ -5680,3 +5692,23 @@ The fixed-origin shear contribution is twice their difference,
 `28834803254369617539393/4398046511104` before `g₂³⁰`.
 The factor of two is from the source-axis symmetry. Other paired
 and unpaired words and full-ensemble normalization remain open.
+
+#### Complete three-deviation paired subfamily at temporal offset 1
+
+The `l1_extended_offset_witness_k3.py` replay evaluates eight
+same-axis and four mixed-axis words with exactly three deviations.
+Four reuse two torus factors. The others each include a protected
+square, with three links fixed and one live Haar link. Its live
+probe is integrated with the action edge, so it introduces no
+separate divisor of 48. Independent review checked the fixed
+anchor and reverse orientation, direct quaternion and cubature
+controls, and the exact source weighting.
+
+The repository replay exited zero and matched the independently
+reviewed scratch coefficients for all 12 words. The same-axis
+subtotal is `26227592827558479037125/70368744177664` and the unsigned
+mixed-axis subtotal is `22069465733850467267925/1125899906842624`.
+The fixed-origin shear contribution is twice their difference,
+`397572019507085197326075/562949953421312` before `g₂³⁰`.
+The remaining paired and unpaired strata and full-ensemble
+normalization remain open.
