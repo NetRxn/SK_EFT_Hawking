@@ -6,7 +6,7 @@ from itertools import product
 from math import factorial
 
 from l1_direct_b_haar import add, scale, wedge
-from l1_extended_four_face_gauge_join import IDENTITY, indexed_mixed_dual, mixed_rows
+from l1_extended_four_face_gauge_join import IDENTITY, PROBE_CLASSES, indexed_mixed_dual, mixed_rows
 from l1_extended_mixed_center_census import (
     EVEN, curvature_boundary, orbits, swap_patterns, words_with_mixed_count,
 )
@@ -42,7 +42,8 @@ def upper_links(face, edges, protected):
     return center, upper
 
 
-def upper_factor(pattern, face, edges, protected, reverse, source=False, omitted=None):
+def upper_factor(pattern, face, edges, protected, reverse, source=False, omitted=None,
+                 probe_classes=False):
     center, upper = upper_links(face, edges, protected)
     if reverse:
         upper = upper[::-1]
@@ -64,10 +65,12 @@ def upper_factor(pattern, face, edges, protected, reverse, source=False, omitted
     sites = tuple(center ^ (1 << a) for a in directions)
     fixed = dict.fromkeys(edges - {upper[0]}, IDENTITY)
     rows = {}
+    multiplicities = dict(PROBE_CLASSES) if probe_classes else dict.fromkeys(PAIRS, 1)
     for components in COMPONENTS:
         terms = face_tensor(face, upper[:1], fixed, components)
-        poly = add(*(scale(upper_tensor(p == q, positions, PAIRS[i], source, removed), weight)
-                     for (i,), weight in terms.items()))
+        poly = add(*(scale(upper_tensor(p == q, positions, PAIRS[i], source, removed),
+                            weight * multiplicities[PAIRS[i]])
+                     for (i,), weight in terms.items() if PAIRS[i] in multiplicities))
         if poly:
             assert all(mask & 255 == 255 for mask in poly)
             rows[components] = remap({m >> 8: v for m, v in poly.items()}, sites)
@@ -155,7 +158,8 @@ def close_channels(base, base_sites, keep, env, upper_sites, terms):
     return tuple(re for re, _ in totals)
 
 
-def coefficient(pattern, faces, protected, base, reverse=False, source=False, omitted=None):
+def coefficient(pattern, faces, protected, base, reverse=False, source=False, omitted=None,
+                probe_classes=False):
     assert not (source and omitted is not None)
     site, = {f[0] for f in faces}
     p, q = pattern[EVEN.index(site)]
@@ -172,7 +176,12 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False, om
         check_disjoint_tree(faces, protected, reverse)
         base = disjoint_base
         base_divisor = SCALE**8 * 4**8 * factorial(2)**2
-    left, right = [upper_factor(pattern, face, faces[face], protected, reverse) for face in ordered]
+    def upper(side, *, source=False, omitted=None):
+        face = ordered[side]
+        return upper_factor(pattern, face, faces[face], protected, reverse, source, omitted,
+                            probe_classes=probe_classes and side == 0)
+
+    left, right = upper(0), upper(1)
     coupled = {site, left[0], right[0]}
     assert len(coupled) == 3
     assert omitted is None or omitted[0] != site
@@ -180,17 +189,14 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False, om
     keep, env = remote_environment(pattern, coupled, only_face=remote_omission)
     if omitted is not None and remote_omission is None:
         if omitted[0] == left[0]:
-            left = upper_factor(pattern, ordered[0], faces[ordered[0]], protected,
-                                reverse, source=True, omitted=omitted)
+            left = upper(0, source=True, omitted=omitted)
         else:
             assert omitted[0] == right[0]
-            right = upper_factor(pattern, ordered[1], faces[ordered[1]], protected,
-                                 reverse, source=True, omitted=omitted)
+            right = upper(1, source=True, omitted=omitted)
     sites = tuple(site ^ (1 << i) for i in directions)
     changed = None
     if source:
-        changed = [upper_factor(pattern, face, faces[face], protected, reverse, source=True)[2]
-                   for face in ordered]
+        changed = [upper(side, source=True)[2] for side in (0, 1)]
     upper_sites = set(left[1]) | set(right[1])
     terms = [(left[2], right[2])]
     if changed is not None:
@@ -207,11 +213,10 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False, om
     source_keep, source_env = remote_environment(pattern, coupled, source=True)
     assert source_keep == keep
     remote, = close_channels(base, sites, keep, source_env, upper_sites, terms[:1])
-    upper = sum(upper_terms)
-    return normal, Fraction(remote, 6 * divisor), Fraction(upper, 6 * divisor)
+    return normal, Fraction(remote, 6 * divisor), Fraction(sum(upper_terms), 6 * divisor)
 
 
-def replay_four_face_deletions(reverse):
+def replay_four_face_deletions(reverse, probe_classes):
     from l1_extended_one_face_gauge_join import check_removals
 
     base = cache(gamma_block(None, None, summed_fourth(1)))
@@ -227,7 +232,8 @@ def replay_four_face_deletions(reverse):
             rest, protection = curvature_boundary(pattern, omitted=omitted)
             assert protection == protected and len(rest) == 2
             assert len(set.union(*rest.values()) - protected) == 1
-            value = coefficient(pattern, rest, protected, base, reverse, omitted=omitted)
+            value = coefficient(pattern, rest, protected, base, reverse, omitted=omitted,
+                                probe_classes=probe_classes)
             print("orbit", count, "removed face", omitted, "source", value, flush=True)
             subtotal += value
         total += 2 * multiplicity * subtotal
@@ -237,7 +243,7 @@ def replay_four_face_deletions(reverse):
     print("four-face deletion subtotal, both checkerboards", total, flush=True)
 
 
-def main(control, reverse, source, orbit, all_protected):
+def main(control, reverse, source, orbit, all_protected, probe_classes):
     words = swap_patterns() if control else words_with_mixed_count(3)
     base = disjoint_base if all_protected else cache(gamma_block(None, None, summed_fourth(1)))
     total = Fraction()
@@ -251,7 +257,8 @@ def main(control, reverse, source, orbit, all_protected):
         eligible += 1
         if orbit is not None and index != orbit:
             continue
-        result = coefficient(pattern, faces, protected, base, reverse, source)
+        result = coefficient(pattern, faces, protected, base, reverse, source,
+                             probe_classes=probe_classes)
         if source:
             result, remote_row, upper_row = result
             remote += 2 * multiplicity * remote_row
@@ -293,13 +300,15 @@ if __name__ == "__main__":
     parser.add_argument("--orbit", type=int, help="evaluate a single numbered orbit")
     parser.add_argument("--all-protected", action="store_true",
                         help="select the 23 all-protected three-mixed orbits")
+    parser.add_argument("--probe-classes", action="store_true", help="weight one live link by its probe classes")
     args = parser.parse_args()
     if args.all_protected and not (args.candidate or args.candidate_source):
         parser.error("--all-protected requires --candidate or --candidate-source")
     if args.four_face_deleted_source:
         if args.orbit is not None:
             parser.error("--orbit is unavailable for the four-face deletion replay")
-        replay_four_face_deletions(args.reverse_upper)
+        replay_four_face_deletions(args.reverse_upper, args.probe_classes)
     else:
         main(not (args.candidate or args.candidate_source), args.reverse_upper,
-             args.control_source or args.candidate_source, args.orbit, args.all_protected)
+             args.control_source or args.candidate_source, args.orbit, args.all_protected,
+             args.probe_classes)

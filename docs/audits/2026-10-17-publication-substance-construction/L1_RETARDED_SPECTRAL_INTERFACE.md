@@ -4468,3 +4468,21 @@ gives `280809426113170260908203125/1180591620717411303424`
 before orbit and checkerboard weighting. The all-probe comparison
 and the joint retained-source sum are running. This is a
 single-orbit result.
+
+#### Single-link classes for the two-face tree
+
+The two-face tree accepts `--probe-classes`. It weights the live
+upper link on the first face and sums the second face directly.
+Because the other three links of the selected face are fixed to
+identity, only imaginary coordinates enter its curvature vector.
+Independent enumeration at all four possible live-link placements
+gives 21 coordinate pairs. Five of the twelve probe classes
+contribute, with weights 3, 3, 3, 3, and 9.
+
+The selected upper factor carries these weights in normalization,
+retained-source, and designated deletion replays. If the source
+replaces that factor, the replacement carries the weights instead.
+Remote replacements use the same weighted upper factor. The
+default remains the direct sum, including the three-face callers.
+The class-weighted normalization and retained-source control for
+two-mixed orbit zero is running.
