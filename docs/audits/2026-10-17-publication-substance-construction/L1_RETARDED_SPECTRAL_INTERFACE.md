@@ -2065,3 +2065,17 @@ has rank 36. Their disjoint column supports give total rank
 336. The next projection joins the retained quadratic (6,0)
 leg to both remaining occurrences in the (4,0,1) and (6,0,1)
 plaquettes before applying its fourth moment.
+
+The [factored (6,0) replay](l1_extended_overlap_u6.py)
+takes the four-face row dump and projects that quadratic
+leg together with both remaining curvature occurrences.
+The projected left factor has 343,440 entries and the
+two-face right factor 147,456. All 64 ordered interface
+slots contribute. The remaining boundary includes four
+old linear ports, four new linear ports along axis 1,
+and a quadratic (4,0) port. The combined Haar denominator
+for the two integrated links is 48². A direct identity
+boundary specialization reproduces all 672 nonzero
+components. Keeping the factors separate avoids materializing
+791,285,760 raw products before cancellations. Independent
+review and the downstream joins remain open.
