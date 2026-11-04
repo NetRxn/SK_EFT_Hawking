@@ -50,30 +50,34 @@ def wedge_accumulate(out, left, right, weight):
                 out[a | b] = old_r + signed*(r*s - i*j), old_i + signed*(r*j + i*s)
 
 
+def join_factors(first, second):
+    axes, left = first
+    other, right = second
+    common = tuple(e for e in axes if e in other)
+    ai, bi = (tuple(axis.index(e) for e in common) for axis in (axes, other))
+    la, ra = (tuple(i for i, e in enumerate(axis) if e not in common)
+              for axis in (axes, other))
+    output = defaultdict(dict)
+    lookup = defaultdict(list)
+    for q, poly in right.items():
+        lookup[tuple(q[i] for i in bi)].append((q, poly))
+    for p, poly in left.items():
+        for moments in product(*(HAAR[PAIRS[p[i]]] for i in ai)):
+            indices, weights = zip(*moments, strict=True)
+            for q, value in lookup[indices]:
+                dest = tuple(p[i] for i in la) + tuple(q[i] for i in ra)
+                wedge_accumulate(output[dest], poly, value, prod(weights))
+    open_links = tuple(axes[i] for i in la) + tuple(other[i] for i in ra)
+    reduced = {k: {m: v for m, v in row.items() if any(v)} for k, row in output.items()}
+    return open_links, {k: v for k, v in reduced.items() if v}
+
+
 def close_shared(factors):
-    while len(factors) > 1:
-        axes, left = factors[0]
-        index = next(i for i in range(1, len(factors)) if set(axes) & set(factors[i][0]))
-        other, right = factors[index]
-        common = tuple(e for e in axes if e in other)
-        ai, bi = (tuple(axis.index(e) for e in common) for axis in (axes, other))
-        la, ra = (tuple(i for i, e in enumerate(axis) if e not in common)
-                  for axis in (axes, other))
-        output = defaultdict(dict)
-        lookup = defaultdict(list)
-        for q, poly in right.items():
-            lookup[tuple(q[i] for i in bi)].append((q, poly))
-        for p, poly in left.items():
-            for moments in product(*(HAAR[PAIRS[p[i]]] for i in ai)):
-                indices, weights = zip(*moments, strict=True)
-                for q, value in lookup[indices]:
-                    dest = tuple(p[i] for i in la) + tuple(q[i] for i in ra)
-                    wedge_accumulate(output[dest], poly, value, prod(weights))
-        open_links = tuple(axes[i] for i in la) + tuple(other[i] for i in ra)
-        reduced = {k: {m: v for m, v in row.items() if any(v)} for k, row in output.items()}
-        factors = [(open_links, {k: v for k, v in reduced.items() if v}),
-                   *(f for i, f in enumerate(factors) if i not in (0, index))]
-    axes, result = factors[0]
+    if len(factors) == 4:
+        # Join the two faces based at each center first. These pairs
+        # close the degree-eight frame endpoints before the final join.
+        factors = [join_factors(*factors[:2]), join_factors(*factors[2:])]
+    axes, result = join_factors(*factors)
     assert not axes
     return result.get((), {})
 
@@ -95,7 +99,22 @@ def protected_frames(pattern, faces, protected):
     return result
 
 
+def translated_factors(factors, shift):
+    translated = []
+    for edges, rows in factors:
+        coordinates = tuple((x ^ shift, axis) for x, axis in edges)
+        order = sorted(range(len(coordinates)), key=coordinates.__getitem__)
+        polynomials = {
+            tuple(key[i] for i in order): {sum(((mask >> (8*x)) & 255) << (8*(x ^ shift)) for x in range(16)): value
+                  for mask, value in poly.items()}
+            for key, poly in rows.items()
+        }
+        translated.append((tuple(coordinates[i] for i in order), polynomials))
+    return translated
+
+
 def main(face_count):
+    previous = None
     for pattern, multiplicity in orbits(swap_patterns()):
         faces, protected = curvature_boundary(pattern)
         if len(faces) != face_count:
@@ -103,7 +122,7 @@ def main(face_count):
         free = {e for edges in faces.values() for e in edges} - protected
         frames = protected_frames(pattern, faces, protected)
         boundaries = []
-        for face, edges in faces.items():
+        for face, edges in sorted(faces.items()):
             a, b = (axis for axis in range(4) if axis not in face[1:])
             label, _ = L[a, b][0]
             links = tuple(sorted(set(edges) & protected))
@@ -114,8 +133,23 @@ def main(face_count):
             integer = {key: {mask: (int(value.const().x), int(value.const().y))
                              for mask, value in poly.items()} for key, poly in row.items()}
             boundaries.append((open_links, integer))
-        result = close_shared(boundaries)
-        assert result == close_shared(boundaries[::-1])
+        print("faces", len(faces), "orbit", multiplicity, "input boundary entries",
+              [sum(map(len, row.values())) for _, row in boundaries], flush=True)
+        if face_count == 4:
+            # These cores differ only by translations, checked on the
+            # complete attached input before reusing the first closure.
+            shift = min(x for x, _, _ in faces)
+            normalized = translated_factors(boundaries, shift)
+            if previous is None:
+                result = close_shared(normalized)
+                assert result == close_shared(normalized[::-1])
+                previous = normalized, result
+            else:
+                assert normalized == previous[0]
+                result = previous[1]
+        else:
+            result = close_shared(boundaries)
+            assert result == close_shared(boundaries[::-1])
         print("faces", len(faces), "orbit", multiplicity, "face boundary sizes",
               [sum(map(len, row.values())) for _, row in boundaries],
               "joined exterior entries", len(result), flush=True)

@@ -3229,6 +3229,17 @@ The coordinate scale for this fixed-label boundary is
 `48 × 192¹² × 4²⁰` before the Dirac trace weights and remaining frames and action factors.
 The contraction preserves exact Gaussian integers and uses a
 complement lookup for sites whose fixed degrees add to eight.
-The cycle implementation also accepts four-face inputs. Its full
-four-face replay and the sum over gamma labels and remaining exterior
-factors are separate from the verified two-face controls.
+The four-face replay pairs the two faces at each mixed center first,
+closing one shared link and the saturated frame endpoints in each
+pair. The final join closes the two remaining links together.
+For the fixed labels, each face has 27,360 input exterior entries
+across its two open links. Reversal of the contraction order
+preserves all 2,702 coefficients after the last Haar projection.
+The other four-face representatives have translated core incidences.
+The replay checks equality of the full translated attached factors
+before reusing the closure. All three representatives passed the coefficientwise check. Whole
+site blocks have even occupancy,
+so that translation carries no exterior sign.
+The raw scale here is `48⁴ × 192¹⁶ × 4²⁴`. The remaining gamma
+labels, Dirac trace weights and exterior factors still have to be
+summed to obtain an orbit coefficient.
