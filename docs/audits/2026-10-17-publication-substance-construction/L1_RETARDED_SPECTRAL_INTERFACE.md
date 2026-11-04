@@ -3603,3 +3603,48 @@ pure sites. The next replay can contract the pure and mixed
 exterior factors separately and join their curvature component
 indices. The four-face normalization and the retained-core
 source terms remain open.
+
+### Completed four-face normalization
+
+The [tree-gauge replay](l1_extended_four_face_gauge_join.py) fixes
+the seven verified links to identity and sums all remaining gamma
+and probe labels. Each residual face has one protected pure-center
+link. Only one face also has the live mixed-center link. The
+pure-center exterior masks close on their two shared passive sites.
+The mixed-center masks close against the remote environment on
+four disjoint passive sites. The implementation pairs these two
+scalar contractions using the four ordered face component labels.
+No Haar scale is inserted for the fixed tree links.
+
+Conjugation by signed imaginary-axis permutations preserves the
+tree identities. The surviving mixed probe has twelve classes,
+with multiplicities (1,3,3,3) in each chirality and (1,3,3,9)
+for mixed chirality. Direct enumeration checked that the classes
+partition all 36 probes. The replay retains the direct probe loop
+as a separate route. Independent review checked the tree, factor
+indices, divisor and residual symmetry. Its first exact replay
+matched the uncached coefficient
+`3952470397264491175048828125/2361183241434822606848`.
+
+The full class-weighted replay completed with these representative
+coefficients, before the orbit and checkerboard weights:
+
+| Multiplicity per checkerboard | Representative normalization |
+| ---: | ---: |
+| 96 | `63238242420019660273681640625/4722366482869645213696` |
+| 192 | `223255944709626144287109375/147573952589676412928` |
+| 96 | `212498972694735519287109375/147573952589676412928` |
+
+The four-face normalization across both checkerboards is
+`252979770023001810375732421875/73786976294838206464`.
+Adding the peelable and two-face parts gives the complete
+balanced two-mixed-center normalization
+`1758825731205986946000732421875/73786976294838206464`.
+The four-face source terms retaining the core remain open.
+Other center counts and the unrestricted lattice sum remain open.
+
+Independent arithmetic reproduced both normalization totals.
+Independent removal enumeration also checked that the remaining
+source terms come from the two protected pure and four remote
+pure centers in each representative. The four removals at mixed
+centers are already in the deleted-face subtotal.
