@@ -3298,7 +3298,10 @@ of each right-hand mask for the exact wedge sign. Ten thousand
 128-bit controls matched the existing direct sign calculation.
 The four-face path compares the full translated input geometry
 and frame tables before reusing the attached closure. The expanded
-four-face component sum remains to be qualified.
+four-face replay completed for all three representatives. Each face
+had 185,792 input entries and each joined core had 2,702 exterior
+entries. The saturated fixed-gamma coefficients and the remote
+gamma sums were sixteen times their one-component controls.
 
 ### Gamma sum at a pure center with two protected edges
 
@@ -3352,3 +3355,33 @@ joint orbit calculation still has to join their open probe and
 component indices against the residual curvature factors and
 close the exterior masks. The mixed-center replay exercises two
 probe pairs and does not enumerate the entire two-probe table.
+
+### Full gamma closure for fixed probes in the two-face cores
+
+The [two-face gamma replay](l1_extended_two_face_gamma_join.py)
+extracts the protected coordinate-pair coefficients on each
+residual face and joins the one free link with its Haar fourth
+moment. It applies that component kernel to the mixed-center gamma
+tensor, attaches the two gamma-summed protected pure centers and
+the five remote centers, and saturates every exterior site. The
+independent review checked the trace multiplicities, all moment
+scales and the repeated-face factorials. Its replay matched both
+tested assignments on all three representatives.
+
+With all six protected probes set to `(0,0)`, the kernel has 12
+component rows and 86 mixed-core exterior entries. The saturated
+coefficient is `277641541909346923828125/37778931862957161709568`.
+With all six set to `(0,4)`, there are nine rows and 144 entries,
+and the coefficient is `243274383544921875/75557863725914323419136`.
+Both closures are exact and invariant under reversing factor order.
+
+The unsummed face has 6,000 distinct protected probe triples.
+Joining the two face supports before attaching frame tensors
+would consider 130,658,304 compatible free-pair products in the
+first representative. The incidence check shows that two of each
+face's three protected probes belong to the same pure center in
+all three representatives. The next contraction can sum those two
+probes against that center first, leaving one protected probe and
+the free link on each face. The fixed-probe coefficients above
+are controls for that sum. The targeted coefficient extractor also
+matched the full raw face expansion on 24 exact slice checks.
