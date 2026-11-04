@@ -20,7 +20,7 @@ void accumulate(Poly& a,Key k,long long v){
     if(f==a.end()){int w=mod(v);if(w)a.emplace(k,w);}
     else {f->second=mod(f->second+v);if(!f->second)a.erase(f);}
 }
-void add(Poly& a,const Poly& b,int s=1){for(auto [k,v]:b)accumulate(a,k,1LL*s*v);}
+void add(Poly& a,const Poly& b,long long s=1){for(auto [k,v]:b)accumulate(a,k,1LL*s*v);}
 void addprod(Poly& a,const Poly& b,const Poly& c,int s=1){
     for(auto [k,v]:b)for(auto [l,w]:c)accumulate(a,k+l,1LL*s*v*w);
 }
@@ -54,8 +54,8 @@ int fwd(int x,int d){return d==0?x^1:x;}
 void setup(int active_site,int active_axis,int seed,bool dense){
     int pauli[4][2][2]={{{0,1},{1,0}},{{0,-I},{I,0}},{{1,0},{0,-1}},{{1,0},{0,1}}};
     for(int a=0;a<4;++a)for(int i=0;i<2;++i)for(int j=0;j<2;++j){
-        accumulate(g[a][i][j+2],0,(a==3?1:-I)*pauli[a][i][j]);
-        accumulate(g[a][i+2][j],0,(a==3?1:I)*pauli[a][i][j]);
+        accumulate(g[a][i][j+2],0,(a==3?1LL:-1LL*I)*pauli[a][i][j]);
+        accumulate(g[a][i+2][j],0,(a==3?1LL:1LL*I)*pauli[a][i][j]);
     }
     g5=mm(mm(g[0],g[1]),mm(g[2],g[3]));
     for(int x=0;x<2;++x)for(int a=0;a<4;++a)for(int c=0;c<2;++c){
@@ -75,7 +75,7 @@ void setup(int active_site,int active_axis,int seed,bool dense){
             auto &u=U[x][a][2*c+i][2*c+j], &v=Ud[x][a][2*c+i][2*c+j];
             if(i==j){add(u,q[0]);add(v,q[0]);}
             for(int k=0;k<3;++k){
-                add(u,q[k+1],-I*pauli[k][i][j]);add(v,q[k+1],I*pauli[k][i][j]);
+                add(u,q[k+1],-1LL*I*pauli[k][i][j]);add(v,q[k+1],1LL*I*pauli[k][i][j]);
             }
         }
     }
@@ -93,12 +93,16 @@ Ext t(int x,int d,int z,int a){
     }
     return r;
 }
+Poly covariance[2][16][16];
+Ext coframe[2][16];
 pair<Ext,Ext> center(int x){
     Ext S,D;
     Ext T[4][2][4];
     for(int d=0;d<4;++d)for(int a=0;a<4;++a){
         T[d][0][a]=t(x,d,x,a);
         if(!d)T[d][1][a]=t(x,d,x^1,a);
+        coframe[x][4*d+a]=T[d][0][a];
+        if(!d)add(coframe[x][4*d+a],T[d][1][a]);
         if(d>=2)add(D,wedge(T[d][0][a],T[d][0][a]),d==2?1:-1);
     }
     for(int k=0;k<4;++k)for(int l=k+1;l<4;++l){
@@ -111,6 +115,8 @@ pair<Ext,Ext> center(int x){
             Poly coeff;
             for(int i=0;i<4;++i)add(coeff,tr[i][i]);
             if(coeff.empty())continue;
+            add(covariance[x][4*mu+a][4*nu+b],coeff,sg);
+            add(covariance[x][4*nu+b][4*mu+a],coeff,sg);
             for(int z=0;z<(mu==0?2:1);++z)for(int w=0;w<(nu==0?2:1);++w){
                 auto v=wedge(T[mu][z][a],T[nu][w][b]);
                 for(const auto& [mask,q]:v)addprod(S[mask],coeff,q,sg);
@@ -195,4 +201,5 @@ int main(int argc,char** argv){
         assert(total==local[h]);
         cout<<"global control "<<h<<' '<<total<<" top terms "<<p0[65535].size()<<endl;
     }
+    return 0;
 }

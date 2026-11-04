@@ -2708,3 +2708,14 @@ builder returned 18,700, 32,752 and 64,188, which matches the
 homogeneous rescaling exactly. Local and global accumulation
 orders agree at each source order. The linear term can be
 nonzero on this cut with seven links fixed.
+
+The [explicit local pairing replay](l1_wick_haar_paired.cpp)
+checks the Wick recurrence coefficientwise against the Taylor
+powers before joining with Haar moments. The [rational lift](l1_wick_haar_cut_crt.py)
+uses both embeddings of the imaginary unit, an eleven-prime
+176-bit modulus against a 162-bit numerator bound, and an
+unused prime 65,293. After unit-link normalization the exact
+coefficients are 385,114,112, 1,081,344 and 88,408,064,
+all real. This resolves the exact one-link dense control.
+The unrestricted lattice still requires the joint contraction
+of the other links and centers.
