@@ -5741,3 +5741,30 @@ The fixed-origin shear contribution is twice their difference,
 `397572019507085197326075/562949953421312` before `g₂³⁰`.
 The remaining paired and unpaired strata and full-ensemble
 normalization remain open.
+
+#### Exact support exclusion for a selected unpaired temporal word
+
+For the seven-coordinate bit-2 cut of the selected odd-curvature
+word, an exact signed contraction of the upper B environment leaves
+16 gamma keys and 3,456 exterior rows. The projection matches the
+two shared gamma labels before checking complementary exterior
+masks at sites 13 and 15. At each site the degrees are 2 from the
+incoming frame, 2 from the environment, and 4 from the connector.
+Dropping exterior constraints on other sites enlarges the support,
+so absence of a simultaneous complement proves the full shard is zero.
+
+Independent review checked this implication and the exact coordinate
+census. The two omitted coordinates have 48 combinations per case.
+The scratch run excluded 12,480 of the 24,576 cases on the five
+retained coordinates, certifying zero for 599,040 of the 1,179,648
+full tuples for this cut. It rejected the control with only
+`q(15,3)=5` changed from the all-one tuple. The all-one control
+and the `q(15,1)=5` control passed the projection despite their
+separately verified signed zeros. Passing the projection gives
+no nonzero certificate.
+
+The scratch receipt SHA-256 is
+`0e8c4ab9e79edcb98e97b5f479bb85038ffb8a9cfdb1b78bbac5d5dd313e72ef`.
+A tracked replay and signed evaluation of the surviving tuples
+remain open. Retaining the coupled site-5 and site-7 masks can
+strengthen the exclusion before that evaluation.
