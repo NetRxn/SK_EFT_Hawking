@@ -4758,3 +4758,20 @@ normalization overlaps for orbits 0–9 and source overlaps for orbits
 0 and 1 all agree. This was a receipt reduction, without a full
 independent rerun. The direct orbit-zero source comparison remains
 separate from this review.
+
+#### Exact reuse of the unprobed common-frame table
+
+The larger-core replay uses the existing summed fourth-frame table
+for the mixed common edge only when both directed anchors are
+unprobed Haar. Both expansions sum the same directed-anchor terms.
+The raw scales differ by `96²·8⁴/(192²·4⁴)=4`. The replay checks
+divisibility of both Gaussian components before taking the quotient.
+
+The bounded mixed-row control and the grouped-product path agreed
+on 232 masks and divisor `13132496513412366336`. A direct
+Haar/Haar gamma tuple agreed on all 38 masks. Independent static
+review checked the anchor and site conventions, the scale, and
+dispatch to the existing fixed, probed, pure, and source paths.
+Dispatch controls passed. The full fixed/Haar fallback and source
+controls reached their cold time caps before emitting totals.
+The larger-core sums still require complete execution receipts.

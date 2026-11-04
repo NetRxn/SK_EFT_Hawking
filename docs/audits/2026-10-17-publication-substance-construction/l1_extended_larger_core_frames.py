@@ -6,7 +6,7 @@ from functools import cache, lru_cache
 from itertools import combinations, product
 from math import factorial, prod
 
-from l1_direct_b_haar import add, scale, wedge
+from l1_direct_b_haar import R, add, scale, wedge
 from l1_extended_four_face_gauge_join import IDENTITY, PROBE_CLASSES, larger_core_tree
 from l1_extended_mixed_center_census import AXES, EVEN, curvature_boundary, orbits, words_with_mixed_count
 from l1_extended_mixed_center_gamma import (
@@ -46,6 +46,35 @@ def layout(pattern, faces, protected, minimize_keys=False):
 def edge_table(degree, moments, slot):
     labels = tuples if degree == 4 else PAIRS
     return {g: remap(frame_edge_moments(g, moments), (0, slot)) for g in labels}
+
+
+@cache
+def unprobed_common_table():
+    # Both routes expand the same two directed anchors with independent Haar.
+    # The summed table uses 96 per anchor and 8T per coframe. Here we use
+    # SCALE=192 per anchor and 4T per coframe, so the raw ratio is four.
+    ratio, remainder = divmod(96**2 * 8**4, SCALE**2 * 4**4)
+    assert not remainder and ratio == 4
+    result = {}
+    for labels, poly in summed_fourth(1).items():
+        row = {}
+        for mask, value in poly.items():
+            assert value.is_ground
+            z = value.const()
+            real, imag = int(z.x), int(z.y)
+            assert real % ratio == imag % ratio == 0
+            row[mask] = R.ground_new(R.domain.dtype(real // ratio, imag // ratio))
+        result[labels] = row
+    return result
+
+
+def mixed_edge_tables(moments):
+    first, common, last = moments
+    return (
+        edge_table(2, first, 1),
+        unprobed_common_table() if common == ((), ()) else edge_table(4, common, 2),
+        edge_table(2, last, 3),
+    )
 
 
 @cache
@@ -102,8 +131,8 @@ def center_tensor(center, planes, slots, components, probes, removed=None, produ
         curvature_scale = 48 * factorial(4) if first == last else 48**2 * factorial(2)**2
         return directions, source_center_tensor(planes, directions, moments, removed), divisor * curvature_scale
 
-    tensors = [edge_table(d, m, i) for i, (d, m) in enumerate(zip(degrees, moments, strict=True), 1)]
     if first == last:
+        tensors = [edge_table(d, m, i) for i, (d, m) in enumerate(zip(degrees, moments, strict=True), 1)]
         k, l = (axis for axis in AXES if axis not in first)
         assert (center, k, l) not in components
         result, _ = staged_center(*tensors)
@@ -120,7 +149,7 @@ def center_tensor(center, planes, slots, components, probes, removed=None, produ
         if labels is None:
             divisor *= 48
     if products is None:
-        result = contract_gamma(*tensors, *weights)
+        result = contract_gamma(*mixed_edge_tables(moments), *weights)
     else:
         result = contract_gamma_products(products(tuple(moments)), *weights)
     return directions, result, divisor * factorial(2)**2
@@ -251,9 +280,7 @@ def center_factor(center, planes, slots, faces, removed=None):
     divisor = None
     @lru_cache(maxsize=1)
     def products(moments):
-        return gamma_products(*(edge_table(degree, moment, i)
-                                for i, (degree, moment) in enumerate(
-                                    zip((2, 4, 2), moments, strict=True), 1)))
+        return gamma_products(*mixed_edge_tables(moments))
 
     for key in grouped_projection_keys(projections):
         components = {axis: value for axis, value in zip(axes, key, strict=True) if len(axis) == 3}
