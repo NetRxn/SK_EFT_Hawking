@@ -2233,3 +2233,14 @@ Opposite chirality integrates to zero by independence and
 centering. This removes the pure transverse pair analytically
 before the time-link cycle. Exact coordinate controls and the
 remaining network contraction are pending.
+
+The [identity-transverse cycle control](l1_extended_overlap_identity_cycle.py)
+pins every transverse link to the identity and integrates all
+time links. The independent character calculation gives
+46,798,847,841,893,967,231,713,280 per column before exterior
+and upper normalization, using 23,616 contributing column rows.
+The two columns decouple under this specialization. This control
+also rejects equality filtering on the inverse-oriented face
+labels. Four edges with vector label pair (0,1) have a nonzero
+moment of 1/3456. The earlier diagonal-only mixed-boundary scratch
+value is therefore excluded from the full boundary calculation.
