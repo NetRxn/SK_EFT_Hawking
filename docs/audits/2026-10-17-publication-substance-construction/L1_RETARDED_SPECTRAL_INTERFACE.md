@@ -3273,3 +3273,29 @@ The coefficients differ once the remaining frame factors are included.
 The remaining gamma channels at the protected-edge centers and the
 other residual curvature components are needed for complete orbit
 coefficients.
+
+### Summing residual Dirac components
+
+The frame-join replay now expands both curvature occurrences at each
+residual face over its nonzero Dirac trace components. It multiplies
+each ordered component pair by the two trace weights before attaching
+the frames. Both orders of a mixed component pair are included.
+The `--single-component` option reproduces the earlier controls,
+with the same trace weight applied at the face.
+
+The complete residual-component run for all three two-face
+representatives gives 1,200 entries per attached face and 84 after
+the shared-link join. The saturated fixed-gamma coefficient is
+`3159044015968265625/618970019642690137449562112`. Summing gamma
+channels at the five remote centers gives
+`17769622589821494140625/18889465931478580854784`. Both values are
+four times the one-component controls. Independent review checked
+the ordered multiplicities and placement of trace weights.
+
+The join indexes each right-hand exterior factor once by the masks
+that must complement the left factor. It precomputes prefix parity
+of each right-hand mask for the exact wedge sign. Ten thousand
+128-bit controls matched the existing direct sign calculation.
+The four-face path compares the full translated input geometry
+and frame tables before reusing the attached closure. The expanded
+four-face component sum remains to be qualified.

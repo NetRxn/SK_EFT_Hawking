@@ -1,12 +1,12 @@
 """Attach protected frame tensors on fixed gamma slices of the curvature cores."""
 from argparse import ArgumentParser
-from collections import defaultdict
+from collections import Counter, defaultdict
 from fractions import Fraction
 from functools import cache
 from itertools import product
 from math import factorial, prod
 
-from l1_direct_b_haar import R, add, scale, wedge
+from l1_direct_b_haar import R, wedge
 from l1_extended_mixed_center_census import EVEN, curvature_boundary, orbits, swap_patterns
 from l1_extended_mixed_curvature_core import PAIRS, face_tensor
 from l1_extended_mixed_frame_moment import SCALE, frame_edge
@@ -15,40 +15,56 @@ from l1_extended_opposed_source import summed_fourth
 from l1_extended_overlap_strip import HAAR
 from l1_extended_two_mixed_centers import contract, mixed_center, remap, second_sum
 from l1_normalization_opposed_fourth import L
-from l1_reduced_wedge_reference import wedge_sign
 
 
-def attached_face(face, protected, free, frames, labels):
-    raw = face_tensor(face, (*protected, *free), {}, labels)
+def attached_face(face, protected, free, frames, components):
+    raw = Counter()
+    for (a, u), (b, v) in product(components, repeat=2):
+        for key, weight in face_tensor(face, (*protected, *free), {}, (a, b)).items():
+            raw[key] += u * v * weight
 
     @cache
     def combined(left, middle):
         return wedge(frames[protected[0]][left], frames[protected[1]][middle])
 
-    out = defaultdict(dict)
+    out = defaultdict(lambda: defaultdict(lambda: R.zero))
     for (a, b, *tail), weight in raw.items():
+        if not weight:
+            continue
         term = combined(a, b)
         if len(protected) == 3:
             c, *tail = tail
             term = wedge(term, frames[protected[2]][c])
         if term:
             live = tuple(tail)
-            out[live] = add(out[live], scale(term, weight))
-    return {i: poly for i, poly in out.items() if poly}
+            row = out[live]
+            for mask, value in term.items():
+                row[mask] += value * weight
+    reduced = {i: {mask: value for mask, value in poly.items() if value}
+               for i, poly in out.items()}
+    return {i: poly for i, poly in reduced.items() if poly}
 
 
-def wedge_accumulate(out, left, right, weight):
-    first, second = next(iter(left)), next(iter(right))
-    full = sum(255 << shift for shift in range(0, 128, 8)
+def complement_mask(left, right):
+    first = next(iter(next(iter(left.values()))))
+    second = next(iter(next(iter(right.values()))))
+    return sum(255 << shift for shift in range(0, 128, 8)
                if ((first >> shift) & 255).bit_count()
                + ((second >> shift) & 255).bit_count() == 8)
-    index = defaultdict(list)
-    for mask, coefficient in right.items():
-        index[mask & full].append((mask, coefficient))
+
+
+def preceding_parity(mask):
+    # Exclusive prefix parity of the right factor at every generator.
+    for shift in (1, 2, 4, 8, 16, 32, 64):
+        mask ^= mask << shift
+    return mask << 1
+
+
+def wedge_accumulate(out, left, index, full, weight):
     for a, (r, i) in left.items():
-        for b, (s, j) in index[full ^ (a & full)]:
+        for b, parity, (s, j) in index[full ^ (a & full)]:
             if not a & b:
-                signed = weight * wedge_sign(a, b)
+                signed = -weight if (a & parity).bit_count() % 2 else weight
                 old_r, old_i = out.get(a | b, (0, 0))
                 out[a | b] = old_r + signed*(r*s - i*j), old_i + signed*(r*j + i*s)
 
@@ -61,15 +77,21 @@ def join_factors(first, second):
     la, ra = (tuple(i for i, e in enumerate(axis) if e not in common)
               for axis in (axes, other))
     output = defaultdict(dict)
+    if not left or not right:
+        return tuple(axes[i] for i in la) + tuple(other[i] for i in ra), {}
+    full = complement_mask(left, right)
     lookup = defaultdict(list)
     for q, poly in right.items():
-        lookup[tuple(q[i] for i in bi)].append((q, poly))
+        index = defaultdict(list)
+        for mask, coefficient in poly.items():
+            index[mask & full].append((mask, preceding_parity(mask), coefficient))
+        lookup[tuple(q[i] for i in bi)].append((q, index))
     for p, poly in left.items():
         for moments in product(*(HAAR[PAIRS[p[i]]] for i in ai)):
             indices, weights = zip(*moments, strict=True)
             for q, value in lookup[indices]:
                 dest = tuple(p[i] for i in la) + tuple(q[i] for i in ra)
-                wedge_accumulate(output[dest], poly, value, prod(weights))
+                wedge_accumulate(output[dest], poly, value, full, prod(weights))
     open_links = tuple(axes[i] for i in la) + tuple(other[i] for i in ra)
     reduced = {k: {m: v for m, v in row.items() if any(v)} for k, row in output.items()}
     return open_links, {k: v for k, v in reduced.items() if v}
@@ -156,10 +178,7 @@ def saturate_slice(pattern, faces, attached, result, free_count, shift, *, sum_r
         for a, b in set(pairs):
             n = 2 * pairs.count((a, b))
             k, l = (axis for axis in range(4) if axis not in (a, b))
-            if (x, k, l) in faces:
-                _, trace_weight = L[a, b][0]
-                weight *= trace_weight**n
-            else:
+            if (x, k, l) not in faces:
                 weight *= curvature(((a, b),) * n)
                 divisor *= 48
             divisor *= factorial(n)
@@ -183,7 +202,32 @@ def saturate_slice(pattern, faces, attached, result, free_count, shift, *, sum_r
     return Fraction(weight * int(raw.const().x), divisor), summed
 
 
-def main(face_count):
+def translated_inputs(faces, frames, shift):
+    sites = tuple(x ^ shift for x in range(16))
+    geometry = {(sites[x], k, l): {(sites[y], a) for y, a in edges}
+                 for (x, k, l), edges in faces.items()}
+    tables = {(sites[x], axis): tuple(remap(poly, sites) for poly in rows)
+              for (x, axis), rows in frames.items()}
+    return geometry, tables
+
+
+def build_boundaries(faces, protected, free, frames, single_component):
+    boundaries = []
+    for face, edges in sorted(faces.items()):
+        a, b = (axis for axis in range(4) if axis not in face[1:])
+        components = L[a, b][:1] if single_component else L[a, b]
+        links = tuple(sorted(set(edges) & protected))
+        open_links = tuple(sorted(set(edges) & free))
+        row = attached_face(face, links, open_links, frames, components)
+        assert row == attached_face(face, links[::-1], open_links, frames, components)
+        assert all(value.is_ground for poly in row.values() for value in poly.values())
+        integer = {key: {mask: (int(value.const().x), int(value.const().y))
+                         for mask, value in poly.items()} for key, poly in row.items()}
+        boundaries.append((open_links, integer))
+    return boundaries
+
+
+def main(face_count, single_component):
     previous = None
     for pattern, multiplicity in orbits(swap_patterns()):
         faces, protected = curvature_boundary(pattern)
@@ -191,39 +235,24 @@ def main(face_count):
             continue
         free = {e for edges in faces.values() for e in edges} - protected
         frames = protected_frames(pattern, faces, protected)
-        boundaries = []
-        for face, edges in sorted(faces.items()):
-            a, b = (axis for axis in range(4) if axis not in face[1:])
-            label, _ = L[a, b][0]
-            links = tuple(sorted(set(edges) & protected))
-            open_links = tuple(sorted(set(edges) & free))
-            row = attached_face(face, links, open_links, frames, (label, label))
-            assert row == attached_face(face, links[::-1], open_links, frames, (label, label))
-            assert all(value.is_ground for poly in row.values() for value in poly.values())
-            integer = {key: {mask: (int(value.const().x), int(value.const().y))
-                             for mask, value in poly.items()} for key, poly in row.items()}
-            boundaries.append((open_links, integer))
-        print("faces", len(faces), "orbit", multiplicity, "input boundary entries",
-              [sum(map(len, row.values())) for _, row in boundaries], flush=True)
-        shift = 0
-        if face_count == 4:
-            # These cores differ only by translations, checked on the
-            # complete attached input before reusing the first closure.
-            shift = min(x for x, _, _ in faces)
-            normalized = translated_factors(boundaries, shift)
-            if previous is None:
-                result = close_shared(normalized)
-                assert result == close_shared(normalized[::-1])
-                previous = normalized, result
-            else:
-                assert normalized == previous[0]
-                result = previous[1]
+        shift = min(x for x, _, _ in faces) if face_count == 4 else 0
+        inputs = translated_inputs(faces, frames, shift) if face_count == 4 else None
+        if face_count == 4 and previous is not None:
+            expected_inputs, sizes, result = previous
+            assert inputs == expected_inputs
         else:
+            boundaries = build_boundaries(faces, protected, free, frames, single_component)
+            sizes = [sum(map(len, row.values())) for _, row in boundaries]
+            print("faces", face_count, "orbit", multiplicity, "input boundary entries",
+                  sizes, flush=True)
+            if face_count == 4:
+                boundaries = translated_factors(boundaries, shift)
             result = close_shared(boundaries)
             assert result == close_shared(boundaries[::-1])
-        print("faces", len(faces), "orbit", multiplicity, "face boundary sizes",
-              [sum(map(len, row.values())) for _, row in boundaries],
-              "joined exterior entries", len(result), flush=True)
+            if face_count == 4:
+                previous = inputs, sizes, result
+        print("faces", face_count, "orbit", multiplicity, "face boundary sizes",
+              sizes, "joined exterior entries", len(result), flush=True)
         coefficient, _ = saturate_slice(pattern, faces, frames, result, len(free), shift)
         print("saturated fixed-label coefficient", coefficient, flush=True)
         coefficient, summed = saturate_slice(
@@ -235,4 +264,7 @@ def main(face_count):
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--faces", type=int, choices=(2, 4), default=2)
-    main(parser.parse_args().faces)
+    parser.add_argument("--single-component", action="store_true",
+                        help="replay the original one-component control")
+    args = parser.parse_args()
+    main(args.faces, args.single_component)
