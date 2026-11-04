@@ -2043,3 +2043,14 @@ control uses Q†, Q, R†Q and Q†R on the four faces, with
 R=(6,0). Unit-coordinate R inputs verify the diagonal
 coefficients of its homogeneous quadratic boundary slice.
 Mixed-coordinate coefficients remain outside that control.
+
+The full [four-face replay](l1_extended_overlap_four_face.cpp)
+retains linear coordinates for (2,1), (3,1), (6,2), (7,2)
+and the symmetric quadratic pair for (6,0). The exact
+48-scaled projection gives 173,664 nonzero entries across
+25,088 boundary monomials, with at most 21 entries per row.
+It recovers the unit-coordinate control. The separate Python
+identity-slice calculation also retains the mixed coordinates
+of (6,0): 408 additional terms supplement the 276 equal-coordinate
+terms. Independent review of the full tensor is pending.
+The complete motif still needs the remaining boundary joins.

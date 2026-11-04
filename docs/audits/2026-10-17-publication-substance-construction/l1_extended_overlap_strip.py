@@ -81,6 +81,32 @@ def pure_patch():
           'nonzero chirality assignments',sum(bool(x) for x in counts.values()),
           'coefficient histogram',dict(sorted(coefficients.items())),flush=True)
 
+def mixed_boundary():
+    """Retain both chiral coordinate labels of R on the identity slice."""
+    totals = Counter()
+    for sectors in product(range(2), repeat=4):
+        for q in product(Q, repeat=4):
+            weight = moment(*(4*c+j for c, j in zip(sectors, q)))
+            if not weight:
+                continue
+            a, b, c, d = map(unit, q)
+            for i, j in product(Q, repeat=2):
+                coords = tuple(sorted((4*sectors[2]+i, 4*sectors[3]+j)))
+                vectors = (qadj(a)[1:], b[1:], mul(qadj(unit(i)), c)[1:],
+                           mul(qadj(d), unit(j))[1:])
+                for v in product(range(3), repeat=4):
+                    coefficient = weight
+                    for vector, index in zip(vectors, v):
+                        coefficient *= vector[index]
+                    if coefficient:
+                        totals[sectors, coords, v] += coefficient
+    support = {key: value for key, value in totals.items() if value}
+    diagonal = sum(i % 4 == j % 4 for _, (i, j), _ in support)
+    assert diagonal == 276
+    print('four-face R polynomial terms, equal-coordinate, mixed-coordinate',
+          len(support), diagonal, len(support)-diagonal)
+
+
 def check_rank():
     from sympy import QQ
     from sympy.polys.matrices import DomainMatrix
@@ -119,5 +145,6 @@ if __name__=='__main__':
     print('strip nonzero frame column pairs',{k:len(v) for k,v in columns.items()},'max row',peak,flush=True)
     print('strip exact coefficient histogram',dict(sorted(values.items())),flush=True)
     pure_patch()
+    mixed_boundary()
     check_rank()
     print('seconds',perf_counter()-start)
