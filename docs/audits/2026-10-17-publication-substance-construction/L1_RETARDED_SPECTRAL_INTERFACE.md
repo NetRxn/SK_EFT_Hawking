@@ -4853,3 +4853,18 @@ is `1376612256215684873408203125/9223372036854775808` and full
 numerator is `−57820902558767550966796875/72057594037927936`.
 This is the first completed full orbit on the opt-in integer path.
 The receipt review did not rerun the orbit on the reference path.
+
+#### Full class-weighted six-face deletion 0
+
+The `--six-deletions --deletion-index 0` replay exited zero.
+The omitted face `(9,0,1)` selects source frame `(2,3)` at site 9.
+Independent review matched the four surviving faces and unchanged
+protection. The class edge `(12,0)` reduces the projected key
+counts from `(69696,70213)` to `(22176,22693)`.
+
+The fixed-shear source before orbit weighting is
+`−915607170319704345703125/18446744073709551616`.
+Weighting 192 words per checkerboard gives
+`−2746821510959113037109375/144115188075855872`.
+Independent review reproduced the weighting. A full direct-probe
+rerun was outside the receipt review.
