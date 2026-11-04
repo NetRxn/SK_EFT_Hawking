@@ -7,7 +7,7 @@ from itertools import combinations, product
 from math import factorial, prod
 
 from l1_direct_b_haar import add, scale, wedge
-from l1_extended_four_face_gauge_join import IDENTITY, larger_core_tree
+from l1_extended_four_face_gauge_join import IDENTITY, PROBE_CLASSES, larger_core_tree
 from l1_extended_mixed_center_census import AXES, EVEN, curvature_boundary, orbits, words_with_mixed_count
 from l1_extended_mixed_center_gamma import (
     COMPONENTS, contract_gamma, contract_gamma_products, face_channels,
@@ -158,15 +158,19 @@ def contract_slice(pattern, slots, components, probes, replacement=None):
     return Fraction(int(result.const().x), divisor * (6 if replacement is not None else 1))
 
 
-def face_factor(face, edges, tree, live, selection=None):
+def face_factor(face, edges, tree, live, selection=None, class_edge=None):
     active = tuple(sorted(edges & live))
     fixed = dict.fromkeys(edges & tree, IDENTITY)
     rows = {}
+    class_axis = active.index(class_edge) if class_edge in active else None
+    class_weights = {PAIR_INDEX[pair]: count for pair, count in PROBE_CLASSES}
     for labels in COMPONENTS:
         for keys, value in face_tensor(face, active, fixed, labels).items():
             key = (labels, *keys)
             if selection is None or key == selection:
-                rows[key] = {0: (value, 0)}
+                weight = 1 if class_axis is None else class_weights.get(keys[class_axis], 0)
+                if weight:
+                    rows[key] = {0: (value * weight, 0)}
     assert rows
     return (face, *active), rows
 
@@ -183,6 +187,32 @@ def projected_keys(center, factor):
     if not indices:
         return (), {()}
     return tuple(axes[i] for i in indices), {tuple(row[i] for i in indices) for row in rows}
+
+
+def projected_cost(factors):
+    sizes = tuple(prod(len(projected_keys(center, factor)[1]) for factor in factors)
+                  for center in EVEN)
+    return max(sizes), sum(sizes)
+
+
+def class_face_factors(faces, tree, live):
+    baseline = face_factors(faces, tree, live)
+    owner = {edge: index for index, (_, *edges) in enumerate(axes for axes, _ in baseline)
+             for edge in edges}
+    assert owner.keys() == live
+    best = None
+    for edge in sorted(live):
+        index = owner[edge]
+        face = baseline[index][0][0]
+        candidate = list(baseline)
+        candidate[index] = face_factor(face, faces[face], tree, live, class_edge=edge)
+        cost = projected_cost(candidate)
+        if best is None or cost < best[0]:
+            best = cost, edge, candidate
+    assert best is not None
+    cost, edge, factors = best
+    assert cost <= projected_cost(baseline)
+    return edge, factors
 
 
 def tree_key_cost(faces):
@@ -265,9 +295,13 @@ def close_factors(factors):
 
 
 def contract_factors(pattern, slots, faces, tree, live, selection=None, retained=None,
-                     replacement=None):
+                     replacement=None, use_classes=True):
     assert retained is None or replacement is None
-    curvature = face_factors(faces, tree, live, selection)
+    if selection is None and use_classes:
+        edge, curvature = class_face_factors(faces, tree, live)
+        print("probe classes at", edge, "projected keys", projected_cost(curvature), flush=True)
+    else:
+        curvature = face_factors(faces, tree, live, selection)
     factors = list(curvature)
     divisors = {}
     for center, planes in zip(EVEN, pattern, strict=True):
@@ -345,7 +379,7 @@ def verify_local_tensors():
     print("pure and mixed local tensors agree with the established replays", flush=True)
 
 
-def replay_six_deletions(first_slice, deletion_index):
+def replay_six_deletions(first_slice, deletion_index, use_classes):
     total = Fraction()
     count = 0
     for pattern, multiplicity in orbits(words_with_mixed_count(3)):
@@ -372,7 +406,8 @@ def replay_six_deletions(first_slice, deletion_index):
                 components, probes = probe_slice(rest, tree, live)
                 selection = {face: (components[face], *(PAIR_INDEX[probes[e]] for e in sorted(edges & live)))
                              for face, edges in rest.items()}
-            value = contract_factors(pattern, slots, rest, tree, live, selection, replacement=replacement)
+            value = contract_factors(pattern, slots, rest, tree, live, selection,
+                                     replacement=replacement, use_classes=use_classes)
             if first_slice:
                 direct = contract_slice(pattern, slots, components, probes, replacement)
                 assert value == direct
@@ -387,7 +422,7 @@ def replay_six_deletions(first_slice, deletion_index):
         print(label, "both checkerboards", total, flush=True)
 
 
-def main(first_slice=False, full_orbit=None, tree_costs=False, source=False):
+def main(first_slice=False, full_orbit=None, tree_costs=False, source=False, use_classes=True):
     counts = Counter()
     completed_full = False
     for pattern, multiplicity in orbits(words_with_mixed_count(3)):
@@ -404,7 +439,9 @@ def main(first_slice=False, full_orbit=None, tree_costs=False, source=False):
             assert optimized <= baseline
             if not counts:
                 assert (baseline, optimized) == ((199584, 205189), (69696, 70213))
-            print("projected keys", len(faces), baseline, optimized, flush=True)
+            edge, factors = class_face_factors(faces, tree, live)
+            print("projected keys", len(faces), baseline, optimized,
+                  "probe classes at", edge, projected_cost(factors), flush=True)
         retained = retained_planes(pattern, faces, protected)
         components, probes = probe_slice(faces, tree, live)
         if first_slice and not counts:
@@ -418,7 +455,7 @@ def main(first_slice=False, full_orbit=None, tree_costs=False, source=False):
             score = tree_key_cost(faces)
             print("full orbit", full_orbit, "projected keys", score(tree, live), flush=True)
             result = contract_factors(pattern, slots, faces, tree, live,
-                                      retained=retained if source else None)
+                                      retained=retained if source else None, use_classes=use_classes)
             if source:
                 result, numerator = result
                 print("full orbit", full_orbit, "retained numerator", numerator, flush=True)
@@ -449,17 +486,18 @@ if __name__ == "__main__":
     parser.add_argument("--retained-source", action="store_true")
     parser.add_argument("--six-deletions", action="store_true")
     parser.add_argument("--deletion-index", type=int, choices=range(6))
+    parser.add_argument("--all-probes", action="store_true", help="use the direct probe sum for comparison")
     args = parser.parse_args()
     if args.deletion_index is not None and not args.six_deletions:
         parser.error("--deletion-index requires --six-deletions")
     if args.six_deletions:
         if args.full_orbit is not None or args.retained_source or args.tree_costs or args.local_controls or args.source_controls:
             parser.error("--six-deletions is separate from original-core replays")
-        replay_six_deletions(args.first_slice, args.deletion_index)
+        replay_six_deletions(args.first_slice, args.deletion_index, not args.all_probes)
         raise SystemExit
     if args.retained_source and args.full_orbit is None:
         parser.error("--retained-source requires --full-orbit or --full-first")
-    main(args.first_slice, args.full_orbit, args.tree_costs, args.retained_source)
+    main(args.first_slice, args.full_orbit, args.tree_costs, args.retained_source, not args.all_probes)
     if args.local_controls:
         verify_local_tensors()
     if args.source_controls:

@@ -4398,3 +4398,29 @@ reproduced the key census and checked the exterior order and
 divisors. Twenty nonzero exact gamma contractions with a shared
 frame block reproduced the direct route in a synthetic fixture.
 The physical component-row comparison and complete orbit remain open.
+
+#### Single-link probe classes in the sparse sum
+
+The six physical component rows in the grouped-probe control
+matched the direct contractions exactly. On that fixture the
+direct and reused paths took 8.303 and 3.240 CPU seconds,
+respectively, with one cache miss and five hits.
+
+The full sparse sum now applies the established twelve probe
+classes to one selected live edge. Residual global gauge
+conjugation preserves the tree identities. Signed permutations
+of the imaginary coordinates in each chirality permute the
+quadratic probes, with the signs canceling between curvature
+and frame factors. The same argument covers the summed
+source insertion at a directed frame endpoint. The replay
+weights the selected face factor once and sums all other
+labels. Fixed-probe controls bypass the class weights, and
+`--all-probes` selects the direct sum.
+
+Independent enumeration checked the twelve classes and their
+36 total probes. Selecting the edge by joint projected-key
+cost reduces the maximum in orbit 10 from 5,544 to 1,320, and
+in the other four-face orbits from 69,696 to 22,176. In the
+six-face orbit it reduces the maximum from 1,463,616 to
+348,480. These are counts before exterior pruning. The full
+class-weighted numerical comparison remains open.
