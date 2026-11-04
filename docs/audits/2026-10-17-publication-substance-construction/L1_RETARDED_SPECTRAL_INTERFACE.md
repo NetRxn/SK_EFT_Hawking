@@ -2308,3 +2308,15 @@ The exact value after `48^8 * 4^4` is
 `1959689171103691034414437601649194086717980672` before exterior
 and upper normalization. The other coordinate and chirality
 blocks remain part of the required signed sum.
+
+Independent review accepted the exact block at `159825103`.
+The reviewer reproduced the value and checked the two paths
+`H S3ᵀ F S0 H` and `S2 H S1ᵀ`, their common endpoints,
+and the row-one-norm bound. The mixed coordinates change S2
+only, so the first path can be reused within a chirality topology.
+The [chirality replay](l1_extended_overlap_chirality_control.py)
+also checks all 2,321,664 exterior coefficients under simultaneous
+interchange of the two chiral factors. Haar moments and quaternion
+multiplication are identical in the two factors. The full gauge
+contraction can therefore pair globally flipped blocks with equal
+contributions. The unrestricted block scheduler remains open.
