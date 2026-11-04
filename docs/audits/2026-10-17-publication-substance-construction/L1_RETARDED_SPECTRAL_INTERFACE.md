@@ -2877,3 +2877,36 @@ review matched the raw-derived result to the known projected source
 column and checked that only the intended half changed. This supplies
 a full-mask source-column control for the next extension across
 action-word sectors.
+
+### Two-source contribution from the disjoint opposed word
+
+The [opposed-source replay](l1_extended_opposed_source.py) evaluates
+all two-source replacements of the disjoint repeated-plane word
+with four identical action vertices at each of the eight even-parity
+centers. Removing one vertex at each of two distinct centers leaves
+odd powers on their private curvature links. The sources touch only
+the transverse frame links, so those terms integrate to zero.
+
+Removing two vertices at one center leaves bilinear deficits
+`(4,2,2)` at the center and its two transverse neighbors. The
+ordered degree census forces one source per incident transverse
+edge. Each source may be based at either endpoint. A source based
+at the action center shares the link and uses a fourth moment. A
+source based at the other endpoint uses the separate reverse-directed
+link and two independent second moments. The signed layer coefficients,
+including the surviving action factorials and both source orders, are:
+
+| Separation bits | Layer coefficient |
+| --- | ---: |
+| 0 | −22275/16384 |
+| 4 | −2025/2048 |
+| 8 | −2025/2048 |
+| 12 | −6075/8192 |
+
+All eight choices of removed center have the same contribution.
+Multiplying by eight and by the three unchanged layer factors gives
+`-15830134442138671875/36893488147419103232`. Independent review
+reproduced the four layer coefficients and subtotal, and checked the
+private-link parity, distinct directed anchors, and factorials.
+This is a second exact selected-word numerator contribution. Other
+action-word sectors and the full signed denominator remain open.
