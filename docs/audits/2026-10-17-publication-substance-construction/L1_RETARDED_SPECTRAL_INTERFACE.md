@@ -6072,3 +6072,13 @@ seven-factor controls matched the cached signed maps, including
 nonempty maps and their primitive scales. This module supplies
 the calculation core. The live bulk driver still uses its pinned
 scratch runner and receipt partition.
+
+The next replay completed prefixes `[11,35)`. Independent
+review verified the pinned inputs, all 24 distinct prefix
+identities, and the separately repeated prefix-3 control.
+The new batch checked 1,199,088 compatible products with
+329,472 nonzero matches and no caps. Twelve prefixes vanish,
+eight contribute `−8371769346801/73786976294838206464`, and
+four contribute its positive counterpart. The real subtotal
+is `−8371769346801/18446744073709551616` and the imaginary
+subtotal is zero. The next untouched prefix is 35.
