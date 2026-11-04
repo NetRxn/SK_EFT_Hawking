@@ -235,6 +235,20 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   background, with matched transport coefficients and boundary
   conventions. Keep the three registrations and the four-laws
   obligation open while that identification is developed.
+  A primary-source check against [Balbinot, Fagnocchi and Fabbri](https://doi.org/10.1103/PhysRevD.71.064019)
+  established the boundary control in their stationary Polyakov
+  and Unruh-state approximation. The nozzle is homentropic and
+  the background equations use phonon stress and its trace.
+  The outgoing null stress gives laboratory energy flux
+  `F_E = c² T_{--} = ℏc²κ²/(48π)`. For one outgoing thermal
+  bosonic channel, integrating the energy and mode entropy with
+  density of states `dω/(2π)` gives `F_S = 2F_E/T_H`.
+  Independent review reproduced the stress conversion and both
+  integrals. The exterior interval balance needs the inner
+  moving-cut term `(J − ż_H s)_inner`, the outer flux, and a
+  specified density and current or reduced-state entropy.
+  The local production sign and physical current identification
+  remain open.
   A separate composition trial on `ce194cdc4` combined the
   serializer, D7 regression, managed paths, inventory and citation
   fixes with the generated tables and reviewed polariton source
