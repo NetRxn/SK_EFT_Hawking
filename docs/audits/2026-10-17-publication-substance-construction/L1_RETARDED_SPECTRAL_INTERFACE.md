@@ -5250,6 +5250,23 @@ The reviewed batches bring two-face coverage to 16 orbits and
 3,072 words per checkerboard. The next component replay ranges
 are `[16,32)` and `[32,48)`.
 
+#### Two-face overlap-base orbits 16–47
+
+The two component batches exited zero. Independent exact reduction
+checked all 32 raw rows and the weighted normalization and source
+components. Each range covers 3,072 words per checkerboard.
+
+| Both-checkerboard contribution | Orbits 16–31 | Orbits 32–47 |
+| --- | ---: | ---: |
+| Normalization | `517617956644112980142578125/144115188075855872` | `3240069235512036719579296875/1152921504606846976` |
+| Remote source | `−428019459161629775075015625/36028797018963968` | `−1352189370205258839486421875/144115188075855872` |
+| Upper source | `−750232568800826556944484375/144115188075855872` | `−576498439758337048154953125/144115188075855872` |
+| Deleted source | `−735871402982549562890625/281474976710656` | `−36054169642181816015625/17592186044416` |
+| Full fixed-shear numerator | `−2839076563774411033444546875/144115188075855872` | `−278005445959043665555171875/18014398509481984` |
+
+The covered prefix now comprises 48 orbits and 9,216 words per
+checkerboard. Next ranges are `[48,64)` and `[64,80)`.
+
 ### Exact temporal transfer control for the scalar probe
 
 Keep periodic spatial forward differences and let the temporal
