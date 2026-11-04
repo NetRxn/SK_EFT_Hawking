@@ -3182,3 +3182,32 @@ One cross-chirality control is negative, −1/16. The conditional
 kernel integrates the unprotected links. The next calculation
 must keep the protected link dependence through the frame join
 and integrate those links jointly to obtain the sector coefficients.
+
+### Joint moments on the protected frame links
+
+The [protected-link frame replay](l1_extended_mixed_frame_moment.py)
+enumerates the frame degrees on the six curvature cores. In a
+two-face core, two protected edges carry two frame factors and
+four carry four. In a four-face core, four edges carry two and
+four carry four. Each protected directed link occurs in one core
+face. Thus its frame tensor needs one retained curvature coordinate
+pair, with moments up to degree six.
+
+The replay expands each frame in unit quaternion coordinates. It
+keeps the two possible directed anchors separate, sums ordered
+frame slots over their allowed even allocations, and inserts the
+coordinate pair on the protected anchor only. Degree-six sphere
+moments have a common integer scale of 192, including mixed
+chiralities on the product group. The two-anchor result has Haar
+scale `192²` and raw frame scale `4^n` for n frame factors.
+For every symmetric gamma tuple, summing the four diagonal probes
+of either chirality inserts the unit norm and reproduces the
+previous exact frame tensor with the scale adjusted. Independent
+review checked the incidence, moment scaling and selected probes. The
+full local replay computed 3,240 tensors and checked all 180 norm
+identities. Individual off-diagonal coefficients share the same
+moment implementation.
+
+The remaining join must combine these exterior tensors with the
+open coordinate-pair indices of each curvature core. The completed
+frame tensors alone do not give the joint orbit totals.
