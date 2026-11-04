@@ -81,6 +81,28 @@ def pure_patch():
           'nonzero chirality assignments',sum(bool(x) for x in counts.values()),
           'coefficient histogram',dict(sorted(coefficients.items())),flush=True)
 
+def check_rank():
+    from sympy import QQ
+    from sympy.polys.matrices import DomainMatrix
+
+    unique = set()
+    for _, row in rows():
+        signed = tuple(sorted(row.items()))
+        if signed[0][1] < 0:
+            signed = tuple((key, -value) for key, value in signed)
+        unique.add(signed)
+    columns = sorted({key for row in unique for key, _ in row})
+    indices = {key: index for index, key in enumerate(columns)}
+    sparse = {
+        index: {indices[key]: QQ(value) for key, value in row}
+        for index, row in enumerate(sorted(unique))
+    }
+    matrix = DomainMatrix(sparse, (len(unique), len(columns)), QQ)
+    result = len(unique), len(columns), matrix.rank()
+    assert result == (528, 584, 455)
+    print('combined strip unique rows, columns, exact rank', *result)
+
+
 if __name__=='__main__':
     start=perf_counter()
     print('tree',sorted(fixed_tree()),flush=True)
@@ -97,4 +119,5 @@ if __name__=='__main__':
     print('strip nonzero frame column pairs',{k:len(v) for k,v in columns.items()},'max row',peak,flush=True)
     print('strip exact coefficient histogram',dict(sorted(values.items())),flush=True)
     pure_patch()
+    check_rank()
     print('seconds',perf_counter()-start)

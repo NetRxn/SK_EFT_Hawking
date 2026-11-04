@@ -2025,3 +2025,13 @@ values of the retained link (6,0). The exact projection
 has 276 nonzero vector components over denominator 48.
 This checks one family of boundary slices. The complete
 four-face tensor and full motif contraction remain open.
+
+Combining the four chirality blocks over common frame
+coordinates gives 528 rows up to sign and 584 occupied
+columns. Exact rational elimination gives rank 455. Each
+individual frame map is injective on its rank-35 Haar image,
+as checked in the single-link replay. Their tensor product
+preserves rank on the strip subspace. The 455 channels
+therefore survive application of the two frame maps before
+external site saturation. This is smaller than the 1,225
+channels of two independent rank-35 interfaces.
