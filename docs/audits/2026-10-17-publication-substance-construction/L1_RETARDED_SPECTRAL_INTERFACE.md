@@ -2344,3 +2344,12 @@ these rotations with global chirality interchange. It selects
 94,748,063,904 candidate pairs with orbit weights. Evaluating
 the representatives still requires 5,166,551,904 candidate
 pairs, 32 left kernels and 1,600 right kernels.
+
+The [orbit runner](l1_extended_overlap_run_orbits.py) accepts
+the exact column file and a half-open range of representative
+indices. It asserts weighted block and candidate-pair coverage
+before starting, then emits one line per completed representative
+with its index, weight, pair count, nonzero count, signed numerator,
+and elapsed time. The first two representatives reproduced the
+unreduced scheduler values with weights 2 and 6. A complete sum
+requires every index exactly once, weighted by its orbit size.
