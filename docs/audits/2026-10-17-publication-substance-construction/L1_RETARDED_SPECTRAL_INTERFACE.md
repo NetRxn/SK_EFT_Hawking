@@ -5039,3 +5039,21 @@ The existing all-disjoint command remains an alias for stratum 4.
 Independent review reproduced the census, all row weights, exact
 receipt sums and source-removal parity. It checked the original
 default and alias dispatch without rerunning the contractions.
+
+#### Complete four-mixed peelable subtotal
+
+The `--four-mixed-peelable 0` and `--four-mixed-peelable 1` runs
+exited zero. The four receipts give the following exact sums.
+
+| Disjoint centers | Orbits | Words per checkerboard | Both-board normalization | Both-board numerator |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 285 | 45,216 | `1198041652025881998809765625/18014398509481984` | `−102782803120596881263546875/281474976710656` |
+| 1 | 25 | 4,800 | `5173496975635812931640625/1125899906842624` | `−3652390070796549923859375/140737488355328` |
+| 2 | 13 | 1,536 | `9181537442128001953125/17592186044416` | `−53309602963571608265625/17592186044416` |
+| 4 | 4 | 144 | `840586565680766015625/70368744177664` | `−161126273244493265625/2199023255552` |
+| Total | 327 | 51,696 | `1290434688137608355816015625/18014398509481984` | `−110961161072582421981515625/281474976710656` |
+
+Independent receipt review checked sequential orbit IDs, multiplicities,
+and every stratum subtotal. This completes the peelable subset of the
+four-mixed sector. The 987 nonpeelable orbits and physical matching
+remain open.
