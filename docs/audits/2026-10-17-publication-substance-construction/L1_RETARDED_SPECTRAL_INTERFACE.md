@@ -4900,3 +4900,15 @@ the raw source `−915607170319704345703125/18446744073709551616`
 by 384 to give `−2746821510959113037109375/144115188075855872`.
 This equals the independently evaluated deletion 0 subtotal.
 Both reviews reconciled existing receipts without rerunning contractions.
+
+#### Four-face orbit 5 normalization and source
+
+The `--full-orbit 5 --retained-source --integer-gamma` replay exited
+zero. Independent receipt review matched the four-only orbit 5
+deletions for faces `(5,2,3)`, `(5,0,3)`, `(12,0,1)`, and `(12,1,3)`.
+The raw deletion sum is `−730354247481162744140625/2305843009213693952`.
+Adding the retained term gives
+`−43379408608429674111328125/36893488147419103232` per representative.
+Weighting 192 words per checkerboard gives normalization
+`48217872201553281708984375/576460752303423488` and full numerator
+`−130138225825289022333984375/288230376151711744`.
