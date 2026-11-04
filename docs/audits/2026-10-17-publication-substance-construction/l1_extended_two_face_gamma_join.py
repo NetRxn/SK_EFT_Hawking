@@ -173,7 +173,7 @@ def check_fusion(face, pure, local, free, table, pair):
     assert {key: poly for key, poly in fused.items() if key[1] == index} == expected
 
 
-def remote_environment(pattern, coupled, *, source=False):
+def remote_environment(pattern, coupled, *, source=False, only_face=None):
     terms = {}
     open_sites = {x ^ (1 << a) for x in coupled
                   for pair in pattern[EVEN.index(x)] for a in pair}
@@ -182,18 +182,25 @@ def remote_environment(pattern, coupled, *, source=False):
         if x not in coupled:
             local, axes = remote_center(pairs)
             terms[x] = remap(local, (x, *(x ^ (1 << i) for i in axes)))
-    if not source:
+    if not source and only_face is None:
         return keep, contract_boundary(terms, keep)
 
+    replacements = remote_source_replacements(pattern, terms, coupled, only_face=only_face)
+    if only_face is not None:
+        (replaced, weight), = replacements
+        return keep, scale(contract_boundary(replaced, keep), weight)
     return keep, add(*(scale(contract_boundary(replaced, keep), weight)
-                       for replaced, weight in remote_source_replacements(pattern, terms, coupled)))
+                       for replaced, weight in replacements))
 
 
-def remote_source_replacements(pattern, terms, coupled):
+def remote_source_replacements(pattern, terms, coupled, *, only_face=None):
     for x in terms.keys() - coupled:
         directions, variants = source_variants(*pattern[EVEN.index(x)])
         sites = (x, *(x ^ (1 << axis) for axis in directions))
-        for local, adjustment, _ in variants:
+        for local, adjustment, frame in variants:
+            curvature = tuple(a for a in range(4) if a not in frame)
+            if only_face is not None and (x, *curvature) != only_face:
+                continue
             replaced = dict(terms)
             replaced[x] = remap(summed_source_tensor(local), sites)
             yield replaced, -2 * adjustment

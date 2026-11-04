@@ -4111,3 +4111,22 @@ live upper link, with two probes incident to one pure center.
 The next calculation joins those pure tensors to the fixed
 overlapping and disjoint mixed bases. The four- and six-face
 deletion terms require their surviving cores.
+
+#### Four-face deletions with a surviving two-face core
+
+All 40 representative deletions from the ten four-face orbits
+leave two faces at the other mixed base. The two faces share one
+unprotected link of incidence two. The protected-link set stays
+fixed. In 20 cases the deleted plane is at an upper center of the
+surviving core. In the other 20 it is at a remote center.
+
+The two-face tree replay with `--four-face-deleted-source`
+selects the single removed plane by its original curvature
+coordinates. At an upper center this selects one exclusive
+source slot and retains the live or fixed protected frame
+moments. At a remote center it selects exactly one replacement
+in the exterior environment. The other face at the removed
+base peels and contributes its ordinary Haar moment. The replay
+uses the signed mixed-plane source factor `−2 × 48 × 2!` once
+and divides the all-axis source sum by six before applying orbit
+and checkerboard weights. The exact subtotal is pending.
