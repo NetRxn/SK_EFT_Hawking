@@ -2503,3 +2503,17 @@ square has 38 nonzero local masks. Joining all 21 remaining
 curvature channels gives site populations (0,2,6,8),
 (4,2,6,4), (2,0,8,6), or (2,4,4,6), depending on the site
 and axis. None complements the fixed lower tensor.
+
+The [separated upper source replay](l1_extended_source_separated.py)
+enumerates the degree-compatible replacements among two removed
+upper action vertices and two outgoing upper sources. There are
+16 same-site cross-term orderings and eight separated-site
+placements before restoring the symmetric source order. For a
+separated placement, the outgoing axis-2 source shares the
+retained action link and requires a fourth moment. At both local
+positions all off-diagonal channels vanish and the diagonal
+blocks retain the original 216-mask support. The raw coefficient
+ratios are 24 and 36. With the relative Haar denominator of 24,
+the reweights are 1 and 3/2 by mask. The lower contraction must
+use these reweighted complements to determine the separated
+subtotal. Independent review of this intermediate is pending.
