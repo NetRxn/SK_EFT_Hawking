@@ -91,7 +91,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   records exact agreement of the direct and class-weighted normalization
   outputs and the direct command exit-status caveat.
   The [independent intersite frame control](L1_RETARDED_SPECTRAL_INTERFACE.md#independent-protected-intersite-frame-control) checks three complete local signed maps.
-  Complete the other normalization orbits and retained-source replays. The
+  The [same-side fused subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-same-side-fused-range)
+  covers 11 all-protected orbits with independently reduced receipts.
+  Complete the other 12 normalization and retained-source rows. The
   [three-face deletion replay](L1_RETARDED_SPECTRAL_INTERFACE.md#three-face-deletion-subtotal-and-remaining-core-geometry)
   evaluates all five deletion orbits. The verified three-face
   tree leaves one upper probe per face. The
