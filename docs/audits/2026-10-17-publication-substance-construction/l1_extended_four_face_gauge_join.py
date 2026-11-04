@@ -49,19 +49,19 @@ def geometry(pattern, faces, protected):
     return mixed, pure, tree, live
 
 
-def larger_core_tree(faces, protected):
+def larger_core_tree(faces, protected, *, cost=None):
     incidence = Counter(edge for edges in faces.values() for edge in edges)
     links = set(incidence)
     vertices = {v for x, a in links for v in (x, x ^ (1 << a))}
     rank = len(links) - len(vertices) + 1
     eligible = sorted(edge for edge in links & protected if incidence[edge] == 1)
-    best = None
+    best = best_score = None
     for candidates in combinations(eligible, rank):
         live = set(candidates)
         if any((x ^ (1 << a), a) in live for x, a in live):
             continue
         loads = tuple(sorted((len(edges & live) for edges in faces.values()), reverse=True))
-        if best is not None and loads >= best[0]:
+        if (cost is not None and loads[0] > 2) or (cost is None and best is not None and loads >= best[0]):
             continue
         tree = links - live
         reached = {min(vertices)}
@@ -71,7 +71,10 @@ def larger_core_tree(faces, protected):
                 if x in reached or y in reached:
                     reached.update((x, y))
         if reached == vertices:
-            best = loads, tree, live
+            score = loads if cost is None else cost(tree, live)
+            if best_score is None or score < best_score:
+                best = loads, tree, live
+                best_score = score
     assert best is not None
     return best
 

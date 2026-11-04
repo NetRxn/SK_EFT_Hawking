@@ -4269,3 +4269,25 @@ face found another valid tree with a maximum of 69,696 projected
 keys at any center and 70,213 in total. These are candidate counts
 before exterior pruning. Use projected center key counts when
 selecting trees for the complete replay.
+
+#### Completed four-face deletion sum and cost-based tree choice
+
+The four-face deletion replay completed 40 terms, four per
+representative. Independent reduction of the exact rows gave
+the same fixed-shear subtotal across both checkerboards:
+`−194729223170660245751953125/144115188075855872`.
+The alternate upper-link replay supplies a separate gauge
+comparison. The ordinary four-face normalization and
+source insertions that retain the full core remain open.
+
+The sparse factor join reproduced the literal first four-face
+slice exactly. The `--tree-costs` replay scores admissible trees
+using the largest center key count and then the sum of those
+counts. Each count uses the joint projections of the actual
+face-factor rows. It does not treat correlated keys within a
+face as independent. The first orbit's maximum falls from
+199,584 to 69,696 keys. The last four-face orbit falls from
+116,424 to 5,544, with 6,026 keys total. The six-face orbit still
+has 1,463,616 keys at its largest center after tree selection.
+These counts precede exterior pruning. The first complete
+probe sum uses the smaller four-face orbit via `--full-orbit 10`.

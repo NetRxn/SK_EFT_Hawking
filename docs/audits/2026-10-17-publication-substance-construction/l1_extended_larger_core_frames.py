@@ -4,7 +4,7 @@ from collections import Counter
 from fractions import Fraction
 from functools import cache
 from itertools import combinations, product
-from math import factorial
+from math import factorial, prod
 
 from l1_direct_b_haar import scale
 from l1_extended_four_face_gauge_join import IDENTITY, larger_core_tree
@@ -19,8 +19,9 @@ from l1_extended_two_mixed_centers import contract, remap
 from l1_normalization_opposed_fourth import tuples
 
 
-def layout(pattern, faces, protected):
-    _, tree, live = larger_core_tree(faces, protected)
+def layout(pattern, faces, protected, minimize_keys=False):
+    cost = tree_key_cost(faces) if minimize_keys else None
+    _, tree, live = larger_core_tree(faces, protected, cost=cost)
     core_links = set.union(*faces.values())
     slots = {}
     routed = Counter()
@@ -105,35 +106,55 @@ def contract_slice(pattern, slots, components, probes):
     return Fraction(int(result.const().x), divisor)
 
 
+def face_factor(face, edges, tree, live, selection=None):
+    active = tuple(sorted(edges & live))
+    fixed = dict.fromkeys(edges & tree, IDENTITY)
+    rows = {}
+    for labels in COMPONENTS:
+        for keys, value in face_tensor(face, active, fixed, labels).items():
+            key = (labels, *keys)
+            if selection is None or key == selection:
+                rows[key] = {0: (value, 0)}
+    assert rows
+    return (face, *active), rows
+
+
 def face_factors(faces, tree, live, selection=None):
-    factors = []
-    for face, edges in faces.items():
-        active = tuple(sorted(edges & live))
-        fixed = dict.fromkeys(edges & tree, IDENTITY)
-        rows = {}
-        for labels in COMPONENTS:
-            for keys, value in face_tensor(face, active, fixed, labels).items():
-                key = (labels, *keys)
-                if selection is None or key == selection[face]:
-                    rows[key] = {0: (value, 0)}
-        assert rows
-        factors.append(((face, *active), rows))
-    return factors
+    return [face_factor(face, edges, tree, live, None if selection is None else selection[face])
+            for face, edges in faces.items()]
+
+
+def projected_keys(center, factor):
+    axes, rows = factor
+    owners = [axes[0][0], *(x if x in EVEN else x ^ (1 << a) for x, a in axes[1:])]
+    indices = tuple(i for i, owner in enumerate(owners) if owner == center)
+    if not indices:
+        return (), {()}
+    return tuple(axes[i] for i in indices), {tuple(row[i] for i in indices) for row in rows}
+
+
+def tree_key_cost(faces):
+    @cache
+    def projection_sizes(face, active):
+        edges = faces[face]
+        factor = face_factor(face, edges, edges - active, active)
+        return tuple(len(projected_keys(center, factor)[1]) for center in EVEN)
+
+    def score(tree, live):
+        assert not tree & live
+        by_face = [projection_sizes(face, frozenset(edges & live)) for face, edges in faces.items()]
+        sizes = tuple(prod(column) for column in zip(*by_face, strict=True))
+        return max(sizes), sum(sizes)
+
+    return score
 
 
 def center_factor(center, planes, slots, faces):
-    live = {state for states in slots.values() for state in states if state}
-    projections = []
-    for axes, rows in faces:
-        indices = tuple(i for i, key in enumerate(axes)
-                        if (i == 0 and key[0] == center) or key in live)
-        if indices:
-            projections.append((tuple(axes[i] for i in indices),
-                                sorted({tuple(row[i] for i in indices) for row in rows})))
+    projections = [projected_keys(center, factor) for factor in faces]
     axes = tuple(axis for keys, _ in projections for axis in keys)
     rows = {}
     divisor = None
-    for projected in product(*(keys for _, keys in projections)):
+    for projected in product(*(sorted(keys) for _, keys in projections)):
         key = tuple(value for group in projected for value in group)
         components = {axis: value for axis, value in zip(axes, key, strict=True) if len(axis) == 3}
         probes = {axis: PROBE_PAIRS[value] for axis, value in zip(axes, key, strict=True)
@@ -202,13 +223,24 @@ def verify_local_tensors():
     print("pure and mixed local tensors agree with the established replays", flush=True)
 
 
-def main(first_slice=False, full_first=False):
+def main(first_slice=False, full_orbit=None, tree_costs=False):
     counts = Counter()
+    completed_full = False
     for pattern, multiplicity in orbits(words_with_mixed_count(3)):
         faces, protected = curvature_boundary(pattern)
         if len(faces) not in (4, 6):
             continue
-        slots, tree, live = layout(pattern, faces, protected)
+        run_full = full_orbit == sum(counts.values())
+        slots, tree, live = layout(pattern, faces, protected, minimize_keys=run_full or tree_costs)
+        if tree_costs:
+            score = tree_key_cost(faces)
+            _, baseline_tree, baseline_live = larger_core_tree(faces, protected)
+            baseline = score(baseline_tree, baseline_live)
+            optimized = score(tree, live)
+            assert optimized <= baseline
+            if not counts:
+                assert (baseline, optimized) == ((199584, 205189), (69696, 70213))
+            print("projected keys", len(faces), baseline, optimized, flush=True)
         components, probes = probe_slice(faces, tree, live)
         if first_slice and not counts:
             direct = contract_slice(pattern, slots, components, probes)
@@ -217,9 +249,12 @@ def main(first_slice=False, full_first=False):
                         for face, edges in faces.items()}
             assert contract_factors(pattern, slots, faces, tree, live, selected) == direct
             print("fixed-probe factor join agrees", flush=True)
-        if full_first and not counts:
-            print("first four-face full normalization", contract_factors(
+        if run_full:
+            score = tree_key_cost(faces)
+            print("full orbit", full_orbit, "projected keys", score(tree, live), flush=True)
+            print("full orbit", full_orbit, "normalization", contract_factors(
                 pattern, slots, faces, tree, live), flush=True)
+            completed_full = True
         for center, planes in zip(EVEN, pattern, strict=True):
             if any(state != () for states in slots[center].values() for state in states):
                 if planes[0] != planes[1]:
@@ -230,14 +265,18 @@ def main(first_slice=False, full_first=False):
         print("core", len(faces), "multiplicity", multiplicity,
               "fixed", len(tree), "live", len(live), flush=True)
     assert counts == {4: 10, 6: 1}
+    assert full_orbit is None or completed_full
 
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--local-controls", action="store_true")
     parser.add_argument("--first-slice", action="store_true")
-    parser.add_argument("--full-first", action="store_true")
+    full = parser.add_mutually_exclusive_group()
+    full.add_argument("--full-first", dest="full_orbit", action="store_const", const=0)
+    full.add_argument("--full-orbit", type=int, choices=range(11))
+    parser.add_argument("--tree-costs", action="store_true")
     args = parser.parse_args()
-    main(args.first_slice, args.full_first)
+    main(args.first_slice, args.full_orbit, args.tree_costs)
     if args.local_controls:
         verify_local_tensors()
