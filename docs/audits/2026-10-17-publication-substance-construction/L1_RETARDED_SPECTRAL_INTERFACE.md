@@ -4936,3 +4936,14 @@ Adding the retained term gives
 Weighting 192 words per checkerboard gives normalization
 `1310289118862622881220703125/9223372036854775808` and full numerator
 `−55151863167275446763671875/72057594037927936`.
+
+#### Full class-weighted six-face deletion 3
+
+The `--six-deletions --deletion-index 3` replay exited zero.
+It omits `(12,0,3)` and replaces source plane `(1,2)`.
+Independent receipt review checked the surviving faces, unchanged
+protection, and class edge `(9,1)`. The raw fixed-shear source
+`−231921055885506591796875/4611686018427387904` weighted by 384 gives
+`−695763167656519775390625/36028797018963968` across both checkerboards.
+The residual face geometry is shared with deletion 2, while the
+source plane differs.
