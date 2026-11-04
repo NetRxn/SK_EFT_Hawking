@@ -2143,3 +2143,18 @@ maps. For the two emitted pairs of fixed exterior boundaries it gives
 are real and retain their signed coefficient histograms. This tests
 the attachment across both shared links. The full contraction should
 apply complementary site masks while the factors are separate.
+
+The [upper local block replay](l1_extended_overlap_upper_block.py)
+exhausts all 441 pairs of unordered curvature channels. Exactly
+36 survive, with both local curvature pairs diagonal. Each survivor
+has the same 216-entry exterior tensor, with populations (2,2,6,6)
+in low, low, upper, upper site order. The four translated blocks
+therefore contract with complementary lower masks of populations
+(6,6,2,2). No upper curvature label has to cross that interface.
+Each upper sheet uses the squared-curvature weight
+`(6 - chi_L - chi_R)/4`, where the two characters are fundamental.
+Character orthogonality leaves the constant channel and two
+fundamental channels, giving `(6/4)^4 + 2*(1/4)^4/3^4 =
+52489/10368` per sheet. The full upper factor uses its square and
+the repeated-vertex factor `1/2^8`. Independent verification
+and the final exterior contraction remain open.
