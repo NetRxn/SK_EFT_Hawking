@@ -2093,3 +2093,17 @@ raw product count from 744,256,512 to 840,896,640 by densifying
 the right factor. Carry the sparser 36-channel form into the (4,0)
 projection, which can be performed on the right factor before
 forming outer products.
+
+The [right-factor replay](l1_extended_overlap_u4_pair.py) projects
+(4,0) with the (0,0,2) and (4,0,2) plaquettes. It then absorbs
+(5,0,2) and projects the shared curvature-only links (4,2) and
+(5,2). The additional Haar denominator is (48\cdot16).
+The replay yields 2,737,152 nonzero entries across the 64 ordered
+U6 slots, peaking at 54,432 in a slot. It retains the mixed-frame
+coordinates and the open (1,0) and (5,0) ports. Independent review
+is pending.
+
+For the next join, add (5,0,1) and project (4,1) and (5,1)
+with the frame tensors. The (4,0,1) plaquette was already
+absorbed at U6. Using the entire earlier mixed-link strip here
+would count that plaquette twice.
