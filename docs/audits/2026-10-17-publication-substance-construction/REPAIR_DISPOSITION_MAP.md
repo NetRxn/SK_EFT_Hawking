@@ -66,9 +66,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   verifies both mixed tensor scales and a five-link spanning tree
   for all 80 free-link orbits. The
   [tree join control](L1_RETARDED_SPECTRAL_INTERFACE.md#two-face-tree-join-control-discrepancy)
-  differs from the established fused subtotal. Reconcile the
-  alternate tree choices and direct fused probe controls before
-  admitting the three-mixed normalization.
+  exposed crossed base probes in the earlier fused calculation.
+  Revalidate with unequal-probe direct controls, replay the corrected
+  fused normalization and both retained-face source cases, and
+  reconcile the affected two-mixed totals before admitting the
+  three-mixed normalization.
   The all-protected case requires two live holonomies at a disjoint mixed base. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 

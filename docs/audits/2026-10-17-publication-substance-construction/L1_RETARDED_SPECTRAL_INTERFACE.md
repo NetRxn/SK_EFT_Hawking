@@ -3482,6 +3482,9 @@ The full class-weighted subtotal remains pending.
 
 ### Completed two-face normalization
 
+The historical two-face and combined two-mixed totals in this section
+are under revalidation following the [probe attachment correction](#fused-probe-attachment-correction).
+
 The class-weighted replay finished. Each chiral diagonal class
 gave `999591240231406494140625/73786976294838206464` per probe,
 each chiral off-diagonal class gave
@@ -3555,6 +3558,9 @@ subtotal is `-1111289291260956298828125/2251799813685248`.
 The source replacements at the two protected pure centers remain open.
 
 ### Completed two-face source numerator
+
+The historical two-face and combined two-mixed totals in this section
+are under revalidation following the [probe attachment correction](#fused-probe-attachment-correction).
 
 The `--protected-source` replay sums both endpoints on each
 source edge before the pure-center gamma contraction. It inserts
@@ -3650,6 +3656,9 @@ pure centers in each representative. The four removals at mixed
 centers are already in the deleted-face subtotal.
 
 ### Completed four-face source numerator
+
+The historical two-face and combined two-mixed totals in this section
+are under revalidation following the [probe attachment correction](#fused-probe-attachment-correction).
 
 The `--source --probe-classes` replay inserts the source tensor
 at one protected pure center at a time, or contracts the ordinary
@@ -3907,3 +3916,28 @@ is open. The comparison can be repeated with
 `--control --reverse-upper` to change the live link at each upper
 center. The fused first-probe route can test the diagonal class
 assumption independently of the tree contraction.
+
+#### Fused probe attachment correction
+
+The reverse-upper tree reproduced the initial tree value on all
+three control orbits. The direct fused `(1,1)` probe reproduced
+the earlier chiral diagonal value, so that scalar-versus-vector
+comparison did not explain the discrepancy.
+
+Independent incidence enumeration found a crossed probe assignment
+in the fused join. Its face rows are ordered by the exclusive
+**frame** axis that the face supplies gamma components for. The
+face's local protected link instead lies in its **curvature**
+plane, on the other exclusive axis. Thus the base tensor takes
+the probe indices in reverse row order while retaining the
+component indices in face order. The corrected join asserts this
+incidence relation. Independent enumeration confirmed it for the
+three control orbits and all 80 free-link three-mixed orbits.
+
+The old equal-probe controls are insensitive to this exchange.
+The `--crossed-control` replay compares the fused and direct
+contractions with unequal probes bound to their actual links.
+The correction affects the earlier fused normalization and the
+remote and protected retained-face source replays. Their totals
+and the combined two-mixed totals that include them require fresh
+evaluation. Deleted-face terms use the separate peeling calculation.

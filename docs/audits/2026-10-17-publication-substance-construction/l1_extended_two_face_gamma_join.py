@@ -249,6 +249,7 @@ def build_fused(pattern, faces, protected, table, source_table=None):
     for side, exclusive in enumerate((a, b)):
         face, = [f for f in faces if exclusive not in f[1:]]
         pure, local, center = pure_links(face, faces[face], protected)
+        assert local == (site, (b, a)[side])
         p, q = pattern[EVEN.index(center)]
         assert p == q
         coupled.add(center)
@@ -305,7 +306,9 @@ def close_fused(pattern, site, directions, coupled, factors, common, *, boundary
     for first, p, last, q in joined:
         groups[p, q].append((first, last))
     for (p, q), channels in groups.items():
-        block = gamma_block(PAIRS[p], PAIRS[q], common)
+        # Each face's live base link lies in its curvature plane, so
+        # it probes the other face's exclusive frame axis.
+        block = gamma_block(PAIRS[q], PAIRS[p], common)
         for first, last in channels:
             pure = joined[first, p, last, q]
             if not any(dual(mask) for mask in pure):
@@ -434,6 +437,34 @@ def replay_fused(probe, orbit, by_class=False, *, remote_source=False, protected
         print(label, "both checkerboards", total, flush=True)
 
 
+def check_crossed_probes():
+    common = summed_fourth(1)
+    for pattern, _ in orbits(swap_patterns()):
+        faces, protected = curvature_boundary(pattern)
+        if len(faces) != 2:
+            continue
+        site, = {f[0] for f in faces}
+        first, last = pattern[EVEN.index(site)]
+        a, b = sorted(set(first) ^ set(last))
+        ordered = [next(f for f in faces if axis not in f[1:]) for axis in (a, b)]
+        pure_probe = PAIR_INDEX[0, 0]
+        table = {(pure_probe, pure_probe): protected_center(((0, 0), (0, 0)))}
+        table = {key: {m: (int(v.const().x), int(v.const().y)) for m, v in poly.items()}
+                 for key, poly in table.items()}
+        for left, right in (((0, 0), (0, 4)), ((0, 0), (1, 1)), ((0, 1), (1, 1))):
+            probes = dict.fromkeys(set.union(*faces.values()) & protected, (0, 0))
+            for f, pair in zip(ordered, (left, right), strict=True):
+                _, local, _ = pure_links(f, faces[f], protected)
+                probes[local] = pair
+            _, _, direct = coefficient(pattern, faces, protected, probes, common)
+            fused, _ = sum_fused(pattern, faces, protected, table, common,
+                                 PAIR_INDEX[left], PAIR_INDEX[right])
+            assert fused == direct, (left, right, fused, direct)
+            print("unequal probe check", left, right, direct, flush=True)
+        return
+    raise AssertionError("expected a two-face control orbit")
+
+
 def main():
     common = summed_fourth(1)
     for pattern, multiplicity in orbits(swap_patterns()):
@@ -461,6 +492,7 @@ def main():
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--crossed-control", action="store_true")
     mode.add_argument("--fuse-pure-centers", action="store_true")
     mode.add_argument("--first-probe", type=int, choices=range(len(PAIRS)))
     mode.add_argument("--all-probes", action="store_true")
@@ -472,6 +504,8 @@ if __name__ == "__main__":
     if args.all_probes or args.probe_classes or args.remote_source or args.protected_source or args.first_probe is not None:
         replay_fused(args.first_probe, args.orbit, args.probe_classes or args.remote_source or args.protected_source,
                      remote_source=args.remote_source, protected_source=args.protected_source)
+    elif args.crossed_control:
+        check_crossed_probes()
     elif args.fuse_pure_centers:
         fuse_all()
     else:
