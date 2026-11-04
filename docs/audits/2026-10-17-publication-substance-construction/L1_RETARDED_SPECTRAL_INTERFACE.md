@@ -2433,3 +2433,13 @@ The shard digests include elapsed-time fields. A fresh run can
 compare the first five fields independently of timing. The full
 sum is ready for independent result review. The selected motif
 still needs to be placed in the full physical matching calculation.
+
+Independent review accepted the selected finite motif at
+`1b7941250`. A separate integer reducer matched all four shard
+digests and the regenerated column digest, verified 35,084 unique
+indices and counted 1,480,986,408 weighted nonzero pairs. It
+reproduced the signed numerator and applied the combined
+denominator independently. This is a single order-`g2^32`
+normalization word with the specified planes and anchor choices.
+The sum over other words and the order-`g2^30` two-source
+numerator remain separate open constructions.
