@@ -83,8 +83,8 @@ def check_word():
         del faces[private]
 
 
-def contract(terms):
-    # Drop each fully saturated site after its final incident tensor.
+def contract_boundary(terms, keep=0):
+    # Drop each interior saturated site after its final incident tensor.
     incident = {x: sum(255 << (8*i) for i in range(16)
                        if any(m & (255 << (8*i)) for m in row))
                 for x, row in terms.items()}
@@ -102,10 +102,14 @@ def contract(terms):
         x = min(todo, key=lambda x: ((remaining_sites(todo) ^ remaining_sites(
             tuple(y for y in todo if y != x))).bit_count() * -1, x))
         todo = tuple(y for y in todo if y != x)
-        closed = incident[x] & ~remaining_sites(todo)
+        closed = incident[x] & ~remaining_sites(todo) & ~keep
         joined = wedge(state, terms[x])
         state = {m ^ closed: value for m, value in joined.items() if m & closed == closed}
-    return state.get(0, R.zero)
+    return state
+
+
+def contract(terms):
+    return contract_boundary(terms).get(0, R.zero)
 
 
 @cache

@@ -3385,3 +3385,30 @@ probes against that center first, leaving one protected probe and
 the free link on each face. The fixed-probe coefficients above
 are controls for that sum. The targeted coefficient extractor also
 matched the full raw face expansion on 24 exact slice checks.
+
+### Pure-center fusion and remote exterior boundary
+
+The two-face replay can now sum each face's two pure-center probes
+before joining the residual faces. It multiplies the raw curvature
+row by the full pure-center gamma tensor and accumulates over both
+probe pairs exactly once. The fused row retains a residual curvature
+component pair, the mixed-center probe and the free-link pair.
+Every one of the six faces gives 3,456 fused rows and 110,784 signed
+exterior entries. Restricting both summed probes to the original
+assignments reproduces the exact fixed-probe face controls.
+
+The five remote centers contract to an environment with 84 entries
+on four passive sites in each representative. A site outside this
+boundary is projected onto its full exterior block only after its
+last incident factor. The final lookup pairs a boundary mask with
+its signed complement. The local replay reproduced all six
+fixed-probe coefficients by both this boundary closure and the
+direct full-lattice closure. Independent review checked the fusion
+indices and the complement signs.
+
+The two fused pure-center factors share one passive site. Their
+masks there are complementary degree-four masks, and the other
+three passive sites are still needed to close against the mixed
+center and the remote environment. The next join can use this
+complement alongside the free-link Haar matrix. The mixed probes
+and residual curvature-component labels still have to be summed.
