@@ -2052,7 +2052,9 @@ and the symmetric quadratic pair for (6,0). The exact
 It recovers the unit-coordinate control. The separate Python
 identity-slice calculation also retains the mixed coordinates
 of (6,0): 408 additional terms supplement the 276 equal-coordinate
-terms. Independent review of the full tensor is pending.
+terms. Independent review of `25d25d380` reproduced the
+entry and monomial counts, checked the closed face orientations
+and complete boundary keys, and verified the Haar denominator.
 The complete motif still needs the remaining boundary joins.
 
 The [exact rank check](l1_extended_overlap_four_face_rank.py)
