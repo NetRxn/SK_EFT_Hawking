@@ -36,6 +36,16 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   diagnostics also matched. The scoped run changed two generated
   count provenance fields and the candidate was restored clean.
   The repository merge gate remains pending.
+  Keep PR #112 scoped to L3. The separate baseline
+  [qualification readback](https://github.com/NetRxn/SK_EFT_Hawking/commit/901f5012d)
+  records reviewed fixes for five of the 11 failures on the composed
+  candidate. Its remaining failures concern module reach and the
+  open-required finding populations. A subsequent
+  [module reach repair](https://github.com/NetRxn/SK_EFT_Hawking/commit/3f1e7dcee)
+  is already in the L3 construction branch ancestry. Establish which
+  reviewed predecessor packages qualify against current main, then
+  requalify the scoped L3 candidate on that integrated base. The
+  composed candidate's retry is narrower than a fresh merge gate.
 
 ## Accountable author, independent review and integration
 
