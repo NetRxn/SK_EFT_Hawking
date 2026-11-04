@@ -50,11 +50,8 @@ def gamma_tensor(first_probe, last_probe, first_components, last_components, com
                           face_channels(first_components), face_channels(last_components))
 
 
-def gamma_block(first_probe, last_probe, common):
-    """Share exterior products across component rows for one probe pair."""
-    first = probed_edge(first_probe, 1)
-    last = probed_edge(last_probe, 3)
-
+def gamma_products(first, common, last):
+    """Cache exterior products for one set of directed frame moments."""
     @cache
     def left_product(u, labels):
         return wedge(first[u], common[labels])
@@ -64,10 +61,22 @@ def gamma_block(first_probe, last_probe, common):
         return {mask: value for mask, value in wedge(left_product(u, labels), last[v]).items()
                 if mask & 255 == 255}
 
+    return exterior
+
+
+def contract_gamma_products(exterior, first_weights, last_weights):
+    return add(*(scale(exterior(u, tuple(sorted(a + b)), v), weight * other)
+                 for (a, u), weight in first_weights.items()
+                 for (b, v), other in last_weights.items()))
+
+
+def gamma_block(first_probe, last_probe, common):
+    """Share exterior products across component rows for one probe pair."""
+    exterior = gamma_products(probed_edge(first_probe, 1), common, probed_edge(last_probe, 3))
+
     def components(first_components, last_components):
-        return add(*(scale(exterior(u, tuple(sorted(a + b)), v), weight * other)
-                     for (a, u), weight in face_channels(first_components).items()
-                     for (b, v), other in face_channels(last_components).items()))
+        return contract_gamma_products(exterior, face_channels(first_components),
+                                       face_channels(last_components))
 
     return components
 

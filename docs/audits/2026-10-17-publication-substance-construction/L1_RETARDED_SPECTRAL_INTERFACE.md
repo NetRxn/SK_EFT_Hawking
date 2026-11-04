@@ -4378,3 +4378,23 @@ nonzero dual entries. Its measured CPU time was 0.268 seconds
 with the reference sign routine and 0.134 seconds with the
 prefix calculation. The established two-face orbit control
 is running with the new kernel. Full-orbit timing remains open.
+
+#### Grouped larger-core probe evaluation
+
+The prefix-sign kernel reproduced the established first two-face
+representative `999693567199179931640625/9223372036854775808`.
+The timing wrapper reported 165.72 seconds elapsed and 125.26
+seconds user CPU, then exited with a sandbox error reading
+`kern.clockrate`. This gives no peak-memory measurement.
+
+The larger-core replay groups the joint projected face keys by
+their directed probe assignments. It reuses the same local
+exterior products across residual component pairs while those
+probe moments are fixed. Only one probe block per center stays
+cached at a time. On the largest center of orbit 10, the
+grouped traversal visits each of the 5,544 original keys exactly
+once across 756 consecutive probe blocks. Independent review
+reproduced the key census and checked the exterior order and
+divisors. Twenty nonzero exact gamma contractions with a shared
+frame block reproduced the direct route in a synthetic fixture.
+The physical component-row comparison and complete orbit remain open.

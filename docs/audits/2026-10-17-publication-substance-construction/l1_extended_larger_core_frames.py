@@ -2,14 +2,17 @@
 from argparse import ArgumentParser
 from collections import Counter
 from fractions import Fraction
-from functools import cache
+from functools import cache, lru_cache
 from itertools import combinations, product
 from math import factorial, prod
 
 from l1_direct_b_haar import add, scale, wedge
 from l1_extended_four_face_gauge_join import IDENTITY, larger_core_tree
 from l1_extended_mixed_center_census import AXES, EVEN, curvature_boundary, orbits, words_with_mixed_count
-from l1_extended_mixed_center_gamma import COMPONENTS, contract_gamma, face_channels, gamma_block, peeled_channels
+from l1_extended_mixed_center_gamma import (
+    COMPONENTS, contract_gamma, contract_gamma_products, face_channels,
+    gamma_block, gamma_products, peeled_channels,
+)
 from l1_extended_mixed_curvature_core import PAIRS as PROBE_PAIRS, PAIR_INDEX, face_tensor
 from l1_extended_mixed_frame_join import join_factors
 from l1_extended_mixed_frame_moment import SCALE, anchored, frame_edge_moments, source_edge_moments
@@ -82,7 +85,7 @@ def source_center_tensor(planes, directions, moments, removed):
             if mask & 255 == 255}
 
 
-def center_tensor(center, planes, slots, components, probes, removed=None):
+def center_tensor(center, planes, slots, components, probes, removed=None, products=None):
     first, last = planes
     if first == last:
         directions = first
@@ -116,7 +119,11 @@ def center_tensor(center, planes, slots, components, probes, removed=None):
         weights.append(peeled_channels() if labels is None else face_channels(labels))
         if labels is None:
             divisor *= 48
-    return directions, contract_gamma(*tensors, *weights), divisor * factorial(2)**2
+    if products is None:
+        result = contract_gamma(*tensors, *weights)
+    else:
+        result = contract_gamma_products(products(tuple(moments)), *weights)
+    return directions, result, divisor * factorial(2)**2
 
 
 def probe_slice(faces, tree, live):
@@ -194,17 +201,35 @@ def tree_key_cost(faces):
     return score
 
 
+def grouped_projection_keys(projections):
+    groups = []
+    for axes, keys in projections:
+        indices = tuple(i for i, axis in enumerate(axes) if len(axis) == 2)
+        by_probe = {}
+        for key in sorted(keys):
+            by_probe.setdefault(tuple(key[i] for i in indices), []).append(key)
+        groups.append(by_probe.values())
+    for group in product(*groups):
+        for projected in product(*group):
+            yield tuple(value for key in projected for value in key)
+
+
 def center_factor(center, planes, slots, faces, removed=None):
     projections = [projected_keys(center, factor) for factor in faces]
     axes = tuple(axis for keys, _ in projections for axis in keys)
     rows = {}
     divisor = None
-    for projected in product(*(sorted(keys) for _, keys in projections)):
-        key = tuple(value for group in projected for value in group)
+    @lru_cache(maxsize=1)
+    def products(moments):
+        return gamma_products(*(edge_table(degree, moment, i)
+                                for i, (degree, moment) in enumerate(
+                                    zip((2, 4, 2), moments, strict=True), 1)))
+
+    for key in grouped_projection_keys(projections):
         components = {axis: value for axis, value in zip(axes, key, strict=True) if len(axis) == 3}
         probes = {axis: PROBE_PAIRS[value] for axis, value in zip(axes, key, strict=True)
                   if len(axis) == 2}
-        directions, local, scale_factor = center_tensor(center, planes, slots, components, probes, removed)
+        directions, local, scale_factor = center_tensor(center, planes, slots, components, probes, removed, products)
         assert divisor is None or divisor == scale_factor
         divisor = scale_factor
         if local:
