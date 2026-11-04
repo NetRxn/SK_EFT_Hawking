@@ -2443,3 +2443,18 @@ denominator independently. This is a single order-`g2^32`
 normalization word with the specified planes and anchor choices.
 The sum over other words and the order-`g2^30` two-source
 numerator remain separate open constructions.
+
+The [upper source replacement replay](l1_extended_source_upper.py)
+tests the selected same-site cross term `-2 G22(8) G33(8)`
+with outgoing frame anchors in place of the two repeated upper
+action vertices. All six diagonal channels at the other site
+reproduce the same 216-entry upper exterior block. All 15
+off-diagonal channels vanish. The punctured curvature sheet
+retains only the trivial character and contributes `27/8`
+in place of `52489/10368`. Removing one repeated-vertex
+factorial and including the source cross term gives the ratio
+`-139968/52489` to the selected normalization word. The
+resulting candidate numerator term is
+`-60445514255728976151/79228162514264337593543950336`.
+Independent review of the insertion anchors and normalization
+is pending. The term belongs to one selected source word.
