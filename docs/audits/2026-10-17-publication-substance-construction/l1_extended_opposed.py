@@ -29,7 +29,29 @@ def center():
             if w:
                 p={m:c for m,c in wedge(A[a],B[b]).items() if m&255==255}
                 out=add(out,scale(p,multiplicity*w))
+    staged, sizes = staged_center(A, B)
+    assert staged == out
+    print("staged center boundary", sum(sizes), "terms across",
+          sum(n > 0 for n in sizes), "second-frame labels", flush=True)
     return out,48*96**2*8**8
+
+def staged_center(A, B):
+    """Contract curvature against the first frame before joining the second."""
+    out = {}
+    boundary_sizes = []
+    for b in tuples:
+        boundary = {}
+        orderings = set(permutations(b))
+        for a in tuples:
+            multiplicity = factorial(4)//prod(factorial(k) for k in Counter(a).values())
+            weight = sum(curvature(tuple(sorted(zip(a, y)))) for y in orderings)
+            if weight:
+                boundary = add(boundary, scale(A[a], multiplicity * weight))
+        boundary_sizes.append(len(boundary))
+        # The second frame still contributes to the center mask.
+        saturated = {m: c for m, c in wedge(boundary, B[b]).items() if m & 255 == 255}
+        out = add(out, saturated)
+    return out, boundary_sizes
 
 def pair_value():
     pol,den=center()

@@ -2775,3 +2775,25 @@ Extending the staged calculation requires revisiting exponent and
 denominator bounds and evaluating the joint contraction over the
 remaining links and centers. The physical susceptibility and its
 window remain open.
+
+### Staged center contraction on the extended opposed word
+
+The [opposed-word replay](l1_extended_opposed.py) exercises staged
+elimination on the 16-site repeated-plane word with disjoint curvature
+plaquettes and frame links. It projects the curvature tensor against
+one Haar-integrated frame, sums the eliminated frame index and retains
+the second frame label and the exact exterior mask. There are 380
+nonzero boundary terms across ten second-frame labels. Joining that
+frame and only then imposing center saturation gives exactly the same
+38-term center polynomial as the direct contraction. Complementary
+exterior saturation of each opposed pair returns 61875/262144,
+including the repetition factorials. The four disjoint layers give
+14657531890869140625/4722366482869645213696.
+
+This replay uses the same local Haar tensors as the direct calculation.
+Independent review reproduced the equality, boundary counts and exact
+coefficient. The equality checks the order of tensor contraction and the delayed
+center saturation. The disjoint opposed word is separate from the
+35,084-record shared-link motif. The next shared-link control needs
+to retain open link moment indices until both incident factors are
+joined.
