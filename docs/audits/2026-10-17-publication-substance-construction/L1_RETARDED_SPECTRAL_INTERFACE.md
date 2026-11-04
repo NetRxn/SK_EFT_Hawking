@@ -5267,6 +5267,22 @@ components. Each range covers 3,072 words per checkerboard.
 The covered prefix now comprises 48 orbits and 9,216 words per
 checkerboard. Next ranges are `[48,64)` and `[64,80)`.
 
+#### Two-face overlap-base orbits 48–79
+
+Both component batches exited zero. Each range covers 16 orbits
+and 3,072 words per checkerboard. The weighted sums are:
+
+| Both-checkerboard contribution | Orbits 48–63 | Orbits 64–79 |
+| --- | ---: | ---: |
+| Normalization | `1959501387618402693331640625/576460752303423488` | `346284829071709163820703125/144115188075855872` |
+| Remote source | `−3264083089106852460904171875/288230376151711744` | `−143501648275342351024453125/18014398509481984` |
+| Upper source | `−697928476006277070886828125/144115188075855872` | `−498763837345636495058765625/144115188075855872` |
+| Deleted source | `−348192808029399863671875/140737488355328` | `−122872547390677822265625/70368744177664` |
+| Full fixed-shear numerator | `−5373038911963617523477828125/288230376151711744` | `−1898420000604483483254390625/144115188075855872` |
+
+The covered prefix comprises 80 orbits and 15,360 words per
+checkerboard. Next ranges are `[80,96)` and `[96,112)`.
+
 ### Exact temporal transfer control for the scalar probe
 
 Keep periodic spatial forward differences and let the temporal
