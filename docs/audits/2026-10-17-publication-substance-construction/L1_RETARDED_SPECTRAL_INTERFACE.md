@@ -5943,3 +5943,15 @@ distinct scalar outputs. A possible grouping preserves the
 common primitive B, fixes the frozen inputs at centers 1, 3,
 and 9, and sums the appropriately weighted center-11 maps
 before completing the A closure.
+
+A five-tuple group at survivor indices 678, 772, 774, 871, and
+967 has one common primitive B map and identical frozen A
+center factors at sites 1, 3, and 9. Independent review checked
+the exact weighted sum of center-11 maps. The signed B scale
+weights each raw center-11 map once. The sum retains 576 of
+624 distinct row keys and agrees with direct coefficientwise
+reduction. This replaces five terms with one signed factor
+without dividing before the scalar contraction. The grouped
+scalar remains open. A broader contraction can carry all
+seven cut labels in one sparse B factor and eliminate them
+against their four owning A center tables.
