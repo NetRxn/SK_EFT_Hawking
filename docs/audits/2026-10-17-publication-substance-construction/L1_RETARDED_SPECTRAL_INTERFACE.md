@@ -1741,3 +1741,28 @@ Independent review of `9c9e7dfa9` reproduced the exact opposed
 pair and full word values, verified the disjoint Haar ports
 and even Grassmann block signs, and checked the distinction
 between gamma-slot multiplicities and action factorials.
+
+### Effective matter actions and absolute metric scale
+
+Volovik's scalar action uses the inverse and volume density
+of the effective tetrad metric. This supplies a comparison
+kinetic and mass term on a nondegenerate collective background.
+The microscopic Berezin composite has vanishing body, so it
+cannot be substituted directly into an inverse metric. A joint
+lattice construction needs a nondegenerate collective branch
+or a polynomial auxiliary-field formulation and a matching
+condition. [Scalar comparison action, Eq. (5)](https://arxiv.org/abs/2003.00915)
+
+The vestigial-gravity proposal identifies the metric with the
+tetrad two-point expectation and proposes Maxwell matter on
+that metric. In four dimensions the classical Maxwell density
+contains one volume factor and two inverse metrics. Under
+g → c g these scale as c² and c⁻², so Maxwell propagation
+cannot fix a common constant metric normalization. It can
+still constrain the causal cone. The massive scalar density
+has kinetic and mass terms scaling as c and c². After
+canonical field normalization its mass-squared term scales
+as c, giving a possible dimensional matching observable if the
+mass is fixed independently. The effective actions leave that
+microscopic normalization to be derived.
+[Vestigial gravity and Maxwell proposal, Eq. (19)](https://arxiv.org/abs/2312.09435v2)
