@@ -4607,3 +4607,13 @@ normalization rows, the eight retained and three deletion variants per
 orbit, and the exact weighting and reduction. It reused the tracked
 deletion subtotal. This review did not rerun the underlying contractions
 or verify the terminal process exit.
+
+#### All-protected orbit-zero retained-source result
+
+The `--candidate-source --all-protected --probe-classes --orbit 0`
+run exited zero and reproduced the orbit-zero normalization.
+The unweighted retained source terms are `-36888186278621288225390625/4611686018427387904` (remote)
+and `-1039919139505603564453125/288230376151711744` (upper). With 96 words per checkerboard,
+the contributions across both checkerboards are `-110664558835863864676171875/72057594037927936` and
+`-3119757418516810693359375/4503599627370496`, respectively. This is one representative. The direct
+source comparison and remaining orbit sums are open.
