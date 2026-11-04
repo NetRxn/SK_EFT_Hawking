@@ -1971,3 +1971,17 @@ contraction with the other factors. The first shared-link
 projection is being computed with both curvature indices
 and frame exterior masks retained. The census alone gives
 no value for the full signed integral.
+
+The [shared-link replay](l1_extended_overlap_projection.py)
+integrates the two curvature coordinates and two actual
+frame factors on one shared link. The 36×36 fourth-moment
+matrix has 92 nonzero entries and rank 35. The projected
+boundary retains 1,600 frame labels and 10,752 nonzero
+entries, with rank 35 and maximum Gaussian component 14.
+The only quadratic relation is equality of the two chiral
+unit norms. The surviving channels comprise one scalar,
+nine traceless quadratic channels for each chirality, and
+sixteen mixed-chirality products. The physical scale uses
+the fourth-moment denominator 48 and two factors of 1/4
+from the frames. The full motif still requires joining the
+remaining link and exterior boundaries.
