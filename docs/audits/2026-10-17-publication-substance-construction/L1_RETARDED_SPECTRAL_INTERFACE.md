@@ -1788,3 +1788,25 @@ defined above. This constructs a lattice family in which
 the joint-response test applies. The positive body and λ
 are inputs to the family. Deriving the physical background
 and matching λ to the gravity source remain B3 obligations.
+
+Independent review verified the polynomial construction. Matrix
+nilpotence follows because every entry lies in the same
+positive-degree ideal of the finite Grassmann algebra. For
+t = λD and the affine family I+tP, the volume is 1−t²/4
+through second order, and the inverse-metric density is
+I−tP+t²(P²−I/4). The scalar exponent therefore has a quadratic
+coefficient D²/8 multiplying the sum of the extended-axis
+gradient squares minus the transverse gradient squares plus
+m²φ², with the common cell weight. The second derivative
+has twice this coefficient. Higher powers may survive when
+D uses neighboring sites.
+
+For a constant ordinary affine strain h, the scalar kernel
+satisfies K'' = p̂₂²+p̂₃²−K₀/2 at h=0. At unit mass and
+spacing on the 16-site lattice, the trace of
+(p̂₂²+p̂₃²)/K₀ is 21824/3315. The log-partition Hessian is
+therefore 193312/342225 + 4 − (21824/3315)/2 =
+7407044/5817825. The connected vertex variance is the first
+term and the rest is the quadratic contact. This checks the
+affine matter source independently of the unknown geometry
+kernel. The numeric contact awaits independent verification.
