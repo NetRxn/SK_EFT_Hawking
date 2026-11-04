@@ -10,6 +10,7 @@ from l1_extended_overlap_pure_strip import strip,vector,qproduct,pair,P,Q
 from l1_normalization_uniform_mixed_edge import moment
 
 N=36**2
+EXTERIOR_FACTOR=23906980319527578894336
 
 def flat(digits,base):
     n=0
@@ -149,6 +150,19 @@ def indices(a,b,pure,nopure):
     u,v=b[:,nopure],b[:,pure]
     return (((x[:,None]*3+u)*3+y[:,None])*3+v).astype(np.int32)
 
+def exact_vector_sum(gauge, a, b):
+    if not len(gauge):return 0
+    product_bound=int(np.max(np.abs(gauge)))*int(np.max(np.abs(a)))*int(np.max(np.abs(b)))
+    if product_bound>=2**63:
+        return sum(int(x)*int(y)*int(z) for x,y,z in zip(gauge,a,b,strict=True))
+    if not product_bound:return 0
+    values=gauge*a*b
+    batch=min(len(values),(2**63-1)//product_bound)
+    count=len(values)//batch
+    bulk=values[:count*batch].reshape(count,batch).sum(axis=1,dtype=np.int64)
+    return sum(map(int,bulk))+int(values[count*batch:].sum(dtype=np.int64))
+
+
 def kernel(L,R,A,B):
     a=np.array([x for x,_ in A],dtype=np.int16)
     b=np.array([x for x,_ in B],dtype=np.int16)
@@ -157,6 +171,9 @@ def kernel(L,R,A,B):
     order=np.argsort(u,kind='stable')
     U=u[order];V=v[order]
     total=0;live=0;peak=0
+    weights = [[divmod(w, EXTERIOR_FACTOR) for _, w in column] for column in (A, B)]
+    assert all(rest == 0 and abs(value) <= 3264 for column in weights for value, rest in column)
+    wa, wb = (np.array([value for value, _ in column], dtype=np.int64) for column in weights)
     assert norm(L)*norm(R)<2**63
     for i in range(0,6561,128):
         j=min(i+128,6561);lo,hi=np.searchsorted(U,[i,j])
@@ -164,12 +181,10 @@ def kernel(L,R,A,B):
         G=L[i:j]@R.T
         peak=max(peak,G.nnz)
         values=np.asarray(G[U[lo:hi]-i,V[lo:hi]]).ravel()
-        for z,gauge in zip(order[lo:hi],values,strict=True):
-            if gauge:
-                x,y=divmod(int(z),len(B))
-                total+=int(gauge)*A[x][1]*B[y][1]
-                live+=1
-    return total,len(U),live,peak
+        flat_pos=order[lo:hi]
+        total+=exact_vector_sum(values,wa[flat_pos//len(B)],wb[flat_pos%len(B)])
+        live+=int(np.count_nonzero(values))
+    return total*EXTERIOR_FACTOR**2,len(U),live,peak
 
 def main():
     p=argparse.ArgumentParser()

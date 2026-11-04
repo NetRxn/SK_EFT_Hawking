@@ -2374,3 +2374,10 @@ bound `3880292686383659548704577595375616` (112 bits). A checked
 signed 128-bit accumulator can hold the scaled total and partial
 sums bounded by the same absolute estimate. Restore the square of
 the divisor before applying the physical normalization.
+
+The tracked scheduler now divides the exterior weights by their
+common factor inside the kernel. It bounds each signed int64
+batch by its maximum absolute product, adds the batch totals
+with Python integers, and restores the common factor squared.
+A two-representative replay matched every prior index, orbit
+weight, candidate count, nonzero count, and signed numerator.
