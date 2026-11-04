@@ -4775,3 +4775,28 @@ dispatch to the existing fixed, probed, pure, and source paths.
 Dispatch controls passed. The full fixed/Haar fallback and source
 controls reached their cold time caps before emitting totals.
 The larger-core sums still require complete execution receipts.
+
+#### Full class-weighted six-face deletion 4
+
+The `--six-deletions --deletion-index 4` replay exited zero.
+Omitting face `(15,0,1)` gives source frame `(2,3)` and a
+four-face surviving core. The fixed-shear source coefficient before
+orbit weighting is `−915708720021982470703125/18446744073709551616`.
+Across both checkerboards it contributes
+`−2747126160065947412109375/144115188075855872`.
+Independent review checked the geometry, class edge, and factor
+of 384. The previous fixed-probe comparison covers one slice.
+A full direct all-probe comparison and five deletion sums remain open.
+
+#### Opt-in integer accumulation for ordinary mixed rows
+
+The `--integer-gamma` option on full larger-core orbits accumulates
+signed Gaussian integers for ordinary grouped mixed rows and then
+constructs the existing ring output. The integer map cache is scoped
+to the current moment group. The reference path remains the default
+and still handles pure centers and explicit source-replacement rows.
+
+All 36 rows of the real orbit-zero control group and their divisor
+matched the reference exactly. A separate complex cancellation and
+reuse control passed independent review. The control does not measure
+full-orbit runtime or peak memory.

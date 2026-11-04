@@ -77,6 +77,32 @@ def mixed_edge_tables(moments):
     )
 
 
+def integer_exterior(exterior):
+    """Cache each signed exterior map in its Gaussian integer representation."""
+    @cache
+    def coefficients(first, common, last):
+        result = {}
+        for mask, value in exterior(first, common, last).items():
+            assert value.is_ground
+            z = value.const()
+            result[mask] = int(z.x), int(z.y)
+        return result
+
+    return coefficients
+
+
+def contract_integer_gamma(exterior, first_weights, last_weights):
+    values = {}
+    for (a, u), weight in first_weights.items():
+        for (b, v), other in last_weights.items():
+            term = weight * other
+            for mask, (real, imag) in exterior(u, tuple(sorted(a + b)), v).items():
+                re, im = values.get(mask, (0, 0))
+                values[mask] = re + term * real, im + term * imag
+    return {m: R.ground_new(R.domain.dtype(re, im))
+            for m, (re, im) in values.items() if re or im}
+
+
 @cache
 def source_edge_table(moments, slot):
     return {labels: remap(add(*(source_edge_moments(labels, moments, endpoint)
@@ -114,7 +140,8 @@ def source_center_tensor(planes, directions, moments, removed):
             if mask & 255 == 255}
 
 
-def center_tensor(center, planes, slots, components, probes, removed=None, products=None):
+def center_tensor(center, planes, slots, components, probes, removed=None, products=None,
+                  *, gamma_sum=contract_gamma_products):
     first, last = planes
     if first == last:
         directions = first
@@ -151,7 +178,7 @@ def center_tensor(center, planes, slots, components, probes, removed=None, produ
     if products is None:
         result = contract_gamma(*mixed_edge_tables(moments), *weights)
     else:
-        result = contract_gamma_products(products(tuple(moments)), *weights)
+        result = gamma_sum(products(tuple(moments)), *weights)
     return directions, result, divisor * factorial(2)**2
 
 
@@ -273,20 +300,26 @@ def grouped_projection_keys(projections):
             yield tuple(value for key in projected for value in key)
 
 
-def center_factor(center, planes, slots, faces, removed=None):
+def center_factor(center, planes, slots, faces, removed=None, *, integer_gamma=False):
     projections = [projected_keys(center, factor) for factor in faces]
     axes = tuple(axis for keys, _ in projections for axis in keys)
     rows = {}
     divisor = None
+    use_integer = integer_gamma and removed is None and planes[0] != planes[1]
+    gamma_sum = contract_integer_gamma if use_integer else contract_gamma_products
+
     @lru_cache(maxsize=1)
     def products(moments):
-        return gamma_products(*mixed_edge_tables(moments))
+        exterior = gamma_products(*mixed_edge_tables(moments))
+        return integer_exterior(exterior) if use_integer else exterior
 
     for key in grouped_projection_keys(projections):
         components = {axis: value for axis, value in zip(axes, key, strict=True) if len(axis) == 3}
         probes = {axis: PROBE_PAIRS[value] for axis, value in zip(axes, key, strict=True)
                   if len(axis) == 2}
-        directions, local, scale_factor = center_tensor(center, planes, slots, components, probes, removed, products)
+        directions, local, scale_factor = center_tensor(
+            center, planes, slots, components, probes, removed, products, gamma_sum=gamma_sum,
+        )
         assert divisor is None or divisor == scale_factor
         divisor = scale_factor
         if local:
@@ -366,7 +399,7 @@ def close_factors(factors, sources=None):
 
 
 def contract_factors(pattern, slots, faces, tree, live, selection=None, retained=None,
-                     replacement=None, use_classes=True):
+                     replacement=None, use_classes=True, *, integer_gamma=False):
     assert retained is None or replacement is None
     if selection is None and use_classes:
         edge, curvature = class_face_factors(faces, tree, live)
@@ -377,7 +410,9 @@ def contract_factors(pattern, slots, faces, tree, live, selection=None, retained
     divisors = {}
     for center, planes in zip(EVEN, pattern, strict=True):
         removed = replacement[1] if replacement is not None and center == replacement[0] else None
-        factor, denominator = center_factor(center, planes, slots[center], curvature, removed)
+        factor, denominator = center_factor(
+            center, planes, slots[center], curvature, removed, integer_gamma=integer_gamma,
+        )
         factors.append(factor)
         divisors[center] = denominator
     occurrences = Counter(key for axes, _ in factors for key in axes)
@@ -488,7 +523,8 @@ def replay_six_deletions(first_slice, deletion_index, use_classes):
         print(label, "both checkerboards", total, flush=True)
 
 
-def main(first_slice=False, full_orbit=None, tree_costs=False, source=False, use_classes=True):
+def main(first_slice=False, full_orbit=None, tree_costs=False, source=False, use_classes=True,
+         *, integer_gamma=False):
     counts = Counter()
     completed_full = False
     for pattern, multiplicity in orbits(words_with_mixed_count(3)):
@@ -521,7 +557,8 @@ def main(first_slice=False, full_orbit=None, tree_costs=False, source=False, use
             score = tree_key_cost(faces)
             print("full orbit", full_orbit, "projected keys", score(tree, live), flush=True)
             result = contract_factors(pattern, slots, faces, tree, live,
-                                      retained=retained if source else None, use_classes=use_classes)
+                                      retained=retained if source else None, use_classes=use_classes,
+                                      integer_gamma=integer_gamma)
             if source:
                 result, numerator = result
                 print("full orbit", full_orbit, "retained numerator", numerator, flush=True)
@@ -550,6 +587,8 @@ if __name__ == "__main__":
     full.add_argument("--full-orbit", type=int, choices=range(11))
     parser.add_argument("--tree-costs", action="store_true")
     parser.add_argument("--retained-source", action="store_true")
+    parser.add_argument("--integer-gamma", action="store_true",
+                        help="accumulate grouped ordinary mixed rows with Gaussian integers")
     parser.add_argument("--six-deletions", action="store_true")
     parser.add_argument("--deletion-index", type=int, choices=range(6))
     parser.add_argument("--all-probes", action="store_true", help="use the direct probe sum for comparison")
@@ -557,13 +596,16 @@ if __name__ == "__main__":
     if args.deletion_index is not None and not args.six_deletions:
         parser.error("--deletion-index requires --six-deletions")
     if args.six_deletions:
-        if args.full_orbit is not None or args.retained_source or args.tree_costs or args.local_controls or args.source_controls:
+        if args.full_orbit is not None or args.retained_source or args.tree_costs or args.local_controls or args.source_controls or args.integer_gamma:
             parser.error("--six-deletions is separate from original-core replays")
         replay_six_deletions(args.first_slice, args.deletion_index, not args.all_probes)
         raise SystemExit
     if args.retained_source and args.full_orbit is None:
         parser.error("--retained-source requires --full-orbit or --full-first")
-    main(args.first_slice, args.full_orbit, args.tree_costs, args.retained_source, not args.all_probes)
+    if args.integer_gamma and args.full_orbit is None:
+        parser.error("--integer-gamma requires --full-orbit or --full-first")
+    main(args.first_slice, args.full_orbit, args.tree_costs, args.retained_source,
+         not args.all_probes, integer_gamma=args.integer_gamma)
     if args.local_controls:
         verify_local_tensors()
     if args.source_controls:
