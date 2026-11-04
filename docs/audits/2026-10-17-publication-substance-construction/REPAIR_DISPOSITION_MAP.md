@@ -97,7 +97,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   now covers all 23 orbits and both checkerboards, with independent
   receipt reduction including all deletion rows. The subsequent tree
   run matched the fused normalization and both retained-source terms
-  on orbits 1 and 2, covering both fused layouts. The
+  on orbits 1 and 2, covering both fused layouts. The [direct all-probe comparison](L1_RETARDED_SPECTRAL_INTERFACE.md#direct-all-probe-comparison-for-all-protected-orbit-zero)
+  also reproduced orbit zero exactly. The
   [three-face deletion replay](L1_RETARDED_SPECTRAL_INTERFACE.md#three-face-deletion-subtotal-and-remaining-core-geometry)
   evaluates all five deletion orbits. The verified three-face
   tree leaves one upper probe per face. The

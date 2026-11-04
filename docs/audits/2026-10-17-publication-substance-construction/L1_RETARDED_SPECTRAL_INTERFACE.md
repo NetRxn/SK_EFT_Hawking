@@ -4967,3 +4967,12 @@ The 40 deletion rows contribute
 Independent review reproduced all sums from the receipts without
 rerunning the full contractions. This subtotal covers the
 four-face cores and their source deletions.
+
+#### Direct all-probe comparison for all-protected orbit zero
+
+The direct `--candidate-source --all-protected --orbit 0` run
+exited zero. Its entire output is byte-identical to the
+class-weighted source receipt. This reproduces the normalization,
+remote source and upper source with the direct sum over probes,
+including the exact weights for both checkerboards. It qualifies
+the comparison for this representative.
