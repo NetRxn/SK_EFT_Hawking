@@ -2118,3 +2118,13 @@ coefficient by coefficient because the corresponding left tensors
 are equal. After removing zero coefficients this gives 2,083,968
 entries in 36 symmetric channels, with at most 62,208 entries in
 one channel. This is an exact reindexing with the same Haar weight.
+
+The [mixed-frame replay](l1_extended_overlap_mixed_frames.py)
+constructs the two-endpoint frame attachment for either surviving
+shared link. Its exact fourth-moment numerator has 734,304
+nonzero complex coefficients across 36 rows and 175,104 distinct
+boundary keys. The unprojected and projected row ranks over Q(i)
+are both 35. Every projected exterior mask has local site
+populations (3,3,1,1). The replay emits the integer real and
+imaginary components separately. Independent review and joining
+these tensors to the curvature boundary remain pending.
