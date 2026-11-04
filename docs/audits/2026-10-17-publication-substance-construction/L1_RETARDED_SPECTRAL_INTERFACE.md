@@ -5199,5 +5199,18 @@ and all source weights. This closes the representative's
 | Deleted source | `−15392181136584814453125/17592186044416` |
 | Full fixed-shear numerator | `−476054647634766350071265625/72057594037927936` |
 
-The remaining 159 representatives require exact replay. Use
-`--orbit-range 1 4 --probe-classes` for the next three.
+The `--orbit-range 1 4 --probe-classes` replay also completed.
+Independent exact reduction verified orbits 1–3 at multiplicity 192
+each, totaling 576 words per checkerboard. Orbit 1 matches orbit 0
+in all four fields, and orbits 2 and 3 match each other.
+
+| Both-checkerboard contribution for orbits 1–3 | Exact value |
+| --- | ---: |
+| Normalization | `259350992354042601127734375/72057594037927936` |
+| Remote source | `−109364592214179317524640625/9007199254740992` |
+| Upper source | `−363959220154970572463953125/72057594037927936` |
+| Deleted source | `−184829311088110451953125/70368744177664` |
+| Full fixed-shear numerator | `−1428141172422630215461078125/72057594037927936` |
+
+Exact receipts now cover four of 160 representatives. The next
+nonoverlapping batch uses `--orbit-range 4 8 --probe-classes`.
