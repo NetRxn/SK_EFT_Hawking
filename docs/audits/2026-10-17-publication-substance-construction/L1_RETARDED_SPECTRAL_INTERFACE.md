@@ -1851,3 +1851,10 @@ K(0)=208123/11635650 and Σ_r K(r)=12082/342225, reproducing
 the uniform per-site variance. The local affine contact
 adds 587/13260 at r=0 only. These formulas fix the scalar
 kernel for the matched-lattice contraction at all separations.
+
+Independent review of `e0c32a7c1` inverted the real-space
+16×16 scalar kernel over the rationals and reproduced the
+diagonal, uniform sum and affine contact. The connected
+kernel is signed by separation. In particular the offset
+that changes both transverse bits gives −2993/1292850.
+The mixed contraction must retain this sign.
