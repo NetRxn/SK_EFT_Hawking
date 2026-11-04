@@ -1949,3 +1949,25 @@ representation dimension. It also checked the local gauge
 rotation and the two chiral radial character expansions.
 This sector has shared curvature links but no shared
 curvature/frame link variables.
+
+### Saturated sector with shared curvature and frame links
+
+At each x₃=0 site take one (0,1) and one (0,2) vertex.
+At each x₃=1 site take two identical (0,1) vertices. For
+frames along axis 1 or 2 at x₃=0, choose the link anchored
+at the lower endpoint. Anchor all other frames at the
+center. Direct incidence counting gives degree eight at
+all 16 sites and even link parity. Link degree pairs
+(curvature, frame) are (4,0) on 24 links, (2,0) on eight,
+(0,2) on 24 and (2,2) on eight. Thus all 40 curvature
+links lack a private single-use port.
+
+The eight shared links form two squares along axes 1
+and 2 at x₃=0, one at each x₀. A spanning tree can include
+three links from each square and gauge-fix them to identity
+for a gauge-invariant closed-order word. The two remaining
+shared links carry independent cycle variables before
+contraction with the other factors. The first shared-link
+projection is being computed with both curvature indices
+and frame exterior masks retained. The census alone gives
+no value for the full signed integral.
