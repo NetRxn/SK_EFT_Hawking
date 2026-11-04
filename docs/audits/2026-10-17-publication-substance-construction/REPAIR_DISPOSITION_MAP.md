@@ -209,6 +209,16 @@ in the specified lattice coordinates.
 Physical normalization and the B3 susceptibility window remain
 separate acceptance requirements.
 
+The [matter-source construction](L1_RETARDED_SPECTRAL_INTERFACE.md#polynomial-scalar-coupling-about-a-nondegenerate-background)
+supplies a reviewed polynomial coupling on a specified positive body
+metric. Its normalization remains an input. On the matched 16-site
+regulator, the independently reproduced scalar connected variance per
+site is 12082/342225. A verified geometry word contributes
+(61875/262144)⁴ to the signed partition sum. The lead owns the full
+geometry partition and covariance calculation and the derivation of
+a physical matching law. The scalar affine contact is in independent
+review. These results preserve the original B3 acceptance target.
+
 Original B3/L1-02 and Phase6a/5y/6e remain full-strength BUILD. These are distinct from the shared D1/E1/E2 quadratic law.
 
 | Missing construction | Current work / next substantive action | Acceptance reviewer and required evidence |
