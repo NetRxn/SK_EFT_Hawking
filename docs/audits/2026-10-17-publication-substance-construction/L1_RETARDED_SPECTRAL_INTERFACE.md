@@ -5765,6 +5765,11 @@ no nonzero certificate.
 
 The scratch receipt SHA-256 is
 `0e8c4ab9e79edcb98e97b5f479bb85038ffb8a9cfdb1b78bbac5d5dd313e72ef`.
-A tracked replay and signed evaluation of the surviving tuples
-remain open. Retaining the coupled site-5 and site-7 masks can
-strengthen the exclusion before that evaluation.
+The independently reviewed repository replay
+[`l1_unpaired_upper_support.py`](l1_unpaired_upper_support.py)
+reproduces these counts without scratch imports. Its
+[factor assembly](l1_unpaired_offset_factors.py) represents one
+predeclared word. Run the replay with the repository Python environment.
+Signed evaluation of the surviving tuples remains open. Retaining
+the coupled site-5 and site-7 masks can strengthen the exclusion
+before that evaluation.
