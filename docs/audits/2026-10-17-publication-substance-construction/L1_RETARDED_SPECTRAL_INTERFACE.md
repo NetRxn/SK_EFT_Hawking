@@ -2365,3 +2365,12 @@ candidate pairs in 121 seconds. Its raw subtotal before global
 chirality doubling is
 `493558895505829437085178565821657728079248882488555076558258176`.
 This is one complete signature, with the others still owed.
+
+The exact column scan also gives a common divisor of
+`23906980319527578894336`. Dividing both column tensors by it
+leaves maximum coefficient magnitude 3,264 and weighted one-norm
+733,410,816. The resulting signed curvature numerator has absolute
+bound `3880292686383659548704577595375616` (112 bits). A checked
+signed 128-bit accumulator can hold the scaled total and partial
+sums bounded by the same absolute estimate. Restore the square of
+the divisor before applying the physical normalization.
