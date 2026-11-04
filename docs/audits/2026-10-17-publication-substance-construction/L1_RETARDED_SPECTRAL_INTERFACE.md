@@ -5502,3 +5502,27 @@ checked the degree count, parity rule, and axis exchange.
 
 These counts establish structural support. The next step is the
 signed exterior and Haar contraction for the predeclared witness.
+
+#### Exact signed coefficient for the selected temporal word
+
+The `l1_extended_offset_witness.py` replay evaluates the
+predeclared paired-label action word with ordered insertions
+`G22(0) G22(1)`. It sums the directed action anchors and the
+exterior and curvature labels. The source link incident to the
+remaining curvature torus is fixed to identity. The other source
+link remains Haar integrated.
+
+Eleven curvature faces peel, leaving a four-face tensor. Its
+diagonal baseline and chiral corrections give 15 scalar branches.
+The replay verifies a fixed-label join, a one-center enumeration,
+and a direct restricted linked-center calculation. All 15 branch
+receipts match the separately reviewed scratch calculation.
+Independent source review also checked the 128 local coframe
+orientation and sign cases against the existing frame evaluator.
+
+The exact coefficient is
+`2028966652060713225/1099511627776` before the factor `g₂³⁰`.
+It establishes a nonzero contribution for one word and one
+ordered source pair. The full shear coefficient still requires
+summing the other source pairs and action words, including their
+signs, and normalizing in the full geometry ensemble.

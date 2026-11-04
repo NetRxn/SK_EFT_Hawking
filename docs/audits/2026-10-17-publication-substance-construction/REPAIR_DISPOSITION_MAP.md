@@ -166,8 +166,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   common-regulator calculation](L1_RETARDED_SPECTRAL_INTERFACE.md#common-regulator-joint-control-in-a-restricted-geometry-sector)
   verifies the exact mixed contraction on the common `2⁴` lattice.
   Its geometry factor has only transverse offsets. The [source-pair census](L1_RETARDED_SPECTRAL_INTERFACE.md#axial-and-temporal-source-pair-support-on-the-common-regulator)
-  verifies separate axial and temporal structural support. The signed
-  contraction of its predeclared witness is pending. The matched geometry
+  verifies separate axial and temporal structural support. The [signed
+  temporal witness](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-signed-coefficient-for-the-selected-temporal-word)
+  has an independently reviewed nonzero coefficient for one word and
+  ordered source pair. The complete offset sum and matched geometry
   inverse pole and physical frequency calibration remain open.
   The full word sum, physical matching and B3 remain open.
 
