@@ -4130,3 +4130,26 @@ base peels and contributes its ordinary Haar moment. The replay
 uses the signed mixed-plane source factor `−2 × 48 × 2!` once
 and divides the all-axis source sum by six before applying orbit
 and checkerboard weights. The exact subtotal is pending.
+
+#### Three-face tree normalization replay
+
+The [three-face tree replay](l1_extended_three_face_tree.py)
+first sums the channel linking the disjoint base to the pure
+upper center shared by two faces. It then pairs the grouped
+tensor and the other pure upper tensor with the overlapping
+base and remote exterior environment. The disjoint base has
+one peeled and one residual curvature pair. Its divisor is
+`48 × 192⁸ × 4⁸ × (2!)²`. The overlapping base uses the same
+fixed exclusive frame tensors as the free-link two-face join.
+
+Both upper-link choices pass the tree check in all five orbits.
+The 30 resulting face maps each give one live coordinate pair
+with unit coefficient for every curvature component pair.
+Independent review checked the component grouping, exterior signs
+and divisors. The full numerical subtotal and the retained-source
+replay remain open.
+
+The first four-face deletion, at face `(3,2,3)` in orbit zero,
+gave `−40832373647928076171875/288230376151711744` before orbit
+and checkerboard weighting in both upper-link choices. The other
+deletion rows still enter the full replay.

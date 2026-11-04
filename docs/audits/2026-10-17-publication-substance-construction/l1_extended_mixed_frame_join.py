@@ -145,15 +145,21 @@ def unprobed_frame(axis, degree):
 
 
 @cache
+def remote_tensor(mixed):
+    common = summed_fourth(1)
+    if mixed:
+        return mixed_center(common)
+    normal, _ = staged_center(summed_fourth(0), common)
+    return normal
+
+
 def remote_center(pairs):
     first, second = pairs
-    common = summed_fourth(1)
     if first == second:
-        normal, _ = staged_center(summed_fourth(0), common)
-        return normal, first
+        return remote_tensor(False), first
     axis, = set(first) & set(second)
     a, b = sorted(set(first) ^ set(second))
-    return mixed_center(common), (a, axis, b)
+    return remote_tensor(True), (a, axis, b)
 
 
 def saturate_slice(pattern, faces, attached, result, free_count, shift, *, sum_remote=False):
