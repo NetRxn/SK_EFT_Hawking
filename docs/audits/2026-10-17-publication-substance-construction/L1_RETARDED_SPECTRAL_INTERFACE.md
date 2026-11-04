@@ -4617,3 +4617,33 @@ and `-1039919139505603564453125/288230376151711744` (upper). With 96 words per c
 the contributions across both checkerboards are `-110664558835863864676171875/72057594037927936` and
 `-3119757418516810693359375/4503599627370496`, respectively. This is one representative. The direct
 source comparison and remaining orbit sums are open.
+
+#### Complete free-link two-face subtotal
+
+The direct source replay supplied orbit IDs 0–39. The class-weighted
+source replay supplied ranges [40,60) and [60,80), each with a zero
+exit status. These ranges contain exactly 80 unique representatives,
+with 77 of multiplicity 192 and three of multiplicity 96 per
+checkerboard. Every normalization row and multiplicity agrees with the
+standalone replay. To reproduce a range, run
+`l1_extended_two_face_tree.py --candidate-source --orbit-range START STOP`
+with `--probe-classes` for the class-weighted ranges.
+
+The direct orbit-41 run exited zero and agrees with the class-weighted
+run on normalization and both retained-source terms. This checks a
+mixed upper with a common-axis live link, complementing the orbit-21
+exclusive-axis comparison.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `290879065364323137721259765625/18446744073709551616` |
+| Remote retained source | `−3657404130214533220402734375/72057594037927936` |
+| Upper retained source | `−26402371190237855140435546875/1152921504606846976` |
+| Tracked face deletions | `−6455243019158686318359375/562949953421312` |
+| Fixed-shear numerator | `−98141174976907376246879296875/1152921504606846976` |
+
+Independent review recomputed the exact reductions, reconciled the
+normalization and multiplicities, and checked the orbit-41 receipts.
+It reused the previously reviewed deletion subtotal and did not rerun
+the underlying contractions. The direct prefix was taken from the
+ongoing unbounded run. These values cover the free-link two-face sector.

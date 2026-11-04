@@ -71,8 +71,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   reconcile the two-mixed normalization. Replay both retained-face
   source cases. Both now agree with the tree calculation, closing
   the corrected balanced two-mixed numerator.
-  The 80-orbit free-link normalization is complete. Finish
-  its retained-source subtotal and the all-protected normalization.
+  The [80-orbit free-link subtotal](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-free-link-two-face-subtotal)
+  now includes normalization and the full fixed-shear numerator, with
+  independent receipt reduction and direct orbit-41 agreement.
+  Finish the all-protected normalization and retained-source sums.
   The [range replay](L1_RETARDED_SPECTRAL_INTERFACE.md#free-link-retained-source-range-control)
   matches the direct normalization and both source terms exactly on
   orbit 21. Use disjoint intervals for remaining free-link work when
