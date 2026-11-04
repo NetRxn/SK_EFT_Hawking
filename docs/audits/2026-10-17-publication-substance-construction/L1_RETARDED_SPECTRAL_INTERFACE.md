@@ -2465,3 +2465,15 @@ across the eight upper sites gives eight distinct missing
 action-vertex choices with the same coefficient. The subtotal
 for this specified family is
 `-60445514255728976151/9903520314283042199192993792`.
+
+Independent review accepted the selected replacement at
+`23f7be09d`. The replay found 84 source masks. At site 8
+the outgoing axis-2 and axis-3 frames use the same anchors
+as the action vertices they replace, preserving the four
+raw frame and two Haar second-moment factors. Schur
+orthogonality propagates the trivial representation from
+the missing face across the punctured sheet. The reviewer
+reproduced the exact single-site coefficient. The two-position
+replay at `00a6572f2` checks the local identity needed for
+the eight-word subtotal. This uses identical upper blocks
+with the lower anchor choices held fixed.
