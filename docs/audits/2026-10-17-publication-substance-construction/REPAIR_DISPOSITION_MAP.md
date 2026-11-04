@@ -29,7 +29,13 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The exact base `ce194cdc4` and candidate have identical
   portfolio structural figure diagnostics after normalizing
   checkout paths. Both report 24 warnings and the same two
-  missing vestigial Monte Carlo inputs. Integration is pending.
+  missing vestigial Monte Carlo inputs. Scoped validation reported
+  6,753 passes and 43 failures. All 43 failing IDs reproduced at
+  the exact base, including two citation ratchets that require the
+  same held-source visibility. Architecture and bundle subgate
+  diagnostics also matched. The scoped run changed two generated
+  count provenance fields and the candidate was restored clean.
+  The repository merge gate remains pending.
 
 ## Accountable author, independent review and integration
 
