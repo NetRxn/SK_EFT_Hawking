@@ -279,12 +279,37 @@ def close_fused(pattern, site, directions, coupled, factors, common):
     return Fraction(int(total.const().x), divisor), len(joined)
 
 
-def replay_fused(probe, orbit):
+PROBE_CLASSES = (((0, 0), 4), ((0, 1), 6), ((4, 4), 4), ((4, 5), 6), ((0, 4), 16))
+
+
+def canonical_inputs(pattern, site, directions, coupled, factors):
+    passive = tuple(site ^ (1 << axis) for axis in directions)
+    keep, environment = remote_environment(pattern, coupled)
+    remaining, = set(x for x in range(16) if keep & (255 << (8*x))) - set(passive)
+    ordered = (*passive, remaining)
+
+    def canonical(mask):
+        return sum(((mask >> (8*x)) & 255) << (8*i) for i, x in enumerate(ordered))
+
+    return (
+        [{key: {canonical(mask): value for mask, value in poly.items()}
+          for key, poly in rows.items()} for _, rows in factors],
+        {canonical(mask): value for mask, value in environment.items()},
+        tuple(sorted(tuple(sorted(Counter(pairs).values()))
+                     for x, pairs in zip(EVEN, pattern, strict=True) if x not in coupled)),
+    )
+
+
+def replay_fused(probe, orbit, by_class=False):
     common = summed_fourth(1)
     table = pure_table()
     total = Fraction()
     completed = 0
-    probes = range(len(PAIRS)) if probe is None else (probe,)
+    probes = [(i, 1) for i in (range(len(PAIRS)) if probe is None else (probe,))]
+    if by_class:
+        probes = [(PAIR_INDEX[pair], count) for pair, count in PROBE_CLASSES]
+        assert sum(weight for _, weight in probes) == len(PAIRS)
+    previous = []
     representatives = ((pattern, n, faces, protected)
                        for pattern, n in orbits(swap_patterns())
                        for faces, protected in (curvature_boundary(pattern),)
@@ -302,13 +327,21 @@ def replay_fused(probe, orbit):
             }
             assert value == expected[pair]
         site, directions, coupled, factors = build_fused(pattern, faces, protected, table)
-        subtotal = Fraction()
-        for index in probes:
-            value, rows = close_fused(pattern, site, directions, coupled,
-                                      restrict_probes(factors, index), common)
-            print("orbit", representative, "multiplicity", multiplicity, "first probe", PAIRS[index],
-                  "rows", rows, "coefficient", value, flush=True)
-            subtotal += value
+        inputs = canonical_inputs(pattern, site, directions, coupled, factors)
+        prior = next((old for old_inputs, old in previous if old_inputs == inputs), None)
+        if prior is not None:
+            print("orbit", representative, "reuses identical canonical input", flush=True)
+            subtotal = prior
+        else:
+            subtotal = Fraction()
+            for index, count in probes:
+                value, rows = close_fused(pattern, site, directions, coupled,
+                                          restrict_probes(factors, index), common)
+                print("orbit", representative, "multiplicity", multiplicity,
+                      "first probe", PAIRS[index], "class weight", count,
+                      "rows", rows, "coefficient", value, flush=True)
+                subtotal += count * value
+            previous.append((inputs, subtotal))
         total += 2 * multiplicity * subtotal
         completed += 1
     assert completed == (3 if orbit is None else 1)
@@ -347,10 +380,11 @@ if __name__ == "__main__":
     mode.add_argument("--fuse-pure-centers", action="store_true")
     mode.add_argument("--first-probe", type=int, choices=range(len(PAIRS)))
     mode.add_argument("--all-probes", action="store_true")
+    mode.add_argument("--probe-classes", action="store_true")
     parser.add_argument("--orbit", type=int, choices=range(3))
     args = parser.parse_args()
-    if args.all_probes or args.first_probe is not None:
-        replay_fused(args.first_probe, args.orbit)
+    if args.all_probes or args.probe_classes or args.first_probe is not None:
+        replay_fused(args.first_probe, args.orbit, args.probe_classes)
     elif args.fuse_pure_centers:
         fuse_all()
     else:

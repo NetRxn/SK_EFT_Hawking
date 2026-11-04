@@ -3437,3 +3437,45 @@ the orbit multiplicity and the factor of two for the second
 checkerboard only after all selected shards finish. The optional
 `--orbit` restricts a run to a single representative. The full
 two-face normalization and source numerator remain open.
+
+### First-probe classes under signed quaternion permutations
+
+For normalization, split the selected directed link into two
+independent formal variables, one for its curvature occurrences
+and one for its frame occurrences. Both variables transform
+with the same endpoint gauge rotations. Each labelled plane and
+frame-anchor term remains invariant after transforming the
+spinors and summing its internal gamma labels. Product Haar and
+the top exterior coefficient preserve this covariance when the
+other links are integrated. The residual curvature dependence on
+the selected link is homogeneous of degree two.
+
+A unit-quaternion rotation at one endpoint signed-permutes the
+four coordinates by a Klein four permutation. Conjugations
+permuting the three imaginary axes generate the remaining
+coordinate permutations. These operations act independently in
+the two chiral factors. For each signed permutation, the curvature
+monomial and the corresponding frame insertion acquire the same
+sign, which cancels in their contraction. Thus the 36 first
+probes have five classes. Each chirality has four diagonal and
+six off-diagonal probes. The mixed-chirality class has sixteen.
+This argument uses the sum over every other probe and internal
+gamma label.
+
+The `--probe-classes` run evaluates one representative of each
+class with its multiplicity. The complete `--all-probes` route
+remains available as a separate direct check. The replay also
+compares the complete fused factors and remote environment in
+the same four passive-site roles before reusing a subtotal
+between representatives. Each local site block has even exterior
+degree, so this relabelling carries no additional wedge sign.
+The comparison includes the remote multiplicities that enter
+the normalization divisor.
+
+Independent review checked the split-link argument and the
+canonical input comparison. A permutation enumeration recovered
+the five disjoint classes and all 36 probes. The direct run
+reproduced the same coefficient
+`28388500213623046875/18446744073709551616` at probes
+`(0,1)`, `(0,2)` and `(0,3)` of the first representative.
+The full class-weighted subtotal remains pending.
