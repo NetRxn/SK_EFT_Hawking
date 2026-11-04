@@ -5351,3 +5351,42 @@ channel. The Nyquist secant is a finite-lattice number and does
 not determine a low-frequency inverse pole or Γ_H. The scalar
 and geometry torus extents differ, so these controls cannot be
 multiplied into a matched joint response.
+
+### Common-regulator joint control in a restricted geometry sector
+
+Use the unit 2⁴ scalar kernel and the reviewed independent
+homogeneous opposed geometry sector with curvature plane (0,1).
+The replay `l1_extended_opposed_torus.py` checks the trivial-channel
+one-checkerboard normalization
+Z_s = 9982511481025756988525390625/295147905179352825856
+and the raw numerator per offset
+N_s = −151675751259254608154296875/576460752303423488
+for r = 0, 4, 8, 12. That numerator includes four layers,
+two centers, and both source orders. Its four offsets are equal.
+The two translated checkerboards give total coefficient 2N_s
+at each offset. Their sum is translation invariant, so the
+coefficient for one origin is 2N_s/16. The sector normalizer
+is 2Z_s, giving geometry covariance −864/(1777 g₂²) at each
+of the four offsets. The pure-g₂ one-point vanishes by Pin
+parity: one degree-four insertion leaves 31 curvature factors.
+This sector normalization is a control and does not normalize
+the contribution to the full geometry ensemble.
+
+The scalar connected values at those offsets are
+208123/11635650, 5329/684450, 5329/684450, and −2993/1292850.
+Their signed sum is 10658/342225. The coincident derivative
+of the mixed covariance under +λ Σ_x D_x O_x is consequently
+−341056/(22523475 g₂²) in the declared sector. The derivative
+uses the scalar connected covariance, with the affine bare
+contact excluded.
+
+The geometry support has no time or axis-1 displacement. Its
+Fourier values at characters 0, 1, 2 and 3 are therefore equal.
+The replay verifies this independent character sum. The full
+scalar Fourier kernel varies with those characters, so the
+joint convolution can vary through its scalar factor even
+though the restricted geometry part has no axial or temporal
+contrast. This calculation checks the common-lattice mixed
+contraction and source normalization. Matching the physical
+geometry ensemble, joint coupling, and inverse pole remains
+separate.

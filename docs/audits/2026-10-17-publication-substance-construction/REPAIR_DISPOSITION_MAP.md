@@ -158,7 +158,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)
   verifies a contact-independent direct contrast and a contact-dependent
-  inverse secant in the separate geometry regulator. The matched geometry
+  inverse secant in the separate geometry regulator. The [restricted
+  common-regulator calculation](L1_RETARDED_SPECTRAL_INTERFACE.md#common-regulator-joint-control-in-a-restricted-geometry-sector)
+  verifies the exact mixed contraction on the common `2⁴` lattice.
+  Its geometry factor has only transverse offsets. The matched geometry
   inverse pole and physical frequency calibration remain open.
   The full word sum, physical matching and B3 remain open.
 

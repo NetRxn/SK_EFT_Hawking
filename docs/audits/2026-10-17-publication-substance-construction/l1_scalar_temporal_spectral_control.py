@@ -25,24 +25,60 @@ def two_slice_propagator(mass_squared, time):
     return (Fraction(1, mass_squared) + Fraction((-1)**time, mass_squared + 4)) / 2
 
 
-def scalar_real_space_projection(staggered):
-    """Project the Wick kernel over the eight spatial displacements."""
+def scalar_real_space_kernel():
+    """Connected Wick kernel at each of the sixteen offsets."""
     propagator = [
         sum(Fraction((-1)**((p & r).bit_count()), 1 + 4 * p.bit_count())
             for p in range(16)) / 16
         for r in range(16)
     ]
-    connected = [Fraction(), Fraction()]
+    kernel = []
     for r in range(16):
         def gradient_pair(i, j):
             return (propagator[r ^ i ^ j] - propagator[r ^ i]
                     - propagator[r ^ j] + propagator[r])
 
-        kernel = (gradient_pair(4, 4)**2 + gradient_pair(8, 8)**2
-                  - gradient_pair(4, 8)**2 - gradient_pair(8, 4)**2) / 4
+        kernel.append((gradient_pair(4, 4)**2 + gradient_pair(8, 8)**2
+                       - gradient_pair(4, 8)**2 - gradient_pair(8, 4)**2) / 4)
+    return kernel
+
+
+def scalar_real_space_projection(staggered):
+    connected = [Fraction(), Fraction()]
+    for r, value in enumerate(scalar_real_space_kernel()):
         spatial_character = (-1)**((r >> 1) & 1) if staggered else 1
-        connected[r & 1] += spatial_character * kernel
+        connected[r & 1] += spatial_character * value
     return tuple(connected)
+
+
+def check_homogeneous_opposed():
+    # Trivial-channel, one-checkerboard sector with curvature plane (0,1).
+    # l1_extended_opposed_torus.py independently asserts these values, the
+    # numerator including four layers, two centers and both source orders.
+    normalization = Fraction(9982511481025756988525390625, 295147905179352825856)
+    numerator_per_offset = Fraction(-151675751259254608154296875, 576460752303423488)
+    # Sum the two translated checkerboards, then divide by all origins.
+    per_origin = 2 * numerator_per_offset / 16
+    sector_covariance = per_origin / (2 * normalization)
+    assert sector_covariance == Fraction(-864, 1777)
+
+    offsets = (0, 4, 8, 12)
+    scalar = scalar_real_space_kernel()
+    assert [scalar[r] for r in offsets] == [
+        Fraction(208123, 11635650), Fraction(5329, 684450),
+        Fraction(5329, 684450), Fraction(-2993, 1292850),
+    ]
+    assert sum(scalar[r] for r in offsets) == Fraction(10658, 342225)
+    joint_coincident = sector_covariance * sum(scalar[r] for r in offsets)
+    assert joint_coincident == Fraction(-341056, 22523475)
+
+    # The geometry Fourier contrast vanishes for both axial characters.
+    # The product with the full scalar Fourier kernel need not share this.
+    phases = [sum((-1)**((k & r).bit_count()) * sector_covariance for r in offsets)
+              for k in (0, 1, 2, 3)]
+    assert phases == [4 * sector_covariance] * 4
+    print("2^4 homogeneous opposed sector, geometry per offset:", sector_covariance)
+    print("2^4 homogeneous opposed sector, coincident joint:", joint_coincident)
 
 
 def check_staggered_controls():
@@ -135,6 +171,7 @@ def main():
     for slices in (2, 3, 7, 16):
         check_transfer(slices)
     check_staggered_controls()
+    check_homogeneous_opposed()
     print("2^4 per-site connected shear:", *connected)
     print("Per-site affine contact at coincident time:", contact)
     print("Transfer, finite-time sum, zero-temperature and absent-line controls passed")
