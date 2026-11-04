@@ -3479,3 +3479,48 @@ reproduced the same coefficient
 `28388500213623046875/18446744073709551616` at probes
 `(0,1)`, `(0,2)` and `(0,3)` of the first representative.
 The full class-weighted subtotal remains pending.
+
+### Completed two-face normalization
+
+The class-weighted replay finished. Each chiral diagonal class
+gave `999591240231406494140625/73786976294838206464` per probe,
+each chiral off-diagonal class gave
+`28388500213623046875/18446744073709551616`, and the mixed class
+gave `3162566986083984375/9223372036854775808`. Independent
+arithmetic reproduced the weighted representative subtotal
+`999812172304465576171875/9223372036854775808`.
+
+The full canonical inputs matched in all three two-face
+representatives. With their multiplicity of 192 and both
+checkerboards, the exact normalization contribution is
+`8998309550740190185546875/72057594037927936`. Adding the
+73 peelable orbits gives
+`2941105392935517843017578125/144115188075855872`.
+The three four-face normalization orbits remain outside this sum.
+
+### Source terms that delete a residual face
+
+The [deleted-face replay](l1_extended_core_removed_source.py)
+removes both action vertices of one residual face while retaining
+the original frame protection. The replacement sources use the
+two complementary frame edges and preserve their degrees.
+Each two-face core then has one face with a private unprotected
+link. Each four-face cycle breaks and also peels completely.
+The replay checks this on every residual face of all six
+representatives before applying the independent Haar tensors.
+
+The exact source subtotal for these deletions is
+`-3158571447608642578125/35184372088832` for the two-face cores
+and `-22489113943181480712890625/4503599627370496` for the
+four-face cores. These contributions include the orbit and
+checkerboard weights and the six-axis-pair average. Replacements
+at other centers that retain a joint core remain open.
+
+The protected frame replay also supplies a probed source-edge
+tensor with two action frames and a quadratic source on either
+directed anchor. Independent review reproduced all sixteen
+unit-norm controls. At a protected pure center the perpendicular
+edges use separate passive-site bytes, with a degree profile of
+(8,4,4) after central saturation. All three tested endpoint
+configurations recovered 38 entries against independent frame
+references for the two directions.

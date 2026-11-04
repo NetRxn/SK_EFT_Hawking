@@ -4,7 +4,7 @@ from functools import cache
 from itertools import combinations, combinations_with_replacement, product
 
 from l1_direct_b_haar import R, add, haar_moment, scale, wedge
-from l1_extended_opposed_source import action_frame, summed_fourth
+from l1_extended_opposed_source import action_frame, frame, source_frames, summed_fourth
 from l1_extended_two_mixed_centers import second_sum
 from l1_normalization_uniform_mixed_edge import unit
 
@@ -19,6 +19,12 @@ def basis(anchor, coordinate):
 
 
 @cache
+def source_basis(anchor, coordinate):
+    q = unit(coordinate % 4)
+    return frame(0, bool(anchor), *((q, ZERO) if coordinate < 4 else (ZERO, q)))
+
+
+@cache
 def moment(indices):
     counts = Counter(indices)
     value = SCALE
@@ -29,18 +35,22 @@ def moment(indices):
 
 
 @cache
-def anchor_terms(anchor, labels):
+def anchor_terms(anchor, labels, source_label=None):
     """Raw exterior polynomials grouped by quaternion monomial."""
     out = {}
-    for coordinates in product(range(8), repeat=len(labels)):
+    slots = len(labels) + (0 if source_label is None else 2)
+    for coordinates in product(range(8), repeat=slots):
         counts = Counter(coordinates)
         if sum(n % 2 for n in counts.values()) > 2:
             continue
         poly = {0: R.one}
-        for label, coordinate in zip(labels, coordinates, strict=True):
+        for label, coordinate in zip(labels, coordinates[:len(labels)], strict=True):
             poly = wedge(poly, basis(anchor, coordinate)[label])
             if not poly:
                 break
+        if poly and source_label is not None:
+            for coordinate in coordinates[len(labels):]:
+                poly = wedge(poly, source_basis(anchor, coordinate)[source_label])
         if poly:
             key = tuple(sorted(coordinates))
             out[key] = add(out.get(key, {}), poly)
@@ -48,9 +58,9 @@ def anchor_terms(anchor, labels):
 
 
 @cache
-def anchored(anchor, labels, probe):
+def anchored(anchor, labels, probe, source_label=None):
     """One directed link, with the probe retained in its moment weight."""
-    return add(*(scale(poly, weight) for key, poly in anchor_terms(anchor, labels).items()
+    return add(*(scale(poly, weight) for key, poly in anchor_terms(anchor, labels, source_label).items()
                  if (weight := moment(tuple(sorted((*key, *probe)))))))
 
 
@@ -65,6 +75,30 @@ def frame_edge(labels, protected_anchor, probe):
             terms.append(wedge(anchored(0, a, probe if protected_anchor == 0 else ()),
                                anchored(1, b, probe if protected_anchor == 1 else ())))
     return add(*terms)
+
+
+def source_edge(labels, protected_anchor, probe, source_anchor):
+    """Two action frames and an outgoing quadratic source on this edge."""
+    assert len(labels) == 2
+    terms = []
+    for action_anchor, gamma in product(range(2), range(4)):
+        blocks = [anchored(anchor, labels if anchor == action_anchor else (),
+                           probe if anchor == protected_anchor else (),
+                           gamma if anchor == source_anchor else None)
+                  for anchor in (0, 1)]
+        terms.append(wedge(*blocks))
+    return add(*terms)
+
+
+def check_source_norm():
+    baseline = [source_frames(0, anchor) for anchor in (0, 1)]
+    for labels, endpoint, protected in product(((0, 0), (0, 1)), range(2), range(2)):
+        reference = add(*(maps[endpoint][labels] for maps in baseline))
+        for chirality in range(2):
+            trace = add(*(source_edge(labels, protected, (i, i), endpoint)
+                          for i in range(4*chirality, 4*chirality + 4)))
+            assert scale(trace, 96**2 * 2**4) == scale(reference, SCALE**2)
+    print("16 exact source-edge norm controls", flush=True)
 
 
 def check_core_degrees():

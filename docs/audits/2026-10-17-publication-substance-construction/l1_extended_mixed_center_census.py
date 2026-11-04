@@ -57,7 +57,7 @@ def orbits(words):
         yield representative, len(images)
 
 
-def curvature_boundary(pattern):
+def curvature_boundary(pattern, omitted=None):
     protected = set()
     faces = {}
     for x, pairs in zip(EVEN, pattern, strict=True):
@@ -65,6 +65,8 @@ def curvature_boundary(pattern):
             for a in frame:
                 protected.update(((x, a), (x ^ (1 << a), a)))
             k, l = (a for a in AXES if a not in frame)
+            if (x, k, l) == omitted:
+                continue
             faces[x, k, l] = {(x, k), (x ^ (1 << k), l), (x ^ (1 << l), k), (x, l)}
     while faces:
         counts = Counter(link for face in faces.values() for link in face)
@@ -103,21 +105,25 @@ def summed_source_tensor(removed_local_site):
                  for u, v in product(range(2), repeat=2)))
 
 
-def source_total(pattern, original):
+def source_total(pattern, original, only_faces=None):
     # Sum over all six choices of shear axes. Axis permutations in
     # an orbit make the contribution to any fixed choice one sixth.
     total = 0
     for x, (first, second) in zip(EVEN, pattern, strict=True):
         if first == second:
             axes = first
-            variants = [(0, factorial(4) // factorial(2))]
+            variants = [(0, factorial(4) // factorial(2), first)]
         else:
             common, = set(first) & set(second)
             a, b = sorted(set(first) ^ set(second))
             axes = (a, common, b)
-            variants = [(1, 48 * factorial(2)), (3, 48 * factorial(2))]
+            variants = [(1, 48 * factorial(2), (a, common)),
+                        (3, 48 * factorial(2), (b, common))]
         sites = (x, *(x ^ (1 << a) for a in axes))
-        for local, adjustment in variants:
+        for local, adjustment, frame in variants:
+            k, l = (axis for axis in AXES if axis not in frame)
+            if only_faces is not None and (x, k, l) not in only_faces:
+                continue
             terms = dict(original)
             terms[x] = remap(summed_source_tensor(local), sites)
             raw = contract(terms)
