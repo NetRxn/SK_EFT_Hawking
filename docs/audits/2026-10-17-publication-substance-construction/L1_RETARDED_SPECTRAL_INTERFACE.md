@@ -2135,3 +2135,11 @@ coordinate and curvature slices, including cross-chirality pairs.
 The join to the curvature boundary remains open. Feed the projected
 frame tensors the raw shared-link curvature coordinates so each
 link is integrated once.
+
+The [fixed-boundary composition replay](l1_extended_overlap_mixed_strip_control.py)
+contracts the already projected two-link strip against the raw frame
+maps. For the two emitted pairs of fixed exterior boundaries it gives
+432 and 288 nonzero curvature outputs, respectively. Both controls
+are real and retain their signed coefficient histograms. This tests
+the attachment across both shared links. The full contraction should
+apply complementary site masks while the factors are separate.
