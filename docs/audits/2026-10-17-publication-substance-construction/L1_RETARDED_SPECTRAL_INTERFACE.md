@@ -1652,3 +1652,23 @@ collapsed transverse torus and is strictly positive on the
 extended example. This supplies the scalar factor in the
 zero-momentum joint test. The corresponding geometry kernel
 must be evaluated on the same extended lattice.
+
+For the pure-g₂ geometry on that same 16-site regulator,
+top degree is 128. Write D_total = Σ_x D_x and use normalized
+product Haar. The two raw constants needed for the uniform
+geometry kernel are
+
+    z₃₂ = ∫ [top] S2³²/32!,
+    d₃₀ = ∫ [top] D_total² S2³⁰/30!.
+
+Each insertion is quartic. The one-point term has 31 curvature
+factors and vanishes by internal Pin. For g₂ ≠ 0 and z₃₂ ≠ 0
+the uniform geometry covariance per site is
+d₃₀/(16 g₂² z₃₂). With the local coupling convention above,
+the derivative of the uniform mixed covariance per site is
+the product of the two per-site susceptibilities. This follows
+by summing over both exterior insertion sites before using
+translation invariance. Thus the unit-mass scalar example
+fixes its factor to 12082/342225. The two geometry coefficients
+and a physical matching law remain to be established on the
+extended regulator.
