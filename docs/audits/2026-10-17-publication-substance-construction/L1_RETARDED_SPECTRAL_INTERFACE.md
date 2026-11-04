@@ -2496,3 +2496,10 @@ and four at one neighbor, yielding degrees ten and six
 at those neighbors. The top form requires degree eight
 at both. This degree argument is specific to the fixed
 remaining action word and the outgoing source anchors.
+
+The [direct square replay](l1_extended_source_squares.py) verifies
+the square-term exclusion with exact fourth-moment cubature. Each
+square has 38 nonzero local masks. Joining all 21 remaining
+curvature channels gives site populations (0,2,6,8),
+(4,2,6,4), (2,0,8,6), or (2,4,4,6), depending on the site
+and axis. None complements the fixed lower tensor.
