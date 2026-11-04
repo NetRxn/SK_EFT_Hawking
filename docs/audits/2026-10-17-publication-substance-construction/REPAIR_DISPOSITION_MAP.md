@@ -64,8 +64,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   the prior two-face join to mixed opposite centers. The
   [opposite-center replay](L1_RETARDED_SPECTRAL_INTERFACE.md#mixed-opposite-center-tensors-for-the-free-link-two-face-join)
   verifies both mixed tensor scales and a five-link spanning tree
-  for all 80 free-link orbits. Next join the two live upper probes
-  to the fixed-base tensor and the remote exterior environment.
+  for all 80 free-link orbits. The
+  [tree join control](L1_RETARDED_SPECTRAL_INTERFACE.md#two-face-tree-join-control-discrepancy)
+  differs from the established fused subtotal. Reconcile the
+  alternate tree choices and direct fused probe controls before
+  admitting the three-mixed normalization.
   The all-protected case requires two live holonomies at a disjoint mixed base. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 

@@ -3885,3 +3885,25 @@ review reproduced the spanning-tree census and checked the
 fixed-link prescription and frame scales. The global normalization
 and retained-face source contraction for these orbits still require
 joining both upper factors to the mixed base and remote centers.
+
+### Two-face tree join control discrepancy
+
+The [tree join](l1_extended_two_face_tree.py) contracts both
+upper factors against the fixed mixed base and the remote
+exterior environment. The reference comparison uses the three
+previously evaluated free-link orbits with two mixed centers.
+All three tree contractions give
+`999693567199179931640625/9223372036854775808` per representative.
+The earlier fused probe replay gave
+`999812172304465576171875/9223372036854775808`. The tree subtotal
+across both checkerboards is
+`8997242104792619384765625/72057594037927936`; the comparison
+expects `8998309550740190185546875/72057594037927936`.
+
+The default replay asserts agreement with the earlier result.
+The three-mixed output from `--candidate` is diagnostic and
+remains outside the normalization ledger while this discrepancy
+is open. The comparison can be repeated with
+`--control --reverse-upper` to change the live link at each upper
+center. The fused first-probe route can test the diagonal class
+assumption independently of the tree contraction.
