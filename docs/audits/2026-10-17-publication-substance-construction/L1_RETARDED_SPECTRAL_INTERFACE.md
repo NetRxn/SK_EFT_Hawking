@@ -6043,3 +6043,14 @@ exact zeros and leave 3,638 nonempty maps for A closure. The
 subsequent partial chunk is outside this verified snapshot.
 The resume run uses the same runner hash and unchanged Python
 inputs and fills the missing rows in the same chunk partition.
+
+The first batched replay completed prefixes 2–10. Independent
+review matched all nine IDs to the sorted 144-prefix census.
+The signed contractions checked 436,176 candidates and found
+133,056 nonzero matches, with no caps. Prefix 3 reproduced
+the earlier control. Four blocks vanish, three contribute
+`−8371769346801/73786976294838206464`, and two contribute
+its positive counterpart. The combined subtotal for 2–10
+equals prefix 3 alone, with zero imaginary part. The generic
+footer describes the unresolved full group, while all nine
+requested prefixes have exact terminal receipts.
