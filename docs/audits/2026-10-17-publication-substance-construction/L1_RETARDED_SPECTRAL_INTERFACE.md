@@ -6062,3 +6062,13 @@ their logged hashes. They contain 3,588 exact zeros and
 508 nonempty B maps. The combined verified bulk range
 `[4736,37504)` covers 32,768 distinct tuples, with 28,622
 exact zeros and 4,146 nonempty maps awaiting A closure.
+
+The independently reviewed [repository B evaluator](l1_unpaired_B_census.py)
+reconstructs the ordered roster from the signed low-prefix receipts
+and the source support replay. It validated the full 3,072-key
+domain and reproduced all 77,472 retained indices in order.
+Both previous gap receipts matched by index. Twelve direct
+seven-factor controls matched the cached signed maps, including
+nonempty maps and their primitive scales. This module supplies
+the calculation core. The live bulk driver still uses its pinned
+scratch runner and receipt partition.
