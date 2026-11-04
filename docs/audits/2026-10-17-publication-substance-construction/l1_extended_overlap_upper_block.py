@@ -32,6 +32,17 @@ def block(a,b,c,d):
     assert all(tuple(((m>>(8*i))&255).bit_count() for i in range(4))==(2,2,6,6) for m,_ in out)
     return out
 
+def signed_lower_complements():
+    """Return signed coefficients in local order [x, x^4, x^8, x^12]."""
+    full_mask = (1 << 32) - 1
+    result = {}
+    for (upper_mask, phase), coefficient in block(0, 0, 0, 0).items():
+        assert phase == 0
+        lower_mask = full_mask ^ upper_mask
+        result[lower_mask] = wedge_sign(lower_mask, upper_mask) * coefficient
+    return result
+
+
 if __name__ == "__main__":
     from fractions import Fraction
     from itertools import combinations_with_replacement

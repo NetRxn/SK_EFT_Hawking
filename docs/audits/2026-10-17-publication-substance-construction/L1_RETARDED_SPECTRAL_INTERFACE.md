@@ -2158,3 +2158,13 @@ fundamental channels, giving `(6/4)^4 + 2*(1/4)^4/3^4 =
 52489/10368` per sheet. The full upper factor uses its square and
 the repeated-vertex factor `1/2^8`. Independent verification
 and the final exterior contraction remain open.
+
+The upper replay exposes the 216 signed lower complements in
+local site order [x, x^4, x^8, x^12], for x=0,1,2,3.
+The coefficient includes the exterior sign for lower-mask wedge
+upper-mask. The generator matched the review-side scratch table
+coefficient by coefficient. The upper normalization is the squared
+sheet scalar divided by `8^16 * 4^32 * 2^8`, including the sixteen
+raw second-moment factors and the repeated-vertex weights. Reordering
+whole site blocks has even parity here because each site population
+in the upper factor is even.
