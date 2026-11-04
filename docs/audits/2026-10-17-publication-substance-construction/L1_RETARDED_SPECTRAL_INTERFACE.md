@@ -4341,3 +4341,21 @@ were stopped after each reached roughly 12 GiB resident memory
 without producing its first orbit. The streamed first-orbit
 replay replaces them and records its memory and elapsed time.
 The full all-protected normalization is still open.
+
+#### Completed three-face normalization and six-face deletion control
+
+The three-face normalization replay completed all five orbits,
+each of multiplicity 192 per checkerboard. The weighted subtotal
+across both checkerboards is
+`1395884377237587968864619140625/4722366482869645213696`.
+Independent reduction reproduced the weighted subtotal. The first
+two normalization rows in the retained-source replay also match
+exactly. Its full numerator subtotal remains open.
+
+For six-face deletion 4, removing face `(15,0,1)` leaves a
+four-face core with 5,544 projected keys at its largest center.
+The literal exterior contraction and the sparse equality join
+agree at the selected fixed probes:
+`−22081446205224609375/2305843009213693952` before orbit and
+checkerboard weighting. The full live-probe sum for this
+deletion and the other five deletion sums remain open.
