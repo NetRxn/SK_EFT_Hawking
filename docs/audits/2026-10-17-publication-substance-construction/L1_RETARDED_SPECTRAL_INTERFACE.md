@@ -1725,3 +1725,14 @@ frame tensors. Each opposed pair contributes 61875/262144
 including its repetition factorials. The full word contributes
 (61875/262144)⁴, strictly positive. This verifies one term of
 the signed partition sum. The sum may contain cancellations.
+
+The 16-site witness has twelve distinct symmetry images:
+six curvature planes and two center parity choices. The
+support and disjoint-link check holds for all twelve. Axis
+permutation can reverse the world epsilon, but there are
+32 vertices, so the resulting overall sign is positive.
+Relabeling whole site blocks of eight Grassmann generators
+also has even sign. Translation exchanges center parities.
+Thus this orbit contributes 12(61875/262144)⁴ to the signed
+sum, subject to independent verification of the base witness.
+The remaining orbits can still cancel that contribution.
