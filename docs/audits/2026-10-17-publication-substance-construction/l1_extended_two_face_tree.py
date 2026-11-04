@@ -15,7 +15,7 @@ from l1_extended_mixed_curvature_core import PAIRS, face_tensor
 from l1_extended_mixed_frame_moment import SCALE
 from l1_extended_opposed_source import summed_fourth
 from l1_extended_protected_center import protected_center, summed_protected_source
-from l1_extended_two_face_gamma_join import pure_links, remote_environment
+from l1_extended_two_face_gamma_join import remote_environment
 from l1_extended_two_mixed_centers import remap
 
 
@@ -32,7 +32,11 @@ def upper_tensor(pure, positions, probe, source):
 
 
 def upper_factor(pattern, face, edges, protected, reverse, source=False):
-    upper, _, center = pure_links(face, edges, protected)
+    x, k, l = face
+    center = x ^ (1 << k) ^ (1 << l)
+    upper = tuple(sorted(((y, a) for y, a in edges & protected
+                          if y ^ (1 << a) == center), key=lambda edge: edge[1]))
+    assert len(upper) == 2
     if reverse:
         upper = upper[::-1]
     planes = pattern[EVEN.index(center)]

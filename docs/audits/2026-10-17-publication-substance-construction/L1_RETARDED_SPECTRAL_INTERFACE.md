@@ -4006,3 +4006,33 @@ three orbits. With orbit and checkerboard weights, the provisional
 remote and upper subtotals are respectively
 `−909034756435048095703125/2251799813685248` and
 `−5907501623989865478515625/36028797018963968`.
+
+#### Retained-source comparison and all-protected deletion path
+
+The corrected fused protected-source replay on the first control
+orbit gives `−1969167207996621826171875/36028797018963968`
+across both checkerboards. The three tree orbits have identical
+values, giving the reconciled upper subtotal
+`−5907501623989865478515625/36028797018963968`.
+
+The first corrected remote-source comparison exposed a separate
+replay defect. Its fixed-probe control overwrote the outer list of
+probe-class indices and weights with a dictionary keyed by directed
+links. The final loop then interpreted link coordinates as probe
+indices and multiplicities. The emitted selected-orbit total
+`−302989267639909423828125/9007199254740992` is rejected.
+The replay now uses a separate fixed-probe dictionary and keeps the
+class sum intact. The remote subtotal and combined source numerator
+remain pending the corrected full comparison.
+
+For the 23 all-protected two-face orbits, the
+`--surviving-face-source` option of the one-face replay removes
+each face in turn. Both removals leave one face at the same
+disjoint base. It fixes both base links and one upper link of that
+face. The base carries two source-only factors on the fixed axes
+and the surviving second frame pair with open curvature components.
+The upper tensor contributes the remaining live-link moment and
+the other six centers provide the exterior complement. Independent
+incidence enumeration found 42 mixed-upper and four pure-upper
+roles across the 46 removal cases. The exact weighted subtotal
+requires the full replay.

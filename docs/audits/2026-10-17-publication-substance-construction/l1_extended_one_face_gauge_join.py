@@ -7,7 +7,7 @@ from itertools import combinations, product
 from math import factorial
 
 from l1_direct_b_haar import R, add, scale, wedge
-from l1_extended_four_face_gauge_join import IDENTITY
+from l1_extended_four_face_gauge_join import IDENTITY, dot, dual_mixed, mixed_rows
 from l1_extended_mixed_center_census import (
     AXES, EVEN, curvature_boundary, disjoint_center, orbits, source_total, tensors,
     words_with_mixed_count,
@@ -19,6 +19,7 @@ from l1_extended_opposed import staged_center
 from l1_extended_opposed_source import summed_fourth
 from l1_extended_protected_center import protected_center, summed_protected_source
 from l1_extended_two_face_gamma_join import remote_environment
+from l1_extended_two_face_tree import upper_factor
 from l1_extended_two_mixed_centers import (
     mixed_center, remap, second_channels, second_sum, source_only,
 )
@@ -161,6 +162,63 @@ def check_source_trace():
         assert scale(trace, 96 * 8**2) == baseline
 
 
+@cache
+def deleted_base_row(components):
+    source = source_frame(None)
+    pair = wedge(source, remap(source, (0, 2)))
+    return {mask: value for mask, value in wedge(pair, residual_pair(components)).items()
+            if mask & 255 == 255}
+
+
+def surviving_face_coefficient(pattern, face, edges, protected):
+    x, k, l = face
+    a, b = (i for i in AXES if i not in (k, l))
+    assert set(pattern[EVEN.index(x)]) == {(k, l), (a, b)}
+    center, upper_sites, upper, upper_divisor = upper_factor(
+        pattern, face, edges, protected, False)
+    coupled = {x, center}
+    keep, environment = remote_environment(pattern, coupled)
+    sites = tuple(x ^ (1 << i) for i in (k, l, a, b))
+    base = mixed_rows(deleted_base_row, sites, ((key,) for key in upper))
+    dual = dual_mixed(keep, environment, base, upper_sites)
+    total = imag = 0
+    for key, row in upper.items():
+        values = {m: (int(v.const().x), int(v.const().y)) for m, v in row.items()}
+        re, im = dot(dual[key,], values)
+        total += re
+        imag += im
+    assert imag == 0
+    divisor = upper_divisor * SCALE**4 * 4**4 * 96**2 * 8**4 * factorial(2)
+    for y, (p, q) in zip(EVEN, pattern, strict=True):
+        if y not in coupled:
+            divisor *= 96**4 * 8**8
+            divisor *= 48 * factorial(4) if p == q else 48**2 * factorial(2)**2
+    return Fraction(-2 * total, 6 * divisor)
+
+
+def replay_surviving_faces():
+    total = Fraction()
+    count = population = 0
+    for pattern, multiplicity in orbits(words_with_mixed_count(3)):
+        faces, protected = curvature_boundary(pattern)
+        if len(faces) != 2 or not set.union(*faces.values()) <= protected:
+            continue
+        check_removals(pattern)
+        contribution = Fraction()
+        for omitted in faces:
+            rest, protection = curvature_boundary(pattern, omitted=omitted)
+            assert protection == protected and len(rest) == 1
+            (face, edges), = rest.items()
+            assert face[0] == omitted[0] and edges <= protection
+            contribution += surviving_face_coefficient(pattern, face, edges, protection)
+        print("orbit", count, "multiplicity", multiplicity, "surviving-face source", contribution, flush=True)
+        total += 2 * multiplicity * contribution
+        count += 1
+        population += multiplicity
+    assert (count, population) == (23, 3744)
+    print("all-protected deletion subtotal, both checkerboards", total, flush=True)
+
+
 def main(deleted_face=False, retained_face=False):
     if retained_face:
         check_source_trace()
@@ -201,5 +259,9 @@ if __name__ == "__main__":
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--deleted-face-source", action="store_true")
     mode.add_argument("--retained-face-source", action="store_true")
+    mode.add_argument("--surviving-face-source", action="store_true")
     args = parser.parse_args()
-    main(args.deleted_face_source, args.retained_face_source)
+    if args.surviving_face_source:
+        replay_surviving_faces()
+    else:
+        main(args.deleted_face_source, args.retained_face_source)

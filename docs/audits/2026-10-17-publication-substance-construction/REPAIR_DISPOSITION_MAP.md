@@ -72,9 +72,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   source cases before closing the corrected two-mixed numerator.
   Complete the 80-orbit tree replay for the three-mixed normalization.
   The mixed upper-source construction is in the same replay.
-  Its chiral trace controls pass. Compare the pure-upper tree
-  source controls against the corrected fused route and evaluate
-  the three-mixed retained-source orbits.
+  Its chiral trace controls pass. The corrected fused protected-source
+  subtotal matches the pure-upper tree result. Finish the remote-source
+  replay with the probe-class list preserved, and evaluate the three-mixed
+  retained-source orbits. The surviving-face replay covers the deletion
+  path in the 23 all-protected orbits.
   The all-protected case requires two live holonomies at a disjoint mixed base. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 

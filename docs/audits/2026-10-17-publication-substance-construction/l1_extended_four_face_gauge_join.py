@@ -103,13 +103,13 @@ def mixed_layout(pattern, faces, site, live, probe, common):
 
 def mixed_rows(block, sites, channels):
     rows = {}
-    for a, b in channels:
+    for key in channels:
         row = {}
-        for mask, value in block(a, b).items():
+        for mask, value in block(*key).items():
             assert mask & 255 == 255 and value.is_ground
             m = sum(((mask >> (8*i)) & 255) << (8*x) for i, x in enumerate(sites, 1))
             row[m] = int(value.const().x), int(value.const().y)
-        rows[a, b] = row
+        rows[key] = row
     return rows
 
 

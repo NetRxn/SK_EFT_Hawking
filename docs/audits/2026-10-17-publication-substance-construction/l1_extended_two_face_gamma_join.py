@@ -395,8 +395,8 @@ def replay_fused(probe, orbit, by_class=False, *, remote_source=False, protected
             }
             assert value == expected[pair]
             if remote_source:
-                probes = dict.fromkeys({e for row in faces.values() for e in row} & protected, pair)
-                _, _, direct = coefficient(pattern, faces, protected, probes, common, remote_source=True)
+                fixed_probes = dict.fromkeys({e for row in faces.values() for e in row} & protected, pair)
+                _, _, direct = coefficient(pattern, faces, protected, fixed_probes, common, remote_source=True)
                 fused, _ = sum_fused(pattern, faces, protected, limited, common, index, index,
                                      remote_source=True)
                 assert direct == fused
