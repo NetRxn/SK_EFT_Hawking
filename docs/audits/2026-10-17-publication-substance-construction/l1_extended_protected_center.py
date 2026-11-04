@@ -8,7 +8,7 @@ from l1_direct_b_haar import add, scale
 from l1_extended_mixed_frame_moment import SCALE, frame_edge, source_edge
 from l1_extended_opposed import close_second_frame, stage_first_frame, staged_center
 from l1_extended_opposed_source import PAIRS as GAMMA_PAIRS, modified_center, source_frames, summed_fourth
-from l1_extended_two_mixed_centers import remap
+from l1_extended_two_mixed_centers import remap, second_channels
 from l1_normalization_opposed_fourth import tuples
 
 
@@ -46,6 +46,27 @@ def protected_source_center(probes, endpoints):
                      for probe, endpoint in zip(probes, endpoints, strict=True))
     return modified_center(first, {labels: remap(poly, (0, 2))
                                    for labels, poly in second.items()})
+
+
+@cache
+def summed_source_table(probe, second=False):
+    a, b = (source_table(probe, endpoint) for endpoint in (0, 1))
+    table = {labels: add(a[labels], b[labels]) for labels in GAMMA_PAIRS}
+    return {labels: remap(poly, (0, 2)) for labels, poly in table.items()} if second else table
+
+
+@cache
+def source_boundary(probe):
+    first = summed_source_table(probe)
+    weights = Counter()
+    for a, b, weight in second_channels():
+        weights[tuple(sorted(a)), b] += weight
+    return {b: add(*(scale(first[a], weights[a, b]) for a in GAMMA_PAIRS if weights[a, b]))
+            for b in GAMMA_PAIRS}
+
+
+def summed_protected_source(probes):
+    return close_second_frame(source_boundary(probes[0]), summed_source_table(probes[1], True))
 
 
 def check_source_center():

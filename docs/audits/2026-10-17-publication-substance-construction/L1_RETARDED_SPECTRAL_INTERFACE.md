@@ -3553,3 +3553,53 @@ six-shear average gives the independently checked subtotal
 Together with the deleted-face terms, the exact two-face source
 subtotal is `-1111289291260956298828125/2251799813685248`.
 The source replacements at the two protected pure centers remain open.
+
+### Completed two-face source numerator
+
+The `--protected-source` replay sums both endpoints on each
+source edge before the pure-center gamma contraction. It inserts
+the source tensor on one fused face at a time and adds the two
+joins. The common normalization divisor is retained by using
+a factor of −24 for the two ordered opposite-sign sources and
+the replacement of 4! by 2!. Fixed-probe closures match the
+direct full-lattice substitutions at
+`-546949200591068115234375/9444732965739290427392` and
+`-1167717041015625/2361183241434822606848`. The grouped local
+source tensor also matches explicit sums over the four endpoint
+choices at those probe assignments.
+
+The class coefficients for the protected replacements are
+`-1969105346634223388671875/18446744073709551616` per chiral
+diagonal, `-30659580230712890625/4611686018427387904` per chiral
+off-diagonal, and `-15180321533203125/288230376151711744` per
+mixed probe. The three canonical inputs agree exactly. The
+weighted protected-source subtotal is
+`-5907873741590291748046875/36028797018963968` across both
+checkerboards and all three orbits for the specified shear.
+Adding the remote-center and deleted-face terms gives the
+complete two-face numerator
+`-23688502401765592529296875/36028797018963968`.
+
+### Gauge fixing the four-face core
+
+The four unprotected links of each four-face core form a disjoint
+matching. Adding three of the four protected links based at the
+mixed centers gives a spanning tree on the eight curvature sites.
+The incidence replay checked all three representatives. The full
+gamma-summed, exterior-saturated integral can set those tree
+links to identity using site gauge transformations and invariance
+of Haar and Berezin measures. This leaves one live mixed-center
+probe and four protected probes at the pure centers. The
+fixed-identity frame branch retains the same integer convention
+and passed direct action and source checks. These tree choices
+apply to the full integral. The fixed-label and fixed-probe
+controls keep their existing variables.
+
+The pure centers share two passive sites and saturate them by
+complement. Their sites are disjoint from the four passive
+sites touched by the mixed centers. The remote environments
+retain 1,444 terms on the mixed-center sites and none on the
+pure sites. The next replay can contract the pure and mixed
+exterior factors separately and join their curvature component
+indices. The four-face normalization and the retained-core
+source terms remain open.

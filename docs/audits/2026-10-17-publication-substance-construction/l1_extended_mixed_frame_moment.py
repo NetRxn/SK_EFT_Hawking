@@ -59,8 +59,12 @@ def anchor_terms(anchor, labels, source_label=None):
 
 @cache
 def anchored(anchor, labels, probe, source_label=None):
-    """One directed link, with the probe retained in its moment weight."""
-    return add(*(scale(poly, weight) for key, poly in anchor_terms(anchor, labels, source_label).items()
+    """One directed link, with a quadratic probe or fixed to identity."""
+    terms = anchor_terms(anchor, labels, source_label)
+    if probe is None:
+        return scale(add(*(poly for key, poly in terms.items()
+                           if all(i in (0, 4) for i in key))), SCALE)
+    return add(*(scale(poly, weight) for key, poly in terms.items()
                  if (weight := moment(tuple(sorted((*key, *probe)))))))
 
 

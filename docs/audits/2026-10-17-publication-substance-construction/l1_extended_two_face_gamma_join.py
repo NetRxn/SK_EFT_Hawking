@@ -15,7 +15,7 @@ from l1_extended_mixed_frame_join import join_factors, remote_center
 from l1_extended_mixed_frame_moment import SCALE
 from l1_extended_opposed_source import summed_fourth
 from l1_extended_overlap_strip import HAAR
-from l1_extended_protected_center import protected_center
+from l1_extended_protected_center import protected_center, summed_protected_source
 from l1_extended_two_mixed_centers import contract, contract_boundary, remap
 from l1_reduced_wedge_reference import wedge_sign
 
@@ -54,7 +54,8 @@ def curvature_join(first, last):
     return result
 
 
-def coefficient(pattern, faces, protected, probes, common, *, remote_source=False):
+def coefficient(pattern, faces, protected, probes, common, *,
+                remote_source=False, protected_source=False):
     free, = {e for edges in faces.values() for e in edges} - protected
     site, = {f[0] for f in faces}
     first, last = pattern[EVEN.index(site)]
@@ -74,6 +75,7 @@ def coefficient(pattern, faces, protected, probes, common, *, remote_source=Fals
     divisor = 48 * SCALE**4 * 4**4 * 96**2 * 8**4 * factorial(2)**2
 
     coupled = {site}
+    changes = {}
     for x, pairs in zip(EVEN, pattern, strict=True):
         if x == site:
             continue
@@ -82,7 +84,11 @@ def coefficient(pattern, faces, protected, probes, common, *, remote_source=Fals
         if protected_axes:
             coupled.add(x)
             assert p == q and tuple(protected_axes) == p
-            local = protected_center(tuple(probes[x ^ (1 << i), i] for i in p))
+            local_probes = tuple(probes[x ^ (1 << i), i] for i in p)
+            local = protected_center(local_probes)
+            if protected_source:
+                changes[x] = remap(summed_protected_source(local_probes),
+                                   (x, *(x ^ (1 << i) for i in p)))
             axes = p
             divisor *= 48 * SCALE**4 * 4**8 * factorial(4)
         else:
@@ -93,6 +99,11 @@ def coefficient(pattern, faces, protected, probes, common, *, remote_source=Fals
         terms[x] = remap(local, (x, *(x ^ (1 << i) for i in axes)))
     if not core:
         return len(channels), 0, Fraction(0)
+    if protected_source:
+        assert not remote_source and len(changes) == 2
+        raw = -24 * sum((contract({**terms, x: local}) for x, local in changes.items()), R.zero)
+        assert raw.is_ground and not raw.const().y
+        return len(channels), len(core), Fraction(int(raw.const().x), divisor)
     if remote_source:
         raw = sum((weight * contract(replaced)
                    for replaced, weight in remote_source_replacements(pattern, terms, coupled)), R.zero)
@@ -119,10 +130,11 @@ def pure_links(face, edges, protected):
 
 
 @cache
-def pure_table():
+def pure_table(source=False):
     table = {}
+    tensor = summed_protected_source if source else protected_center
     for i, j in product(range(len(PAIRS)), repeat=2):
-        poly = protected_center((PAIRS[i], PAIRS[j]))
+        poly = tensor((PAIRS[i], PAIRS[j]))
         if poly:
             assert all(value.is_ground for value in poly.values())
             table[i, j] = {m: (int(v.const().x), int(v.const().y)) for m, v in poly.items()}
@@ -225,13 +237,14 @@ def open_face(fused, site, axes, free, side, probe=None):
     return (free, (side, "components"), (side, "probe")), rows
 
 
-def build_fused(pattern, faces, protected, table):
+def build_fused(pattern, faces, protected, table, source_table=None):
     free, = {e for edges in faces.values() for e in edges} - protected
     site, = {f[0] for f in faces}
     first, last = pattern[EVEN.index(site)]
     axis, = set(first) & set(last)
     a, b = sorted(set(first) ^ set(last))
     factors = []
+    changed = []
     coupled = {site}
     for side, exclusive in enumerate((a, b)):
         face, = [f for f in faces if exclusive not in f[1:]]
@@ -241,7 +254,10 @@ def build_fused(pattern, faces, protected, table):
         coupled.add(center)
         factors.append(open_face(fuse_face(face, pure, local, free, table),
                                  center, p, free, side))
-    return site, (a, axis, b), coupled, factors
+        if source_table is not None:
+            changed.append(open_face(fuse_face(face, pure, local, free, source_table),
+                                     center, p, free, side))
+    return site, (a, axis, b), coupled, factors, changed
 
 
 def restrict_probes(factors, first, second=None):
@@ -251,16 +267,27 @@ def restrict_probes(factors, first, second=None):
 
 
 def sum_fused(pattern, faces, protected, table, common, probe=None, other_probe=None, *, remote_source=False):
-    site, directions, coupled, factors = build_fused(pattern, faces, protected, table)
+    site, directions, coupled, factors, _ = build_fused(pattern, faces, protected, table)
     boundary = remote_environment(pattern, coupled, source=True) if remote_source else None
     return close_fused(pattern, site, directions, coupled,
                        restrict_probes(factors, probe, other_probe), common, boundary=boundary)
 
 
-def close_fused(pattern, site, directions, coupled, factors, common, *, boundary=None):
+def close_fused(pattern, site, directions, coupled, factors, common, *, boundary=None, changed=None):
     keep, environment = remote_environment(pattern, coupled) if boundary is None else boundary
     sites = tuple(site ^ (1 << axis) for axis in directions)
-    axes, joined = join_factors(*factors)
+    if changed is None:
+        axes, joined = join_factors(*factors)
+    else:
+        # Insert one source pair, never both, at the two pure centers.
+        axes, joined = join_factors(changed[0], factors[1])
+        other_axes, other = join_factors(factors[0], changed[1])
+        assert axes == other_axes
+        for key, row in other.items():
+            out = joined.setdefault(key, {})
+            for mask, (re, im) in row.items():
+                r, i = out.get(mask, (0, 0))
+                out[mask] = r + re, i + im
     assert axes == ((0, "components"), (0, "probe"), (1, "components"), (1, "probe"))
 
     @cache
@@ -298,7 +325,9 @@ def close_fused(pattern, site, directions, coupled, factors, common, *, boundary
             for pair in set(pairs):
                 divisor *= 48 * factorial(2 * pairs.count(pair))
     assert total.is_ground and not total.const().y
-    return Fraction(int(total.const().x), divisor), len(joined)
+    # Opposite shear signs, two source orders, and 4! / 2! at the replaced center.
+    weight = -24 if changed is not None else 1
+    return Fraction(weight * int(total.const().x), divisor), len(joined)
 
 
 PROBE_CLASSES = (((0, 0), 4), ((0, 1), 6), ((4, 4), 4), ((4, 5), 6), ((0, 4), 16))
@@ -322,9 +351,23 @@ def canonical_inputs(pattern, site, directions, coupled, factors, *, boundary=No
     )
 
 
-def replay_fused(probe, orbit, by_class=False, *, remote_source=False):
+def check_protected_source(pattern, faces, protected, common, index, table, source):
+    key = index, index
+    pair = PAIRS[index]
+    probes = dict.fromkeys({e for row in faces.values() for e in row} & protected, pair)
+    _, _, direct = coefficient(pattern, faces, protected, probes, common, protected_source=True)
+    site, directions, coupled, factors, changed = build_fused(
+        pattern, faces, protected, {key: table[key]}, {key: source[key]})
+    fused, _ = close_fused(pattern, site, directions, coupled, restrict_probes(factors, index, index),
+                           common, changed=restrict_probes(changed, index, index))
+    assert fused == direct
+    return direct
+
+
+def replay_fused(probe, orbit, by_class=False, *, remote_source=False, protected_source=False):
     common = summed_fourth(1)
     table = pure_table()
+    source = pure_table(True) if protected_source else None
     total = Fraction()
     completed = 0
     probes = [(i, 1) for i in (range(len(PAIRS)) if probe is None else (probe,))]
@@ -355,9 +398,14 @@ def replay_fused(probe, orbit, by_class=False, *, remote_source=False):
                                      remote_source=True)
                 assert direct == fused
                 print("remote source control", representative, pair, direct, flush=True)
-        site, directions, coupled, factors = build_fused(pattern, faces, protected, table)
+            if protected_source:
+                value = check_protected_source(pattern, faces, protected, common, index, table, source)
+                print("protected source control", representative, pair, value, flush=True)
+        site, directions, coupled, factors, changed = build_fused(pattern, faces, protected, table, source)
         boundary = remote_environment(pattern, coupled, source=True) if remote_source else None
         inputs = canonical_inputs(pattern, site, directions, coupled, factors, boundary=boundary)
+        if protected_source:
+            inputs = (inputs, canonical_inputs(pattern, site, directions, coupled, changed))
         prior = next((old for old_inputs, old in previous if old_inputs == inputs), None)
         if prior is not None:
             print("orbit", representative, "reuses identical canonical input", flush=True)
@@ -366,17 +414,21 @@ def replay_fused(probe, orbit, by_class=False, *, remote_source=False):
             subtotal = Fraction()
             for index, count in probes:
                 value, rows = close_fused(pattern, site, directions, coupled,
-                                          restrict_probes(factors, index), common, boundary=boundary)
+                                          restrict_probes(factors, index), common, boundary=boundary,
+                                          changed=restrict_probes(changed, index) if protected_source else None)
                 print("orbit", representative, "multiplicity", multiplicity,
                       "first probe", PAIRS[index], "class weight", count,
-                      "rows", rows, "coefficient", value, flush=True)
+                      "candidate rows" if protected_source else "rows", rows,
+                      "coefficient", value, flush=True)
                 subtotal += count * value
             previous.append((inputs, subtotal))
-        total += 2 * multiplicity * subtotal / (6 if remote_source else 1)
+        total += 2 * multiplicity * subtotal / (6 if remote_source or protected_source else 1)
         completed += 1
     assert completed == (3 if orbit is None else 1)
     if probe is None:
         label = "two-face remote source subtotal" if remote_source else "two-face normalization"
+        if protected_source:
+            label = "two-face protected source subtotal"
         if orbit is not None:
             label = "selected orbit " + label
         print(label, "both checkerboards", total, flush=True)
@@ -414,11 +466,12 @@ if __name__ == "__main__":
     mode.add_argument("--all-probes", action="store_true")
     mode.add_argument("--probe-classes", action="store_true")
     mode.add_argument("--remote-source", action="store_true")
+    mode.add_argument("--protected-source", action="store_true")
     parser.add_argument("--orbit", type=int, choices=range(3))
     args = parser.parse_args()
-    if args.all_probes or args.probe_classes or args.remote_source or args.first_probe is not None:
-        replay_fused(args.first_probe, args.orbit, args.probe_classes or args.remote_source,
-                     remote_source=args.remote_source)
+    if args.all_probes or args.probe_classes or args.remote_source or args.protected_source or args.first_probe is not None:
+        replay_fused(args.first_probe, args.orbit, args.probe_classes or args.remote_source or args.protected_source,
+                     remote_source=args.remote_source, protected_source=args.protected_source)
     elif args.fuse_pure_centers:
         fuse_all()
     else:

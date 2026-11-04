@@ -44,9 +44,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   now closes all three two-face orbits. Source replacements deleting
   a residual face also have exact subtotals in both core families.
   The [remote-source replay](L1_RETARDED_SPECTRAL_INTERFACE.md#two-face-source-terms-at-remote-centers)
-  completes the five remote centers in the two-face family. Next
-  contract the two protected source centers and the four-face
-  normalization. General center counts remain open.
+  completes the five remote centers in the two-face family. The
+  [protected-source replay](L1_RETARDED_SPECTRAL_INTERFACE.md#completed-two-face-source-numerator)
+  closes the two remaining centers and the full two-face numerator.
+  Next use the four-face spanning tree to contract its normalization
+  and retained-core source terms. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 
 - **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing and canonical finding §3.2 closure. The next bounded substrate package is §2.2–2.4. Derive Schwarzschild heating from a differentiable decreasing mass profile and acoustic cooling from the explicit source profile, then relate the applicable profiles to the regime hypotheses. Keep the finite-step monotonicity result separate from strict derivative signs. Supply the partition-linked `δ` corollary and exact `G_N M_c = 1/Λ_UV` length identity. The four-laws construction in §2.1 remains open. A differential Schwarzschild area first law is a viable component of that larger obligation. For the acoustic second law, source inspection at `ff5c2614` identified `GloriosoLiu.entropy_current_exists` and `noetherEntropyDensity_nonneg_of_SKEFTAxioms` as reuse candidates. The latter establishes density positivity under the SK axioms. The local-law module defines its divergence as the imaginary Lagrangian, whereas L3 takes the physical entropy divergence as a scalar input. Search by type in the pinned consumer context for a current and divergence identification before dispatching the acoustic construction. The source inspection leaves this search incomplete. The mapped Paper 27 review IDs require individual lifecycle reconciliation, and the manuscript still requires fresh Stage 13 after its redraft.
