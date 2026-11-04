@@ -4218,3 +4218,24 @@ Independent direct identity evaluations checked the action
 tensor when both anchors are fixed. These controls establish
 the local inputs for the larger-core join. Its full contraction
 remains open.
+
+#### Larger-core face-to-frame routing
+
+The [larger-core replay](l1_extended_larger_core_frames.py)
+routes each directed protected link to its active center, frame
+axis, and anchor. The incidence check covers ten four-face
+orbits and one six-face orbit. Every residual face is based at
+an overlapping mixed center, and its component labels belong
+to the complementary frame plane. The common axis receives
+both pairs of frame labels. Pure centers use the peeled
+fourth curvature moment.
+
+The replay distinguishes a fixed identity, an independent Haar
+link, and a live quadratic probe before contracting a local
+frame tensor. It verifies one selected probe slice per orbit
+by placing a vector coordinate on one live link of each face
+and scalar coordinates on the others. The exact curvature row
+then selects one component pair with unit coefficient. The
+`--first-slice` option also contracts the eight exterior tensors
+for the first four-face orbit. This slice supplies a control for
+a later sum over all live probes. The complete sum is open.
