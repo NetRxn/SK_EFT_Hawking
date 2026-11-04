@@ -5863,3 +5863,15 @@ close, and ten at site 15. The exact batch subtotal is zero.
 The 1.67-second evaluation reused both environments after factor
 assembly. The next signed ranges can reuse lower blocks and
 upper connector contractions across repeated coordinates.
+
+The next scratch replay caches the signed lower, middle and
+upper connector blocks by their incident cut coordinates.
+Independent review confirmed that the first 128 distinct
+survivors all have an empty exact block, giving subtotal zero
+with no capped evaluations. The first 16 match the preceding
+tuple roster and were also checked through the uncached
+seven-factor route. The 1.12-second signed phase includes
+those checks and excludes factor assembly. The final join
+for nonempty blocks remains to be exercised. Classify the
+repeated lower blocks across the guarded domain before
+contracting the remaining survivors.
