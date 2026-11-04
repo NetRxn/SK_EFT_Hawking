@@ -4818,3 +4818,22 @@ Weighting 192 words per checkerboard gives normalization
 fixed-shear numerator
 `−1850268228065598531955078125/2305843009213693952`.
 Independent review reproduced the arithmetic from the receipts.
+
+#### Four-face orbit 1 normalization and source
+
+The class-weighted `--full-orbit 1 --retained-source` replay exited
+zero, giving normalization
+`1014107394039901259765625/4611686018427387904` and retained source
+`−31275675424624693359375/36028797018963968` per representative.
+The four-only orbit 1 deletion rows correspond to faces
+`(3,2,3)`, `(3,1,3)`, `(15,0,3)`, and `(15,0,2)`. They sum to
+`−46081191263316064453125/144115188075855872`.
+Independent receipt review matched the pattern and multiplicity.
+Weighting 192 words per checkerboard gives normalization
+`3042322182119703779296875/36028797018963968` and full numerator
+`−513551678885444513671875/1125899906842624`.
+
+The separate all-protected normalization run for [8,13) also exited
+zero. Independent reduction matched the fused rows 8–11, the
+pure-upper source run's normalization for orbit 12, and the reported
+weighted subtotal `132525894456351369226494140625/295147905179352825856`.
