@@ -1872,3 +1872,21 @@ numerator is 16 times the sum over the nine representative
 coefficients with weights binom(2,i) binom(2,j). This reduction
 applies to the full signed integral and keeps the origin and
 the doubly transverse separation in distinct classes.
+
+The grouped-center contraction has a measured width bottleneck.
+Subset elimination on the 16 centers gives treewidth six for
+the nearest-neighbor hypercube and twelve for the graph
+joining all pairs within each closed center star. An exhaustive
+balanced-cut scan gives at least twelve crossing stars, with
+four anchored link variables per star. Fixing a spanning tree
+removes at most fifteen of those 48 crossing links. These are
+bounds for the grouped-center representation. They do not
+rule out a split sparse contraction.
+
+The next exact computation splits curvature and frame factors,
+projects each link onto Haar moments locally, and measures the
+remaining sparse boundary support before joining. A modular
+nonzero result with an admissible prime certifies nonzero
+rational amplitude. Reconstructing signs and normalized
+covariances requires rational reconstruction with a bound or
+a separate argument. A zero residue alone is inconclusive.
