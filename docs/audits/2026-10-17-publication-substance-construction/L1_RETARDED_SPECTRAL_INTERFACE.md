@@ -5820,5 +5820,12 @@ confirmed that the signed B calculation gives empty maps for
 six values, certifying six zero shards. The B maps at 1 and 5
 each contain 24 rows and have distinct digests. The direct
 20-factor route reproduced the entire signed map at 1.
-The two nonempty maps require contraction with A to obtain
-the scalar slice subtotal.
+Direct contraction also reproduced the full map at 5. For
+both nonempty maps, insert the signed B boundary as an even-degree
+factor before A. The site-4 closure has 32 compatible products
+and 24 signed rows. The site-5 closure has zero compatible
+products in both cases. Independent review checked the factor
+order and exact receipts, including the negative wedge-sign
+control. Thus all eight scalars vanish and the complete slice
+subtotal is exactly zero. Other slices and the full word remain
+open.
