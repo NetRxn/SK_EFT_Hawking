@@ -173,17 +173,18 @@ def deleted_base_row(components):
             if mask & 255 == 255}
 
 
-def surviving_face_coefficient(pattern, face, edges, protected):
+def surviving_face_coefficient(pattern, face, edges, protected, *,
+                               factor=upper_factor, environment=remote_environment):
     x, k, l = face
     a, b = (i for i in AXES if i not in (k, l))
     assert set(pattern[EVEN.index(x)]) == {(k, l), (a, b)}
-    center, upper_sites, upper, upper_divisor = upper_factor(
+    center, upper_sites, upper, upper_divisor = factor(
         pattern, face, edges, protected, False)
     coupled = {x, center}
-    keep, environment = remote_environment(pattern, coupled)
+    keep, remote = environment(pattern, coupled)
     sites = tuple(x ^ (1 << i) for i in (k, l, a, b))
     base = mixed_rows(deleted_base_row, sites, ((key,) for key in upper))
-    dual = dual_mixed(keep, environment, base, upper_sites)
+    dual = dual_mixed(keep, remote, base, upper_sites)
     total = imag = 0
     for key, row in upper.items():
         values = {m: (int(v.const().x), int(v.const().y)) for m, v in row.items()}

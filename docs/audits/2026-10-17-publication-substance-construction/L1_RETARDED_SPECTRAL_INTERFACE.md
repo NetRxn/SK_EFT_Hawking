@@ -5475,9 +5475,16 @@ The first exact contraction is pending. Replay it with
 `--four-mixed-all-protected-disjoint-base --orbit 0 --probe-classes`
 and compare the retained-source tree with `--reverse-upper`.
 The surviving-face calculation is independent of that flag.
-The remaining 32 geometries require disjoint upper or remote
-handling, including a formerly coupled upper that becomes remote
-when its face is removed.
+The companion
+`--four-mixed-all-protected-disjoint-base-remaining` route covers
+the other 32 orbits and 4,896 words per checkerboard. It generalizes
+the disjoint remote contraction to the actual number of remote
+disjoint centers. When a base omission removes a face, the former
+upper of that face enters the surviving-face remote calculation.
+Both tree choices passed the census and all omission guards.
+Independent source review checked each source weight, normalization,
+and preservation of the existing paths. Orbit 0 of this companion
+route is running with `--probe-classes`; numerical evidence is pending.
 
 ### Exact temporal transfer control for the scalar probe
 

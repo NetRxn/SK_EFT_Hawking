@@ -162,7 +162,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   checkerboard.
   The [all-protected disjoint-base candidate](L1_RETARDED_SPECTRAL_INTERFACE.md#all-protected-disjoint-base-two-face-candidate)
   passed independent source and census review for 35 orbits and
-  6,720 words per checkerboard. Exact coefficients are pending.
+  6,720 words per checkerboard. The companion route passed the same
+  review for the remaining 32 orbits and 4,896 words per checkerboard.
+  The first 35-orbit route coefficient has passed receipt reduction
+  and awaits the alternate-tree comparison. The companion route's
+  first exact contraction is pending.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)
