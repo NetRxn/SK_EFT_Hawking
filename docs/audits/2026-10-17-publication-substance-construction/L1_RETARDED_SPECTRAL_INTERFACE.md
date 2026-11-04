@@ -2381,3 +2381,12 @@ batch by its maximum absolute product, adds the batch totals
 with Python integers, and restores the common factor squared.
 A two-representative replay matched every prior index, orbit
 weight, candidate count, nonzero count, and signed numerator.
+
+The indexed runner preserves the full schedule while emitting
+exact zeros for incompatible temporal chirality. At each unfixed
+node, the fourth moment is zero unless the incident strips have
+equal parity of their two chiral labels. The three unfixed nodes
+of the pinned column still connect all four strips. The other
+column has all four constraints. Exhausting all 4,096 coordinate
+quadruples confirms the local Haar rule. Exactly 770 of the
+35,084 representatives survive this necessary condition.
