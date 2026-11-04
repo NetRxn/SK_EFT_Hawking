@@ -75,3 +75,18 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
   references.
 - Stage-13 redo required: yes. The tracked PDF refresh and full bundle review
   remain pending.
+
+## 2026-11-04 — Scope acoustic cooling to the source calculation
+
+- Balbinot et al. §V and Eq. (8.4) give the initial cooling slope of the
+  constant-sound-speed nozzle for `c κ t ≪ 1`. Their Eqs. (8.5)–(8.6)
+  extrapolate the late-time tail, and §VIII leaves the condensate case open.
+- The abstract, branch discussion, and figure caption identify the exponential
+  as the model profile. Its asymptotic limit is distinct from the extrapolation.
+- Stage-13 redo required. The partition sign construction, physical late-time
+  dynamics, and any condensate transfer remain open. No gate or finding closure
+  recorded.
+- Independent source review accepted the final wording. The canonical
+  scratch build rendered all four pages with zero errors, overfull boxes,
+  unresolved references, or dropped class options. The tracked PDF
+  refresh remains pending.
