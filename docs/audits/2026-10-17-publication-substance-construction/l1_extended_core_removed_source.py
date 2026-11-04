@@ -14,7 +14,8 @@ from l1_extended_opposed_source import summed_fourth
 from l1_extended_two_mixed_centers import mixed_center
 
 
-def main(three_mixed=False):
+def main(core_size=None):
+    three_mixed = core_size is not None
     common = summed_fourth(1)
     normal, _ = staged_center(summed_fourth(0), common)
     mixed = mixed_center(common)
@@ -33,10 +34,10 @@ def main(three_mixed=False):
         if not faces:
             continue
         if three_mixed:
-            if len(faces) != 2:
+            if len(faces) != core_size:
                 continue
             check_removals(pattern)
-            if set.union(*faces.values()) <= protected:
+            if core_size == 2 and set.union(*faces.values()) <= protected:
                 assert all(len(curvature_boundary(pattern, omitted=f)[0]) == 1 for f in faces)
                 retained["orbits"] += 1
                 retained["words"] += multiplicity
@@ -51,10 +52,12 @@ def main(three_mixed=False):
         total[len(faces)] += contribution
         print("core faces", len(faces), "multiplicity", multiplicity,
               "weighted source contribution", contribution, flush=True)
-    if three_mixed:
+    if core_size == 2:
         assert count == {2: 80} and population == {2: 15072}
         assert retained == {"orbits": 23, "words": 3744}
         print("three-mixed orbit and word counts", dict(count), dict(population), dict(retained))
+    elif core_size == 3:
+        assert count == {3: 5} and population == {3: 960}
     else:
         assert count == {2: 3, 4: 3}
     print("source subtotal by deleted core-face family", dict(sorted(total.items())))
@@ -62,5 +65,7 @@ def main(three_mixed=False):
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
-    parser.add_argument("--two-face-deleted-source", action="store_true")
-    main(parser.parse_args().two_face_deleted_source)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--two-face-deleted-source", action="store_const", const=2, dest="core_size")
+    mode.add_argument("--three-face-deleted-source", action="store_const", const=3, dest="core_size")
+    main(parser.parse_args().core_size)

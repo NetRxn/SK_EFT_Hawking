@@ -4085,3 +4085,29 @@ fixed-shear subtotal `−1494543246329579853515625/562949953421312`
 across both checkerboards. This adds the base removals for the
 all-protected family. The normalization and source insertions
 that retain both faces remain open.
+
+#### Three-face deletion subtotal and remaining core geometry
+
+The `--three-face-deleted-source` replay covers five orbits
+with 960 words per checkerboard. Both unprotected links in each
+core become peelable after removing any one of the three faces.
+The replay asserts that the protected set stays fixed and that
+the remaining core is empty before contracting the source
+replacement. The fixed-shear subtotal across both checkerboards
+is `−778235981974605966796875/2251799813685248`.
+
+| Initial core faces | Orbits | Words per checkerboard | Free links | Core faces after any single omission |
+| ---: | ---: | ---: | ---: | ---: |
+| 3 | 5 | 960 | 2 | 0 |
+| 4 | 10 | 1,920 | 2 | 2 |
+| 6 | 1 | 192 | 3 | 4 |
+
+The three-face squares have two mixed bases, one carrying two
+residual faces and one carrying one. Their upper ends are two
+pure centers. Selecting the first protected upper link at each
+face in axis order leaves a seven-link spanning tree on eight
+vertices in each of the five orbits. Each face then has one
+live upper link, with two probes incident to one pure center.
+The next calculation joins those pure tensors to the fixed
+overlapping and disjoint mixed bases. The four- and six-face
+deletion terms require their surviving cores.
