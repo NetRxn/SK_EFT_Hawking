@@ -5975,3 +5975,10 @@ with no gap or overlap. The complete interval has 880 exact
 zeros and 144 nonempty B maps. With the preceding interval,
 `[640,3712)` now has 2,688 exact zeros and 384 nonempty maps
 whose A closures remain due. The next untouched B index is 3712.
+
+Independent review verified the next complete interval
+`[3712,4736)`. Its 1,024 distinct tuples include 908 exact
+zeros and 116 nonempty B maps. Twelve maps were checked
+against the unfactored signed route. The contiguous interval
+`[640,4736)` has 3,596 exact zeros and 500 nonempty maps.
+Resume the B census at index 4736 and keep A closures separate.
