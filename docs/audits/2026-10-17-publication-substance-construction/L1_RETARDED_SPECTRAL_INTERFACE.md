@@ -6035,3 +6035,11 @@ the full divisor once gives real subtotal
 zero. This prefix is disjoint from the verified `q91=1` zero
 prefix. The other prefixes can contribute with either sign.
 The receipt's scalar applies only to this prefix.
+
+Independent review extended the first bulk snapshot through
+`[4736,33408)`. All 28 complete chunks match the logged hashes
+and cover 28,672 distinct tuples. The receipts certify 25,034
+exact zeros and leave 3,638 nonempty maps for A closure. The
+subsequent partial chunk is outside this verified snapshot.
+The resume run uses the same runner hash and unchanged Python
+inputs and fills the missing rows in the same chunk partition.
