@@ -2244,3 +2244,10 @@ also rejects equality filtering on the inverse-oriented face
 labels. Four edges with vector label pair (0,1) have a nonzero
 moment of 1/3456. The earlier diagonal-only mixed-boundary scratch
 value is therefore excluded from the full boundary calculation.
+
+The [transverse pair control](l1_extended_overlap_transverse_control.py)
+checks the analytic projection on all 2,304 quaternion-basis
+components by summing the two independent second moments directly.
+It reproduces all 144 nonzero components and every zero. Each
+expression is multilinear in X, Y, Z, and T, so the basis check
+covers arbitrary quaternion inputs in the common-chirality block.
