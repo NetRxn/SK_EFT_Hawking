@@ -2629,3 +2629,15 @@ link powers. This removes explicit anchor enumeration from
 the support count. The signed evaluator still has to sum
 the corresponding exterior and Haar tensors with their
 actual coefficients and factorial weights.
+
+The [anchor-marginalized replay](l1_extended_anchor_census.py)
+reproduces 51,930 ordered words for the collapsed six-action
+source control from just 14 center-plane patterns. The existing
+explicit-anchor support routine counts 185 multisets and gives
+the same ordered total. For the extended regulator, duplicating
+one plane at every center with one prescribed removed plane
+gives 1,578,561,542,553,600 candidate multisets for a fixed
+same-site cross source. This is a lower bound on structural
+support, prior to signed contraction. The next pilot measures
+frontier growth by summing site degrees and edge parities as
+soon as the contributing centers have been processed.
