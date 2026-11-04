@@ -159,7 +159,7 @@ def close_channels(base, base_sites, keep, env, upper_sites, terms):
 
 
 def coefficient(pattern, faces, protected, base, reverse=False, source=False, omitted=None,
-                probe_classes=False):
+                probe_classes=False, *, environment=remote_environment, close=close_channels):
     assert not (source and omitted is not None)
     site, = {f[0] for f in faces}
     p, q = pattern[EVEN.index(site)]
@@ -186,7 +186,7 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False, om
     assert len(coupled) == 3
     assert omitted is None or omitted[0] != site
     remote_omission = omitted if omitted is not None and omitted[0] not in coupled else None
-    keep, env = remote_environment(pattern, coupled, only_face=remote_omission)
+    keep, env = environment(pattern, coupled, only_face=remote_omission)
     if omitted is not None and remote_omission is None:
         if omitted[0] == left[0]:
             left = upper(0, source=True, omitted=omitted)
@@ -201,7 +201,7 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False, om
     terms = [(left[2], right[2])]
     if changed is not None:
         terms.extend(((changed[0], right[2]), (left[2], changed[1])))
-    total, *upper_terms = close_channels(base, sites, keep, env, upper_sites, terms)
+    total, *upper_terms = close(base, sites, keep, env, upper_sites, terms)
     divisor = left[3] * right[3] * base_divisor
     for x, (p, q) in zip(EVEN, pattern, strict=True):
         if x not in coupled:
@@ -210,9 +210,9 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False, om
     normal = Fraction(total, divisor * (6 if omitted is not None else 1))
     if changed is None:
         return normal
-    source_keep, source_env = remote_environment(pattern, coupled, source=True)
+    source_keep, source_env = environment(pattern, coupled, source=True)
     assert source_keep == keep
-    remote, = close_channels(base, sites, keep, source_env, upper_sites, terms[:1])
+    remote, = close(base, sites, keep, source_env, upper_sites, terms[:1])
     return normal, Fraction(remote, 6 * divisor), Fraction(sum(upper_terms), 6 * divisor)
 
 

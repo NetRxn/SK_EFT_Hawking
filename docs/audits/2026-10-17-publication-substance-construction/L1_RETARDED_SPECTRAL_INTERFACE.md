@@ -4647,3 +4647,27 @@ normalization and multiplicities, and checked the orbit-41 receipts.
 It reused the previously reviewed deletion subtotal and did not rerun
 the underlying contractions. The direct prefix was taken from the
 ongoing unbounded run. These values cover the free-link two-face sector.
+
+#### Fused replay for the same-side all-protected layout
+
+The [opt-in replay](l1_allprotected_fused.py) accepts the 11 eligible
+orbit IDs 0, 1, 4–11 and 20. Each mixed upper has a remote pair on its
+own exclusive and common sites. The remaining remote pair crosses
+between the far exclusive sites. The replay contracts those factors
+against the base without expanding a full exterior dual. It checks
+the actual site footprints and degrees for each ordinary and source
+component. The ordinary tree contraction remains available for the
+other 12 orbits.
+
+Run `l1_allprotected_fused.py --orbit 0 --orbit 8` for the exact
+controls. Both complete normalization and source triples matched in
+36.12 seconds in a single run. Orbit 8's normalization agrees with
+the standalone tree replay. Its unweighted remote and upper terms
+are `−8234693198583117711328125/9223372036854775808` and
+`−233919342720723779296875/576460752303423488`, with 192 words per
+checkerboard.
+
+Independent review checked eligibility, the existing caller defaults,
+and the cache's row lifetimes. An independent exterior oracle with
+interleaved sites and complex coefficients reproduced the normal and
+single-source sums. This review did not rerun the full controls.
