@@ -6024,3 +6024,14 @@ The four-label prefix `(q153,g90,g91,q91)` partitions these
 into 144 blocks of 16 retained keys each. One block is
 already verified zero by the pinned environment query.
 The remaining 143 blocks require exact signed evaluation.
+
+Prefix 3, `(q153,g90,g91,q91)=(5,(0,0),(1,),5)`, is the
+first independently reviewed nonzero A subtotal. After locating
+a match, the replay restarted the selected prefix and exhausted
+all 16 retained keys. It checked 55,080 compatible products
+and found 25,344 nonzero signed environment matches. Applying
+the full divisor once gives real subtotal
+`−8371769346801/73786976294838206464` and imaginary subtotal
+zero. This prefix is disjoint from the verified `q91=1` zero
+prefix. The other prefixes can contribute with either sign.
+The receipt's scalar applies only to this prefix.
