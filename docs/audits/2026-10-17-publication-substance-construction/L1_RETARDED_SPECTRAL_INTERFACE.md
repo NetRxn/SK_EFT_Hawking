@@ -2697,3 +2697,14 @@ The quadratic source join uses 270 signed monomial products.
 This pilot checks an interleaved contraction on a restricted
 cut. It leaves the other link integrations and the 16-site
 coefficient calculation open.
+
+The dense cut (`2 1 1` arguments) uses doubled quaternions,
+including the integrated link. The closed action vertex has
+link degree six and the source vertex degree two. At source
+order h, divide the raw residue by `2^(24-4h)` to recover the
+unit-link control. The raw residues are 62,538, 264 and 1,349.
+A separate replay using unit coordinates in the polynomial
+builder returned 18,700, 32,752 and 64,188, which matches the
+homogeneous rescaling exactly. Local and global accumulation
+orders agree at each source order. The linear term can be
+nonzero on this cut with seven links fixed.
