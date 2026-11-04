@@ -85,7 +85,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   deletion subtotal for the 23 all-protected orbits.
   The all-protected tree join now attaches the two live upper links
   to the complementary fixed frame pairs at the disjoint base.
-  Complete its normalization and retained-source replays. The
+  The [orbit-zero comparison](L1_RETARDED_SPECTRAL_INTERFACE.md#all-protected-orbit-zero-normalization-comparison)
+  records exact agreement of the direct and class-weighted normalization
+  outputs and the direct command exit-status caveat.
+  Complete the other normalization orbits and retained-source replays. The
   [three-face deletion replay](L1_RETARDED_SPECTRAL_INTERFACE.md#three-face-deletion-subtotal-and-remaining-core-geometry)
   evaluates all five deletion orbits. The verified three-face
   tree leaves one upper probe per face. The

@@ -4526,3 +4526,15 @@ The partial totals multiply each by 384, accounting for 192 words per
 checkerboard. This comparison qualifies the range replay on one free-link
 orbit. The full retained-source sum still requires one row per orbit,
 with disjoint intervals covering [0, 80) and the existing census check.
+
+#### All-protected orbit zero normalization comparison
+
+Run `l1_extended_two_face_tree.py --candidate --all-protected --orbit 0`
+and repeat with `--probe-classes`. The direct streamed and class-weighted
+logs agree exactly on the representative normalization `1460729721830618365576171875/590295810358705651712`.
+Both report `4382189165491855096728515625/9223372036854775808` after weighting 96 words per checkerboard.
+The class-weighted process exited zero. The timed direct command emitted
+its final subtotal and returned status 1, with no diagnostic in its
+captured log. The comparison establishes agreement of the emitted values.
+Direct command exit status, the other 22 normalization orbits, and
+the retained-source subtotal remain open.
