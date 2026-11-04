@@ -8,6 +8,7 @@ from l1_extended_overlap_upper_block import L,block,pair
 from l1_normalization_disjoint_sector import adj,quat
 from l1_normalization_opposed_fourth import nodes
 from l1_extended_source_upper import join
+from l1_reduced_wedge_reference import wedge_sign
 
 def shared(site):
     other=site^1
@@ -36,6 +37,19 @@ def combined(removed):
         raw=join(sparse_int(source),retained_poly) if removed==2 else join(retained_poly,sparse_int(source))
         yield (a,b),raw
 
+def twice_signed_lower_complements():
+    """Return the signed complement coefficients with a common extra factor 2."""
+    _, tensor = next(combined(2))
+    result = {}
+    for (mask, phase), raw in tensor.items():
+        assert phase == 0
+        value, remainder = divmod(raw, 12)
+        assert not remainder
+        complement = ((1 << 32) - 1) ^ mask
+        result[complement] = value * wedge_sign(complement, mask)
+    return result
+
+
 def degree_census():
     upper = range(8, 16)
 
@@ -60,11 +74,15 @@ def degree_census():
 if __name__ == "__main__":
     degree_census()
     baseline = block(0, 0, 0, 0)
+    shared_diagonal = None
     for removed in (2, 3):
         for (a, b), raw in combined(removed):
             if a != b:
                 assert not raw
                 continue
+            if shared_diagonal is None:
+                shared_diagonal = raw
+            assert raw == shared_diagonal
             assert raw.keys() == baseline.keys()
-            assert {Fraction(v, baseline[k]) for k, v in raw.items()} == {24, 36}
+            assert Counter(Fraction(v, baseline[k]) for k, v in raw.items()) == {24: 72, 36: 144}
         print(f"Site {removed}: same diagonal support, raw ratios 24 and 36")
