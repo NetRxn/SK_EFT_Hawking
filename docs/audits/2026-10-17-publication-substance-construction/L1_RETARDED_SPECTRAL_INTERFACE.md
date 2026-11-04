@@ -4882,3 +4882,21 @@ weight of 192 words per checkerboard. Across both checkerboards,
 normalization is `7110003109076325966796875/144115188075855872`
 and the full numerator is `−9616825719052072470703125/36028797018963968`.
 The independent check reduced the receipts.
+
+#### Four-face orbit 4 and six-face deletion 1
+
+The `--full-orbit 4 --retained-source --integer-gamma` replay exited
+zero. Independent review matched the four-only deletion rows for faces
+`(12,1,3)`, `(12,0,3)`, `(15,0,1)`, and `(15,1,3)`.
+Their unweighted sum is `−28680949746879345703125/144115188075855872`.
+At 192 words per checkerboard, the both-checkerboard normalization is
+`1898428922982908701171875/36028797018963968` and the retained plus
+deleted source numerator is `−2555164473661523267578125/9007199254740992`.
+
+The `--six-deletions --deletion-index 1` replay exited zero. It omits
+`(9,0,2)` and replaces frame `(1,3)` at site 9. Independent review
+matched the surviving faces and class edge `(12,0)` and multiplied
+the raw source `−915607170319704345703125/18446744073709551616`
+by 384 to give `−2746821510959113037109375/144115188075855872`.
+This equals the independently evaluated deletion 0 subtotal.
+Both reviews reconciled existing receipts without rerunning contractions.
