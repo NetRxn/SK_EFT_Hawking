@@ -5800,3 +5800,14 @@ The two projections can currently match different rows of the
 shared edge. Retaining its site-7 and site-15 bytes together
 gives a stronger necessary support condition. The full signed
 coefficient remains open.
+
+The independently reviewed correlated projection indexes both
+endpoint bytes and the shared gamma from the same `(7,3)` edge
+row. A candidate survives only when that row meets both endpoint
+complement constraints. Across the guarded domain of 1,179,648
+tuples it leaves 249,120 candidates and certifies 930,528 zeros,
+including 11,232 beyond the separate projections. Both incoming
+flip controls are excluded. The all-one and connector-flip
+controls still require the signed calculation to establish zero.
+The tracked port should assert the exact projected key domains
+before relying on the coverage count.

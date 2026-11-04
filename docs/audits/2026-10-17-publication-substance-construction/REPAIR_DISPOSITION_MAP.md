@@ -221,6 +221,15 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   must identify the actual branch rate with the corresponding profile
   derivative. The Schwarzschild branch requires positive mass and
   negative mass derivative, and BEC cooling requires its own derivation.
+  For the Schwarzschild branch, require a mass trajectory through
+  the classified mass with derivative `m' < 0`. The chain rule gives
+  the rate `−m'/(8πM²) > 0`. If the criterion retains a supplied rate,
+  identify it with the derivative of the selected profile by derivative
+  uniqueness. For physical acoustic evolution written as the affine
+  profile plus a differentiable remainder `R`, transfer strict cooling
+  only where `R' < T₀Γ`. Balbinot's short-time expansion supplies the
+  affine model slope. A quantitative derivative bound for the full
+  trajectory remains a separate evidence requirement.
   The focused main-based [draft PR #112](https://github.com/NetRxn/SK_EFT_Hawking/pull/112)
   carries independently reviewed §3.2 closure at `5780a47b`.
   The exact base `ce194cdc4` and candidate have identical
