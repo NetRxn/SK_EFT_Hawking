@@ -5811,3 +5811,14 @@ flip controls are excluded. The all-one and connector-flip
 controls still require the signed calculation to establish zero.
 The tracked port should assert the exact projected key domains
 before relying on the coverage count.
+
+A signed eight-value slice fixes the coordinates on
+`(5,1),(5,3),(7,1),(7,3),(13,3),(15,3)` to
+`(5,5,1,5,1,1)` and varies `q(15,1)` over 0–7.
+All eight pass the correlated support test. Independent review
+confirmed that the signed B calculation gives empty maps for
+six values, certifying six zero shards. The B maps at 1 and 5
+each contain 24 rows and have distinct digests. The direct
+20-factor route reproduced the entire signed map at 1.
+The two nonempty maps require contraction with A to obtain
+the scalar slice subtotal.
