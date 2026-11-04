@@ -3821,3 +3821,30 @@ The next 103 two-face orbits separate into 80 with one free link
 and 23 with every link protected. The remaining three-, four-,
 and six-face orbits and other multiplicity sectors still contribute
 to the full lattice sums.
+
+### Source deletion in the three-mixed-center two-face cores
+
+The [deleted-face replay](l1_extended_core_removed_source.py)
+with `--two-face-deleted-source` checks site and geometric link
+parity on all 103 two-face orbits. In the 80 orbits with one free
+link, either residual-face deletion restores complete peeling.
+Their 15,072 words per checkerboard give the fixed-shear numerator
+subtotal `-6455243019158686318359375/562949953421312` across both
+checkerboards. Each contribution replaces the two action slots of
+one residual face and sums the two directed anchors of each source.
+The multiplicity is twice the one-checkerboard orbit size, with the
+all-axis source sum divided by six to select a fixed shear.
+Independent replay reproduced the subtotal and the 80 orbit rows.
+
+The other 23 orbits contain 3,744 words per checkerboard. Either
+deletion there leaves a protected face, so the empty-core replay
+excludes both source types. Those terms require a one-face
+contraction with the affected base tensor.
+
+For the 80 free-link orbits, the two opposite-center roles per orbit
+give 160 role occurrences. There are 12 pure roles with two
+protected fourth frame moments, 44 overlapping mixed roles with one
+protected fourth and one protected second frame moment, and 104
+overlapping mixed roles with two protected second frame moments.
+The ordinary normalization and retained-face source joins for this
+family require these mixed opposite-center tensors.

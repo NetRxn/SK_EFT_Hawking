@@ -58,8 +58,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The [one-face tree-gauge replay](L1_RETARDED_SPECTRAL_INTERFACE.md#one-face-cores-with-three-mixed-centers)
   covers 13 more orbits. The next core family contains 103 two-face
   orbits, 80 with one free link and 23 with all links protected.
-  The free-link case extends the prior two-face join to mixed
-  opposite centers. The all-protected case requires two live
+  The [deleted-face replay](L1_RETARDED_SPECTRAL_INTERFACE.md#source-deletion-in-the-three-mixed-center-two-face-cores)
+  evaluates the two source removals that restore peeling in each
+  free-link orbit. Normalization and retained-face sources extend
+  the prior two-face join to mixed opposite centers. The all-protected case requires two live
   holonomies at a disjoint mixed base. General center counts remain open.
   The full word sum, physical matching and B3 remain open.
 
