@@ -108,6 +108,15 @@ if __name__=='__main__':
         if f:
             used+=1
             value+=f*sheets[p]*sheets[q]
+    pair_scale, vector = F(15993, 2048), (F(1), F(10, 3), F(1))
+    assert all(K[a][b][0] == pair_scale * vector[a] * vector[b]
+               for a, b in product(range(3), repeat=2))
+    reduced_sheet = sum(
+        weight * prod(vector[channel] for channel in channels)
+        for channels, weight in sheets.items()
+    )
+    assert value == pair_scale**4 * reduced_sheet**2
+    print('rank-one sheet contraction', reduced_sheet)
     print('nonzero sheet boundaries',sum(bool(v) for v in sheets.values()),'of',len(sheets))
     print('nonzero pair joins',used,'of',len(sheets)**2)
     print('coupled curvature subnetwork exact',value,'seconds',perf_counter()-start)
