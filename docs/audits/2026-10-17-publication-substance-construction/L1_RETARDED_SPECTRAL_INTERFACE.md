@@ -5829,3 +5829,21 @@ order and exact receipts, including the negative wedge-sign
 control. Thus all eight scalars vanish and the complete slice
 subtotal is exactly zero. Other slices and the full word remain
 open.
+
+The independently reviewed source-supported cut moves the only
+A-side factors incident on sites 4 and 5 into the signed lower
+environment. The two source factors are independent of the seven
+cut coordinates. This closes site 4 and leaves four gamma keys
+and 5,040 rows with degrees `{0:2,1:2,5:4,7:4}`. The
+projection keeps the site-5 and site-7 masks correlated, matches
+the gamma labels and retains the shared edge's endpoint relation
+through the site-13 and site-15 checks. This support test excludes
+1,055,232 of 1,179,648 tuples, leaving 124,416 possible survivors.
+Both nonempty B maps in the verified slice are excluded at this
+stage. The surviving candidates still require signed evaluation.
+
+Run [the signed slice replay](l1_unpaired_signed_slice.py) with
+the repository Python environment to reproduce the complete zero
+subtotal. Independent source review and a fresh run without
+scratch imports confirmed exact agreement of the cached and
+direct B maps at all eight coordinates.
