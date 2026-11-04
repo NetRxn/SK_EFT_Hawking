@@ -6082,3 +6082,10 @@ eight contribute `−8371769346801/73786976294838206464`, and
 four contribute its positive counterpart. The real subtotal
 is `−8371769346801/18446744073709551616` and the imaginary
 subtotal is zero. The next untouched prefix is 35.
+
+The next independently checked bulk snapshot covers
+`[4736,52864)`. All 47 complete chunks match the hashes
+in the original and resume logs. The 48,128 distinct tuples
+contain 42,053 exact zeros and 6,075 nonempty B maps.
+The resumed complete chunk replaces its earlier partial
+receipt. A closure remains due for the nonempty maps.
