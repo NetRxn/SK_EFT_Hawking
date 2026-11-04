@@ -1926,3 +1926,21 @@ four shared links, sparse counts and all three exact cycles.
 The reviewer independently lifted the four-center join to
 128-bit global exterior masks and reproduced the top coefficient.
 A loop with no private curvature port remains the next test.
+
+The [coupled-curvature replay](l1_extended_coupled_curvature.py)
+covers a different restricted sector. Each of two longitudinal
+sheets has four plaquettes, every curvature link lies in two
+plaquettes, and no port can be integrated privately. After
+integrating the transverse frame factors and saturating the
+active center, local gauge conjugation leaves only three
+chiral radial channels per center. The sheet contractions
+use the SU(2) character basis. Schur integration forces a
+common representation around a sheet and gives the fourth
+power of the inverse representation dimension. All 81
+channel assignments and 6,561 sheet joins contribute.
+The exact bounded coefficient is
+2686789328589557725241742448284154145239249/79407184549937850344905113600000000.
+It differs from the independent-Haar control, which the same
+frame tensors reproduce when supplied independent moments.
+Independent review is pending. This sector has shared
+curvature links but no shared curvature/frame link variables.
