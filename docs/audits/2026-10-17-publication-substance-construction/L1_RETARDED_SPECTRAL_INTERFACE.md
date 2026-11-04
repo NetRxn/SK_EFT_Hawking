@@ -5230,3 +5230,50 @@ Use separate contiguous orbit ranges for parallel replay. Keep
 ranges disjoint when accumulating exact totals. The first factored
 batch uses `--orbit-range 8 16 --probe-classes --component-remotes`
 while the legacy batch covers `--orbit-range 4 8`.
+
+### Exact temporal transfer control for the scalar probe
+
+Keep periodic spatial forward differences and let the temporal
+spacing be a_t, the number of slices N_t, and β = N_t a_t.
+For spatial momentum p write Ω_p² = m² + Σ_i p̂_i². The inverse
+of the one-dimensional periodic difference kernel, with action
+time weight a_t, is
+
+    E_p = 2 asinh(a_t Ω_p/2)/a_t,
+    C_p(τ) = A_p (e^(−E_p τ) + e^(−E_p(β−τ)))/(1−e^(−β E_p)),
+    A_p = a_t/[2 sinh(a_t E_p)].
+
+This solves the periodic Green function recurrence with source
+δ_{τ0}/a_t. For the uniform spatial slice sum of the shear vertex
+the connected covariance at separation τ is
+Σ_p w_p C_p(τ)² with w_p = (p̂₃²−p̂₂²)²/4. Divide by the
+number of spatial sites for the per-site result. Put
+q_p = e^(−β E_p). Each summand is a nonnegative static weight
+2w_p A_p² q_p/(1−q_p)² plus a pair with gap 2E_p and thermal
+kernel e^(−2E_p τ)+e^(−2E_p(β−τ)), multiplied by
+w_p A_p²/(1−q_p)². The static term supplies no nonzero-frequency
+commutator weight. At zero temperature only the forward
+exponential survives. Modes with equal transverse squared
+momenta have exactly zero weight. Thus this finite free-scalar control has no absorption below the
+first active pair gap at zero spatial momentum.
+
+The discrete connected zero-frequency sum obeys
+a_t Σ_τ C_p(τ)² = β⁻¹ Σ_n (Ω_p²+p̂₀,n²)⁻² by Parseval.
+At unit spacing and mass on the 2⁴ torus the exact per-spatial-site
+connected values at separations 0 and 1 are 11306/342225 and
+776/342225. Their sum is the independently checked uniform
+per-site covariance 12082/342225. The bare affine contact is
+587/13260 at coincident time only and is excluded from these
+connected values. The `l1_scalar_temporal_spectral_control.py` replay tests the finite transfer
+formula and time sum against the temporal Fourier representation
+at multiple temporal extents.
+
+This supplies a controlled frequency-dependent probe kernel.
+A physical Γ_H requires a matched geometry operator, subtraction
+of permitted contacts and calibration of the inertial part of
+the inverse response. A dissipative coefficient belongs to the
+coefficient linear in frequency in the imaginary part of the
+matched inverse pole kernel at nonzero
+spatial momentum under a specified pole convention. The scalar
+shear susceptibility alone supplies neither that coefficient nor
+a real speed correction at physical frequencies.
