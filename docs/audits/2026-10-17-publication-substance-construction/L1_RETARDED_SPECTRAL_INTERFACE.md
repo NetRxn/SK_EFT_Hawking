@@ -2187,3 +2187,22 @@ match the direct unsplit contraction exactly. This control caught
 an overall minus in the first split: the endpoint crossing and
 the standalone middle-byte swap cancel. The replay uses the
 corrected signs.
+
+The [full lower-column join](l1_extended_overlap_lower_join.cpp)
+removes every exterior mask and emits 2,321,664 real nonzero rows
+over 36 coordinate pairs. Generate the two half files with
+`l1_extended_overlap_lower_half_dump.py OUTPUT_DIR`. Run the
+mixed-frame replay and keep its seven-column numeric rows only
+(`awk 'NF==7 && $1 ~ /^[0-9]+$/'` removes import diagnostics).
+Compile the join with `c++ -O3 -std=c++17`, then pass half0,
+half1, and mixed rows in that order. The replay matched the
+author's complete sorted output byte for byte. The author also
+matched all 44,736 rows of the (0,0) pair to the unsplit evaluator.
+
+Output rows are the shared pair, the packed base-6 curvature
+key, and real and imaginary numerators. The curvature order
+for the first column is mixed x4,x6,x0,x2 followed by original
+x0,x4,x2,x6. Translate sites by XOR 1 for the other column.
+The lower denominator is `48 * 4^16` per column. The upper
+blocks retain their separate normalization. The remaining
+curvature-only join has yet to be evaluated.
