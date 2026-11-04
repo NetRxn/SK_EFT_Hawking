@@ -5502,7 +5502,23 @@ checkerboards and one surviving-face term per base deletion.
 | Surviving-face source | `−355210877489031889453125/140737488355328` |
 | Full fixed-shear numerator | `−4630681670551695317846671875/288230376151711744` |
 
-Orbits 0–5 now have reviewed receipts. The next range is `[6,11)`.
+##### All-protected disjoint-base batch covering orbits 6–10
+
+The probe-class evaluator at `fcfad029e` exited zero for
+`--four-mixed-all-protected-disjoint-base --orbit-range 6 11 --probe-classes`.
+Independent receipt review reproduced the exact weighted sum for
+960 words per checkerboard, with one surviving-face term per base
+deletion.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `232557216687590213717578125/288230376151711744` |
+| Remote source | `−383622448696074371877609375/144115188075855872` |
+| Upper source | `−337588464804443512656890625/288230376151711744` |
+| Surviving-face source | `−25253859175075747265625/35184372088832` |
+| Full fixed-shear numerator | `−1311712976558812778012109375/288230376151711744` |
+
+Orbits 0–10 now have reviewed receipts. The next range is `[11,16)`.
 
 The companion
 `--four-mixed-all-protected-disjoint-base-remaining` route covers
