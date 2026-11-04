@@ -2964,3 +2964,34 @@ The remaining plane-homogeneous configurations with nonalternating
 opposed pairs across transverse layers can share curvature links.
 They require a joint curvature contraction. Other action sectors
 and the unrestricted lattice sums remain open.
+
+### Private-link elimination for the other layer patterns
+
+Each of the four transverse frame layers chooses one of two opposite
+center pairs. For a fixed curvature slice the chosen plaquettes are a
+subset of the four faces of its periodic square. Any nonempty proper
+subset has a directed link used by just one remaining face. With all
+other links fixed, that face is a left and right translate of a Haar
+link or its inverse. Its holonomy is therefore conditionally Haar and
+can be integrated out while the other faces retain their integrands.
+Repeating this step gives independent Haar holonomies for every
+proper subset, including subsets whose original faces share links.
+
+The replay checks all 16 layer patterns against the actual directed
+plaquette incidences. Fourteen peel completely. The two constant
+patterns each fill two curvature slices and have no private link in
+either slice. For each of the fourteen, the frame layers still close on
+opposed pairs and the source degree census gives the same two-link
+replacements. Two distinct removals leave an odd directed curvature
+edge. An outgoing source cannot repair its parity because it is even
+on its directed link. Consequently the normalization of this family
+uses 84 copies of the single pattern, and the specified shear
+numerator uses 14. The two constant patterns remain for a joint
+four-face contraction.
+
+The exact replay gives normalization
+`209632741101540896759033203125/73786976294838206464`
+and numerator `-1061730258814782257080078125/72057594037927936`.
+Independent review confirmed the incidence census and the conditional
+Haar argument. These totals already include the two disjoint
+checkerboard patterns.

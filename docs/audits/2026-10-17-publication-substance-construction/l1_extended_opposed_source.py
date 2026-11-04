@@ -148,6 +148,34 @@ def summed_fourth(direction):
     return result
 
 
+def peel_curvature(centers):
+    """A private directed link makes the face Haar conditional on all others."""
+    faces = {x: {(x, 0), (x ^ 1, 1), (x ^ 2, 0), (x, 1)} for x in centers}
+    while faces:
+        counts = Counter(link for face in faces.values() for link in face)
+        private = next((x for x, face in faces.items()
+                        if any(counts[link] == 1 for link in face)), None)
+        if private is None:
+            return False
+        del faces[private]
+    return True
+
+
+def independent_layer_patterns():
+    independent = []
+    joint = []
+    for layers in product(range(2), repeat=4):
+        active = {low | (high << 2) for low, high in product(range(4), repeat=2)
+                  if high.bit_count() % 2 == layers[low]}
+        check_source_support(sorted(active))
+        groups = ({x for x in active if x >> 2 == high} for high in range(4))
+        target = independent if all(map(peel_curvature, groups)) else joint
+        target.append(layers)
+    assert len(independent) == 14
+    assert joint == [(0, 0, 0, 0), (1, 1, 1, 1)]
+    return independent
+
+
 def mixed_anchor_sector():
     normal, _ = staged_center(summed_fourth(0), summed_fourth(1))
     denominator = 48 * 96**4 * 8**8
@@ -173,6 +201,11 @@ def mixed_anchor_sector():
     # Source degree matching selects the (0,1) curvature plane.
     print("homogeneous-plane orbit normalization", 12 * normalization)
     print("homogeneous-plane orbit numerator", 2 * numerator)
+    independent = len(independent_layer_patterns())
+    print("peelable homogeneous normalization", 6 * independent * normalization)
+    print("peelable homogeneous numerator by offset",
+          {r: independent * value for r, value in sorted(values.items())})
+    print("peelable homogeneous numerator", independent * numerator)
 
 
 def main():
