@@ -2035,3 +2035,11 @@ preserves rank on the strip subspace. The 455 channels
 therefore survive application of the two frame maps before
 external site saturation. This is smaller than the 1,225
 channels of two independent rank-35 interfaces.
+
+Independent review of `59044ed5b` and `3a598282d`
+reproduced rank 455 and checked the closed-loop indices,
+Haar denominators, and frame-map injectivity. The four-face
+control uses Q†, Q, R†Q and Q†R on the four faces, with
+R=(6,0). Unit-coordinate R inputs verify the diagonal
+coefficients of its homogeneous quadratic boundary slice.
+Mixed-coordinate coefficients remain outside that control.
