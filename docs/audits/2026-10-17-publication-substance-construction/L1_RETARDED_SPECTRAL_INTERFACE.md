@@ -2178,3 +2178,12 @@ splits the fixed mixed pair at the two crossing Grassmann bits.
 Each upper-projected block absorbs its own fixed vertex and
 retains only the incoming and outgoing bit indices, an 8 by 8
 interface. The exact factored replay is in progress.
+
+The [lower half-column replay](l1_extended_overlap_lower_halves.py)
+builds both signed factors. Each has 78,144 entries in 64 crossing
+channels across 288 retained endpoint masks. On the fixed mask
+pair (7,16), (193,64), all 11,712 nonzero curvature coefficients
+match the direct unsplit contraction exactly. This control caught
+an overall minus in the first split: the endpoint crossing and
+the standalone middle-byte swap cancel. The replay uses the
+corrected signs.
