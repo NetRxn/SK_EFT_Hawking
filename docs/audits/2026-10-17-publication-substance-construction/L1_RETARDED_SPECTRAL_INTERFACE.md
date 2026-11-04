@@ -2078,4 +2078,18 @@ for the two integrated links is 48². A direct identity
 boundary specialization reproduces all 672 nonzero
 components. Keeping the factors separate avoids materializing
 791,285,760 raw products before cancellations. Independent
-review and the downstream joins remain open.
+review of `f1cf1a8ce` replayed a fresh C++ four-face dump and
+accepted the orientations, interface indexing and Haar weight.
+The identity control changes contraction order using shared
+input tensors. Downstream joins remain open.
+
+The [exact rank replay](l1_extended_overlap_u6_rank.py) combines
+ordered pairs into 36 symmetric channels. Over the rationals the
+left factor has rank 35 and the right factor has full column rank 36,
+so the contracted tensor has rank 35. The left relation is
+(L_{77}=L_{00}+L_{11}+L_{22}+L_{33}-L_{44}-L_{55}-L_{66})
+with zero-based indices. Eliminating this channel increases the
+raw product count from 744,256,512 to 840,896,640 by densifying
+the right factor. Carry the sparser 36-channel form into the (4,0)
+projection, which can be performed on the right factor before
+forming outer products.
