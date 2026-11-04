@@ -1921,5 +1921,8 @@ resulting four-center cycle has 38 rows at every boundary
 and contributes 21690819140625/34359738368. Two remaining
 two-center cycles reproduce the prior anchor-summed value.
 The unswitched control also reproduces four independent
-layers. Independent review is pending. A loop with no
-private curvature port remains the next test.
+layers. Independent review of `5f0335be0` reproduced the
+four shared links, sparse counts and all three exact cycles.
+The reviewer independently lifted the four-center join to
+128-bit global exterior masks and reproduced the top coefficient.
+A loop with no private curvature port remains the next test.
