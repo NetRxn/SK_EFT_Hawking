@@ -18,8 +18,11 @@ The critical NJL finding has a canonical closure on the candidate at
 [`b92e8db5c`](https://github.com/NetRxn/SK_EFT_Hawking/commit/b92e8db5c).
 Remote readback on November 4 confirmed [draft PR #94](https://github.com/NetRxn/SK_EFT_Hawking/pull/94)
 at `115e00122` contains that closure. Its main base `ce194cdc4` lacks
-the closure commit. CodeQL passed at the draft head. The broad test
-receipt in the PR predates subsequent edits. The next delivery
+the closure commit. CodeQL passed at the draft head. An exact-head
+focused run passed all 200 tests in `test_tetrad_gap.py`,
+`test_tetrad_gap_solver.py`, and `test_adw.py`. The formula and solver
+imports resolved to the candidate checkout. The broad test receipt
+in the PR predates subsequent edits. The next delivery
 checkpoint requires a current repository merge-gate result and a
 separate disposition of any failures against the exact main base.
 
