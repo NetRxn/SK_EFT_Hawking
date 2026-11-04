@@ -4193,3 +4193,28 @@ three-face orbit in the earlier path gave
 `164441394041669509962041015625/604462909807314587353088`
 before orbit and checkerboard weighting. The five-orbit subtotal
 and full-workload performance comparison remain pending.
+
+#### Larger-core tree and directed frame moments
+
+The streamed join passed the first two-face orbit control exactly.
+It reproduced `999693567199179931640625/9223372036854775808`
+before orbit and checkerboard weighting.
+
+The `--larger-core-trees` census chooses a spanning tree with
+every unprotected or shared curvature link fixed. Each remaining
+live directed link occurs in one face. At most one direction of
+each geometric frame edge remains live. Nine four-face orbits
+then have live-link counts (2,2,1,1) by face, and the tenth has
+(2,1,1,1). The six-face orbit has (2,2,2,2,1,1). Two, one,
+and four live links respectively have their reverse directed
+link fixed by the tree.
+
+The frame moment replay now specifies the moment of each directed
+anchor separately. A live quadratic probe can coexist with a
+fixed identity at the reverse anchor. Summing either chiral
+diagonal restores the ordinary Haar moment at the live anchor.
+Eight action traces and eight source traces passed exactly.
+Independent direct identity evaluations checked the action
+tensor when both anchors are fixed. These controls establish
+the local inputs for the larger-core join. Its full contraction
+remains open.

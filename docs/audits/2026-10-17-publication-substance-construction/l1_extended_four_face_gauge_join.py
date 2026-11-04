@@ -2,11 +2,11 @@
 from argparse import ArgumentParser
 from collections import Counter, defaultdict
 from fractions import Fraction
-from itertools import product
+from itertools import combinations, product
 from math import factorial
 
 from l1_direct_b_haar import R, add, scale
-from l1_extended_mixed_center_census import EVEN, curvature_boundary, orbits, swap_patterns
+from l1_extended_mixed_center_census import EVEN, curvature_boundary, orbits, swap_patterns, words_with_mixed_count
 from l1_extended_mixed_center_gamma import COMPONENTS, gamma_block
 from l1_extended_mixed_curvature_core import PAIRS, PAIR_INDEX, face_tensor
 from l1_extended_mixed_frame_moment import SCALE
@@ -47,6 +47,47 @@ def geometry(pattern, faces, protected):
         pure[center].append((axis, face, (x, axis)))
     assert sorted(map(len, pure.values())) == [2, 2]
     return mixed, pure, tree, live
+
+
+def larger_core_tree(faces, protected):
+    incidence = Counter(edge for edges in faces.values() for edge in edges)
+    links = set(incidence)
+    vertices = {v for x, a in links for v in (x, x ^ (1 << a))}
+    rank = len(links) - len(vertices) + 1
+    eligible = sorted(edge for edge in links & protected if incidence[edge] == 1)
+    best = None
+    for candidates in combinations(eligible, rank):
+        live = set(candidates)
+        if any((x ^ (1 << a), a) in live for x, a in live):
+            continue
+        loads = tuple(sorted((len(edges & live) for edges in faces.values()), reverse=True))
+        if best is not None and loads >= best[0]:
+            continue
+        tree = links - live
+        reached = {min(vertices)}
+        for _ in vertices:
+            for x, a in tree:
+                y = x ^ (1 << a)
+                if x in reached or y in reached:
+                    reached.update((x, y))
+        if reached == vertices:
+            best = loads, tree, live
+    assert best is not None
+    return best
+
+
+def verify_larger_core_trees():
+    counts = Counter()
+    for pattern, _ in orbits(words_with_mixed_count(3)):
+        faces, protected = curvature_boundary(pattern)
+        if len(faces) not in (4, 6):
+            continue
+        loads, tree, live = larger_core_tree(faces, protected)
+        paired = sum((x ^ (1 << a), a) in tree for x, a in live)
+        counts[len(faces), loads, paired] += 1
+    assert counts == {(4, (2, 2, 1, 1), 2): 9, (4, (2, 1, 1, 1), 1): 1,
+                      (6, (2, 2, 2, 2, 1, 1), 4): 1}
+    print("larger-core tree loads", dict(counts), flush=True)
 
 
 def pure_factor(faces, tree, live, probe, items, table):
@@ -236,7 +277,11 @@ def main():
     mode.add_argument("--probe-classes", action="store_true")
     parser.add_argument("--orbit", type=int, choices=range(3))
     parser.add_argument("--source", action="store_true")
+    parser.add_argument("--larger-core-trees", action="store_true")
     args = parser.parse_args()
+    if args.larger_core_trees:
+        verify_larger_core_trees()
+        return
     common = summed_fourth(1)
     table = pure_table()
     source_table = pure_table(True) if args.source else None

@@ -70,28 +70,59 @@ def anchored(anchor, labels, probe, source_label=None):
 
 def frame_edge(labels, protected_anchor, probe):
     """Return the joint tensor at scale 192² times the raw frame convention."""
+    probes = tuple(probe if anchor == protected_anchor else () for anchor in (0, 1))
+    return frame_edge_moments(labels, probes)
+
+
+def frame_edge_moments(labels, probes):
+    """Per-anchor moments: () for Haar, None for identity, pair for a probe."""
     terms = []
-    # A quadratic probe leaves even frame count on each directed link.
-    for n in range(0, len(labels) + 1, 2):
+    # A Haar anchor forces its allocation to be even. With both
+    # anchors fixed, the identity evaluation also keeps odd splits.
+    step = 1 if probes == (None, None) else 2
+    for n in range(0, len(labels) + 1, step):
         for left in combinations(range(len(labels)), n):
             a = tuple(labels[i] for i in left)
             b = tuple(labels[i] for i in range(len(labels)) if i not in left)
-            terms.append(wedge(anchored(0, a, probe if protected_anchor == 0 else ()),
-                               anchored(1, b, probe if protected_anchor == 1 else ())))
+            terms.append(wedge(anchored(0, a, probes[0]), anchored(1, b, probes[1])))
     return add(*terms)
 
 
 def source_edge(labels, protected_anchor, probe, source_anchor):
+    probes = tuple(probe if anchor == protected_anchor else () for anchor in (0, 1))
+    return source_edge_moments(labels, probes, source_anchor)
+
+
+def source_edge_moments(labels, probes, source_anchor):
     """Two action frames and an outgoing quadratic source on this edge."""
     assert len(labels) == 2
     terms = []
-    for action_anchor, gamma in product(range(2), range(4)):
-        blocks = [anchored(anchor, labels if anchor == action_anchor else (),
-                           probe if anchor == protected_anchor else (),
-                           gamma if anchor == source_anchor else None)
-                  for anchor in (0, 1)]
-        terms.append(wedge(*blocks))
+    step = 1 if probes == (None, None) else 2
+    for n in range(0, 3, step):
+        for indices in combinations(range(2), n):
+            left = tuple(labels[i] for i in indices)
+            right = tuple(labels[i] for i in range(2) if i not in indices)
+            for gamma in range(4):
+                terms.append(wedge(
+                    anchored(0, left, probes[0], gamma if source_anchor == 0 else None),
+                    anchored(1, right, probes[1], gamma if source_anchor == 1 else None),
+                ))
     return add(*terms)
+
+
+def check_anchor_traces():
+    for labels, live, chirality in product(((0, 1), (0, 0, 1, 1)), range(2), range(2)):
+        diag = range(4 * chirality, 4 * chirality + 4)
+        probes = [(None, (i, i)) if live else ((i, i), None) for i in diag]
+        result = add(*(frame_edge_moments(labels, pair) for pair in probes))
+        reference = frame_edge(labels, 1 - live, None)
+        assert result == reference
+    for live, endpoint, chirality in product(range(2), repeat=3):
+        diag = range(4 * chirality, 4 * chirality + 4)
+        probes = [(None, (i, i)) if live else ((i, i), None) for i in diag]
+        trace = add(*(source_edge_moments((0, 1), pair, endpoint) for pair in probes))
+        assert trace == source_edge((0, 1), 1 - live, None, endpoint)
+    print("eight action and eight source fixed-anchor probe traces passed", flush=True)
 
 
 def check_source_norm():
