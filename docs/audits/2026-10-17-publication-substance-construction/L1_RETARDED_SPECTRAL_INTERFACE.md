@@ -2559,3 +2559,17 @@ axis orders, eight separated upper pairs, and 16 low/upper
 pairs. Restoring both source orders for distinct sites gives
 64 ordered contributions. The low/upper family is the remaining
 sum for this fixed action word. The census covers this word only.
+
+Independent review accepted the separated upper signed sum at
+`af10b752f`. It reproduced the coverage and normalization,
+checked all proportional reuses against the exact columns,
+and verified the modified rotation and chirality symmetries.
+
+The [low/upper source replay](l1_extended_source_low_upper.py)
+uses the tree-fixed outgoing axis-3 link at the low source.
+It checks both upper positions and both choices of upper axis-2
+link. Each case gives 504 exterior masks. All diagonal
+curvature channels coincide within each case and all
+off-diagonal channels vanish. The 288 additional masks must
+be tested against the lower tensors. The lower and final
+signed joins remain in progress.
