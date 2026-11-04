@@ -4837,3 +4837,19 @@ The separate all-protected normalization run for [8,13) also exited
 zero. Independent reduction matched the fused rows 8–11, the
 pure-upper source run's normalization for orbit 12, and the reported
 weighted subtotal `132525894456351369226494140625/295147905179352825856`.
+
+#### Four-face orbit 2 normalization and source
+
+The `--full-orbit 2 --retained-source --integer-gamma` replay exited
+zero, giving normalization
+`458870752071894957802734375/1180591620717411303424` and retained
+source `−14070103247269059697265625/9223372036854775808` per
+representative. The four-only orbit 2 deletion rows match faces
+`(3,2,3)`, `(3,1,3)`, `(15,1,3)`, and `(15,1,2)`. They sum to
+`−81305170921668603515625/144115188075855872`.
+Independent receipt review verified the mapping and the weight of
+192 words per checkerboard. Across both checkerboards, normalization
+is `1376612256215684873408203125/9223372036854775808` and full
+numerator is `−57820902558767550966796875/72057594037927936`.
+This is the first completed full orbit on the opt-in integer path.
+The receipt review did not rerun the orbit on the reference path.
