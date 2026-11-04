@@ -10,7 +10,7 @@ from l1_extended_four_face_gauge_join import IDENTITY, dot, dual_mixed, mixed_ro
 from l1_extended_mixed_center_census import (
     EVEN, curvature_boundary, orbits, swap_patterns, words_with_mixed_count,
 )
-from l1_extended_mixed_center_gamma import COMPONENTS, gamma_block, opposite_center
+from l1_extended_mixed_center_gamma import COMPONENTS, gamma_block, opposite_center, opposite_source
 from l1_extended_mixed_curvature_core import PAIRS, face_tensor
 from l1_extended_mixed_frame_moment import SCALE
 from l1_extended_opposed_source import summed_fourth
@@ -24,9 +24,10 @@ def upper_tensor(pure, positions, probe, source):
     if pure:
         tensor = summed_protected_source if source else protected_center
         return tensor((probe, None) if positions == (1, 2) else (None, probe))
-    assert not source
     live, fixed = positions
     probes = tuple(probe if i == live else None for i in (1, 2, 3))
+    if source:
+        return add(*(opposite_source(removed, probes, fixed=(fixed,)) for removed in (1, 3)))
     return opposite_center(probes, fixed=(fixed,))
 
 
@@ -56,6 +57,9 @@ def upper_factor(pattern, face, edges, protected, reverse, source=False):
     degree = sum(2 * sum(a in plane for plane in planes) for _, a in upper)
     divisor = SCALE**4 * 4**degree * 96**((8-degree)//2) * 8**(8-degree)
     divisor *= 48 * factorial(4) if p == q else 48**2 * factorial(2)**2
+    if source:
+        adjustment = -2 * (factorial(4) // factorial(2) if p == q else 48 * factorial(2))
+        rows = {key: scale(poly, adjustment) for key, poly in rows.items()}
     return center, sites, rows, divisor
 
 
@@ -105,36 +109,46 @@ def coefficient(pattern, faces, protected, base, reverse=False, source=False):
     remote_dual = dual_mixed(keep, source_env, first, upper_sites)
     remote = close(left[2], right[2], remote_dual)
     # A source pair replaces two of the four slots at exactly one upper center.
-    upper = -24 * (close(changed[0], right[2], dual) + close(left[2], changed[1], dual))
+    upper = close(changed[0], right[2], dual) + close(left[2], changed[1], dual)
     return normal, Fraction(remote, 6 * divisor), Fraction(upper, 6 * divisor)
 
 
-def main(control, reverse, source):
+def main(control, reverse, source, orbit):
     words = swap_patterns() if control else words_with_mixed_count(3)
     base = cache(gamma_block(None, None, summed_fourth(1)))
     total = Fraction()
-    count = population = 0
+    count = population = eligible = 0
     remote = upper = Fraction()
     for pattern, multiplicity in orbits(words):
         faces, protected = curvature_boundary(pattern)
         if len(faces) != 2 or len(set.union(*faces.values()) - protected) != 1:
+            continue
+        index = eligible
+        eligible += 1
+        if orbit is not None and index != orbit:
             continue
         result = coefficient(pattern, faces, protected, base, reverse, source)
         if source:
             result, remote_row, upper_row = result
             remote += 2 * multiplicity * remote_row
             upper += 2 * multiplicity * upper_row
-            print("source orbit", count, multiplicity, remote_row, upper_row, flush=True)
-        print(count, multiplicity, result, flush=True)
+            print("source orbit", index, multiplicity, remote_row, upper_row, flush=True)
+        print(index, multiplicity, result, flush=True)
         total += 2 * multiplicity * result
         count += 1
         population += multiplicity
-    assert (count, population) == ((3, 576) if control else (80, 15072))
+    expected_count, expected_population = (3, 576) if control else (80, 15072)
+    assert eligible == expected_count
+    if orbit is None:
+        assert (count, population) == (expected_count, expected_population)
+    else:
+        assert count == 1
     print("candidate normalization, both checkerboards", total, flush=True)
     if source:
         print("candidate retained source, both checkerboards", remote, upper, flush=True)
     if control:
-        expected = Fraction(8997242104792619384765625, 72057594037927936)
+        expected = (Fraction(8997242104792619384765625, 72057594037927936)
+                    / (3 if orbit is not None else 1))
         assert total == expected, f"tree control differs from fused control by {total - expected}"
 
 
@@ -143,7 +157,10 @@ if __name__ == "__main__":
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--control", action="store_true", help="compare to the corrected fused subtotal (default)")
     mode.add_argument("--candidate", action="store_true", help="emit provisional three-mixed orbit values")
+    mode.add_argument("--candidate-source", action="store_true", help="emit provisional three-mixed retained-source values")
     mode.add_argument("--control-source", action="store_true", help="replay the two-mixed retained-source controls")
     parser.add_argument("--reverse-upper", action="store_true")
+    parser.add_argument("--orbit", type=int, help="evaluate a single numbered orbit")
     args = parser.parse_args()
-    main(not args.candidate, args.reverse_upper, args.control_source)
+    main(not (args.candidate or args.candidate_source), args.reverse_upper,
+         args.control_source or args.candidate_source, args.orbit)

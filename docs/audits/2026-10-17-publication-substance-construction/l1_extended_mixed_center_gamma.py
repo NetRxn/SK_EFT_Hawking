@@ -5,9 +5,12 @@ from functools import cache
 from itertools import combinations_with_replacement, product
 
 from l1_direct_b_haar import add, scale, wedge
-from l1_extended_mixed_frame_moment import SCALE, frame_edge
+from l1_extended_mixed_frame_moment import SCALE, anchored, frame_edge, source_edge as probed_source_edge
 from l1_extended_opposed_source import PAIRS, summed_fourth
-from l1_extended_two_mixed_centers import mixed_center, remap, second_channels, second_sum
+from l1_extended_two_mixed_centers import (
+    mixed_center, mixed_source_center, remap, second_channels, second_sum,
+    source_edge, source_only,
+)
 from l1_normalization_opposed_fourth import L, tuples
 
 COMPONENTS = tuple(combinations_with_replacement(range(6), 2))
@@ -98,6 +101,66 @@ def opposite_edge(site, probes):
     else:
         table = {g: add(*(frame_edge(g, 1, probe) for probe in probes)) for g in labels}
     return {g: remap(poly, (0, site)) for g, poly in table.items()}
+
+
+@cache
+def opposite_source_edge(site, probes):
+    if site == 2:
+        if probes is None:
+            return {g: add(*(source_edge(1, endpoint)[g] for endpoint in range(2)))
+                    for g in PAIRS}
+        return {g: remap(add(*(probed_source_edge(g, 1, probe, endpoint)
+                               for probe in probes for endpoint in range(2))), (0, site))
+                for g in PAIRS}
+
+    if probes is None:
+        return remap(add(source_only(0), source_only(1)), (0, site))
+    terms = []
+    for probe, endpoint, gamma in product(probes, range(2), range(4)):
+        first = anchored(0, (), (), gamma if endpoint == 0 else None)
+        last = anchored(1, (), probe, gamma if endpoint == 1 else None)
+        terms.append(wedge(first, last))
+    return remap(add(*terms), (0, site))
+
+
+def opposite_source(removed, probes, *, fixed=()):
+    """Replace the plane containing the given exclusive slot by a source pair."""
+    assert removed in (1, 3) and all(probes[i - 1] is None for i in fixed)
+    slots = tuple((p,) if p is not None or i in fixed else None
+                  for i, p in enumerate(probes, 1))
+    return opposite_source_tensor(removed, slots)
+
+
+def opposite_source_tensor(removed, slots):
+    survivor = 4 - removed
+    common = opposite_source_edge(2, slots[1])
+    other = opposite_edge(survivor, slots[survivor - 1])
+    source = opposite_source_edge(removed, slots[removed - 1])
+    retained = add(*(scale(wedge(common[a], other[b]), weight)
+                     for (a, b), weight in peeled_channels().items()))
+    return {mask: value for mask, value in wedge(retained, source).items()
+            if mask & 255 == 255}
+
+
+def verify_opposite_source():
+    for removed, protected in product((1, 3), ((1, 3), (1, 2), (2, 3))):
+        reference = add(*(mixed_source_center(removed, a, b)
+                          for a, b in product(range(2), repeat=2)))
+        degree = sum(4 if i == 2 else 2 for i in protected)
+        raw_scale = 96**(degree // 2) * 8**degree
+        probe_scale = SCALE**(2 * len(protected)) * 4**degree
+        for chirality in (0, 1):
+            diagonal = tuple((i, i) for i in range(4 * chirality, 4 * chirality + 4))
+            slots = tuple(diagonal if i in protected else None for i in (1, 2, 3))
+            trace = opposite_source_tensor(removed, slots)
+            assert scale(trace, raw_scale) == scale(reference, probe_scale)
+        live, fixed = protected
+        probes = tuple((0, 0) if i == live else None for i in (1, 2, 3))
+        row = opposite_source(removed, probes, fixed=(fixed,))
+        assert row and all(tuple(((mask >> (8*i)) & 255).bit_count() for i in range(4))
+                           == (8, 2, 4, 2) for mask in row)
+        print("removed slot", removed, "protected slots", protected,
+              "both chiral source traces passed", flush=True)
 
 
 def verify_opposite_geometry():
@@ -212,8 +275,13 @@ def main():
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
-    parser.add_argument("--opposite-center", action="store_true")
-    if parser.parse_args().opposite_center:
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--opposite-center", action="store_true")
+    mode.add_argument("--opposite-source", action="store_true")
+    args = parser.parse_args()
+    if args.opposite_source:
+        verify_opposite_source()
+    elif args.opposite_center:
         verify_opposite()
     else:
         main()

@@ -3971,3 +3971,38 @@ center at a time. The upper replacement carries `−2 × 4!/2!`,
 and the remote boundary already carries the corresponding source
 weights. Both source subtotals are divided by six for a fixed
 shear. The source replays are pending.
+
+#### Mixed upper-center retained-source construction
+
+When a source pair replaces a peeled plane at a mixed upper
+center, the surviving exclusive edge keeps its second action
+moment. The common edge carries two action slots and a quadratic
+source, and the removed exclusive edge carries a quadratic source
+alone. Both source endpoints are summed on each source edge. The
+probe and fixed-link branches retain the passive anchor convention,
+and the unprobed branches use the existing independent Haar
+tensors. Independent review checked the frame scales and exterior
+signs. The removed peeled moment and its multiplicity give the
+signed adjustment `−2 × 48 × 2!` per mixed upper replacement.
+
+The `--opposite-source` replay compares chiral traces against
+the existing unprobed source tensor for both removed slots and
+all three protected-slot layouts. The tree join accepts the
+resulting mixed upper tensors through `--candidate-source`.
+The `--orbit` selector allows a focused comparison while the
+default enumerates the whole selected family.
+
+The first corrected two-mixed tree source control gives the
+fixed-shear representative values
+`−101003861826116455078125/288230376151711744` for the remote
+insertions and `−656389069332207275390625/4611686018427387904`
+for the upper insertions before orbit and checkerboard weighting.
+These are provisional pending the corrected fused source comparisons.
+
+All twelve chiral trace checks passed, as did the six
+one-live/one-fixed exterior-degree checks. The two-mixed tree
+source replay reproduced both representative values in all
+three orbits. With orbit and checkerboard weights, the provisional
+remote and upper subtotals are respectively
+`−909034756435048095703125/2251799813685248` and
+`−5907501623989865478515625/36028797018963968`.
