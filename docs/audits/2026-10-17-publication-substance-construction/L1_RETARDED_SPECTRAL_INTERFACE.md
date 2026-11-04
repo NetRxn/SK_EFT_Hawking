@@ -2008,3 +2008,20 @@ Of 24 distinct plaquettes, the counts with one through four
 live ports are 2, 4, 2 and 16. A separate curvature-only
 projection at (2,0) couples four incident faces. These two
 patches are being evaluated before assembly of the motif.
+
+The [two-link strip replay](l1_extended_overlap_strip.py)
+projects both remaining shared links. It retains four
+longitudinal coordinate legs, two chiral curvature vector
+indices and the quadratic frame coordinates. Each of the
+four chirality blocks has 2,304 nonzero rows. The
+same-chirality blocks have 76,608 entries each and the
+opposite-chirality blocks have 36,864 each. The largest
+row holds 70 entries. These signed integers have denominator
+48² before the frame exterior tensor is joined.
+
+For the separate four-face link, the replay fixes the other
+boundary links to identity except for four coordinate unit
+values of the retained link (6,0). The exact projection
+has 276 nonzero vector components over denominator 48.
+This checks one family of boundary slices. The complete
+four-face tensor and full motif contraction remain open.
