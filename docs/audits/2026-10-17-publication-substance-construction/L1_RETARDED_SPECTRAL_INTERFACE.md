@@ -2390,3 +2390,11 @@ of the pinned column still connect all four strips. The other
 column has all four constraints. Exhausting all 4,096 coordinate
 quadruples confirms the local Haar rule. Exactly 770 of the
 35,084 representatives survive this necessary condition.
+
+The unpruned kernel independently checked excluded signature
+(00101000,00000000) at coordinate pairs (0,0),(0,0).
+All 900,909 exterior pairs give a zero gauge block. The
+opposite signature also gives zero. The excluded even
+signature has strip parities (1,1,0,0), which disagree at
+unfixed nodes. This control does not impose a constraint
+at the pinned temporal root.
