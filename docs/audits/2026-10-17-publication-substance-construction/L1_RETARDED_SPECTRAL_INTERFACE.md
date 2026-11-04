@@ -5847,3 +5847,15 @@ the repository Python environment to reproduce the complete zero
 subtotal. Independent source review and a fresh run without
 scratch imports confirmed exact agreement of the cached and
 direct B maps at all eight coordinates.
+
+The first signed source-supported batch takes the first 16
+survivors in ascending coordinate order
+`(q51,q71,q73,q153,q53,q133,q151)`. The scratch receipt prints
+each tuple in order `(q51,q53,q71,q73,q133,q151,q153)`.
+Independent review confirmed 16 distinct tuples, exact empty
+signed maps after source absorption for all 16, and zero capped
+or timed-out evaluations. Six maps vanish when sites 13 and 7
+close, and ten at site 15. The exact batch subtotal is zero.
+The 1.67-second evaluation reused both environments after factor
+assembly. The next signed ranges can reuse lower blocks and
+upper connector contractions across repeated coordinates.
