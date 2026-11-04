@@ -2641,3 +2641,14 @@ same-site cross source. This is a lower bound on structural
 support, prior to signed contraction. The next pilot measures
 frontier growth by summing site degrees and edge parities as
 soon as the contributing centers have been processed.
+
+The [center frontier pilot](l1_extended_center_frontier.cpp)
+keeps partial site degrees, directed curvature parity and
+frame-edge support and parity. It aggregates identical states
+after each center. The first three steps retain 208, 10,312,
+and 647,597 states. None has a closed site or edge constraint.
+The fourth step reaches the one-million-state cap after
+2,749,529 attempted joins. This measures the cost of retaining
+complete center labels even in the support-only calculation.
+The signed construction needs earlier link and exterior
+elimination. The cutoff gives no bound on the physical result.
