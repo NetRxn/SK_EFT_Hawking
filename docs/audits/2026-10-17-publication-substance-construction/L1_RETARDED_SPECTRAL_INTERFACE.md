@@ -3077,3 +3077,31 @@ reproduced the census and both totals.
 These totals already include the homogeneous global checkerboards.
 The other homogeneous layer patterns are separate. Mixed planes
 within a center and general center counts remain open.
+
+### Two centers with mixed curvature planes
+
+The [two-center replay](l1_extended_two_mixed_centers.py) starts from
+the even checkerboard with frame axes (2,3). At sites 0 and 9 it
+replaces two of the four vertices by vertices with frame axes (0,2).
+The replacements exchange passive endpoint incidences and preserve
+the required degree at every site. All ten curvature faces peel
+with both directed anchors of every frame edge protected.
+
+At each changed center the common frame axis has four factors and
+the other axes have two each. The replay uses the anchor-summed
+fourth and second moments and two independent curvature second
+moments. It retains 84 local exterior coefficients. A site mask
+closes only after its final incident tensor, with its full
+eight-generator block removed after saturation. The all-homogeneous
+control reproduces the previously checked exact normalization.
+
+Independent review reproduced the representative coefficient
+`123512167576473721435546875/9223372036854775808`, including the
+`(2!)²` divisor at each changed center. Axis permutations and
+translations preserve the measure and coefficient because the
+plane multiplicities are even. The replay enumerates 192 distinct
+images, giving normalization contribution
+`370536502729421164306640625/144115188075855872`. This orbit has
+two planes at two centers and is disjoint from the one-plane-per-center
+sector. Its source numerator and the other mixed-center words
+remain open.
