@@ -2054,3 +2054,12 @@ identity-slice calculation also retains the mixed coordinates
 of (6,0): 408 additional terms supplement the 276 equal-coordinate
 terms. Independent review of the full tensor is pending.
 The complete motif still needs the remaining boundary joins.
+
+The [exact rank check](l1_extended_overlap_four_face_rank.py)
+takes the row dump from the C++ replay. Chirality partitions
+the column support into eight blocks. Each same-chirality
+block has rank 60 and each of the six two-plus-two blocks
+has rank 36. Their disjoint column supports give total rank
+336. The next projection joins the retained quadratic (6,0)
+leg to both remaining occurrences in the (4,0,1) and (6,0,1)
+plaquettes before applying its fourth moment.
