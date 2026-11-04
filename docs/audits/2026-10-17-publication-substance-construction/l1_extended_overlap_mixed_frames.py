@@ -73,7 +73,8 @@ if __name__=='__main__':
     for mode,data in [('unprojected',frame),('projected',rows)]:
         nnz=sum(len({k[:3] for k in row}) for row in data.values())
         print(mode,'rows',len(data),'nnz',nnz,'boundary/rank',rank(data),file=sys.stderr,flush=True)
-    for (i,j),row in sorted(rows.items()):
+    emitted = frame if "--raw" in sys.argv[1:] else rows
+    for (i,j),row in sorted(emitted.items()):
         for a,b,m in sorted({key[:3] for key in row}):
             assert all(((m>>sh)&255).bit_count()==d for sh,d in ((0,3),(8,3),(16,1),(24,1)))
             print(i,j,a,b,m,row.get((a,b,m,0),0),row.get((a,b,m,1),0))

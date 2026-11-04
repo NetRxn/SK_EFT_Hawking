@@ -2832,3 +2832,48 @@ provides a signed end-to-end control for an unrestricted evaluator.
 Independent review also reproduced a mixed-phase slice with 432 purely
 imaginary outputs. It checked the positive exterior interleaving sign
 and the combined integer scale `48² × 4⁸`.
+
+### Moving the mixed-link Haar map across exterior closure
+
+The lower-column exterior map acts at fixed shared-link pair and is
+linear over Gaussian integers. The fourth Haar moment mixes only the
+shared-link pair, so the two maps commute. This lets the replay close
+the entire lower exterior boundary in raw coordinates and apply the
+Haar map afterward, with the same factor of 48 as early projection.
+It also works when one lower half is replaced by the separated-source
+tensor. These are lower-column checks. The remaining curvature and
+other columns still enter the full numerator and normalization.
+
+From this directory, generate and compare the two orders:
+
+```sh
+mkdir -p /tmp/l1-frame-close
+work=/tmp/l1-frame-close
+python l1_extended_overlap_lower_half_dump.py "$work"
+c++ -std=c++17 -O3 l1_extended_overlap_lower_join.cpp -o "$work/join"
+python l1_extended_overlap_mixed_frames.py --raw |
+    awk 'NF==7 && $1 ~ /^[0-9]+$/' > "$work/raw.rows"
+python l1_extended_overlap_mixed_frames.py |
+    awk 'NF==7 && $1 ~ /^[0-9]+$/' > "$work/projected.rows"
+for mode in raw projected; do
+    "$work/join" "$work/half0.rows" "$work/half1.rows" "$work/$mode.rows" > "$work/$mode.closed"
+done
+python l1_extended_overlap_closed_control.py "$work/raw.closed" "$work/projected.closed"
+```
+
+For the separated-source check, regenerate the halves in a separate
+directory with `--separated-half 0` and use the same raw and projected
+mixed-frame inputs.
+
+The base run matched all 2,321,664 signed coefficients in 36 groups.
+Independent review checked the raw keys and compared the late projection
+against its separately generated early-projection reference
+(`3f15a76fc3ae9af4f3340cfc14626feebee2839c0fb25ead9cf2750ee37bf702`).
+The raw export switch also reproduced the exact input used in the run.
+
+With the separated-source replacement at half 0, both orders again
+matched all 2,321,664 coefficients across 36 groups. Independent
+review matched the raw-derived result to the known projected source
+column and checked that only the intended half changed. This supplies
+a full-mask source-column control for the next extension across
+action-word sectors.
