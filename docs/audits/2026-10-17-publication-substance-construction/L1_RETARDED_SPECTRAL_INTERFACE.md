@@ -3040,3 +3040,40 @@ the complete homogeneous opposed family:
 The four source offsets contribute equally in this family. Other
 curvature-plane assignments and center multiplicities still enter the
 unrestricted lattice sums.
+
+### Mixed curvature planes on the two checkerboards
+
+The [mixed-plane cycle replay](l1_extended_mixed_plane.py) sums the
+sector with four action vertices at each active checkerboard site and
+a single curvature plane per site. It includes every frame-anchor
+assignment for those vertices. The two complementary frame
+directions at each active site give two incident edges. Saturation
+requires exactly two incoming frame edges at each passive site.
+The enumeration gives 2,970 plane assignments per checkerboard.
+
+Every face has a directed link based at its own active site that is
+private to its curvature factor and outside the protected frame
+links. A face based at another active site can reach that link
+neither at its base nor after one step to a passive site. This
+justifies the independent Haar reduction for all 2,970 assignments.
+The frame incidence graph is a union of even cycles. A transfer
+matrix retains the four-generator mask on each passive boundary.
+Its sign wedges the preceding outgoing mask with the next incoming
+mask. Closing each cycle by a trace gives the saturated coefficient.
+
+For a source replacement at one center, its two frame axes must
+be 2 and 3. Distinct-center removals give odd curvature-link parity.
+The modified trace uses the two-source tensor at the affected
+center, with the two source orders and the remaining action
+factorial. The homogeneous normalization and all four source
+offsets are exact controls for the transfer implementation.
+
+For both checkerboards together the normalization is
+`894775334784931468048095703125/147573952589676412928`.
+The signed numerator is
+`-4491709929939096221923828125/144115188075855872`,
+distributed equally across offsets 0, 4, 8 and 12. Independent review
+reproduced the census and both totals.
+These totals already include the homogeneous global checkerboards.
+The other homogeneous layer patterns are separate. Mixed planes
+within a center and general center counts remain open.
