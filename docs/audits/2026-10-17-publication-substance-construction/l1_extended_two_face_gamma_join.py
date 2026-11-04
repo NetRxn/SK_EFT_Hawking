@@ -8,10 +8,10 @@ from math import factorial
 
 from l1_direct_b_haar import R, add, scale
 from l1_extended_mixed_center_census import EVEN, curvature_boundary, orbits, swap_patterns
-from l1_extended_mixed_center_gamma import COMPONENTS, gamma_tensor
+from l1_extended_mixed_center_gamma import COMPONENTS, gamma_block, gamma_tensor
 from l1_extended_mixed_curvature_core import PAIRS, PAIR_INDEX, face_tensor, face_vector
 from l1_normalization_uniform_mixed_edge import unit
-from l1_extended_mixed_frame_join import remote_center
+from l1_extended_mixed_frame_join import join_factors, remote_center
 from l1_extended_mixed_frame_moment import SCALE
 from l1_extended_opposed_source import summed_fourth
 from l1_extended_overlap_strip import HAAR
@@ -193,6 +193,130 @@ def fuse_all():
               "remote environment entries", len(environment), flush=True)
 
 
+def open_face(fused, site, axes, free, side, probe=None):
+    # The local tensor has already saturated the pure center.
+    a, b = (site ^ (1 << axis) for axis in axes)
+    rows = {}
+    for (components, local, live), poly in fused.items():
+        if probe is not None and probe != local:
+            continue
+        rows[live, components, local] = {
+            (((mask >> 8) & 255) << (8*a)) | (((mask >> 16) & 255) << (8*b)): value
+            for mask, value in poly.items()
+        }
+    return (free, (side, "components"), (side, "probe")), rows
+
+
+def build_fused(pattern, faces, protected, table):
+    free, = {e for edges in faces.values() for e in edges} - protected
+    site, = {f[0] for f in faces}
+    first, last = pattern[EVEN.index(site)]
+    axis, = set(first) & set(last)
+    a, b = sorted(set(first) ^ set(last))
+    factors = []
+    coupled = {site}
+    for side, exclusive in enumerate((a, b)):
+        face, = [f for f in faces if exclusive not in f[1:]]
+        pure, local, center = pure_links(face, faces[face], protected)
+        p, q = pattern[EVEN.index(center)]
+        assert p == q
+        coupled.add(center)
+        factors.append(open_face(fuse_face(face, pure, local, free, table),
+                                 center, p, free, side))
+    return site, (a, axis, b), coupled, factors
+
+
+def restrict_probes(factors, first, second=None):
+    return [(axes, {key: value for key, value in rows.items()
+                    if selected is None or key[2] == selected})
+            for (axes, rows), selected in zip(factors, (first, second), strict=True)]
+
+
+def sum_fused(pattern, faces, protected, table, common, probe=None, other_probe=None):
+    site, directions, coupled, factors = build_fused(pattern, faces, protected, table)
+    return close_fused(pattern, site, directions, coupled,
+                       restrict_probes(factors, probe, other_probe), common)
+
+
+def close_fused(pattern, site, directions, coupled, factors, common):
+    keep, environment = remote_environment(pattern, coupled)
+    sites = tuple(site ^ (1 << axis) for axis in directions)
+    axes, joined = join_factors(*factors)
+    assert axes == ((0, "components"), (0, "probe"), (1, "components"), (1, "probe"))
+
+    @cache
+    def dual(mask):
+        weights = {}
+        for other, value in environment.items():
+            if not mask & other:
+                required = keep ^ (mask | other)
+                sign = wedge_sign(mask, required) * wedge_sign(mask | required, other)
+                weights[required] = value * sign
+        return weights
+
+    total = R.zero
+    groups = defaultdict(list)
+    for first, p, last, q in joined:
+        groups[p, q].append((first, last))
+    for (p, q), channels in groups.items():
+        block = gamma_block(PAIRS[p], PAIRS[q], common)
+        for first, last in channels:
+            local = block(first, last)
+            mixed = {sum(((mask >> (8*i)) & 255) << (8*x)
+                         for i, x in enumerate(sites, 1)): value for mask, value in local.items()}
+            for mask, (re, im) in joined[first, p, last, q].items():
+                subtotal = sum((coefficient * mixed.get(target, R.zero)
+                                for target, coefficient in dual(mask).items()), R.zero)
+                total += R.ground_new(R.domain.dtype(re, im)) * subtotal
+    divisor = 48 * SCALE**4 * 4**4 * 96**2 * 8**4 * factorial(2)**2
+    divisor *= (48 * SCALE**4 * 4**8 * factorial(4))**2
+    for x, pairs in zip(EVEN, pattern, strict=True):
+        if x not in coupled:
+            divisor *= 96**4 * 8**8
+            for pair in set(pairs):
+                divisor *= 48 * factorial(2 * pairs.count(pair))
+    assert total.is_ground and not total.const().y
+    return Fraction(int(total.const().x), divisor), len(joined)
+
+
+def replay_fused(probe, orbit):
+    common = summed_fourth(1)
+    table = pure_table()
+    total = Fraction()
+    completed = 0
+    probes = range(len(PAIRS)) if probe is None else (probe,)
+    representatives = ((pattern, n, faces, protected)
+                       for pattern, n in orbits(swap_patterns())
+                       for faces, protected in (curvature_boundary(pattern),)
+                       if len(faces) == 2)
+    for representative, (pattern, multiplicity, faces, protected) in enumerate(representatives):
+        if orbit is not None and orbit != representative:
+            continue
+        for pair in ((0, 0), (0, 4)):
+            index = PAIR_INDEX[pair]
+            limited = {(index, index): table[index, index]}
+            value, _ = sum_fused(pattern, faces, protected, limited, common, index, index)
+            expected = {
+                (0, 0): Fraction(277641541909346923828125, 37778931862957161709568),
+                (0, 4): Fraction(243274383544921875, 75557863725914323419136),
+            }
+            assert value == expected[pair]
+        site, directions, coupled, factors = build_fused(pattern, faces, protected, table)
+        subtotal = Fraction()
+        for index in probes:
+            value, rows = close_fused(pattern, site, directions, coupled,
+                                      restrict_probes(factors, index), common)
+            print("orbit", representative, "multiplicity", multiplicity, "first probe", PAIRS[index],
+                  "rows", rows, "coefficient", value, flush=True)
+            subtotal += value
+        total += 2 * multiplicity * subtotal
+        completed += 1
+    assert completed == (3 if orbit is None else 1)
+    if probe is None:
+        label = "complete two-face normalization" if orbit is None else "selected orbit normalization"
+        print(label, "both checkerboards", total, flush=True)
+
+
 def main():
     common = summed_fourth(1)
     for pattern, multiplicity in orbits(swap_patterns()):
@@ -219,8 +343,15 @@ def main():
 
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
-    parser.add_argument("--fuse-pure-centers", action="store_true")
-    if parser.parse_args().fuse_pure_centers:
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--fuse-pure-centers", action="store_true")
+    mode.add_argument("--first-probe", type=int, choices=range(len(PAIRS)))
+    mode.add_argument("--all-probes", action="store_true")
+    parser.add_argument("--orbit", type=int, choices=range(3))
+    args = parser.parse_args()
+    if args.all_probes or args.first_probe is not None:
+        replay_fused(args.first_probe, args.orbit)
+    elif args.fuse_pure_centers:
         fuse_all()
     else:
         main()

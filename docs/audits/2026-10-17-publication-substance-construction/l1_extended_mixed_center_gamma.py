@@ -46,6 +46,28 @@ def gamma_tensor(first_probe, last_probe, first_components, last_components, com
                           face_channels(first_components), face_channels(last_components))
 
 
+def gamma_block(first_probe, last_probe, common):
+    """Share exterior products across component rows for one probe pair."""
+    first = probed_edge(first_probe, 1)
+    last = probed_edge(last_probe, 3)
+
+    @cache
+    def left_product(u, labels):
+        return wedge(first[u], common[labels])
+
+    @cache
+    def exterior(u, labels, v):
+        return {mask: value for mask, value in wedge(left_product(u, labels), last[v]).items()
+                if mask & 255 == 255}
+
+    def components(first_components, last_components):
+        return add(*(scale(exterior(u, tuple(sorted(a + b)), v), weight * other)
+                     for (a, u), weight in face_channels(first_components).items()
+                     for (b, v), other in face_channels(last_components).items()))
+
+    return components
+
+
 def verify_norm(common):
     reference = mixed_center(common)
     # Independent Haar on each face selects identical components and

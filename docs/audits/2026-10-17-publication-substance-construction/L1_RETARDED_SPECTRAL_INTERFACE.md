@@ -3412,3 +3412,28 @@ three passive sites are still needed to close against the mixed
 center and the remote environment. The next join can use this
 complement alongside the free-link Haar matrix. The mixed probes
 and residual curvature-component labels still have to be summed.
+
+### Two-face normalization with one first probe open
+
+The two fused faces can now join on the free-link fourth moment and
+the complementary masks at their common passive site. The two pure
+center blocks are already saturated. The remaining join contracts
+the mixed-center tensor and remote environment against the signed
+exterior complement. The replay recovers both fixed-probe controls
+when all six probes are restricted.
+
+With only the first mixed-center probe restricted to `(0,0)`,
+the other five probes and every gamma label are summed. Each of
+the three representatives gives 384 joined component and probe
+rows and coefficient
+`999591240231406494140625/73786976294838206464`.
+Independent review checked the exact Gaussian signs and divisor.
+The cached gamma blocks also matched the direct local evaluator
+in twelve exact comparisons.
+
+Use `--first-probe 0` for this shard, or `--all-probes` for all
+36 first-probe indices in each representative. The latter applies
+the orbit multiplicity and the factor of two for the second
+checkerboard only after all selected shards finish. The optional
+`--orbit` restricts a run to a single representative. The full
+two-face normalization and source numerator remain open.
