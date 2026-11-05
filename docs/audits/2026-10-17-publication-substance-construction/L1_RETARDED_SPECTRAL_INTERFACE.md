@@ -8087,3 +8087,18 @@ The pair adds 180 words and contributes
 `-11673324034363939437/2361183241434822606848`.
 Verified dominant coverage is 66 of 148 orbits and 6,672 of
 9,216 words.
+
+### Complete chirality pair (16,18)/(20,18)
+
+Independent review checked 256 ordered direct selectors, 16
+terminal shards and four singleton witnesses on the second pinned
+roster. The exact component subtotal is
+`-1297036003818215493/4722366482869645213696` with zero imaginary
+part and no caps. The [full receipt](l1_gamma_16_18.out.txt) has
+SHA-256 `572cf3f06afa0caa4a78f748695e0bd8c013e72ff27f3d91800eb2f7b0a746c2`.
+
+Each signed orbit contains 90 words with multiplicity nine.
+The pair adds 180 disjoint words and contributes
+`-11673324034363939437/2361183241434822606848`.
+Verified dominant coverage is 68 of 148 orbits and 6,852 of
+9,216 words.
