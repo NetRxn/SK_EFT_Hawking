@@ -7827,3 +7827,21 @@ imaginary part. The component receipt SHA-256 is
 The component's dominant orbit has multiplicity one and contains
 60 source words disjoint from the 1,008 previously accepted.
 Complete coverage is now 17 of 148 dominant orbits and 1,068 words.
+
+### Complete dominant representatives (7,4) and (7,19)
+
+Independent review checked 128 ordered exact selectors and eight
+terminal shards per representative on the original pinned roster.
+Each uses direct slices 0 and 3. The signed proper rotations map
+slice 0 to slices 1 and 2 and leave slice 3 as a singleton class.
+The reviewed weighted results have zero imaginary part. Both
+dominant orbits are singletons.
+
+| Representative | Source words | Exact contribution | Receipt byte interval | Receipt SHA-256 |
+|---|---:|---|---|---|
+| (7,4) | 60 | `378279423049817079/2361183241434822606848` | [1317, 47370) | `fe0c3fe6d3c18a5fac3c23fdac5cca7634eaab0b726c56cf5fd466e5c2c14269` |
+| (7,19) | 15 | `4055515893230966199/9444732965739290427392` | [1319, 47432) | `534f14cfe32f65a449354d5345b239b24c9cfc287f066d889b1d9202bac92b70` |
+
+The 75 signed source words are disjoint from each other and the
+1,068 previously accepted words. Verified dominant coverage is
+19 of 148 orbits and 1,143 of 9,216 words.
