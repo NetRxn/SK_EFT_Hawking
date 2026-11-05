@@ -79,7 +79,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   Finding1.4's namespace repair retains the exact D3 regression and
   proves a journalled external-import seed still fails the existing
   declaration assertion. Main and full-tree qualification remain open.
-  The broader scoped run is red:6,783 passed,45 failed,8 skipped
+  The earlier scoped run is red:6,783 passed,45 failed,8 skipped
   and92 deselected. Its [record and failure identities](../../../papers/AutomatedReviews/2026-11-05-publication-l1-positive-speed/SCOPED_REVIEW.md)
   preserve full qualification debt. Next classify failures against
   the exact main base and fix accepted blockers; qualify a frozen
@@ -321,9 +321,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   and [free-torus30 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-free-torus-four-deviation-population), plus the
   [independently reviewed two-square8 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-two-square-four-deviation-population), plus the
   [both-source square/free-torus pair](L1_RETARDED_SPECTRAL_INTERFACE.md#both-sources-on-one-square-with-a-free-torus), and the
-  [two-square protected-torus class](L1_RETARDED_SPECTRAL_INTERFACE.md#two-squares-and-a-source-bearing-protected-torus),226 of272
+  [two-square protected-torus class](L1_RETARDED_SPECTRAL_INTERFACE.md#two-squares-and-a-source-bearing-protected-torus), plus the
+  [two-source-bearing-tori class](L1_RETARDED_SPECTRAL_INTERFACE.md#two-independently-source-bearing-tori),230 of272
   words have portable accepted receipts and reviewed evaluators.
-  The46 remaining words split28 same-axis and18 mixed-axis.
+  The42 remaining words split28 same-axis and14 mixed-axis.
   Next classify these residual cores and construct the next complete
   class. Complete k4 and physical B3 matching remain open.
   The remaining residual-core classes still require construction.
@@ -766,3 +767,38 @@ The existing remediation plan B1–B8 and D12 obligations remain accepted by the
 Author repair → independent verification → existing recorded closure. A lexical decider pass, source-only acceptance, honest omission or a map update is not full scientific acceptance. Preserve the append-only finding history and use existing closure writers. Gates G4/G5/G11 and native/sourceholding/figure/notebook/charter/stage/human conditions retain their actual evidence boundaries; no new gate is created here.
 
 ROOT coordinates protected normal checkpoints for coherent accepted work, including each bundle green except final genuine human review. Scientific model units can integrate earlier when their actual checks/review and safe composition pass. Do not wait for all bundles or leave accepted publication work indefinitely isolated. The seventeen-document checkpoint and later differential corrections must be reconciled by exact preimages with local NJL/D12 and shifting frontier changes; no whole-file transplant or blind main merge.
+
+
+### Frozen qualification and incremental delivery readback
+
+The canonical bare fast suite on4b6408ce6 reports7065passed,37failed,
+8skipped and92deselected in829.43s, with a clean candidate afterward.
+The [actual verification](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4B6408_VERIFICATION.json)
+and [independent37-row disposition](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4B6408_DISPOSITION.md)
+retain every failure, source binding and next action through existing routes.
+All prior45 failing tests are present: eight now actually pass and37 still fail.
+Aggregate pass totals are not compared as an unchanged collection. The37
+failures form19 causal packages, including scientific mapping/grounding BUILD,
+prose, references, review contracts and metadata; inherited identity is not a waiver.
+
+The [canonical gate readback](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4B6408_GATE_READBACK.json)
+contains the existing producer's231 gate payloads for all21 bundles:154passed,
+30blocked,28open and19recheck. It is not a replacement evaluator or publication
+acceptance. Relative to pre-registry754, L1 G4 changes open to static passed;
+G3 changes open to blocked because the twenty parameters lack human verification.
+No gate-state change follows after71f. L1 G11 remains blocked but its blocking
+references fall from four to two, and total open findings from ten to eight.
+Its remaining blocking references are natural-parameter B3 and IMPORTS1.2.
+The graph source_hash is not a full content binding; explicit source/timing and
+payload hashes are preserved, including the untracked evidence-sidecar caveat.
+
+Existing metadata normalization from6a6cd7ee6/b8f352bd8 is independently
+reconciled against exact current D3/L2 preimages and applied through the existing
+writer, preserving every JSON field. The [composition review](../../../papers/AutomatedReviews/2026-11-05-publication-metadata-serialization/COMPOSITION_REVIEW.md)
+and58pass/1intentional-skip receipt cover the three frozen serialization
+failures. New canonical formatting findings await this fix's committed anchor
+and enforced closure; this is not a new full-suite result. Thirty-four other
+failures from the frozen receipt remain unaddressed. Preserve scientific BUILD
+and human/main acceptance while qualifying incremental delivery through the
+existing gates. IMPORTS1.2 has an independently reconciled producer repair route
+but no implementation yet; do not rebuild Formula enumeration or G4.

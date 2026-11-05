@@ -133,3 +133,23 @@ The existing writer records current1.4 fixed at06aacc0e2 after the declared
 seven-case suite passes; [closure receipt](NAMESPACE_CLOSURE.txt) is preserved.
 Residual1.2 IMPORTS,
 whole-tree/native/main and physical publication obligations remain open.
+
+
+## Frozen4b canonical qualification and current follow-through
+
+[Frozen stdout](FROZEN_4B6408_FAST.txt), [verification](FROZEN_4B6408_VERIFICATION.json)
+and [independent disposition](FROZEN_4B6408_DISPOSITION.md) preserve the actual
+bare-suite result:7065pass/37fail/8skip/92deselected,829.43s, clean source4b.
+All45 old failure IDs are present; eight actually pass,37 fail. No new failure
+ID appears, and causal/source comparisons remain distinct from identity.
+The19 repair packages retain scientific BUILD and existing routing/closure.
+The [all-bundle gate payload](FROZEN_4B6408_GATE_READBACK.json) is a direct
+canonical graph readback, not a new gate implementation. It preserves vacuous
+coverage, source/timing limits and unchanged4e53 fingerprint despite metadata
+changes; explicit commit and payload hashes remain necessary. Current L1 G11
+is blocked with two blocking references/eight open findings. Current metadata
+normalization is independently repaired after this frozen run; it does not
+rewrite the frozen37-case outcome or establish whole-tree/main acceptance.
+[IMPORTS source reconciliation](IMPORTS_RECONCILIATION.md) identifies sixteen
+missing actual calls among109 structural candidates versus93 existing edges;
+no implementation, settled specification or new gate result is asserted.

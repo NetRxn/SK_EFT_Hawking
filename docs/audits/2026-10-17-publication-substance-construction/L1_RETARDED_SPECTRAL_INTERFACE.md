@@ -8910,3 +8910,60 @@ mixed-axis. Forty-six remain, comprising28 same-axis and18 mixed-axis words.
 Construct the remaining protected-core classes. Full k4, full source/action
 ensemble and common partition normalization remain open, as do physical B3
 susceptibility/window, microscopic modes, transport and publication acceptance.
+
+
+## Two independently source-bearing tori
+
+The [portable evaluator](l1_extended_offset_witness_k4_two_protected_tori.py)
+completes mixed words243/245/257/270. Both source polynomials remain explicit
+and are jointly fixed on a two-edge acyclic forest. The residual tori have
+disjoint Haar-link and vertex sets. Their independent fifteen-branch tensors
+are combined through all225 Cartesian products into the full action/Grassmann
+factor graph; the final coefficients are not products of separate observables.
+There are seven peeled curvature pairs and J0. Actual action edges differ:
+E19 for243/245, E20 for257/270. The divisor is therefore
+`192^(2E+2) * 4^64 * 48^7 * 2^15`, including the crucial192^2 distinction.
+
+The [scientific review](l1_k4_two_protected_tori4_review.md),
+[original terminal archives](l1_k4_two_protected_tori4_receipts.jsonl) and
+[independent900-branch reduction](l1_k4_two_protected_tori4_verification.json)
+establish `1568203593478308820845/35184372088832` for243/245 and
+`16232042463041423025/8796093022208` for257/270. The mixed subtotal is
+`1633131763330474512945/17592186044416`. The independent full243 replay
+matches every branch and final raw numerator. Actual source/action covariance
+transposes the two branch indices, `15i+j` to `15j+i`; it is not an assertion
+of equal rows in the original order. Maximum intermediate size is3,952 rows.
+All whole225-branch author contractions remain below60 seconds under unchanged
+row/pair caps. Actual computed zero raw contractions are retained as results,
+not substituted for resource failures.
+
+The [portable review](l1_k4_two_protected_tori4_port_review.md) verifies six
+scientific ASTs against the accepted source, sixteen canonical imports/bindings,
+both sources, exact class census, fixed-label controls and CLI refusals.
+The [validation-attempt record](l1_k4_two_protected_tori4_portable_attempts.json)
+preserves the first ROOT timeout: that driver prepared factor tables cold and
+rebuilt them through solve inside the warm deadline. It emitted no coefficient.
+Only the scratch driver changed. The corrected
+[prepared-factor execution](l1_k4_two_protected_tori4_portable_control.json)
+and [exit](l1_k4_two_protected_tori4_portable_exit.json) reuse the actual canonical
+tables across the complete225 weighted contractions. Preparation29.391172s,
+whole warm55.894891s and parent85.775962s satisfy separate600/60/665 limits.
+The [actual full CLI](l1_k4_two_protected_tori4_full_cli.json) and
+[exit](l1_k4_two_protected_tori4_full_cli_exit.json) separately exercise
+`--word 243` in84.515449 seconds under the665-second parent limit; that total
+includes preparation and is not claimed below60 seconds.
+
+The [archive verification](l1_k4_two_protected_tori4_archive_verification.json)
+checks all twelve original stdout/stderr/exit byte streams, all900 branch
+identities, covariance, phase/fullCLI receipts and unchanged source bindings.
+The initial failed validation remains separate from successful executions.
+Evaluator SHA256:
+`6d8e93102b87f98ddea6e9fc1fe519245c6b9d993a78a783bb6161d1da5700eb`.
+
+Portable accepted coverage is now230/272 selected words:136 same-axis and94
+mixed-axis. Forty-two remain:28 same-axis and14 mixed-axis. Next construct the
+residual connected cores; the author is deriving same-axis78/80, where a
+protected square and torus share a source link that becomes identity only
+after their joint forest gauge fixing. Full k4, full source/action ensemble,
+common partition normalization, physical B3/window, microscopic modes,
+transport and publication acceptance remain open.
