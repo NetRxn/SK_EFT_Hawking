@@ -1,0 +1,65 @@
+{
+  "scope": "reviewed focused source/state adoption; no full-source-body or scientific/publication closure",
+  "files": [
+    {
+      "name": "CITATION_ADOPTION_EVIDENCE.zip",
+      "sha256": "7a48bf96ea524270770057bf440c8aba2a734b3ef90f2b1c4344b2b9f51c567d",
+      "bytes": 33130
+    },
+    {
+      "name": "CITATION_ADOPTION_EVIDENCE-manifest.json",
+      "sha256": "758b37ee7a544dacfffe687c2c474bf7e946758debf82cefacb9e0ff80a77229",
+      "bytes": 4724
+    },
+    {
+      "name": "CITATION_ADOPTION_REVIEW-archive-check.json",
+      "sha256": "3f08cf8f8de72485072678860ee20159cf571287a9267670dd67e1475129c438",
+      "bytes": 233
+    },
+    {
+      "name": "CITATION_ADOPTION_REVIEW-audit.json",
+      "sha256": "d43704742c0185a46b727546122ce6e8cb1179cd143b348fbbc24f8f14f34417",
+      "bytes": 3598
+    },
+    {
+      "name": "CITATION_ADOPTION_REVIEW-audit.py",
+      "sha256": "1cbc4955d782cd8010866f0ec3abc48e5b6cb8ca69b226efd2b61f6cace79b8d",
+      "bytes": 6358
+    },
+    {
+      "name": "CITATION_ADOPTION_REVIEW-final-readback.json",
+      "sha256": "e091499bf01e94995e72efd6b321ae68402513c97dccc630b907031a26fc9a89",
+      "bytes": 447
+    },
+    {
+      "name": "CITATION_ADOPTION_REVIEW-tests.exit",
+      "sha256": "743c7850cccfba5e53a9002663ec1ddd1079315a98bdbfdde10e6044f56abefe",
+      "bytes": 4
+    },
+    {
+      "name": "CITATION_ADOPTION_REVIEW-tests.txt",
+      "sha256": "e85b0cf43d10e96fca984acdc22f6a26f0cf5842e74c048865aa30307745d6b3",
+      "bytes": 51
+    },
+    {
+      "name": "CITATION_ADOPTION_REVIEW-verify.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "name": "CITATION_ADOPTION_REVIEW-verify.txt",
+      "sha256": "b07e69c0cf1f865dccd9a05b01a325ad5b5b859dae268dfe4a4e2e1e99b7fc1a",
+      "bytes": 113
+    },
+    {
+      "name": "CITATION_ADOPTION_REVIEW-verify.xml",
+      "sha256": "b902f543549104f0eacacabc6e30583ca168fe85606ee3782b3662cf59b7b584",
+      "bytes": 4341
+    },
+    {
+      "name": "CITATION_ADOPTION_REVIEW.md",
+      "sha256": "622eb51839b9e0e60475280843ebfac6098992402f0a8ebf8fa69054ed9687bf",
+      "bytes": 6744
+    }
+  ]
+}

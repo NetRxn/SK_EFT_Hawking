@@ -1,0 +1,90 @@
+{
+  "registry": {
+    "before": 664,
+    "after": 677,
+    "added": [
+      "Barcelo2011",
+      "CompanionCompilation",
+      "CompanionFaultTolerance",
+      "CompanionStochastic",
+      "FinazziLiberatiSindoni2012",
+      "Kitaev2006",
+      "Roehm2026TQC",
+      "RoehmD4Topological",
+      "RoehmD6FaultTolerant",
+      "RoehmD8Compilation",
+      "RoehmD9Certification",
+      "Verlinde1988",
+      "Wang2026TMDPolariton"
+    ],
+    "old_changed": [
+      "BarceloLRR2005"
+    ],
+    "removed": []
+  },
+  "internal": [
+    "CompanionCompilation",
+    "CompanionFaultTolerance",
+    "CompanionStochastic",
+    "Roehm2026TQC",
+    "RoehmD4Topological",
+    "RoehmD6FaultTolerant",
+    "RoehmD8Compilation",
+    "RoehmD9Certification"
+  ],
+  "manuscript_bodies_unchanged": true,
+  "state": {
+    "old_entries_preserved": 649,
+    "new_keys": [
+      "Barcelo2011",
+      "FinazziLiberatiSindoni2012",
+      "Kitaev2006",
+      "Verlinde1988",
+      "Wang2026TMDPolariton"
+    ],
+    "writer_script_sha256": "2982ea9585e1f7df089fce8bb172b266bc56f2a7597a7bd0ddf8df41c4b7715f",
+    "held_current_metadata_equal": true,
+    "Verlinde_metadata_only": true
+  },
+  "prepared_source_state_restored": true,
+  "full_affected_tests": {
+    "passed": 89,
+    "required_original_controls_present": [
+      "test_the_undeclared_ceiling_has_ZERO_headroom",
+      "test_seeding_AWAY_a_declaration_turns_the_check_RED",
+      "test_seeding_a_DOI_onto_a_declared_textbook_KEEPS_it_exempt",
+      "test_extract_missing_bibkeys_emits_no_orphans",
+      "test_no_missing_from_registry"
+    ],
+    "junit_sha256": "1258bfe63ba4d268515b9520971b280b4d11fd00fc6c8a50c51bf1dbd7cd3f09"
+  },
+  "derived_register": {
+    "current_bundle_usage_gap_count_own_writer_semantics": 174,
+    "all_gap_keys_listed": true,
+    "Zhao2023_current_bundle_citations": [],
+    "Rokhlin1952_current_bundle_citations": [
+      "L2"
+    ],
+    "curated_overlay_unchanged": true,
+    "limits": "Existing generator _holding uses abstract filename; metadata JSON is treated full; route uses Roehm2026 prefix rather than inprep. Current output is faithful to existing generator, not a new fidelity/body acquisition measurement. Rokhlin curated reason retains historical D2 bibitem text; current bundles column correctly L2."
+  },
+  "ratchet": {
+    "current_ceiling": 76,
+    "postcontrol_measurement": 76,
+    "zero_headroom": true
+  },
+  "head": "85a4c7275b608a70e5ba42729962f243857aa2ad",
+  "hashes": {
+    "docs/SOURCE_ACQUISITION_REGISTER.md": "b9b9609305199580e9afaceedae97188a67cdc00486c8d3509d45bad57755f78",
+    "docs/architecture/SURFACE_INVENTORY.md": "7ac84ea95e4a1e78fc5845f0fbb2b9b7b6f65f554a94462fbc236bd706868b7a",
+    "docs/primary_sources_state.json": "c629104e2915a39a6ffd27c8e2ad80d8170e9e8f2a28cf4fd5ee3187b5434d20",
+    "papers/D1/paper_draft.tex": "badd7db66a368bc0a80620e10e552e2a56d52ac0fc65f63f60b9651b6a1ee614",
+    "papers/D3/paper_draft.tex": "e60c583110b8de5884a62b67ad21aa268da718632528b178a6b519224ce4b15c",
+    "papers/D8/bibliography.bib": "709d0a92da6689ca54e331c18c6e0758582f07512fa9293e586b8e6f784dd4ab",
+    "papers/D9/paper_draft.tex": "c2514912b42cb7eb615791f4030e0dfca5f4d58b8d3ca1263e99834e930d690d",
+    "papers/E1/paper_draft.tex": "3570323f966b0bdd488c0af6de76d1e27006fdd848409c47a4412d81796996b1",
+    "src/core/citations.py": "3b42687dec73ff6d147bb8b72fae261aed285f706373f95845b74b0322b3d608",
+    "src/core/constants.py": "b91f65926d7a5190834352e757f25ebaed9b03895901acc632875e2c55f05b2d",
+    "tests/test_d5_citations.py": "c020863fedcf33c9d21527530c7108e3d2c429d7ddf31428a0bb63422f99633b"
+  }
+}

@@ -845,11 +845,15 @@ accepted complete coefficients, direct/fixed controls, independent full110
 replay, actual portable CLI and original archive. Portable coverage is234/272.
 The separate79/81 source-sharing/two-protected-tori225-branch mathematical
 design and actual evaluator source are independently accepted, including
-second gamma-slot routing and branch-role transpose. Its direct/fixed controls
-and coefficients remain unrun; it adds no accepted coefficient to that count.
-The independent delivery lane prepares the already reviewed focused citation
-repair needed by cache finding1.2; managed-worktree planner finding1.1 is fixed
-as recorded below. Use the accepted source boundary and current verification.
+second gamma-slot routing and branch-role transpose. Direct79/81 controls and
+fixed79 have independently accepted runtime receipts. Fixed81 completed with
+the same restricted coefficient; independent450-branch original-L/full-row
+reconstruction and signed branch-transpose controls passed, with ROOT receipt
+intake accepted. The bounded unrestricted79 pilot is next. None of these
+restricted controls increases the portable coefficient count.
+The independent delivery lane has adopted the reviewed focused citation repair
+needed by cache finding1.2. Managed-worktree planner finding1.1 is fixed as
+recorded below. Preserve the accepted scope and current verification.
 
 
 The [existing managed-checkout repair adoption](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/MANAGED_PATH_ADOPTION.md)
@@ -858,32 +862,39 @@ It preserves stronger G4 assertions, original containment/existence/lane control
 and the accepted tmp_path extractor isolation. The complete affected four-file
 run explicitly includes the slow extractor:106pass/2citation failures. The
 existing writer records original planner finding1.1 fixed after its complete
-declared command passes. Cache1.2 remains open:13 registry keys are missing;
-the extractor emits ten stubs and three D8 orphan keys, failing its first
-zero-stub assertion. The existing source/citation repair history (including
-f28cc370f and the separate e340 source package) must be reconciled as its next
-independent delivery dependency, rather than importing unrelated manuscripts
-or weakening assertions. ROOT owns that integration and independent source
-review is required. This later scoped repair does not rewrite frozen16fde9's
-34fail result or establish a new broad/main/publication pass.
+declared command passes. The subsequent
+[focused citation adoption](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_ADOPTION.md)
+reuses the reviewed f28 source boundary without unrelated ancestry or historical
+success rows. It repairs thirteen missing identities and retains the
+zero-stub/zero-orphan controls. Actual89 affected cases, including slow
+extraction and production seeds, pass; independent original cache1.2 Verify
+passes33 cases. Five current existing-file registrations conserve all old state
+and held bytes. The measured undeclared ceiling tightens78 to76. Cache1.2
+awaits its reviewed source commit and canonical closure writer; full-text
+fidelity, scientific BUILD and final publication remain separate. This scoped
+repair does not rewrite frozen16fde9's34fail result or establish a new broad,
+main or publication pass. The acquisition register retains inherited
+metadata/internal-routing limitations; its174 rows are not full body-debt
+coverage or a new acquisition milestone.
 
 ### Parallel assignments and remote resume inputs
 
 ROOT owns candidate integration and the primary local notebook. The scientific
-author prepares direct/fixed79 controls from the accepted
+author and independent reviewer continue79/81 controls from the accepted
 [79/81 design and scratch-source archive](l1_k4_two_protected_tori_7981_source_design.zip)
 and its [byte manifest](l1_k4_two_protected_tori_7981_source_design_manifest.json).
-This archive preserves original failed checker attempts. It establishes no
-scientific execution: direct/fixed controls precede an unrestricted pilot,
+This historical source-only archive preserves original failed checker attempts.
+It establishes no scientific execution: later runtime receipts are distinct.
+Complete independently accepted direct/fixed controls precede an unrestricted pilot,
 and independent review precedes portable coefficient acceptance. Extracted
 scratch paths must be rebound deliberately before a remote or installed run.
 The existing resource caps and all physical B3 obligations remain required.
 
-The separate delivery author prepares the focused source patch described in the
+The separate delivery author prepared the focused source patch described in the
 [citation predecessor review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_review.md).
 Its population, preimage and held-source identity evidence is preserved alongside
-that review. ROOT applies only the reviewed source scope, obtains fresh local
-state through the existing writer and measures the current ratchet before
+that review. ROOT applied only the reviewed source scope, obtained fresh local
+state through the existing writer and measured the current ratchet before
 tightening it. Historical success rows and unrelated ancestry are excluded.
 Registry resolution cannot establish full-text fidelity; Verlinde metadata
 does not supply the still-owed source body. The cache finding remains open

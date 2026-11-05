@@ -1,0 +1,29 @@
+{
+  "reviewed11_postimages_unchanged": {
+    "docs/SOURCE_ACQUISITION_REGISTER.md": "b9b9609305199580e9afaceedae97188a67cdc00486c8d3509d45bad57755f78",
+    "docs/architecture/SURFACE_INVENTORY.md": "7ac84ea95e4a1e78fc5845f0fbb2b9b7b6f65f554a94462fbc236bd706868b7a",
+    "docs/primary_sources_state.json": "c629104e2915a39a6ffd27c8e2ad80d8170e9e8f2a28cf4fd5ee3187b5434d20",
+    "papers/D1/paper_draft.tex": "badd7db66a368bc0a80620e10e552e2a56d52ac0fc65f63f60b9651b6a1ee614",
+    "papers/D3/paper_draft.tex": "e60c583110b8de5884a62b67ad21aa268da718632528b178a6b519224ce4b15c",
+    "papers/D8/bibliography.bib": "709d0a92da6689ca54e331c18c6e0758582f07512fa9293e586b8e6f784dd4ab",
+    "papers/D9/paper_draft.tex": "c2514912b42cb7eb615791f4030e0dfca5f4d58b8d3ca1263e99834e930d690d",
+    "papers/E1/paper_draft.tex": "3570323f966b0bdd488c0af6de76d1e27006fdd848409c47a4412d81796996b1",
+    "src/core/citations.py": "3b42687dec73ff6d147bb8b72fae261aed285f706373f95845b74b0322b3d608",
+    "src/core/constants.py": "b91f65926d7a5190834352e757f25ebaed9b03895901acc632875e2c55f05b2d",
+    "tests/test_d5_citations.py": "c020863fedcf33c9d21527530c7108e3d2c429d7ddf31428a0bb63422f99633b"
+  },
+  "exact_copied_evidence_files": 12,
+  "archive_entries_valid": 24,
+  "local_links_checked": 86,
+  "promoted_finding_id": "review:2026-11-05-source-register-fidelity:source_register_fidelity:1.1",
+  "promoted_finding_status": "open",
+  "original_Verify_unchanged": true,
+  "both_actual_red_and_import_failure_preserved": true,
+  "dedup_requiredrepair_ROOTowner_indirect_gate_retained": true,
+  "source_writes_tests_network": false,
+  "verdict": "ACCEPT final narrow composition",
+  "queue_sha256": "ee3567e5c009fff300111964b738a82d6edc2a33df60dbbd792fa6e56d382c1e",
+  "queue_stale_transpose_correction": "resolved; accepted450 controls only,0scalar/unrestricted,portable234unchanged",
+  "planner_finding": "queued infra4paths, no unverifiable IDs; deferred beyond non-isolated fan-out cap",
+  "review_sha256": "89b766f851031917caae42a70381346ba92a237fffa8fcb6d7330f24522b4fac"
+}
