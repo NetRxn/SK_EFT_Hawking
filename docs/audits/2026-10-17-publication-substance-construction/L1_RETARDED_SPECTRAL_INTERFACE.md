@@ -6120,3 +6120,10 @@ phase log. The second run stopped at its wall limit with
 that chunk using the same runner hash and unchanged existing
 tracked Python inputs. Its partial and later results are
 outside this verified range.
+
+A native nonempty control at index 3792 completed in a new
+receipt directory. Its 208-row signed map passed the unfactored
+control and its exact digest, primitive digest, and signed
+scale matched the independently reviewed bulk-gap receipt byte
+for byte. This extends the native command's controls to a
+nonempty B map. A closure is separate.
