@@ -50,12 +50,21 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   `review:2026-11-05-publication-l1-positive-speed:L1:1.1`
   is fixed through the existing closure writer, anchored at77aeb7091.
   Its [finding and receipts](../../../papers/AutomatedReviews/2026-11-05-publication-l1-positive-speed/L1.md)
-  retain the original physical requirements. Current G4 remains open:
+  retain the original physical requirements. Current L1 G4 remains open:
   the [coverage findings](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/infra.md)
   track L1's absent existing-registry population, mixed-case Formula
-  extraction omissions and an absent-target false pass in the
-  evaluator. The lead owns these minimal repairs through the existing
-  architecture-change and independent review process. Exact sentence
+  extraction omissions and the absent-target false pass observed in
+  the pre-integration evaluator. History reconciliation recovered the
+  already reviewed `1550f5ff1` repair and `dcb9a2c5a` evidence. Normal
+  merge `f2fca05a` restores that coherent producer/evaluator/consumer
+  and inventory package, with112 current scoped passes and three
+  passing freshness checks. Finding1.3 is canonically fixed through
+  the existing writer. Formula emission is restored, while1.2's
+  mixed-case IMPORTS edges,1.1's L1 roster and1.4's namespace scanner
+  remain open. The [reuse and current integration evidence](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/infra.md)
+  retain exact scope and both closure histories. The lead owns only
+  the residual repairs through the existing architecture-change and
+  independent review process. Exact sentence
   targets are repaired separately; no gate transition is inferred.
   Finding1.4 separately records the dependency scanner's false
   classification of the local papers namespace used by the exact
@@ -299,11 +308,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   now has all90 words independently accepted, including the other48
   completed cases. Together with the peeled86 population and the
   [portable single-square6 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-single-square-four-deviation-population)
-  and [free-torus30 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-free-torus-four-deviation-population),212 of272
+  and [free-torus30 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-free-torus-four-deviation-population), plus the
+  [independently reviewed two-square8 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-two-square-four-deviation-population),220 of272
   words have portable accepted receipts and reviewed evaluators.
-  The60 remaining words split34 same-axis and26 mixed-axis.
-  Next construct the two-square8 class without conflating its two
-  component/probe factors, then finish the other residual cores.
+  The52 remaining words split30 same-axis and22 mixed-axis.
+  Next classify these residual cores and construct the next complete
+  class. Complete k4 and physical B3 matching remain open.
   The remaining residual-core classes still require construction.
   The shared-Q and left-cache benchmarks
   retain the direct transfer route for the current workload.

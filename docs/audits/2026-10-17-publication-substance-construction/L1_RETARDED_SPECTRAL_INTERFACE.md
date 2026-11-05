@@ -8653,7 +8653,7 @@ acceptance evidence. The receipt bundle digest is
 `bb3c432d527e0ef539b378fab3f76455b72711712c3e577ccc5abbecce55792b`.
 
 Together with the separate original-kernel population below,
-212 of the 272 four-deviation words have portable accepted receipts.
+220 of the 272 four-deviation words have portable accepted receipts.
 The complete action/source ensemble, common partition coefficient
 and physical response matching remain required.
 
@@ -8769,8 +8769,62 @@ manifest. Sibling imports require no scratch files.
 Together the original-kernel90, fully peeled86, single-square6
 and free-torus30 populations cover212/272 words:130 same-axis and
 82 mixed-axis. The60 remaining words are34 same-axis and26 mixed-axis;
-their contribution is unknown, not zero. The next proposed class
-contains eight two-square entries and needs distinct component
-and probe factors for both squares. Complete k4 summation, full
+their contribution is unknown, not zero. The next subsection
+integrates eight of those entries with two independent squares.
+Complete k4 summation, full
 source/action ensemble, common partition normalization, physical
 susceptibility, microscopic mode and transport matching remain open.
+
+## Complete two-square four-deviation population
+
+The [portable two-square evaluator](l1_extended_offset_witness_k4_two_square.py)
+covers entries28,63,114,149,194,219,253,268. Each retains15 paired
+action vertices, both ordered sources and22 geometric action edges.
+The two protected squares have distinct component and probe keys;
+identifying either pair would change the contraction. Their six
+fixed edges form a forest, and both sources are off the square cores.
+The divisor is `192^(46−J) * 4^64 * 48^13 * 2^15`, with J=0 only
+for194/219 and J=1 for the other six words.
+
+The [independent scientific review](l1_k4_two_square8_review.md)
+derives the geometry and normalization and verifies direct quaternion,
+orientation, Haar and off-diagonal pruning controls. All eight
+preparations have34 distinct factor keys appearing twice and degree8
+at every site. The [eight raw receipts](l1_k4_two_square8_receipts.jsonl)
+have terminal exit zero and empty stderr. The
+[independent reduction](l1_k4_two_square8_verification.json) gives
+same-axis subtotal `13408159967615306205/2199023255552` and mixed-axis
+subtotal `288435790010965434291/140737488355328`. Restricted shear
+is `569686447916414162829/70368744177664`. All four covariance pairs
+agree exactly; maximum intermediate size is16,448 rows within the
+unchanged caps. The eight-word receipt-bundle digest is
+`8a7e4005b36a7321fc260fe66a0714355e9ae74b1dd4fc21189e98302087fd67`.
+
+The [portable review](l1_k4_two_square_port_review.md) confirms that
+the six scientific function ASTs equal the accepted scratch source,
+all imports resolve to tracked siblings, fixed-label controls match,
+and default/invalid CLI inputs behave as declared. ROOT's
+[portable word28 control](l1_k4_two_square_portable_control.json)
+and [terminal receipt](l1_k4_two_square_portable_exit.json) reproduce
+`13408159967615306205/8796093022208`, its exact raw numerator and
+divisor, and the independent full replay. Cold preparation took
+67.84 seconds and warm contraction0.74 seconds, separately bounded
+at600 and60 seconds. The remaining seven author words shared one
+process and its caches; preparation took107.29 seconds and each
+warm contraction took less than1.57 seconds. These are measured
+phase times, not a whole-process60-second claim.
+
+The tracked evaluator SHA256 is
+`1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b`.
+From the repository root, run it with `--word 28` for that complete
+coefficient, with `--controls-only` for fixed-label controls, or with
+no argument for the exact eight-word manifest. The
+[archive readback](l1_k4_two_square_archive_verification.json)
+checks all stored stdout bytes, hashes, exit receipts and arithmetic.
+
+Portable accepted coverage is220/272:134 same-axis and86 mixed-axis
+words. The remaining52 words split30 same-axis and22 mixed-axis;
+their values remain unknown. The next action is to classify those
+residual cores and construct the next complete class. Full k4,
+source/action ensemble, common partition normalization, physical B3
+susceptibility/window, microscopic modes and transport remain open.

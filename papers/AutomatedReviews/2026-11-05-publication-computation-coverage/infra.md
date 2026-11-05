@@ -15,8 +15,34 @@ extraction omission and absent-target false pass. ROOT also reproduced
 the local namespace-classification failure in finding1.4. The targeted
 [runtime receipt](REPRODUCTION.json) and [source binding](SOURCE_BINDING.json)
 are source/extractor/evaluator evidence, not a full graph or native run.
-All four findings remain open. They require the existing architecture-change
-workflow before changes to the registry, producer or gate machinery.
+Current disposition: finding1.3 is repaired by propagating an existing
+independently reviewed checkpoint; findings1.1,1.2 and1.4 remain open.
+The Formula-emission part of1.2 is restored, while its IMPORTS-edge
+part remains owed. Residual machinery changes require the existing
+architecture-change workflow.
+
+## Existing repair recovered and integrated
+
+The [history reconciliation](EXISTING_REPAIR_REUSE.md) identified
+`1550f5ff11ab6c350081abf607d4431e28e02ef1`, parent exact main
+`ce194cdc4`. It already repairs structural Formula emission,
+typed G4 missing/wrong-type handling, the existing submission
+consumer and worktree inventory resolution. `dcb9a2c5a` carries
+its evidence and original enforced closures. Normal merge
+`f2fca05a` brings that coherent package into this candidate;
+it does not merge the later unrelated cache repair.
+
+The [independent integration review](INTEGRATION_REVIEW.md) verifies
+all donor paths, both unchanged closure histories and canonical
+count regeneration. Its [current verification](INTEGRATION_VERIFICATION.json)
+records7+23+25+57 passing cases. The [freshness readback](INTEGRATION_FRESHNESS.txt)
+passes all three selected checks. The [targeted producer/gate measurement](INTEGRATION_MEASUREMENT.json)
+emits436 Formula nodes, retains L1 OPEN/unmeasured with no declared
+formula roster, measures all five source Paper25 formulas as statically
+supported, and blocks/unmeasures the absent-target control. This is
+not a full graph/native run, numerical correctness proof or publication
+acceptance. The original failure receipt and source binding above
+describe the pre-integration diagnosis, not the current implementation.
 
 ### 1.1 — MAJOR — L1 computational claims have no registered G4 formula population
 
@@ -37,8 +63,9 @@ workflow before changes to the registry, producer or gate machinery.
 - **Location:** `scripts/build_graph.py::extract_formula_nodes`, `scripts/build_graph.py::extract_imports_edges`
 - **Observed:** Lowercase-only identifier expressions omit 26 of 436 public source functions. Four omitted GW functions are `c_GW_from_chi_vest`, `c_GW_deviation_from_c`, `c_GW_natural_range`, and `dispersion_correction_from_GammaH`. Actual extraction emits 410 Formula nodes. This is a producer omission, not evidence that the functions or their Lean substrate are missing.
 - **Expected:** The existing producer must represent actual public mixed-case identifiers and their direct import/call relations, while retaining private-helper exclusions and alias-resolution protections.
-- **Next action:** Lead owns the minimal producer repair under architecture-change review. Add normal producer regressions that fail on the current source, independently compare the relevant AST population, and review affected existing consumers. Preserve existing node and edge types; no parallel extractor or registry is required.
-- **Verify:** `uv run python -c "import sys; sys.path.insert(0,'scripts'); from build_graph import extract_formula_nodes; expected={'c_GW_from_chi_vest','c_GW_deviation_from_c','c_GW_natural_range','dispersion_correction_from_GammaH'}; assert expected <= {n['name'] for n in extract_formula_nodes()}"`
+- **Next action:** Lead reuses the integrated Formula enumeration and owns the residual IMPORTS caller/callee repair under architecture-change review. Add direct mixed-case-call regressions through the existing edge producer, preserve private-helper and alias protections, and review affected existing consumers. Preserve existing node and edge types; no parallel extractor or registry is required.
+- **Current disposition:** Existing structural Formula repair is integrated and emits all436 public functions. IMPORTS still uses the lowercase-only caller/callee predicates. The lead owes only this residual edge repair and its current review, not another Formula implementation.
+- **Verify:** `uv run python -c "import sys; sys.path.insert(0,'scripts'); from build_graph import extract_formula_nodes,extract_imports_edges; nodes=extract_formula_nodes(); expected={'c_GW_from_chi_vest','c_GW_deviation_from_c','c_GW_natural_range','dispersion_correction_from_GammaH'}; assert expected <= {n['name'] for n in nodes}; edges=extract_imports_edges({n['id'] for n in nodes}); assert any(e['source']=='formula:G_N_emergent' and e['target']=='formula:G_N_sakharov' for e in edges)"`
 
 ### 1.3 — MAJOR — G4 reports PASSED when its declared formula is absent
 
@@ -48,7 +75,8 @@ workflow before changes to the registry, producer or gate machinery.
 - **Location:** `scripts/readiness_gates.py::_eval_computation_correctness`
 - **Observed:** A Paper node with one registered missing Formula and no other graph evidence receives `passed`. Its evidence explicitly reports one Formula NOT IN GRAPH and not examined. The existing absent bucket is informational and does not prevent this false pass.
 - **Expected:** A missing required Formula cannot establish computation coverage. Withhold PASSED and retain explicit evidence using the existing state and blocker vocabulary. Complete supported formula/test populations must retain valid outcomes.
-- **Next action:** Lead owns the minimal evaluator repair under architecture-change review, with independent absent-only, partially missing and complete-population controls. Remeasure real affected papers after producer repair. The gate assesses static test classification; passing it does not establish test execution or physical derivation.
+- **Next action:** Lead records the verified propagation closure through the existing writer. Retain the integrated absent-only, partially missing, wrong-type and complete-population controls and current real-paper measurement. No replacement evaluator is owed. Static test classification remains distinct from test execution and physical derivation.
+- **Current disposition:** Existing repair and controls from original finding `review:2026-10-20-g4-population-and-inventory:infra:1.2` are integrated at `f2fca05a`. The current absent-only control blocks and is unmeasured; current typed coverage and consumer suites pass. Record the propagation closure through the existing writer, preserving the original donor finding and its scope.
 - **Verify:** `uv run python -c "import sys; sys.path.insert(0,'scripts'); from readiness_gates import GraphIndex,_eval_computation_correctness; p={'id':'paper:control','type':'Paper','meta':{'formulas':['missing_control']}}; r=_eval_computation_correctness(p,GraphIndex({'nodes':[p],'links':[]})); assert r.state!='passed', r.evidence"`
 
 ### 1.4 — REQUIRED — Dependency scanner classifies the local papers namespace as a third-party distribution

@@ -10368,6 +10368,21 @@
         "enforced": true,
         "run_at": "2026-10-20"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-publication-computation-coverage:infra:1.3",
+      "status": "fixed",
+      "evidence": "Propagated existing independently accepted1550+dcb typed G4 repair through normal mergef2fca05a. Independent current composition review preserves both histories;112 scoped cases and3 freshness checks pass. Actual missing-target control blocks/unmeasures; L1 mapping and full science remain open.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "f2fca05a",
+      "verified_by": {
+        "command": "uv run python -c \"import sys; sys.path.insert(0,'scripts'); from readiness_gates import GraphIndex,_eval_computation_correctness; p={'id':'paper:control','type':'Paper','meta':{'formulas':['missing_control']}}; r=_eval_computation_correctness(p,GraphIndex({'nodes':[p],'links':[]})); assert r.state!='passed', r.evidence\"",
+        "declared": "uv run python -c \"import sys; sys.path.insert(0,'scripts'); from readiness_gates import GraphIndex,_eval_computation_correctness; p={'id':'paper:control','type':'Paper','meta':{'formulas':['missing_control']}}; r=_eval_computation_correctness(p,GraphIndex({'nodes':[p],'links':[]})); assert r.state!='passed', r.evidence\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }
