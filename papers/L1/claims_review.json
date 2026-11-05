@@ -4858,15 +4858,17 @@
       "finding_class": "SD",
       "first_observed_date": "2026-11-04",
       "lane": "substrate",
-      "verify": "Direct current69-case replay and bound source hashes; ROOT reports independent finalR2 code review accepted with210unique boundaryfloatcontrols. Current render/recorded closure remain ROOT responsibilities.",
-      "blocked_by": "ROOT canonical ingestion and closure disposition. Do not infer exact real width from rounded endpoint subtraction or waive physical BUILD.",
-      "status": "source/runtime repaired and independently source-reviewed; canonical ROOT closure pending",
+      "verify": "Canonical closure writer executed uv run python -m pytest tests/test_gravitational_waves.py -q with exit0; current render and exact source hashes accepted.",
+      "blocked_by": null,
+      "status": "fixed via review:2026-11-05-publication-l1-window-precision:L1:1.1; original physical BUILD remains open",
       "precision_source_sha256": {
         "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
         "src/gravitational_waves/ligo_constraint_check.py": "c889cee0bb5b2e4faf219d47ce93b811c66d531876e62b96ffabb4d194b3952c",
         "tests/test_gravitational_waves.py": "aed8be6258ddff6f3f5d3f6f1bbc22161efd707c8e9c3153d04b6551bebb9d5f",
         "papers/D3/tables.py": "ac15baa7f0cbf515de7d9df16f67368dc2ae5324577e6e869cfe293d4a0d5f62"
-      }
+      },
+      "canonical_finding_id": "review:2026-11-05-publication-l1-window-precision:L1:1.1",
+      "fix_commit": "5ffc0e445510cb290af22deb6cff9d578857b1f6"
     },
     {
       "id": "L1-source-attribution-editions",

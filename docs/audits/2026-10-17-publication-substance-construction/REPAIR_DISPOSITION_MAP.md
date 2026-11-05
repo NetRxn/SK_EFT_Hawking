@@ -34,6 +34,14 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 numerical interval and comparison.** Canonical finding
+  `review:2026-11-05-publication-l1-window-precision:L1:1.1`
+  is fixed on the candidate at `5ffc0e445` through the existing
+  closure writer. Stable endpoints, deviation and D3 width
+  propagation pass69 regression cases,210 distinct boundary
+  controls and14 count-freshness checks. The original physical
+  B3, mode, transport and full publication gates remain open.
+
 - **L1 lead.** The [finite tensor and source controls](L1_OFFDIAGONAL_HESSIAN.md) now contain the independently reproduced complete 6,451-word pure-g₂ normalization and the normalized diagonal plus response for real nonzero g₂. The [positive transfer and staggered-mode tests](L1_RETARDED_SPECTRAL_INTERFACE.md) rule out direct thermal matching of the literal site-resolved channel. Its staggered projection passes the half-period sign check. The equal-time contraction is complete, including the independently checked 40-word unsymmetrized control. The fixed-spatial-cutoff Gaussian comparison now supplies an independently verified quadratic contact and spectral band. The curvature-dressed uniform operator now has an independently reproduced positive half-period scalar in the four-site pure-g₂ regulator. The local equal-time calculation separates the quadratic contact and passes the scalar two-time test, with independent reproduction complete. Next derive whether a physical background variation gives this operator and contact, justify which observables the physical algebra retains, and verify positive-state and time-dependent matching before retarded extraction. B3 and publication acceptance remain open.
   The [selected 16-site normalization motif](L1_RETARDED_SPECTRAL_INTERFACE.md)
   now has an independently verified exact coefficient at `1b7941250`.

@@ -45,3 +45,11 @@ Python/test/producer paths and marks its declared verification
 command as available. The sentence writer ingests 114 current
 records with zero automatic finding closures and five prior
 reconciliation candidates.
+
+The existing closure writer recorded
+`review:2026-11-05-publication-l1-window-precision:L1:1.1`
+as fixed, anchored to repair commit `5ffc0e445510cb290af22deb6cff9d578857b1f6`.
+It executed the finding's declared 69-case command and recorded
+exit zero with enforcement enabled. The
+[writer receipt](CLOSURE_RECEIPT.txt) and supersession ledger
+supply the canonical closure record.
