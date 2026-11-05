@@ -564,4 +564,223 @@ infrastructure policy.
 -/
 theorem _phase6f_w8_session2_module_summary_marker : True := trivial
 
+section PalatiniVariation
+
+open Filter MeasureTheory
+open scoped Topology
+
+private lemma sum4_deriv {f : Fin 4 → ℝ → ℝ} {g : Fin 4 → ℝ} {t : ℝ}
+    (h : ∀ i, HasDerivAt (f i) (g i) t) :
+    HasDerivAt (fun s => sumFin4 (fun i => f i s)) (sumFin4 g) t := by
+  exact (((h 0).add (h 1)).add (h 2)).add (h 3)
+
+/-- The difference of two connections, and hence its parameter derivative,
+transforms as a (1,2) tensor. -/
+def covConnectionVariation (Γ K : Christoffel) (dK : ChristoffelPartial) :
+    ChristoffelPartial := fun a r i j =>
+  dK a r i j + sumFin4 (fun l => Γ r a l * K l i j) -
+    sumFin4 (fun l => Γ l a i * K r l j) -
+    sumFin4 (fun l => Γ l a j * K r i l)
+
+theorem palatini_riemann_algebra (Γ K : Christoffel) (dK : ChristoffelPartial)
+    (hΓ : IsTorsionFree Γ) (r j a b : Fin 4) :
+    riemannLinearTerm dK r j a b +
+      riemannQuadraticTerm_partial Γ (fun _ => K) 0 r j a b =
+    covConnectionVariation Γ K dK a r b j -
+      covConnectionVariation Γ K dK b r a j := by
+  simp only [riemannLinearTerm, riemannQuadraticTerm_partial, covConnectionVariation,
+    sumFin4, hΓ 0 b a, hΓ 1 b a, hΓ 2 b a, hΓ 3 b a]
+  ring
+
+/-- Genuine one-parameter differentiation of the existing coordinate Riemann
+formula. The input dK is the parameter derivative of the spatial derivative
+array, so application to a smooth chart can commute its mixed derivatives. -/
+theorem palatini_riemann (Γ : ℝ → Christoffel) (dΓ : ℝ → ChristoffelPartial)
+    (K : Christoffel) (dK : ChristoffelPartial) (t : ℝ)
+    (hΓ : IsTorsionFree (Γ t))
+    (hK : ∀ r a j, HasDerivAt (fun s => Γ s r a j) (K r a j) t)
+    (hdK : ∀ b r a j, HasDerivAt (fun s => dΓ s b r a j) (dK b r a j) t)
+    (r j a b : Fin 4) :
+    HasDerivAt (fun s => riemannCoord (Γ s) (dΓ s) r j a b)
+      (covConnectionVariation (Γ t) K dK a r b j -
+        covConnectionVariation (Γ t) K dK b r a j) t := by
+  rw [← palatini_riemann_algebra (Γ t) K dK hΓ]
+  have hd := (hdK a r b j).sub (hdK b r a j)
+  have h₁ := sum4_deriv (fun l => (hK r a l).mul (hK l b j))
+  have h₂ := sum4_deriv (fun l => (hK r b l).mul (hK l a j))
+  exact hd.add (h₁.sub h₂)
+
+/-- Our convention is Ric_{ij} = R^a_{iaj}. -/
+def ricciVariation (Γ K : Christoffel) (dK : ChristoffelPartial) : RicciTensor :=
+  fun i j => sumFin4 (fun a => covConnectionVariation Γ K dK a a j i -
+    covConnectionVariation Γ K dK j a a i)
+
+theorem palatini_ricci (Γ : ℝ → Christoffel) (dΓ : ℝ → ChristoffelPartial)
+    (K : Christoffel) (dK : ChristoffelPartial) (t : ℝ)
+    (hΓ : IsTorsionFree (Γ t))
+    (hK : ∀ r a j, HasDerivAt (fun s => Γ s r a j) (K r a j) t)
+    (hdK : ∀ b r a j, HasDerivAt (fun s => dΓ s b r a j) (dK b r a j) t)
+    (i j : Fin 4) :
+    HasDerivAt (fun s => ricciOf (riemannCoord (Γ s) (dΓ s)) i j)
+      (ricciVariation (Γ t) K dK i j) t :=
+  sum4_deriv (fun a => palatini_riemann Γ dΓ K dK t hΓ hK hdK a i a j)
+
+def contractedCurrent (B : MetricMatrix) (K : Christoffel) (a : Fin 4) : ℝ :=
+  sumFin4 (fun i => sumFin4 (fun j => B i j * K a j i)) -
+    sumFin4 (fun i => B i a * sumFin4 (fun r => K r r i))
+
+def contractedCurrentPartial (B dB : MetricMatrix) (K dK : Christoffel)
+    (a : Fin 4) : ℝ :=
+  contractedCurrent dB K a + contractedCurrent B dK a
+
+def inverseMetricCompatiblePartial (Γ : Christoffel) (B : MetricMatrix)
+    (dB : Fin 4 → MetricMatrix) : Prop :=
+  ∀ a i j, dB a i j =
+    -sumFin4 (fun l => Γ i a l * B l j) -
+      sumFin4 (fun l => Γ j a l * B i l)
+
+def densityCompatiblePartial (Γ : Christoffel) (w : ℝ) (dw : Fin 4 → ℝ) : Prop :=
+  ∀ a, dw a = w * sumFin4 (fun l => Γ l l a)
+
+set_option maxHeartbeats 1000000 in
+set_option maxRecDepth 4096 in
+/-- The contracted Palatini current has an ordinary density divergence.
+Metric compatibility and the volume-density derivative are explicit inputs. -/
+theorem contracted_density_divergence (Γ K : Christoffel) (dK : ChristoffelPartial)
+    (B : MetricMatrix) (dB : Fin 4 → MetricMatrix) (w : ℝ) (dw : Fin 4 → ℝ)
+    (hΓ : IsTorsionFree Γ) (hB : inverseMetricCompatiblePartial Γ B dB)
+    (hw : densityCompatiblePartial Γ w dw) :
+    w * scalarOf (ricciVariation Γ K dK) B =
+      sumFin4 (fun a => dw a * contractedCurrent B K a +
+        w * contractedCurrentPartial B (dB a) K (dK a) a) := by
+  unfold inverseMetricCompatiblePartial at hB
+  unfold densityCompatiblePartial at hw
+  have hs10 (q : Fin 4) : Γ q 1 0 = Γ q 0 1 := hΓ q 1 0
+  have hs20 (q : Fin 4) : Γ q 2 0 = Γ q 0 2 := hΓ q 2 0
+  have hs30 (q : Fin 4) : Γ q 3 0 = Γ q 0 3 := hΓ q 3 0
+  have hs21 (q : Fin 4) : Γ q 2 1 = Γ q 1 2 := hΓ q 2 1
+  have hs31 (q : Fin 4) : Γ q 3 1 = Γ q 1 3 := hΓ q 3 1
+  have hs32 (q : Fin 4) : Γ q 3 2 = Γ q 2 3 := hΓ q 3 2
+  simp only [scalarOf, ricciVariation, covConnectionVariation, contractedCurrentPartial,
+    contractedCurrent, sumFin4, hB, hw, hs10, hs20, hs30, hs21, hs31, hs32]
+  ring
+
+theorem contractedCurrent_hasDerivAt (B : ℝ → MetricMatrix) (K : ℝ → Christoffel)
+    (dB : MetricMatrix) (dK : Christoffel) (s : ℝ) (a : Fin 4)
+    (hB : ∀ i j, HasDerivAt (fun t => B t i j) (dB i j) s)
+    (hK : ∀ r i j, HasDerivAt (fun t => K t r i j) (dK r i j) s) :
+    HasDerivAt (fun t => contractedCurrent (B t) (K t) a)
+      (contractedCurrentPartial (B s) dB (K s) dK a) s := by
+  have h₁ := sum4_deriv (fun i => sum4_deriv (fun j => (hB i j).mul (hK a j i)))
+  have h₂ := sum4_deriv (fun i => (hB i a).mul (sum4_deriv (fun r => hK r r i)))
+  convert h₁.sub h₂ using 1 <;> first | rfl | (simp only [contractedCurrentPartial, contractedCurrent, sumFin4]; ring)
+
+abbrev Chart := Fin 4 → ℝ
+
+def densityCurrent (w : Chart → ℝ) (B : Chart → MetricMatrix) (K : Chart → Christoffel)
+    (a : Fin 4) (x : Chart) : ℝ :=
+  w x * contractedCurrent (B x) (K x) a
+
+/-- This ties the algebraic divergence to the actual Fréchet derivative
+of the density current. Derivative inputs are along the straight coordinate
+line through x. -/
+theorem current_derivative_from_chart (w : Chart → ℝ) (B : Chart → MetricMatrix)
+    (K : Chart → Christoffel) (x : Chart) (a : Fin 4)
+    (dw : ℝ) (dB : MetricMatrix) (dK : Christoffel)
+    (D : Chart →L[ℝ] ℝ)
+    (hD : HasFDerivAt (densityCurrent w B K a) D x)
+    (hw : HasDerivAt (fun t : ℝ => w (x + t • Pi.single a 1)) dw 0)
+    (hB : ∀ i j, HasDerivAt (fun t : ℝ => B (x + t • Pi.single a 1) i j)
+      (dB i j) 0)
+    (hK : ∀ r i j, HasDerivAt (fun t : ℝ => K (x + t • Pi.single a 1) r i j)
+      (dK r i j) 0) :
+    D (Pi.single a 1) =
+      dw * contractedCurrent (B x) (K x) a +
+        w x * contractedCurrentPartial (B x) dB (K x) dK a := by
+  have hline : HasDerivAt (fun t : ℝ => x + t • (Pi.single a 1 : Chart))
+      (Pi.single a 1) 0 := by
+    simpa only [one_smul] using
+      (((hasDerivAt_id' (x := (0 : ℝ))).smul_const (Pi.single a 1 : Chart)).const_add x)
+  have hcomp := hD.comp_hasDerivAt_of_eq (x := (0 : ℝ)) hline (by simp)
+  have hprod := hw.mul (contractedCurrent_hasDerivAt
+    (fun t => B (x + t • Pi.single a 1)) (fun t => K (x + t • Pi.single a 1))
+    dB dK 0 a hB hK)
+  simpa [densityCurrent] using hcomp.unique hprod
+
+/-- The local contracted Ricci variation equals the divergence of the
+specified chart current, with actual derivatives certified on each line. -/
+theorem weighted_ricci_trace_eq_chart_divergence
+    (w : Chart → ℝ) (B : Chart → MetricMatrix) (K : Chart → Christoffel)
+    (x : Chart) (Γ : Christoffel) (dw : Fin 4 → ℝ)
+    (dB : Fin 4 → MetricMatrix) (dK : ChristoffelPartial)
+    (D : Fin 4 → Chart →L[ℝ] ℝ)
+    (hΓ : IsTorsionFree Γ)
+    (hMetric : inverseMetricCompatiblePartial Γ (B x) dB)
+    (hDensity : densityCompatiblePartial Γ (w x) dw)
+    (hD : ∀ a, HasFDerivAt (densityCurrent w B K a) (D a) x)
+    (hw : ∀ a, HasDerivAt (fun t : ℝ => w (x + t • Pi.single a 1)) (dw a) 0)
+    (hB : ∀ a i j, HasDerivAt (fun t : ℝ => B (x + t • Pi.single a 1) i j)
+      (dB a i j) 0)
+    (hK : ∀ a r i j, HasDerivAt (fun t : ℝ => K (x + t • Pi.single a 1) r i j)
+      (dK a r i j) 0) :
+    w x * scalarOf (ricciVariation Γ (K x) dK) (B x) =
+      ∑ a, D a (Pi.single a 1) := by
+  rw [contracted_density_divergence Γ (K x) dK (B x) dB (w x) dw hΓ hMetric hDensity]
+  have he (a : Fin 4) := current_derivative_from_chart w B K x a
+    (dw a) (dB a) (dK a) (D a) (hD a) (hw a) (hB a) (hK a)
+  simp_rw [he]
+  simp only [sumFin4, Fin.sum_univ_four]
+
+/-- Actual chart-box boundary cancellation. The supplied boundary condition
+fixes equal values of each normal current component on paired faces.
+A current supported in the box interior is a sufficient special case. -/
+theorem chart_box_boundary_cancellation (a b : Chart) (hab : a ≤ b)
+    (J : Fin 4 → Chart → ℝ) (DJ : Fin 4 → Chart → Chart →L[ℝ] ℝ)
+    (hcont : ∀ i, ContinuousOn (J i) (Set.Icc a b))
+    (hderiv : ∀ x ∈ (Set.pi Set.univ fun i => Set.Ioo (a i) (b i)), ∀ i,
+      HasFDerivAt (J i) (DJ i x) x)
+    (hint : IntegrableOn (fun x => ∑ i, DJ i x (Pi.single i 1)) (Set.Icc a b))
+    (hface : ∀ (i : Fin 4) (y : Fin 3 → ℝ),
+      J i (Fin.insertNth i (b i) y) = J i (Fin.insertNth i (a i) y)) :
+    (∫ x in Set.Icc a b, ∑ i, DJ i x (Pi.single i 1)) = 0 := by
+  have h :=
+    integral_divergence_of_hasFDerivAt_off_countable' (n := 3) a b hab J DJ
+      ∅ Set.countable_empty hcont
+      (fun x hx => hderiv x hx.1) hint
+  rw [h]
+  simp [hface]
+
+/-- Integration of the EH bulk variation with a boundary condition on the
+explicit Palatini current. Domination is separate from boundary cancellation. -/
+theorem eh_box_stationary (a b : Chart) (hab : a ≤ b)
+    (J : Fin 4 → Chart → ℝ) (DJ : Fin 4 → Chart → Chart →L[ℝ] ℝ)
+    (hcont : ∀ i, ContinuousOn (J i) (Set.Icc a b))
+    (hderiv : ∀ x ∈ (Set.pi Set.univ fun i => Set.Ioo (a i) (b i)), ∀ i,
+      HasFDerivAt (J i) (DJ i x) x)
+    (hint : IntegrableOn (fun x => ∑ i, DJ i x (Pi.single i 1)) (Set.Icc a b))
+    (hface : ∀ (i : Fin 4) (y : Fin 3 → ℝ),
+      J i (Fin.insertNth i (b i) y) = J i (Fin.insertNth i (a i) y))
+    (L L' : ℝ → Chart → ℝ) (u : Set ℝ) (bound : Chart → ℝ)
+    (hu : u ∈ 𝓝 (0 : ℝ))
+    (hmeas : ∀ᶠ t in 𝓝 (0 : ℝ), AEStronglyMeasurable (L t)
+      (volume.restrict (Set.Icc a b)))
+    (hL0 : IntegrableOn (L 0) (Set.Icc a b))
+    (hL'0 : ∀ᵐ x ∂(volume.restrict (Set.Icc a b)),
+      L' 0 x = ∑ i, DJ i x (Pi.single i 1))
+    (hbound : ∀ᵐ x ∂(volume.restrict (Set.Icc a b)), ∀ t ∈ u, ‖L' t x‖ ≤ bound x)
+    (hbound_int : IntegrableOn bound (Set.Icc a b))
+    (hdiff : ∀ᵐ x ∂(volume.restrict (Set.Icc a b)), ∀ t ∈ u,
+      HasDerivAt (fun s => L s x) (L' t x) t) :
+    HasDerivAt (fun t => ∫ x in Set.Icc a b, L t x) 0 0 := by
+  have heq : L' 0 =ᵐ[volume.restrict (Set.Icc a b)]
+      (fun x => ∑ i, DJ i x (Pi.single i 1)) := hL'0
+  have hm := hint.aestronglyMeasurable.congr heq.symm
+  have hd := (hasDerivAt_integral_of_dominated_loc_of_deriv_le
+    hu hmeas hL0 hm hbound hbound_int hdiff).2
+  rw [integral_congr_ae heq, chart_box_boundary_cancellation a b hab J DJ
+    hcont hderiv hint hface] at hd
+  exact hd
+
+end PalatiniVariation
+
 end SKEFTHawking.RiemannDifferentialBianchi

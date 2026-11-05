@@ -312,3 +312,18 @@ passed, with only standard axioms for the three main results.
 Einstein–Hilbert and Euler boundary stationarity, zero
 renormalized cosmological term, and microscopic ADW matching
 remain open.
+
+### Palatini variation and chart boundary cancellation
+
+The coordinate curvature formulas now give a genuine parameter
+derivative for Ricci. The weighted trace is the divergence of the
+contracted connection-variation current under explicit metric
+and density compatibility. The Bochner box divergence theorem
+and dominated differentiation give zero integrated variation
+when the density derivative equals that divergence and normal
+current agrees on paired face hyperplanes. Independent review
+checked the curvature convention, signs, and the boundary scope.
+Local elaboration passed and the main declarations reported
+only standard axioms. Instantiating the compatibility, mixed
+derivatives, and density variation for an actual metric family,
+and treating the Euler term and microscopic ADW action, remain open.
