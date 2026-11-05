@@ -849,8 +849,12 @@ second gamma-slot routing and branch-role transpose. Direct79/81 controls and
 fixed79 have independently accepted runtime receipts. Fixed81 completed with
 the same restricted coefficient; independent450-branch original-L/full-row
 reconstruction and signed branch-transpose controls passed, with ROOT receipt
-intake accepted. The bounded unrestricted79 pilot is next. None of these
-restricted controls increases the portable coefficient count.
+intake accepted. The [bounded unrestricted79 pilot and controls](l1_k4_two_protected_tori_7981_controls.md)
+are archived with independent byte/receipt review. The pilot reaches218 of225
+branches before its60s whole-contraction deadline; no final coefficient exists.
+The next scientific action examines exact reuse/redundant work in the existing
+contraction, retaining all branches and original limits. None of these
+restricted controls or partial pilot increases the portable coefficient count.
 The independent delivery lane has adopted the reviewed focused citation repair
 needed by cache finding1.2. Managed-worktree planner finding1.1 is fixed as
 recorded below. Preserve the accepted scope and current verification.
@@ -869,13 +873,18 @@ success rows. It repairs thirteen missing identities and retains the
 zero-stub/zero-orphan controls. Actual89 affected cases, including slow
 extraction and production seeds, pass; independent original cache1.2 Verify
 passes33 cases. Five current existing-file registrations conserve all old state
-and held bytes. The measured undeclared ceiling tightens78 to76. Cache1.2
-awaits its reviewed source commit and canonical closure writer; full-text
+and held bytes. The measured undeclared ceiling tightens78 to76. The existing
+writer records cache1.2 fixed at reviewed source8b6da1c2f; full-text
 fidelity, scientific BUILD and final publication remain separate. This scoped
 repair does not rewrite frozen16fde9's34fail result or establish a new broad,
 main or publication pass. The acquisition register retains inherited
 metadata/internal-routing limitations; its174 rows are not full body-debt
-coverage or a new acquisition milestone.
+coverage or a new acquisition milestone. The historical SOURCE-1 producer
+defect is promoted to the existing canonical finding system as
+[source_register_fidelity:1.1](../../../papers/AutomatedReviews/2026-11-05-source-register-fidelity/source_register_fidelity.md),
+OPEN with ROOT ownership and a real failing decider. The next independent
+delivery action repairs this existing producer through architecture-change
+review, reusing canonical fidelity/discovery and actual registry identity.
 
 ### Parallel assignments and remote resume inputs
 
@@ -897,8 +906,9 @@ that review. ROOT applied only the reviewed source scope, obtained fresh local
 state through the existing writer and measured the current ratchet before
 tightening it. Historical success rows and unrelated ancestry are excluded.
 Registry resolution cannot establish full-text fidelity; Verlinde metadata
-does not supply the still-owed source body. The cache finding remains open
-until its complete declared verification and independent adoption review pass.
+does not supply the still-owed source body. The cache finding is fixed through
+its complete declared verification and independent adoption review; the distinct
+source-register producer finding and scientific obligations remain open.
 
 These assignments use the existing continuity packets and author/reviewer
 separation. They do not change the portfolio priorities or create another

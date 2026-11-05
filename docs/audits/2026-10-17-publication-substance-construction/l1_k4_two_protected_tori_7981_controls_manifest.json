@@ -1,0 +1,320 @@
+{
+  "scope": "accepted direct and both450 fixed controls plus failed unrestricted79pilot; no completed unrestrictedcoefficient",
+  "portable_coverage_unchanged": 234,
+  "archive_sha256": "417bfddde7c86a3e6e5b0ae62dadc442a3cd25488dc6667954a4b791469d4f3e",
+  "files": [
+    {
+      "name": "l1-7981-control-preparation-r2-binding.json",
+      "bytes": 1881,
+      "sha256": "9c53cd21f0cb622f6a16dc2b9673cf489c0997ae205d9819d8f21955d4744c59"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-build.py",
+      "bytes": 16601,
+      "sha256": "434793379e06397bf0c4fa96c3873c2dd4f00db144c09b0f0ac5fd643a4b156e"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-direct-driver.py",
+      "bytes": 2130,
+      "sha256": "f77f12c8e6a45e97b77ae769e0611143a945cd05229cd41878f987cb911c0b0c"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-direct-runner.py",
+      "bytes": 10678,
+      "sha256": "80233a0218949cf60eab66c4ad5c8accf446a4998073d88f86b9a3f72198d737"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-direct.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-direct.exit.json",
+      "bytes": 783,
+      "sha256": "a20091139d024b1e20620d52fb8015e1dce830c78d479db0ca7cff4225fbaea7"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-direct.out",
+      "bytes": 3281,
+      "sha256": "7c8d76acf54f07a955656dcd8fd121dd70f6668319da177b459118d7e71bd9e6"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-fixed79-driver.py",
+      "bytes": 2102,
+      "sha256": "14585bf8c010e33852f3e0845ea5aef6c3ebab0ad952dd1b639eafe2fb33fa5e"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-fixed79-runner.py",
+      "bytes": 6629,
+      "sha256": "1e3a15719d1522d0ed1f4004e4b4dfd680c35cff3a66374d5b4cec9a07fdc1d1"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-fixed79.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-fixed79.exit.json",
+      "bytes": 747,
+      "sha256": "b2ae521805b05fd88f7d8a09b63ca40dd6613087767eacf25d2b61eefca76e10"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-fixed79.out",
+      "bytes": 591153,
+      "sha256": "613d7f141033c569ef5339c8c442f917f47b2aa1cbb8c018f89e9ecc0441f629"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-patch.py",
+      "bytes": 955,
+      "sha256": "651f9d6bdb22858cd1ac16ba4b568c226cec91591f40e8a46a8d075d84e024a4"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-quaternion-reference.py",
+      "bytes": 2498,
+      "sha256": "3520188b78f838b475814949104c8c64dc3c5dd3cff2ff57ba93024bdc642059"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-report-build.py",
+      "bytes": 5886,
+      "sha256": "920d5faf82811508b15a18ff221a00448b87a8e527119b6675a98f4b338423a5"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-stdlib-check.json",
+      "bytes": 1658,
+      "sha256": "cd656e1af97d33b4d3c98c4ea07921ff04f327eacd2497e8a4a1160707613685"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2-stdlib-check.py",
+      "bytes": 3976,
+      "sha256": "ccdab1429a0c6215b16e518ed6e29d620fe0737aaf5d99435feb57b790a85b4d"
+    },
+    {
+      "name": "l1-7981-control-preparation-r2.md",
+      "bytes": 6002,
+      "sha256": "0e77e485c25b934015ba97a7a0de3aa5dd41b95b8fea2e2cff27bd790156bc9a"
+    },
+    {
+      "name": "l1-7981-control-source-review-r3.direct-execution.json",
+      "bytes": 5958,
+      "sha256": "0708c3e74e891f28e148145afb22625d314d0e252655f13e8455ac5affc2ec2d"
+    },
+    {
+      "name": "l1-7981-control-source-review-r3.direct-execution.md",
+      "bytes": 1268,
+      "sha256": "ad4441e725021bde023560bcee71fc0c2bcd8078942d3c3ad97655bd58557f97"
+    },
+    {
+      "name": "l1-7981-control-source-review-r3.json",
+      "bytes": 2111,
+      "sha256": "143bdbc359da4a1c2b3a1095d6052df499d5c7d22669fa2c6923dd811b0f2956"
+    },
+    {
+      "name": "l1-7981-control-source-review-r3.md",
+      "bytes": 6884,
+      "sha256": "31b9c8781d7779471ec4ad0499c805973b10ba75c78f680160278b49a20fffc0"
+    },
+    {
+      "name": "l1-7981-control-source-review-r3.py",
+      "bytes": 6318,
+      "sha256": "56b0d38c793ed85f9bf7919440587d0d107aa69e8c7d73cd8567c01f374dc04d"
+    },
+    {
+      "name": "l1-7981-fixed81-r4-driver.py",
+      "bytes": 2062,
+      "sha256": "994f0f38b244bf9b07d8c173272ab963ed0f8204b088a570b5d051e6dd78f5be"
+    },
+    {
+      "name": "l1-7981-fixed81-r4-prepare.py",
+      "bytes": 4387,
+      "sha256": "5ad950e515bc6da1c4a26e04eb0a1569b8f409da8a9ea4a4c66c0250f5894404"
+    },
+    {
+      "name": "l1-7981-fixed81-r4-runner.py",
+      "bytes": 6629,
+      "sha256": "fc197d0cabbacc0fba8bae0f85d53861e196616040d96ef15be30ea489885796"
+    },
+    {
+      "name": "l1-7981-fixed81-r4-transpose-verification.json",
+      "bytes": 2787,
+      "sha256": "920072c66b9af9eb642f10b3a5b5c40ca2d534da600df8129ca1dd6345ab8fe7"
+    },
+    {
+      "name": "l1-7981-fixed81-r4-transpose-verify.py",
+      "bytes": 5238,
+      "sha256": "e80bbdcb4aaef349f0884a600f4ffe58ec2f885b435ba5b4e7fac0a849a28d6a"
+    },
+    {
+      "name": "l1-7981-fixed81-r4-verification.json",
+      "bytes": 1052,
+      "sha256": "9e962e884ca9d2fbcb672006159955100c7e9dbec54d16428e837fa58d632b65"
+    },
+    {
+      "name": "l1-7981-fixed81-r4.diff",
+      "bytes": 5555,
+      "sha256": "18de4d3854f02b2cd065f02c7ef69477682d7917d9b5a84fed56415a1a189fe8"
+    },
+    {
+      "name": "l1-7981-fixed81-r4.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "l1-7981-fixed81-r4.exit.json",
+      "bytes": 727,
+      "sha256": "289249ba3cc3b744124d257e3f5c111367efa34d54c6fc376db31459e8e33e2b"
+    },
+    {
+      "name": "l1-7981-fixed81-r4.out",
+      "bytes": 591151,
+      "sha256": "42211906e973b1f7277bd0fea7947d3536dcfbc978e0a1b6f0be0b0bc5d060ee"
+    },
+    {
+      "name": "l1-7981-fixed81-root-admission-review.json",
+      "bytes": 471,
+      "sha256": "022755706c331b78cdf3f907bd29bb38a6b24fbfc71908bd27aa2aad4f9b9849"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-control.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-control.exit.json",
+      "bytes": 790,
+      "sha256": "9cb7c86b8de1887ef668ba1fb5b27bddb714fe669cff3701a09150cf8e5cf543"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-control.out",
+      "bytes": 2733,
+      "sha256": "2f4129957088057185c53f72190f44a660a47d8d250a6a2cd9ef54f70e42cc8c"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-control.py",
+      "bytes": 9423,
+      "sha256": "8815633e951e5833157b9c324280aa19f0936d2133a436e1c25842f3b7c810a8"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-driver.py",
+      "bytes": 2145,
+      "sha256": "095c930267a28325c5ace373bbfc1a144b78530189929087473d7cdbd735f5ef"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-execution-r5.json",
+      "bytes": 5448,
+      "sha256": "f7fe5d3e31a775112278cb2c39ccb87c4334e7ef307030d63e04de3ef18b22d2"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-execution-r5.md",
+      "bytes": 1346,
+      "sha256": "b41fe5bee7b7ae44acc13909800a3d67b8c3a61effc85b75cf70a774a4df263f"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-preparation.json",
+      "bytes": 987,
+      "sha256": "bea16f90421360b2b3989159baa3de2e87bc66361c96647d75fbe0d1e1e36dbf"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-receipts.json",
+      "bytes": 2025,
+      "sha256": "e73ad8233bc071958cacb55b6828f6e98fb43b524f76879d3c74f1e7d6fe18a6"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-receipts.py",
+      "bytes": 6255,
+      "sha256": "91c290930ba4e7b7a331a6fab0fdef0e848df2369b841c9d03768e4bcabdc7d3"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-transpose.json",
+      "bytes": 1320,
+      "sha256": "dbe5fab54ed727a3205b58dcf951a948da0e3c298f219cca02cfd54ff87e5480"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4-transpose.py",
+      "bytes": 4566,
+      "sha256": "216362b041bc1c6dccf3cffc22d903ebc808fe469d48a76d9a8a5405f12e3928"
+    },
+    {
+      "name": "l1-7981-independent-fixed-review-r4.md",
+      "bytes": 5941,
+      "sha256": "c5e3b5fff950c539ab36c275ec11df482fb6d42828bf3481524b548dcec034ec"
+    },
+    {
+      "name": "l1-7981-independent450-root-admission-review.json",
+      "bytes": 651,
+      "sha256": "0dad6da422e401bcb85ae6ec98dea9c5046e72168adc632647b2623fe0092021"
+    },
+    {
+      "name": "l1-7981-independent450-root-intake.json",
+      "bytes": 1919,
+      "sha256": "a896c7bb48d336d412603cb107ad6a4c21d438e321090f1f5b5fbe94e95cda9f"
+    },
+    {
+      "name": "l1-7981-unrestricted79-r6-driver.py",
+      "bytes": 2068,
+      "sha256": "e385b7ca489205f0df7f8bf6ee35287afe95423cdf3a283c9ad49c78c0e491ce"
+    },
+    {
+      "name": "l1-7981-unrestricted79-r6-failure-verification.json",
+      "bytes": 1874,
+      "sha256": "64f90216d431906fcc401f61c8f81951a1bec4fa95ad07791baca29ce430a1f1"
+    },
+    {
+      "name": "l1-7981-unrestricted79-r6-failure-verify.py",
+      "bytes": 3430,
+      "sha256": "8e831f939703b300f5efcda1dad6462521a9aacc5bd00021fceacaaf4d4617ba"
+    },
+    {
+      "name": "l1-7981-unrestricted79-r6-prepare.py",
+      "bytes": 8143,
+      "sha256": "967bbfdd12efcc0ba2908d1a3bdbde5c2d7fddc7ee5e428e16acb98cfaea8f24"
+    },
+    {
+      "name": "l1-7981-unrestricted79-r6-receipt-verify.py",
+      "bytes": 4196,
+      "sha256": "2a3d4b5de2445faadb50b102ced1a250b753cfa6b26e99b35ea7011780593c8b"
+    },
+    {
+      "name": "l1-7981-unrestricted79-r6-runner.py",
+      "bytes": 6383,
+      "sha256": "7b7f0a0815e62fa8f200bbefffcc0b234d48c29a52f802e0eb7cbba807d8b0f6"
+    },
+    {
+      "name": "l1-7981-unrestricted79-r6-verification.json",
+      "bytes": 1049,
+      "sha256": "adbefd5a8843b1c7f2dcb98c2c3dd407b305aa8c7ec0f2e0afed9992285da9dc"
+    },
+    {
+      "name": "l1-7981-unrestricted79-r6.err",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "l1-7981-unrestricted79-r6.exit.json",
+      "bytes": 730,
+      "sha256": "8a822d31f8864c12a185ed4b188e5cc6441e146b3f237713b57777ede39f808e"
+    },
+    {
+      "name": "l1-7981-unrestricted79-r6.out",
+      "bytes": 3558855,
+      "sha256": "e19af147bc4c01a5c1b67f2ef9ffd4cf082af9df4aec55461e8697235f27dd5c"
+    },
+    {
+      "name": "l1-7981-unrestricted79-root-admission-review.json",
+      "bytes": 636,
+      "sha256": "074e3a2e8e93c7e24d916225c5ffa75dc40532318f100aaa2094376b5972df7a"
+    },
+    {
+      "name": "publication-7981-fixed79-execution-r3-verification.json",
+      "bytes": 1844,
+      "sha256": "8cb56c486914d5885294fbc56c75fdd4d06b44e580f2b45c8080862f418dd9e3"
+    },
+    {
+      "name": "publication-7981-fixed79-execution-r3-verify.py",
+      "bytes": 3731,
+      "sha256": "18f2580d66d2055dd1c228f830f2ff19d83a8abb9b42b3661b917a47f26e2ab4"
+    }
+  ],
+  "failed_pilot": "SIGALRM after60s whole225warm;218 complete branches; no final coefficient; no rerun or failurezero",
+  "next": "inspect existing exact contraction work for correct reusable work; source changes and further runs require review/admission",
+  "archive_review_correction": "r1 omitted original fixed79 author verifier source while its JSON was included. r2 adds that original source; no scientific or runtime artifact changed. r1 retained in scratch."
+}

@@ -10473,6 +10473,21 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-10-19-managed-worktree-paths:infra:1.2",
+      "status": "fixed",
+      "evidence": "Focused historical source repair reconciled and independently accepted at papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_ADOPTION.md and CITATION_ADOPTION_REVIEW.md: thirteen exact identities, five fresh existing-file writer receipts, current zero-headroom ceiling76, full affected89passes including slow extraction and restored production seed controls; independent originalVerify33passes. Full body/SOURCE137/scientific/publication and the separately promoted producer defect remain open.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "8b6da1c2fd87f07b3dde29e68e590ca324887d42",
+      "verified_by": {
+        "command": "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py",
+        "declared": "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }

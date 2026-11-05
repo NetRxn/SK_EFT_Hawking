@@ -2,12 +2,16 @@
 
 Review date: 2026-10-19. Author: publication infrastructure repair assessment.
 Status: planner finding1.1 is fixed through the canonical writer at6e2983e61.
-Cache finding1.2 remains OPEN: its whole declared Verify retains the separate
-citation obligations. Historical source/control acceptance does not close it.
+Cache finding1.2 is fixed through the canonical writer at8b6da1c2f after the
+separate focused citation repair and current independent verification. Its
+complete declared command passes; source-content and scientific debts remain open.
 Whole independent source/control review is accepted in [SCOPED_REVIEW.md](SCOPED_REVIEW.md).
 Current integration reuses the accepted original source. The complete affected
-scope has106passes and2citation failures; source/main/full publication gates
-remain separate. [Current adoption and evidence](../2026-11-05-publication-computation-coverage/MANAGED_PATH_ADOPTION.md).
+scope at6e2983e61 had106passes and2citation failures. The subsequent
+[citation adoption](../2026-11-05-publication-computation-coverage/CITATION_ADOPTION.md)
+passes89 affected cases including slow extraction and33 independent original
+Verify cases. Source/main/full publication gates remain separate.
+[Portability adoption evidence](../2026-11-05-publication-computation-coverage/MANAGED_PATH_ADOPTION.md).
 
 These are execution-context defects reproduced in named managed checkouts of main
 `ce194cdc4bf939b108c17edc9530a7f0a14565f9`. The carrying function bodies also match the

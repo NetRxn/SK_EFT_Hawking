@@ -24,8 +24,12 @@ three-module run explicitly includes slow extraction:89 passed in27.31s.
 Both production seed controls and the original zero-stub/zero-orphan assertions
 are present and pass. Prepared source/state bytes, modes and modification times
 are restored. Independent original cache1.2 verification passes33 cases with
-one default deselection. The existing writer still owns its eventual closure,
-anchored to the reviewed source commit; no historical closure is adopted.
+one default deselection. The existing writer records original cache1.2 fixed
+at reviewed source8b6da1c2f after enforcing its complete declared command.
+[Closure receipt](CITATION_CACHE_CLOSURE.txt) preserves the writer outcome;
+the first launch failed to locate Python and closed nothing. The retry supplies
+the established interpreter through PATH without changing Verify. No historical
+closure is adopted.
 
 Counts, module census and architecture inventory freshness pass. Existing
 derived writers refresh the acquisition register and the registry inventory
