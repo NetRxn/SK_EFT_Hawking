@@ -6127,3 +6127,15 @@ control and its exact digest, primitive digest, and signed
 scale matched the independently reviewed bulk-gap receipt byte
 for byte. This extends the native command's controls to a
 nonempty B map. A closure is separate.
+
+The full selected two-word group has exact scalar
+`−25115308040403/9223372036854775808` with zero imaginary part.
+Independent review reconstructed all 144 disjoint prefixes,
+including the two initial zero controls, and counted the
+repeated prefix-3 control once. No prefix capped. The final
+`[35,144)` batch contributed
+`−159063617589219/73786976294838206464`. The full raw sum
+uses one common 40-factor divisor. Each of the two selected
+words contributes half the combined value. This gives a
+signed nonzero control for future bulk A contraction.
+The full unpaired word coefficient remains open.
