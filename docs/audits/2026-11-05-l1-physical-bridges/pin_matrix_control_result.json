@@ -1,0 +1,13 @@
+{
+  "matrix_control": "passed",
+  "R_determinant": 1,
+  "internal_vector_signs": [
+    -1,
+    -1,
+    -1,
+    1
+  ],
+  "chiral_swap_basis_checks": 8,
+  "finite_degree_parity_cases": 3168,
+  "scope": "tiny exact matrix and parity controls; no Haar contraction or denominator calculation"
+}
