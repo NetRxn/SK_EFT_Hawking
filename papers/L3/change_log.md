@@ -255,3 +255,19 @@ Schwarzschild-de Sitter control. Local elaboration passed with
 two tactic-style warnings, and all three result declarations
 reported only standard axioms. The ADW exterior derivation,
 physical mass matching, and authoritative validation remain open.
+
+### Spherical ADM surface charge
+
+ADMFormalism now computes the spherical coordinate-sphere flux
+from actual Cartesian derivatives. For the spatial metric
+`delta_ij + A(r) n_i n_j`, contraction with the outward unit
+normal gives `2 A(R)/R`. The round measure and radial pullback
+give finite charge `R A(R)/(2G)`. For `A=F^(-1)-1`, a lapse
+tending to one and a prescribed mass tail give the mass limit.
+Independent review checked the outward sign, surface measure,
+and limit. The full modified file elaborated locally with one
+tactic-style warning. The three principal declarations report
+only standard axioms. Applying this calculation to an emergent
+solution still requires the static spacelike slicing, physical
+mass normalization, and ADW exterior matching. Authoritative
+validation remains open.
