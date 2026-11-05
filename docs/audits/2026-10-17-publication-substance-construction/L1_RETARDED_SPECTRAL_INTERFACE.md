@@ -6821,3 +6821,23 @@ independent verification with no caps. Each contributes
 |---|---|---|
 | 9 | `ee3dc0fce0d794f5fd56d22a97c7c57849b540593178e482984086a8478de83a` | `def0caa6124b665a740e3867f1bd516b2eac8ef9d98a5b22d4a18017a7f29d93` |
 | 10 | `f097c6aefd81af88b01661845763a570a9e71e39fb4109b9b2c83b1fab2ba1de` | `3c735792898dfeed0bf6997a37148f67933cef89df8048a9e008bc8f0fdf9be9` |
+
+**Repository site-10 replay.** The independently reviewed
+[runner](l1_unpaired_A_site10.py) reconstructs the target 60-word
+component from explicit signed B receipts. It checks its member
+indices, weighted-factor digest, the full 256-selector roster,
+and the requested internal slice. It retains the original row
+and product caps and supplies a terminal subtotal only after
+the complete requested range.
+
+The repository control `[33,34)` reproduced the scratch selector
+exactly. Its scalar is `16188097425307101/9444732965739290427392`
+with zero imaginary part, from 8,956 compatible products, 4,174
+complement queries and 2,038 nonzero environments. The runner
+also rejected a range outside its requested slice. The source
+SHA-256 is
+`b88a65eae741df00d90b73cf1766b6f477a1081551a83d37d5d2d8fa47cb88c9`.
+The control stdout SHA-256 is
+`be75be107b3a2bf52c6871a1a132abefda2ac6d2d5e4116a874a13045f44001f`.
+This comparison exercises one repository selector. Earlier
+full-range receipts came from the reviewed scratch driver.
