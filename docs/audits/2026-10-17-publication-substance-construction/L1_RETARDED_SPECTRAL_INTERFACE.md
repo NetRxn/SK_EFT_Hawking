@@ -8265,3 +8265,24 @@ A nonzero residue would certify nonvanishing of the complete
 partition coefficient after exact signed coverage and
 denominator checks. The restricted motifs leave that
 complete coefficient open.
+
+### Complete chirality pairs for (8,1), (8,8), (8,17), and (9,0)
+
+Independent review checked 256 direct selectors, 16 terminal
+shards, four singleton class witnesses, and exact scaling per
+run on the original pinned roster. Each component contributes
+`-742478726025364419/9444732965739290427392` with zero imaginary
+part and no caps. Each signed orbit has multiplicity 18 and
+contains 18 words.
+
+| Direct representative | Chirality counterpart | Full receipt SHA-256 |
+|---|---|---|
+| [(8,1)](l1_gamma_8_1.out.txt) | (12,5) | `3bbe023ea7b9ca03111f80fb46c7dae60e3daeefe520e53ac7bfb1b2cdbe38d5` |
+| [(8,8)](l1_gamma_8_8.out.txt) | (12,8) | `4fd2b68f58d165056f0d6bfd40b496a239d1268e2fe9a5dabda2b6a3582f60c7` |
+| [(8,17)](l1_gamma_8_17.out.txt) | (12,17) | `e2d2fa3d6e98002f567800610cc8271e3749aa6716f57c6ac15a065fe5720962` |
+| [(9,0)](l1_gamma_9_0.out.txt) | (13,4) | `a49179cd4501a645375907af1bc640024ad197de98f2e7c5fbbde7b10862d63f` |
+
+The eight signed orbits add 144 disjoint words and contribute
+`-6682308534228279771/590295810358705651712` together.
+Verified dominant coverage is 112 of 148 orbits and 8,694 of
+9,216 words.
