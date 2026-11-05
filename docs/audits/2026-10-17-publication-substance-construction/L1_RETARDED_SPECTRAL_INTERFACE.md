@@ -7302,3 +7302,21 @@ with zero imaginary part. Its nine-member orbit contributes
 source words. Independent reconstruction found the words
 disjoint from the 288 words covered by the first three orbits.
 Four of 148 dominant orbits now have complete results.
+
+### Minority representatives 174, 177, 180 and 182
+
+Independent review checked all four pinned rosters and their
+signed manifest scales. Each has 2,304 ordered exact leaves,
+864 nonzero contributions and zero imaginary part.
+
+| Representative | Multiplicity | Exact real coefficient | Raw receipt SHA-256 |
+|---:|---:|---|---|
+| 174 | 6 | `470989542140397/4611686018427387904` | `c815b2819e205a1b5bb4eba6385520c309f597a74b2ff9c2f69eca766ed3761a` |
+| 177 | 18 | `871859979116847/144115188075855872` | `467794d93dcf1fc9156ab2dd39785530b42733c416f588e8720c0cd3b1f38d2b` |
+| 180 | 6 | `-207640550836089/2305843009213693952` | `27bd5ff7cbba3d71d30edd2710cc996fe048697ceb0973107249a8140fb19c27` |
+| 182 | 6 | `-231274434671091/2305843009213693952` | `b84a43ed196e1e031e80af5501826cfeadf79a2ed5e0a2713df6b424a8c772a7` |
+
+The repository orbit verifier replayed the terminal receipts and
+reproduced the reviewed subtotal
+`157251432208655295/288230376151711744` over 276 of 288 pairs
+in 32 of 34 orbits. The remaining representatives are 181 and 183.
