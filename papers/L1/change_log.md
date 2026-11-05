@@ -111,3 +111,30 @@ It also reproduces the H1 endpoint-theorem attribution problem
 and records a numerical window-cancellation limitation that
 existing test tolerances mask. Five prior findings are marked
 for reconciliation; no finding is closed by this review.
+
+### 2026-11-05 — Stable numerical interval and boundary comparison
+
+The compatible-window computation now uses compensated endpoint
+evaluation for small caps, stable lower evaluation near cap one
+and the correct zero lower bound for caps at or above one. It
+validates cap inputs and documents unrepresentable endpoint
+overflow. The speed deviation uses its rationalized form and
+preserves wider scalar arithmetic. D3's width ratio uses the
+exact algebraic width.
+
+Independent review accepted the repair and its rounding budget.
+The regression suite first exposed eleven failures, then two
+additional single-precision failures. The final 69 cases pass,
+with exact rational and high-precision references. A fresh
+210-input boundary control has zero classification mismatches.
+The existing counts writer updates the project total to 6,911,
+and all fourteen focused freshness checks pass.
+
+The manuscript test count is 69. It compiles to four pages;
+the first three pages and the regenerated headline figure are
+pixel-identical to the prior accepted outputs. Page four was
+visually checked. The six inherited overfull boxes remain.
+The refreshed canonical sentence review has 114 records and
+preserves the physical BUILD obligations and H1 attribution
+failure. The focused numerical finding is
+`review:2026-11-05-publication-l1-window-precision:L1:1.1`.

@@ -8604,7 +8604,12 @@ def c_GW_deviation_from_c(chi_vest):
     float
         (c_GW − c) / c. Zero at the natural anchor χ_vest = 1.
     """
-    return float(np.sqrt(chi_vest) - 1.0)
+    scalar_type = np.result_type(chi_vest, np.float64).type
+    chi = scalar_type(chi_vest)
+    root = np.sqrt(chi)
+    if np.isfinite(root):
+        return float((chi - 1.0) / (root + 1.0))
+    return float(root - 1.0)
 
 
 def dispersion_correction_from_GammaH(omega_hz, gamma_h_dimensionless):

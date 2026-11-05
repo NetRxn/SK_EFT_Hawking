@@ -1,14 +1,17 @@
-"""Phase 6a Wave 2: gravitational-wave propagation tests.
+"""Gravitational-wave propagation and numerical-window tests.
 
-Cross-checks the Python pipeline (``src.gravitational_waves``) against
-the Lean module ``GravitationalWaves.lean``. The Wave 2 main physics
-finding — natural-range vestigial-second-sound graviton ID fails
-GW170817 by 14+ orders of magnitude — is encoded as a hard test.
+The adopted susceptibility endpoints exceed the GW170817 speed cap.
+The compatible interval surrounds unity inside the adopted range.
+Exact rational and high-precision references check the numerical
+interval and speed-deviation computations.
 """
 
 from __future__ import annotations
 
 import math
+
+from decimal import Decimal, localcontext
+from fractions import Fraction
 
 import numpy as np
 import pytest
@@ -136,18 +139,19 @@ class TestLigoConstraint:
         # window is symmetric around 1 to leading order
         assert (1.0 - chi_lo) == pytest.approx(chi_hi - 1.0, rel=1e-3)
 
-    def test_ligo_window_size_matches_2x_cap(self):
-        """Width of GW170817-compatible χ window ≈ 2·cap."""
-        cap = GW_PARAMS["C_GW_TWO_SIDED_CAP"]
-        chi_lo, chi_hi = chi_vest_window_compatible_with_ligo(cap)
-        assert (chi_hi - chi_lo) == pytest.approx(4.0 * cap, rel=1e-3)
+    def test_ligo_window_endpoints_match_exact_default_cap(self):
+        """Rounded endpoints agree with the exact cap's rational preimage."""
+        cap = Fraction.from_float(GW_PARAMS["C_GW_TWO_SIDED_CAP"])
+        chi_lo, chi_hi = chi_vest_window_compatible_with_ligo()
+        assert chi_lo == float((1 - cap) ** 2)
+        assert chi_hi == float((1 + cap) ** 2)
 
 
 # =====================================================================
 # Natural-range falsification (LOAD-BEARING)
 # =====================================================================
 class TestNaturalRangeFalsification:
-    """Natural χ_vest range fails GW170817 by ~10^14."""
+    """Both adopted susceptibility endpoints exceed the GW170817 speed cap."""
 
     def test_natural_lower_violates_ligo(self):
         """Lean: natural_lower_violates_ligo"""
@@ -323,8 +327,12 @@ class TestVestigialModeIsGravitonBundle:
         """Window width = 4·tol to leading order; Lean biconditional pre-image."""
         cap = GW_PARAMS["C_GW_TWO_SIDED_CAP"]
         chi_lo, chi_hi = chi_vest_window_compatible_with_ligo(cap)
-        # (1+tol)^2 - (1-tol)^2 = 4·tol
-        assert (chi_hi - chi_lo) == pytest.approx(4.0 * cap, rel=1e-9)
+        # Quantized endpoints carry a known rounding budget around exact 4·tol.
+        exact_width = 4 * Fraction.from_float(cap)
+        width = Fraction.from_float(chi_hi) - Fraction.from_float(chi_lo)
+        budget = (Fraction.from_float(math.ulp(chi_lo)) +
+                  Fraction.from_float(math.ulp(chi_hi))) / 2
+        assert abs(width - exact_width) <= budget
 
 
 # =====================================================================
@@ -357,18 +365,16 @@ class TestWave1Integration:
 class TestStrengtheningPass:
     """Cross-checks for the Wave 2 strengthening-pass theorems."""
 
-    def test_quarter_susceptibility_isolates_p3prime(self):
-        """Lean: H_VestigialModeIsGraviton_fails_at_quarter. χ=1/4 gives
-        Δc/c = -1/2; |Δ| = 1/2 fails the strict-< 1/2 P3' clause."""
+    def test_quarter_susceptibility_violates_cap_and_strict_half_bound(self):
+        """At χ=1/4, both the speed cap and strict half-deviation bound fail."""
         deviation = c_GW_deviation_from_c(0.25)
         assert deviation == pytest.approx(-0.5, rel=1e-15)
         # The bundle's P3' is |Δ| < 1/2 (strict). At χ=1/4, |Δ| = 1/2 exactly.
         assert abs(deviation) >= 0.5  # P3' fails
+        assert not ligo_constraint_check(deviation)
 
-    def test_natural_range_disjoint_from_ligo_window(self):
-        """Lean: natural_range_disjoint_from_ligo_window. The natural
-        endpoints both fail LigoSatisfied; the natural range and the
-        GW170817-compatible window are disjoint."""
+    def test_natural_endpoints_fail_and_compatible_window_is_inside_range(self):
+        """Both adopted endpoints fail while the compatible interval contains unity."""
         chi_lo = GW_PARAMS["CHI_VEST_NATURAL_LOWER"]
         chi_hi = GW_PARAMS["CHI_VEST_NATURAL_UPPER"]
         cap = GW_PARAMS["C_GW_TWO_SIDED_CAP"]
@@ -382,9 +388,8 @@ class TestStrengtheningPass:
 
         # The GW170817-compatible window
         chi_lig_lo, chi_lig_hi = chi_vest_window_compatible_with_ligo(cap)
-        # Disjointness: chi_lig_hi < chi_lo and chi_lig_lo > chi_hi would
-        # be unattainable since the window contains 1; check that the
-        # endpoints are outside the window
+        # Endpoint exclusion coexists with intersection at the natural anchor.
+        assert chi_lo < chi_lig_lo < 1.0 < chi_lig_hi < chi_hi
         assert chi_lo < chi_lig_lo or chi_lo > chi_lig_hi
         assert chi_hi < chi_lig_lo or chi_hi > chi_lig_hi
 
@@ -434,11 +439,8 @@ class TestStrengtheningPass:
         deviation = c_GW_deviation_from_c(0.25)
         assert not (abs(deviation) < 0.5)  # P3' fails
 
-    def test_second_sound_underdetermination_replaced_by_disjointness(self):
-        """The strengthened Phase 5y H1 caveat: the natural range and
-        GW170817 window are disjoint (not just 'one consistent value
-        exists'). This is the substantive replacement for the prior
-        ∃-absorption form."""
+    def test_natural_endpoints_excluded_while_window_contains_unity(self):
+        """The finite window is inside the adopted range and includes unity."""
         cap = GW_PARAMS["C_GW_TWO_SIDED_CAP"]
         chi_lo, chi_hi = chi_vest_window_compatible_with_ligo(cap)
 
@@ -450,10 +452,62 @@ class TestStrengtheningPass:
         natural_hi = GW_PARAMS["CHI_VEST_NATURAL_UPPER"]
         natural_width = natural_hi - natural_lo
 
-        # The LIGO window is exponentially smaller than the natural range
+        # The interval widths differ by more than fourteen orders of magnitude.
         # ratio = natural / ligo ~ 9.9 / 1.2e-14 ~ 8e14
         ratio = natural_width / ligo_window_width
         assert ratio > 1e14
         # And the natural endpoints are outside the LIGO window
         assert natural_lo < chi_lo  # 0.1 < ~1
         assert natural_hi > chi_hi  # 10 > ~1
+        assert natural_lo < chi_lo < 1.0 < chi_hi < natural_hi
+
+
+class TestWindowNumericalPrecision:
+    @pytest.mark.parametrize("cap", [
+        0.0, 1e-18, 3e-15, 0.1, 0.5, math.nextafter(1.0, 0.0), 1.0, 2.0,
+    ])
+    def test_window_endpoints_against_exact_preimage(self, cap):
+        tolerance = Fraction.from_float(cap)
+        expected = (max(Fraction(0), 1 - tolerance) ** 2,
+                    (1 + tolerance) ** 2)
+        actual = chi_vest_window_compatible_with_ligo(cap)
+        for value, reference in zip(actual, expected, strict=True):
+            # One output ulp covers the squared term's intermediate rounding.
+            assert abs(Fraction.from_float(value) - reference) <= Fraction.from_float(
+                math.ulp(float(reference))
+            )
+
+    @pytest.mark.parametrize("cap", [-1.0, float("nan"), float("inf")])
+    def test_invalid_caps_are_rejected(self, cap):
+        with pytest.raises(ValueError, match="finite.*nonnegative"):
+            chi_vest_window_compatible_with_ligo(cap)
+
+    @pytest.mark.parametrize("chi", [
+        math.nextafter(1.0, 0.0), math.nextafter(1.0, math.inf),
+        0.999999999999994, 1.000000000000006,
+        np.float32(1.0000001), np.float32(0.99999994),
+        np.longdouble(1) + 4 * np.finfo(np.longdouble).eps,
+    ])
+    def test_near_unity_deviation_matches_high_precision_reference(self, chi):
+        with localcontext() as context:
+            context.prec = 80
+            numerator, denominator = chi.as_integer_ratio()
+            exact_chi = Decimal(numerator) / Decimal(denominator)
+            reference = float(exact_chi.sqrt() - 1)
+        assert c_GW_deviation_from_c(chi) == pytest.approx(
+            reference, rel=3e-16, abs=0.0
+        )
+
+    def test_infinite_and_nan_deviation_behavior_is_preserved(self):
+        assert math.isinf(c_GW_deviation_from_c(math.inf))
+        assert math.isnan(c_GW_deviation_from_c(math.nan))
+
+    def test_d3_width_ratio_uses_the_exact_algebraic_width(self):
+        from papers.D3.tables import _chi_window_ratio
+
+        cap = GW_PARAMS["C_GW_TWO_SIDED_CAP"]
+        natural = (GW_PARAMS["CHI_VEST_NATURAL_UPPER"]
+                   - GW_PARAMS["CHI_VEST_NATURAL_LOWER"])
+        assert _chi_window_ratio() == pytest.approx(
+            natural / (4 * cap), rel=3e-16, abs=0.0
+        )

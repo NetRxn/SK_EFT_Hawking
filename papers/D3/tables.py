@@ -87,7 +87,7 @@ def _chi_window_ratio() -> float:
     tol = GW_PARAMS['C_GW_TWO_SIDED_CAP']
     natural = (GW_PARAMS['CHI_VEST_NATURAL_UPPER']
                - GW_PARAMS['CHI_VEST_NATURAL_LOWER'])
-    admitted = (1.0 + tol) ** 2 - (1.0 - tol) ** 2
+    admitted = 4.0 * tol if tol <= 1.0 else (1.0 + tol) ** 2
     return natural / admitted
 
 
