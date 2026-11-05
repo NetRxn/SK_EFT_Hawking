@@ -252,8 +252,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   geometry normalization. Preserve the checked raw totals and signed
   membership when combining selected coefficients.
   The [four-deviation paired census](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-paired-four-deviation-census)
-  independently reproduces all 272 words. Its 42-word same-axis,
-  single-protected-torus class is the next exact replay. The
+  independently reproduces all 272 words. The
+  [complete42-word same-axis class](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-four-deviation-single-protected-torus-class)
+  has independently verified subtotal
+  `53640259931094413213475/8796093022208`, with no shear factor.
+  Its21 translated word pairs agree exactly. The
   [fully peeled evaluator](L1_RETARDED_SPECTRAL_INTERFACE.md#fully-peeled-four-deviation-source-words)
   now supplies a separately reviewed route for 86 additional
   census entries, including two shared source/action edges.

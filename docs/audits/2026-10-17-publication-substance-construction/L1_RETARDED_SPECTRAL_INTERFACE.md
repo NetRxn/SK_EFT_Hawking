@@ -8606,3 +8606,26 @@ with the 90 words supported by the original geometry kernel,
 these words leave 96 census entries requiring other core
 constructions. All full action, source, common normalization
 and physical matching requirements remain open.
+
+### Complete four-deviation single-protected-torus class
+
+The [42-word receipt archive](l1_k4_core42_receipts.jsonl) and
+[independent verification](l1_k4_core42_verification.json)
+cover every same-axis census word with one protected torus,
+no square and no free torus. All 42 CLI runs exited zero.
+Every terminal row matches its declared census word, manifest,
+reduced rational coefficient and integral numerator under its
+divisor. Maximum peak is 3,952 rows, with no cap failures.
+
+The complete unsigned same-axis subtotal is
+`53640259931094413213475/8796093022208`.
+No shear or axis multiplicity has been applied. Independent
+covariance verification translates sites by XOR1, swapping the
+two commuting same-axis sources. All 21 paired coefficients
+agree exactly. The per-receipt bundle digest is
+`46719bf801747b0d9f497ef28cdd3fb1695a411be3d1be372be6d361d90f1c22`.
+
+The fully peeled 86-word population is a separate contraction.
+The other supported geometry classes and the remaining
+residual-core words are still required for the complete k4
+coefficient.
