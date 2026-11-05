@@ -1,0 +1,19 @@
+# Independent bounded L1 reader-notation review
+
+Verdict: ACCEPT scratch `/tmp/l1-reader-notation-6962-r1.tex`, SHA256 `f611a8a308dac9bd1f5e2cef9fcb88ad0ea77ac754abe65f86e73b34971d9cc8`. No required correction in these three edits.
+
+Baseline clean HEAD6962a3c0475d6386a6427a765949f413efa76f80; actual L1 TeX SHA82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac. Read current paper-authoring/prohibited-pattern guidance, governing queue, exact proposed diff and surrounding manuscript, actual Lean RPA/dispersion declarations and proof carriers. No new theorem/existence/absence/native claim, slot/build/proof execution, source/Git/notebook write or full prose acceptance. ROOT owns integration. Final tracked status remained clean.
+
+Independent full-text comparison confirms exactly three changed blocks:
+
+1. Abstract now defines c as electromagnetic reference speed. This identifies the observable reference convention already used for GW170817; it does not derive same-background microscopic matter propagation or close the physical light-cone obligation.
+2. RPA paragraph defines gamma_star as effective resummation coupling and its product with chi0 as dimensionless, while explicitly retaining undetermined physical normalization/coupling value. Actual `VestigialSusceptibility.chi_RPA (chi0 gamma_star : Real) := chi0/(1−gamma_star*chi0)` uses real scalar carriers, without unit types or a computed coupling. `chi_RPA_closed_form` explicitly requires nonzero denominator; sign stability assumes chi0>0 and gamma_star*chi0<1. The dimensionless-product sentence is the dimensional consistency convention for subtraction from1, not an extracted Lean physical-units theorem. It is compatible with a dimensionful bubble and inverse-dimension coupling, and does not make chi0 dimensionless, choose a numerical gamma_star, derive the project-adopted interval or normalize physical chi_vest. Existing paragraph continues to state all of those model-input boundaries. No pole or unrestricted-domain claim is introduced; existing conditional closed-form/stability scope remains.
+3. Dispersion sentence now states `|gamma omega|≤tau iff |gamma|≤tau/omega` for positive numerical omega, explicitly using the fixed GW170817 tolerance and bounding the correction alone. Actual `dispersion_within_ligo_iff {gamma omega : Real} (h:0<omega)` fixes tolGW170817 in its conclusion, rather than quantifying an arbitrary tolerance. Actual tolGW170817 is3e−15 and dispersion_correction is multiplication gamma*omega. The proposed sentence faithfully retains that scope, avoids undefined manuscript tol and physical-Hz interpretation, and does not claim total-deviation compatibility or controlled transport.
+
+No new em-dash, process-history narration, unsupported count or physics-completion assertion is introduced. Existing wider manuscript B3/prose/normalization/transport caveats and independent scientific construction obligations remain. This is source-level notation/math acceptance only; canonical compile/rendered layout and any affected catalog rebinding remain ROOT's later integration checks.
+
+Evidence: exact diff via diff -u, full-text SequenceMatcher confirming3 replacement blocks, direct actual Lean source statements/domain assumptions, and read-only Git HEAD/status. Source hashes: GravitationalWaves.lean027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54; VestigialSusceptibility.lean cf5a4584ad51f44a232c7da2d4fe9300ea14c322a416b2843e7ef3c2032bf721. Complete structured pins/diff indices in companion JSON.
+
+## CONTRADICTIONS BETWEEN THE BRIEF AND THE SOURCES
+
+None requiring correction. Actual dispersion theorem uses fixed tolGW170817, consistent with the proposed tau sentence. Actual RPA carrier is Real, so dimensionless-product consistency is a modeling/units convention, not a formal physical-normalization result. Both edits preserve that distinction and the remaining physical BUILD obligations.

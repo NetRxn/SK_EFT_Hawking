@@ -1,9 +1,9 @@
 {
   "paper": "L1",
-  "review_date": "2026-11-05T19:07:45.648093+00:00",
+  "review_date": "2026-11-05T19:49:26.795638+00:00",
   "reviewer_version": "claims-reviewer-v2",
   "reviewer_model": "gpt-6",
-  "reviewer_run_id": "claims-reviewer-v2:2026-11-05:l1-primary-body-claims-refresh-r1",
+  "reviewer_run_id": "claims-reviewer-v2:2026-11-05:l1-reader-notation-claims-r3",
   "bundle_target": "L1",
   "bundle_tier": 2,
   "review_profile": "current L1 full sentence coverage; mapped-source/cross-bridge inspection limited",
@@ -12,7 +12,7 @@
       "type": "formal-claim",
       "finding_classes": [],
       "agent_verdict": "PASS",
-      "agent_notes": "Explicitly assumed speed law, matching c_GW definition; no dynamical derivation asserted.",
+      "agent_notes": "The adopted scalar law remains explicitly assumed. c is defined here as the electromagnetic reference speed used in the GW/electromagnetic comparison; this definition does not derive a tensor mode or matter coupling. Python c_GW_from_chi_vest uses c_light*sqrt(chi), with C_LIGHT_M_S the SI reference.",
       "gates_invoked": [],
       "chain_proposed": {
         "links": [
@@ -25,31 +25,35 @@
         "completeness": "full"
       },
       "section": "abstract",
-      "quote": "We constrain our assumed leading-order graviton speed\n$\\cGW=c\\sqrt{\\chivest}$.",
+      "quote": "We constrain our assumed leading-order graviton speed\n$\\cGW=c\\sqrt{\\chivest}$, where $c$ is the electromagnetic\nreference speed.",
       "tex_line_start": 33,
-      "tex_line_end": 34,
-      "id": "sentence:L1:abstract:9a3de8fb",
-      "quote_normalized": "we constrain our assumed leading-order graviton speed $\\cgw=c\\sqrt{\\chivest}$.",
+      "tex_line_end": 35,
+      "id": "sentence:L1:abstract:756848ee",
+      "quote_normalized": "we constrain our assumed leading-order graviton speed $\\cgw=c\\sqrt{\\chivest}$, where $c$ is the electromagnetic reference speed.",
       "raw_id_parts": {
         "paper": "L1",
         "section_slug": "abstract",
-        "quote_hash": "9a3de8fb",
+        "quote_hash": "756848ee",
         "hash_algorithm": "sha256_first_8"
       },
       "section_ordinal": 1,
-      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-reader-notation-claims-r3",
       "tombstone": false,
       "bundle_destination": "L1",
       "bundle_section_hint": "abstract",
       "lift_action": "Lift-letter",
-      "rewrite_of": null,
+      "rewrite_of": "sentence:L1:abstract:9a3de8fb",
       "meta": {
         "review_unit": 0,
-        "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
-        "assessment_origin": "exact-retained",
-        "prior_assessment_id": "sentence:L1:abstract:9a3de8fb",
-        "prior_assessment_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
-        "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+        "source_sha256": "208a06c5ca352ed209cfd221262e4f4099dae58d3c310c42bd1369b0df45ff8d",
+        "assessment_origin": "bounded-reader-notation-reassessment",
+        "prior_assessment_ids": [
+          "sentence:L1:abstract:9a3de8fb"
+        ],
+        "prior_assessment_run_ids": [
+          "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+        ],
+        "source_scope": "Source/actual statement and dimensional-convention inspection only; no Lean/LSP/slot/kernel/build/native/scientific execution. Physical matching and full prose/stage/main/human holds remain."
       }
     },
     {
@@ -70,8 +74,8 @@
       },
       "section": "abstract",
       "quote": "The conservative GW170817 bound\n$|\\dccap|\\leq\\tau=3\\times10^{-15}$ confines the nonnegative\nsusceptibility to $[(1-\\tau)^2,(1+\\tau)^2]$, of width $4\\tau$.",
-      "tex_line_start": 34,
-      "tex_line_end": 36,
+      "tex_line_start": 35,
+      "tex_line_end": 37,
       "id": "sentence:L1:abstract:275ad002",
       "quote_normalized": "the conservative gw170817 bound $|\\dccap|\\leq\\tau=3\\times10^{-15}$ confines the nonnegative susceptibility to $[(1-\\tau)^2,(1+\\tau)^2]$, of width $4\\tau$.",
       "raw_id_parts": {
@@ -114,8 +118,8 @@
       },
       "section": "abstract",
       "quote": "This interval contains $\\chivest=1$ and is over fourteen orders of\nmagnitude narrower than our adopted range $[0.1,10]$.",
-      "tex_line_start": 37,
-      "tex_line_end": 38,
+      "tex_line_start": 38,
+      "tex_line_end": 39,
       "id": "sentence:L1:abstract:600cc132",
       "quote_normalized": "this interval contains $\\chivest=1$ and is over fourteen orders of magnitude narrower than our adopted range $[0.1,10]$.",
       "raw_id_parts": {
@@ -158,8 +162,8 @@
       },
       "section": "abstract",
       "quote": "The mode and range are not derived from microscopic dynamics;\nthe constraint applies to this kinematic model, not to emergent\ngravity generally.",
-      "tex_line_start": 39,
-      "tex_line_end": 41,
+      "tex_line_start": 40,
+      "tex_line_end": 42,
       "id": "sentence:L1:abstract:7597e1a0",
       "quote_normalized": "the mode and range are not derived from microscopic dynamics; the constraint applies to this kinematic model, not to emergent gravity generally.",
       "raw_id_parts": {
@@ -205,8 +209,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "Spinor-gravity constructions use composite vielbeins built from\nfermions~\\cite{Diakonov2011,HebeckerWetterich2003}.",
-      "tex_line_start": 50,
-      "tex_line_end": 51,
+      "tex_line_start": 51,
+      "tex_line_end": 52,
       "id": "sentence:L1:introduction:62514176",
       "quote_normalized": "spinor-gravity constructions use composite vielbeins built from fermions~.",
       "raw_id_parts": {
@@ -248,8 +252,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "Volovik proposes a vestigial phase with metric order preceding a\nnonzero tetrad expectation~\\cite{Volovik2024Vestigial}.",
-      "tex_line_start": 52,
-      "tex_line_end": 53,
+      "tex_line_start": 53,
+      "tex_line_end": 54,
       "id": "sentence:L1:introduction:5f9fdcc4",
       "quote_normalized": "volovik proposes a vestigial phase with metric order preceding a nonzero tetrad expectation~.",
       "raw_id_parts": {
@@ -291,8 +295,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "His symmetry-breaking analysis distinguishes absorbed\nNambu--Goldstone modes from the Higgs-sector gravitational-wave\nmodes, whose counting also uses coordinate\nconstraints~\\cite{Volovik2022Counting}.",
-      "tex_line_start": 54,
-      "tex_line_end": 57,
+      "tex_line_start": 55,
+      "tex_line_end": 58,
       "id": "sentence:L1:introduction:0240691b",
       "quote_normalized": "his symmetry-breaking analysis distinguishes absorbed nambu--goldstone modes from the higgs-sector gravitational-wave modes, whose counting also uses coordinate constraints~.",
       "raw_id_parts": {
@@ -329,8 +333,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "Here we assume that a metric-channel excitation of such a substrate\ncan be identified with a spin-2 second-sound graviton.",
-      "tex_line_start": 58,
-      "tex_line_end": 59,
+      "tex_line_start": 59,
+      "tex_line_end": 60,
       "id": "sentence:L1:introduction:648f68d1",
       "quote_normalized": "here we assume that a metric-channel excitation of such a substrate can be identified with a spin-2 second-sound graviton.",
       "raw_id_parts": {
@@ -372,8 +376,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "Volovik applies Landau two-fluid hydrodynamics to a de~Sitter\nstate in~\\cite{Volovik2026SecondSound}.",
-      "tex_line_start": 62,
-      "tex_line_end": 63,
+      "tex_line_start": 63,
+      "tex_line_end": 64,
       "id": "sentence:L1:introduction:8b4bfa65",
       "quote_normalized": "volovik applies landau two-fluid hydrodynamics to a de~sitter state in~.",
       "raw_id_parts": {
@@ -415,8 +419,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "The underlying thermodynamic framework treats the gravitational\nnormal component as stiff matter~\\cite{Volovik2024VacuumDecay}.",
-      "tex_line_start": 64,
-      "tex_line_end": 65,
+      "tex_line_start": 65,
+      "tex_line_end": 66,
       "id": "sentence:L1:introduction:3aa1767b",
       "quote_normalized": "the underlying thermodynamic framework treats the gravitational normal component as stiff matter~.",
       "raw_id_parts": {
@@ -462,8 +466,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "Within that de~Sitter model, the Landau formula and the stiff-component\nthermodynamic relations give $s_2=c$, independently of $H$.",
-      "tex_line_start": 66,
-      "tex_line_end": 67,
+      "tex_line_start": 67,
+      "tex_line_end": 68,
       "id": "sentence:L1:introduction:f764373d",
       "quote_normalized": "within that de~sitter model, the landau formula and the stiff-component thermodynamic relations give $s_2=c$, independently of $h$.",
       "raw_id_parts": {
@@ -505,8 +509,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "He discusses several possible graviton interpretations of this\ncollective mode and leaves its type open.",
-      "tex_line_start": 68,
-      "tex_line_end": 69,
+      "tex_line_start": 69,
+      "tex_line_end": 70,
       "id": "sentence:L1:introduction:67b7c8dd",
       "quote_normalized": "he discusses several possible graviton interpretations of this collective mode and leaves its type open.",
       "raw_id_parts": {
@@ -548,8 +552,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "For the spin-2 substrate identification assumed here, we also assume\nthe susceptibility-dependent speed law:\n\\begin{equation}\n  \\cGW^2(\\chivest) = c^2 \\cdot \\chivest, \\qquad\n  \\cGW(\\chivest) = c\\sqrt{\\chivest},\n                \n\\end{equation}\nwhere $\\chivest$ is the dimensionless, normalized metric-channel\nresponse of the assumed vestigial substrate.",
-      "tex_line_start": 70,
-      "tex_line_end": 78,
+      "tex_line_start": 71,
+      "tex_line_end": 79,
       "id": "sentence:L1:introduction:d6013bba",
       "quote_normalized": "for the spin-2 substrate identification assumed here, we also assume the susceptibility-dependent speed law: \\begin{equation} \\cgw^2(\\chivest) = c^2 \\cdot \\chivest, \\qquad \\cgw(\\chivest) = c\\sqrt{\\chivest}, \\end{equation} where $\\chivest$ is the dimensionless, normalized metric-channel response of the assumed vestigial substrate.",
       "raw_id_parts": {
@@ -586,8 +590,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "It is a free parameter in this calculation.",
-      "tex_line_start": 79,
-      "tex_line_end": 79,
+      "tex_line_start": 80,
+      "tex_line_end": 80,
       "id": "sentence:L1:introduction:7b7e770d",
       "quote_normalized": "it is a free parameter in this calculation.",
       "raw_id_parts": {
@@ -633,8 +637,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "The RPA form in \\texttt{VestigialSusceptibility.lean} models it using\nunevaluated bare susceptibility and coupling inputs, so that form\nalone supplies no numerical value of $\\chivest$.",
-      "tex_line_start": 80,
-      "tex_line_end": 82,
+      "tex_line_start": 81,
+      "tex_line_end": 83,
       "id": "sentence:L1:introduction:36969d20",
       "quote_normalized": "the rpa form in vestigialsusceptibility.lean models it using unevaluated bare susceptibility and coupling inputs, so that form alone supplies no numerical value of $\\chivest$.",
       "raw_id_parts": {
@@ -677,8 +681,8 @@
       },
       "section": "Introduction",
       "quote": "The underlying\nlattice-fermion framework is the one whose unitarity Vergeles\nestablishes~\\cite{Vergeles2025}.",
-      "tex_line_start": 83,
-      "tex_line_end": 85,
+      "tex_line_start": 84,
+      "tex_line_end": 86,
       "id": "sentence:L1:introduction:64da36f6",
       "quote_normalized": "the underlying lattice-fermion framework is the one whose unitarity vergeles establishes~.",
       "raw_id_parts": {
@@ -704,40 +708,6 @@
       }
     },
     {
-      "type": "qualitative",
-      "finding_classes": [],
-      "agent_verdict": "INFO",
-      "agent_notes": "Author appraisal, no scientific backing claimed.",
-      "gates_invoked": [],
-      "section": "Introduction",
-      "quote": "The identification is appealing in its\nbrevity.",
-      "tex_line_start": 85,
-      "tex_line_end": 86,
-      "id": "sentence:L1:introduction:0ef96618",
-      "quote_normalized": "the identification is appealing in its brevity.",
-      "raw_id_parts": {
-        "paper": "L1",
-        "section_slug": "introduction",
-        "quote_hash": "0ef96618",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section_ordinal": 13,
-      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
-      "tombstone": false,
-      "bundle_destination": "L1",
-      "bundle_section_hint": "Introduction",
-      "lift_action": "Lift-letter",
-      "rewrite_of": null,
-      "meta": {
-        "review_unit": 16,
-        "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
-        "assessment_origin": "exact-retained",
-        "prior_assessment_id": "sentence:L1:introduction:0ef96618",
-        "prior_assessment_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
-        "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
-      }
-    },
-    {
       "type": "methodology",
       "finding_classes": [],
       "chain_proposed": {
@@ -753,31 +723,35 @@
       "agent_notes": "Accurate assumption disclosure for the supplied law.",
       "gates_invoked": [],
       "section": "Introduction",
-      "quote": "In this Letter, Eq.~\\eqref{eq:cGW} is an assumed kinematic speed law.",
+      "quote": "Equation~\\eqref{eq:cGW} is an\nassumed kinematic speed law.",
       "tex_line_start": 86,
-      "tex_line_end": 86,
-      "id": "sentence:L1:introduction:162806f2",
-      "quote_normalized": "in this letter, eq.~ is an assumed kinematic speed law.",
+      "tex_line_end": 87,
+      "id": "sentence:L1:introduction:82677384",
+      "quote_normalized": "equation~ is an assumed kinematic speed law.",
       "raw_id_parts": {
         "paper": "L1",
         "section_slug": "introduction",
-        "quote_hash": "162806f2",
+        "quote_hash": "82677384",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 14,
-      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+      "section_ordinal": 13,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-reader-notation-claims-r3",
       "tombstone": false,
       "bundle_destination": "L1",
       "bundle_section_hint": "Introduction",
       "lift_action": "Lift-letter",
-      "rewrite_of": null,
+      "rewrite_of": "sentence:L1:introduction:162806f2",
       "meta": {
-        "review_unit": 17,
-        "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
-        "assessment_origin": "exact-retained",
-        "prior_assessment_id": "sentence:L1:introduction:162806f2",
-        "prior_assessment_run_id": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z",
-        "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+        "review_unit": 16,
+        "source_sha256": "208a06c5ca352ed209cfd221262e4f4099dae58d3c310c42bd1369b0df45ff8d",
+        "assessment_origin": "bounded-reader-notation-reassessment",
+        "prior_assessment_ids": [
+          "sentence:L1:introduction:162806f2"
+        ],
+        "prior_assessment_run_ids": [
+          "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+        ],
+        "source_scope": "Source/actual statement and dimensional-convention inspection only; no Lean/LSP/slot/kernel/build/native/scientific execution. Physical matching and full prose/stage/main/human holds remain."
       }
     },
     {
@@ -792,8 +766,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "We constrain its free susceptibility without deriving a propagating\nsecond-sound mode from a microscopic action, its propagator, or its\ncoupling to matter.",
-      "tex_line_start": 87,
-      "tex_line_end": 89,
+      "tex_line_start": 88,
+      "tex_line_end": 90,
       "id": "sentence:L1:introduction:5de5ca35",
       "quote_normalized": "we constrain its free susceptibility without deriving a propagating second-sound mode from a microscopic action, its propagator, or its coupling to matter.",
       "raw_id_parts": {
@@ -802,7 +776,7 @@
         "quote_hash": "5de5ca35",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 15,
+      "section_ordinal": 14,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -810,7 +784,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 18,
+        "review_unit": 17,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:5de5ca35",
@@ -830,8 +804,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "This missing dynamical bridge is a limitation of\nthe present calculation, not an impossibility result.",
-      "tex_line_start": 89,
-      "tex_line_end": 90,
+      "tex_line_start": 90,
+      "tex_line_end": 91,
       "id": "sentence:L1:introduction:4c437fe8",
       "quote_normalized": "this missing dynamical bridge is a limitation of the present calculation, not an impossibility result.",
       "raw_id_parts": {
@@ -840,7 +814,7 @@
         "quote_hash": "4c437fe8",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 16,
+      "section_ordinal": 15,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -848,7 +822,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 19,
+        "review_unit": 18,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:4c437fe8",
@@ -874,8 +848,8 @@
       },
       "section": "Introduction",
       "quote": "The 2017 binary-neutron-star merger\nGW170817~\\cite{Abbott2017GW170817} placed an extraordinarily tight\nbound on $\\cGW$: comparing the gravitational-wave arrival time at\nLIGO/Virgo against the gamma-ray-burst signal at Fermi/INTEGRAL,\nthe multi-messenger collaboration constrained\n$-3 \\times 10^{-15} \\leq \\dccap \\leq +7 \\times 10^{-16}$.",
-      "tex_line_start": 92,
-      "tex_line_end": 97,
+      "tex_line_start": 93,
+      "tex_line_end": 98,
       "id": "sentence:L1:introduction:555a000d",
       "quote_normalized": "the 2017 binary-neutron-star merger gw170817~ placed an extraordinarily tight bound on $\\cgw$: comparing the gravitational-wave arrival time at ligo/virgo against the gamma-ray-burst signal at fermi/integral, the multi-messenger collaboration constrained $-3 \\times 10^{-15} \\leq \\dccap \\leq +7 \\times 10^{-16}$.",
       "raw_id_parts": {
@@ -884,7 +858,7 @@
         "quote_hash": "555a000d",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 17,
+      "section_ordinal": 16,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -892,7 +866,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 20,
+        "review_unit": 19,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:555a000d",
@@ -912,8 +886,8 @@
       },
       "section": "Introduction",
       "quote": "Conservatively two-sided, $|\\dccap| \\leq \\tau$ with\n$\\tau = 3 \\times 10^{-15}$.",
-      "tex_line_start": 98,
-      "tex_line_end": 99,
+      "tex_line_start": 99,
+      "tex_line_end": 100,
       "id": "sentence:L1:introduction:11fe3464",
       "quote_normalized": "conservatively two-sided, $|\\dccap| \\leq \\tau$ with $\\tau = 3 \\times 10^{-15}$.",
       "raw_id_parts": {
@@ -922,7 +896,7 @@
         "quote_hash": "11fe3464",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 18,
+      "section_ordinal": 17,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -930,45 +904,11 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 21,
+        "review_unit": 20,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:11fe3464",
         "prior_assessment_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
-        "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
-      }
-    },
-    {
-      "type": "methodology",
-      "finding_classes": [],
-      "agent_verdict": "TRANSITION",
-      "agent_notes": "Introduces conditional comparison.",
-      "gates_invoked": [],
-      "section": "Introduction",
-      "quote": "This Letter formalizes Eq.~\\eqref{eq:cGW}, places it head-to-head\nagainst GW170817, and reports the result.",
-      "tex_line_start": 101,
-      "tex_line_end": 102,
-      "id": "sentence:L1:introduction:2da8b694",
-      "quote_normalized": "this letter formalizes eq.~, places it head-to-head against gw170817, and reports the result.",
-      "raw_id_parts": {
-        "paper": "L1",
-        "section_slug": "introduction",
-        "quote_hash": "2da8b694",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section_ordinal": 19,
-      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
-      "tombstone": false,
-      "bundle_destination": "L1",
-      "bundle_section_hint": "Introduction",
-      "lift_action": "Lift-letter",
-      "rewrite_of": null,
-      "meta": {
-        "review_unit": 22,
-        "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
-        "assessment_origin": "exact-retained",
-        "prior_assessment_id": "sentence:L1:introduction:2da8b694",
-        "prior_assessment_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
         "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
       }
     },
@@ -989,31 +929,35 @@
         "completeness": "full"
       },
       "section": "Introduction",
-      "quote": "The conclusion is sharp:\nour assumed speed law satisfies the GW170817 bound only on a\nsub-interval of our adopted range $\\chivest \\in [0.1, 10]$ narrower\nthan that range by more than 14 orders of magnitude.",
+      "quote": "Our assumed speed law satisfies the GW170817 bound only on a\nsub-interval of our adopted range $\\chivest \\in [0.1, 10]$ narrower\nthan that range by more than 14 orders of magnitude.",
       "tex_line_start": 102,
-      "tex_line_end": 105,
-      "id": "sentence:L1:introduction:cd2d9076",
-      "quote_normalized": "the conclusion is sharp: our assumed speed law satisfies the gw170817 bound only on a sub-interval of our adopted range $\\chivest \\in [0.1, 10]$ narrower than that range by more than 14 orders of magnitude.",
+      "tex_line_end": 104,
+      "id": "sentence:L1:introduction:9f09b12d",
+      "quote_normalized": "our assumed speed law satisfies the gw170817 bound only on a sub-interval of our adopted range $\\chivest \\in [0.1, 10]$ narrower than that range by more than 14 orders of magnitude.",
       "raw_id_parts": {
         "paper": "L1",
         "section_slug": "introduction",
-        "quote_hash": "cd2d9076",
+        "quote_hash": "9f09b12d",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 20,
-      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+      "section_ordinal": 18,
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-reader-notation-claims-r3",
       "tombstone": false,
       "bundle_destination": "L1",
       "bundle_section_hint": "Introduction",
       "lift_action": "Lift-letter",
-      "rewrite_of": "sentence:L1:introduction:a07882f6",
+      "rewrite_of": "sentence:L1:introduction:cd2d9076",
       "meta": {
-        "review_unit": 23,
-        "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
-        "assessment_origin": "current-reassessment",
-        "prior_assessment_id": "sentence:L1:introduction:a07882f6",
-        "prior_assessment_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
-        "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+        "review_unit": 21,
+        "source_sha256": "208a06c5ca352ed209cfd221262e4f4099dae58d3c310c42bd1369b0df45ff8d",
+        "assessment_origin": "bounded-reader-notation-reassessment",
+        "prior_assessment_ids": [
+          "sentence:L1:introduction:cd2d9076"
+        ],
+        "prior_assessment_run_ids": [
+          "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+        ],
+        "source_scope": "Source/actual statement and dimensional-convention inspection only; no Lean/LSP/slot/kernel/build/native/scientific execution. Physical matching and full prose/stage/main/human holds remain."
       }
     },
     {
@@ -1034,8 +978,8 @@
       },
       "section": "Introduction",
       "quote": "The\nGW170817-compatible window $[(1-\\tau)^2, (1+\\tau)^2]$ has width\n$4\\tau$ in $\\chivest$ and sits strictly interior to our adopted range\n$[0.1, 10]$ about the anchor $\\chivest = 1$.",
-      "tex_line_start": 105,
-      "tex_line_end": 108,
+      "tex_line_start": 104,
+      "tex_line_end": 107,
       "id": "sentence:L1:introduction:3f462fe0",
       "quote_normalized": "the gw170817-compatible window $[(1-\\tau)^2, (1+\\tau)^2]$ has width $4\\tau$ in $\\chivest$ and sits strictly interior to our adopted range $[0.1, 10]$ about the anchor $\\chivest = 1$.",
       "raw_id_parts": {
@@ -1044,7 +988,7 @@
         "quote_hash": "3f462fe0",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 21,
+      "section_ordinal": 19,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1052,7 +996,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 24,
+        "review_unit": 22,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:3f462fe0",
@@ -1078,8 +1022,8 @@
       },
       "section": "Introduction",
       "quote": "Its relative width is $4\\tau/9.9 \\approx 1.2\\times10^{-15}$;\na probability mass additionally requires a specified prior.",
-      "tex_line_start": 109,
-      "tex_line_end": 110,
+      "tex_line_start": 108,
+      "tex_line_end": 109,
       "id": "sentence:L1:introduction:ec137388",
       "quote_normalized": "its relative width is $4\\tau/9.9 \\approx 1.2\\times10^{-15}$; a probability mass additionally requires a specified prior.",
       "raw_id_parts": {
@@ -1088,7 +1032,7 @@
         "quote_hash": "ec137388",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 22,
+      "section_ordinal": 20,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1096,7 +1040,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 25,
+        "review_unit": 23,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:ec137388",
@@ -1112,8 +1056,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "The result is a fine-tuning constraint on one specific\nkinematic identification, not a refutation of emergent\ngravity nor of the ADW program; we discuss three Phase~6 recovery\npaths in the Discussion.",
-      "tex_line_start": 110,
-      "tex_line_end": 113,
+      "tex_line_start": 109,
+      "tex_line_end": 112,
       "id": "sentence:L1:introduction:d6933ae4",
       "quote_normalized": "the result is a fine-tuning constraint on one specific kinematic identification, not a refutation of emergent gravity nor of the adw program; we discuss three phase~6 recovery paths in the discussion.",
       "raw_id_parts": {
@@ -1122,7 +1066,7 @@
         "quote_hash": "d6933ae4",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 23,
+      "section_ordinal": 21,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1130,7 +1074,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:introduction:8f425cff",
       "meta": {
-        "review_unit": 26,
+        "review_unit": 24,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "current-reassessment",
         "prior_assessment_id": "sentence:L1:introduction:8f425cff",
@@ -1150,8 +1094,8 @@
       },
       "section": "Introduction",
       "quote": "Using GW170817 to\neliminate a gravity model is not new.",
-      "tex_line_start": 115,
-      "tex_line_end": 116,
+      "tex_line_start": 114,
+      "tex_line_end": 115,
       "id": "sentence:L1:introduction:92468fa1",
       "quote_normalized": "using gw170817 to eliminate a gravity model is not new.",
       "raw_id_parts": {
@@ -1160,7 +1104,7 @@
         "quote_hash": "92468fa1",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 24,
+      "section_ordinal": 22,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1168,7 +1112,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 27,
+        "review_unit": 25,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:92468fa1",
@@ -1179,9 +1123,9 @@
     {
       "id": "sentence:L1:introduction:b7a2d94a",
       "section": "Introduction",
-      "section_ordinal": 25,
-      "tex_line_start": 116,
-      "tex_line_end": 118,
+      "section_ordinal": 23,
+      "tex_line_start": 115,
+      "tex_line_end": 117,
       "quote": "Within months of the detection,\nfour Letters analyzed constraints on specified gravitational actions\nand cosmological models.",
       "quote_normalized": "within months of the detection, four letters analyzed constraints on specified gravitational actions and cosmological models.",
       "raw_id_parts": {
@@ -1229,7 +1173,7 @@
       "bundle_section_hint": "Introduction",
       "lift_action": "Lift-letter",
       "meta": {
-        "review_unit": 28,
+        "review_unit": 26,
         "source_sha256": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
         "assessment_origin": "bounded-primary-body-reassessment",
         "prior_assessment_ids": [
@@ -1244,9 +1188,9 @@
     {
       "id": "sentence:L1:introduction:92b08bc8",
       "section": "Introduction",
-      "section_ordinal": 26,
-      "tex_line_start": 118,
-      "tex_line_end": 120,
+      "section_ordinal": 24,
+      "tex_line_start": 117,
+      "tex_line_end": 119,
       "quote": "Baker \\emph{et al.}~\\cite{BakerBellini2017}\nconstrained scalar-tensor and vector-tensor theories and obtained a\nconditional graviton-mass bound in bimetric gravity.",
       "quote_normalized": "baker et al.~ constrained scalar-tensor and vector-tensor theories and obtained a conditional graviton-mass bound in bimetric gravity.",
       "raw_id_parts": {
@@ -1279,7 +1223,7 @@
       "bundle_section_hint": "Introduction",
       "lift_action": "Lift-letter",
       "meta": {
-        "review_unit": 29,
+        "review_unit": 27,
         "source_sha256": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
         "assessment_origin": "bounded-primary-body-reassessment",
         "prior_assessment_ids": [
@@ -1294,9 +1238,9 @@
     {
       "id": "sentence:L1:introduction:e41111f6",
       "section": "Introduction",
-      "section_ordinal": 27,
-      "tex_line_start": 120,
-      "tex_line_end": 124,
+      "section_ordinal": 25,
+      "tex_line_start": 119,
+      "tex_line_end": 123,
       "quote": "Creminelli and\nVernizzi~\\cite{CreminelliVernizzi2017} required luminal propagation\nto remain robust on nearby cosmological backgrounds to avoid tuning,\nreducing the three independent quartic and quintic beyond-Horndeski\nfunctions to one.",
       "quote_normalized": "creminelli and vernizzi~ required luminal propagation to remain robust on nearby cosmological backgrounds to avoid tuning, reducing the three independent quartic and quintic beyond-horndeski functions to one.",
       "raw_id_parts": {
@@ -1329,7 +1273,7 @@
       "bundle_section_hint": "Introduction",
       "lift_action": "Lift-letter",
       "meta": {
-        "review_unit": 30,
+        "review_unit": 28,
         "source_sha256": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
         "assessment_origin": "bounded-primary-body-reassessment",
         "prior_assessment_ids": [
@@ -1344,9 +1288,9 @@
     {
       "id": "sentence:L1:introduction:57841ed5",
       "section": "Introduction",
-      "section_ordinal": 28,
-      "tex_line_start": 124,
-      "tex_line_end": 129,
+      "section_ordinal": 26,
+      "tex_line_start": 123,
+      "tex_line_end": 128,
       "quote": "Sakstein and Jain~\\cite{SaksteinJain2017} combined\nthe GW bound with cluster and stellar tests to constrain\nbeyond-Horndeski parameters; their separate combination of GW and M87\nblack-hole constraints made the covariant quartic galileon\ncosmologically irrelevant for the order-unity matter couplings\nconsidered.",
       "quote_normalized": "sakstein and jain~ combined the gw bound with cluster and stellar tests to constrain beyond-horndeski parameters; their separate combination of gw and m87 black-hole constraints made the covariant quartic galileon cosmologically irrelevant for the order-unity matter couplings considered.",
       "raw_id_parts": {
@@ -1379,7 +1323,7 @@
       "bundle_section_hint": "Introduction",
       "lift_action": "Lift-letter",
       "meta": {
-        "review_unit": 31,
+        "review_unit": 29,
         "source_sha256": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
         "assessment_origin": "bounded-primary-body-reassessment",
         "prior_assessment_ids": [
@@ -1394,9 +1338,9 @@
     {
       "id": "sentence:L1:introduction:fed0c478",
       "section": "Introduction",
-      "section_ordinal": 29,
-      "tex_line_start": 129,
-      "tex_line_end": 133,
+      "section_ordinal": 27,
+      "tex_line_start": 128,
+      "tex_line_end": 132,
       "quote": "Ezquiaga and\nZumalac\\'arregui~\\cite{EzquiagaZumalacarregui2017} also discussed\nconstraints on GW-speed-modifying couplings in Einstein-aether,\nsome sectors of Ho\\v{r}ava gravity, and Generalized Proca theories,\nand the impact on TeVeS and MOND-like theories.",
       "quote_normalized": "ezquiaga and zumalac\\'arregui~ also discussed constraints on gw-speed-modifying couplings in einstein-aether, some sectors of ho\\v{r}ava gravity, and generalized proca theories, and the impact on teves and mond-like theories.",
       "raw_id_parts": {
@@ -1429,7 +1373,7 @@
       "bundle_section_hint": "Introduction",
       "lift_action": "Lift-letter",
       "meta": {
-        "review_unit": 32,
+        "review_unit": 30,
         "source_sha256": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
         "assessment_origin": "bounded-primary-body-reassessment",
         "prior_assessment_ids": [
@@ -1444,9 +1388,9 @@
     {
       "id": "sentence:L1:introduction:d76ed428",
       "section": "Introduction",
-      "section_ordinal": 30,
-      "tex_line_start": 135,
-      "tex_line_end": 136,
+      "section_ordinal": 28,
+      "tex_line_start": 134,
+      "tex_line_end": 135,
       "quote": "These four analyses relate GW propagation to specified actions or EFT\noperators, with assumptions about backgrounds and matter coupling.",
       "quote_normalized": "these four analyses relate gw propagation to specified actions or eft operators, with assumptions about backgrounds and matter coupling.",
       "raw_id_parts": {
@@ -1494,7 +1438,7 @@
       "bundle_section_hint": "Introduction",
       "lift_action": "Lift-letter",
       "meta": {
-        "review_unit": 33,
+        "review_unit": 31,
         "source_sha256": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
         "assessment_origin": "bounded-primary-body-reassessment",
         "prior_assessment_ids": [
@@ -1511,9 +1455,9 @@
     {
       "id": "sentence:L1:introduction:ab187a1d",
       "section": "Introduction",
-      "section_ordinal": 31,
-      "tex_line_start": 137,
-      "tex_line_end": 138,
+      "section_ordinal": 29,
+      "tex_line_start": 136,
+      "tex_line_end": 137,
       "quote": "They restrict combinations of functions or couplings, mass parameters,\nand model cosmologies.",
       "quote_normalized": "they restrict combinations of functions or couplings, mass parameters, and model cosmologies.",
       "raw_id_parts": {
@@ -1561,7 +1505,7 @@
       "bundle_section_hint": "Introduction",
       "lift_action": "Lift-letter",
       "meta": {
-        "review_unit": 34,
+        "review_unit": 32,
         "source_sha256": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
         "assessment_origin": "bounded-primary-body-reassessment",
         "prior_assessment_ids": [
@@ -1585,8 +1529,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "This Letter supplies no microscopic Lagrangian for the\nvestigial-second-sound identification.",
-      "tex_line_start": 138,
-      "tex_line_end": 139,
+      "tex_line_start": 137,
+      "tex_line_end": 138,
       "id": "sentence:L1:introduction:83a31c23",
       "quote_normalized": "this letter supplies no microscopic lagrangian for the vestigial-second-sound identification.",
       "raw_id_parts": {
@@ -1595,7 +1539,7 @@
         "quote_hash": "83a31c23",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 32,
+      "section_ordinal": 30,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1603,7 +1547,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 35,
+        "review_unit": 33,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:83a31c23",
@@ -1623,8 +1567,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "As the Introduction notes,\n$\\cGW = c\\sqrt{\\chivest}$ is assumed kinematically, so this calculation\ndoes not constrain microscopic operator coefficients.",
-      "tex_line_start": 139,
-      "tex_line_end": 141,
+      "tex_line_start": 138,
+      "tex_line_end": 140,
       "id": "sentence:L1:introduction:d6f8d95d",
       "quote_normalized": "as the introduction notes, $\\cgw = c\\sqrt{\\chivest}$ is assumed kinematically, so this calculation does not constrain microscopic operator coefficients.",
       "raw_id_parts": {
@@ -1633,7 +1577,7 @@
         "quote_hash": "d6f8d95d",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 33,
+      "section_ordinal": 31,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1641,7 +1585,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:introduction:7ee7216b",
       "meta": {
-        "review_unit": 36,
+        "review_unit": 34,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "current-reassessment",
         "prior_assessment_id": "sentence:L1:introduction:7ee7216b",
@@ -1667,8 +1611,8 @@
       },
       "section": "Introduction",
       "quote": "What the bound constrains is $\\chivest$: the compatible interval has\nroughly one part in $10^{15}$ of the width of our adopted order-unity\nwindow.",
-      "tex_line_start": 142,
-      "tex_line_end": 144,
+      "tex_line_start": 141,
+      "tex_line_end": 143,
       "id": "sentence:L1:introduction:e17de389",
       "quote_normalized": "what the bound constrains is $\\chivest$: the compatible interval has roughly one part in $10^{15}$ of the width of our adopted order-unity window.",
       "raw_id_parts": {
@@ -1677,7 +1621,7 @@
         "quote_hash": "e17de389",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 34,
+      "section_ordinal": 32,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1685,7 +1629,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 37,
+        "review_unit": 35,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:e17de389",
@@ -1701,8 +1645,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "This is an interval-width comparison, not a microscopic\nprediction of $\\chivest$ or a probability statement independent of a prior.",
-      "tex_line_start": 144,
-      "tex_line_end": 145,
+      "tex_line_start": 143,
+      "tex_line_end": 144,
       "id": "sentence:L1:introduction:fcbc3c66",
       "quote_normalized": "this is an interval-width comparison, not a microscopic prediction of $\\chivest$ or a probability statement independent of a prior.",
       "raw_id_parts": {
@@ -1711,7 +1655,7 @@
         "quote_hash": "fcbc3c66",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 35,
+      "section_ordinal": 33,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1719,7 +1663,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 38,
+        "review_unit": 36,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:fcbc3c66",
@@ -1735,8 +1679,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "The\n2017 sweep constrained \\emph{theories}; this constrains an\n\\emph{identification}, which is why it is stated as a ratio of two\ninterval widths rather than as a surviving region of parameter space.",
-      "tex_line_start": 145,
-      "tex_line_end": 148,
+      "tex_line_start": 144,
+      "tex_line_end": 147,
       "id": "sentence:L1:introduction:f191f615",
       "quote_normalized": "the 2017 sweep constrained theories; this constrains an identification, which is why it is stated as a ratio of two interval widths rather than as a surviving region of parameter space.",
       "raw_id_parts": {
@@ -1745,7 +1689,7 @@
         "quote_hash": "f191f615",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 36,
+      "section_ordinal": 34,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1753,7 +1697,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 39,
+        "review_unit": 37,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:f191f615",
@@ -1773,8 +1717,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "At fixed assumed Eq.~\\eqref{eq:cGW}, this calculation constrains\n$\\chivest$ rather than microscopic operator coefficients.",
-      "tex_line_start": 150,
-      "tex_line_end": 151,
+      "tex_line_start": 149,
+      "tex_line_end": 150,
       "id": "sentence:L1:introduction:89456771",
       "quote_normalized": "at fixed assumed eq.~, this calculation constrains $\\chivest$ rather than microscopic operator coefficients.",
       "raw_id_parts": {
@@ -1783,7 +1727,7 @@
         "quote_hash": "89456771",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 37,
+      "section_ordinal": 35,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1791,7 +1735,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 40,
+        "review_unit": 38,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:89456771",
@@ -1811,8 +1755,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "It does not\nanalyze whether the operator-level mechanisms discussed in those\ntheories alter the effective speed law or its applicability.",
-      "tex_line_start": 151,
-      "tex_line_end": 153,
+      "tex_line_start": 150,
+      "tex_line_end": 152,
       "id": "sentence:L1:introduction:29595c5a",
       "quote_normalized": "it does not analyze whether the operator-level mechanisms discussed in those theories alter the effective speed law or its applicability.",
       "raw_id_parts": {
@@ -1821,7 +1765,7 @@
         "quote_hash": "29595c5a",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 38,
+      "section_ordinal": 36,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1829,7 +1773,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 41,
+        "review_unit": 39,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:29595c5a",
@@ -1849,8 +1793,8 @@
       "gates_invoked": [],
       "section": "Introduction",
       "quote": "A\nmicroscopic realization would require that separate analysis.",
-      "tex_line_start": 153,
-      "tex_line_end": 154,
+      "tex_line_start": 152,
+      "tex_line_end": 153,
       "id": "sentence:L1:introduction:1079fe28",
       "quote_normalized": "a microscopic realization would require that separate analysis.",
       "raw_id_parts": {
@@ -1859,7 +1803,7 @@
         "quote_hash": "1079fe28",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 39,
+      "section_ordinal": 37,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1867,7 +1811,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 42,
+        "review_unit": 40,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:1079fe28",
@@ -1893,8 +1837,8 @@
       },
       "section": "Introduction",
       "quote": "The three recovery paths in\nthe Discussion can supply a mechanism fixing $\\chivest$\nwithin the compatible interval, or modify the identification or its\nleading-order assumptions.",
-      "tex_line_start": 155,
-      "tex_line_end": 158,
+      "tex_line_start": 154,
+      "tex_line_end": 157,
       "id": "sentence:L1:introduction:1277ae3f",
       "quote_normalized": "the three recovery paths in the discussion can supply a mechanism fixing $\\chivest$ within the compatible interval, or modify the identification or its leading-order assumptions.",
       "raw_id_parts": {
@@ -1903,7 +1847,7 @@
         "quote_hash": "1277ae3f",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 40,
+      "section_ordinal": 38,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1911,7 +1855,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:introduction:4ebaca5d",
       "meta": {
-        "review_unit": 43,
+        "review_unit": 41,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "current-reassessment",
         "prior_assessment_id": "sentence:L1:introduction:4ebaca5d",
@@ -1937,8 +1881,8 @@
       },
       "section": "Introduction",
       "quote": "A fixed-point mechanism can preserve the\nspeed law; the finite-tolerance constraint alone derives none of\nthese mechanisms.",
-      "tex_line_start": 158,
-      "tex_line_end": 160,
+      "tex_line_start": 157,
+      "tex_line_end": 159,
       "id": "sentence:L1:introduction:5bda7b0e",
       "quote_normalized": "a fixed-point mechanism can preserve the speed law; the finite-tolerance constraint alone derives none of these mechanisms.",
       "raw_id_parts": {
@@ -1947,7 +1891,7 @@
         "quote_hash": "5bda7b0e",
         "hash_algorithm": "sha256_first_8"
       },
-      "section_ordinal": 41,
+      "section_ordinal": 39,
       "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
       "tombstone": false,
       "bundle_destination": "L1",
@@ -1955,7 +1899,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 44,
+        "review_unit": 42,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:introduction:5bda7b0e",
@@ -1981,8 +1925,8 @@
       },
       "section": "Formal setup and result",
       "quote": "Our substrate models the vestigial-phase metric-channel susceptibility\nby the RPA \\emph{resummation}\n$\\chi_{\\rm RPA} = \\chi_0/(1 - \\gamma_\\star \\chi_0)$ in the standard\nHertz--Millis convention.",
-      "tex_line_start": 167,
-      "tex_line_end": 170,
+      "tex_line_start": 166,
+      "tex_line_end": 169,
       "id": "sentence:L1:formal-setup-and-result:06a02fb4",
       "quote_normalized": "our substrate models the vestigial-phase metric-channel susceptibility by the rpa resummation $\\chi_{\\rm rpa} = \\chi_0/(1 - \\gamma_\\star \\chi_0)$ in the standard hertz--millis convention.",
       "raw_id_parts": {
@@ -1999,7 +1943,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:formal-setup-and-result:9d46cbb0",
       "meta": {
-        "review_unit": 45,
+        "review_unit": 43,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "current-reassessment",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:9d46cbb0",
@@ -2011,7 +1955,7 @@
       "type": "formal-claim",
       "finding_classes": [],
       "agent_verdict": "PASS",
-      "agent_notes": "chi_RPA is a rational resummed response distinct from the free bare input chi0; the source has both the separate bubble construction and this scalar closed form. No microscopic metric normalization is inferred.",
+      "agent_notes": "Actual W6Ext.chi_RPA(chi0,gamma_star) is chi0/(1-gamma_star*chi0); the separate inputs and resummed response support the stated effective-coupling role. Closed-form multiplication identity requires 1-gamma_star*chi0 != 0. Physical normalization is undetermined by these unevaluated scalar inputs; no physical matching or project-wide absence is inferred.",
       "gates_invoked": [],
       "chain_proposed": {
         "links": [
@@ -2024,31 +1968,35 @@
         "completeness": "full"
       },
       "section": "Formal setup and result",
-      "quote": "Here $\\chi_0$ is the bubble integral;\n$\\chi_{\\rm RPA}$ is the resummed response, not the bubble integral itself.",
-      "tex_line_start": 170,
+      "quote": "Here $\\chi_0$ is the bubble integral;\n$\\chi_{\\rm RPA}$ is the resummed response and $\\gamma_\\star$ the\neffective coupling; physical normalization remains undetermined.",
+      "tex_line_start": 169,
       "tex_line_end": 171,
-      "id": "sentence:L1:formal-setup-and-result:98b2e23b",
-      "quote_normalized": "here $\\chi_0$ is the bubble integral; $\\chi_{\\rm rpa}$ is the resummed response, not the bubble integral itself.",
+      "id": "sentence:L1:formal-setup-and-result:89678d2f",
+      "quote_normalized": "here $\\chi_0$ is the bubble integral; $\\chi_{\\rm rpa}$ is the resummed response and $\\gamma_\\star$ the effective coupling; physical normalization remains undetermined.",
       "raw_id_parts": {
         "paper": "L1",
         "section_slug": "formal-setup-and-result",
-        "quote_hash": "98b2e23b",
+        "quote_hash": "89678d2f",
         "hash_algorithm": "sha256_first_8"
       },
       "section_ordinal": 2,
-      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-reader-notation-claims-r3",
       "tombstone": false,
       "bundle_destination": "L1",
       "bundle_section_hint": "Formal setup and result",
       "lift_action": "Lift-letter",
-      "rewrite_of": "sentence:L1:formal-setup-and-result:5b0d5912",
+      "rewrite_of": "sentence:L1:formal-setup-and-result:98b2e23b",
       "meta": {
-        "review_unit": 46,
-        "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
-        "assessment_origin": "current-reassessment",
-        "prior_assessment_id": "sentence:L1:formal-setup-and-result:5b0d5912",
-        "prior_assessment_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
-        "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+        "review_unit": 44,
+        "source_sha256": "208a06c5ca352ed209cfd221262e4f4099dae58d3c310c42bd1369b0df45ff8d",
+        "assessment_origin": "bounded-reader-notation-reassessment",
+        "prior_assessment_ids": [
+          "sentence:L1:formal-setup-and-result:98b2e23b"
+        ],
+        "prior_assessment_run_ids": [
+          "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+        ],
+        "source_scope": "Source/actual statement and dimensional-convention inspection only; no Lean/LSP/slot/kernel/build/native/scientific execution. Physical matching and full prose/stage/main/human holds remain."
       }
     },
     {
@@ -2087,7 +2035,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 47,
+        "review_unit": 45,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:c1c2c986",
@@ -2133,7 +2081,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 48,
+        "review_unit": 46,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:7cde98b1",
@@ -2177,7 +2125,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 49,
+        "review_unit": 47,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:fe4a081e",
@@ -2226,7 +2174,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 50,
+        "review_unit": 48,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:e189cdda",
@@ -2280,7 +2228,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 51,
+        "review_unit": 49,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:4e8fd97b",
@@ -2329,7 +2277,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 52,
+        "review_unit": 50,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:3cd70eb8",
@@ -2363,7 +2311,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 53,
+        "review_unit": 51,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:c694dfa5",
@@ -2417,7 +2365,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 54,
+        "review_unit": 52,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:6bb21996",
@@ -2451,7 +2399,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 55,
+        "review_unit": 53,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:a48e702c",
@@ -2495,7 +2443,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 56,
+        "review_unit": 54,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:b63f73a8",
@@ -2554,7 +2502,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 57,
+        "review_unit": 55,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:aa870922",
@@ -2603,7 +2551,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:formal-setup-and-result:c0a94df1",
       "meta": {
-        "review_unit": 58,
+        "review_unit": 56,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "typesetting-only-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:c0a94df1",
@@ -2637,7 +2585,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 59,
+        "review_unit": 57,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:bb17ffb5",
@@ -2691,7 +2639,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 60,
+        "review_unit": 58,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:207942fe",
@@ -2745,7 +2693,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 61,
+        "review_unit": 59,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:0b2b6094",
@@ -2779,7 +2727,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 62,
+        "review_unit": 60,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:929692a7",
@@ -2826,7 +2774,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 63,
+        "review_unit": 61,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:675ab7d2",
@@ -2875,7 +2823,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 64,
+        "review_unit": 62,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:d8b52fd1",
@@ -2939,7 +2887,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:formal-setup-and-result:8e5524b2",
       "meta": {
-        "review_unit": 65,
+        "review_unit": 63,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "current-reassessment",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:8e5524b2",
@@ -2988,7 +2936,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 66,
+        "review_unit": 64,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:6cfe0344",
@@ -3026,7 +2974,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 67,
+        "review_unit": 65,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:67680096",
@@ -3070,7 +3018,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 68,
+        "review_unit": 66,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:e18ae283",
@@ -3114,7 +3062,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 69,
+        "review_unit": 67,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:e8ff11e9",
@@ -3163,7 +3111,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:formal-setup-and-result:ff36d704",
       "meta": {
-        "review_unit": 70,
+        "review_unit": 68,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "current-reassessment",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:ff36d704",
@@ -3216,7 +3164,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 71,
+        "review_unit": 69,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:9dbf0010",
@@ -3266,7 +3214,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 72,
+        "review_unit": 70,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:928d4e3e",
@@ -3316,7 +3264,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 73,
+        "review_unit": 71,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:9b5a8e88",
@@ -3366,7 +3314,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 74,
+        "review_unit": 72,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:c566aed6",
@@ -3431,7 +3379,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 75,
+        "review_unit": 73,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:2d57174c",
@@ -3491,7 +3439,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 76,
+        "review_unit": 74,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:bbf37c66",
@@ -3535,7 +3483,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 77,
+        "review_unit": 75,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:41d63d4f",
@@ -3573,7 +3521,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 78,
+        "review_unit": 76,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:0f3f4a6d",
@@ -3622,7 +3570,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 79,
+        "review_unit": 77,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:152de090",
@@ -3660,7 +3608,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 80,
+        "review_unit": 78,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:a43e84f3",
@@ -3704,7 +3652,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 81,
+        "review_unit": 79,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:ea26e7aa",
@@ -3742,7 +3690,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 82,
+        "review_unit": 80,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:03a02b34",
@@ -3780,7 +3728,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 83,
+        "review_unit": 81,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:41403f4b",
@@ -3824,7 +3772,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 84,
+        "review_unit": 82,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:90db9920",
@@ -3868,7 +3816,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 85,
+        "review_unit": 83,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:8a067e2e",
@@ -3911,7 +3859,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 86,
+        "review_unit": 84,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:cb1ca595",
@@ -3958,7 +3906,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 87,
+        "review_unit": 85,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:de4a9473",
@@ -4013,7 +3961,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 88,
+        "review_unit": 86,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:0f9408ca",
@@ -4051,7 +3999,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 89,
+        "review_unit": 87,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:2cf63785",
@@ -4102,7 +4050,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 90,
+        "review_unit": 88,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:formal-setup-and-result:f7fc4a81",
@@ -4146,7 +4094,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 91,
+        "review_unit": 89,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:c7c68df6",
@@ -4190,7 +4138,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 92,
+        "review_unit": 90,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:d3026983",
@@ -4234,7 +4182,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 93,
+        "review_unit": 91,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:443b79a2",
@@ -4268,7 +4216,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 94,
+        "review_unit": 92,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:49c6a59c",
@@ -4302,7 +4250,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 95,
+        "review_unit": 93,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:5ca36fd5",
@@ -4346,7 +4294,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 96,
+        "review_unit": 94,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:6a138e73",
@@ -4390,7 +4338,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 97,
+        "review_unit": 95,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:175a78b5",
@@ -4434,7 +4382,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 98,
+        "review_unit": 96,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:8e4393e7",
@@ -4478,7 +4426,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 99,
+        "review_unit": 97,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:285b31f4",
@@ -4516,7 +4464,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 100,
+        "review_unit": 98,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:1f291b86",
@@ -4554,7 +4502,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 101,
+        "review_unit": 99,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:287db35b",
@@ -4592,7 +4540,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 102,
+        "review_unit": 100,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:ee8c0180",
@@ -4636,7 +4584,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 103,
+        "review_unit": 101,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:bc5f96cb",
@@ -4674,7 +4622,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 104,
+        "review_unit": 102,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:a1b7cfc8",
@@ -4712,7 +4660,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 105,
+        "review_unit": 103,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:5799c0b5",
@@ -4755,7 +4703,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 106,
+        "review_unit": 104,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:9c6744da",
@@ -4793,7 +4741,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 107,
+        "review_unit": 105,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:4b211e50",
@@ -4840,7 +4788,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:discussion:cbcc11a7",
       "meta": {
-        "review_unit": 108,
+        "review_unit": 106,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "typesetting-only-retained",
         "prior_assessment_id": "sentence:L1:discussion:cbcc11a7",
@@ -4883,7 +4831,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 109,
+        "review_unit": 107,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:8b6e85b5",
@@ -4930,7 +4878,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 110,
+        "review_unit": 108,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:4fc7e3f3",
@@ -4973,7 +4921,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 111,
+        "review_unit": 109,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:e1ed18a0",
@@ -5016,7 +4964,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 112,
+        "review_unit": 110,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:e63a56f8",
@@ -5059,7 +5007,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 113,
+        "review_unit": 111,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:d0e426a2",
@@ -5074,40 +5022,45 @@
         "links": [
           {
             "kind": "theorem",
-            "target": "SKEFTHawking.GravitationalWaves.dispersion_within_ligo_iff"
+            "target": "SKEFTHawking.GravitationalWaves.dispersion_within_ligo_iff",
+            "verification_scope": "Actual real-valued iff at fixed tolGW170817=3e-15 and omega>0, with dispersion_correction=gamma*omega; correction alone, no physical frequency matching."
           }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "The actual iff requires omega>0 and fixed tolGW170817. The current text now states that positive-frequency hypothesis explicitly.",
+      "agent_notes": "Actual GravitationalWaves.dispersion_within_ligo_iff has real gamma,omega and hypothesis 0<omega; unfolding dispersion_correction gives precisely |gamma*omega| <= tolGW170817 iff |gamma| <= tolGW170817/omega. tolGW170817 is fixed at 3e-15, not a quantified tolerance. Source statement inspection only, no fresh kernel/build.",
       "gates_invoked": [],
       "section": "Discussion",
-      "quote": "For positive $\\omega$, \\texttt{dispersion\\_within\\_ligo\\_iff}\nexchanges the correction's tolerance for\n$|\\gamma|\\leq\\mathrm{tol}/\\omega$.",
+      "quote": "For a positive numerical probe $\\omega$,\n\\texttt{dispersion\\_within\\_ligo\\_iff} gives\n$|\\gamma\\omega|\\leq\\tau\\iff|\\gamma|\\leq\\tau/\\omega$ at the fixed\nGW170817 tolerance $\\tau$, bounding the correction alone.",
       "tex_line_start": 400,
-      "tex_line_end": 402,
-      "id": "sentence:L1:discussion:e1a97170",
-      "quote_normalized": "for positive $\\omega$, dispersion\\_within\\_ligo\\_iff exchanges the correction's tolerance for $|\\gamma|\\leqtol/\\omega$.",
+      "tex_line_end": 403,
+      "id": "sentence:L1:discussion:6409d539",
+      "quote_normalized": "for a positive numerical probe $\\omega$, dispersion\\_within\\_ligo\\_iff gives $|\\gamma\\omega|\\leq\\tau\\iff|\\gamma|\\leq\\tau/\\omega$ at the fixed gw170817 tolerance $\\tau$, bounding the correction alone.",
       "raw_id_parts": {
         "paper": "L1",
         "section_slug": "discussion",
-        "quote_hash": "e1a97170",
+        "quote_hash": "6409d539",
         "hash_algorithm": "sha256_first_8"
       },
       "section_ordinal": 24,
-      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-reader-notation-claims-r3",
       "tombstone": false,
       "bundle_destination": "L1",
       "bundle_section_hint": "Discussion",
       "lift_action": "Lift-letter",
-      "rewrite_of": null,
+      "rewrite_of": "sentence:L1:discussion:e1a97170",
       "meta": {
-        "review_unit": 114,
-        "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
-        "assessment_origin": "exact-retained",
-        "prior_assessment_id": "sentence:L1:discussion:e1a97170",
-        "prior_assessment_run_id": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z",
-        "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+        "review_unit": 112,
+        "source_sha256": "208a06c5ca352ed209cfd221262e4f4099dae58d3c310c42bd1369b0df45ff8d",
+        "assessment_origin": "bounded-reader-notation-reassessment",
+        "prior_assessment_ids": [
+          "sentence:L1:discussion:e1a97170"
+        ],
+        "prior_assessment_run_ids": [
+          "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
+        ],
+        "source_scope": "Source/actual statement and dimensional-convention inspection only; no Lean/LSP/slot/kernel/build/native/scientific execution. Physical matching and full prose/stage/main/human holds remain."
       }
     },
     {
@@ -5135,8 +5088,8 @@
       "gates_invoked": [],
       "section": "Discussion",
       "quote": "\\texttt{dispersion\\_correction\\_abs\\_bound},\n\\texttt{dispersion\\_correction\\_linear\\_in\\_gamma} and\n\\path{dispersion_correction_zero_at_no_dissipation} describe\nthe product's magnitude, additivity in $\\gamma$ and zero-coefficient\nlimit.",
-      "tex_line_start": 403,
-      "tex_line_end": 407,
+      "tex_line_start": 404,
+      "tex_line_end": 408,
       "id": "sentence:L1:discussion:67db304d",
       "quote_normalized": "dispersion\\_correction\\_abs\\_bound, dispersion\\_correction\\_linear\\_in\\_gamma and \\path{dispersion_correction_zero_at_no_dissipation} describe the product's magnitude, additivity in $\\gamma$ and zero-coefficient limit.",
       "raw_id_parts": {
@@ -5153,7 +5106,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:discussion:22c4f0e2",
       "meta": {
-        "review_unit": 115,
+        "review_unit": 113,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "typesetting-only-retained",
         "prior_assessment_id": "sentence:L1:discussion:22c4f0e2",
@@ -5173,8 +5126,8 @@
       "gates_invoked": [],
       "section": "Discussion",
       "quote": "Deriving $\\Gamma_H$ and the normalization of this ansatz from\nmicroscopic dynamics remains open.",
-      "tex_line_start": 408,
-      "tex_line_end": 409,
+      "tex_line_start": 409,
+      "tex_line_end": 410,
       "id": "sentence:L1:discussion:27f33f68",
       "quote_normalized": "deriving $\\gamma_h$ and the normalization of this ansatz from microscopic dynamics remains open.",
       "raw_id_parts": {
@@ -5191,7 +5144,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 116,
+        "review_unit": 114,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:27f33f68",
@@ -5222,8 +5175,8 @@
       },
       "section": "Discussion",
       "quote": "The companion\nlinearized-EFE wave~\\cite{Roehm2026LinearizedEFE} ships an\nemergent-gravity identification \\emph{compatible} with observation at\nthe natural-range level: the Sakharov--Adler form\n$G_{\\rm N,emerg} = \\alpha_{\\rm ADW} \\cdot 12\\pi/(N_f \\Lambda_{\\rm UV}^2)$\nat $\\Lambda_{\\rm UV} = M_{\\rm Pl}$ produces\n$\\alpha_{\\rm ADW}^\\star \\in [0.40, 1.27]$ for SM $N_f$, sitting\ninside the natural range $[0.1,10]$.",
-      "tex_line_start": 412,
-      "tex_line_end": 419,
+      "tex_line_start": 413,
+      "tex_line_end": 420,
       "id": "sentence:L1:discussion:7caeb5ce",
       "quote_normalized": "the companion linearized-efe wave~ ships an emergent-gravity identification compatible with observation at the natural-range level: the sakharov--adler form $g_{\\rm n,emerg} = \\alpha_{\\rm adw} \\cdot 12\\pi/(n_f \\lambda_{\\rm uv}^2)$ at $\\lambda_{\\rm uv} = m_{\\rm pl}$ produces $\\alpha_{\\rm adw}^\\star \\in [0.40, 1.27]$ for sm $n_f$, sitting inside the natural range $[0.1,10]$.",
       "raw_id_parts": {
@@ -5240,7 +5193,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 117,
+        "review_unit": 115,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:7caeb5ce",
@@ -5260,8 +5213,8 @@
       },
       "section": "Discussion",
       "quote": "The asymmetry between the two\nwaves is a feature of the program: the linearized-EFE\n$G_{\\rm N,emerg}$ depends on the Sakharov--Adler kernel computed at\nthe linearized level, where the relevant scale is $M_{\\rm Pl}$;\n$\\cGW$ depends on the free metric-channel susceptibility\n$\\chivest$.",
-      "tex_line_start": 419,
-      "tex_line_end": 424,
+      "tex_line_start": 420,
+      "tex_line_end": 425,
       "id": "sentence:L1:discussion:b68e17fa",
       "quote_normalized": "the asymmetry between the two waves is a feature of the program: the linearized-efe $g_{\\rm n,emerg}$ depends on the sakharov--adler kernel computed at the linearized level, where the relevant scale is $m_{\\rm pl}$; $\\cgw$ depends on the free metric-channel susceptibility $\\chivest$.",
       "raw_id_parts": {
@@ -5278,7 +5231,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 118,
+        "review_unit": 116,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:b68e17fa",
@@ -5304,8 +5257,8 @@
       },
       "section": "Discussion",
       "quote": "Our adopted interval contains unity but derives no\nvalue of this susceptibility.",
-      "tex_line_start": 424,
-      "tex_line_end": 425,
+      "tex_line_start": 425,
+      "tex_line_end": 426,
       "id": "sentence:L1:discussion:c987e539",
       "quote_normalized": "our adopted interval contains unity but derives no value of this susceptibility.",
       "raw_id_parts": {
@@ -5322,7 +5275,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 119,
+        "review_unit": 117,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:c987e539",
@@ -5348,8 +5301,8 @@
       },
       "section": "Discussion",
       "quote": "The conservative GW170817 cap\nrestricts it to the much narrower compatible interval; the\nwidth comparison alone supplies no microscopic selection mechanism.",
-      "tex_line_start": 425,
-      "tex_line_end": 427,
+      "tex_line_start": 426,
+      "tex_line_end": 428,
       "id": "sentence:L1:discussion:0c438d3f",
       "quote_normalized": "the conservative gw170817 cap restricts it to the much narrower compatible interval; the width comparison alone supplies no microscopic selection mechanism.",
       "raw_id_parts": {
@@ -5366,7 +5319,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 120,
+        "review_unit": 118,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:0c438d3f",
@@ -5382,8 +5335,8 @@
       "gates_invoked": [],
       "section": "Discussion",
       "quote": "The result is reproducible in two\nlayers.",
-      "tex_line_start": 429,
-      "tex_line_end": 430,
+      "tex_line_start": 430,
+      "tex_line_end": 431,
       "id": "sentence:L1:discussion:40e3f093",
       "quote_normalized": "the result is reproducible in two layers.",
       "raw_id_parts": {
@@ -5400,7 +5353,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": null,
       "meta": {
-        "review_unit": 121,
+        "review_unit": 119,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:40e3f093",
@@ -5420,8 +5373,8 @@
       },
       "section": "Discussion",
       "quote": "The Lean layer is \\texttt{GravitationalWaves.lean} (32\ntheorems, zero \\texttt{sorry}, zero new axioms, zero\n\\texttt{maxHeartbeats} overrides) at the project's pinned\nMathlib4 commit;",
-      "tex_line_start": 430,
-      "tex_line_end": 433,
+      "tex_line_start": 431,
+      "tex_line_end": 434,
       "id": "sentence:L1:discussion:556783ed",
       "quote_normalized": "the lean layer is gravitationalwaves.lean (32 theorems, zero sorry, zero new axioms, zero maxheartbeats overrides) at the project's pinned mathlib4 commit;",
       "raw_id_parts": {
@@ -5438,7 +5391,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:discussion:6d8afeb6",
       "meta": {
-        "review_unit": 122,
+        "review_unit": 120,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "exact-retained",
         "prior_assessment_id": "sentence:L1:discussion:6d8afeb6",
@@ -5485,8 +5438,8 @@
       },
       "section": "Discussion",
       "quote": "the Python layer is \\texttt{src/gravitational\\_waves/}\nwith 89 \\texttt{pytest} cases cross-checking every numeric quoted\nin the abstract and figure caption.",
-      "tex_line_start": 433,
-      "tex_line_end": 435,
+      "tex_line_start": 434,
+      "tex_line_end": 436,
       "id": "sentence:L1:discussion:09269d60",
       "quote_normalized": "the python layer is src/gravitational\\_waves/ with 89 pytest cases cross-checking every numeric quoted in the abstract and figure caption.",
       "raw_id_parts": {
@@ -5503,7 +5456,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:discussion:ac7de9a4",
       "meta": {
-        "review_unit": 123,
+        "review_unit": 121,
         "source_sha256": "bd64ce8b91b6aa5ed6ec28d7001dc582919354462209bab6a5addb18397d0856",
         "assessment_origin": "bounded-current-numeric-reassessment",
         "prior_assessment_id": "sentence:L1:discussion:ac7de9a4",
@@ -5533,8 +5486,8 @@
       },
       "section": "Discussion",
       "quote": "The headline figure\n(\\path{src/core/visualizations.py:fig_c_GW_vs_ligo_constraint})\nand its underlying numerics are committed-pinned.",
-      "tex_line_start": 435,
-      "tex_line_end": 437,
+      "tex_line_start": 436,
+      "tex_line_end": 438,
       "id": "sentence:L1:discussion:064e25cb",
       "quote_normalized": "the headline figure (\\path{src/core/visualizations.py:fig_c_gw_vs_ligo_constraint}) and its underlying numerics are committed-pinned.",
       "raw_id_parts": {
@@ -5551,7 +5504,7 @@
       "lift_action": "Lift-letter",
       "rewrite_of": "sentence:L1:discussion:31c6d6d6",
       "meta": {
-        "review_unit": 124,
+        "review_unit": 122,
         "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
         "assessment_origin": "typesetting-only-retained",
         "prior_assessment_id": "sentence:L1:discussion:31c6d6d6",
@@ -6420,6 +6373,17 @@
         "docs/primary_sources_state.json": "4d19204df2bff22661a71109b551cb027907cf66bcdd71cc018e708089c849d2"
       },
       "sidecar_note": "Integrated sidecar generated_at differs from accepted scratch; ROOT existing-writer receipt verifies identical four entry records. CUSTODY_INTEGRATION.json pins this integration."
+    },
+    "reader_notation_refresh": {
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-reader-notation-claims-r3",
+      "base_head": "6962a3c0475d6386a6427a765949f413efa76f80",
+      "packet": "l1-reader-notation-claims-6962-r1.json; ROOT-authorized r3 reconciliation after expected source edit",
+      "prior_catalog_sha256": "18eebdd446a48479bed1fcaacd42f877c5b1921979a1d43f92fc425c5484ec23",
+      "current_manuscript_sha256": "208a06c5ca352ed209cfd221262e4f4099dae58d3c310c42bd1369b0df45ff8d",
+      "scope": "ROOT r3 removes process/taste language while preserving scientific scope. c reference definition, RPA coupling definition and fixed-tolerance dispersion iff reader notation.118 unaffected assessments retained; seven old records become five successor units, including two deleted process/taste records and two editorial rewrites. Physical/prose/stage/main/human holds unchanged.",
+      "original_top_level_review_date": "2026-11-05T19:07:45.648093+00:00",
+      "original_top_level_reviewer_run_id": "claims-reviewer-v2:2026-11-05:l1-primary-body-claims-refresh-r1",
+      "acceptance": "Scratch proposal only; independent source/catalog review and ROOT intake pending; no ingestion/closure/acceptance inferred."
     }
   },
   "review_evidence": {
@@ -7538,6 +7502,392 @@
       },
       "prior_non_reproducing_entries_preserved": 49,
       "new_scoped_supersession_candidates": 5
+    },
+    "reader_notation_refresh": {
+      "old_records_preserved": [
+        {
+          "type": "formal-claim",
+          "finding_classes": [],
+          "agent_verdict": "PASS",
+          "agent_notes": "Explicitly assumed speed law, matching c_GW definition; no dynamical derivation asserted.",
+          "gates_invoked": [],
+          "chain_proposed": {
+            "links": [
+              {
+                "kind": "formula",
+                "target": "c_GW_from_chi_vest",
+                "verification_scope": "Actual scalar speed law c*sqrt(chi), with an assumed physical identification. Direct sqrt implementation and independent small-positive/dtype/grid controls reviewed; no microscopic mode derivation."
+              }
+            ],
+            "completeness": "full"
+          },
+          "section": "abstract",
+          "quote": "We constrain our assumed leading-order graviton speed\n$\\cGW=c\\sqrt{\\chivest}$.",
+          "tex_line_start": 33,
+          "tex_line_end": 34,
+          "id": "sentence:L1:abstract:9a3de8fb",
+          "quote_normalized": "we constrain our assumed leading-order graviton speed $\\cgw=c\\sqrt{\\chivest}$.",
+          "raw_id_parts": {
+            "paper": "L1",
+            "section_slug": "abstract",
+            "quote_hash": "9a3de8fb",
+            "hash_algorithm": "sha256_first_8"
+          },
+          "section_ordinal": 1,
+          "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+          "tombstone": false,
+          "bundle_destination": "L1",
+          "bundle_section_hint": "abstract",
+          "lift_action": "Lift-letter",
+          "rewrite_of": null,
+          "meta": {
+            "review_unit": 0,
+            "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+            "assessment_origin": "exact-retained",
+            "prior_assessment_id": "sentence:L1:abstract:9a3de8fb",
+            "prior_assessment_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
+            "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+          }
+        },
+        {
+          "type": "formal-claim",
+          "finding_classes": [],
+          "agent_verdict": "PASS",
+          "agent_notes": "chi_RPA is a rational resummed response distinct from the free bare input chi0; the source has both the separate bubble construction and this scalar closed form. No microscopic metric normalization is inferred.",
+          "gates_invoked": [],
+          "chain_proposed": {
+            "links": [
+              {
+                "kind": "theorem",
+                "target": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_closed_form",
+                "verification_scope": "Actual conditional statement and rational definition, read from source; bare input is distinct from resummed response."
+              }
+            ],
+            "completeness": "full"
+          },
+          "section": "Formal setup and result",
+          "quote": "Here $\\chi_0$ is the bubble integral;\n$\\chi_{\\rm RPA}$ is the resummed response, not the bubble integral itself.",
+          "tex_line_start": 170,
+          "tex_line_end": 171,
+          "id": "sentence:L1:formal-setup-and-result:98b2e23b",
+          "quote_normalized": "here $\\chi_0$ is the bubble integral; $\\chi_{\\rm rpa}$ is the resummed response, not the bubble integral itself.",
+          "raw_id_parts": {
+            "paper": "L1",
+            "section_slug": "formal-setup-and-result",
+            "quote_hash": "98b2e23b",
+            "hash_algorithm": "sha256_first_8"
+          },
+          "section_ordinal": 2,
+          "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+          "tombstone": false,
+          "bundle_destination": "L1",
+          "bundle_section_hint": "Formal setup and result",
+          "lift_action": "Lift-letter",
+          "rewrite_of": "sentence:L1:formal-setup-and-result:5b0d5912",
+          "meta": {
+            "review_unit": 46,
+            "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+            "assessment_origin": "current-reassessment",
+            "prior_assessment_id": "sentence:L1:formal-setup-and-result:5b0d5912",
+            "prior_assessment_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+            "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+          }
+        },
+        {
+          "type": "theorem-ref",
+          "finding_classes": [],
+          "chain_proposed": {
+            "links": [
+              {
+                "kind": "theorem",
+                "target": "SKEFTHawking.GravitationalWaves.dispersion_within_ligo_iff"
+              }
+            ],
+            "completeness": "full"
+          },
+          "agent_verdict": "PASS",
+          "agent_notes": "The actual iff requires omega>0 and fixed tolGW170817. The current text now states that positive-frequency hypothesis explicitly.",
+          "gates_invoked": [],
+          "section": "Discussion",
+          "quote": "For positive $\\omega$, \\texttt{dispersion\\_within\\_ligo\\_iff}\nexchanges the correction's tolerance for\n$|\\gamma|\\leq\\mathrm{tol}/\\omega$.",
+          "tex_line_start": 400,
+          "tex_line_end": 402,
+          "id": "sentence:L1:discussion:e1a97170",
+          "quote_normalized": "for positive $\\omega$, dispersion\\_within\\_ligo\\_iff exchanges the correction's tolerance for $|\\gamma|\\leqtol/\\omega$.",
+          "raw_id_parts": {
+            "paper": "L1",
+            "section_slug": "discussion",
+            "quote_hash": "e1a97170",
+            "hash_algorithm": "sha256_first_8"
+          },
+          "section_ordinal": 24,
+          "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+          "tombstone": false,
+          "bundle_destination": "L1",
+          "bundle_section_hint": "Discussion",
+          "lift_action": "Lift-letter",
+          "rewrite_of": null,
+          "meta": {
+            "review_unit": 114,
+            "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+            "assessment_origin": "exact-retained",
+            "prior_assessment_id": "sentence:L1:discussion:e1a97170",
+            "prior_assessment_run_id": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z",
+            "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+          }
+        },
+        {
+          "type": "qualitative",
+          "finding_classes": [],
+          "agent_verdict": "INFO",
+          "agent_notes": "Author appraisal, no scientific backing claimed.",
+          "gates_invoked": [],
+          "section": "Introduction",
+          "quote": "The identification is appealing in its\nbrevity.",
+          "tex_line_start": 85,
+          "tex_line_end": 86,
+          "id": "sentence:L1:introduction:0ef96618",
+          "quote_normalized": "the identification is appealing in its brevity.",
+          "raw_id_parts": {
+            "paper": "L1",
+            "section_slug": "introduction",
+            "quote_hash": "0ef96618",
+            "hash_algorithm": "sha256_first_8"
+          },
+          "section_ordinal": 13,
+          "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+          "tombstone": false,
+          "bundle_destination": "L1",
+          "bundle_section_hint": "Introduction",
+          "lift_action": "Lift-letter",
+          "rewrite_of": null,
+          "meta": {
+            "review_unit": 16,
+            "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+            "assessment_origin": "exact-retained",
+            "prior_assessment_id": "sentence:L1:introduction:0ef96618",
+            "prior_assessment_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+            "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+          }
+        },
+        {
+          "type": "methodology",
+          "finding_classes": [],
+          "chain_proposed": {
+            "links": [
+              {
+                "kind": "formula",
+                "target": "c_GW_from_chi_vest"
+              }
+            ],
+            "completeness": "partial"
+          },
+          "agent_verdict": "INFO",
+          "agent_notes": "Accurate assumption disclosure for the supplied law.",
+          "gates_invoked": [],
+          "section": "Introduction",
+          "quote": "In this Letter, Eq.~\\eqref{eq:cGW} is an assumed kinematic speed law.",
+          "tex_line_start": 86,
+          "tex_line_end": 86,
+          "id": "sentence:L1:introduction:162806f2",
+          "quote_normalized": "in this letter, eq.~ is an assumed kinematic speed law.",
+          "raw_id_parts": {
+            "paper": "L1",
+            "section_slug": "introduction",
+            "quote_hash": "162806f2",
+            "hash_algorithm": "sha256_first_8"
+          },
+          "section_ordinal": 14,
+          "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+          "tombstone": false,
+          "bundle_destination": "L1",
+          "bundle_section_hint": "Introduction",
+          "lift_action": "Lift-letter",
+          "rewrite_of": null,
+          "meta": {
+            "review_unit": 17,
+            "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+            "assessment_origin": "exact-retained",
+            "prior_assessment_id": "sentence:L1:introduction:162806f2",
+            "prior_assessment_run_id": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z",
+            "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+          }
+        },
+        {
+          "type": "methodology",
+          "finding_classes": [],
+          "agent_verdict": "TRANSITION",
+          "agent_notes": "Introduces conditional comparison.",
+          "gates_invoked": [],
+          "section": "Introduction",
+          "quote": "This Letter formalizes Eq.~\\eqref{eq:cGW}, places it head-to-head\nagainst GW170817, and reports the result.",
+          "tex_line_start": 101,
+          "tex_line_end": 102,
+          "id": "sentence:L1:introduction:2da8b694",
+          "quote_normalized": "this letter formalizes eq.~, places it head-to-head against gw170817, and reports the result.",
+          "raw_id_parts": {
+            "paper": "L1",
+            "section_slug": "introduction",
+            "quote_hash": "2da8b694",
+            "hash_algorithm": "sha256_first_8"
+          },
+          "section_ordinal": 19,
+          "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+          "tombstone": false,
+          "bundle_destination": "L1",
+          "bundle_section_hint": "Introduction",
+          "lift_action": "Lift-letter",
+          "rewrite_of": null,
+          "meta": {
+            "review_unit": 22,
+            "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+            "assessment_origin": "exact-retained",
+            "prior_assessment_id": "sentence:L1:introduction:2da8b694",
+            "prior_assessment_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+            "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+          }
+        },
+        {
+          "type": "formal-claim",
+          "finding_classes": [],
+          "agent_verdict": "PASS",
+          "agent_notes": "Exact real interval has width4tau=1.2e-14 versus adopted9.9. Scaling by1e14 leaves1.2<9.9. This rewording retains the conditional adopted-range scope.",
+          "gates_invoked": [],
+          "chain_proposed": {
+            "links": [
+              {
+                "kind": "formula",
+                "target": "c_GW_deviation_from_c",
+                "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
+              }
+            ],
+            "completeness": "full"
+          },
+          "section": "Introduction",
+          "quote": "The conclusion is sharp:\nour assumed speed law satisfies the GW170817 bound only on a\nsub-interval of our adopted range $\\chivest \\in [0.1, 10]$ narrower\nthan that range by more than 14 orders of magnitude.",
+          "tex_line_start": 102,
+          "tex_line_end": 105,
+          "id": "sentence:L1:introduction:cd2d9076",
+          "quote_normalized": "the conclusion is sharp: our assumed speed law satisfies the gw170817 bound only on a sub-interval of our adopted range $\\chivest \\in [0.1, 10]$ narrower than that range by more than 14 orders of magnitude.",
+          "raw_id_parts": {
+            "paper": "L1",
+            "section_slug": "introduction",
+            "quote_hash": "cd2d9076",
+            "hash_algorithm": "sha256_first_8"
+          },
+          "section_ordinal": 20,
+          "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+          "tombstone": false,
+          "bundle_destination": "L1",
+          "bundle_section_hint": "Introduction",
+          "lift_action": "Lift-letter",
+          "rewrite_of": "sentence:L1:introduction:a07882f6",
+          "meta": {
+            "review_unit": 23,
+            "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+            "assessment_origin": "current-reassessment",
+            "prior_assessment_id": "sentence:L1:introduction:a07882f6",
+            "prior_assessment_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
+            "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+          }
+        }
+      ],
+      "lineage": [
+        {
+          "prior_id": "sentence:L1:abstract:9a3de8fb",
+          "successor_ids": [
+            "sentence:L1:abstract:756848ee"
+          ],
+          "relation": "rewrite",
+          "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+        },
+        {
+          "prior_id": "sentence:L1:formal-setup-and-result:98b2e23b",
+          "successor_ids": [
+            "sentence:L1:formal-setup-and-result:89678d2f"
+          ],
+          "relation": "rewrite",
+          "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+        },
+        {
+          "prior_id": "sentence:L1:discussion:e1a97170",
+          "successor_ids": [
+            "sentence:L1:discussion:6409d539"
+          ],
+          "relation": "rewrite",
+          "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+        },
+        {
+          "prior_id": "sentence:L1:introduction:0ef96618",
+          "successor_ids": [],
+          "relation": "deleted-process-or-taste",
+          "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+        },
+        {
+          "prior_id": "sentence:L1:introduction:162806f2",
+          "successor_ids": [
+            "sentence:L1:introduction:82677384"
+          ],
+          "relation": "rewrite",
+          "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+        },
+        {
+          "prior_id": "sentence:L1:introduction:2da8b694",
+          "successor_ids": [],
+          "relation": "deleted-process-or-taste",
+          "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+        },
+        {
+          "prior_id": "sentence:L1:introduction:cd2d9076",
+          "successor_ids": [
+            "sentence:L1:introduction:9f09b12d"
+          ],
+          "relation": "rewrite",
+          "disposition": "prior assessment preserved in full; zero automatic closure; physical/stage holds unchanged"
+        }
+      ],
+      "sources": {
+        "lean/SKEFTHawking/VestigialSusceptibility.lean": "cf5a4584ad51f44a232c7da2d4fe9300ea14c322a416b2843e7ef3c2032bf721",
+        "lean/SKEFTHawking/GravitationalWaves.lean": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
+        "src/core/formulas.py": "7d17a1acc60cd11e5d066141ebe0702b7a319db644e80fd4ce8aca28cf48a3a9",
+        "src/core/constants.py": "b91f65926d7a5190834352e757f25ebaed9b03895901acc632875e2c55f05b2d"
+      },
+      "actual_source_scope": [
+        "VestigialSusceptibility.lean:320-333 abstract real-valued definition and denominator hypothesis",
+        "GravitationalWaves.lean:185 fixed tolerance;544 product definition;573-580 actual iff",
+        "formulas.py:8548-8589 reference c_light and actual sqrt implementation;constants.py:5881 SI reference"
+      ],
+      "prior_metadata_preserved_in_full": true,
+      "physical_and_prose_hold": "No B3/window/common-functional/state/tensor/matter/transport discharge; existing prose BLOCK and stage/human requirements retained.",
+      "prior_summary_preserved": {
+        "total_sentences": 125,
+        "by_type": {
+          "formal-claim": 27,
+          "numeric": 20,
+          "methodology": 20,
+          "citation": 17,
+          "qualitative": 14,
+          "parameter": 4,
+          "theorem-ref": 18,
+          "transition": 3,
+          "metaclaim": 2
+        },
+        "by_verdict": {
+          "PASS": 88,
+          "INFO": 25,
+          "TRANSITION": 4,
+          "WARN": 7,
+          "UNGROUNDED": 1
+        },
+        "by_finding_class": {
+          "HD": 1,
+          "SD": 1
+        },
+        "non_reproducing_count": 54,
+        "non_reproducing_auto_closed": 0,
+        "non_reproducing_candidates": 54,
+        "agent_text": "125 current content units;118 assessments retained and seven bounded primary-body source-comparison assessments PASS. Original49 supersession candidates preserved; five historical source WARN candidates added, zero auto closure. Four scientific blocker identities and full prose/stage/main/human holds retained. Historical81/89 receipts are not fresh executions."
+      }
     }
   },
   "cross_bundle_findings": [
@@ -7550,13 +7900,13 @@
     }
   ],
   "summary": {
-    "total_sentences": 125,
+    "total_sentences": 123,
     "by_type": {
       "formal-claim": 27,
       "numeric": 20,
-      "methodology": 20,
+      "methodology": 19,
       "citation": 17,
-      "qualitative": 14,
+      "qualitative": 13,
       "parameter": 4,
       "theorem-ref": 18,
       "transition": 3,
@@ -7564,10 +7914,10 @@
     },
     "by_verdict": {
       "PASS": 88,
-      "INFO": 25,
-      "TRANSITION": 4,
+      "INFO": 24,
       "WARN": 7,
-      "UNGROUNDED": 1
+      "UNGROUNDED": 1,
+      "TRANSITION": 3
     },
     "by_finding_class": {
       "HD": 1,
@@ -7576,6 +7926,6 @@
     "non_reproducing_count": 54,
     "non_reproducing_auto_closed": 0,
     "non_reproducing_candidates": 54,
-    "agent_text": "125 current content units;118 assessments retained and seven bounded primary-body source-comparison assessments PASS. Original49 supersession candidates preserved; five historical source WARN candidates added, zero auto closure. Four scientific blocker identities and full prose/stage/main/human holds retained. Historical81/89 receipts are not fresh executions."
+    "agent_text": "123 current units;118 unaffected assessments retained; seven affected old records preserved in full with five successor units and explicit deletion lineage for two process/taste units. The retained assumption-disclosure rewrite remains INFO; the four scientific successor units remain PASS at their original conditional source scope. No verdict upgrade. Original54 supersession candidates and four scientific blocker records unchanged; zero automatic closures. No fresh scientific execution or physical/prose/stage/human acceptance."
   }
 }

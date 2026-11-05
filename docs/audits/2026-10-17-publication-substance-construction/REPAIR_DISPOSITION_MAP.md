@@ -72,9 +72,17 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   uncited register row; no fifth acquisition or science acceptance is credited.
   Focused finding1.1 is canonically FIXED at repair9bdd7e2b4, with all1258
   prior ledger records and all four actual source PDF hashes preserved.
-  Next complete a full prose-reviewer read-through on the corrected draft,
-  integrate accepted physical construction evidence as it becomes applicable,
-  and retain original B3/state/tensor/matter/transport BUILD requirements.
+  The fresh complete corrected-draft prose read-through is recorded in the
+  [reader-notation checkpoint](../../../papers/AutomatedReviews/2026-11-05-l1-reader-notation/SCOPE.md).
+  It remains BLOCK on the physical-to-observational chain and process-heavy
+  structure. Independently accepted local repairs define the reference speed
+  and RPA coupling, state the actual fixed-tolerance dispersion biconditional,
+  and remove two taste/process clauses without deleting scientific content.
+  The final revision retains four pages,89 passing focused cases and all
+  original B3/state/tensor/matter/transport BUILD requirements. Next integrate
+  accepted physical construction as applicable and continue the full prose
+  restructuring through the existing review/claim/closure process; these local
+  corrections do not authorize full-stage or publication acceptance.
 
 
 - **L1 exhaustive numerical acceptance and mathematical source propagation.**

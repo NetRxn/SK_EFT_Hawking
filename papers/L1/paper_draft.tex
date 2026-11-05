@@ -31,7 +31,8 @@ identification to one part in $10^{15}$ of its natural range}
 
 \begin{abstract}
 We constrain our assumed leading-order graviton speed
-$\cGW=c\sqrt{\chivest}$. The conservative GW170817 bound
+$\cGW=c\sqrt{\chivest}$, where $c$ is the electromagnetic
+reference speed. The conservative GW170817 bound
 $|\dccap|\leq\tau=3\times10^{-15}$ confines the nonnegative
 susceptibility to $[(1-\tau)^2,(1+\tau)^2]$, of width $4\tau$.
 This interval contains $\chivest=1$ and is over fourteen orders of
@@ -82,8 +83,8 @@ unevaluated bare susceptibility and coupling inputs, so that form
 alone supplies no numerical value of $\chivest$.
 The underlying
 lattice-fermion framework is the one whose unitarity Vergeles
-establishes~\cite{Vergeles2025}. The identification is appealing in its
-brevity. In this Letter, Eq.~\eqref{eq:cGW} is an assumed kinematic speed law.
+establishes~\cite{Vergeles2025}. Equation~\eqref{eq:cGW} is an
+assumed kinematic speed law.
 We constrain its free susceptibility without deriving a propagating
 second-sound mode from a microscopic action, its propagator, or its
 coupling to matter. This missing dynamical bridge is a limitation of
@@ -98,9 +99,7 @@ $-3 \times 10^{-15} \leq \dccap \leq +7 \times 10^{-16}$.
 Conservatively two-sided, $|\dccap| \leq \tau$ with
 $\tau = 3 \times 10^{-15}$.
 
-This Letter formalizes Eq.~\eqref{eq:cGW}, places it head-to-head
-against GW170817, and reports the result. The conclusion is sharp:
-our assumed speed law satisfies the GW170817 bound only on a
+Our assumed speed law satisfies the GW170817 bound only on a
 sub-interval of our adopted range $\chivest \in [0.1, 10]$ narrower
 than that range by more than 14 orders of magnitude. The
 GW170817-compatible window $[(1-\tau)^2, (1+\tau)^2]$ has width
@@ -168,7 +167,8 @@ Our substrate models the vestigial-phase metric-channel susceptibility
 by the RPA \emph{resummation}
 $\chi_{\rm RPA} = \chi_0/(1 - \gamma_\star \chi_0)$ in the standard
 Hertz--Millis convention. Here $\chi_0$ is the bubble integral;
-$\chi_{\rm RPA}$ is the resummed response, not the bubble integral itself.
+$\chi_{\rm RPA}$ is the resummed response and $\gamma_\star$ the
+effective coupling; physical normalization remains undetermined.
 \texttt{VestigialSusceptibility.lean} formalizes that closed form and
 its stability properties; it evaluates neither $\chi_0$ nor
 $\gamma_\star$, so it fixes no numerical $\chivest$, which is why
@@ -397,9 +397,10 @@ $|\delta_{\rm tot}|\leq\tau$ whenever $|\delta_0|>\tau+B$.
 Offsets just outside $\pm\tau$ can nevertheless become compatible
 through an oppositely signed correction within this bound.
 Larger corrections are not excluded by the placeholder theorem.
-For positive $\omega$, \texttt{dispersion\_within\_ligo\_iff}
-exchanges the correction's tolerance for
-$|\gamma|\leq\mathrm{tol}/\omega$.
+For a positive numerical probe $\omega$,
+\texttt{dispersion\_within\_ligo\_iff} gives
+$|\gamma\omega|\leq\tau\iff|\gamma|\leq\tau/\omega$ at the fixed
+GW170817 tolerance $\tau$, bounding the correction alone.
 \texttt{dispersion\_correction\_abs\_bound},
 \texttt{dispersion\_correction\_linear\_in\_gamma} and
 \path{dispersion_correction_zero_at_no_dissipation} describe

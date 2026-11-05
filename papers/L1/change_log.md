@@ -209,3 +209,26 @@ The broad fast result remains RED; six additional environment failures pass thei
 Separate the Sakstein–Jain cluster/dwarf analysis from its GW-plus-M87 quartic-galileon inference, state the considered matter-coupling scope, qualify affected Ezquiaga–Zumalacarregui sectors and bound the comparison to the four inspected analyses. Correct the matching registry provides/notes and select the four verified PDFs through the existing acquisition record writer, retaining journal identities, verification fields and all earlier abstracts. Source/fulltext versions are explicitly recorded; no fulltext is copied into this repository.
 
 Independent primary-body and integrated125-unit catalog/rendered review accept the bounded correction. The existing sentence-state writer preserves historical assessment/ID lineage, all audit bytes and human state; four scientific blockers remain open. Citation/GW domain tests pass152cases and the four-page compile has zero overflow/errors/unresolved references. The derived acquisition register now has159gaps: four owned body acquisitions plus removal of one already-stale uncited row, not five acquisitions. Full corpus prose/full-stage/main/publication qualification remains open. Evidence: papers/AutomatedReviews/2026-11-05-l1-primary-body-comparison/.
+
+
+## 2026-11-05 — Reader notation and fixed-tolerance source fidelity
+
+The complete current-draft prose review remains BLOCK on the original physical
+response/tensor/matter/transport chain and reader structure. ROOT retains the
+whole L1 deliverable; Executor owns bounded substantial constructions.
+
+The revision defines the electromagnetic speed reference and effective RPA
+coupling while preserving undetermined physical normalization. It states the
+actual dispersion theorem at the fixed GW170817 tolerance rather than an
+undefined generic tolerance, with positive numerical probe and correction-only
+scope. Two redundant taste/process clauses are removed without changing any
+scientific statement, number, attribution or obligation. Independent source and
+all-four-page rendered reviews accept this bounded revision. Initial notation
+proposals overflowed the charter at five pages; final compact wording restores
+four pages without changing typography. All89 focused tests pass. Original
+compile/test receipts and full prose instruction are in
+`papers/AutomatedReviews/2026-11-05-l1-reader-notation/`.
+
+Canonical claim intake and focused finding closure are recorded separately
+through their existing writers. No full-stage, current broad-suite, main or
+human publication acceptance follows; original scientific BUILD remains open.
