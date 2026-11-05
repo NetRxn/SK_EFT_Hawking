@@ -238,9 +238,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   verified receipts, as do all 64 scalars in the second slice.
   The [complete minority contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-minority-contraction)
   covers 288 pairs and 34 orbits. The weighted real subtotal is
-  `156896923951130265/288230376151711744`. Dominant coverage at
-  [checkpoint `19411de93`](https://github.com/NetRxn/SK_EFT_Hawking/commit/19411de93)
-  is 17 of 148 orbits and 1,068 of 9,216 source words. Both selector
+  `156896923951130265/288230376151711744`. Dominant coverage in the
+  [latest verified contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-dominant-representative-34)
+  is 20 of 148 orbits and 1,170 of 9,216 source words. Both selector
   rosters are pinned in the repository runner. Its independently
   checked symmetry mode uses complete gamma slices and exact signed
   stabilizer witnesses. The first new weighted representative

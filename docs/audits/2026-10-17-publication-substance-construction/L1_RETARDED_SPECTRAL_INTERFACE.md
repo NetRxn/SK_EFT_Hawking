@@ -7845,3 +7845,19 @@ dominant orbits are singletons.
 The 75 signed source words are disjoint from each other and the
 1,068 previously accepted words. Verified dominant coverage is
 19 of 148 orbits and 1,143 of 9,216 words.
+
+### Complete dominant representative (3,4)
+
+Independent review verified 192 ordered exact selectors in gamma
+slices 0, 2, and 3 on the original pinned roster. It checked all
+12 terminal shards and regenerated the signed witness
+`(-2,-1,-3)` mapping slice 0 to slice 1. The exact weighted
+component subtotal is `688672510171296147/9444732965739290427392`
+with zero imaginary part. The component receipt byte interval
+is [47367, 115753) in the shared block 3 run. Its SHA-256 is
+`c66a5fbd2889295f6a1b71e6a353334e61d7feac954c286859c4a7beca4743e4`.
+
+The nine-member signed orbit adds 27 source words disjoint from
+the previously accepted 1,143. Its contribution is
+`6198052591541665323/9444732965739290427392`. Verified dominant
+coverage is 20 of 148 orbits and 1,170 of 9,216 words.
