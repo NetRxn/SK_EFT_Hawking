@@ -193,3 +193,12 @@ full-body source corroboration remain owned publication obligations.
 
 Evidence: papers/AutomatedReviews/2026-11-05-l1-figure-propagation/ and
 papers/AutomatedReviews/2026-11-05-l1-current-claims/.
+
+
+## 2026-11-05 — exact numerical acceptance and source mathematical propagation
+
+Retain the original universal abstract/caption numerical-verification requirement and supply its complete independently accepted exact/high-precision value-to-assertion map. Eight scientific cases extend the original81 unchanged cases to89; meaningful wrong-cap, swapped-star and premature-rounding controls fail. Correct four Abbott bound locators from Eq.(5) to Eq.(1), preserving values, historical dates, tiers and human state. Propagate exact finite-interval, endpoint, prior and tracked-conjunct mathematics into the contributing source, with independently reviewed all-page rendering. Correct its stale conclusion census using actual32 built theorem/lemma records.
+
+The existing sentence-state writer records one bounded current catalog refresh:124units,81PASS/12WARN/26INFO/4TRANSITION/1UNGROUNDED. One count-based successor and numerical-coverage reassessment preserve all four blocker IDs,49 prior candidates and all human state, with zero automatic closures. Full physical B3/modes/matter/transport and full prose-readthrough remain open.
+
+The broad fast result remains RED; six additional environment failures pass their exact targeted rerun with no source/harness modification. Original29 failure identities remain unwaived. Evidence and scoped finding controls: papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/. Final canonical closures and remote checkpoint are recorded separately.

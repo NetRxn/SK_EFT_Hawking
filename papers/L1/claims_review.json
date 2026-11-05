@@ -1,9 +1,9 @@
 {
   "paper": "L1",
-  "review_date": "2026-11-05T17:36:12.038875+00:00",
+  "review_date": "2026-11-05T18:30:07.161204+00:00",
   "reviewer_version": "claims-reviewer-v2",
   "reviewer_model": "gpt-6",
-  "reviewer_run_id": "claims-reviewer-v2:2026-11-05:l1-current-documentary-r3",
+  "reviewer_run_id": "claims-reviewer-v2:2026-11-05:l1-numeric-claims-refresh-r1",
   "bundle_target": "L1",
   "bundle_tier": 2,
   "review_profile": "current L1 full sentence coverage; mapped-source/cross-bridge inspection limited",
@@ -3024,6 +3024,10 @@
         "current_evidence_refresh": {
           "run_id": "claims-reviewer-v2:2026-11-05:l1-current-documentary-r3",
           "scope": "Update documentary independent-review status only; existing verdict and source assessment remain unchanged."
+        },
+        "numeric_coverage_refresh": {
+          "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-numeric-claims-refresh-r1",
+          "scope": "The last sentence of historical r2 agent_notes (exhaustive numeric acceptance open) describes that prior state. Accepted R2 scientific tests plus actual ROOT89PASS now satisfy the bounded exhaustive-numeric map; this does not change the retained broader caption WARN or confer complete Stage9/science/publication acceptance."
         }
       }
     },
@@ -5296,39 +5300,74 @@
     {
       "type": "metaclaim",
       "finding_classes": [],
-      "agent_verdict": "WARN",
-      "agent_notes": "Fresh current scoped suite returned81 passed in0.08s. Count is verified; no exhaustive mapping exists in the inspected81 assertions for literal3e-15 reference validity, exact adopted endpoints0.1/10, exact4tau=1.2e-14 and9.9, printed two-decimal endpoint rounding, or figure-render numbers. Existing controls test related formulas and precision, but count and family coverage do not alone establish every quoted numeric. Preserve the exhaustive acceptance requirement; ROOT must supply actual value/reference/assertion mapping, not merely weaken prose.",
+      "agent_verdict": "PASS",
+      "agent_notes": "Current integrated scoped Python suite has89cases and ROOT executed all89PASS in0.19s after the accepted R2 test augmentation and factual Abbott Eq.(1) locator repair. The eight added cases and independent accepted mapping cover every current abstract/caption numeric: assumed scalar law; source asymmetric bounds\u2192conservative3e-15 cap; adopted0.1/10 with PROJECTED provenance; exact rational preimage and4tau=1.2e-14 distinct from rounded endpoints;9.9 width; ratio8.25e14/log10>14; unity anchor and nonunity compatible witnesses; two-decimal\u22120.68/+2.16 displays and independently checked unrounded endpoint factors; actual Plotly curve/band/rectangle/star/callout numbers and subpixel extents. Independent review accepted this bounded exhaustive numerical mapping and controls. Lower\u22120.68 is two-decimal rounding, not a claimed0.5% relative agreement. The former missing-exhaustive-numeric-mapping WARN does not reproduce for this sentence. This PASS concerns numerical cross-check coverage and actual89-case execution, not microscopic range/mode/matter/transport derivation, full G4, native Lean, PNG rendering, committed-pinned custody or publication acceptance. Historical81-case evidence remains historical.",
       "gates_invoked": [],
       "chain_proposed": {
-        "links": [],
-        "completeness": "partial"
+        "links": [
+          {
+            "kind": "production_run",
+            "target": "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INTEGRATED_TESTS.txt",
+            "computed_value": "89 passed in 0.19s",
+            "verification_scope": "ROOT actual corrected-source integrated pytest receipt; byte-identical to /tmp/l1-numeric-integrated-20261105.txt"
+          },
+          {
+            "kind": "production_run",
+            "target": "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INDEPENDENT_PROPOSAL_REVIEW.md",
+            "verification_scope": "Independent acceptance of exhaustive current abstract/caption value/reference/assertion mapping and isolated RED/GREEN controls; bounded numerical coverage only"
+          },
+          {
+            "kind": "production_run",
+            "target": "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/REPORT.md",
+            "verification_scope": "Complete exact/high-precision reference and assertion map; source-qualified Abbott printedp6 Eq1; adopted endpoints and display rounding separated from physical derivation"
+          },
+          {
+            "kind": "formula",
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual integrated tests against independent Fraction/80-digit Decimal references, including Plotly scientific input values; no production helper computes its own expected value"
+          },
+          {
+            "kind": "citation",
+            "target": "Abbott2017GW170817",
+            "verification_scope": "Held full-body printedp6 Sec4.1 Eq1 asymmetric interval, operational symmetric envelope; no human state mutation"
+          }
+        ],
+        "completeness": "full"
       },
       "section": "Discussion",
-      "quote": "the Python layer is \\texttt{src/gravitational\\_waves/}\nwith 81 \\texttt{pytest} cases cross-checking every numeric quoted\nin the abstract and figure caption.",
+      "quote": "the Python layer is \\texttt{src/gravitational\\_waves/}\nwith 89 \\texttt{pytest} cases cross-checking every numeric quoted\nin the abstract and figure caption.",
       "tex_line_start": 429,
       "tex_line_end": 431,
-      "id": "sentence:L1:discussion:ac7de9a4",
-      "quote_normalized": "the python layer is src/gravitational\\_waves/ with 81 pytest cases cross-checking every numeric quoted in the abstract and figure caption.",
+      "id": "sentence:L1:discussion:09269d60",
+      "quote_normalized": "the python layer is src/gravitational\\_waves/ with 89 pytest cases cross-checking every numeric quoted in the abstract and figure caption.",
       "raw_id_parts": {
         "paper": "L1",
         "section_slug": "discussion",
-        "quote_hash": "ac7de9a4",
+        "quote_hash": "09269d60",
         "hash_algorithm": "sha256_first_8"
       },
       "section_ordinal": 33,
-      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-numeric-claims-refresh-r1",
       "tombstone": false,
       "bundle_destination": "L1",
       "bundle_section_hint": "Discussion",
       "lift_action": "Lift-letter",
-      "rewrite_of": null,
+      "rewrite_of": "sentence:L1:discussion:ac7de9a4",
       "meta": {
         "review_unit": 122,
-        "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
-        "assessment_origin": "exact-retained",
+        "source_sha256": "bd64ce8b91b6aa5ed6ec28d7001dc582919354462209bab6a5addb18397d0856",
+        "assessment_origin": "bounded-current-numeric-reassessment",
         "prior_assessment_id": "sentence:L1:discussion:ac7de9a4",
-        "prior_assessment_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
-        "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+        "prior_assessment_run_id": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1",
+        "source_scope": "Only changed89-case reproducibility sentence and exhaustive numeric coverage reassessed; historical source/Lean/figure assessments remain attributed to their original runs.",
+        "prior_assessment_meta": {
+          "review_unit": 122,
+          "source_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+          "assessment_origin": "exact-retained",
+          "prior_assessment_id": "sentence:L1:discussion:ac7de9a4",
+          "prior_assessment_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
+          "source_scope": "Source/statement inspection only for Lean; no LSP, slot, kernel or build. Historical evidence remains historically attributed; scoped81 Python rerun is current."
+        }
       }
     },
     {
@@ -5450,7 +5489,7 @@
         "sentence:L1:formal-setup-and-result:c566aed6",
         "sentence:L1:formal-setup-and-result:2d57174c",
         "sentence:L1:discussion:556783ed",
-        "sentence:L1:discussion:ac7de9a4",
+        "sentence:L1:discussion:09269d60",
         "sentence:L1:discussion:064e25cb"
       ],
       "gate": "FixPropagation",
@@ -5485,7 +5524,7 @@
       "summary": "The prior precision finding remains fixed with its 69-case receipt preserved. The current 81-case suite additionally covers the separate positive-speed repair, independently reviewed scalar and grid controls, and unchanged interval checks. Full G4 and physical BUILD acceptance remain separate.",
       "sentences": [
         "sentence:L1:discussion:556783ed",
-        "sentence:L1:discussion:ac7de9a4"
+        "sentence:L1:discussion:09269d60"
       ],
       "gate": "ComputationCorrectness",
       "finding_class": "SD",
@@ -5571,16 +5610,22 @@
     },
     {
       "id": "L1-every-quoted-numeric-coverage",
-      "summary": "Fresh81 cases pass, but historical partial coverage warning survives until exhaustive abstract/caption value-to-reference/assertion mapping is accepted. Preserve requirement, do not discharge by count or wording narrowing.",
+      "summary": "The prior exhaustive-numeric-coverage concern no longer reproduces under the accepted R2 complete current abstract/caption mapping, eight appended scientific cases and actual integrated89PASS. Historical81-case receipt remains preserved. This is a scoped disposition candidate; original physical BUILD and full G4/publication acceptance remain separate.",
       "sentences": [
         "sentence:L1:discussion:556783ed",
-        "sentence:L1:discussion:ac7de9a4"
+        "sentence:L1:discussion:09269d60"
       ],
       "gate": "Gate2_TestSubstance",
       "finding_class": null,
       "first_observed_date": "2026-05-06T16:50:00Z",
       "lane": "substrate",
-      "status": "open; no closure performed"
+      "status": "candidate for scoped canonical disposition after independent claims-refresh review; no auto-closure or human ratification performed",
+      "evidence_refresh": {
+        "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-numeric-claims-refresh-r1",
+        "prior_summary": "Fresh81 cases pass, but historical partial coverage warning survives until exhaustive abstract/caption value-to-reference/assertion mapping is accepted. Preserve requirement, do not discharge by count or wording narrowing.",
+        "prior_status": "open; no closure performed",
+        "evidence": "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INDEPENDENT_PROPOSAL_REVIEW.md; INTEGRATED_TESTS.txt; numeric-r2/REPORT.md"
+      }
     }
   ],
   "non_reproducing_prior_findings": [
@@ -6117,7 +6162,16 @@
     "r2_delta_scope": "Bounded source-data/custody rebase only; same manuscript bytes,124 content IDs,quotes,spans,verdicts and four prior blocker identities. Independent current rendered figure acceptance remains pending. All original numerical acceptance and scientific BUILD requirements retained.",
     "r3_packet": "l1-current-claims-documentary-r3-20261105.json",
     "r3_prior_candidate_sha256": "463f015a91ecb3b42d82afaca6af34f0b11596220efca0cba70be53e3e902fa2",
-    "r3_delta_scope": "Bounded documentary correction only. Immutable r1/r2 manifests remain dated inputs. Current final source manifest supersedes neither their historical facts nor their input hashes. Expected later P25 finding1.5 typesetting delta explicitly reconciled. No science, ID, quote, line-span or verdict changes."
+    "r3_delta_scope": "Bounded documentary correction only. Immutable r1/r2 manifests remain dated inputs. Current final source manifest supersedes neither their historical facts nor their input hashes. Expected later P25 finding1.5 typesetting delta explicitly reconciled. No science, ID, quote, line-span or verdict changes.",
+    "numeric_refresh": {
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-numeric-claims-refresh-r1",
+      "head": "3c56f0c6d6c0785f2b9958ec9c136d8dd293a3d8",
+      "manuscript_sha256": "bd64ce8b91b6aa5ed6ec28d7001dc582919354462209bab6a5addb18397d0856",
+      "prior_catalog_sha256": "d441e52371493e719d592ce2c79473705fee91510df65cbd2f14da53fab662b4",
+      "original_top_level_review_date": "2026-11-05T17:36:12.038875+00:00",
+      "original_top_level_reviewer_run_id": "claims-reviewer-v2:2026-11-05:l1-current-documentary-r3",
+      "scope": "Only TeX81\u219289 count, one quote/content-ID successor, exhaustive numerical coverage reassessment and current pointers. All124 units and other123 quote/ID/span/verdict records preserved; caption69 gains explicit dated numeric status qualification. Four original scientific blockers remain; no broad G4/Stage9/2017 fullbody/native/publication/human acceptance."
+    }
   },
   "review_evidence": {
     "current_scoped_python": "primary .venv/bin/python -m pytest tests/test_gravitational_waves.py -q -p no:cacheprovider =>81passed in0.08s; no dependency synchronization",
@@ -6857,10 +6911,10 @@
         "prior_run": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1"
       },
       {
-        "current_id": "sentence:L1:discussion:ac7de9a4",
+        "current_id": "sentence:L1:discussion:09269d60",
         "prior_id": "sentence:L1:discussion:ac7de9a4",
-        "origin": "exact-retained",
-        "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+        "origin": "count-only-quote-rewrite-and-bounded-numeric-reassessment",
+        "prior_run": "claims-reviewer-v2:2026-11-05:l1-current-complete-r1"
       },
       {
         "current_id": "sentence:L1:discussion:064e25cb",
@@ -6880,7 +6934,21 @@
     },
     "r2_scope": "No scientific/native/Lean/slot/build/compile execution. Source-data equality checks and schema validation only. Originalr1candidate/evidence remain immutable. Current independent figure render acceptance pending.",
     "r3_final_source_manifest_sha256": "08004761d0ad41794da16778e880fafe95fcdd205885b4eaf82db78ec55f8e66",
-    "r3_current_review_status": "Independent repaired-figure r1 and final-source-layout r2 report scoped ACCEPT1.1\u20131.5; source-paper scientific prose/claims and complete Stage9 remain unaccepted."
+    "r3_current_review_status": "Independent repaired-figure r1 and final-source-layout r2 report scoped ACCEPT1.1\u20131.5; source-paper scientific prose/claims and complete Stage9 remain unaccepted.",
+    "numeric_refresh": {
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-numeric-claims-refresh-r1",
+      "result": "ROOT89passed in0.19s on actual integrated corrected source; independently accepted complete R2 numerical map. Author read receipt, did not misattribute as own rerun.",
+      "sourcepins": {
+        "papers/L1/paper_draft.tex": "bd64ce8b91b6aa5ed6ec28d7001dc582919354462209bab6a5addb18397d0856",
+        "tests/test_gravitational_waves.py": "d7ea13b44e41d36327fa99699b02e96290fa40985c4a1b6aafb9a85729d9d38d",
+        "src/core/provenance.py": "eba5b4ed81cd21fba3ce78d281d3af60224a94c035dc36afadfb348087dc31ae",
+        "src/core/formulas.py": "7d17a1acc60cd11e5d066141ebe0702b7a319db644e80fd4ce8aca28cf48a3a9",
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INDEPENDENT_PROPOSAL_REVIEW.md": "56ec8106025b91e0fa1a7f0c9363c69cc02876877b8bae8e365e38f67d8a7b85",
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/INTEGRATED_TESTS.txt": "b3266baca7c3b99701602fff4fb0fb7b95c05d0da211c9763fd297479e263e41",
+        "papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/numeric-r2/REPORT.md": "dfa918063abc8f0b4b8b318ff941efcfeeecb0027e69a6074845248e6e832ee2"
+      },
+      "scope": "No native/Lean/slot/build/compile/render/fullscience/human actions; prior81 runtime and124-unit review retain original identity."
+    }
   },
   "cross_bundle_findings": [
     {
@@ -6905,10 +6973,10 @@
       "metaclaim": 2
     },
     "by_verdict": {
-      "PASS": 80,
+      "PASS": 81,
       "INFO": 26,
       "TRANSITION": 4,
-      "WARN": 13,
+      "WARN": 12,
       "UNGROUNDED": 1
     },
     "by_finding_class": {
@@ -6918,6 +6986,6 @@
     "non_reproducing_count": 49,
     "non_reproducing_auto_closed": 0,
     "non_reproducing_candidates": 49,
-    "agent_text": "124 current content units; full L1 source coverage, limited mapped-source breadth; four prior blocker identities explicitly reconciled and scientific BUILD retained."
+    "agent_text": "124 current content units; full L1 source coverage, limited mapped-source breadth; four prior blocker identities explicitly reconciled and scientific BUILD retained. Bounded numeric refresh:89 actual scoped tests and exhaustive numerical map accepted; one former numeric-coverage WARN now PASS, all physical blockers retained."
   }
 }

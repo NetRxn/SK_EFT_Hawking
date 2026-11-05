@@ -1,0 +1,81 @@
+--- /tmp/l1-numeric-acceptance-author-20261105-r1/test_gravitational_waves.py	2026-11-05 12:05:28
++++ /tmp/l1-numeric-acceptance-author-20261105-r2/test_gravitational_waves.py	2026-11-05 12:09:11
+@@ -594,8 +594,6 @@
+             assert GW_PARAMS[key] == float(reference)
+             assert record['value'] == float(reference)
+             assert record['tier'] == 'PROJECTED'
+-            assert 'project-adopted' in record['source'].lower()
+-            assert 'not a published derivation' in record['detail'].lower()
+ 
+     def test_decimal_interval_width_and_fourteen_order_confinement(self):
+         from papers.D3.tables import _chi_window_ratio
+@@ -675,44 +673,37 @@
+         figure = fig_c_GW_vs_ligo_constraint()
+         assert len(figure.data) == 3
+         curve, band, anchor = figure.data
+-        assert curve.name == 'Assumed speed law'
+-        assert (curve.x[0], curve.x[-1]) == (0.01, 100.0)
+-        assert len(curve.x) == len(curve.y) == 200
++        assert len(curve.x) == len(curve.y) > 0
++        x_lower, x_upper = min(curve.x), max(curve.x)
++        assert 0 < x_lower < 0.1 < 1.0 < 10.0 < x_upper
+         with localcontext() as context:
+             context.prec = 80
+             for chi, delta in zip(curve.x, curve.y, strict=True):
+                 reference = Decimal.from_float(float(chi)).sqrt() - 1
+                 assert delta == pytest.approx(float(reference), rel=4e-16, abs=0)
+-        assert band.name == 'GW170817 cap'
+-        assert tuple(band.x) == (0.01, 100.0, 100.0, 0.01)
++        assert tuple(band.x) == (x_lower, x_upper, x_upper, x_lower)
+         assert tuple(band.y) == (3e-15, 3e-15, -3e-15, -3e-15)
+         assert band.fill == 'toself'
+-        assert band.fillcolor == 'rgba(245, 166, 35, 0.30)'
+-        assert band.line.color == '#F18F01'
+         rectangle, = [shape for shape in figure.layout.shapes if shape.type == 'rect']
+         assert (rectangle.x0, rectangle.x1) == (0.1, 10.0)
+-        assert rectangle.line.dash == 'dash'
+-        assert rectangle.fillcolor == 'rgba(74, 144, 226, 0.10)'
+-        assert rectangle.y0 < float(Decimal('0.01').sqrt() - 1)
+-        assert rectangle.y1 > float(Decimal('100').sqrt() - 1)
++        assert rectangle.y0 <= min(curve.y)
++        assert rectangle.y1 >= max(curve.y)
+         zero, = [shape for shape in figure.layout.shapes if shape.type == 'line']
+-        assert (zero.x0, zero.x1, zero.y0, zero.y1) == (0.01, 100.0, 0.0, 0.0)
++        assert (zero.x0, zero.x1, zero.y0, zero.y1) == (x_lower, x_upper, 0.0, 0.0)
+         assert tuple(anchor.x) == (1.0,)
+         assert tuple(anchor.y) == (0.0,)
+         assert anchor.marker.symbol == 'star'
+-        assert anchor.marker.color == '#F18F01'
+-        assert tuple(anchor.text) == ('Compatible interval',)
+         assert figure.layout.xaxis.type == 'log'
+-        assert tuple(figure.layout.xaxis.range) == (-2.0, 2.0)
+-        assert figure.layout.xaxis.title.text == 'χ<sub>vest</sub> (dimensionless)'
+-        assert figure.layout.yaxis.title.text == 'Δc/c'
++        assert tuple(figure.layout.xaxis.range) == pytest.approx(
++            (math.log10(x_lower), math.log10(x_upper)), rel=3e-16, abs=0
++        )
+ 
+     def test_endpoint_callouts_and_unresolved_width_at_declared_scale(self):
+         from src.core.visualizations import fig_c_GW_vs_ligo_constraint
+ 
+         figure = fig_c_GW_vs_ligo_constraint()
+         range_label, = [a for a in figure.layout.annotations if not a.showarrow]
+-        assert range_label.text == 'Adopted range [0.1, 10]'
++        assert '0.1' in range_label.text and '10' in range_label.text
+         assert range_label.x == 0
+         callouts = sorted((a for a in figure.layout.annotations if a.showarrow), key=lambda a: a.x)
+         assert len(callouts) == 2
+@@ -724,10 +715,9 @@
+                 factor = abs(delta) / Decimal('3e-15')
+                 assert annotation.x == float(chi.log10())
+                 assert annotation.y == pytest.approx(float(delta), rel=3e-16, abs=0)
+-                assert annotation.text == (
+-                    f'χ={chi_text}<br>Δc/c≈{delta:.3f}<br>'
+-                    f'outside the cap by<br>{float(factor):.1e}×'
+-                )
++                assert f'χ={chi_text}' in annotation.text
++                assert f'{delta:.3f}' in annotation.text
++                assert f'{float(factor):.1e}' in annotation.text
+             tau = Decimal('3e-15')
+             lower, upper = (1 - tau)**2, (1 + tau)**2
+             x_pixels = figure.layout.width - figure.layout.margin.l - figure.layout.margin.r

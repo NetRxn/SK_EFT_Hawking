@@ -8594,7 +8594,7 @@ def c_GW_deviation_from_c(chi_vest):
 
     Lean: GravitationalWaves.c_GW_deviation_zero_iff_chi_one
     Aristotle: pending
-    Source: Abbott et al. ApJL 848, L13 (2017) Eq. (5).
+    Source: Abbott et al. ApJL 848, L13 (2017) Eq. (1).
 
     Parameters
     ----------

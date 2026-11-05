@@ -1,0 +1,118 @@
+[
+  {
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+    "type": "Real \u2192 Prop"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_at_one",
+    "type": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton 1"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower",
+    "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper",
+    "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
+    "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton (1 / 4))"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero",
+    "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton 0)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+    "type": "Real \u2192 Prop"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.c_GW",
+    "type": "Real \u2192 Real \u2192 Real"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_at_chi_one",
+    "type": "\u2200 (c : Real), Eq (SKEFTHawking.GravitationalWaves.c_GW 1 c) c"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+    "type": "Real \u2192 Real"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation_strict_mono",
+    "type": "StrictMonoOn SKEFTHawking.GravitationalWaves.c_GW_deviation (Set.Ici 0)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation_zero_iff_chi_one",
+    "type": "\u2200 {\u03c7_vest : Real},\n  Real.instLE.le 0 \u03c7_vest \u2192 Iff (Eq (SKEFTHawking.GravitationalWaves.c_GW_deviation \u03c7_vest) 0) (Eq \u03c7_vest 1)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+    "type": "\u2200 {\u03c7_vest : Real},\n  Real.instLE.le 0 \u03c7_vest \u2192\n    Iff (SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation \u03c7_vest))\n      (And (Real.instLE.le (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2) \u03c7_vest)\n        (Real.instLE.le \u03c7_vest (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)))"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_pos",
+    "type": "\u2200 {\u03c7_vest c : Real},\n  Real.instLT.lt 0 \u03c7_vest \u2192 Real.instLT.lt 0 c \u2192 Real.instLT.lt 0 (SKEFTHawking.GravitationalWaves.c_GW \u03c7_vest c)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_relative_deviation_eq",
+    "type": "\u2200 {\u03c7_vest c : Real},\n  Ne c 0 \u2192\n    Eq (instHDiv.hDiv (instHSub.hSub (SKEFTHawking.GravitationalWaves.c_GW \u03c7_vest c) c) c)\n      (SKEFTHawking.GravitationalWaves.c_GW_deviation \u03c7_vest)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+    "type": "Real"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+    "type": "Real"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.dispersion_correction",
+    "type": "Real \u2192 Real \u2192 Real"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.ligo_satisfied_at_chi_one",
+    "type": "SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation 1)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.ligo_window_inter_natural_range_nonempty",
+    "type": "(Set.instInter.inter\n    (Set.Icc (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n      (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n    (Set.Icc SKEFTHawking.GravitationalWaves.chi_vest_natural_lower\n      SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)).Nonempty"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.ligo_window_subset_natural_range",
+    "type": "Set.instLE.le\n  (Set.Icc (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n    (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n  (Set.Icc SKEFTHawking.GravitationalWaves.chi_vest_natural_lower\n    SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_eq",
+    "type": "Eq\n  (instHSub.hSub (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n    (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n  (instHMul.hMul 4 SKEFTHawking.GravitationalWaves.tolGW170817)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
+    "type": "Real.instLT.lt\n  (instHMul.hMul 1e14\n    (instHSub.hSub (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n      (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)))\n  (instHSub.hSub SKEFTHawking.GravitationalWaves.chi_vest_natural_upper\n    SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+    "type": "\u2200 {c : Real},\n  Ne c 0 \u2192\n    \u2200 {\u03c7 : Real},\n      Or (Eq \u03c7 SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)\n          (Eq \u03c7 SKEFTHawking.GravitationalWaves.chi_vest_natural_upper) \u2192\n        Not\n          (SKEFTHawking.GravitationalWaves.LigoSatisfied\n            (instHDiv.hDiv (instHSub.hSub (SKEFTHawking.GravitationalWaves.c_GW \u03c7 c) c) c))"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+    "type": "Not\n  (Exists fun \u03c7 =>\n    And\n      (Or (Eq \u03c7 SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)\n        (Eq \u03c7 SKEFTHawking.GravitationalWaves.chi_vest_natural_upper))\n      (SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation \u03c7)))"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+    "type": "Not\n  (SKEFTHawking.GravitationalWaves.LigoSatisfied\n    (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_lower))"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.natural_range_width_eq",
+    "type": "Eq\n  (instHSub.hSub SKEFTHawking.GravitationalWaves.chi_vest_natural_upper\n    SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)\n  (99 / 10)"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo",
+    "type": "Not\n  (SKEFTHawking.GravitationalWaves.LigoSatisfied\n    (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_upper))"
+  },
+  {
+    "name": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
+    "type": "And\n  (Not\n    (SKEFTHawking.GravitationalWaves.LigoSatisfied\n      (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)))\n  (Not\n    (SKEFTHawking.GravitationalWaves.LigoSatisfied\n      (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)))"
+  }
+]

@@ -34,6 +34,25 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 exhaustive numerical acceptance and mathematical source propagation.**
+  Independently reviewed eight scientific cases retain the original universal
+  abstract/caption requirement and bring the focused module to89 passing cases.
+  Exact references, genuine negative controls, source locator repairs and
+  all-nine-page rendered acceptance are preserved in the
+  [scoped checkpoint](../../../papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/SCOPE.md).
+  The existing catalog/writer now records124units with one bounded numerical
+  WARN-to-PASS reassessment; four blocker identities,49 historical candidates
+  and all human states remain. The full broad receipt is RED7169pass/35fail;
+  the six additional environment failures pass an exact targeted rerun without
+  source or harness changes. Original29 failures remain unwaived. This is
+  draft checkpoint qualification, not main/full-stage/publication acceptance.
+  Next ROOT integrates source-qualified2017 comparison corrections and custody
+  records after full-body corroboration, then reruns affected claim/prose reviews.
+  Executor's independently reviewed common-source/matter construction is ready
+  for separate bounded intake; original physical B3, state, tensor/matter and
+  transport requirements remain open.
+
+
 - **Current canonical portfolio measurement.** The existing graph producer
   remeasures all21bundles/231gates on clean `425324077`:159passed,25blocked,
   28open,19needs-recheck. No state changes versusAF255 and no newly green
@@ -54,14 +73,15 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   propagates identically to L1, D3 and its source, with readable print text.
   The full [prose read-through](../../../papers/L1/prose_review.md) is BLOCK: the
   required physical chain cannot be replaced by assumed-law interval algebra.
-  Next ROOT repairs remaining source mathematical propagation and builds the
-  exhaustive quoted-number/reference validation, while coordinating the
+  ROOT has separately completed the bounded mathematical propagation and
+  exhaustive quoted-number/reference acceptance documented above, while coordinating the
   original B3/W1–W4 constructions with Executor. Executor reconciles the
   existing PR115 physical branch selection: one common-generating-functional
   source/background and same-regulator matter contract, first/second vertices,
   contact and measure terms, retained observable algebra and dimensions. No
   extra selected-word campaign is justified without its role in that chain.
-  Full-body corroboration for the four2017 attributions remains owed. No
+  Four2017 full bodies are now held and source-linked verification identifies
+  comparison corrections; manuscript acceptance and custody promotion remain owed. No
   full stage or bundle is green.
 
 - **L1 reviewed manuscript and layout.** The historical microscopic/source/frequency
