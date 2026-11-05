@@ -255,8 +255,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   and common partition coefficient remain open.
   The [modular controls](L1_RETARDED_SPECTRAL_INTERFACE.md#modular-controls-for-the-common-normalization)
   independently match two restricted 16-site motifs at prime
-  65,537. The next control is a signed modular replay of the
-  reviewed overlap motif before full zero-source coverage.
+  65,537. The [two-row overlap control](L1_RETARDED_SPECTRAL_INTERFACE.md#two-direct-modular-overlap-rows)
+  also matched the pinned exact receipts. Complete the signed
+  modular overlap replay before full zero-source coverage.
   The moving-edge derivative bound applies to prescribed smooth
   fields. The weighted ensemble conditions and positive Gibbs
   comparisons identify the additional source-measure analysis needed

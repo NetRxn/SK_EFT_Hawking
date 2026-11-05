@@ -8286,3 +8286,34 @@ The eight signed orbits add 144 disjoint words and contribute
 `-6682308534228279771/590295810358705651712` together.
 Verified dominant coverage is 112 of 148 orbits and 8,694 of
 9,216 words.
+
+### Two direct modular overlap rows
+
+The [modular overlap control](l1_modular_overlap_two.py)
+loads the previously reproduced lower-column rows at SHA-256
+`3f15a76fc3ae9af4f3340cfc14626feebee2839c0fb25ead9cf2750ee37bf702`
+and the [reviewed exact rows 0 and 1](l1_overlap_control_exact.rows)
+at `d487deadea8c31337cecc5ac5ffcceaff79a30e3e0422f9b07b7f4ecbe277b32`.
+Run it with the lower-column file and the exact two-row file as
+its two positional arguments. The existing lower-column
+contraction above documents the reproducible input.
+
+The replay reduces the tracked integer factors and exterior
+weights modulo 65,537 before the signed join. Sparse matrices
+are canonicalized after reduction. The replay checks the
+integer bounds for duplicate summation and sparse products.
+Independent review checked the index, signs, and invertible
+scale factors. The checked replay took 18.72 seconds.
+
+| Orbit row | Weight | Candidate pairs | Nonzero joined pairs | Raw residue |
+|---|---:|---:|---:|---:|
+| 0 | 2 | 2,692,881 | 2,247,513 | 28290 |
+| 1 | 6 | 2,691,240 | 2,031,218 | 35445 |
+
+The weighted raw residue is 7102. Applying the full motif
+scale to these two rows gives residue 7262, matching the
+exact rational subtotal
+`10561246637180471/1762613844998129336721604608`.
+This qualifies the join for the two selected rows. The
+35,084-orbit modular replay and the complete common
+partition coefficient remain open.
