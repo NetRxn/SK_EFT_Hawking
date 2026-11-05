@@ -7227,3 +7227,19 @@ disjoint from the 216 words of the two previous orbits. The
 weighted contribution is
 `2066017530513888441/1180591620717411303424`.
 Three of 148 dominant orbits now have full direct results.
+
+### Minority representatives 149 and 150
+
+Independent review verified both pinned rosters of 2,304 distinct
+ordered leaves. Each has 864 nonzero contributions, zero imaginary
+part, and exact signed coefficient
+`3340335969373599/576460752303423488`.
+
+| Representative | Multiplicity | Raw receipt SHA-256 |
+|---:|---:|---|
+| 149 | 9 | `2868d615fda716880c26802030f286f816d7b8d2a60143c75f5a72b7b6738fce` |
+| 150 | 18 | `8d1d22ac04f4e25bbdd288722136eb13085a5b0b098bbacef6f845f96c396e15` |
+
+The two disjoint orbits bring the verified subtotal to
+`272628263401307289/576460752303423488` across 216 of 288 pairs
+in 23 of 34 orbits.
