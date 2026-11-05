@@ -214,10 +214,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   defect. The corrected independent materialization completed
   all 2,304 leaves of the selected two-tuple group and checked
   64 native control leaves. Use the corrected signed result as
-  a control for bulk A. Independent review accepted the first 37
-  prefixes (592 leaves) for one opposite-scale pair in the dominant
+  a control for bulk A. Independent review accepted the first 53
+  prefixes (848 leaves) for one opposite-scale pair in the dominant
   208-row primitive, with a nonzero exact subtotal. Complete the
-  remaining 35 prefixes for that pair. Independent review verified
+  remaining 19 prefixes for that pair. Independent review verified
   an exact partition of all 9,216 dominant-map occurrences into 6,656
   signed center-1 groups. Use that partition for bulk A and verify
   any additional batching against all remaining A factors.

@@ -6392,3 +6392,18 @@ The accepted union `[0,37)` now covers 592 distinct ordered
 leaves and gives `−274396016602155609/9444732965739290427392`.
 The new block subtotal equals the prior block by exact reduction.
 The remaining 35 prefixes still require evaluation and review.
+
+Independent review accepted the 256 exact leaves in `[37,53)`.
+The regenerated roster digest is unchanged, no leaf capped, and
+all imaginary subtotals are zero.
+
+| Prefix range | Exact subtotal | Raw JSONL SHA-256 |
+|---|---:|---|
+| `[37,41)` | `−373654276764363/2361183241434822606848` | `1115ec0b48616226878e365582fa32f014e561856d62c53aa8048804cba1a0a4` |
+| `[41,45)` | `−88476104653270299/18889465931478580854784` | `c6677864cab064926ce1451f694aac97dc31cd092af223627fed4a916f719940` |
+| `[45,49)` | `−91465338867385203/18889465931478580854784` | `4b5e8602466bc6b58bd307493459cea3f02fbe4f8665363207406d34424a0f1c` |
+| `[49,53)` | `−88476104653270299/9444732965739290427392` | `0ce1f444cd1ad34c90dfa9f7b8769a09cb2428eb9bd4ed4ad603f2751020c40d` |
+
+The accepted union `[0,53)` covers 848 ordered leaves and gives
+`−454337460122811111/9444732965739290427392` with zero imaginary
+part. The final 19 prefixes of the pair remain due.
