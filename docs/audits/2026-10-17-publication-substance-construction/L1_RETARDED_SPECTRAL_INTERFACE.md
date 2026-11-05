@@ -8336,3 +8336,26 @@ The six signed orbits add 108 disjoint words and contribute
 `-20046925602684839313/2361183241434822606848` together.
 Verified dominant coverage is 118 of 148 orbits and 8,802 of
 9,216 words.
+
+### Complete overlap modular replay contract
+
+The [shard runner](l1_modular_overlap_shards.py) uses the pinned
+lower-column file and the directory of four reviewed exact
+shards. Run `plan` to emit the 97 contiguous ranges, then
+`run START STOP OUTPUT` for each range. Once each terminal
+receipt is present, `reduce RECEIPTS...` checks the complete
+35,084-orbit roster, all multiplicities, and all exact row
+residues. The plan calls for 770 active modular joins and
+one direct parity-zero control. Its target is raw residue
+10618 and normalized motif residue 38375 at prime 65,537.
+
+Independent review checked the schedule, row-wise signed
+reduction, caps and normalization. The runner binds the
+resolved local source files and verifies their hashes before
+publishing a receipt. It writes and flushes a temporary file,
+then installs it with an exclusive atomic link. The guarded
+two-row replay reproduced raw residue 7102. A one-second cap
+left no terminal receipt, and the reducer rejected the
+two-row receipt as incomplete. This route verifies the
+selected overlap motif. The complete common partition
+coefficient requires separate full-sector coverage.
