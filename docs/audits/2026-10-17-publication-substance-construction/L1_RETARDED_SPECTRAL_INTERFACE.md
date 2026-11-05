@@ -6436,3 +6436,11 @@ The source SHA-256 is
 and its prefix-0 stdout SHA-256 is
 `35c8bc6443586220c206b3ce0e237ab9520008e881ff09faf13f4a8200d605ef`.
 The full exact total above is from the reviewed scratch union.
+
+The full repository replay `python l1_unpaired_A_dominant_pair.py
+0 72` at `8ab9b3288` exited zero. Independent review matched all
+1,152 raw keys, statuses, real and imaginary numerators and
+complement counts to the complete scratch union. It reproduced
+the same roster digest and exact total without a cap. The raw
+repository stdout SHA-256 is
+`549235ff9768e6afd2f2ccd7a3ee5c8bb9910b2558c06731a3a72591f7332a86`.
