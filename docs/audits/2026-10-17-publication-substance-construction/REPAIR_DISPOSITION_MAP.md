@@ -840,6 +840,20 @@ no state changes versus4b. L1 G11 remains blocked but falls to one blocking
 reference/seven open findings after IMPORTS closure. Physical natural B3 remains
 its blocking reference; source closure does not discharge that construction.
 
+The subsequent [clean4a0d broad qualification](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_4A0D_QUALIFICATION.md)
+finishes7159 passed/29 failed/8 skipped/92 deselected. Independent exact-case
+review confirms all7161 prior identities remain: five prior failures now pass,
+29 still fail, all35 added cases pass and no new failing identity appears.
+The original outputs, full remaining failure records, source/clean-state
+receipt and independent review are retained. Qualification remains RED.
+
+On that same clean committed source, the existing graph remeasures all231 gates:
+159 passed/25 blocked/28 open/19 requiring recheck. CitationIntegrity changes
+blocked to passed for D1,D3,D4,D9,E1 versus16fde9. No bundle is newly green;
+these mechanical repairs do not discharge full-text, physical BUILD, native,
+main or final human publication requirements. The earlier16fde9 evidence stays
+a separate historical measurement.
+
 The110/153 shared-square/protected-free-tori class now has independently
 accepted complete coefficients, direct/fixed controls, independent full110
 replay, actual portable CLI and original archive. Portable coverage is234/272.
