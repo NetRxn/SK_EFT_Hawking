@@ -235,8 +235,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   zeros for that selector, which is now complete. Verify the
   exterior roster contains 256 disjoint candidates across four
   slices. All 64 scalars in the first slice have independently
-  verified receipts, as do the first 16 in the second slice.
-  Continue with `[80,96)` before reducing the component.
+  verified receipts, as do the first 32 in the second slice.
+  Use the independently reviewed repository runner for the
+  remaining disjoint ranges `[96,112)` and `[112,128)`.
   In parallel, the reviewed 576-occurrence minority census admits
   288 exact center-11 pairs. Independent review verified all 2,304
   leaves and the joint scalar of the 162-row pair at indices 34 and
@@ -293,8 +294,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   With the same held sources the composed export reports 516 cited
   keys, zero missing from the registry or required cache, and 76
   undeclared entries against ceiling 76. All 73 focused citation
-  tests passed. Qualify the predecessor separately before updating
-  the focused L3 merge candidate.
+  tests passed. A separate export of exact main `ce194cdc4` with
+  the same nine predecessor paths also passed all 73 focused tests
+  and measured the same citation population with the same held
+  sources. Broader repository qualification of the predecessor
+  remains due before updating the focused L3 merge candidate.
   The exact base `ce194cdc4` and candidate have identical
   portfolio structural figure diagnostics after normalizing
   checkout paths. Both report 24 warnings and the same two

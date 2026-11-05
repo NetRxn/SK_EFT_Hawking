@@ -6841,3 +6841,12 @@ The control stdout SHA-256 is
 `be75be107b3a2bf52c6871a1a132abefda2ac6d2d5e4116a874a13045f44001f`.
 This comparison exercises one repository selector. Earlier
 full-range receipts came from the reviewed scratch driver.
+
+**Second-slice selector batch `[80,96)`.** Independent review
+verified all 16 exact rows on the same exterior roster with no
+caps. Each evaluated 8,956 compatible products and 4,174 distinct
+complement queries. The interval contributes
+`378279423049817079/37778931862957161709568` with zero imaginary part.
+The stdout SHA-256 is
+`c4f2f49419782b0023c1cdf76cfd895747684f3e4c8afbec88c57c44daba2b93`.
+The first 96 of 256 selector scalars now have verified receipts.
