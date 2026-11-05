@@ -854,25 +854,36 @@ these mechanical repairs do not discharge full-text, physical BUILD, native,
 main or final human publication requirements. The earlier16fde9 evidence stays
 a separate historical measurement.
 
-The110/153 shared-square/protected-free-tori class now has independently
-accepted complete coefficients, direct/fixed controls, independent full110
-replay, actual portable CLI and original archive. Portable coverage is234/272.
-The separate79/81 source-sharing/two-protected-tori225-branch mathematical
-design and actual evaluator source are independently accepted, including
-second gamma-slot routing and branch-role transpose. Direct79/81 controls and
-fixed79 have independently accepted runtime receipts. Fixed81 completed with
-the same restricted coefficient; independent450-branch original-L/full-row
-reconstruction and signed branch-transpose controls passed, with ROOT receipt
-intake accepted. The [bounded unrestricted79 pilot and controls](l1_k4_two_protected_tori_7981_controls.md)
-are archived with independent byte/receipt review. The pilot reaches218 of225
-branches before its60s whole-contraction deadline; no final coefficient exists.
-The next scientific action examines exact reuse/redundant work in the existing
-contraction, retaining all branches and original limits. None of these
-restricted controls or partial pilot increases the portable coefficient count.
-The independent delivery lane has adopted the reviewed focused citation repair
-needed by cache finding1.2. Managed-worktree planner finding1.1 is fixed as
-recorded below. Preserve the accepted scope and current verification.
+The110/153 shared-square/protected-free-tori class brought portable accepted
+coverage to234/272. The subsequent [complete79/81 delivery](l1_k4_two_protected_tori_7981_delivery.md)
+is independently accepted at `af255623060a9224a53f33d5dfaac81e37e84d82`.
+Portable accepted coverage is236/272 selected words:142same-axis and94mixed-axis;
+36remain (22same-axis,14mixed-axis). Both unrestricted225-branch contractions,
+independent450 original-L/full-row reconstruction, fresh complete79 replay,
+fixed450 controls and both portable full-word Python CLI modes pass under the
+original resource limits. The [acceptance record](l1_k4_two_protected_tori_7981_acceptance.json)
+and [whole-class review](l1_k4_two_protected_tori_7981_delivery_review.md) bind
+source, disjoint coverage and the150-member archive. The earlier218/225 timeout
+remains preserved in the [original controls archive](l1_k4_two_protected_tori_7981_controls.zip);
+it supplied no final coefficient and is not the current delivery state.
 
+The next selected-family construction is the coupled161/163 holonomy design,
+with full source/action/gamma/Grassmann factors and original limits retained.
+It needs independent mathematical design review, direct/fixed controls, complete
+contraction, independent reconstruction/replay and portable acceptance. This
+construction does not replace the full derivative-normalized source/action
+ensemble, common partition, physical B3 normalization/window, microscopic
+modes/matter coupling or transport/frequency/error obligations.
+
+The [frozen01d72 broad qualification](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_01D72_QUALIFICATION.md)
+remains RED:7167passed/29failed/8skipped/92deselected. All prior failure
+identities remain; this is not a broad test result ataf255. The subsequent
+[canonical AF255 gate readback](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CURRENT_AF255_GATE_READBACK.json)
+measures all21bundles/231gates:159passed/25blocked/28open/19needs-recheck,
+with zero state changes since01d72 and no newly green bundle. The full commit
+and graph digest bind that snapshot; its limited graph source_hash is not a
+complete source fingerprint. Main integration and final human/publication
+acceptance remain open.
 
 The [existing managed-checkout repair adoption](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/MANAGED_PATH_ADOPTION.md)
 is independently accepted and normally merged at6e2983e61 from original9edf7c8fa.
@@ -891,27 +902,38 @@ and held bytes. The measured undeclared ceiling tightens78 to76. The existing
 writer records cache1.2 fixed at reviewed source8b6da1c2f; full-text
 fidelity, scientific BUILD and final publication remain separate. This scoped
 repair does not rewrite frozen16fde9's34fail result or establish a new broad,
-main or publication pass. The acquisition register retains inherited
-metadata/internal-routing limitations; its174 rows are not full body-debt
-coverage or a new acquisition milestone. The historical SOURCE-1 producer
-defect is promoted to the existing canonical finding system as
-[source_register_fidelity:1.1](../../../papers/AutomatedReviews/2026-11-05-source-register-fidelity/source_register_fidelity.md),
-OPEN with ROOT ownership and a real failing decider. The next independent
-delivery action repairs this existing producer through architecture-change
-review, reusing canonical fidelity/discovery and actual registry identity.
+main or publication pass. The acquisition register's inherited fidelity/internal-routing defect is now
+repaired through the existing architecture-change and independent review
+process. Canonical [source_register_fidelity:1.1](../../../papers/AutomatedReviews/2026-11-05-source-register-fidelity/source_register_fidelity.md)
+is FIXED, anchored at `5b9323a1d` and recorded by the existing closure writer
+in `601abe282`. The [closure readback](../../../papers/AutomatedReviews/2026-11-05-source-register-fidelity/SOURCE_REGISTER_CLOSURE_READBACK.json)
+preserves the enforced original Verify, all1249 old records and the single new
+closure. Canonical fidelity and strongest-phase discovery, actual internal
+registry identity and workspace resolution are reused. Complete affected97
+cases and actual producer/derivative mutation controls pass with exact
+restoration. This repairs the acquisition-status producer; it supplies no
+new source-body acquisition, reading or scientific acceptance. Full-text/body,
+edition, scientific BUILD and publication obligations remain open.
 
 ### Parallel assignments and remote resume inputs
 
-ROOT owns candidate integration and the primary local notebook. The scientific
-author and independent reviewer continue79/81 controls from the accepted
-[79/81 design and scratch-source archive](l1_k4_two_protected_tori_7981_source_design.zip)
-and its [byte manifest](l1_k4_two_protected_tori_7981_source_design_manifest.json).
-This historical source-only archive preserves original failed checker attempts.
-It establishes no scientific execution: later runtime receipts are distinct.
-Complete independently accepted direct/fixed controls precede an unrestricted pilot,
-and independent review precedes portable coefficient acceptance. Extracted
-scratch paths must be rebound deliberately before a remote or installed run.
-The existing resource caps and all physical B3 obligations remain required.
+ROOT owns candidate integration and the primary local notebook. The accepted
+79/81 implementation, original attempts, source reviews and full runtime
+receipts are portable through the [complete delivery archive](l1_k4_two_protected_tori_7981_delivery.zip)
+and [manifest](l1_k4_two_protected_tori_7981_delivery_manifest.json), with the
+bound predecessor archives preserved. Its earlier source-only archive is
+historical evidence, not the current execution or acceptance record.
+
+The scientific author now develops the coupled161/163 holonomy construction;
+a fresh nonauthor reviewer verifies the design before substantive execution
+and acceptance. The ongoing L1 Lean support assignment owns coherent proof
+batches, controlled lane coordination, retries and package-level handback.
+ROOT retains scientific/publication acceptance and portfolio integration.
+Native enforcement must be established before proof edits; a matching MCP
+read alone does not establish the full guarded worker contract. Exact local
+assignments and controller state are recovered through the existing continuity
+notebook and fresh controller receipts, not inferred from this document.
+All original scientific requirements and resource controls remain in force.
 
 The separate delivery author prepared the focused source patch described in the
 [citation predecessor review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_review.md).
@@ -921,8 +943,8 @@ state through the existing writer and measured the current ratchet before
 tightening it. Historical success rows and unrelated ancestry are excluded.
 Registry resolution cannot establish full-text fidelity; Verlinde metadata
 does not supply the still-owed source body. The cache finding is fixed through
-its complete declared verification and independent adoption review; the distinct
-source-register producer finding and scientific obligations remain open.
+its complete declared verification and independent adoption review; the source-register producer finding is separately fixed as recorded above;
+scientific and full-text/body obligations remain open.
 
 These assignments use the existing continuity packets and author/reviewer
 separation. They do not change the portfolio priorities or create another
