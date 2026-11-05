@@ -248,6 +248,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   representatives and verify raw receipt totals and signed membership
   before weighting each orbit. The shared-Q and left-cache benchmarks
   retain the direct transfer route for the current workload.
+  The [pure-g₂ one-point cancellation](L1_PURE_G2_ONE_POINT.md)
+  holds for the literal metric and shear sources on the full common
+  regulator. The normalized statement still requires nonzero
+  `g₂³² Z₃₂`. The full derivative-normalized two-point numerator
+  and common partition coefficient remain open.
   The moving-edge derivative bound applies to prescribed smooth
   fields. The weighted ensemble conditions and positive Gibbs
   comparisons identify the additional source-measure analysis needed
