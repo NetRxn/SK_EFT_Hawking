@@ -6873,3 +6873,15 @@ and zero imaginary part.
 |---|---:|---|---|
 | 11 | `−241403242028949/2305843009213693952` | `cfc0228ea35ffdb5a01b6d1ce785c14654c608972b4107c0970ab85b0e3515a0` | `4496823abdccd3935055769f223ec62ff955a8b0ee97c6e3185dcbdd650c1421` |
 | 12 | `871859979116847/144115188075855872` | `d5130984b0161d7589797ce8ed832e26bc247eec0435a485e940728779e47535` | `31980880099a6b0796e4efbe80232bfd6a909f631383af49a892de7e2cc69ca3` |
+
+**Third-slice batches `[128,144)` and `[144,160)`.** The
+repository runner exited zero in both ranges. Independent review
+verified all 32 exact rows against the pinned roster, with no caps.
+Every selector evaluated 8,956 compatible products and 4,174
+complement queries. Each range contributes
+`378279423049817079/37778931862957161709568` with zero imaginary part.
+The stdout SHA-256 values are
+`e56576d7ff6a3298dfd40ed19f3650a2e9fcfd5d93d023b351bc079c685e1b48`
+and
+`1e2ba037a1288fd6456350eab5e0eca94a9cd0741d152dab90005727763f1a95`.
+The first 160 of the 256 selector scalars have verified receipts.

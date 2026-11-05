@@ -236,8 +236,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   exterior roster contains 256 disjoint candidates across four
   slices. All 64 scalars in the first slice have independently
   verified receipts, as do all 64 scalars in the second slice.
-  Continue the third slice on the repository runner with
-  disjoint ranges `[128,144)` and `[144,160)`.
+  The first 32 scalars of the third slice are independently verified.
+  Continue with `[160,192)` and the fourth slice `[192,256)` on
+  the same repository runner and pinned roster.
   In parallel, the reviewed 576-occurrence minority census admits
   288 exact center-11 pairs. Independent review verified all 2,304
   leaves and the joint scalar of the 162-row pair at indices 34 and
