@@ -389,6 +389,25 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   §2.1 construction still requires the physical current or evolving
   reduced state at the moving cut and a derivation of the local
   production sign.
+  For §2.2, the held nozzle source's appendix gives
+  `b₁ = 9γ/2`, `c₁ = -304γ/15`, and
+  `γ = κ²c²A₀/(24π)`. Independent exact reduction gives
+  `b₁/3 + c₁ = -563γ/30` and the cooling coefficient
+  `λ = 563 ε κ³ c A₀/(720π)`. On the affine profile
+  `T(t) = T₀(1-λt)`, the difference between two times is
+  `-T₀λ(t₂-t₁)`. The source's short-time expansion requires
+  `cκt ≪ 1`, and the positive-temperature profile also
+  requires `λt < 1`. At `ε = 0` the slope is zero.
+  The [source parameter repair](https://github.com/NetRxn/SK_EFT_Hawking/commit/3ef2dea6c)
+  and [profile distinction](https://github.com/NetRxn/SK_EFT_Hawking/commit/680c420a7)
+  already carry the throat area and short-time scope on the
+  research branch. Preserve those edits when composing the
+  next manuscript candidate. The executable profile and
+  native criterion still need to consume the affine source
+  slope and the chain rule for a positive decreasing
+  Schwarzschild mass. The equality case remains outside both
+  strict branches. The source supplies a leading-order sign
+  and leaves the exact trajectory's quantitative remainder open.
   A separate composition trial on `ce194cdc4` combined the
   serializer, D7 regression, managed paths, inventory and citation
   fixes with the generated tables and reviewed polariton source
