@@ -6624,3 +6624,35 @@ with zero matching products and no cap. This certifies zero for
 the queried complement. The outer diagnostic stops at this query
 and supplies no scalar for the selector. The raw stdout SHA-256
 is `ef8951148298f1830af9a7ecb64e379660df1946c1c15f0142d0ee470cc415ab`.
+
+**Minority bulk inputs and exact reuse.** The independently
+reviewed [manifest generator](l1_unpaired_A_minority_manifest.py)
+binds the 78 input receipt hashes and covers all 576 minority
+words exactly once. It emits 288 ordered pairs with signed B
+hashes and scales, source origins, and weighted center-11 hashes.
+The repository replay is byte-identical under input path
+reordering. The manifest SHA-256 is
+`48d9d1cf6ed7445be86b772602f8ee682966f56d4c6c0c7f301eb9e5938e40c4`.
+The three completed controls are pair IDs 0, 24, and 52. The
+manifest admits independent pair runs with the existing runner
+and supplies no scalar results by itself.
+
+A separate scratch replay for pair 0 shared a materialization
+only when the full ordered frozen-factor inputs were equal.
+The keys retain axes, signed Gaussian rows, exterior masks
+and site grades. Independent review matched all 2,304 result
+rows to the uncached receipts. The cache recorded 1,368 hits
+and 3,240 misses. It peaked at 120,000 retained logical row
+slots across keys and results, with at most 128 entries.
+The stdout SHA-256 is
+`c47db55216c7a795ddb4215237cb28fb69d3ed914bb423ea3f0f7e1b0f190784`.
+This verifies exactness for the one pair. A controlled speed
+comparison remains open.
+
+For the weighted site-10 selector, the candidate census has
+8,956 compatible products and 4,174 distinct complement queries.
+Each paired byte subset, sites 1 and 2 or sites 9 and 11, has 318
+distinct values. The full selector reached its wall limit after
+151 completed 16-slice fallbacks without a per-slice cap. The
+next reuse target is a partial environment transfer that retains
+its shared labels, boundary masks and signed coefficients.
