@@ -818,6 +818,48 @@ and the Dyson remainder estimate. A symbolic control using the
 repository's gamma matrices and curvature coefficients reproduced
 the trace, orientation and both derivative identities.
 
+### Conditions for averaging the moving-edge remainder
+
+Write the Berezin-reduced expectation as a ratio relative to a fixed
+link reference measure `ν`. For the normalized curvature error
+`e_j`, let `N = ∫ e_j w_j dν` and `Z = ∫ w_j dν`, allowing signed
+weights. Suppose the integrands have two source derivatives with
+uniform integrable domination on the source interval and `inf|Z|>0`
+there at each spacing. A uniform bound
+`∫|(∂_j^p e_j)(∂_j^q w_j)| dν/|Z| ≤ C a` for `p+q≤2`, together with
+uniform bounds on `∫|∂_j^k w_j| dν/|Z|` for `k=1,2`, suffices for
+`N/Z` and its first two derivatives to be `O(a)`. Here the
+derivatives are with respect to the source `j`. The second derivative
+is `N″/Z - 2N′Z′/Z² - NZ″/Z² + 2N(Z′)²/Z³`.
+This accounts for derivatives of a moving density, including any
+source dependence of the regulator, action and measure Jacobian.
+It uses absolute weighted moments and remains valid with signed
+weights when the stated denominator and integrability conditions hold.
+
+The product Haar link law supplies an exact obstruction to obtaining
+these conditions from typical smooth fields alone. In a genuine
+plaquette with one independent Haar edge used once, condition on the
+other edges. The ordered product is Haar by left and right invariance
+and inversion. In one SU(2) block its scalar quaternion coordinate
+`q₀` has density `(2/π)√(1-q₀²)` on `[-1,1]`, and
+`‖U-I‖op² = 2(1-q₀)`. Bounding the density near `q₀=1` gives
+`P(‖U-I‖op≤r) ≤ 2r³/(3π)` for `0≤r≤2`. The two independent
+Spin(4) blocks therefore give at most `4r⁶/(9π²)` in the
+maximum block norm. At `r=Ca²` this is `O(a¹²)`.
+For a positive normalized link density `ρ_a` relative to product Haar,
+Hölder bounds the same probability by
+`‖ρ_a‖ₚ [4(Ca²)⁶/(9π²)]^(1-1/p)` for `p>1`.
+Uniform `Lᵖ` control thus precludes concentration on these balls.
+For signed weights this controls normalized total variation in
+the ball, under the corresponding absolute-density hypothesis.
+
+Independent review checked the quotient identity and the exact
+small-ball integral bound. The bare Haar result concerns the
+reference link marginal. The finite Berezin partition function
+vanishes when the action is zero and Grassmann variables are
+present. A physical interacting ensemble still needs its own
+weighted remainder and source-measure construction.
+
 ### Source contract for a background extension
 
 The held primary [Diakonov 2011, arXiv:1109.0091v1](https://arxiv.org/abs/1109.0091v1)
@@ -7561,3 +7603,19 @@ Its weighted contribution is
 `12166547679692898597/9444732965739290427392`. Its 45 source words
 are disjoint from all six previous orbits. Complete dominant
 coverage is now seven of 148 orbits and 486 source words.
+
+### Complete dominant representatives (0,11) and (0,16)
+
+Independent review reconstructed both pinned rosters from all
+256 ordered exact selectors per component and verified each set
+of 16 terminal shards. Both raw-to-scaled reductions have zero
+imaginary part and no caps.
+
+| Representative | Multiplicity | Exact real subtotal before weighting | Receipt SHA-256 |
+|---|---:|---|---|
+| (0,11) | 6 | `4055515893230966199/9444732965739290427392` | `cc921a9665c2ce2f537ff650b0d7482e313799e2a66199caa324b0e9487ccd15` |
+| (0,16) | 9 | `688672510171296147/9444732965739290427392` | `bb846389fefce4a3c6a06931295e82944c8a7468abfb1f33b8ab3120ed94e02d` |
+
+Their 90 and 27 signed source words are mutually disjoint and
+disjoint from all seven previously accepted orbits. The verified
+dominant coverage is now nine of 148 orbits and 603 source words.
