@@ -218,7 +218,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   a control for bulk A. Independent review then accepted all 72
   prefixes (1,152 leaves) for the joint contribution of one
   opposite-scale pair in the dominant 208-row primitive. The other
-  9,694 nonempty B occurrences still need contributions to the word
+  9,566 nonempty B occurrences still need contributions to the word
   sum. Independent review verified an exact partition of all 9,216
   dominant occurrences into 6,656 signed center-1 groups. The
   reviewed rank-one manifest partitions them further into 2,080
@@ -239,9 +239,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   Independent review verified all 256 selectors and the joint
   contribution of the selected 60-word component. Its manifest
   membership is disjoint from the earlier dominant pair and from
-  the separate minority primitives. Next verify
-  exact shared response factors on a second component of the
-  same fixed-center block before applying reuse across components.
+  the separate minority primitives. The second component has an
+  exact direct selector and shared-response coefficient controls.
+  Resolve the remaining shared-Q live-row cap before applying
+  reuse across components.
   In parallel, the reviewed 576-occurrence minority census admits
   288 exact center-11 pairs. Independent review verified all 2,304
   leaves and the joint scalar of the 162-row pair at indices 34 and
@@ -250,7 +251,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   pair at indices 13,156 and 13,158 has the same full-roster review.
   The reviewed minority input manifest admits all 288 disjoint
   pairs. IDs 1 and 2 passed independent exact roster and signed B
-  review, followed by IDs 3–14. Continue with IDs 15 and 16.
+  review. The verified Spin symmetry partitions all 288 minority
+  pairs into 34 orbits. Eighteen direct receipts cover 12 orbits
+  representing 81 pairs. Evaluate representatives of the remaining
+  22 orbits, starting with IDs 25 and 26.
   Keep the direct runner for bulk:
   the bounded cache matches exact rows but was slower in the paired
   CPU benchmark.

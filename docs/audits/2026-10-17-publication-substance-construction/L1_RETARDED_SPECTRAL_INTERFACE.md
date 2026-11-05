@@ -6929,3 +6929,40 @@ divisor once to the full union gives
 This closes the selected component of the dominant word sum.
 The other components require their own evaluation or an exact
 reduction that preserves all their factors and weights.
+
+**Minority Spin symmetry and verified subtotal.** Independent
+review verified the disjoint partition of all 288 minority
+pairs into 34 orbits under proper signed axis permutations
+in each chirality. The orbit sizes are 3 (six), 6 (twelve),
+9 (ten), and 18 (six). The witness for each member maps both
+fixed words and keeps the exact signed B digest and scale.
+
+The chiral quarter-turn generators act by unitary conjugation
+on the links and by a proper orthogonal rotation on the Dirac
+coframe labels. They preserve Haar measure, fixed identity links,
+the paired Dirac contractions, oriented action, source frames,
+and the Berezin volume. The six minority B primitives are
+invariant under the signed exterior expansion for the generators
+on both chiralities. On A, each fixed cut coordinate occurs
+at one live face. The two retained coordinates are unit support
+restrictions. The three equal-coordinate pairs therefore cancel
+their two matching signs, and the seventh coordinate is a
+chirality scalar. These facts identify complete pair coefficients.
+
+Independent reduction verified 18 exact pair receipts across
+12 represented orbits, with all six within-orbit comparisons
+agreeing. Multiplicity weighting gives
+`4451788014082227/36028797018963968` with zero imaginary part
+across 81 pairs. The orbit manifest SHA-256 is
+`aebcb716a1f6bb0b66dd9d5bad3e33afba9d21829111c382cf572ea2a599024c`.
+The remaining 22 orbits still require representative evaluation.
+
+**Second dominant component control.** At selector 0 in
+component `(0,0)`, the direct route gives
+`26336732102857701/18889465931478580854784` with zero imaginary part.
+The signed site-10 pair and the physical opposite-side Q
+factors match the first component on this selector. Independent
+review verified three exact coefficientwise controls for shared Q,
+including one with four rows. The shared calculation then hit
+the original live-row cap. The direct scalar is verified and
+the full shared-Q contraction remains open.
