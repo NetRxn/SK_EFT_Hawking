@@ -1,5 +1,22 @@
 # L1 retarded tensor spectral interface
 
+**Withdrawal of the site-11 signed subtotals.** The repository
+port exposed a defect in the scratch `close_site11` routine
+used by the environment-query prefix runs. The loop computed
+the left-to-middle join key once per exterior row and then
+reassigned that variable to the scalar-center lookup key
+inside the mask loop. Subsequent masks could use the wrong
+key and silently omit valid products. All signed zero and
+nonzero site-11 prefix subtotals and their reported 144-prefix
+two-tuple aggregate are withdrawn. The numeric receipts below
+are retained as history and cannot serve as exact controls.
+The corrected replay keeps the keys separate. It exceeded
+the original scan cap on the first nonzero control, so it
+has yet to establish a replacement scalar. The B census,
+primitive maps, and signed eight-value slice use separate
+contractions.
+
+
 **Verified normalization correction.** Conditional Haar projection
 retains singleton link dependencies. Independent enumeration confirmed
 5,718 transferable normalization words and 1,812 transferable cross
@@ -5998,7 +6015,7 @@ against the unfactored signed route. The contiguous interval
 `[640,4736)` has 3,596 exact zeros and 500 nonempty maps.
 Resume the B census at index 4736 and keep A closures separate.
 
-The indexed environment query completes one exact A subshard
+**Withdrawn scratch result.** The indexed environment query reported one A subshard
 of the two-tuple grouping. It fixes `q(15,3)=5`, selecting
 the first tuple, with `γ(9,0)=(0,0)`, `γ(9,1)=(1,)`, and
 `q(9,1)=1`. Independent review checked that the remaining
@@ -6128,7 +6145,7 @@ scale matched the independently reviewed bulk-gap receipt byte
 for byte. This extends the native command's controls to a
 nonempty B map. A closure is separate.
 
-The full selected two-word group has exact scalar
+**Withdrawn scratch aggregate.** The selected two-word group previously reported scalar
 `−25115308040403/9223372036854775808` with zero imaginary part.
 Independent review reconstructed all 144 disjoint prefixes,
 including the two initial zero controls, and counted the
@@ -6154,8 +6171,8 @@ The ordered roster SHA-256
 `282471134d9ee196c94f791cf4a757a400ef466af3c9f01cc8900f90caff0d17`
 matches the independently regenerated repository roster.
 There are 67,680 exact full-shard zeros and 9,792 nonempty
-B maps. Two nonempty cases already have exact A+B results,
-leaving 9,790 A closures in this accounting. No B caps
+B maps. The two previously credited A+B results are withdrawn.
+All 9,792 nonempty cases require valid A closure in this accounting. No B caps
 remain. This completes the B stage for one selected word.
 
 Within `[640,70272)`, 8,784 nonempty maps have 20 exact
