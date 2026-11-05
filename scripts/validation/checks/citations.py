@@ -572,6 +572,30 @@ def _cache_fidelity(path, ext: str) -> str:
     return "metadata"
 
 
+_CACHE_TIER_RANK = {"full": 3, "abstract": 2, "metadata": 1}
+
+
+def _best_cache_for(bibkey: str, entry: dict):
+    """Return the strongest nonempty cache in the entry's canonical phase.
+
+    Equal tiers retain the existing extension order. Header-oriented discovery
+    remains separate so a stronger body does not hide a parseable header.
+    """
+    from src.core.citations import bibkey_phase
+    from src.core.workspace import find_workspace
+
+    phase = bibkey_phase(entry) or "Phase-1-and-Background"
+    target_dir = find_workspace() / "Lit-Search" / phase / "primary-sources"
+    selected, best = None, None
+    for ext in ("pdf", "tex", "abstract.txt", "json"):
+        candidate = target_dir / f"{bibkey}.{ext}"
+        if candidate.is_file() and candidate.stat().st_size > 0:
+            tier = _cache_fidelity(candidate, ext)
+            if best is None or _CACHE_TIER_RANK[tier] > _CACHE_TIER_RANK[best]:
+                selected, best = candidate, tier
+    return selected, best
+
+
 @register_check("citation_primary_sources_present",
                 "Every cited external bibitem has a primary-source cache, its fidelity "
                 "tier is decided by what the file holds rather than by its extension so "
@@ -616,9 +640,7 @@ def check_citation_primary_sources_present() -> CheckResult:
     from src.core.citations import CITATION_REGISTRY, bibkey_phase
     from src.core.workspace import find_workspace
 
-    LIT_SEARCH = find_workspace() / "Lit-Search"
     FALLBACK = "Phase-1-and-Background"
-    EXTENSIONS = ["pdf", "tex", "abstract.txt", "json"]
 
     # ── Duplicate-key guard (added 2026-07-31) ────────────────────────────────
     # CITATION_REGISTRY is a dict *literal*, so a repeated key is legal Python:
@@ -710,21 +732,8 @@ def check_citation_primary_sources_present() -> CheckResult:
         # replaced code did — meant a declared entry could never be checked even once
         # it was acquired.
         phase = bibkey_phase(entry) or FALLBACK
-        target_dir = LIT_SEARCH / phase / "primary-sources"
-        found = False
-        # ⚠️ Score EVERY cache this bibkey holds and keep the STRONGEST tier. Breaking on the first
-        # existing extension scores the entry on whichever spelling happens to sort first in
-        # EXTENSIONS — so a stub `abstract.txt` beside a full-body `.json` would report `abstract`.
-        # 29 bibkeys hold more than one cache, so this is the routine case, not a corner.
-        _TIER_RANK = {"full": 3, "abstract": 2, "metadata": 1}
-        best = None
-        for ext in EXTENSIONS:
-            candidate = target_dir / f"{bibkey}.{ext}"
-            if candidate.is_file() and candidate.stat().st_size > 0:
-                found = True
-                tier = _cache_fidelity(candidate, ext)
-                if best is None or _TIER_RANK[tier] > _TIER_RANK[best]:
-                    best = tier
+        selected, best = _best_cache_for(bibkey, entry)
+        found = selected is not None
         # ADR-014 D1 — FIDELITY, not mere presence. Before this, an accepted extension was
         # indistinguishable from a full text and the check reported "cached" either way.
         # Mather1982 is the measured cost: its cache file's own last line says the body has

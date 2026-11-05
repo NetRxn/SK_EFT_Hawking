@@ -27,33 +27,36 @@ only once the free routes named in `route_note` have actually been tried.
 
 ## Spend list — P0, not free
 
-_None._
+| source | held | bundles | route | free routes to exhaust first |
+|---|---|---|---|---|
+| `Adler1982` | metadata | L3 | unassessed | ⚠️ none recorded |
 
-**Candidate spend: 0 source(s).**
+**Candidate spend: 1 source(s).**
+
+⚠️ **Route not yet assessed** (cannot be priced, may well be free): `Adler1982`
 
 ## P0 — load-bearing
 
 | source | held | bundles | route | why it is load-bearing |
 |---|---|---|---|---|
-| `Sen2013` | none | D3, F | open | Supplies BH.LOG_CORRECTION_SEN_4D_SCHWARZSCHILD; cited by both D3 and F. |
+| `Adler1982` | metadata | L3 | unassessed | param:GRAV.ALPHA_ADW_SAKHAROV_DEFAULT; param:GRAV.SAKHAROV_COEFFICIENT |
 | `BB84` | none | D9 | open | Referenced by formulas.py. |
-| `IrwinHilton2005` | abstract | D12 | repository | Attributed source of D12's diffuse-conduction closed form for the thermal-link gradient factor gamma (F_link). D12:474-475 currently discloses in reader-facing prose that we hold it only as a resolved DOI record -- a non-starter for submission. Either the attribution is verified or it must be re-sourced. |
 | `Mather1982` | abstract | D12 | repository | Supplies MATHER_1982_GRADIENT_REDUCTION (0.30). The convention -- whether the quoted 30% is a PSD or an amplitude reduction -- is UNRESOLVED because the body has never been read, and D12:498 discloses that in prose. The body settles it; the abstract cannot. |
 | `PDG2024` | abstract | D3 | open | Supplies EW.M_H_GEV and EW.M_TOP_GEV. |
 | `Rokhlin1952` | none | L2 | repository | Has a bibitem in D2 but NO cached text. D2's section 5.5 quotes the statement of Rokhlin's theorem (16 | sigma for closed smooth spin 4-manifolds) from its standard formulation, unverified against the original. The theorem is universally standard, so the risk is attribution fidelity rather than correctness. |
 
-## P1 — cross-cutting, not detected as load-bearing (30)
+## P1 — cross-cutting, not detected as load-bearing (23)
 
-`Sakharov1968`, `Volovik2024Vestigial`, `ABP1967`, `Adams1974`, `Adler1980`, `AndersonBFP2013`, `BardeenCarterHawking1973`, `CorleyJacobson1996`, `Coutant2014`, `DawsonNielsen2006`, `FreedmanLarsenWang2002`, `Hawking1971`, `Hawking1972`, `Hawking1975`, `Hietala2020VOQC`, `Israel1986`, `KSS2005`, `KitaevShenVyalyi2002`, `Lewis2021VerifQC`, `Majumdar2025`, `NayakSimonSternFreedmanDasSarma2008`, `PastawskiYoshidaHarlowPreskill2015`, `PretkoRadzihovsky2018`, `ReshetikhinTuraev1991`, `Stepanov2019`, `Weinberg1989`, `Wen2003`, `Will2014`, `Witten1989`, `coqq2022`
+`Akama1978`, `Sakharov1968`, `Unruh1981`, `ABP1967`, `Adams1974`, `Adler1980`, `AndersonBFP2013`, `BardeenCarterHawking1973`, `Claude2023`, `Estrecho2021`, `Finazzi2012`, `Hawking1971`, `Hawking1972`, `Hawking1975`, `Hietala2020VOQC`, `Israel1986`, `KitaevShenVyalyi2002`, `Lewis2021VerifQC`, `Polyakov1978`, `ReshetikhinTuraev1991`, `Weinberg1989`, `Witten1989`, `coqq2022`
 
-## P2 — single bundle, not detected as load-bearing (122)
+## P2 — single bundle, not detected as load-bearing (113)
 
-`ADM1962`, `AaronsonGottesman2004`, `AharonovArad2011`, `Alberti1983`, `AnantramDatta1996`, `ArnoldMcLerran1987`, `BakerBellini2017`, `Balbinot2005`, `Berry1984`, `Berry1989`, `Bhatia1997`, `Bilic1999`, `Blanter2000`, `BlochSiegert1940`, `BoldoLaxMilgram2016`, `Brylinski2002`, `Buballa2005`, `CallenWelton1951`, `Carter1971`, `Caves1982`, `Choi1975`, `ChristensenDuff1978`, `CompanionCompilation`, `CompanionFaultTolerance`, `CompanionStochastic`, `CoutantParentani2012`, `CreminelliVernizzi2017`, `Davies1990`, `Degenne2025Kernels`, `DemboZeitouni1998LDT`, `DolanGrady1982`, `EchenimMhalla2021`, `Eddington1919`, `EzquiagaZumalacarregui2017`, `FordFulkerson1956`, `FouresBruhat1952`, `FriedrichRendall2000`, `FukuiHatsugaiSuzuki2005`, `Gabor1946`, `GellMannOakesRenner1968`, `GrossJackiw1972`, `Haldane1988`, `HashinShtrikman1962`, `HashinShtrikman1963`, `HawkingPenrose1970`, `Heading1962`, `Helstrom1976`, `InonuWigner1953`, `Irwin1995`, `Israel1967`, `Jacquet2022`, `KMM2013`, `Kailath1967`, `KaratzasShreve1991BMSC`, `KehleUnger2024`, `Kitaev1997`, `KlinkhamerManton1984`, `KobayashiNomizu1963`, `LeCam1986`, `Lean4`, `LeanLJ2025`, `LiPaulson2018`, `LjungstromMortberg2024`, `LuccioliDegenne2024`, `Maldacena1997`, `MaxwellGarnett1904`, `MeiburgLessaSoldati2025`, `Milton2002`, `Mukhopadhyay2024`, `Nielsen1981a`, `Nielsen1981b`, `Niemeier1973`, `Onsager1944`, `Penrose1965`, `RashidHasan2017`, `ReadRezayi1999`, `Reuss1929`, `RevuzYor1999CMSM`, `RobertsonParentani2015`, `Robinson1975`, `RoehmD4Topological`, `RoehmD6FaultTolerant`, `RoehmD8Compilation`, `RoehmD9Certification`, `Romatschke2010`, `RossSelinger2016`, `SaksteinJain2017`, `Son2002`, `Stelle1977`, `TKNN1982`, `Uhlmann1976`, `UnruhCBO2025`, `Voigt1889`, `Volovik2022Counting`, `Volovik2024VacuumDecay`, `Volovik2026SecondSound`, `Watrous2018`, `WernerState1989`, `Witten1982`, `Zaremba1999`, `bakalov2001`, `buttiker1986`, `datta1995`, `denHollander2000LDPs`, `diFrancesco1997`, `efron1982`, `egno2015`, `gksl1976`, `hohenbergKohn1964`, `isabelleCBO`, `kassel1995`, `kato1995`, `landauer1957`, `leanQI2025`, `levy1979`, `lieb1983`, `lindblad1976`, `mathlib4_2020`, `meirWingreen1992`, `reedSimon2`, `survey2021`, `turaev2010`
+`ADW2019`, `AaronsonGottesman2004`, `AharonovArad2011`, `Alberti1983`, `AlphaProof2025`, `AnantramDatta1996`, `ArnoldMcLerran1987`, `BakerBellini2017`, `Berry1984`, `Berry1989`, `Bhatia1997`, `Blanter2000`, `BlochSiegert1940`, `BoldoLaxMilgram2016`, `Brylinski2002`, `CallenWelton1951`, `Carter1971`, `Caves1982`, `Choi1975`, `ChristensenDuff1978`, `CreminelliVernizzi2017`, `Davies1990`, `Degenne2025Kernels`, `DemboZeitouni1998LDT`, `DolanGrady1982`, `EchenimMhalla2021`, `Eddington1919`, `EzquiagaZumalacarregui2017`, `FalascoEsposito2025RMP`, `FordFulkerson1956`, `FouresBruhat1952`, `FukuiHatsugaiSuzuki2005`, `Gabor1946`, `GellMannOakesRenner1968`, `Gerace2012`, `Grisins2016`, `GrossJackiw1972`, `Haldane1988`, `HashinShtrikman1962`, `HashinShtrikman1963`, `Hawking1975CMP`, `HawkingPenrose1970`, `Heading1962`, `Helstrom1976`, `InonuWigner1953`, `Irwin1995`, `Israel1967`, `Jacquet2022`, `Jacquet2023QNM`, `Kailath1967`, `KaratzasShreve1991BMSC`, `Kitaev1997`, `KlinkhamerManton1984`, `KobayashiNomizu1963`, `LeCam1986`, `Lean4`, `LeanLJ2025`, `LiPaulson2018`, `LjungstromMortberg2024`, `LuccioliDegenne2024`, `MaxwellGarnett1904`, `MeiburgLessaSoldati2025`, `Milton2002`, `Nguyen2015`, `Nielsen1981a`, `Nielsen1981b`, `Niemeier1973`, `Onsager1944`, `Penrose1965`, `RashidHasan2017`, `ReadRezayi1999`, `Reuss1929`, `RevuzYor1999CMSM`, `Robinson1975`, `Romatschke2010`, `SaksteinJain2017`, `Stelle1977`, `SvetitskyYaffe1982`, `TKNN1982`, `Uhlmann1976`, `UnruhCBO2025`, `Verlinde1988`, `Viermann2022`, `VladimirovDiakonov2012`, `Voigt1889`, `Wald1984`, `Watrous2018`, `WernerState1989`, `Witten1982`, `Zaremba1999`, `bakalov2001`, `buttiker1986`, `compcert`, `datta1995`, `denHollander2000LDPs`, `diFrancesco1997`, `efron1982`, `egno2015`, `gksl1976`, `hohenbergKohn1964`, `isabelleCBO`, `kassel1995`, `kato1995`, `landauer1957`, `leanQI2025`, `levy1979`, `lieb1983`, `lindblad1976`, `meirWingreen1992`, `reedSimon2`, `sel4`, `survey2021`, `turaev2010`
 
-## Our own companion papers (16) — not purchasable
+## Our own companion papers (23) — not purchasable
 
-`Roehm2026D2`, `Roehm2026D3`, `Roehm2026D4`, `Roehm2026E1`, `Roehm2026E2`, `Roehm2026I1`, `Roehm2026Modular`, `Roehm2026Strategy`, `Roehm2026D1`, `Roehm2026D5`, `Roehm2026GrapheneDeep`, `Roehm2026I2`, `Roehm2026L2`, `Roehm2026LinearizedEFE`, `Roehm2026TQC`, `Roehm2026Wave16`
+`Roehm2026D2`, `Roehm2026D3`, `Roehm2026D4`, `Roehm2026E1`, `Roehm2026E2`, `Roehm2026I1`, `Roehm2026Modular`, `Roehm2026Strategy`, `CompanionCompilation`, `CompanionFaultTolerance`, `CompanionStochastic`, `Roehm2026D1`, `Roehm2026D5`, `Roehm2026GrapheneDeep`, `Roehm2026I2`, `Roehm2026L2`, `Roehm2026LinearizedEFE`, `Roehm2026TQC`, `Roehm2026Wave16`, `RoehmD4Topological`, `RoehmD6FaultTolerant`, `RoehmD8Compilation`, `RoehmD9Certification`
 
 ---
 
-*174 bundle-cited sources not held in full text: 6 P0, 30 P1, 122 P2, 16 internal.*
+*164 bundle-cited sources not held in full text: 5 P0, 23 P1, 113 P2, 23 internal.*
