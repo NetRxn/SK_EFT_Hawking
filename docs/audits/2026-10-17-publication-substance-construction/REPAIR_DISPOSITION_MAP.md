@@ -34,6 +34,17 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **Existing canonical portfolio artifact refresh.**
+  [BUNDLE_READINESS_HEATMAP](../../BUNDLE_READINESS_HEATMAP.md) is regenerated
+  with the existing bundle_readiness writer, including its derived count/gate
+  metadata synchronization for six bundles. No review dates, stage flags or
+  human states change. The standard aggregate remains13RED/5YELLOW/3UNMEASURED,
+  zero GREEN. Existing bundle_metadata_matches_graph passes for all21 blobs,
+  zero drift. [Writer, source-qualified data and scope](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/HEATMAP_REFRESH_SCOPE.md)
+  preserve the distinction between this report refresh and original scientific,
+  native/full-project, adversarial/main or final human publication acceptance.
+
+
 - **L1 apex description propagation and remaining source documentation.**
   Independent audit resolves all14 declared apexes in actual source and existing
   proof records, correcting nine claim descriptions without altering proofs,
@@ -76,7 +87,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 - **L1 primary-body comparison and custody.** The bounded factual correction
   is independently accepted against the four full sources and actual rendered
-  manuscript. The current existing claims artifact has125units with complete
+  manuscript. That checkpoint records125 claim units with complete
   predecessor/ID lineage,54 supersession candidates and zero automatic closures;
   all four scientific blockers and human states remain unchanged. The four
   validated PDF paths/acquisition records and source-qualified registry notes are
@@ -106,7 +117,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   Exact references, genuine negative controls, source locator repairs and
   all-nine-page rendered acceptance are preserved in the
   [scoped checkpoint](../../../papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/SCOPE.md).
-  The existing catalog/writer now records124units with one bounded numerical
+  At that numerical checkpoint, the catalog records124units with one bounded numerical
   WARN-to-PASS reassessment; four blocker identities,49 historical candidates
   and all human states remain. The full broad receipt is RED7169pass/35fail;
   the six additional environment failures pass an exact targeted rerun without
@@ -117,7 +128,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   and original scientific BUILD blockers remain open.
   ROOT has integrated the [source-qualified2017 comparison corrections](../../../papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/next-source-body/STATUS.md)
   and custody records after independent full-body corroboration; affected claim
-  intake is complete and the full prose read-through remains the next review.
+  intake is complete; the subsequent full prose read-through remains BLOCK as
+  recorded in the reader-notation checkpoint above.
   Executor's independently reviewed common-source/matter construction is
   integrated by normal merge7b9f8fdb6, preserving originalb804 history and
   [both independent reviews and publication intake](../2026-11-05-l1-physical-bridges/COMMON_SOURCE_ACCEPTANCE.md).
@@ -136,20 +148,22 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 
 - **Current canonical portfolio measurement.** The existing graph producer
-  remeasures all21bundles/231gates on clean `adebcb7ef`:159passed,25blocked,
-  28open,19needs-recheck. No state changes versus7b9f8fdb6 and no newly green
-  bundle. [All exact payloads and independent archive review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CURRENT_ADEB_GATE_READBACK.md)
+  remeasures all21bundles/231gates on clean `226ee77d6`:159passed,25blocked,
+  28open,19needs-recheck. No state changes versusADEB and no newly green
+  bundle. [All exact payloads and independent archive review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CURRENT_226EE_GATE_READBACK.md)
   preserve static/vacuous coverage limits, source binding and the whole
   measured graph. Focused figure/source closures, exhaustive numerical acceptance and current
   claim intake are progress outside state transitions; they are not scientific
   BUILD discharge or main/publication acceptance.
 
 - **L1 current claims and figure propagation.** The current canonical catalog
-  has124 reviewed manuscript units, all114 predecessor records reconciled,
-  four retained blocker identities and49 supersession candidates with zero
-  automatic closures. The existing sentence-state writer preserves all
+  has123 reviewed manuscript units after the reader-notation revision,
+  four retained blocker identities and54 supersession candidates with zero
+  automatic closures. The earlier124-unit and125-unit checkpoints retain their
+  complete historical lineage; seven affected records are preserved with five
+  successors and two taste/process deletions, without a verdict promotion. The existing sentence-state writer preserves all
   human states and prior audit bytes.
-  [Intake evidence](../../../papers/AutomatedReviews/2026-11-05-l1-current-claims/SCOPE.md)
+  [Initial124-unit intake evidence](../../../papers/AutomatedReviews/2026-11-05-l1-current-claims/SCOPE.md)
   and [five independently verified figure/typesetting repairs](../../../papers/AutomatedReviews/2026-11-05-l1-figure-propagation/SCOPE.md)
   use the established artifacts and closure writer. The canonical PNG now
   propagates identically to L1, D3 and its source, with readable print text.
