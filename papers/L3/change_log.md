@@ -218,3 +218,13 @@ domain and geometric interpretation. The full source elaborated
 against local compiled imports, with standard axioms reported for
 the inverse and final nonaffinity theorems. The ADW exterior
 derivation and authoritative validation remain open.
+
+### Ingoing-chart result in the manuscript
+
+The mechanics discussion now propagates the conditional exterior
+lapse and the chart calculation of horizon nonaffinity. Independent
+prose review checked the equations against ExactSolutions and
+requested explicit radial and asymptotic hypotheses, the raised
+normal's normalization, and a narrower zeroth-law statement.
+The final four-page PDF incorporates those revisions. The physical
+ADW matching and acoustic energy balance remain open.

@@ -230,17 +230,24 @@ $dM=\kappa\,dA/(8\pi G)$
 If $G$ is instead positive and differentiable along the same algebraic
 family, the area term equals $dM+M\,dG/G$
 (\texttt{schwarzschild\_varying\_G\_area\_control}).
-Applying the fixed-$G$ identity to the classified emergent branch requires
-matching its area and surface gravity to these profiles. A differential
-first law for the acoustic branch requires a separate energy balance.
+For the stationary ingoing spherical metric with radial block
+$-F(r)\,dv^2+2\,dv\,dr$, assume the reduced vacuum equation
+$rF'+F-1=0$ for differentiable $F$ on $r>a$, with $0\leq a<2m$,
+and $r(1-F)\to 2m$ as $r\to\infty$. Then $F=1-2m/r$.
+Away from the angular poles, raising $dr$ at $r=2m$ gives the
+null generator $K=\partial_v$, and the connection gives
+$\nabla_K K=\tfrac12 F'(2m)K=K/(4m)$ at the lapse zero.
+Applying the fixed-$G$ identity to the emergent ADW branch requires
+deriving this exterior and matching $m=\GNem M$ at fixed $\GNem$.
+A differential first law for the acoustic branch requires a separate
+energy balance.
 The second-law
 slot records the Glorioso--Liu conclusion, that the entropy-current
 divergence is non-negative, as a hypothesis rather than as a consequence,
 because deriving it needs the Schwinger--Keldysh effective
 action~\cite{GloriosoLiu2018,CrossleyGloriosoLiu2017,GloriosoCrossleyLiu2017}.
-Constancy of $\kappa$ over the horizon, and any affine-time statement of
-the third law, are absent for want of Killing-vector and affine-time
-machinery. What does follow unconditionally is that a hole classified into
+The emergent and acoustic branches still lack a general zeroth-law
+theorem and an affine-time third law. What does follow unconditionally is that a hole classified into
 the cooling branch and satisfying those two slots has a strictly negative
 evaporation rate (\texttt{FourLaws\_ADWExtremality},
 \texttt{four\_laws\_consistent\_with\_acoustic\_regime}).
