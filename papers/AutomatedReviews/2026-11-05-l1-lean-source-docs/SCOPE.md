@@ -51,3 +51,23 @@ Original B3 susceptibility/window, microscopic dynamics, physical state,
 tensor/matter and transport/frequency BUILD requirements remain OPEN, as do
 whole-publication native/project, stage, main and final human acceptance.
 This checkpoint alone records no canonical closure or newly green bundle.
+
+
+## Independent historical reconciliation and remaining definition comment
+
+A fresh independent review accepts original L1 stage13 findings3.3,3.4,4.2,5.3
+at their actual scopes. HISTORICAL_FINDING_REVIEW.md and the unchanged original
+Verify receipts retain the distinction between lexical checks and actual
+source/proof/manuscript/render evidence. The nonzero-c bridge was introduced
+at300c2a9f in August; this is recognition of existing substantive work, not a
+new proof claim. Canonical closure remains pending final qualification.
+
+That review found a separate surviving local attribution in the c_GW definition
+docstring. New MAJOR finding1.3 is OPEN. Its exact one-comment replacement has
+independent acceptance and original-red/proposed-green evidence, preserved in
+DEFINITION_DOC_PROPOSAL.json/.zip and DEFINITION_DOC_INDEPENDENT.md. It is a
+proposal only: actual source remains the preceding d928 version until controlled
+application and qualification. Original physical requirements remain unchanged.
+Finding1.1's Gate field was corrected to the canonical G7 NarrativeGrounding
+name; its identity, severity, requirement and Verify are unchanged. The prior
+noncanonical display name and reason are preserved in CONTROL_REFINEMENT.json.

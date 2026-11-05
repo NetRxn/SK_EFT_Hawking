@@ -96,5 +96,11 @@
         "after_exit": 0
       }
     ]
+  },
+  "gate_name_correction": {
+    "finding": "1.1",
+    "prior": "ClaimGrounding",
+    "canonical": "NarrativeGrounding",
+    "reason": "Use exact G7 name from docs/READINESS_GATES.md; stable finding identity and substantive requirement unchanged."
   }
 }

@@ -48,7 +48,14 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   is discharged by this enabling mathematical construction.
 
 
-- **L1 Lean source documentation repaired; final qualification pending.**
+- **L1 Lean source documentation: first repair applied; definition follow-up pending.**
+  A fresh independent review accepts original stage13 findings3.3/3.4/4.2/5.3
+  at their own scopes, including the already implemented nonzero-c bridge.
+  It also identifies a separate false local speed-law attribution in the
+  c_GW definition comment. New MAJOR finding1.3 is OPEN; its independently
+  accepted one-comment proposal awaits controlled application and qualification.
+  The earlier repair and all its passing evidence remain bounded to that version.
+
   [Exact repair and retained review/native/build evidence](../../../papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md)
   correct the dependent scalar conditions, observational locator, susceptibility
   offsets and physical-matching descriptions without changing imports, definitions,
