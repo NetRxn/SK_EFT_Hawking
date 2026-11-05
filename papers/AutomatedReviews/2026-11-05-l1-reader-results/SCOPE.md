@@ -49,3 +49,9 @@ No stage green, physics completion, native qualification, main integration or
 human publication approval is implied. Existing source-comment validation
 tasks remain open. The last all231-gate measurement remains pinned to226ee77d6;
 this r3 checkpoint is not a same-source portfolio remeasurement.
+
+The existing closure writer records focused observation finding1.1 FIXED at
+repair7b963cc29 after running its original Verify successfully. All prior ledger
+records remain identical. Source-comment1.2 and the separate aggregate-comment
+finding remain OPEN; this factual closure discharges neither physical BUILD
+work nor full manuscript acceptance. See CLOSURE_READBACK.json.

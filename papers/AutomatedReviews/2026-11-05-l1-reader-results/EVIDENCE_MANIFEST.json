@@ -19,6 +19,10 @@
     "sha256": "84540a05356d6b059546b080e0a0aba08707c9a2e1d10871ab1dcee4473b3a6f",
     "bytes": 614
   },
+  "CLOSURE_READBACK.json": {
+    "sha256": "ea815940c94201a702530d1c3c4c5ea0a6782ef29f9498ac7bdc1ffc9c412f4a",
+    "bytes": 307
+  },
   "COMPILE_R2.txt": {
     "sha256": "d8e1b3be55eda39579ffa49ab514163352d74a26b2b79f53f9a34275fff9c118",
     "bytes": 212
@@ -52,8 +56,8 @@
     "bytes": 456
   },
   "L1.md": {
-    "sha256": "df37fb366ca53a82719059130a2d95a3637b9c9f66d9a20375a78a661ca9f952",
-    "bytes": 4795
+    "sha256": "96dca4e2fa8b495abe4c60c9c452afb2c707632b1b51afab60224539435a0500",
+    "bytes": 4857
   },
   "LENGTH_R3.json": {
     "sha256": "91fd7c1980d9d042010576f643ae60e0aa8cf4c30eb6eb1888a1df6a783ff883",
@@ -96,8 +100,8 @@
     "bytes": 11882
   },
   "SCOPE.md": {
-    "sha256": "830b176b846ab60d4a2b986066d9c7c1aa3ef0845d373bd3cfc4c885ddc00361",
-    "bytes": 3357
+    "sha256": "cd4bf85cc7b93eb939f9879d2e989ad3bc7ed6a6c39cac86a4f0d8248e021f84",
+    "bytes": 3734
   },
   "SOURCE_DOCUMENTATION_RED.json": {
     "sha256": "43a9d331ddba71b1d05779263ee8088d180e0da4126695d022b864a4637527da",

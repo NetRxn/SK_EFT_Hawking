@@ -10688,6 +10688,21 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-reader-results:L1:1.1",
+      "status": "fixed",
+      "evidence": "The accepted Introduction now states conservative distance and source-emission assumptions, adopted symmetric-envelope scope and alternative histories. Independent full carrying-section primary-body review and current manuscript/catalog review accept this factual clarification; original physics remains open.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-l1-reader-results/OBSERVATION_INDEPENDENT_REVIEW.md",
+      "date": "2026-11-05",
+      "commit": "7b963cc29",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text()); p=s.split(\"The 2017 binary-neutron-star merger\",1)[1].split(\"Our assumed speed law\",1)[0]; assert \"emission-time assumptions\" in p and \"alternative emission histories can weaken\" in p, \"published propagation cap lacks its source-emission assumptions\"'",
+        "declared": "python3 -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text()); p=s.split(\"The 2017 binary-neutron-star merger\",1)[1].split(\"Our assumed speed law\",1)[0]; assert \"emission-time assumptions\" in p and \"alternative emission histories can weaken\" in p, \"published propagation cap lacks its source-emission assumptions\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }
