@@ -8317,3 +8317,22 @@ exact rational subtotal
 This qualifies the join for the two selected rows. The
 35,084-orbit modular replay and the complete common
 partition coefficient remain open.
+
+### Complete chirality pairs for (9,1), (9,3), and (9,16)
+
+Independent review checked 256 direct selectors, 16 terminal
+shards, four singleton witnesses, and exact scaling per run on
+the original pinned roster. Each component subtotal is
+`-742478726025364419/9444732965739290427392`, with zero imaginary
+part and no caps. Each orbit has multiplicity 18 and 18 words.
+
+| Direct representative | Chirality counterpart | Full receipt SHA-256 |
+|---|---|---|
+| [(9,1)](l1_gamma_9_1.out.txt) | (13,5) | `e1b179b07fe53c37bb0ca7029e9d9f785222cc72a7d7e4b27ff23334b4b5e940` |
+| [(9,3)](l1_gamma_9_3.out.txt) | (13,7) | `141da89fac6b32929ed1391e27dbab482c4b268ea506e1ad7cefb2185fae391b` |
+| [(9,16)](l1_gamma_9_16.out.txt) | (13,16) | `3231cca959d33a119e111c7832c0d961a65d633c75769ae1c9a52399dfd1c923` |
+
+The six signed orbits add 108 disjoint words and contribute
+`-20046925602684839313/2361183241434822606848` together.
+Verified dominant coverage is 118 of 148 orbits and 8,802 of
+9,216 words.
