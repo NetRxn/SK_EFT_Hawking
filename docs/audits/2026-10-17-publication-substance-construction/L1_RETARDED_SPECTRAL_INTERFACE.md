@@ -7699,3 +7699,34 @@ The verified signed orbit `{(0,19),(1,19),(2,19)}` contributes
 distinct source words. The nine block-0 representatives are
 complete. Including the separately accepted `(20,8)` orbit,
 coverage is ten of 148 dominant orbits and 648 source words.
+
+### Signed stabilizers for complete gamma slices
+
+A simultaneous proper signed rotation of both chiral blocks acts
+on the three spatial Clifford components by its signed permutation
+and fixes the fourth. It preserves the dominant B primitive,
+Haar measure, identity tree links, closed oriented traces, and
+the Berezin top form. The fixed target label `gkey(1,1)` has
+one singleton Clifford index on each of two factors, the center
+and its coframe edge. The same sign appears on both legs and
+their product is positive. All other Clifford labels and exterior
+generators are summed in the full slice.
+
+For a representative, keep only the diagonal rotations that
+map its entire weighted word set bijectively to itself with
+the exact induced probe sign on each scale. The scale and probe
+signs then cancel term by term. A rotation of this signed
+stabilizer can equate two complete gamma-slice contractions.
+It supplies no equality between individual selector rows.
+The fixed fourth component is a singleton slice.
+
+Independent review verified the rotation `(2,-1,3)` for
+`(0,4)`, `(0,7)`, `(0,16)`, and `(0,19)`. It exchanges
+gamma slices 0 and 1, which also agree in each complete direct
+receipt. The census of all canonical representatives found 92
+with four distinct slices, 52 with three, and four with two,
+so guarded replay can evaluate 532 of the 592 slices. The
+census source SHA-256 is
+`a1772986235d544df23e0609d2edfe23690afedf2ade9f6e14eeadec2c3acfd7`.
+A replay must record a signed stabilizer witness and a complete
+direct subtotal for each retained slice before weighting it.
