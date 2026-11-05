@@ -6771,3 +6771,22 @@ imaginary part.
 |---|---|---|
 | 5 | `c9df3f9363627766347ff8f971c16b2c1db9873bae6ce7658cac78c5548cc58d` | `5fc724eaacd3ebebd56eb0d7e53270a5305b3bb9a32580f12546e42399ba9875` |
 | 6 | `dfa01092e60d4ce09c3f7e50e043009931a106e985a0d79a286de5bab4b07090` | `ee4f4caf7ab5c2b593d122d6714c60428b418a943bffb540002d14092aac2815` |
+
+**Selector batch `[8,32)`.** Independent review verified all
+24 exact rows on the pinned roster with no caps. Each row
+evaluated 8,956 compatible products and 4,174 complement queries.
+The exact real subtotal is
+`1008348807432951747/37778931862957161709568`, with zero imaginary
+part. The run took 101.54 seconds including assembly and 66.68
+seconds after assembly. Stdout SHA-256 is
+`908c80c779cb6f0628b2071d4498e0f844252be7db32a77865ec92de6494d888`.
+The first 32 of 256 selectors now have verified scalars.
+
+**Minority manifest IDs 7 and 8.** Both complete 2,304-leaf
+receipts passed independent verification with no caps and zero
+imaginary parts.
+
+| ID | Exact real subtotal | Roster SHA-256 | Stdout SHA-256 |
+|---|---:|---|---|
+| 7 | `−871859979116847/144115188075855872` | `608c4d56a2f7c6f3eff75a84082bfd9e83d2d0ff0e7e0b79b1d6132f53acfba4` | `733f27ea6a5ffa8b4acc12b0b5b0ba39cc8ed07780efc3b20de36985da7f0a53` |
+| 8 | `−207640550836089/2305843009213693952` | `7c7950b416c5f358873483fccd6e750fc38cc5582eaa54dcf3863babfec7ec6a` | `ecff25806cd467f173b28a7acb53702b77eee8d87564d89b7cd0e7e559f72028` |

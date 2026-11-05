@@ -218,7 +218,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   a control for bulk A. Independent review then accepted all 72
   prefixes (1,152 leaves) for the joint contribution of one
   opposite-scale pair in the dominant 208-row primitive. The other
-  9,770 nonempty B occurrences still need contributions to the word
+  9,766 nonempty B occurrences still need contributions to the word
   sum. Independent review verified an exact partition of all 9,216
   dominant occurrences into 6,656 signed center-1 groups. The
   reviewed rank-one manifest partitions them further into 2,080
@@ -234,8 +234,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   independent review. The other internal gamma slices are exact
   zeros for that selector, which is now complete. Verify the
   exterior roster contains 256 disjoint candidates across four
-  slices. The first eight scalars have independently verified
-  receipts. Continue with the disjoint range `[8,32)` before
+  slices. The first 32 scalars have independently verified
+  receipts. Continue with the disjoint range `[32,64)` before
   reducing the component.
   In parallel, the reviewed 576-occurrence minority census admits
   288 exact center-11 pairs. Independent review verified all 2,304
@@ -245,7 +245,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   pair at indices 13,156 and 13,158 has the same full-roster review.
   The reviewed minority input manifest admits all 288 disjoint
   pairs. IDs 1 and 2 passed independent exact roster and signed B
-  review, followed by IDs 3–6. Continue with IDs 7 and 8.
+  review, followed by IDs 3–8. Continue with IDs 9 and 10.
   Keep the direct runner for bulk:
   the bounded cache matches exact rows but was slower in the paired
   CPU benchmark.
