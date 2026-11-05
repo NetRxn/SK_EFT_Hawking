@@ -46,9 +46,13 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   match remains, with existing species/regulator and transport BUILD explicit.
   Next ordinary authoring relocates the formal/reproducibility inventory to
   accessible support and ends Discussion with its scientific meaning, preserving
-  every adverse condition. ROOT also owns the companion's separately observed
-  Nf approximately19-between15-and16 arithmetic repair against its actual
-  ansatz. The original physical construction, both Lean source-comment findings,
+  every adverse condition. The [companion anchor repair](../../../papers/AutomatedReviews/2026-11-05-l1-companion-anchor/SCOPE.md)
+  corrects the false count ordering and coupling direction with the exact
+  conditional inverse locus. Independent source/algebra and all-five-page
+  application/render reviews accept repair `e71fcdc1d`; the existing closure
+  writer closes only focused finding1.1. P23 also maps to D3§5/F§6; no blanket
+  downstream synchronization is inferred. Physical species/regulator/one-loop
+  matching remains ROOT-owned BUILD. The original physical construction, both Lean source-comment findings,
   full native/main and final human gates remain open. Primary custody37dd92504
   is pushed and clean; newer controller history must be retained during any
   controlled validation window rather than replaced by older publication code.
@@ -134,8 +138,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   **Accepted bounded construction owner: Executor. Next scientific target:**
   full nonzero normalization and actual same-functional physical-image state
   certification, or a source-matched negative witness on the required algebra.
-  ROOT has requested the concrete continuation contract and confirmation;
-  this entry does not invent acceptance of a new evaluation assignment.
+  Executor confirmed the source-level continuation: derive a complete
+  degree-bounded physical-image observable/Gram target and reconcile the actual
+  reflection/unitarity assumptions before considering evaluation. The concrete
+  construction contract and independent mathematical/physics acceptance remain
+  pending; no finite-degree claim or evaluation assignment is accepted here.
   **Acceptance reviewers:** producer-independent mathematical and physics/source
   reviewers, then ROOT intake. **Required evidence:** complete action/source
   correspondence, full normalization certificate and the required state pairing;
