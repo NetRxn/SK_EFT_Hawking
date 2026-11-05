@@ -123,3 +123,19 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
   and `Quot.sound`.
 - The authoritative build, declaration-registry refresh, and canonical
   finding §2.4 closure remain due.
+
+## 2026-11-04 — Derive the local trajectory signs
+
+- The additive profile criterion derives Schwarzschild heating by
+  applying the chain rule to a positive mass profile with local mass
+  loss. It derives the exact negative slope of the leading-order
+  Balbinot nozzle profile in natural units.
+- The nozzle branch requires the caller's short-time budget and a
+  positive-temperature window. The equality boundary receives neither
+  strict sign. The existing partition interface remains available.
+- Independent source review accepted the scope and proofs. The modified
+  file elaborated against local compiled imports, and all three new
+  theorem axiom queries reported only `propext`, `Classical.choice`,
+  and `Quot.sound`.
+- The authoritative build, declaration refresh, manuscript propagation,
+  and reconciliation of the §2.2 verifier remain due.
