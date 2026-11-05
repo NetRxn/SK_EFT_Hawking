@@ -1,0 +1,48 @@
+{
+  "candidate": "4aca534a28d05233b2394fdd7b210ea68c43a3e4",
+  "parent": "8440c44fe9263d0070002895b5186bca32f4f1a9",
+  "source_sha256": "8544ece0ae2dfce3b3e054cd81c17153467e9b9afb9959be0372ab406e046487",
+  "archive_sha256": "b0c3468068c060dd4275111f92bc0150b4b0d64f490da84f4511262ededfcb4b",
+  "archive_bytes": 120248,
+  "members": 15,
+  "complete_crc_and_member_hashes": true,
+  "scope": "Custody/readback only. ROOT read entire221line derivation and both reviews; no scientific evaluation or scientific/publication acceptance follows from archive checks.",
+  "merge_commit": "dd097e67203cffdef8cbe62aa45926251c5f3425",
+  "publication_preservation": [
+    {
+      "path": "papers/L1/paper_draft.tex",
+      "sha256": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2",
+      "unchanged": true
+    },
+    {
+      "path": "papers/L1/paper_draft.pdf",
+      "sha256": "62e35e8eb41f6f652916cbfddc8c24bd48ef57f72df4e3b0e8763834d414f29a",
+      "unchanged": true
+    },
+    {
+      "path": "papers/L1/bundle_metadata.json",
+      "sha256": "57b0a4e30446196a6cfbac62e9499e5fb96dcb99359f30c8b6484be82433f16b",
+      "unchanged": true
+    },
+    {
+      "path": "papers/L1/claims_review.json",
+      "sha256": "c575c49851db4ef6f08f69b9b87e09b2902ced906032574fa9d4f6fcb85b2951",
+      "unchanged": true
+    },
+    {
+      "path": "papers/L1/prose_state.json",
+      "sha256": "f3e0464c5745c6dc0fe11558709d2ed9eff7ba0445f00973ae7385ffc1616627",
+      "unchanged": true
+    },
+    {
+      "path": "papers/L1/audit_log.jsonl",
+      "sha256": "447676b4f073f130aa0290d569d5a29bfd2d1ef39a53d3ff89e83299e92824ed",
+      "unchanged": true
+    },
+    {
+      "path": "docs/review_finding_supersessions.json",
+      "sha256": "9e8f80f8aa7eb71a88380d814f205a0b838cbf4b94f1f4d65c26d10316161900",
+      "unchanged": true
+    }
+  ]
+}

@@ -34,6 +34,19 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 symbolic normalization construction accepted for bounded scientific intake.**
+  [ROOT intake](../2026-11-05-l1-physical-bridges/PUBLICATION_SYMBOLIC_NORMALIZATION_INTAKE.md)
+  records direct full derivation/review reading and complete archive/source custody
+  for4aca534a. The common denominators and coefficient heights cover the original
+  whole partition and prescribed physical-image matrix. The nonzero-neighborhood
+  theorem remains conditional on a future complete c0 nonzero certificate;
+  that antecedent is not supplied. Normal merge preserves producer history and
+  every manuscript/catalog/human/ledger byte. Executor's next substantive target
+  remains actual complete normalization/nonvanishing or equivalent analytic work,
+  then physical state and response matching. ROOT retains all L1 readiness.
+  No original B3, state, tensor/matter, transport, native, main or human acceptance
+  is discharged by this enabling mathematical construction.
+
 
 - **L1 Lean source documentation repaired; final qualification pending.**
   [Exact repair and retained review/native/build evidence](../../../papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md)
