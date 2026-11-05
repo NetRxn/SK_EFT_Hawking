@@ -7320,3 +7320,44 @@ The repository orbit verifier replayed the terminal receipts and
 reproduced the reviewed subtotal
 `157251432208655295/288230376151711744` over 276 of 288 pairs
 in 32 of 34 orbits. The remaining representatives are 181 and 183.
+
+### Dominant orbit covered by the existing two-word replay
+
+The prior direct replay of indices 4,776 and 17,672 exhausts
+component `(65,13)`. Independent review matched both signed
+scales and all 1,152 exact ordered leaves to the pinned inputs,
+then recovered the direct subtotal
+`-274396016602155609/4722366482869645213696` with zero imaginary
+part. The full direct receipt SHA-256 is
+`549235ff9768e6afd2f2ccd7a3ee5c8bb9910b2558c06731a3a72591f7332a86`.
+
+Component `(65,13)` belongs to the orbit represented by `(20,8)`.
+All 36 component images preserve the signed contraction. Their
+72 source words are disjoint from the 315 words in the four
+accepted block-0 orbits. The weighted contribution is
+`-2469564149419400481/1180591620717411303424`, bringing the
+reviewed dominant subtotal to
+`15773102838950927715/9444732965739290427392` across 387 source
+words in five of 148 orbits. This subtotal includes the direct
+pair once through its orbit weight.
+
+### Complete minority contraction
+
+Independent review verified the final two exact receipts and
+reduced all 34 orbit contributions over 288 distinct pair IDs
+and 576 source words. Each final receipt has 2,304 exact leaves,
+864 nonzero contributions, and zero imaginary part.
+
+| Representative | Multiplicity | Exact real coefficient | Raw receipt SHA-256 |
+|---:|---:|---|---|
+| 181 | 6 | `-231274434671091/2305843009213693952` | `1c088eef984304745a5461a0de8bb8fe78a934034ec0b5edd47fa85eb5d047c7` |
+| 183 | 6 | `-241403242028949/2305843009213693952` | `c81fbc86776eed24a78c45cb5e5ab37a758770c69cfd662a66050173a8925757` |
+
+The complete real minority subtotal is
+`156896923951130265/288230376151711744`. The repository orbit
+verifier reproduced full coverage and the same subtotal. Its
+complete manifest SHA-256 is
+`500c8d667a31b454a0bdec5857f99cbad4f0ff64b27f692f76d6dadaa6fa71ac`.
+The pinned minority and dominant word sets are disjoint and
+together cover all 9,792 nonempty B occurrences. The remaining
+143 dominant orbits still require representative results.
