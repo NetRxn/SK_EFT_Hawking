@@ -7191,3 +7191,39 @@ part. Each raw sum reduces with its signed manifest scale to
 These distinct orbits bring the reviewed subtotal to
 `152376168503857725/576460752303423488` across 180 of 288 pairs
 in 20 of 34 orbits. Fourteen representatives remain.
+
+### Minority representative 148
+
+Independent readback verified 2,304 ordered exact leaves on the
+pinned roster, with 864 nonzero contributions and zero imaginary
+part. The signed manifest scale gives
+`3340335969373599/576460752303423488`. The raw receipt SHA-256 is
+`b3b14c91699cc2179eea5d021566b63b1c2ff19e2117ff5a2b0d6fcafa735a66`.
+The disjoint orbit of nine brings the reviewed minority subtotal
+to `45609798057055029/144115188075855872` across 189 of 288 pairs
+in 21 of 34 orbits.
+
+### Complete third dominant component and orbit
+
+For `(0,1)`, independent review checked all 256 exact selectors
+across 16 terminal ranges. The 12-member source pin is
+`00d37e216c5067f53c1e003261060fdb5f902ced30223128f5377cd46063cedf`.
+The joint table pin is
+`313a62f36772a3063835cff00cb8532c23441351f02cbbae9f910d0459705874`.
+The roster matches the previous direct components. Each gamma
+slice contributes `688672510171296147/9444732965739290427392`
+with zero imaginary part.
+
+| Receipt selector coverage | SHA-256 |
+|---|---|
+| [0,16) | `7e4f582f17792e0e0453f9221f4cfecbe68951f0cff2999856ade7f144a244f6` |
+| [16,128) | `ebed0257d5f6ba0ddb8c01fd98d2a498b9ab0fef0a6e80a2118b00cd5c165285` |
+| [128,256) | `68312a5ac7b7df1ff16bf8d4426e203fb7d0f3e5c74c936b9073fd5e63707814` |
+
+The direct total is `688672510171296147/2361183241434822606848`.
+The signed orbit consists of `(0,1)`, `(0,2)`, `(1,1)`,
+`(1,3)`, `(2,2)`, and `(2,3)`. The 72 source words are
+disjoint from the 216 words of the two previous orbits. The
+weighted contribution is
+`2066017530513888441/1180591620717411303424`.
+Three of 148 dominant orbits now have full direct results.
