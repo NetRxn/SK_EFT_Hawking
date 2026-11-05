@@ -802,3 +802,11 @@ failures from the frozen receipt remain unaddressed. Preserve scientific BUILD
 and human/main acceptance while qualifying incremental delivery through the
 existing gates. IMPORTS1.2 has an independently reconciled producer repair route
 but no implementation yet; do not rebuild Formula enumeration or G4.
+
+
+At976d16e0d, the [combined repaired-cohort check](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_976D_REPAIRED_COHORT.json)
+passes66 cases with one intentional non-bundle-cache skip in25.09s. All eleven
+formerly failing cases are present and pass on this same committed source:
+inventory, memo equivalence, dependency declaration, five isolated host fixtures
+and three metadata serialization cases. The other34 frozen failures were not
+rerun here and remain unaddressed. No full-project or main qualification is inferred.

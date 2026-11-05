@@ -153,3 +153,11 @@ rewrite the frozen37-case outcome or establish whole-tree/main acceptance.
 [IMPORTS source reconciliation](IMPORTS_RECONCILIATION.md) identifies sixteen
 missing actual calls among109 structural candidates versus93 existing edges;
 no implementation, settled specification or new gate result is asserted.
+
+
+The [976d focused readback](FROZEN_976D_REPAIRED_COHORT.json) subsequently verifies
+all eleven repaired former failure IDs present and passing on one committed
+source, with66pass/1intentional skip overall. The read-only Lean-dependency
+[preflight](FROZEN_976D_PREFLIGHT.txt) passes; no refresh/build or live-slot action
+was invoked. This targets repaired cases plus serializer controls, not the other
+34 frozen failures or whole-project/main/publication gates.
