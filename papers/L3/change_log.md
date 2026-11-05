@@ -297,3 +297,18 @@ against the proved source and clarified the distinction between flux
 and limiting charge. The rebuilt four-page PDF carries those changes.
 The ADW derivation of this exterior and the identification with the
 physical branch mass remain open.
+
+### Ricci-quadratic action variation
+
+HigherCurvatureStructure now proves that the densitized scalar-
+and Ricci-square terms have zero first variation at a Ricci-flat
+background, allowing both inverse metrics and the density weight
+to vary. A dominated derivative bound carries the result through
+the chart integral. The exact four-dimensional Euler split
+isolates the remaining curvature-square contribution.
+Independent source review checked the contractions, measure
+hypotheses and boundary of the claim. Local source elaboration
+passed, with only standard axioms for the three main results.
+Einstein–Hilbert and Euler boundary stationarity, zero
+renormalized cosmological term, and microscopic ADW matching
+remain open.

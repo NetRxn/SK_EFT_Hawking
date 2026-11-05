@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.Basic
 import SKEFTHawking.HeatKernelExpansion
+import SKEFTHawking.Curvature
 
 /-!
 # Phase 6e Wave 2: Higher-Curvature Structure
@@ -429,6 +430,154 @@ theorem H_HigherCurvatureWithinObservationalBounds_pulsar_witness :
   · intro N_f hN_pos hN_max
     have h := higher_curvature_below_pulsar_bound hN_pos hN_max
     exact ⟨le_of_lt h.1, le_of_lt h.2.1, le_of_lt h.2.2⟩
+
+section RicciFlatVariation
+
+open Filter MeasureTheory SKEFTHawking.Curvature
+open scoped Topology
+
+/-- Independent parameter dependence of both inverse metrics is retained. -/
+def ricciSquare (B R : MetricMatrix) : ℝ :=
+  ∑ i : Fin 4, ∑ j : Fin 4, ∑ k : Fin 4, ∑ l : Fin 4,
+    B i k * B j l * R i j * R k l
+
+private theorem product_zero_deriv
+    {f g : ℝ → ℝ} {f' g' t : ℝ}
+    (hf : HasDerivAt f f' t) (hg : HasDerivAt g g' t)
+    (hf0 : f t = 0) (hg0 : g t = 0) :
+    HasDerivAt (fun s => f s * g s) 0 t := by
+  simpa [hf0, hg0] using hf.fun_mul hg
+
+private theorem weight_zero_deriv
+    {w q : ℝ → ℝ} {w' t : ℝ}
+    (hw : HasDerivAt w w' t) (hq : HasDerivAt q 0 t) (hq0 : q t = 0) :
+    HasDerivAt (fun s => w s * q s) 0 t := by
+  simpa [hq0] using hw.fun_mul hq
+
+theorem ricciSquare_first_variation (B R : ℝ → MetricMatrix)
+    (B' R' : MetricMatrix) (t : ℝ)
+    (hB : ∀ i j, HasDerivAt (fun s => B s i j) (B' i j) t)
+    (hR : ∀ i j, HasDerivAt (fun s => R s i j) (R' i j) t)
+    (hflat : ∀ i j, R t i j = 0) :
+    HasDerivAt (fun s => ricciSquare (B s) (R s)) 0 t := by
+  have hterm (i j k l : Fin 4) :
+      HasDerivAt (fun s => B s i k * B s j l * R s i j * R s k l) 0 t := by
+    have hq := product_zero_deriv (hR i j) (hR k l) (hflat i j) (hflat k l)
+    have hh := weight_zero_deriv ((hB i k).fun_mul (hB j l)) hq
+      (by simp [hflat i j] : R t i j * R t k l = 0)
+    simpa only [mul_assoc] using hh
+  unfold ricciSquare
+  simpa only [Finset.sum_const_zero] using
+    (HasDerivAt.fun_sum fun i _ => HasDerivAt.fun_sum fun j _ =>
+      HasDerivAt.fun_sum fun k _ => HasDerivAt.fun_sum fun l _ => hterm i j k l)
+
+theorem scalarOf_eq_zero (B R : MetricMatrix) (hflat : ∀ i j, R i j = 0) :
+    scalarOf R B = 0 := by
+  simp [scalarOf, sumFin4, hflat]
+
+/-- Local derivative of the part of the quadratic Lagrangian which is not the
+four-dimensional Euler density. The density weight may vary with the metric. -/
+theorem densitized_ricci_terms_first_variation
+    (w : ℝ → ℝ) (B R : ℝ → MetricMatrix)
+    (w' scalar' : ℝ) (B' R' : MetricMatrix) (t a b : ℝ)
+    (hw : HasDerivAt w w' t)
+    (hScalar : HasDerivAt (fun s => scalarOf (R s) (B s)) scalar' t)
+    (hB : ∀ i j, HasDerivAt (fun s => B s i j) (B' i j) t)
+    (hR : ∀ i j, HasDerivAt (fun s => R s i j) (R' i j) t)
+    (hflat : ∀ i j, R t i j = 0) :
+    HasDerivAt (fun s => w s * (a * scalarOf (R s) (B s) ^ 2 +
+      b * ricciSquare (B s) (R s))) 0 t := by
+  have hSq : HasDerivAt (fun s => scalarOf (R s) (B s) ^ 2) 0 t := by
+    simpa only [pow_two] using product_zero_deriv hScalar hScalar
+      (scalarOf_eq_zero (B t) (R t) hflat) (scalarOf_eq_zero (B t) (R t) hflat)
+  have hRic := ricciSquare_first_variation B R B' R' t hB hR hflat
+  have hSum : HasDerivAt (fun s => a * scalarOf (R s) (B s) ^ 2 +
+      b * ricciSquare (B s) (R s)) 0 t := by
+    simpa using (hSq.const_mul a).fun_add (hRic.const_mul b)
+  exact weight_zero_deriv hw hSum (by
+    simp [scalarOf_eq_zero (B t) (R t) hflat, ricciSquare, hflat])
+
+theorem quadratic_density_split (w S Q K a b c : ℝ) :
+    w * (a * S ^ 2 + b * Q + c * K) =
+      c * (w * gaussBonnet4D (S ^ 2) Q K) +
+        w * ((a - c) * S ^ 2 + (b + 4 * c) * Q) := by
+  unfold gaussBonnet4D
+  ring
+
+/-- A pointwise zero variation can be integrated under a local integrable
+dominator. This is an analytic hypothesis, independent of the boundary flux. -/
+theorem integral_first_variation_zero
+    {X : Type*} [MeasurableSpace X] (μ : Measure X)
+    (L L' : ℝ → X → ℝ) (u : Set ℝ) (bound : X → ℝ)
+    (hu : u ∈ 𝓝 (0 : ℝ))
+    (hmeas : ∀ᶠ s in 𝓝 (0 : ℝ), AEStronglyMeasurable (L s) μ)
+    (hint : Integrable (L 0) μ)
+    (hbound : ∀ᵐ x ∂μ, ∀ s ∈ u, ‖L' s x‖ ≤ bound x)
+    (hbound_int : Integrable bound μ)
+    (hdiff : ∀ᵐ x ∂μ, ∀ s ∈ u, HasDerivAt (fun t => L t x) (L' s x) s)
+    (hzero : ∀ᵐ x ∂μ, L' 0 x = 0) :
+    HasDerivAt (fun s => ∫ x, L s x ∂μ) 0 0 := by
+  have hzero' : L' 0 =ᵐ[μ] (fun _ : X => (0 : ℝ)) := hzero
+  have hm : AEStronglyMeasurable (L' 0) μ :=
+    aestronglyMeasurable_const.congr hzero'.symm
+  have hd := (hasDerivAt_integral_of_dominated_loc_of_deriv_le
+    hu hmeas hint hm hbound hbound_int hdiff).2
+  rw [integral_congr_ae hzero', integral_zero] at hd
+  exact hd
+
+/-- The integrated Ricci-quadratic correction is stationary. The analytic
+inputs bound the derivative near zero; its value at zero is derived from
+componentwise Ricci flatness, including variation of the density weight. -/
+theorem integrated_ricci_terms_first_variation
+    {X : Type*} [MeasurableSpace X] (μ : Measure X)
+    (w : ℝ → X → ℝ) (B R : ℝ → X → MetricMatrix)
+    (w' scalar' : X → ℝ) (B' R' : X → MetricMatrix) (a b : ℝ)
+    (L' : ℝ → X → ℝ) (u : Set ℝ) (bound : X → ℝ)
+    (hu : u ∈ 𝓝 (0 : ℝ))
+    (hBase : ∀ᵐ x ∂μ,
+      HasDerivAt (fun s => w s x) (w' x) 0 ∧
+      HasDerivAt (fun s => scalarOf (R s x) (B s x)) (scalar' x) 0 ∧
+      (∀ i j, HasDerivAt (fun s => B s x i j) (B' x i j) 0) ∧
+      (∀ i j, HasDerivAt (fun s => R s x i j) (R' x i j) 0) ∧
+      (∀ i j, R 0 x i j = 0))
+    (hbound : ∀ᵐ x ∂μ, ∀ s ∈ u, ‖L' s x‖ ≤ bound x)
+    (hbound_int : Integrable bound μ) :
+    let L := fun s x => w s x *
+      (a * scalarOf (R s x) (B s x) ^ 2 + b * ricciSquare (B s x) (R s x))
+    (∀ᶠ s in 𝓝 (0 : ℝ), AEStronglyMeasurable (L s) μ) →
+    Integrable (L 0) μ →
+    (∀ᵐ x ∂μ, ∀ s ∈ u, HasDerivAt (fun t => L t x) (L' s x) s) →
+    HasDerivAt (fun s => ∫ x, L s x ∂μ) 0 0 := by
+  dsimp only
+  intro hmeas hint hdiff
+  refine integral_first_variation_zero μ _ L' u bound hu hmeas hint
+    hbound hbound_int hdiff ?_
+  filter_upwards [hBase, hdiff] with x hx hdx
+  rcases hx with ⟨hw, hS, hB, hR, hflat⟩
+  exact (hdx 0 (mem_of_mem_nhds hu)).unique
+    (densitized_ricci_terms_first_variation (fun s => w s x)
+      (fun s => B s x) (fun s => R s x) (w' x) (scalar' x)
+      (B' x) (R' x) 0 a b hw hS hB hR hflat)
+
+/-- Action on a fixed chart integration domain. Integrability and equality
+of the component integrals are analytic, not consequences of Ricci flatness. -/
+noncomputable def localQuadraticAction {X : Type*} [MeasurableSpace X]
+    (μ : Measure X) (w S Q K : ℝ → X → ℝ) (a b c : ℝ) (s : ℝ) : ℝ :=
+  ∫ x, w s x * (a * S s x ^ 2 + b * Q s x + c * K s x) ∂μ
+
+theorem localQuadraticAction_split {X : Type*} [MeasurableSpace X]
+    (μ : Measure X) (w S Q K : ℝ → X → ℝ) (a b c s : ℝ)
+    (hEuler : Integrable (fun x => w s x * gaussBonnet4D (S s x ^ 2) (Q s x) (K s x)) μ)
+    (hRicci : Integrable (fun x =>
+      w s x * ((a - c) * S s x ^ 2 + (b + 4 * c) * Q s x)) μ) :
+    localQuadraticAction μ w S Q K a b c s =
+      c * (∫ x, w s x * gaussBonnet4D (S s x ^ 2) (Q s x) (K s x) ∂μ) +
+      ∫ x, w s x * ((a - c) * S s x ^ 2 + (b + 4 * c) * Q s x) ∂μ := by
+  unfold localQuadraticAction
+  simp_rw [quadratic_density_split]
+  rw [integral_add (hEuler.const_mul c) hRicci, integral_const_mul]
+
+end RicciFlatVariation
 
 end SKEFTHawking.HigherCurvatureStructure
 
