@@ -1,0 +1,7 @@
+{
+  "base": "d2941d0f8",
+  "tex_sha256": "224b4b4917c7fd00eff5d2b11369c5c79e9c48963fac93eb5439fff7800871e2",
+  "pdf_sha256": "a467535118eca293b8f295786327c67a47c15ac76b868c171c33daf22e479af6",
+  "compile": "4 pages;0 overfull;0 TeX errors;0 unresolved references",
+  "scope": "Typesetting and section-pointer repair; physical BUILD and full stage acceptance remain open"
+}

@@ -110,7 +110,7 @@ Its relative width is $4\tau/9.9 \approx 1.2\times10^{-15}$;
 a probability mass additionally requires a specified prior. The result is a fine-tuning constraint on one specific
 kinematic identification, not a refutation of emergent
 gravity nor of the ADW program; we discuss three Phase~6 recovery
-paths in Sec.~\ref{sec:discussion}.
+paths in the Discussion.
 
 \paragraph{Relation to the 2017 constraint sweep.} Using GW170817 to
 eliminate a gravity model is not new. Within months of the detection,
@@ -132,7 +132,7 @@ difference is structural rather than one of degree. Every theory the
 2017 sweep reached has a Lagrangian from which a varying $\cGW$ is
 \emph{derived}; the constraint therefore lands on operator coefficients,
 and each Letter reports which coefficients survive. This Letter supplies no microscopic Lagrangian for the
-vestigial-second-sound identification. As Sec.~\ref{sec:intro} notes,
+vestigial-second-sound identification. As the Introduction notes,
 $\cGW = c\sqrt{\chivest}$ is assumed kinematically, so this calculation
 does not constrain microscopic operator coefficients.
 What the bound constrains is $\chivest$: the compatible interval has
@@ -149,7 +149,7 @@ analyze whether the operator-level mechanisms discussed in those
 theories alter the effective speed law or its applicability. A
 microscopic realization would require that separate analysis.
 The three recovery paths in
-Sec.~\ref{sec:discussion} can supply a mechanism fixing $\chivest$
+the Discussion can supply a mechanism fixing $\chivest$
 within the compatible interval, or modify the identification or its
 leading-order assumptions. A fixed-point mechanism can preserve the
 speed law; the finite-tolerance constraint alone derives none of
@@ -217,7 +217,7 @@ GW170817-compatible window has width exactly $4\tau =
 strictly inside it
 (\texttt{ligo\_window\_subset\_natural\_range}), not disjoint from it.
 Scaling the window up by $10^{14}$ still leaves it the narrower
-(\texttt{ligo\_window\_width\_lt\_natural\_range\_width\_by\_1e14}):
+(\path{ligo_window_width_lt_natural_range_width_by_1e14}):
 that ratio, not a disjointness, is the fine-tuning claim.
 Two endpoint-falsifier theorems sharpen the exclusion of the extremes.
 
@@ -245,8 +245,8 @@ fail \verb|LigoSatisfied| simultaneously.
 
 The identification hypothesis itself is refuted pointwise rather than
 only at the observable:
-\verb|H_VestigialModeIsGraviton_fails_at_natural_lower| and
-\verb|H_VestigialModeIsGraviton_fails_at_natural_upper| refute it at the
+\path{H_VestigialModeIsGraviton_fails_at_natural_lower} and
+\path{H_VestigialModeIsGraviton_fails_at_natural_upper} refute it at the
 two endpoints, and
 \verb|H_VestigialModeIsGraviton_fails_at_zero| and
 \verb|H_VestigialModeIsGraviton_fails_at_quarter| refute it at
@@ -378,7 +378,7 @@ The formal probe is numerical $\omega=100$; interpreting it as a
 $100\,\mathrm{Hz}$ band and setting $\gamma=\Gamma_H/\cGW^2$ are
 modeling assumptions requiring physical normalization and
 microscopic matching.
-\texttt{vestigial\_dispersion\_below\_ligo\_at\_inspiral\_peak}
+\path{vestigial_dispersion_below_ligo_at_inspiral_peak}
 assumes $|\gamma|\leq10^{-30}$ and proves that
 $|\delta_{\rm disp}|$ at that numerical probe is below the
 GW170817 tolerance.
@@ -398,7 +398,7 @@ exchanges the correction's tolerance for
 $|\gamma|\leq\mathrm{tol}/\omega$.
 \texttt{dispersion\_correction\_abs\_bound},
 \texttt{dispersion\_correction\_linear\_in\_gamma} and
-\texttt{dispersion\_correction\_zero\_at\_no\_dissipation} describe
+\path{dispersion_correction_zero_at_no_dissipation} describe
 the product's magnitude, additivity in $\gamma$ and zero-coefficient
 limit.
 Deriving $\Gamma_H$ and the normalization of this ansatz from
@@ -429,7 +429,7 @@ theorems, zero \texttt{sorry}, zero new axioms, zero
 Mathlib4 commit; the Python layer is \texttt{src/gravitational\_waves/}
 with 81 \texttt{pytest} cases cross-checking every numeric quoted
 in the abstract and figure caption. The headline figure
-(\texttt{src/core/visualizations.py:fig\_c\_GW\_vs\_ligo\_constraint})
+(\path{src/core/visualizations.py:fig_c_GW_vs_ligo_constraint})
 and its underlying numerics are committed-pinned.
 
 %% ================================================================

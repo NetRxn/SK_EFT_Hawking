@@ -156,3 +156,13 @@ near-boundary condition. These corrections do not discharge the original BUILD
 obligations. Compile: four pages, zero TeX errors/unresolved references, six
 overfull boxes. Independent review and canonical stage reevaluation remain owed.
 Evidence: `papers/AutomatedReviews/2026-11-05-l1-reviewed-manuscript-reconciliation/`.
+
+
+## 2026-11-05: repair L1 identifier overflow and section pointers
+
+Use breakable path typesetting for the six overflowing identifiers/paths,
+preserving their exact spelling, and refer to unnumbered REVTeX sections by
+their displayed names. The original layout invariant failed with six
+overfull boxes; the repaired four-page compile reports zero overfull boxes,
+zero TeX errors and zero unresolved references. Whole-page independent
+rendered verification and canonical closure are required separately.
