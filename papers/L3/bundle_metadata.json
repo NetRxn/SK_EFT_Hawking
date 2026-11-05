@@ -63,7 +63,7 @@
     },
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.falsifier_alpha_ADW_dependence",
-      "claims": "falsifier: δ_ADW must depend on α_ADW via the Wave-9 ansatz, not be a free parameter",
+      "claims": "falsifier: (α_ADW − 1)Λ_UV is strictly positive when α_ADW > 1",
       "declared": "2026-08-07"
     }
   ],
