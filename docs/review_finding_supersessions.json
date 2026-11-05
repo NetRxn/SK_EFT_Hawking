@@ -10518,6 +10518,81 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-figure-propagation:L1:1.1",
+      "status": "fixed",
+      "evidence": "Author repair at e196381b7 preserves exact three-trace science data and shapes, makes print labels readable, propagates identical PNGs to four consumers, corrects the held Abbott equation anchor, and repairs source compilation/column overflow. All original declared Verify commands run through this writer; original RED and repaired GREEN receipts are preserved. Independent actual PNG/PDF/data/source reviews accept focused1.1-1.5: papers/AutomatedReviews/2026-11-05-l1-figure-propagation/INDEPENDENT_REPAIRED_FIGURES.md and INDEPENDENT_FINAL_SOURCE_LAYOUT.md. This closes only these concrete defects, not the source-paper scientific propagation blocker, whole stages, physical B3 or publication acceptance.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/INDEPENDENT_FINAL_SOURCE_LAYOUT.md",
+      "date": "2026-11-05",
+      "commit": "e196381b7",
+      "verified_by": {
+        "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from src.core.visualizations import fig_c_GW_vs_ligo_constraint; f=fig_c_GW_vs_ligo_constraint(); effective_pt=min(a.font.size for a in f.layout.annotations)*240/f.layout.width; print(effective_pt); assert effective_pt >= 6, \"endpoint annotations fall below conservative 6pt review reading floor\"'",
+        "declared": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from src.core.visualizations import fig_c_GW_vs_ligo_constraint; f=fig_c_GW_vs_ligo_constraint(); effective_pt=min(a.font.size for a in f.layout.annotations)*240/f.layout.width; print(effective_pt); assert effective_pt >= 6, \"endpoint annotations fall below conservative 6pt review reading floor\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-figure-propagation:L1:1.2",
+      "status": "fixed",
+      "evidence": "Author repair at e196381b7 preserves exact three-trace science data and shapes, makes print labels readable, propagates identical PNGs to four consumers, corrects the held Abbott equation anchor, and repairs source compilation/column overflow. All original declared Verify commands run through this writer; original RED and repaired GREEN receipts are preserved. Independent actual PNG/PDF/data/source reviews accept focused1.1-1.5: papers/AutomatedReviews/2026-11-05-l1-figure-propagation/INDEPENDENT_REPAIRED_FIGURES.md and INDEPENDENT_FINAL_SOURCE_LAYOUT.md. This closes only these concrete defects, not the source-paper scientific propagation blocker, whole stages, physical B3 or publication acceptance.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/INDEPENDENT_FINAL_SOURCE_LAYOUT.md",
+      "date": "2026-11-05",
+      "commit": "e196381b7",
+      "verified_by": {
+        "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'import hashlib,pathlib; bad={\"83200753ed0c13a2d47a3b2447fe9e0b93a1d8af52b003314f50c935fed013f2\",\"653775690d300e8d74de3e2a813ba5969fbc7ecfe4936578624e997546312176\"}; paths=[pathlib.Path(\"papers/D3/figures/fig_c_GW_vs_ligo_constraint.png\"),pathlib.Path(\"papers/paper25_gravitational_waves/figures/fig_c_GW_vs_ligo_constraint.png\")]; assert not any(hashlib.sha256(p.read_bytes()).hexdigest() in bad for p in paths), \"known visually incorrect stale PNG artifacts remain\"'",
+        "declared": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'import hashlib,pathlib; bad={\"83200753ed0c13a2d47a3b2447fe9e0b93a1d8af52b003314f50c935fed013f2\",\"653775690d300e8d74de3e2a813ba5969fbc7ecfe4936578624e997546312176\"}; paths=[pathlib.Path(\"papers/D3/figures/fig_c_GW_vs_ligo_constraint.png\"),pathlib.Path(\"papers/paper25_gravitational_waves/figures/fig_c_GW_vs_ligo_constraint.png\")]; assert not any(hashlib.sha256(p.read_bytes()).hexdigest() in bad for p in paths), \"known visually incorrect stale PNG artifacts remain\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-figure-propagation:L1:1.3",
+      "status": "fixed",
+      "evidence": "Author repair at e196381b7 preserves exact three-trace science data and shapes, makes print labels readable, propagates identical PNGs to four consumers, corrects the held Abbott equation anchor, and repairs source compilation/column overflow. All original declared Verify commands run through this writer; original RED and repaired GREEN receipts are preserved. Independent actual PNG/PDF/data/source reviews accept focused1.1-1.5: papers/AutomatedReviews/2026-11-05-l1-figure-propagation/INDEPENDENT_REPAIRED_FIGURES.md and INDEPENDENT_FINAL_SOURCE_LAYOUT.md. This closes only these concrete defects, not the source-paper scientific propagation blocker, whole stages, physical B3 or publication acceptance.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/INDEPENDENT_FINAL_SOURCE_LAYOUT.md",
+      "date": "2026-11-05",
+      "commit": "e196381b7",
+      "verified_by": {
+        "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'import scripts.review_figures as r; s=next(s for s in r.FIGURE_REGISTRY if s.name==\"fig_c_GW_vs_ligo_constraint\"); assert \"Eq. (1)\" in s.caption, \"held Abbott L13 p6 speed bound is Eq.(1), not Eq.(5)\"'",
+        "declared": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'import scripts.review_figures as r; s=next(s for s in r.FIGURE_REGISTRY if s.name==\"fig_c_GW_vs_ligo_constraint\"); assert \"Eq. (1)\" in s.caption, \"held Abbott L13 p6 speed bound is Eq.(1), not Eq.(5)\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-figure-propagation:L1:1.4",
+      "status": "fixed",
+      "evidence": "Author repair at e196381b7 preserves exact three-trace science data and shapes, makes print labels readable, propagates identical PNGs to four consumers, corrects the held Abbott equation anchor, and repairs source compilation/column overflow. All original declared Verify commands run through this writer; original RED and repaired GREEN receipts are preserved. Independent actual PNG/PDF/data/source reviews accept focused1.1-1.5: papers/AutomatedReviews/2026-11-05-l1-figure-propagation/INDEPENDENT_REPAIRED_FIGURES.md and INDEPENDENT_FINAL_SOURCE_LAYOUT.md. This closes only these concrete defects, not the source-paper scientific propagation blocker, whole stages, physical B3 or publication acceptance.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/INDEPENDENT_FINAL_SOURCE_LAYOUT.md",
+      "date": "2026-11-05",
+      "commit": "e196381b7",
+      "verified_by": {
+        "command": "python3 scripts/compile_bundle_pdf.py paper25_gravitational_waves --force",
+        "declared": "python3 scripts/compile_bundle_pdf.py paper25_gravitational_waves --force",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-figure-propagation:L1:1.5",
+      "status": "fixed",
+      "evidence": "Author repair at e196381b7 preserves exact three-trace science data and shapes, makes print labels readable, propagates identical PNGs to four consumers, corrects the held Abbott equation anchor, and repairs source compilation/column overflow. All original declared Verify commands run through this writer; original RED and repaired GREEN receipts are preserved. Independent actual PNG/PDF/data/source reviews accept focused1.1-1.5: papers/AutomatedReviews/2026-11-05-l1-figure-propagation/INDEPENDENT_REPAIRED_FIGURES.md and INDEPENDENT_FINAL_SOURCE_LAYOUT.md. This closes only these concrete defects, not the source-paper scientific propagation blocker, whole stages, physical B3 or publication acceptance.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-l1-figure-propagation/INDEPENDENT_FINAL_SOURCE_LAYOUT.md",
+      "date": "2026-11-05",
+      "commit": "e196381b7",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok, report, pages = compile_one(Path(\"papers/paper25_gravitational_waves\"), force=True); print(report); assert ok and \"overfull=0 \" in report'",
+        "declared": "python3 -c 'from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok, report, pages = compile_one(Path(\"papers/paper25_gravitational_waves\"), force=True); print(report); assert ok and \"overfull=0 \" in report'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }

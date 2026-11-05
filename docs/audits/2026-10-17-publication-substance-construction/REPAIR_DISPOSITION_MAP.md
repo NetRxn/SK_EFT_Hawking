@@ -34,6 +34,22 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 current claims and figure propagation.** The current canonical catalog
+  has124 reviewed manuscript units, all114 predecessor records reconciled,
+  four retained blocker identities and49 supersession candidates with zero
+  automatic closures. The existing sentence-state writer preserves all
+  human states and prior audit bytes.
+  [Intake evidence](../../../papers/AutomatedReviews/2026-11-05-l1-current-claims/SCOPE.md)
+  and [five independently verified figure/typesetting repairs](../../../papers/AutomatedReviews/2026-11-05-l1-figure-propagation/SCOPE.md)
+  use the established artifacts and closure writer. The canonical PNG now
+  propagates identically to L1, D3 and its source, with readable print text.
+  The full [prose read-through](../../../papers/L1/prose_review.md) is BLOCK: the
+  required physical chain cannot be replaced by assumed-law interval algebra.
+  Next ROOT repairs remaining source mathematical propagation and builds the
+  exhaustive quoted-number/reference validation, while coordinating the
+  original B3/W1–W4 constructions with Executor. Full-body corroboration for
+  the four2017 attributions remains owed. No full stage or bundle is green.
+
 - **L1 reviewed manuscript and layout.** The historical microscopic/source/frequency
   corrections are restored without undoing the November numerical repairs.
   Independent source and all-four-page rendered reviews accept the scoped
@@ -887,17 +903,20 @@ factor dictionaries, original finite-word nonidentity source/action/spinor
 covariance and unit-Berezin bridge, full signed prepared-row XOR1, and actual
 per-monomial support/degree readback for all30 word/branch graphs. The
 [acceptance record](l1_k4_coupled_holonomy_161163_preparation_acceptance.json)
-binds source and original receipts. Coverage remains236/272; no contraction or
-new coefficient is accepted. The Executor's next selected-family construction
-supplies controlled fixed-label contractions with existing kernels and all15
-branches/both words. Gauge fixing applies to the full internally summed word
-before diagnostic fixed-gamma restriction; individual restricted components are
-not separately gauge invariant. Original limits remain. Independent fixed
-controls, complete contraction, reconstruction/replay and portable acceptance
-are still owed. This
-construction does not replace the full derivative-normalized source/action
-ensemble, common partition, physical B3 normalization/window, microscopic
-modes/matter coupling or transport/frequency/error obligations.
+binds source and original receipts. The subsequent
+[Executor handback](l1_coupled_fixed_diagnostics_checkpoint.md) independently
+accepts all15 fixed-label diagnostic branches for both words, with equal exact
+signed totals. Those restricted controls give no unrestricted coefficient or
+coverage credit; coverage remains236/272. The single unrestricted161 attempt
+fails at row120001 under the unchanged120000-row allowance before completing
+any branch. Raw sources, failures and independent reviews are preserved; no
+blind retry or increased limit is authorized. Gauge fixing applies to the full
+internally summed word before diagnostic restriction. Any next substantial
+construction is coordinated against the existing PR115/W1–W2 physical targets,
+not a duplicate ordering or optimization programme. Complete contraction,
+reconstruction/replay and portable acceptance remain owed. These controls do
+not replace the full derivative-normalized source/action ensemble, common
+partition, physical B3/window, microscopic modes/matter or transport matching.
 
 The [frozen01d72 broad qualification](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_01D72_QUALIFICATION.md)
 remains RED:7167passed/29failed/8skipped/92deselected. All prior failure

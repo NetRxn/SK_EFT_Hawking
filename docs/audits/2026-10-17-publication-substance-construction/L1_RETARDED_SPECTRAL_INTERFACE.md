@@ -9140,10 +9140,13 @@ and degree checks for every2,962,818 monomials, beyond degree metadata alone.
 The [acceptance record](l1_k4_coupled_holonomy_161163_preparation_acceptance.json)
 and bound original archives retain all attempts and review scopes.
 
-No scalar/action contraction or161/163 coefficient is accepted; coverage stays
-236/272. The Executor's next package supplies controlled fixed-label
-contractions and independent verification using existing kernels and original
-limits before any unrestricted pilot. Gauge fixing precedes fixed-gamma
-diagnostic restriction on the full internally summed word; a restricted
-component is not separately gauge invariant. Full physical/Lean/ensemble,
-main and publication obligations remain open.
+The subsequent [fixed-diagnostic handback](l1_coupled_fixed_diagnostics_checkpoint.md)
+accepts both complete15-branch restricted controls with equal exact signed
+totals. It also preserves the single failed unrestricted161 attempt: the
+unchanged120000-row guard triggers at120001 before any branch completes.
+No unrestricted161/163 coefficient or portable coverage increment is accepted;
+coverage stays236/272. Gauge fixing precedes diagnostic restriction on the full
+internally summed word; a restricted component is not separately gauge
+invariant. Next substantial construction is coordinated through the existing
+physical roadmap and prior work, not an unchanged retry. Full physical/Lean/
+ensemble, main and publication obligations remain open.
