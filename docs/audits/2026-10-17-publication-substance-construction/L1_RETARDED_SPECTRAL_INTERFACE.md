@@ -6471,3 +6471,25 @@ moved the cap to a site-1 join that closes no site. Neither route
 reached a supported leaf. The next comparison must preserve the
 complete conditioned label sum, the same exact scale and divisor,
 and the existing cap.
+
+Conditioning on the shared site-1 gamma label gave the exact
+intersection `[(0,), (1,), (2,), (3,)]` at its two incidences.
+In the first slice, the join that closes site 10 emitted
+120,001 slots before completing, above the unchanged 120,000
+cap. The two operands had 15,552 and 336 rows and no common
+ordinary label at that join. The unclosed grades on sites
+1, 2, 9, and 11 are all four. No slice reached the exterior
+roster. The next attempt tests alternate exact join orders
+within each conditioned slice.
+
+**Minority-map census.** Independent review verified 576
+distinct occurrences across six primitives, using 506 indexed
+and 70 additional legacy receipts. The two 36-row primitives
+each occur 144 times. The two 72-row and two 162-row primitives
+each occur 72 times. Each occurrence reconstructs the exact B
+digest from its primitive and signed scale. Within each
+primitive, holding all cut labels except the two at center 1
+fixed produces only singleton groups. The normalized full A
+center signatures are also distinct. Grouping on centers 1
+and 9 organizes the minority cases into eight-member blocks.
+That census alone leaves their scalar contractions open.
