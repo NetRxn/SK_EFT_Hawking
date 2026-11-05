@@ -207,9 +207,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   word. The reviewed source-supported cut now excludes 1,055,232
   tuples by preserving shared-edge support correlations and absorbing
   two fixed source factors. The reviewed full signed lower-block
-  census excludes 46,944 more. Evaluate the remaining 77,472 possible
-  survivors using the complementary upper and middle blocks.
-  The B census is now complete for all 77,472 retained tuples.
+  census excluded 46,944 more. Complementary upper and middle
+  joins completed the B census for all 77,472 retained tuples.
   It certifies 67,680 zeros and leaves 9,790 A closures after
   the two independently verified nonzero controls.
   All 144 disjoint prefixes of the selected two-tuple A closure

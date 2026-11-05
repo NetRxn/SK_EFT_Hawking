@@ -6165,3 +6165,10 @@ full signed maps against the unfactored route, including
 the exact digests and signed scales. This is a reuse
 opportunity for B maps. Each subsequent A contraction must
 preserve its own cut coordinates and signed B scale.
+
+Regenerate the seven verified representatives using B roster
+indices 4737, 12916, 12946, 13156, 13204, 51076, and 51412.
+The recovered primitive maps have 208, 36, 162, 72, 36, 72,
+and 162 rows respectively. A separate check reconstructed
+each exact map from its primitive rows and signed scale and
+reproduced both receipt digests.
