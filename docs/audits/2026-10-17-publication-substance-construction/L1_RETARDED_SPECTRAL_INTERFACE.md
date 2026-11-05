@@ -7972,3 +7972,12 @@ no caps. Both counterpart orbits were already counted.
 
 The second control uses the proper signed witness from gamma
 slice 0 to slice 1, with slices 2 and 3 evaluated directly.
+
+The [(20,7) control](l1_gamma_20_7.out.txt) tests the second
+pinned roster. Independent review checked 256 ordered direct
+selectors, 16 terminal shards, four singleton witnesses, and
+exact raw equality to (16,3). The whole-component subtotal is
+`-744421773825188613/1180591620717411303424` with zero imaginary
+part and no caps. The full receipt SHA-256 is
+`d4cbcf5120e2ca1b57f134662cf3420940196e715d9749b54aeb3759410f5c1c`.
+The orbit was already counted.
