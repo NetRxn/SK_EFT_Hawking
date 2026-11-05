@@ -6597,3 +6597,30 @@ with zero imaginary part. The suffix stdout SHA-256 is
 It used the repository runner at `ca1ec11ab`. Independent review
 reproduced the earlier source hash by reverting only the receipt
 header and CLI help changes.
+
+**Complete 72-row minority control.** For indices 13,156 and
+13,158, the repository assembly regenerated the same signed
+72-row B map for both words. The projected roster has 2,304
+leaves and SHA-256
+`d5130984b0161d7589797ce8ed832e26bc247eec0435a485e940728779e47535`.
+The first replay reached the wall limit after 1,869 exact leaves.
+The disjoint suffix exited zero with 435 exact leaves. Independent
+review matched their ordered union to the full roster. There are
+1,440 zero, 720 positive and 144 negative leaves, with 940,032
+complementary pairs. The joint contribution is
+`871859979116847/144115188075855872` with zero imaginary part.
+The prefix and suffix stdout SHA-256 values are
+`73693f6f3d80a378c2294099719f12e6712a43cdea7de4a3149eed837084f7f8`
+and
+`377a439ccde40c7d4f71686e3ac5a8ba3e3de1e1223d588c40444b2cba1c302b`.
+
+**Conditioned site-10 query.** For the first weighted selector,
+the indexed search reaches its visit limit on boundary query 186.
+Independent review verified an exact split of that complement
+query over the joint values of `gamma(11,3)` and `q(11,3)`.
+Each label occurs at the same two factors, and intersecting the
+paired supports yields 16 disjoint slices. All 16 slices finish
+with zero matching products and no cap. This certifies zero for
+the queried complement. The outer diagnostic stops at this query
+and supplies no scalar for the selector. The raw stdout SHA-256
+is `ef8951148298f1830af9a7ecb64e379660df1946c1c15f0142d0ee470cc415ab`.
