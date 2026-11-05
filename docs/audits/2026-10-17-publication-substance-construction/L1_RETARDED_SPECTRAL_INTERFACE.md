@@ -6544,3 +6544,28 @@ exterior complement sign. The actual weighted target reached the
 15,552-by-336 site-10 cut. The fixture qualifies the arithmetic
 on that control; the target result and its unfactored comparison
 remain open.
+
+The suffix for minority indices 34 and 35 exited zero and
+covered all 1,056 remaining leaves exactly. It contributed
+`12247898554369863/4611686018427387904` with zero imaginary part.
+Its stdout SHA-256 is
+`e3f3a2218f94847842465a197a921f9a7ff0b501bf5a648a97f23c141e59581f`.
+Independent review matched the combined 2,304 ordered leaves
+to the full roster digest above. The union has 1,440 zero,
+720 positive and 144 negative leaves. The pair contributes
+`3340335969373599/576460752303423488` with zero imaginary part
+to the word sum.
+
+The independently source-reviewed [generic minority runner](l1_unpaired_A_minority_pair.py)
+takes the explicit two coordinates, expected exact B hash and
+optional roster hash. It regenerates both B maps and checks the
+center-11 incidence. An empty range is a roster census. For
+indices 4 and 5, a separate 36-row primitive control exercised
+the runner over `[0,32)` and gave
+`21945749275359/18446744073709551616` with zero imaginary part.
+The roster matched the 2,304-leaf digest above. The control
+stdout SHA-256 is
+`eeb79d035184857c414e71a69cb2f6a4f18c6ac2542bbbd275cd1c7172c9c98f`.
+That run used source SHA-256
+`47c80de136832690718858f964ebcf903e2038859ba8a717cc90478ebce3dcd0`
+before the tuple/range receipt header and census help were added.
