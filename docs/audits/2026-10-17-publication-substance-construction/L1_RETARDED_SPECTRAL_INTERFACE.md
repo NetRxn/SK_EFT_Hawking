@@ -9011,9 +9011,75 @@ established by the actual runner and complete gamma tables. No raw receipt
 was rewritten. Evaluator SHA256:
 `1fdb5cdbb3495ff0362902f9c0cec3cb1564040c4084ed4988e8b9e73899ebe9`.
 
-Portable accepted coverage is232/272 selected words:138 same-axis and94
-mixed-axis. Forty remain:26 same-axis and14 mixed-axis. The next assignment
-classifies these exact residual cores before choosing another construction.
-Complete k4, the full derivative-normalized source/action ensemble, common
-partition normalization, physical B3 susceptibility/window, microscopic modes,
-transport, main integration and publication acceptance remain open.
+This class brought portable accepted coverage to232/272 selected words.
+The shared square/protected-free-tori pair below supplies the next disjoint
+class. Complete k4, the full derivative-normalized source/action ensemble,
+common partition normalization, physical B3 susceptibility/window, microscopic
+modes, transport, main integration and publication acceptance remain open.
+
+
+## Shared square, protected torus and free torus
+
+The [portable evaluator](l1_extended_offset_witness_k4_shared_square_protected_free_tori.py)
+completes same-axis110/153. Both ordered sources are fixed jointly on the
+square's three-edge forest. The square and protected torus share one source
+link; the additional free torus has disjoint Haar variables. The conditional
+curvature tensors therefore use every protected15/free3 product, while all
+action, gamma and Grassmann couplings remain in one global contraction.
+All fifteen paired action vertices and sixteen Grassmann sites remain.
+The omitted action center4/5 still receives source and incoming coframes.
+The fixed action edge4–5 has one center label5/4 here, unlike the earlier
+connected pair's two-label edge. E20, J0 and six peeled curvature pairs give
+the divisor `192^42 * 4^64 * 48^6 * 2^15`.
+
+The [design](l1_k4_shared_square_protected_free2_design_review.md),
+[direct controls](l1_k4_shared_square_protected_free2_direct_review.md) and
+[fixed-label verification](l1_k4_shared_square_protected_free2_fixed_verification.json)
+retain both source polynomials, nonidentity forest covariance, quaternion
+coefficients, full45-term products, singleton fixed/live moments and all
+center/domain/site-degree checks. Every fixed word has fifteen nonempty and
+thirty algebraically empty preparations. These are support results, not
+resource-failure substitutes. Every unrestricted word has45 nonempty
+preparations and eighteen actual computed raw-zero branches.
+
+The [scientific review](l1_k4_shared_square_protected_free2_review.md) and
+[independent reduction](l1_k4_shared_square_protected_free2_verification.json)
+verify every branch, source/action/domain and source-polynomial Grassmann
+permutation under XOR1. Each coefficient is
+`461966234549968960425/140737488355328`; the same-axis subtotal is
+`461966234549968960425/70368744177664`, without an extra shear/axis factor.
+The independent full110 replay matches all45 original raw terms. Actual peaks
+are5,632 and3,024 rows: elimination-order metrics need not be invariant under
+physical relabeling. Original row/pair and600/60/665 phase/parent caps remain.
+
+The [portable review](l1_k4_shared_square_protected_free2_portable_review.md)
+verifies all six original scientific ASTs and sixteen canonical siblings.
+Prepared tables are reused through the entire45-term contraction. Installed
+census, fixed controls and full110 CLI exit0. The full CLI takes35.716621
+seconds under a60-second whole-process limit; its preparation19.363071 and
+whole45 warm10.380316 seconds satisfy the original phase bounds.
+Evaluator SHA256:
+`0cf1a5ad661240a518c1f03d66f53b71ca7d25b26dca687614ad82b7c33f73a1`.
+
+The [94-file original archive](l1_k4_shared_square_protected_free2_evidence.zip),
+[manifest](l1_k4_shared_square_protected_free2_manifest.json) and
+[archive review](l1_k4_shared_square_protected_free2_archive_review.md) preserve
+all original streams and failures. The first independent replay stopped before
+contraction on tuple/int-key versus serialized JSON comparison; only that
+checker comparison was normalized for its successful new attempt. The original
+110 driver copied a fixed-branch record counter and reported zero, while
+stdout contains all45 unrestricted branches. Original bytes remain; strict
+independent reduction establishes actual execution and the annotation. New153
+metadata passes an AST/mock contract check. The separate
+[final-reader evidence](l1_k4_shared_square_protected_free2_archive_checks.zip)
+preserves a checker-only receipt-field alias correction without changing the
+accepted scientific archive or rerunning a coefficient.
+
+Portable accepted coverage is234/272 selected words:140 same-axis and94
+mixed-axis. Thirty-eight remain:24 same-axis and14 mixed-axis. Next79/81
+uses an independently accepted square/two-protected-tori225-branch source,
+with second gamma slots and transposed branch roles; direct/fixed controls
+precede any pilot. The161/163 opposite-link cycle needs a separate coupled
+holonomy construction. Full k4, full source/action ensemble, common partition
+normalization, physical B3/window, microscopic modes, transport, main and
+publication acceptance remain open.

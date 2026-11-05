@@ -324,12 +324,14 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   [both-source square/free-torus pair](L1_RETARDED_SPECTRAL_INTERFACE.md#both-sources-on-one-square-with-a-free-torus), and the
   [two-square protected-torus class](L1_RETARDED_SPECTRAL_INTERFACE.md#two-squares-and-a-source-bearing-protected-torus), plus the
   [two-source-bearing-tori class](L1_RETARDED_SPECTRAL_INTERFACE.md#two-independently-source-bearing-tori), and the
-  [connected square/source-bearing-torus pair](L1_RETARDED_SPECTRAL_INTERFACE.md#connected-square-and-source-bearing-torus),232 of272
+  [connected square/source-bearing-torus pair](L1_RETARDED_SPECTRAL_INTERFACE.md#connected-square-and-source-bearing-torus), and the
+  [shared square/protected-free-tori pair](L1_RETARDED_SPECTRAL_INTERFACE.md#shared-square-protected-torus-and-free-torus),234 of272
   words have portable accepted receipts and reviewed evaluators.
-  The40 remaining words split26 same-axis and14 mixed-axis.
-  The author has an accepted scratch-only assignment to classify this
-  exact residual population and derive the next complete core family;
-  factor preparation awaits independent design/control review.
+  The38 remaining words split24 same-axis and14 mixed-axis.
+  The next79/81 square/two-protected-tori construction has independently
+  accepted mathematical design and actual evaluator source; fixed/direct
+  controls precede an unrestricted pilot. Its opposite-link relatives
+  161/163 require a coupled-holonomy construction and remain owed.
   Complete k4 and physical B3 matching remain open.
   The remaining residual-core classes still require construction.
   The shared-Q and left-cache benchmarks
@@ -838,13 +840,13 @@ no state changes versus4b. L1 G11 remains blocked but falls to one blocking
 reference/seven open findings after IMPORTS closure. Physical natural B3 remains
 its blocking reference; source closure does not discharge that construction.
 
-The next scientific source-level design110/153 has independent acceptance:
-shared-source square/protected torus plus one free torus,45 branch products,
-E20/J0/six peeled pairs, retaining both sources/all action vertices/all physical
-Grassmann sites. Direct and fixed-label controls precede an unrestricted pilot.
-A fresh separate79/81 source-sharing/two-protected-tori225-branch design is under
-independent review, with actual second gamma slots and branch-role transpose.
-Neither design adds accepted coefficients to the current232/272 count.
+The110/153 shared-square/protected-free-tori class now has independently
+accepted complete coefficients, direct/fixed controls, independent full110
+replay, actual portable CLI and original archive. Portable coverage is234/272.
+The separate79/81 source-sharing/two-protected-tori225-branch mathematical
+design and actual evaluator source are independently accepted, including
+second gamma-slot routing and branch-role transpose. Its direct/fixed controls
+and coefficients remain unrun; it adds no accepted coefficient to that count.
 The independent delivery lane is reconciling already reviewed managed-worktree
 portability history against the current planner path failure; use its accepted
 coherent source boundary and current verification, not a duplicate mechanism.
