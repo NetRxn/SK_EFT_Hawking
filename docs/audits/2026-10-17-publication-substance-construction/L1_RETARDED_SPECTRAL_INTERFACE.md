@@ -9127,3 +9127,23 @@ source/action factors and original resource bounds. Intermediate contraction
 width/performance remain unmeasured; no raised cap or omitted channel is
 authorized. Fullk4/common partition, physicalB3/window, microscopic dynamics/
 matter coupling, transport, main and human/publication acceptance stay open.
+
+
+## Coupled161/163: accepted finite covariance and prepared graphs
+
+The [source/covariance/preparation checkpoint](l1_k4_coupled_holonomy_161163_preparation_checkpoint.md)
+records independent acceptance of the exact47-factor scratch constructor, all
+actual scalar-factor dictionaries, the original finite-word nonidentity
+source/action/spinor covariance and unit-Berezin forest bridge, and complete
+signed-XOR1 prepared graphs. Thirty both-word/branch graphs have actual support
+and degree checks for every2,962,818 monomials, beyond degree metadata alone.
+The [acceptance record](l1_k4_coupled_holonomy_161163_preparation_acceptance.json)
+and bound original archives retain all attempts and review scopes.
+
+No scalar/action contraction or161/163 coefficient is accepted; coverage stays
+236/272. The Executor's next package supplies controlled fixed-label
+contractions and independent verification using existing kernels and original
+limits before any unrestricted pilot. Gauge fixing precedes fixed-gamma
+diagnostic restriction on the full internally summed word; a restricted
+component is not separately gauge invariant. Full physical/Lean/ensemble,
+main and publication obligations remain open.
