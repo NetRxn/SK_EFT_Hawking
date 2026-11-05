@@ -1,0 +1,24 @@
+{
+  "archive": "cubic_metric_support_evidence.zip",
+  "bytes": 45446,
+  "members": 14,
+  "sha256": "bb8acaad7ceecd8d07c36f4bdfe80e4a4212de4bb63214f5859baa1426facd4a",
+  "accepted_source_sha256": "ab4259858312b3fc8fe86d1a19c2461a87445357aaa2646c3af7684b134521b2",
+  "files": {
+    "review/l1-leading-metric-cubic-intake-r1.md": "66328a6f18f3d298ba1cab60ca7a50108fa7b7fd24615617bde1044e6c55ba05",
+    "review/l1-leading-metric-cubic-math-review-r1.md": "ec4ad04e9f337712a6c68a72d6719ad8b7a4063d03e4c5e330de770b28466a20",
+    "review/l1-leading-metric-cubic-math-review-r2.md": "05c0835b79a556d8b96d035de15edb6de62d9e018ee1d69ddf49465c6ae2a193",
+    "review/l1-leading-metric-cubic-physics-review-r1.md": "b8e7131087c4489678eb3103e167095514c497d956d1b1813da78c9987fc325d",
+    "review/l1-leading-metric-cubic-physics-review-r2.md": "09ac9d3e816dd166cabd760d0c73c23233c353292d2327ab591204e1dea2bdd3",
+    "review/l1-leading-metric-dirac-design-review-r1.md": "a2706dfcfce3db3e6f108f93b8ee045a14d48090057de99b4a379b2928fd33b1",
+    "source/COLLECTIVE_BODY_PARITY.md": "f6e624715ddbf95866064f10feb0cacd373530afd1204083808441c71690becb",
+    "source/CUBIC_METRIC_SUPPORT_R1.md": "089a56545ab44e04def4d5923083f0420006c30478d02a57b091c80580cea55a",
+    "source/CUBIC_METRIC_SUPPORT_R2.md": "ab4259858312b3fc8fe86d1a19c2461a87445357aaa2646c3af7684b134521b2",
+    "source/DIRAC_LOOP_FACTORIZATION_R1.md": "fa30344e060a0d6af043f0efaf760023d40da192fe4d8000c982cb06eda54ff1",
+    "source/l1_interacting_support.py": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388",
+    "source/l1_mixed_g1_support.py": "0b419cda9fb84cbebbbb81b42f985aad39d372985f8c8a5015fd79bca0770de8",
+    "source/leading.py": "7e39ae396c9bf15d6c0ffc49f7747049b1962aa7938460a4018ead9645bfbb10",
+    "source/support.json": "1419846c046e5dea8c8dfb8ada90fc0cf19b6c8c9d86673e05b97820f81131e3"
+  },
+  "scope": "Independently accepted manual finite support identities and same-regulator Euclidean SPD obstruction; prospective Dirac factorization design only; no full tensor or kernel/publication acceptance"
+}
