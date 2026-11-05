@@ -6377,3 +6377,18 @@ factor. The other A factors must still be accounted for before
 reusing any complete contraction. The reviewed scratch census
 stdout SHA-256 is
 `246d3bd6e12440d1adf4b34e5ec3f0f7100648a27c9b16fea70c56785c512aeb`.
+
+Independent review accepted the next 256 exact leaves with no caps
+on the same regenerated roster. Each imaginary subtotal is zero.
+
+| Prefix range | Exact subtotal | Raw JSONL SHA-256 |
+|---|---:|---|
+| `[21,25)` | `−91465338867385203/18889465931478580854784` | `2a80b16d55d15e05e58bfe2da37bda226b399408cf244fc35b159af634de2b0e` |
+| `[25,29)` | `−373654276764363/2361183241434822606848` | `0e18d422663466211852a7232ed39e7f1608f9f06b728f626641019be0a596c6` |
+| `[29,33)` | `−88476104653270299/18889465931478580854784` | `f37e3581be7c109e3e0b812d44d96ab880e9f991be7fd58309257abce6aa0fc8` |
+| `[33,37)` | `−91465338867385203/18889465931478580854784` | `1e47aec30ebb0bbc263d0de72ffb71abe1f08373573aead29a7e7f9167808d62` |
+
+The accepted union `[0,37)` now covers 592 distinct ordered
+leaves and gives `−274396016602155609/9444732965739290427392`.
+The new block subtotal equals the prior block by exact reduction.
+The remaining 35 prefixes still require evaluation and review.
