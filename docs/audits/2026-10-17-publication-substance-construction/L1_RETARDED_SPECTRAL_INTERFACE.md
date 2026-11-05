@@ -7175,3 +7175,19 @@ combined exact real contribution of these two orbits is
 The remaining 146 dominant orbits still require their own
 representative results. The next direct component `(0,1)`
 belongs to a separate six-member orbit.
+
+### Minority representatives 145 and 146
+
+Independent review verified 2,304 ordered exact leaves and 864
+nonzero contributions per representative, with zero imaginary
+part. Each raw sum reduces with its signed manifest scale to
+`-125576540202015/576460752303423488`.
+
+| Representative | Multiplicity | Raw receipt SHA-256 |
+|---:|---:|---|
+| 145 | 9 | `d6e2b275dd262c336ebe656d764a0d6400a4bd99cdc713219c14a90031abf1e6` |
+| 146 | 18 | `44dfeddc832fe650752680e08274397c31e1a26b98b03015979c08291653e21a` |
+
+These distinct orbits bring the reviewed subtotal to
+`152376168503857725/576460752303423488` across 180 of 288 pairs
+in 20 of 34 orbits. Fourteen representatives remain.
