@@ -120,27 +120,33 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   positive body or source projection is selected after evaluation. ADR008
   admission remains a separate fresh decision.
 
-- **Adopted next L1 physical milestone: complete-source temporal correspondence.**
-  ROOT adopts the independently reviewed
-  [sixteen-site construction contract](../2026-11-05-l1-physical-bridges/N16_SOURCE_STATE_CONSTRUCTION_CONTRACT.md)
-  at source `942c50adb`, following its mathematical and physics R2 assessment
-  acceptances. **Accepted owner: Executor. Next action:** derive the complete-source
-  temporal-boundary identity and completion criterion for the original closed
-  all-extended periodic action, reusing the accepted full-S4 signed Hermite
-  representation. Retain both periodic interfaces, fermion signs, all physical
-  sources and first/mixed-second contacts, and derive the required observable
-  algebra rather than selecting favorable directions. **Acceptance reviewers:**
-  producer-independent mathematical and physics/source reviewers, followed by
-  ROOT intake. **Required first evidence:** exact action/source/reflection/cut
-  correspondence and a complete roster of remaining boundary integrations and
-  indices, with a specified subsequent nonzero-normalization and state-positivity
-  certificate or source-matched negative witness. This adopts a source-level
-  construction, not a completed kernel, feasible evaluator, positive state or
-  evaluation admission. Full nonzero Z alone is insufficient; finite-regulator
+- **L1 temporal correspondence: first construction accepted and integrated.**
+  The [actual temporal-boundary identity](../2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md)
+  at source `7f8cf17b443e23fd253ab59be3047bb23c69c60e` completes the FIRST
+  manual source-level identity/completion-criterion milestone adopted from
+  contract `942c50adb`. Independent mathematical and physics/source reviews
+  accept the exact derivation; [publication intake](../2026-11-05-l1-physical-bridges/PUBLICATION_TEMPORAL_INTAKE_REVIEW.md)
+  accepts its full source correspondence with55 custody/source checks.
+  ROOT integrated it by normal merge `752d7eacfea1007fb83dc1d1820171c7084ad0e0`, preserving all
+  original histories and evidence. Both periodic interfaces, full signed S4
+  weight, all-subset fermionic minors, prescribed source contacts, reflection
+  conventions and actual physical-image algebra remain explicit.
+  **Accepted bounded construction owner: Executor. Next scientific target:**
+  full nonzero normalization and actual same-functional physical-image state
+  certification, or a source-matched negative witness on the required algebra.
+  ROOT has requested the concrete continuation contract and confirmation;
+  this entry does not invent acceptance of a new evaluation assignment.
+  **Acceptance reviewers:** producer-independent mathematical and physics/source
+  reviewers, then ROOT intake. **Required evidence:** complete action/source
+  correspondence, full normalization certificate and the required state pairing;
+  selected positive minors or nonzero Z alone are insufficient. No K coefficient
+  or full Z was evaluated, no positivity or thermal interpretation was proved,
+  and no implementation/evaluation or Lean admission is granted. Finite-regulator
   success would still leave physical matching, limits, B3, tensor and transport
   requirements open. The N4 full-tensor assignment remains openly owned and is
-  neither cancelled nor scientifically deferred. Original L1 readiness remains
-  ROOT-owned; no Lean lease, resource reservation or new infrastructure follows.
+  neither cancelled nor scientifically deferred. ROOT retains ordinary L1
+  authorship, source/Lean/Python repairs, independent review, canonical findings,
+  gates and publication integration. This is not a transfer of the rest of L1.
 
 - **Existing L1 normalization and transport debt: primary-source follow-through.**
   ROOT retains the original action/source/projector/species/regulator/subtraction
