@@ -17,9 +17,10 @@ the local namespace-classification failure in finding1.4. The targeted
 are source/extractor/evaluator evidence, not a full graph or native run.
 Current disposition: findings1.1 and1.3 have canonical fixed records.
 Finding1.1 is anchored at71f93c7f7;1.3 propagates the independently
-reviewed existing checkpoint. Finding1.2 remains open; finding1.4 is canonically fixed at06aacc0e2.
-The Formula-emission part of1.2 is restored, while its IMPORTS-edge
-part remains owed. Residual machinery changes require the existing
+reviewed existing checkpoint. Finding1.2 has an independently accepted residual IMPORTS implementation, pending
+canonical closure; finding1.4 is canonically fixed at06aacc0e2.
+The Formula-emission part of1.2 is restored. Its residual IMPORTS repair
+now has [accepted implementation evidence](IMPORTS_IMPLEMENTATION.md). Residual machinery changes require the existing
 architecture-change workflow.
 
 ## Existing repair recovered and integrated
@@ -64,8 +65,8 @@ describe the pre-integration diagnosis, not the current implementation.
 - **Location:** `scripts/build_graph.py::extract_formula_nodes`, `scripts/build_graph.py::extract_imports_edges`
 - **Observed:** Lowercase-only identifier expressions omit 26 of 436 public source functions. Four omitted GW functions are `c_GW_from_chi_vest`, `c_GW_deviation_from_c`, `c_GW_natural_range`, and `dispersion_correction_from_GammaH`. Actual extraction emits 410 Formula nodes. This is a producer omission, not evidence that the functions or their Lean substrate are missing.
 - **Expected:** The existing producer must represent actual public mixed-case identifiers and their direct import/call relations, while retaining private-helper exclusions and alias-resolution protections.
-- **Next action:** Lead reuses the integrated Formula enumeration and owns the residual IMPORTS caller/callee repair under architecture-change review. Add direct mixed-case-call regressions through the existing edge producer, preserve private-helper and alias protections, and review affected existing consumers. Preserve existing node and edge types; no parallel extractor or registry is required.
-- **Current disposition:** Existing structural Formula repair is integrated and emits all436 public functions. IMPORTS still uses the lowercase-only caller/callee predicates. The lead owes only this residual edge repair and its current review, not another Formula implementation.
+- **Next action:** Lead records the accepted residual repair through the canonical closure writer after its source checkpoint, then refreshes exact-head graph/gate evidence. Full qualification and main integration remain separate.
+- **Current disposition:** Existing structural Formula repair emits all436 public functions unchanged. The independently reviewed existing IMPORTS producer now emits109 direct edges: all93 prior dictionaries and the exact16 measured additions. Original scope defects, real production red/restoration and passing consumer evidence are preserved in [the implementation record](IMPORTS_IMPLEMENTATION.md). Closure is pending the source commit and writer enforcement; no runtime/scientific/full qualification is inferred.
 - **Verify:** `uv run python -c "import sys; sys.path.insert(0,'scripts'); from build_graph import extract_formula_nodes,extract_imports_edges; nodes=extract_formula_nodes(); expected={'c_GW_from_chi_vest','c_GW_deviation_from_c','c_GW_natural_range','dispersion_correction_from_GammaH'}; assert expected <= {n['name'] for n in nodes}; edges=extract_imports_edges({n['id'] for n in nodes}); assert any(e['source']=='formula:G_N_emergent' and e['target']=='formula:G_N_sakharov' for e in edges)"`
 
 ### 1.3 — MAJOR — G4 reports PASSED when its declared formula is absent
@@ -91,13 +92,13 @@ describe the pre-integration diagnosis, not the current implementation.
 - **Evidence:** `DEPENDENCY_FAILURE.txt` records one failure and four passes in the existing declaration suite. No repair or acceptance is asserted.
 - **Verify:** `uv run python -m pytest tests/test_dependency_declaration.py::test_every_third_party_import_is_declared -q`
 
-The Verify commands directly assert the missing requirements and fail
-against the current source. They are not evidence that these defects
-are fixed. Producer and evaluator regressions must also be added to the
-existing test suites during repair. Current
-L1 sentence targets have been separately corrected to exact source
-identifiers with scope qualifications. That source repair does not close
-any of the four findings above.
+The Verify commands assert the original missing requirements. Their original
+failures are preserved in the reproduction evidence; current passing results,
+independent reviews and canonical closure records must be read separately.
+Producer and evaluator regressions are part of the accepted repairs documented
+above. L1 sentence targets were separately corrected to exact source identifiers
+with scope qualifications. That sentence repair alone did not close these
+machinery findings.
 
 - **Current implementation evidence for1.4:** [Accepted design](NAMESPACE_SPEC_REVIEW.md)
   and [independent implementation review](NAMESPACE_IMPLEMENTATION_REVIEW.md)

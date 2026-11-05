@@ -1,0 +1,8 @@
+{
+  "kind": "same-built-population edge-removal downstream diagnostic",
+  "graph_sha256": "93ea9506d25e4821bd6671f07a3a62a297c7c4229a5fc65732eb13d54c1167a9",
+  "added_edge_count": 16,
+  "last_modified_deltas": [],
+  "gate_node_count": 704,
+  "scope": "Controlled removal of exact16 IMPORTS from one canonical full graph, then existing freshness annotation recomputed. This isolates relationship freshness propagation; not a second complete baseline build or new runtime evidence. Graph built at dirty R1 producer; R2 exact edge-set conservation separately verified. No PG sync or Lean refresh."
+}

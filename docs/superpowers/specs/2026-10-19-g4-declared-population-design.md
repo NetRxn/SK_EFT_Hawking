@@ -194,3 +194,98 @@ gates, genuinely nonauthor WHOLE implementation and intent review, canonical wri
 only for real changed inputs, existing closure writer and protected Git/main remain
 ROOT-owned release requirements. This design supplies no scientific, native,
 physical, bundle-stage, human-submission or publication acceptance.
+
+
+## D6.7 — Residual direct-call IMPORTS producer
+
+Status: specification and scoped implementation independently accepted. Current
+finding `review:2026-11-05-publication-computation-coverage:infra:1.2` owns this
+residue. Existing structural Formula/G4 implementation is not replaced.
+
+### Existing coverage and measured population
+
+The existing Formula helper owns module-level public sync/async identities,
+case/Unicode/decorator eligibility, source ordering and duplicate/parse diagnostics.
+At the pre-repair26d checkpoint, the call-edge producer instead scanned
+lowercase-only definition/body regexes. That source measurement gave436 definitions,93 existing edges
+and109 direct AST Name-call candidates, with16 missing pairs and no old edge
+outside that syntactic candidate set. The independent reconciliation records
+that the actual candidate bindings have no parameter/store/nested-definition
+collisions; two local imports are genuine same-module references, and a generator
+call must survive. This is a source diagnostic, not numerical correctness.
+Claims/adversarial reviewers continue to own scientific backing and inference;
+static call edges do not replace their review or create G4 test coverage.
+
+### Bounded lexical contract
+
+- Read/parse canonical formulas source without importing or executing it. Reuse
+  the existing public-definition eligibility/duplicate contract. Sharing a parsed
+  AST through the private helper is permitted only if its default behavior and
+  every existing Formula node remain unchanged.
+- Analyze each eligible caller's own function body. A direct `Call(Name(...))`
+  must resolve to an eligible module declaration or an explicit import from
+  `src.core.formulas` (including relative `.formulas`). Explicit import aliases
+  from that exact module may resolve by their declared original name; unrelated
+  imports, parameter/local-function/assignment shadows and arbitrary variable
+  aliases must not manufacture edges. Conflicting writers take precedence over
+  an otherwise valid self-import: parameter, store/delete, nested definition,
+  unrelated import or explicit global write in that caller prevents resolution.
+  All literal import facts for one spelling must agree on the eligible target.
+  The module override inventory records potential bindings/deletions outside an
+  eligible identity's own declaration, including imports and control-flow block
+  writes, without descending into unrelated callable/class bodies or treating
+  comprehension targets as module bindings. Type-only module annotations are not
+  value overrides. Any such additional module writer conservatively excludes the
+  affected caller/target; no statement-order, branch-sensitive, reflective or
+  dynamic rebinding analysis is claimed.
+- Use compiler lexical facts for function bindings and AST comprehension target
+  scopes. On Python3.14 list comprehensions can be inlined without a child symbol
+  table; generator-only global names can be absent from the enclosing function
+  table. The first comprehension iterable is evaluated in the outer scope;
+  targets shadow only the comprehension scope, including its later iterables,
+  conditions and result. Preserve unshadowed generator calls and ordinary calls
+  outside a comprehension that reuses the same target spelling.
+- Do not attribute nested function/lambda/class bodies to the outer Formula.
+  Their eagerly evaluated defaults/decorators and ordinary class headers are
+  visited in their actual definition-evaluation scope. Generic class bases and
+  keywords honor class type-parameter shadows; decorators and generic function
+  ordinary defaults retain their outer scope. Unsupported compiler-scope forms
+  produce a diagnosed refusal rather than an outer-scope guess. Type-parameter
+  bounds/defaults, deferred annotations and TypeAlias right-hand sides are not
+  eagerly executed caller bodies. Assignment values/evaluated target expressions
+  remain visited, excluding their deferred annotations. Public callers' own
+  defaults/decorators execute outside their bodies and are not caller edges.
+  Source/compiler-scope analysis failures are explicit diagnosed refusals, not
+  missing-data success.
+- Ignore attributes and unsupported dynamic call forms; no tail matching. Keep
+  `formula:<caller>` to `formula:<callee>`, type IMPORTS, both endpoint guards,
+  duplicate suppression, private exclusion and self-edge exclusion. Results are
+  deterministic static declaration references, not proof a path executes.
+
+### Acceptance and production control
+
+The actual corpus must conserve all93 old edge dictionaries and attribute exactly
+the independently verified sixteen missing pairs. Compare all existing Formula
+node dictionaries, not just counts. Independent fixture expectations exercise the
+real producer: mixed-case/Unicode/decorated/multiline/async callers and callees;
+comments, strings and definition-looking text; private/self/absent endpoints;
+parameter, assignment, unrelated import and nested callable shadows; explicit
+same-module imports/aliases; generator and inlined-comprehension target scopes;
+source read/parse/duplicate and diagnosed lexical failures. Include imported-then-
+assigned and explicit-global-write negatives, generic class-header shadows versus
+ordinary header/default/decorator positives, and deferred annotation/TypeAlias
+negatives; these are binding controls, not arbitrary alias propagation.
+
+Use the existing seed journal to remove one real mixed-case call in canonical
+formulas.py while retaining a comment/string decoy of its spelling. The actual
+known-present edge assertion must turn red under that mutation and return green
+after exact byte/mtime restoration. Do not import/execute altered scientific
+code, add fake Formula identities, loosen a ceiling or seed concurrently with a
+frozen graph/test qualification. Preserve full existing graph/gate consumers;
+IMPORTS is not a replacement for GROUNDED_IN or VERIFIES.
+
+ROOT owns code, findings and canonical writers. A nonauthor reviews specification,
+source, corpus/production evidence and actual whole composition. Existing
+registration-site probes are interpreted for an extractor, not used to invent
+an additional validate check. Main/full publication/scientific obligations remain
+open until their actual gates are met.

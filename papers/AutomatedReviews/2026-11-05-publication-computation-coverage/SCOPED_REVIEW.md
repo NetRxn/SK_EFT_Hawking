@@ -31,7 +31,7 @@ it cannot replace the full-precision ratio regression. The reviewer
 corrected the finding's test-class name before checkpoint. No scanner
 implementation or passing dependency suite is asserted.
 
-## Current integrated disposition
+## Integration checkpoint disposition
 
 The independent history assessment found the original reviewed
 G4/inventory implementation at1550f5ff1 with its public evidence
@@ -152,7 +152,7 @@ normalization is independently repaired after this frozen run; it does not
 rewrite the frozen37-case outcome or establish whole-tree/main acceptance.
 [IMPORTS source reconciliation](IMPORTS_RECONCILIATION.md) identifies sixteen
 missing actual calls among109 structural candidates versus93 existing edges;
-no implementation, settled specification or new gate result is asserted.
+that earlier source reconciliation predates the separately reviewed implementation below.
 
 
 The [976d focused readback](FROZEN_976D_REPAIRED_COHORT.json) subsequently verifies
@@ -161,3 +161,15 @@ source, with66pass/1intentional skip overall. The read-only Lean-dependency
 [preflight](FROZEN_976D_PREFLIGHT.txt) passes; no refresh/build or live-slot action
 was invoked. This targets repaired cases plus serializer controls, not the other
 34 frozen failures or whole-project/main/publication gates.
+
+
+## Independently accepted residual IMPORTS implementation
+
+[Implementation evidence](IMPORTS_IMPLEMENTATION.md) preserves specification-first
+review, all implementation review rounds, original red controls and actual
+production mutation/restore. The bounded existing producer retains436 Formula
+dictionaries and93 old edge dictionaries, adding exactly16 measured calls. The
+complete producer module passes130 cases with one skip and fifteen deselections;
+163 consumer cases pass. Static relationship coverage supplies no physical proof
+or runtime evidence. Source checkpoint, enforced finding closure and fresh
+canonical gate readback remain distinct from full/main/publication acceptance.

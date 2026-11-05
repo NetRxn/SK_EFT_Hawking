@@ -1,0 +1,26 @@
+{
+  "verdict": "CHANGES REQUIRED",
+  "packet": "publication-imports-implementation-review-r2.json",
+  "packet_fresh": true,
+  "producer_sha256": "f069f5461438e057df3ac3457c8c5905379fb14199143d14dbd227506f96bf9d",
+  "tests_sha256": "df1f1249607d2b30d873e8ef41c2296eb1b9aa1657cc4f5efbc391a6ff5dc822",
+  "resolved_findings": [
+    "I1 evaluated comprehension targets"
+  ],
+  "findings": [
+    {
+      "id": "I2",
+      "priority": 2,
+      "surface": "Calls.resolve compiler-local exclusion across inlined comprehensions",
+      "title": "Do not leak a target binding from one comprehension into a later comprehension global call"
+    }
+  ],
+  "scoped_tests_passed": 43,
+  "production_seed_excluded": true,
+  "independent_probes": 14,
+  "independent_probe_matches": 13,
+  "corpus_conservation_verified": true,
+  "source_sensitive_probes_finished": true,
+  "candidate_mutated": false,
+  "science_main_publication_acceptance": false
+}

@@ -1,0 +1,27 @@
+{
+  "verdict": "CHANGES REQUIRED",
+  "packet": "publication-imports-implementation-review-r3.json",
+  "packet_fresh": true,
+  "producer_sha256": "b360fc790946947f1ea012e5b1287b81580697e55d06b86d78abb7a8c593219d",
+  "tests_sha256": "84b6c69bf248da9de6604a9fd024d9ef255daa5c7f29a89ac5741074af5f4897",
+  "resolved_findings": [
+    "I1",
+    "I2"
+  ],
+  "findings": [
+    {
+      "id": "I3",
+      "priority": 2,
+      "surface": "Calls.resolve transient-comprehension fallback",
+      "title": "Retain generic caller type-parameter shadow binding"
+    }
+  ],
+  "scoped_tests_passed": 46,
+  "production_seed_excluded": true,
+  "independent_probes": 21,
+  "independent_probe_matches": 20,
+  "corpus_conservation_verified": true,
+  "source_sensitive_probes_finished": true,
+  "candidate_mutated": false,
+  "science_main_publication_acceptance": false
+}

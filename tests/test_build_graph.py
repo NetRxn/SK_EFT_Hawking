@@ -1622,3 +1622,133 @@ class Example:
                 ref.rpartition(".")[0] in {"F", "formulas", "src.core.formulas"}
                 and ref.rpartition(".")[2] == name for ref in refs)
             assert edge["test_kind"] == test["meta"]["test_kind"]
+
+
+class TestDirectFormulaImports:
+    """Direct source edges must survive legal names without inventing bindings."""
+
+    @staticmethod
+    def _edges(monkeypatch, tmp_path, source, node_names=None):
+        import ast
+        import scripts.build_graph as graph
+
+        path = tmp_path / "src/core/formulas.py"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(source, encoding="utf-8")
+        if node_names is None:
+            node_names = [n.name for n in ast.parse(source).body
+                          if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+        monkeypatch.setattr(graph, "PROJECT_ROOT", tmp_path)
+        return graph.extract_imports_edges({f"formula:{n}" for n in node_names})
+
+    @pytest.mark.parametrize("body,expected", [
+        ("def MixedCaller():\n return Target()\n", {("MixedCaller", "Target")}),
+        ("def β():\n return Target()\n", {("β", "Target")}),
+        ("def decorate(f):\n return f\n@decorate\nasync def MixedCaller(\n):\n return Target()\n", {("MixedCaller", "Target")}),
+        ("def caller():\n from src.core.formulas import Target as local\n return local()\n", {("caller", "Target")}),
+        ("def caller():\n from .formulas import Target\n return Target()\n", {("caller", "Target")}),
+        ("from src.core.formulas import Target as Alias\ndef caller():\n return Alias()\n", {("caller", "Target")}),
+        ("def caller():\n return all(Target(x) for x in items)\n", {("caller", "Target")}),
+        ("def caller():\n return [0 for data[Target()] in items]\n", {("caller", "Target")}),
+        ("def caller():\n return [Target() for data[Target] in items]\n", {("caller", "Target")}),
+        ("def caller():\n [x for Target in Target() for x in Target()]\n", {("caller", "Target")}),
+        ("def caller():\n [x for Target in items for x in items]\n return Target()\n", {("caller", "Target")}),
+        ("def caller():\n [x for Target in items for x in others]\n return [Target() for x in items]\n", {("caller", "Target")}),
+        ("def caller():\n Target: object\n [x for Target in items for x in others]\n return [Target() for x in items]\n", set()),
+        ("def caller():\n Target=other\n [x for Target in items for x in others]\n return [Target() for x in items]\n", set()),
+        ("def caller():\n def nested(x=Target()):\n  return 0\n return 0\n", {("caller", "Target")}),
+        ("def caller():\n hook=lambda x=Target(): 0\n return hook\n", {("caller", "Target")}),
+        ("def caller():\n class Nested(Target()):\n  pass\n return Nested\n", {("caller", "Target")}),
+        ("def caller():\n from src.core.formulas import Target\n Target: object\n return Target()\n", {("caller", "Target")}),
+        ("def caller(Target):\n return Target()\n", set()),
+        ("def caller():\n Target=other\n return Target()\n", set()),
+        ("def caller():\n import foreign as Target\n return Target()\n", set()),
+        ("def caller():\n from foreign import Target\n return Target()\n", set()),
+        ("def caller():\n from src.core.formulas import Target\n Target=other\n return Target()\n", set()),
+        ("def caller():\n from src.core.formulas import Target\n from foreign import Target\n return Target()\n", set()),
+        ("def caller():\n global Target\n Target=other\n return Target()\n", set()),
+        ("def caller():\n global Target\n del Target\n return Target()\n", set()),
+        ("def caller():\n def Target():\n  return 0\n return Target()\n", set()),
+        ("def caller():\n class Target:\n  pass\n return Target()\n", set()),
+        ("def caller():\n # Target()\n text='Target()'\n obj.Target()\n return text\n", set()),
+        ("def caller():\n def nested():\n  return Target()\n hook=lambda: Target()\n class Nested:\n  value=Target()\n return hook\n", set()),
+        ("def caller():\n value: Target()\n type Alias = Target()\n return 0\n", set()),
+        ("def caller(value=Target()) -> Target():\n return value\n", set()),
+        ("Target=foreign\ndef caller():\n return Target()\n", set()),
+        ("def caller():\n return Target()\ncaller=foreign\n", set()),
+        ("def caller():\n [(Target:=f) for f in items]\n return Target()\n", set()),
+        ("def caller[Target]():\n return Target()\n", set()),
+        ("def caller[Target]():\n global Target\n return Target()\n", {("caller", "Target")}),
+        ("def caller[Target]():\n global Target\n Target=other\n return Target()\n", set()),
+        ("def caller[Target]():\n [0 for Target in items]\n return [Target() for x in items]\n", set()),
+        ("def caller[Target]():\n from src.core.formulas import Target\n [0 for Target in items]\n return [Target() for x in items]\n", {("caller", "Target")}),
+    ])
+    def test_actual_producer_binding_contract(self, monkeypatch, tmp_path, body, expected):
+        edges = self._edges(monkeypatch, tmp_path, "def Target(*args):\n return 1\n" + body)
+        assert {tuple(sorted(e)) for e in edges} <= {("source", "target", "type")}
+        assert {(e["source"].removeprefix("formula:"), e["target"].removeprefix("formula:"))
+                for e in edges} == expected
+        assert all(e["type"] == "IMPORTS" for e in edges)
+
+    @pytest.mark.parametrize("expression", [
+        "[Target() for Target in items]", "{Target() for Target in items}",
+        "{x:Target() for x,Target in items}", "(Target() for Target in items)",
+    ])
+    def test_comprehension_targets_do_not_become_global_formula_calls(self, monkeypatch, tmp_path, expression):
+        source = "def Target():\n return 1\ndef caller():\n return " + expression + "\n"
+        assert self._edges(monkeypatch, tmp_path, source) == []
+
+    def test_private_self_missing_endpoints_and_dedup(self, monkeypatch, tmp_path):
+        source = "def Target():\n return 1\ndef _private():\n return Target()\ndef caller():\n caller()\n _private()\n Target()\n return Target()\n"
+        assert self._edges(monkeypatch, tmp_path, source) == [
+            {"source": "formula:caller", "target": "formula:Target", "type": "IMPORTS"}]
+        assert self._edges(monkeypatch, tmp_path, source, ["caller", "_private"]) == []
+
+    @pytest.mark.parametrize("source,match", [
+        ("def Target():\n return 1\ndef Target():\n return 2\n", "Duplicate public Formula"),
+        ("def broken(\n", "Cannot"),
+        ("def caller():\n nonlocal Target\n return Target()\n", "Cannot analyze Formula call bindings"),
+        ("def Target():\n return 1\ndef caller():\n class Nested[Target](Target()):\n  pass\n", "generic class header"),
+    ])
+    def test_source_or_binding_failure_is_diagnosed(self, monkeypatch, tmp_path, source, match):
+        with pytest.raises(ValueError, match=match):
+            self._edges(monkeypatch, tmp_path, source, ["Target", "caller"])
+
+    def test_real_mixed_case_edge_and_self_imports_survive(self):
+        import scripts.build_graph as graph
+        nodes = graph.extract_formula_nodes()
+        edges = {(e["source"], e["target"]) for e in graph.extract_imports_edges({n["id"] for n in nodes})}
+        assert ("formula:G_N_emergent", "formula:G_N_sakharov") in edges
+        assert ("formula:diff_invariance_anomaly_residual_a0", "formula:seeley_dewitt_a0") in edges
+        assert ("formula:diff_invariance_anomaly_residual_a2", "formula:seeley_dewitt_a2_R_coefficient") in edges
+        assert ("formula:diff_invariance_holds_order_by_order", "formula:diff_invariance_holds_at_order") in edges
+
+    def test_production_call_omission_with_text_decoy_turns_real_assertion_red(self):
+        import ast
+        import scripts.build_graph as graph
+        from scripts.seed_journal import seeded_mutation
+
+        path = graph.PROJECT_ROOT / "src/core/formulas.py"
+        original = path.read_bytes()
+        mtime_ns = path.stat().st_mtime_ns
+        before_nodes = graph.extract_formula_nodes()
+        self.test_real_mixed_case_edge_and_self_imports_survive()
+        tree = ast.parse(original)
+        caller = next(n for n in tree.body if isinstance(n, ast.FunctionDef)
+                      and n.name == "G_N_emergent")
+        call = next(n for n in ast.walk(caller) if isinstance(n, ast.Call)
+                    and isinstance(n.func, ast.Name) and n.func.id == "G_N_sakharov")
+        lines = original.splitlines(keepends=True)
+        start = sum(map(len, lines[:call.func.lineno - 1])) + call.func.col_offset
+        end = sum(map(len, lines[:call.func.end_lineno - 1])) + call.func.end_col_offset
+        assert original[start:end] == b"G_N_sakharov"
+        seed = original[:start] + b"_missing_production_callee" + original[end:]
+        insertion = seed.index(b"\n", start) + 1
+        seed = seed[:insertion] + b"    # G_N_sakharov(...) is a text decoy, not a call.\n" + seed[insertion:]
+        with seeded_mutation(path, seed, reason="prove the real Formula call-edge seam rejects an omitted call despite its text decoy"):
+            with pytest.raises(AssertionError, match="G_N_emergent"):
+                self.test_real_mixed_case_edge_and_self_imports_survive()
+        assert path.read_bytes() == original
+        assert path.stat().st_mtime_ns == mtime_ns
+        self.test_real_mixed_case_edge_and_self_imports_survive()
+        assert graph.extract_formula_nodes() == before_nodes

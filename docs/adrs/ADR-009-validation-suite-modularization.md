@@ -410,6 +410,29 @@ workflow and reviewers. Specification and plan:
 `docs/superpowers/specs/2026-10-19-g4-declared-population-design.md` and
 `docs/superpowers/plans/2026-10-19-g4-declared-population.md`.
 
+### D6 residual — Static direct Formula call edges
+
+Status: scoped implementation independently accepted for current computation-coverage
+finding1.2; canonical closure and main qualification remain separate.
+The existing producer/evaluator/consumer repair above is not reopened.
+
+Extend `extract_imports_edges`, using the existing structural public-definition
+eligibility and Python AST/compiler scope facts. Emit only bounded static direct
+calls to eligible Formula declarations, including explicit same-module imports;
+do not infer a dependency from a suffix, comment, string, local shadow or an
+unexecuted nested callable body. Comprehension targets have their own scope,
+including Python's inlined comprehensions. Retain actual generator calls and the
+current same-module local imports. This is a declaration-level static relation,
+not execution reachability or a whole-program/dynamic alias resolver.
+
+Preserve existing edge shape/direction, endpoint filtering, deduplication and
+self/private exclusions, plus all Formula identities/metadata and other gates.
+Use the existing producer and tests; no new edge type, registry, evaluator,
+threshold or registered check is introduced. Diagnose source/analysis failures
+rather than silently returning an empty successful population. Full population,
+negative binding/scope cases and a journalled real-source omission/restore control
+must precede acceptance. The extended D6 specification and plan own the details.
+
 ## Overlap reconciliation with prior ADRs (keep the ADR set one system)
 
 - **ADR-002** owns the `native_decide` policy and its ratchet metric; **ADR-009 owns only the code location**

@@ -8,8 +8,9 @@ review, current gates and release remain distinct obligations.
 
 Read current notebook/map, architecture skill/owners, complete independent whole
 review and actual target source before editing. Root allocates future runtime and
-integration. No new service/check/gate/registry/threshold, dummy formula, alias or
-numerical/physical code change. Other readiness evaluator bodies, state/public APIs,
+integration. No new service/check/gate/registry/threshold, dummy formula, fabricated identity,
+arbitrary variable alias or numerical/physical code change. D6.7 permits only
+explicit self-module import aliases resolved from their literal source binding. Other readiness evaluator bodies, state/public APIs,
 bucket tuples, roster/priorities/floors and serialization caps stay fixed.
 Human submission requires GREEN; current mechanical aggregation rejects literal
 blocked at either priority and retains outstanding P1 YELLOW advisory behavior.
@@ -92,3 +93,28 @@ canonical writers for real changed inputs, closure through the existing writer,
 protected Git delivery and merged-wave evidence. No status/ledger/book/stage or human
 acceptance is implied by document changes or scoped test green. Full physical and
 scientific mapping/consumer/error-control duties remain on their original workstreams.
+
+
+## 6. Residual IMPORTS repair — independently accepted implementation
+
+Owner ROOT; independent specification/implementation reviewer; original current
+coverage finding1.2. Preserve all scientific source bodies and existing gates.
+
+1. Remeasure exact current source and retain old edge dictionaries/missing pairs
+   plus Python3.14 lexical-scope probes. Completed diagnostic is source-only.
+2. Independently review ADR-009 D6 residual and specification D6.7, original intent,
+   existing machinery overlap and real-corpus pilot before implementation.
+3. Add meaningful red fixtures at the existing producer seam. Extend only the
+   existing structural/helper/call producer path, with explicit bindings/scopes.
+4. Verify full old-node/edge conservation, actual missing pairs, negative scopes,
+   real-source seed/red/byte+mtime restore and restored production result. Check
+   downstream graph consumers and exact typed graph differences; do not count
+   IMPORTS as new runtime or G4 evidence.
+5. Update the owning QA map before shipping, regenerate actual derived counts,
+   inspect registration sites, obtain independent whole composition acceptance,
+   record finding1.2 through the existing closure writer and checkpoint/push.
+   Main/full/native/human/publication qualification remains separate.
+
+Code ownership: ROOT `scripts/build_graph.py`, existing `tests/test_build_graph.py`
+and owning architecture/finding records. Reviewers write isolated scratch reports
+only; lead-bundle scientific construction continues independently.

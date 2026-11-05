@@ -323,6 +323,29 @@ proxy because it costs a pytest collection, and it needs no more: a deleted file
 only works in one direction. Where the answer is cheap to recompute, recompute it** — which is
 why the rows above split into *mtime* and *content compare* at all, and why this row is now both.
 
+### Static Formula call relationships
+
+`scripts/build_graph.py::extract_imports_edges` derives Formula-to-Formula
+`IMPORTS` edges from evaluated direct calls in the public definitions selected
+by the existing Formula producer. Python AST structure and compiler symbol
+tables determine caller scope and binding identity. Literal imports from the
+canonical formulas module can resolve to those definitions; conflicting
+bindings, arbitrary aliases and attribute calls do not establish an edge.
+Comprehension bindings shadow only their own scope, while evaluated target
+expressions, eager nested defaults, decorators and ordinary class headers
+retain their enclosing execution context. Deferred annotations, type-alias
+right-hand sides and nested callable/class bodies are excluded. Unsupported
+generic class headers and invalid binding analysis raise a diagnostic rather
+than silently returning an empty call population.
+
+This is static declaration-reference coverage. It does not establish runtime
+dispatch or computation correctness. The emitted relationships participate in
+`scripts/last_modified.py` freshness propagation and the graph's existing
+dashboard consumers. G4 retains its registered Formula and test-evidence
+contract; an `IMPORTS` edge does not supply a missing test or physical derivation.
+The bounded scope and its controls are specified in
+[`ADR-009`](../adrs/ADR-009-validation-suite-modularization.md).
+
 ### 2.1 The module census — one derived answer, with no hand-written half
 
 `docs/MODULE_CENSUS.md` answers *what is this module, script or notebook* — the question this
