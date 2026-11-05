@@ -6146,3 +6146,22 @@ and 1,045 nonempty B maps. The complete bulk union
 `[4736,70272)` now covers 65,536 distinct tuples, with 57,252
 exact zeros and 8,284 nonempty B maps awaiting A closure.
 The completed chunk supersedes the earlier 66-row partial.
+
+The B census is complete over all 77,472 retained indices.
+Independent review matched all 72 bulk chunk hashes and
+reconciled the earlier batches in their original index order.
+The ordered roster SHA-256
+`282471134d9ee196c94f791cf4a757a400ef466af3c9f01cc8900f90caff0d17`
+matches the independently regenerated repository roster.
+There are 67,680 exact full-shard zeros and 9,792 nonempty
+B maps. Two nonempty cases already have exact A+B results,
+leaving 9,790 A closures in this accounting. No B caps
+remain. This completes the B stage for one selected word.
+
+Within `[640,70272)`, 8,784 nonempty maps have 20 exact
+digests and seven primitive digests. The tracked B evaluator
+regenerated all seven representatives and checked their
+full signed maps against the unfactored route, including
+the exact digests and signed scales. This is a reuse
+opportunity for B maps. Each subsequent A contraction must
+preserve its own cut coordinates and signed B scale.
