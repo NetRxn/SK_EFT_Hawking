@@ -286,3 +286,14 @@ the three main statements reported only standard Lean axioms.
 This identifies the static spatial metric for the supplied
 exterior. General ADM coordinate invariance, microscopic ADW
 matching, and authoritative validation remain open.
+
+### Ricci vacuum and ADM mass in the manuscript
+
+The mechanics discussion now uses the derived angular Ricci component
+and states the local vacuum equivalence for the regular stationary
+spherical chart. It also gives the finite-radius Cartesian flux and its
+ADM limit on the static slice. Independent prose review checked both
+against the proved source and clarified the distinction between flux
+and limiting charge. The rebuilt four-page PDF carries those changes.
+The ADW derivation of this exterior and the identification with the
+physical branch mass remain open.

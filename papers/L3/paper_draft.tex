@@ -231,14 +231,21 @@ If $G$ is instead positive and differentiable along the same algebraic
 family, the area term equals $dM+M\,dG/G$
 (\texttt{schwarzschild\_varying\_G\_area\_control}).
 For the stationary ingoing spherical metric with radial block
-$-F(r)\,dv^2+2\,dv\,dr$, assume the reduced vacuum equation
-$rF'+F-1=0$ for differentiable $F$ on $r>a$, with $0\leq a<2m$,
-and $r(1-F)\to 2m$ as $r\to\infty$. Then $F=1-2m/r$.
+$-F(r)\,dv^2+2\,dv\,dr$, the angular Ricci component is
+$R_{\theta\theta}=1-F-rF'$. For a twice differentiable lapse,
+vacuum on a regular radial neighborhood is equivalent to
+$rF'+F-1=0$ there. If this equation holds on $r>a$, with
+$0\leq a<2m$ and $r(1-F)\to 2m$ at infinity, then $F=1-2m/r$.
 Away from the angular poles, raising $dr$ at $r=2m$ gives the
 null generator $K=\partial_v$, and the connection gives
 $\nabla_K K=\tfrac12 F'(2m)K=K/(4m)$ at the lapse zero.
-Applying the fixed-$G$ identity to the emergent ADW branch requires
-deriving this exterior and matching $m=\GNem M$ at fixed $\GNem$.
+
+On the static spacelike slice outside $2m$, the ADM-normalized
+Cartesian flux at radius $R$ is $R(F(R)^{-1}-1)/(2G)$.
+The ADM charge is its limit $m/G$. Applying the
+fixed-$G$ identity to the emergent ADW branch still requires
+deriving this exterior and identifying its mass normalization
+with the physical mass at fixed $G=\GNem$.
 A differential first law for the acoustic branch requires a separate
 energy balance.
 The second-law
