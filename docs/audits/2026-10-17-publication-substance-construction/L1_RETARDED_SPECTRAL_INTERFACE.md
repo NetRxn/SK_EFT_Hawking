@@ -6139,3 +6139,10 @@ uses one common 40-factor divisor. Each of the two selected
 words contributes half the combined value. This gives a
 signed nonzero control for future bulk A contraction.
 The full unpaired word coefficient remains open.
+
+Independent review verified the third bulk run's first eight
+complete chunks in `[62080,70272)`. They add 7,147 exact zeros
+and 1,045 nonempty B maps. The complete bulk union
+`[4736,70272)` now covers 65,536 distinct tuples, with 57,252
+exact zeros and 8,284 nonempty B maps awaiting A closure.
+The completed chunk supersedes the earlier 66-row partial.
