@@ -139,3 +139,18 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
   and `Quot.sound`.
 - The authoritative build, declaration refresh, manuscript propagation,
   and reconciliation of the §2.2 verifier remain due.
+
+## 2026-11-04 — Connect the manuscript to the local profile proofs
+
+- The abstract and branch section present the derived local signs,
+  including the short-time and positive-temperature conditions.
+  The caption keeps the plotted exponential distinct from the
+  affine nozzle calculation.
+- The cutoff discussion distinguishes the proved emergent identity
+  from the physical choice of crossover scale. Source review
+  checked both claims against the new declarations.
+- The canonical compiler produced four pages with no errors,
+  overfull boxes, unresolved references or dropped options.
+  Visual inspection checked all four pages.
+- The declaration registry, derived counts, theorem backing records,
+  and §2.2 and §2.4 closure remain pending authoritative validation.

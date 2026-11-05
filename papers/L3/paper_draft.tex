@@ -30,13 +30,11 @@ a machine-checked partition at the induced-gravity cutoff}
 \begin{abstract}
 The partition model describes evaporation on a substrate whose Newton
 constant is induced by fermion loops below an ultraviolet cutoff. It
-assigns heating above a critical mass and an exponential cooling profile
-below it. That
-critical mass is the one whose emergent gravitational length reaches the
-cutoff length. We formalize the partition in Lean~4: a decidable
-classifier, strict monotonicity on each branch, a criterion theorem selecting
-the assumed branch sign of $d\Thawk/dt$ from a mass comparison, and falsifier theorems stating
-what would refute it.
+compares local heating above a critical mass with nozzle cooling
+below it. That critical mass is the one whose emergent gravitational length reaches the
+cutoff length. We formalize the cutoff identity and derive the opposite local
+temperature slopes in Lean~4 from a decreasing Schwarzschild mass
+profile and the leading-order nozzle solution.
 \end{abstract}
 
 \maketitle
@@ -113,7 +111,8 @@ lighter than $\Mc$ would need a horizon smaller than the substrate's own
 resolution, and what responds is the fluid rather than the geometry. Read
 this way, Eq.~\eqref{eq:Mc} is the mass at which the two descriptions
 exchange roles rather than a fitted scale. Equation~\eqref{eq:Mccutoff} is
-also where the construction's one free choice sits: no derivation on this
+proved in Lean~4 for the emergent coupling.
+The construction still makes a physical choice: no derivation on this
 substrate pins the crossover at $\GNem M = \Ladw^{-1}$ rather than at an
 order-unity multiple of it, so the coefficient in Eq.~\eqref{eq:Mc} is an
 ansatz even though its parametric form is not.
@@ -193,16 +192,16 @@ supplies the initial cooling sign. The authors propose extending the
 calculation to condensates, where $c \propto \rho^{1/2}$ and the cooling
 sign requires a separate derivation.
 
-The partition itself is a single theorem. A substrate satisfying positivity of
-$\Mc$ and of the initial temperature, a positive evaporation rate above
-$\Mc$, a negative one below, and the substrate response
-$\dADW = (\aADW - 1)\Ladw$, has an evaporation rate whose sign is fixed by
-a mass comparison alone: positive when $M > \Mc$, negative when $M < \Mc$
-(\texttt{H\_RegimePartition}, \texttt{regime\_partition\_criterion}). The
-two branch signs enter as hypotheses. The Schwarzschild trajectory
-motivates the heating sign~\cite{Hawking1975CMP}, and the nozzle's initial
-slope motivates the cooling sign~\cite{Balbinot2005PRD}. Under these
-hypotheses, the criterion assigns the sign by comparison with $\Mc$.
+The profile criterion derives the signs from separate local models.
+Above $\Mc$, the chain rule gives $d\Thawk/dt=-M'(t)/(8\pi M(t)^2)>0$
+for positive mass and $M'(t)<0$. Below $\Mc$, write
+Eq.~\eqref{eq:Tsonic} as $\Thawk(t)=T_0(1-\lambda t)$.
+Its slope is $-T_0\lambda<0$ for positive nozzle parameters.
+The criterion requires $t\geq 0$, $c\kappa t<\eta$ for a supplied
+short-time budget $0<\eta<1$, and $\lambda t<1$ for positive
+temperature. At $M=\Mc$ it assigns neither strict sign.
+Matching the two descriptions across the cutoff requires a
+separate construction.
 
 \begin{figure}[t]
   \centering
@@ -215,8 +214,7 @@ hypotheses, the criterion assigns the sign by comparison with $\Mc$.
   at $M = \Mc$ [Eq.~\eqref{eq:Mccutoff}]; blue and amber shading indicate
   the branches below and above this model boundary. Formal
   witnesses: \texttt{T\_H\_schwarzschild\_strict\_decreasing} and
-  \texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}, combined by
-  \texttt{regime\_partition\_criterion}.}
+  \texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}.}
   \label{fig:regime}
 \end{figure}
 
