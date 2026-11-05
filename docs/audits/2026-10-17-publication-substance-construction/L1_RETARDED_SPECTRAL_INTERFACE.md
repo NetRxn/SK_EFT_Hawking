@@ -7981,3 +7981,23 @@ exact raw equality to (16,3). The whole-component subtotal is
 part and no caps. The full receipt SHA-256 is
 `d4cbcf5120e2ca1b57f134662cf3420940196e715d9749b54aeb3759410f5c1c`.
 The orbit was already counted.
+
+### Complete chirality pairs (8,7)/(12,3) and (11,7)/(15,3)
+
+Independent review checked 192 ordered direct selectors and
+12 terminal shards in each run. A proper signed witness supplies
+gamma slice 1 from slice 0. Slices 2 and 3 were evaluated directly.
+Each whole component has exact subtotal
+`-557561034463996143/2361183241434822606848`, with zero imaginary
+part and no caps.
+
+| Direct representative | Chirality counterpart | Words per orbit | Orbit multiplicity | Full receipt SHA-256 |
+|---|---|---:|---:|---|
+| [(8,7)](l1_gamma_8_7.out.txt) | (12,3) | 180 | 9 | `42d2ca00ae35991bb205015365de820edb5150ee85c8c051587ef84dd82aa952` |
+| [(11,7)](l1_gamma_11_7.out.txt) | (15,3) | 180 | 9 | `3daeb080f3da129d11cf373f19ff96bcc05115db0d380aa051c875bd02709e12` |
+
+All four signed orbits are disjoint from each other and prior
+coverage. They add 720 words with combined contribution
+`-5018049310175965287/590295810358705651712`.
+Verified dominant coverage is 48 of 148 orbits and 4,668 of
+9,216 words.
