@@ -7811,3 +7811,19 @@ The verified 18-member orbit contributes
 `-2469564149419400481/590295810358705651712`. It adds 144
 signed source words disjoint from the 864 previously accepted.
 Complete coverage is now 16 of 148 dominant orbits and 1,008 words.
+
+### First new orbit accepted using gamma-slice symmetry
+
+The repository runner directly evaluated 128 selectors for `(3,0)`
+in gamma slices 0 and 3. Independent review checked eight terminal
+shards and regenerated the signed word maps. The three-member
+slice class covers gamma 0, 1, and 2 from slice 0. Gamma 3 is
+a singleton. Both direct slices have exact real subtotal
+`378279423049817079/9444732965739290427392`. The weighted component
+total is `378279423049817079/2361183241434822606848`, with zero
+imaginary part. The component receipt SHA-256 is
+`30fdd487411c15f31e6700e2cb96d9bbc46906aa16afa1e7b59a9814c126ace9`.
+
+The component's dominant orbit has multiplicity one and contains
+60 source words disjoint from the 1,008 previously accepted.
+Complete coverage is now 17 of 148 dominant orbits and 1,068 words.
