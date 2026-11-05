@@ -1,0 +1,37 @@
+{
+  "task": "l1-p23-anchor-review-r1",
+  "verdict": "ACCEPT",
+  "proposal_sha256": "d51dcf6342ef6952006f3d82d4d2154db9b26aeb29974e6e2c83a847e6ebf15c",
+  "base_sha256": "6edfb690d52ad7e807d3f6b523e992a8db2d168df8da630949406d4a6739e095",
+  "scope": "focused independent manual analytic/source acceptance only",
+  "inverse_locus_correct": true,
+  "counts15_16_in_open1_2": true,
+  "x2_implies6pi_above16": true,
+  "above2_wrong_direction_at_fixed_anchor": true,
+  "only_anchor_paragraph_changed": true,
+  "all_labels_bibkeys_cites_retained": true,
+  "physical_species_regulator_build_open": true,
+  "root_sole_application_closure_owner": true,
+  "consumers": [
+    "L1 companion citation",
+    "D3 section5",
+    "F section6"
+  ],
+  "required_corrections": [],
+  "report": "/tmp/l1-p23-anchor-independent-20261105.md",
+  "preservation_receipt": "/tmp/l1-p23-anchor-independent-preservation-20261105.json",
+  "initial_continuity_fresh": true,
+  "final_continuity_fresh": true,
+  "scientific_execution": false,
+  "tracked_writes": false,
+  "fullclaims_stages_green": false,
+  "final_continuity_changed": [
+    "source"
+  ],
+  "reconciliation": "Lead deliberately reissued r2 after baseline-PDF-only refresh; baseTex and exactproposal unchanged; no proposed finalrender acceptance.",
+  "r1_final_continuity_fresh": false,
+  "r2_packet": "l1-p23-anchor-review-r2.json",
+  "r2_initial_continuity_fresh": true,
+  "r2_final_continuity_fresh": true,
+  "baseline_pdf_sha256": "ae40293a6268452b7ce48a70ecdd24569f2f4e09287d3d2216710afeebcb86f6"
+}
