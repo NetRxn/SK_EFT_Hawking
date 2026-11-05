@@ -9075,11 +9075,10 @@ metadata passes an AST/mock contract check. The separate
 preserves a checker-only receipt-field alias correction without changing the
 accepted scientific archive or rerunning a coefficient.
 
-Portable accepted coverage is234/272 selected words:140 same-axis and94
-mixed-axis. Thirty-eight remain:24 same-axis and14 mixed-axis. Next79/81
-uses an independently accepted square/two-protected-tori225-branch source,
-with second gamma slots and transposed branch roles; direct/fixed controls
-precede any pilot. The161/163 opposite-link cycle needs a separate coupled
+This class brought portable accepted coverage to234/272 selected words:140
+same-axis and94 mixed-axis. The square/two-protected-tori79/81 delivery below
+adds the next disjoint selected class after its full controls, replay and
+portable acceptance. The161/163 opposite-link cycle needs a separate coupled
 holonomy construction. Full k4, full source/action ensemble, common partition
 normalization, physical B3/window, microscopic modes, transport, main and
 publication acceptance remain open.
@@ -9089,4 +9088,15 @@ publication acceptance remain open.
 
 The [exact-reuse paired record](l1_k4_two_protected_tori_7981_exact_reuse.md) preserves both complete225-branch unrestricted pilots and independent source, fixed450, arithmetic/covariance and archive reviews. Both exact coefficients are `1165710661495982585955/35184372088832`; warm times40.680624s and41.401290s respect the original single60s bound. The original failed attempt remains preserved.
 
-Portable accepted coverage remains234/272 until independent full original-L/full-row reconstruction, fresh79 replay and portable CLI/class-union acceptance. The two selected words do not establish fullk4/common partition or physical B3/modes/transport.
+This paired-pilot checkpoint retained234/272 pending the independent original-L/full-row, fresh79 replay and portable delivery gates. Those gates are completed in the accepted delivery below. The selected words do not establish fullk4/common partition or physical B3/modes/transport.
+
+
+## Accepted shared-square/two-protected-tori79/81 portable class
+
+The [complete delivery](l1_k4_two_protected_tori_7981_delivery.md), [independent whole-class review](l1_k4_two_protected_tori_7981_delivery_review.md) and [acceptance record](l1_k4_two_protected_tori_7981_acceptance.json) establish the next disjoint selected class. Portable accepted coverage is236/272:142 same-axis and94 mixed-axis. Thirty-six remain:22 same-axis and14 mixed-axis; coupled161/163 still require their own holonomy construction.
+
+The [portable evaluator](l1_extended_offset_witness_k4_source_sharing_square_two_protected_tori.py) retains all225 signed protected-branch products, both ordered sources, fifteen paired action vertices and sixteen Grassmann sites. Independent full450 original-L/action-cubature/prepared-row reconstruction and signed225 full-row covariance pass. A fresh complete79 replay matches every original branch. Installed census,450 fixed controls and both complete225-branch Python CLI modes exit0 under the original bounds, with actual sibling/module/source bindings verified.
+
+Each coefficient is `1165710661495982585955/35184372088832`; the two-word same-axis subtotal is `1165710661495982585955/17592186044416`, without an extra axis/shear factor. Exact-input reuse leaves the scientific eliminator unchanged and retains225 own-index emissions;154 complete inputs yield154 first results/71 reuses. Actual zeros remain distinct from structural absence or failures. The complete150-member [archive](l1_k4_two_protected_tori_7981_delivery.zip) and [manifest](l1_k4_two_protected_tori_7981_delivery_manifest.json) preserve source/control corrections, all new actual results and independent reviews. The manifest binds the earlier [controls archive](l1_k4_two_protected_tori_7981_controls.zip), which preserves the original incomplete pilot.
+
+This is accepted exact Python construction for a selected regulated family, not a new Lean proof or physical susceptibility derivation. Fullk4, the complete derivative-normalized source/action ensemble and common partition, physical B3 normalization/window, microscopic dynamics/matter coupling, physical transport/frequency/error matching, main integration and final human/publication acceptance remain OPEN.
