@@ -10458,6 +10458,21 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-10-19-managed-worktree-paths:infra:1.1",
+      "status": "fixed",
+      "evidence": "Normal merge reuses original reviewed9edf7c8fa coherent managed-checkout consumer package, preserving stronger G4 and accepted extractor isolation. Current complete affected scope106passed with2 separate citation failures; planner original prefixed identity and all containment/existence/multiplicity/refusal/lane controls pass. Independent current composition and history evidence are in MANAGED_PATH_ADOPTION.md and MANAGED_PATH_INTEGRATION_REVIEW.md. Only planner1.1 is closed; cache1.2, citation, full/main and scientific acceptance remain open.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/MANAGED_PATH_INTEGRATION_REVIEW.md",
+      "date": "2026-11-05",
+      "commit": "6e2983e61",
+      "verified_by": {
+        "command": "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+        "declared": "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }

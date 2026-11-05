@@ -848,3 +848,19 @@ Neither design adds accepted coefficients to the current232/272 count.
 The independent delivery lane is reconciling already reviewed managed-worktree
 portability history against the current planner path failure; use its accepted
 coherent source boundary and current verification, not a duplicate mechanism.
+
+
+The [existing managed-checkout repair adoption](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/MANAGED_PATH_ADOPTION.md)
+is independently accepted and normally merged at6e2983e61 from original9edf7c8fa.
+It preserves stronger G4 assertions, original containment/existence/lane controls
+and the accepted tmp_path extractor isolation. The complete affected four-file
+run explicitly includes the slow extractor:106pass/2citation failures. The
+existing writer records original planner finding1.1 fixed after its complete
+declared command passes. Cache1.2 remains open:13 registry keys are missing;
+the extractor emits ten stubs and three D8 orphan keys, failing its first
+zero-stub assertion. The existing source/citation repair history (including
+f28cc370f and the separate e340 source package) must be reconciled as its next
+independent delivery dependency, rather than importing unrelated manuscripts
+or weakening assertions. ROOT owns that integration and independent source
+review is required. This later scoped repair does not rewrite frozen16fde9's
+34fail result or establish a new broad/main/publication pass.

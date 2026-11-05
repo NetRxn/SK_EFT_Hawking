@@ -1,0 +1,1 @@
+✓ wrote 1 record(s): review:2026-10-19-managed-worktree-paths:infra:1.1

@@ -35,7 +35,10 @@ command passes. [Freshness](MANAGED_PATH_FRESHNESS.txt) passes all three selecte
 checks. The count writer adds the actual35 adopted cases; other typed scientific,
 Lean and Aristotle values remain unchanged.
 
-Independent current source/control composition acceptance and the reviewed
-source checkpoint precede canonical closure. Existing34 frozen broad failures
+The [independent current integration review](MANAGED_PATH_INTEGRATION_REVIEW.md)
+accepts the actual composition. Normal merge6e2983e61 checkpoints that source;
+the existing writer then records planner1.1 fixed after its declared command
+passes ([receipt](MANAGED_PATH_CLOSURE_1_1.txt)). Cache1.2 remains open while its
+whole Verify is red. Existing34 frozen broad failures
 and all scientific BUILDs are retained; no new broad/main/native/human/publication
 acceptance is inferred from this bounded repair.
