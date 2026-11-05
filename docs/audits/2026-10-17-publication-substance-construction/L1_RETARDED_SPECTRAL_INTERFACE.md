@@ -677,6 +677,147 @@ source derivatives require a remainder uniform with its first two
 source derivatives. The pointwise small-loop estimate supplies no
 bound on the integrated quantum response.
 
+### Moving-edge plaquette and its first two source derivatives
+
+Use the locally covariant closed ordering in
+`l1_full_action_reference.py`, with a forward link transporting
+the start fiber to the end fiber (`link` endpoint law). The positively
+oriented path is +k,+l,−k,−l. If its chronological transports are
+V1,V2,V3,V4, the matrix at the base is U = V4 V3 V2 V1.
+Axis reversal on the same rectangle and base gives U⁻¹. Take the
+anti-Hermitian connection convention V′ = A(y′) V and
+F_kl = ∂k A_l − ∂l A_k − [A_k,A_l]. This sign makes the leading
+increment +area F_kl for the stated orientation. The gauge at
+the base is fixed across the source family.
+
+The curvature coefficient is the traceless chiral projection in
+`l1_normalization_opposed_fourth.py::curv_coeff`. With distinct
+internal indices b,c, write
+L_bc(U) = tr(U γ_b γ_c γ₅). In each SU(2) block write
+U = q₀ I + Σ q_d (−i σ_d); the scalar part of either block has zero
+trace against γ_b γ_c γ₅. This gives exactly the repo's
+`(-I*p*gamma[b]*gamma[c]*g5).trace()` coefficients. In particular
+L_bc(U⁻¹) = −L_bc(U), without a small-loop approximation. Equivalently
+one may apply L_bc to (U−U⁻¹)/2. The exact raw ordered action coefficient
+multiplies L_bc by g₂ ε^{klμν}/4 and the two frame coefficients,
+as in `l1_full_action_reference.py::coefficient`. Keep that quarter;
+do not insert an additional antisymmetrization factor when using
+the existing ordered-world-index sum. The b=c contraction cancels
+in the antisymmetric frame slots. The statements below concern the
+curvature multiplier of an existing distinct internal pair.
+
+#### Uniform C² bound
+
+Let E = diag(λ₀,…,λ₃) be real with trace zero and fix |j| ≤ J.
+Take a piecewise-linear unit square r(t) on the k,l coordinate
+plane, rooted at the origin, with each edge traversed in one
+unit of t, t∈[0,4]. Use y(t,j)=a exp(jE)r(t). Assume the entire
+family and its radial segments stay in a convex coordinate
+neighborhood. Choose one radial gauge about the base, independent
+of j. Assume the smooth curvature in that gauge and its first two
+coordinate derivatives have uniform multilinear operator bounds
+M₀,M₁,M₂ there. Use a submultiplicative matrix norm.
+
+For source-dependent functions write
+‖f‖₂ = Σ_{p=0}² sup_{|j|≤J} ‖∂ⱼᵖ f‖/p!.
+This norm is submultiplicative by the Leibniz rule. Choose finite R,T
+such that ‖y‖₂≤aR and ‖ẏ‖₂≤aT on every edge. For example use
+R=√2 e^(JΛ)(1+Λ+Λ²/2), T=R/√2, Λ=max |λ_i|.
+Radial gauge gives A_μ(y)=∫₀¹ u y^ν F_{νμ}(u y)du. This identity
+uses the fixed radial trivialization, so F and A are matrices in
+the same gauge. For the generator K=A_μ(y)ẏ^μ on each edge,
+define K₀=F_{νμ}(0)y^νẏ^μ/2.
+
+For Z(j)=F(u y(j))−F(0), the bounds term by term are
+‖Z‖ ≤ M₁ u |y|,
+‖Z′‖ ≤ M₁ u |y′|,
+and ‖Z″‖ ≤ M₁ u |y″| + M₂ u² |y′|², where primes in this line
+mean source derivatives. Thus ‖Z‖₂ ≤ M₁ u aR +
+M₂ u² a² R²/2. Multiply by the two y and ẏ factors in the
+radial formula and integrate u to obtain
+
+    ‖K−K₀‖₂ ≤ a³ M₁ R² T/3 + a⁴ M₂ R³ T/8.
+
+Also ‖K₀‖₂ ≤ a² M₀ RT/2. These bounds include all source derivatives
+of the two explicit tangent factors. They are piecewise bounds,
+and the four time integration intervals and corners are fixed in j.
+
+Put D=∫₀⁴ ‖K(t)‖₂ dt. The ordered Dyson term of order n has
+‖·‖₂≤Dⁿ/n! by the ordered simplex and submultiplicativity.
+The resulting absolute uniform convergence permits taking both
+source derivatives term by term. The sum of all n≥2 terms
+is bounded in ‖·‖₂ by D² exp(D)/2. The order-one term from K₀
+is exact: (1/2)∮ F_{νμ}(0)y^ν dy^μ =
+a² e^{j(λ_k+λ_l)} F_kl(0). Hence
+
+    ‖U−I−a² e^{j(λ_k+λ_l)}F_kl(0)‖₂
+       ≤ 4(a³ M₁ R² T/3 + a⁴ M₂ R³ T/8) + D² exp(D)/2.
+
+The RHS is O(a³) uniformly for bounded J and 0<a≤a₀
+with the stated curvature bounds. Applying the fixed bounded
+linear functional L_bc preserves the order. With fixed reference
+coframes evaluated on the two complementary moved tangent axes,
+the multiplicative strain factor is e^{j(λ_μ+λ_ν)} =
+e^{−j(λ_k+λ_l)}. Multiply by that factor and divide by the
+reference area a². The resulting curvature-frame multiplier
+is L_bc(F_kl(0)) plus an O(a) error in ‖·‖₂, so the first
+and second source derivatives of the normalized multiplier
+are O(a) too. If the underlying frames themselves are spatially
+varying and evaluated at shifted points, their separate Taylor
+terms must also be included. The area division here compares
+geometries in reference units; it does not add a factor to
+the finite-lattice action replay.
+
+#### Exact commuting tests with the repository projection
+
+Choose H=diag(−i σ₃,0) in the left chiral block. For the actual
+gamma matrices in `l1_full_action_reference.py`,
+L_01(H)=2 and L_01(exp(Hθ))=2 sin θ. Set A=H f(x^k) dx^l,
+with a constant shift in f immaterial. Then exact chronological
+transport gives
+
+    θ(j)=a e^{jλ_l}[f(a e^{jλ_k})−f(0)].
+
+Write s=λ_k+λ_l. The normalized projected curvature multiplier
+including the complementary strain is
+Y(j)=2 a⁻² e^{−sj} sin θ(j). For an explicit orientation control
+take E=diag(0,0,1,−1), k=2,l=0, μ=1,ν=3, so s=1,
+ε^{2013}=+1 and λ_k=1. The ordered action weight before
+reference-area division is then (g₂/4) a²Y times the fixed
+complementary frame coefficients.
+
+* Linear f(x)=f(0)+b x gives θ=b a² e^{sj}.
+  The compensated log multiplier is exactly constant. For the
+  actual projected U, Y′=2 a⁻² s e^{−sj}(θ cosθ−sinθ) and
+  Y″=2 a⁻² s² e^{−sj}[(1−θ²)sinθ−θ cosθ].
+  These are O(a⁴), including the zero b or s controls. This
+  detects substituting log(U) for the repo projection.
+* Quadratic f(x)=f(0)+b x+c x²/2 gives θ=e^{sj}
+  (b a²+c a³ e^{jλ_k}/2). The compensated log projected through
+  L_01 and divided by a² is 2b+c a e^{jλ_k}.
+  Its first and second derivatives at zero are c a λ_k and
+  c a λ_k². The actual projected U differs by O(a⁴) in C².
+  These terms test the O(a) residual and its normalization.
+  Taking λ_k=0 eliminates the quadratic log-source derivatives.
+* Reverse traversal with the same base changes θ→−θ and
+  Y→−Y exactly, including both derivatives. The epsilon factor
+  also reverses if the world indices are exchanged in the
+  full action, so that exchange does not flip the full ordered
+  contribution.
+
+The proof is a smooth-field control for the simultaneous moving-edge
+prescription. It supplies no derivative bound after integrating
+unrestricted lattice links, no definition of a background-dependent
+measure, and no choice between the physical background source
+and the independent coframe-only or composite source extensions.
+It also supplies no B3 susceptibility or retarded pole.
+
+Independent review checked the fixed radial gauge identity, the
+factorial-weighted derivative norm, the first-order loop integral,
+and the Dyson remainder estimate. A symbolic control using the
+repository's gamma matrices and curvature coefficients reproduced
+the trace, orientation and both derivative identities.
+
 ### Source contract for a background extension
 
 The held primary [Diakonov 2011, arXiv:1109.0091v1](https://arxiv.org/abs/1109.0091v1)
@@ -7405,3 +7546,18 @@ The verified 18-member orbit covers 54 signed source words,
 all disjoint from the 387 already accepted. Its contribution is
 `6198052591541665323/4722366482869645213696`. Six of 148
 dominant orbits now have complete results, covering 441 words.
+
+### Complete dominant representative (0,7)
+
+Independent review checked all 256 ordered exact selectors and
+16 terminal shards against the pinned roster. No caps were hit.
+The raw-to-scaled reduction gives
+`4055515893230966199/9444732965739290427392` with zero imaginary
+part. The complete receipt SHA-256 is
+`c74d5320fbb7eabe43f02fbd9af49eee7d2ec92de32dbe4bbd65ebc9c7e2de1f`.
+
+The signed orbit consists of `(0,7)`, `(1,11)`, and `(2,15)`.
+Its weighted contribution is
+`12166547679692898597/9444732965739290427392`. Its 45 source words
+are disjoint from all six previous orbits. Complete dominant
+coverage is now seven of 148 orbits and 486 source words.
