@@ -6311,3 +6311,36 @@ result above comes from the separate scratch replay. For parallel
 replay, record the pinned source and command for each disjoint
 half-open prefix range and verify exact status and ordered coverage
 before reducing raw numerators with the common divisor.
+
+The pinned repository replay at `83ae2cff6` also completed
+`python l1_unpaired_A_pairwise.py 0 3` with exit zero. All 48
+ordered keys, statuses, raw signed coefficients and complement counts
+matched the independently assembled scratch receipt. Each of the
+three prefixes has exact subtotal zero in both components. Raw
+stdout SHA-256 is
+`fb05d207c0aad6dd605df55d893722a39a5b66f29f6620adf159bc343d883be4`.
+
+**Dominant-map pair.** Bulk indices 4,776 and 17,672 have the same
+208-row B primitive and exact opposite signed scales. Independent
+review reconstructed both exact B hashes and checked that the two
+changed coordinates, `q51` and `q53`, occur only in A center 1.
+Subtracting the two center maps leaves 24 signed rows with
+coefficients ±4. The pair uses its own regenerated roster of 1,152
+leaves over 72 prefixes, SHA-256
+`489f340dc12c5e1935e05b842b46325bb2573a14fa575066835b76b6e2b94cf4`.
+All 16 leaves of prefix 0 have empty complementary products and
+exact zero numerators. The independent scratch JSONL SHA-256 is
+`c41d1dd322a32bf9ece899ae260028f73fc8887b73c3ff44c7aa814953a9fab9`.
+This establishes one prefix for the pair. A port must preserve the
+coordinate incidence guards and the common signed scale.
+
+Independent review accepted the next range `[1,5)` against the
+same roster digest. Its 64 ordered leaves were exact with no caps.
+Prefixes 1 and 2 are zero. Prefixes 3 and 4 each have eight negative
+and eight zero leaves and 8,688 complementary pairs. Applying the
+positive scale of index 17,672 once to the raw sum and dividing by
+the common divisor gives `−88476104653270299/9444732965739290427392`
+with zero imaginary part. Scratch JSONL SHA-256 is
+`5ceb2b8c307d8e3d5101ad60db3e3abc99f1ee4484dfd967270597d5d4d7c089`.
+The accepted contiguous range is now `[0,5)` for this pair, leaving
+67 prefixes and the other dominant-map occurrences open.
