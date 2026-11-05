@@ -7390,3 +7390,18 @@ for four block-0 selectors matched exact values and reduced
 left contractions from 72 to 18. Total selector wall time
 changed from 11.12 to 10.95 seconds, so the replay continues
 to use the original cache scope.
+
+### Complete dominant representative (0,8)
+
+Independent review reconstructed the exact ordered roster from
+all 256 directly evaluated selectors in 16 terminal shards.
+No caps were hit. Each gamma slice contributes
+`688672510171296147/37778931862957161709568`, for a complete
+direct subtotal of `688672510171296147/9444732965739290427392`
+with zero imaginary part. The receipt SHA-256 is
+`04a49ea23c5604e21eeda9830bc04ffa10a1a4006efc46ca03440720587a2211`.
+
+The verified 18-member orbit covers 54 signed source words,
+all disjoint from the 387 already accepted. Its contribution is
+`6198052591541665323/4722366482869645213696`. Six of 148
+dominant orbits now have complete results, covering 441 words.
