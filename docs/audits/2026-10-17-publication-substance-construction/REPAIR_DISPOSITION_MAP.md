@@ -318,9 +318,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   [portable single-square6 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-single-square-four-deviation-population)
   and [free-torus30 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-free-torus-four-deviation-population), plus the
   [independently reviewed two-square8 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-two-square-four-deviation-population), plus the
-  [both-source square/free-torus pair](L1_RETARDED_SPECTRAL_INTERFACE.md#both-sources-on-one-square-with-a-free-torus),222 of272
+  [both-source square/free-torus pair](L1_RETARDED_SPECTRAL_INTERFACE.md#both-sources-on-one-square-with-a-free-torus), and the
+  [two-square protected-torus class](L1_RETARDED_SPECTRAL_INTERFACE.md#two-squares-and-a-source-bearing-protected-torus),226 of272
   words have portable accepted receipts and reviewed evaluators.
-  The50 remaining words split28 same-axis and22 mixed-axis.
+  The46 remaining words split28 same-axis and18 mixed-axis.
   Next classify these residual cores and construct the next complete
   class. Complete k4 and physical B3 matching remain open.
   The remaining residual-core classes still require construction.

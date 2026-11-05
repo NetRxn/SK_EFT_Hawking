@@ -98,3 +98,14 @@ existing test suites during repair. Current
 L1 sentence targets have been separately corrected to exact source
 identifiers with scope qualifications. That source repair does not close
 any of the four findings above.
+
+- **Current implementation evidence for1.4:** [Accepted design](NAMESPACE_SPEC_REVIEW.md)
+  and [independent implementation review](NAMESPACE_IMPLEMENTATION_REVIEW.md)
+  cover the minimal root-component extension to the existing helper. The
+  [original failure](NAMESPACE_BEFORE.txt), [new red regression](NAMESPACE_RED.txt)
+  and [116 passing focused cases](NAMESPACE_AFTER.txt) preserve both directions,
+  including a real external-import seed, restored bytes/mtime and the unchanged
+  exact D3 regression. The [population pilot](NAMESPACE_POPULATION.json) affects
+  only the imported papers root. [Freshness checks](NAMESPACE_FRESHNESS.txt)
+  pass3/3. Canonical closure awaits the committed source anchor.
+- **Verify:** `uv run python -m pytest tests/test_dependency_declaration.py -q`

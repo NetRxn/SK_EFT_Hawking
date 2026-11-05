@@ -8866,3 +8866,47 @@ the author is investigating the four-word mixed class191/202/238/239.
 Full k4, the source/action ensemble, common partition normalization,
 physical B3 susceptibility/window, microscopic modes and transport
 remain open. No publication or main acceptance follows from this class.
+
+
+## Two squares and a source-bearing protected torus
+
+The [portable evaluator](l1_extended_offset_witness_k4_two_square_protected_torus.py)
+completes the four mixed words191/202/238/239. The actual geometry retains
+both ordered sources and all fifteen paired action vertices. Two explicit
+protected squares use distinct probe/component labels; a singly source-bearing
+four-face torus retains all fifteen exact Haar branches. One source is fixed
+on the joint seven-edge acyclic forest, and the other remains integrated.
+With E22/J0 and nine peeled pairs the divisor is
+`192^46 * 4^64 * 48^9 * 2^15`; the protected-core branch weights already
+include the torus normalization, so no further48^4 factor applies.
+
+The [independent scientific review](l1_k4_protected_torus4_review.md),
+[four original terminal archives](l1_k4_protected_torus4_receipts.jsonl) and
+[sixty-branch reduction](l1_k4_protected_torus4_verification.json) establish
+`1016884898158927659939/2251799813685248` for each word, with mixed-axis
+subtotal `1016884898158927659939/562949953421312`. Actual axis2/3 and
+XOR1 source covariance hold for191/238 and202/239, branch by branch.
+Independent full191 replay reproduces every branch and the final raw value.
+Maximum intermediate size is16,448 rows under unchanged caps.
+
+The [portable review](l1_k4_protected_torus4_port_review.md) checks all five
+scientific ASTs against the accepted source, canonical sibling imports and
+sixteen principal bindings, exact four-word census, fixed-label controls and
+invalid CLI refusals. ROOT's [actual portable191 replay](l1_k4_protected_torus4_portable_control.json)
+and [terminal exit](l1_k4_protected_torus4_portable_exit.json) match its exact
+coefficient, raw numerator and divisor. Preparation took27.036710 seconds;
+the whole fifteen-branch warm solve took14.352064 seconds; parent wall time
+was41.523641 seconds, within the separate600/60/665-second limits.
+The [archive verification](l1_k4_protected_torus4_archive_verification.json)
+checks all twelve original stdout/stderr/exit byte streams and hashes,
+all sixty branch calculations, the subtotal and actual portable provenance.
+The evaluator SHA256 is
+`764dabd1629e82bbe835343ccb4385438c09aafd107ad75b9d4577e67180fe3b`.
+Run it without arguments for the exact class census, with `--controls-only`
+for bounded fixed-label controls, or with `--word 191` for a full coefficient.
+
+Portable accepted coverage is now226/272 selected words:136 same-axis and90
+mixed-axis. Forty-six remain, comprising28 same-axis and18 mixed-axis words.
+Construct the remaining protected-core classes. Full k4, full source/action
+ensemble and common partition normalization remain open, as do physical B3
+susceptibility/window, microscopic modes, transport and publication acceptance.
