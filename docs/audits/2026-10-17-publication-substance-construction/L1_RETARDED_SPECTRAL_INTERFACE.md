@@ -7684,3 +7684,18 @@ before emitting results. One shared preparation tested selector 0
 from `(8,9)` on the original roster and `(20,8)` on the second.
 The control SHA-256 is
 `c5bea6490c54581c1fa8fe8bfb535f26c2ebf30727e85ec6a6c8efb3c4622d0d`.
+
+### Complete dominant representative (0,19)
+
+The repository runner produced all 256 exact ordered selectors
+and 16 terminal shards without a cap. Independent review
+checked the roster, raw reduction and terminal representative pin.
+The direct total is `4055515893230966199/9444732965739290427392`
+with zero imaginary part. The receipt SHA-256 is
+`0a8a3f3789f6f7c95cc1a29d157937c2e10bac0214882ec136f4cb2fa5a8f756`.
+
+The verified signed orbit `{(0,19),(1,19),(2,19)}` contributes
+`12166547679692898597/9444732965739290427392` and adds 45
+distinct source words. The nine block-0 representatives are
+complete. Including the separately accepted `(20,8)` orbit,
+coverage is ten of 148 dominant orbits and 648 source words.
