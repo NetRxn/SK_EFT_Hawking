@@ -6975,3 +6975,42 @@ identity, and all observed coefficient equalities before
 writing each orbit. Replaying the 18 direct receipts reproduced
 the reviewed manifest byte for byte. The generator SHA-256 is
 `586038c666e4956871e2d4193e7d8f9d58200416a9469fedcafa8170a8b57d61`.
+
+**Minority orbit reduction readback.** These are the accepted
+coefficients and multiplicities that produce the 81-pair subtotal.
+Every imaginary coefficient is zero. ID 16 was evaluated separately
+after the original manifest replay and matched ID 8 exactly.
+
+| Orbit representative | Multiplicity | Directly evaluated IDs | Exact real coefficient |
+|---|---:|---|---:|
+| 0 | 3 | 0 | `427098043589679/4611686018427387904` |
+| 1 | 3 | 1 | `454108196543967/4611686018427387904` |
+| 2 | 6 | 2, 3 | `470989542140397/4611686018427387904` |
+| 4 | 3 | 4 | `−871859979116847/144115188075855872` |
+| 5 | 9 | 5, 6, 7 | `−871859979116847/144115188075855872` |
+| 8 | 6 | 8, 16 | `−207640550836089/2305843009213693952` |
+| 9 | 6 | 9 | `−231274434671091/2305843009213693952` |
+| 10 | 6 | 10 | `−231274434671091/2305843009213693952` |
+| 11 | 6 | 11 | `−241403242028949/2305843009213693952` |
+| 12 | 6 | 12, 52 | `871859979116847/144115188075855872` |
+| 13 | 18 | 13, 14, 15 | `871859979116847/144115188075855872` |
+| 24 | 9 | 24 | `3340335969373599/576460752303423488` |
+
+ID 16 has 2,304 exact leaves and no caps. Its stdout SHA-256 is
+`fc627a7c25f5e87c15ce0abf3d09cec4953643041c9e89e5f4db9e8d09016969`.
+It supplies a seventh within-orbit comparison and leaves
+the multiplicity-weighted subtotal unchanged.
+
+**Exact reuse of signed site-10 weights.** Independent review
+verified that a single signed map of 4,174 complement masks,
+built from 8,956 compatible products, reproduces both direct
+selector-0 results for components `(0,3)` and `(0,0)`.
+The respective real scalars are
+`30242684552249295/18889465931478580854784` and
+`26336732102857701/18889465931478580854784`, with zero imaginary
+parts. Each uses its own opposite-side transfer. The shared
+map took 0.025 seconds to prepare, and the two subsequent
+contractions took 3.05 and 2.70 seconds. Thus this exact reuse
+has limited effect on the overall cost of the two selectors.
+The stdout SHA-256 is
+`d1436991977a1b99454e3dc2b99339c9e4cef700252affc43828adcd0044a0b0`.
