@@ -1,0 +1,135 @@
+{
+  "verdict": "ACCEPT exact8440c44fe9263d0070002895b5186bca32f4f1a9 for normal history-preserving merge at manual annihilator/full-physical-image reduction and certificate-contract scope",
+  "incoming": "8440c44fe9263d0070002895b5186bca32f4f1a9",
+  "parent": "7f8cf17b443e23fd253ab59be3047bb23c69c60e",
+  "source_sha256": "78861d229e02055c5274a1d3e16fab933d2cac961441816a47a4b739db6e9d26",
+  "candidate_head_at_review": "ab097b381aec6658217bb7237c2dc1ba82bbc174",
+  "initial_continuity": {
+    "fresh": true,
+    "changed": [],
+    "packet": "l1-physical-image-intake-r1.json"
+  },
+  "checks": {
+    "incoming_direct_parent7f": true,
+    "exact_six_additive_delta": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_ACCEPTANCE.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_CERTIFICATE_CONTRACT.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_MATH_REVIEW_R1.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_PHYSICS_REVIEW_R1.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/n16_physical_image_certificate_evidence.zip": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/n16_physical_image_certificate_manifest.json": true,
+    "archive_original_pin": true,
+    "member_set": true,
+    "crc": true,
+    "safe_unique": true,
+    "member_hash:construction/l1-n16-physical-image-certificate-contract-r1.md": true,
+    "expanded:construction/l1-n16-physical-image-certificate-contract-r1.md": true,
+    "member_hash:reconciliation/l1-n16-certificate-literature-intake-r1.md": true,
+    "expanded:reconciliation/l1-n16-certificate-literature-intake-r1.md": true,
+    "member_hash:reconciliation/l1-n16-certificate-primary-source-pins-r1.json": true,
+    "expanded:reconciliation/l1-n16-certificate-primary-source-pins-r1.json": true,
+    "member_hash:review/l1-n16-physical-image-math-review-r1.md": true,
+    "expanded:review/l1-n16-physical-image-math-review-r1.md": true,
+    "member_hash:review/l1-n16-physical-image-physics-review-r1.md": true,
+    "expanded:review/l1-n16-physical-image-physics-review-r1.md": true,
+    "member_hash:source/ADW_EXACT_AUXILIARY_IDENTITY.md": true,
+    "expanded:source/ADW_EXACT_AUXILIARY_IDENTITY.md": true,
+    "member_hash:source/FermionBag4D.lean": true,
+    "expanded:source/FermionBag4D.lean": true,
+    "member_hash:source/MixedState.lean": true,
+    "expanded:source/MixedState.lean": true,
+    "member_hash:source/N16_TEMPORAL_BOUNDARY_IDENTITY.md": true,
+    "expanded:source/N16_TEMPORAL_BOUNDARY_IDENTITY.md": true,
+    "top_level_archive_identical:N16_PHYSICAL_IMAGE_CERTIFICATE_CONTRACT.md": true,
+    "top_level_archive_identical:N16_PHYSICAL_IMAGE_MATH_REVIEW_R1.md": true,
+    "top_level_archive_identical:N16_PHYSICAL_IMAGE_PHYSICS_REVIEW_R1.md": true,
+    "unique_parent_source:source/ADW_EXACT_AUXILIARY_IDENTITY.md": true,
+    "parent_source_exact:source/ADW_EXACT_AUXILIARY_IDENTITY.md": true,
+    "unique_parent_source:source/FermionBag4D.lean": true,
+    "parent_source_exact:source/FermionBag4D.lean": true,
+    "unique_parent_source:source/MixedState.lean": true,
+    "parent_source_exact:source/MixedState.lean": true,
+    "unique_parent_source:source/N16_TEMPORAL_BOUNDARY_IDENTITY.md": true,
+    "parent_source_exact:source/N16_TEMPORAL_BOUNDARY_IDENTITY.md": true,
+    "exact302_line_source": true,
+    "both_review_pins_exact": true,
+    "manifest_parent_exact": true,
+    "held_primary_pdf:Diakonov2011.pdf": true,
+    "held_primary_pdf:Vergeles2025.pdf": true,
+    "manual_scientific_scope_accept": true
+  },
+  "check_count": 47,
+  "failed_checks": [],
+  "git_receipts": {
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_ACCEPTANCE.md": {
+      "sha256": "170b940a1a0f3e3cd4393526ed37a53d426684a7ae3d67433551e6665b42afe5",
+      "bytes": 4489
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_CERTIFICATE_CONTRACT.md": {
+      "sha256": "78861d229e02055c5274a1d3e16fab933d2cac961441816a47a4b739db6e9d26",
+      "bytes": 17501
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_MATH_REVIEW_R1.md": {
+      "sha256": "d6f908e639c7aed2a83ea201b2e3e8c9e74f3d6d11dd1f5dbe00dfb5e4d2c626",
+      "bytes": 14105
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_PHYSICS_REVIEW_R1.md": {
+      "sha256": "0cefc0a577f5e2a54784e1e2bed8152d0f6de5e0151c9d2d1a80788ea16a134d",
+      "bytes": 8156
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/n16_physical_image_certificate_evidence.zip": {
+      "sha256": "1a72f4b641de24894252f0057ce1c67fe029bef1635b7d636e1fa23a3880f3ce",
+      "bytes": 51105
+    },
+    "docs/audits/2026-11-05-l1-physical-bridges/n16_physical_image_certificate_manifest.json": {
+      "sha256": "9c416a5afec81be73cf3482fb93d9da0a610426db99bae0a4fd4a8dd6f76daab",
+      "bytes": 1697
+    }
+  },
+  "archive_manifest": {
+    "archive": "n16_physical_image_certificate_evidence.zip",
+    "bytes": 51105,
+    "members": 9,
+    "sha256": "1a72f4b641de24894252f0057ce1c67fe029bef1635b7d636e1fa23a3880f3ce",
+    "accepted_source_sha256": "78861d229e02055c5274a1d3e16fab933d2cac961441816a47a4b739db6e9d26",
+    "parent_boundary_checkpoint": "7f8cf17b443e23fd253ab59be3047bb23c69c60e",
+    "files": {
+      "construction/l1-n16-physical-image-certificate-contract-r1.md": "78861d229e02055c5274a1d3e16fab933d2cac961441816a47a4b739db6e9d26",
+      "reconciliation/l1-n16-certificate-literature-intake-r1.md": "b06ba0c530dad21d3d2c94c0e733dde3e159cdc6635cc1a16fcddfb0864465c7",
+      "reconciliation/l1-n16-certificate-primary-source-pins-r1.json": "6b18da4d686128e30649ea6544be58fe992692714a82d7045f48eee8c51e22ab",
+      "review/l1-n16-physical-image-math-review-r1.md": "d6f908e639c7aed2a83ea201b2e3e8c9e74f3d6d11dd1f5dbe00dfb5e4d2c626",
+      "review/l1-n16-physical-image-physics-review-r1.md": "0cefc0a577f5e2a54784e1e2bed8152d0f6de5e0151c9d2d1a80788ea16a134d",
+      "source/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+      "source/FermionBag4D.lean": "8b40ba99d093a16c9b17b3e416035b333c2aeb9ba4668cb2c2e3163667b1573c",
+      "source/MixedState.lean": "1d7119f829efeac46b9e9e235f54e4862844bc4a27e448a07f3a8774a24b44ab",
+      "source/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49"
+    },
+    "scope": "Independently accepted manual auxiliary-annihilator/whole-physical-image reductions and exact normalization/reflection/state certificate contract only; no evaluated normalization, Gram/state/witness, feasibility or execution admission"
+  },
+  "parent_source_paths": {
+    "source/ADW_EXACT_AUXILIARY_IDENTITY.md": "docs/audits/2026-10-17-publication-substance-construction/ADW_EXACT_AUXILIARY_IDENTITY.md",
+    "source/FermionBag4D.lean": "lean/SKEFTHawking/FermionBag4D.lean",
+    "source/MixedState.lean": "lean/SKEFTHawking/QuantumNetwork/MixedState.lean",
+    "source/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md"
+  },
+  "held_primary_hash_readback": [
+    {
+      "file": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Diakonov2011.pdf",
+      "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da",
+      "read_scope": "Held text load-bearing excerpts checked; no independent verification of all optional literature theorem premises"
+    },
+    {
+      "file": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf",
+      "sha256": "daa334f1ad59ace58aba5afe68ec5d4909e717e626ba6fa7c0d7237c8df43eac",
+      "read_scope": "Held text load-bearing excerpts checked; no independent verification of all optional literature theorem premises"
+    }
+  ],
+  "contradictions": [],
+  "accepted_obligation": "Actual manual (A),(P),(I),(G): total-Hermite64 annihilator on ALL physical inserted/sourcejet functionals; spatial128 plus halfE32 coefficient degree160; gauge-equivariant auxiliary projection and complete physical-image spanning list; complete original-action N/Z HermitianPSD iff all-A+ positivity only fullZ nonzero.",
+  "remaining": "No normalization/Gram values, nonzero domain, sign/PSD/witness, physical operator/null-space/adjoint/thermal reconstruction, coupling/state/matter/source map, limits/fullW1/B3/tensor/lightcone/transport or N4tensor completion. Couplings remain symbolic; no inference from generic CGL/Volovik/conditional Lean/other-model state.",
+  "actions": "Read-only Git/hash/ZIP/CRC/JSON/source/manual reasoning and continuity checks; only /tmp report writes. No scientific import/evaluation/test/Lean/native/slot/process/source/Git/notebook mutation.",
+  "final_continuity": {
+    "fresh": true,
+    "changed": []
+  }
+}

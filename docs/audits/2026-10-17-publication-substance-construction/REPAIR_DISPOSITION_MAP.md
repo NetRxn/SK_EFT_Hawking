@@ -147,11 +147,20 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   **Accepted bounded construction owner: Executor. Next scientific target:**
   full nonzero normalization and actual same-functional physical-image state
   certification, or a source-matched negative witness on the required algebra.
-  Executor confirmed the source-level continuation: derive a complete
-  degree-bounded physical-image observable/Gram target and reconcile the actual
-  reflection/unitarity assumptions before considering evaluation. The concrete
-  construction contract and independent mathematical/physics acceptance remain
-  pending; no finite-degree claim or evaluation assignment is accepted here.
+  The [whole-physical-image reduction](../2026-11-05-l1-physical-bridges/PUBLICATION_PHYSICAL_IMAGE_INTAKE.md)
+  at `8440c44fe` now has independent mathematical/physics acceptance and ROOT's
+  direct302-line/47-check intake. Normal merge `d89b07c6170d457833a31df571f9cd6fc4e91b5a`
+  preserves its exact source and evidence. Actual global Hermite-degree64
+  annihilation, degree-bounded complete physical-image/gauge projection and
+  same-functional N/Z Gram equivalence are accepted manual results; no full
+  normalization or state certificate was evaluated. The finite projection is
+  nonmultiplicative and supplies no physical-operator reconstruction.
+  **Executor's next substantive target:** complete original-action normalization
+  nonvanishing and the whole-image state/observable certificate or an actual
+  matched obstruction, keeping coupling/state/source correspondence symbolic
+  until derived. Its later `4aca534a` symbolic-denominator handback is pending
+  separate ROOT intake, not accepted or merged by this checkpoint. No favorable
+  physical domain, evaluation, job or Lean slot is selected or admitted.
   **Acceptance reviewers:** producer-independent mathematical and physics/source
   reviewers, then ROOT intake. **Required evidence:** complete action/source
   correspondence, full normalization certificate and the required state pairing;
