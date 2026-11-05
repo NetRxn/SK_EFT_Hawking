@@ -8828,3 +8828,41 @@ their values remain unknown. The next action is to classify those
 residual cores and construct the next complete class. Full k4,
 source/action ensemble, common partition normalization, physical B3
 susceptibility/window, microscopic modes and transport remain open.
+
+
+## Both sources on one square with a free torus
+
+The [portable evaluator](l1_extended_offset_witness_k4_both_source_square_free_torus.py)
+now covers the complete paired class106/142. Both directed source edges,
+(0,2) and(1,2), are retained explicitly on the protected square; the
+other core is a free four-face torus. The acyclic square forest has
+three edges. Each word has E20/J0 and ten peeled pairs, with divisor
+`192^42 * 4^64 * 48^10 * 2^15`. The free-core branch weights are
+`1/256`, `1/1679616`, and `1/1679616`.
+
+The [scientific review](l1_k4_both_source2_review.md),
+[two raw receipts](l1_k4_both_source2_receipts.jsonl), and
+[independent reduction](l1_k4_both_source2_verification.json) establish
+`57744679168632405825/17592186044416` for each word and same-axis
+subtotal `57744679168632405825/8796093022208`. All six branch
+raw/divisor calculations and the actual XOR1 covariance agree.
+Maximum intermediate size is5,552 rows under unchanged caps.
+The [portable review](l1_k4_both_source2_port_review.md) verifies exact
+scientific AST equality, sibling imports, both source labels, fixed
+controls and CLI refusals. ROOT's [portable106 control](l1_k4_both_source2_portable_control.json)
+and [terminal receipt](l1_k4_both_source2_portable_exit.json) reproduce
+the exact coefficient, raw numerator and divisor. Cold preparation
+was23.804930 seconds, warm contraction0.784299 seconds, and parent
+wall time24.678554 seconds, separately bounded at600/60/665 seconds.
+The [archive verification](l1_k4_both_source2_archive_verification.json)
+checks exact original receipt bytes and exit objects, source bindings,
+branch arithmetic and portable provenance. The receipt-bundle digest is
+`e706dc7f4ad41a8ff87436814c1e55e957aa6b33b872e074b0ced35aa833796d`.
+
+Portable accepted selected-word coverage is now222/272:136 same-axis
+and86 mixed-axis words. Fifty remain, comprising28 same-axis and22
+mixed-axis words. Next construct the residual protected-core classes;
+the author is investigating the four-word mixed class191/202/238/239.
+Full k4, the source/action ensemble, common partition normalization,
+physical B3 susceptibility/window, microscopic modes and transport
+remain open. No publication or main acceptance follows from this class.

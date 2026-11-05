@@ -10383,6 +10383,21 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-publication-computation-coverage:infra:1.1",
+      "status": "fixed",
+      "evidence": "Independently accepted source-qualified complete L1 seven-Formula20-parameter entry is applied exactly, preserving all other registry values and physical BUILD duties. Current canonical graph measures seven typed supported Formula dependencies;112 relevant cases pass. Human parameter verification, scoped wrappers and full physical/publication acceptance remain separate.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "71f93c7f",
+      "verified_by": {
+        "command": "uv run python -c \"import sys; sys.path.insert(0,'scripts'); from build_graph import extract_paper_nodes; p=next(p for p in extract_paper_nodes() if p['id']=='paper:L1'); assert p['meta']['has_provenance_entry'] and p['meta']['formulas'], p['meta']\"",
+        "declared": "uv run python -c \"import sys; sys.path.insert(0,'scripts'); from build_graph import extract_paper_nodes; p=next(p for p in extract_paper_nodes() if p['id']=='paper:L1'); assert p['meta']['has_provenance_entry'] and p['meta']['formulas'], p['meta']\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }

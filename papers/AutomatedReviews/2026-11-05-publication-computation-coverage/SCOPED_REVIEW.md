@@ -81,3 +81,33 @@ their separate receipts remain scoped. Next run the memo equality
 diagnostic on an unchanged frozen candidate before another broad
 run, after first checking that dependency extraction would not
 refresh or launch an unallocated Lean process.
+
+
+## Reviewed L1 registry checkpoint and current gate measurement
+
+At71f93c7f7, independent proposal and applied-composition reviews accepted
+only the seven core Formula consumers, twenty existing parameters and
+four modules actually used by L1. Existing Paper25 and every other
+registry entry are preserved. Two RPA backing targets resolve the
+existing W6Ext declaration; no new theorem or physical derivation is
+asserted. All114 sentence IDs/verdicts and human state are unchanged.
+The canonical graph [readback](L1_REGISTRY_GATE_READBACK.json) is bound
+to71f93c7f7 and source hash4e53e7560ae180e1. G4 is passed/measured for
+seven formulas; G3 is blocked/measured for twenty parameters with zero
+human verification. G6 remains explicitly vacuous. G9 needs recheck;
+G11 is blocked. This graph predates the canonical closure of1.1 and
+therefore still includes that finding in its historical blocker list.
+The closure writer subsequently recorded1.1 fixed at71f93c7f7.
+Physical B3, H1 failure/ungrounded claims, modes and transport remain
+open. Residual infra findings1.2 IMPORTS and1.4 namespace remain open.
+
+The quiet-tree memo diagnostic on frozen754cef24e subsequently passed
+one case in21.32 seconds after a read-only dependency-freshness check.
+This resolves that diagnostic in its tested context, not the entire
+prior broad failure population. No fresh full-suite or main acceptance
+is inferred from it or the separately passing five host fixtures.
+
+The [independent final composition review](L1_222_COMPOSITION_REVIEW.md)
+accepts the applied archive, exact closure append and measurement timing.
+[Closure receipt](L1_REGISTRY_CLOSURE.txt) and [quiet memo receipt](FROZEN_MEMO_READBACK.txt)
+preserve their actual commands/results.

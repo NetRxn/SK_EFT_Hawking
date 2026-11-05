@@ -15,8 +15,9 @@ extraction omission and absent-target false pass. ROOT also reproduced
 the local namespace-classification failure in finding1.4. The targeted
 [runtime receipt](REPRODUCTION.json) and [source binding](SOURCE_BINDING.json)
 are source/extractor/evaluator evidence, not a full graph or native run.
-Current disposition: finding1.3 is repaired by propagating an existing
-independently reviewed checkpoint; findings1.1,1.2 and1.4 remain open.
+Current disposition: findings1.1 and1.3 have canonical fixed records.
+Finding1.1 is anchored at71f93c7f7;1.3 propagates the independently
+reviewed existing checkpoint. Findings1.2 and1.4 remain open.
 The Formula-emission part of1.2 is restored, while its IMPORTS-edge
 part remains owed. Residual machinery changes require the existing
 architecture-change workflow.
@@ -52,7 +53,7 @@ describe the pre-integration diagnosis, not the current implementation.
 - **Location:** `src/core/provenance.py::PAPER_DEPENDENCIES`, `scripts/build_graph.py::extract_paper_nodes`, `scripts/readiness_gates.py::_eval_computation_correctness`
 - **Observed:** The actual L1 Paper node has an empty formula roster and `has_provenance_entry=false`. The source Paper25 entry does not populate the distinct L1 bundle. Sentence BACKED_BY links do not feed the evaluator's Paper/CLAIMS/GROUNDED_IN route. The separately accepted 81-case numerical evidence therefore does not establish a G4 pass.
 - **Expected:** Reconcile actual current manuscript consumers into the existing dependency registry, preserving the source Paper25 entry. Do not populate the roster by copying unreviewed legacy consumers. Keep wrapper and independent scientific-script evidence explicit where outside current core-Formula extraction scope.
-- **Next action:** Lead owns manuscript/consumer reconciliation; independent claims and coverage review must accept the precise roster and emitted edges. Remeasure through the canonical gate after findings 1.2 and 1.3 are repaired. Physical B3, mode and transport obligations remain open.
+- **Current disposition:** Independently reviewed reconciliation at71f93c7f7 registers seven actual Formula consumers, twenty existing parameters and four modules. Two backing paths resolve the existing W6Ext theorem; all114 sentence IDs/verdicts and human state are preserved. The existing writer records this finding fixed. The full canonical graph measures all seven G4 consumers supported; G3 is blocked for lack of human parameter verification. [Gate readback](L1_REGISTRY_GATE_READBACK.json) precedes closure and retains that timing explicitly. Static coverage does not discharge physical B3, mode or transport obligations. Finding1.2 still owns the separate IMPORTS defect.
 - **Verify:** `uv run python -c "import sys; sys.path.insert(0,'scripts'); from build_graph import extract_paper_nodes; p=next(p for p in extract_paper_nodes() if p['id']=='paper:L1'); assert p['meta']['has_provenance_entry'] and p['meta']['formulas'], p['meta']"`
 
 ### 1.2 — MAJOR — Formula and import extraction omit mixed-case public functions
