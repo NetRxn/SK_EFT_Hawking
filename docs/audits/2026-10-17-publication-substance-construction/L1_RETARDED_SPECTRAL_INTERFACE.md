@@ -7730,3 +7730,20 @@ census source SHA-256 is
 `a1772986235d544df23e0609d2edfe23690afedf2ade9f6e14eeadec2c3acfd7`.
 A replay must record a signed stabilizer witness and a complete
 direct subtotal for each retained slice before weighting it.
+
+### Complete dominant representatives (8,9) and (9,8)
+
+Independent review checked all 256 exact ordered selectors per
+representative, each set of 16 terminal shards, and the raw-to-scaled
+arithmetic. No caps were hit. Both directly evaluated subtotals are
+`-742478726025364419/9444732965739290427392` with zero imaginary part.
+
+| Representative | Multiplicity | Receipt SHA-256 |
+|---|---:|---|
+| (8,9) | 36 | `27e1838fe5bb0e3106256088f4e20e32e22233f3729b0f7ba1ce15209adc4824` |
+| (9,8) | 36 | `d09b7ba679663aa7bdf9fda4d2a11cb23baab328b42ef68d461b6fa330b5fb45` |
+
+The two signed orbits are disjoint from each other and all ten
+previous orbits. Their combined contribution is
+`-6682308534228279771/1180591620717411303424`, bringing complete
+dominant coverage to 12 of 148 orbits and 720 source words.
