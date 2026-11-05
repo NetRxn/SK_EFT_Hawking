@@ -129,5 +129,7 @@ the existing writer. Architecture/inventory/counts/module freshness passes3/3.
 The generic [registration probe](NAMESPACE_REGISTRATION_PROBE.txt) targets a
 pytest function, so its validate-registration OWED rows do not create a new
 registered check obligation; existing pytest collection remains authoritative.
-Current1.4 closure awaits a committed fix anchor. Residual1.2 IMPORTS,
+The existing writer records current1.4 fixed at06aacc0e2 after the declared
+seven-case suite passes; [closure receipt](NAMESPACE_CLOSURE.txt) is preserved.
+Residual1.2 IMPORTS,
 whole-tree/native/main and physical publication obligations remain open.

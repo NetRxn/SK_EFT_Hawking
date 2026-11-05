@@ -10398,6 +10398,21 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-publication-computation-coverage:infra:1.4",
+      "status": "fixed",
+      "evidence": "Independent specification and implementation reviews accepted the minimal existing local-namespace helper extension. The actual papers.D3.tables producer remains local; exact D3 width regression is unchanged. New namespace test reproduced red before repair, and116 focused cases pass including journalled sentinel-specific production external-import failure and byte/mtime restoration. Counts regenerated; three freshness checks pass. Full project/main/publication acceptance remains separate.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "06aacc0e2",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_dependency_declaration.py::test_every_third_party_import_is_declared -q",
+        "declared": "uv run python -m pytest tests/test_dependency_declaration.py::test_every_third_party_import_is_declared -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }

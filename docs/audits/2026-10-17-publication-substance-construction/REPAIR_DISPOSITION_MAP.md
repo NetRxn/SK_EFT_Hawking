@@ -60,7 +60,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   and inventory package, with112 current scoped passes and three
   passing freshness checks. Finding1.3 is canonically fixed through
   the existing writer. Formula emission is restored, while1.2's
-  mixed-case IMPORTS edges and1.4's namespace scanner remain open.
+  mixed-case IMPORTS edges remain open. The namespace scanner1.4
+  is independently repaired and canonically fixed at06aacc0e2, with
+  the exact D3 regression preserved and116 focused cases passing.
   Independently reviewed registry reconciliation at71f93c7f7 adds
   seven actual core Formula consumers and twenty existing parameters.
   Finding1.1 is canonically fixed through the existing writer. The
@@ -74,9 +76,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   the residual repairs through the existing architecture-change and
   independent review process. Exact sentence
   targets are repaired separately; no gate transition is inferred.
-  Finding1.4 separately records the dependency scanner's false
-  classification of the local papers namespace used by the exact
-  D3 regression; preserve that regression's precision during repair.
+  Finding1.4's namespace repair retains the exact D3 regression and
+  proves a journalled external-import seed still fails the existing
+  declaration assertion. Main and full-tree qualification remain open.
   The broader scoped run is red:6,783 passed,45 failed,8 skipped
   and92 deselected. Its [record and failure identities](../../../papers/AutomatedReviews/2026-11-05-publication-l1-positive-speed/SCOPED_REVIEW.md)
   preserve full qualification debt. Next classify failures against

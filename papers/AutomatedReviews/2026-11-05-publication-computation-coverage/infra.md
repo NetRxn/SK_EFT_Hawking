@@ -17,7 +17,7 @@ the local namespace-classification failure in finding1.4. The targeted
 are source/extractor/evaluator evidence, not a full graph or native run.
 Current disposition: findings1.1 and1.3 have canonical fixed records.
 Finding1.1 is anchored at71f93c7f7;1.3 propagates the independently
-reviewed existing checkpoint. Findings1.2 and1.4 remain open.
+reviewed existing checkpoint. Finding1.2 remains open; finding1.4 is canonically fixed at06aacc0e2.
 The Formula-emission part of1.2 is restored, while its IMPORTS-edge
 part remains owed. Residual machinery changes require the existing
 architecture-change workflow.
@@ -107,5 +107,5 @@ any of the four findings above.
   including a real external-import seed, restored bytes/mtime and the unchanged
   exact D3 regression. The [population pilot](NAMESPACE_POPULATION.json) affects
   only the imported papers root. [Freshness checks](NAMESPACE_FRESHNESS.txt)
-  pass3/3. Canonical closure awaits the committed source anchor.
+  pass3/3. The existing writer records1.4 fixed at06aacc0e2; its declared seven-case suite passes. [Closure receipt](NAMESPACE_CLOSURE.txt) preserves the actual writer result.
 - **Verify:** `uv run python -m pytest tests/test_dependency_declaration.py -q`

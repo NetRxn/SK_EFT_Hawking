@@ -1,7 +1,7 @@
 # ADR-018 — Local namespace identity in dependency declaration checks
 
 Status: design accepted and implementation independently reviewed; canonical
-closure and main qualification pending.
+closure recorded at06aacc0e2; main qualification pending.
 
 ## Context and existing coverage
 

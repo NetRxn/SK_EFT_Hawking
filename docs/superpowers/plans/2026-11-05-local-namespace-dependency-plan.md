@@ -1,7 +1,7 @@
 # Local namespace dependency repair plan
 
 Specification and implementation independently accepted at source scope;
-canonical closure and main qualification remain pending.
+canonical closure recorded at06aacc0e2; main qualification remains pending.
 
 Global constraints: preserve the scientific exact-width regression, existing guard,
 source-walk exclusions, declaration/alias policy, seed-journal restoration, one ROOT
