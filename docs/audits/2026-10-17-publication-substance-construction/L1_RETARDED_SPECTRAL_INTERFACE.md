@@ -7269,3 +7269,36 @@ ordered rosters. Each representative has 2,304 exact leaves,
 The two disjoint orbits bring the reviewed subtotal to
 `1847594199819220965/4611686018427387904` across 231 of 288 pairs
 in 26 of 34 orbits.
+
+### Minority representatives 172 and 176
+
+Independent review matched each pinned roster of 2,304 ordered
+exact leaves and verified both signed scales. Each has 864
+nonzero contributions and zero imaginary part.
+
+| Representative | Multiplicity | Exact real coefficient | Raw receipt SHA-256 |
+|---:|---:|---|---|
+| 172 | 3 | `427098043589679/4611686018427387904` | `f66d30053b684bbb093101fcedc532d3184438aeb2de3bc67dd4e393a79b5bdf` |
+| 176 | 6 | `871859979116847/144115188075855872` | `087d9596b67d9a932848825632728a25b8e58c08f6ddaa5a62c300cb9ef7bf36` |
+
+Their disjoint orbits bring the reviewed subtotal to
+`1008136304970212313/2305843009213693952` across 240 of 288 pairs
+in 28 of 34 orbits.
+
+### Complete fourth dominant component and orbit
+
+The shared-preparation runner evaluated all 256 selectors of
+`(0,4)` directly in 16 terminal shards. Independent review
+checked the ordered selector tuples against the pinned roster,
+reduced the exact raw coefficients, and verified the absence
+of unresolved selectors or cap exits. The full receipt SHA-256
+is `f5c592b644d38a86e975c691047f30aae4b03b111517811e3b3681c5d0f9a13e`.
+
+Each gamma slice contributes
+`688672510171296147/37778931862957161709568`. The complete
+component gives `688672510171296147/9444732965739290427392`
+with zero imaginary part. Its nine-member orbit contributes
+`6198052591541665323/9444732965739290427392` across 27 signed
+source words. Independent reconstruction found the words
+disjoint from the 288 words covered by the first three orbits.
+Four of 148 dominant orbits now have complete results.
