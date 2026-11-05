@@ -7880,3 +7880,62 @@ previously accepted words. The two orbits contribute
 `-3524071874637583143/1180591620717411303424` together.
 Verified dominant coverage is 22 of 148 orbits and 1,386 of
 9,216 words.
+
+### Global chirality exchange pairs the dominant orbits
+
+Independent scientific review accepted a second exact symmetry
+for the full dominant contraction. Conjugation by `γ₃` exchanges
+the two chiral spin blocks. On the seven probe coordinates it
+acts by `x XOR 4`. On the exterior algebra it sends each local
+generator index `i` to `i XOR 2`, with the wedge permutation sign.
+It preserves the Berezin top form, identity tree links and
+normalized product Haar measure. The closed curvature vertices
+each acquire one sign from `γ₅`, which cancel across the fourteen
+retained vertices. Signs on the matched internal Dirac legs
+occur twice. The cut projection commutes with the chiral block
+exchange, and the frozen auxiliary unit remains fixed.
+
+The [exact control](l1_chirality_swap_control.py) checks all 208
+primitive B rows, the seven A center tables, 128 directed
+coframes, and 495 frame Haar monomials through degree four.
+The pinned signed source maps verify coefficientwise equality
+for all 9,216 words under the swap. It pairs all 2,080 components
+and descends to 74 pairs of distinct Spin orbits. The two
+members of each pair have equal whole contraction and equal
+orbit multiplicity. This identity applies at the level of
+whole contractions.
+
+Of the 22 directly evaluated orbits, four already belong to
+two completed pairs, `(3,0)/(7,4)` and `(16,8)/(20,8)`.
+Independent review verified that the other 18 counterparts
+add 1,122 disjoint source words. Verified dominant coverage is
+therefore 40 of 148 orbits and 2,508 of 9,216 words. The remaining
+108 orbits require one exact representative per pair, with
+separate signed membership and multiplicity accounting.
+
+| Direct representative | Added counterpart | Orbit multiplicity | Added words |
+|---|---|---:|---:|
+| (0,0) | (4,4) | 3 | 36 |
+| (0,3) | (4,7) | 3 | 180 |
+| (0,1) | (4,5) | 6 | 72 |
+| (0,4) | (4,0) | 9 | 27 |
+| (0,8) | (4,8) | 18 | 54 |
+| (0,7) | (4,3) | 3 | 45 |
+| (0,11) | (4,11) | 6 | 90 |
+| (0,16) | (4,16) | 9 | 27 |
+| (0,19) | (4,19) | 3 | 45 |
+| (8,9) | (12,9) | 36 | 36 |
+| (9,8) | (13,8) | 36 | 36 |
+| (16,0) | (20,4) | 9 | 72 |
+| (9,9) | (13,9) | 36 | 36 |
+| (9,11) | (13,11) | 36 | 36 |
+| (16,1) | (20,5) | 18 | 144 |
+| (7,19) | (3,19) | 1 | 15 |
+| (3,4) | (7,0) | 9 | 27 |
+| (13,1) | (9,5) | 36 | 144 |
+
+The exact added subtotal is
+`-30789502461494097867/4722366482869645213696`.
+The aggregate dominant subtotal over the 40 accepted orbits is
+`-39911200213072065633/2361183241434822606848`, with zero
+imaginary part.
