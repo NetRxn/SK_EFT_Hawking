@@ -10905,6 +10905,21 @@
         "enforced": true,
         "run_at": "2026-11-04"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:2.5",
+      "status": "fixed",
+      "evidence": "Independent review of the held Glorioso–Liu arXiv v2 source confirmed the local entropy-production result in §III.B and its derivative-expansion assumptions. Both Lean attribution comments and citation registry fields now match that scope. The declared verifier and 56 citation tests passed. The physical entropy-current bridge remains open.",
+      "superseded_by": null,
+      "date": "2026-11-04",
+      "commit": "2b73ca53966ed9aacd69266b82924129dae1cb28",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"without invoking pointwise NEC\" lean/SKEFTHawking/BHThermodynamicsFourLaws.lean",
+        "declared": "cd \"$REPO\" && ! grep -q \"without invoking pointwise NEC\" lean/SKEFTHawking/BHThermodynamicsFourLaws.lean",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-04"
+      }
     }
   ]
 }
