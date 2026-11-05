@@ -5564,7 +5564,21 @@ Independent review verified all five orbits and 960 words per checkerboard.
 | Surviving-face source | `−32945948609504143359375/140737488355328` |
 | Full fixed-shear numerator | `−852229559818802966376234375/576460752303423488` |
 
-Orbits 0–20 now have reviewed receipts. The next range is `[21,26)`.
+The range `[21,26)` exited zero. Independent review verified
+multiplicity 192 for each of the five orbits and 960 words per
+checkerboard.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `3395444431191001224609375/9007199254740992` |
+| Remote source | `−173814225559875344671875/140737488355328` |
+| Upper source | `−19747483311160114386328125/36028797018963968` |
+| Surviving-face source | `−47184185595006298828125/140737488355328` |
+| Full fixed-shear numerator | `−76323076566809815122328125/36028797018963968` |
+
+The stdout SHA-256 is
+`81c15253a9c09763af5a1427136c336268430623ed1d304963e566a5bedcc922`.
+Orbits 0–25 now have reviewed receipts. The next range is `[26,31)`.
 
 The companion
 `--four-mixed-all-protected-disjoint-base-remaining` route covers
@@ -6721,3 +6735,18 @@ to the word sum. The two evaluations establish that cancellation.
 |---|---:|---|---|
 | 3 | `470989542140397/4611686018427387904` | `cfc0228ea35ffdb5a01b6d1ce785c14654c608972b4107c0970ab85b0e3515a0` | `a3ae1e8d77db67f895fc2eb5648eed8ef8aef4d64eaff35413c30aca5a8fdc19` |
 | 4 | `−871859979116847/144115188075855872` | `d5130984b0161d7589797ce8ed832e26bc247eec0435a485e940728779e47535` | `21f580eaaf7cbe2ae1095e02dfb87a0702f4f621b0ccac849b5cf52bf04588e5` |
+
+
+**Exterior selector census.** Independent review verified the
+necessary support of the weighted site-10 component from the
+actual signed factor keys and the correlated projections of the
+opposite factors. Each internal gamma slice gives 64 candidates.
+There are 256 distinct exterior selectors. Each has a unique
+internal slice, since the exterior gamma at `(1,3)` equals
+the internal gamma value in every retained row. The four
+disjoint ranges are `[0,64)`, `[64,128)`, `[128,192)` and
+`[192,256)`. Row 0 is the already verified scalar. The other
+255 rows still need exact contraction. The ordered roster SHA-256
+is `b8bde9d2380ff0fa25a5d2478cd30042c4144d024638729801ddbd5c439e4dae`.
+The census stdout SHA-256 is
+`4823aa1223c813c6ada21d32464d3c17b584d1f8b00a40606e9fccd2ca339c57`.

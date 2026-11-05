@@ -179,8 +179,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   Orbit 0 of the 35-orbit route passed independent receipt reduction
   and matched exactly under both tree choices. Orbit 0 of the
   companion route passed the same checks. The [35-orbit route's first batch](L1_RETARDED_SPECTRAL_INTERFACE.md#all-protected-disjoint-base-batch-covering-orbits-15)
-  passed independent receipt reduction for orbits 1–5. The next range
-  is `[21,26)` after independent review of the [fourth batch](L1_RETARDED_SPECTRAL_INTERFACE.md#all-protected-disjoint-base-batch-covering-orbits-1620).
+  passed independent receipt reduction for orbits 1–5. Orbits 0–25
+  have reviewed receipts. The next disjoint range is `[26,31)`.
   Companion orbits 0–5 have independently verified receipts. The
   next disjoint companion range is `[6,11)`.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
@@ -233,8 +233,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   conditioned selector, matching all 20 unfactored terms under
   independent review. The other internal gamma slices are exact
   zeros for that selector, which is now complete. Verify the
-  exterior roster and the other selectors before crediting the
-  component.
+  exterior roster contains 256 disjoint candidates across four
+  slices. Verify the remaining 255 scalar contractions before
+  crediting the component.
   In parallel, the reviewed 576-occurrence minority census admits
   288 exact center-11 pairs. Independent review verified all 2,304
   leaves and the joint scalar of the 162-row pair at indices 34 and
