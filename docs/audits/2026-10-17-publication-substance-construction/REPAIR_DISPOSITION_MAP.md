@@ -234,9 +234,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   independent review. The other internal gamma slices are exact
   zeros for that selector, which is now complete. Verify the
   exterior roster contains 256 disjoint candidates across four
-  slices. The first 32 scalars have independently verified
-  receipts. Continue with the disjoint range `[32,64)` before
-  reducing the component.
+  slices. All 64 scalars in the first slice have independently
+  verified receipts. Continue with the next disjoint range
+  `[64,80)` before reducing the component.
   In parallel, the reviewed 576-occurrence minority census admits
   288 exact center-11 pairs. Independent review verified all 2,304
   leaves and the joint scalar of the 162-row pair at indices 34 and
@@ -281,6 +281,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   canonical closure. The declared verifier passed on both this branch
   and the [research checkpoint](https://github.com/NetRxn/SK_EFT_Hawking/commit/fc1766949).
   The full merge qualification remains due on the updated head.
+  Focused citation tests at `a34eb6b0` gave 70 passes and three
+  failures in the undeclared-class and citation-cache controls.
+  The canonical checker measured 13 cited bibkeys missing from the
+  registry and 76 undeclared entries against the ceiling of 78.
+  Reconcile source identities and the measured ratchet on this
+  candidate before claiming citation gate acceptance.
   The exact base `ce194cdc4` and candidate have identical
   portfolio structural figure diagnostics after normalizing
   checkout paths. Both report 24 warnings and the same two

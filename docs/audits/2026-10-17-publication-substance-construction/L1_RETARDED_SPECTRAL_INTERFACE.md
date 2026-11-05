@@ -6790,3 +6790,16 @@ imaginary parts.
 |---|---:|---|---|
 | 7 | `−871859979116847/144115188075855872` | `608c4d56a2f7c6f3eff75a84082bfd9e83d2d0ff0e7e0b79b1d6132f53acfba4` | `733f27ea6a5ffa8b4acc12b0b5b0ba39cc8ed07780efc3b20de36985da7f0a53` |
 | 8 | `−207640550836089/2305843009213693952` | `7c7950b416c5f358873483fccd6e750fc38cc5582eaa54dcf3863babfec7ec6a` | `ecff25806cd467f173b28a7acb53702b77eee8d87564d89b7cd0e7e559f72028` |
+
+**Complete first internal slice.** Independent review verified
+the two disjoint batches `[32,48)` and `[48,64)` against the
+same roster. All 32 additional rows are exact with no caps.
+Each batch contributes
+`378279423049817079/37778931862957161709568` with zero imaginary
+part. The full `[0,64)` slice subtotal is
+`378279423049817079/9444732965739290427392` with zero imaginary
+part. The two new stdout SHA-256 values are
+`0bdbd4771a6ec4f9a7a4d0e96be95799e91b4ad785fb0905bf92c9cf2c5b92dc`
+and
+`61232bf290a7f4de2a29e1ab30866bc2b9f319b2f4b8a7713c18ec34c6307c31`.
+The other three slices remain separate.
