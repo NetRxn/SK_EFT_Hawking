@@ -60,7 +60,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   and inventory package, with112 current scoped passes and three
   passing freshness checks. Finding1.3 is canonically fixed through
   the existing writer. Formula emission is restored, while1.2's
-  mixed-case IMPORTS edges remain open. The namespace scanner1.4
+  mixed-case IMPORTS edges are repaired and canonically fixed atd5585d16,
+  retaining436 Formula nodes and93 old edges while adding sixteen direct calls. The namespace scanner1.4
   is independently repaired and canonically fixed at06aacc0e2, with
   the exact D3 regression preserved and116 focused cases passing.
   Independently reviewed registry reconciliation at71f93c7f7 adds
@@ -791,7 +792,9 @@ acceptance. Relative to pre-registry754, L1 G4 changes open to static passed;
 G3 changes open to blocked because the twenty parameters lack human verification.
 No gate-state change follows after71f. L1 G11 remains blocked but its blocking
 references fall from four to two, and total open findings from ten to eight.
-Its remaining blocking references are natural-parameter B3 and IMPORTS1.2.
+At that frozen graph, the remaining blocking references were natural-parameter
+B3 and IMPORTS1.2; the latter now has the source closure below, pending fresh
+canonical gate readback.
 The graph source_hash is not a full content binding; explicit source/timing and
 payload hashes are preserved, including the untracked evidence-sidecar caveat.
 
@@ -803,8 +806,12 @@ failures. The existing closure writer records D3:1.1 and L2:1.1 fixed at8214f00e
 with enforced original corpus verification; this is not a new full-suite result. Thirty-four other
 failures from the frozen receipt remain unaddressed. Preserve scientific BUILD
 and human/main acceptance while qualifying incremental delivery through the
-existing gates. IMPORTS1.2 has an independently reconciled producer repair route
-but no implementation yet; do not rebuild Formula enumeration or G4.
+existing gates. IMPORTS1.2 now has an independently accepted source repair at
+d5585d16 and writer-enforced closure. Its [implementation and review record](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/IMPORTS_IMPLEMENTATION.md)
+preserves all scope regressions,130 producer-module passes,163 consumer passes
+and three freshness checks. The existing producer adds the exact sixteen
+missing relationships; no Formula enumeration or G4 replacement is introduced.
+Refresh exact-head qualification before claiming main or publication readiness.
 
 
 At976d16e0d, the [combined repaired-cohort check](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_976D_REPAIRED_COHORT.json)

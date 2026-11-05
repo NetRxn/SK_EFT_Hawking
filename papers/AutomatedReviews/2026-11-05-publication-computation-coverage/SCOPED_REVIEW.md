@@ -173,3 +173,8 @@ complete producer module passes130 cases with one skip and fifteen deselections;
 163 consumer cases pass. Static relationship coverage supplies no physical proof
 or runtime evidence. Source checkpoint, enforced finding closure and fresh
 canonical gate readback remain distinct from full/main/publication acceptance.
+
+The existing writer subsequently records current infra1.2 fixed atd5585d16,
+after executing its declared Verify command; [closure](IMPORTS_CLOSURE.txt).
+The source repair does not change the historical frozen-suite result or close
+physical B3, other scientific obligations, full qualification or main acceptance.

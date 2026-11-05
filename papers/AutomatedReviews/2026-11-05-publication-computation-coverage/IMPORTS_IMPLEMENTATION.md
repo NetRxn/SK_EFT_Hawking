@@ -48,5 +48,7 @@ existing edge producer, not a registered check; those new-check sites do not
 apply. Existing edge assembly already invokes the producer. The owning QA map,
 ADR-009 D6, specification and plan describe the bounded mechanism. Counts are
 regenerated through the existing writer; Lean sources and live slots are
-unchanged. Canonical finding closure, exact-head all-bundle readback and
-main/full/native/security/human/publication gates remain separate.
+unchanged. The existing closure writer records finding1.2 fixed atd5585d16 after
+running its declared Verify command; [receipt](IMPORTS_CLOSURE.txt). Exact-head
+all-bundle readback and main/full/native/security/human/publication gates remain
+separate.

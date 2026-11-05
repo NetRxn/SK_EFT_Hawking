@@ -10443,6 +10443,21 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-publication-computation-coverage:infra:1.2",
+      "status": "fixed",
+      "evidence": "Existing Formula eligibility and bounded AST/compiler binding repair preserve436 Formula dictionaries and93 previous direct edges while adding exactly16 missing relationships. Independent R5 and final composition acceptance, actual real-source omission/red/bytes-mtime restoration,130 module passes and163 consumer passes are preserved in IMPORTS_IMPLEMENTATION.md and its linked evidence. This closes the source extraction defect only; physics and full/main/publication qualification remain separate.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-publication-computation-coverage/IMPORTS_IMPLEMENTATION_REVIEW_R5.md",
+      "date": "2026-11-05",
+      "commit": "d5585d16",
+      "verified_by": {
+        "command": "uv run python -c \"import sys; sys.path.insert(0,'scripts'); from build_graph import extract_formula_nodes,extract_imports_edges; nodes=extract_formula_nodes(); expected={'c_GW_from_chi_vest','c_GW_deviation_from_c','c_GW_natural_range','dispersion_correction_from_GammaH'}; assert expected <= {n['name'] for n in nodes}; edges=extract_imports_edges({n['id'] for n in nodes}); assert any(e['source']=='formula:G_N_emergent' and e['target']=='formula:G_N_sakharov' for e in edges)\"",
+        "declared": "uv run python -c \"import sys; sys.path.insert(0,'scripts'); from build_graph import extract_formula_nodes,extract_imports_edges; nodes=extract_formula_nodes(); expected={'c_GW_from_chi_vest','c_GW_deviation_from_c','c_GW_natural_range','dispersion_correction_from_GammaH'}; assert expected <= {n['name'] for n in nodes}; edges=extract_imports_edges({n['id'] for n in nodes}); assert any(e['source']=='formula:G_N_emergent' and e['target']=='formula:G_N_sakharov' for e in edges)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }

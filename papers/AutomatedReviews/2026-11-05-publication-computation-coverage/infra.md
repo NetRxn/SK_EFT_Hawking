@@ -17,8 +17,8 @@ the local namespace-classification failure in finding1.4. The targeted
 are source/extractor/evaluator evidence, not a full graph or native run.
 Current disposition: findings1.1 and1.3 have canonical fixed records.
 Finding1.1 is anchored at71f93c7f7;1.3 propagates the independently
-reviewed existing checkpoint. Finding1.2 has an independently accepted residual IMPORTS implementation, pending
-canonical closure; finding1.4 is canonically fixed at06aacc0e2.
+reviewed existing checkpoint. Finding1.2 is canonically fixed atd5585d16 after independent residual
+IMPORTS acceptance and writer-enforced verification; finding1.4 is fixed at06aacc0e2.
 The Formula-emission part of1.2 is restored. Its residual IMPORTS repair
 now has [accepted implementation evidence](IMPORTS_IMPLEMENTATION.md). Residual machinery changes require the existing
 architecture-change workflow.
@@ -65,8 +65,8 @@ describe the pre-integration diagnosis, not the current implementation.
 - **Location:** `scripts/build_graph.py::extract_formula_nodes`, `scripts/build_graph.py::extract_imports_edges`
 - **Observed:** Lowercase-only identifier expressions omit 26 of 436 public source functions. Four omitted GW functions are `c_GW_from_chi_vest`, `c_GW_deviation_from_c`, `c_GW_natural_range`, and `dispersion_correction_from_GammaH`. Actual extraction emits 410 Formula nodes. This is a producer omission, not evidence that the functions or their Lean substrate are missing.
 - **Expected:** The existing producer must represent actual public mixed-case identifiers and their direct import/call relations, while retaining private-helper exclusions and alias-resolution protections.
-- **Next action:** Lead records the accepted residual repair through the canonical closure writer after its source checkpoint, then refreshes exact-head graph/gate evidence. Full qualification and main integration remain separate.
-- **Current disposition:** Existing structural Formula repair emits all436 public functions unchanged. The independently reviewed existing IMPORTS producer now emits109 direct edges: all93 prior dictionaries and the exact16 measured additions. Original scope defects, real production red/restoration and passing consumer evidence are preserved in [the implementation record](IMPORTS_IMPLEMENTATION.md). Closure is pending the source commit and writer enforcement; no runtime/scientific/full qualification is inferred.
+- **Next action:** Lead refreshes exact-head graph/gate evidence after the writer-enforced source closure. Full qualification and main integration remain separate.
+- **Current disposition:** Existing structural Formula repair emits all436 public functions unchanged. The independently reviewed existing IMPORTS producer now emits109 direct edges: all93 prior dictionaries and the exact16 measured additions. Original scope defects, real production red/restoration and passing consumer evidence are preserved in [the implementation record](IMPORTS_IMPLEMENTATION.md). The existing writer records1.2 fixed atd5585d16; [closure receipt](IMPORTS_CLOSURE.txt) preserves its enforced Verify result. No runtime/scientific/full qualification is inferred.
 - **Verify:** `uv run python -c "import sys; sys.path.insert(0,'scripts'); from build_graph import extract_formula_nodes,extract_imports_edges; nodes=extract_formula_nodes(); expected={'c_GW_from_chi_vest','c_GW_deviation_from_c','c_GW_natural_range','dispersion_correction_from_GammaH'}; assert expected <= {n['name'] for n in nodes}; edges=extract_imports_edges({n['id'] for n in nodes}); assert any(e['source']=='formula:G_N_emergent' and e['target']=='formula:G_N_sakharov' for e in edges)"`
 
 ### 1.3 — MAJOR — G4 reports PASSED when its declared formula is absent

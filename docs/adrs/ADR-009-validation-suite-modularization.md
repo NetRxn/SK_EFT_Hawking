@@ -413,7 +413,8 @@ workflow and reviewers. Specification and plan:
 ### D6 residual — Static direct Formula call edges
 
 Status: scoped implementation independently accepted for current computation-coverage
-finding1.2; canonical closure and main qualification remain separate.
+finding1.2. Its canonical source closure is anchored atd5585d16; main
+qualification remains separate.
 The existing producer/evaluator/consumer repair above is not reopened.
 
 Extend `extract_imports_edges`, using the existing structural public-definition
