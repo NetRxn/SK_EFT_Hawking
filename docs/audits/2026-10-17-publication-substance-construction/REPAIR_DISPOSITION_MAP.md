@@ -364,8 +364,31 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   integrals. The exterior interval balance needs the inner
   moving-cut term `(J − ż_H s)_inner`, the outer flux, and a
   specified density and current or reduced-state entropy.
-  The local production sign and physical current identification
-  remain open.
+  Independent review also checked the moving-boundary balance for
+  the exterior `[h(t),R]`, with fixed outer cut and outward current
+  positive toward increasing `z`. For a candidate density `s`
+  and current `j` with boundary traces and integrable derivatives,
+  `σ = ∂ₜs + ∂zj` gives
+  `dS_ext/dt = ∫σ dz - j(R) + j(h) - h′ s(h)`.
+  Balbinot's first-order horizon `h = -ε b₁t/c` supplies the
+  inner-cut motion in the short-time regime. A stationary density
+  and spatially constant current at fixed cuts give zero local
+  production and zero accumulation even with positive outgoing flux.
+
+  The same review verified an exact state-identification control.
+  For one regulated free outgoing mode with mean occupation `μ > 0`,
+  compare thermal geometric probabilities `p_n = (1-r)rⁿ`,
+  `r = μ/(1+μ)`, with the number-diagonal mixture `q` on
+  `m = floor(μ)` and `m+1`, with weights `1-(μ-m)` and `μ-m`.
+  Equal means and zero anomalous moments give identical free-field
+  two-point functions and quadratic stress expectations with the
+  same regulator, subtraction and other uncorrelated modes. Since
+  `log p_n` is affine in `n`, `S(p)-S(q)=k_B D(q‖p)>0`.
+  At `μ=0` both states are vacuum. The thermal boundary-flux
+  derivation uses the additional Unruh/thermal state input. The
+  §2.1 construction still requires the physical current or evolving
+  reduced state at the moving cut and a derivation of the local
+  production sign.
   A separate composition trial on `ce194cdc4` combined the
   serializer, D7 regression, managed paths, inventory and citation
   fixes with the generated tables and reviewed polariton source
