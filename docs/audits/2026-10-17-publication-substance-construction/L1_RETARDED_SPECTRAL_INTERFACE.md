@@ -6907,3 +6907,25 @@ imaginary part.
 |---|---|---|
 | 13 | `c9df3f9363627766347ff8f971c16b2c1db9873bae6ce7658cac78c5548cc58d` | `f38de68e8fccb501c4cf8ace7142607a0e97ffd305132224ff8034c532829b3d` |
 | 14 | `dfa01092e60d4ce09c3f7e50e043009931a106e985a0d79a286de5bab4b07090` | `5aa079a20da8d4d3c5d0362c7c6abcad76e3bdc66fbf44955cc3d3ce1ae456a8` |
+
+**Complete weighted 60-word component.** The final four
+ranges each have 16 exact scalars and no caps. Each contributes
+`378279423049817079/37778931862957161709568` with zero imaginary part.
+
+| Selector range | Stdout SHA-256 |
+|---|---|
+| `[176,192)` | `afe38eaf7fbecf06d7764a73f4e7c9d5c106e169328a5d83dd3dce9ab507189d` |
+| `[208,224)` | `343022347fdfeace0d01bacc7a2d36cbeeb2760e78481a8d88f596f7099e15db` |
+| `[224,240)` | `d0edf4eddc7c0f31a4cc798beed8ac0ee627231d72fb3d0e4ad98211b2c3dfeb` |
+| `[240,256)` | `3d75cab25bbfb58a97af8ca7e6be45903fc97260eab93d76df65c1d37c9010f4` |
+
+Independent review bound selector 0 to its explicit exterior
+tuple and reduced the raw receipts for all 256 distinct keys
+against the pinned roster. Each of the four internal slices
+contributes `378279423049817079/9444732965739290427392`. These
+equalities follow from the raw sums. Applying the common
+divisor once to the full union gives
+`378279423049817079/2361183241434822606848` with zero imaginary part.
+This closes the selected component of the dominant word sum.
+The other components require their own evaluation or an exact
+reduction that preserves all their factors and weights.

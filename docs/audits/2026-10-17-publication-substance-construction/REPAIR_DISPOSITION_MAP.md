@@ -218,7 +218,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   a control for bulk A. Independent review then accepted all 72
   prefixes (1,152 leaves) for the joint contribution of one
   opposite-scale pair in the dominant 208-row primitive. The other
-  9,754 nonempty B occurrences still need contributions to the word
+  9,694 nonempty B occurrences still need contributions to the word
   sum. Independent review verified an exact partition of all 9,216
   dominant occurrences into 6,656 signed center-1 groups. The
   reviewed rank-one manifest partitions them further into 2,080
@@ -236,9 +236,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   exterior roster contains 256 disjoint candidates across four
   slices. All 64 scalars in the first slice have independently
   verified receipts, as do all 64 scalars in the second slice.
-  Verified coverage extends through `[0,176)` and `[192,208)`.
-  Complete `[176,192)` and `[208,256)` against the pinned roster
-  before reducing the component.
+  Independent review verified all 256 selectors and the joint
+  contribution of the selected 60-word component. Its manifest
+  membership is disjoint from the earlier dominant pair and from
+  the separate minority primitives. Next verify
+  exact shared response factors on a second component of the
+  same fixed-center block before applying reuse across components.
   In parallel, the reviewed 576-occurrence minority census admits
   288 exact center-11 pairs. Independent review verified all 2,304
   leaves and the joint scalar of the 162-row pair at indices 34 and
