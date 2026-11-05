@@ -796,8 +796,8 @@ Existing metadata normalization from6a6cd7ee6/b8f352bd8 is independently
 reconciled against exact current D3/L2 preimages and applied through the existing
 writer, preserving every JSON field. The [composition review](../../../papers/AutomatedReviews/2026-11-05-publication-metadata-serialization/COMPOSITION_REVIEW.md)
 and58pass/1intentional-skip receipt cover the three frozen serialization
-failures. New canonical formatting findings await this fix's committed anchor
-and enforced closure; this is not a new full-suite result. Thirty-four other
+failures. The existing closure writer records D3:1.1 and L2:1.1 fixed at8214f00e1
+with enforced original corpus verification; this is not a new full-suite result. Thirty-four other
 failures from the frozen receipt remain unaddressed. Preserve scientific BUILD
 and human/main acceptance while qualifying incremental delivery through the
 existing gates. IMPORTS1.2 has an independently reconciled producer repair route

@@ -10413,6 +10413,36 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-publication-metadata-serialization:D3:1.1",
+      "status": "fixed",
+      "evidence": "Exact existing normalization propagated from independently verified current preimages using canonical bundle_json writer. Actual postimages equal6a6cd7ee6/b8f352bd8, all typed JSON fields/key order unchanged. Independent applied-composition review accepted. Original serializer module58pass1intentional non-bundle-cache skip; no scientific, stage or human-state changes and no whole-tree/main acceptance inferred.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "8214f00e1",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_bundle_json_serializer.py -q",
+        "declared": "uv run python -m pytest tests/test_bundle_json_serializer.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-publication-metadata-serialization:L2:1.1",
+      "status": "fixed",
+      "evidence": "Exact existing normalization propagated from independently verified current preimages using canonical bundle_json writer. Actual postimages equal6a6cd7ee6/b8f352bd8, all typed JSON fields/key order unchanged. Independent applied-composition review accepted. Original serializer module58pass1intentional non-bundle-cache skip; no scientific, stage or human-state changes and no whole-tree/main acceptance inferred.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "8214f00e1",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_bundle_json_serializer.py -q",
+        "declared": "uv run python -m pytest tests/test_bundle_json_serializer.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }
