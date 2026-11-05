@@ -6750,3 +6750,24 @@ disjoint ranges are `[0,64)`, `[64,128)`, `[128,192)` and
 is `b8bde9d2380ff0fa25a5d2478cd30042c4144d024638729801ddbd5c439e4dae`.
 The census stdout SHA-256 is
 `4823aa1223c813c6ada21d32464d3c17b584d1f8b00a40606e9fccd2ca339c57`.
+
+**Selector batch `[1,8)`.** All seven weighted selectors in
+this disjoint interval exited exact under the original caps.
+Independent review checked the pinned exterior roster, raw
+signed numerators, and divisor. Each selector evaluated 8,956
+compatible products and 4,174 distinct complement queries.
+The interval contributes `−312275330437816179/37778931862957161709568`
+with zero imaginary part. The run took 57.41 seconds including
+assembly and 20.07 seconds after assembly. Stdout SHA-256 is
+`2fa68f18c90a654b73562fc3684ecaef350439890774796ec0d1d430a99e5419`.
+The first eight of 256 selectors now have verified scalars.
+
+**Minority manifest IDs 5 and 6.** Both complete 2,304-leaf
+receipts passed independent verification with no caps.
+Each contributes `−871859979116847/144115188075855872` with zero
+imaginary part.
+
+| ID | Roster SHA-256 | Stdout SHA-256 |
+|---|---|---|
+| 5 | `c9df3f9363627766347ff8f971c16b2c1db9873bae6ce7658cac78c5548cc58d` | `5fc724eaacd3ebebd56eb0d7e53270a5305b3bb9a32580f12546e42399ba9875` |
+| 6 | `dfa01092e60d4ce09c3f7e50e043009931a106e985a0d79a286de5bab4b07090` | `ee4f4caf7ab5c2b593d122d6714c60428b418a943bffb540002d14092aac2815` |
