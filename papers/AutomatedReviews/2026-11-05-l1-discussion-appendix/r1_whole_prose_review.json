@@ -1,0 +1,55 @@
+{
+  "task": "l1-discussion-prose",
+  "packet": "l1-discussion-prose-r1.json",
+  "initial_packet_fresh": true,
+  "final_packet_fresh": true,
+  "manuscript_sha256": "80d48ada62d9842f803d34732937b4fa4fb058fa4a753fa600000a63f04726bd",
+  "pdf_sha256": "755f2e8064b49beb5fe5510220202e230e5235ccec3ef5dc337e6737d79c915d",
+  "entire_source_read_before_prior_review": true,
+  "source_lines": 582,
+  "enddocument_reached": true,
+  "individual_pages_viewed": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "ordinary_restructuring": "LANDED_WITH_BOUNDED_REPAIRS",
+  "whole_paper_acceptance": "BLOCK",
+  "questions": {
+    "1": "YES",
+    "2": "YES_WITH_NAVIGATION_REPAIR",
+    "3": "YES_AT_READER_SCOPE",
+    "4": "NO_LINES_469_471",
+    "5": "YES_DECLARED_REPOSITORY_INSTRUMENT"
+  },
+  "current_defects": [
+    {
+      "line": 332,
+      "page": 3,
+      "issue": "Appendix reference renders empty as Appendix .",
+      "repair": "Use visible named appendix link or appropriate numbered reference."
+    },
+    {
+      "lines": [
+        469,
+        471
+      ],
+      "page": 4,
+      "issue": "Native execution/certificate framing addresses internal process.",
+      "repair": "Replace framing with reader-facing scientific scope; preserve nonderivation caveat."
+    }
+  ],
+  "length": {
+    "compiled_pages": 5,
+    "word_equivalents": 3515,
+    "declared_ceiling": 3750,
+    "whole_pdf_includes_appendix_and_references": true,
+    "fresh_publisher_policy_verified": false
+  },
+  "scientific_construction": "OPEN_ORIGINAL_FULL_STRENGTH",
+  "native_execution_performed": false,
+  "tracked_mutations": false,
+  "report": "/tmp/l1-discussion-prose-independent-20261105.md"
+}

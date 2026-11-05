@@ -1,0 +1,11 @@
+{
+  "existing_instrument": "scripts/validation/checks/bundles_readiness.py::_measure_manuscript",
+  "value": 3515,
+  "unit": "word_equivalents",
+  "note": "1 figure(s) at 300 words each",
+  "declared_ceiling": 3750,
+  "measured_within_declared_ceiling": true,
+  "manuscript_sha256": "80d48ada62d9842f803d34732937b4fa4fb058fa4a753fa600000a63f04726bd",
+  "pdf_sha256": "755f2e8064b49beb5fe5510220202e230e5235ccec3ef5dc337e6737d79c915d",
+  "scope": "Entire canonical PDF including appendix and references; no new publisher-policy verification"
+}

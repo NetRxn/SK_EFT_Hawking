@@ -34,28 +34,37 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
-- **L1 coherent reader-polish checkpoint.** The
-  [current source, prose, rendered and catalog evidence](../../../papers/AutomatedReviews/2026-11-05-l1-reader-polish/SCOPE.md)
-  accepts ordinary reader polish as LANDED while whole-paper acceptance remains
-  BLOCK. The abstract leads with the result and first-use definitions pass;
-  the independent five reader verdicts are YES/NO/YES/NO/YES. Compilation and
-  all-four-page inspection pass; the existing instrument measures3281/3750
-  word equivalents. The current134-unit catalog preserves every128predecessor,
-  all four scientific blockers,54candidates and human state. Existing intake
-  appends one audit event and closes no finding. The companion's true algebraic
-  match remains, with existing species/regulator and transport BUILD explicit.
-  Next ordinary authoring relocates the formal/reproducibility inventory to
-  accessible support and ends Discussion with its scientific meaning, preserving
-  every adverse condition. The [companion anchor repair](../../../papers/AutomatedReviews/2026-11-05-l1-companion-anchor/SCOPE.md)
-  corrects the false count ordering and coupling direction with the exact
-  conditional inverse locus. Independent source/algebra and all-five-page
-  application/render reviews accept repair `e71fcdc1d`; the existing closure
-  writer closes only focused finding1.1. P23 also maps to D3§5/F§6; no blanket
-  downstream synchronization is inferred. Physical species/regulator/one-loop
-  matching remains ROOT-owned BUILD. The original physical construction, both Lean source-comment findings,
-  full native/main and final human gates remain open. Primary custody37dd92504
-  is pushed and clean; newer controller history must be retained during any
-  controlled validation window rather than replaced by older publication code.
+- **L1 ordinary Discussion and supporting appendix accepted.**
+  [Current source, reader/render and catalog evidence](../../../papers/AutomatedReviews/2026-11-05-l1-discussion-appendix/SCOPE.md)
+  accepts the connected main argument and scientific ending. All five current
+  reader questions are YES at their stated scopes; whole-paper acceptance
+  remains BLOCK on original physical construction and title support. Full
+  predicate/four-counterexample, additive/restoration/product and reproducibility
+  material stays in the SAME canonical manuscript's appendix BEFORE bibliography,
+  covered by current claims/style/length review. No pipeline extension or length
+  exemption was introduced. Compilation is clean at five pages; the existing
+  whole-PDF instrument measures3518/3750 word equivalents including appendix
+  and references, without new publisher-policy certification.
+  The independently accepted151-unit catalog preserves all134 predecessors,
+  four scientific blockers,54 candidates and human state. One existing intake
+  appends one audit event and closes nothing automatically. The
+  [preceding reader-polish milestone](../../../papers/AutomatedReviews/2026-11-05-l1-reader-polish/SCOPE.md)
+  remains historical evidence, not the current134-unit or3281-word state.
+  **ROOT's next publication actions:** resolve both existing Lean documentation
+  findings through the supported controlled validation route and integrate the
+  independently accepted physical results into the same source/readiness chain.
+  Preserve newer controller history; do not replace it with older publication
+  control code. Original susceptibility/window, physical state, tensor/matter,
+  microscopic normalization and transport/frequency requirements remain OPEN;
+  no main/native/stage/human publication acceptance is implied.
+
+- **L1 cited companion anchor corrected.** The
+  [source/analytic/application/render repair](../../../papers/AutomatedReviews/2026-11-05-l1-companion-anchor/SCOPE.md)
+  corrects the false count ordering and coupling direction using the exact
+  conditional inverse locus. Existing closure records focused finding1.1 at
+  repair `e71fcdc1d`/closure `ab097b381`; P23 also maps to D3§5/F§6, without
+  blanket downstream synchronization. Physical species/regulator/one-loop
+  matching remains ROOT-owned BUILD. No coefficient or species rescale occurred.
 
 - **L1 reader-facing results and observational scope.** The
   [integrated review and receipts](../../../papers/AutomatedReviews/2026-11-05-l1-reader-results/SCOPE.md)

@@ -268,3 +268,29 @@ event, no automatic closure or stage promotion. Four-page compilation is clean;
 existing length instrument3281/3750. Whole prose remains BLOCK; abstract and
 definitions now pass. Formal inventory/ending and the original B3/state/tensor/
 matter/transport construction remain owed. See AutomatedReviews/2026-11-05-l1-reader-polish.
+
+
+## 2026-11-05 — Connected Discussion and fully reviewed supporting appendix
+
+The main text now uses reader-facing theorem headings and ends its Discussion
+with the finite interval's physical implication. Full predicate dependence,
+four counterexamples, assumed frequency/additive/nonrestoration/near-boundary
+arguments, product witnesses and reproducibility records remain in an ordinary
+same-source appendix before bibliography. Every scientific condition, the
+stronger real nonzero-c endpoint result, figure, source-qualified primary
+comparison, companion normalization debt and original physical BUILD survive.
+A visually empty appendix reference in R1 was corrected with a named hyperlink;
+R1 evidence remains preserved.
+
+Independent current reader review gives YES/YES/YES/YES/YES at stated scopes;
+all five final pages were inspected. Canonical compilation is clean and the
+existing whole-PDF instrument measures3518/3750 word equivalents, including
+appendix/references. Publisher conformance is not newly established. Whole-paper
+acceptance remains BLOCK on the original physical/title requirements.
+
+The independently checked151-unit catalog preserves all134 predecessor records
+and complete adverse history. Four scientific blockers,54 candidate findings and
+human state remain; one canonical audit append and no automatic closure. The
+only metadata change is canonical compiled_pages4-to5. See
+AutomatedReviews/2026-11-05-l1-discussion-appendix/SCOPE.md for exact pins,
+complete current and predecessor reports, source preservation and writer evidence.
