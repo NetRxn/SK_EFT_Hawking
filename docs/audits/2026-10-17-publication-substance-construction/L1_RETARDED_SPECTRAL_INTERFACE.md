@@ -6251,3 +6251,12 @@ The native B evaluator reproduced the first 128 indexed
 classifications, including 102 zeros and 26 nonempty maps.
 The 26 nonempty maps matched the direct contraction, and
 their primitive scales reconstruct the exact coefficients.
+
+The independent pairwise materialization was extended to all
+16 leaves of corrected prefix 3. Every raw numerator agrees
+with the repository replay, including the four zeros. The
+materialization and complement dot took 1.258 seconds after
+31.440 seconds of shared assembly. Peak joins used 53,616
+products and 16,128 rows, within the existing caps. Use the
+same exact census and separate cap status when expanding this
+route to all 2,304 leaves.
