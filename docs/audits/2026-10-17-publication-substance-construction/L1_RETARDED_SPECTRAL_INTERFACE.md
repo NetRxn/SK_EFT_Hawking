@@ -7861,3 +7861,22 @@ The nine-member signed orbit adds 27 source words disjoint from
 the previously accepted 1,143. Its contribution is
 `6198052591541665323/9444732965739290427392`. Verified dominant
 coverage is 20 of 148 orbits and 1,170 of 9,216 words.
+
+### Complete dominant representatives (13,1) and (16,8)
+
+Independent review verified 256 ordered exact selectors and 16
+terminal shards per representative. All four gamma classes were
+singletons in each run. The reviewer checked the distinct pinned
+rosters, class hashes, exact scaling, zero imaginary parts, and
+absence of caps.
+
+| Representative | Words | Direct subtotal | Orbit multiplicity | Full receipt SHA-256 |
+|---|---:|---|---:|---|
+| [(13,1)](l1_gamma_13_1.out.txt) | 144 | `-58583762512121259/2361183241434822606848` | 36 | `617d7da02c8e6c1cfc0a43a7167e9c7881a92116f69444d61ca71c1bb626e96d` |
+| [(16,8)](l1_gamma_16_8.out.txt) | 72 | `-274396016602155609/4722366482869645213696` | 36 | `d34b733d247ffe42acf3dad4b0436ec5c7f6af4898f252c3031441a07802df4f` |
+
+The signed maps prove disjointness from each other and the 1,170
+previously accepted words. The two orbits contribute
+`-3524071874637583143/1180591620717411303424` together.
+Verified dominant coverage is 22 of 148 orbits and 1,386 of
+9,216 words.
