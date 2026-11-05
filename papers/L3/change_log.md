@@ -204,3 +204,17 @@ The full modified file elaborated against local compiled imports,
 and the three new declarations reported only the standard Lean axioms.
 The ADW action derivation of the equation and tail, the geometric
 Killing-horizon calculation, and authoritative validation remain open.
+
+### Ingoing chart and horizon nonaffinity
+
+The four-dimensional ingoing chart has a regular radial block at
+the lapse zero. Away from the angular coordinate poles, the inverse
+raises the null normal to the stationary coordinate generator. The
+repository's Koszul formula and actual coordinate partials give
+nonaffinity equal to half the lapse slope, hence the Schwarzschild
+surface-gravity profile under the previously stated exterior
+equation and mass tail. Independent source review checked the chart
+domain and geometric interpretation. The full source elaborated
+against local compiled imports, with standard axioms reported for
+the inverse and final nonaffinity theorems. The ADW exterior
+derivation and authoritative validation remain open.

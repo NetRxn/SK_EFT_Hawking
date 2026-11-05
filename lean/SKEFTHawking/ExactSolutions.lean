@@ -4,6 +4,7 @@ import SKEFTHawking.EinsteinTensor
 import SKEFTHawking.EnergyConditions
 import SKEFTHawking.LinearizedEFE
 import SKEFTHawking.KerrSchild
+import SKEFTHawking.RiemannianConnection
 import Mathlib
 
 /-!
@@ -533,6 +534,120 @@ theorem spherical_normalized_horizon_profiles
   ring
 
 end SphericalExterior
+
+section IngoingChart
+
+open Filter
+open scoped Topology
+
+open SKEFTHawking.RiemannianConnection
+
+/-- Ingoing chart with coordinates ordered v,r,θ,φ and round angular block. -/
+noncomputable def ingoingSphericalMetric (F : ℝ → ℝ) (r θ : ℝ) : MetricMatrix :=
+  ![![-F r, 1, 0, 0], ![1, 0, 0, 0],
+    ![0, 0, r ^ 2, 0], ![0, 0, 0, r ^ 2 * Real.sin θ ^ 2]]
+
+/-- The radial block has inverse even at a zero of F. Angular poles are excluded. -/
+noncomputable def ingoingSphericalInverse (F : ℝ → ℝ) (r θ : ℝ) : MetricMatrix :=
+  ![![0, 1, 0, 0], ![1, F r, 0, 0],
+    ![0, 0, 1 / r ^ 2, 0], ![0, 0, 0, 1 / (r ^ 2 * Real.sin θ ^ 2)]]
+
+theorem ingoingSpherical_inverse (F : ℝ → ℝ) {r θ : ℝ}
+    (hr : r ≠ 0) (hθ : Real.sin θ ≠ 0) (i j : Fin 4) :
+    sumFin4 (fun k ↦ ingoingSphericalMetric F r θ i k *
+      ingoingSphericalInverse F r θ k j) = if i = j then 1 else 0 := by
+  fin_cases i <;> fin_cases j <;>
+    simp (config := {decide := true}) [sumFin4, ingoingSphericalMetric,
+      ingoingSphericalInverse, hr]
+  field_simp [hr, hθ]
+
+/-- Radial nondegeneracy requires no condition on the lapse. -/
+theorem ingoingSpherical_radial_det (F : ℝ → ℝ) (r θ : ℝ) :
+    ingoingSphericalMetric F r θ 0 0 * ingoingSphericalMetric F r θ 1 1 -
+      ingoingSphericalMetric F r θ 0 1 * ingoingSphericalMetric F r θ 1 0 = -1 := by
+  norm_num [ingoingSphericalMetric]
+
+/-- Metric components at a chart point; they are independent of v and φ. -/
+noncomputable def ingoingChartMetric (F : ℝ → ℝ) (x : Fin 4 → ℝ) : MetricMatrix :=
+  ingoingSphericalMetric F (x 1) (x 2)
+
+/-- Actual coordinate partials used in the Koszul Christoffel formula. -/
+noncomputable def ingoingMetricPartial (F : ℝ → ℝ) (x : Fin 4 → ℝ) : MetricPartial :=
+  fun d i j ↦ deriv (fun s ↦ ingoingChartMetric F (Function.update x d s) i j) (x d)
+
+theorem ingoingMetricPartial_v (F : ℝ → ℝ) (x : Fin 4 → ℝ) (i j : Fin 4) :
+    ingoingMetricPartial F x 0 i j = 0 := by
+  simp [ingoingMetricPartial, ingoingChartMetric, Function.update]
+
+theorem ingoingMetricPartial_vv (F : ℝ → ℝ) (x : Fin 4 → ℝ)
+    (hF : DifferentiableAt ℝ F (x 1)) (d : Fin 4) :
+    ingoingMetricPartial F x d 0 0 = if d = 1 then -deriv F (x 1) else 0 := by
+  by_cases hd : d = 1
+  · subst d
+    have hline : (fun s ↦ ingoingChartMetric F (Function.update x 1 s) 0 0) =
+        fun s ↦ -F s := by
+      funext s
+      simp [ingoingChartMetric, ingoingSphericalMetric]
+    unfold ingoingMetricPartial
+    rw [hline, if_pos rfl]
+    exact hF.hasDerivAt.neg.deriv
+  · simp [ingoingMetricPartial, ingoingChartMetric, ingoingSphericalMetric,
+      Function.update, hd, Ne.symm hd]
+
+/-- Components of the stationary coordinate generator ∂v. -/
+def ingoingK (i : Fin 4) : ℝ := if i = 0 then 1 else 0
+
+theorem ingoingK_nonzero : ingoingK 0 ≠ 0 := by norm_num [ingoingK]
+
+theorem ingoingK_norm (F : ℝ → ℝ) (r θ : ℝ) :
+    sumFin4 (fun i ↦ sumFin4 (fun j ↦
+      ingoingSphericalMetric F r θ i j * ingoingK i * ingoingK j)) = -F r := by
+  simp (config := {decide := true}) [sumFin4, ingoingSphericalMetric, ingoingK]
+
+/-- At a lapse zero the inverse-column identities encode the null normal dr
+and its raised vector ∂v on the regular chart of `ingoingSpherical_inverse`. -/
+theorem ingoing_horizon_normal (F : ℝ → ℝ) {r θ : ℝ} (hz : F r = 0) :
+    ingoingSphericalInverse F r θ 1 1 = 0 ∧
+      (∀ i, ingoingSphericalInverse F r θ i 1 = ingoingK i) := by
+  refine ⟨?_, ?_⟩
+  · simp [ingoingSphericalInverse, hz]
+  · intro i
+    fin_cases i <;> norm_num [ingoingSphericalInverse, ingoingK, hz]
+
+/-- Stationarity and the actual partial of g_vv give the radial inverse column
+in the covariant acceleration of the constant coordinate generator. -/
+theorem ingoing_christoffel_vv (F : ℝ → ℝ) (x : Fin 4 → ℝ)
+    (hF : DifferentiableAt ℝ F (x 1)) (i : Fin 4) :
+    christoffelKoszul (ingoingSphericalInverse F (x 1) (x 2))
+      (ingoingMetricPartial F x) i 0 0 =
+      (deriv F (x 1) / 2) * ingoingSphericalInverse F (x 1) (x 2) i 1 := by
+  simp [christoffelKoszul, sumFin4, ingoingMetricPartial_v,
+    ingoingMetricPartial_vv F x hF]
+  ring
+
+/-- The horizon generator has nonaffinity F′/2 in the fixed ingoing chart
+scale. Interpret the connection on the regular chart of `ingoingSpherical_inverse`. -/
+theorem ingoing_horizon_nonaffinity (F : ℝ → ℝ) (x : Fin 4 → ℝ)
+    (hF : DifferentiableAt ℝ F (x 1)) (hz : F (x 1) = 0) (i : Fin 4) :
+    christoffelKoszul (ingoingSphericalInverse F (x 1) (x 2))
+      (ingoingMetricPartial F x) i 0 0 = (deriv F (x 1) / 2) * ingoingK i := by
+  rw [ingoing_christoffel_vv F x hF, (ingoing_horizon_normal F hz).2 i]
+
+/-- The normalized lapse gives the Schwarzschild nonaffinity at the chart horizon. -/
+theorem ingoing_normalized_horizon_nonaffinity
+    (F : ℝ → ℝ) (x : Fin 4 → ℝ) {a m : ℝ}
+    (ha : 0 ≤ a) (hm : 0 < m) (hinside : a < 2 * m) (hx : x 1 = 2 * m)
+    (hF : ∀ r > a, DifferentiableAt ℝ F r)
+    (hVac : ∀ r > a, r * deriv F r + F r - 1 = 0)
+    (hTail : Tendsto (fun r ↦ r * (1 - F r)) atTop (𝓝 (2 * m))) (i : Fin 4) :
+    christoffelKoszul (ingoingSphericalInverse F (x 1) (x 2))
+      (ingoingMetricPartial F x) i 0 0 = schwarzschildKappa m * ingoingK i := by
+  obtain ⟨hzero, _, hκ⟩ := spherical_normalized_horizon_profiles F ha hm hinside hF hVac hTail
+  have hxinside : a < x 1 := hx.symm ▸ hinside
+  have hz : F (x 1) = 0 := (hzero (x 1) hxinside).2 hx
+  rw [ingoing_horizon_nonaffinity F x (hF (x 1) hxinside) hz, hx, hκ]
+
+end IngoingChart
 
 /--
 **Schwarzschild Bekenstein-Hawking entropy: `S_BH = 4π M²`.**
