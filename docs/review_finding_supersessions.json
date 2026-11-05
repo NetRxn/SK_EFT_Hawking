@@ -10488,6 +10488,21 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-source-register-fidelity:source_register_fidelity:1.1",
+      "status": "fixed",
+      "evidence": "Existing acquisition producer now reuses canonical content fidelity and strongest-phase selection, actual registry inprep identity and workspace resolution. Independent source/final/archive reviews accepted;97 complete affected tests and actual producer/derivative red-green mutation controls with exact restoration pass. Original Verify remains unchanged; broad/main/publication acceptance remains open.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-source-register-fidelity/SOURCE_REGISTER_ARCHIVE_REVIEW.md",
+      "date": "2026-11-05",
+      "commit": "5b9323a1d",
+      "verified_by": {
+        "command": "python -B -c 'import runpy,sys; sys.path.insert(0,\"scripts\"); from src.core.citations import CITATION_REGISTRY as R; from validation.checks.citations import _cache_fidelity; m=runpy.run_path(\"scripts/source_acquisition_register.py\"); p=m[\"WORKSPACE\"]/R[\"Verlinde1988\"][\"primary_source_path\"]; expected=_cache_fidelity(p,\"json\"); actual=m[\"_holding\"](\"Verlinde1988\",R); rows=m[\"_rows\"](); bad=[r[\"key\"] for r in rows if R.get(r[\"key\"],{}).get(\"inprep\") is True and (r[\"route\"]!=\"internal\" or r[\"priority\"]!=\"—\")]; print({\"Verlinde1988_canonical\":expected,\"register\":actual,\"inprep_misrouted\":bad}); assert actual==expected==\"metadata\" and not bad, \"existing register disagrees with canonical cache fidelity or actual inprep identity\"'",
+        "declared": "python -B -c 'import runpy,sys; sys.path.insert(0,\"scripts\"); from src.core.citations import CITATION_REGISTRY as R; from validation.checks.citations import _cache_fidelity; m=runpy.run_path(\"scripts/source_acquisition_register.py\"); p=m[\"WORKSPACE\"]/R[\"Verlinde1988\"][\"primary_source_path\"]; expected=_cache_fidelity(p,\"json\"); actual=m[\"_holding\"](\"Verlinde1988\",R); rows=m[\"_rows\"](); bad=[r[\"key\"] for r in rows if R.get(r[\"key\"],{}).get(\"inprep\") is True and (r[\"route\"]!=\"internal\" or r[\"priority\"]!=\"—\")]; print({\"Verlinde1988_canonical\":expected,\"register\":actual,\"inprep_misrouted\":bad}); assert actual==expected==\"metadata\" and not bad, \"existing register disagrees with canonical cache fidelity or actual inprep identity\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }
