@@ -1,0 +1,225 @@
+{
+  "ref": "56fe8172f695ad664461c6e6517a8913413abbc6",
+  "draft_count": 64,
+  "all_cited_count": 516,
+  "registry_count": 664,
+  "missing_registry_keys": [
+    "Barcelo2011",
+    "CompanionCompilation",
+    "CompanionFaultTolerance",
+    "CompanionStochastic",
+    "FinazziLiberatiSindoni2012",
+    "Kitaev2006",
+    "Roehm2026TQC",
+    "RoehmD4Topological",
+    "RoehmD6FaultTolerant",
+    "RoehmD8Compilation",
+    "RoehmD9Certification",
+    "Verlinde1988",
+    "Wang2026TMDPolariton"
+  ],
+  "separately_measured_extractor_stub_keys": [
+    "Barcelo2011",
+    "CompanionCompilation",
+    "CompanionFaultTolerance",
+    "CompanionStochastic",
+    "FinazziLiberatiSindoni2012",
+    "Kitaev2006",
+    "Roehm2026TQC",
+    "RoehmD8Compilation",
+    "Verlinde1988",
+    "Wang2026TMDPolariton"
+  ],
+  "separately_measured_orphan_keys": [
+    "RoehmD4Topological",
+    "RoehmD6FaultTolerant",
+    "RoehmD9Certification"
+  ],
+  "partition_checked_by_key_not_count": true,
+  "donor_added": [
+    "Barcelo2011",
+    "CompanionCompilation",
+    "CompanionFaultTolerance",
+    "CompanionStochastic",
+    "FinazziLiberatiSindoni2012",
+    "Kitaev2006",
+    "Roehm2026TQC",
+    "RoehmD4Topological",
+    "RoehmD6FaultTolerant",
+    "RoehmD8Compilation",
+    "RoehmD9Certification",
+    "Verlinde1988",
+    "Wang2026TMDPolariton"
+  ],
+  "donor_changed_old": [
+    "BarceloLRR2005"
+  ],
+  "donor_exact_current_missing_additions": true,
+  "donor_current_registry_preimage_exact": true,
+  "rows": [
+    {
+      "key": "Barcelo2011",
+      "cited_in": [
+        "E1"
+      ],
+      "bibitem_in": [
+        "E1"
+      ],
+      "donor_added": true,
+      "donor_inprep": false,
+      "source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "CompanionCompilation",
+      "cited_in": [
+        "D9"
+      ],
+      "bibitem_in": [
+        "D9"
+      ],
+      "donor_added": true,
+      "donor_inprep": true,
+      "source_path": null,
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "CompanionFaultTolerance",
+      "cited_in": [
+        "D9"
+      ],
+      "bibitem_in": [
+        "D9"
+      ],
+      "donor_added": true,
+      "donor_inprep": true,
+      "source_path": null,
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "CompanionStochastic",
+      "cited_in": [
+        "D9"
+      ],
+      "bibitem_in": [
+        "D9"
+      ],
+      "donor_added": true,
+      "donor_inprep": true,
+      "source_path": null,
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "FinazziLiberatiSindoni2012",
+      "cited_in": [
+        "D3"
+      ],
+      "bibitem_in": [
+        "D3"
+      ],
+      "donor_added": true,
+      "donor_inprep": false,
+      "source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf",
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "Kitaev2006",
+      "cited_in": [
+        "D2"
+      ],
+      "bibitem_in": [
+        "D2"
+      ],
+      "donor_added": true,
+      "donor_inprep": false,
+      "source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf",
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "Roehm2026TQC",
+      "cited_in": [
+        "D3"
+      ],
+      "bibitem_in": [
+        "D3"
+      ],
+      "donor_added": true,
+      "donor_inprep": true,
+      "source_path": null,
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "RoehmD4Topological",
+      "cited_in": [
+        "D8"
+      ],
+      "bibitem_in": [],
+      "donor_added": true,
+      "donor_inprep": true,
+      "source_path": null,
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "RoehmD6FaultTolerant",
+      "cited_in": [
+        "D8"
+      ],
+      "bibitem_in": [],
+      "donor_added": true,
+      "donor_inprep": true,
+      "source_path": null,
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "RoehmD8Compilation",
+      "cited_in": [
+        "D4"
+      ],
+      "bibitem_in": [
+        "D4"
+      ],
+      "donor_added": true,
+      "donor_inprep": true,
+      "source_path": null,
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "RoehmD9Certification",
+      "cited_in": [
+        "D8"
+      ],
+      "bibitem_in": [],
+      "donor_added": true,
+      "donor_inprep": true,
+      "source_path": null,
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "Verlinde1988",
+      "cited_in": [
+        "D4"
+      ],
+      "bibitem_in": [
+        "D4",
+        "paper11_quantum_group"
+      ],
+      "donor_added": true,
+      "donor_inprep": false,
+      "source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json",
+      "donor_same_e340_record": true
+    },
+    {
+      "key": "Wang2026TMDPolariton",
+      "cited_in": [
+        "D1"
+      ],
+      "bibitem_in": [
+        "D1"
+      ],
+      "donor_added": true,
+      "donor_inprep": false,
+      "source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf",
+      "donor_same_e340_record": true
+    }
+  ]
+}

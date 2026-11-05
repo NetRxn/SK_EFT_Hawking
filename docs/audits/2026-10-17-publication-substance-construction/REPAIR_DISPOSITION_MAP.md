@@ -847,9 +847,9 @@ The separate79/81 source-sharing/two-protected-tori225-branch mathematical
 design and actual evaluator source are independently accepted, including
 second gamma-slot routing and branch-role transpose. Its direct/fixed controls
 and coefficients remain unrun; it adds no accepted coefficient to that count.
-The independent delivery lane is reconciling already reviewed managed-worktree
-portability history against the current planner path failure; use its accepted
-coherent source boundary and current verification, not a duplicate mechanism.
+The independent delivery lane prepares the already reviewed focused citation
+repair needed by cache finding1.2; managed-worktree planner finding1.1 is fixed
+as recorded below. Use the accepted source boundary and current verification.
 
 
 The [existing managed-checkout repair adoption](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/MANAGED_PATH_ADOPTION.md)
@@ -866,3 +866,30 @@ independent delivery dependency, rather than importing unrelated manuscripts
 or weakening assertions. ROOT owns that integration and independent source
 review is required. This later scoped repair does not rewrite frozen16fde9's
 34fail result or establish a new broad/main/publication pass.
+
+### Parallel assignments and remote resume inputs
+
+ROOT owns candidate integration and the primary local notebook. The scientific
+author prepares direct/fixed79 controls from the accepted
+[79/81 design and scratch-source archive](l1_k4_two_protected_tori_7981_source_design.zip)
+and its [byte manifest](l1_k4_two_protected_tori_7981_source_design_manifest.json).
+This archive preserves original failed checker attempts. It establishes no
+scientific execution: direct/fixed controls precede an unrestricted pilot,
+and independent review precedes portable coefficient acceptance. Extracted
+scratch paths must be rebound deliberately before a remote or installed run.
+The existing resource caps and all physical B3 obligations remain required.
+
+The separate delivery author prepares the focused source patch described in the
+[citation predecessor review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CITATION_PREDECESSOR_review.md).
+Its population, preimage and held-source identity evidence is preserved alongside
+that review. ROOT applies only the reviewed source scope, obtains fresh local
+state through the existing writer and measures the current ratchet before
+tightening it. Historical success rows and unrelated ancestry are excluded.
+Registry resolution cannot establish full-text fidelity; Verlinde metadata
+does not supply the still-owed source body. The cache finding remains open
+until its complete declared verification and independent adoption review pass.
+
+These assignments use the existing continuity packets and author/reviewer
+separation. They do not change the portfolio priorities or create another
+routing ledger. Shared mutation checks and candidate writes remain serialized;
+independent scratch preparation may overlap controlled scientific work.
