@@ -289,6 +289,7 @@ is the load-bearing column:** content-hash and content-compare are sound; mtime 
 | `docs/PERMANENT_TRACKED_HYPOTHESES.md` | `render_tracked_hypotheses.py` | content compare, **hard-fail, never auto-written** | no |
 | `papers/cluster_bundle_index.json` | `bundle_clusters.py` | **none** | **no** |
 | `docs/BUNDLE_READINESS_HEATMAP.md` | `bundle_readiness.py` | **none** | **no** |
+| `docs/SOURCE_ACQUISITION_REGISTER.md` | `source_acquisition_register.py` using canonical citation cache fidelity/discovery, registry identity and the curated overlay | **content compare** via the writer's `--check` against current bundle citations, registry, overlay, bearing inputs and held caches | no — explicit existing writer |
 | `docs/QI_REGISTER.md` | `qi_register.py` | **none** — *re-parses its own Closed Items* | **no** |
 | PG + AGE `sk_eft` | `build_graph.write_graph_to_pg` | **none** (full delete + rewrite) | opt-in only |
 | `figures/provenance_graph.json` | `build_graph --out` | **none** | **no** |
