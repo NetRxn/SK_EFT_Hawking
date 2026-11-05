@@ -6101,3 +6101,12 @@ the unfactored signed route. These four maps are empty.
 Use the same input files, interval, and chunk boundaries
 when resuming into that receipt directory. The already live
 bulk process continues with its original pinned scratch driver.
+
+An independently verified snapshot of the longer A replay
+covers `[35,100)`. The pinned hashes, sorted census identities,
+and repeated prefix-3 control match. Among 65 new exact
+prefixes, 33 vanish, 21 contribute the negative reference
+value, and 11 contribute the positive counterpart. The real
+subtotal is `−41858846734005/36893488147419103232` with zero
+imaginary part. The snapshot excludes the repeated control
+and later rows. The full two-word subtotal remains due.
