@@ -9083,3 +9083,10 @@ precede any pilot. The161/163 opposite-link cycle needs a separate coupled
 holonomy construction. Full k4, full source/action ensemble, common partition
 normalization, physical B3/window, microscopic modes, transport, main and
 publication acceptance remain open.
+
+
+### Shared square with two protected tori79/81: complete paired pilot
+
+The [exact-reuse paired record](l1_k4_two_protected_tori_7981_exact_reuse.md) preserves both complete225-branch unrestricted pilots and independent source, fixed450, arithmetic/covariance and archive reviews. Both exact coefficients are `1165710661495982585955/35184372088832`; warm times40.680624s and41.401290s respect the original single60s bound. The original failed attempt remains preserved.
+
+Portable accepted coverage remains234/272 until independent full original-L/full-row reconstruction, fresh79 replay and portable CLI/class-union acceptance. The two selected words do not establish fullk4/common partition or physical B3/modes/transport.
