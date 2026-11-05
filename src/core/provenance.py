@@ -4500,6 +4500,65 @@ PAPER_DEPENDENCIES = {
                 'value if F2 ever discharges',
         ],
     },
+    # Reviewed current L1 computational dependencies; physical BUILD remains open.
+    'L1': {'title': 'GW170817 confines the vestigial-second-sound graviton identification to one part in 10^15 '
+                     'of its natural range',
+            'topic': 'Conditional c_GW=c sqrt(chi_vest) constraint from conservative GW170817 cap; exact '
+                     'nonnegative compatible interval and adopted-range width comparison; conditional scalar '
+                     'gamma*omega dispersion; internal Planck-anchor Newton-constant comparison. Physical '
+                     'susceptibility normalization, microscopic modes and transport matching remain open.',
+            'formulas': ['c_GW_from_chi_vest',
+                         'c_GW_deviation_from_c',
+                         'dispersion_correction_from_GammaH',
+                         'ligo_constraint_check',
+                         'c_GW_natural_range',
+                         'G_N_emergent',
+                         'G_N_sakharov'],
+            'lean_modules': ['GravitationalWaves', 'VestigialSusceptibility', 'SecondOrderSK', 'LinearizedEFE'],
+            'platforms': [],
+            'parameters': ['GW.C_LIGHT_M_S',
+                           'GW.C_GW_DEVIATION_UPPER_BOUND',
+                           'GW.C_GW_DEVIATION_LOWER_BOUND',
+                           'GW.C_GW_TWO_SIDED_CAP',
+                           'GW.CHI_VEST_NATURAL_LOWER',
+                           'GW.CHI_VEST_NATURAL_UPPER',
+                           'GW.CHI_VEST_DEFAULT',
+                           'GW.GW170817_PEAK_FREQ_HZ',
+                           'GW.GAMMA_H_VESTIGIAL_DEFAULT',
+                           'GW.GW_FREQ_HZ_LOWER',
+                           'GW.GW_FREQ_HZ_UPPER',
+                           'GRAV.G_N_OBS_GEV_M2',
+                           'GRAV.M_PLANCK_GEV',
+                           'GRAV.N_F_PER_GEN_NO_NU_R',
+                           'GRAV.N_F_PER_GEN_WITH_NU_R',
+                           'GRAV.N_F_THREE_GEN_NO_NU_R',
+                           'GRAV.N_F_THREE_GEN_WITH_NU_R',
+                           'GRAV.ALPHA_ADW_LOWER',
+                           'GRAV.ALPHA_ADW_UPPER',
+                           'GRAV.SAKHAROV_COEFFICIENT'],
+            'key_claims': ['Assume c_GW=c sqrt(chi_vest), with nonnegative chi_vest and positive c; the physical '
+                           'spin-2 identification is not derived by this law.',
+                           'At fixed conservative tau=3e-15, |sqrt(chi_vest)-1|<=tau iff chi_vest lies in '
+                           '[(1-tau)^2,(1+tau)^2]; exact width 4tau=1.2e-14. Returned floating endpoints and '
+                           'their subtraction are approximations, not an exact-width certificate.',
+                           'The compatible interval contains chi_vest=1 and lies strictly inside the '
+                           'project-adopted [0.1,10]; natural width 9.9 divided by 4tau equals 8.25e14. This is '
+                           'a width ratio; probability requires an explicit prior.',
+                           'At adopted endpoints 0.1 and 10 the deviations are approximately -0.6838 and 2.1623, '
+                           'exceeding tau by approximately 2.28e14 and 7.21e14. These endpoint failures do not '
+                           'exclude the interior compatible interval.',
+                           'The tracked scalar positivity/compatibility/sub-half-deviation predicate holds '
+                           'throughout the compatible interval and at chi_vest=1; its pointwise falsifiers do '
+                           'not derive a microscopic mode or formalize the missing-dynamics H1 caveat.',
+                           'For the defined scalar correction gamma*omega with omega>0, tolerance is equivalent '
+                           'to |gamma|<=tol/omega. The 1e-30 scaffold at literal 100 is conditional arithmetic; '
+                           'physical Gamma_H units, angular-frequency convention and retarded transport matching '
+                           'remain open.',
+                           'In the internal Sakharov-Adler parameterization '
+                           'G_N_emerg=alpha_ADW*12pi/(N_f*Lambda_UV^2), the adopted Planck anchor reduces the '
+                           'matching coefficient to N_f/(12pi). Project counts {15,16,45,48} yield rounded 0.40 '
+                           'through 1.27 inside adopted [0.1,10]; this is input-dependent comparison, not a '
+                           'derived physical ADW coefficient.']},
 }
 
 

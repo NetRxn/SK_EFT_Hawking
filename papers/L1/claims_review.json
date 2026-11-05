@@ -1711,8 +1711,8 @@
         "links": [
           {
             "kind": "theorem",
-            "target": "SKEFTHawking.VestigialSusceptibility.chi_RPA_closed_form",
-            "verification_scope": "Conditional source theorem; no physical channel normalization or fresh kernel check."
+            "target": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_closed_form",
+            "verification_scope": "Conditional source theorem; no physical channel normalization or fresh kernel check. Exact built W6Ext namespace reconciled by independent source/index review; conditional scalar algebra does not derive microscopic susceptibility or coupling."
           }
         ],
         "completeness": "partial"
@@ -1751,8 +1751,8 @@
         "links": [
           {
             "kind": "theorem",
-            "target": "SKEFTHawking.VestigialSusceptibility.chi_RPA_closed_form",
-            "verification_scope": "Conditional source theorem; no physical channel normalization or fresh kernel check."
+            "target": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_closed_form",
+            "verification_scope": "Conditional source theorem; no physical channel normalization or fresh kernel check. Exact built W6Ext namespace reconciled by independent source/index review; conditional scalar algebra does not derive microscopic susceptibility or coupling."
           }
         ],
         "completeness": "full"
@@ -5336,6 +5336,14 @@
         "verification_exit_code": 0,
         "scope": "Scalar computation repair only; dependency-scanner, full qualification, physical BUILD and human approval remain open."
       }
+    },
+    "registry_mapping_review": {
+      "author_proposal_sha256": "6bbd3d66d38e2babd918acb0139ec57befc0a62b9ed5e1468792d19dc0292da6",
+      "independent_review_sha256": "7fb116bb53e311cc1856dda1acec131d3eda9ca1a61a0ff367d3525c9940be92",
+      "scope": "Seven existing core Formula dependencies and20 existing parameters; source-qualified mapping only. Current runtime/graph/readiness measurement remains separate. Wrapper/D3 width/alpha helper and science audit evidence retain their explicit scope. Physical B3/modes/transport and H1FAIL/three UNGROUNDED verdicts unchanged.",
+      "corrected_rpa_targets": 2,
+      "rpa_actual_declaration": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_closed_form",
+      "provenance_source_sha256_after_entry": "ebf7778164e1f8522261cac70fd4372394a71b35c0ce67a0563eff14760bfc3e"
     }
   },
   "cross_bundle_findings": [
