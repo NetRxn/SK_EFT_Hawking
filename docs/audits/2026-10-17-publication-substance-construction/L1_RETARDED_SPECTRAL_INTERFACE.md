@@ -6516,3 +6516,31 @@ compatible-product cap. The only candidate that closed a
 site was the site-10 closure. It hit the row cap. The next
 route keeps its four exterior grade-four bytes factored
 and queries the opposite environment before emitting rows.
+
+**Minority 162-row pair.** For indices 34 and 35, both B routes
+regenerated the same signed 162-row map and the two frozen center-11
+factors summed to 288 rows. The projected roster keeps 2,304 of
+3,072 candidate leaves in 72 prefixes of 32. Its SHA-256 is
+`7c7950b416c5f358873483fccd6e750fc38cc5582eaa54dcf3863babfec7ec6a`.
+Independent review verified the contiguous first 1,248 leaves.
+Of those, 780 are zero, 396 positive, and 72 negative, with
+922,752 complementary pairs. Applying the common signed scale
+and divisor once gives `14474789200618929/4611686018427387904`
+with zero imaginary part. Stdout SHA-256 is
+`d73859b00fc5d6d1b3250c90c7756f351a4a2d52e397cbeecc0277ce63fbfda4`.
+The wall alarm ended this run after 39 complete prefixes with no
+recorded join cap. The remaining 1,056 leaves require a separate
+disjoint replay on the same roster.
+
+A bounded cache control matched the first 96 raw results. Both
+sides depend on all six external labels, so neither side reused
+a materialization on those leaves. Caching whole sides by external
+keys does not address repeated joins within a side.
+
+**Site-10 query control.** On a signed two-product fixture the
+sparse complement query and materialized contraction both give
+`−32−64i`. The query applies the incident wedge sign and then the
+exterior complement sign. The actual weighted target reached the
+15,552-by-336 site-10 cut. The fixture qualifies the arithmetic
+on that control; the target result and its unfactored comparison
+remain open.
