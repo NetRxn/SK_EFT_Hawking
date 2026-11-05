@@ -1,0 +1,22 @@
+{
+  "catalog_sha256": "4fd35e9a46a87bb40e53dcf92a9083f625f22c55dfae529da98941a411274c61",
+  "current_units": 134,
+  "all_predecessors_accounted": 128,
+  "unchanged_assessments": 83,
+  "same_quote_section_moves": 12,
+  "rewritten_predecessors": 33,
+  "new_units": 39,
+  "old_human_bytes_identical": true,
+  "audit_prior_prefix_unchanged": true,
+  "audit_events_appended": 1,
+  "four_blockers_54_candidates_unchanged": true,
+  "automatic_closures": 0,
+  "summary": {
+    "PASS": 93,
+    "INFO": 28,
+    "TRANSITION": 4,
+    "WARN": 8,
+    "UNGROUNDED": 1
+  },
+  "physical_readiness": "BLOCK; original requirements retained"
+}

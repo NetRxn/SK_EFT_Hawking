@@ -249,3 +249,22 @@ controlled validation requirement. Evidence and disposition are in
 `papers/AutomatedReviews/2026-11-05-l1-apex-propagation/`. Existing module-coverage
 and stage-order checks remain0/2 before and after, with identical corpus results;
 no native, full-stage, main or publication acceptance is inferred.
+
+
+## 2026-11-05 — Coherent reader polish with original physical obligations retained
+
+The abstract now states the conditional interval result first. Source-supported
+first-use definitions and a concise Introduction replace internal phase/program
+navigation. The every-real-nonzero-c endpoint statement is adjacent to endpoint
+checks; complete dependent-conjunct/counterexample and auxiliary product support
+remains in Formal checks. The companion comparison states its genuine algebraic
+match and unresolved species/microscopic normalization without claiming physical
+extraction. R1 proposal objections and corrected R2 are preserved.
+
+Independent source, whole-prose/all-four-page and complete134-unit catalog reviews
+accept this bounded improvement. All128 predecessors, four scientific blockers,
+54supersession candidates and human state remain; one canonical intake audit
+event, no automatic closure or stage promotion. Four-page compilation is clean;
+existing length instrument3281/3750. Whole prose remains BLOCK; abstract and
+definitions now pass. Formal inventory/ending and the original B3/state/tensor/
+matter/transport construction remain owed. See AutomatedReviews/2026-11-05-l1-reader-polish.

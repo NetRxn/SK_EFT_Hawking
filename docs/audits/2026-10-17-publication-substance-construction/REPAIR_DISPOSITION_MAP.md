@@ -34,19 +34,37 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 coherent reader-polish checkpoint.** The
+  [current source, prose, rendered and catalog evidence](../../../papers/AutomatedReviews/2026-11-05-l1-reader-polish/SCOPE.md)
+  accepts ordinary reader polish as LANDED while whole-paper acceptance remains
+  BLOCK. The abstract leads with the result and first-use definitions pass;
+  the independent five reader verdicts are YES/NO/YES/NO/YES. Compilation and
+  all-four-page inspection pass; the existing instrument measures3281/3750
+  word equivalents. The current134-unit catalog preserves every128predecessor,
+  all four scientific blockers,54candidates and human state. Existing intake
+  appends one audit event and closes no finding. The companion's true algebraic
+  match remains, with existing species/regulator and transport BUILD explicit.
+  Next ordinary authoring relocates the formal/reproducibility inventory to
+  accessible support and ends Discussion with its scientific meaning, preserving
+  every adverse condition. ROOT also owns the companion's separately observed
+  Nf approximately19-between15-and16 arithmetic repair against its actual
+  ansatz. The original physical construction, both Lean source-comment findings,
+  full native/main and final human gates remain open. Primary custody37dd92504
+  is pushed and clean; newer controller history must be retained during any
+  controlled validation window rather than replaced by older publication code.
+
 - **L1 reader-facing results and observational scope.** The
   [integrated review and receipts](../../../papers/AutomatedReviews/2026-11-05-l1-reader-results/SCOPE.md)
   accept the source-qualified observation paragraph and mathematical results
-  reorganization without reducing original scientific requirements. Independent
-  review verifies all128 current claim units and all123 predecessors; all four
+  reorganization without reducing original scientific requirements. That checkpoint's
+  independent review verifies128 claim units and all123 predecessors; all four
   scientific blockers,54 prior-finding candidates and human state remain.
   Canonical sentence intake appends one audit event. Compilation and independent
   inspection cover all four pages; the existing instrument measures3268 word
   equivalents against3750, and focused gravitational-wave tests pass89 cases.
   The full prose verdict remains BLOCK; the assigned results improvement is
-  LANDED. Next ordinary authoring addresses the abstract's result-first opening,
-  first-use definitions and remaining internal inventory/program language,
-  preserving scientific content and adverse limitations. ROOT retains the full
+  LANDED. The later reader-polish checkpoint above addresses the abstract and
+  definitions while retaining remaining inventory/structure issues. ROOT retains the full
   manuscript and readiness chain. The original B3/state/tensor/matter/transport
   construction and both separately filed Lean source-comment findings remain
   open. No new all231-gate, native, main or human publication acceptance is
