@@ -954,6 +954,46 @@ private theorem update_line_regular (x : Chart) (a : Fin 4)
     (continuous_const.continuousAt.eventually_lt
       (Real.continuous_sin.comp (update_line_continuous x a 2)).continuousAt h₂)
 
+private theorem ingoing_metricConnection_eq (g : MetricPath) (F : ℝ → ℝ) (x : Chart)
+    (hBase : g 0 = ingoingChartMetric F) (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0) :
+    metricConnection g 0 x = ingoingChartChristoffel F x := by
+  have hInv : metricInverse g 0 x = ingoingSphericalInverse F (x 1) (x 2) := by
+    unfold metricInverse
+    rw [hBase]
+    exact ingoing_inverse_exact F (x 1) (x 2) hr hθ
+  unfold metricConnection ingoingChartChristoffel ingoingMetricPartial
+  simp_rw [hInv, hBase, spatialLineDeriv_eq_update]
+
+/-- On a regular ingoing chart, the Ricci tensor used by the actual
+Einstein–Hilbert density agrees with the ingoing-coordinate calculation. -/
+theorem ingoing_metricRicci_eq (g : MetricPath) (F : ℝ → ℝ) (x : Chart)
+    (hBase : g 0 = ingoingChartMetric F)
+    (hr : 0 < x 1) (hθ : 0 < Real.sin (x 2)) :
+    metricRicci g 0 x = ricciOf (riemannCoord (ingoingChartChristoffel F x)
+      (ingoingChartChristoffelPartial F x)) := by
+  have hPartial : metricConnectionPartial g 0 x = ingoingChartChristoffelPartial F x := by
+    funext a i j k
+    unfold metricConnectionPartial ingoingChartChristoffelPartial
+    rw [spatialLineDeriv_eq_update]
+    apply Filter.EventuallyEq.deriv_eq
+    filter_upwards [update_line_regular x a hr hθ] with t ht
+    rw [ingoing_metricConnection_eq g F _ hBase ht.1.ne' ht.2.ne']
+  rw [metricRicci, ingoing_metricConnection_eq g F x hBase hr.ne' hθ.ne', hPartial]
+
+/-- The local reduced vacuum equation makes the actual chart Ricci tensor
+vanish at the base of an arbitrary metric path on the regular patch. -/
+theorem ingoing_metricRicci_eq_zero_of_local_reducedVacuum
+    (g : MetricPath) (F : ℝ → ℝ) (x : Chart) {f₂ : ℝ}
+    (hBase : g 0 = ingoingChartMetric F)
+    (hr : 0 < x 1) (hθ : 0 < Real.sin (x 2))
+    (hF : DifferentiableAt ℝ F (x 1))
+    (hNear : ∀ᶠ s in 𝓝 (x 1), DifferentiableAt ℝ F s)
+    (h₂ : HasDerivAt (deriv F) f₂ (x 1))
+    (hVac : (fun s ↦ s * deriv F s + F s - 1) =ᶠ[𝓝 (x 1)] fun _ ↦ 0) :
+    ∀ i j, metricRicci g 0 x i j = 0 := by
+  rw [ingoing_metricRicci_eq g F x hBase hr hθ]
+  exact ingoing_spherical_ricciFlat_of_local_reducedVacuum F x hr.ne' hθ.ne' hF hNear h₂ hVac
+
 private noncomputable def ingoingInversePartialTable
     (F : ℝ → ℝ) (r θ : ℝ) : Fin 4 → MetricMatrix :=
   fun a i j => match a.val, i.val, j.val with
@@ -1016,9 +1056,8 @@ theorem ingoing_background_variational_compatibility
     rw [hBase]
     exact ingoing_weight_exact F (y 1) (y 2) hy₁ hy₂
   have hΓ : metricConnection g 0 x = ingoingChristoffelTable F (x 1) (x 2) := by
-    rw [← ingoingChartChristoffel_eq_table F x hr.ne' hθ.ne' hF]
-    unfold metricConnection ingoingChartChristoffel ingoingMetricPartial
-    simp_rw [hInv x hr hθ, hBase, spatialLineDeriv_eq_update]
+    rw [ingoing_metricConnection_eq g F x hBase hr.ne' hθ.ne',
+      ingoingChartChristoffel_eq_table F x hr.ne' hθ.ne' hF]
   have hdB (a i j : Fin 4) : inversePartial g x a i j =
       ingoingInversePartialTable F (x 1) (x 2) a i j := by
     unfold inversePartial

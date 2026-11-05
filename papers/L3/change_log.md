@@ -362,3 +362,19 @@ ingoing calculation and applies the local reduced-vacuum theorem.
 For the box result, a smooth symmetric perturbation supported in
 the interior gives a concrete family for proving the remaining
 regularity, mixed-partial, domination and boundary premises.
+
+### Actual chart Ricci tensor on the ingoing vacuum background
+
+The Einstein–Hilbert chart's connection and coordinate partials
+now agree with the existing ingoing-coordinate expressions on
+the regular patch. The proof establishes neighborhood equality
+before taking coordinate derivatives. The actual chart Ricci
+tensor therefore vanishes under the existing local reduced
+vacuum equation and derivative hypotheses. Independent source
+review accepted this geometric identification. Fresh scratch
+elaboration against the pinned two-module source passed, and
+the Ricci-flatness theorem reports only the standard axioms.
+
+This supplies the Ricci-flat field for the stationarity theorem.
+Deriving its remaining analytic hypotheses from a jointly
+smooth, nondegenerate metric path remains the next construction.
