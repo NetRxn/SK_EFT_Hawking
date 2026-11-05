@@ -860,6 +860,45 @@ vanishes when the action is zero and Grassmann variables are
 present. A physical interacting ensemble still needs its own
 weighted remainder and source-measure construction.
 
+### Positive local Gibbs comparison
+
+Condition on all links except one edge used once in the plaquette.
+For a positive local Gibbs measure, let `V_e` be the sum of action
+terms that depend on this edge and let `Δ` bound its oscillation
+uniformly in the other links. If the small-ball event has Haar
+probability `q`, comparison of the largest weight inside with the
+smallest weight outside bounds its conditional probability by
+`e^Δ q/(1-q+e^Δ q)`. The same bound holds after averaging.
+At radius `Ca²`, the Haar bound implies that a probability bounded
+below by a fixed `p>0` requires
+`Δ ≥ 12 log(1/a)+O(1)`. Only incident terms enter `Δ`, so the
+condition does not grow weaker with lattice volume.
+
+There is a stronger bound for a smooth conditional action. Give
+the two chiral groups their unit-sphere product metric and suppose
+the geodesic Hessian of `V_e` is bounded above by `H≥0`.
+At its minimum the first derivative vanishes. On a ball of radius
+`r=min(1,H^(-1/2))` the action is within `1/2` of its minimum,
+with `r=1` at `H=0`. The ball contains the product of the chiral
+balls of radius `r/√2`. Integrating their radial Haar densities
+with `sin θ≥2θ/π` gives a lower mass bound `8r⁶/(9π⁶)`.
+The conditional density is therefore bounded above by
+`(9π⁶/8)e^(1/2) max(1,H)³`. The conditional smooth-ball
+probability at radius `ε` is at most
+`(π⁴/2)e^(1/2) max(1,H)³ ε⁶`.
+At `ε=Ca²`, maintaining a fixed positive probability requires
+`max(1,H) ≳ a^(-4)`.
+
+For a normalized fundamental-trace Wilson comparison with six
+incident faces per edge in four dimensions, each face contributes
+at most `β` to the directional Hessian along a unit-speed product
+geodesic. Thus `H≤6β`, and the pointwise event requires
+`β ≳ a^(-4)` in this comparison. The derivation and both Haar
+constants were independently checked. L1 has signed Berezin
+weights and still requires its own measure and weighted-error
+analysis. This comparison concerns a pointwise plaquette event.
+It gives no scaling law for an averaged or renormalized curvature.
+
 ### Source contract for a background extension
 
 The held primary [Diakonov 2011, arXiv:1109.0091v1](https://arxiv.org/abs/1109.0091v1)
