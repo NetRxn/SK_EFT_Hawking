@@ -93,15 +93,51 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   At g2=0 normalization is undefined. This settles that regulator's strict-SPD
   decision, not indefinite/Lorentzian or physical sixteen-site construction.
   Full tensor, source/body/state, B3 normalization/window, matter/tensor and
-  transport obligations remain OPEN at original strength. Executor is assessing
-  the next bounded construction that supplies evidence directly to that physical
-  chain; ROOT records its accepted milestone here after review. The prospective
+  transport obligations remain OPEN at original strength. The next bounded
+  source/state milestone is adopted below. The prospective
   Dirac-loop factorization has mathematical design acceptance only. No execution,
   cap increase, blind retry, task cancellation or scientific deferral follows.
   A four-site result remains enabling evidence rather than a replacement for
   the sixteen-site/physical/state/B3 objective. No favorable coupling/sign,
   positive body or source projection is selected after evaluation. ADR008
   admission remains a separate fresh decision.
+
+- **Adopted next L1 physical milestone: complete-source temporal correspondence.**
+  ROOT adopts the independently reviewed
+  [sixteen-site construction contract](../2026-11-05-l1-physical-bridges/N16_SOURCE_STATE_CONSTRUCTION_CONTRACT.md)
+  at source `942c50adb`, following its mathematical and physics R2 assessment
+  acceptances. **Accepted owner: Executor. Next action:** derive the complete-source
+  temporal-boundary identity and completion criterion for the original closed
+  all-extended periodic action, reusing the accepted full-S4 signed Hermite
+  representation. Retain both periodic interfaces, fermion signs, all physical
+  sources and first/mixed-second contacts, and derive the required observable
+  algebra rather than selecting favorable directions. **Acceptance reviewers:**
+  producer-independent mathematical and physics/source reviewers, followed by
+  ROOT intake. **Required first evidence:** exact action/source/reflection/cut
+  correspondence and a complete roster of remaining boundary integrations and
+  indices, with a specified subsequent nonzero-normalization and state-positivity
+  certificate or source-matched negative witness. This adopts a source-level
+  construction, not a completed kernel, feasible evaluator, positive state or
+  evaluation admission. Full nonzero Z alone is insufficient; finite-regulator
+  success would still leave physical matching, limits, B3, tensor and transport
+  requirements open. The N4 full-tensor assignment remains openly owned and is
+  neither cancelled nor scientifically deferred. Original L1 readiness remains
+  ROOT-owned; no Lean lease, resource reservation or new infrastructure follows.
+
+- **Existing L1 normalization and transport debt: primary-source follow-through.**
+  ROOT retains the original action/source/projector/species/regulator/subtraction
+  matching obligation already recorded in
+  [L1_REGISTRY_REVIEW](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/L1_REGISTRY_REVIEW.md).
+  The Dirac-kernel versus Weyl-count inconsistency and Gamma/frequency mismatch
+  are existing BUILD debt, not new findings or discharged prose defects.
+  The actual held Visser primary distinguishes Weyl/Dirac multiplicities and
+  explicitly retains EH/supertrace signs, proper-time regularization, bare,
+  mass-log and finite terms. Those data do not authorize a blind factor-two
+  replacement of the adopted scalar baseline. Next derive the same convention
+  from the actual broken-phase field/source functional before propagating a
+  physical normalization to L1, its companion and their code/proof consumers.
+  Independent source and physical/analytic acceptance are required. Reader
+  clarification preserves this construction obligation and original claim strength.
 
 - **L3 independent enabling reconciliation.** The
   [pinned Paper27/L3 source and lifecycle reconciliation](L3_READINESS_RECONCILIATION_20261105.md)

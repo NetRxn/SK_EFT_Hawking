@@ -1,0 +1,21 @@
+{
+  "task": "l1-reader-definitions-source",
+  "checkout": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+  "head": "2bebbbf5e9c31340b771697d67352ab8c90d07c6",
+  "report": "/tmp/l1-reader-definitions-source-20261105.md",
+  "tracked_writes": false,
+  "scientific_execution": false,
+  "first_continuity_fresh": true,
+  "verdict": "source-supported first-use edits authorable; companion physical-compatibility claim and dispersion matching remain unresolved",
+  "findings": [
+    "free alpha algebraic locus is not physically derived compatibility",
+    "Dirac kernel versus Weyl numeric-count convention unresolved",
+    "H_VergelesNGModeProjection actual carrier has scalar positivity/two limits only",
+    "Gamma_H horizon-to-L1 transport/units/frequency map unsupported",
+    "companion Nf19 between15and16 sentence internally inconsistent"
+  ],
+  "original_build_retained": true,
+  "root_ownership_retained": true,
+  "lsp_discovery": "unavailable; incomplete; no absence claim",
+  "final_continuity_fresh": true
+}

@@ -1,0 +1,41 @@
+# Independent physics assessment review r1 — next L1 bridge
+
+**BLOCK the exact assessment pending one narrow physical-source correction. Otherwise ACCEPT its research-priority recommendation as an assessment, without feasibility or construction acceptance.** The candidate conflates a fixed positive-body family with the separately centered mean-matching family at lambda1. Correct that sentence before treating the whole assessment as accepted.
+
+Candidate `/private/tmp/l1-next-physical-bridge-assessment-r1.md` SHA25637ed41cd13a85a42389d5325bfe1ea8108ce4b43d97c096a5ff897d853e6c05c. First action and final pre-report action were assigned primary l1-next-bridge-physics-assessment-r1.json checks from the same managed checkout; both fresh:true/changed:[]. Read the assessment, newest notebook request and pinned source sections, particularly spectral-interface2845–2934 and physical-matching decomposition's body discussion. Unchanged parent/common-source/roadmap authorities remain those already independently reviewed. No new scientific construction or evaluation was performed.
+
+## Required correction
+
+The downstream paragraph introduces `M=B0+lambda Q`, then says `At lambda=1 its body vanishes`. For fixed positive ordinary B0 and zero-body Q, the body of this family is B0 for EVERY lambda, including1. The vanishing endpoint belongs instead to the separately centered mean-matching family `M=G+lambda(Q-G)=(1-lambda)G+lambdaQ`, whose body is(1-lambda)G. The accepted parent explicitly distinguishes those cases. State that distinction here; neither choice derives microscopic matter/source matching. This is a source-correspondence error, not a reason to abandon the proposed N16 feasibility work.
+
+## Recommendation's genuine connection to original W1/W2
+
+A complete-action, source-correct same-regulator representation and time-cut contract targets the actual missing normalized observable/state functional. This is more directly connected to W1 than further selected k4 words or another N4 amplitude whose regulator already fails the stipulated SPD-body property. It can supply inputs to W2 if it establishes the actual source/state and normalization, whereas accumulating selected terms alone cannot. The assessment appropriately retains the open N4 tensor obligation and separates scientific priority from cancellation, deferral or operator scope disposition. This is a reasoned next candidate, not proof it is uniquely earliest or computationally feasible.
+
+The first milestone—fixing exact action/source/reflection/observable/boundary correspondence before evaluation—is necessary. The second genuinely distinguishes nonzero full Z from positivity/reconstruction, with a source-matched negative witness as a possible outcome. A finite negative witness defeats only its stated representation/domain; positive samples do not establish positivity of the entire retained algebra. State choice, matter interpretation and physical source cannot be selected afterward to retain only favorable Gram directions.
+
+## Actual reusable substrate and its gaps
+
+The spectral record's formal Wick identity and acceptedb92bfa301controls concern an action quadratic in the vector of even coframe bilinears, with possibly indefinite covariance. The full64x64 fixed-real-auxiliary checkerboard determinant has the documented chiral norm factorization; joint auxiliary variables and Haar integration remain. Neither that pointwise determinant sign nor local cut controls establish a positive integrated functional or a completed N16 partition.
+
+NonzeroS4 is quartic in coframes, so the proposed higher differential insertion extension is genuinely needed. The assessment identifies this instead of pretending the quadratic Gaussian covariance already represents full nonzerog1. A determinant generating the Berezin bilinears and finite differential operators is a plausible exact representation route; its detailed source signs/factorials/orientation and time-cut correspondence still require derivation/review. No full-action contraction or nonzero-domain certificate is delivered here.
+
+The source-correct temporal boundary kernel must retain all directed/chiral/gauge/fermion information, original periodicity and contacts. Defining a density matrix from an arbitrary signed transfer matrix's square does not prove correspondence with the original observable correlators, as the assessment correctly states. Prepared positive-matrix Lean algebra supplies a consequence of a constructed positive state, not that state itself.
+
+At pureg2 the accepted all-finite-volume parity already forces literal G0where normalized. Thus even a successful Z32 calculation alone cannot supply the nonzero metric body. Nonzerog1 and any source-selected/matter limit require their own retained terms and correspondence; the collapsedN4 polynomial truncation cannot be imported toN16. This limitation is correctly preserved.
+
+## Bounded downstream acceptance
+
+The proposed one-regulator feasibility question is bounded in scientific scope, not an elapsed-time estimate. Any evaluation still needs a concrete representation/source design, resource bound and fresh admission. Full nonzeroZ is not state/body positivity; a positive state is not a tensor pole, common matter/light cone or causal transport model. B3 still requires the normalized momentum-dependent response, physical source/projector, units/cutoff/subtractions and independently justified stable chi range. The mass4 static metric Hessian cannot simply become a mass2 gradient coefficient or be rescaled to force[0.1,10]. None of these obligations is reduced by the recommendation.
+
+With the explicit body-family correction, the assessment supports existing W1/W2 sequencing and a genuine physical discriminator without authorizing a new run, infrastructure mechanism, axiom, selected-word campaign or scope change. The fulltensor assignment remains openly owned; publication retains end-to-end L1 readiness and actual disposition authority.
+
+Executed only read-only source/text/hash inspection and required continuity checks. No scientific import, job, computation, support enumeration, control/compile/contraction, Git/build/Lean/slot/harness/process or candidate/repository/notebook write occurred. Only this review report was written.
+
+## Additional source-reuse precision before recommendation acceptance
+
+After the initial report text was drafted, the lead supplied supplementary substrate intake and pointed to the exact full-action auxiliary identity. Directly read ADW_EXACT_AUXILIARY_IDENTITY.md equations(5)–(11): equations(7)–(10) ALREADY give a finite exact signed-Hermite auxiliary/fermion-determinant representation including BOTH S4 and S2, arbitrary finite couplings and actual source insertions. This was not missing abstract science. The assessment should explicitly reuse this source, rather than tasking the executor with rebuilding a full-action identity as a new milestone. An exp(D2)exp(g1D4)detM formulation is an optional equivalent representation for deriving the temporal cut, not an absent full-action theorem. Its signed/complex Hermite weight must be retained; fixed-auxiliary determinant norms cannot make it a state measure.
+
+This is a second required precision in the final recommendation. The genuinely missing construction is the complete-source temporal-boundary pairing and its SAME-functional normalization/state certificate. Even a successful finiteN16state certificate is finite-regulator evidence: it does not establish controlled regulator/continuum/source-selected limits or fullW1physical completion. Those limits/source correspondences remain separate original obligations.
+
+A complete nonzero residue of full rationalZ32modulo a good prime, with PROVED invertibility of every denominator and exact original-functional correspondence, can certify Z32nonzero without full rational CRT reconstruction. Zero residue proves nothing about rational nonvanishing. This is an acceptable prospective certificate option, not a calculation or guaranteed tractable route. No new run or source revision was performed; final continuity was checked fresh again immediately before this addendum. The recommendation remains otherwise scientifically well-motivated, subject to the two explicit corrections above.
