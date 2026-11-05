@@ -6966,3 +6966,12 @@ review verified three exact coefficientwise controls for shared Q,
 including one with four rows. The shared calculation then hit
 the original live-row cap. The direct scalar is verified and
 the full shared-Q contraction remains open.
+
+The repository [orbit generator](l1_unpaired_A_minority_spin_orbits.py)
+reproduces the signed orbit manifest from the pinned minority
+manifest, exact primitive maps, and explicit direct receipts.
+It checks both transformed words, the paired signs, the exact B
+identity, and all observed coefficient equalities before
+writing each orbit. Replaying the 18 direct receipts reproduced
+the reviewed manifest byte for byte. The generator SHA-256 is
+`586038c666e4956871e2d4193e7d8f9d58200416a9469fedcafa8170a8b57d61`.
