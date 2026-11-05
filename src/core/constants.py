@@ -1576,7 +1576,8 @@ LEGACY_DRAFT_DANGLING_REF_CEILING = 1
 #: on work nobody was asked to do. Inherited drift is frozen and itemised; a NEW drifted
 #: title fails the submission gate. **Lower this as titles are corrected; raising it
 #: needs a stated reason in the same commit.**
-BIBITEM_TITLE_DRIFT_CEILING = 7
+#: Berti2025 title aligned with the publisher issue in 1ebdcf082, leaving six.
+BIBITEM_TITLE_DRIFT_CEILING = 6
 
 #: Cited bibkeys with NO identifiers (`primary_source_path`/`doi`/`arxiv` all None) and NO
 #: declared `citation_class` — read by `citation_primary_sources_present` (ADR-014 D7).
