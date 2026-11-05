@@ -45,7 +45,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   [repair and independent evidence](../../../papers/AutomatedReviews/2026-11-05-l1-primary-body-comparison/SCOPE.md)
   distinguish the four actual body acquisitions from a fifth, older stale
   uncited register row; no fifth acquisition or science acceptance is credited.
-  Focused finding1.1 awaits canonical recorded closure after the repair commit.
+  Focused finding1.1 is canonically FIXED at repair9bdd7e2b4, with all1258
+  prior ledger records and all four actual source PDF hashes preserved.
   Next complete a full prose-reviewer read-through on the corrected draft,
   integrate accepted physical construction evidence as it becomes applicable,
   and retain original B3/state/tensor/matter/transport BUILD requirements.
