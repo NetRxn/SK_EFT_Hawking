@@ -4,7 +4,7 @@ import SKEFTHawking.EinsteinTensor
 import SKEFTHawking.EnergyConditions
 import SKEFTHawking.LinearizedEFE
 import SKEFTHawking.KerrSchild
-import SKEFTHawking.RiemannianConnection
+import SKEFTHawking.RiemannCoordinate
 import Mathlib
 
 /-!
@@ -646,6 +646,134 @@ theorem ingoing_normalized_horizon_nonaffinity
   have hxinside : a < x 1 := hx.symm ▸ hinside
   have hz : F (x 1) = 0 := (hzero (x 1) hxinside).2 hx
   rw [ingoing_horizon_nonaffinity F x (hF (x 1) hxinside) hz, hx, hκ]
+
+open SKEFTHawking.RiemannCoordinate
+
+noncomputable def ingoingChartChristoffel (F : ℝ → ℝ) (x : Fin 4 → ℝ) : Christoffel :=
+  christoffelKoszul (ingoingSphericalInverse F (x 1) (x 2)) (ingoingMetricPartial F x)
+
+noncomputable def ingoingChartChristoffelPartial
+    (F : ℝ → ℝ) (x : Fin 4 → ℝ) : ChristoffelPartial :=
+  fun d i j k ↦ deriv (fun s ↦ ingoingChartChristoffel F (Function.update x d s) i j k) (x d)
+
+private noncomputable def ingoingPartialTable
+    (F : ℝ → ℝ) (r θ : ℝ) : MetricPartial :=
+  fun d i j ↦ match d.val, i.val, j.val with
+    | 1, 0, 0 => -deriv F r
+    | 1, 2, 2 => 2 * r
+    | 1, 3, 3 => 2 * r * Real.sin θ ^ 2
+    | 2, 3, 3 => r ^ 2 * (2 * Real.sin θ * Real.cos θ)
+    | _, _, _ => 0
+
+private theorem ingoingMetricPartial_eq_table (F : ℝ → ℝ) (x : Fin 4 → ℝ)
+    (hF : DifferentiableAt ℝ F (x 1)) :
+    ingoingMetricPartial F x = ingoingPartialTable F (x 1) (x 2) := by
+  have hrr : deriv (fun s : ℝ ↦ s ^ 2) (x 1) = 2 * x 1 := by
+    simp
+  have hrrφ : deriv (fun s : ℝ ↦ s ^ 2 * Real.sin (x 2) ^ 2) (x 1) =
+      2 * x 1 * Real.sin (x 2) ^ 2 := by
+    simp
+  have hθφ : deriv (fun s : ℝ ↦ x 1 ^ 2 * Real.sin s ^ 2) (x 2) =
+      x 1 ^ 2 * (2 * Real.sin (x 2) * Real.cos (x 2)) := by
+    simp
+  have hn : deriv (fun s ↦ -F s) (x 1) = -deriv F (x 1) := hF.hasDerivAt.neg.deriv
+  funext d i j
+  fin_cases d <;> fin_cases i <;> fin_cases j <;>
+    simp (config := {decide := true}) [ingoingMetricPartial, ingoingChartMetric,
+      ingoingSphericalMetric, ingoingPartialTable, Function.update, hrr, hrrφ, hθφ, hn]
+
+private noncomputable def ingoingChristoffelTable
+    (F : ℝ → ℝ) (r θ : ℝ) : Christoffel :=
+  fun i j k ↦ match i.val, j.val, k.val with
+    | 0, 0, 0 => deriv F r / 2
+    | 1, 0, 0 => F r * deriv F r / 2
+    | 1, 0, 1 | 1, 1, 0 => -(deriv F r / 2)
+    | 0, 2, 2 => -r
+    | 1, 2, 2 => -r * F r
+    | 0, 3, 3 => -r * Real.sin θ ^ 2
+    | 1, 3, 3 => -r * F r * Real.sin θ ^ 2
+    | 2, 1, 2 | 2, 2, 1 | 3, 1, 3 | 3, 3, 1 => 1 / r
+    | 2, 3, 3 => -Real.sin θ * Real.cos θ
+    | 3, 2, 3 | 3, 3, 2 => Real.cos θ / Real.sin θ
+    | _, _, _ => 0
+
+private theorem ingoingChartChristoffel_eq_table (F : ℝ → ℝ) (x : Fin 4 → ℝ)
+    (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0)
+    (hF : DifferentiableAt ℝ F (x 1)) :
+    ingoingChartChristoffel F x = ingoingChristoffelTable F (x 1) (x 2) := by
+  unfold ingoingChartChristoffel
+  rw [ingoingMetricPartial_eq_table F x hF]
+  funext i j k
+  fin_cases i <;> fin_cases j <;> fin_cases k <;>
+    simp (config := {decide := true}) [christoffelKoszul, sumFin4,
+      ingoingSphericalInverse, ingoingPartialTable, ingoingChristoffelTable] <;>
+    field_simp [hr, hθ]
+
+private theorem ingoingChartChristoffelPartial_eq_table_deriv
+    (F : ℝ → ℝ) (x : Fin 4 → ℝ)
+    (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0)
+    (hF : DifferentiableAt ℝ F (x 1))
+    (hNear : ∀ᶠ s in 𝓝 (x 1), DifferentiableAt ℝ F s) (d i j k : Fin 4) :
+    ingoingChartChristoffelPartial F x d i j k =
+      deriv (fun s ↦ ingoingChristoffelTable F
+        (Function.update x d s 1) (Function.update x d s 2) i j k) (x d) := by
+  apply Filter.EventuallyEq.deriv_eq
+  have hrNear : ∀ᶠ s : ℝ in 𝓝 (x 1), s ≠ 0 := isOpen_ne.mem_nhds hr
+  have hθNear : ∀ᶠ s : ℝ in 𝓝 (x 2), Real.sin s ≠ 0 :=
+    Real.continuous_sin.continuousAt.eventually_ne hθ
+  fin_cases d
+  · exact Eventually.of_forall fun s ↦ congrFun (congrFun (congrFun
+      (ingoingChartChristoffel_eq_table F (Function.update x 0 s)
+        (by simpa using hr) (by simpa using hθ) (by simpa using hF)) i) j) k
+  · filter_upwards [hrNear, hNear] with s hsr hsF
+    exact congrFun (congrFun (congrFun
+      (ingoingChartChristoffel_eq_table F (Function.update x 1 s)
+        (by simpa using hsr) (by simpa using hθ) (by simpa using hsF)) i) j) k
+  · filter_upwards [hθNear] with s hsθ
+    exact congrFun (congrFun (congrFun
+      (ingoingChartChristoffel_eq_table F (Function.update x 2 s)
+        (by simpa using hr) (by simpa using hsθ) (by simpa using hF)) i) j) k
+  · exact Eventually.of_forall fun s ↦ congrFun (congrFun (congrFun
+      (ingoingChartChristoffel_eq_table F (Function.update x 3 s)
+        (by simpa using hr) (by simpa using hθ) (by simpa using hF)) i) j) k
+
+/-- The angular Ricci component of the actual ingoing-chart metric. -/
+theorem ingoing_spherical_ricci_theta_theta
+    (F : ℝ → ℝ) (x : Fin 4 → ℝ)
+    (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0)
+    (hF : DifferentiableAt ℝ F (x 1))
+    (hNear : ∀ᶠ s in 𝓝 (x 1), DifferentiableAt ℝ F s) :
+    ricciOf (riemannCoord (ingoingChartChristoffel F x)
+      (ingoingChartChristoffelPartial F x)) 2 2 = 1 - F (x 1) - x 1 * deriv F (x 1) := by
+  have hrad : deriv (fun s ↦ s * F s) (x 1) = F (x 1) + x 1 * deriv F (x 1) := by
+    simpa using ((hasDerivAt_id' (x := x 1)).fun_mul hF.hasDerivAt).deriv
+  have hcot : deriv (fun s ↦ Real.cos s / Real.sin s) (x 2) =
+      -(1 / Real.sin (x 2) ^ 2) := by
+    rw [((Real.hasDerivAt_cos (x 2)).fun_div (Real.hasDerivAt_sin (x 2)) hθ).deriv]
+    field_simp [hθ]
+    nlinarith [Real.sin_sq_add_cos_sq (x 2)]
+  simp only [ricciOf, riemannCoord, riemannLinearTerm, riemannQuadraticTerm, sumFin4]
+  simp_rw [ingoingChartChristoffelPartial_eq_table_deriv F x hr hθ hF hNear,
+    ingoingChartChristoffel_eq_table F x hr hθ hF]
+  simp (config := {decide := true}) [ingoingChristoffelTable, Function.update, hrad, hcot]
+  field_simp [hr, hθ]
+  have hcos : Real.cos (x 2) ^ 2 = 1 - Real.sin (x 2) ^ 2 := by
+    nlinarith [Real.sin_sq_add_cos_sq (x 2)]
+  ring_nf
+  simp only [hcos]
+  ring
+
+/-- Angular vacuum Ricci implies the reduced radial equation. -/
+theorem ingoing_spherical_reducedVacuum_of_ricci_theta_theta
+    (F : ℝ → ℝ) (x : Fin 4 → ℝ)
+    (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0)
+    (hF : DifferentiableAt ℝ F (x 1))
+    (hNear : ∀ᶠ s in 𝓝 (x 1), DifferentiableAt ℝ F s)
+    (hVac : ricciOf (riemannCoord (ingoingChartChristoffel F x)
+      (ingoingChartChristoffelPartial F x)) 2 2 = 0) :
+    x 1 * deriv F (x 1) + F (x 1) - 1 = 0 := by
+  rw [ingoing_spherical_ricci_theta_theta F x hr hθ hF hNear] at hVac
+  linarith
 
 end IngoingChart
 

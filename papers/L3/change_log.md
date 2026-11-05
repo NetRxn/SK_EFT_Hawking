@@ -228,3 +228,16 @@ requested explicit radial and asymptotic hypotheses, the raised
 normal's normalization, and a narrower zeroth-law statement.
 The final four-page PDF incorporates those revisions. The physical
 ADW matching and acoustic energy balance remain open.
+
+### Angular vacuum gives the exterior lapse equation
+
+The ingoing chart now has a coordinate Ricci calculation using the
+repository's Koszul connection and Riemann contraction. The angular
+component is `R_theta theta = 1 - F - r F'` at regular chart points,
+so angular vacuum gives the reduced radial equation used in the
+exterior uniqueness proof. Independent source review checked all
+four Ricci terms and the chart hypotheses. The full modified file
+elaborated against local compiled imports, and both new result
+declarations reported only standard axioms. Full tensor vacuum and
+matching the metric and mass normalization to the ADW action
+remain open, along with authoritative candidate validation.
