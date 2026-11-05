@@ -6271,3 +6271,20 @@ receipt SHA-256 is
 `e13657e8830741675f5f4d2730f8055991bd99172082bfd0b836f210e22d25ec`.
 The dominant primitive can be reused, with each occurrence's
 coordinates and signed scale preserved in the A contraction.
+
+**Corrected full two-tuple result.** Independent pairwise
+materialization completed all 2,304 leaves across 144 prefixes
+without caps. A separate receipt reduction matched every leaf
+to the ordered census and all 64 corrected native control
+numerators for prefixes 0–3. There are 1,440 zero, 576
+negative, and 288 positive leaves. Applying the full divisor
+once gives `−25115308040403/576460752303423488` with zero
+imaginary part. Each selected tuple contributes
+`−25115308040403/1152921504606846976`. This replaces the
+withdrawn scratch aggregate and closes these two tuples only.
+
+The exact JSONL receipt SHA-256 is
+`631a6115481895efa8c73f2157898475f550b87e6b2f574c85ba3e981000f339`.
+The replay took 124.201 seconds after 31.837 seconds of assembly.
+Peak joins used 68,448 products and 19,920 rows. The remaining
+9,790 nonempty B cases still require A closure.
