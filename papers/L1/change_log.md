@@ -95,3 +95,19 @@ remain open, along with H1 microscopic dynamics, B3 normalization and
 window, transport matching, D3 and Paper 25 figure propagation, and
 fresh claims and Stage 13 evaluation. This record is scoped to the
 lead-branch source, figure and rendered PDF.
+
+### 2026-11-04 — Current sentence review
+
+Refreshed the existing claims-review artifact against the reviewed
+manuscript and recorded it through the canonical sentence-state
+ingest writer. The 114 body, display, caption and list records
+include 79 PASS, 16 WARN, 12 INFO, three TRANSITION, three
+UNGROUNDED and one FAIL. The title observation is retained as
+a separate followup under the review protocol.
+
+The review preserves the open physical susceptibility/window,
+microscopic dynamics, transport and propagation obligations.
+It also reproduces the H1 endpoint-theorem attribution problem
+and records a numerical window-cancellation limitation that
+existing test tolerances mask. Five prior findings are marked
+for reconciliation; no finding is closed by this review.
