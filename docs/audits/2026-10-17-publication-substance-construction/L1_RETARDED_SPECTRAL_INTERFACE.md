@@ -8565,3 +8565,44 @@ has not rerun this new contraction. The full 42-word sum and
 the remaining four-deviation words require their own completed
 receipts and verification. All full-ensemble and physical
 acceptance requirements remain open.
+
+### Fully peeled four-deviation source words
+
+Independent topology review identifies 86 completely peeled
+words in the four-deviation census: 54 same-axis and 32
+mixed-axis. The [fully peeled evaluator](l1_extended_offset_witness_k4_peeled.py)
+retains both source Haar integrals and evaluates one contraction
+branch. It introduces no fixed gauge links. Every shared
+source/action edge has exactly one action-center incidence.
+
+| Ordered source axes | No shared edge | One shared edge | Two shared edges |
+|---|---:|---:|---:|
+| (2,2) | 6 | 32 | 16 |
+| (2,3) | 20 | 12 | 0 |
+
+For `E` geometric action-frame edges and `J` shared edges, the
+divisor is `(192²)^E · 4^64 · 192^(2−J) · 48^15 · 2^15`.
+Shared sources use the existing joint moments and are excluded
+from both independent source factors and exclusive-edge
+diagonal pruning. Both relative endpoint orientations occur.
+The remaining sources are integrated with the existing Haar
+moment. All fifteen curvature pairs peel, so there is no
+protected-core branch sum.
+
+The [canonical preparation controls](l1_k4_peeled_controls.out.txt)
+check representatives with zero, one and two shared edges.
+The independent implementation reviewer reproduced the
+[double-shared word-0 result](l1_k4_peeled_word0_review.out.txt)
+exactly. Its coefficient is
+`834814503361393106337/2199023255552`, with peak 3,952 rows.
+The evaluator SHA-256 is
+`7eb0114dec24a2cc0674c2e3e3865ffc34d12924f131868d95ad121c62d31a4c`.
+The old census's `supported_geometry:false` field describes
+the original k3 geometry kernel. This evaluator supplies the
+separate fully peeled route.
+
+The full 86-word coefficient sums remain pending. Together
+with the 90 words supported by the original geometry kernel,
+these words leave 96 census entries requiring other core
+constructions. All full action, source, common normalization
+and physical matching requirements remain open.

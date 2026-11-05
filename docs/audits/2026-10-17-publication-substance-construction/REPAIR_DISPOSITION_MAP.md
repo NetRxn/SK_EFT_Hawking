@@ -254,8 +254,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The [four-deviation paired census](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-paired-four-deviation-census)
   independently reproduces all 272 words. Its 42-word same-axis,
   single-protected-torus class is the next exact replay. The
-  182 words outside the existing geometry kernel retain explicit
-  failures and require further construction. The shared-Q and left-cache benchmarks
+  [fully peeled evaluator](L1_RETARDED_SPECTRAL_INTERFACE.md#fully-peeled-four-deviation-source-words)
+  now supplies a separately reviewed route for 86 additional
+  census entries, including two shared source/action edges.
+  Its representative controls pass. Complete coefficient sums and
+  the other 96 residual-core words require further construction. The shared-Q and left-cache benchmarks
   retain the direct transfer route for the current workload.
   The [pure-g₂ one-point cancellation](L1_PURE_G2_ONE_POINT.md)
   holds for the literal metric and shear sources on the full common
