@@ -8072,3 +8072,18 @@ The six signed orbits add 540 disjoint words and contribute
 `-41726051507544379101/2361183241434822606848` together.
 Verified dominant coverage is 64 of 148 orbits and 6,492 of
 9,216 words.
+
+### Complete chirality pair (16,6)/(20,2)
+
+Independent review checked 256 ordered direct selectors, 16
+terminal shards and four singleton witnesses on the second pinned
+roster. Exact scaling gives `-1297036003818215493/4722366482869645213696`
+with zero imaginary part and no caps. The [full receipt](l1_gamma_16_6.out.txt)
+has SHA-256 `4fcdbb4a88ccfa514e853363c2faadaa1d0eb5163277a382449df29749b7431f`.
+
+Each signed orbit contains 90 words with multiplicity nine.
+They are mutually disjoint and disjoint from prior coverage.
+The pair adds 180 words and contributes
+`-11673324034363939437/2361183241434822606848`.
+Verified dominant coverage is 66 of 148 orbits and 6,672 of
+9,216 words.

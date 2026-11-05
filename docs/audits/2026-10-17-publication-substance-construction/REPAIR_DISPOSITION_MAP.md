@@ -239,8 +239,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The [complete minority contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-minority-contraction)
   covers 288 pairs and 34 orbits. The weighted real subtotal is
   `156896923951130265/288230376151711744`. Dominant coverage in the
-  [latest verified contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-chirality-pairs-for-92-918-and-118)
-  is 64 of 148 orbits and 6,492 of 9,216 source words. Both selector
+  [latest verified contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-chirality-pair-166202)
+  is 66 of 148 orbits and 6,672 of 9,216 source words. Both selector
   rosters are pinned in the repository runner. Its independently
   checked symmetry mode uses complete gamma slices and exact signed
   stabilizer witnesses. The first new weighted representative
@@ -255,6 +255,14 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The full word sum, physical matching and B3 remain open.
 
 - **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing and canonical finding §3.2 closure. The local profile criterion and the bare and emergent cutoff identities are now proved on the L3 research branch. Independent review and local file elaboration accepted the [cutoff proofs](https://github.com/NetRxn/SK_EFT_Hawking/commit/5d2d829ea) and [local profile proofs](https://github.com/NetRxn/SK_EFT_Hawking/commit/b1a90e49c). The [rendered manuscript](https://github.com/NetRxn/SK_EFT_Hawking/commit/9405f7552) and [apex entries](https://github.com/NetRxn/SK_EFT_Hawking/commit/41c58eaec) carry the new scope. The focused apex gate did not measure because its extractor could not fetch Physlib. All 16 dependency revisions are available in the local cache at the exact manifest pins. Next qualify the exact L3 source through the authoritative build and registry refresh, then reconcile the §2.2 verifier with the profile criterion and record §2.2 and §2.4 closure through the canonical writer. [Finding §2.5](https://github.com/NetRxn/SK_EFT_Hawking/commit/9d9974543) has an independently verified attribution closure on the research branch. The four-laws construction in §2.1 remains open. A differential Schwarzschild area first law is a viable component of that larger obligation. For the acoustic second law, source inspection at `ff5c2614` identified `GloriosoLiu.entropy_current_exists` and `noetherEntropyDensity_nonneg_of_SKEFTAxioms` as reuse candidates. The latter establishes density positivity under the SK axioms. The local-law module defines its divergence as the imaginary Lagrangian, whereas L3 takes the physical entropy divergence as a scalar input. Search by type in the pinned consumer context for a current and divergence identification before dispatching the acoustic construction. The source inspection leaves this search incomplete. The mapped Paper 27 review IDs require individual lifecycle reconciliation, and the manuscript still requires fresh Stage 13 after its redraft.
+  The reviewed [fixed-coupling first law](https://github.com/NetRxn/SK_EFT_Hawking/commit/d006634b1),
+  [conditional exterior profiles](https://github.com/NetRxn/SK_EFT_Hawking/commit/811447e35),
+  and [ingoing-chart nonaffinity](https://github.com/NetRxn/SK_EFT_Hawking/commit/66abb2050)
+  now have local elaboration evidence and a
+  [reviewed manuscript render](https://github.com/NetRxn/SK_EFT_Hawking/commit/909b6d023).
+  The physical ADW derivation of the exterior and mass matching,
+  the acoustic energy and entropy balances, and authoritative
+  candidate validation remain open.
   Independent source review at L3 candidate `3ef2dea6c` accepted the
   Balbinot short-time acoustic slope. Appendix II gives
   `b₁/3+c₁ = −563γ/30` with `γ = κ²c²A₀/(24π)`. The displayed
