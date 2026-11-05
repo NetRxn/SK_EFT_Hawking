@@ -8433,3 +8433,33 @@ These orbits add 72 disjoint words and contribute
 `-2388854825638298073/1180591620717411303424`.
 Verified dominant coverage is 138 of 148 orbits and 9,126 of
 9,216 words for the selected ordered G22 coefficient.
+
+### Complete chirality pairs for (19,16), (8,16), (11,3), and (11,19)
+
+Independent review checked the exact ordered selectors, shard
+reductions and scaling, signed witness digests, and disjoint word
+membership. The first representative used 256 direct selectors.
+Each other representative used 192 direct selectors from slices
+0, 2 and 3 with the signed transfer from slice 0 to slice 1.
+All imaginary parts vanish and no caps were hit.
+
+| Direct representative | Chirality counterpart | Direct subtotal | Multiplicity | Words per orbit | Full receipt SHA-256 |
+|---|---|---|---:|---:|---|
+| [(19,16)](l1_gamma_19_16.out.txt) | (23,16) | `-274396016602155609/4722366482869645213696` | 6 | 12 | `42e977c492530b3f341533b0f8c25becb56b0e9e4d795366cb03270d60a1bcd7` |
+| [(8,16)](l1_gamma_8_16.out.txt) | (12,16) | `-742478726025364419/9444732965739290427392` | 9 | 9 | `5148c26dc4e461f70555eedbbb521be5e18bf6f307d679574e28804e34def7d1` |
+| [(11,3)](l1_gamma_11_3.out.txt) | (15,7) | `-742478726025364419/9444732965739290427392` | 9 | 9 | `9c362c011fc869e14b1d4620b8827a400d006f4f32c613aa3030790a827431fa` |
+| [(11,19)](l1_gamma_11_19.out.txt) | (15,19) | `-742478726025364419/9444732965739290427392` | 9 | 9 | `d4b99dbcfa8902d58ca911c37502c5d3bbcce0c41a198b55e33c8ef2779a2146` |
+
+These orbits add 78 disjoint words and contribute
+`-23339677801910706621/4722366482869645213696`.
+Verified dominant coverage is 146 of 148 orbits and 9,204 of
+9,216 words for the selected ordered G22 coefficient. The final
+pair, (19,19) and (23,19), requires its own accepted receipt.
+
+Independent cumulative reconstruction checked 75 direct representative
+values including overlapping controls. It reduced the archived raw
+rows, shards and classes, checked the original pilot through its
+hashed receipt list, and deduplicated equal overlapping controls.
+The 146 accepted orbits cover 9,204 distinct signed words and
+sum to `-432109557732318904053/2361183241434822606848` with zero
+imaginary part.
