@@ -378,3 +378,17 @@ the Ricci-flatness theorem reports only the standard axioms.
 This supplies the Ricci-flat field for the stationarity theorem.
 Deriving its remaining analytic hypotheses from a jointly
 smooth, nondegenerate metric path remains the next construction.
+
+### Symmetry and persistence of nondegeneracy
+
+The ingoing background is symmetric for every lapse profile.
+An arbitrary metric path continuous in its parameter has nonzero
+determinant near the ingoing base at each regular chart point.
+The proof uses the exact base determinant and continuity of the
+matrix determinant. It includes zeros of the lapse profile.
+
+Independent source review accepted both results. The exact
+source passed local elaboration with the pinned toolchain;
+the nondegeneracy theorem reports the standard axioms. Uniform
+control over a chart box and the remaining differentiability
+and mixed-partial conditions still require their own proofs.

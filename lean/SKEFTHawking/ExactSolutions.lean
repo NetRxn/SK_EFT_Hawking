@@ -954,6 +954,30 @@ private theorem update_line_regular (x : Chart) (a : Fin 4)
     (continuous_const.continuousAt.eventually_lt
       (Real.continuous_sin.comp (update_line_continuous x a 2)).continuousAt h₂)
 
+/-- The ingoing spherical background is symmetric in all metric indices. -/
+theorem ingoing_chart_baseSymmetric (F : ℝ → ℝ) :
+    ∀ y i j, ingoingChartMetric F y i j = ingoingChartMetric F y j i := by
+  intro y i j
+  fin_cases i <;> fin_cases j <;> rfl
+
+/-- Continuity of the parameterized metric preserves nondegeneracy near
+the ingoing base, including points where the lapse profile vanishes. -/
+theorem ingoing_path_eventually_nondegenerate (g : MetricPath) (F : ℝ → ℝ) (x : Chart)
+    (hBase : g 0 = ingoingChartMetric F)
+    (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0)
+    (hcont : ContinuousAt (fun s => g s x) 0) :
+    ∀ᶠ s in 𝓝 (0 : ℝ),
+      Matrix.det (g s x : Matrix (Fin 4) (Fin 4) ℝ) ≠ 0 := by
+  have hdet : Matrix.det (g 0 x : Matrix (Fin 4) (Fin 4) ℝ) ≠ 0 := by
+    rw [hBase]
+    change Matrix.det (ingoingSphericalMetric F (x 1) (x 2)) ≠ 0
+    rw [ingoing_det_exact]
+    exact neg_ne_zero.mpr (mul_ne_zero (pow_ne_zero _ hr) (pow_ne_zero _ hθ))
+  have hdetCont : ContinuousAt
+      (fun s => Matrix.det (g s x : Matrix (Fin 4) (Fin 4) ℝ)) 0 :=
+    (continuous_id.matrix_det.continuousAt).comp hcont
+  exact hdetCont.eventually_ne hdet
+
 private theorem ingoing_metricConnection_eq (g : MetricPath) (F : ℝ → ℝ) (x : Chart)
     (hBase : g 0 = ingoingChartMetric F) (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0) :
     metricConnection g 0 x = ingoingChartChristoffel F x := by
