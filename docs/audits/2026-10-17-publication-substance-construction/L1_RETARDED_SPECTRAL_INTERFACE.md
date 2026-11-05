@@ -7054,3 +7054,24 @@ scalars agreed. The largest response held 118,272 rows under the
 seconds for direct replay on this workload. Use the direct route
 for the next representative batch. The full dominant contraction,
 physical transport matching, and B3 remain open.
+
+### Four additional minority representatives
+
+Independent receipt review checked 2,304 distinct ordered leaves per
+representative against the pinned roster. It recomputed each exact
+coefficient from the raw sum, signed manifest scale and common
+divisor. Each receipt had 864 nonzero real leaves, zero imaginary
+contribution and no caps.
+
+| Representative | Multiplicity | Exact real coefficient | Raw receipt SHA-256 |
+|---:|---:|---:|---|
+| 25 | 9 | `3340335969373599/576460752303423488` | `918c2b22d000c170c64304dc9c2d418acedfe02855fc6f9090c31c4f2de64310` |
+| 26 | 18 | `3340335969373599/576460752303423488` | `391cededb46b4ca624506e102fd088ff1bd78b141984e8d01f71034a85513ae4` |
+| 28 | 9 | `-125576540202015/576460752303423488` | `a1e3aa13765505e87fd593dd662d075110e43471a82a6b77661f429b055c4785` |
+| 29 | 9 | `-125576540202015/576460752303423488` | `df21e1f7bf50374df764b0c65fa33a54e305684368f666a200d20f1794370433` |
+
+These four distinct orbits cover 45 pairs and add
+`87928693449450903/576460752303423488`. The minority subtotal
+is now `159157301674766535/576460752303423488` across 126 of
+288 pairs in 16 of 34 orbits, with zero imaginary part. The
+other 18 orbits still require representative evaluation.
