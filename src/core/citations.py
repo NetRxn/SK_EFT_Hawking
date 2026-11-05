@@ -4017,6 +4017,31 @@ CITATION_REGISTRY = {
                  'preserved at Lit-Search/Phase-6a/primary-sources/'
                  'JacobsonVolovik1998.source/.',
     },
+    'JacobsonVolovik1998JETP': {
+        'authors': 'Jacobson, T. A. and Volovik, G. E.',
+        'title': 'Effective spacetime and Hawking radiation from a moving domain wall '
+                 'in a thin film of 3He-A',
+        'journal': 'JETP Lett.',
+        'volume': 68,
+        'page': '874–880',
+        'year': 1998,
+        'doi': '10.1134/1.567808',
+        'arxiv': 'gr-qc/9811014',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/'
+                               'JacobsonVolovik1998JETP-arXiv-v1.pdf',
+        'used_in': [],
+        'provides': ['Thin-film ³He-A moving domain-wall model with paired horizons. '
+                     'The authors discuss heating if Hawking emission decelerates the wall '
+                     'and leave whether the emission occurs unresolved.'],
+        'notes': 'Balbinot2005PRD cites this JETP Letters paper together with '
+                 'JacobsonKoike2002 in its thin-film contrast reference. '
+                 'JacobsonVolovik1998 is the separate PRD 58, 064021 bulk-soliton paper. '
+                 'Held edition: authors’ arXiv gr-qc/9811014v1, 4 November 1998, '
+                 'https://arxiv.org/pdf/gr-qc/9811014v1. PDF SHA-256 '
+                 'a2a93fc3032d1882b6bc11931bd35cc85b7f060856aa2d9c3e2c3447e7dd5b42.',
+    },
     'JacobsonKoike2002': {
         'authors': 'Jacobson, T. A. and Koike, T.',
         'title': 'Black hole and baby universe in a thin film of 3He-A',
