@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok, report, pages = compile_one(Path("papers/L1"), force=True); print(report); assert ok and "overfull=0 " in report
+                                                                                                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+L1: OK  pages=4 overfull=6 tex_errors=0 unresolved_refs_in_pdf=0 dropped_class_opts=0
