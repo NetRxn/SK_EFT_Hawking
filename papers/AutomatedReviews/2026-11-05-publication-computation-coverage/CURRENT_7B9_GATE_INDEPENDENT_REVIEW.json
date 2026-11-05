@@ -1,0 +1,90 @@
+{
+  "verdict": "ACCEPT",
+  "ledger_prior_preserved": 1256,
+  "ledger_current": 1258,
+  "two_exact_declared_verify_records_pass": true,
+  "all_paper_gate_nodes": 704,
+  "canonical_bundle_roster": [
+    "D1",
+    "D10",
+    "D11",
+    "D12",
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D6",
+    "D7",
+    "D8",
+    "D9",
+    "E1",
+    "E2",
+    "F",
+    "I1",
+    "I2",
+    "I3",
+    "L1",
+    "L2",
+    "L3"
+  ],
+  "canonical_gate_count": 231,
+  "counts": {
+    "passed": 159,
+    "open": 28,
+    "blocked": 25,
+    "needs-recheck": 19
+  },
+  "states_changed_vs425": [],
+  "graph_meta": {
+    "built_at": "2026-11-05T18:49:33.055834+00:00",
+    "source_hash": "15e54ca9ee1b650c",
+    "node_count": 51095,
+    "edge_count": 18770
+  },
+  "graph_sha256": "deb75e116a3d13cd73080ab209c387d8585afe2aa5a35d06506cd369dbc15337",
+  "archive_sha256": "1222cf51fe5c6cb0d61d649ef2e905e5a22c06d69af190cf0d63f1963f0eb540",
+  "all_archive_members_crc_length_hash_match": true,
+  "common_source_eight_members_match": true,
+  "common_source_archive_crc": true,
+  "common_source_zip_members": [
+    "COMMON_SOURCE_MATTER_INTERFACE_R1.md",
+    "COMMON_SOURCE_MATH_REVIEW_R1.md",
+    "COMMON_SOURCE_PHYSICS_REVIEW_R1.md"
+  ],
+  "common_source_root_intake": {
+    "commit": "b804fb426d722d3597b06f821e91d22b67c8d6f7",
+    "manifest_members_verified": [
+      "COMMON_SOURCE_ACCEPTANCE.md",
+      "COMMON_SOURCE_MATH_REVIEW_R1.md",
+      "COMMON_SOURCE_MATH_REVIEW_R2.md",
+      "COMMON_SOURCE_MATTER_INTERFACE.md",
+      "COMMON_SOURCE_PHYSICS_REVIEW_R1.md",
+      "COMMON_SOURCE_PHYSICS_REVIEW_R2.md",
+      "common_source_review_r1_evidence.zip",
+      "common_source_scalar_path_check_r1.json"
+    ],
+    "archive_crc_ok": true,
+    "archive_members": [
+      "COMMON_SOURCE_MATTER_INTERFACE_R1.md",
+      "COMMON_SOURCE_MATH_REVIEW_R1.md",
+      "COMMON_SOURCE_PHYSICS_REVIEW_R1.md"
+    ],
+    "current_reused_source_pins_match": true,
+    "root_exact_scalar_control": {
+      "variance": "193312/342225",
+      "exponential": "-6288976/5817825",
+      "affine": "7407044/5817825",
+      "difference": "7804/3315"
+    },
+    "scope": "All original8manifestbytes and archiveCRC rechecked after normal ancestry-preserving merge7b9. Accepted conditional manual finite-source construction only; no physical matching, B3/Lean/stage/main/publication closure.",
+    "publication_merge": "7b9f8fdb6fd86adcebe993f21f28b7b268a535d3"
+  },
+  "sources_unchanged_since_repair": true,
+  "packet_initial_fresh": true,
+  "packet_final_fresh": true,
+  "required_corrections": [],
+  "scope": "milestone closure and gate data readback only",
+  "physical_builds_closed": false,
+  "fullstage_main_native_publication_accepted": false,
+  "report": "/tmp/l1-milestone-gate-closure-independent-20261105-r1.md"
+}

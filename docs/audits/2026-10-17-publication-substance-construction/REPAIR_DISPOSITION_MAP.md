@@ -49,20 +49,28 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   Focused findings1.1 and1.2 are canonically FIXED at repairc183f44a9;
   all1256 prior ledger records are preserved. The broader propagation
   and original scientific BUILD blockers remain open.
-  Next ROOT integrates source-qualified2017 comparison corrections and custody
-  records after full-body corroboration, then reruns affected claim/prose reviews.
-  Executor's independently reviewed common-source/matter construction is ready
-  for separate bounded intake; original physical B3, state, tensor/matter and
-  transport requirements remain open.
+  Next ROOT integrates the [source-qualified2017 comparison corrections](../../../papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/next-source-body/STATUS.md)
+  and custody records after full-body corroboration, then reruns affected
+  claim/prose reviews.
+  Executor's independently reviewed common-source/matter construction is
+  integrated by normal merge7b9f8fdb6, preserving originalb804 history and
+  [both independent reviews and publication intake](../2026-11-05-l1-physical-bridges/COMMON_SOURCE_ACCEPTANCE.md).
+  The accepted scope is an exact finite-lambda generating functional, full
+  first/second contacts and conditional dimensional matching. Actual physical
+  B3, state, tensor/matter and transport requirements remain open. Executor's
+  next reviewed decompositione79d6aa8 is checkpointed on remote branch
+  codex/l1-common-source-interface-20261105; separate publication intake remains
+  pending. It identifies collective G/A/B/D kernels and physical unit/source
+  correspondence without claiming a derived body or coefficient.
 
 
 - **Current canonical portfolio measurement.** The existing graph producer
-  remeasures all21bundles/231gates on clean `425324077`:159passed,25blocked,
-  28open,19needs-recheck. No state changes versusAF255 and no newly green
-  bundle. [All exact payloads and independent archive review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CURRENT_425324_GATE_READBACK.md)
+  remeasures all21bundles/231gates on clean `7b9f8fdb6`:159passed,25blocked,
+  28open,19needs-recheck. No state changes versus425324077 and no newly green
+  bundle. [All exact payloads and independent archive review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CURRENT_7B9_GATE_READBACK.md)
   preserve static/vacuous coverage limits, source binding and the whole
-  measured graph. Five concrete scoped closures and current124-unit claim
-  intake are progress outside state transitions; they are not scientific
+  measured graph. Focused figure/source closures, exhaustive numerical acceptance and current
+  claim intake are progress outside state transitions; they are not scientific
   BUILD discharge or main/publication acceptance.
 
 - **L1 current claims and figure propagation.** The current canonical catalog
