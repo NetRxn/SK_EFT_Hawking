@@ -8155,3 +8155,21 @@ The six signed orbits add 270 disjoint words and contribute
 `-41726051507544379101/4722366482869645213696` together.
 Verified dominant coverage is 84 of 148 orbits and 7,824 of
 9,216 words.
+
+### Complete chirality pairs (11,16)/(15,16) and (3,1)/(7,5)
+
+Independent review checked 192 ordered direct selectors and
+12 terminal shards per run on the original pinned roster.
+For (11,16) a signed witness maps gamma slice 0 to 1.
+For (3,1) a signed witness maps slice 1 to 2. Exact scaling
+and signed witnesses match, with zero imaginary parts and no caps.
+
+| Direct representative | Chirality counterpart | Words per orbit | Direct subtotal | Multiplicity | Full receipt SHA-256 |
+|---|---|---:|---|---:|---|
+| [(11,16)](l1_gamma_11_16.out.txt) | (15,16) | 45 | `-1545409315094236263/9444732965739290427392` | 9 | `bc9688bdfff7892053bc3f02a31c3a3d4560bfa026a91d16057ac10c43aecd25` |
+| [(3,1)](l1_gamma_3_1.out.txt) | (7,5) | 36 | `688672510171296147/2361183241434822606848` | 3 | `a4df7184df3094944ca74d5b7a26b60fc4eac37ad1458e308323e4d2253e8b23` |
+
+The four signed orbits add 162 disjoint words and contribute
+`-5644613713792572603/4722366482869645213696` together.
+Verified dominant coverage is 88 of 148 orbits and 7,986 of
+9,216 words.
