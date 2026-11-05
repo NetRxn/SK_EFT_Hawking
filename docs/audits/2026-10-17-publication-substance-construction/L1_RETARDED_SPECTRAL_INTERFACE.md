@@ -6885,3 +6885,25 @@ The stdout SHA-256 values are
 and
 `1e2ba037a1288fd6456350eab5e0eca94a9cd0741d152dab90005727763f1a95`.
 The first 160 of the 256 selector scalars have verified receipts.
+
+**Selector ranges `[160,176)` and `[192,208)`.** Independent
+review verified both 16-row receipts against the pinned roster,
+with no caps. Each row evaluated 8,956 compatible products and
+4,174 complement queries. Each range contributes
+`378279423049817079/37778931862957161709568` with zero imaginary part.
+The respective stdout SHA-256 values are
+`88a7637529038fcb2bb21330769969e7ef962dedc45b7c46abcf86e374f0c271`
+and
+`d9a691abad122c02724c2b064a7ab1d79170b02deb6061a97f7e41e953bc43b6`.
+Verified coverage is `[0,176)` and `[192,208)`, for 192 of
+the 256 selectors.
+
+**Minority manifest IDs 13 and 14.** Each 2,304-leaf receipt
+passed independent signed-roster verification with no caps.
+Both contribute `871859979116847/144115188075855872` with zero
+imaginary part.
+
+| ID | Roster SHA-256 | Stdout SHA-256 |
+|---|---|---|
+| 13 | `c9df3f9363627766347ff8f971c16b2c1db9873bae6ce7658cac78c5548cc58d` | `f38de68e8fccb501c4cf8ace7142607a0e97ffd305132224ff8034c532829b3d` |
+| 14 | `dfa01092e60d4ce09c3f7e50e043009931a106e985a0d79a286de5bab4b07090` | `5aa079a20da8d4d3c5d0362c7c6abcad76e3bdc66fbf44955cc3d3ce1ae456a8` |
