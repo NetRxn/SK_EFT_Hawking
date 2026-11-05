@@ -6230,3 +6230,24 @@ and found 479,232 nonzero matches. Summing the raw signed rows
 and dividing once gives `−8371769346801/4611686018427387904`
 with zero imaginary part. This replaces only the withdrawn
 prefix-3 subtotal. Other prefixes require their own replay.
+
+An alternative production-leaf contraction reproduced the
+corrected prefix-3 leaf-0 raw numerator exactly. It freezes
+the six leaf labels, materializes the incident and environment
+maps separately with ordinary indexed joins, and computes
+the sign by direct inversion count over 1,152 complementary
+mask pairs. It shares upstream factor construction with the
+repository replay and independently checks the contraction
+after the site-11 cut.
+
+The corrected repository replay also completed prefixes 0–2.
+All 48 leaves match the ordered census. Each prefix scanned
+265,392 candidates with no nonzero matches and no caps. Their
+subtotals are exactly zero. The receipt SHA-256 is
+`b64abdd97c6a656c3c40730ea7fd7dfd4b9a2eee561ef8c30b927a828affa94d`.
+These results replace the withdrawn subtotals for 0–2 only.
+
+The native B evaluator reproduced the first 128 indexed
+classifications, including 102 zeros and 26 nonempty maps.
+The 26 nonempty maps matched the direct contraction, and
+their primitive scales reconstruct the exact coefficients.
