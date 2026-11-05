@@ -18,7 +18,7 @@ This document is the **source of truth** for the 11 readiness gates that every p
 
 **Submission policy (human):** a paper MAY NOT be submitted unless it is GREEN — no exceptions for any gate, P1 or P2. Credibility is the project's primary asset; every gate exists because a real failure class has passed through the internal pipeline in the past.
 
-**What the mechanized check enforces is narrower, and the gap is deliberate.** `validate.py --check readiness_submission_gate` fails iff a P1 gate is not `passed` or a P2 gate is `blocked`; a P2 gate at `needs-recheck`/`open` is reported as an advisory and does not fail the run. So a YELLOW paper — GREEN-ineligible under the policy above — still passes the suite. **Honouring the GREEN requirement at submission is the operator's judgement, not a mechanical stop.** Per-gate enforceability is tabulated in [`docs/architecture/VALIDATION_GATE_TOPOLOGY.md`](architecture/VALIDATION_GATE_TOPOLOGY.md#4-what-each-readiness-gate-actually-computes).
+**The current mechanized rule is narrower than the human submission policy.** `validate.py --check readiness_submission_gate` fails on a `blocked` gate at either priority. Outstanding P1 states, including `open` with `measured=False`, can remain mechanically advisory and YELLOW. P2 `needs-recheck`/`open` are also advisory. A YELLOW paper is not GREEN and remains ineligible for human submission even when the mechanical check passes. **Honouring the GREEN requirement at submission is the operator's judgement, not a mechanical stop.** ADR-009 D6 specifies truthful reporting of outstanding state and measurement without changing that aggregate verdict. Per-gate enforceability is tabulated in [`docs/architecture/VALIDATION_GATE_TOPOLOGY.md`](architecture/VALIDATION_GATE_TOPOLOGY.md#4-what-each-readiness-gate-actually-computes).
 
 ---
 
@@ -79,14 +79,41 @@ This document is the **source of truth** for the 11 readiness gates that every p
 
 **Intent:** Every formula the paper makes claims from has at least one test that asserts **correctness**, not just **boundedness**. Bounds-only coverage is how silent formula bugs ship (a formula wrong by orders of magnitude can still fall inside a sanity-bound check).
 
-**Evaluator input:** Formulas the paper `GROUNDED_IN`; their incoming `VERIFIES` edges from `PythonTest` nodes; each edge's `test_kind` attribute.
+**ADR-009 D6: design accepted; implementation under review.** The contract below
+repairs structural source enumeration, typed coverage and truthful partial-measurement
+reporting. This document does not establish current runtime, production-control,
+whole implementation review, numerical or physical acceptance.
+
+**Producer:** `build_graph.extract_formula_nodes` enumerates canonical
+`src/core/formulas.py` module-level public function definitions structurally, without
+a lowercase-name filter. Exact `formula:<name>` identities and existing metadata and
+grounding semantics are conserved. Private helpers, nested definitions, methods
+and text resembling definitions are not this population. No aliases, dummy formulas
+or hand-maintained population substitute is permitted.
+
+**Evaluator input:** the union of declared metadata formulas and claim
+`GROUNDED_IN` formula targets; their incoming `VERIFIES` edges from resolved
+`PythonTest` nodes; each edge's explicit `test_kind` attribute.
 
 **Passes iff:**
-- Every grounded formula has ≥1 VERIFIES edge where `test_kind ∈ {golden, identity, roundtrip}`
+- The union of metadata formulas and claim-grounding formula targets is nonempty, and every target resolves as a Formula.
+- Every resolved formula has ≥1 VERIFIES edge from a resolved PythonTest where `test_kind ∈ {golden, identity, roundtrip}`.
+- Static edge coverage is not a test execution receipt or proof of physical applicability.
 
 **Blocks on any:**
-- A grounded formula with no VERIFIES edges
-- A grounded formula whose VERIFIES edges are all `test_kind ∈ {bounds, unknown}`
+- A declared formula absent from the graph or resolving to the wrong node type; the incomplete population is `measured=False`.
+- A grounded formula with no VERIFIES edge from a resolved PythonTest
+- A grounded formula without any supported `golden`, `identity` or `roundtrip` test edge. Bounds, unknown and unsupported kinds cannot satisfy it.
+
+An entirely undeclared formula population stays `open`, `measured=False`. It requires a source-grounded mapping assessment; adding dummy registrations cannot satisfy the scientific obligation.
+
+The existing submission consumer must preserve these distinctions in displayed
+G4 state, measurement, notes and capped evidence totals. P1 OPEN/unmeasured must
+not be reported as passed. Complete bounds/no-valid-test populations are blocked
+but measured; incomplete target populations are blocked and unmeasured. The
+aggregate classifier and its public bucket/result interfaces remain unchanged.
+A static test-kind edge is a coverage declaration, not independent numerical
+verification, fresh execution, an error budget or physical model validation.
 
 **test_kind definitions:**
 - `golden` — asserts numeric equality to a hardcoded reference value (`assertAlmostEqual`, `assert_allclose`, `pytest.approx`, `math.isclose`)
