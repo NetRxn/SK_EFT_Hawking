@@ -8522,3 +8522,46 @@ the selected normalization motif. The review did not freshly
 rerun all 770 contractions. Full common normalization, complete
 source response and physical susceptibility acceptance remain
 open.
+
+### Complete paired four-deviation census
+
+The [four-deviation runner](l1_extended_offset_witness_k4.py)
+reuses the paired-word census, geometry and exact contraction
+kernels. The census's optional deviation count defaults to
+three, preserving the existing k3 entry point. Independent
+meet-in-the-middle enumeration agrees word for word with the
+complete k2, k3 and k4 populations. It enforces the full degree
+equation at each of the sixteen sites.
+
+| Ordered source axes | Two deviations | Three deviations | Four deviations |
+|---|---:|---:|---:|
+| (2,2) | 4 | 8 | 164 |
+| (2,3) | 2 | 4 | 108 |
+
+The [complete census receipt](l1_k4_census.out.txt) records
+all 272 four-deviation words. Its manifest digest is
+`ada6e3a7bd8b32b238a85f1a8e7070dde1d2846f5fe6bc5184068a0fc9596d5b`.
+Independent private-link peeling verifies 90 supported words
+across five geometry classes. The other 182 entries retain
+their geometry failures explicitly. Of these, 86 are fully
+peeled cases for which the existing geometry routine encounters
+an empty-set-union error. None of the unsupported words has
+been assigned a zero coefficient.
+
+The next exact replay covers all 42 same-axis words with one
+protected four-face torus, no square, and no free torus.
+Independent review checked one protected source link and no
+other protected curvature edge in every word. Thirty-six words
+share a geometric action/source edge, handled by the existing
+joint Haar integration; six do not. The normalization retains
+fifteen paired vertices, `2!^15`, existing frame and source
+scales, and one factor of `48` per peeled face.
+
+The [word-4 receipt](l1_k4_word4.out.txt) gives
+`28491102303472560120705/35184372088832` with a peak of 3,952
+rows. This is an author-run exact contraction using the
+independently reviewed kernel applicability. Independent review
+has not rerun this new contraction. The full 42-word sum and
+the remaining four-deviation words require their own completed
+receipts and verification. All full-ensemble and physical
+acceptance requirements remain open.

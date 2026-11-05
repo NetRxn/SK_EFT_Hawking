@@ -250,7 +250,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   stabilizer witnesses. The first new weighted representative
   `(3,0)` used 128 direct selectors. Continue with the full action and source sum and common
   geometry normalization. Preserve the checked raw totals and signed
-  membership when combining selected coefficients. The shared-Q and left-cache benchmarks
+  membership when combining selected coefficients.
+  The [four-deviation paired census](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-paired-four-deviation-census)
+  independently reproduces all 272 words. Its 42-word same-axis,
+  single-protected-torus class is the next exact replay. The
+  182 words outside the existing geometry kernel retain explicit
+  failures and require further construction. The shared-Q and left-cache benchmarks
   retain the direct transfer route for the current workload.
   The [pure-g₂ one-point cancellation](L1_PURE_G2_ONE_POINT.md)
   holds for the literal metric and shear sources on the full common

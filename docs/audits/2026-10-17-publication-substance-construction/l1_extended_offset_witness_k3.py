@@ -47,19 +47,19 @@ WORD_TYPES = {
 }
 
 
-def census(first_axis, second_axis):
+def census(first_axis, second_axis, deviations=3):
     sources = ((0, first_axis), (1, second_axis))
     ends = source_endpoints(1, first_axis, second_axis)
     for omitted in SITES:
         senders = tuple(x for x in SITES if x != omitted)
         demand = Counter({x: 4 - ends[x] - 2 * (x != omitted) for x in SITES})
-        for chosen in combinations(senders, 3):
+        for chosen in combinations(senders, deviations):
             incoming = Counter(
                 x ^ (1 << axis) for x in senders if x not in chosen for axis in BASE
             )
             if any(incoming[x] > demand[x] for x in SITES):
                 continue
-            for planes in product(ALTERNATIVES, repeat=3):
+            for planes in product(ALTERNATIVES, repeat=deviations):
                 changes = tuple(zip(chosen, planes, strict=True))
                 added = Counter(x ^ (1 << axis) for x, pair in changes for axis in pair)
                 if incoming + added == demand:
