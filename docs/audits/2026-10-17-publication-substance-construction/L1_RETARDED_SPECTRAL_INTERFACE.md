@@ -6089,3 +6089,15 @@ in the original and resume logs. The 48,128 distinct tuples
 contain 42,053 exact zeros and 6,075 nonempty B maps.
 The resumed complete chunk replaces its earlier partial
 receipt. A closure remains due for the nonempty maps.
+
+The [repository replay command](l1_unpaired_B_replay.py)
+uses the same ordered indices and exact row format. It binds
+each receipt directory to the evaluator source bytes, low
+receipts, and ordered roster. A single writer atomically
+replaces each chunk after validating its saved rows. Unresolved
+caps remain pending. A native control reproduced all four
+`[3712,3716)` rows byte for byte and checked each against
+the unfactored signed route. These four maps are empty.
+Use the same input files, interval, and chunk boundaries
+when resuming into that receipt directory. The already live
+bulk process continues with its original pinned scratch driver.
