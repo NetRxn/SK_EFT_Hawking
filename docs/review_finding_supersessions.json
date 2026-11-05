@@ -10890,6 +10890,21 @@
         "enforced": true,
         "run_at": "2026-11-04"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:2.3",
+      "status": "fixed",
+      "evidence": "Independent claims review matched the metadata to the standalone positivity theorem and identified the separately cited partition-linked equivalence. Independent replay accepted the amended declared verifier on the repair and rejected the prior metadata and mutations to either declaration contract. All 24 focused apex tests passed. Scope is metadata attribution and generated declarations.",
+      "superseded_by": null,
+      "date": "2026-11-04",
+      "commit": "35426f9aa",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import json; d={x['name']:x['type'] for x in json.load(open('lean/lean_deps.json'))}; prefix='SKEFTHawking.BHThermodynamicsFourLaws.'; name=prefix+'falsifier_alpha_ADW_dependence'; claims=[a['claims'] for a in json.load(open('papers/L3/bundle_metadata.json'))['apex_theorems'] if a['name']==name]; assert claims==['falsifier: (α_ADW − 1)Λ_UV is strictly positive when α_ADW > 1']; assert 'Real.instLT.lt 1 p.α_ADW' in d[name] and 'Real.instLT.lt 0 (instHMul.hMul (instHSub.hSub p.α_ADW 1) p.Λ_UV)' in d[name]; backing=d[prefix+'delta_ADW_nonzero_iff_alpha_ADW_ne_one']; assert 'H_RegimePartition' in backing and 'Iff (Ne delta 0) (Ne p.α_ADW 1)' in backing\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import json; d={x['name']:x['type'] for x in json.load(open('lean/lean_deps.json'))}; prefix='SKEFTHawking.BHThermodynamicsFourLaws.'; name=prefix+'falsifier_alpha_ADW_dependence'; claims=[a['claims'] for a in json.load(open('papers/L3/bundle_metadata.json'))['apex_theorems'] if a['name']==name]; assert claims==['falsifier: (α_ADW − 1)Λ_UV is strictly positive when α_ADW > 1']; assert 'Real.instLT.lt 1 p.α_ADW' in d[name] and 'Real.instLT.lt 0 (instHMul.hMul (instHSub.hSub p.α_ADW 1) p.Λ_UV)' in d[name]; backing=d[prefix+'delta_ADW_nonzero_iff_alpha_ADW_ne_one']; assert 'H_RegimePartition' in backing and 'Iff (Ne delta 0) (Ne p.α_ADW 1)' in backing\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-04"
+      }
     }
   ]
 }
