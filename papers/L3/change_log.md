@@ -342,3 +342,23 @@ axioms. The regularity, mixed-partial and compatibility premises
 still require instantiation for the selected physical metric
 family. Euler boundary cancellation and microscopic ADW
 matching remain open.
+
+### Ingoing background compatibility for Einstein–Hilbert variation
+
+For an actual metric path with the ingoing spherical base, the
+coordinate metric determinant is `-r^4 sin²θ`. On the patch
+`r > 0`, `sin θ > 0`, its matrix inverse and density give the
+two compatibility identities required by the Einstein–Hilbert
+variation theorem. The identities depend only on the base and
+impose no spherical symmetry on the perturbation. Independent
+source review checked the determinant, inverse derivatives and
+connection trace. The exact two-module scratch check passed with
+the pinned Lean toolchain and existing compiled dependencies.
+The new theorem reports `propext`, `Classical.choice` and
+`Quot.sound`.
+
+The next step identifies the actual chart Ricci tensor with the
+ingoing calculation and applies the local reduced-vacuum theorem.
+For the box result, a smooth symmetric perturbation supported in
+the interior gives a concrete family for proving the remaining
+regularity, mixed-partial, domination and boundary premises.

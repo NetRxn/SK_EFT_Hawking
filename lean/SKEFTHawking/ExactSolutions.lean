@@ -5,6 +5,7 @@ import SKEFTHawking.EnergyConditions
 import SKEFTHawking.LinearizedEFE
 import SKEFTHawking.KerrSchild
 import SKEFTHawking.RiemannCoordinate
+import SKEFTHawking.RiemannDifferentialBianchi
 import Mathlib
 
 /-!
@@ -870,6 +871,182 @@ theorem ingoing_spherical_ricciFlat_of_local_reducedVacuum
   have hDval : deriv (fun s ↦ s * deriv F s + F s - 1) (x 1) = _ := hD.deriv
   rw [hDval, deriv_const] at hz
   linarith
+
+section IngoingVariationalCompatibility
+
+open SKEFTHawking.RiemannDifferentialBianchi
+open SKEFTHawking.RiemannDifferentialBianchi.EHChart
+
+private theorem ingoing_det_exact (F : ℝ → ℝ) (r θ : ℝ) :
+    Matrix.det (ingoingSphericalMetric F r θ : Matrix (Fin 4) (Fin 4) ℝ) =
+      -(r ^ 4 * Real.sin θ ^ 2) := by
+  let M : Matrix (Fin 4) (Fin 4) ℝ := ingoingSphericalMetric F r θ
+  change M.det = _
+  have h0 : (M.submatrix (0 : Fin 4).succAbove Fin.succ).det = 0 := by
+    apply Matrix.det_eq_zero_of_row_eq_zero (0 : Fin 3)
+    intro j
+    fin_cases j <;> rfl
+  have h1 : (M.submatrix (1 : Fin 4).succAbove Fin.succ).det =
+      r ^ 4 * Real.sin θ ^ 2 := by
+    rw [Matrix.det_fin_three]
+    change 1 * r ^ 2 * (r ^ 2 * Real.sin θ ^ 2) - 1 * 0 * 0 -
+      0 * 0 * (r ^ 2 * Real.sin θ ^ 2) + 0 * 0 * 0 + 0 * 0 * 0 -
+      0 * r ^ 2 * 0 = _
+    ring
+  rw [Matrix.det_succ_column_zero, Fin.sum_univ_four, h0, h1]
+  have h10 : M 1 0 = 1 := rfl
+  have h20 : M 2 0 = 0 := rfl
+  have h30 : M 3 0 = 0 := rfl
+  simp [h10, h20, h30]
+
+private theorem ingoing_inverse_exact (F : ℝ → ℝ) (r θ : ℝ)
+    (hr : r ≠ 0) (hθ : Real.sin θ ≠ 0) :
+    @Inv.inv (Matrix (Fin 4) (Fin 4) ℝ) Matrix.inv (ingoingSphericalMetric F r θ) =
+      ingoingSphericalInverse F r θ := by
+  apply Matrix.inv_eq_right_inv
+  ext i j
+  simpa only [Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_four, sumFin4] using
+    ingoingSpherical_inverse F hr hθ i j
+
+private theorem ingoing_weight_exact (F : ℝ → ℝ) (r θ : ℝ)
+    (hr : 0 < r) (hθ : 0 < Real.sin θ) :
+    Real.sqrt |Matrix.det
+      (ingoingSphericalMetric F r θ : Matrix (Fin 4) (Fin 4) ℝ)| =
+      r ^ 2 * Real.sin θ := by
+  rw [ingoing_det_exact, abs_neg, abs_of_nonneg (by positivity :
+    0 ≤ r ^ 4 * Real.sin θ ^ 2)]
+  rw [show r ^ 4 * Real.sin θ ^ 2 = (r ^ 2 * Real.sin θ) ^ 2 by ring]
+  exact Real.sqrt_sq (by positivity)
+
+private theorem spatialLineDeriv_eq_update (f : Chart → ℝ) (x : Chart) (a : Fin 4) :
+    spatialLineDeriv f x a =
+      deriv (fun t => f (Function.update x a t)) (x a) := by
+  have hline (t : ℝ) : x + t • (Pi.single a 1 : Chart) =
+      Function.update x a (x a + t) := by
+    funext i
+    by_cases h : i = a
+    · subst i
+      simp
+    · simp [Function.update, h]
+  unfold spatialLineDeriv
+  simp_rw [hline]
+  simpa only [add_zero] using
+    deriv_comp_const_add (fun t => f (Function.update x a t)) (x a) (0 : ℝ)
+
+private theorem update_line_continuous (x : Chart) (a i : Fin 4) :
+    Continuous (fun t : ℝ => Function.update x a t i) := by
+  by_cases h : i = a
+  · subst i
+    simp only [Function.update_self]
+    change Continuous (id : ℝ → ℝ)
+    exact continuous_id
+  · simpa [Function.update, h] using (continuous_const : Continuous (fun _ : ℝ => x i))
+
+private theorem update_line_regular (x : Chart) (a : Fin 4)
+    (hr : 0 < x 1) (hθ : 0 < Real.sin (x 2)) :
+    ∀ᶠ t in 𝓝 (x a), 0 < Function.update x a t 1 ∧
+      0 < Real.sin (Function.update x a t 2) := by
+  have h₁ : 0 < Function.update x a (x a) 1 := by simpa only [Function.update_eq_self] using hr
+  have h₂ : 0 < Real.sin (Function.update x a (x a) 2) := by
+    simpa only [Function.update_eq_self] using hθ
+  exact (continuous_const.continuousAt.eventually_lt
+      (update_line_continuous x a 1).continuousAt h₁).and
+    (continuous_const.continuousAt.eventually_lt
+      (Real.continuous_sin.comp (update_line_continuous x a 2)).continuousAt h₂)
+
+private noncomputable def ingoingInversePartialTable
+    (F : ℝ → ℝ) (r θ : ℝ) : Fin 4 → MetricMatrix :=
+  fun a i j => match a.val, i.val, j.val with
+    | 1, 1, 1 => deriv F r
+    | 1, 2, 2 => -(2 / r ^ 3)
+    | 1, 3, 3 => -(2 / (r ^ 3 * Real.sin θ ^ 2))
+    | 2, 3, 3 => -(2 * Real.cos θ / (r ^ 2 * Real.sin θ ^ 3))
+    | _, _, _ => 0
+
+private theorem ingoing_inverse_update_derivative (F : ℝ → ℝ) (x : Chart)
+    (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0) (a i j : Fin 4) :
+    deriv (fun s => ingoingSphericalInverse F (Function.update x a s 1)
+      (Function.update x a s 2) i j) (x a) =
+      ingoingInversePartialTable F (x 1) (x 2) a i j := by
+  have h22 : deriv (fun r : ℝ => 1 / r ^ 2) (x 1) = -(2 / x 1 ^ 3) := by
+    rw [((hasDerivAt_const (x 1) (1 : ℝ)).fun_div
+      (hasDerivAt_pow 2 (x 1)) (pow_ne_zero _ hr)).deriv]
+    field_simp [hr] <;> ring
+  have hrInv : deriv (fun r : ℝ => (r ^ 2)⁻¹) (x 1) = -(2 / x 1 ^ 3) := by
+    simpa only [one_div] using h22
+  have hθInv : deriv (fun θ : ℝ => (Real.sin θ ^ 2)⁻¹) (x 2) =
+      -(2 * Real.cos (x 2) / Real.sin (x 2) ^ 3) := by
+    have h := (((Real.hasDerivAt_sin (x 2)).fun_pow 2).inv (pow_ne_zero _ hθ)).deriv
+    change deriv (fun θ => (Real.sin θ ^ 2)⁻¹) (x 2) = _ at h
+    rw [h]
+    field_simp [hθ] <;> ring
+  fin_cases a <;> fin_cases i <;> fin_cases j <;>
+    simp (config := {decide := true}) [ingoingSphericalInverse, Function.update,
+      ingoingInversePartialTable, hrInv, hθInv] <;>
+    field_simp [hr, hθ] <;> ring
+
+private theorem ingoing_weight_update_derivative (x : Chart) (a : Fin 4) :
+    deriv (fun s => (Function.update x a s 1) ^ 2 *
+      Real.sin (Function.update x a s 2)) (x a) =
+      (![0, 2 * x 1 * Real.sin (x 2), x 1 ^ 2 * Real.cos (x 2), 0] : Fin 4 → ℝ) a := by
+  have hr := ((hasDerivAt_pow 2 (x 1)).mul_const (Real.sin (x 2))).deriv
+  have hθ := ((Real.hasDerivAt_sin (x 2)).const_mul (x 1 ^ 2)).deriv
+  fin_cases a <;> simp (config := {decide := true}) [Function.update, hr, hθ]
+
+set_option maxHeartbeats 1200000 in
+/-- The two Palatini compatibility identities for an arbitrary family
+with the selected ingoing spherical base. They concern only s=0 and
+place no symmetry restrictions on the perturbation away from s=0. -/
+theorem ingoing_background_variational_compatibility
+    (g : MetricPath) (F : ℝ → ℝ) (x : Chart)
+    (hBase : g 0 = ingoingChartMetric F)
+    (hr : 0 < x 1) (hθ : 0 < Real.sin (x 2)) (hF : DifferentiableAt ℝ F (x 1)) :
+    inverseMetricCompatiblePartial (metricConnection g 0 x) (metricInverse g 0 x)
+      (inversePartial g x) ∧
+    densityCompatiblePartial (metricConnection g 0 x) (metricWeight g 0 x)
+      (weightPartial g x) := by
+  have hInv (y : Chart) (hy₁ : 0 < y 1) (hy₂ : 0 < Real.sin (y 2)) :
+      metricInverse g 0 y = ingoingSphericalInverse F (y 1) (y 2) := by
+    unfold metricInverse
+    rw [hBase]
+    exact ingoing_inverse_exact F (y 1) (y 2) hy₁.ne' hy₂.ne'
+  have hW (y : Chart) (hy₁ : 0 < y 1) (hy₂ : 0 < Real.sin (y 2)) :
+      metricWeight g 0 y = y 1 ^ 2 * Real.sin (y 2) := by
+    unfold metricWeight
+    rw [hBase]
+    exact ingoing_weight_exact F (y 1) (y 2) hy₁ hy₂
+  have hΓ : metricConnection g 0 x = ingoingChristoffelTable F (x 1) (x 2) := by
+    rw [← ingoingChartChristoffel_eq_table F x hr.ne' hθ.ne' hF]
+    unfold metricConnection ingoingChartChristoffel ingoingMetricPartial
+    simp_rw [hInv x hr hθ, hBase, spatialLineDeriv_eq_update]
+  have hdB (a i j : Fin 4) : inversePartial g x a i j =
+      ingoingInversePartialTable F (x 1) (x 2) a i j := by
+    unfold inversePartial
+    rw [spatialLineDeriv_eq_update, ← ingoing_inverse_update_derivative F x hr.ne' hθ.ne']
+    apply Filter.EventuallyEq.deriv_eq
+    filter_upwards [update_line_regular x a hr hθ] with s hs
+    exact congrArg (fun M : MetricMatrix => M i j) (hInv _ hs.1 hs.2)
+  have hdW (a : Fin 4) : weightPartial g x a =
+      (![0, 2 * x 1 * Real.sin (x 2), x 1 ^ 2 * Real.cos (x 2), 0] : Fin 4 → ℝ) a := by
+    unfold weightPartial
+    rw [spatialLineDeriv_eq_update, ← ingoing_weight_update_derivative x a]
+    apply Filter.EventuallyEq.deriv_eq
+    filter_upwards [update_line_regular x a hr hθ] with s hs
+    exact hW _ hs.1 hs.2
+  constructor
+  · intro a i j
+    rw [hdB, hΓ, hInv x hr hθ]
+    fin_cases a <;> fin_cases i <;> fin_cases j <;>
+      simp (config := {decide := true}) [sumFin4, ingoingChristoffelTable,
+        ingoingSphericalInverse, ingoingInversePartialTable] <;>
+      field_simp [hr.ne', hθ.ne'] <;> ring
+  · intro a
+    rw [hdW, hΓ, hW x hr hθ]
+    fin_cases a <;>
+      simp (config := {decide := true}) [sumFin4, ingoingChristoffelTable] <;>
+      field_simp [hr.ne', hθ.ne'] <;> ring
+
+end IngoingVariationalCompatibility
 
 end IngoingChart
 
