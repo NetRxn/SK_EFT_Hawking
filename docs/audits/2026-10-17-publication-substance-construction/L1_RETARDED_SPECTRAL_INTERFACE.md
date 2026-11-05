@@ -5550,7 +5550,21 @@ The evaluator is identical to the preceding batch's evaluator.
 | Surviving-face source | `−64704638672459715234375/140737488355328` |
 | Full fixed-shear numerator | `−419824579683589432175953125/144115188075855872` |
 
-Orbits 0–15 now have reviewed receipts. The next range is `[16,21)`.
+##### All-protected disjoint-base batch covering orbits 16–20
+
+The probe-class evaluator at `76bba72b0` exited zero for
+`--four-mixed-all-protected-disjoint-base --orbit-range 16 21 --probe-classes`.
+Independent review verified all five orbits and 960 words per checkerboard.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `2427385717062785533285546875/9223372036854775808` |
+| Remote source | `−2015326915349783984601328125/2305843009213693952` |
+| Upper source | `−853804901907311996103609375/2305843009213693952` |
+| Surviving-face source | `−32945948609504143359375/140737488355328` |
+| Full fixed-shear numerator | `−852229559818802966376234375/576460752303423488` |
+
+Orbits 0–20 now have reviewed receipts. The next range is `[21,26)`.
 
 The companion
 `--four-mixed-all-protected-disjoint-base-remaining` route covers
