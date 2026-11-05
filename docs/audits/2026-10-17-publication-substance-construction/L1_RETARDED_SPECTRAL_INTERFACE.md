@@ -7839,8 +7839,8 @@ dominant orbits are singletons.
 
 | Representative | Source words | Exact contribution | Receipt byte interval | Receipt SHA-256 |
 |---|---:|---|---|---|
-| (7,4) | 60 | `378279423049817079/2361183241434822606848` | [1317, 47370) | `fe0c3fe6d3c18a5fac3c23fdac5cca7634eaab0b726c56cf5fd466e5c2c14269` |
-| (7,19) | 15 | `4055515893230966199/9444732965739290427392` | [1319, 47432) | `534f14cfe32f65a449354d5345b239b24c9cfc287f066d889b1d9202bac92b70` |
+| [(7,4)](l1_gamma_7_4.out.txt) | 60 | `378279423049817079/2361183241434822606848` | [1317, 47370) | `fe0c3fe6d3c18a5fac3c23fdac5cca7634eaab0b726c56cf5fd466e5c2c14269` |
+| [(7,19)](l1_gamma_7_19.out.txt) | 15 | `4055515893230966199/9444732965739290427392` | [1319, 47432) | `534f14cfe32f65a449354d5345b239b24c9cfc287f066d889b1d9202bac92b70` |
 
 The 75 signed source words are disjoint from each other and the
 1,068 previously accepted words. Verified dominant coverage is
@@ -7854,7 +7854,7 @@ slices 0, 2, and 3 on the original pinned roster. It checked all
 `(-2,-1,-3)` mapping slice 0 to slice 1. The exact weighted
 component subtotal is `688672510171296147/9444732965739290427392`
 with zero imaginary part. The component receipt byte interval
-is [47367, 115753) in the shared block 3 run. Its SHA-256 is
+is [47367, 115753) in the [shared block 3 run](l1_gamma_block3.out.txt). Its SHA-256 is
 `c66a5fbd2889295f6a1b71e6a353334e61d7feac954c286859c4a7beca4743e4`.
 
 The nine-member signed orbit adds 27 source words disjoint from
