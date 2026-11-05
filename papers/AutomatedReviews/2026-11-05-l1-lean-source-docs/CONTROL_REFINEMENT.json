@@ -1,0 +1,100 @@
+{
+  "scope": "Stronger controls for new still-open findings, following independent R1 BLOCK; older two finding Verifies unchanged",
+  "r1_proposal": "695e955a1e7d90db84969dd0677bdb8da3dccc327b4f4d4e90926571aeff3fba",
+  "r2_proposal": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+  "author_intermediate_check": "Strengthened1.1 caught a second half-decade copy in the summary; it was corrected before requesting R2 review. No repository Lean source was edited.",
+  "checks": {
+    "1.1": {
+      "original_v1_command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s; assert \"physical source, state and unit matching\" in \" \".join(s.split())'",
+      "strengthened_v2_command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"\u03c7_vest \u00b7 \u039b\u00b2\" not in s; assert \"`|\u03b3| \u00b7 \u03c9`\" not in s'",
+      "actual_results": {
+        "original": {
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"\u03c7_vest \u00b7 \u039b\u00b2\" not in s; assert \"`|\u03b3| \u00b7 \u03c9`\" not in s\n                                                                                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        "rejected_r1": {
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"/tmp/l1-source-docs-r1-preserved-20261105/proposal.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"\u03c7_vest \u00b7 \u039b\u00b2\" not in s; assert \"`|\u03b3| \u00b7 \u03c9`\" not in s\n                                                                                                                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        "r2": {
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    "1.2": {
+      "original_v1_command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"to within ~3e-15\" not in s and \"susceptibility offsets approximately \u00b12\u03c4\" in s'",
+      "strengthened_v2_command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately \u00b12\u03c4\" in n'",
+      "actual_results": {
+        "original": {
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately \u00b12\u03c4\" in n\n                                                                                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        "rejected_r1": {
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"/tmp/l1-source-docs-r1-preserved-20261105/proposal.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately \u00b12\u03c4\" in n\n                                                                                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+        },
+        "r2": {
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    }
+  },
+  "command_delimiter_refinement": {
+    "reason": "Existing review_verify_is_one_command rejects embedded backticks inside Python string literals. chr(96) preserves assertions. Older two finding controls unchanged.",
+    "prior_document": "---\npaper: L1\nbundle: L1\nbundle_target: L1\ntier: 2\nreviewer: publication-source-scope-assessment\nreview_date: 2026-11-05\nreadiness_gates_version: 1\nkind: focused-lean-source-documentation\n---\n\n# Related Lean-source description propagation\n\n### 1.1 \u2014 MINOR \u2014 Remaining provenance comments overstate inputs, carrier and physical matching\n\n- **Severity:** minor\n- **Lane:** `lean`\n- **Gate:** ClaimGrounding\n- **Location:** `lean/SKEFTHawking/GravitationalWaves.lean`, overview/declaration documentation and module summary\n- **Observed:** Source overview and dispersion comments claim no project dependencies, give the fixed predicate an extra argument, narrow the interval carrier, and promote free real-product algebra to a physically matched correction. Actual imports/types do not support those descriptions.\n- **Expected:** State actual imported/free-input scope and fixed-tolerance/nonnegative carrier; label the illustrative correction and its unmatched physical units/source interpretation. Preserve all declarations/proofs and the original physical BUILD.\n- **Fix:** ROOT owns the comment-only propagation and existing controlled independent/native/project qualification. Original source-comment findings in apex-propagation1.2 and reader-results1.2 retain separate identities and evidence.\n- **Verify:** `python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"\u03c7_vest \u00b7 \u039b\u00b2\" not in s; assert \"`|\u03b3| \u00b7 \u03c9`\" not in s'`\n- **Evidence:** ORIGINAL_RED.json records actual original failures at130b4015d. Exact source/carrier review, comment-token preservation and qualified native/project evidence are required; lexical controls alone do not certify physics or native execution.\n\n### 1.2 \u2014 MINOR \u2014 Summary confuses speed tolerance with susceptibility offsets\n\n- **Severity:** minor\n- **Lane:** `lean`\n- **Gate:** ComputationCorrectness\n- **Location:** `lean/SKEFTHawking/GravitationalWaves.lean`, overview/declaration documentation and module summary\n- **Observed:** The summary applies an approximately3e-15 neighborhood to chi although its actual squared-endpoint interval has approximately2tau offsets;3e-15 is the speed-deviation tolerance.\n- **Expected:** State the exact finite interval and distinguish susceptibility offsets from the speed tolerance. No scalar computation, threshold or physical range changes.\n- **Fix:** ROOT owns the comment-only propagation and existing controlled independent/native/project qualification. Original source-comment findings in apex-propagation1.2 and reader-results1.2 retain separate identities and evidence.\n- **Verify:** `python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately \u00b12\u03c4\" in n'`\n- **Evidence:** ORIGINAL_RED.json records actual original failures at130b4015d. Exact source/carrier review, comment-token preservation and qualified native/project evidence are required; lexical controls alone do not certify physics or native execution.\n\n## Ownership and scientific boundary\n\nROOT accepts this same-file ordinary documentation package. All four source\nfindings remain OPEN until independently verified repair and required controlled\nqualification. The source proposal is outside the repository pending that process.\nExisting physical normalization/window, operator/state/matter/tensor and transport\nBUILD obligations remain owed under the current repair/disposition map; their\nabsence from these free-input definitions is not a claim of absence from every\nproject branch. No proof task, axiom, code formula, API change or scientific\nscope reduction is proposed. The original mathematical statements are preserved.\n\n## Control refinement before repair\n\nThe first source proposal was independently BLOCKED for a second susceptibility-\noffset copy and the stale W6Ext locator. Initial new-finding controls and exact\nfailed receipts are preserved in the R1 archive. Strengthened controls reject\nBOTH the original source and rejected proposal, while passing the corrected\nscratch proposal. The two older findings retain their original Verify commands.\nThis is not an accepted repair or closure. See CONTROL_REFINEMENT.json.\n",
+    "previous_commands": [
+      "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"\u03c7_vest \u00b7 \u039b\u00b2\" not in s; assert \"`|\u03b3| \u00b7 \u03c9`\" not in s'",
+      "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(\"`\", \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately \u00b12\u03c4\" in n'"
+    ],
+    "corrected_commands": [
+      "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"\u03c7_vest \u00b7 \u039b\u00b2\" not in s; assert (chr(96)+\"|\u03b3| \u00b7 \u03c9\"+chr(96)) not in s'",
+      "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately \u00b12\u03c4\" in n'"
+    ],
+    "equivalence_receipts": [
+      {
+        "source": "original",
+        "finding": "1.1",
+        "before_exit": 1,
+        "after_exit": 1
+      },
+      {
+        "source": "original",
+        "finding": "1.2",
+        "before_exit": 1,
+        "after_exit": 1
+      },
+      {
+        "source": "rejected_r1",
+        "finding": "1.1",
+        "before_exit": 1,
+        "after_exit": 1
+      },
+      {
+        "source": "rejected_r1",
+        "finding": "1.2",
+        "before_exit": 1,
+        "after_exit": 1
+      },
+      {
+        "source": "repaired",
+        "finding": "1.1",
+        "before_exit": 0,
+        "after_exit": 0
+      },
+      {
+        "source": "repaired",
+        "finding": "1.2",
+        "before_exit": 0,
+        "after_exit": 0
+      }
+    ]
+  }
+}

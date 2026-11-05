@@ -294,3 +294,13 @@ human state remain; one canonical audit append and no automatic closure. The
 only metadata change is canonical compiled_pages4-to5. See
 AutomatedReviews/2026-11-05-l1-discussion-appendix/SCOPE.md for exact pins,
 complete current and predecessor reports, source preservation and writer evidence.
+
+
+2026-11-05 — Lean source documentation propagation: independently reviewed
+comment-only repair corrects predicate dependence, Abbott equation/assumptions,
+susceptibility offsets and physical-matching descriptions. Imports, definitions,
+proofs and API remain unchanged. Actual matching native observations and normal
+controller build are recorded in ../AutomatedReviews/2026-11-05-l1-lean-source-docs/.
+The same patch is applied to this publication candidate; four declared controls
+pass. Broader qualification and canonical individual closure remain pending.
+Original scientific BUILD and all publication/main/human acceptance are retained.

@@ -34,6 +34,23 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+
+- **L1 Lean source documentation repaired; final qualification pending.**
+  [Exact repair and retained review/native/build evidence](../../../papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md)
+  correct the dependent scalar conditions, observational locator, susceptibility
+  offsets and physical-matching descriptions without changing imports, definitions,
+  statements, proofs or API. Independent source and applied-file reviews accept
+  the exact patch; actual matching-slot diagnostics and four axiom scans are clean.
+  Normal controller absorption and authoritative build completed at1028b047;
+  wt1 is released and legacy wt2/wt3 work preserved. All four actual publication
+  finding controls pass. Five scoped project checks pass with retained warnings;
+  the broader fast suite is still running, so individual canonical closures remain
+  pending. Corpus command-format failures return to the exact56 baseline after
+  this package's two command-format defects were repaired. ROOT retains the entire
+  L1 readiness chain; Executor owns only specifically bounded deeper constructions.
+  Original physical BUILD, whole-publication native/project, stage, main and human
+  acceptance remain OPEN. No new green bundle is claimed.
+
 - **L1 ordinary Discussion and supporting appendix accepted.**
   [Current source, reader/render and catalog evidence](../../../papers/AutomatedReviews/2026-11-05-l1-discussion-appendix/SCOPE.md)
   accepts the connected main argument and scientific ending. All five current
