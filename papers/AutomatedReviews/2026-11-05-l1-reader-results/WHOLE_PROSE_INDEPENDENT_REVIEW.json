@@ -1,0 +1,76 @@
+{
+  "schema": "l1-whole-prose-review/v1",
+  "verdict": "BLOCK",
+  "assigned_results_reader_improvement": "LANDED",
+  "head": "7258784b74dcdd34e8ca1a56f5d7ff67a366a292",
+  "manuscript_sha256": "911fef6ae5b1a6037a98afc483f185885e38e5cf16321aaa8dc42b6204d78338",
+  "pdf_sha256": "f8a015f91c9f7d12ee7b30704bc4cc6449d9e73258e12e1a0ecb73d1d0080ad1",
+  "read_through_enddocument_line": 541,
+  "continuity_initial": "fresh",
+  "continuity_final": "fresh",
+  "questions": [
+    {
+      "number": 1,
+      "verdict": "NO",
+      "lines": [
+        33,
+        37
+      ],
+      "reason": "First sentence states activity/law; interval result follows."
+    },
+    {
+      "number": 2,
+      "verdict": "NO",
+      "reason": "Revised results core is coherent; full Introduction/Discussion retain repeated scope and implementation/research-agenda inventory."
+    },
+    {
+      "number": 3,
+      "verdict": "NO",
+      "first_clear_undefined_symbol": "H",
+      "line": 68
+    },
+    {
+      "number": 4,
+      "verdict": "NO",
+      "reason": "Phase/program navigation and implementation inventory persist; deletion/move list in report."
+    },
+    {
+      "number": 5,
+      "verdict": "PASS_DECLARED_REPOSITORY_INSTRUMENT",
+      "compiled_pages": 4,
+      "word_equivalents": 3267,
+      "declared_ceiling": 3750,
+      "headroom": 483,
+      "publisher_policy_freshly_verified": false
+    }
+  ],
+  "reader_stop_lines": [
+    88,
+    91
+  ],
+  "pdf_page_qa": {
+    "pages_viewed": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "render_dpi": 110,
+    "verdict": "PASS",
+    "visible_overflow_or_clipping": false,
+    "minor_typographic_reader_issue": "Long implementation names/additive inventory on page4 remain distracting."
+  },
+  "original_physical_chain": "OPEN_BUILD_NOT_RECHARTERED",
+  "source_edits": false,
+  "compile_run": false,
+  "test_run": false,
+  "native_or_lean_run": false,
+  "report_sha256": "6ae37ed7e92627aa753496743f5ca360b028a5d5221013e6dac5f4835adaa228",
+  "remaining": [
+    "Physical B3 normalization/domain",
+    "Physical state/tensor propagation/matter-light reference",
+    "Transport/frequency/units/error matching",
+    "Whole prose revisions and independent re-review",
+    "Existing full stages/main/human acceptance"
+  ]
+}

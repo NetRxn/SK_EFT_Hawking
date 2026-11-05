@@ -1,0 +1,27 @@
+{
+  "schema": "l1-bounded-prose-followup/v1",
+  "scope": "exact r2-to-r3 antecedent delta and ALL4 current rendered pages",
+  "verdict": "ACCEPT_BOUNDED",
+  "whole_prose_verdict": "BLOCK",
+  "assigned_results_reader_improvement": "LANDED",
+  "source_sha256": "e773c9f57a480f972f8d31304cbf6a14e9e0341ad452729c6329b1a0c8e60b6f",
+  "pdf_sha256": "28a12f204d4c0104baf4162e8b66d18c9c998378c125e0139d6481a5909124e0",
+  "exact_single_replacement_verified": true,
+  "line": 230,
+  "all_pages_visually_inspected": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "layout_verdict": "PASS",
+  "word_equivalents": 3268,
+  "declared_ceiling": 3750,
+  "headroom": 482,
+  "publisher_policy_verified": false,
+  "compile_rerun": false,
+  "test_run": false,
+  "scientific_native_lean_slot_operations": false,
+  "tracked_edits": false,
+  "report_sha256": "9eaa9f27445ac5390719f2ec926a1989193e3f4ed881fd53c6f896bd419b8904"
+}

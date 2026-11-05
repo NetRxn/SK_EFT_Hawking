@@ -34,6 +34,24 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 reader-facing results and observational scope.** The
+  [integrated review and receipts](../../../papers/AutomatedReviews/2026-11-05-l1-reader-results/SCOPE.md)
+  accept the source-qualified observation paragraph and mathematical results
+  reorganization without reducing original scientific requirements. Independent
+  review verifies all128 current claim units and all123 predecessors; all four
+  scientific blockers,54 prior-finding candidates and human state remain.
+  Canonical sentence intake appends one audit event. Compilation and independent
+  inspection cover all four pages; the existing instrument measures3268 word
+  equivalents against3750, and focused gravitational-wave tests pass89 cases.
+  The full prose verdict remains BLOCK; the assigned results improvement is
+  LANDED. Next ordinary authoring addresses the abstract's result-first opening,
+  first-use definitions and remaining internal inventory/program language,
+  preserving scientific content and adverse limitations. ROOT retains the full
+  manuscript and readiness chain. The original B3/state/tensor/matter/transport
+  construction and both separately filed Lean source-comment findings remain
+  open. No new all231-gate, native, main or human publication acceptance is
+  inferred from this checkpoint.
+
 - **Existing canonical portfolio artifact refresh.**
   [BUNDLE_READINESS_HEATMAP](../../BUNDLE_READINESS_HEATMAP.md) is regenerated
   with the existing bundle_readiness writer, including its derived count/gate

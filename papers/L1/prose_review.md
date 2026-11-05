@@ -1,118 +1,152 @@
-# Independent current L1 full prose review at 6962
+# Current L1 prose acceptance state
 
-**BLOCK on reader outcome.** The current manuscript clearly states a conditional interval result, but a PRL reader still has no established physical model to which its headline restriction applies. Accepted numerical, source, figure and finite-model milestones are progress; none changes that structural verdict.
+Full manuscript **BLOCK**; reader-facing results improvement **LANDED**.
+The complete r2 review below and bounded r3 source/render follow-up jointly
+apply to manuscript e773c9f5 and PDF28a12f20. The follow-up is not a new
+whole-paper scientific review. Original physical requirements remain open.
 
-## Boundary and read receipt
+# Independent complete L1 prose and rendered-page review
 
-Repository: `/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103`; bundle: `papers/L1`. HEAD verified `6962a3c0475d6386a6427a765949f413efa76f80`; draft SHA256 `82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac`; tracked status clean. Existing continuity check was the first operation and returned fresh/no changed inputs. Read draft anew in order, lines 1–200, 201–400 and 401–539, through `\end{document}` at **539**, before reading the prior instruction. Current line numbers below refer to this exact draft.
+**Whole-manuscript verdict: BLOCK. Assigned results-section reader improvement: LANDED, with minor residual presentation repairs. Rendered four-page layout: PASS at the inspected pin. Declared repository length instrument: PASS, not verified publisher-policy conformance.**
 
-Read the complete existing prose-reviewer persona and prohibited-pattern floor; metadata; candidate queue/current checkpoint authority and original acceptance table; Phase6a current scientific-successor overlay; L1 strategy charter; current primary notebook resume/ownership; existing prose review; and all three current physical-bridge acceptance records (common source, matching decomposition, collective-body diagnostic). The primary notebook remains ROOT-owned. No source edits, build/tests, calculations, Lean search, slot action, canonical finding closure or stage acceptance performed. Scratch report is the only output. No absence-of-Lean assertion is made: that would require actual LSP/type/import/dependency/history discovery, which this review did not undertake. No new prior-work attribution is proposed; the four full-body corrections are accepted context rather than re-audited literature findings.
+## Identity, role and read receipt
 
-## Where a reader stops and what the paper is about
+Assigned repository: `/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103`; bundle `papers/L1`. HEAD `7258784b74dcdd34e8ca1a56f5d7ff67a366a292`. Actual current manuscript SHA256 `911fef6ae5b1a6037a98afc483f185885e38e5cf16321aaa8dc42b6204d78338`; canonical PDF SHA256 `f8a015f91c9f7d12ee7b30704bc4cc6449d9e73258e12e1a0ecb73d1d0080ad1`. Both pins independently checked before rendering and again after the read. First attempted continuity command used unavailable `python`; the immediate `python3 scripts/codex_continuity.py check` returned fresh/no changes before source inspection. The same existing check returned fresh/no changes at final identity readback. No source mismatch was refreshed away.
 
-**Line 87, completed by 88–90:** after introducing a spin-2 second-sound identification, the paper says it derives neither the propagating mode, propagator nor matter coupling. This is the point a referee asks why an assumed response law and an adopted comparison range constitute new physical information. Lines 135–148 answer by distinguishing this calculation from action-level studies, but do not supply that information. A skimming reader may stop already at abstract 39–41; that is an honest limitation, not a reason to suppress it.
+Read the complete actual manuscript in source order, lines 1–541, including bibliography and comments through `\\end{document}` at 541, before consulting the stored 6962 prose review and its bounded follow-up. Read the COMPLETE existing prose-reviewer persona, authoring skill and prohibited-pattern floor, current target/length metadata, workspace/repository guidance, current primary ROOT notebook resume/ownership sections, existing queue's current L1 ownership/acceptance passages, and Phase6a's current scientific-successor overlay. The large historical notebook was consulted by its relevant resume sections, not claimed as a whole-history read. Existing source/math review is contextual preservation evidence, not a substitute for this reader review.
 
-**Actual subject in one sentence:** Given `c_GW=c sqrt(chi_vest)` and an adopted order-unity comparison interval, the paper inverts the GW170817 speed bound, formally records its finite compatible interval and endpoint checks, and explains the limits of interpreting that algebra as a graviton constraint.
+This is the literature-reader/prose role, not physics authorship. ROOT alone owns manuscript integration, notebook, gates and closure. Executor owns bounded deeper construction, not the remainder of L1. No tracked file/Git/notebook edits, compile, test run, scientific calculation, native/Lean/slot operation or absent-proof assertion. Only scratch report and light PDF page renders were produced. The supplied compile and 89-test receipts are context, not independent physics criteria or newly executed review checks.
 
-That matches the conditional confinement portion of the historical charter. It does not meet the current original B3/state/tensor/matter/transport construction requirements. The title at 24–25 implies a physically established “natural range,” while the body at 175–189 calls it adopted and not derived. The correct response is accepted physical construction and subsequent integrated authorship, not qualification removal or conversion into a different, completed conditional-note project.
+## Where the reader stops; actual subject
 
-## Five reader-outcome verdicts
+**Main stop: lines 88–91**, where the Introduction explicitly says the propagating second-sound mode, propagator and matter coupling are not derived. The scientific limitation is correct and must stay. At this point a PRL referee needs the missing connection between a physical observable and the chosen response law/range. The later interval inversion does not supply it. A skimmer can stop at abstract 40–42 for the same reason. The qualifier added at 93–102 helps the reader understand the observational assumption; it does not supply the physical model.
 
-### 1. Abstract leads with the result: NO
+**Actual subject in one sentence:** Assuming `c_GW=c sqrt(chi_vest)` and an adopted order-unity susceptibility range, the manuscript inverts a source-qualified GW170817 speed cap into a finite compatible interval, checks its endpoints, and limits the physical interpretation of that algebra.
 
-The first sentence (33–34) says “We constrain our assumed leading-order graviton speed” and gives the law; the finding starts in the next sentence at 35. Put the conditional allowed interval in the first sentence and define the light-reference speed and susceptibility there or immediately afterward. Keep both the assumption and mode/range boundary. The title must eventually follow the strongest accepted physical result; changing its adjective alone cannot complete that result.
+That is the conditional mathematical part of the charter. It does not complete the current original physical B3 window, state/tensor/matter, and transport/frequency requirements in Phase6a and the queue. The title's “its natural range” (24–25) continues to outpace the expressly adopted, not derived range at 177–191. Honest limitations should not be removed to manufacture a stronger paper; physical construction and independent acceptance must precede the final physical spine. No alternate conditional-note charter is approved here.
 
-### 2. Each section advances one connected argument: NO
+## The five questions
 
-**Introduction (50–160)** establishes motivation, an assumption, a datum and an interval; this is a usable conditional spine. The four-paper comparison at 115–148 is now specific and source-qualified, but is disproportionately long relative to the absent new physical step. Paragraphs 150–160 repeat scope and preview mechanisms already discussed later. They create a second landing after the conclusion at 101–113. Condense without restoring broad claims about all theories.
+### 1. Does the abstract lead with the result? NO
 
-**Formal setup and result (166–337)** contains the indispensable range provenance (166–189), deviation definition and finite interval (198–225), and quantitative endpoint checks. It then becomes an inventory of a Lean module: tactic exposition at 211–214 and 242–248; several additional named witnesses at 250–265; the tracked Prop and falsifier bookkeeping at 290–323; then another endpoint limitation at 325–337. The complete compatible set was already established at 205–208. The redundancy and failure-clause corrections are important supporting facts, but their current main-text allocation does not advance a second physical conclusion.
+Lines 33–35 lead with the activity “We constrain” and the assumed law. The actual finding begins at 35–37 with the compatible interval. Put the conditional interval result in the first sentence, retaining the assumed-law condition and electromagnetic reference definition. Keep the nonderived mode/range limitation at 40–42. The abstract is concise enough to make this a straightforward local repair, but its current first sentence still does not pass this criterion.
 
-**Discussion (343–437)** begins with a useful interpretation of finite tolerance versus exact luminality (343–353). It then turns into a research agenda. The third option (374–409) develops an unnormalized placeholder ansatz and theorem inventory over more space than the main interval proof. The companion-wave comparison (412–427) introduces another provisional normalization without supplying the present model's missing bridge. Reproducibility (429–437) is appropriate support but gives implementation/count assertions instead of a directly usable versioned resource.
+### 2. Does each section advance a single connected argument? NO overall; substantially improved within the revised results
 
-The intended chain remains physical response/state/domain → tensor propagation relative to the same matter/light reference → controlled observational propagation → allowed interval. The current paper carries the last step.
+The Introduction (51–161) has a usable route through motivation, assumed speed law, observation and conditional interval. Its literature comparison at 116–149 now distinguishes specific source-qualified theory results from the kinematic calculation. However, 136–155 repeat the absence of microscopic operator constraints, and 156–161 preview possibilities treated again in Discussion. Condense the repeated framing while preserving all four accepted attributions, including the separate Sakstein–Jain constraint combinations.
 
-### 3. Every symbol defined before use: NO
+The core of Formal setup and result now DOES advance a comprehensible mathematical argument: law/relative deviation and domain (193–205), exact finite-tolerance biconditional with a reader-level proof (207–224), nesting/width/prior interpretation (226–239), and quantitative endpoint checks (241–263). This is a material improvement over the prior inventory of tactics and witnesses. It gives a referee the reason for squaring rather than Lean tactics.
 
-The **first offending use is `c` at line 34**: it is never explicitly defined as the electromagnetic/light-reference speed. That reference matters physically here. `chi_vest` is first described as a normalized metric-channel response at 77–79; bring its reader-level meaning forward, without implying its physical normalization has been established.
+Two residual blocks reduce the gain. The compatibility-condition discussion (286–315) correctly preserves the dependent clauses and counterexamples but still reads as a formal-definition audit after the complete compatible interval is known. The second endpoint paragraph (317–338) returns to an already-established conclusion to record the important nonzero-c variant and physical boundary. Preserve that stronger statement but connect it to the initial relative-deviation identity; support the detailed conjunction/counterexample audit in formal methods. Small immediate repair: at 230 “It contains” follows “Every compatible susceptibility” at 226; explicitly say “The compatible interval contains” so the reader does not have to repair the antecedent.
 
-Bounded definition repairs available now:
+Discussion (344–439) is still partly an internal research agenda. The finite-tolerance interpretation at 344–354 carries the argument. The three possible mechanisms at 356–411 turn into an extended placeholder-dispersion and theorem catalogue. The companion comparison at 414–429 introduces several new scales/quantities late, without supplying this paper's missing physical bridge. Reproducibility is supporting material, not the concluding physical result.
 
-- **67:** identify `H` as the de Sitter Hubble parameter.
-- **112:** expand ADW at first use, if the acronym survives; do not invent an expansion from inference.
-- **169–170:** define `gamma_star` as the coupling input of the displayed RPA parametrization and state the actual convention/domain only as supported by source; “coupling inputs” at 81 does not bind this symbol. Define `chi_0` and the distinction from normalized `chi_vest` in the same local account. A definition does not deliver their microscopic map.
-- **178:** name `Lambda_UV` as the cutoff scale before using it. Distinguish the dimensionful bare bubble estimate from the dimensionless normalized quantity, explicitly leaving the unconstructed normalization open. Do not silently equate them.
-- **187:** explain what `alpha_ADW` denotes and that sharing an adopted numerical interval does not establish equality with `chi_vest`.
-- **378–394:** introduce `omega`, `gamma`, `Gamma_H`, and `B` before use and distinguish numerical variables from physically matched units. The source already correctly warns that Hz interpretation and the rate/velocity map are open. Preserve that distinction.
-- **402:** identify `tol` and its relation to fixed `tau` from the actual cited theorem; do not broaden a fixed-tolerance source statement into a generic-tolerance claim for readability.
-- **416–418:** if the companion comparison stays, define `G_N,emerg`, `N_f`, `M_Pl`, and SM; state the count convention from accepted source rather than guessing it.
+**Argument-bearing material:** the assumed-law and source-qualified observational setup, honest adopted-range provenance, finite interval/width/prior interpretation, endpoint checks, figure and explicit physical validity boundary. **Ballast in the main Letter:** repeated scope paragraphs, implementation-name/tactic inventories, full conjunction bookkeeping, phase instructions, long placeholder-product theorem catalogue, and program-asymmetry narration. “Ballast” is placement/reader value, not permission to destroy scientific or adverse information.
 
-These are authorable definitions, not B3 or transport acceptance. If a physical unit or normalization cannot be source-supported, say it is not fixed rather than supplying one for readability.
+### 3. Is every symbol defined before use? NO
 
-### 4. Every sentence addressed to a literature reader: NO
+The bounded prior repairs are present: electromagnetic `c` is defined at 34–35; `gamma_star` is the effective RPA coupling at 172–173; fixed `tau` replaces the formerly loose correction tolerance at 403–404. These are repaired, not current findings.
 
-Deletion/move instruction with current lines follows. Preserve scientific content and adverse limitations in reader-facing main text or supporting material; this is not authority to erase original obligations.
+The first clear remaining undefined physical symbol is **`H` at line 68**, in “independently of H”; the manuscript does not identify it as the de Sitter expansion/Hubble parameter. `s_2` there is inferable as the second-sound speed, but should also be named explicitly. The abstract first uses `chi_vest` at 34 and calls the constrained quantity a susceptibility at 36–37; its normalized metric-channel meaning is only given at 78–80. Bring that meaning forward where possible, without claiming its physical normalization has been derived.
 
-- **85–86:** delete “The identification is appealing in its brevity.” It supplies taste rather than motivation.
-- **112–113:** remove the programme defense and “Phase 6” navigation. Preserve the narrow conditional scope.
-- **139:** delete “As the Introduction notes”; this occurs inside the Introduction.
-- **150–160:** merge the scientific qualification/mechanism point with its single final discussion location; remove duplicate navigation.
-- **186–189:** remove “wave”/“project-internal” framing from the Letter; preserve exact adopted-range provenance in supporting source documentation and the statement that the range is not derived in the main argument.
-- **191–196:** move “ships” and lemma inventory to supporting methods. State the law mathematically once.
-- **198–201:** replace “correctness-push” with the actual compatibility question.
-- **211–214, 242–248:** move tactics and proof inventory to supporting methods. Retain a short mathematical square-root/squaring proof and endpoint values.
-- **250–265:** consolidate duplicate falsifier/anchor inventories in supporting formal documentation; retain nonzero compatible interval and unity anchor in the Letter.
-- **283–286:** move the three Lean witness names out of the figure caption. Keep its finite-width, adopted-domain and unresolved-scale disclosures.
-- **290–293, 307–308:** remove “Per the project's discipline” and definition-maintenance narration. Move the full tracked-Prop/falsifier audit (290–323) to supporting formal methods, preserving the corrected dependence caveat and prior statement there.
-- **355–356, 364–365, 372–373:** delete Phase labels and instructions to future phases. Preserve the scientific possibilities as conditional possibilities.
-- **385–407:** move the placeholder theorem inventory/algebra to supporting methods if retained. Keep the physical matching/normalization limitation and transport requirement visible; do not sell tiny chosen gamma as a physical conclusion.
-- **412–427:** remove “wave,” “ships,” and program-asymmetry narration; retain a short comparison only if it bears directly on the final accepted physical result. Do not import the companion claim as a stronger spine without its own review.
-- **429–437:** move tactic/axiom/test-count and local function-path inventory into versioned supporting provenance; use a usable public reproducibility reference when available. Preserve formal assumptions and verification boundaries.
+Further unresolved first-use definitions: `Lambda_UV` at 180; `alpha_ADW` at 189 beyond calling it a microscopic coefficient; `Gamma_H` at 383; and, if the late companion comparison stays, `G_N,emerg`, `N_f`, `M_Pl`, and SM at 418–420. ADW at 113 and RPA at 81 are unexplained acronyms. The dispersion ansatz introduces a numerical `omega` and `gamma` at 379–383 and explicitly retains physical matching as open; do not fix readability by inventing their units or equating Hz with angular frequency. Source-supported definitions are authorable; the physical map still needs construction and review.
 
-Commented lift history at 522–537 is not rendered prose. No deterministic gate result is inferred or re-run here.
+### 4. Is every sentence addressed to a literature reader? NO
 
-### 5. Compiled length within charter: PAGE PASS; word-equivalent compliance UNVERIFIED
+Deletion/replacement/move list, with current lines. Preserve scientific content and all original obligations; move support rather than deleting adverse facts.
 
-Metadata records `compiled_pages: 4`, meeting the four-page L1 strategy charter. Its actual `length_target` is **3750 word equivalents**, so a page count alone cannot establish that separate ceiling. No word-equivalent measurement is supplied in this review. The metadata also explicitly marks the approximately 600-character abstract guidance as not primary-source verified. Neither becomes confirmed venue compliance here. No compile was run. Read-through is complete, so this is a scope-limited length verdict rather than a verdict on a partial draft.
+- **113–114:** remove program defense and “three Phase 6 recovery paths” navigation; retain the narrow scope and, if needed, a reader-level pointer to mechanisms.
+- **140:** delete “As the Introduction notes”; this is inside the Introduction.
+- **151–161:** merge the repeated no-operator-constraint/possible-mechanism discussion with one final scope paragraph and the Discussion. Do not broaden the accepted literature attributions.
+- **179, 183–191:** replace “project-adopted,” “of this project,” “linearized-EFE wave,” and “project-internal anchor” framing with a direct statement that the range is adopted and what calculation/reference motivates it. Retain the nonderivation and full normalization gap; retain supporting provenance outside the main Letter.
+- **212, 244, 251; 315; 325–327:** move literal Lean witness/module labels into supporting formal provenance. Mathematical theorem statements and the full nonzero-c endpoint assertion stay.
+- **291–315:** move the named implementation predicate and full failure-clause audit into supporting formal methods, keeping the corrected dependent-conjunct logic, all four counterexamples, exact quarter value and their limited interpretation. A concise mathematical compatibility statement can remain.
+- **356–357:** replace “Three Phase 6 paths” with a scientific description of conditional model-building possibilities.
+- **365–366:** delete “Phase 6 should examine” instruction; retain whether the fixed point is realized as an open physical question.
+- **373–374:** delete the phase-as-venue navigation; retain that nonlinear microscopic dynamics must disambiguate the channels.
+- **386–409:** move literal dispersion witness inventory and auxiliary product algebra to supporting methods. Keep the placeholder coefficient, non-restoration boundary, possible near-boundary cancellation, unmatched units/normalization and open microscopic transport explicitly accessible. No physical upgrade is permitted.
+- **414–425:** replace “wave,” “ships,” and “feature of the program” narration with a brief comparison to the companion paper, if scientifically necessary. Preserve actual normalization assumptions/values and distinguish the coefficients rather than implying their identity.
+- **431–439:** move counts, tactic/axiom settings and local-path inventory into versioned reproducibility material; use an accessible versioned reference in the main text when available. This review does not declare the existing counts false.
+
+There is no new deletion request for old taste/procedure passages already removed, nor for unrendered historical comments at 524–539. The deterministic corpus floor supplied in the brief remains 1/3 because of other bundles; this review neither reruns it nor infers L1 reader efficacy from it.
+
+### 5. Is the compiled length within the charter's budget? YES under the supplied existing repository instrument
+
+Metadata says PRL, `compiled_pages: 4`, and `length_target.ceiling: 3750` word equivalents. `pdfinfo` independently confirms **four actual pages**. The pin-matched `/tmp/l1-reader-results-length-20261105.json` records the existing `_measure_manuscript` output **3267 word equivalents**, rendered PDF tokens plus 300 for the single figure. That is **483 below the declared 3750 ceiling**. Unlike the prior 6962 review, this review has a word-equivalent receipt as well as a page count. The supplied receipt's manuscript/PDF hashes match the actual inspected files.
+
+This is repository-instrument/declared-budget compliance. It is not fresh verification of current publisher accounting or acceptance policy. Metadata separately marks the approximate 600-character abstract guidance unverified; no publisher conformance conclusion follows. Full read-through reached end-document before this verdict.
+
+## Independent actual four-page PDF QA
+
+Used the PDF skill. Actual commands: `pdfinfo papers/L1/paper_draft.pdf`; `pdftoppm -r 110 -png papers/L1/paper_draft.pdf /tmp/l1-reader-results-prose-page`; then viewed all four individual PNGs with `view_image`. No recompilation or source mutation.
+
+1. **Page 1:** title, author, abstract and two-column Introduction readable; equations and citation links render; no clipping/overlap, blank section pointer or missing-glyph box observed. The title's natural-range implication is a prose/claim-scope issue, not a rendering failure.
+2. **Page 2:** continued comparison, RPA paragraph and reorganized mathematical argument render legibly. Finite interval, proof, nested inequalities, width comparison and endpoint theorems fit their columns. The conjunction display at the bottom remains inside margins. No observed collision or clipped long theorem name.
+3. **Page 3:** actual figure, axes, endpoint callouts, gold anchor and long caption render legibly. The finite interval remains unresolved at this scale, and the caption explicitly says so; this is not evidence for a singleton compatible set. Continued conditions, nonzero-c display and Discussion have intact reading order. No observed overflow or missing section reference. Caption-to-text whitespace is noticeable but does not lose content or impede column order.
+4. **Page 4:** continued numbered mechanisms, dispersion text, companion comparison, reproducibility and bibliography all fit. The breakable long implementation paths/witness names produce distracting typography, particularly the separated “and” around 405–409, but no clipping, overlap, unreadable glyph or missing reference was observed. This supports moving the inventory for reader reasons; it is not a new failed compile finding.
+
+**Layout verdict: PASS at this exact PDF pin.** Rendering/legibility review does not validate physical truth, plot semantics beyond visible caption consistency, native proof completion or full Stage9/10/13 acceptance. The supplied actual compile receipt reports four pages/zero overfull/errors/unresolved/dropped options; this review independently establishes the visible four-page result, not a new compile execution.
 
 ## Ordered restructuring instruction
 
-1. **Make bounded reader repairs now while construction proceeds.** Define the symbols above; lead the abstract with the conditional result; remove process vocabulary and duplicate paragraphs; preserve accepted four-paper comparisons, finite interval, P3 dependence/prior caveats and the figure's scale disclosure. These edits can be reviewed independently without changing the physical acceptance contract. Do not fill absent normalization with invented notation or substitute the adopted interval as a derived domain.
-2. **Give Introduction one route to the question.** Motivation and physical target, exact status of the assumed law, observational datum, conditional result, then a short source-qualified comparison. Preserve correct attribution of Volovik's own luminal de Sitter result. Reduce repeated caveats by stating a precise validity boundary once and referring to actual assumptions where needed.
-3. **Give Formal setup and result one mathematical route.** Define response, speed reference and domain; state the finite-tolerance interval once; give a brief mathematical argument; use endpoint values as checks/figure annotations. Move implementation identifiers, tactics and tracked-hypothesis auditing to supporting formal methods with their corrected statements intact. This releases main-text space without pretending to supply missing physics.
-4. **Reserve the physical-model step for accepted physical results.** When construction is independently accepted, integrate the source/state, physical normalization/domain, tensor pole and matter/light reference, and controlled transport/arrival-time equations before the interval inversion. The conditional finite-lambda common functional and contacts, matching decomposition, and pure-g2 zero-body diagnostic are useful accepted distinctions. They supply no physical B3 range or propagating graviton. Do not insert them as if they closed those steps; do not add a repository-progress paragraph to the Letter.
-5. **Make Discussion interpret the established model/result.** Keep finite tolerance, prior dependence and the real validity band. Compress speculative mechanisms to what accepted physics motivates. Put placeholder dispersion algebra and formal audit detail in supporting material, maintaining their limits and original open transport objective. Do not create an alternate publication charter around the easier algebra.
-6. **Rebuild title/abstract from the accepted integrated outcome and re-review.** ROOT remains sole L1 author/integrator and owner of ordinary science, figures, source/claim propagation, closure and gates. Executor returns bounded deep constructions. If physical construction yields a different law/domain or scoped obstruction, reconcile the original contract with its actual evidence through existing authority. Notation polish and this instruction grant no Stage 9/10/13, main or publication acceptance.
+1. **Retain the revised mathematical core.** Keep the present law → relative deviation → finite interval/proof → nesting/width/prior → endpoint checks sequence. Repair the ambiguous “It” at 230. Integrate the every-real-nonzero-c identity/endpoint scope into that same route rather than ending with a second result inventory. Preserve all exact conditions, strict inequalities, nonempty finite window, unity anchor, endpoint values, reference targets and corrected conjunction logic.
+2. **Make immediately supported reader repairs.** Lead the abstract with the conditional finding, add the remaining source-supported first-use symbol definitions, and remove internal phase/program navigation. Do not derive missing units/normalization by editorial fiat. These are bounded authorable improvements, not a new physical acceptance gate or physics substitute.
+3. **Compress Introduction to one approach to the question.** Keep the physical motivation and accurate Volovik distinction; state the assumed law and its validity boundary, then the source-qualified observational input and conditional result. Give the four accepted prior analyses one proportionate comparison, preserving their actual claims. Remove repeated microscopic-scope paragraphs and mechanism previews.
+4. **Move formal implementation support out of the main argumentative spine.** Retain a short mathematical account of dependent conditions; move predicate names/full counterexample audit and auxiliary dispersion witness catalogue to existing supporting/reproducibility material with their precise limits. Preserve every old scientific assertion/negative limitation rather than silently dropping difficult content. Keep Figure1 and its finite-width/unresolved-scale disclosures.
+5. **Complete the original physical chain before writing its final spine.** Current Phase6a requires the actual metric-channel/source/projector/state and physically normalized susceptibility/domain, stable propagating tensor and matter/light reference, and controlled transport/frequency/unit/error matching. Independently accepted bounded constructions can be integrated only at their accepted scope. They must not be promoted into the original B3 range or a physical graviton without evidence. A result producing a different interval needs the existing specific evidence-backed disposition, not this review's permission to recharter.
+6. **Make Discussion interpret the accepted integrated physical outcome.** Keep finite-tolerance versus exact-luminality, prior dependence and source-emission/propagation limits. Give conditional mechanisms only the space justified by that outcome. Rebuild the title/abstract from the strongest actually accepted result and re-invoke whole prose, source/claims and rendered review. ROOT retains full L1 ownership, ordinary remediation and eventual existing closure/main gates; Executor returns its bounded deep package.
 
-## What changed since the prior prose instruction
+## Separate assessment of the assigned improvement
 
-The old review's main stop point and physical-chain instruction persist. Its line numbers are now stale: current end document is 539, not 535; comparison growth moves later passages. Its suggestion to condense the four-paper catalogue must now preserve the accepted, bounded **actual** claims at 115–148, including the separate Sakstein–Jain cluster/stellar and GW/M87 combinations. This review does not request a new attribution rewrite.
+**YES: the results-section reader improvement landed.** The first two-thirds of Formal setup and result now presents an argument a literature reader can follow without learning tactics: domain and normalized relative deviation, finite-tolerance interval, a short square-root proof, width/prior meaning and quantitative checks. The strongest nonzero-c exclusion and original physical boundary remain visible rather than being sacrificed for brevity. The new observation paragraph states the inherited distance/emission-time assumptions, making the use of a symmetric envelope easier to interpret. These are worthwhile bounded improvements and do not need to be reversed because the full manuscript is blocked.
 
-The current source contains the accepted finite interval center/width and speed-versus-susceptibility distinction (343–353), P2/P3 dependence and correct quarter interpretation (303–323), exact endpoint factors (230–239), 89-case reproducibility statement (434), and updated caption. Those are repaired source/numerical matters, not live defects. The review does not reopen accepted figure/layout/source receipts; neither does it certify them independently. The new accepted common-source/matching/body packages do not warrant reversing the current manuscript's physical caution: their acceptance records explicitly retain B3/state/tensor/matter/transport as open. No unsupported stronger-theorem or physical no-go inference follows.
+What did not change: the abstract still leads with activity, first-use physical symbols remain unexplained, internal planning language remains outside the assigned section, and the physical/model-to-observation chain remains absent from the manuscript. The prior canonical 6962 review is historical, not a current line map. Its tactic/name and pre-definition complaints must not be repeated as if unchanged; its physical-chain and full-paper instruction remain relevant. Question5 now has a pin-matched repository instrument receipt and is no longer merely page-pass/word-equivalent-unverified.
 
 ## CONTRADICTIONS BETWEEN THE BRIEF AND THE SOURCES
 
-1. **No continuity or exact-source mismatch found:** the first check was fresh and current HEAD/hash match the task snapshot. Repository source was clean at final identity readback.
-2. The brief's original physical acceptance agrees with the current queue, Phase6a overlay and three scoped bridge acceptances. Historical strategy language saying L1 has no open Phase-6 dependency conflicts with that current obligation; it is not a waiver or evidence for a reduced conditional-note delivery.
-3. The title's “its natural range” conflicts with the present body's adopted/not-derived range and with the still-open requirement to derive it. Truthful body notation fixes cannot settle that scientific/title gap.
-4. Four compiled pages satisfy the page charter but do not prove the metadata's word-equivalent target. Historical metadata green/submission-ready histories coexist with current RED/pending fields and cannot authorize stage acceptance.
-5. The prior prose instruction refers to old 535-line source and pre-repair passages. Its structural verdict remains applicable, but its old numerical/source findings and line numbers must not be reused as current defects. No contradiction justifies transferring the remainder of L1 to Executor or promoting accepted finite-model milestones to physical closure.
+1. **No candidate pin mismatch:** actual HEAD, manuscript, PDF and both continuity checks agree with the assigned deliberate dirty revision. No self-refresh or tracked-file mutation occurred.
+2. **No source/brief disagreement on ownership or original physics:** current notebook, queue and Phase6a retain ROOT's end-to-end L1 ownership and original B3/state/tensor/matter/transport construction. Historical SHIPPED/submission-ready text is not the current acceptance boundary.
+3. **Live manuscript tension:** the title says “its natural range,” but 177–191 say the range is adopted, with physical normalization undetermined. That mismatch remains despite clearer results. The remedy is accepted construction and integrated authorship, not deleting the limitation or reducing the charter.
+4. **Historical report limitation now superseded narrowly:** stored 6962 prose review and bounded r3 follow-up were not a full read of this 541-line source. Old tactic-inventory and c/gamma-star/tol findings are repaired or changed. Current 3267 receipt also resolves the old missing word-equivalent measurement at repository-instrument scope only.
+5. **Persona versus authorized inspection scope:** the canonical persona's stock tool list excludes shell/build and ordinarily relies on recorded compiled pages; this assignment explicitly authorizes light read-only PDF rendering and use of the existing length receipt. That narrower explicit override was used; it grants no compilation, scientific/native/Lean execution or physics acceptance. No claim of publisher-policy verification is made.
 
 
-## Integrated reader-notation follow-up
+# Independent bounded r3 L1 prose and rendered-page follow-up
 
-The complete read-through above is pinned to6962. The subsequent bounded r3
-revision defines c and the effective RPA coupling, states the actual fixed-tau
-correction biconditional, and removes two taste/process clauses. Independent
-source/catalog review and independent inspection of all four rendered pages
-accept those five changes. This follow-up does not represent another whole
-read-through or reverse the structural BLOCK. Other symbol definitions and the
-physical-response/tensor/matter/transport chain remain owed.
+**ACCEPT the sole antecedent repair and current four-page rendering. Whole prose BLOCK and assigned results reader improvement LANDED remain unchanged.** This follows the full in-order 541-line r2 review; it is not a new whole-paper review or a physics acceptance.
 
-Exact final source and PDF pins, source/rendered reviews, prior five-page
-proposals, original RED/current GREEN and89-case execution receipts are in
-[the bounded checkpoint](../AutomatedReviews/2026-11-05-l1-reader-notation/SCOPE.md).
-Canonical catalog123units and its full preservation/lineage records are there;
-no scientific verdict is promoted by notation. Continue the ordered instruction
-above using accepted physical construction as it becomes available. ROOT retains
-the whole bundle, final stage qualification and integration.
+## Exact source delta
+
+ROOT explicitly authorized this bounded follow-up after the r2 review. Repository: `/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103`.
+
+The preserved `/tmp/l1-results-observation-725-r2-full.tex` hashes to the independently reviewed r2 SHA256 `911fef6ae5b1a6037a98afc483f185885e38e5cf16321aaa8dc42b6204d78338`. Current `papers/L1/paper_draft.tex` and `/tmp/l1-results-observation-725-r3-full.tex` both hash to `e773c9f57a480f972f8d31304cbf6a14e9e0341ad452729c6329b1a0c8e60b6f`.
+
+A complete byte comparison establishes exactly one replacement at source line230:
+
+- r2: `It contains $\chivest=1$ and has nonzero width exactly`
+- r3: `The compatible interval contains $\chivest=1$ and has nonzero width exactly`
+
+The r2 target occurs exactly once; applying only that replacement reproduces the current source byte-for-byte. No other source change exists between these candidates. It repairs the antecedent ambiguity after “Every compatible susceptibility” while preserving the finite interval, anchor and width statement. No quantity, assumption, theorem, source attribution or physical requirement changes.
+
+## Current compile, length and actual page inspection
+
+Actual canonical PDF SHA256 independently checked: `28a12f204d4c0104baf4162e8b66d18c9c998378c125e0139d6481a5909124e0`.
+
+Read supplied terminal compile receipt `/tmp/l1-reader-results-compile-r3-20261105.txt`: four pages, zero overfull boxes, TeX errors, unresolved references or dropped class options. ROOT reports actual session53987 terminal0; I did not rerun compilation. Independently ran `pdfinfo`, confirming four letter-size pages, and used the PDF skill's light `pdftoppm -r 110 -png` rendering to `/tmp/l1-reader-results-prose-r3-page-1.png` through `-4.png`. Viewed ALL FOUR current individual PNGs using `view_image`.
+
+1. **Page1 PASS:** title/abstract/Introduction, speed equation, observation assumptions and citation glyphs remain legible, inside margins, with no visible clipping, collision or missing section pointer.
+2. **Page2 PASS:** corrected “The compatible interval contains” reads clearly in the interval/width paragraph. Its reflow preserves readable mathematics, strict width inequality and following endpoint results. Remaining setup and conjunction display stay within both columns. No overflow, collision or clipped theorem name observed.
+3. **Page3 PASS:** figure, labels, endpoint callouts, unity marker and caption are readable; finite interval remains explicitly unresolved at this plotting scale. Continued compatibility/endpoint discussion and start of Discussion retain intact column reading order. No clipping/overlap or missing reference observed.
+4. **Page4 PASS:** continued mechanisms, auxiliary dispersion statements, companion comparison, reproducibility and bibliography fit. Existing long implementation-name typography remains distracting, as already recorded, but is neither a new r3 regression nor visible clipping/overlap/missing glyph.
+
+Read current `/tmp/l1-reader-results-length-r3-20261105.json`, whose source/PDF pins match both actual current files. Existing `_measure_manuscript` output is **3268 word equivalents against declared3750**, **482 headroom**, not the old3267. Metadata records four compiled pages. This is a PASS under the supplied repository instrument (rendered PDF tokens plus300 for its figure), not fresh verification of publisher policy or acceptance criteria. No test or scientific/native/Lean/slot operation was run.
+
+## Retained whole-review verdict and acceptance boundary
+
+The full r2 report remains the source of the five-question/ordered restructuring assessment: Q1–Q4 NO; Q5 PASS under the declared repository instrument. Only the specific line230 repair is now satisfied and the length measurement is updated to3268. The main reader stop remains88–91, where no propagating mode/propagator/matter coupling is derived. Abstract-first-sentence, remaining undefined symbols, internal phase/program navigation and the full physical response/state/domain → tensor/matter-light reference → controlled transport/frequency chain remain open.
+
+Assigned results-section improvement remains **LANDED**. Current visible layout remains **PASS** at the r3 PDF pin. Original B3 window/normalization, microscopic state/modes/matter, transport/frequency/units/errors, independent scientific review, existing stages/main and human publication acceptance remain owed. ROOT retains whole L1 author/integrator ownership; Executor's deep package remains bounded. No rechartering, source/Git/notebook edits, new machinery or stage promotion follows.
+
+## CONTRADICTIONS BETWEEN THE BRIEF AND THE SOURCES
+
+No r3 source or PDF-pin contradiction found. The exact one-antecedent correction, four actual pages and fresh3268 instrument receipt match ROOT's follow-up. The r2 report's3267 value is historical and must not be relabeled current. The earlier full-review title-versus-adopted-range tension and all physical-chain limits remain; this bounded repair does not resolve them.

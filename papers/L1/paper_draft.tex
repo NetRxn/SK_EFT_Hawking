@@ -91,13 +91,15 @@ coupling to matter. This missing dynamical bridge is a limitation of
 the present calculation, not an impossibility result.
 
 The 2017 binary-neutron-star merger
-GW170817~\cite{Abbott2017GW170817} placed an extraordinarily tight
-bound on $\cGW$: comparing the gravitational-wave arrival time at
-LIGO/Virgo against the gamma-ray-burst signal at Fermi/INTEGRAL,
-the multi-messenger collaboration constrained
-$-3 \times 10^{-15} \leq \dccap \leq +7 \times 10^{-16}$.
-Conservatively two-sided, $|\dccap| \leq \tau$ with
-$\tau = 3 \times 10^{-15}$.
+GW170817~\cite{Abbott2017GW170817} yielded a tight propagation
+constraint under the collaboration's conservative distance and
+emission-time assumptions. Comparing the gravitational-wave arrival
+time at LIGO/Virgo with the gamma-ray signal at Fermi/INTEGRAL gives
+$-3 \times 10^{-15} \leq \dccap \leq +7 \times 10^{-16}$
+under those assumptions. We use its conservative symmetric envelope,
+$|\dccap| \leq \tau$ with $\tau = 3 \times 10^{-15}$.
+This cap inherits the assumed source-emission window; alternative
+emission histories can weaken the inferred propagation constraint.
 
 Our assumed speed law satisfies the GW170817 bound only on a
 sub-interval of our adopted range $\chivest \in [0.1, 10]$ narrower
@@ -188,81 +190,77 @@ $\alpha_{\rm ADW} \in [0.1, 10]$ natural
 range~\cite{Roehm2026LinearizedEFE}, which we treat as the
 project-internal anchor for the order-of-magnitude prior.
 
-\paragraph{The leading-order $\cGW$.} Equation~\eqref{eq:cGW} ships in
-\texttt{GravitationalWaves.lean} as
-\verb|c_GW(chi, c) := c * Real.sqrt(chi)|, with the
-positivity / monotonicity / anchor lemmas \verb|c_GW_pos|,
-\verb|c_GW_at_chi_one|, \verb|c_GW_deviation|,
-\verb|c_GW_deviation_strict_mono|.
+\paragraph{The leading-order $\cGW$.}
+Under the assumed law~\eqref{eq:cGW}, a positive susceptibility
+and physical reference speed $c>0$ give $\cGW>0$.
+For every $c\ne0$, the relative speed deviation is
+\[
+  \dccap(\chivest)
+  \equiv \frac{\cGW(\chivest)-c}{c}
+  = \sqrt{\chivest}-1.
+\]
+On the nonnegative domain this deviation is strictly increasing
+and vanishes if and only if $\chivest=1$. Thus unity is the exactly
+luminal anchor; finite-tolerance compatibility requires an interval
+rather than this single value.
 
-\paragraph{The GW170817 correctness-push.} Define
-$\dccap(\chivest) = \sqrt{\chivest} - 1$ and the predicate
-$\verb|LigoSatisfied|(\delta) \equiv |\delta| \leq \tau$. The
-correctness-push biconditional is
+\paragraph{Finite-tolerance compatibility.}
+Fix $\tau=3\times10^{-15}$ and write
+$\verb|LigoSatisfied|(\delta)\equiv|\delta|\leq\tau$
+for the conservative symmetric cap.
 
 \begin{theorem}[\texttt{c\_GW\_match\_iff\_chi\_close\_to\_one}]
   \label{thm:bicond}
-  For $\chivest \geq 0$,
+  For $\chivest\geq0$,
   $\verb|LigoSatisfied|(\dccap(\chivest))
   \;\Longleftrightarrow\;
-  \chivest \in [(1-\tau)^2, (1+\tau)^2]$.
+  \chivest\in[(1-\tau)^2,(1+\tau)^2]$.
 \end{theorem}
 
-The proof is a $\sqrt{\cdot}$/squaring round-trip via
-\verb|Real.sqrt_le_sqrt| and \verb|Real.sqrt_sq|, with
-\verb|nlinarith| supplied the hint
-$\sqrt{\chivest}^2 = \chivest$. The compatible $\chivest$
-window has width $\sim 4\tau = 1.2\times 10^{-14}$.
+Indeed, the cap is equivalent to
+$1-\tau\leq\sqrt{\chivest}\leq1+\tau$.
+Since $0<\tau<1$, both bounds are nonnegative, so squaring
+gives the stated interval. Conversely, monotonicity of the
+square root recovers the cap from these squared bounds.
 
-\paragraph{Natural-range fine-tuning.} The natural range $[0.1,10]$
-has width $9.9$ (\texttt{natural\_range\_width\_eq}); the
-GW170817-compatible window has width exactly $4\tau =
-1.2\times 10^{-14}$ (\texttt{ligo\_window\_width\_eq}) and is nested
-strictly inside it
-(\texttt{ligo\_window\_subset\_natural\_range}), not disjoint from it.
-Scaling the window up by $10^{14}$ still leaves it the narrower
-(\path{ligo_window_width_lt_natural_range_width_by_1e14}):
-that ratio, not a disjointness, is the fine-tuning claim.
-Two endpoint-falsifier theorems sharpen the exclusion of the extremes.
+Every compatible susceptibility therefore satisfies
+\[
+  0.1<(1-\tau)^2\leq\chivest\leq(1+\tau)^2<10.
+\]
+The compatible interval contains $\chivest=1$ and has nonzero width exactly
+$(1+\tau)^2-(1-\tau)^2=4\tau=1.2\times10^{-14}$.
+The adopted range has width $9.9$, and the strict comparison is
+\[
+  10^{14}\bigl[(1+\tau)^2-(1-\tau)^2\bigr]<9.9.
+\]
+This is a comparison of interval widths within an adopted domain.
+It supplies no probability without a prior: under a uniform prior
+on $[0.1,10]$, the compatible interval has probability mass
+$4\tau/9.9$.
+
+\paragraph{Endpoint checks.}
+The endpoints provide quantitative checks of the confinement.
 
 \begin{theorem}[\texttt{natural\_lower\_violates\_ligo}]
   \label{thm:falsifier-lower}
-  At $\chivest = 0.1$, $\dccap = \sqrt{0.1} - 1 \approx -0.6838$,
-  hence $|\dccap|/\tau \approx 2.28\times 10^{14}$ and
+  At $\chivest=0.1$, $\dccap=\sqrt{0.1}-1\approx-0.6838$,
+  hence $|\dccap|/\tau\approx2.28\times10^{14}$ and
   \verb|LigoSatisfied| is false.
 \end{theorem}
 
 \begin{theorem}[\texttt{natural\_upper\_violates\_ligo}]
   \label{thm:falsifier-upper}
-  At $\chivest = 10$, $\dccap = \sqrt{10} - 1 \approx +2.1623$,
-  hence $|\dccap|/\tau \approx 7.21\times 10^{14}$ and
+  At $\chivest=10$, $\dccap=\sqrt{10}-1\approx+2.1623$,
+  hence $|\dccap|/\tau\approx7.21\times10^{14}$ and
   \verb|LigoSatisfied| is false.
 \end{theorem}
 
-The proofs use $\sqrt{1/10} \leq \sqrt{1/4} = 1/2$ and
-$\sqrt{10} \geq \sqrt{4} = 2$, both via \verb|Real.sqrt_le_sqrt|
-and \verb|Real.sqrt_sq|, closed by \verb|linarith|. The Lean source
-supplies proofs of these two concrete real-number
-inequalities. The bundled corollary
-\verb|vestigial_natural_range_violates_ligo| asserts both endpoints
-fail \verb|LigoSatisfied| simultaneously.
-
-The identification hypothesis itself is refuted pointwise rather than
-only at the observable:
-\path{H_VestigialModeIsGraviton_fails_at_natural_lower} and
-\path{H_VestigialModeIsGraviton_fails_at_natural_upper} refute it at the
-two endpoints, and
-\verb|H_VestigialModeIsGraviton_fails_at_zero| and
-\verb|H_VestigialModeIsGraviton_fails_at_quarter| refute it at
-$\chivest \in \{0, 1/4\}$. Zero lies outside the adopted range,
-whereas $1/4$ is an interior point. These falsifiers show failures
-away from the two natural-range endpoints, without excluding the
-compatible interval.
-\verb|ligo_satisfied_at_chi_one| supplies the compatible anchor
-$\chivest = 1$. The exact-zero statement
-\verb|c_GW_deviation_zero_iff_chi_one| characterizes vanishing deviation,
-not finite-tolerance compatibility: the latter holds on the entire
-interval in Theorem~\ref{thm:bicond}.
+The exclusions already follow from
+$\sqrt{1/10}\leq\sqrt{1/4}=1/2$ and
+$\sqrt{10}\geq\sqrt{4}=2$.
+Both endpoints therefore fail simultaneously, while the finite
+interval in Theorem~\ref{thm:bicond} remains compatible.
+Figure~\ref{fig:cGW} shows this distinction.
 
 \begin{figure}[t]
   \centering
@@ -270,7 +268,8 @@ interval in Theorem~\ref{thm:bicond}.
   \caption{\textbf{Headline result.} The
   $\dccap = \sqrt{\chivest} - 1$ deviation across the natural
   $\chivest \in [0.1,10]$ range (pale blue band, dashed blue border)
-  versus the GW170817~\cite{Abbott2017GW170817} multi-messenger cap
+  versus the conservative symmetric envelope of the
+  GW170817~\cite{Abbott2017GW170817} multi-messenger constraint,
   $|\dccap| \leq 3\times 10^{-15}$ (amber, drawn at $\dccap = 0$ because
   the cap's own width is far below one pixel at this scale). Over the
   natural range $\dccap$ sweeps $[-0.68, +2.16]$, exceeding the cap by
@@ -280,61 +279,63 @@ interval in Theorem~\ref{thm:bicond}.
   compared with the adopted range's width $9.9$. Its finite extent is
   unresolved at this scale; the gold star marks its anchor $\chivest=1$,
   not a singleton compatible set. The window sits \emph{inside} the band:
-  the datum confines $\chivest$, it does not exclude the range. Lean witnesses:
-  \texttt{ligo\_confines\_chi\_vest\_within\_natural\_range},
-  \texttt{ligo\_window\_subset\_natural\_range},
-  \texttt{vestigial\_natural\_range\_violates\_ligo}.}
+  the datum confines $\chivest$, it does not exclude the range.}
   \label{fig:cGW}
 \end{figure}
 
-\paragraph{Tracked-hypothesis bundle.} Per the project's discipline
-for non-derived identifications, we bundle the structural properties
-of ``the vestigial mode is the graviton'' into a Lean Prop with
-three recorded conjuncts:
-\begin{equation*}
+\paragraph{Compatibility of the identification conditions.}
+The proposed identification imposes positivity (P1), compatibility
+with the cap (P2), and sub-half-deviation (P3'):
+\[
   \begin{aligned}
-    &\verb|H_VestigialModeIsGraviton|(\chivest) \\
-    &\quad \equiv \chivest > 0 \\
-    &\qquad \wedge \verb|LigoSatisfied|(\dccap(\chivest)) \\
-    &\qquad \wedge |\dccap(\chivest)| < 1/2,
+    &\verb|H_VestigialModeIsGraviton|(\chivest)\\
+    &\quad\equiv
+      \chivest>0
+      \;\wedge\;\verb|LigoSatisfied|(\dccap(\chivest))\\
+    &\qquad\wedge\;|\dccap(\chivest)|<1/2.
   \end{aligned}
-\end{equation*}
-demanding positivity (P1), GW170817 compatibility (P2), and
-sub-half-deviation $|\dccap| < 1/2$ (P3'). These clauses are not
-independent at the fixed tolerance $\tau=3\times10^{-15}$:
-P2 already implies P3' because $\tau<1/2$, and the compatible
-interval in Theorem~\ref{thm:bicond} is strictly positive, supplying
-P1 throughout that interval. The recorded Prop retains all three
-clauses; this observation does not change its definition.
+\]
+These three clauses are not independent.
+At the fixed tolerance, P2 implies P3' because $\tau<1/2$.
+On the nonnegative domain, Theorem~\ref{thm:bicond} also places
+every P2-compatible susceptibility in a strictly positive interval,
+so P1 holds there. Consequently, the complete compatible set for
+these conditions is precisely that same finite interval, including
+the anchor $\chivest=1$.
 
-The bundle is satisfied at $\chivest=1$
-(\texttt{H\_VestigialModeIsGraviton\_at\_one}). Four explicit
-falsifier theorems establish that it is not universally satisfied:
-\verb|*_fails_at_natural_lower| and \verb|*_fails_at_natural_upper|
-use failure of P2; \verb|*_fails_at_zero| uses failure of P1;
-\verb|*_fails_at_quarter| uses failure of P3'. At $\chivest=1/4$,
-$\dccap=-1/2$ fails both P2 and P3', while satisfying P1.
-It therefore shows that P1 alone does not imply P3', not that P3'
-is independent of the other two clauses. Likewise these proofs do
-not isolate one failing clause while requiring all others to hold.
-On the nonnegative physical domain, the bundle's compatible set is
-precisely the finite interval in Theorem~\ref{thm:bicond}, of width
-$4\tau=1.2\times10^{-14}$. Its probability mass depends on the prior;
-under a uniform prior on $[0.1,10]$ it is $4\tau/9.9$.
+Four counterexamples distinguish compatibility from positivity
+alone. The endpoints $0.1$ and $10$ refute the conjunction through
+failure of P2. At zero, P1 fails; this point lies outside the
+adopted range. At the interior point $\chivest=1/4$,
+$\dccap=-1/2$: P1 holds, but P2 and the strict P3' inequality
+both fail. The quarter-point example therefore shows that P1
+alone does not imply P3'. These counterexamples do not establish
+independence of the three clauses or isolate a uniquely failing
+clause. The corresponding definitions and algebraic results are
+recorded in \texttt{GravitationalWaves.lean}, Sections~1--4.
 
 \paragraph{Endpoint constraints and the open dynamical bridge.}
-The theorem \texttt{natural\_endpoints\_violate\_ligo\_window}
-excludes $\chivest\in\{0.1,10\}$ under the assumed speed law.
-The relative-deviation form
-\texttt{natural\_endpoints\_violate\_ligo\_for\_every\_c}
-uses \texttt{c\_GW\_relative\_deviation\_eq} and holds for every
-$c\ne0$, including the physical domain $c>0$. Both concern the
-two endpoints only; neither excludes interior values, and
-$\chivest=1$ satisfies the cap
-(\texttt{ligo\_satisfied\_at\_chi\_one}). These are conditional
-constraints on the assumed law. Neither theorem quantifies over
-microscopic actions, propagators or matter couplings, so neither
-establishes the absence or impossibility of a dynamical derivation.
+The endpoint exclusion also applies directly to the relative
+deviation of the speed itself:
+\[
+  \left|\frac{\cGW(\chivest)-c}{c}\right|>\tau,
+  \qquad
+  \chivest\in\{0.1,10\},\quad c\ne0.
+\]
+This is the statement of
+\texttt{natural\_endpoints\_violate\_ligo\_for\_every\_c};
+it includes the physical domain $c>0$ and follows from the
+relative-deviation identity above. Changing $c$ therefore
+cannot make either endpoint compatible under the assumed law.
+This two-point exclusion leaves the compatible interior interval
+intact. Neither it nor the $c$-free endpoint statement quantifies
+over microscopic actions, propagators or matter couplings, so
+neither establishes the absence or impossibility of a dynamical
+derivation. A physical application still requires the response
+normalization and domain, the physical state, a propagating
+tensor mode relative to the same matter/light reference, and
+controlled transport and frequency matching with units and
+error bounds.
 
 %% ================================================================
 \section{Discussion}
