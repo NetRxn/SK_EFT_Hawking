@@ -218,7 +218,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   a control for bulk A. Independent review then accepted all 72
   prefixes (1,152 leaves) for the joint contribution of one
   opposite-scale pair in the dominant 208-row primitive. The other
-  9,778 nonempty B occurrences still need contributions to the word
+  9,774 nonempty B occurrences still need contributions to the word
   sum. Independent review verified an exact partition of all 9,216
   dominant occurrences into 6,656 signed center-1 groups. The
   reviewed rank-one manifest partitions them further into 2,080
@@ -231,8 +231,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   query has an exact zero control for one complement after a
   16-slice split. Exact partial transfers then completed one
   conditioned selector, matching all 20 unfactored terms under
-  independent review. Complete its other internal gamma slices
-  and verify the exterior roster before crediting the component.
+  independent review. The other internal gamma slices are exact
+  zeros for that selector, which is now complete. Verify the
+  exterior roster and the other selectors before crediting the
+  component.
   In parallel, the reviewed 576-occurrence minority census admits
   288 exact center-11 pairs. Independent review verified all 2,304
   leaves and the joint scalar of the 162-row pair at indices 34 and
@@ -241,7 +243,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   pair at indices 13,156 and 13,158 has the same full-roster review.
   The reviewed minority input manifest admits all 288 disjoint
   pairs. IDs 1 and 2 passed independent exact roster and signed B
-  review. Continue with IDs 3 and 4. Keep the direct runner for bulk:
+  review, followed by IDs 3 and 4. Continue with IDs 5 and 6.
+  Keep the direct runner for bulk:
   the bounded cache matches exact rows but was slower in the paired
   CPU benchmark.
   The full word sum, physical matching and B3 remain open.
@@ -271,6 +274,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   trajectory remains a separate evidence requirement.
   The focused main-based [draft PR #112](https://github.com/NetRxn/SK_EFT_Hawking/pull/112)
   carries independently reviewed §3.2 closure at `5780a47b`.
+  Its [updated candidate](https://github.com/NetRxn/SK_EFT_Hawking/commit/a34eb6b08)
+  also carries the reviewed §1.3 JETP citation repair and same-candidate
+  canonical closure. The declared verifier passed on both this branch
+  and the [research checkpoint](https://github.com/NetRxn/SK_EFT_Hawking/commit/fc1766949).
+  The full merge qualification remains due on the updated head.
   The exact base `ce194cdc4` and candidate have identical
   portfolio structural figure diagnostics after normalizing
   checkout paths. Both report 24 warnings and the same two

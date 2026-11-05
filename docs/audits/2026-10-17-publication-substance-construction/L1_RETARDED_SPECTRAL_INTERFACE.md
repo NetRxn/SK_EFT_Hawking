@@ -6693,3 +6693,31 @@ are separate. The weighted and unfactored stdout SHA-256 values are
 `a4c8e0a2a649a75e425b83046a7279bbbec96ff7de509d177e761f327a8d376f`
 and
 `65017657906d5dd872b532330ae403cd2f4c31aef75c04ea0f598aa5ad24d6db`.
+
+**Full scalar for the first exterior selector.** The exact
+intersection of the two internal gamma incidences is
+`[(0,), (1,), (2,), (3,)]`. For the fixed exterior selector,
+the last three slices each lack the required left-table key.
+Independent review confirmed their exact zero contributions
+under the same cut and guards. All three runs exited zero.
+Together with slice 0, this exhausts the internal labels for
+this selector and gives
+`30242684552249295/18889465931478580854784` with zero imaginary
+part. The other exterior selectors remain open.
+
+| Internal gamma slice | Raw stdout SHA-256 |
+|---|---|
+| `(1,)` | `ac4fedf7eb0ff709c2967bb67cffe0ad21528baa323252be1a6ff73f3349d776` |
+| `(2,)` | `f41c262525473f90e5e77154d05541c7fd0a38bbd1f1bab95e8a2555b122f8a6` |
+| `(3,)` | `dd655367fea9a08ca051bfa2402349ee9c1c58f229f280f96932397145013cfa` |
+
+**Minority manifest IDs 3 and 4.** Independent review matched
+both signed B inputs and all 2,304 ordered leaves of each pair
+to the regenerated rosters, with no caps and zero imaginary
+part. ID 4 cancels the previously verified ID 52 contribution
+to the word sum. The two evaluations establish that cancellation.
+
+| Manifest ID | Exact real subtotal | Roster SHA-256 | Stdout SHA-256 |
+|---|---:|---|---|
+| 3 | `470989542140397/4611686018427387904` | `cfc0228ea35ffdb5a01b6d1ce785c14654c608972b4107c0970ab85b0e3515a0` | `a3ae1e8d77db67f895fc2eb5648eed8ef8aef4d64eaff35413c30aca5a8fdc19` |
+| 4 | `−871859979116847/144115188075855872` | `d5130984b0161d7589797ce8ed832e26bc247eec0435a485e940728779e47535` | `21f580eaaf7cbe2ae1095e02dfb87a0702f4f621b0ccac849b5cf52bf04588e5` |
