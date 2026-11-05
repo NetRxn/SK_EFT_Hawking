@@ -7075,3 +7075,28 @@ These four distinct orbits cover 45 pairs and add
 is now `159157301674766535/576460752303423488` across 126 of
 288 pairs in 16 of 34 orbits, with zero imaginary part. The
 other 18 orbits still require representative evaluation.
+
+### Direct selectors for dominant component (0,0)
+
+The [site-10 runner](l1_unpaired_A_site10.py) selects this block-0
+component with `--component 0`. Its 12 original words form a
+4×1 rank-one component, with weighted center rows of sizes 384
+and 144. The runner checks membership, the exact joint product
+and the same 256-selector roster used by the pilot. Selector 0
+reproduces the earlier direct scalar and its 8,956 products,
+4,174 queries and 1,770 nonzero replies.
+
+Independent reduction checked the ordered exact selectors and
+raw-to-scaled arithmetic in the following ranges. All imaginary
+subtotals vanish.
+
+| Selector range | Exact real subtotal | Receipt SHA-256 |
+|---|---:|---|
+| [0,8) | `388574307412283223/37778931862957161709568` | `530672f0514ab45196c263a95b29d73e7cb15155ae05d4443b7aa1d38bee22d6` |
+| [8,24) | `688672510171296147/37778931862957161709568` | `e742352c15896585bafa8968747cb8dfcffa91860a15c4170211bca468b31a89` |
+| [64,80) | `688672510171296147/37778931862957161709568` | `3be4d5dff3b8a9406b90007343b7fd01bb895fbac8e91ef759b22e3412962040` |
+
+The 40 verified selectors contribute
+`1765919327754875517/37778931862957161709568` before orbit
+weighting. The other selectors must be verified before the
+component's multiplicity of three can be applied.

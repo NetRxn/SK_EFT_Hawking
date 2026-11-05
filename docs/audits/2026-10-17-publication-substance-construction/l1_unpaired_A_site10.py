@@ -1,15 +1,15 @@
 """Replay one signed dominant-B rank-one component across its site-10 selectors."""
 
+import json
+import signal
 from argparse import ArgumentParser
 from collections import Counter, defaultdict
 from fractions import Fraction
 from functools import lru_cache
 from hashlib import sha256
 from itertools import combinations, product
-import json
 from math import comb, prod
 from pathlib import Path
-import signal
 from time import monotonic
 
 from l1_extended_offset_witness_k2 import indexed_join
@@ -36,6 +36,15 @@ from l1_unpaired_signed_slice import (
 MEMBER_DIGEST = "fe6c9dd82e8a4eb6f33f2f0e80b168075333db93bd423a0da4349a7ce44135ea"
 ROSTER_DIGEST = "b8bde9d2380ff0fa25a5d2478cd30042c4144d024638729801ddbd5c439e4dae"
 JOINT_DIGEST = "a35f2af71cb901a9103614b093e7b56b217b0d2094cb9e2e40db6f145504a02e"
+COMPONENT_PINS = {
+    (0, 3): (60, (4, 5), MEMBER_DIGEST, JOINT_DIGEST),
+    (0, 0): (
+        12,
+        (4, 1),
+        "24649b6ae541a1c09f0ea2a396ba36d8606064827239d72a7b19bd933f26aae8",
+        "0353a8533c18ca0b722a788e20e853bccc53cf4cf459f8ae1cfcb2a679ab7707",
+    ),
+}
 TARGET = gkey(1, 1)
 DUMMY = qkey((15, 3))
 
@@ -198,7 +207,8 @@ def site10_cut(a):
     raise RuntimeError("did not encounter intended site10 cut")
 
 
-def component_factors(primitive_path, receipt_paths, logs):
+def component_factors(primitive_path, receipt_paths, logs, component=(0, 3)):
+    count, shape, member_digest, joint_digest = COMPONENT_PINS[component]
     records = [
         json.loads(line)
         for line in primitive_path.read_text().splitlines()
@@ -210,21 +220,22 @@ def component_factors(primitive_path, receipt_paths, logs):
     words = input_words(sorted(receipt_paths), sorted(logs), primitive)
     assert len(words) == 9216
     selected = None
-    for _, _, c1, c9, c3, c11, groups in component_partition(words):
+    for block_id, component_id, c1, c9, c3, c11, groups in component_partition(words):
+        if (block_id, component_id) != component:
+            continue
         members = sorted(
             index for _, rows in groups for _, _, index in rows if index is not None
         )
-        if len(members) == 60 and digest_rows(members) == MEMBER_DIGEST:
-            assert selected is None and (len(c3), len(c11)) == (4, 5)
-            assert sum(len(rows) for _, rows in groups) == 60
-            selected = c1, table_sum(c3), c9, table_sum(c11)
+        assert selected is None and (len(c3), len(c11)) == shape
+        assert len(members) == count and digest_rows(members) == member_digest
+        assert sum(len(rows) for _, rows in groups) == count
+        selected = c1, table_sum(c3), c9, table_sum(c11)
     assert selected is not None
     c1, c3, c9, c11 = selected
-    assert (len(c3[1]), len(c11[1])) == (384, 576)
     joint = tuple(
         ((u, v), Fraction(a * b)) for (u, a), (v, b) in product(c3[1], c11[1])
     )
-    assert digest_rows(joint) == JOINT_DIGEST
+    assert digest_rows(joint) == joint_digest
 
     factors = prepare()
     centers = dict(zip(sorted(FRAME_PLANES), factors[:15], strict=True))
@@ -360,6 +371,13 @@ def main():
     parser.add_argument("--primitive", type=Path, required=True)
     parser.add_argument("--rows", type=Path, nargs="+", required=True)
     parser.add_argument("--logs", type=Path, nargs="*", default=[])
+    parser.add_argument(
+        "--component",
+        type=int,
+        choices=(0, 3),
+        default=3,
+        help="rank-one component of block 0",
+    )
     args = parser.parse_args()
     low = 64 * args.gamma_slice
     if not low <= args.start < args.stop <= low + 64:
@@ -367,7 +385,7 @@ def main():
     start = monotonic()
     signal.alarm(120)
     roster, cuts = selector_roster(
-        component_factors(args.primitive, args.rows, args.logs)
+        component_factors(args.primitive, args.rows, args.logs, (0, args.component))
     )
     batch = [0, 0]
     for index in range(args.start, args.stop):
