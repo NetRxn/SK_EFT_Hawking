@@ -7747,3 +7747,18 @@ The two signed orbits are disjoint from each other and all ten
 previous orbits. Their combined contribution is
 `-6682308534228279771/1180591620717411303424`, bringing complete
 dominant coverage to 12 of 148 orbits and 720 source words.
+
+### Complete dominant representative (16,0)
+
+The repository runner completed the first new orbit under the
+second pinned roster. Independent review checked all 256 ordered
+exact selectors and 16 terminal shards, with no caps. The direct
+subtotal is `-274396016602155609/1180591620717411303424` with zero
+imaginary part. The receipt from the component marker through its
+terminal marker has SHA-256
+`deb076a9a8b3ede047c92f215824fc0d28519e8f0795a36c56d1c3402f30c206`.
+
+Its nine-member orbit contributes
+`-2469564149419400481/1180591620717411303424`. The 72 signed source
+words are disjoint from all 720 previously accepted words. Complete
+dominant coverage is now 13 of 148 orbits and 792 source words.
