@@ -7361,3 +7361,32 @@ complete manifest SHA-256 is
 The pinned minority and dominant word sets are disjoint and
 together cover all 9,792 nonempty B occurrences. The remaining
 143 dominant orbits still require representative results.
+
+### Manifest-pinned direct representative replay
+
+The [site-10 runner](l1_unpaired_A_site10.py) accepts repeatable
+`--representative BLOCK COMPONENT` selections together with
+the pinned component and orbit manifests. It regenerates the
+signed tables and word membership, uses one immutable factor
+preparation, and checks the preparation digest after each
+representative. A full `0 256` replay runs 16 bounded shards.
+The original component-0 and component-3 entry points retain
+their slice guards.
+
+Independent review matched both exact selector-0 controls for
+`(0,4)` and `(0,8)` to their direct receipts. The combined
+control SHA-256 is
+`7bb1f56b8943632e0398836a1736a6c6b0ba5569ad72be3387e2cdca545a2b60`.
+Each matched the raw Gaussian scalar, 8,956 products,
+4,174 queries, and 1,746 nonzero replies.
+
+The runner requires the existing ordered roster digest.
+The block-20 probe independently regenerated 256 selectors
+but yielded a different roster, with SHA-256
+`ab0c93745e811a0ff1620599953c5d3daa874b6c43e8937e6b385df11ec6e9f1`.
+Its full replay is a separate qualification against the known
+two-word orbit subtotal. A guarded left-transfer cache trial
+for four block-0 selectors matched exact values and reduced
+left contractions from 72 to 18. Total selector wall time
+changed from 11.12 to 10.95 seconds, so the replay continues
+to use the original cache scope.

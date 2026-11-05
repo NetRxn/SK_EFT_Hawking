@@ -45,6 +45,12 @@ COMPONENT_PINS = {
         "0353a8533c18ca0b722a788e20e853bccc53cf4cf459f8ae1cfcb2a679ab7707",
     ),
 }
+ORBIT_MANIFEST_DIGEST = (
+    "1600b0e8c87ef548acdd17c057fc483c0e118d29faf775456778fd12ec2d37f5"
+)
+COMPONENT_MANIFEST_DIGEST = (
+    "eebf286061137a1354f831fae29ad20223bf74ce43f22aaa90e15a98b5031e75"
+)
 TARGET = gkey(1, 1)
 DUMMY = qkey((15, 3))
 
@@ -207,8 +213,7 @@ def site10_cut(a):
     raise RuntimeError("did not encounter intended site10 cut")
 
 
-def component_factors(primitive_path, receipt_paths, logs, component=(0, 3)):
-    count, shape, member_digest, joint_digest = COMPONENT_PINS[component]
+def component_inputs(primitive_path, receipt_paths, logs):
     records = [
         json.loads(line)
         for line in primitive_path.read_text().splitlines()
@@ -219,6 +224,12 @@ def component_factors(primitive_path, receipt_paths, logs, component=(0, 3)):
     assert len(primitive) == 208 and digest_rows(primitive) == DIGEST
     words = input_words(sorted(receipt_paths), sorted(logs), primitive)
     assert len(words) == 9216
+    return primitive, words
+
+
+def component_factors(primitive_path, receipt_paths, logs, component=(0, 3)):
+    count, shape, member_digest, joint_digest = COMPONENT_PINS[component]
+    primitive, words = component_inputs(primitive_path, receipt_paths, logs)
     selected = None
     for block_id, component_id, c1, c9, c3, c11, groups in component_partition(words):
         if (block_id, component_id) != component:
@@ -236,8 +247,53 @@ def component_factors(primitive_path, receipt_paths, logs, component=(0, 3)):
         ((u, v), Fraction(a * b)) for (u, a), (v, b) in product(c3[1], c11[1])
     )
     assert digest_rows(joint) == joint_digest
+    return assemble_component(selected, prepare(), common_factors(primitive))
 
-    factors = prepare()
+
+def manifest_components(words, requested, component_path, orbit_path):
+    """Regenerate signed tables for representatives bound by both reviewed manifests."""
+    component_bytes = component_path.read_bytes()
+    orbit_bytes = orbit_path.read_bytes()
+    assert sha256(component_bytes).hexdigest() == COMPONENT_MANIFEST_DIGEST
+    assert sha256(orbit_bytes).hexdigest() == ORBIT_MANIFEST_DIGEST
+    component_rows = map(json.loads, component_bytes.splitlines()[1:])
+    orbit_rows = map(json.loads, orbit_bytes.splitlines())
+    expected = {(row["block"], row["component"]): row for row in component_rows}
+    reps = {
+        tuple(row["representative"]): row
+        for row in orbit_rows
+        if row["kind"] == "component_orbit"
+    }
+    assert set(requested) <= reps.keys() & expected.keys()
+    selected = {}
+    for block, component, c1, c9, c3, c11, groups in component_partition(words):
+        key = block, component
+        if key not in requested:
+            continue
+        assert key not in selected
+        tables = c1, table_sum(c3), c9, table_sum(c11)
+        row = expected[key]
+        assert row["shape"] == [len(c3), len(c11)]
+        assert row["centers"] == [digest_rows(table) for table in tables]
+        assert row["fixed_groups"] == json.loads(json.dumps(groups))
+        actual = [word for _, members in groups for word, _, _ in members]
+        pinned = list(map(tuple, reps[key]["representative_words"]))
+        assert len(actual) == len(pinned) == len(set(actual))
+        assert set(actual) == set(pinned)
+        selected[key] = tables
+    assert selected.keys() == set(requested)
+    return selected
+
+
+def common_factors(primitive):
+    return [
+        ((), {(): dict(primitive)}, B_BOUNDARY),
+        ((DUMMY,), {(0,): {0: (1, 0)}}, {}),
+    ]
+
+
+def assemble_component(selected, factors, common):
+    """Build component-specific scalars over the immutable prepared factors."""
     centers = dict(zip(sorted(FRAME_PLANES), factors[:15], strict=True))
     edges = dict(zip(sorted(SLOTS), factors[15:-2], strict=True))
 
@@ -249,7 +305,7 @@ def component_factors(primitive_path, receipt_paths, logs, component=(0, 3)):
             keys = (*keys, DUMMY)
             table = {(*k, 0): row for k, row in table.items()}
         active[site] = keys, table, {}
-    out = [((), {(): dict(primitive)}, B_BOUNDARY), ((DUMMY,), {(0,): {0: (1, 0)}}, {})]
+    out = list(common)
     out.extend(active[x] for x in (3, 11))
     out.extend(
         active.get(x, row)
@@ -367,7 +423,7 @@ def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("start", type=int)
     parser.add_argument("stop", type=int)
-    parser.add_argument("--gamma-slice", type=int, choices=range(4), required=True)
+    parser.add_argument("--gamma-slice", type=int, choices=range(4))
     parser.add_argument("--primitive", type=Path, required=True)
     parser.add_argument("--rows", type=Path, nargs="+", required=True)
     parser.add_argument("--logs", type=Path, nargs="*", default=[])
@@ -375,23 +431,89 @@ def main():
         "--component",
         type=int,
         choices=(0, 3),
-        default=3,
+        default=None,
         help="rank-one component of block 0",
     )
+    parser.add_argument(
+        "--representative",
+        type=int,
+        nargs=2,
+        action="append",
+        metavar=("BLOCK", "COMPONENT"),
+        help="replay a reviewed orbit representative, repeat to share assembly",
+    )
+    parser.add_argument("--components", type=Path)
+    parser.add_argument("--orbits", type=Path)
     args = parser.parse_args()
-    low = 64 * args.gamma_slice
-    if not low <= args.start < args.stop <= low + 64:
-        parser.error(f"range must lie within gamma slice [{low}, {low + 64})")
+    if args.representative:
+        if args.component is not None or args.components is None or args.orbits is None:
+            parser.error(
+                "--representative requires both manifests and excludes --component"
+            )
+        requested = tuple(map(tuple, args.representative))
+        if len(set(requested)) != len(requested):
+            parser.error("duplicate --representative")
+    elif args.components is not None or args.orbits is not None:
+        parser.error("manifest flags require --representative")
+
+    if args.gamma_slice is None:
+        if not args.representative or (args.start, args.stop) != (0, 256):
+            parser.error(
+                "--gamma-slice is required except for full representative replay 0 256"
+            )
+    else:
+        low = 64 * args.gamma_slice
+        if not low <= args.start < args.stop <= low + 64:
+            parser.error(f"range must lie within gamma slice [{low}, {low + 64})")
     start = monotonic()
     signal.alarm(120)
-    roster, cuts = selector_roster(
-        component_factors(args.primitive, args.rows, args.logs, (0, args.component))
-    )
+    if args.representative:
+        primitive, words = component_inputs(args.primitive, args.rows, args.logs)
+        selected = manifest_components(words, requested, args.components, args.orbits)
+        factors = prepare()
+        common = common_factors(primitive)
+        prepared_digest = digest_rows((factors, common))
+        signal.alarm(0)
+        for key in requested:
+            component_start = monotonic()
+            signal.alarm(120)
+            print("representative", key, "roster", ROSTER_DIGEST, flush=True)
+            roster, cuts = selector_roster(
+                assemble_component(selected[key], factors, common)
+            )
+            if args.gamma_slice is None:
+                signal.alarm(0)
+                for low in range(0, 256, 16):
+                    signal.alarm(120)
+                    replay_range(low, low + 16, roster, cuts, monotonic())
+                    signal.alarm(0)
+            else:
+                replay_range(args.start, args.stop, roster, cuts, component_start)
+            assert digest_rows((factors, common)) == prepared_digest
+            signal.alarm(0)
+            print(
+                "terminal representative",
+                key,
+                args.start,
+                args.stop,
+                ROSTER_DIGEST,
+                flush=True,
+            )
+    else:
+        component = 3 if args.component is None else args.component
+        roster, cuts = selector_roster(
+            component_factors(args.primitive, args.rows, args.logs, (0, component))
+        )
+        replay_range(args.start, args.stop, roster, cuts, start)
+        signal.alarm(0)
+
+
+def replay_range(low, high, roster, cuts, start):
     batch = [0, 0]
-    for index in range(args.start, args.stop):
+    for index in range(low, high):
         tick = monotonic()
         gamma, keys, values = roster[index]
-        assert gamma == (args.gamma_slice,)
+        assert gamma == (index // 64,)
         selector = dict(zip(keys, values, strict=True))
         total, products, queries, nonzero = selector_scalar(*cuts[gamma], selector)
         for k, value in enumerate(total):
@@ -415,8 +537,8 @@ def main():
         )
     print(
         "terminal range",
-        args.start,
-        args.stop,
+        low,
+        high,
         "roster",
         ROSTER_DIGEST,
         "raw",
@@ -427,7 +549,6 @@ def main():
         monotonic() - start,
         flush=True,
     )
-    signal.alarm(0)
 
 
 if __name__ == "__main__":
