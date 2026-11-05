@@ -239,8 +239,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The [complete minority contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-minority-contraction)
   covers 288 pairs and 34 orbits. The weighted real subtotal is
   `156896923951130265/288230376151711744`. Dominant coverage in the
-  [latest verified contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-chirality-pairs-16112011-and-16162016)
-  is 102 of 148 orbits and 8,478 of 9,216 source words. Both selector
+  [latest verified contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-chirality-pair-194230)
+  is 104 of 148 orbits and 8,550 of 9,216 source words. Both selector
   rosters are pinned in the repository runner. Its independently
   checked symmetry mode uses complete gamma slices and exact signed
   stabilizer witnesses. The first new weighted representative

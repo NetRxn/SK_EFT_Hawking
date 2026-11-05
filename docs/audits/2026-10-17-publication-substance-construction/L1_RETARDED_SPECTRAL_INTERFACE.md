@@ -8227,3 +8227,19 @@ The four signed orbits add 144 disjoint words and contribute
 `-2469564149419400481/590295810358705651712` together.
 Verified dominant coverage is 102 of 148 orbits and 8,478 of
 9,216 words.
+
+### Complete chirality pair (19,4)/(23,0)
+
+Independent review checked 256 ordered direct selectors, 16
+terminal shards, four singleton class witnesses and exact scaling
+on the second pinned roster. The component subtotal is
+`-274396016602155609/4722366482869645213696` with zero imaginary
+part and no caps. The [full receipt](l1_gamma_19_4.out.txt) has
+SHA-256 `b4f235887a3b227d19d5b2d5ec2d1864cc58af087cb4ff7f2c6f9a867123a480`.
+
+Each orbit contains 36 words with multiplicity 18. They are
+mutually disjoint and disjoint from prior coverage. The pair
+adds 72 words and contributes
+`-2469564149419400481/1180591620717411303424`.
+Verified dominant coverage is 104 of 148 orbits and 8,550 of
+9,216 words.
