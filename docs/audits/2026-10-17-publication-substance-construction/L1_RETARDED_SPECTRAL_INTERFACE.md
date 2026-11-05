@@ -7243,3 +7243,14 @@ part, and exact signed coefficient
 The two disjoint orbits bring the verified subtotal to
 `272628263401307289/576460752303423488` across 216 of 288 pairs
 in 23 of 34 orbits.
+
+### Minority representative 168
+
+Independent review matched all 2,304 ordered exact leaves to the
+pinned roster and recomputed the signed coefficient
+`-871859979116847/144115188075855872`, with 864 nonzero leaves
+and zero imaginary part. Raw receipt SHA-256 is
+`5c578dbf21d242419043b3c6af6d4d15cf672a04656f8519f6fde455fa88810a`.
+Its disjoint three-member orbit brings the reviewed subtotal to
+`262165943651905125/576460752303423488` across 219 of 288 pairs
+in 24 of 34 orbits.

@@ -408,6 +408,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   Schwarzschild mass. The equality case remains outside both
   strict branches. The source supplies a leading-order sign
   and leaves the exact trajectory's quantitative remainder open.
+  L3 §2.3 has a [verified canonical closure](https://github.com/NetRxn/SK_EFT_Hawking/commit/bb44c4692)
+  on the research branch. The correction attributes positivity to the
+  standalone sign theorem and preserves the separate partition-linked
+  equivalence cited by the manuscript. The declared verifier checks the
+  metadata route named in the finding and rejects the prior claim.
+  Carry both the repair and its closure into the next qualified candidate.
   A separate composition trial on `ce194cdc4` combined the
   serializer, D7 regression, managed paths, inventory and citation
   fixes with the generated tables and reviewed polariton source
