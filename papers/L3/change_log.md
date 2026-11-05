@@ -241,3 +241,17 @@ elaborated against local compiled imports, and both new result
 declarations reported only standard axioms. Full tensor vacuum and
 matching the metric and mass normalization to the ADW action
 remain open, along with authoritative candidate validation.
+
+### Full Ricci tensor on the stationary spherical chart
+
+The ingoing chart calculation now covers every Ricci component.
+With Q = F''/2 + F'/r and W = 1 - F - r F', the radial block
+is (F Q, -Q; -Q, 0) and the angular block is W times the unit
+sphere metric. Pointwise vacuum requires both scalars to vanish.
+If the reduced equation holds on a neighborhood, differentiation
+supplies the second condition under the stated radial regularity.
+Independent review checked the repository convention and the
+Schwarzschild-de Sitter control. Local elaboration passed with
+two tactic-style warnings, and all three result declarations
+reported only standard axioms. The ADW exterior derivation,
+physical mass matching, and authoritative validation remain open.

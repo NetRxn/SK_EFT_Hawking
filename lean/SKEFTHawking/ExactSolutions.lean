@@ -775,6 +775,102 @@ theorem ingoing_spherical_reducedVacuum_of_ricci_theta_theta
   rw [ingoing_spherical_ricci_theta_theta F x hr hθ hF hNear] at hVac
   linarith
 
+/-- Independent components of the Ricci tensor in the stationary ingoing chart. -/
+noncomputable def ingoingSphericalRicciTable
+    (f f₁ f₂ r θ : ℝ) : RicciTensor :=
+  let q := f₂ / 2 + f₁ / r
+  let w := 1 - f - r * f₁
+  ![![f * q, -q, 0, 0], ![-q, 0, 0, 0],
+    ![0, 0, w, 0], ![0, 0, 0, w * Real.sin θ ^ 2]]
+
+set_option maxHeartbeats 600000 in
+/-- Full coordinate Ricci tensor. Only the radial second derivative is needed. -/
+theorem ingoing_spherical_fullRicci
+    (F : ℝ → ℝ) (x : Fin 4 → ℝ) {f₂ : ℝ}
+    (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0)
+    (hF : DifferentiableAt ℝ F (x 1))
+    (hNear : ∀ᶠ s in 𝓝 (x 1), DifferentiableAt ℝ F s)
+    (h₂ : HasDerivAt (deriv F) f₂ (x 1)) :
+    ricciOf (riemannCoord (ingoingChartChristoffel F x)
+      (ingoingChartChristoffelPartial F x)) =
+      ingoingSphericalRicciTable (F (x 1)) (deriv F (x 1)) f₂ (x 1) (x 2) := by
+  have hid := hasDerivAt_id' (x := x 1)
+  have hfr := hid.fun_mul hF.hasDerivAt
+  have hrad : deriv (fun s ↦ s * F s) (x 1) = F (x 1) + x 1 * deriv F (x 1) := by
+    simpa using hfr.deriv
+  have hradφ : deriv (fun s ↦ s * F s * Real.sin (x 2) ^ 2) (x 1) =
+      (F (x 1) + x 1 * deriv F (x 1)) * Real.sin (x 2) ^ 2 := by
+    simpa only [one_mul] using (hfr.mul_const (Real.sin (x 2) ^ 2)).deriv
+  have hfrd : deriv (fun s ↦ F s * deriv F s / 2) (x 1) =
+      (deriv F (x 1) * deriv F (x 1) + F (x 1) * f₂) / 2 :=
+    ((hF.hasDerivAt.fun_mul h₂).div_const 2).deriv
+  have hhalf : deriv (fun s ↦ deriv F s / 2) (x 1) = f₂ / 2 :=
+    (h₂.div_const 2).deriv
+  have hcot : deriv (fun s ↦ Real.cos s / Real.sin s) (x 2) =
+      -(1 / Real.sin (x 2) ^ 2) := by
+    rw [((Real.hasDerivAt_cos (x 2)).fun_div (Real.hasDerivAt_sin (x 2)) hθ).deriv]
+    field_simp [hθ]
+    nlinarith [Real.sin_sq_add_cos_sq (x 2)]
+  have hsc : deriv (fun s ↦ Real.sin s * Real.cos s) (x 2) =
+      Real.cos (x 2) ^ 2 - Real.sin (x 2) ^ 2 := by
+    rw [((Real.hasDerivAt_sin (x 2)).fun_mul (Real.hasDerivAt_cos (x 2))).deriv]
+    ring
+  have hcos : Real.cos (x 2) ^ 2 = 1 - Real.sin (x 2) ^ 2 := by
+    nlinarith [Real.sin_sq_add_cos_sq (x 2)]
+  funext i j
+  fin_cases i <;> fin_cases j <;>
+    simp only [ricciOf, riemannCoord, riemannLinearTerm, riemannQuadraticTerm, sumFin4] <;>
+    simp_rw [ingoingChartChristoffelPartial_eq_table_deriv F x hr hθ hF hNear,
+      ingoingChartChristoffel_eq_table F x hr hθ hF] <;>
+    simp (config := {decide := true}) [ingoingChristoffelTable, ingoingSphericalRicciTable,
+      Function.update, hrad, hradφ, hfrd, hhalf, hcot, hsc] <;>
+    field_simp [hr, hθ] <;> ring_nf <;> simp only [hcos] <;> ring
+
+/-- At a point, angular vacuum and the differentiated radial condition are independent. -/
+theorem ingoing_spherical_ricciFlat_iff
+    (F : ℝ → ℝ) (x : Fin 4 → ℝ) {f₂ : ℝ}
+    (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0)
+    (hF : DifferentiableAt ℝ F (x 1))
+    (hNear : ∀ᶠ s in 𝓝 (x 1), DifferentiableAt ℝ F s)
+    (h₂ : HasDerivAt (deriv F) f₂ (x 1)) :
+    (∀ i j, ricciOf (riemannCoord (ingoingChartChristoffel F x)
+      (ingoingChartChristoffelPartial F x)) i j = 0) ↔
+      (x 1 * deriv F (x 1) + F (x 1) - 1 = 0 ∧
+        x 1 * f₂ + 2 * deriv F (x 1) = 0) := by
+  rw [ingoing_spherical_fullRicci F x hr hθ hF hNear h₂]
+  constructor
+  · intro h
+    have hω := h 2 2
+    have hq := h 0 1
+    simp [ingoingSphericalRicciTable] at hω hq
+    field_simp [hr] at hq
+    exact ⟨by linarith, by linarith⟩
+  · rintro ⟨hω, hq⟩ i j
+    have hq' : f₂ / 2 + deriv F (x 1) / x 1 = 0 := by
+      field_simp [hr]
+      linarith
+    have hω' : 1 - F (x 1) - x 1 * deriv F (x 1) = 0 := by linarith
+    fin_cases i <;> fin_cases j <;> simp [ingoingSphericalRicciTable, hω', hq']
+
+/-- On a neighborhood, the reduced vacuum equation implies full pointwise Ricci-flatness. -/
+theorem ingoing_spherical_ricciFlat_of_local_reducedVacuum
+    (F : ℝ → ℝ) (x : Fin 4 → ℝ) {f₂ : ℝ}
+    (hr : x 1 ≠ 0) (hθ : Real.sin (x 2) ≠ 0)
+    (hF : DifferentiableAt ℝ F (x 1))
+    (hNear : ∀ᶠ s in 𝓝 (x 1), DifferentiableAt ℝ F s)
+    (h₂ : HasDerivAt (deriv F) f₂ (x 1))
+    (hVac : (fun s ↦ s * deriv F s + F s - 1) =ᶠ[𝓝 (x 1)] fun _ ↦ 0) :
+    ∀ i j, ricciOf (riemannCoord (ingoingChartChristoffel F x)
+      (ingoingChartChristoffelPartial F x)) i j = 0 := by
+  apply (ingoing_spherical_ricciFlat_iff F x hr hθ hF hNear h₂).2
+  refine ⟨hVac.eq_of_nhds, ?_⟩
+  have hD := (((hasDerivAt_id' (x := x 1)).fun_mul h₂).add hF.hasDerivAt).sub_const 1
+  have hz := hVac.deriv_eq
+  change deriv (fun s ↦ s * deriv F s + F s - 1) (x 1) = _ at hz
+  have hDval : deriv (fun s ↦ s * deriv F s + F s - 1) (x 1) = _ := hD.deriv
+  rw [hDval, deriv_const] at hz
+  linarith
+
 end IngoingChart
 
 /--
