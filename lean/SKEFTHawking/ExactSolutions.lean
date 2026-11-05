@@ -406,6 +406,47 @@ theorem schwarzschild_area_eq_16pi_M_sq (M : ℝ) :
   unfold schwarzschildArea schwarzschildHorizonRadius
   ring
 
+/-- The area derivative along a curve of Schwarzschild geometric masses. -/
+theorem schwarzschildArea_profile_deriv
+    {m : ℝ → ℝ} {t dm : ℝ} (hm : HasDerivAt m dm t) :
+    HasDerivAt (fun s ↦ schwarzschildArea (m s)) (32 * Real.pi * m t * dm) t := by
+  simp_rw [schwarzschild_area_eq_16pi_M_sq]
+  convert (hm.fun_pow 2).const_mul (16 * Real.pi) using 1 <;> first | rfl | ring
+
+private theorem schwarzschild_area_term
+    {G m dm : ℝ} (hG : G ≠ 0) (hm : m ≠ 0) :
+    schwarzschildKappa m / (8 * Real.pi * G) * (32 * Real.pi * m * dm) = dm / G := by
+  unfold schwarzschildKappa
+  field_simp [hG, hm, Real.pi_ne_zero]
+  ring
+
+/-- Fixed-coupling Schwarzschild first law with geometric mass G times physical mass. -/
+theorem schwarzschild_fixed_G_firstLaw
+    {mass : ℝ → ℝ} {G t dM : ℝ}
+    (hG : 0 < G) (hM : 0 < mass t) (hMass : HasDerivAt mass dM t) :
+    let dA := 32 * Real.pi * (G * mass t) * (G * dM)
+    HasDerivAt (fun s ↦ schwarzschildArea (G * mass s)) dA t ∧
+      dM = schwarzschildKappa (G * mass t) / (8 * Real.pi * G) * dA := by
+  dsimp only
+  refine ⟨schwarzschildArea_profile_deriv (hMass.const_mul G), ?_⟩
+  rw [schwarzschild_area_term (ne_of_gt hG) (ne_of_gt (mul_pos hG hM))]
+  field_simp [ne_of_gt hG]
+
+/-- Varying-coupling control within the algebraic Schwarzschild family. -/
+theorem schwarzschild_varying_G_area_control
+    {coupling mass : ℝ → ℝ} {t dG dM : ℝ}
+    (hG : 0 < coupling t) (hM : 0 < mass t)
+    (hCoupling : HasDerivAt coupling dG t) (hMass : HasDerivAt mass dM t) :
+    let dA := 32 * Real.pi * (coupling t * mass t) * (dG * mass t + coupling t * dM)
+    HasDerivAt (fun s ↦ schwarzschildArea (coupling s * mass s)) dA t ∧
+      schwarzschildKappa (coupling t * mass t) / (8 * Real.pi * coupling t) * dA =
+        dM + mass t * dG / coupling t := by
+  dsimp only
+  refine ⟨schwarzschildArea_profile_deriv (hCoupling.fun_mul hMass), ?_⟩
+  rw [schwarzschild_area_term (ne_of_gt hG) (ne_of_gt (mul_pos hG hM))]
+  field_simp [ne_of_gt hG]
+  ring
+
 /--
 **Schwarzschild Bekenstein-Hawking entropy: `S_BH = 4π M²`.**
 Substantive named identity tying the `schwarzschildBHEntropy`

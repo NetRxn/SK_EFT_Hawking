@@ -165,3 +165,19 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
   declaration extractor attempted to fetch the missing Physlib
   dependency and could not resolve the remote host. The registry
   refresh and authoritative validation remain due.
+
+## 2026-11-04 — Prove the fixed-coupling Schwarzschild first law
+
+- The area derivative uses geometric mass `m = G M`. At fixed
+  positive `G`, the exact area and surface-gravity formulas give
+  `dM = κ dA/(8πG)` along a differentiable positive mass profile.
+  A varying-coupling control in the same algebraic family gives
+  the additional term `M dG/G`.
+- Independent review accepted the scope and algebra. The modified
+  ExactSolutions file elaborated against local compiled imports,
+  and the three new theorem axiom queries reported only `propext`,
+  `Classical.choice` and `Quot.sound`.
+- This supplies the Schwarzschild differential first-law component
+  of §2.1. The ADW and nozzle laws, physical entropy-current
+  construction, authoritative build and publication propagation
+  remain open.
