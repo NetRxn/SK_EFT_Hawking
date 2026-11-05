@@ -7118,3 +7118,19 @@ The disjoint union `[0,56) ∪ [64,112)` covers 104 of 256
 selectors. Its exact real subtotal is
 `4520609368440060105/37778931862957161709568` before orbit
 weighting.
+
+The first two gamma slices are now complete. Independent readback
+checked every selector in `[0,128)`, including the two terminal
+ranges below, against the pinned roster and exact raw reduction.
+
+| Selector range | Exact real subtotal | Receipt SHA-256 |
+|---|---:|---|
+| [56,64) | `75024550689753231/9444732965739290427392` | `b90ea0f75338664e7a67c648302947c6b103511ba0811586ca940e0c3827fbee` |
+| [112,128) | `688672510171296147/37778931862957161709568` | `f71ea6d31709b43dc2a19eb651dfa8a54bb0a64f79c93cf734939d2a9c13b0ba` |
+
+Each complete slice contributes
+`688672510171296147/9444732965739290427392`, giving a
+direct half-component subtotal of
+`688672510171296147/4722366482869645213696` with zero
+imaginary part. Evaluate the other two slices directly before
+applying the component-orbit multiplicity.
