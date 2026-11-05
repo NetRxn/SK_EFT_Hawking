@@ -8243,3 +8243,25 @@ adds 72 words and contributes
 `-2469564149419400481/1180591620717411303424`.
 Verified dominant coverage is 104 of 148 orbits and 8,550 of
 9,216 words.
+
+### Modular controls for the common normalization
+
+The [modular replay](l1_modular_motif_control.py) reuses the
+exact center tensors and Haar reductions of two reviewed
+16-site restricted motifs. It then performs the signed cycle
+joins modulo 65,537. Independent review reran the joins,
+checked the prime and denominator inverses, and compared
+against separately reduced rational receipts.
+
+| Restricted motif | Cycle residues | Coefficient residue |
+|---|---|---:|
+| Four unswitched layers | 15768, 15768, 15768, 15768 | 53479 |
+| Planes switched at centers 0 and 6 | 15768, 54472, 15768 | 48879 |
+
+Live cycle widths are 38 in these controls. The reviewed
+35,084-orbit overlap motif reduces to 38375 modulo the same
+prime. That value is a target for a direct modular replay.
+A nonzero residue would certify nonvanishing of the complete
+partition coefficient after exact signed coverage and
+denominator checks. The restricted motifs leave that
+complete coefficient open.
