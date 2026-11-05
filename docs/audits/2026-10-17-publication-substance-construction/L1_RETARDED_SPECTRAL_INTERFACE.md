@@ -7152,3 +7152,26 @@ do their manifest scales. Each scaled coefficient is
 These disjoint orbits bring the reviewed subtotal to
 `77883367544656065/288230376151711744` across 153 of 288 pairs
 in 18 of 34 orbits. Sixteen representative evaluations remain.
+
+### Complete second dominant component and orbit
+
+All four gamma slices of `(0,0)` were evaluated directly.
+Independent review reduced the raw rows in 17 terminal receipts,
+confirmed unique complete coverage of `[0,256)` against the
+pinned roster, and reproduced the exact slice subtotals. Each
+slice contributes `688672510171296147/9444732965739290427392`
+with zero imaginary part. The compact JSON array of filename
+and receipt SHA-256 pairs, sorted by numeric range start, has
+SHA-256 `f48e4717aa109a2f3307782b5b2e8713c67ab5c8cdec850a77d064d9c65752fd`.
+
+The direct total is `688672510171296147/2361183241434822606848`.
+The independently reconstructed signed orbit consists of
+`(0,0)`, `(1,0)` and `(2,0)`, covering 36 unique source words.
+Its weighted contribution is
+`2066017530513888441/2361183241434822606848`.
+The pilot orbit covers 180 words disjoint from these 36. The
+combined exact real contribution of these two orbits is
+`1600427899831669839/1180591620717411303424`.
+The remaining 146 dominant orbits still require their own
+representative results. The next direct component `(0,1)`
+belongs to a separate six-member orbit.
