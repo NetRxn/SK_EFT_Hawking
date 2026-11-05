@@ -6189,3 +6189,20 @@ The recovered primitive maps have 208, 36, 162, 72, 36, 72,
 and 162 rows respectively. A separate check reconstructed
 each exact map from its primitive rows and signed scale and
 reproduced both receipt digests.
+
+The [corrected repository A replay](l1_unpaired_A_group.py)
+uses distinct middle-factor and scalar-center lookup keys.
+An independent brute-force Gaussian-integer oracle reproduces
+the old omission with two masks in one left row. The corrected
+join agrees with that oracle in all six factor orders, including
+a negative wedge contribution. The replay regenerates 2,304
+supported leaves and guards their exact roster.
+
+Prefix 3, leaf 0 fixes
+`(q153,g90,g91,q91,g33,q33)=(5,(0,0),(1,),5,(0,),4)`.
+The corrected run checked 64,800 compatible products and
+36,864 nonzero environment matches. Independent review
+verified the normalized leaf scalar
+`−2790589782267/18446744073709551616` with zero imaginary
+part. This result covers one leaf. All other leaves still
+require corrected evaluation.
