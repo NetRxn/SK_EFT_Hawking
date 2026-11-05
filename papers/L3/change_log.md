@@ -271,3 +271,18 @@ only standard axioms. Applying this calculation to an emergent
 solution still requires the static spacelike slicing, physical
 mass normalization, and ADW exterior matching. Authoritative
 validation remains open.
+
+### Static slice for the spherical ADM charge
+
+On a regular exterior patch with positive lapse, the radial
+integral of the reciprocal lapse defines the ingoing time shift.
+The coordinate partials and finite matrix pullback give the static
+radial coefficient (F^{-1}). The polar Jacobian identifies the
+Cartesian spatial profile used by the spherical surface-charge
+calculation. Independent source review checked the integral
+hypotheses, pullbacks, and chart scope. The combined candidate
+source elaborated locally against compiled dependencies, and
+the three main statements reported only standard Lean axioms.
+This identifies the static spatial metric for the supplied
+exterior. General ADM coordinate invariance, microscopic ADW
+matching, and authoritative validation remain open.

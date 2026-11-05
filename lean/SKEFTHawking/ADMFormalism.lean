@@ -714,6 +714,165 @@ lemma sphereCharge_mass_limit (F : ℝ → ℝ) (G M : ℝ) (hG : G ≠ 0)
   filter_upwards [eventually_gt_atTop (0 : ℝ), hDiff] with R hR hd
   exact (sphereCharge_eq G hG _ _ R hR hd.hasDerivAt).symm
 
+noncomputable def tortoise (F : ℝ → ℝ) (r₀ r : ℝ) : ℝ :=
+  ∫ s in r₀..r, (F s)⁻¹
+
+noncomputable def staticToIngoing (F : ℝ → ℝ) (r₀ : ℝ) (x : Fin 4 → ℝ) :
+    Fin 4 → ℝ :=
+  ![x 0 + tortoise F r₀ (x 1), x 1, x 2, x 3]
+
+noncomputable def ingoingToStatic (F : ℝ → ℝ) (r₀ : ℝ) (x : Fin 4 → ℝ) :
+    Fin 4 → ℝ :=
+  ![x 0 - tortoise F r₀ (x 1), x 1, x 2, x 3]
+
+theorem static_ingoing_inverse (F : ℝ → ℝ) (r₀ : ℝ) :
+    Function.LeftInverse (ingoingToStatic F r₀) (staticToIngoing F r₀) ∧
+      Function.RightInverse (ingoingToStatic F r₀) (staticToIngoing F r₀) := by
+  constructor <;> intro x <;> funext i <;> fin_cases i <;>
+    simp [staticToIngoing, ingoingToStatic]
+
+noncomputable def staticJacobian (F : ℝ → ℝ) (r : ℝ) : MetricMatrix :=
+  ![![1, (F r)⁻¹, 0, 0], ![0, 1, 0, 0], ![0, 0, 1, 0], ![0, 0, 0, 1]]
+
+theorem static_jacobian_is_partial (F : ℝ → ℝ) (r₀ : ℝ) (x : Fin 4 → ℝ)
+    (hInt : IntervalIntegrable (fun s => (F s)⁻¹) volume r₀ (x 1))
+    (hMeas : Measurable F) (hCont : ContinuousAt F (x 1)) (hF : 0 < F (x 1)) (a i : Fin 4) :
+    deriv (fun s => staticToIngoing F r₀ (Function.update x i s) a) (x i) =
+      staticJacobian F (x 1) a i := by
+  have hInv : ContinuousAt (fun s => (F s)⁻¹) (x 1) := hCont.inv₀ (ne_of_gt hF)
+  have ht := intervalIntegral.integral_hasDerivAt_right hInt
+    hMeas.inv.stronglyMeasurable.stronglyMeasurableAtFilter hInv
+  have htd : HasDerivAt (tortoise F r₀) (F (x 1))⁻¹ (x 1) := ht
+  fin_cases a <;> fin_cases i <;>
+    simp (config := {decide := true}) [staticToIngoing, staticJacobian, Function.update,
+      htd.deriv, deriv_const_add]
+
+theorem static_jacobian_on_positive_interval (F : ℝ → ℝ) (r₀ : ℝ)
+    (x : Fin 4 → ℝ) (hMeas : Measurable F) (hCont : ContinuousAt F (x 1))
+    (hPath : ContinuousOn F (Set.uIcc r₀ (x 1)))
+    (hF : ∀ r ∈ Set.uIcc r₀ (x 1), 0 < F r) (a i : Fin 4) :
+    deriv (fun s => staticToIngoing F r₀ (Function.update x i s) a) (x i) =
+      staticJacobian F (x 1) a i :=
+  static_jacobian_is_partial F r₀ x
+    ((hPath.inv₀ fun r hr => ne_of_gt (hF r hr)).intervalIntegrable)
+    hMeas hCont (hF (x 1) Set.right_mem_uIcc) a i
+
+noncomputable def staticMetric (F : ℝ → ℝ) (r θ : ℝ) : MetricMatrix :=
+  ![![-F r, 0, 0, 0], ![0, (F r)⁻¹, 0, 0],
+    ![0, 0, r ^ 2, 0], ![0, 0, 0, r ^ 2 * Real.sin θ ^ 2]]
+
+theorem static_metric_pullback (F : ℝ → ℝ) (r θ : ℝ) (hF : 0 < F r)
+    (i j : Fin 4) :
+    sumFin4 (fun a => sumFin4 (fun b => staticJacobian F r a i *
+      ExactSolutions.ingoingSphericalMetric F r θ a b * staticJacobian F r b j)) =
+      staticMetric F r θ i j := by
+  fin_cases i <;> fin_cases j <;>
+    simp (config := {decide := true}) [sumFin4, staticJacobian,
+      ExactSolutions.ingoingSphericalMetric, staticMetric, ne_of_gt hF]
+
+/-- Tangential metric is the Euclidean angular component at radius r;
+replace only the coefficient of dr squared in the static slice. -/
+noncomputable def cartesianSlice (F : ℝ → ℝ) (x : Cartesian) (i j : Fin 3) : ℝ :=
+  let di := cartesianPartial radius x i
+  let dj := cartesianPartial radius x j
+  (delta i j - di * dj) + (F (radius x))⁻¹ * di * dj
+
+theorem cartesian_slice_eq (F : ℝ → ℝ) (x : Cartesian) (hr : 0 < radius x)
+    (i j : Fin 3) :
+    cartesianSlice F x i j = spatial (fun r => (F r)⁻¹ - 1) x i j := by
+  have hd (k : Fin 3) : cartesianPartial radius x k = normal x k :=
+    (radius_line x k hr).deriv
+  simp only [cartesianSlice, spatial, hd]
+  ring
+
+/-- Cartesian embedding and its three actual polar Jacobian columns. -/
+noncomputable def polarPoint (r θ φ : ℝ) : Cartesian :=
+  ![r * Real.sin θ * Real.cos φ, r * Real.sin θ * Real.sin φ, r * Real.cos θ]
+
+noncomputable def polarColumn (r θ φ : ℝ) (k : Fin 3) : Cartesian :=
+  (![![Real.sin θ * Real.cos φ, Real.sin θ * Real.sin φ, Real.cos θ],
+    ![r * Real.cos θ * Real.cos φ, r * Real.cos θ * Real.sin φ, -r * Real.sin θ],
+    ![-r * Real.sin θ * Real.sin φ, r * Real.sin θ * Real.cos φ, 0]] : Fin 3 → Cartesian) k
+
+lemma polarColumn_r (r θ φ : ℝ) (i : Fin 3) :
+    deriv (fun s => polarPoint s θ φ i) r = polarColumn r θ φ 0 i := by
+  fin_cases i <;>
+    simp [polarPoint, polarColumn]
+
+lemma polarColumn_theta (r θ φ : ℝ) (i : Fin 3) :
+    deriv (fun s => polarPoint r s φ i) θ = polarColumn r θ φ 1 i := by
+  fin_cases i <;>
+    simp [polarPoint, polarColumn,
+      Real.differentiableAt_sin, Real.differentiableAt_cos]
+
+lemma polarColumn_phi (r θ φ : ℝ) (i : Fin 3) :
+    deriv (fun s => polarPoint r θ s i) φ = polarColumn r θ φ 2 i := by
+  fin_cases i <;>
+    simp [polarPoint, polarColumn,
+      Real.differentiableAt_sin, Real.differentiableAt_cos]
+
+lemma polarColumn_gram (r θ φ : ℝ) (i j : Fin 3) :
+    (∑ k, polarColumn r θ φ i k * polarColumn r θ φ j k) =
+      (![![1, 0, 0], ![0, r ^ 2, 0],
+        ![0, 0, r ^ 2 * Real.sin θ ^ 2]] : Fin 3 → Fin 3 → ℝ) i j := by
+  have hφ := Real.sin_sq_add_cos_sq φ
+  have hθ := Real.sin_sq_add_cos_sq θ
+  fin_cases i <;> fin_cases j <;>
+    simp (config := {decide := true}) [Fin.sum_univ_three, polarColumn] <;>
+    first
+    | ring1
+    | linear_combination (Real.sin θ ^ 2) * hφ + hθ
+    | linear_combination (r * Real.sin θ * Real.cos θ) * hφ
+    | linear_combination (r ^ 2 * Real.cos θ ^ 2) * hφ + r ^ 2 * hθ
+    | linear_combination (r ^ 2 * Real.sin θ ^ 2) * hφ
+
+lemma polarPoint_radius (r θ φ : ℝ) (hr : 0 < r) :
+    radius (polarPoint r θ φ) = r := by
+  have he : (∑ i, polarPoint r θ φ i ^ 2) = r ^ 2 := by
+    simp [Fin.sum_univ_three, polarPoint]
+    linear_combination (r ^ 2 * Real.sin θ ^ 2) * Real.sin_sq_add_cos_sq φ +
+      r ^ 2 * Real.sin_sq_add_cos_sq θ
+  rw [radius, he, Real.sqrt_sq (le_of_lt hr)]
+
+lemma polarPoint_normal (r θ φ : ℝ) (hr : 0 < r) (i : Fin 3) :
+    normal (polarPoint r θ φ) i = polarColumn r θ φ 0 i := by
+  rw [normal, polarPoint_radius r θ φ hr]
+  fin_cases i <;> simp [polarPoint, polarColumn] <;> field_simp [ne_of_gt hr]
+
+lemma polarColumn_radial_projection (r θ φ : ℝ) (hr : 0 < r) (j : Fin 3) :
+    (∑ k, normal (polarPoint r θ φ) k * polarColumn r θ φ j k) =
+      delta 0 j := by
+  simp_rw [polarPoint_normal r θ φ hr]
+  rw [polarColumn_gram]
+  fin_cases j <;> simp [delta]
+
+theorem cartesian_slice_polar_pullback (F : ℝ → ℝ) (r θ φ : ℝ) (hr : 0 < r)
+    (i j : Fin 3) :
+    (∑ k, ∑ l, polarColumn r θ φ i k *
+      cartesianSlice F (polarPoint r θ φ) k l * polarColumn r θ φ j l) =
+      staticMetric F r θ i.succ j.succ := by
+  have hrx : 0 < radius (polarPoint r θ φ) := by
+    rw [polarPoint_radius r θ φ hr]
+    exact hr
+  simp_rw [cartesian_slice_eq F (polarPoint r θ φ) hrx]
+  let n := normal (polarPoint r θ φ)
+  let v := polarColumn r θ φ i
+  let w := polarColumn r θ φ j
+  let c := (F r)⁻¹ - 1
+  have hsplit :
+      (∑ k, ∑ l, v k * (delta k l + c * n k * n l) * w l) =
+        (∑ k, v k * w k) + c * (∑ k, n k * v k) * (∑ k, n k * w k) := by
+    simp (config := {decide := true}) [Fin.sum_univ_three, delta]
+    ring
+  simp only [spatial, polarPoint_radius r θ φ hr]
+  change (∑ k, ∑ l, v k * (delta k l + c * n k * n l) * w l) = _
+  rw [hsplit]
+  dsimp only [v, w, n, c]
+  rw [polarColumn_gram, polarColumn_radial_projection r θ φ hr i,
+    polarColumn_radial_projection r θ φ hr j]
+  fin_cases i <;> fin_cases j <;>
+    simp (config := {decide := true}) [staticMetric, delta]
+
 end SphericalSurface
 
 end SKEFTHawking.ADMFormalism
