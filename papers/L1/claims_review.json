@@ -5327,7 +5327,15 @@
       "execution_provenance": "This assigned reviewer directly reran 81 cases in 0.07s with prepared project Python, offline/no-sync settings and cacheprovider disabled. The same reviewer previously executed the independently written Decimal 120-digit scalar and grid controls in 0.000317s. ROOT author logs with 9 failures and 72 passes before repair, and 81 passes after repair, were read separately.",
       "independent_control_scope": "The smallest positive binary64 value, 1e-300, 1e-18, 1e-16, float16, float32, longdouble, ordinary anchors, 1e308 and the public three-point grid match exact input-ratio Decimal references within one output ulp. Zero, tiny negatives, NaN, infinities, negative c and 0*inf behavior were checked. This host has the same exponent range for longdouble and binary64, so the wider-range control was not executed.",
       "g4_boundary": "The established G4 reads PaperClaim/GROUNDED_IN and paper registry formulas, rather than these 114 Sentence/BACKED_BY records. L1 lacks the formula registry row; the existing extractor also drops mixed-case formulas. Exact identifiers here repair source references but do not establish complete graph resolution or a G4 pass.",
-      "reviewed_render": "No new 81-case PDF was inspected by this reviewer. Historical 69-case render and byte-identical figure evidence remain in the prior precision evidence. ROOT owns current render acceptance."
+      "reviewed_render": "No new 81-case PDF was inspected by this reviewer. Historical 69-case render and byte-identical figure evidence remain in the prior precision evidence. ROOT owns current render acceptance.",
+      "canonical_closure": {
+        "finding": "review:2026-11-05-publication-l1-positive-speed:L1:1.1",
+        "commit": "77aeb7091",
+        "writer": "scripts/close_finding.py",
+        "verification": "uv run python -m pytest tests/test_gravitational_waves.py -q",
+        "verification_exit_code": 0,
+        "scope": "Scalar computation repair only; dependency-scanner, full qualification, physical BUILD and human approval remain open."
+      }
     }
   },
   "cross_bundle_findings": [

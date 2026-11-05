@@ -11,10 +11,11 @@ readiness_gates_version: 1
 
 Independent assessment by `/root/l1_transport` identified these defects.
 ROOT separately reproduced the missing registry population, mixed-case
-extraction omission and absent-target false pass. The targeted
+extraction omission and absent-target false pass. ROOT also reproduced
+the local namespace-classification failure in finding1.4. The targeted
 [runtime receipt](REPRODUCTION.json) and [source binding](SOURCE_BINDING.json)
 are source/extractor/evaluator evidence, not a full graph or native run.
-All three findings remain open. They require the existing architecture-change
+All four findings remain open. They require the existing architecture-change
 workflow before changes to the registry, producer or gate machinery.
 
 ### 1.1 — MAJOR — L1 computational claims have no registered G4 formula population
@@ -49,6 +50,17 @@ workflow before changes to the registry, producer or gate machinery.
 - **Expected:** A missing required Formula cannot establish computation coverage. Withhold PASSED and retain explicit evidence using the existing state and blocker vocabulary. Complete supported formula/test populations must retain valid outcomes.
 - **Next action:** Lead owns the minimal evaluator repair under architecture-change review, with independent absent-only, partially missing and complete-population controls. Remeasure real affected papers after producer repair. The gate assesses static test classification; passing it does not establish test execution or physical derivation.
 - **Verify:** `uv run python -c "import sys; sys.path.insert(0,'scripts'); from readiness_gates import GraphIndex,_eval_computation_correctness; p={'id':'paper:control','type':'Paper','meta':{'formulas':['missing_control']}}; r=_eval_computation_correctness(p,GraphIndex({'nodes':[p],'links':[]})); assert r.state!='passed', r.evidence"`
+
+### 1.4 — REQUIRED — Dependency scanner classifies the local papers namespace as a third-party distribution
+
+- **Severity:** required
+- **Lane:** infra
+- **Location:** `tests/test_dependency_declaration.py::_local_module_names`, `tests/test_gravitational_waves.py::TestNumericalWindowPrecision.test_d3_width_ratio_uses_the_exact_algebraic_width`
+- **Observed:** The declaration suite fails with `papers <- tests/test_gravitational_waves.py`. That regression imports the actual local `papers.D3.tables` producer. The repository contains a namespace directory rather than a top-level papers.py or a direct papers/__init__.py. The scanner collects file stems and immediate parent names and does not recognize this namespace root. No external papers distribution supplies the producer.
+- **Expected:** Recognize actual local namespace packages without hiding genuinely undeclared third-party imports. Preserve the exact-width regression's numerical strength; the publication renderer's rounded scalar output is insufficient to replace its full-precision assertion.
+- **Next action:** Lead owns the minimal scanner repair through architecture-change review, with independent real namespace and undeclared-external controls. This is a full-qualification blocker, distinct from the independently accepted scalar speed repair.
+- **Evidence:** `DEPENDENCY_FAILURE.txt` records one failure and four passes in the existing declaration suite. No repair or acceptance is asserted.
+- **Verify:** `uv run python -m pytest tests/test_dependency_declaration.py::test_every_third_party_import_is_declared -q`
 
 The Verify commands directly assert the missing requirements and fail
 against the current source. They are not evidence that these defects

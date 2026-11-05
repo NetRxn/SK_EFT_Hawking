@@ -46,3 +46,18 @@ transport matching, full native/project checks, qualified main
 integration and final human approval remain open. No G4 pass is
 inferred from this scoped repair: current registry and formula
 extraction coverage still require their separately identified repairs.
+
+The separate dependency-declaration suite has one failure and four
+passes: its scanner treats the local papers namespace imported by
+the pre-existing D3 precision regression as an undeclared third-party
+distribution. That still-open defect is recorded as computation
+coverage finding1.4, with the original failure receipt. The exact
+regression is preserved. Broader scoped verification is still running;
+this record does not claim full-tree qualification.
+
+The existing closure writer recorded
+`review:2026-11-05-publication-l1-positive-speed:L1:1.1`
+as fixed at77aeb7091 after executing the declared 81-case command
+with exit zero. CLOSURE_RECEIPT.txt and the supersession ledger
+record that scoped closure. The dependency-scanner finding remains
+open and still blocks full qualification.

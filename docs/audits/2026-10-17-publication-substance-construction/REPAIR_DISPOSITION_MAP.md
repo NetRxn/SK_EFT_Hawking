@@ -46,14 +46,20 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   reviewed direct-square-root repair removes cancellation for tiny
   positive susceptibilities and propagates through the public grid.
   The current focused module passes81 cases after nine reproduced
-  failures. Its [finding and receipts](../../../papers/AutomatedReviews/2026-11-05-publication-l1-positive-speed/L1.md)
+  failures. Canonical finding
+  `review:2026-11-05-publication-l1-positive-speed:L1:1.1`
+  is fixed through the existing closure writer, anchored at77aeb7091.
+  Its [finding and receipts](../../../papers/AutomatedReviews/2026-11-05-publication-l1-positive-speed/L1.md)
   retain the original physical requirements. Current G4 remains open:
-  the [three coverage findings](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/infra.md)
+  the [coverage findings](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/infra.md)
   track L1's absent existing-registry population, mixed-case Formula
   extraction omissions and an absent-target false pass in the
   evaluator. The lead owns these minimal repairs through the existing
   architecture-change and independent review process. Exact sentence
   targets are repaired separately; no gate transition is inferred.
+  Finding1.4 separately records the dependency scanner's false
+  classification of the local papers namespace used by the exact
+  D3 regression; preserve that regression's precision during repair.
 
 - **L1 lead.** The [finite tensor and source controls](L1_OFFDIAGONAL_HESSIAN.md) now contain the independently reproduced complete 6,451-word pure-g₂ normalization and the normalized diagonal plus response for real nonzero g₂. The [positive transfer and staggered-mode tests](L1_RETARDED_SPECTRAL_INTERFACE.md) rule out direct thermal matching of the literal site-resolved channel. Its staggered projection passes the half-period sign check. The equal-time contraction is complete, including the independently checked 40-word unsymmetrized control. The fixed-spatial-cutoff Gaussian comparison now supplies an independently verified quadratic contact and spectral band. The curvature-dressed uniform operator now has an independently reproduced positive half-period scalar in the four-site pure-g₂ regulator. The local equal-time calculation separates the quadratic contact and passes the scalar two-time test, with independent reproduction complete. Next derive whether a physical background variation gives this operator and contact, justify which observables the physical algebra retains, and verify positive-state and time-dependent matching before retarded extraction. B3 and publication acceptance remain open.
   The [selected 16-site normalization motif](L1_RETARDED_SPECTRAL_INTERFACE.md)

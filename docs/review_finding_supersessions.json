@@ -10293,6 +10293,21 @@
         "enforced": true,
         "run_at": "2026-11-04"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-publication-l1-positive-speed:L1:1.1",
+      "status": "fixed",
+      "evidence": "Direct c*sqrt(chi) scalar repair independently reviewed; original nine failing regressions now pass in the81-case module with exact scalar and grid controls; physical BUILD and full qualification remain open.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "77aeb7091",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_gravitational_waves.py -q",
+        "declared": "uv run python -m pytest tests/test_gravitational_waves.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }
