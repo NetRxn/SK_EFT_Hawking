@@ -138,3 +138,21 @@ The refreshed canonical sentence review has 114 records and
 preserves the physical BUILD obligations and H1 attribution
 failure. The focused numerical finding is
 `review:2026-11-05-publication-l1-window-precision:L1:1.1`.
+
+
+## 2026-11-05: reconcile reviewed microscopic and frequency scope
+
+Restored the reviewed October H1, source-attribution, frequency-model and
+concrete-inequality corrections from `2e33bf6`, `90be7b1` and `bd7172ed`.
+The current draft retains the November stable numerical interval and positive
+speed repairs, the dimensionless normalized-response qualification, finite
+tolerance, relative-width/prior distinction and redundant-conjunct disclosure.
+Removed the two remaining prose em dashes without changing eponym en dashes.
+
+The manuscript distinguishes conditional endpoint constraints from microscopic
+action/propagator/matter construction, and numerical omega=100 from a physically
+matched 100 Hz band. The additive correction qualification retains the tau+B
+near-boundary condition. These corrections do not discharge the original BUILD
+obligations. Compile: four pages, zero TeX errors/unresolved references, six
+overfull boxes. Independent review and canonical stage reevaluation remain owed.
+Evidence: `papers/AutomatedReviews/2026-11-05-l1-reviewed-manuscript-reconciliation/`.

@@ -934,13 +934,21 @@ and [manifest](l1_k4_two_protected_tori_7981_delivery_manifest.json), with the
 bound predecessor archives preserved. Its earlier source-only archive is
 historical evidence, not the current execution or acceptance record.
 
-The publication lead owns portfolio priorities, paper-stage review, canonical
-closure and qualified integration into main. SK-EFT-Hawking-Executor owns
-implementation of high-leverage backfill math/physics obligations and may
-delegate coherent isolated branch/cloud packages. It coordinates with Develop
-L1 physics roadmap and other implementation sessions for local computation,
-Lean support, retries and package-level handback. PhysRxn-M has the distinct
-frontier remit. The priority order above remains unchanged.
+L1 remains the publication lead's active bundle. The publication lead owns its
+end-to-end readiness: ordinary scientific/code remediation, manuscript,
+figures, citations, claim grounding, stage reviews, canonical finding closure,
+gates and qualified integration into main. The remaining L1 work is not
+transferred to SK-EFT-Hawking-Executor.
+
+The Executor takes explicitly bounded deeper math/physics construction
+packages requiring substantial implementation or roadmap-level work. Each
+package returns its source, original evidence, independent review and remaining
+limitations to the publication acceptance chain. The coupled-tensor
+contraction/factorization work is such a package, not ownership of L1. The
+Executor may delegate those packages and coordinate with Develop L1 physics
+roadmap for local computation and Lean support. PhysRxn-M retains the distinct
+frontier remit. Parallel NJL delivery does not displace the L1 publication
+critical path; the overall priority order above remains unchanged.
 
 Use existing tooling and the established persona, continuity, independent
 review and ADR-008 resource procedures. Keep implementation moving; report
