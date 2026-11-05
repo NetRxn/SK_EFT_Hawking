@@ -7100,3 +7100,21 @@ The 40 verified selectors contribute
 `1765919327754875517/37778931862957161709568` before orbit
 weighting. The other selectors must be verified before the
 component's multiplicity of three can be applied.
+
+Four subsequent ranges each reduce to
+`688672510171296147/37778931862957161709568` with zero imaginary
+part. Independent review checked all 16 ordered exact rows in each
+range, the pinned membership, joint and roster, and the raw-to-scaled
+arithmetic.
+
+| Selector range | Receipt SHA-256 |
+|---|---|
+| [24,40) | `57d1fb02fc21c5e77a1d3a337f7be296a0faf3d75e14d21c03814fa9ce8c6d5c` |
+| [40,56) | `f9d33916b800879788635c18073a363ea76a0db0aa04ca960df6e43af397d8f2` |
+| [80,96) | `74f333b24296334d1c4ea7d1cfc54a41aeb91cf8cbed5cfce720e7fc2bd47b68` |
+| [96,112) | `0a23fde2fb171d62e4046a2652c7d273ca7599d550defe6a565223a921d3bad1` |
+
+The disjoint union `[0,56) ∪ [64,112)` covers 104 of 256
+selectors. Its exact real subtotal is
+`4520609368440060105/37778931862957161709568` before orbit
+weighting.
