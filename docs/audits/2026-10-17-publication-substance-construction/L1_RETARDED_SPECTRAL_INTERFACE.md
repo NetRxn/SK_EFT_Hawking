@@ -8038,3 +8038,18 @@ They add 144 words and contribute
 `-2469564149419400481/590295810358705651712` together.
 Verified dominant coverage is 56 of 148 orbits and 5,772 of
 9,216 words.
+
+### Complete chirality pair (8,11)/(12,11)
+
+Independent review checked 256 ordered direct selectors and 16
+terminal shards on the original pinned roster. All four class
+witnesses are singletons. The exact subtotal is
+`-1545409315094236263/9444732965739290427392`, with zero imaginary
+part and no caps. The [full receipt](l1_gamma_8_11.out.txt) has
+SHA-256 `6bb33d6ff28eb0c2c7c53771218d20c0450b3ab54cc65269984dc76bb0912e83`.
+
+Each signed orbit contains 90 words with multiplicity 18. The
+two orbits are mutually disjoint and disjoint from prior coverage.
+Together they contribute `-13908683835848126367/2361183241434822606848`
+and add 180 words. Verified dominant coverage is 58 of 148
+orbits and 5,952 of 9,216 words.
