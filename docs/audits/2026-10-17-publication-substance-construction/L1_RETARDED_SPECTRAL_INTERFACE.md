@@ -6444,3 +6444,30 @@ complement counts to the complete scratch union. It reproduced
 the same roster digest and exact total without a cap. The raw
 repository stdout SHA-256 is
 `549235ff9768e6afd2f2ccd7a3ee5c8bb9910b2558c06731a3a72591f7332a86`.
+
+**Rank-one partition for the dominant map.** The reviewed
+[manifest generator](l1_unpaired_A_dominant_components.py) replays
+the 9,216 signed occurrences against their exact B hashes.
+It accounts for all 6,656 fixed-coordinate groups in 104 blocks.
+Each block holds normalized centers 1 and 9 fixed and partitions
+the center-3/center-11 weight matrix into 20 integer rank-one
+components. The 2,080 components consist of 1,248 of shape
+1×1, 416 of 1×5, 312 of 4×1, and 104
+of 4×5. The generator checks each coefficient, including
+implicit zeros, against the integer outer product. Independent
+review rehashed all 78 receipt inputs and matched each word
+and signed scale to its unique manifest membership. The repository
+generator reproduced the same manifest byte for byte, SHA-256
+`eebf286061137a1354f831fae29ad20223bf74ce43f22aaa90e15a98b5031e75`.
+Replay requires the explicit B receipts and primitive input.
+The emitted hashes fingerprint the weighted factors.
+
+For block 0, component 3, an independent local check matched
+all 221,184 joint coefficients of the weighted pair to the
+explicit 20-term sum over 60 original B words. The exterior
+scalar check remains open. The initial join hit the 120,000-row
+cap when attaching weighted center 11. Deferring that attachment
+moved the cap to a site-1 join that closes no site. Neither route
+reached a supported leaf. The next comparison must preserve the
+complete conditioned label sum, the same exact scale and divisor,
+and the existing cap.
