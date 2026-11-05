@@ -8652,9 +8652,38 @@ reproduced double-shared word-0 control remains part of the
 acceptance evidence. The receipt bundle digest is
 `bb3c432d527e0ef539b378fab3f76455b72711712c3e577ccc5abbecce55792b`.
 
-Together with the separate 42-word class, 128 of the 272
-four-deviation words are computed. The other 48 words already
-supported by the original geometry kernel and 96 words needing
-other core constructions remain open. The complete action/source
-ensemble, common partition coefficient and physical response
-matching remain required.
+Together with the separate original-kernel population below,
+176 of the 272 four-deviation words have portable accepted receipts.
+The complete action/source ensemble, common partition coefficient
+and physical response matching remain required.
+
+## Complete original-kernel four-deviation population
+
+The [remaining48 raw receipts](l1_k4_remaining48_receipts.jsonl)
+complete the original kernel's 90 supported words. Independent
+review by `/root/l1_transport_review` checked all expected terminal
+receipts, exact manifest binding, reconstructed divisors and integral
+raw numerators. All exit codes are zero. The maximum observed
+intermediate has 16,448 rows, within the unchanged 120,000-row cap.
+The [complete90 verification](l1_k4_original90_verification.json)
+also binds the earlier42 archive and verifies all30 same-axis and
+15 mixed-axis covariance pairs.
+
+The new48 contain18 same-axis and30 mixed-axis words, with subtotals
+`50730389701193201376915/140737488355328` and
+`498018043932492448107225/562949953421312`, respectively.
+The complete90 population contains60 same-axis and30 mixed-axis
+words. Its same-axis subtotal is
+`908974548598703812792515/140737488355328`; its mixed-axis subtotal
+is the new48 mixed-axis subtotal above. Restricted shear is
+`3137880150462322803062835/281474976710656`.
+
+The independent report SHA256 is
+`abb81374dc652839ae9812234c1bd08c8ee4883fb14ad04d859802e94abf7b10`;
+the report's complete90 receipt-bundle digest is
+`ddaa4b565d774e9ec59b945f9115668389b99317ea62a53e4042b4515c7a2900`.
+This population is disjoint from the separate86 peeled words and
+six scratch-evaluated single-square words. Portable accepted
+coverage is176/272. The single-square source integration, running
+free-torus population, other residual cores, full ensemble and
+physical matching remain open.

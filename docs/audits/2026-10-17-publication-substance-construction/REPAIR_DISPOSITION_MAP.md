@@ -270,9 +270,14 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   census entries, including two shared source/action edges.
   Its [complete86-word population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-fully-peeled-four-deviation-population)
   has independently verified same-axis and mixed-axis subtotals.
-  In total128 of272 four-deviation words are computed. The next
-  replay covers the other48 words supported by the original
-  geometry kernel;96 residual-core words need further construction. The shared-Q and left-cache benchmarks
+  The [complete original-kernel population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-original-kernel-four-deviation-population)
+  now has all90 words independently accepted, including the other48
+  completed cases. Together with the peeled86 population,176 of272
+  words have portable accepted receipts. Six single-square words
+  have independently accepted scratch evidence awaiting portable
+  source integration; a separate30-word free-torus batch is running.
+  The remaining residual-core classes still require construction.
+  The shared-Q and left-cache benchmarks
   retain the direct transfer route for the current workload.
   The [pure-g₂ one-point cancellation](L1_PURE_G2_ONE_POINT.md)
   holds for the literal metric and shear sources on the full common
