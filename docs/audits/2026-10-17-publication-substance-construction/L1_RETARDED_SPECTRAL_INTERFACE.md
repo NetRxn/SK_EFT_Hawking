@@ -7014,3 +7014,43 @@ contractions took 3.05 and 2.70 seconds. Thus this exact reuse
 has limited effect on the overall cost of the two selectors.
 The stdout SHA-256 is
 `d1436991977a1b99454e3dc2b99339c9e4cef700252affc43828adcd0044a0b0`.
+
+### Dominant Spin orbit reduction
+
+The four chiral Spin quarter-turns preserve all 208 exact rows of
+the dominant B primitive. Each generator permutes all 9,216 words
+and maps each rank-one component onto a complete component. The
+transformed B scale acquires the same coordinate sign as the A
+probe, so the signs cancel in the contracted scalar. The independent
+replay checked every generator action and reconstructed the same
+148 component orbits from the 2,080 components.
+
+| Orbit size | Component orbits |
+|---:|---:|
+| 1 | 4 |
+| 3 | 20 |
+| 6 | 6 |
+| 9 | 48 |
+| 18 | 54 |
+| 36 | 16 |
+
+The [orbit generator](l1_unpaired_A_dominant_spin_orbits.py) consumes
+the pinned rank-one partition, its 78 receipt inputs, and the B
+primitive receipt. Its optional pilot input binds the 256 raw
+selector results and emits the exact already-evaluated scalar for
+component `(0,3)`. The full replay produced manifest SHA-256
+`1600b0e8c87ef548acdd17c057fc483c0e118d29faf775456778fd12ec2d37f5`.
+The pilot orbit consists of `(0,3)`, `(1,2)`, and `(2,1)`.
+Run the remaining 147 representatives in disjoint batches, using
+exact membership and selector receipts before weighting each orbit.
+The second direct selector control belongs to the separate orbit
+represented by `(0,0)`. Its remaining selectors still require evaluation.
+
+A conditioned shared-Q replay completed both selector-0 controls
+across 318 byte-pair keys. All 32 split response maps matched the
+two direct maps coefficient by coefficient, and both final exact
+scalars agreed. The largest response held 118,272 rows under the
+120,000-row cap. The shared route took 38.90 seconds versus 5.50
+seconds for direct replay on this workload. Use the direct route
+for the next representative batch. The full dominant contraction,
+physical transport matching, and B3 remain open.
