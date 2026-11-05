@@ -867,10 +867,14 @@ source, disjoint coverage and the150-member archive. The earlier218/225 timeout
 remains preserved in the [original controls archive](l1_k4_two_protected_tori_7981_controls.zip);
 it supplied no final coefficient and is not the current delivery state.
 
-The next selected-family construction is the coupled161/163 holonomy design,
-with full source/action/gamma/Grassmann factors and original limits retained.
-It needs independent mathematical design review, direct/fixed controls, complete
-contraction, independent reconstruction/replay and portable acceptance. This
+The [coupled161/163 holonomy design](l1_k4_coupled_holonomy_161163_design.md)
+and [independent mathematical review](l1_k4_coupled_holonomy_161163_design_review.md)
+are accepted with bounded local controls. The next selected-family construction
+implements that complete joint tensor with existing kernels. Actual
+nonidentity-forest source/action/spinor covariance and signed prepared-row XOR1
+are required before fixed/pilot acceptance. Full source/action/gamma/Grassmann
+factors and original limits remain. Direct/fixed controls, complete contraction,
+independent reconstruction/replay and portable acceptance are still owed. This
 construction does not replace the full derivative-normalized source/action
 ensemble, common partition, physical B3 normalization/window, microscopic
 modes/matter coupling or transport/frequency/error obligations.

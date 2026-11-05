@@ -9100,3 +9100,30 @@ The [portable evaluator](l1_extended_offset_witness_k4_source_sharing_square_two
 Each coefficient is `1165710661495982585955/35184372088832`; the two-word same-axis subtotal is `1165710661495982585955/17592186044416`, without an extra axis/shear factor. Exact-input reuse leaves the scientific eliminator unchanged and retains225 own-index emissions;154 complete inputs yield154 first results/71 reuses. Actual zeros remain distinct from structural absence or failures. The complete150-member [archive](l1_k4_two_protected_tori_7981_delivery.zip) and [manifest](l1_k4_two_protected_tori_7981_delivery_manifest.json) preserve source/control corrections, all new actual results and independent reviews. The manifest binds the earlier [controls archive](l1_k4_two_protected_tori_7981_controls.zip), which preserves the original incomplete pilot.
 
 This is accepted exact Python construction for a selected regulated family, not a new Lean proof or physical susceptibility derivation. Fullk4, the complete derivative-normalized source/action ensemble and common partition, physical B3 normalization/window, microscopic dynamics/matter coupling, physical transport/frequency/error matching, main integration and final human/publication acceptance remain OPEN.
+
+
+## Coupled161/163: accepted mathematical design
+
+The [coupled-holonomy design](l1_k4_coupled_holonomy_161163_design.md) and
+[independent review](l1_k4_coupled_holonomy_161163_design_review.md) establish
+the joint degree-six Haar construction for the square sharing a non-source
+directed link with a torus. A valid six-edge forest leaves that holonomy live.
+Five sparse face factors, four fourth-moment factors and one sixth-moment
+factor retain the complete coupled tensor through separate occurrence indices;
+every individual label remains twice-used. Independent quaternion-polynomial
+and factorial-moment calculations reproduce the signed/mixed controls and
+all local face coefficient dictionaries. The [acceptance record](l1_k4_coupled_holonomy_161163_design_acceptance.json),
+[original evidence archive](l1_k4_coupled_holonomy_161163_design_evidence.zip)
+and [manifest](l1_k4_coupled_holonomy_161163_design_manifest.json) retain exact
+source, attempts and bounded receipts.
+
+This is mathematical design acceptance, not a complete prepared graph or
+coefficient. Portable coverage stays236/272. Next implement the selected
+evaluator using existing kernels and independently verify actual source/action/
+spinor nonidentity-forest covariance and complete signed prepared-row XOR1
+before fixed or pilot acceptance. Direct source/tensor controls remain
+required. Preserve all15 outer branches,
+source/action factors and original resource bounds. Intermediate contraction
+width/performance remain unmeasured; no raised cap or omitted channel is
+authorized. Fullk4/common partition, physicalB3/window, microscopic dynamics/
+matter coupling, transport, main and human/publication acceptance stay open.
