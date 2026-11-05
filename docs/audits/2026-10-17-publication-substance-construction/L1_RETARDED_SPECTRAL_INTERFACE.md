@@ -6110,3 +6110,13 @@ value, and 11 contribute the positive counterpart. The real
 subtotal is `−41858846734005/36893488147419103232` with zero
 imaginary part. The snapshot excludes the repeated control
 and later rows. The full two-word subtotal remains due.
+
+The first two bulk runs have independent receipt verification
+over `[4736,62080)`. The 56 full chunks cover 57,344
+distinct tuples, with 50,105 exact zeros and 7,239 nonempty
+B maps awaiting A closure. Every full-chunk hash matches its
+phase log. The second run stopped at its wall limit with
+66 additional rows in the next chunk. The third run resumes
+that chunk using the same runner hash and unchanged existing
+tracked Python inputs. Its partial and later results are
+outside this verified range.
