@@ -309,6 +309,39 @@ theorem M_c_pos (p : ADWParams) : 0 < M_c p := by
     mul_pos (by positivity) p.α_pos
   exact div_pos hnum hden
 
+/-- The bare Sakharov coupling retains the ADW coefficient in the cutoff length. -/
+theorem G_N_sakharov_mul_M_c_eq_inv_alpha_cutoff (p : ADWParams) :
+    LinearizedEFE.G_N_sakharov p.Λ_UV p.N_f * M_c p = 1 / (p.α_ADW * p.Λ_UV) := by
+  have hΛ : p.Λ_UV ≠ 0 := ne_of_gt p.Λ_pos
+  have hN : p.N_f ≠ 0 := ne_of_gt p.N_pos
+  have hα : p.α_ADW ≠ 0 := ne_of_gt p.α_pos
+  unfold LinearizedEFE.G_N_sakharov M_c
+  field_simp [hΛ, hN, hα, Real.pi_ne_zero]
+
+/-- The emergent coupling gives the cutoff length for the defined critical mass. -/
+theorem G_N_emerg_eval_mul_M_c_eq_inv_cutoff (p : ADWParams) :
+    p.G_N_emerg_eval * M_c p = 1 / p.Λ_UV := by
+  have hΛ : p.Λ_UV ≠ 0 := ne_of_gt p.Λ_pos
+  have hα : p.α_ADW ≠ 0 := ne_of_gt p.α_pos
+  unfold ADWParams.G_N_emerg_eval LinearizedEFE.G_N_emerg
+  rw [mul_assoc, G_N_sakharov_mul_M_c_eq_inv_alpha_cutoff]
+  field_simp [hΛ, hα]
+
+/-- The bare and emergent cutoff lengths coincide exactly at unit ADW coefficient. -/
+theorem bare_mul_M_c_eq_emerg_mul_M_c_iff (p : ADWParams) :
+    LinearizedEFE.G_N_sakharov p.Λ_UV p.N_f * M_c p = p.G_N_emerg_eval * M_c p ↔
+      p.α_ADW = 1 := by
+  have hΛ : p.Λ_UV ≠ 0 := ne_of_gt p.Λ_pos
+  have hαΛ : p.α_ADW * p.Λ_UV ≠ 0 := mul_ne_zero (ne_of_gt p.α_pos) hΛ
+  rw [G_N_sakharov_mul_M_c_eq_inv_alpha_cutoff, G_N_emerg_eval_mul_M_c_eq_inv_cutoff]
+  constructor
+  · intro h
+    have hcross := (div_eq_div_iff hαΛ hΛ).mp h
+    apply mul_right_cancel₀ hΛ
+    simpa using hcross.symm
+  · intro h
+    rw [h, one_mul]
+
 /--
 **Decidable regime classifier.** Returns the regime of a given BH at
 the given ADW substrate by comparing `M` against the critical mass `M_c`.

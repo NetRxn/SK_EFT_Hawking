@@ -111,3 +111,15 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
   the four-page PDF. The canonical compile passed.
 - D3 and Paper 27 retain the older right panel. Their figure and caption
   updates require a separate coordinated review. Stage 13 remains due.
+
+## 2026-11-04 — Formalize the two cutoff-length identities
+
+- The bare Sakharov coupling gives `1/(α_ADW Λ_UV)` when multiplied
+  by `M_c`. The emergent coupling gives `1/Λ_UV`. The two products
+  agree exactly at unit `α_ADW` under the existing positivity assumptions.
+- Independent source review accepted all three proofs. The full modified
+  Lean file elaborated against local compiled imports using Lean 4.32.0.
+  The three axiom queries reported only `propext`, `Classical.choice`,
+  and `Quot.sound`.
+- The authoritative build, declaration-registry refresh, and canonical
+  finding §2.4 closure remain due.
