@@ -131,7 +131,7 @@ dynamics:
    inequality.
 4. **Second law**: Glorioso–Liu SK-EFT entropy-current monotonicity
    (arXiv:1612.07705 §III: dynamical KMS Z₂ + Im S_eff ≥ 0
-   ⇒ ∂_μ s^μ ≥ 0, **without invoking pointwise NEC**).
+   ⇒ ∂_μ s^μ ≥ 0 in the local-equilibrium EFT).
 
 ## Cross-wave connections
 
@@ -308,6 +308,39 @@ theorem M_c_pos (p : ADWParams) : 0 < M_c p := by
   have hden : 0 < 12 * Real.pi * p.α_ADW :=
     mul_pos (by positivity) p.α_pos
   exact div_pos hnum hden
+
+/-- The bare Sakharov coupling retains the ADW coefficient in the cutoff length. -/
+theorem G_N_sakharov_mul_M_c_eq_inv_alpha_cutoff (p : ADWParams) :
+    LinearizedEFE.G_N_sakharov p.Λ_UV p.N_f * M_c p = 1 / (p.α_ADW * p.Λ_UV) := by
+  have hΛ : p.Λ_UV ≠ 0 := ne_of_gt p.Λ_pos
+  have hN : p.N_f ≠ 0 := ne_of_gt p.N_pos
+  have hα : p.α_ADW ≠ 0 := ne_of_gt p.α_pos
+  unfold LinearizedEFE.G_N_sakharov M_c
+  field_simp [hΛ, hN, hα, Real.pi_ne_zero]
+
+/-- The emergent coupling gives the cutoff length for the defined critical mass. -/
+theorem G_N_emerg_eval_mul_M_c_eq_inv_cutoff (p : ADWParams) :
+    p.G_N_emerg_eval * M_c p = 1 / p.Λ_UV := by
+  have hΛ : p.Λ_UV ≠ 0 := ne_of_gt p.Λ_pos
+  have hα : p.α_ADW ≠ 0 := ne_of_gt p.α_pos
+  unfold ADWParams.G_N_emerg_eval LinearizedEFE.G_N_emerg
+  rw [mul_assoc, G_N_sakharov_mul_M_c_eq_inv_alpha_cutoff]
+  field_simp [hΛ, hα]
+
+/-- The bare and emergent cutoff lengths coincide exactly at unit ADW coefficient. -/
+theorem bare_mul_M_c_eq_emerg_mul_M_c_iff (p : ADWParams) :
+    LinearizedEFE.G_N_sakharov p.Λ_UV p.N_f * M_c p = p.G_N_emerg_eval * M_c p ↔
+      p.α_ADW = 1 := by
+  have hΛ : p.Λ_UV ≠ 0 := ne_of_gt p.Λ_pos
+  have hαΛ : p.α_ADW * p.Λ_UV ≠ 0 := mul_ne_zero (ne_of_gt p.α_pos) hΛ
+  rw [G_N_sakharov_mul_M_c_eq_inv_alpha_cutoff, G_N_emerg_eval_mul_M_c_eq_inv_cutoff]
+  constructor
+  · intro h
+    have hcross := (div_eq_div_iff hαΛ hΛ).mp h
+    apply mul_right_cancel₀ hΛ
+    simpa using hcross.symm
+  · intro h
+    rw [h, one_mul]
 
 /--
 **Decidable regime classifier.** Returns the regime of a given BH at
@@ -534,6 +567,86 @@ theorem regime_partition_criterion
   · intro hcls
     rw [classify_ADWExtremality_iff] at hcls
     exact H.evap_dT_dt_below hcls
+
+/-- Chain-rule heating on a positive mass profile that is locally losing mass. -/
+theorem schwarzschild_profile_deriv
+    {mass : ℝ → ℝ} {t dM : ℝ}
+    (hmass : HasDerivAt mass dM t) (hM : 0 < mass t) (hdM : dM < 0) :
+    HasDerivAt (fun s ↦ T_H_schwarzschild (mass s))
+      (-(8 * Real.pi * dM) / (8 * Real.pi * mass t) ^ 2) t ∧
+      0 < -(8 * Real.pi * dM) / (8 * Real.pi * mass t) ^ 2 := by
+  have hπ : 0 < (8 : ℝ) * Real.pi := mul_pos (by norm_num) Real.pi_pos
+  have hden : 0 < 8 * Real.pi * mass t := mul_pos hπ hM
+  have hquot := (hasDerivAt_const t (1 : ℝ)).fun_div
+    (hmass.const_mul (8 * Real.pi)) (ne_of_gt hden)
+  refine ⟨?_, div_pos (neg_pos.mpr (mul_neg_of_pos_of_neg hπ hdM)) (pow_pos hden 2)⟩
+  simpa only [T_H_schwarzschild, zero_mul, one_mul, zero_sub] using hquot
+
+/-- Relative cooling rate in the leading-order nozzle solution. -/
+noncomputable def balbinotRelativeCoolingRate (c κ A₀ ε : ℝ) : ℝ :=
+  (563 : ℝ) / (720 * Real.pi) * ε * κ ^ 3 * c * A₀
+
+/-- Balbinot et al. Eq. (8.4), in natural units, as a local affine profile. -/
+noncomputable def balbinotAffine (c κ A₀ ε t : ℝ) : ℝ :=
+  (c * κ / (2 * Real.pi)) *
+    (1 - balbinotRelativeCoolingRate c κ A₀ ε * t)
+
+/-- The exact positive cooling coefficient of the affine profile. -/
+noncomputable def balbinotCoolingCoefficient (c κ A₀ ε : ℝ) : ℝ :=
+  (c * κ / (2 * Real.pi)) * balbinotRelativeCoolingRate c κ A₀ ε
+
+/-- Pointwise derivative of the affine formula. Physical use needs the local nozzle regime. -/
+theorem balbinotAffine_deriv {c κ A₀ ε t : ℝ}
+    (hc : 0 < c) (hκ : 0 < κ) (hA : 0 < A₀) (hε : 0 < ε) :
+    HasDerivAt (balbinotAffine c κ A₀ ε) (-balbinotCoolingCoefficient c κ A₀ ε) t ∧
+      -balbinotCoolingCoefficient c κ A₀ ε < 0 := by
+  let a : ℝ := balbinotRelativeCoolingRate c κ A₀ ε
+  let T₀ : ℝ := c * κ / (2 * Real.pi)
+  have hlin := (hasDerivAt_id' (x := t)).const_mul a
+  have haff := ((hasDerivAt_const t (1 : ℝ)).sub hlin).const_mul T₀
+  refine ⟨?_, ?_⟩
+  · change HasDerivAt (fun s : ℝ ↦ T₀ * (1 - a * s)) (-balbinotCoolingCoefficient c κ A₀ ε) t
+    simpa only [balbinotCoolingCoefficient, a, T₀, Pi.sub_apply,
+      mul_one, zero_sub, mul_neg] using haff
+  · apply neg_lt_zero.mpr
+    unfold balbinotCoolingCoefficient balbinotRelativeCoolingRate
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+
+/--
+Derive the branch signs from separate local trajectory models. The
+caller supplies the short-time budget for the affine nozzle profile.
+The result controls that profile and preserves the equality boundary.
+-/
+theorem regime_partition_profile_criterion
+    (b : BHData) (p : ADWParams) (mass : ℝ → ℝ) (t dM c κ A₀ ε η : ℝ)
+    (hc : 0 < c) (hκ : 0 < κ) (hA : 0 < A₀) (hε : 0 < ε)
+    (hη : 0 < η ∧ η < 1)
+    (hmass : b.M > M_c p → mass t = b.M ∧ HasDerivAt mass dM t ∧ dM < 0)
+    (hshort : b.M < M_c p →
+      0 ≤ t ∧ c * κ * t < η ∧ balbinotRelativeCoolingRate c κ A₀ ε * t < 1) :
+    (classify b p = .Schwarzschild →
+      HasDerivAt (fun s ↦ T_H_schwarzschild (mass s))
+        (-(8 * Real.pi * dM) / (8 * Real.pi * mass t) ^ 2) t ∧
+        0 < -(8 * Real.pi * dM) / (8 * Real.pi * mass t) ^ 2) ∧
+    (classify b p = .ADWExtremality →
+      (0 ≤ t ∧ c * κ * t < η ∧ 0 < η ∧ η < 1) ∧
+      0 < balbinotAffine c κ A₀ ε t ∧
+      HasDerivAt (balbinotAffine c κ A₀ ε) (-balbinotCoolingCoefficient c κ A₀ ε) t ∧
+      -balbinotCoolingCoefficient c κ A₀ ε < 0) ∧
+    (classify b p = .Boundary ↔ b.M = M_c p) := by
+  refine ⟨?_, ?_, classify_Boundary_iff b p⟩
+  · intro h
+    rcases hmass ((classify_Schwarzschild_iff b p).mp h) with ⟨hlink, hderiv, hneg⟩
+    have hpos : 0 < mass t := hlink.symm ▸ b.M_pos
+    exact schwarzschild_profile_deriv hderiv hpos hneg
+  · intro h
+    obtain ⟨ht, hscale, hwindow⟩ := hshort ((classify_ADWExtremality_iff b p).mp h)
+    have hT₀ : 0 < c * κ / (2 * Real.pi) :=
+      div_pos (mul_pos hc hκ) (mul_pos (by norm_num) Real.pi_pos)
+    have hT : 0 < balbinotAffine c κ A₀ ε t :=
+      mul_pos hT₀ (sub_pos.mpr hwindow)
+    exact ⟨⟨ht, hscale, hη.1, hη.2⟩, hT, balbinotAffine_deriv hc hκ hA hε⟩
 
 /--
 **Substantive corollary.** Under the tracked-hypothesis bundle, the
@@ -845,8 +958,8 @@ gravity ADW black holes, anchored on:
   approximation `κ(t) ~ κ_0 · exp(-t/τ_cool)`.
 - **Hawking 1975** (CMP 43, 199) for the Schwarzschild heating regime
   (`b.M > M_c`): `dT_H/dt > 0`, finite t-evap, classical T_H = ℏ/(8πM).
-- **Glorioso–Liu 2017** (arXiv:1612.07705) for the SK-EFT second law
-  without NEC.
+- **Glorioso–Liu 2017** (arXiv:1612.07705 §III.B) for the local
+  SK-EFT second law in the derivative expansion.
 - **Project-original** `M_c = (N_f · Λ_UV)/(12π · α_ADW)` ansatz (Wave 5
   deep-research §3 dimensional analysis) is encoded as a tracked
   hypothesis, NOT a derivation.

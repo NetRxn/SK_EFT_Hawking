@@ -43,6 +43,21 @@
       "stage13_redo_required": true,
       "agent_run_id": "phase6n_6o-absorption-pass-2026-05-06T16:30:00Z",
       "notes": "D.3 GATE 2 absorption (Phase 6n.ζ, user-auth granted 2026-05-06): NEW paragraph 'Substrate-class context' inserted after Jacobson-Koike contrast paragraph. ³He-A satisfies all 4 Sakharov / FLS BEC violates condition (ii). Two classifications (Sakharov-criterion + regime partition) are independent program axes; horizon-Crooks unifies them only at the substrate-induced-gravity layer. Verlinde disclaimer enforced (Phase 6m EGDE 8/8 NO-GO ≥5σ). 2 new bibitems added (JacobsonEFE1995, Roehm2026EmergentGravity D3 inprep self-cite). Title + abstract + result section unchanged; central PRL claim preserved. LaTeX compile clean (4pp / 350KB). Pre-draft: temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md."
+    },
+    {
+      "date": "2026-11-04T22:39:45Z",
+      "source_paper": "(none — deregistration)",
+      "lift_action": "Deregister-lean-modules",
+      "bundle_section_inserted": "(n/a — deregistration)",
+      "lean_modules_referenced": [],
+      "lean_modules_deregistered": [
+        "EntropicGravityDarkEnergy"
+      ],
+      "deregistration_rationale": "The August L3 redraft removed the ancillary Phase 6m Verlinde discussion. The live L3 draft does not rely on this module. The L3 four-laws obligations and separate Phase 6m result remain tracked.",
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-deregister-2026-11-04T22:39:45Z",
+      "notes": "The August L3 redraft removed the ancillary Phase 6m Verlinde discussion. The live L3 draft does not rely on this module. The L3 four-laws obligations and separate Phase 6m result remain tracked."
     }
   ]
 }
