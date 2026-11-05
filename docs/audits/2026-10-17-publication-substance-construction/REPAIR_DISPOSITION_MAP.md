@@ -217,8 +217,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   a control for bulk A. Independent review accepted the first 21
   prefixes (336 leaves) for one opposite-scale pair in the dominant
   208-row primitive, with a nonzero exact subtotal. Complete the
-  remaining 51 prefixes for that pair and verify grouping by actual
-  coordinate incidence before expanding to the other occurrences.
+  remaining 51 prefixes for that pair. Independent review verified
+  an exact partition of all 9,216 dominant-map occurrences into 6,656
+  signed center-1 groups. Use that partition for bulk A and verify
+  any additional batching against all remaining A factors.
   The other 9,790 A closures remain due.
   The full word sum, physical matching and B3 remain open.
 

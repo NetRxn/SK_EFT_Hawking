@@ -6360,3 +6360,20 @@ and divisor.
 The accepted union `[0,21)` has 336 distinct ordered leaves and
 subtotal `−274396016602155609/18889465931478580854784`.
 Fifty-one prefixes remain for this pair.
+
+**Dominant-map grouping.** Independent review reconciled 9,211
+distinct indexed occurrences and five disjoint older exact B
+receipts. The signed scale of each of the 9,216 occurrences
+reconstructs its exact B hash from the common 208-row primitive.
+On the A side only center 1 depends on `q51,q53`. Holding
+`(q71,q73,q133,q151,q153)` fixed therefore permits the weighted
+center maps to be summed before the full contraction. The
+disjoint partition contains 4,608 singletons, 1,536 pairs, and
+512 triples, for 6,656 groups. No weighted center map vanishes.
+The singles have 16 rows and the pairs and triples have 24.
+Normalizing the signed coefficient gcd gives 25 center-1
+primitive maps. This normalization only identifies the center-1
+factor. The other A factors must still be accounted for before
+reusing any complete contraction. The reviewed scratch census
+stdout SHA-256 is
+`246d3bd6e12440d1adf4b34e5ec3f0f7100648a27c9b16fea70c56785c512aeb`.
