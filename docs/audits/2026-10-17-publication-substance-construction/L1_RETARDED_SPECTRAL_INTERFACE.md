@@ -7134,3 +7134,21 @@ direct half-component subtotal of
 `688672510171296147/4722366482869645213696` with zero
 imaginary part. Evaluate the other two slices directly before
 applying the component-orbit multiplicity.
+
+### Minority representatives 30 and 144
+
+Independent review checked all 2,304 ordered exact leaves in each
+receipt against its pinned roster and recomputed the signed
+coefficients. Each has 864 nonzero leaves and zero imaginary
+contribution. The two raw real totals have opposite signs, as
+do their manifest scales. Each scaled coefficient is
+`-125576540202015/576460752303423488`.
+
+| Representative | Multiplicity | Raw receipt SHA-256 |
+|---:|---:|---|
+| 30 | 18 | `f69c37a6c920bc75fe0397207abc44734372afe0f9167728884a40e3566d10ca` |
+| 144 | 9 | `88011c0d9fd92ccbff2cbcf3641eb4351036542918291dc8b05f9b2055af4fa8` |
+
+These disjoint orbits bring the reviewed subtotal to
+`77883367544656065/288230376151711744` across 153 of 288 pairs
+in 18 of 34 orbits. Sixteen representative evaluations remain.
