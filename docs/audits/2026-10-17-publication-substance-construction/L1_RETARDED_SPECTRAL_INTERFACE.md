@@ -6583,3 +6583,17 @@ stdout SHA-256 is
 That run used source SHA-256
 `47c80de136832690718858f964ebcf903e2038859ba8a717cc90478ebce3dcd0`
 before the tuple/range receipt header and census help were added.
+
+**Complete 36-row minority control.** The repository runner
+completed indices 4 and 5 in disjoint ranges `[0,32)` and
+`[32,2304)`. Independent review verified all 2,304 exact leaves,
+the same roster digest, the regenerated signed B map and the
+normalization. There are 1,440 zero, 720 positive and 144 negative
+leaves. The suffix gives
+`1686446425083357/18446744073709551616` with zero imaginary part.
+The full pair contributes `427098043589679/4611686018427387904`
+with zero imaginary part. The suffix stdout SHA-256 is
+`1169d875ca9d3dc9c4143e45d97c76440491131978348ac0f838307690535bb0`.
+It used the repository runner at `ca1ec11ab`. Independent review
+reproduced the earlier source hash by reverting only the receipt
+header and CLI help changes.
