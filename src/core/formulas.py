@@ -8577,10 +8577,12 @@ def c_GW_from_chi_vest(chi_vest, c_light=2.99792458e8):
     Returns
     -------
     float
-        c_GW in m/s (positive).
+        c_GW in m/s (positive for positive susceptibility and c_light).
+        Negative real susceptibility returns NaN.
     """
-    delta_chi = (chi_vest - 1.0)
-    return float(c_light * np.sqrt(1.0 + delta_chi))
+    scalar_type = np.result_type(chi_vest, c_light, np.float64).type
+    chi = scalar_type(chi_vest)
+    return float(scalar_type(c_light) * np.sqrt(chi))
 
 
 def c_GW_deviation_from_c(chi_vest):

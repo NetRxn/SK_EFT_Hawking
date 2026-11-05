@@ -65,6 +65,51 @@ class TestCGWCore:
     def test_c_GW_zero_at_chi_zero(self):
         assert c_GW_from_chi_vest(0.0, 1.0) == pytest.approx(0.0, abs=1e-15)
 
+    @pytest.mark.parametrize("chi", [
+        math.nextafter(0.0, 1.0), 1e-300, 1e-18, 1e-16,
+        np.float32(1e-8), np.longdouble("1e-18"), 0.1, 1.0, 10.0,
+    ])
+    def test_speed_preserves_small_positive_susceptibilities(self, chi):
+        """Avoid losing chi in 1 + (chi - 1), including normal callers' scalars."""
+        with localcontext() as context:
+            context.prec = 100
+            numerator, denominator = chi.as_integer_ratio()
+            reference = float((Decimal(numerator) / Decimal(denominator)).sqrt())
+        actual = c_GW_from_chi_vest(chi, 1.0)
+        assert actual > 0.0
+        assert abs(actual - reference) <= math.ulp(reference)
+
+    def test_speed_retains_wide_scalar_until_final_return(self):
+        chi = np.longdouble("1e-18")
+        speed = np.longdouble("1.000000000000000001")
+        with localcontext() as context:
+            context.prec = 100
+            chi_num, chi_den = chi.as_integer_ratio()
+            speed_num, speed_den = speed.as_integer_ratio()
+            reference = float(
+                (Decimal(chi_num) / Decimal(chi_den)).sqrt()
+                * Decimal(speed_num) / Decimal(speed_den)
+            )
+        assert abs(c_GW_from_chi_vest(chi, speed) - reference) <= math.ulp(reference)
+
+    def test_negative_susceptibility_returns_nan(self):
+        with np.errstate(invalid="ignore"):
+            assert math.isnan(c_GW_from_chi_vest(-1e-18, 1.0))
+
+    def test_grid_preserves_small_positive_speeds(self):
+        chi_values, speeds, _ = c_GW_grid(1e-18, 1e-16, 3)
+        with localcontext() as context:
+            context.prec = 100
+            c_num, c_den = GW_PARAMS["C_LIGHT_M_S"].as_integer_ratio()
+            exact_speed = Decimal(c_num) / Decimal(c_den)
+            for chi, actual in zip(chi_values, speeds, strict=True):
+                numerator, denominator = chi.as_integer_ratio()
+                reference = float(
+                    (Decimal(numerator) / Decimal(denominator)).sqrt() * exact_speed
+                )
+                assert actual > 0.0
+                assert abs(actual - reference) <= math.ulp(reference)
+
 
 class TestCGWDeviation:
     """Δc/c (χ_vest) = √χ_vest − 1."""

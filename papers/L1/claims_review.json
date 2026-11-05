@@ -1,12 +1,12 @@
 {
   "paper": "L1",
-  "review_date": "2026-11-05T05:27:10.239590Z",
+  "review_date": "2026-11-05T06:08:26.951296Z",
   "reviewer_version": "claims-reviewer-v2-source-qualified-r1",
   "reviewer_model": "codex-runtime-model-id-unavailable",
-  "reviewer_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r2",
+  "reviewer_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
   "bundle_target": "L1",
   "bundle_tier": 2,
-  "review_profile": "Current stand-alone L1 complete rendered-content sentence review; legacy source/cross-bundle spot checks, not complete new Paper25/D3 sentence audits.",
+  "review_profile": "Current stand-alone L1 complete rendered-content sentence review; legacy source/cross-bundle spot checks, not complete new Paper25/D3 sentence audits. Speed/census and exact formula-target refresh only; unchanged source statements retain their prior substantive verdicts.",
   "sentences": [
     {
       "section": "abstract",
@@ -25,7 +25,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Explicitly assumed speed law, matching c_GW definition; no dynamical derivation asserted.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -34,15 +34,15 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 0,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "c_GW_from_chi_vest",
+            "verification_scope": "Actual scalar speed law c*sqrt(chi), with an assumed physical identification. Direct sqrt implementation and independent small-positive/dtype/grid controls reviewed; no microscopic mode derivation."
           }
         ],
         "completeness": "full"
@@ -65,7 +65,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Conservative envelope and exact nonnegative sqrt preimage; width 4τ=1.2e-14. Actual Abbott held primary Eq.(1) supplies asymmetric observation; symmetric envelope is deliberately weaker.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -74,7 +74,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 1,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -87,8 +87,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -111,7 +111,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Unity belongs; 9.9/(4τ)=825000000000000 >1e14. This is width comparison within adopted inputs.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -120,7 +120,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 2,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -133,8 +133,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -166,7 +166,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 3,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -206,7 +206,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 4,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -236,7 +236,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 5,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -281,7 +281,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 6,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -346,7 +346,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 7,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -386,7 +386,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 8,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -426,7 +426,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 9,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -460,7 +460,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 10,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -510,7 +510,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 11,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -535,7 +535,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Conditional proposed identification, consistent with definition rather than a theorem deriving the transplant.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -544,15 +544,15 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 12,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -584,7 +584,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 13,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -615,7 +615,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Conditional scalar RPA form is present; sentence explicitly requires microscopic matching. The displayed c²χ law is an assumption.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -624,15 +624,15 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 14,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -664,7 +664,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 15,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -704,7 +704,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 16,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -744,7 +744,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 17,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -774,7 +774,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 18,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -808,7 +808,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 19,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -848,7 +848,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 20,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -894,7 +894,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 21,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -934,7 +934,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 22,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -955,7 +955,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "c_GW_match_iff_chi_close_to_one and width ratio support this conditional statement; range is adopted.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -964,15 +964,15 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 23,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -995,7 +995,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Exact width and strict nesting match ligo_window_width_eq, natural_lower_lt_ligo_window_lower and ligo_window_upper_lt_natural_upper.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -1004,7 +1004,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 24,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -1017,8 +1017,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -1041,7 +1041,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Exact relative width 4τ/9.9=1.21212121212e−15 rounds to1.2e−15 at two significant figures; probability requires prior.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -1050,7 +1050,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 25,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -1063,8 +1063,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -1096,7 +1096,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 26,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -1126,7 +1126,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 27,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1160,7 +1160,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 28,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1200,7 +1200,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 28,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1240,7 +1240,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 28,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1280,7 +1280,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 28,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1320,7 +1320,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 29,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -1350,7 +1350,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 30,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1384,7 +1384,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 31,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1424,7 +1424,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 32,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1455,7 +1455,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Relative interval width1.21212e−15 supports roughly one part in1e15.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -1464,15 +1464,15 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 33,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -1504,7 +1504,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 34,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -1534,7 +1534,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 35,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -1564,7 +1564,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 36,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -1594,7 +1594,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 37,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -1624,7 +1624,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 38,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1664,7 +1664,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 39,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1704,7 +1704,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 40,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1744,7 +1744,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 41,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1786,7 +1786,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 42,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1826,7 +1826,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 43,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1866,7 +1866,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 44,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -1911,7 +1911,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 45,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -1958,7 +1958,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Definitions match source including fixedτ.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -1967,7 +1967,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 46,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -1985,8 +1985,8 @@
           },
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2018,7 +2018,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 47,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -2039,7 +2039,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Exact source theorem with nonnegativeχ hypothesis; no physical derivation or fresh native check implied.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2048,7 +2048,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 48,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2071,8 +2071,8 @@
           },
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2104,7 +2104,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 49,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -2125,7 +2125,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Exact algebra gives4τ=1.2e−14; approximation sign is weaker than exact identity.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2134,7 +2134,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 50,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2147,8 +2147,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2171,7 +2171,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Named statements and domains inspected; finite interval is nested, not disjoint.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2180,7 +2180,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 51,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2208,8 +2208,8 @@
           },
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2232,7 +2232,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "4τ·1e14=1.2<9.9, matching theorem; this is width comparison.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2241,7 +2241,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 52,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2259,8 +2259,8 @@
           },
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2292,7 +2292,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 53,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -2313,7 +2313,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "sqrt(.1)−1=−.683772233983…, ratio2.27924077994e14. Printed rounding is correct; theorem proves endpoint incompatibility, not transcendental decimal values.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2322,7 +2322,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 54,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2345,8 +2345,8 @@
           },
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2369,7 +2369,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "sqrt(10)−1=2.162277660168…, ratio7.20759220056e14. Printed rounding correct; endpoint theorem scope retained.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2378,7 +2378,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 55,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2401,8 +2401,8 @@
           },
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2434,7 +2434,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 56,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -2464,7 +2464,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 57,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -2498,7 +2498,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 58,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -2543,7 +2543,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 59,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -2594,7 +2594,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "0<.1 and .1<.25<10; location statement exact.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2603,15 +2603,20 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 60,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
         "links": [
           {
-            "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "kind": "parameter",
+            "target": "GW.CHI_VEST_NATURAL_LOWER",
+            "verification_scope": "Adopted interval endpoint. Exact ordering 0<0.1<1/4<10 locates the two points; this does not derive the physical susceptibility window."
+          },
+          {
+            "kind": "parameter",
+            "target": "GW.CHI_VEST_NATURAL_UPPER",
+            "verification_scope": "Adopted interval endpoint. Exact ordering 0<0.1<1/4<10 locates the two points; this does not derive the physical susceptibility window."
           }
         ],
         "completeness": "full"
@@ -2643,7 +2648,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 61,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -2677,7 +2682,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 62,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -2717,7 +2722,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 63,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -2748,7 +2753,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2757,7 +2762,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 64,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2775,8 +2780,8 @@
           },
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2799,7 +2804,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2808,7 +2813,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 64,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2821,8 +2826,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2845,7 +2850,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2854,7 +2859,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 64,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2867,8 +2872,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2891,7 +2896,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2900,7 +2905,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 64,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2913,8 +2918,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2937,7 +2942,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2946,7 +2951,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 64,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -2959,8 +2964,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -2983,7 +2988,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Current figure and producer display anchor plus unresolved finite interval; endpoints rounded to−.68,+2.16 and callouts ~1e14 correct at plotted precision. Figure SHA and four-page reviewed render are pinned in evidence; no inference of singleton or excluded full range. Precision-refresh regenerated PNG matches existing bytes exactly; no rendered figure change.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -2992,7 +2997,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 64,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -3020,8 +3025,8 @@
           },
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -3053,7 +3058,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 65,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3094,7 +3099,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "P2⇒|δ|≤τ<1/2. Biconditional onχ≥0 givesχ≥(1−τ)²>0. No independence claimed.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -3103,15 +3108,15 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 66,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -3143,7 +3148,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 67,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3177,7 +3182,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 68,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3222,7 +3227,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 69,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3247,7 +3252,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "sqrt(1/4)−1=−1/2; P1 holds, P2 and strictP3 fail.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -3256,15 +3261,15 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 70,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -3296,7 +3301,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 71,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3330,7 +3335,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 72,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3355,7 +3360,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Onχ≥0, P2⇒P1 andP3 at fixed tolerance; hence Prop compatible set equals finite interval.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -3364,7 +3369,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 73,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -3377,8 +3382,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -3401,7 +3406,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Uniform prior density1/9.9 yields mass4τ/9.9. No prior-independent measure claimed.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -3410,7 +3415,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 74,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -3423,8 +3428,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -3456,7 +3461,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 75,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3498,7 +3503,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 76,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3540,7 +3545,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 77,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3585,7 +3590,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 78,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3616,7 +3621,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Conditional sqrt preimage on nonnegative physicalχ as established above.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -3625,7 +3630,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 79,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -3638,8 +3643,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -3662,7 +3667,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Exact endpoints1±2τ+τ²; susceptibility offsets≈±6e−15 differ from speedτ. Checked with exact rational arithmetic, not binary64 subtraction.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -3671,7 +3676,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 80,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -3684,8 +3689,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -3708,7 +3713,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Zero deviation iff1 does not collapse finite-width compatible interval.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -3717,7 +3722,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 81,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -3730,8 +3735,8 @@
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Actual repaired Python source plus current69-case scoped runtime; independent exact rational interval arithmetic/Decimal and ulp controls. Rounded endpoint subtraction remains distinct from exact real4τ. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -3763,7 +3768,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 82,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -3793,7 +3798,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 83,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3824,7 +3829,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Unity belongs to interval exactly.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -3833,15 +3838,15 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 84,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
         "links": [
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "c_GW_deviation_from_c",
+            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model. Exact inverse-preimage and width algebra are independently reviewed consequences of this scalar deviation law; they are not separate return values of this function. The rounded interval wrapper and D3 algebraic width retain their own scoped test evidence. No graph-level G4 pass is asserted."
           }
         ],
         "completeness": "full"
@@ -3873,7 +3878,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 85,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3913,7 +3918,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 86,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3953,7 +3958,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 87,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -3993,7 +3998,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 88,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4033,7 +4038,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 89,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4075,7 +4080,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 90,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4115,7 +4120,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 91,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4157,7 +4162,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 92,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4199,7 +4204,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 93,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4244,7 +4249,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 94,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4284,7 +4289,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 95,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4318,7 +4323,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 96,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4373,7 +4378,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 97,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4404,7 +4409,7 @@
       "finding_classes": [],
       "agent_verdict": "PASS",
       "agent_notes": "Conditional G formula at adoptedΛ=M_Pl givesα=Nf/(12π), .397887… to1.273239… for project counts15..48, matching rounded. This is an input-dependent internal scalar comparison, not an independently matched Newton constant.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
       "rewrite_of": null,
       "tombstone": false,
@@ -4413,7 +4418,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 98,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4425,8 +4430,8 @@
           },
           {
             "kind": "formula",
-            "target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
-            "verification_scope": "Independent exact rational interval arithmetic and numerical endpoint rounding; explicit conditional model."
+            "target": "G_N_emergent",
+            "verification_scope": "Conditional scalar G=alpha*12*pi/(Nf*Lambda^2). At adopted Planck anchor the supplied matching equation gives alpha=Nf/(12*pi), rounded 0.40 to1.27 for project counts15 through48. No independently matched Newton constant or GW-deviation calculation."
           }
         ],
         "completeness": "full"
@@ -4458,7 +4463,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 99,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4492,7 +4497,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 100,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4532,7 +4537,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 101,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       },
       "chain_proposed": {
@@ -4572,7 +4577,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 102,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence."
       }
     },
@@ -4602,7 +4607,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 103,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -4618,37 +4623,88 @@
     },
     {
       "section": "discussion",
-      "quote": "the Python layer is \\texttt{src/gravitational\\_waves/}\nwith 69 \\texttt{pytest} cases cross-checking every numeric quoted\nin the abstract and figure caption.",
+      "quote": "the Python layer is \\texttt{src/gravitational\\_waves/}\nwith 81 \\texttt{pytest} cases cross-checking every numeric quoted\nin the abstract and figure caption.",
       "tex_line_start": 415,
       "tex_line_end": 420,
-      "id": "sentence:L1:discussion:d5a03fec",
+      "id": "sentence:L1:discussion:ac7de9a4",
       "raw_id_parts": {
         "paper": "L1",
         "section_slug": "discussion",
-        "quote_hash": "d5a03fec",
+        "quote_hash": "ac7de9a4",
         "hash_algorithm": "sha256_first_8"
       },
-      "quote_normalized": "the python layer is src/gravitational\\_waves/ with 69 pytest cases cross-checking every numeric quoted in the abstract and figure caption.",
+      "quote_normalized": "the python layer is src/gravitational\\_waves/ with 81 pytest cases cross-checking every numeric quoted in the abstract and figure caption.",
       "type": "metaclaim",
       "finding_classes": [],
       "agent_verdict": "PASS",
-      "agent_notes": "Updated69-case manuscript count agrees with current scoped runtime:54 test functions expand to69passing parameterized cases. Actual repaired source and exact rational/Decimal/endpoint-ulp controls support the printed conditional interval, endpoint and deviation arithmetic; source tests no longer mask narrow-width error with default absolute tolerance. Exact real4τ is not reconstructed from rounded floatendpoint subtraction. This is scoped computational backing, not physical matching, native Lean execution or publication acceptance.",
-      "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r2",
+      "agent_notes": "The current manuscript count of 81 cases matches the directly rerun scoped suite. Stable speed evaluation for small positive susceptibility, dtype promotion and public grid controls supplement the previous 69-case interval and deviation repair. Original 69-case evidence and prior census IDs remain historical. This count does not establish physical matching, native Lean execution, full G4 coverage or publication acceptance.",
+      "agent_run_id": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1",
       "gates_invoked": [],
-      "rewrite_of": "sentence:L1:discussion:877f37a5",
+      "rewrite_of": "sentence:L1:discussion:d5a03fec",
       "tombstone": false,
       "bundle_destination": "L1",
       "bundle_section_hint": "discussion",
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 103,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
           "src/gravitational_waves/ligo_constraint_check.py": "c889cee0bb5b2e4faf219d47ce93b811c66d531876e62b96ffabb4d194b3952c",
           "tests/test_gravitational_waves.py": "aed8be6258ddff6f3f5d3f6f1bbc22161efd707c8e9c3153d04b6551bebb9d5f",
           "papers/D3/tables.py": "ac15baa7f0cbf515de7d9df16f67368dc2ae5324577e6e869cfe293d4a0d5f62"
+        },
+        "prior_census_record": {
+          "section": "discussion",
+          "quote": "the Python layer is \\texttt{src/gravitational\\_waves/}\nwith 69 \\texttt{pytest} cases cross-checking every numeric quoted\nin the abstract and figure caption.",
+          "tex_line_start": 415,
+          "tex_line_end": 420,
+          "id": "sentence:L1:discussion:d5a03fec",
+          "raw_id_parts": {
+            "paper": "L1",
+            "section_slug": "discussion",
+            "quote_hash": "d5a03fec",
+            "hash_algorithm": "sha256_first_8"
+          },
+          "quote_normalized": "the python layer is src/gravitational\\_waves/ with 69 pytest cases cross-checking every numeric quoted in the abstract and figure caption.",
+          "type": "metaclaim",
+          "finding_classes": [],
+          "agent_verdict": "PASS",
+          "agent_notes": "Updated69-case manuscript count agrees with current scoped runtime:54 test functions expand to69passing parameterized cases. Actual repaired source and exact rational/Decimal/endpoint-ulp controls support the printed conditional interval, endpoint and deviation arithmetic; source tests no longer mask narrow-width error with default absolute tolerance. Exact real4τ is not reconstructed from rounded floatendpoint subtraction. This is scoped computational backing, not physical matching, native Lean execution or publication acceptance.",
+          "agent_run_id": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r2",
+          "gates_invoked": [],
+          "rewrite_of": "sentence:L1:discussion:877f37a5",
+          "tombstone": false,
+          "bundle_destination": "L1",
+          "bundle_section_hint": "discussion",
+          "lift_action": "Lift-letter",
+          "meta": {
+            "review_unit": 103,
+            "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
+            "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
+            "precision_refresh_source_sha256": {
+              "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
+              "src/gravitational_waves/ligo_constraint_check.py": "c889cee0bb5b2e4faf219d47ce93b811c66d531876e62b96ffabb4d194b3952c",
+              "tests/test_gravitational_waves.py": "aed8be6258ddff6f3f5d3f6f1bbc22161efd707c8e9c3153d04b6551bebb9d5f",
+              "papers/D3/tables.py": "ac15baa7f0cbf515de7d9df16f67368dc2ae5324577e6e869cfe293d4a0d5f62"
+            }
+          },
+          "chain_proposed": {
+            "completeness": "full",
+            "links": [
+              {
+                "kind": "production_run",
+                "target": "L1 precision scoped pytest69cases",
+                "receipt_sha256": "7750d2ddb97f95a2501e0b25e2c65a8b5194a70c062b7d1bedfc28fc54b9e856",
+                "verification_scope": "Reviewer executed tests/test_gravitational_waves.py with projectvenv;69passed0.07s. Exact rational/Decimal and endpoint-ulp controls."
+              }
+            ]
+          }
+        },
+        "speed_refresh_source_sha256": {
+          "src/core/formulas.py": "deaa9898b4463360d26479dd65014ae884d511391df17cbd86fe4b429b7a568e",
+          "tests/test_gravitational_waves.py": "00381658addd9eb76c2eee70ec0bb74a0bbdb633b018bfa845e6f075cd4bb9c7"
         }
       },
       "chain_proposed": {
@@ -4656,9 +4712,9 @@
         "links": [
           {
             "kind": "production_run",
-            "target": "L1 precision scoped pytest69cases",
-            "receipt_sha256": "7750d2ddb97f95a2501e0b25e2c65a8b5194a70c062b7d1bedfc28fc54b9e856",
-            "verification_scope": "Reviewer executed tests/test_gravitational_waves.py with projectvenv;69passed0.07s. Exact rational/Decimal and endpoint-ulp controls."
+            "target": "L1 positive-speed scoped pytest 81 cases",
+            "receipt_sha256": "1632c2e83946ce34429a17a9521b4f6d9bbb6cc26282dfc147b9e7afa727445e",
+            "verification_scope": "Direct prepared-project-Python replay returned 81 passes in 0.07s. This descriptive receipt identifier is not a registered ProductionRun graph node; no graph-resolution or full G4 claim."
           }
         ]
       }
@@ -4691,7 +4747,7 @@
       "lift_action": "Lift-letter",
       "meta": {
         "review_unit": 104,
-        "source_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+        "source_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
         "backing_scope": "Source/statement review; execution explicitly identified in review_evidence.",
         "precision_refresh_source_sha256": {
           "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
@@ -4819,7 +4875,7 @@
         "sentence:L1:formal-setup-and-result:c566aed6",
         "sentence:L1:formal-setup-and-result:2d57174c",
         "sentence:L1:discussion:6d8afeb6",
-        "sentence:L1:discussion:d5a03fec",
+        "sentence:L1:discussion:ac7de9a4",
         "sentence:L1:discussion:31c6d6d6"
       ],
       "gate": "FixPropagation",
@@ -4849,10 +4905,10 @@
     },
     {
       "id": "L1-numeric-test-strength",
-      "summary": "Source repair and69-case runtime accepted in independent finalR2 source review; manuscript case count corrected to69. Exact rational/Decimal/ulp controls replace permissive tiny-width checks. Floatendpoint representability caveat remains explicit.",
+      "summary": "The prior precision finding remains fixed with its 69-case receipt preserved. The current 81-case suite additionally covers the separate positive-speed repair, independently reviewed scalar and grid controls, and unchanged interval checks. Full G4 and physical BUILD acceptance remain separate.",
       "sentences": [
         "sentence:L1:discussion:6d8afeb6",
-        "sentence:L1:discussion:d5a03fec"
+        "sentence:L1:discussion:ac7de9a4"
       ],
       "gate": "ComputationCorrectness",
       "finding_class": "SD",
@@ -4905,7 +4961,7 @@
     },
     {
       "id": "L1-render-source-custody",
-      "summary": "Prior r2 render has existing overfull boxes and blank references; new manuscript differs only by testcensus49→69. Current compile in flight, not claimed inspected here. Native Lean and full publication-run freshness still require their own acceptance.",
+      "summary": "Historical render evidence is retained. The current manuscript changes the test census from 69 to 81; this reviewer has not inspected the new 81-case PDF. ROOT owns current render and full publication-run acceptance.",
       "sentences": [
         "sentence:L1:discussion:31c6d6d6"
       ],
@@ -4964,7 +5020,7 @@
   "review_scope": {
     "packet_pin": "54dd38f4a3d829d25387f49039a43c7b5fac5820",
     "reconciled_head": "c327df13bc9c7900c4b12bf2a1345d5786469949",
-    "manuscript_sha256": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+    "manuscript_sha256": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
     "coverage": "All105 body sentence/display/caption parent units; caption and independent2017 subclaims split into114 content-addressed records. Title/author metadata, bibliography, comments and unrendered declined crossref excluded per persona A.1. Title scope observation retained in non_blocking_followups. No footnotes in reviewed content. Source sentence spans preserved; subclaims share parent sentence span.",
     "excluded_scope": "Not a new complete Paper25 or D3 sentence audit, not full branch/LSP search, native kernel validation, publication acceptance, scientific BUILD closure or human verification.",
     "human_state_preservation": "Only claims_review.json written by this refresh. Existing prose_state.json and audit_log.jsonl are present after ROOT canonical ingestion of the original114-record review; their current hashes are pinned below and remain unchanged by this refresh. Canonical ingest dry-run only; ROOT owns actual ingestion/reconciliation. No human approval fields manufactured.",
@@ -4979,28 +5035,35 @@
     },
     "prior_manuscript_sha256": "84184864b857e69a2786f522f13b38cbefe98f849b6a15afb1b6d79394ddc293",
     "precision_refresh_r2_input_sha256": "f61808db736ea1920ff43c99a968c67d68daaab6a3441754c899db72721a1fd0",
-    "precision_refresh_r2_delta": "ROOT changed only49→69pytestcases in existing manuscript sentence. Exactly one content ID regenerated with rewrite_of pointing to oldID; all other113 IDs and original scientific findings preserved."
+    "precision_refresh_r2_delta": "ROOT changed only49→69pytestcases in existing manuscript sentence. Exactly one content ID regenerated with rewrite_of pointing to oldID; all other113 IDs and original scientific findings preserved.",
+    "speed_refresh_input_sha256": "96119383acb2135807bba80d29a0aacbf2a64aafeac1beb36ae7b3bf9f433fab",
+    "speed_refresh_head": "5eb636bed42aa668d2cfb070d0c9383275e17107",
+    "speed_refresh_delta": "The manuscript changes only the case count from 69 to 81. One content ID is rewritten with its direct predecessor and complete prior census record retained. All 114 records retain coverage and verdicts. Thirty-two inaccurate compound formula targets were reviewed individually and replaced by 31 exact Formula links and two adopted-endpoint Parameter links.",
+    "speed_refresh_human_state_input_sha256": {
+      "papers/L1/prose_state.json": "f3e0464c5745c6dc0fe11558709d2ed9eff7ba0445f00973ae7385ffc1616627",
+      "papers/L1/audit_log.jsonl": "1463f846201722ca8654d9bb817eca077190489ec519adc28ce5ccef40c3d9c4"
+    }
   },
   "review_evidence": {
     "sha256": {
-      "papers/L1/paper_draft.tex": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+      "papers/L1/paper_draft.tex": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
       "papers/L1/figures/fig_c_GW_vs_ligo_constraint.png": "d0eded96aa4d26b940707cce3b99081dd279b5285e345eb91a5eac5c0b81faec",
       "lean/SKEFTHawking/GravitationalWaves.lean": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
       "lean/SKEFTHawking/VestigialSusceptibility.lean": "cf5a4584ad51f44a232c7da2d4fe9300ea14c322a416b2843e7ef3c2032bf721",
       "lean/lean_deps.json": "942279d0b9a4480b6396acd0717a1709a763aeee1a74289bfefbdb41d0664e6d",
       "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464",
-      "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
+      "src/core/formulas.py": "deaa9898b4463360d26479dd65014ae884d511391df17cbd86fe4b429b7a568e",
       "src/core/constants.py": "0efa3ffd37d57cec4a942f922d0717024398d70ec33049f57a5e19a06fc32c15",
       "src/core/provenance.py": "1e929d8e3e0c4603e14e4df3e8bfc1108a71fbf9ace459b9171809f17d20766d",
       "src/core/citations.py": "d0d2720d845ce9fee73bf2ba8b3c3c01b45df41c1212327a5c737c997fb56210",
       "src/core/visualizations.py": "3e9a6f37c6565d5ecc043b81637a3772c9f6059db1480f3890da022369f234b6",
       "src/gravitational_waves/ligo_constraint_check.py": "c889cee0bb5b2e4faf219d47ce93b811c66d531876e62b96ffabb4d194b3952c",
-      "tests/test_gravitational_waves.py": "aed8be6258ddff6f3f5d3f6f1bbc22161efd707c8e9c3153d04b6551bebb9d5f",
+      "tests/test_gravitational_waves.py": "00381658addd9eb76c2eee70ec0bb74a0bbdb633b018bfa845e6f075cd4bb9c7",
       "papers/D3/tables.py": "ac15baa7f0cbf515de7d9df16f67368dc2ae5324577e6e869cfe293d4a0d5f62"
     },
-    "python_test_command": "PYTHONDONTWRITEBYTECODE=1 MPLCONFIGDIR=/tmp/l1-claims-review-mpl <project-venv>/bin/python -m pytest tests/test_gravitational_waves.py -q -p no:cacheprovider",
-    "python_test_result": "69 passed in0.07s at the current uncommitted precision source composition;54 test functions expand to69 cases. Scoped test execution, no native Lean run or physical matching acceptance.",
-    "python_test_receipt_sha256": "7750d2ddb97f95a2501e0b25e2c65a8b5194a70c062b7d1bedfc28fc54b9e856",
+    "python_test_command": "UV_NO_SYNC=1 UV_OFFLINE=1 PYTHONDONTWRITEBYTECODE=1 <prepared-project-venv>/bin/python -B -m pytest tests/test_gravitational_waves.py -q -p no:cacheprovider",
+    "python_test_result": "81 passed in 0.07s in the direct reviewer replay. Scoped module coverage; no native Lean run or full G4 measurement.",
+    "python_test_receipt_sha256": "1632c2e83946ce34429a17a9521b4f6d9bbb6cc26282dfc147b9e7afa727445e",
     "source_theorem_census": {
       "explicit_nonautogenerated": 32,
       "index_nonautogenerated": 32,
@@ -5053,7 +5116,218 @@
       "collected_passing_cases": 69,
       "manuscript_count_caveat": "Corrected manuscript now says69pytestcases; matches current69-case runtime with54 source functions. No other sentence wording changed.",
       "physical_scope": "No metric normalization, microscopic mode, physical frequency matching, originalB3 or full-response acceptance inferred.",
-      "independent_review": "ROOT reports l1_transport finalR2 acceptance: duplicate import removed; overflow documentation ready;69tests plus210unique boundaryfloatcontrol. Delegated report distinguished from direct execution."
+      "independent_review": "ROOT reports l1_transport finalR2 acceptance: duplicate import removed; overflow documentation ready;69tests plus210unique boundaryfloatcontrol. Delegated report distinguished from direct execution.",
+      "historical_scope": "This preserved section describes the prior 69-case precision composition. Its then-current source hashes, execution and pending-render statements remain historical. Current 81-case speed evidence is recorded in speed_refresh."
+    },
+    "speed_refresh": {
+      "prior69_case_runtime": {
+        "python_test_command": "PYTHONDONTWRITEBYTECODE=1 MPLCONFIGDIR=/tmp/l1-claims-review-mpl <project-venv>/bin/python -m pytest tests/test_gravitational_waves.py -q -p no:cacheprovider",
+        "python_test_result": "69 passed in0.07s at the current uncommitted precision source composition;54 test functions expand to69 cases. Scoped test execution, no native Lean run or physical matching acceptance.",
+        "python_test_receipt_sha256": "7750d2ddb97f95a2501e0b25e2c65a8b5194a70c062b7d1bedfc28fc54b9e856",
+        "source_sha256": {
+          "papers/L1/paper_draft.tex": "5ddd74c1faf8d59058a4e36a6c211ba2ba7d33e4ac83013fd5be769dfc2116f2",
+          "papers/L1/figures/fig_c_GW_vs_ligo_constraint.png": "d0eded96aa4d26b940707cce3b99081dd279b5285e345eb91a5eac5c0b81faec",
+          "lean/SKEFTHawking/GravitationalWaves.lean": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
+          "lean/SKEFTHawking/VestigialSusceptibility.lean": "cf5a4584ad51f44a232c7da2d4fe9300ea14c322a416b2843e7ef3c2032bf721",
+          "lean/lean_deps.json": "942279d0b9a4480b6396acd0717a1709a763aeee1a74289bfefbdb41d0664e6d",
+          "lean/lake-manifest.json": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464",
+          "src/core/formulas.py": "27c685823e75bb8a2f7d908846ea0663aa1446ec86cd7552b5e23686a503a0d7",
+          "src/core/constants.py": "0efa3ffd37d57cec4a942f922d0717024398d70ec33049f57a5e19a06fc32c15",
+          "src/core/provenance.py": "1e929d8e3e0c4603e14e4df3e8bfc1108a71fbf9ace459b9171809f17d20766d",
+          "src/core/citations.py": "d0d2720d845ce9fee73bf2ba8b3c3c01b45df41c1212327a5c737c997fb56210",
+          "src/core/visualizations.py": "3e9a6f37c6565d5ecc043b81637a3772c9f6059db1480f3890da022369f234b6",
+          "src/gravitational_waves/ligo_constraint_check.py": "c889cee0bb5b2e4faf219d47ce93b811c66d531876e62b96ffabb4d194b3952c",
+          "tests/test_gravitational_waves.py": "aed8be6258ddff6f3f5d3f6f1bbc22161efd707c8e9c3153d04b6551bebb9d5f",
+          "papers/D3/tables.py": "ac15baa7f0cbf515de7d9df16f67368dc2ae5324577e6e869cfe293d4a0d5f62"
+        }
+      },
+      "census_change": {
+        "old_id": "sentence:L1:discussion:d5a03fec",
+        "new_id": "sentence:L1:discussion:ac7de9a4"
+      },
+      "changed_backing_links": [
+        {
+          "sentence_id": "sentence:L1:abstract:9a3de8fb",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_from_chi_vest"
+        },
+        {
+          "sentence_id": "sentence:L1:abstract:275ad002",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:abstract:600cc132",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:introduction:3ba45b23",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:introduction:64249a15",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:introduction:a07882f6",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:introduction:3f462fe0",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:introduction:ec137388",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:introduction:e17de389",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:3cd70eb8",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:6bb21996",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:b63f73a8",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:aa870922",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:c0a94df1",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:207942fe",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:0b2b6094",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:6cfe0344",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_parameter_targets": [
+            "GW.CHI_VEST_NATURAL_LOWER",
+            "GW.CHI_VEST_NATURAL_UPPER"
+          ]
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:ff36d704",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:9dbf0010",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:928d4e3e",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:9b5a8e88",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:c566aed6",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:2d57174c",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:41d63d4f",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:ea26e7aa",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:90db9920",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:formal-setup-and-result:8a067e2e",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:discussion:c7c68df6",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:discussion:d3026983",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:discussion:443b79a2",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:discussion:175a78b5",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "c_GW_deviation_from_c"
+        },
+        {
+          "sentence_id": "sentence:L1:discussion:7caeb5ce",
+          "old_target": "c_GW_deviation_from_c / exact sqrt preimage and rational width",
+          "new_target": "G_N_emergent"
+        }
+      ],
+      "runtime_receipts_sha256": {
+        "/tmp/l1-speed-red.txt": "4bbe66e9f48db0a7bc2c6fd6af783d5449f6f1b651b1360123d7b21c1f9329e8",
+        "/tmp/l1-speed-green.txt": "498967a0171614a3a71e23a0f11fac2e872fcd55066bd9fcb982763847126dbb",
+        "/tmp/l1_transport_speed_claims81.out": "1632c2e83946ce34429a17a9521b4f6d9bbb6cc26282dfc147b9e7afa727445e",
+        "/tmp/l1_transport_positive_speed_review.py": "4dad09ebe17b26e810316c0b655289a1d05c1e35bbb42259a7417860216a224a",
+        "/tmp/l1_transport_positive_speed_review.out": "4b50fb628b7ce4277362a09603d7a7fc2f726a61a79f211ebf93ff8029defc70"
+      },
+      "source_sha256": {
+        "papers/L1/paper_draft.tex": "eb35e94c682129086757ce1abfe0c5383c6ac7381a51fd98fc48a0c1b75ab922",
+        "src/core/formulas.py": "deaa9898b4463360d26479dd65014ae884d511391df17cbd86fe4b429b7a568e",
+        "tests/test_gravitational_waves.py": "00381658addd9eb76c2eee70ec0bb74a0bbdb633b018bfa845e6f075cd4bb9c7"
+      },
+      "test_functions": 58,
+      "collected_passing_cases": 81,
+      "execution_provenance": "This assigned reviewer directly reran 81 cases in 0.07s with prepared project Python, offline/no-sync settings and cacheprovider disabled. The same reviewer previously executed the independently written Decimal 120-digit scalar and grid controls in 0.000317s. ROOT author logs with 9 failures and 72 passes before repair, and 81 passes after repair, were read separately.",
+      "independent_control_scope": "The smallest positive binary64 value, 1e-300, 1e-18, 1e-16, float16, float32, longdouble, ordinary anchors, 1e308 and the public three-point grid match exact input-ratio Decimal references within one output ulp. Zero, tiny negatives, NaN, infinities, negative c and 0*inf behavior were checked. This host has the same exponent range for longdouble and binary64, so the wider-range control was not executed.",
+      "g4_boundary": "The established G4 reads PaperClaim/GROUNDED_IN and paper registry formulas, rather than these 114 Sentence/BACKED_BY records. L1 lacks the formula registry row; the existing extractor also drops mixed-case formulas. Exact identifiers here repair source references but do not establish complete graph resolution or a G4 pass.",
+      "reviewed_render": "No new 81-case PDF was inspected by this reviewer. Historical 69-case render and byte-identical figure evidence remain in the prior precision evidence. ROOT owns current render acceptance."
     }
   },
   "cross_bundle_findings": [
@@ -5095,6 +5369,6 @@
     "non_reproducing_count": 5,
     "non_reproducing_auto_closed": 0,
     "non_reproducing_candidates": 5,
-    "agent_text": "114 content-addressed current body records; title/author metadata excluded. R2 single census sentence changed49→69and has explicit rewrite_of;69-case runtime and reviewed repaired source support the numerical claims. Original physicalB3/mode/transport, H1FAIL and fix-propagation obligations remain open. No native Lean run, human approval, canonical closure or full publication acceptance."
+    "agent_text": "114 current body records, with one census ID rewritten from 69 to 81 cases and its full prior record retained. Thirty-two compound formula links are repaired using source-specific identifiers. The direct 81-case runtime and independent scalar and grid controls support this computational increment. Original H1 FAIL, physical B3, mode, transport and propagation findings remain open. Graph G4 coverage, native Lean, current PDF and publication acceptance retain separate evidence requirements."
   }
 }
