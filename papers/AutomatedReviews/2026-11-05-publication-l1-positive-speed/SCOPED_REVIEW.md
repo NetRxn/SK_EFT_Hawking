@@ -52,8 +52,29 @@ passes: its scanner treats the local papers namespace imported by
 the pre-existing D3 precision regression as an undeclared third-party
 distribution. That still-open defect is recorded as computation
 coverage finding1.4, with the original failure receipt. The exact
-regression is preserved. Broader scoped verification is still running;
-this record does not claim full-tree qualification.
+regression is preserved. Broader scoped verification terminated with
+exit one:6,783 passed,45 failed,8 skipped and92 deselected in849.19s.
+SCOPED_VERIFICATION.txt preserves the wrapper output. Its fast-suite
+summary omits individual tracebacks; FAST_FAILURE_IDS.json preserves
+the45 identities from the immediately read pytest failure cache.
+No claim that all45 are inherited is made. Classification against the
+exact main base remains required.
+
+The same wrapper also failed architecture_inventory_fresh, bundle
+gates and its unchanged-tree check. ROOT was documenting and
+committing accepted scientific work concurrently; that last failure
+is not proof that the test suite itself introduced the listed changes.
+This run does not certify the final checkpoint unchanged. Future
+qualification must freeze an isolated exact candidate while authoring
+continues independently.
+
+The separate no-memo VALIDATION_READBACK.txt records all output for
+the selected cheap checks. Two of six pass. Architecture inventory
+is stale and names a missing local schema document; paper-corpus
+em-dash, reader-voice and review-command checks also fail. The new
+coverage findings' direct commands are preserved and fail on their
+specified missing requirements; existing malformed review commands
+remain distinct corpus debt. No required check is waived.
 
 The existing closure writer recorded
 `review:2026-11-05-publication-l1-positive-speed:L1:1.1`

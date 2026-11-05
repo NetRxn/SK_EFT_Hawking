@@ -60,6 +60,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   Finding1.4 separately records the dependency scanner's false
   classification of the local papers namespace used by the exact
   D3 regression; preserve that regression's precision during repair.
+  The broader scoped run is red:6,783 passed,45 failed,8 skipped
+  and92 deselected. Its [record and failure identities](../../../papers/AutomatedReviews/2026-11-05-publication-l1-positive-speed/SCOPED_REVIEW.md)
+  preserve full qualification debt. Next classify failures against
+  the exact main base and fix accepted blockers; qualify a frozen
+  candidate independently of ongoing authoring. Main promotion and
+  final human approval remain open.
 
 - **L1 lead.** The [finite tensor and source controls](L1_OFFDIAGONAL_HESSIAN.md) now contain the independently reproduced complete 6,451-word pure-g₂ normalization and the normalized diagonal plus response for real nonzero g₂. The [positive transfer and staggered-mode tests](L1_RETARDED_SPECTRAL_INTERFACE.md) rule out direct thermal matching of the literal site-resolved channel. Its staggered projection passes the half-period sign check. The equal-time contraction is complete, including the independently checked 40-word unsymmetrized control. The fixed-spatial-cutoff Gaussian comparison now supplies an independently verified quadratic contact and spectral band. The curvature-dressed uniform operator now has an independently reproduced positive half-period scalar in the four-site pure-g₂ regulator. The local equal-time calculation separates the quadratic contact and passes the scalar two-time test, with independent reproduction complete. Next derive whether a physical background variation gives this operator and contact, justify which observables the physical algebra retains, and verify positive-state and time-dependent matching before retarded extraction. B3 and publication acceptance remain open.
   The [selected 16-site normalization motif](L1_RETARDED_SPECTRAL_INTERFACE.md)
