@@ -8463,3 +8463,62 @@ hashed receipt list, and deduplicated equal overlapping controls.
 The 146 accepted orbits cover 9,204 distinct signed words and
 sum to `-432109557732318904053/2361183241434822606848` with zero
 imaginary part.
+
+### Complete selected dominant and minority contraction
+
+Independent review verified the final [(19,19) receipt](l1_gamma_19_19.out.txt),
+including its 192 ordered selectors from slices 0, 1 and 3,
+12 exact tranches, and the signed slice-1-to-slice-2 witness.
+The component subtotal is
+`-274396016602155609/4722366482869645213696`.
+Its orbit has multiplicity 3 and six words. Its signed
+counterpart (23,19) has the same value and multiplicity, supplying
+the last twelve disjoint words. The pair contributes
+`-823188049806466827/2361183241434822606848`.
+All imaginary parts vanish and no caps were hit.
+The full receipt SHA-256 is
+`2f276294cfda1f6de015e5c28ddbeeb3d2ba185e077f5e9794a113f881109349`.
+
+The independent raw-receipt reconstruction and the lead's replay
+both cover all 148 dominant orbits and 9,216 signed words.
+They give the dominant subtotal
+`-845571769105713615/4611686018427387904`.
+The complete minority contraction above uses the same source
+ordering, frame planes, Haar orientation and divisor. The signed
+primitive scale is restored exactly once in each calculation.
+Its 576 words are disjoint from the dominant population.
+Thus all 9,792 nonempty B occurrences for this selected ordered
+G22 contribution give
+`1664779014112370625/4611686018427387904`,
+with zero imaginary part. No extra source-pair or factorial
+multiplicity is inserted between these two sums. Full action
+and source summation, the common geometry normalization, and
+the physical retarded response remain separate constructions.
+
+### Full modular verification of the selected overlap motif
+
+The [complete receipt archive](l1_modular_overlap_complete_receipts.jsonl)
+contains 97 terminal envelopes with their original filenames
+and file SHA-256 hashes. Each original envelope is recovered by
+serializing its `receipt` field with sorted keys and compact
+JSON separators, followed by one newline. The archive SHA-256 is
+`0dbff506efb30c6718253f29027dfa4f07ace852569ac0ea1fd67bf83c430b1d`.
+The [canonical reducer output](l1_modular_overlap_complete_reduction.json)
+records every shard range and hash. The coverage digest is
+`fc4f7dca24cabf2c791d8f0bb94e8ff467721196c1481ff14c454d4396675f7c`.
+
+Independent review and the lead's canonical reducer run verified
+unique contiguous coverage of [0,35084), 589,194 orbit weights
+and 94,748,063,904 weighted candidates. The receipts contain 770
+joined rows, one explicitly joined zero control and 34,313
+parity-excluded zero rows. Every raw residue agrees with its
+hash-verified archived exact row modulo 65,537. The full raw
+residue is 10,618, and the normalized motif residue is 38,375.
+The independent reviewer checked the curvature, exterior and
+upper-sheet scales and retained 238 negative exact rows.
+
+This is rowwise arithmetic and receipt-custody verification of
+the selected normalization motif. The review did not freshly
+rerun all 770 contractions. Full common normalization, complete
+source response and physical susceptibility acceptance remain
+open.

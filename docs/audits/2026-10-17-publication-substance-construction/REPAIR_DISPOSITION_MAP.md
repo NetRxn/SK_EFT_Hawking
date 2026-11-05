@@ -239,14 +239,18 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The [complete minority contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-minority-contraction)
   covers 288 pairs and 34 orbits. The weighted real subtotal is
   `156896923951130265/288230376151711744`. Dominant coverage in the
-  [latest verified contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-chirality-pairs-for-1916-816-113-and-1119)
-  is 146 of 148 orbits and 9,204 of 9,216 source words. Both selector
+  [latest verified contraction](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-selected-dominant-and-minority-contraction)
+  is complete at 148 of 148 orbits and 9,216 of 9,216 source words.
+  Together with the disjoint minority population, the selected
+  ordered G22 coefficient is `1664779014112370625/4611686018427387904`.
+  The [full modular overlap verification](L1_RETARDED_SPECTRAL_INTERFACE.md#full-modular-verification-of-the-selected-overlap-motif)
+  also covers every selected motif row. Both selector
   rosters are pinned in the repository runner. Its independently
   checked symmetry mode uses complete gamma slices and exact signed
   stabilizer witnesses. The first new weighted representative
-  `(3,0)` used 128 direct selectors. Continue with disjoint
-  representatives and verify raw receipt totals and signed membership
-  before weighting each orbit. The shared-Q and left-cache benchmarks
+  `(3,0)` used 128 direct selectors. Continue with the full action and source sum and common
+  geometry normalization. Preserve the checked raw totals and signed
+  membership when combining selected coefficients. The shared-Q and left-cache benchmarks
   retain the direct transfer route for the current workload.
   The [pure-g₂ one-point cancellation](L1_PURE_G2_ONE_POINT.md)
   holds for the literal metric and shear sources on the full common
