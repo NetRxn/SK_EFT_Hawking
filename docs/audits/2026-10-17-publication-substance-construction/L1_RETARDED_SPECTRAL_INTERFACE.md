@@ -8629,3 +8629,32 @@ The fully peeled 86-word population is a separate contraction.
 The other supported geometry classes and the remaining
 residual-core words are still required for the complete k4
 coefficient.
+
+### Complete fully peeled four-deviation population
+
+The [86-word receipt archive](l1_k4_peeled86_receipts.jsonl)
+and [independent verification](l1_k4_peeled86_verification.json)
+cover all fully peeled words. Every declared unique word has
+an exit-zero terminal, matching census row, exact reduced
+coefficient and integral reconstructed numerator under its
+audited divisor. Maximum peak is 3,952 rows. No cap was hit.
+
+| Ordered source axes | Words | Exact subtotal |
+|---|---:|---|
+| (2,2) | 54 | `496437586062832211319/68719476736` |
+| (2,3) | 32 | `2863352227266063230535/4398046511104` |
+
+This symmetry-closed population has restricted shear
+`2(same−mixed) = 28908653280755198293881/2199023255552`.
+All 27 same-axis translation pairs and all 16 mixed
+translation/axis-exchange pairs agree exactly. The independently
+reproduced double-shared word-0 control remains part of the
+acceptance evidence. The receipt bundle digest is
+`bb3c432d527e0ef539b378fab3f76455b72711712c3e577ccc5abbecce55792b`.
+
+Together with the separate 42-word class, 128 of the 272
+four-deviation words are computed. The other 48 words already
+supported by the original geometry kernel and 96 words needing
+other core constructions remain open. The complete action/source
+ensemble, common partition coefficient and physical response
+matching remain required.

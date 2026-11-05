@@ -260,8 +260,11 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   [fully peeled evaluator](L1_RETARDED_SPECTRAL_INTERFACE.md#fully-peeled-four-deviation-source-words)
   now supplies a separately reviewed route for 86 additional
   census entries, including two shared source/action edges.
-  Its representative controls pass. Complete coefficient sums and
-  the other 96 residual-core words require further construction. The shared-Q and left-cache benchmarks
+  Its [complete86-word population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-fully-peeled-four-deviation-population)
+  has independently verified same-axis and mixed-axis subtotals.
+  In total128 of272 four-deviation words are computed. The next
+  replay covers the other48 words supported by the original
+  geometry kernel;96 residual-core words need further construction. The shared-Q and left-cache benchmarks
   retain the direct transfer route for the current workload.
   The [pure-g₂ one-point cancellation](L1_PURE_G2_ONE_POINT.md)
   holds for the literal metric and shear sources on the full common
