@@ -181,3 +181,14 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
   of §2.1. The ADW and nozzle laws, physical entropy-current
   construction, authoritative build and publication propagation
   remain open.
+
+### Schwarzschild first-law manuscript propagation
+
+The mechanics paragraph now states the proved fixed-coupling
+Schwarzschild law and the varying-coupling control, including
+the geometric-mass convention and the differentiability and
+positivity assumptions. Independent source review checked the
+identities and requested explicit varying-coupling hypotheses,
+which are included in the final four-page render. The emergent
+profile match, acoustic energy balance, and physical entropy
+current remain open.

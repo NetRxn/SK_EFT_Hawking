@@ -218,10 +218,22 @@ separate construction.
   \label{fig:regime}
 \end{figure}
 
-Two of the four laws of black-hole mechanics enter the development, and
-neither in full. The first-law slot fixes the positivity $0 < \GNem$ that
-the coupling $1/(8\pi\GNem)$ requires, together with the response identity
-above; the differential first law itself is not formalized. The second-law
+The mechanics slots give partial statements of the first and second laws.
+The first-law slot fixes the positivity $0 < \GNem$ required by the
+coupling $1/(8\pi\GNem)$ and carries the response identity above.
+Separately, the exact Schwarzschild family satisfies a differential first
+law. For a differentiable physical mass $M$ with $M>0$ at the point of
+evaluation, fixed $G>0$, and geometric mass $m=GM$, the area
+$A=16\pi m^2$ and surface gravity $\kappa=1/(4m)$ give
+$dM=\kappa\,dA/(8\pi G)$
+(\texttt{schwarzschild\_fixed\_G\_firstLaw}).
+If $G$ is instead positive and differentiable along the same algebraic
+family, the area term equals $dM+M\,dG/G$
+(\texttt{schwarzschild\_varying\_G\_area\_control}).
+Applying the fixed-$G$ identity to the classified emergent branch requires
+matching its area and surface gravity to these profiles. A differential
+first law for the acoustic branch requires a separate energy balance.
+The second-law
 slot records the Glorioso--Liu conclusion, that the entropy-current
 divergence is non-negative, as a hypothesis rather than as a consequence,
 because deriving it needs the Schwinger--Keldysh effective
