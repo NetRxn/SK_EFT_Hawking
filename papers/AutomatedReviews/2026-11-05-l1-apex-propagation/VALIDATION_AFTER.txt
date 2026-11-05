@@ -1,0 +1,41 @@
+
+══════════════════════════════════════════════════════════════════════
+  [31m✗ FAIL[0m  bundle_reviewer_stage_ordering: No bundle records a Stage-13 verdict before Stages 9 and 10 are green
+══════════════════════════════════════════════════════════════════════
+  ✗ summary  —  21 bundle(s) checked for reviewer-stage ordering, 3 violation(s)
+  ✗ D6  —  stage10_status='redrafted' is not a declared status (green, not_started, pending, pending-redo, red, skeleton, yellow) — an unrecognised value cannot be judged 'not green', so it is a finding, not a shrug
+  ✗ D8  —  stage10_status='redrafted-2026-08-15' is not a declared status (green, not_started, pending, pending-redo, red, skeleton, yellow) — an unrecognised value cannot be judged 'not green', so it is a finding, not a shrug
+  ✗ D10  —  stage10_status='redrafted-2026-08-17' is not a declared status (green, not_started, pending, pending-redo, red, skeleton, yellow) — an unrecognised value cannot be judged 'not green', so it is a finding, not a shrug
+
+══════════════════════════════════════════════════════════════════════
+  [31m✗ FAIL[0m  bundle_lean_module_coverage: Lean modules a bundle registers as contributing are reached by its draft, by module name or by citing their theorems (ratcheted)
+══════════════════════════════════════════════════════════════════════
+  ✗ ratchet  —  185 registered-but-absent module(s) across 18 bundle(s) (441 net-declared after 3 deregistration(s)); ceiling 147 — REGISTERED SUBSTRATE DRIFTED FURTHER FROM THE PUBLISHED CLAIM. Cite the module, or DEREGISTER it with a rationale (`bundle_append.py --deregister-lean-modules`) if the draft genuinely no longer rests on it; do not widen the ambiguous-basename list, and do not keep a citation alive only to hold this number down
+  [33m⚠[0m D8  —  33 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. CliffordCCZSU8HeadlineCascadeFinal, CliffordCCZSU8LiteralGeneratingSet, CliffordCCZSU8LiteralHeadline)
+  [33m⚠[0m D3  —  27 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. APSEta.ADWHorizon, APSEta.BECAcoustic, APSEta.He3A)
+  [33m⚠[0m D1  —  26 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. CrooksAnalogHawking.HorizonDetailedBalance, DispersiveCorrection, DissipativeCorrection)
+  [33m⚠[0m D4  —  24 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. ETH.ConcreteWitness, ETH.Predicates, ETH.RefutationTableau)
+  [33m⚠[0m D9  —  16 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. BellNegativity, DistillationRateBound, EndToEnd)
+  [33m⚠[0m I1  —  15 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. APSEta.He3A, APSEta.Predicate, APSEta.RegimePartition)
+  [33m⚠[0m D2  —  13 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. APSEta.Predicate, APSEta.RegimePartition, APSEta.SymTFTBridge)
+  [33m⚠[0m D5  —  8 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. BBNUnified, CosmologicalConstantEmergent, EquivalencePrincipleClassification)
+  [33m⚠[0m E1  —  7 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. DispersionAndPolariton, GrapheneHawking, KerrSchild.PolaritonCrossBridge)
+  [33m⚠[0m I2  —  5 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. SymTFTAudit.DeligneTensor, SymTFTAudit.DrinfeldCenter, SymTFTAudit.FreeKLinearCategory)
+  [33m⚠[0m L3  —  4 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. EntropicGravityDarkEnergy, GloriosoLiu.Axioms, GloriosoLiu.SecondOrderProjection)
+  [33m⚠[0m L2  —  3 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. ModularGeneration, SteenrodA1, Z16Classification)
+  [33m⚠[0m L1  —  3 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. KerrSchild.PetrovD, KerrSchild.PolaritonCrossBridge, KerrSchild.SingleCopy)
+  [33m⚠[0m D12  —  1 of the modules it registers are reached by its draft neither by name nor by citing their theorems (e.g. Control.BanachAveraging)
+  [33m⚠[0m unbuilt  —  25 of those, across 6 bundle(s), resolve to NO module in the Lean build and so can never be repaid by citing them — they are registrations of substrate that was planned and not built (D1: 12; D3: 2; D5: 4; E1: 2; I1: 4; L2: 1). Repay by removing the registration, not by writing prose about them (TODO-D50)
+  [33m⚠[0m deregistered  —  3 module(s) across 1 bundle(s) are recorded as DEREGISTERED — a draft that stopped resting on them, declared through `bundle_append.py --deregister-lean-modules` with a rationale, and excluded from the absence ledger (L2: Schellekens.Chain, Schellekens.HolomorphicVOAc24, Schellekens.NiemeierLattice)
+
+══════════════════════════════════════════════════════════════════════
+  Overall: 0/2 checks passed (16 warnings)
+  [31mSOME CHECKS FAILED[0m
+
+  [32m✓ SUBSTRATE: clean[0m — no Lean/Python-side failure
+  [33m● PAPER CORPUS (2):[0m bundle_lean_module_coverage, bundle_reviewer_stage_ordering
+    These concern the paper corpus, not the Lean/Python substrate. A Lean-only wave
+    cannot have caused them — see docs/architecture/VALIDATION_GATE_TOPOLOGY.md §2.
+══════════════════════════════════════════════════════════════════════
+
+  Completed in 0.5s

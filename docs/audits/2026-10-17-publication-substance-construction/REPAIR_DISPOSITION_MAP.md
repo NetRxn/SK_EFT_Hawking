@@ -34,6 +34,21 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 apex description propagation and remaining source documentation.**
+  Independent audit resolves all14 declared apexes in actual source and existing
+  proof records, correcting nine claim descriptions without altering proofs,
+  declaration identities/dates, stage/human fields or original scientific scope.
+  [Current evidence and residual assignment](../../../papers/AutomatedReviews/2026-11-05-l1-apex-propagation/SCOPE.md)
+  distinguish the corrected metadata from the aggregate Lean independence
+  docstring, which remains OPEN and ROOT-owned. Next reconcile controlled
+  candidate validation, apply the exact proposed comment correction without
+  changing the proof API, then obtain independent verification and required
+  native/project qualification before closure. Peer primary/slot history stays
+  preserved; no alternative native route or new infrastructure is authorized.
+  Ordinary manuscript/readiness work continues in parallel. This does not alter
+  the lead priority, original B3/tensor/matter/transport acceptance or full prose BLOCK.
+
+
 - **Accepted next L1 deeper construction assignment.** Executor accepted ownership
   of the full tensor leading nonzero-g1 collective-body coefficient qprime and
   its source tangent under the original closed action, prospectively fixed

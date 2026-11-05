@@ -232,3 +232,20 @@ compile/test receipts and full prose instruction are in
 Canonical claim intake and focused finding closure are recorded separately
 through their existing writers. No full-stage, current broad-suite, main or
 human publication acceptance follows; original scientific BUILD remains open.
+
+
+## 2026-11-05 — Exact apex-description propagation
+
+Independent source/existing-registry audit of all14 apexes corrects nine claim
+strings while retaining every name, declared date, stage, human field, historical
+record and other metadata byte. Falsifiers are nonexclusive, the biconditional
+has its actual nonnegative/fixed-tolerance domain, the c-free endpoint result is
+distinguished from its stronger real c≠0 relative-deviation companion, and the
+width theorem retains its actual strict10^14 comparison. No stronger proof is
+weakened or treated as absent. Manuscript/PDF/catalog/audit and Lean source are
+unchanged. The separate aggregate Lean independence docstring remains an
+explicit ROOT-owned OPEN propagation task, with proposed exact correction and
+controlled validation requirement. Evidence and disposition are in
+`papers/AutomatedReviews/2026-11-05-l1-apex-propagation/`. Existing module-coverage
+and stage-order checks remain0/2 before and after, with identical corpus results;
+no native, full-stage, main or publication acceptance is inferred.
