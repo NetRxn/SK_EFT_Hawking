@@ -6407,3 +6407,32 @@ all imaginary subtotals are zero.
 The accepted union `[0,53)` covers 848 ordered leaves and gives
 `−454337460122811111/9444732965739290427392` with zero imaginary
 part. The final 19 prefixes of the pair remain due.
+
+**Complete dominant-pair contraction.** The final five shards
+cover all 304 remaining leaves exactly, with no caps.
+
+| Prefix range | Exact real subtotal | Raw JSONL SHA-256 |
+|---|---:|---|
+| `[53,57)` | `85486870439155395/18889465931478580854784` | `dc7e969cc19bf9a780872317dab1078d9c1d139eef93aa924eec8f22a2fb501a` |
+| `[57,61)` | `−91465338867385203/18889465931478580854784` | `56c4c28c225b7b792e12c6bbd5a471d1076bd86ac3c5843a07418d16152ce0ea` |
+| `[61,65)` | `−373654276764363/2361183241434822606848` | `cd8596bdd139345bd1f5154c70a30c81671f30ec0dd071f8dea7acd0b7b5baa3` |
+| `[65,69)` | `−88476104653270299/18889465931478580854784` | `b897362d9a91d4e57b48c45a570868acb926ef03a4900c8b45c86904f532db2e` |
+| `[69,72)` | `−91465338867385203/18889465931478580854784` | `7262e67520f24cd3551b282a6bdfc274cc9bced102ddc6b9c2c2b7a66c229506` |
+
+Independent review matched the complete scratch union to the
+pinned roster digest. There are 816 zero, 264 negative and
+72 positive leaves. The combined contribution of indices 4,776
+and 17,672 is `−274396016602155609/4722366482869645213696`
+with zero imaginary part. This is a joint contribution to the
+selected word sum. It does not separate the two tuple values.
+
+The independently reviewed [repository runner](l1_unpaired_A_dominant_pair.py)
+regenerates both B maps by direct and factored evaluation,
+checks their exact and primitive hashes and opposite scales,
+and pins the projected roster. The repository run `0 1`
+matched all 16 scratch leaf keys, raw values and pair counts.
+The source SHA-256 is
+`3a35f3bd94039873da8bcc3be1c77b2b9437f3b3c3616e57965349735559ecc2`
+and its prefix-0 stdout SHA-256 is
+`35c8bc6443586220c206b3ce0e237ab9520008e881ff09faf13f4a8200d605ef`.
+The full exact total above is from the reviewed scratch union.

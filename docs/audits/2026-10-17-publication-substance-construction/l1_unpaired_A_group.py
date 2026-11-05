@@ -156,8 +156,8 @@ def site11_cut(factors):
     return incident, scalar, rest
 
 
-def prefix_roster(incident, scalar, rest):
-    """Exclude unsupported outer keys using paired site-2/9/11 bytes."""
+def projected_outer_keys(incident, scalar, rest):
+    """Return the candidate and necessary-support outer key sets."""
     left, e33, e91 = sorted(incident, key=lambda f: -f[2].get(11, 0))
     if 3 not in e33[2]:
         e33, e91 = e91, e33
@@ -220,6 +220,12 @@ def prefix_roster(incident, scalar, rest):
                     all_keys.add(block)
                     if any(byte(m, 11) in possible for m in trows):
                         projected.add(block)
+    return all_keys, projected
+
+
+def prefix_roster(incident, scalar, rest):
+    """Pin the projected roster for the original two-word control."""
+    all_keys, projected = projected_outer_keys(incident, scalar, rest)
     digest = sha256(repr(tuple(sorted(projected))).encode()).hexdigest()
     assert digest == "cfeec1137c5b5417171a9e01c263d9a498430927f494478b86b33c1319e8d406"
     counts = Counter(key[:4] for key in projected)
