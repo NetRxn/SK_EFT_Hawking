@@ -7619,3 +7619,29 @@ imaginary part and no caps.
 Their 90 and 27 signed source words are mutually disjoint and
 disjoint from all seven previously accepted orbits. The verified
 dominant coverage is now nine of 148 orbits and 603 source words.
+
+### Two pinned rosters for the dominant representatives
+
+An independently reviewed census regenerated all 148 representative
+rosters in one immutable preparation. Each has four gamma slices
+of 64 selectors. The original roster covers 108 representatives,
+1,600 components and 6,144 signed source words. Blocks 16, 19, 20,
+and 23 use the second roster, covering 40 representatives,
+480 components and 3,072 signed source words. The census receipt
+SHA-256 is
+`1e0f21c8c1e0656bfcb21dd5e0b25e967f0a698f43b110feb241be223892d042`.
+
+The direct replay of `(20,8)` completed all 256 selectors under
+the second roster and recovered
+`-274396016602155609/4722366482869645213696` with zero imaginary
+part. This equals the independently accepted two-word subtotal
+from component `(65,13)` in the same orbit. The cross-check adds
+no duplicate contribution. The full receipt SHA-256 is
+`930d217f73c945f4217fdd4ca81366c50cc7be9d2631cdf39ca3514c9c207ff7`.
+
+The repository runner selects the expected digest from the pinned
+representative's block and checks the exact regenerated roster
+before emitting results. One shared preparation tested selector 0
+from `(8,9)` on the original roster and `(20,8)` on the second.
+The control SHA-256 is
+`c5bea6490c54581c1fa8fe8bfb535f26c2ebf30727e85ec6a6c8efb3c4622d0d`.

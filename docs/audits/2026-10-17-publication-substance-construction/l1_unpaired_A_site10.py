@@ -51,6 +51,10 @@ ORBIT_MANIFEST_DIGEST = (
 COMPONENT_MANIFEST_DIGEST = (
     "eebf286061137a1354f831fae29ad20223bf74ce43f22aaa90e15a98b5031e75"
 )
+SECOND_ROSTER_DIGEST = (
+    "ab0c93745e811a0ff1620599953c5d3daa874b6c43e8937e6b385df11ec6e9f1"
+)
+SECOND_ROSTER_BLOCKS = frozenset({16, 19, 20, 23})
 TARGET = gkey(1, 1)
 DUMMY = qkey((15, 3))
 
@@ -317,7 +321,7 @@ def assemble_component(selected, factors, common):
     return out
 
 
-def selector_roster(factors):
+def selector_roster(factors, expected_digest=ROSTER_DIGEST):
     domains = [
         {key[keys.index(TARGET)] for key in rows}
         for keys, rows, _ in factors
@@ -373,7 +377,7 @@ def selector_roster(factors):
     assert len({values for _, _, values in roster}) == 256
     assert (
         sha256(json.dumps(roster, separators=(",", ":")).encode()).hexdigest()
-        == ROSTER_DIGEST
+        == expected_digest
     )
     return roster, cuts
 
@@ -477,18 +481,27 @@ def main():
         for key in requested:
             component_start = monotonic()
             signal.alarm(120)
-            print("representative", key, "roster", ROSTER_DIGEST, flush=True)
-            roster, cuts = selector_roster(
-                assemble_component(selected[key], factors, common)
+            roster_digest = (
+                SECOND_ROSTER_DIGEST
+                if key[0] in SECOND_ROSTER_BLOCKS
+                else ROSTER_DIGEST
             )
+            roster, cuts = selector_roster(
+                assemble_component(selected[key], factors, common), roster_digest
+            )
+            print("representative", key, "roster", roster_digest, flush=True)
             if args.gamma_slice is None:
                 signal.alarm(0)
                 for low in range(0, 256, 16):
                     signal.alarm(120)
-                    replay_range(low, low + 16, roster, cuts, monotonic())
+                    replay_range(
+                        low, low + 16, roster, cuts, monotonic(), roster_digest
+                    )
                     signal.alarm(0)
             else:
-                replay_range(args.start, args.stop, roster, cuts, component_start)
+                replay_range(
+                    args.start, args.stop, roster, cuts, component_start, roster_digest
+                )
             assert digest_rows((factors, common)) == prepared_digest
             signal.alarm(0)
             print(
@@ -496,7 +509,7 @@ def main():
                 key,
                 args.start,
                 args.stop,
-                ROSTER_DIGEST,
+                roster_digest,
                 flush=True,
             )
     else:
@@ -508,7 +521,7 @@ def main():
         signal.alarm(0)
 
 
-def replay_range(low, high, roster, cuts, start):
+def replay_range(low, high, roster, cuts, start, roster_digest=ROSTER_DIGEST):
     batch = [0, 0]
     for index in range(low, high):
         tick = monotonic()
@@ -540,7 +553,7 @@ def replay_range(low, high, roster, cuts, start):
         low,
         high,
         "roster",
-        ROSTER_DIGEST,
+        roster_digest,
         "raw",
         batch,
         "scaled",
