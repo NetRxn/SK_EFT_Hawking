@@ -192,3 +192,15 @@ identities and requested explicit varying-coupling hypotheses,
 which are included in the final four-page render. The emergent
 profile match, acoustic energy balance, and physical entropy
 current remain open.
+
+### Spherical exterior uniqueness under the reduced vacuum equation
+
+The ExactSolutions construction proves constancy of the radial mass
+function on the connected exterior. A prescribed asymptotic mass tail
+fixes the unique lapse. On a regular chart containing its zero, the
+construction gives the Schwarzschild area profile and the half-lapse
+slope. Independent review accepted those statements and their domain.
+The full modified file elaborated against local compiled imports,
+and the three new declarations reported only the standard Lean axioms.
+The ADW action derivation of the equation and tail, the geometric
+Killing-horizon calculation, and authoritative validation remain open.

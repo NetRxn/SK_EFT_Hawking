@@ -447,6 +447,93 @@ theorem schwarzschild_varying_G_area_control
   field_simp [ne_of_gt hG]
   ring
 
+section SphericalExterior
+
+open Filter Set
+open scoped Topology
+
+/-- The reduced spherical vacuum ODE makes the radial mass function constant. -/
+theorem spherical_massFunction_eq_at_radius
+    (F : ℝ → ℝ) {a r₀ : ℝ} (hr₀ : a < r₀)
+    (hF : ∀ r > a, DifferentiableAt ℝ F r)
+    (hVac : ∀ r > a, r * deriv F r + F r - 1 = 0) :
+    EqOn (fun r ↦ r * (1 - F r)) (fun _ ↦ r₀ * (1 - F r₀)) (Ioi a) := by
+  have hMass (r : ℝ) (hr : a < r) :
+      HasDerivAt (fun s ↦ s * (1 - F s)) 0 r := by
+    have hsub := (hasDerivAt_const r (1 : ℝ)).sub (hF r hr).hasDerivAt
+    have hzero : 1 * (1 - F r) + r * (0 - deriv F r) = 0 := by
+      linarith [hVac r hr]
+    rw [← hzero]
+    exact (hasDerivAt_id' (x := r)).fun_mul hsub
+  refine isOpen_Ioi.eqOn_of_deriv_eq (convex_Ioi a).isPreconnected ?_ ?_ ?_ hr₀ rfl
+  · intro r hr
+    exact (hMass r hr).differentiableAt.differentiableWithinAt
+  · exact differentiableOn_const _
+  · intro r hr
+    exact (hMass r hr).deriv.trans
+      (hasDerivAt_const r (r₀ * (1 - F r₀))).deriv.symm
+
+/-- The weak-field normalization fixes the unique spherical lapse on the exterior. -/
+theorem spherical_normalized_lapse
+    (F : ℝ → ℝ) {a C : ℝ} (ha : 0 ≤ a)
+    (hF : ∀ r > a, DifferentiableAt ℝ F r)
+    (hVac : ∀ r > a, r * deriv F r + F r - 1 = 0)
+    (hTail : Tendsto (fun r ↦ r * (1 - F r)) atTop (𝓝 C)) :
+    ∀ r > a, F r = 1 - C / r := by
+  let r₀ : ℝ := a + 1
+  have hr₀ : a < r₀ := by dsimp [r₀]; linarith
+  have hconst := spherical_massFunction_eq_at_radius F hr₀ hF hVac
+  have hevent :
+      (fun r ↦ r * (1 - F r)) =ᶠ[atTop] (fun _ ↦ r₀ * (1 - F r₀)) :=
+    (eventually_gt_atTop a).mono fun r hr ↦ hconst hr
+  have hC : C = r₀ * (1 - F r₀) :=
+    tendsto_nhds_unique (hTail.congr' hevent) tendsto_const_nhds
+  intro r hr
+  have hrne : r ≠ 0 := ne_of_gt (lt_of_le_of_lt ha hr)
+  have hmass : r * (1 - F r) = C := (hconst hr).trans hC.symm
+  have hdiv : C / r = 1 - F r := (div_eq_iff hrne).2 (by
+    simpa only [mul_comm r] using hmass.symm)
+  rw [hdiv]
+  ring
+
+/-- With the normalized ingoing chart conventions, the unique zero gives the
+Schwarzschild sphere area and half-lapse-slope profile. The radial interval
+must contain the candidate horizon. -/
+theorem spherical_normalized_horizon_profiles
+    (F : ℝ → ℝ) {a m : ℝ} (ha : 0 ≤ a) (hm : 0 < m) (hinside : a < 2 * m)
+    (hF : ∀ r > a, DifferentiableAt ℝ F r)
+    (hVac : ∀ r > a, r * deriv F r + F r - 1 = 0)
+    (hTail : Tendsto (fun r ↦ r * (1 - F r)) atTop (𝓝 (2 * m))) :
+    (∀ r > a, F r = 0 ↔ r = schwarzschildHorizonRadius m) ∧
+    4 * Real.pi * (2 * m) ^ 2 = schwarzschildArea m ∧
+    deriv F (2 * m) / 2 = schwarzschildKappa m := by
+  have hFexact := spherical_normalized_lapse F ha hF hVac hTail
+  have hzero (r : ℝ) (hr : a < r) :
+      F r = 0 ↔ r = schwarzschildHorizonRadius m := by
+    have hrne : r ≠ 0 := ne_of_gt (lt_of_le_of_lt ha hr)
+    unfold schwarzschildHorizonRadius
+    rw [hFexact r hr]
+    constructor
+    · intro hz
+      have hq : 2 * m / r = 1 := by linarith
+      simpa using ((div_eq_iff hrne).1 hq).symm
+    · rintro rfl
+      simp [hrne]
+  refine ⟨hzero, rfl, ?_⟩
+  have hz : F (2 * m) = 0 := (hzero (2 * m) hinside).2 rfl
+  have hmne : m ≠ 0 := ne_of_gt hm
+  have h2m : (2 : ℝ) * m ≠ 0 := mul_ne_zero (by norm_num) hmne
+  have hd : deriv F (2 * m) = 1 / (2 * m) := (eq_div_iff h2m).2 (by
+    have hODE := hVac (2 * m) hinside
+    rw [hz] at hODE
+    nlinarith)
+  rw [hd]
+  unfold schwarzschildKappa
+  field_simp [hmne]
+  ring
+
+end SphericalExterior
+
 /--
 **Schwarzschild Bekenstein-Hawking entropy: `S_BH = 4π M²`.**
 Substantive named identity tying the `schwarzschildBHEntropy`
