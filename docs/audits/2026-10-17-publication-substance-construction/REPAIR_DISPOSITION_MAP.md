@@ -34,6 +34,15 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **Current canonical portfolio measurement.** The existing graph producer
+  remeasures all21bundles/231gates on clean `425324077`:159passed,25blocked,
+  28open,19needs-recheck. No state changes versusAF255 and no newly green
+  bundle. [All exact payloads and independent archive review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CURRENT_425324_GATE_READBACK.md)
+  preserve static/vacuous coverage limits, source binding and the whole
+  measured graph. Five concrete scoped closures and current124-unit claim
+  intake are progress outside state transitions; they are not scientific
+  BUILD discharge or main/publication acceptance.
+
 - **L1 current claims and figure propagation.** The current canonical catalog
   has124 reviewed manuscript units, all114 predecessor records reconciled,
   four retained blocker identities and49 supersession candidates with zero
@@ -47,8 +56,13 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   required physical chain cannot be replaced by assumed-law interval algebra.
   Next ROOT repairs remaining source mathematical propagation and builds the
   exhaustive quoted-number/reference validation, while coordinating the
-  original B3/W1–W4 constructions with Executor. Full-body corroboration for
-  the four2017 attributions remains owed. No full stage or bundle is green.
+  original B3/W1–W4 constructions with Executor. Executor reconciles the
+  existing PR115 physical branch selection: one common-generating-functional
+  source/background and same-regulator matter contract, first/second vertices,
+  contact and measure terms, retained observable algebra and dimensions. No
+  extra selected-word campaign is justified without its role in that chain.
+  Full-body corroboration for the four2017 attributions remains owed. No
+  full stage or bundle is green.
 
 - **L1 reviewed manuscript and layout.** The historical microscopic/source/frequency
   corrections are restored without undoing the November numerical repairs.
