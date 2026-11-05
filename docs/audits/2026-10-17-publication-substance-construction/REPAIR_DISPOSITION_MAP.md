@@ -322,11 +322,14 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   [independently reviewed two-square8 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-two-square-four-deviation-population), plus the
   [both-source square/free-torus pair](L1_RETARDED_SPECTRAL_INTERFACE.md#both-sources-on-one-square-with-a-free-torus), and the
   [two-square protected-torus class](L1_RETARDED_SPECTRAL_INTERFACE.md#two-squares-and-a-source-bearing-protected-torus), plus the
-  [two-source-bearing-tori class](L1_RETARDED_SPECTRAL_INTERFACE.md#two-independently-source-bearing-tori),230 of272
+  [two-source-bearing-tori class](L1_RETARDED_SPECTRAL_INTERFACE.md#two-independently-source-bearing-tori), and the
+  [connected square/source-bearing-torus pair](L1_RETARDED_SPECTRAL_INTERFACE.md#connected-square-and-source-bearing-torus),232 of272
   words have portable accepted receipts and reviewed evaluators.
-  The42 remaining words split28 same-axis and14 mixed-axis.
-  Next classify these residual cores and construct the next complete
-  class. Complete k4 and physical B3 matching remain open.
+  The40 remaining words split26 same-axis and14 mixed-axis.
+  The author has an accepted scratch-only assignment to classify this
+  exact residual population and derive the next complete core family;
+  factor preparation awaits independent design/control review.
+  Complete k4 and physical B3 matching remain open.
   The remaining residual-core classes still require construction.
   The shared-Q and left-cache benchmarks
   retain the direct transfer route for the current workload.

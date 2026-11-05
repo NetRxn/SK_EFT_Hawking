@@ -8960,10 +8960,60 @@ The initial failed validation remains separate from successful executions.
 Evaluator SHA256:
 `6d8e93102b87f98ddea6e9fc1fe519245c6b9d993a78a783bb6161d1da5700eb`.
 
-Portable accepted coverage is now230/272 selected words:136 same-axis and94
-mixed-axis. Forty-two remain:28 same-axis and14 mixed-axis. Next construct the
-residual connected cores; the author is deriving same-axis78/80, where a
-protected square and torus share a source link that becomes identity only
-after their joint forest gauge fixing. Full k4, full source/action ensemble,
-common partition normalization, physical B3/window, microscopic modes,
-transport and publication acceptance remain open.
+This class brought portable accepted coverage to230/272 selected words.
+The connected square/source-bearing-torus construction below supplies the
+next disjoint pair. Full k4, full source/action ensemble, common partition
+normalization, physical B3/window, microscopic modes, transport and
+publication acceptance remain open.
+
+
+## Connected square and source-bearing torus
+
+The [portable evaluator](l1_extended_offset_witness_k4_connected_source_square_torus.py)
+completes same-axis words78/80. Both ordered source polynomials are jointly
+fixed on the square's three-edge acyclic forest. The source link shared with
+the torus is identity only after this joint gauge fixing. Remaining Haar
+variables separate, while the full gamma/Grassmann action graph stays coupled:
+the live square action center is also a torus center, and a fixed action edge
+retains both center labels. The construction keeps all fifteen paired action
+vertices, E20, J0, ten peeled curvature pairs and all fifteen protected-torus
+branches. The divisor is `192^42 * 4^64 * 48^10 * 2^15`.
+
+The [scientific review](l1_k4_connected_square_torus2_review.md) and
+[independent reduction](l1_k4_connected_square_torus2_verification.json)
+verify every branch and XOR1 source/action/domain covariance. Each coefficient
+is `230444796360321160875/8796093022208`; the same-axis subtotal is
+`230444796360321160875/4398046511104`, without an additional shear/axis factor.
+The independent full78 replay matches the original raw branch receipts.
+Peak intermediate size is3,952 rows. The
+[direct/fixed controls](l1_k4_connected_square_torus2_controls_review.md)
+include nonidentity joint-forest covariance, both source polynomials, shared-link
+quaternion checks, the two-center fixed-edge moment and complete fixed-label
+branch reductions.
+
+The [portable review](l1_k4_connected_square_torus2_portable_review.md) verifies
+all original scientific ASTs and canonical sibling bindings. Preparation and
+contraction reuse the same factor tables. The actual installed census, fixed
+controls and full78 CLI all exit0. Full78 takes28.845064 seconds under a
+60-second whole-process limit; preparation18.828787 and whole15 warm3.995175
+seconds also satisfy the original phase budgets. The initial census used the
+system interpreter and failed before scientific execution because Sympy was
+unavailable. The unchanged source succeeds with the existing project virtual
+environment. Both attempts are retained.
+
+The [archive manifest](l1_k4_connected_square_torus2_manifest.json),
+[original evidence](l1_k4_connected_square_torus2_evidence.zip) and
+[independent archive verification](l1_k4_connected_square_torus2_archive_verification.json)
+preserve original stdout/stderr/exits, immutable runners, failed metadata
+assertions and their corrections. The original78 output's copied `NOTRUN`
+suffix is explicitly annotated as a label error; unrestricted execution is
+established by the actual runner and complete gamma tables. No raw receipt
+was rewritten. Evaluator SHA256:
+`1fdb5cdbb3495ff0362902f9c0cec3cb1564040c4084ed4988e8b9e73899ebe9`.
+
+Portable accepted coverage is232/272 selected words:138 same-axis and94
+mixed-axis. Forty remain:26 same-axis and14 mixed-axis. The next assignment
+classifies these exact residual cores before choosing another construction.
+Complete k4, the full derivative-normalized source/action ensemble, common
+partition normalization, physical B3 susceptibility/window, microscopic modes,
+transport, main integration and publication acceptance remain open.
