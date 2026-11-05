@@ -7958,3 +7958,17 @@ The four add 1,440 words and contribute
 `-2929461318650665701/147573952589676412928`.
 Verified dominant coverage is 44 of 148 orbits and 3,948 of
 9,216 words.
+
+### Direct replay controls for chirality exchange
+
+Two independently reviewed controls match previously accepted
+whole-component totals exactly, with zero imaginary part and
+no caps. Both counterpart orbits were already counted.
+
+| Control | Comparison | Direct selectors | Whole-component subtotal | Full receipt SHA-256 |
+|---|---|---:|---|---|
+| [(13,3)](l1_gamma_13_3.out.txt) | (9,7) | 256 | `-557561034463996143/2361183241434822606848` | `8cd8ef016a0ff9035f93d6b7794ae339da056a78f7590f556da06dafec163b09` |
+| [(4,7)](l1_gamma_4_7.out.txt) | (0,3) | 192 | `378279423049817079/2361183241434822606848` | `3687be647901af88a5c4abbf838243aee7ea46a96891faefed43163d1b856820` |
+
+The second control uses the proper signed witness from gamma
+slice 0 to slice 1, with slices 2 and 3 evaluated directly.
