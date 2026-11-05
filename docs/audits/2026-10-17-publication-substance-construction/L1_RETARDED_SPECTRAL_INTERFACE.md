@@ -6288,3 +6288,26 @@ The exact JSONL receipt SHA-256 is
 The replay took 124.201 seconds after 31.837 seconds of assembly.
 Peak joins used 68,448 products and 19,920 rows. The remaining
 9,790 nonempty B cases still require A closure.
+
+**Repository pairwise replay.** The independently reviewed
+[runner](l1_unpaired_A_pairwise.py) shares the selected-group assembly
+and roster with the corrected query evaluator. It closes both factor
+maps separately after fixing the six external labels, then contracts
+complementary masks with the inversion sign. It reports capped leaves
+without a numerator and exits nonzero if any leaf caps.
+
+Running `python l1_unpaired_A_pairwise.py 3 4 --cross-check` with the
+repository Python environment produced all 16 expected rows (indices
+48–63). Independent review compared the ordered keys and raw signed
+numerators against both native and scratch outputs, and matched the
+13,824 complementary pairs against scratch. The exact subtotal was
+`−8371769346801/4611686018427387904` with zero imaginary part.
+The source SHA-256 is
+`3cfffb177b6d789efdee7e81de72e7cb46d6a340cd68129a67d45584ecc47374`
+and the raw stdout SHA-256 is
+`fd6c09ad969ea84d23f46da18ad98b2883dc39fc070827d8b56078d9fb171841`.
+This repository receipt covers prefix 3. The full selected-group
+result above comes from the separate scratch replay. For parallel
+replay, record the pinned source and command for each disjoint
+half-open prefix range and verify exact status and ordered coverage
+before reducing raw numerators with the common divisor.
