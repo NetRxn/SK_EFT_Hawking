@@ -6344,3 +6344,19 @@ with zero imaginary part. Scratch JSONL SHA-256 is
 `5ceb2b8c307d8e3d5101ad60db3e3abc99f1ee4484dfd967270597d5d4d7c089`.
 The accepted contiguous range is now `[0,5)` for this pair, leaving
 67 prefixes and the other dominant-map occurrences open.
+
+Independent review accepted another 256 exact leaves over four
+disjoint ranges of the same roster, with no caps and zero imaginary
+components. The raw rows were reduced using the same signed scale
+and divisor.
+
+| Prefix range | Exact subtotal | Raw JSONL SHA-256 |
+|---|---:|---|
+| `[5,9)` | `85486870439155395/18889465931478580854784` | `0546adcc397b7756166fa09af2641c202d15f26bd9d6b890652bd558dacabbeb` |
+| `[9,13)` | `−91465338867385203/18889465931478580854784` | `d527d47c0d081c911d70da27d36149aa076767b3a339b6eb9108102695f20077` |
+| `[13,17)` | `−373654276764363/2361183241434822606848` | `b2c03de342f6eb66a1a322a3110fd4b2f22b84b4cef457009027003da9eb2253` |
+| `[17,21)` | `−88476104653270299/18889465931478580854784` | `3934f261eac3b26382bf7fe7b697fc2de8eea2da83342dff17d92f9a7235a10e` |
+
+The accepted union `[0,21)` has 336 distinct ordered leaves and
+subtotal `−274396016602155609/18889465931478580854784`.
+Fifty-one prefixes remain for this pair.
