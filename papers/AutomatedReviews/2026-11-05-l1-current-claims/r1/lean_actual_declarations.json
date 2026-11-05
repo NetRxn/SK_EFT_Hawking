@@ -1,0 +1,1482 @@
+[
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real \u2192 Prop",
+    "type_deps_project": [],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_at_one",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.ligo_satisfied_at_chi_one",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation.eq_1",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton 1",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.ligo_satisfied_at_chi_one",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation.eq_1",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower.match_1_1",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower.match_1_1",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": true,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower.match_1_1",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200\n  (motive :\n    SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton SKEFTHawking.GravitationalWaves.chi_vest_natural_lower \u2192\n      Prop)\n  (h :\n    SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton SKEFTHawking.GravitationalWaves.chi_vest_natural_lower),\n  (\u2200 (left : Real.instLT.lt 0 SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)\n      (h2 :\n        SKEFTHawking.GravitationalWaves.LigoSatisfied\n          (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_lower))\n      (right :\n        Real.instLT.lt\n          (abs (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_lower))\n          (1 / 2)),\n      motive \u22ef) \u2192\n    motive h",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper.match_1_1",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+      "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper.match_1_1",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+      "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+    ]
+  },
+  {
+    "autogen": true,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper.match_1_1",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200\n  (motive :\n    SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton SKEFTHawking.GravitationalWaves.chi_vest_natural_upper \u2192\n      Prop)\n  (h :\n    SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton SKEFTHawking.GravitationalWaves.chi_vest_natural_upper),\n  (\u2200 (left : Real.instLT.lt 0 SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)\n      (h2 :\n        SKEFTHawking.GravitationalWaves.LigoSatisfied\n          (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_upper))\n      (right :\n        Real.instLT.lt\n          (abs (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_upper))\n          (1 / 2)),\n      motive \u22ef) \u2192\n    motive h",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter.match_1_1",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton (1 / 4))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter.match_1_1",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": true,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter.match_1_1",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 (motive : SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton (1 / 4) \u2192 Prop)\n  (h : SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton (1 / 4)),\n  (\u2200 (left : Real.instLT.lt 0 (1 / 4))\n      (left_1 : SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation (1 / 4)))\n      (h3 : Real.instLT.lt (abs (SKEFTHawking.GravitationalWaves.c_GW_deviation (1 / 4))) (1 / 2)), motive \u22ef) \u2192\n    motive h",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero.match_1_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Not (SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton 0)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero.match_1_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": true,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero.match_1_1",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 (motive : SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton 0 \u2192 Prop)\n  (h : SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton 0),\n  (\u2200 (h1 : Real.instLT.lt 0 0)\n      (left : SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation 0))\n      (right : Real.instLT.lt (abs (SKEFTHawking.GravitationalWaves.c_GW_deviation 0)) (1 / 2)), motive \u22ef) \u2192\n    motive h",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton",
+      "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real \u2192 Prop",
+    "type_deps_project": [],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.c_GW",
+    "name_deps_extracted": true,
+    "name_deps_project": [],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real \u2192 Real \u2192 Real",
+    "type_deps_project": [],
+    "value_deps_project": []
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_at_chi_one",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 (c : Real), Eq (SKEFTHawking.GravitationalWaves.c_GW 1 c) c",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+    "name_deps_extracted": true,
+    "name_deps_project": [],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real \u2192 Real",
+    "type_deps_project": [],
+    "value_deps_project": []
+  },
+  {
+    "autogen": true,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation.eq_1",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 (\u03c7_vest : Real), Eq (SKEFTHawking.GravitationalWaves.c_GW_deviation \u03c7_vest) (instHSub.hSub \u03c7_vest.sqrt 1)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation_strict_mono",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "StrictMonoOn SKEFTHawking.GravitationalWaves.c_GW_deviation (Set.Ici 0)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation_zero_iff_chi_one",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 {\u03c7_vest : Real},\n  Real.instLE.le 0 \u03c7_vest \u2192 Iff (Eq (SKEFTHawking.GravitationalWaves.c_GW_deviation \u03c7_vest) 0) (Eq \u03c7_vest 1)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 {\u03c7_vest : Real},\n  Real.instLE.le 0 \u03c7_vest \u2192\n    Iff (SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation \u03c7_vest))\n      (And (Real.instLE.le (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2) \u03c7_vest)\n        (Real.instLE.le \u03c7_vest (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_pos",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 {\u03c7_vest c : Real},\n  Real.instLT.lt 0 \u03c7_vest \u2192 Real.instLT.lt 0 c \u2192 Real.instLT.lt 0 (SKEFTHawking.GravitationalWaves.c_GW \u03c7_vest c)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.c_GW_relative_deviation_eq",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 {\u03c7_vest c : Real},\n  Ne c 0 \u2192\n    Eq (instHDiv.hDiv (instHSub.hSub (SKEFTHawking.GravitationalWaves.c_GW \u03c7_vest c) c) c)\n      (SKEFTHawking.GravitationalWaves.c_GW_deviation \u03c7_vest)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.chi_one_mem_ligo_window",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.ligo_satisfied_at_chi_one",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Set.instMembership.mem\n  (Set.Icc (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n    (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n  1",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.ligo_satisfied_at_chi_one",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real",
+    "type_deps_project": [],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real",
+    "type_deps_project": [],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.dispersion_correction",
+    "name_deps_extracted": true,
+    "name_deps_project": [],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real \u2192 Real \u2192 Real",
+    "type_deps_project": [],
+    "value_deps_project": []
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.dispersion_correction_abs_bound",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 (\u03b3 \u03c9 : Real),\n  Real.instLE.le (abs (SKEFTHawking.GravitationalWaves.dispersion_correction \u03b3 \u03c9)) (instHMul.hMul (abs \u03b3) (abs \u03c9))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.dispersion_correction_linear_in_gamma",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 (\u03b3\u2081 \u03b3\u2082 \u03c9 : Real),\n  Eq (SKEFTHawking.GravitationalWaves.dispersion_correction (instHAdd.hAdd \u03b3\u2081 \u03b3\u2082) \u03c9)\n    (instHAdd.hAdd (SKEFTHawking.GravitationalWaves.dispersion_correction \u03b3\u2081 \u03c9)\n      (SKEFTHawking.GravitationalWaves.dispersion_correction \u03b3\u2082 \u03c9))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.dispersion_correction_zero_at_no_dissipation",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 (\u03c9 : Real), Eq (SKEFTHawking.GravitationalWaves.dispersion_correction 0 \u03c9) 0",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.dispersion_within_ligo_iff",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 {\u03b3 \u03c9 : Real},\n  Real.instLT.lt 0 \u03c9 \u2192\n    Iff\n      (Real.instLE.le (abs (SKEFTHawking.GravitationalWaves.dispersion_correction \u03b3 \u03c9))\n        SKEFTHawking.GravitationalWaves.tolGW170817)\n      (Real.instLE.le (abs \u03b3) (instHDiv.hDiv SKEFTHawking.GravitationalWaves.tolGW170817 \u03c9))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+      "SKEFTHawking.GravitationalWaves.ligo_window_upper_lt_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.natural_lower_lt_ligo_window_lower",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 {\u03c7_vest : Real},\n  Real.instLE.le 0 \u03c7_vest \u2192\n    SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation \u03c7_vest) \u2192\n      And (Real.instLE.le (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2) \u03c7_vest)\n        (And (Real.instLE.le \u03c7_vest (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n          (And (Real.instLT.lt SKEFTHawking.GravitationalWaves.chi_vest_natural_lower \u03c7_vest)\n            (Real.instLT.lt \u03c7_vest SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
+      "SKEFTHawking.GravitationalWaves.ligo_window_upper_lt_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.natural_lower_lt_ligo_window_lower",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.ligo_satisfied_at_chi_one",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation.eq_1",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation 1)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation.eq_1",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.ligo_window_inter_natural_range_nonempty",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_one_mem_ligo_window",
+      "SKEFTHawking.GravitationalWaves.ligo_window_subset_natural_range",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "(Set.instInter.inter\n    (Set.Icc (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n      (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n    (Set.Icc SKEFTHawking.GravitationalWaves.chi_vest_natural_lower\n      SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)).Nonempty",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_one_mem_ligo_window",
+      "SKEFTHawking.GravitationalWaves.ligo_window_subset_natural_range",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.ligo_window_subset_natural_range",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.ligo_window_upper_lt_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.natural_lower_lt_ligo_window_lower",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Set.instLE.le\n  (Set.Icc (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n    (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n  (Set.Icc SKEFTHawking.GravitationalWaves.chi_vest_natural_lower\n    SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.ligo_window_upper_lt_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.natural_lower_lt_ligo_window_lower",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.ligo_window_upper_lt_natural_upper",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real.instLT.lt (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n  SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_eq",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Eq\n  (instHSub.hSub (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n    (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n  (instHMul.hMul 4 SKEFTHawking.GravitationalWaves.tolGW170817)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_1e13",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.ligo_window_width_eq",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real.instLT.lt\n  (instHSub.hSub (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n    (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2))\n  1e-13",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.ligo_window_width_eq",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.ligo_window_width_eq",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.natural_range_width_eq",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real.instLT.lt\n  (instHMul.hMul 1e14\n    (instHSub.hSub (instHPow.hPow (instHAdd.hAdd 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)\n      (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)))\n  (instHSub.hSub SKEFTHawking.GravitationalWaves.chi_vest_natural_upper\n    SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.ligo_window_width_eq",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.natural_range_width_eq",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.c_GW",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_relative_deviation_eq",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+      "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 {c : Real},\n  Ne c 0 \u2192\n    \u2200 {\u03c7 : Real},\n      Or (Eq \u03c7 SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)\n          (Eq \u03c7 SKEFTHawking.GravitationalWaves.chi_vest_natural_upper) \u2192\n        Not\n          (SKEFTHawking.GravitationalWaves.LigoSatisfied\n            (instHDiv.hDiv (instHSub.hSub (SKEFTHawking.GravitationalWaves.c_GW \u03c7 c) c) c))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.c_GW",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.c_GW",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_relative_deviation_eq",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+      "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+      "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Not\n  (Exists fun \u03c7 =>\n    And\n      (Or (Eq \u03c7 SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)\n        (Eq \u03c7 SKEFTHawking.GravitationalWaves.chi_vest_natural_upper))\n      (SKEFTHawking.GravitationalWaves.LigoSatisfied (SKEFTHawking.GravitationalWaves.c_GW_deviation \u03c7)))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+      "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.natural_lower_lt_ligo_window_lower",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real.instLT.lt SKEFTHawking.GravitationalWaves.chi_vest_natural_lower\n  (instHPow.hPow (instHSub.hSub 1 SKEFTHawking.GravitationalWaves.tolGW170817) 2)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Not\n  (SKEFTHawking.GravitationalWaves.LigoSatisfied\n    (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_lower))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.natural_range_width_eq",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Eq\n  (instHSub.hSub SKEFTHawking.GravitationalWaves.chi_vest_natural_upper\n    SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)\n  (99 / 10)",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Not\n  (SKEFTHawking.GravitationalWaves.LigoSatisfied\n    (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_upper))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower._proof_1",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.tolGW170817",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.tolGW170817",
+    "name_deps_extracted": true,
+    "name_deps_project": [],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real",
+    "type_deps_project": [],
+    "value_deps_project": []
+  },
+  {
+    "autogen": true,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.tolGW170817.eq_1",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Eq SKEFTHawking.GravitationalWaves.tolGW170817 3e-15",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.vestigial_dispersion_below_ligo_at_inspiral_peak",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 {\u03b3 : Real},\n  Real.instLE.le (abs \u03b3) 1e-30 \u2192\n    Real.instLE.le (abs (SKEFTHawking.GravitationalWaves.dispersion_correction \u03b3 100))\n      SKEFTHawking.GravitationalWaves.tolGW170817",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.dispersion_correction",
+      "SKEFTHawking.GravitationalWaves.tolGW170817"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.GravitationalWaves",
+    "name": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+      "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "And\n  (Not\n    (SKEFTHawking.GravitationalWaves.LigoSatisfied\n      (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_lower)))\n  (Not\n    (SKEFTHawking.GravitationalWaves.LigoSatisfied\n      (SKEFTHawking.GravitationalWaves.c_GW_deviation SKEFTHawking.GravitationalWaves.chi_vest_natural_upper)))",
+    "type_deps_project": [
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_upper",
+      "SKEFTHawking.GravitationalWaves.chi_vest_natural_lower",
+      "SKEFTHawking.GravitationalWaves.LigoSatisfied",
+      "SKEFTHawking.GravitationalWaves.c_GW_deviation",
+      "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.SecondOrderSK",
+    "name": "SKEFTHawking.SecondOrderSK.GammaH",
+    "name_deps_extracted": true,
+    "name_deps_project": [],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real \u2192 Real \u2192 Real \u2192 Real \u2192 Real",
+    "type_deps_project": [],
+    "value_deps_project": []
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "def",
+    "module": "SKEFTHawking.VestigialSusceptibility",
+    "name": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA",
+    "name_deps_extracted": true,
+    "name_deps_project": [],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "Real \u2192 Real \u2192 Real",
+    "type_deps_project": [],
+    "value_deps_project": []
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.VestigialSusceptibility",
+    "name": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_closed_form",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 (\u03c7_0 \u03b3_star : Real),\n  Ne (instHSub.hSub 1 (instHMul.hMul \u03b3_star \u03c7_0)) 0 \u2192\n    Eq\n      (instHMul.hMul (SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA \u03c7_0 \u03b3_star)\n        (instHSub.hSub 1 (instHMul.hMul \u03b3_star \u03c7_0)))\n      \u03c7_0",
+    "type_deps_project": [
+      "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA"
+    ]
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.VestigialSusceptibility",
+    "name": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_denom_zero_at_instability",
+    "name_deps_extracted": true,
+    "name_deps_project": [],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 (\u03c7_0 \u03b3_star : Real), Eq (instHMul.hMul \u03b3_star \u03c7_0) 1 \u2192 Eq (instHSub.hSub 1 (instHMul.hMul \u03b3_star \u03c7_0)) 0",
+    "type_deps_project": [],
+    "value_deps_project": []
+  },
+  {
+    "autogen": false,
+    "axiom_deps_core": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "axiom_deps_project": [],
+    "kind": "theorem",
+    "module": "SKEFTHawking.VestigialSusceptibility",
+    "name": "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA_sign_stable",
+    "name_deps_extracted": true,
+    "name_deps_project": [
+      "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA"
+    ],
+    "name_deps_timed_out": false,
+    "structure_fields": [],
+    "type": "\u2200 (\u03c7_0 \u03b3_star : Real),\n  Real.instLT.lt 0 \u03c7_0 \u2192\n    Real.instLT.lt (instHMul.hMul \u03b3_star \u03c7_0) 1 \u2192\n      Real.instLT.lt 0 (SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA \u03c7_0 \u03b3_star)",
+    "type_deps_project": [
+      "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA"
+    ],
+    "value_deps_project": [
+      "SKEFTHawking.VestigialSusceptibility.W6Ext.chi_RPA"
+    ]
+  }
+]

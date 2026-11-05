@@ -167,3 +167,29 @@ overfull boxes; the repaired four-page compile reports zero overfull boxes,
 zero TeX errors and zero unresolved references. Independent review inspected all four pages and accepted exact scientific
 and identifier preservation. The existing closure writer records layout
 finding1.1 fixed at `4fb4e23ea`; full stage and physical BUILD acceptance remain open.
+
+
+## 2026-11-05: readable canonical figure and current claim catalog
+
+Repair the canonical Plotly canvas/fonts and propagate the identical reviewed
+PNG to the global figure, L1, D3 and contributing source paper. Preserve all
+three trace coordinate arrays and existing shapes. Correct the FigureSpec's
+Abbott speed-bound anchor to actual Eq.(1), retaining the conservative-envelope
+qualification. D3 now states the exact susceptibility interval center and
+half-width instead of conflating them with the speed cap. Source-paper TeX
+notation and column overflows are separately repaired without scientific
+acceptance of its remaining stale claims. Five focused findings have actual
+RED/GREEN controls and independent rendered/source acceptance; full stages
+and physical BUILDs remain open.
+
+Install the independently verified124-unit claims-reviewer catalog and run
+the existing sentence-state intake writer. All114 predecessor records and
+four blocker identities are reconciled,49 entries remain supersession
+candidates and zero are automatically closed. Existing human sentence states
+and prior audit bytes are preserved. The full prose read-through blocks on
+reader outcome and the missing original physical argument; its restructuring
+instruction is in prose_review.md. Exhaustive quoted-number validation and
+full-body source corroboration remain owned publication obligations.
+
+Evidence: papers/AutomatedReviews/2026-11-05-l1-figure-propagation/ and
+papers/AutomatedReviews/2026-11-05-l1-current-claims/.

@@ -13,6 +13,10 @@
 \newcommand{\chivest}{\chi_{\rm vest}}
 \newcommand{\GammaH}{\Gamma_{H}}
 \newcommand{\dccap}{\Delta c/c}
+\newcommand{\GNemerg}{G_{N}^{\rm emerg}}
+\newcommand{\Lambdauv}{\Lambda_{\rm UV}}
+\newcommand{\Mpl}{M_{P}}
+\newcommand{\Nf}{N_{f}}
 
 \begin{document}
 
@@ -188,9 +192,11 @@ We define the predicate
 $\verb|LigoSatisfied|(\delta) \equiv |\delta| \leq \tau$ and
 state the correctness-push biconditional:
 \begin{equation}
-\verb|LigoSatisfied|(\dccap(\chivest))
-\;\Longleftrightarrow\;
+\begin{aligned}
+&\verb|LigoSatisfied|(\dccap(\chivest)) \\
+&\quad\Longleftrightarrow\quad
 \chivest \in [(1-\tau)^{2}, (1+\tau)^{2}].
+\end{aligned}
 \label{eq:bicond}
 \end{equation}
 \textbf{Theorem~A}~(\verb|c_GW_match_iff_chi_close_to_one|).
@@ -218,7 +224,7 @@ nested strictly inside it
 $\chivest = 1$ (\verb|ligo_window_inter_natural_range_nonempty|).
 The content of the constraint is the width ratio --- scaling the
 window up by $10^{14}$ still leaves it narrower than the natural
-range (\verb|ligo_window_width_lt_natural_range_width_by_1e14|).
+range (\path{ligo_window_width_lt_natural_range_width_by_1e14}).
 
 We make the exclusion of the extremes sharp with two
 endpoint-falsifier theorems.
@@ -295,9 +301,12 @@ redundancy rule) requires removing redundant conjuncts. We replace
 P3 with the load-bearing quantitative constraint
 P3' (sub-half-deviation):
 \begin{equation*}
-\verb|H_VestigialModeIsGraviton|(\chivest) \;\equiv\;
-\chivest > 0 \,\wedge\, \verb|LigoSatisfied|(\dccap(\chivest))
-\,\wedge\, |\dccap(\chivest)| < 1/2.
+\begin{aligned}
+&\verb|H_VestigialModeIsGraviton|(\chivest) \\
+&\quad\equiv\; \chivest > 0 \\
+&\qquad\wedge\; \verb|LigoSatisfied|(\dccap(\chivest)) \\
+&\qquad\wedge\; |\dccap(\chivest)| < 1/2.
+\end{aligned}
 \end{equation*}
 P1 demands positive susceptibility, P2 is the GW170817 compatibility,
 and P3' is the load-bearing sub-half-deviation bound (genuinely
@@ -309,10 +318,10 @@ $\chivest = 1$ discharges the bundle.
 
 \textbf{Falsifier theorems} (four; the fourth isolates P3'
 independence).
-\verb|H_VestigialModeIsGraviton_fails_at_natural_lower| (P2 fails),
-\verb|H_VestigialModeIsGraviton_fails_at_natural_upper| (P2 fails),
-\verb|H_VestigialModeIsGraviton_fails_at_zero| (P1 fails),
-\verb|H_VestigialModeIsGraviton_fails_at_quarter| (P3' fails: at
+\path{H_VestigialModeIsGraviton_fails_at_natural_lower} (P2 fails),
+\path{H_VestigialModeIsGraviton_fails_at_natural_upper} (P2 fails),
+\path{H_VestigialModeIsGraviton_fails_at_zero} (P1 fails),
+\path{H_VestigialModeIsGraviton_fails_at_quarter} (P3' fails: at
 $\chivest = 1/4$, $\dccap = -1/2$ saturates the bound).
 
 The natural-range falsifiers are non-trivial: they demonstrate
@@ -323,7 +332,7 @@ $4\tau \approx 1.2\times 10^{-14}$ over the natural-range prior ---
 vanishingly small, but non-empty, and containing $\chivest = 1$.
 
 %% ================================================================
-\section{Dispersion correction from the SK--EFT Γ\textsubscript{H}}
+\section{Dispersion correction from the SK--EFT \texorpdfstring{$\GammaH$}{Gamma H}}
 \label{sec:dispersion}
 
 The leading dissipative correction to the linear dispersion
@@ -336,7 +345,7 @@ $\verb|SecondOrderSK.GammaH| = (\gamma_{1}+\gamma_{2})(\kappa/c_{s})^{2}$,
 \end{equation}
 with $\gamma$ the dimensionless coefficient
 $\GammaH/\cGW^{2}$ at the probe frequency. We add the formula
-\verb|dispersion_correction(γ, ω) = γ ω| as
+\texttt{dispersion\_correction}$(\gamma,\omega)=\gamma\omega$ as
 \verb|GravitationalWaves.dispersion_correction| with three
 proofs: (i) zero-correction at $\gamma = 0$; (ii) linearity in
 $\gamma$ (additivity of dissipative coefficients);

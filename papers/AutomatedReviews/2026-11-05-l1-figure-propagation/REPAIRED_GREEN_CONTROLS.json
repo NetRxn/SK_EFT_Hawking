@@ -1,0 +1,23 @@
+[
+  {
+    "finding": "1.1",
+    "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from src.core.visualizations import fig_c_GW_vs_ligo_constraint; f=fig_c_GW_vs_ligo_constraint(); effective_pt=min(a.font.size for a in f.layout.annotations)*240/f.layout.width; print(effective_pt); assert effective_pt >= 6, \"endpoint annotations fall below conservative 6pt review reading floor\"'",
+    "exit_code": 0,
+    "stdout": "7.304347826086956\n",
+    "stderr": ""
+  },
+  {
+    "finding": "1.2",
+    "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'import hashlib,pathlib; bad={\"83200753ed0c13a2d47a3b2447fe9e0b93a1d8af52b003314f50c935fed013f2\",\"653775690d300e8d74de3e2a813ba5969fbc7ecfe4936578624e997546312176\"}; paths=[pathlib.Path(\"papers/D3/figures/fig_c_GW_vs_ligo_constraint.png\"),pathlib.Path(\"papers/paper25_gravitational_waves/figures/fig_c_GW_vs_ligo_constraint.png\")]; assert not any(hashlib.sha256(p.read_bytes()).hexdigest() in bad for p in paths), \"known visually incorrect stale PNG artifacts remain\"'",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "finding": "1.3",
+    "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'import scripts.review_figures as r; s=next(s for s in r.FIGURE_REGISTRY if s.name==\"fig_c_GW_vs_ligo_constraint\"); assert \"Eq. (1)\" in s.caption, \"held Abbott L13 p6 speed bound is Eq.(1), not Eq.(5)\"'",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]
