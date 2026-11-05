@@ -8359,3 +8359,18 @@ left no terminal receipt, and the reducer rejected the
 two-row receipt as incomplete. This route verifies the
 selected overlap motif. The complete common partition
 coefficient requires separate full-sector coverage.
+
+### Complete chirality pair (9,17)/(13,17)
+
+Independent review checked 256 ordered direct selectors, 16
+terminal shards, four singleton class witnesses and exact
+scaling on the original pinned roster. The component subtotal is
+`-742478726025364419/9444732965739290427392` with zero imaginary
+part and no caps. The [full receipt](l1_gamma_9_17.out.txt) has
+SHA-256 `1c4c1d59e50edab7474963f64014d7a8dbf6418a9f1169ce9e4ff6af7c67d367`.
+
+Each orbit has multiplicity 18 and contains 18 words. The
+disjoint pair adds 36 words and contributes
+`-6682308534228279771/2361183241434822606848`.
+Verified dominant coverage is 120 of 148 orbits and 8,838 of
+9,216 words.
