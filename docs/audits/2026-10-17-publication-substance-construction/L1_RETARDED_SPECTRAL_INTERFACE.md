@@ -7797,3 +7797,17 @@ part. The symmetry control SHA-256 is
 `fda20159fe194c05d00616f9f50304d3af5d0b74547a2137dcb8d2f778e09bc9`.
 This validates the reduced route on the control without adding
 a duplicate orbit contribution.
+
+### Complete dominant representative (16,1)
+
+Independent review checked all 256 ordered exact selectors
+and 16 terminal shards on the second pinned roster. No caps
+were hit. The direct subtotal is
+`-274396016602155609/1180591620717411303424` with zero imaginary
+part. The component receipt through its terminal marker has
+SHA-256 `0a105c7866c5cfcec9ce340f5706e5094765cb3d543dfcb8cb77053124c34706`.
+
+The verified 18-member orbit contributes
+`-2469564149419400481/590295810358705651712`. It adds 144
+signed source words disjoint from the 864 previously accepted.
+Complete coverage is now 16 of 148 dominant orbits and 1,008 words.
