@@ -8021,3 +8021,20 @@ were hit.
 The six signed orbits are mutually disjoint and disjoint from
 the prior 48. They add 960 source words. Verified dominant
 coverage is 54 of 148 orbits and 5,628 of 9,216 words.
+
+### Complete chirality pair (19,1)/(23,5)
+
+Independent review checked 192 ordered direct selectors in
+gamma slices 0, 1 and 3, with 12 terminal shards on the second
+pinned roster. The proper signed witness `(-1,-3,-2)` maps
+slice 1 to slice 2. Exact scaling gives the whole-component
+subtotal `-274396016602155609/1180591620717411303424`, with zero
+imaginary part and no caps. The [full receipt](l1_gamma_19_1.out.txt)
+has SHA-256 `12eef921bdceb67a6eb53219ed250c35e1a84c1632d6a8ec558b006486abc95c`.
+
+Each signed orbit contains 72 words with multiplicity nine.
+The two are disjoint from each other and all prior coverage.
+They add 144 words and contribute
+`-2469564149419400481/590295810358705651712` together.
+Verified dominant coverage is 56 of 148 orbits and 5,772 of
+9,216 words.
