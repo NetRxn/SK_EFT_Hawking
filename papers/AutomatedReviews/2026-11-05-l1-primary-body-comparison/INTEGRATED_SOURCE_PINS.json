@@ -1,0 +1,11 @@
+{
+  "base_commit": "97018780963e5d9c328cae29e6187b5f9fcda088",
+  "files": {
+    "papers/L1/paper_draft.tex": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
+    "papers/L1/paper_draft.pdf": "d65a3a00546c90a6fe26e6600593b4e98f4162c5662ff8211c64f976eee8a32c",
+    "papers/L1/claims_review.json": "18eebdd446a48479bed1fcaacd42f877c5b1921979a1d43f92fc425c5484ec23",
+    "src/core/citations.py": "8fefe95dfe535168509cf1dbc4607ff40fa82bc1eda7a70b0ac01a7db6a2a3bd",
+    "docs/primary_sources_state.json": "4d19204df2bff22661a71109b551cb027907cf66bcdd71cc018e708089c849d2",
+    "docs/SOURCE_ACQUISITION_REGISTER.md": "a2ab560e3413d070e7531930144a43dc4ee0b0467206fda596d132d124b4d271"
+  }
+}

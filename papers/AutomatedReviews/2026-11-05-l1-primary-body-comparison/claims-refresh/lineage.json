@@ -1,0 +1,46 @@
+[
+  {
+    "prior_id": "sentence:L1:introduction:c1128f8a",
+    "successor_ids": [
+      "sentence:L1:introduction:b7a2d94a",
+      "sentence:L1:introduction:92b08bc8"
+    ],
+    "disposition": "explicit rewritten/merged lineage; no auto closure"
+  },
+  {
+    "prior_id": "sentence:L1:introduction:eb1c2e4c",
+    "successor_ids": [
+      "sentence:L1:introduction:e41111f6"
+    ],
+    "disposition": "explicit rewritten/merged lineage; no auto closure"
+  },
+  {
+    "prior_id": "sentence:L1:introduction:92113836",
+    "successor_ids": [
+      "sentence:L1:introduction:57841ed5"
+    ],
+    "disposition": "explicit rewritten/merged lineage; no auto closure"
+  },
+  {
+    "prior_id": "sentence:L1:introduction:c55144cc",
+    "successor_ids": [
+      "sentence:L1:introduction:fed0c478"
+    ],
+    "disposition": "explicit rewritten/merged lineage; no auto closure"
+  },
+  {
+    "prior_id": "sentence:L1:introduction:131274cb",
+    "successor_ids": [
+      "sentence:L1:introduction:d76ed428"
+    ],
+    "disposition": "explicit rewritten/merged lineage; no auto closure"
+  },
+  {
+    "prior_id": "sentence:L1:introduction:c88d44ca",
+    "successor_ids": [
+      "sentence:L1:introduction:d76ed428",
+      "sentence:L1:introduction:ab187a1d"
+    ],
+    "disposition": "explicit rewritten/merged lineage; no auto closure"
+  }
+]

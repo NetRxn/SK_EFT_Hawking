@@ -3603,14 +3603,13 @@ CITATION_REGISTRY = {
         'arxiv': '1710.06394',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BakerBellini2017.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
-            'scalar-tensor / vector-tensor elimination from the c_GW bound',
-            'independent graviton-mass bound in bimetric gravity',
+            'constraints on scalar-tensor/vector-tensor functions under stated assumptions',
+            'conditional independent graviton-mass bound in bimetric gravity',
         ],
-        'notes': 'Sweep member covering the vector-tensor and bimetric classes. '
-                 'Cited by L1 to delimit what the 2017 sweep reached.',
+        'notes': 'Scalar/vector-tensor restrictions include the stated no-finely-tuned-cancellation premise; the bimetric mass bound has separate matter-coupling and mode-amplitude assumptions. Held arXiv:1710.06394v1 (17 October 2017), body pp.2-4.',
     },
     'CreminelliVernizzi2017': {
         'authors': 'Creminelli, P., Vernizzi, F.',
@@ -3623,14 +3622,13 @@ CITATION_REGISTRY = {
         'arxiv': '1710.05877',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CreminelliVernizzi2017.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
             'no-tuning criterion: c_GW unaffected on nearby cosmological solutions',
             'Horndeski / beyond-Horndeski / DHOST operator relations',
         ],
-        'notes': 'Supplies the stability-under-nearby-solutions criterion that L1 '
-                 'contrasts with its own window-measure argument.',
+        'notes': 'Nearby-background robustness criterion; the quartic/quintic beyond-Horndeski sector reduces to one B4 function while G2/G3 remain free. Held arXiv:1710.05877v3 (7 June 2018) is titled Dark Energy after GW170817; the distinct registered journal title is retained. Body pp.2-4, Eqs.(3)-(16).',
     },
     'SaksteinJain2017': {
         'authors': 'Sakstein, J., Jain, B.',
@@ -3644,14 +3642,13 @@ CITATION_REGISTRY = {
         'arxiv': '1710.05893',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/SaksteinJain2017.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
-            'c_GW bound combined with cluster + M87 SEP constraints',
-            'quartic-galileon exclusion; disformal photon-coupling bound',
+            'GW plus cluster/dwarf-star tests constrain beyond-Horndeski parameters; separate GW plus M87 constraints restrict the covariant quartic galileon',
+            'quartic-galileon cosmological-density restriction for stated order-unity matter couplings; disformal photon-coupling bound',
         ],
-        'notes': 'The sweep member that combines the bound with independent '
-                 'astrophysical data rather than using it alone.',
+        'notes': 'The cluster/dwarf-star parameter analysis and the GW-plus-M87 quartic-galileon inference are separate. The latter uses the representative order-unity matter couplings considered in the paper. Held arXiv:1710.05893v3 (18 December 2017), body pp.2-5, Eqs.(1)-(8) and Fig.2.',
     },
     'EzquiagaZumalacarregui2017': {
         'authors': 'Ezquiaga, J. M., Zumalacarregui, M.',
@@ -3664,16 +3661,13 @@ CITATION_REGISTRY = {
         'arxiv': '1710.05901',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/EzquiagaZumalacarregui2017.pdf',
         'used_in': ['papers/L1/paper_draft.tex'],
         'provides': [
-            'broadest sweep coverage: Einstein-aether, Horava, Generalized Proca, '
-            'TeVeS, MOND-like',
-            'GW-speed bound |c_g/c - 1| <= 5e-16',
+            'discussion of affected GW-speed-modifying couplings in Einstein-aether, some Horava sectors, Generalized Proca, TeVeS and MOND-like theories',
+            'paper-adopted symmetric GW-speed bound |c_g/c - 1| <= 5e-16',
         ],
-        'notes': 'L1 leans on this paper\'s closing enumeration: every class it names '
-                 'has a Lagrangian predicting a varying c_g, which is exactly what the '
-                 'kinematic vestigial identification lacks.',
+        'notes': "Explicit scalar-tensor actions and surviving sectors are analyzed; the closing enumeration discusses affected broader families without deriving a complete allowed-coefficient classification for every named family. The symmetric 5e-16 is this paper's adopted convention, not L1's conservative envelope. Held arXiv:1710.05901v2 (21 November 2017), body pp.2-5.",
     },
     'Abbott2017GW170817': {
         'authors': 'Abbott, B. P. et al. (LIGO+Virgo+EM partners)',

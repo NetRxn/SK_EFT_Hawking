@@ -34,6 +34,23 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 primary-body comparison and custody.** The bounded factual correction
+  is independently accepted against the four full sources and actual rendered
+  manuscript. The current existing claims artifact has125units with complete
+  predecessor/ID lineage,54 supersession candidates and zero automatic closures;
+  all four scientific blockers and human states remain unchanged. The four
+  validated PDF paths/acquisition records and source-qualified registry notes are
+  integrated. Complete citation/GW domain tests pass152cases and L1 remains
+  four pages with zero overflow, TeX errors and unresolved references. The
+  [repair and independent evidence](../../../papers/AutomatedReviews/2026-11-05-l1-primary-body-comparison/SCOPE.md)
+  distinguish the four actual body acquisitions from a fifth, older stale
+  uncited register row; no fifth acquisition or science acceptance is credited.
+  Focused finding1.1 awaits canonical recorded closure after the repair commit.
+  Next complete a full prose-reviewer read-through on the corrected draft,
+  integrate accepted physical construction evidence as it becomes applicable,
+  and retain original B3/state/tensor/matter/transport BUILD requirements.
+
+
 - **L1 exhaustive numerical acceptance and mathematical source propagation.**
   Independently reviewed eight scientific cases retain the original universal
   abstract/caption requirement and bring the focused module to89 passing cases.
@@ -49,9 +66,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   Focused findings1.1 and1.2 are canonically FIXED at repairc183f44a9;
   all1256 prior ledger records are preserved. The broader propagation
   and original scientific BUILD blockers remain open.
-  Next ROOT integrates the [source-qualified2017 comparison corrections](../../../papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/next-source-body/STATUS.md)
-  and custody records after full-body corroboration, then reruns affected
-  claim/prose reviews.
+  ROOT has integrated the [source-qualified2017 comparison corrections](../../../papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/next-source-body/STATUS.md)
+  and custody records after independent full-body corroboration; affected claim
+  intake is complete and the full prose read-through remains the next review.
   Executor's independently reviewed common-source/matter construction is
   integrated by normal merge7b9f8fdb6, preserving originalb804 history and
   [both independent reviews and publication intake](../2026-11-05-l1-physical-bridges/COMMON_SOURCE_ACCEPTANCE.md).
@@ -91,8 +108,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   source/background and same-regulator matter contract, first/second vertices,
   contact and measure terms, retained observable algebra and dimensions. No
   extra selected-word campaign is justified without its role in that chain.
-  Four2017 full bodies are now held and source-linked verification identifies
-  comparison corrections; manuscript acceptance and custody promotion remain owed. No
+  Four2017 full bodies and the scoped comparison/custody corrections are now
+  independently accepted as documented above. The original physical argument
+  and full-stage acceptance remain owed. No
   full stage or bundle is green.
 
 - **L1 reviewed manuscript and layout.** The historical microscopic/source/frequency
