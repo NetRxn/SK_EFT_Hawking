@@ -22,6 +22,7 @@ from l1_unpaired_A_dominant_components import (
     input_words,
     table_sum,
 )
+from l1_unpaired_A_dominant_spin_orbits import action, group, signed
 from l1_unpaired_A_group import DIVISOR, environment
 from l1_unpaired_B_census import B_BOUNDARY
 from l1_unpaired_offset_factors import FRAME_PLANES, SLOTS, gkey, prepare, qkey
@@ -289,6 +290,107 @@ def manifest_components(words, requested, component_path, orbit_path):
     return selected
 
 
+def gamma_slice_classes(weighted_words, rotations):
+    """Partition complete gamma slices using exact diagonal signed stabilizers."""
+    stabilizers = []
+    for rotation in rotations:
+        witness = []
+        for word, scale in sorted(weighted_words.items()):
+            target, signs = action(word, rotation, rotation)
+            if weighted_words.get(target) != signed(signs) * scale:
+                break
+            witness.append((word, target, signs))
+        else:
+            assert {target for _, target, _ in witness} == weighted_words.keys()
+            stabilizers.append((rotation, digest_rows(witness)))
+
+    remaining = set(range(4))
+    classes = []
+    while remaining:
+        representative = min(remaining)
+        images = {}
+        for rotation, witness_digest in stabilizers:
+            target = abs(rotation[representative]) - 1 if representative < 3 else 3
+            images.setdefault(target, (rotation, witness_digest))
+        assert representative in images and images.keys() <= remaining
+        classes.append((representative, sorted(images.items())))
+        remaining -= images.keys()
+    assert sorted(target for _, images in classes for target, _ in images) == list(
+        range(4)
+    )
+    return classes
+
+
+def manifest_slice_classes(path, requested, words):
+    data = path.read_bytes()
+    assert sha256(data).hexdigest() == COMPONENT_MANIFEST_DIGEST
+    rotations, _ = group()
+    out = {}
+    for row in map(json.loads, data.splitlines()[1:]):
+        key = row["block"], row["component"]
+        if key not in requested:
+            continue
+        members = [
+            (tuple(word), scale)
+            for _, member_group in row["fixed_groups"]
+            for word, scale, _ in member_group
+        ]
+        weights = dict(members)
+        assert weights and len(weights) == len(members)
+        assert all(scale and words[word][0] == scale for word, scale in members)
+        out[key] = gamma_slice_classes(weights, rotations)
+    assert out.keys() == set(requested)
+    return out
+
+
+def replay_symmetric_slices(key, classes, roster, cuts, roster_digest):
+    raw = [0, 0]
+    direct = []
+    for gamma, images in classes:
+        subtotal = [0, 0]
+        low = gamma * 64
+        for start in range(low, low + 64, 16):
+            signal.alarm(120)
+            shard = replay_range(
+                start, start + 16, roster, cuts, monotonic(), roster_digest
+            )
+            signal.alarm(0)
+            for axis in range(2):
+                subtotal[axis] += shard[axis]
+        direct.append(gamma)
+        weighted = [len(images) * value for value in subtotal]
+        for axis in range(2):
+            raw[axis] += weighted[axis]
+        print(
+            json.dumps(
+                {
+                    "kind": "gamma_slice_class",
+                    "component": key,
+                    "direct_gamma": gamma,
+                    "direct_selectors": 64,
+                    "covered_gammas": [target for target, _ in images],
+                    "mapping_witnesses": [
+                        {
+                            "gamma": target,
+                            "diagonal_rotation": rotation,
+                            "gamma_basis_sign": (
+                                -1 if gamma < 3 and rotation[gamma] < 0 else 1
+                            ),
+                            "word_map_sha256": digest,
+                        }
+                        for target, (rotation, digest) in images
+                    ],
+                    "multiplicity": len(images),
+                    "direct_raw": subtotal,
+                    "weighted_raw": weighted,
+                    "roster_sha256": roster_digest,
+                }
+            ),
+            flush=True,
+        )
+    return direct, raw
+
+
 def common_factors(primitive):
     return [
         ((), {(): dict(primitive)}, B_BOUNDARY),
@@ -448,7 +550,20 @@ def main():
     )
     parser.add_argument("--components", type=Path)
     parser.add_argument("--orbits", type=Path)
+    parser.add_argument(
+        "--gamma-symmetry",
+        action="store_true",
+        help="weight complete gamma slices using signed stabilizers",
+    )
     args = parser.parse_args()
+    if args.gamma_symmetry and (
+        not args.representative
+        or args.gamma_slice is not None
+        or (args.start, args.stop) != (0, 256)
+    ):
+        parser.error(
+            "--gamma-symmetry requires a full representative replay without --gamma-slice"
+        )
     if args.representative:
         if args.component is not None or args.components is None or args.orbits is None:
             parser.error(
@@ -474,6 +589,11 @@ def main():
     if args.representative:
         primitive, words = component_inputs(args.primitive, args.rows, args.logs)
         selected = manifest_components(words, requested, args.components, args.orbits)
+        slice_classes = (
+            manifest_slice_classes(args.components, requested, words)
+            if args.gamma_symmetry
+            else {}
+        )
         factors = prepare()
         common = common_factors(primitive)
         prepared_digest = digest_rows((factors, common))
@@ -490,7 +610,12 @@ def main():
                 assemble_component(selected[key], factors, common), roster_digest
             )
             print("representative", key, "roster", roster_digest, flush=True)
-            if args.gamma_slice is None:
+            if args.gamma_symmetry:
+                signal.alarm(0)
+                direct, raw = replay_symmetric_slices(
+                    key, slice_classes[key], roster, cuts, roster_digest
+                )
+            elif args.gamma_slice is None:
                 signal.alarm(0)
                 for low in range(0, 256, 16):
                     signal.alarm(120)
@@ -504,6 +629,25 @@ def main():
                 )
             assert digest_rows((factors, common)) == prepared_digest
             signal.alarm(0)
+            if args.gamma_symmetry:
+                print(
+                    json.dumps(
+                        {
+                            "kind": "terminal_gamma_symmetry",
+                            "component": key,
+                            "direct_gamma_slices": direct,
+                            "direct_selectors": 64 * len(direct),
+                            "covered_gamma_slices": [0, 1, 2, 3],
+                            "weighted_raw": raw,
+                            "coefficient": [
+                                str(Fraction(value, DIVISOR)) for value in raw
+                            ],
+                            "roster_sha256": roster_digest,
+                        }
+                    ),
+                    flush=True,
+                )
+                continue
             print(
                 "terminal representative",
                 key,
@@ -562,6 +706,8 @@ def replay_range(low, high, roster, cuts, start, roster_digest=ROSTER_DIGEST):
         monotonic() - start,
         flush=True,
     )
+
+    return batch
 
 
 if __name__ == "__main__":

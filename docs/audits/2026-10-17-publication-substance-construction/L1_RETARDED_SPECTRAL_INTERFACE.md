@@ -7762,3 +7762,38 @@ Its nine-member orbit contributes
 `-2469564149419400481/1180591620717411303424`. The 72 signed source
 words are disjoint from all 720 previously accepted words. Complete
 dominant coverage is now 13 of 148 orbits and 792 source words.
+
+### Complete dominant representatives (9,9) and (9,11)
+
+Independent review verified 256 ordered exact selectors and 16
+terminal shards per representative, with no caps and zero imaginary
+part. Each direct subtotal is
+`-742478726025364419/9444732965739290427392`.
+
+| Representative | Multiplicity | Receipt SHA-256 |
+|---|---:|---|
+| (9,9) | 36 | `7528c08d7c621ca912223d2e483b4f8995968eadda5af3bec4de3d4e8c03c36a` |
+| (9,11) | 36 | `7bd6d69f82c179b92fe9bcb32457bed259add45cbf109ea6347939f0216aa4e9` |
+
+The disjoint signed orbits add 72 words and contribute
+`-6682308534228279771/1180591620717411303424`. Verified dominant
+coverage is now 15 of 148 orbits and 864 source words.
+
+### Verified symmetry replay control
+
+The repository runner's opt-in `--gamma-symmetry` mode uses
+exact signed stabilizers for manifest-pinned full replays. It
+emits distinct direct and weighted raw totals, one exact class
+receipt per complete slice, and the signed rotation witnesses.
+A failed shard prevents the class and representative terminals.
+
+For `(0,4)` the control ran 192 direct selectors in gamma slices
+0, 2 and 3. Independent review matched each raw row and its
+counters to the full direct receipt, reconstructed all three
+class witnesses, and checked the weighted raw sum against
+all 256 direct selectors. The exact total was
+`688672510171296147/9444732965739290427392` with zero imaginary
+part. The symmetry control SHA-256 is
+`fda20159fe194c05d00616f9f50304d3af5d0b74547a2137dcb8d2f778e09bc9`.
+This validates the reduced route on the control without adding
+a duplicate orbit contribution.
