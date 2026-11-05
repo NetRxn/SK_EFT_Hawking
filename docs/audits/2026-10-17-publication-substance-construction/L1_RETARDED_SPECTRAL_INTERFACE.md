@@ -7254,3 +7254,18 @@ and zero imaginary part. Raw receipt SHA-256 is
 Its disjoint three-member orbit brings the reviewed subtotal to
 `262165943651905125/576460752303423488` across 219 of 288 pairs
 in 24 of 34 orbits.
+
+### Minority representatives 169 and 173
+
+Independent review checked the signed scales and the complete
+ordered rosters. Each representative has 2,304 exact leaves,
+864 nonzero contributions and zero imaginary part.
+
+| Representative | Multiplicity | Exact real coefficient | Raw receipt SHA-256 |
+|---:|---:|---|---|
+| 169 | 9 | `-871859979116847/144115188075855872` | `6b180fa2b7ad100a7ecce7fd3bf03d10af36a3bab20f04a99b3a6bb816c38406` |
+| 173 | 3 | `454108196543967/4611686018427387904` | `7e0616a166a3175330bfc31124cf80a8e963b5421aaa53d923af09e7a1459020` |
+
+The two disjoint orbits bring the reviewed subtotal to
+`1847594199819220965/4611686018427387904` across 231 of 288 pairs
+in 26 of 34 orbits.
