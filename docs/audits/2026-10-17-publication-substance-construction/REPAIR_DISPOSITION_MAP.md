@@ -46,6 +46,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   the six additional environment failures pass an exact targeted rerun without
   source or harness changes. Original29 failures remain unwaived. This is
   draft checkpoint qualification, not main/full-stage/publication acceptance.
+  Focused findings1.1 and1.2 are canonically FIXED at repairc183f44a9;
+  all1256 prior ledger records are preserved. The broader propagation
+  and original scientific BUILD blockers remain open.
   Next ROOT integrates source-qualified2017 comparison corrections and custody
   records after full-body corroboration, then reruns affected claim/prose reviews.
   Executor's independently reviewed common-source/matter construction is ready

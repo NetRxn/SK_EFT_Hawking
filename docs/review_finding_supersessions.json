@@ -10593,6 +10593,36 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-mathematical-propagation:L1:1.1",
+      "status": "fixed",
+      "evidence": "Independently accepted exact source/math, integrated89-case execution, preserved original RED controls, meaningful negative mutants, all9 rendered pages, and exact four factual Eq1 source locators. Scope and peer reviews in papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/. Physical B3/matter/transport and broad propagation remain open.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "c183f44a9ef866051fb544aea6032c450ea409e0",
+      "verified_by": {
+        "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/paper25_gravitational_waves/paper_draft.tex\").read_text()); bad=[r\"\\chivest = 1 \\pm 3\\times 10^{-15}\",\"sits exactly at unity\",\"exponentially small measure in any\",\"the fourth isolates P3'\"'\"'\",r\"\\sim 7\\times 10^{14}$ at the\",\"the natural range fails by\",r\"locating the $\\cGW = c$ window\"]; assert not any(x in s for x in bad), \"source retains false finite-tolerance, endpoint, prior or independence statements\"'",
+        "declared": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/paper25_gravitational_waves/paper_draft.tex\").read_text()); bad=[r\"\\chivest = 1 \\pm 3\\times 10^{-15}\",\"sits exactly at unity\",\"exponentially small measure in any\",\"the fourth isolates P3'\"'\"'\",r\"\\sim 7\\times 10^{14}$ at the\",\"the natural range fails by\",r\"locating the $\\cGW = c$ window\"]; assert not any(x in s for x in bad), \"source retains false finite-tolerance, endpoint, prior or independence statements\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-mathematical-propagation:L1:1.2",
+      "status": "fixed",
+      "evidence": "Independently accepted exact source/math, integrated89-case execution, preserved original RED controls, meaningful negative mutants, all9 rendered pages, and exact four factual Eq1 source locators. Scope and peer reviews in papers/AutomatedReviews/2026-11-05-l1-mathematical-propagation/. Physical B3/matter/transport and broad propagation remain open.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "c183f44a9ef866051fb544aea6032c450ea409e0",
+      "verified_by": {
+        "command": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from src.core.provenance import PARAMETER_PROVENANCE as P; from src.core.formulas import c_GW_deviation_from_c; assert all(\"Eq. (1)\" in P[k][\"source\"] for k in [\"GW.C_GW_DEVIATION_UPPER_BOUND\",\"GW.C_GW_DEVIATION_LOWER_BOUND\"]), \"GW170817 primary bound is Eq. (1)\"; assert \"Eq. (1)\" in c_GW_deviation_from_c.__doc__, \"formula source locator is stale\"'",
+        "declared": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python -c 'from src.core.provenance import PARAMETER_PROVENANCE as P; from src.core.formulas import c_GW_deviation_from_c; assert all(\"Eq. (1)\" in P[k][\"source\"] for k in [\"GW.C_GW_DEVIATION_UPPER_BOUND\",\"GW.C_GW_DEVIATION_LOWER_BOUND\"]), \"GW170817 primary bound is Eq. (1)\"; assert \"Eq. (1)\" in c_GW_deviation_from_c.__doc__, \"formula source locator is stale\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }

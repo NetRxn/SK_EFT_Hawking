@@ -1,0 +1,66 @@
+{
+  "archive_sha256": "e0687daaca60cd421d86fe8f4daec6e7588c37f5c3a8aff16a795d613df4b46b",
+  "members": {
+    "source/paper_draft.patch": {
+      "bytes": 13505,
+      "sha256": "4bb74d864dde1860f32c9ffaaeb4a6b98a82083adaea63031a6ace2b0d9033a9"
+    },
+    "numeric-r2/r1-to-r2.patch": {
+      "bytes": 4558,
+      "sha256": "672dc69b8ec8da631d2f3cd246ecb4d7befc643046e1a83fc9a6eeae52c4d119"
+    },
+    "source/controls.log": {
+      "bytes": 960,
+      "sha256": "b9cce521276e2d49796d77229fc24d84cc483cf1466860f12f8078b32a38e9b4"
+    },
+    "numeric-r2/control-baseline.py": {
+      "bytes": 1524,
+      "sha256": "65bd76fd9993836e5a369e7ca4935de8a32a16c59277effab1a79c64507848db"
+    },
+    "numeric-r2/control-swapped-star.py": {
+      "bytes": 1496,
+      "sha256": "c556b7cf71e6846ac5a7adad000dc8b52eef123ba8043251f57a78ef291df58e"
+    },
+    "numeric-r2/control-rounded-deviation.py": {
+      "bytes": 1514,
+      "sha256": "d06066e739bc599a5a2cb4e1f1697366ee8c1b1764e1c54bf312425ce2e0fe46"
+    },
+    "numeric-r2/control-source-corrected.py": {
+      "bytes": 1486,
+      "sha256": "5d6c2c37bab15d3e04ff1aa758278fd56261aa73a7d54459cb0a08027c2cd6e6"
+    },
+    "numeric-r2/swapped-star.log": {
+      "bytes": 2065,
+      "sha256": "7165ea6c7b9180ffa79bc04608280928d8ef8c946178ca2bddc9e7dbbdfe792b"
+    },
+    "numeric-r2/source-corrected.log": {
+      "bytes": 179,
+      "sha256": "ad1ad56162d75a5e0eb7ddc19a4406f141f38d8254606ec4761c013c1e46b4bb"
+    },
+    "numeric-r2/baseline.log": {
+      "bytes": 1370,
+      "sha256": "8602a242356241fb3b15b18083e4394e4bfb6baec2eb254411319d5ce47a24aa"
+    },
+    "numeric-r2/rounded-deviation.log": {
+      "bytes": 3213,
+      "sha256": "1b36b0789b608c7f4d7dc35815458e984e3a61b024cacd3676ec755bb8e37c6e"
+    },
+    "numeric-r2/control-restored.py": {
+      "bytes": 1478,
+      "sha256": "f14bd435db70b94c7ddd6ac6b59725be9effd183df1ca2ad4768a3f7fa2620d2"
+    },
+    "numeric-r2/control-wrong-cap.py": {
+      "bytes": 1495,
+      "sha256": "a08dd13ed959d386b4084d5e6d412b7251ff47446fa8af3b9849afe55e829af1"
+    },
+    "numeric-r2/restored.log": {
+      "bytes": 179,
+      "sha256": "6f2bc5cc60abb4f536f7cb87bf8e5801d13201d1440a377830e95886988a93a5"
+    },
+    "numeric-r2/wrong-cap.log": {
+      "bytes": 1609,
+      "sha256": "483aac348995b8f34e10e396a28580666971a9399235a7d13986ac0d57c214a5"
+    }
+  },
+  "scope": "Original diff blank context records contain required leading space; exact original bytes retained in archive rather than altered for outer diff whitespace. All original ignored .log control receipts and isolated mutant scripts included. No scientific source or result change."
+}
