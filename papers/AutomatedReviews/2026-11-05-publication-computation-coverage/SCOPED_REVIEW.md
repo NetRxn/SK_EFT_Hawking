@@ -178,3 +178,14 @@ The existing writer subsequently records current infra1.2 fixed atd5585d16,
 after executing its declared Verify command; [closure](IMPORTS_CLOSURE.txt).
 The source repair does not change the historical frozen-suite result or close
 physical B3, other scientific obligations, full qualification or main acceptance.
+
+
+## Completed frozen16fde9 broad qualification
+
+[Original result, fixed-cohort comparison and canonical gate payloads](FROZEN_16FDE9_QUALIFICATION.md)
+record7119pass/34fail/8skip/92deselected at unchanged clean16fde9. Every current
+failure ID is in the previous37; all previous37 are present, with exactly the
+three serializer cases now passing. New collection includes51 additional cases.
+All34 remaining failures retain their original substantive repair duties. L1
+G11 loses the closed IMPORTS blocking reference but remains blocked by physical
+B3; all231 bundle gate states remain unchanged. No main/publication readiness.

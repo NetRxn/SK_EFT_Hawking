@@ -820,3 +820,31 @@ formerly failing cases are present and pass on this same committed source:
 inventory, memo equivalence, dependency declaration, five isolated host fixtures
 and three metadata serialization cases. The other34 frozen failures were not
 rerun here and remain unaddressed. No full-project or main qualification is inferred.
+
+
+### Frozen16fde9 qualification and current resume state
+
+The [completed canonical bare-fast qualification](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_16FDE9_QUALIFICATION.md)
+reports7,119passed/34failed/8skipped/92deselected, unchanged source and clean
+status before/after. All previous37 failure IDs are present:34 still fail and
+the three canonical-JSON cases pass. There are no new failing IDs;51 cases
+were added. Existing scientific BUILD obligations and the disposition routes
+remain required, with current failure text retained. This is red qualification,
+not a waiver or main/publication acceptance.
+
+The [canonical gate payload](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/FROZEN_16FDE9_GATE_READBACK.json)
+remeasures all21bundles/231gates:154passed/30blocked/28open/19needs-recheck,
+no state changes versus4b. L1 G11 remains blocked but falls to one blocking
+reference/seven open findings after IMPORTS closure. Physical natural B3 remains
+its blocking reference; source closure does not discharge that construction.
+
+The next scientific source-level design110/153 has independent acceptance:
+shared-source square/protected torus plus one free torus,45 branch products,
+E20/J0/six peeled pairs, retaining both sources/all action vertices/all physical
+Grassmann sites. Direct and fixed-label controls precede an unrestricted pilot.
+A fresh separate79/81 source-sharing/two-protected-tori225-branch design is under
+independent review, with actual second gamma slots and branch-role transpose.
+Neither design adds accepted coefficients to the current232/272 count.
+The independent delivery lane is reconciling already reviewed managed-worktree
+portability history against the current planner path failure; use its accepted
+coherent source boundary and current verification, not a duplicate mechanism.
