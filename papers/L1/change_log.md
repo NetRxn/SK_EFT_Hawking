@@ -164,5 +164,6 @@ Use breakable path typesetting for the six overflowing identifiers/paths,
 preserving their exact spelling, and refer to unnumbered REVTeX sections by
 their displayed names. The original layout invariant failed with six
 overfull boxes; the repaired four-page compile reports zero overfull boxes,
-zero TeX errors and zero unresolved references. Whole-page independent
-rendered verification and canonical closure are required separately.
+zero TeX errors and zero unresolved references. Independent review inspected all four pages and accepted exact scientific
+and identifier preservation. The existing closure writer records layout
+finding1.1 fixed at `4fb4e23ea`; full stage and physical BUILD acceptance remain open.

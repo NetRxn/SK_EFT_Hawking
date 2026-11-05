@@ -10503,6 +10503,21 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-reviewed-manuscript-reconciliation:L1:1.1",
+      "status": "fixed",
+      "evidence": "Breakable exact identifiers and displayed unnumbered section names repair the six overfull boxes and blank section references. Original verification failed; identical command now passes with four pages and zero overfull boxes/errors/unresolved references. Independent all-four-page review accepts exact scientific/identifier preservation: papers/AutomatedReviews/2026-11-05-l1-reviewed-manuscript-reconciliation/INDEPENDENT_LAYOUT_REVIEW.md and .json. This closes only layout finding1.1, not physical BUILD or full stage acceptance.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-05-l1-reviewed-manuscript-reconciliation/INDEPENDENT_LAYOUT_REVIEW.md",
+      "date": "2026-11-05",
+      "commit": "4fb4e23ea",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok, report, pages = compile_one(Path(\"papers/L1\"), force=True); print(report); assert ok and \"overfull=0 \" in report'",
+        "declared": "python3 -c 'from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok, report, pages = compile_one(Path(\"papers/L1\"), force=True); print(report); assert ok and \"overfull=0 \" in report'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }

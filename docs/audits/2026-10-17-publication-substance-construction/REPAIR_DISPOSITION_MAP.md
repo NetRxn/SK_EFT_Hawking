@@ -34,6 +34,20 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 reviewed manuscript and layout.** The historical microscopic/source/frequency
+  corrections are restored without undoing the November numerical repairs.
+  Independent source and all-four-page rendered reviews accept the scoped
+  adoption and typography repair at `33ba6eeec` and `4fb4e23ea`.
+  The current four-page compile has zero overfull boxes, TeX errors or
+  unresolved references. The existing closure writer fixes
+  `review:2026-11-05-l1-reviewed-manuscript-reconciliation:L1:1.1`.
+  [Evidence and limitations](../../../papers/AutomatedReviews/2026-11-05-l1-reviewed-manuscript-reconciliation/SCOPE.md)
+  preserve the original failed layout receipt and independent verification.
+  Next reconcile the current manuscript's sentence/claim state through the
+  existing writer and complete figure/claim review on the integrated candidate.
+  Physical B3, dynamics/matter and transport BUILD obligations remain open;
+  no full stage or publication acceptance is asserted.
+
 - **L1 numerical interval and comparison.** Canonical finding
   `review:2026-11-05-publication-l1-window-precision:L1:1.1`
   is fixed on the candidate at `5ffc0e445` through the existing
