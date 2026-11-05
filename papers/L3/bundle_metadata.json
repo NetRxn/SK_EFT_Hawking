@@ -43,8 +43,18 @@
     },
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.T_H_acoustic_evolution_strict_decreasing",
-      "claims": "the load-bearing acoustic sign claim: T_H strictly decreasing in t (Balbinot 2005 grounded)",
+      "claims": "The illustrative exponential profile is strictly decreasing for positive initial temperature and cooling timescale",
       "declared": "2026-08-07"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.G_N_emerg_eval_mul_M_c_eq_inv_cutoff",
+      "claims": "The defined critical mass times the emergent coupling equals the inverse ultraviolet cutoff",
+      "declared": "2026-11-04"
+    },
+    {
+      "name": "SKEFTHawking.BHThermodynamicsFourLaws.regime_partition_profile_criterion",
+      "claims": "The local Schwarzschild mass-loss profile heats and the affine nozzle profile cools on their stated domains. The equality case is the classifier boundary.",
+      "declared": "2026-11-04"
     },
     {
       "name": "SKEFTHawking.BHThermodynamicsFourLaws.falsifier_acoustic_decay_form",

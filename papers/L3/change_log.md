@@ -154,3 +154,14 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
   Visual inspection checked all four pages.
 - The declaration registry, derived counts, theorem backing records,
   and §2.2 and §2.4 closure remain pending authoritative validation.
+
+## 2026-11-04 — Declare the local profile and cutoff proof backing
+
+- The two new apex entries name the exact emergent cutoff identity
+  and local profile criterion. Independent source review matched them
+  to the rendered claims. The exponential entry describes the
+  illustrative model used in the figure.
+- The focused apex gate could not measure this checkout. Its
+  declaration extractor attempted to fetch the missing Physlib
+  dependency and could not resolve the remote host. The registry
+  refresh and authoritative validation remain due.
