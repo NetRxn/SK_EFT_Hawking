@@ -181,7 +181,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   companion route passed the same checks. The [35-orbit route's first batch](L1_RETARDED_SPECTRAL_INTERFACE.md#all-protected-disjoint-base-batch-covering-orbits-15)
   passed independent receipt reduction for orbits 1–5. The next range
   is `[21,26)` after independent review of the [fourth batch](L1_RETARDED_SPECTRAL_INTERFACE.md#all-protected-disjoint-base-batch-covering-orbits-1620).
-  The companion's `[1,6)` batch remains in progress.
+  Companion orbits 0–5 have independently verified receipts. The
+  next disjoint companion range is `[6,11)`.
   The [scalar temporal transfer control](L1_RETARDED_SPECTRAL_INTERFACE.md#exact-temporal-transfer-control-for-the-scalar-probe)
   now gives an independently verified finite-regulator spectral
   kernel with the affine contact separated. The [nonzero-momentum control](L1_RETARDED_SPECTRAL_INTERFACE.md#nonzero-spatial-character-and-contact-dependence-of-the-inverse-secant)

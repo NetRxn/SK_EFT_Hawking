@@ -5587,7 +5587,21 @@ The receipts agree byte for byte. Independent reduction verified
 | Surviving-face source | `−353894419130628515625/2199023255552` |
 | Full fixed-shear numerator | `−9493589186305497002953125/9007199254740992` |
 
-The next companion replay range is `[1,6)`.
+The companion range `[1,6)` exited zero. Independent exact
+reduction checked each orbit at multiplicity 192, for 960 words
+per checkerboard. The range is disjoint from the reviewed orbit 0.
+
+| Both-checkerboard contribution | Exact value |
+| --- | ---: |
+| Normalization | `3026106787211402296728515625/4611686018427387904` |
+| Remote source | `−1263023994452441560088765625/576460752303423488` |
+| Upper source | `−299719141847279991194765625/288230376151711744` |
+| Surviving-face source | `−20522565260050911328125/35184372088832` |
+| Full fixed-shear numerator | `−2198703987367675673678296875/576460752303423488` |
+
+The raw stdout SHA-256 is
+`c4ec5e9df085666a935f10109a0e3af1dcb2378d7db07d8a461db6dff965747b`.
+The next companion replay range is `[6,11)`.
 
 ### Exact temporal transfer control for the scalar probe
 
