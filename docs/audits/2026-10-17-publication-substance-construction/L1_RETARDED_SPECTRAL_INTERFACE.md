@@ -6206,3 +6206,13 @@ verified the normalized leaf scalar
 `−2790589782267/18446744073709551616` with zero imaginary
 part. This result covers one leaf. All other leaves still
 require corrected evaluation.
+
+The corrected repository replay completed all 16 leaves
+of prefix 3 under the unchanged per-leaf caps. Independent
+review checked every leaf against the ordered census and the
+pinned source. Twelve leaves have equal negative contributions
+and four vanish. The run checked 1,202,688 compatible products
+and found 479,232 nonzero matches. Summing the raw signed rows
+and dividing once gives `−8371769346801/4611686018427387904`
+with zero imaginary part. This replaces only the withdrawn
+prefix-3 subtotal. Other prefixes require their own replay.
