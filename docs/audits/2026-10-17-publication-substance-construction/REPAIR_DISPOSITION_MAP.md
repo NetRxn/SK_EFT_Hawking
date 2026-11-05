@@ -218,7 +218,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   a control for bulk A. Independent review then accepted all 72
   prefixes (1,152 leaves) for the joint contribution of one
   opposite-scale pair in the dominant 208-row primitive. The other
-  9,766 nonempty B occurrences still need contributions to the word
+  9,762 nonempty B occurrences still need contributions to the word
   sum. Independent review verified an exact partition of all 9,216
   dominant occurrences into 6,656 signed center-1 groups. The
   reviewed rank-one manifest partitions them further into 2,080
@@ -235,8 +235,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   zeros for that selector, which is now complete. Verify the
   exterior roster contains 256 disjoint candidates across four
   slices. All 64 scalars in the first slice have independently
-  verified receipts. Continue with the next disjoint range
-  `[64,80)` before reducing the component.
+  verified receipts, as do the first 16 in the second slice.
+  Continue with `[80,96)` before reducing the component.
   In parallel, the reviewed 576-occurrence minority census admits
   288 exact center-11 pairs. Independent review verified all 2,304
   leaves and the joint scalar of the 162-row pair at indices 34 and
@@ -245,7 +245,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   pair at indices 13,156 and 13,158 has the same full-roster review.
   The reviewed minority input manifest admits all 288 disjoint
   pairs. IDs 1 and 2 passed independent exact roster and signed B
-  review, followed by IDs 3–8. Continue with IDs 9 and 10.
+  review, followed by IDs 3–10. Continue with IDs 11 and 12.
   Keep the direct runner for bulk:
   the bounded cache matches exact rows but was slower in the paired
   CPU benchmark.
@@ -287,6 +287,14 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   registry and 76 undeclared entries against the ceiling of 78.
   Reconcile source identities and the measured ratchet on this
   candidate before claiming citation gate acceptance.
+  A separate export of the exact `a34eb6b0` tree accepted the nine
+  source, bibliography, custody, ratchet and test paths from
+  [the reviewed citation predecessor](https://github.com/NetRxn/SK_EFT_Hawking/commit/f28cc370f).
+  With the same held sources the composed export reports 516 cited
+  keys, zero missing from the registry or required cache, and 76
+  undeclared entries against ceiling 76. All 73 focused citation
+  tests passed. Qualify the predecessor separately before updating
+  the focused L3 merge candidate.
   The exact base `ce194cdc4` and candidate have identical
   portfolio structural figure diagnostics after normalizing
   checkout paths. Both report 24 warnings and the same two

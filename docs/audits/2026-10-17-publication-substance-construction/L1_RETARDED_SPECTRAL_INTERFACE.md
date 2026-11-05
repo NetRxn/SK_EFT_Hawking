@@ -6803,3 +6803,21 @@ part. The two new stdout SHA-256 values are
 and
 `61232bf290a7f4de2a29e1ab30866bc2b9f319b2f4b8a7713c18ec34c6307c31`.
 The other three slices remain separate.
+
+**Second-slice selector batch `[64,80)`.** Independent review
+verified all 16 exact rows on the pinned exterior roster, with no
+caps. Each evaluated 8,956 compatible products and 4,174 distinct
+complement queries. The exact subtotal is
+`378279423049817079/37778931862957161709568` with zero imaginary part.
+The stdout SHA-256 is
+`e270d8afe58cf1319a92b046900ab212425f508f988613e8324f822076888d9c`.
+The first 80 of 256 selector scalars have verified receipts.
+
+**Minority manifest IDs 9 and 10.** Both 2,304-leaf receipts passed
+independent verification with no caps. Each contributes
+`−231274434671091/2305843009213693952` with zero imaginary part.
+
+| ID | Roster SHA-256 | Stdout SHA-256 |
+|---|---|---|
+| 9 | `ee3dc0fce0d794f5fd56d22a97c7c57849b540593178e482984086a8478de83a` | `def0caa6124b665a740e3867f1bd516b2eac8ef9d98a5b22d4a18017a7f29d93` |
+| 10 | `f097c6aefd81af88b01661845763a570a9e71e39fb4109b9b2c83b1fab2ba1de` | `3c735792898dfeed0bf6997a37148f67933cef89df8048a9e008bc8f0fdf9be9` |
