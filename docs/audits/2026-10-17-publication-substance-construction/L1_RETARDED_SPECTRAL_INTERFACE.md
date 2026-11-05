@@ -6850,3 +6850,26 @@ complement queries. The interval contributes
 The stdout SHA-256 is
 `c4f2f49419782b0023c1cdf76cfd895747684f3e4c8afbec88c57c44daba2b93`.
 The first 96 of 256 selector scalars now have verified receipts.
+
+**Complete second internal slice.** The repository runner
+completed `[96,112)` and `[112,128)`. Independent review
+verified all 32 exact selectors against the pinned roster.
+Every selector evaluated 8,956 compatible products and 4,174
+complement queries with no caps. Each range contributes
+`378279423049817079/37778931862957161709568` with zero imaginary
+part. The complete second slice `[64,128)` contributes
+`378279423049817079/9444732965739290427392`, equal to the first
+slice by exact summation. The two new stdout SHA-256 values are
+`9f5c4cd51f661ce6b96da54de756ea936afc5e258875309d68919c16d40a691d`
+and
+`554618901b360933d05c6b650770ea26e3d241b842aa62613a6f92852641ee11`.
+Two of four slices are complete.
+
+**Minority manifest IDs 11 and 12.** Both 2,304-leaf receipts
+passed independent signed-roster verification with no caps
+and zero imaginary part.
+
+| ID | Exact real subtotal | Roster SHA-256 | Stdout SHA-256 |
+|---|---:|---|---|
+| 11 | `−241403242028949/2305843009213693952` | `cfc0228ea35ffdb5a01b6d1ce785c14654c608972b4107c0970ab85b0e3515a0` | `4496823abdccd3935055769f223ec62ff955a8b0ee97c6e3185dcbdd650c1421` |
+| 12 | `871859979116847/144115188075855872` | `d5130984b0161d7589797ce8ed832e26bc247eec0435a485e940728779e47535` | `31980880099a6b0796e4efbe80232bfd6a909f631383af49a892de7e2cc69ca3` |
