@@ -8653,7 +8653,7 @@ acceptance evidence. The receipt bundle digest is
 `bb3c432d527e0ef539b378fab3f76455b72711712c3e577ccc5abbecce55792b`.
 
 Together with the separate original-kernel population below,
-176 of the 272 four-deviation words have portable accepted receipts.
+182 of the 272 four-deviation words have portable accepted receipts.
 The complete action/source ensemble, common partition coefficient
 and physical response matching remain required.
 
@@ -8684,6 +8684,47 @@ the report's complete90 receipt-bundle digest is
 `ddaa4b565d774e9ec59b945f9115668389b99317ea62a53e4042b4515c7a2900`.
 This population is disjoint from the separate86 peeled words and
 six scratch-evaluated single-square words. Portable accepted
-coverage is176/272. The single-square source integration, running
-free-torus population, other residual cores, full ensemble and
-physical matching remain open.
+coverage through this original-kernel checkpoint was176/272.
+The next subsection integrates the six single-square entries.
+The running free-torus population, other residual cores, full
+ensemble and physical matching remain open.
+
+## Complete single-square four-deviation population
+
+The [single-square evaluator](l1_extended_offset_witness_k4_single_square.py)
+supplies the six entries `3,42,165,206,247,262`. Every residual
+square has one source-only boundary edge in its three-edge fixed
+forest. That source is fixed jointly with the square; treating it
+as an additional independent Haar integral would be incorrect.
+The remaining source may share an action edge. With E action
+edges and J shared source/action integrations, the divisor is
+`192^(2E+2−J) * 4^64 * 48^14 * 2^15`. The normalized forest has
+unit gauge volume; there is one square contraction, without the
+protected-torus branch sum.
+
+Independent review by `/root/l1_transport_review` accepted the
+underlying six-word construction, direct conditional controls and
+all [six terminal receipts](l1_k4_single_square6_receipts.jsonl).
+The [independent reduction](l1_k4_single_square6_verification.json)
+finds two same-axis words summing to
+`18213535071678203955/274877906944` and four mixed-axis words
+summing to `20255649238809619245/137438953472`. Restricted shear
+is `−22297763405941034535/137438953472`. All three covariance
+pairs agree; the maximum intermediate has9,600 rows.
+
+That reviewer then ported the scientific evaluator to sibling
+imports and pinned manifest/source receipts. ROOT independently
+read the port, checked [field equality of all six geometries](l1_k4_single_square_port_equivalence.json)
+against the accepted construction and reran the full word3
+contraction. The [portable control](l1_k4_single_square_portable_control.json)
+reproduces `18213535071678203955/549755813888`, including its
+integer raw numerator and divisor. The tracked evaluator SHA256
+is `4fd18a9a852ce9c1d331f9462f4436d7d8d41f6cd10f408e0dfa2c3aca2729dd`.
+
+From the repository root, use the prepared Python environment to
+run this scientific module with `--word 3`; no argument emits its
+six-word manifest. These entries are disjoint from the accepted
+original-kernel90 and peeled86 populations:182/272 portable
+accepted words. The separate free-torus30 population is still
+running. Other residual cores, the complete source/action sum,
+common partition normalization and physical B3 matching remain open.
