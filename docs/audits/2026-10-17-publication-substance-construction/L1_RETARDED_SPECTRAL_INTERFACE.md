@@ -6493,3 +6493,26 @@ fixed produces only singleton groups. The normalized full A
 center signatures are also distinct. Grouping on centers 1
 and 9 organizes the minority cases into eight-member blocks.
 That census alone leaves their scalar contractions open.
+
+Independent review verified a separate exact pairing across
+the minority maps. There are 288 disjoint pairs, split as
+72 pairs for each 36-row primitive and 36 for each other
+primitive. Members share their exact B hash and signed scale,
+and differ only at `q(15,1)`, taking values 0 and 4. That
+coordinate occurs on the A side only at center 11. The two
+frozen center factors have matching axes and disjoint
+144-row supports, yielding a 288-row sum for every pair.
+The census stdout SHA-256 is
+`cced0771f3436665ff6244c4d2e24d4c47c62828b3a32f06a46a764cd5dbd6a1`.
+This proves the input pairing and leaves the exterior sums
+open. The 162-row pair at indices 34 and 35 is the first
+new scalar control.
+
+In the dominant pilot, an alternate join order in the first
+site-1 slice avoided the initial cap by taking a 31,616-row
+join. At the next step all 14 admissible joins hit the same
+limits. Ten hit the 120,000-row cap, and four hit the 300,000
+compatible-product cap. The only candidate that closed a
+site was the site-10 closure. It hit the row cap. The next
+route keeps its four exterior grade-four bytes factored
+and queries the opposite environment before emitting rows.

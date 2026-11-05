@@ -225,10 +225,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   the exterior contraction against the explicit scalar sum on the
   60-word component and resolve the live-row cap without losing
   support, signs, or coordinates. The exact site-1 split moves
-  the cap to site-10 closure. Try alternate join orders with
-  the same cap. In parallel, the six minority maps now have a
-  reviewed 576-occurrence census. Test a guarded replay on the
-  162-row pair at indices 34 and 35 before assigning bulk coverage.
+  the cap to site-10 closure. A bounded alternate join order
+  exhausts 14 candidates in the first slice. Try an indexed
+  complementary query at site 10 before emitting exterior rows.
+  In parallel, the reviewed 576-occurrence minority census admits
+  288 exact center-11 pairs. Test a guarded replay on the 162-row
+  pair at indices 34 and 35 before assigning scalar coverage.
   The full word sum, physical matching and B3 remain open.
 
 - **L3 preparation.** [Checkpoint `ff5c2614`](https://github.com/NetRxn/SK_EFT_Hawking/commit/ff5c2614) contains the verified critical-mass crossing and canonical finding §3.2 closure. The next bounded substrate package is §2.2–2.4. Derive Schwarzschild heating from a differentiable decreasing mass profile and acoustic cooling from the explicit source profile, then relate the applicable profiles to the regime hypotheses. Keep the finite-step monotonicity result separate from strict derivative signs. Reuse the partition-linked `δ` corollary already present as `delta_ADW_nonzero_iff_alpha_ADW_ne_one` in the pinned consumer module. For the length identity, use `G_N_emerg_eval p * M_c p = 1 / p.Λ_UV`; the bare Sakharov coupling gives `1 / (p.α_ADW * p.Λ_UV)`. The independently reviewed and rendered [L3 manuscript correction](https://github.com/NetRxn/SK_EFT_Hawking/commit/4de686400) records that cancellation on the research checkpoint. The exact identity still needs native proof discovery and validation. The four-laws construction in §2.1 remains open. A differential Schwarzschild area first law is a viable component of that larger obligation. For the acoustic second law, source inspection at `ff5c2614` identified `GloriosoLiu.entropy_current_exists` and `noetherEntropyDensity_nonneg_of_SKEFTAxioms` as reuse candidates. The latter establishes density positivity under the SK axioms. The local-law module defines its divergence as the imaginary Lagrangian, whereas L3 takes the physical entropy divergence as a scalar input. Search by type in the pinned consumer context for a current and divergence identification before dispatching the acoustic construction. The source inspection leaves this search incomplete. The mapped Paper 27 review IDs require individual lifecycle reconciliation, and the manuscript still requires fresh Stage 13 after its redraft.
