@@ -8117,3 +8117,21 @@ in each run. All imaginary parts vanish and no caps were hit.
 
 The six signed orbits add 468 disjoint words. Verified dominant
 coverage is 74 of 148 orbits and 7,320 of 9,216 words.
+
+### Complete chirality pairs (11,5)/(15,1) and (3,7)/(7,3)
+
+Independent review checked all 256 ordered direct selectors and
+16 terminal shards for (11,5). It checked 192 direct selectors and
+12 shards for (3,7), where the proper signed rotation
+`(-2,-1,-3)` maps gamma slice 0 to slice 1. Both runs used the
+original pinned roster, with exact scaling, zero imaginary
+parts and no caps.
+
+| Direct representative | Chirality counterpart | Words per orbit | Direct subtotal | Multiplicity | Full receipt SHA-256 |
+|---|---|---:|---|---:|---|
+| [(11,5)](l1_gamma_11_5.out.txt) | (15,1) | 72 | `-58583762512121259/2361183241434822606848` | 18 | `aeb9688e922801cb73fe94727d191ce83aa9a843c4742dd350d6f1b0e77d9852` |
+| [(3,7)](l1_gamma_3_7.out.txt) | (7,3) | 45 | `4055515893230966199/9444732965739290427392` | 3 | `295347f5d70840849728201815b171877caa6787a8609efc6164b88b9992000f` |
+
+The four signed orbits are disjoint from each other and prior
+coverage. They add 234 source words. Verified dominant coverage
+is 78 of 148 orbits and 7,554 of 9,216 words.
