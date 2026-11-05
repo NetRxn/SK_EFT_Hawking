@@ -6656,3 +6656,18 @@ distinct values. The full selector reached its wall limit after
 151 completed 16-slice fallbacks without a per-slice cap. The
 next reuse target is a partial environment transfer that retains
 its shared labels, boundary masks and signed coefficients.
+
+**First disjoint minority manifest batch.** Independent review
+verified IDs 1 and 2 against their signed B inputs. Each has all
+2,304 exact ordered leaves and zero imaginary part, with no caps.
+
+| Manifest ID | Exact real subtotal | Roster SHA-256 | Stdout SHA-256 |
+|---|---:|---|---|
+| 1 | `454108196543967/4611686018427387904` | `ee3dc0fce0d794f5fd56d22a97c7c57849b540593178e482984086a8478de83a` | `a58caf1cc1901cee5fffa8b46f343e0d90531afb6005305d89a9011974bad338` |
+| 2 | `470989542140397/4611686018427387904` | `f097c6aefd81af88b01661845763a570a9e71e39fb4109b9b2c83b1fab2ba1de` | `4a65183d4f1b90d1296bc7f7cb78b63d0818a9fb362f6ab29df2aa90a41aa0f6` |
+
+The fixed 256-leaf pair-0 benchmark ran direct, cached, cached,
+direct after a common assembly. All four outputs were identical.
+The uncached CPU times were 15.42 and 15.34 seconds. The cache
+took 16.98 and 16.99 seconds, despite 152 hits in each pass.
+The current cache is therefore kept out of bulk replay.
