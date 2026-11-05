@@ -6699,10 +6699,14 @@ CITATION_REGISTRY = {
         'arxiv': '1912.02250',
         'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Hietala2020VOQC.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Hietala2021VOQC.pdf',
         'used_in': ['papers/D8/paper_draft.tex', 'papers/D6/paper_draft.tex'],
         'provides': [],
-        'notes': 'VOQC/SQIR (Coq) — prior verified-QC compiler work; cited in D8 §1 for prior-art positioning (exact circuit optimization vs D8 quantitative-approximation theory) and in D6 §1 (equivalence-preserving optimization vs D6 FT-substrate chain). arXiv ID verified 2026-05-31.',
+        'notes': 'VOQC/SQIR (Coq) — prior verified-QC compiler work; cited in D8 §1 for prior-art positioning (exact circuit optimization vs D8 quantitative-approximation theory) and in D6 §1 '
+                 '(equivalence-preserving optimization vs D6 FT-substrate chain). '
+                 'Held full text: author final draft arXiv:1912.02250v3 (13 Nov 2020), '
+                 'distinct from the ACM version of record. PDF SHA-256 '
+                 '677fecb0313df458b7b82ed0da22d80327baaa4dc001d37e4f8284a4f52d44c5.',
     },
 
     'Chareton2021Qbricks': {
