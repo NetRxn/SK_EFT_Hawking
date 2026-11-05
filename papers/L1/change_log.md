@@ -71,3 +71,27 @@ frequency-dependent $\chivest$ at higher derivative order).
 ```
 
 The shorter abstract reflows the preexisting overwide tracked-hypothesis display into the left column, where its original single line overlaps neighboring prose. The display is therefore broken across four aligned lines, preserving its complete mathematical token sequence. This is the sole body-layout exception; it does not establish the adjacent conjunct-independence claim. All other body source bytes are preserved. The original clipped baseline and the pre-layout-fix overlapping rendering are retained in local execution evidence.
+
+### 2026-11-04 — Finite tolerance, attribution and units
+
+Reapplied the independently reviewed finite-tolerance source and figure
+repair from `45c740f2` to the lead branch. For the assumed speed law,
+finite compatibility gives the exact interval `[(1−τ)², (1+τ)²]`.
+Exact luminality singles out unity. Interval width alone gives no
+prior probability. The introduction distinguishes Volovik's proposal
+from this paper's conditional speed law and uses a dimensionless model
+parameter. The RPA response still requires physical normalization and
+matching to that parameter.
+
+Independent review held the first composition for an inconsistent
+inverse-cutoff unit and language that presented the tensor hypothesis
+and project speed law as established or externally derived. The
+reviewer accepted the corrected composition and visually checked all
+four rebuilt pages. The producer regenerated the October-reviewed
+figure byte for byte. The manuscript SHA-256 is
+`84184864b857e69a2786f522f13b38cbefe98f849b6a15afb1b6d79394ddc293` and the PDF SHA-256 is
+`9f09e22dddbf8f6efbb433366d2b91fd8fb8df3530a66a2302b3e3b1690c4bbb`. Six inherited overfull boxes and blank section pointers
+remain open, along with H1 microscopic dynamics, B3 normalization and
+window, transport matching, D3 and Paper 25 figure propagation, and
+fresh claims and Stage 13 evaluation. This record is scoped to the
+lead-branch source, figure and rendered PDF.
