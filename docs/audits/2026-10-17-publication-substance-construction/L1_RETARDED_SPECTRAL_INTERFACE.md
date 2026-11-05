@@ -8102,3 +8102,18 @@ The pair adds 180 disjoint words and contributes
 `-11673324034363939437/2361183241434822606848`.
 Verified dominant coverage is 68 of 148 orbits and 6,852 of
 9,216 words.
+
+### Complete chirality pairs for (19,6), (8,5), and (9,4)
+
+Independent review verified 256 ordered direct selectors, 16
+terminal shards, four singleton class witnesses and exact scaling
+in each run. All imaginary parts vanish and no caps were hit.
+
+| Direct representative | Chirality counterpart | Words per orbit | Direct subtotal | Multiplicity | Full receipt SHA-256 |
+|---|---|---:|---|---:|---|
+| [(19,6)](l1_gamma_19_6.out.txt) | (23,2) | 90 | `-1297036003818215493/4722366482869645213696` | 9 | `6b380215100b5644c9ef21914228fce43f740426256e3df006c009da6c3da93c` |
+| [(8,5)](l1_gamma_8_5.out.txt) | (12,1) | 72 | `-58583762512121259/2361183241434822606848` | 18 | `b5a0dd52f6761f9d9cca1302c5e608bd052dabce0011ef305e54026e466e4ac6` |
+| [(9,4)](l1_gamma_9_4.out.txt) | (13,0) | 72 | `-58583762512121259/2361183241434822606848` | 18 | `ed278cbf5a2ad4ac19a6ad026d406c989d9abb569653b1fc9b0e3cae430b40ba` |
+
+The six signed orbits add 468 disjoint words. Verified dominant
+coverage is 74 of 148 orbits and 7,320 of 9,216 words.
