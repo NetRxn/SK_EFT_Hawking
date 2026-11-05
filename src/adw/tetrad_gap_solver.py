@@ -1,19 +1,9 @@
-"""Tetrad Gap Equation Solver — Integral Formulation.
+"""Scalar NJL gap curves with finite-precision failure propagation.
 
-Solves the NJL-type gap equation for the tetrad VEV:
-    Δ = G · N_f · Δ · I(Δ)
-where I(Δ) = ∫₀^Λ ρ(p)/(p²+Δ²) dp with ��(p) = c₄·p³.
-
-This module provides:
-1. Δ*(G) curve: order parameter vs coupling strength
-2. Phase diagram: identify critical coupling and vestigial window
-3. Cross-validation with V_eff formulation in gap_equation.py
-
-The gap equation is the first explicit derivation for the tetrad channel.
-No published work has written it down.
-
-Lean: TetradGapEquation.lean (gap_nontrivial_exists, gap_trivial_unique_subcritical,
-      gap_solution_monotone, criticalCoupling_formula)
+The integral model shares a threshold, not the positive roots of the
+regulated scalar potential. Microscopic ADW identification is uncomputed.
+Conditional vestigial metadata below remains a separate model component;
+no new physical phase, native result or figure acceptance is supplied.
 """
 
 import numpy as np
@@ -72,31 +62,29 @@ def compute_gap_curve(
     G_max_ratio: float = 10.0,
     n_points: int = 200,
 ) -> GapCurveResult:
-    """Compute the Δ*(G) curve over a range of couplings.
+    """Sample scalar NJL roots; propagate any canonical numerical refusal.
 
-    Args:
-        Lambda: UV cutoff
-        N_f: Number of Dirac fermion species
-        G_min_ratio: Minimum G/G_c ratio
-        G_max_ratio: Maximum G/G_c ratio
-        n_points: Number of coupling points
-
-    Returns:
-        GapCurveResult with the complete curve
+    Nonnegative finite ordered ratios, including zero/equal ranges, and
+    positive integer counts including one are valid. No quadrature estimate
+    is formed here. Positive endpoint products must be representable.
+    Above-cutoff roots are mathematical continuation, not UV/ADW validation.
     """
-    G_c = tetrad_critical_coupling_integral(Lambda, N_f)
-    G_values = np.linspace(G_min_ratio * G_c, G_max_ratio * G_c, n_points)
-    Delta_values = np.array([
-        tetrad_gap_solution(G, Lambda, N_f) for G in G_values
-    ])
+    from src.core.formulas import _tetrad_njl_real, _tetrad_njl_count, _tetrad_njl_product
 
-    return GapCurveResult(
-        G_values=G_values,
-        Delta_values=Delta_values,
-        G_c=G_c,
-        Lambda=Lambda,
-        N_f=N_f,
-    )
+    G_min_ratio = _tetrad_njl_real(G_min_ratio, "G_min_ratio")
+    G_max_ratio = _tetrad_njl_real(G_max_ratio, "G_max_ratio")
+    n_points = _tetrad_njl_count(n_points, "n_points")
+    if G_max_ratio < G_min_ratio:
+        raise ValueError("coupling ratio range must be ordered")
+    G_c = tetrad_critical_coupling_integral(Lambda, N_f)
+    G_min = (0.0 if G_min_ratio == 0 else
+             _tetrad_njl_product((G_min_ratio, G_c), (), "minimum coupling"))
+    G_max = (0.0 if G_max_ratio == 0 else
+             _tetrad_njl_product((G_max_ratio, G_c), (), "maximum coupling"))
+    G_values = np.linspace(G_min, G_max, n_points)
+    Delta_values = np.array([tetrad_gap_solution(G, Lambda, N_f) for G in G_values])
+    return GapCurveResult(G_values=G_values, Delta_values=Delta_values,
+                          G_c=G_c, Lambda=Lambda, N_f=N_f)
 
 
 def compute_phase_diagram(
@@ -146,7 +134,7 @@ def cross_validate_Gc(
     Lambda: float = ADW_VESTIGIAL['Lambda'],
     N_f: int = ADW_VESTIGIAL['N_f'],
 ) -> dict:
-    """Cross-validate G_c between integral and V_eff formulations.
+    """Compare threshold coefficients only, not full models or positive roots.
 
     Returns:
         Dict with both G_c values and their ratio
