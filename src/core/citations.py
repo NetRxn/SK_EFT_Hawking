@@ -1103,10 +1103,9 @@ CITATION_REGISTRY = {
                     'papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex',
                     'src/second_order/enumeration.py',
                     'papers/I1/paper_draft.tex'],
-        'provides': ['Eq. (3.20) §III: dynamical KMS Z₂ symmetry + unitarity '
-                     '(Im S_eff ≥ 0) ⇒ ∂_μ s^μ ≥ 0 (entropy-current monotonicity), '
-                     'WITHOUT pointwise NEC. Wave 5 second-law primary anchor.'],
-        'notes': 'SK-EFT second law without NEC. arXiv:1612.07705 verified 2026-04-26; year/journal corrected 2026-05-11 (Bundle I1 Stage-13 fix-pass) — WebFetch on arxiv.org/abs/1612.07705 confirms first-submitted Dec 2016, no JHEP publication info on arXiv metadata (registry key retained as GloriosoLiu2018 for backwards-compat with downstream cites; bibitem cites (2016) correctly).',
+        'provides': ['§III.B: local entropy production is nonnegative in the SK-EFT derivative '
+                     'expansion under the stated dynamical KMS and unitarity assumptions.'],
+        'notes': 'Local SK-EFT second law from dynamical KMS symmetry and unitarity. arXiv:1612.07705 verified 2026-04-26; year/journal corrected 2026-05-11 (Bundle I1 Stage-13 fix-pass) — WebFetch on arxiv.org/abs/1612.07705 confirms first-submitted Dec 2016, no JHEP publication info on arXiv metadata (registry key retained as GloriosoLiu2018 for backwards-compat with downstream cites; bibitem cites (2016) correctly).',
     },
     'Jana2020': {
         'authors': 'Jana, C., Loganayagam, R., Rangamani, M.',

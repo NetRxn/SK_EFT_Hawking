@@ -131,7 +131,7 @@ dynamics:
    inequality.
 4. **Second law**: Glorioso–Liu SK-EFT entropy-current monotonicity
    (arXiv:1612.07705 §III: dynamical KMS Z₂ + Im S_eff ≥ 0
-   ⇒ ∂_μ s^μ ≥ 0, **without invoking pointwise NEC**).
+   ⇒ ∂_μ s^μ ≥ 0 in the local-equilibrium EFT).
 
 ## Cross-wave connections
 
@@ -845,8 +845,8 @@ gravity ADW black holes, anchored on:
   approximation `κ(t) ~ κ_0 · exp(-t/τ_cool)`.
 - **Hawking 1975** (CMP 43, 199) for the Schwarzschild heating regime
   (`b.M > M_c`): `dT_H/dt > 0`, finite t-evap, classical T_H = ℏ/(8πM).
-- **Glorioso–Liu 2017** (arXiv:1612.07705) for the SK-EFT second law
-  without NEC.
+- **Glorioso–Liu 2017** (arXiv:1612.07705 §III.B) for the local
+  SK-EFT second law in the derivative expansion.
 - **Project-original** `M_c = (N_f · Λ_UV)/(12π · α_ADW)` ansatz (Wave 5
   deep-research §3 dimensional analysis) is encoded as a tracked
   hypothesis, NOT a derivation.
