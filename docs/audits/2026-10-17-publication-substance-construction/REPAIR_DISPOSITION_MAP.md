@@ -78,19 +78,30 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   the lead priority, original B3/tensor/matter/transport acceptance or full prose BLOCK.
 
 
-- **Accepted next L1 deeper construction assignment.** Executor accepted ownership
+- **Accepted L1 deeper construction assignment, still OPEN.** Executor accepted ownership
   of the full tensor leading nonzero-g1 collective-body coefficient qprime and
   its source tangent under the original closed action, prospectively fixed
-  source convention, units and regulator. First reconcile existing full
-  denominators, actual S4 insertions and kernel contracts, then independently
-  review the exact calculation design before execution. Acceptance requires
-  complete tensor/normalization evidence or a construction breakdown, independent
-  mathematical/physics verification and ROOT publication intake. Reviewer actor
-  identities belong in Executor's design packet; no runtime assignment or
-  completed review is inferred here. A matching four-site control is enabling
-  evidence, not a replacement for the sixteen-site/physical/state/B3 objective.
-  No favorable coupling/sign, positive body or source projection is selected
-  after seeing a result. ADR008 admission remains a separate fresh decision.
+  source convention, units and regulator. The
+  [reviewed construction and ROOT intake](../2026-11-05-l1-physical-bridges/PUBLICATION_LEADING_METRIC_INTAKE.md)
+  preserve the source/design reviews and two terminal capped-join attempts.
+  Both pass their mandatory controls and complete the necessary support census;
+  neither completes the full tensor. Their failures are not coefficients or
+  infeasibility proofs. A separate independently accepted manual parity argument
+  proves cubic numerator and quartic partition zeros on the same four-site
+  regulator. With empty linear00/11 support, normalized literalG has zero00/11
+  entries wherever fullZ is nonzero and cannot be strictly real Euclidean SPD.
+  At g2=0 normalization is undefined. This settles that regulator's strict-SPD
+  decision, not indefinite/Lorentzian or physical sixteen-site construction.
+  Full tensor, source/body/state, B3 normalization/window, matter/tensor and
+  transport obligations remain OPEN at original strength. Executor is assessing
+  the next bounded construction that supplies evidence directly to that physical
+  chain; ROOT records its accepted milestone here after review. The prospective
+  Dirac-loop factorization has mathematical design acceptance only. No execution,
+  cap increase, blind retry, task cancellation or scientific deferral follows.
+  A four-site result remains enabling evidence rather than a replacement for
+  the sixteen-site/physical/state/B3 objective. No favorable coupling/sign,
+  positive body or source projection is selected after evaluation. ADR008
+  admission remains a separate fresh decision.
 
 - **L3 independent enabling reconciliation.** The
   [pinned Paper27/L3 source and lifecycle reconciliation](L3_READINESS_RECONCILIATION_20261105.md)

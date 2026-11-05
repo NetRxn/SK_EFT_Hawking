@@ -1,0 +1,11 @@
+{
+  "incoming": "bd5b4d471f98d96b01581d97042d4c3fb3d35106",
+  "incoming_files": 26,
+  "unchanged_incoming_blobs": 25,
+  "only_changed_incoming_blob": "docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT1_FAILURE.md",
+  "exact_authorized_replacement": true,
+  "all_five_original_archives_unchanged": true,
+  "manuscript_catalog_human_audit_ledger_unchanged": true,
+  "independent_review_checks": 346,
+  "no_scientific_or_native_execution": true
+}
