@@ -781,6 +781,149 @@ theorem eh_box_stationary (a b : Chart) (hab : a ≤ b)
     hcont hderiv hint hface] at hd
   exact hd
 
+namespace EHChart
+
+abbrev MetricPath := ℝ → Chart → MetricMatrix
+
+noncomputable def spatialLineDeriv (f : Chart → ℝ) (x : Chart) (a : Fin 4) : ℝ :=
+  deriv (fun t : ℝ => f (x + t • Pi.single a 1)) 0
+
+noncomputable def metricInverse (g : MetricPath) (s : ℝ) (x : Chart) : MetricMatrix :=
+  ((g s x : Matrix (Fin 4) (Fin 4) ℝ)⁻¹ : Matrix (Fin 4) (Fin 4) ℝ)
+
+noncomputable def metricWeight (g : MetricPath) (s : ℝ) (x : Chart) : ℝ :=
+  Real.sqrt |Matrix.det (g s x : Matrix (Fin 4) (Fin 4) ℝ)|
+
+noncomputable def metricConnection (g : MetricPath) (s : ℝ) (x : Chart) : Christoffel :=
+  christoffelKoszul (metricInverse g s x)
+    (fun a i j => spatialLineDeriv (fun y => g s y i j) x a)
+
+noncomputable def metricConnectionPartial (g : MetricPath) (s : ℝ) (x : Chart) :
+    ChristoffelPartial :=
+  fun a r i j => spatialLineDeriv (fun y => metricConnection g s y r i j) x a
+
+noncomputable def metricRicci (g : MetricPath) (s : ℝ) (x : Chart) : RicciTensor :=
+  ricciOf (riemannCoord (metricConnection g s x) (metricConnectionPartial g s x))
+
+noncomputable def density (g : MetricPath) (s : ℝ) (x : Chart) : ℝ :=
+  metricWeight g s x * scalarOf (metricRicci g s x) (metricInverse g s x)
+
+noncomputable def deltaConnection (g : MetricPath) (x : Chart) : Christoffel :=
+  fun r i j => deriv (fun s => metricConnection g s x r i j) 0
+
+noncomputable def deltaConnectionPartial (g : MetricPath) (x : Chart) :
+    ChristoffelPartial :=
+  fun a r i j => spatialLineDeriv (fun y => deltaConnection g y r i j) x a
+
+noncomputable def inversePartial (g : MetricPath) (x : Chart) : Fin 4 → MetricMatrix :=
+  fun a i j => spatialLineDeriv (fun y => metricInverse g 0 y i j) x a
+
+noncomputable def weightPartial (g : MetricPath) (x : Chart) : Fin 4 → ℝ :=
+  fun a => spatialLineDeriv (metricWeight g 0) x a
+
+noncomputable def current (g : MetricPath) (a : Fin 4) : Chart → ℝ :=
+  densityCurrent (metricWeight g 0) (metricInverse g 0) (deltaConnection g) a
+
+private theorem scalarOf_flat_hasDerivAt (B R : ℝ → MetricMatrix)
+    (B' R' : MetricMatrix) (t : ℝ)
+    (hB : ∀ i j, HasDerivAt (fun s => B s i j) (B' i j) t)
+    (hR : ∀ i j, HasDerivAt (fun s => R s i j) (R' i j) t)
+    (hflat : ∀ i j, R t i j = 0) :
+    HasDerivAt (fun s => scalarOf (R s) (B s)) (scalarOf R' (B t)) t := by
+  have h (i j : Fin 4) :
+      HasDerivAt (fun s => B s i j * R s i j) (B t i j * R' i j) t := by
+    simpa [hflat i j] using (hB i j).fun_mul (hR i j)
+  exact RiemannDifferentialBianchi.sum4_deriv (fun i =>
+    RiemannDifferentialBianchi.sum4_deriv (fun j => h i j))
+
+/-- These are differentiability, mixed-partial, and metric compatibility
+conditions for actual coordinate expressions at the background. The Ricci
+flatness is a property of the base metric, independent of the perturbation. -/
+structure RegularBase (g : MetricPath) (x : Chart) : Prop where
+  nondegenerate : ∀ᶠ s in 𝓝 (0 : ℝ),
+    Matrix.det (g s x : Matrix (Fin 4) (Fin 4) ℝ) ≠ 0
+  baseSymmetric : ∀ y i j, g 0 y i j = g 0 y j i
+  flat : ∀ i j, metricRicci g 0 x i j = 0
+  paramWeight : DifferentiableAt ℝ (fun s => metricWeight g s x) 0
+  paramInverse : ∀ i j, DifferentiableAt ℝ (fun s => metricInverse g s x i j) 0
+  paramConnection : ∀ r i j, DifferentiableAt ℝ (fun s => metricConnection g s x r i j) 0
+  commute : ∀ a r i j, HasDerivAt (fun s => metricConnectionPartial g s x a r i j)
+    (deltaConnectionPartial g x a r i j) 0
+  spatialWeight : ∀ a, DifferentiableAt ℝ
+    (fun t : ℝ => metricWeight g 0 (x + t • Pi.single a 1)) 0
+  spatialInverse : ∀ a i j, DifferentiableAt ℝ
+    (fun t : ℝ => metricInverse g 0 (x + t • Pi.single a 1) i j) 0
+  spatialDelta : ∀ a r i j, DifferentiableAt ℝ
+    (fun t : ℝ => deltaConnection g (x + t • Pi.single a 1) r i j) 0
+  inverseCompat : inverseMetricCompatiblePartial
+    (metricConnection g 0 x) (metricInverse g 0 x) (inversePartial g x)
+  weightCompat : densityCompatiblePartial
+    (metricConnection g 0 x) (metricWeight g 0 x) (weightPartial g x)
+
+theorem local_eh_variation (g : MetricPath) (x : Chart)
+    (D : Fin 4 → Chart →L[ℝ] ℝ) (h : RegularBase g x)
+    (hD : ∀ a, HasFDerivAt (current g a) (D a) x) :
+    HasDerivAt (fun s => density g s x) (∑ a, D a (Pi.single a 1)) 0 := by
+  have hsym : MetricPartialSymmetric
+      (fun a i j => spatialLineDeriv (fun y => g 0 y i j) x a) := by
+    intro a i j
+    exact congrArg (fun f => spatialLineDeriv f x a)
+      (funext fun y => h.baseSymmetric y i j)
+  have ht : IsTorsionFree (metricConnection g 0 x) :=
+    christoffelKoszul_isTorsionFree _ _ hsym
+  have hRic (i j : Fin 4) :
+      HasDerivAt (fun s => metricRicci g s x i j)
+        (ricciVariation (metricConnection g 0 x) (deltaConnection g x)
+          (deltaConnectionPartial g x) i j) 0 :=
+    palatini_ricci (fun s => metricConnection g s x)
+      (fun s => metricConnectionPartial g s x) _ _ 0 ht
+      (fun r a j => (h.paramConnection r a j).hasDerivAt) h.commute i j
+  have hScalar :=
+    scalarOf_flat_hasDerivAt (fun s => metricInverse g s x) (fun s => metricRicci g s x)
+      _ _ 0 (fun i j => (h.paramInverse i j).hasDerivAt) hRic h.flat
+  have hZero : scalarOf (metricRicci g 0 x) (metricInverse g 0 x) = 0 := by
+    simp [scalarOf, sumFin4, h.flat]
+  have hDiv := weighted_ricci_trace_eq_chart_divergence
+    (metricWeight g 0) (metricInverse g 0) (deltaConnection g) x (metricConnection g 0 x)
+    (weightPartial g x) (inversePartial g x) (deltaConnectionPartial g x) D
+    ht h.inverseCompat h.weightCompat hD
+    (fun a => (h.spatialWeight a).hasDerivAt)
+    (fun a i j => (h.spatialInverse a i j).hasDerivAt)
+    (fun a r i j => (h.spatialDelta a r i j).hasDerivAt)
+  simpa only [density, hZero, mul_zero, zero_add, hDiv] using
+    h.paramWeight.hasDerivAt.fun_mul hScalar
+
+/-- The box integral of the actual EH density is stationary for the
+specified perturbation, under a.e. compatibility, local dominated
+differentiation, and paired normal traces of its Palatini current. -/
+theorem eh_metric_box_stationary (g : MetricPath) (a b : Chart) (hab : a ≤ b)
+    (D : Fin 4 → Chart → Chart →L[ℝ] ℝ)
+    (hcont : ∀ i, ContinuousOn (current g i) (Set.Icc a b))
+    (hderiv : ∀ x ∈ (Set.pi Set.univ fun i => Set.Ioo (a i) (b i)), ∀ i,
+      HasFDerivAt (current g i) (D i x) x)
+    (hint : IntegrableOn (fun x => ∑ i, D i x (Pi.single i 1)) (Set.Icc a b))
+    (hface : ∀ (i : Fin 4) (y : Fin 3 → ℝ),
+      current g i (Fin.insertNth i (b i) y) = current g i (Fin.insertNth i (a i) y))
+    (hBase : ∀ᵐ x ∂(volume.restrict (Set.Icc a b)),
+      RegularBase g x ∧ ∀ i, HasFDerivAt (current g i) (D i x) x)
+    (L' : ℝ → Chart → ℝ) (u : Set ℝ) (bound : Chart → ℝ)
+    (hu : u ∈ 𝓝 (0 : ℝ))
+    (hmeas : ∀ᶠ t in 𝓝 (0 : ℝ), AEStronglyMeasurable (density g t)
+      (volume.restrict (Set.Icc a b)))
+    (hL0 : IntegrableOn (density g 0) (Set.Icc a b))
+    (hbound : ∀ᵐ x ∂(volume.restrict (Set.Icc a b)), ∀ t ∈ u, ‖L' t x‖ ≤ bound x)
+    (hbound_int : IntegrableOn bound (Set.Icc a b))
+    (hdiff : ∀ᵐ x ∂(volume.restrict (Set.Icc a b)), ∀ t ∈ u,
+      HasDerivAt (fun s => density g s x) (L' t x) t) :
+    HasDerivAt (fun t => ∫ x in Set.Icc a b, density g t x) 0 0 := by
+  refine eh_box_stationary a b hab (current g) D hcont hderiv hint hface
+    (density g) L' u bound hu hmeas hL0 ?_ hbound hbound_int hdiff
+  filter_upwards [hBase, hdiff] with x hx hdx
+  exact (hdx 0 (mem_of_mem_nhds hu)).unique
+    (local_eh_variation g x (fun i => D i x) hx.1 hx.2)
+
+end EHChart
+
 end PalatiniVariation
 
 end SKEFTHawking.RiemannDifferentialBianchi

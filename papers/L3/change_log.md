@@ -327,3 +327,18 @@ Local elaboration passed and the main declarations reported
 only standard axioms. Instantiating the compatibility, mixed
 derivatives, and density variation for an actual metric family,
 and treating the Euler term and microscopic ADW action, remain open.
+
+### Einstein–Hilbert density on a metric path
+
+The chart proof now constructs the inverse, volume density,
+coordinate connection, and curvature from the metric path itself.
+At a Ricci-flat base, the product rule and Palatini variation
+derive the local density derivative as the divergence of its
+actual connection-variation current. The box result uses that
+identity and the stated domination and paired-face hypotheses.
+Independent review accepted the scoped construction. Local
+elaboration passed and both results reported only standard
+axioms. The regularity, mixed-partial and compatibility premises
+still require instantiation for the selected physical metric
+family. Euler boundary cancellation and microscopic ADW
+matching remain open.
