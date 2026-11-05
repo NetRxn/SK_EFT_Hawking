@@ -7939,3 +7939,22 @@ The exact added subtotal is
 The aggregate dominant subtotal over the 40 accepted orbits is
 `-39911200213072065633/2361183241434822606848`, with zero
 imaginary part.
+
+### Complete chirality pairs (9,7)/(13,3) and (16,3)/(20,7)
+
+Independent review checked all 256 direct selectors and 16
+terminal shards in each direct run, using the appropriate pinned
+roster. All gamma classes were singletons. Exact scaling and
+signed witnesses matched, with zero imaginary parts and no caps.
+
+| Direct representative | Chirality counterpart | Words per orbit | Direct subtotal | Multiplicity | Full receipt SHA-256 |
+|---|---|---:|---|---:|---|
+| [(9,7)](l1_gamma_9_7.out.txt) | (13,3) | 360 | `-557561034463996143/2361183241434822606848` | 18 | `d6dfef8762368e766d1efa8abccbd306a2984eb5d34f16adebc7780ebef019c2` |
+| [(16,3)](l1_gamma_16_3.out.txt) | (20,7) | 360 | `-744421773825188613/1180591620717411303424` | 9 | `cf56371c521098e42188beb017297f8df2568b2a918b7faa74d4b065343c7fad` |
+
+The exact whole-member maps establish both chirality counterparts
+and disjointness among the four orbits and from prior coverage.
+The four add 1,440 words and contribute
+`-2929461318650665701/147573952589676412928`.
+Verified dominant coverage is 44 of 148 orbits and 3,948 of
+9,216 words.
