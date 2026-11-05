@@ -34,6 +34,31 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **Accepted next L1 deeper construction assignment.** Executor accepted ownership
+  of the full tensor leading nonzero-g1 collective-body coefficient qprime and
+  its source tangent under the original closed action, prospectively fixed
+  source convention, units and regulator. First reconcile existing full
+  denominators, actual S4 insertions and kernel contracts, then independently
+  review the exact calculation design before execution. Acceptance requires
+  complete tensor/normalization evidence or a construction breakdown, independent
+  mathematical/physics verification and ROOT publication intake. Reviewer actor
+  identities belong in Executor's design packet; no runtime assignment or
+  completed review is inferred here. A matching four-site control is enabling
+  evidence, not a replacement for the sixteen-site/physical/state/B3 objective.
+  No favorable coupling/sign, positive body or source projection is selected
+  after seeing a result. ADR008 admission remains a separate fresh decision.
+
+- **L3 independent enabling reconciliation.** The
+  [pinned Paper27/L3 source and lifecycle reconciliation](L3_READINESS_RECONCILIATION_20261105.md)
+  preserves actual historical acceptances and current four-laws BUILD, existing
+  candidate-specific closures and source/type limits. Researchf905a2873 already
+  supplies Ricci/symmetry/pointwise-nondegeneracy components; do not reassign
+  those as missing. Analytic metric-path/box premises, physical matching and
+  the original four laws remain distinct. Exact authoritative build/extraction,
+  LSP/consumer discovery and new execution admission are not established by
+  the read-only report. L1 stays lead; no L3 repair or priority change occurred.
+
+
 - **L1 primary-body comparison and custody.** The bounded factual correction
   is independently accepted against the four full sources and actual rendered
   manuscript. The current existing claims artifact has125units with complete
@@ -76,16 +101,21 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The accepted scope is an exact finite-lambda generating functional, full
   first/second contacts and conditional dimensional matching. Actual physical
   B3, state, tensor/matter and transport requirements remain open. Executor's
-  next reviewed decompositione79d6aa8 is checkpointed on remote branch
-  codex/l1-common-source-interface-20261105; separate publication intake remains
-  pending. It identifies collective G/A/B/D kernels and physical unit/source
-  correspondence without claiming a derived body or coefficient.
+  matching decompositione79d6aa8 and finite collective-body diagnostic6dbeeb6f
+  are integrated by normal history-preserving merges ending atadebcb7ef.
+  [Scoped acceptance and original reviews](../2026-11-05-l1-physical-bridges/COLLECTIVE_BODY_ACCEPTANCE.md)
+  retain the collective G/A/B/D and source/unit distinctions. At finite N,
+  zero external composite source and no matter determinant, pureg2 has zero
+  raw literal-metric numerator; normalized G/B vanish where the full partition
+  is nonzero. The reused complete four-site denominator supplies a normalized
+  example; the sixteen-site denominator, physical state, source-selected limits
+  and nonzero-g1 body remain open. No global no-go or B3 closure follows.
 
 
 - **Current canonical portfolio measurement.** The existing graph producer
-  remeasures all21bundles/231gates on clean `7b9f8fdb6`:159passed,25blocked,
-  28open,19needs-recheck. No state changes versus425324077 and no newly green
-  bundle. [All exact payloads and independent archive review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CURRENT_7B9_GATE_READBACK.md)
+  remeasures all21bundles/231gates on clean `adebcb7ef`:159passed,25blocked,
+  28open,19needs-recheck. No state changes versus7b9f8fdb6 and no newly green
+  bundle. [All exact payloads and independent archive review](../../../papers/AutomatedReviews/2026-11-05-publication-computation-coverage/CURRENT_ADEB_GATE_READBACK.md)
   preserve static/vacuous coverage limits, source binding and the whole
   measured graph. Focused figure/source closures, exhaustive numerical acceptance and current
   claim intake are progress outside state transitions; they are not scientific

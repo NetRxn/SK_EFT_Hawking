@@ -1,0 +1,9 @@
+# Canonical portfolio readback atadebcb7ef
+
+Existing build_graph.py completed on cleanadebcb7efa33a04fc1e14813bc9e66ca0820dba8 after the source-body repair/closure and normal adoption of Executor matching/body research commits. All21canonicalbundles/231exactgatepayloads, the complete graph and raw stdout/stderr are preserved with hashes and CRC verification. SourceADEB is the measured input; subsequent documentary commits are not fresh gate runs.
+
+Counts remain159passed,25blocked,28open,19needs-recheck, with zero state changes versus7b9 and no newly green bundle. Fullgraph has51098nodes/18785edges; its limitedsource_hash is682c6bfbc7a60d33. Exact commit and whole graph hash separately bind the measurement. Ambiguous-name edge warnings are retained in producer stderr, not waived or repaired in this package.
+
+One further source-comparison finding is canonically FIXED, the four full-body holdings/custody records are accepted, and the existing catalog now125units with five source-WARN reassessments and complete historical lineage; four scientific blockers and all human states remain. These are concrete scoped progress outside mechanical state transitions. The accepted manual matching/parity results identify a finite pureg2 collective-body limitation; they do not establish physical normalization, state, nonzero-g1 body, full denominator, B3range, tensor/matter or transport. Executor accepted the next bounded full-tensor qprime calculation subject to independent design/correct-regulator review.
+
+The fresh affected-domain check passes152cases; L1 compilesfourpages without overflow/errors/unresolvedreferences and has no prose-floor violation. Corpus-level prose checks remain1/3 with19unmeasuredlengths. No new broad-green/native/main/full-stage/publication/human acceptance is asserted. Prior RED35failure receipt and separate6environmentpasses remain historically bound. Resume through the existing repair/disposition map.
