@@ -6671,3 +6671,25 @@ direct after a common assembly. All four outputs were identical.
 The uncached CPU times were 15.42 and 15.34 seconds. The cache
 took 16.98 and 16.99 seconds, despite 152 hits in each pass.
 The current cache is therefore kept out of bulk replay.
+
+**Weighted site-10 selector control.** The paired partial
+transfers completed all 4,174 distinct complement queries from
+8,956 compatible site-10 products. Of these queries, 1,786 have
+nonzero environments. Eight actual queries, including two
+nonzero cases, matched the earlier indexed route. For the
+all-zero external gamma labels and internal `gamma(1,1)=(0,)`,
+the weighted component gives
+`30242684552249295/18889465931478580854784` with zero imaginary part.
+
+Independent review reconstructed the 20 original matrix
+weights and checked each unfactored raw Gaussian result times
+its signed weight. All 20 terms completed within the same caps
+and used the same selector and cut. The sum agrees exactly
+with the weighted route after applying the common divisor once.
+Both routes share the partial-transfer routine. The comparison
+verifies the weighting and grouping for this conditioned
+selector. The remaining internal slices and exterior selectors
+are separate. The weighted and unfactored stdout SHA-256 values are
+`a4c8e0a2a649a75e425b83046a7279bbbec96ff7de509d177e761f327a8d376f`
+and
+`65017657906d5dd872b532330ae403cd2f4c31aef75c04ea0f598aa5ad24d6db`.

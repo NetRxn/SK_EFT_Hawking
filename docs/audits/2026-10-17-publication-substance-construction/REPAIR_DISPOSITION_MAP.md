@@ -229,7 +229,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   the cap to site-10 closure. A bounded alternate join order
   exhausts 14 candidates in the first slice. The indexed site-10
   query has an exact zero control for one complement after a
-  16-slice split. Complete and check the full selector scalar.
+  16-slice split. Exact partial transfers then completed one
+  conditioned selector, matching all 20 unfactored terms under
+  independent review. Complete its other internal gamma slices
+  and verify the exterior roster before crediting the component.
   In parallel, the reviewed 576-occurrence minority census admits
   288 exact center-11 pairs. Independent review verified all 2,304
   leaves and the joint scalar of the 162-row pair at indices 34 and
