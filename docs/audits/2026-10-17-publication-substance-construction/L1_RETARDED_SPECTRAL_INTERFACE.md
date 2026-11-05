@@ -8653,7 +8653,7 @@ acceptance evidence. The receipt bundle digest is
 `bb3c432d527e0ef539b378fab3f76455b72711712c3e577ccc5abbecce55792b`.
 
 Together with the separate original-kernel population below,
-182 of the 272 four-deviation words have portable accepted receipts.
+212 of the 272 four-deviation words have portable accepted receipts.
 The complete action/source ensemble, common partition coefficient
 and physical response matching remain required.
 
@@ -8725,6 +8725,52 @@ From the repository root, use the prepared Python environment to
 run this scientific module with `--word 3`; no argument emits its
 six-word manifest. These entries are disjoint from the accepted
 original-kernel90 and peeled86 populations:182/272 portable
-accepted words. The separate free-torus30 population is still
-running. Other residual cores, the complete source/action sum,
-common partition normalization and physical B3 matching remain open.
+accepted words through this checkpoint. The next subsection adds
+the separate free-torus30 population. Other residual cores, the
+complete source/action sum, common partition normalization and
+physical B3 matching remain open.
+
+## Complete free-torus four-deviation population
+
+The [portable free-torus evaluator](l1_extended_offset_witness_k4_free_torus.py)
+covers30 disjoint entries,14 same-axis and16 mixed-axis. The four
+remaining curvature faces form one (2,3) torus with no boundary
+incidence on action or source links. Both original sources remain
+integrated. The existing three free-torus tensor branches apply
+without gauge fixing. With E action edges and J shared source/action
+integrations, the common divisor is
+`192^(2E+2−J) * 4^64 * 48^11 * 2^15`.
+
+All [30 terminal receipts](l1_k4_free_torus30_receipts.jsonl) have
+exit zero and empty stderr. Independent reviewer
+`/root/l1_transport_review` reconstructed the roster, source-axis
+and J strata, divisors and integral numerators after accounting for
+the branch-denominator LCM1,679,616. Its
+[complete verification](l1_k4_free_torus30_verification.json)
+finds same-axis subtotal `8378727937961970070755/17592186044416`
+and mixed-axis subtotal `9767754984895145920305/35184372088832`.
+Restricted shear is `6989700891028794221205/17592186044416`.
+All15 covariance pairs agree; maximum intermediate size is3,952
+rows within unchanged caps. The receipt archive SHA256 is
+`8d72edb1f363410960d21a395328f32c6c825cfd3ba57e0a4caf5485155ed123`.
+
+The portable evaluator SHA256 is
+`ba82ce5abdcc35dc0e4d98fe52fef1f275837f7063074babfb2cd95c0ab24109`.
+The author checked [all30 geometry/branch equivalences and bounded controls](l1_k4_free_torus_port_equivalence.json);
+the independent reviewer repeated the geometry/branch comparison,
+J=0/J=1 fixed-label controls and receipt readback. ROOT inspected
+the port and reran the full word23 contraction with normal exit
+zero. Its [portable control](l1_k4_free_torus_portable_control.json)
+matches `57744679168632405825/17592186044416`, the divisor and
+raw numerator including the branch LCM. From the repository root,
+run this module with `--word 23`; no argument emits the30-word
+manifest. Sibling imports require no scratch files.
+
+Together the original-kernel90, fully peeled86, single-square6
+and free-torus30 populations cover212/272 words:130 same-axis and
+82 mixed-axis. The60 remaining words are34 same-axis and26 mixed-axis;
+their contribution is unknown, not zero. The next proposed class
+contains eight two-square entries and needs distinct component
+and probe factors for both squares. Complete k4 summation, full
+source/action ensemble, common partition normalization, physical
+susceptibility, microscopic mode and transport matching remain open.

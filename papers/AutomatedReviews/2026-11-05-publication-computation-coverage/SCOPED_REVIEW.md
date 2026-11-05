@@ -21,3 +21,12 @@ asserted from this scoped review. The document validator's basename
 selection also included other existing infra.md documents and reported
 their prior severity errors; that output is not a validation failure
 attributed to this new document. No validator change was made.
+
+The same independent reviewer separately accepted finding1.4 after
+checking a fresh source snapshot, the real namespace import and the
+scanner's population logic. The module resolves to this repository's
+papers/D3/tables.py, while the scanner omits its namespace root. The
+existing scalar renderer rounds log10 of the ratio to one decimal;
+it cannot replace the full-precision ratio regression. The reviewer
+corrected the finding's test-class name before checkpoint. No scanner
+implementation or passing dependency suite is asserted.

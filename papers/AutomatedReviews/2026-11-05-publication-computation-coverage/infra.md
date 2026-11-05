@@ -55,7 +55,7 @@ workflow before changes to the registry, producer or gate machinery.
 
 - **Severity:** required
 - **Lane:** infra
-- **Location:** `tests/test_dependency_declaration.py::_local_module_names`, `tests/test_gravitational_waves.py::TestNumericalWindowPrecision.test_d3_width_ratio_uses_the_exact_algebraic_width`
+- **Location:** `tests/test_dependency_declaration.py::_local_module_names`, `tests/test_gravitational_waves.py::TestWindowNumericalPrecision.test_d3_width_ratio_uses_the_exact_algebraic_width`
 - **Observed:** The declaration suite fails with `papers <- tests/test_gravitational_waves.py`. That regression imports the actual local `papers.D3.tables` producer. The repository contains a namespace directory rather than a top-level papers.py or a direct papers/__init__.py. The scanner collects file stems and immediate parent names and does not recognize this namespace root. No external papers distribution supplies the producer.
 - **Expected:** Recognize actual local namespace packages without hiding genuinely undeclared third-party imports. Preserve the exact-width regression's numerical strength; the publication renderer's rounded scalar output is insufficient to replace its full-precision assertion.
 - **Next action:** Lead owns the minimal scanner repair through architecture-change review, with independent real namespace and undeclared-external controls. This is a full-qualification blocker, distinct from the independently accepted scalar speed repair.
@@ -68,4 +68,4 @@ are fixed. Producer and evaluator regressions must also be added to the
 existing test suites during repair. Current
 L1 sentence targets have been separately corrected to exact source
 identifiers with scope qualifications. That source repair does not close
-any of the three findings above.
+any of the four findings above.

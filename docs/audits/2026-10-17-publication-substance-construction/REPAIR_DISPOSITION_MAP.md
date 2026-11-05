@@ -292,10 +292,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   The [complete original-kernel population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-original-kernel-four-deviation-population)
   now has all90 words independently accepted, including the other48
   completed cases. Together with the peeled86 population and the
-  [portable single-square6 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-single-square-four-deviation-population),182 of272
-  words have portable accepted receipts. The separate30-word
-  free-torus population is independently accepted; its portable
-  source integration and receipt archive are next.
+  [portable single-square6 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-single-square-four-deviation-population)
+  and [free-torus30 population](L1_RETARDED_SPECTRAL_INTERFACE.md#complete-free-torus-four-deviation-population),212 of272
+  words have portable accepted receipts and reviewed evaluators.
+  The60 remaining words split34 same-axis and26 mixed-axis.
+  Next construct the two-square8 class without conflating its two
+  component/probe factors, then finish the other residual cores.
   The remaining residual-core classes still require construction.
   The shared-Q and left-cache benchmarks
   retain the direct transfer route for the current workload.
