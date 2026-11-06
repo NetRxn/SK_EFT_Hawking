@@ -1,0 +1,35 @@
+{
+  "executor_head": "acb34ee7d99d55703a19dc2f7cbdeaa666e717cc",
+  "parent": "e2e393b126bedd49ca114efc6ca8c8ae005e8876",
+  "target_head": "9b61cacaa50a813c6f6e9a8731bdd65584460124",
+  "paths": [
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_ACCEPTANCE.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_MATH_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_RESULT_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_SOURCE_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_EXTERNAL_TOEHOLDS_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_FORMAL_TOEHOLDS_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_HISTORY_TOEHOLDS_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_TOEHOLD_RESEARCH.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_TOEHOLD_SCOPE_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_TOEHOLD_SYNTHESIS_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/positive_toeholds_convention_evidence_r1.zip",
+    "docs/audits/2026-11-05-l1-physical-bridges/positive_toeholds_convention_manifest_r1.json",
+    "docs/roadmaps/Phase6a_Roadmap.md"
+  ],
+  "archive_members_verified": 29,
+  "archive_sha256": "64b82488088b99f746157707fd0360db59f4b720952299109c791a39c6b9c609",
+  "accepted_inputs_exact": [
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE.md",
+    "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md",
+    "ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md"
+  ],
+  "numerical_plan_exact": true,
+  "primary_sources_exact": 3,
+  "crosswalk_sha256": "59b2a4a9c9856da3a2eec2b8f0cd62a94c5dfce03026d9429538f4346b1a825e",
+  "scope": "ROOT full result and both actual R2 reviews read; bounded coordinate acceptance only; additional full-cut BUILD accepted owner Executor; no physical completion"
+}

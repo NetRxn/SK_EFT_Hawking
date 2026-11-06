@@ -34,6 +34,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Current resume point — numerical foundation repaired; independent R2 reviews active; convention intake integrated.**
+[Four exact source/API defects and remote-restorable R1/R2 candidates](ORIGINAL_COEFFICIENT_TASK1_REPAIR_CHECKPOINT_R2.md) are tracked through the canonical PRIMARY review finding L1 section1.1. All23 new counterexamples fail on R1;52bounded tests pass on R2. Fresh complete different science/algebra reviews are active; no source acceptance/canonical closure or coefficient result is claimed. ROOT owns closure/integration after those reviews.
+
+[ROOT finished full convention intake](../2026-11-05-l1-physical-bridges/ROOT_CONVENTION_CROSSWALK_INTAKE_R1.md) and normally integrated Executor's exact17-path checkpoint. Additional P0↔N0/C3 full-cut transport remains a separately accepted Executor BUILD and must pass independent actual math/source review before Task3 consumes physical certificates; actual construction is under revision. Research scouts are preserved as leads only. The same focused PR118/a56 full merge-profile process remains live; its result is pending. Portfolio priority and original acceptance remain unchanged.
+
+
 **Current resume point — focused original Eq7 fully source/native/canonical reviewed; actual merge qualification live.**
 Draft [PR118](https://github.com/NetRxn/SK_EFT_Hawking/pull/118) is pushed at a56e6a644e2520a1891e70c607dbc98d13615062. Its nine accepted mathematical modules/nine imports have complete different source composition ACCEPT, OWN native10,843PASS and [six canonical derivatives independently accepted](ORIGINAL_EQ7_MAIN_GENERATED_REVIEW_R1.md). All41034old records remain exact;626new records only belong to those9modules.419eligible theorem-kind nodes include416explicit public theorems, one proof-field projection and two proof-valued instances. Two D11 backing targets are independently disambiguated after the realTorus name collision; [exact scoped review](D11_TORUS_REFERENCE_PROPAGATION_REVIEW_R1.md) leaves all sentence/claim/human data intact and broader111-link debt open. Existing FULL verify_scope --merge-gate is running on this clean exact draft, with raw baseline25FAIL/2PASS preserved. No main merge or full-profile pass is claimed.
 
