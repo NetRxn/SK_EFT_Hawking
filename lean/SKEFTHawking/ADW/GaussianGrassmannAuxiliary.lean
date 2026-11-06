@@ -723,7 +723,7 @@ theorem quadratic_two_scale_coefficients (g : ℂ) :
         g - 1/8 := by
   constructor <;> rw [quadratic_compensation_coefficient] <;> norm_num
 
-/-- The fourteen-generator word is nonzero; it consists of the seven disjoint coordinate pairs. -/
+/-- The available ordered-pair prefix is nonzero; for V at least two it has seven pairs. -/
 theorem seven_word_nonzero (L : Torus) :
     (((pairPrefix L 7).prod : bilinearAlgebra L) : Grassmann L) ≠ 0 := by
   intro hz
