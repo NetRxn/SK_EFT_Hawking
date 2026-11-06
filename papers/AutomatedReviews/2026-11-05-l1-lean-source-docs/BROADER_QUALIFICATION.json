@@ -1,0 +1,70 @@
+{
+  "measured_at": "2026-11-06T00:01:11.331446+00:00",
+  "baseline_before_comment_repair": "37dd9250420e4fb986e06bb9ab1776ed7b6a1856",
+  "tested_source": "1028b047446452398836793e1afda36f7ad56a3a",
+  "command": "uv run python -m pytest -q",
+  "session": 14865,
+  "terminal_exit_code": 1,
+  "result": {
+    "passed": 8214,
+    "failed": 19,
+    "skipped": 7,
+    "deselected": 95,
+    "warnings": 7,
+    "seconds": 1757.04
+  },
+  "failed_tests": [
+    "tests/test_d5_bundles_readiness.py::TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom",
+    "tests/test_d5_bundles_readiness.py::TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary",
+    "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet",
+    "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom",
+    "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom",
+    "tests/test_d5_bundles_readiness.py::TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red",
+    "tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_the_undeclared_ceiling_has_ZERO_headroom",
+    "tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_AWAY_a_declaration_turns_the_check_RED",
+    "tests/test_d5_papers_prose.py::TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree",
+    "tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean",
+    "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails",
+    "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom",
+    "tests/test_d5_reviews.py::TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red",
+    "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]",
+    "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]",
+    "tests/test_validate_public_surface.py::TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population"
+  ],
+  "unchanged_working_tree_prefixes_against_baseline": [
+    "src",
+    "scripts",
+    "tests",
+    "papers",
+    ".claude/plugins",
+    "pyproject.toml",
+    "uv.lock"
+  ],
+  "only_committed_source_diff": [
+    "lean/SKEFTHawking/GravitationalWaves.lean"
+  ],
+  "comment_only_preservation_nonblock_sha256": "2e84faa34934b06504b5a31ab71dde726b2236706c20bd315a6b02ac1622524d",
+  "remaining_generated_paths": [
+    {
+      "path": "docs/counts.json",
+      "sha256": "b25c7dc6837683d15b34f7d086910180856a6495e7c27a085505e6e4aefa3c47"
+    },
+    {
+      "path": "docs/counts.tex",
+      "sha256": "32f55a939bca842962f16278e36f825b9f9001ee08f1d7aa4020479ee6985e7f"
+    },
+    {
+      "path": "lean/lean_deps.json.hash",
+      "sha256": "60037468f863b9d71cc775ec6216af035f09b36562a5683dd79c633fe7f706b2"
+    }
+  ],
+  "count_change": {
+    "old_pytest_cases": 8059,
+    "new_pytest_cases": 8140,
+    "other_json_fields_unchanged_except_generated": true
+  },
+  "scope": "Actual full default testpaths run on current primary. No literal baseline rerun and no waiver inferred. Independent dependency/failure attribution and artifact reconciliation remain required; publication checkout and main candidate are not certified."
+}

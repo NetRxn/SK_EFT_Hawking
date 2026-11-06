@@ -1,0 +1,6 @@
+{
+  "command": "python3 -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text()); p=s.split(\"The 2017 binary-neutron-star merger\",1)[1].split(\"Our assumed speed law\",1)[0]; assert \"emission-time assumptions\" in p and \"alternative emission histories can weaken\" in p, \"published propagation cap lacks its source-emission assumptions\"'",
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

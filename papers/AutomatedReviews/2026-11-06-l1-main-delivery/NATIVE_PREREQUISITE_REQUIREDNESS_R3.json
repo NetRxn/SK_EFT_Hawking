@@ -1,0 +1,182 @@
+{
+  "task": "l1-native-prerequisite-requiredness-r3",
+  "generated_utc": "2026-11-06T07:39:44.320703+00:00",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-native-prerequisite-requiredness-r3.json",
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "refs": {
+    "publication": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+    "primary": "4fca5970f4f4cb0b408ea33243076c72058f6e56"
+  },
+  "final_publication_status": "",
+  "final_primary_status": "",
+  "primary_branch": "codex/publication-primary-custody-20261105",
+  "reference_sha256s": {
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase6a_Roadmap.md": "f37c9e1606b640408c58887c2607ad75caf1036278d3731d5fe6ad53d60c014e",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-remediation-notebook.md": "c772ef0fd53fa18782d3f670f3d6b30686201ece1fb559aabd2aa8ba0691b259",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/AGENTS.md": "be95697d83810ffb7a384c6be0616b726287b57a38db68ce3275b8b3efacab7b",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/CLAUDE.md": "8b285a18bc34b4bba4dede0e2b9bb40c2262f9eda5fab546c0206d9f92e8ad48",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md": "393da185686533d92a466da3dec0501f2c88e3e46dfad6d4d378915caf1bdf22",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-008-shared-lean-slot-control-plane.md": "8b783a2a2698dd2e9e5808f992fbb2a8115a89454d34a4926c78843d4b21a164",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-017-codex-continuity.md": "bbb5c52cff5f8269b6007e6faa170ad74d0fae790a71705abc0c4925d152de29",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/CODEX_CONTINUITY.md": "6276f6e4912bc46d63fa7b1e7bba102882ee68e08e4157572aa581ead6c1ba46",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md": "2cc663c170c504e31367efd8a271b5716731087afb9cb4abec3970f1cd7e103d",
+    "/private/tmp/l1-native-validation-route-r1.md": "1b8d466a2149d145e424bb293a810cf9ac6ad81a123bbac522f948d1da4e3e8e",
+    "/private/tmp/l1-primary-integration-prerequisites-r2.md": "f5ab0954c42c1204140f4f95b3cb53ae88f14bf2eb5c13ea1261310525dcf839"
+  },
+  "scientific_project_import_closure_sha256s": {
+    "lean/SKEFTHawking/GravitationalWaves.lean": {
+      "publication": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
+      "primary": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d"
+    },
+    "lean/SKEFTHawking/LinearizedEFE.lean": {
+      "publication": "ef2c73f40daabb1266d9d10803bebeab894dafdce9c2682f7b3cfc9ac397e339",
+      "primary": "ef2c73f40daabb1266d9d10803bebeab894dafdce9c2682f7b3cfc9ac397e339"
+    },
+    "lean/SKEFTHawking/ADWMechanism.lean": {
+      "publication": "025eb5c3934b1b0866b0a85aabf0cb3c0bec263a0f9970092e32dad3d5428e24",
+      "primary": "025eb5c3934b1b0866b0a85aabf0cb3c0bec263a0f9970092e32dad3d5428e24"
+    },
+    "lean/SKEFTHawking/Basic.lean": {
+      "publication": "2bb228652560bd95d72e562a0eafbd95dfa531380e45a45c18e8f3e43e275557",
+      "primary": "2bb228652560bd95d72e562a0eafbd95dfa531380e45a45c18e8f3e43e275557"
+    }
+  },
+  "pins_git_blobs": {
+    "lean/lean-toolchain": {
+      "publication": "94b9f495baff80fd9cb44aad8f4762cb3b2066fe",
+      "primary": "94b9f495baff80fd9cb44aad8f4762cb3b2066fe"
+    },
+    "lean/lakefile.toml": {
+      "publication": "6a58bf72dbece91db21d4b7af192c417ddf28eb0",
+      "primary": "50b396ab6efc46bea830e80ffbe9d128fd6c83d2"
+    },
+    "lean/lake-manifest.json": {
+      "publication": "56b701b1124d456d9e8c7cc2df9f6b5a26b47a5f",
+      "primary": "56b701b1124d456d9e8c7cc2df9f6b5a26b47a5f"
+    }
+  },
+  "lakefile_difference": "Only primary additional NavierStokes lean_lib stanza with autoImplicit=true; this is not a runtime equivalence certificate.",
+  "correction_to_r2": "Withdraw requirement to import lifecycle/controller package into publication. R2 inventory is source difference evidence, not a mandatory scientific dependency set.",
+  "newer_controller_import_necessary": false,
+  "newer_controller_import_sufficient": false,
+  "requiredness_basis": [
+    {
+      "path": "primary docs/adrs/ADR-008-shared-lean-slot-control-plane.md",
+      "lines": [
+        181,
+        186,
+        188
+      ],
+      "meaning": "Primary orchestrator authority; exact successful-build epoch; ancestry-safe leased integration."
+    },
+    {
+      "path": "primary scripts/lean_slots/controller.py",
+      "lines": [
+        370,
+        422
+      ],
+      "meaning": "Full commit plus pins and exact epoch equality."
+    },
+    {
+      "path": "primary scripts/lean_slots/controller.py",
+      "lines": [
+        424,
+        456
+      ],
+      "meaning": "Clean configured-primary source built before its epoch publication."
+    },
+    {
+      "path": "primary scripts/lean_slots/controller.py",
+      "lines": [
+        495,
+        540
+      ],
+      "meaning": "Prepare verifies exact base/dependency/epoch."
+    },
+    {
+      "path": "primary scripts/lean_slots/controller.py",
+      "lines": [
+        898,
+        965
+      ],
+      "meaning": "Absorb checks actual primary branch, integrates lease-owned work and builds result."
+    },
+    {
+      "path": "primary docs/dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md",
+      "lines": [
+        123,
+        130
+      ],
+      "meaning": "Canonical loaded controller/inventory selects operating domain."
+    },
+    {
+      "path": "primary docs/dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md",
+      "lines": [
+        481,
+        531
+      ],
+      "meaning": "Existing source review/protected delivery/runtime admission; no transport-driven primary movement."
+    },
+    {
+      "path": "publication scripts/verify_scope.py",
+      "lines": [
+        220,
+        262
+      ],
+      "meaning": "Actual whole merge profile independent of scoped diagnostics."
+    }
+  ],
+  "minimal_scoped_gw_source_prerequisites": "All four actual project-import files already identical; no additional GW or lifecycle source transplant needed for scoped checks at primary4fca.",
+  "whole_graph_limit": "ExtractDeps imports complete aggregate. Entire Lean source/population/extractor differs; identical GW closure cannot qualify exact publication graph.",
+  "existing_safe_action": {
+    "source": "4fca5970f4f4cb0b408ea33243076c72058f6e56",
+    "condition": "ROOT performs current owner/request/capacity/runtime admission through existing route; reviewer has not assessed live eligibility.",
+    "action": "Ordinary authoritative primary build, matching-primary-branch eligible existing slot prepare, scoped GW diagnostics/named axiom checks, normal no-change release if needed.",
+    "could_establish": [
+      "Authoritative epoch only for4fca and actual pins",
+      "Current recorded scoped GW diagnostics/axioms on prepared4fca",
+      "Ordinary release evidence"
+    ],
+    "cannot_establish": [
+      "Exact3b43 full source or merge qualification",
+      "Publication full graph/G4 validation",
+      "Original physical BUILD/human/publication acceptance"
+    ]
+  },
+  "owning_decision": "ROOT selects intended canonical scientific integration source and order. Review bounded L1 scientific delta against canonical peer science while leaving operational lifecycle code unchanged; name and qualify resulting exact source through original gates. No retarget merely for transport. Alternatively retain bounded primary evidence and publication full gates OPEN.",
+  "no_implementation_inferred": true,
+  "operations_performed": [
+    "Read-only Git source/history/status inspection",
+    "Text/JSON/hash inspection",
+    "Existing continuity check"
+  ],
+  "forbidden_operations_performed": [],
+  "owning_decision_alternatives": [
+    {
+      "scientific_target": "existing4fca",
+      "scope": "Current-primary scoped GW evidence only; whole publication gates remain OPEN."
+    },
+    {
+      "scientific_target": "exact publication3b43",
+      "scope": "Requires substantive ROOT scientific source/order admission, preservation of custody/peer work, candidate/protected-source and canonical operational-source/runtime/dependency conditions; no transition merely for transport and no automatic replacement of loaded operational source."
+    },
+    {
+      "scientific_target": "new reviewed integrated scientific composition",
+      "scope": "Reconcile bounded publication delta with canonical peer science while preserving current lifecycle behavior, explicitly accept resultant commit, then existing primary/full gates qualify that exact new commit."
+    }
+  ],
+  "parent_attributed_host_observation": {
+    "path": "/tmp/l1-primary-live-status-20261106-r2.json",
+    "reviewer_inspected": false,
+    "packet_amendment": false,
+    "parent_reported": "capacity complete, no conflicts/errors/reservations,0 running backends; wt1 FREE,wt2 READY_TO_ABSORB,wt3 QUARANTINED; owners/states preserved",
+    "authority": "No runtime/native admission inferred; static conclusion independent."
+  }
+}

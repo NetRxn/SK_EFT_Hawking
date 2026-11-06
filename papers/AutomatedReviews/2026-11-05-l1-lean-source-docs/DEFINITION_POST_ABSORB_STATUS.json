@@ -1,0 +1,31 @@
+{
+  "measured_at": "2026-11-06T00:21:33.174086+00:00",
+  "capacity_complete": true,
+  "capacity_conflicts": [],
+  "reserved_physical_slots": [],
+  "global_running_backends": 0,
+  "slots": [
+    {
+      "slot": 1,
+      "lease_state": "FREE",
+      "head": "bfeaadd2dc6568f1d76800d16445b8459bf872d3",
+      "proxy_state": "running",
+      "backend_state": "down"
+    },
+    {
+      "slot": 2,
+      "lease_state": "READY_TO_ABSORB",
+      "head": "8187fc8312d3a9a070239adea5a4f04c48266822",
+      "proxy_state": "down",
+      "backend_state": "down"
+    },
+    {
+      "slot": 3,
+      "lease_state": "QUARANTINED",
+      "head": "3505b2f8afa4b47ef34b02771983dc8083a1c7fa",
+      "proxy_state": "down",
+      "backend_state": "down"
+    }
+  ],
+  "scope": "Public-only post-R3 controller status; legacy slots untouched. Lease FREE does not certify general capacity."
+}

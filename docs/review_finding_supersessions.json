@@ -10293,6 +10293,171 @@
         "enforced": true,
         "run_at": "2026-11-06"
       }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-apex-propagation:L1:1.1",
+      "status": "fixed",
+      "evidence": "Metadata still preserves all14 apex names/dates and the accepted fixed-tau/nonnegative domain, dependent/nonexclusive falsifiers, actual c!=0 carrier and strict1e14width comparison. Later wording changes at indices11/12/13 clarify adopted comparison scope and remove title/section placement claims. Actual theorem bodies establish the claims; no new physical range or probability is implied. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 366fe4109d33df4f6337b498c0e2817d3859a7b6. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+      "verified_by": {
+        "command": "python3 -c 'import json; from pathlib import Path; a=json.loads(Path(\"papers/L1/bundle_metadata.json\").read_text())[\"apex_theorems\"]; assert all(\"isolating\" not in x[\"claims\"] for x in a), \"apex metadata overstates exclusive falsifier scope\"; assert \"nonnegative\" in a[0][\"claims\"] and \"fixed\" in a[0][\"claims\"], \"missing theorem domain\"; assert \"≠ 0\" in a[10][\"claims\"], \"missing actual relative-deviation carrier\"; assert \"10^14 times\" in a[13][\"claims\"], \"wrong exact width theorem scope\"'",
+        "declared": "python3 -c 'import json; from pathlib import Path; a=json.loads(Path(\"papers/L1/bundle_metadata.json\").read_text())[\"apex_theorems\"]; assert all(\"isolating\" not in x[\"claims\"] for x in a), \"apex metadata overstates exclusive falsifier scope\"; assert \"nonnegative\" in a[0][\"claims\"] and \"fixed\" in a[0][\"claims\"], \"missing theorem domain\"; assert \"≠ 0\" in a[10][\"claims\"], \"missing actual relative-deviation carrier\"; assert \"10^14 times\" in a[13][\"claims\"], \"wrong exact width theorem scope\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-reader-results:L1:1.1",
+      "status": "fixed",
+      "evidence": "The entire accepted GW170817 Introduction paragraph remains present: conservative distance and emission assumptions; asymmetric[-3e-15,+7e-16]; adopted symmetric envelope; alternative histories may weaken inference. Later title/range/numeric-input edits do not change it. This is source-fidelity disclosure, not a source-clock likelihood or astrophysical measurement. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 7b963cc29. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text()); p=s.split(\"The 2017 binary-neutron-star merger\",1)[1].split(\"Our assumed speed law\",1)[0]; assert \"emission-time assumptions\" in p and \"alternative emission histories can weaken\" in p, \"published propagation cap lacks its source-emission assumptions\"'",
+        "declared": "python3 -c 'from pathlib import Path; import re; s=re.sub(r\"\\s+\",\" \",Path(\"papers/L1/paper_draft.tex\").read_text()); p=s.split(\"The 2017 binary-neutron-star merger\",1)[1].split(\"Our assumed speed law\",1)[0]; assert \"emission-time assumptions\" in p and \"alternative emission histories can weaken\" in p, \"published propagation cap lacks its source-emission assumptions\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:3.3",
+      "status": "fixed",
+      "evidence": "Actual c_GW_relative_deviation_eq proves (c_GW chi c-c)/c=c_GW_deviation chi under c!=0 by div_eq_iff and ring. Actual natural_endpoints_violate_ligo_for_every_c rewrites through it before applying endpoint proofs. Current manuscript displays the ratio and c!=0 endpoint carrier, includes physical c>0, and asserts no tensor/Lorentz covariance. git300c2a9 contains BOTH substantive statements and is current ancestry: this recognizes the August proof, not new/missing work. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 300c2a9fedd4f6b1d9fe5d70ff85ba8607322e4c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "300c2a9fedd4f6b1d9fe5d70ff85ba8607322e4c",
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -qE \"c_GW .*=.*c_GW_deviation|c_GW_deviation_eq_rel\" lean/SKEFTHawking/GravitationalWaves.lean",
+        "declared": "cd \"$REPO\" && grep -qE \"c_GW .*=.*c_GW_deviation|c_GW_deviation_eq_rel\" lean/SKEFTHawking/GravitationalWaves.lean",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:3.4",
+      "status": "fixed",
+      "evidence": "Whole current manuscript contains no computational decidability claim. Endpoint paragraph displays sqrt(1/10)<=sqrt(1/4)=1/2 and sqrt(10)>=sqrt4=2. Actual endpoint bodies use sqrt monotonicity/square identities and norm_num/linarith. Later generated numerals preserve this reasoning. Removal of the false prose is supported independently of negative grep. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 33ba6eeec498458cc9b4d9aaee5cf35653a201ca. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"decidable\" papers/L1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q \"decidable\" papers/L1/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:4.2",
+      "status": "fixed",
+      "evidence": "Actual section3 and source summary say adopted normalized[.1,10], one decade on each side of unity; definitions remain1/10 and10, width99/10. Current manuscript calls it an adopted comparison window centered geometrically at1 and explicitly says no microscopic normalization/center/endpoints are derived. Later removal of old dimensional-naturalness prose strengthens disclosure, not the physical result. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 792714d9c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"half-decade\" lean/SKEFTHawking/GravitationalWaves.lean",
+        "declared": "cd \"$REPO\" && ! grep -q \"half-decade\" lean/SKEFTHawking/GravitationalWaves.lean",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:5.3",
+      "status": "fixed",
+      "evidence": "Current Introduction simply cites Volovik2024Vestigial for metric-before-tetrad vestigial order, without calling it a review. Bibliography retains original Fermionic quartet and vestigial gravity/JETP Letters119,330(2024). Historical independent publisher/institution and primary metadata review support original Article/Letter scope; no new web acquisition or physics-attribution acceptance is claimed. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 47f99e86a48cd503d64d3a8e5f03e1e3ccd3a5af. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"2024 vestigial-fluid review\" papers/L1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q \"2024 vestigial-fluid review\" papers/L1/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-apex-propagation:L1:1.2",
+      "status": "fixed",
+      "evidence": "Actual H docstring/summary retain dependent scalar clauses: at fixed cap P2 implies P3, and on nonnegative carrier compatibility yields P1; quarter point passes P1 and fails P2/P3. Actual H definition/proofs remain intact, with witness1 and nonexclusive counterexamples. Current appendix states the same dependency and does not promote scalar satisfiability to microscopic mode construction. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 792714d9c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"each conjunct is independently necessary\" not in s and \"all independently load-bearing\" not in s, \"stale conjunct-independence source documentation\"'",
+        "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"each conjunct is independently necessary\" not in s and \"all independently load-bearing\" not in s, \"stale conjunct-independence source documentation\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-reader-results:L1:1.2",
+      "status": "fixed",
+      "evidence": "Actual tolGW170817 docstring identifies Abbott Eq1/sec4.1, asymmetric bound, conservative distance/emission assumptions, adopted symmetric envelope and alternative histories. Exact value remains3e-15. Current Introduction agrees; historical independent complete primary carrying-section review establishes locator and qualifications beyond lexical Eq1 presence. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 792714d9c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"'",
+        "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.1",
+      "status": "fixed",
+      "evidence": "Actual imports Basic/LinearizedEFE/Mathlib and free inputs are described honestly. Fixed LigoSatisfied has one deviation argument; biconditional nonnegative carrier is retained; W6Ext.chi_RPA locator is corrected. Dispersion is explicitly illustrative real multiplication, requires physical source/state/unit matching, and abs_bound has |gamma|*|omega|. Current Discussion/appendix preserve unmatched coefficient/frequency and correction-only limits. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 792714d9c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied δ tol\" not in s; assert \"χ_vest ∈ [0, ∞)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"χ_vest · Λ²\" not in s; assert (chr(96)+\"|γ| · ω\"+chr(96)) not in s'",
+        "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied δ tol\" not in s; assert \"χ_vest ∈ [0, ∞)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"χ_vest · Λ²\" not in s; assert (chr(96)+\"|γ| · ω\"+chr(96)) not in s'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.2",
+      "status": "fixed",
+      "evidence": "Actual source states exact[(1-tau)^2,(1+tau)^2], offsets-2tau+tau² and+2tau+tau², approximately±2tau. Current Discussion correctly distinguishes susceptibility±6e-15 from speed±3e-15, and manuscript/source retain exact4tau width. No threshold or physical domain has changed. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 792714d9c. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately ±2τ\" in n'",
+        "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately ±2τ\" in n'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.3",
+      "status": "fixed",
+      "evidence": "Actual immediate c_GW docstring explicitly adopts a scalar susceptibility-to-speed law, says H does not derive it or construct a microscopic graviton, and retains physical mode/response/matter-reference matching. Module exactlyeab4 matches accepted R3 application/native source; all nonblock segments retain accepted semantics. Current manuscript explicitly assumes the law and leaves the same physical bridge open. Current-source reuse independently accepted at3b43b2ba87053f71da48e73eb5a56932be854a89; original independent source/application and bounded native receipts restored byte-exact. See papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1.md and readback. Historical repair origin 3c9306bc5793245e5e7108c8c5b5fe0661497409. This records the repaired finding only, not new physical work, current full-native/project/main acceptance or human approval; original physical BUILD remains OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "3b43b2ba87053f71da48e73eb5a56932be854a89",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Gravitational-wave propagation speed\",1)[1].split(\"-/\",1)[0]; n=\" \".join(d.replace(chr(96), \"\").split()); assert \"This definition adopts a scalar susceptibility-to-speed law\" in n and \"it does not derive this law or construct a microscopic graviton\" in n; assert \"Volovik 2024 + Phase 5y H1\" not in d and \"leading-order identification under\" not in d'",
+        "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Gravitational-wave propagation speed\",1)[1].split(\"-/\",1)[0]; n=\" \".join(d.replace(chr(96), \"\").split()); assert \"This definition adopts a scalar susceptibility-to-speed law\" in n and \"it does not derive this law or construct a microscopic graviton\" in n; assert \"Volovik 2024 + Phase 5y H1\" not in d and \"leading-order identification under\" not in d'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
     }
   ]
 }

@@ -676,3 +676,74 @@ composition. Reissue deliberate current continuity before integration acceptance
 No minimal currently accepted aggregate composition or native/main green is
 claimed. ROOT continues this ordinary L1 delivery work; deeper science remains
 a separate bounded Executor assignment.
+
+### R3 correction: no mandatory lifecycle import
+
+NATIVE_PREREQUISITE_REQUIREDNESS_R3.md and its JSON supersede R2's inference
+that a newer lifecycle package must be imported into publication. That inference
+was not established by a gate or scientific dependency. Copying controller code
+would neither select the scientific source nor publish its full-commit epoch.
+No lifecycle source, controller, slot, cache or runtime has been changed.
+
+The actual four-module GW project import closure, toolchain and dependency
+manifest already match primary. Existing primary diagnostics could establish
+bounded primary-source evidence only; they cannot certify this publication
+branch's complete graph or merge profile. The intended main-delivery scientific
+candidate remains this publication branch. ROOT retains canonical custody and
+peer work while resolving its actual scientific-source admission/integration
+order under the existing guide. Exact-source full gates remain required; no
+speculative infrastructure upgrade or ceremonial repeat of prior GW proof
+checks is a prerequisite. R2's measured lineage facts and stale-review limits
+remain historical evidence.
+
+### Existing L1 source closures reconciled to delivery
+
+Independent fresh applicability review accepts eleven already repaired L1
+findings against the current manuscript, metadata and exact accepted GW module.
+The original review/evidence content is preserved byte-exact:120 standalone
+files, one historical predecessor report and one raw stdout inside the archive.
+Historical source/native/project/broader receipts retain their original limits.
+All eleven original Verify commands pass independently and through the existing
+closure writer's dry-run and actual calls, without command substitution.
+The August relative-speed bridge keeps its original300c2a9 anchor; the other
+ten use the current scientific carrier with fresh applicability rationale.
+
+Actual canonical readers report all eleven FIXED. The ledger grows1236->1247,
+preserving all prior records and schema fields. ID resolution passes with the
+same59 annotated legacy exceptions and no growth. Scientific source, manuscript,
+metadata, catalog, human state and audit bytes remain unchanged. These reconcile
+shared existing repairs, not eleven new scientific constructions. Four L1
+scientific blockers and all original physical, native/fullgraph/merge, human and
+publication acceptance requirements remain OPEN. Current evidence and actual
+writer/readback receipts accompany L1_CANONICAL_SOURCE_REUSE_R1.md.
+
+L1_CANONICAL_SOURCE_REUSE_APPLICATION_R2.md independently accepts the actual
+writer/readback and qualifies the initial122-standalone proposal. The exact
+historical PREDECESSOR_PROSE_REVIEW.md is discoverable at its original repository
+path inside L1_CANONICAL_SOURCE_REUSE_R1_EVIDENCE.zip. Its adverse structural
+physical BLOCK is retained, alongside current scientific holds. Keeping that
+old questionnaire standalone made the existing reader ingest five obsolete
+numbered outcomes as new unrouted findings. Archive application removes exactly
+those five incidental nodes; every other canonical node remains deep-exact and
+all eleven original live findings remain FIXED. No parser, gate, predicate or
+closure is used to dismiss those historical outcomes. Current whole-prose,
+venue/length and physical acceptance remain unclaimed. The readback pins the
+exact archived member and all preserved source/human/ledger evidence.
+
+After that independent placement review, the initial staged whitespace check
+identified thirteen trailing-whitespace lines in the historical BROADER_FAST.stdout.
+ROOT preserved that raw output at its exact original path inside the same ZIP
+rather than rewriting the receipt. This additional storage-only correction
+accounts for120 standalone files plus two archived original files; it changes
+no Markdown ingestion, scientific source or closure. The readback distinguishes
+the independently reviewed predecessor placement from this exact-byte raw-output
+archival step. Authored text remains subject to the unchanged whitespace check.
+
+All three restored original finding documents pass the existing marker contract.
+The current scoped corpus validation is1/3: finding minting PASS, severity/lane
+declaration FAIL and single-command Verify FAIL. It reports eight documents with
+missing severity declarations, five unmappable-lane documents and56 malformed
+Verify controls. Raw outcomes are archived and unwaived. No global corpus PASS
+is inferred from this package's valid markers or individual closures. The final
+existing planner has no L1 manuscript/GW source group; its linked-checkout slot
+discovery is not canonical runtime capacity authority.
