@@ -1,0 +1,42 @@
+{
+  "head_before_repair": "edb5de74a7400baf3ecc8e02c18782e136787fa4",
+  "historical_repair": "06c7d8eb28541f9b664350f17594a61336ec8a2f",
+  "test_postimage_sha256": "7a417431b8ea94ebea77e7ac7974ff003617225ae64ec0cd404539e06a22cc8f",
+  "independent_final_review": "ACCEPT actual source and controls; no corrections",
+  "current_class": "7 PASS incl three real production resolver phantom-form negatives",
+  "actual_paper_mutation_sequence": [
+    0,
+    1,
+    0
+  ],
+  "exact_restore": "bytes/fullmode/nsmtime and empty journal",
+  "current_full_module": "72 PASS,1 FAIL:150>117 numeric ceiling remains owed",
+  "canonical_finding": "review:2026-10-15-d7-current-theorem-regression:infra:1.1",
+  "closure": "PENDING existing writer and declared portable Verify after source commit",
+  "scientific_boundary": "No Lean/manuscript/validator/registry/ceiling/physical claim change; saved declaration cache is stale and is not fresh kernel evidence",
+  "numeric_audit": "149 original main,150 current, same64 drafts; L1 -3/Paper25+4. GW-only scalar retrofit would leave139>117. No debt discharged by this census.",
+  "archive": "D7_REGRESSION_REUSE_R1_EVIDENCE.zip",
+  "archive_sha256": "10ce26bd914c1532408e5ee06a2585b774bec3666f6ca36bf45dbe6ccb383af6",
+  "members": {
+    "l1-d7-regression-reuse-r1.patch": "ac9882d09b8820b241f956c9c57c3260de9e23fe9ad17c48d5231173f684a533",
+    "l1-d7-regression-original-finding-r1.md": "ab435380815e16661aecd3a18cfea4a4ff22a6e971eacb43d0ee4d49ca9bbd58",
+    "l1-d7-regression-review-r1.md": "c894a7fbf024f87da4aac548394e06317599a97f9d220e2245374d76165616c3",
+    "l1-d7-regression-review-r1.json": "0c4d02e1541a1cedf940869f589605d680bcb217792966b9bd2fa453c958b0eb",
+    "l1-d7-current-acceptance-r2.md": "75797e5f80dd829911648a7b3ebc3414c7d75241a717e47e044b7188b4d4279a",
+    "l1-d7-current-acceptance-r2.json": "a771e6ddd3d38238e20ee18cdee8372d14d863c29a7398c75750344a54479890",
+    "l1-d7-current-control-r1.py": "a7a303b98ab6746f5587380dbac692cf1162700b0c212e21a04b2f32d2a61fc0",
+    "l1-d7-current-control-r1.json": "9c0d66830846b62f19f330854ec115a0619aea9289517f1fc746e01a457cefef",
+    "l1-d7-current-class-r1.xml": "d5bbd47b706d3c54877dcd17d557f55ba292ee1bbf247b645595cbbfbc7ce1f1",
+    "l1-d7-current-module-r1.xml": "91e0328831e680fdbc651caa89213c5baf0741a2f2dcbe03852453d3eb0ba6dc",
+    "l1-d7-current-module-r1.json": "ebc9542c1af17992c44bc7de20ec19bcc1c2a909dde7e82a784b8467e9959461",
+    "l1-d7-control-baseline.xml": "0263b92e3b039ae9ddac20a8789abf74d16150434d0eabdf3ddd3342259c45f0",
+    "l1-d7-control-missing_headline.xml": "76bccd2d5a5798476e54c7283f9b12164361872472d64a1d9569c3ed643de218",
+    "l1-d7-control-restored.xml": "6f0a5d4faa18517457af18c480e7703dcbb030c790c03e4ba0e4f3a136445ca0",
+    "l1-inventory-public-surface-current-r1.xml": "cdd69666a033527125ac7bee4a0da9468fed27269c8fb805ea9287ba3c2e68d2",
+    "l1-d7-canonical-finding-before-r1.json": "80aac6944924ae194abc4e3934f900edf8b826b6eb4341d31ea1c01fc83058a7",
+    "l1-numerical-literal-audit-r1.md": "4bd4c06c65e7be836c8ae6f4dfbca530ea0d83e824e1a5ac9db03fe5b4f7ff04",
+    "l1-numerical-literal-audit-r1.json": "673f323e4590a9a4761195a3d44ac6fa2357e48757d22d2ab36875faa9ca8f61",
+    "l1-current-extraction-staleness-r1.json": "f7caa3eeefe10051a9a798f2421f16f39b7c01de8050deb9b0355daefc47e957",
+    "test_validate_public_surface.preimage.py": "e96852a18276697e45d3239126966e2e63b34d8b8ad53a3348d6eda958fe3d95"
+  }
+}

@@ -561,3 +561,37 @@ human state are untouched. This is source propagation progress only, not a
 full strategy/paper review, aggregate G11 or BUILD closure, stage/main/venue/
 submission/publication acceptance. Remaining qualification and original
 scientific findings retain their full scope.
+
+
+## Current D7 citation-regression source reuse and numerical-debt attribution
+
+The existing06c D7 regression repair is reconciled byte-exact to this candidate,
+preserving the already completed inventory guard. Independent source and final
+actual-control reviews ACCEPT the current test repair. Its positive requires the
+actual manuscript verbatim headline, actual Lean declaration and indexed name,
+and production resolver OK; three phantom citation forms use the real extractor/
+resolver and remain ABSENT. The long simulability companion positively exists;
+this repair neither declares missing substrate nor strengthens its physics.
+
+Allseven current class checks pass. Actual journalled removal of the displayed
+current headline yields0->1->0, with only the intended assertion failing, exact
+bytes/fullmode/nsmtime restoration and empty journal. Full public-surface module
+now72PASS/oneFAIL: numerical-literal150>117 remains. Native/kernel, D7physical
+simulability, fullG11 and all publication gates remain open. The saved declaration
+snapshot is stale by the existing staleness-only check and was not refreshed.
+
+The original focused finding is restored at its original identity. Its Verify
+entrypoint is portable uvrun--no-sync with the same completepytestclass; outer
+project-environment selection reuses the existing primary virtualenv. Original
+review/command and exactsourcepreimage are archived. Existing canonical closure
+writer and its actual declared Verify remain a separate post-source-commit step.
+
+Independent numerical-literal audit uses the unchanged predicate and identical
+64draft corpus: originalmain149,current150; onlyL1(-3)andPaper25(+4) differ.
+Most overage is inherited. ExistingSCALARS can eliminate11currentGWoccurrences
+but leaves139>117; no fullceiling pass or scientific error is inferred from the
+census. Source measurements/theorem constants need individual classification;
+physics-deferred off-shell cells cannot be converted into unsupported generated
+results. No ceiling increase, predicate change or new numerical machinery.
+D7_REGRESSION_REUSE_R1_READBACK.json and archive retain all source/controls,
+independent reviews, actual failures, complete occurrence audit and limits.
