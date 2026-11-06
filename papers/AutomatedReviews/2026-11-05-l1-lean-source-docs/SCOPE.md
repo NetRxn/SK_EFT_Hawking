@@ -10,7 +10,7 @@ actual imports and RPA namespace, and the distinction between product algebra
 and physical transport matching. All imports, definitions, statements, proofs,
 values and API bytes are unchanged. No physical BUILD is retired.
 
-The exact accepted file has SHA256
+The initial applied R2 file has SHA256
 `d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f`.
 [Independent R2 review](INDEPENDENT_R2.md) accepts its mathematical and primary
 source accuracy. [Rejected R1](INDEPENDENT_REJECTED_R1.md) and its complete
@@ -67,14 +67,21 @@ at their actual scopes. HISTORICAL_FINDING_REVIEW.md and the unchanged original
 Verify receipts retain the distinction between lexical checks and actual
 source/proof/manuscript/render evidence. The nonzero-c bridge was introduced
 at300c2a9f in August; this is recognition of existing substantive work, not a
-new proof claim. Canonical closure remains pending final qualification.
+new proof claim. These four original findings now have canonical closure, as recorded below.
 
 That review found a separate surviving local attribution in the c_GW definition
 docstring. New MAJOR finding1.3 is OPEN. Its exact one-comment replacement has
 independent acceptance and original-red/proposed-green evidence, preserved in
-DEFINITION_DOC_PROPOSAL.json/.zip and DEFINITION_DOC_INDEPENDENT.md. It is a
-proposal only: actual source remains the preceding d928 version until controlled
-application and qualification. Original physical requirements remain unchanged.
+DEFINITION_DOC_PROPOSAL.json/.zip and DEFINITION_DOC_INDEPENDENT.md. Its exact R3 version is now applied on the publication candidate, SHA256
+`eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d`.
+Protected native delivery bfeaadd2 retains every non-comment byte; matching
+native diagnostics and five theorem scans are clean/core-axiom-only. Normal
+controller absorption and authoritative build complete at that source. The
+actual publication control passes. The final scoped project run passes5/5 with
+six retained warnings in428.9seconds; independent applied-source qualification
+accepts those actual terminal receipts. The existing focused gravitational-wave
+suite passes all89 tests, with imports verified in this publication checkout. This is bounded module evidence, not a
+publication-checkout native build. Original physical requirements remain unchanged.
 Finding1.1's Gate field was corrected to the canonical G7 NarrativeGrounding
 name; its identity, severity, requirement and Verify are unchanged. The prior
 noncanonical display name and reason are preserved in CONTROL_REFINEMENT.json.
@@ -93,6 +100,6 @@ scientific constructions. The older bridge is anchored to its actual August
 repair; historical manuscript repairs retain their own anchors.
 
 The19 broad test failures remain RED. No stage/full-wave/main/publication or
-human state is promoted. Separate MAJOR1.3 remains OPEN until its accepted
-one-comment proposal is actually applied and qualified; all original physical
+human state is promoted. Separate MAJOR1.3 awaits the existing closure writer after its now accepted
+applied-source and terminal scoped qualification; all original physical
 BUILD obligations remain OPEN.
