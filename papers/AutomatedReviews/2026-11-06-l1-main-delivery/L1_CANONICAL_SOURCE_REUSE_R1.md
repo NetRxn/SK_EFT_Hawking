@@ -10,7 +10,7 @@ The original August review already exists in current checkout and contains3.3/3.
 
 ## Per-finding decisions
 
-### review:2026-11-05-l1-apex-propagation:L1:1.1 — ACCEPT
+## review:2026-11-05-l1-apex-propagation:L1:1.1 — ACCEPT
 
 Metadata still preserves all14 apex names/dates and the accepted fixed-tau/nonnegative domain, dependent/nonexclusive falsifiers, actual c!=0 carrier and strict1e14width comparison. Later wording changes at indices11/12/13 clarify adopted comparison scope and remove title/section placement claims. Actual theorem bodies establish the claims; no new physical range or probability is implied.
 
@@ -18,7 +18,7 @@ Original support: `2026-11-05-l1-apex-propagation/INDEPENDENT_REVIEW.md; INDEPEN
 
 Historical repair anchor `366fe4109d33df4f6337b498c0e2817d3859a7b6`; recommended new record anchor `3b43b2ba87053f71da48e73eb5a56932be854a89` with date2026-11-06 and status `fixed`. No canonical write has occurred.
 
-### review:2026-11-05-l1-reader-results:L1:1.1 — ACCEPT
+## review:2026-11-05-l1-reader-results:L1:1.1 — ACCEPT
 
 The entire accepted GW170817 Introduction paragraph remains present: conservative distance and emission assumptions; asymmetric[-3e-15,+7e-16]; adopted symmetric envelope; alternative histories may weaken inference. Later title/range/numeric-input edits do not change it. This is source-fidelity disclosure, not a source-clock likelihood or astrophysical measurement.
 
@@ -26,7 +26,7 @@ Original support: `2026-11-05-l1-reader-results/OBSERVATION_INDEPENDENT_REVIEW.m
 
 Historical repair anchor `7b963cc29`; recommended new record anchor `3b43b2ba87053f71da48e73eb5a56932be854a89` with date2026-11-06 and status `fixed`. No canonical write has occurred.
 
-### review:2026-08-14-l1-stage13:L1:3.3 — ACCEPT
+## review:2026-08-14-l1-stage13:L1:3.3 — ACCEPT
 
 Actual c_GW_relative_deviation_eq proves (c_GW chi c-c)/c=c_GW_deviation chi under c!=0 by div_eq_iff and ring. Actual natural_endpoints_violate_ligo_for_every_c rewrites through it before applying endpoint proofs. Current manuscript displays the ratio and c!=0 endpoint carrier, includes physical c>0, and asserts no tensor/Lorentz covariance. git300c2a9 contains BOTH substantive statements and is current ancestry: this recognizes the August proof, not new/missing work.
 
@@ -34,7 +34,7 @@ Original support: `2026-11-05-l1-lean-source-docs/HISTORICAL_FINDING_REVIEW.md; 
 
 Historical repair anchor `300c2a9fedd4f6b1d9fe5d70ff85ba8607322e4c`; recommended new record anchor `300c2a9fedd4f6b1d9fe5d70ff85ba8607322e4c` with date2026-11-06 and status `fixed`. No canonical write has occurred.
 
-### review:2026-08-14-l1-stage13:L1:3.4 — ACCEPT
+## review:2026-08-14-l1-stage13:L1:3.4 — ACCEPT
 
 Whole current manuscript contains no computational decidability claim. Endpoint paragraph displays sqrt(1/10)<=sqrt(1/4)=1/2 and sqrt(10)>=sqrt4=2. Actual endpoint bodies use sqrt monotonicity/square identities and norm_num/linarith. Later generated numerals preserve this reasoning. Removal of the false prose is supported independently of negative grep.
 
@@ -42,7 +42,7 @@ Original support: `2026-11-05-l1-lean-source-docs/HISTORICAL_FINDING_REVIEW.md`.
 
 Historical repair anchor `33ba6eeec498458cc9b4d9aaee5cf35653a201ca`; recommended new record anchor `3b43b2ba87053f71da48e73eb5a56932be854a89` with date2026-11-06 and status `fixed`. No canonical write has occurred.
 
-### review:2026-08-14-l1-stage13:L1:4.2 — ACCEPT
+## review:2026-08-14-l1-stage13:L1:4.2 — ACCEPT
 
 Actual section3 and source summary say adopted normalized[.1,10], one decade on each side of unity; definitions remain1/10 and10, width99/10. Current manuscript calls it an adopted comparison window centered geometrically at1 and explicitly says no microscopic normalization/center/endpoints are derived. Later removal of old dimensional-naturalness prose strengthens disclosure, not the physical result.
 
@@ -50,7 +50,7 @@ Original support: `2026-11-05-l1-lean-source-docs/HISTORICAL_FINDING_REVIEW.md; 
 
 Historical repair anchor `792714d9c`; recommended new record anchor `3b43b2ba87053f71da48e73eb5a56932be854a89` with date2026-11-06 and status `fixed`. No canonical write has occurred.
 
-### review:2026-08-14-l1-stage13:L1:5.3 — ACCEPT
+## review:2026-08-14-l1-stage13:L1:5.3 — ACCEPT
 
 Current Introduction simply cites Volovik2024Vestigial for metric-before-tetrad vestigial order, without calling it a review. Bibliography retains original Fermionic quartet and vestigial gravity/JETP Letters119,330(2024). Historical independent publisher/institution and primary metadata review support original Article/Letter scope; no new web acquisition or physics-attribution acceptance is claimed.
 
@@ -58,7 +58,7 @@ Original support: `2026-11-05-l1-lean-source-docs/HISTORICAL_FINDING_REVIEW.md`.
 
 Historical repair anchor `47f99e86a48cd503d64d3a8e5f03e1e3ccd3a5af`; recommended new record anchor `3b43b2ba87053f71da48e73eb5a56932be854a89` with date2026-11-06 and status `fixed`. No canonical write has occurred.
 
-### review:2026-11-05-l1-apex-propagation:L1:1.2 — ACCEPT
+## review:2026-11-05-l1-apex-propagation:L1:1.2 — ACCEPT
 
 Actual H docstring/summary retain dependent scalar clauses: at fixed cap P2 implies P3, and on nonnegative carrier compatibility yields P1; quarter point passes P1 and fails P2/P3. Actual H definition/proofs remain intact, with witness1 and nonexclusive counterexamples. Current appendix states the same dependency and does not promote scalar satisfiability to microscopic mode construction.
 
@@ -66,7 +66,7 @@ Original support: `2026-11-05-l1-lean-source-docs/INDEPENDENT_R2.md; INDEPENDENT
 
 Historical repair anchor `792714d9c`; recommended new record anchor `3b43b2ba87053f71da48e73eb5a56932be854a89` with date2026-11-06 and status `fixed`. No canonical write has occurred.
 
-### review:2026-11-05-l1-reader-results:L1:1.2 — ACCEPT
+## review:2026-11-05-l1-reader-results:L1:1.2 — ACCEPT
 
 Actual tolGW170817 docstring identifies Abbott Eq1/sec4.1, asymmetric bound, conservative distance/emission assumptions, adopted symmetric envelope and alternative histories. Exact value remains3e-15. Current Introduction agrees; historical independent complete primary carrying-section review establishes locator and qualifications beyond lexical Eq1 presence.
 
@@ -74,7 +74,7 @@ Original support: `2026-11-05-l1-reader-results/OBSERVATION_INDEPENDENT_REVIEW.m
 
 Historical repair anchor `792714d9c`; recommended new record anchor `3b43b2ba87053f71da48e73eb5a56932be854a89` with date2026-11-06 and status `fixed`. No canonical write has occurred.
 
-### review:2026-11-05-l1-lean-source-docs:L1:1.1 — ACCEPT
+## review:2026-11-05-l1-lean-source-docs:L1:1.1 — ACCEPT
 
 Actual imports Basic/LinearizedEFE/Mathlib and free inputs are described honestly. Fixed LigoSatisfied has one deviation argument; biconditional nonnegative carrier is retained; W6Ext.chi_RPA locator is corrected. Dispersion is explicitly illustrative real multiplication, requires physical source/state/unit matching, and abs_bound has |gamma|*|omega|. Current Discussion/appendix preserve unmatched coefficient/frequency and correction-only limits.
 
@@ -82,7 +82,7 @@ Original support: `2026-11-05-l1-lean-source-docs/INDEPENDENT_R2.md; INDEPENDENT
 
 Historical repair anchor `792714d9c`; recommended new record anchor `3b43b2ba87053f71da48e73eb5a56932be854a89` with date2026-11-06 and status `fixed`. No canonical write has occurred.
 
-### review:2026-11-05-l1-lean-source-docs:L1:1.2 — ACCEPT
+## review:2026-11-05-l1-lean-source-docs:L1:1.2 — ACCEPT
 
 Actual source states exact[(1-tau)^2,(1+tau)^2], offsets-2tau+tau² and+2tau+tau², approximately±2tau. Current Discussion correctly distinguishes susceptibility±6e-15 from speed±3e-15, and manuscript/source retain exact4tau width. No threshold or physical domain has changed.
 
@@ -90,7 +90,7 @@ Original support: `2026-11-05-l1-lean-source-docs/INDEPENDENT_R2.md; INDEPENDENT
 
 Historical repair anchor `792714d9c`; recommended new record anchor `3b43b2ba87053f71da48e73eb5a56932be854a89` with date2026-11-06 and status `fixed`. No canonical write has occurred.
 
-### review:2026-11-05-l1-lean-source-docs:L1:1.3 — ACCEPT
+## review:2026-11-05-l1-lean-source-docs:L1:1.3 — ACCEPT
 
 Actual immediate c_GW docstring explicitly adopts a scalar susceptibility-to-speed law, says H does not derive it or construct a microscopic graviton, and retains physical mode/response/matter-reference matching. Module exactlyeab4 matches accepted R3 application/native source; all nonblock segments retain accepted semantics. Current manuscript explicitly assumes the law and leaves the same physical bridge open.
 

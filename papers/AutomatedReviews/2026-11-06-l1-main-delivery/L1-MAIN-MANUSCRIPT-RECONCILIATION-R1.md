@@ -46,6 +46,9 @@ The L1 TeX has no separate table input: only `../../docs/counts.tex`, one local 
 
 ### 89 versus49: cannot copy the statement alone
 
+- **Severity:** advisory
+- **Lane:** prose
+
 Main L1 currently says49 cases; donor L1 says89. Donor contains substantial new parametrized numerical/source/figure cases and changes existing precision expectations. Its source records say actual89 passed on its own pinned publication candidate. Those historical executions are not candidate455358 evidence. Carrying donor prose with main tests would misrepresent test population and omit the numerical repairs needed by the new cases. Either carry and actually qualify the complete dependency package then derive the current count, or revise the reproducibility sentence to an accurate evidence-supported description without a stale count. Do not “fix”89 back to49 while leaving genuine numerical defects untreated. Also avoid interpreting “cross-checking every numeric quoted” as exhaustive physics validation: these tests check the conditional model and figure inputs, not microscopic normalization, tensor modes or physical transport.
 
 No runtime parameter change or broad constants delta is needed: donor `src/core/constants.py` differs in an unrelated citation-title ceiling only. Do not import that unrelated delta to support L1. No new theorem/proof is needed for this manuscript's already-existing exact algebra. Donor has valuable **comment-only** `GravitationalWaves.lean` repairs correcting physical attribution, fixed predicate arity/tolerance, dependent conjuncts, offsets and matching; those should be reconciled as an appropriate Lean/source-documentation dependency rather than retaining contradictory claims beside the new manuscript. Native/build qualification for any such Lean-path composition remains ROOT-owned; this assessment did not run it.

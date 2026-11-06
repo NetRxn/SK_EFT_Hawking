@@ -20,11 +20,11 @@ That is the conditional mathematical part of the charter. It does not complete t
 
 ## The five questions
 
-### 1. Does the abstract lead with the result? NO
+## 1. Does the abstract lead with the result? NO
 
 Lines 33–35 lead with the activity “We constrain” and the assumed law. The actual finding begins at 35–37 with the compatible interval. Put the conditional interval result in the first sentence, retaining the assumed-law condition and electromagnetic reference definition. Keep the nonderived mode/range limitation at 40–42. The abstract is concise enough to make this a straightforward local repair, but its current first sentence still does not pass this criterion.
 
-### 2. Does each section advance a single connected argument? NO overall; substantially improved within the revised results
+## 2. Does each section advance a single connected argument? NO overall; substantially improved within the revised results
 
 The Introduction (51–161) has a usable route through motivation, assumed speed law, observation and conditional interval. Its literature comparison at 116–149 now distinguishes specific source-qualified theory results from the kinematic calculation. However, 136–155 repeat the absence of microscopic operator constraints, and 156–161 preview possibilities treated again in Discussion. Condense the repeated framing while preserving all four accepted attributions, including the separate Sakstein–Jain constraint combinations.
 
@@ -36,7 +36,7 @@ Discussion (344–439) is still partly an internal research agenda. The finite-t
 
 **Argument-bearing material:** the assumed-law and source-qualified observational setup, honest adopted-range provenance, finite interval/width/prior interpretation, endpoint checks, figure and explicit physical validity boundary. **Ballast in the main Letter:** repeated scope paragraphs, implementation-name/tactic inventories, full conjunction bookkeeping, phase instructions, long placeholder-product theorem catalogue, and program-asymmetry narration. “Ballast” is placement/reader value, not permission to destroy scientific or adverse information.
 
-### 3. Is every symbol defined before use? NO
+## 3. Is every symbol defined before use? NO
 
 The bounded prior repairs are present: electromagnetic `c` is defined at 34–35; `gamma_star` is the effective RPA coupling at 172–173; fixed `tau` replaces the formerly loose correction tolerance at 403–404. These are repaired, not current findings.
 
@@ -44,7 +44,7 @@ The first clear remaining undefined physical symbol is **`H` at line 68**, in �
 
 Further unresolved first-use definitions: `Lambda_UV` at 180; `alpha_ADW` at 189 beyond calling it a microscopic coefficient; `Gamma_H` at 383; and, if the late companion comparison stays, `G_N,emerg`, `N_f`, `M_Pl`, and SM at 418–420. ADW at 113 and RPA at 81 are unexplained acronyms. The dispersion ansatz introduces a numerical `omega` and `gamma` at 379–383 and explicitly retains physical matching as open; do not fix readability by inventing their units or equating Hz with angular frequency. Source-supported definitions are authorable; the physical map still needs construction and review.
 
-### 4. Is every sentence addressed to a literature reader? NO
+## 4. Is every sentence addressed to a literature reader? NO
 
 Deletion/replacement/move list, with current lines. Preserve scientific content and all original obligations; move support rather than deleting adverse facts.
 
@@ -63,7 +63,7 @@ Deletion/replacement/move list, with current lines. Preserve scientific content 
 
 There is no new deletion request for old taste/procedure passages already removed, nor for unrendered historical comments at 524–539. The deterministic corpus floor supplied in the brief remains 1/3 because of other bundles; this review neither reruns it nor infers L1 reader efficacy from it.
 
-### 5. Is the compiled length within the charter's budget? YES under the supplied existing repository instrument
+## 5. Is the compiled length within the charter's budget? YES under the supplied existing repository instrument
 
 Metadata says PRL, `compiled_pages: 4`, and `length_target.ceiling: 3750` word equivalents. `pdfinfo` independently confirms **four actual pages**. The pin-matched `/tmp/l1-reader-results-length-20261105.json` records the existing `_measure_manuscript` output **3267 word equivalents**, rendered PDF tokens plus 300 for the single figure. That is **483 below the declared 3750 ceiling**. Unlike the prior 6962 review, this review has a word-equivalent receipt as well as a page count. The supplied receipt's manuscript/PDF hashes match the actual inspected files.
 

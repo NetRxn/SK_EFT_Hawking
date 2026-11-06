@@ -597,7 +597,7 @@ D7_REGRESSION_REUSE_R1_READBACK.json and archive retain all source/controls,
 independent reviews, actual failures, complete occurrence audit and limits.
 
 
-### D7 focused regression canonical closure
+## D7 focused regression canonical closure
 
 After independent final acceptance and source commitb0f8e3b45, the existing
 close_finding.py writer dry-run and actualwrite both execute the declared
@@ -654,7 +654,7 @@ ROOT retains the entire L1 readiness package; Executor owns only separately
 commissioned deeper scientific construction. No fresh portfolio-wide gate
 snapshot or newly green bundle is claimed.
 
-### Protected integration prerequisite reconciliation
+## Protected integration prerequisite reconciliation
 
 PRIMARY_INTEGRATION_PREREQUISITES_R2.md and its JSON record a read-only lineage
 review at9505b60af and primary4fca5970. The main base is their common ancestor;
@@ -677,7 +677,7 @@ No minimal currently accepted aggregate composition or native/main green is
 claimed. ROOT continues this ordinary L1 delivery work; deeper science remains
 a separate bounded Executor assignment.
 
-### R3 correction: no mandatory lifecycle import
+## R3 correction: no mandatory lifecycle import
 
 NATIVE_PREREQUISITE_REQUIREDNESS_R3.md and its JSON supersede R2's inference
 that a newer lifecycle package must be imported into publication. That inference
@@ -696,7 +696,7 @@ speculative infrastructure upgrade or ceremonial repeat of prior GW proof
 checks is a prerequisite. R2's measured lineage facts and stale-review limits
 remain historical evidence.
 
-### Existing L1 source closures reconciled to delivery
+## Existing L1 source closures reconciled to delivery
 
 Independent fresh applicability review accepts eleven already repaired L1
 findings against the current manuscript, metadata and exact accepted GW module.
@@ -749,7 +749,7 @@ existing planner has no L1 manuscript/GW source group; its linked-checkout slot
 discovery is not canonical runtime capacity authority.
 
 
-### R4 source-composition disposition and failed measurement retained
+## R4 source-composition disposition and failed measurement retained
 
 SCIENTIFIC_INTEGRATION_COMPOSITION_R4.md/.json independently reviews the actual
 publication/main delta against canonical scientific custody. ROOT keeps bounded
@@ -778,7 +778,7 @@ No new scientific, canonical-finding, native/fullgraph/main or human acceptance
 follows from this source-review checkpoint. Original physical BUILD remains owed.
 
 
-### Existing standalone merge profile: R5 authority correction
+## Existing standalone merge profile: R5 authority correction
 
 EXISTING_MERGE_PROFILE_AUTHORITY_R5.md/.json correct R4's overly broad route
 limitation. ROOT, acting as the primary orchestrator, may execute the unchanged
