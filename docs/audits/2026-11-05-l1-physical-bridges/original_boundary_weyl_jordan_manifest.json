@@ -1,0 +1,42 @@
+{
+  "archive": "original_boundary_weyl_jordan_evidence.zip",
+  "sha256": "4953e50ca436c18d19a9f8a354a28cff8023f2c7f70356d8dcd16e340e0bdcc1",
+  "bytes": 1221967,
+  "members": 20,
+  "actual_manual_result_sha256": "244ed2e609d59bc7d5b004a51c81f8512d02514721bab6364a4ee2a38eb813df",
+  "approved_brief_sha256": "948b1ae8fa6739e234243cfcccd56f141ca23c21e283555ca1d3ec8a6d80ebe0",
+  "parent_checkpoint": "bc3da85008f7c4a2f988c60e31cb81ea332cffcd",
+  "canonical_copies": {
+    "l1-original-boundary-weyl-jordan-r1.md": "ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md",
+    "l1-boundary-weyl-jordan-brief-r1.md": "ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION_BRIEF.md",
+    "l1-boundary-weyl-jordan-math-prospective-r1.md": "ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION_MATH_PROSPECTIVE_R1.md",
+    "l1-boundary-weyl-jordan-source-prospective-r1.md": "ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION_SOURCE_PROSPECTIVE_R1.md",
+    "l1-boundary-weyl-jordan-math-result-r1.md": "ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION_MATH_REVIEW_R1.md",
+    "l1-boundary-weyl-jordan-source-result-r1.md": "ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION_SOURCE_REVIEW_R1.md",
+    "l1-boundary-weyl-jordan-primary-intake-r1.md": "BOUNDARY_WEYL_JORDAN_PRIMARY_RESEARCH.md"
+  },
+  "files": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+    "accepted/N16_SATURATION_STATE_OBSTRUCTION.md": "832f231124cc46e41296caf13c50f46d9f4cd3dcb8508860a8b8d83709a5ca9b",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "accepted/ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT.md": "c5d3f45f48b21807b86d15055f753ee387be7942c8794bbefb61010e60063917",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "accepted/PUBLICATION_SATURATION_INTAKE.md": "243e861f6a78190ce6fad514dfd4d5ab67f408fa55cd509043092548cbe2bb2a",
+    "candidate/l1-original-boundary-weyl-jordan-r1.md": "244ed2e609d59bc7d5b004a51c81f8512d02514721bab6364a4ee2a38eb813df",
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "parent/original_automaton_physical_transport_evidence.zip": "d629a1252125be5fc07f40eaec9d404e51fe1db3e9788531d9b6b92feca69a04",
+    "parent/original_automaton_physical_transport_manifest.json": "88795af8a79e52dd5c4a37da95f5745fa0f3bb1b14e08495540ba5196ea6d3bf",
+    "prework/l1-boundary-weyl-jordan-brief-r1.md": "948b1ae8fa6739e234243cfcccd56f141ca23c21e283555ca1d3ec8a6d80ebe0",
+    "prework/l1-boundary-weyl-jordan-math-prospective-r1.md": "78ad99650b75162e65448bdad0e5b25532f4464c9c5e18d8029946acb5e808da",
+    "prework/l1-boundary-weyl-jordan-source-prospective-r1.md": "44cac8a3996ed364a227a4f33350598ff58fe4b6cc27df185bf7dd521f35d6bd",
+    "research/l1-boundary-weyl-jordan-primary-intake-r1.md": "a57c009fc20a045247e229416809a89d8d6dd9f8f96d337c68b6c4795d87654e",
+    "review/l1-boundary-weyl-jordan-math-result-r1.md": "57163b0258ea72dffcb6a9577eeab3555a34cccc782b24fc0ce524756266f787",
+    "review/l1-boundary-weyl-jordan-source-result-r1.md": "5938f1c7ca6b7464eb05217a286525c14489bad5d8591d9723eceaf5029b1995",
+    "source/boundary-weyl-jordan-custody-r1.json": "73c964c9bb13dad5e2ec9e6d11233d1a0f7707ee3633f958b45a7097ea130c15"
+  },
+  "outcome": "BOTH independent ACTUAL RESULT ACCEPT: conditional static trace-dual boundary realization, original reality, coefficient positivity/scaling and all-test Jordan C2 response",
+  "scope": "No actual nonzero Z or metric jet, microscopic ordering/metric identification, physical P1/P2/Q1 or causal evolution, runtime or publication acceptance"
+}
