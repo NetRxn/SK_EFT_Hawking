@@ -10503,6 +10503,21 @@
         "enforced": true,
         "run_at": "2026-11-06"
       }
+    },
+    {
+      "finding_id": "review:2026-11-06-d8-source-reconciliation:D1:1",
+      "status": "fixed",
+      "evidence": "The actual JSON CLI now serializes the unchanged cutoff comparison through built-in bool. Independent source and actual production acceptance, full hierarchy equality, unchanged LaTeX, real regression failure and byte-exact restoration/pass are preserved in SOURCE_RECORD_R4_EVIDENCE.zip and SOURCE_PRODUCTION_REVIEW_R1.md. Only this API defect closes; all original D1 physics and D8 human/figure obligations remain open.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "0e2894344b35e1fe45bc6d9602b4e388f7c56a65",
+      "verified_by": {
+        "command": "python3 -m pytest tests/test_d1_hierarchy_table.py::TestGenerator::test_cli_json_round_trip -q -p no:cacheprovider",
+        "declared": "python3 -m pytest tests/test_d1_hierarchy_table.py::TestGenerator::test_cli_json_round_trip -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
     }
   ]
 }

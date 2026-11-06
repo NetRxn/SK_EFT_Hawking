@@ -44,7 +44,9 @@ The same repair exposed D1's real JSON CLI failure and stale human formula
 labels. The built-in Boolean conversion preserves the existing comparison,
 all numerical values, and byte-identical LaTeX output. Actual production
 controls pass, fail on deliberate regressions and pass after exact restoration.
-[Distinct interface finding](D1.md) remains subject to recorded independent
-production acceptance and canonical closure. No original physics finding is
+[Distinct interface finding](D1.md) now has [independent actual production
+acceptance](SOURCE_PRODUCTION_REVIEW_R1.md) and a canonical verified/fixed closure
+through the existing writer, anchored to source0e2894344.
+[Actual closure and production evidence](SOURCE_PRODUCTION_R1_EVIDENCE.zip). No original physics finding is
 closed by this record repair. Native/hash/full-project qualification remains
 required; mechanical record acceptance is not publication acceptance.

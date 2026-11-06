@@ -33,3 +33,7 @@ evaluation, Berezin orientation/determinant, compact links/integration, weighted
 source response and derivative-of-weight Eq. 11, nonzero normalization, and
 physical B3/state/adjoint/calibration/dynamics/transport remain OPEN.
 This is an accepted scientific proof milestone, not publication readiness.
+
+Subsequent actual candidate native and independently accepted canonical-output
+qualification is recorded in [COMPLEX_NATIVE_R1.md](COMPLEX_NATIVE_R1.md).
+It does not grant whole-project or physical/publication acceptance.
