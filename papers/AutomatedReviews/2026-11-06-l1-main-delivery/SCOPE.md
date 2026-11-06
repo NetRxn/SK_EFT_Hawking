@@ -358,7 +358,7 @@ Independent source R3 and reader/catalog R2 ACCEPT the actual source and
 metadata. The reader directly inspected all five pages and compared actual
 figure image streams against the baseline; the figure is unchanged. Actual
 canonical compile exits0:5pages,zerooverflows/TeXerrors/unresolvedreferences/
-droppedoptions. Actual GW tests89PASS. Global authoring gates remain1/3PASS: 
+droppedoptions. Actual GW tests89PASS. Global authoring gates remain1/3PASS:
 length measures3manuscripts,18UNMEASURED andoneunderflooradvisory; corpus dash
 and reader-voice failures remain. This is no new broad/native qualification.
 
