@@ -34,6 +34,19 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 physical-state source qualification integrated; physical construction open.**
+  [ROOT direct intake](../2026-11-05-l1-physical-bridges/PUBLICATION_STATE_QUALIFICATION_INTAKE.md)
+  accepts Executor26bf5596's independently reviewed source qualification after
+  normal merge and exact archive/source custody checks. The candidate is NOT
+  YET QUALIFIED: action/source correspondence, physical measure/domain/adjoint,
+  local-step/generator identification and metric contact matching remain owed.
+  Executor's next step is a concrete deeper construction brief and renewed
+  independent scientific approvals before an attempt. ROOT retains ALL L1
+  readiness and ordinary repairs. No scientific deferral, canonical closure,
+  main merge or gate transition is recorded. The six-entry provenance proposal
+  is under independent scientific review on PR117's e301c7b9a candidate.
+
+
 - **Current L1 main delivery and deeper boundary construction.**
   [Draft PR117 at e301c7b9a](https://github.com/NetRxn/SK_EFT_Hawking/blob/e301c7b9a6dc315153b48c5daa251b5ff1e502de/papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md)
   checkpoints actual source/render acceptance, the complete grouped documentary
