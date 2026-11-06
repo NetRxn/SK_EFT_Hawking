@@ -1,5 +1,6 @@
 import SKEFTHawking.ADW.FiniteGrassmannEvaluation
 import SKEFTHawking.ADW.FiniteGrassmannCoframe
+import SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary
 import SKEFTHawking.ADW.GaussianAuxiliaryCompensation
 import SKEFTHawking.ADW.GaussianAuxiliaryComplex
 import SKEFTHawking.ADW.GaussianPolynomialAffine
