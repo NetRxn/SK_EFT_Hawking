@@ -49,4 +49,3 @@ Primary version: [publisher article record](https://www.sciencedirect.com/scienc
 - Lüscher 1977 full text was available through browser body read; no downloading performed. The 1984 publisher record was abstract-level only and is used solely as a cautionary counterexample.
 - Uncertainty: I did not inspect Lit-Search or obtain/paywall-download copies; Menotti–Pelissetto/Osterwalder–Seiler were already represented in packet inventory, so not repeated as novel candidates. The older primary scan has OCR/math extraction imperfections; cross-check theorem wording against page images before relying on a formula. No theory-specific applicability has been accepted.
 - No repository, notebook, code, Lean, build, slot, controller, or other scout files were edited. No physical premise adopted.
-
