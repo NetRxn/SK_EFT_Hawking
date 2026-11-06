@@ -34,6 +34,24 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **Exact original transfer/source operators constructed and accepted.**
+  [ROOT direct intake](../2026-11-05-l1-physical-bridges/PUBLICATION_TRANSFER_INTAKE.md)
+  accepts d421925e's bounded auxiliary transfers, finite-rank two-step kernel,
+  derived periodic supertrace and actual metric insertion/contact operators
+  after complete proof/review/source reading and archive custody checks.
+  This is constructive scientific progress, not only a dictionary exclusion.
+  A positive physical state/adjoint, nonzero partition, B3, N4, tensor/matter
+  and transport remain OPEN. No physical boundary or favorable projection is
+  chosen. Executor continues the bounded original physical correspondence;
+  ROOT retains every ordinary L1 readiness and delivery duty.
+  [Completed failure triage](../../../papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/FAILURE_TRIAGE.md)
+  separates58 extraction-dependent outcomes, one nested collection failure,
+  five separately passing host fixtures and27 corpus/process/stale-test
+  outcomes. Reuse the already implemented primary repairs before new code.
+  Next ROOT delivery work is the exact main-paper composition and its existing
+  qualification, alongside substantive closure of the remaining obligations.
+
+
 - **Current qualification and deeper construction intake.**
   The [87ae47bfd default-suite result](../../../papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/BROAD_DEFAULT_RESULT.json)
   is RED:61 failures,7081 passes,30 errors,40 skips and92 deselections.
@@ -61,7 +79,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   **Next ROOT milestone:** canonical propagation disposition and current
   merge qualification for incremental main delivery.
   Executor's93338ee deeper construction now has direct bounded intake above;
-  its later d421925e transfer construction awaits ROOT reading. Physical B3/
+  the later d421925e transfer construction has direct bounded intake above. Physical B3/
   state/tensor/matter/transport and full publication/main/human remain OPEN.
 
 

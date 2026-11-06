@@ -72,7 +72,8 @@ positive state, constrained tensor mode, matter/light reference and controlled
 transport remain full-strength BUILD obligations. Executor owns bounded deeper
 constructions, not the rest of L1. The93338ee handback has
 [bounded direct ROOT intake](../../../docs/audits/2026-11-05-l1-physical-bridges/PUBLICATION_METRIC_DICTIONARY_INTAKE.md).
-The later d421925e transfer construction awaits direct intake.
+The later d421925e transfer construction has
+[direct bounded intake](../../../docs/audits/2026-11-05-l1-physical-bridges/PUBLICATION_TRANSFER_INTAKE.md).
 ROOT's next work is canonical propagation disposition and
 qualification of incremental main delivery, while those constructions proceed.
 Full D3 catalog coverage, broader corpus failures, physical BUILD acceptance,
