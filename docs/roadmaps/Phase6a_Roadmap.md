@@ -1066,6 +1066,24 @@ previously called "low-utility/high-effort":
 
 ---
 
+### Publication research assignment: original Lorentzian boundary continuation
+
+Task `l1-lorentzian-boundary-continuation-source-research-r1`, owner Executor
+01a1ac65, parent publication remediation ROOT 01a13f67. ROOT accepted the
+[research intake](../audits/2026-11-05-l1-physical-bridges/NEXT_PHYSICAL_CORRESPONDENCE_RESEARCH_INTAKE.md)
+and commissioned the [next objective](../audits/2026-11-05-l1-physical-bridges/LORENTZIAN_BOUNDARY_CONTINUATION_RESEARCH_OBJECTIVE.md):
+derive a concrete original-grounded Lorentzian composite boundary cycle, real
+structure, polarization and continuation candidate, or a precise construction
+breakdown with exact primary hypotheses. Retain BOTH accepted kernel orientations
+and the complete original C2/seam/source/denominator/domain/matter/scale obligations.
+This authorizes research, not adoption of a physical premise or an unspecified
+positive representation. No operator question is needed merely to investigate.
+The controlled original Euclidean reconstruction remains an open alternative.
+Fresh independent prospective math/source review precedes any implementation;
+the designer cannot independently review its own prescription. Physical B3 and
+all original publication requirements remain open. ROOT retains ordinary Eq4–11
+proving/publication integration and runtime/reset ownership; no slot is granted.
+
 ## Decision Gates
 
 **Gate A.1 — after Wave 1 (`LinearizedEFE`) ships:** Is `G_N^emerg` sign correct and within 2 orders of magnitude of observed `G_N`? YES → all subsequent 6a waves proceed at full scope. NO (wrong sign) → ADW identification falsified at linearized order; 6a.4 scope is narrowed, 6a.5 and 6a.6 continue as formal exercises; Phase 6e reassessed. NO (right sign, wrong magnitude) → proceed but document parameter-fit freedom in every downstream wave.
