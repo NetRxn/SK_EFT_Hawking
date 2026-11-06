@@ -1219,9 +1219,11 @@ independently derived, not defined by the target moments.
 
 Normal primary absorption at7fc0d2c0b publishes its epoch and releaseswt1.
 Separate actual main-source library/ExtractDeps build passes10,838jobs,
-terminal zero18:31UTC. Canonical derivatives, independent artifact acceptance
-and a fresh full-project gate result remain required; the earlier full merge
-profile remains failed at its recorded source.
+terminal zero18:31UTC. Canonical derivatives and independent artifact review
+now pass at pushedb21c206a8; all prior complete records and scientific tables
+are conserved, with forty new authored theorems. Actual freshness4/4passes
+with one canonical cluster-regeneration warning. A fresh complete existing
+merge-gate profile is RUNNING atb21c206a8; no full-project pass is claimed.
 
 Next ordinary mathematical acceptance: original Eq4 compensation and finite
 truncation, then actual Grassmann/coframe commutation/global nilpotence and
@@ -1290,3 +1292,11 @@ requirements remain binding. The controlled original Euclidean reconstruction
 alternative remains open. A derived concrete construction requires fresh
 independent prospective source/mathematical review before implementation.
 Executor owns that deeper task; ROOT keeps ordinary L1 and runtime/reset.
+
+The next ordinary [Eq4/Eq7design](../audits/2026-10-17-publication-substance-construction/AUXILIARY_COMPENSATION_GRASSMANN_DESIGN_R1.md)
+has [independent prospective approval](../audits/2026-10-17-publication-substance-construction/AUXILIARY_COMPENSATION_GRASSMANN_DESIGN_REVIEW_R1.md)
+for admitted discovery/implementation. Deterministic finite complex compensation,
+actual8Vexterior/coframe/global4Vnilpotence and G-valued integrability/equality
+are all required; a conditional carrier or scalar surrogate is insufficient.
+Actual source conventions precede specialization. No Eq7kernel/physical/B3
+acceptance follows from design approval.

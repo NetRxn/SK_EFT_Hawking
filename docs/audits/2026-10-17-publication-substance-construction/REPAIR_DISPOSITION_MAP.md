@@ -41,7 +41,8 @@ main candidate. The earlier checkpoint narratives remain in Git history and
 below; pending statements there do not supersede these current assignments.
 
 - **Ordinary L1 native/proof delivery:** main-based draft [PR117](https://github.com/NetRxn/SK_EFT_Hawking/pull/117)
-  is pushed at `0e2894344b35e1fe45bc6d9602b4e388f7c56a65`. The full complex
+  is pushed at `b21c206a847ea4d914c27cc7e78866de3fddce1f`, with scientific
+  source `0e2894344b35e1fe45bc6d9602b4e388f7c56a65`. The full complex
   auxiliary Eq5–6 identity is implemented and independently source/kernel accepted:
   arbitrary complex finite polynomial, every multiindex, positive scale, finite
   coordinates including empty, genuine integrability and actual formal exp(Q).
@@ -52,7 +53,13 @@ below; pending statements there do not supersede these current assignments.
   `7fc0d2c0b720989cf3f9003ce87a6654895a11bc` succeeds, publishes epoch and releases
   wt1. The actual main delivery candidate's separate library/ExtractDeps build
   passes **10,838 jobs**, terminal zero18:31UTC. Canonical regeneration and
-  independent artifact review are next; no current full-project pass is claimed.
+  [independent full artifact review](https://github.com/NetRxn/SK_EFT_Hawking/blob/b21c206a847ea4d914c27cc7e78866de3fddce1f/papers/AutomatedReviews/2026-11-06-l1-main-delivery/COMPLEX_NATIVE_R1.md)
+  accept all41,064oldcomplete records unchanged, exactly62newrecords including
+  forty authored theorems, correct107macros/atlas/heatmap and all ninety
+  unchanged scientific tables. Existing freshness4/4passes with one canonical
+  cluster-regeneration warning; the final review snapshot is reconciled/fresh.
+  The complete existing merge-gate profile is RUNNING on clean pushedb21c206a8,
+  separate from native/artifact acceptance; no fresh whole-project pass is claimed.
   Original Eq4 compensation/truncation, actual Grassmann/coframe/Berezin/link
   assembly and weighted source Eq11 are the next ordinary construction steps.
   Physical B3/state/adjoint/calibration/transport remain OPEN. ROOT retains L1.
@@ -106,13 +113,16 @@ below; pending statements there do not supersede these current assignments.
   all seven equations, accepted figure and bibliography are conserved. Original
   physical four-laws and wider WKB/claims debt stay OPEN; focused native/index
   and full-stage qualification remain next. [Full repair and closure evidence](https://github.com/NetRxn/SK_EFT_Hawking/tree/263c882b2714d94a50a1e0ece1fcd402ca2f1539/papers/AutomatedReviews/2026-11-06-l3-figure-readability).
-- **Portfolio measurement:** [all231 canonical payloads](CURRENT_GATES_20261106_R3.json)
-  on c9b223abf with its freshly regenerated affine derivatives, measured
-  2026-11-06 17:27 UTC and preserved at91d380f4a, give **160passed/25blocked/
-  28open/18recheck**. Exact gate-ID/state comparison to1dc710e9 has **zero state
-  changes and zero newly green bundles**. [Raw graph, prior snapshot and hashes](CURRENT_GATES_20261106_R3_EVIDENCE.json)
-  preserve warnings/coverage caveats. This measures the stated main-based source,
-  not the separate focused L3 or cumulative physical-research candidate.
+- **Portfolio measurement:** [all231 canonical payloads](CURRENT_GATES_20261106_R4.json)
+  on source0e2894344 with all seven regenerated derivatives and the one accepted
+  API closure, measured **2026-11-06 18:44 UTC**, are preserved atb21c206a8:
+  **160passed/25blocked/28open/18recheck**. Exact gate-ID/state comparison to
+  priorR3/17:27 gives **zero state changes and zero newly green bundles**.
+  [Source, comparison and full raw evidence pointers](CURRENT_GATES_20261106_R4_EVIDENCE.json)
+  retain all coverage caveats; G4 is open for nineteen bundles without declared
+  formulas. L1/D12 static coverage passes do not establish execution or physical
+  validation. Separate focusedL3 and cumulative research branches are not measured.
+
 
 Original Paper25 dependency2.3/compile6 closures and L2 terminal-LF source repair
 remain accepted at their recorded scopes. Paper25 human-attestation2.1 and every
@@ -2437,3 +2447,23 @@ ROOT retains all ordinary L1 publication work. Current existing-SCALARS package
 is applied and independently current-source/render/control accepted; canonical
 five-unit quote lineage and F binding reviews/application remain in flight,
 so it has not yet been promoted as a complete checkpoint.
+
+### Next ordinary auxiliary construction
+
+ROOT directly read the [complete Eq4/Eq7 design](AUXILIARY_COMPENSATION_GRASSMANN_DESIGN_R1.md)
+and [fresh independent prospective approval](AUXILIARY_COMPENSATION_GRASSMANN_DESIGN_REVIEW_R1.md).
+This authorizes admitted discovery/implementation, not proof or physical completion.
+A owns arbitrary-complex finite compensation/truncation/all retained coefficients;
+B owns actual8V-generator exterior algebra, original quarter-coframes, even
+commutation and global4Vjoint nilpotence; C combines them into actual G-valued
+Eq7with independent integrability. ROOT retains all three acceptance boundaries.
+A conditional nilpotent-carrier theorem alone cannot close actual-model Eq7.
+Original gamma/plaquette/boundary/source conventions must be checked before
+pinning those definitions; failed static searches are not absence evidence.
+ROOT normally admitted and assignedwt1 forA at primary7fc0/current successful
+epoch; actual native21tool dispatch and cleanup pass. The worker sandbox ps/
+loopback denial and stale no-lease description were reconciled against ROOT
+host census and an actual successful matching MCP outline; no reset or backend
+repair was needed. Implementation and independent kernel review remain owed. Controlled full-profile work on MAIN and Executor's original
+physical reconstruction research continue independently. No original requirement
+or final human approval is waived.
