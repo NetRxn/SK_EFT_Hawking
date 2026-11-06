@@ -1,5 +1,15 @@
 # Two-lane disposition assessment r1
 
+## Standing recovery ownership — 2026-11-06
+
+Operator direction: the agent owning team orchestration/coordination is the single go-to owner for `/reset-slot` and slot recovery after this recovery. For the publication team, that is ROOT / Physics Publication Remediation. Executor and lane workers coordinate requests with ROOT; the operator does not need to micromanage routine recovery. On a lead handoff, transfer this responsibility explicitly with the continuity packet and current controller evidence.
+
+Use the existing [reset-slot command](../../../.claude/plugins/skeft-qa/commands/reset-slot.md) for an **unleased** slot; leased slots follow [ADR-008's operator workflow](../../dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md) through the primary checkout. Establish current ownership, preserve committed and uncommitted work, reconcile ancestry and process identity/quiescence, and verify the resulting controller/backend state before redispatch. A remote preservation branch alone does not establish that a reset is safe. Do not reset a dirty slot or bypass quarantine/lease guards. A compiler/proof failure alone is not grounds to reset a slot.
+
+The assessment below is the historical R1 snapshot, not a current lane-availability report. This ownership decision changes no controller implementation, scientific acceptance requirement or publication gate.
+
+---
+
 Conclusion: NO supported end-to-end existing workflow frees BOTH current slots under all stated constraints. Do not retry release/reclaim/absorb or alter state to manufacture eligibility. This is a source/process assessment, not native admission or a repair authorization. The missing second-lane capacity is not presently blocking an approved two-package proof dispatch: Executor has no two approved implementation-ready proof packages, and its deeper-physics proposal is still manual-stage pending.
 
 ## Snapshot and measured facts
