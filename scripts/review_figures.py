@@ -1382,9 +1382,11 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         name="fig_T_H_evolution_regime_partition",
         function="fig_T_H_evolution_regime_partition",
         caption=(
-            "Left: representative normalized Hawking-temperature histories "
-            "for the heating Schwarzschild and cooling acoustic branches. "
-            "Right: the emergent gravitational length G_N^emerg M and the "
+            "Panel (a): separately normalized temperature histories for representative "
+            "Schwarzschild evaporation (t/t_evap) and illustrative exponential "
+            "cooling (t/τ_cool). The exponential is a chosen profile, distinct "
+            "from Balbinot et al.'s local affine nozzle result. "
+            "Panel (b): the emergent gravitational length G_N^emerg M and the "
             "cutoff length 1/Λ_UV, expressed in cutoff-length units. They "
             "coincide at M = M_c in the stated model. Blue and amber shading "
             "mark the classified branches on either side."
