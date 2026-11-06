@@ -1189,28 +1189,31 @@ previously called "low-utility/high-effort":
 ### Publication continuation: polynomial Gaussian identity
 
 ROOT retains ordinary L1 Lean/Python construction and publication delivery.
-The arbitrary-degree standard Gaussian/Hermite and affine/product foundation is
-independently source/kernel accepted and integrated on main-based draft PR117.
-At source c9b223abf, actual library/ExtractDeps build passes10,837jobs; canonical
-producers and four freshness checks pass. Independent generated-artifact review
-accepts ten new authored theorems and conservation of prior declarations and
-scientific tables. Delivery checkpoint91d380f4a records full receipts.
-The earlier full merge profile remains FAILED, with27 persistent IDs and other
-source/run obligations recorded in the [canonical queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints).
+The all-degree Hermite and affine/product foundations remain independently
+accepted and integrated. The full complex auxiliary Eq5–6 proof is now accepted
+at author e0c51ec2, with exact selected-source integration on draftPR117 source
+0e2894344. Genuine integrability, arbitrary complex finite polynomial, every
+multiindex, positive scale and finite coordinates including empty are retained.
+Independent actual kernel verification covers all forty exports/closing goals
+with only standard logical axioms. The formal exp(Q) coefficient result is
+independently derived, not defined by the target moments.
+[Source, independent reviews and full raw evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/0e2894344b35e1fe45bc6d9602b4e388f7c56a65/papers/AutomatedReviews/2026-11-06-l1-main-delivery/COMPLEX_SOURCE_R1.md).
 
-Next ordinary mathematical block: complete finite complex Hermite auxiliary
-weight and every normalized monomial coefficient, including genuine Bochner
-integrability, arbitrary positive scale, arbitrary finite complex polynomial,
-empty dimension and the actual formal exp(Q) generating identity (originalEq5–6).
-The [design and independent prospective approval](../audits/2026-10-17-publication-substance-construction/GAUSSIAN_COMPLEX_AUXILIARY_DESIGN_REVIEW_R1.md)
-are accepted for admitted discovery/implementation, not kernel acceptance.
-Task `publication-l1-complex-auxiliary-proof-r1` is owned by ROOT and an admitted
-matching worker. Matching admitted LSP/type
-search of existing project/Mathlib/imported declarations precedes new proof work;
-static misses or stale graph/docstrings do not establish absence. ROOT owns
-assignment, independent kernel/source review, integration and actual native gates.
-Full compensation/truncation, actual Grassmann/coframe/Berezin/link/source and
-physical B3 acceptance remain OPEN, not discharged by this support.
+Normal primary absorption at7fc0d2c0b publishes its epoch and releaseswt1.
+Separate actual main-source library/ExtractDeps build passes10,838jobs,
+terminal zero18:31UTC. Canonical derivatives, independent artifact acceptance
+and a fresh full-project gate result remain required; the earlier full merge
+profile remains failed at its recorded source.
+
+Next ordinary mathematical acceptance: original Eq4 compensation and finite
+truncation, then actual Grassmann/coframe commutation/global nilpotence and
+Eq7evaluation, Berezin orientation/determinant, compact link integrability and
+weighted derivative-of-W/source Eq11. Search actual statement/type and consumer
+imports through admitted Lean LSP before opening purportedly missing proofs;
+failed text search/stale pending comments are not absence evidence. ROOT owns
+dispatch, independent review, actual builds, integration and publication.
+Original physical B3 and all calibration/state/domain/mode/transport obligations
+remain OPEN. See the [canonical current queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints).
 
 ### Publication continuation: original one-slice source kernel
 
@@ -1256,3 +1259,16 @@ with construction evidence. Existing B3, maps30–31/calibration, secondary
 constraints, causal dynamics, matter/absolute scale, limits, N4/tensor/light/
 transport and human/publication gates remain OPEN. a14 and K/K_R remain uncomputed.
 No new Lean slot or runtime capacity is granted by these manual research entries.
+
+### Publication continuation: next physical prescription research
+
+ROOT read the complete Executor next-physical mathematical-design and primary
+source intake plus handback, verified hashes/complete archive custody, and
+commissioned source-specific Lorentzian composite boundary real-structure/
+polarization/cycle/continuation investigation. This is authorized research, not
+adoption of a new physical premise, a positive-state candidate or a deferral.
+Both original kernel orientations, full C2/source/frame/denominator/seam/domain
+requirements remain binding. The controlled original Euclidean reconstruction
+alternative remains open. A derived concrete construction requires fresh
+independent prospective source/mathematical review before implementation.
+Executor owns that deeper task; ROOT keeps ordinary L1 and runtime/reset.

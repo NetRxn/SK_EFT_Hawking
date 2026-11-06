@@ -34,45 +34,52 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
-**Current resume state — 6 November 2026, 17:32 UTC.** L1 remains lead and
+**Current resume state — 6 November 2026, 18:37 UTC.** L1 remains lead and
 owns the next delivery milestone through canonical gates/final human review.
 The cumulative branch preserves research/review history and is not a whole-branch
 main candidate. The earlier checkpoint narratives remain in Git history and
 below; pending statements there do not supersede these current assignments.
 
 - **Ordinary L1 native/proof delivery:** main-based draft [PR117](https://github.com/NetRxn/SK_EFT_Hawking/pull/117)
-  is pushed at `91d380f4acd6077e55d24e6f213931497ae39e55`. The unrestricted
-  affine/product Gaussian proof is integrated at `c9b223abf`; actual candidate
-  library/ExtractDeps build passes **10,837 jobs**. Existing canonical extraction,
-  counts, tables and fast-sync all succeed; independent full generated-artifact
-  review accepts exactly ten new authored theorem records, all previous41,054
-  complete records unchanged, correct atlas dependency impacts and all ninety
-  unchanged canonical tables. Actual freshness checks pass4/4.
-  [Native, review, full raw receipt and gate custody](https://github.com/NetRxn/SK_EFT_Hawking/blob/91d380f4acd6077e55d24e6f213931497ae39e55/papers/AutomatedReviews/2026-11-06-l1-main-delivery/AFFINE_NATIVE_R1.md).
-  Primary normal absorption at2c201cd00 and its successful epoch are separate
-  from that actual main-candidate qualification. Full complex auxiliary weight,
-  formal Gaussian compensation/truncation and actual Grassmann/coframe/Berezin/
-  link/source assembly remain owed. The next mathematical block is the complete
-  complex polynomial auxiliary coefficient/formal-series identity (original
-  Eq5–6), [prospectively approved for admitted discovery and implementation](GAUSSIAN_COMPLEX_AUXILIARY_DESIGN_REVIEW_R1.md).
-  [Complete design and controls](GAUSSIAN_COMPLEX_AUXILIARY_DESIGN_R1.md) retain
-  arbitrary complex coefficients, every multiindex, genuine integrability and
-  actual formal exp(Q); no implementation/kernel acceptance follows yet. ROOT retains ordinary L1 and integration ownership.
-- **Actual merge blockers:** the earlier Hermite full profile on d4e4494b8 is
-  TERMINAL FAILED:7,172passed/28failed/14skipped. Its equal count concealed a
-  changed set: L2 serialization resolved, live census appeared and27 prior IDs
-  persisted. Canonical refresh repairs the census; no later full-profile pass
-  is claimed. [Fresh bounded read-only source-record diagnosis](DELIVERY_RECORD_DIAGNOSIS_R3.md)
-  identifies three malformed Verify records, invalid stage chronology values,
-  missing severity/unsupported lanes, and111 unresolved chain links versus109.
-  Blocked-by dependencies themselves resolve; their containing check fails
-  other metadata legs. ROOT next repairs actual source records through author
-  repair, independent review, applicable controls and canonical closure where
-  earned. Do not add machinery, weaken ceilings, erase findings, substitute
-  grep absence for physics or treat routing repair as scientific acceptance.
-  Earlier stricter pin proposals remain held, unapplied;35 numeral gaps and
-  nineteen thin-claim flags remain visible. Notebook scientific run admission
-  remains a separate original open finding; no unqualified dataset is copied.
+  is pushed at `0e2894344b35e1fe45bc6d9602b4e388f7c56a65`. The full complex
+  auxiliary Eq5–6 identity is implemented and independently source/kernel accepted:
+  arbitrary complex finite polynomial, every multiindex, positive scale, finite
+  coordinates including empty, genuine integrability and actual formal exp(Q).
+  All forty exports have only standard logical axioms, no warnings and empty
+  closing goals. [Full source, independent reviews and actual raw evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/0e2894344b35e1fe45bc6d9602b4e388f7c56a65/papers/AutomatedReviews/2026-11-06-l1-main-delivery/COMPLEX_SOURCE_R1.md).
+  Exact reviewed source plus one aggregate import conserves every prior aggregate
+  byte and import-closure/dependency pin. ROOT normal controller absorption at
+  `7fc0d2c0b720989cf3f9003ce87a6654895a11bc` succeeds, publishes epoch and releases
+  wt1. The actual main delivery candidate's separate library/ExtractDeps build
+  passes **10,838 jobs**, terminal zero18:31UTC. Canonical regeneration and
+  independent artifact review are next; no current full-project pass is claimed.
+  Original Eq4 compensation/truncation, actual Grassmann/coframe/Berezin/link
+  assembly and weighted source Eq11 are the next ordinary construction steps.
+  Physical B3/state/adjoint/calibration/transport remain OPEN. ROOT retains L1.
+- **Actual merge-blocker repair:** the reviewed source/record package is applied
+  and pushed at that same source checkpoint. D1's real JSON CLI serialization
+  failure is repaired without changing numerical values, comparison truth or
+  LaTeX output. Stale emitted formula labels are corrected while preserving the
+  full original Verify assertion body. Actual15targeted tests pass; deliberate
+  JSON/narrative faults fail and exact restoration passes. Independent actual
+  production review accepts the repair; the existing closure writer records only
+  the new JSON API finding as verified/fixed, anchored to source0e2894344. All
+  original physics/semantic findings remain open. Three malformed Verify
+  records and unsupported lanes are corrected under existing contracts.
+  [Primary-source, data, review and production evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/0e2894344b35e1fe45bc6d9602b4e388f7c56a65/papers/AutomatedReviews/2026-11-06-d8-source-reconciliation/SOURCE_ASSESSMENT.md)
+  establishes Dawson–Nielsen's true3.97length/2.71pointer-runtime distinction,
+  real DOI and existing fullPDF custody. The false abstract is preserved in
+  Lit-Search; canonical registry/Sidecar/register now use the fullPDF. NoPDF is
+  redistributed. Original D8:1.4 remains a human-confirmation supersession
+  candidate, and its figure guard remains red. All1853prior finding identities,
+  severities/gates/statuses and ledger were conserved before adding one explicit
+  new API finding. No original physics finding is silently closed.
+  The earlier Hermite full profile remains TERMINAL FAILED7,172pass/28fail/
+  14skip at its source; prior canonical refresh repaired its new census failure.
+  Other chronology/severity/chain/claim/run failures remain owed. No ceiling,
+  checker or planner is changed;35numeral gaps/nineteen thin-claim flags and the
+  notebook scientific-run-admission finding remain open. No unqualified dataset
+  is copied to obtain a pass.
 - **Deeper L1 construction:** Executor’s original one-slice/source-defect result
   at6b86bd220 and EHC reflection/reversed-cut/full-source law at
   `7fc890876d66611044d9d0d49b1090074f9de97e` received independent actual math
@@ -114,89 +121,30 @@ approval remain owed. The priority order and original claim strength are unchang
 
 ### Current lane availability and next scientific checkpoint
 
-**Later actual admission — 17:38 UTC:** ROOT normally acquired/prepared wt1
-for `publication-l1-complex-auxiliary-proof-r1` at accepted primary2c201cd00,
-successful epoch85a44ba7. Existing native probe passes21 tools, real active
-dispatch and cleanup200; no build tool is exposed. Fresh ROOT census/heartbeat
-at17:42 confirms ACTIVE/running with complete capacity and no conflicts/errors.
-Fresh worker `/root/complex_auxiliary_wt1` checked its exact continuity packet,
-then confirmed actual existing affine theorem types through the matching Lean
-endpoint. It is performing statement/type discovery before new proof work;
-no implemented complex theorem or native acceptance is claimed. Sandbox-limited
-process observations and an initial wrong filename were reconciled against
-actual ROOT census and the correct existing module; no reset or infrastructure
-change was needed. wt2/wt3 remain unleased/unreserved in that fresh census.
-The earlier free-lane snapshot below is dated evidence, superseded only for wt1.
+Fresh primary-controller readback after normal complex-proof absorption,
+**2026-11-06 18:29 UTC**, reports all three slots clean, unleased and unreserved,
+complete capacity and no conflicts; public proxies run and backends are down.
+No recovery barrier remains. wt1 source/import checkpoint7fc0d2c0b and primary
+custody history are pushed. Free wt2/wt3 retain their last accepted HEAD until
+an actual prepare installs the current source/epoch; older free HEAD is not a
+reason to reset. ROOT is the standing team /reset-slot owner; any orchestration
+handoff explicitly transfers responsibility. No slot is reserved for an unready
+package. Executor has the deeper physics research commission below, not an
+implementation lease.
 
-Fresh primary-controller readback at **2026-11-06 17:32 UTC** reports complete
-capacity, no conflicts/errors/reservations and no running backends: all three
-slots clean, unleased and unreserved, with running public proxies. wt1 is at
-accepted primary2c201cd00; free wt2/wt3 remain2fbbfd95a until the next actual
-prepare installs the current base/epoch. A free slot’s older HEAD is not a
-recovery barrier and is not reset just for presentation. The [successful saved-
-work recovery](OWNED_SLOT_RECOVERY_R1.md) and normal fresh native admission
-receipts remain authoritative historical evidence. The fresh census is local;
-only this public custody summary is recorded, avoiding unrelated workspace data.
+ROOT personally read the complete new Executor mathematical-design,
+primary-source and research handback, checked all hashes and full archive
+custody. The inspected projection mechanisms start with physical adjoint/domain
+or CAR inputs not supplied by the original compact model. This is bounded
+applicability diligence, not a positive candidate, proof of impossibility or
+operator deferral. Executor is commissioned to investigate the actual
+source-specific Lorentzian composite boundary cycle/real structure/polarization
+and continuation, preserving both accepted kernels and all C2/source/seam/
+denominator/domain requirements. A concrete candidate needs fresh independent
+prospective review; no new physical premise or favorable norm/state is adopted.
+The controlled original Euclidean reconstruction alternative remains open.
+Existing physical construction and publication acceptance requirements stand.
 
-Next actual ordinary Lean admission is the prospectively approved complete
-complex auxiliary Eq5–6 block, task `publication-l1-complex-auxiliary-proof-r1`,
-ROOT owner with a matching admitted worker. Acquire/prepare and actual typed
-search precede new proof work; no lease is granted by this narrative. Executor
-has no two approved proof-ready packages and uses no slot for its current manual
-deep constructions. Its intended two additional lanes remain available when
-concrete independent packages and matching admission are ready.
-
-**Standing reset owner: ROOT while leading this team.** Agents, including
-Executor, route `/reset-slot` and manual recovery through that orchestrator.
-Handoff names the successor; preserve exact work, reconcile ownership and actual
-quiescence, follow existing locks/recovery and record fresh readback. Routine
-authorization persists; no repeat permission or new infrastructure is required
-merely to recover saved work. Unknown/dirty/active peer custody is reconciled first.
-
-#### Earlier lane audit (historical, before operator clarification and recovery)
-
-The intended allocation is ROOT on wt1 and up to two Executor lanes when
-approved independent packages are ready. **This three-lane allocation has not
-been achieved.** Actual controller health verification succeeds: only wt1 has
-a running backend; wt2/wt3 are clean and down. Executor confirms it has not
-used either during this commission and has no two approved implementation-ready
-proof packages yet. Availability restoration and scientific dispatch are separate.
-
-[Independent existing-process assessment](LEAN_LANE_DISPOSITION_R1.md) and
-[actual status/refusal/preservation custody](LEAN_LANE_DISPOSITION_EVIDENCE_R1.json)
-record the precise barriers. wt2 retains four October20 BP commits at8187fc831;
-wt3 retains older3505b2f8 history under its November4 quarantine. Both complete
-histories are now preserved and remotely read back at the refs in the evidence.
-The current ROOT session owns both old leases; owner-ended reclaim is inapplicable.
-No dirty reset, manual lease edit, bypass, infrastructure change or main merge
-was performed. Existing wt3 owner release actually refused because its history
-is contained in current authoritative publication primary, but not configured
-main or its obsolete raw-SHA base. wt2 also has raw-SHA absorption and READY
-release-state barriers. A reviewed custody configuration decision can supply
-the wt3 path after wt1's milestone; it alone cannot solve wt2's terminal-state
-workflow gap. Preserve this bounded assessment for the bundled architecture
-review, rather than starting an ad hoc controller fix. ROOT owns follow-through.
-No approved two-package scientific dispatch is currently waiting on recovery.
-
-The next L1 coefficient proof is now constructed and independently source/kernel
-accepted: `bfb8ca2576ccdfb25ad2ebf3bebc1a2bfb7d9fc0`, preserved remotely at
-`codex/publication-l1-hermite-source-20261106`. [Full independent kernel review](GAUSSIAN_HERMITE_KERNEL_REVIEW_R1.md) and [complete actual MCP custody](GAUSSIAN_HERMITE_EVIDENCE_R1.json) are preserved. It proves actual Gaussian
-polynomial integrability, all-order Hermite insertions with no degree cap,
-coefficient extraction, factorial normalization and orthogonality. Every export
-uses only standard axioms. Aggregate integration, authoritative build and actual
-main-based composition remain required; full auxiliary/physical B3 stays OPEN.
-
-L3's five-path source/consumer figure correction has independent source ACCEPT.
-Actual normalized-coordinate and unchanged crossing positives pass; all nine
-journalled real producer faults fail and restore exact source bytes/mtime.
-The unchanged thermodynamics test module passes58tests; canonical forced L3
-compile passes at4pages with zero overfull, TeX or unresolved-reference errors.
-Actual regenerated PNG/PDF still require independent publication-size visual/
-claims acceptance and canonical closure. These applied work-in-progress files
-are in the existing focused L3 checkout; they have not yet been committed or
-attributed to its previous remote42dd snapshot. Inherited WKB/Lean prose and
-source-paper propagation remain identified obligations, not globally closed.
-L1 retains lead and no new bundle green or qualified main merge is claimed.
 
 ### Earlier delivery checkpoints (historical evidence)
 
