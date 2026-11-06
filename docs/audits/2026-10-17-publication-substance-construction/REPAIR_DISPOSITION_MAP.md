@@ -122,6 +122,51 @@ retained. Before any next Lean task, reconcile live primary controller admission
 the previous wt1 shutdown observation retained its backend reservation. No slot
 release, wt2 absorption or wt3 quarantine recovery is implied by these records.
 
+### Current lane availability and next scientific checkpoint
+
+The intended allocation is ROOT on wt1 and up to two Executor lanes when
+approved independent packages are ready. **This three-lane allocation has not
+been achieved.** Actual controller health verification succeeds: only wt1 has
+a running backend; wt2/wt3 are clean and down. Executor confirms it has not
+used either during this commission and has no two approved implementation-ready
+proof packages yet. Availability restoration and scientific dispatch are separate.
+
+[Independent existing-process assessment](LEAN_LANE_DISPOSITION_R1.md) and
+[actual status/refusal/preservation custody](LEAN_LANE_DISPOSITION_EVIDENCE_R1.json)
+record the precise barriers. wt2 retains four October20 BP commits at8187fc831;
+wt3 retains older3505b2f8 history under its November4 quarantine. Both complete
+histories are now preserved and remotely read back at the refs in the evidence.
+The current ROOT session owns both old leases; owner-ended reclaim is inapplicable.
+No dirty reset, manual lease edit, bypass, infrastructure change or main merge
+was performed. Existing wt3 owner release actually refused because its history
+is contained in current authoritative publication primary, but not configured
+main or its obsolete raw-SHA base. wt2 also has raw-SHA absorption and READY
+release-state barriers. A reviewed custody configuration decision can supply
+the wt3 path after wt1's milestone; it alone cannot solve wt2's terminal-state
+workflow gap. Preserve this bounded assessment for the bundled architecture
+review, rather than starting an ad hoc controller fix. ROOT owns follow-through.
+No approved two-package scientific dispatch is currently waiting on recovery.
+
+The next L1 coefficient proof is now constructed and independently source/kernel
+accepted: `bfb8ca2576ccdfb25ad2ebf3bebc1a2bfb7d9fc0`, preserved remotely at
+`codex/publication-l1-hermite-source-20261106`. It proves actual Gaussian
+polynomial integrability, all-order Hermite insertions with no degree cap,
+coefficient extraction, factorial normalization and orthogonality. Every export
+uses only standard axioms. Aggregate integration, authoritative build and actual
+main-based composition remain required; full auxiliary/physical B3 stays OPEN.
+
+L3's five-path source/consumer figure correction has independent source ACCEPT.
+Actual normalized-coordinate and unchanged crossing positives pass; all nine
+journalled real producer faults fail and restore exact source bytes/mtime.
+The unchanged thermodynamics test module passes58tests; canonical forced L3
+compile passes at4pages with zero overfull, TeX or unresolved-reference errors.
+Actual regenerated PNG/PDF still require independent publication-size visual/
+claims acceptance and canonical closure. These applied work-in-progress files
+are in the existing focused L3 checkout; they have not yet been committed or
+attributed to its previous remote42dd snapshot. Inherited WKB/Lean prose and
+source-paper propagation remain identified obligations, not globally closed.
+L1 retains lead and no new bundle green or qualified main merge is claimed.
+
 ### Earlier delivery checkpoints (historical evidence)
 
 - **Residual historical verification commands require substantive author work.**
