@@ -34,6 +34,20 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Next ordinary L1 proof commission:** task `publication-l1-affine-product-proof-r1`
+is accepted by the admitted wt1 worker; ROOT owns integration/acceptance. The
+[prospectively reviewed variance/product design and actual LSP discovery](GAUSSIAN_AFFINE_PRODUCT_DESIGN_R1.md)
+confirm and reuse existing Gaussian affine transport, all-degree Hermite and
+finite-product substrate. Implementation must prove genuine integrability and
+the universal positive-variance/product identities, with empty dimension and
+normalization controls; fresh independent kernel/source review is required.
+Full Eq6-11 and original physical B3 remain OPEN, not discharged by this support.
+
+Paper27's three body overflows and source/completion contradictions are now
+canonical OPEN consumer findings on focused draft PR112. Both declared predicates
+actually fail before repair. The single-file author proposal is under independent
+source review; no manuscript correction is counted as its scientific BUILD.
+
 **Subsequent source checkpoint — 6 November 2026:** main-based draft PR117 is
 pushed at `d4e4494b88e15892785adac7d687459c71eb04ae`. The exact independently
 reviewed all-degree Gaussian Hermite module and one aggregate import are now
