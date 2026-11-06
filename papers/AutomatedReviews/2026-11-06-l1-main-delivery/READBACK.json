@@ -1,0 +1,28 @@
+{
+  "base": "ce194cdc4bf939b108c17edc9530a7f0a14565f9",
+  "source_provenance": "87ae47bfdfd1b2ed3b395ead1d40cca9b1d72f31",
+  "publication_checkpoint": "1805e33581cb81229e8568c450875e454d0afdd9",
+  "main_composition_accepted": false,
+  "files": {
+    "papers/D3/paper_draft.tex": "32740b59d35187b869314f1c809890f1c695fb72d501afb15b4ea55a05e0aeec",
+    "papers/D3/bundle_metadata.json": "cf76a8e9a5b89d0078b61dc61e8b273efd794b0547b6c6140d0bda0f9a02c5b2",
+    "papers/paper25_gravitational_waves/paper_draft.tex": "760c21f1295b72cb3fd5bfc66adb09320ef9d5e65da0074215bdfa871675f2ff",
+    "papers/paper25_gravitational_waves/paper_draft.pdf": "e97f9d9443d8627e9728319a8cda23ddf79c2f9c41a2eed08ca61860a78238eb"
+  },
+  "tests": {
+    "passed": 49,
+    "full_suite": false
+  },
+  "compile": {
+    "D3": {
+      "pages": 65,
+      "overflows": 12
+    },
+    "Paper25": {
+      "pages": 5,
+      "overflows": 0
+    }
+  },
+  "native_or_main_or_human_acceptance": false,
+  "next": "Existing producer/precision/figure reconciliation followed by independent exact-composition review and qualified gates"
+}
