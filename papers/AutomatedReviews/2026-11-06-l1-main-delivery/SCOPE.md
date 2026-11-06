@@ -147,3 +147,17 @@ anchor/test documentation that still overstates the physics. They belong to
 the existing L1-fix-propagation obligation and remain owed. An off-tree narrow
 repair proposal is being independently assessed next; this checkpoint neither
 waives the residues nor treats truthful prose as physical construction.
+
+## Resume after reviewed-render checkpoint
+
+Reviewed-render/canonical-claims checkpoint69f92d1ee is normally pushed to
+PR117. The next off-tree source-propagation proposal is archived as R1,
+NOTapplied or independently accepted. It preserves executable ASTs/all167
+assertions, changes four narrative fields in one hypothesis record and
+corrects existing GW comments/docstrings plus one test name. ROOT still
+owes direct full proposal review, remaining citation-summary/L1-anchor
+propagation reconciliation identified by claims review, independent proposal
+and application review, existing hypothesis renderer/controls, canonical
+claims refresh, counts freshness and qualified main gates. A narrow R1 patch
+alone must not close the aggregate L1-fix-propagation obligation. No claim
+strength, original physical BUILD, title or human gate is reduced.
