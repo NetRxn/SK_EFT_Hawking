@@ -1188,13 +1188,69 @@ previously called "low-utility/high-effort":
 
 ### Publication continuation: polynomial Gaussian identity
 
-The supporting all-polynomial standard-Gaussian integration-by-parts theorem
-is independently accepted and saved on the main-based draft PR117 at
-`8ad1411526b8b8d5b49e9f3b9993b8083ec887d9`.
-[Exact proof, independent reviews and primary build receipts](https://github.com/NetRxn/SK_EFT_Hawking/blob/8ad1411526b8b8d5b49e9f3b9993b8083ec887d9/papers/AutomatedReviews/2026-11-06-l1-main-delivery/GAUSSIAN_IBP_R1.md)
-retain the full auxiliary, physical B3 and publication requirements as open.
-The actual main-candidate merge profile is running; primary absorption alone
-is not its qualification. ROOT retains L1 publication delivery and ordinary
-Lean/Python work. Executor supplies only specifically commissioned deeper
-constructions. Current priority and resume evidence remain in the
-[existing remediation queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md).
+ROOT retains ordinary L1 Lean/Python construction and publication delivery.
+The supporting standard-Gaussian IBP theorem has actual main-candidate native
+qualification; its earlier full merge profile failed and remains recorded in the
+[canonical remediation queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md).
+The independently reviewed all-degree Hermite extension is integrated on draft
+PR117 at `d4e4494b88e15892785adac7d687459c71eb04ae`; its actual full merge profile
+is running. Primary absorption is not that candidate's qualification.
+
+The accepted ordinary next task is `publication-l1-affine-product-proof-r1`,
+owned by ROOT with an admitted wt1 worker. It must prove actual positive-variance
+polynomial/Hermite integrability and the universal insertion identity, then
+arbitrary finite-coordinate product and mixed-monomial identities, including
+empty dimension. It reuses existing Gaussian affine transport and product
+integration confirmed by actual matching LSP discovery. [Design, independent
+review and native discovery custody](../audits/2026-10-17-publication-substance-construction/GAUSSIAN_AFFINE_PRODUCT_DESIGN_R1.md)
+record the exact statement and acceptance requirements. New implementation,
+independent kernel review and actual main qualification remain pending.
+Full auxiliary Eq6-11 and original physical B3 acceptance remain OPEN.
+
+### Publication continuation: original one-slice source kernel
+
+**Original physical bridge and B3 acceptance: OPEN BUILD.** Historical shipped
+algebraic results do not discharge the outstanding physical product, adjoint,
+domain, constraints, source/response, matter, calibration or transport objectives.
+Executor supplies the specifically commissioned deeper construction below;
+ROOT retains ordinary L1 and canonical roadmap/integration ownership.
+
+Task `l1-original-one-slice-source-kernel` is accepted by Executor, parent
+publication remediation. The preceding spatial-source-kick physical proposal
+received independent mathematical and source REVISE verdicts; it is not approved.
+The next substantive action is an exact original-action temporal-coframe/link
+and Grassmann transfer-kernel construction, or an explicit evidenced breakdown
+of the proposed slice factorization. Prospective scope checks are requested;
+they do not accept a scientific result.
+
+Preserve the actual periodic regulator, independent temporal anchors, Dirac/barred
+Grassmann content, oriented coframe, determinant/EHC action, source multiplicities
+and arbitrary prescribed C2 frame/source jets. Derive the temporal polynomial
+and explicit backward/forward and mixed dependence. A zero-frame/spatial-source
+edge kernel is a labeled diagnostic. Return to all sources/frames and retain
+longer-range and overlap defects; a failed local factorization needs an actual
+nonzero mixed coefficient at admissible compact-link values. It does not prove
+that every possible physical reduction is impossible.
+
+Required evidence includes exact two-interface/Berezin/Haar ordering and
+trace/supertrace signs, complete first/mixed-second source-insertion kernels,
+source-dependent boundary-map derivatives where applicable, and both previously
+accepted metric and separate temporal C2 coefficients unchanged. Do not replace
+the existing geometric negative Gram with a renamed result or infer a physical
+positive Hilbert product/adjoint from Haar or formal exterior identities.
+
+Independent prospective and actual-result review roles are Executor's
+`l1_fixed_plan_review` (mathematics) and `l1_fixed_data_review` (original
+source/physics), followed by Executor full-read/freshness checks and ROOT's
+personal full intake. Proposed result home is the existing
+`docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md`.
+An immutable accepted result/review archive and owned-branch checkpoint are
+required before milestone delivery. No slot or build is granted by this entry.
+
+Parallel primary-source scouting may assess applicable fermionic reconstruction,
+reflection-positivity or canonical prescriptions for the actual source action.
+An added physical prescription must expose its hypotheses for prospective review;
+no favorable norm, state, scale or physical parameter choice is silently adopted.
+The positive represented product/adjoint/domain, secondary constraints and
+physical source correspondence remain separately owed. No scientific deferral,
+reduced scope, physical no-go or publication acceptance is approved here.

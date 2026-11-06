@@ -34,6 +34,15 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Accepted deeper L1 commission:** Executor owns
+`l1-original-one-slice-source-kernel`, recorded in the
+[owning physical roadmap](../../roadmaps/Phase6a_Roadmap.md#publication-continuation-original-one-slice-source-kernel).
+Its prior source-kick proposal received two independent REVISE verdicts. The
+new task derives the exact original-action temporal/source kernel or its explicit
+mixed-defect breakdown; prospective scope and actual independent result reviews
+remain required. Positive physical product/adjoint/domain and full B3 stay owed.
+ROOT retains ordinary L1 delivery; no new routing ledger or operator deferral.
+
 **Next ordinary L1 proof commission:** task `publication-l1-affine-product-proof-r1`
 is accepted by the admitted wt1 worker; ROOT owns integration/acceptance. The
 [prospectively reviewed variance/product design and actual LSP discovery](GAUSSIAN_AFFINE_PRODUCT_DESIGN_R1.md)
