@@ -34,6 +34,23 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **Residual historical verification commands require substantive author work.**
+  [Source investigation](RESIDUAL_VERIFY_PREREQUISITES_R1.md) and
+  [pinned evidence](RESIDUAL_VERIFY_PREREQUISITES_R1.json) preserve OPEN
+  D1 Aug15 finding1.1 and D8 findings1.4/1.8. No source patch or closure was
+  accepted. D1 needs the existing common-unit/thermal-component construction
+  implemented and propagated without conflating brightness, thermal and bare
+  temperature; current output labels and consumers still need reconciliation.
+  D8 needs carrying full-text attribution adjudication and actual theorem-backed
+  figure producers/assets/consumer bindings. Formatting or grep polarity alone
+  would not satisfy those scientific obligations. The report corrects its
+  interim D1 regex misread: the current layout does capture delta_diss; the
+  unresolved output-binding and physical-quantity issues are distinct. These
+  are prerequisites in existing finding identities, not a new routing ledger,
+  a priority change or proof of infeasibility. Source repair, production fault/
+  restoration controls, independent verification and canonical closure remain
+  required. L1 retains lead while its actual full merge profile is running.
+
 - **Independent L3 reconciliation completed during the L1 qualification freeze.**
   [Read-only report](L3_DELIVERY_RECONCILIATION_R1.md) and
   [source-bound evidence](L3_DELIVERY_RECONCILIATION_R1.json) distinguish authentic

@@ -1,0 +1,95 @@
+{
+  "task": "publication-verify-residual-r1",
+  "candidate": "8ad1411526b8b8d5b49e9f3b9993b8083ec887d9",
+  "disposition": "WITHHOLD_ALL_THREE_REPLACEMENTS",
+  "patch_bytes": 0,
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "finding_ids": [
+    "review:2026-08-15-d1-stage10-redraft:D1:1.1",
+    "review:2026-08-15-d8-stage10-redraft:D8:1.4",
+    "review:2026-08-15-d8-stage10-redraft:D8:1.8"
+  ],
+  "matching_committed_ledger_entries": {
+    "review:2026-08-15-d1-stage10-redraft:D1:1.1": [],
+    "review:2026-08-15-d8-stage10-redraft:D8:1.4": [],
+    "review:2026-08-15-d8-stage10-redraft:D8:1.8": []
+  },
+  "status_changes": false,
+  "repository_edits": false,
+  "scientific_execution": false,
+  "syntax_only": [
+    {
+      "candidate": "original D1 multiline command",
+      "shell_syntax_exit": 0,
+      "python_ast": "parsed only",
+      "executed": false,
+      "acceptable_repair": false
+    },
+    {
+      "candidate": "rejected D8 attribution absence-only diagnostic",
+      "shell_syntax_exit": 0,
+      "python_ast": "parsed only",
+      "executed": false,
+      "acceptable_repair": false
+    },
+    {
+      "candidate": "rejected D8 figure absence-only diagnostic",
+      "shell_syntax_exit": 0,
+      "python_ast": "parsed only",
+      "executed": false,
+      "acceptable_repair": false
+    }
+  ],
+  "source_sha256": {
+    "papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md": "3445c3f2b7a08a92d33bc9804c6e42d8f6b2b2b56d401f9c13be54ca29056619",
+    "papers/AutomatedReviews/2026-08-15-d8-stage10-redraft/D8.md": "66488cb635939c7a2ef489fed2c095ad081a37ea6bf490fc0f824668270795cf",
+    "scripts/gen_d1_hierarchy_table.py": "8a8c15b7e00c7dcb7e9f47d0e09ba79d8a16e8c1c8153852b4c8bc8966feb845",
+    "src/wkb/spectrum.py": "04dd00f3ea02f0931ac7f95772abebb1b64c990903d2db2053e848d3cb8cdf4e",
+    "src/wkb/connection_formula.py": "fcfdf40af49f211a03422fb37d5087828f69ecf72b9dcd0b7f94b4fa1cab21a4",
+    "src/wkb/bogoliubov.py": "7f037c752c74c9d85881d5db63f7340daf918ee1cd9c0f7a27fd1c327e705803",
+    "src/second_order/wkb_analysis.py": "227da6446ec3dc8050d8ef747ba6f804a52f6fd95305e7c96cdd32b092777141",
+    "scripts/validation/checks/physics.py": "2bb4643658c9844ef05f59f955522a1f73bc0997c9d00125a1964902f0160bbf",
+    "tests/test_d1_hierarchy_table.py": "b8c587a28cef64ba3661c5d238ab6e9953356f3c85dba656fdbd99b66bd75949",
+    "tests/test_f_hierarchy_claims.py": "822764e697cb4a50a4d166e3c1bd9fca349732fe2e79f4dcf0dfb919a5ee921e",
+    "tests/test_d5_reviews.py": "ce604be937c029ccf5902cc46f9ed6244c61a17812c8637dd10c19ad1534b3cd",
+    "src/core/visualizations.py": "d723a9bacc93bac9e3b76010b201a3a718b5c55acbff320ca44f5b5496202e6d",
+    "papers/D8/figures/review_manifest.json": "0d90469ff0f738b64519d60b9dfcef8022cf81f8d1df6b6465d7f277037114cb",
+    "scripts/review_figures.py": "9426060ca6c1721e8f940418e0c969dc9fd6824295c3605740712c38b03db752",
+    "papers/D1/paper_draft.tex": "2769eeaa832647cdc2aa9d8ff566fe577fe5454acc650834142df6cc7b9b19ed",
+    "papers/F/paper_draft.tex": "e8f1e0e8b448fd8b6a3a232d10a9656cfd584bb3861900cf793eab486a0eef89",
+    "papers/D4/paper_draft.tex": "13e4f2b18d9e720f8a63c733af69e83dafab07795a3e2a8dff1e8325a0498aa8",
+    "papers/D8/paper_draft.tex": "f9244c5c8e575ea0385ccb5de70419776445c1c4fb9e1027a8a355bc09411892",
+    "lean/SKEFTHawking/FKLW/GenericSUdSkLengthExponent.lean": "b363ef02110e9dfb6615e19959455d7eba78954e79bdd223e6e17d63a9fe59fa",
+    "lean/SKEFTHawking/FKLW/SolovayKitaevLengthBound.lean": "a0382998322f36d8427fb59afeccd9d3ad520392e6a49db3b81b2749c4237750",
+    "docs/PAPER_STRATEGY.md": "bc956584b183e4c336362f82dc25ca264d17e25f02ee63dbbd7ce50f603ab73c",
+    "docs/review_finding_supersessions.json": "8b5d2a79008b43ca17276316cb5c89ca0b7395581675a42c633fc2ae17daa58d"
+  },
+  "manual_common_unit_evidence": {
+    "md": "/tmp/d1-crossover-normalization-construction-r1.md",
+    "md_sha256": "1103543b08474470731cca8bec1266d7489890fca547bfeea9f65988f362ec94",
+    "json_sha256": "0c9a7b930a6e456cff9331e3e1a4d9327e4e7d02c563f36a46aff094b79079ff",
+    "numeric_calculation_performed": false
+  },
+  "limits": [
+    "No full-text primary-source attribution adjudication",
+    "No source repair, producer, plot, gate or control execution",
+    "No scientific or publication closure",
+    "Final packet check must preserve any drift"
+  ],
+  "final_continuity": {
+    "exit_code": 0,
+    "result": {
+      "fresh": true,
+      "changed": [],
+      "task": "publication-verify-residual-r1",
+      "meaning": "Input snapshot matches; no execution or completion authority."
+    },
+    "stderr": ""
+  },
+  "generated_hash_observed_sha256": "ea586c323e81da9ef0aab4f74cde12599e1e14376c9e220441e4b91fb7e9a4cd",
+  "generated_hash_packet_sha256": "ea586c323e81da9ef0aab4f74cde12599e1e14376c9e220441e4b91fb7e9a4cd",
+  "source_pins_unchanged_at_handoff": true
+}
