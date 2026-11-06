@@ -1,0 +1,37 @@
+{
+  "actual_main_base": "a0f68bfbdb779b9d0617bca52017f3f576cde204",
+  "original_composition_review_main": "d4e4494b88e15892785adac7d687459c71eb04ae",
+  "non_source_checkpoint_reconciled": true,
+  "source_author": "ae0076b43813cd4c486b51dee1d5dd2466adda2c",
+  "source_sha256": "3e6a5a5671a518595571395a2584f3d8794f157aadd3b0d552677dec69b47676",
+  "independent_kernel_verdict": "ACCEPT_SOURCE_AND_KERNEL_COEFFICIENT_FOUNDATION",
+  "selected_composition_verdict": "ACCEPT_SOURCE_COMPOSITION_ONLY",
+  "actual_primary_integrated_head": "2c201cd00cd1d17e7665ea0a6711344abc1c1524",
+  "actual_primary_epoch": "85a44ba760ab210dac379002a628c58a812f412cd658e7c03f1ccc63f7dca244",
+  "actual_primary_absorb_returncode": 0,
+  "main_native": "PENDING; primary receipt is not actual main qualification",
+  "source_postimages": {
+    "lean/SKEFTHawking/ADW/GaussianPolynomialAffine.lean": "3e6a5a5671a518595571395a2584f3d8794f157aadd3b0d552677dec69b47676",
+    "lean/SKEFTHawking.lean": "e471901c2f91a9866dfcbe012b83452b45f85e5ae0169292b8caf2759f3dc824"
+  },
+  "archive_sha256": "6f4749382c936969909fb1fbd048f4446912293d9aefcb286a92a7e07fa0d611",
+  "members": {
+    "publication-l1-affine-product-wt1-r1.md": "643a3d9a2ad73a2c0a75f46cf6bbf31b00a59e24de8e327045647182373ee7f0",
+    "publication-l1-affine-product-wt1-r1.json": "bfffff3681d2964c14022b3542a83dcffe7859152430f0c526d1cc51fcccbafe",
+    "publication-l1-affine-product-wt1-r2.md": "7a3a19dfe988cc04890c43489df5831164b1737f4a51024fadc7312a5c244fef",
+    "publication-l1-affine-product-wt1-r2.json": "347698796d2cb025d6d172d23a136079ecfd18b4cee59b4db00e5d90eabb7327",
+    "publication-l1-affine-product-kernel-review-r1.md": "dd41d3c0c117cdc83616be3c99a8e2ee830e86391cc4d9f633568958f742e179",
+    "publication-l1-affine-product-kernel-review-r1.json": "f7c8923c0c5c201c34e734b1016bd16c5c95f57e97ff0527f39af770a4ee6efc",
+    "publication-l1-affine-integration-r1.patch": "6fa4fa2dab5a9161a0a7a8a0f2debe653643b38c18a79140593e692a818e3872",
+    "publication-l1-affine-integration-r1.json": "7da873e963d37bac8b56bd95627f4b2ffd31611bae53934d67db5bd2dcaaeca8",
+    "publication-l1-affine-primary-import-r1.patch": "652f5a8a0eb60143d79b0579a8057408cbcff56e311d73bc76a8ad022edb6f7c",
+    "publication-l1-integration-review-r2.md": "fd3c49eab80a0000ee4e67a4ed69a3aad113851110c2e2b40ca8634502b420b1",
+    "publication-l1-integration-review-r2.json": "5c3f8bf6d69b367533b4c8e215bf364921968315b511c6fc6c2bf3650f516cfe",
+    "publication-l1-affine-absorb-r1.invocation.json": "d7acd14e3c51a3ab712bb747b92e12eef7c2e496dc56068bed887f4de250d46f",
+    "publication-l1-affine-absorb-r1.result.json": "e200ffb1703afaa9028fb38530951d83be01b06ef786a7e3e91ca42ac1d6ebf7",
+    "publication-l1-affine-absorb-r1.stdout": "304186549805942c70ab22acf1f17a8eb7cd59b3034f4f5d4dd007d7b113a9ef",
+    "publication-l1-affine-absorb-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "publication-l1-affine-after-absorb-status-r1.json": "75d9d8dbcb3e886c3751dda13350e9bb2d4874141c5f6f10bac650dc7268d2cb"
+  },
+  "scientific_scope": "Actual positive-variance and finite real-polynomial coefficient foundation; full complex/formal/Grassmann/coframe/Berezin/link/source/physical B3 and publication remain OPEN"
+}
