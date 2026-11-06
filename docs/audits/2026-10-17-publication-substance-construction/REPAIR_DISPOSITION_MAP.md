@@ -56,8 +56,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   beginning with a concrete prospectively reviewed map or separating test on
   the actual kernels. Preserve original action/links/periodic sewing/full C2;
   do not choose a favorable positive part, sector, source/order calibration or
-  repeat the already failed shortcuts. Handoff acceptance pending. ROOT retains
-  all ordinary L1 work. B3, physical state/dynamics, N4, matter/light/transport,
+  repeat the already failed shortcuts. Executor explicitly ACCEPTED this bounded
+  task: concrete prospective map/test, then both independent approvals before
+  substantive construction. ROOT retains all ordinary L1 work. B3, physical state/dynamics, N4, matter/light/transport,
   controlled limits, kernel/native/publication/main/human acceptance stay OPEN.
 
 
