@@ -35,6 +35,29 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **Current L1 scientific composition review and delivery boundary.**
+  [PR117 review checkpoint](https://github.com/NetRxn/SK_EFT_Hawking/blob/codex/publication-l1-main-delivery-20261106/papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCIENTIFIC_INTEGRATION_R4_READBACK.json)
+  preserves independent R4 and ROOT's actual five-file application feasibility
+  check. Keep bounded PR117 as main delivery. A combined primary-science branch
+  would certify only its own source and is not a mandatory qualification detour.
+  No source patch, controller import or native retry was applied. The canonical
+  graph refresh failed before evaluation during Physlib dependency resolution;
+  no new gate snapshot exists. Exact-source guarded admission remains ROOT-owned.
+  Executor reports it owns no Lean slots, active requests or unabsorbed Lean
+  changes; that is its ownership report, not a current global controller census.
+  ROOT also requested existing ownership/route evidence from Develop L1 physics
+  roadmap without changing its assignment or any slot. All L1 original physical
+  and exact-source full-profile acceptance remains OPEN. No citation-cleanup
+  mandate or publication-priority change follows from optional R4 advice.
+  **Contained enabler checkpoint:** the existing D1 derived-value proposal and
+  source-linked scaling finding are saved under
+  [D1 finding/evidence](../../../papers/AutomatedReviews/2026-11-06-d1-derived-numerals/D1.md).
+  Its exact original Verify currently fails on the contradictory paragraph after
+  the canonical scaling witness succeeds. No scalar migration, source correction,
+  independent scientific acceptance or closure is claimed. Review the complete
+  operating-point proposal before application; preserve original shared BUILD.
+
+
 - **L1 ownership reaffirmed; original-automaton result integrated for scoped intake.**
   ROOT retains the entire L1 publication package, ordinary Lean/Python repair,
   manuscript, claims, figures, consumers, reviews, gates and qualified integration.
