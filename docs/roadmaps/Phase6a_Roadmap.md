@@ -2,6 +2,30 @@
 
 ## Current L1 scientific successors — 2026-11-06
 
+**Current ordinary auxiliary construction milestone:** complete Eq4 finite
+complex compensation and B1 actual Grassmann/coframe construction are independently
+source/math/kernel ACCEPTED and normally absorbed. The main-based candidate
+`a16af66d15d6184c19defcad1f2110515777b6c1` passes its own native library/ExtractDeps
+build, 10,840 jobs. All41,126prior canonical records are exact;168new records
+include88authored proof exports. Canonical regeneration/freshness is complete;
+independent full artifact review is active. The latest measured231gates remain
+160pass/25blocked/28open/18recheck, zero transitions and zero newly green bundles.
+[Accepted construction, reviews and remote resume queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints)
+preserve raw evidence and the preceding terminal full-profile failures.
+
+Next original acceptance is **full actual G-valued Eq7/C**, retaining C1 basis/
+norm/completeness/truncation evaluation, C2 independent Bochner integrability
+and actual local identity, and C3 original degree4+degree2source polynomials,
+independent-site product/global Gaussian integral and measure transport. Its
+full R2 design is independently prospectively ACCEPTED, with products formed
+in the proved commutative subalgebra or ordered in G with order independence,
+and actual positive-cutoff zero-coframe controls proving weighted mean1.
+C1 is ROOT's next admitted proof package; C2/C3 and full C are not complete.
+Original literal/closed source-action correspondence B2, Eq9–11/Berezin/Haar/
+nonzeroZ, physical source/state/adjoint/matter/B3/calibration/transport/limits
+remain OPEN. These accepted subconstruction updates supersede older future-tense
+Eq4/B1 notes below without marking the physical program shipped.
+
 **Accepted fixed metric-sewing result:** the [actual construction and dual
 independent reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_ACCEPTANCE.md)
 and [ROOT full intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_RESULT_ROOT_INTAKE.json)

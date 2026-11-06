@@ -34,6 +34,41 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Current checkpoint and active work — 6 November 2026, 20:17 gate measurement.**
+Main-based draft PR117 now has independently accepted canonical derivatives at
+`4c6c5149a92a1c3bdedab49fd2864487c280292c`, for scientific source
+`a16af66d15d6184c19defcad1f2110515777b6c1`. Both accepted Eq4 and B1 constructions
+pass this candidate's own native build, **10,840 jobs**. All 41,126 prior catalog
+records are unchanged; 168 additions include 88 reviewed public exports. The
+extra canonical theorem node is the proof-valued `Torus.positive` projection,
+not another authored export. [Native, canonical and independent review evidence](AUXILIARY_COFRAME_NATIVE_R1.md)
+records the six accepted derivatives, four freshness passes and complete raw
+receipts. The initial wrapper assertion failure and successful continuation are
+preserved; extraction was not repeated and no checker was changed.
+
+[All 231 current measured gates](CURRENT_GATES_20261106_R5.json) remain **160 pass,
+25 blocked, 28 open, 18 needing recheck**: zero transitions and zero newly green
+bundles. Source hash `2954acb360d07c3e` is unchanged after the artifact commit.
+This is the measured main-based source, not the separate L3 or research branch.
+The earlier full profile remains failed with 7,174 passing tests, 27 failures,
+14 skips and the missing-data notebook failure. No main merge or publication
+approval follows from native or artifact acceptance.
+
+**Current accepted proof assignments:** [C1 on wt1 and the independent original
+source-construction portion C3-S on wt2](GRASSMANN_VALUED_EQ7_ASSIGNMENTS_R1.md)
+are active at built primary base `f2ee5854e`; both owners confirmed their assignments
+and actual matching runtimes. The [full C design](GRASSMANN_VALUED_EQ7_DESIGN_R2.md)
+has [independent prospective acceptance](GRASSMANN_VALUED_EQ7_DESIGN_REVIEW_R2.md).
+ROOT retains the entire Eq7 milestone and ordinary L1 publication work. C2 and
+the remaining source-specialized/global C3 integral/product are required next,
+not deferred or waived. Executor retains deeper physical research and confirmed
+no queued slot work; ROOT's fresh normal admission uses its offered unused wt2
+capacity. ROOT remains the go-to slot recovery owner. The existing priority
+order and original physical/publication acceptance requirements are unchanged.
+
+This entry supersedes older running/pending statements below. They remain as
+checkpoint history; the active tasks and evidence above govern resume.
+
 **Latest acceptance/integration update — 6 November 2026.** Complete B1 actual
 finite Grassmann/coframe construction is independently **ACCEPTED**, with all
 527 source lines/source pp11–15 reviewed, all48 closing goals empty,49 standard-only
