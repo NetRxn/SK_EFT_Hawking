@@ -15,6 +15,25 @@ Next milestones: derive the actual metric-channel operator/source/projector, reg
 
 **Accepted bounded successor owner:** Executor derives the intended original reflection/algebra/boundary/state correspondence or returns a complete source-linked construction breakdown, beginning with Diakonov/Volovik/Vergeles/CGL and the original W1 charter. ROOT retains the complete L1 publication-readiness chain and operator disposition. No quotient or premise is chosen to remove the witness; any actual premise/scope fork requires the operator's explicit disposition.
 
+**Current bounded manual prerequisite:** ROOT has accepted the
+[dual-reviewed original nonregular boundary brief](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONREGULAR_BOUNDARY_DESIGN_ACCEPTANCE.md)
+and [exact intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONREGULAR_BOUNDARY_ROOT_INTAKE.json).
+Executor is commissioned to derive the unchanged original action's complete
+graded boundary component relation and two-move matching; justified pre/post
+ideals or an implicit relation with distinct regularity questions; exact
+off-shell Haar/Berezin/test-domain identities; and prescribed C2 contacts
+before quotient. Deliver ORIGINAL_GRADED_CONSTRAINT_RELATION.md with
+independent scientific and mathematical review. This is a manual prerequisite,
+not a physical state or Q1–Q4 quantization/positivity/normalization/source-map
+approval. No executable producer, Lean/native run or slot admission follows.
+The original B3, state, tensor/matter/light, fullZ/c0, N4 and transport criteria
+remain OPEN. The alternative controlled scaling route is retained.
+
+The [research intake](../audits/2026-11-05-l1-physical-bridges/NONREGULAR_BOUNDARY_RESEARCH.md)
+is generated work held in this repository. Lit-Search is reserved for full
+external sources; the [custody correction](../audits/2026-11-05-l1-physical-bridges/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md)
+preserves the exact intake and removes only its temporary generated corpus copy.
+
 ## Technical Roadmap — April 2026
 
 *Prepared 2026-04-24 | Derived from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0 (2026-04-22) §4. The "consolidation half" of the post-SK-EFT program — everything about gravity that does not require a full nonlinear effective action derivation (those land in Phase 6e).*

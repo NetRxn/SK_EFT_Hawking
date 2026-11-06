@@ -1581,3 +1581,29 @@ preparing a source-grounded original-model nonregular boundary-constraint/
 quantization prospective research package with renewed independent reviews.
 No physical construction or runtime admission is approved by that research
 assignment. Lead and portfolio order remain unchanged.
+
+
+### Executor manual original-boundary prerequisite commissioned
+
+Source8fed6fb4 and custody correctionf70942ea are normally integrated on this
+publication checkpoint branch. ROOT read the full R2 brief, both independent
+APPROVE reviews and vetted intake; verified19unique archive members/hashes,
+four canonical copies, seven accepted sources, nested parent and four actual
+held PDF pins. [Exact ROOT intake](../2026-11-05-l1-physical-bridges/ORIGINAL_NONREGULAR_BOUNDARY_ROOT_INTAKE.json)
+and the existing [Phase6a owning record](../../roadmaps/Phase6a_Roadmap.md)
+record the accepted assignment, not a new roadmap.
+
+Executor now derives the limited manual original graded boundary relation,
+pre/post or implicit ideals with distinct rank questions, exact off-shell
+Haar/Berezin/test-domain identities, and prescribed C2 contacts before quotient.
+Required output ORIGINAL_GRADED_CONSTRAINT_RELATION.md needs independent
+scientific and mathematical result review. Q1–Q4 physical domain/product/
+adjoint, positive form, original kernel/state/nonzero normalization and metric
+source correspondence remain later uncommissioned gates. No runtime/slot
+permission or physical-state result is granted. All original scientific
+acceptance and the separate controlled scaling route remain intact.
+
+Generated research is preserved in tracked NONREGULAR_BOUNDARY_RESEARCH.md
+and the evidence archive; the temporary generated Lit-Search copy was removed
+after exact preservation, without touching external primary sources.
+ROOT continues all ordinary L1 publication/qualification work.
