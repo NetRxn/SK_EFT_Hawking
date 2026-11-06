@@ -1746,3 +1746,32 @@ L1-fix-propagation alongside qualification. Executor's next bounded proposal
 is frozen for prospective independent review; no construction/runtime/physical
 premise is approved by receipt. The portfolio priority and original science,
 canonical closure, main, stage and finalhuman requirements are unchanged.
+
+
+### L1 ordinary strategy propagation and next bounded construction
+
+Main-delivery draftPR117 checkpointedb5de74a corrects13existing strategy spans
+under L1-fix-propagation. Independent focused claims review accepts exactcurrent
+L1title/assumedlaw/nonemptyinterval/adoptedrange and primary-source attribution,
+removing globalfalsification/no-dependency/vouchercomplete assertions. The
+current roster check and two relevant roster tests pass; no wholepaper/strategy
+review or scientific BUILD closure follows. Four-page venue target, agreedqueue,
+original B3/state/mode/transport work and finalhumanapproval remain intact.
+Evidence/limits are in L1_STRATEGY_PROPAGATION_R1_READBACK.json and its archive
+under the existing main-delivery review directory. G4/fullgraph/native/broader
+qualification and known failures remain owed.
+
+ROOT personally read the full boundary-operator proposal and both prospective
+reviews from b922030349649b6e2c9c0778422ff86ff6627227, verified archive/current
+accepted inputs and actual held source pins, and normally merged the proposal
+into this cumulative draft. Exact intake/assignment is recorded in
+[ORIGINAL_BOUNDARY_OPERATOR_ROOT_COMMISSION.json](../2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_OPERATOR_ROOT_COMMISSION.json)
+and the existing Phase6a successor header. Executor is commissioned only the
+accepted manual O1–O4 package, followed by independent math and original-source
+RESULT reviews. It must construct concrete nonzero operators or report precise
+failure, retain ordered contacts/source lifts and distinguish auxiliary adjoint
+from original bilinear sewing transpose and the still-unbuilt physical adjoint.
+This is a test-operator prerequisite, not physical Q1/state/positive-form,
+fullZ/c0,N4,B3,dynamics/transport completion or runtime/slot authority. ROOT
+retains the full ordinary L1 publication chain. No priority/scope reduction,
+scientific deferral, canonical closure or human acceptance is made.

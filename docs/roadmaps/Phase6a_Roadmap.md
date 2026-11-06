@@ -22,8 +22,15 @@ The commissioned L1–L4 package now supplies original-action forces, the typed
 boundary graph/pre-post kernels, the finite inverse obstruction, exact off-shell
 derivative/ordered-contact identities and C2 relation-lifting conditions.
 It was normally merged into the cumulative publication draft; main remains pending.
-Next deeper work is a concrete prospectively reviewed boundary-operator,
-source-compatible domain and derived-adjoint construction. Defining the implicit
+ROOT has personally accepted the [exact boundary-operator brief and dual
+prospective reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_OPERATOR_PROPOSAL_ACCEPTANCE.md)
+and [commissioned only manual O1–O4](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_OPERATOR_ROOT_COMMISSION.json)
+to Executor: explicit nonzero original-action test operators, actual kernel/
+source lifts and ordered contacts, auxiliary adjoints and original bilinear
+sewing transposes with full domains/signs. Independent mathematical and
+original-source RESULT reviews remain required. No operator result is yet
+accepted. High-degree test operators and auxiliary dualities do not supply a
+physical constraint algebra, metric observable, physical adjoint or state. Defining the implicit
 kernels does not classify all physical constraints. Q1–Q4 positive-state,
 normalization and source-map construction remains open; no runtime/slot grant follows.
 ROOT retains ordinary L1 Lean/Python repair, manuscript/consumer updates,
