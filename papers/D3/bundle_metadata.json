@@ -13,12 +13,12 @@
     },
     {
       "name": "SKEFTHawking.ADWMechanism.zero_C_with_fluct_gives_vestigial",
-      "claims": "§2.2 — branch 2: fluctuation without condensate gives the VESTIGIAL phase (the object GW170817 later falsifies as a graviton)",
+      "claims": "§2.2 — the zero-condensate, nonzero-fluctuation branch is classified as vestigial; this scalar classification supplies no GW170817 exclusion of the physical phase",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.ADWMechanism.pos_C_gives_full_tetrad",
-      "claims": "§2.2 — branch 3: positive condensate gives the full tetrad phase, the only one admitting classical gravity",
+      "claims": "§2.2 — positive C selects the full-tetrad case of the phase classifier; no exclusivity of physical classical gravity follows",
       "declared": "2026-08-07"
     },
     {
@@ -78,72 +78,72 @@
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.c_GW_at_chi_one",
-      "claims": "§6 — the vestigial-graviton speed agrees with GR exactly at chi = 1",
+      "claims": "§IV — the adopted scalar speed law is exactly luminal at chi = 1; no microscopic propagation mode is derived",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation_zero_iff_chi_one",
-      "claims": "§6 — and ONLY at chi = 1 (biconditional)",
+      "claims": "§IV — the defined scalar relative speed deviation vanishes exactly at chi = 1; finite observational tolerance permits an interval",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.c_GW_deviation_strict_mono",
-      "claims": "§6 — the deviation is strictly monotone in chi",
+      "claims": "§IV — the deviation is strictly monotone in chi",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.natural_lower_violates_ligo",
-      "claims": "§6.1 — the chi = 0.1 endpoint violates the GW170817 cap",
+      "claims": "§IV.C — the chi = 0.1 endpoint violates the GW170817 cap",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.natural_upper_violates_ligo",
-      "claims": "§6.1 — the chi = 10 endpoint violates it",
+      "claims": "§IV.C — the chi = 10 endpoint violates it",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.vestigial_natural_range_violates_ligo",
-      "claims": "§6.1 — the violation at both natural-range endpoints, bundled",
+      "claims": "§IV.C — the violation at both natural-range endpoints, bundled",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
-      "claims": "ABSTRACT + §4.3 + §6.1 — CLOSURE 3, negative half: both endpoints of the natural range violate the LIGO window. Shared character-for-character with L1",
+      "claims": "Abstract + §IV.C — CLOSURE 3, negative half: both endpoints of the natural range violate the LIGO window. Shared character-for-character with L1",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
-      "claims": "ABSTRACT + §6.1 — CLOSURE 3, positive half: the LIGO cap confines chi_vest to a window strictly interior to the natural range. The headline is a CONSTRAINT, not an exclusion",
+      "claims": "ABSTRACT + §IV.C — CLOSURE 3, positive half: the LIGO cap confines chi_vest to a window strictly interior to the natural range. The headline is a CONSTRAINT, not an exclusion",
       "declared": "2026-08-14"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.ligo_window_subset_natural_range",
-      "claims": "§6.1 — the compatible window is nested inside the natural range, not disjoint from it",
+      "claims": "§IV.C — the compatible window is nested inside the natural range, not disjoint from it",
       "declared": "2026-08-14"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
-      "claims": "ABSTRACT + §6.1 — the fine-tuning quantified: the width ratio exceeds 14 orders of magnitude. The bundle's headline quantitative claim",
+      "claims": "ABSTRACT + §IV.C — the fine-tuning quantified: the width ratio exceeds 14 orders of magnitude. The bundle's headline quantitative claim",
       "declared": "2026-08-14"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
-      "claims": "ABSTRACT + §6.1 — the frame-independent endpoint falsifier",
+      "claims": "Abstract + §IV.C — endpoint exclusion is independent of the nonzero scalar reference speed, not a Lorentz-frame transformation",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.VestigialGravity.phase_count",
-      "claims": "§6.2 — the phase count: only the full-tetrad phase admits classical gravity",
+      "claims": "§IV.A — the list of the three named finite phase constructors has length three",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.VestigialGravity.vestigial_has_metric_no_tetrad",
-      "claims": "§6.2 — the vestigial phase has metric structure but no tetrad",
+      "claims": "§IV.A — the finite classifier assigns metric structure but no tetrad expectation to its vestigial case",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.VestigialGravity.wep_distinguishes_vestigial_from_full",
-      "claims": "§6.2 — the Weak Equivalence Principle distinguishes the two phases",
+      "claims": "§IV.A — the assigned finite boson/fermion coupling flags differ in the vestigial case and agree in the full-tetrad case; physical trajectories are not derived",
       "declared": "2026-08-07"
     },
     {

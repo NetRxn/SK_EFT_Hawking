@@ -323,3 +323,19 @@ the controlled build, five scoped project checks and independent application
 review support closure1.3. All89 publication gravitational-wave tests pass.
 The source package closes nine review records across shared repairs; the19 broad
 failures and full scientific/publication/main/human requirements remain open.
+
+
+## 2026-11-06 — L1 mapped-consumer source checkpoint
+
+D3 and Paper25 now distinguish the assumed scalar speed law, adopted comparison
+range and finite classifier flags from physical tensor, response and matter
+constructions. The source repair preserves the accepted finite interval and
+endpoint results, adds the correct signed additive-correction scope, and
+reconciles observational/source assumptions. Independent source and actual
+reader/render acceptance, rejected R1 bytes and final verification are recorded
+in `papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/SCOPE.md`.
+L1's canonical claims artifact records the bounded propagation progress through
+the existing writer while retaining all four blockers and all prior sentence/
+human state. No scientific BUILD, canonical gate, main or human acceptance
+is discharged. D3's twelve baseline overflows and other corpus failures remain
+open and unwaived.

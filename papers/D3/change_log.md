@@ -299,3 +299,19 @@ All recorded in `docs/review_finding_supersessions.json`. Post-remediation: D3 o
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-06-10 source-reconciliation pass post external-review remediation: 5 freshness-flagged sources triaged — paper20_scalar_rung/paper21_majorana_rung/paper26_bh_entropy/paper6_vestigial REAL prose changes (all one theme: commit 5207b72b CHECK-24 calibration, gapped_interface_axiom-since-retired-into-tracked-Prop-TPFConjecture phrasing in per-paper formal-status passages) with NO D3 counterpart prose (bundle carries no project-axiom-count/status prose; grep-verified zero hits) hence zero divergence; paper40_higher_curvature MTIME-ONLY (regenerated tables byte-identical to HEAD, D3 has zero \input statements, compile path decoupled). Remediation themes (asymmetric GW170817 bound, project-adopted Vergeles window, Lean-backed wen_adw_factor_6000 bracket, 4x module-attribution fixes) verified already absorbed in-tandem via ca0d0f36/f1a0829f/da05d435/5207b72b. Standard DISCLOSURE_TEXT.md Variant-A block inserted (was clearly absent); pdflatex x2 clean 57pp. freshness_stale to be re-set true post-run per task direction (sweep program owns lifecycle).
+
+
+## 2026-11-06 — L1 mapped-consumer source checkpoint
+
+D3 and Paper25 now distinguish the assumed scalar speed law, adopted comparison
+range and finite classifier flags from physical tensor, response and matter
+constructions. The source repair preserves the accepted finite interval and
+endpoint results, adds the correct signed additive-correction scope, and
+reconciles observational/source assumptions. Independent source and actual
+reader/render acceptance, rejected R1 bytes and final verification are recorded
+in `papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/SCOPE.md`.
+L1's canonical claims artifact records the bounded propagation progress through
+the existing writer while retaining all four blockers and all prior sentence/
+human state. No scientific BUILD, canonical gate, main or human acceptance
+is discharged. D3's twelve baseline overflows and other corpus failures remain
+open and unwaived.

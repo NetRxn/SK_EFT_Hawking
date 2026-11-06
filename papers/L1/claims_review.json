@@ -1,9 +1,9 @@
 {
   "paper": "L1",
-  "review_date": "2026-11-05T22:39:34.875572+00:00",
+  "review_date": "2026-11-06T01:12:28.097658+00:00",
   "reviewer_version": "claims-reviewer-v2",
   "reviewer_model": "gpt-6",
-  "reviewer_run_id": "claims-reviewer-v2:2026-11-05:l1-discussion-appendix-catalog-r2",
+  "reviewer_run_id": "claims-reviewer-v2:2026-11-06:l1-consumer-propagation-refresh-r1",
   "bundle_target": "L1",
   "bundle_tier": 2,
   "review_profile": "current L1 full sentence coverage; mapped-source/cross-bridge inspection limited",
@@ -7322,7 +7322,7 @@
     },
     {
       "id": "L1-fix-propagation",
-      "summary": "D3/Paper25 propagation remains broader than this scoped figure repair. The algebraic D3 width ratio agrees; D3 now correctly states the conditional squared interval, center1+tau^2 and half-width2tau, and corrects the displayed axis-extent qualification. Canonical FigureSpec now cites actual AbbottEq.(1); regenerated source/L1/D3/Paper25 PNGs match byte-for-byte. ROOT structural controls are GREEN; independent repaired-figure r1 and final-source-layout r2 reports ACCEPT scoped1.1–1.5, including final P25 typesetting. Original D3 adopted-endpoint physical-regime assertions, Paper25 old scientific wording and complete cross-consumer acceptance remain unresolved.",
+      "summary": "Prior scalar/window/figure repairs are preserved. The mapped D3 vestigial section and affected abstract/conclusion, three-stage metadata readback, and complete Paper25 consumer now have independent scoped source and reader/render acceptance. Unsupported physical endpoint-regime, tensor-speed derivation, whole-branch exclusion, H1 endpoint-as-dynamics, RPA-window attribution, unmatched transport and companion physical-normalization assertions are corrected. This records source propagation, not construction of the original physical B3/state/tensor/matter/transport requirements or full D3/L1 publication acceptance. Canonical propagation disposition remains pending.",
       "sentences": [
         "sentence:L1:formal-setup-and-result:6b3a489b",
         "sentence:L1:formal-setup-and-result:9dbf0010",
@@ -7340,8 +7340,8 @@
       "lane": "prose",
       "verify": "Canonical cross-consumer producer/render review and closure writer",
       "blocked_by": "Existing propagation gate remains blocked; current L1 scoped source acceptance is not bundle closure.",
-      "status": "open; no closure by this review",
-      "precision_progress": "Prior scalar/window/source repairs remain preserved. Current drawing-style/propagation repair preserves exact supplied plot numeric data; D3 adjacent prose corrected, Paper25typesetting repaired. No automatic finding closure or scientific BUILD discharge. Independent final scoped render/source acceptance recorded; no complete source-paper scientific acceptance."
+      "status": "open; scoped mapped-consumer source repair independently accepted; canonical gate closure pending",
+      "precision_progress": "Accepted mathematical and figure data remain unchanged. Current source/readback evidence: papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/SOURCE_REVIEW_R3.md and READER_RENDER_R2.md. All physical BUILD and human approval states remain open; no automatic finding closure."
     }
   ],
   "non_blocking_followups": [
@@ -8168,6 +8168,24 @@
       "original_r1_review_date": "2026-11-05T22:37:20.519729+00:00",
       "original_r1_run_id": "claims-reviewer-v2:2026-11-05:l1-discussion-appendix-catalog-r1",
       "packet_history": "R1initialFRESH/finalSTALE owned-files+source at ROOT sourcefix; lead reissued R2 after compile; no selfrefresh."
+    },
+    "consumer_propagation_refresh": {
+      "scope": "Bounded cross-consumer propagation status refresh only; L1 source and all prior sentence assessments unchanged",
+      "prior_catalog_sha256": "c575c49851db4ef6f08f69b9b87e09b2902ced906032574fa9d4f6fcb85b2951",
+      "prior_review_date": "2026-11-05T22:39:34.875572+00:00",
+      "prior_reviewer_run_id": "claims-reviewer-v2:2026-11-05:l1-discussion-appendix-catalog-r2",
+      "evidence": [
+        "papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/SOURCE_REVIEW_R3.md",
+        "papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/READER_RENDER_R2.md"
+      ],
+      "consumer_sha256": {
+        "papers/D3/paper_draft.tex": "9db0ddb25df43f34087cf8ebafb28fd58369cacc23c6c46b6bdfe19b5d62b231",
+        "papers/D3/bundle_metadata.json": "97514e8d12d8ad44257bf716605e3b9a90cd6ab2a67983cb05f77c26cc7187f8",
+        "papers/paper25_gravitational_waves/paper_draft.tex": "760c21f1295b72cb3fd5bfc66adb09320ef9d5e65da0074215bdfa871675f2ff"
+      },
+      "closures": 0,
+      "original_physical_build_obligations": "OPEN; unchanged",
+      "complete_D3_catalog_or_publication_acceptance": false
     }
   },
   "review_evidence": {

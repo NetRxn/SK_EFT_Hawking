@@ -34,6 +34,21 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 mapped-consumer source repair independently accepted.**
+  [Applied source, reader/render and canonical catalog evidence](../../../papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/SCOPE.md)
+  reconcile the complete Paper25 consumer and the assigned D3 passages and
+  metadata. Accepted interval/endpoint mathematics and figure data remain.
+  The existing claims writer records progress on the still-OPEN propagation
+  blocker, preserving all151 sentence assessments, all four blockers, prior
+  candidates and human state; zero automatic or canonical closures occur.
+  Actual89 focused cases and both canonical compiles pass. D3's twelve
+  unchanged baseline overflows and corpus-wide style failures remain unwaived.
+  **Next ROOT milestone:** canonical propagation disposition and current
+  merge qualification for incremental main delivery. Personally intake
+  Executor's93338ee deeper construction separately; physical B3/state/tensor/
+  matter/transport and full publication/main/human acceptance remain OPEN.
+
+
 - **L1 source-documentation package complete at its qualified scope.**
   [Final controlled repair and canonical closure](../../../papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md#final-source-package-checkpoint)
   resolve the final MAJOR definition attribution after actual source application,
@@ -45,8 +60,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   when the final record is appended. The planner reports no open GW-source group.
   All19 broader failures, original B3/state/matter/tensor/transport, full
   publication/native/project, main and human acceptance remain OPEN.
-  **Next ROOT acceptance work:** complete the remaining D3/Paper25 propagation
-  against current L1 and pursue qualified incremental delivery.
+  The subsequent mapped-consumer source repair is accepted at the scope
+  above; canonical propagation disposition and qualified main delivery remain.
   Executor's503a78eb original-premise handback has now received direct ROOT
   acceptance at the bounded scope linked below. This continues the L1 lead;
   Executor's bounded deep work does not transfer its publication readiness.
