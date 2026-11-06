@@ -40,8 +40,15 @@ only `GaussianAuxiliaryCompensation.lean` at
 [`a680ec6758713e9ee2f3d964d7fde8c892ae5ae8`](https://github.com/NetRxn/SK_EFT_Hawking/commit/a680ec6758713e9ee2f3d964d7fde8c892ae5ae8),
 verified present on remote `codex/publication-l1-compensation-source-20261106`.
 ROOT checked the exact source hash, forty distinct standard-axiom reports and
-forty corrected empty closing goals. Independent actual source/kernel review is
-ACTIVE; no absorption, native build or publication acceptance is claimed for it.
+forty corrected empty closing goals. [Independent actual source/kernel review](AUXILIARY_COMPENSATION_INDEPENDENT_REVIEW_R1.md)
+is **ACCEPT** for complete ordinary design A/Eq4. ROOT checked the review's exact
+source, independent forty-export batch, six headline checks, forty empty closing
+states and clean diagnostics. The current controller's normal wt1 absorption succeeds at 19:44:09 UTC,
+integrates `a680ec675` into the primary checkout, completes its authoritative
+build, publishes epoch `53f50505e9eb84d11dc1e139491ebb9c598061819d74d163ce1557d33355e978`
+and releases wt1. Main-based selected-source/aggregate composition and the three
+reviewed lifecycle values are under independent actual integration review.
+Standalone MAIN native/extraction/publication acceptance remains pending.
 [Author report and complete raw evidence](AUXILIARY_COMPENSATION_AUTHOR_R1.md)
 retain failed attempts and receipt disclosures. The separate actual coframe B1
 construction is ACTIVE on admitted wt2 after
@@ -59,17 +66,21 @@ documented recovery and reassignment. Executor and proof workers route requests
 to ROOT; routine recovery does not require renewed operator micromanagement.
 All ADR-008 identity, custody and active-worker protections continue to apply.
 
-The clean pushed MAIN candidate `b21c206a8` remains frozen while its complete
-merge profile runs. Its actual parent pytest phase finished with **7,174 passed,
-27 failed, 14 skipped**. Compared with the prior Hermite run, the original
-Verify-command and theorem-census failures are resolved; a new Flow-page browser
-navigation timeout is present. Canonical validation and subsequent profile
-steps are still RUNNING, so this is not a terminal merge-gate result. The
-independently accepted three-value Stage10 lifecycle repair stays unapplied
-until that run finishes. The separate eleven-review-document formatting/routing
-proposal is undergoing independent classification review, including whether two
-canonical narrative-looking nodes must instead be retained as real debt. No
-closure, gate state or human verdict changes in this checkpoint.
+The clean pushed MAIN candidate `b21c206a8` completed its full merge profile
+at 19:42:31 UTC, **TERMINAL FAILED**: actual parent pytest **7,174 passed,
+27 failed, 14 skipped**, plus the separate four-CI-skip-check leg failed.
+Canonical `--ci --no-memo` reported SUBSTRATE clean; actual native build passed
+10,838 jobs; the final tree remained unchanged. Against the prior Hermite run,
+Verify-command and theorem-census failures resolved, while a Flow-page browser
+navigation timeout is new. Full invocation, terminal receipt, stdout/stderr,
+parent JUnit and exact differential are in
+`COMPLEX_FULL_PROFILE_R1_EVIDENCE.zip`. No main merge is qualified by this result.
+ROOT captured the complete CI-skip failure: counts, tables and claim clusters
+pass; notebook execution fails on the missing `data/vestigial_mc` dataset. No
+unqualified data is substituted. Only independently accepted repairs are applied. The separate eleven-review-document proposal is being revised
+to preserve L1:89 and all eleven recurrence comparisons, following independent
+REVISE; historical SCOPE:R3 demotion and the other ten documents were supported.
+No scientific closure, gate state or human verdict changes in this checkpoint.
 
 **Current resume state — 6 November 2026, 18:37 UTC.** L1 remains lead and
 owns the next delivery milestone through canonical gates/final human review.
