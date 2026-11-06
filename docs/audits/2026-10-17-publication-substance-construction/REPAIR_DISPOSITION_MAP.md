@@ -35,6 +35,32 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **Full L1 delivery qualification terminal; Lean build passed, merge gate failed.**
+  Exact source `5a5d36fed` completed the unchanged profile at 10:29:20 UTC
+  on November 6: Lean library/ExtractDeps **PASS, 10834 jobs**; Python
+  7053 passed/63 failed/52 errors/46 skipped; CI coverage 76/85; combined
+  four CI-skip checks and working-tree conservation FAIL. Two generated
+  diffs (counts JSON and Paper15 check table) are preserved, not silently
+  restored or accepted. Terminal evidence is pushed on existing draft PR117
+  at `211c211c1`, under `FULL_PROFILE_R5_TERMINAL.md` and its hashed archive.
+  No full-profile pass, new 231-gate snapshot, main merge or publication claim.
+  ROOT's next native step is existing post-build declaration extraction under
+  the existing authoritative build lock, then actual graph-failure reproduction
+  with full output; successful build does not erase earlier failures.
+  [Fresh read-only diagnosis](L1_PUBLICATION_FAILURE_ROOTS_R1.md) identifies
+  reviewed source reuse `be0b4fa47`:53 Verify-format transformations across
+  five historical documents. ROOT checked the donor review: preserve excluded
+  D8 1.4/1.8, whose grep diagnostics have invalid fixed-state exit semantics.
+  Exact patch applicability fails on current D1 context, so compose individual
+  reviewed command transformations and independently verify current content,
+  ASTs, findings/status conservation. Do not copy whole donor files, relax
+  gates or create new pipeline machinery. Remaining numeric139>117 and D1
+  physical/consumer holds persist. This is ordinary publication work owned here.
+  Executor explicitly accepted only the next bounded physical metric/operator
+  construction and now reports a provisional manual result pending actual
+  independent review. It does not own the remaining L1 package. L1 stays lead.
+
+
 - **Original finite-model normalization and temporal source response completed at manual scope.**
   Executor `83fcce8414db39ffcbdb1a8b87e5b8282531f5d0` is normally integrated.
   [ROOT full intake](../2026-11-05-l1-physical-bridges/ORIGINAL_NONZERO_NORMALIZATION_ROOT_INTAKE.json)
