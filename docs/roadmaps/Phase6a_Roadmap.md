@@ -1189,68 +1189,70 @@ previously called "low-utility/high-effort":
 ### Publication continuation: polynomial Gaussian identity
 
 ROOT retains ordinary L1 Lean/Python construction and publication delivery.
-The supporting standard-Gaussian IBP theorem has actual main-candidate native
-qualification; its earlier full merge profile failed and remains recorded in the
-[canonical remediation queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md).
-The independently reviewed all-degree Hermite extension is integrated on draft
-PR117 at `d4e4494b88e15892785adac7d687459c71eb04ae`; its actual full merge profile
-is running. Primary absorption is not that candidate's qualification.
+The arbitrary-degree standard Gaussian/Hermite and affine/product foundation is
+independently source/kernel accepted and integrated on main-based draft PR117.
+At source c9b223abf, actual library/ExtractDeps build passes10,837jobs; canonical
+producers and four freshness checks pass. Independent generated-artifact review
+accepts ten new authored theorems and conservation of prior declarations and
+scientific tables. Delivery checkpoint91d380f4a records full receipts.
+The earlier full merge profile remains FAILED, with27 persistent IDs and other
+source/run obligations recorded in the [canonical queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints).
 
-The accepted ordinary next task is `publication-l1-affine-product-proof-r1`,
-owned by ROOT with an admitted wt1 worker. It must prove actual positive-variance
-polynomial/Hermite integrability and the universal insertion identity, then
-arbitrary finite-coordinate product and mixed-monomial identities, including
-empty dimension. It reuses existing Gaussian affine transport and product
-integration confirmed by actual matching LSP discovery. [Design, independent
-review and native discovery custody](../audits/2026-10-17-publication-substance-construction/GAUSSIAN_AFFINE_PRODUCT_DESIGN_R1.md)
-record the exact statement and acceptance requirements. New implementation,
-independent kernel review and actual main qualification remain pending.
-Full auxiliary Eq6-11 and original physical B3 acceptance remain OPEN.
+Next ordinary mathematical block: complete finite complex Hermite auxiliary
+weight and every normalized monomial coefficient, including genuine Bochner
+integrability, arbitrary positive scale, arbitrary finite complex polynomial,
+empty dimension and the actual formal exp(Q) generating identity (originalEq5–6).
+The [design and independent prospective approval](../audits/2026-10-17-publication-substance-construction/GAUSSIAN_COMPLEX_AUXILIARY_DESIGN_REVIEW_R1.md)
+are accepted for admitted discovery/implementation, not kernel acceptance.
+Task `publication-l1-complex-auxiliary-proof-r1` is owned by ROOT and an admitted
+matching worker. Matching admitted LSP/type
+search of existing project/Mathlib/imported declarations precedes new proof work;
+static misses or stale graph/docstrings do not establish absence. ROOT owns
+assignment, independent kernel/source review, integration and actual native gates.
+Full compensation/truncation, actual Grassmann/coframe/Berezin/link/source and
+physical B3 acceptance remain OPEN, not discharged by this support.
 
 ### Publication continuation: original one-slice source kernel
 
 **Original physical bridge and B3 acceptance: OPEN BUILD.** Historical shipped
-algebraic results do not discharge the outstanding physical product, adjoint,
-domain, constraints, source/response, matter, calibration or transport objectives.
-Executor supplies the specifically commissioned deeper construction below;
-ROOT retains ordinary L1 and canonical roadmap/integration ownership.
+algebra does not discharge physical product/adjoint/domain, constraints, source/
+response, matter, calibration or transport. Executor owns specifically commissioned
+deeper constructions; ROOT retains the whole ordinary L1 bundle and integration.
 
-Task `l1-original-one-slice-source-kernel` is accepted by Executor, parent
-publication remediation. The preceding spatial-source-kick physical proposal
-received independent mathematical and source REVISE verdicts; it is not approved.
-The next substantive action is an exact original-action temporal-coframe/link
-and Grassmann transfer-kernel construction, or an explicit evidenced breakdown
-of the proposed slice factorization. Prospective scope checks are requested;
-they do not accept a scientific result.
+Accepted task `l1-original-one-slice-source-kernel`, peer6b86bd220, supplies the
+actual temporal polynomial decomposition, diagnostic finite-rank slice kernel,
+explicit bare-local mixed-factorization defect and full-source pair/C2 law.
+Both independent actual math/source reviews ACCEPT; ROOT personally read all
+results/reviews and verified full custody before normal cumulative integration.
+[Exact ROOT intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_ROOT_INTAKE_R1.md).
+It does not supply a positive physical product or prove all reductions impossible.
+Prior spatial-source-kick REVISE verdicts remain preserved, not overwritten.
 
-Preserve the actual periodic regulator, independent temporal anchors, Dirac/barred
-Grassmann content, oriented coframe, determinant/EHC action, source multiplicities
-and arbitrary prescribed C2 frame/source jets. Derive the temporal polynomial
-and explicit backward/forward and mixed dependence. A zero-frame/spatial-source
-edge kernel is a labeled diagnostic. Return to all sources/frames and retain
-longer-range and overlap defects; a failed local factorization needs an actual
-nonzero mixed coefficient at admissible compact-link values. It does not prove
-that every possible physical reduction is impossible.
+### Publication continuation: original EHC reflection and source adjoint
 
-Required evidence includes exact two-interface/Berezin/Haar ordering and
-trace/supertrace signs, complete first/mixed-second source-insertion kernels,
-source-dependent boundary-map derivatives where applicable, and both previously
-accepted metric and separate temporal C2 coefficients unchanged. Do not replace
-the existing geometric negative Gram with a renamed result or infer a physical
-positive Hilbert product/adjoint from Haar or formal exterior identities.
+Accepted task `l1-original-ehc-reflection-source-adjoint`, owner Executor, parent
+publication remediation, peer7fc890876d66611044d9d0d49b1090074f9de97e. Two independent
+prospective approvals precede construction; two independent ACTUAL math/source
+ACCEPT reports and ROOT full personal intake establish bounded manual acceptance.
+[Actual result and ROOT custody](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT_ROOT_INTAKE_R1.md)
+retain original fields, independent anchors, quarter, complete action, source
+multiplicities, arbitrary C2 frame jets and both prior exact controls.
 
-Independent prospective and actual-result review roles are Executor's
-`l1_fixed_plan_review` (mathematics) and `l1_fixed_data_review` (original
-source/physics), followed by Executor full-read/freshness checks and ROOT's
-personal full intake. Proposed result home is the existing
-`docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md`.
-An immutable accepted result/review archive and owned-branch checkpoint are
-required before milestone delivery. No slot or build is granted by this entry.
+The existing reflection maps EHC to an explicit backward/parallel-transported
+curvature with coframes at the proper base. A complete actual coefficient gives
+2i*g2 versus -2i*g2 and Delta=-4i*g2. The exact reverse-cut/transposed/coefficient-
+adjoint comparison and full raw/normalized source jets retain expDelta0 and proper
+reverse constraint sides. This is a lattice action mismatch, not a restricted
+integrated-form sign conclusion or global original-model no-go.
 
-Parallel primary-source scouting may assess applicable fermionic reconstruction,
-reflection-positivity or canonical prescriptions for the actual source action.
-An added physical prescription must expose its hypotheses for prospective review;
-no favorable norm, state, scale or physical parameter choice is silently adopted.
-The positive represented product/adjoint/domain, secondary constraints and
-physical source correspondence remain separately owed. No scientific deferral,
-reduced scope, physical no-go or publication acceptance is approved here.
+Next deeper construction must address the original-grounded positive physical
+domain and source/operator correspondence for both computed kernel orientations,
+or an actual controlled original-state/regulator/source limit with defect/jet
+bounds. Executor prepares a precise prospective construction attempt and missing
+physical data for independent review and ROOT intake. No norm, state, coupling,
+CAR prescription, source-family enlargement, symmetrized action or continuum
+limit is silently selected; any needed operator disposition is asked specifically
+with construction evidence. Existing B3, maps30–31/calibration, secondary
+constraints, causal dynamics, matter/absolute scale, limits, N4/tensor/light/
+transport and human/publication gates remain OPEN. a14 and K/K_R remain uncomputed.
+No new Lean slot or runtime capacity is granted by these manual research entries.
