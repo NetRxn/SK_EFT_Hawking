@@ -35,6 +35,34 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **Built candidate graph now measured; generated artifacts repaired and pushed.**
+  Existing canonical extraction completed0 with41034 declarations and JSON
+  byte-identical to committed source; its cache hash is fresh. [Exact extraction
+  receipt](L1_POSTBUILD_EXTRACTION_R1_READBACK.json) and archive preserve the run.
+  Eight previously failing native/graph/readiness modules then measured
+  **182PASS/3SKIP**. Canonical CI completed **67/85 checks passed**, substrate
+  clean, with18 paper-corpus checks still red; full stdout/stderr are retained.
+  This is not a full merge pass or a new231-gate snapshot. It supersedes the
+  earlier missing-build/coverage-floor condition, not the scientific holds.
+  Existing planner output is preserved:868open,187dispatchable,677unrouted;
+  its local zero-slot warning is not lease authority or a setup instruction.
+  Current L1-specific provenance/constants findings2.1/2.3 from the August14
+  review are the next focused original-scope/source reconciliation, alongside
+  the unresolved original physical BUILD. No closure is inferred from a passing
+  diagnostic or honest qualification alone.
+  Independent artifact R1 review rejected the stale counts.tex companion.
+  ROOT ran the existing producer; independent R2 ACCEPT verified all4717 LaTeX
+  bytes/107macros and all four artifact bindings. Counts JSON and LaTeX now
+  agree on7019tests. Canonical counts_fresh/tables_fresh then **2/2PASS** with
+  all reviewed bytes and every other tracked output conserved (90tables/15papers
+  rendered). Artifacts and complete evidence are pushed on PR117 at
+  `a3ceb535231b54d82a751a0a0509521ff08f76d6`; the delivery worktree is clean.
+  [Scoped artifact acceptance and exact receipts](https://github.com/NetRxn/SK_EFT_Hawking/blob/a3ceb535231b54d82a751a0a0509521ff08f76d6/papers/AutomatedReviews/2026-11-06-l1-main-delivery/GENERATED_ARTIFACT_SYNC_R2.md)
+  preserve R1REVISE, R2ACCEPT, the initial mistyped no-tests invocation, actual
+  CI/graph/extraction output and scientific/human limits. No new machinery,
+  threshold change, scientific closure or qualified main merge.
+
+
 - **Actual original coherent/metric-operator milestone accepted and normally integrated.**
   Peer `dcd46b6ce053cf2fa771f735577fd36d7001de6e` is preserved by normal merge
   `4aeb0f80d9f553a6ebf358711b8149d57bf21c18`. ROOT full-read actual R2,
