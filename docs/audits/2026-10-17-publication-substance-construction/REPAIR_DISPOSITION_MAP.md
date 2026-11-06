@@ -35,6 +35,43 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **L1/Paper25 original dependency finding closed on the main-based candidate.**
+  Author `64eb1978a0561bc6f4905635e020ef6ea3fd8db2` repairs Paper25's original
+  seven GW dependency edges, with seven separately reviewed actual Newton-
+  comparison inputs. Independent source/consumer review ACCEPT and actual
+  RED/GREEN plus production removal/restoration controls are preserved.
+  The existing writer then closes ONLY
+  `review:2026-08-14-l1-stage13:L1:2.3` at
+  `8b0ab67533918d4aabdf04c22499b3768dc05314` on draft PR117. Canonical reader
+  confirms FIXED; every prior ledger row/schema is exact (1248 to1249).
+  [Actual writer/reader receipt](https://github.com/NetRxn/SK_EFT_Hawking/blob/8b0ab67533918d4aabdf04c22499b3768dc05314/papers/AutomatedReviews/2026-11-06-l1-main-delivery/PAPER25_CLOSURE_READBACK_R1.json)
+  and [source/consumer/adverse evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/8b0ab67533918d4aabdf04c22499b3768dc05314/papers/AutomatedReviews/2026-11-06-l1-main-delivery/PAPER25_PARAMETER_REPAIR_R1.md)
+  are remotely recoverable. Parameter values, human dates/history and physical
+  requirements are unchanged. Finding2.1 still reads OPEN for actual operator
+  attestation. Exposing dependencies is not parameter or physical acceptance.
+
+  The current broad default suite is terminal RED:7084passed/27failed/
+  11skipped/92deselected. All tracebacks are archived; independent static
+  assessment covers all27 assertions, finding no plausible exact-patch causal
+  path, without claiming an executed historical baseline. Canonical remaining
+  change-scoped checks7PASS/6FAIL, substrateclean; no test residue or extra
+  source diff. Full source/failure reports and prior failed full merge profile
+  remain available on PR117. No main merge/newly green bundle/fresh231snapshot.
+
+  **Resume:** L1 remains lead and ROOT owns the entire bundle. Carry the
+  original physical metric-channel/source/normalization construction toward
+  B3 through the existing roadmap, with independent mathematical and physical
+  verification; do not substitute scalar examples, adopted intervals or
+  metadata for that construction. Executor's next bounded original kinetic/
+  source-normalization brief is in dual prospective review (R1 REVISE;
+  R2 awaiting decisions), not transfer of L1, B3 or the roadmap. ROOT continues
+  ordinary implementation, claim/figure/consumer review and gate integration.
+  Preserve original tensor/state/matter/light/transport/frequency/error and
+  final-human acceptance. Route the remaining corpus failures through the
+  existing planner; do not raise ceilings or create parallel machinery.
+
+
+
 - **Original conditional-process reconstruction and finite link certificate accepted.**
   Executor `d95370a95128599ef9dbecb4bd3105b55f0019d4` is normally integrated
   at `a56bd045d2bf9e338df772ee1f23af49d6164cb4`. ROOT FULL-read actual result,
