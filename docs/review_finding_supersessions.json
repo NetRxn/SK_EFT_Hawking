@@ -10473,6 +10473,21 @@
         "enforced": true,
         "run_at": "2026-11-06"
       }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:2.3",
+      "status": "fixed",
+      "evidence": "Original seven GW dependencies now exist for BOTH L1 and Paper25 with actual Parameter target types; independent source review accepts exact consumer mapping. Actual RED/GREEN and production adverse-removal/restoration controls retained in PAPER25_PARAMETER_REPAIR_R1_EVIDENCE.zip. Human attestation2.1, physical BUILD and broader failed publication gates remain OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "64eb1978a0561bc6f4905635e020ef6ea3fd8db2",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c 'import sys; sys.path.insert(0,\"scripts\"); from build_graph import build_graph_json; g=build_graph_json(); nodes={n[\"id\"]:n for n in g[\"nodes\"]}; edges={(e[\"source\"],e[\"target\"]) for e in g[\"links\"] if e[\"type\"]==\"DEPENDS_ON\" and nodes.get(e[\"target\"],{}).get(\"type\")==\"Parameter\"}; keys=[\"GW.C_GW_DEVIATION_UPPER_BOUND\", \"GW.C_GW_DEVIATION_LOWER_BOUND\", \"GW.C_GW_TWO_SIDED_CAP\", \"GW.CHI_VEST_NATURAL_LOWER\", \"GW.CHI_VEST_NATURAL_UPPER\", \"GW.GW170817_PEAK_FREQ_HZ\", \"GW.GAMMA_H_VESTIGIAL_DEFAULT\"]; required={(\"paper:\"+p,\"param:\"+k) for p in [\"L1\",\"paper25_gravitational_waves\"] for k in keys}; missing=sorted(required-edges); assert not missing, \"Missing original GW Parameter dependencies: \"+repr(missing); print(\"All14original GW dependency edges verified across L1 and Paper25\")'",
+        "declared": "cd \"$REPO\" && uv run python -c 'import sys; sys.path.insert(0,\"scripts\"); from build_graph import build_graph_json; g=build_graph_json(); nodes={n[\"id\"]:n for n in g[\"nodes\"]}; edges={(e[\"source\"],e[\"target\"]) for e in g[\"links\"] if e[\"type\"]==\"DEPENDS_ON\" and nodes.get(e[\"target\"],{}).get(\"type\")==\"Parameter\"}; keys=[\"GW.C_GW_DEVIATION_UPPER_BOUND\", \"GW.C_GW_DEVIATION_LOWER_BOUND\", \"GW.C_GW_TWO_SIDED_CAP\", \"GW.CHI_VEST_NATURAL_LOWER\", \"GW.CHI_VEST_NATURAL_UPPER\", \"GW.GW170817_PEAK_FREQ_HZ\", \"GW.GAMMA_H_VESTIGIAL_DEFAULT\"]; required={(\"paper:\"+p,\"param:\"+k) for p in [\"L1\",\"paper25_gravitational_waves\"] for k in keys}; missing=sorted(required-edges); assert not missing, \"Missing original GW Parameter dependencies: \"+repr(missing); print(\"All14original GW dependency edges verified across L1 and Paper25\")'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
     }
   ]
 }

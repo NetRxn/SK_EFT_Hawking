@@ -52,3 +52,16 @@ Evidence: [source review](PAPER25_PARAMETER_SOURCE_REVIEW_R1.md),
 [all-failure assessment](PAPER25_BROAD_FAILURE_REVIEW_R1.md),
 [raw receipts and preimages](PAPER25_PARAMETER_REPAIR_R1_EVIDENCE.zip),
 [hashes and terminal results](PAPER25_PARAMETER_REPAIR_R1_READBACK.json).
+
+## Canonical closure checkpoint
+
+After author commit64eb1978a0561bc6f4905635e020ef6ea3fd8db2, the existing
+closure writer's dry run and actual invocation each executed the complete
+declared Verify successfully. Exactly one record was appended: original L1
+finding2.3 now reads FIXED through the canonical reader. All1,248previous
+ledger records and schema are unchanged; the ledger now holds1,249records.
+The independent human-attestation finding2.1 still reads OPEN.
+
+[Actual writer/reader and conservation evidence](PAPER25_CLOSURE_READBACK_R1.json)
+and [raw closure receipts/preimage](PAPER25_CLOSURE_R1_EVIDENCE.zip) preserve
+the acceptance boundary. Full suite and publication holds above remain.
