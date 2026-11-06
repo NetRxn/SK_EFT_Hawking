@@ -1,0 +1,29 @@
+{
+  "source_head": "1c2b15f69919c331f64628acfb1876ddd1a5dd5e",
+  "candidate_sha256": "bc956584b183e4c336362f82dc25ca264d17e25f02ee63dbbd7ce50f603ab73c",
+  "preimage_sha256": "8cd374faea0201e0810a517c296c0f559ff6b4ac3e906dcfecd35266da7ed039",
+  "changed_spans": 13,
+  "independent_claims_review": "ACCEPT exact candidate; held primary bodies and actual theorem statements checked",
+  "application": "Byte-exact independently reviewed postimage",
+  "verification": {
+    "relevant_roster_tests": "2 PASS",
+    "existing_bundle_registry_consistency": "PASS measured, codes/tiers/all registered consumers agree",
+    "initial_test_selection": "One invalid node name caused collection exit4/no tests; corrected invocation separately passed2, not counted as acceptance"
+  },
+  "priority_science_venue_approval": "Existing queue/order, original physical BUILD, 4pp venue target and final human approval preserved",
+  "scope": "Current documentary descriptions only; no canonical L1-fix-propagation closure or scientific/stage/main/publication acceptance",
+  "archive": "L1_STRATEGY_PROPAGATION_R1_EVIDENCE.zip",
+  "archive_sha256": "8c0e8a2279586d38bdff7f321727afea09f473264ee92c0fe7d217683b207b8a",
+  "members": {
+    "l1-strategy-propagation-proposal-r1.py": "0aa2ad8e2276811e24d39f4cf88aa2904f36c55d0cfbf2bbb177640a8e46110a",
+    "l1-strategy-propagation-candidate-r1.md": "bc956584b183e4c336362f82dc25ca264d17e25f02ee63dbbd7ce50f603ab73c",
+    "l1-strategy-propagation-r1.diff": "2dcca4e282bcfe063fbe2cd77226f63f7c7ee3b89de8008133850e1a7ab36922",
+    "l1-strategy-propagation-r1.json": "9d3f50e72f4fa004d5d27019b54e6407d823763e2a612066d2fa8fd6bcff873a",
+    "l1-strategy-claims-review-r1.md": "53361bbd307e10a65e1ed7a635814100933dcea2f75cba0594b704ce7232271a",
+    "l1-strategy-claims-review-r1.json": "17dfc38e9b74f4382871da921bb7916e1c10615f25210e1751c8244395667f28",
+    "l1-strategy-roster-r2.xml": "cfa25c3636fe6698afe9f79430cff498f1aa18b4db9d15c317770e2b2ea22ca2",
+    "l1-strategy-registry-check-r1.json": "35fec031434600a829c2b22b4b4fdf17a5cc338ee176317474efa33769f2c944",
+    "l1-strategy-existing-planner-r1.json": "60d6ad21c838d25bd44b079c4879e8de90b14f40842b06ca3c6a99c704ec3d58",
+    "PAPER_STRATEGY.preimage.md": "8cd374faea0201e0810a517c296c0f559ff6b4ac3e906dcfecd35266da7ed039"
+  }
+}

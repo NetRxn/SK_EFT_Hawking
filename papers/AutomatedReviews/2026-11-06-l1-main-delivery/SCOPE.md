@@ -533,3 +533,31 @@ failures remain owed; no floor increase, test deletion or full-module pass is
 claimed. Current evidence/reviews/projections and failureXML are preserved in
 G4_PRODUCTION_CONTROLS_R1_EVIDENCE.zip and its READBACK.json. Canonical closure,
 broader/native/main/publication qualification and original L1science remain open.
+
+
+## L1 strategy propagation source acceptance
+
+The existing L1-fix-propagation obligation now includes13exact documentary
+corrections in PAPER_STRATEGY.md. Independent focused claims/source review
+accepts the complete candidate, checking the held Volovik fulltext bodies and
+actual Lean statements. The title/lede reflect the current assumed-law finite
+interval, nonempty compatibility and adopted range; the opening and D3/D5
+cross-bridge descriptions no longer advertise a whole-branch falsification.
+No-dependency/readiness/voucher-complete descriptions are corrected. L1remains
+lead, the four-page venue target stays a target and original B3/state/mode/
+transport BUILD, unchanged priority and final human approval remain explicit.
+
+ROOT applied the exact accepted postimage. Two relevant existing roster tests
+pass and the actual existing bundle_registry_consistency check passes/measures:
+codes, tiers and all registered consumer keysets agree. An initial misspelled
+test node caused collection exit4/no tests; the corrected invocation supplies
+the two actual passes. No native/network path ran. Existing planner output is
+retained as routing context, not slot capacity or a priority replacement.
+
+L1_STRATEGY_PROPAGATION_R1_READBACK.json and its evidence archive preserve
+preimage/postimage,13span mapping, independent review, verification and planner
+limitations. Manuscript/catalog, scientific code, roster implementation and
+human state are untouched. This is source propagation progress only, not a
+full strategy/paper review, aggregate G11 or BUILD closure, stage/main/venue/
+submission/publication acceptance. Remaining qualification and original
+scientific findings retain their full scope.
