@@ -1607,3 +1607,52 @@ Generated research is preserved in tracked NONREGULAR_BOUNDARY_RESEARCH.md
 and the evidence archive; the temporary generated Lit-Search copy was removed
 after exact preservation, without touching external primary sources.
 ROOT continues all ordinary L1 publication/qualification work.
+
+
+### Citation source reuse checkpoint and next G4 qualification package
+
+Main-delivery source
+[4737b36dcae1fb556449d7b816f087e0f5f4f885](https://github.com/NetRxn/SK_EFT_Hawking/commit/4737b36dcae1fb556449d7b816f087e0f5f4f885)
+is pushed on existing draftPR117. Independent source/state and final compile
+composition ACCEPT exact8b donor reuse without reverting current L1 records,
+physics constants or D3 body. Original failed test reports13missing citing
+keys; current source haszero. Actual affected77cases yield76PASS/oneexplicit
+environmentSKIP including slowextractor,zeroerrors/failures; bytes/mode/mtime
+restore exactly. Current516keys/64drafts have0missing/0needcache andactual76
+undeclared at tightened76ceiling. Five current existing-file writer calls
+conserve all649old state entries and actualheldbytes,654records total.
+No downloads, donor history/closure transfer, full-text or physical closure.
+
+Allfive affected bibliography compiles pass: D1/D3/D8/D9/E1 have20/66/12/14/5
+pages and15/12/7/9/0 unwaived overflows. Only D1/E1 stored pagecounts update;
+no full reader/venue/stage acceptance or invented page-growth attribution.
+F R5 independently refreshes13current dependency hashes and20semanticspans;
+its declared Verify passes. [Exact evidence and limits](https://github.com/NetRxn/SK_EFT_Hawking/blob/4737b36dcae1fb556449d7b816f087e0f5f4f885/papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md)
+and CITATION_REUSE_R2_READBACK.json preserve all current and original receipts.
+No new green bundle, scientific BUILD closure, parent canonical closure or
+main merge is claimed.
+
+ROOT reused the current desktop isolation with a verified sibling link to
+the real held corpus; no additional worktree/resolver was created. One
+update_counts --help invocation unexpectedly ran native refresh, failed
+Physlib DNS and collection-cache initialization, terminated and was not
+retried; no native/counts acceptance or cache repair is inferred. Actual
+incident is archived. Generated register/inventory candidates remain off-tree;
+tracked register is restored, rather than promoting known fidelity/hook errors.
+
+Next L1 main-qualification milestone: adopt the coherent already reviewed
+1550f5ff11ab6c350081abf607d4431e28e02ef1 G4/inventory source/test/owner/spec
+package. Independent static comparison finds all existing21path preimages
+match and citation changes disjoint. Current old extractor omits six of L1's
+seven registered formulas; this is an emission gap, not missing physics code.
+Keep current formulas/provenance and actualroster, retain dcb9a2c5a original
+evidence without its ledger/counts, independently review current composition
+and run original meaningful controls through the authorized route. Correct
+collector source before deriving a hook census; do not hand-enter counts or
+reuse donor population/gate outcomes. Managed6e and source-register5b follow
+as distinct existing repair packages. Native/counts/broader qualification
+and fullstage/main/human acceptance remain owed. Portfolio order is unchanged.
+
+Executor's commissioned manual original-boundary prerequisite remains
+parallel under the linked Phase6a record; all original physical requirements
+and final result review remain in force. ROOT retains ordinary L1 readiness.
