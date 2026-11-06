@@ -1,5 +1,7 @@
 # Original finite Eq7 focused delivery checkpoint
 
+**Updated accepted checkpoint:** source0c0c85c8 has different [generated-artifact ACCEPT](ORIGINAL_EQ7_MAIN_GENERATED_REVIEW_R1.md); artifact commitbf586aa77 is pushed. The follow-up two-reference D11 propagation repair is independently accepted and pushed ata56e6a644. Existing full merge qualification is now active on that exact clean head; earlier pending composition/artifact statements below are historical. Current focused gates153/29/30/19 are explicitly a different paper population from integratedR6, as [the exact focused snapshot](FOCUSED_EQ7_GATES_20261106_R1.json) records. No newly green bundle or main merge. [Complete canonical receipts](ORIGINAL_EQ7_MAIN_QUALIFIED_ARTIFACTS_R1_EVIDENCE.zip) and [D11 scoped evidence](D11_TORUS_REFERENCE_PROPAGATION_R1_EVIDENCE.zip) preserve exact producer/review boundaries.
+
 L1 remains lead; all21 original requirements and final human approval remain unchanged. ROOT owns integration, ordinary L1 science/computation and slot recovery. This checkpoint advances accepted original mathematical construction toward a qualified main delivery; no publication acceptance is claimed.
 
 ## Accepted science and source
