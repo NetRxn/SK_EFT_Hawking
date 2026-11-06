@@ -34,6 +34,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Current resume point — Task1 independently accepted and canonically closed; full Task2 implementation dispatched.**
+[ROOT Task1 acceptance](ORIGINAL_COEFFICIENT_TASK1_ACCEPTANCE_R2.md) records both COMPLETE different R2 science/algebra ACCEPTs and personal source/review intake. Existing close_finding.py reran the exact declared52-test verification and recorded fixed review:2026-11-06-original-coefficient-task1:L1:1.1 in PRIMARY. [Canonical record, original finding, raw writer output/planner and next assignment](ORIGINAL_COEFFICIENT_TASK1_CANONICAL_CLOSURE_R2_EVIDENCE.zip) preserve that exact local state for remote resume. This is closure of four code invariants only, not original B3/scientific completion. Frozen source and all reviews are pushed in this cumulative draft; the actual source/ledger remain uncommitted PRIMARY while the separate MAIN qualification holds the native/build lock. The cumulative branch does not install a closure over code it does not contain.
+
+Task2 owner /root/original_coefficient_task2_implementation_r1 is freshly assigned the ENTIRE accepted source-jet/minor/Hermite/Gaussian/Haar/contact/refusal and COMPLETE original one-site coefficient-control implementation. Bounded TDD runs now; full original scientific execution requires source/cost review and actual ROOT runtime admission. No toy/selected subtotal replaces full3876source-quartic/full-denominator/T/H/frame scope, bothwords and nonunitvariances. Task3physical certificate consumption remains guarded by Executor's independent actual full-cut BUILD/review. Task4fullZ/B3/modes/matter/transport/limits and allpublication requirements remain open. Same clean PR118/a56 full merge-profile process is still running; last qualified paper-population gates remain R6 and the separately labeled focused snapshot. No new main merge or newly green bundle. Priority unchanged.
+
+
 **Current resume point — numerical foundation repaired; independent R2 reviews active; convention intake integrated.**
 [Four exact source/API defects and remote-restorable R1/R2 candidates](ORIGINAL_COEFFICIENT_TASK1_REPAIR_CHECKPOINT_R2.md) are tracked through the canonical PRIMARY review finding L1 section1.1. All23 new counterexamples fail on R1;52bounded tests pass on R2. Fresh complete different science/algebra reviews are active; no source acceptance/canonical closure or coefficient result is claimed. ROOT owns closure/integration after those reviews.
 
