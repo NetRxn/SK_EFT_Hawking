@@ -49,13 +49,24 @@ steps. No gate-state transition or physical B3 closure follows from source
 integration. Positive-variance/multivariate/complex-source/Grassmann/coframe/link
 and physical response assembly remain owed.
 
-L3's accepted R2 scientific figure correction passed actual numerical/source
-fault controls and compilation, but independent publication-scale review
-requires revision because annotations rendered near 2.14 points. An R3 stacked
-layout and coherent L3/Paper27 captions are now under independent source review.
-Actual regenerated artifacts, compilation of both consumers, readable typography,
-the letter's length requirement and independent visual acceptance remain required.
-This enabling package does not move the lead away from L1.
+**Accepted L3 figure checkpoint:** focused draft PR112 is now pushed at
+`db4b41ef2edeeb4114bfe5429e64cce40e962a7f`. The R3 stacked layout resolves the
+independently measured R2 microscopic-text defect. Actual canonical regeneration
+installs identical accepted PNG bytes in L3 and Paper27 with coherent captions.
+Both source and all-eleven-page visual reviews accept this scoped repair.
+L3 compiles to four pages with zero overfull boxes/errors/unresolved references;
+essential figure labels measure approximately7.84 points. Scientific runtime
+controls pass, detect all nine production faults and pass after exact restoration;
+the existing thermodynamics suite passes all58 tests.
+[Complete source, visual, runtime and compile evidence](https://github.com/NetRxn/SK_EFT_Hawking/tree/42ca6d9f3/papers/AutomatedReviews/2026-11-06-l3-figure-readability)
+is preserved on the focused branch. Original finding
+`review:2026-08-15-l3-stage10-redraft:L3:3.1` is canonically FIXED: the existing
+writer ran its declared Verify, the canonical reader reports verified/fixed,
+and every prior ledger record is conserved. No bundle-wide gate transition is
+inferred. Actual focused native/index/production qualification remains next.
+Whole Paper27 remains REVISE for three body overflows and stronger source/physics
+claims; related WKB/Lean attribution and original physical four-laws BUILD remain
+OPEN. This enabling checkpoint does not move the lead away from L1.
 
 **Resume checkpoint — 6 November 2026, after the terminal native run.** L1
 remains lead; the agreed portfolio order above is unchanged. The following
