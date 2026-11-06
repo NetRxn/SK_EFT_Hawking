@@ -89,3 +89,11 @@ consumer propagation and qualified incremental delivery. The accepted scientific
 obstruction has its separate intake and does not close physical BUILD. The later
 original-premise handback requires its own direct source review. L1 remains the
 lead and its full readiness remains ROOT-owned.
+
+
+The [main-delivery assessment](MAIN_DELIVERY_ASSESSMENT.md) is a read-only
+snapshot pinned to earlier08079c0bc and maince194, not qualification of this
+later candidate. It identifies a narrow source/evidence increment and retains
+the exact-candidate merge-gate requirements. The untouched baseline and other
+unmerged work stay preserved. Its older source/path observations require
+reconciliation before execution; it grants no new runner or primary retarget.
