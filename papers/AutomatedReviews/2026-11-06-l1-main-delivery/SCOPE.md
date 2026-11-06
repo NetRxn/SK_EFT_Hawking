@@ -399,3 +399,70 @@ actual source composition, appropriate existing validation and independent
 review must qualify delivery. Executor continues the bounded original-model
 nonregular boundary-constraint/quantization research design, separate from
 ROOT's entire ordinary L1 publication ownership.
+
+
+## Citation identity repair reused for main qualification
+
+The exact reviewed8b6da1c2f delta supplies13previously missing citing-key
+identities and qualifies the existing Barcelo edition record. All eight current
+L1/GW citation records remain exact; physics constants, hypotheses and D3's
+L1 body are conserved. Five bibliography edits change no manuscript body.
+Eight internal companions retain current titles/inprep/null external identity;
+five held external aliases retain their distinct edition/content limits.
+
+The actual before-test fails on13missing registry keys. Current independent
+scan measures516citing keys across64drafts,zero missing keys andzero need-cache
+entries. Existing undeclared ceiling tightens78to actual76 withzero headroom,
+original equality/declaration-removal/zero-stub/zero-orphan controls retained.
+The existing writer registers five already-held files with network refused;
+all649old sidecar entries and held bytes/modes/nsmtime are exact,654total.
+Four artifacts are PDFs; Verlinde remains metadata without full text. Current
+presence output retains45abstract-only and64metadata-only warnings; this
+identity repair establishes no new full-text reading or physical result.
+
+Actual complete affected three-file suite explicitly includes the slow
+extractor:76PASS,oneenvironmentSKIP,zero failures/errors. Registry/constants/
+sidecar bytes, modes and nsmtime are exactly restored after controls. This
+is the current77case population, not the donor's historical89pass result.
+Independent source/state review accepts exact composition and parsed receipts.
+
+The actual canonical compiler runs for D1,D3,D8,D9,E1 all exit0 withnoTeX
+errors,unresolvedPDFreferences or dropped class options. Pages20/66/12/14/5;
+overfull15/12/7/9/0 remain unwaived. No baseline/no-regression or whole-layout
+acceptance is claimed. Only D1/E1 stored pagecounts change11to20 and4to5;
+those old fields were historical, not evidence the citation delta added
+nine pages. Readiness, review and human fields remain exact. Independent
+final composition checks actualPDF/log hashes and corrected bibliography
+text, not whole-paper visual/venue/scientific acceptance. Current F R5
+semantically checks all20spans/13backings/threeprimaryPDFpins and its declared
+Verify exits0. No additional F closure is appended.
+
+[Readback](CITATION_REUSE_R2_READBACK.json) and CITATION_REUSE_R2_EVIDENCE.zip
+preserve original failure, exact donor delta/acceptance, current controls and
+independent reviews, five actual PDFs/compiler logs, current writer/source
+custody and held-content limitations. Full external primary sources are not
+redistributed. Source-corpus access uses an explicit local sibling link to
+the already-held real Lit-Search, preserving the existing resolver; no new
+worktree or resolver is created.
+
+Qualification remains incomplete. The existing counts script's --help path
+unexpectedly attempted refresh/Physlib fetch, terminated on DNS and collection
+cache errors, and was not retried; no cache repair or counts/native acceptance
+is claimed. The actual incident is retained. Generated register/inventory
+candidates are archived, not promoted: existing5bsource-register fidelity
+and1550worktree-hook fixes must be reused first. The original tracked register
+is restored exactly. Current derived freshness, broader configured testpaths,
+admitted native/counts/document sync, canonical parent-finding closure and
+main integration remain owed. No donor closure ledger or success state is
+imported, no new finding is invented and no bundle is newly green.
+
+The next coherent source package is the already independently reviewed1550
+G4/inventory repair. Independent exact comparison finds its21source/test/
+owner/spec preimages match, disjoint from this repair. The old producer omits
+six of L1's seven registered formulas; the fix restores structural emission
+and typed coverage without changing current formulas/provenance. Adopt the
+coherent package, retain original evidence, independently review current
+composition and qualify through the original controls and authorized route.
+Managed-path6e and source-register5b remain distinct reuse packages. Original
+physical B3/state/tensor/matter/light/transport requirements, full-stage/
+publication/main/human acceptance all remain OPEN.

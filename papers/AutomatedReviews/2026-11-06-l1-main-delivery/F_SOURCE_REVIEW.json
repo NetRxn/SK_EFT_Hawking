@@ -4,7 +4,7 @@
   "original_build_open": true,
   "canonical_closures": 0,
   "human_approvals": 0,
-  "packet": "f-l1-source-candidate-review-r4.json",
+  "packet": "f-l1-source-candidate-review-r5.json",
   "required_span_ids": [
     "abstract-coefficient",
     "abstract-headline",
@@ -55,14 +55,14 @@
     "papers/F/bundle_metadata.json": "6dc78648a4a44f4d18ce83831d17dffa2218fc33427bccafa1007901bd537778",
     "papers/L1/paper_draft.tex": "06927cc8dd7a231db93745fd07eb1a346d0595db43a92a9c7387ef20cb966b65",
     "papers/L1/claims_review.json": "3b2ba1c1baeb036c45034bb58d42d666badbaace860e56415829400a1ca307cc",
-    "papers/D3/paper_draft.tex": "32740b59d35187b869314f1c809890f1c695fb72d501afb15b4ea55a05e0aeec",
+    "papers/D3/paper_draft.tex": "9db0ddb25df43f34087cf8ebafb28fd58369cacc23c6c46b6bdfe19b5d62b231",
     "papers/paper25_gravitational_waves/paper_draft.tex": "760c21f1295b72cb3fd5bfc66adb09320ef9d5e65da0074215bdfa871675f2ff",
     "lean/SKEFTHawking/GravitationalWaves.lean": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
     "lean/SKEFTHawking/VestigialSusceptibility.lean": "cf5a4584ad51f44a232c7da2d4fe9300ea14c322a416b2843e7ef3c2032bf721",
     "src/core/formulas.py": "ef3e76f28ab0bcad83311ba029b1a8fb19fd2cb161e6186d161ccf7ccf7cb836",
     "src/core/provenance.py": "301d9db0be7404cb44834233eb7847d2eee3a14283298abcb6ddab11057b5983",
-    "src/core/constants.py": "aa841158ab58e087b400922ceeefef9d42a72f98882f55d6f0d8da7e740765e5",
-    "src/core/citations.py": "0d9283a1bcbdfbe1cc7b6a841c59aa55ab16154b592a1dfdada301aa5de7f37d"
+    "src/core/constants.py": "10ed8fed72f61002dbfc561b24537d8e61d6cb8abd9949d260505bbe458204f0",
+    "src/core/citations.py": "5ae657c3ada17d0e7e0d4f758a7d44f2576f17929cb1f03d0566fa16064928f8"
   },
   "primary_source_pins": {
     "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Volovik2024.pdf": "fae06f3bd7189f52a24fce5b612a30d2fc23ca1f2a9db43100e535d954791d9d",
@@ -94,6 +94,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Extra free GW response expressly disclosed; actual speed definition has independent chi,c. No G_N-to-response matching is inferred.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Extra free GW response expressly disclosed; actual speed definition has independent chi,c. No G_N-to-response matching is inferred.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -120,6 +125,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Assumed-law qualifier, chosen endpoints and finite compatible interval accurately replace generic graviton falsification.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Assumed-law qualifier, chosen endpoints and finite compatible interval accurately replace generic graviton falsification.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -146,6 +156,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Original neutral program link exact; submission intent is not physical or venue acceptance.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Original neutral program link exact; submission intent is not physical or venue acceptance.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -172,6 +187,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Roster names conditional susceptibility constraint, not universal identification falsification.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Roster names conditional susceptibility constraint, not universal identification falsification.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -198,6 +218,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. GW is expressly distinguished from sigma/Bayes falsification and its later category heading now agrees.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. GW is expressly distinguished from sigma/Bayes falsification and its later category heading now agrees.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -224,6 +249,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Motivation replaces unique-channel forcing; surviving interior and absence of selection theorem explicit.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Motivation replaces unique-channel forcing; surviving interior and absence of selection theorem explicit.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -250,6 +280,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Intended PRL-letter strategy now preserves physical construction, venue qualification and final review; no current four-page qualification.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Intended PRL-letter strategy now preserves physical construction, venue qualification and final review; no current four-page qualification.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -276,6 +311,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Separate free normalized susceptibility is explicit; physical response matching to induced Newton baseline remains required, and equal comparison ranges supply no bridge.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Separate free normalized susceptibility is explicit; physical response matching to induced Newton baseline remains required, and equal comparison ranges supply no bridge.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -302,6 +342,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Mixed scopes and absence of unique physical ADW selection are explicit; historical closure-list origin does not override this restriction.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Mixed scopes and absence of unique physical ADW selection are explicit; historical closure-list origin does not override this restriction.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -328,6 +373,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. 2024 quartet metric order and2026 de Sitter luminal second sound/open interpretation correctly separated. Actual held full §§III/IV do not derive substrate susceptibility law or tensor/matter bridge.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. 2024 quartet metric order and2026 de Sitter luminal second sound/open interpretation correctly separated. Actual held full §§III/IV do not derive substrate susceptibility law or tensor/matter bridge.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -354,6 +404,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Actual source-qualified asymmetric bound and conservative envelope distinguished. Nonnegative chi/fixed tau biconditional yields exact finite squared interval, nested window and surviving unity. Endpoints only excluded; width4tau/strict10^14 comparison and offsets±2tau+tau² correct; no probability without prior.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Actual source-qualified asymmetric bound and conservative envelope distinguished. Nonnegative chi/fixed tau biconditional yields exact finite squared interval, nested window and surviving unity. Endpoints only excluded; width4tau/strict10^14 comparison and offsets±2tau+tau² correct; no probability without prior.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -380,6 +435,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. GW supplies no unique ADW selection. Physical response/range/state/tensor/matter/light/transport/frequency/units/error construction all retained.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. GW supplies no unique ADW selection. Physical response/range/state/tensor/matter/light/transport/frequency/units/error construction all retained.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -406,6 +466,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. D3/L1 actual assumed law, adopted window and interval agree; historical false universal quantification no longer asserted. Physical matching remains owed; copyedit fixed.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. D3/L1 actual assumed law, adopted window and interval agree; historical false universal quantification no longer asserted. Physical matching remains owed; copyedit fixed.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -432,6 +497,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Theorem-name agreement distinguished from physical identity; original response/mode/common matter-reference obligations explicit.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Theorem-name agreement distinguished from physical identity; original response/mode/common matter-reference obligations explicit.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -458,6 +528,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Free-response caveat prevents heat-kernel coefficient comparison from being read as derived GW speed or physical matching.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Free-response caveat prevents heat-kernel coefficient comparison from being read as derived GW speed or physical matching.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -484,6 +559,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Exclusions and conditional constraints heading correctly classifies mixed list. Cap ratio distinguished from sigma/Bayes. Exact finite compatibility and chosen-endpoint proof scope preserved without asserting all other interior points are compatible.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Exclusions and conditional constraints heading correctly classifies mixed list. Cap ratio distinguished from sigma/Bayes. Exact finite compatibility and chosen-endpoint proof scope preserved without asserting all other interior points are compatible.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -510,6 +590,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Original neutral tier roster exact; no current scientific/venue acceptance inferred.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Original neutral tier roster exact; no current scientific/venue acceptance inferred.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -536,6 +621,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Original neutral ordering exact; strategy intent not present readiness.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Original neutral ordering exact; strategy intent not present readiness.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -562,6 +652,11 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Explicit conditional constraint with compatible interior correctly replaces universal falsification.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Explicit conditional constraint with compatible interior correctly replaces universal falsification.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     },
     {
@@ -588,10 +683,15 @@
         "verdict": "ACCEPT_SCOPED_SOURCE",
         "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Original neutral architecture linkage exact; does not confer whole-program readiness.",
         "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
+      },
+      "dependency_semantic_review_r5": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Actual R5 bibliography/registry/ceiling diff leaves this F claim's mathematical and source domain intact. Original neutral architecture linkage exact; does not confer whole-program readiness.",
+        "dependency_effect": "The entire D3 body is exact; only a companion TQC bibliography author/title changed. All existing GW source-key records remain exact. Added alias/companion records and qualified Barcelo edition do not derive physical L1 normalization/mode/transport or change the assumed law/window; numerical constants and hypothesis content are unchanged."
       }
     }
   ],
-  "scope": "R4 bounded independent dependency-semantic refresh for all20 unchanged F spans against actual changed L1 source/catalog/3active metadata claims. R3 actual F source review retained; no new whole-F review, test/render/native/project/physics acceptance.",
+  "scope": "R5 independent dependency-semantic refresh for20 unchanged F spans after selective citation-registration/bibliography/ceiling repair. Actual13backing hashes/3fullPDF pins bound. No new whole-F/L1, fullsource-package, runtime, test/render/native/project/physics/publication acceptance.",
   "preservation": {
     "four_neutral_quotes_exact": true,
     "legacy_F_claims_byte_exact": true,
@@ -608,7 +708,7 @@
     "transport/Kubo/frequency/units/remainder and controlled nonempty band"
   ],
   "native_tests_compile_ingestion_closures_performed": false,
-  "review_date": "2026-11-06T05:07:06.832103+00:00",
+  "review_date": "2026-11-06T05:23:33.123292+00:00",
   "additional_dependency_hashes": {
     "papers/L1/bundle_metadata.json": "9b1c3278da2bf706d3de6bc805eb21d69ba37f6b9bc5487f288a5cf8d1513993"
   },
@@ -649,5 +749,66 @@
     ],
     "semantic_disposition": "Title/heading/caption remove unsupported natural-range derivation and exact one-part title implication while retaining the same conditional scalar equation and interval.3active apex descriptions identify adopted comparison window, chi1 witness and fixed-cap strict benchmark inequality without false title/appendix attribution. Full154catalog preserves152assessments and2captionWARN; historical records/rejection evidence are preserved. Therefore F no-extra-dial/source/quantifier/statistical/synthesis caveats remain scientifically consistent and need no F source change.",
     "closure_boundary": "This review performs0canonical closures and grants0human approvals; prior closure history/anchors untouched. Original full physical BUILD remains open."
+  },
+  "dependency_refresh_r5": {
+    "prior_review_json": {
+      "path": "/tmp/f-l1-source-review-r4.json",
+      "sha256": "b39d26aa02dab428bb6eb7ed0235665b1d84496d96b088f5195655167620c2bb"
+    },
+    "prior_review_md": {
+      "path": "/tmp/f-l1-source-review-r4.md",
+      "sha256": "e8fad6303cc85a1833583b6bfcdfc8071ab39fede42e7e4ad417a0d9fac98aad"
+    },
+    "prior_backing_hashes": {
+      "papers/F/paper_draft.tex": "e8f1e0e8b448fd8b6a3a232d10a9656cfd584bb3861900cf793eab486a0eef89",
+      "papers/F/claims_review.json": "c44b08f2eef7e260d8db3361507b41c97631ddfb8a02a82f19b27f0930c308f1",
+      "papers/F/bundle_metadata.json": "6dc78648a4a44f4d18ce83831d17dffa2218fc33427bccafa1007901bd537778",
+      "papers/L1/paper_draft.tex": "06927cc8dd7a231db93745fd07eb1a346d0595db43a92a9c7387ef20cb966b65",
+      "papers/L1/claims_review.json": "3b2ba1c1baeb036c45034bb58d42d666badbaace860e56415829400a1ca307cc",
+      "papers/D3/paper_draft.tex": "32740b59d35187b869314f1c809890f1c695fb72d501afb15b4ea55a05e0aeec",
+      "papers/paper25_gravitational_waves/paper_draft.tex": "760c21f1295b72cb3fd5bfc66adb09320ef9d5e65da0074215bdfa871675f2ff",
+      "lean/SKEFTHawking/GravitationalWaves.lean": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
+      "lean/SKEFTHawking/VestigialSusceptibility.lean": "cf5a4584ad51f44a232c7da2d4fe9300ea14c322a416b2843e7ef3c2032bf721",
+      "src/core/formulas.py": "ef3e76f28ab0bcad83311ba029b1a8fb19fd2cb161e6186d161ccf7ccf7cb836",
+      "src/core/provenance.py": "301d9db0be7404cb44834233eb7847d2eee3a14283298abcb6ddab11057b5983",
+      "src/core/constants.py": "aa841158ab58e087b400922ceeefef9d42a72f98882f55d6f0d8da7e740765e5",
+      "src/core/citations.py": "0d9283a1bcbdfbe1cc7b6a841c59aa55ab16154b592a1dfdada301aa5de7f37d"
+    },
+    "changed_backings": [
+      "papers/D3/paper_draft.tex",
+      "src/core/constants.py",
+      "src/core/citations.py"
+    ],
+    "unchanged_backings": 10,
+    "citation_AST_added_keys": [
+      "Barcelo2011",
+      "CompanionCompilation",
+      "CompanionFaultTolerance",
+      "CompanionStochastic",
+      "FinazziLiberatiSindoni2012",
+      "Kitaev2006",
+      "Roehm2026TQC",
+      "RoehmD4Topological",
+      "RoehmD6FaultTolerant",
+      "RoehmD8Compilation",
+      "RoehmD9Certification",
+      "Verlinde1988",
+      "Wang2026TMDPolariton"
+    ],
+    "citation_AST_changed_existing": [
+      "BarceloLRR2005"
+    ],
+    "citation_AST_removed_keys": [],
+    "carrying_GW_citation_records_exact": [
+      "Volovik2024Vestigial",
+      "Volovik2026SecondSound",
+      "Abbott2017GW170817",
+      "Vergeles2025"
+    ],
+    "D3_entire_prebibliography_body_exact": true,
+    "D3_only_bibliography_change": "Roehm2026TQC author/title to current internal companion manuscript identity, still in preparation; not a new GW physical source.",
+    "constants_entire_file_diff": "Only CITATION_UNDECLARED_CLASS_CEILING 78→76; every physics value, hypothesis and other byte exact.",
+    "semantic_disposition": "All20F law/domain/interval/endpoint/source-emission/attribution/free-response/statistical/synthesis/open-construction statements remain consistent. New aliases and edition-qualified sources do not alter the unchanged GW carrying keys, existing held sources or mathematical theorem content. No current source-content endorsement of all13new citation entries is inferred from this focused F rebind.",
+    "boundary": "This reviewer performs0closures/0humanapprovals; existing canonical acceptance/closure history untouched. Runtime/source-state adoption separately reviewed; original physical BUILD remains open."
   }
 }
