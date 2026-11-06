@@ -1,3 +1,9 @@
+---
+paper: F
+bundle_target: F
+kind: focused-claim-scope
+---
+
 # Focused F consumer review: L1 source propagation
 
 Review kind: focused claim scope and cross-paper source consistency.
@@ -9,7 +15,7 @@ cannot establish current source acceptance.
 
 ## Findings
 
-### 1.1 Unsupported L1 attribution, quantifiers and shared-coefficient synthesis in F
+### 1.1 — Unsupported L1 attribution, quantifiers and shared-coefficient synthesis in F
 
 - **Severity:** blocker
 - **Lane:** prose
