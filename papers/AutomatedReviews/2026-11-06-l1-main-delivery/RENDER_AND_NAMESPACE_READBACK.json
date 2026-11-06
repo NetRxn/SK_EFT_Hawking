@@ -1,0 +1,50 @@
+{
+  "parent": "521f574e91bc0bdf6cfea4bff160f0697e6eb1c4",
+  "tests": {
+    "passed": 124,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "compile": {
+    "L1": {
+      "pages": 5,
+      "overflows": 0
+    },
+    "D3": {
+      "pages": 66,
+      "overflows": 12
+    },
+    "Paper25": {
+      "pages": 5,
+      "overflows": 0
+    },
+    "errors": 0,
+    "unresolved": 0
+  },
+  "figure_hashes": {
+    "figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/L1/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/D3/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/paper25_gravitational_waves/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976"
+  },
+  "metadata_invariants": {
+    "L1": {
+      "only_compiled_pages_changed": true,
+      "pages": 5
+    },
+    "D3": {
+      "only_compiled_pages_changed": true,
+      "pages": 66
+    }
+  },
+  "source_doc": {
+    "all_nonblock_segments_equal": true,
+    "segments": 49,
+    "nonblock_sha256": "2e84faa34934b06504b5a31ab71dde726b2236706c20bd315a6b02ac1622524d",
+    "new_source_sha256": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
+    "native_build_claim": false
+  },
+  "independent_current_composition_review": "pending",
+  "canonical_closures_added": 0,
+  "main_acceptance": false
+}

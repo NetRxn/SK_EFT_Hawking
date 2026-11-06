@@ -86,3 +86,64 @@ compile all actual papers, independently review exact source and renders,
 refresh canonical records through existing writers and qualify existing gates.
 Lean source-doc repairs, original physical BUILD and full main acceptance
 remain distinct and owed. No new green bundle or scientific waiver is claimed.
+
+## Regenerated main composition and existing scanner repair
+
+The accepted ADR-018/specification/plan and owning architecture paragraph
+precede reuse of the exact existing local-namespace scanner repair. Historical
+independent specification/implementation reviews are archived as provenance.
+Actual combined dependency, gravitational-wave and seed-residue suites pass
+124 cases in12.79seconds, terminal0. Its production-seeded assertion proves
+an undeclared external import is still rejected and restores scientific bytes
+and mtime. An initial command named a nonexistent test_seed_journal.py and
+terminated at collection; the corrected existing test_seed_residue_guard.py
+run is retained separately. No fake dependency, exclusion or test weakening.
+
+The existing canonical figure generator, scoped in memory to its existing
+L1FigureSpec, exports the actual PNG; existing structural checks reportzero
+issues. Sandbox Chrome startup failed; the same authorized producer succeeds
+with host access. Allfour canonical/L1/D3/Paper25 PNGs have matching hashes.
+The current canonical compiles terminate0: L1fivepages/zerooverflows,
+D3sixty-sixpages/twelveoverflows, Paper25fivepages/zerooverflows; zeroerrors,
+unresolved references or dropped options. The compiler changes only derived
+compiled_pages in L1/D3 metadata. Actual PDF bytes are archived, including
+ignoredD3, for independent review. TwelveD3overflows remain unwaived.
+
+The existing L1 PAPER_DEPENDENCIES entry is reconciled from publication1805;
+old parameter values/dates/human verification remain. Reviewed GW Lean source
+comments are reconciled with all49 non-block-comment segments exact; code hash
+2e84faa34934b06504b5a31ab71dde726b2236706c20bd315a6b02ac1622524d
+is unchanged. This source equality is not a new nativebuild receipt.
+Fresh independent full-composition source and actual-render review remain
+required, as do current canonical claims/gates, derivedcounts freshness,
+existing full merge qualification and original physical BUILDs. No canonical
+closure or acceptance from donor history has been copied.
+
+## Independent current-main reviews and canonical claims intake
+
+Fresh source review ACCEPTS the exact composed scientific/source corrections;
+fresh reader/render review ACCEPTS the conditional-result prose, actual figure
+and changed consumer rendering. It inspects everyL1/Paper25page, surveysall66
+D3pages and directly inspects29relevantD3pages. Neither accepts original
+physical BUILD, title natural-range implication, twelveD3overflows, native/full
+qualification or finalhuman/main. Both report finalfresh continuity checks.
+Exact full reports and pins are archived without changing their scope.
+
+Fresh claims review audits151actual current units with no uncovered bodylines,
+89PASS/36INFO/19WARN/6TRANSITION/1UNGROUNDED. These are sentence judgments,
+not readiness gates. ROOT recomputes all151 quote bindings and exact lines,
+validates the existing schema and verifies the entire historical69record
+catalog/5followups are preserved as attributed original history. Three prior
+followups need human-ratify supersession; none is silently closed. Donor151
+judgments/54candidates remain history only. Main had no prose_state; no donor
+human state is seeded. Existing writer dryrun+actual ingestion succeed with
+zero automatic closures; original audit prefix remains exact and fresh prose
+state has no human overrides. Four original scientific/propagation identities
+remain OPEN. Current corpus prose checks are1/3: lengthPASSwith19unmeasured,
+72emdashes and6reader-history passages elsewhere remain failures.
+
+The reviews identify inherited canonical-registry/formula/parameter/citation/
+anchor/test documentation that still overstates the physics. They belong to
+the existing L1-fix-propagation obligation and remain owed. An off-tree narrow
+repair proposal is being independently assessed next; this checkpoint neither
+waives the residues nor treats truthful prose as physical construction.
