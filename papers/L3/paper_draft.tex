@@ -28,15 +28,13 @@ a machine-checked partition at the induced-gravity cutoff}
 \date{\today}
 
 \begin{abstract}
-A black hole on a substrate whose Newton constant is induced by fermion
-loops below an ultraviolet cutoff has two evaporation regimes, told apart
-by the sign of $d\Thawk/dt$. Above a critical mass it heats as it
-evaporates; below it, it cools toward extremality in infinite time. That
-critical mass is the one whose emergent gravitational length reaches the
-cutoff length. We formalize the partition in Lean~4: a decidable
-classifier, strict monotonicity on each branch, a criterion theorem fixing
-the sign of $d\Thawk/dt$ from a mass comparison, and falsifier theorems stating
-what would refute it.
+The partition model describes evaporation on a substrate whose Newton
+constant is induced by fermion loops below an ultraviolet cutoff. It
+compares local heating above a critical mass with nozzle cooling
+below it. That critical mass is the one whose emergent gravitational length reaches the
+cutoff length. We formalize the cutoff identity and derive the opposite local
+temperature slopes in Lean~4 from a decreasing Schwarzschild mass
+profile and the leading-order nozzle solution.
 \end{abstract}
 
 \maketitle
@@ -49,14 +47,13 @@ A Schwarzschild black hole has negative heat capacity: it grows hotter as
 it radiates. Its temperature $\Thawk = \hbar/(8\pi M)$ rises without bound
 as the mass falls, and a hole of initial mass $M_0$ disappears after a time
 of order $M_0^{3}$~\cite{Hawking1975CMP}. A sonic horizon in a flowing
-fluid does the opposite. Balbinot, Fagnocchi and Fabbri solved the
-linearized backreaction of the emitted phonons on the flow and found that
-the horizon migrates, the supersonic region shrinks, and the emission
-temperature falls linearly in time at leading order, with a tail
-$t \sim \Thawk^{-3}$ that sends $\Thawk$ to zero only after infinite
-time~\cite{Balbinot2005PRD}. They compare that end state to a near-extremal
-Reissner--Nordstr\"om hole, and we use \emph{extremality} throughout in
-that sense: a vanishing temperature that is approached and never attained.
+fluid can initially cool. Balbinot, Fagnocchi and Fabbri solved the
+linearized backreaction near the horizon and found that the horizon
+migrates, the supersonic region shrinks, and the emission temperature
+initially falls~\cite{Balbinot2005PRD}. They extrapolate this result to
+$t \sim \Thawk^{-3}$ and compare the proposed zero-temperature limit to a
+near-extremal Reissner--Nordstr\"om hole. We use \emph{extremality} for
+the zero-temperature limit of a cooling profile.
 
 Those are opposite signs of the same derivative. Each is derived on its own
 background, and on a fixed background there is nothing for a criterion to
@@ -65,28 +62,25 @@ coupling is itself induced by the matter it couples to. One system then
 carries a geometric description at large mass and a fluid description at
 small mass, and something has to separate them.
 
-This Letter supplies that separation and machine-checks it. On a substrate
-whose Newton constant is induced by $\Nf$ Dirac species below a cutoff
-$\Ladw$, the sign of $d\Thawk/dt$ under evaporation changes at a single
-mass,
+This Letter formalizes a model separation. For a substrate whose Newton
+constant is induced by $\Nf$ Dirac species below a cutoff $\Ladw$, we
+assign the two local trajectory models using the critical mass
 \begin{equation}
   \Mc = \frac{\Nf\,\Ladw}{12\pi\,\aADW},
   \label{eq:Mc}
 \end{equation}
 where $\aADW$ measures the departure of the induced coupling from its bare
-one-loop value. The scale is fixed once the substrate is, and it is not a
-dimensional guess: Eq.~\eqref{eq:Mc} says exactly that the emergent
-gravitational length of $\Mc$ equals the shortest length the substrate
-resolves.
+one-loop value. The defined scale is fixed once the parameters are supplied:
+Eq.~\eqref{eq:Mc} makes its emergent gravitational length equal to
+the inverse cutoff. Physical branch selection remains to be derived.
 
 The formal development comprises \bundleTheorems{} theorems across
 \bundleDecls{} declarations, in Lean~\leantoolchain{} against Mathlib
 revision \mathlibrev{}. The kernel accepts them from \texttt{propext},
 \texttt{Classical.choice} and \texttt{Quot.sound} alone, with no
 substrate-specific axiom and no incomplete proof. Which hypotheses the
-partition rests on is stated where each is used, and
-Sec.~\ref{sec:falsifiers} gives the falsifier theorems whose content is what
-would refute the construction.
+partition rests on is stated where each is used. The section titled
+``What would refute this'' states the falsifiers and what they test.
 
 %% ================================================================
 \section{The critical mass}
@@ -103,7 +97,7 @@ numerical coefficient is regulator dependent; what survives regulator
 choice is that the induced coupling is finite and of definite
 sign~\cite{Visser2002}.
 
-Substituting $G_N^{\rm Sak}$ into Eq.~\eqref{eq:Mc} gives an identity:
+Multiplying Eq.~\eqref{eq:Mc} by the emergent coupling $\GNem = \aADW G_N^{\rm Sak}$ cancels the substrate factor and gives
 \begin{equation}
   \GNem\,\Mc \;=\; \Ladw^{-1}.
   \label{eq:Mccutoff}
@@ -115,7 +109,11 @@ lighter than $\Mc$ would need a horizon smaller than the substrate's own
 resolution, and what responds is the fluid rather than the geometry. Read
 this way, Eq.~\eqref{eq:Mc} is the mass at which the two descriptions
 exchange roles rather than a fitted scale. Equation~\eqref{eq:Mccutoff} is
-also where the construction's one free choice sits: no derivation on this
+the statement of
+\texttt{G\_N\_emerg\_eval\_mul\_M\_c\_eq\_inv\_cutoff}.
+The bare product is instead $G_N^{\rm Sak}\Mc=1/(\aADW\Ladw)$;
+the bare and emergent products agree exactly when $\aADW=1$.
+The construction still makes a physical choice: no derivation on this
 substrate pins the crossover at $\GNem M = \Ladw^{-1}$ rather than at an
 order-unity multiple of it, so the coefficient in Eq.~\eqref{eq:Mc} is an
 ansatz even though its parametric form is not.
@@ -169,62 +167,60 @@ natural units. It is positive and strictly decreasing in $M$
 drives $dM/dt < 0$, raises the temperature and the lifetime is
 finite~\cite{Hawking1975CMP}.
 
-Below $\Mc$ the profile is the sonic one. Writing $\kappa$ for the surface
-gravity of the sonic horizon, $c$ for the sound speed, $A_0$ for the
-amplitude of the quantum source driving the backreaction and $\epsilon$ for
-the expansion parameter that switches it on, Balbinot \textit{et al.}
-obtain to leading order
+The nozzle calculation motivates the cooling branch. In the notation of Balbinot
+\textit{et al.}, $c$ is the sound speed, $c^2\kappa$ is the unperturbed
+sonic surface gravity, $A_0$ is the nozzle throat's cross-sectional area,
+and $\epsilon$ is the dimensionless backreaction parameter. They obtain
+to leading order
 \begin{equation}
   \Thawk(t) = \frac{\hbar c}{2\pi}\,\kappa \left[
     1 - \frac{563}{720\pi}\,\epsilon\,\kappa^{3}\,c\,A_{0}\,t
   \right],
   \label{eq:Tsonic}
 \end{equation}
-together with the extrapolation $t \sim \Thawk^{-3}$ that sends $\Thawk$ to
-zero only as $t \to \infty$~\cite{Balbinot2005PRD}. The profile carried
-through the development is instead the exponential
+for $c\kappa t \ll 1$ at constant sound speed~\cite{Balbinot2005PRD}.
+The initial slope is strictly negative for positive $c$, $\kappa$,
+$A_0$, and $\epsilon$. A separate illustrative profile is the exponential
 $\Thawk(t) = \Thawk^{(0)} e^{-t/\tau_{\rm cool}}$, positive and strictly
 decreasing for positive $\Thawk^{(0)}$ and $\tau_{\rm cool}$, and equal to
 $\Thawk^{(0)}$ at $t = 0$ (\texttt{T\_H\_acoustic\_evolution} and its
 accompanying positivity, monotonicity and initial-value lemmas).
 
-Substituting one for the other is a scope condition on everything proved of
-the cooling branch, and it is worth stating twice rather than not at all.
-The exponential agrees with Eq.~\eqref{eq:Tsonic} at $t = 0$ and shares the
-two features the partition consumes, a temperature that falls throughout
-the evaporation and reaches zero only in the infinite-time limit, but it is
-a different function. What is proved is proved of a representative of the
-cooling branch and not of an exact evaporation history. Equation
-\eqref{eq:Tsonic} is itself a leading order and holds for a fluid of
-constant sound speed, so a condensate, where $c \propto \rho^{1/2}$,
-inherits the branch by the sign of $d\Thawk/dt$ rather than by that
-formula.
+With the same initial temperature, the exponential and
+Eq.~\eqref{eq:Tsonic} share the sign of the initial slope. The exponential
+approaches zero as $t \to \infty$ by construction. The nozzle calculation
+supplies the initial cooling sign. The authors propose extending the
+calculation to condensates, where $c \propto \rho^{1/2}$ and the cooling
+sign requires a separate derivation.
 
-The partition itself is a single theorem. A substrate satisfying positivity of
-$\Mc$ and of the initial temperature, a positive evaporation rate above
-$\Mc$, a negative one below, and the substrate response
-$\dADW = (\aADW - 1)\Ladw$, has an evaporation rate whose sign is fixed by
-a mass comparison alone: positive when $M > \Mc$, negative when $M < \Mc$
-(\texttt{H\_RegimePartition}, \texttt{regime\_partition\_criterion}). The
-two branch signs enter as hypotheses, each grounded in its own primary
-source, Ref.~\cite{Hawking1975CMP} above $\Mc$ and
-Ref.~\cite{Balbinot2005PRD} below it. What the criterion adds is that the
-comparison against $\Mc$ decides between them, which is the statement
-neither source makes.
+The profile criterion derives the signs from separate local models.
+Above $\Mc$, the chain rule gives $d\Thawk/dt=-M'(t)/(8\pi M(t)^2)>0$
+for positive mass and $M'(t)<0$. Below $\Mc$, write
+Eq.~\eqref{eq:Tsonic} as $\Thawk(t)=T_0(1-\lambda t)$.
+Its slope is $-T_0\lambda<0$ for positive nozzle parameters.
+The criterion requires $t\geq 0$, $c\kappa t<\eta$ for a supplied
+short-time budget $0<\eta<1$, and $\lambda t<1$ for positive
+temperature. At $M=\Mc$ it assigns neither strict sign.
+Matching the two descriptions across the cutoff requires a
+separate construction.
+The corresponding Lean statement is
+\texttt{regime\_partition\_profile\_criterion}. For an actual
+trajectory $T_0(1-\lambda t)+R(t)$, strict cooling also requires
+$R'(t)<T_0\lambda$; no quantitative remainder control is proved here.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.96\columnwidth]{figures/fig_T_H_evolution_regime_partition.png}
   \caption{Opposite signs of $d\Thawk/dt$ under evaporation. The
   Schwarzschild branch (amber, dashed) heats and terminates in finite time,
-  while the sonic branch (blue, solid) cools and reaches zero temperature
-  only asymptotically. The right panel compares the emergent gravitational
+  while the illustrative exponential profile (blue, solid) approaches zero
+  asymptotically. The right panel compares the emergent gravitational
   length $\GNem M$ with the cutoff length $\Ladw^{-1}$. The lengths coincide
   at $M = \Mc$ [Eq.~\eqref{eq:Mccutoff}]; blue and amber shading indicate
   the branches below and above this model boundary. Formal
   witnesses: \texttt{T\_H\_schwarzschild\_strict\_decreasing} and
-  \texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}, combined by
-  \texttt{regime\_partition\_criterion}.}
+  \texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}. These plotted
+  profiles are distinct from the local affine nozzle criterion.}
   \label{fig:regime}
 \end{figure}
 
@@ -236,12 +232,14 @@ slot records the Glorioso--Liu conclusion, that the entropy-current
 divergence is non-negative, as a hypothesis rather than as a consequence,
 because deriving it needs the Schwinger--Keldysh effective
 action~\cite{GloriosoLiu2018,CrossleyGloriosoLiu2017,GloriosoCrossleyLiu2017}.
-Constancy of $\kappa$ over the horizon, and any affine-time statement of
-the third law, are absent for want of Killing-vector and affine-time
-machinery. What does follow unconditionally is that a hole classified into
-the cooling branch and satisfying those two slots has a strictly negative
-evaporation rate (\texttt{FourLaws\_ADWExtremality},
+The emergent and acoustic branches still lack a general zeroth-law
+theorem and an affine-time third law. The conditional cooling-slot theorem
+states that a hole classified into the cooling branch and satisfying the
+supplied mechanics slots has a strictly negative evaporation rate (\texttt{FourLaws\_ADWExtremality},
 \texttt{four\_laws\_consistent\_with\_acoustic\_regime}).
+Physical first-law identification, acoustic energy and entropy balances,
+and microscopic action, exterior and mass matching remain open. The
+cutoff identities and local slopes do not supply these constructions.
 
 %% ================================================================
 \section{What would refute this}
@@ -303,9 +301,8 @@ on emergent gravity through black-hole thermodynamics carries the
 classification in full~\cite{Roehm2026D3}
 (\texttt{horizonCrooks\_substrate\_partition},
 \texttt{volovikJannes\_vs\_flsBEC\_depletion\_asymmetry}). The cooling
-branch survives the failure, because a negative $d\Thawk/dt$ constrains the
-time evolution of the emission temperature on a given background and says
-nothing about how the dynamics of that background arise. The two questions
+criterion uses the sign of $d\Thawk/dt$ on a given background independently
+of how the dynamics of that background arise. The two questions
 meet only at the induced-gravity layer, where the Clausius relation
 $\delta Q = T\,dS$ on every local Rindler horizon returns the Einstein
 equation as an equation of state~\cite{JacobsonEFE1995}.

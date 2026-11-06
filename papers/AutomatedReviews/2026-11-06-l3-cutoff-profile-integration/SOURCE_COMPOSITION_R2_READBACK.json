@@ -1,0 +1,58 @@
+{
+  "base": "a34eb6b08fb85e43f3d5e5071f45db6a8e7ebf57",
+  "donor": "f905a2873a32269c3d21651abb2b64825a212c3d",
+  "patch_sha256": "ce68d4ed3b95a30456ca424bba5909e313465f5d22f67a3e2ca56b337e80bb79",
+  "source_files": [
+    {
+      "path": "lean/SKEFTHawking/BHThermodynamicsFourLaws.lean",
+      "preimage_sha256": "44e8925fab13fb37768cad8bcb980cd4e4e1233209de25d605cc14a1d62d49e7",
+      "proposed_sha256": "3dad53ccf26c7fd5608ae234a51f88e4e50b5196b69f4321d690092e9611d3e2"
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md",
+      "preimage_sha256": "6376da15fbff42afeb8a0bf180304ababb8b5d246989638fb14b76390ab1762b",
+      "proposed_sha256": "c0fa78ae7ffbe627636daa68ba1c6d755ab414086c1c8d0e95cfd65b85e0ff64"
+    },
+    {
+      "path": "papers/L3/bundle_metadata.json",
+      "preimage_sha256": "5a2d421686eb87ee05f1d3e1c8318f8cfc80bb3011cdd7257d1b5b6dd9c4e079",
+      "proposed_sha256": "8193d729336e7d73e6757ac09d984f479f7d3873d994c0036b5096a253124f80"
+    },
+    {
+      "path": "papers/L3/paper_draft.tex",
+      "preimage_sha256": "973e2258717b6e0631a787fbf20fc45c580699703c5a65e0b26db32735dcab99",
+      "proposed_sha256": "d5bc7cedcad517f46ea44075d1f675d40645e1baa544b6f75c6867ec62910dae"
+    }
+  ],
+  "exact_reviewed_postimages_applied": true,
+  "independent_verdict": "PASS_SOURCE_COMPOSITION_ONLY",
+  "root_read": "Complete author R2 report, complete patch in consecutive chunks, complete independent report; personally inspected actual focused PNG and carrying Balbinot full sections/source appendix",
+  "stronger_3_2_preserved": {
+    "section_before_sha256": "15c2b53223b5ff87a91a06f4c90cc88fd962a77c3850c137ce13146975fa2dd5",
+    "section_after_sha256": "15c2b53223b5ff87a91a06f4c90cc88fd962a77c3850c137ce13146975fa2dd5",
+    "byte_identical": true,
+    "section_text": "### 3.2 \u2014 \ud83d\udd35 RECOMMENDED \u2014 The figure's right panel plots a straight line and should plot the crossing that defines `M_c`\n\n- **Severity:** recommended\n- **Lane:** `figure`\n- **Verify:** `cd \"$REPO\" && uv run python -c \"import numpy as n; from src.core.visualizations import fig_T_H_evolution_regime_partition as f; p=f(); assert len(p.data)==4; a,b=p.data[2:]; x=n.asarray(a.x); y=n.asarray(a.y); c=n.asarray(b.y); assert n.array_equal(x,b.x) and n.allclose(c,1); assert (x==1).sum()==1 and n.allclose(y[x==1],c[x==1]); assert n.all(y[x<1]<c[x<1]) and n.all(y[x>1]>c[x>1]); assert [(s.x0,s.x1) for s in p.layout.shapes]==[(0,1),(1,2),(1,1)]\"`\n  *What it asserts:* evaluates the two length traces, their unique sampled crossing, the ordering on each side, and the shaded branch limits. The earlier source-token proxy could pass on the docstring alone.\n- **Gate:** NarrativeGrounding\n- **Location:** same as 3.1\n- **Observed:** The right panel is $\\dADW/\\Ladw = \\aADW - 1$, a straight line through zero at $\\aADW = 1$. In a four-page Letter with one figure, half of that figure spends 300 word equivalents restating a definition.\n- **Evidence:** Direct read of the rendered PNG.\n- **Expected:** The panel that earns its space here is the one behind finding 2.4: the emergent gravitational length $\\GNem M$ against the cutoff length $\\Ladw^{-1}$ as a function of $M$, crossing at $\\Mc$, with the two branches shaded. That panel makes the paper's central claim visible instead of restating an ansatz.\n- **Fix:** Replace the right panel and re-render through `src/core/visualizations.py` per Pipeline Invariant #3, together with 3.1.\n- **Cache:** N/A.\n\n---\n\n",
+    "executed": false
+  },
+  "native_qualification": "PENDING_THIS_APPLIED_CANDIDATE",
+  "finding_closures": "NONE; ledger unchanged",
+  "archive_sha256": "3a5b16f39f7416a377e81666dd621b81441b8077126901b8daf6b99e61a30531",
+  "members": {
+    "l3-existing-cutoff-profile-composition-r1.patch": "a74e87be6589d16d7471f9da319bca46f378f6acdd2b3c3b9a221e03c29b890a",
+    "l3-existing-cutoff-profile-composition-r1.md": "148325ac3173673b66abdbc827adb54ac07fffe903557d8b9e18529dec4f687c",
+    "l3-existing-cutoff-profile-composition-r1.json": "1cc4e05279a86be7ace048a5a6bf1203e546f7fb845679611c68687751b2ec22",
+    "l3-existing-cutoff-profile-composition-brief-r1.md": "886a1935e2b08286d49939a9f6187989a43484df9786aa6939e793c19574d7a8",
+    "l3-existing-cutoff-profile-composition-r2.patch": "ce68d4ed3b95a30456ca424bba5909e313465f5d22f67a3e2ca56b337e80bb79",
+    "l3-existing-cutoff-profile-composition-r2.md": "01145c79e52e5eedcdca7520943ff6ad8bf2e276f827aea5f21aa0464e9d64c1",
+    "l3-existing-cutoff-profile-composition-r2.json": "debf114018f5458bdc31ac94a47cb467e7b6b305c93cbe6e1a2d9fd5f25c3893",
+    "l3-existing-cutoff-profile-composition-brief-r2.md": "adc78640f658ec2ab8ebcf112f4d96a1bc31650204e379ac031db46ea7973fc5",
+    "l3-existing-cutoff-profile-independent-r2.md": "0dc1a80fe12469854b5123fea2d5be4b71c87c10c432679d02448af24f3d479c",
+    "l3-existing-cutoff-profile-independent-r2.json": "1e8faec037aad96af57473f03fc831124cea4e065fb24b33b49ff67da9ae00b5"
+  },
+  "open_figure_work": [
+    "Exponential falsely labelled Balbinot",
+    "Schwarzschild raw time labelled t/t_evap",
+    "Cooling annotation overlap"
+  ],
+  "original_scientific_scope": "Full physical four-laws, physical branch/cutoff/mass and source/entropy/current, remainder and controlled geometric/analytic construction remain owed; no scope reduction."
+}

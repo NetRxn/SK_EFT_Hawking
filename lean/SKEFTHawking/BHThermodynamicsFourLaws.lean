@@ -10,15 +10,16 @@ import Mathlib
 
 Phase 6a Wave 5 (re-shipped 2026-04-26 around the corrected primary-source
 anchor; citation attribution re-verified 2026-08-15). Formalizes the
-Bardeen–Carter–Hawking four laws of black hole mechanics in two regimes —
+conditional mechanics slots and local profile signs in two regimes —
 Schwarzschild and acoustic — separated by a critical mass `M_c` set by ADW
-substrate parameters `(α_ADW, Λ_UV, N_f, χ_vest)`. The two regimes have
-*opposite signs* of `dT_H/dt` under Hawking-radiation evaporation:
+substrate parameters `(α_ADW, Λ_UV, N_f, χ_vest)`. The classifier is a
+model ansatz. The derived profile criterion gives
+*opposite local signs* under its explicit trajectory and domain hypotheses:
 
 - **Schwarzschild regime** (`b.M > M_c`): `dT_H/dt > 0` during evaporation
   (BH heats as it loses mass, Hawking 1975, finite t-evap).
 - **Acoustic regime** (`b.M < M_c`): `dT_H/dt < 0` during evaporation
-  (BH cools toward asymptotic extremality, infinite t-evap), per
+  (the local affine nozzle profile cools on its supplied short-time domain), per
   Balbinot–Fagnocchi–Fabbri, *Quantum Effects in Acoustic
   Black Holes: the Backreaction*, **Phys. Rev. D 71, 064019 (2005)**,
   arXiv:gr-qc/0405098, **Eq. (Tsonic)**:
@@ -33,13 +34,18 @@ substrate parameters `(α_ADW, Λ_UV, N_f, χ_vest)`. The two regimes have
   constant"). It is *not* a Bose–Einstein-condensate result: the paper
   says of the condensate case that "the sound velocity c is not constant,
   but proportional to ρ^(1/2). This will be discussed elsewhere." A
-  condensate substrate inherits this branch by the *sign* of `dT_H/dt`,
-  not by Eq. (Tsonic) itself.
+  condensate cooling sign requires its own derivation; neither this formula
+  nor the classifier establishes it.
 
 The project's own `src/wkb/backreaction.py` (Phase 1-2 anchor) implements
-the leading-order time evolution `κ(t) ~ κ_0 · exp(-t/τ_cool)`. Wave 5
-formalizes that computation in Lean and combines it with the textbook
-Schwarzschild result to produce the regime-partition theorem.
+an exponential representative `κ(t) ~ κ_0 · exp(-t/τ_cool)`. Its
+monotonicity remains separate from the local affine nozzle derivative.
+`regime_partition_criterion` transports supplied signs;
+`regime_partition_profile_criterion` derives signs from local profiles.
+Neither proves physical ADW branch selection, a late-time law or a
+quantitative remainder estimate. Physical first/zeroth/third laws, acoustic
+energy/entropy balance and microscopic action/exterior/mass matching remain
+open; `ADWSecondLaw` records an externally supplied scalar sign.
 
 ## Provenance correction (2026-04-26-2230)
 
@@ -123,15 +129,15 @@ dynamics:
    time; analog of near-extremal Reissner–Nordström. Same sign as the
    JV-1998 moving soliton, whose `κ → 0` at `v → c_⊥⁺` is an
    independent primary-source realization of this branch.
-3. **Third law**: Israel strong form preserved in the acoustic regime
-   (the asymptotic-extremality is reached in infinite time per
-   Balbinot's `t ~ 1/T³`); classical regime carries Kehle–Unger 2022
+3. **Third-law motivation, not a formalized law**: Balbinot's late-time
+   `t ~ 1/T³` is an extrapolation; the local profile criterion does not
+   establish an affine-time statement. Classical literature carries Kehle–Unger 2022
    caveat (arXiv:2211.15742) for charged-scalar matter sectors;
    restored under Reall (arXiv:2410.11956) BPS local mass-charge
    inequality.
 4. **Second law**: Glorioso–Liu SK-EFT entropy-current monotonicity
    (arXiv:1612.07705 §III: dynamical KMS Z₂ + Im S_eff ≥ 0
-   ⇒ ∂_μ s^μ ≥ 0, **without invoking pointwise NEC**).
+   ⇒ ∂_μ s^μ ≥ 0 in the local-equilibrium EFT).
 
 ## Cross-wave connections
 
@@ -213,9 +219,9 @@ classical thermodynamics applies. Evaporation ⇒ `dM/dt < 0`,
 
 `Acoustic` regime (`ADWExtremality` constructor name retained for
 backward bibliographic continuity): below the critical mass `M_c`.
-Balbinot 2005 backreaction analysis applies. Evaporation ⇒
-`dT_H/dt < 0` (cools), asymptotic `T → 0` at infinite time
-(Balbinot Eq. Tsonic), preserved Israel third law.
+The local affine nozzle model motivates cooling under its stated domain
+and parameter assumptions. Physical ADW matching, late-time behavior and
+the third law do not follow from this constructor.
 
 `Boundary` regime: exactly `M = M_c`. The crossover; both regime
 descriptions degenerate.
@@ -294,9 +300,8 @@ This default is *consistent with* (but not derived from) Sakharov–Visser
 scaling 1/G_N ∝ N_f Λ². It is **not** a quoted equation in any primary
 ADW paper and is **project-original**.
 
-**Anti-pattern audit.** Ratio of three independently-specified
-parameters — not trivial-multiplication-as-physics; subsequent
-theorems compare it against `M`, never re-multiply.
+**Scope.** The cutoff identities below prove algebraic consequences of
+these definitions. They do not determine the physical crossover coefficient.
 -/
 noncomputable def M_c (p : ADWParams) : ℝ :=
   p.N_f * p.Λ_UV / (12 * Real.pi * p.α_ADW)
@@ -308,6 +313,39 @@ theorem M_c_pos (p : ADWParams) : 0 < M_c p := by
   have hden : 0 < 12 * Real.pi * p.α_ADW :=
     mul_pos (by positivity) p.α_pos
   exact div_pos hnum hden
+
+/-- The bare Sakharov coupling retains the ADW coefficient in the cutoff length. -/
+theorem G_N_sakharov_mul_M_c_eq_inv_alpha_cutoff (p : ADWParams) :
+    LinearizedEFE.G_N_sakharov p.Λ_UV p.N_f * M_c p = 1 / (p.α_ADW * p.Λ_UV) := by
+  have hΛ : p.Λ_UV ≠ 0 := ne_of_gt p.Λ_pos
+  have hN : p.N_f ≠ 0 := ne_of_gt p.N_pos
+  have hα : p.α_ADW ≠ 0 := ne_of_gt p.α_pos
+  unfold LinearizedEFE.G_N_sakharov M_c
+  field_simp [hΛ, hN, hα, Real.pi_ne_zero]
+
+/-- The emergent coupling gives the cutoff length for the defined critical mass. -/
+theorem G_N_emerg_eval_mul_M_c_eq_inv_cutoff (p : ADWParams) :
+    p.G_N_emerg_eval * M_c p = 1 / p.Λ_UV := by
+  have hΛ : p.Λ_UV ≠ 0 := ne_of_gt p.Λ_pos
+  have hα : p.α_ADW ≠ 0 := ne_of_gt p.α_pos
+  unfold ADWParams.G_N_emerg_eval LinearizedEFE.G_N_emerg
+  rw [mul_assoc, G_N_sakharov_mul_M_c_eq_inv_alpha_cutoff]
+  field_simp [hΛ, hα]
+
+/-- The bare and emergent cutoff lengths coincide exactly at unit ADW coefficient. -/
+theorem bare_mul_M_c_eq_emerg_mul_M_c_iff (p : ADWParams) :
+    LinearizedEFE.G_N_sakharov p.Λ_UV p.N_f * M_c p = p.G_N_emerg_eval * M_c p ↔
+      p.α_ADW = 1 := by
+  have hΛ : p.Λ_UV ≠ 0 := ne_of_gt p.Λ_pos
+  have hαΛ : p.α_ADW * p.Λ_UV ≠ 0 := mul_ne_zero (ne_of_gt p.α_pos) hΛ
+  rw [G_N_sakharov_mul_M_c_eq_inv_alpha_cutoff, G_N_emerg_eval_mul_M_c_eq_inv_cutoff]
+  constructor
+  · intro h
+    have hcross := (div_eq_div_iff hαΛ hΛ).mp h
+    apply mul_right_cancel₀ hΛ
+    simpa using hcross.symm
+  · intro h
+    rw [h, one_mul]
 
 /--
 **Decidable regime classifier.** Returns the regime of a given BH at
@@ -367,17 +405,13 @@ trivial-projection); both are positive on their physical domains.
 -/
 
 /--
-**Acoustic Hawking temperature time evolution.** Leading-order
-exponential decay form per the project's own
-`src/wkb/backreaction.py` (line 449-450), citing Balbinot 2005:
+**Illustrative exponential cooling profile.**
 
     T_H_acoustic_evolution(T_H,0, τ_cool, t) = T_H,0 · exp(-t / τ_cool)
 
-The exponential is the leading-order approximation to the full coupled
-backreaction equations of Balbinot 2005 §"The fate of the acoustic
-black hole" (Eq. Tsonic + extrapolation `t ~ 1/T³`); the full
-backreaction.py uses the coupled ODE rather than the exponential, but
-both share `dT/dt < 0` and asymptotic `T → 0`.
+This representative is distinct from the constant-c nozzle's local affine
+leading-order formula. Its positivity and strict decrease do not establish
+an exact nozzle history, condensate cooling or a physical late-time law.
 -/
 noncomputable def T_H_acoustic_evolution (T_H0 τ_cool t : ℝ) : ℝ :=
   T_H0 * Real.exp (-t / τ_cool)
@@ -394,10 +428,8 @@ theorem T_H_acoustic_evolution_pos {T_H0 : ℝ} (hT0 : 0 < T_H0)
   unfold T_H_acoustic_evolution
   exact mul_pos hT0 (Real.exp_pos _)
 
-/-- **Strict monotone-decay** (Balbinot 2005 Eq. Tsonic content): for
-positive `T_H,0` and `τ_cool`, `T_H(t)` is strictly decreasing in `t`.
-This is the load-bearing primary-source claim for the acoustic
-regime: `dT/dt < 0` strictly, formalized as monotone-decreasing. -/
+/-- Strict decrease of the illustrative exponential for positive initial
+ temperature and timescale; separate from the affine nozzle criterion. -/
 theorem T_H_acoustic_evolution_strict_decreasing {T_H0 τ_cool : ℝ}
     (hT0 : 0 < T_H0) (hτ : 0 < τ_cool)
     {t₁ t₂ : ℝ} (h : t₁ < t₂) :
@@ -447,8 +479,8 @@ theorem T_H_schwarzschild_strict_decreasing
 **Wave 5 second-law Prop bundle (post-Stage-13 strengthened).**
 Encodes the Glorioso–Liu theorem (arXiv:1612.07705, §III, Eq. 3.20):
 dynamical KMS Z₂ symmetry + unitarity (Im S_eff ≥ 0) imply local
-entropy-current monotonicity `∂_μ s^μ ≥ 0`, **without invoking
-pointwise NEC**.
+entropy-current monotonicity `∂_μ s^μ ≥ 0` in its local-equilibrium
+derivative expansion. This bundle itself only records a scalar sign.
 
 The bundle takes the entropy-current divergence as an
 **externally-supplied real parameter** (`entropy_div`) and constrains
@@ -509,18 +541,10 @@ structure H_RegimePartition
 /-! ## §7 — `regime_partition_criterion` (Wave 5 correctness-push) -/
 
 /--
-**Wave 5 correctness-push theorem (corrected).** Combines the regime
-classifier `classify` with the tracked hypothesis `H_RegimePartition`
-to produce the explicit **sign-of-dT_H/dt-flips-at-M_c** statement.
-
-This is the genuine regime-partition: in the Schwarzschild branch,
-the BH heats during evaporation (Hawking 1975 + textbook); in the
-acoustic branch, the BH cools during evaporation (Balbinot 2005,
-primary anchor). The sign of `dT_H/dt` flips at `M_c`.
-
-**Anti-pattern audit.** Not ∃-absorption: the conditional sign claims
-are over disjoint mass regions; both branches of the conjunction
-encode primary-source-grounded physics on each side.
+Conditional sign transport through the classifier. Both branch signs are
+fields of `H_RegimePartition`; this theorem does not derive them. The
+additive `regime_partition_profile_criterion` below instead derives local
+slopes from an explicit mass derivative and affine nozzle profile.
 -/
 theorem regime_partition_criterion
     (b : BHData) (p : ADWParams) (T_H0 dT_dt_evap delta : ℝ)
@@ -534,6 +558,86 @@ theorem regime_partition_criterion
   · intro hcls
     rw [classify_ADWExtremality_iff] at hcls
     exact H.evap_dT_dt_below hcls
+
+/-- Chain-rule heating on a positive mass profile that is locally losing mass. -/
+theorem schwarzschild_profile_deriv
+    {mass : ℝ → ℝ} {t dM : ℝ}
+    (hmass : HasDerivAt mass dM t) (hM : 0 < mass t) (hdM : dM < 0) :
+    HasDerivAt (fun s ↦ T_H_schwarzschild (mass s))
+      (-(8 * Real.pi * dM) / (8 * Real.pi * mass t) ^ 2) t ∧
+      0 < -(8 * Real.pi * dM) / (8 * Real.pi * mass t) ^ 2 := by
+  have hπ : 0 < (8 : ℝ) * Real.pi := mul_pos (by norm_num) Real.pi_pos
+  have hden : 0 < 8 * Real.pi * mass t := mul_pos hπ hM
+  have hquot := (hasDerivAt_const t (1 : ℝ)).fun_div
+    (hmass.const_mul (8 * Real.pi)) (ne_of_gt hden)
+  refine ⟨?_, div_pos (neg_pos.mpr (mul_neg_of_pos_of_neg hπ hdM)) (pow_pos hden 2)⟩
+  simpa only [T_H_schwarzschild, zero_mul, one_mul, zero_sub] using hquot
+
+/-- Relative cooling rate in the leading-order nozzle solution. -/
+noncomputable def balbinotRelativeCoolingRate (c κ A₀ ε : ℝ) : ℝ :=
+  (563 : ℝ) / (720 * Real.pi) * ε * κ ^ 3 * c * A₀
+
+/-- Balbinot et al. Eq. (8.4), in natural units, as a local affine profile. -/
+noncomputable def balbinotAffine (c κ A₀ ε t : ℝ) : ℝ :=
+  (c * κ / (2 * Real.pi)) *
+    (1 - balbinotRelativeCoolingRate c κ A₀ ε * t)
+
+/-- The exact positive cooling coefficient of the affine profile. -/
+noncomputable def balbinotCoolingCoefficient (c κ A₀ ε : ℝ) : ℝ :=
+  (c * κ / (2 * Real.pi)) * balbinotRelativeCoolingRate c κ A₀ ε
+
+/-- Pointwise derivative of the affine formula. Physical use needs the local nozzle regime. -/
+theorem balbinotAffine_deriv {c κ A₀ ε t : ℝ}
+    (hc : 0 < c) (hκ : 0 < κ) (hA : 0 < A₀) (hε : 0 < ε) :
+    HasDerivAt (balbinotAffine c κ A₀ ε) (-balbinotCoolingCoefficient c κ A₀ ε) t ∧
+      -balbinotCoolingCoefficient c κ A₀ ε < 0 := by
+  let a : ℝ := balbinotRelativeCoolingRate c κ A₀ ε
+  let T₀ : ℝ := c * κ / (2 * Real.pi)
+  have hlin := (hasDerivAt_id' (x := t)).const_mul a
+  have haff := ((hasDerivAt_const t (1 : ℝ)).sub hlin).const_mul T₀
+  refine ⟨?_, ?_⟩
+  · change HasDerivAt (fun s : ℝ ↦ T₀ * (1 - a * s)) (-balbinotCoolingCoefficient c κ A₀ ε) t
+    simpa only [balbinotCoolingCoefficient, a, T₀, Pi.sub_apply,
+      mul_one, zero_sub, mul_neg] using haff
+  · apply neg_lt_zero.mpr
+    unfold balbinotCoolingCoefficient balbinotRelativeCoolingRate
+    have hπ : 0 < Real.pi := Real.pi_pos
+    positivity
+
+/--
+Derive the branch signs from separate local trajectory models. The
+caller supplies the short-time budget for the affine nozzle profile.
+The result controls that profile and preserves the equality boundary.
+-/
+theorem regime_partition_profile_criterion
+    (b : BHData) (p : ADWParams) (mass : ℝ → ℝ) (t dM c κ A₀ ε η : ℝ)
+    (hc : 0 < c) (hκ : 0 < κ) (hA : 0 < A₀) (hε : 0 < ε)
+    (hη : 0 < η ∧ η < 1)
+    (hmass : b.M > M_c p → mass t = b.M ∧ HasDerivAt mass dM t ∧ dM < 0)
+    (hshort : b.M < M_c p →
+      0 ≤ t ∧ c * κ * t < η ∧ balbinotRelativeCoolingRate c κ A₀ ε * t < 1) :
+    (classify b p = .Schwarzschild →
+      HasDerivAt (fun s ↦ T_H_schwarzschild (mass s))
+        (-(8 * Real.pi * dM) / (8 * Real.pi * mass t) ^ 2) t ∧
+        0 < -(8 * Real.pi * dM) / (8 * Real.pi * mass t) ^ 2) ∧
+    (classify b p = .ADWExtremality →
+      (0 ≤ t ∧ c * κ * t < η ∧ 0 < η ∧ η < 1) ∧
+      0 < balbinotAffine c κ A₀ ε t ∧
+      HasDerivAt (balbinotAffine c κ A₀ ε) (-balbinotCoolingCoefficient c κ A₀ ε) t ∧
+      -balbinotCoolingCoefficient c κ A₀ ε < 0) ∧
+    (classify b p = .Boundary ↔ b.M = M_c p) := by
+  refine ⟨?_, ?_, classify_Boundary_iff b p⟩
+  · intro h
+    rcases hmass ((classify_Schwarzschild_iff b p).mp h) with ⟨hlink, hderiv, hneg⟩
+    have hpos : 0 < mass t := hlink.symm ▸ b.M_pos
+    exact schwarzschild_profile_deriv hderiv hpos hneg
+  · intro h
+    obtain ⟨ht, hscale, hwindow⟩ := hshort ((classify_ADWExtremality_iff b p).mp h)
+    have hT₀ : 0 < c * κ / (2 * Real.pi) :=
+      div_pos (mul_pos hc hκ) (mul_pos (by norm_num) Real.pi_pos)
+    have hT : 0 < balbinotAffine c κ A₀ ε t :=
+      mul_pos hT₀ (sub_pos.mpr hwindow)
+    exact ⟨⟨ht, hscale, hη.1, hη.2⟩, hT, balbinotAffine_deriv hc hκ hA hε⟩
 
 /--
 **Substantive corollary.** Under the tracked-hypothesis bundle, the
@@ -845,8 +949,8 @@ gravity ADW black holes, anchored on:
   approximation `κ(t) ~ κ_0 · exp(-t/τ_cool)`.
 - **Hawking 1975** (CMP 43, 199) for the Schwarzschild heating regime
   (`b.M > M_c`): `dT_H/dt > 0`, finite t-evap, classical T_H = ℏ/(8πM).
-- **Glorioso–Liu 2017** (arXiv:1612.07705) for the SK-EFT second law
-  without NEC.
+- **Glorioso–Liu 2017** (arXiv:1612.07705 §III.B) for the local
+  SK-EFT second law in the derivative expansion.
 - **Project-original** `M_c = (N_f · Λ_UV)/(12π · α_ADW)` ansatz (Wave 5
   deep-research §3 dimensional analysis) is encoded as a tracked
   hypothesis, NOT a derivation.
