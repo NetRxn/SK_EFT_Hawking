@@ -5,8 +5,8 @@
   "scope": "crosswalk manual ACTUAL ACCEPT; scouting research only; ROOT intake pending",
   "archive": {
     "path": "docs/audits/2026-11-05-l1-physical-bridges/positive_toeholds_convention_evidence_r1.zip",
-    "bytes": 175669,
-    "sha256": "e69d94515df6ac6d4ba5549a72a7eb6d869bf1af48c4f720dd7e6265d56e7446",
+    "bytes": 182694,
+    "sha256": "64b82488088b99f746157707fd0360db59f4b720952299109c791a39c6b9c609",
     "members": {
       "accepted-inputs/ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md": {
         "bytes": 24144,
@@ -37,8 +37,8 @@
         "sha256": "59b2a4a9c9856da3a2eec2b8f0cd62a94c5dfce03026d9429538f4346b1a825e"
       },
       "canonical/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_ACCEPTANCE.md": {
-        "bytes": 3411,
-        "sha256": "5550ac2981d5d4d8cea27dc20762a25be179b0d4ef81842f011ffc7dcbac5952"
+        "bytes": 4366,
+        "sha256": "10cfa7207a3a42884a847869c05073cc94bd84f133183e46df4fde74aad6f495"
       },
       "canonical/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_MATH_REVIEW_R1.md": {
         "bytes": 12634,
@@ -60,9 +60,13 @@
         "bytes": 7538,
         "sha256": "aa867444929fccf3fb3c079d8be3d46115a553d4029167757db822aab311dd15"
       },
+      "canonical/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md": {
+        "bytes": 3517,
+        "sha256": "929f670ddc2c49c2bd6234b515dae81b9761f820803a53c8c9e7615f45cd0878"
+      },
       "canonical/POSITIVE_RECONSTRUCTION_EXTERNAL_TOEHOLDS_R1.md": {
-        "bytes": 9690,
-        "sha256": "78ff769362687e82f48e536870f279cec54ec52e5be0bd6ca362a25563ef78c1"
+        "bytes": 9689,
+        "sha256": "5bb392abb9a455c7c368c5490597ba83ef13620e019681dc8dd610385549e1c1"
       },
       "canonical/POSITIVE_RECONSTRUCTION_FORMAL_TOEHOLDS_R1.md": {
         "bytes": 7461,
@@ -115,6 +119,10 @@
       "continuity/l1-positive-toehold-synthesis-r1.json": {
         "bytes": 7717,
         "sha256": "56c18c5752becdd48a80f74bc0bad0d3aebb971367f2a04aa1d9d57642643278"
+      },
+      "original-scout-report/POSITIVE_RECONSTRUCTION_EXTERNAL_TOEHOLDS_R1.md": {
+        "bytes": 9690,
+        "sha256": "78ff769362687e82f48e536870f279cec54ec52e5be0bd6ca362a25563ef78c1"
       }
     }
   },
@@ -133,7 +141,10 @@
     },
     "POSITIVE_RECONSTRUCTION_EXTERNAL_TOEHOLDS_R1.md": {
       "source": "/private/tmp/l1-positive-external-toeholds-r1.md",
-      "sha256": "78ff769362687e82f48e536870f279cec54ec52e5be0bd6ca362a25563ef78c1"
+      "sha256": "78ff769362687e82f48e536870f279cec54ec52e5be0bd6ca362a25563ef78c1",
+      "canonical_sha256": "5bb392abb9a455c7c368c5490597ba83ef13620e019681dc8dd610385549e1c1",
+      "canonical_transform": "remove redundant final blank line only; original private and original-scout-report archive copy unchanged",
+      "original_archive_member": "original-scout-report/POSITIVE_RECONSTRUCTION_EXTERNAL_TOEHOLDS_R1.md"
     },
     "POSITIVE_RECONSTRUCTION_TOEHOLD_SYNTHESIS_R1.md": {
       "source": "/private/tmp/l1-positive-toehold-synthesis-r1.md",
@@ -193,7 +204,8 @@
     "docs/audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_ACCEPTANCE.md",
     "docs/audits/2026-11-05-l1-physical-bridges/positive_toeholds_convention_evidence_r1.zip",
     "docs/audits/2026-11-05-l1-physical-bridges/positive_toeholds_convention_manifest_r1.json",
-    "docs/roadmaps/Phase6a_Roadmap.md"
+    "docs/roadmaps/Phase6a_Roadmap.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md"
   ],
   "primary_custody": [
     {
@@ -214,5 +226,19 @@
       "sha256": "daa334f1ad59ace58aba5afe68ec5d4909e717e626ba6fa7c0d7237c8df43eac",
       "full_text_copied": false
     }
-  ]
+  ],
+  "checkpoint_hygiene": {
+    "first_commit": "a128dd1c2",
+    "first_whitespace_check": "FAILED extra blank line EOF in external scout; shell continued to local commit",
+    "corrective_scope": "canonical final newline plus manifest/archive/acceptance custody",
+    "pre_correction_archive_sha256": "e69d94515df6ac6d4ba5549a72a7eb6d869bf1af48c4f720dd7e6265d56e7446",
+    "science_changed": false
+  },
+  "accepted_build_objective": {
+    "path": "docs/audits/2026-11-05-l1-physical-bridges/P0_NUMERICAL_FULL_CUT_TRANSPORT_OBJECTIVE.md",
+    "task": "l1-p0-n0-full-cut-transport-build-r1",
+    "owner": "Executor01a1ac65",
+    "sha256": "929f670ddc2c49c2bd6234b515dae81b9761f820803a53c8c9e7615f45cd0878",
+    "authority": "explicit ROOT commission; actual construction not yet accepted"
+  }
 }
