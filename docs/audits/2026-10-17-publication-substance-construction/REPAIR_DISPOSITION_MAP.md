@@ -35,6 +35,27 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **Reviewed publication-source repair applied and pushed on PR117.**
+  `9d0d7fc3c6ab01ab58118cd474cabda43260c158` composes the existing accepted
+  donor's53 Verify-format transformations into five current review documents.
+  Independent current-source review ACCEPTS exact composition:45 Python ASTs,
+  eight shell token sequences, all53 shell syntax checks conserved;1852 finding
+  IDs/statuses and all metadata except25 intended Verify fields unchanged.
+  Canonical format check:282 markers retained, malformed56->3; focused controls
+  fivePASS/oneFAIL, with the actual remaining live-corpus failure preserved.
+  No scientific commands or closure writer ran; no scientific finding is closed.
+  Original D1 crossover1.1 and D8 controls1.4/1.8 remain unmodified; they need
+  substantive fixed-state verification, not punctuation removal. Historical
+  E2/D7 ingestion limits remain. Hash-bound evidence and full independent review
+  live under the existing PR117 main-delivery review directory in
+  `VERIFY_FORMAT_REUSE_R1.md`, its readback and22-member evidence archive.
+  No parser, infrastructure, predicate, threshold, scientific source or ledger
+  change. The previously generated counts/Paper15 edits remain unreviewed and
+  unstaged. Current native extraction is still the same live ROOT-controlled
+  process; it must finish before graph-dependent reproduction. L1 remains lead;
+  next acceptance remains a qualified L1 delivery, not a format-only checkpoint.
+
+
 - **Full L1 delivery qualification terminal; Lean build passed, merge gate failed.**
   Exact source `5a5d36fed` completed the unchanged profile at 10:29:20 UTC
   on November 6: Lean library/ExtractDeps **PASS, 10834 jobs**; Python
