@@ -59,11 +59,14 @@ It supplies nonzero original-action boundary test operators, full source/kernel
 identities, ordered contacts, individual C2 lifts and distinct auxiliary-adjoint
 versus bilinear-sewing-transpose reverse kernels. These high-degree test
 operators do not construct physical constraints, a low-degree metric observable,
-a physical adjoint/domain or positive state. The current bounded Executor successor is a prospectively reviewed original-source
-coherent-state/transfer/metric-operator correspondence construction, following
-the accepted nonzero-normalization and temporal-response milestone above. Reuse the
-accepted metric dictionary and transfer/pre-post work and justify each proposed
-physical-domain or factorization condition from the original sources/charter. Full physical Q1–Q4 state/metric/source identification remains open; finite
+a physical adjoint/domain or positive state. The coherent-state/transfer/metric-polynomial/contact construction is now accepted
+at the partial manual scope recorded above. Executor explicitly accepts the next
+bounded original-transfer-to-positive-process/observable reduction or dilation
+construction, starting with its concrete prospective map/test and both independent
+prospective approvals. Reuse the accepted kernels, metric dictionary and source
+contacts; justify every physical-domain/factorization condition from original
+kinetic/reflection/constraint/source structure. This is not transfer of the rest
+of L1 or its roadmap. Full physical Q1–Q4 state/metric/source identification remains open; finite
 normalization and source nontriviality have the separate accepted result above.
 No runtime/slot grant follows.
 ROOT retains ordinary L1 Lean/Python repair, manuscript/consumer updates,
