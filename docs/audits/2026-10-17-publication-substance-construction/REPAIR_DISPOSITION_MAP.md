@@ -1775,3 +1775,43 @@ This is a test-operator prerequisite, not physical Q1/state/positive-form,
 fullZ/c0,N4,B3,dynamics/transport completion or runtime/slot authority. ROOT
 retains the full ordinary L1 publication chain. No priority/scope reduction,
 scientific deferral, canonical closure or human acceptance is made.
+
+
+### Main qualification: focused D7 regression closed; numerical source repair next
+
+Current main-delivery sourceb0f8e3b45 and canonical closureddc3a0d19 are pushed
+to existing draftPR117. Independent static and actual-control reviews accept
+exact historical06c regression reuse, its current positive manuscript/source/
+index resolution and three phantom-form production negatives. Current class
+sevenPASS; journalled actualheadline removal gives0->1->0 with exact restoration
+and emptyjournal. The original focused finding1.1 is FIXED through the existing
+close_finding.py writer, which executes its own portable declared Verify in
+dry-run and actualwrite. All1235priorledgerrows are exact; one closure appended.
+Canonical reader confirms FIXED. Evidence/current limits live in
+D7_REGRESSION_REUSE_R1_READBACK.json and D7_REGRESSION_CLOSURE_R1_READBACK.json
+under the main-delivery review directory. D7physical/simulability/fullG11,
+main/publication and human gates remain open.
+
+Complete current public-surface module is72PASS/oneFAIL, numeric150>117.
+Independent unchanged-predicate audit finds149onoriginalmaince194and150now,
+identical64draftcorpus; L1moves6->3,Paper25moves4->8. This does not make inherited
+debt acceptable or establish that every numeric literal is scientifically wrong.
+Use the existingSCALARS/table renderer and source-derived formatting pattern
+already shipped forD3. The coherent next L1/Paper25 derived-numeral retrofit
+covers11occurrences and would leave139>117. Preserve theorem/source constants,
+original physical BUILD and independent source/control/render review. Update
+canonical claims and F dependency binding only through their existing writers/
+review process if paper sources change; preserve lineage and human state.
+Further source-reviewed derived families (not arbitrary22sites) are required
+for wholeceiling qualification. D1is a candidate subsequent enabling package;
+source measurements require classification. Physics-deferred Paper2cells cannot
+be dressed as computed output. No floor increase, predicate change or newpipeline.
+
+Remote main remainsce194andPR117remainsdraft/unmerged; its body now reflects
+currentsource/closure/evidence ratherthan4737. Existing extraction check-only
+reportsSTALE, no refresh. Current native primary is a different source, and
+no saved runnableCodexCloud environment was listed. Retain proper existing
+protected source-integration/admission gates; do not retarget custodyprimary,
+copycache/stamp epoch or claim slot capacity. L1remainslead, ordinarypublication
+ROOT-owned, Executor's bounded O1-O4 actual result currently under independent
+reviews. Original21bundleobjectives/queueorder and scientific/human gates unchanged.
