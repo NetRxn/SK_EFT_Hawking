@@ -1,0 +1,122 @@
+{
+  "candidate": "dcd46b6ce053cf2fa771f735577fd36d7001de6e",
+  "archive_sha256": "f9b920977d91c8b01a9d3b72dbf451272faef388a0f832a2183c9c3e8a91a277",
+  "members": [
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md",
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md",
+    "accepted/ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT.md",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md",
+    "accepted/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md",
+    "accepted/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md",
+    "accepted/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_ACCEPTANCE.md",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md",
+    "candidate/l1-original-microscopic-metric-coherent-result-r2.md",
+    "charter/L1_Physical_Bridges_Roadmap.md",
+    "history/l1-original-microscopic-metric-coherent-result-r1.md",
+    "parent/original_nonzero_normalization_evidence.zip",
+    "parent/original_nonzero_normalization_manifest.json",
+    "prework/l1-microscopic-metric-coherent-brief-r1.md",
+    "prework/l1-microscopic-metric-coherent-math-prospective-r1.md",
+    "prework/l1-microscopic-metric-coherent-source-prospective-r1.md",
+    "research/l1-metric-coherent-primary-intake-r1.md",
+    "review/l1-microscopic-metric-coherent-math-result-r1.md",
+    "review/l1-microscopic-metric-coherent-math-result-r2.md",
+    "review/l1-microscopic-metric-coherent-source-result-r1.md",
+    "review/l1-microscopic-metric-coherent-source-result-r2.md",
+    "source/microscopic-metric-coherent-custody-r1.json"
+  ],
+  "canonical_copies": {
+    "ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md": "563aeda483e743933580139c7edc8c8ca32f9522ddd74128f091bf736b1062b2",
+    "ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_BRIEF.md": "2106c8ce8a4f84f01e2dee3afadb717bcc3dd45e7b4674d5b213774a36d2428b",
+    "ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_MATH_PROSPECTIVE_R1.md": "cee591f367d5de87a6d86294ae135409d659100c08f16144e4106595c61c8c5a",
+    "ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_SOURCE_PROSPECTIVE_R1.md": "18f4698343cda5f4679dc0fee0d1422331f21a30f5f9c9c3aa45fb8fc67ae824",
+    "ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_MATH_REVIEW_R2.md": "e11010f2a2ab7b1ac2b3b01870f15c52ce88619942cec83d5f2b1bfb7db94fb0",
+    "ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_SOURCE_REVIEW_R2.md": "42139c459f060b86e772618f14b13795a27d526416092b83b9b56930710db1b8",
+    "ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_MATH_REVIEW_R1.md": "6afa0a5400f4d71c25ced79e484541f0ee9c385fe5d5d9926ed01c8c07cde672",
+    "ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_SOURCE_REVIEW_R1.md": "9f6124e5594a2df1c3197945c86f7844f91a93bf6869ee8f564f95a55460b408",
+    "MICROSCOPIC_METRIC_COHERENT_PRIMARY_RESEARCH.md": "c6b4d6ded10a1acb0369c49636fa69229f6fe46540514c7fbfe944d8091a0cd7"
+  },
+  "accepted_current_inputs": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": [
+      "docs/audits/2026-10-17-publication-substance-construction/ADW_EXACT_AUXILIARY_IDENTITY.md"
+    ],
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md"
+    ],
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md"
+    ],
+    "accepted/ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT.md"
+    ],
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md"
+    ],
+    "accepted/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md"
+    ],
+    "accepted/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md"
+    ],
+    "accepted/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_ACCEPTANCE.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_ACCEPTANCE.md"
+    ],
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_OPERATOR.md"
+    ]
+  },
+  "held_sources": [
+    {
+      "held_corpus_path": "Phase-6a/primary-sources/CahillGlauberFermionDensity1998-arXiv9808029v1.pdf",
+      "version": "physics/9808029v1",
+      "url": "https://arxiv.org/pdf/physics/9808029v1",
+      "bytes": 280071,
+      "sha256": "9d51289336395f6991f37fe834e866c6fdfb7d1dc73421eaa9f98f0cbc5e2f86"
+    },
+    {
+      "held_corpus_path": "Phase-6a/primary-sources/BachKnorrMengeGrassmann2013-arXiv1307.0465v1.pdf",
+      "version": "1307.0465v1",
+      "url": "https://arxiv.org/pdf/1307.0465v1",
+      "bytes": 450385,
+      "sha256": "f8ebbabd37f841089b3afbf21b5382fbe80ea3ec8d0c4ac2afff64da59f0425b"
+    }
+  ],
+  "parent_members_verified": 16,
+  "root_decision": "ACCEPT exact manually constructed partial coherent/composite/contact result; physical microscopic metric and positive original process remain UNMATCHED",
+  "result_sha256": "563aeda483e743933580139c7edc8c8ca32f9522ddd74128f091bf736b1062b2",
+  "result_bytes": 29427,
+  "normal_integration_commit": "4aeb0f80d9f553a6ebf358711b8149d57bf21c18",
+  "root_full_reads": [
+    "complete actual R2 result",
+    "both complete independent ACTUAL R2 reviews",
+    "R1 detailed mathematical review and preserved carrier correction",
+    "complete acceptance and exact prospective brief",
+    "actual held Cahill-Glauber coherent trace/ordering passages",
+    "actual held BKM normal/star/adjoint/trace passages"
+  ],
+  "manual_crosschecks": [
+    "coherent single-mode trace signs and positive32/64/128 regrouping orientation",
+    "separate128 auxiliary coefficient modes,64 two-slice bookkeeping modes,32 boundary candidate modes",
+    "normal-Weyl negative half-contraction, trace-zero coframe matrix and quartic scalar/bilinear terms",
+    "graded Bopp parity, trace dual/reversed composition and full literal/frame C2 contacts before reduction",
+    "degree modulo4 bare-normal vacuum-source-germ contradiction at actual scaled positive point",
+    "fixed joint-link test z(u)Q(u), literal lambda^-8 scaling, positive analytic Haar leading coefficient and degree<=2 discrepancy; family counterpoint only"
+  ],
+  "scientific_progress": [
+    "actual original coherent transfer/source and boundary kernels",
+    "explicit original coframe/metric polynomial operators and forced ordering contacts",
+    "two specific nonvacuous dictionary failures without replacing original physical requirements"
+  ],
+  "not_closed": [
+    "physical CAR/adjoint/metric identification",
+    "positive joint link/time process and original transfer reduction/dilation",
+    "nonzero metric mean/spatial order/signature",
+    "B3 susceptibility/window/units",
+    "N4/tensor/matter/light/transport/controlled limits",
+    "Lean/kernel/native/full-wave/publication/main/human acceptance"
+  ],
+  "next_bounded_executor_commission": "Prospectively reviewed original transfer-to-positive-process/observable reduction or dilation, tied to original kinetic/reflection/constraint/source structure and full C2 preservation. No repeated failed shortcut or ad hoc state/sector/order/boundary change. Sent; acceptance pending.",
+  "root_ownership": "entire ordinary L1 scientific repair, manuscript/claims/figures/consumers, review/gates/closures and qualified main integration remain ROOT-owned",
+  "execution": "manual scientific intake plus artifact custody only; no new scientific runtime/slot grant"
+}

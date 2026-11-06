@@ -35,6 +35,32 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **Actual original coherent/metric-operator milestone accepted and normally integrated.**
+  Peer `dcd46b6ce053cf2fa771f735577fd36d7001de6e` is preserved by normal merge
+  `4aeb0f80d9f553a6ebf358711b8149d57bf21c18`. ROOT full-read actual R2,
+  both independent ACTUAL R2 ACCEPT reviews, detailed preceding mathematics,
+  brief/acceptance and actual held primary passages; personally checked the
+  operator/contact and separating-test arguments. [Exact intake and custody](../2026-11-05-l1-physical-bridges/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_ROOT_INTAKE.json)
+  verifies23archive hashes/CRC,9canonical copies,9current inputs,parent16members
+  and both versioned primary PDFs. Accepted progress: coherent kernels of the
+  original transfer/source and actual positive boundary state; actual coframe
+  and quartic metric polynomial operators with forced scalar/bilinear ordering
+  terms; full graded insertion/C2 operations; bare-normal source-germ and rigid
+  joint-link Jordan dictionary countertests. R2 repairs the temporal/frame-jet
+  carrier explicitly; R1 REVISE source/history remains preserved. The three-mode
+  spaces remain distinct. No physical CAR, metric mean/signature or positive
+  joint link/time process is established. Actual normalization/source response
+  stays accepted; this is not an original-model no-go or a scope reduction.
+  **Next bounded Executor commission sent:** construct a source-grounded
+  original-transfer reduction/dilation and physical observable/contact map,
+  beginning with a concrete prospectively reviewed map or separating test on
+  the actual kernels. Preserve original action/links/periodic sewing/full C2;
+  do not choose a favorable positive part, sector, source/order calibration or
+  repeat the already failed shortcuts. Handoff acceptance pending. ROOT retains
+  all ordinary L1 work. B3, physical state/dynamics, N4, matter/light/transport,
+  controlled limits, kernel/native/publication/main/human acceptance stay OPEN.
+
+
 - **Reviewed publication-source repair applied and pushed on PR117.**
   `9d0d7fc3c6ab01ab58118cd474cabda43260c158` composes the existing accepted
   donor's53 Verify-format transformations into five current review documents.

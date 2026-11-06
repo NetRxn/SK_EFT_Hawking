@@ -3,6 +3,21 @@
 ## Current L1 scientific successors — 2026-11-06
 
 
+**Accepted coherent/composite partial bridge:** the [actual R2 construction and
+independent result reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_ACCEPTANCE.md),
+with [ROOT full intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_ROOT_INTAKE.json),
+construct original transfer/source coherent kernels, actual coframe and quartic
+metric operators and full graded insertion/C2 contacts. Two specific bare-normal
+and rigid joint-link Jordan identifications fail; neither is a global physical
+no-go. The full two-slice carrier is retained for time-mixing frame jets. The
+physical microscopic metric/positive original process remains UNMATCHED.
+Executor's next bounded commission is an original-transfer reduction/dilation
+and physical observable/contact map with a concrete prospectively reviewed first
+construction, not the remaining L1 package. ROOT retains ordinary L1 publication,
+Lean/Python/consumer repairs, gates and qualified main integration. All original
+physical B3/state/dynamics/matter/transport goals remain full-strength OPEN.
+
+
 **Accepted original finite normalization/source milestone:** the
 [complete original-model construction and dual result reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_ACCEPTANCE.md),
 with [ROOT personal intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONZERO_NORMALIZATION_ROOT_INTAKE.json),
