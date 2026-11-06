@@ -2,6 +2,18 @@
 
 ## Current L1 scientific successors — 2026-11-06
 
+**Accepted fixed metric-sewing result:** the [actual construction and dual
+independent reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_ACCEPTANCE.md)
+and [ROOT full intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_RESULT_ROOT_INTAKE.json)
+show that this specified geometric sewing/domain/adjoint pairing cannot be
+positive at nonzero real g2 and nonzero normalization, already on actual metric
+words. The separate literal temporal C2 contact is also evaluated. This is a
+scoped manual construction breakdown, not a global physical no-go or kernel
+certificate. Executor owns the next prospectively reviewed original physical
+product/adjoint/constraint or controlled-limit construction, preserving these
+tests. ROOT retains ordinary L1 work; B3, physical map30-31, calibration32-33,
+tensor/matter/light and transport/frequency/error requirements remain OPEN.
+
 
 **Accepted original kinetic/current/source normalization:** [actual result
 and both independent ACTUAL reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_ACCEPTANCE.md)
@@ -11,10 +23,13 @@ charge, original-step generator/current intertwining, temporal metric/C2 Ward
 contacts and the whole field/source/product normalization covariance. Physical
 source-dependent map30-31 and metric/matter calibration32-33 remain OPEN.
 A Ward identity or favorable fixed-unit state cannot replace those constructions.
-ROOT's next bounded Lean brick formalizes actual polynomial Gaussian IBP for
-the accepted exact signed auxiliary/source transform; later Hermite/source/
-coframe and all original physical requirements remain owed. This supersedes
-the older proposal-only status below, without promoting B3/physical acceptance.
+ROOT's actual all-real-polynomial Gaussian IBP proof is independently reviewed,
+native-built and canonically indexed on the main-based L1 candidate. Its full
+merge profile remains red; later Hermite/sigma/multivariate/source/coframe/C2
+assembly and all original physical requirements remain owed. The current
+[delivery queue and exact evidence](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints)
+own the next ordinary L1 acceptance actions. This supersedes the older
+proposal-only status below, without promoting B3/physical acceptance.
 
 
 

@@ -34,6 +34,90 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Resume checkpoint — 6 November 2026, after the terminal native run.** L1
+remains lead; the agreed portfolio order above is unchanged. The following
+current state supersedes run-in-progress and proposal-only descriptions in the
+historical checkpoints below. This cumulative branch preserves research and
+review history; it is not a whole-branch candidate for main.
+
+- **L1 main-based delivery:** draft [PR117](https://github.com/NetRxn/SK_EFT_Hawking/pull/117)
+  is checkpointed at `1dc710e9185411ca86c794b75b95e86552e7610b`.
+  The all-real-polynomial Gaussian IBP proof has actual native library/ExtractDeps
+  qualification at `8ad1411526b8b8d5b49e9f3b9993b8083ec887d9`.
+  Canonical extraction adds exactly its three theorems, preserving all prior
+  declaration records; independent generated-artifact review accepts the exact
+  refresh. [Native receipt and evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/142c5023249814f487ad0731e64619021c751ff8/papers/AutomatedReviews/2026-11-06-l1-main-delivery/IBP_NATIVE_R1.md)
+  distinguish that successful build from the **FAILED full merge profile**:
+  7172 tests passed, 28 failed, 14 skipped. Full-profile output retains summaries,
+  not every inner traceback; the earlier default-profile 27-case assessment is
+  preserved separately. No executed historical baseline or causal regression
+  verdict is inferred from comparing different profiles. Counts, tables and
+  claim-cluster freshness subsequently pass their actual checks. Full auxiliary
+  Hermite/sigma/multivariate/coframe/source/C2 assembly remains owed; B3 and
+  physical state/dynamics/matter/transport acceptance remain OPEN.
+- **Notebook scientific run admission:** the actual four-check diagnostic fails
+  only notebook execution, at the Phase5b vestigial MC source. The new canonical
+  finding is `review:2026-11-06-vestigial-notebook-run-admission:notebook-execution:1`.
+  [Tracked source discovery and original finding](https://github.com/NetRxn/SK_EFT_Hawking/tree/1dc710e9185411ca86c794b75b95e86552e7610b/papers/AutomatedReviews/2026-11-06-vestigial-notebook-run-admission)
+  show incompatible table/figure run selectors and historical toy/retracted,
+  NJL and inconclusive Weingarten data. Copying a directory does not repair this
+  scientific binding. ROOT owns ordinary source/run/narrative/figure repair and
+  independent verification; positive ADW phase/B3 construction remains owed.
+  The existing planner routes this finding; no second ledger or loader is added.
+- **Fresh portfolio measurement:** [all 231 canonical gate payloads](CURRENT_GATES_20261106_R2.json)
+  at `1dc710e9185411ca86c794b75b95e86552e7610b`, measured
+  2026-11-06 14:13 UTC, give **160 passed / 25 blocked / 28 open /
+  18 needing recheck**. Exact gate-id/state comparison to the previous `8b0ab6753`
+  snapshot yields **zero state changes and zero newly green bundles**.
+  [Raw graph custody](CURRENT_GATES_20261106_R2_EVIDENCE.json) includes the full
+  canonical output and prior snapshot. Existing coverage caveats remain; scoped
+  scientific progress and pytest counts are not gate-state transitions.
+- **L3 independent enabling package:** draft [PR112](https://github.com/NetRxn/SK_EFT_Hawking/pull/112)
+  is pushed at `42dd2d3a41a693dd4ca48e4669f7f3a69944006a`. Six existing theorems
+  and three definitions from preserved `f905a2873` are reused exactly, with
+  manuscript/apex consumption and semantic reconciliation of finding2.2.
+  Fresh independent source-composition review accepts that scope only. Its own
+  native/index and production Verify qualification remain pending. Figure work
+  remains: the illustrative exponential is falsely attributed to Balbinot,
+  the evaporation-time axis uses raw time under a normalized label, and an
+  annotation overlaps the curve. Original physical four-laws and analytic
+  metric-path obligations remain OPEN; stronger existing finding3.2 controls
+  are preserved unchanged. This does not move the lead away from L1.
+- **Actual deeper L1 result accepted:** peer `fadff561ef34f420ee41cfefefcde93d8619c368`
+  is normally integrated at `573c6dc0d806f96adf315a91ecb04522b9510ba1`.
+  [Complete actual construction and both independent reviews](../2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_ACCEPTANCE.md)
+  and [ROOT full result intake](../2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_RESULT_ROOT_INTAKE.json)
+  establish a zero-norm/nonzero-cross obstruction for the **specified** geometric
+  sewing/domain/adjoint and a separate literal temporal C2 contact. This is
+  manual mathematical/source acceptance, not kernel settlement, global model
+  impossibility, physical operating-point selection or B3 closure. Unpolarized
+  order14 and separate transfer-range identities remain uncomputed. Executor's
+  accepted next commission is a prospectively reviewed original noncommuting
+  product/adjoint/constraint or controlled-limit construction preserving both
+  new coefficients. ROOT retains all ordinary L1/publication delivery.
+- **Integration-blocker lane:** a bounded author proposal for existing
+  zero-headroom pins and canonical L2 serialization is complete; independent
+  review is pending. Validator pin hunks remain unapplied for a bundled
+  architecture assessment; ordinary scientific work continues meanwhile. Actual proposal population
+  is 636 structured scored rows plus one unscored bare-string D7 entry. No
+  check threshold is relaxed, no claim dropped and no scientific closure
+  inferred. The 19 historically quoted failures belong to a different older
+  pytest source/profile; the current full profile above is the merge receipt.
+  Use the existing planner and original findings for subsequent substantive
+  claim repairs. Do not raise ceilings to remove genuine failures.
+
+**Next acceptance actions:** complete the current notebook source/run repair
+while continuing full L1 scientific construction; preserve the bounded
+integration proposal and review for the bundled architecture assessment; qualify the focused L3 reuse/figure repair independently; apply
+canonical closure only after author repair and independent verification. Rerun
+the actual full merge profile when the relevant repairs justify it. Promote
+qualified increments to main, with original physical and final-human gates
+retained. Before any next Lean task, reconcile live primary controller admission;
+the previous wt1 shutdown observation retained its backend reservation. No slot
+release, wt2 absorption or wt3 quarantine recovery is implied by these records.
+
+### Earlier delivery checkpoints (historical evidence)
+
 - **Residual historical verification commands require substantive author work.**
   [Source investigation](RESIDUAL_VERIFY_PREREQUISITES_R1.md) and
   [pinned evidence](RESIDUAL_VERIFY_PREREQUISITES_R1.json) preserve OPEN
@@ -49,7 +133,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   are prerequisites in existing finding identities, not a new routing ledger,
   a priority change or proof of infeasibility. Source repair, production fault/
   restoration controls, independent verification and canonical closure remain
-  required. L1 retains lead while its actual full merge profile is running.
+  required. L1 retained lead while the then-active full merge profile ran.
 
 - **Independent L3 reconciliation completed during the L1 qualification freeze.**
   [Read-only report](L3_DELIVERY_RECONCILIATION_R1.md) and
