@@ -34,6 +34,21 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **Current qualification and deeper construction intake.**
+  The [87ae47bfd default-suite result](../../../papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/BROAD_DEFAULT_RESULT.json)
+  is RED:61 failures,7081 passes,30 errors,40 skips and92 deselections.
+  The exact terminal receipt includes unprepared dependency-extraction and
+  sandbox failures; classify these separately from actual corpus debt before
+  further validation. No dependency/cache/runner workaround or waived gate is
+  authorized by this result. Source restoration was clean.
+  [ROOT direct kinetic/source intake](../2026-11-05-l1-physical-bridges/PUBLICATION_METRIC_DICTIONARY_INTAKE.md)
+  accepts93338ee's original-action time split, fixed positive fermion control
+  and precisely conditional dictionary failures. This supplies no physical
+  state or original-goal impossibility. [The read-only main-route audit](../../../papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/MAIN_PAPER_ROUTE_ASSESSMENT.md)
+  finds no new Lean/code dependency for a paper-only consumer delivery; its
+  qualified main composition and full merge gate remain to be executed.
+
+
 - **L1 mapped-consumer source repair independently accepted.**
   [Applied source, reader/render and canonical catalog evidence](../../../papers/AutomatedReviews/2026-11-06-l1-consumer-propagation/SCOPE.md)
   reconcile the complete Paper25 consumer and the assigned D3 passages and
@@ -44,9 +59,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   Actual89 focused cases and both canonical compiles pass. D3's twelve
   unchanged baseline overflows and corpus-wide style failures remain unwaived.
   **Next ROOT milestone:** canonical propagation disposition and current
-  merge qualification for incremental main delivery. Personally intake
-  Executor's93338ee deeper construction separately; physical B3/state/tensor/
-  matter/transport and full publication/main/human acceptance remain OPEN.
+  merge qualification for incremental main delivery.
+  Executor's93338ee deeper construction now has direct bounded intake above;
+  its later d421925e transfer construction awaits ROOT reading. Physical B3/
+  state/tensor/matter/transport and full publication/main/human remain OPEN.
 
 
 - **L1 source-documentation package complete at its qualified scope.**

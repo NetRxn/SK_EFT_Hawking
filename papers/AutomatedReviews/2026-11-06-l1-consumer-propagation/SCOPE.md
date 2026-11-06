@@ -54,16 +54,26 @@ The existing cross-bundle consistency check passes within its indexed-cluster
 coverage. Length passes for two measured bundles with nineteen unmeasured.
 The corpus-wide em-dash and reader-voice checks remain RED on other bundles.
 All raw outputs and source/render identities are retained beside this report.
-The previous full default-suite receipt is historical; no new whole-suite,
-231-gate or main-candidate acceptance follows from these scoped checks.
+The default suite subsequently completed at87ae47bfd:61 failed,7081 passed,
+40 skipped,92 deselected,7 warnings and30 errors in280.81 seconds. Exact stdout,
+stderr are preserved byte-for-byte in BROAD_DEFAULT_RAW.zip; terminal status
+and test identities are in BROAD_DEFAULT_RESULT.json. Dependency
+extraction attempted an unprepared worktree and failed while cloning Physlib;
+isolated process-signature and loopback tests also encountered sandbox limits.
+These environmental results must be separated from the actual corpus failures;
+no failure is waived or reclassified as passing. The tracked source was clean
+at terminal. The older primary-suite receipt remains a different historical
+measurement. This run supplies no native,231-gate or exact-main acceptance.
 
 ## Remaining acceptance
 
 Deriving the original physical B3 normalization and [0.1,10] interval,
 positive state, constrained tensor mode, matter/light reference and controlled
 transport remain full-strength BUILD obligations. Executor owns bounded deeper
-constructions, not the rest of L1. Its 93338ee handback remains pending ROOT's
-direct intake. ROOT's next work is canonical propagation disposition and
+constructions, not the rest of L1. The93338ee handback has
+[bounded direct ROOT intake](../../../docs/audits/2026-11-05-l1-physical-bridges/PUBLICATION_METRIC_DICTIONARY_INTAKE.md).
+The later d421925e transfer construction awaits direct intake.
+ROOT's next work is canonical propagation disposition and
 qualification of incremental main delivery, while those constructions proceed.
 Full D3 catalog coverage, broader corpus failures, physical BUILD acceptance,
 whole publication gates and final human approval remain separate and OPEN.
