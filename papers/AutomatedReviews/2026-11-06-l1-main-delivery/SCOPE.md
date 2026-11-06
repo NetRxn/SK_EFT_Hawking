@@ -332,3 +332,14 @@ Previously accepted D1/F thermal-crossover commit2e56926994 remains on NJL
 branch ancestry and is absent from this main candidate and cumulative
 publication checkpoint; reuse requires exact composition and independent
 integration review. Preserving current F thermal text does not import that work.
+
+
+## Recorded F source closure
+
+The existing close_finding writer records F1.1 FIXED, anchored to source
+528f2adb0, after executing its declared Verify. Actual producer readback returns
+status fixed. Every prior ledger row is preserved and one focused record is
+appended; Verify still exits0 afterward.
+[F closure readback](F_PROPAGATION_CLOSURE_R3.json) preserves the exact command,
+writer output and producer row. Aggregate L1 propagation and all original
+physical BUILDs, whole-stage/main/publication/human acceptance remain OPEN.
