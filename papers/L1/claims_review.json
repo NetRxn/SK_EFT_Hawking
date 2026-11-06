@@ -8399,7 +8399,15 @@
       "first_observed_date": "2026-08-14",
       "lane": "prose",
       "status": "open; fresh main review does not close or promote donor acceptance",
-      "agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1"
+      "agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+      "source_propagation_progress_r2": {
+        "agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-propagation-scoped-r2",
+        "review_date": "2026-11-06T02:34:38.105627+00:00",
+        "status": "OPEN; applied documentary progress only; independent application review and existing canonical disposition remain separate",
+        "progress": "Exact independently accepted five-file R2 documentary proposal is present, plus existing generated hypothesis view. Current commentary distinguishes assumed speed law/adoptedrange, scalar dependent clauses/one-way nonimplication, unmatched product transport, primary-source editions and endpoint-only confinement. Actual carrying receipts report124focusedPASS and2hypothesisgatesPASS.",
+        "evidence": "review_evidence.source_propagation_scoped_r2",
+        "nonclosure": "No change to original blocker identity/summary/anchors/status; no fullG11, title/D3layout, physical BUILD or human/publication closure. OriginalR1 references to documentary residues remain dated historical observations, not statements that those same old docstrings persist afterR2."
+      }
     }
   ],
   "non_blocking_followups": [
@@ -8489,7 +8497,17 @@
     "coverage": "151actual source-bound units: whole abstract/body/theorem displays/caption and appendix; excludesmetadata/headings/comments/bibliography per persona. Donor quote segmentation reused only. D3/Paper25 consistency checked narrowly, not wholeconsumer catalog.",
     "acceptance": "Proposed canonical schema artifact only. No ingestion/closure/human or current native/kernel/fullscience/publication acceptance. Original scientific BUILD unchanged.",
     "lean_discovery": "Actual source/import/type/body/lean_deps/history inspected; liveLSP unavailable, proof discovery incomplete; registry absence never sufficient proofabsence.",
-    "prior_catalog_sha256": "9dd7128a11a06ffb815613bd748c6f4efcf38074257728462f238f00cbc35b51"
+    "prior_catalog_sha256": "9dd7128a11a06ffb815613bd748c6f4efcf38074257728462f238f00cbc35b51",
+    "source_propagation_scoped_r2": {
+      "agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-propagation-scoped-r2",
+      "review_date": "2026-11-06T02:34:38.105627+00:00",
+      "head": "f144749d795f904e563a83c869b0dee27bdbbd99",
+      "scope": "NARROW documentary source-propagation evidence refresh only; NOT another full151sentencewalk, scientific reassessment or verdict update. Original top-level review date/run and all151 sentence assessment dates/runIDs remain historical and exact.",
+      "base_catalog_sha256": "a0a9e36b0a76ca1a768c9f3a168a5941f6b56599b184d70dcc5141df7a7ffef8",
+      "manuscript_sha256": "29f926fef642a352ffb24b2d1fb0d851c1fb58d5c2a50ba7ffaf3083e3c1c5a2",
+      "changes": "Five applied documentary files plus existing generated hypothesis view; supporting frozen receipts and existing L1-fix-propagation progress only.",
+      "acceptance": "Proposal for independent ROOT intake only. Application review was pending in carrying readback; no current application acceptance is inferred. FullG11/canonical closure, original physical BUILD/title/D3overflows/main/human/publication remain open."
+    }
   },
   "review_evidence": {
     "source_hashes": {
@@ -52704,6 +52722,422 @@
       "/tmp/l1-main-composed-render-review-r1.json": "99db7f9702bcbe0ef006efd61f7f7a0f169ea9c8588cdb4184c691bf53294bb1"
     },
     "current_independent_review_scope": "Personally read actual current source/render reports; both narrowly ACCEPT current composition, not original physical science/title/D3cleanlayout/main/human acceptance. Reports do not replace this author own source assessment or donor acceptance.",
-    "writer_constraints": "scripts.bundle_json.write_bundle_json is existing canonical claims JSON writer; scripts/sentence_state.py is sole human/audit writer. No proposer ingestion or substitute state ledger. Main prose_state is absent, and real ingestion may create its ordinary emptystate; ROOT must explicitly preserve historical audit/human lineage, never copy donor humanstate as acceptance."
+    "writer_constraints": "scripts.bundle_json.write_bundle_json is existing canonical claims JSON writer; scripts/sentence_state.py is sole human/audit writer. No proposer ingestion or substitute state ledger. Main prose_state is absent, and real ingestion may create its ordinary emptystate; ROOT must explicitly preserve historical audit/human lineage, never copy donor humanstate as acceptance.",
+    "source_propagation_scoped_r2": {
+      "agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-propagation-scoped-r2",
+      "source_hashes": {
+        "src/core/constants.py": "aa841158ab58e087b400922ceeefef9d42a72f98882f55d6f0d8da7e740765e5",
+        "src/core/formulas.py": "ef3e76f28ab0bcad83311ba029b1a8fb19fd2cb161e6186d161ccf7ccf7cb836",
+        "tests/test_gravitational_waves.py": "86fba16e56dbc84253097abe4d1d24b2a5391333a4541e1ff0f2f99dd0cbdd69",
+        "src/core/citations.py": "85bb6a68aeb40f780adb73a62952afc05a020d2ea11da34ea33e6ac03fdf3680",
+        "docs/agents/claims-reviewer-bundle-prompts.md": "9e6c6836d8d37f13743f41599ec9799e72bcd1e46e484b7c490a29c8ceff6105",
+        "docs/PERMANENT_TRACKED_HYPOTHESES.md": "9887ebc65a2a2b2314c18e18034bf47d193df8a749981c0d2812fc84cfda7d1d"
+      },
+      "evidence_archive": {
+        "path": "papers/AutomatedReviews/2026-11-06-l1-main-delivery/SOURCE_PROPAGATION_R2_EVIDENCE.zip",
+        "sha256": "7b8248c6380ec3324dca4a821bdac80f08c9a34797940582d1818be6ac5ce3fe",
+        "crc_all_members_pass": true,
+        "member_sha256": {
+          "l1-main-source-propagation-proposal-r2.patch": "1dd24a9bf0aca1dbabfd719247e867693449598ebef2761090ad2e6f620dd5df",
+          "l1-main-source-propagation-proposal-r2.md": "2e85a18bc86dc819142d813e40d3512988abaa2c706543c9e9e4fc6b8fe715b8",
+          "l1-main-source-propagation-proposal-r2.json": "419cb3a5aea160575508d56d3ac996eda026db3d5efc92e272d4dcd3f99af0ad",
+          "l1-source-propagation-independent-r2.md": "ff05da3f244e9b56f213ae0ba8593851423fb4af149e1a759618217baef30297",
+          "l1-source-propagation-independent-r2.json": "5ac48616d9e6c8d986ed46769c26cf2c7b36e8d7a55e1d4a7fcfa0965b439704",
+          "l1-main-hypothesis-baseline.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "l1-main-hypothesis-baseline.stderr": "d5ede50360b6b6a1936b021846208bed8fb75b1653ea330fe7b6c9807f04f1cc",
+          "l1-main-hypothesis-baseline-r2.stdout": "d386c6f010b64f1491c24f7fde7af396fb2902a37ac5035937874aec2800cb79",
+          "l1-main-hypothesis-baseline-r2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "l1-main-hypothesis-render-r2.stdout": "7d2a51e66e010a7130d123e4e9fb3150a03abe5464f50d5ee45e596775d73cfd",
+          "l1-main-hypothesis-render-r2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "l1-main-hypothesis-gates-r2.stdout": "840ba6306459c9bcb75bb7a0408d6348ca592215fbdef12c243b2ba113f8be7c",
+          "l1-main-hypothesis-gates-r2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "l1-main-propagation-tests-r2.stdout": "c8a81de7ec16ee9aab04617ead45131f6583debb8dae9e6cbc1a17117a55b948",
+          "l1-main-propagation-tests-r2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "l1-main-current-plan.json": "654fb542a35282b0a5a0b3e37b395e392dff65ca01cd04339fd1f5fab258b007",
+          "l1-source-propagation-independent-r2-checks.json": "9631f27acf4b9865886d214ea0dbcf281c463673777f0fd749f0b20ee3ca549b"
+        }
+      },
+      "carrying_readback": {
+        "path": "papers/AutomatedReviews/2026-11-06-l1-main-delivery/SOURCE_PROPAGATION_R2_READBACK.json",
+        "sha256": "010dc72c795952cea6a7878ba64c28a18d6ae2e0ba344730bd15c98a86a0e75a",
+        "record": {
+          "parent": "f144749d795f904e563a83c869b0dee27bdbbd99",
+          "exact_accepted_five_file_proposal_applied": true,
+          "original_ast_assertions_values_metadata_preserved": "Independent proposal review and actual file hash equality",
+          "generated_hypothesis_view": "existing renderer; only H_VestigialModeIsGraviton narratives changed",
+          "hypothesis_gates": {
+            "pass": 2,
+            "fail": 0
+          },
+          "focused_tests": {
+            "pass": 124,
+            "fail": 0,
+            "exit_code": 0,
+            "seconds": 12.82
+          },
+          "TEX_PDF_inputs_unchanged": true,
+          "actual_PDFs_unchanged": true,
+          "application_review": "pending",
+          "canonical_G11_closure": false,
+          "original_physical_BUILD": "OPEN"
+        }
+      },
+      "exact_five_file_proposed_hashes_match_actual": true,
+      "personally_inspected": "Actual six-file diff, registry replacement, GW docstrings/test rename, citation summaries, corrected L1 anchor and generated hypothesis text; existing R2 proposal/independent source review and retained stdout receipts. No new primary acquisition, physical construction or test execution.",
+      "scoped_backing_chain_impacts": [
+        {
+          "index": 4,
+          "sentence_id": "sentence:L1:introduction:62514176",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 5,
+          "sentence_id": "sentence:L1:introduction:5f9fdcc4",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 6,
+          "sentence_id": "sentence:L1:introduction:0240691b",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 8,
+          "sentence_id": "sentence:L1:introduction:8b4bfa65",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 9,
+          "sentence_id": "sentence:L1:introduction:3aa1767b",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 10,
+          "sentence_id": "sentence:L1:introduction:6c6bdfda",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 11,
+          "sentence_id": "sentence:L1:introduction:67b7c8dd",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 14,
+          "sentence_id": "sentence:L1:introduction:c71f012d",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 15,
+          "sentence_id": "sentence:L1:introduction:64da36f6",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 19,
+          "sentence_id": "sentence:L1:introduction:73005b59",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 20,
+          "sentence_id": "sentence:L1:introduction:ece88384",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 21,
+          "sentence_id": "sentence:L1:introduction:d6d55f75",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 22,
+          "sentence_id": "sentence:L1:introduction:c671b5eb",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 28,
+          "sentence_id": "sentence:L1:introduction:92468fa1",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 29,
+          "sentence_id": "sentence:L1:introduction:b7a2d94a",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 30,
+          "sentence_id": "sentence:L1:introduction:92b08bc8",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 31,
+          "sentence_id": "sentence:L1:introduction:e41111f6",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 32,
+          "sentence_id": "sentence:L1:introduction:57841ed5",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 33,
+          "sentence_id": "sentence:L1:introduction:fed0c478",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 34,
+          "sentence_id": "sentence:L1:introduction:8d85d0bd",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 40,
+          "sentence_id": "sentence:L1:formal-setup-and-result:06a02fb4",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 41,
+          "sentence_id": "sentence:L1:formal-setup-and-result:89678d2f",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 42,
+          "sentence_id": "sentence:L1:formal-setup-and-result:7e269f6c",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 43,
+          "sentence_id": "sentence:L1:formal-setup-and-result:b81984d5",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "UNGROUNDED",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 44,
+          "sentence_id": "sentence:L1:formal-setup-and-result:26d8a4ef",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 70,
+          "sentence_id": "sentence:L1:formal-setup-and-result:b6f6c9cd",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 91,
+          "sentence_id": "sentence:L1:discussion:d0f5558e",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 101,
+          "sentence_id": "sentence:L1:discussion:d8f9b63c",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 113,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:fb832458",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 114,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:89d91fb8",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 115,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:400713c7",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 116,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:8cb5069d",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 117,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:3c7bc2ae",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 118,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:9b38846d",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 119,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:0ace8576",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 120,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:d4af581b",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 121,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:05e85cbd",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 122,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:7eec1d53",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 123,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:50947714",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 124,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:3d479f29",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 130,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:56ff1fe7",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 131,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:7e56289b",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 139,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:6409d539",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 140,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:67db304d",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "PASS",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 148,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:556783ed",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 149,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:09269d60",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        },
+        {
+          "index": 150,
+          "sentence_id": "sentence:L1:supporting-formal-results-and-reproducibility:064e25cb",
+          "prior_agent_run_id": "claims-reviewer-v2:2026-11-06:l1-main-521f-r1",
+          "verdict_preserved": "WARN",
+          "impact": "Backing descriptions now disclose scalar/assumed/adopted/conditional content and source-specific hypotheses rather than prior documentary overclaims. Existing named formula/theorem/parameter/citation identities remain; no target renamed or numeric/domain proof promoted. Old notes about current documentary residue describe their originalR1 input and remain attributed history. Physical partial-chain caveats and native/kernel/primary-custody limitations remain."
+        }
+      ],
+      "preservation_receipts": "Archived independent R2 AST analysis reports unchanged normalized executable formulas/values,165GW assertions, imports/identities/nonnarrative fields; only four hypothesis narratives,eight citation notes/provides,test documentary rename and L1 anchor. This author verifies exact proposed-carrying hashes and attributes independent semantic checks.",
+      "reported_execution_only": {
+        "focused_tests": "Archived stdout124passed12.82s, carrying readback terminal0; NOT executed by this author.",
+        "hypothesis_gates": "Archived existing tracked_hypothesis_ledger/tracked_hypotheses_fresh stdout2/2PASS, carrying readback; NOT executed by this author.",
+        "publication_closure": false
+      },
+      "human_audit_preimages": {
+        "papers/L1/audit_log.jsonl": "d87669616f4500c35532298c741340883a221cfbe43724d4d75444c18419ecf7",
+        "papers/L1/prose_state.json": "f3e0464c5745c6dc0fe11558709d2ed9eff7ba0445f00973ae7385ffc1616627"
+      },
+      "retained_limits": "Original B3 normalization/window asRESULT, physical state, tensor/matter/light, controlled transport/frequency/units/errors remain BUILD. Source qualification never supplies these; title/D3overflow/fullG11 closure/current application acceptance/main/human remain separate."
+    },
+    "root_source_propagation_application_intake_r2": {
+      "acceptance": "ACCEPT scoped actual application after independent proposal and integrated review; no original physical BUILD or aggregate G11 closure",
+      "review_report": "papers/AutomatedReviews/2026-11-06-l1-main-delivery/SOURCE_PROPAGATION_R2_FINAL_INTAKE.zip:l1-propagation-application-r2.md",
+      "review_sha256": "1f6265fad3d7fbd46adfb2dab2007c93f83a51cf1d58fdd8319f939087970155",
+      "test_session": 26218,
+      "test_exit": 0,
+      "focused_tests_passed": 124,
+      "hypothesis_checks_passed": 2,
+      "current_sentence_assessments_changed": 0,
+      "original_four_blockers": "OPEN",
+      "chronology": "Scoped reviewer refresh recorded pending application before the independent application report returned; ROOT records subsequent actual acceptance here without rewriting historical observations."
+    }
   }
 }

@@ -38,3 +38,21 @@ show26 failures before and89 passes after. Main dependency scanning still
 misclassifies the local papers namespace; existing reviewed repair is owed.
 Figure assets, PDFs and canonical acceptance require fresh candidate execution.
 Evidence: papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md.
+
+
+## Reviewed source-propagation application on main base
+
+Reconcile the scalar hypothesis narratives, adopted-window/frequency comments,
+GW formula docstrings, citation summaries, L1 review anchor and quarter-witness
+test documentation with the current manuscript. The existing hypothesis writer
+regenerates only the affected entry. Independent proposal and actual-application
+reviews accept the exact six-file composition, preserving executable ASTs,
+parameter/verification metadata and all assertions. Actual124focused cases and
+both hypothesis ledger/freshness gates pass. Original physical BUILD remains
+OPEN; no physical source, positive state, derived range or transport is supplied.
+
+The existing claims writer records a narrow source-evidence refresh; all151
+sentence assessments and historical records remain exact, allfour blockers
+remainOPEN, audit prefix/human state are preserved andzeroautomaticclosures
+occur. Evidence and remaining qualification limits are in
+papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md.

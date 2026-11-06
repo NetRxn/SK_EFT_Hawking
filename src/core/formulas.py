@@ -8546,38 +8546,30 @@ def vestigial_pertubation_growth_at_zero(k_wavenumber, eta):
 
 
 def c_GW_from_chi_vest(chi_vest, c_light=2.99792458e8):
-    """Gravitational-wave propagation speed from vestigial-phase susceptibility.
+    """Evaluate the assumed scalar speed law c_GW = c * sqrt(chi_vest).
 
-    In the linearized-EFE / vestigial-second-sound identification,
-    the GW propagation speed is
-
-        c_GW² = c² · (1 + δ_χ),  with δ_χ = (χ_vest − χ_vest^(c)) / χ_vest^(c)
-
-    where χ_vest is the metric-channel susceptibility (chi_RPA in
-    VestigialSusceptibility.lean) and χ_vest^(c) ≡ 1 is the natural
-    convention so the leading order matches c. Wave 2 ships the
-    leading-order identification: c_GW = c · √(1 + δ_χ).
-
-    Phase 5y H1 caveat: the second-sound mode is NOT derived as a
-    propagating DOF (negative-evidence finding). This formula assumes
-    the identification, which is a tracked-hypothesis bridge.
+    chi_vest is a free dimensionless normalized response. Neither this law
+    nor its physical normalization follows from the RPA closed form alone.
+    A microscopic physical state, propagating tensor mode and matter/light
+    reference matching remain part of the original open L1 BUILD.
 
     Lean: GravitationalWaves.c_GW
     Aristotle: pending
-    Source: Volovik JETP Lett. 119, 564 (2024); Phase 5y H1 deep research.
+    Source: project kinematic ansatz; papers/L1/paper_draft.tex Eq. (cGW).
+        Volovik arXiv:2601.00639v1 (2026), Eqs. (6)–(9), derives luminal
+        second sound in its de Sitter model, not this susceptibility law.
 
     Parameters
     ----------
     chi_vest : float
-        Vestigial-phase metric-channel susceptibility (dimensionless,
-        in units of inverse Λ²). χ_vest = 1 ⇒ c_GW = c at leading order.
+        Free dimensionless normalized susceptibility; unity gives c_GW = c.
     c_light : float, default=2.99792458e8
-        Speed of light in m/s.
+        Reference speed in m/s for an SI interpretation.
 
     Returns
     -------
     float
-        c_GW in m/s (positive for positive susceptibility and c_light).
+        c_light * sqrt(chi_vest), positive for positive real inputs.
         Negative real susceptibility returns NaN.
     """
     scalar_type = np.result_type(chi_vest, c_light, np.float64).type
@@ -8586,25 +8578,25 @@ def c_GW_from_chi_vest(chi_vest, c_light=2.99792458e8):
 
 
 def c_GW_deviation_from_c(chi_vest):
-    """Dimensionless GW speed deviation from light: (c_GW − c)/c.
+    """Evaluate sqrt(chi_vest) - 1 under the assumed normalized speed law.
 
-    Returns the GW170817 comparison quantity. For χ_vest = 1
-    (default natural anchor), the deviation is exactly zero;
-    otherwise δ_c = √χ_vest − 1.
+    This is the relative deviation (c_GW - c)/c when c != 0. Unity is
+    the adopted anchor, not a derived microscopic response normalization.
 
     Lean: GravitationalWaves.c_GW_deviation_zero_iff_chi_one
     Aristotle: pending
-    Source: Abbott et al. ApJL 848, L13 (2017) Eq. (1).
+    Source: project kinematic ansatz. Abbott et al. ApJL 848, L13 (2017)
+        Eq. (1) supplies the observational comparison, not the ansatz.
 
     Parameters
     ----------
     chi_vest : float
-        Vestigial-phase susceptibility (dimensionless).
+        Free dimensionless normalized susceptibility.
 
     Returns
     -------
     float
-        (c_GW − c) / c. Zero at the natural anchor χ_vest = 1.
+        sqrt(chi_vest) - 1, zero at the adopted anchor chi_vest = 1.
     """
     scalar_type = np.result_type(chi_vest, np.float64).type
     chi = scalar_type(chi_vest)
@@ -8615,32 +8607,35 @@ def c_GW_deviation_from_c(chi_vest):
 
 
 def dispersion_correction_from_GammaH(omega_hz, gamma_h_dimensionless):
-    """Leading dissipative dispersion correction at frequency ω.
+    """Evaluate the illustrative numerical product gamma * omega.
 
-    From SecondOrderSK Γ_H = (γ₁ + γ₂)(κ/c_s)²: the dissipative
-    correction to the linear dispersion ω = c_GW · k is
-
-        δω/ω = Γ_H · ω / c_GW²       (leading order in ω/Λ_diss)
-
-    parameterized by the dimensionless coefficient
-    γ_H_dim ≡ Γ_H · ω / c_GW² evaluated at the probe frequency.
+    This is a real-product ansatz, not a derived leading term of a
+    microscopic derivative expansion. The coefficient is multiplied by
+    the probe exactly once; it does not already include that probe.
+    A dimensionless physical correction requires compatible coefficient
+    and frequency normalization. Identifying gamma = Gamma_H/c_GW² is
+    unmatched: the acoustic horizon damping rate SecondOrderSK.GammaH
+    [s⁻¹] supplies no metric-channel state/transport identification.
+    Ordinary versus angular frequency, units and error bounds remain open.
 
     Lean: GravitationalWaves.dispersion_correction
     Aristotle: pending
-    Source: Crossley-Glorioso-Liu JHEP 2017 (arXiv:1511.03646);
-            SecondOrderSK.lean Γ_H definition.
+    Source: project product ansatz; papers/L1/paper_draft.tex appendix.
 
     Parameters
     ----------
     omega_hz : float
-        GW probe frequency (Hz).
+        Numerical probe; the API label alone does not match Hz to angular
+        frequency or supply the physical unit normalization.
     gamma_h_dimensionless : float
-        Dimensionless Γ_H · ω / c² evaluated at probe ω.
+        Numerical coefficient gamma before multiplication by the probe.
+        The legacy name does not establish physical dimensionlessness.
 
     Returns
     -------
     float
-        Dimensionless dispersion correction δω/ω at probe ω.
+        gamma_h_dimensionless * omega_hz. Interpretation as a physical
+        relative correction requires separate matching.
     """
     return float(gamma_h_dimensionless * omega_hz / 1.0)
 
@@ -8673,26 +8668,29 @@ def ligo_constraint_check(c_gw_deviation, two_sided_cap=3.0e-15):
 
 
 def c_GW_natural_range(chi_vest_lower=0.1, chi_vest_upper=10.0):
-    """Wave 2 natural-range (c_GW − c)/c interval for χ_vest ∈ [lower, upper].
+    """Deviation endpoints for an adopted nonnegative susceptibility interval.
 
-    Computes the deviation interval over the natural χ_vest range.
-    The GW170817 cap (3e-15) is satisfied only by an exponentially
-    fine-tuned subset — Wave 2 paper documents this as the structural
-    constraint on the vestigial-second-sound identification.
+    Under the assumed law, sqrt(chi_vest) - 1 is monotone. The default
+    [0.1, 10] is an adopted comparison window, not a derived physical
+    range. Both endpoints violate the fixed cap tau = 3e-15, while the
+    finite compatible interval [(1-tau)², (1+tau)²] lies inside the window
+    and contains unity. Its exact algebraic width is 4*tau; this is no
+    exponential scaling, probability without a prior, or microscopic no-go.
+    The original physical normalization/range BUILD remains open.
 
     Lean: GravitationalWaves.vestigial_natural_range_violates_ligo
     Aristotle: pending
-    Source: Phase 5y H1 deep research caveat + GW170817 bound.
+    Source: project adopted window and assumed law; GW170817 comparison.
 
     Parameters
     ----------
     chi_vest_lower, chi_vest_upper : float
-        χ_vest natural-range bounds.
+        Ordered nonnegative dimensionless normalized-response endpoints.
 
     Returns
     -------
     tuple
-        (delta_min, delta_max) for (c_GW − c)/c.
+        (sqrt(lower) - 1, sqrt(upper) - 1).
     """
     delta_min = float(np.sqrt(chi_vest_lower) - 1.0)
     delta_max = float(np.sqrt(chi_vest_upper) - 1.0)

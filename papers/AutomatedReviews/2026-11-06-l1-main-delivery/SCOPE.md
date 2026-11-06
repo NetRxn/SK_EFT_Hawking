@@ -161,3 +161,45 @@ and application review, existing hypothesis renderer/controls, canonical
 claims refresh, counts freshness and qualified main gates. A narrow R1 patch
 alone must not close the aggregate L1-fix-propagation obligation. No claim
 strength, original physical BUILD, title or human gate is reduced.
+
+## Applied grouped propagation repair: independent acceptance
+
+ROOT applies the exact independently accepted R2five-file proposal, then uses
+only the existing hypothesis renderer for its derived view. Independent actual-
+application review ACCEPTS the exact six-file composition, including executable
+AST/assertion/value/metadata preservation and readable derived narratives.
+All124focused dependency/GW/seedresidue cases pass in12.82seconds with actual
+terminalexit0; both existing hypothesis ledger/freshness checks pass. Manuscript,
+PDF, figure and Lean bytes remain exact, so prior render evidence is retained
+without an unnecessary recompile or a new native claim.
+
+The existing canonical claims writer validates/dryruns/ingests the scoped
+refresh withzeroautomaticclosures. All151assessment objects/summary/old69+
+5history/donor151+54history and original blocker fields are EXACT; only three
+reviewer progress children and one subsequent ROOTapplication-intake child are
+appended. Allfour blockers remainOPEN; humanstatebytes/oldauditprefix survive.
+The refresh is explicitly not a new151sentencewalk. Reviewers and raw execution
+command/terminal metadata are in SOURCE_PROPAGATION_R2_FINAL_INTAKE.zip.
+
+A focused diagnostic invokes the EXISTING Paper/ReviewFinding/FLAGS producers
+and G11 evaluator for all21bundles, with the entire canonical paper roster.
+It is not a full graph/native build or231gate snapshot. L1G11remainsblocked:
+33flagged findings,24fixed/1accepted/8open, with original2.1 human parameter
+verification the only blocking-severity item in this mapping. Its old proposed
+normalization note must not be approved as a derived physical window. The four
+scientific/propagation obligations retained by actual claims review and the
+original BUILD acceptance remain separate; this diagnostic proves neither
+physical readiness nor permission for a scope reduction.
+
+The already queued parallel L3 reconciliation finds substantive existing source
+on PR114f905a2873 and PR112a34eb6b08, beyond main/publication pinned heads.
+The exact report/pins/oldfinding identities are archived, not a second queue.
+Reuse its derivative/firstlaw/geometry constructions and existing prior review
+before any new proof dispatch; remaining physical matching and analytic path/
+box instantiation must not be assumed absent from every branch. L1 remainslead.
+
+Next ROOT: canonical disposition of actual findings through their existing
+writers once the original acceptance evidence is met; qualified counts/full-
+project/main execution under existing controller ownership, while original
+physical BUILD continues with Executor. No cached/fabricated native certificate,
+new runner, replayed whole-suite green, new green bundle or humanapproval.

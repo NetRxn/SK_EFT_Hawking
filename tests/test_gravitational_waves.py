@@ -41,7 +41,7 @@ from src.gravitational_waves import (
 # c_GW core formulas
 # =====================================================================
 class TestCGWCore:
-    """c_GW = c · √χ_vest (Wave 2 leading-order identification)."""
+    """c_GW = c · √χ_vest under the assumed normalized scalar law."""
 
     def test_c_GW_at_chi_one_equals_c(self):
         """Lean: GravitationalWaves.c_GW_at_chi_one"""
@@ -289,10 +289,10 @@ class TestCGWGrid:
 
 
 # =====================================================================
-# Dispersion correction (SK-EFT bridge)
+# Illustrative numerical product correction (physical matching open)
 # =====================================================================
 class TestDispersionCorrection:
-    """Leading dissipative dispersion: δω/ω = γ · ω."""
+    """Illustrative real-product ansatz: delta = gamma * omega."""
 
     def test_dispersion_zero_at_no_dissipation(self):
         """Lean: dispersion_correction_zero_at_no_dissipation"""
@@ -312,7 +312,8 @@ class TestDispersionCorrection:
     def test_dispersion_at_default_gamma(self):
         omega = GW_PARAMS["GW170817_PEAK_FREQ_HZ"]
         result = leading_dispersion_correction(omega)
-        # Default γ_H is 1e-30 placeholder, ω=100 Hz → δ = 1e-28
+        # Placeholder gamma=1e-30, numerical probe=100 gives delta=1e-28.
+        # Physical frequency convention and unit normalization remain unmatched.
         assert result == pytest.approx(1e-30 * 100.0, rel=1e-15)
 
     def test_dispersion_grid_shape(self):
@@ -369,7 +370,7 @@ class TestVestigialModeIsGravitonBundle:
         assert chi <= 0  # P1 fails
 
     def test_compatible_window_width_consistent_with_lean(self):
-        """Window width = 4·tol to leading order; Lean biconditional pre-image."""
+        """Exact real width is 4*tol; rounded endpoints approximate the preimage."""
         cap = GW_PARAMS["C_GW_TWO_SIDED_CAP"]
         chi_lo, chi_hi = chi_vest_window_compatible_with_ligo(cap)
         # Quantized endpoints carry a known rounding budget around exact 4·tol.
@@ -392,7 +393,7 @@ class TestWave1Integration:
         assert c == 299792458.0
 
     def test_chi_vest_natural_range_matches_alpha_ADW_convention(self):
-        """χ_vest natural range follows GRAV.ALPHA_ADW_LOWER/UPPER convention."""
+        """Adopted windows match numerically without identifying their coefficients."""
         from src.core.constants import GRAV_PARAMS
         assert GW_PARAMS["CHI_VEST_NATURAL_LOWER"] == GRAV_PARAMS["ALPHA_ADW_LOWER"]
         assert GW_PARAMS["CHI_VEST_NATURAL_UPPER"] == GRAV_PARAMS["ALPHA_ADW_UPPER"]
@@ -462,8 +463,9 @@ class TestStrengtheningPass:
 
     def test_vestigial_dispersion_below_ligo_at_inspiral_peak(self):
         """Lean: vestigial_dispersion_below_ligo_at_inspiral_peak.
-        Vestigial-regime placeholder γ ≤ 1e-30 keeps δω/ω below the
-        GW170817 cap at the GW170817 inspiral peak ω = 100 Hz."""
+        The chosen placeholder gamma=1e-30 makes the numerical product
+        gamma*100 smaller than the cap. This tests neither a derived physical
+        coefficient nor a matched 100 Hz correction or total deviation."""
         from src.core.constants import GW_PARAMS
         gamma = GW_PARAMS["GAMMA_H_VESTIGIAL_DEFAULT"]  # 1e-30
         omega = GW_PARAMS["GW170817_PEAK_FREQ_HZ"]      # 100
@@ -475,9 +477,10 @@ class TestStrengtheningPass:
         # Verify the 13-orders-of-magnitude headroom
         assert abs(result) < 1e-25  # 3 orders of margin to demonstrate "well below"
 
-    def test_p3prime_independent_of_p1(self):
-        """P3' (sub-half-deviation) is genuinely independent of P1 (positivity).
-        Witness: χ=1/4 satisfies P1 but not P3'."""
+    def test_p1_does_not_imply_p3prime(self):
+        """P1 (positivity) does not imply P3' (sub-half-deviation).
+        At chi=1/4 P1 holds while P3' and P2 fail. Conversely P3' implies
+        sqrt(chi)>1/2 and hence P1; this is no two-way independence."""
         # P1 at χ=1/4: 0 < 1/4 ✓
         assert 1.0/4.0 > 0
         # P3' at χ=1/4: |sqrt(1/4) - 1| = 1/2, NOT < 1/2 ✗
