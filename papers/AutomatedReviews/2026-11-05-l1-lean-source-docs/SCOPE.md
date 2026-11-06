@@ -35,8 +35,15 @@ source applicability and discloses compiler, package and configuration limits.
 This is not a publication-checkout build or exported epoch certificate.
 [Actual publication controls](REPAIRED_VERIFY.json) pass all four findings.
 The existing scoped project checks pass5/5 with five retained warnings;
-their complete output is in PROJECT_CHECKS.stdout. The required broader fast
-suite is still running at this checkpoint; its outcome remains unestablished.
+their complete output is in PROJECT_CHECKS.stdout. The actual broader default
+suite completed on primary1028:8214passed,19failed,7skipped,95deselected,
+7warnings in1757.04seconds. BROADER_FAST.stdout and BROADER_QUALIFICATION.json
+retain the RED outcome. Independent dependency/conservation review in
+BROAD_DISPOSITION_INDEPENDENT.md supports narrowly scoped individual finding
+closure; it grants no overall suite, wave, main or publication acceptance.
+Every current manuscript/review/registry/test/script/plugin/environment input
+is unchanged against pre-comment37dd. No literal baseline rerun is claimed;
+the independent review checks the actual failure dependencies and their limits.
 
 The corpus-wide review-command gate remains red. At the pinned publication
 base it has56 malformed controls. This package initially added two malformed
