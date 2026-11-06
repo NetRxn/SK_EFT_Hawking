@@ -149,7 +149,7 @@ No approved two-package scientific dispatch is currently waiting on recovery.
 
 The next L1 coefficient proof is now constructed and independently source/kernel
 accepted: `bfb8ca2576ccdfb25ad2ebf3bebc1a2bfb7d9fc0`, preserved remotely at
-`codex/publication-l1-hermite-source-20261106`. It proves actual Gaussian
+`codex/publication-l1-hermite-source-20261106`. [Full independent kernel review](GAUSSIAN_HERMITE_KERNEL_REVIEW_R1.md) and [complete actual MCP custody](GAUSSIAN_HERMITE_EVIDENCE_R1.json) are preserved. It proves actual Gaussian
 polynomial integrability, all-order Hermite insertions with no degree cap,
 coefficient extraction, factorial normalization and orthogonality. Every export
 uses only standard axioms. Aggregate integration, authoritative build and actual
