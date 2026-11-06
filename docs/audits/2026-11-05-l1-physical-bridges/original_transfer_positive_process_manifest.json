@@ -1,0 +1,42 @@
+{
+  "archive": "original_transfer_positive_process_evidence.zip",
+  "sha256": "3e276790c367acc17b65c7d49c4439c4771100886752f5ad48ed36581643c913",
+  "bytes": 1546555,
+  "members": 20,
+  "actual_manual_result_sha256": "d4e59e8d68ab4b6babc4f3daf374372bb1dddfbd4840e763b16a8eaafef248fd",
+  "approved_brief_sha256": "7ceacf74a90f66a61df21f206eff0914d92599772fb57474a33245de9ae96655",
+  "parent_checkpoint": "dcd46b6ce053cf2fa771f735577fd36d7001de6e",
+  "canonical_copies": {
+    "l1-original-positive-process-result-r1.md": "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION.md",
+    "l1-original-process-dilation-brief-r1.md": "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_BRIEF.md",
+    "l1-original-process-math-prospective-r1.md": "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_MATH_PROSPECTIVE_R1.md",
+    "l1-original-process-source-prospective-r1.md": "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_SOURCE_PROSPECTIVE_R1.md",
+    "l1-original-process-math-result-r1.md": "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_MATH_REVIEW_R1.md",
+    "l1-original-process-source-result-r1.md": "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_SOURCE_REVIEW_R1.md",
+    "l1-original-process-primary-intake-r1.md": "ORIGINAL_PROCESS_PRIMARY_RESEARCH.md"
+  },
+  "files": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "accepted/N16_SYMBOLIC_NORMALIZATION.md": "8544ece0ae2dfce3b3e054cd81c17153467e9b9afb9959be0372ab406e046487",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "accepted/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md": "244ed2e609d59bc7d5b004a51c81f8512d02514721bab6364a4ee2a38eb813df",
+    "accepted/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md": "563aeda483e743933580139c7edc8c8ca32f9522ddd74128f091bf736b1062b2",
+    "accepted/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_ACCEPTANCE.md": "3e2f5471f68869fb94da54bb86e758d739944dcf257b8d744952ca098f1a115d",
+    "accepted/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": "c1c796de8678af83952e3cb531bdb15a0f09a203fbf2f582aaffc5568e039468",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "candidate/l1-original-positive-process-result-r1.md": "d4e59e8d68ab4b6babc4f3daf374372bb1dddfbd4840e763b16a8eaafef248fd",
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "parent/original_microscopic_metric_coherent_evidence.zip": "f9b920977d91c8b01a9d3b72dbf451272faef388a0f832a2183c9c3e8a91a277",
+    "parent/original_microscopic_metric_coherent_manifest.json": "e2d900f08e47598128e95551c7c8714ed6e3229e51edcf467e6739d14452f0b4",
+    "prework/l1-original-process-dilation-brief-r1.md": "7ceacf74a90f66a61df21f206eff0914d92599772fb57474a33245de9ae96655",
+    "prework/l1-original-process-math-prospective-r1.md": "adff0208cffd0cd3e96ee228c5b02a5f10c36aadb15e1f7a3256c69a2af6ff5f",
+    "prework/l1-original-process-source-prospective-r1.md": "793fd30dbbffd61f19d9c12ea6bf1918c81f9f32dd63f8fe1c8a8f78ba17370f",
+    "research/l1-original-process-primary-intake-r1.md": "5fa63bdccd9ecf9df5d55a03e9b43bdb3660b8d0facef2e6476334615556fed1",
+    "review/l1-original-process-math-result-r1.md": "eef2c9dd43355789efcf1247767c64555777ad86ecf8cd1f0e66207d919ec0fa",
+    "review/l1-original-process-source-result-r1.md": "6967a49e19aa95198c474efcadbfd5443238d6ad76e25fcc4c979eafa285ca53",
+    "source/original-process-custody-r1.json": "ea548e15a1a0dd69dc282a7957d4019c11d7c1e26198d5f3d17dd11efb0196b0"
+  },
+  "outcome": "BOTH independent ACTUAL ACCEPT: original-transfer coefficient reconstruction, actual full two-slice positive/PPT conditional CPTP dilation, full C2 preservation and finite binary classical all-history-link instrument obstruction",
+  "scope": "Not original one-step physical causal transfer, quantum-link process or physical metric/BUILD completion; no same-time24-link or global original-model no-go; no runtime admission"
+}
