@@ -35,6 +35,30 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **Eleven accepted L1 source closures now reconciled to the delivery branch.**
+  [PR117 current readback](https://github.com/NetRxn/SK_EFT_Hawking/blob/codex/publication-l1-main-delivery-20261106/papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1_READBACK.json)
+  records fresh independent per-finding applicability and actual existing-writer
+  dry-run/real Verify success for eleven prior repairs. Canonical reader reports
+  all11FIXED; ledger1236->1247 preserves every earlier row/schema. Original August
+  bridge retains its source anchor; no new proof is claimed. All122original
+  evidence contents are preserved:120standalone/twoexactarchive members. Exact
+  archived predecessor placement removes only five obsolete questionnaire nodes,
+  preserving all other nodes and current physical BLOCK. LedgerID1/1PASS with
+  same59legacyexceptions; three original marker contractsPASS. Current corpus
+  checks1/3PASS (severity/lane and56malformedVerify debt remainRED). Six scientific/
+  catalog/human pins unchanged, four scientific blockersOPEN; no green bundle,
+  physical closure, main merge, full native or human acceptance.
+  **Independent enabling task:** follow the already accepted numerical-literal
+  audit's D1 recommendation: classify its complete derived-value families and
+  existing canonical producers for an existing SCALARS/TABLES retrofit. This
+  addresses actual shared full-suite debt139>117 while L1 remains lead. Preserve
+  measured/source/theorem/adopted constants; do not merely wrap literals or select
+  arbitrary22sites to pass. Source/operating-point proposal, independent review,
+  actual producer controls and rendering precede application. No pipeline changes
+  or D1 physical-derivation acceptance. Executor continues the bounded physical
+  prescription research under the prior accepted assignment.
+
+
 - **Current L1 generated-number/catalog checkpoint and next integration acceptance.**
   [PR117 at9505b60af](https://github.com/NetRxn/SK_EFT_Hawking/blob/9505b60afd8c63a4b2161ddded516bf461740e70/papers/AutomatedReviews/2026-11-06-l1-main-delivery/GW_SCALARS_R1_READBACK.json)
   independently accepts two existing-renderer SCALARS specs/nine outputs and
@@ -48,13 +72,16 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   with zero automatic closures. F independent R6 accepts20spans/26sourcepins;
   existing declared Verify exits0. All receipts and initial compile failures
   are remotely checkpointed. No physical closure, main merge or green bundle.
-  **Next ROOT ordinary L1:** finish the existing protected integration prerequisite
-  review, including primary's newer lifecycle/native-startup contracts. Current
-  publication/primary lines diverge atmain; GW Lean source is already identical.
-  Do not redo that proof, overwrite33divergent shared paths, merge unrelated
-  history wholesale, retargetprimary or create a validation workaround. Require
-  the actual minimal owned composition/dependency acceptance before full native/
-  project/main qualification. See PR117 SCOPE and its exact lineage report.
+  **Next ROOT ordinary L1:** reconcile the actual scientific-source admission/
+  integration order and remaining exact-source qualification, not a mandatory
+  lifecycle import. R3 withdraws R2's inference: newer controllers are neither
+  a demonstrated scientific prerequisite nor sufficient for certification.
+  All four GW project-import modules and pinned dependencies already match
+  primary. Preserve canonical custody and peer science; no proof reimplementation,
+  speculative infrastructure upgrade, wholesale unrelated merge or cache/epoch
+  workaround. Publication delivery remains the intended main candidate; bounded
+  primary evidence cannot replace its whole-source native/fullgraph/merge gates.
+  See PR117 SCOPE and NATIVE_PREREQUISITE_REQUIREDNESS_R3.md.
 
 - **Deeper physical-prescription research commissioned; auxiliary audit not started.**
   [ROOT intake](../2026-11-05-l1-physical-bridges/ORIGINAL_LOW_DEGREE_METRIC_ROOT_INTAKE.json)
