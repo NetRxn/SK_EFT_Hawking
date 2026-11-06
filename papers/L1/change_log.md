@@ -314,3 +314,12 @@ constructions. The broader default test suite remains RED with19 failures.
 New MAJOR source finding1.3 remains open with an independently accepted proposed
 comment correction. Original physical BUILD, stages/main and human approval stay
 open. See ../AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md.
+
+
+2026-11-06 — Final source attribution correction qualified and canonically closed.
+The c_GW docstring states the adopted scalar law and the scalar hypothesis's
+limited role. Source definitions/proofs remain byte-identical. Five native scans,
+the controlled build, five scoped project checks and independent application
+review support closure1.3. All89 publication gravitational-wave tests pass.
+The source package closes nine review records across shared repairs; the19 broad
+failures and full scientific/publication/main/human requirements remain open.

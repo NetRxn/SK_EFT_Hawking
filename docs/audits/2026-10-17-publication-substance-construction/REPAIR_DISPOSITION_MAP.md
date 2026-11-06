@@ -34,6 +34,23 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **L1 source-documentation package complete at its qualified scope.**
+  [Final controlled repair and canonical closure](../../../papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md#final-source-package-checkpoint)
+  resolve the final MAJOR definition attribution after actual source application,
+  five clean native scans, a matching authoritative build, 5/5 scoped project
+  checks with six retained warnings, independent verification and the existing
+  closure writer. All89 publication gravitational-wave tests and all nine
+  declared controls pass. Nine review records are closed across shared repairs;
+  they are not nine scientific constructions. All1271 prior ledger rows remain
+  when the final record is appended. The planner reports no open GW-source group.
+  All19 broader failures, original B3/state/matter/tensor/transport, full
+  publication/native/project, main and human acceptance remain OPEN.
+  **Next ROOT acceptance work:** complete the remaining D3/Paper25 propagation
+  against current L1 and pursue qualified incremental delivery. Personally intake
+  Executor's503a78eb original-premise handback before recording its scientific
+  acceptance or assigning the next construction. This continues the L1 lead;
+  Executor's bounded deep work does not transfer its publication readiness.
+
 - **L1 adopted finite-state reflection route: actual manual obstruction accepted.**
   [ROOT scientific intake and accepted next ownership](../2026-11-05-l1-physical-bridges/PUBLICATION_SATURATION_INTAKE.md)
   record direct full proof/review/source reading and complete custody for `6905caf8`.
@@ -50,7 +67,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   ROOT retains all L1 readiness; original B3/state/matter/tensor/transport and
   whole-publication/main/human acceptance remain OPEN.
 
-- **L1 eight review records canonically closed; remaining definition repair OPEN.**
+- **L1 first eight review records canonically closed (preceding checkpoint).**
   [Existing-writer receipts and exact scope](../../../papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md#canonical-individual-closure)
   record original stage13 sections3.3/3.4/4.2/5.3 and four focused source
   findings fixed through independent substantive verification and the canonical
@@ -59,8 +76,7 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   appended across shared repairs. The actual broader default suite is RED:
   8,214 passed / 19 failed / 7 skipped / 95 deselected. Independent dependency/conservation
   review supports these individual closures while retaining every broader failure.
-  Separate MAJOR source finding1.3 has an accepted comment proposal and remains
-  OPEN pending controlled application/native/project qualification. No original
+  The subsequent MAJOR source finding1.3 is resolved in the final package above. No original
   physical BUILD, full-stage, main or final human acceptance is discharged.
 
 - **L1 symbolic normalization construction accepted for bounded scientific intake.**
@@ -77,12 +93,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   is discharged by this enabling mathematical construction.
 
 
-- **L1 Lean source documentation: first repair applied; definition follow-up pending.**
+- **L1 source-documentation intermediate checkpoint.**
   A fresh independent review accepts original stage13 findings3.3/3.4/4.2/5.3
   at their own scopes, including the already implemented nonzero-c bridge.
   It also identifies a separate false local speed-law attribution in the
-  c_GW definition comment. New MAJOR finding1.3 is OPEN; its independently
-  accepted one-comment proposal awaits controlled application and qualification.
+  c_GW definition comment. The subsequent independently accepted definition correction now has controlled
+  application, qualification and recorded closure in the final package above.
   The earlier repair and all its passing evidence remain bounded to that version.
 
   [Exact repair and retained review/native/build evidence](../../../papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md)
@@ -93,8 +109,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   Normal controller absorption and authoritative build completed at1028b047;
   wt1 is released and legacy wt2/wt3 work preserved. All four actual publication
   finding controls pass. Five scoped project checks pass with retained warnings;
-  the broader fast suite is still running, so individual canonical closures remain
-  pending. Corpus command-format failures return to the exact56 baseline after
+  the later broader run and bounded disposition are recorded above, alongside
+  canonical individual closures; the overall suite remains RED. Corpus command-format failures return to the exact56 baseline after
   this package's two command-format defects were repaired. ROOT retains the entire
   L1 readiness chain; Executor owns only specifically bounded deeper constructions.
   Original physical BUILD, whole-publication native/project, stage, main and human
@@ -116,9 +132,10 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   appends one audit event and closes nothing automatically. The
   [preceding reader-polish milestone](../../../papers/AutomatedReviews/2026-11-05-l1-reader-polish/SCOPE.md)
   remains historical evidence, not the current134-unit or3281-word state.
-  **ROOT's next publication actions:** resolve both existing Lean documentation
-  findings through the supported controlled validation route and integrate the
-  independently accepted physical results into the same source/readiness chain.
+  **ROOT's next publication actions:** complete the remaining consumer propagation
+  and scientific intake through the same source/readiness chain. The source
+  documentation findings now have the controlled verification and recorded closures
+  linked in the final package above.
   Preserve newer controller history; do not replace it with older publication
   control code. Original susceptibility/window, physical state, tensor/matter,
   microscopic normalization and transport/frequency requirements remain OPEN;
@@ -145,8 +162,8 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   LANDED. The later reader-polish checkpoint above addresses the abstract and
   definitions while retaining remaining inventory/structure issues. ROOT retains the full
   manuscript and readiness chain. The original B3/state/tensor/matter/transport
-  construction and both separately filed Lean source-comment findings remain
-  open. No new all231-gate, native, main or human publication acceptance is
+  construction remains OPEN. The separately filed Lean source-comment findings
+  now have controlled verification and recorded closure above. No new all231-gate, native, main or human publication acceptance is
   inferred from this checkpoint.
 
 - **Existing canonical portfolio artifact refresh.**
@@ -166,10 +183,9 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   declaration identities/dates, stage/human fields or original scientific scope.
   [Current evidence and residual assignment](../../../papers/AutomatedReviews/2026-11-05-l1-apex-propagation/SCOPE.md)
   distinguish the corrected metadata from the aggregate Lean independence
-  docstring, which remains OPEN and ROOT-owned. Next reconcile controlled
-  candidate validation, apply the exact proposed comment correction without
-  changing the proof API, then obtain independent verification and required
-  native/project qualification before closure. Peer primary/slot history stays
+  docstring, now corrected through controlled authoring without changing the
+  proof API. Actual native/project qualification, independent verification and
+  canonical closure are recorded in the final source package above. Peer primary/slot history stays
   preserved; no alternative native route or new infrastructure is authorized.
   Ordinary manuscript/readiness work continues in parallel. This does not alter
   the lead priority, original B3/tensor/matter/transport acceptance or full prose BLOCK.
