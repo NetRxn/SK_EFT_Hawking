@@ -2,6 +2,9 @@
 
 ## Current L1 scientific successors — 2026-11-06
 
+**Latest ordinary construction milestone:** full original C3 has different source/kernel ACCEPT at056ccb9f0 (168exports/70new closing states), normal primary absorption/native epochbb8c4eb3 and remote preservation. The focused exact-current-main nine-module candidate0c0c85c8 passes its OWN native10,843jobs; composition/canonical/full merge qualification remains required. Initial aggregate placement failure and correction are preserved. The older source420 R6 snapshot remains the last all21 measurement,160pass/25blocked/28open/18recheck. Original coefficient-plan R1 has separate physics/cost REVISE; accepted author repairs all requested conventions, source grading, complete original one-site control cost and minor/resource accounting, reusing existing accepted factorization. No scientific computation or B3/physical closure follows. [Current evidence and resume assignments](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints) supersede older active C2/C3 statements below.
+
+
 **Current ordinary auxiliary construction milestone:** Eq4 compensation, B1
 actual coframes, C1 actual exterior norm/evaluation and C3-S original source
 polynomials have independent source/math/kernel/composition acceptance. Main-based

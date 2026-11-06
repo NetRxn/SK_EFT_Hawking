@@ -34,6 +34,13 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Current resume point — full original C3 accepted, focused actual-main native checkpoint.**
+Different full actual source/kernel review accepts C3 at056ccb9f0; normal primary absorption/native epochbb8c4eb3 is pushed. [Complete acceptance and active assignments](GRASSMANN_VALUED_EQ7_ASSIGNMENTS_R1.md#full-original-c3-independently-accepted-and-natively-absorbed--6-november-2026) retain all original requirements. ROOT reuses the existing delivery worktree on [focused draft PR118](https://github.com/NetRxn/SK_EFT_Hawking/pull/118), branch codex/publication-l1-original-eq7-main-20261106: exact actualmaince194 plus nine accepted modules/nine imports, corrected source0c0c85c8, OWN native10,843PASS. [Current delivery and remaining qualification](ORIGINAL_EQ7_MAIN_CHECKPOINT_R1.md) preserve initial integration failure/correction and different composition review. Candidate-specific canonical refresh/review, full required merge checks and actual main delivery remain next; older mixed draft117/420 remains pushed.
+
+[Current known merge-check differential](MAIN_MERGE_BLOCKERS_20261106_R1.md): mixed420 has24fail/3pass in the exact prior27failure cohort; untouched actualmain has25fail/2pass. This is not a failed-bundle count or full-suite pass. No baseline waiver, ceiling increase, new publication machinery or scientific scope reduction. Last all21 snapshot remains R6 at420:160pass/25blocked/28open/18recheck, zero new greens.
+
+Original coefficient plan R1 has two substantive independent REVISE reviews; author R2 repairs are active under packetR3 and reuse existing accepted one-site factorization. No coefficient evaluator/campaign has run. ROOT owns ordinary L1/publication/numerical delivery; Executor independently develops the deeper Lorentzian/composite-cycle package under two prospective reviews, without a new theorem/physical acceptance. L1 and the agreed portfolio priority remain unchanged.
+
 **Current resume point — corrected C2 absorbed; full original C3 active.**
 C2 corrected source/kernel/composition has independent R2 ACCEPT and normally
 absorbs/builds at pushed primary450710b86, epoch6e14a9c16; its actual native
