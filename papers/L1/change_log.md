@@ -304,3 +304,13 @@ controller build are recorded in ../AutomatedReviews/2026-11-05-l1-lean-source-d
 The same patch is applied to this publication candidate; four declared controls
 pass. Broader qualification and canonical individual closure remain pending.
 Original scientific BUILD and all publication/main/human acceptance are retained.
+
+
+2026-11-06 — Canonical scoped closure records original stage13 findings3.3,
+3.4,4.2,5.3 and four focused source-documentation findings after independent
+actual-proof/source/render review, declared controls and bounded native/project
+qualification. Eight review records share repairs; they are not eight scientific
+constructions. The broader default test suite remains RED with19 failures.
+New MAJOR source finding1.3 remains open with an independently accepted proposed
+comment correction. Original physical BUILD, stages/main and human approval stay
+open. See ../AutomatedReviews/2026-11-05-l1-lean-source-docs/SCOPE.md.

@@ -10718,6 +10718,126 @@
         "enforced": true,
         "run_at": "2026-11-05"
       }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:3.3",
+      "status": "fixed",
+      "evidence": "Existing nonzero-c relative-deviation bridge and stronger actual-speed endpoint theorem use c load-bearingly; independently read actual definitions/proofs, current dependency/native evidence and manuscript. This recognizes the August substantive repair, not a new proof today. Independent source/application review and actual declared Verify pass on the publication candidate. See papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.md, HISTORICAL_FINDING_REVIEW.md and BROAD_DISPOSITION_INDEPENDENT.md. Controlled primary1028/d928 build and native observations are bounded to the identical module/import closure; broader default suite8214 passed/19 failed remains RED with independently conserved failing inputs. No full wave, main, publication or physical BUILD acceptance is inferred.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "300c2a9fedd4f6b1d9fe5d70ff85ba8607322e4c",
+      "verified_by": {
+        "command": "cd \"$REPO\" && grep -qE \"c_GW .*=.*c_GW_deviation|c_GW_deviation_eq_rel\" lean/SKEFTHawking/GravitationalWaves.lean",
+        "declared": "cd \"$REPO\" && grep -qE \"c_GW .*=.*c_GW_deviation|c_GW_deviation_eq_rel\" lean/SKEFTHawking/GravitationalWaves.lean",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:3.4",
+      "status": "fixed",
+      "evidence": "Reviewed manuscript restoration removes the false decidability claim and accurately describes the rational/square-root inequality proofs; current whole manuscript and hash-bound five-page render independently inspected. Independent source/application review and actual declared Verify pass on the publication candidate. See papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.md, HISTORICAL_FINDING_REVIEW.md and BROAD_DISPOSITION_INDEPENDENT.md. Controlled primary1028/d928 build and native observations are bounded to the identical module/import closure; broader default suite8214 passed/19 failed remains RED with independently conserved failing inputs. No full wave, main, publication or physical BUILD acceptance is inferred.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "33ba6eeec498458cc9b4d9aaee5cf35653a201ca",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"decidable\" papers/L1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q \"decidable\" papers/L1/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:4.2",
+      "status": "fixed",
+      "evidence": "Both incorrect half-decade source descriptions are repaired to the adopted normalized window, one decade each side of unity. Source definitions/proofs/API and physical-normalization BUILD are unchanged. Independent source/application review and actual declared Verify pass on the publication candidate. See papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.md, HISTORICAL_FINDING_REVIEW.md and BROAD_DISPOSITION_INDEPENDENT.md. Controlled primary1028/d928 build and native observations are bounded to the identical module/import closure; broader default suite8214 passed/19 failed remains RED with independently conserved failing inputs. No full wave, main, publication or physical BUILD acceptance is inferred.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "792714d9c",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"half-decade\" lean/SKEFTHawking/GravitationalWaves.lean",
+        "declared": "cd \"$REPO\" && ! grep -q \"half-decade\" lean/SKEFTHawking/GravitationalWaves.lean",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-14-l1-stage13:L1:5.3",
+      "status": "fixed",
+      "evidence": "The manuscript no longer calls the original five-page Letter a review. Independent current source/primary metadata and rendered manuscript review support this bounded factual attribution repair. Independent source/application review and actual declared Verify pass on the publication candidate. See papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.md, HISTORICAL_FINDING_REVIEW.md and BROAD_DISPOSITION_INDEPENDENT.md. Controlled primary1028/d928 build and native observations are bounded to the identical module/import closure; broader default suite8214 passed/19 failed remains RED with independently conserved failing inputs. No full wave, main, publication or physical BUILD acceptance is inferred.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "47f99e86a48cd503d64d3a8e5f03e1e3ccd3a5af",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"2024 vestigial-fluid review\" papers/L1/paper_draft.tex",
+        "declared": "cd \"$REPO\" && ! grep -q \"2024 vestigial-fluid review\" papers/L1/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-apex-propagation:L1:1.2",
+      "status": "fixed",
+      "evidence": "Comment-only source repair states the scalar conditions are dependent and falsifiers nonexclusive; actual conjunction and all theorem bodies are unchanged. No microscopic graviton construction or full physical hypothesis discharge is claimed. Independent source/application review and actual declared Verify pass on the publication candidate. See papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.md, HISTORICAL_FINDING_REVIEW.md and BROAD_DISPOSITION_INDEPENDENT.md. Controlled primary1028/d928 build and native observations are bounded to the identical module/import closure; broader default suite8214 passed/19 failed remains RED with independently conserved failing inputs. No full wave, main, publication or physical BUILD acceptance is inferred.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "792714d9c",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"each conjunct is independently necessary\" not in s and \"all independently load-bearing\" not in s, \"stale conjunct-independence source documentation\"'",
+        "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"each conjunct is independently necessary\" not in s and \"all independently load-bearing\" not in s, \"stale conjunct-independence source documentation\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-reader-results:L1:1.2",
+      "status": "fixed",
+      "evidence": "Tolerance docstring now cites Abbott Eq.(1), its asymmetric source bound and the adopted symmetric envelope, retaining distance/emission-history qualifications. Independent actual primary-page/source review and controlled native/project qualification support the exact comment repair. Independent source/application review and actual declared Verify pass on the publication candidate. See papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.md, HISTORICAL_FINDING_REVIEW.md and BROAD_DISPOSITION_INDEPENDENT.md. Controlled primary1028/d928 build and native observations are bounded to the identical module/import closure; broader default suite8214 passed/19 failed remains RED with independently conserved failing inputs. No full wave, main, publication or physical BUILD acceptance is inferred.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "792714d9c",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"'",
+        "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.1",
+      "status": "fixed",
+      "evidence": "Exact d928 comment repair corrects imports, fixed predicate/carrier, actual W6Ext RPA locator, illustrative product/matching scope, two-decade window, absolute-frequency factor and exact susceptibility offsets near plus/minus2tau. All49 non-block segments are identical. Original/red/rejected history and refined command-format evidence are preserved. Separate newly found MAJOR1.3 definition attribution remains OPEN and its R3 source is only proposed. Independent source/application review and actual declared Verify pass on the publication candidate. See papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.md, HISTORICAL_FINDING_REVIEW.md and BROAD_DISPOSITION_INDEPENDENT.md. Controlled primary1028/d928 build and native observations are bounded to the identical module/import closure; broader default suite8214 passed/19 failed remains RED with independently conserved failing inputs. No full wave, main, publication or physical BUILD acceptance is inferred.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "792714d9c",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied δ tol\" not in s; assert \"χ_vest ∈ [0, ∞)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"χ_vest · Λ²\" not in s; assert (chr(96)+\"|γ| · ω\"+chr(96)) not in s'",
+        "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"it has no project\" not in s and \"LigoSatisfied δ tol\" not in s; assert \"χ_vest ∈ [0, ∞)\" in s and \"Illustrative real-product ansatz\" in s and \"VestigialSusceptibility.W6Ext.chi_RPA\" in s; assert \"physical source, state and unit matching\" in n; assert \"half-decade\" not in s and \"χ_vest · Λ²\" not in s; assert (chr(96)+\"|γ| · ω\"+chr(96)) not in s'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-05-l1-lean-source-docs:L1:1.2",
+      "status": "fixed",
+      "evidence": "Exact d928 comment repair corrects imports, fixed predicate/carrier, actual W6Ext RPA locator, illustrative product/matching scope, two-decade window, absolute-frequency factor and exact susceptibility offsets near plus/minus2tau. All49 non-block segments are identical. Original/red/rejected history and refined command-format evidence are preserved. Separate newly found MAJOR1.3 definition attribution remains OPEN and its R3 source is only proposed. Independent source/application review and actual declared Verify pass on the publication candidate. See papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/INDEPENDENT_APPLICATION.md, HISTORICAL_FINDING_REVIEW.md and BROAD_DISPOSITION_INDEPENDENT.md. Controlled primary1028/d928 build and native observations are bounded to the identical module/import closure; broader default suite8214 passed/19 failed remains RED with independently conserved failing inputs. No full wave, main, publication or physical BUILD acceptance is inferred.",
+      "superseded_by": null,
+      "date": "2026-11-05",
+      "commit": "792714d9c",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately ±2τ\" in n'",
+        "declared": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); n=\" \".join(s.replace(chr(96), \"\").split()); assert \"within ~3e-15 of unity\" not in n and \"to within ~3e-15\" not in n; assert \"susceptibility offsets approximately ±2τ\" in n'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
     }
   ]
 }

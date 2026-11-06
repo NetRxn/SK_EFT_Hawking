@@ -78,3 +78,21 @@ application and qualification. Original physical requirements remain unchanged.
 Finding1.1's Gate field was corrected to the canonical G7 NarrativeGrounding
 name; its identity, severity, requirement and Verify are unchanged. The prior
 noncanonical display name and reason are preserved in CONTROL_REFINEMENT.json.
+
+
+## Canonical individual closure
+
+The established close_finding writer now records eight fixed review findings:
+original L1 stage13 sections3.3/3.4/4.2/5.3, apex-propagation1.2,
+reader-results1.2, and this review's1.1/1.2. All seven dry-run and seven real
+writer calls exit0 and execute the unchanged declared controls. The ledger
+moves1263→1271 records with every prior record and schema field preserved.
+EIGHT_CANONICAL_CLOSURE_RECEIPTS.json records commands, anchors and results.
+These are eight review records across shared repairs, not eight independent
+scientific constructions. The older bridge is anchored to its actual August
+repair; historical manuscript repairs retain their own anchors.
+
+The19 broad test failures remain RED. No stage/full-wave/main/publication or
+human state is promoted. Separate MAJOR1.3 remains OPEN until its accepted
+one-comment proposal is actually applied and qualified; all original physical
+BUILD obligations remain OPEN.
