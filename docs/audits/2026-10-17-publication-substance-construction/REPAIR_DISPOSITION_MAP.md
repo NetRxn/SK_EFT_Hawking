@@ -1466,3 +1466,47 @@ These assignments use the existing continuity packets and author/reviewer
 separation. They do not change the portfolio priorities or create another
 routing ledger. Shared mutation checks and candidate writes remain serialized;
 independent scratch preparation may overlap controlled scientific work.
+
+
+### L1 resume checkpoint: F propagation accepted and recorded
+
+Lead remains L1; portfolio order remains L1 → L3 → D3 → L2/D2 → D1/E1/E2,
+with NJL delivery parallel. ROOT retains full L1 publication ownership.
+The focused mapped F consumer source is independently accepted at
+[528f2adb0](https://github.com/NetRxn/SK_EFT_Hawking/commit/528f2adb0).
+The existing closure writer records
+`review:2026-11-06-l1-main-delivery:F:1.1` FIXED at
+[f98831a81565b30048b483df43f25f02cb7ce593](https://github.com/NetRxn/SK_EFT_Hawking/commit/f98831a81565b30048b483df43f25f02cb7ce593),
+with all prior ledger rows preserved. Both commits are pushed on the existing
+main-delivery draft [PR117](https://github.com/NetRxn/SK_EFT_Hawking/pull/117);
+this cumulative branch references them without claiming they are merged here
+or into main.
+
+[Remote source/review/closure evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/f98831a81565b30048b483df43f25f02cb7ce593/papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md)
+includes accepted and rejected independent reports, all twenty original spans
+(sixteen initial repair spans/four INFO), source/PDF preimages and actual current
+PDF, full-source pins, focused tests97PASS, selected gates2/4PASS, actual
+compile24pages/22 inherited unwaived overflows, and the exact declared Verify
+passing before/after canonical closure. No fresh whole-portfolio gate run,
+new green bundle, physical BUILD completion or main/human acceptance follows.
+
+Next acceptance milestone: repair L1 title/heading/caption use of "natural
+range" to match the adopted comparison window, obtain independent source and
+actual render review, and reconcile the affected canonical sentence records
+through the existing writer. Continue original scientific B3/window, physical
+state/tensor/matter/light, G_N-response, transport/frequency/band requirements
+at full strength. Aggregate L1-fix-propagation remains OPEN; the focused F
+closure is one consumer manifestation, not the aggregate or scientific closure.
+
+Executor's accepted26bf559 source qualification stops before construction.
+ROOT's renewed bounded assignment is to develop the unchanged-model concrete
+construction brief and obtain independent original-source and architecture
+review before physical implementation; no slot admission or remaining-L1
+ownership is transferred. Return a viable approved construction or an exact
+evidenced breakdown for specific operator disposition.
+
+Reuse check: accepted D1/F thermal-crossover commit
+`2e56926994ed296e0f513ccab7a286b259e18141` is on NJL PR94 ancestry but absent
+from this cumulative source and current main-delivery candidate. Preserve and
+qualify its exact composition through the existing parallel delivery work;
+do not reimplement it or infer integration from unchanged older F text.
