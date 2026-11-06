@@ -1,0 +1,28 @@
+{
+  "review_scope": "Independent read-only source composition advice; no composed candidate applied or accepted",
+  "publication_source": "89a5d6d3eb233f4ffe03bd845b12f95d966ea18f",
+  "canonical_primary": "4fca5970f4f4cb0b408ea33243076c72058f6e56",
+  "root_disposition": {
+    "keep_bounded_PR117_delivery": true,
+    "create_qualification_side_branch": false,
+    "mandatory_controller_import": false,
+    "native_gate_refresh": "FAILED before evaluation; no gate snapshot",
+    "five_file_apply_check": "PASS, read-only application feasibility, not semantic/native acceptance",
+    "citation_recipe": "Optional source-reuse proposal only; verify actual need and sources before authoring, not a new critical-path mandate",
+    "exact_delivery_native_admission": "OPEN; ROOT retains ownership and is coordinating actual protected work ownership with Executor",
+    "original_science": "OPEN at original strength"
+  },
+  "archive": {
+    "file": "SCIENTIFIC_INTEGRATION_R4_EVIDENCE.zip",
+    "sha256": "843439857804ca02aa80a7383333e7b0428c945bdbe93e66dc0e9fe22fc1dc78",
+    "members": {
+      "l1-scientific-core-composition-r4.patch": "319c33401e0243ef02ac16f204f18eec5309da4acce84ef1b71e07cc1cb25c2c",
+      "l1-scientific-core-composition-r4.json": "0dbe3a92a1d6c337642698a02eb8b7173530db766bcfbe339cb473feabea3762",
+      "l1-current-canonical-gates-r4.stderr": "76cf4cd797d096368a3ca1de578afe1ddf8358820c213c85405a49dd63025fc6",
+      "l1-current-canonical-gates-r4-receipt.json": "1a3faf081f5a763d89d77ed546a7c061eeb96c0caad0e96e692edc21e4edb2b9",
+      "l1-canonical-planner-resume-r4.json": "997a92b1f7ae185f3feaac374c7b847c5544d302ffe14d5e236e07f413d5dd73"
+    }
+  },
+  "review_md_sha256": "1c0777da6dc7f99dc0c6eed69597b66db1ad3a4dc61fdf6c6c4a1952eb21e403",
+  "no_source_runtime_or_slot_application": true
+}

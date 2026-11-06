@@ -747,3 +747,32 @@ Verify controls. Raw outcomes are archived and unwaived. No global corpus PASS
 is inferred from this package's valid markers or individual closures. The final
 existing planner has no L1 manuscript/GW source group; its linked-checkout slot
 discovery is not canonical runtime capacity authority.
+
+
+### R4 source-composition disposition and failed measurement retained
+
+SCIENTIFIC_INTEGRATION_COMPOSITION_R4.md/.json independently reviews the actual
+publication/main delta against canonical scientific custody. ROOT keeps bounded
+PR117 as the delivery target. The five-file core scientific/reader patch passes
+an actual read-only application check against primary, preserving clean status.
+No patch is applied. Creating a separate combined qualification branch merely to
+obtain a build epoch is declined: its whole-source certificate would not certify
+this publication source. No controller import or ceremonial GW rerun is required.
+The report's citation-edition recipe is optional source-reuse advice, not proof
+of a newly blocking defect or a new mandatory detour. Verify need and sources
+before any such correction. Shared manuscript/catalog/ledger histories require
+their existing individual composition and writer processes, not whole-file copy.
+
+A fresh canonical graph/evaluator attempt failed before gate evaluation: its
+stale-artifact reader auto-invoked ExtractDeps, then Physlib dependency resolution
+failed with a GitHub DNS error. No new gate JSON was produced and tracked source
+remained unchanged. The actual error and receipt are preserved without retry or
+cache workaround in SCIENTIFIC_INTEGRATION_R4_EVIDENCE.zip, alongside the existing
+planner and read-only patch feasibility evidence. This is not evidence of absent
+physics substrate and does not replace the last qualified gate measurement.
+
+The exact bounded delivery's scientific-source/native admission remains OPEN and
+ROOT-owned. ROOT requested current protected-slot/unabsorbed-work ownership from
+Executor, without granting or changing any slot or transferring ordinary L1 work.
+No new scientific, canonical-finding, native/fullgraph/main or human acceptance
+follows from this source-review checkpoint. Original physical BUILD remains owed.
