@@ -46,10 +46,23 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   All19 broader failures, original B3/state/matter/tensor/transport, full
   publication/native/project, main and human acceptance remain OPEN.
   **Next ROOT acceptance work:** complete the remaining D3/Paper25 propagation
-  against current L1 and pursue qualified incremental delivery. Personally intake
-  Executor's503a78eb original-premise handback before recording its scientific
-  acceptance or assigning the next construction. This continues the L1 lead;
+  against current L1 and pursue qualified incremental delivery.
+  Executor's503a78eb original-premise handback has now received direct ROOT
+  acceptance at the bounded scope linked below. This continues the L1 lead;
   Executor's bounded deep work does not transfer its publication readiness.
+
+- **L1 original-premise and finite-route robustness handback accepted.**
+  [ROOT direct intake](../2026-11-05-l1-physical-bridges/PUBLICATION_ORIGINAL_PREMISE_INTAKE.md)
+  records complete proof/review reading, pinned primary-body checks and full
+  archive custody for503a78eb. The same finite full-symbol pairing remains
+  incompatible with positivity across the specified algebraic half adjoints,
+  scalar unitary temporal twists and full-pairing-preserving quotients. This
+  does not prove original physical or continuum impossibility. FullZ/c0,
+  physical state, B3, N4, matter and transport remain OPEN. Executor owns the
+  bounded deeper correspondence construction; ROOT retains all L1 readiness,
+  including the now-identified D3/Paper25 physical-claim propagation repairs.
+  No gate transition, canonical closure, main delivery or human approval is
+  established by this intake.
 
 - **L1 adopted finite-state reflection route: actual manual obstruction accepted.**
   [ROOT scientific intake and accepted next ownership](../2026-11-05-l1-physical-bridges/PUBLICATION_SATURATION_INTAKE.md)
