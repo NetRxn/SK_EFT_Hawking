@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-06T07:49:17.568104",
+  "generated": "2026-11-06T10:43:55.587874",
   "lean_deps_source": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 41037,
-    "theorems_total": 22854,
-    "theorems_substantive": 22828,
+    "total_declarations": 41054,
+    "theorems_total": 22869,
+    "theorems_substantive": 22843,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 22761,
+    "theorems_kernel_substantive": 22776,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2048,
+    "modules": 2049,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -25,6 +25,7 @@
       "SKEFTHawking.A1Resolution",
       "SKEFTHawking.A1Ring",
       "SKEFTHawking.ADMFormalism",
+      "SKEFTHawking.ADW.GaussianPolynomialHermite",
       "SKEFTHawking.ADW.GaussianPolynomialIBP",
       "SKEFTHawking.ADWMechanism",
       "SKEFTHawking.APSEta.ADWHorizon",
@@ -2066,7 +2067,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12900,
+    "definitions": 12901,
     "structures": 480,
     "instances": 943,
     "inductives": 101,

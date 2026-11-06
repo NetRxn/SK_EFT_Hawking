@@ -2026,6 +2026,168 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.ADW.eval_realHermite",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integrable_hermite_mul",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integrable_polynomial_gaussianReal",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integrable_polynomial_mul_gaussian",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialIBP",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_hermite_mul",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_hermite_mul_eq_factorial_coeff",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_hermite_mul_eq_zero",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_hermite_mul_hermite_of_ne",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_hermite_mul_hermite_self",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_hermite_mul_pow",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_hermite_mul_pow_eq_zero",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_hermite_mul_pow_self",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_mul_polynomial_gaussianReal",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialIBP",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_mul_polynomial_gaussian_weight",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialIBP",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_realHermite_mul",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.integral_realHermite_succ_mul",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.natDegree_realHermite",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.ADW.realHermite_succ",
+      "module": "SKEFTHawking.ADW.GaussianPolynomialHermite",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.ADWMechanism.GapParams.G_pos",
       "module": "SKEFTHawking.ADWMechanism",
       "atlas_kind": "TRUE",
@@ -211401,7 +211563,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 22851,
+    "theorem_nodes": 22869,
     "unknown_nodes": 48,
     "implies_edges": 72,
     "apex_nodes": 1,
@@ -211412,7 +211574,7 @@
     "registered_obstructions": 45,
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 398,
-      "TRUE:PROVED": 22453,
+      "TRUE:PROVED": 22471,
       "UNKNOWN:DISCHARGED": 6,
       "UNKNOWN:PLANNED": 17,
       "UNKNOWN:STATED": 20,
