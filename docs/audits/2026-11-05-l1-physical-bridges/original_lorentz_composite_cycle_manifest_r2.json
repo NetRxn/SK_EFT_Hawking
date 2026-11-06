@@ -1,0 +1,209 @@
+{
+  "schema": "l1-lorentz-cycle-evidence/v1",
+  "parent": "6a62061319737190f0f9889d187e1326486c1972",
+  "candidate_sha256": "aa32c7c983a2aa994a26d6336ffc2a7d925c9b1e1c495ff7c9de6a43b76612f1",
+  "acceptance": "scoped manual math and source ACCEPT; ROOT intake pending",
+  "archive": {
+    "path": "docs/audits/2026-11-05-l1-physical-bridges/original_lorentz_composite_cycle_evidence_r2.zip",
+    "sha256": "45d1f199b50d548d7369e1dd257dd79a1861b323e1f69b1015fe0c0cb707befd",
+    "bytes": 168662,
+    "members": {
+      "accepted-inputs/LORENTZIAN_BOUNDARY_CONTINUATION_RESEARCH_OBJECTIVE.md": {
+        "sha256": "4a4ff19792ecc03c17f434734e198d2cbec9dfc2181c05eb17ba3e739e9abb11",
+        "bytes": 4631
+      },
+      "accepted-inputs/ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md": {
+        "sha256": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab",
+        "bytes": 24144
+      },
+      "accepted-inputs/ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE.md": {
+        "sha256": "50bb6c95b3c135c0956fb8b56a14c4ee443894d0abfe7455dbd08f4a59bbe019",
+        "bytes": 36311
+      },
+      "accepted-inputs/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md": {
+        "sha256": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38",
+        "bytes": 30710
+      },
+      "accepted-inputs/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": {
+        "sha256": "c1c796de8678af83952e3cb531bdb15a0f09a203fbf2f582aaffc5568e039468",
+        "bytes": 22289
+      },
+      "accepted-inputs/ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md": {
+        "sha256": "769838b284108660b08fb8f2bde6675d00d6b8209520cdcafcd43a5c3773fd65",
+        "bytes": 23504
+      },
+      "authority/own-branch-Phase6a-before-checkpoint.md": {
+        "sha256": "48729369ab9fa961a61ea34fbb2b7090fe9534caedb76f7d92c74d4c3e3e8f06",
+        "bytes": 90910
+      },
+      "authority/primary-custody.json": {
+        "sha256": "a3bbe6e57b39301b90a97555a8d4991dd14a53edcdec62ed27ee6d8efec3ce5a",
+        "bytes": 888
+      },
+      "canonical/ORIGINAL_LORENTZ_COMPOSITE_CYCLE.md": {
+        "sha256": "aa32c7c983a2aa994a26d6336ffc2a7d925c9b1e1c495ff7c9de6a43b76612f1",
+        "bytes": 28712
+      },
+      "canonical/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_ACCEPTANCE.md": {
+        "sha256": "6a2403a3eb6d48a00bb3466b09390c8fefea63a1755b7ca55f0e1fd5edf4aa3a",
+        "bytes": 4303
+      },
+      "canonical/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_MATH_REVIEW_R1.md": {
+        "sha256": "fb73cb8584453868aedc366f94b29e86d021989f023d301e77dedbf94c805d1a",
+        "bytes": 16628
+      },
+      "canonical/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_MATH_REVIEW_R2.md": {
+        "sha256": "37b1c5aa17fb62dfddc8e833d05a9675b1f7dd42f71646d9f66fee4cfc2dfe96",
+        "bytes": 9444
+      },
+      "canonical/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_PROPOSAL.md": {
+        "sha256": "b392bae0fd4f7001eb75e8df13d5f379879e2358f13bf99d7629a9719ec642d6",
+        "bytes": 7574
+      },
+      "canonical/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_PROSPECTIVE_MATH_REVIEW_R1.md": {
+        "sha256": "838ac1eda42c85d1e650c18d86dd5656ff7e48d9e3326bae4829ee0755e40838",
+        "bytes": 15610
+      },
+      "canonical/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_PROSPECTIVE_SOURCE_REVIEW_R1.md": {
+        "sha256": "ebd37bd076273f30907844011c00bbd4d53a9212ebd2718922e125b408da6e96",
+        "bytes": 8698
+      },
+      "canonical/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_RESULT_R1.md": {
+        "sha256": "434c82fe2a3fa6cd196f40847ad18a2e1ef4a5626ee8d6237460117cbbc40aac",
+        "bytes": 26399
+      },
+      "canonical/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_SOURCE_REVIEW_R1.md": {
+        "sha256": "e1f047e4f81d8f5bdc62a5ed9c68cdf0da0df19ba5312ba6c31c1d966a07f024",
+        "bytes": 10714
+      },
+      "canonical/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_SOURCE_REVIEW_R2.md": {
+        "sha256": "690ccb609d96d9adfcbd6e8e6191692be17a0eae2103c8ab59aced9af38dc35e",
+        "bytes": 8965
+      },
+      "continuity/l1-lorentz-cycle-actual-math-r1.json": {
+        "sha256": "3f403251906a0c56fa892843e9bf6d96ad928b373fa50a239de657e66ac53378",
+        "bytes": 10998
+      },
+      "continuity/l1-lorentz-cycle-actual-math-r2.json": {
+        "sha256": "1dbe3202dd22f7ec5e3c57eef703016ebdfccc3f4b1174a9b0f1a5c31e8ea6f5",
+        "bytes": 11770
+      },
+      "continuity/l1-lorentz-cycle-actual-source-r1.json": {
+        "sha256": "18551618c691920283e376a35aa24aa4831c65bf4deedb66b1e47833a839efbe",
+        "bytes": 10992
+      },
+      "continuity/l1-lorentz-cycle-actual-source-r2.json": {
+        "sha256": "b7c6da5720a8d2379666d143bb756c7715f277cfbbb63922d6741927e2990cdd",
+        "bytes": 11764
+      },
+      "continuity/l1-lorentz-cycle-prospective-math-r1.json": {
+        "sha256": "dc5fb25f00925b70eb2b418ee96cc5e8469f950219981ee54da49897dc8def94",
+        "bytes": 10152
+      },
+      "continuity/l1-lorentz-cycle-prospective-source-r1.json": {
+        "sha256": "1de44ef40195a915f645d7a03af5e4d9cbbc0c33a1f624ff259b6d7ccf363b56",
+        "bytes": 10146
+      }
+    }
+  },
+  "accepted_inputs": {
+    "LORENTZIAN_BOUNDARY_CONTINUATION_RESEARCH_OBJECTIVE.md": {
+      "sha256": "4a4ff19792ecc03c17f434734e198d2cbec9dfc2181c05eb17ba3e739e9abb11",
+      "bytes": 4631
+    },
+    "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE.md": {
+      "sha256": "50bb6c95b3c135c0956fb8b56a14c4ee443894d0abfe7455dbd08f4a59bbe019",
+      "bytes": 36311
+    },
+    "ORIGINAL_ONE_SLICE_SOURCE_KERNEL.md": {
+      "sha256": "769838b284108660b08fb8f2bde6675d00d6b8209520cdcafcd43a5c3773fd65",
+      "bytes": 23504
+    },
+    "ORIGINAL_EHC_REFLECTION_SOURCE_ADJOINT.md": {
+      "sha256": "e2f8b00e8d11a8536f164a8499b6d558522fab57e8fca70f8b65740470cd53ab",
+      "bytes": 24144
+    },
+    "ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION.md": {
+      "sha256": "06bd1df1b93d1fc2ec8ee375bde234329929dd55ad003ec7f52e0a3a70887a38",
+      "bytes": 30710
+    },
+    "ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": {
+      "sha256": "c1c796de8678af83952e3cb531bdb15a0f09a203fbf2f582aaffc5568e039468",
+      "bytes": 22289
+    }
+  },
+  "exact_copies": {
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE_PROPOSAL.md": {
+      "private_source": "/private/tmp/l1-lorentzian-composite-cycle-prospective-brief-r1.md",
+      "sha256": "b392bae0fd4f7001eb75e8df13d5f379879e2358f13bf99d7629a9719ec642d6"
+    },
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE_PROSPECTIVE_MATH_REVIEW_R1.md": {
+      "private_source": "/private/tmp/l1-lorentz-cycle-prospective-math-r1.md",
+      "sha256": "838ac1eda42c85d1e650c18d86dd5656ff7e48d9e3326bae4829ee0755e40838"
+    },
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE_PROSPECTIVE_SOURCE_REVIEW_R1.md": {
+      "private_source": "/private/tmp/l1-lorentz-cycle-prospective-source-r1.md",
+      "sha256": "ebd37bd076273f30907844011c00bbd4d53a9212ebd2718922e125b408da6e96"
+    },
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE_RESULT_R1.md": {
+      "private_source": "/private/tmp/l1-lorentz-composite-cycle-result-r1.md",
+      "sha256": "434c82fe2a3fa6cd196f40847ad18a2e1ef4a5626ee8d6237460117cbbc40aac"
+    },
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE_MATH_REVIEW_R1.md": {
+      "private_source": "/private/tmp/l1-lorentz-cycle-actual-math-r1.md",
+      "sha256": "fb73cb8584453868aedc366f94b29e86d021989f023d301e77dedbf94c805d1a"
+    },
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE_SOURCE_REVIEW_R1.md": {
+      "private_source": "/private/tmp/l1-lorentz-cycle-actual-source-r1.md",
+      "sha256": "e1f047e4f81d8f5bdc62a5ed9c68cdf0da0df19ba5312ba6c31c1d966a07f024"
+    },
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE.md": {
+      "private_source": "/private/tmp/l1-lorentz-composite-cycle-result-r2.md",
+      "sha256": "aa32c7c983a2aa994a26d6336ffc2a7d925c9b1e1c495ff7c9de6a43b76612f1"
+    },
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE_MATH_REVIEW_R2.md": {
+      "private_source": "/private/tmp/l1-lorentz-cycle-actual-math-r2.md",
+      "sha256": "37b1c5aa17fb62dfddc8e833d05a9675b1f7dd42f71646d9f66fee4cfc2dfe96"
+    },
+    "ORIGINAL_LORENTZ_COMPOSITE_CYCLE_SOURCE_REVIEW_R2.md": {
+      "private_source": "/private/tmp/l1-lorentz-cycle-actual-source-r2.md",
+      "sha256": "690ccb609d96d9adfcbd6e8e6191692be17a0eae2103c8ab59aced9af38dc35e"
+    }
+  },
+  "primary_custody": [
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Diakonov2011.pdf",
+      "bytes": 270355,
+      "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da",
+      "full_text_copied": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Volovik2024.pdf",
+      "bytes": 140946,
+      "sha256": "fae06f3bd7189f52a24fce5b612a30d2fc23ca1f2a9db43100e535d954791d9d",
+      "full_text_copied": false
+    },
+    {
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf",
+      "bytes": 1756894,
+      "sha256": "daa334f1ad59ace58aba5afe68ec5d4909e717e626ba6fa7c0d7237c8df43eac",
+      "full_text_copied": false
+    }
+  ],
+  "paths": [
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_PROPOSAL.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_PROSPECTIVE_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_PROSPECTIVE_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_RESULT_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_MATH_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_SOURCE_REVIEW_R1.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_MATH_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_SOURCE_REVIEW_R2.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_ACCEPTANCE.md",
+    "docs/audits/2026-11-05-l1-physical-bridges/original_lorentz_composite_cycle_evidence_r2.zip",
+    "docs/audits/2026-11-05-l1-physical-bridges/original_lorentz_composite_cycle_manifest_r2.json",
+    "docs/roadmaps/Phase6a_Roadmap.md"
+  ],
+  "expected_checks": "exact copy, all member hashes/CRC, six input pins, six historical continuity snapshots, source custody, exact parent/path list, whitespace; no scientific or full gate claim"
+}

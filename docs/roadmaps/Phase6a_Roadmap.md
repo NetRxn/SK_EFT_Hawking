@@ -1125,6 +1125,12 @@ the designer cannot independently review its own prescription. Physical B3 and
 all original publication requirements remain open. ROOT retains ordinary Eq4–11
 proving/publication integration and runtime/reset ownership; no slot is granted.
 
+### Original composite continuation and bare Lorentz cycle: scoped manual result
+
+The [corrected composite-cycle result](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE.md) has separate independent actual mathematical and original-source ACCEPT at its [recorded boundary](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_LORENTZ_COMPOSITE_CYCLE_ACCEPTANCE.md). It derives the actual composite Wick/action/source phases and full reflected profiles, then establishes a residual-loop absolute-integrability obstruction for the specified bare Lorentz Haar cycle after complete generic continuous-gauge reduction. The inherited nonzero compact witness supplies a nonempty algebraic scope, not a physical state/coupling choice. R1 and both REVISE reports are preserved alongside the corrected R2.
+
+This advances the source-specific continuation/convergence investigation. No positive physical domain, contour equality, four physical kernel intertwiners, Lorentz normalized source functional, B3/N4 or model no-go is established. Both original kernels and full C2/source/normalization obligations remain; distributional/other-cycle/boundary-weighted and controlled Euclidean routes remain open. ROOT personal intake/canonical publication integration is pending this exact checkpoint. Ordinary L1/numerical/runtime ownership stays with publication ROOT; Executor retains the commissioned deeper physical research, with no slot reservation.
+
 ## Decision Gates
 
 **Gate A.1 — after Wave 1 (`LinearizedEFE`) ships:** Is `G_N^emerg` sign correct and within 2 orders of magnitude of observed `G_N`? YES → all subsequent 6a waves proceed at full scope. NO (wrong sign) → ADW identification falsified at linearized order; 6a.4 scope is narrowed, 6a.5 and 6a.6 continue as formal exercises; Phase 6e reassessed. NO (right sign, wrong magnitude) → proceed but document parameter-fit freedom in every downstream wave.
