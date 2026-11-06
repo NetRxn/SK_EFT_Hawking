@@ -1,0 +1,68 @@
+{
+  "base": "e301c7b9a6dc315153b48c5daa251b5ff1e502de",
+  "source_sha256": "301d9db0be7404cb44834233eb7847d2eee3a14283298abcb6ddab11057b5983",
+  "independent_scientific_proposal": "ACCEPT R3",
+  "independent_actual_application": "ACCEPT R4, final packet fresh",
+  "earlier_application_review": "R3 REVISE for final source drift during tests; preserved",
+  "changed_entries": 6,
+  "human_dates_granted": 0,
+  "historical_automatic_dates_withdrawn": 2,
+  "physical_build_closed": 0,
+  "canonical_findings_closed": 0,
+  "focused_tests": {
+    "passed": 109,
+    "seconds": 0.84,
+    "terminal_exit": 0
+  },
+  "existing_scoped_verifier": {
+    "terminal_exit": 1,
+    "failed": 87,
+    "passed": 6687,
+    "errors": 30,
+    "skipped": 42,
+    "deselected": 92,
+    "architecture_inventory": "FAIL",
+    "module_census": "PASS",
+    "counts_fresh": "FAIL",
+    "generated_counts": "preserved in archive; exact original restored"
+  },
+  "failed_slice": {
+    "failed": 87,
+    "errors": 30,
+    "pytest_exit": 1
+  },
+  "exact_preimage_replay": {
+    "selected_nonnative_cases": 24,
+    "unchanged_failure_outcomes": 24,
+    "remaining_failed_error_cases_unqualified": 93
+  },
+  "archive": "GW_PROVENANCE_R3_EVIDENCE.zip",
+  "archive_sha256": "554b874872e65db6e5717d47c42afcb6ef0f45852e1cbbfcc232d537dc2c48fc",
+  "archive_member_hashes": {
+    "l1-gw-provenance-proposal-r3.patch": "28223731243ea2278a5ea298aebb8ced2c7814493e0896d88f81727b3d677e0c",
+    "l1-gw-provenance-proposal-r3.md": "05b205e10fe69fde739cbc5f53d6436639aaebccc34e6b72537aec11b6e7bcff",
+    "l1-gw-provenance-proposal-r3.json": "0948ca4c92d4fc0a456cc5bc0f933f8cf3e7e08983bd6807b059272853667ae8",
+    "l1-gw-provenance-proposal-r3.human-operations.json": "efbc4091ce12b0d189a63281ea144781f93f57114e795212cf3bf87593648b89",
+    "l1-gw-provenance-independent-r3.md": "965bcd630a1845029aeb7fb6893c524f521f5ae113976b8c1c77c0a8971b6e18",
+    "l1-gw-provenance-independent-r3.json": "61192855b58500d3a4c5bd1fd5a2932a6eb1cfa67f1953de3cf4cf54fb1723b3",
+    "l1-gw-provenance-actual-preimage-r3.py": "eba5b4ed81cd21fba3ce78d281d3af60224a94c035dc36afadfb348087dc31ae",
+    "l1-gw-provenance-actual-after-r3.py": "301d9db0be7404cb44834233eb7847d2eee3a14283298abcb6ddab11057b5983",
+    "l1-gw-provenance-actual-application-r3.json": "a38006bb05e79bbff1b25ee57f4c5a3db6f56989bd416d178b4486d814be99af",
+    "l1-gw-provenance-application-independent-r3.md": "5774f76c39ee942d3424b1463d255af21803e4a5d21451f2d460e521dbd88790",
+    "l1-gw-provenance-application-independent-r3.json": "b39a61e17e26198d9ef0797a8a1dba66c734ef11e73140897516e5cba503b808",
+    "l1-gw-provenance-application-independent-r4.md": "abf07104e9f674e347e5d20973a22748c4088a0ce5846baaa5dcd0fa2a3df505",
+    "l1-gw-provenance-application-independent-r4.json": "67636d00a43c88f304a6611afd353b1d157105e229520e332dcb8d5606042a0d",
+    "l1-gw-provenance-focused-tests-r3.log": "50816732bb8838966c9f34f8bdb40c833711c4aaadd76622ed8e4ff20c27adb8",
+    "l1-gw-provenance-scope-r3.log": "52200054a9480038d3724a3cfd4550134d6d9c7f8a58c66a59df92e5a7887d72",
+    "l1-gw-provenance-scope-lastfailed-r3.json": "21fda2ebca0e12b9989cf8702058711a259039e44cfd9ba1098d60a44a2a1736",
+    "l1-gw-provenance-generated-counts-r3.json": "dcdd15f4300a864b416b89815c0583bb3c451300a176d81ac5c0ea53574254c8",
+    "l1-gw-provenance-failed-slice-candidate-r3.log": "6f751f3e571dc51fb632dc863e43529f89750ffcf704c7564ef7c265bbff8612",
+    "l1-gw-provenance-failed-slice-candidate-r3.xml": "78244b5960799bc249f115029bf9911309d52b138f91dd1001cc5339c8080d75",
+    "l1-gw-provenance-failed-slice-candidate-r3.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "l1-gw-provenance-nonnative-baseline-r3.log": "0722a258df12481b7c3fdcfd81cc4f8ca6f3052f101426edb366975c0eb41b12",
+    "l1-gw-provenance-nonnative-baseline-r3.xml": "3742602c716f1851e00833f87affc8e7d0593c210b434027252e3e5ece450f64",
+    "l1-gw-provenance-nonnative-baseline-r3.json": "0e1f92df5138f6477ffaf111de36ea2d2a21462250257d5d2ab4297852cb481a"
+  },
+  "publication_status": "L1 OPEN/RED; no new green/main merge/human approval",
+  "next_ordinary_repair": "Known UNGROUNDED normalization paragraph, actual render and canonical sentence reassessment; physical B3 retained"
+}

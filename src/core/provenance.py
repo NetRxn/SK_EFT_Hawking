@@ -2909,19 +2909,19 @@ PARAMETER_PROVENANCE = {
     },
     'GW.CHI_VEST_NATURAL_LOWER': {
         'value': 0.1,
-        'unit': 'dimensionless (× Λ²)',
+        'unit': 'dimensionless normalized response (physical matching open)',
         'tier': 'PROJECTED',
-        'source': 'Project-adopted naturalness window (±1 decade about the unit-normalized '
-                  'O(Λ²/16π²) one-loop bubble scale); same convention as GRAV.ALPHA_ADW_LOWER',
-        'detail': 'Vestigial-phase metric-channel susceptibility natural lower bound. '
-                  'χ_vest · Λ² ∈ [0.1, 10] is a PROJECT-ADOPTED naturalness window, not a '
-                  'published derivation: the one-loop bubble normalization is O(Λ²/16π²) by '
-                  'dimensional analysis (χ_RPA = χ_0/(1 − γ_★ χ_0) closed form, standard '
-                  'Hertz–Millis convention, formalized project-side in '
-                  'VestigialSusceptibility.lean), and the range is the ±1-decade window about '
-                  'the resulting unit-normalized central value. The DOI below (Vergeles 2025) '
-                  'is cited for what it actually establishes — unitarity of the underlying '
-                  'Einstein–Cartan–Palatini lattice theory — NOT as the source of this range.',
+        'source': 'Project-adopted [0.1, 10] comparison window for the assumed normalized susceptibility; not '
+                  'a measured or derived physical range',
+        'detail': 'Lower endpoint of the adopted [0.1, 10] comparison window about the chosen anchor '
+                  'chi_vest=1. The RPA closed form chi_0/(1-gamma_star*chi_0) takes unevaluated inputs and '
+                  'does not determine the physical response normalization or a numerical window. The '
+                  'normalized chi_vest used in c_GW=c*sqrt(chi_vest) is an assumed free dimensionless '
+                  'response. Alpha_ADW is a distinct response coefficient; matching comparison endpoints do '
+                  'not identify the coefficients. No fine-tuning or physical exclusion outside the adopted '
+                  'window is established. Original physical susceptibility, normalization and window '
+                  'construction remains required. The retained Vergeles DOI concerns lattice unitarity under '
+                  'degree-of-freedom-preserving evolution, not a derivation of these endpoints.',
         'doi': '10.1103/PhysRevD.112.054509',
         'llm_verified_date': '2026-04-25',
         'llm_verified_notes': 'PROJECTED. Same convention as GRAV.ALPHA_ADW_LOWER. '
@@ -2933,45 +2933,28 @@ PARAMETER_PROVENANCE = {
                               'is re-attributed as project-adopted; Vergeles cited for ECP '
                               'lattice unitarity only.',
         'human_verified_date': None,
-        'human_verified_notes': (
-            'PROPOSED HUMAN-VERIFY NOTE (rewritten 2026-06-10, review-2026-06-05 sweep; '
-            'supersedes the Phase 7b sub-wave 7b.0 pre-fill of 2026-05-01, which misattributed '
-            'the range to a Vergeles 2025 RPA bubble-integral derivation) — review and approve '
-            'via provenance dashboard if accurate, else edit and approve. '
-            'The natural range χ_vest · Λ² ∈ [0.1, 10] is a PROJECT-ADOPTED naturalness '
-            'window — a modeling choice of this project, not a published derivation: '
-            '(a) Scale — the one-loop bubble normalization is O(Λ²/16π²) by dimensional '
-            'analysis; the χ_RPA = χ_0/(1 − γ_★ χ_0) closed form (standard Hertz–Millis '
-            'convention) is formalized project-side in VestigialSusceptibility.lean. '
-            '(b) Window — the range is the ±1-decade window about the resulting '
-            'unit-normalized central value, i.e. [0.1, 10]. (c) Cross-program anchor — the '
-            'window matches the linearized-EFE wave\'s ADW microscopic-coefficient '
-            'α_ADW ∈ [0.1, 10] natural range (GRAV.ALPHA_ADW_LOWER/UPPER), the '
-            'project-internal anchor for the order-of-magnitude prior. Vergeles 2025 '
-            '(Phys. Rev. D 112, 054509; arXiv:2506.00036; cached at '
-            'Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf) establishes unitarity of '
-            'the underlying Einstein–Cartan–Palatini lattice theory but does not itself '
-            'compute χ_vest or assign it a range (keyword-sweep verified 2026-06-10: no RPA '
-            'bubble integral, no susceptibility computation, no [0.1, 10] range in the paper). '
-            'Lower endpoint 0.1 is the conservative −1-decade edge of the adopted prior; '
-            'values < 0.1 would require fine-tuned suppression below the adopted naturalness '
-            'scale. Cross-link: VestigialSusceptibility.chi_RPA (Lean).'
-        ),
-        'notes': 'Project-adopted ±1-decade naturalness window (modeling choice, not a '
-                 'published derivation); Vergeles 2025 cited for ECP lattice unitarity only. '
-                 'Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
+        'human_verified_notes': 'FLAGGED: Pending human review of adopted lower endpoint 0.1 only. The normalized dimensionless response and [0.1,10] are model inputs, not a derived chi_vest*Lambda^2 or O(Lambda^2/16pi^2) physical normalization. The RPA inputs are unevaluated; alpha_ADW is distinct. Values below 0.1 are outside the chosen comparison window, not proved fine-tuned or excluded. Original physical B3 normalization/window, state, tensor/matter/light and controlled transport/frequency band remain BUILD. This note does not grant human approval. Historical prior human date (not a current approval): None. Historical prior human note (retained verbatim): PROPOSED HUMAN-VERIFY NOTE (rewritten 2026-06-10, review-2026-06-05 sweep; supersedes the Phase 7b sub-wave 7b.0 pre-fill of 2026-05-01, which misattributed the range to a Vergeles 2025 RPA bubble-integral derivation) — review and approve via provenance dashboard if accurate, else edit and approve. The natural range χ_vest · Λ² ∈ [0.1, 10] is a PROJECT-ADOPTED naturalness window — a modeling choice of this project, not a published derivation: (a) Scale — the one-loop bubble normalization is O(Λ²/16π²) by dimensional analysis; the χ_RPA = χ_0/(1 − γ_★ χ_0) closed form (standard Hertz–Millis convention) is formalized project-side in VestigialSusceptibility.lean. (b) Window — the range is the ±1-decade window about the resulting unit-normalized central value, i.e. [0.1, 10]. (c) Cross-program anchor — the window matches the linearized-EFE wave\'s ADW microscopic-coefficient α_ADW ∈ [0.1, 10] natural range (GRAV.ALPHA_ADW_LOWER/UPPER), the project-internal anchor for the order-of-magnitude prior. Vergeles 2025 (Phys. Rev. D 112, 054509; arXiv:2506.00036; cached at Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf) establishes unitarity of the underlying Einstein–Cartan–Palatini lattice theory but does not itself compute χ_vest or assign it a range (keyword-sweep verified 2026-06-10: no RPA bubble integral, no susceptibility computation, no [0.1, 10] range in the paper). Lower endpoint 0.1 is the conservative −1-decade edge of the adopted prior; values < 0.1 would require fine-tuned suppression below the adopted naturalness scale. Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
+        'notes': 'The prior chi_vest*Lambda^2 and O(Lambda^2/16pi^2) unit-normalization rationale is not '
+                 'established for this physical response. The formal '
+                 'bubble_integral=(log(Lambda^2/r_e)-1)/(16*pi^2) and chi_RPA resummation do not supply that '
+                 'matching. Existing DOI, LLM date and LLM notes are retained as historical records; they do '
+                 'not verify the corrected model interpretation.',
     },
     'GW.CHI_VEST_NATURAL_UPPER': {
         'value': 10.0,
-        'unit': 'dimensionless (× Λ²)',
+        'unit': 'dimensionless normalized response (physical matching open)',
         'tier': 'PROJECTED',
-        'source': 'Project-adopted naturalness window (±1 decade about the unit-normalized '
-                  'O(Λ²/16π²) one-loop bubble scale); same convention as GRAV.ALPHA_ADW_UPPER',
-        'detail': 'Upper bound matching CHI_VEST_NATURAL_LOWER; ±1-decade window about the '
-                  'unit-normalized central value. PROJECT-ADOPTED naturalness window, not a '
-                  'published derivation — see CHI_VEST_NATURAL_LOWER for the full provenance '
-                  'note. The DOI below (Vergeles 2025) is cited for ECP lattice unitarity '
-                  'only, NOT as the source of this range.',
+        'source': 'Project-adopted [0.1, 10] comparison window for the assumed normalized susceptibility; not '
+                  'a measured or derived physical range',
+        'detail': 'Upper endpoint of the adopted [0.1, 10] comparison window about the chosen anchor '
+                  'chi_vest=1. The RPA closed form chi_0/(1-gamma_star*chi_0) takes unevaluated inputs and '
+                  'does not determine the physical response normalization or a numerical window. The '
+                  'normalized chi_vest used in c_GW=c*sqrt(chi_vest) is an assumed free dimensionless '
+                  'response. Alpha_ADW is a distinct response coefficient; matching comparison endpoints do '
+                  'not identify the coefficients. No fine-tuning or physical exclusion outside the adopted '
+                  'window is established. Original physical susceptibility, normalization and window '
+                  'construction remains required. The retained Vergeles DOI concerns lattice unitarity under '
+                  'degree-of-freedom-preserving evolution, not a derivation of these endpoints.',
         'doi': '10.1103/PhysRevD.112.054509',
         'llm_verified_date': '2026-04-25',
         'llm_verified_notes': 'PROJECTED. Same convention as GRAV.ALPHA_ADW_UPPER. '
@@ -2983,42 +2966,31 @@ PARAMETER_PROVENANCE = {
                               'is re-attributed as project-adopted; Vergeles cited for ECP '
                               'lattice unitarity only.',
         'human_verified_date': None,
-        'human_verified_notes': (
-            'PROPOSED HUMAN-VERIFY NOTE (rewritten 2026-06-10, review-2026-06-05 sweep; '
-            'supersedes the Phase 7b sub-wave 7b.0 pre-fill of 2026-05-01, which misattributed '
-            'the range to a Vergeles 2025 RPA bubble-integral derivation) — review and approve '
-            'via provenance dashboard if accurate, else edit and approve. '
-            'Upper endpoint of the PROJECT-ADOPTED ±1-decade naturalness window centered on '
-            'χ_vest · Λ² = 1; rationale identical to CHI_VEST_NATURAL_LOWER. Upper value 10 '
-            'is the conservative +1-decade edge of the adopted prior; values χ_vest > 10 '
-            'would imply a metric-channel susceptibility 10× the adopted naturalness scale '
-            'O(Λ²/16π²), an enhancement the project\'s natural-range prior excludes by '
-            'construction. This window is a modeling choice of this project, not a published '
-            'derivation: Vergeles 2025 establishes unitarity of the underlying '
-            'Einstein–Cartan–Palatini lattice theory but does not itself compute χ_vest or '
-            'assign it a range (keyword-sweep verified 2026-06-10: no RPA bubble integral, no '
-            'susceptibility computation, no [0.1, 10] range in the paper). Cross-program: '
-            'matches the GRAV.ALPHA_ADW_UPPER +1-decade upper bound, the project-internal '
-            'anchor for the order-of-magnitude prior. Primary source cached at '
-            'Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf. Cross-link: '
-            'VestigialSusceptibility.chi_RPA (Lean).'
-        ),
-        'notes': 'Project-adopted ±1-decade naturalness window (modeling choice, not a '
-                 'published derivation); Vergeles 2025 cited for ECP lattice unitarity only. '
-                 'Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
+        'human_verified_notes': 'FLAGGED: Pending human review of adopted upper endpoint 10 only. Neither its physical normalization nor exclusion of larger susceptibilities follows from dimensional analysis, RPA or the companion alpha_ADW window. Vergeles v2 proves degree-of-freedom-preserving lattice unitarity under its stated assumptions, not this range. Original physical B3 normalization/window, state, tensor/matter/light and controlled transport/frequency band remain BUILD. This note does not grant human approval. Historical prior human date (not a current approval): None. Historical prior human note (retained verbatim): PROPOSED HUMAN-VERIFY NOTE (rewritten 2026-06-10, review-2026-06-05 sweep; supersedes the Phase 7b sub-wave 7b.0 pre-fill of 2026-05-01, which misattributed the range to a Vergeles 2025 RPA bubble-integral derivation) — review and approve via provenance dashboard if accurate, else edit and approve. Upper endpoint of the PROJECT-ADOPTED ±1-decade naturalness window centered on χ_vest · Λ² = 1; rationale identical to CHI_VEST_NATURAL_LOWER. Upper value 10 is the conservative +1-decade edge of the adopted prior; values χ_vest > 10 would imply a metric-channel susceptibility 10× the adopted naturalness scale O(Λ²/16π²), an enhancement the project\'s natural-range prior excludes by construction. This window is a modeling choice of this project, not a published derivation: Vergeles 2025 establishes unitarity of the underlying Einstein–Cartan–Palatini lattice theory but does not itself compute χ_vest or assign it a range (keyword-sweep verified 2026-06-10: no RPA bubble integral, no susceptibility computation, no [0.1, 10] range in the paper). Cross-program: matches the GRAV.ALPHA_ADW_UPPER +1-decade upper bound, the project-internal anchor for the order-of-magnitude prior. Primary source cached at Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf. Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
+        'notes': 'The prior chi_vest*Lambda^2 and O(Lambda^2/16pi^2) unit-normalization rationale is not '
+                 'established for this physical response. The formal '
+                 'bubble_integral=(log(Lambda^2/r_e)-1)/(16*pi^2) and chi_RPA resummation do not supply that '
+                 'matching. Existing DOI, LLM date and LLM notes are retained as historical records; they do '
+                 'not verify the corrected model interpretation.',
     },
     'GW.CHI_VEST_DEFAULT': {
         'value': 1.0,
-        'unit': 'dimensionless (× Λ²)',
+        'unit': 'dimensionless normalized response (physical matching open)',
         'tier': 'PROJECTED',
-        'source': 'Operational default at the natural-range center (geometric mean of [0.1, 10])',
-        'detail': 'Default χ_vest · Λ² = 1 used as the leading-order Wave 2 fiducial.',
+        'source': 'Project-selected fiducial normalized susceptibility at the anchor of the adopted [0.1, 10] '
+                  'comparison window',
+        'detail': 'Default chi_vest=1 is the exactly luminal anchor of the assumed c_GW=c*sqrt(chi_vest) law '
+                  'and the geometric center of the adopted endpoints. It is not a computed microscopic '
+                  'response. Physical normalization and the original physical susceptibility/window '
+                  'construction remain open.',
         'doi': None,
         'llm_verified_date': '2026-04-25',
         'llm_verified_notes': 'PROJECTED operational default.',
         'human_verified_date': None,
-        'human_verified_notes': None,
-        'notes': 'Convention matches GRAV.ALPHA_ADW_SAKHAROV_DEFAULT = 1.',
+        'human_verified_notes': 'FLAGGED: Pending human review of the chosen normalized fiducial chi_vest=1 and assumed speed-law anchor only; no microscopic selection, alpha_ADW equivalence or physical range is established. Original physical BUILD remains open. This note does not grant human approval. Historical prior human date (not a current approval): None. Historical prior human note (retained verbatim): [None]',
+        'notes': 'Alpha_ADW=1 is a separate companion fiducial; equality of chosen numbers establishes no '
+                 'physical coefficient identity. Existing DOI, LLM date and LLM notes are retained as '
+                 'historical records; they do not verify the corrected model interpretation.',
     },
     'GW.GW_FREQ_HZ_LOWER': {
         'value': 10.0,
@@ -3049,45 +3021,66 @@ PARAMETER_PROVENANCE = {
     'GW.GW170817_PEAK_FREQ_HZ': {
         'value': 100.0,
         'unit': 'Hz',
-        'tier': 'MEASURED',
-        'source': 'Abbott et al. (LIGO+Virgo), PRL 119, 161101 (2017) — GW170817 inspiral peak',
-        'detail': 'GW170817 binary-neutron-star inspiral peak strain frequency ≈ 100 Hz '
-                  '(post-Newtonian expansion through ISCO at ~1 kHz). Used as the probe '
-                  'frequency for Wave 2 dispersion-correction evaluation.',
+        'tier': 'PROJECTED',
+        'source': 'Project-selected numerical probe 100; retained Abbott et al. PRL 119, 161101 (2017) DOI '
+                  'supplies GW170817 event context, not an established 100 Hz peak-strain measurement',
+        'detail': 'Legacy PEAK_FREQ_HZ key retained for compatibility. The value 100 is adopted for the '
+                  'illustrative product evaluation. The inspected published detection paper describes an '
+                  'evolving chirp, noise-normalized time-frequency plots and Bayesian analysis over 30-2048 '
+                  'Hz; those passages do not establish the asserted scalar inspiral peak-strain frequency of '
+                  '100 Hz. No contradiction of using 100 as a probe is inferred. Physical use as 100 Hz '
+                  'requires frequency convention and normalization matching.',
         'doi': '10.1103/PhysRevLett.119.161101',
         'llm_verified_date': '2026-04-25',
         'llm_verified_notes': 'BNS-merger inspiral analysis; representative frequency ~100 Hz.',
-        'human_verified_date': '2026-04-28',
-        'human_verified_notes': 'Phase 6i Wave 2 closure: auto-flipped after categorization sweep. DOI populated and LLM-verified against the primary source. Bibkey not yet present in CITATION_REGISTRY; queued for Phase 6i Wave 4 (Lean-substance / paper-cited-bibkey audit) sweep.',
-        'notes': 'Wave 2 correctness-push probe frequency.',
+        'human_verified_date': None,
+        'human_verified_notes': 'REJECTED: Withdraw the historical automatic verification of a measured GW170817 100 Hz peak-strain frequency. The published PRL119161101 body describes the evolving chirp (Sec IV), noise-normalized time-frequency views (Fig 1) and 30-2048 Hz analysis (Sec IV), but supplies no established scalar 100 Hz peak-strain determination for this registry claim. The value 100 remains an adopted numerical probe; this is source-unestablished attribution, not proof that a 100 Hz probe or every peak definition is false. Original physical frequency/transport matching remains BUILD. No replacement human approval is given. Historical prior human date (not a current approval): 2026-04-28. Historical prior human note (retained verbatim): Phase 6i Wave 2 closure: auto-flipped after categorization sweep. DOI populated and LLM-verified against the primary source. Bibkey not yet present in CITATION_REGISTRY; queued for Phase 6i Wave 4 (Lean-substance / paper-cited-bibkey audit) sweep.',
+        'notes': 'FACTUAL provenance correction: MEASURED replaced by PROJECTED because the cited source '
+                 'does not establish the registered peak claim. This is a source-unestablished attribution, '
+                 'not a proof that every possible definition of peak at 100 Hz is false. Original physical '
+                 'frequency/transport BUILD remains open. Existing DOI, LLM date and LLM notes are retained '
+                 'as historical records; they do not verify the corrected model interpretation.',
     },
     'GW.GW_FREQ_HZ_PROBE': {
         'value': 100.0,
         'unit': 'Hz',
-        'tier': 'DERIVED',
-        'source': 'Operational alias of GW170817 inspiral peak (GW.GW170817_PEAK_FREQ_HZ)',
-        'detail': 'Probe frequency for Wave 2 dispersion-correction evaluation = GW170817 peak.',
+        'tier': 'PROJECTED',
+        'source': 'Operational alias of the project-selected numerical probe GW.GW170817_PEAK_FREQ_HZ; no '
+                  'measured-peak attribution',
+        'detail': 'The alias preserves exactly the numerical value 100 used in the product ansatz. Equality '
+                  'to the legacy key is a code convention, not a derivation from a measured peak. Physical '
+                  'interpretation as a 100 Hz probe requires ordinary/angular frequency convention, unit '
+                  'normalization and controlled transport matching.',
         'doi': '10.1103/PhysRevLett.119.161101',
         'llm_verified_date': '2026-04-25',
         'llm_verified_notes': 'Same value as GW.GW170817_PEAK_FREQ_HZ — alias for code clarity.',
-        'human_verified_date': '2026-04-28',
-        'human_verified_notes': 'Phase 6i Wave 2 closure: auto-flipped after categorization sweep. DOI populated and LLM-verified against the primary source. Bibkey not yet present in CITATION_REGISTRY; queued for Phase 6i Wave 4 (Lean-substance / paper-cited-bibkey audit) sweep.',
-        'notes': 'Convention alias.',
+        'human_verified_date': None,
+        'human_verified_notes': 'REJECTED: Withdraw the historical automatic verification inherited by this alias from the unsupported measured-peak attribution. Numerical equality to the legacy input 100 is preserved, but an adopted probe is not DERIVED from a measured peak. Physical Hz/angular-frequency normalization, coefficient units and transport matching remain BUILD. No replacement human approval is given. Historical prior human date (not a current approval): 2026-04-28. Historical prior human note (retained verbatim): Phase 6i Wave 2 closure: auto-flipped after categorization sweep. DOI populated and LLM-verified against the primary source. Bibkey not yet present in CITATION_REGISTRY; queued for Phase 6i Wave 4 (Lean-substance / paper-cited-bibkey audit) sweep.',
+        'notes': 'FACTUAL provenance correction: DERIVED replaced by PROJECTED because aliasing an adopted '
+                 'input does not derive it from a measured parameter. The exact alias value and all APIs are '
+                 'unchanged. Existing DOI, LLM date and LLM notes are retained as historical records; they '
+                 'do not verify the corrected model interpretation.',
     },
     'GW.GAMMA_H_VESTIGIAL_DEFAULT': {
         'value': 1.0e-30,
-        'unit': 'dimensionless (Γ_H · ω/c² at probe ω)',
+        'unit': 'numerical coefficient before probe multiplication (physical units unmatched)',
         'tier': 'PROJECTED',
-        'source': 'Phase 6a Wave 2 placeholder (vestigial regime ≪ observed gravity scale)',
-        'detail': 'Dimensionless dispersion coefficient placeholder. Vestigial-regime '
-                  'γ₁+γ₂ scales out at the linearized level; placeholder value chosen '
-                  'so the dispersion correction stays well below the GW170817 cap.',
+        'source': 'Project-selected 1e-30 placeholder coefficient for the illustrative product gamma*omega',
+        'detail': 'The helper dispersion_correction_from_GammaH multiplies this coefficient by the numerical '
+                  'probe exactly once; it does not already contain omega. At probe 100 the product is 1e-28. '
+                  'Physical frequency normalization, ordinary versus angular frequency and coefficient units '
+                  'are unmatched. The proposed gamma=Gamma_H/c_GW^2 is not established by the acoustic '
+                  'SecondOrderSK.GammaH damping rate [s^-1]. This placeholder does not bound the actual '
+                  'physical correction or derive a microscopic transport coefficient.',
         'doi': None,
         'llm_verified_date': '2026-04-25',
         'llm_verified_notes': 'PROJECTED scaffold. Refined when Wave 2 deep research returns.',
         'human_verified_date': None,
-        'human_verified_notes': None,
-        'notes': 'Cross-link: SecondOrderSK.GammaH (Lean).',
+        'human_verified_notes': 'FLAGGED: Pending human review of 1e-30 as the numerical coefficient before multiplication by the probe exactly once. It is not Gamma_H*omega/c^2 already evaluated. Acoustic GammaH [s^-1] does not match this metric coefficient; physical frequency convention, units, state, transport and error-controlled band remain BUILD. This note does not grant human approval. Historical prior human date (not a current approval): None. Historical prior human note (retained verbatim): [None]',
+        'notes': 'The legacy key and numerical value are retained. Metric-channel state, transport, '
+                 'frequency convention, units and error-controlled band remain full construction '
+                 'requirements. Existing DOI, LLM date and LLM notes are retained as historical records; '
+                 'they do not verify the corrected model interpretation.',
     },
     'GW.C_GW_MATCH_TOLERANCE': {
         'value': 3.0e-15,

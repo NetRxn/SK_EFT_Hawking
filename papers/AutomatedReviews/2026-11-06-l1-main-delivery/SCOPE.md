@@ -203,3 +203,42 @@ writers once the original acceptance evidence is met; qualified counts/full-
 project/main execution under existing controller ownership, while original
 physical BUILD continues with Executor. No cached/fabricated native certificate,
 new runner, replayed whole-suite green, new green bundle or humanapproval.
+
+## Applied GW provenance repair: scoped acceptance and red qualification
+
+The independently accepted six-entry proposal corrects physical attribution
+and units without changing a numerical value, API, DOI or historical LLM
+record. The existing per-entry writer applies four annotations and withdraws
+two historical automatic verification dates; complete old notes/dates remain
+attributed history. No human approval is granted. All six corrected entries
+remain pending genuine human review. The original lower/upper parameter
+finding and physical susceptibility/window construction are not closed.
+
+The legacy 100 Hz peak/probe pair is PROJECTED: the held detection paper's
+chirp, noise-normalized plot and analysis band do not establish that scalar
+measured peak. The chosen probe is not refuted. The adopted susceptibility
+window is not derived from a cutoff normalization or companion alpha value;
+the gamma coefficient precedes multiplication by the numerical probe once.
+
+Actual focused writer/GW tests:109PASS in0.84s. The existing scoped verifier
+is RED:87FAIL,6687PASS,42SKIP,92deselected,30ERROR in its fast suite;
+architecture inventory and counts freshness also fail; module census passes.
+Its generated counts change is preserved in the evidence archive and the exact
+original file is restored. No generated count or native certificate is promoted.
+A diagnostic replay of the117 failed/error cases reproduces87FAIL/30ERROR.
+A bounded exact-preimage replay proves24 selected non-native citation/cache/
+serializer failures unchanged; the other93 cases are not thereby established
+as inherited or qualified. Full raw diagnostic/JUnit receipts are retained.
+No full-project, native, publication or main acceptance follows.
+
+The initial application review confirmed exact intended bytes but returned
+REVISE when its final continuity check detected source drift during the test
+suite. That record is retained. After terminal tests and exact restoration, the independent R4 application
+review ACCEPTS the exact actual bytes; its initial/final same-packet checks
+are fresh. ROOT accepts that narrow application and preserves the R3 drift
+record. The evidence archive contains both independent reviews and raw receipts.
+The manuscript's existing UNGROUNDED normalization paragraph is unchanged;
+its separately accepted factual replacement, actual rendering and canonical
+sentence reassessment remain the next ordinary L1 repair, with original B3
+and all physical BUILD obligations retained. This checkpoint does not close
+that paragraph or the aggregate propagation obligation.
