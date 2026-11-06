@@ -35,6 +35,36 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **Common-unit crossover mathematics independently accepted; application pending.**
+  [Manual construction](../../../papers/AutomatedReviews/2026-11-06-d1-derived-numerals/CROSSOVER_COMMON_UNIT_CONSTRUCTION_R1.md)
+  and [independent math/source review](../../../papers/AutomatedReviews/2026-11-06-d1-derived-numerals/CROSSOVER_COMMON_UNIT_REVIEW_R3.md)
+  derive the exact monotone quintic and analytic crossover bracket in the
+  existing natural-unit factory WKB branch, including supplied third-order
+  coefficients, full modified-unitarity normalization, floor, positive-domain
+  and half-cutoff hypotheses. Retained factory arithmetic supports a wide
+  conditional cutoff margin and small retained quartic correction. This is
+  neither an unknown-order EFT remainder nor physical temperature matching.
+  The parameter, thermal and total-occupation brightness temperatures differ;
+  the older WKB implementation has an unresolved opposite-sign convention.
+  Default spectrum sampling also stops below all these crossovers. No numerical
+  source/API change, canonical closure, native proof or migration acceptance.
+  ROOT owns the next substantive implementation/consumer reconciliation under
+  the existing D1 WKB/numerical obligations after the current delivery freeze;
+  original physical BUILDs and graphene/quantity-identity holds remain OPEN.
+  L1 stays lead and exact5a full-profile job remains the active qualification.
+
+- **Deeper normalization handoff accepted by Executor.** Executor explicitly
+  accepted original128-generator/64-link nonzero-Z and metric-jet construction.
+  Its prospective brief `ba13d0000e4d54b7a1d682c0d498ded9cff25b6a177a2f6c8d0cfd28283d0598`
+  targets the full c16 determinant-action coefficient with complete signed/Haar
+  cancellation control, then an actual nonzero-g2 basepoint and literal metric
+  response if viable. Independent prospective math/source review is underway;
+  no actual coefficient, basepoint or BUILD completion is credited yet. A
+  controlled computation request must name a concrete contraction/certificate;
+  no competing native work or runtime authority is inferred. This is the
+  specifically bounded deeper construction; ROOT retains all ordinary L1 work.
+
+
 - **Actual bounded delivery full profile running; scientific scaling repair closed.**
   [PR117](https://github.com/NetRxn/SK_EFT_Hawking/pull/117) source
   `5a5d36fed74a83dcf4746e95b8f7673309e11d27` is clean, committed and pushed.
