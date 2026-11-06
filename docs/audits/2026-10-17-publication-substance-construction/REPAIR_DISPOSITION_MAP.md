@@ -124,6 +124,26 @@ release, wt2 absorption or wt3 quarantine recovery is implied by these records.
 
 ### Current lane availability and next scientific checkpoint
 
+**Recovery completed; earlier automatic-path assessment superseded operationally.**
+[Owned recovery and standing reset responsibility](OWNED_SLOT_RECOVERY_R1.md)
+and [actual final readback](OWNED_SLOT_RECOVERY_R1.json) establish that wt2/wt3
+are clean, unleased and available for fresh task admission. Both passed normal
+acquire/prepare, actual native Codex MCP dispatch and normal release; controller
+`doctor` passes all checks. All three slots have healthy proxies, stopped backends
+and zero reserved physical capacity at primary2fbbfd95a. Both old histories and
+original lease records remain preserved. No controller/configuration change was
+required. ROOT's earlier interpretation of automatic API refusal was too narrow.
+
+**Standing reset owner: ROOT while leading this team.** All agents, including
+Executor, route `/reset-slot` and manual recovery through that one orchestrator;
+a handoff explicitly names the successor. Preserve work and ownership/quiescence
+before recovery, then verify actual readback. Routine authorization persists;
+no repeated permission question or new infrastructure build is needed merely
+to recover saved slots. Scientific assignment still requires a concrete approved
+target and fresh acquire/prepare. The original full publication scope is unchanged.
+
+#### Earlier lane audit (historical, before operator clarification and recovery)
+
 The intended allocation is ROOT on wt1 and up to two Executor lanes when
 approved independent packages are ready. **This three-lane allocation has not
 been achieved.** Actual controller health verification succeeds: only wt1 has
