@@ -6,7 +6,7 @@
   "prior_catalog_records_exact": 41294,
   "new_records": 189,
   "reviewed_public_exports": 162,
-  "generated_artifact_review": "ACTIVE, not accepted yet",
+  "generated_artifact_review": "ACCEPT_GENERATED_ARTIFACTS_ONLY, independently verified full six artifacts",
   "freshness_checks": [
     "counts_fresh",
     "theorem_census_agrees",
@@ -175,5 +175,7 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "bytes": 0
     }
-  }
+  },
+  "accepted_artifact_commit": "42037383847cc7fa5a3e3761032456fe3050f653",
+  "source_hash_after_artifact_commit": "562af3e2785d2fe0"
 }

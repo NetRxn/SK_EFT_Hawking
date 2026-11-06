@@ -2,36 +2,42 @@
 
 ## Current L1 scientific successors — 2026-11-06
 
-**Current ordinary auxiliary construction milestone:** complete Eq4 finite
-complex compensation and B1 actual Grassmann/coframe construction are independently
-source/math/kernel ACCEPTED and normally absorbed. The main-based candidate
-`a16af66d15d6184c19defcad1f2110515777b6c1` passes its own native library/ExtractDeps
-build, 10,840 jobs. All41,126prior canonical records are exact;168new records
-include88authored proof exports. Canonical regeneration/freshness is complete;
-independent full artifact review is ACCEPTED at4c6c5149a. The latest measured231gates remain
-160pass/25blocked/28open/18recheck, zero transitions and zero newly green bundles.
-[Accepted construction, reviews and remote resume queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints)
-preserve raw evidence and the preceding terminal full-profile failures.
+**Current ordinary auxiliary construction milestone:** Eq4 compensation, B1
+actual coframes, C1 actual exterior norm/evaluation and C3-S original source
+polynomials have independent source/math/kernel/composition acceptance. Main-based
+PR117 at `42037383847cc7fa5a3e3761032456fe3050f653` passes its own native
+build (10,842 jobs), complete independent acceptance of six canonical derivatives,
+and four freshness checks. All41,294 prior records remain exact;189 additions
+contain162 reviewed public exports. The125 eligible new theorem nodes include
+123 authored theorem declarations and2 proof-valued instance exports. All231
+fresh gates remain160pass/25blocked/28open/18recheck, zero newly green bundles;
+full profileb21 remains FAILED.
+[Exact evidence, original failures and current resume assignments](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints)
+govern the next work, without marking the physical program shipped.
 
-Next original acceptance is **full actual G-valued Eq7/C**, retaining C1 basis/
-norm/completeness/truncation evaluation, C2 independent Bochner integrability
-and actual local identity, and C3 original degree4+degree2source polynomials,
-independent-site product/global Gaussian integral and measure transport. Its
-full R2 design is independently prospectively ACCEPTED, with products formed
-in the proved commutative subalgebra or ordered in G with order independence,
-and actual positive-cutoff zero-coframe controls proving weighted mean1.
-C1 is independently source/kernel/composition ACCEPTED, normally absorbed and
-built at primary82f71ebc2, and pushed on MAIN at4c4a7baa9 pending that
-candidate's own fresh native/canonical qualification. C3-S original source
-polynomials are independently source/kernel ACCEPTED at8d6b0b99a; source
-integration review is active. C2 actual integrability/local Eq7 is now assigned
-on freshly prepared wt1 to /root/eq7_c2_wt1. C3 source specialization, original
-independent-site product/global integral and measure transport follow C2;
-full C remains OPEN. Exact assignments and raw evidence are in the linked queue.
-Original literal/closed source-action correspondence B2, Eq9–11/Berezin/Haar/
-nonzeroZ, physical source/state/adjoint/matter/B3/calibration/transport/limits
-remain OPEN. These accepted subconstruction updates supersede older future-tense
-Eq4/B1 notes below without marking the physical program shipped.
+C2 actual G-valued integrability/local Eq7 has different independent full
+source/math/kernel acceptance at candidate8f8797bdf:75 public exports,67 closing
+goals,10 headline scans and all original nonzero complex/mixed/high-degree/
+nonconstant-weight controls pass. One nonblocking prefix-length comment is in
+original-author correction before fresh independent delta reconciliation and
+controlled primary absorption. No future corrected bytes or C2 native/main
+qualification is accepted yet.
+
+Next original acceptance remains **full actual G-valued Eq7/C**: C3's original
+source-specialized local identities, ordered product of actual integrals,
+original independent-site product weight, global integrability and nested/uncurried
+Gaussian measure transport. Preserve common global4V and full noncommutative G;
+products use the actual commutative bilinear subalgebra or proved order independence.
+Batch C2 plus full C3 for the next MAIN native/canonical delivery, using primary
+controlled builds for proof dependencies. The original full R2 design remains
+unchanged. ROOT also owns the numerical original-action coefficient/source-jet
+BUILD, reusing accepted ADW_COMPOSITE_SOURCES; the invalid legacy MC data and
+scientifically different adopted-model Hasenbusch campaign cannot close B3.
+
+Original literal/closed action correspondence B2, Eq9–11/Berezin/Haar/nonzeroZ,
+physical source/state/adjoint/matter/B3/calibration/transport/limits and publication
+acceptance remain OPEN. These subconstruction updates supersede older future-tense
+notes without reducing the original science.
 
 **Accepted fixed metric-sewing result:** the [actual construction and dual
 independent reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION_ACCEPTANCE.md)

@@ -34,6 +34,21 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Latest accepted delivery and active proof checkpoint — 6 November 2026.**
+MAIN draft PR117 at pushed `42037383847cc7fa5a3e3761032456fe3050f653`
+has own native10,842PASS and complete different independent acceptance of all
+six canonical artifacts for C1+C3-S source57f6c2a9. [Exact acceptance and evidence](GRASSMANN_EVALUATION_SOURCE_NATIVE_R1.md)
+retain all initial failures and unchanged source hash562af3e2785d2fe0. All231
+R6 states remain160pass/25blocked/28open/18recheck, zero new greens.
+C2 candidate8f8797bdf now has different independent full actual source/kernel
+ACCEPT (75exports,67goals,10scans and all original controls1–6). Its author is
+correcting one nonblocking comment before fresh independent delta reconciliation
+and controlled primary absorption. Full original C3 site-product/global
+integrability/measure transport remains the next scientific package. Batch
+C2 and completed full C3 for the next MAIN native/canonical delivery rather
+than repeat whole artifact refresh per enabling module. ROOT retains original
+finite coefficient/source-jet numerical BUILD and all physical/publication debt.
+
 **Latest native and measured portfolio checkpoint — 6 November 2026, 21:33 UTC.**
 MAIN source `57f6c2a9340cb1947919f607e59b3d740ca4fb16` containing independently
 accepted C1+C3-S passes its OWN native build,10,842 jobs. Canonical producers

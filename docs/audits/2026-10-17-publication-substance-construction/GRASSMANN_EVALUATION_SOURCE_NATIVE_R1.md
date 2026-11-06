@@ -19,10 +19,18 @@ completed; the R2 continuation checks that exact auto-generated equation and
 continues from the fresh catalog without repeating extraction. Production
 checker/source bytes are unchanged; the failed wrapper receipt remains archived.
 
-The six generated artifacts are frozen under **active different independent
-full review**, `publication-evaluation-source-generated-review-r1`; they are
-not yet accepted or committed. This checkpoint is native-qualified source plus
-successful producer/freshness evidence, not full-tree/publication acceptance.
+The six generated artifacts now have **different independent full acceptance**,
+[actual complete review](GRASSMANN_EVALUATION_SOURCE_GENERATED_REVIEW_R1.md),
+and are committed/pushed at `42037383847cc7fa5a3e3761032456fe3050f653`.
+The measured source hash remains562af3e2785d2fe0 after that commit.
+All125 new eligible theorem nodes comprise123 authored theorem declarations
+and2 proof-valued instances;27 generated theorem records are excluded.
+The complete107macros,90 scientific outputs, seven clusters and human state
+are verified. Nine exact old impact updates, five stale count-report edge
+payload changes and the new induced-norm lexical marker remain disclosed.
+This is native and canonical artifact qualification, not full-tree/publication
+acceptance. [Full generated review and C2 raw proof evidence](GRASSMANN_EVALUATION_SOURCE_ACCEPTED_R1_EVIDENCE.zip)
+preserve all adverse audit assumptions and corrected measurements.
 
 [All231 current canonical gates](CURRENT_GATES_20261106_R6.json), measured
 21:33:32 UTC on graph source `562af3e2785d2fe0`, remain **160 pass /25 blocked
@@ -32,12 +40,20 @@ hashes are in [the evidence archive](GRASSMANN_EVALUATION_SOURCE_NATIVE_R1_EVIDE
 Old full profileb21 remains FAILED. No scientific closure, main merge or human
 verdict is invented.
 
-C2 author has actual clean diagnostics for G-valued integrability/local Eq7
-and all original complex/mixed/high-degree/nonconstant-weight controls, with
-complete-source public-export kernel and closing-goal sweep in progress. This
-is author evidence, not independent acceptance. ROOT owns the next different
-actual source/kernel review, controlled absorption, native/canonical qualification
-and remaining full C3 site-product/independent Gaussian measure transport.
+C2 now has [different independent actual full-source/math/kernel acceptance](GRASSMANN_GAUSSIAN_IMPLEMENTATION_REVIEW_R1.md)
+at original candidate `8f8797bdf39024e10511d0a0b6b84f5ece901365`, preserved
+on remote `codex/publication-l1-grassmann-integrals-source-20261106`.
+All75 public exports,67 sequential closing goals,10 headline scans, final
+diagnostics and original controls1–6 pass. ROOT read all839 lines and the
+complete actual review. One nonblocking docstring overstates the universal
+prefix length at V1; its mathematical statement and V>=2 degree-seven control
+are correct. The original author is correcting only that comment before a
+fresh independent delta/source reconciliation and ROOT controlled absorption.
+No future corrected bytes or native/main result is accepted by R1.
+Remaining full C3 original site weights/product/global integrability/measure
+transport follow. Batch C2 plus completed full C3 for the next MAIN native/
+canonical delivery, while primary controlled builds supply proof dependencies;
+this avoids repeating full canonical refresh for every enabling module.
 
 ## Actual numerical blocker and original BUILD ownership
 
