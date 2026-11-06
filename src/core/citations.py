@@ -8143,8 +8143,10 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Abbott2017GW170817Detection.pdf',
         'used_in': ['src/core/provenance.py'],
         'provides': [
-            'GW.GW170817_PEAK_FREQ_HZ (inspiral peak frequency)',
-            'GW.GW_FREQ_HZ_PROBE (operational alias)',
+            'GW.GW170817_PEAK_FREQ_HZ (event context only for the project-adopted '
+                '100 Hz probe; not a measured inspiral peak)',
+            'GW.GW_FREQ_HZ_PROBE (same project-adopted probe; no physical band '
+                'or peak calibration)',
         ],
         'notes': 'GW170817 detection paper (PRL 119:161101). Distinct from Abbott2017GW170817 (which canonical-tracks the multimessenger speed-of-graviton paper ApJL 848:L13 used for HC_BOUND_LIGO_C_SQ in paper40). Both Abbott2017 papers cite the same event but address different physics.',
     },

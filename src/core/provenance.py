@@ -4389,15 +4389,13 @@ PAPER_DEPENDENCIES = {
         ],
     },
     'paper25_gravitational_waves': {
-        'title': 'Paper 25: Gravitational Wave Propagation under the Vestigial-Susceptibility '
-                 'Identification — GW170817 Confines the Volovik Second-Sound Graviton to One '
-                 'Part in 10^15 of the Natural Range (PRD)',
-        'topic': 'c_GW = c · √χ_vest leading-order propagation, GW170817 multi-messenger '
-                 'correctness-push biconditional, natural-range confinement by >10^14 in '
-                 'interval width, tracked-hypothesis bundle H_VestigialModeIsGraviton with four '
-                 'falsifiers, Phase 5y H1 caveat encoded as '
-                 'natural_endpoints_violate_ligo_window, '
-                 'SK-EFT dispersion correction from SecondOrderSK Γ_H',
+        'title': 'Paper 25: A Conditional GW170817 Constraint on a '
+                 'Vestigial-Susceptibility Speed Law',
+        'topic': 'Conditional scalar c_GW = c · √χ_vest speed law, finite '
+                 'GW170817-compatible interval inside an adopted comparison range, '
+                 'prior-dependent interpretation and an adopted γω correction. '
+                 'Physical response normalization, tensor dynamics, matter coupling '
+                 'and transport/frequency matching remain required.',
         'formulas': [
             'c_GW_from_chi_vest',
             'c_GW_deviation_from_c',
@@ -4408,36 +4406,59 @@ PAPER_DEPENDENCIES = {
         'lean_modules': ['GravitationalWaves', 'VestigialSusceptibility', 'SecondOrderSK',
                          'LinearizedEFE'],
         'platforms': [],
+        'parameters': [
+            # Actual GW cap, adopted comparison endpoints and placeholder probe/model.
+            'GW.C_GW_DEVIATION_UPPER_BOUND',
+            'GW.C_GW_DEVIATION_LOWER_BOUND',
+            'GW.C_GW_TWO_SIDED_CAP',
+            'GW.CHI_VEST_NATURAL_LOWER',
+            'GW.CHI_VEST_NATURAL_UPPER',
+            'GW.GW170817_PEAK_FREQ_HZ',
+            'GW.GAMMA_H_VESTIGIAL_DEFAULT',
+            # Separate conditional Newton-coupling comparison, not χ normalization.
+            'GRAV.N_F_PER_GEN_NO_NU_R',
+            'GRAV.N_F_PER_GEN_WITH_NU_R',
+            'GRAV.N_F_THREE_GEN_NO_NU_R',
+            'GRAV.N_F_THREE_GEN_WITH_NU_R',
+            'GRAV.ALPHA_ADW_LOWER',
+            'GRAV.ALPHA_ADW_UPPER',
+            'GRAV.SAKHAROV_COEFFICIENT',
+        ],
         'key_claims': [
-            'Leading-order c_GW = c · √χ_vest (Lean: c_GW); deviation Δc/c = √χ_vest − 1 '
-                '(Lean: c_GW_deviation, _zero_iff_chi_one, _strict_mono)',
-            'GW170817 correctness-push biconditional: |Δc/c| ≤ 3e-15 ⟺ χ_vest ∈ '
+            'For the assumed scalar law c_GW = c · √χ_vest (Lean: c_GW), '
+                'Δc/c = √χ_vest − 1 (Lean: c_GW_deviation, '
+                '_zero_iff_chi_one, _strict_mono); no microscopic graviton is derived',
+            'Under the adopted conservative symmetric envelope, '
+                '|Δc/c| ≤ 3e-15 ⟺ χ_vest ∈ '
                 '[(1-τ)², (1+τ)²] (Lean: c_GW_match_iff_chi_close_to_one)',
-            'Natural-range endpoint exclusion: at χ_vest = 0.1, Δc/c ≈ -0.684; at χ_vest = 10, '
+            'Adopted comparison endpoints: at χ_vest = 0.1, Δc/c ≈ -0.684; at χ_vest = 10, '
                 'Δc/c ≈ +2.162. Both endpoints fail GW170817 by ~10^14 (Lean: '
                 'natural_lower_violates_ligo, natural_upper_violates_ligo, '
                 'vestigial_natural_range_violates_ligo). The interior is NOT excluded: '
                 'χ_vest = 1 satisfies the cap (Lean: ligo_satisfied_at_chi_one)',
-            'Natural-range confinement: the GW170817-compatible window is nested strictly '
+            'Conditional confinement: the GW170817-compatible window is nested strictly '
                 'inside [0.1, 10] and meets it at χ_vest = 1 (Lean: '
                 'ligo_window_subset_natural_range, ligo_window_inter_natural_range_nonempty); '
                 'the cap confines χ_vest to that window (Lean: '
                 'ligo_confines_chi_vest_within_natural_range), which is narrower than the '
-                'natural range by >14 orders of magnitude (Lean: '
+                'adopted comparison range by >14 orders of magnitude (Lean: '
                 'ligo_window_width_lt_natural_range_width_by_1e14)',
-            'Phase 5y H1 caveat: neither natural-range endpoint admits a GW170817-compatible '
-                'deviation at any c (Lean: natural_endpoints_violate_ligo_window, '
+            'Scalar endpoint result: neither adopted comparison endpoint admits a GW170817-compatible '
+                'deviation for a positive reference c (Lean: natural_endpoints_violate_ligo_window, '
                 'natural_endpoints_violate_ligo_for_every_c, resting on '
-                'c_GW_relative_deviation_eq)',
-            'Bundled tracked hypothesis H_VestigialModeIsGraviton: positivity ∧ LIGO '
-                'compatibility ∧ luminal propagation; discharged at χ_vest = 1 (Lean: '
-                'H_VestigialModeIsGraviton_at_one), three falsifiers at natural range '
-                'endpoints + zero',
-            'GW170817-compatible χ_vest window has width 4·(3e-15) = 1.2e-14 — vanishing '
-                'measure under any natural-range prior',
-            'SK-EFT dispersion correction δω/ω = γ·ω from Γ_H bridge (Lean: '
+                'c_GW_relative_deviation_eq); no physical microscopic no-go follows',
+            'The algebraic bundle H_VestigialModeIsGraviton holds at χ_vest = 1 '
+                '(Lean: H_VestigialModeIsGraviton_at_one); this does not construct '
+                'a tensor mode, propagator or matter coupling',
+            'GW170817-compatible χ_vest window has finite width 4·(3e-15) = 1.2e-14; '
+                'its adopted-range width fraction is not a probability without a specified prior',
+            'Adopted correction ansatz δω/ω = γ·ω (Lean: '
                 'dispersion_correction, _zero_at_no_dissipation, _linear_in_gamma, '
-                '_abs_bound)',
+                '_abs_bound); the numerical probe100 and placeholder coefficient '
+                'supply no physical frequency band or matched Γ_H transport law',
+            'At the adopted Planck cutoff the companion comparison gives '
+                'α_ADW = N_f/(12π); its count conventions and physical normalization '
+                'still require matching, and α_ADW is not χ_vest',
         ],
     },
     'paper26_bh_entropy': {
