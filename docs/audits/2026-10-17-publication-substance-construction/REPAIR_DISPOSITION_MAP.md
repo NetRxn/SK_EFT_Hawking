@@ -34,6 +34,43 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+
+- **Current L1 generated-number/catalog checkpoint and next integration acceptance.**
+  [PR117 at9505b60af](https://github.com/NetRxn/SK_EFT_Hawking/blob/9505b60afd8c63a4b2161ddded516bf461740e70/papers/AutomatedReviews/2026-11-06-l1-main-delivery/GW_SCALARS_R1_READBACK.json)
+  independently accepts two existing-renderer SCALARS specs/nine outputs and
+  thirteen derived-numeral substitutions, preserving exact theorem constants
+  and physical claims. Both five-page manuscripts compile cleanly and all ten
+  rendered pages match their preimages pixel-for-pixel. Current GW tests89PASS;
+  canonical literal composition2PASS/1FAIL,139>117 versus150 before. L1/Paper25
+  have zero matches; global debt remains. Five catalog source bindings change,
+  all154 assessments/history survive, four blockers stayOPEN and seven human
+  candidates pending. Existing writer appends one audit, preserving human state,
+  with zero automatic closures. F independent R6 accepts20spans/26sourcepins;
+  existing declared Verify exits0. All receipts and initial compile failures
+  are remotely checkpointed. No physical closure, main merge or green bundle.
+  **Next ROOT ordinary L1:** finish the existing protected integration prerequisite
+  review, including primary's newer lifecycle/native-startup contracts. Current
+  publication/primary lines diverge atmain; GW Lean source is already identical.
+  Do not redo that proof, overwrite33divergent shared paths, merge unrelated
+  history wholesale, retargetprimary or create a validation workaround. Require
+  the actual minimal owned composition/dependency acceptance before full native/
+  project/main qualification. See PR117 SCOPE and its exact lineage report.
+
+- **Deeper physical-prescription research commissioned; auxiliary audit not started.**
+  [ROOT intake](../2026-11-05-l1-physical-bridges/ORIGINAL_LOW_DEGREE_METRIC_ROOT_INTAKE.json)
+  records personal full R2 proposal/both independent reviews and direct custody
+  verification after normal integration of Executor171c980a. Accept the bounded
+  readiness breakdown only: no actual physical domain/product/adjoint/state
+  prescription is yet supplied. No new physical BUILD acceptance. ROOT declines
+  further auxiliary component algebra without a concrete physical use and
+  commissions Executor's source-grounded prescription research toward an actual
+  P1/P2 candidate, independent prospective review, then substantive derivation
+  and independent result review within that bounded scope. Existing transfer,
+  contacts and shared-top identities are inputs, not new milestones. FullZ/c0,
+  N4, B3, tensor/matter/light and transport remainOPEN. ROOT retains ALL ordinary
+  L1 Lean/Python repairs, manuscripts/catalog/consumers, gates/closure/integration
+  and operator work. Priority unchanged; no reduced scope or deferral.
+
 - **Current L1 normalization manuscript/canonical checkpoint.**
   [Draft PR117 at6c15b2ee0](https://github.com/NetRxn/SK_EFT_Hawking/blob/6c15b2ee06b322c53125f819e8581f76019b143a/papers/AutomatedReviews/2026-11-06-l1-main-delivery/NORMALIZATION_R1_READBACK.json)
   independently accepts the factual normalization correction, qualified lattice
