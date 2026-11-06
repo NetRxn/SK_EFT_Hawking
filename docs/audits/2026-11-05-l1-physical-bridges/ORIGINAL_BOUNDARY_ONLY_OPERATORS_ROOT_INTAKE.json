@@ -1,0 +1,137 @@
+{
+  "intake_time_utc": "2026-11-06T07:11:52.466231+00:00",
+  "source_commit": "7c572ca494b722bba182e6e0100724e3d240e2f4",
+  "normal_merge_commit": "75ab35d803fef409a4c2b251903334ecd7de54a6",
+  "verdict": "ACCEPT_COMMISSIONED_MANUAL_O1_O4_RESULT",
+  "root_read_in_full": [
+    "ORIGINAL_BOUNDARY_ONLY_OPERATORS.md",
+    "ORIGINAL_BOUNDARY_ONLY_OPERATORS_MATH_REVIEW_R1.md",
+    "ORIGINAL_BOUNDARY_ONLY_OPERATORS_SOURCE_REVIEW_R1.md"
+  ],
+  "result_sha256": "e353df388ab9293157a3a002e3cd1796ee59441ee791f79cd202d22ea2ca6303",
+  "custody_readback": {
+    "source_commit": "7c572ca494b722bba182e6e0100724e3d240e2f4",
+    "manifest": {
+      "archive": "original_boundary_only_operators_evidence.zip",
+      "sha256": "0ac81f80b9255fbb113a673885298549aac7a0f712eecc373a897490b494d3e6",
+      "bytes": 913864,
+      "members": 16,
+      "manual_result_sha256": "e353df388ab9293157a3a002e3cd1796ee59441ee791f79cd202d22ea2ca6303",
+      "approved_brief_sha256": "dccf0c2b745b67d03762dc8feb6d7ff3c772aaf3b3b8d912708b88f1f6e8e82c",
+      "parent_checkpoint": "b922030349649b6e2c9c0778422ff86ff6627227",
+      "canonical_copies": {
+        "l1-original-boundary-only-operators-r1.md": "ORIGINAL_BOUNDARY_ONLY_OPERATORS.md",
+        "l1-boundary-only-operator-math-result-review-r1.md": "ORIGINAL_BOUNDARY_ONLY_OPERATORS_MATH_REVIEW_R1.md",
+        "l1-boundary-only-operator-source-result-review-r1.md": "ORIGINAL_BOUNDARY_ONLY_OPERATORS_SOURCE_REVIEW_R1.md"
+      },
+      "files": {
+        "accepted/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md": "d0cb41c784f36beed3f41e613c4a59e620b71540f373bb0871e4d1e383ad9f91",
+        "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+        "accepted/ORIGINAL_GRADED_CONSTRAINT_MATH_REVIEW_R1.md": "5377b70d6bd2c2c1d7eeecc5e36444069756a3aadb0b2f91d519b8d78c7c12fb",
+        "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+        "accepted/ORIGINAL_GRADED_CONSTRAINT_SOURCE_REVIEW_R1.md": "ade2488983aa40fae7b91fbf8644c0981072b84ff861ad295df728d9a9058b05",
+        "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+        "candidate/l1-original-boundary-only-operators-r1.md": "e353df388ab9293157a3a002e3cd1796ee59441ee791f79cd202d22ea2ca6303",
+        "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+        "parent/original_boundary_operator_proposal_evidence.zip": "7b50304872a57f217e064c6792d0e7deda99184692838c72ba91c98bee23e928",
+        "parent/original_boundary_operator_proposal_manifest.json": "f2fb2579dec58f25d3d9bdada8c41a05f20bea4e10774b69ae90be0595e544e1",
+        "prework/ORIGINAL_BOUNDARY_OPERATOR_BRIEF.md": "dccf0c2b745b67d03762dc8feb6d7ff3c772aaf3b3b8d912708b88f1f6e8e82c",
+        "prework/ORIGINAL_BOUNDARY_OPERATOR_MATH_REVIEW_R1.md": "4ba0574bebc8f3cb432d53f8d089b730f762e7626f4fae1dc63f45756c7098c2",
+        "prework/ORIGINAL_BOUNDARY_OPERATOR_SOURCE_REVIEW_R1.md": "166d4bea62a17b4863d4b6f61bdb076bc197e088faa38c52ff57d3f6b0837f16",
+        "review/l1-boundary-only-operator-math-result-review-r1.md": "3ef2b2fc751969ff1738b4c6a8d63ab4656282980e8529cdd9a80aada23b6d58",
+        "review/l1-boundary-only-operator-source-result-review-r1.md": "10fd98f01869dfdba019c12640cf38434f1172bb80cbd672e531704a743e2213",
+        "source/manual-operator-custody-r1.json": "0058817e35f93bc4dbb3537f642d8d857dbc45745ac7f68b3b1074c93fbaffd1"
+      },
+      "outcome": "Independent mathematical and original-source ACCEPT of actual commissioned manual O1-O4 test-operator/kernel/two-duality/source construction",
+      "scope": "No physical constraint/quantization/domain/product/adjoint/quotient/positive-state/Q1 completion, runtime or slot authority"
+    },
+    "archive_crc_all_unique_member_hashes": "PASS",
+    "canonical_result_and_both_reviews": "EXACT",
+    "current_input_copies": {
+      "accepted/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md": "docs/audits/2026-11-05-l1-physical-bridges/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md",
+      "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md",
+      "accepted/ORIGINAL_GRADED_CONSTRAINT_MATH_REVIEW_R1.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_GRADED_CONSTRAINT_MATH_REVIEW_R1.md",
+      "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_GRADED_CONSTRAINT_RELATION.md",
+      "accepted/ORIGINAL_GRADED_CONSTRAINT_SOURCE_REVIEW_R1.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_GRADED_CONSTRAINT_SOURCE_REVIEW_R1.md",
+      "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_OPERATOR.md",
+      "parent/original_boundary_operator_proposal_evidence.zip": "docs/audits/2026-11-05-l1-physical-bridges/original_boundary_operator_proposal_evidence.zip",
+      "parent/original_boundary_operator_proposal_manifest.json": "docs/audits/2026-11-05-l1-physical-bridges/original_boundary_operator_proposal_manifest.json",
+      "prework/ORIGINAL_BOUNDARY_OPERATOR_BRIEF.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_OPERATOR_BRIEF.md",
+      "prework/ORIGINAL_BOUNDARY_OPERATOR_MATH_REVIEW_R1.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_OPERATOR_MATH_REVIEW_R1.md",
+      "prework/ORIGINAL_BOUNDARY_OPERATOR_SOURCE_REVIEW_R1.md": "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_OPERATOR_SOURCE_REVIEW_R1.md"
+    },
+    "nested_parent_crc": "PASS",
+    "actual_four_held_pdf_pins": "MATCHED",
+    "generated_corpus_copy": "ABSENT",
+    "custody": {
+      "scope": "Commissioned MANUAL O1-O4 construction only; actual test-operator/kernel/duality/source results, not physical quantization",
+      "approved_prospective_brief_sha256": "dccf0c2b745b67d03762dc8feb6d7ff3c772aaf3b3b8d912708b88f1f6e8e82c",
+      "manual_result_sha256": "e353df388ab9293157a3a002e3cd1796ee59441ee791f79cd202d22ea2ca6303",
+      "accepted_force_contact_lift_input_sha256": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+      "original_held_pdf_pins": [
+        {
+          "name": "Diakonov2011",
+          "held_corpus_path": "Phase-5d/primary-sources/Diakonov2011.pdf",
+          "arxiv_version": "1109.0091v1",
+          "url": "https://arxiv.org/abs/1109.0091v1",
+          "bytes": 270355,
+          "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da",
+          "inspected_scope": "I, V(20)-(28), VI"
+        },
+        {
+          "name": "Volovik2024 held filename",
+          "held_corpus_path": "Phase-5d/primary-sources/Volovik2024.pdf",
+          "arxiv_version": "2312.09435v2",
+          "url": "https://arxiv.org/abs/2312.09435v2",
+          "bytes": 140946,
+          "sha256": "fae06f3bd7189f52a24fce5b612a30d2fc23ca1f2a9db43100e535d954791d9d",
+          "inspected_scope": "III(18)-(22)"
+        },
+        {
+          "name": "Vergeles2025",
+          "held_corpus_path": "Phase-5d/primary-sources/Vergeles2025.pdf",
+          "arxiv_version": "2506.00036v2",
+          "url": "https://arxiv.org/abs/2506.00036v2",
+          "bytes": 1756894,
+          "sha256": "daa334f1ad59ace58aba5afe68ec5d4909e717e626ba6fa7c0d7237c8df43eac",
+          "inspected_scope": "II-IV, V(5.7), VI(6.1)"
+        },
+        {
+          "name": "CrossleyGloriosoLiu2017",
+          "held_corpus_path": "Phase-6a/primary-sources/CrossleyGloriosoLiu2017.pdf",
+          "arxiv_version": "1511.03646v3",
+          "url": "https://arxiv.org/abs/1511.03646v3",
+          "bytes": 1109199,
+          "sha256": "c0a23d4c44b72b991843fd52e5ff1f9d747e75906a0e78b50264776d5cafcc9c",
+          "inspected_scope": "I(1.7), I.F(1.60)-(1.61), II"
+        }
+      ],
+      "commission": "ROOT direct FULL prospective intake followed explicit NEW manual O1-O4 commission53e363b4f, recorded primary sole-writer notebook",
+      "physical_constraint_domain_product_adjoint_state_constructed": false,
+      "physical_Q1_completion": false,
+      "scientific_execution": false,
+      "controller_canary_or_resources": false,
+      "corpus_custody": "Generated work in repo/tmp only; external fulltext unchanged; prior generated corpus copy absent"
+    }
+  },
+  "accepted": [
+    "Nonzero original-action boundary test operators with all-source null kernel identities",
+    "Explicit individual classical source lifts and quantum C2 identities",
+    "Ordered derivative-of-force contact retained before specified saturation",
+    "Actual coefficient kernel with complement and ordering signs",
+    "Distinct auxiliary Hilbert adjoint and original bilinear graded sewing transpose with shared-coordinate reverse kernels",
+    "Correct one-sided kernel modules and reverse-dual role exchange"
+  ],
+  "not_established": [
+    "Physical constraints or null states",
+    "Low-degree metric observable or complete constraint algebra",
+    "Physical domain/product/adjoint/quotient and positive form/state",
+    "Physical Q1 completion and Q2-Q4 reconstruction",
+    "FullZ/c0, N4, B3, dynamics/matter/light and transport",
+    "Native/kernel/full-wave/main/publication/human acceptance"
+  ],
+  "scientific_obligation_closures": [],
+  "root_ownership": "Whole ordinary L1 publication delivery retained",
+  "next_executor_assignment": "PROPOSAL ONLY: source-grounded next construction for original low-degree metric/source-channel-to-physical-domain/adjoint/state correspondence, using existing metric dictionary/transfer/pre-post results; include exact first nonvacuous acceptance and independent prospective math/source review. Explain any factorization/locality/domain requirement from original physical charter and sources before imposing it. Preserve all components, source contacts and original theory; no auxiliary norm chosen to secure success.",
+  "runtime_or_slot_grant": false
+}
