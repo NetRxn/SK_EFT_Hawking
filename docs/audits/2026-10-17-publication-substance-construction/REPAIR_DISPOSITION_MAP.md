@@ -114,6 +114,20 @@ approval remain owed. The priority order and original claim strength are unchang
 
 ### Current lane availability and next scientific checkpoint
 
+**Later actual admission — 17:38 UTC:** ROOT normally acquired/prepared wt1
+for `publication-l1-complex-auxiliary-proof-r1` at accepted primary2c201cd00,
+successful epoch85a44ba7. Existing native probe passes21 tools, real active
+dispatch and cleanup200; no build tool is exposed. Fresh ROOT census/heartbeat
+at17:42 confirms ACTIVE/running with complete capacity and no conflicts/errors.
+Fresh worker `/root/complex_auxiliary_wt1` checked its exact continuity packet,
+then confirmed actual existing affine theorem types through the matching Lean
+endpoint. It is performing statement/type discovery before new proof work;
+no implemented complex theorem or native acceptance is claimed. Sandbox-limited
+process observations and an initial wrong filename were reconciled against
+actual ROOT census and the correct existing module; no reset or infrastructure
+change was needed. wt2/wt3 remain unleased/unreserved in that fresh census.
+The earlier free-lane snapshot below is dated evidence, superseded only for wt1.
+
 Fresh primary-controller readback at **2026-11-06 17:32 UTC** reports complete
 capacity, no conflicts/errors/reservations and no running backends: all three
 slots clean, unleased and unreserved, with running public proxies. wt1 is at
