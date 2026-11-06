@@ -34,6 +34,29 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **Current L1 normalization manuscript/canonical checkpoint.**
+  [Draft PR117 at6c15b2ee0](https://github.com/NetRxn/SK_EFT_Hawking/blob/6c15b2ee06b322c53125f819e8581f76019b143a/papers/AutomatedReviews/2026-11-06-l1-main-delivery/NORMALIZATION_R1_READBACK.json)
+  independently accepts the factual normalization correction, qualified lattice
+  attribution, allfive rendered pages and exact canonical application.154current
+  units preserve149assessments, full151predecessors/allhistory/fourOPENblockers;
+  existingwriter appendsoneaudit withzeroautomaticclosures and unchangedhumanstate.
+  Compile isclean; existinglengthproducer measures3534againstdeclared3750ceiling.
+  Current authoring checks remain1/3globally(19unmeasuredlengths,72em-dashes and
+  sixself-narratingpassages outsideL1). Prior9d645's87FAIL/30ERROR are now fully
+  triaged, not remeasured after the new manuscript. Exactly117outcomes are mapped,
+  with89shared+28new-2absent versusprior91; only24selectedbaselineoutcomes are
+  reproduced,93remainunqualified. Reuse existing reviewed source repairs before
+  new implementation; known unprepared native failures need qualified replay.
+  **Next ROOT ordinary L1:** reconcile mappedFconsumer residues under the
+  existing L1-fix-propagation obligation. Its Closure3 still attributes a Volovik
+  graviton identification and an RPA-normalized range; other headline passages
+  retain falsification language. D3/Paper25 checked passages already use adopted/
+  free/physical-matching-required content. Preserve original title/range and
+  Stage13/project/main/human obligations; this checkpoint grants no reduced
+  scientific scope or physical closure. Executor continues bounded deeper
+  construction while ROOT retains the entire L1 readiness package.
+
+
 - **L1 physical-state source qualification integrated; physical construction open.**
   [ROOT direct intake](../2026-11-05-l1-physical-bridges/PUBLICATION_STATE_QUALIFICATION_INTAKE.md)
   accepts Executor26bf5596's independently reviewed source qualification after
