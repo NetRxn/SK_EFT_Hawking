@@ -608,3 +608,48 @@ actual commands/exitcodes and reader status are preserved in
 D7_REGRESSION_CLOSURE_R1_READBACK.json. This closes only the citation-regression
 test defect. No numeric ceiling/freshness/native/fullgraph, physical D7/G11,
 main/publication or human gate is closed.
+
+## Current L1/Paper25 generated-number checkpoint
+
+The existing SCALARS renderer now supplies nine outputs from two paper specs.
+Thirteen derived numeral occurrences consume these outputs; eleven counted
+literal occurrences are removed. Exact theorem constants, adopted parameters,
+scientific claims and the original physical BUILD requirements are preserved.
+Two optional short caption titles repair moving-argument compilation with the
+generated inputs. Initial failed compilation receipts are retained alongside
+the corrected successful runs. Both manuscripts compile to five pages with
+zero errors, overfull boxes, unresolved references or dropped options; all ten
+rendered pages are pixel-identical to their pre-change counterparts.
+
+Independent source/composition review accepts the actual producers, outputs,
+caption repairs and retained controls. Actual renderer/output comparisons
+detect a changed canonical cap and corrupted generated output in a
+0->1->0->1->0 sequence, with exact source/artifact restoration and empty seed
+journal. These establish bounded producer/output binding, not physical
+correctness or a global tables_fresh pass. The current gravitational-wave
+suite reports 89 PASS. The unchanged canonical numerical population tests
+report two PASS and one FAIL: 139 literals remain against the ceiling of117,
+down from150; L1 and Paper25 each have zero matches. No predicate or ceiling
+is changed.
+
+The independently accepted canonical catalog is applied byte-exact: five
+source quote/ID bindings change,149 complete records remain exact, and all154
+scientific assessments and prior histories are preserved. Existing schema,
+dry-run and actual ingestion pass. The sole writer appends one re_audit event;
+human state and all prior audit bytes remain exact. Four blockers remain OPEN,
+seven human candidates remain pending, with zero tombstones or automatic
+closures. F's independent R6 semantic review accepts all20 existing spans
+against26 actual backing hashes and three held primary pins. ROOT applies
+that exact review and its existing declared Verify exits0. This is no new F
+finding closure or physical acceptance.
+
+GW_SCALARS_R1_READBACK.json and GW_SCALARS_R1_EVIDENCE.zip preserve the source
+proposals, initial failures, corrected compile/render receipts, controls,
+independent reviews, complete catalog preimage/candidate/application, F R6
+and current test results. F_SOURCE_REVIEW_R6.md exposes the semantic review.
+The original B3 normalization/window, physical dynamics/matter/light and
+transport/frequency constructions, global literal debt, full native/graph/
+merge/publication gates, main integration and final human review remain owed.
+ROOT retains the entire L1 readiness package; Executor owns only separately
+commissioned deeper scientific construction. No fresh portfolio-wide gate
+snapshot or newly green bundle is claimed.

@@ -102,7 +102,7 @@ than that range by more than 14 orders of magnitude. The
 GW170817-compatible window $[(1-\tau)^2, (1+\tau)^2]$ has width
 $4\tau$ in $\chivest$ and sits strictly interior to our adopted range
 $[0.1, 10]$ about the anchor $\chivest = 1$.
-Its relative width is $4\tau/9.9 \approx 1.2\times10^{-15}$;
+Its relative width is $4\tau/9.9 \approx \input{tables/gw_relative_width.tex}\unskip$;
 a probability mass additionally requires a specified prior. The result is a fine-tuning constraint on one specific
 kinematic identification, not a refutation of emergent
 gravity nor of the Akama--Diakonov--Wetterich (ADW) framework.
@@ -209,7 +209,7 @@ Every compatible susceptibility therefore satisfies
   0.1<(1-\tau)^2\leq\chivest\leq(1+\tau)^2<10.
 \]
 The compatible interval contains $\chivest=1$ and has nonzero width exactly
-$(1+\tau)^2-(1-\tau)^2=4\tau=1.2\times10^{-14}$.
+$(1+\tau)^2-(1-\tau)^2=4\tau=\input{tables/gw_compatible_width.tex}\unskip$.
 The adopted range has width $9.9$, and the strict comparison is
 \[
   10^{14}\bigl[(1+\tau)^2-(1-\tau)^2\bigr]<9.9.
@@ -225,14 +225,14 @@ The endpoints provide quantitative checks of the confinement.
 \begin{theorem}[Lower endpoint]
   \label{thm:falsifier-lower}
   At $\chivest=0.1$, $\dccap=\sqrt{0.1}-1\approx-0.6838$,
-  hence $|\dccap|/\tau\approx2.28\times10^{14}$ and
+  hence $|\dccap|/\tau\approx\input{tables/gw_lower_ratio_detailed.tex}\unskip$ and
   the conservative symmetric cap is violated.
 \end{theorem}
 
 \begin{theorem}[Upper endpoint]
   \label{thm:falsifier-upper}
   At $\chivest=10$, $\dccap=\sqrt{10}-1\approx+2.1623$,
-  hence $|\dccap|/\tau\approx7.21\times10^{14}$ and
+  hence $|\dccap|/\tau\approx\input{tables/gw_upper_ratio_detailed.tex}\unskip$ and
   the conservative symmetric cap is violated.
 \end{theorem}
 
@@ -259,7 +259,7 @@ cannot make either endpoint compatible under the assumed law.
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.96\columnwidth]{figures/fig_c_GW_vs_ligo_constraint.png}
-  \caption{\textbf{Headline result.} For the assumed speed law, the
+  \caption[Conditional GW170817 susceptibility window]{\textbf{Headline result.} For the assumed speed law, the
   $\dccap = \sqrt{\chivest} - 1$ deviation across the adopted
   comparison window $\chivest \in [0.1,10]$ (pale blue band, dashed blue border)
   versus the conservative symmetric envelope of the
@@ -269,7 +269,7 @@ cannot make either endpoint compatible under the assumed law.
   comparison window $\dccap$ sweeps $[-0.68, +2.16]$, exceeding the cap by
   $\sim 10^{14}\times$ \emph{at the endpoints} (orange callouts) and
   vanishing at $\chivest = 1$. The compatible $\chivest$ window
-  $[(1-\tau)^2,(1+\tau)^2]$ has width $4\tau = 1.2\times10^{-14}$,
+  $[(1-\tau)^2,(1+\tau)^2]$ has width $4\tau = \input{tables/gw_compatible_width.tex}\unskip$,
   compared with the adopted range's width $9.9$. Its finite extent is
   unresolved at this scale; the gold star marks its anchor $\chivest=1$,
   not a singleton compatible set. The window sits \emph{inside} the band:

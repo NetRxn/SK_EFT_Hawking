@@ -38,7 +38,7 @@ and width $4\tau$. It lies strictly inside the adopted comparison
 range $[0.1,10]$ and occupies the fraction $4\tau/9.9$ of its width;
 that fraction is not a probability without a specified prior.
 The lower and upper comparison endpoints exceed the speed cap by
-approximately $2.3\times10^{14}$ and $7.2\times10^{14}$,
+approximately $\input{tables/gw_lower_ratio_rounded.tex}\unskip$ and $\input{tables/gw_upper_ratio_rounded.tex}\unskip$,
 respectively, while exact luminality occurs at $\chivest=1$.
 We formalize the scalar identities, interval and endpoint results,
 and four explicit counterexamples to the conjunction of positivity,
@@ -187,7 +187,7 @@ $\sqrt{\chivest}^{2} = \chivest$ on the nonnegative domain.
 
 The GW170817-compatible $\chivest$ window
 $[(1-\tau)^{2}, (1+\tau)^{2}]$ has width exactly $4\tau =
-1.2 \times 10^{-14}$ in $\chivest$
+\input{tables/gw_compatible_width.tex}\unskip$ in $\chivest$
 (\verb|ligo_window_width_eq|). The natural range
 $[0.1, 10]$ has width $9.9$ (\verb|natural_range_width_eq|). The
 compatible window is not disjoint from the natural range: it is
@@ -203,12 +203,12 @@ endpoint-falsifier theorems.
 
 \textbf{Theorem~B} (\verb|natural_lower_violates_ligo|). At
 $\chivest = 0.1$, $\dccap = \sqrt{0.1} - 1 \approx -0.6838$,
-hence $|\dccap|/\tau \approx 2.28 \times 10^{14}$ and
+hence $|\dccap|/\tau \approx \input{tables/gw_lower_ratio_detailed.tex}\unskip$ and
 \verb|LigoSatisfied| fails.
 
 \textbf{Theorem~C} (\verb|natural_upper_violates_ligo|). At
 $\chivest = 10$, $\dccap = \sqrt{10} - 1 \approx +2.1623$,
-hence $|\dccap|/\tau \approx 7.21 \times 10^{14}$ and
+hence $|\dccap|/\tau \approx \input{tables/gw_upper_ratio_detailed.tex}\unskip$ and
 \verb|LigoSatisfied| fails.
 
 The proofs use $\sqrt{1/10} \leq \sqrt{1/4} = 1/2$ and
@@ -282,7 +282,7 @@ independence from P2.
 The falsifiers show that the Prop is not universally satisfied;
 Theorem~E supplies a satisfying point. On the nonnegative physical
 domain its compatible set is precisely the interval in
-Eq.~\eqref{eq:bicond}, of width $4\tau=1.2\times10^{-14}$ and
+Eq.~\eqref{eq:bicond}, of width $4\tau=\input{tables/gw_compatible_width.tex}\unskip$ and
 containing $\chivest=1$. Its probability mass depends on the prior;
 under a uniform prior on $[0.1,10]$ it equals $4\tau/9.9$.
 
@@ -369,12 +369,12 @@ placeholder arithmetic discharge none of these requirements.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.96\columnwidth]{figures/fig_c_GW_vs_ligo_constraint.png}
-\caption{Conditional speed-law constraint: $\dccap$ deviation across the
+\caption[Adopted speed-law endpoint comparisons]{Conditional speed-law constraint: $\dccap$ deviation across the
 adopted $\chivest$ range, versus the GW170817 multi-messenger cap.
 The amber band $|\dccap| \leq 3\times 10^{-15}$ is essentially
 invisible at this scale. The adopted range $[0.1, 10]$ produces
 $\dccap \in [-0.68, +2.16]$; both endpoints fail GW170817 by
-$\sim 2.3\times10^{14}$ and $\sim 7.2\times10^{14}$,
+$\sim \input{tables/gw_lower_ratio_rounded.tex}\unskip$ and $\sim \input{tables/gw_upper_ratio_rounded.tex}\unskip$,
 respectively. The GW170817-compatible $\chivest$ window
 $[(1-\tau)^{2},(1+\tau)^{2}]$ has finite width $4\tau$,
 unresolved at this scale. The gold star marks its anchor
