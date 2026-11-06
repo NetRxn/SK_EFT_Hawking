@@ -10488,6 +10488,21 @@
         "enforced": true,
         "run_at": "2026-11-06"
       }
+    },
+    {
+      "finding_id": "review:2026-08-12-legacy-compile-triage:legacy-compile-triage:6",
+      "status": "fixed",
+      "evidence": "Existing current-ancestor author455358440ab0c16dee043de0d574eff13dec7a78 repairs Unicode Gamma and missing macros. Fresh forced canonical compile at8b0ab6753 produces5pages,0fatal,0overfull,0unresolved; independent review visually inspects all5pages and verifies allPNG/text bytes equal committed PDF, with only12timestamp bytes differing. Closure is compile-only; original physical/B3, human and broader failed qualification remain OPEN.",
+      "superseded_by": null,
+      "date": "2026-11-06",
+      "commit": "455358440ab0c16dee043de0d574eff13dec7a78",
+      "verified_by": {
+        "command": "uv run python scripts/compile_bundle_pdf.py paper25_gravitational_waves",
+        "declared": "uv run python scripts/compile_bundle_pdf.py paper25_gravitational_waves",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
     }
   ]
 }

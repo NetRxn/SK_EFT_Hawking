@@ -1,0 +1,149 @@
+{
+  "task": "l1-current-canonical-gate-review-r1",
+  "verdict": "REVISE_VISIBLE_STATUS_AND_CURRENT_SCALAR; CANONICAL_GATE_DATA_EXACT",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-current-canonical-gate-review-r1.json",
+  "initial_packet_check": {
+    "fresh": true,
+    "changed": [],
+    "task": "l1-current-canonical-gate-review-r1",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  },
+  "final_same_packet_check": {
+    "fresh": true,
+    "changed": [],
+    "task": "l1-current-canonical-gate-review-r1",
+    "meaning": "Input snapshot matches; no execution or completion authority."
+  },
+  "source_head": "8b0ab67533918d4aabdf04c22499b3768dc05314",
+  "source_status": "Only modified tracked file papers/paper25_gravitational_waves/paper_draft.pdf, matching packet; no reviewer mutation.",
+  "findings": [
+    {
+      "id": "R1-1",
+      "severity": "required",
+      "scope": "both HTML files, static candidate control",
+      "finding": "Candidate gates \u00b7 Nov 5 is stale: actual candidate measurement ended 2026-11-06T12:05:20.498660+00:00.",
+      "repair": "Update visible date to Nov 6 or derive from the existing measurement."
+    },
+    {
+      "id": "R1-2",
+      "severity": "required",
+      "scope": "both HTML files, Latest verified increments / L1 fix propagation",
+      "finding": "Latest cell says 2 at 4b6408; current canonical L1 FixPropagation has 1 open reference and 1 accepted blocker.",
+      "repair": "Identify main-based PR117 current1 open/original2.1 and separately disclose1accepted; preserve historical2 as historical if retained."
+    },
+    {
+      "id": "R1-3",
+      "severity": "required",
+      "scope": "both HTML files, Latest verified increments / Broader qualification",
+      "finding": "Latest cell still reports 01d72 7167pass/29fail/8skip/92deselected/no full rerun at af255. This is historical evidence, while new current default suite is7084pass/27fail/11skip/92deselected. Dynamic pr-mode correctly reports new result, causing an on-screen contradiction.",
+      "repair": "Move historical result to earlier evidence; label current default suite RED and full merge profile remains failed. Do not call static failure classification baseline execution."
+    },
+    {
+      "id": "R1-4",
+      "severity": "required",
+      "scope": "snapshot and embedded JSON, counts.current_gate_state_changes_since_baseline",
+      "finding": "Scalar remains3 although current candidate differs in4cells from Oct16 baseline (L1 G3,G4,G9 and I1 G9). Candidate_measurement.differences_from_baseline and JavaScript dynamic count correctly give4.",
+      "repair": "Reconcile this current scalar without altering preserved historical cells/counts."
+    },
+    {
+      "id": "R1-5",
+      "severity": "clarify",
+      "scope": "both HTML files, Latest verified increments / L1 selected k4 words and source-register producer",
+      "finding": "These accepted historical/cumulative milestones remain true at their stated bounded scope, but Latest verified evidence gives no branch identifier. PR117 current gate data do not establish the cumulative PR113 science/source checkpoints on the main-based branch.",
+      "repair": "Label cumulative/historical PR113 evidence explicitly; keep PR117 dependency/G9 increment separate."
+    },
+    {
+      "id": "R1-6",
+      "severity": "clarify",
+      "scope": "dynamic pr-date header",
+      "finding": "Header renders main ce194cdc from live_main_checkpoint, whose own observed_at is Nov5 09:19UTC and basis is historical PR113 base_sha. No main refresh was performed in this review.",
+      "repair": "Call this dated main checkpoint (or show observation date); do not imply current live-main verification."
+    }
+  ],
+  "verified": {
+    "roster_source": "AST of scripts/bundle_registry.py BUNDLES, with BUNDLE_CODES derived there",
+    "bundles": 21,
+    "gates_per_bundle": 11,
+    "canonical_cells": 231,
+    "all_graph_readiness_nodes_before_roster_filter": 704,
+    "counts": {
+      "passed": 160,
+      "blocked": 25,
+      "open": 28,
+      "needs-recheck": 18
+    },
+    "readback_gates_equal_exact_roster_filtered_producer_nodes": true,
+    "chart_all231_meta_and_detail_exact": true,
+    "candidate_metadata_actual63_stage_values_exact": true,
+    "baseline_historical_cells_and_metadata_preserved": true,
+    "previous_AF255_measurement_exact_backup": true,
+    "both_HTML_identical": true,
+    "each_HTML_bytes": 847427,
+    "both_embedded_JSON_exact_snapshot": true,
+    "candidate_payload_copy_byte_exact_readback": true,
+    "existing_control_tags_unchanged": true,
+    "runtime_diff_only_status_string": true,
+    "new_gates_predicates_controls": false,
+    "AF255_state_changes": [
+      {
+        "id": "gate:L1:NumericalFreshness",
+        "before": "needs-recheck",
+        "now": "passed"
+      }
+    ],
+    "baseline_state_changes": 4,
+    "reference_payloads": {
+      "serialized_blocker_refs": 231,
+      "blocker_refs_exact_total": 244,
+      "serialized_accepted_blockers": 55,
+      "accepted_blockers_exact_total": 55,
+      "all_serialized_refs_match_graph_ReviewFinding_severity_lane_status_target": true,
+      "target_null_empty_normalization": "Producer converts missing target to empty string; treated as equivalent for ref-to-node check.",
+      "D11_cap": "63total/50serialized blocker refs and blockers,13omitted; all producer total/truncation flags preserved. No second cap or lost accepted blockers."
+    }
+  },
+  "limits": [
+    "Read-only file/AST/git/hash comparisons only; no evaluator, graph/native/scientific/test/browser execution.",
+    "Root Node syntax/id result reviewed as supplied receipt: exit0, IDs resolve; browser_render_inspected=false. This is not independently executed Node or browser QA.",
+    "Graph source_hash34fa083674600b86 (olderf05067d944cb41f5) hashes selected registry/source and Lean files only; not full source/manuscript/evidence binding.",
+    "AF255 is a different branch population; exactly1 observed state transition does not establish per-commit causality or PR117 physical gain.",
+    "Source provenance, graph generation command, full suite receipt origin and remote PR/main state are source-qualified by supplied receipts/notebook; not rerun or remotely reverified here.",
+    "G4 static typed coverage and G6 explicit vacuity remain; L1 G3blocked20human provenance dates and G11blocked1open/1accepted remain.",
+    "Existing detail renderer shows gate detail/evidence but does not enumerate raw blocker_refs/accepted_blockers; exact arrays preserved in payload. D11 complete244-reference claim would be false because producer explicitly caps13.",
+    "No new accepted bundle; no physical B3/window, native lifecycle, full-tree/merge/main, human or publication acceptance. ROOT must accept/integrate after reading complete report."
+  ],
+  "reviewed_authorities": [
+    "CLAUDE.md",
+    "docs/WAVE_EXECUTION_PIPELINE.md",
+    "docs/READINESS_GATES.md",
+    ".claude/plugins/skeft-qa/agents/adversarial-reviewer.md",
+    "docs/dev-loops/CODEX_CONTINUITY.md",
+    "docs/adrs/ADR-008-shared-lean-slot-control-plane.md",
+    "docs/adrs/ADR-017-codex-continuity.md",
+    "packet-referenced primary notebook and Phase6a roadmap"
+  ],
+  "actual_command_classes": [
+    "continuity.py check SAME R1 packet first and final",
+    "cat/sed/rg repo documentation and producer implementation",
+    "git status --short and git rev-parse HEAD",
+    "Python stdlib json/pathlib/ast/re/hashlib/difflib/collections read-only comparisons; report writes only to assigned/tmp paths"
+  ],
+  "diagnostic_corrections": [
+    "Initial all-graph readiness count704 included legacy papers; corrected to AST-derived canonical roster231 before assertions.",
+    "Initial stage comparison to Paper graph metadata was inapplicable (graph does not contain stage fields); verified all63 against actual bundle_metadata.json instead.",
+    "Attempted graph FLAGS severity filter did not reconstruct D11 semantics (explicit gate-block metadata also matters); no evaluator conclusion drawn. Exact producer63/50 truncation retained as authority."
+  ],
+  "hashes": {
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-current-canonical-gate-review-r1.json": "04a8e32aa833342a7903aa4838befb14014fc6aee62b949140d659c7e8026781",
+    "/tmp/l1-main-8b-canonical-graph-r1.json": "57f25750ad1c9aa49ee49a5a92c2d241e8ccb9341e6bfd4b78adb0f9dec45208",
+    "/tmp/l1-main-8b-gate-readback-r1.json": "c868dab81ced7599e19e8a4d180df811815d0803a3b5821553c4b6a2213ef746",
+    "/tmp/l1-current-chart-structural-r1.json": "cec1ad286f327c770a628c4cac1d2df91d1eb7a1f30ac85e1650ed8f7df22168",
+    "/Users/johnroehm/.codex/visualizations/2026/10/15/01a13f67-0907-71e2-9a64-64d2f2420e2f/publication-readiness.html": "cb0d846c3469a050466bb5bf5162fc4f712d46b4eb401bdd4d80f65bf33452a9",
+    "/Users/johnroehm/.codex/visualizations/2026/10/15/01a13f67-0907-71e2-9a64-64d2f2420e2f/publication-readiness-comparison.html": "cb0d846c3469a050466bb5bf5162fc4f712d46b4eb401bdd4d80f65bf33452a9",
+    "/Users/johnroehm/.codex/visualizations/2026/10/15/01a13f67-0907-71e2-9a64-64d2f2420e2f/publication-readiness-snapshot.json": "7b35d6fcc38ea50aaaa11967f7f64868591f4277a0c287e0dd45c9bc41af159b",
+    "/Users/johnroehm/.codex/visualizations/2026/10/15/01a13f67-0907-71e2-9a64-64d2f2420e2f/publication-readiness.html.before-main8b-20261106-r1": "59762f069a7e0974112db91c8b2e5bb19270cf8fab07d2861d177e7a630b926d",
+    "/Users/johnroehm/.codex/visualizations/2026/10/15/01a13f67-0907-71e2-9a64-64d2f2420e2f/publication-readiness-comparison.html.before-main8b-20261106-r1": "59762f069a7e0974112db91c8b2e5bb19270cf8fab07d2861d177e7a630b926d",
+    "/Users/johnroehm/.codex/visualizations/2026/10/15/01a13f67-0907-71e2-9a64-64d2f2420e2f/publication-readiness-snapshot.json.before-main8b-20261106-r1": "a7ecb69afb8031a876121c2eb3af5da9020f86115686f0aad06cf41b935a6edd"
+  },
+  "report_md_sha256": "9873d682040b49253890814f029fc0f74331026e5f9806d1022122665b8a72b6"
+}
