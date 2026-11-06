@@ -67,6 +67,7 @@ import validate as v  # noqa: E402
 
 #: Check functions imported BY NAME (not via `_CHECKS`) by ten test files.
 EXPECTED_CHECK_FUNCTIONS = [
+    "check_architecture_inventory_fresh",
     "check_atlas_integrity",
     "check_axiom_count_prose_consistency",
     "check_bundle_consistency",

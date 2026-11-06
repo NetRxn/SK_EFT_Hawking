@@ -500,3 +500,36 @@ G4_INVENTORY_SOURCE_R1_READBACK.json binds current evidence and the adjacent
 archive preserves original failures,112-pass XML, actual controls, both source
 reviews and independent bounded control review. This is a remote-resumable
 incomplete source checkpoint, not a completed enabling wave or green L1.
+
+
+## Current actual G4 controls and required guard registration completion
+
+ROOT ran existing journalled mutations of the actual producer case filter,
+public G_N_emergent definition with its declaration retained, and real L1
+PAPER_DEPENDENCIES with a genuinely absent target. Allseven fresh source-bound
+input-extractor/evaluator/GateResult projection receipts independently reconcile:
+0->1->0->1->0->1->0. Each seed produces the intended L1blocked/unmeasured
+missing-formula evidence; exact restoration recovers passed/measured and the
+complete baseline observations. Source bytes/fullmode/nsmtime and emptyjournal
+are confirmed. The independent review reconstructed448paper rows, source deltas,
+complete restore outputs and raw base64/decoded pipe captures without discrepancy.
+
+This accepts the actual G4 input/evaluator/serializer controls only. Actual
+submission-consumer observations, explicit loaded-module origins, full native
+graph and other-gate effects remain required for fullD6.6. No source-correctness
+or numerical/physical BUILD closure follows, and no all-green corpus is claimed.
+
+Existing registration discovery identified one required architecture inventory
+public-surface guard entry. Its exact historical df42dc907 one-line repair
+was independently accepted off-tree, then applied byte-exact. Existing discovery
+now returns0 with allrequired sites satisfied. The conditional sync-edge entry
+is optional because this check never writes the artifact; no new writer is added.
+
+The full existing public-surface module returns68PASS/twoFAIL. The added guard
+case passes. Both failed node IDs reproduce on the exact pre-change HEAD file:
+the live numerical-literal population150exceeds117 and a D7test expects an absent
+theorem name. Source restores exactly after journalled preimage replay. These
+failures remain owed; no floor increase, test deletion or full-module pass is
+claimed. Current evidence/reviews/projections and failureXML are preserved in
+G4_PRODUCTION_CONTROLS_R1_EVIDENCE.zip and its READBACK.json. Canonical closure,
+broader/native/main/publication qualification and original L1science remain open.
