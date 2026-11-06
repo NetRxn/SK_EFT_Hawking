@@ -1,0 +1,76 @@
+{
+  "task": "l1-ibp-main-composition-review-r1",
+  "parent": "publication-remediation",
+  "reviewer": "/root/l1_ibp_main_composition_review",
+  "verdict": "PASS_SOURCE_COMPOSITION",
+  "findings": [],
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-ibp-main-composition-review-r1.json",
+  "initial_check": {
+    "exit_code": 0,
+    "fresh": true,
+    "changed": []
+  },
+  "final_check": {
+    "exit_code": 0,
+    "fresh": true,
+    "changed": []
+  },
+  "candidate": {
+    "head": "22da44f3493d946910c866f5cbce8aef187c5706",
+    "delta": [
+      "lean/SKEFTHawking.lean",
+      "lean/SKEFTHawking/ADW/GaussianPolynomialIBP.lean"
+    ],
+    "staged_delta": [],
+    "other_tracked_inputs_unchanged": true
+  },
+  "source": {
+    "bytes": 3490,
+    "sha256": "ffb651c528b22d256b05e8a5ea5118ff3d6fb5bf917d00cd9544b25daccfb396",
+    "equals_wt1_commit_f597f91e1": true,
+    "equals_rawauthor": true,
+    "equals_author_receipt": true,
+    "four_mathlib_only_imports": true,
+    "project_frontier_assumptions": false,
+    "all_real_polynomials": true,
+    "mean": 0,
+    "variance": 1,
+    "degree_bound": null,
+    "integrability_assumed": false,
+    "actual_integrability_proved": true,
+    "actual_whole_line_ibp": true
+  },
+  "aggregate": {
+    "sha256": "8b84989b46fe0c57cef25596fde5cfee91d0e6711587c07d7bc948aa0d01e46b",
+    "exact_preimage_plus_one_import": true,
+    "preimage_equals_head22da": true
+  },
+  "dependencies": {
+    "toolchain_byte_exact_primary_and_base": true,
+    "manifest_byte_exact_primary_and_base": true,
+    "require_exact_primary_and_base": true,
+    "global_leanOptions_exact_primary_and_base": true,
+    "sole_lakefile_primary_difference": "Appended separate NavierStokes lean_lib with its own autoImplicit=true"
+  },
+  "eq11_applicability": "Correct standard-Gaussian coefficientwise brick; entire insertion derivative retained; full Eq11 composition remains owed",
+  "remaining": [
+    "all-degree Hermite lowering/factorial/parity",
+    "sigma scaling",
+    "constructed finite signed/complex W",
+    "original128 coframe grading/nilpotence",
+    "C2 source/test preservation",
+    "full undivided observable construction",
+    "physical B3/state/metric/dynamics/frequency/transport",
+    "separate independent matching-slot kernel review",
+    "authoritative native exact-main-candidate gates",
+    "main integration/full-wave/publication/human acceptance"
+  ],
+  "fresh_kernel_check_performed": false,
+  "native_main_certification": false,
+  "merge_or_publication_acceptance": false,
+  "forbidden_actions_performed": [],
+  "outputs": [
+    "/tmp/l1-ibp-main-composition-review-r1.md",
+    "/tmp/l1-ibp-main-composition-review-r1.json"
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "task": "l1-gaussian-polynomial-ibp-independent-r1",
+  "parent": "publication-remediation",
+  "reviewer": "l1-ibp-independent-review",
+  "acceptance_reviewer": "ROOT",
+  "verdict": "PASS_SCOPED_SOURCE_AND_INDEPENDENT_LSP",
+  "findings": [],
+  "candidate": "f597f91e12704b30e8b31ace0f38bd32f2e6aff3",
+  "base": "4fca5970f4f4cb0b408ea33243076c72058f6e56",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-gaussian-polynomial-ibp-independent-r1.json",
+  "packet_sha256": "8df54a93e2f27e21aeca2714b49b3d3e94701542e8b3c692f01fb842f2da3e60",
+  "initial_check": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_check": {
+    "fresh": true,
+    "changed": []
+  },
+  "source_sha256": "ffb651c528b22d256b05e8a5ea5118ff3d6fb5bf917d00cd9544b25daccfb396",
+  "aggregate_sha256": "08e8b0d3746c25f6511b6f5c4957731e617a566146e7c5c8e2f95f24c5a77d5e",
+  "aggregate_prepend_exact": true,
+  "changed_files": [
+    "lean/SKEFTHawking.lean",
+    "lean/SKEFTHawking/ADW/GaussianPolynomialIBP.lean"
+  ],
+  "clean_status": true,
+  "diagnostics": {
+    "success": true,
+    "timed_out": false,
+    "items": [],
+    "failed_dependencies": []
+  },
+  "final_goal": {
+    "line": 68,
+    "goals_after": []
+  },
+  "outline": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"imports\": [\n    \"Mathlib.Probability.Distributions.Gaussian.Real\",\n    \"Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral\",\n    \"Mathlib.MeasureTheory.Integral.IntegralEqImproper\",\n    \"Mathlib.Analysis.Calculus.Deriv.Polynomial\"\n  ],\n  \"declarations\": [\n    {\n      \"name\": \"SKEFTHawking.ADW\",\n      \"kind\": \"Ns\",\n      \"start_line\": 14,\n      \"end_line\": 70,\n      \"type_signature\": null,\n      \"children\": []\n    },\n    {\n      \"name\": \"integrable_polynomial_mul_gaussian\",\n      \"kind\": \"Thm\",\n      \"start_line\": 18,\n      \"end_line\": 32,\n      \"type_signature\": \"∀ (p : Polynomial ℝ),\\n        Integrable (fun z => Polynomial.eval z p * Real.exp (-(z ^ 2 / 2))) ℙ\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_mul_polynomial_gaussian_weight\",\n      \"kind\": \"Thm\",\n      \"start_line\": 34,\n      \"end_line\": 55,\n      \"type_signature\": \"∀ (p : Polynomial ℝ),\\n        ∫ (z : ℝ), z * Polynomial.eval z p * Real.exp (-(z ^ 2 / 2)) =\\n          ∫ (z : ℝ), Polynomial.eval z (Polynomial.derivative p) * Real.exp (-(z ^ 2 / 2))\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_mul_polynomial_gaussianReal\",\n      \"kind\": \"Thm\",\n      \"start_line\": 57,\n      \"end_line\": 68,\n      \"type_signature\": \"∀ (p : Polynomial ℝ),\\n        ∫ (z : ℝ), z * Polynomial.eval z p ∂gaussianReal 0 1 =\\n          ∫ (z : ℝ), Polynomial.eval z (Polynomial.derivative p) ∂gaussianReal 0 1\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integrable_polynomial_mul_gaussian\",\n      \"kind\": \"Thm\",\n      \"start_line\": 19,\n      \"end_line\": 19,\n      \"type_signature\": \"(p : Polynomial ℝ) : Integrable (fun z : ℝ ↦ p.eval z * Real.exp (-(z ^ 2 / 2)))\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_mul_polynomial_gaussian_weight\",\n      \"kind\": \"Thm\",\n      \"start_line\": 35,\n      \"end_line\": 35,\n      \"type_signature\": \"(p : Polynomial ℝ) : (∫ z : ℝ, z * p.eval z * Real.exp (-(z ^ 2 / 2))) = ∫ z : ℝ, p.derivative.eval z * Real.exp (-(z ^ 2 / 2))\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_mul_polynomial_gaussianReal\",\n      \"kind\": \"Thm\",\n      \"start_line\": 58,\n      \"end_line\": 58,\n      \"type_signature\": \"(p : Polynomial ℝ) : (∫ z : ℝ, z * p.eval z ∂gaussianReal 0 1) = ∫ z : ℝ, p.derivative.eval z ∂gaussianReal 0 1\",\n      \"children\": []\n    }\n  ],\n  \"total_declarations\": null\n}"
+      }
+    ],
+    "structuredContent": {
+      "imports": [
+        "Mathlib.Probability.Distributions.Gaussian.Real",
+        "Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral",
+        "Mathlib.MeasureTheory.Integral.IntegralEqImproper",
+        "Mathlib.Analysis.Calculus.Deriv.Polynomial"
+      ],
+      "declarations": [
+        {
+          "name": "SKEFTHawking.ADW",
+          "kind": "Ns",
+          "start_line": 14,
+          "end_line": 70,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "integrable_polynomial_mul_gaussian",
+          "kind": "Thm",
+          "start_line": 18,
+          "end_line": 32,
+          "type_signature": "∀ (p : Polynomial ℝ),\n        Integrable (fun z => Polynomial.eval z p * Real.exp (-(z ^ 2 / 2))) ℙ",
+          "children": []
+        },
+        {
+          "name": "integral_mul_polynomial_gaussian_weight",
+          "kind": "Thm",
+          "start_line": 34,
+          "end_line": 55,
+          "type_signature": "∀ (p : Polynomial ℝ),\n        ∫ (z : ℝ), z * Polynomial.eval z p * Real.exp (-(z ^ 2 / 2)) =\n          ∫ (z : ℝ), Polynomial.eval z (Polynomial.derivative p) * Real.exp (-(z ^ 2 / 2))",
+          "children": []
+        },
+        {
+          "name": "integral_mul_polynomial_gaussianReal",
+          "kind": "Thm",
+          "start_line": 57,
+          "end_line": 68,
+          "type_signature": "∀ (p : Polynomial ℝ),\n        ∫ (z : ℝ), z * Polynomial.eval z p ∂gaussianReal 0 1 =\n          ∫ (z : ℝ), Polynomial.eval z (Polynomial.derivative p) ∂gaussianReal 0 1",
+          "children": []
+        },
+        {
+          "name": "integrable_polynomial_mul_gaussian",
+          "kind": "Thm",
+          "start_line": 19,
+          "end_line": 19,
+          "type_signature": "(p : Polynomial ℝ) : Integrable (fun z : ℝ ↦ p.eval z * Real.exp (-(z ^ 2 / 2)))",
+          "children": []
+        },
+        {
+          "name": "integral_mul_polynomial_gaussian_weight",
+          "kind": "Thm",
+          "start_line": 35,
+          "end_line": 35,
+          "type_signature": "(p : Polynomial ℝ) : (∫ z : ℝ, z * p.eval z * Real.exp (-(z ^ 2 / 2))) = ∫ z : ℝ, p.derivative.eval z * Real.exp (-(z ^ 2 / 2))",
+          "children": []
+        },
+        {
+          "name": "integral_mul_polynomial_gaussianReal",
+          "kind": "Thm",
+          "start_line": 58,
+          "end_line": 58,
+          "type_signature": "(p : Polynomial ℝ) : (∫ z : ℝ, z * p.eval z ∂gaussianReal 0 1) = ∫ z : ℝ, p.derivative.eval z ∂gaussianReal 0 1",
+          "children": []
+        }
+      ],
+      "total_declarations": null
+    },
+    "isError": false
+  },
+  "ibp_hover": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"symbol\": \"integral_mul_deriv_eq_deriv_mul_of_integrable\",\n  \"info\": \"MeasureTheory.integral_mul_deriv_eq_deriv_mul_of_integrable.{u_1} {A : Type u_1} [NormedRing A] [NormedAlgebra ℝ A]\\n  {u v u' v' : ℝ → A} (hu : ∀ x ∈ tsupport v, HasDerivAt u (u' x) x) (hv : ∀ x ∈ tsupport u, HasDerivAt v (v' x) x)\\n  (huv' : Integrable (u * v') ℙ) (hu'v : Integrable (u' * v) ℙ) (huv : Integrable (u * v) ℙ) :\\n  ∫ (x : ℝ), u x * v' x = -∫ (x : ℝ), u' x * v x\\n***\\n**Integration by parts on (-∞, ∞).**\\nVersion assuming that the total function is integrable \\n***\\n*import Mathlib.MeasureTheory.Integral.IntegralEqImproper*\",\n  \"diagnostics\": []\n}"
+      }
+    ],
+    "structuredContent": {
+      "symbol": "integral_mul_deriv_eq_deriv_mul_of_integrable",
+      "info": "MeasureTheory.integral_mul_deriv_eq_deriv_mul_of_integrable.{u_1} {A : Type u_1} [NormedRing A] [NormedAlgebra ℝ A]\n  {u v u' v' : ℝ → A} (hu : ∀ x ∈ tsupport v, HasDerivAt u (u' x) x) (hv : ∀ x ∈ tsupport u, HasDerivAt v (v' x) x)\n  (huv' : Integrable (u * v') ℙ) (hu'v : Integrable (u' * v) ℙ) (huv : Integrable (u * v) ℙ) :\n  ∫ (x : ℝ), u x * v' x = -∫ (x : ℝ), u' x * v x\n***\n**Integration by parts on (-∞, ∞).**\nVersion assuming that the total function is integrable \n***\n*import Mathlib.MeasureTheory.Integral.IntegralEqImproper*",
+      "diagnostics": []
+    },
+    "isError": false
+  },
+  "measure_hover": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"symbol\": \"integral_gaussianReal_eq_integral_smul\",\n  \"info\": \"ProbabilityTheory.integral_gaussianReal_eq_integral_smul.{u_1} {E : Type u_1} [NormedAddCommGroup E] [NormedSpace ℝ E]\\n  {μ : ℝ} {v : NNReal} {f : ℝ → E} (hv : v ≠ 0) :\\n  ∫ (x : ℝ), f x ∂gaussianReal μ v = ∫ (x : ℝ), gaussianPDFReal μ v x • f x\\n***\\n*import Mathlib.Probability.Distributions.Gaussian.Real*\",\n  \"diagnostics\": []\n}"
+      }
+    ],
+    "structuredContent": {
+      "symbol": "integral_gaussianReal_eq_integral_smul",
+      "info": "ProbabilityTheory.integral_gaussianReal_eq_integral_smul.{u_1} {E : Type u_1} [NormedAddCommGroup E] [NormedSpace ℝ E]\n  {μ : ℝ} {v : NNReal} {f : ℝ → E} (hv : v ≠ 0) :\n  ∫ (x : ℝ), f x ∂gaussianReal μ v = ∫ (x : ℝ), gaussianPDFReal μ v x • f x\n***\n*import Mathlib.Probability.Distributions.Gaussian.Real*",
+      "diagnostics": []
+    },
+    "isError": false
+  },
+  "theorems": {
+    "integrable_polynomial_mul_gaussian": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+        }
+      ],
+      "structuredContent": {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "warnings": []
+      },
+      "isError": false
+    },
+    "integral_mul_polynomial_gaussian_weight": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+        }
+      ],
+      "structuredContent": {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "warnings": []
+      },
+      "isError": false
+    },
+    "integral_mul_polynomial_gaussianReal": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"axioms\": [\n    \"propext\",\n    \"Classical.choice\",\n    \"Quot.sound\"\n  ],\n  \"warnings\": []\n}"
+        }
+      ],
+      "structuredContent": {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "warnings": []
+      },
+      "isError": false
+    }
+  },
+  "limitations": [
+    "No aggregate/project build or integration performed or certified.",
+    "No Hermite/factorial/parity/sigma/constructed signed W/original128-generator coframe nilpotence/C2 source-test package completion.",
+    "Undivided weighted observable identity is supported coefficientwise but not yet fully formalized.",
+    "Physical CAR/B3/state/metric/dynamics and scientific/publication/human acceptance remain owed."
+  ],
+  "writes": [
+    "/tmp/l1-gaussian-polynomial-ibp-independent-r1.md",
+    "/tmp/l1-gaussian-polynomial-ibp-independent-r1.json"
+  ],
+  "prohibited_actions_performed": []
+}

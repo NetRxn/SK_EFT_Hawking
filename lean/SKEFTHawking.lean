@@ -1,3 +1,4 @@
+import SKEFTHawking.ADW.GaussianPolynomialIBP
 import SKEFTHawking.Basic
 -- Array helper lemmas (bang-indexed ofFn simp lemma) for cyclotomic-substrate
 -- symbolic reasoning. Upstream-contribution-quality; gating step for the
