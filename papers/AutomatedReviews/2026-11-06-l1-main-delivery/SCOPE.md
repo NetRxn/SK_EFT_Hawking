@@ -55,3 +55,34 @@ Physical susceptibility normalization and [0.1,10] as a result, physical state,
 tensor/matter/light and controlled transport remain original-strength BUILD.
 Executor owns only bounded deeper constructions. No canonical closure, main
 merge, final scientific acceptance or human approval is recorded here.
+
+## Main source and computation composition checkpoint
+
+The subsequent authoring composition carries the actual L1 manuscript and
+nine semantic apex-claim corrections, preserving all other main metadata,
+including stage/human/readiness fields. It reuses the exact reviewed GW
+formula, inverse-window, D3 width producer, figure function/spec and scientific
+test deltas from publication1805, plus only three provenance locator strings.
+No historical claims catalog, closure ledger, counts or acceptance is copied.
+Two read-only composition assessments and exact hashes are retained here.
+
+On this actual main preimage, the complete89-case scientific suite first
+reports26 failures/63 passes. After the complete numerical/source package,
+it reports89 passes in0.19seconds. The canonical D3 table producer renders
+all16 snippets with no tracked table-byte change; the corrected exact width
+is significant even though its rounded displayed logarithm stays the same.
+The dependency-declaration suite reports1failure/4passes: its existing scanner
+misclassifies the local papers namespace imported by the scientific regression.
+The already reviewed generic repair exists on the publication branch; reconcile
+it through its existing finding/process before qualification. Do not declare a
+third-party papers dependency or suppress the scientific test.
+
+This remains an INCOMPLETE AUTHOR CHECKPOINT. The current figure assets and
+PDFs have not yet been regenerated for these new source changes. Initial
+compile receipts above describe the earlier455358 composition only. Required
+next steps: reconcile existing scanner repair and L1 source registration,
+regenerate the actual canonical figure and propagate to all consumers,
+compile all actual papers, independently review exact source and renders,
+refresh canonical records through existing writers and qualify existing gates.
+Lean source-doc repairs, original physical BUILD and full main acceptance
+remain distinct and owed. No new green bundle or scientific waiver is claimed.

@@ -8535,11 +8535,11 @@ def fig_c_GW_vs_ligo_constraint():
     """Phase 6a Wave 2: c_GW deviation across the natural χ_vest range, vs the
     GW170817 constraint.
 
-    The key Wave 2 finding: GW170817 *confines* χ_vest to within 3e-15 of
-    unity. The endpoints of the natural range [0.1, 10] fail the cap by 14+
-    orders of magnitude, but the compatible window is nested strictly inside
-    that range and meets it at χ_vest = 1 — a fine-tuning constraint, not a
-    falsification of the range.
+    The symmetric speed-deviation cap is τ = 3e-15; susceptibility lies in
+    [(1−τ)², (1+τ)²]. The endpoints of the adopted natural range [0.1, 10]
+    fail the cap by 14+ orders of magnitude, while the compatible interval
+    lies strictly inside that range and contains χ_vest = 1. This is an
+    interval constraint, not exclusion of the range.
 
     Lean: GravitationalWaves.ligo_confines_chi_vest_within_natural_range,
     GravitationalWaves.vestigial_natural_range_violates_ligo
@@ -8565,7 +8565,7 @@ def fig_c_GW_vs_ligo_constraint():
         y=deviations,
         mode="lines",
         line=dict(color=COLORS["steel_blue"], width=3),
-        name="Δc/c = √χ_vest − 1",
+        name="Assumed speed law",
     ))
 
     # Zero line (Δc = 0 ↔ c_GW = c)
@@ -8581,9 +8581,10 @@ def fig_c_GW_vs_ligo_constraint():
         x=[chi_grid[0], chi_grid[-1], chi_grid[-1], chi_grid[0]],
         y=[cap, cap, -cap, -cap],
         fill="toself",
+        mode="lines",
         fillcolor="rgba(245, 166, 35, 0.30)",
         line=dict(color=COLORS["amber"], width=1, dash="dash"),
-        name=f"GW170817 cap |Δc/c| ≤ {cap:.0e}",
+        name="GW170817 cap",
     ))
 
     # Natural-range vertical band [0.1, 10]
@@ -8605,9 +8606,9 @@ def fig_c_GW_vs_ligo_constraint():
     fig.add_annotation(
         x=_math.log10((chi_lo_nat * chi_hi_nat) ** 0.5),
         y=y_max + 0.05,
-        text="Natural χ_vest range [0.1, 10]",
+        text="Adopted range [0.1, 10]",
         showarrow=False,
-        font=dict(size=10, color=COLORS["steel_blue"]),
+        font=dict(size=14, color=COLORS["steel_blue"]),
         bgcolor="rgba(255,255,255,0.7)",
     )
 
@@ -8620,9 +8621,9 @@ def fig_c_GW_vs_ligo_constraint():
         marker=dict(symbol="star", size=18,
                     color=COLORS["amber"],
                     line=dict(width=1, color="black")),
-        text=["GW170817-compatible<br>(χ_vest = 1 ± 3×10⁻¹⁵)"],
+        text=["Compatible interval"],
         textposition="bottom right",
-        textfont=dict(size=10),
+        textfont=dict(size=14),
         showlegend=False,
     ))
 
@@ -8635,8 +8636,8 @@ def fig_c_GW_vs_ligo_constraint():
             f"outside the cap by<br>{summary['violation_ratio_lower']:.1e}×"
         ),
         showarrow=True, arrowhead=2,
-        ax=75, ay=-45,
-        font=dict(size=9, color=COLORS["amber"]),
+        ax=0, ay=-85,
+        font=dict(size=14, color=COLORS["amber"]),
         bgcolor="rgba(255,255,255,0.85)",
         bordercolor=COLORS["amber"], borderwidth=1,
     )
@@ -8647,8 +8648,8 @@ def fig_c_GW_vs_ligo_constraint():
             f"outside the cap by<br>{summary['violation_ratio_upper']:.1e}×"
         ),
         showarrow=True, arrowhead=2,
-        ax=80, ay=-30,
-        font=dict(size=9, color=COLORS["amber"]),
+        ax=5, ay=-75,
+        font=dict(size=14, color=COLORS["amber"]),
         bgcolor="rgba(255,255,255,0.85)",
         bordercolor=COLORS["amber"], borderwidth=1,
     )
@@ -8656,7 +8657,7 @@ def fig_c_GW_vs_ligo_constraint():
     apply_layout(
         fig,
         xaxis=dict(
-            title="χ_vest (vestigial-phase metric-channel susceptibility, dimensionless)",
+            title="χ<sub>vest</sub> (dimensionless)",
             type="log",
             # Clamp to the decades that carry data. Auto-ranging left eight
             # empty decades on the right, because the mis-anchored χ=10
@@ -8664,21 +8665,17 @@ def fig_c_GW_vs_ligo_constraint():
             range=[_math.log10(chi_grid[0]), _math.log10(chi_grid[-1])],
         ),
         yaxis=dict(
-            title="Δc/c = (c_GW − c)/c",
+            title="Δc/c",
             range=[y_min - 0.2, y_max + 0.2],
         ),
         title=dict(
-            text=(
-                "GW170817 confines the vestigial metric-channel susceptibility<br>"
-                "<sub>Δc/c = √χ_vest − 1; cap |Δc/c| ≤ 3 × 10⁻¹⁵ (amber, at "
-                "Δc/c = 0). The compatible window is nested INSIDE the natural "
-                "range, meeting it at χ_vest = 1.<br>"
-                "The endpoints of the natural range lie far outside the cap.</sub>"
-            ),
+            text="Assumed metric-channel speed",
             font=TITLE_FONT,
         ),
-        height=620,
-        width=920,
+        height=400,
+        width=460,
+        margin=dict(l=55, r=20, t=85, b=55),
+        legend=dict(orientation="h", x=0, y=1.04, yanchor="bottom", font=dict(size=14)),
     )
     return fig
 
