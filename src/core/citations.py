@@ -6530,14 +6530,14 @@ CITATION_REGISTRY = {
         'volume': 6,
         'page': '81-95',
         'year': 2006,
-        'doi': None,
+        'doi': '10.26421/QIC6.1-6',
         'arxiv': 'quant-ph/0505030',
-        'doi_verified': None,
+        'doi_verified': '2026-11-06',
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf',
         'used_in': ['papers/D4/paper_draft.tex', 'papers/D8/paper_draft.tex'],
         'provides': [],
-        'notes': 'Canonical reference for the polylogarithmic length bound of the Solovay-Kitaev algorithm. Cited in D4 §9 Stage 10.E prose alongside KitaevShenVyalyi2002 (existence form) and AharonovArad2011 (group-commutator substrate). No DOI: QIC vol. 6 (Rinton Press) does not register article DOIs; arXiv quant-ph/0505030 is the canonical locator.',
+        'notes': 'Canonical balanced-commutator length reference. Held arXiv quant-ph/0505030v2, section 3 Eqs. (8)-(9): length exponent log(5)/log(3/2), distinct from pointer-compressed runtime log(3)/log(3/2); section 5 extends the analysis to SU(d). DOI/title/authors/venue verified against the publisher record on 2026-11-06. Legacy abstract-cache exponent was false; see the source-reconciliation evidence.',
     },
 
     'KitaevShenVyalyi2002': {

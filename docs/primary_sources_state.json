@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-11-06T05:15:51+00:00",
+  "generated_at": "2026-11-06T18:26:42+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -1842,13 +1842,13 @@
     "DawsonNielsen2006": {
       "bibkey": "DawsonNielsen2006",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 1324,
+      "fetched_at": "2026-11-06T17:58:52+00:00",
+      "size_bytes": 222679,
       "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "note": "Pre-existing held full PDF verified by direct body read; no re-fetch in this repair. Legacy abstract cache is false and preserved in quarantine custody. Live publisher/arXiv identity independently confirmed."
     },
     "Degenne2025BrownianMotion": {
       "bibkey": "Degenne2025BrownianMotion",

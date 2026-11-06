@@ -1,3 +1,4 @@
+import SKEFTHawking.ADW.GaussianAuxiliaryComplex
 import SKEFTHawking.ADW.GaussianPolynomialAffine
 import SKEFTHawking.ADW.GaussianPolynomialHermite
 import SKEFTHawking.ADW.GaussianPolynomialIBP
