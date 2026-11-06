@@ -10316,6 +10316,36 @@
         "enforced": true,
         "run_at": "2026-11-06"
       }
+    },
+    {
+      "finding_id": "review:2026-11-06-l3-figure-readability:paper27_bh_thermodynamics_four_laws:1",
+      "status": "fixed",
+      "evidence": "Actual single-file Paper27 repair preserves all equations, accepted figure/caption and bibliography; independent R1 REVISE attribution echo was repaired and R2 source review accepts exact composition. Actual canonical compile has7pages/0overfull/0errors/0unresolved; independent fresh all-seven-page visual review accepts all3bodyoverflow repairs and coherent compiled source. Both declared predicates failed before repair and execute successfully through this writer. Full rejected/accepted source/runtime/render custody is in PAPER27_REPAIR_R2_EVIDENCE.zip; source and actual visual reviews are adjacent. Original full physical four-laws BUILD, related WKB/Lean attribution, broader claims and full publication/human acceptance remain OPEN.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-06-l3-figure-readability/PAPER27_VISUAL_R2.md",
+      "date": "2026-11-06",
+      "commit": "3034617f",
+      "verified_by": {
+        "command": "uv run python -c \"from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok,msg,n=compile_one(Path('papers/paper27_bh_thermodynamics_four_laws'),keep=True,force=True); print(msg); assert ok and 'overfull=0' in msg\"",
+        "declared": "uv run python -c \"from pathlib import Path; from scripts.compile_bundle_pdf import compile_one; ok,msg,n=compile_one(Path('papers/paper27_bh_thermodynamics_four_laws'),keep=True,force=True); print(msg); assert ok and 'overfull=0' in msg\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-06-l3-figure-readability:paper27_bh_thermodynamics_four_laws:2",
+      "status": "fixed",
+      "evidence": "Actual single-file Paper27 repair preserves all equations, accepted figure/caption and bibliography; independent R1 REVISE attribution echo was repaired and R2 source review accepts exact composition. Actual canonical compile has7pages/0overfull/0errors/0unresolved; independent fresh all-seven-page visual review accepts all3bodyoverflow repairs and coherent compiled source. Both declared predicates failed before repair and execute successfully through this writer. Full rejected/accepted source/runtime/render custody is in PAPER27_REPAIR_R2_EVIDENCE.zip; source and actual visual reviews are adjacent. Original full physical four-laws BUILD, related WKB/Lean attribution, broader claims and full publication/human acceptance remain OPEN.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-06-l3-figure-readability/PAPER27_VISUAL_R2.md",
+      "date": "2026-11-06",
+      "commit": "3034617f",
+      "verified_by": {
+        "command": "uv run python -c \"from pathlib import Path; s=Path('papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex').read_text(); assert 'which evolves the full' not in s; assert 'infinite} affine' not in s; assert 'The wave is structurally complete' not in s; assert 'local affine' in s and 'full four-laws' in s\"",
+        "declared": "uv run python -c \"from pathlib import Path; s=Path('papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex').read_text(); assert 'which evolves the full' not in s; assert 'infinite} affine' not in s; assert 'The wave is structurally complete' not in s; assert 'local affine' in s and 'full four-laws' in s\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
     }
   ]
 }
