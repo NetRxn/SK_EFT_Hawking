@@ -1714,3 +1714,35 @@ packages, not new machinery. No enabling finding, physical BUILD, publication
 bundle or protected main gate is closed by this incomplete draft checkpoint.
 ROOT retains L1 as lead; Executor's next prospectively reviewed deeper manual
 proposal runs independently, as recorded in the same Phase6a successor record.
+
+
+### Current G4 input controls independently accepted; full consumer still owed
+
+Main-delivery checkpoint1c2b15f69 is pushed to existing draftPR117. Independent
+review accepts the actual journalled producer-case exclusion, real public
+G_N_emergent private rename with declaration retained, and absent real L1
+provenance target controls. Seven fresh-child receipts show0->1->0->1->0->1->0;
+448serialized paper rows reconcile, intended L1missing-target blockers are
+blocked/unmeasured and complete restoration recovers the exact baseline.
+Bytes/fullmode/nsmtime restore and the recovery journal is empty. The archive
+G4_PRODUCTION_CONTROLS_R1_EVIDENCE.zip/READBACK under the existing main-delivery
+review directory contains all projections, rawcaptures, source witnesses,
+independent review and limits. No fullD6.6 closure is claimed: actual submission
+consumer details, explicit loaded-module origins, fullgraph/native and other-gate
+qualification remain required.
+
+The original inventory contract's public-surface guard omission is completed
+using the exact historical df42dc907 one-line insertion, independently reviewed.
+Existing registration discovery changes from1to0, allrequired sites satisfied;
+optional nonwriter sync-edge remains inapplicable. The full existing module
+reports68PASS/twoFAIL. Both exact failures independently reproduce on the
+pre-change HEAD file: current literal population150exceeds117, and D7's test
+expects an absent theorem name. Exact postimage restoration is recorded.
+Keep these test failures owed; no ceiling increase, dropped test or fullsuite
+pass is authorized. Source/history reconciliation precedes further fixes.
+
+ROOT remains L1lead, with remaining ordinary propagation work under existing
+L1-fix-propagation alongside qualification. Executor's next bounded proposal
+is frozen for prospective independent review; no construction/runtime/physical
+premise is approved by receipt. The portfolio priority and original science,
+canonical closure, main, stage and finalhuman requirements are unchanged.
