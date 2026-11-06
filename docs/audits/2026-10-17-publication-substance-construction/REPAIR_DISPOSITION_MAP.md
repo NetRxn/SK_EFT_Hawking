@@ -96,9 +96,15 @@ review history; it is not a whole-branch candidate for main.
   product/adjoint/constraint or controlled-limit construction preserving both
   new coefficients. ROOT retains all ordinary L1/publication delivery.
 - **Integration-blocker lane:** a bounded author proposal for existing
-  zero-headroom pins and canonical L2 serialization is complete; independent
-  review is pending. Validator pin hunks remain unapplied for a bundled
-  architecture assessment; ordinary scientific work continues meanwhile. Actual proposal population
+  zero-headroom pins and canonical L2 serialization has completed
+  [independent semantic review](INTEGRATION_PIN_INDEPENDENT_REVIEW_R1.md).
+  [Full proposal/review custody](INTEGRATION_PIN_REVIEW_EVIDENCE_R1.json) retains
+  actual populations and history. Validator pin hunks remain unapplied for a
+  bundled architecture assessment; ordinary scientific work continues meanwhile.
+  L2 received only its canonical terminal LF, with the same existing test
+  PASS / production-LF-removal FAIL / exact-restoration PASS on PR117.
+  All prior bytes and every parsed field are conserved. This fixes the scoped
+  serialization defect, not the current full profile or any scientific claim. Actual proposal population
   is 636 structured scored rows plus one unscored bare-string D7 entry. No
   check threshold is relaxed, no claim dropped and no scientific closure
   inferred. The 19 historically quoted failures belong to a different older
