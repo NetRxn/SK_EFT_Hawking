@@ -1,0 +1,2283 @@
+{
+  "task": "l1-hermite-source-discovery-wt1-r1",
+  "parent": "publication-remediation",
+  "status": "DISCOVERY_COMPLETE_BOUNDED_NOT_IMPLEMENTED",
+  "primary": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "slot": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/worktrees/wt1",
+  "notebook": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-remediation-notebook.md",
+  "notebook_writer": "ROOT",
+  "roadmap": "docs/roadmaps/Phase6a_Roadmap.md",
+  "owned_outputs": [
+    "/tmp/l1-hermite-source-discovery-wt1-r1.md",
+    "/tmp/l1-hermite-source-discovery-wt1-r1.json"
+  ],
+  "candidate_state": "No source changes; read-only discovery on admitted base4fca",
+  "acceptance_reviewer": "ROOT",
+  "packet_initial": {
+    "fresh": true,
+    "changed": []
+  },
+  "packet_final": {
+    "fresh": true,
+    "changed": []
+  },
+  "git_status_final": "",
+  "provisional_stop": {
+    "capacity_complete": false,
+    "capacity_conflicts": [
+      1,
+      2,
+      3
+    ],
+    "errors": [
+      "[Errno 1] Operation not permitted: 'ps'",
+      "public wt1 endpoint observation unavailable",
+      "public wt1 identity unavailable"
+    ],
+    "catalog_description": "This slot holds no active lease, so its Lean backend is not running and it exposes no tools. Acquire and prepare the slot with slotctl first.",
+    "reports_initially_written_as_stop": true
+  },
+  "reconciliation": "ROOT supplied complete authorized controller observation and ACTIVE acquire/prepare at12:16:47Z; sandbox unavailable observation and pre-acquire catalog description were reconciled. ROOT directed one actual matching call, success authorized continued read-only discovery. No bypass or lifecycle changes.",
+  "first_lsp_call": {
+    "name": "mcp__skeft_wt1__lean_file_outline",
+    "args": {
+      "file_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/worktrees/wt1/lean/SKEFTHawking/QuantumNetwork/GaussianMoments.lean",
+      "max_declarations": 80
+    }
+  },
+  "first_lsp_result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"imports\": [\n    \"Mathlib.Probability.Distributions.Gaussian.Real\",\n    \"Mathlib.Probability.Moments.Variance\",\n    \"Mathlib.MeasureTheory.Integral.Gamma\",\n    \"Mathlib.MeasureTheory.Measure.Lebesgue.Integral\",\n    \"Mathlib.MeasureTheory.Group.Integral\",\n    \"Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral\"\n  ],\n  \"declarations\": [\n    {\n      \"name\": \"SKEFTHawking.QuantumNetwork\",\n      \"kind\": \"Ns\",\n      \"start_line\": 34,\n      \"end_line\": 168,\n      \"type_signature\": null,\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_sq_gaussianReal\",\n      \"kind\": \"Thm\",\n      \"start_line\": 38,\n      \"end_line\": 45,\n      \"type_signature\": \"∫ (x : ℝ), x ^ 2 ∂gaussianReal 0 1 = 1\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_gaussian_weight\",\n      \"kind\": \"Thm\",\n      \"start_line\": 53,\n      \"end_line\": 57,\n      \"type_signature\": \"∫ (x : ℝ), rexp (-x ^ 2 / 2) = √(2 * π)\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_pow_two_mul_gaussian\",\n      \"kind\": \"Thm\",\n      \"start_line\": 59,\n      \"end_line\": 92,\n      \"type_signature\": \"∫ (x : ℝ), x ^ 2 * rexp (-x ^ 2 / 2) =\\n        √(2 * π)\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_pow_four_mul_gaussian\",\n      \"kind\": \"Thm\",\n      \"start_line\": 94,\n      \"end_line\": 134,\n      \"type_signature\": \"∫ (x : ℝ), x ^ 4 * rexp (-x ^ 2 / 2) =\\n        3 * √(2 * π)\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_odd_mul_gaussian\",\n      \"kind\": \"Thm\",\n      \"start_line\": 136,\n      \"end_line\": 150,\n      \"type_signature\": \"∀ (k : ℕ),\\n        ∫ (x : ℝ), x ^ (2 * k + 1) * rexp (-x ^ 2 / 2) = 0\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_pow_four_gaussianReal\",\n      \"kind\": \"Thm\",\n      \"start_line\": 152,\n      \"end_line\": 166,\n      \"type_signature\": \"∫ (x : ℝ), x ^ 4 ∂gaussianReal 0 1 =\\n        3\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_sq_gaussianReal\",\n      \"kind\": \"Thm\",\n      \"start_line\": 40,\n      \"end_line\": 40,\n      \"type_signature\": \": ∫ x : ℝ, x ^ 2 ∂(gaussianReal 0 1) = 1\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_gaussian_weight\",\n      \"kind\": \"Thm\",\n      \"start_line\": 54,\n      \"end_line\": 54,\n      \"type_signature\": \": ∫ x : ℝ, Real.exp (-x ^ 2 / 2) = Real.sqrt (2 * π)\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_pow_two_mul_gaussian\",\n      \"kind\": \"Thm\",\n      \"start_line\": 60,\n      \"end_line\": 60,\n      \"type_signature\": \": ∫ x : ℝ, x ^ 2 * Real.exp (-x ^ 2 / 2) = Real.sqrt (2 * π)\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_pow_four_mul_gaussian\",\n      \"kind\": \"Thm\",\n      \"start_line\": 95,\n      \"end_line\": 95,\n      \"type_signature\": \": ∫ x : ℝ, x ^ 4 * Real.exp (-x ^ 2 / 2) = 3 * Real.sqrt (2 * π)\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_odd_mul_gaussian\",\n      \"kind\": \"Thm\",\n      \"start_line\": 138,\n      \"end_line\": 138,\n      \"type_signature\": \"(k : ℕ) : ∫ x : ℝ, x ^ (2 * k + 1) * Real.exp (-x ^ 2 / 2) = 0\",\n      \"children\": []\n    },\n    {\n      \"name\": \"integral_pow_four_gaussianReal\",\n      \"kind\": \"Thm\",\n      \"start_line\": 156,\n      \"end_line\": 156,\n      \"type_signature\": \": ∫ x : ℝ, x ^ 4 ∂(gaussianReal 0 1) = 3\",\n      \"children\": []\n    }\n  ],\n  \"total_declarations\": null\n}"
+      }
+    ],
+    "structuredContent": {
+      "imports": [
+        "Mathlib.Probability.Distributions.Gaussian.Real",
+        "Mathlib.Probability.Moments.Variance",
+        "Mathlib.MeasureTheory.Integral.Gamma",
+        "Mathlib.MeasureTheory.Measure.Lebesgue.Integral",
+        "Mathlib.MeasureTheory.Group.Integral",
+        "Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral"
+      ],
+      "declarations": [
+        {
+          "name": "SKEFTHawking.QuantumNetwork",
+          "kind": "Ns",
+          "start_line": 34,
+          "end_line": 168,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "integral_sq_gaussianReal",
+          "kind": "Thm",
+          "start_line": 38,
+          "end_line": 45,
+          "type_signature": "∫ (x : ℝ), x ^ 2 ∂gaussianReal 0 1 = 1",
+          "children": []
+        },
+        {
+          "name": "integral_gaussian_weight",
+          "kind": "Thm",
+          "start_line": 53,
+          "end_line": 57,
+          "type_signature": "∫ (x : ℝ), rexp (-x ^ 2 / 2) = √(2 * π)",
+          "children": []
+        },
+        {
+          "name": "integral_pow_two_mul_gaussian",
+          "kind": "Thm",
+          "start_line": 59,
+          "end_line": 92,
+          "type_signature": "∫ (x : ℝ), x ^ 2 * rexp (-x ^ 2 / 2) =\n        √(2 * π)",
+          "children": []
+        },
+        {
+          "name": "integral_pow_four_mul_gaussian",
+          "kind": "Thm",
+          "start_line": 94,
+          "end_line": 134,
+          "type_signature": "∫ (x : ℝ), x ^ 4 * rexp (-x ^ 2 / 2) =\n        3 * √(2 * π)",
+          "children": []
+        },
+        {
+          "name": "integral_odd_mul_gaussian",
+          "kind": "Thm",
+          "start_line": 136,
+          "end_line": 150,
+          "type_signature": "∀ (k : ℕ),\n        ∫ (x : ℝ), x ^ (2 * k + 1) * rexp (-x ^ 2 / 2) = 0",
+          "children": []
+        },
+        {
+          "name": "integral_pow_four_gaussianReal",
+          "kind": "Thm",
+          "start_line": 152,
+          "end_line": 166,
+          "type_signature": "∫ (x : ℝ), x ^ 4 ∂gaussianReal 0 1 =\n        3",
+          "children": []
+        },
+        {
+          "name": "integral_sq_gaussianReal",
+          "kind": "Thm",
+          "start_line": 40,
+          "end_line": 40,
+          "type_signature": ": ∫ x : ℝ, x ^ 2 ∂(gaussianReal 0 1) = 1",
+          "children": []
+        },
+        {
+          "name": "integral_gaussian_weight",
+          "kind": "Thm",
+          "start_line": 54,
+          "end_line": 54,
+          "type_signature": ": ∫ x : ℝ, Real.exp (-x ^ 2 / 2) = Real.sqrt (2 * π)",
+          "children": []
+        },
+        {
+          "name": "integral_pow_two_mul_gaussian",
+          "kind": "Thm",
+          "start_line": 60,
+          "end_line": 60,
+          "type_signature": ": ∫ x : ℝ, x ^ 2 * Real.exp (-x ^ 2 / 2) = Real.sqrt (2 * π)",
+          "children": []
+        },
+        {
+          "name": "integral_pow_four_mul_gaussian",
+          "kind": "Thm",
+          "start_line": 95,
+          "end_line": 95,
+          "type_signature": ": ∫ x : ℝ, x ^ 4 * Real.exp (-x ^ 2 / 2) = 3 * Real.sqrt (2 * π)",
+          "children": []
+        },
+        {
+          "name": "integral_odd_mul_gaussian",
+          "kind": "Thm",
+          "start_line": 138,
+          "end_line": 138,
+          "type_signature": "(k : ℕ) : ∫ x : ℝ, x ^ (2 * k + 1) * Real.exp (-x ^ 2 / 2) = 0",
+          "children": []
+        },
+        {
+          "name": "integral_pow_four_gaussianReal",
+          "kind": "Thm",
+          "start_line": 156,
+          "end_line": 156,
+          "type_signature": ": ∫ x : ℝ, x ^ 4 ∂(gaussianReal 0 1) = 3",
+          "children": []
+        }
+      ],
+      "total_declarations": null
+    },
+    "isError": false
+  },
+  "evidence": {
+    "gaussian_wick": {
+      "imports": [
+        "SKEFTHawking.QuantumNetwork.GaussianMoments",
+        "Mathlib.MeasureTheory.Integral.Pi",
+        "Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace",
+        "Mathlib.Analysis.InnerProductSpace.EuclideanDist"
+      ],
+      "declarations": [
+        {
+          "name": "SKEFTHawking.QuantumNetwork",
+          "kind": "Ns",
+          "start_line": 25,
+          "end_line": 208,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "gaussInt_monomial",
+          "kind": "Thm",
+          "start_line": 29,
+          "end_line": 49,
+          "type_signature": "∀ {ι : Type u_1} [inst : Fintype ι] (m : ι → ℕ),\n        ∫ (x : EuclideanSpace ℝ ι), (∏ i, x.ofLp i ^ m i) * rexp (-‖x‖ ^ 2 / 2) =\n          ∏ i, ∫ (t : ℝ), t ^ m i * rexp (-t ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "moment_zero",
+          "kind": "Thm",
+          "start_line": 57,
+          "end_line": 59,
+          "type_signature": "∫ (t : ℝ), t ^ 0 * rexp (-t ^ 2 / 2) = √(2 * π)",
+          "children": []
+        },
+        {
+          "name": "moment_one",
+          "kind": "Thm",
+          "start_line": 61,
+          "end_line": 64,
+          "type_signature": "∫ (t : ℝ), t ^ 1 * rexp (-t ^ 2 / 2) = 0",
+          "children": []
+        },
+        {
+          "name": "moment_two",
+          "kind": "Thm",
+          "start_line": 66,
+          "end_line": 68,
+          "type_signature": "∫ (t : ℝ), t ^ 2 * rexp (-t ^ 2 / 2) = √(2 * π)",
+          "children": []
+        },
+        {
+          "name": "moment_three",
+          "kind": "Thm",
+          "start_line": 70,
+          "end_line": 73,
+          "type_signature": "∫ (t : ℝ), t ^ 3 * rexp (-t ^ 2 / 2) = 0",
+          "children": []
+        },
+        {
+          "name": "moment_four",
+          "kind": "Thm",
+          "start_line": 75,
+          "end_line": 77,
+          "type_signature": "∫ (t : ℝ), t ^ 4 * rexp (-t ^ 2 / 2) = 3 * √(2 * π)",
+          "children": []
+        },
+        {
+          "name": "wval",
+          "kind": "Def",
+          "start_line": 81,
+          "end_line": 84,
+          "type_signature": "ℕ → ℝ",
+          "children": []
+        },
+        {
+          "name": "moment_eq_wval",
+          "kind": "Thm",
+          "start_line": 86,
+          "end_line": 94,
+          "type_signature": "∀ m ≤ 4,\n        ∫ (t : ℝ), t ^ m * rexp (-t ^ 2 / 2) = √(2 * π) * wval m",
+          "children": []
+        },
+        {
+          "name": "coordMult",
+          "kind": "Thm",
+          "start_line": 98,
+          "end_line": 101,
+          "type_signature": "{ι : Type u_1} → [DecidableEq ι] → ι → ι → ι → ι → ι → ℕ",
+          "children": []
+        },
+        {
+          "name": "coordMult_le_four",
+          "kind": "Thm",
+          "start_line": 103,
+          "end_line": 107,
+          "type_signature": "∀ {ι : Type u_1} [inst : DecidableEq ι] (a b c d e : ι),\n        coordMult a b c d e ≤ 4",
+          "children": []
+        },
+        {
+          "name": "monomial_coord_pow",
+          "kind": "Thm",
+          "start_line": 109,
+          "end_line": 117,
+          "type_signature": "∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : DecidableEq ι]\n        (x : EuclideanSpace ℝ ι) (a b c d : ι),\n        x.ofLp a * x.ofLp b * x.ofLp c * x.ofLp d = ∏ e, x.ofLp e ^ coordMult a b c d e",
+          "children": []
+        },
+        {
+          "name": "realWick",
+          "kind": "Thm",
+          "start_line": 121,
+          "end_line": 127,
+          "type_signature": "{ι : Type u_1} → [DecidableEq ι] → ι → ι → ι → ι → ℝ",
+          "children": []
+        },
+        {
+          "name": "prod_wval_eq_one",
+          "kind": "Thm",
+          "start_line": 129,
+          "end_line": 133,
+          "type_signature": "∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : DecidableEq ι]\n        (a b c d : ι),\n        (∀ (e : ι), coordMult a b c d e = 0 ∨ coordMult a b c d e = 2) →\n          ∏ e, wval (coordMult a b c d e) = 1",
+          "children": []
+        },
+        {
+          "name": "prod_wval_allEqual",
+          "kind": "Thm",
+          "start_line": 135,
+          "end_line": 141,
+          "type_signature": "∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : DecidableEq ι]\n        (a : ι), ∏ e, wval (coordMult a a a a e) = 3",
+          "children": []
+        },
+        {
+          "name": "prod_wval_coordMult",
+          "kind": "Thm",
+          "start_line": 143,
+          "end_line": 190,
+          "type_signature": "∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : DecidableEq ι]\n        (a b c d : ι), ∏ e, wval (coordMult a b c d e) = realWick a b c d",
+          "children": []
+        },
+        {
+          "name": "gaussRealFourTensor",
+          "kind": "Thm",
+          "start_line": 192,
+          "end_line": 206,
+          "type_signature": "∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : DecidableEq ι]\n        (a b c d : ι),\n        ∫ (x : EuclideanSpace ℝ ι), x.ofLp a * x.ofLp b * x.ofLp c * x.ofLp d * rexp (-‖x‖ ^ 2 / 2) =\n          realWick a b c d * √(2 * π) ^ Fintype.card ι",
+          "children": []
+        },
+        {
+          "name": "gaussInt_monomial",
+          "kind": "Thm",
+          "start_line": 33,
+          "end_line": 33,
+          "type_signature": "{ι : Type*} [Fintype ι] (m : ι → ℕ) : ∫ x : EuclideanSpace ℝ ι, (∏ i, (x i) ^ (m i)) * Real.exp (-‖x‖ ^ 2 / 2) = ∏ i, ∫ t : ℝ, t ^ (m i) * Real.exp (-t ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "moment_zero",
+          "kind": "Thm",
+          "start_line": 58,
+          "end_line": 58,
+          "type_signature": ": ∫ t : ℝ, t ^ 0 * Real.exp (-t ^ 2 / 2) = Real.sqrt (2 * π)",
+          "children": []
+        },
+        {
+          "name": "moment_one",
+          "kind": "Thm",
+          "start_line": 62,
+          "end_line": 62,
+          "type_signature": ": ∫ t : ℝ, t ^ 1 * Real.exp (-t ^ 2 / 2) = 0",
+          "children": []
+        },
+        {
+          "name": "moment_two",
+          "kind": "Thm",
+          "start_line": 67,
+          "end_line": 67,
+          "type_signature": ": ∫ t : ℝ, t ^ 2 * Real.exp (-t ^ 2 / 2) = Real.sqrt (2 * π)",
+          "children": []
+        },
+        {
+          "name": "moment_three",
+          "kind": "Thm",
+          "start_line": 71,
+          "end_line": 71,
+          "type_signature": ": ∫ t : ℝ, t ^ 3 * Real.exp (-t ^ 2 / 2) = 0",
+          "children": []
+        },
+        {
+          "name": "moment_four",
+          "kind": "Thm",
+          "start_line": 76,
+          "end_line": 76,
+          "type_signature": ": ∫ t : ℝ, t ^ 4 * Real.exp (-t ^ 2 / 2) = 3 * Real.sqrt (2 * π)",
+          "children": []
+        },
+        {
+          "name": "wval",
+          "kind": "Thm",
+          "start_line": 83,
+          "end_line": 83,
+          "type_signature": ": ℕ → ℝ | 0 => 1 | 1 => 0 | 2 => 1 | 3 => 0 | 4 => 3 | _ => 0 /-- Each 1-D moment factors as `Jₘ = √(2π)·w(m)` for `m ≤ 4`. -/ theorem moment_eq_wval (m : ℕ) (hm : m ≤ 4) : (∫ t : ℝ, t ^ m * Real.exp (-t ^ 2 / 2)) = Real.sqrt (2 * π) * wval m",
+          "children": []
+        },
+        {
+          "name": "moment_eq_wval",
+          "kind": "Thm",
+          "start_line": 87,
+          "end_line": 87,
+          "type_signature": "(m : ℕ) (hm : m ≤ 4) : (∫ t : ℝ, t ^ m * Real.exp (-t ^ 2 / 2)) = Real.sqrt (2 * π) * wval m",
+          "children": []
+        },
+        {
+          "name": "coordMult",
+          "kind": "Def",
+          "start_line": 99,
+          "end_line": 99,
+          "type_signature": "{ι : Type*} [DecidableEq ι] (a b c d e : ι) : ℕ",
+          "children": []
+        },
+        {
+          "name": "coordMult_le_four",
+          "kind": "Thm",
+          "start_line": 104,
+          "end_line": 104,
+          "type_signature": "{ι : Type*} [DecidableEq ι] (a b c d e : ι) : coordMult a b c d e ≤ 4",
+          "children": []
+        },
+        {
+          "name": "monomial_coord_pow",
+          "kind": "Thm",
+          "start_line": 111,
+          "end_line": 111,
+          "type_signature": "{ι : Type*} [Fintype ι] [DecidableEq ι] (x : EuclideanSpace ℝ ι) (a b c d : ι) : x a * x b * x c * x d = ∏ e, (x e) ^ (coordMult a b c d e)",
+          "children": []
+        },
+        {
+          "name": "realWick",
+          "kind": "Def",
+          "start_line": 124,
+          "end_line": 124,
+          "type_signature": "{ι : Type*} [DecidableEq ι] (a b c d : ι) : ℝ",
+          "children": []
+        },
+        {
+          "name": "prod_wval_eq_one",
+          "kind": "Thm",
+          "start_line": 130,
+          "end_line": 130,
+          "type_signature": "{ι : Type*} [Fintype ι] [DecidableEq ι] (a b c d : ι) (h : ∀ e, coordMult a b c d e = 0 ∨ coordMult a b c d e = 2) : ∏ e, wval (coordMult a b c d e) = 1",
+          "children": []
+        },
+        {
+          "name": "prod_wval_allEqual",
+          "kind": "Thm",
+          "start_line": 136,
+          "end_line": 136,
+          "type_signature": "{ι : Type*} [Fintype ι] [DecidableEq ι] (a : ι) : ∏ e, wval (coordMult a a a a e) = 3",
+          "children": []
+        },
+        {
+          "name": "prod_wval_coordMult",
+          "kind": "Thm",
+          "start_line": 147,
+          "end_line": 147,
+          "type_signature": "{ι : Type*} [Fintype ι] [DecidableEq ι] (a b c d : ι) : ∏ e, wval (coordMult a b c d e) = realWick a b c d",
+          "children": []
+        },
+        {
+          "name": "gaussRealFourTensor",
+          "kind": "Thm",
+          "start_line": 197,
+          "end_line": 197,
+          "type_signature": "{ι : Type*} [Fintype ι] [DecidableEq ι] (a b c d : ι) : ∫ x : EuclideanSpace ℝ ι, (x a * x b * x c * x d) * Real.exp (-‖x‖ ^ 2 / 2) = realWick a b c d * Real.sqrt (2 * π) ^ Fintype.card ι",
+          "children": []
+        }
+      ],
+      "total_declarations": null
+    },
+    "hermite_gaussian": {
+      "imports": [
+        "Mathlib.RingTheory.Polynomial.Hermite.Basic",
+        "Mathlib.Analysis.Calculus.Deriv.Add",
+        "Mathlib.Analysis.Calculus.Deriv.Polynomial",
+        "Mathlib.Analysis.SpecialFunctions.Exp",
+        "Mathlib.Analysis.SpecialFunctions.ExpDeriv"
+      ],
+      "declarations": [
+        {
+          "name": "<section>",
+          "kind": "Ns",
+          "start_line": 32,
+          "end_line": 74,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "deriv_gaussian_eq_hermite_mul_gaussian",
+          "kind": "Thm",
+          "start_line": 41,
+          "end_line": 59,
+          "type_signature": "∀ (n : ℕ) (x : ℝ),\n        deriv^[n] (fun y ↦ Real.exp (-(y ^ 2 / 2))) x =\n          (-1) ^ n * (aeval x) (hermite n) * Real.exp (-(x ^ 2 / 2))",
+          "children": []
+        },
+        {
+          "name": "hermite_eq_deriv_gaussian",
+          "kind": "Thm",
+          "start_line": 61,
+          "end_line": 66,
+          "type_signature": "∀ (n : ℕ) (x : ℝ),\n        (aeval x) (hermite n) =\n          (-1) ^ n * deriv^[n] (fun y ↦ Real.exp (-(y ^ 2 / 2))) x / Real.exp (-(x ^ 2 / 2))",
+          "children": []
+        },
+        {
+          "name": "hermite_eq_deriv_gaussian'",
+          "kind": "Thm",
+          "start_line": 68,
+          "end_line": 71,
+          "type_signature": "∀ (n : ℕ) (x : ℝ),\n        (aeval x) (hermite n) =\n          (-1) ^ n * deriv^[n] (fun y ↦ Real.exp (-(y ^ 2 / 2))) x * Real.exp (x ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "deriv_gaussian_eq_hermite_mul_gaussian",
+          "kind": "Thm",
+          "start_line": 42,
+          "end_line": 42,
+          "type_signature": "(n : ℕ) (x : ℝ) : deriv^[n] (fun y => Real.exp (-(y ^ 2 / 2))) x = (-1 : ℝ) ^ n * aeval x (hermite n) * Real.exp (-(x ^ 2 / 2))",
+          "children": []
+        },
+        {
+          "name": "hermite_eq_deriv_gaussian",
+          "kind": "Thm",
+          "start_line": 61,
+          "end_line": 61,
+          "type_signature": "(n : ℕ) (x : ℝ) : aeval x (hermite n) = (-1 : ℝ) ^ n * deriv^[n] (fun y => Real.exp (-(y ^ 2 / 2))) x / Real.exp (-(x ^ 2 / 2))",
+          "children": []
+        },
+        {
+          "name": "hermite_eq_deriv_gaussian'",
+          "kind": "Thm",
+          "start_line": 68,
+          "end_line": 68,
+          "type_signature": "(n : ℕ) (x : ℝ) : aeval x (hermite n) = (-1 : ℝ) ^ n * deriv^[n] (fun y => Real.exp (-(y ^ 2 / 2))) x * Real.exp (x ^ 2 / 2)",
+          "children": []
+        }
+      ],
+      "total_declarations": null
+    },
+    "semantic_target": {
+      "items": [
+        {
+          "name": "Polynomial.hermite",
+          "module_name": "Mathlib.RingTheory.Polynomial.Hermite.Basic",
+          "kind": "definition",
+          "type": "ℕ → Polynomial ℤ"
+        },
+        {
+          "name": "Polynomial.hermite_succ",
+          "module_name": "Mathlib.RingTheory.Polynomial.Hermite.Basic",
+          "kind": "theorem",
+          "type": "∀ (n : ℕ),\n  Polynomial.hermite (n + 1) = Polynomial.X * Polynomial.hermite n - Polynomial.derivative (Polynomial.hermite n)"
+        },
+        {
+          "name": "Polynomial.coeff_hermite_explicit",
+          "module_name": "Mathlib.RingTheory.Polynomial.Hermite.Basic",
+          "kind": "theorem",
+          "type": "∀ (n k : ℕ),\n  (Polynomial.hermite (2 * n + k)).coeff k = (-1) ^ n * ↑(2 * n - 1).doubleFactorial * ↑((2 * n + k).choose k)"
+        },
+        {
+          "name": "Polynomial.hermite_eq_deriv_gaussian'",
+          "module_name": "Mathlib.RingTheory.Polynomial.Hermite.Gaussian",
+          "kind": "theorem",
+          "type": "∀ (n : ℕ) (x : ℝ),\n  (Polynomial.aeval x) (Polynomial.hermite n) =\n    (-1) ^ n * deriv^[n] (fun y => Real.exp (-(y ^ 2 / 2))) x * Real.exp (x ^ 2 / 2)"
+        },
+        {
+          "name": "Polynomial.coeff_hermite",
+          "module_name": "Mathlib.RingTheory.Polynomial.Hermite.Basic",
+          "kind": "theorem",
+          "type": "∀ (n k : ℕ),\n  (Polynomial.hermite n).coeff k =\n    if Even (n + k) then (-1) ^ ((n - k) / 2) * ↑(n - k - 1).doubleFactorial * ↑(n.choose k) else 0"
+        },
+        {
+          "name": "Polynomial.hermite_eq_iterate",
+          "module_name": "Mathlib.RingTheory.Polynomial.Hermite.Basic",
+          "kind": "theorem",
+          "type": "∀ (n : ℕ), Polynomial.hermite n = (fun p => Polynomial.X * p - Polynomial.derivative p)^[n] 1"
+        }
+      ]
+    },
+    "hermite_basic": {
+      "imports": [
+        "Mathlib.Algebra.Polynomial.Derivative",
+        "Mathlib.Data.Nat.Factorial.DoubleFactorial"
+      ],
+      "declarations": [
+        {
+          "name": "<section>",
+          "kind": "Ns",
+          "start_line": 39,
+          "end_line": 203,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "hermite",
+          "kind": "Def",
+          "start_line": 47,
+          "end_line": 50,
+          "type_signature": "ℕ → ℤ[X]",
+          "children": []
+        },
+        {
+          "name": "hermite_succ",
+          "kind": "Thm",
+          "start_line": 52,
+          "end_line": 55,
+          "type_signature": "∀ (n : ℕ),\n        hermite (n + 1) = X * hermite n - derivative (hermite n)",
+          "children": []
+        },
+        {
+          "name": "hermite_eq_iterate",
+          "kind": "Thm",
+          "start_line": 57,
+          "end_line": 60,
+          "type_signature": "∀ (n : ℕ),\n        hermite n = (fun p ↦ X * p - derivative p)^[n] 1",
+          "children": []
+        },
+        {
+          "name": "hermite_zero",
+          "kind": "Thm",
+          "start_line": 62,
+          "end_line": 64,
+          "type_signature": "hermite 0 = C 1",
+          "children": []
+        },
+        {
+          "name": "hermite_one",
+          "kind": "Thm",
+          "start_line": 66,
+          "end_line": 68,
+          "type_signature": "hermite 1 = X",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_succ_zero",
+          "kind": "Thm",
+          "start_line": 75,
+          "end_line": 76,
+          "type_signature": "∀ (n : ℕ),\n        (hermite (n + 1)).coeff 0 = -(hermite n).coeff 1",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_succ_succ",
+          "kind": "Thm",
+          "start_line": 78,
+          "end_line": 81,
+          "type_signature": "∀ (n k : ℕ),\n        (hermite (n + 1)).coeff (k + 1) = (hermite n).coeff k - (↑k + 2) * (hermite n).coeff (k + 2)",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_of_lt",
+          "kind": "Thm",
+          "start_line": 83,
+          "end_line": 90,
+          "type_signature": "∀ {n k : ℕ}, n < k → (hermite n).coeff k = 0",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_self",
+          "kind": "Thm",
+          "start_line": 92,
+          "end_line": 98,
+          "type_signature": "∀ (n : ℕ), (hermite n).coeff n = 1",
+          "children": []
+        },
+        {
+          "name": "degree_hermite",
+          "kind": "Thm",
+          "start_line": 100,
+          "end_line": 106,
+          "type_signature": "∀ (n : ℕ), (hermite n).degree = ↑n",
+          "children": []
+        },
+        {
+          "name": "natDegree_hermite",
+          "kind": "Thm",
+          "start_line": 108,
+          "end_line": 110,
+          "type_signature": "∀ {n : ℕ}, (hermite n).natDegree = n",
+          "children": []
+        },
+        {
+          "name": "leadingCoeff_hermite",
+          "kind": "Thm",
+          "start_line": 112,
+          "end_line": 114,
+          "type_signature": "∀ (n : ℕ), (hermite n).leadingCoeff = 1",
+          "children": []
+        },
+        {
+          "name": "hermite_monic",
+          "kind": "Thm",
+          "start_line": 116,
+          "end_line": 117,
+          "type_signature": "∀ (n : ℕ), (hermite n).Monic",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_of_odd_add",
+          "kind": "Thm",
+          "start_line": 119,
+          "end_line": 133,
+          "type_signature": "∀ {n k : ℕ},\n        Odd (n + k) → (hermite n).coeff k = 0",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_explicit",
+          "kind": "Thm",
+          "start_line": 141,
+          "end_line": 182,
+          "type_signature": "∀ (n k : ℕ),\n        (hermite (2 * n + k)).coeff k = (-1) ^ n * ↑(2 * n - 1)‼ * ↑((2 * n + k).choose k)",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_of_even_add",
+          "kind": "Thm",
+          "start_line": 184,
+          "end_line": 191,
+          "type_signature": "∀ {n k : ℕ},\n        Even (n + k) → (hermite n).coeff k = (-1) ^ ((n - k) / 2) * ↑(n - k - 1)‼ * ↑(n.choose k)",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite",
+          "kind": "Thm",
+          "start_line": 193,
+          "end_line": 198,
+          "type_signature": "∀ (n k : ℕ),\n        (hermite n).coeff k =\n          if Even (n + k) then (-1) ^ ((n - k) / 2) * ↑(n - k - 1)‼ * ↑(n.choose k) else 0",
+          "children": []
+        },
+        {
+          "name": "hermite_succ",
+          "kind": "Thm",
+          "start_line": 54,
+          "end_line": 54,
+          "type_signature": "(n : ℕ) : hermite (n + 1) = X * hermite n - derivative (hermite n)",
+          "children": []
+        },
+        {
+          "name": "hermite_eq_iterate",
+          "kind": "Thm",
+          "start_line": 57,
+          "end_line": 57,
+          "type_signature": "(n : ℕ) : hermite n = (fun p => X * p - derivative p)^[n] 1",
+          "children": []
+        },
+        {
+          "name": "hermite_zero",
+          "kind": "Thm",
+          "start_line": 63,
+          "end_line": 63,
+          "type_signature": ": hermite 0 = C 1",
+          "children": []
+        },
+        {
+          "name": "hermite_one",
+          "kind": "Thm",
+          "start_line": 66,
+          "end_line": 66,
+          "type_signature": ": hermite 1 = X",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_succ_zero",
+          "kind": "Thm",
+          "start_line": 75,
+          "end_line": 75,
+          "type_signature": "(n : ℕ) : coeff (hermite (n + 1)) 0 = -coeff (hermite n) 1",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_succ_succ",
+          "kind": "Thm",
+          "start_line": 78,
+          "end_line": 78,
+          "type_signature": "(n k : ℕ) : coeff (hermite (n + 1)) (k + 1) = coeff (hermite n) k - (k + 2) * coeff (hermite n) (k + 2)",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_of_lt",
+          "kind": "Thm",
+          "start_line": 83,
+          "end_line": 83,
+          "type_signature": "{n k : ℕ} (hnk : n < k) : coeff (hermite n) k = 0",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_self",
+          "kind": "Thm",
+          "start_line": 93,
+          "end_line": 93,
+          "type_signature": "(n : ℕ) : coeff (hermite n) n = 1",
+          "children": []
+        },
+        {
+          "name": "degree_hermite",
+          "kind": "Thm",
+          "start_line": 101,
+          "end_line": 101,
+          "type_signature": "(n : ℕ) : (hermite n).degree = n",
+          "children": []
+        },
+        {
+          "name": "natDegree_hermite",
+          "kind": "Thm",
+          "start_line": 109,
+          "end_line": 109,
+          "type_signature": "{n : ℕ} : (hermite n).natDegree = n",
+          "children": []
+        },
+        {
+          "name": "leadingCoeff_hermite",
+          "kind": "Thm",
+          "start_line": 113,
+          "end_line": 113,
+          "type_signature": "(n : ℕ) : (hermite n).leadingCoeff = 1",
+          "children": []
+        },
+        {
+          "name": "hermite_monic",
+          "kind": "Thm",
+          "start_line": 116,
+          "end_line": 116,
+          "type_signature": "(n : ℕ) : (hermite n).Monic",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_of_odd_add",
+          "kind": "Thm",
+          "start_line": 119,
+          "end_line": 119,
+          "type_signature": "{n k : ℕ} (hnk : Odd (n + k)) : coeff (hermite n) k = 0",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_explicit",
+          "kind": "Thm",
+          "start_line": 142,
+          "end_line": 142,
+          "type_signature": ": ∀ n k : ℕ, coeff (hermite (2 * n + k)) k = (-1) ^ n * (2 * n - 1)‼ * Nat.choose (2 * n + k) k | 0, _ => by simp | n + 1, 0 => by convert! coeff_hermite_succ_zero (2 * n + 1) using 1 rw [coeff_hermite_explicit n 1, (by grind : 2 * (n + 1) - 1 = 2 * n + 1), Nat.doubleFactorial_add_one, Nat.choose_zero_right, Nat.choose_one_right, pow_succ] push_cast ring | n + 1, k + 1 => by let hermite_explicit : ℕ → ℕ → ℤ",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite_of_even_add",
+          "kind": "Thm",
+          "start_line": 184,
+          "end_line": 184,
+          "type_signature": "{n k : ℕ} (hnk : Even (n + k)) : coeff (hermite n) k = (-1) ^ ((n - k) / 2) * (n - k - 1)‼ * Nat.choose n k",
+          "children": []
+        },
+        {
+          "name": "coeff_hermite",
+          "kind": "Thm",
+          "start_line": 193,
+          "end_line": 193,
+          "type_signature": "(n k : ℕ) : coeff (hermite n) k = if Even (n + k) then (-1 : ℤ) ^ ((n - k) / 2) * (n - k - 1)‼ * Nat.choose n k else 0",
+          "children": []
+        }
+      ],
+      "total_declarations": null
+    },
+    "loogle_hermite_integral": {
+      "items": []
+    },
+    "gaussian_semantic": {
+      "items": [
+        {
+          "full_name": "ProbabilityTheory.integral_id_gaussianReal",
+          "formal_statement": "Formal Name: ProbabilityTheory.integral_id_gaussianReal | Kind: theorem | Type: ∀ {μ : ℝ} {v : NNReal}, ∫ (x : ℝ), x ∂ProbabilityTheory.gaussianReal μ v = μ | Path: Mathlib.Probability.Distributions.Gaussian.Real",
+          "informal_statement": "The integral of the identity function $ x $ with respect to the Gaussian measure on $ \\mathbb{R} $ with mean $ \\mu $ and variance $ v $ is equal to $ \\mu $, i.e., $ \\int x \\, d(\\text{Gaussian}(\\mu, v)) = \\mu $."
+        },
+        {
+          "full_name": "integral_gaussian",
+          "formal_statement": "Formal Name: integral_gaussian | Kind: theorem | Type: ∀ (b : ℝ), ∫ (x : ℝ), Real.exp (-b * x ^ 2) = √(Real.pi / b) | Path: Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral",
+          "informal_statement": "For any real number $ b $, the integral of $ e^{-b x^2} $ over the real numbers equals $ \\sqrt{\\pi / b} $."
+        },
+        {
+          "full_name": "ProbabilityTheory.integral_gaussianPDFReal_eq_one",
+          "formal_statement": "Formal Name: ProbabilityTheory.integral_gaussianPDFReal_eq_one | Kind: theorem | Type: ∀ (μ : ℝ) {v : NNReal}, v ≠ 0 → ∫ (x : ℝ), ProbabilityTheory.gaussianPDFReal μ v x = 1 | Path: Mathlib.Probability.Distributions.Gaussian.Real",
+          "informal_statement": "For any real number $\\mu$ and positive real number $v$, the integral of the Gaussian probability density function $\\frac{1}{\\sqrt{2\\pi v}} \\exp\\left(-\\frac{(x - \\mu)^2}{2v}\\right)$ over the entire real line $\\mathbb{R}$ with respect to the Lebesgue measure equals 1."
+        },
+        {
+          "full_name": "ProbabilityTheory.lintegral_gaussianPDF_eq_one",
+          "formal_statement": "Formal Name: ProbabilityTheory.lintegral_gaussianPDF_eq_one | Kind: theorem | Type: ∀ (μ : ℝ) {v : NNReal}, v ≠ 0 → ∫⁻ (x : ℝ), ProbabilityTheory.gaussianPDF μ v x = 1 | Path: Mathlib.Probability.Distributions.Gaussian.Real",
+          "informal_statement": "For any real number $\\mu$ and positive real number $v$, the Lebesgue integral of the Gaussian probability density function $\\frac{1}{\\sqrt{2\\pi v}} \\exp\\left(-\\frac{(x - \\mu)^2}{2v}\\right)$ over $\\mathbb{R}$ equals 1."
+        },
+        {
+          "full_name": "ProbabilityTheory.integral_gaussianReal_eq_integral_smul",
+          "formal_statement": "Formal Name: ProbabilityTheory.integral_gaussianReal_eq_integral_smul | Kind: theorem | Type: ∀ {E : Type u_1} [inst : NormedAddCommGroup E] [inst_1 : NormedSpace ℝ E] {μ : ℝ} {v : NNReal} {f : ℝ → E},\n  v ≠ 0 → ∫ (x : ℝ), f x ∂ProbabilityTheory.gaussianReal μ v = ∫ (x : ℝ), ProbabilityTheory.gaussianPDFReal μ v x • f x | Path: Mathlib.Probability.Distributions.Gaussian.Real",
+          "informal_statement": "For any real Banach space $E$, mean $\\mu \\in \\mathbb{R}$, positive variance $v > 0$, and measurable function $f : \\mathbb{R} \\to E$, the Bochner integral of $f$ with respect to the Gaussian measure $\\gamma_{\\mu,v}$ satisfies $\\int_{\\mathbb{R}} f(x) \\, d\\gamma_{\\mu,v}(x) = \\int_{\\mathbb{R}} \\frac{1}{\\sqrt{2\\pi v}} e^{-\\frac{(x-\\mu)^2}{2v}} f(x) \\, dx$, where the right-hand side uses the Lebesgue integral of the product of the Gaussian density and $f$."
+        },
+        {
+          "full_name": "ProbabilityTheory.lintegral_gaussianPDFReal_eq_one",
+          "formal_statement": "Formal Name: ProbabilityTheory.lintegral_gaussianPDFReal_eq_one | Kind: theorem | Type: ∀ (μ : ℝ) {v : NNReal}, v ≠ 0 → ∫⁻ (x : ℝ), ENNReal.ofReal (ProbabilityTheory.gaussianPDFReal μ v x) = 1 | Path: Mathlib.Probability.Distributions.Gaussian.Real",
+          "informal_statement": "For any real number $\\mu$ and positive real number $v > 0$, the Lebesgue integral of the Gaussian probability density function $\\frac{1}{\\sqrt{2\\pi v}} \\exp\\left(-\\frac{(x - \\mu)^2}{2v}\\right)$ over $\\mathbb{R}$ equals 1, i.e., $\\int_{-\\infty}^{\\infty} \\frac{1}{\\sqrt{2\\pi v}} \\exp\\left(-\\frac{(x - \\mu)^2}{2v}\\right) dx = 1$."
+        },
+        {
+          "full_name": "ProbabilityTheory.integral_continuousLinearMap_gaussianReal",
+          "formal_statement": "Formal Name: ProbabilityTheory.integral_continuousLinearMap_gaussianReal | Kind: theorem | Type: ∀ {μ : ℝ} {v : NNReal} (L : ℝ →L[ℝ] ℝ), ∫ (x : ℝ), L x ∂ProbabilityTheory.gaussianReal μ v = L μ | Path: Mathlib.Probability.Distributions.Gaussian.Real",
+          "informal_statement": "The integral of a continuous linear map $ L : \\mathbb{R} \\to \\mathbb{R} $ with respect to the Gaussian measure on $ \\mathbb{R} $ with mean $ \\mu $ and variance $ v $ is equal to $ L(\\mu) $, i.e., $ \\int_{\\mathbb{R}} L(x) \\, d\\text{Gaussian}(\\mu, v)(x) = L(\\mu) $."
+        },
+        {
+          "full_name": "ProbabilityTheory.integral_linearMap_gaussianReal",
+          "formal_statement": "Formal Name: ProbabilityTheory.integral_linearMap_gaussianReal | Kind: theorem | Type: ∀ {μ : ℝ} {v : NNReal} (L : ℝ →ₗ[ℝ] ℝ), ∫ (x : ℝ), L x ∂ProbabilityTheory.gaussianReal μ v = L μ | Path: Mathlib.Probability.Distributions.Gaussian.Real",
+          "informal_statement": "For any linear map $ L : \\mathbb{R} \\to \\mathbb{R} $, the integral of $ L(x) $ with respect to the Gaussian measure on $ \\mathbb{R} $ with mean $ \\mu $ and variance $ v \\geq 0 $ is equal to $ L(\\mu) $. The Gaussian measure is defined as the Dirac measure $ \\delta_\\mu $ when $ v = 0 $, and as the Lebesgue measure with density $ \\frac{1}{\\sqrt{2\\pi v}} \\exp\\left(-\\frac{(x - \\mu)^2}{2v}\\right) $ when $ v > 0 $."
+        }
+      ]
+    },
+    "gaussian_derivative_hover": {
+      "symbol": "deriv_gaussian_eq_hermite_mul_gaussian",
+      "info": "Polynomial.deriv_gaussian_eq_hermite_mul_gaussian (n : ℕ) (x : ℝ) :\n  deriv^[n] (fun y ↦ Real.exp (-(y ^ 2 / 2))) x = (-1) ^ n * (aeval x) (hermite n) * Real.exp (-(x ^ 2 / 2))\n***\n`hermite n` is (up to sign) the factor appearing in `deriv^[n]` of a Gaussian.",
+      "diagnostics": []
+    },
+    "gaussian_variance_hover": {
+      "symbol": "gaussianPDFReal",
+      "info": "ProbabilityTheory.gaussianPDFReal (μ : ℝ) (v : ℝ≥0) (x : ℝ) : ℝ\n***\nProbability density function of the Gaussian distribution with mean `μ` and variance `v`.",
+      "diagnostics": []
+    },
+    "generic_ibp": {
+      "imports": [
+        "Mathlib.Analysis.SpecialFunctions.Pow.Deriv",
+        "Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts",
+        "Mathlib.MeasureTheory.Measure.Haar.NormedSpace",
+        "Mathlib.MeasureTheory.Measure.Haar.Unique"
+      ],
+      "declarations": [
+        {
+          "name": "<section>",
+          "kind": "Ns",
+          "start_line": 78,
+          "end_line": 1393,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover",
+          "kind": "Thm",
+          "start_line": 89,
+          "end_line": 99,
+          "type_signature": "(ι → Set α) → Prop",
+          "children": []
+        },
+        {
+          "name": "inter",
+          "kind": "Thm",
+          "start_line": 109,
+          "end_line": 113,
+          "type_signature": "∀ {φ ψ : ι → Set α},\n        AECover μ l φ → AECover μ l ψ → AECover μ l fun i ↦ φ i ∩ ψ i",
+          "children": []
+        },
+        {
+          "name": "superset",
+          "kind": "Thm",
+          "start_line": 115,
+          "end_line": 117,
+          "type_signature": "∀ {φ ψ : ι → Set α},\n        AECover μ l φ → (∀ (i : ι), φ i ⊆ ψ i) → (∀ (i : ι), MeasurableSet (ψ i)) → AECover μ l ψ",
+          "children": []
+        },
+        {
+          "name": "mono_ac",
+          "kind": "Thm",
+          "start_line": 119,
+          "end_line": 120,
+          "type_signature": "∀ {ν : Measure α} {φ : ι → Set α},\n        AECover μ l φ → ν ≪ μ → AECover ν l φ",
+          "children": []
+        },
+        {
+          "name": "mono",
+          "kind": "Thm",
+          "start_line": 122,
+          "end_line": 123,
+          "type_signature": "∀ {ν : Measure α} {φ : ι → Set α},\n        AECover μ l φ → ν ≤ μ → AECover ν l φ",
+          "children": []
+        },
+        {
+          "name": "aecover_ball",
+          "kind": "Thm",
+          "start_line": 131,
+          "end_line": 136,
+          "type_signature": "∀ {x : α} {r : ι → ℝ},\n        Tendsto r l atTop → AECover μ l fun i ↦ Metric.ball x (r i)",
+          "children": []
+        },
+        {
+          "name": "aecover_closedBall",
+          "kind": "Thm",
+          "start_line": 138,
+          "end_line": 143,
+          "type_signature": "∀ {x : α} {r : ι → ℝ},\n        Tendsto r l atTop → AECover μ l fun i ↦ Metric.closedBall x (r i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ici",
+          "kind": "Def",
+          "start_line": 152,
+          "end_line": 154,
+          "type_signature": "Tendsto a l atBot → AECover μ l fun i ↦ Ici (a i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Iic",
+          "kind": "Def",
+          "start_line": 156,
+          "end_line": 157,
+          "type_signature": "Tendsto b l atTop → AECover μ l fun i ↦ Iic (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Icc",
+          "kind": "Thm",
+          "start_line": 159,
+          "end_line": 161,
+          "type_signature": "Tendsto a l atBot →\n        Tendsto b l atTop → AECover μ l fun i ↦ Icc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioo",
+          "kind": "Thm",
+          "start_line": 180,
+          "end_line": 181,
+          "type_signature": "∀ [NoMinOrder α] [NoMaxOrder α],\n        AECover μ l fun i ↦ Ioo (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioc",
+          "kind": "Thm",
+          "start_line": 183,
+          "end_line": 184,
+          "type_signature": "∀ [NoMinOrder α], AECover μ l fun i ↦ Ioc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ico",
+          "kind": "Thm",
+          "start_line": 186,
+          "end_line": 187,
+          "type_signature": "∀ [NoMaxOrder α], AECover μ l fun i ↦ Ico (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioc_of_Icc",
+          "kind": "Thm",
+          "start_line": 250,
+          "end_line": 252,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Ioc A B)) l fun i ↦ Icc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioc_of_Ico",
+          "kind": "Thm",
+          "start_line": 254,
+          "end_line": 256,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Ioc A B)) l fun i ↦ Ico (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioc_of_Ioc",
+          "kind": "Thm",
+          "start_line": 258,
+          "end_line": 260,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Ioc A B)) l fun i ↦ Ioc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioc_of_Ioo",
+          "kind": "Thm",
+          "start_line": 262,
+          "end_line": 264,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Ioc A B)) l fun i ↦ Ioo (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ico_of_Icc",
+          "kind": "Thm",
+          "start_line": 266,
+          "end_line": 268,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Ico A B)) l fun i ↦ Icc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ico_of_Ico",
+          "kind": "Thm",
+          "start_line": 270,
+          "end_line": 272,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Ico A B)) l fun i ↦ Ico (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ico_of_Ioc",
+          "kind": "Thm",
+          "start_line": 274,
+          "end_line": 276,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Ico A B)) l fun i ↦ Ioc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ico_of_Ioo",
+          "kind": "Thm",
+          "start_line": 278,
+          "end_line": 280,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Ico A B)) l fun i ↦ Ioo (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Icc_of_Icc",
+          "kind": "Thm",
+          "start_line": 282,
+          "end_line": 284,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Icc A B)) l fun i ↦ Icc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Icc_of_Ico",
+          "kind": "Thm",
+          "start_line": 286,
+          "end_line": 288,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Icc A B)) l fun i ↦ Ico (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Icc_of_Ioc",
+          "kind": "Thm",
+          "start_line": 290,
+          "end_line": 292,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Icc A B)) l fun i ↦ Ioc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Icc_of_Ioo",
+          "kind": "Thm",
+          "start_line": 294,
+          "end_line": 296,
+          "type_signature": "Tendsto a l (𝓝 A) →\n        Tendsto b l (𝓝 B) → AECover (μ.restrict (Icc A B)) l fun i ↦ Ioo (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "AECover.restrict",
+          "kind": "Thm",
+          "start_line": 300,
+          "end_line": 302,
+          "type_signature": "∀ {φ : ι → Set α},\n            AECover μ l φ → ∀ {s : Set α}, AECover (μ.restrict s) l φ",
+          "children": []
+        },
+        {
+          "name": "aecover_restrict_of_ae_imp",
+          "kind": "Thm",
+          "start_line": 304,
+          "end_line": 308,
+          "type_signature": "∀ {s : Set α} {φ : ι → Set α},\n        MeasurableSet s →\n          (∀ᵐ (x : α) ∂μ, x ∈ s → ∀ᶠ (n : ι) in l, x ∈ φ n) →\n            (∀ (n : ι), MeasurableSet (φ n)) → AECover (μ.restrict s) l φ",
+          "children": []
+        },
+        {
+          "name": "AECover.inter_restrict",
+          "kind": "Def",
+          "start_line": 310,
+          "end_line": 314,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.ae_tendsto_indicator",
+          "kind": "Def",
+          "start_line": 316,
+          "end_line": 320,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.aemeasurable",
+          "kind": "Def",
+          "start_line": 322,
+          "end_line": 329,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.aestronglyMeasurable",
+          "kind": "Def",
+          "start_line": 331,
+          "end_line": 337,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.comp_tendsto",
+          "kind": "Def",
+          "start_line": 341,
+          "end_line": 345,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.biUnion_Iic_aecover",
+          "kind": "Def",
+          "start_line": 351,
+          "end_line": 354,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.biInter_Ici_aecover",
+          "kind": "Def",
+          "start_line": 356,
+          "end_line": 360,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "lintegral_tendsto_of_monotone_of_nat",
+          "kind": "Thm",
+          "start_line": 368,
+          "end_line": 377,
+          "type_signature": "∀ {φ : ℕ → Set α},\n        AECover μ atTop φ →\n          Monotone φ →\n            ∀ {f : α → ℝ≥0∞},\n              AEMeasurable f μ →\n                Tendsto (fun i ↦ ∫⁻ (x : α) in φ i, f x ∂μ) atTop (𝓝 (∫⁻ (x : α), f x ∂μ))",
+          "children": []
+        },
+        {
+          "name": "AECover.lintegral_tendsto_of_nat",
+          "kind": "Def",
+          "start_line": 379,
+          "end_line": 387,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.lintegral_tendsto_of_countably_generated",
+          "kind": "Def",
+          "start_line": 389,
+          "end_line": 392,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.lintegral_eq_of_tendsto",
+          "kind": "Def",
+          "start_line": 394,
+          "end_line": 397,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.iSup_lintegral_eq_of_countably_generated",
+          "kind": "Def",
+          "start_line": 399,
+          "end_line": 405,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integrable_of_lintegral_enorm_bounded",
+          "kind": "Def",
+          "start_line": 413,
+          "end_line": 417,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integrable_of_lintegral_enorm_tendsto",
+          "kind": "Def",
+          "start_line": 419,
+          "end_line": 426,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integrable_of_lintegral_enorm_bounded'",
+          "kind": "Def",
+          "start_line": 428,
+          "end_line": 432,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integrable_of_lintegral_enorm_tendsto'",
+          "kind": "Def",
+          "start_line": 434,
+          "end_line": 438,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integrable_of_integral_norm_bounded",
+          "kind": "Def",
+          "start_line": 440,
+          "end_line": 453,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integrable_of_integral_norm_tendsto",
+          "kind": "Def",
+          "start_line": 455,
+          "end_line": 459,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integrable_of_integral_bounded_of_nonneg_ae",
+          "kind": "Def",
+          "start_line": 461,
+          "end_line": 465,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integrable_of_integral_tendsto_of_nonneg_ae",
+          "kind": "Def",
+          "start_line": 467,
+          "end_line": 472,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integral_tendsto_of_countably_generated",
+          "kind": "Def",
+          "start_line": 481,
+          "end_line": 489,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integral_eq_of_tendsto",
+          "kind": "Def",
+          "start_line": 491,
+          "end_line": 495,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "AECover.integral_eq_of_tendsto_of_nonneg_ae",
+          "kind": "Def",
+          "start_line": 497,
+          "end_line": 502,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "integrable_of_intervalIntegral_norm_bounded",
+          "kind": "Thm",
+          "start_line": 511,
+          "end_line": 518,
+          "type_signature": "∀ (I : ℝ),\n        (∀ (i : ι), IntegrableOn f (Ioc (a i) (b i)) μ) →\n          Tendsto a l atBot →\n            Tendsto b l atTop →\n              (∀ᶠ (i : ι) in l, ∫ (x : ℝ) in a i..b i, ‖f x‖ ∂μ ≤ I) → Integrable f μ",
+          "children": []
+        },
+        {
+          "name": "integrable_of_intervalIntegral_norm_tendsto",
+          "kind": "Thm",
+          "start_line": 520,
+          "end_line": 529,
+          "type_signature": "∀ (I : ℝ),\n        (∀ (i : ι), IntegrableOn f (Ioc (a i) (b i)) μ) →\n          Tendsto a l atBot →\n            Tendsto b l atTop →\n              Tendsto (fun i ↦ ∫ (x : ℝ) in a i..b i, ‖f x‖ ∂μ) l (𝓝 I) → Integrable f μ",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Iic_of_intervalIntegral_norm_bounded",
+          "kind": "Thm",
+          "start_line": 531,
+          "end_line": 542,
+          "type_signature": "∀ (I b : ℝ),\n        (∀ (i : ι), IntegrableOn f (Ioc (a i) b) μ) →\n          Tendsto a l atBot →\n            (∀ᶠ (i : ι) in l, ∫ (x : ℝ) in a i..b, ‖f x‖ ∂μ ≤ I) → IntegrableOn f (Iic b) μ",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Iic_of_intervalIntegral_norm_tendsto",
+          "kind": "Thm",
+          "start_line": 544,
+          "end_line": 552,
+          "type_signature": "∀ (I b : ℝ),\n        (∀ (i : ι), IntegrableOn f (Ioc (a i) b) μ) →\n          Tendsto a l atBot →\n            Tendsto (fun i ↦ ∫ (x : ℝ) in a i..b, ‖f x‖ ∂μ) l (𝓝 I) → IntegrableOn f (Iic b) μ",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioi_of_intervalIntegral_norm_bounded",
+          "kind": "Thm",
+          "start_line": 554,
+          "end_line": 566,
+          "type_signature": "∀ (I a : ℝ),\n        (∀ (i : ι), IntegrableOn f (Ioc a (b i)) μ) →\n          Tendsto b l atTop →\n            (∀ᶠ (i : ι) in l, ∫ (x : ℝ) in a..b i, ‖f x‖ ∂μ ≤ I) → IntegrableOn f (Ioi a) μ",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioi_of_intervalIntegral_norm_tendsto",
+          "kind": "Thm",
+          "start_line": 568,
+          "end_line": 576,
+          "type_signature": "∀ (I a : ℝ),\n        (∀ (i : ι), IntegrableOn f (Ioc a (b i)) μ) →\n          Tendsto b l atTop →\n            Tendsto (fun i ↦ ∫ (x : ℝ) in a..b i, ‖f x‖ ∂μ) l (𝓝 I) → IntegrableOn f (Ioi a) μ",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioc_of_intervalIntegral_norm_bounded",
+          "kind": "Thm",
+          "start_line": 578,
+          "end_line": 590,
+          "type_signature": "∀ {I a₀ b₀ : ℝ},\n        (∀ (i : ι), IntegrableOn f (Ioc (a i) (b i)) volume) →\n          Tendsto a l (𝓝 a₀) →\n            Tendsto b l (𝓝 b₀) →\n              (∀ᶠ (i : ι) in l, ∫ (x : ℝ) in Ioc (a i) (b i), ‖f x‖ ≤ I) →\n                IntegrableOn f (Ioc a₀ b₀) volume",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioc_of_intervalIntegral_norm_bounded_left",
+          "kind": "Thm",
+          "start_line": 592,
+          "end_line": 595,
+          "type_signature": "∀ {I a₀ b : ℝ},\n        (∀ (i : ι), IntegrableOn f (Ioc (a i) b) volume) →\n          Tendsto a l (𝓝 a₀) →\n            (∀ᶠ (i : ι) in l, ∫ (x : ℝ) in Ioc (a i) b, ‖f x‖ ≤ I) →\n              IntegrableOn f (Ioc a₀ b) volume",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioc_of_intervalIntegral_norm_bounded_right",
+          "kind": "Thm",
+          "start_line": 597,
+          "end_line": 600,
+          "type_signature": "∀ {I a b₀ : ℝ},\n        (∀ (i : ι), IntegrableOn f (Ioc a (b i)) volume) →\n          Tendsto b l (𝓝 b₀) →\n            (∀ᶠ (i : ι) in l, ∫ (x : ℝ) in Ioc a (b i), ‖f x‖ ≤ I) →\n              IntegrableOn f (Ioc a b₀) volume",
+          "children": []
+        },
+        {
+          "name": "intervalIntegral_tendsto_integral",
+          "kind": "Thm",
+          "start_line": 609,
+          "end_line": 616,
+          "type_signature": "Integrable f μ →\n        Tendsto a l atBot →\n          Tendsto b l atTop →\n            Tendsto (fun i ↦ ∫ (x : ℝ) in a i..b i, f x ∂μ) l (𝓝 (∫ (x : ℝ), f x ∂μ))",
+          "children": []
+        },
+        {
+          "name": "intervalIntegral_tendsto_integral_Iic",
+          "kind": "Thm",
+          "start_line": 618,
+          "end_line": 626,
+          "type_signature": "∀ (b : ℝ),\n        IntegrableOn f (Iic b) μ →\n          Tendsto a l atBot →\n            Tendsto (fun i ↦ ∫ (x : ℝ) in a i..b, f x ∂μ) l (𝓝 (∫ (x : ℝ) in Iic b, f x ∂μ))",
+          "children": []
+        },
+        {
+          "name": "tendsto_integral_Iic_zero",
+          "kind": "Thm",
+          "start_line": 628,
+          "end_line": 638,
+          "type_signature": "Tendsto a l atBot →\n        Tendsto (fun i ↦ ∫ (x : ℝ) in Iic (a i), f x ∂μ) l (𝓝 0)",
+          "children": []
+        },
+        {
+          "name": "tendsto_integral_Ico_integral_Iio",
+          "kind": "Thm",
+          "start_line": 640,
+          "end_line": 644,
+          "type_signature": "∀ (b : ℝ),\n        IntegrableOn f (Iio b) μ →\n          Tendsto a l atBot →\n            Tendsto (fun i ↦ ∫ (x : ℝ) in Ico (a i) b, f x ∂μ) l (𝓝 (∫ (x : ℝ) in Iio b, f x ∂μ))",
+          "children": []
+        },
+        {
+          "name": "tendsto_integral_Iio_zero",
+          "kind": "Thm",
+          "start_line": 646,
+          "end_line": 656,
+          "type_signature": "Tendsto a l atBot →\n        Tendsto (fun i ↦ ∫ (x : ℝ) in Iio (a i), f x ∂μ) l (𝓝 0)",
+          "children": []
+        },
+        {
+          "name": "intervalIntegral_tendsto_integral_Ioi",
+          "kind": "Thm",
+          "start_line": 658,
+          "end_line": 667,
+          "type_signature": "∀ (a : ℝ),\n        IntegrableOn f (Ioi a) μ →\n          Tendsto b l atTop →\n            Tendsto (fun i ↦ ∫ (x : ℝ) in a..b i, f x ∂μ) l (𝓝 (∫ (x : ℝ) in Ioi a, f x ∂μ))",
+          "children": []
+        },
+        {
+          "name": "tendsto_integral_Ioi_zero",
+          "kind": "Thm",
+          "start_line": 669,
+          "end_line": 679,
+          "type_signature": "Tendsto b l atTop →\n        Tendsto (fun i ↦ ∫ (x : ℝ) in Ioi (b i), f x ∂μ) l (𝓝 0)",
+          "children": []
+        },
+        {
+          "name": "tendsto_integral_Ico_integral_Ici",
+          "kind": "Thm",
+          "start_line": 681,
+          "end_line": 684,
+          "type_signature": "∀ (b : ℝ),\n        IntegrableOn f (Ici b) μ →\n          Tendsto a l atTop →\n            Tendsto (fun i ↦ ∫ (x : ℝ) in Ico b (a i), f x ∂μ) l (𝓝 (∫ (x : ℝ) in Ici b, f x ∂μ))",
+          "children": []
+        },
+        {
+          "name": "tendsto_integral_Ici_zero",
+          "kind": "Thm",
+          "start_line": 686,
+          "end_line": 696,
+          "type_signature": "Tendsto a l atTop →\n        Tendsto (fun i ↦ ∫ (x : ℝ) in Ici (a i), f x ∂μ) l (𝓝 0)",
+          "children": []
+        },
+        {
+          "name": "tendsto_limUnder_of_hasDerivAt_of_integrableOn_Ioi",
+          "kind": "Thm",
+          "start_line": 709,
+          "end_line": 752,
+          "type_signature": "∀ [CompleteSpace E],\n        (∀ x ∈ Ioi a, HasDerivAt f (f' x) x) →\n          IntegrableOn f' (Ioi a) volume → Tendsto f atTop (𝓝 (atTop.limUnder f))",
+          "children": []
+        },
+        {
+          "name": "integral_Ioi_of_hasDerivAt_of_tendsto",
+          "kind": "Thm",
+          "start_line": 780,
+          "end_line": 804,
+          "type_signature": "ContinuousWithinAt f (Ici a) a →\n        (∀ x ∈ Ioi a, HasDerivAt f (f' x) x) →\n          IntegrableOn f' (Ioi a) volume →\n            Tendsto f atTop (𝓝 m) → ∫ (x : ℝ) in Ioi a, f' x = m - f a",
+          "children": []
+        },
+        {
+          "name": "integral_Ioi_of_hasDerivAt_of_tendsto'",
+          "kind": "Thm",
+          "start_line": 806,
+          "end_line": 818,
+          "type_signature": "(∀ x ∈ Ici a, HasDerivAt f (f' x) x) →\n        IntegrableOn f' (Ioi a) volume → Tendsto f atTop (𝓝 m) → ∫ (x : ℝ) in Ioi a, f' x = m - f a",
+          "children": []
+        },
+        {
+          "name": "_root_.HasCompactSupport.integral_Ioi_deriv_eq",
+          "kind": "Def",
+          "start_line": 820,
+          "end_line": 828,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioi_deriv_of_nonneg",
+          "kind": "Thm",
+          "start_line": 830,
+          "end_line": 860,
+          "type_signature": "ContinuousWithinAt g (Ici a) a →\n        (∀ x ∈ Ioi a, HasDerivAt g (g' x) x) →\n          (∀ x ∈ Ioi a, 0 ≤ g' x) → Tendsto g atTop (𝓝 l) → IntegrableOn g' (Ioi a) volume",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioi_deriv_of_nonneg'",
+          "kind": "Thm",
+          "start_line": 862,
+          "end_line": 868,
+          "type_signature": "(∀ x ∈ Ici a, HasDerivAt g (g' x) x) →\n        (∀ x ∈ Ioi a, 0 ≤ g' x) → Tendsto g atTop (𝓝 l) → IntegrableOn g' (Ioi a) volume",
+          "children": []
+        },
+        {
+          "name": "integral_Ioi_of_hasDerivAt_of_nonneg",
+          "kind": "Thm",
+          "start_line": 870,
+          "end_line": 878,
+          "type_signature": "ContinuousWithinAt g (Ici a) a →\n        (∀ x ∈ Ioi a, HasDerivAt g (g' x) x) →\n          (∀ x ∈ Ioi a, 0 ≤ g' x) → Tendsto g atTop (𝓝 l) → ∫ (x : ℝ) in Ioi a, g' x = l - g a",
+          "children": []
+        },
+        {
+          "name": "integral_Ioi_of_hasDerivAt_of_nonneg'",
+          "kind": "Thm",
+          "start_line": 880,
+          "end_line": 886,
+          "type_signature": "(∀ x ∈ Ici a, HasDerivAt g (g' x) x) →\n        (∀ x ∈ Ioi a, 0 ≤ g' x) → Tendsto g atTop (𝓝 l) → ∫ (x : ℝ) in Ioi a, g' x = l - g a",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioi_deriv_of_nonpos",
+          "kind": "Thm",
+          "start_line": 888,
+          "end_line": 896,
+          "type_signature": "ContinuousWithinAt g (Ici a) a →\n        (∀ x ∈ Ioi a, HasDerivAt g (g' x) x) →\n          (∀ x ∈ Ioi a, g' x ≤ 0) → Tendsto g atTop (𝓝 l) → IntegrableOn g' (Ioi a) volume",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioi_deriv_of_nonpos'",
+          "kind": "Thm",
+          "start_line": 898,
+          "end_line": 904,
+          "type_signature": "(∀ x ∈ Ici a, HasDerivAt g (g' x) x) →\n        (∀ x ∈ Ioi a, g' x ≤ 0) → Tendsto g atTop (𝓝 l) → IntegrableOn g' (Ioi a) volume",
+          "children": []
+        },
+        {
+          "name": "integral_Ioi_of_hasDerivAt_of_nonpos",
+          "kind": "Thm",
+          "start_line": 906,
+          "end_line": 914,
+          "type_signature": "ContinuousWithinAt g (Ici a) a →\n        (∀ x ∈ Ioi a, HasDerivAt g (g' x) x) →\n          (∀ x ∈ Ioi a, g' x ≤ 0) → Tendsto g atTop (𝓝 l) → ∫ (x : ℝ) in Ioi a, g' x = l - g a",
+          "children": []
+        },
+        {
+          "name": "integral_Ioi_of_hasDerivAt_of_nonpos'",
+          "kind": "Thm",
+          "start_line": 916,
+          "end_line": 922,
+          "type_signature": "(∀ x ∈ Ici a, HasDerivAt g (g' x) x) →\n        (∀ x ∈ Ioi a, g' x ≤ 0) → Tendsto g atTop (𝓝 l) → ∫ (x : ℝ) in Ioi a, g' x = l - g a",
+          "children": []
+        },
+        {
+          "name": "tendsto_limUnder_of_hasDerivAt_of_integrableOn_Iic",
+          "kind": "Thm",
+          "start_line": 931,
+          "end_line": 948,
+          "type_signature": "∀ [CompleteSpace E],\n        (∀ x ∈ Iic a, HasDerivAt f (f' x) x) →\n          IntegrableOn f' (Iic a) volume → Tendsto f atBot (𝓝 (atBot.limUnder f))",
+          "children": []
+        },
+        {
+          "name": "integral_Iic_of_hasDerivAt_of_tendsto",
+          "kind": "Thm",
+          "start_line": 977,
+          "end_line": 999,
+          "type_signature": "ContinuousWithinAt f (Iic a) a →\n        (∀ x ∈ Iio a, HasDerivAt f (f' x) x) →\n          IntegrableOn f' (Iic a) volume →\n            Tendsto f atBot (𝓝 m) → ∫ (x : ℝ) in Iic a, f' x = f a - m",
+          "children": []
+        },
+        {
+          "name": "integral_Iic_of_hasDerivAt_of_tendsto'",
+          "kind": "Thm",
+          "start_line": 1001,
+          "end_line": 1013,
+          "type_signature": "(∀ x ∈ Iic a, HasDerivAt f (f' x) x) →\n        IntegrableOn f' (Iic a) volume →\n          Tendsto f atBot (𝓝 m) → ∫ (x : ℝ) in Iic a, f' x = f a - m",
+          "children": []
+        },
+        {
+          "name": "_root_.HasCompactSupport.integral_Iic_deriv_eq",
+          "kind": "Def",
+          "start_line": 1015,
+          "end_line": 1023,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "integral_of_hasDerivAt_of_tendsto",
+          "kind": "Thm",
+          "start_line": 1050,
+          "end_line": 1064,
+          "type_signature": "∀ [CompleteSpace E],\n        (∀ (x : ℝ), HasDerivAt f (f' x) x) →\n          Integrable f' volume →\n            Tendsto f atBot (𝓝 m) → Tendsto f atTop (𝓝 n) → ∫ (x : ℝ), f' x = n - m",
+          "children": []
+        },
+        {
+          "name": "integral_eq_zero_of_hasDerivAt_of_integrable",
+          "kind": "Thm",
+          "start_line": 1066,
+          "end_line": 1079,
+          "type_signature": "(∀ (x : ℝ), HasDerivAt f (f' x) x) →\n        Integrable f' volume → Integrable f volume → ∫ (x : ℝ), f' x = 0",
+          "children": []
+        },
+        {
+          "name": "integral_deriv_smul_comp_Ioi",
+          "kind": "Thm",
+          "start_line": 1091,
+          "end_line": 1115,
+          "type_signature": "∀ {f f' : ℝ → ℝ} {g : ℝ → E} {a : ℝ},\n        ContinuousOn f (Ici a) →\n          Tendsto f atTop atTop →\n            (∀ x ∈ Ioi a, HasDerivWithinAt f (f' x) (Ioi x) x) →\n              ContinuousOn g (f '' Ioi a) →\n                IntegrableOn g (f '' Ici a) volume →\n                  IntegrableOn (fun x ↦ f' x • (g ∘ f) x) (Ici a) volume →\n                    ∫ (x : ℝ) in Ioi a, f' x • (g ∘ f) x = ∫ (u : ℝ) in Ioi (f a), g u",
+          "children": []
+        },
+        {
+          "name": "integral_comp_mul_deriv_Ioi",
+          "kind": "Thm",
+          "start_line": 1120,
+          "end_line": 1128,
+          "type_signature": "∀ {f f' g : ℝ → ℝ} {a : ℝ},\n        ContinuousOn f (Ici a) →\n          Tendsto f atTop atTop →\n            (∀ x ∈ Ioi a, HasDerivWithinAt f (f' x) (Ioi x) x) →\n              ContinuousOn g (f '' Ioi a) →\n                IntegrableOn g (f '' Ici a) volume →\n                  IntegrableOn (fun x ↦ (g ∘ f) x * f' x) (Ici a) volume →\n                    ∫ (x : ℝ) in Ioi a, (g ∘ f) x * f' x = ∫ (u : ℝ) in Ioi (f a), g u",
+          "children": []
+        },
+        {
+          "name": "integral_comp_rpow_Ioi",
+          "kind": "Thm",
+          "start_line": 1130,
+          "end_line": 1153,
+          "type_signature": "∀ (g : ℝ → E) {p : ℝ},\n        p ≠ 0 → ∫ (x : ℝ) in Ioi 0, (|p| * x ^ (p - 1)) • g (x ^ p) = ∫ (y : ℝ) in Ioi 0, g y",
+          "children": []
+        },
+        {
+          "name": "integral_comp_rpow_Ioi_of_pos",
+          "kind": "Thm",
+          "start_line": 1155,
+          "end_line": 1158,
+          "type_signature": "∀ {g : ℝ → E} {p : ℝ},\n        0 < p → ∫ (x : ℝ) in Ioi 0, (p * x ^ (p - 1)) • g (x ^ p) = ∫ (y : ℝ) in Ioi 0, g y",
+          "children": []
+        },
+        {
+          "name": "integral_comp_mul_left_Ioi",
+          "kind": "Thm",
+          "start_line": 1160,
+          "end_line": 1168,
+          "type_signature": "∀ (g : ℝ → E) (a : ℝ) {b : ℝ},\n        0 < b → ∫ (x : ℝ) in Ioi a, g (b * x) = b⁻¹ • ∫ (x : ℝ) in Ioi (b * a), g x",
+          "children": []
+        },
+        {
+          "name": "integral_comp_mul_right_Ioi",
+          "kind": "Thm",
+          "start_line": 1170,
+          "end_line": 1172,
+          "type_signature": "∀ (g : ℝ → E) (a : ℝ) {b : ℝ},\n        0 < b → ∫ (x : ℝ) in Ioi a, g (x * b) = b⁻¹ • ∫ (x : ℝ) in Ioi (a * b), g x",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioi_comp_rpow_iff",
+          "kind": "Thm",
+          "start_line": 1184,
+          "end_line": 1207,
+          "type_signature": "∀ [inst : NormedSpace ℝ E] (f : ℝ → E) {p : ℝ},\n        p ≠ 0 →\n          (IntegrableOn (fun x ↦ (|p| * x ^ (p - 1)) • f (x ^ p)) (Ioi 0) volume ↔\n            IntegrableOn f (Ioi 0) volume)",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioi_comp_rpow_iff'",
+          "kind": "Thm",
+          "start_line": 1209,
+          "end_line": 1214,
+          "type_signature": "∀ [inst : NormedSpace ℝ E] (f : ℝ → E) {p : ℝ},\n        p ≠ 0 →\n          (IntegrableOn (fun x ↦ x ^ (p - 1) • f (x ^ p)) (Ioi 0) volume ↔\n            IntegrableOn f (Ioi 0) volume)",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioi_comp_mul_left_iff",
+          "kind": "Thm",
+          "start_line": 1216,
+          "end_line": 1223,
+          "type_signature": "∀ (f : ℝ → E) (c : ℝ) {a : ℝ},\n        0 < a →\n          (IntegrableOn (fun x ↦ f (a * x)) (Ioi c) volume ↔ IntegrableOn f (Ioi (a * c)) volume)",
+          "children": []
+        },
+        {
+          "name": "integrableOn_Ioi_comp_mul_right_iff",
+          "kind": "Thm",
+          "start_line": 1225,
+          "end_line": 1227,
+          "type_signature": "∀ (f : ℝ → E) (c : ℝ) {a : ℝ},\n        0 < a →\n          (IntegrableOn (fun x ↦ f (x * a)) (Ioi c) volume ↔ IntegrableOn f (Ioi (c * a)) volume)",
+          "children": []
+        },
+        {
+          "name": "integral_bilinear_hasDerivAt_eq_sub",
+          "kind": "Thm",
+          "start_line": 1242,
+          "end_line": 1250,
+          "type_signature": "∀ [CompleteSpace G],\n        (∀ x ∈ tsupport v, HasDerivAt u (u' x) x) →\n          (∀ x ∈ tsupport u, HasDerivAt v (v' x) x) →\n            Integrable (fun x ↦ (L (u x)) (v' x) + (L (u' x)) (v x)) volume →\n              Tendsto (fun x ↦ (L (u x)) (v x)) atBot (𝓝 m) →\n                Tendsto (fun x ↦ (L (u x)) (v x)) atTop (𝓝 n) →\n                  ∫ (x : ℝ), (L (u x)) (v' x) + (L (u' x)) (v x) = n - m",
+          "children": []
+        },
+        {
+          "name": "integral_bilinear_hasDerivAt_right_eq_sub",
+          "kind": "Thm",
+          "start_line": 1252,
+          "end_line": 1263,
+          "type_signature": "∀ [CompleteSpace G],\n        (∀ x ∈ tsupport v, HasDerivAt u (u' x) x) →\n          (∀ x ∈ tsupport u, HasDerivAt v (v' x) x) →\n            Integrable (fun x ↦ (L (u x)) (v' x)) volume →\n              Integrable (fun x ↦ (L (u' x)) (v x)) volume →\n                Tendsto (fun x ↦ (L (u x)) (v x)) atBot (𝓝 m) →\n                  Tendsto (fun x ↦ (L (u x)) (v x)) atTop (𝓝 n) →\n                    ∫ (x : ℝ), (L (u x)) (v' x) = n - m - ∫ (x : ℝ), (L (u' x)) (v x)",
+          "children": []
+        },
+        {
+          "name": "integral_bilinear_hasDerivAt_right_eq_neg_left_of_integrable",
+          "kind": "Thm",
+          "start_line": 1265,
+          "end_line": 1284,
+          "type_signature": "(∀ x ∈ tsupport v,\n          HasDerivAt u (u' x) x) →\n        (∀ x ∈ tsupport u, HasDerivAt v (v' x) x) →\n          Integrable (fun x ↦ (L (u x)) (v' x)) volume →\n            Integrable (fun x ↦ (L (u' x)) (v x)) volume →\n              Integrable (fun x ↦ (L (u x)) (v x)) volume →\n                ∫ (x : ℝ), (L (u x)) (v' x) = -∫ (x : ℝ), (L (u' x)) (v x)",
+          "children": []
+        },
+        {
+          "name": "integral_deriv_mul_eq_sub",
+          "kind": "Thm",
+          "start_line": 1293,
+          "end_line": 1301,
+          "type_signature": "∀ [CompleteSpace A],\n        (∀ x ∈ tsupport v, HasDerivAt u (u' x) x) →\n          (∀ x ∈ tsupport u, HasDerivAt v (v' x) x) →\n            Integrable (u' * v + u * v') volume →\n              Tendsto (u * v) atBot (𝓝 a') →\n                Tendsto (u * v) atTop (𝓝 b') → ∫ (x : ℝ), u' x * v x + u x * v' x = b' - a'",
+          "children": []
+        },
+        {
+          "name": "integral_mul_deriv_eq_deriv_mul",
+          "kind": "Thm",
+          "start_line": 1303,
+          "end_line": 1312,
+          "type_signature": "∀ [CompleteSpace A],\n        (∀ x ∈ tsupport v, HasDerivAt u (u' x) x) →\n          (∀ x ∈ tsupport u, HasDerivAt v (v' x) x) →\n            Integrable (u * v') volume →\n              Integrable (u' * v) volume →\n                Tendsto (u * v) atBot (𝓝 a') →\n                  Tendsto (u * v) atTop (𝓝 b') →\n                    ∫ (x : ℝ), u x * v' x = b' - a' - ∫ (x : ℝ), u' x * v x",
+          "children": []
+        },
+        {
+          "name": "integral_mul_deriv_eq_deriv_mul_of_integrable",
+          "kind": "Thm",
+          "start_line": 1314,
+          "end_line": 1322,
+          "type_signature": "(∀ x ∈ tsupport v,\n          HasDerivAt u (u' x) x) →\n        (∀ x ∈ tsupport u, HasDerivAt v (v' x) x) →\n          Integrable (u * v') volume →\n            Integrable (u' * v) volume →\n              Integrable (u * v) volume → ∫ (x : ℝ), u x * v' x = -∫ (x : ℝ), u' x * v x",
+          "children": []
+        },
+        {
+          "name": "integral_Ioi_deriv_mul_eq_sub",
+          "kind": "Thm",
+          "start_line": 1328,
+          "end_line": 1346,
+          "type_signature": "(∀ x ∈ Ioi a, HasDerivAt u (u' x) x) →\n        (∀ x ∈ Ioi a, HasDerivAt v (v' x) x) →\n          IntegrableOn (u' * v + u * v') (Ioi a) volume →\n            Tendsto (u * v) (𝓝[>] a) (𝓝 a') →\n              Tendsto (u * v) atTop (𝓝 b') →\n                ∫ (x : ℝ) in Ioi a, u' x * v x + u x * v' x = b' - a'",
+          "children": []
+        },
+        {
+          "name": "integral_Ioi_mul_deriv_eq_deriv_mul",
+          "kind": "Thm",
+          "start_line": 1348,
+          "end_line": 1357,
+          "type_signature": "(∀ x ∈ Ioi a, HasDerivAt u (u' x) x) →\n        (∀ x ∈ Ioi a, HasDerivAt v (v' x) x) →\n          IntegrableOn (u * v') (Ioi a) volume →\n            IntegrableOn (u' * v) (Ioi a) volume →\n              Tendsto (u * v) (𝓝[>] a) (𝓝 a') →\n                Tendsto (u * v) atTop (𝓝 b') →\n                  ∫ (x : ℝ) in Ioi a, u x * v' x = b' - a' - ∫ (x : ℝ) in Ioi a, u' x * v x",
+          "children": []
+        },
+        {
+          "name": "integral_Iic_deriv_mul_eq_sub",
+          "kind": "Thm",
+          "start_line": 1359,
+          "end_line": 1377,
+          "type_signature": "(∀ x ∈ Iio a, HasDerivAt u (u' x) x) →\n        (∀ x ∈ Iio a, HasDerivAt v (v' x) x) →\n          IntegrableOn (u' * v + u * v') (Iic a) volume →\n            Tendsto (u * v) (𝓝[<] a) (𝓝 a') →\n              Tendsto (u * v) atBot (𝓝 b') →\n                ∫ (x : ℝ) in Iic a, u' x * v x + u x * v' x = a' - b'",
+          "children": []
+        },
+        {
+          "name": "integral_Iic_mul_deriv_eq_deriv_mul",
+          "kind": "Thm",
+          "start_line": 1379,
+          "end_line": 1388,
+          "type_signature": "(∀ x ∈ Iio a, HasDerivAt u (u' x) x) →\n        (∀ x ∈ Iio a, HasDerivAt v (v' x) x) →\n          IntegrableOn (u * v') (Iic a) volume →\n            IntegrableOn (u' * v) (Iic a) volume →\n              Tendsto (u * v) (𝓝[<] a) (𝓝 a') →\n                Tendsto (u * v) atBot (𝓝 b') →\n                  ∫ (x : ℝ) in Iic a, u x * v' x = a' - b' - ∫ (x : ℝ) in Iic a, u' x * v x",
+          "children": []
+        },
+        {
+          "name": "inter",
+          "kind": "Thm",
+          "start_line": 110,
+          "end_line": 110,
+          "type_signature": "{φ ψ : ι → Set α} (hφ : AECover μ l φ) (hψ : AECover μ l ψ) : AECover μ l (fun i ↦ φ i ∩ ψ i) where ae_eventually_mem",
+          "children": []
+        },
+        {
+          "name": "superset",
+          "kind": "Thm",
+          "start_line": 115,
+          "end_line": 115,
+          "type_signature": "{φ ψ : ι → Set α} (hφ : AECover μ l φ) (hsub : ∀ i, φ i ⊆ ψ i) (hmeas : ∀ i, MeasurableSet (ψ i)) : AECover μ l ψ",
+          "children": []
+        },
+        {
+          "name": "mono_ac",
+          "kind": "Thm",
+          "start_line": 119,
+          "end_line": 119,
+          "type_signature": "{ν : Measure α} {φ : ι → Set α} (hφ : AECover μ l φ) (hle : ν ≪ μ) : AECover ν l φ",
+          "children": []
+        },
+        {
+          "name": "mono",
+          "kind": "Thm",
+          "start_line": 122,
+          "end_line": 122,
+          "type_signature": "{ν : Measure α} {φ : ι → Set α} (hφ : AECover μ l φ) (hle : ν ≤ μ) : AECover ν l φ",
+          "children": []
+        },
+        {
+          "name": "aecover_ball",
+          "kind": "Thm",
+          "start_line": 131,
+          "end_line": 131,
+          "type_signature": "{x : α} {r : ι → ℝ} (hr : Tendsto r l atTop) : AECover μ l (fun i ↦ Metric.ball x (r i)) where measurableSet _",
+          "children": []
+        },
+        {
+          "name": "aecover_closedBall",
+          "kind": "Thm",
+          "start_line": 138,
+          "end_line": 138,
+          "type_signature": "{x : α} {r : ι → ℝ} (hr : Tendsto r l atTop) : AECover μ l (fun i ↦ Metric.closedBall x (r i)) where measurableSet _",
+          "children": []
+        },
+        {
+          "name": "aecover_Ici",
+          "kind": "Thm",
+          "start_line": 152,
+          "end_line": 152,
+          "type_signature": "(ha : Tendsto a l atBot) : AECover μ l fun i => Ici (a i) where ae_eventually_mem",
+          "children": []
+        },
+        {
+          "name": "aecover_Iic",
+          "kind": "Thm",
+          "start_line": 156,
+          "end_line": 156,
+          "type_signature": "(hb : Tendsto b l atTop) : AECover μ l fun i => Iic <| b i",
+          "children": []
+        },
+        {
+          "name": "aecover_Icc",
+          "kind": "Thm",
+          "start_line": 159,
+          "end_line": 159,
+          "type_signature": "(ha : Tendsto a l atBot) (hb : Tendsto b l atTop) : AECover μ l fun i => Icc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioi",
+          "kind": "Thm",
+          "start_line": 171,
+          "end_line": 171,
+          "type_signature": "[NoMinOrder α] : AECover μ l fun i => Ioi (a i) where ae_eventually_mem",
+          "children": []
+        },
+        {
+          "name": "aecover_Iio",
+          "kind": "Thm",
+          "start_line": 176,
+          "end_line": 176,
+          "type_signature": "[NoMaxOrder α] : AECover μ l fun i => Iio (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioo",
+          "kind": "Thm",
+          "start_line": 180,
+          "end_line": 180,
+          "type_signature": "[NoMinOrder α] [NoMaxOrder α] : AECover μ l fun i => Ioo (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioc",
+          "kind": "Thm",
+          "start_line": 183,
+          "end_line": 183,
+          "type_signature": "[NoMinOrder α] : AECover μ l fun i => Ioc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ico",
+          "kind": "Thm",
+          "start_line": 186,
+          "end_line": 186,
+          "type_signature": "[NoMaxOrder α] : AECover μ l fun i => Ico (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioi_of_Ioi",
+          "kind": "Thm",
+          "start_line": 198,
+          "end_line": 198,
+          "type_signature": ": AECover (μ.restrict (Ioi A)) l fun i ↦ Ioi (a i) where ae_eventually_mem",
+          "children": []
+        },
+        {
+          "name": "aecover_Iio_of_Iio",
+          "kind": "Thm",
+          "start_line": 204,
+          "end_line": 204,
+          "type_signature": ": AECover (μ.restrict (Iio B)) l fun i ↦ Iio (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioi_of_Ici",
+          "kind": "Thm",
+          "start_line": 208,
+          "end_line": 208,
+          "type_signature": ": AECover (μ.restrict (Ioi A)) l fun i ↦ Ici (a i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Iio_of_Iic",
+          "kind": "Thm",
+          "start_line": 212,
+          "end_line": 212,
+          "type_signature": ": AECover (μ.restrict (Iio B)) l fun i ↦ Iic (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Iio_of_Ico",
+          "kind": "Thm",
+          "start_line": 216,
+          "end_line": 216,
+          "type_signature": ": AECover (μ.restrict (Iio B)) l fun i ↦ Ico (c i) (b i) where ae_eventually_mem",
+          "children": []
+        },
+        {
+          "name": "aecover_Ici_of_Ico",
+          "kind": "Thm",
+          "start_line": 224,
+          "end_line": 224,
+          "type_signature": "[NoMaxOrder α] : AECover (μ.restrict (Ici B)) l fun i ↦ Ico B (d i) where ae_eventually_mem",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioo_of_Ioo",
+          "kind": "Thm",
+          "start_line": 232,
+          "end_line": 232,
+          "type_signature": ": AECover (μ.restrict <| Ioo A B) l fun i => Ioo (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioo_of_Icc",
+          "kind": "Thm",
+          "start_line": 237,
+          "end_line": 237,
+          "type_signature": ": AECover (μ.restrict <| Ioo A B) l fun i => Icc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioo_of_Ico",
+          "kind": "Thm",
+          "start_line": 241,
+          "end_line": 241,
+          "type_signature": ": AECover (μ.restrict <| Ioo A B) l fun i => Ico (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioo_of_Ioc",
+          "kind": "Thm",
+          "start_line": 245,
+          "end_line": 245,
+          "type_signature": ": AECover (μ.restrict <| Ioo A B) l fun i => Ioc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioc_of_Icc",
+          "kind": "Thm",
+          "start_line": 250,
+          "end_line": 250,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Ioc A B) l fun i => Icc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioc_of_Ico",
+          "kind": "Thm",
+          "start_line": 254,
+          "end_line": 254,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Ioc A B) l fun i => Ico (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioc_of_Ioc",
+          "kind": "Thm",
+          "start_line": 258,
+          "end_line": 258,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Ioc A B) l fun i => Ioc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ioc_of_Ioo",
+          "kind": "Thm",
+          "start_line": 262,
+          "end_line": 262,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Ioc A B) l fun i => Ioo (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ico_of_Icc",
+          "kind": "Thm",
+          "start_line": 266,
+          "end_line": 266,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Ico A B) l fun i => Icc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ico_of_Ico",
+          "kind": "Thm",
+          "start_line": 270,
+          "end_line": 270,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Ico A B) l fun i => Ico (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ico_of_Ioc",
+          "kind": "Thm",
+          "start_line": 274,
+          "end_line": 274,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Ico A B) l fun i => Ioc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Ico_of_Ioo",
+          "kind": "Thm",
+          "start_line": 278,
+          "end_line": 278,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Ico A B) l fun i => Ioo (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Icc_of_Icc",
+          "kind": "Thm",
+          "start_line": 282,
+          "end_line": 282,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Icc A B) l fun i => Icc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Icc_of_Ico",
+          "kind": "Thm",
+          "start_line": 286,
+          "end_line": 286,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Icc A B) l fun i => Ico (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Icc_of_Ioc",
+          "kind": "Thm",
+          "start_line": 290,
+          "end_line": 290,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Icc A B) l fun i => Ioc (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_Icc_of_Ioo",
+          "kind": "Thm",
+          "start_line": 294,
+          "end_line": 294,
+          "type_signature": "(ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) : AECover (μ.restrict <| Icc A B) l fun i => Ioo (a i) (b i)",
+          "children": []
+        },
+        {
+          "name": "aecover_restrict_of_ae_imp",
+          "kind": "Thm",
+          "start_line": 304,
+          "end_line": 304,
+          "type_signature": "{s : Set α} {φ : ι → Set α} (hs : MeasurableSet s) (ae_eventually_mem : ∀ᵐ x ∂μ, x ∈ s → ∀ᶠ n in l, x ∈ φ n) (measurable : ∀ n, MeasurableSet <| φ n) : AECover (μ.restrict s) l φ where ae_eventually_mem",
+          "children": []
+        },
+        {
+          "name": "AECover.inter_restrict",
+          "kind": "Thm",
+          "start_line": 310,
+          "end_line": 310,
+          "type_signature": "{φ : ι → Set α} (hφ : AECover μ l φ) {s : Set α} (hs : MeasurableSet s) : AECover (μ.restrict s) l fun i => φ i ∩ s",
+          "children": []
+        },
+        {
+          "name": "AECover.ae_tendsto_indicator",
+          "kind": "Thm",
+          "start_line": 316,
+          "end_line": 316,
+          "type_signature": "{β : Type*} [Zero β] [TopologicalSpace β] (f : α → β) {φ : ι → Set α} (hφ : AECover μ l φ) : ∀ᵐ x ∂μ, Tendsto (fun i => (φ i).indicator f x) l (𝓝 <| f x)",
+          "children": []
+        },
+        {
+          "name": "AECover.aemeasurable",
+          "kind": "Thm",
+          "start_line": 322,
+          "end_line": 322,
+          "type_signature": "{β : Type*} [MeasurableSpace β] [l.IsCountablyGenerated] [l.NeBot] {f : α → β} {φ : ι → Set α} (hφ : AECover μ l φ) (hfm : ∀ i, AEMeasurable f (μ.restrict <| φ i)) : AEMeasurable f μ",
+          "children": []
+        },
+        {
+          "name": "AECover.aestronglyMeasurable",
+          "kind": "Thm",
+          "start_line": 331,
+          "end_line": 331,
+          "type_signature": "{β : Type*} [TopologicalSpace β] [PseudoMetrizableSpace β] [l.IsCountablyGenerated] [l.NeBot] {f : α → β} {φ : ι → Set α} (hφ : AECover μ l φ) (hfm : ∀ i, AEStronglyMeasurable f (μ.restrict <| φ i)) : AEStronglyMeasurable f μ",
+          "children": []
+        },
+        {
+          "name": "AECover.comp_tendsto",
+          "kind": "Thm",
+          "start_line": 341,
+          "end_line": 341,
+          "type_signature": "{α ι ι' : Type*} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} {l' : Filter ι'} {φ : ι → Set α} (hφ : AECover μ l φ) {u : ι' → ι} (hu : Tendsto u l' l) : AECover μ l' (φ ∘ u) where ae_eventually_mem",
+          "children": []
+        },
+        {
+          "name": "AECover.biUnion_Iic_aecover",
+          "kind": "Thm",
+          "start_line": 351,
+          "end_line": 351,
+          "type_signature": "[Preorder ι] {φ : ι → Set α} (hφ : AECover μ atTop φ) : AECover μ atTop fun n : ι => ⋃ (k) (_h : k ∈ Iic n), φ k",
+          "children": []
+        }
+      ],
+      "total_declarations": 222
+    },
+    "gaussian_sphere": {
+      "imports": [
+        "SKEFTHawking.QuantumNetwork.GaussianPolar",
+        "Mathlib.MeasureTheory.Integral.Gamma"
+      ],
+      "declarations": [
+        {
+          "name": "SKEFTHawking.QuantumNetwork",
+          "kind": "Ns",
+          "start_line": 23,
+          "end_line": 170,
+          "type_signature": null,
+          "children": []
+        },
+        {
+          "name": "halfline_moment",
+          "kind": "Thm",
+          "start_line": 27,
+          "end_line": 41,
+          "type_signature": "∀ (m : ℕ),\n        ∫ (a : ℝ) in Set.Ioi 0, a ^ m * rexp (-a ^ 2 / 2) =\n          (1 / 2) ^ (-(↑m + 1) / 2) * (1 / 2) * Gamma ((↑m + 1) / 2)",
+          "children": []
+        },
+        {
+          "name": "halfline_rec",
+          "kind": "Thm",
+          "start_line": 43,
+          "end_line": 54,
+          "type_signature": "∀ (m : ℕ),\n        ∫ (a : ℝ) in Set.Ioi 0, a ^ (m + 2) * rexp (-a ^ 2 / 2) =\n          (↑m + 1) * ∫ (a : ℝ) in Set.Ioi 0, a ^ m * rexp (-a ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "radial_ratio",
+          "kind": "Thm",
+          "start_line": 56,
+          "end_line": 65,
+          "type_signature": "∀ (N : ℕ) [NeZero N],\n        ∫ (a : ℝ) in Set.Ioi 0, a ^ (N + 3) * rexp (-a ^ 2 / 2) =\n          ↑N * (↑N + 2) * ∫ (a : ℝ) in Set.Ioi 0, a ^ (N - 1) * rexp (-a ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "radial_volumeIoiPow",
+          "kind": "Thm",
+          "start_line": 67,
+          "end_line": 80,
+          "type_signature": "∀ (n k : ℕ),\n        ∫ (r : ↑(Set.Ioi 0)), ↑r ^ k * rexp (-↑r ^ 2 / 2) ∂Measure.volumeIoiPow n =\n          ∫ (a : ℝ) in Set.Ioi 0, a ^ (n + k) * rexp (-a ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "gaussInt_one",
+          "kind": "Thm",
+          "start_line": 82,
+          "end_line": 89,
+          "type_signature": "∀ (ι : Type u_1) [inst : Fintype ι],\n        ∫ (x : EuclideanSpace ℝ ι), 1 * rexp (-‖x‖ ^ 2 / 2) = √(2 * π) ^ Fintype.card ι",
+          "children": []
+        },
+        {
+          "name": "sphere_polar_monomial",
+          "kind": "Thm",
+          "start_line": 98,
+          "end_line": 114,
+          "type_signature": "∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : DecidableEq ι]\n        [Nonempty ι] (a b c d : ι),\n        realWick a b c d * √(2 * π) ^ Fintype.card ι =\n          (∫ (ω : ↑(sphere 0 1)), (↑ω).ofLp a * (↑ω).ofLp b * (↑ω).ofLp c * (↑ω).ofLp d ∂ℙ.toSphere) *\n            ∫ (aa : ℝ) in Set.Ioi 0, aa ^ (Fintype.card ι + 3) * rexp (-aa ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "sphere_polar_one",
+          "kind": "Thm",
+          "start_line": 116,
+          "end_line": 128,
+          "type_signature": "∀ {ι : Type u_1} [inst : Fintype ι] [Nonempty ι],\n        √(2 * π) ^ Fintype.card ι =\n          ℙ.toSphere.real Set.univ *\n            ∫ (aa : ℝ) in Set.Ioi 0, aa ^ (Fintype.card ι - 1) * rexp (-aa ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "sphere_moment_real",
+          "kind": "Thm",
+          "start_line": 130,
+          "end_line": 154,
+          "type_signature": "∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : DecidableEq ι]\n        [Nonempty ι] (a b c d : ι),\n        ↑(Fintype.card ι) * (↑(Fintype.card ι) + 2) *\n            ∫ (ω : ↑(sphere 0 1)), (↑ω).ofLp a * (↑ω).ofLp b * (↑ω).ofLp c * (↑ω).ofLp d ∂ℙ.toSphere =\n          realWick a b c d * ℙ.toSphere.real Set.univ",
+          "children": []
+        },
+        {
+          "name": "sphere_moment_norm",
+          "kind": "Thm",
+          "start_line": 156,
+          "end_line": 168,
+          "type_signature": "∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : DecidableEq ι]\n        [Nonempty ι] (a b c d : ι),\n        ∫ (ω : ↑(sphere 0 1)), (↑ω).ofLp a * (↑ω).ofLp b * (↑ω).ofLp c * (↑ω).ofLp d ∂ℙ.toSphere =\n          realWick a b c d * ℙ.toSphere.real Set.univ /\n            (↑(Fintype.card ι) * (↑(Fintype.card ι) + 2))",
+          "children": []
+        },
+        {
+          "name": "halfline_moment",
+          "kind": "Thm",
+          "start_line": 29,
+          "end_line": 29,
+          "type_signature": "(m : ℕ) : (∫ a in Ioi (0 : ℝ), a ^ m * Real.exp (-a ^ 2 / 2)) = (1 / 2 : ℝ) ^ (-((m : ℝ) + 1) / 2) * (1 / 2) * Real.Gamma (((m : ℝ) + 1) / 2)",
+          "children": []
+        },
+        {
+          "name": "halfline_rec",
+          "kind": "Thm",
+          "start_line": 45,
+          "end_line": 45,
+          "type_signature": "(m : ℕ) : (∫ a in Ioi (0 : ℝ), a ^ (m + 2) * Real.exp (-a ^ 2 / 2)) = ((m : ℝ) + 1) * ∫ a in Ioi (0 : ℝ), a ^ m * Real.exp (-a ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "radial_ratio",
+          "kind": "Thm",
+          "start_line": 58,
+          "end_line": 58,
+          "type_signature": "(N : ℕ) [NeZero N] : (∫ a in Ioi (0 : ℝ), a ^ (N + 3) * Real.exp (-a ^ 2 / 2)) = (N : ℝ) * ((N : ℝ) + 2) * ∫ a in Ioi (0 : ℝ), a ^ (N - 1) * Real.exp (-a ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "radial_volumeIoiPow",
+          "kind": "Thm",
+          "start_line": 69,
+          "end_line": 69,
+          "type_signature": "(n k : ℕ) : (∫ r : Ioi (0 : ℝ), (r : ℝ) ^ k * Real.exp (-(r : ℝ) ^ 2 / 2) ∂Measure.volumeIoiPow n) = ∫ a in Ioi (0 : ℝ), a ^ (n + k) * Real.exp (-a ^ 2 / 2)",
+          "children": []
+        },
+        {
+          "name": "gaussInt_one",
+          "kind": "Thm",
+          "start_line": 83,
+          "end_line": 83,
+          "type_signature": "(ι : Type*) [Fintype ι] : ∫ x : EuclideanSpace ℝ ι, (1 : ℝ) * Real.exp (-‖x‖ ^ 2 / 2) = Real.sqrt (2 * π) ^ Fintype.card ι",
+          "children": []
+        },
+        {
+          "name": "sphere_polar_monomial",
+          "kind": "Thm",
+          "start_line": 100,
+          "end_line": 100,
+          "type_signature": "{ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι] (a b c d : ι) : realWick a b c d * Real.sqrt (2 * π) ^ Fintype.card ι = (∫ ω : sphere (0 : EuclideanSpace ℝ ι) 1, (ω : EuclideanSpace ℝ ι) a * (ω : EuclideanSpace ℝ ι) b * (ω : EuclideanSpace ℝ ι) c * (ω : EuclideanSpace ℝ ι) d ∂volume.toSphere) * (∫ aa in Ioi (0 : ℝ), aa ^ (Fintype.card ι + 3) * Real.exp (-aa ^ 2 / 2))",
+          "children": []
+        },
+        {
+          "name": "sphere_polar_one",
+          "kind": "Thm",
+          "start_line": 117,
+          "end_line": 117,
+          "type_signature": "{ι : Type*} [Fintype ι] [Nonempty ι] : Real.sqrt (2 * π) ^ Fintype.card ι = ((volume.toSphere (E",
+          "children": []
+        },
+        {
+          "name": "sphere_moment_real",
+          "kind": "Thm",
+          "start_line": 134,
+          "end_line": 134,
+          "type_signature": "{ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι] (a b c d : ι) : (Fintype.card ι : ℝ) * ((Fintype.card ι : ℝ) + 2) * (∫ ω : sphere (0 : EuclideanSpace ℝ ι) 1, (ω : EuclideanSpace ℝ ι) a * (ω : EuclideanSpace ℝ ι) b * (ω : EuclideanSpace ℝ ι) c * (ω : EuclideanSpace ℝ ι) d ∂volume.toSphere) = realWick a b c d * (volume.toSphere (E",
+          "children": []
+        },
+        {
+          "name": "sphere_moment_norm",
+          "kind": "Thm",
+          "start_line": 159,
+          "end_line": 159,
+          "type_signature": "{ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι] (a b c d : ι) : (∫ ω : sphere (0 : EuclideanSpace ℝ ι) 1, (ω : EuclideanSpace ℝ ι) a * (ω : EuclideanSpace ℝ ι) b * (ω : EuclideanSpace ℝ ι) c * (ω : EuclideanSpace ℝ ι) d ∂volume.toSphere) = realWick a b c d * (volume.toSphere (E",
+          "children": []
+        }
+      ],
+      "total_declarations": null
+    }
+  },
+  "built_index": {
+    "records": 53530,
+    "sha256": "30b39767ba8f495116be9c25b56f4816718582fa938408fc9032ada42220246c",
+    "hermite_name_or_type_records": 0,
+    "scope": "Extracted project declarations, not global Mathlib absence proof"
+  },
+  "import_correction": "Initial naive graph counted imports in comments; final nested-comment-stripped traversal corrects it. GaussianMoments/Wick do not import Hermite or GaussianSphere; generic IBP and IntegrableExpMul reached. GS imports Mathlib.",
+  "first_proof_obligation": "For every p : Polynomial ℝ, ∫ z, z*p.eval z ∂gaussianReal 0 1 = ∫ z, p.derivative.eval z ∂gaussianReal 0 1; prove via actual IBP and integrability, do not assume.",
+  "direct_target_found": false,
+  "global_absence_claim": false,
+  "implementation": false,
+  "commit": null,
+  "mutations": "Only owned /tmp .md and .json reports",
+  "acceptance": "Discovery only; no physical CAR/B3/state/dynamics, main, publication or human acceptance."
+}

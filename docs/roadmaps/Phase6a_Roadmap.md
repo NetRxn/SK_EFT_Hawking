@@ -3,6 +3,21 @@
 ## Current L1 scientific successors — 2026-11-06
 
 
+**Accepted original kinetic/current/source normalization:** [actual result
+and both independent ACTUAL reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_ACCEPTANCE.md)
+and [ROOT intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_KINETIC_NORMALIZATION_ROOT_INTAKE.json)
+construct the explicit original phase current, cotangent/continuum kinetic
+charge, original-step generator/current intertwining, temporal metric/C2 Ward
+contacts and the whole field/source/product normalization covariance. Physical
+source-dependent map30-31 and metric/matter calibration32-33 remain OPEN.
+A Ward identity or favorable fixed-unit state cannot replace those constructions.
+ROOT's next bounded Lean brick formalizes actual polynomial Gaussian IBP for
+the accepted exact signed auxiliary/source transform; later Hermite/source/
+coframe and all original physical requirements remain owed. This supersedes
+the older proposal-only status below, without promoting B3/physical acceptance.
+
+
+
 **Accepted original conditional-process milestone:** the [actual result and
 independent reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_ACCEPTANCE.md),
 with [ROOT intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_POSITIVE_PROCESS_ROOT_INTAKE.json),

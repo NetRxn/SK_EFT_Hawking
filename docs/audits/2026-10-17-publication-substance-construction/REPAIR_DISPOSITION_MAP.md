@@ -35,6 +35,46 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **Current canonical gates and original L1 companion compile closure.**
+  [Exact dated8bmeasurement and all231payloads](https://github.com/NetRxn/SK_EFT_Hawking/blob/22da44f3493d946910c866f5cbce8aef187c5706/papers/AutomatedReviews/2026-11-06-l1-main-delivery/CURRENT_GATES_AND_PAPER25_COMPILE_R1.md)
+  report160PASS/25blocked/28open/18recheck. Only L1G9changes fromAF255
+  (recheck toPASS); no newly accepted bundle. R1chartREVISE and corrected
+  R2ACCEPT preserve exact cells, stage values, history, caps and caveats.
+  The graph was measured before the later compile-only closure on PR117
+  `22da44f3493d946910c866f5cbce8aef187c5706`. Original legacy compile finding6
+  now reads FIXED through the canonical writer/reader (1249to1250, prior
+  rows/schema exact), anchored to actual ancestor455358440. Forced5page
+  compile0fatal/0overfull/0unresolved and independent all-page pixel review
+  PASS. Only12PDFdate bytes changed; that ROOT-only delta was restored.
+  Original human2.1 and all physical requirements remain OPEN. Broad default
+  suite7084PASS/27FAIL and failed full merge profile remain unwaived.
+
+- **Original kinetic/current/source normalization milestone accepted.**
+  Peer `f55279f1c5cded8ba86833d225f6e69b18b28204` is normally integrated;
+  [ROOT full intake](../2026-11-05-l1-physical-bridges/ORIGINAL_KINETIC_NORMALIZATION_ROOT_INTAKE.json)
+  binds actual R2result, both ACTUAL ACCEPT reviews, full brief/primary reading,
+  all28archive hashes/CRC,12canonical copies,10current accepted inputs,
+  parent20members and3heldPDFpins. The new explicit phase-current/kinetic/
+  kernel/metric-source diagram and whole normalization covariance are actual
+  scoped manual construction. Physical map30-31 and calibration32-33 remain
+  unmatched; symmetry/Ward identities do not supply B3 or physical dynamics.
+  Both prospective/result R1REVISE histories remain preserved.
+
+  **Next ROOT Lean increment:** after actual admitted wt1 LSP discovery,
+  prove the all-polynomial standard-Gaussian integration-by-parts identity
+  supporting the ACCEPTED signed auxiliary/source construction. Existing
+  all-degree half-line moments and arbitrary coordinate factorization must
+  be reused. [Exact bounded brief](../2026-11-05-l1-physical-bridges/GAUSSIAN_POLYNOMIAL_IBP_BRIEF_R1.md)
+  retains the full Hermite/sigma/original-coframe/C2 package and physical goals
+  as owed. No new pipeline or missing-proof assertion from grep. Currentwt1
+  ACTIVE atprimary4fca/epoch323eaae; wt2ready/unabsorbed and wt3quarantined
+  remain untouched. Root controller admission and actual LSPcalls succeeded;
+  sandbox ps/endpoint denial and stale catalog prose were observation limits,
+  not an infrastructure defect. ROOT retains all L1 delivery; Executor owns
+  only separately commissioned deeper work.
+
+
+
 - **L1/Paper25 original dependency finding closed on the main-based candidate.**
   Author `64eb1978a0561bc6f4905635e020ef6ea3fd8db2` repairs Paper25's original
   seven GW dependency edges, with seven separately reviewed actual Newton-
