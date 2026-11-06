@@ -116,10 +116,11 @@ open Real
 
       `c_GW χ_vest c = c · √χ_vest`.
 
-    This is the leading-order identification under
-    `H_VestigialModeIsGraviton` (Volovik 2024 + Phase 5y H1
-    "use-as-identified" mode). The natural anchor `χ_vest = 1`
-    gives `c_GW = c`. -/
+    This definition adopts a scalar susceptibility-to-speed law.
+    `H_VestigialModeIsGraviton` records scalar compatibility conditions;
+    it does not derive this law or construct a microscopic graviton.
+    Physical mode and response/matter-reference matching remain required.
+    The natural anchor `χ_vest = 1` gives `c_GW = c`. -/
 noncomputable def c_GW (χ_vest c : ℝ) : ℝ := c * Real.sqrt χ_vest
 
 /-- At the natural anchor `χ_vest = 1`, GW speed equals light speed. -/
