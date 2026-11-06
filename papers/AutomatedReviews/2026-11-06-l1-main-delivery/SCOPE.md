@@ -242,3 +242,46 @@ its separately accepted factual replacement, actual rendering and canonical
 sentence reassessment remain the next ordinary L1 repair, with original B3
 and all physical BUILD obligations retained. This checkpoint does not close
 that paragraph or the aggregate propagation obligation.
+
+
+## Normalization paragraph: independently accepted canonical repair
+
+The actual L1 paragraph records an adopted comparison window and its chosen
+unity anchor, without inferring physical normalization or endpoints from the
+RPA identity or dimensional analysis. Vergeles attribution now states the
+fixed-degree/function-space premises. Independent source/reader review accepts
+this factual correction and visually inspects allfive actual pages. Canonical
+compile passes:5pages,zerooverflows/errors/unresolvedreferences/droppedoptions.
+The existing manuscript producer measures3534wordequivalents against the
+recorded3750ceiling; primary venue/abstract-source verification remains separate.
+
+The complete current quote walk contains154units:149unchanged assessments and
+five new bounded assessments replacingtwo old sentences. Independent catalog
+and actual-application reviews ACCEPT exact current bindings/IDs/positions,
+full151priorassessments and allprevious69/donor151/54history. The old unsupported
+normalization stays historicalUNGROUNDED. Existingwriter schema/dryrun/ingest
+pass withzeroautomaticclosures/zerotombstones andfivehumanratifycandidates;
+humanstatebytes,oldauditprefix andallfourOPENblockerobjects remainexact.
+One re_audit event is appended. This corrects a manuscript statement; it does
+not build the physical response or close the original scientific obligations.
+
+Actual authoring gates are1/3PASS: lengthPASSfor2measured/19unmeasured;
+global72em-dashes andsixself-narratingpassages outsideL1 remainFAIL. This is
+not a new full-project/native qualification. Latest broad test evidence is the
+prior9d645 source result, not rerun after this manuscript/catalog edit.
+[Readback](NORMALIZATION_R1_READBACK.json) and NORMALIZATION_R1_EVIDENCE.zip
+preserve reviews,preimages,fullwriterreceipts,compile/length/gates and exact
+failed-qualification triage. All117prior outcomes are mappedonce:89shared,
+28newlypresent andtwoabsent versus prior91(net+26). Only24selectedpre-change
+outcomes are reproduced;93remainunqualified. Existing repair reuse is identified
+without treating donor source as current runtime acceptance or making newinfra.
+
+Next ordinaryL1 includes the mappedFconsumer: its current Closure3 still
+attributes a Volovik graviton identification and an RPA-normalized range, with
+other headline falsification residues. D3/Paper25 checked susceptibility passages
+already state adopted/free/matching-required content. Fsource propagation is
+still owed under the existing L1-fix-propagation obligation; this checkpoint
+claims no whole-consumer closure. Title/heading/caption natural-range scope,
+Stage13/fullproject/main/human and all original B3/state/tensor/matter/light/
+transport/frequency/control-band BUILD remainOPEN. ROOT retains all L1 readiness;
+Executor owns bounded deeper physics, not the remainder of the bundle.
