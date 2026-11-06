@@ -60,18 +60,35 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   unmatched; symmetry/Ward identities do not supply B3 or physical dynamics.
   Both prospective/result R1REVISE histories remain preserved.
 
-  **Next ROOT Lean increment:** after actual admitted wt1 LSP discovery,
-  prove the all-polynomial standard-Gaussian integration-by-parts identity
-  supporting the ACCEPTED signed auxiliary/source construction. Existing
-  all-degree half-line moments and arbitrary coordinate factorization must
-  be reused. [Exact bounded brief](../2026-11-05-l1-physical-bridges/GAUSSIAN_POLYNOMIAL_IBP_BRIEF_R1.md)
-  retains the full Hermite/sigma/original-coframe/C2 package and physical goals
-  as owed. No new pipeline or missing-proof assertion from grep. Currentwt1
-  ACTIVE atprimary4fca/epoch323eaae; wt2ready/unabsorbed and wt3quarantined
-  remain untouched. Root controller admission and actual LSPcalls succeeded;
-  sandbox ps/endpoint denial and stale catalog prose were observation limits,
-  not an infrastructure defect. ROOT retains all L1 delivery; Executor owns
-  only separately commissioned deeper work.
+  **Polynomial Gaussian integration by parts accepted and remotely checkpointed.**
+  [Main-based source and complete evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/8ad1411526b8b8d5b49e9f3b9993b8083ec887d9/papers/AutomatedReviews/2026-11-06-l1-main-delivery/GAUSSIAN_IBP_R1.md)
+  prove the actual standard-Gaussian identity for every real polynomial,
+  with absolute integrability and whole-line integration by parts discharged.
+  Independent matching-slot mathematical/kernel review and separate actual-main
+  composition review accept the exact source, with only standard logical axioms.
+  Primary absorption of author f597f91e1 finished with return code zero and
+  epoch03a2919f. Draft PR117 is pushed at8ad141152. No full auxiliary or B3
+  closure follows. The full Hermite/sigma/original-coframe/C2 obligations remain
+  owed; reuse the already discovered all-degree moments and factorization.
+
+  **Current ROOT delivery action:** qualify that frozen main-based candidate
+  through the unchanged canonical full merge profile, then resolve its actual
+  scientific/publication findings through the existing planner, reviewers and
+  closure writer. The run is active under the shared authoritative-build lock;
+  its local invocation prefix is `/tmp/l1-ibp-full-merge-profile-r1` and handle7896.
+  No main merge or new green gate is claimed before its terminal evidence.
+  Primary's build is not this candidate's full-gate certificate. The terminal
+  slot release reported unavailable shutdown identity and retained wt1's backend
+  reservation; leave it untouched pending actual authority. wt2's unabsorbed
+  work and wt3 quarantine are preserved.
+
+  ROOT retains all ordinary L1 implementation, manuscript/claims/figures,
+  canonical gates, independent review, closure and main delivery. Executor owns
+  only commissioned deeper physical construction. Its revised metric-sewing
+  proposal is awaiting dual prospective review, not construction acceptance
+  or a transfer of L1/B3. The independent L3 historical-acceptance reconciliation
+  may proceed read-only during the L1 source freeze, as the agreed queue allows.
+
 
 
 

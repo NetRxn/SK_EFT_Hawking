@@ -1169,3 +1169,17 @@ previously called "low-utility/high-effort":
 ---
 
 *Phase 6a roadmap. Prepared 2026-04-24 from `Lit-Search/Phase-5z/Post-SK-EFT Research Program Strategy.md` v2.0. Six waves, six papers, five correctness-push highlights. Tractable gravitational dynamics: linearized, cosmological, BH structure, four laws, positive mass. All waves follow [Wave Execution Pipeline](../WAVE_EXECUTION_PIPELINE.md). Total PM: 27–45. Consolidation-half anchor of the post-SK-EFT program.*
+
+
+### Publication continuation: polynomial Gaussian identity
+
+The supporting all-polynomial standard-Gaussian integration-by-parts theorem
+is independently accepted and saved on the main-based draft PR117 at
+`8ad1411526b8b8d5b49e9f3b9993b8083ec887d9`.
+[Exact proof, independent reviews and primary build receipts](https://github.com/NetRxn/SK_EFT_Hawking/blob/8ad1411526b8b8d5b49e9f3b9993b8083ec887d9/papers/AutomatedReviews/2026-11-06-l1-main-delivery/GAUSSIAN_IBP_R1.md)
+retain the full auxiliary, physical B3 and publication requirements as open.
+The actual main-candidate merge profile is running; primary absorption alone
+is not its qualification. ROOT retains L1 publication delivery and ordinary
+Lean/Python work. Executor supplies only specifically commissioned deeper
+constructions. Current priority and resume evidence remain in the
+[existing remediation queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md).
