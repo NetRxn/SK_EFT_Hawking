@@ -34,6 +34,41 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Latest acceptance/integration update — 6 November 2026.** Complete B1 actual
+finite Grassmann/coframe construction is independently **ACCEPTED**, with all
+527 source lines/source pp11–15 reviewed, all48 closing goals empty,49 standard-only
+axiom reports, clean diagnostics and three clean headline scans. Original source
+[`78ec8a16d9223d7644ccc49d2046d66e2eae006e`](https://github.com/NetRxn/SK_EFT_Hawking/commit/78ec8a16d9223d7644ccc49d2046d66e2eae006e)
+is preserved on remote `codex/publication-l1-grassmann-source-20261106`.
+[Independent B1 review and original raw receipts](GRASSMANN_COFRAME_IMPLEMENTATION_REVIEW_R1.md)
+are preserved with the actual author controls and ROOT intake disclosures.
+Normal controller absorption succeeds at primary `84cb3f5911bcffc4d071662af2311908f89de279`,
+with epoch `54a17885e576df91381d463e5c88479a2652f463b75f27286326016e80194921`
+and slot release. Rebase preserves the exact reviewed source bytes. This is not
+yet standalone MAIN qualification or complete Eq7/physical B3 acceptance.
+
+Ordinary Eq4 compensation plus the exact three reviewed lifecycle values and
+complete independent evidence are now committed/pushed on main-based PR117 at
+`996fa93a38fbd663a42837cc6b9db6bc8f74d480`. The next MAIN source composition is
+under independent actual review: exact accepted B1 plus one aggregate import and
+the eleven exact corrected review-record postimages. Actual production passes
+four unchanged canonical review gates and32existing tests; seeding the original
+missing L2 severity fails, then exact restoration passes. R2 retains L1:89 and
+all555closure comparisons, exposes16historical L2 findings OPEN, and retires only
+the supported historical SCOPE:R3 artifact. No scientific closure or operator
+verdict is synthesized. The preceding full-profile terminal failure is still
+binding; no fresh all-project pass or same-source gate transition is claimed.
+
+**Next original scientific milestone:** ROOT commissioned a precise full C/Eq7
+construction design using accepted A/B1: actual G-valued Gaussian integration,
+genuine finite-dimensional norm/integrability, full global nilpotence discharge,
+and original degree4+degree2 source specialization. Both literal and closed
+source orderings must be explicitly labeled, with no assumed equivalence or
+physical disposition. Design undergoes independent review before proof dispatch.
+B2/source-action correspondence and original Eq9–11/Berezin/Haar/nonzero Z,
+physical source/state/adjoint/matter/B3/calibration/transport/limits remain owed.
+Executor's separate deeper physical research continues under its existing scope.
+
 **Active construction/recovery update — 2026-11-06 19:38 UTC.** ROOT retains the lead L1
 publication milestone. The Eq4 finite complex compensation author has committed
 only `GaussianAuxiliaryCompensation.lean` at
