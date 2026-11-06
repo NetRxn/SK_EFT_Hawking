@@ -8,7 +8,7 @@ source/math/kernel ACCEPTED and normally absorbed. The main-based candidate
 `a16af66d15d6184c19defcad1f2110515777b6c1` passes its own native library/ExtractDeps
 build, 10,840 jobs. All41,126prior canonical records are exact;168new records
 include88authored proof exports. Canonical regeneration/freshness is complete;
-independent full artifact review is active. The latest measured231gates remain
+independent full artifact review is ACCEPTED at4c6c5149a. The latest measured231gates remain
 160pass/25blocked/28open/18recheck, zero transitions and zero newly green bundles.
 [Accepted construction, reviews and remote resume queue](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints)
 preserve raw evidence and the preceding terminal full-profile failures.
@@ -20,7 +20,14 @@ independent-site product/global Gaussian integral and measure transport. Its
 full R2 design is independently prospectively ACCEPTED, with products formed
 in the proved commutative subalgebra or ordered in G with order independence,
 and actual positive-cutoff zero-coframe controls proving weighted mean1.
-C1 is ROOT's next admitted proof package; C2/C3 and full C are not complete.
+C1 is independently source/kernel/composition ACCEPTED, normally absorbed and
+built at primary82f71ebc2, and pushed on MAIN at4c4a7baa9 pending that
+candidate's own fresh native/canonical qualification. C3-S original source
+polynomials are independently source/kernel ACCEPTED at8d6b0b99a; source
+integration review is active. C2 actual integrability/local Eq7 is now assigned
+on freshly prepared wt1 to /root/eq7_c2_wt1. C3 source specialization, original
+independent-site product/global integral and measure transport follow C2;
+full C remains OPEN. Exact assignments and raw evidence are in the linked queue.
 Original literal/closed source-action correspondence B2, Eq9–11/Berezin/Haar/
 nonzeroZ, physical source/state/adjoint/matter/B3/calibration/transport/limits
 remain OPEN. These accepted subconstruction updates supersede older future-tense
