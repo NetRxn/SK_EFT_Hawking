@@ -10301,6 +10301,21 @@
         "enforced": true,
         "run_at": "2026-11-04"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:3.1",
+      "status": "fixed",
+      "evidence": "Canonical producer title and dedicated legends are corrected, actual normalized histories and scientific crossing controls pass, both L3 and Paper27 regenerated with identical PNG and truthful captions. Independent source composition and all-eleven-page actual visual review accept this bounded figure repair. L3 remains four pages with readable 7.84pt essentials; original predicate PASS, production legacy-title fault FAIL, exact-restoration PASS. Complete evidence: papers/AutomatedReviews/2026-11-06-l3-figure-readability/. Physical four-laws BUILD, whole Paper27 body and native/full-stage/publication acceptance remain OPEN.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-06-l3-figure-readability/SCOPED_REVIEW.md",
+      "date": "2026-11-06",
+      "commit": "42ca6d9f3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
     }
   ]
 }
