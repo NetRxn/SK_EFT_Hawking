@@ -34,6 +34,29 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Subsequent source checkpoint — 6 November 2026:** main-based draft PR117 is
+pushed at `d4e4494b88e15892785adac7d687459c71eb04ae`. The exact independently
+reviewed all-degree Gaussian Hermite module and one aggregate import are now
+integrated, preserving all prior aggregate bytes. [Complete source, kernel and
+composition evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/d4e4494b88e15892785adac7d687459c71eb04ae/papers/AutomatedReviews/2026-11-06-l1-main-delivery/HERMITE_INTEGRATION_R1.md)
+records actual standard-Gaussian integrability, insertion identity, orthogonality
+and factorial norm. Primary library/ExtractDeps absorption passed at `2fbbfd95a`;
+that result is not actual main-candidate qualification. The existing full merge
+profile started on exact main candidate `d4e4494b8` at 15:50 UTC under the shared
+build lock and remains pending at this checkpoint. Its result, canonical
+extraction and independent generated-artifact review are the next acceptance
+steps. No gate-state transition or physical B3 closure follows from source
+integration. Positive-variance/multivariate/complex-source/Grassmann/coframe/link
+and physical response assembly remain owed.
+
+L3's accepted R2 scientific figure correction passed actual numerical/source
+fault controls and compilation, but independent publication-scale review
+requires revision because annotations rendered near 2.14 points. An R3 stacked
+layout and coherent L3/Paper27 captions are now under independent source review.
+Actual regenerated artifacts, compilation of both consumers, readable typography,
+the letter's length requirement and independent visual acceptance remain required.
+This enabling package does not move the lead away from L1.
+
 **Resume checkpoint — 6 November 2026, after the terminal native run.** L1
 remains lead; the agreed portfolio order above is unchanged. The following
 current state supersedes run-in-progress and proposal-only descriptions in the
