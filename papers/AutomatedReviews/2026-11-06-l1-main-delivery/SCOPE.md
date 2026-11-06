@@ -285,3 +285,50 @@ claims no whole-consumer closure. Title/heading/caption natural-range scope,
 Stage13/fullproject/main/human and all original B3/state/tensor/matter/light/
 transport/frequency/control-band BUILD remainOPEN. ROOT retains all L1 readiness;
 Executor owns bounded deeper physics, not the remainder of the bundle.
+
+
+## F mapped L1 propagation: independently accepted source checkpoint
+
+The complete twenty-span F manifestation is independently accepted after R2
+source and render revisions. The immutable initial assessment contains sixteen
+FAIL and four INFO spans; earlier prose counts were incorrect. Current source
+distinguishes quartet metric order from the de Sitter second-sound model,
+adopted response inputs from physical normalization, endpoint exclusions from
+universal exclusion, and speed tolerance from susceptibility offsets. It
+removes unsupported unique-channel and parameter-free common-coefficient
+inferences. Original physical requirements remain full-strength and OPEN.
+
+Independent source R3 checks all thirteen backing hashes and three held primary
+PDFs; independent reader R3 surveys all twenty-four pages and directly views
+eleven carrying pages. Both frozen-packet checks are fresh. The page13 new-text
+overprint is repaired, and the three wrapped theorem identifiers retain all
+fifty-nine reference tokens under the existing producer. Twenty-two inherited
+overflow records remain unresolved and unwaived; whole-F layout is not accepted.
+Actual canonical compile exits0 with24pages and no TeX errors, unresolved PDF
+references or dropped options. Actual focused tests97PASS. Selected source gates
+are2/4PASS: hierarchy and length pass, global dash and reader-voice failures
+remain. Latest broad project qualification remains the earlier RED result.
+
+The exact declared F1.1 Verify now exits0 against the independent accepted
+source evidence. This checkpoint supports the focused source-finding closure
+through the existing writer; it does not itself assert a recorded closure.
+F's legacy May4 Stage10-round3 claims summary and pending/RED metadata are
+byte-preserved. Aggregate L1 fix propagation, full-stage reviews, physical B3/
+state/tensor/matter/light/G_N-response/transport/frequency/band BUILD, native/
+main qualification and final human approval remain OPEN.
+
+[F source acceptance](F_SOURCE_REVIEW.json),
+[archive readback](F_PROPAGATION_R3_READBACK.json) and
+F_PROPAGATION_R3_EVIDENCE.zip preserve original/rejected/accepted assessments,
+actual preimage/rejected/current PDFs, source bindings, focused test and gate
+receipts, compiler log and inspected rendered pages. Full copyrighted primary
+papers remain in the existing local source cache; their pins are preserved.
+
+Next ordinary L1 milestone: reconcile remaining title/heading/caption
+"natural range" claims with the adopted comparison window and review their
+canonical sentence dispositions and actual rendering. Executor separately
+prepares the bounded deeper construction brief; this is not transfer of L1.
+Previously accepted D1/F thermal-crossover commit2e56926994 remains on NJL
+branch ancestry and is absent from this main candidate and cumulative
+publication checkpoint; reuse requires exact composition and independent
+integration review. Preserving current F thermal text does not import that work.

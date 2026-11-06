@@ -1,10 +1,56 @@
 {
-  "assessment": "Focused independent SOURCE ASSESSMENT; not a complete F sentence catalog",
-  "packet": "f-l1-source-assessment-r1.json",
-  "candidate_head": "6c15b2ee06b322c53125f819e8581f76019b143a",
-  "verdict": "REQUEST_CHANGES",
+  "verdict": "ACCEPT_SOURCE_PROPAGATION",
+  "independent_semantic_review": true,
+  "original_build_open": true,
+  "canonical_closures": 0,
+  "human_approvals": 0,
+  "packet": "f-l1-source-candidate-review-r3.json",
+  "required_span_ids": [
+    "abstract-coefficient",
+    "abstract-headline",
+    "cleared-register-coefficient",
+    "closure-attribution-normalization",
+    "closure-constraint-math",
+    "closure-forcing-offset",
+    "closure-heading",
+    "conclusion-register",
+    "conclusion-roster",
+    "crossbridge",
+    "crossnetwork",
+    "falsified-register",
+    "gauge-synthesis",
+    "gravity-overview",
+    "no-extra-dial",
+    "partition-example",
+    "publication-order",
+    "publication-tier-roster",
+    "strategy-link",
+    "tier-overview"
+  ],
+  "accepted_span_ids": [
+    "abstract-coefficient",
+    "abstract-headline",
+    "cleared-register-coefficient",
+    "closure-attribution-normalization",
+    "closure-constraint-math",
+    "closure-forcing-offset",
+    "closure-heading",
+    "conclusion-register",
+    "conclusion-roster",
+    "crossbridge",
+    "crossnetwork",
+    "falsified-register",
+    "gauge-synthesis",
+    "gravity-overview",
+    "no-extra-dial",
+    "partition-example",
+    "publication-order",
+    "publication-tier-roster",
+    "strategy-link",
+    "tier-overview"
+  ],
   "source_hashes": {
-    "papers/F/paper_draft.tex": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+    "papers/F/paper_draft.tex": "e8f1e0e8b448fd8b6a3a232d10a9656cfd584bb3861900cf793eab486a0eef89",
     "papers/F/claims_review.json": "c44b08f2eef7e260d8db3361507b41c97631ddfb8a02a82f19b27f0930c308f1",
     "papers/F/bundle_metadata.json": "6dc78648a4a44f4d18ce83831d17dffa2218fc33427bccafa1007901bd537778",
     "papers/L1/paper_draft.tex": "7859026de6486011b60af888e193e72bfd2e348f234a3d0d976a566d77952b58",
@@ -16,354 +62,450 @@
     "src/core/formulas.py": "ef3e76f28ab0bcad83311ba029b1a8fb19fd2cb161e6186d161ccf7ccf7cb836",
     "src/core/provenance.py": "301d9db0be7404cb44834233eb7847d2eee3a14283298abcb6ddab11057b5983",
     "src/core/constants.py": "aa841158ab58e087b400922ceeefef9d42a72f98882f55d6f0d8da7e740765e5",
-    "src/core/citations.py": "85bb6a68aeb40f780adb73a62952afc05a020d2ea11da34ea33e6ac03fdf3680"
+    "src/core/citations.py": "0d9283a1bcbdfbe1cc7b6a841c59aa55ab16154b592a1dfdada301aa5de7f37d"
   },
   "primary_source_pins": {
     "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Volovik2024.pdf": "fae06f3bd7189f52a24fce5b612a30d2fc23ca1f2a9db43100e535d954791d9d",
     "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-1-and-Background/primary-sources/Volovik2026SecondSound.pdf": "392649cf58b98b03957e11f95beb01b9e204b398219e6ffde067c181d26a5c17",
-    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-6a/primary-sources/Abbott2017GW170817.pdf": "bf06bd2ae6a23cf7f7092307677c2b681ce02abab3b5bbe37bbce76a8960140a",
-    "papers/F/paper_draft.tex": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610"
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-6a/primary-sources/Abbott2017GW170817.pdf": "bf06bd2ae6a23cf7f7092307677c2b681ce02abab3b5bbe37bbce76a8960140a"
   },
   "spans": [
     {
       "id": "abstract-coefficient",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 59,
-      "line_end": 62,
-      "quote": "Bundle~D3 (a single heat-kernel coefficient\n$G_N^{a_2} = 3\\pi/(N_f\\,\\Lambda_{\\mathrm{UV}}^{2})$\npropagating across six observables) also drives the SK--EFT analog-Hawking\ncontent of Bundle~D1 (across BEC, polariton, and graphene Dirac-fluid",
-      "verdict": "FAIL",
-      "assessment": "Sakharov coefficient is said to propagate across six observables, including GW speed in the later enumerated roster. The speed law instead has free chi; no physical normalization selects chi from G_N, N_f or cutoff.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 61,
+      "current_line_end": 65,
+      "current_quote": "Bundle~D3 (a single heat-kernel coefficient\n$G_N^{a_2} = 3\\pi/(N_f\\,\\Lambda_{\\mathrm{UV}}^{2})$\nused across gravitational comparisons, with an additional free response\nin the GW-speed law) also drives the SK--EFT analog-Hawking\ncontent of Bundle~D1 (across BEC, polariton, and graphene Dirac-fluid",
+      "assessment": "Extra free GW response expressly disclosed; actual speed definition has independent chi,c. No G_N-to-response matching is inferred.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 59,
+        "r1_line_end": 62,
+        "r1_quote": "Bundle~D3 (a single heat-kernel coefficient\n$G_N^{a_2} = 3\\pi/(N_f\\,\\Lambda_{\\mathrm{UV}}^{2})$\npropagating across six observables) also drives the SK--EFT analog-Hawking\ncontent of Bundle~D1 (across BEC, polariton, and graphene Dirac-fluid",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "abstract-headline",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 73,
-      "line_end": 76,
-      "quote": "worth of predictive register. NO-GO results are reported as\nfirst-class predictive content rather than absences: GW170817 falsifies\nthe vestigial-second-sound graviton at $\\sim 7\\times 10^{14}$; an\nabelian-MTC falsifier closes the Bekenstein--Hawking entropy with the",
-      "verdict": "FAIL",
-      "assessment": "Generic graviton falsification at a single endpoint/cap ratio is unsupported. Exact chi=1 witness and a finite interval survive the assumed law.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 76,
+      "current_line_end": 80,
+      "current_quote": "worth of predictive register. Exclusions and conditional constraints are\nreported as predictive content: under an assumed susceptibility-speed law,\nGW170817 excludes the adopted comparison endpoints while retaining a\nfinite compatible interval about unity; an\nabelian-MTC falsifier closes the Bekenstein--Hawking entropy with the",
+      "assessment": "Assumed-law qualifier, chosen endpoints and finite compatible interval accurately replace generic graviton falsification.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 73,
+        "r1_line_end": 76,
+        "r1_quote": "worth of predictive register. NO-GO results are reported as\nfirst-class predictive content rather than absences: GW170817 falsifies\nthe vestigial-second-sound graviton at $\\sim 7\\times 10^{14}$; an\nabelian-MTC falsifier closes the Bekenstein--Hawking entropy with the",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "strategy-link",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 125,
-      "line_end": 126,
-      "quote": "through black-hole thermodynamics (Bundle~D3 with PRL splashes L1 on\nGW170817 and L3 on the BCH four laws), topological quantum-computation",
-      "verdict": "INFO",
-      "assessment": "Neutral bibliographic/program link to L1 on GW170817; retain, without treating PRL intent as readiness.",
-      "parent_refs": [
-        "L1-fix-propagation"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 129,
+      "current_line_end": 130,
+      "current_quote": "through black-hole thermodynamics (Bundle~D3 with PRL splashes L1 on\nGW170817 and L3 on the BCH four laws), topological quantum-computation",
+      "assessment": "Original neutral program link exact; submission intent is not physical or venue acceptance.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 125,
+        "r1_line_end": 126,
+        "r1_quote": "through black-hole thermodynamics (Bundle~D3 with PRL splashes L1 on\nGW170817 and L3 on the BCH four laws), topological quantum-computation",
+        "r1_verdict": "INFO",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "tier-overview",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 160,
-      "line_end": 163,
-      "quote": "\\item \\textbf{Tier 2 (3 PRL splashes):} Bundle~L1 (GW170817 falsifies\n  the vestigial-second-sound graviton), Bundle~L2 (three SM fermion\n  generations from modular invariance), Bundle~L3 (BCH four laws by\n  regime).",
-      "verdict": "FAIL",
-      "assessment": "Publication roster falsely advertises falsification of the graviton rather than a conditional assumed-law constraint.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 164,
+      "current_line_end": 167,
+      "current_quote": "\\item \\textbf{Tier 2 (3 PRL splashes):} Bundle~L1 (the conditional GW170817\n  susceptibility constraint), Bundle~L2 (three SM fermion\n  generations from modular invariance), Bundle~L3 (BCH four laws by\n  regime).",
+      "assessment": "Roster names conditional susceptibility constraint, not universal identification falsification.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 160,
+        "r1_line_end": 163,
+        "r1_quote": "\\item \\textbf{Tier 2 (3 PRL splashes):} Bundle~L1 (GW170817 falsifies\n  the vestigial-second-sound graviton), Bundle~L2 (three SM fermion\n  generations from modular invariance), Bundle~L3 (BCH four laws by\n  regime).",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "partition-example",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 194,
-      "line_end": 200,
-      "quote": "\\item \\textbf{Falsified.} The substrate produces a quantitative\n  prediction in tension with observation at $\\geq 5\\sigma$ or\n  Bayes-factor $|\\log\\mathcal{B}| \\geq 5$ (Jeffreys-decisive). Examples\n  include the GW170817 vestigial-graviton falsification at $\\sim\n  7\\times 10^{14}$ (L1 with D3 \\S\\ref{sec:emergent-gravity}), the\n  Wen--ADW factor-$6000$ deficit closing the\n  emergent-$U(1)$-string-net-extended-to-gravity channel of Wen",
-      "verdict": "FAIL",
-      "assessment": "Falsified partition lists the full identification and an endpoint ratio, under sigma/Bayes threshold language. A ratio to a speed cap is neither a sigma significance nor a Bayes factor.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 198,
+      "current_line_end": 204,
+      "current_quote": "\\item \\textbf{Falsified.} The substrate produces a quantitative\n  prediction in tension with observation at $\\geq 5\\sigma$ or\n  Bayes-factor $|\\log\\mathcal{B}| \\geq 5$ (Jeffreys-decisive). The\n  GW170817 susceptibility comparison is recorded separately as a conditional\n  parameter constraint (L1 with D3 \\S\\ref{sec:emergent-gravity}).\n  The register includes the Wen--ADW factor-$6000$ deficit closing the\n  emergent-$U(1)$-string-net-extended-to-gravity channel of Wen",
+      "assessment": "GW is expressly distinguished from sigma/Bayes falsification and its later category heading now agrees.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 194,
+        "r1_line_end": 200,
+        "r1_quote": "\\item \\textbf{Falsified.} The substrate produces a quantitative\n  prediction in tension with observation at $\\geq 5\\sigma$ or\n  Bayes-factor $|\\log\\mathcal{B}| \\geq 5$ (Jeffreys-decisive). Examples\n  include the GW170817 vestigial-graviton falsification at $\\sim\n  7\\times 10^{14}$ (L1 with D3 \\S\\ref{sec:emergent-gravity}), the\n  Wen--ADW factor-$6000$ deficit closing the\n  emergent-$U(1)$-string-net-extended-to-gravity channel of Wen",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "gauge-synthesis",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 525,
-      "line_end": 530,
-      "quote": "theorem (\\texttt{GaugeErasure.gauge\\_erasure},\n\\texttt{GaugeErasure.u1\\_survival}) is the first of three\npredictive-boundary cuts that force the ADW substrate route to the\ntetrad-condensation channel; the other two are the perturbative\nWen-ADW deficit and the GW170817 vestigial-graviton falsification\n(\\S\\ref{sec:emergent-gravity}).",
-      "verdict": "FAIL",
-      "assessment": "Claim that three cuts force ADW relies on generic GW exclusion; conditional scalar interval does not eliminate vestigial metric ordering or luminal second sound.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 529,
+      "current_line_end": 535,
+      "current_quote": "theorem (\\texttt{GaugeErasure.gauge\\_erasure},\n\\texttt{GaugeErasure.u1\\_survival}) is the first of three\ncomparisons motivating the ADW tetrad-condensation channel; the other\ntwo are the perturbative Wen--ADW deficit and the conditional GW170817\nsusceptibility constraint (\\S\\ref{sec:emergent-gravity}). The GW comparison\nretains compatible interior responses and supplies no unique-channel\nselection theorem.",
+      "assessment": "Motivation replaces unique-channel forcing; surviving interior and absence of selection theorem explicit.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 525,
+        "r1_line_end": 530,
+        "r1_quote": "theorem (\\texttt{GaugeErasure.gauge\\_erasure},\n\\texttt{GaugeErasure.u1\\_survival}) is the first of three\npredictive-boundary cuts that force the ADW substrate route to the\ntetrad-condensation channel; the other two are the perturbative\nWen-ADW deficit and the GW170817 vestigial-graviton falsification\n(\\S\\ref{sec:emergent-gravity}).",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "gravity-overview",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 960,
-      "line_end": 966,
-      "quote": "content from the substrate-condensation mechanism through the\nBekenstein--Hawking entropy and the BCH four laws. The two PRL\nsplashes Bundle~L1 (GW170817 falsifies the vestigial-second-sound\ngraviton; \\cite{Abbott2017GW170817}) and Bundle~L3 (BCH four laws\nby regime;~\\cite{BardeenCarterHawking1973}) extract headline\nresults from D3 that ship as four-page PRL submissions ahead of the\nD3 deep-paper submission per the strategy frame~\\cite{Roehm2026Strategy}.",
-      "verdict": "FAIL",
-      "assessment": "Overview repeats generic falsification and calls the result a submission; current L1/readiness limits are not carried.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 964,
+      "current_line_end": 972,
+      "current_quote": "paper at $\\sim 53$pp, consolidating the substrate's emergent-gravity\ncontent from the substrate-condensation mechanism through the\nBekenstein--Hawking entropy and the BCH four laws. The two PRL\nsplashes Bundle~L1 (the conditional GW170817 susceptibility\nconstraint; \\cite{Abbott2017GW170817}) and Bundle~L3 (BCH four laws\nby regime;~\\cite{BardeenCarterHawking1973}) extract headline\nresults intended for PRL letters ahead of the D3 deep-paper submission\nin the strategy frame~\\cite{Roehm2026Strategy}. Physical construction,\nvenue qualification and final review remain required.",
+      "assessment": "Intended PRL-letter strategy now preserves physical construction, venue qualification and final review; no current four-page qualification.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 960,
+        "r1_line_end": 966,
+        "r1_quote": "content from the substrate-condensation mechanism through the\nBekenstein--Hawking entropy and the BCH four laws. The two PRL\nsplashes Bundle~L1 (GW170817 falsifies the vestigial-second-sound\ngraviton; \\cite{Abbott2017GW170817}) and Bundle~L3 (BCH four laws\nby regime;~\\cite{BardeenCarterHawking1973}) extract headline\nresults from D3 that ship as four-page PRL submissions ahead of the\nD3 deep-paper submission per the strategy frame~\\cite{Roehm2026Strategy}.",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "REVISE"
+      }
     },
     {
       "id": "no-extra-dial",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 970,
-      "line_end": 990,
-      "quote": "The substrate's emergent-gravity content propagates across six\nobservables through a \\emph{single} closed-form coefficient\n\\begin{equation}\n  G_N^{a_2} \\;=\\; \\frac{3\\pi}{N_f\\,\\Lambda_{\\mathrm{UV}}^{2}}\\,,\n\\end{equation}\nderived from the heat-kernel $a_2$ coefficient of an $N_f$-flavour\nDirac fermion bundle on the substrate~\\cite{Sakharov1968,Adler1980,\nVassilevich2003} (D3 \\S 17;\n\\texttt{HeatKernelExpansion.G\\_N\\_from\\_a2\\_eq\\_quarter\\_G\\_N\\_sakharov}).\nThis is exactly one quarter of the Sakharov--Adler\n$G_N^{\\mathrm{Sak}} = 12\\pi/(N_f\\Lambda_{\\mathrm{UV}}^{2})$ that Phase\n6a.1 states independently; the factor is the Dirac index trace\n$\\operatorname{tr}_V\\mathbb{1} = 4$ carried by Vassilevich Eq.~(4.27),\nand the named theorem is the exact ratio rather than an equality. The\nsame coefficient propagates without an additional dial across the six\nobservables of D3 (the BCH four\nlaws regime-partition mass; the Bekenstein--Hawking entropy\nprefactor; the cosmological-constant overshoot ratio; the\nEinstein--Cartan torsion at the cosmological background; the\ngravitational-wave propagation speed; the Stelle higher-curvature\nceilings).",
-      "verdict": "FAIL",
-      "assessment": "Single-coefficient, no-additional-dial six-observable synthesis explicitly includes GW speed. Actual c_GW takes independent chi and c; no physical bridge is built.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 976,
+      "current_line_end": 996,
+      "current_quote": "The induced-Newton baseline used in the gravitational comparisons is\nthe closed-form coefficient\n\\begin{equation}\n  G_N^{a_2} \\;=\\; \\frac{3\\pi}{N_f\\,\\Lambda_{\\mathrm{UV}}^{2}}\\,,\n\\end{equation}\nderived from the heat-kernel $a_2$ coefficient of an $N_f$-flavour\nDirac fermion bundle on the substrate~\\cite{Sakharov1968,Adler1980,\nVassilevich2003} (D3 \\S 17;\n\\texttt{HeatKernelExpansion.G\\_N\\_from\\_a2\\_eq\\_quarter\\_G\\_N\\_sakharov}).\nThis is exactly one quarter of the Sakharov--Adler\n$G_N^{\\mathrm{Sak}} = 12\\pi/(N_f\\Lambda_{\\mathrm{UV}}^{2})$ that Phase\n6a.1 states independently; the factor is the Dirac index trace\n$\\operatorname{tr}_V\\mathbb{1} = 4$ carried by Vassilevich Eq.~(4.27),\nand the named theorem is the exact ratio rather than an equality. The\ncoefficient enters the comparisons of the BCH four-laws regime-partition\nmass, Bekenstein--Hawking entropy prefactor, cosmological-constant\novershoot, Einstein--Cartan torsion and Stelle higher-curvature ceilings.\nThe GW-speed comparison additionally assumes a free normalized\nsusceptibility $\\chi_{\\mathrm{vest}}$. A physical normalization relating\nthat response to the induced-Newton baseline remains required; the\nshared numerical comparison ranges do not supply it.",
+      "assessment": "Separate free normalized susceptibility is explicit; physical response matching to induced Newton baseline remains required, and equal comparison ranges supply no bridge.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 970,
+        "r1_line_end": 990,
+        "r1_quote": "The substrate's emergent-gravity content propagates across six\nobservables through a \\emph{single} closed-form coefficient\n\\begin{equation}\n  G_N^{a_2} \\;=\\; \\frac{3\\pi}{N_f\\,\\Lambda_{\\mathrm{UV}}^{2}}\\,,\n\\end{equation}\nderived from the heat-kernel $a_2$ coefficient of an $N_f$-flavour\nDirac fermion bundle on the substrate~\\cite{Sakharov1968,Adler1980,\nVassilevich2003} (D3 \\S 17;\n\\texttt{HeatKernelExpansion.G\\_N\\_from\\_a2\\_eq\\_quarter\\_G\\_N\\_sakharov}).\nThis is exactly one quarter of the Sakharov--Adler\n$G_N^{\\mathrm{Sak}} = 12\\pi/(N_f\\Lambda_{\\mathrm{UV}}^{2})$ that Phase\n6a.1 states independently; the factor is the Dirac index trace\n$\\operatorname{tr}_V\\mathbb{1} = 4$ carried by Vassilevich Eq.~(4.27),\nand the named theorem is the exact ratio rather than an equality. The\nsame coefficient propagates without an additional dial across the six\nobservables of D3 (the BCH four\nlaws regime-partition mass; the Bekenstein--Hawking entropy\nprefactor; the cosmological-constant overshoot ratio; the\nEinstein--Cartan torsion at the cosmological background; the\ngravitational-wave propagation speed; the Stelle higher-curvature\nceilings).",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "closure-heading",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 999,
-      "line_end": 1008,
-      "quote": "\\subsection{Three closures forcing ADW}\n\nThree independent closures force the substrate to the ADW\ntetrad-condensation channel rather than alternative emergent-gravity\nmechanisms. (D3 \\S 4 originally enumerates the closure triad as\nWen + fracton + GW170817; F lifts the gauge-erasure prerequisite\nof D3 \\S 3 into the closure list as the structural pre-condition for\nthe substrate-identity claim, and handles the fracton diff-invariance\nno-go separately as a structurally-blocked register entry in\n\\S\\ref{sec:substrate-register}.)",
-      "verdict": "FAIL",
-      "assessment": "Three closures forcing ADW is not supported by the GW interval; triad should be scoped without physical elimination of the vestigial channel.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 1005,
+      "current_line_end": 1015,
+      "current_quote": "\\subsection{Channel exclusions and a conditional GW constraint}\n\nThe following comparisons have different scopes. The gauge and coupling\nresults address their stated channels, while the assumed GW-speed law\nleaves a finite compatible susceptibility interval. Together they do\nnot establish a unique physical selection of the ADW channel. (D3 \\S 4 originally enumerates the closure triad as\nWen + fracton + GW170817; F lifts the gauge-erasure prerequisite\nof D3 \\S 3 into the closure list as the structural pre-condition for\nthe substrate-identity claim, and handles the fracton diff-invariance\nno-go separately as a structurally-blocked register entry in\n\\S\\ref{sec:substrate-register}.)",
+      "assessment": "Mixed scopes and absence of unique physical ADW selection are explicit; historical closure-list origin does not override this restriction.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 999,
+        "r1_line_end": 1008,
+        "r1_quote": "\\subsection{Three closures forcing ADW}\n\nThree independent closures force the substrate to the ADW\ntetrad-condensation channel rather than alternative emergent-gravity\nmechanisms. (D3 \\S 4 originally enumerates the closure triad as\nWen + fracton + GW170817; F lifts the gauge-erasure prerequisite\nof D3 \\S 3 into the closure list as the structural pre-condition for\nthe substrate-identity claim, and handles the fracton diff-invariance\nno-go separately as a structurally-blocked register entry in\n\\S\\ref{sec:substrate-register}.)",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "closure-attribution-normalization",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 1042,
-      "line_end": 1050,
-      "quote": "\\paragraph{Closure 3: GW170817 vestigial-graviton constraint (D3\n\\S 6 with Bundle~L1).} The Volovik vestigial-second-sound\nmode~\\cite{Volovik2024Vestigial} is a candidate for the substrate's\ngraviton. Carried onto our substrate, the identification makes the\npropagation speed depend on the natural-range parameter band\n$\\chi_{\\mathrm{vest}}\\in[0.1,10]$ (a project-adopted order-unity\nnaturalness window about the random-phase-approximation\nbubble-integral scale, a modeling choice of this project rather than\na published derivation). The",
-      "verdict": "FAIL",
-      "assessment": "Volovik2024 is wrongly cited for a second-sound mode. RPA bubble-scale naturalness phrase implies a physical normalization not established by conditional chi_RPA or adopted interval.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 1049,
+      "current_line_end": 1064,
+      "current_quote": "\\paragraph{Closure 3: conditional GW170817 constraint on the\nvestigial-graviton identification.} Under the assumed scalar law\n$c_{\\mathrm{GW}}=c\\sqrt{\\chi_{\\mathrm{vest}}}$, GW170817 confines the\nfree, nonnegative normalized response $\\chi_{\\mathrm{vest}}$ to a\nfinite interval about unity. Here $c$ is the electromagnetic reference\nspeed. The physical identification requires a separate dynamical\nconstruction. Volovik's quartet-order proposal allows metric order\nbefore a nonzero tetrad expectation~\\cite[Sec.~III,\nEqs.~(18)--(20)]{Volovik2024Vestigial}. His de~Sitter two-fluid\nmodel derives luminal second sound, $s_2=c$, from its thermodynamic\nrelations~\\cite[Sec.~III, Eqs.~(6)--(9)]{Volovik2026SecondSound};\nits discussion leaves the graviton interpretation open\n\\cite[Sec.~IV]{Volovik2026SecondSound}. Neither result derives the\nsusceptibility-dependent speed law or identifies this substrate's\nexcitation with a propagating tensor mode coupled to the same\nmatter/light reference.",
+      "assessment": "2024 quartet metric order and2026 de Sitter luminal second sound/open interpretation correctly separated. Actual held full §§III/IV do not derive substrate susceptibility law or tensor/matter bridge.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 1042,
+        "r1_line_end": 1050,
+        "r1_quote": "\\paragraph{Closure 3: GW170817 vestigial-graviton constraint (D3\n\\S 6 with Bundle~L1).} The Volovik vestigial-second-sound\nmode~\\cite{Volovik2024Vestigial} is a candidate for the substrate's\ngraviton. Carried onto our substrate, the identification makes the\npropagation speed depend on the natural-range parameter band\n$\\chi_{\\mathrm{vest}}\\in[0.1,10]$ (a project-adopted order-unity\nnaturalness window about the random-phase-approximation\nbubble-integral scale, a modeling choice of this project rather than\na published derivation). The",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "closure-constraint-math",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 1051,
-      "line_end": 1065,
-      "quote": "GW170817 multi-messenger constraint (asymmetrically\n$-3\\times 10^{-15} \\le \\Delta c/c \\le +7\\times 10^{-16}$;\nconservatively two-sided $|\\Delta c/c| \\le 3\\times\n10^{-15}$)~\\cite{Abbott2017GW170817} then \\emph{confines} that band\nrather than falsifying it: the compatible window is nested strictly\ninside $[0.1,10]$ and meets it at $\\chi_{\\mathrm{vest}} = 1$, while\nboth endpoints deviate from $c$ by $\\sim 14$ orders of magnitude\n($\\sim 7\\times 10^{14}$). The Lean\nformalisation \\texttt{GravitationalWaves.natural\\_endpoints\\_violate\\_ligo\\_window}\nplus \\texttt{vestigial\\_natural\\_range\\_violates\\_ligo} plus\n\\texttt{ligo\\_confines\\_chi\\_vest\\_within\\_natural\\_range} and the\nwidth ratio\n\\texttt{ligo\\_window\\_width\\_lt\\_natural\\_range\\_width\\_by\\_1e14}\nship the constraint at zero \\texttt{sorry}. Bundle~L1 PRL splash\nextracts this as a stand-alone four-page submission.",
-      "verdict": "FAIL",
-      "assessment": "Nesting and endpoint theorem references are substantively correct conditional algebra. Missing speed-law hypothesis/domain and source-emission assumptions; both-endpoint 7e14 statement conflates cap ratios with relative deviations. Lower ratio about2.28e14; upper about7.21e14; deviations about−0.684,+2.162. Stand-alone four-page submission claim is not current L1 qualification.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 1066,
+      "current_line_end": 1099,
+      "current_quote": "Abbott et al. obtain\n$-3\\times10^{-15}\\le\\Delta c/c\\le+7\\times10^{-16}$ using a\nconservative source distance, simultaneous emission for the upper\nbound and a delayed gamma-ray emission assumption for the lower\nbound~\\cite[Sec.~4.1, Eq.~(1)]{Abbott2017GW170817}.\nWe adopt the symmetric envelope $|\\Delta c/c|\\le\\tau$, with\n$\\tau=3\\times10^{-15}$; alternative source-emission histories can\nweaken this inferred propagation constraint. For the assumed law,\n$\\Delta c/c=\\sqrt{\\chi_{\\mathrm{vest}}}-1$ when $c\\ne0$.\nThe theorem\n\\leanref{GravitationalWaves.c_GW_match_iff_chi_close_to_one}\ngives, for $\\chi_{\\mathrm{vest}}\\ge0$,\n\\[\n |\\sqrt{\\chi_{\\mathrm{vest}}}-1|\\le\\tau\n \\quad\\Longleftrightarrow\\quad\n \\chi_{\\mathrm{vest}}\\in[(1-\\tau)^2,(1+\\tau)^2].\n\\]\nThe comparison window $[0.1,10]$ is adopted about the exactly luminal\nanchor $\\chi_{\\mathrm{vest}}=1$. Its physical normalization, center\nand endpoints are not determined by the RPA resummation with\nunevaluated bare-response and coupling inputs.\nBoth endpoints fail the cap\n(\\texttt{natural\\_endpoints\\_violate\\_ligo\\_window}), while the\ncompatible interval lies strictly inside the comparison window and\ncontains unity\n(\\texttt{ligo\\_confines\\_chi\\_vest\\_within\\_natural\\_range} and\n\\texttt{chi\\_one\\_mem\\_ligo\\_window}).\nIts width is exactly $4\\tau$ and is smaller than the comparison-window\nwidth by more than fourteen orders of magnitude\n(\\texttt{ligo\\_window\\_width\\_eq} and\n\\leanref{ligo_window_width_lt_natural_range_width_by_1e14}).\nThis width comparison assigns no probability without a prior.\nThe susceptibility offsets are $-2\\tau+\\tau^2$ and\n$2\\tau+\\tau^2$; $\\tau$ bounds the speed deviation.",
+      "assessment": "Actual source-qualified asymmetric bound and conservative envelope distinguished. Nonnegative chi/fixed tau biconditional yields exact finite squared interval, nested window and surviving unity. Endpoints only excluded; width4tau/strict10^14 comparison and offsets±2tau+tau² correct; no probability without prior.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 1051,
+        "r1_line_end": 1065,
+        "r1_quote": "GW170817 multi-messenger constraint (asymmetrically\n$-3\\times 10^{-15} \\le \\Delta c/c \\le +7\\times 10^{-16}$;\nconservatively two-sided $|\\Delta c/c| \\le 3\\times\n10^{-15}$)~\\cite{Abbott2017GW170817} then \\emph{confines} that band\nrather than falsifying it: the compatible window is nested strictly\ninside $[0.1,10]$ and meets it at $\\chi_{\\mathrm{vest}} = 1$, while\nboth endpoints deviate from $c$ by $\\sim 14$ orders of magnitude\n($\\sim 7\\times 10^{14}$). The Lean\nformalisation \\texttt{GravitationalWaves.natural\\_endpoints\\_violate\\_ligo\\_window}\nplus \\texttt{vestigial\\_natural\\_range\\_violates\\_ligo} plus\n\\texttt{ligo\\_confines\\_chi\\_vest\\_within\\_natural\\_range} and the\nwidth ratio\n\\texttt{ligo\\_window\\_width\\_lt\\_natural\\_range\\_width\\_by\\_1e14}\nship the constraint at zero \\texttt{sorry}. Bundle~L1 PRL splash\nextracts this as a stand-alone four-page submission.",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "closure-forcing-offset",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 1067,
-      "line_end": 1073,
-      "quote": "The three closures, taken together, force the substrate to the ADW\ntetrad-condensation channel: the alternative emergent-gravity\nmechanisms are ruled out either structurally (gauge erasure;\nfracton diff-invariance no-go), at quantitative magnitude (Wen-ADW\ndeficit), or --- for the vestigial graviton --- conditionally, absent\na mechanism pinning $\\chi_{\\mathrm{vest}}$ to unity, which GW170817\nconfines it to within $3\\times 10^{-15}$.",
-      "verdict": "FAIL",
-      "assessment": "Absence of a mechanism selecting unity is no exclusion proof. Compatibility is finite, not a singleton; 3e-15 is the speed tolerance, not the chi offset (~6e-15). The conditional constraint cannot force ADW.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 1101,
+      "current_line_end": 1109,
+      "current_quote": "These comparisons motivate the ADW tetrad-condensation channel,\nbut the GW170817 result does not uniquely select it: the assumed\nvestigial speed law retains a finite compatible interval, including\nunity. Establishing a physical realization still requires the\nmicroscopic response normalization and range, the physical state,\na propagating tensor mode with matched matter/light reference,\nand controlled transport and frequency matching with units and\nerror bounds. The conditional scalar constraint discharges none of\nthese construction requirements.",
+      "assessment": "GW supplies no unique ADW selection. Physical response/range/state/tensor/matter/light/transport/frequency/units/error construction all retained.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 1067,
+        "r1_line_end": 1073,
+        "r1_quote": "The three closures, taken together, force the substrate to the ADW\ntetrad-condensation channel: the alternative emergent-gravity\nmechanisms are ruled out either structurally (gauge erasure;\nfracton diff-invariance no-go), at quantitative magnitude (Wen-ADW\ndeficit), or --- for the vestigial graviton --- conditionally, absent\na mechanism pinning $\\chi_{\\mathrm{vest}}$ to unity, which GW170817\nconfines it to within $3\\times 10^{-15}$.",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "crossbridge",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 1247,
-      "line_end": 1252,
-      "quote": "\\item \\textbf{D3 \\S 6 $\\leftrightarrow$ L1 (GW170817).} The\n  $\\sim 7\\times 10^{14}$ vestigial-graviton falsification is shared\n  character-for-character between D3 and L1, including the natural-range\n  parameter band and the Lean theorem name. Cross-bridge verified\n  in the Phase~7c.8 review pass.\n\\item \\textbf{D3 \\S 8 $\\leftrightarrow$ L3 (BCH four laws regime",
-      "verdict": "FAIL",
-      "assessment": "Character-for-character D3/L1 falsification and old Phase7c.8 verified claim no longer describe current D3/L1 conditional sources. Historical alignment is not present scientific acceptance.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 1283,
+      "current_line_end": 1288,
+      "current_quote": "\\item \\textbf{D3 \\S 6 $\\leftrightarrow$ L1 (GW170817).}\n  D3 and L1 use the same assumed susceptibility-speed law, adopted\n  comparison interval and finite GW-compatible interval. The endpoint\n  exclusion and interval-width results are conditional scalar constraints;\n  the physical response, tensor mode and matter reference require matching.\n\\item \\textbf{D3 \\S 8 $\\leftrightarrow$ L3 (BCH four laws regime",
+      "assessment": "D3/L1 actual assumed law, adopted window and interval agree; historical false universal quantification no longer asserted. Physical matching remains owed; copyedit fixed.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 1247,
+        "r1_line_end": 1252,
+        "r1_quote": "\\item \\textbf{D3 \\S 6 $\\leftrightarrow$ L1 (GW170817).} The\n  $\\sim 7\\times 10^{14}$ vestigial-graviton falsification is shared\n  character-for-character between D3 and L1, including the natural-range\n  parameter band and the Lean theorem name. Cross-bridge verified\n  in the Phase~7c.8 review pass.\n\\item \\textbf{D3 \\S 8 $\\leftrightarrow$ L3 (BCH four laws regime",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "crossnetwork",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 1265,
-      "line_end": 1269,
-      "quote": "The cross-bridge network closes self-consistently: D3, L1, L3, D4\nall cite the same Lean theorem names character-for-character, and\nthe substrate-identity claim of this flagship leans on the\nobservation that the cross-bridges close without an additional\nmechanism.",
-      "verdict": "FAIL",
-      "assessment": "Self-consistent network closure without another mechanism overstates this branch: physical mode/source/normalization/matter/light bridge remains open. Same theorem names do not establish physical equivalence.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 1301,
+      "current_line_end": 1306,
+      "current_quote": "The cross-bridge network records the stated mathematical connections\nbetween D3, L1, L3 and D4. Matching a theorem name is not a physical\nidentification: the L1 edge additionally needs the microscopic response\nnormalization, propagating mode and common matter/light reference.\nThese construction obligations remain part of the substrate-identity\nclaim.",
+      "assessment": "Theorem-name agreement distinguished from physical identity; original response/mode/common matter-reference obligations explicit.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 1265,
+        "r1_line_end": 1269,
+        "r1_quote": "The cross-bridge network closes self-consistently: D3, L1, L3, D4\nall cite the same Lean theorem names character-for-character, and\nthe substrate-identity claim of this flagship leans on the\nobservation that the cross-bridges close without an additional\nmechanism.",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "cleared-register-coefficient",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 1830,
-      "line_end": 1836,
-      "quote": "  \\S\\ref{sec:emergent-gravity} with Bundle~D3 \\S 2).\n\\item \\textbf{Decision Gate~E.2 (heat-kernel calibration).} The\n  heat-kernel coefficient $G_N^{a_2} = 3\\pi/(N_f\\,\\Lambda_{\\mathrm{UV}}^{2})$\n  follows from Vassilevich Eq.~(4.27)~\\cite{Vassilevich2003} with the\n  Dirac fibre trace, and is exactly one quarter of the Sakharov--Adler\n  $12\\pi/(N_f\\Lambda_{\\mathrm{UV}}^{2})$. The same coefficient propagates\n  across six observables in D3 without an additional dial.",
-      "verdict": "FAIL",
-      "assessment": "Repetition of no-extra-dial six-observable assertion; GW free-response law defeats that synthesis without additional physical matching.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 1867,
+      "current_line_end": 1874,
+      "current_quote": "  \\S\\ref{sec:emergent-gravity} with Bundle~D3 \\S 2).\n\\item \\textbf{Decision Gate~E.2 (heat-kernel calibration).} The\n  heat-kernel coefficient $G_N^{a_2} = 3\\pi/(N_f\\,\\Lambda_{\\mathrm{UV}}^{2})$\n  follows from Vassilevich Eq.~(4.27)~\\cite{Vassilevich2003} with the\n  Dirac fibre trace, and is exactly one quarter of the Sakharov--Adler\n  $12\\pi/(N_f\\Lambda_{\\mathrm{UV}}^{2})$. The same coefficient\n  enters D3's gravitational comparisons. The GW-speed statement also\n  takes a free normalized response whose physical matching remains open.",
+      "assessment": "Free-response caveat prevents heat-kernel coefficient comparison from being read as derived GW speed or physical matching.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 1830,
+        "r1_line_end": 1836,
+        "r1_quote": "  \\S\\ref{sec:emergent-gravity} with Bundle~D3 \\S 2).\n\\item \\textbf{Decision Gate~E.2 (heat-kernel calibration).} The\n  heat-kernel coefficient $G_N^{a_2} = 3\\pi/(N_f\\,\\Lambda_{\\mathrm{UV}}^{2})$\n  follows from Vassilevich Eq.~(4.27)~\\cite{Vassilevich2003} with the\n  Dirac fibre trace, and is exactly one quarter of the Sakharov--Adler\n  $12\\pi/(N_f\\Lambda_{\\mathrm{UV}}^{2})$. The same coefficient propagates\n  across six observables in D3 without an additional dial.",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "falsified-register",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 1874,
-      "line_end": 1888,
-      "quote": "\nThe substrate produces predictions in tension with observation at\n$\\geq 5\\sigma$ or Bayesian thresholds exceeding decisive at the\nfollowing locations:\n\n\\begin{itemize}\n\\item \\textbf{GW170817 vestigial-second-sound graviton.} The\n  vestigial-mode-as-graviton hypothesis (the mode is\n  Volovik's~\\cite{Volovik2024Vestigial}) is falsified at $\\sim 7\\times\n  10^{14}$ over the susceptibility natural range (D3\n  \\S\\ref{sec:emergent-gravity} with Bundle~L1 PRL splash). The\n  falsification is universal across the natural-range parameter band\n  $\\chi_{\\mathrm{vest}}\\in[0.1,10]$ (a project-adopted naturalness\n  window, not a published derivation) via Abbott et al.\\\n  $|\\Delta c/c| \\le 3\\times 10^{-15}$~\\cite{Abbott2017GW170817}.",
-      "verdict": "FAIL",
-      "assessment": "Universal natural-band falsification is mathematically false at chi=1; wrong Volovik2024 mode attribution persists; endpoint cap ratio is not sigma/Bayes evidence.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 1910,
+      "current_line_end": 1930,
+      "current_quote": "\n\\subsection{Exclusions and conditional constraints}\n\nThe following comparisons distinguish statistical exclusions from\nconditional parameter constraints. A speed-deviation/cap ratio is\nneither a Gaussian significance nor a Bayes factor:\n\n\\begin{itemize}\n\\item \\textbf{Conditional GW170817 susceptibility constraint.}\n  For the assumed law $c_{\\mathrm{GW}}=c\\sqrt{\\chi_{\\mathrm{vest}}}$,\n  the conservative symmetric cap gives\n  $\\chi_{\\mathrm{vest}}\\in[(1-\\tau)^2,(1+\\tau)^2]$ with\n  $\\tau=3\\times10^{-15}$, subject to the source-emission assumptions\n  stated in \\S\\ref{sec:emergent-gravity}~\\cite{Abbott2017GW170817}.\n  The adopted $[0.1,10]$ comparison interval contains this finite\n  compatible set, including unity. The endpoint results exclude each\n  chosen endpoint; the interval result locates the compatible interior.\n  Physical response, polarization and matter-reference\n  matching remain construction requirements.\n\\item \\textbf{Wen--ADW factor-$6000$ deficit.} The\n  perturbative-Wen extension to gravity under-predicts $G_N$ by an",
+      "assessment": "Exclusions and conditional constraints heading correctly classifies mixed list. Cap ratio distinguished from sigma/Bayes. Exact finite compatibility and chosen-endpoint proof scope preserved without asserting all other interior points are compatible.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 1874,
+        "r1_line_end": 1888,
+        "r1_quote": "\nThe substrate produces predictions in tension with observation at\n$\\geq 5\\sigma$ or Bayesian thresholds exceeding decisive at the\nfollowing locations:\n\n\\begin{itemize}\n\\item \\textbf{GW170817 vestigial-second-sound graviton.} The\n  vestigial-mode-as-graviton hypothesis (the mode is\n  Volovik's~\\cite{Volovik2024Vestigial}) is falsified at $\\sim 7\\times\n  10^{14}$ over the susceptibility natural range (D3\n  \\S\\ref{sec:emergent-gravity} with Bundle~L1 PRL splash). The\n  falsification is universal across the natural-range parameter band\n  $\\chi_{\\mathrm{vest}}\\in[0.1,10]$ (a project-adopted naturalness\n  window, not a published derivation) via Abbott et al.\\\n  $|\\Delta c/c| \\le 3\\times 10^{-15}$~\\cite{Abbott2017GW170817}.",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "REVISE"
+      }
     },
     {
       "id": "publication-tier-roster",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 2043,
-      "line_end": 2046,
-      "quote": "Tier~1 (D1--D12; twelve deep papers), Tier~2 (L1--L3; three PRL\nsplashes extracted from D2 and D3), Tier~3 (I1--I3; three\ninfrastructure papers), and Tier~4 (E1--E2; two experimental\nletters). The",
-      "verdict": "INFO",
-      "assessment": "Neutral tier roster, not a substantive speed claim. Preserve current readiness limits.",
-      "parent_refs": [
-        "L1-fix-propagation"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 2083,
+      "current_line_end": 2086,
+      "current_quote": "Tier~1 (D1--D12; twelve deep papers), Tier~2 (L1--L3; three PRL\nsplashes extracted from D2 and D3), Tier~3 (I1--I3; three\ninfrastructure papers), and Tier~4 (E1--E2; two experimental\nletters). The",
+      "assessment": "Original neutral tier roster exact; no current scientific/venue acceptance inferred.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 2043,
+        "r1_line_end": 2046,
+        "r1_quote": "Tier~1 (D1--D12; twelve deep papers), Tier~2 (L1--L3; three PRL\nsplashes extracted from D2 and D3), Tier~3 (I1--I3; three\ninfrastructure papers), and Tier~4 (E1--E2; two experimental\nletters). The",
+        "r1_verdict": "INFO",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "publication-order",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 2064,
-      "line_end": 2068,
-      "quote": "the Tier-2 PRL splashes (L1, L2, L3) as arXiv vouchers ahead of the\nTier-1 deep-paper submissions. The Tier-1 deep papers (D1--D12)\nfollow the splashes, with D3 (the heaviest at $\\sim 50$pp)\nshipped after L1 and L3 since L1 and L3 extract content from D3.\nThe Tier-3 infrastructure papers (I1, I2, I3) ship in parallel with",
-      "verdict": "INFO",
-      "assessment": "Submission-order intentions include L1/D3; not acceptance evidence. No scientific rewrite required solely because L1 appears.",
-      "parent_refs": [
-        "L1-fix-propagation"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 2104,
+      "current_line_end": 2108,
+      "current_quote": "the Tier-2 PRL splashes (L1, L2, L3) as arXiv vouchers ahead of the\nTier-1 deep-paper submissions. The Tier-1 deep papers (D1--D12)\nfollow the splashes, with D3 (the heaviest at $\\sim 50$pp)\nshipped after L1 and L3 since L1 and L3 extract content from D3.\nThe Tier-3 infrastructure papers (I1, I2, I3) ship in parallel with",
+      "assessment": "Original neutral ordering exact; strategy intent not present readiness.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 2064,
+        "r1_line_end": 2068,
+        "r1_quote": "the Tier-2 PRL splashes (L1, L2, L3) as arXiv vouchers ahead of the\nTier-1 deep-paper submissions. The Tier-1 deep papers (D1--D12)\nfollow the splashes, with D3 (the heaviest at $\\sim 50$pp)\nshipped after L1 and L3 since L1 and L3 extract content from D3.\nThe Tier-3 infrastructure papers (I1, I2, I3) ship in parallel with",
+        "r1_verdict": "INFO",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "conclusion-register",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 2226,
-      "line_end": 2233,
-      "quote": "The cleared register includes the four cleared decision gates of D3,\nthe polariton stimulated-Hawking-gain prediction of D1+E1, and the\nstrongest Phase~6m Track-C $f(R)$ candidates of D5. The falsified\nregister includes the GW170817 vestigial-graviton falsification of\nD3+L1 at $\\sim 7\\times 10^{14}$, the Wen--ADW factor-$6000$ deficit\nof D3, the abelian-MTC entropy falsifier of D3+D4, and the unanimous\n$8/8$ Phase~6m Track-B closure of D5. The structurally-blocked\nregister includes the Gibbs--Duhem obstruction theorem, the",
-      "verdict": "FAIL",
-      "assessment": "Conclusion repeats generic full identification falsification and upper endpoint cap ratio.",
-      "parent_refs": [
-        "L1-fix-propagation",
-        "review:2026-08-14-l1-stage13:L1:4.1",
-        "review:2026-08-14-l1-stage13:L1:3.1",
-        "review:2026-08-14-l1-stage13:L1:1.1",
-        "review:2026-08-14-l1-stage13:L1:3.2",
-        "review:2026-08-14-l1-stage13:L1:5.1"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 2266,
+      "current_line_end": 2274,
+      "current_quote": "The cleared register includes the four cleared decision gates of D3,\nthe polariton stimulated-Hawking-gain prediction of D1+E1, and the\nstrongest Phase~6m Track-C $f(R)$ candidates of D5. The GW170817\nsusceptibility comparison of D3 and L1 is a conditional constraint,\nwith a finite compatible interior rather than universal falsification.\nThe falsified register includes the Wen--ADW factor-$6000$ deficit\nof D3, the abelian-MTC entropy falsifier of D3+D4, and the unanimous\n$8/8$ Phase~6m Track-B closure of D5. The structurally-blocked\nregister includes the Gibbs--Duhem obstruction theorem, the",
+      "assessment": "Explicit conditional constraint with compatible interior correctly replaces universal falsification.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 2226,
+        "r1_line_end": 2233,
+        "r1_quote": "The cleared register includes the four cleared decision gates of D3,\nthe polariton stimulated-Hawking-gain prediction of D1+E1, and the\nstrongest Phase~6m Track-C $f(R)$ candidates of D5. The falsified\nregister includes the GW170817 vestigial-graviton falsification of\nD3+L1 at $\\sim 7\\times 10^{14}$, the Wen--ADW factor-$6000$ deficit\nof D3, the abelian-MTC entropy falsifier of D3+D4, and the unanimous\n$8/8$ Phase~6m Track-B closure of D5. The structurally-blocked\nregister includes the Gibbs--Duhem obstruction theorem, the",
+        "r1_verdict": "FAIL",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     },
     {
       "id": "conclusion-roster",
-      "path": "papers/F/paper_draft.tex",
-      "line_start": 2244,
-      "line_end": 2248,
-      "quote": "Per the project's strategy frame~\\cite{Roehm2026Strategy}, the 21\nbundles ship as a coherent submission package: the twelve Tier-1 deep\npapers (D1--D12) carry the full substantive content; the three Tier-2\nPRL splashes extract headline results from D3 (L1, L3) and D2 (L2);\nthe three Tier-3 infrastructure papers describe the methodology (I1),",
-      "verdict": "INFO",
-      "assessment": "Neutral program architecture linkage to L1; not by itself a claim about speed or physical closure.",
-      "parent_refs": [
-        "L1-fix-propagation"
-      ]
+      "verdict": "ACCEPT_SCOPED_SOURCE",
+      "current_path": "papers/F/paper_draft.tex",
+      "current_line_start": 2285,
+      "current_line_end": 2289,
+      "current_quote": "Per the project's strategy frame~\\cite{Roehm2026Strategy}, the 21\nbundles ship as a coherent submission package: the twelve Tier-1 deep\npapers (D1--D12) carry the full substantive content; the three Tier-2\nPRL splashes extract headline results from D3 (L1, L3) and D2 (L2);\nthe three Tier-3 infrastructure papers describe the methodology (I1),",
+      "assessment": "Original neutral architecture linkage exact; does not confer whole-program readiness.",
+      "evidence": [
+        "Actual candidate full diff and carrying-context semantic read",
+        "R1 held full primary sections/actual Lean and Python bodies; exact backing editions rehashed R3"
+      ],
+      "history": {
+        "r1_source_sha256": "77e41db051be7ebf4df88bbcb8ce3ed16d07e70d17633fcadfa5b94f9fe0a610",
+        "r1_line_start": 2244,
+        "r1_line_end": 2248,
+        "r1_quote": "Per the project's strategy frame~\\cite{Roehm2026Strategy}, the 21\nbundles ship as a coherent submission package: the twelve Tier-1 deep\npapers (D1--D12) carry the full substantive content; the three Tier-2\nPRL splashes extract headline results from D3 (L1, L3) and D2 (L2);\nthe three Tier-3 infrastructure papers describe the methodology (I1),",
+        "r1_verdict": "INFO",
+        "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      }
     }
   ],
-  "original_build_open": true,
-  "canonical_closures": 0,
-  "human_approvals": 0,
-  "native_build_or_tests_run": false,
-  "f_legacy_catalog_preserved": true,
-  "canonical_parent_reconciliation": {
-    "source": "/tmp/f-l1-canonical-existing-findings-r1.json",
-    "sha256": "3d8d7c97701b367ed6a292fcc954c39a905ce1c5b4cabd2db4357fe7f5378af4",
-    "F_nodes": 24,
-    "L1_nodes": 17,
-    "historical_parents_status": {
-      "review:2026-08-14-l1-stage13:L1:1.1": "fixed",
-      "review:2026-08-14-l1-stage13:L1:3.1": "fixed",
-      "review:2026-08-14-l1-stage13:L1:3.2": "fixed",
-      "review:2026-08-14-l1-stage13:L1:4.1": "fixed",
-      "review:2026-08-14-l1-stage13:L1:5.1": "fixed"
-    },
-    "live_ownership": "L1-fix-propagation OPEN; historical parents are references, not fresh closures or live Blocked-by dependencies",
-    "dedup": "No F-specific scientific L1 finding located; F1.11 concerns preview/count tiling, distinct from GW source/quantifier defect."
-  }
+  "scope": "Focused independent semantic source propagation only; not full F/L1 Stage10/13, project/native, render/venue, physical BUILD or human acceptance.",
+  "preservation": {
+    "four_neutral_quotes_exact": true,
+    "legacy_F_claims_byte_exact": true,
+    "citation_change_only_F_used_in": true,
+    "other11_backing_hashes_unchanged": true
+  },
+  "count_correction": "Earlier prose summaries mistakenly said15FAIL/5neutral; immutable R1 individual records actually classify16FAIL/4INFO. Full20 IDs and all dispositions unchanged.",
+  "remaining_original_build": [
+    "physical B3 response/normalization/domain/window",
+    "physical state/positive dynamics",
+    "induced-Newton baseline to physical normalized response",
+    "tensor mode/constraints/poles",
+    "common matter/light source reference",
+    "transport/Kubo/frequency/units/remainder and controlled nonempty band"
+  ],
+  "native_tests_compile_ingestion_closures_performed": false
 }

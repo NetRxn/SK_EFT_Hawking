@@ -3521,7 +3521,7 @@ CITATION_REGISTRY = {
         'inprep': False,
         'primary_source_path':
             'Lit-Search/Phase-1-and-Background/primary-sources/Volovik2026SecondSound.abstract.txt',
-        'used_in': ['papers/L1/paper_draft.tex'],
+        'used_in': ['papers/L1/paper_draft.tex', 'papers/F/paper_draft.tex'],
         'provides': [],
         'notes': (
             'Registered 2026-08-14 to close historical review:2026-08-14-l1-stage13:L1:1.1, which '
