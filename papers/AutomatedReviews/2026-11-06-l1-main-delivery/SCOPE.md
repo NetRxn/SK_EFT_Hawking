@@ -653,3 +653,26 @@ merge/publication gates, main integration and final human review remain owed.
 ROOT retains the entire L1 readiness package; Executor owns only separately
 commissioned deeper scientific construction. No fresh portfolio-wide gate
 snapshot or newly green bundle is claimed.
+
+### Protected integration prerequisite reconciliation
+
+PRIMARY_INTEGRATION_PREREQUISITES_R2.md and its JSON record a read-only lineage
+review at9505b60af and primary4fca5970. The main base is their common ancestor;
+the lines have20 and399 unique commits. The GW Lean source is already identical,
+so no missing GW proof transport is established. Primary's materially newer
+lifecycle package has eight historical anchors and ten current source/contract/
+test paths, with thirty support paths. Its branch is not a minimal transport
+target: it carries unrelated research, and33 shared changed paths diverge.
+Whole-file replacement would lose accepted publication qualifications or peer
+science. This is no license for a wholesale branch merge, cherry-pick, primary
+retarget, cache workaround or new infrastructure.
+
+Next acceptance is the existing lifecycle/native-startup prerequisite's minimal
+owned source composition and dependency review, followed by current broader/
+change-appropriate checks and protected integration. Native admission remains
+subsequent. The R2 reviewer retained its stale final continuity result for the
+expected ROOT checkpoint; it certifies lineage observations, not current whole
+composition. Reissue deliberate current continuity before integration acceptance.
+No minimal currently accepted aggregate composition or native/main green is
+claimed. ROOT continues this ordinary L1 delivery work; deeper science remains
+a separate bounded Executor assignment.
