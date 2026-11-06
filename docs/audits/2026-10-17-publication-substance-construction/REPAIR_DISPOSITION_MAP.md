@@ -35,6 +35,48 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **Actual bounded delivery full profile running; scientific scaling repair closed.**
+  [PR117](https://github.com/NetRxn/SK_EFT_Hawking/pull/117) source
+  `5a5d36fed74a83dcf4746e95b8f7673309e11d27` is clean, committed and pushed.
+  Independent R5 corrects R4: the existing standalone `verify_scope.py --merge-gate`
+  is an authorized ROOT orchestrator command, distinct from shared-slot epochs.
+  ROOT launched that unchanged profile from canonical primary, verified candidate
+  import origins and separate build paths, and holds the existing authoritative-
+  build lock. No slot, cache copy, primary retarget or controller change. The run
+  is active at this checkpoint; no full-profile PASS or new gate transition is
+  claimed. Keep this candidate frozen through the actual result, including any
+  original gate-induced artifact changes. Current local session handle is51609;
+  local invocation/output/result receipts use `/tmp/l1-full-merge-profile-r5`.
+  Source/review limits are recorded on PR117; this cumulative draft is not the
+  validation target.
+  The separately accepted D1 fixed-material scaling repair has actual original
+  Verify success, independent source/render acceptance and canonical writer
+  closure on PR117: ledger1247->1248, all old records preserved. The new finding
+  reads FIXED there; original D1 August1.1/2.4/2.8 remain OPEN. This cumulative
+  draft retains the unapplied original D1 source and does not claim that closure
+  as its own source acceptance. Larger numerical migration remains HOLD.
+
+- **L1 conditional boundary-state construction independently accepted.**
+  Normal integration preserves Executor
+  `58c3b7c7c265ef02febb10b72322eef06f2de28f` and its two independent actual-result
+  reviews. [ROOT intake](../2026-11-05-l1-physical-bridges/BOUNDARY_WEYL_JORDAN_ROOT_INTAKE.json)
+  records full personal reads/manual checks, all archive/current-input custody
+  and directly read primary passages. The result constructs the full trace-dual
+  boundary matrix/product/adjoint, original reality, conditional strict positivity
+  along a coupling ray, and complete all-test Jordan C2 response with contacts.
+  It proves neither an actual nonzero original partition point nor physical
+  microscopic metric/ordering or causal evolution; original B3/state/dynamics/
+  matter/light/transport obligations remain full-strength OPEN.
+  **Next bounded deeper commission sent to Executor:** construct an actual
+  original nonzero-Z certificate with nonzero g2 and a viable integrated metric
+  mean/nontriviality witness, using the original full measure/action/links and
+  independent prospective/result review. ROOT is not concurrently deriving that
+  deep certificate. Until accepted handoff, ROOT remains accountable; no generic
+  owner label or conditional theorem discharges it. All ordinary L1 publication,
+  Lean/Python repairs, claims/figures/consumers, reviews/gates/closure/integration
+  remain ROOT-owned. Priority unchanged.
+
+
 - **Current L1 scientific composition review and delivery boundary.**
   [PR117 review checkpoint](https://github.com/NetRxn/SK_EFT_Hawking/blob/codex/publication-l1-main-delivery-20261106/papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCIENTIFIC_INTEGRATION_R4_READBACK.json)
   preserves independent R4 and ROOT's actual five-file application feasibility
