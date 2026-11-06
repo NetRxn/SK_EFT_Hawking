@@ -35,6 +35,23 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **First exact-candidate full-suite phase measured; remainder active.**
+  At frozen PR117 source `5a5d36fed`, the unchanged full profile reports
+  **7053passed,63failed,52errors,46skipped** in26m05s. Its canonical CI phase
+  is still running under the same live handle/build lock; this is not a full-
+  profile terminal result. The
+  [phase summary](L1_FULL_PROFILE_R5_PYTEST_PHASE.txt) and
+  [diagnostic failure-cache index](L1_FULL_PROFILE_R5_PYTEST_CACHE_INDEX.json)
+  preserve actual evidence. Cache has115node IDs matching failures/errors;
+  it does not contain full tracebacks or establish independent root causes.
+  ROOT will classify/reproduce necessary failures after the profile's remaining
+  phases, including the candidate library/dependency result. Candidate project
+  oleans were initially absent, so native-dependent errors must be distinguished
+  from source defects. No failure is waived, gate relabelled or test changed.
+  Preserve controlled test mutations until their owning run completes; no reset
+  or source repair during the freeze. L1 remains lead, deeper science continues.
+
+
 - **Common-unit crossover mathematics independently accepted; application pending.**
   [Manual construction](../../../papers/AutomatedReviews/2026-11-06-d1-derived-numerals/CROSSOVER_COMMON_UNIT_CONSTRUCTION_R1.md)
   and [independent math/source review](../../../papers/AutomatedReviews/2026-11-06-d1-derived-numerals/CROSSOVER_COMMON_UNIT_REVIEW_R3.md)
