@@ -34,6 +34,43 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Active construction/recovery update — 2026-11-06 19:38 UTC.** ROOT retains the lead L1
+publication milestone. The Eq4 finite complex compensation author has committed
+only `GaussianAuxiliaryCompensation.lean` at
+[`a680ec6758713e9ee2f3d964d7fde8c892ae5ae8`](https://github.com/NetRxn/SK_EFT_Hawking/commit/a680ec6758713e9ee2f3d964d7fde8c892ae5ae8),
+verified present on remote `codex/publication-l1-compensation-source-20261106`.
+ROOT checked the exact source hash, forty distinct standard-axiom reports and
+forty corrected empty closing goals. Independent actual source/kernel review is
+ACTIVE; no absorption, native build or publication acceptance is claimed for it.
+[Author report and complete raw evidence](AUXILIARY_COMPENSATION_AUTHOR_R1.md)
+retain failed attempts and receipt disclosures. The separate actual coframe B1
+construction is ACTIVE on admitted wt2 after
+[independent prospective scope acceptance](GRASSMANN_COFRAME_SCOPE_REVIEW_R2.md).
+Its [exact original-source scope](GRASSMANN_COFRAME_SCOPE_R2.md) requires actual
+8V Grassmann generators, four anchored quarter-hops and global 4V joint
+nilpotence; this is not yet independent implementation acceptance. ROOT retains
+B2 literal/closed source-action correspondence, complete G-valued Eq7, original
+Eq9–11 and every physical B3/state/calibration/transport obligation. No
+literal/closed-action equivalence is assumed.
+
+**Standing slot recovery owner:** by explicit operator allocation, publication
+ROOT is the team's go-to for `/reset-slot`, preservation, quiescence checks,
+documented recovery and reassignment. Executor and proof workers route requests
+to ROOT; routine recovery does not require renewed operator micromanagement.
+All ADR-008 identity, custody and active-worker protections continue to apply.
+
+The clean pushed MAIN candidate `b21c206a8` remains frozen while its complete
+merge profile runs. Its actual parent pytest phase finished with **7,174 passed,
+27 failed, 14 skipped**. Compared with the prior Hermite run, the original
+Verify-command and theorem-census failures are resolved; a new Flow-page browser
+navigation timeout is present. Canonical validation and subsequent profile
+steps are still RUNNING, so this is not a terminal merge-gate result. The
+independently accepted three-value Stage10 lifecycle repair stays unapplied
+until that run finishes. The separate eleven-review-document formatting/routing
+proposal is undergoing independent classification review, including whether two
+canonical narrative-looking nodes must instead be retained as real debt. No
+closure, gate state or human verdict changes in this checkpoint.
+
 **Current resume state — 6 November 2026, 18:37 UTC.** L1 remains lead and
 owns the next delivery milestone through canonical gates/final human review.
 The cumulative branch preserves research/review history and is not a whole-branch
