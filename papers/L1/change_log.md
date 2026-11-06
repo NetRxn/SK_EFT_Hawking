@@ -71,3 +71,22 @@ oneaudit event withzeroautomaticclosures. Physical B3/state/tensor/matter/light/
 transport and original publication acceptance remain owed. Scope, full evidence,
 red corpus gates and qualification/consumer follow-through are recorded in
 papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md.
+
+
+## 2026-11-06 — Adopted comparison-window framing
+
+- Reconciled title, paragraph heading and two caption spans with the assumed
+  speed law and adopted comparison window. Preserved exact finite-interval,
+  width, endpoint and interior results and the original physical BUILD.
+- Corrected three active apex descriptions; theorem identities/dates, readiness
+  fields and all historical review summaries remain intact.
+- Independent source, actual five-page reader/render, full-catalog integrity
+  and actual-application reviews accept the bounded repair.154current units
+  retain152assessments and two fresh caption WARNs, all154predecessors/history
+  and allfourOPENblockers. Existing writer appends one audit withzeroautomatic
+  closures, seven pending candidates and unchanged human state.
+- Actual compile5pages/zerooverflows;89GWtestsPASS. Global authoring1/3PASS
+  remains limited by corpus failures. Full-stage/native/main/publication/human
+  and original scientific construction acceptance remain open.
+- Evidence: ../AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md and
+  RANGE_FRAMING_R3_EVIDENCE.zip; rejected source/metadata rounds are preserved.

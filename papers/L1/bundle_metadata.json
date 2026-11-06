@@ -58,17 +58,17 @@
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
-      "claims": "TITLE + ABSTRACT — the headline result: for nonnegative chi_vest satisfying the fixed GW170817 cap, chi_vest lies in [(1-τ)²,(1+τ)²], strictly interior to the natural range",
+      "claims": "TITLE + ABSTRACT — the headline result: for nonnegative chi_vest satisfying the fixed GW170817 cap, chi_vest lies in [(1-τ)²,(1+τ)²], strictly interior to the adopted comparison window",
       "declared": "2026-08-14"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.ligo_window_inter_natural_range_nonempty",
-      "claims": "ABSTRACT — the compatible window and the natural range intersect at chi_vest = 1; the kernel-checked refutation of the retired disjointness framing",
+      "claims": "ABSTRACT — the compatible window and the adopted comparison window intersect at chi_vest = 1; the kernel-checked refutation of the retired disjointness framing",
       "declared": "2026-08-14"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
-      "claims": "TITLE + ABSTRACT + §4 — the fine-tuning quantified: 10^14 times the compatible-window width remains smaller than the natural-range width (4τ = 1.2e-14 versus 9.9)",
+      "claims": "Under the assumed speed law and fixed GW170817 cap, 10^14 times the compatible-window width is smaller than the adopted comparison-window width (4τ = 1.2e-14 versus 9.9)",
       "declared": "2026-08-14"
     }
   ],

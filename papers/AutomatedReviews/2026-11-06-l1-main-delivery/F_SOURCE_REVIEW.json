@@ -4,7 +4,7 @@
   "original_build_open": true,
   "canonical_closures": 0,
   "human_approvals": 0,
-  "packet": "f-l1-source-candidate-review-r3.json",
+  "packet": "f-l1-source-candidate-review-r4.json",
   "required_span_ids": [
     "abstract-coefficient",
     "abstract-headline",
@@ -53,8 +53,8 @@
     "papers/F/paper_draft.tex": "e8f1e0e8b448fd8b6a3a232d10a9656cfd584bb3861900cf793eab486a0eef89",
     "papers/F/claims_review.json": "c44b08f2eef7e260d8db3361507b41c97631ddfb8a02a82f19b27f0930c308f1",
     "papers/F/bundle_metadata.json": "6dc78648a4a44f4d18ce83831d17dffa2218fc33427bccafa1007901bd537778",
-    "papers/L1/paper_draft.tex": "7859026de6486011b60af888e193e72bfd2e348f234a3d0d976a566d77952b58",
-    "papers/L1/claims_review.json": "a823553de206c8e16f8368c3d887487af8647c18628c594edef1579b6ab1dcb8",
+    "papers/L1/paper_draft.tex": "06927cc8dd7a231db93745fd07eb1a346d0595db43a92a9c7387ef20cb966b65",
+    "papers/L1/claims_review.json": "3b2ba1c1baeb036c45034bb58d42d666badbaace860e56415829400a1ca307cc",
     "papers/D3/paper_draft.tex": "32740b59d35187b869314f1c809890f1c695fb72d501afb15b4ea55a05e0aeec",
     "papers/paper25_gravitational_waves/paper_draft.tex": "760c21f1295b72cb3fd5bfc66adb09320ef9d5e65da0074215bdfa871675f2ff",
     "lean/SKEFTHawking/GravitationalWaves.lean": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
@@ -89,6 +89,11 @@
         "r1_quote": "Bundle~D3 (a single heat-kernel coefficient\n$G_N^{a_2} = 3\\pi/(N_f\\,\\Lambda_{\\mathrm{UV}}^{2})$\npropagating across six observables) also drives the SK--EFT analog-Hawking\ncontent of Bundle~D1 (across BEC, polariton, and graphene Dirac-fluid",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Extra free GW response expressly disclosed; actual speed definition has independent chi,c. No G_N-to-response matching is inferred.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -110,6 +115,11 @@
         "r1_quote": "worth of predictive register. NO-GO results are reported as\nfirst-class predictive content rather than absences: GW170817 falsifies\nthe vestigial-second-sound graviton at $\\sim 7\\times 10^{14}$; an\nabelian-MTC falsifier closes the Bekenstein--Hawking entropy with the",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Assumed-law qualifier, chosen endpoints and finite compatible interval accurately replace generic graviton falsification.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -131,6 +141,11 @@
         "r1_quote": "through black-hole thermodynamics (Bundle~D3 with PRL splashes L1 on\nGW170817 and L3 on the BCH four laws), topological quantum-computation",
         "r1_verdict": "INFO",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Original neutral program link exact; submission intent is not physical or venue acceptance.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -152,6 +167,11 @@
         "r1_quote": "\\item \\textbf{Tier 2 (3 PRL splashes):} Bundle~L1 (GW170817 falsifies\n  the vestigial-second-sound graviton), Bundle~L2 (three SM fermion\n  generations from modular invariance), Bundle~L3 (BCH four laws by\n  regime).",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Roster names conditional susceptibility constraint, not universal identification falsification.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -173,6 +193,11 @@
         "r1_quote": "\\item \\textbf{Falsified.} The substrate produces a quantitative\n  prediction in tension with observation at $\\geq 5\\sigma$ or\n  Bayes-factor $|\\log\\mathcal{B}| \\geq 5$ (Jeffreys-decisive). Examples\n  include the GW170817 vestigial-graviton falsification at $\\sim\n  7\\times 10^{14}$ (L1 with D3 \\S\\ref{sec:emergent-gravity}), the\n  Wen--ADW factor-$6000$ deficit closing the\n  emergent-$U(1)$-string-net-extended-to-gravity channel of Wen",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. GW is expressly distinguished from sigma/Bayes falsification and its later category heading now agrees.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -194,6 +219,11 @@
         "r1_quote": "theorem (\\texttt{GaugeErasure.gauge\\_erasure},\n\\texttt{GaugeErasure.u1\\_survival}) is the first of three\npredictive-boundary cuts that force the ADW substrate route to the\ntetrad-condensation channel; the other two are the perturbative\nWen-ADW deficit and the GW170817 vestigial-graviton falsification\n(\\S\\ref{sec:emergent-gravity}).",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Motivation replaces unique-channel forcing; surviving interior and absence of selection theorem explicit.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -215,6 +245,11 @@
         "r1_quote": "content from the substrate-condensation mechanism through the\nBekenstein--Hawking entropy and the BCH four laws. The two PRL\nsplashes Bundle~L1 (GW170817 falsifies the vestigial-second-sound\ngraviton; \\cite{Abbott2017GW170817}) and Bundle~L3 (BCH four laws\nby regime;~\\cite{BardeenCarterHawking1973}) extract headline\nresults from D3 that ship as four-page PRL submissions ahead of the\nD3 deep-paper submission per the strategy frame~\\cite{Roehm2026Strategy}.",
         "r1_verdict": "FAIL",
         "r2_verdict": "REVISE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Intended PRL-letter strategy now preserves physical construction, venue qualification and final review; no current four-page qualification.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -236,6 +271,11 @@
         "r1_quote": "The substrate's emergent-gravity content propagates across six\nobservables through a \\emph{single} closed-form coefficient\n\\begin{equation}\n  G_N^{a_2} \\;=\\; \\frac{3\\pi}{N_f\\,\\Lambda_{\\mathrm{UV}}^{2}}\\,,\n\\end{equation}\nderived from the heat-kernel $a_2$ coefficient of an $N_f$-flavour\nDirac fermion bundle on the substrate~\\cite{Sakharov1968,Adler1980,\nVassilevich2003} (D3 \\S 17;\n\\texttt{HeatKernelExpansion.G\\_N\\_from\\_a2\\_eq\\_quarter\\_G\\_N\\_sakharov}).\nThis is exactly one quarter of the Sakharov--Adler\n$G_N^{\\mathrm{Sak}} = 12\\pi/(N_f\\Lambda_{\\mathrm{UV}}^{2})$ that Phase\n6a.1 states independently; the factor is the Dirac index trace\n$\\operatorname{tr}_V\\mathbb{1} = 4$ carried by Vassilevich Eq.~(4.27),\nand the named theorem is the exact ratio rather than an equality. The\nsame coefficient propagates without an additional dial across the six\nobservables of D3 (the BCH four\nlaws regime-partition mass; the Bekenstein--Hawking entropy\nprefactor; the cosmological-constant overshoot ratio; the\nEinstein--Cartan torsion at the cosmological background; the\ngravitational-wave propagation speed; the Stelle higher-curvature\nceilings).",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Separate free normalized susceptibility is explicit; physical response matching to induced Newton baseline remains required, and equal comparison ranges supply no bridge.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -257,6 +297,11 @@
         "r1_quote": "\\subsection{Three closures forcing ADW}\n\nThree independent closures force the substrate to the ADW\ntetrad-condensation channel rather than alternative emergent-gravity\nmechanisms. (D3 \\S 4 originally enumerates the closure triad as\nWen + fracton + GW170817; F lifts the gauge-erasure prerequisite\nof D3 \\S 3 into the closure list as the structural pre-condition for\nthe substrate-identity claim, and handles the fracton diff-invariance\nno-go separately as a structurally-blocked register entry in\n\\S\\ref{sec:substrate-register}.)",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Mixed scopes and absence of unique physical ADW selection are explicit; historical closure-list origin does not override this restriction.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -278,6 +323,11 @@
         "r1_quote": "\\paragraph{Closure 3: GW170817 vestigial-graviton constraint (D3\n\\S 6 with Bundle~L1).} The Volovik vestigial-second-sound\nmode~\\cite{Volovik2024Vestigial} is a candidate for the substrate's\ngraviton. Carried onto our substrate, the identification makes the\npropagation speed depend on the natural-range parameter band\n$\\chi_{\\mathrm{vest}}\\in[0.1,10]$ (a project-adopted order-unity\nnaturalness window about the random-phase-approximation\nbubble-integral scale, a modeling choice of this project rather than\na published derivation). The",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. 2024 quartet metric order and2026 de Sitter luminal second sound/open interpretation correctly separated. Actual held full §§III/IV do not derive substrate susceptibility law or tensor/matter bridge.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -299,6 +349,11 @@
         "r1_quote": "GW170817 multi-messenger constraint (asymmetrically\n$-3\\times 10^{-15} \\le \\Delta c/c \\le +7\\times 10^{-16}$;\nconservatively two-sided $|\\Delta c/c| \\le 3\\times\n10^{-15}$)~\\cite{Abbott2017GW170817} then \\emph{confines} that band\nrather than falsifying it: the compatible window is nested strictly\ninside $[0.1,10]$ and meets it at $\\chi_{\\mathrm{vest}} = 1$, while\nboth endpoints deviate from $c$ by $\\sim 14$ orders of magnitude\n($\\sim 7\\times 10^{14}$). The Lean\nformalisation \\texttt{GravitationalWaves.natural\\_endpoints\\_violate\\_ligo\\_window}\nplus \\texttt{vestigial\\_natural\\_range\\_violates\\_ligo} plus\n\\texttt{ligo\\_confines\\_chi\\_vest\\_within\\_natural\\_range} and the\nwidth ratio\n\\texttt{ligo\\_window\\_width\\_lt\\_natural\\_range\\_width\\_by\\_1e14}\nship the constraint at zero \\texttt{sorry}. Bundle~L1 PRL splash\nextracts this as a stand-alone four-page submission.",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Actual source-qualified asymmetric bound and conservative envelope distinguished. Nonnegative chi/fixed tau biconditional yields exact finite squared interval, nested window and surviving unity. Endpoints only excluded; width4tau/strict10^14 comparison and offsets±2tau+tau² correct; no probability without prior.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -320,6 +375,11 @@
         "r1_quote": "The three closures, taken together, force the substrate to the ADW\ntetrad-condensation channel: the alternative emergent-gravity\nmechanisms are ruled out either structurally (gauge erasure;\nfracton diff-invariance no-go), at quantitative magnitude (Wen-ADW\ndeficit), or --- for the vestigial graviton --- conditionally, absent\na mechanism pinning $\\chi_{\\mathrm{vest}}$ to unity, which GW170817\nconfines it to within $3\\times 10^{-15}$.",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. GW supplies no unique ADW selection. Physical response/range/state/tensor/matter/light/transport/frequency/units/error construction all retained.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -341,6 +401,11 @@
         "r1_quote": "\\item \\textbf{D3 \\S 6 $\\leftrightarrow$ L1 (GW170817).} The\n  $\\sim 7\\times 10^{14}$ vestigial-graviton falsification is shared\n  character-for-character between D3 and L1, including the natural-range\n  parameter band and the Lean theorem name. Cross-bridge verified\n  in the Phase~7c.8 review pass.\n\\item \\textbf{D3 \\S 8 $\\leftrightarrow$ L3 (BCH four laws regime",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. D3/L1 actual assumed law, adopted window and interval agree; historical false universal quantification no longer asserted. Physical matching remains owed; copyedit fixed.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -362,6 +427,11 @@
         "r1_quote": "The cross-bridge network closes self-consistently: D3, L1, L3, D4\nall cite the same Lean theorem names character-for-character, and\nthe substrate-identity claim of this flagship leans on the\nobservation that the cross-bridges close without an additional\nmechanism.",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Theorem-name agreement distinguished from physical identity; original response/mode/common matter-reference obligations explicit.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -383,6 +453,11 @@
         "r1_quote": "  \\S\\ref{sec:emergent-gravity} with Bundle~D3 \\S 2).\n\\item \\textbf{Decision Gate~E.2 (heat-kernel calibration).} The\n  heat-kernel coefficient $G_N^{a_2} = 3\\pi/(N_f\\,\\Lambda_{\\mathrm{UV}}^{2})$\n  follows from Vassilevich Eq.~(4.27)~\\cite{Vassilevich2003} with the\n  Dirac fibre trace, and is exactly one quarter of the Sakharov--Adler\n  $12\\pi/(N_f\\Lambda_{\\mathrm{UV}}^{2})$. The same coefficient propagates\n  across six observables in D3 without an additional dial.",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Free-response caveat prevents heat-kernel coefficient comparison from being read as derived GW speed or physical matching.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -404,6 +479,11 @@
         "r1_quote": "\nThe substrate produces predictions in tension with observation at\n$\\geq 5\\sigma$ or Bayesian thresholds exceeding decisive at the\nfollowing locations:\n\n\\begin{itemize}\n\\item \\textbf{GW170817 vestigial-second-sound graviton.} The\n  vestigial-mode-as-graviton hypothesis (the mode is\n  Volovik's~\\cite{Volovik2024Vestigial}) is falsified at $\\sim 7\\times\n  10^{14}$ over the susceptibility natural range (D3\n  \\S\\ref{sec:emergent-gravity} with Bundle~L1 PRL splash). The\n  falsification is universal across the natural-range parameter band\n  $\\chi_{\\mathrm{vest}}\\in[0.1,10]$ (a project-adopted naturalness\n  window, not a published derivation) via Abbott et al.\\\n  $|\\Delta c/c| \\le 3\\times 10^{-15}$~\\cite{Abbott2017GW170817}.",
         "r1_verdict": "FAIL",
         "r2_verdict": "REVISE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Exclusions and conditional constraints heading correctly classifies mixed list. Cap ratio distinguished from sigma/Bayes. Exact finite compatibility and chosen-endpoint proof scope preserved without asserting all other interior points are compatible.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -425,6 +505,11 @@
         "r1_quote": "Tier~1 (D1--D12; twelve deep papers), Tier~2 (L1--L3; three PRL\nsplashes extracted from D2 and D3), Tier~3 (I1--I3; three\ninfrastructure papers), and Tier~4 (E1--E2; two experimental\nletters). The",
         "r1_verdict": "INFO",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Original neutral tier roster exact; no current scientific/venue acceptance inferred.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -446,6 +531,11 @@
         "r1_quote": "the Tier-2 PRL splashes (L1, L2, L3) as arXiv vouchers ahead of the\nTier-1 deep-paper submissions. The Tier-1 deep papers (D1--D12)\nfollow the splashes, with D3 (the heaviest at $\\sim 50$pp)\nshipped after L1 and L3 since L1 and L3 extract content from D3.\nThe Tier-3 infrastructure papers (I1, I2, I3) ship in parallel with",
         "r1_verdict": "INFO",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Original neutral ordering exact; strategy intent not present readiness.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -467,6 +557,11 @@
         "r1_quote": "The cleared register includes the four cleared decision gates of D3,\nthe polariton stimulated-Hawking-gain prediction of D1+E1, and the\nstrongest Phase~6m Track-C $f(R)$ candidates of D5. The falsified\nregister includes the GW170817 vestigial-graviton falsification of\nD3+L1 at $\\sim 7\\times 10^{14}$, the Wen--ADW factor-$6000$ deficit\nof D3, the abelian-MTC entropy falsifier of D3+D4, and the unanimous\n$8/8$ Phase~6m Track-B closure of D5. The structurally-blocked\nregister includes the Gibbs--Duhem obstruction theorem, the",
         "r1_verdict": "FAIL",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Explicit conditional constraint with compatible interior correctly replaces universal falsification.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     },
     {
@@ -488,10 +583,15 @@
         "r1_quote": "Per the project's strategy frame~\\cite{Roehm2026Strategy}, the 21\nbundles ship as a coherent submission package: the twelve Tier-1 deep\npapers (D1--D12) carry the full substantive content; the three Tier-2\nPRL splashes extract headline results from D3 (L1, L3) and D2 (L2);\nthe three Tier-3 infrastructure papers describe the methodology (I1),",
         "r1_verdict": "INFO",
         "r2_verdict": "ACCEPT_SCOPED_SOURCE"
+      },
+      "dependency_semantic_review_r4": {
+        "verdict": "ACCEPT_SCOPED_SOURCE",
+        "assessment": "Reconciled this actual unchanged F passage with current L1 title/heading/adopted-window caption, actual canonical154-unit catalog and3active apex claims. Original neutral architecture linkage exact; does not confer whole-program readiness.",
+        "new_dependency_effect": "Changed L1 framing reinforces rather than alters assumed scalar law, chosen comparison window, finite compatibility and full physical construction boundaries. Catalog retains visual partial-chain WARN and original4OPEN blocker objects; F passage does not consume them as physics or render acceptance."
       }
     }
   ],
-  "scope": "Focused independent semantic source propagation only; not full F/L1 Stage10/13, project/native, render/venue, physical BUILD or human acceptance.",
+  "scope": "R4 bounded independent dependency-semantic refresh for all20 unchanged F spans against actual changed L1 source/catalog/3active metadata claims. R3 actual F source review retained; no new whole-F review, test/render/native/project/physics acceptance.",
   "preservation": {
     "four_neutral_quotes_exact": true,
     "legacy_F_claims_byte_exact": true,
@@ -507,5 +607,47 @@
     "common matter/light source reference",
     "transport/Kubo/frequency/units/remainder and controlled nonempty band"
   ],
-  "native_tests_compile_ingestion_closures_performed": false
+  "native_tests_compile_ingestion_closures_performed": false,
+  "review_date": "2026-11-06T05:07:06.832103+00:00",
+  "additional_dependency_hashes": {
+    "papers/L1/bundle_metadata.json": "9b1c3278da2bf706d3de6bc805eb21d69ba37f6b9bc5487f288a5cf8d1513993"
+  },
+  "dependency_refresh_r4": {
+    "prior_review_json": {
+      "path": "/tmp/f-l1-source-review-r3.json",
+      "sha256": "3cd5cd5aaaf250a093fd9594c01bee7540b11fdc3d1cdea02e2ce3d439424f78"
+    },
+    "prior_review_md": {
+      "path": "/tmp/f-l1-source-review-r3.md",
+      "sha256": "7fa4c271fbbc217a08a33e569e2f9a67867f8834d9c31b2d5ba63503152d87f5"
+    },
+    "prior_backing_hashes": {
+      "papers/F/paper_draft.tex": "e8f1e0e8b448fd8b6a3a232d10a9656cfd584bb3861900cf793eab486a0eef89",
+      "papers/F/claims_review.json": "c44b08f2eef7e260d8db3361507b41c97631ddfb8a02a82f19b27f0930c308f1",
+      "papers/F/bundle_metadata.json": "6dc78648a4a44f4d18ce83831d17dffa2218fc33427bccafa1007901bd537778",
+      "papers/L1/paper_draft.tex": "7859026de6486011b60af888e193e72bfd2e348f234a3d0d976a566d77952b58",
+      "papers/L1/claims_review.json": "a823553de206c8e16f8368c3d887487af8647c18628c594edef1579b6ab1dcb8",
+      "papers/D3/paper_draft.tex": "32740b59d35187b869314f1c809890f1c695fb72d501afb15b4ea55a05e0aeec",
+      "papers/paper25_gravitational_waves/paper_draft.tex": "760c21f1295b72cb3fd5bfc66adb09320ef9d5e65da0074215bdfa871675f2ff",
+      "lean/SKEFTHawking/GravitationalWaves.lean": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
+      "lean/SKEFTHawking/VestigialSusceptibility.lean": "cf5a4584ad51f44a232c7da2d4fe9300ea14c322a416b2843e7ef3c2032bf721",
+      "src/core/formulas.py": "ef3e76f28ab0bcad83311ba029b1a8fb19fd2cb161e6186d161ccf7ccf7cb836",
+      "src/core/provenance.py": "301d9db0be7404cb44834233eb7847d2eee3a14283298abcb6ddab11057b5983",
+      "src/core/constants.py": "aa841158ab58e087b400922ceeefef9d42a72f98882f55d6f0d8da7e740765e5",
+      "src/core/citations.py": "0d9283a1bcbdfbe1cc7b6a841c59aa55ab16154b592a1dfdada301aa5de7f37d"
+    },
+    "changed_backings": [
+      "papers/L1/paper_draft.tex",
+      "papers/L1/claims_review.json"
+    ],
+    "unchanged_backings": 11,
+    "L1_catalog_exact_independently_reviewed_proposal": true,
+    "all4original_open_blockers_exact": true,
+    "caption_WARN_ids": [
+      "sentence:L1:formal-setup-and-result:a8427f68",
+      "sentence:L1:formal-setup-and-result:aeb03a12"
+    ],
+    "semantic_disposition": "Title/heading/caption remove unsupported natural-range derivation and exact one-part title implication while retaining the same conditional scalar equation and interval.3active apex descriptions identify adopted comparison window, chi1 witness and fixed-cap strict benchmark inequality without false title/appendix attribution. Full154catalog preserves152assessments and2captionWARN; historical records/rejection evidence are preserved. Therefore F no-extra-dial/source/quantifier/statistical/synthesis caveats remain scientifically consistent and need no F source change.",
+    "closure_boundary": "This review performs0canonical closures and grants0human approvals; prior closure history/anchors untouched. Original full physical BUILD remains open."
+  }
 }

@@ -343,3 +343,59 @@ appended; Verify still exits0 afterward.
 [F closure readback](F_PROPAGATION_CLOSURE_R3.json) preserves the exact command,
 writer output and producer row. Aggregate L1 propagation and all original
 physical BUILDs, whole-stage/main/publication/human acceptance remain OPEN.
+
+
+## L1 title, heading and caption: accepted canonical framing checkpoint
+
+The title now states finite susceptibility confinement under an assumed speed
+law. The paragraph heading and caption consistently identify an adopted
+comparison window. The exact interval, width, endpoint and interior results
+remain unchanged. Three active apex claim strings receive the same scoped
+correction; all declaration identities/dates and historical review summaries
+remain intact. No scientific charter or original physical BUILD is reduced.
+
+Independent source R3 and reader/catalog R2 ACCEPT the actual source and
+metadata. The reader directly inspected all five pages and compared actual
+figure image streams against the baseline; the figure is unchanged. Actual
+canonical compile exits0:5pages,zerooverflows/TeXerrors/unresolvedreferences/
+droppedoptions. Actual GW tests89PASS. Global authoring gates remain1/3PASS: 
+length measures3manuscripts,18UNMEASURED andoneunderflooradvisory; corpus dash
+and reader-voice failures remain. This is no new broad/native qualification.
+
+The existing canonical writer validates and ingests the independently reviewed
+154unit catalog. Two caption units have new source-backed WARN records;152
+assessments are preserved outside current position fields. All154full prior
+records, earlier histories and four original OPEN blocker objects remain
+exact. Independent actual-application review ACCEPTS byte identity to the
+reviewed proposal, old audit prefix plus one re_audit event, unchanged human
+state, zero tombstones/automatic closures and seven pending candidates. Titles
+and headings have explicit source/reader review rather than invented sentence
+coverage. This is not a fresh154unit scientific-backing acceptance.
+
+Independent F R4 reconciles all20accepted F spans against the actual changed
+L1 dependencies,13backing hashes andthreefullprimaryPDFpins. The declared F
+binding Verify again exits0. Earlier F source/rejected/accepted reports and
+its original closure anchor remain historical; no new closure is appended.
+[Readback](RANGE_FRAMING_R3_READBACK.json) and RANGE_FRAMING_R3_EVIDENCE.zip
+preserve preimages,currentPDF/source/catalog,allreviewrounds,actualwriter/
+compile/test/gate/verification receipts and inspected pages.
+
+Original B3 response/normalization/domain/window, physical state/tensor/matter/
+light, G_N-response, transport/frequency/units/remainder and controlled-band
+BUILD remain OPEN. Aggregate L1 fix propagation, full-stage/native/main/venue/
+publication/human acceptance remain OPEN; no newly green bundle is claimed.
+Known remaining documentary propagation includes PAPER_STRATEGY's older
+universal-falsification headline at its opening and D3 content charter.
+Reconcile current-state descriptions without silently deleting original
+scientific obligations or treating a false universal inference as a buildable
+theorem. Existing L1-fix-propagation remains the owning task.
+
+Next main-qualification package reuses the independently reviewed citation
+identity/bibliography delta8b6da1c2f, preserving current L1 registry/constants
+and D3 content. Exact donor comparison and scope limits are archived; no new
+implementation or donor runtime/closure acceptance is imported. Managed-path
+6e and source-register5b remain distinct reuse candidates. Corpus custody,
+actual source composition, appropriate existing validation and independent
+review must qualify delivery. Executor continues the bounded original-model
+nonregular boundary-constraint/quantization research design, separate from
+ROOT's entire ordinary L1 publication ownership.
