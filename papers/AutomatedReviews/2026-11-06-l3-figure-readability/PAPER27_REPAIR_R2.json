@@ -1,0 +1,32 @@
+{
+  "source_preimage": "39cddf7586d4828991a27f0b1803b6256af5a65fbdb32efb45ae0a92fbc063ba",
+  "source_postimage": "9110d98bbe4a348883c2e6d9285ac722b9003fdd621b0c0b663b3e5fffa8dede",
+  "archive_sha256": "16f0779b2f04ac4d8c31e7b97f04555b8e44685a0efdfabe6739bf53006b49a9",
+  "members": {
+    "publication-paper27-source-proposal-r1.patch": "37112831c31bf15f467cb7f6856ef65b79148719af321d4b72ad1917398c1c35",
+    "publication-paper27-source-proposal-r1.md": "7ab3c157888b26dd0d89816b7b035ca3fafce6bf28a22f2df5978dc0dc121d28",
+    "publication-paper27-source-proposal-r1.json": "ecb51c2c6b596523b58e57438c8b87fa03b00d9c82623fd60c9a6237c902bf39",
+    "publication-paper27-source-proposal-r2.patch": "beb8c65907913b790ec571cf6a3c91fc8aff1d55f15fbe501db959134825a013",
+    "publication-paper27-source-proposal-r2.md": "f31d87e67476ca87204e723aa157c7aa8661fcc5ccd829ecdb0d26a461ced33c",
+    "publication-paper27-source-proposal-r2.json": "13551b4c630c7a4fee5959eb8f99c08f3b285b89a8ac547bd21371d736ae127c",
+    "publication-paper27-source-review-r1.md": "a117646ebbe7491d2653d6e75b932a89642b758d1b5d92999a53d0fa708ed12f",
+    "publication-paper27-source-review-r1.json": "70a42daf236f214ec2a64b797ee40f996b3a9e6de4821392b25b9fd12ec4fe9d",
+    "publication-paper27-source-review-r2.md": "625734a7cfdcbb6a4ce57b1d7a56aa6a4ec7eac90034d6c6595d1c1d989f4787",
+    "publication-paper27-source-review-r2.json": "c3f2952cb8959e004ddb1f3c330dd9aa081bb849fcbebc92b59c28e26412b338",
+    "publication-paper27-render-review-r2.md": "34e78e7050a3b957472738ccaa0c0244ca7af603258c6fa28b0ecf88087add8d",
+    "publication-paper27-render-review-r2.json": "d766eb899a1941febfbb7f44b1184e8212ebf99e09c0e41d9d4aa27684c1be37",
+    "publication-paper27-compile-r2.json": "015b1d008b6ed3e2f6a42a6b3d422c9e01822f78c391a44f29c2799cad2d82a2"
+  },
+  "actual_compile": {
+    "source_sha256": "9110d98bbe4a348883c2e6d9285ac722b9003fdd621b0c0b663b3e5fffa8dede",
+    "passed": true,
+    "report": "paper27_bh_thermodynamics_four_laws: OK  pages=7 overfull=0 tex_errors=0 unresolved_refs_in_pdf=0 dropped_class_opts=0\n    artifacts kept: /var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/skeft-paper27_bh_thermodynamics_four_laws-2ztlzu7f",
+    "pages": 7,
+    "pdf_sha256": "68de6eeb3a032fd9fd89a63f4824ffb01d293f0cd6cd24fd95eac6fe25430ee9",
+    "figure_sha256": "c1e0ec9f6db1321e620b11eeeaf62e1ddb1a69fdab093329b81f416d00d143fe",
+    "scope": "Actual canonical compilation only; fresh independent all-page visual acceptance required"
+  },
+  "source_verdict": "ACCEPT_SOURCE_COMPOSITION_ONLY after R1 REVISE and required attribution-echo correction",
+  "visual_verdict": "ACCEPT_SCOPED actual all7pages; nonfatal warnings retained",
+  "original_physical_BUILD": "OPEN; accurate correction is not construction or publication acceptance"
+}
