@@ -1,12 +1,12 @@
 {
-  "generated": "2026-11-06T12:40:46.928287",
+  "generated": "2026-11-06T14:15:24.481601",
   "lean_deps_source": "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 41126,
-    "theorems_total": 22919,
-    "theorems_substantive": 22893,
+    "total_declarations": 41294,
+    "theorems_total": 23008,
+    "theorems_substantive": 22982,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 22826,
+    "theorems_kernel_substantive": 22915,
     "theorems_tracked_vacuity_debt": 67,
     "theorems_vacuity_baseline": 47,
     "theorems_vacuous_proxy": 5,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 2051,
+    "modules": 2053,
     "module_names": [
       "SKEFTHawking.A1Algebra",
       "SKEFTHawking.A1Exactness",
@@ -25,6 +25,8 @@
       "SKEFTHawking.A1Resolution",
       "SKEFTHawking.A1Ring",
       "SKEFTHawking.ADMFormalism",
+      "SKEFTHawking.ADW.FiniteGrassmannCoframe",
+      "SKEFTHawking.ADW.GaussianAuxiliaryCompensation",
       "SKEFTHawking.ADW.GaussianAuxiliaryComplex",
       "SKEFTHawking.ADW.GaussianPolynomialAffine",
       "SKEFTHawking.ADW.GaussianPolynomialHermite",
@@ -2069,9 +2071,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12913,
-    "structures": 480,
-    "instances": 943,
+    "definitions": 12961,
+    "structures": 481,
+    "instances": 947,
     "inductives": 101,
     "native_decide_decl_closure": 530,
     "native_decide_clusters": {
