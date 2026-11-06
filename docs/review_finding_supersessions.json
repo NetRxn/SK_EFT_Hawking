@@ -10458,6 +10458,21 @@
         "enforced": true,
         "run_at": "2026-11-06"
       }
+    },
+    {
+      "finding_id": "review:2026-11-06-d1-derived-numerals:D1:1.1",
+      "status": "fixed",
+      "evidence": "Independent scientific R1 and applied-result R2 accept the corrected fixed-material Gamma quadratic versus delta_diss linear scaling, inverse ratio and background-sweep caveat. Original declared Verify independently passes; actual20page compile and inspectedpage11 retained. Wider numerical migration and original physical BUILD remain OPEN.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-06-d1-derived-numerals/SCALING_APPLICATION_REVIEW_R2.md",
+      "date": "2026-11-06",
+      "commit": "8189530ea2380fa73546cf3702a6073acb3b5374",
+      "verified_by": {
+        "command": "python3 -c 'from pathlib import Path; import math; from src.core.transonic_background import heidelberg_K39; from src.core.formulas import beliaev_damping_rate, first_order_correction; q=heidelberg_K39(); a=beliaev_damping_rate(q.density_upstream,q.scattering_length,1.,q.sound_speed_upstream); b=beliaev_damping_rate(q.density_upstream,q.scattering_length,2.,q.sound_speed_upstream); assert math.isclose(b/a,4.) and math.isclose(first_order_correction(b,2.)/first_order_correction(a,1.),2.); s=\" \".join(Path(\"papers/D1/paper_draft.tex\").read_text().split()); t=s[s.index(\"The condensate rows\"):]; t=t.split(chr(92)+\"subsection\",1)[0]; assert \"their ratio is independent\" not in t and \"decreases inversely\" in t, \"D1 hierarchy prose contradicts the fixed-material canonical scaling\"'",
+        "declared": "python3 -c 'from pathlib import Path; import math; from src.core.transonic_background import heidelberg_K39; from src.core.formulas import beliaev_damping_rate, first_order_correction; q=heidelberg_K39(); a=beliaev_damping_rate(q.density_upstream,q.scattering_length,1.,q.sound_speed_upstream); b=beliaev_damping_rate(q.density_upstream,q.scattering_length,2.,q.sound_speed_upstream); assert math.isclose(b/a,4.) and math.isclose(first_order_correction(b,2.)/first_order_correction(a,1.),2.); s=\" \".join(Path(\"papers/D1/paper_draft.tex\").read_text().split()); t=s[s.index(\"The condensate rows\"):]; t=t.split(chr(92)+\"subsection\",1)[0]; assert \"their ratio is independent\" not in t and \"decreases inversely\" in t, \"D1 hierarchy prose contradicts the fixed-material canonical scaling\"'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
     }
   ]
 }

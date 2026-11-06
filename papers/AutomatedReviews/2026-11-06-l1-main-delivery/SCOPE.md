@@ -776,3 +776,29 @@ ROOT-owned. ROOT requested current protected-slot/unabsorbed-work ownership from
 Executor, without granting or changing any slot or transferring ordinary L1 work.
 No new scientific, canonical-finding, native/fullgraph/main or human acceptance
 follows from this source-review checkpoint. Original physical BUILD remains owed.
+
+
+### Existing standalone merge profile: R5 authority correction
+
+EXISTING_MERGE_PROFILE_AUTHORITY_R5.md/.json correct R4's overly broad route
+limitation. ROOT, acting as the primary orchestrator, may execute the unchanged
+candidate verify_scope.py --merge-gate as standalone exact-source validation.
+It selects its own script repository; it neither publishes a shared-slot epoch
+nor acquires/prepares a slot. Existing actor, serialized build ownership and
+source/cache/dependency-isolation requirements apply. No canonical branch move,
+controller import or new qualification branch is required for this operation.
+ROOT will use the existing authoritative-build lock and the existing Python
+environment without synchronization, preserving canonical primary and slots.
+A measured full-profile result remains distinct from original physical BUILD,
+shared native worker admission, Stage13, protected main and human publication.
+
+The contained D1 enabler now includes an independently accepted algebraic repair
+at8189530ea: quadratic damping rate, linear fractional dissipative correction,
+inverse ratio and recomputed-background sweep qualification. Original declared
+Verify passes independently and through both existing writer calls. Canonical
+reader reports the new finding FIXED; ledger1247->1248 preserves every old row.
+The original August D1 crossover1.1, reduction2.4 and velocity2.8 remain OPEN.
+The wider generated-number migration remains HOLD; no literal ceiling change,
+physical derivation or whole-paper acceptance follows. Current20page compile
+and inspectedpage11 support the narrow repair; fifteen other overfull boxes
+remain, as documented in its independent application review and evidence.
