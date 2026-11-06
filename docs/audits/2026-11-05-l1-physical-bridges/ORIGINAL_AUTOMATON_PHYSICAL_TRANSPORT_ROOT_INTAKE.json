@@ -1,0 +1,25 @@
+{
+  "source_commit": "bc3da85008f7c4a2f988c60e31cb81ea332cffcd",
+  "scope": "ROOT accepts scoped manual transport failures and derived quotient/source/C2 conditions, not physical state or original full BUILD completion.",
+  "root_direct_reads": [
+    "full actual result",
+    "full mathematics RESULT review",
+    "full original-source RESULT review",
+    "actual held2211.09002v2 II/III quartet-domain/microscopic updating,IV53-55 corrections and VI limits",
+    "actual held2203.14081v2 H19-H23 insertion/inverse/observable construction"
+  ],
+  "outer20_crc_and_hashes": true,
+  "seven_frozen_canonical_copies_exact": true,
+  "nine_current_accepted_inputs_exact": true,
+  "nested18_and16_crc_and_hashes": true,
+  "six_actual_held_primary_PDF_pins_verified": true,
+  "manual_cross_checks": [
+    "BC reorder sign and positive meson coefficient",
+    "Clifford determinant coefficient12 and degree protection",
+    "quotient injection forces spatial nilpotence only under exact prescribed transport",
+    "symmetric invariant-domain nilpotence and nonHermitian loophole",
+    "mixed derivative order and commutator sign"
+  ],
+  "original_full_physics_open": true,
+  "no_native_formalization_or_execution_claimed": true
+}

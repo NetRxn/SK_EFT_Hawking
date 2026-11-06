@@ -35,6 +35,29 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **L1 ownership reaffirmed; original-automaton result integrated for scoped intake.**
+  ROOT retains the entire L1 publication package, ordinary Lean/Python repair,
+  manuscript, claims, figures, consumers, reviews, gates and qualified integration.
+  Executor owns only specifically commissioned deeper scientific constructions;
+  it does not inherit the remaining L1 bundle. The independently reviewed result
+  `bc3da85008f7c4a2f988c60e31cb81ea332cffcd` was normally merged at
+  `def191691` without transferring publication ownership. The
+  [ROOT intake](../2026-11-05-l1-physical-bridges/ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT_ROOT_INTAKE.json)
+  preserves the accepted bounded manual transport failures and quotient/source/C2
+  conditions, original-source reads and custody checks. It establishes neither
+  an original physical state nor completion of B3, tensor/matter or transport.
+  Executor continues the bounded physical-correspondence construction with
+  independent review; no nonzero partition normalization or physical metric
+  identification is assumed.
+  **Next ROOT delivery action:** review the bounded L1 scientific/publication
+  delta against canonical scientific custody, retaining its operational behavior
+  and peer history, and select the exact integration/qualification composition
+  under the existing process. R3 remains governing: no speculative controller
+  upgrade or cache/epoch workaround. D1's source proposal remains a contained
+  enabling task, not a new publication lead. The detected review-document CLI
+  defects remain unimplemented; no new infrastructure is on L1's critical path.
+
+
 - **Eleven accepted L1 source closures now reconciled to the delivery branch.**
   [PR117 current readback](https://github.com/NetRxn/SK_EFT_Hawking/blob/codex/publication-l1-main-delivery-20261106/papers/AutomatedReviews/2026-11-06-l1-main-delivery/L1_CANONICAL_SOURCE_REUSE_R1_READBACK.json)
   records fresh independent per-finding applicability and actual existing-writer
