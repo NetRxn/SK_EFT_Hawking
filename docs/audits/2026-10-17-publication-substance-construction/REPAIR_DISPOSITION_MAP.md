@@ -35,6 +35,29 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 ### Current delivery checkpoints
 
 
+- **Original conditional-process reconstruction and finite link certificate accepted.**
+  Executor `d95370a95128599ef9dbecb4bd3105b55f0019d4` is normally integrated
+  at `a56bd045d2bf9e338df772ee1f23af49d6164cb4`. ROOT FULL-read actual result,
+  BOTH actual ACCEPT reviews, acceptance/brief and actual primary passages;
+  manually checked the coefficient, positivity/PPT, Choi/filter, full C2 and
+  finite Haar/cancellation arguments. [Exact ROOT intake](../2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_POSITIVE_PROCESS_ROOT_INTAKE.json)
+  verifies20archive hashes/CRC,7canonical copies,9current inputs,parent23members
+  and the actual held Leifer PDF; Choi body was web-read with no held-PDF claim.
+  The full two-slice fermionic candidate and conditional channel are now actual
+  at the stated coupling family, with original all-test/source coefficients.
+  An explicit finite nonnegative link polynomial separates its proposed
+  classical ALL-HISTORY instrument extension. This is not a same-time-link
+  result, original-model no-go, or a physical causal/metric reconstruction.
+  Physical kinetic/CAR/adjoint/constraint, quantum link/time evolution, B3,
+  metric mean/signature, N4,matter/light/transport/controlled limits remain OPEN.
+  Next bounded Executor request: original-source physical kinetic/constraint/
+  observable correspondence proposal, with a concrete physical map/first test
+  and the action's field/source normalization covariance. No arbitrary favorable
+  positive cone, lambda, sector, ordering or model may supply the missing
+  physics; dual prospective then actual reviews required. Handoff acceptance
+  pending; ROOT remains accountable and owns all ordinary L1 delivery.
+
+
 - **Built candidate graph now measured; generated artifacts repaired and pushed.**
   Existing canonical extraction completed0 with41034 declarations and JSON
   byte-identical to committed source; its cache hash is fresh. [Exact extraction

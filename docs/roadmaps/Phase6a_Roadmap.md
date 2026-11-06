@@ -3,6 +3,20 @@
 ## Current L1 scientific successors — 2026-11-06
 
 
+**Accepted original conditional-process milestone:** the [actual result and
+independent reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_ACCEPTANCE.md),
+with [ROOT intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_POSITIVE_PROCESS_ROOT_INTAKE.json),
+now construct a positive/PPT full two-slice fermionic candidate and conditional
+CPTP dilation matching the original coefficients and complete source contacts.
+A finite integrated certificate rules out its specified positive classical
+all-history-link instrument extension. Neither ordinary PPT nor this conditional
+channel supplies original causal evolution or physical metric/CAR. The
+same-time-link and quantum-link questions remain distinct and open. Next
+bounded source-grounded physical kinetic/constraint/observable proposal must
+also address field/source normalization covariance; B3 and all original
+physical goals stay full-strength OPEN, with ordinary L1 delivery ROOT-owned.
+
+
 **Accepted coherent/composite partial bridge:** the [actual R2 construction and
 independent result reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_ACCEPTANCE.md),
 with [ROOT full intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_ROOT_INTAKE.json),
