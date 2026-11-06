@@ -5273,3 +5273,12 @@ Blueprint+sorry: algebraic identities are fully formalized; PDE well-posedness,
 asymptotic analysis, and derivative expansion convergence are left as `sorry`.
 The `sorry` gaps are documented and flagged for Aristotle automated filling.
 -/
+import SKEFTHawking.ADW.GaussianPolynomialIBP
+import SKEFTHawking.ADW.GaussianPolynomialHermite
+import SKEFTHawking.ADW.GaussianPolynomialAffine
+import SKEFTHawking.ADW.GaussianAuxiliaryComplex
+import SKEFTHawking.ADW.GaussianAuxiliaryCompensation
+import SKEFTHawking.ADW.FiniteGrassmannCoframe
+import SKEFTHawking.ADW.FiniteGrassmannEvaluation
+import SKEFTHawking.ADW.GaussianGrassmannAuxiliary
+import SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary
