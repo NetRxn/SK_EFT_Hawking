@@ -1683,3 +1683,34 @@ relation-lifting obstructions, for prospective independent review. No new
 premise/product/state or runtime/slot grant is made. The lead bundle and
 portfolio priority queue are unchanged. G4/inventory main qualification
 continues separately; this result is not a substitute for those checks.
+
+
+### G4/inventory source and current control checkpoint
+
+Existing main-delivery draftPR117 now contains source checkpoint9c2b00f59.
+The reused1550 package has independent source acceptance; the corrected current
+canonical inventory exactly matches its independently reviewed candidate.
+All112 original focused cases now pass, including57 inventory cases. Both
+actual inventory production controls observe baseline0/seeded1/restored0 with
+exact byte/fullmode/nsmtime restoration and no outstanding recovery entries;
+independent current-control review accepts that bounded evidence.
+
+The adjacent G4_INVENTORY_SOURCE_R1_EVIDENCE.zip and READBACK.json under
+papers/AutomatedReviews/2026-11-06-l1-main-delivery preserve actual failures,
+source reviews, static graph projections, controls and current112-pass XML.
+The live G4 extractor now includes436 public functions and allseven L1
+registered targets, conserving all410 prior complete formula nodes. This
+repairs actual emission/measurement; it does not establish numeric or physical
+correctness. Paper39's newly exposed unsupported heat-kernel target remains
+blocked. Original expanded175pass/fourfail attempt remains unqualified.
+
+Next acceptance milestone remains current G4 actual producer/declaration/
+provenance controls and serialized-consumer effects, authoritative full graph
+and required broader qualification through the existing guarded source-delivery
+and native-admission route. No custody-primary transport retarget, controller
+replacement, cache/epoch transfer, raw native build or unallocated slot follows.
+Existing managed6e/source-register5b repairs remain subsequent supporting
+packages, not new machinery. No enabling finding, physical BUILD, publication
+bundle or protected main gate is closed by this incomplete draft checkpoint.
+ROOT retains L1 as lead; Executor's next prospectively reviewed deeper manual
+proposal runs independently, as recorded in the same Phase6a successor record.
