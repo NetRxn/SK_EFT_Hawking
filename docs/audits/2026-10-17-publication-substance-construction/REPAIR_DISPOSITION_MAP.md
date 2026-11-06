@@ -1542,3 +1542,42 @@ changes, reuse only original deltas and independently qualify actual composition
 Managed-path6e and source-register5b are separate enabling reuse packages.
 Do not copy donor closure ledger, historical successful custody rows or derived
 counts as current evidence. Existing qualification remains RED until rerun.
+
+
+### L1 framing milestone accepted and pushed
+
+Main-delivery [PR117](https://github.com/NetRxn/SK_EFT_Hawking/pull/117) now
+contains source checkpoint005c07a77 and documentation cleanup
+`3b2ef9dbc52e20042cafbeaf662129078b98c04f`. Both are pushed; no main merge
+is claimed. [Current evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/3b2ef9dbc52e20042cafbeaf662129078b98c04f/papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md)
+and RANGE_FRAMING_R3_READBACK.json preserve independent source, allfivepage
+render,154unit catalog-integrity and actual canonical-application acceptance.
+
+The title/heading/caption and three active apex claim strings now distinguish
+the assumed speed law and adopted comparison window from physical derivation.
+All mathematical results and original BUILD remain intact. Canonical154units
+retain152assessments and two new caption WARNs, all154predecessors/history
+and four unchanged OPEN blockers. Existing writer:one audit,zeroautomatic
+closures/tombstones,sevenpendingcandidates,humanstatebyteexact. Actualcompile
+5pages/zerooverflows;89GWtestsPASS. Global authoring1/3PASS remains limited
+by corpus failures, with3measured/18unmeasuredlengths. No fullproject/native
+or all231gate remeasurement is claimed. F R4 independently accepts the changed
+L1 dependencies; its existing Verify exits0 with the original closure anchor
+preserved. New green bundles0, new physical BUILD closures0, humanapprovals0.
+
+Next main-qualification milestone is the already accepted citation delta
+8b6da1c2f: compose exact identity/bibliography changes without reverting L1
+registry/constants/D3, independently review, run the applicable original
+checks under proper source/resource authority, and record actual current
+closure evidence. Reuse managed-path6e/source-register5b as distinct packages
+where required. No donor ledger, source-custody success or derived census is
+accepted as current. The archived read-only reuse comparison binds immutable
+f98831a81; refresh its candidate binding before accepting any implementation.
+
+Remaining ordinary L1 includes current-state PAPER_STRATEGY headline/content
+propagation under existing L1-fix-propagation and fullstage/main qualification;
+original scientific objectives must not be silently deleted. Executor is
+preparing a source-grounded original-model nonregular boundary-constraint/
+quantization prospective research package with renewed independent reviews.
+No physical construction or runtime admission is approved by that research
+assignment. Lead and portfolio order remain unchanged.
