@@ -578,6 +578,35 @@ def _definitional_record_grounding_shorts() -> frozenset:
     )
 
 
+def _formula_source_definitions(source: str, source_path: Path) -> list[tuple[str, int]]:
+    """Direct public definitions in source order, with definition-line offsets.
+
+    Parsing source does not import or execute formulas. Preserve the existing
+    metadata window at the definition line; decorators are not that window.
+    """
+    try:
+        tree = _ast.parse(source, filename=str(source_path))
+    except SyntaxError as exc:
+        raise ValueError(f'Cannot enumerate Formula definitions in {source_path}: {exc}') from exc
+    # Python source read_text normalizes newlines. Other Unicode line separators
+    # inside a string are not Python source-line boundaries.
+    offsets = [0] + [match.end() for match in re.finditer("\n", source)]
+    definitions, seen = [], {}
+    for node in tree.body:
+        if not isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+            continue
+        if node.name.startswith('_'):
+            continue
+        if node.name in seen:
+            raise ValueError(
+                f'Duplicate public Formula identity {node.name!r} in {source_path}: '
+                f'lines {seen[node.name]} and {node.lineno}'
+            )
+        seen[node.name] = node.lineno
+        definitions.append((node.name, offsets[node.lineno - 1]))
+    return definitions
+
+
 @_memo_within_build
 def extract_formula_nodes() -> list[dict]:
     """Extract formula nodes from function definitions in formulas.py.
@@ -599,21 +628,10 @@ def extract_formula_nodes() -> list[dict]:
     resolvable = _lean_ref_resolution_index()
     defl_shorts = _definitional_record_grounding_shorts()
 
-    # Parse function definitions and their docstrings
-    pattern = re.compile(
-        r'^def\s+([a-z_][a-z0-9_]*)\s*\(',
-        re.MULTILINE,
-    )
-
+    # Structural source population; metadata extraction below remains unchanged.
     nodes = []
-    for match in pattern.finditer(source):
-        name = match.group(1)
-        # Skip private helpers
-        if name.startswith('_'):
-            continue
-
+    for name, func_start in _formula_source_definitions(source, formulas_path):
         # Extract docstring if present
-        func_start = match.start()
         lean_refs = []
         aristotle_refs = []
         source_refs = []
@@ -3371,7 +3389,7 @@ def extract_readiness_gate_nodes() -> list[dict]:
             if dark:
                 logger.warning(
                     "ReadinessGate: %s has %d UNMEASURED gate(s) — the evaluator "
-                    "read nothing, which is NOT the same as outstanding work: %s",
+                    "could not complete measurement; partial evidence may remain: %s",
                     paper, len(dark), ", ".join(dark))
     return nodes
 

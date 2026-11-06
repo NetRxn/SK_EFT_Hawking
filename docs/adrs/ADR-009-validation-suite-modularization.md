@@ -361,6 +361,55 @@ Precedent exists: `_tp_scan_lines` (`:7573`) was extracted as a pure core specif
 
 ---
 
+### D6 — Declared G4 coverage requires a complete producer and resolved evidence
+
+**Status: DESIGN ACCEPTED; implementation under review.** The independent whole-design
+review and ROOT intake accept this contract only. Current source/runtime verification,
+production controls, registration, whole implementation review and release remain owed.
+
+The existing `extract_formula_nodes` producer derives its population structurally
+from module-level public function definitions in canonical `src/core/formulas.py`.
+Identifier case is not an eligibility rule. Existing exact identities, source order,
+complete node metadata and grounding labels/ref resolution remain conserved;
+private helpers, nested functions and methods are excluded. No hand-list, alias,
+dummy function or source-body alteration substitutes for the actual population.
+The specification binds source-population equality, old-node conservation and
+attribution of newly reachable Formula/test/claim/gate effects.
+
+`ComputationCorrectness` evaluates the union of a paper's metadata formulas and its
+claim-grounding formula targets. A declared target absent from the graph, or present
+with a different node type, blocks the gate and sets `measured=False`: the complete
+declared population was not examined. Every unresolved identity remains in internal
+blocker evidence before existing serialization caps. An entirely undeclared
+population remains `open` and unmeasured; it does not establish absence of computations.
+
+A resolved Formula satisfies the existing coverage contract only through a
+`VERIFIES` edge from a resolved `PythonTest` with explicit `test_kind` in
+`{golden, identity, roundtrip}`. Bounds, unknown and unsupported kinds do not count.
+Complete negative coverage is blocked/measured; complete supported coverage is
+passed/measured. Existing grounding warnings and source identities survive.
+Static links do not establish independent test assertions, fresh runtime,
+numerical error control or physical model applicability.
+
+The existing submission classifier rejects literal `blocked` at either priority.
+Outstanding P1 states can remain mechanically advisory/YELLOW, even when unmeasured.
+Human submission still requires GREEN. The consumer must report outstanding G4
+state, measurement, notes and capped evidence truthfully and must not say all P1
+passed when any P1 remains outstanding. Preserve classification/verdict, existing
+bucket/result and serialized APIs, and the other readiness evaluator semantics.
+
+This is one existing producer→evaluator→serialization→consumer repair. Existing
+extractor/evaluator/submission/architecture-claim tests must bind meaningful
+behavior, not only bucket-name substrings. Production source omission and genuine
+absent-provenance controls use `seed_journal`, real extraction/evaluation and
+targeted consumer observations, exact restoration and a clean journal.
+A pre-existing unrelated global RED does not prove either new control fired.
+No gate, service, registry, threshold, cap, coverage waiver or dummy formula is added.
+Original scientific mapping and BUILD obligations remain with the publication
+workflow and reviewers. Specification and plan:
+`docs/superpowers/specs/2026-10-19-g4-declared-population-design.md` and
+`docs/superpowers/plans/2026-10-19-g4-declared-population.md`.
+
 ## Overlap reconciliation with prior ADRs (keep the ADR set one system)
 
 - **ADR-002** owns the `native_decide` policy and its ratchet metric; **ADR-009 owns only the code location**

@@ -466,3 +466,37 @@ composition and qualify through the original controls and authorized route.
 Managed-path6e and source-register5b remain distinct reuse packages. Original
 physical B3/state/tensor/matter/light/transport requirements, full-stage/
 publication/main/human acceptance all remain OPEN.
+
+
+## G4 and worktree inventory source checkpoint
+
+The coherent existing1550 source/test/owner/spec repair is adopted without
+its donor counts, inventory or closure ledger. Independent G4 source ACCEPT
+and inventory source PASS precede the canonical inventory writer. The exact
+fresh inventory matches the independently reviewed candidate. Current focused
+verification retains all112 cases and passes112, with no skips/errors/failures.
+Both authentic inventory controls use the actual source/artifact and existing
+reader with fresh bytecode contexts: baseline0, source regression1, restore0,
+canonical known-row deletion1, restore0. Exact bytes/fullmode/nsmtime restore
+and empty journal are independently accepted. These captures are decoded text;
+separate seeded hashes and child environment snapshots were not recorded.
+
+Actual static G4 producer/evaluator evidence now finds all436 public functions,
+conserves all410 old complete node records and represents allseven L1 targets.
+The old apparent L1 pass had examined onlyone ofseven. Current typed static
+coverage is supported; it is not a numerical or physical correctness certificate.
+Paper39 correctly becomes blocked on a missing valid PythonTest support edge;
+that exposed debt is retained. Empty declarations are truthfully unmeasured.
+
+The earlier expanded attempt remains RED:175pass/fourfail, reaching unexpected
+native dependency refresh and DNS failure. No native build, authoritative full
+graph, broader suite or submission acceptance is inferred. Proper native
+admission, all actual G4 mutation/serialized-consumer controls, full graph
+other-gate effects, required broader checks and protected main qualification
+remain owed. No canonical finding is closed by this checkpoint. The primary
+custody branch, controller, caches, leases, physics source and Lean are untouched.
+
+G4_INVENTORY_SOURCE_R1_READBACK.json binds current evidence and the adjacent
+archive preserves original failures,112-pass XML, actual controls, both source
+reviews and independent bounded control review. This is a remote-resumable
+incomplete source checkpoint, not a completed enabling wave or green L1.
