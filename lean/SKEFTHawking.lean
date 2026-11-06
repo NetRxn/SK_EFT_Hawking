@@ -1,3 +1,4 @@
+import SKEFTHawking.ADW.GaussianPolynomialHermite
 import SKEFTHawking.ADW.GaussianPolynomialIBP
 import SKEFTHawking.Basic
 -- Array helper lemmas (bang-indexed ofFn simp lemma) for cyclotomic-substrate
