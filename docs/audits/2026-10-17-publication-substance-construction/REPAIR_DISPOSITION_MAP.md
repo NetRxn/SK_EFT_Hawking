@@ -34,6 +34,40 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Latest accepted increments — 6 November 2026:** the affine/product module is
+committed at `ae0076b43813cd4c486b51dee1d5dd2466adda2c`, preserved remotely at
+`codex/publication-l1-affine-source-20261106`. [Independent actual kernel review](GAUSSIAN_AFFINE_KERNEL_REVIEW_R1.md)
+accepts the arbitrary-positive-variance and finite-real-coefficient product
+foundation; ROOT inspected the full source and actual42request evidence.
+Aggregate import, authoritative primary/main qualification and full Eq6-11
+remain pending. This is not physical B3 closure.
+
+Executor's actual original-action one-slice/source-defect construction at
+`6b86bd2204a7642bdb728006f7177011131ac96c` received both independent actual
+ACCEPT verdicts. ROOT personally read the complete result/reviews, checked
+all archive/input custody and normally integrated it, with
+[full ROOT intake](../2026-11-05-l1-physical-bridges/ORIGINAL_ONE_SLICE_SOURCE_KERNEL_ROOT_INTAKE_R1.md).
+It supplies the temporal decomposition, diagnostic finite-rank auxiliary kernel,
+explicit bare-local mixed-defect witness and full-source pair C2 kernels.
+Physical positive product/adjoint/domain and all original B3 objectives stay owed.
+
+L3 enabling draft PR112 is pushed at `263c882b2`: two further Paper27 consumer
+findings are canonically verified/fixed after independent source and actual
+all-seven-page visual acceptance. Actual compile has no overfull boxes/errors/
+unresolved references. Displayed equations, figure/caption and bibliography are
+conserved. Original physical four-laws BUILD and wider source/claims debt remain
+OPEN. [Accepted repair and closure custody](https://github.com/NetRxn/SK_EFT_Hawking/tree/263c882b2/papers/AutomatedReviews/2026-11-06-l3-figure-readability)
+record scoped completion, not bundle green.
+
+Main Hermite source `d4e4494b8` now has actual successful library/ExtractDeps
+build10836jobs. Its full merge profile FAILED:7172passed/28failed/14skipped;
+L2serialization resolved,27prior failure IDs persist and the live-census test
+appeared. Canonical extraction adds17raw records (16exports plus one generated
+equation theorem), preserving all41037prior records. The existing fast-sync
+manifest refreshed atlas/census surfaces; actual live-census retest passes and
+counts/tables/claim-cluster/census checks all pass. Generated-artifact independent
+review and checkpoint remain next; this is not a fresh full-profile PASS.
+
 **Accepted deeper L1 commission:** Executor owns
 `l1-original-one-slice-source-kernel`, recorded in the
 [owning physical roadmap](../../roadmaps/Phase6a_Roadmap.md#publication-continuation-original-one-slice-source-kernel).
