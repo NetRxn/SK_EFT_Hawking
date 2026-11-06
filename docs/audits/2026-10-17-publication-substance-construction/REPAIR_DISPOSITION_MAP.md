@@ -34,6 +34,21 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Latest native and measured portfolio checkpoint — 6 November 2026, 21:33 UTC.**
+MAIN source `57f6c2a9340cb1947919f607e59b3d740ca4fb16` containing independently
+accepted C1+C3-S passes its OWN native build,10,842 jobs. Canonical producers
+and four freshness checks pass; six derivative artifacts await active independent
+full review. [Exact native, extraction, review, assignment and numerical BUILD
+disposition](GRASSMANN_EVALUATION_SOURCE_NATIVE_R1.md) governs current resume.
+[All231 freshly measured gates](CURRENT_GATES_20261106_R6.json) remain
+160pass/25blocked/28open/18recheck, zero transitions/newly green. C2 actual
+integrability/local identity and original controls are in author verification
+onwt1; full C3 original site-product/measure transport follows independent C2
+acceptance. ROOT also owns the confirmed invalid legacy-data numerical blocker:
+reuse the accepted original finite coefficient/source-jet algorithm, rather than
+copying invalid data or launching the scientifically mismatched adopted-model
+campaign. No fullZ/state/B3/publication requirement is reduced or closed.
+
 **Latest implementation checkpoint — 6 November 2026, after C1 absorption.**
 C1's full actual Grassmann evaluation/norm construction is independently accepted,
 authoritatively absorbed/built at primary82f71 and pushed; MAIN exact-source
