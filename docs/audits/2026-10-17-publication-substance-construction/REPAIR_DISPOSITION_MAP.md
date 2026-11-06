@@ -44,7 +44,16 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
   independent scientific approvals before an attempt. ROOT retains ALL L1
   readiness and ordinary repairs. No scientific deferral, canonical closure,
   main merge or gate transition is recorded. The six-entry provenance proposal
-  is under independent scientific review on PR117's e301c7b9a candidate.
+  is now independently accepted and applied on PR117 at9d645b887. Exact
+  historical automatic verification withdrawals use the existing writer;
+  no human approval or physical closure is granted.109focusedtestsPASS,
+  but the actual scoped verifier is RED(87FAIL/30ERROR);24selected failures
+  reproduce against the exact pre-change metadata,93remainunqualified.
+  [Main checkpoint evidence](https://github.com/NetRxn/SK_EFT_Hawking/blob/9d645b887754e50256749c180bb88805b6f4378e/papers/AutomatedReviews/2026-11-06-l1-main-delivery/GW_PROVENANCE_R3_READBACK.json).
+  Next ordinary L1: apply the independently accepted factual normalization
+  paragraph correction, render and independently reassess the changed canonical
+  sentences while preserving original B3 construction; resolve exact-source
+  project/main qualification without inventing infrastructure or waiving gates.
 
 
 - **Current L1 main delivery and deeper boundary construction.**

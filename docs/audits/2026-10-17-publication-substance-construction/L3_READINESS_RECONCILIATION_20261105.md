@@ -131,3 +131,24 @@ acoustic current/divergence and analytic metric-path/box witness requirements
 remain OPEN. Existing geometry/profile science is credited at its exact scope.
 L1 remains lead; this is its agreed parallel L3 enabling reconciliation, not a
 new priority order, reduced charter or new proof assignment.
+
+
+## Bounded reuse validation attempt after source reconciliation
+
+ROOT acquired and prepared wt1 against unchanged primary4fca5970, then copied
+only the existing PR114 BHThermodynamicsFourLaws source, exact SHA256
+9ca8a7bf363f54c6640275c770eed56873cfdb8aacc2cf20aebf7eedb225f1ab.
+The assigned worker's continuity check was fresh, but its tool catalog exposed
+no active-lease Lean tools and its sandbox could not observe the endpoint or
+process identity. It stopped before a Lean call, proof edit or commit. This
+is an unavailable validation path in that worker environment, not a theorem
+failure, missing-substrate finding or verified controller defect.
+
+ROOT preserved the proposed source and exact original preimage locally,
+confirmed no worker edits, restored only ROOT's copied file and verified the
+worktree clean at its original base. The documented no-change controller
+release completed terminal0/FREE. No reset/reclaim, cache repair, new runner,
+raw build, ready/absorb, authoritative qualification or other slot action was
+performed. The PR114 source remains preserved remotely. Native validation
+remains owed; collect this tool-admission observation for existing architectural
+review rather than an ad-hoc machinery change. L1 remains the lead package.
