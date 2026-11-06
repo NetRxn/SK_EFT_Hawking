@@ -34,6 +34,18 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Latest implementation checkpoint — 6 November 2026, after C1 absorption.**
+C1's full actual Grassmann evaluation/norm construction is independently accepted,
+authoritatively absorbed/built at primary82f71 and pushed; MAIN exact-source
+integration is pushed at4c4a7baa9, pending its own fresh native/canonical gates.
+C3-S's complete original source polynomial construction is independently accepted;
+its integration review is active. C2's actual Grassmann-valued integrability and
+local Eq7 proof package is freshly admitted on wt1. [Current assignments, exact
+commits, independent reviews, raw failures and next acceptance requirements](GRASSMANN_VALUED_EQ7_ASSIGNMENTS_R1.md#current-implementation-checkpoint--6-november-2026-after-c1-absorption)
+govern resume. The prior all21 R5 measurement below remains the last qualified
+gate snapshot: zero new gate transitions or green bundles are claimed. Full C3,
+B2/B3, original physics and publication requirements remain owed.
+
 **Current checkpoint and active work — 6 November 2026, 20:17 gate measurement.**
 Main-based draft PR117 now has independently accepted canonical derivatives at
 `4c6c5149a92a1c3bdedab49fd2864487c280292c`, for scientific source
