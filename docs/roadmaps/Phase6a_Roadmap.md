@@ -15,17 +15,19 @@ Next milestones: derive the actual metric-channel operator/source/projector, reg
 
 **Accepted bounded successor owner:** Executor derives the intended original reflection/algebra/boundary/state correspondence or returns a complete source-linked construction breakdown, beginning with Diakonov/Volovik/Vergeles/CGL and the original W1 charter. ROOT retains the complete L1 publication-readiness chain and operator disposition. No quotient or premise is chosen to remove the witness; any actual premise/scope fork requires the operator's explicit disposition.
 
-**Current bounded manual prerequisite:** ROOT has accepted the
-[dual-reviewed original nonregular boundary brief](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONREGULAR_BOUNDARY_DESIGN_ACCEPTANCE.md)
-and [exact intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONREGULAR_BOUNDARY_ROOT_INTAKE.json).
-Executor is commissioned to derive the unchanged original action's complete
-graded boundary component relation and two-move matching; justified pre/post
-ideals or an implicit relation with distinct regularity questions; exact
-off-shell Haar/Berezin/test-domain identities; and prescribed C2 contacts
-before quotient. Deliver ORIGINAL_GRADED_CONSTRAINT_RELATION.md with
-independent scientific and mathematical review. This is a manual prerequisite,
-not a physical state or Q1–Q4 quantization/positivity/normalization/source-map
-approval. No executable producer, Lean/native run or slot admission follows.
+**Accepted bounded manual prerequisite:** ROOT personally read the complete
+[original graded boundary result and dual independent reviews](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_GRADED_CONSTRAINT_ACCEPTANCE.md)
+and recorded its [exact evidence intake](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_GRADED_CONSTRAINT_ROOT_INTAKE.json).
+The commissioned L1–L4 package now supplies original-action forces, the typed
+boundary graph/pre-post kernels, the finite inverse obstruction, exact off-shell
+derivative/ordered-contact identities and C2 relation-lifting conditions.
+It was normally merged into the cumulative publication draft; main remains pending.
+Next deeper work is a concrete prospectively reviewed boundary-operator,
+source-compatible domain and derived-adjoint construction. Defining the implicit
+kernels does not classify all physical constraints. Q1–Q4 positive-state,
+normalization and source-map construction remains open; no runtime/slot grant follows.
+ROOT retains ordinary L1 Lean/Python repair, manuscript/consumer updates,
+independent review, canonical gates/closure and qualified main delivery.
 The original B3, state, tensor/matter/light, fullZ/c0, N4 and transport criteria
 remain OPEN. The alternative controlled scaling route is retained.
 

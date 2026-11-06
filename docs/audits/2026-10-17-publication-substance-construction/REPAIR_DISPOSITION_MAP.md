@@ -1656,3 +1656,30 @@ and fullstage/main/human acceptance remain owed. Portfolio order is unchanged.
 Executor's commissioned manual original-boundary prerequisite remains
 parallel under the linked Phase6a record; all original physical requirements
 and final result review remain in force. ROOT retains ordinary L1 readiness.
+
+
+### L1 commissioned manual boundary result accepted into the publication draft
+
+ROOT personally read ORIGINAL_GRADED_CONSTRAINT_RELATION.md and both complete
+independent result reviews, then accepted the commissioned manual L1–L4 result
+from 0dc9e069bbfdb1cbf9f3f55f04e3190e13d7e5f9. Normal merge preserves its history.
+The exact result, reviews, archive and ROOT readback are linked in the current
+[Phase6a successor record](../../roadmaps/Phase6a_Roadmap.md).
+Archive CRC/all member hashes, canonical result/review copies, current accepted
+inputs and four actual held primary PDF pins agree. Generated research remains
+in this repository; no generated corpus copy was reintroduced.
+
+This is new accepted manual scientific content: original full-action forces,
+explicit boundary graph/pre-post maps, a finite inverse obstruction, exact
+off-shell ordered-contact identities and C2 relation-lifting conditions.
+It does not complete physical quantization/state, fullZ/c0, N4, B3 normalization,
+physical dynamics or transport; none of those findings is closed. No native,
+full-wave, main/publication or human acceptance follows.
+
+ROOT retains the entire ordinary L1 publication delivery chain. Executor's
+next deeper package must first specify the actual boundary-only operators,
+source-compatible domain and derived adjoint, retaining ordered contacts and
+relation-lifting obstructions, for prospective independent review. No new
+premise/product/state or runtime/slot grant is made. The lead bundle and
+portfolio priority queue are unchanged. G4/inventory main qualification
+continues separately; this result is not a substitute for those checks.
