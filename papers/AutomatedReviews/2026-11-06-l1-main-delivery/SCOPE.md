@@ -595,3 +595,16 @@ physics-deferred off-shell cells cannot be converted into unsupported generated
 results. No ceiling increase, predicate change or new numerical machinery.
 D7_REGRESSION_REUSE_R1_READBACK.json and archive retain all source/controls,
 independent reviews, actual failures, complete occurrence audit and limits.
+
+
+### D7 focused regression canonical closure
+
+After independent final acceptance and source commitb0f8e3b45, the existing
+close_finding.py writer dry-run and actualwrite both execute the declared
+portable Verify successfully. The canonical reader now reports the original
+review:2026-10-15-d7-current-theorem-regression:infra:1.1 FIXED. Exactlyone
+record is appended; all prior records and metadata remain exact. Source anchor,
+actual commands/exitcodes and reader status are preserved in
+D7_REGRESSION_CLOSURE_R1_READBACK.json. This closes only the citation-regression
+test defect. No numeric ceiling/freshness/native/fullgraph, physical D7/G11,
+main/publication or human gate is closed.

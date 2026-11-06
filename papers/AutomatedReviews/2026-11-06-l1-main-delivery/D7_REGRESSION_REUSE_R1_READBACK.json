@@ -12,7 +12,7 @@
   "exact_restore": "bytes/fullmode/nsmtime and empty journal",
   "current_full_module": "72 PASS,1 FAIL:150>117 numeric ceiling remains owed",
   "canonical_finding": "review:2026-10-15-d7-current-theorem-regression:infra:1.1",
-  "closure": "PENDING existing writer and declared portable Verify after source commit",
+  "closure": "FIXED focused regression by existing writer; declared Verify executed, canonical reader confirms",
   "scientific_boundary": "No Lean/manuscript/validator/registry/ceiling/physical claim change; saved declaration cache is stale and is not fresh kernel evidence",
   "numeric_audit": "149 original main,150 current, same64 drafts; L1 -3/Paper25+4. GW-only scalar retrofit would leave139>117. No debt discharged by this census.",
   "archive": "D7_REGRESSION_REUSE_R1_EVIDENCE.zip",
@@ -38,5 +38,6 @@
     "l1-numerical-literal-audit-r1.json": "673f323e4590a9a4761195a3d44ac6fa2357e48757d22d2ab36875faa9ca8f61",
     "l1-current-extraction-staleness-r1.json": "f7caa3eeefe10051a9a798f2421f16f39b7c01de8050deb9b0355daefc47e957",
     "test_validate_public_surface.preimage.py": "e96852a18276697e45d3239126966e2e63b34d8b8ad53a3348d6eda958fe3d95"
-  }
+  },
+  "closure_readback": "D7_REGRESSION_CLOSURE_R1_READBACK.json"
 }
