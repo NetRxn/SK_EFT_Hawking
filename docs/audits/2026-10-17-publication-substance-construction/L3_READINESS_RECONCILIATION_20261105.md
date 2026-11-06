@@ -97,3 +97,37 @@ The current 2.2 command hardcodes the old theorem name and monotonicity dependen
 - A broad reading of “Paper27 accepted, so polish L3” conflicts with actual charter/types: historical acceptance explicitly deferred two laws and accepted sign-only bundles; current required 2.1 still demands substantive construction. Current source/local research progress is substantial and must be reused, but not promoted to authoritative built/main/publication acceptance.
 - Cached metadata/strategy says Paper27 ready/D3 ready, while current redraft invalidates stages and actual canonical IDs retain open lifecycle debt. Both historical acceptance and current red are explainable without erasing either.
 - The roadmap's earlier “next connect actual Ricci” is superseded by accepted 9caaca0b0; next symmetry/nondegeneracy is superseded by f905a2873. Their actual types still leave uniform analytic metric-path/box premises open. Reassigning those completed geometric lemmas would duplicate accepted work.
+
+
+## 6 November source-population and qualification reconciliation
+
+The [current read-only evidence](L3_RECONCILIATION_20261106_EVIDENCE.zip)
+reconciles maince194, main-deliveryf144 and publication1805 source with the
+preserved research/focused packages. L3/Paper27 and the old thermodynamics
+module are identical across those first three populations. [PR114](https://github.com/NetRxn/SK_EFT_Hawking/pull/114)
+remains draft/open atf905a2873 on NJL115e; [PR112](https://github.com/NetRxn/SK_EFT_Hawking/pull/112)
+remains draft/open ata34eb6b08 againstmain. Later source work is real and
+must be reused, not redispatched after a name search misses the correct branch.
+
+Actual configured primary4fca and its matching successful epoch323eaae retain
+the OLDER L3 population. Five construction modules are identical primary/main,
+and its source-corresponding declaration index contains none of the28examined
+new research roots. The aggregate/ExtractDeps import the older modules; this
+is not evidence of stale extraction of already integrated new source. New
+profile derivatives, cutoff identity, differential fixed-G law, Ricci/ADM/EH
+and actual-background components exist in researchf905 with prior source/local
+elaboration evidence; they do not inherit the older primary build certificate.
+
+The primary/research mergebase isce194, with divergent399/172commit histories.
+NJL115e is ancestor ofresearch, notprimary. A whole-branch merge would carry
+broader predecessors. Reconcile the exact reviewed nineteen-path L3 tail and
+its actual import prerequisites under existing ownership/admission before
+qualified integration. No approved exact integration sequence is established
+by this read-only assessment. Do not retarget/reset primary or reclaim old
+slots, copy a stale certificate, or invent a runner to sidestep qualification.
+
+Original four-laws/physical regime selection, ADW action/exterior/mass matching,
+acoustic current/divergence and analytic metric-path/box witness requirements
+remain OPEN. Existing geometry/profile science is credited at its exact scope.
+L1 remains lead; this is its agreed parallel L3 enabling reconciliation, not a
+new priority order, reduced charter or new proof assignment.

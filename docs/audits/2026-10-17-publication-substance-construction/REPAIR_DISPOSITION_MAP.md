@@ -34,6 +34,28 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+- **Current L1 main delivery and deeper boundary construction.**
+  [Draft PR117 at e301c7b9a](https://github.com/NetRxn/SK_EFT_Hawking/blob/e301c7b9a6dc315153b48c5daa251b5ff1e502de/papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md)
+  checkpoints actual source/render acceptance, the complete grouped documentary
+  propagation repair,124focusedPASS/twohypothesisgatePASS and existing-writer
+  canonical refresh preserving151assessments/allhistory/humanstate/fourOPEN
+  obligations withzeroautomaticclosures. Main remains unmerged/unqualified;
+  counts/fullgates and exact configured-primary execution coordination remain
+  owed. The focused canonicalG11diagnostic still blocksL1 on original2.1human
+  parameter verification; its stale proposed normalization note needs scientific
+  reconciliation before any operator approval and cannot discharge physicalB3.
+  [ROOT scientific intake](../2026-11-05-l1-physical-bridges/PUBLICATION_BOUNDARY_GAUGE_INTAKE.md)
+  accepts Executor c4c848d7 after normalmerge/direct proof/source/custody checks:
+  derived compact boundary/Gauss/center/trace/source identities, preserving the
+  original obstruction. Physical product/adjoint/positive-state/source-limit,
+  fullZ/c0/N4, B3/tensor/matter/light/transport remain OPEN, with bounded deeper
+  construction owned byExecutor and ALL ordinary L1 readiness retained byROOT.
+  [L3 reuse/primary qualification reconciliation](L3_READINESS_RECONCILIATION_20261105.md#6-november-source-population-and-qualification-reconciliation)
+  updates the already-agreed parallel enabling work. ExistingPR114science is
+  not already qualified onprimary; do not rebuild completed proofs or merge its
+  divergent history wholesale. Priority and original acceptance remain unchanged.
+
+
 - **Exact original transfer/source operators constructed and accepted.**
   [ROOT direct intake](../2026-11-05-l1-physical-bridges/PUBLICATION_TRANSFER_INTAKE.md)
   accepts d421925e's bounded auxiliary transfers, finite-rank two-step kernel,
