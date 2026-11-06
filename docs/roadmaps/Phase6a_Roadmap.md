@@ -977,6 +977,12 @@ The [corrected composite-cycle result](../audits/2026-11-05-l1-physical-bridges/
 
 This advances the source-specific continuation/convergence investigation. No positive physical domain, contour equality, four physical kernel intertwiners, Lorentz normalized source functional, B3/N4 or model no-go is established. Both original kernels and full C2/source/normalization obligations remain; distributional/other-cycle/boundary-weighted and controlled Euclidean routes remain open. ROOT personal intake/canonical publication integration is pending this exact checkpoint. Ordinary L1/numerical/runtime ownership stays with publication ROOT; Executor retains the commissioned deeper physical research, with no slot reservation.
 
+### Recovered reconstruction substrate and numerical convention consumption
+
+[Background Terra/Luna scouts and Sol synthesis](../audits/2026-11-05-l1-physical-bridges/POSITIVE_RECONSTRUCTION_TOEHOLD_RESEARCH.md) recover conditional finite-positive-kernel/GNS tools and the actual one-slice spatial-link marginal as a concrete next research question. The marginal's positivity is not implied by integrated PPT, and the prior all-history obstruction does not settle it. These are source-verified research leads, not accepted positive physical reconstruction or Lean-kernel claims; a concrete construction still requires prospective review.
+
+The independently accepted [numerical/physical crosswalk](../audits/2026-11-05-l1-physical-bridges/NUMERICAL_PHYSICAL_CONVENTION_CROSSWALK_ACCEPTANCE.md) verifies the unsquared Euclidean permutation/source signs and C3↔N0 opposite-cut maps, while explicitly withholding the additional P0↔C3/N0 physical/metric cut identification. A coincident time-gamma matrix or g2^4 cannot replace that map. ROOT retains numerical/publication/runtime ownership; Executor retains the original physical research. No slot or gate transition follows.
+
 ## Decision Gates
 
 **Gate A.1 — after Wave 1 (`LinearizedEFE`) ships:** Is `G_N^emerg` sign correct and within 2 orders of magnitude of observed `G_N`? YES → all subsequent 6a waves proceed at full scope. NO (wrong sign) → ADW identification falsified at linearized order; 6a.4 scope is narrowed, 6a.5 and 6a.6 continue as formal exercises; Phase 6e reassessed. NO (right sign, wrong magnitude) → proceed but document parameter-fit freedom in every downstream wave.
