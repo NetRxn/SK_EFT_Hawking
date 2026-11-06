@@ -34,6 +34,17 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 ### Current delivery checkpoints
 
+**Current resume point — corrected C2 absorbed; full original C3 active.**
+C2 corrected source/kernel/composition has independent R2 ACCEPT and normally
+absorbs/builds at pushed primary450710b86, epoch6e14a9c16; its actual native
+artifact exists. [Exact acceptance and active full C3 assignment](GRASSMANN_VALUED_EQ7_ASSIGNMENTS_R1.md#corrected-c2-accepted-and-remaining-full-c3-active)
+name owner /root/eq7_c3_full_wt2, original source-only scope, complete product/
+integrability/transport requirements, reviewer and required evidence. Fresh wt2
+acquisition/preparation and matching built API probe succeed. MAIN remains pushed
+and clean at420373838, own-native/canonical-qualified for C1+C3-S. Next MAIN
+qualification batches C2 plus completed full C3. No newer portfolio measurement
+beyond R6 or full-tree/main/publication pass is claimed.
+
 **Latest accepted delivery and active proof checkpoint — 6 November 2026.**
 MAIN draft PR117 at pushed `42037383847cc7fa5a3e3761032456fe3050f653`
 has own native10,842PASS and complete different independent acceptance of all

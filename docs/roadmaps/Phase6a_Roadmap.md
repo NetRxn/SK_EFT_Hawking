@@ -15,13 +15,14 @@ full profileb21 remains FAILED.
 [Exact evidence, original failures and current resume assignments](../audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md#current-delivery-checkpoints)
 govern the next work, without marking the physical program shipped.
 
-C2 actual G-valued integrability/local Eq7 has different independent full
-source/math/kernel acceptance at candidate8f8797bdf:75 public exports,67 closing
-goals,10 headline scans and all original nonzero complex/mixed/high-degree/
-nonconstant-weight controls pass. One nonblocking prefix-length comment is in
-original-author correction before fresh independent delta reconciliation and
-controlled primary absorption. No future corrected bytes or C2 native/main
-qualification is accepted yet.
+C2 corrected source/kernel/composition has independent R2 ACCEPT and normal
+primary absorption/build at450710b86, epoch6e14a9c16; actual native artifact
+exists and checkpoint is pushed. All75 public exports,67 original actual goals
+and controls1–6 remain qualified. The sole misleading prefix-length comment
+is corrected; R2 verifies exact delta and new full-source kernel evidence,
+preserving unchanged proof/context evidence. Full remaining C3 is now active on
+freshly prepared wt2, owner /root/eq7_c3_full_wt2, only the existing source module,
+with actual matching built API admission. No MAIN C2 or future C3 result inferred.
 
 Next original acceptance remains **full actual G-valued Eq7/C**: C3's original
 source-specialized local identities, ordered product of actual integrals,

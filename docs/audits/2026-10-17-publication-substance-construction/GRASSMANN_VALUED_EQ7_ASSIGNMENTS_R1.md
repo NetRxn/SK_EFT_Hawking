@@ -2,6 +2,51 @@
 
 Parent: publication remediation, lead L1. The [full R2 construction](GRASSMANN_VALUED_EQ7_DESIGN_R2.md) and [independent prospective acceptance](GRASSMANN_VALUED_EQ7_DESIGN_REVIEW_R2.md) preserve the entire original C1–C3 requirement. Their raw evidence, earlier clarifications and runtime admission receipts are in `GRASSMANN_VALUED_EQ7_DESIGN_R2_EVIDENCE.zip`. Prospective acceptance is not implementation acceptance.
 
+## Corrected C2 accepted and remaining full C3 active
+
+[Different independent R2 source/kernel/composition review](GRASSMANN_GAUSSIAN_IMPLEMENTATION_REVIEW_R2.md)
+accepts corrected C2 source SHA84c7aa0ecef730f1f29c3ade0ec61eabb107d92b1bbe4b6d9d032609cd675d50.
+Author435fa3c05 changes only the prefix-length comment; all839 lines, statements,
+proofs and goal positions otherwise remain exact. ROOT aggregate1f11a8791 adds
+one import. New full corrected-source75-export kernel evidence, two new scans
+and final diagnostics pass;67 prior actual goals are reused only after exact
+proof/context conservation. Original R1 and all adverse evidence remain preserved.
+
+Normal absorption succeeds at pushed primary450710b86adfec7a9adf7c43178d26e421bbbd18,
+publishing epoch6e14a9c16e13097e26e1170d06fca388d37cd245bf8804b9e0ab2e41a553131c.
+The actual native C2 artifact exists. No MAIN C2 result is inferred. MAIN stays
+clean and own-native/canonical-qualified at420373838; all231 R6 states unchanged.
+[Full correction, acceptance, absorption and actual next admission receipts](GRASSMANN_GAUSSIAN_ACCEPTED_R2_EVIDENCE.zip)
+preserve the precise source/native/runtime boundary.
+
+**Active accepted assignment:** publication-eq7-c3-full-wt2-r1, owner
+/root/eq7_c3_full_wt2, only existing
+lean/SKEFTHawking/ADW/FiniteGrassmannSourceAuxiliary.lean. ROOT freshly acquires
+and prepares wt2 at the above base/epoch; actual matching MCP import/type probes
+successfully reach built C2 and original source APIs. ROOT is sole notebook writer,
+runtime/reset/integration owner. Different full actual mathematical/kernel reviewer
+must assess the committed result; no future result is accepted here.
+
+Next substantive action is the COMPLETE remaining original C3 contract under
+unchanged full R2 design: separate printed/closed source-local Eq7/integrability,
+original ordered products of ACTUAL local integrals with image/order independence,
+single actual global G integral with ORIGINAL independent-site product weights,
+independent global integrability, explicit nested/uncurried Gaussian transport,
+both original family specializations and meaningful original independent-field/
+shared-coframe controls. All84 accepted source exports/proof bodies and source
+conventions remain intact; update the old no-integral header accurately when
+new claims are proved. No full-G commutativity, diagonal-field/scalar surrogate,
+assumed Fubini/integrability or replacement by one global compensation weight.
+Use the same global4V throughout. Worker never builds, repairs caches, edits
+aggregate/pins/registries or integrates; ROOT's normal gates follow.
+
+Batch C2 plus accepted full C3 for the next MAIN native/canonical qualification,
+while primary builds make actual proof dependencies available. ROOT separately
+owns the original numerical finite coefficient/source-jet BUILD using accepted
+ADW_COMPOSITE_SOURCES. Original B2, Eq9–11/Berezin/Haar/nonzeroZ, physical B3/
+state/source/matter/transport/limits and human/publication gates remain OPEN.
+No new infrastructure/checker, reset, scientific deferral or scope reduction.
+
 ## Current implementation checkpoint — 6 November 2026, after C1 absorption
 
 This entry supersedes the historical running/partial assignment statements below.
