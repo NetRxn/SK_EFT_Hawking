@@ -448,6 +448,8 @@ def extract_parameter_nodes() -> list[dict]:
                 'doi': entry.get('doi'),
                 'llm_verified': entry.get('llm_verified_date') is not None,
                 'human_verified': entry.get('human_verified_date') is not None,
+                'llm_verified_date': entry.get('llm_verified_date'),
+                'human_verified_date': entry.get('human_verified_date'),
                 'notes': notes if notes else None,
             },
         })
