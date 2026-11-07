@@ -10346,6 +10346,21 @@
         "enforced": true,
         "run_at": "2026-11-06"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:2.5",
+      "status": "fixed",
+      "evidence": "Independent held-source and render review verified arXiv:1612.07705 v2 Sec. III.B and Eq. (3.36), including local equilibrium and the invertible leading quadratic form. The Lean comments, citation registry, and Paper 27 now agree. Negative controls reproduce the old false attribution on each carrier, and the seven-page rendered correction passes. Physical horizon-current identification remains open.",
+      "superseded_by": null,
+      "date": "2026-11-07",
+      "commit": "531fc19426a12d0e96c034b5ae666083e827e0b2",
+      "verified_by": {
+        "command": "cd \"$REPO\" && ! grep -q \"without invoking pointwise NEC\" lean/SKEFTHawking/BHThermodynamicsFourLaws.lean",
+        "declared": "cd \"$REPO\" && ! grep -q \"without invoking pointwise NEC\" lean/SKEFTHawking/BHThermodynamicsFourLaws.lean",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
     }
   ]
 }
