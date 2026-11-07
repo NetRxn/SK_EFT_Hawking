@@ -302,7 +302,7 @@ in the Lie algebra, and conjugation spreads that line to the whole algebra.
 
 The two recurrences these produce are
 \[
-  \varepsilon_{n+1} = K^{2}\varepsilon_n^{3/2},
+  \varepsilon_{n+1} = K\varepsilon_n^{3/2},
   \qquad
   L(n+1) = 5\,L(n) + \beta ,
 \]
@@ -798,8 +798,9 @@ the constructive $\varepsilon_0$-cover's maximum word length, not the
 information-theoretically optimal constant, which is precisely the gap
 Sec.~\ref{sec:length} addresses. And the accompanying worked instantiation,
 which witnesses that the contract is not vacuous, is evaluated at $U = \mathbf 1$
-and $\varepsilon = \varepsilon_0$, that is at the identity target and the base
-precision, so it exercises the contract at recursion depth $0$ and not beyond.
+and $\varepsilon = \varepsilon_0$. The threshold gives
+$\log_4(1/(K^2\varepsilon_0)) = 3/2$, so this instance exercises the
+compiler at recursion depth $1$.
 
 Finally, the scope boundary. The compiler is a mathematical function inside the
 proof assistant, verified once for all inputs. Engineering it into a runnable,
@@ -1189,8 +1190,8 @@ Clifford$+$CCZ, which is where its right-hand side is defined. The
 ancilla-assisted synthesis (Theorem~\ref{thm:kmm}) is a state-level contract on
 ancilla-initialized inputs, not an operator-norm statement. And the worked
 instantiation accompanying Theorem~\ref{thm:compile} is evaluated at the
-identity target and the base precision, so it witnesses non-vacuity at
-recursion depth $0$.
+identity target and the base precision. It witnesses non-vacuity at
+recursion depth $1$.
 
 \subsection{What is outside}
 
