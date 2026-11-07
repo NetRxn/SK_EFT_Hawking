@@ -10346,6 +10346,21 @@
         "enforced": true,
         "run_at": "2026-11-06"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d1-stage10-redraft:D1:1.1",
+      "status": "fixed",
+      "evidence": "Exact reviewed D1/F donor requalified on the current draft. All three supported zero-bath occupation crossings, full noise floors, thermal coefficients and cutoff placements pass. JSON, charter, manuscript and F agree. The legacy accessibility proxy is scoped, and the broader physical common-unit BUILD stays open.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D1_CROSSOVER_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-06",
+      "commit": "45dc34875bf882043fe603dd49bc363eab209482",
+      "verified_by": {
+        "command": "uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider",
+        "declared": "uv run python -B -m pytest tests/test_d1_hierarchy_table.py tests/test_f_hierarchy_claims.py -q -p no:cacheprovider",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
     }
   ]
 }
