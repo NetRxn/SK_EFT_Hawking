@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-08-14T04:03:05+00:00",
+  "generated_at": "2026-11-07T00:52:53+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -650,6 +650,17 @@
       "size_bytes": 239457,
       "url_used": "https://arxiv.org/pdf/hep-th/9404156",
       "note": null
+    },
+    "Barcelo2011": {
+      "bibkey": "Barcelo2011",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-07T00:50:00+00:00",
+      "size_bytes": 2172677,
+      "url_used": null,
+      "note": "pre-existing on disk; recorded without re-fetch"
     },
     "BarceloLRR2005": {
       "bibkey": "BarceloLRR2005",
@@ -1831,13 +1842,13 @@
     "DawsonNielsen2006": {
       "bibkey": "DawsonNielsen2006",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 1324,
-      "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "fetched_at": "2026-11-07T00:52:53+00:00",
+      "size_bytes": 222679,
+      "url_used": "https://arxiv.org/pdf/quant-ph/0505030",
+      "note": null
     },
     "Degenne2025BrownianMotion": {
       "bibkey": "Degenne2025BrownianMotion",
@@ -2223,6 +2234,17 @@
       "size_bytes": 8883,
       "url_used": "https://api.crossref.org/works/10.1103/PhysRevD.85.124027",
       "note": "no arxiv id"
+    },
+    "FinazziLiberatiSindoni2012": {
+      "bibkey": "FinazziLiberatiSindoni2012",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-07T00:50:00+00:00",
+      "size_bytes": 318882,
+      "url_used": null,
+      "note": "pre-existing on disk; recorded without re-fetch"
     },
     "FinazziLiberatiSindoni2012PRL": {
       "bibkey": "FinazziLiberatiSindoni2012PRL",
@@ -3554,6 +3576,17 @@
       "size_bytes": 330438,
       "url_used": "https://arxiv.org/pdf/quant-ph/9707021",
       "note": null
+    },
+    "Kitaev2006": {
+      "bibkey": "Kitaev2006",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-07T00:50:00+00:00",
+      "size_bytes": 1533535,
+      "url_used": null,
+      "note": "pre-existing on disk; recorded without re-fetch"
     },
     "Kitaev2009": {
       "bibkey": "Kitaev2009",
@@ -5876,6 +5909,17 @@
       "url_used": "https://arxiv.org/pdf/2506.00036",
       "note": null
     },
+    "Verlinde1988": {
+      "bibkey": "Verlinde1988",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json",
+      "verdict": "success",
+      "fetched_at": "2026-11-07T00:50:00+00:00",
+      "size_bytes": 12945,
+      "url_used": null,
+      "note": "pre-existing on disk; recorded without re-fetch"
+    },
     "Verlinde2011Entropic": {
       "bibkey": "Verlinde2011Entropic",
       "phase": "Phase-6a",
@@ -6194,6 +6238,17 @@
       "size_bytes": 1015578,
       "url_used": "https://arxiv.org/pdf/2312.14928",
       "note": null
+    },
+    "Wang2026TMDPolariton": {
+      "bibkey": "Wang2026TMDPolariton",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-11-07T00:50:00+00:00",
+      "size_bytes": 1152746,
+      "url_used": null,
+      "note": "pre-existing on disk; recorded without re-fetch"
     },
     "WangKimBZHe2026PennTMDPolariton": {
       "bibkey": "WangKimBZHe2026PennTMDPolariton",
