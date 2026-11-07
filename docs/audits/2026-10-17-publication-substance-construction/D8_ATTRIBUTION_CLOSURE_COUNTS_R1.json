@@ -1,0 +1,30 @@
+{
+  "before": {
+    "blockers_open": 0,
+    "open_findings": 7,
+    "advisories_open": 7,
+    "critical_open": 0,
+    "blocked_p1_gates": [
+      "LeanProofSubstance",
+      "NarrativeGrounding"
+    ],
+    "readiness": "YELLOW"
+  },
+  "after": {
+    "blockers_open": 0,
+    "open_findings": 6,
+    "advisories_open": 6,
+    "critical_open": 0,
+    "blocked_p1_gates": [
+      "LeanProofSubstance",
+      "NarrativeGrounding"
+    ],
+    "readiness": "YELLOW"
+  },
+  "closed": [
+    "review:2026-08-15-d8-stage10-redraft:D8:1.6",
+    "review:2026-11-07-d8-trapped-ion-proof-attribution:D8:1.1"
+  ],
+  "catalog_sha256": "313258e76de99b9e2eb9fc476611a303c916fbfc265a554e2c96cdcf726a4770",
+  "idempotent": true
+}
