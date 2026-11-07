@@ -17,6 +17,7 @@ import SKEFTHawking.ADW.FiniteDeterminantRawJet
 import SKEFTHawking.ADW.FiniteDiracExecutableAssembly
 import SKEFTHawking.ADW.FiniteDiracQuaternionSpecialization
 import SKEFTHawking.ADW.QuaternionSU2Sphere
+import SKEFTHawking.ADW.QuaternionSU2Haar
 import SKEFTHawking.ADW.GaussianPolynomialAffine
 import SKEFTHawking.ADW.GaussianPolynomialHermite
 import SKEFTHawking.ADW.GaussianPolynomialIBP
