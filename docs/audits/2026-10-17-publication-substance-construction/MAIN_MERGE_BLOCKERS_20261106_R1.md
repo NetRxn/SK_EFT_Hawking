@@ -30,3 +30,21 @@ A portable reproduction needs exact input custody and delivery to the
 expected path. The currently available notebook skip-cache fingerprint
 differs from this draft. The full notebook leg, hosted input delivery,
 other merge failures, and full merge qualification are still open.
+
+## Current draft diagnostic, 7 November
+
+The [exact 27-node rerun](MAIN_MERGE_BLOCKERS_20261107_R2_EVIDENCE.zip)
+on `3bfc51622` ran with the actual merge profile's empty marker expression.
+It recorded **6 passed, 21 failed**, with zero skips and errors. Compared
+with the earlier 3/24 diagnostic, three apex-grounding tests and the
+LaTeX population test now pass. The seeded dangling Blocked-by test
+detects the seed but now fails at its clean-baseline check because
+existing review documents still have unsupported lanes or severity
+markers. An exact transport of seven previously reviewed postimages
+plus four D1 Python lane corrections is independently under review.
+
+The test regenerated the catalog source stamp. The catalog bytes
+were identical to the input. The exact generated stamp was preserved
+in the archive and restored to the pinned tracked version after the
+test. A standalone authoritative native rebuild was outside this
+diagnostic. Full qualification remains open.
