@@ -2015,15 +2015,27 @@ class TestSentenceLengthRatchet:
         by = {d.name: d for d in br.check_bundle_sentence_length().details}
         assert by["over_60_words"].warning is False
 
-    def test_ratchet_is_sensitive_to_a_seeded_regression(self, monkeypatch):
-        """Lower the population by raising nothing: drop the ceiling below the
-        live count and the gate must fail. Proves it is not vacuous."""
-        import sys, pathlib
-        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+    def test_ratchet_is_sensitive_to_a_seeded_regression(self, tmp_path, monkeypatch):
+        """Included scalar definitions are invisible. Included prose still gates."""
         from src.core import constants
+
         monkeypatch.setattr(constants, "SENTENCE_OVER_100_CEILING", 0)
-        res = self._run()
-        assert not res.passed, "ceiling 0 must fail — the gate would otherwise be inert"
+        bundle = tmp_path / "D1"
+        bundle.mkdir()
+        monkeypatch.setattr(_H, "PAPERS_DIR", tmp_path)
+        (bundle / "paper_draft.tex").write_text("\\input{counts}\n")
+        included = bundle / "counts.tex"
+        definitions = "".join(f"\\newcommand{{\\count{'a' * n}}}{{{n}}}\n"
+                              for n in range(1, 111))
+        included.write_text(definitions)
+        clean = self._run()
+        assert clean.passed, [d.message for d in clean.details]
+
+        included.write_text(definitions + " ".join(["word"] * 101) + ".\n")
+        seeded = self._run()
+        over_limit = next(d for d in seeded.details if d.name == "over_100_words")
+        assert not seeded.passed
+        assert over_limit.message.startswith("1 sentence(s) over 100 words")
 
     def test_ceiling_matches_the_live_measurement(self):
         """A ratchet frozen above the live value is slack that hides a

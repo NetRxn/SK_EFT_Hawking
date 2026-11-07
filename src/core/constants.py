@@ -3099,7 +3099,10 @@ NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tab
 #: 2026-08-11: 20 -> 18. I1's prose-reviewer restructuring split two over-100-word
 #: sentences while rewriting the abstract and merging sections. Repayment, not a
 #: measurement change — the instrument is the same one that produced the 20.
-SENTENCE_OVER_100_CEILING = 18
+#: 2026-11-07: six measured units after excluding non-rendered scalar macro
+#: definitions. The previous scanner counted the shared census include once
+#: per consuming bundle. This is a measurement correction.
+SENTENCE_OVER_100_CEILING = 6
 
 #: Advisory companion: sentences over 60 words. Reported, not gated — 60 words is
 #: long but defensible in a methods paragraph, and gating it would fire on correct
