@@ -1316,18 +1316,18 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         function="fig_c_GW_vs_ligo_constraint",
         caption=(
             "Phase 6a Wave 2 — gravitational-wave propagation speed deviation "
-            "Δc/c = √χ_vest − 1 across the natural vestigial-susceptibility "
+            "Δc/c = √χ_vest − 1 across the adopted vestigial-susceptibility "
             "range, vs the GW170817 multi-messenger bound (Abbott et al. ApJL "
-            "848, L13 (2017), Eq. (5)): |Δc/c| ≤ 3 × 10⁻¹⁵. Making the Volovik "
-            "vestigial-second-sound graviton identification quantitative "
+            "848, L13 (2017), Eq. (1)), using the conservative symmetric envelope |Δc/c| ≤ 3 × 10⁻¹⁵. Making the "
+            "assumed vestigial-second-sound graviton speed law quantitative "
             "through the ADW metric-channel susceptibility gives "
-            "Δc/c sweeping [−0.68, +2.16] over the natural χ_vest range "
+            "Δc/c sweeping [−0.68, +2.16] over the adopted χ_vest range "
             "[0.1, 10], vanishing at χ_vest = 1 and exceeding the GW170817 "
             "cap by 14+ orders of magnitude AT THE ENDPOINTS. The "
             "GW170817-compatible χ_vest window is "
             "[(1 − 3e-15)², (1 + 3e-15)²] — nested strictly INSIDE the "
             "natural range and meeting it at χ_vest = 1, so the datum "
-            "confines the susceptibility to unity rather than excluding "
+            "confines the susceptibility to a finite interval about unity rather than excluding "
             "the range. Lean: "
             "GravitationalWaves.ligo_confines_chi_vest_within_natural_range, "
             "ligo_window_subset_natural_range, "
@@ -1335,7 +1335,7 @@ FIGURE_REGISTRY: list[FigureSpec] = [
             "c_GW_match_iff_chi_close_to_one."
         ),
         needs_experiments=False, expected_traces=3,
-        expected_axes={"xaxis": "χ_vest", "yaxis": "Δc/c"},
+        expected_axes={"xaxis": "χ<sub>vest</sub>", "yaxis": "Δc/c"},
         physics_checks=[], color_keys=["amber", "steel_blue"],
     ),
     FigureSpec(

@@ -299,3 +299,14 @@ All recorded in `docs/review_finding_supersessions.json`. Post-remediation: D3 o
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-06-10 source-reconciliation pass post external-review remediation: 5 freshness-flagged sources triaged — paper20_scalar_rung/paper21_majorana_rung/paper26_bh_entropy/paper6_vestigial REAL prose changes (all one theme: commit 5207b72b CHECK-24 calibration, gapped_interface_axiom-since-retired-into-tracked-Prop-TPFConjecture phrasing in per-paper formal-status passages) with NO D3 counterpart prose (bundle carries no project-axiom-count/status prose; grep-verified zero hits) hence zero divergence; paper40_higher_curvature MTIME-ONLY (regenerated tables byte-identical to HEAD, D3 has zero \input statements, compile path decoupled). Remediation themes (asymmetric GW170817 bound, project-adopted Vergeles window, Lean-backed wen_adw_factor_6000 bracket, 4x module-attribution fixes) verified already absorbed in-tandem via ca0d0f36/f1a0829f/da05d435/5207b72b. Standard DISCLOSURE_TEXT.md Variant-A block inserted (was clearly absent); pdflatex x2 clean 57pp. freshness_stale to be re-set true post-run per task direction (sweep program owns lifecycle).
+
+
+## 2026-11-06 — Main-based L1 consumer authoring checkpoint
+
+Reconciled the reviewed D3/Paper25 source corrections against main ce194cdc4.
+The unrelated TQC bibliography change is excluded; declaration identities,
+dates and acceptance state are preserved. The existing compiler derives the
+actual65-page D3 candidate. This authoring checkpoint is not independently
+accepted or merge-ready. Producer/figure/precision and upstream L1 consistency
+remain to be composed and qualified. See the existing review area at
+`papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md`.

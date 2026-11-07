@@ -1,0 +1,16 @@
+{
+  "publication_base_head": "092454d6c",
+  "publication_file_sha256": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
+  "controlled_primary_commit": "bfeaadd2dc6568f1d76800d16445b8459bf872d3",
+  "controlled_epoch": "e3db3cb877fc37134306e72448cbf52dfa78064e04e2981cc1ae40520d2f97ab",
+  "native_diagnostics_and_five_core_only_scans_inspected": true,
+  "all_nine_declared_publication_controls_pass": true,
+  "scoped_project_session": 17731,
+  "scoped_project_outcome": "TERMINAL exit0;5/5 PASS,6 warnings,428.9seconds",
+  "broader_default_receipt_source": "1028b047446452398836793e1afda36f7ad56a3a",
+  "broader_default_failed": 19,
+  "full_publication_native_main_human_acceptance": false,
+  "scoped_project_warnings_retained": true,
+  "focused_publication_test_outcome": "89 passed in0.68seconds;imports resolve within publication checkout",
+  "independent_application_and_scoped_qualification": "ACCEPT with terminal addendum; no fullpublication or physical acceptance"
+}

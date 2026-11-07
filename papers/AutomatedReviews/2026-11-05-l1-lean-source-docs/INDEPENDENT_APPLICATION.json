@@ -1,0 +1,98 @@
+{
+  "verdict": "ACCEPT",
+  "scope": "Current exact documentation application/composition and control-format correction; narrow closure pending remaining broad qualification and ROOT disposition",
+  "reviewed_at_utc": "2026-11-05T23:35:22.435797+00:00",
+  "source_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+  "accepted_source_exact": true,
+  "only_new_control_commands_changed_vs_preserved_document": true,
+  "control_delimiter_grammar": "both current new commands pass actual canonical regex",
+  "independent_semantic_equivalence_executions": [
+    {
+      "finding": "1.1",
+      "source": "original",
+      "before_after_exit": [
+        1,
+        1
+      ]
+    },
+    {
+      "finding": "1.1",
+      "source": "rejected_r1",
+      "before_after_exit": [
+        1,
+        1
+      ]
+    },
+    {
+      "finding": "1.1",
+      "source": "repaired",
+      "before_after_exit": [
+        0,
+        0
+      ]
+    },
+    {
+      "finding": "1.2",
+      "source": "original",
+      "before_after_exit": [
+        1,
+        1
+      ]
+    },
+    {
+      "finding": "1.2",
+      "source": "rejected_r1",
+      "before_after_exit": [
+        1,
+        1
+      ]
+    },
+    {
+      "finding": "1.2",
+      "source": "repaired",
+      "before_after_exit": [
+        0,
+        0
+      ]
+    }
+  ],
+  "fresh_actual_publication_verifies": [
+    {
+      "document": "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/L1.md",
+      "finding": "1.2",
+      "result": "PASS"
+    },
+    {
+      "document": "papers/AutomatedReviews/2026-11-05-l1-reader-results/L1.md",
+      "finding": "1.2",
+      "result": "PASS"
+    },
+    {
+      "document": "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/L1.md",
+      "finding": "1.1",
+      "result": "PASS"
+    },
+    {
+      "document": "papers/AutomatedReviews/2026-11-05-l1-lean-source-docs/L1.md",
+      "finding": "1.2",
+      "result": "PASS"
+    }
+  ],
+  "corpus_invalid_count": 56,
+  "historical_invalid_controls_not_waived": true,
+  "scope_local_links_all_exist": true,
+  "absorbed_commit": "1028b047446452398836793e1afda36f7ad56a3a",
+  "authoritative_epoch": "8927bc113b46e31d02ec6f676e10d3c70e8910edb2af4ddfa5f8ea72445b5ba5",
+  "project_checks": "Actual5/5 PASS, five warnings retained; counts regeneration observed and must be reconciled in primary delivery",
+  "broader_fast_suite": "PENDING per parent at review time, no pass inferred",
+  "narrow_closure_supported_after_qualification": true,
+  "remaining_conditions": [
+    "Terminal broader fast-suite result honestly reconciled, with any failure handled at actual scope",
+    "Derived counts writer outputs reconciled without reset; no claim unchanged primary whole tree after regeneration",
+    "ROOT protected source/evidence checkpoint and per-finding existing closure writer using exact declared Verifies",
+    "Full science/main/whole-publication-native/stage/human gates remain open"
+  ],
+  "required_corrections": [],
+  "fresh_final_invalid_identities_equal_baseline": true,
+  "baseline_comparison_artifact_scope": "Initial58 current-invalid entries preserved; independent final scan56 equals baseline identities/multiplicities"
+}

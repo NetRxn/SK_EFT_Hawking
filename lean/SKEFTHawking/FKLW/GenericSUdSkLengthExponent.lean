@@ -13,7 +13,7 @@ calibration modules that reference it.
 
 `skLengthExponent_sud := Real.log 5 / Real.log (3 / 2) ≈ 3.97` — the canonical
 Dawson-Nielsen exponent (Dawson & Nielsen, *Quantum Info. & Comp.* 6 (2006),
-81–95; arXiv:quant-ph/0505030, §3.3). It arises from solving the joint SK
+81–95; arXiv:quant-ph/0505030, §3). It arises from solving the joint SK
 recursion:
   * length recurrence `L(n+1) = 5 · L(n)` (5× word-length growth per level), and
   * error recurrence `ε(n+1) = ε(n)^(3/2)` (the super-quadratic contraction the
@@ -47,7 +47,7 @@ set_option autoImplicit false
 namespace SKEFTHawking.FKLW.GenericSUd
 
 /-- **The canonical SU(d) Solovay-Kitaev word-length polylog exponent**
-`log 5 / log (3 / 2) ≈ 3.97` (Dawson-Nielsen 2006, arXiv:quant-ph/0505030 §3.3):
+`log 5 / log (3 / 2) ≈ 3.97` (Dawson-Nielsen 2006, arXiv:quant-ph/0505030 §3):
 5× word-length growth per level + ε^(3/2) error contraction. Single source of
 truth — all SU(d) headline / cascade / calibration modules reference this
 definition so the value cannot drift. Definitionally equal to the SU(2)

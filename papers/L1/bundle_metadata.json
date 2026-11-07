@@ -3,7 +3,7 @@
   "apex_theorems": [
     {
       "name": "SKEFTHawking.GravitationalWaves.c_GW_match_iff_chi_close_to_one",
-      "claims": "Theorem 1: LigoSatisfied(Δc/c) ↔ χ_vest ∈ [(1-τ)²,(1+τ)²] — the correctness-push biconditional locating the compatible window",
+      "claims": "Theorem 1: for nonnegative χ_vest and fixed τ = tolGW170817 = 3e-15, LigoSatisfied(Δc/c) ↔ χ_vest ∈ [(1-τ)²,(1+τ)²] — the correctness-push biconditional locating the compatible window",
       "declared": "2026-08-07"
     },
     {
@@ -28,47 +28,47 @@
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_lower",
-      "claims": "falsifier isolating P2 (GW170817 compatibility) at the lower endpoint",
+      "claims": "bundle falsifier using failure of P2 (GW170817 compatibility) at the lower endpoint; P1 holds and P3' also fails",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_natural_upper",
-      "claims": "falsifier isolating P2 at the upper endpoint",
+      "claims": "bundle falsifier using failure of P2 at the upper endpoint; P1 holds and P3' also fails",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_zero",
-      "claims": "falsifier isolating P1 (positivity)",
+      "claims": "bundle falsifier using failure of P1 (positivity) at χ_vest = 0; P2 and P3' also fail",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.H_VestigialModeIsGraviton_fails_at_quarter",
-      "claims": "falsifier isolating P3' — at χ_vest = 1/4 the deviation saturates -1/2, establishing P3' independence from P1",
+      "claims": "bundle falsifier using failure of P3' — at χ_vest = 1/4 the deviation is -1/2; P1 holds while P2 and P3' fail, showing P1 alone does not imply P3'",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_window",
-      "claims": "the Phase-5y H1 underdetermination caveat as an endpoint theorem: no c-rescaling reconciles either endpoint",
+      "claims": "endpoint exclusion: neither χ_vest = 0.1 nor χ_vest = 10 satisfies LigoSatisfied(c_GW_deviation χ_vest); the c-rescaling result is supplied by natural_endpoints_violate_ligo_for_every_c",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.natural_endpoints_violate_ligo_for_every_c",
-      "claims": "the frame-independent form, quantifying over all c > 0 explicitly",
+      "claims": "the c-independent endpoint exclusion for the actual relative deviation (c_GW χ_vest c - c)/c, for every real c ≠ 0",
       "declared": "2026-08-07"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.ligo_confines_chi_vest_within_natural_range",
-      "claims": "TITLE + ABSTRACT — the headline result: GW170817 confines chi_vest to a window strictly interior to the natural range",
+      "claims": "TITLE + ABSTRACT — the headline result: for nonnegative chi_vest satisfying the fixed GW170817 cap, chi_vest lies in [(1-τ)²,(1+τ)²], strictly interior to the adopted comparison window",
       "declared": "2026-08-14"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.ligo_window_inter_natural_range_nonempty",
-      "claims": "ABSTRACT — the compatible window and the natural range intersect at chi_vest = 1; the kernel-checked refutation of the retired disjointness framing",
+      "claims": "ABSTRACT — the compatible window and the adopted comparison window intersect at chi_vest = 1; the kernel-checked refutation of the retired disjointness framing",
       "declared": "2026-08-14"
     },
     {
       "name": "SKEFTHawking.GravitationalWaves.ligo_window_width_lt_natural_range_width_by_1e14",
-      "claims": "TITLE + ABSTRACT + §4 — the fine-tuning quantified: one part in 10^15 of the natural range",
+      "claims": "Under the assumed speed law and fixed GW170817 cap, 10^14 times the compatible-window width is smaller than the adopted comparison-window width (4τ = 1.2e-14 versus 9.9)",
       "declared": "2026-08-14"
     }
   ],
@@ -82,7 +82,7 @@
   "stage13_redo_required": true,
   "freshness_stale": true,
   "source_manifest_last_regen": "2026-05-12T12:46:30Z",
-  "last_lift": "2026-05-06T15:42:03Z",
+  "last_lift": "2026-11-07T13:14:40Z",
   "last_stage9_review": "2026-05-07T01:00:00Z",
   "last_stage10_review": "2026-05-06T23:55:00Z",
   "last_stage13_review": "2026-08-14T18:50:43Z",
@@ -116,7 +116,7 @@
       "source_note": "UNVERIFIED against the primary. A 2026-08-15 research-scout pass could not reach journals.aps.org: its robots.txt disallows automated agents and every author-guide fetch returned 403. This figure is the one recorded in papers/AutomatedReviews/2026-08-15-l3-stage10-redraft/L3.md §5.1, not one read off the APS author guide. Confirm by hand before treating a pass here as venue conformance; the current abstracts are 2-5x over, so the exact figure does not change any live verdict."
     }
   },
-  "compiled_pages": 4,
+  "compiled_pages": 5,
   "compile_gate_ok": true,
   "critical_open": 0,
   "stage13_review_kind": "full-adversarial",

@@ -1,0 +1,95 @@
+{
+  "author_commit": "64eb1978a0561bc6f4905635e020ef6ea3fd8db2",
+  "canonical_writer": "scripts/close_finding.py",
+  "reader": "build_graph.extract_review_finding_nodes",
+  "prior_records": 1248,
+  "current_records": 1249,
+  "previous_records_and_schema_exact": true,
+  "appended_record": {
+    "finding_id": "review:2026-08-14-l1-stage13:L1:2.3",
+    "status": "fixed",
+    "evidence": "Original seven GW dependencies now exist for BOTH L1 and Paper25 with actual Parameter target types; independent source review accepts exact consumer mapping. Actual RED/GREEN and production adverse-removal/restoration controls retained in PAPER25_PARAMETER_REPAIR_R1_EVIDENCE.zip. Human attestation2.1, physical BUILD and broader failed publication gates remain OPEN.",
+    "superseded_by": null,
+    "date": "2026-11-06",
+    "commit": "64eb1978a0561bc6f4905635e020ef6ea3fd8db2",
+    "verified_by": {
+      "command": "cd \"$REPO\" && uv run python -c 'import sys; sys.path.insert(0,\"scripts\"); from build_graph import build_graph_json; g=build_graph_json(); nodes={n[\"id\"]:n for n in g[\"nodes\"]}; edges={(e[\"source\"],e[\"target\"]) for e in g[\"links\"] if e[\"type\"]==\"DEPENDS_ON\" and nodes.get(e[\"target\"],{}).get(\"type\")==\"Parameter\"}; keys=[\"GW.C_GW_DEVIATION_UPPER_BOUND\", \"GW.C_GW_DEVIATION_LOWER_BOUND\", \"GW.C_GW_TWO_SIDED_CAP\", \"GW.CHI_VEST_NATURAL_LOWER\", \"GW.CHI_VEST_NATURAL_UPPER\", \"GW.GW170817_PEAK_FREQ_HZ\", \"GW.GAMMA_H_VESTIGIAL_DEFAULT\"]; required={(\"paper:\"+p,\"param:\"+k) for p in [\"L1\",\"paper25_gravitational_waves\"] for k in keys}; missing=sorted(required-edges); assert not missing, \"Missing original GW Parameter dependencies: \"+repr(missing); print(\"All14original GW dependency edges verified across L1 and Paper25\")'",
+      "declared": "cd \"$REPO\" && uv run python -c 'import sys; sys.path.insert(0,\"scripts\"); from build_graph import build_graph_json; g=build_graph_json(); nodes={n[\"id\"]:n for n in g[\"nodes\"]}; edges={(e[\"source\"],e[\"target\"]) for e in g[\"links\"] if e[\"type\"]==\"DEPENDS_ON\" and nodes.get(e[\"target\"],{}).get(\"type\")==\"Parameter\"}; keys=[\"GW.C_GW_DEVIATION_UPPER_BOUND\", \"GW.C_GW_DEVIATION_LOWER_BOUND\", \"GW.C_GW_TWO_SIDED_CAP\", \"GW.CHI_VEST_NATURAL_LOWER\", \"GW.CHI_VEST_NATURAL_UPPER\", \"GW.GW170817_PEAK_FREQ_HZ\", \"GW.GAMMA_H_VESTIGIAL_DEFAULT\"]; required={(\"paper:\"+p,\"param:\"+k) for p in [\"L1\",\"paper25_gravitational_waves\"] for k in keys}; missing=sorted(required-edges); assert not missing, \"Missing original GW Parameter dependencies: \"+repr(missing); print(\"All14original GW dependency edges verified across L1 and Paper25\")'",
+      "exit_code": 0,
+      "enforced": true,
+      "run_at": "2026-11-06"
+    }
+  },
+  "selected_actual_nodes": {
+    "review:2026-08-14-l1-stage13:L1:2.1": {
+      "id": "review:2026-08-14-l1-stage13:L1:2.1",
+      "type": "ReviewFinding",
+      "label": "2.1 \ud83d\udfe1 REQUIRED \u2014 `GW.CHI_VEST_NATURAL_LOWER` / `_UPPER",
+      "name": "\ud83d\udfe1 REQUIRED \u2014 `GW.CHI_VEST_NATURAL_LOWER` / `_UPPER` still lack `human_verified_date` (the correct residual)",
+      "verification": "verified",
+      "detail": "- **Severity:** required - **Lane:** `research` - **Verify:** `cd \"$REPO\" && uv run python -c \"from src.core.provenance import PARAMETER_PROVENANCE as P; m=[k for k in ('GW.CHI_VEST_NATURAL_LOWER','GW.CHI_VEST_NATURAL_UPPER') if not P[k].get('human_verified_date')]; assert not m, m\"`   *What it asserts:* exits 1 at HEAD. **Do not substitute `validate.py --check parameter_provenance --strict`:** th",
+      "meta": {
+        "severity": "major",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md",
+        "review_date": "2026-08-14-l1-stage13",
+        "review_name": "L1",
+        "section": "2.1",
+        "inferred_paper": null,
+        "inferred_bundle": "L1",
+        "declared_paper": "L1",
+        "declared_bundle": "L1",
+        "blocks": "ParameterProvenance",
+        "target": "`src/core/provenance.py:2785` and `:2835`",
+        "lane": "research",
+        "verify": "`cd \"$REPO\" && uv run python -c \"from src.core.provenance import PARAMETER_PROVENANCE as P; m=[k for k in ('GW.CHI_VEST_NATURAL_LOWER','GW.CHI_VEST_NATURAL_UPPER') if not P[k].get('human_verified_date')]; assert not m, m\"`",
+        "blocked_by": [],
+        "needs_operator": "now` \u2014 this is the sign-off itself."
+      }
+    },
+    "review:2026-08-14-l1-stage13:L1:2.3": {
+      "id": "review:2026-08-14-l1-stage13:L1:2.3",
+      "type": "ReviewFinding",
+      "label": "2.3 \ud83d\udd35 RECOMMENDED \u2014 L1 has zero `DEPENDS_ON` edges, so",
+      "name": "\ud83d\udd35 RECOMMENDED \u2014 L1 has zero `DEPENDS_ON` edges, so Gate 3 evaluates vacuously for it",
+      "verification": "verified",
+      "detail": "- **Severity:** recommended - **Lane:** `infra` - **Verify:** `cd \"$REPO\" && uv run python -c 'import sys; sys.path.insert(0,\"scripts\"); from build_graph import build_graph_json; g=build_graph_json(); nodes={n[\"id\"]:n for n in g[\"nodes\"]}; edges={(e[\"source\"],e[\"target\"]) for e in g[\"links\"] if e[\"type\"]==\"DEPENDS_ON\" and nodes.get(e[\"target\"],{}).get(\"type\")==\"Parameter\"}; keys=[\"GW.C_GW_DEVIATIO",
+      "meta": {
+        "severity": "minor",
+        "status": "fixed",
+        "review_file": "papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md",
+        "review_date": "2026-08-14-l1-stage13",
+        "review_name": "L1",
+        "section": "2.3",
+        "inferred_paper": null,
+        "inferred_bundle": "L1",
+        "declared_paper": "L1",
+        "declared_bundle": "L1",
+        "blocks": "ParameterProvenance",
+        "target": "graph nodes `paper:L1` and `paper:paper25_gravitational_waves`; `src/core/provenance.py` (`PAPER_DEPENDENCIES`); `src/core/constants.py` (`GW_PARAMS` values)",
+        "lane": "infra",
+        "verify": "`cd \"$REPO\" && uv run python -c 'import sys; sys.path.insert(0,\"scripts\"); from build_graph import build_graph_json; g=build_graph_json(); nodes={n[\"id\"]:n for n in g[\"nodes\"]}; edges={(e[\"source\"],e[\"target\"]) for e in g[\"links\"] if e[\"type\"]==\"DEPENDS_ON\" and nodes.get(e[\"target\"],{}).get(\"type\")==\"Parameter\"}; keys=[\"GW.C_GW_DEVIATION_UPPER_BOUND\", \"GW.C_GW_DEVIATION_LOWER_BOUND\", \"GW.C_GW_TWO_SIDED_CAP\", \"GW.CHI_VEST_NATURAL_LOWER\", \"GW.CHI_VEST_NATURAL_UPPER\", \"GW.GW170817_PEAK_FREQ_HZ\", \"GW.GAMMA_H_VESTIGIAL_DEFAULT\"]; required={(\"paper:\"+p,\"param:\"+k) for p in [\"L1\",\"paper25_gravitational_waves\"] for k in keys}; missing=sorted(required-edges); assert not missing, \"Missing original GW Parameter dependencies: \"+repr(missing); print(\"All14original GW dependency edges verified across L1 and Paper25\")'`",
+        "blocked_by": [],
+        "needs_operator": null,
+        "superseded_by": null,
+        "supersession_evidence": "Original seven GW dependencies now exist for BOTH L1 and Paper25 with actual Parameter target types; independent source review accepts exact consumer mapping. Actual RED/GREEN and production adverse-removal/restoration controls retained in PAPER25_PARAMETER_REPAIR_R1_EVIDENCE.zip. Human attestation2.1, physical BUILD and broader failed publication gates remain OPEN.",
+        "supersession_date": "2026-11-06"
+      }
+    }
+  },
+  "archive_sha256": "45f7718898c2564bb25c4033b3ffa3f39968b1dc28292c142e1d48cabf1f2e30",
+  "archive_members": {
+    "l1-paper25-closure-dry-r1.stdout": "51df1321df9e5900ea9b5695bd0abb73b42016868e0dc127882aaea88d737f67",
+    "l1-paper25-closure-dry-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "l1-paper25-closure-dry-r1.json": "069113d654f75991ee28139017ff0b24dbfbaf1abea37a29609bd37c178bb7ca",
+    "l1-paper25-closure-actual-r1.json": "695d9f8277e0c5b7a3006a6c75e0cb02ddd7a4e6399f3dc384a69cf1536bc85a",
+    "l1-paper25-closure-actual-r1.stdout": "fac56703546735d4d46f4358792ebaa38aa87dbe527804bee53b2002f6286bba",
+    "l1-paper25-closure-actual-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "l1-paper25-closure-reader-r1.stdout": "43b12c630f6a6506e60ace3630c28166ab7180f95ef896f55d4f2da9a3af0c17",
+    "l1-paper25-closure-reader-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "l1-paper25-closure-ledger-preimage-r1.json": "70dcf7a7eae914182fac3433c1cac082cd81a763bee7c235cc9cf31270f5ff8e"
+  },
+  "physical_BUILD": "OPEN_ORIGINAL_STRENGTH",
+  "newly_green_bundles": 0,
+  "main_merge": false
+}

@@ -1,0 +1,82 @@
+{
+  "source_commit": "528f2adb0d96e434a809e451fa3048d630ca4dfc",
+  "canonical_finding": "review:2026-11-06-l1-main-delivery:F:1.1",
+  "canonical_status": "fixed",
+  "closure_writer": {
+    "command": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "scripts/close_finding.py",
+      "--doc",
+      "papers/AutomatedReviews/2026-11-06-l1-main-delivery/F.md",
+      "--section",
+      "1.1",
+      "--status",
+      "fixed",
+      "--evidence",
+      "Independent source R3 accepts all20 original spans and13 backing hashes plus3 full-source pins; independent actual reader/render review accepts corrected passages. Exact declared Verify exits0. Original physical BUILD and aggregate L1 propagation remain OPEN.",
+      "--commit",
+      "528f2adb0d96e434a809e451fa3048d630ca4dfc",
+      "--superseded-by",
+      "papers/AutomatedReviews/2026-11-06-l1-main-delivery/F_SOURCE_REVIEW.json"
+    ],
+    "exit_code": 0,
+    "stdout": "\u2713 wrote 1 record(s): review:2026-11-06-l1-main-delivery:F:1.1\n",
+    "stderr": "",
+    "source_commit": "528f2adb0d96e434a809e451fa3048d630ca4dfc"
+  },
+  "producer": [
+    {
+      "id": "review:2026-11-06-l1-main-delivery:F:1.1",
+      "type": "ReviewFinding",
+      "label": "1.1 Unsupported L1 attribution, quantifiers and shared",
+      "name": "Unsupported L1 attribution, quantifiers and shared-coefficient synthesis in F",
+      "verification": "verified",
+      "detail": "- **Severity:** blocker - **Lane:** prose - **Gate:** `CrossPaperConsistency` - **Location:** `papers/F/paper_draft.tex:59-62`, with the complete20-span inventory in archived source assessment. - **Observed:** F attributes the graviton/second-sound identification to the2024quartet-order source, promotes an adopted response range to RPA normalization, claims universal range falsification despite th",
+      "meta": {
+        "severity": "critical",
+        "status": "fixed",
+        "review_file": "papers/AutomatedReviews/2026-11-06-l1-main-delivery/F.md",
+        "review_date": "2026-11-06-l1-main-delivery",
+        "review_name": "F",
+        "section": "1.1",
+        "inferred_paper": null,
+        "inferred_bundle": "F",
+        "declared_paper": "F",
+        "declared_bundle": "F",
+        "blocks": "`CrossPaperConsistency`",
+        "target": "`papers/F/paper_draft.tex:59-62`, with the complete20-span inventory in archived source assessment.",
+        "lane": "prose",
+        "verify": "`python3 -c 'import hashlib,json,pathlib; r=json.load(open('\"'\"'papers/AutomatedReviews/2026-11-06-l1-main-delivery/F_SOURCE_REVIEW.json'\"'\"')); assert r[\"verdict\"]==\"ACCEPT_SOURCE_PROPAGATION\", \"independent semantic review has not accepted this source\"; assert r[\"original_build_open\"] is True; assert r[\"canonical_closures\"]==0 and r[\"human_approvals\"]==0; assert all(hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()==h for p,h in r[\"source_hashes\"].items()); assert all(hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()==h for p,h in r[\"primary_source_pins\"].items()); expected=['\"'\"'abstract-coefficient'\"'\"', '\"'\"'abstract-headline'\"'\"', '\"'\"'cleared-register-coefficient'\"'\"', '\"'\"'closure-attribution-normalization'\"'\"', '\"'\"'closure-constraint-math'\"'\"', '\"'\"'closure-forcing-offset'\"'\"', '\"'\"'closure-heading'\"'\"', '\"'\"'conclusion-register'\"'\"', '\"'\"'conclusion-roster'\"'\"', '\"'\"'crossbridge'\"'\"', '\"'\"'crossnetwork'\"'\"', '\"'\"'falsified-register'\"'\"', '\"'\"'gauge-synthesis'\"'\"', '\"'\"'gravity-overview'\"'\"', '\"'\"'no-extra-dial'\"'\"', '\"'\"'partition-example'\"'\"', '\"'\"'publication-order'\"'\"', '\"'\"'publication-tier-roster'\"'\"', '\"'\"'strategy-link'\"'\"', '\"'\"'tier-overview'\"'\"']; assert sorted(r[\"required_span_ids\"])==expected and sorted(r[\"accepted_span_ids\"])==expected; assert r[\"independent_semantic_review\"] is True'`",
+        "blocked_by": [],
+        "needs_operator": null,
+        "superseded_by": "papers/AutomatedReviews/2026-11-06-l1-main-delivery/F_SOURCE_REVIEW.json",
+        "supersession_evidence": "Independent source R3 accepts all20 original spans and13 backing hashes plus3 full-source pins; independent actual reader/render review accepts corrected passages. Exact declared Verify exits0. Original physical BUILD and aggregate L1 propagation remain OPEN.",
+        "supersession_date": "2026-11-05"
+      }
+    }
+  ],
+  "old_ledger_rows_preserved": true,
+  "appended_rows": [
+    {
+      "finding_id": "review:2026-11-06-l1-main-delivery:F:1.1",
+      "status": "fixed",
+      "evidence": "Independent source R3 accepts all20 original spans and13 backing hashes plus3 full-source pins; independent actual reader/render review accepts corrected passages. Exact declared Verify exits0. Original physical BUILD and aggregate L1 propagation remain OPEN.",
+      "superseded_by": "papers/AutomatedReviews/2026-11-06-l1-main-delivery/F_SOURCE_REVIEW.json",
+      "date": "2026-11-05",
+      "commit": "528f2adb0d96e434a809e451fa3048d630ca4dfc",
+      "verified_by": {
+        "command": "python3 -c 'import hashlib,json,pathlib; r=json.load(open('\"'\"'papers/AutomatedReviews/2026-11-06-l1-main-delivery/F_SOURCE_REVIEW.json'\"'\"')); assert r[\"verdict\"]==\"ACCEPT_SOURCE_PROPAGATION\", \"independent semantic review has not accepted this source\"; assert r[\"original_build_open\"] is True; assert r[\"canonical_closures\"]==0 and r[\"human_approvals\"]==0; assert all(hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()==h for p,h in r[\"source_hashes\"].items()); assert all(hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()==h for p,h in r[\"primary_source_pins\"].items()); expected=['\"'\"'abstract-coefficient'\"'\"', '\"'\"'abstract-headline'\"'\"', '\"'\"'cleared-register-coefficient'\"'\"', '\"'\"'closure-attribution-normalization'\"'\"', '\"'\"'closure-constraint-math'\"'\"', '\"'\"'closure-forcing-offset'\"'\"', '\"'\"'closure-heading'\"'\"', '\"'\"'conclusion-register'\"'\"', '\"'\"'conclusion-roster'\"'\"', '\"'\"'crossbridge'\"'\"', '\"'\"'crossnetwork'\"'\"', '\"'\"'falsified-register'\"'\"', '\"'\"'gauge-synthesis'\"'\"', '\"'\"'gravity-overview'\"'\"', '\"'\"'no-extra-dial'\"'\"', '\"'\"'partition-example'\"'\"', '\"'\"'publication-order'\"'\"', '\"'\"'publication-tier-roster'\"'\"', '\"'\"'strategy-link'\"'\"', '\"'\"'tier-overview'\"'\"']; assert sorted(r[\"required_span_ids\"])==expected and sorted(r[\"accepted_span_ids\"])==expected; assert r[\"independent_semantic_review\"] is True'",
+        "declared": "python3 -c 'import hashlib,json,pathlib; r=json.load(open('\"'\"'papers/AutomatedReviews/2026-11-06-l1-main-delivery/F_SOURCE_REVIEW.json'\"'\"')); assert r[\"verdict\"]==\"ACCEPT_SOURCE_PROPAGATION\", \"independent semantic review has not accepted this source\"; assert r[\"original_build_open\"] is True; assert r[\"canonical_closures\"]==0 and r[\"human_approvals\"]==0; assert all(hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()==h for p,h in r[\"source_hashes\"].items()); assert all(hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()==h for p,h in r[\"primary_source_pins\"].items()); expected=['\"'\"'abstract-coefficient'\"'\"', '\"'\"'abstract-headline'\"'\"', '\"'\"'cleared-register-coefficient'\"'\"', '\"'\"'closure-attribution-normalization'\"'\"', '\"'\"'closure-constraint-math'\"'\"', '\"'\"'closure-forcing-offset'\"'\"', '\"'\"'closure-heading'\"'\"', '\"'\"'conclusion-register'\"'\"', '\"'\"'conclusion-roster'\"'\"', '\"'\"'crossbridge'\"'\"', '\"'\"'crossnetwork'\"'\"', '\"'\"'falsified-register'\"'\"', '\"'\"'gauge-synthesis'\"'\"', '\"'\"'gravity-overview'\"'\"', '\"'\"'no-extra-dial'\"'\"', '\"'\"'partition-example'\"'\"', '\"'\"'publication-order'\"'\"', '\"'\"'publication-tier-roster'\"'\"', '\"'\"'strategy-link'\"'\"', '\"'\"'tier-overview'\"'\"']; assert sorted(r[\"required_span_ids\"])==expected and sorted(r[\"accepted_span_ids\"])==expected; assert r[\"independent_semantic_review\"] is True'",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-05"
+      }
+    }
+  ],
+  "verify_after_closure_exit_code": 0,
+  "original_build_open": true,
+  "aggregate_l1_fix_propagation_open": true,
+  "newly_green_bundles": 0,
+  "main_merged": false,
+  "human_approvals": 0
+}

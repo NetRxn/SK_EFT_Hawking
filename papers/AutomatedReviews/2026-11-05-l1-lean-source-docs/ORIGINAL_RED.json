@@ -1,0 +1,31 @@
+{
+  "source_commit": "130b4015d99f5d2d69a71bc6baca4978d38a5061",
+  "source_file_sha256": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
+  "controls": {
+    "papers/AutomatedReviews/2026-11-05-l1-apex-propagation/L1.md:1.2": {
+      "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"each conjunct is independently necessary\" not in s and \"all independently load-bearing\" not in s, \"stale conjunct-independence source documentation\"'",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"each conjunct is independently necessary\" not in s and \"all independently load-bearing\" not in s, \"stale conjunct-independence source documentation\"\n                                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: stale conjunct-independence source documentation\n"
+    },
+    "papers/AutomatedReviews/2026-11-05-l1-reader-results/L1.md:1.2": {
+      "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"'",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Symmetric two-sided GW170817 cap\",1)[1].split(\"-/\",1)[0]; assert \"Eq. (1)\" in d, \"GW170817 tolerance docstring cites the wrong primary equation\"\n                                                                                                                                                                               ^^^^^^^^^^^^^^\nAssertionError: GW170817 tolerance docstring cites the wrong primary equation\n"
+    },
+    "new:1.1": {
+      "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s; assert \"physical source, state and unit matching\" in \" \".join(s.split())'",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"it has no project\" not in s and \"LigoSatisfied \u03b4 tol\" not in s; assert \"\u03c7_vest \u2208 [0, \u221e)\" in s and \"Illustrative real-product ansatz\" in s; assert \"physical source, state and unit matching\" in \" \".join(s.split())\n                                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    "new:1.2": {
+      "command": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"to within ~3e-15\" not in s and \"susceptibility offsets approximately \u00b12\u03c4\" in s'",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); assert \"to within ~3e-15\" not in s and \"susceptibility offsets approximately \u00b12\u03c4\" in s\n                                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    }
+  },
+  "scope": "Actual original lexical failures; independent source/native/project qualification remains required"
+}

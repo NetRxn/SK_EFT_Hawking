@@ -1,0 +1,69 @@
+{
+  "task": "l1-existing-merge-profile-authority-r5",
+  "generated_utc": "2026-11-06T09:13:07.974943+00:00",
+  "verdict": "ALLOWED_CONDITIONAL_ROOT_ORCHESTRATOR_STANDALONE_EXACT_CANDIDATE_PROFILE",
+  "candidate_head": "8189530ea2380fa73546cf3702a6073acb3b5374",
+  "candidate_status": "",
+  "initial_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_continuity": {
+    "fresh": true,
+    "changed": []
+  },
+  "packet_sha256": "4c3ae9da9713a72f85ac17abcab5f6f6fc8b0c1a72064fd96a5e4a5277d6c35b",
+  "reference_sha256_actual": {
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md": "a1a2f0a0417aa9dfab6c37d3ef5fa5511feb32df5cfa9f7823228f7de380144c",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-remediation-notebook.md": "e45bc8af218a44240a86509c3f07149fe3087cc25fe1b401956efa1db8cfb1f1",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/AGENTS.md": "be95697d83810ffb7a384c6be0616b726287b57a38db68ce3275b8b3efacab7b",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/CLAUDE.md": "8b285a18bc34b4bba4dede0e2b9bb40c2262f9eda5fab546c0206d9f92e8ad48",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md": "393da185686533d92a466da3dec0501f2c88e3e46dfad6d4d378915caf1bdf22",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-008-shared-lean-slot-control-plane.md": "8b783a2a2698dd2e9e5808f992fbb2a8115a89454d34a4926c78843d4b21a164",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/adrs/ADR-017-codex-continuity.md": "bbb5c52cff5f8269b6007e6faa170ad74d0fae790a71705abc0c4925d152de29",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/CODEX_CONTINUITY.md": "6276f6e4912bc46d63fa7b1e7bba102882ee68e08e4157572aa581ead6c1ba46",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/LEAN_SLOT_OPERATOR_GUIDE.md": "2cc663c170c504e31367efd8a271b5716731087afb9cb4abec3970f1cd7e103d",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/slotctl.py": "cbe736c7b2ef553f1518b1c24764b2d129f3e2af046f06f4c59d24da90dc7e60",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/verify_scope.py": "8fa4ff7b7cb75c17db1c55e9dcb0a13c61326f97912474449fc0202ac0c5bc48",
+    "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/papers/AutomatedReviews/2026-11-06-l1-main-delivery/NATIVE_PREREQUISITE_REQUIREDNESS_R3.md": "f1b6aa8ed3ad49b7d824a93a36c1f90ee5bd1196cdbf85c79cabd863f0918f27",
+    "/Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCIENTIFIC_INTEGRATION_COMPOSITION_R4.md": "1c0777da6dc7f99dc0c6eed69597b66db1ad3a4dc61fdf6c6c4a1952eb21e403"
+  },
+  "script_sha256": "66977a6dac44920ad7ced3a193f854a46e9676098f2d70cb75d2df8c953d0795",
+  "normative_findings": {
+    "S_B": "Non-worktree orchestrator actor restriction; no standalone validation target-commit restriction stated",
+    "S_E": "Explicit main/orchestrator validation command path; never worker endpoint",
+    "S_G": "Slot cache matching epoch requirement; no universal preexisting-epoch requirement for standalone profile",
+    "AGENTS_25_27": "Retain slotctl authority for shared absorption/build epoch/cache; coexist with explicit CLAUDE168 standalone full candidate gate",
+    "serialization": "ADR008 primary295 no authoritative build/cache-refresh overlap remains required"
+  },
+  "invocation": {
+    "workdir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+    "command": "UV_PROJECT_ENVIRONMENT=/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv UV_NO_SYNC=1 PYTHONDONTWRITEBYTECODE=1 /Users/johnroehm/.local/bin/uv run python /Users/johnroehm/.codex/worktrees/l1-main-delivery/SK_EFT_Hawking/scripts/verify_scope.py --merge-gate",
+    "target_selection": "script __file__ REPO; per-step cwd candidate or candidate/lean; inherited Python env explicit and no-sync"
+  },
+  "next_root_action": "Pin actual final reviewed checkpoint, bind module/toolchain/manifest/path-dependency origins, confirm candidate cache isolation and serialized build ownership; execute unchanged fullprofile once as ROOT. No slot/epoch/controller import/source retarget required.",
+  "parent_reported_preflight": {
+    "candidate_lake": "real separate directory; packages empty; no build directory",
+    "primary_lake": "different real path; existing build",
+    "candidate_venv": "absent",
+    "primary_venv": "real",
+    "source_review": "D1 R2 independently accepted; final closure/doc checkpoint pending",
+    "host_status": "capacity complete; zero conflicts/errors/reservations/backends; wt1FREE,wt2READY4unabsorbed,wt3QUARANTINED; observations not grants"
+  },
+  "not_performed": [
+    "scientific imports",
+    "tests",
+    "builds",
+    "native extraction",
+    "runtime/controller/slot calls",
+    "cache operations",
+    "network",
+    "Git mutations"
+  ],
+  "writes": [
+    "/tmp/l1-existing-merge-profile-authority-r5.md",
+    "/tmp/l1-existing-merge-profile-authority-r5.json"
+  ],
+  "report_sha256": "a29a042104c397c464178d0adc8599942dc2354f9d57d74d0b254f887c2072d0",
+  "corrects_R4": "Standalone existing fullcandidate route exists under actual ROOT role; primary epoch mismatch does not exclude standalone exact-source validation."
+}

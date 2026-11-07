@@ -1,0 +1,52 @@
+{
+  "archive": "G4_PRODUCTION_CONTROLS_R1_EVIDENCE.zip",
+  "sha256": "107b45795d14796e8b0502c7d66f8b82bc835aa2b351865ecc1c37aeeb7404ed",
+  "bytes": 2484979,
+  "members": {
+    "l1-g4-current-controls-r1.py": "69d01b141decf7f319122e19835328d96d4d11a62a82a18b21221a6f71afc044",
+    "l1-g4-current-controls-r1.json": "f36837a49a0daf70a05b69aa235815ac77310c66b96497912f15e75b606e3337",
+    "l1-g4-current-source-probe.py": "9dd8fd3f1fd79838ee8451d3ba2357f69d2a9ecc6d911456e26d1db14a3268ba",
+    "l1-g4-current-controls-r2-review.md": "a4b19242af1ccd7df2c8ae2385981506fad62be19029b806e9b629ad5645060f",
+    "l1-g4-current-controls-r2-review.json": "bc4a71f65a72e39553c78cbd4b534b7272e9d2b868ad6f47f7f3f657a28a099e",
+    "l1-inventory-public-surface-candidate-r1.py": "e96852a18276697e45d3239126966e2e63b34d8b8ad53a3348d6eda958fe3d95",
+    "l1-inventory-public-surface-review-r1.md": "5a6caed317b083cbaf04019700e71aa78cdab3f07b56e557e1beb75bbcd9c8e0",
+    "l1-inventory-public-surface-review-r1.json": "a067a1f2681d501e754ce74a3e3ceb2309389737bb8c6fbc0723b24f1c4a5442",
+    "l1-inventory-public-surface-registration-before-r1.json": "39f2c4081dc0df5ffb993890998c4a89ceb92127bbbb7d0c912a76b09c218a92",
+    "l1-inventory-public-surface-registration-after-r1.json": "90571d4f904790a181d2d02eb2de4a5c9282665cfa10dfcd58677c68a85e72e9",
+    "l1-inventory-public-surface-current-r1.xml": "cdd69666a033527125ac7bee4a0da9468fed27269c8fb805ea9287ba3c2e68d2",
+    "l1-public-surface-preimage-replay-r1.py": "550cd8ded43a96bdc26507436fb5caee1fe532e8cb03ae8bee7aa487ee725381",
+    "l1-public-surface-preimage-replay-r1.json": "fcd057eb56a28aa34cbde38d572be6e5fa1b6396382dd955523ed540d6d0235b",
+    "l1-public-surface-preimage-replay-r1.xml": "2b551aac68612e199a1f45af1be944b98853e7a3d31311795e887a39bcded9d8",
+    "l1-g4-production-controls_baseline.json": "c66f0a07638411932d4185f183d221aa8c02502d0e12d0e2b6eb2ef2cf8fb2eb",
+    "l1-g4-production-producer_case_exclusion_seeded.json": "6c197dba82cb124c26c4f5afd495e7bc70db7abac33222f356fa03745dc76e6c",
+    "l1-g4-production-producer_case_exclusion_restored.json": "00f37112b6c9cf883440b46ab22e3d5cb2b47b0594694fb5a6e433494e0c7bc9",
+    "l1-g4-production-retained_declaration_private_definition_seeded.json": "0f739f31696f20b47d03e8fc4e5089a5b1c6a7516e06dc49e28d225b686bb227",
+    "l1-g4-production-retained_declaration_private_definition_restored.json": "b2279d3f884de8f12c3368b70261b0040f9558854d936400c26c36f78be62f46",
+    "l1-g4-production-absent_dependency_target_seeded.json": "61ce38f0e244f56f53352bd7a5a6413962b95df08e9131da25e49838677980fc",
+    "l1-g4-production-absent_dependency_target_restored.json": "7b7466cd008377262d207615522fa50f4430b40ced806f191487cc7002959fb1"
+  },
+  "source_head": "9c2b00f59af77ac0516a31cddefa20f27409627c",
+  "current_controls_sequence": [
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0
+  ],
+  "independent_review": "ACCEPT bounded production input-extractor/evaluator/GateResult projection; full D6.6 incomplete",
+  "current_registration_completion": "Exact historical df42dc907 one-line EXPECTED_CHECK_FUNCTIONS insertion; independently reviewed candidate applied byte-exact",
+  "public_surface_module": {
+    "passed": 68,
+    "failed": 2,
+    "preimage_replay": "Both exact failed node IDs reproduced on HEAD original source, 150>117 and absent D7 theorem spelling; exact restore",
+    "new_guard_case": "PASS"
+  },
+  "unresolved": [
+    "Actual submission-consumer detail and loaded-module origin observations",
+    "Authoritative full graph/native and other-gate effects",
+    "Broader gates and two reproduced public-surface failures",
+    "Physical scientific BUILD, canonical finding closure, main and publication acceptance"
+  ]
+}

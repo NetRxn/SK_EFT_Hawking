@@ -1,0 +1,23 @@
+{
+  "source_base": "59ea56558b373f288bd96a8f46ca1f42777b9732",
+  "author_commit": "bfb8ca2576ccdfb25ad2ebf3bebc1a2bfb7d9fc0",
+  "source_postimages": {
+    "lean/SKEFTHawking/ADW/GaussianPolynomialHermite.lean": "2d4f1dee5432252a28aca49038f870ecdb98ea06122eafa1cfa121d1f27c5893",
+    "lean/SKEFTHawking.lean": "b444de34752554a1d7460052a163a78d0e6cf4116844e68678f5a2a78492237e"
+  },
+  "archive_sha256": "320709ade1e3ed8ae5adece55065ab6af7cdc6b4dd9780b7d14ff024f8bcae14",
+  "members": {
+    "publication-l1-hermite-integration-r1.patch": "503e9bfb139a34cabb6df4f72bf99977cb4ff3913604ac25b1bc7fc6022f5e4e",
+    "publication-l1-hermite-kernel-review-r1.md": "8d81d85292adc17548c13e6392fa08f483b49cd8c73231f6c9e8e3856e499e83",
+    "publication-l1-hermite-kernel-review-r1.json": "b5826840dfc350c5b10bbce96b6dbe4e8c8ae8526f66eab0f8dd1f3c5e2bfd5b",
+    "publication-l1-hermite-integration-review-r1.md": "6b4ac9bd056551ddb0ce1710d4ad2839218bebd92cc7a1872b5b9637fed53576",
+    "publication-l1-hermite-integration-review-r1.json": "90e3013aada14444ee431e0d7d7ce4f22395c8aad8e6fed5f892f3eb42dd3579",
+    "publication-l1-hermite-wt1-axioms-r1.json": "a54cc911940f42691443c6d69fba6441efda6e7d6dd20a8f6b8149f4dbf31b50",
+    "publication-l1-hermite-wt1-diagnostics-goals-r1.json": "d7077b1e7c7a88f7de14f21ded2d971b2d1272150839a6d654638361e36b8148",
+    "publication-l1-hermite-absorb-r1.invocation.json": "7811bb814012ba92b2ccbc76a5e543ee58547d8c6a2f2e9b023b6d81c803143e",
+    "publication-l1-hermite-absorb-r1.result.json": "efa3a868a20d66829462d327c5fbeaa5194422d2c8b37d56c39c705bb3c1701d",
+    "publication-l1-hermite-absorb-r1.stdout": "3f5e8df02d8fdbf65d78b3ff431c9a661e39366a12a68f887c2254805f194254",
+    "publication-l1-hermite-absorb-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Independent source/kernel/composition acceptance; primary native qualification only. Actual main candidate build and canonical extraction pending."
+}

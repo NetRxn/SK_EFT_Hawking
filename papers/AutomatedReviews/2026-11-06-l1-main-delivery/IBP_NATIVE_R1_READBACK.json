@@ -1,0 +1,61 @@
+{
+  "source_commit": "8ad1411526b8b8d5b49e9f3b9993b8083ec887d9",
+  "native_profile": "FAIL",
+  "native_profile_returncode": 1,
+  "native_build": "PASS10835jobs",
+  "substrate": "clean",
+  "pytest": {
+    "passed": 7172,
+    "failed": 28,
+    "skipped": 14,
+    "warnings": 7,
+    "seconds": 2069.39
+  },
+  "failure_identity_comparison": "All27 earlier default failure IDs present, plus slow paper_latex_compiles zero-headroom test; profiles/sources differ, no causal or baseline-pass claim. Current full child tracebacks are not retained by existing wrapper.",
+  "postbuild_canonical_producers": "extraction/counts/tables allrc0",
+  "new_index_records": 41037,
+  "old_index_records_preserved": 41034,
+  "new_theorems": 3,
+  "source_hash": "edb39a8f035fe3da",
+  "all_new_axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "new_project_axioms": [],
+  "zero_sorry": true,
+  "freshness": {
+    "counts_fresh": "PASS",
+    "tables_fresh": "PASS90unchangedoutputs",
+    "claim_clusters_fresh": "PASS",
+    "notebook_exec": "FAIL Phase5b_Synthesis_Technical missingvestigial_mc;90cache-skipped"
+  },
+  "independent_artifact_verdict": "PASS_EXACT_GENERATED_ARTIFACTS allrows/all107macros",
+  "artifact_sha256": {
+    "docs/counts.json": "ef3a19e0c953cdc2fb276e96fc4a3d3e6e85de6e76c87f3a6302c806bdbc8e15",
+    "docs/counts.tex": "fdea7e969203f8a6156a5420ad97ab4d704ab0499e98780d8f0b43fbb8bfbd9a",
+    "lean/lean_deps.json": "cfe643cf7fff973259021bf873ab85cea76fba1a4b3ec75c5ad8e519e3e43ac4",
+    "lean/lean_deps.json.hash": "ea586c323e81da9ef0aab4f74cde12599e1e14376c9e220441e4b91fb7e9a4cd"
+  },
+  "archive_sha256": "a2978c18ee8e49afb40a840d4ed6d5c83e7827b0f9cb179107366ba7f9b7e0f2",
+  "members": {
+    "l1-ibp-full-merge-profile-r1.invocation.json": "4cb54e8c0f991fc91e8f2ba83162cf2d3c7d40dcf41904fcf1a3539ffe970137",
+    "l1-ibp-full-merge-profile-r1.result.json": "b3a94096feadebb34afa56c282d5d3623ceff2bf95b782e899deabd271e2594f",
+    "l1-ibp-full-merge-profile-r1.stdout": "705c26494662c1b77d204a98b44b5e79db47593566b11c7e5f90eb3fd85742e7",
+    "l1-ibp-full-merge-profile-r1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "l1-ibp-full-profile-pytest-lastfailed-r1.json": "57b5c2e73c60fbbeec06cf52a417b4624ea45af6b108bfa45f557bb5f60486c0",
+    "l1-ibp-postbuild-refresh-r1.result.json": "d2cce922cb048b88cfc8970b5cd42805dfc29e745513c8a301a5600463d52b4e",
+    "l1-ibp-four-checks-diagnosis-r1.result.json": "354658f089dd1f2627b75705016163a05af743fa59c174445416f17b4757ba2a",
+    "l1-ibp-four-checks-diagnosis-r1.four-checks.stdout": "66b2fb009ffc1aef39531dcac32fdcd90aa0d087859903c8aba0c08af3c5196f",
+    "l1-ibp-four-checks-diagnosis-r1.four-checks.stderr": "d051db5792957843beaea0cafdeac3f38f0d1c50f073681630473641e43cb285",
+    "l1-ibp-generated-artifact-review-r1.md": "475d9ec7e5db4cd893dbf0c65a2a7860bef6a75e9585e87b50db1192e3bd45d7",
+    "l1-ibp-generated-artifact-review-r1.json": "3652fb73ad8480527307023a705cbed96ae34a6cb1015a58b186f51b3caa0be3",
+    "l1-ibp-postbuild-refresh-r1.extraction.stdout": "421406c9af46f0b227e11da473db6249a8bfceef8c3139071223e6585f2c43f7",
+    "l1-ibp-postbuild-refresh-r1.extraction.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "l1-ibp-postbuild-refresh-r1.counts.stdout": "2455ae1ed34bb542ad2cad242f7620c5184e9829401d1b420aea94ede938aa98",
+    "l1-ibp-postbuild-refresh-r1.counts.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "l1-ibp-postbuild-refresh-r1.tables.stdout": "74ee7584945eb41305e9c84eb425b65b4e8c6e73ab67e017bee7aa592ad3464c",
+    "l1-ibp-postbuild-refresh-r1.tables.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scientific_or_publication_closures": false
+}

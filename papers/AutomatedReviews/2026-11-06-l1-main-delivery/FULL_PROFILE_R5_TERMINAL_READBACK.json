@@ -1,0 +1,21 @@
+{
+  "archive": "FULL_PROFILE_R5_TERMINAL_EVIDENCE.zip",
+  "sha256": "27d1b193c6ba0aac5b6eee314f1d5d27172aebe89796ec4df39e7e922571ee54",
+  "members": {
+    "l1-full-merge-profile-r5.invocation.json": "a30081b8387aaee1907b3bd77734708b8856815fef0c9469a88ce34bee3deff1",
+    "l1-full-merge-profile-r5.result.json": "06fb82b6faa80f090e0e6977ad74f6d71237c5f0e5c05f269abfce558ce8a2af",
+    "l1-full-merge-profile-r5.stdout": "b4e93448db25fd3fb0b722bad4c261bce8751ebb974f8359e394e66873893435",
+    "l1-full-merge-profile-r5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "generated-paths.diff": "9cb05cb8c84dacd57d5df7cbe4dba32dd89217eb6d892a053d247205d995ee0e"
+  },
+  "candidate": "5a5d36fed74a83dcf4746e95b8f7673309e11d27",
+  "returncode": 1,
+  "lean_build": "PASS: Build completed successfully (10834 jobs).",
+  "failed_phases": [
+    "full suite",
+    "validate --ci --no-memo",
+    "four CI_SKIP checks",
+    "working tree unchanged"
+  ],
+  "scope": "Actual terminal wrapper output; child full tracebacks were not retained. No publication or main acceptance."
+}

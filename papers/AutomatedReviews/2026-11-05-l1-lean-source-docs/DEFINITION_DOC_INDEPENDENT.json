@@ -1,0 +1,47 @@
+{
+  "task": "l1-definition-doc-r3-review",
+  "parent": "publication-remediation",
+  "verdict": "ACCEPT",
+  "scope": "Exact proposed one-block source-doc correction and finding contract, proposal only",
+  "head": "08079c0bc2152a82fd8845eac8291753b7f913e1",
+  "base_source_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+  "proposal_source_sha256": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
+  "initial_packet": {
+    "fresh": true,
+    "changed": []
+  },
+  "final_packet": {
+    "fresh": true,
+    "changed": []
+  },
+  "preservation": {
+    "exact_manifest_single_replacement_reconstructs_entire_proposal": true,
+    "all_nonblock_segments_equal": 49,
+    "block_comments": 48,
+    "changed_blocks_zero_based": [
+      2
+    ],
+    "all_other_block_comments_equal": 47,
+    "imports_definitions_statements_proofs_API_and_inline_comments_unchanged": true
+  },
+  "substantive": "The exact c_GW definition docstring now calls the law adopted, describes H as scalar compatibility conditions, explicitly denies that H derives the law or constructs a microscopic graviton, and retains physical mode and response/matter-reference matching as required. Anchor chi=1 and c*sqrt(chi) are preserved. This repairs the particular misleading local attribution in place and agrees with actual free-real definition and later scalar conjunction. No new physical assumption, proof or universal absence assertion introduced.",
+  "finding_1_3": {
+    "severity": "major: ACCEPT as material source-facing overclaim of physical attribution/derivation",
+    "gate": "NarrativeGrounding: ACCEPT canonical Gate7; historical-attribution heuristic is explicitly listed",
+    "command_contract": "One inline command, no embedded backticks, shlex exactly python3 -c plus one code argument. Extracted command exactly equals DEFINITION_DOC_ORIGINAL_RED.json verify. It confines assertions to immediately preceding c_GW docstring.",
+    "actual_current_unchanged_command_exit": 1,
+    "actual_proposal_path_adapted_command_exit": 0,
+    "control_limit": "Lexical exact-sentence control can be fooled and does not prove physics. Proposal control changes only input path and is not the canonical source Verify PASS. Actual unchanged source remains red pending ROOT application.",
+    "remaining": "ROOT source application, required controlled native/project qualification and existing recorded closure; no source application or closure inferred from proposal acceptance."
+  },
+  "finding_1_1_gate_correction": {
+    "verdict": "ACCEPT",
+    "prior": "ClaimGrounding",
+    "current": "NarrativeGrounding",
+    "evidence": "docs/READINESS_GATES.md151 canonical Gate7; scripts/readiness_gates.py683/1035 uses NarrativeGrounding. No ClaimGrounding match in these two owning files. CONTROL_REFINEMENT gate_name_correction transparently preserves prior label and rationale.",
+    "identity_requirement": "Only gate field changed; same heading/body/Verify requirement; existing1.1/1.2 Verify strings independently byte-compared against HEAD and unchanged."
+  },
+  "historical_acceptance": "Original3.3/3.4/4.2/5.3 remain separately ACCEPT at prior bounded source/proof/manuscript/render scope. This local-doc review is no new whole-source or whole-paper certificate.",
+  "retained_open": "Original B3 normalization/window, physical state and domain, tensor/polarization and matter reference, microscopic mode and physical transport/frequency/unit/error-band matching. Whole L1/full publication/native/main/human gates remain OPEN/BLOCK as applicable. ROOT owns entire L1 readiness and writers; Executor bounded deeper construction only.",
+  "execution_limit": "No tests/suite/builds/MCP/controller/native execution or primary writes. Only current and proposed lexical finding controls and read-only exact comparisons. Existing broader14865 left untouched. Only two requested report outputs written."
+}

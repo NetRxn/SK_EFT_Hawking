@@ -1,0 +1,110 @@
+{
+  "author_commit": "455358440ab0c16dee043de0d574eff13dec7a78",
+  "previous_records": 1249,
+  "current_records": 1250,
+  "previous_records_and_schema_exact": true,
+  "appended_record": {
+    "finding_id": "review:2026-08-12-legacy-compile-triage:legacy-compile-triage:6",
+    "status": "fixed",
+    "evidence": "Existing current-ancestor author455358440ab0c16dee043de0d574eff13dec7a78 repairs Unicode Gamma and missing macros. Fresh forced canonical compile at8b0ab6753 produces5pages,0fatal,0overfull,0unresolved; independent review visually inspects all5pages and verifies allPNG/text bytes equal committed PDF, with only12timestamp bytes differing. Closure is compile-only; original physical/B3, human and broader failed qualification remain OPEN.",
+    "superseded_by": null,
+    "date": "2026-11-06",
+    "commit": "455358440ab0c16dee043de0d574eff13dec7a78",
+    "verified_by": {
+      "command": "uv run python scripts/compile_bundle_pdf.py paper25_gravitational_waves",
+      "declared": "uv run python scripts/compile_bundle_pdf.py paper25_gravitational_waves",
+      "exit_code": 0,
+      "enforced": true,
+      "run_at": "2026-11-06"
+    }
+  },
+  "reader": "build_graph.extract_review_finding_nodes",
+  "nodes": {
+    "review:2026-08-12-legacy-compile-triage:legacy-compile-triage:6": {
+      "id": "review:2026-08-12-legacy-compile-triage:legacy-compile-triage:6",
+      "type": "ReviewFinding",
+      "label": "6 \ud83d\udd35 `paper25_gravitational_waves` does not compile: ",
+      "name": "\ud83d\udd35 `paper25_gravitational_waves` does not compile: ! LaTeX Error: Unicode character \u0393 (U+0393)",
+      "verification": "verified",
+      "detail": "- **Severity:** minor - **Lane:** prose - **Gate:** `paper_latex_compiles` (legacy ratchet) - **Location:** `papers/paper25_gravitational_waves/paper_draft.tex` - **Observed:** 13 fatal LaTeX error(s) under `pdflatex -halt-on-error`. First: `! LaTeX Error: Unicode character \u0393 (U+0393)` - **Evidence:** `uv run python scripts/compile_bundle_pdf.py paper25_gravitational_waves` reports FAIL with   `te",
+      "meta": {
+        "severity": "minor",
+        "status": "fixed",
+        "review_file": "papers/AutomatedReviews/2026-08-12-legacy-compile-triage/legacy-compile-triage.md",
+        "review_date": "2026-08-12-legacy-compile-triage",
+        "review_name": "legacy-compile-triage",
+        "section": "6",
+        "inferred_paper": "paper25_gravitational_waves",
+        "inferred_bundle": null,
+        "declared_paper": null,
+        "declared_bundle": null,
+        "blocks": "`paper_latex_compiles` (legacy ratchet)",
+        "target": "`papers/paper25_gravitational_waves/paper_draft.tex`",
+        "lane": "prose",
+        "verify": "`uv run python scripts/compile_bundle_pdf.py paper25_gravitational_waves`",
+        "blocked_by": [],
+        "needs_operator": null,
+        "superseded_by": null,
+        "supersession_evidence": "Existing current-ancestor author455358440ab0c16dee043de0d574eff13dec7a78 repairs Unicode Gamma and missing macros. Fresh forced canonical compile at8b0ab6753 produces5pages,0fatal,0overfull,0unresolved; independent review visually inspects all5pages and verifies allPNG/text bytes equal committed PDF, with only12timestamp bytes differing. Closure is compile-only; original physical/B3, human and broader failed qualification remain OPEN.",
+        "supersession_date": "2026-11-06"
+      }
+    },
+    "review:2026-08-14-l1-stage13:L1:2.1": {
+      "id": "review:2026-08-14-l1-stage13:L1:2.1",
+      "type": "ReviewFinding",
+      "label": "2.1 \ud83d\udfe1 REQUIRED \u2014 `GW.CHI_VEST_NATURAL_LOWER` / `_UPPER",
+      "name": "\ud83d\udfe1 REQUIRED \u2014 `GW.CHI_VEST_NATURAL_LOWER` / `_UPPER` still lack `human_verified_date` (the correct residual)",
+      "verification": "verified",
+      "detail": "- **Severity:** required - **Lane:** `research` - **Verify:** `cd \"$REPO\" && uv run python -c \"from src.core.provenance import PARAMETER_PROVENANCE as P; m=[k for k in ('GW.CHI_VEST_NATURAL_LOWER','GW.CHI_VEST_NATURAL_UPPER') if not P[k].get('human_verified_date')]; assert not m, m\"`   *What it asserts:* exits 1 at HEAD. **Do not substitute `validate.py --check parameter_provenance --strict`:** th",
+      "meta": {
+        "severity": "major",
+        "status": "open",
+        "review_file": "papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md",
+        "review_date": "2026-08-14-l1-stage13",
+        "review_name": "L1",
+        "section": "2.1",
+        "inferred_paper": null,
+        "inferred_bundle": "L1",
+        "declared_paper": "L1",
+        "declared_bundle": "L1",
+        "blocks": "ParameterProvenance",
+        "target": "`src/core/provenance.py:2785` and `:2835`",
+        "lane": "research",
+        "verify": "`cd \"$REPO\" && uv run python -c \"from src.core.provenance import PARAMETER_PROVENANCE as P; m=[k for k in ('GW.CHI_VEST_NATURAL_LOWER','GW.CHI_VEST_NATURAL_UPPER') if not P[k].get('human_verified_date')]; assert not m, m\"`",
+        "blocked_by": [],
+        "needs_operator": "now` \u2014 this is the sign-off itself."
+      }
+    },
+    "review:2026-08-14-l1-stage13:L1:2.3": {
+      "id": "review:2026-08-14-l1-stage13:L1:2.3",
+      "type": "ReviewFinding",
+      "label": "2.3 \ud83d\udd35 RECOMMENDED \u2014 L1 has zero `DEPENDS_ON` edges, so",
+      "name": "\ud83d\udd35 RECOMMENDED \u2014 L1 has zero `DEPENDS_ON` edges, so Gate 3 evaluates vacuously for it",
+      "verification": "verified",
+      "detail": "- **Severity:** recommended - **Lane:** `infra` - **Verify:** `cd \"$REPO\" && uv run python -c 'import sys; sys.path.insert(0,\"scripts\"); from build_graph import build_graph_json; g=build_graph_json(); nodes={n[\"id\"]:n for n in g[\"nodes\"]}; edges={(e[\"source\"],e[\"target\"]) for e in g[\"links\"] if e[\"type\"]==\"DEPENDS_ON\" and nodes.get(e[\"target\"],{}).get(\"type\")==\"Parameter\"}; keys=[\"GW.C_GW_DEVIATIO",
+      "meta": {
+        "severity": "minor",
+        "status": "fixed",
+        "review_file": "papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md",
+        "review_date": "2026-08-14-l1-stage13",
+        "review_name": "L1",
+        "section": "2.3",
+        "inferred_paper": null,
+        "inferred_bundle": "L1",
+        "declared_paper": "L1",
+        "declared_bundle": "L1",
+        "blocks": "ParameterProvenance",
+        "target": "graph nodes `paper:L1` and `paper:paper25_gravitational_waves`; `src/core/provenance.py` (`PAPER_DEPENDENCIES`); `src/core/constants.py` (`GW_PARAMS` values)",
+        "lane": "infra",
+        "verify": "`cd \"$REPO\" && uv run python -c 'import sys; sys.path.insert(0,\"scripts\"); from build_graph import build_graph_json; g=build_graph_json(); nodes={n[\"id\"]:n for n in g[\"nodes\"]}; edges={(e[\"source\"],e[\"target\"]) for e in g[\"links\"] if e[\"type\"]==\"DEPENDS_ON\" and nodes.get(e[\"target\"],{}).get(\"type\")==\"Parameter\"}; keys=[\"GW.C_GW_DEVIATION_UPPER_BOUND\", \"GW.C_GW_DEVIATION_LOWER_BOUND\", \"GW.C_GW_TWO_SIDED_CAP\", \"GW.CHI_VEST_NATURAL_LOWER\", \"GW.CHI_VEST_NATURAL_UPPER\", \"GW.GW170817_PEAK_FREQ_HZ\", \"GW.GAMMA_H_VESTIGIAL_DEFAULT\"]; required={(\"paper:\"+p,\"param:\"+k) for p in [\"L1\",\"paper25_gravitational_waves\"] for k in keys}; missing=sorted(required-edges); assert not missing, \"Missing original GW Parameter dependencies: \"+repr(missing); print(\"All14original GW dependency edges verified across L1 and Paper25\")'`",
+        "blocked_by": [],
+        "needs_operator": null,
+        "superseded_by": null,
+        "supersession_evidence": "Original seven GW dependencies now exist for BOTH L1 and Paper25 with actual Parameter target types; independent source review accepts exact consumer mapping. Actual RED/GREEN and production adverse-removal/restoration controls retained in PAPER25_PARAMETER_REPAIR_R1_EVIDENCE.zip. Human attestation2.1, physical BUILD and broader failed publication gates remain OPEN.",
+        "supersession_date": "2026-11-06"
+      }
+    }
+  },
+  "physical_BUILD": "OPEN_ORIGINAL_STRENGTH",
+  "main_qualified": false
+}

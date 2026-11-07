@@ -1,0 +1,804 @@
+# Main-based L1 consumer authoring checkpoint
+
+This is an INCOMPLETE authoring candidate based exactly on main
+ce194cdc4bf939b108c17edc9530a7f0a14565f9. It is not independently accepted
+on this composition, merge-qualified or publication-ready. ROOT retains L1.
+
+## Exact composition
+
+The D3 and Paper25 source repairs are reconciled against their main preimages
+from the independently reviewed publication sources at87ae47bfd, retained in
+normal publication history through1805e3358. D3's unrelated TQC bibliography
+hunk is excluded. Sixteen related D3 metadata claim strings are reconciled
+by declaration identity through the existing canonical JSON writer; names,
+declaration dates and other acceptance state are preserved. The existing
+compiler subsequently derives65pages for this actual D3 composition.
+No frontier metadata/history, L1 claims/audit state, Python implementation,
+Lean source or dependency configuration is transplanted.
+
+Source acceptance and archived reviews at publication87ae are provenance,
+not acceptance of this main composition. The exact preimage patches are
+retained byte-for-byte in PREIMAGES.zip with their hashes.
+
+## Actual initial checks and limits
+
+The existing49 gravitational-wave tests on this main-based code pass.
+These are not the publication candidate's89 cases; its additional precision
+controls and producer repairs have not been composed here. Both existing
+canonical LaTeX compiles pass without errors or unresolved references:
+D3has65pages/twelve unresolved overflows, Paper25fivepages/zero overflows.
+These PDFs use main's current figure bytes and are not independently render
+accepted here. Compiler success does not resolve stale producer/text matching.
+No native/build/slot/dependency action or full-suite replay was attempted.
+
+## Next required work
+
+Reconcile the upstream L1 manuscript and its canonical records on this same
+main base; the consumers are supporting work, not a substitute for L1 delivery.
+Reconcile the existing reviewed mathematical/precision controls and table
+producer, plus the actual figure producer and generated paper assets. Their
+main preimages differ from publication; include any necessary Python delta
+explicitly rather than call that a paper-only patch. Keep unrelated source
+and metadata untouched. Recheck source/figure consistency and independently
+review the complete composed diff and actual renders. Original main/source
+acceptance, counts freshness and the full merge gate still need a qualified
+existing execution route; paper scope can transitively require extraction.
+Do not retry native-dependent checks in an unprepared checkout or introduce
+a new runner/cache/timestamp workaround.
+
+The stable publication default-suite87ae result remains RED and has complete
+91-test triage at1805e3358. Some relevant D7/census fixes already exist on
+primary; reuse their evidence before implementing anything new. Do not copy
+constants wholesale or waive real corpus debt.
+
+Physical susceptibility normalization and [0.1,10] as a result, physical state,
+tensor/matter/light and controlled transport remain original-strength BUILD.
+Executor owns only bounded deeper constructions. No canonical closure, main
+merge, final scientific acceptance or human approval is recorded here.
+
+## Main source and computation composition checkpoint
+
+The subsequent authoring composition carries the actual L1 manuscript and
+nine semantic apex-claim corrections, preserving all other main metadata,
+including stage/human/readiness fields. It reuses the exact reviewed GW
+formula, inverse-window, D3 width producer, figure function/spec and scientific
+test deltas from publication1805, plus only three provenance locator strings.
+No historical claims catalog, closure ledger, counts or acceptance is copied.
+Two read-only composition assessments and exact hashes are retained here.
+
+On this actual main preimage, the complete89-case scientific suite first
+reports26 failures/63 passes. After the complete numerical/source package,
+it reports89 passes in0.19seconds. The canonical D3 table producer renders
+all16 snippets with no tracked table-byte change; the corrected exact width
+is significant even though its rounded displayed logarithm stays the same.
+The dependency-declaration suite reports1failure/4passes: its existing scanner
+misclassifies the local papers namespace imported by the scientific regression.
+The already reviewed generic repair exists on the publication branch; reconcile
+it through its existing finding/process before qualification. Do not declare a
+third-party papers dependency or suppress the scientific test.
+
+This remains an INCOMPLETE AUTHOR CHECKPOINT. The current figure assets and
+PDFs have not yet been regenerated for these new source changes. Initial
+compile receipts above describe the earlier455358 composition only. Required
+next steps: reconcile existing scanner repair and L1 source registration,
+regenerate the actual canonical figure and propagate to all consumers,
+compile all actual papers, independently review exact source and renders,
+refresh canonical records through existing writers and qualify existing gates.
+Lean source-doc repairs, original physical BUILD and full main acceptance
+remain distinct and owed. No new green bundle or scientific waiver is claimed.
+
+## Regenerated main composition and existing scanner repair
+
+The accepted ADR-018/specification/plan and owning architecture paragraph
+precede reuse of the exact existing local-namespace scanner repair. Historical
+independent specification/implementation reviews are archived as provenance.
+Actual combined dependency, gravitational-wave and seed-residue suites pass
+124 cases in12.79seconds, terminal0. Its production-seeded assertion proves
+an undeclared external import is still rejected and restores scientific bytes
+and mtime. An initial command named a nonexistent test_seed_journal.py and
+terminated at collection; the corrected existing test_seed_residue_guard.py
+run is retained separately. No fake dependency, exclusion or test weakening.
+
+The existing canonical figure generator, scoped in memory to its existing
+L1FigureSpec, exports the actual PNG; existing structural checks reportzero
+issues. Sandbox Chrome startup failed; the same authorized producer succeeds
+with host access. Allfour canonical/L1/D3/Paper25 PNGs have matching hashes.
+The current canonical compiles terminate0: L1fivepages/zerooverflows,
+D3sixty-sixpages/twelveoverflows, Paper25fivepages/zerooverflows; zeroerrors,
+unresolved references or dropped options. The compiler changes only derived
+compiled_pages in L1/D3 metadata. Actual PDF bytes are archived, including
+ignoredD3, for independent review. TwelveD3overflows remain unwaived.
+
+The existing L1 PAPER_DEPENDENCIES entry is reconciled from publication1805;
+old parameter values/dates/human verification remain. Reviewed GW Lean source
+comments are reconciled with all49 non-block-comment segments exact; code hash
+2e84faa34934b06504b5a31ab71dde726b2236706c20bd315a6b02ac1622524d
+is unchanged. This source equality is not a new nativebuild receipt.
+Fresh independent full-composition source and actual-render review remain
+required, as do current canonical claims/gates, derivedcounts freshness,
+existing full merge qualification and original physical BUILDs. No canonical
+closure or acceptance from donor history has been copied.
+
+## Independent current-main reviews and canonical claims intake
+
+Fresh source review ACCEPTS the exact composed scientific/source corrections;
+fresh reader/render review ACCEPTS the conditional-result prose, actual figure
+and changed consumer rendering. It inspects everyL1/Paper25page, surveysall66
+D3pages and directly inspects29relevantD3pages. Neither accepts original
+physical BUILD, title natural-range implication, twelveD3overflows, native/full
+qualification or finalhuman/main. Both report finalfresh continuity checks.
+Exact full reports and pins are archived without changing their scope.
+
+Fresh claims review audits151actual current units with no uncovered bodylines,
+89PASS/36INFO/19WARN/6TRANSITION/1UNGROUNDED. These are sentence judgments,
+not readiness gates. ROOT recomputes all151 quote bindings and exact lines,
+validates the existing schema and verifies the entire historical69record
+catalog/5followups are preserved as attributed original history. Three prior
+followups need human-ratify supersession; none is silently closed. Donor151
+judgments/54candidates remain history only. Main had no prose_state; no donor
+human state is seeded. Existing writer dryrun+actual ingestion succeed with
+zero automatic closures; original audit prefix remains exact and fresh prose
+state has no human overrides. Four original scientific/propagation identities
+remain OPEN. Current corpus prose checks are1/3: lengthPASSwith19unmeasured,
+72emdashes and6reader-history passages elsewhere remain failures.
+
+The reviews identify inherited canonical-registry/formula/parameter/citation/
+anchor/test documentation that still overstates the physics. They belong to
+the existing L1-fix-propagation obligation and remain owed. An off-tree narrow
+repair proposal is being independently assessed next; this checkpoint neither
+waives the residues nor treats truthful prose as physical construction.
+
+## Resume after reviewed-render checkpoint
+
+Reviewed-render/canonical-claims checkpoint69f92d1ee is normally pushed to
+PR117. The next off-tree source-propagation proposal is archived as R1,
+NOTapplied or independently accepted. It preserves executable ASTs/all167
+assertions, changes four narrative fields in one hypothesis record and
+corrects existing GW comments/docstrings plus one test name. ROOT still
+owes direct full proposal review, remaining citation-summary/L1-anchor
+propagation reconciliation identified by claims review, independent proposal
+and application review, existing hypothesis renderer/controls, canonical
+claims refresh, counts freshness and qualified main gates. A narrow R1 patch
+alone must not close the aggregate L1-fix-propagation obligation. No claim
+strength, original physical BUILD, title or human gate is reduced.
+
+## Applied grouped propagation repair: independent acceptance
+
+ROOT applies the exact independently accepted R2five-file proposal, then uses
+only the existing hypothesis renderer for its derived view. Independent actual-
+application review ACCEPTS the exact six-file composition, including executable
+AST/assertion/value/metadata preservation and readable derived narratives.
+All124focused dependency/GW/seedresidue cases pass in12.82seconds with actual
+terminalexit0; both existing hypothesis ledger/freshness checks pass. Manuscript,
+PDF, figure and Lean bytes remain exact, so prior render evidence is retained
+without an unnecessary recompile or a new native claim.
+
+The existing canonical claims writer validates/dryruns/ingests the scoped
+refresh withzeroautomaticclosures. All151assessment objects/summary/old69+
+5history/donor151+54history and original blocker fields are EXACT; only three
+reviewer progress children and one subsequent ROOTapplication-intake child are
+appended. Allfour blockers remainOPEN; humanstatebytes/oldauditprefix survive.
+The refresh is explicitly not a new151sentencewalk. Reviewers and raw execution
+command/terminal metadata are in SOURCE_PROPAGATION_R2_FINAL_INTAKE.zip.
+
+A focused diagnostic invokes the EXISTING Paper/ReviewFinding/FLAGS producers
+and G11 evaluator for all21bundles, with the entire canonical paper roster.
+It is not a full graph/native build or231gate snapshot. L1G11remainsblocked:
+33flagged findings,24fixed/1accepted/8open, with original2.1 human parameter
+verification the only blocking-severity item in this mapping. Its old proposed
+normalization note must not be approved as a derived physical window. The four
+scientific/propagation obligations retained by actual claims review and the
+original BUILD acceptance remain separate; this diagnostic proves neither
+physical readiness nor permission for a scope reduction.
+
+The already queued parallel L3 reconciliation finds substantive existing source
+on PR114f905a2873 and PR112a34eb6b08, beyond main/publication pinned heads.
+The exact report/pins/oldfinding identities are archived, not a second queue.
+Reuse its derivative/firstlaw/geometry constructions and existing prior review
+before any new proof dispatch; remaining physical matching and analytic path/
+box instantiation must not be assumed absent from every branch. L1 remainslead.
+
+Next ROOT: canonical disposition of actual findings through their existing
+writers once the original acceptance evidence is met; qualified counts/full-
+project/main execution under existing controller ownership, while original
+physical BUILD continues with Executor. No cached/fabricated native certificate,
+new runner, replayed whole-suite green, new green bundle or humanapproval.
+
+## Applied GW provenance repair: scoped acceptance and red qualification
+
+The independently accepted six-entry proposal corrects physical attribution
+and units without changing a numerical value, API, DOI or historical LLM
+record. The existing per-entry writer applies four annotations and withdraws
+two historical automatic verification dates; complete old notes/dates remain
+attributed history. No human approval is granted. All six corrected entries
+remain pending genuine human review. The original lower/upper parameter
+finding and physical susceptibility/window construction are not closed.
+
+The legacy 100 Hz peak/probe pair is PROJECTED: the held detection paper's
+chirp, noise-normalized plot and analysis band do not establish that scalar
+measured peak. The chosen probe is not refuted. The adopted susceptibility
+window is not derived from a cutoff normalization or companion alpha value;
+the gamma coefficient precedes multiplication by the numerical probe once.
+
+Actual focused writer/GW tests:109PASS in0.84s. The existing scoped verifier
+is RED:87FAIL,6687PASS,42SKIP,92deselected,30ERROR in its fast suite;
+architecture inventory and counts freshness also fail; module census passes.
+Its generated counts change is preserved in the evidence archive and the exact
+original file is restored. No generated count or native certificate is promoted.
+A diagnostic replay of the117 failed/error cases reproduces87FAIL/30ERROR.
+A bounded exact-preimage replay proves24 selected non-native citation/cache/
+serializer failures unchanged; the other93 cases are not thereby established
+as inherited or qualified. Full raw diagnostic/JUnit receipts are retained.
+No full-project, native, publication or main acceptance follows.
+
+The initial application review confirmed exact intended bytes but returned
+REVISE when its final continuity check detected source drift during the test
+suite. That record is retained. After terminal tests and exact restoration, the independent R4 application
+review ACCEPTS the exact actual bytes; its initial/final same-packet checks
+are fresh. ROOT accepts that narrow application and preserves the R3 drift
+record. The evidence archive contains both independent reviews and raw receipts.
+The manuscript's existing UNGROUNDED normalization paragraph is unchanged;
+its separately accepted factual replacement, actual rendering and canonical
+sentence reassessment remain the next ordinary L1 repair, with original B3
+and all physical BUILD obligations retained. This checkpoint does not close
+that paragraph or the aggregate propagation obligation.
+
+
+## Normalization paragraph: independently accepted canonical repair
+
+The actual L1 paragraph records an adopted comparison window and its chosen
+unity anchor, without inferring physical normalization or endpoints from the
+RPA identity or dimensional analysis. Vergeles attribution now states the
+fixed-degree/function-space premises. Independent source/reader review accepts
+this factual correction and visually inspects allfive actual pages. Canonical
+compile passes:5pages,zerooverflows/errors/unresolvedreferences/droppedoptions.
+The existing manuscript producer measures3534wordequivalents against the
+recorded3750ceiling; primary venue/abstract-source verification remains separate.
+
+The complete current quote walk contains154units:149unchanged assessments and
+five new bounded assessments replacingtwo old sentences. Independent catalog
+and actual-application reviews ACCEPT exact current bindings/IDs/positions,
+full151priorassessments and allprevious69/donor151/54history. The old unsupported
+normalization stays historicalUNGROUNDED. Existingwriter schema/dryrun/ingest
+pass withzeroautomaticclosures/zerotombstones andfivehumanratifycandidates;
+humanstatebytes,oldauditprefix andallfourOPENblockerobjects remainexact.
+One re_audit event is appended. This corrects a manuscript statement; it does
+not build the physical response or close the original scientific obligations.
+
+Actual authoring gates are1/3PASS: lengthPASSfor2measured/19unmeasured;
+global72em-dashes andsixself-narratingpassages outsideL1 remainFAIL. This is
+not a new full-project/native qualification. Latest broad test evidence is the
+prior9d645 source result, not rerun after this manuscript/catalog edit.
+[Readback](NORMALIZATION_R1_READBACK.json) and NORMALIZATION_R1_EVIDENCE.zip
+preserve reviews,preimages,fullwriterreceipts,compile/length/gates and exact
+failed-qualification triage. All117prior outcomes are mappedonce:89shared,
+28newlypresent andtwoabsent versus prior91(net+26). Only24selectedpre-change
+outcomes are reproduced;93remainunqualified. Existing repair reuse is identified
+without treating donor source as current runtime acceptance or making newinfra.
+
+Next ordinaryL1 includes the mappedFconsumer: its current Closure3 still
+attributes a Volovik graviton identification and an RPA-normalized range, with
+other headline falsification residues. D3/Paper25 checked susceptibility passages
+already state adopted/free/matching-required content. Fsource propagation is
+still owed under the existing L1-fix-propagation obligation; this checkpoint
+claims no whole-consumer closure. Title/heading/caption natural-range scope,
+Stage13/fullproject/main/human and all original B3/state/tensor/matter/light/
+transport/frequency/control-band BUILD remainOPEN. ROOT retains all L1 readiness;
+Executor owns bounded deeper physics, not the remainder of the bundle.
+
+
+## F mapped L1 propagation: independently accepted source checkpoint
+
+The complete twenty-span F manifestation is independently accepted after R2
+source and render revisions. The immutable initial assessment contains sixteen
+FAIL and four INFO spans; earlier prose counts were incorrect. Current source
+distinguishes quartet metric order from the de Sitter second-sound model,
+adopted response inputs from physical normalization, endpoint exclusions from
+universal exclusion, and speed tolerance from susceptibility offsets. It
+removes unsupported unique-channel and parameter-free common-coefficient
+inferences. Original physical requirements remain full-strength and OPEN.
+
+Independent source R3 checks all thirteen backing hashes and three held primary
+PDFs; independent reader R3 surveys all twenty-four pages and directly views
+eleven carrying pages. Both frozen-packet checks are fresh. The page13 new-text
+overprint is repaired, and the three wrapped theorem identifiers retain all
+fifty-nine reference tokens under the existing producer. Twenty-two inherited
+overflow records remain unresolved and unwaived; whole-F layout is not accepted.
+Actual canonical compile exits0 with24pages and no TeX errors, unresolved PDF
+references or dropped options. Actual focused tests97PASS. Selected source gates
+are2/4PASS: hierarchy and length pass, global dash and reader-voice failures
+remain. Latest broad project qualification remains the earlier RED result.
+
+The exact declared F1.1 Verify now exits0 against the independent accepted
+source evidence. This checkpoint supports the focused source-finding closure
+through the existing writer; it does not itself assert a recorded closure.
+F's legacy May4 Stage10-round3 claims summary and pending/RED metadata are
+byte-preserved. Aggregate L1 fix propagation, full-stage reviews, physical B3/
+state/tensor/matter/light/G_N-response/transport/frequency/band BUILD, native/
+main qualification and final human approval remain OPEN.
+
+[F source acceptance](F_SOURCE_REVIEW.json),
+[archive readback](F_PROPAGATION_R3_READBACK.json) and
+F_PROPAGATION_R3_EVIDENCE.zip preserve original/rejected/accepted assessments,
+actual preimage/rejected/current PDFs, source bindings, focused test and gate
+receipts, compiler log and inspected rendered pages. Full copyrighted primary
+papers remain in the existing local source cache; their pins are preserved.
+
+Next ordinary L1 milestone: reconcile remaining title/heading/caption
+"natural range" claims with the adopted comparison window and review their
+canonical sentence dispositions and actual rendering. Executor separately
+prepares the bounded deeper construction brief; this is not transfer of L1.
+Previously accepted D1/F thermal-crossover commit2e56926994 remains on NJL
+branch ancestry and is absent from this main candidate and cumulative
+publication checkpoint; reuse requires exact composition and independent
+integration review. Preserving current F thermal text does not import that work.
+
+
+## Recorded F source closure
+
+The existing close_finding writer records F1.1 FIXED, anchored to source
+528f2adb0, after executing its declared Verify. Actual producer readback returns
+status fixed. Every prior ledger row is preserved and one focused record is
+appended; Verify still exits0 afterward.
+[F closure readback](F_PROPAGATION_CLOSURE_R3.json) preserves the exact command,
+writer output and producer row. Aggregate L1 propagation and all original
+physical BUILDs, whole-stage/main/publication/human acceptance remain OPEN.
+
+
+## L1 title, heading and caption: accepted canonical framing checkpoint
+
+The title now states finite susceptibility confinement under an assumed speed
+law. The paragraph heading and caption consistently identify an adopted
+comparison window. The exact interval, width, endpoint and interior results
+remain unchanged. Three active apex claim strings receive the same scoped
+correction; all declaration identities/dates and historical review summaries
+remain intact. No scientific charter or original physical BUILD is reduced.
+
+Independent source R3 and reader/catalog R2 ACCEPT the actual source and
+metadata. The reader directly inspected all five pages and compared actual
+figure image streams against the baseline; the figure is unchanged. Actual
+canonical compile exits0:5pages,zerooverflows/TeXerrors/unresolvedreferences/
+droppedoptions. Actual GW tests89PASS. Global authoring gates remain1/3PASS:
+length measures3manuscripts,18UNMEASURED andoneunderflooradvisory; corpus dash
+and reader-voice failures remain. This is no new broad/native qualification.
+
+The existing canonical writer validates and ingests the independently reviewed
+154unit catalog. Two caption units have new source-backed WARN records;152
+assessments are preserved outside current position fields. All154full prior
+records, earlier histories and four original OPEN blocker objects remain
+exact. Independent actual-application review ACCEPTS byte identity to the
+reviewed proposal, old audit prefix plus one re_audit event, unchanged human
+state, zero tombstones/automatic closures and seven pending candidates. Titles
+and headings have explicit source/reader review rather than invented sentence
+coverage. This is not a fresh154unit scientific-backing acceptance.
+
+Independent F R4 reconciles all20accepted F spans against the actual changed
+L1 dependencies,13backing hashes andthreefullprimaryPDFpins. The declared F
+binding Verify again exits0. Earlier F source/rejected/accepted reports and
+its original closure anchor remain historical; no new closure is appended.
+[Readback](RANGE_FRAMING_R3_READBACK.json) and RANGE_FRAMING_R3_EVIDENCE.zip
+preserve preimages,currentPDF/source/catalog,allreviewrounds,actualwriter/
+compile/test/gate/verification receipts and inspected pages.
+
+Original B3 response/normalization/domain/window, physical state/tensor/matter/
+light, G_N-response, transport/frequency/units/remainder and controlled-band
+BUILD remain OPEN. Aggregate L1 fix propagation, full-stage/native/main/venue/
+publication/human acceptance remain OPEN; no newly green bundle is claimed.
+Known remaining documentary propagation includes PAPER_STRATEGY's older
+universal-falsification headline at its opening and D3 content charter.
+Reconcile current-state descriptions without silently deleting original
+scientific obligations or treating a false universal inference as a buildable
+theorem. Existing L1-fix-propagation remains the owning task.
+
+Next main-qualification package reuses the independently reviewed citation
+identity/bibliography delta8b6da1c2f, preserving current L1 registry/constants
+and D3 content. Exact donor comparison and scope limits are archived; no new
+implementation or donor runtime/closure acceptance is imported. Managed-path
+6e and source-register5b remain distinct reuse candidates. Corpus custody,
+actual source composition, appropriate existing validation and independent
+review must qualify delivery. Executor continues the bounded original-model
+nonregular boundary-constraint/quantization research design, separate from
+ROOT's entire ordinary L1 publication ownership.
+
+
+## Citation identity repair reused for main qualification
+
+The exact reviewed8b6da1c2f delta supplies13previously missing citing-key
+identities and qualifies the existing Barcelo edition record. All eight current
+L1/GW citation records remain exact; physics constants, hypotheses and D3's
+L1 body are conserved. Five bibliography edits change no manuscript body.
+Eight internal companions retain current titles/inprep/null external identity;
+five held external aliases retain their distinct edition/content limits.
+
+The actual before-test fails on13missing registry keys. Current independent
+scan measures516citing keys across64drafts,zero missing keys andzero need-cache
+entries. Existing undeclared ceiling tightens78to actual76 withzero headroom,
+original equality/declaration-removal/zero-stub/zero-orphan controls retained.
+The existing writer registers five already-held files with network refused;
+all649old sidecar entries and held bytes/modes/nsmtime are exact,654total.
+Four artifacts are PDFs; Verlinde remains metadata without full text. Current
+presence output retains45abstract-only and64metadata-only warnings; this
+identity repair establishes no new full-text reading or physical result.
+
+Actual complete affected three-file suite explicitly includes the slow
+extractor:76PASS,oneenvironmentSKIP,zero failures/errors. Registry/constants/
+sidecar bytes, modes and nsmtime are exactly restored after controls. This
+is the current77case population, not the donor's historical89pass result.
+Independent source/state review accepts exact composition and parsed receipts.
+
+The actual canonical compiler runs for D1,D3,D8,D9,E1 all exit0 withnoTeX
+errors,unresolvedPDFreferences or dropped class options. Pages20/66/12/14/5;
+overfull15/12/7/9/0 remain unwaived. No baseline/no-regression or whole-layout
+acceptance is claimed. Only D1/E1 stored pagecounts change11to20 and4to5;
+those old fields were historical, not evidence the citation delta added
+nine pages. Readiness, review and human fields remain exact. Independent
+final composition checks actualPDF/log hashes and corrected bibliography
+text, not whole-paper visual/venue/scientific acceptance. Current F R5
+semantically checks all20spans/13backings/threeprimaryPDFpins and its declared
+Verify exits0. No additional F closure is appended.
+
+[Readback](CITATION_REUSE_R2_READBACK.json) and CITATION_REUSE_R2_EVIDENCE.zip
+preserve original failure, exact donor delta/acceptance, current controls and
+independent reviews, five actual PDFs/compiler logs, current writer/source
+custody and held-content limitations. Full external primary sources are not
+redistributed. Source-corpus access uses an explicit local sibling link to
+the already-held real Lit-Search, preserving the existing resolver; no new
+worktree or resolver is created.
+
+Qualification remains incomplete. The existing counts script's --help path
+unexpectedly attempted refresh/Physlib fetch, terminated on DNS and collection
+cache errors, and was not retried; no cache repair or counts/native acceptance
+is claimed. The actual incident is retained. Generated register/inventory
+candidates are archived, not promoted: existing5bsource-register fidelity
+and1550worktree-hook fixes must be reused first. The original tracked register
+is restored exactly. Current derived freshness, broader configured testpaths,
+admitted native/counts/document sync, canonical parent-finding closure and
+main integration remain owed. No donor closure ledger or success state is
+imported, no new finding is invented and no bundle is newly green.
+
+The next coherent source package is the already independently reviewed1550
+G4/inventory repair. Independent exact comparison finds its21source/test/
+owner/spec preimages match, disjoint from this repair. The old producer omits
+six of L1's seven registered formulas; the fix restores structural emission
+and typed coverage without changing current formulas/provenance. Adopt the
+coherent package, retain original evidence, independently review current
+composition and qualify through the original controls and authorized route.
+Managed-path6e and source-register5b remain distinct reuse packages. Original
+physical B3/state/tensor/matter/light/transport requirements, full-stage/
+publication/main/human acceptance all remain OPEN.
+
+
+## G4 and worktree inventory source checkpoint
+
+The coherent existing1550 source/test/owner/spec repair is adopted without
+its donor counts, inventory or closure ledger. Independent G4 source ACCEPT
+and inventory source PASS precede the canonical inventory writer. The exact
+fresh inventory matches the independently reviewed candidate. Current focused
+verification retains all112 cases and passes112, with no skips/errors/failures.
+Both authentic inventory controls use the actual source/artifact and existing
+reader with fresh bytecode contexts: baseline0, source regression1, restore0,
+canonical known-row deletion1, restore0. Exact bytes/fullmode/nsmtime restore
+and empty journal are independently accepted. These captures are decoded text;
+separate seeded hashes and child environment snapshots were not recorded.
+
+Actual static G4 producer/evaluator evidence now finds all436 public functions,
+conserves all410 old complete node records and represents allseven L1 targets.
+The old apparent L1 pass had examined onlyone ofseven. Current typed static
+coverage is supported; it is not a numerical or physical correctness certificate.
+Paper39 correctly becomes blocked on a missing valid PythonTest support edge;
+that exposed debt is retained. Empty declarations are truthfully unmeasured.
+
+The earlier expanded attempt remains RED:175pass/fourfail, reaching unexpected
+native dependency refresh and DNS failure. No native build, authoritative full
+graph, broader suite or submission acceptance is inferred. Proper native
+admission, all actual G4 mutation/serialized-consumer controls, full graph
+other-gate effects, required broader checks and protected main qualification
+remain owed. No canonical finding is closed by this checkpoint. The primary
+custody branch, controller, caches, leases, physics source and Lean are untouched.
+
+G4_INVENTORY_SOURCE_R1_READBACK.json binds current evidence and the adjacent
+archive preserves original failures,112-pass XML, actual controls, both source
+reviews and independent bounded control review. This is a remote-resumable
+incomplete source checkpoint, not a completed enabling wave or green L1.
+
+
+## Current actual G4 controls and required guard registration completion
+
+ROOT ran existing journalled mutations of the actual producer case filter,
+public G_N_emergent definition with its declaration retained, and real L1
+PAPER_DEPENDENCIES with a genuinely absent target. Allseven fresh source-bound
+input-extractor/evaluator/GateResult projection receipts independently reconcile:
+0->1->0->1->0->1->0. Each seed produces the intended L1blocked/unmeasured
+missing-formula evidence; exact restoration recovers passed/measured and the
+complete baseline observations. Source bytes/fullmode/nsmtime and emptyjournal
+are confirmed. The independent review reconstructed448paper rows, source deltas,
+complete restore outputs and raw base64/decoded pipe captures without discrepancy.
+
+This accepts the actual G4 input/evaluator/serializer controls only. Actual
+submission-consumer observations, explicit loaded-module origins, full native
+graph and other-gate effects remain required for fullD6.6. No source-correctness
+or numerical/physical BUILD closure follows, and no all-green corpus is claimed.
+
+Existing registration discovery identified one required architecture inventory
+public-surface guard entry. Its exact historical df42dc907 one-line repair
+was independently accepted off-tree, then applied byte-exact. Existing discovery
+now returns0 with allrequired sites satisfied. The conditional sync-edge entry
+is optional because this check never writes the artifact; no new writer is added.
+
+The full existing public-surface module returns68PASS/twoFAIL. The added guard
+case passes. Both failed node IDs reproduce on the exact pre-change HEAD file:
+the live numerical-literal population150exceeds117 and a D7test expects an absent
+theorem name. Source restores exactly after journalled preimage replay. These
+failures remain owed; no floor increase, test deletion or full-module pass is
+claimed. Current evidence/reviews/projections and failureXML are preserved in
+G4_PRODUCTION_CONTROLS_R1_EVIDENCE.zip and its READBACK.json. Canonical closure,
+broader/native/main/publication qualification and original L1science remain open.
+
+
+## L1 strategy propagation source acceptance
+
+The existing L1-fix-propagation obligation now includes13exact documentary
+corrections in PAPER_STRATEGY.md. Independent focused claims/source review
+accepts the complete candidate, checking the held Volovik fulltext bodies and
+actual Lean statements. The title/lede reflect the current assumed-law finite
+interval, nonempty compatibility and adopted range; the opening and D3/D5
+cross-bridge descriptions no longer advertise a whole-branch falsification.
+No-dependency/readiness/voucher-complete descriptions are corrected. L1remains
+lead, the four-page venue target stays a target and original B3/state/mode/
+transport BUILD, unchanged priority and final human approval remain explicit.
+
+ROOT applied the exact accepted postimage. Two relevant existing roster tests
+pass and the actual existing bundle_registry_consistency check passes/measures:
+codes, tiers and all registered consumer keysets agree. An initial misspelled
+test node caused collection exit4/no tests; the corrected invocation supplies
+the two actual passes. No native/network path ran. Existing planner output is
+retained as routing context, not slot capacity or a priority replacement.
+
+L1_STRATEGY_PROPAGATION_R1_READBACK.json and its evidence archive preserve
+preimage/postimage,13span mapping, independent review, verification and planner
+limitations. Manuscript/catalog, scientific code, roster implementation and
+human state are untouched. This is source propagation progress only, not a
+full strategy/paper review, aggregate G11 or BUILD closure, stage/main/venue/
+submission/publication acceptance. Remaining qualification and original
+scientific findings retain their full scope.
+
+
+## Current D7 citation-regression source reuse and numerical-debt attribution
+
+The existing06c D7 regression repair is reconciled byte-exact to this candidate,
+preserving the already completed inventory guard. Independent source and final
+actual-control reviews ACCEPT the current test repair. Its positive requires the
+actual manuscript verbatim headline, actual Lean declaration and indexed name,
+and production resolver OK; three phantom citation forms use the real extractor/
+resolver and remain ABSENT. The long simulability companion positively exists;
+this repair neither declares missing substrate nor strengthens its physics.
+
+Allseven current class checks pass. Actual journalled removal of the displayed
+current headline yields0->1->0, with only the intended assertion failing, exact
+bytes/fullmode/nsmtime restoration and empty journal. Full public-surface module
+now72PASS/oneFAIL: numerical-literal150>117 remains. Native/kernel, D7physical
+simulability, fullG11 and all publication gates remain open. The saved declaration
+snapshot is stale by the existing staleness-only check and was not refreshed.
+
+The original focused finding is restored at its original identity. Its Verify
+entrypoint is portable uvrun--no-sync with the same completepytestclass; outer
+project-environment selection reuses the existing primary virtualenv. Original
+review/command and exactsourcepreimage are archived. Existing canonical closure
+writer and its actual declared Verify remain a separate post-source-commit step.
+
+Independent numerical-literal audit uses the unchanged predicate and identical
+64draft corpus: originalmain149,current150; onlyL1(-3)andPaper25(+4) differ.
+Most overage is inherited. ExistingSCALARS can eliminate11currentGWoccurrences
+but leaves139>117; no fullceiling pass or scientific error is inferred from the
+census. Source measurements/theorem constants need individual classification;
+physics-deferred off-shell cells cannot be converted into unsupported generated
+results. No ceiling increase, predicate change or new numerical machinery.
+D7_REGRESSION_REUSE_R1_READBACK.json and archive retain all source/controls,
+independent reviews, actual failures, complete occurrence audit and limits.
+
+
+## D7 focused regression canonical closure
+
+After independent final acceptance and source commitb0f8e3b45, the existing
+close_finding.py writer dry-run and actualwrite both execute the declared
+portable Verify successfully. The canonical reader now reports the original
+review:2026-10-15-d7-current-theorem-regression:infra:1.1 FIXED. Exactlyone
+record is appended; all prior records and metadata remain exact. Source anchor,
+actual commands/exitcodes and reader status are preserved in
+D7_REGRESSION_CLOSURE_R1_READBACK.json. This closes only the citation-regression
+test defect. No numeric ceiling/freshness/native/fullgraph, physical D7/G11,
+main/publication or human gate is closed.
+
+## Current L1/Paper25 generated-number checkpoint
+
+The existing SCALARS renderer now supplies nine outputs from two paper specs.
+Thirteen derived numeral occurrences consume these outputs; eleven counted
+literal occurrences are removed. Exact theorem constants, adopted parameters,
+scientific claims and the original physical BUILD requirements are preserved.
+Two optional short caption titles repair moving-argument compilation with the
+generated inputs. Initial failed compilation receipts are retained alongside
+the corrected successful runs. Both manuscripts compile to five pages with
+zero errors, overfull boxes, unresolved references or dropped options; all ten
+rendered pages are pixel-identical to their pre-change counterparts.
+
+Independent source/composition review accepts the actual producers, outputs,
+caption repairs and retained controls. Actual renderer/output comparisons
+detect a changed canonical cap and corrupted generated output in a
+0->1->0->1->0 sequence, with exact source/artifact restoration and empty seed
+journal. These establish bounded producer/output binding, not physical
+correctness or a global tables_fresh pass. The current gravitational-wave
+suite reports 89 PASS. The unchanged canonical numerical population tests
+report two PASS and one FAIL: 139 literals remain against the ceiling of117,
+down from150; L1 and Paper25 each have zero matches. No predicate or ceiling
+is changed.
+
+The independently accepted canonical catalog is applied byte-exact: five
+source quote/ID bindings change,149 complete records remain exact, and all154
+scientific assessments and prior histories are preserved. Existing schema,
+dry-run and actual ingestion pass. The sole writer appends one re_audit event;
+human state and all prior audit bytes remain exact. Four blockers remain OPEN,
+seven human candidates remain pending, with zero tombstones or automatic
+closures. F's independent R6 semantic review accepts all20 existing spans
+against26 actual backing hashes and three held primary pins. ROOT applies
+that exact review and its existing declared Verify exits0. This is no new F
+finding closure or physical acceptance.
+
+GW_SCALARS_R1_READBACK.json and GW_SCALARS_R1_EVIDENCE.zip preserve the source
+proposals, initial failures, corrected compile/render receipts, controls,
+independent reviews, complete catalog preimage/candidate/application, F R6
+and current test results. F_SOURCE_REVIEW_R6.md exposes the semantic review.
+The original B3 normalization/window, physical dynamics/matter/light and
+transport/frequency constructions, global literal debt, full native/graph/
+merge/publication gates, main integration and final human review remain owed.
+ROOT retains the entire L1 readiness package; Executor owns only separately
+commissioned deeper scientific construction. No fresh portfolio-wide gate
+snapshot or newly green bundle is claimed.
+
+## Protected integration prerequisite reconciliation
+
+PRIMARY_INTEGRATION_PREREQUISITES_R2.md and its JSON record a read-only lineage
+review at9505b60af and primary4fca5970. The main base is their common ancestor;
+the lines have20 and399 unique commits. The GW Lean source is already identical,
+so no missing GW proof transport is established. Primary's materially newer
+lifecycle package has eight historical anchors and ten current source/contract/
+test paths, with thirty support paths. Its branch is not a minimal transport
+target: it carries unrelated research, and33 shared changed paths diverge.
+Whole-file replacement would lose accepted publication qualifications or peer
+science. This is no license for a wholesale branch merge, cherry-pick, primary
+retarget, cache workaround or new infrastructure.
+
+Next acceptance is the existing lifecycle/native-startup prerequisite's minimal
+owned source composition and dependency review, followed by current broader/
+change-appropriate checks and protected integration. Native admission remains
+subsequent. The R2 reviewer retained its stale final continuity result for the
+expected ROOT checkpoint; it certifies lineage observations, not current whole
+composition. Reissue deliberate current continuity before integration acceptance.
+No minimal currently accepted aggregate composition or native/main green is
+claimed. ROOT continues this ordinary L1 delivery work; deeper science remains
+a separate bounded Executor assignment.
+
+## R3 correction: no mandatory lifecycle import
+
+NATIVE_PREREQUISITE_REQUIREDNESS_R3.md and its JSON supersede R2's inference
+that a newer lifecycle package must be imported into publication. That inference
+was not established by a gate or scientific dependency. Copying controller code
+would neither select the scientific source nor publish its full-commit epoch.
+No lifecycle source, controller, slot, cache or runtime has been changed.
+
+The actual four-module GW project import closure, toolchain and dependency
+manifest already match primary. Existing primary diagnostics could establish
+bounded primary-source evidence only; they cannot certify this publication
+branch's complete graph or merge profile. The intended main-delivery scientific
+candidate remains this publication branch. ROOT retains canonical custody and
+peer work while resolving its actual scientific-source admission/integration
+order under the existing guide. Exact-source full gates remain required; no
+speculative infrastructure upgrade or ceremonial repeat of prior GW proof
+checks is a prerequisite. R2's measured lineage facts and stale-review limits
+remain historical evidence.
+
+## Existing L1 source closures reconciled to delivery
+
+Independent fresh applicability review accepts eleven already repaired L1
+findings against the current manuscript, metadata and exact accepted GW module.
+The original review/evidence content is preserved byte-exact:120 standalone
+files, one historical predecessor report and one raw stdout inside the archive.
+Historical source/native/project/broader receipts retain their original limits.
+All eleven original Verify commands pass independently and through the existing
+closure writer's dry-run and actual calls, without command substitution.
+The August relative-speed bridge keeps its original300c2a9 anchor; the other
+ten use the current scientific carrier with fresh applicability rationale.
+
+Actual canonical readers report all eleven FIXED. The ledger grows1236->1247,
+preserving all prior records and schema fields. ID resolution passes with the
+same59 annotated legacy exceptions and no growth. Scientific source, manuscript,
+metadata, catalog, human state and audit bytes remain unchanged. These reconcile
+shared existing repairs, not eleven new scientific constructions. Four L1
+scientific blockers and all original physical, native/fullgraph/merge, human and
+publication acceptance requirements remain OPEN. Current evidence and actual
+writer/readback receipts accompany L1_CANONICAL_SOURCE_REUSE_R1.md.
+
+L1_CANONICAL_SOURCE_REUSE_APPLICATION_R2.md independently accepts the actual
+writer/readback and qualifies the initial122-standalone proposal. The exact
+historical PREDECESSOR_PROSE_REVIEW.md is discoverable at its original repository
+path inside L1_CANONICAL_SOURCE_REUSE_R1_EVIDENCE.zip. Its adverse structural
+physical BLOCK is retained, alongside current scientific holds. Keeping that
+old questionnaire standalone made the existing reader ingest five obsolete
+numbered outcomes as new unrouted findings. Archive application removes exactly
+those five incidental nodes; every other canonical node remains deep-exact and
+all eleven original live findings remain FIXED. No parser, gate, predicate or
+closure is used to dismiss those historical outcomes. Current whole-prose,
+venue/length and physical acceptance remain unclaimed. The readback pins the
+exact archived member and all preserved source/human/ledger evidence.
+
+After that independent placement review, the initial staged whitespace check
+identified thirteen trailing-whitespace lines in the historical BROADER_FAST.stdout.
+ROOT preserved that raw output at its exact original path inside the same ZIP
+rather than rewriting the receipt. This additional storage-only correction
+accounts for120 standalone files plus two archived original files; it changes
+no Markdown ingestion, scientific source or closure. The readback distinguishes
+the independently reviewed predecessor placement from this exact-byte raw-output
+archival step. Authored text remains subject to the unchanged whitespace check.
+
+All three restored original finding documents pass the existing marker contract.
+The current scoped corpus validation is1/3: finding minting PASS, severity/lane
+declaration FAIL and single-command Verify FAIL. It reports eight documents with
+missing severity declarations, five unmappable-lane documents and56 malformed
+Verify controls. Raw outcomes are archived and unwaived. No global corpus PASS
+is inferred from this package's valid markers or individual closures. The final
+existing planner has no L1 manuscript/GW source group; its linked-checkout slot
+discovery is not canonical runtime capacity authority.
+
+
+## R4 source-composition disposition and failed measurement retained
+
+SCIENTIFIC_INTEGRATION_COMPOSITION_R4.md/.json independently reviews the actual
+publication/main delta against canonical scientific custody. ROOT keeps bounded
+PR117 as the delivery target. The five-file core scientific/reader patch passes
+an actual read-only application check against primary, preserving clean status.
+No patch is applied. Creating a separate combined qualification branch merely to
+obtain a build epoch is declined: its whole-source certificate would not certify
+this publication source. No controller import or ceremonial GW rerun is required.
+The report's citation-edition recipe is optional source-reuse advice, not proof
+of a newly blocking defect or a new mandatory detour. Verify need and sources
+before any such correction. Shared manuscript/catalog/ledger histories require
+their existing individual composition and writer processes, not whole-file copy.
+
+A fresh canonical graph/evaluator attempt failed before gate evaluation: its
+stale-artifact reader auto-invoked ExtractDeps, then Physlib dependency resolution
+failed with a GitHub DNS error. No new gate JSON was produced and tracked source
+remained unchanged. The actual error and receipt are preserved without retry or
+cache workaround in SCIENTIFIC_INTEGRATION_R4_EVIDENCE.zip, alongside the existing
+planner and read-only patch feasibility evidence. This is not evidence of absent
+physics substrate and does not replace the last qualified gate measurement.
+
+The exact bounded delivery's scientific-source/native admission remains OPEN and
+ROOT-owned. ROOT requested current protected-slot/unabsorbed-work ownership from
+Executor, without granting or changing any slot or transferring ordinary L1 work.
+No new scientific, canonical-finding, native/fullgraph/main or human acceptance
+follows from this source-review checkpoint. Original physical BUILD remains owed.
+
+
+## Existing standalone merge profile: R5 authority correction
+
+EXISTING_MERGE_PROFILE_AUTHORITY_R5.md/.json correct R4's overly broad route
+limitation. ROOT, acting as the primary orchestrator, may execute the unchanged
+candidate verify_scope.py --merge-gate as standalone exact-source validation.
+It selects its own script repository; it neither publishes a shared-slot epoch
+nor acquires/prepares a slot. Existing actor, serialized build ownership and
+source/cache/dependency-isolation requirements apply. No canonical branch move,
+controller import or new qualification branch is required for this operation.
+ROOT will use the existing authoritative-build lock and the existing Python
+environment without synchronization, preserving canonical primary and slots.
+A measured full-profile result remains distinct from original physical BUILD,
+shared native worker admission, Stage13, protected main and human publication.
+
+The contained D1 enabler now includes an independently accepted algebraic repair
+at8189530ea: quadratic damping rate, linear fractional dissipative correction,
+inverse ratio and recomputed-background sweep qualification. Original declared
+Verify passes independently and through both existing writer calls. Canonical
+reader reports the new finding FIXED; ledger1247->1248 preserves every old row.
+The original August D1 crossover1.1, reduction2.4 and velocity2.8 remain OPEN.
+The wider generated-number migration remains HOLD; no literal ceiling change,
+physical derivation or whole-paper acceptance follows. Current20page compile
+and inspectedpage11 support the narrow repair; fifteen other overfull boxes
+remain, as documented in its independent application review and evidence.

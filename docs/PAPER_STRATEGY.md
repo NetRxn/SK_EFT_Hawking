@@ -12,9 +12,9 @@
 
 The project entered Phase 6 with thirty-two paper drafts and zero submissions. This is not a productivity issue — the per-wave drafting cadence has been an extremely effective *internal* discipline: each wave produces a paper-shaped deliverable, the Stage 13 adversarial reviewer keeps each draft honest, and the sentence-level provenance ties each claim to a Lean theorem. But the resulting paper map is inward-facing in three concrete ways:
 
-**Headline results are buried.** "First quantum group in any proof assistant," "first formally verified four laws of black-hole mechanics partitioned by regime," "GW170817 falsifies the vestigial-second-sound graviton ID by 7 × 10¹⁴" — each of these is striking enough on its own to be the door into the program, but each currently sits inside a draft (Paper 11, Paper 27, Paper 25) that an external reader encounters as an isolated technical result. There is no flagship that says "here is what this research program is about" for them to land in.
+**Headline results are buried.** "First quantum group in any proof assistant," "first formally verified four laws of black-hole mechanics partitioned by regime," "GW170817 confines susceptibility to a finite interval under an assumed graviton speed law" — each of these is striking enough on its own to be the door into the program, but each currently sits inside a draft (Paper 11, Paper 27, Paper 25) that an external reader encounters as an isolated technical result. There is no flagship that says "here is what this research program is about" for them to land in.
 
-**NO-GO theorems lose first-class status.** The program is unusual in that negative structural results are a deliberate output: Volovik q-theory dark energy, the vestigial-graviton GW170817 falsification, Fang-Gu torsion DM kinematic exclusion, fracton hydrodynamics → full GR, the BCS-branch seesaw lepton-number-violation requirement, perturbative Wen-ADW gravity, EW baryogenesis under crossover, abelian-MTC at the BH horizon. Distributed across many drafts, these read like incidental obstructions. Consolidated, they are a coherent statement about *which* parts of the standard map of physics are reachable from condensed-matter substrates and *why* — a genuine field-clearing contribution. Phase 5y already understands this internally (six closure rounds, formal scope memo, `ARCHITECTURE_SCOPE.md`). The paper strategy did not previously reflect it externally.
+**NO-GO theorems lose first-class status.** The program is unusual in that negative structural results are a deliberate output: Volovik q-theory dark energy, Fang-Gu torsion DM kinematic exclusion, fracton hydrodynamics → full GR, the BCS-branch seesaw lepton-number-violation requirement, perturbative Wen-ADW gravity, EW baryogenesis under crossover, abelian-MTC at the BH horizon. Distributed across many drafts, these read like incidental obstructions. Consolidated, they are a coherent statement about *which* parts of the standard map of physics are reachable from condensed-matter substrates and *why* — a genuine field-clearing contribution. Phase 5y already understands this internally (six closure rounds, formal scope memo, `ARCHITECTURE_SCOPE.md`). The paper strategy did not previously reflect it externally. The GW170817 susceptibility result is a conditional constraint with a nonempty compatible interval; it is not a whole-branch vestigial-graviton NO-GO.
 
 **Methodology is invisible to physicists.** The project's verification pipeline — Lean + Aristotle + adversarial review + sentence-level provenance + the 14-stage wave execution + the preemptive-strengthening discipline — is genuinely novel as a way to *do* theoretical physics, not just as a tool for proof-assistant developers. Critically, the verification has produced physics that wouldn't otherwise exist: Aristotle disproved the original FirstOrderKMS axiom (too weak); Aristotle disproved the gap-solution-bounded conjecture; the chirality-wall axiom decomposition surfaced hidden dependencies; the strengthening-pass discipline has caught dozens of structural-tautology theorems. Buried in a methods paper that only formal-verification people will read, this contribution is invisible to the physics audience that should hear it.
 
@@ -28,7 +28,7 @@ The new structure is **twenty-one publication targets**, organized as one flagsh
 
 Three principles drive the architecture:
 
-1. **Falsifiability-led ordering.** The PRL-style headline letters (Tier 2) lead with the program's strongest falsifiable results — GW170817 vs vestigial-graviton (a 10¹⁵ confinement of χ_vest, with both natural-range endpoints excluded at ~7 × 10¹⁴), three generations from modular invariance, BCH four laws by regime. These are the door-openers. Readers arrive through them.
+1. **Falsifiability-led ordering.** The PRL-style headline letters (Tier 2) lead with the program's strongest falsifiable results — GW170817 vs an assumed vestigial-graviton speed law (a finite compatible susceptibility interval, with both adopted-range endpoints excluded), three generations from modular invariance, BCH four laws by regime. These are the door-openers. Readers arrive through them.
 2. **NO-GOs as first-class deliverables.** The dark-sector deep paper (Tier 1 #5) is built around the structural-NO-GO architecture. The flagship's Layer-3 scope statement makes the predictive-boundary explicit. The methodology paper documents specific cases where verification produced negative content the conventional process would have missed.
 3. **The flagship is the citation anchor.** Tier 0 — one *Reviews of Modern Physics* / *Physics Reports* / *Annual Review* article — is the canonical entry point. Every other paper in the program cites it. It ships *last*, after the Tier 1 papers are out, so it can cite them and serve as the stable reference rather than a snapshot.
 
@@ -97,7 +97,7 @@ Target: *PRD* (long article), possibly *Annals of Physics*.
 
 Audience: gravitational physics, BH thermodynamics, emergent-gravity community, holography-adjacent.
 
-Content: ADW gap equation `G_c = 8π² / (N_f Λ²)`; the tetrad gap equation as the first explicit derivation in the literature; the bifurcation theorem; Vergeles unitarity Props; the gauge erasure selection rule (only U(1) survives the fluid layer; non-Abelian erased); the perturbative Wen-ADW deficit (G_Wen / G_c ≈ 1/6000 — route formally closed); fracton-hydrodynamics → full GR no-go; the linearized EFE result `G_N^emerg = α_ADW · 12π / (N_f Λ²)`; FLRW reduction with Friedmann I/II + Bianchi consistency; the GW170817 falsification of the vestigial-second-sound graviton identification (the headline negative result, reported in full); the Bekenstein-Hawking entropy from MTC state counting `S = A/(4G_N) − (3/2) log(A/(4G_N))` with Kaul-Majumdar SU(2)_k decomposition and the abelian-MTC F2 falsifier; the BCH four laws partitioned by regime at `M_c = (N_f Λ_UV) / (12π α_ADW)`; the Schwarzschild-vs-ADW-extremality regime criterion. Cross-bridges to QCD strong-coupling closure (Phase 6d Track A: confinement, χSSB GMOR, CFL ℤ_3 ≡ QCD center-ℤ_3) as a section.
+Content: ADW gap equation `G_c = 8π² / (N_f Λ²)`; the tetrad gap equation as the first explicit derivation in the literature; the bifurcation theorem; Vergeles unitarity Props; the gauge erasure selection rule (only U(1) survives the fluid layer; non-Abelian erased); the perturbative Wen-ADW deficit (G_Wen / G_c ≈ 1/6000 — route formally closed); fracton-hydrodynamics → full GR no-go; the linearized EFE result `G_N^emerg = α_ADW · 12π / (N_f Λ²)`; FLRW reduction with Friedmann I/II + Bianchi consistency; the conditional GW170817 susceptibility interval under the assumed vestigial-graviton speed law, with the physical mode, susceptibility normalization and transport construction still owed; the Bekenstein-Hawking entropy from MTC state counting `S = A/(4G_N) − (3/2) log(A/(4G_N))` with Kaul-Majumdar SU(2)_k decomposition and the abelian-MTC F2 falsifier; the BCH four laws partitioned by regime at `M_c = (N_f Λ_UV) / (12π α_ADW)`; the Schwarzschild-vs-ADW-extremality regime criterion. Cross-bridges to QCD strong-coupling closure (Phase 6d Track A: confinement, χSSB GMOR, CFL ℤ_3 ≡ QCD center-ℤ_3) as a section.
 
 Sources: Papers 3, 5, 22, 23, 25, 26, 27, 36, 37, 38; Phase 3 + Phase 5d + Phase 5f + Phase 5z W3 + Phase 6a + Phase 6d material.
 
@@ -201,7 +201,7 @@ Sources: Phases 6EA, 6EB, 6EC, 6EE (`6E*` series head: `roadmaps/Phase6EA_Roadma
 
 Each is four pages, citing flagship + one Tier 1 paper. Each is a stand-alone news-attractor.
 
-**Paper L1: GW170817 Confines the Vestigial-Second-Sound Graviton Identification to One Part in 10¹⁵ of Its Natural Range**
+**Paper L1: GW170817 confines vestigial susceptibility to a finite interval under an assumed graviton speed law**
 
 Target: *Physical Review Letters*.
 
@@ -210,9 +210,9 @@ Length: 4 pages.
 ⚠️ **REWRITTEN 2026-08-15. This entry described a falsification, and the result is not one.**
 `natural_range_disjoint_from_ligo_window` was a statement about the two ENDPOINTS χ_vest ∈ {0.1, 10}; the prose read it as an interval disjointness. The GW170817-compatible window is nested strictly *inside* [0.1, 10] and meets it at χ_vest = 1, which satisfies the cap. See `papers/AutomatedReviews/2026-08-14-l1-stage13/L1.md` §3.1/§4.1.
 
-Lede: Volovik identifies the vestigial second-sound mode as the graviton — in arXiv:2601.00639 and arXiv:2410.04392, **not** in the vestigial-gravity note (JETP Lett. **119, 330**, 2024; the "119, 564" this entry previously carried belongs to no paper we could find). On his own de Sitter background the Landau formula gives `s₂ = c` **exactly** — structural, not tunable — and he records GW170817 as satisfied. The χ-dependent speed `c_GW = c·√χ_vest` is **this project's** construction, obtained by transplanting his identification onto the ADW substrate, whose metric-channel susceptibility does not fix χ_vest. GW170817 then confines χ_vest to a window of width 4τ ≈ 1.2 × 10⁻¹⁴ against a natural-range width of 9.9 — narrower by >14 orders of magnitude — while both endpoints are excluded at ~7 × 10¹⁴ by Lean falsifier theorems. The value the datum selects is the value Volovik's own construction already produces, so it **corroborates** him and constrains our substrate.
+Lede: Volovik's de Sitter second-sound calculation in arXiv:2601.00639 uses the stiff-component thermodynamic framework of arXiv:2410.04392 and gives `s₂ = c`. It discusses several possible graviton interpretations and leaves the type open. L1 assumes a spin-2 substrate identification and `c_GW = c·√χ_vest`; neither follows from that calculation. For nonnegative χ_vest, the adopted GW170817 cap gives `[(1−τ)²,(1+τ)²]`, of exact width `4τ`. This interval contains χ_vest = 1 and lies inside adopted `[0.1,10]`. The width comparison is not a probability or a unique parameter selection. The physical metric susceptibility, normalization/range, microscopic mode and matched transport remain BUILD obligations.
 
-Why it ships first: stand-alone, four pages, depends on no other paper and on no open Phase-6 closure. ⚠️ Its *rationale* has changed — "clean falsification, news-attractive" no longer describes it, and whether a confinement result is still the right door-opener is an **open portfolio decision reserved for the operator**. The ordering below is unchanged pending that call.
+Why it leads remediation: L1 is the agreed lead bundle and a stand-alone letter candidate. Four pages remains the venue target, not a current length or acceptance receipt. The paper's original scientific requirements and final human approval must be met before submission. Physical BUILD dependencies remain open even though the conditional interval algebra is established. The relative portfolio ordering is unchanged; a different venue, scope or deferred scientific objective requires the operator's specific disposition.
 
 Source: Paper 25 + Phase 6a Wave 2 material.
 
@@ -304,7 +304,7 @@ Sources: Phase 5w material; Paper 16a main content.
 
 The order matters. Three principles:
 
-1. **Clear the arXiv-voucher gate with the easiest stand-alone PRL.** L1 (GW170817 vs vestigial-graviton) is the strongest candidate on STRUCTURE — stand-alone, no Phase-6 dependency, fits in 4 pages, news-attractive, doesn't require any other paper to be out, doesn't depend on uncertain content.
+1. **Develop L1 as the lead stand-alone letter.** Its conditional susceptibility interval supplies the current mathematical result. Publication still requires the original physical BUILD obligations, independent review, venue checks and final human approval. Stand-alone presentation does not remove these dependencies or establish an arXiv voucher.
 
 2. **Tier 1 papers ship before Tier 0.** The flagship cites the Tier 1 papers; trying to write the flagship without them done is a snapshot. Tier 1 papers ship roughly in parallel after the voucher, with priority weighted toward shipping-ready material.
 
@@ -312,7 +312,7 @@ The order matters. Three principles:
 
 Recommended sequence (approximate, conditional on user-authorization gates and Phase 6 closure of dependent waves):
 
-- **Month 0:** L1 (GW170817 / vestigial-graviton). Voucher cleared.
+- **Month 0 target:** L1 (conditional GW170817 susceptibility interval), after scientific and publication acceptance. Voucher clearance remains unestablished.
 - **Month 1–2:** L3 (BCH four laws by regime — Paper 27 already submission-ready), D3 (emergent gravity through BH thermo — absorbs L3's content as a section + adds the architectural context). These can ship in close succession; L3 as the splash, D3 as the deep companion.
 - **Month 2–3:** L2 (three generations from modular invariance) + D2 (anomaly constraints on SM particle content). Same pattern: splash + deep.
 - **Month 3–4:** D1 (analog Hawking across three platforms) + E1 (Paris LKB letter) + E2 (Dean-Kim-Lucas letter). Three publications same window because they reinforce each other and reach distinct experimental teams.
@@ -325,10 +325,10 @@ Twelve months from voucher to flagship is the rough envelope. The Phase 6 deep-r
 
 ### Dependency graph (compressed)
 
-- L1 has no dependencies; ships first.
+- L1 leads remediation. Its physical susceptibility/normalization, mode and transport BUILD dependencies remain open; submission follows the full publication gates and final human approval.
 - L3 ships after Paper 27 Stage-13 closure (already done) + arXiv voucher (from L1).
 - L2 ships after L1 voucher; depends on no Phase-6 closure.
-- D3 depends on L3 content + Phase 6d Track A closure (already shipped) + Phase 6a closure (already shipped). Ready.
+- D3 depends on L3 content, Phase 6d Track A and Phase 6a material, including their unresolved physical successors. Historical SHIPPED labels do not establish current publication readiness. Its vestigial section consumes the conditional L1 result.
 - D2 depends on L2 content + the Phase 5b/5c chain (already shipped). Ready.
 - D1 depends on Phase 5w closure (already shipped) + Phase 5d/5u closure (already shipped) + the WKB chain (already shipped). Ready.
 - D4 depends on Phase 5b–5p categorical chain (already shipped) + Phase 5t doublon-gate (already shipped). Ready.
@@ -351,7 +351,7 @@ Two lessons are worth keeping over the number itself. First, the note aged into 
 
 ## 4. Cross-cutting principles
 
-**NO-GOs are first-class.** Every Tier 1 deep paper that contains a structural NO-GO presents it as a result, not a footnote: D3 with vestigial-graviton + perturbative-Wen-ADW + non-Abelian-gauge-erasure + fracton-GR; D5 with q-theory + vestigial-graviton-cross-bridge + Fang-Gu + abelian-MTC-horizon. The flagship's §2 (architectural scope) and §10 (scope statement) explicitly section the predictive boundary. This is a deliberate communication choice; the program's negative content is unusually high-quality and deserves visibility.
+**NO-GOs are first-class.** Every Tier 1 deep paper that contains a structural NO-GO presents it as a result, not a footnote: D3 with perturbative-Wen-ADW + non-Abelian-gauge-erasure + fracton-GR; D5 with q-theory + Fang-Gu + abelian-MTC-horizon. The vestigial-graviton cross-bridge carries the conditional susceptibility constraint, not a whole-branch NO-GO. The flagship's §2 (architectural scope) and §10 (scope statement) explicitly section the predictive boundary. This is a deliberate communication choice; the program's negative content is unusually high-quality and deserves visibility.
 
 **The methodology paper aims at physicists.** I1 is *not* primarily a formal-verification-community paper. The audience is the theorist who currently does not believe machine verification is worth the friction. The argument is empirical: here are three concrete cases where verification produced physics that would not otherwise exist. The formal-verification audience consumes I2 (the software paper) and the Mathlib upstream PRs.
 
@@ -387,7 +387,7 @@ Two lessons are worth keeping over the number itself. First, the note aged into 
 
 | Tier | Paper | Title (short) | Target | Length | Ships | Dependencies |
 |---|---|---|---|---|---|---|
-| 2 | L1 | GW170817 / vestigial-graviton | PRL | 4pp | Month 0 | (voucher gate) |
+| 2 | L1 | Conditional GW170817 susceptibility interval | PRL | 4pp target | Month 0 target | voucher gate remains open |
 | 2 | L2 | Three generations from modular invariance | PRL | 4pp | Month 2–3 | L1 voucher |
 | 2 | L3 | BCH four laws by regime | PRL | 4pp | Month 1–2 | L1 voucher |
 | 1 | D1 | Analog Hawking across three platforms | PRD long | ~40pp | Month 3–4 | L1 voucher |

@@ -1,0 +1,20 @@
+{
+  "verify": "python3 -c 'from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Gravitational-wave propagation speed\",1)[1].split(\"-/\",1)[0]; n=\" \".join(d.replace(chr(96), \"\").split()); assert \"This definition adopts a scalar susceptibility-to-speed law\" in n and \"it does not derive this law or construct a microscopic graviton\" in n; assert \"Volovik 2024 + Phase 5y H1\" not in d and \"leading-order identification under\" not in d'",
+  "receipts": [
+    {
+      "source": "current_r2",
+      "sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"lean/SKEFTHawking/GravitationalWaves.lean\").read_text(); d=s.split(\"/-- Gravitational-wave propagation speed\",1)[1].split(\"-/\",1)[0]; n=\" \".join(d.replace(chr(96), \"\").split()); assert \"This definition adopts a scalar susceptibility-to-speed law\" in n and \"it does not derive this law or construct a microscopic graviton\" in n; assert \"Volovik 2024 + Phase 5y H1\" not in d and \"leading-order identification under\" not in d\n                                                                                                                                                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "source": "proposed_r3",
+      "sha256": "eab4cd660adb486d6b057e8036d2d952bdea55e7ab7686e568cb79ae6a02285d",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "scope": "Proposal only; no source application, native verification or closure."
+}

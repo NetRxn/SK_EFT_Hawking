@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "-B",
+    "scripts/close_finding.py",
+    "--doc",
+    "papers/AutomatedReviews/2026-11-06-d1-derived-numerals/D1.md",
+    "--section",
+    "1.1",
+    "--status",
+    "fixed",
+    "--commit",
+    "8189530ea2380fa73546cf3702a6073acb3b5374",
+    "--superseded-by",
+    "papers/AutomatedReviews/2026-11-06-d1-derived-numerals/SCALING_APPLICATION_REVIEW_R2.md",
+    "--evidence",
+    "Independent scientific R1 and applied-result R2 accept the corrected fixed-material Gamma quadratic versus delta_diss linear scaling, inverse ratio and background-sweep caveat. Original declared Verify independently passes; actual20page compile and inspectedpage11 retained. Wider numerical migration and original physical BUILD remain OPEN."
+  ],
+  "rc": 0,
+  "stdout": "\u2713 wrote 1 record(s): review:2026-11-06-d1-derived-numerals:D1:1.1\n",
+  "stderr": ""
+}

@@ -1,0 +1,41 @@
+# Vestigial data provenance discovery r1
+
+Read-only discovery for packet `vestigial-data-provenance-r1.json`, candidate 8ad1411526b8b8d5b49e9f3b9993b8083ec887d9. Both start and final existing-adapter checks returned fresh=true / changed=[]. No repository/notebook/Git writes, scientific imports, compute, notebook execution, tests, builds, controller operations or data migration occurred. ROOT remains sole notebook writer. JSON companion contains all exact paths, hashes, metadata and schemas.
+
+## Failure and actual requirements
+
+`notebooks/Phase5b_Synthesis_Technical.ipynb`, zero-based cell 13 (id e061fa2d), calls `fig_vestigial_binder_crossing()`. `src/core/visualizations.py:3856-3873` derives `<repository>/data/vestigial_mc` from its own file path, lists every `.json`, sorts descending by byte size and loads the first. The candidate has neither `data` nor `docs/vestigial_mc_results`. The primary has `data/vestigial_mc` with 14 JSONs; its docs directory is also absent.
+
+The failing function requires `binder_crossing.data`, keyed by integer-like L strings, each with `g_EH_values`, `binder_tetrad`, `binder_metric` numeric arrays of matching lengths. It requires no particular filename, timestamp or manifest, and performs no model/source/run admission. The earliest quick run lacks `data`; `rhmc_20260402T082842.json` is an entirely different schema. The other twelve have the consumed keys. Historical intended L=4,6,8 file is `vestigial_mc_20260329T192611.json` (11523 bytes, SHA256 2756849b07a3f2d0c9ff9e09550f63a61701b2e18befd6866157ff29fc18f30d), but it is scientifically superseded.
+
+Cell 12 (a33da0be) separately looks in `../docs/vestigial_mc_results` and picks lexicographic-last `vestigial_mc_*.json`. Its absence only prints a message. If the primary collection were copied to both locations, this cell would select NJL 20260331T201920 while the figure selects 20260330T164110. These are different scientific models/runs. `fig_vestigial_susceptibility_split` shares largest-file behavior; `fig_vestigial_phase_diagram_mc` separately pins the March29 filename and silently omits overlays when absent. Neither sibling is called in this failing cell.
+
+## Located data and scientific provenance
+
+Primary dataset root: `/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/data/vestigial_mc`.
+
+Blindly supplying the whole directory selects `vestigial_mc_20260330T164110.json`, 318726 bytes, SHA256 9bf0ad2b00ac4a1f2518a36b776a21e2912154fb4385eabc7be58bf4ad08a2dd: L=4..16, 5000 measured/2500 thermalization sweeps, 40 couplings, seed16, 14 cores. Associated primary log `logs/vestigial_mc_20260330T164110.log` corroborates these settings and uniformly 0.933 Binder acceptance. This is from the pre-correction period, not a trustworthy current vestigial result.
+
+`docs/roadmaps/Phase5_Roadmap.md:698-740` explicitly identifies missing spatial coupling, wrong FSS backend, prior split signal as noise, and the corrected product-form approximation as the wrong ADW distribution. The early March29 L4/6/8 apparent split is therefore not accepted science. Its JSON even stores split_transition as the string "True", not a boolean; raw flags are not valid adjudication.
+
+March31 Weingarten `vestigial_mc_20260331T114048.json` exists (222942 bytes, SHA256 9c4cf8c098ec30510d7a749b371da61c0b65101dfe8d4b24366feaf4232e4e8e). Roadmap 9C-2, lines 996-1014, warns no Binder crossings, nondivergent noise peaks, catastrophic Lorentzian reweighting, and invalid interpretation with blind single-site order parameters. The roadmap explicitly says its split flag is misleading. It is not a replacement positive vestigial run.
+
+NJL `vestigial_mc_njl_20260331T201920.json` exists (260780 bytes, SHA256 9afcb1406a41e87860b1b93720380b6846e202d076ea5493af2fae42d66d8b1c); roadmap 9C-3 lines 1034-1045 identifies genuine antiferromagnetic occupation ordering, explicitly NOT metric vestigial ordering. Odd-L periodic lattices are frustrated. It cannot substantiate ADW vestigial assertions by matching JSON schema.
+
+The April13 two-core ADW rerun has `logs/vestigial_mc_adw_20260413T181012.log` and `logs/vestigial_mc_2core_production_20260413.out`, but no corresponding completed JSON in the primary collection. The log stops after dispatching 280 Binder jobs; the out file includes leaked-semaphore shutdown warning. This is launch evidence, not completed data.
+
+Primary `data/rhmc/` has L4/L8 NPZ histories and diagnostic artifacts, including L4_baseline_20260413, L8_m0.1, L8_v1, L8eo_m0.1 and L8mlx_m0.05. A standard-library ZIP member inspection of L4_baseline_20260413/g3.0000.npz shows h_sq_history, delta_h_history, tet_m2_history, tr_q2_history, h_final, acceptance_rate, g, L, n_md_steps, hasenbusch, n_factors. These do not have the JSON Binder schema. Existence establishes neither current scientific validity nor publication acceptance; no RHMC analysis was run or silently converted. Phase5 roadmap also documents superseded pseudofermion conventions, so directory naming alone cannot admit a run.
+
+Two targeted existing delivery roots contain exact byte-identical copies of all fourteen primary JSONs: `.codex-python-worktrees/publication-integrated-science-20261019/data/vestigial_mc` and `.codex-python-worktrees/publication-adw-validation-20261019/data/vestigial_mc`, under the same Physics workspace. They are ordinary directories, not symlinks. Targeted checks of .publication-l1-checkpoint-20261103, .publication-njl-focused-qualification, continuity-preserved immediate children and l1-coupled-fixed-controls did not find a different collection at the known canonical relative paths. This is a bounded search, not a claim of global absence.
+
+## Supported mechanisms and next action
+
+The existing figure has no filepath argument, environment override, workspace resolver or run-admission hook. `src/core/workspace.py` supports `.workspace-root` and structural workspace detection for shared resources; this figure does not use it, so a sentinel cannot resolve this failure. `scripts/run_vestigial_production.py` supports --model and --resume and checks resumed coupling-grid compatibility, writes cwd-relative data/vestigial_mc and logs, but emits no model/source commit identity in metadata. Existing viewer supports explicit files/model filtering; it is not the notebook loader. The notebook validator executes in the notebook directory; no supported external data mount/admission mechanism was found in the inspected source/producer/slot/continuity docs. Do not introduce a second loader or fallback system.
+
+Minimum scientifically correct next action: ROOT route the existing notebook/scientific inconsistency through the current planner and reconcile the narrative with the explicit historical retraction before admitting a run. A historical diagnostic can retain exact original run identity only with clear invalidation and corrected narrative/figure scope; a current positive result requires separately reviewed appropriate current producer and observables, not a schema-compatible NJL substitution or unreviewed RHMC conversion. Whole-directory copy/symlink would make execution easier while selecting a scientifically invalid old run. No data should be populated on the strength of this discovery alone.
+
+Dataset existence is confirmed in primary. Consumed schema is present in twelve JSONs. No publication-accepted run for the notebook's current ADW split-transition claim was identified. Stage11 requires narrative to agree with displayed computation; execution success alone cannot close that gap. Full publication/scientific gates and independent review remain owed.
+
+## Read-only evidence methods
+
+Read actual CLAUDE/pipeline guidance, referenced continuity notebook/current Phase6a roadmap and relevant ADR/continuity authorities; source-read notebook JSON with stdlib json (no execution); rg source/docs/producer; targeted pathlib listing/stat; JSON parse/schema inspection; SHA256/read_bytes comparison for the two located copy roots; producer log reads; ZIP member listing for one related NPZ; existing continuity adapter check before/after. Companion JSON preserves per-file evidence. No proposed source/data patch was applied.
