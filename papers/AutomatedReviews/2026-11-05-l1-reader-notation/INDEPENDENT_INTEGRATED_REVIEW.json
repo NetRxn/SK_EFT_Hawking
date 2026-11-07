@@ -1,0 +1,38 @@
+{
+  "verdict": "ACCEPT",
+  "source_sha256": "208a06c5ca352ed209cfd221262e4f4099dae58d3c310c42bd1369b0df45ff8d",
+  "catalog_sha256": "8e53db0cdcddc0240dab137892980cd71167938683355fb57ec17285d813291c",
+  "canonical_baseline_catalog_sha256": "18eebdd446a48479bed1fcaacd42f877c5b1921979a1d43f92fc425c5484ec23",
+  "active_units": 123,
+  "all_ids_unique_and_helper_correct": true,
+  "all123_quote_bindings_unique_spans_correct": true,
+  "retained_assessments": 118,
+  "old_records_fully_preserved": 7,
+  "successors": 5,
+  "explicit_deletions": 2,
+  "no_successor_verdict_promotion": true,
+  "54_candidates_and_four_blockers_unchanged": true,
+  "all_prior_scope_and_evidence_preserved": true,
+  "by_verdict": {
+    "PASS": 88,
+    "INFO": 24,
+    "WARN": 7,
+    "UNGROUNDED": 1,
+    "TRANSITION": 3
+  },
+  "schema_command": [
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+    "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/scripts/sentence_state.py",
+    "validate",
+    "/tmp/l1-reader-notation-claims-20261105-r1/claims_review.json"
+  ],
+  "schema_returncode": 0,
+  "schema_stdout": "{\"ok\": true, \"path\": \"/private/tmp/l1-reader-notation-claims-20261105-r1/claims_review.json\", \"sentences\": 123, \"reviewer_version\": \"claims-reviewer-v2\"}\n",
+  "required_corrections": [],
+  "section_ordinals_verified": true,
+  "human_audit_prose_pins_unchanged": true,
+  "no_ingest_or_scientific_execution": true,
+  "scope": "R3 source plus bounded123-unit catalog only; rendering/fullprose/physical acceptance separate",
+  "report": "/tmp/l1-reader-notation-final-independent-20261105.md",
+  "canonical_evidence_copy_matches_proposal": true
+}

@@ -1,0 +1,36 @@
+{
+  "verdict": "ACCEPT",
+  "base_head": "6962a3c0475d6386a6427a765949f413efa76f80",
+  "baseline_sha256": "82d5682f890baf32f663ca2779353416c6770e81081b721ea99f24e19f3f30ac",
+  "scratch_sha256": "f611a8a308dac9bd1f5e2cef9fcb88ad0ea77ac754abe65f86e73b34971d9cc8",
+  "changed_blocks": [
+    [
+      "replace",
+      33,
+      34,
+      33,
+      35
+    ],
+    [
+      "replace",
+      170,
+      171,
+      171,
+      175
+    ],
+    [
+      "replace",
+      399,
+      402,
+      403,
+      408
+    ]
+  ],
+  "actual_source_pins": {
+    "lean/SKEFTHawking/GravitationalWaves.lean": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
+    "lean/SKEFTHawking/VestigialSusceptibility.lean": "cf5a4584ad51f44a232c7da2d4fe9300ea14c322a416b2843e7ef3c2032bf721"
+  },
+  "tracked_status": "clean",
+  "scope": "Three reader-notation edits only, no physical derivation or full prose acceptance",
+  "required_corrections": []
+}

@@ -1,0 +1,13 @@
+{
+  "commit": "93338ee2490177b5f7c1d363d217fba05da68a13",
+  "source_sha256": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+  "decision": "ACCEPT scoped manual kinetic/source construction attempts",
+  "archive_sha256": "dbc859eda69d5377730a3f725380e23f457b565517aefca1ec99895a363c751a",
+  "public_merge": true,
+  "original_physical_build": "OPEN; unchanged",
+  "kernel_or_publication_acceptance": false,
+  "merge_commit": "574386304efe05dff98d60ff61240836aa776b4a",
+  "test_handle_status": "27769 terminal1; separate source87ae47bfd result",
+  "prior_publication_candidate": "87ae47bfdfd1b2ed3b395ead1d40cca9b1d72f31",
+  "qualification_test_handle": 27769
+}

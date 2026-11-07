@@ -1,0 +1,37 @@
+{
+  "archive": "original_nonzero_normalization_evidence.zip",
+  "sha256": "58c5e86a819b3f38ed4d72c25b5d2819af130969a8024af2f17db961c5e58091",
+  "bytes": 1302544,
+  "members": 16,
+  "actual_manual_result_sha256": "c1c796de8678af83952e3cb531bdb15a0f09a203fbf2f582aaffc5568e039468",
+  "approved_brief_sha256": "ba13d0000e4d54b7a1d682c0d498ded9cff25b6a177a2f6c8d0cfd28283d0598",
+  "parent_checkpoint": "58c3b7c7c265ef02febb10b72322eef06f2de28f",
+  "canonical_copies": {
+    "l1-original-nonzero-normalization-result-r1.md": "ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md",
+    "l1-original-nonzero-normalization-brief-r1.md": "ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_BRIEF.md",
+    "l1-nonzero-normalization-math-prospective-r1.md": "ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_MATH_PROSPECTIVE_R1.md",
+    "l1-nonzero-normalization-source-prospective-r1.md": "ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_SOURCE_PROSPECTIVE_R1.md",
+    "l1-nonzero-normalization-math-result-r1.md": "ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_MATH_REVIEW_R1.md",
+    "l1-nonzero-normalization-source-result-r1.md": "ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION_SOURCE_REVIEW_R1.md"
+  },
+  "files": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": "e74fc4b792d59d19f88917f8f0365a2336583ca0abc5cac1403917b98ebd3cd8",
+    "accepted/N16_SATURATION_STATE_OBSTRUCTION.md": "832f231124cc46e41296caf13c50f46d9f4cd3dcb8508860a8b8d83709a5ca9b",
+    "accepted/N16_SYMBOLIC_NORMALIZATION.md": "8544ece0ae2dfce3b3e054cd81c17153467e9b9afb9959be0372ab406e046487",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "accepted/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md": "244ed2e609d59bc7d5b004a51c81f8512d02514721bab6364a4ee2a38eb813df",
+    "accepted/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION_ACCEPTANCE.md": "e8a6f44a54129d5dfbb8bf6f0bd0aaa049f4aab687e188db5c65e42fe06062df",
+    "candidate/l1-original-nonzero-normalization-result-r1.md": "c1c796de8678af83952e3cb531bdb15a0f09a203fbf2f582aaffc5568e039468",
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "parent/original_boundary_weyl_jordan_evidence.zip": "4953e50ca436c18d19a9f8a354a28cff8023f2c7f70356d8dcd16e340e0bdcc1",
+    "parent/original_boundary_weyl_jordan_manifest.json": "ce84a1c17780794aa83b522f4ec05e55bb5afd663314f16c29030bdbf9865ef3",
+    "prework/l1-nonzero-normalization-math-prospective-r1.md": "8641165b9f47a4a224e9d5116954d3549120350505896e5fa22cd244c9aac12e",
+    "prework/l1-nonzero-normalization-source-prospective-r1.md": "ec3c766cabde889e9a38a3a0c981dc485c938313bee10d511d299f057fcad586",
+    "prework/l1-original-nonzero-normalization-brief-r1.md": "ba13d0000e4d54b7a1d682c0d498ded9cff25b6a177a2f6c8d0cfd28283d0598",
+    "review/l1-nonzero-normalization-math-result-r1.md": "1ffe5b0217b475b400700eec6728bc4a503b9b31d01d8772b15e6100aa26d6d1",
+    "review/l1-nonzero-normalization-source-result-r1.md": "5181a2c5ade2c5f0be2b57be8719b1de6f6df40f1c3dfe4986589a6b62d02cd2",
+    "source/original-nonzero-normalization-custody-r1.json": "b1d823ddc2c555c643583d608809b61ae6f27a6a676cf468373133cca89aee1c"
+  },
+  "outcome": "BOTH independent ACTUAL RESULT ACCEPT: original Z(2^1717,1)>1 and nonzero normalized integrated literal temporal J response at same point; activated nonempty static trace-dual candidate",
+  "scope": "No metric mean, spatial order/signature, physical CAR/ordering/metric or causal state, B3/N4/physical BUILD/publication completion; no scientific executable/runtime grant"
+}

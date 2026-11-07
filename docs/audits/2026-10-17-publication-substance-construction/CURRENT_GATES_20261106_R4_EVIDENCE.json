@@ -1,0 +1,17 @@
+{
+  "source_commit": "0e2894344b35e1fe45bc6d9602b4e388f7c56a65",
+  "preserved_at_commit": "b21c206a847ea4d914c27cc7e78866de3fddce1f",
+  "built_at": "2026-11-06T18:44:32.990966+00:00",
+  "graph_sha256": "1a4d93a3c554c30421d6aee849501606ad707013e68283092dab8d40e3dd8cc7",
+  "compared_with": "CURRENT_GATES_20261106_R3.json",
+  "all_231_ids_equal": true,
+  "gate_state_changes": [],
+  "counts": {
+    "passed": 160,
+    "open": 28,
+    "blocked": 25,
+    "needs-recheck": 18
+  },
+  "full_raw_graph_and_warnings": "https://github.com/NetRxn/SK_EFT_Hawking/blob/b21c206a847ea4d914c27cc7e78866de3fddce1f/papers/AutomatedReviews/2026-11-06-l1-main-delivery/COMPLEX_NATIVE_R1_EVIDENCE.zip",
+  "scope": "Actual canonical measurement after all seven canonical writers including claim clusters. Static coverage caveats retained; zero newlygreen. Separate L3/research branches not measured."
+}

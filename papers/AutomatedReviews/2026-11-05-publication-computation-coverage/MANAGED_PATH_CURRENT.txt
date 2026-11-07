@@ -1,0 +1,64 @@
+..........................................................FF............ [ 66%]
+....................................                                     [100%]
+=================================== FAILURES ===================================
+________________________ test_no_missing_from_registry _________________________
+
+    def test_no_missing_from_registry():
+        """After Wave 1 promotion, every cited bibkey is registered."""
+        from validate import check_citation_primary_sources_present  # noqa
+        result = check_citation_primary_sources_present()
+        missing_detail = next((d for d in result.details if d.name == "missing_from_registry"), None)
+>       assert missing_detail is None, (
+            "After Wave 1 promotion every \\cite{} target should resolve. "
+            "If this fails, run scripts/extract_missing_bibkeys.py and "
+            "scripts/promote_primary_sources.py to backfill."
+        )
+E       AssertionError: After Wave 1 promotion every \cite{} target should resolve. If this fails, run scripts/extract_missing_bibkeys.py and scripts/promote_primary_sources.py to backfill.
+E       assert Detail(name='missing_from_registry', passed=False, message='13 cited bibkeys absent from CITATION_REGISTRY: Barcelo201..., FinazziLiberatiSindoni2012, Kitaev2006, Roehm2026TQC, RoehmD4Topological (and 5 more)', warning=False, measured=True) is None
+
+tests/test_phase6i_wave1.py:185: AssertionError
+________________ test_extract_missing_bibkeys_emits_no_orphans _________________
+
+tmp_path = PosixPath('/private/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/pytest-of-johnroehm/pytest-614/test_extract_missing_bibkeys_e0')
+
+    @pytest.mark.slow
+    def test_extract_missing_bibkeys_emits_no_orphans(tmp_path):
+        """Re-run the extractor; after promotion all citations resolve so 0 stubs."""
+        import extract_missing_bibkeys as ext  # noqa
+        output = tmp_path / "missing_stubs.json"
+        rc = ext.main(["--out", str(output)])
+        assert rc == 0
+        payload = json.loads(
+            output.read_text(encoding="utf-8")
+        )
+>       assert payload["n_stubs"] == 0, (
+            f"Post-promotion extractor still finds {payload['n_stubs']} unregistered "
+            f"bibkeys: {[s['bibkey'] for s in payload['stubs'][:8]]}"
+        )
+E       AssertionError: Post-promotion extractor still finds 10 unregistered bibkeys: ['Barcelo2011', 'CompanionCompilation', 'CompanionFaultTolerance', 'CompanionStochastic', 'FinazziLiberatiSindoni2012', 'Kitaev2006', 'Roehm2026TQC', 'RoehmD8Compilation']
+E       assert 10 == 0
+
+tests/test_phase6i_wave1.py:206: AssertionError
+----------------------------- Captured stdout call -----------------------------
+
+Cited bibkeys (total):              516
+  In CITATION_REGISTRY:             503
+  Stubs created (bibitem found):    10
+  Orphans (no bibitem block found): 3
+
+Stub field coverage:
+  title:  2/10
+  year:   7/10
+  arxiv:  4/10
+  doi:    0/10
+
+Orphan bibkeys (cited but no \bibitem block):
+  RoehmD4Topological  (D8)
+  RoehmD6FaultTolerant  (D8)
+  RoehmD9Certification  (D8)
+----------------------------- Captured stderr call -----------------------------
+wrote /private/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/pytest-of-johnroehm/pytest-614/test_extract_missing_bibkeys_e0/missing_stubs.json
+=========================== short test summary info ============================
+FAILED tests/test_phase6i_wave1.py::test_no_missing_from_registry - Assertion...
+FAILED tests/test_phase6i_wave1.py::test_extract_missing_bibkeys_emits_no_orphans
+2 failed, 106 passed in 3.09s

@@ -1,0 +1,146 @@
+{
+  "verdict": "ACCEPT_EXISTING_CANONICAL_HEATMAP_AND_SIX_DERIVED_METADATA_UPDATES",
+  "baseline": "226ee77d63884c9259d3ec8ab339eaf248335cfb",
+  "writer_returncode": 0,
+  "existing_contract": "scripts/bundle_readiness.py main returns early for --json; non-JSON always calls write_metadata_counts before heatmap; --heatmap only suppresses per-bundle docs",
+  "exact_six_metadata_deltas": {
+    "D3": {
+      "readiness_last_computed": {
+        "before": "2026-08-15",
+        "after": "2026-11-05"
+      },
+      "blocked_p1_gates": {
+        "before": [
+          "CitationIntegrity",
+          "FixPropagation"
+        ],
+        "after": [
+          "FixPropagation"
+        ]
+      }
+    },
+    "D1": {
+      "readiness_last_computed": {
+        "before": "2026-08-15",
+        "after": "2026-11-05"
+      },
+      "blocked_p1_gates": {
+        "before": [
+          "CitationIntegrity",
+          "FixPropagation",
+          "LeanProofSubstance"
+        ],
+        "after": [
+          "FixPropagation",
+          "LeanProofSubstance"
+        ]
+      }
+    },
+    "D10": {
+      "readiness_last_computed": {
+        "before": "2026-08-17",
+        "after": "2026-11-05"
+      },
+      "open_findings": {
+        "before": 9,
+        "after": 3
+      }
+    },
+    "E1": {
+      "readiness_last_computed": {
+        "before": "2026-08-15",
+        "after": "2026-11-05"
+      },
+      "blocked_p1_gates": {
+        "before": [
+          "CitationIntegrity",
+          "FixPropagation"
+        ],
+        "after": [
+          "FixPropagation"
+        ]
+      }
+    },
+    "L1": {
+      "advisories_open": {
+        "before": 6,
+        "after": 7
+      },
+      "readiness_last_computed": {
+        "before": "2026-08-15",
+        "after": "2026-11-05"
+      },
+      "blocked_p1_gates": {
+        "before": [
+          "FixPropagation"
+        ],
+        "after": [
+          "FixPropagation",
+          "ParameterProvenance"
+        ]
+      },
+      "open_findings": {
+        "before": 7,
+        "after": 8
+      }
+    },
+    "D4": {
+      "readiness_last_computed": {
+        "before": "2026-08-15",
+        "after": "2026-11-05"
+      },
+      "blocked_p1_gates": {
+        "before": [
+          "CitationIntegrity",
+          "FixPropagation"
+        ],
+        "after": [
+          "FixPropagation"
+        ]
+      }
+    }
+  },
+  "all21_before_hashes_match_Git_baseline": true,
+  "all15_other_metadata_files_byte_identical": true,
+  "all_changes_only_existing_writer_derived_keys": true,
+  "all_changed_field_values_match_readonly_aggregate": true,
+  "all21_summary_rows_exactly_match_aggregate": true,
+  "all21_gate_distribution_rows_exactly_match_aggregate": true,
+  "counts": {
+    "RED": 13,
+    "YELLOW": 5,
+    "UNMEASURED": 3
+  },
+  "GREEN": 0,
+  "no_review_date_backfill_or_stage_human_lifecycle_promotion": true,
+  "apex_claims_and_names_unchanged": true,
+  "ten_protected_artifact_hashes_unchanged": true,
+  "prior_226ee_archive_unchanged": true,
+  "current_metadata_sha256": {
+    "D12": "d2b8b74a684556480d39894636c0d66eac92c8ee73aac6c39e8f1f3929d38adf",
+    "L3": "5a2d421686eb87ee05f1d3e1c8318f8cfc80bb3011cdd7257d1b5b6dd9c4e079",
+    "D3": "6751193a5e167a5e3ce223f304ac3a06a3c16bd95d307180bb3398721a957eb5",
+    "D5": "254c5e08280d1e3acf4c91489f1db1b577c8594bd391c903f8a7cac17c08b114",
+    "D1": "43ee3929437eb3341bfecb24ace63991849b6df9f480cd52826938c9d733df67",
+    "I1": "5ca673e645749fae0d03c46f802f87fabe93a0d3832a019c37b939ff7283044c",
+    "F": "6dc78648a4a44f4d18ce83831d17dffa2218fc33427bccafa1007901bd537778",
+    "L2": "eb926f0fb30a8df77f38993ddb897441fe6f1aa95742c07d04811c7e7a363b0a",
+    "D10": "0d0cb1275c1cb536baf313ab09d3c211152d21720646be4774abb15c53e9f9e6",
+    "D8": "80c452da8c30945385c77de68f819bc8e252743c5b9a9779e5f03026cf569ab8",
+    "E1": "9c994b12a81251b8ccd079eb21f9393f55fcd8bba90d84590de0b17249f0bf66",
+    "L1": "5a043c24023e7eed9253dcb7bf136f590ad2bc9085862d28d1ac6d335ec2ba25",
+    "D7": "f1ceadc35d4ac829a5a52b14f01b39f1e0711ed36de6e15c7032510ca8be25d6",
+    "I2": "116db2239e2c132772734f2fc5dc6cdf87cda30b40db3c0378cdcad40b2a3dee",
+    "D11": "a6883a75e13ec0f6888d97e0dd8f5e974139ef1d6dc939d75d9fe1c6320f2d0c",
+    "D9": "ccb1cc73acee4deea53e030b1ea760a0405e2bf9a6d9941dacc6dcc007b0c359",
+    "D4": "3b078b934c4398b46af1181a6506ecc8e73e7a53aa5044960d4a78bbc27b7905",
+    "I3": "8fadd5816d2c198fc03a4b9327e73c9cbd63fe8bd6ef95ff447a794d944e6705",
+    "D2": "11a96bc879cb76cc4732339ca47579867db013b80a1bb13788f897b715e27a6a",
+    "E2": "315e6861d2a8d431165dc7193d4f2c154b6d3abd37119744214b52d3705a0977",
+    "D6": "e08e57634e73729eb21fa298e56d8ffabb6de7cafe2adf682d09b7ef006ba518"
+  },
+  "heatmap_sha256": "5e64b4ac0b20b9490637226c9eeb64a28858cf083d6dc6d90a271a4030ef9558",
+  "source_identity_limit": "Prior canonical226ee graph remains pinned to source before these derived metadata updates; heatmap writer is a separately recorded aggregation refresh, not a fresh native/scientific/full-gate run.",
+  "no_new_producer_or_source_edits_by_reviewer": true,
+  "contradictions_between_brief_and_sources": []
+}

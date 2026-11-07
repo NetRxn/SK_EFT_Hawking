@@ -1,0 +1,1722 @@
+{
+  "incoming": "bd5b4d471f98d96b01581d97042d4c3fb3d35106",
+  "base": "6dbeeb6fd3441cad1a64b44ea63ec26af9edada2",
+  "checks": {
+    "candidate_head_a5d": true,
+    "candidate_clean": true,
+    "four_commits": true,
+    "exact_26_file_delta": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_ACCEPTANCE.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_MATH_REVIEW_R1.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_MATH_REVIEW_R2.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_PHYSICS_REVIEW_R1.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_PHYSICS_REVIEW_R2.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/CUBIC_METRIC_SUPPORT.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/DIRAC_LOOP_FACTORIZATION_R1.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/DIRAC_LOOP_MATH_DESIGN_REVIEW_R1.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/ELIMINATION_ORDER_REPAIR_R1.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/ELIMINATION_ORDER_SOURCE_ACCEPTANCE_R1.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT1_DATA_REVIEW.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT1_FAILURE.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT2_DATA_REVIEW.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT2_FAILURE.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_SOURCE_ACCEPTANCE.md": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/cubic_metric_support_evidence.zip": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/cubic_metric_support_manifest.json": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt1_failure_evidence.zip": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt1_failure_manifest.json": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt2_failure_evidence.zip": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_attempt2_failure_manifest.json": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_order_source_r1.zip": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_order_source_r1_manifest.json": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_response_source_r2.zip": true,
+    "blob:docs/audits/2026-11-05-l1-physical-bridges/leading_metric_response_source_r2_manifest.json": true,
+    "cubic_metric_support_evidence.zip:archive": true,
+    "cubic_metric_support_evidence.zip:safe_unique": true,
+    "cubic_metric_support_evidence.zip:crc": true,
+    "cubic_metric_support_evidence.zip:manifest_set": true,
+    "cubic_metric_support_evidence.zip:member:review/l1-leading-metric-cubic-intake-r1.md": true,
+    "cubic_metric_support_evidence.zip:expanded:review/l1-leading-metric-cubic-intake-r1.md": true,
+    "cubic_metric_support_evidence.zip:member:review/l1-leading-metric-cubic-math-review-r1.md": true,
+    "cubic_metric_support_evidence.zip:expanded:review/l1-leading-metric-cubic-math-review-r1.md": true,
+    "cubic_metric_support_evidence.zip:member:review/l1-leading-metric-cubic-math-review-r2.md": true,
+    "cubic_metric_support_evidence.zip:expanded:review/l1-leading-metric-cubic-math-review-r2.md": true,
+    "cubic_metric_support_evidence.zip:member:review/l1-leading-metric-cubic-physics-review-r1.md": true,
+    "cubic_metric_support_evidence.zip:expanded:review/l1-leading-metric-cubic-physics-review-r1.md": true,
+    "cubic_metric_support_evidence.zip:member:review/l1-leading-metric-cubic-physics-review-r2.md": true,
+    "cubic_metric_support_evidence.zip:expanded:review/l1-leading-metric-cubic-physics-review-r2.md": true,
+    "cubic_metric_support_evidence.zip:member:review/l1-leading-metric-dirac-design-review-r1.md": true,
+    "cubic_metric_support_evidence.zip:expanded:review/l1-leading-metric-dirac-design-review-r1.md": true,
+    "cubic_metric_support_evidence.zip:member:source/COLLECTIVE_BODY_PARITY.md": true,
+    "cubic_metric_support_evidence.zip:expanded:source/COLLECTIVE_BODY_PARITY.md": true,
+    "cubic_metric_support_evidence.zip:member:source/CUBIC_METRIC_SUPPORT_R1.md": true,
+    "cubic_metric_support_evidence.zip:expanded:source/CUBIC_METRIC_SUPPORT_R1.md": true,
+    "cubic_metric_support_evidence.zip:member:source/CUBIC_METRIC_SUPPORT_R2.md": true,
+    "cubic_metric_support_evidence.zip:expanded:source/CUBIC_METRIC_SUPPORT_R2.md": true,
+    "cubic_metric_support_evidence.zip:member:source/DIRAC_LOOP_FACTORIZATION_R1.md": true,
+    "cubic_metric_support_evidence.zip:expanded:source/DIRAC_LOOP_FACTORIZATION_R1.md": true,
+    "cubic_metric_support_evidence.zip:member:source/l1_interacting_support.py": true,
+    "cubic_metric_support_evidence.zip:expanded:source/l1_interacting_support.py": true,
+    "cubic_metric_support_evidence.zip:member:source/l1_mixed_g1_support.py": true,
+    "cubic_metric_support_evidence.zip:expanded:source/l1_mixed_g1_support.py": true,
+    "cubic_metric_support_evidence.zip:member:source/leading.py": true,
+    "cubic_metric_support_evidence.zip:expanded:source/leading.py": true,
+    "cubic_metric_support_evidence.zip:member:source/support.json": true,
+    "cubic_metric_support_evidence.zip:expanded:source/support.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:archive": true,
+    "leading_metric_attempt1_failure_evidence.zip:safe_unique": true,
+    "leading_metric_attempt1_failure_evidence.zip:crc": true,
+    "leading_metric_attempt1_failure_evidence.zip:manifest_set": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt-1-failure-summary.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt-1-failure-summary.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/calculate.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/calculate.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/controls.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/controls.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/leading.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/leading.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/legacy-binding.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/legacy-binding.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/run.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/run.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/science/l1_direct_a_haar.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/science/l1_direct_a_haar.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/science/l1_direct_b_haar.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/science/l1_direct_b_haar.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/science/l1_interacting_support.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/science/l1_interacting_support.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/science/l1_mixed_g1_determinant_tensor.cpp": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/science/l1_mixed_g1_determinant_tensor.cpp": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/science/l1_mixed_g1_support.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/science/l1_mixed_g1_support.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/science/l1_reduced_wedge_reference.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/science/l1_reduced_wedge_reference.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/science/legacy.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/science/legacy.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/consumed/test_scientific_controls.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/consumed/test_scientific_controls.py": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/controls/determinant-compile.stderr": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/controls/determinant-compile.stderr": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/controls/determinant-control.rows": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/controls/determinant-control.rows": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/controls/determinant-control.stderr": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/controls/determinant-control.stderr": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/controls/tiny-tests.stderr": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/controls/tiny-tests.stderr": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/controls/tiny-tests.stdout": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/controls/tiny-tests.stdout": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/exit.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/exit.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/reviewed-source-pins.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/reviewed-source-pins.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/stderr": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/stderr": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/stdout": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/stdout": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/support.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/support.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:attempt/warm-clock.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:attempt/warm-clock.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:independent-data-review.md": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:independent-data-review.md": true,
+    "leading_metric_attempt1_failure_evidence.zip:member:ordering-diagnostic-r1.json": true,
+    "leading_metric_attempt1_failure_evidence.zip:expanded:ordering-diagnostic-r1.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:archive": true,
+    "leading_metric_attempt2_failure_evidence.zip:safe_unique": true,
+    "leading_metric_attempt2_failure_evidence.zip:crc": true,
+    "leading_metric_attempt2_failure_evidence.zip:manifest_set": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/ELIMINATION_ORDER_REPAIR_R1.md": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/ELIMINATION_ORDER_REPAIR_R1.md": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/calculate.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/calculate.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/controls.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/controls.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/leading.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/leading.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/legacy-binding.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/legacy-binding.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/run.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/run.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/science/l1_direct_a_haar.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/science/l1_direct_a_haar.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/science/l1_direct_b_haar.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/science/l1_direct_b_haar.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/science/l1_interacting_support.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/science/l1_interacting_support.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/science/l1_mixed_g1_determinant_tensor.cpp": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/science/l1_mixed_g1_determinant_tensor.cpp": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/science/l1_mixed_g1_support.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/science/l1_mixed_g1_support.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/science/l1_reduced_wedge_reference.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/science/l1_reduced_wedge_reference.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/science/legacy.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/science/legacy.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/consumed/test_scientific_controls.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/consumed/test_scientific_controls.py": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/controls/determinant-compile.stderr": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/controls/determinant-compile.stderr": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/controls/determinant-control.rows": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/controls/determinant-control.rows": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/controls/determinant-control.stderr": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/controls/determinant-control.stderr": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/controls/tiny-tests.stderr": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/controls/tiny-tests.stderr": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/controls/tiny-tests.stdout": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/controls/tiny-tests.stdout": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/exit.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/exit.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/reviewed-source-pins.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/reviewed-source-pins.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/stderr": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/stderr": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/stdout": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/stdout": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/support.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/support.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:attempt/warm-clock.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:attempt/warm-clock.json": true,
+    "leading_metric_attempt2_failure_evidence.zip:member:review/LEADING_METRIC_ATTEMPT2_DATA_REVIEW.md": true,
+    "leading_metric_attempt2_failure_evidence.zip:expanded:review/LEADING_METRIC_ATTEMPT2_DATA_REVIEW.md": true,
+    "leading_metric_order_source_r1.zip:archive": true,
+    "leading_metric_order_source_r1.zip:safe_unique": true,
+    "leading_metric_order_source_r1.zip:crc": true,
+    "leading_metric_order_source_r1.zip:manifest_set": true,
+    "leading_metric_order_source_r1.zip:member:diagnostic/ordering-diagnostic-r1.json": true,
+    "leading_metric_order_source_r1.zip:expanded:diagnostic/ordering-diagnostic-r1.json": true,
+    "leading_metric_order_source_r1.zip:member:diagnostic/support-link-degree-profile.json": true,
+    "leading_metric_order_source_r1.zip:expanded:diagnostic/support-link-degree-profile.json": true,
+    "leading_metric_order_source_r1.zip:member:reviews/l1-leading-metric-order-math-review-r1.md": true,
+    "leading_metric_order_source_r1.zip:expanded:reviews/l1-leading-metric-order-math-review-r1.md": true,
+    "leading_metric_order_source_r1.zip:member:reviews/l1-leading-metric-order-physics-review-r1.md": true,
+    "leading_metric_order_source_r1.zip:expanded:reviews/l1-leading-metric-order-physics-review-r1.md": true,
+    "leading_metric_order_source_r1.zip:member:source/ELIMINATION_ORDER_REPAIR_R1.md": true,
+    "leading_metric_order_source_r1.zip:expanded:source/ELIMINATION_ORDER_REPAIR_R1.md": true,
+    "leading_metric_order_source_r1.zip:member:source/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "leading_metric_order_source_r1.zip:expanded:source/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "leading_metric_order_source_r1.zip:member:source/calculate.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/calculate.py": true,
+    "leading_metric_order_source_r1.zip:member:source/controls.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/controls.py": true,
+    "leading_metric_order_source_r1.zip:member:source/leading.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/leading.py": true,
+    "leading_metric_order_source_r1.zip:member:source/legacy-binding.json": true,
+    "leading_metric_order_source_r1.zip:expanded:source/legacy-binding.json": true,
+    "leading_metric_order_source_r1.zip:member:source/run.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/run.py": true,
+    "leading_metric_order_source_r1.zip:member:source/science/l1_direct_a_haar.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/science/l1_direct_a_haar.py": true,
+    "leading_metric_order_source_r1.zip:member:source/science/l1_direct_b_haar.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/science/l1_direct_b_haar.py": true,
+    "leading_metric_order_source_r1.zip:member:source/science/l1_interacting_support.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/science/l1_interacting_support.py": true,
+    "leading_metric_order_source_r1.zip:member:source/science/l1_mixed_g1_determinant_tensor.cpp": true,
+    "leading_metric_order_source_r1.zip:expanded:source/science/l1_mixed_g1_determinant_tensor.cpp": true,
+    "leading_metric_order_source_r1.zip:member:source/science/l1_mixed_g1_support.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/science/l1_mixed_g1_support.py": true,
+    "leading_metric_order_source_r1.zip:member:source/science/l1_reduced_wedge_reference.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/science/l1_reduced_wedge_reference.py": true,
+    "leading_metric_order_source_r1.zip:member:source/science/legacy.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/science/legacy.py": true,
+    "leading_metric_order_source_r1.zip:member:source/source-candidate-pins.json": true,
+    "leading_metric_order_source_r1.zip:expanded:source/source-candidate-pins.json": true,
+    "leading_metric_order_source_r1.zip:member:source/test_scientific_controls.py": true,
+    "leading_metric_order_source_r1.zip:expanded:source/test_scientific_controls.py": true,
+    "leading_metric_response_source_r2.zip:archive": true,
+    "leading_metric_response_source_r2.zip:safe_unique": true,
+    "leading_metric_response_source_r2.zip:crc": true,
+    "leading_metric_response_source_r2.zip:manifest_set": true,
+    "leading_metric_response_source_r2.zip:member:history/LEADING_METRIC_RESPONSE_DESIGN_R1.md": true,
+    "leading_metric_response_source_r2.zip:expanded:history/LEADING_METRIC_RESPONSE_DESIGN_R1.md": true,
+    "leading_metric_response_source_r2.zip:member:history/source-r1-blocked-evidence.zip": true,
+    "leading_metric_response_source_r2.zip:expanded:history/source-r1-blocked-evidence.zip": true,
+    "leading_metric_response_source_r2.zip:member:reviews/kernel-intake.md": true,
+    "leading_metric_response_source_r2.zip:expanded:reviews/kernel-intake.md": true,
+    "leading_metric_response_source_r2.zip:member:reviews/l1-leading-metric-design-math-review-r1.md": true,
+    "leading_metric_response_source_r2.zip:expanded:reviews/l1-leading-metric-design-math-review-r1.md": true,
+    "leading_metric_response_source_r2.zip:member:reviews/l1-leading-metric-design-math-review-r2.md": true,
+    "leading_metric_response_source_r2.zip:expanded:reviews/l1-leading-metric-design-math-review-r2.md": true,
+    "leading_metric_response_source_r2.zip:member:reviews/l1-leading-metric-design-physics-review-r1.md": true,
+    "leading_metric_response_source_r2.zip:expanded:reviews/l1-leading-metric-design-physics-review-r1.md": true,
+    "leading_metric_response_source_r2.zip:member:reviews/l1-leading-metric-design-physics-review-r2.md": true,
+    "leading_metric_response_source_r2.zip:expanded:reviews/l1-leading-metric-design-physics-review-r2.md": true,
+    "leading_metric_response_source_r2.zip:member:reviews/l1-leading-metric-source-math-review-r1.md": true,
+    "leading_metric_response_source_r2.zip:expanded:reviews/l1-leading-metric-source-math-review-r1.md": true,
+    "leading_metric_response_source_r2.zip:member:reviews/l1-leading-metric-source-math-review-r2.md": true,
+    "leading_metric_response_source_r2.zip:expanded:reviews/l1-leading-metric-source-math-review-r2.md": true,
+    "leading_metric_response_source_r2.zip:member:reviews/l1-leading-metric-source-physics-review-r1.md": true,
+    "leading_metric_response_source_r2.zip:expanded:reviews/l1-leading-metric-source-physics-review-r1.md": true,
+    "leading_metric_response_source_r2.zip:member:reviews/l1-leading-metric-source-physics-review-r2.md": true,
+    "leading_metric_response_source_r2.zip:expanded:reviews/l1-leading-metric-source-physics-review-r2.md": true,
+    "leading_metric_response_source_r2.zip:member:source/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "leading_metric_response_source_r2.zip:expanded:source/LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "leading_metric_response_source_r2.zip:member:source/calculate.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/calculate.py": true,
+    "leading_metric_response_source_r2.zip:member:source/controls.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/controls.py": true,
+    "leading_metric_response_source_r2.zip:member:source/leading.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/leading.py": true,
+    "leading_metric_response_source_r2.zip:member:source/legacy-binding.json": true,
+    "leading_metric_response_source_r2.zip:expanded:source/legacy-binding.json": true,
+    "leading_metric_response_source_r2.zip:member:source/run.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/run.py": true,
+    "leading_metric_response_source_r2.zip:member:source/science/l1_direct_a_haar.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/science/l1_direct_a_haar.py": true,
+    "leading_metric_response_source_r2.zip:member:source/science/l1_direct_b_haar.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/science/l1_direct_b_haar.py": true,
+    "leading_metric_response_source_r2.zip:member:source/science/l1_interacting_support.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/science/l1_interacting_support.py": true,
+    "leading_metric_response_source_r2.zip:member:source/science/l1_mixed_g1_determinant_tensor.cpp": true,
+    "leading_metric_response_source_r2.zip:expanded:source/science/l1_mixed_g1_determinant_tensor.cpp": true,
+    "leading_metric_response_source_r2.zip:member:source/science/l1_mixed_g1_support.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/science/l1_mixed_g1_support.py": true,
+    "leading_metric_response_source_r2.zip:member:source/science/l1_reduced_wedge_reference.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/science/l1_reduced_wedge_reference.py": true,
+    "leading_metric_response_source_r2.zip:member:source/science/legacy.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/science/legacy.py": true,
+    "leading_metric_response_source_r2.zip:member:source/source-candidate-pins.json": true,
+    "leading_metric_response_source_r2.zip:expanded:source/source-candidate-pins.json": true,
+    "leading_metric_response_source_r2.zip:member:source/test_scientific_controls.py": true,
+    "leading_metric_response_source_r2.zip:expanded:source/test_scientific_controls.py": true,
+    "attempt1:reviewed_manifest": true,
+    "attempt1:pin_count": true,
+    "attempt1:consumed_file_set": true,
+    "attempt1:exit_pins": true,
+    "attempt1:consumed:LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "attempt1:consumed:calculate.py": true,
+    "attempt1:consumed:controls.py": true,
+    "attempt1:consumed:leading.py": true,
+    "attempt1:consumed:legacy-binding.json": true,
+    "attempt1:consumed:run.py": true,
+    "attempt1:consumed:science/l1_direct_a_haar.py": true,
+    "attempt1:consumed:science/l1_direct_b_haar.py": true,
+    "attempt1:consumed:science/l1_interacting_support.py": true,
+    "attempt1:consumed:science/l1_mixed_g1_determinant_tensor.cpp": true,
+    "attempt1:consumed:science/l1_mixed_g1_support.py": true,
+    "attempt1:consumed:science/l1_reduced_wedge_reference.py": true,
+    "attempt1:consumed:science/legacy.py": true,
+    "attempt1:consumed:test_scientific_controls.py": true,
+    "attempt1:preparation_source": true,
+    "attempt1:stream_hashes": true,
+    "attempt1:failure": true,
+    "attempt1:no_complete": true,
+    "attempt1:six_controls_first": true,
+    "attempt1:control_receipts": true,
+    "attempt1:normalization_word": true,
+    "attempt1:support_receipt": true,
+    "attempt1:cpp_rows": true,
+    "attempt1:compile_empty": true,
+    "attempt1:tiny_raw": true,
+    "attempt1:completion_scope": true,
+    "attempt2:reviewed_manifest": true,
+    "attempt2:pin_count": true,
+    "attempt2:consumed_file_set": true,
+    "attempt2:exit_pins": true,
+    "attempt2:consumed:ELIMINATION_ORDER_REPAIR_R1.md": true,
+    "attempt2:consumed:LEADING_METRIC_RESPONSE_DESIGN.md": true,
+    "attempt2:consumed:calculate.py": true,
+    "attempt2:consumed:controls.py": true,
+    "attempt2:consumed:leading.py": true,
+    "attempt2:consumed:legacy-binding.json": true,
+    "attempt2:consumed:run.py": true,
+    "attempt2:consumed:science/l1_direct_a_haar.py": true,
+    "attempt2:consumed:science/l1_direct_b_haar.py": true,
+    "attempt2:consumed:science/l1_interacting_support.py": true,
+    "attempt2:consumed:science/l1_mixed_g1_determinant_tensor.cpp": true,
+    "attempt2:consumed:science/l1_mixed_g1_support.py": true,
+    "attempt2:consumed:science/l1_reduced_wedge_reference.py": true,
+    "attempt2:consumed:science/legacy.py": true,
+    "attempt2:consumed:test_scientific_controls.py": true,
+    "attempt2:preparation_source": true,
+    "attempt2:stream_hashes": true,
+    "attempt2:failure": true,
+    "attempt2:no_complete": true,
+    "attempt2:six_controls_first": true,
+    "attempt2:control_receipts": true,
+    "attempt2:normalization_word": true,
+    "attempt2:support_receipt": true,
+    "attempt2:cpp_rows": true,
+    "attempt2:compile_empty": true,
+    "attempt2:tiny_raw": true,
+    "attempt2:completion_scope": true,
+    "proof_r2_exact_review_pin": true,
+    "proof_source_matches_actual_attempt2:leading.py": true,
+    "proof_source_matches_actual_attempt2:l1_interacting_support.py": true,
+    "proof_source_matches_actual_attempt2:l1_mixed_g1_support.py": true,
+    "proof_source_matches_actual_attempt2:support.json": true
+  },
+  "details": {
+    "commits": [
+      "6b9b29106653db0d36f85159bc3d6e01c9b3df2a",
+      "6019c66fd764911768b34ebfce81a0b27ae8d456",
+      "e4a9bc95d14d2c807bc2bf71e3a08ce204d7b1d4",
+      "bd5b4d471f98d96b01581d97042d4c3fb3d35106"
+    ],
+    "archives": {
+      "cubic_metric_support_evidence.zip": {
+        "sha256": "bb8acaad7ceecd8d07c36f4bdfe80e4a4212de4bb63214f5859baa1426facd4a",
+        "bytes": 45446,
+        "members": 14,
+        "member_hashes": {
+          "review/l1-leading-metric-cubic-intake-r1.md": "66328a6f18f3d298ba1cab60ca7a50108fa7b7fd24615617bde1044e6c55ba05",
+          "review/l1-leading-metric-cubic-math-review-r1.md": "ec4ad04e9f337712a6c68a72d6719ad8b7a4063d03e4c5e330de770b28466a20",
+          "review/l1-leading-metric-cubic-math-review-r2.md": "05c0835b79a556d8b96d035de15edb6de62d9e018ee1d69ddf49465c6ae2a193",
+          "review/l1-leading-metric-cubic-physics-review-r1.md": "b8e7131087c4489678eb3103e167095514c497d956d1b1813da78c9987fc325d",
+          "review/l1-leading-metric-cubic-physics-review-r2.md": "09ac9d3e816dd166cabd760d0c73c23233c353292d2327ab591204e1dea2bdd3",
+          "review/l1-leading-metric-dirac-design-review-r1.md": "a2706dfcfce3db3e6f108f93b8ee045a14d48090057de99b4a379b2928fd33b1",
+          "source/COLLECTIVE_BODY_PARITY.md": "f6e624715ddbf95866064f10feb0cacd373530afd1204083808441c71690becb",
+          "source/CUBIC_METRIC_SUPPORT_R1.md": "089a56545ab44e04def4d5923083f0420006c30478d02a57b091c80580cea55a",
+          "source/CUBIC_METRIC_SUPPORT_R2.md": "ab4259858312b3fc8fe86d1a19c2461a87445357aaa2646c3af7684b134521b2",
+          "source/DIRAC_LOOP_FACTORIZATION_R1.md": "fa30344e060a0d6af043f0efaf760023d40da192fe4d8000c982cb06eda54ff1",
+          "source/l1_interacting_support.py": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388",
+          "source/l1_mixed_g1_support.py": "0b419cda9fb84cbebbbb81b42f985aad39d372985f8c8a5015fd79bca0770de8",
+          "source/leading.py": "7e39ae396c9bf15d6c0ffc49f7747049b1962aa7938460a4018ead9645bfbb10",
+          "source/support.json": "1419846c046e5dea8c8dfb8ada90fc0cf19b6c8c9d86673e05b97820f81131e3"
+        }
+      },
+      "leading_metric_attempt1_failure_evidence.zip": {
+        "sha256": "378ceef3490d738b740d28fd877eaa76ae3d1e2d5d26af030cb97da289bf10fe",
+        "bytes": 312251,
+        "members": 29,
+        "member_hashes": {
+          "attempt-1-failure-summary.json": "696c0ee38effff07796ed9e2f6a33793a576ae460cc163916b55134c65bc3683",
+          "attempt/consumed/LEADING_METRIC_RESPONSE_DESIGN.md": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d",
+          "attempt/consumed/calculate.py": "907af07bd4968de9d91b3c033725ea07f77db2482086e41097edda7bef800a92",
+          "attempt/consumed/controls.py": "4b283af2cdb59dbc63f75ae222894da79abd0a0ce68544cbfc2b183d85e3109d",
+          "attempt/consumed/leading.py": "fba5e69d31c1066cb350744f0eb3ab698aae7de7cd37d1fbad1282b4b74b0ac7",
+          "attempt/consumed/legacy-binding.json": "f44bbd98a0db28ebdde8cdecca0573b258be09517761647c2fd642651b453edc",
+          "attempt/consumed/run.py": "8821afb651c6c78df245cbb822f32f6fc45ca453851a617d312eb00eb9ee6f0e",
+          "attempt/consumed/science/l1_direct_a_haar.py": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588",
+          "attempt/consumed/science/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "attempt/consumed/science/l1_interacting_support.py": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388",
+          "attempt/consumed/science/l1_mixed_g1_determinant_tensor.cpp": "a4aed857bfdaa7a7f02578f8813fe8348e27010c0308de4bb50b5618b7af3155",
+          "attempt/consumed/science/l1_mixed_g1_support.py": "0b419cda9fb84cbebbbb81b42f985aad39d372985f8c8a5015fd79bca0770de8",
+          "attempt/consumed/science/l1_reduced_wedge_reference.py": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a",
+          "attempt/consumed/science/legacy.py": "c2424499909f51afd3d1044f673fcd5d8cb00fb1bab01f93e442b193ca5f5101",
+          "attempt/consumed/test_scientific_controls.py": "be84c5a65cc8b275c99bc9ae4d3576e24fb7ccec997044b9a105ce1b3bd5c866",
+          "attempt/controls/determinant-compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "attempt/controls/determinant-control.rows": "542cb4a1b2c31a1b138364404c6803112817a3c2eb870b6709e0358e4ef4b13c",
+          "attempt/controls/determinant-control.stderr": "d33d16bb1a48917598bbfb478c89e2078430f7cd112aa0c7e4b1837764dd7807",
+          "attempt/controls/tiny-tests.stderr": "9319ac899c61a2787a71eced5f8494a00700dd619b55127732f7cb8058e7251d",
+          "attempt/controls/tiny-tests.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "attempt/exit.json": "0737a3bc3bc418116319cc94d093f317ab8f33af39ff22c0c453bcb000c2b2f0",
+          "attempt/reviewed-source-pins.json": "d6efcd03049d968fb247e5e2beca1ebc6948cb2f2495c04608312c4b16a0d5a6",
+          "attempt/stderr": "63cacc9b09ef7fc6057469ad598dfab5fb10b6123f725e914f9c5476daef5c99",
+          "attempt/stdout": "4253414215e1b91bbed443b626e595c0e76f195dd170c097ac082519a73b2fbd",
+          "attempt/support.json": "1419846c046e5dea8c8dfb8ada90fc0cf19b6c8c9d86673e05b97820f81131e3",
+          "attempt/warm-clock.json": "b9c5d618d8a8e31b90a9acebdd61e54a0bcab88d91163235ecfd141ea89904bc",
+          "independent-data-review.md": "93cf3edebc08c9437ad1292d05c44cf14f826eb3ccd86c8dade08674f068a9e5",
+          "ordering-diagnostic-r1.json": "e343b77a222ad1a8aa721079f58b763de3131ea0da224b31d4aaf0a7cf5d4720",
+          "manifest.json": "c0f92d3c50dfea6dfdb7e77a9693bb5e242447fc4ef53613fba8a2aba6aca0b0"
+        }
+      },
+      "leading_metric_attempt2_failure_evidence.zip": {
+        "sha256": "1a9b9c15478898bd4febee00ce8f3466980929590b70692d864146b4a301cb22",
+        "bytes": 311544,
+        "members": 27,
+        "member_hashes": {
+          "attempt/consumed/ELIMINATION_ORDER_REPAIR_R1.md": "c009564ac0fe88581f808991587ae5bd8051aac292dd0967750e9519b71afc1f",
+          "attempt/consumed/LEADING_METRIC_RESPONSE_DESIGN.md": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d",
+          "attempt/consumed/calculate.py": "2b692999635c7d7c5e68c1c363943a5d9de106ff0ec5d9dbb1c22f6b7a612edd",
+          "attempt/consumed/controls.py": "4b283af2cdb59dbc63f75ae222894da79abd0a0ce68544cbfc2b183d85e3109d",
+          "attempt/consumed/leading.py": "7e39ae396c9bf15d6c0ffc49f7747049b1962aa7938460a4018ead9645bfbb10",
+          "attempt/consumed/legacy-binding.json": "f44bbd98a0db28ebdde8cdecca0573b258be09517761647c2fd642651b453edc",
+          "attempt/consumed/run.py": "3e2a9335f520671f64b25863fd95d28968539b905bf2ee8ca3948ae3b3b47db0",
+          "attempt/consumed/science/l1_direct_a_haar.py": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588",
+          "attempt/consumed/science/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "attempt/consumed/science/l1_interacting_support.py": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388",
+          "attempt/consumed/science/l1_mixed_g1_determinant_tensor.cpp": "a4aed857bfdaa7a7f02578f8813fe8348e27010c0308de4bb50b5618b7af3155",
+          "attempt/consumed/science/l1_mixed_g1_support.py": "0b419cda9fb84cbebbbb81b42f985aad39d372985f8c8a5015fd79bca0770de8",
+          "attempt/consumed/science/l1_reduced_wedge_reference.py": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a",
+          "attempt/consumed/science/legacy.py": "c2424499909f51afd3d1044f673fcd5d8cb00fb1bab01f93e442b193ca5f5101",
+          "attempt/consumed/test_scientific_controls.py": "be84c5a65cc8b275c99bc9ae4d3576e24fb7ccec997044b9a105ce1b3bd5c866",
+          "attempt/controls/determinant-compile.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "attempt/controls/determinant-control.rows": "542cb4a1b2c31a1b138364404c6803112817a3c2eb870b6709e0358e4ef4b13c",
+          "attempt/controls/determinant-control.stderr": "d33d16bb1a48917598bbfb478c89e2078430f7cd112aa0c7e4b1837764dd7807",
+          "attempt/controls/tiny-tests.stderr": "f6533bb4a4a7804f124c09b6b9b57f8a8f44a9dd6c0a089c37b02ed32b5f3993",
+          "attempt/controls/tiny-tests.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "attempt/exit.json": "523022cac3d2752937f6274259fed1b6a0a698b77a92c9ad68080d49e9da0375",
+          "attempt/reviewed-source-pins.json": "bbcee9540ca6a28afc5527f8c330905e3d1fc3e8a32f4ad6b9b108bf71edd3a5",
+          "attempt/stderr": "9b2519c37217955104fcd41e60dafa9c19742cbf471543558266dfbe2549be69",
+          "attempt/stdout": "f33acdb2a2d8ef963a6c3eed9ca85d3c853d7c9338e78bb9a57d315510d714a8",
+          "attempt/support.json": "1419846c046e5dea8c8dfb8ada90fc0cf19b6c8c9d86673e05b97820f81131e3",
+          "attempt/warm-clock.json": "28c7ff4feef1a365217e379fadf2d1dda7e38ac6cee9fa0632824ca2f40ad796",
+          "review/LEADING_METRIC_ATTEMPT2_DATA_REVIEW.md": "1eb088b7de988bac3f48d2a81dbadbdecb430f7b5bcd7dcacd145a81f03ec34e"
+        }
+      },
+      "leading_metric_order_source_r1.zip": {
+        "sha256": "d0cf575929801f3711ae2298ca283d278461a8d987d53ab372da1846fc942d48",
+        "bytes": 53721,
+        "members": 21,
+        "member_hashes": {
+          "diagnostic/ordering-diagnostic-r1.json": "e343b77a222ad1a8aa721079f58b763de3131ea0da224b31d4aaf0a7cf5d4720",
+          "diagnostic/support-link-degree-profile.json": "831645d5cd87428d8828379a6b4c49ab84411072772bf3432fcd2e8fd0dd9cf0",
+          "reviews/l1-leading-metric-order-math-review-r1.md": "4b1aed30b49db85469ea7d8e0c14a015e330b0545abe395af271bd59b6236bc7",
+          "reviews/l1-leading-metric-order-physics-review-r1.md": "c71a78cb349f3281faa4c566e54e7fb53e6344afa10e16f48005401e8099f570",
+          "source/ELIMINATION_ORDER_REPAIR_R1.md": "c009564ac0fe88581f808991587ae5bd8051aac292dd0967750e9519b71afc1f",
+          "source/LEADING_METRIC_RESPONSE_DESIGN.md": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d",
+          "source/calculate.py": "2b692999635c7d7c5e68c1c363943a5d9de106ff0ec5d9dbb1c22f6b7a612edd",
+          "source/controls.py": "4b283af2cdb59dbc63f75ae222894da79abd0a0ce68544cbfc2b183d85e3109d",
+          "source/leading.py": "7e39ae396c9bf15d6c0ffc49f7747049b1962aa7938460a4018ead9645bfbb10",
+          "source/legacy-binding.json": "f44bbd98a0db28ebdde8cdecca0573b258be09517761647c2fd642651b453edc",
+          "source/run.py": "3e2a9335f520671f64b25863fd95d28968539b905bf2ee8ca3948ae3b3b47db0",
+          "source/science/l1_direct_a_haar.py": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588",
+          "source/science/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "source/science/l1_interacting_support.py": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388",
+          "source/science/l1_mixed_g1_determinant_tensor.cpp": "a4aed857bfdaa7a7f02578f8813fe8348e27010c0308de4bb50b5618b7af3155",
+          "source/science/l1_mixed_g1_support.py": "0b419cda9fb84cbebbbb81b42f985aad39d372985f8c8a5015fd79bca0770de8",
+          "source/science/l1_reduced_wedge_reference.py": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a",
+          "source/science/legacy.py": "c2424499909f51afd3d1044f673fcd5d8cb00fb1bab01f93e442b193ca5f5101",
+          "source/source-candidate-pins.json": "bbcee9540ca6a28afc5527f8c330905e3d1fc3e8a32f4ad6b9b108bf71edd3a5",
+          "source/test_scientific_controls.py": "be84c5a65cc8b275c99bc9ae4d3576e24fb7ccec997044b9a105ce1b3bd5c866",
+          "manifest.json": "a59bc06cebecf557308ab60ccac4d2c3cfea8caa5d04575e54c14d2977cfffb0"
+        }
+      },
+      "leading_metric_response_source_r2.zip": {
+        "sha256": "533bc1ba63ee8e6e2c69c6137d565e0ac1a25b14b1088c55f2353d4e8d3963fb",
+        "bytes": 126068,
+        "members": 27,
+        "member_hashes": {
+          "history/LEADING_METRIC_RESPONSE_DESIGN_R1.md": "5af026ea836172f8f83098e0bbdffd8bac1ea746c4b6b4ae80fef44e521ac097",
+          "history/source-r1-blocked-evidence.zip": "af4ea57524fd42372a0d31b877c5245ec0b8fc7c389b965066fb60ba984d6a85",
+          "reviews/kernel-intake.md": "86fe1061125efd641433c7327b4bb99f48a7dbd6dd9c95b1f111b36d3a43a71e",
+          "reviews/l1-leading-metric-design-math-review-r1.md": "6ee64536e5ac54cb9d835669494e14e9d15115b160e541f8ccd60a4a968cd70b",
+          "reviews/l1-leading-metric-design-math-review-r2.md": "cad209a3bb3df9110e691f3ba90444beb596f81ac0b53e73fb9cb0ae11a47f7b",
+          "reviews/l1-leading-metric-design-physics-review-r1.md": "ea3b949061378436f8db312dfe2b1e6dedf1e323651917160f01d1a862a82eb1",
+          "reviews/l1-leading-metric-design-physics-review-r2.md": "99b47988d23f1b3c92551dab3ae0439153a6e2d11af67feb05933520081bbebe",
+          "reviews/l1-leading-metric-source-math-review-r1.md": "60b149eb1aa2579d76eac991d155ea45d816f11cfcedc933f3674a2e03d2c326",
+          "reviews/l1-leading-metric-source-math-review-r2.md": "f612f0c90436cf8060e93a8d5d83d3509dc1580ac47e34be9b6ecfebfce1e099",
+          "reviews/l1-leading-metric-source-physics-review-r1.md": "b208cee85cd0a0418fc17de17856733d5af8fffa362ba761d28c6d6fbf5c326f",
+          "reviews/l1-leading-metric-source-physics-review-r2.md": "10e50fb7ebcf585c3a6369465aa95bc1d08b97a706f2f5e08410d76189c30785",
+          "source/LEADING_METRIC_RESPONSE_DESIGN.md": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d",
+          "source/calculate.py": "907af07bd4968de9d91b3c033725ea07f77db2482086e41097edda7bef800a92",
+          "source/controls.py": "4b283af2cdb59dbc63f75ae222894da79abd0a0ce68544cbfc2b183d85e3109d",
+          "source/leading.py": "fba5e69d31c1066cb350744f0eb3ab698aae7de7cd37d1fbad1282b4b74b0ac7",
+          "source/legacy-binding.json": "f44bbd98a0db28ebdde8cdecca0573b258be09517761647c2fd642651b453edc",
+          "source/run.py": "8821afb651c6c78df245cbb822f32f6fc45ca453851a617d312eb00eb9ee6f0e",
+          "source/science/l1_direct_a_haar.py": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588",
+          "source/science/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "source/science/l1_interacting_support.py": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388",
+          "source/science/l1_mixed_g1_determinant_tensor.cpp": "a4aed857bfdaa7a7f02578f8813fe8348e27010c0308de4bb50b5618b7af3155",
+          "source/science/l1_mixed_g1_support.py": "0b419cda9fb84cbebbbb81b42f985aad39d372985f8c8a5015fd79bca0770de8",
+          "source/science/l1_reduced_wedge_reference.py": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a",
+          "source/science/legacy.py": "c2424499909f51afd3d1044f673fcd5d8cb00fb1bab01f93e442b193ca5f5101",
+          "source/source-candidate-pins.json": "d6efcd03049d968fb247e5e2beca1ebc6948cb2f2495c04608312c4b16a0d5a6",
+          "source/test_scientific_controls.py": "be84c5a65cc8b275c99bc9ae4d3576e24fb7ccec997044b9a105ce1b3bd5c866",
+          "manifest.json": "f759dd9ddcf57aad37ef1d4fc9ce2df71ed7a93522784b056e2057d74880281f"
+        }
+      }
+    },
+    "attempt1": {
+      "source_pins_sha256": "d6efcd03049d968fb247e5e2beca1ebc6948cb2f2495c04608312c4b16a0d5a6",
+      "exit": {
+        "argv": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+          "-B",
+          "/private/tmp/l1-leading-metric-response-20261105-r1/attempt-1-source-r2/consumed/calculate.py",
+          "--out",
+          "/private/tmp/l1-leading-metric-response-20261105-r1/attempt-1-source-r2"
+        ],
+        "consumed_sha256": {
+          "LEADING_METRIC_RESPONSE_DESIGN.md": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d",
+          "calculate.py": "907af07bd4968de9d91b3c033725ea07f77db2482086e41097edda7bef800a92",
+          "controls.py": "4b283af2cdb59dbc63f75ae222894da79abd0a0ce68544cbfc2b183d85e3109d",
+          "leading.py": "fba5e69d31c1066cb350744f0eb3ab698aae7de7cd37d1fbad1282b4b74b0ac7",
+          "legacy-binding.json": "f44bbd98a0db28ebdde8cdecca0573b258be09517761647c2fd642651b453edc",
+          "run.py": "8821afb651c6c78df245cbb822f32f6fc45ca453851a617d312eb00eb9ee6f0e",
+          "science/l1_direct_a_haar.py": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588",
+          "science/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "science/l1_interacting_support.py": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388",
+          "science/l1_mixed_g1_determinant_tensor.cpp": "a4aed857bfdaa7a7f02578f8813fe8348e27010c0308de4bb50b5618b7af3155",
+          "science/l1_mixed_g1_support.py": "0b419cda9fb84cbebbbb81b42f985aad39d372985f8c8a5015fd79bca0770de8",
+          "science/l1_reduced_wedge_reference.py": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a",
+          "science/legacy.py": "c2424499909f51afd3d1044f673fcd5d8cb00fb1bab01f93e442b193ca5f5101",
+          "test_scientific_controls.py": "be84c5a65cc8b275c99bc9ae4d3576e24fb7ccec997044b9a105ce1b3bd5c866"
+        },
+        "driver_failure": {
+          "message": "Scientific child failed; no accepted coefficient",
+          "phase": "post-child-provenance",
+          "type": "RuntimeError"
+        },
+        "driver_success": false,
+        "exit_code": 1,
+        "parent_cap": 2465,
+        "parent_seconds_before_readback": 49.03325912496075,
+        "parent_seconds_on_failure": 49.03393891698215,
+        "source_unchanged": true,
+        "stderr_sha256": "63cacc9b09ef7fc6057469ad598dfab5fb10b6123f725e914f9c5476daef5c99",
+        "stdout_sha256": "4253414215e1b91bbed443b626e595c0e76f195dd170c097ac082519a73b2fbd",
+        "timeout": false
+      },
+      "completed_words": [
+        {
+          "anchors": [
+            0,
+            0
+          ],
+          "component": [
+            0,
+            1
+          ],
+          "curvature_quarters": 5,
+          "determinant": [
+            3,
+            3,
+            1,
+            3,
+            3
+          ],
+          "divisor": 885443715538058477568,
+          "event": "word",
+          "factors": 60,
+          "frames": 16,
+          "haar_divisor": 201326592,
+          "indices": [
+            0,
+            18,
+            20,
+            31,
+            34
+          ],
+          "initial_rows": 5372,
+          "link_degrees": [
+            [
+              [
+                0,
+                0
+              ],
+              2,
+              true
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              2,
+              true
+            ],
+            [
+              [
+                0,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              6,
+              true
+            ],
+            [
+              [
+                1,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                0
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                1
+              ],
+              4,
+              false
+            ],
+            [
+              [
+                2,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                0
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                3
+              ],
+              2,
+              false
+            ]
+          ],
+          "multiplicity_factorial": 1,
+          "ordinal": 0,
+          "peak": 25472,
+          "products": 502064,
+          "raw": [
+            0,
+            0
+          ],
+          "value": [
+            "0",
+            "0"
+          ]
+        },
+        {
+          "anchors": [
+            0,
+            0
+          ],
+          "component": [
+            0,
+            1
+          ],
+          "curvature_quarters": 5,
+          "determinant": [
+            3,
+            3,
+            1,
+            3,
+            3
+          ],
+          "divisor": 885443715538058477568,
+          "event": "word",
+          "factors": 60,
+          "frames": 16,
+          "haar_divisor": 201326592,
+          "indices": [
+            0,
+            18,
+            20,
+            32,
+            33
+          ],
+          "initial_rows": 5372,
+          "link_degrees": [
+            [
+              [
+                0,
+                0
+              ],
+              2,
+              true
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              2,
+              true
+            ],
+            [
+              [
+                0,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                1,
+                0
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              6,
+              true
+            ],
+            [
+              [
+                1,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                0
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                1
+              ],
+              4,
+              false
+            ],
+            [
+              [
+                2,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                0
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                3
+              ],
+              2,
+              false
+            ]
+          ],
+          "multiplicity_factorial": 1,
+          "ordinal": 1,
+          "peak": 25472,
+          "products": 502064,
+          "raw": [
+            0,
+            0
+          ],
+          "value": [
+            "0",
+            "0"
+          ]
+        },
+        {
+          "anchors": [
+            0,
+            0
+          ],
+          "component": [
+            0,
+            1
+          ],
+          "curvature_quarters": 5,
+          "determinant": [
+            3,
+            3,
+            1,
+            3,
+            3
+          ],
+          "divisor": 221360928884514619392,
+          "event": "word",
+          "factors": 57,
+          "frames": 16,
+          "haar_divisor": 50331648,
+          "indices": [
+            0,
+            19,
+            21,
+            31,
+            34
+          ],
+          "initial_rows": 5156,
+          "link_degrees": [
+            [
+              [
+                0,
+                0
+              ],
+              4,
+              true
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              2,
+              true
+            ],
+            [
+              [
+                0,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              6,
+              true
+            ],
+            [
+              [
+                1,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                0
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                1
+              ],
+              4,
+              false
+            ],
+            [
+              [
+                2,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                0
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                3
+              ],
+              2,
+              false
+            ]
+          ],
+          "multiplicity_factorial": 1,
+          "ordinal": 2,
+          "peak": 25472,
+          "products": 621824,
+          "raw": [
+            0,
+            0
+          ],
+          "value": [
+            "0",
+            "0"
+          ]
+        },
+        {
+          "anchors": [
+            0,
+            0
+          ],
+          "component": [
+            0,
+            1
+          ],
+          "curvature_quarters": 5,
+          "determinant": [
+            3,
+            3,
+            1,
+            3,
+            3
+          ],
+          "divisor": 221360928884514619392,
+          "event": "word",
+          "factors": 57,
+          "frames": 16,
+          "haar_divisor": 50331648,
+          "indices": [
+            0,
+            19,
+            21,
+            32,
+            33
+          ],
+          "initial_rows": 5156,
+          "link_degrees": [
+            [
+              [
+                0,
+                0
+              ],
+              4,
+              true
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              2,
+              true
+            ],
+            [
+              [
+                0,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                0,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                1,
+                1
+              ],
+              6,
+              true
+            ],
+            [
+              [
+                1,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                0
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                1
+              ],
+              4,
+              false
+            ],
+            [
+              [
+                2,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                2,
+                3
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                0
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                2
+              ],
+              2,
+              false
+            ],
+            [
+              [
+                3,
+                3
+              ],
+              2,
+              false
+            ]
+          ],
+          "multiplicity_factorial": 1,
+          "ordinal": 3,
+          "peak": 25472,
+          "products": 621824,
+          "raw": [
+            0,
+            0
+          ],
+          "value": [
+            "0",
+            "0"
+          ]
+        }
+      ],
+      "started_words": [
+        {
+          "anchors": [
+            0,
+            0
+          ],
+          "component": [
+            0,
+            1
+          ],
+          "determinant": [
+            3,
+            3,
+            1,
+            3,
+            3
+          ],
+          "event": "word-start",
+          "indices": [
+            0,
+            18,
+            20,
+            31,
+            34
+          ],
+          "ordinal": 0
+        },
+        {
+          "anchors": [
+            0,
+            0
+          ],
+          "component": [
+            0,
+            1
+          ],
+          "determinant": [
+            3,
+            3,
+            1,
+            3,
+            3
+          ],
+          "event": "word-start",
+          "indices": [
+            0,
+            18,
+            20,
+            32,
+            33
+          ],
+          "ordinal": 1
+        },
+        {
+          "anchors": [
+            0,
+            0
+          ],
+          "component": [
+            0,
+            1
+          ],
+          "determinant": [
+            3,
+            3,
+            1,
+            3,
+            3
+          ],
+          "event": "word-start",
+          "indices": [
+            0,
+            19,
+            21,
+            31,
+            34
+          ],
+          "ordinal": 2
+        },
+        {
+          "anchors": [
+            0,
+            0
+          ],
+          "component": [
+            0,
+            1
+          ],
+          "determinant": [
+            3,
+            3,
+            1,
+            3,
+            3
+          ],
+          "event": "word-start",
+          "indices": [
+            0,
+            19,
+            21,
+            32,
+            33
+          ],
+          "ordinal": 3
+        },
+        {
+          "anchors": [
+            0,
+            0
+          ],
+          "component": [
+            0,
+            1
+          ],
+          "determinant": [
+            3,
+            2,
+            3,
+            3,
+            3
+          ],
+          "event": "word-start",
+          "indices": [
+            0,
+            14,
+            17,
+            27,
+            29
+          ],
+          "ordinal": 4
+        }
+      ],
+      "preparation": {
+        "Z8": "1252309350145403/2123366400",
+        "cold_seconds": 47.26340712502133,
+        "components": [
+          {
+            "component": [
+              0,
+              0
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              0,
+              1
+            ],
+            "ordered_words": 3840,
+            "support": 32
+          },
+          {
+            "component": [
+              0,
+              2
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              0,
+              3
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              1,
+              1
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              1,
+              2
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              1,
+              3
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              2,
+              2
+            ],
+            "ordered_words": 15360,
+            "support": 192
+          },
+          {
+            "component": [
+              2,
+              3
+            ],
+            "ordered_words": 7680,
+            "support": 64
+          },
+          {
+            "component": [
+              3,
+              3
+            ],
+            "ordered_words": 15360,
+            "support": 192
+          }
+        ],
+        "event": "preparation",
+        "python": "3.14.8 (main, Oct  1 2026, 20:50:07) [Clang 22.1.3 ]",
+        "source_sha256": {
+          "LEADING_METRIC_RESPONSE_DESIGN.md": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d",
+          "calculate.py": "907af07bd4968de9d91b3c033725ea07f77db2482086e41097edda7bef800a92",
+          "controls.py": "4b283af2cdb59dbc63f75ae222894da79abd0a0ce68544cbfc2b183d85e3109d",
+          "leading.py": "fba5e69d31c1066cb350744f0eb3ab698aae7de7cd37d1fbad1282b4b74b0ac7",
+          "legacy-binding.json": "f44bbd98a0db28ebdde8cdecca0573b258be09517761647c2fd642651b453edc",
+          "run.py": "8821afb651c6c78df245cbb822f32f6fc45ca453851a617d312eb00eb9ee6f0e",
+          "science/l1_direct_a_haar.py": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588",
+          "science/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "science/l1_interacting_support.py": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388",
+          "science/l1_mixed_g1_determinant_tensor.cpp": "a4aed857bfdaa7a7f02578f8813fe8348e27010c0308de4bb50b5618b7af3155",
+          "science/l1_mixed_g1_support.py": "0b419cda9fb84cbebbbb81b42f985aad39d372985f8c8a5015fd79bca0770de8",
+          "science/l1_reduced_wedge_reference.py": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a",
+          "science/legacy.py": "c2424499909f51afd3d1044f673fcd5d8cb00fb1bab01f93e442b193ca5f5101",
+          "test_scientific_controls.py": "be84c5a65cc8b275c99bc9ae4d3576e24fb7ccec997044b9a105ce1b3bd5c866"
+        },
+        "support_sha256": "1419846c046e5dea8c8dfb8ada90fc0cf19b6c8c9d86673e05b97820f81131e3",
+        "sympy": "1.14.0",
+        "tree": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      "events": [
+        "control-tiny-tests",
+        "control-haar-moments",
+        "control-frames",
+        "control-curvature",
+        "control-determinant",
+        "control-normalization-word",
+        "preparation",
+        "target-start",
+        "component",
+        "word-start",
+        "word",
+        "word-start",
+        "word",
+        "word-start",
+        "word",
+        "word-start",
+        "word",
+        "word-start"
+      ]
+    },
+    "attempt2": {
+      "source_pins_sha256": "bbcee9540ca6a28afc5527f8c330905e3d1fc3e8a32f4ad6b9b108bf71edd3a5",
+      "exit": {
+        "argv": [
+          "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+          "-B",
+          "/private/tmp/l1-leading-metric-response-20261105-r1/attempt-2-domain-order-r1/consumed/calculate.py",
+          "--out",
+          "/private/tmp/l1-leading-metric-response-20261105-r1/attempt-2-domain-order-r1"
+        ],
+        "consumed_sha256": {
+          "ELIMINATION_ORDER_REPAIR_R1.md": "c009564ac0fe88581f808991587ae5bd8051aac292dd0967750e9519b71afc1f",
+          "LEADING_METRIC_RESPONSE_DESIGN.md": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d",
+          "calculate.py": "2b692999635c7d7c5e68c1c363943a5d9de106ff0ec5d9dbb1c22f6b7a612edd",
+          "controls.py": "4b283af2cdb59dbc63f75ae222894da79abd0a0ce68544cbfc2b183d85e3109d",
+          "leading.py": "7e39ae396c9bf15d6c0ffc49f7747049b1962aa7938460a4018ead9645bfbb10",
+          "legacy-binding.json": "f44bbd98a0db28ebdde8cdecca0573b258be09517761647c2fd642651b453edc",
+          "run.py": "3e2a9335f520671f64b25863fd95d28968539b905bf2ee8ca3948ae3b3b47db0",
+          "science/l1_direct_a_haar.py": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588",
+          "science/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "science/l1_interacting_support.py": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388",
+          "science/l1_mixed_g1_determinant_tensor.cpp": "a4aed857bfdaa7a7f02578f8813fe8348e27010c0308de4bb50b5618b7af3155",
+          "science/l1_mixed_g1_support.py": "0b419cda9fb84cbebbbb81b42f985aad39d372985f8c8a5015fd79bca0770de8",
+          "science/l1_reduced_wedge_reference.py": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a",
+          "science/legacy.py": "c2424499909f51afd3d1044f673fcd5d8cb00fb1bab01f93e442b193ca5f5101",
+          "test_scientific_controls.py": "be84c5a65cc8b275c99bc9ae4d3576e24fb7ccec997044b9a105ce1b3bd5c866"
+        },
+        "driver_failure": {
+          "message": "Scientific child failed; no accepted coefficient",
+          "phase": "post-child-provenance",
+          "type": "RuntimeError"
+        },
+        "driver_success": false,
+        "exit_code": 1,
+        "parent_cap": 2465,
+        "parent_seconds_before_readback": 52.80087012494914,
+        "parent_seconds_on_failure": 52.80156433302909,
+        "source_unchanged": true,
+        "stderr_sha256": "9b2519c37217955104fcd41e60dafa9c19742cbf471543558266dfbe2549be69",
+        "stdout_sha256": "f33acdb2a2d8ef963a6c3eed9ca85d3c853d7c9338e78bb9a57d315510d714a8",
+        "timeout": false
+      },
+      "completed_words": [],
+      "started_words": [
+        {
+          "anchors": [
+            0,
+            0
+          ],
+          "component": [
+            0,
+            1
+          ],
+          "determinant": [
+            3,
+            3,
+            1,
+            3,
+            3
+          ],
+          "event": "word-start",
+          "indices": [
+            0,
+            18,
+            20,
+            31,
+            34
+          ],
+          "ordinal": 0
+        }
+      ],
+      "preparation": {
+        "Z8": "1252309350145403/2123366400",
+        "cold_seconds": 52.52176833397243,
+        "components": [
+          {
+            "component": [
+              0,
+              0
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              0,
+              1
+            ],
+            "ordered_words": 3840,
+            "support": 32
+          },
+          {
+            "component": [
+              0,
+              2
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              0,
+              3
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              1,
+              1
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              1,
+              2
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              1,
+              3
+            ],
+            "ordered_words": 0,
+            "support": 0
+          },
+          {
+            "component": [
+              2,
+              2
+            ],
+            "ordered_words": 15360,
+            "support": 192
+          },
+          {
+            "component": [
+              2,
+              3
+            ],
+            "ordered_words": 7680,
+            "support": 64
+          },
+          {
+            "component": [
+              3,
+              3
+            ],
+            "ordered_words": 15360,
+            "support": 192
+          }
+        ],
+        "elimination_order": "initial-observed-domain-and-input-row-upper-bound-r1",
+        "event": "preparation",
+        "python": "3.14.8 (main, Oct  1 2026, 20:50:07) [Clang 22.1.3 ]",
+        "python_optimize": 0,
+        "source_sha256": {
+          "ELIMINATION_ORDER_REPAIR_R1.md": "c009564ac0fe88581f808991587ae5bd8051aac292dd0967750e9519b71afc1f",
+          "LEADING_METRIC_RESPONSE_DESIGN.md": "405a556e38abaa97d8d297fdb593cb80813caf4fa7e9b6ef58a022c24491317d",
+          "calculate.py": "2b692999635c7d7c5e68c1c363943a5d9de106ff0ec5d9dbb1c22f6b7a612edd",
+          "controls.py": "4b283af2cdb59dbc63f75ae222894da79abd0a0ce68544cbfc2b183d85e3109d",
+          "leading.py": "7e39ae396c9bf15d6c0ffc49f7747049b1962aa7938460a4018ead9645bfbb10",
+          "legacy-binding.json": "f44bbd98a0db28ebdde8cdecca0573b258be09517761647c2fd642651b453edc",
+          "run.py": "3e2a9335f520671f64b25863fd95d28968539b905bf2ee8ca3948ae3b3b47db0",
+          "science/l1_direct_a_haar.py": "ab628660108b9f795c6acea9267fdcf2648f96dacbbc8d9d6eb99f11d505c588",
+          "science/l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+          "science/l1_interacting_support.py": "f1354705de51b714396633115251eefdce5a3ed96244afbaf354d4db8b67f388",
+          "science/l1_mixed_g1_determinant_tensor.cpp": "a4aed857bfdaa7a7f02578f8813fe8348e27010c0308de4bb50b5618b7af3155",
+          "science/l1_mixed_g1_support.py": "0b419cda9fb84cbebbbb81b42f985aad39d372985f8c8a5015fd79bca0770de8",
+          "science/l1_reduced_wedge_reference.py": "5d92ae507ddf90b8c24081b5cf99f2489c1178c2ce7b7b482d71d897bc6c2c3a",
+          "science/legacy.py": "c2424499909f51afd3d1044f673fcd5d8cb00fb1bab01f93e442b193ca5f5101",
+          "test_scientific_controls.py": "be84c5a65cc8b275c99bc9ae4d3576e24fb7ccec997044b9a105ce1b3bd5c866"
+        },
+        "support_sha256": "1419846c046e5dea8c8dfb8ada90fc0cf19b6c8c9d86673e05b97820f81131e3",
+        "sympy": "1.14.0",
+        "tree": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      "events": [
+        "control-tiny-tests",
+        "control-haar-moments",
+        "control-frames",
+        "control-curvature",
+        "control-determinant",
+        "control-normalization-word",
+        "preparation",
+        "target-start",
+        "component",
+        "word-start"
+      ]
+    },
+    "prior_custody": {
+      "sha256": "f02a3511a820b596b9dce06aed80f243ad50c8816b3cf573c88137d546e8119f",
+      "verdict": "ACCEPT immutable custody and stated bounded failure/partial scope; no scientific completion promotion",
+      "crosscheck": "Personally rechecked all incoming blobs/archives/consumed source/stream hashes and receipts; no scientific execution"
+    }
+  },
+  "failed_checks": [],
+  "verdict": "ACCEPT checkpoint custody and bounded reviewed scientific construction for normal history-preserving integration WITH specified factual attempt1 narrative correction; original physics closure NOT ACCEPTED",
+  "conditions": [
+    "Replace current LEADING_METRIC_ATTEMPT1_FAILURE.md claim of exact preserved inputs with exact preserved interface descriptors; explicitly state full intermediate row tables were not serialized. Preserve original 6019 commit and immutable historical archive.",
+    "Keep original proof/API/manuscript/gates/human state and all full-tensor/physical obligations unchanged."
+  ],
+  "contradictions": [
+    {
+      "path": "docs/audits/2026-11-05-l1-physical-bridges/LEADING_METRIC_ATTEMPT1_FAILURE.md",
+      "sha256": "c5a866dcd8a25b9b6774adfa423787d7ed9fdfd829f72d7e847df14ca6fcbc6a",
+      "claim": "These exact inputs ... are preserved",
+      "finding": "Only failing interface descriptors, not full left/right row tables, are serialized; exact consumed source and raw/control/support/exit artifacts are preserved.",
+      "disposition": "Required author-authorized integration prose correction; preserve original archive and history."
+    }
+  ],
+  "archive_manifest_scope": "Source-r2, attempt1, and order-r1 contain embedded per-member manifests. Cubic has external per-member manifest. Attempt2 has only whole-archive adjacent receipt; audit derives member hashes from that pinned archive and checks expanded bytes, consumed-source manifests and stream/exit receipts. Derived hashes are not misrepresented as an original author member manifest.",
+  "science_scope": {
+    "premises": "Original closed uncoupled J0 action; N4 2x2x1x1, eight generators per site, Spin4 Haar and original orientation. Static helper definitions personally read; no support enumeration executed.",
+    "result": "Three distinct determinants require six odd collapsed selflinks; Q plus one S2 toggles at most five. Repeated centres Grassmann-zero. Four distinct determinant centres leave eight uncancelled collapsed links. Thus full-ten cubic numerator and quartic partition vanish.",
+    "raw": "Z=z0*g2^8+z2*g1^2*g2^4; N_i=c_i*g1*g2^5; z0=1252309350145403/2123366400",
+    "normalization": "Only full Z!=0. At g2=0 both raw polynomials vanish; G undefined. Unknown z2/nonempty c not evaluated.",
+    "body": "Accepted empty leading00/11 support gives zero raw numerators; normalized G00/G11 vanish where fullZ!=0, excluding strict real Euclidean SPD literalG only on same original regulator.",
+    "remaining": "Full tensor Executor-owned OPEN; Dirac-loop DESIGN only; indefinite/Lorentzian/N16/source/body/state/matter/B3/susceptibility/tensor/lightcone/transport/global no-go and publication remain unestablished."
+  },
+  "actions": "Only read-only Git inspection, continuity checker, stdlib file/JSON/hash/ZIP/CRC/integer/Fraction inspection. Writes only /tmp audit script/report. No science import/control/support/compile/contraction, tests, Lean/slots/heavy work or tracked/notebook modification.",
+  "initial_continuity": {
+    "fresh": true,
+    "changed": [],
+    "packet": "l1-leading-complete-intake-review-r1.json"
+  },
+  "final_continuity": {
+    "fresh": true,
+    "changed": [],
+    "packet": "l1-leading-complete-intake-review-r1.json"
+  }
+}

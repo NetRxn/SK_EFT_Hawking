@@ -1,0 +1,11 @@
+# ROOT actual half-sewing partial intake
+
+ROOT personally read both complete result reports, both different actual math/source review pairs, full R1/R2 design history and prospective reviews, and lead acceptance. All10archived artifact copies and4accepted scientific inputs match exact current/commit bytes; archive17members/CRC/hash verified. The12path scientific evidence checkpoint5ad2c7e0b is normally integrated; no evaluator/build/slot action or new physical primary-source assumption occurs in this intake.
+
+ACCEPT only the specified coefficientwise self-pairing failure and exact partial nodal boundary reduction. Unit complement coefficient1 survives the proposed diagonal Gram rule where original trace is0, disproving that rule alone. Original signed cross-edge sewing remains different. This does not prove R_b nonpositive or exclude alternative positive construction.
+
+The zero-source/baseframe inserted boundary roster is exactly p=0,4,8,12,16,20, with30formal multinomial terms and complementary test degrees64,60,56,52,48,44. At fixed coupling positivity would force weighted blocks to vanish, not every independently labeled coefficient. The p=0 coefficient is exactly g2^16/16! times the original eight-site64odd/24spatiallink integral after removing only absent/legitimately gauge-integrated temporal variables. P0 remains UNEVALUATED; all higher blocks remain relevant. No scalar trace cancellation is promoted to all inserted moments or full-source vanishing.
+
+Preserve the corrected nontracial amplitude order F A†/sqrtZ and the original failedAF design as history. The author's disclosed first-check ordering deviation and refused pre-valid packet attempts remain documented. Prospective review permits an attempt, not acceptance of its success.
+
+Executor retains original-grounded positive amplitude/cross-edge grouping, source-stable domain/null quotient/product/adjoint, all four physical cut maps/both kernels/fullC2contacts and kinetic/source/calibrated operators. ROOT retains ordinary L1/Eq4–11/formal/numerical/publication integration. Positive P1–P4, fullZ/nonzero, physical state/dynamics, B3window/modes/matter/transport/calibration/limits and all publication/human requirements remain OPEN. No deferral or reduced scope.

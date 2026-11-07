@@ -1,0 +1,746 @@
+[
+  {
+    "current_id": "sentence:L1:abstract:9a3de8fb",
+    "prior_id": "sentence:L1:abstract:9a3de8fb",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:abstract:275ad002",
+    "prior_id": "sentence:L1:abstract:275ad002",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:abstract:600cc132",
+    "prior_id": "sentence:L1:abstract:600cc132",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:abstract:7597e1a0",
+    "prior_id": "sentence:L1:abstract:7597e1a0",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:62514176",
+    "prior_id": "sentence:L1:introduction:62514176",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:5f9fdcc4",
+    "prior_id": "sentence:L1:introduction:5f9fdcc4",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:0240691b",
+    "prior_id": "sentence:L1:introduction:0240691b",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:648f68d1",
+    "prior_id": "sentence:L1:introduction:648f68d1",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:8b4bfa65",
+    "prior_id": "sentence:L1:introduction:8b4bfa65",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:3aa1767b",
+    "prior_id": "sentence:L1:introduction:3aa1767b",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:f764373d",
+    "prior_id": "sentence:L1:introduction:f764373d",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:67b7c8dd",
+    "prior_id": "sentence:L1:introduction:67b7c8dd",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:d6013bba",
+    "prior_id": "sentence:L1:introduction:32bbca1d",
+    "origin": "current-reassessment",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:7b7e770d",
+    "prior_id": "sentence:L1:introduction:7b7e770d",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:36969d20",
+    "prior_id": "sentence:L1:introduction:36969d20",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:64da36f6",
+    "prior_id": "sentence:L1:introduction:64da36f6",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:0ef96618",
+    "prior_id": "sentence:L1:introduction:0ef96618",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:162806f2",
+    "prior_id": "sentence:L1:introduction:162806f2",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:5de5ca35",
+    "prior_id": "sentence:L1:introduction:5de5ca35",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:4c437fe8",
+    "prior_id": "sentence:L1:introduction:4c437fe8",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:555a000d",
+    "prior_id": "sentence:L1:introduction:555a000d",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:11fe3464",
+    "prior_id": "sentence:L1:introduction:11fe3464",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:2da8b694",
+    "prior_id": "sentence:L1:introduction:2da8b694",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:cd2d9076",
+    "prior_id": "sentence:L1:introduction:a07882f6",
+    "origin": "current-reassessment",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:3f462fe0",
+    "prior_id": "sentence:L1:introduction:3f462fe0",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:ec137388",
+    "prior_id": "sentence:L1:introduction:ec137388",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:d6933ae4",
+    "prior_id": "sentence:L1:introduction:8f425cff",
+    "origin": "current-reassessment",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:92468fa1",
+    "prior_id": "sentence:L1:introduction:92468fa1",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:c1128f8a",
+    "prior_id": "sentence:L1:introduction:c1128f8a",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:eb1c2e4c",
+    "prior_id": "sentence:L1:introduction:eb1c2e4c",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:92113836",
+    "prior_id": "sentence:L1:introduction:92113836",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:c55144cc",
+    "prior_id": "sentence:L1:introduction:c55144cc",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:131274cb",
+    "prior_id": "sentence:L1:introduction:131274cb",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:c88d44ca",
+    "prior_id": "sentence:L1:introduction:c88d44ca",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:83a31c23",
+    "prior_id": "sentence:L1:introduction:83a31c23",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:d6f8d95d",
+    "prior_id": "sentence:L1:introduction:7ee7216b",
+    "origin": "current-reassessment",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:e17de389",
+    "prior_id": "sentence:L1:introduction:e17de389",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:fcbc3c66",
+    "prior_id": "sentence:L1:introduction:fcbc3c66",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:f191f615",
+    "prior_id": "sentence:L1:introduction:f191f615",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:89456771",
+    "prior_id": "sentence:L1:introduction:89456771",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:29595c5a",
+    "prior_id": "sentence:L1:introduction:29595c5a",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:1079fe28",
+    "prior_id": "sentence:L1:introduction:1079fe28",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:introduction:1277ae3f",
+    "prior_id": "sentence:L1:introduction:4ebaca5d",
+    "origin": "current-reassessment",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:introduction:5bda7b0e",
+    "prior_id": "sentence:L1:introduction:5bda7b0e",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:06a02fb4",
+    "prior_id": "sentence:L1:formal-setup-and-result:9d46cbb0",
+    "origin": "current-reassessment",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:98b2e23b",
+    "prior_id": "sentence:L1:formal-setup-and-result:5b0d5912",
+    "origin": "current-reassessment",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:c1c2c986",
+    "prior_id": "sentence:L1:formal-setup-and-result:c1c2c986",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:7cde98b1",
+    "prior_id": "sentence:L1:formal-setup-and-result:7cde98b1",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:fe4a081e",
+    "prior_id": "sentence:L1:formal-setup-and-result:fe4a081e",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:e189cdda",
+    "prior_id": "sentence:L1:formal-setup-and-result:e189cdda",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:4e8fd97b",
+    "prior_id": "sentence:L1:formal-setup-and-result:4e8fd97b",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:3cd70eb8",
+    "prior_id": "sentence:L1:formal-setup-and-result:3cd70eb8",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:c694dfa5",
+    "prior_id": "sentence:L1:formal-setup-and-result:c694dfa5",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:6bb21996",
+    "prior_id": "sentence:L1:formal-setup-and-result:6bb21996",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:a48e702c",
+    "prior_id": "sentence:L1:formal-setup-and-result:a48e702c",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:b63f73a8",
+    "prior_id": "sentence:L1:formal-setup-and-result:b63f73a8",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:aa870922",
+    "prior_id": "sentence:L1:formal-setup-and-result:aa870922",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:ed33e4c6",
+    "prior_id": "sentence:L1:formal-setup-and-result:c0a94df1",
+    "origin": "typesetting-only-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:bb17ffb5",
+    "prior_id": "sentence:L1:formal-setup-and-result:bb17ffb5",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:207942fe",
+    "prior_id": "sentence:L1:formal-setup-and-result:207942fe",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:0b2b6094",
+    "prior_id": "sentence:L1:formal-setup-and-result:0b2b6094",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:929692a7",
+    "prior_id": "sentence:L1:formal-setup-and-result:929692a7",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:675ab7d2",
+    "prior_id": "sentence:L1:formal-setup-and-result:675ab7d2",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T23:20:05.476998Z"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:d8b52fd1",
+    "prior_id": "sentence:L1:formal-setup-and-result:d8b52fd1",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:3868a57b",
+    "prior_id": "sentence:L1:formal-setup-and-result:8e5524b2",
+    "origin": "current-reassessment",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:6cfe0344",
+    "prior_id": "sentence:L1:formal-setup-and-result:6cfe0344",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:67680096",
+    "prior_id": "sentence:L1:formal-setup-and-result:67680096",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:e18ae283",
+    "prior_id": "sentence:L1:formal-setup-and-result:e18ae283",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:e8ff11e9",
+    "prior_id": "sentence:L1:formal-setup-and-result:e8ff11e9",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:6b3a489b",
+    "prior_id": "sentence:L1:formal-setup-and-result:ff36d704",
+    "origin": "current-reassessment",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:9dbf0010",
+    "prior_id": "sentence:L1:formal-setup-and-result:9dbf0010",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:928d4e3e",
+    "prior_id": "sentence:L1:formal-setup-and-result:928d4e3e",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:9b5a8e88",
+    "prior_id": "sentence:L1:formal-setup-and-result:9b5a8e88",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:c566aed6",
+    "prior_id": "sentence:L1:formal-setup-and-result:c566aed6",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:2d57174c",
+    "prior_id": "sentence:L1:formal-setup-and-result:2d57174c",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:bbf37c66",
+    "prior_id": "sentence:L1:formal-setup-and-result:bbf37c66",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:41d63d4f",
+    "prior_id": "sentence:L1:formal-setup-and-result:41d63d4f",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:0f3f4a6d",
+    "prior_id": "sentence:L1:formal-setup-and-result:0f3f4a6d",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:152de090",
+    "prior_id": "sentence:L1:formal-setup-and-result:152de090",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:a43e84f3",
+    "prior_id": "sentence:L1:formal-setup-and-result:a43e84f3",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:ea26e7aa",
+    "prior_id": "sentence:L1:formal-setup-and-result:ea26e7aa",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:03a02b34",
+    "prior_id": "sentence:L1:formal-setup-and-result:03a02b34",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:41403f4b",
+    "prior_id": "sentence:L1:formal-setup-and-result:41403f4b",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:90db9920",
+    "prior_id": "sentence:L1:formal-setup-and-result:90db9920",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:8a067e2e",
+    "prior_id": "sentence:L1:formal-setup-and-result:8a067e2e",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:cb1ca595",
+    "prior_id": "sentence:L1:formal-setup-and-result:cb1ca595",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:de4a9473",
+    "prior_id": "sentence:L1:formal-setup-and-result:de4a9473",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:0f9408ca",
+    "prior_id": "sentence:L1:formal-setup-and-result:0f9408ca",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:2cf63785",
+    "prior_id": "sentence:L1:formal-setup-and-result:2cf63785",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:formal-setup-and-result:f7fc4a81",
+    "prior_id": "sentence:L1:formal-setup-and-result:f7fc4a81",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:c7c68df6",
+    "prior_id": "sentence:L1:discussion:c7c68df6",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:d3026983",
+    "prior_id": "sentence:L1:discussion:d3026983",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:443b79a2",
+    "prior_id": "sentence:L1:discussion:443b79a2",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:49c6a59c",
+    "prior_id": "sentence:L1:discussion:49c6a59c",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:5ca36fd5",
+    "prior_id": "sentence:L1:discussion:5ca36fd5",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:6a138e73",
+    "prior_id": "sentence:L1:discussion:6a138e73",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:175a78b5",
+    "prior_id": "sentence:L1:discussion:175a78b5",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:8e4393e7",
+    "prior_id": "sentence:L1:discussion:8e4393e7",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:285b31f4",
+    "prior_id": "sentence:L1:discussion:285b31f4",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:1f291b86",
+    "prior_id": "sentence:L1:discussion:1f291b86",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:287db35b",
+    "prior_id": "sentence:L1:discussion:287db35b",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:ee8c0180",
+    "prior_id": "sentence:L1:discussion:ee8c0180",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:bc5f96cb",
+    "prior_id": "sentence:L1:discussion:bc5f96cb",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:a1b7cfc8",
+    "prior_id": "sentence:L1:discussion:a1b7cfc8",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:5799c0b5",
+    "prior_id": "sentence:L1:discussion:5799c0b5",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:9c6744da",
+    "prior_id": "sentence:L1:discussion:9c6744da",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:4b211e50",
+    "prior_id": "sentence:L1:discussion:4b211e50",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:a19165ab",
+    "prior_id": "sentence:L1:discussion:cbcc11a7",
+    "origin": "typesetting-only-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:8b6e85b5",
+    "prior_id": "sentence:L1:discussion:8b6e85b5",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:4fc7e3f3",
+    "prior_id": "sentence:L1:discussion:4fc7e3f3",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:e1ed18a0",
+    "prior_id": "sentence:L1:discussion:e1ed18a0",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:e63a56f8",
+    "prior_id": "sentence:L1:discussion:e63a56f8",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:d0e426a2",
+    "prior_id": "sentence:L1:discussion:d0e426a2",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:e1a97170",
+    "prior_id": "sentence:L1:discussion:e1a97170",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:67db304d",
+    "prior_id": "sentence:L1:discussion:22c4f0e2",
+    "origin": "typesetting-only-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:27f33f68",
+    "prior_id": "sentence:L1:discussion:27f33f68",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-10-15T22:25:47.754711Z"
+  },
+  {
+    "current_id": "sentence:L1:discussion:7caeb5ce",
+    "prior_id": "sentence:L1:discussion:7caeb5ce",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:b68e17fa",
+    "prior_id": "sentence:L1:discussion:b68e17fa",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:c987e539",
+    "prior_id": "sentence:L1:discussion:c987e539",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:0c438d3f",
+    "prior_id": "sentence:L1:discussion:0c438d3f",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:40e3f093",
+    "prior_id": "sentence:L1:discussion:40e3f093",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-current-sentences-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:556783ed",
+    "prior_id": "sentence:L1:discussion:6d8afeb6",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:ac7de9a4",
+    "prior_id": "sentence:L1:discussion:ac7de9a4",
+    "origin": "exact-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-05:l1-speed-claims-refresh-r1"
+  },
+  {
+    "current_id": "sentence:L1:discussion:064e25cb",
+    "prior_id": "sentence:L1:discussion:31c6d6d6",
+    "origin": "typesetting-only-retained",
+    "prior_run": "claims-reviewer-v2:2026-11-04:l1-precision-evidence-refresh-r1"
+  }
+]

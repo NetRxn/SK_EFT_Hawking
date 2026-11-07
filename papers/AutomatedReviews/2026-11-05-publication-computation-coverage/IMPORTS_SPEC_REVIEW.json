@@ -1,0 +1,35 @@
+{
+  "decision": "ACCEPT FOR IMPLEMENTATION",
+  "candidate": "26d2545c44b806fb2f417fcfc8b237cb33d490f4",
+  "packet": "publication-imports-spec-review-r2.json",
+  "packet_fresh": true,
+  "blocking_amendments": [],
+  "live_source_diagnostic": {
+    "public_definitions": 436,
+    "bare_name_pairs": 109,
+    "old_dictionaries": 93,
+    "missing_pairs": 16,
+    "old_outside_syntactic": 0,
+    "pilot_pair_agreement": true
+  },
+  "candidate_mutated": false,
+  "tests_run": false,
+  "graph_build_run": false,
+  "scientific_source_executed": false,
+  "science_main_publication_acceptance": false,
+  "report": "/tmp/l1-imports-spec-review.md",
+  "initial_decision": "AMEND BEFORE IMPLEMENTATION",
+  "amendments_resolved": [
+    "A1",
+    "A2"
+  ],
+  "remaining_specification_blockers": [],
+  "accepted_hashes": {
+    "docs/adrs/ADR-009-validation-suite-modularization.md": "0950a5edeac7e5dee54bd790e42036b30f57ccde1b9ec8655ffe063e10d8b6d9",
+    "docs/superpowers/specs/2026-10-19-g4-declared-population-design.md": "ce61aaf381e447d14d642c48ecbf4b996ad2267fa78859aac8ecb25be096b80f",
+    "docs/superpowers/plans/2026-10-19-g4-declared-population.md": "35a5f108914ac7b1966d91caf686dc66175396970b1e0768960cee0010469c8f",
+    "scripts/build_graph.py": "173710e48b9ade0c93e95cb81c94178165616d7aa0d0c92c25e85bde3fc23dce",
+    "src/core/formulas.py": "deaa9898b4463360d26479dd65014ae884d511391df17cbd86fe4b429b7a568e"
+  },
+  "acceptance_scope": "Bounded specification only; implementation, tests, production control and independent implementation review remain owed."
+}

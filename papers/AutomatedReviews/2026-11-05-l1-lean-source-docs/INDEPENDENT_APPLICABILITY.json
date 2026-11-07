@@ -1,0 +1,197 @@
+{
+  "reviewed_at_utc": "2026-11-05T23:28:41.890626+00:00",
+  "verdict": "ACCEPT_BOUNDED_APPLICABILITY_PENDING_PROJECT_QUALIFICATION",
+  "commit": "1028b047446452398836793e1afda36f7ad56a3a",
+  "commit_parent": "37dd9250420e4fb986e06bb9ab1776ed7b6a1856",
+  "commit_changed_paths": [
+    "lean/SKEFTHawking/GravitationalWaves.lean"
+  ],
+  "committed_source_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+  "worker_current_source_matches_committed": true,
+  "publication_source_still_original": true,
+  "publication_HEAD": "130b4015d99f5d2d69a71bc6baca4978d38a5061",
+  "primary_HEAD_observed": "1028b047446452398836793e1afda36f7ad56a3a",
+  "project_closure": {
+    "GravitationalWaves": {
+      "committed_sha256": "d9287e0c0e0b0683fe5af73bab4f7c4fa2a7585bde4db0de9b9ed122b25d541f",
+      "publication_sha256": "027cb240423ae8b694a04a3226dcb2e0e73b52d91d3d7939608017de82492c54",
+      "equal_before_publication_patch": false
+    },
+    "Basic": {
+      "committed_sha256": "2bb228652560bd95d72e562a0eafbd95dfa531380e45a45c18e8f3e43e275557",
+      "publication_sha256": "2bb228652560bd95d72e562a0eafbd95dfa531380e45a45c18e8f3e43e275557",
+      "equal_before_publication_patch": true
+    },
+    "LinearizedEFE": {
+      "committed_sha256": "ef2c73f40daabb1266d9d10803bebeab894dafdce9c2682f7b3cfc9ac397e339",
+      "publication_sha256": "ef2c73f40daabb1266d9d10803bebeab894dafdce9c2682f7b3cfc9ac397e339",
+      "equal_before_publication_patch": true
+    },
+    "ADWMechanism": {
+      "committed_sha256": "025eb5c3934b1b0866b0a85aabf0cb3c0bec263a0f9970092e32dad3d5428e24",
+      "publication_sha256": "025eb5c3934b1b0866b0a85aabf0cb3c0bec263a0f9970092e32dad3d5428e24",
+      "equal_before_publication_patch": true
+    }
+  },
+  "pins": {
+    "lean-toolchain": {
+      "committed_sha256": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e",
+      "publication_sha256": "2773c517aa90b66ea8a2c52bddddf84393157797f8341be0df45294fff7fd32e",
+      "identical": true
+    },
+    "lakefile.toml": {
+      "committed_sha256": "7008b3d79ac294f4e822e8c867a326c316e94ff9047c4fd110e66b9cab84e5fe",
+      "publication_sha256": "236bd415087ae279f8235e19f6c4df7eb6f00a1baa4ca80b1accfe11b03dc602",
+      "identical": false
+    },
+    "lake-manifest.json": {
+      "committed_sha256": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464",
+      "publication_sha256": "6620cd482acd9c924acd5715c07cb59f8cb840d605ad211c31c1666839516464",
+      "identical": true
+    }
+  },
+  "packages": [
+    {
+      "name": "Physlib",
+      "manifest_rev": "c48433678e8fb6306ebcd48453300c8e16058a62",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "c48433678e8fb6306ebcd48453300c8e16058a62",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "repl",
+      "manifest_rev": "68a3b3a059787a7db44fb1e6281e4a657efee470",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "68a3b3a059787a7db44fb1e6281e4a657efee470",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "mathlib",
+      "manifest_rev": "81a5d257c8e410db227a6665ed08f64fea08e997",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "81a5d257c8e410db227a6665ed08f64fea08e997",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "doc-gen4",
+      "manifest_rev": "092d6318789e7bb9160ade1e85bdbcc0abfd7f6e",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "092d6318789e7bb9160ade1e85bdbcc0abfd7f6e",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "plausible",
+      "manifest_rev": "e12c1910fe855cbfc38803cd4e55543906d5fa62",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "e12c1910fe855cbfc38803cd4e55543906d5fa62",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "LeanSearchClient",
+      "manifest_rev": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "importGraph",
+      "manifest_rev": "7e9612bf0b9ee66db3cb5b9988a35afc706f5a12",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "7e9612bf0b9ee66db3cb5b9988a35afc706f5a12",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "proofwidgets",
+      "manifest_rev": "6e311e2a844da9b2cc3971187df2fe0066947b93",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "6e311e2a844da9b2cc3971187df2fe0066947b93",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "aesop",
+      "manifest_rev": "a7dbf0c63b694e47f425f3dcddbc0e178bb432d3",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "a7dbf0c63b694e47f425f3dcddbc0e178bb432d3",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "Qq",
+      "manifest_rev": "38d591e778f100aec9762bb582f9c7f55f50e9dc",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "38d591e778f100aec9762bb582f9c7f55f50e9dc",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "batteries",
+      "manifest_rev": "023ce7d62a0531e22a5331e20b587817a80d49ff",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "023ce7d62a0531e22a5331e20b587817a80d49ff",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "leansqlite",
+      "manifest_rev": "b2e8105c3507d81adaa531fda5990d14b631528f",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "b2e8105c3507d81adaa531fda5990d14b631528f",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "Cli",
+      "manifest_rev": "88679d088c9720c27ebdf2ba4dafe17341747f94",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "88679d088c9720c27ebdf2ba4dafe17341747f94",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "UnicodeBasic",
+      "manifest_rev": "947120c17904da8fc89abe3616d57e1c3e13aa9c",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "947120c17904da8fc89abe3616d57e1c3e13aa9c",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "BibtexQuery",
+      "manifest_rev": "b648facb6be09a29be636bbc02d28ddee77565c7",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "b648facb6be09a29be636bbc02d28ddee77565c7",
+      "normal_porcelain_empty": true
+    },
+    {
+      "name": "MD4Lean",
+      "manifest_rev": "31907cc18f48a95384f99cee5582c00fb39e0f67",
+      "primary_package_exists": true,
+      "publication_package_exists": false,
+      "observed_primary_head": "31907cc18f48a95384f99cee5582c00fb39e0f67",
+      "normal_porcelain_empty": true
+    }
+  ],
+  "native_receipts": "Actual worker diagnostics success, no timeout/items/failed_dependencies; four named source scans core3axioms/no warnings. Baseline same. Not independently rerun by reviewer.",
+  "compiler_attestation": "Declared v4.32.0 pins match; supplied native receipts do not record effective compiler executable hash/version or full launch options. No runtime binary/loaded-process equivalence claimed.",
+  "absorb": "No terminal receipt provided in this review; empty stdout/stderr snapshot is not pass.",
+  "epoch": "No export/cross-checkout matching epoch; successful primary epoch remains commit+pins-bound.",
+  "missing_scoped_evidence": [
+    "Terminal normal absorb and exact integrated primary revision, source bytes and clean state",
+    "Controlled exact integrated-source authoritative build terminal result and resulting current-primary epoch",
+    "Required change checks: counts_fresh; lean_zero_sorry; axiom_closure_allowlist; vacuous_statement_audit; existential_witness_disclosure, all no-memo where prescribed; preserve failures and scope",
+    "Guide-required broader bare fast suite with repo and plugin testpaths, with existing unrelated failures explicitly retained",
+    "Identical accepted patch actually applied in publication pinned branch; actual four finding Verify commands there, plus applicable papers/review Verify syntax gates for changed review artifacts",
+    "Bounded compiler/import/options/package applicability recorded without full publication environment or native acceptance claim",
+    "Existing closure writer individually records each of four findings only after ROOT accepts actual evidence; no physical BUILD closure"
+  ],
+  "whole_publication_native_main_human_gates": "OPEN"
+}

@@ -1,0 +1,75 @@
+{
+  "verdict": "ACCEPT final connected78/80 portable CLI and original evidence archive",
+  "archive_sha256": "51ca1c16915abfeb1f624e754f620e58538f28bfa578c3c5dedec1165330c23d",
+  "manifest_sha256": "f03b7d7c6cfdfa815a108de41edcc79e4944106d44626dfce7dfab8f0ffebf92",
+  "members": 84,
+  "all84_manifest_sizes_hashes_original_bytes_match": true,
+  "author34_roster_complete": true,
+  "installed_portable_sha256": "1fdb5cdbb3495ff0362902f9c0cec3cb1564040c4084ed4988e8b9e73899ebe9",
+  "five_original_scientific_ASTs_equal": true,
+  "principal16_siblings_current_and_all_CLI17_bindings_match": true,
+  "all30_full_branches_and_XOR1_raw_weight_divisor_coefficient_peak_domain_centerrows_verified": true,
+  "independent_full78_replay_verified": true,
+  "both30_branch_fixedlabel_replays_verified": true,
+  "direct14_torus_56joint_and_fullpolynomial_streams_preserved": true,
+  "actual_CLI_exits_times": {
+    "census": {
+      "args": [],
+      "exit_code": 0,
+      "reason": "terminal",
+      "actual_parent_wall_seconds": 5.8635469999862835,
+      "whole_process_limit_seconds": 30,
+      "source_sha256": "1fdb5cdbb3495ff0362902f9c0cec3cb1564040c4084ed4988e8b9e73899ebe9"
+    },
+    "fixed": {
+      "args": [
+        "--controls-only"
+      ],
+      "exit_code": 0,
+      "reason": "terminal",
+      "actual_parent_wall_seconds": 6.500348167028278,
+      "whole_process_limit_seconds": 60,
+      "source_sha256": "1fdb5cdbb3495ff0362902f9c0cec3cb1564040c4084ed4988e8b9e73899ebe9"
+    },
+    "78": {
+      "args": [
+        "--word",
+        "78"
+      ],
+      "exit_code": 0,
+      "reason": "terminal",
+      "actual_parent_wall_seconds": 28.845063625019975,
+      "whole_process_limit_seconds": 60,
+      "source_sha256": "1fdb5cdbb3495ff0362902f9c0cec3cb1564040c4084ed4988e8b9e73899ebe9"
+    }
+  },
+  "actual_CLI78_coefficient": [
+    230444796360321160875,
+    8796093022208
+  ],
+  "actual_CLI78_preparation_seconds": 18.82878687500488,
+  "actual_CLI78_whole15_warm_seconds": 3.9951748750172555,
+  "exact_class": [
+    78,
+    80
+  ],
+  "same_axis_subtotal": [
+    230444796360321160875,
+    4398046511104
+  ],
+  "portable_scope_after_ROOT_acceptance": 232,
+  "same_axis_portable_after_ROOT_acceptance": 138,
+  "mixed_portable_after_ROOT_acceptance": 94,
+  "remaining": 40,
+  "remaining_same": 26,
+  "remaining_mixed": 14,
+  "canonical_review_copies_identical": true,
+  "preserved_attempts": [
+    "author singular fixededge label assertion",
+    "original78 copied NOTRUN scope suffix with explicit annotation",
+    "reviewer exact full80 wording assertion",
+    "ROOT systempython missingSympy initial census"
+  ],
+  "no_additional_scientific_compute": true,
+  "acceptance_limits": "Selected2word portable class only. Fullk4, complete source/action ensemble,commonZ,physicalB3/window,modes,transport,main/publication remain open."
+}

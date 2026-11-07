@@ -1,0 +1,144 @@
+{
+  "verdict": "REUSE EXISTING COHERENT REPAIR AFTER ACTUAL 85890 TERMINATION",
+  "packet": "publication-managed-path-reuse-review-r1.json",
+  "packet_fresh": true,
+  "immutable_current_base": "16fde9b0803019d55d0b10250fed52e6258c1d42",
+  "source_donor": "0b6012549428b3a5b40c3e51e0c8a787defaf812",
+  "original": "9edf7c8fa3a4495c0508615371a9240c5c5dae11",
+  "stable_patch_id": "1481393907e26602db029265c73bf56b93d365a5",
+  "broader_history_not_to_merge_wholesale": "e340bf425756c0c69aa80b79e207d93a2f2ba61b",
+  "slow_extractor_function_from": "437546236f1d18d871a8cdc2526bb6581f163a9d",
+  "current_equivalent_integrated": false,
+  "donor_ancestors_of_current": false,
+  "donor_preimages_exact_or_absent": 9,
+  "preserve_current_stronger_G4_architecture_test": true,
+  "coherent_paths": [
+    "docs/adrs/ADR-012-finding-lifecycle-routing-and-closure.md",
+    "docs/superpowers/plans/2026-10-19-managed-worktree-paths.md",
+    "docs/superpowers/specs/2026-10-19-managed-worktree-paths-design.md",
+    "papers/AutomatedReviews/2026-10-19-managed-worktree-paths/SCOPED_REVIEW.md",
+    "papers/AutomatedReviews/2026-10-19-managed-worktree-paths/infra.md",
+    "scripts/orchestrate.py",
+    "tests/test_architecture_claims.py",
+    "tests/test_orchestrate.py",
+    "tests/test_phase6i_wave1.py",
+    "tests/test_workspace_resolver.py"
+  ],
+  "later_phase_exact_donor_plus_guard_function": true,
+  "canonical_finding_ids": [
+    "review:2026-10-19-managed-worktree-paths:infra:1.1",
+    "review:2026-10-19-managed-worktree-paths:infra:1.2"
+  ],
+  "declared_commands": [
+    "python -B -m pytest -q -p no:cacheprovider tests/test_orchestrate.py",
+    "python -B -m pytest -q -p no:cacheprovider tests/test_phase6i_wave1.py tests/test_workspace_resolver.py"
+  ],
+  "current_runtime_test_acceptance": false,
+  "project_imports_tests_run": false,
+  "candidate_git_mutated": false,
+  "whole_ledger_replace_forbidden": true,
+  "live85890_terminal_not_inferred": true,
+  "science_fullcache_main_publication_acceptance": false,
+  "path_hashes": [
+    {
+      "path": "docs/adrs/ADR-012-finding-lifecycle-routing-and-closure.md",
+      "current_sha256": "6d2a161af13926745d1b17cd9c53065f95667198d53c641a4cdeeffcc1922005",
+      "donor_sha256": "85324638f59548e2ef8b85d8f0dbe663b53b51ccb8592a45fb5a28fe14e3a3c8",
+      "later_sha256": "85324638f59548e2ef8b85d8f0dbe663b53b51ccb8592a45fb5a28fe14e3a3c8",
+      "current_equals_donor_preimage": true,
+      "current_equals_donor_postimage": false,
+      "donor_equals_original": true,
+      "later_equals_donor": true
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-19-managed-worktree-paths.md",
+      "current_sha256": null,
+      "donor_sha256": "a6ae81ca87355f3968e9f523d6e7a8da389a5ac4e3af8bf49062af66c6bf2fc2",
+      "later_sha256": "d6eaf607cc773fbd9e6aa2005261c35aae75ae338effb5b4864225d18005a10d",
+      "current_equals_donor_preimage": true,
+      "current_equals_donor_postimage": false,
+      "donor_equals_original": true,
+      "later_equals_donor": false
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-19-managed-worktree-paths-design.md",
+      "current_sha256": null,
+      "donor_sha256": "c1743620a9bfc8a44aef652427a97f3a7a48a38e45b5bcedbfa65af314fce2ed",
+      "later_sha256": "bf79b7d1acccc97fc58cb6c70e23dfd947723f9a6a4a982ace3f5a397e6f5a06",
+      "current_equals_donor_preimage": true,
+      "current_equals_donor_postimage": false,
+      "donor_equals_original": true,
+      "later_equals_donor": false
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-10-19-managed-worktree-paths/SCOPED_REVIEW.md",
+      "current_sha256": null,
+      "donor_sha256": "78af0d59b8d0a70bdfe47f1191a87a5384eef38729e6a3920774f674c4062a8f",
+      "later_sha256": "78af0d59b8d0a70bdfe47f1191a87a5384eef38729e6a3920774f674c4062a8f",
+      "current_equals_donor_preimage": true,
+      "current_equals_donor_postimage": false,
+      "donor_equals_original": true,
+      "later_equals_donor": true
+    },
+    {
+      "path": "papers/AutomatedReviews/2026-10-19-managed-worktree-paths/infra.md",
+      "current_sha256": null,
+      "donor_sha256": "2c53b9565ab59aa6297fed2346782a173cd06565f8a18e0bbf0825de0b7b74db",
+      "later_sha256": "efbbe0ad4e48c59e937799e8c9775cb86805dc05cbb781fe5fbe28a8a4e7bf50",
+      "current_equals_donor_preimage": true,
+      "current_equals_donor_postimage": false,
+      "donor_equals_original": true,
+      "later_equals_donor": false
+    },
+    {
+      "path": "scripts/orchestrate.py",
+      "current_sha256": "4aa821b1d6634240cad2fe9ef3e724a3b3890e6f2e66a55d358cd7bf02ecd3d6",
+      "donor_sha256": "b5f44d3ee4b75b48a107844417cef56b8b1a39abd88ea3885d3059db21a6a39f",
+      "later_sha256": "b5f44d3ee4b75b48a107844417cef56b8b1a39abd88ea3885d3059db21a6a39f",
+      "current_equals_donor_preimage": true,
+      "current_equals_donor_postimage": false,
+      "donor_equals_original": true,
+      "later_equals_donor": true
+    },
+    {
+      "path": "tests/test_architecture_claims.py",
+      "current_sha256": "a35e41158751bf8fab5d3f5ad92e47e510d3e248f3782cd821bc7bda1b7ffe34",
+      "donor_sha256": "d6b971c6ebe158cfd44ec1b44aca0fd3437f6777244952a881f52ce366abab6d",
+      "later_sha256": "d6b971c6ebe158cfd44ec1b44aca0fd3437f6777244952a881f52ce366abab6d",
+      "current_equals_donor_preimage": false,
+      "current_equals_donor_postimage": false,
+      "donor_equals_original": true,
+      "later_equals_donor": true
+    },
+    {
+      "path": "tests/test_orchestrate.py",
+      "current_sha256": "6ba127a591e4e64b0b79f67c73ffb68bc6fdabfede49e91c04c8e4479b730c20",
+      "donor_sha256": "d2ef209645077b5362d124b004fb4de72ff5e99a840f372c5c8b0144ceaff324",
+      "later_sha256": "d2ef209645077b5362d124b004fb4de72ff5e99a840f372c5c8b0144ceaff324",
+      "current_equals_donor_preimage": true,
+      "current_equals_donor_postimage": false,
+      "donor_equals_original": true,
+      "later_equals_donor": true
+    },
+    {
+      "path": "tests/test_phase6i_wave1.py",
+      "current_sha256": "997e53abaf13b038de620c03376510e054484e458fb8489189cf367e96ef9b91",
+      "donor_sha256": "83b6744806071825033d5ece05fed987722fd2405f209446d779d136f25a9546",
+      "later_sha256": "37a70787f4e1cfe2084d97805edfc45f43192f19fb123a7eec85c1cedb3fbf1d",
+      "current_equals_donor_preimage": true,
+      "current_equals_donor_postimage": false,
+      "donor_equals_original": true,
+      "later_equals_donor": false
+    },
+    {
+      "path": "tests/test_workspace_resolver.py",
+      "current_sha256": "402adae1880cc57ceb70e5bfc76e42e6e63051c553b231fec1f1b249408f2699",
+      "donor_sha256": "c93bb654a520b66bbc31a152dac5dd79b6ef9477574d2f1afe388e9a3a75276a",
+      "later_sha256": "c93bb654a520b66bbc31a152dac5dd79b6ef9477574d2f1afe388e9a3a75276a",
+      "current_equals_donor_preimage": true,
+      "current_equals_donor_postimage": false,
+      "donor_equals_original": true,
+      "later_equals_donor": true
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "decision": "ACCEPT_APPLIED_COMPOSITION_SOURCE_ONLY",
+  "head": "754cef24e998eba5c746f3309676fa6e721fe69e",
+  "entry_exactly_accepted": true,
+  "all_other_provenance_AST_unchanged": true,
+  "existing_registry_keys_unique": true,
+  "claims_only_two_targets_scopes_and_one_review_evidence_object": true,
+  "changed_sentence_ids": [
+    "sentence:L1:formal-setup-and-result:9d46cbb0",
+    "sentence:L1:formal-setup-and-result:c1c2c986"
+  ],
+  "all114_ids_verdicts_and_other_sentence_fields_preserved": true,
+  "review_metadata_hashes_verified": true,
+  "one_append_only_reaudit_event": "audit:2026-11-05T07:27:26.217289Z:paper:L1:re_audit",
+  "ingest_receipt": {
+    "ok": true,
+    "paper": "L1",
+    "reviewer_version": "claims-reviewer-v2-source-qualified-r1",
+    "sentences_in_run": 114,
+    "tombstoned_sentences": [],
+    "tombstoned_count": 0,
+    "rewrite_candidates": [],
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates_for_supersession": 5
+  },
+  "human_prose_state_byte_identical_HEAD": true,
+  "inventory_only17to18": true,
+  "new_physical_runtime_or_graph_acceptance": false
+}

@@ -1,0 +1,10 @@
+{
+  "packet": "publication-citation-adoption-review-r4.json",
+  "packet_sha256": "f2f52b9affd133c0d3ec2d6373b3b5a2e2cb8b0fa602fe50726b1d6b0a04fd8f",
+  "all_bound_files_match": true,
+  "verify_passed": 33,
+  "verify_default_deselected": 1,
+  "verify_junit_sha256": "b902f543549104f0eacacabc6e30583ca168fe85606ee3782b3662cf59b7b584",
+  "verify_stdout_sha256": "b07e69c0cf1f865dccd9a05b01a325ad5b5b859dae268dfe4a4e2e1e99b7fc1a",
+  "verify_exit": 0
+}

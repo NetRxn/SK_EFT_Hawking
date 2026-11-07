@@ -1,0 +1,22 @@
+{
+  "archive_sha256": "5978086cb8bba46c2545688f3c67babb306a6ec772dba71894b6f54f1b9b8169",
+  "archive_bytes": 5489042,
+  "members": {
+    "l1-adeb-current-graph-20261105.json": {
+      "bytes": 87668111,
+      "sha256": "c0a6714ae64e50f8fca56e60b6c9fa2bd3e1b10c2a2955b2732b49d92c38c182"
+    },
+    "l1-adeb-current-graph-20261105.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "l1-adeb-current-graph-20261105.stderr": {
+      "bytes": 13033,
+      "sha256": "8e511ca7752b06701d6915e2dba3226ec7c6fcc8aa3df7ae54d7ca8651b2a2fd"
+    },
+    "l1-adeb-current-gate-readback-20261105.json": {
+      "bytes": 404560,
+      "sha256": "67f485c476d9add0e78cbc07377db641deaffdfb64d5ab7d0e5d31edea6493d5"
+    }
+  }
+}

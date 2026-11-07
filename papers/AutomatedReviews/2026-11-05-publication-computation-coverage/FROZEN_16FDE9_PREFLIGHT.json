@@ -1,0 +1,14 @@
+{
+  "head": "16fde9b0803019d55d0b10250fed52e6258c1d42",
+  "status": "",
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "-m",
+    "pytest",
+    "-q",
+    "--junitxml=/tmp/l1-16fde9-fast.xml"
+  ],
+  "scope": "Canonical bare fast testpaths, frozen candidate; no live Lean slot operation authorized."
+}

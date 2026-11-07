@@ -1,0 +1,42 @@
+{
+  "archive": "original_automaton_physical_transport_evidence.zip",
+  "sha256": "d629a1252125be5fc07f40eaec9d404e51fe1db3e9788531d9b6b92feca69a04",
+  "bytes": 1116106,
+  "members": 20,
+  "actual_manual_result_sha256": "c5d3f45f48b21807b86d15055f753ee387be7942c8794bbefb61010e60063917",
+  "approved_brief_sha256": "812d20b71047f1981f0ca70ad6195d0a9eabcc6a3e0ff9e8049022f4a47aa8c3",
+  "parent_checkpoint": "171c980a261251b8fd625e6d4a0dc999af245039",
+  "canonical_copies": {
+    "l1-original-automaton-physical-transport-r1.md": "ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT.md",
+    "l1-automaton-physical-transport-math-result-r1.md": "ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT_MATH_REVIEW_R1.md",
+    "l1-automaton-physical-transport-source-result-r1.md": "ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT_SOURCE_REVIEW_R1.md",
+    "l1-automaton-physical-transport-brief-r1.md": "ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT_BRIEF.md",
+    "l1-automaton-physical-transport-math-prospective-r1.md": "ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT_MATH_PROSPECTIVE_R1.md",
+    "l1-automaton-physical-transport-source-prospective-r1.md": "ORIGINAL_AUTOMATON_PHYSICAL_TRANSPORT_SOURCE_PROSPECTIVE_R1.md",
+    "l1-physical-prescription-primary-intake-r1.md": "PHYSICAL_PRESCRIPTION_RESEARCH.md"
+  },
+  "files": {
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": "82197710fb69018810f321dff0ef9f14f9556e47a5b8fab6725b26d1b4c58c49",
+    "accepted/NONREGULAR_BOUNDARY_CUSTODY_CORRECTION.md": "d0cb41c784f36beed3f41e613c4a59e620b71540f373bb0871e4d1e383ad9f91",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "accepted/ORIGINAL_BOUNDARY_ONLY_OPERATORS.md": "e353df388ab9293157a3a002e3cd1796ee59441ee791f79cd202d22ea2ca6303",
+    "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md": "07054c34ffa7edb9ee141bef0f45a5396047ca14b534563df400119c6f31ce6c",
+    "accepted/ORIGINAL_LOW_DEGREE_METRIC_PROPOSAL.md": "c92a0db356ee4453aa6251aa130ba75c23f5650a271cf054d1c237442d41efcc",
+    "accepted/ORIGINAL_STATE_CANDIDATE_QUALIFICATION.md": "448daa530cbf3d9856bdd1dadd0b07fd4cea2e71489133ee91a4eb6df43cdb07",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "candidate/l1-original-automaton-physical-transport-r1.md": "c5d3f45f48b21807b86d15055f753ee387be7942c8794bbefb61010e60063917",
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "parent/original_low_degree_metric_proposal_evidence.zip": "c14da59f12bd7094e8501fca973b2a425edd52c7696bef0211cac193da6bafcd",
+    "parent/original_low_degree_metric_proposal_manifest.json": "0648b410e01d42e5d7ca80b74eef189b68eecee77674cee08f65fd63d681bed0",
+    "prework/l1-automaton-physical-transport-brief-r1.md": "812d20b71047f1981f0ca70ad6195d0a9eabcc6a3e0ff9e8049022f4a47aa8c3",
+    "prework/l1-automaton-physical-transport-math-prospective-r1.md": "bb84fe1795528ae65a9898911eff6dffb02c4c3e644664fbf8fdd427146d201f",
+    "prework/l1-automaton-physical-transport-source-prospective-r1.md": "4d42fec56a43cb61fe430ad16bafedd0872adb0ae62a00884f6da97170d0f306",
+    "research/l1-physical-prescription-primary-intake-r1.md": "a7ac971283ac200c79bdbd4a1edddb32d1c5cd7f03fd7666a468d5501fee2c40",
+    "review/l1-automaton-physical-transport-math-result-r1.md": "d7a7352b80f4368a2fc5de701602157684a52e14c363d280301f0e4417afbe82",
+    "review/l1-automaton-physical-transport-source-result-r1.md": "2455d646c2faef2876b66982276458bac4aa16baf07f6d5a8db066b47a00a331",
+    "source/automaton-physical-result-custody-r1.json": "1b7d31a442b7b247b9bed90761ab3eb78339d2af7230ab6bffb728fe74c747fa"
+  },
+  "outcome": "BOTH independent actual RESULT ACCEPT: source-specific physical transport failures, full-action source/return witnesses and exact quotient/operator/C2 alternatives",
+  "scope": "No positive original state, physical P1/P2/Q1 completion, global original no-go or runtime admission"
+}

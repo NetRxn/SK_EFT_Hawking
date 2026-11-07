@@ -1,0 +1,459 @@
+{
+  "candidate": "ae4311f754777f0b0b34f9f9bd116b7d1388b5b2",
+  "main_receipt_base": "ce194cdc4bf939b108c17edc9530a7f0a14565f9",
+  "main_log_sha256": "a05f43eb1c8a491e3580b53114e23de8e959e28007b925d99f2bb533db2e9f68",
+  "current_ids": 45,
+  "common_ids": 43,
+  "rows": [
+    {
+      "row": 1,
+      "id": "tests/test_architecture_inventory.py::TestTheFreshnessCheck::test_the_live_tree_is_fresh",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1282,
+      "test_blob_same_as_base": true,
+      "owner": "scripts/architecture_inventory.py; docs/architecture",
+      "evidence": "Main stale inventory hooks7\u21926 plus missing sentence schema path; current selected validation reproduces both. Reuse accepted1550f5ff1 inventory writer repair before regeneration; do not create missing schema blindly.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 2,
+      "id": "tests/test_build_graph_memo.py::TestTheMemoIsSemanticallyInvisible::test_the_memoized_build_equals_the_unmemoized_build",
+      "classification": "unknown",
+      "main_receipt_line": null,
+      "test_blob_same_as_base": true,
+      "owner": "existing graph memo / frozen qualification owner",
+      "evidence": "Not failed in exact-main receipt. Test source explicitly requires quiet tree and compares two successive graphs. ROOT wrote/committed during candidate run. Missing traceback/diff prevents attributing to memo or concurrency. Replay this read-only one-node test on frozen isolated tree before code changes.",
+      "current_cause_limit": null
+    },
+    {
+      "row": 3,
+      "id": "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/D3/bundle_metadata.json]",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1284,
+      "test_blob_same_as_base": true,
+      "owner": "bundle metadata canonical writer; papers/D3,L2",
+      "evidence": "Main D3 escaped Unicode and L2 missing final newline. Canonical serialization patch is existing reviewed predecessor package; use current existing writer.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 4,
+      "id": "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_blob_is_byte_stable_through_the_serializer[papers/L2/bundle_metadata.json]",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1285,
+      "test_blob_same_as_base": true,
+      "owner": "bundle metadata canonical writer; papers/D3,L2",
+      "evidence": "Main D3 escaped Unicode and L2 missing final newline. Canonical serialization patch is existing reviewed predecessor package; use current existing writer.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 5,
+      "id": "tests/test_bundle_json_serializer.py::TestCorpusIsCanonical::test_no_blob_carries_escaped_unicode",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1283,
+      "test_blob_same_as_base": true,
+      "owner": "bundle metadata canonical writer; papers/D3,L2",
+      "evidence": "Main D3 escaped Unicode and L2 missing final newline. Canonical serialization patch is existing reviewed predecessor package; use current existing writer.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 6,
+      "id": "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_both_ratchets_have_zero_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1300,
+      "test_blob_same_as_base": true,
+      "owner": "apex claim metadata / scientific owners",
+      "evidence": "Main636 vs634 floor and19 vacuity rows vs20 ceiling. Lowering an honestly shrunk ratchet is distinct from establishing scientific correctness.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 7,
+      "id": "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_every_flagged_row_is_NAMED_in_the_output",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1301,
+      "test_blob_same_as_base": true,
+      "owner": "apex claim metadata / scientific owners",
+      "evidence": "Main636 vs634 floor and19 vacuity rows vs20 ceiling. Lowering an honestly shrunk ratchet is distinct from establishing scientific correctness.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 8,
+      "id": "tests/test_d5_bundles_readiness.py::TestApexClaimsNotVacuous::test_the_population_floor_has_zero_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1299,
+      "test_blob_same_as_base": true,
+      "owner": "apex claim metadata / scientific owners",
+      "evidence": "Main636 vs634 floor and19 vacuity rows vs20 ceiling. Lowering an honestly shrunk ratchet is distinct from establishing scientific correctness.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 9,
+      "id": "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_PRODUCTION_SEEDED_a_placeholder_claim_turns_the_real_corpus_red",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1298,
+      "test_blob_same_as_base": true,
+      "owner": "apex claim metadata / scientific owners",
+      "evidence": "Main636 claims vs634 floor;33 numeral omissions vs31. Production seed test fails green precondition. Check substantive backing and carrier types before roster/ratchet update.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 10,
+      "id": "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_live_state_passes",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1295,
+      "test_blob_same_as_base": true,
+      "owner": "apex claim metadata / scientific owners",
+      "evidence": "Main636 claims vs634 floor;33 numeral omissions vs31. Production seed test fails green precondition. Check substantive backing and carrier types before roster/ratchet update.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 11,
+      "id": "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_the_numeral_ratchet_has_zero_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1297,
+      "test_blob_same_as_base": true,
+      "owner": "apex claim metadata / scientific owners",
+      "evidence": "Main636 claims vs634 floor;33 numeral omissions vs31. Production seed test fails green precondition. Check substantive backing and carrier types before roster/ratchet update.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 12,
+      "id": "tests/test_d5_bundles_readiness.py::TestApexTheoremClaimsGrounded::test_the_population_floor_has_zero_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1296,
+      "test_blob_same_as_base": true,
+      "owner": "apex claim metadata / scientific owners",
+      "evidence": "Main636 claims vs634 floor;33 numeral omissions vs31. Production seed test fails green precondition. Check substantive backing and carrier types before roster/ratchet update.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 13,
+      "id": "tests/test_d5_bundles_readiness.py::TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1286,
+      "test_blob_same_as_base": true,
+      "owner": "bundles_readiness; manuscript/module owners",
+      "evidence": "Main185 absent registrations vs147. Existing parser3f1e7dcee does NOT change exact-base185; scientific reach reconciliation required, not a raised ceiling or absence inference.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 14,
+      "id": "tests/test_d5_bundles_readiness.py::TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1294,
+      "test_blob_same_as_base": true,
+      "owner": "bundles_readiness; manuscript/module owners",
+      "evidence": "Main production-seed precondition already red:185 vs147. Fix genuine registration reach; preserve mutation test.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 15,
+      "id": "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1289,
+      "test_blob_same_as_base": true,
+      "owner": "papers prose owners",
+      "evidence": "Main23 sentences>100 words vs18. Repair actual prose; repeated failing IDs share this root cause.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 16,
+      "id": "tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1288,
+      "test_blob_same_as_base": true,
+      "owner": "papers prose owners",
+      "evidence": "Main23 sentences>100 words vs18. Repair actual prose; repeated failing IDs share this root cause.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 17,
+      "id": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1291,
+      "test_blob_same_as_base": true,
+      "owner": "review corpus attribution / accepted findings owners",
+      "evidence": "Main per-bundle populations differ and unattributed57 vs44; actual open blocking scientific findings must be resolved or correctly attributed. Do not raise ceilings.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 18,
+      "id": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1290,
+      "test_blob_same_as_base": true,
+      "owner": "review corpus attribution / accepted findings owners",
+      "evidence": "Main per-bundle populations differ and unattributed57 vs44; actual open blocking scientific findings must be resolved or correctly attributed. Do not raise ceilings.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 19,
+      "id": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1292,
+      "test_blob_same_as_base": true,
+      "owner": "review corpus attribution / accepted findings owners",
+      "evidence": "Main per-bundle populations differ and unattributed57 vs44; actual open blocking scientific findings must be resolved or correctly attributed. Do not raise ceilings.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 20,
+      "id": "tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1293,
+      "test_blob_same_as_base": true,
+      "owner": "review corpus attribution / accepted findings owners",
+      "evidence": "Main per-bundle populations differ and unattributed57 vs44; actual open blocking scientific findings must be resolved or correctly attributed. Do not raise ceilings.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 21,
+      "id": "tests/test_d5_bundles_readiness.py::TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1287,
+      "test_blob_same_as_base": true,
+      "owner": "bundle stage metadata / canonical stage owner",
+      "evidence": "Main D10,D6,D8 stage10 values outside enum. Reconcile actual stage state with canonical contract; no fabricated green.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 22,
+      "id": "tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_AWAY_a_declaration_turns_the_check_RED",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1304,
+      "test_blob_same_as_base": true,
+      "owner": "citation registry, custody and scientific source owners",
+      "evidence": "Main13 cited bibkeys absent;76 undeclared vs78. Existing reviewed9-path f28cc370f composition passes73 on exact main with same held sources. Reuse and requalify; preserve custody.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 23,
+      "id": "tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_a_DOI_onto_a_declared_textbook_KEEPS_it_exempt",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1303,
+      "test_blob_same_as_base": true,
+      "owner": "citation registry, custody and scientific source owners",
+      "evidence": "Main13 cited bibkeys absent;76 undeclared vs78. Existing reviewed9-path f28cc370f composition passes73 on exact main with same held sources. Reuse and requalify; preserve custody.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 24,
+      "id": "tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_the_undeclared_ceiling_has_ZERO_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1302,
+      "test_blob_same_as_base": true,
+      "owner": "citation registry, custody and scientific source owners",
+      "evidence": "Main13 cited bibkeys absent;76 undeclared vs78. Existing reviewed9-path f28cc370f composition passes73 on exact main with same held sources. Reuse and requalify; preserve custody.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 25,
+      "id": "tests/test_d5_papers_prose.py::TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1306,
+      "test_blob_same_as_base": true,
+      "owner": "bundle tables pipeline / manuscript owners",
+      "evidence": "Main15 handwritten tables vs1. Existing generated-tables predecessors are named in planner; integrate only reviewed compatible payloads.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 26,
+      "id": "tests/test_d5_prose_checks.py::TestSpelledOutCensusFigures::test_the_live_ceiling_has_ZERO_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1307,
+      "test_blob_same_as_base": true,
+      "owner": "count macros / manuscript owners",
+      "evidence": "Main67 spelled-out census vs71 ceiling; lower after measured corpus reconciliation, using canonical counts writer.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 27,
+      "id": "tests/test_d5_prose_lean_refs.py::TestProseTheoremReferenceCoverage::test_the_live_legacy_ceiling_has_ZERO_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1308,
+      "test_blob_same_as_base": true,
+      "owner": "prose reference reconciliation / manuscript owners",
+      "evidence": "Main94 unresolved legacy refs vs90; exact source/import/carrier lookup owed. No absent-theorem inference from grep.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 28,
+      "id": "tests/test_d5_reviews.py::TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1312,
+      "test_blob_same_as_base": true,
+      "owner": "review corpus schema attribution",
+      "evidence": "Main seeded Blocked-by is detected but restored baseline red. Existing corpus needs severity/link reconciliation; current trace is missing.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 29,
+      "id": "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1310,
+      "test_blob_same_as_base": true,
+      "owner": "review chain targets / Lean reference resolution",
+      "evidence": "Main111 unresolvable vs109; seeded test baseline red. Resolve exact declaration/import/carrier mappings, not ceiling inflation.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 30,
+      "id": "tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1311,
+      "test_blob_same_as_base": true,
+      "owner": "review chain targets / Lean reference resolution",
+      "evidence": "Main111 unresolvable vs109; seeded test baseline red. Resolve exact declaration/import/carrier mappings, not ceiling inflation.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 31,
+      "id": "tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1309,
+      "test_blob_same_as_base": true,
+      "owner": "historical review command authors / close_finding contract",
+      "evidence": "Main56 malformed Verify lines; current selected validation also56. Repair runnable commands while preserving finding IDs and scientific assertions.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 32,
+      "id": "tests/test_dependency_declaration.py::test_every_third_party_import_is_declared",
+      "classification": "verified introduced",
+      "main_receipt_line": null,
+      "test_blob_same_as_base": true,
+      "owner": "existing namespace dependency scanner; infra1.4",
+      "evidence": "Main receipt passes this ID (not in45 failed list); candidate focused DEPENDENCY_FAILURE.txt reproduces papers\u2190test_gravitational_waves. 5ffc0e445 adds exact D3 import. Scanner local-name model only records immediate parent/stem; namespace root papers omitted. Preserve rel3e-16/abs0 exact regression.",
+      "current_cause_limit": null
+    },
+    {
+      "row": 33,
+      "id": "tests/test_lean_slots.py::test_an_idle_slot_mints_a_session_on_initialize",
+      "classification": "host-sensitive",
+      "main_receipt_line": 1315,
+      "test_blob_same_as_base": true,
+      "owner": "existing slot fixture/host qualification owner",
+      "evidence": "Main matching fixture fails loopback bind with EPERM (main.log:920\u20131059). Do not mutate actual slots or weaken lease tests; qualify on capable approved host.",
+      "current_cause_limit": null
+    },
+    {
+      "row": 34,
+      "id": "tests/test_lean_slots.py::test_each_initialize_mints_a_distinct_session",
+      "classification": "host-sensitive",
+      "main_receipt_line": 1316,
+      "test_blob_same_as_base": true,
+      "owner": "existing slot fixture/host qualification owner",
+      "evidence": "Main matching fixture fails loopback bind with EPERM (main.log:920\u20131059). Do not mutate actual slots or weaken lease tests; qualify on capable approved host.",
+      "current_cause_limit": null
+    },
+    {
+      "row": 35,
+      "id": "tests/test_lean_slots.py::test_global_backend_limit_counts_other_repository_roles",
+      "classification": "host-sensitive",
+      "main_receipt_line": 1313,
+      "test_blob_same_as_base": true,
+      "owner": "existing slot fixture/host qualification owner",
+      "evidence": "Main matching fixture fails process_start_signature(os.getpid())\u2192None (main.log:900\u2013919).",
+      "current_cause_limit": null
+    },
+    {
+      "row": 36,
+      "id": "tests/test_lean_slots.py::test_one_physical_slot_cannot_have_two_repository_backends",
+      "classification": "host-sensitive",
+      "main_receipt_line": 1314,
+      "test_blob_same_as_base": true,
+      "owner": "existing slot fixture/host qualification owner",
+      "evidence": "Main matching fixture fails process_start_signature(os.getpid())\u2192None (main.log:900\u2013919).",
+      "current_cause_limit": null
+    },
+    {
+      "row": 37,
+      "id": "tests/test_lean_slots.py::test_the_minted_session_does_not_weaken_the_lease_gate",
+      "classification": "host-sensitive",
+      "main_receipt_line": 1317,
+      "test_blob_same_as_base": true,
+      "owner": "existing slot fixture/host qualification owner",
+      "evidence": "Main matching fixture fails loopback bind with EPERM (main.log:920\u20131059). Do not mutate actual slots or weaken lease tests; qualify on capable approved host.",
+      "current_cause_limit": null
+    },
+    {
+      "row": 38,
+      "id": "tests/test_orchestrate.py::test_target_resolves_to_every_file_it_names_and_only_real_ones[SK_EFT_Hawking/src/core/formulas.py-expected4]",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1318,
+      "test_blob_same_as_base": true,
+      "owner": "existing remediation planner target resolver",
+      "evidence": "Main repo-prefixed target resolves[] in nonstandard named checkout. Reuse reviewed managed-worktree portability predecessor; not a physics failure.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 39,
+      "id": "tests/test_phase6i_wave1.py::test_no_missing_from_registry",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1320,
+      "test_blob_same_as_base": true,
+      "owner": "citation registry and custody",
+      "evidence": "Main13 missing registry bibkeys. Same source-qualification package as citation controls; current cause should be confirmed on frozen candidate.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 40,
+      "id": "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1323,
+      "test_blob_same_as_base": true,
+      "owner": "bundle tables pipeline / manuscript owners",
+      "evidence": "Main15 handwritten tables vs1; duplicates existing table pipeline root cause.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 41,
+      "id": "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[count_literals]",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1321,
+      "test_blob_same_as_base": true,
+      "owner": "count macros / manuscript owners",
+      "evidence": "Main91 count literals vs95 ceiling. Reconcile actual corpus; lower only genuine shrink, not as workaround.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 42,
+      "id": "tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1322,
+      "test_blob_same_as_base": true,
+      "owner": "paper numerical literals / tables owners",
+      "evidence": "Main149 numerical literals vs117; repair literal/table provenance debt rather than raising ceiling.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 43,
+      "id": "tests/test_validate_prose_checks.py::TestLiveRepoSmoke::test_prose_theorem_reference_coverage_passes",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1324,
+      "test_blob_same_as_base": true,
+      "owner": "prose reference reconciliation / manuscript owners",
+      "evidence": "Main94 unresolved legacy references vs90 plus unresolvable current references. Native/import reconciliation required; do not infer absence.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 44,
+      "id": "tests/test_validate_public_surface.py::TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1325,
+      "test_blob_same_as_base": true,
+      "owner": "numerical literal / paper tables owners",
+      "evidence": "Main15+134=149 numerical literals vs117. Same corpus debt as numerical_literals ratchet.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    },
+    {
+      "row": 45,
+      "id": "tests/test_validate_public_surface.py::TestTexQuoteReferencesAreExtracted::test_d7_no_longer_cites_a_nonexistent_theorem",
+      "classification": "verified inherited (failure identity)",
+      "main_receipt_line": 1326,
+      "test_blob_same_as_base": true,
+      "owner": "D7 manuscript/regression owner",
+      "evidence": "Main asserts literal analog_hawking_simulable_iff_fourCycleFree string absent from manuscript. Reuse reviewed D7 regression predecessor; establish current intended scientific ref, not textual substitution.",
+      "current_cause_limit": "Current run retained IDs only; inherited means exact-main also failed, not proof of identical cause/current corpus parity."
+    }
+  ]
+}

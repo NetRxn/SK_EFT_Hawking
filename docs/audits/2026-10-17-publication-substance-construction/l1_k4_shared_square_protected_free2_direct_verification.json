@@ -1,0 +1,125 @@
+{
+  "verdict": "ACCEPT independent DIRECT110/153 controls only; separate full45 fixed scalar receipts and review still required before pilot",
+  "actual_handle": 48428,
+  "actual_exit": 0,
+  "inner_seconds": 25.89086183393374,
+  "parent_seconds": 25.96241045894567,
+  "inner_bound": 600,
+  "parent_bound": 665,
+  "conditional_controls": [
+    {
+      "activated_offdiagonal_terms": 67,
+      "both_fixed_source_remaps": true,
+      "cartesian_formula_checks": 49,
+      "free_patterns": 7,
+      "joint_nineface_closures": 7,
+      "kind": "conditional45-direct",
+      "nonidentity_F3_nineface_covariance": true,
+      "omitted_source_Grassmann_site_retained": 4,
+      "protected_patterns": 7,
+      "square_components": 21,
+      "square_samples": 21,
+      "word": 110
+    },
+    {
+      "activated_offdiagonal_terms": 67,
+      "both_fixed_source_remaps": true,
+      "cartesian_formula_checks": 49,
+      "free_patterns": 7,
+      "joint_nineface_closures": 7,
+      "kind": "conditional45-direct",
+      "nonidentity_F3_nineface_covariance": true,
+      "omitted_source_Grassmann_site_retained": 5,
+      "protected_patterns": 7,
+      "square_components": 21,
+      "square_samples": 21,
+      "word": 153
+    }
+  ],
+  "prepared_graph_controls": [
+    {
+      "all_centerweights_original_L": true,
+      "both_source_polys_checked": true,
+      "branches": 45,
+      "core_centers": 8,
+      "full_factor_predicates_checked": true,
+      "kind": "gamma-and-prepared-graphs-direct",
+      "nonempty": 15,
+      "omitted_site_action6_source2": true,
+      "protected_free_cross_action_factor_checks": 60,
+      "scalar_contractions_run": 0,
+      "structural_empty": 30,
+      "word": 110
+    },
+    {
+      "all_centerweights_original_L": true,
+      "both_source_polys_checked": true,
+      "branches": 45,
+      "core_centers": 8,
+      "full_factor_predicates_checked": true,
+      "kind": "gamma-and-prepared-graphs-direct",
+      "nonempty": 15,
+      "omitted_site_action6_source2": true,
+      "protected_free_cross_action_factor_checks": 60,
+      "scalar_contractions_run": 0,
+      "structural_empty": 30,
+      "word": 153
+    }
+  ],
+  "singleton_fixed_moment_controls": {
+    "actual_orientations": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "full_polynomial_equalities": 16,
+    "gamma_cases": 4,
+    "kind": "singleton-fixed-edge-direct"
+  },
+  "live_probe_controls": {
+    "actual_orientations": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "all_nonzero": true,
+    "full_polynomial_equalities": 18,
+    "kind": "actual-live-probe-direct",
+    "offdiagonal_probes": [
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        5
+      ]
+    ]
+  },
+  "source_sha256": "a30dacedacc857ae1cf8ce32db6b4b2a62ee2cdfc33e890bf601995bfd942a98",
+  "principal16_bindings_unchanged": true,
+  "nine_reference_function_ASTs_equal_previous_accepted_independent_reference": true,
+  "fixed_scalar_replays_run": 0,
+  "unrestricted_coefficients_run": 0,
+  "source_proposal_7981": "separate mathematical acceptance only; no evaluator execution or implementation reviewed",
+  "files_sha256": {
+    "/tmp/l1-110153-review-reference.py": "3520188b78f838b475814949104c8c64dc3c5dd3cff2ff57ba93024bdc642059",
+    "/tmp/l1-110153-review-direct.py": "ed61fe6f353385096bfeea2db50cd2dc01769ed1ea833dcf613f2b78c612f4d4",
+    "/tmp/l1-110153-review-driver.py": "55c6596d064ccb2cbf4c78ea940b1d93aa7ffea413915705e995b94bf663e2ef",
+    "/tmp/l1-110153-review-direct.out": "afeae2bbb16b667a175f70233060ec1c6735256df6bc2df920104176db3df7df",
+    "/tmp/l1-110153-review-direct.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-110153-review-direct.exit.json": "2bb02e37ec1074cf4534f5176fc31d953e2ee8b3975322a6325584d3a5055263"
+  },
+  "portable_scope": 232,
+  "full_k4_commonZ_physicalB3_modes_transport": "OPEN"
+}

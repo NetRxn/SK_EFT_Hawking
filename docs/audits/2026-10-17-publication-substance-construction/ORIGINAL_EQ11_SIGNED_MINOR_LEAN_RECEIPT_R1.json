@@ -1,0 +1,54 @@
+{
+  "success": true,
+  "timed_out": false,
+  "diagnostics": [
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.nilExp_barMpsi_rows' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 425,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.berezin_insert_rows' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 426,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.det_of_unit_row' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 427,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.det_of_ordered_unit_rows' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 428,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.berezin_grouped_insert_rows' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 429,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.berezin_ordered_complementary_minor' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 430,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.executableFermionIndex_val' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 431,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.FiniteGrassmannDiracBerezin.theta_word_repeat_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 432,
+      "column": 1
+    }
+  ]
+}

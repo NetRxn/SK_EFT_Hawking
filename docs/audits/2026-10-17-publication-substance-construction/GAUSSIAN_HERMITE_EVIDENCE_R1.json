@@ -1,0 +1,31 @@
+{
+  "author_commit": "bfb8ca2576ccdfb25ad2ebf3bebc1a2bfb7d9fc0",
+  "remote_source_ref": "codex/publication-l1-hermite-source-20261106",
+  "module_sha256": "2d4f1dee5432252a28aca49038f870ecdb98ea06122eafa1cfa121d1f27c5893",
+  "archive_sha256": "7e3c0a271ba207c355604fb371b31cf230be6289b3d6026e617a71498b663004",
+  "members": [
+    {
+      "name": "publication-l1-hermite-kernel-review-r1.md",
+      "sha256": "8d81d85292adc17548c13e6392fa08f483b49cd8c73231f6c9e8e3856e499e83",
+      "bytes": 10071
+    },
+    {
+      "name": "publication-l1-hermite-kernel-review-r1.json",
+      "sha256": "b5826840dfc350c5b10bbce96b6dbe4e8c8ae8526f66eab0f8dd1f3c5e2bfd5b",
+      "bytes": 39271
+    },
+    {
+      "name": "publication-l1-hermite-wt1-axioms-r1.json",
+      "sha256": "a54cc911940f42691443c6d69fba6441efda6e7d6dd20a8f6b8149f4dbf31b50",
+      "bytes": 7615
+    },
+    {
+      "name": "publication-l1-hermite-wt1-diagnostics-goals-r1.json",
+      "sha256": "d7077b1e7c7a88f7de14f21ded2d971b2d1272150839a6d654638361e36b8148",
+      "bytes": 9980
+    }
+  ],
+  "ROOT_intake": "Complete actual135line module and full independent math/kernel report read; all-order recurrence/product derivative cancellation, true Gaussian integrability and factorial bound vs unrestricted identity crosschecked",
+  "accepted_scope": "one-variable real polynomial coefficient/source and matching kernel milestone only",
+  "remaining": "aggregate integration, authoritative build, actual main composition, complete sigma/multivariate/complex/formal nilpotent/source transform and original physical B3 remain owed"
+}

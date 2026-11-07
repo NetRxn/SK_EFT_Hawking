@@ -1,0 +1,132 @@
+{
+  "scope": "actual source adoption, existing writer and focused verification; current independent acceptance pending",
+  "source_parent": "85a4c7275",
+  "archive_sha256": "7a48bf96ea524270770057bf440c8aba2a734b3ef90f2b1c4344b2b9f51c567d",
+  "files": [
+    {
+      "name": "l1-citation-adoption-preparation-r2.patch",
+      "bytes": 19306,
+      "sha256": "eee50f463aa2e18a69c787c7c4eabca317eba7877f0a9e8f91b9054c0ff04e3c"
+    },
+    {
+      "name": "l1-citation-adoption-preparation-r2.md",
+      "bytes": 13801,
+      "sha256": "ae860007af318e134e63ab4152daba370f1ec4289d2c371f37cafbfc90a53b7c"
+    },
+    {
+      "name": "l1-citation-adoption-preparation-r2.json",
+      "bytes": 10803,
+      "sha256": "457683cc7085365530399e8041a557417aed1afa13ec6bb1f7aa6e2aab3a43d2"
+    },
+    {
+      "name": "l1-citation-adoption-preparation-r2-sequence.txt",
+      "bytes": 9251,
+      "sha256": "669ee57075132bd201e8406183b5af36d0788156ba23d657b833b14f47fd12bf"
+    },
+    {
+      "name": "l1-citation-current-writer.py",
+      "bytes": 3955,
+      "sha256": "b0a48e9a005e7ef068a11b8eb34e2b28cb383ff5f6a536dd6c75edbdbcf2ad83"
+    },
+    {
+      "name": "l1-citation-current-writer.json",
+      "bytes": 6309,
+      "sha256": "1d381f63cfa3e32b3fee5685085ed1c264ae532e71def87f2b8848a426e79c1d"
+    },
+    {
+      "name": "l1-citation-current-measurement.txt",
+      "bytes": 4434,
+      "sha256": "8a024dd5668bb3a8cfb437c94822fdbdb325e3051a45aac803d56a53b90f56e0"
+    },
+    {
+      "name": "l1-citation-pre-ratchet-source.json",
+      "bytes": 526,
+      "sha256": "2ff2ac86a755ad075723f7e383c8f251f567dd427bcc065245eec74b1541d723"
+    },
+    {
+      "name": "l1-citation-pre-control-source.json",
+      "bytes": 526,
+      "sha256": "5d084a4703798017c536cce7780ed95c04f16221e4e3fb31f90223236b41e90b"
+    },
+    {
+      "name": "l1-citation-adopted-full.txt",
+      "bytes": 180,
+      "sha256": "2ad0147311ee031a2a2633e5cc3f911c4213822fd4be11d453cb132dbc0958d4"
+    },
+    {
+      "name": "l1-citation-adopted-full.xml",
+      "bytes": 12584,
+      "sha256": "1258bfe63ba4d268515b9520971b280b4d11fd00fc6c8a50c51bf1dbd7cd3f09"
+    },
+    {
+      "name": "l1-citation-adopted-full-verification.json",
+      "bytes": 851,
+      "sha256": "a811378e88002b93f8d12ba2f1b8b7a5264970f4af617ce45596806135af205b"
+    },
+    {
+      "name": "l1-citation-post-control-checks.txt",
+      "bytes": 279,
+      "sha256": "eff0199c5e01f3430038920773e2b3b2f1621e796fa5acc5a6a8d17c6cd95439"
+    },
+    {
+      "name": "l1-citation-post-control-residue.txt",
+      "bytes": 1258,
+      "sha256": "b3ef3911416f212c3fea10623e30b0fd3300eb4effbfd8e94394a1f099d49bd8"
+    },
+    {
+      "name": "l1-citation-post-control-presence.txt",
+      "bytes": 4434,
+      "sha256": "48d43788310471beb2f24ad7708316d258f3a1f3957de9cc9459723ec39b82ef"
+    },
+    {
+      "name": "l1-citation-source-register-precheck.txt",
+      "bytes": 149,
+      "sha256": "c053bd78a8b6fa2f010e30cca3987017d364f867bd40e759ac310c39f6b3438b"
+    },
+    {
+      "name": "l1-citation-source-register-write.txt",
+      "bytes": 53,
+      "sha256": "3af83e3d0a59c307c0e020efd36a3c3c13724f31a143d10eb9f41afe8cdc1686"
+    },
+    {
+      "name": "l1-citation-source-register-postcheck.txt",
+      "bytes": 21,
+      "sha256": "d2e165d66dc5cd3dcaf7e9ec37ac43c4732410696085709dc881b3b48b9475a4"
+    },
+    {
+      "name": "l1-citation-counts-fresh.txt",
+      "bytes": 1347,
+      "sha256": "bb69f4eb2b9390fa115452b13de8d7c71cb0a939505a58e798fc8bd7845c218f"
+    },
+    {
+      "name": "l1-citation-counts-fresh-r2.txt",
+      "bytes": 1565,
+      "sha256": "2423651cd41a974f3681e8b28251cf38e510e2747fe41e01efb202ed97d4e570"
+    },
+    {
+      "name": "l1-citation-architecture_inventory_fresh.txt",
+      "bytes": 1789,
+      "sha256": "af68077646f0e7b3f84dff06fafb6a9d3d66aa83b62319e7383a3d3f1c548697"
+    },
+    {
+      "name": "l1-citation-inventory-write.txt",
+      "bytes": 166,
+      "sha256": "f2a45cbd30bd4904e21fd32d0fd42a1f7c0a7a0d507862b4fdcef159d2516088"
+    },
+    {
+      "name": "l1-citation-architecture_inventory_fresh-r2.txt",
+      "bytes": 1564,
+      "sha256": "c844ab3aa7b2a32b3c099342cfa4adc489a4663c38c382e928eeb800c9d68ab9"
+    },
+    {
+      "name": "l1-citation-module_census_fresh.txt",
+      "bytes": 1335,
+      "sha256": "eeafad53d5b746cde777c032a0a6bcaf140c8aeeec7af1806e8cb2cc80ffc4e9"
+    }
+  ],
+  "preserved_failures": [
+    "combined two-check CLI rejected before evaluation; each check subsequently executed separately",
+    "counts_fresh first existingwriter attempt failed default uv-cache permission; established offline-environment retry passed",
+    "source register and inventory initially stale; existing derived writers used then verified"
+  ]
+}

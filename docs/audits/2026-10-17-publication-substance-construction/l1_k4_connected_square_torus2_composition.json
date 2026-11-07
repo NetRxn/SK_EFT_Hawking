@@ -1,0 +1,14 @@
+{
+  "verdict": "ACCEPT bounded final scientific documentation composition; no overclaim or missing linked evidence",
+  "interface_sha256": "aa11fb54f47cc4e6e4cb70ef9dd954226106c307b75a2ce0bcd6803e3e634ba6",
+  "queue_sha256": "37bfd05294ea619369c218e3ca10d09556963437b2a927ad09cc2d740b5e3217",
+  "portable": 232,
+  "same": 138,
+  "mixed": 94,
+  "remaining": 40,
+  "remaining_same": 26,
+  "remaining_mixed": 14,
+  "full_k4_sourceaction_commonZ_B3_modes_transport_main_publication_explicitly_open": true,
+  "missing_new_section_links": [],
+  "archive_review_path": "/tmp/l1-connected-core-review-archive.md"
+}

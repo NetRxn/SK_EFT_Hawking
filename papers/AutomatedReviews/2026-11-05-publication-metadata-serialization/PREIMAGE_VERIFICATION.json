@@ -1,0 +1,98 @@
+{
+  "source_commit": "4b6408ce608b6138d903aaa96f787dda139394b6",
+  "serializer_sha256": "bcd9cc61414410c8bd4dfc44c94010ae5377f9716654993ca1ae365eb91f35e9",
+  "method": "strict duplicate/nonfinite JSON parse; exact existing dump_bundle_json AST body; no candidate imports/writes/tests",
+  "files": [
+    {
+      "path": "papers/D3/bundle_metadata.json",
+      "source_sha256": "b0061743d9cdb4c89fd872f8f36e74699a13a5da30517102cb2ccf0b9fd7708d",
+      "canonical_sha256": "cdc8cec5040596b6eb950e07c8646c155f9137973950ecec4216422bdaaf075f",
+      "proposal": "/tmp/l1-serialization-preimage-proposals/D3.bundle_metadata.json",
+      "source_bytes": 25983,
+      "canonical_bytes": 25273,
+      "duplicate_keys": false,
+      "nonfinite_values": false,
+      "semantic_tree_equal": true,
+      "all_claims_status_dates_human_fields_unchanged": true,
+      "canonical_idempotent": true,
+      "source_has_final_newline": true,
+      "canonical_has_final_newline": true,
+      "changed_lines": 188,
+      "history": [
+        {
+          "commit": "6a6cd7ee6",
+          "current_bytes_equal_parent_preimage": true,
+          "proposal_bytes_equal_commit_postimage": true,
+          "current_semantics_equal_old_postimage": true,
+          "old_pre_post_semantics_equal": true,
+          "parent_pre_sha256": "b0061743d9cdb4c89fd872f8f36e74699a13a5da30517102cb2ccf0b9fd7708d",
+          "post_sha256": "cdc8cec5040596b6eb950e07c8646c155f9137973950ecec4216422bdaaf075f",
+          "current_and_post_top_level_fields_differ": []
+        },
+        {
+          "commit": "b8f352bd8",
+          "current_bytes_equal_parent_preimage": true,
+          "proposal_bytes_equal_commit_postimage": true,
+          "current_semantics_equal_old_postimage": true,
+          "old_pre_post_semantics_equal": true,
+          "parent_pre_sha256": "b0061743d9cdb4c89fd872f8f36e74699a13a5da30517102cb2ccf0b9fd7708d",
+          "post_sha256": "cdc8cec5040596b6eb950e07c8646c155f9137973950ecec4216422bdaaf075f",
+          "current_and_post_top_level_fields_differ": []
+        }
+      ],
+      "typed_tree_and_key_order_equal": true,
+      "finite_recursive_numeric_check": true,
+      "diff": "/tmp/l1-serialization-preimage-proposals/D3.diff",
+      "diff_insertions": 94,
+      "diff_deletions": 94
+    },
+    {
+      "path": "papers/L2/bundle_metadata.json",
+      "source_sha256": "f5231e903694eef7b637da53e759e728bfcc57da6ab158094b836c648c4bb341",
+      "canonical_sha256": "eb926f0fb30a8df77f38993ddb897441fe6f1aa95742c07d04811c7e7a363b0a",
+      "proposal": "/tmp/l1-serialization-preimage-proposals/L2.bundle_metadata.json",
+      "source_bytes": 9692,
+      "canonical_bytes": 9693,
+      "duplicate_keys": false,
+      "nonfinite_values": false,
+      "semantic_tree_equal": true,
+      "all_claims_status_dates_human_fields_unchanged": true,
+      "canonical_idempotent": true,
+      "source_has_final_newline": false,
+      "canonical_has_final_newline": true,
+      "changed_lines": 2,
+      "history": [
+        {
+          "commit": "6a6cd7ee6",
+          "current_bytes_equal_parent_preimage": true,
+          "proposal_bytes_equal_commit_postimage": true,
+          "current_semantics_equal_old_postimage": true,
+          "old_pre_post_semantics_equal": true,
+          "parent_pre_sha256": "f5231e903694eef7b637da53e759e728bfcc57da6ab158094b836c648c4bb341",
+          "post_sha256": "eb926f0fb30a8df77f38993ddb897441fe6f1aa95742c07d04811c7e7a363b0a",
+          "current_and_post_top_level_fields_differ": []
+        },
+        {
+          "commit": "b8f352bd8",
+          "current_bytes_equal_parent_preimage": true,
+          "proposal_bytes_equal_commit_postimage": true,
+          "current_semantics_equal_old_postimage": true,
+          "old_pre_post_semantics_equal": true,
+          "parent_pre_sha256": "f5231e903694eef7b637da53e759e728bfcc57da6ab158094b836c648c4bb341",
+          "post_sha256": "eb926f0fb30a8df77f38993ddb897441fe6f1aa95742c07d04811c7e7a363b0a",
+          "current_and_post_top_level_fields_differ": []
+        }
+      ],
+      "typed_tree_and_key_order_equal": true,
+      "finite_recursive_numeric_check": true,
+      "diff": "/tmp/l1-serialization-preimage-proposals/L2.diff",
+      "diff_insertions": 1,
+      "diff_deletions": 1
+    }
+  ],
+  "predecessor_is_ancestor_of_current": {
+    "6a6cd7ee6": false,
+    "b8f352bd8": false
+  },
+  "closure_route_limit": "Bounded supersession-ledger grep found no entry naming either normalizer commit, serializer or TODO-D25; original TODO-D25 records existing writer fixed, not a minted current ADR-012 closure."
+}

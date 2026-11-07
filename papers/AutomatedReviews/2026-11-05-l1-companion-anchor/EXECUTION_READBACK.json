@@ -1,0 +1,42 @@
+{
+  "tex_sha256": "d51dcf6342ef6952006f3d82d4d2154db9b26aeb29974e6e2c83a847e6ebf15c",
+  "pdf_sha256": "314bec227785fa1890953fcffc199d925ea93504387805c6ae34ab85b5519b8e",
+  "original_red": "ORIGINAL_RED.json",
+  "integrated_verify": "INTEGRATED_VERIFY.json",
+  "focused_test": {
+    "command": "primary-installed .venv/bin/python -m pytest tests/test_emergent_gravity.py -q",
+    "actual_tool_chunk": "217a92",
+    "exit_code": 0,
+    "result": "50 passed in 0.07s",
+    "source": "e8931b361; before manuscript-only repair",
+    "scope": "Existing scientific helpers only, not whole-repository or physical normalization acceptance"
+  },
+  "baseline_compile": {
+    "actual_session": 38062,
+    "terminal_chunk": "861585",
+    "exit_code": 0,
+    "pages": 5,
+    "overfull": 0,
+    "tex_errors": 0,
+    "unresolved_refs": 0,
+    "dropped_class_opts": 0
+  },
+  "integrated_compile": {
+    "command": "python3 scripts/compile_bundle_pdf.py paper23_linearized_efe --force --keep-artifacts",
+    "actual_session": 72897,
+    "terminal_chunk": "770f64",
+    "exit_code": 0,
+    "pages": 5,
+    "overfull": 0,
+    "tex_errors": 0,
+    "unresolved_refs": 0,
+    "dropped_class_opts": 0
+  },
+  "root_visual_review": {
+    "all_five_individual_pages_viewed": true,
+    "actual_tool": "view_image forwarded through functions.exec",
+    "new_anchor_page": 4,
+    "result": "Anchor display and surrounding text legible, no clipping/overlap, unchanged five-page layout. Existing figure scale is outside this focused repair; no full figure review asserted."
+  },
+  "scope": "ROOT execution receipts from actual tool outputs, not independent raw command capture or full paper/native acceptance"
+}

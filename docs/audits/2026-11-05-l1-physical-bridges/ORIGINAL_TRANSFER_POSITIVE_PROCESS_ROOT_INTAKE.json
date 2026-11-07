@@ -1,0 +1,118 @@
+{
+  "candidate": "d95370a95128599ef9dbecb4bd3105b55f0019d4",
+  "archive_sha256": "3e276790c367acc17b65c7d49c4439c4771100886752f5ad48ed36581643c913",
+  "members": [
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md",
+    "accepted/N16_SYMBOLIC_NORMALIZATION.md",
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md",
+    "accepted/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md",
+    "accepted/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md",
+    "accepted/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_ACCEPTANCE.md",
+    "accepted/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md",
+    "candidate/l1-original-positive-process-result-r1.md",
+    "charter/L1_Physical_Bridges_Roadmap.md",
+    "parent/original_microscopic_metric_coherent_evidence.zip",
+    "parent/original_microscopic_metric_coherent_manifest.json",
+    "prework/l1-original-process-dilation-brief-r1.md",
+    "prework/l1-original-process-math-prospective-r1.md",
+    "prework/l1-original-process-source-prospective-r1.md",
+    "research/l1-original-process-primary-intake-r1.md",
+    "review/l1-original-process-math-result-r1.md",
+    "review/l1-original-process-source-result-r1.md",
+    "source/original-process-custody-r1.json"
+  ],
+  "canonical_copies": {
+    "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION.md": "d4e59e8d68ab4b6babc4f3daf374372bb1dddfbd4840e763b16a8eaafef248fd",
+    "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_BRIEF.md": "7ceacf74a90f66a61df21f206eff0914d92599772fb57474a33245de9ae96655",
+    "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_MATH_PROSPECTIVE_R1.md": "adff0208cffd0cd3e96ee228c5b02a5f10c36aadb15e1f7a3256c69a2af6ff5f",
+    "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_SOURCE_PROSPECTIVE_R1.md": "793fd30dbbffd61f19d9c12ea6bf1918c81f9f32dd63f8fe1c8a8f78ba17370f",
+    "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_MATH_REVIEW_R1.md": "eef2c9dd43355789efcf1247767c64555777ad86ecf8cd1f0e66207d919ec0fa",
+    "ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION_SOURCE_REVIEW_R1.md": "6967a49e19aa95198c474efcadbfd5443238d6ad76e25fcc4c979eafa285ca53",
+    "ORIGINAL_PROCESS_PRIMARY_RESEARCH.md": "5fa63bdccd9ecf9df5d55a03e9b43bdb3660b8d0facef2e6476334615556fed1"
+  },
+  "accepted_current_inputs": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": [
+      "docs/audits/2026-10-17-publication-substance-construction/ADW_EXACT_AUXILIARY_IDENTITY.md"
+    ],
+    "accepted/N16_SYMBOLIC_NORMALIZATION.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/N16_SYMBOLIC_NORMALIZATION.md"
+    ],
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md"
+    ],
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md"
+    ],
+    "accepted/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_WEYL_JORDAN_CONSTRUCTION.md"
+    ],
+    "accepted/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md"
+    ],
+    "accepted/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_ACCEPTANCE.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE_ACCEPTANCE.md"
+    ],
+    "accepted/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md"
+    ],
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_OPERATOR.md"
+    ]
+  },
+  "held_sources": [
+    {
+      "held_corpus_path": "Phase-6a/primary-sources/LeiferSpekkensConditionalStates2012-arXiv1107.5849v2.pdf",
+      "version": "1107.5849v2",
+      "url": "https://arxiv.org/pdf/1107.5849v2",
+      "bytes": 700527,
+      "sha256": "0286939fc8eb37190f3dcca6e2dec9f2ddea1b3bd365bb3a932162298ea7e9e7"
+    }
+  ],
+  "parent_members_verified": 23,
+  "web_source_custody": [
+    {
+      "title": "Completely Positive Linear Maps on Complex Matrices",
+      "author": "Man-Duen Choi",
+      "year": 1975,
+      "doi": "10.1016/0024-3795(75)90075-0",
+      "url": "https://core.ac.uk/download/pdf/82789302.pdf",
+      "passages": "Theorems1-2 and their proofs, Remark4",
+      "custody": "Full primary body read using web PDF reader; local HTTP fetch403, no held-PDF byte/hash claim"
+    }
+  ],
+  "ROOT_Choi_primary_access": "Direct URL403; indexed primaryPDF body then readable. Personally read Theorems1-2/proofs/Remark4; no heldPDF claimed.",
+  "ROOT_decision": "ACCEPT exact manual original-coefficient conditional reconstruction and finite classical all-history-link obstruction; physical kinetic/quantum-link/metric/causal identification remains OPEN",
+  "result_sha256": "d4e59e8d68ab4b6babc4f3daf374372bb1dddfbd4840e763b16a8eaafef248fd",
+  "result_bytes": 25465,
+  "normal_merge_commit": "a56bd045d2bf9e338df772ee1f23af49d6164cb4",
+  "full_reads": [
+    "complete actual result",
+    "both complete independent actual ACCEPT reviews",
+    "acceptance and exact approved brief",
+    "actual held Leifer conditional/channel/instrument/multitime passages",
+    "Choi indexed primary body Theorems1-2/proofs/Remark4 after direct403"
+  ],
+  "manual_crosschecks": [
+    "original periodic multiplier trace,128-Majorana coefficient pairing and odd/odd graded strings",
+    "actual full-state and ordinary-PPT norm tail at Lambda=1+M, separate from marginal positivity",
+    "rho0-transpose Choi filter, forced sandwich, canonical-root Kraus/isometry and all weighted coefficients",
+    "normalization and root/inverse-root derivatives, nine C2 placements, original Bopp/frame contacts",
+    "original symmetric coframe cancellation and full top parity D=2^64 for every link",
+    "64 independent relative SU2 factors and exact Beta moments; complete saturated64-coframe bound",
+    "B=17[2^41(1+g1+g2)]^32,N=66B,Jensen and strict negative normalized moment with Z<=B",
+    "positive transpose-invariant effect and negative weighted Choi component; only classical all-history extension refuted"
+  ],
+  "not_closed": [
+    "physical CAR/adjoint/constraint and metric normalization",
+    "positive quantum-link/time process and original one-step causal transfer",
+    "same-time24-spatial-link marginal positivity",
+    "metric mean/spatial order/signature/calibration",
+    "B3 susceptibility/window/units,N4,tensor/matter/light/transport,controlled limits",
+    "native/kernel/publication/main/human acceptance"
+  ],
+  "next_bounded_request": "Original-source kinetic/constraint/adjoint and quantum-link/time observable correspondence proposal, including field/source normalization covariance; actual first physical operator/transfer relation, dual prospective reviews, no optional-cone repeat or unapproved model change. Sent; acceptance pending.",
+  "ownership": "ROOT retains complete ordinary L1 publication/Lean/Python/consumer/review/gate/closure/integration chain; Executor only bounded deeper construction",
+  "scientific_execution": "None; manual proof/source intake plus artifact custody bookkeeping only"
+}

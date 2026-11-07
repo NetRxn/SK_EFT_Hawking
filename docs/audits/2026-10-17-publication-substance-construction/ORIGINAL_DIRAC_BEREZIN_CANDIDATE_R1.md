@@ -1,0 +1,9 @@
+# Original Dirac/Berezin candidate — independent review active
+
+Source-only commit e87baaeb9bcd208e396c19acaa9309c3756a7a60 is preserved on remote branch codex/publication-l1-dirac-berezin-source-20261107. Only lean/SKEFTHawking/ADW/FiniteGrassmannDiracBerezin.lean changes (542lines, SHA256578821c0a1cd9125a95d41aa928b70fbff2b90d301848cd37a44352dab8416f6). wt1 remains ROOT-owned ACTIVE and clean; no reset or absorption is authorized by this checkpoint.
+
+ROOT personally read the complete actual module and complete author report. It defines the actual original global four-quarter-block Dirac matrix, proves its coframe contraction, defines an independent source-oriented exterior top coefficient, and derives the arbitrary complex/singular determinant identity by alternating multilinearity and source normalization. The continuous linear functional exchanges with the actual C3 integrable Gaussian field; full original product weights and printed/closed variants are retained. No inverse, positivity or magnitude replacement is used.
+
+Author evidence reports clean diagnostics,54 standard-axiom/axiom-free exports and39 empty closing states. These are author receipts, not different review acceptance. Fresh independent reviewer original_dirac_berezin_review_r1 is actively auditing the entire source and actual matching wt1 kernel evidence under a new fresh continuity packet. ROOT's authoritative build/absorption and different complete acceptance remain required.
+
+[Exact source and complete raw author evidence](ORIGINAL_DIRAC_BEREZIN_CANDIDATE_R1_EVIDENCE.zip) are remote-restorable. Outer compact-link Haar continuity/boundedness/Fubini, full Eq10, source response/insertions, full Z/nonzero normalization, physical B3/state/modes/matter/transport/calibration and all publication/human gates remain open. This finite fixed-link candidate is no physical or publication closure.

@@ -1,0 +1,93 @@
+{
+  "decision": "ACCEPT_CHECKPOINT_DOCUMENTATION",
+  "packet": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/publication-complex-checkpoint-review-r3.json",
+  "checkout": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103",
+  "head": "5a552a82928eb053effd1a39b15aa2bcd1d5da65",
+  "owned_files": {
+    "docs/audits/2026-10-17-publication-substance-construction/AUXILIARY_COMPENSATION_GRASSMANN_DESIGN_R1.json": {
+      "kind": "file",
+      "sha256": "08e7b26eedd3e6b7ccf96741518fae8991157a3ea3939c3b31d1eb630a6030c9"
+    },
+    "docs/audits/2026-10-17-publication-substance-construction/AUXILIARY_COMPENSATION_GRASSMANN_DESIGN_R1.md": {
+      "kind": "file",
+      "sha256": "7bc83d3141f2533f6c9112bfa53b321b7307a62908433f6fd4952b4a1824c9e0"
+    },
+    "docs/audits/2026-10-17-publication-substance-construction/AUXILIARY_COMPENSATION_GRASSMANN_DESIGN_REVIEW_R1.json": {
+      "kind": "file",
+      "sha256": "6a7750dd2a7117122be533570990e8313436b7b28a142f4aeb52267ae117f875"
+    },
+    "docs/audits/2026-10-17-publication-substance-construction/AUXILIARY_COMPENSATION_GRASSMANN_DESIGN_REVIEW_R1.md": {
+      "kind": "file",
+      "sha256": "1784b4c7754f32dd17780620d88771dab746748a53a510fe15b1661aeb0e2882"
+    },
+    "docs/audits/2026-10-17-publication-substance-construction/CURRENT_GATES_20261106_R4.json": {
+      "kind": "file",
+      "sha256": "fbf6af5d152fe0cd59067ff222ada9c1b5eea0698747ba14345093e6eaaeb368"
+    },
+    "docs/audits/2026-10-17-publication-substance-construction/CURRENT_GATES_20261106_R4_EVIDENCE.json": {
+      "kind": "file",
+      "sha256": "bb1234c122efc4cd8a81fbfa07cdb259f4ada516b1e1fc183ec5d6fcde3af06d"
+    },
+    "docs/audits/2026-10-17-publication-substance-construction/REPAIR_DISPOSITION_MAP.md": {
+      "kind": "file",
+      "sha256": "1af5ec0d95b0e7d17cb837f5490af805d15dd47e9d2afd406bc94fc0cac40e5c"
+    },
+    "docs/roadmaps/Phase6a_Roadmap.md": {
+      "kind": "file",
+      "sha256": "94ae797323382efef562f77869bb91ac87fbfc6a6ce44706aea2ab63bfd47f72"
+    }
+  },
+  "blocking_corrections": [],
+  "r4_measurement": {
+    "source_commit": "0e2894344b35e1fe45bc6d9602b4e388f7c56a65",
+    "preserved_at_commit": "b21c206a847ea4d914c27cc7e78866de3fddce1f",
+    "built_at": "2026-11-06T18:44:32.990966+00:00",
+    "gates": 231,
+    "counts": {
+      "passed": 160,
+      "blocked": 25,
+      "open": 28,
+      "needs-recheck": 18
+    },
+    "all_full_payloads_match_archived_graph": true,
+    "ids_and_states_unchanged_from_r3": true,
+    "newly_green_bundles": 0,
+    "graph_sha256": "1a4d93a3c554c30421d6aee849501606ad707013e68283092dab8d40e3dd8cc7",
+    "g4_noformula_open": 19,
+    "L1_D12_static_coverage_not_execution": true
+  },
+  "native_receipt": {
+    "rc": 0,
+    "jobs": 10838,
+    "finished": "2026-11-06T18:31:09.997358+00:00",
+    "not_full_profile_acceptance": true
+  },
+  "freshness": {
+    "passed": 4,
+    "checks": 4,
+    "warnings": 1,
+    "canonical_cluster_regeneration_retained": true
+  },
+  "full_merge_profile": {
+    "candidate": "b21c206a847ea4d914c27cc7e78866de3fddce1f",
+    "invocation_started": "2026-11-06T18:49:50.523498+00:00",
+    "terminal_result_exists_at_review": false,
+    "full_project_pass_claimed": false
+  },
+  "one_api_closure_only": true,
+  "design_copies_all4byte_exact": true,
+  "design_acceptance": "admitted discovery/implementation only; actualEq7/physicalB3unproved",
+  "runtime_scope": "actual21toolprobe/ROOTmatchingMCPoutline receipts; no reviewer runtimecall/reset/backendrepair",
+  "research_merge": {
+    "head": "5a552a82928eb053effd1a39b15aa2bcd1d5da65",
+    "peer": "6a62061319737190f0f9889d187e1326486c1972",
+    "normal_merge_parent": true,
+    "research_only": true
+  },
+  "priority_and_original_physics_human_scope_conserved": true,
+  "initial_packet_check": {
+    "fresh": true,
+    "changed": []
+  },
+  "report_sha256": "a5d2ba4055dd9135d9f470a8e0e1c6ec9ae5e6849055c5d453e40fb64a8537a5"
+}

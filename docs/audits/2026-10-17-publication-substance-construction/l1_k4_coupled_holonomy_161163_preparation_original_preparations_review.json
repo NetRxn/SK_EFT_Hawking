@@ -1,0 +1,352 @@
+{
+  "verdict": "ACCEPT_ORIGINAL_PREPARATION_AND_COMPLETE_LOCAL_FACTOR_EVIDENCE",
+  "required_corrections": [],
+  "phaseA": "ACCEPT_FROZEN_UNEXECUTED_DEGREE_CONTROL_SOURCE",
+  "input_sha256": {
+    "/tmp/l1-coupled-evaluator-r2-degree-controls.py": "cfcca6804bdbdc2d7d05aa3b9ca78fdd1719e43d0f3d44ddea234c20d81bcf09",
+    "/tmp/l1-coupled-evaluator-r2-degree-run.py": "84a8a1b4ad5e831bb7a753e5c23f7f204444d0f826ee7faff28124d3dd907549",
+    "/tmp/l1-coupled-evaluator-r2-source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+    "/tmp/l1-coupled-evaluator-r2-controls.py": "bbd74607ce156432d6b9f6ee5a80f6db8ef7bfd580535201789e55dadd64c31f"
+  },
+  "original18_audit": {
+    "accepted_original_attempts": 18,
+    "all_sources_snapshots_streams_exits_exact": true,
+    "full_unrestricted_word_branch_pairs": 30,
+    "unrestricted_executions_including_seam": 32,
+    "fixed_executions": 2,
+    "metadata_degree_not_actual_monomial_degree": true,
+    "observations": [
+      {
+        "name": "local",
+        "seconds": 6.582623916910961,
+        "rows": null,
+        "terms": null
+      },
+      {
+        "name": "fixed0",
+        "seconds": 7.523601833032444,
+        "rows": 63959,
+        "terms": 65126
+      },
+      {
+        "name": "unrestricted0",
+        "seconds": 26.85902974999044,
+        "rows": 66253,
+        "terms": 99631
+      },
+      {
+        "name": "unrestricted1",
+        "seconds": 26.80928458296694,
+        "rows": 66253,
+        "terms": 99631
+      },
+      {
+        "name": "unrestricted2",
+        "seconds": 26.87029708304908,
+        "rows": 66237,
+        "terms": 99615
+      },
+      {
+        "name": "unrestricted3",
+        "seconds": 26.526726542040706,
+        "rows": 66197,
+        "terms": 96511
+      },
+      {
+        "name": "unrestricted4",
+        "seconds": 27.517861749976873,
+        "rows": 66197,
+        "terms": 97951
+      },
+      {
+        "name": "unrestricted5",
+        "seconds": 26.460950582986698,
+        "rows": 66237,
+        "terms": 99615
+      },
+      {
+        "name": "unrestricted6",
+        "seconds": 26.465525499894284,
+        "rows": 66197,
+        "terms": 97951
+      },
+      {
+        "name": "unrestricted7",
+        "seconds": 26.91489112493582,
+        "rows": 66237,
+        "terms": 99615
+      },
+      {
+        "name": "unrestricted8",
+        "seconds": 26.594625167082995,
+        "rows": 66253,
+        "terms": 99631
+      },
+      {
+        "name": "unrestricted9",
+        "seconds": 26.5264438749291,
+        "rows": 66237,
+        "terms": 99615
+      },
+      {
+        "name": "unrestricted10",
+        "seconds": 26.982093082973734,
+        "rows": 66197,
+        "terms": 96511
+      },
+      {
+        "name": "unrestricted11",
+        "seconds": 26.698968708049506,
+        "rows": 66197,
+        "terms": 97951
+      },
+      {
+        "name": "unrestricted12",
+        "seconds": 26.56835912493989,
+        "rows": 66237,
+        "terms": 99615
+      },
+      {
+        "name": "unrestricted13",
+        "seconds": 26.980702791013755,
+        "rows": 66197,
+        "terms": 97951
+      },
+      {
+        "name": "unrestricted14",
+        "seconds": 27.02397133305203,
+        "rows": 66237,
+        "terms": 99615
+      },
+      {
+        "name": "seam",
+        "seconds": 26.991568292025477,
+        "rows": null,
+        "terms": null
+      }
+    ],
+    "bindings": {
+      "l1-coupled-evaluator-r2-sourcecontract.json": "cd3c67b4e64cb6bb9af1b5d33f6cfd701c6a6de1d0d892fdc3a8399e8438bd05",
+      "l1-coupled-evaluator-r2-report.md": "fa1912f83b2224368ae209a3c67b218c67e92667c0fe558a8ed3b42057d58f10",
+      "l1-coupled-evaluator-r2-run.py": "b85affe2781a1b395159d4c728ee72d3679d7d1c977a1e0332c1bb0dffcdfe70",
+      "l1-coupled-evaluator-r2-degree-controls.py": "cfcca6804bdbdc2d7d05aa3b9ca78fdd1719e43d0f3d44ddea234c20d81bcf09",
+      "l1-coupled-evaluator-r2-degree-run.py": "84a8a1b4ad5e831bb7a753e5c23f7f204444d0f826ee7faff28124d3dd907549",
+      "l1-coupled-holonomy-independent-r1-math.py": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+      "l1-coupled-evaluator-r2-local.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-local.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-local.stdout": "4cb0572a004daf920fca419b95f21095265f0d3fb529ced688c75bba3000ef5d",
+      "l1-coupled-evaluator-r2-local.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-local.exit.json": "31ae8d028eedaf592465c51d3aa8b79b9526b9ebae3da267cc09c57c28e950bf",
+      "l1-coupled-evaluator-r2-fixed0.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-fixed0.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-fixed0.stdout": "4b7df836f8e6961681a56c36e8c610f20a6e3a4dc0a13feee4560f5245a65d3f",
+      "l1-coupled-evaluator-r2-fixed0.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-fixed0.exit.json": "369648f5f2b023187a8be740265acf0b4f11bd04fde06e38f806b32b3d2067f4",
+      "l1-coupled-evaluator-r2-unrestricted0.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted0.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted0.stdout": "2c9d7b3ca7fc1060c6a7c88e67c3438893bdc14d3f6cd231e18ee988cee723cc",
+      "l1-coupled-evaluator-r2-unrestricted0.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted0.exit.json": "6baec98e0178e94d7219162c306127f99a7e103ecdd7fdeda9a1ecd6dc0561b2",
+      "l1-coupled-evaluator-r2-unrestricted1.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted1.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted1.stdout": "d489acc6c6efff6b81557eb1eb20ff914b14dc4e4b4d199f16f27839c1a2877e",
+      "l1-coupled-evaluator-r2-unrestricted1.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted1.exit.json": "54b7fb9df77e1b869b642c890b3d28ae6f71874c883f5a35d186c1909192ed63",
+      "l1-coupled-evaluator-r2-unrestricted2.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted2.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted2.stdout": "696f33c41495fc3c283c26e59750e13de03b4e033e5b59c1146d6cda375e9bc3",
+      "l1-coupled-evaluator-r2-unrestricted2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted2.exit.json": "b3010b05db2a33fe5061057453d04f6553cf498a90abe6617bb65f29b7cebf0d",
+      "l1-coupled-evaluator-r2-unrestricted3.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted3.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted3.stdout": "6f43dccb9a8d0ef64ecbde9376b453c4f8236d85da8fd6133b529daf808cc5da",
+      "l1-coupled-evaluator-r2-unrestricted3.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted3.exit.json": "3276642d79b76cf4d20df5b2552e6a73305bc9dc5ee15ccabea1e1406df0167a",
+      "l1-coupled-evaluator-r2-unrestricted4.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted4.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted4.stdout": "2afa68cc31cf1a6d5e9fbcf2aac3ecf563883b536624eeccfa4f6d08970e4592",
+      "l1-coupled-evaluator-r2-unrestricted4.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted4.exit.json": "cd9b08f803686265a3eec4c7b9d8803bce3ea715031d386250d8c0ef4c71a1ec",
+      "l1-coupled-evaluator-r2-unrestricted5.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted5.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted5.stdout": "696f33c41495fc3c283c26e59750e13de03b4e033e5b59c1146d6cda375e9bc3",
+      "l1-coupled-evaluator-r2-unrestricted5.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted5.exit.json": "bcbbd3bc0851c1264ebe720c260737d83cd376be96946e4b4c21bf36c71978b0",
+      "l1-coupled-evaluator-r2-unrestricted6.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted6.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted6.stdout": "2afa68cc31cf1a6d5e9fbcf2aac3ecf563883b536624eeccfa4f6d08970e4592",
+      "l1-coupled-evaluator-r2-unrestricted6.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted6.exit.json": "ffc0d3331909328198abf23f59f8ea09a23a7f8a7fd640470959f09682b8398c",
+      "l1-coupled-evaluator-r2-unrestricted7.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted7.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted7.stdout": "696f33c41495fc3c283c26e59750e13de03b4e033e5b59c1146d6cda375e9bc3",
+      "l1-coupled-evaluator-r2-unrestricted7.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted7.exit.json": "a0a6b9847c34a70e21aadc89ad00726e0609c5f0c6773213d8060ba6173b03e0",
+      "l1-coupled-evaluator-r2-unrestricted8.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted8.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted8.stdout": "d489acc6c6efff6b81557eb1eb20ff914b14dc4e4b4d199f16f27839c1a2877e",
+      "l1-coupled-evaluator-r2-unrestricted8.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted8.exit.json": "4a72c46c564671af2d5d364358d55234c517f6a6eb0e6ed7db373bd7b91ef090",
+      "l1-coupled-evaluator-r2-unrestricted9.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted9.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted9.stdout": "696f33c41495fc3c283c26e59750e13de03b4e033e5b59c1146d6cda375e9bc3",
+      "l1-coupled-evaluator-r2-unrestricted9.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted9.exit.json": "15908beb6620d8a0893be6562c9efd2ef151815421b5e71cc52ccb164afbf62a",
+      "l1-coupled-evaluator-r2-unrestricted10.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted10.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted10.stdout": "6f43dccb9a8d0ef64ecbde9376b453c4f8236d85da8fd6133b529daf808cc5da",
+      "l1-coupled-evaluator-r2-unrestricted10.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted10.exit.json": "beabd4718d1758d1765e1482e124b969cbf9f65d45da1980e3287b30821d5591",
+      "l1-coupled-evaluator-r2-unrestricted11.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted11.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted11.stdout": "2afa68cc31cf1a6d5e9fbcf2aac3ecf563883b536624eeccfa4f6d08970e4592",
+      "l1-coupled-evaluator-r2-unrestricted11.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted11.exit.json": "e9aa94ee8fb3d413ad57dfeec2a55c2fffeb46d554e0258819b6fabe321e41d7",
+      "l1-coupled-evaluator-r2-unrestricted12.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted12.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted12.stdout": "696f33c41495fc3c283c26e59750e13de03b4e033e5b59c1146d6cda375e9bc3",
+      "l1-coupled-evaluator-r2-unrestricted12.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted12.exit.json": "9f7b67ddc4b5648891bff9abdcd909f1151bc9652ba79f7feb74a2503d678906",
+      "l1-coupled-evaluator-r2-unrestricted13.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted13.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted13.stdout": "2afa68cc31cf1a6d5e9fbcf2aac3ecf563883b536624eeccfa4f6d08970e4592",
+      "l1-coupled-evaluator-r2-unrestricted13.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted13.exit.json": "de63b081cd9a0abee5f4ba22ae472bfeee0a7ecc1f6fc9678fbffd145daee325",
+      "l1-coupled-evaluator-r2-unrestricted14.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-unrestricted14.controls.py": "ed66b3f27f2429984ed4750651b629dc211ca40ee94853afe5bc8968be8ea5ca",
+      "l1-coupled-evaluator-r2-unrestricted14.stdout": "696f33c41495fc3c283c26e59750e13de03b4e033e5b59c1146d6cda375e9bc3",
+      "l1-coupled-evaluator-r2-unrestricted14.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-unrestricted14.exit.json": "d45c003aa4034c183f10a77c422a57531370b6f620a72b1f89b346d42ca72969",
+      "l1-coupled-evaluator-r2-seam.source.py": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7",
+      "l1-coupled-evaluator-r2-seam.controls.py": "bbd74607ce156432d6b9f6ee5a80f6db8ef7bfd580535201789e55dadd64c31f",
+      "l1-coupled-evaluator-r2-seam.stdout": "b3cc554ce34a8900029e40d41cd6887d3d8b1464fa516be4400b44ee93921525",
+      "l1-coupled-evaluator-r2-seam.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-coupled-evaluator-r2-seam.exit.json": "afa6e9356eb97d642ab598d0a58112695e5ce243fa72de64fe41e0b4c3287479"
+    },
+    "consumed_zip_sha256": "b040bf0c8d909e3843ee516f6982716ec9f9617b4b53f9912f9c50266894d845"
+  },
+  "independent_scalar_results": {
+    "independent_math_sha256": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+    "no_action_preparation_or_contraction": true,
+    "results": [
+      {
+        "actual_full_factor_dictionaries_equal": true,
+        "dictionary_sha256": "6dd5d74a66db3df0bc5a6b482fecad292fcfcbe0d093977a29a28150d241f9df",
+        "distinct_scalar_axes": 17,
+        "factor_count": 10,
+        "host_completed_multiplicity2": true,
+        "probe": [
+          "occurrence",
+          7,
+          7,
+          1
+        ],
+        "row_counts": [
+          300,
+          21,
+          300,
+          4200,
+          57168,
+          92,
+          92,
+          92,
+          92,
+          1520
+        ],
+        "rows": 63877,
+        "word": 161
+      },
+      {
+        "actual_full_factor_dictionaries_equal": true,
+        "dictionary_sha256": "a09b16801dc360fb2744a9647f7b33f572cc1f5d9b27ee891264b6278303eefc",
+        "distinct_scalar_axes": 17,
+        "factor_count": 10,
+        "host_completed_multiplicity2": true,
+        "probe": [
+          "occurrence",
+          6,
+          6,
+          1
+        ],
+        "row_counts": [
+          300,
+          21,
+          300,
+          4200,
+          57168,
+          92,
+          92,
+          92,
+          92,
+          1520
+        ],
+        "rows": 63877,
+        "word": 163
+      }
+    ],
+    "source_sha256": "5736258f9fe63fe246fb98df8827ac16d4fe1a933439723b92ebbcceb1bba6e7"
+  },
+  "independent_scalar_receipt": {
+    "argv": [
+      "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+      "-B",
+      "/tmp/l1-coupled-preparation-review-r1-scalar.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "seconds": 0.7709152500610799,
+    "stdout_sha256": "b33ad3b931beba0cadd51ea2918ab577f6798dde39acb23e0f6f50e6592876bd",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checker_sha256": "732e8a9bcb11096f0e66675004f06c3be5261943ed13fcf09b27587c9d84b031"
+  },
+  "final_receipts": [
+    {
+      "name": "continuity",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/.publication-l1-checkpoint-20261103/scripts/codex_continuity.py",
+        "check",
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.codex/continuity/l1-coupled-preparation-review-r1.json"
+      ],
+      "exit": 0,
+      "seconds": 0.19019587500952184,
+      "stdout": "{\n  \"fresh\": true,\n  \"changed\": [],\n  \"task\": \"l1-coupled-preparation-review\",\n  \"meaning\": \"Input snapshot matches; no execution or completion authority.\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "head",
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit": 0,
+      "seconds": 0.011731666047126055,
+      "stdout": "531f89f59136c7a23b24ad036e11f77fc2593c62\n",
+      "stderr": ""
+    },
+    {
+      "name": "status",
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1"
+      ],
+      "exit": 0,
+      "seconds": 0.029735457967035472,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "new_actual_degree_batch": "NOT_REVIEWED_IN_THIS_PACKAGE",
+  "no_fixed_or_full_contraction": true,
+  "no_nonidentity_covariance_acceptance": true,
+  "coverage": "236/272 unchanged",
+  "open": [
+    "New complete actual-monomial support/degree batch and RED controls",
+    "Independent full nonidentity forest/source/action/spinor covariance",
+    "Fixed coefficient controls, runtime admission, complete coefficients, reconstruction, portable delivery",
+    "Full ensemble/common partition/physical B3/window/modes/matter/transport/main/publication"
+  ]
+}

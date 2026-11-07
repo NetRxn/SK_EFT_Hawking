@@ -1,0 +1,8 @@
+{
+  "baseline": "f86e4b37f",
+  "ok": true,
+  "pages": 66,
+  "detail": "D3: OK  pages=66 overfull=12 tex_errors=0 unresolved_refs_in_pdf=0 dropped_class_opts=0\n    artifacts kept: /var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/skeft-D3-mfo_9hrj",
+  "isolated_source": "/var/folders/qn/14hsg1xs2cdg_017yb6f9wq40000gn/T/l1-d3-baseline-yi3oc10c/papers/D3",
+  "method": "Existing compile_one on exact git-archived baseline D3; unchanged shared docs input closure supplied read-only after two failed missing-figuredeferred.tex probes; no source reset or working-tree mutation"
+}

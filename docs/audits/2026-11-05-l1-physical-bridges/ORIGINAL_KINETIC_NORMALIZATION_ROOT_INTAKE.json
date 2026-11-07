@@ -1,0 +1,91 @@
+{
+  "candidate": "f55279f1c5cded8ba86833d225f6e69b18b28204",
+  "parent": "d95370a95128599ef9dbecb4bd3105b55f0019d4",
+  "archive_sha256": "760510eed1bdd544ad5b7092a0ea3f88b0b67b0b8f434b18502f683f0b67c225",
+  "archive_members": 28,
+  "all_member_hashes_crc_unique": true,
+  "canonical_copies": {
+    "l1-original-kinetic-normalization-result-r2.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE.md",
+    "l1-original-kinetic-normalization-result-r1.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_RESULT_R1.md",
+    "l1-original-kinetic-normalization-brief-r2.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_BRIEF.md",
+    "l1-original-kinetic-normalization-brief-r1.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_BRIEF_R1.md",
+    "l1-original-kinetic-math-prospective-r1.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_MATH_PROSPECTIVE_R1.md",
+    "l1-original-kinetic-math-result-r1.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_MATH_REVIEW_R1.md",
+    "l1-original-kinetic-math-prospective-r2.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_MATH_PROSPECTIVE_R2.md",
+    "l1-original-kinetic-math-result-r2.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_MATH_REVIEW_R2.md",
+    "l1-original-kinetic-source-prospective-r1.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_SOURCE_PROSPECTIVE_R1.md",
+    "l1-original-kinetic-source-result-r1.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_SOURCE_REVIEW_R1.md",
+    "l1-original-kinetic-source-prospective-r2.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_SOURCE_PROSPECTIVE_R2.md",
+    "l1-original-kinetic-source-result-r2.md": "ORIGINAL_KINETIC_NORMALIZATION_CORRESPONDENCE_SOURCE_REVIEW_R2.md"
+  },
+  "current_accepted_inputs": {
+    "accepted/ADW_EXACT_AUXILIARY_IDENTITY.md": [
+      "docs/audits/2026-10-17-publication-substance-construction/ADW_EXACT_AUXILIARY_IDENTITY.md"
+    ],
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md"
+    ],
+    "accepted/N16_TEMPORAL_BOUNDARY_IDENTITY.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/N16_TEMPORAL_BOUNDARY_IDENTITY.md"
+    ],
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md"
+    ],
+    "accepted/ORIGINAL_GRADED_CONSTRAINT_RELATION.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_GRADED_CONSTRAINT_RELATION.md"
+    ],
+    "accepted/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_MICROSCOPIC_METRIC_COHERENT_BRIDGE.md"
+    ],
+    "accepted/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_NONZERO_NORMALIZATION_CONSTRUCTION.md"
+    ],
+    "accepted/ORIGINAL_STATE_CANDIDATE_QUALIFICATION.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_STATE_CANDIDATE_QUALIFICATION.md"
+    ],
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_OPERATOR.md"
+    ],
+    "accepted/ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION.md": [
+      "docs/audits/2026-11-05-l1-physical-bridges/ORIGINAL_TRANSFER_POSITIVE_PROCESS_RECONSTRUCTION.md"
+    ]
+  },
+  "parent_archive_sha256": "3e276790c367acc17b65c7d49c4439c4771100886752f5ad48ed36581643c913",
+  "parent_members": 20,
+  "held_primary_sources": [
+    {
+      "name": "Diakonov2011.pdf",
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Diakonov2011.pdf",
+      "sha256": "132d63150a678ef17bfbbc04978a8cab9c9801f03556982a6aa67c11d3fbc4da",
+      "bytes": 270355,
+      "custody": "Held original primary body read; external fulltext only in Lit-Search, never included in this archive."
+    },
+    {
+      "name": "Volovik2024.pdf",
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Volovik2024.pdf",
+      "sha256": "fae06f3bd7189f52a24fce5b612a30d2fc23ca1f2a9db43100e535d954791d9d",
+      "bytes": 140946,
+      "custody": "Held original primary body read; external fulltext only in Lit-Search, never included in this archive."
+    },
+    {
+      "name": "Vergeles2025.pdf",
+      "path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf",
+      "sha256": "daa334f1ad59ace58aba5afe68ec5d4909e717e626ba6fa7c0d7237c8df43eac",
+      "bytes": 1756894,
+      "custody": "Held original primary body read; external fulltext only in Lit-Search, never included in this archive."
+    }
+  ],
+  "ROOT_FULL_read": "Complete exact R2 result, BOTH actual R2 ACCEPT reports, acceptance and full prospective brief read; relevant actual held Diakonov/Volovik/Vergeles passages read and all three full PDF pins checked. Preserved R1 normal-map counterexample checked against corrected all-monomial definition.",
+  "scientific_execution": "NONE",
+  "physical_BUILD": "OPEN_ORIGINAL_STRENGTH",
+  "root_manual_checks": [
+    "128/full and64/step Berezin factors, source/coupling/test covariance",
+    "Contragradient cotangent versus barred fields; zero-source continuum scope",
+    "Transported Weyl/normal contraction, linear and number controls, invariant trace-dual matrix",
+    "All4coframe hopping signs, gamma placements, two independent anchors and diagonal metric source factor2",
+    "Old/shared/new current intertwining and allC2 weight/current/quotient/source contacts",
+    "Explicit unmatched physical source map30-31 and calibration32-33; Ward alone is insufficient"
+  ],
+  "normal_merge": "aa915baec68d4ab16b1b04e0c63238733f77534b",
+  "newly_closed_physical_BUILD": 0
+}

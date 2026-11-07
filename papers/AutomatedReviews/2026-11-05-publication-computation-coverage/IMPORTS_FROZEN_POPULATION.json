@@ -1,0 +1,73 @@
+{
+  "source_commit": "4b6408ce608b6138d903aaa96f787dda139394b6",
+  "old_edges": 93,
+  "structural_name_call_edges": 109,
+  "missing_existing_name_calls": [
+    [
+      "formula:G_N_emergent",
+      "formula:G_N_sakharov"
+    ],
+    [
+      "formula:G_N_emergent_at_coupling",
+      "formula:G_N_sakharov"
+    ],
+    [
+      "formula:G_N_emergent_matches_observed",
+      "formula:G_N_emergent"
+    ],
+    [
+      "formula:diff_invariance_anomaly_residual_a2",
+      "formula:seeley_dewitt_a2_R_coefficient"
+    ],
+    [
+      "formula:efe_residual_at_dirac_calibration",
+      "formula:G_N_from_seeley_dewitt"
+    ],
+    [
+      "formula:g_n_microscopic",
+      "formula:G_N_from_seeley_dewitt"
+    ],
+    [
+      "formula:heat_kernel_a2_matches_GN_sakharov",
+      "formula:G_N_from_seeley_dewitt"
+    ],
+    [
+      "formula:higher_curvature_correction_at_background",
+      "formula:higher_curvature_R_sq_coefficient"
+    ],
+    [
+      "formula:higher_curvature_correction_at_background",
+      "formula:higher_curvature_Ricci_sq_coefficient"
+    ],
+    [
+      "formula:higher_curvature_correction_at_background",
+      "formula:higher_curvature_Riemann_sq_coefficient"
+    ],
+    [
+      "formula:higher_curvature_predicted_in_observational_band",
+      "formula:higher_curvature_R_sq_coefficient"
+    ],
+    [
+      "formula:higher_curvature_predicted_in_observational_band",
+      "formula:higher_curvature_Ricci_sq_coefficient"
+    ],
+    [
+      "formula:higher_curvature_predicted_in_observational_band",
+      "formula:higher_curvature_Riemann_sq_coefficient"
+    ],
+    [
+      "formula:microscopic_macroscopic_match_residual",
+      "formula:G_N_from_seeley_dewitt"
+    ],
+    [
+      "formula:planck_mass_emergent_gev",
+      "formula:G_N_emergent"
+    ],
+    [
+      "formula:torsion_amplitude_ec",
+      "formula:G_N_from_seeley_dewitt"
+    ]
+  ],
+  "old_not_structural_name_calls": [],
+  "scope": "Diagnostic AST Name calls only; local shadow binding not independently resolved; no replacement extractor installed."
+}

@@ -1,0 +1,37 @@
+{
+  "packet": "l1-repaired-figure-review-r1-20261105.json",
+  "packet_fresh": true,
+  "candidate": "0f254271cde8a44b78c7bab4194ea9308a5499e6 with packet-pinned dirty repair",
+  "verdict": "PASS for narrow findings 1.1–1.4; whole Stage9 and publication acceptance not granted",
+  "findings": {
+    "1.1": "PASS: exact Verify independently executed exit0, font7.304347826pt at conservative240pt; actual L1page3 readable",
+    "1.2": "PASS: exact Verify exit0; all four consumer PNGs identical and actual L1/D3/source embedded plots read; exact x/y of all3traces plus axes unchanged",
+    "1.3": "PASS: exact Verify exit0; corrected held-primary Eq.(1) and conservative-envelope language",
+    "1.4": "PASS source-only compile repair evidence: actual produced source PDF read; ROOT log tex_errors0; actual generated .log contains no error/Unicode/undefined-control messages. No compile rerun by reviewer."
+  },
+  "residuals": [
+    "P25 actual page3 contains inherited overfull display and theorem names entering right-column prose.7overfull; full source publication layout not accepted.",
+    "D3 rootcompile12inherited overfull; only corresponding figurepage63 reviewed, not whole66pages.",
+    "Full manifest enumerates registry but does not attest every figure newly generated or reviewed.",
+    "Original B3 susceptibility/window, microscopicmode/matter and transport BUILD obligations remain open."
+  ],
+  "evidence_hashes": {
+    "src/core/visualizations.py": "d723a9bacc93bac9e3b76010b201a3a718b5c55acbff320ca44f5b5496202e6d",
+    "scripts/review_figures.py": "9426060ca6c1721e8f940418e0c969dc9fd6824295c3605740712c38b03db752",
+    "papers/L1/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/D3/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/paper25_gravitational_waves/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/L1/paper_draft.pdf": "529336d8d9fcb910132e6919e5a0ec85aa71147cb4dc6cc92e66cdc537bdccad",
+    "papers/D3/paper_draft.pdf": "3903f15c2332e51ffe08893199532b152f3e898dd7ccdce5b9e6b0e39e61bb65",
+    "papers/paper25_gravitational_waves/paper_draft.pdf": "a9b7ba8577404b181b92f1673b142e870f7d5896ee9aefceb1e209dd5fc5b799",
+    "papers/D3/paper_draft.tex": "80938e91fe03727a56c894786f00b6d2725ccb85563e22a53c1d15e8afe139b4",
+    "papers/paper25_gravitational_waves/paper_draft.tex": "a5011e907b6d27708b8f455cb044281b611eeced28cf604999574b300850c77b",
+    "/tmp/l1-figure-before-0f254-20261105.json": "0d6295b1826ec0abd7770d1988788c65fd2bb82f23e6f005e865f10274248045",
+    "/tmp/l1-figure-repair-candidate-20261105-r2.json": "7c86fce45c3acf3444fbcfe2102d298e48fa18096538342b3384c53bd6d9e048",
+    "/tmp/l1-figure-repair-candidate-20261105-r2.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "/tmp/l1-figure-final-L1-20261105-3.png": "bfde5c0adc6e1ce0deb39ebaa8d86f0c43f3d3a3cd02d3c09f8b2aa059a12450",
+    "/tmp/l1-figure-final-D3-r2-20261105-63.png": "0f40cc069521dc3bb56ce5ea203bfaf68d18ebac9156f70bce1e1b19616370b9",
+    "/tmp/l1-figure-final-paper25_gravitational_waves-20261105-3.png": "b0433bd7cdd10953919defed8b8f806c10c8a2faa6a8a4682ee5f3e2d8901cf4"
+  }
+}

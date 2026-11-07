@@ -1,0 +1,11 @@
+{
+  "scope": "Existing run_structural_checks on exactly the L1 FigureSpec; no assertion for other figures",
+  "issues": [],
+  "conservative_annotation_print_pt": 7.304347826086956,
+  "consumer_sha256": {
+    "figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/L1/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/D3/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976",
+    "papers/paper25_gravitational_waves/figures/fig_c_GW_vs_ligo_constraint.png": "cd3c1de52d177dd19ef6fb49d79319484c66674329624a1e6dd80702c1474976"
+  }
+}

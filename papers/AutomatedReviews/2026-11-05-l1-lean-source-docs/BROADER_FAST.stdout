@@ -1,0 +1,723 @@
+........................................................................ [  0%]
+........................................................................ [  1%]
+........................................................................ [  2%]
+........................................................................ [  3%]
+........................................................................ [  4%]
+....................................................s................... [  5%]
+........................................................................ [  6%]
+........................................................................ [  6%]
+........................................................................ [  7%]
+........................................................................ [  8%]
+........................................................................ [  9%]
+........................................................................ [ 10%]
+..............................................s......................... [ 11%]
+........................................................................ [ 12%]
+........................................................................ [ 13%]
+........................................................................ [ 13%]
+........................................................................ [ 14%]
+........................................................................ [ 15%]
+........................................................................ [ 16%]
+........................................................................ [ 17%]
+........................................................................ [ 18%]
+........................................................................ [ 19%]
+.....................................................F.................. [ 20%]
+.FF....FF.F..FF..................F...................................... [ 20%]
+...............................................F.F...................... [ 21%]
+........................................................................ [ 22%]
+........................................................................ [ 23%]
+........................................................................ [ 24%]
+........................................................................ [ 25%]
+......F................................................................. [ 26%]
+...................................F...........F.F......F............... [ 27%]
+........................................................................ [ 27%]
+........................................................................ [ 28%]
+........................................................................ [ 29%]
+........................................................................ [ 30%]
+........................................................................ [ 31%]
+........................................................................ [ 32%]
+........................................................................ [ 33%]
+........................................................................ [ 34%]
+........................................................................ [ 34%]
+........................................................................ [ 35%]
+........................................................................ [ 36%]
+........................................................................ [ 37%]
+........................................................................ [ 38%]
+........................................................................ [ 39%]
+........................................................................ [ 40%]
+........................................................................ [ 41%]
+........................................................................ [ 41%]
+........................................................................ [ 42%]
+........................................................................ [ 43%]
+........................................................................ [ 44%]
+........................................................................ [ 45%]
+........................................................................ [ 46%]
+........................................................................ [ 47%]
+........................................................................ [ 48%]
+........................................................................ [ 48%]
+........................................................................ [ 49%]
+........................................................................ [ 50%]
+........................................................................ [ 51%]
+........................................................................ [ 52%]
+........................................................................ [ 53%]
+........................................................................ [ 54%]
+........................................................................ [ 55%]
+........................................................................ [ 55%]
+........................................................................ [ 56%]
+........................................................................ [ 57%]
+........................................................................ [ 58%]
+........................................................................ [ 59%]
+........................................................................ [ 60%]
+........................................................................ [ 61%]
+........................................................................ [ 62%]
+........................................................................ [ 62%]
+........................................................................ [ 63%]
+........................................................................ [ 64%]
+........................................................................ [ 65%]
+........................................................................ [ 66%]
+........................................................................ [ 67%]
+........................................................................ [ 68%]
+........................................................................ [ 69%]
+........................................................................ [ 69%]
+........................................................................ [ 70%]
+........................................................................ [ 71%]
+........................................................................ [ 72%]
+........................................................................ [ 73%]
+........................................................................ [ 74%]
+........................................................................ [ 75%]
+........................................................................ [ 76%]
+........................................................................ [ 76%]
+........................................................................ [ 77%]
+........................................................................ [ 78%]
+........................................................................ [ 79%]
+.........................F..F........................................... [ 80%]
+........................................................................ [ 81%]
+........................................................................ [ 82%]
+........................................................................ [ 83%]
+........................................................................ [ 83%]
+........................................................................ [ 84%]
+........................................................................ [ 85%]
+........................................................................ [ 86%]
+........................................................................ [ 87%]
+........................................................................ [ 88%]
+........................................................................ [ 89%]
+........................................................................ [ 90%]
+........................................................................ [ 90%]
+................................................F....................... [ 91%]
+........................................................................ [ 92%]
+........................................................................ [ 93%]
+........................................................................ [ 94%]
+........................................................................ [ 95%]
+........................................................................ [ 96%]
+........................................................................ [ 97%]
+........................................................................ [ 97%]
+........................................................................ [ 98%]
+........................................................................ [ 99%]
+...........................                                              [100%]
+=================================== FAILURES ===================================
+_______ TestBundleLeanModuleCoverage.test_the_ratchet_has_zero_headroom ________
+
+self = <tests.test_d5_bundles_readiness.TestBundleLeanModuleCoverage object at 0x124190e20>
+
+    def test_the_ratchet_has_zero_headroom(self):
+        """The live value IS the ceiling, so any regression fails immediately."""
+        r = bru.check_bundle_lean_module_coverage()
+        n = int(re.search(r"(\d+) registered-but-absent", r.details[0].message).group(1))
+>       assert n == bru.LEAN_MODULE_ABSENT_CEILING, (
+            f"ceiling {bru.LEAN_MODULE_ABSENT_CEILING} but live count {n} — "
+            f"a ratchet with headroom silently permits drift")
+E       AssertionError: ceiling 147 but live count 178 — a ratchet with headroom silently permits drift
+E       assert 178 == 147
+E        +  where 147 = bru.LEAN_MODULE_ABSENT_CEILING
+
+tests/test_d5_bundles_readiness.py:1739: AssertionError
+_ TestUnmeasuredIsDistinctFromYellow.test_stage_status_enum_covers_the_live_vocabulary _
+
+self = <tests.test_d5_bundles_readiness.TestUnmeasuredIsDistinctFromYellow object at 0x12419d480>
+
+    def test_stage_status_enum_covers_the_live_vocabulary(self):
+        """Measured live: not_started, skeleton and pending-redo were all in the
+        corpus and all undeclared, on stages that had no enum guard at all."""
+        import sys, pathlib, json
+        root = pathlib.Path(__file__).resolve().parents[1]
+        sys.path.insert(0, str(root / "scripts"))
+        from bundle_readiness import _STAGE_STATUS_ENUM, _GUARDED_STAGE_FIELDS
+        for f in ("not_started", "skeleton", "pending-redo"):
+            assert f in _STAGE_STATUS_ENUM, f
+        assert set(_GUARDED_STAGE_FIELDS) == {
+            "stage9_status", "stage10_status", "stage13_status"}
+        undeclared = []
+        for md in sorted(root.glob("papers/*/bundle_metadata.json")):
+            m = json.loads(md.read_text(encoding="utf-8"))
+            for fld in _GUARDED_STAGE_FIELDS:
+                if str(m.get(fld) or "") not in _STAGE_STATUS_ENUM:
+                    undeclared.append(f"{md.parent.name}.{fld}={m.get(fld)!r}")
+>       assert undeclared == [], undeclared
+E       AssertionError: ["D10.stage10_status='redrafted-2026-08-17'", "D6.stage10_status='redrafted'", "D8.stage10_status='redrafted-2026-08-15'"]
+E       assert ["D10.stage10...-2026-08-15'"] == []
+E         
+E         Left contains 3 more items, first extra item: "D10.stage10_status='redrafted-2026-08-17'"
+E         Use -v to get more diff
+
+tests/test_d5_bundles_readiness.py:1961: AssertionError
+______ TestSentenceLengthRatchet.test_gate_is_green_at_the_frozen_ratchet ______
+
+self = <tests.test_d5_bundles_readiness.TestSentenceLengthRatchet object at 0x124199d10>
+
+    def test_gate_is_green_at_the_frozen_ratchet(self):
+        res = self._run()
+>       assert res.passed, [d.message for d in res.details]
+E       AssertionError: ['23 sentence(s) over 100 words exceeds the frozen ratchet 18. Shorten the new prose, or lower the ratchet only after shortening: longest is 160 words.', '189 sentence(s) over 60 words (advisory baseline 220; not gated, see docstring)']
+E       assert False
+E        +  where False = CheckResult(passed=False, details=[Detail(name='over_100_words', passed=False, message='23 sentence(s) over 100 words ...60 words (advisory baseline 220; not gated, see docstring)', warning=False, measured=True)], error=None, measured=True).passed
+
+tests/test_d5_bundles_readiness.py:1985: AssertionError
+_____ TestSentenceLengthRatchet.test_ceiling_matches_the_live_measurement ______
+
+self = <tests.test_d5_bundles_readiness.TestSentenceLengthRatchet object at 0x124191370>
+
+    def test_ceiling_matches_the_live_measurement(self):
+        """A ratchet frozen above the live value is slack that hides a
+        regression; frozen below it is a permanently red gate."""
+        from src.core.constants import SENTENCE_OVER_100_CEILING
+        res = self._run()
+        msg = next(d.message for d in res.details if d.name == "over_100_words")
+        live = int(msg.split()[0])
+>       assert live == SENTENCE_OVER_100_CEILING, (live, SENTENCE_OVER_100_CEILING)
+E       AssertionError: (23, 18)
+E       assert 23 == 18
+
+tests/test_d5_bundles_readiness.py:2035: AssertionError
+_ TestTheOpenRequiredPopulationRatchets.test_the_check_is_green_at_the_frozen_ceilings _
+
+self = <tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets object at 0x12419a0d0>
+
+    def test_the_check_is_green_at_the_frozen_ceilings(self):
+        from validation.checks.bundles_readiness import (
+            check_bundle_stage13_claim_consistent)
+>       assert check_bundle_stage13_claim_consistent().passed is True
+E       assert False is True
+E        +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.", warning=False, measured=True)], error=None, measured=True).passed
+E        +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.", warning=False, measured=True)], error=None, measured=True) = <function check_bundle_stage13_claim_consistent at 0x111b683b0>()
+
+tests/test_d5_bundles_readiness.py:2046: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'quantum_dim_unit' resolves to 2 candidates: ['lean:SKEFTHawking.BHEntropyMicroscopic.HorizonMTCBC.quantum_dim_unit', 'lean:SKEFTHawking.quantum_dim_unit'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'fusion_unit_left' resolves to 2 candidates: ['lean:SKEFTHawking.SymTFT.SkeletalModularModel.fusion_unit_left', 'lean:SKEFTHawking.fusion_unit_left'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'theta_psi' resolves to 2 candidates: ['lean:SKEFTHawking.IsingBraiding.theta_psi', 'lean:SKEFTHawking.KummerChart1NbhdAcyclicInt.theta_psi'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'zero' resolves to 13 candidates: ['lean:SKEFTHawking.BordismTheory.BordismGrp.zero', 'lean:SKEFTHawking.FKLW.SU2LieAlgebra.Matrix.IsSkewHermitian.zero', 'lean:SKEFTHawking.FibonacciQuintetUniversality.Mat5K.zero', 'lean:SKEFTHawking.GateCompilation.Mat2K_40.zero', 'lean:SKEFTHawking.Mat13K_5Ext.zero', 'lean:SKEFTHawking.QuantumCrooks.WorkDistribution.zero', 'lean:SKEFTHawking.RossSelinger.ZOmegaSqrt2.Frac.zero', 'lean:SKEFTHawking.RouabahExplicit.Mat2K_40_Ext.zero', 'lean:SKEFTHawking.T2TangentialBordism.T2DataBordismGrp.zero', 'lean:SKEFTHawking.TangentialBordism.TangentialBordismGrp.zero', 'lean:SKEFTHawking.TangentialDataBordism.DataBordismGrp.zero', 'lean:SKEFTHawking.TgateFibBraid.Mat2K_80_Ext.zero', 'lean:trunc.zero'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'trace' resolves to 3 candidates: ['lean:SKEFTHawking.HeatKernelExpansion.DiracHeatKernelAsymptotic.trace', 'lean:SKEFTHawking.KTCompletenessTether.IsotropicSurgeryOutput.trace', 'lean:SKEFTHawking.QuantumNetwork.FiniteQutritInvariantReconstruction.trace'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'A' resolves to 12 candidates: ['lean:SKEFTHawking.BHThermodynamicsFourLaws.BHData.A', 'lean:SKEFTHawking.DaviesPresentation.A', 'lean:SKEFTHawking.FaultTolerance.MalignantPairAttestation.A', 'lean:SKEFTHawking.PinPlusKTRankZeroCollapseSupply.RankZeroCollapseSupply.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneCohomologyMV.CapstoneCohomologyMVDatum.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneMVPieces.CapstoneMVTransferRow.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneResidualRow.KRSResidualRow.A', 'lean:SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.A', 'lean:SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.A', 'lean:SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand.A', 'lean:SKEFTHawking.Resurgence.BorelActionData.A', 'lean:SKEFTHawking.SurgeryFoundation.SeamCollarDatum.A'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'Path' resolves to 3 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteAdaptiveKrausRealization.Path', 'lean:SKEFTHawking.QuantumNetwork.GibbsCylinderHistory.Path', 'lean:SKEFTHawking.QuantumNetwork.GibbsMultilevelCylinder.Path'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'F' resolves to 9 candidates: ['lean:SKEFTHawking.CharSurface.PinCharSurface.F', 'lean:SKEFTHawking.CondensedMatterAnalog.HSChannelPotential.F', 'lean:SKEFTHawking.DFT.GroundStateData.F', 'lean:SKEFTHawking.FKLW.GenericSUd.DNStepData_SUd.F', 'lean:SKEFTHawking.FKLW.SolovayKitaevPathA.DNStepData.F', 'lean:SKEFTHawking.FSymbolData.F', 'lean:SKEFTHawking.HawkingUniversality.ModifiedDispersion.F', 'lean:SKEFTHawking.KummerHemisphereChartInt.F', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout.F'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'Z2' resolves to 2 candidates: ['lean:SKEFTHawking.CenterSymmetryConfinement.Z2', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelPositiveHistory.Z2'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'C' resolves to 5 candidates: ['lean:SKEFTHawking.Electrothermal.ETFModel.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.C', 'lean:SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelCoherentReadout.C'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'conjugate' resolves to 2 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteGibbsClock.conjugate', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelThermalPhase.conjugate'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'identity' resolves to 2 candidates: ['lean:SKEFTHawking.NeutrinoMixing.PMNSMatrix.identity', 'lean:SKEFTHawking.QuantumNetwork.FiniteInstrument.identity'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'state' resolves to 6 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer.ProductInput.state', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialSchedule.state', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.state', 'lean:SKEFTHawking.QuantumNetwork.GibbsUnitalHistory.state', 'lean:SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.state', 'lean:SKEFTHawking.TopologicalBand.AdmissibleBandFrame.state'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'run' resolves to 3 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.run', 'lean:SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer.run', 'lean:SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining.run'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'gamma_1_nonneg' resolves to 5 candidates: ['lean:SKEFTHawking.DissipativeCoeffs.gamma_1_nonneg', 'lean:SKEFTHawking.KappaScaling.MaterialParams.gamma_1_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs.gamma_1_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs_relaxed.gamma_1_nonneg', 'lean:SKEFTHawking.WKBAnalysis.DissipativeDispersion.gamma_1_nonneg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'gamma_2_nonneg' resolves to 5 candidates: ['lean:SKEFTHawking.DissipativeCoeffs.gamma_2_nonneg', 'lean:SKEFTHawking.KappaScaling.MaterialParams.gamma_2_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs.gamma_2_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs_relaxed.gamma_2_nonneg', 'lean:SKEFTHawking.WKBAnalysis.DissipativeDispersion.gamma_2_nonneg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'globalDimSq_pos' resolves to 2 candidates: ['lean:SKEFTHawking.BHEntropyMicroscopic.HorizonMTCBC.globalDimSq_pos', 'lean:SKEFTHawking.globalDimSq_pos'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'one_le_globalDimSq' resolves to 2 candidates: ['lean:SKEFTHawking.QECHolographyBridge.HPCode.one_le_globalDimSq', 'lean:SKEFTHawking.RTReplicaTrickOnMTC.one_le_globalDimSq'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name '_root_.IsCovariantDerivativeOn.neg' resolves to 9 candidates: ['lean:CS.neg', 'lean:IsCovariantDerivativeOn.neg', 'lean:SKEFTHawking.Brown.Z4Quadratic.neg', 'lean:SKEFTHawking.FKLW.SU2LieAlgebra.Matrix.IsSkewHermitian.neg', 'lean:SKEFTHawking.Mat13K_5Ext.neg', 'lean:SKEFTHawking.PinPlusCharPairData.IsMetabolic.neg', 'lean:SKEFTHawking.RossSelinger.ZOmegaSqrt2.Frac.neg', 'lean:SKEFTHawking.T2TangentialBordism.T2DataBordismGrp.neg', 'lean:SKEFTHawking.TangentialDataBordism.DataBordismGrp.neg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name '_root_.IsCovariantDerivativeOn.sub' resolves to 9 candidates: ['lean:IsCovariantDerivativeOn.sub', 'lean:SKEFTHawking.FibonacciQuintetUniversality.Mat5K.sub', 'lean:SKEFTHawking.FibonacciQutritUniversality.Mat3K.sub', 'lean:SKEFTHawking.GateCompilation.Mat2K_40.sub', 'lean:SKEFTHawking.Mat13K_5Ext.sub', 'lean:SKEFTHawking.RouabahExplicit.Mat2K_40_Ext.sub', 'lean:SKEFTHawking.SingularRelativeHomologyMod2.sub', 'lean:SKEFTHawking.TgateFibBraid.Mat2K_80_Ext.sub', 'lean:W1.sub'] — edges skipped (subsequent hits logged at DEBUG)
+_ TestTheOpenRequiredPopulationRatchets.test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED _
+
+self = <tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets object at 0x12419d940>
+
+    def test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED(self):
+        """PRODUCTION-SEEDED (guide §2.4), and it replaces a CLAIM.
+    
+        The registry entry asserted this mutation had been run by hand and it was never
+        recorded, so the leg's production-seeded status rode on an unverifiable sentence.
+        Appending one real blocking finding to a live review document must take its bundle
+        over the frozen ceiling and name it.
+    
+        ⚠️ THIS TEST IS THE ONE THAT LEAKED. Its `finally` restore did not run when the
+        process was killed at a timeout on 2026-08-12, and the six seeded lines below sat
+        in the tracked corpus for three days as a live open CRITICAL on D10 — a node, a
+        FLAGS edge, a ratchet consumer, a moved `readiness_submission_gate`. It now seeds
+        through `seed_journal.seeded_mutation`, which records the original bytes durably
+        BEFORE touching the file, so a later process can undo what this one may not live
+        to undo. Seeding in place is deliberate and stays: the check resolves the corpus
+        from the repo root and cannot be pointed at a copy.
+        """
+        import validate_helpers as _H
+        import validation.checks.bundles_readiness as br
+        from seed_journal import SEED_MARKER, seeded_mutation
+        doc = (_H.PROJECT_ROOT
+               / "papers/AutomatedReviews/2026-08-12-0200-citation-integrity/D10.md")
+        assert doc.is_file(), "review document moved — re-point this mutation"
+        original = doc.read_text(encoding="utf-8")
+        seed = (f"\n### 99.9 — 🔴 CRITICAL — seeded mutation\n\n"
+                f"- **Severity:** critical\n\n"
+                f"Seeded by the test suite. <!-- {SEED_MARKER} -->\n")
+        with seeded_mutation(
+                doc, original + seed,
+                reason="a new open critical must breach the D10 required-population "
+                       "ceiling and name the bundle"):
+            res = br.check_bundle_stage13_claim_consistent()
+            assert res.passed is False, "a new open critical did not breach any ceiling"
+            over = [d for d in res.details
+                    if d.name == 'required_population' and not d.passed]
+            assert over and 'D10' in over[0].message
+        assert doc.read_text(encoding="utf-8") == original
+>       assert br.check_bundle_stage13_claim_consistent().passed is True
+E       assert False is True
+E        +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.", warning=False, measured=True)], error=None, measured=True).passed
+E        +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='21 bundle Stage-13 claim(s) checked a...atchet. Re-attribute it or fix it; never raise this limit.", warning=False, measured=True)], error=None, measured=True) = <function check_bundle_stage13_claim_consistent at 0x111b683b0>()
+E        +      where <function check_bundle_stage13_claim_consistent at 0x111b683b0> = <module 'validation.checks.bundles_readiness' from '/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/validation/checks/bundles_readiness.py'>.check_bundle_stage13_claim_consistent
+
+tests/test_d5_bundles_readiness.py:2105: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'quantum_dim_unit' resolves to 2 candidates: ['lean:SKEFTHawking.BHEntropyMicroscopic.HorizonMTCBC.quantum_dim_unit', 'lean:SKEFTHawking.quantum_dim_unit'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'fusion_unit_left' resolves to 2 candidates: ['lean:SKEFTHawking.SymTFT.SkeletalModularModel.fusion_unit_left', 'lean:SKEFTHawking.fusion_unit_left'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'theta_psi' resolves to 2 candidates: ['lean:SKEFTHawking.IsingBraiding.theta_psi', 'lean:SKEFTHawking.KummerChart1NbhdAcyclicInt.theta_psi'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'zero' resolves to 13 candidates: ['lean:SKEFTHawking.BordismTheory.BordismGrp.zero', 'lean:SKEFTHawking.FKLW.SU2LieAlgebra.Matrix.IsSkewHermitian.zero', 'lean:SKEFTHawking.FibonacciQuintetUniversality.Mat5K.zero', 'lean:SKEFTHawking.GateCompilation.Mat2K_40.zero', 'lean:SKEFTHawking.Mat13K_5Ext.zero', 'lean:SKEFTHawking.QuantumCrooks.WorkDistribution.zero', 'lean:SKEFTHawking.RossSelinger.ZOmegaSqrt2.Frac.zero', 'lean:SKEFTHawking.RouabahExplicit.Mat2K_40_Ext.zero', 'lean:SKEFTHawking.T2TangentialBordism.T2DataBordismGrp.zero', 'lean:SKEFTHawking.TangentialBordism.TangentialBordismGrp.zero', 'lean:SKEFTHawking.TangentialDataBordism.DataBordismGrp.zero', 'lean:SKEFTHawking.TgateFibBraid.Mat2K_80_Ext.zero', 'lean:trunc.zero'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'trace' resolves to 3 candidates: ['lean:SKEFTHawking.HeatKernelExpansion.DiracHeatKernelAsymptotic.trace', 'lean:SKEFTHawking.KTCompletenessTether.IsotropicSurgeryOutput.trace', 'lean:SKEFTHawking.QuantumNetwork.FiniteQutritInvariantReconstruction.trace'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'A' resolves to 12 candidates: ['lean:SKEFTHawking.BHThermodynamicsFourLaws.BHData.A', 'lean:SKEFTHawking.DaviesPresentation.A', 'lean:SKEFTHawking.FaultTolerance.MalignantPairAttestation.A', 'lean:SKEFTHawking.PinPlusKTRankZeroCollapseSupply.RankZeroCollapseSupply.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneCohomologyMV.CapstoneCohomologyMVDatum.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneMVPieces.CapstoneMVTransferRow.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneResidualRow.KRSResidualRow.A', 'lean:SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.A', 'lean:SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.A', 'lean:SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand.A', 'lean:SKEFTHawking.Resurgence.BorelActionData.A', 'lean:SKEFTHawking.SurgeryFoundation.SeamCollarDatum.A'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'Path' resolves to 3 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteAdaptiveKrausRealization.Path', 'lean:SKEFTHawking.QuantumNetwork.GibbsCylinderHistory.Path', 'lean:SKEFTHawking.QuantumNetwork.GibbsMultilevelCylinder.Path'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'F' resolves to 9 candidates: ['lean:SKEFTHawking.CharSurface.PinCharSurface.F', 'lean:SKEFTHawking.CondensedMatterAnalog.HSChannelPotential.F', 'lean:SKEFTHawking.DFT.GroundStateData.F', 'lean:SKEFTHawking.FKLW.GenericSUd.DNStepData_SUd.F', 'lean:SKEFTHawking.FKLW.SolovayKitaevPathA.DNStepData.F', 'lean:SKEFTHawking.FSymbolData.F', 'lean:SKEFTHawking.HawkingUniversality.ModifiedDispersion.F', 'lean:SKEFTHawking.KummerHemisphereChartInt.F', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout.F'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'Z2' resolves to 2 candidates: ['lean:SKEFTHawking.CenterSymmetryConfinement.Z2', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelPositiveHistory.Z2'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'C' resolves to 5 candidates: ['lean:SKEFTHawking.Electrothermal.ETFModel.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.C', 'lean:SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelCoherentReadout.C'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'conjugate' resolves to 2 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteGibbsClock.conjugate', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelThermalPhase.conjugate'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'identity' resolves to 2 candidates: ['lean:SKEFTHawking.NeutrinoMixing.PMNSMatrix.identity', 'lean:SKEFTHawking.QuantumNetwork.FiniteInstrument.identity'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'state' resolves to 6 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer.ProductInput.state', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialSchedule.state', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.state', 'lean:SKEFTHawking.QuantumNetwork.GibbsUnitalHistory.state', 'lean:SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.state', 'lean:SKEFTHawking.TopologicalBand.AdmissibleBandFrame.state'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'run' resolves to 3 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.run', 'lean:SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer.run', 'lean:SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining.run'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'gamma_1_nonneg' resolves to 5 candidates: ['lean:SKEFTHawking.DissipativeCoeffs.gamma_1_nonneg', 'lean:SKEFTHawking.KappaScaling.MaterialParams.gamma_1_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs.gamma_1_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs_relaxed.gamma_1_nonneg', 'lean:SKEFTHawking.WKBAnalysis.DissipativeDispersion.gamma_1_nonneg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'gamma_2_nonneg' resolves to 5 candidates: ['lean:SKEFTHawking.DissipativeCoeffs.gamma_2_nonneg', 'lean:SKEFTHawking.KappaScaling.MaterialParams.gamma_2_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs.gamma_2_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs_relaxed.gamma_2_nonneg', 'lean:SKEFTHawking.WKBAnalysis.DissipativeDispersion.gamma_2_nonneg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'globalDimSq_pos' resolves to 2 candidates: ['lean:SKEFTHawking.BHEntropyMicroscopic.HorizonMTCBC.globalDimSq_pos', 'lean:SKEFTHawking.globalDimSq_pos'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'one_le_globalDimSq' resolves to 2 candidates: ['lean:SKEFTHawking.QECHolographyBridge.HPCode.one_le_globalDimSq', 'lean:SKEFTHawking.RTReplicaTrickOnMTC.one_le_globalDimSq'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name '_root_.IsCovariantDerivativeOn.neg' resolves to 9 candidates: ['lean:CS.neg', 'lean:IsCovariantDerivativeOn.neg', 'lean:SKEFTHawking.Brown.Z4Quadratic.neg', 'lean:SKEFTHawking.FKLW.SU2LieAlgebra.Matrix.IsSkewHermitian.neg', 'lean:SKEFTHawking.Mat13K_5Ext.neg', 'lean:SKEFTHawking.PinPlusCharPairData.IsMetabolic.neg', 'lean:SKEFTHawking.RossSelinger.ZOmegaSqrt2.Frac.neg', 'lean:SKEFTHawking.T2TangentialBordism.T2DataBordismGrp.neg', 'lean:SKEFTHawking.TangentialDataBordism.DataBordismGrp.neg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name '_root_.IsCovariantDerivativeOn.sub' resolves to 9 candidates: ['lean:IsCovariantDerivativeOn.sub', 'lean:SKEFTHawking.FibonacciQuintetUniversality.Mat5K.sub', 'lean:SKEFTHawking.FibonacciQutritUniversality.Mat3K.sub', 'lean:SKEFTHawking.GateCompilation.Mat2K_40.sub', 'lean:SKEFTHawking.Mat13K_5Ext.sub', 'lean:SKEFTHawking.RouabahExplicit.Mat2K_40_Ext.sub', 'lean:SKEFTHawking.SingularRelativeHomologyMod2.sub', 'lean:SKEFTHawking.TgateFibBraid.Mat2K_80_Ext.sub', 'lean:W1.sub'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'quantum_dim_unit' resolves to 2 candidates: ['lean:SKEFTHawking.BHEntropyMicroscopic.HorizonMTCBC.quantum_dim_unit', 'lean:SKEFTHawking.quantum_dim_unit'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'fusion_unit_left' resolves to 2 candidates: ['lean:SKEFTHawking.SymTFT.SkeletalModularModel.fusion_unit_left', 'lean:SKEFTHawking.fusion_unit_left'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'theta_psi' resolves to 2 candidates: ['lean:SKEFTHawking.IsingBraiding.theta_psi', 'lean:SKEFTHawking.KummerChart1NbhdAcyclicInt.theta_psi'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'zero' resolves to 13 candidates: ['lean:SKEFTHawking.BordismTheory.BordismGrp.zero', 'lean:SKEFTHawking.FKLW.SU2LieAlgebra.Matrix.IsSkewHermitian.zero', 'lean:SKEFTHawking.FibonacciQuintetUniversality.Mat5K.zero', 'lean:SKEFTHawking.GateCompilation.Mat2K_40.zero', 'lean:SKEFTHawking.Mat13K_5Ext.zero', 'lean:SKEFTHawking.QuantumCrooks.WorkDistribution.zero', 'lean:SKEFTHawking.RossSelinger.ZOmegaSqrt2.Frac.zero', 'lean:SKEFTHawking.RouabahExplicit.Mat2K_40_Ext.zero', 'lean:SKEFTHawking.T2TangentialBordism.T2DataBordismGrp.zero', 'lean:SKEFTHawking.TangentialBordism.TangentialBordismGrp.zero', 'lean:SKEFTHawking.TangentialDataBordism.DataBordismGrp.zero', 'lean:SKEFTHawking.TgateFibBraid.Mat2K_80_Ext.zero', 'lean:trunc.zero'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'trace' resolves to 3 candidates: ['lean:SKEFTHawking.HeatKernelExpansion.DiracHeatKernelAsymptotic.trace', 'lean:SKEFTHawking.KTCompletenessTether.IsotropicSurgeryOutput.trace', 'lean:SKEFTHawking.QuantumNetwork.FiniteQutritInvariantReconstruction.trace'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'A' resolves to 12 candidates: ['lean:SKEFTHawking.BHThermodynamicsFourLaws.BHData.A', 'lean:SKEFTHawking.DaviesPresentation.A', 'lean:SKEFTHawking.FaultTolerance.MalignantPairAttestation.A', 'lean:SKEFTHawking.PinPlusKTRankZeroCollapseSupply.RankZeroCollapseSupply.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneCohomologyMV.CapstoneCohomologyMVDatum.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneMVPieces.CapstoneMVTransferRow.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneResidualRow.KRSResidualRow.A', 'lean:SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.A', 'lean:SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.A', 'lean:SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand.A', 'lean:SKEFTHawking.Resurgence.BorelActionData.A', 'lean:SKEFTHawking.SurgeryFoundation.SeamCollarDatum.A'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'Path' resolves to 3 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteAdaptiveKrausRealization.Path', 'lean:SKEFTHawking.QuantumNetwork.GibbsCylinderHistory.Path', 'lean:SKEFTHawking.QuantumNetwork.GibbsMultilevelCylinder.Path'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'F' resolves to 9 candidates: ['lean:SKEFTHawking.CharSurface.PinCharSurface.F', 'lean:SKEFTHawking.CondensedMatterAnalog.HSChannelPotential.F', 'lean:SKEFTHawking.DFT.GroundStateData.F', 'lean:SKEFTHawking.FKLW.GenericSUd.DNStepData_SUd.F', 'lean:SKEFTHawking.FKLW.SolovayKitaevPathA.DNStepData.F', 'lean:SKEFTHawking.FSymbolData.F', 'lean:SKEFTHawking.HawkingUniversality.ModifiedDispersion.F', 'lean:SKEFTHawking.KummerHemisphereChartInt.F', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout.F'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'Z2' resolves to 2 candidates: ['lean:SKEFTHawking.CenterSymmetryConfinement.Z2', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelPositiveHistory.Z2'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'C' resolves to 5 candidates: ['lean:SKEFTHawking.Electrothermal.ETFModel.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.C', 'lean:SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelCoherentReadout.C'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'conjugate' resolves to 2 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteGibbsClock.conjugate', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelThermalPhase.conjugate'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'identity' resolves to 2 candidates: ['lean:SKEFTHawking.NeutrinoMixing.PMNSMatrix.identity', 'lean:SKEFTHawking.QuantumNetwork.FiniteInstrument.identity'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'state' resolves to 6 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer.ProductInput.state', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialSchedule.state', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.state', 'lean:SKEFTHawking.QuantumNetwork.GibbsUnitalHistory.state', 'lean:SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.state', 'lean:SKEFTHawking.TopologicalBand.AdmissibleBandFrame.state'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'run' resolves to 3 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.run', 'lean:SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer.run', 'lean:SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining.run'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'gamma_1_nonneg' resolves to 5 candidates: ['lean:SKEFTHawking.DissipativeCoeffs.gamma_1_nonneg', 'lean:SKEFTHawking.KappaScaling.MaterialParams.gamma_1_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs.gamma_1_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs_relaxed.gamma_1_nonneg', 'lean:SKEFTHawking.WKBAnalysis.DissipativeDispersion.gamma_1_nonneg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'gamma_2_nonneg' resolves to 5 candidates: ['lean:SKEFTHawking.DissipativeCoeffs.gamma_2_nonneg', 'lean:SKEFTHawking.KappaScaling.MaterialParams.gamma_2_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs.gamma_2_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs_relaxed.gamma_2_nonneg', 'lean:SKEFTHawking.WKBAnalysis.DissipativeDispersion.gamma_2_nonneg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'globalDimSq_pos' resolves to 2 candidates: ['lean:SKEFTHawking.BHEntropyMicroscopic.HorizonMTCBC.globalDimSq_pos', 'lean:SKEFTHawking.globalDimSq_pos'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'one_le_globalDimSq' resolves to 2 candidates: ['lean:SKEFTHawking.QECHolographyBridge.HPCode.one_le_globalDimSq', 'lean:SKEFTHawking.RTReplicaTrickOnMTC.one_le_globalDimSq'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name '_root_.IsCovariantDerivativeOn.neg' resolves to 9 candidates: ['lean:CS.neg', 'lean:IsCovariantDerivativeOn.neg', 'lean:SKEFTHawking.Brown.Z4Quadratic.neg', 'lean:SKEFTHawking.FKLW.SU2LieAlgebra.Matrix.IsSkewHermitian.neg', 'lean:SKEFTHawking.Mat13K_5Ext.neg', 'lean:SKEFTHawking.PinPlusCharPairData.IsMetabolic.neg', 'lean:SKEFTHawking.RossSelinger.ZOmegaSqrt2.Frac.neg', 'lean:SKEFTHawking.T2TangentialBordism.T2DataBordismGrp.neg', 'lean:SKEFTHawking.TangentialDataBordism.DataBordismGrp.neg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name '_root_.IsCovariantDerivativeOn.sub' resolves to 9 candidates: ['lean:IsCovariantDerivativeOn.sub', 'lean:SKEFTHawking.FibonacciQuintetUniversality.Mat5K.sub', 'lean:SKEFTHawking.FibonacciQutritUniversality.Mat3K.sub', 'lean:SKEFTHawking.GateCompilation.Mat2K_40.sub', 'lean:SKEFTHawking.Mat13K_5Ext.sub', 'lean:SKEFTHawking.RouabahExplicit.Mat2K_40_Ext.sub', 'lean:SKEFTHawking.SingularRelativeHomologyMod2.sub', 'lean:SKEFTHawking.TgateFibBraid.Mat2K_80_Ext.sub', 'lean:W1.sub'] — edges skipped (subsequent hits logged at DEBUG)
+_ TestTheOpenRequiredPopulationRatchets.test_the_per_bundle_ratchet_has_zero_headroom _
+
+self = <tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets object at 0x124191480>
+
+    def test_the_per_bundle_ratchet_has_zero_headroom(self):
+        """⚠️ Measured through `_readiness_aggregate()` — what the CHECK reads — never
+        through `meta['inferred_bundle']`. The aggregation attributes via
+        `inferred_paper or inferred_bundle` plus the paper->bundle mapping, so the two
+        populations differ materially (D3 3 vs 6, F 5 vs 15).
+    
+        ⚠️ EVERY BLOCKING SEVERITY. Keying this on `major` alone was the defect: the open
+        CRITICALS that DO reach a bundle were ratcheted by nothing, since leg 2 covers only
+        the unattributed population.
+        """
+        import sys
+        sys.path.insert(0, 'scripts')
+        from readiness_gates import BLOCKING_SEVERITIES
+        from validation.checks.bundles_readiness import (
+            _readiness_aggregate, _required_open_ceilings)
+        by_bundle, _, failure = _readiness_aggregate()
+        assert failure is None, f"aggregation failed: {failure}"
+        live = {}
+        for b, d in by_bundle.items():
+            n = sum(v for k, v in (d.get('severity_mix') or {}).items()
+                    if k in BLOCKING_SEVERITIES)
+            if n:
+                live[b] = n
+>       assert live == _required_open_ceilings(), (
+            "ceilings carry headroom or have drifted; if the population SHRANK, lower them "
+            "in the commit that shrank it — headroom makes a ratchet unfireable")
+E       AssertionError: ceilings carry headroom or have drifted; if the population SHRANK, lower them in the commit that shrank it — headroom makes a ratchet unfireable
+E       assert {'D1': 13, 'D...'D3': 14, ...} == {'D1': 2, 'D1... 'D3': 1, ...}
+E         
+E         Omitting 6 identical items, use -vv to show
+E         Differing items:
+E         {'D2': 10} != {'D2': 3}
+E         {'E1': 4} != {'E1': 1}
+E         {'D3': 14} != {'D3': 1}
+E         {'D4': 13} != {'D4': 4}...
+E         
+E         ...Full output truncated (4 lines hidden), use '-vv' to show
+
+tests/test_d5_bundles_readiness.py:2158: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'quantum_dim_unit' resolves to 2 candidates: ['lean:SKEFTHawking.BHEntropyMicroscopic.HorizonMTCBC.quantum_dim_unit', 'lean:SKEFTHawking.quantum_dim_unit'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'fusion_unit_left' resolves to 2 candidates: ['lean:SKEFTHawking.SymTFT.SkeletalModularModel.fusion_unit_left', 'lean:SKEFTHawking.fusion_unit_left'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'theta_psi' resolves to 2 candidates: ['lean:SKEFTHawking.IsingBraiding.theta_psi', 'lean:SKEFTHawking.KummerChart1NbhdAcyclicInt.theta_psi'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'zero' resolves to 13 candidates: ['lean:SKEFTHawking.BordismTheory.BordismGrp.zero', 'lean:SKEFTHawking.FKLW.SU2LieAlgebra.Matrix.IsSkewHermitian.zero', 'lean:SKEFTHawking.FibonacciQuintetUniversality.Mat5K.zero', 'lean:SKEFTHawking.GateCompilation.Mat2K_40.zero', 'lean:SKEFTHawking.Mat13K_5Ext.zero', 'lean:SKEFTHawking.QuantumCrooks.WorkDistribution.zero', 'lean:SKEFTHawking.RossSelinger.ZOmegaSqrt2.Frac.zero', 'lean:SKEFTHawking.RouabahExplicit.Mat2K_40_Ext.zero', 'lean:SKEFTHawking.T2TangentialBordism.T2DataBordismGrp.zero', 'lean:SKEFTHawking.TangentialBordism.TangentialBordismGrp.zero', 'lean:SKEFTHawking.TangentialDataBordism.DataBordismGrp.zero', 'lean:SKEFTHawking.TgateFibBraid.Mat2K_80_Ext.zero', 'lean:trunc.zero'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'trace' resolves to 3 candidates: ['lean:SKEFTHawking.HeatKernelExpansion.DiracHeatKernelAsymptotic.trace', 'lean:SKEFTHawking.KTCompletenessTether.IsotropicSurgeryOutput.trace', 'lean:SKEFTHawking.QuantumNetwork.FiniteQutritInvariantReconstruction.trace'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'A' resolves to 12 candidates: ['lean:SKEFTHawking.BHThermodynamicsFourLaws.BHData.A', 'lean:SKEFTHawking.DaviesPresentation.A', 'lean:SKEFTHawking.FaultTolerance.MalignantPairAttestation.A', 'lean:SKEFTHawking.PinPlusKTRankZeroCollapseSupply.RankZeroCollapseSupply.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneCohomologyMV.CapstoneCohomologyMVDatum.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneMVPieces.CapstoneMVTransferRow.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneResidualRow.KRSResidualRow.A', 'lean:SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.A', 'lean:SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.A', 'lean:SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand.A', 'lean:SKEFTHawking.Resurgence.BorelActionData.A', 'lean:SKEFTHawking.SurgeryFoundation.SeamCollarDatum.A'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'Path' resolves to 3 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteAdaptiveKrausRealization.Path', 'lean:SKEFTHawking.QuantumNetwork.GibbsCylinderHistory.Path', 'lean:SKEFTHawking.QuantumNetwork.GibbsMultilevelCylinder.Path'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'F' resolves to 9 candidates: ['lean:SKEFTHawking.CharSurface.PinCharSurface.F', 'lean:SKEFTHawking.CondensedMatterAnalog.HSChannelPotential.F', 'lean:SKEFTHawking.DFT.GroundStateData.F', 'lean:SKEFTHawking.FKLW.GenericSUd.DNStepData_SUd.F', 'lean:SKEFTHawking.FKLW.SolovayKitaevPathA.DNStepData.F', 'lean:SKEFTHawking.FSymbolData.F', 'lean:SKEFTHawking.HawkingUniversality.ModifiedDispersion.F', 'lean:SKEFTHawking.KummerHemisphereChartInt.F', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout.F'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'Z2' resolves to 2 candidates: ['lean:SKEFTHawking.CenterSymmetryConfinement.Z2', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelPositiveHistory.Z2'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'C' resolves to 5 candidates: ['lean:SKEFTHawking.Electrothermal.ETFModel.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.C', 'lean:SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelCoherentReadout.C'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'conjugate' resolves to 2 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteGibbsClock.conjugate', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelThermalPhase.conjugate'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'identity' resolves to 2 candidates: ['lean:SKEFTHawking.NeutrinoMixing.PMNSMatrix.identity', 'lean:SKEFTHawking.QuantumNetwork.FiniteInstrument.identity'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'state' resolves to 6 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer.ProductInput.state', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialSchedule.state', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.state', 'lean:SKEFTHawking.QuantumNetwork.GibbsUnitalHistory.state', 'lean:SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.state', 'lean:SKEFTHawking.TopologicalBand.AdmissibleBandFrame.state'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'run' resolves to 3 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.run', 'lean:SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer.run', 'lean:SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining.run'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'gamma_1_nonneg' resolves to 5 candidates: ['lean:SKEFTHawking.DissipativeCoeffs.gamma_1_nonneg', 'lean:SKEFTHawking.KappaScaling.MaterialParams.gamma_1_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs.gamma_1_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs_relaxed.gamma_1_nonneg', 'lean:SKEFTHawking.WKBAnalysis.DissipativeDispersion.gamma_1_nonneg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'gamma_2_nonneg' resolves to 5 candidates: ['lean:SKEFTHawking.DissipativeCoeffs.gamma_2_nonneg', 'lean:SKEFTHawking.KappaScaling.MaterialParams.gamma_2_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs.gamma_2_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs_relaxed.gamma_2_nonneg', 'lean:SKEFTHawking.WKBAnalysis.DissipativeDispersion.gamma_2_nonneg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'globalDimSq_pos' resolves to 2 candidates: ['lean:SKEFTHawking.BHEntropyMicroscopic.HorizonMTCBC.globalDimSq_pos', 'lean:SKEFTHawking.globalDimSq_pos'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'one_le_globalDimSq' resolves to 2 candidates: ['lean:SKEFTHawking.QECHolographyBridge.HPCode.one_le_globalDimSq', 'lean:SKEFTHawking.RTReplicaTrickOnMTC.one_le_globalDimSq'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name '_root_.IsCovariantDerivativeOn.neg' resolves to 9 candidates: ['lean:CS.neg', 'lean:IsCovariantDerivativeOn.neg', 'lean:SKEFTHawking.Brown.Z4Quadratic.neg', 'lean:SKEFTHawking.FKLW.SU2LieAlgebra.Matrix.IsSkewHermitian.neg', 'lean:SKEFTHawking.Mat13K_5Ext.neg', 'lean:SKEFTHawking.PinPlusCharPairData.IsMetabolic.neg', 'lean:SKEFTHawking.RossSelinger.ZOmegaSqrt2.Frac.neg', 'lean:SKEFTHawking.T2TangentialBordism.T2DataBordismGrp.neg', 'lean:SKEFTHawking.TangentialDataBordism.DataBordismGrp.neg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name '_root_.IsCovariantDerivativeOn.sub' resolves to 9 candidates: ['lean:IsCovariantDerivativeOn.sub', 'lean:SKEFTHawking.FibonacciQuintetUniversality.Mat5K.sub', 'lean:SKEFTHawking.FibonacciQutritUniversality.Mat3K.sub', 'lean:SKEFTHawking.GateCompilation.Mat2K_40.sub', 'lean:SKEFTHawking.Mat13K_5Ext.sub', 'lean:SKEFTHawking.RouabahExplicit.Mat2K_40_Ext.sub', 'lean:SKEFTHawking.SingularRelativeHomologyMod2.sub', 'lean:SKEFTHawking.TgateFibBraid.Mat2K_80_Ext.sub', 'lean:W1.sub'] — edges skipped (subsequent hits logged at DEBUG)
+_ TestTheOpenRequiredPopulationRatchets.test_the_unattributed_ratchet_has_zero_headroom _
+
+self = <tests.test_d5_bundles_readiness.TestTheOpenRequiredPopulationRatchets object at 0x124191590>
+
+    def test_the_unattributed_ratchet_has_zero_headroom(self):
+        """⚠️ Measured by what the AGGREGATION REACHED, never by the presence of a key.
+    
+        This test asserted `not inferred_bundle and not inferred_paper` — the same PROXY
+        the check itself used, so the two agreed with each other and neither agreed with
+        the truth. Eight open blocking findings carry an `inferred_paper` whose paper maps
+        to no bundle: keyed, therefore skipped here, and unreachable by leg 1, therefore
+        counted nowhere. A test that recomputes the check's own predicate cannot catch a
+        wrong predicate.
+        """
+        import sys
+        sys.path.insert(0, 'scripts')
+        from build_graph import extract_review_finding_nodes
+        from validation.checks.bundles_readiness import (
+            UNATTRIBUTED_OPEN_BLOCKING_CEILING, _readiness_aggregate)
+        from readiness_gates import BLOCKING_SEVERITIES
+        by_bundle, _, failure = _readiness_aggregate()
+        assert failure is None, f"aggregation failed: {failure}"
+        covered = {i for d in by_bundle.values()
+                   for i in (d.get('open_finding_ids') or ())}
+        live = sum(1 for n in extract_review_finding_nodes()
+                   if n['meta'].get('status') == 'open'
+                   and n['meta'].get('severity') in BLOCKING_SEVERITIES
+                   and n['id'] not in covered)
+>       assert live == UNATTRIBUTED_OPEN_BLOCKING_CEILING
+E       assert 55 == 44
+
+tests/test_d5_bundles_readiness.py:2186: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'quantum_dim_unit' resolves to 2 candidates: ['lean:SKEFTHawking.BHEntropyMicroscopic.HorizonMTCBC.quantum_dim_unit', 'lean:SKEFTHawking.quantum_dim_unit'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'fusion_unit_left' resolves to 2 candidates: ['lean:SKEFTHawking.SymTFT.SkeletalModularModel.fusion_unit_left', 'lean:SKEFTHawking.fusion_unit_left'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'theta_psi' resolves to 2 candidates: ['lean:SKEFTHawking.IsingBraiding.theta_psi', 'lean:SKEFTHawking.KummerChart1NbhdAcyclicInt.theta_psi'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'zero' resolves to 13 candidates: ['lean:SKEFTHawking.BordismTheory.BordismGrp.zero', 'lean:SKEFTHawking.FKLW.SU2LieAlgebra.Matrix.IsSkewHermitian.zero', 'lean:SKEFTHawking.FibonacciQuintetUniversality.Mat5K.zero', 'lean:SKEFTHawking.GateCompilation.Mat2K_40.zero', 'lean:SKEFTHawking.Mat13K_5Ext.zero', 'lean:SKEFTHawking.QuantumCrooks.WorkDistribution.zero', 'lean:SKEFTHawking.RossSelinger.ZOmegaSqrt2.Frac.zero', 'lean:SKEFTHawking.RouabahExplicit.Mat2K_40_Ext.zero', 'lean:SKEFTHawking.T2TangentialBordism.T2DataBordismGrp.zero', 'lean:SKEFTHawking.TangentialBordism.TangentialBordismGrp.zero', 'lean:SKEFTHawking.TangentialDataBordism.DataBordismGrp.zero', 'lean:SKEFTHawking.TgateFibBraid.Mat2K_80_Ext.zero', 'lean:trunc.zero'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'trace' resolves to 3 candidates: ['lean:SKEFTHawking.HeatKernelExpansion.DiracHeatKernelAsymptotic.trace', 'lean:SKEFTHawking.KTCompletenessTether.IsotropicSurgeryOutput.trace', 'lean:SKEFTHawking.QuantumNetwork.FiniteQutritInvariantReconstruction.trace'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'A' resolves to 12 candidates: ['lean:SKEFTHawking.BHThermodynamicsFourLaws.BHData.A', 'lean:SKEFTHawking.DaviesPresentation.A', 'lean:SKEFTHawking.FaultTolerance.MalignantPairAttestation.A', 'lean:SKEFTHawking.PinPlusKTRankZeroCollapseSupply.RankZeroCollapseSupply.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneCohomologyMV.CapstoneCohomologyMVDatum.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneMVPieces.CapstoneMVTransferRow.A', 'lean:SKEFTHawking.PinPlusTraceCapstoneResidualRow.KRSResidualRow.A', 'lean:SKEFTHawking.QuantumNetwork.FiniteClockControlledRetainedMemory.A', 'lean:SKEFTHawking.QuantumNetwork.FiniteClockHandReadout.A', 'lean:SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand.A', 'lean:SKEFTHawking.Resurgence.BorelActionData.A', 'lean:SKEFTHawking.SurgeryFoundation.SeamCollarDatum.A'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'Path' resolves to 3 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteAdaptiveKrausRealization.Path', 'lean:SKEFTHawking.QuantumNetwork.GibbsCylinderHistory.Path', 'lean:SKEFTHawking.QuantumNetwork.GibbsMultilevelCylinder.Path'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'F' resolves to 9 candidates: ['lean:SKEFTHawking.CharSurface.PinCharSurface.F', 'lean:SKEFTHawking.CondensedMatterAnalog.HSChannelPotential.F', 'lean:SKEFTHawking.DFT.GroundStateData.F', 'lean:SKEFTHawking.FKLW.GenericSUd.DNStepData_SUd.F', 'lean:SKEFTHawking.FKLW.SolovayKitaevPathA.DNStepData.F', 'lean:SKEFTHawking.FSymbolData.F', 'lean:SKEFTHawking.HawkingUniversality.ModifiedDispersion.F', 'lean:SKEFTHawking.KummerHemisphereChartInt.F', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelMemoryReadout.F'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'Z2' resolves to 2 candidates: ['lean:SKEFTHawking.CenterSymmetryConfinement.Z2', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelPositiveHistory.Z2'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'C' resolves to 5 candidates: ['lean:SKEFTHawking.Electrothermal.ETFModel.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.C', 'lean:SKEFTHawking.QuantumNetwork.FinitePersistentMeasuredHand.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteQutritRetainedClock.C', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelCoherentReadout.C'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'conjugate' resolves to 2 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteGibbsClock.conjugate', 'lean:SKEFTHawking.QuantumNetwork.FiniteThreeLevelThermalPhase.conjugate'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'identity' resolves to 2 candidates: ['lean:SKEFTHawking.NeutrinoMixing.PMNSMatrix.identity', 'lean:SKEFTHawking.QuantumNetwork.FiniteInstrument.identity'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'state' resolves to 6 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer.ProductInput.state', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialSchedule.state', 'lean:SKEFTHawking.QuantumNetwork.FiniteNontracialThermalPhase.state', 'lean:SKEFTHawking.QuantumNetwork.GibbsUnitalHistory.state', 'lean:SKEFTHawking.QuantumNetwork.NontracialReflectionDynamics.state', 'lean:SKEFTHawking.TopologicalBand.AdmissibleBandFrame.state'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'run' resolves to 3 candidates: ['lean:SKEFTHawking.QuantumNetwork.FiniteInterventionProcess.run', 'lean:SKEFTHawking.QuantumNetwork.FiniteLocalChannelLayer.run', 'lean:SKEFTHawking.QuantumNetwork.FiniteMemoryCoarseGraining.run'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'gamma_1_nonneg' resolves to 5 candidates: ['lean:SKEFTHawking.DissipativeCoeffs.gamma_1_nonneg', 'lean:SKEFTHawking.KappaScaling.MaterialParams.gamma_1_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs.gamma_1_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs_relaxed.gamma_1_nonneg', 'lean:SKEFTHawking.WKBAnalysis.DissipativeDispersion.gamma_1_nonneg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'gamma_2_nonneg' resolves to 5 candidates: ['lean:SKEFTHawking.DissipativeCoeffs.gamma_2_nonneg', 'lean:SKEFTHawking.KappaScaling.MaterialParams.gamma_2_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs.gamma_2_nonneg', 'lean:SKEFTHawking.SecondOrderSK.CombinedDissipativeCoeffs_relaxed.gamma_2_nonneg', 'lean:SKEFTHawking.WKBAnalysis.DissipativeDispersion.gamma_2_nonneg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'globalDimSq_pos' resolves to 2 candidates: ['lean:SKEFTHawking.BHEntropyMicroscopic.HorizonMTCBC.globalDimSq_pos', 'lean:SKEFTHawking.globalDimSq_pos'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name 'one_le_globalDimSq' resolves to 2 candidates: ['lean:SKEFTHawking.QECHolographyBridge.HPCode.one_le_globalDimSq', 'lean:SKEFTHawking.RTReplicaTrickOnMTC.one_le_globalDimSq'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name '_root_.IsCovariantDerivativeOn.neg' resolves to 9 candidates: ['lean:CS.neg', 'lean:IsCovariantDerivativeOn.neg', 'lean:SKEFTHawking.Brown.Z4Quadratic.neg', 'lean:SKEFTHawking.FKLW.SU2LieAlgebra.Matrix.IsSkewHermitian.neg', 'lean:SKEFTHawking.Mat13K_5Ext.neg', 'lean:SKEFTHawking.PinPlusCharPairData.IsMetabolic.neg', 'lean:SKEFTHawking.RossSelinger.ZOmegaSqrt2.Frac.neg', 'lean:SKEFTHawking.T2TangentialBordism.T2DataBordismGrp.neg', 'lean:SKEFTHawking.TangentialDataBordism.DataBordismGrp.neg'] — edges skipped (subsequent hits logged at DEBUG)
+WARNING  build_graph:build_graph.py:330 Ambiguous Lean name '_root_.IsCovariantDerivativeOn.sub' resolves to 9 candidates: ['lean:IsCovariantDerivativeOn.sub', 'lean:SKEFTHawking.FibonacciQuintetUniversality.Mat5K.sub', 'lean:SKEFTHawking.FibonacciQutritUniversality.Mat3K.sub', 'lean:SKEFTHawking.GateCompilation.Mat2K_40.sub', 'lean:SKEFTHawking.Mat13K_5Ext.sub', 'lean:SKEFTHawking.RouabahExplicit.Mat2K_40_Ext.sub', 'lean:SKEFTHawking.SingularRelativeHomologyMod2.sub', 'lean:SKEFTHawking.TgateFibBraid.Mat2K_80_Ext.sub', 'lean:W1.sub'] — edges skipped (subsequent hits logged at DEBUG)
+_ TestLeanModuleDeregistration.test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red _
+
+self = <tests.test_d5_bundles_readiness.TestLeanModuleDeregistration object at 0x1241dfb50>
+
+    def test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red(self):
+        """§2.4: seed the defect into the artifact the check ACTUALLY reads.
+    
+        L3's draft demonstrably reaches `BHThermodynamicsFourLaws` — it is the module
+        the Letter is about. Recording a deregistration of it into the real
+        `papers/L3/append_log.json` must turn the live check red, or the falsifiability
+        leg is decoration.
+        """
+        from seed_journal import seeded_mutation
+        log = _H.PAPERS_DIR / "L3" / "append_log.json"
+>       assert bru.check_bundle_lean_module_coverage().passed, (
+            "precondition: the live check is green before seeding")
+E       AssertionError: precondition: the live check is green before seeding
+E       assert False
+E        +  where False = CheckResult(passed=False, details=[Detail(name='ratchet', passed=False, message='178 registered-but-absent module(s) a...Schellekens.HolomorphicVOAc24, Schellekens.NiemeierLattice)', warning=True, measured=True)], error=None, measured=True).passed
+E        +    where CheckResult(passed=False, details=[Detail(name='ratchet', passed=False, message='178 registered-but-absent module(s) a...Schellekens.HolomorphicVOAc24, Schellekens.NiemeierLattice)', warning=True, measured=True)], error=None, measured=True) = <function check_bundle_lean_module_coverage at 0x111b699b0>()
+E        +      where <function check_bundle_lean_module_coverage at 0x111b699b0> = bru.check_bundle_lean_module_coverage
+
+tests/test_d5_bundles_readiness.py:2508: AssertionError
+_ TestExemptionIsClaimedNotInferred.test_the_undeclared_ceiling_has_ZERO_headroom _
+
+self = <tests.test_d5_citations.TestExemptionIsClaimedNotInferred object at 0x111dc0640>
+
+    def test_the_undeclared_ceiling_has_ZERO_headroom(self):
+        """Guide §2.3 — a ceiling above the live population cannot fire. The ratchet's job
+        is to red the check the moment one new undeclared entry appears, which it cannot do
+        with slack."""
+        from src.core.constants import CITATION_UNDECLARED_CLASS_CEILING as CEIL
+        res = ck.check_citation_primary_sources_present()
+        n = int(self._summary(res).split(" UNDECLARED-class")[0].split("/ ")[-1])
+>       assert n == CEIL, (
+            f"{n} undeclared entries against a ceiling of {CEIL}. Slack here is headroom "
+            f"for exactly the defect the ceiling records; lower it to {n}.")
+E       AssertionError: 76 undeclared entries against a ceiling of 77. Slack here is headroom for exactly the defect the ceiling records; lower it to 76.
+E       assert 76 == 77
+
+tests/test_d5_citations.py:912: AssertionError
+_ TestExemptionIsClaimedNotInferred.test_seeding_AWAY_a_declaration_turns_the_check_RED _
+
+self = <tests.test_d5_citations.TestExemptionIsClaimedNotInferred object at 0x111d01010>
+
+    def test_seeding_AWAY_a_declaration_turns_the_check_RED(self):
+        """FIRES ON THE SEEDED DEFECT, and on the old predicate too. Strip `citation_class`
+        and `exempt_reason` from a real declared textbook and it becomes what it would have
+        been all along: an entry with no identifiers and nothing said about it. That is one
+        over the frozen ceiling, so the check must go red.
+    
+        Under the replaced predicate the stripped entry is exempt again and the check stays
+        GREEN — this test is the one that cannot pass both ways."""
+        from seed_journal import seeded_mutation
+        from src.core.constants import CITATION_UNDECLARED_CLASS_CEILING as CEIL
+        orig = self.REG.read_text(encoding="utf-8")
+        seeded = self._edit_entry(
+            orig, "KobayashiNomizu1963",
+            lambda b: self._drop_keys(b, {"citation_class", "exempt_reason"}))
+        try:
+            with seeded_mutation(
+                    self.REG, seeded,
+                    reason="ADR-014 D7: an undeclared entry must not inherit the "
+                           "textbook exemption"):
+                res = self._reloaded_result()
+                det = {d.name: d for d in res.details}
+                # Prove the seed reached the imported object, not just the file. The
+                # message's key sample is truncated to eight, so it cannot carry this.
+                from src.core.citations import CITATION_REGISTRY as _seeded_reg
+                assert _seeded_reg["KobayashiNomizu1963"].get("citation_class") is None, (
+                    "the seed did not reach the imported registry — the reload is inert "
+                    "and this test proves nothing")
+>               assert res.passed is False, (
+                    "stripping an entry down to no-metadata left the check GREEN — "
+                    "absence is buying the exemption again")
+E                   AssertionError: stripping an entry down to no-metadata left the check GREEN — absence is buying the exemption again
+E                   assert True is False
+E                    +  where True = CheckResult(passed=True, details=[Detail(name='summary', passed=True, message='518 bibkeys cited across 64 papers — 36... Year 2014 != registry 2016 (preprint vs publication year?)', warning=True, measured=True)], error=None, measured=True).passed
+
+tests/test_d5_citations.py:977: AssertionError
+_ TestBundleTablesUsePipeline.test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree _
+
+self = <tests.test_d5_papers_prose.TestBundleTablesUsePipeline object at 0x1239f9d90>
+
+    def test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree(self):
+        """House ratchet idiom, measured against production."""
+        r = pp.check_bundle_tables_use_pipeline()
+        n = int(r.details[0].message.split()[0])
+>       assert n == pp.BUNDLE_HANDWRITTEN_TABLE_CEILING, (
+            f"{n} hand-written tabular(s) live against a ceiling of "
+            f"{pp.BUNDLE_HANDWRITTEN_TABLE_CEILING}. If it dropped, LOWER the ceiling "
+            f"in the same commit; if it rose, add the tables.py spec.")
+E       AssertionError: 15 hand-written tabular(s) live against a ceiling of 1. If it dropped, LOWER the ceiling in the same commit; if it rose, add the tables.py spec.
+E       assert 15 == 1
+E        +  where 1 = pp.BUNDLE_HANDWRITTEN_TABLE_CEILING
+
+tests/test_d5_papers_prose.py:359: AssertionError
+__________ TestReviewVerifyIsOneCommand.test_the_live_corpus_is_clean __________
+
+self = <tests.test_d5_reviews.TestReviewVerifyIsOneCommand object at 0x1234b9370>
+
+    def test_the_live_corpus_is_clean(self):
+        """PRODUCTION. Measured 2026-08-15: 129 Verify lines, 0 violating — which is why
+        the bar is a hard zero. If this fails, a new document broke rule 4; fix the
+        document, never the bar."""
+        r = rv.check_review_verify_is_one_command()
+>       assert r.passed is True, [(d.name, d.message) for d in r.details if not d.passed]
+E       AssertionError: [('summary', '322 `Verify:` line(s) checked, 56 carrying anything other than a single backticked command'), ('papers/A...g can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.'), ...]
+E       assert False is True
+E        +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='322 `Verify:` line(s) checked, 56 car...planation on the following line as `*What it asserts:* …`.', warning=False, measured=True)], error=None, measured=True).passed
+
+tests/test_d5_reviews.py:522: AssertionError
+_ TestChainBackingTargetsResolve.test_a_dangling_link_seeded_past_the_ceiling_fails _
+
+self = <tests.test_d5_reviews.TestChainBackingTargetsResolve object at 0x1234e07d0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10f265470>
+chain_backing_result = CheckResult(passed=False, details=[Detail(name='population', passed=True, message='2387 Lean chain-of-backing link(s),...le: SKEFTHawking.VestigialGravity.VestigialPhase.vestigial', warning=False, measured=True)], error=None, measured=True)
+
+    def test_a_dangling_link_seeded_past_the_ceiling_fails(
+            self, monkeypatch, chain_backing_result):
+        """⚠️ Seeded at the SEAM, not into the tracked corpus.
+    
+        This test used to append a dangling link to the real
+        `papers/D3/claims_review.json` and restore it in a `finally`. Inside that
+        window every concurrent reader — `validate.py`, the dashboard, a parallel
+        pytest worker, even this class's own sibling `test_the_ceiling_carries_no_
+        headroom` — measured one more unresolved link than the commit contains,
+        and a kill or timeout mid-window left the corpus permanently +1. Against a
+        ZERO-HEADROOM ratchet that makes the suite's colour depend on timing.
+    
+        The class docstring's argument that the *ceiling* must be measured live
+        does not extend to the *seeding* test: this one only has to prove the
+        ceiling can fire, which the seam shows without touching a tracked file."""
+        import chain_canonicalize as _cc
+    
+>       assert chain_backing_result.passed is True, (
+            "baseline must be green, or this mutation proves nothing")
+E       AssertionError: baseline must be green, or this mutation proves nothing
+E       assert False is True
+E        +  where False = CheckResult(passed=False, details=[Detail(name='population', passed=True, message='2387 Lean chain-of-backing link(s),...le: SKEFTHawking.VestigialGravity.VestigialPhase.vestigial', warning=False, measured=True)], error=None, measured=True).passed
+
+tests/test_d5_reviews.py:727: AssertionError
+_____ TestChainBackingTargetsResolve.test_the_ceiling_carries_no_headroom ______
+
+self = <tests.test_d5_reviews.TestChainBackingTargetsResolve object at 0x1234c1810>
+chain_backing_result = CheckResult(passed=False, details=[Detail(name='population', passed=True, message='2387 Lean chain-of-backing link(s),...le: SKEFTHawking.VestigialGravity.VestigialPhase.vestigial', warning=False, measured=True)], error=None, measured=True)
+
+    def test_the_ceiling_carries_no_headroom(self, chain_backing_result):
+        """A ratchet above the population cannot fire. Assert against the LIVE measured
+        value, never against the constant's own definition (guide §2.3).
+    
+        Session-shared: this call is unpatched, so it is the same result the seeded
+        test takes its baseline from."""
+        r = chain_backing_result
+        detail = next(d for d in r.details if d.name == "unresolvable")
+        live = int(detail.message.split()[0])
+>       assert live == rv.UNRESOLVED_CHAIN_LINK_CEILING, (
+            f"live unresolved count {live} != ceiling {rv.UNRESOLVED_CHAIN_LINK_CEILING}; "
+            f"if the backlog shrank, LOWER the ceiling — headroom makes it unfireable")
+E       AssertionError: live unresolved count 111 != ceiling 109; if the backlog shrank, LOWER the ceiling — headroom makes it unfireable
+E       assert 111 == 109
+E        +  where 109 = rv.UNRESOLVED_CHAIN_LINK_CEILING
+
+tests/test_d5_reviews.py:755: AssertionError
+_ TestBlockedByResolvesLeg.test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red _
+
+self = <tests.test_d5_reviews.TestBlockedByResolvesLeg object at 0x1234e0cd0>
+
+    def test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red(self):
+        """PRODUCTION-SEEDED (guide §2.4): the line goes into the tracked corpus and the
+        real extractor parses it. A fixture tree cannot reach this leg — it reads
+        `extract_review_finding_nodes()`, not the walked document text."""
+        import validate_helpers as _H
+        from seed_journal import SEED_MARKER, seeded_mutation
+        doc = _H.PROJECT_ROOT / self.DOC
+        assert doc.is_file(), f"{self.DOC} moved — re-point this mutation, do not delete it"
+        original = doc.read_text(encoding="utf-8")
+        with seeded_mutation(
+                doc,
+                original + f"\n- **Blocked-by:** review:no-such-date:NOPE:9.9\n"
+                           f"<!-- {SEED_MARKER} -->\n",
+                reason="a dangling Blocked-by id must turn review_severity_declared red"):
+            res = rv.check_review_severity_declared()
+            assert res.passed is False, "a dangling Blocked-by did not turn the check red"
+            assert any("review:no-such-date:NOPE:9.9" in (d.message or "")
+                       for d in res.details)
+        # and the corpus is clean again, byte for byte
+        assert doc.read_text(encoding="utf-8") == original
+>       assert rv.check_review_severity_declared().passed is True
+E       AssertionError: assert False is True
+E        +  where False = CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='79 review document(s) dated >= 2026-0...ked-by:` names a minted finding or a valued release scheme', warning=False, measured=True)], error=None, measured=True).passed
+E        +    where CheckResult(passed=False, details=[Detail(name='summary', passed=False, message='79 review document(s) dated >= 2026-0...ked-by:` names a minted finding or a valued release scheme', warning=False, measured=True)], error=None, measured=True) = <function check_review_severity_declared at 0x111b1e4b0>()
+E        +      where <function check_review_severity_declared at 0x111b1e4b0> = rv.check_review_severity_declared
+
+tests/test_d5_reviews.py:869: AssertionError
+_ TestRatchetsHaveZeroHeadroom.test_population_equals_ceiling[numerical_literals] _
+
+self = <tests.test_ratchets_have_zero_headroom.TestRatchetsHaveZeroHeadroom object at 0x1139ee9e0>
+check = 'numerical_literals'
+
+    @pytest.mark.parametrize("check", _RATCHET_PARAMS)
+    def test_population_equals_ceiling(self, check):
+        """FIRES ON A SEEDED DEFECT: raise any ceiling above its live population and
+        this fails — before the ratchet silently stops guarding."""
+        got = _population_and_ceiling(check)
+        assert got is not None, (
+            f"{check} no longer reports a '(ceiling N)' in any Detail, so its "
+            f"headroom cannot be measured. Restore the phrasing or remove it from "
+            f"RATCHETED_CHECKS deliberately — do not let it fall out silently.")
+        population, ceiling = got
+>       assert population == ceiling, (
+            f"{check}: live population {population} against ceiling {ceiling} — "
+            f"{abs(ceiling - population)} of headroom. "
+            + ("LOWER the ceiling in the same commit (the population shrank, which is "
+               "good news the ratchet must record)." if population < ceiling else
+               "The population GREW past its ceiling; fix the underlying debt rather "
+               "than raising the number."))
+E       AssertionError: numerical_literals: live population 148 against ceiling 117 — 31 of headroom. The population GREW past its ceiling; fix the underlying debt rather than raising the number.
+E       assert 148 == 117
+
+tests/test_ratchets_have_zero_headroom.py:145: AssertionError
+_ TestRatchetsHaveZeroHeadroom.test_population_equals_ceiling[bundle_tables_use_pipeline] _
+
+self = <tests.test_ratchets_have_zero_headroom.TestRatchetsHaveZeroHeadroom object at 0x113a7c490>
+check = 'bundle_tables_use_pipeline'
+
+    @pytest.mark.parametrize("check", _RATCHET_PARAMS)
+    def test_population_equals_ceiling(self, check):
+        """FIRES ON A SEEDED DEFECT: raise any ceiling above its live population and
+        this fails — before the ratchet silently stops guarding."""
+        got = _population_and_ceiling(check)
+        assert got is not None, (
+            f"{check} no longer reports a '(ceiling N)' in any Detail, so its "
+            f"headroom cannot be measured. Restore the phrasing or remove it from "
+            f"RATCHETED_CHECKS deliberately — do not let it fall out silently.")
+        population, ceiling = got
+>       assert population == ceiling, (
+            f"{check}: live population {population} against ceiling {ceiling} — "
+            f"{abs(ceiling - population)} of headroom. "
+            + ("LOWER the ceiling in the same commit (the population shrank, which is "
+               "good news the ratchet must record)." if population < ceiling else
+               "The population GREW past its ceiling; fix the underlying debt rather "
+               "than raising the number."))
+E       AssertionError: bundle_tables_use_pipeline: live population 15 against ceiling 1 — 14 of headroom. The population GREW past its ceiling; fix the underlying debt rather than raising the number.
+E       assert 15 == 1
+
+tests/test_ratchets_have_zero_headroom.py:145: AssertionError
+_ TestNumericalLiteralPopulationComposition.test_ceiling_matches_the_live_population _
+
+self = <tests.test_validate_public_surface.TestNumericalLiteralPopulationComposition object at 0x113f1ed70>
+
+    def test_ceiling_matches_the_live_population(self):
+        from src.core.constants import NUMERICAL_LITERAL_CEILING
+        unit_leg, times_leg = self._measure()
+>       assert unit_leg + times_leg <= NUMERICAL_LITERAL_CEILING
+E       assert (13 + 135) <= 117
+
+tests/test_validate_public_surface.py:501: AssertionError
+=============================== warnings summary ===============================
+tests/test_bdg_self_energy.py::test_stage_5_ratio_test_decays_monotonically
+  /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/lib/python3.14/site-packages/scipy/interpolate/_pade.py:63: LinAlgWarning: An ill-conditioned matrix detected: slice 0 has rcond = 3.827624137762748e-25.
+    pq = linalg.solve(C, an)
+
+tests/test_cosmological_perturbations.py::TestSpectrumAmplitude::test_growth_amplitude_vestigial_diverges_at_high_k
+tests/test_cosmological_perturbations.py::TestSpectrumAmplitude::test_spectrum_amplitude_at_low_ell_vestigial_diverges
+tests/test_cosmological_perturbations.py::TestSpectrumAmplitude::test_spectrum_diverges_predicate_vestigial_true
+tests/test_cosmological_perturbations.py::TestPlanckComparison::test_evaluate_admissibility_vestigial
+tests/test_cosmological_perturbations.py::TestPlanckComparison::test_vestigial_falsification_check
+tests/test_cosmological_perturbations.py::TestAntiPatternAudit::test_falsification_threshold_separation
+  /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/src/core/formulas.py:8488: RuntimeWarning: overflow encountered in cosh
+    return float(np.cosh(arg_max))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_d5_bundles_readiness.py::TestBundleLeanModuleCoverage::test_the_ratchet_has_zero_headroom
+FAILED tests/test_d5_bundles_readiness.py::TestUnmeasuredIsDistinctFromYellow::test_stage_status_enum_covers_the_live_vocabulary
+FAILED tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_gate_is_green_at_the_frozen_ratchet
+FAILED tests/test_d5_bundles_readiness.py::TestSentenceLengthRatchet::test_ceiling_matches_the_live_measurement
+FAILED tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_check_is_green_at_the_frozen_ceilings
+FAILED tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_A_REAL_NEW_BLOCKING_FINDING_TURNS_THE_LEG_RED
+FAILED tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_per_bundle_ratchet_has_zero_headroom
+FAILED tests/test_d5_bundles_readiness.py::TestTheOpenRequiredPopulationRatchets::test_the_unattributed_ratchet_has_zero_headroom
+FAILED tests/test_d5_bundles_readiness.py::TestLeanModuleDeregistration::test_PRODUCTION_SEEDED_a_false_deregistration_turns_the_real_corpus_red
+FAILED tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_the_undeclared_ceiling_has_ZERO_headroom
+FAILED tests/test_d5_citations.py::TestExemptionIsClaimedNotInferred::test_seeding_AWAY_a_declaration_turns_the_check_RED
+FAILED tests/test_d5_papers_prose.py::TestBundleTablesUsePipeline::test_the_ceiling_has_ZERO_HEADROOM_against_the_live_tree
+FAILED tests/test_d5_reviews.py::TestReviewVerifyIsOneCommand::test_the_live_corpus_is_clean
+FAILED tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_a_dangling_link_seeded_past_the_ceiling_fails
+FAILED tests/test_d5_reviews.py::TestChainBackingTargetsResolve::test_the_ceiling_carries_no_headroom
+FAILED tests/test_d5_reviews.py::TestBlockedByResolvesLeg::test_a_dangling_blocked_by_in_a_REAL_document_turns_the_check_red
+FAILED tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[numerical_literals]
+FAILED tests/test_ratchets_have_zero_headroom.py::TestRatchetsHaveZeroHeadroom::test_population_equals_ceiling[bundle_tables_use_pipeline]
+FAILED tests/test_validate_public_surface.py::TestNumericalLiteralPopulationComposition::test_ceiling_matches_the_live_population
+19 failed, 8214 passed, 7 skipped, 95 deselected, 7 warnings in 1757.04s (0:29:17)

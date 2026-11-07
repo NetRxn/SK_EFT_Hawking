@@ -1,0 +1,25 @@
+{
+  "command": "python3 scripts/orchestrate.py --lane prose --json",
+  "actual_tool_chunk": "53ab50",
+  "exit_code": 0,
+  "matched_group": {
+    "target": "papers/paper23_linearized_efe/paper_draft.tex",
+    "files": [
+      "papers/paper23_linearized_efe/paper_draft.tex"
+    ],
+    "lane": "prose",
+    "spans_lanes": null,
+    "findings": [
+      "review:2026-11-05-l1-companion-anchor:L1:1.1"
+    ],
+    "closable": [
+      "review:2026-11-05-l1-companion-anchor:L1:1.1"
+    ],
+    "unverifiable": [],
+    "severity": [
+      "major"
+    ],
+    "deferred": "beyond the non-isolated fan-out cap"
+  },
+  "scope": "Existing planner resolves exact source/finding/lane and closable identity. Its non-isolated fan-out cap is queue placement, not scientific deferral or a grant of execution authority. ROOT handles the agreed lead package."
+}

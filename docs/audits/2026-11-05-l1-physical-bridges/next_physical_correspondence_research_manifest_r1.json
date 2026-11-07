@@ -1,0 +1,22 @@
+{
+  "archive": "next_physical_correspondence_research_evidence_r1.zip",
+  "sha256": "b5d3bdf56cdcfc4c5eae0a6e2c9fcb7e303a079f0484c02248ec38d4d51772ba",
+  "bytes": 58466,
+  "members": 7,
+  "files": {
+    "l1-next-physical-mathematical-design-r1.md": "2c3ccf3df329d7231c0cd8d3da9ef81ce40b1bb68c833e414c5f742ce5f8571c",
+    "l1-next-physical-operator-decision-r1.md": "54530787e4d7e776464d449a7111a1cf7ad9cd82a7644e7c1747835941c7707c",
+    "l1-next-physical-owning-Phase6a-b93491ed8.md": "8d0b05383216cb257d3708d8dd6047178e4faee0bf4cac3982313472d97f8f3a",
+    "l1-next-physical-prescription-primary-intake-r1.md": "21d0383a775e2854fd77ecd322d28125f6d72bc0e492950262c80ac087c397a6",
+    "l1-next-physical-prescription-scope-r1.md": "a2c6f8a8e9b2e2abd256501f8ba49aa527bcd57baa4c869c9519cc8bb4281430",
+    "l1-next-physical-public-scope-r1.md": "d08819b1d65a5d115dca412481a5745a956e9a48aaffbab85bab3cc394e8cfbd",
+    "source-context.json": "87b26d22556e13e1f57beb1d92f0016cd57c895be7deb1462322ccb50bbc40a8"
+  },
+  "scope": "Research/readiness custody only; no implementation-ready candidate, physical prescription adoption, scientific theorem or prospective/actual approval.",
+  "canonical_copies": {
+    "l1-next-physical-operator-decision-r1.md": "NEXT_PHYSICAL_CORRESPONDENCE_RESEARCH_HANDOFF_R1.md",
+    "l1-next-physical-mathematical-design-r1.md": "NEXT_PHYSICAL_CORRESPONDENCE_MATHEMATICAL_DESIGN_R1.md",
+    "l1-next-physical-prescription-primary-intake-r1.md": "NEXT_PHYSICAL_CORRESPONDENCE_PRIMARY_SOURCE_INTAKE_R1.md"
+  },
+  "intake": "ROOT personally full-read all three reports; accepted research intake and next objective only, no positive prescription adopted."
+}

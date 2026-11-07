@@ -1,0 +1,268 @@
+{
+  "held_sources": [
+    {
+      "key": "Barcelo2011",
+      "path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+      "exists": true,
+      "size": 2172677,
+      "sha256": "b1cad9c9c9511d0e912820c8f1d583fefdb622ff6331936f07649f2447d5581d",
+      "PDF_magic": "%PDF-",
+      "current_alias_state": null,
+      "donor_state": {
+        "bibkey": "Barcelo2011",
+        "phase": "Phase-1-and-Background",
+        "tier_achieved": "arxiv-pdf",
+        "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Barcelo2011.pdf",
+        "verdict": "success",
+        "fetched_at": "2026-10-15T14:37:47+00:00",
+        "size_bytes": 2172677,
+        "url_used": "https://arxiv.org/pdf/gr-qc/0505065v3",
+        "note": null
+      }
+    },
+    {
+      "key": "FinazziLiberatiSindoni2012",
+      "path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf",
+      "exists": true,
+      "size": 318882,
+      "sha256": "61c4da4e5f21112acee522fedbfd65bede2e567fea53eed8ac0e47e3b7c75f3e",
+      "PDF_magic": "%PDF-",
+      "current_alias_state": null,
+      "donor_state": {
+        "bibkey": "FinazziLiberatiSindoni2012",
+        "phase": "Phase-1-and-Background",
+        "tier_achieved": "arxiv-pdf",
+        "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012.pdf",
+        "verdict": "success",
+        "fetched_at": "2026-10-15T16:14:04+00:00",
+        "size_bytes": 318882,
+        "url_used": "https://arxiv.org/pdf/1103.4841v2",
+        "note": null
+      },
+      "canonical_key": "FinazziLiberatiSindoni2012PRL",
+      "canonical_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012PRL.pdf",
+      "byte_identical_canonical": true,
+      "current_canonical_state": {
+        "bibkey": "FinazziLiberatiSindoni2012PRL",
+        "phase": "Phase-1-and-Background",
+        "tier_achieved": "arxiv-pdf",
+        "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012PRL.pdf",
+        "verdict": "success",
+        "fetched_at": "2026-05-11T16:15:23+00:00",
+        "size_bytes": 318882,
+        "url_used": "https://arxiv.org/pdf/1103.4841",
+        "note": null
+      }
+    },
+    {
+      "key": "Kitaev2006",
+      "path": "Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf",
+      "exists": true,
+      "size": 1533535,
+      "sha256": "eb99541ee61044a6028edc53aad19dd80afed7e96778350a38420f36269e93ba",
+      "PDF_magic": "%PDF-",
+      "current_alias_state": null,
+      "donor_state": {
+        "bibkey": "Kitaev2006",
+        "phase": "Phase-1-and-Background",
+        "tier_achieved": "arxiv-pdf",
+        "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Kitaev2006.pdf",
+        "verdict": "success",
+        "fetched_at": "2026-10-15T16:14:04+00:00",
+        "size_bytes": 1533535,
+        "url_used": "https://arxiv.org/pdf/cond-mat/0506438v3",
+        "note": null
+      },
+      "canonical_key": "KitaevHonest2006",
+      "canonical_source_path": "Lit-Search/Phase-6a/primary-sources/KitaevHonest2006.pdf",
+      "byte_identical_canonical": true,
+      "current_canonical_state": {
+        "bibkey": "KitaevHonest2006",
+        "phase": "Phase-6a",
+        "tier_achieved": "arxiv-pdf",
+        "primary_source_path": "Lit-Search/Phase-6a/primary-sources/KitaevHonest2006.pdf",
+        "verdict": "success",
+        "fetched_at": "2026-05-11T16:14:31+00:00",
+        "size_bytes": 1533535,
+        "url_used": "https://arxiv.org/pdf/cond-mat/0506438",
+        "note": null
+      }
+    },
+    {
+      "key": "Verlinde1988",
+      "path": "Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json",
+      "exists": true,
+      "size": 12945,
+      "sha256": "010f971d637b39e3e596f40a5d9fa326fbfff713e7b1a35cc79149f34a34e20e",
+      "PDF_magic": "{\n  \"",
+      "current_alias_state": null,
+      "donor_state": {
+        "bibkey": "Verlinde1988",
+        "phase": "Phase-1-and-Background",
+        "tier_achieved": "crossref-json",
+        "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Verlinde1988.json",
+        "verdict": "success",
+        "fetched_at": "2026-10-15T16:09:00+00:00",
+        "size_bytes": 12945,
+        "url_used": "https://api.crossref.org/works/10.1016/0550-3213(88)90603-7",
+        "note": "no arxiv id"
+      },
+      "json_top_keys": [
+        "status",
+        "message-type",
+        "message-version",
+        "message"
+      ],
+      "json_message_type": "work",
+      "json_message_keys": [
+        "indexed",
+        "reference-count",
+        "publisher",
+        "license",
+        "content-domain",
+        "short-container-title",
+        "published-print",
+        "DOI",
+        "type",
+        "created",
+        "page",
+        "update-policy",
+        "source",
+        "is-referenced-by-count",
+        "special_numbering",
+        "title",
+        "prefix",
+        "volume",
+        "author",
+        "member",
+        "reference",
+        "container-title",
+        "original-title",
+        "language",
+        "link",
+        "deposited",
+        "score",
+        "resource",
+        "subtitle",
+        "short-title",
+        "issued",
+        "references-count",
+        "alternative-id",
+        "URL",
+        "relation",
+        "ISSN",
+        "issn-type",
+        "subject",
+        "published",
+        "assertion"
+      ],
+      "contains_abstract": false
+    },
+    {
+      "key": "Wang2026TMDPolariton",
+      "path": "Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf",
+      "exists": true,
+      "size": 1152746,
+      "sha256": "88f4a4eda6a956ab29554730908d916891933379fc7594c3f0a674b4f055bded",
+      "PDF_magic": "%PDF-",
+      "current_alias_state": null,
+      "donor_state": {
+        "bibkey": "Wang2026TMDPolariton",
+        "phase": "Phase-1-and-Background",
+        "tier_achieved": "arxiv-pdf",
+        "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Wang2026TMDPolariton.pdf",
+        "verdict": "success",
+        "fetched_at": "2026-10-15T16:14:04+00:00",
+        "size_bytes": 1152746,
+        "url_used": "https://arxiv.org/pdf/2411.16635v1",
+        "note": null
+      },
+      "canonical_key": "WangKimBZHe2026PennTMDPolariton",
+      "canonical_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/WangKimBZHe2026PennTMDPolariton.pdf",
+      "byte_identical_canonical": true,
+      "current_canonical_state": {
+        "bibkey": "WangKimBZHe2026PennTMDPolariton",
+        "phase": "Phase-1-and-Background",
+        "tier_achieved": "arxiv-pdf",
+        "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/WangKimBZHe2026PennTMDPolariton.pdf",
+        "verdict": "success",
+        "fetched_at": "2026-06-18T10:41:15+00:00",
+        "size_bytes": 1152746,
+        "url_used": null,
+        "note": "pre-existing on disk; recorded without re-fetch"
+      }
+    }
+  ],
+  "preimages": [
+    {
+      "path": "docs/audits/2026-10-25-njl-qualification-dependencies/NJL_FOCUSED_RENDER_READBACK_20261103.md",
+      "current_preimage_equal": false,
+      "current_postimage_equal": false,
+      "current_sha256": null,
+      "donor_sha256": "e736b4636bed1d06e8c543a48feafa95ce771bb9cc645ecc5259ccb454a817a2"
+    },
+    {
+      "path": "docs/primary_sources_state.json",
+      "current_preimage_equal": true,
+      "current_postimage_equal": false,
+      "current_sha256": "b3e7f4e33d3304f6512cfc5450ecf7f8bfe155ddf79b8df82039cc978c07929d",
+      "donor_sha256": "a84ad2f17c77a347eb80ebd49c5c0d2501009fa0b69779c75a4546b549565df2"
+    },
+    {
+      "path": "papers/D1/paper_draft.tex",
+      "current_preimage_equal": true,
+      "current_postimage_equal": false,
+      "current_sha256": "0e0ae1be8970816add86ed9491f53f0975660bb02b917f9ecb1ff87c403d1138",
+      "donor_sha256": "badd7db66a368bc0a80620e10e552e2a56d52ac0fc65f63f60b9651b6a1ee614"
+    },
+    {
+      "path": "papers/D3/paper_draft.tex",
+      "current_preimage_equal": true,
+      "current_postimage_equal": false,
+      "current_sha256": "55642bb6be98c68f2feb6cece25b1d7ce405a4f336aeb2807fc206c2a66fac22",
+      "donor_sha256": "e60c583110b8de5884a62b67ad21aa268da718632528b178a6b519224ce4b15c"
+    },
+    {
+      "path": "papers/D8/bibliography.bib",
+      "current_preimage_equal": true,
+      "current_postimage_equal": false,
+      "current_sha256": "859f72ecf366bfdf78153db56478847fcefa003d861d3368d6042d66e1ceece2",
+      "donor_sha256": "709d0a92da6689ca54e331c18c6e0758582f07512fa9293e586b8e6f784dd4ab"
+    },
+    {
+      "path": "papers/D9/paper_draft.tex",
+      "current_preimage_equal": true,
+      "current_postimage_equal": false,
+      "current_sha256": "d14aa1a4dfa7d8a41923700a179b8925626a2114ebb368a451c69c1e58524fab",
+      "donor_sha256": "c2514912b42cb7eb615791f4030e0dfca5f4d58b8d3ca1263e99834e930d690d"
+    },
+    {
+      "path": "papers/E1/paper_draft.tex",
+      "current_preimage_equal": true,
+      "current_postimage_equal": false,
+      "current_sha256": "42480eb34627c37ecda4ebdace02ad243d8776e451fcef23d4e1bca5faf30233",
+      "donor_sha256": "3570323f966b0bdd488c0af6de76d1e27006fdd848409c47a4412d81796996b1"
+    },
+    {
+      "path": "src/core/citations.py",
+      "current_preimage_equal": true,
+      "current_postimage_equal": false,
+      "current_sha256": "d0d2720d845ce9fee73bf2ba8b3c3c01b45df41c1212327a5c737c997fb56210",
+      "donor_sha256": "3b42687dec73ff6d147bb8b72fae261aed285f706373f95845b74b0322b3d608"
+    },
+    {
+      "path": "src/core/constants.py",
+      "current_preimage_equal": true,
+      "current_postimage_equal": false,
+      "current_sha256": "0efa3ffd37d57cec4a942f922d0717024398d70ec33049f57a5e19a06fc32c15",
+      "donor_sha256": "b91f65926d7a5190834352e757f25ebaed9b03895901acc632875e2c55f05b2d"
+    },
+    {
+      "path": "tests/test_d5_citations.py",
+      "current_preimage_equal": true,
+      "current_postimage_equal": false,
+      "current_sha256": "bab2e802e8a4bfc948209fa00da1b441bc67c83373d042f55b22a0bbb4040a2e",
+      "donor_sha256": "c020863fedcf33c9d21527530c7108e3d2c429d7ddf31428a0bb63422f99633b"
+    }
+  ]
+}

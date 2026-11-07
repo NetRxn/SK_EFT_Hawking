@@ -1,0 +1,630 @@
+{
+  "verdict": "ACCEPT mathematical coupled161/163 design and bounded local controls only",
+  "reviewed_report_sha256": "b9ccad542317211e6da55cac2dba62d2e46495691103d3839dbc206510491ccd",
+  "first_and_return_continuity": {
+    "fresh": true,
+    "changed": [],
+    "self_refreshed": false
+  },
+  "author_files_unchanged": true,
+  "actual_source_hashes": {
+    "l1_direct_b_haar.py": "535d4233a51b89e44f8b9d9b8d01ed624b659d68f1ee9e10ec14efea060900b1",
+    "l1_extended_four_face_gauge_join.py": "4ddfbc8731cc8c8f546b4347c28718fc3917e131d3a5f461fef19f67122ec91b",
+    "l1_extended_mixed_center_gamma.py": "a3dcaffb79e59a174b3a2816d207d8ced22e2bd11a9e05b8c9ea07a20d9c158d",
+    "l1_extended_mixed_curvature_core.py": "24f640e140b8ab179779f8fc9f5029c2484d834a8f79d5f134991822d2010242",
+    "l1_extended_mixed_frame_moment.py": "3d1e8d1e1281e6a27223224cf0cbb7dc0545e9c7c035951a0adabd97d9cf3137",
+    "l1_extended_offset_square.py": "32373f84a267f266e29dea45fa4fe4dc49823be288f1e37dc168dabf06c1793d",
+    "l1_extended_offset_witness.py": "e558b5a3211ee2ff62bd4f9d8b06c762ba26d3e041eb8a70280fee7464a4dd0f",
+    "l1_extended_offset_witness_k2.py": "1d10dc5705e89e8d16cc9e6991b7547b2d8b67bb52e257505aa04259c85455d7",
+    "l1_extended_offset_witness_k3.py": "fa1ef180c87707c6e9a4a13410890b77b04c3620774587a81d00dd9b34e2c73d",
+    "l1_extended_offset_witness_k4.py": "b2b6027c9a3f13dab49b9c72efd09ecc9dbf1e6bf3ab9903fdb008ac79fd12e0",
+    "l1_extended_offset_witness_k4_two_square.py": "1bd858308e4ba5be3d9d25ce1b0d0a8695600b7b030e45e765d923c60610e78b",
+    "l1_extended_opposed_source.py": "06e16f2f83062b1b123bf2a6ce7150522114a43c2af06fb117e73823a6bc42f5",
+    "l1_extended_overlap_strip.py": "13d41c0b8bdb2565a76bfc5bf45a472cf8292a18295dd67cb2e115b085ae3b3e",
+    "l1_extended_two_mixed_centers.py": "6f950654cc6e2650246dcb55623040f22e5a3bda7a5ce74c4ab7f0eaf9f628b2",
+    "l1_normalization_uniform_mixed_edge.py": "089d5bfd21e3bb2a25e2a914dadb261fab354888b9b7b1287a6b28b78e31768a"
+  },
+  "independent_commands": [
+    {
+      "mode": "slice0",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-math.py",
+        "slice0"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.048493083100765944,
+      "source_sha256": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+      "result": {
+        "actual": {
+          "(0, 0)": "245/248832",
+          "(1, 1)": "83/82944",
+          "(2, 2)": "245/248832",
+          "(3, 3)": "245/248832"
+        },
+        "author_exact_equality": true,
+        "incorrect_independent_H": {
+          "(0, 0)": "1/1024",
+          "(1, 1)": "1/1024",
+          "(2, 2)": "1/1024",
+          "(3, 3)": "1/1024"
+        },
+        "mode": "slice0",
+        "pattern": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "projection_order": "H+L first across S,B,D; J then M,N closure",
+        "seconds": 0.020167166949249804
+      }
+    },
+    {
+      "mode": "slice1",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-math.py",
+        "slice1"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.06699566694442183,
+      "source_sha256": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+      "result": {
+        "actual": {
+          "(1, 1)": "-1/248832",
+          "(2, 2)": "1/248832"
+        },
+        "author_exact_equality": true,
+        "incorrect_independent_H": {},
+        "mode": "slice1",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "projection_order": "H+L first across S,B,D; J then M,N closure",
+        "seconds": 0.03739445796236396
+      }
+    },
+    {
+      "mode": "slice2",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-math.py",
+        "slice2"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.11897900002077222,
+      "source_sha256": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+      "result": {
+        "actual": {},
+        "author_exact_equality": true,
+        "incorrect_independent_H": {},
+        "mode": "slice2",
+        "pattern": [
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "projection_order": "H+L first across S,B,D; J then M,N closure",
+        "seconds": 0.08913845801725984
+      }
+    },
+    {
+      "mode": "slice3",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-math.py",
+        "slice3"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.049466957920230925,
+      "source_sha256": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+      "result": {
+        "actual": {
+          "(0, 0)": "1/1024",
+          "(1, 1)": "1/1024",
+          "(2, 2)": "1/1024",
+          "(3, 3)": "1/1024"
+        },
+        "author_exact_equality": true,
+        "incorrect_independent_H": {
+          "(0, 0)": "1/1024",
+          "(1, 1)": "1/1024",
+          "(2, 2)": "1/1024",
+          "(3, 3)": "1/1024"
+        },
+        "mode": "slice3",
+        "pattern": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "projection_order": "H+L first across S,B,D; J then M,N closure",
+        "seconds": 0.02040270797442645
+      }
+    },
+    {
+      "mode": "slice4",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-math.py",
+        "slice4"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.06511229102034122,
+      "source_sha256": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+      "result": {
+        "actual": {
+          "(1, 2)": "1/124416"
+        },
+        "author_exact_equality": true,
+        "incorrect_independent_H": {},
+        "mode": "slice4",
+        "pattern": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "projection_order": "H+L first across S,B,D; J then M,N closure",
+        "seconds": 0.03692233294714242
+      }
+    },
+    {
+      "mode": "slice5",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-math.py",
+        "slice5"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.1163948749890551,
+      "source_sha256": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+      "result": {
+        "actual": {},
+        "author_exact_equality": true,
+        "incorrect_independent_H": {},
+        "mode": "slice5",
+        "pattern": [
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        "projection_order": "H+L first across S,B,D; J then M,N closure",
+        "seconds": 0.08767087501473725
+      }
+    },
+    {
+      "mode": "moments",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-math.py",
+        "moments"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.08125087490770966,
+      "source_sha256": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+      "result": {
+        "denominator": 1019215872,
+        "fourth_rows": 92,
+        "mode": "moments",
+        "ordered4096_pairing_checks": true,
+        "pure_mixed_degree6_samples": true,
+        "seconds": 0.052032292005605996,
+        "sixth_histogram": {
+          "1": 168,
+          "2": 1008,
+          "3": 144,
+          "6": 192,
+          "15": 8
+        },
+        "sixth_rows": 1520
+      }
+    },
+    {
+      "mode": "support",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-math.py",
+        "support"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.10468408395536244,
+      "source_sha256": "24eeb4ed2af4a5654a194c6a30eb073d75238c9452dc0078d4afdafcb0ad9577",
+      "result": {
+        "every_component_occurrence_label_twice": true,
+        "full_graph_factors": 47,
+        "largest_component_rows": 4096,
+        "largest_factor_rows": 57168,
+        "mode": "support",
+        "own_direct_holonomy_face_polynomial_counts": {
+          "0": {
+            "max_component": 16,
+            "total_rows": 300
+          },
+          "1": {
+            "max_component": 1,
+            "total_rows": 21
+          },
+          "2": {
+            "max_component": 16,
+            "total_rows": 300
+          },
+          "3": {
+            "max_component": 256,
+            "total_rows": 4200
+          },
+          "4": {
+            "max_component": 4096,
+            "total_rows": 57168
+          }
+        },
+        "primitive_scalar_rows": 63877,
+        "runtime_feasibility": "UNMEASURED",
+        "seconds": 0.07342912501189858
+      }
+    },
+    {
+      "mode": "geometry-gamma",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-geometry-gamma.py"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.430187041987665,
+      "source_sha256": "5fcc7fae18ee9b8af0a0f023240715c3b63df17a8af02cb6fe616d49c234b51d",
+      "result": {
+        "all105_component_polynomial_coefficients_match_canonical": true,
+        "both_forests": {
+          "components": 2,
+          "edges": 6,
+          "vertices": 8
+        },
+        "both_source_edges_not_action_edges": true,
+        "changed_action_routing": {
+          "161": [
+            {
+              "anchor_flag": 1,
+              "axis": 1,
+              "center": 1,
+              "center_flag": 0,
+              "directed": [
+                3,
+                1
+              ],
+              "edge": [
+                1,
+                3,
+                1
+              ],
+              "slot": 1
+            },
+            {
+              "anchor_flag": 1,
+              "axis": 2,
+              "center": 3,
+              "center_flag": 0,
+              "directed": [
+                7,
+                2
+              ],
+              "edge": [
+                3,
+                7,
+                2
+              ],
+              "slot": 1
+            },
+            {
+              "anchor_flag": 1,
+              "axis": 1,
+              "center": 5,
+              "center_flag": 0,
+              "directed": [
+                7,
+                1
+              ],
+              "edge": [
+                5,
+                7,
+                1
+              ],
+              "slot": 1
+            }
+          ],
+          "163": [
+            {
+              "anchor_flag": 1,
+              "axis": 1,
+              "center": 0,
+              "center_flag": 0,
+              "directed": [
+                2,
+                1
+              ],
+              "edge": [
+                0,
+                2,
+                1
+              ],
+              "slot": 1
+            },
+            {
+              "anchor_flag": 1,
+              "axis": 2,
+              "center": 2,
+              "center_flag": 0,
+              "directed": [
+                6,
+                2
+              ],
+              "edge": [
+                2,
+                6,
+                2
+              ],
+              "slot": 1
+            },
+            {
+              "anchor_flag": 1,
+              "axis": 1,
+              "center": 4,
+              "center_flag": 0,
+              "directed": [
+                6,
+                1
+              ],
+              "edge": [
+                4,
+                6,
+                1
+              ],
+              "slot": 1
+            }
+          ]
+        },
+        "direct_gamma_square_equals_grouped_channels": true,
+        "exact_XOR1_frames_faces_forest": true,
+        "extra_offdiagonal_factor2_refuted": true,
+        "fixing_opposite_H_creates_cycle": true,
+        "full15centers20edges2sources16degree8": true,
+        "geometry_words": [
+          161,
+          163
+        ],
+        "independent_integer_2x2_matrix_orientation_checks": 3840,
+        "own_face_totals": [
+          300,
+          21,
+          300,
+          4200,
+          57168
+        ],
+        "scalar_factorial_accounting": {
+          "action192_exponent": 40,
+          "action_pair_factorial2_exponent": 15,
+          "coframes": 64,
+          "new_moment192_exponent": 1,
+          "new_moment48_exponent": 4,
+          "peeled48_exponent": 6,
+          "source192_exponent": 2
+        },
+        "seconds": 0.3761098750401288
+      }
+    },
+    {
+      "mode": "exhaustive-vector",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-vector.py"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.03368745790794492,
+      "source_sha256": "2f5e35037dd10554e9533bf0a70987e1ccb76d05ad0325a1d7d8714b3aa9e2ab",
+      "result": {
+        "all_independent_holonomy_vector_coefficients_match_canonical": true,
+        "exhaustive_linear_basis_checks": 2136,
+        "seconds": 0.008765000035054982
+      }
+    },
+    {
+      "mode": "all-canonical-moments",
+      "argv": [
+        "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.venv/bin/python",
+        "-B",
+        "/tmp/l1-coupled-holonomy-independent-r1-canonical-moments.py"
+      ],
+      "exit": 0,
+      "parent_seconds": 0.09744420798961073,
+      "source_sha256": "51baf4a8d02c3e8f799a1809f8d957c87d359b75602b3be385a1ea84181c107b",
+      "result": {
+        "canonical_actual_AST_equal_to_independent_factorial_Dirichlet": true,
+        "fourth_entries_including_zeros": 1296,
+        "sixth_entries_including_zeros": 46656,
+        "seconds": 0.06972504104487598
+      }
+    }
+  ],
+  "max_bounded_parent_seconds": 0.430187041987665,
+  "core_findings": {
+    "valid_forest_edges_vertices_components": [
+      6,
+      8,
+      2
+    ],
+    "opposite_H_independent_of_source": true,
+    "five_holonomies": [
+      "H K",
+      "J dagger",
+      "L dagger H",
+      "M dagger N J",
+      "N dagger H dagger M L"
+    ],
+    "all2136_vector_basis_coefficients_match": true,
+    "all105_local_component_pair_tensors_coefficients_match": true,
+    "fourth_moment_entries": 1296,
+    "fourth_nonzero_rows": 92,
+    "sixth_moment_entries": 46656,
+    "sixth_nonzero_rows": 1520,
+    "sixth_histogram": {
+      "1": 168,
+      "2": 1008,
+      "3": 144,
+      "6": 192,
+      "15": 8
+    },
+    "ordered_one_sector_sixth_pairing_checks": 4096,
+    "all6_slices_matched_via_H_L_first_projection": true,
+    "offdiagonal_double_count_refuted": true,
+    "primitive_face_rows": [
+      300,
+      21,
+      300,
+      4200,
+      57168
+    ],
+    "primitive_scalar_rows": 63877,
+    "full_branch_factor_count": 47,
+    "formal_label_multiplicity": 2,
+    "geometry_sites_degree8": 16,
+    "raw_divisor": "192^43 * 4^64 * 48^10 * 2^15",
+    "extra_denominator": 1019215872,
+    "outer_branches": 15,
+    "XOR1_geometry": true,
+    "extra_axis_or_source_factorial": false
+  },
+  "required_corrections": [],
+  "implementation_acceptance_prerequisites": [
+    "Separate exact implementation/source review using inherited canonical helpers and original caps",
+    "Actual nonidentity-forest source/action/spinor covariance readback before fixed/pilot acceptance; orientation/sampled scalar checks are not full-integrand Ward or covariance acceptance",
+    "Actual prepared47factor/15center/20edge/2source/16site rows assert degree8 and every label twice; full row XOR1 with induced Grassmann mask signs",
+    "Independent direct/fixed controls including all15 branches, sampled implicit network versus normalized tensor and canonical divisor convention; bounded fixed contractions/XOR covariance before pilot",
+    "Fresh source-bound native whole-graph cold600/wholewarm60/parent665, rows120000/pairs3000000; no partial/fallback sums or cap increase",
+    "Complete independent reconstruction/replay/portable/archive/classunion review before236 changes"
+  ],
+  "uncertainties": [
+    "Full joint tensor support not enumerated",
+    "All-factor preparation not run",
+    "Intermediate row/pair support, memory and contraction performance unmeasured",
+    "No selected coefficient or fullk4/source-action ensemble/commonZ/physicalB3/modes/transport/main/human/publication acceptance"
+  ],
+  "review_markdown_sha256": "61eea1082c0f4d2514e2d30a142cf4180d217674edf59a76006e19393559d6bd",
+  "command_receipts_sha256": "cc1e3b582313daae2677dac3978a17742986adce27ed1f709e751a68bd3dc907",
+  "return_continuity": {
+    "fresh": true,
+    "changed": [],
+    "self_refreshed": false
+  }
+}

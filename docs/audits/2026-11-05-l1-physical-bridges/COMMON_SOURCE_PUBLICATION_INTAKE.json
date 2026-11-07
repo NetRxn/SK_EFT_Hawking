@@ -1,0 +1,28 @@
+{
+  "commit": "b804fb426d722d3597b06f821e91d22b67c8d6f7",
+  "manifest_members_verified": [
+    "COMMON_SOURCE_ACCEPTANCE.md",
+    "COMMON_SOURCE_MATH_REVIEW_R1.md",
+    "COMMON_SOURCE_MATH_REVIEW_R2.md",
+    "COMMON_SOURCE_MATTER_INTERFACE.md",
+    "COMMON_SOURCE_PHYSICS_REVIEW_R1.md",
+    "COMMON_SOURCE_PHYSICS_REVIEW_R2.md",
+    "common_source_review_r1_evidence.zip",
+    "common_source_scalar_path_check_r1.json"
+  ],
+  "archive_crc_ok": true,
+  "archive_members": [
+    "COMMON_SOURCE_MATTER_INTERFACE_R1.md",
+    "COMMON_SOURCE_MATH_REVIEW_R1.md",
+    "COMMON_SOURCE_PHYSICS_REVIEW_R1.md"
+  ],
+  "current_reused_source_pins_match": true,
+  "root_exact_scalar_control": {
+    "variance": "193312/342225",
+    "exponential": "-6288976/5817825",
+    "affine": "7407044/5817825",
+    "difference": "7804/3315"
+  },
+  "scope": "All original8manifestbytes and archiveCRC rechecked after normal ancestry-preserving merge7b9. Accepted conditional manual finite-source construction only; no physical matching, B3/Lean/stage/main/publication closure.",
+  "publication_merge": "7b9f8fdb6fd86adcebe993f21f28b7b268a535d3"
+}

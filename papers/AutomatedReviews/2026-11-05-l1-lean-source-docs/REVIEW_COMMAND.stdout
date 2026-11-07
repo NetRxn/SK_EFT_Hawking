@@ -1,0 +1,27 @@
+
+══════════════════════════════════════════════════════════════════════
+  [31m✗ FAIL[0m  review_verify_is_one_command: Every `Verify:` line is a single runnable command and nothing else
+══════════════════════════════════════════════════════════════════════
+  ✗ summary  —  306 `Verify:` line(s) checked, 58 carrying anything other than a single backticked command
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+  ✗ papers/AutomatedReviews/2026-08-15-d1-stage10-redraft/D1.md  —  `Verify:` is not a single command: '`cd "$REPO" && uv run python -c "'. `close_finding.py` runs this line verbatim under a shell, so trailing prose is argv, not commentary — the finding can then be neither verified nor closed. Put the explanation on the following line as `*What it asserts:* …`.
+
+══════════════════════════════════════════════════════════════════════
+  Overall: 0/1 checks passed
+  [31mSOME CHECKS FAILED[0m
+
+  [32m✓ SUBSTRATE: clean[0m — no Lean/Python-side failure
+  [33m● PAPER CORPUS (1):[0m review_verify_is_one_command
+    These concern the paper corpus, not the Lean/Python substrate. A Lean-only wave
+    cannot have caused them — see docs/architecture/VALIDATION_GATE_TOPOLOGY.md §2.
+══════════════════════════════════════════════════════════════════════
+
+  Completed in 0.1s

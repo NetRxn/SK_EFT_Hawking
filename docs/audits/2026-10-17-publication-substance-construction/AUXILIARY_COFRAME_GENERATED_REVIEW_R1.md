@@ -1,0 +1,37 @@
+# Independent canonical generated-artifact review R1
+
+**ACCEPT_GENERATED_ARTIFACTS_ONLY**
+
+Accept only the six frozen generated files at MAIN `a16af66d15d6184c19defcad1f2110515777b6c1`. No material generated-artifact correction is required. This review grants no full-project, scientific, human, main-publication or submission acceptance. Only this report and its paired JSON were written; no live writer, freshness command, extraction, build, MCP, Git mutation, controller, ledger, source or cache operation was invoked.
+
+## Complete canonical reproduction and conservation
+
+The first existing continuity-adapter check matched the packet. I read its ROOT notebook, governing contracts, actual producers and accepted source/kernel/composition reviews. The final check of the same packet returns fresh:true, changed:[], exit0; every frozen file hash remains exact. `git diff --check` exits0. All current source changes remain exactly the six packet-owned derived paths.
+
+All 41,126 baseline extraction records are deep-exact, with no duplicate names or removed records. Exactly 168 records are added in the two accepted modules: 115 theorem-kind, 48 definitions, one structure and four instances. Every new closure uses only subsets of propext/Classical.choice/Quot.sound and has no project axiom; no inappropriate requirement for all three axioms was applied to helpers. All 88 public exports are eligible under the actual existing classifier. The actual source hash `58aeb8817b0cf8d9` matches the hash file, and the entire extraction byte stream matches the canonical serializer.
+
+The existing census owner yields 22,919→23,008 theorem nodes and 2,051→2,053 modules, with zero sorry. The additional census node beyond the 88 public exports is the proof-valued structure projection `SKEFTHawking.ADW.FiniteGrassmannCoframe.Torus.positive`, classified as eligible by the existing owner. It is not a 89th independently authored public export. Twenty-six added theorem-kind compiler products are excluded by that owner. No classifier, parser or threshold was changed.
+
+The entire `docs/counts.json` object was recomputed through its actual owners, including Python collection and Aristotle registry counts, and equals the artifact. All 107 macro definitions and the complete `docs/counts.tex` bytes match `generate_tex`, rendered into an in-memory sink. The actual `count_python` collector/parser was retained; its uv launcher prefix alone was replaced by the same installed venv Python, with bytecode and pytest cache writes disabled. Collection succeeded. This is a collection census, not a test-suite pass.
+
+The complete current and baseline atlas models reproduce through `build_atlas`; current atlas bytes and full heatmap text reproduce through their existing writers. Every old theorem node remains. Only four old frontier-impact fields increase by one, justified by the new direct dependency records: auxiliaryGaussianSeries_coeff, auxiliaryQuadraticSeries_constantCoeff, auxiliarySeries_eq_exp_quadratic_mul, and integrable_auxiliaryWeight_mul_monomial. Unknowns, edges, frontier, obstruction records and tracks remain entirely exact to baseline. Every new atlas node is exactly one of the owner's 89 eligible records; generated helpers are excluded.
+
+All 90 scientific table/scalar outputs across all 15 discovered papers reproduce through the actual canonical rendering functions and remain byte-exact to baseline. This comparison was repeated over the complete corpus after reading the rendering package. The seven complete claim clusters reproduce through the existing exact/normalized builders, ignoring only construction timestamps; their saved bytes remain baseline-exact. Every claims-review and prose-state file across all schemas also remains byte-exact to baseline. No human disposition changes.
+
+## Whole review corpus and graph/gate provenance
+
+The actual current canonical extractor yields 1,869 nodes, deep-exact to the accepted independent integration review. All eleven postimages, parser/checker implementations and immutable closure ledger match that review. The original 1,853 survivors preserve the accepted protected-field contract; only the already accepted eleven lane/detail changes exist. Sixteen L2 findings are newly visible and OPEN; SCOPE:R3 alone is removed as the accepted historical authority artifact. No scientific or human closure is synthesized.
+
+All four actual existing review functions pass and their full results are deep-exact to the accepted production review, including 284 explicit single-command controls. Tracing the unchanged recurrence function yields the same 987 closed records and exact same 555 compared closure IDs, with zero hits. This weak near-verbatim detector remains a floor, not proof of no semantic recurrence.
+
+The actual canonical graph has 51,334 nodes and 19,073 links. Its SHA256 `231a70c0fdeea614a06ead6cfe36ba7f2e0353cb9146851881a04e52e6ebe9c7` matches the gate snapshot, its metadata/counts agree, and live canonical source hashing yields `2954acb360d07c3e`. All 231 complete selected gate payloads match the actual graph for the actual `validate.BUNDLE_CODES` roster of 21 bundles. Legacy graph gates outside that roster are not silently counted as bundle gates.
+
+Every one of the 231 IDs and states is exact to the preceding snapshot: 160 passed, 25 blocked, 28 open and 18 needs-recheck. Full payloads are not globally identical: timestamps advance; D3/E1/L3 FixPropagation references reflect accepted lane corrections; L2 FixPropagation reflects newly visible blocking findings. All these complete differences are retained in JSON, and every current finding reference matches its actual canonical node. None changes a gate state or closes a scientific duty. G4 remains open for 19 bundles without declared formulas; L1/D12 passing G4 labels explicitly describe typed static coverage, with execution/scientific validation separate.
+
+## Actual execution evidence and acceptance limits
+
+The preserved current native receipt is terminal0 at 20:06:42 UTC with 10,840 jobs; every receipt source/toolchain/dependency pin matches current bytes. I did not rerun the build. The initial ROOT refresh R1 genuinely failed its old-count assertion after `load_lean_deps` had automatically completed extraction. Its failed receipt and raw AssertionError remain preserved. R2 continued that completed extraction, qualified all old/new records and completed existing writers/four freshness checks with all recorded steps exit0. This is a wrapper bookkeeping failure, not a scientific/kernel failure or a checker change.
+
+The older b21 full profile remains FAILED: 7,174 passed, 27 failed and 14 skipped, plus notebook validation failure. There is no new full-project certificate. Actual G-valued Eq7/C, physical B3/state/source/modes/matter/transport/limits/simulation, whole-paper scientific and human/publication requirements remain open. Accepted A/B1 source work is reused only at its verified unchanged hashes and boundaries.
+
+The paired JSON retains full new records, count objects/all107 macros, atlas differences, all90 output hashes, all-schema human-state hashes, full actual review nodes/checks/recurrence locals, complete231 gate payloads/deltas, source/producer/native/raw evidence manifests and first/final continuity receipts. Two reviewer-only audit path assumptions stopped earlier local comparison attempts (absolute Git blob path; assumed module file instead of the actual package); both were corrected without source, checker or canonical artifact mutations.

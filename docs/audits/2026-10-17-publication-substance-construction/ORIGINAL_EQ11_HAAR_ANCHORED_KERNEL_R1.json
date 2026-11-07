@@ -1,0 +1,73 @@
+{
+  "commit": "c6c80cc883625f5591bcc5530e7d3b003d2813b6",
+  "success": true,
+  "timed_out": false,
+  "diagnostics": [
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.anchoredCoordinate' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 172,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.chiralMoment' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 173,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.chiralMoment_eq_integral' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 174,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.linkHaar_monomial' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 175,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.linkHaar_monomial_complex' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 176,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.linkHaar_monomial_of_odd' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 177,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.linkHaar_monomial_even' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 178,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.chiralMoment_zero' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 179,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.linkHaar_at_anchor' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 180,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.linkHaar_left_fourth' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 181,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.linkHaar_left_right_square' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 182,
+      "column": 1
+    }
+  ]
+}

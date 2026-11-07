@@ -1,0 +1,18 @@
+registration sites for 'extract_imports_edges':
+
+  [OWED] check definition                           scripts/validation/checks/
+  [OWED] _CANONICAL_ORDER                           scripts/validate.py
+  [OWED] validate.py re-export                      scripts/validate.py
+  [OWED] EXPECTED_CHECKS (count+order)              tests/test_validate_registry_contract.py
+  [  --] EXPECTED_CHECK_FUNCTIONS (only if a test reaches it via `validate.`) not applicable to this check
+  [OWED] mutation obligation                        tests/test_d5_mutation_obligation.py
+  [OWED] cannot-measure baseline                    tests/test_cannot_measure_baseline.py
+  [OWED] verify_scope path mapping                  scripts/verify_scope.py
+  [OWED] sync edge (only if it writes an artifact)  scripts/sync_manifest.py
+  [OWED] SURFACE_INVENTORY (regenerate)             docs/architecture/SURFACE_INVENTORY.md
+
+  numeric floors — confirm the direction yourself:
+    CI_MIN_CHECKS_RUN = 85  (+1 when adding a non-CI_SKIP check, -1 when removing one)
+    FIXTURE_ONLY_CEILING = 51  (unchanged if the new check is PRODUCTION_SEEDED; +1 if fixture-only)
+
+7 site(s) owed: check definition, _CANONICAL_ORDER, validate.py re-export, EXPECTED_CHECKS (count+order), mutation obligation, verify_scope path mapping, SURFACE_INVENTORY (regenerate)

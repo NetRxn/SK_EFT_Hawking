@@ -1,0 +1,89 @@
+{
+  "verdict": "ACCEPT_ORIGINAL_FULL_ONE_SITE_NUMERICAL_CONTROL",
+  "source_head": "25b5f229ce3f518ac08a9279f1680f2068cd4a4c",
+  "source": {
+    "src/core/formulas.py": "d2eb079a84da6ab0c68aabb91640e9b29013bcf4b22104e816d68a804bd5c1b4",
+    "src/vestigial/original_coefficients.py": "fb0ac84c5623f9fd2454561d007a4f973e0db5874f259fe5f395879a9b3a7df8",
+    "tests/test_original_coefficient_jets.py": "0b8fd40a3749090d30f8793cd6aaa103e3f841e070d6686701a64ad013c0ebf8"
+  },
+  "wrapper_sha256": "d263e566d288f035cef70e9a32d74159872d7a47384f614714a6787fa1358b3c",
+  "child_sha256": "4636af5ef3051d53ed0d1e5c0633dd32890826f8b16c8fd5fe068bbb79dd7d85",
+  "pid": 73196,
+  "result_sha256": "9a681136c101fb321d2d69039719ee5e8d7ff3d12aae96e4a6fa2edcd0202e5c",
+  "result_bytes": 580540,
+  "junit_sha256": "64bac88415fc68e0b96e1e69b3d7ea7345682ac713883fd30db5d601a8f5ec9d",
+  "cost": {
+    "products": 4668894,
+    "integer_products": 13593214,
+    "peak_integer_bits": 41,
+    "peak_scalar_records": 422706,
+    "peak_payload_bytes": 760350274
+  },
+  "resources": {
+    "exit_code": 0,
+    "termination_reason": null,
+    "cleanup_errors": [],
+    "sampled_peak_tree_rss_bytes": 134774784,
+    "max_observed_threads": 1,
+    "wall_seconds": 1113.0725416671485,
+    "wall_started": 1794016861.696756,
+    "full_scientific_acceptance": false,
+    "independent_result_review_required": true
+  },
+  "quartic_slots": 3876,
+  "center_allowed": 740,
+  "query_count": 94016,
+  "reports": {
+    "printed": {
+      "partition_terms": 173,
+      "joint_JH_terms": 277,
+      "T_first_second": [
+        16,
+        136
+      ],
+      "H_first_second": [
+        10,
+        55
+      ],
+      "pointwise_values_checked": [
+        218,
+        218
+      ],
+      "point_denominators": [
+        "96",
+        "12313/128"
+      ],
+      "normalized_frame_contacts_per_point": [
+        26,
+        26
+      ],
+      "slots_per_jet": 6
+    },
+    "closed": {
+      "partition_terms": 173,
+      "joint_JH_terms": 277,
+      "T_first_second": [
+        16,
+        136
+      ],
+      "H_first_second": [
+        10,
+        55
+      ],
+      "pointwise_values_checked": [
+        218,
+        218
+      ],
+      "point_denominators": [
+        "96",
+        "12313/128"
+      ],
+      "normalized_frame_contacts_per_point": [
+        26,
+        26
+      ],
+      "slots_per_jet": 6
+    }
+  },
+  "physical_acceptance": false
+}

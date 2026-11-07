@@ -1,0 +1,59 @@
+{
+  "writer_exit_code": 0,
+  "source": {
+    "src/core/formulas.py": {
+      "sha256": "d2eb079a84da6ab0c68aabb91640e9b29013bcf4b22104e816d68a804bd5c1b4",
+      "bytes": 536661
+    },
+    "src/vestigial/original_coefficients.py": {
+      "sha256": "fb0ac84c5623f9fd2454561d007a4f973e0db5874f259fe5f395879a9b3a7df8",
+      "bytes": 71849
+    },
+    "tests/test_original_coefficient_jets.py": {
+      "sha256": "0b8fd40a3749090d30f8793cd6aaa103e3f841e070d6686701a64ad013c0ebf8",
+      "bytes": 30825
+    },
+    "tests/test_original_coefficients.py": {
+      "sha256": "15d64a3899ad078015864ae4354156c62bbe1bb6a4e8db3c5a398833865d885d",
+      "bytes": 25695
+    }
+  },
+  "science_verdict": "ACCEPT_SOURCE",
+  "algebra_cost_verdict": "ACCEPT_SOURCE_AND_PROSPECTIVE_COST",
+  "archive_sha256": "8f4dee278830d5118ae11b4cc12535e880aad49b4fc40db8aa6694c04ff40c18",
+  "archive_payloads": 17,
+  "ledger_before_sha256": "569916ae2b022338b56c120a08e18ceb5c2adc5ee37ca584f1bef67adc1a2e7c",
+  "full_scientific_run_executed": false,
+  "native_acceptance": false,
+  "prior_ledger_entries_unchanged": true,
+  "canonical_records": [
+    {
+      "finding_id": "review:2026-11-07-original-coefficient-task2:L1:1.1",
+      "status": "fixed",
+      "evidence": "Both complete independent R3 source reviews ACCEPT exact source hashes in ORIGINAL_COEFFICIENT_TASK2_ACCEPTANCE_R3_EVIDENCE.zip; all action slots enforce positive-even nilpotence and rational/current accumulation checks unreduced height. Both independently pass109bounded tests. Source repairs only; complete scientific run and independent result review remain owed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/ORIGINAL_COEFFICIENT_TASK2_ROOT_ACCEPTANCE_R3.md",
+      "date": "2026-11-07",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py tests/test_original_coefficient_jets.py -k 'not test_original_full_small_carrier_direct_vs_auxiliary' -q",
+        "declared": "uv run python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py tests/test_original_coefficient_jets.py -k 'not test_original_full_small_carrier_direct_vs_auxiliary' -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-original-coefficient-task2:L1:1.2",
+      "status": "fixed",
+      "evidence": "Both complete independent R3 source reviews ACCEPT exact source hashes in ORIGINAL_COEFFICIENT_TASK2_ACCEPTANCE_R3_EVIDENCE.zip; all action slots enforce positive-even nilpotence and rational/current accumulation checks unreduced height. Both independently pass109bounded tests. Source repairs only; complete scientific run and independent result review remain owed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/ORIGINAL_COEFFICIENT_TASK2_ROOT_ACCEPTANCE_R3.md",
+      "date": "2026-11-07",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py tests/test_original_coefficient_jets.py -k 'not test_original_full_small_carrier_direct_vs_auxiliary' -q",
+        "declared": "uv run python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py tests/test_original_coefficient_jets.py -k 'not test_original_full_small_carrier_direct_vs_auxiliary' -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    }
+  ]
+}

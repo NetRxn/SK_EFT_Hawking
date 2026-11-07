@@ -1,0 +1,25 @@
+{
+  "incoming": "8440c44fe9263d0070002895b5186bca32f4f1a9",
+  "premerge": "4db245bc9ccf635e1d5c53fbf0bca7dfba6d1acc",
+  "merge": "d89b07c6170d457833a31df571f9cd6fc4e91b5a",
+  "parents": [
+    "4db245bc9ccf635e1d5c53fbf0bca7dfba6d1acc",
+    "8440c44fe9263d0070002895b5186bca32f4f1a9"
+  ],
+  "checks": {
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_ACCEPTANCE.md": "exact original incoming bytes",
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_CERTIFICATE_CONTRACT.md": "exact original incoming bytes",
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_MATH_REVIEW_R1.md": "exact original incoming bytes",
+    "docs/audits/2026-11-05-l1-physical-bridges/N16_PHYSICAL_IMAGE_PHYSICS_REVIEW_R1.md": "exact original incoming bytes",
+    "docs/audits/2026-11-05-l1-physical-bridges/n16_physical_image_certificate_evidence.zip": "exact original incoming bytes",
+    "docs/audits/2026-11-05-l1-physical-bridges/n16_physical_image_certificate_manifest.json": "exact original incoming bytes",
+    "papers/L1/paper_draft.tex": "unchanged by scientific merge",
+    "papers/L1/paper_draft.pdf": "unchanged by scientific merge",
+    "papers/L1/claims_review.json": "unchanged by scientific merge",
+    "papers/L1/bundle_metadata.json": "unchanged by scientific merge",
+    "papers/L1/prose_state.json": "unchanged by scientific merge",
+    "papers/L1/audit_log.jsonl": "unchanged by scientific merge",
+    "docs/review_finding_supersessions.json": "unchanged by scientific merge"
+  },
+  "scope": "Accepted manual reductions and original-action certificate contract only; no normalization/state value, job or full publication acceptance"
+}

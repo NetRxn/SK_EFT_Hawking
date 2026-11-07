@@ -1,0 +1,53 @@
+{
+  "axis_subtotals": {
+    "(2, 2)": [
+      13408159967615306205,
+      2199023255552
+    ],
+    "(2, 3)": [
+      288435790010965434291,
+      140737488355328
+    ]
+  },
+  "covariance_pairs": [
+    [
+      28,
+      63,
+      "xor1"
+    ],
+    [
+      114,
+      149,
+      "xor1"
+    ],
+    [
+      194,
+      219,
+      "xor1+transverse23"
+    ],
+    [
+      253,
+      268,
+      "xor1+transverse23"
+    ]
+  ],
+  "hashes": {
+    "l1_k4_two_square8_receipts.jsonl": "8a7e4005b36a7321fc260fe66a0714355e9ae74b1dd4fc21189e98302087fd67",
+    "l1_k4_two_square8_review.md": "dca207c30d3739df48db923c33a00d6d7d1cd91df2f716c1829724bb2e136ad1",
+    "l1_k4_two_square8_verification.json": "a962778af69280d6198c5b247ec03300b5d5c1718c0e40fcc7e9efe8ec8b16f6",
+    "l1_k4_two_square_port_verification.json": "1fac0c2de3f012a6d043b3e5a9b6d3d408a373a4431fac05146b6a469c224d2d",
+    "l1_k4_two_square_portable_control.json": "a7bebb3c3fe01bbc7a1421ea22def45036c377bd6113b08fda285a610e39ad3a",
+    "l1_k4_two_square_portable_exit.json": "810ebd14adf5e1b601d50f6eb0c726f5bf58265f4213ddf6122b6dcbd60accc5"
+  },
+  "roster": [
+    28,
+    63,
+    114,
+    149,
+    194,
+    219,
+    253,
+    268
+  ],
+  "status": "PASS-archived-selected-eight"
+}

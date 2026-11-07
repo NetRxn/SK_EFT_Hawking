@@ -8577,10 +8577,12 @@ def c_GW_from_chi_vest(chi_vest, c_light=2.99792458e8):
     Returns
     -------
     float
-        c_GW in m/s (positive).
+        c_GW in m/s (positive for positive susceptibility and c_light).
+        Negative real susceptibility returns NaN.
     """
-    delta_chi = (chi_vest - 1.0)
-    return float(c_light * np.sqrt(1.0 + delta_chi))
+    scalar_type = np.result_type(chi_vest, c_light, np.float64).type
+    chi = scalar_type(chi_vest)
+    return float(scalar_type(c_light) * np.sqrt(chi))
 
 
 def c_GW_deviation_from_c(chi_vest):
@@ -8592,7 +8594,7 @@ def c_GW_deviation_from_c(chi_vest):
 
     Lean: GravitationalWaves.c_GW_deviation_zero_iff_chi_one
     Aristotle: pending
-    Source: Abbott et al. ApJL 848, L13 (2017) Eq. (5).
+    Source: Abbott et al. ApJL 848, L13 (2017) Eq. (1).
 
     Parameters
     ----------
@@ -8604,7 +8606,12 @@ def c_GW_deviation_from_c(chi_vest):
     float
         (c_GW − c) / c. Zero at the natural anchor χ_vest = 1.
     """
-    return float(np.sqrt(chi_vest) - 1.0)
+    scalar_type = np.result_type(chi_vest, np.float64).type
+    chi = scalar_type(chi_vest)
+    root = np.sqrt(chi)
+    if np.isfinite(root):
+        return float((chi - 1.0) / (root + 1.0))
+    return float(root - 1.0)
 
 
 def dispersion_correction_from_GammaH(omega_hz, gamma_h_dimensionless):

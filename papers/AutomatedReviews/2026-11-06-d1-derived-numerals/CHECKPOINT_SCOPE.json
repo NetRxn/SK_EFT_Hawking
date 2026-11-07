@@ -1,0 +1,23 @@
+{
+  "state": "OPEN finding and unapplied source proposal, not independent scientific acceptance",
+  "original_verify_rc": 1,
+  "expected_red": "Current hierarchy paragraph contradicts actual canonical fixed-material scaling",
+  "source_application": false,
+  "numerical_migration": false,
+  "original_physical_obligations": "Retain existing D1/E1/E2 identities and full BUILD acceptance",
+  "archive": {
+    "name": "UNAPPLIED_SOURCE_PROPOSAL_R1.zip",
+    "sha256": "c480c515601cdf51c5e5c1a74a5b31e9edfe25e7f96068ac4419673b4c9103a2",
+    "members": {
+      "d1-derived-numeral-source-proposal-r1.md": "fcf60638c602c36c6cff1fd03f6ed7ca3e9dbcba24e51a4c8cc77de6d83136db",
+      "d1-derived-numeral-source-proposal-r1.json": "02adb6a87421f8df208e18b6cf70a33a744a9795b615bda795210493b4eb2466",
+      "d1-derived-numeral-proposal-r1/REPLACEMENTS.json": "cead78918b40a7cd9180a99b4da25440cb234ea182d79b5fcdf4ed539d5a8e65",
+      "d1-derived-numeral-proposal-r1/hierarchy_scaling_replacement.tex": "a838b0c1281c7524aea65d9a66a5c0566a9f7ec01473abf0259c9834cd652057",
+      "d1-derived-numeral-proposal-r1/SCALING_REPLACEMENT.json": "974e9a25ee6052c3415e05e0de9a8b26ecd90ab467dd2ba2d7a76f3ea5a787a0",
+      "d1-derived-numeral-proposal-r1/finish_report.py": "c33160a35e1ddfbc75888409987343aa539ed508a08128880222faf1b9b6ed45",
+      "d1-derived-numeral-proposal-r1/tables.py": "afbbb416577038ae4f4c36a7d681ed57d810e9c8e28560f4d5e7b3938c9593a3",
+      "d1-derived-numeral-proposal-r1/assemble_report.py": "2e677c7f3831c9026a8460d317fcbb043b3ae23d50218877b63bfb791ba818db"
+    }
+  },
+  "priority": "L1 lead; bounded existing numerical-debt enabler only"
+}

@@ -1,0 +1,110 @@
+{
+  "verdict": "ACCEPT complete scientific110/153 class and independent complete110 replay; portable/archive acceptance pending",
+  "words": {
+    "110": {
+      "coefficient": [
+        461966234549968960425,
+        140737488355328
+      ],
+      "raw_numerator": 354477641405232380622803615678938360768892524931703483026525508672275150558953348691407747402013103285469270516217007246279620990938521777273207425649868800,
+      "nonempty_preparations": 45,
+      "computed_raw_zero_branches": 18,
+      "peak_ordering_sensitive": 5632,
+      "cold_seconds": 24.912659000023268,
+      "whole45_warm_seconds": 10.21285354194697,
+      "parent_seconds": 35.27062883297913,
+      "actual_exit": 0,
+      "stdout_sha256": "887d154e6ef391f5548e94b184e863fab72b59a4183d8dfa3c993262f760f31a",
+      "exit_sha256": "dcd82b6d7a401cf18d76c2076cb78fddf41c41aceb4adb7867f8ebd3efec19bb",
+      "runner_sha256": "061a071e087df20410d27be2cacded98a2ccf96ad9cdc502c5b062ab13a1209c",
+      "driver_sha256": "babae27b6d77033e27f775b8ce3c9cd3b69cd5a657eaf529c8909408afdaf8f1"
+    },
+    "153": {
+      "coefficient": [
+        461966234549968960425,
+        140737488355328
+      ],
+      "raw_numerator": 354477641405232380622803615678938360768892524931703483026525508672275150558953348691407747402013103285469270516217007246279620990938521777273207425649868800,
+      "nonempty_preparations": 45,
+      "computed_raw_zero_branches": 18,
+      "peak_ordering_sensitive": 3024,
+      "cold_seconds": 24.48231033293996,
+      "whole45_warm_seconds": 9.56925866601523,
+      "parent_seconds": 34.22540812497027,
+      "actual_exit": 0,
+      "stdout_sha256": "6bb236d46152c15a6700aec0c12874a4af25544e77478227f8566cc8ac5a15a4",
+      "exit_sha256": "0ceaa53dfe66288980bac171b41109b0449a67a8e025347e7c16b095173c9ab1",
+      "runner_sha256": "7777bfdf89b429a14e873706275e95d4da36200c3373c974888e3cb90ab8f381",
+      "driver_sha256": "372dd90f30ecea0d579144d6f0931ddc6d3768146b54647b1b4a059e887a3508"
+    }
+  },
+  "independent_replay": {
+    "verdict": "ACCEPT independent complete110 replay retry2; original failed validation attempt preserved",
+    "actual_handle": 32867,
+    "actual_child_driver_exit": 0,
+    "all45_raw_weight_divisor_fraction_equal_pilot": true,
+    "all45_originalL_fullgamma_degree_source_table_checks": true,
+    "coefficient": [
+      461966234549968960425,
+      140737488355328
+    ],
+    "raw_numerator": 354477641405232380622803615678938360768892524931703483026525508672275150558953348691407747402013103285469270516217007246279620990938521777273207425649868800,
+    "peak_ordering_sensitive": 5632,
+    "cold_seconds": 25.837254083016887,
+    "whole45_warm_seconds": 10.460991083993576,
+    "parent_seconds": 36.50061608396936,
+    "completed_branch_counter": 45,
+    "first_attempt": {
+      "handle": 71223,
+      "actual_child_driver_exit": 1,
+      "complete_branches": 0,
+      "cause": "runtime tuple/int-key source provenance compared directly to JSON list/string-key representation",
+      "preserved": true,
+      "correction": "serialization-normalized provenance assertion only; no scientific source or computation statement changed"
+    }
+  },
+  "all90_branch_arithmetic": true,
+  "all45_XOR1_raw_weight_divisor_fraction_core_fullgamma_sourcepoly_covariance": true,
+  "branch_role_order": "3i+j remains3i+j, no transpose",
+  "actual_peaks_preserved_no_equal_peak_requirement": true,
+  "same_axis_class_subtotal": [
+    461966234549968960425,
+    70368744177664
+  ],
+  "class_exactly": [
+    110,
+    153
+  ],
+  "class_disjoint_from_accepted232": true,
+  "principal16_bindings_unchanged": true,
+  "source_sha256": "a30dacedacc857ae1cf8ce32db6b4b2a62ee2cdfc33e890bf601995bfd942a98",
+  "preserved_author110_counter_defect": "reported0 because copied exact-fixed-branch filter; actual45 original exact-branch records preserved with annotation",
+  "files_sha256": {
+    "/tmp/l1-residual40-author-pilot110-r1.out": "887d154e6ef391f5548e94b184e863fab72b59a4183d8dfa3c993262f760f31a",
+    "/tmp/l1-residual40-author-pilot110-r1.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-residual40-author-pilot110-r1.exit.json": "dcd82b6d7a401cf18d76c2076cb78fddf41c41aceb4adb7867f8ebd3efec19bb",
+    "/tmp/l1-residual40-author-pilot110-runner-r1.py": "061a071e087df20410d27be2cacded98a2ccf96ad9cdc502c5b062ab13a1209c",
+    "/tmp/l1-residual40-author-pilot110-driver-r1.py": "babae27b6d77033e27f775b8ce3c9cd3b69cd5a657eaf529c8909408afdaf8f1",
+    "/tmp/l1-residual40-author-full153-r1.out": "6bb236d46152c15a6700aec0c12874a4af25544e77478227f8566cc8ac5a15a4",
+    "/tmp/l1-residual40-author-full153-r1.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-residual40-author-full153-r1.exit.json": "0ceaa53dfe66288980bac171b41109b0449a67a8e025347e7c16b095173c9ab1",
+    "/tmp/l1-residual40-author-full153-runner-r1.py": "7777bfdf89b429a14e873706275e95d4da36200c3373c974888e3cb90ab8f381",
+    "/tmp/l1-residual40-author-full153-driver-r1.py": "372dd90f30ecea0d579144d6f0931ddc6d3768146b54647b1b4a059e887a3508",
+    "/tmp/l1-110-review-replay.py": "87e1cac21f681f62db4793346354be2e7ede25a6e041f0be4fdebd7f32c22b9e",
+    "/tmp/l1-110-review-replay-driver.py": "a54f03a43ff1a1479f1716b7b3889049730501b3bb586f2b4e1e78fe25015a97",
+    "/tmp/l1-110-review-replay.out": "9a9c5f8e5b127c2507d1f3f82a423351b3c9fa3e59bf08ed6202c2de5209bea6",
+    "/tmp/l1-110-review-replay.err": "0c9bd6b2cc73bb2beef245df2f631c45de86d432d8a801c30291b3e9c79bf286",
+    "/tmp/l1-110-review-replay.exit.json": "6dfa6fd08fd78da6df268c852d052cf1d0a5aa324d572d44da984be86dee899d",
+    "/tmp/l1-110-review-replay-r2.py": "2e140007b479ba9fd3d49ea77d4da39b84b98720c108f6e0b216f216937400cc",
+    "/tmp/l1-110-review-replay-driver-r2.py": "9f4629355e1866c2e178617bfc8cae828af21929bc1b8554260b06e8e2ecbfac",
+    "/tmp/l1-110-review-replay-r2.out": "d75cf4844e295e88f72d92f6a0be1d5b303db36f42daa1fd4f02b7d4e7f049a7",
+    "/tmp/l1-110-review-replay-r2.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/l1-110-review-replay-r2.exit.json": "fda1c220e92aef3284837baed01b05ade4d4b7ecf5fcd94f845284085eccb4be",
+    "/tmp/l1-110-review-replay-metadata-preflight.json": "79d1694d90a9ee818bc6f6ee9ef5f3189739fcb53490aee1e394174fe5e6ca4e",
+    "/tmp/l1-110-review-replay-attempt1-annotation.json": "eb44561482f53ef570cb1169336b09358e8c74bb79726d454185ed7353226e89"
+  },
+  "portable_scope": 232,
+  "portable234": "NOT ACCEPTED until actual portable/archive review",
+  "remaining_unrestricted_after_scientific_class": 38,
+  "full_k4_sourceaction_commonZ_B3_modes_transport_main_publication": "OPEN"
+}

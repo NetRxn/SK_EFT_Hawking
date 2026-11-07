@@ -1,0 +1,8 @@
+{
+  "source": "e8931b36163ffd7ae72e8aa47d3e1a5e8cfa80e9",
+  "command": "python3 -c 'from pathlib import Path; s=Path(\"papers/paper23_linearized_efe/paper_draft.tex\").read_text(); p=s.split(\"Combined with the Planck-anchor relation\",1)[1].split(r\"\\paragraph*{Vestigial caveat.}\",1)[0]; assert r\"6\\pi>16\" in p and r\"x_{\\Nf}\" in p and \"1,2\" in p; assert \"multi-generation\" not in p and \"between the per-generation\" not in p'",
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; s=Path(\"papers/paper23_linearized_efe/paper_draft.tex\").read_text(); p=s.split(\"Combined with the Planck-anchor relation\",1)[1].split(r\"\\paragraph*{Vestigial caveat.}\",1)[0]; assert r\"6\\pi>16\" in p and r\"x_{\\Nf}\" in p and \"1,2\" in p; assert \"multi-generation\" not in p and \"between the per-generation\" not in p\n                                                                                                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "scope": "Manuscript propagation control; independent algebra review is required"
+}

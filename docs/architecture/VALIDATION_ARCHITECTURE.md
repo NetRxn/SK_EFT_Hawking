@@ -28,6 +28,15 @@ runs, what it blocks, what each computes) · [`CHECK_AUTHORING_GUIDE.md`](CHECK_
 
 ## 1. The one-sentence shape
 
+The pytest dependency-declaration guard in `tests/test_dependency_declaration.py`
+separates local source names from external imports before checking declared
+distributions. Its pruned Python-source walk includes the identifier-valued
+repository-root component of nested sources, so local namespace packages do not
+require an `__init__.py` or an external-dependency exception. Existing bare-script
+and module names remain supported. A journalled production import mutation checks
+that an unrelated undeclared external module still fails the same assertion.
+This guard remains in pytest collection; it is not a registered validate check.
+
 `scripts/validate.py` is a **framework** (zero registered checks); the checks live in domain
 modules under `scripts/validation/checks/`; three framework modules
 (`_registry`, `_config`, `_memo`) and one shared helper (`_tex`) sit below both, and

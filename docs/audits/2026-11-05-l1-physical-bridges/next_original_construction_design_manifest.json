@@ -1,0 +1,29 @@
+{
+  "archive": "next_original_construction_design_evidence.zip",
+  "bytes": 595011,
+  "members": 12,
+  "sha256": "0fd991e315ff7d616755a8f42722f61cd47b6ba464e8f7431fadcea6084d4ff2",
+  "reviewed_design_sha256": "0a95627a2be738fba1a713b522b6adca2ecbfcc9723a55178d39eef448853b6d",
+  "parent_checkpoint": "26bf5596231b96f3389a78cd9b38ad2a6028aa29",
+  "outcome": "independently accepted construction-readiness breakdown; no viable physical construction brief approved",
+  "canonical_copies": {
+    "l1-original-next-construction-design-r1.md": "NEXT_ORIGINAL_CONSTRUCTION_DESIGN.md",
+    "l1-original-next-design-architecture-review-r1.md": "NEXT_ORIGINAL_CONSTRUCTION_ARCHITECTURE_REVIEW_R1.md",
+    "l1-original-next-design-source-review-r1.md": "NEXT_ORIGINAL_CONSTRUCTION_SOURCE_REVIEW_R1.md"
+  },
+  "files": {
+    "accepted/METRIC_OPERATOR_DICTIONARY_ATTEMPT.md": "63d98c23920e49f452059ef34da44fa020e01c4e10a6f09a6a73b7cd40402ec1",
+    "accepted/ORIGINAL_BOUNDARY_GAUGE_CONSTRAINT.md": "452ed85923acf7b841e398f5d08117ad5514158e4e654f1556f703d31a6ee832",
+    "accepted/ORIGINAL_STATE_CANDIDATE_QUALIFICATION.md": "448daa530cbf3d9856bdd1dadd0b07fd4cea2e71489133ee91a4eb6df43cdb07",
+    "accepted/ORIGINAL_STATE_PREMISE_CORRESPONDENCE.md": "33462331704f0d5de406856433edc9cf30cc2b2a6f907a4a6831237628d4e190",
+    "accepted/ORIGINAL_TRANSFER_OPERATOR.md": "975ad00ddfdd6c646ff3d95e0e2e42bd6634f2487d43edb8b36dd4ec8e514a66",
+    "charter/L1_Physical_Bridges_Roadmap.md": "05e0235064ed3828708bed195188110faea1536f900e5c93e35a876bc475d409",
+    "design/l1-original-next-construction-design-r1.md": "0a95627a2be738fba1a713b522b6adca2ecbfcc9723a55178d39eef448853b6d",
+    "parent/original_state_qualification_evidence.zip": "ebaeacb2cd538d121ecba425cf9932c974c24490444462e7ae586f3eb2562463",
+    "parent/original_state_qualification_manifest.json": "866882732815a51b5a93fc3791e5b5d713caf42135dc619d37ae3f7a566f1512",
+    "review/l1-original-next-design-architecture-review-r1.md": "b64c3a6de2e61623ad6607f9a7ffebc4f00f0e0e330dd5c847d32ab78fef3263",
+    "review/l1-original-next-design-source-review-r1.md": "71b38dfe3bb8425258df4888b62ba24f2ee2f74099aac14b0e5bb663e07f9a90",
+    "source/primary-and-qualification-pins-r1.json": "1779d7203f4709051f9c157a58dd4ca4c7402305c304fd2be789ff6635c86b5c"
+  },
+  "scope": "Design synthesis only; no new physical theorem, state, constraint derivation, scientific execution, runtime permission, goal closure or scope reduction."
+}

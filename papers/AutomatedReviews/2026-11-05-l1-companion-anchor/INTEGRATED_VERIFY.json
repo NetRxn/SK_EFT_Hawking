@@ -1,0 +1,8 @@
+{
+  "command": "python3 -c 'from pathlib import Path; s=Path(\"papers/paper23_linearized_efe/paper_draft.tex\").read_text(); p=s.split(\"Combined with the Planck-anchor relation\",1)[1].split(r\"\\paragraph*{Vestigial caveat.}\",1)[0]; assert r\"6\\pi>16\" in p and r\"x_{\\Nf}\" in p and \"1,2\" in p; assert \"multi-generation\" not in p and \"between the per-generation\" not in p'",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "tex_sha256": "d51dcf6342ef6952006f3d82d4d2154db9b26aeb29974e6e2c83a847e6ebf15c",
+  "scope": "Exact accepted source application and original lexical Verify; source/algebra review separate"
+}

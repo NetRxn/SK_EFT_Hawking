@@ -24,7 +24,26 @@ def inv_mod():
     mod = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = mod
     spec.loader.exec_module(mod)
+    assert Path(mod.__file__).resolve() == (SK_ROOT / "scripts/architecture_inventory.py").resolve()
+    print("INVENTORY_SOURCE " + str(Path(mod.__file__).resolve()))
     return mod
+
+
+@pytest.fixture(scope="module")
+def architecture_inventory_result():
+    """Same real-tree reader as suite conftest, also available under --noconftest.
+
+    Does not write the canonical baseline. Its original freshness assertion can
+    remain RED until the separately owned reviewed canonical-writer checkpoint.
+    """
+    from validation.checks.freshness import check_architecture_inventory_fresh
+    import validation.checks.freshness as freshness
+    assert Path(freshness.__file__).resolve() == (SK_ROOT / "scripts/validation/checks/freshness.py").resolve()
+    result = check_architecture_inventory_fresh()
+    print("ACTUAL_FRESHNESS_READER " + str(Path(freshness.__file__).resolve()))
+    print("ACTUAL_FRESHNESS_DETAILS " + __import__("json").dumps(
+        [{"name": d.name, "passed": d.passed, "message": d.message} for d in result.details]))
+    return result
 
 
 class TestDerivation:
@@ -311,3 +330,263 @@ class TestDocumentsAnswerTheirQuestion:
         assert mutated != f"**Answers:** {q}"
         # a verbatim comparison must reject the mutated form
         assert f"**Answers:** {q}" not in mutated.replace(f"**Answers:** {q}", "X", 1)
+
+
+# Git writes below are confined to builtin pytest tmp_path fixture repositories.
+def _fixture_git(root, *args):
+    import json, os, subprocess
+    env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+    env.update(GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1")
+    argv = ["git", "--no-optional-locks", "-C", str(root), *args]
+    result = subprocess.run(argv, env=env, capture_output=True, text=True, timeout=10)
+    print("FIXTURE_GIT " + json.dumps({"argv": argv, "returncode": result.returncode,
+          "stdout": result.stdout, "stderr": result.stderr}))
+    assert result.returncode == 0, result.stderr
+    return result.stdout.strip()
+
+
+@pytest.fixture
+def git_catalog(inv_mod, tmp_path, monkeypatch):
+    import os
+    # Hermetic fixture creation only. The production collector never clears all
+    # config: its inherited-context controls below deliberately inject selectors.
+    for name in tuple(os.environ):
+        if name.startswith("GIT_"):
+            monkeypatch.delenv(name)
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", os.devnull)
+    monkeypatch.setenv("GIT_CONFIG_NOSYSTEM", "1")
+    root = tmp_path / "main project"
+    root.mkdir()
+    _fixture_git(root, "init", "-q")
+    _fixture_git(root, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+                 "commit", "--allow-empty", "-m", "isolated fixture", "-q")
+    monkeypatch.setattr(inv_mod, "PROJECT_ROOT", root)
+    monkeypatch.setattr(inv_mod, "PLUGIN", root / ".claude/plugins/skeft-qa")
+    return root
+
+
+def _git_events(inv_mod):
+    return [r for r in inv_mod.hooks() if r["kind"] == "git"]
+
+
+class TestGitResolvedHookCatalog:
+    def test_main_linked_nested_same_full_rows(self, inv_mod, git_catalog, tmp_path,
+                                              monkeypatch):
+        root = git_catalog
+        hook = root / ".git/hooks/pre-commit"
+        hook.write_text("fixture metadata; never executed")
+        expected = [{"kind": "git", "event": "pre-commit", "matcher": "-",
+                     "command": "git-path:hooks/pre-commit", "timeout": None}]
+        assert _git_events(inv_mod) == expected
+        linked = tmp_path / "linked project"
+        _fixture_git(root, "worktree", "add", "--detach", str(linked), "HEAD")
+        assert (linked / ".git").is_file()
+        monkeypatch.setattr(inv_mod, "PROJECT_ROOT", linked)
+        monkeypatch.setattr(inv_mod, "PLUGIN", linked / ".claude/plugins/skeft-qa")
+        assert _git_events(inv_mod) == expected
+        nested = linked / "nested"; nested.mkdir(); monkeypatch.chdir(nested)
+        assert _git_events(inv_mod) == expected
+
+    @pytest.mark.parametrize("relative", [False, True])
+    def test_absolute_relative_spaced_external_catalog(self, inv_mod, git_catalog,
+                                                       tmp_path, relative):
+        root = git_catalog
+        location = (root / "configured hooks") if relative else tmp_path / "external hooks"
+        location.mkdir(); (location / "post-checkout").write_text("unread fixture")
+        (root / ".git/hooks/pre-commit").write_text("inactive default")
+        _fixture_git(root, "config", "core.hooksPath",
+                     "configured hooks" if relative else str(location))
+        assert [x["event"] for x in _git_events(inv_mod)] == ["post-checkout"]
+        assert inv_mod._hook_inventory()[1] == {
+            "lookup": "git-path:hooks", "directory_state": "directory"}
+
+    def test_worktree_config_precedence_different_legitimate_catalogs(
+            self, inv_mod, git_catalog, tmp_path, monkeypatch):
+        root = git_catalog; shared = tmp_path / "shared"; shared.mkdir()
+        special = tmp_path / "worktree only"; special.mkdir()
+        (shared / "post-merge").write_text("shared")
+        (special / "post-checkout").write_text("specific")
+        _fixture_git(root, "config", "core.hooksPath", str(shared))
+        _fixture_git(root, "config", "extensions.worktreeConfig", "true")
+        linked = tmp_path / "linked"; _fixture_git(root, "worktree", "add", "--detach", str(linked))
+        _fixture_git(linked, "config", "--worktree", "core.hooksPath", str(special))
+        assert [x["event"] for x in _git_events(inv_mod)] == ["post-merge"]
+        monkeypatch.setattr(inv_mod, "PROJECT_ROOT", linked)
+        assert [x["event"] for x in _git_events(inv_mod)] == ["post-checkout"]
+
+    def test_supported_inherited_config_precedence_is_not_stripped(
+            self, inv_mod, git_catalog, tmp_path, monkeypatch):
+        external = tmp_path / "command configured"; external.mkdir()
+        (external / "pre-push").write_text("metadata")
+        monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+        monkeypatch.setenv("GIT_CONFIG_KEY_0", "core.hooksPath")
+        monkeypatch.setenv("GIT_CONFIG_VALUE_0", str(external))
+        assert [x["event"] for x in _git_events(inv_mod)] == ["pre-push"]
+
+    @pytest.mark.parametrize("selector", ["GIT_COMMON_DIR", "GIT_DIR", "GIT_WORK_TREE",
+                                           "same-top-dir", "same-top-dir-config"] )
+    def test_foreign_context_refuses_even_if_same_top_level(
+            self, inv_mod, git_catalog, tmp_path, monkeypatch, selector):
+        foreign = tmp_path / "foreign"; foreign.mkdir(); _fixture_git(foreign, "init", "-q")
+        if selector in ("same-top-dir", "same-top-dir-config"):
+            monkeypatch.setenv("GIT_DIR", str(foreign / ".git"))
+            monkeypatch.setenv("GIT_WORK_TREE", str(git_catalog))
+            if selector == "same-top-dir-config":
+                monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+                monkeypatch.setenv("GIT_CONFIG_KEY_0", "core.hooksPath")
+                monkeypatch.setenv("GIT_CONFIG_VALUE_0", str(foreign / ".git/hooks"))
+        else:
+            monkeypatch.setenv(selector, str(foreign if selector == "GIT_WORK_TREE"
+                                           else foreign / ".git"))
+        with pytest.raises(RuntimeError):
+            inv_mod.hooks()
+
+    def test_inherited_worktree_config_is_judged_by_actual_admin_identity(
+            self, inv_mod, git_catalog, tmp_path, monkeypatch):
+            foreign = tmp_path / "foreign"; foreign.mkdir()
+            (git_catalog / ".git/hooks/pre-commit").write_text("fixture")
+            monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+            monkeypatch.setenv("GIT_CONFIG_KEY_0", "core.worktree")
+            monkeypatch.setenv("GIT_CONFIG_VALUE_0", str(foreign))
+            import json, subprocess, os
+            witness = subprocess.run(["git", "-C", str(git_catalog), "config", "--show-origin",
+                                      "--get-all", "core.worktree"], capture_output=True, text=True)
+            print("CONFIG_CONTEXT_WITNESS " + json.dumps({"config_rc": witness.returncode,
+                  "config_stdout": witness.stdout, "config_stderr": witness.stderr,
+                  "actual_top": inv_mod._git_query(["--show-toplevel"]),
+                  "actual_git_dir": inv_mod._git_query(["--absolute-git-dir"]),
+                  "actual_common_dir": inv_mod._git_query(["--path-format=absolute", "--git-common-dir"])}))
+            # Installed Git reports this inherited key but leaves the actual
+            # top-level/admin identity untouched. Key presence is not redirection.
+            assert Path(inv_mod._git_query(["--show-toplevel"])) == git_catalog
+            assert Path(inv_mod._git_query(["--absolute-git-dir"])) == git_catalog / ".git"
+            assert Path(inv_mod._git_query(["--path-format=absolute", "--git-common-dir"])) == git_catalog / ".git"
+            assert [x["event"] for x in _git_events(inv_mod)] == ["pre-commit"]
+
+    def test_membership_sorted_samples_nonexec_symlink_no_body_reads(
+            self, inv_mod, git_catalog, tmp_path, monkeypatch):
+        directory = git_catalog / ".git/hooks"
+        (directory / "zeta").write_text("private fixture")
+        (directory / "alpha").write_text("private fixture")
+        (directory / "alpha").chmod(0o600)
+        target = tmp_path / "symlink target"; target.write_text("private fixture")
+        (directory / "linked").symlink_to(target)
+        (directory / "subdir").mkdir()
+        marker = tmp_path / "must-not-exist"
+        (directory / "executable").write_text("#!/bin/sh\ntouch '" + str(marker) + "'\n")
+        (directory / "executable").chmod(0o700)
+        original_text, original_bytes = Path.read_text, Path.read_bytes
+        def guard_text(path, *a, **kw):
+            assert path.parent != directory and path != target, "hook body opened"
+            return original_text(path, *a, **kw)
+        def guard_bytes(path, *a, **kw):
+            assert path.parent != directory and path != target, "hook body opened"
+            return original_bytes(path, *a, **kw)
+        monkeypatch.setattr(Path, "read_text", guard_text)
+        monkeypatch.setattr(Path, "read_bytes", guard_bytes)
+        assert [x["event"] for x in _git_events(inv_mod)] == ["alpha", "executable", "linked", "zeta"]
+        assert not marker.exists()
+
+    @pytest.mark.parametrize("case", ["absent", "empty", "samples", "file", "parent-file"])
+    def test_known_empty_is_measured_metadata(self, inv_mod, git_catalog, tmp_path, case):
+        catalog = tmp_path / "observed"
+        if case in ("empty", "samples"):
+            catalog.mkdir()
+            if case == "samples":(catalog / "pre-commit.sample").write_text("sample")
+        elif case == "file":catalog.write_text("not a directory")
+        elif case == "parent-file":
+            catalog.write_text("not a directory"); catalog = catalog / "child"
+        _fixture_git(git_catalog, "config", "core.hooksPath", str(catalog))
+        if case == "parent-file":
+            # Git itself refuses to resolve this configured path. Only a
+            # successful lookup can establish known metadata absence.
+            with pytest.raises(RuntimeError, match="query failed"):
+                inv_mod._hook_inventory()
+            return
+        rows, context = inv_mod._hook_inventory()
+        assert rows == []
+        assert context == {"lookup": "git-path:hooks", "directory_state":
+                           "non-directory" if case in ("file", "parent-file") else
+                           "absent" if case == "absent" else "directory"}
+
+    def test_malformed_real_config_is_failure(self, inv_mod, git_catalog):
+        with (git_catalog / ".git/config").open("a") as f:f.write("\n[malformed\n")
+        with pytest.raises(RuntimeError, match="query failed"):
+            inv_mod.hooks()
+
+    @pytest.mark.parametrize("output", ["", "/first\n/second\n", "relative\n", "/path\x00bad\n"])
+    def test_strict_ambiguous_or_unsupported_output_refuses(self, inv_mod, monkeypatch, output):
+        import subprocess
+        monkeypatch.setattr(subprocess, "run", lambda *a, **k:
+                            subprocess.CompletedProcess(a, 0, stdout=output, stderr=""))
+        with pytest.raises(RuntimeError):inv_mod._git_path(["--git-path", "hooks"])
+
+    @pytest.mark.parametrize("failure", ["not-installed", "timeout", "unsupported"])
+    def test_query_failures_do_not_become_empty(self, inv_mod, monkeypatch, failure):
+        import subprocess
+        def query(*a, **kw):
+            assert kw["timeout"] == 10 and kw["capture_output"]
+            if failure == "not-installed":raise FileNotFoundError()
+            if failure == "timeout":raise subprocess.TimeoutExpired(a[0], 10)
+            return subprocess.CompletedProcess(a, 129, stdout="", stderr="unsupported")
+        monkeypatch.setattr(subprocess, "run", query)
+        with pytest.raises(RuntimeError):inv_mod.hooks()
+
+    @pytest.mark.parametrize("failure", ["directory-stat", "listing", "entry-stat", "disappeared", "race"])
+    def test_partial_read_refuses(self, inv_mod, git_catalog, monkeypatch, failure):
+        directory = git_catalog / ".git/hooks"; entry = directory / "pre-commit"
+        entry.write_text("unread")
+        original_stat, original_iter = Path.stat, Path.iterdir
+        def get_stat(path, *a, **kw):
+            if (path == directory and failure == "directory-stat") or (path == entry and failure == "entry-stat"):
+                raise PermissionError("fixture metadata failure")
+            if path == entry and failure == "disappeared":raise FileNotFoundError("fixture disappeared")
+            return original_stat(path, *a, **kw)
+        def get_iter(path):
+            if path == directory and failure == "listing":raise PermissionError("fixture listing")
+            values = list(original_iter(path))
+            if path == directory and failure == "race":(directory / "late arrival").write_text("fixture")
+            return iter(values)
+        monkeypatch.setattr(Path, "stat", get_stat);monkeypatch.setattr(Path, "iterdir", get_iter)
+        with pytest.raises(RuntimeError):inv_mod.hooks()
+
+    def test_plugin_and_complete_other_families_preserved_single_observation(
+            self, inv_mod, monkeypatch):
+        original = inv_mod._hook_inventory; calls = []
+        original_query = inv_mod._git_query; queries = []
+        def witnessed_query(args, **kwargs):
+            value = original_query(args, **kwargs)
+            queries.append({"args": args, "anchor_selector_environment": kwargs.get("env") is not None,
+                            "explicit_git_dir": str(kwargs.get("git_dir")) if kwargs.get("git_dir") else None,
+                            "result": value})
+            return value
+        monkeypatch.setattr(inv_mod, "_git_query", witnessed_query)
+        def observe():calls.append(True);return original()
+        monkeypatch.setattr(inv_mod, "_hook_inventory", observe)
+        inventory = inv_mod.collect()
+        assert len(calls) == 1
+        assert [x for x in inventory["hooks"] if x["kind"] == "claude-code"] == inv_mod._plugin_hooks()
+        assert inventory["checks"] == inv_mod.checks()
+        assert inventory["gates"] == inv_mod.gates()
+        assert inventory["graph"] == inv_mod.graph_types()
+        assert {k: inventory[k] for k in ("agents", "commands")} == inv_mod.agents_and_commands()
+        assert inventory["registries"] == inv_mod.registries()
+        assert inventory["bundles"] == inv_mod.bundles()
+        text = inv_mod.render(inventory)
+        assert text == inv_mod.render(inventory)
+        assert "git-path:hooks" in text and "not establish runtime activation" in text
+        assert str(inv_mod.PROJECT_ROOT) not in text
+        import json, validate, readiness_gates, build_graph
+        origins = {m.__name__: str(Path(m.__file__).resolve())
+                   for m in (validate, readiness_gates, build_graph)}
+        assert all(Path(v).is_relative_to(SK_ROOT) for v in origins.values())
+        print("FULL_CURRENT_COLLECTION " + json.dumps({"root": str(inv_mod.PROJECT_ROOT),
+              "inventory": inventory, "actual_import_sources": origins,
+              "actual_git_queries": queries}, sort_keys=True))
+
+    def test_existing_reader_refuses_actual_foreign_admin(self, git_catalog, monkeypatch):
+        from validation.checks.freshness import check_architecture_inventory_fresh
+        monkeypatch.setenv("GIT_COMMON_DIR", str(git_catalog / ".git"))
+        result = check_architecture_inventory_fresh()
+        assert result.passed is False and result.measured is True
+        assert any(x.name == "derivation_runs" and not x.passed for x in result.details)

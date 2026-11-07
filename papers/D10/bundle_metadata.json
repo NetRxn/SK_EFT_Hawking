@@ -187,12 +187,12 @@
   "audit_log_path": "papers/D10/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "notes": "Stage-10 FULL REDRAFT 2026-08-17 (branch redraft/D10), rewritten from prose. Restructured around INHABITANCE on the skeft-qa:prose-reviewer's ruling that 'three pillars sharing a substrate' is a table of contents rather than an argument: the thesis is now that kernel purity is a property of a proof, not of a statement, and cannot detect a theorem proved over a structure nothing inhabits. Table I reports hypotheses-in-signature and witness-constructed per layer. DFT NOVELTY CLAIM WITHDRAWN: hohenberg_kohn_variational returns its nondegen and ground fields unchanged as two of three conjuncts, levyLieb_functional is ciInf_le on an infimum F_LL is defined to be, and GroundStateData/DensityVariational/LevyLiebData are referenced in no other module and inhabited nowhere. Those four theorems are now the paper's NEGATIVE CASE (Sec. IV), not results. NEGF scope corrected: the self-energy is Sigma = -i*eta*1, so A = G^R Gamma G^A is verified only in the structureless wide-band limit, not for a general lead self-energy. GATES: LeanProofSubstance now PASSES (the rfl-bodied landauer_conductance_def is no longer cited). NarrativeGrounding remains BLOCKED and CANNOT be cleared honestly: it queries a SUPPORTS edge that no extractor emits (see finding 1.1), so the only way to green it is to delete the priority claim from the abstract. That was deliberately NOT done. Compiles clean: 0 errors, 0 undefined references, 9 pages (was 5). Still under the 24pp floor; reported honestly rather than padded, per the prose-reviewer's explicit ruling. D10+D11 -> D10* NOT performed: rejected on evidence 2026-08-08 (D10 n D11 = 0), ratified in ADR-010 2026-08-09. Findings: papers/AutomatedReviews/2026-08-17-d10-stage10-redraft/D10.md",
-  "open_findings": 9,
+  "open_findings": 3,
   "blocked_p1_gates": [
     "NarrativeGrounding"
   ],
   "readiness": "YELLOW",
-  "readiness_last_computed": "2026-08-17",
+  "readiness_last_computed": "2026-11-05",
   "length_target": {
     "unit": "pages",
     "floor": 24,

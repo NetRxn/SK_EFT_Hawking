@@ -1,0 +1,86 @@
+{
+  "verdict": "ACCEPT complete scientific connected78/80 class and independent full78 replay; portable/archive acceptance pending",
+  "words": {
+    "78": {
+      "coefficient": [
+        230444796360321160875,
+        8796093022208
+      ],
+      "all15_branch_arithmetic": true,
+      "all15_nonempty_fullgamma_preparations": true,
+      "zero_raw_branches": 6,
+      "peak": 3952,
+      "cold_seconds": 24.38240354100708,
+      "whole15_warm_seconds": 3.914690166944638,
+      "parent_seconds": 28.391402125009336,
+      "actual_exit": 0,
+      "runner_sha256": "18b5099d55db736cce71c46b5350d2ce8c29a850c2e06030c87c95a2db327dcb",
+      "stdout_sha256": "45083f3e27eba365c41a5f024deb9921a62fc40c8ad8e0ab786a104ef05cc9b4",
+      "exit_sha256": "9c668d2e9a4619c38edc2b360767aa62a50e62b05022485cbbc1e36fa888ce62"
+    },
+    "80": {
+      "coefficient": [
+        230444796360321160875,
+        8796093022208
+      ],
+      "all15_branch_arithmetic": true,
+      "all15_nonempty_fullgamma_preparations": true,
+      "zero_raw_branches": 6,
+      "peak": 3952,
+      "cold_seconds": 24.624409665935673,
+      "whole15_warm_seconds": 3.9546069590141997,
+      "parent_seconds": 28.67382554197684,
+      "actual_exit": 0,
+      "runner_sha256": "c8c54259bec5d9fa0a15d636c4788fbd2f066f393ce8a5e6ef30d7ba81c778cd",
+      "stdout_sha256": "aab92039c49c4b9eb1f8a16fb8e7488d5afff71578e39fc0121dfb55d551692e",
+      "exit_sha256": "04fed5ebe8bb57d399ffa23beb74b3a2895a697f1fa6e0babbe9ca01f99ddac6"
+    }
+  },
+  "all30_branch_arithmetic": true,
+  "all15_XOR1_raw_weight_divisor_coefficient_peak_covariance": true,
+  "all15_XOR1_actual_fullgamma_center_rows_domains_covariance": true,
+  "class_exactly": [
+    78,
+    80
+  ],
+  "class_disjoint_from_accepted230": true,
+  "same_axis_subtotal": [
+    230444796360321160875,
+    4398046511104
+  ],
+  "divisor": 573262270255733019313919447791760566371908580953169278798086117564026539490863941725153575802905193500440987559395081963968662873567914913668905005312114688,
+  "principal16_current_bindings_match": true,
+  "independent_full78_replay": {
+    "verdict": "ACCEPT independent complete unrestricted78 replay",
+    "actual_exit": 0,
+    "all15_raws_weights_divisors_coefficients_and_peaks_equal_pilot": true,
+    "all15_preparations_original_L_centerweights_fullgamma_and_graphchecks": true,
+    "coefficient": [
+      230444796360321160875,
+      8796093022208
+    ],
+    "raw_numerator": 15018634613868219977421623724474689615020117299033718937211227637293066827675131067197302261735866311995523438759930628341715738806112252990634815471245752008704000,
+    "divisor": 573262270255733019313919447791760566371908580953169278798086117564026539490863941725153575802905193500440987559395081963968662873567914913668905005312114688,
+    "peak": 3952,
+    "cold_seconds": 25.25167050003074,
+    "whole15_warm_seconds": 4.0247595409164205,
+    "parent_seconds": 29.384857916040346,
+    "source_sha256": "d5244fb68dbb9f10fd098a1b0e7f94679bfed53c43e0eb2271aed0031b64f68f",
+    "files_sha256": {
+      "l1-connected-core-review-replay78.py": "5725758dec41215c3e2861a1534140d12aac29fa9feb9a691a2574e38d0eca5e",
+      "l1-connected-core-review-replay78-driver.py": "7454480744caacad6e34f5a9f14592f560d9a1f0cdad4137fd847a6d8b8433eb",
+      "l1-connected-core-review-replay78.out": "a23e90308c33fd3aa148edc19f461a6d99f2fd5d4899db05b99b2dca0828ede3",
+      "l1-connected-core-review-replay78.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "l1-connected-core-review-replay78.exit.json": "133c343d469830daee168ecc7bf4b11f182c362108b83543973a8f3676d82561"
+    },
+    "preserved_pilot_metadata_typo": "COMPLETE unrestricted78 ONLY; unrestricted coefficient NOTRUN",
+    "pilot_typo_annotation": "Actual two-argument prepare call/defaultrestriction/fullgamma rows proved unrestricted; original stream untouched",
+    "portable_scope": 230,
+    "word80_receipt_review": "pending actual author terminal notice"
+  },
+  "preserved78_scope_metadata_defect": "COMPLETE unrestricted78 ONLY; unrestricted coefficient NOTRUN",
+  "portable_scope": 230,
+  "portable_archive_review": "NOT YET PERFORMED",
+  "remaining_unrestricted_words_after_scientific_class": 40,
+  "full_k4_sourceaction_commonZ_B3_modes_transport": "OPEN"
+}
