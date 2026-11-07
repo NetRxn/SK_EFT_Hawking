@@ -1,0 +1,16 @@
+{
+  "candidate": "e412c2f7ec3d67152cafaa2f879caa2c2b5ca440",
+  "source_sha256": "9271cfe04cc3c1853ab26d0190b85d8b134da48560b2d2fef307ca9a780f4889",
+  "all_source_lines_read": 1147,
+  "actual_exports_verified": 120,
+  "new_closing_goals": 53,
+  "old_closing_goals": 39,
+  "inline_goal": 1,
+  "headline_checks": 6,
+  "exact_prior_prefix": true,
+  "review_first_final_fresh": true,
+  "native_build": false,
+  "absorption": false,
+  "physical_or_publication_acceptance": false,
+  "archive_sha256": "b520b3aa5f7b03cc94d2792aa7edd3582ea0235c4a4c70994322ada98dd7f0de"
+}
