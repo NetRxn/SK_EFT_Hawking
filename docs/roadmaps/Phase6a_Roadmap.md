@@ -989,6 +989,12 @@ The [explicit full-cut transport](../audits/2026-11-05-l1-physical-bridges/P0_NU
 
 This completes the specified manual coordinate/control BUILD, without repairing the transported metric positivity obstruction or supplying positive physical domain/adjoint/CAR/causal dynamics. The spatial-record reconstruction candidate remains research, and all original physical/publication requirements stay open. No slot, numerical result or gate transition follows.
 
+### Original one-slice spatial-record construction and finite obstruction
+
+The [exact spatial marginal/source construction](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION.md) has independent ACTUAL math/source ACCEPT at its [recorded restricted scope](../audits/2026-11-05-l1-physical-bridges/ORIGINAL_SPATIAL_RECORD_RECONSTRUCTION_ACCEPTANCE.md). A complete zero-source bidegree audit, new uniform original-functional bound and explicit finite spatial-only positive test establish failure of the specified classical24-spatial-link/doubled-Weyl hybrid and CP-instrument extension, with all other40anchors integrated. This is stronger than the earlier all-history-only result; it is not a global reconstruction/model no-go.
+
+The weaker one-slice R_b, noncommuting spatial quantization, quantum time-link and controlled Euclidean routes remain open. Integrated positive/PPT/CPTP results and all full source/kernel/contact requirements survive. ROOT intake is pending; positive physical domain/adjoint/product/causal calibration, B3/N4 and publication remain owed. No numerical run, slot or gate transition follows.
+
 ## Decision Gates
 
 **Gate A.1 — after Wave 1 (`LinearizedEFE`) ships:** Is `G_N^emerg` sign correct and within 2 orders of magnitude of observed `G_N`? YES → all subsequent 6a waves proceed at full scope. NO (wrong sign) → ADW identification falsified at linearized order; 6a.4 scope is narrowed, 6a.5 and 6a.6 continue as formal exercises; Phase 6e reassessed. NO (right sign, wrong magnitude) → proceed but document parameter-fit freedom in every downstream wave.
