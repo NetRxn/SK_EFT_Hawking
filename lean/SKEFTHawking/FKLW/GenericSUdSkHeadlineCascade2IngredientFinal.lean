@@ -78,9 +78,9 @@ chooser) is composed internally via Sessions 41-55 substrate.
 ## Length-bound exponent
 
 The headline form's length exponent is `Real.log 5 / Real.log (3 / 2) ≈ 3.97`,
-the canonical Dawson-Nielsen value (arXiv:quant-ph/0505030 §3.3): the SK
-recursion expands word length 5× per level while contracting error at the
-ε^(3/2) super-quadratic rate, giving `c = log 5 / log (3/2)`. This matches the
+the canonical Dawson-Nielsen value (arXiv:quant-ph/0505030v2, §3 (Analysis),
+Eq. (8), p. 7 and §5.1, p. 11). The SK recursion expands word length 5× per
+level with superlinear error contraction of order 3/2. This matches the
 project's SU(2) `SolovayKitaevLengthBound.skLengthExponent` and the level
 chooser `skLevel_polylog_sud` (which already uses `log (3/2)`). The hypothesis
 `h_length_polylog` asserts the polylog bound at this achievable exponent.

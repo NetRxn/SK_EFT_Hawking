@@ -42,7 +42,8 @@ theorem cliffordCCZSU8_skLength_const_pos : 0 < cliffordCCZSU8_skLength_const :=
 
 /-- **The SU(8) Clifford+CCZ SK polylog exponent** — an alias of the canonical
 `skLengthExponent_sud = log 5 / log (3 / 2) ≈ 3.97` (Dawson-Nielsen 2006,
-arXiv:quant-ph/0505030 §3.3). Single source of truth lives at
+arXiv:quant-ph/0505030v2, §3 (Analysis), Eq. (8), p. 7 and §5.1, p. 11).
+The canonical definition lives at
 `SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud`. -/
 noncomputable def cliffordCCZSU8_skLength_exponent : ℝ :=
   SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud

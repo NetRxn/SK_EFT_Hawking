@@ -442,17 +442,26 @@ resulting compilation theorems are unconditional.
 \label{sec:sud-exponent}
 
 The recursion contracts error as $\varepsilon \mapsto O(\varepsilon^{3/2})$
-while expanding word length fivefold per level. Solving the pair gives a
-recursion depth $n(\varepsilon) = \log_{3/2}\log(1/\varepsilon)$ and a length
-$5^{n(\varepsilon)} = (\log 1/\varepsilon)^{\gamma}$ with
+while expanding word length fivefold per level. For a fixed base precision
+within the contraction regime, the resulting depth is
+$n(\varepsilon) = \log_{3/2}\log(1/\varepsilon) + O(1)$ as $\varepsilon \to 0$.
+The resulting length bound is $O((\log(1/\varepsilon))^{\gamma})$ with
 \[
-  \gamma \;=\; \frac{\log 5}{\log (3/2)} \;\approx\; 3.97 ,
+  \gamma \;=\; \frac{\log 5}{\log (3/2)} \;\approx\; 3.97 .
 \]
-which agrees with the value reported for the balanced-commutator algorithm by
-Selinger~\cite{Selinger2015} and by Kliuchnikov, Maslov and
-Mosca~\cite{KMM2013ancilla}. The exponent is defined once and referenced by
-every dimension-generic module, so the value cannot drift between the statement
-of Theorem~\ref{thm:sud} and the instantiations that consume it. The frequently
+Dawson and Nielsen derive this gate-length exponent in Eq.~(8), Sec.~3
+(Analysis), p.~7 of the author preprint
+arXiv:quant-ph/0505030v2~\cite{DawsonNielsen2006}.
+Equation~(9) on the same page gives the classical runtime exponent
+$\log 3/\log(3/2) \approx 2.71$ with pointer reuse of subsequences and
+without accounting for arithmetic precision costs. Section~5.1 (p.~11)
+extends both bounds to fixed $d$ with dimension-dependent constants and
+a dimension-dependent cost for constructing the base approximation table.
+Selinger~\cite{Selinger2015} and Kliuchnikov, Maslov and
+Mosca~\cite{KMM2013ancilla} also report the length exponent.
+Theorem~\ref{thm:sud} and its per-alphabet instantiations use the same
+length exponent. In Lean, the trapped-ion and Clifford+CCZ calibration
+aliases refer to the canonical $\su d$ definition. The frequently
 quoted $\log 5/\log 2 \approx 2.32$ corresponds to a quadratic contraction
 $\varepsilon \mapsto O(\varepsilon^2)$, which the balanced commutator does not
 provide and which this development does not claim.
