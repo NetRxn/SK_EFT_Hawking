@@ -1094,10 +1094,10 @@ CITATION_REGISTRY = {
                     'papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex',
                     'src/second_order/enumeration.py',
                     'papers/I1/paper_draft.tex'],
-        'provides': ['Eq. (3.20) §III: dynamical KMS Z₂ symmetry + unitarity '
-                     '(Im S_eff ≥ 0) ⇒ ∂_μ s^μ ≥ 0 (entropy-current monotonicity), '
-                     'WITHOUT pointwise NEC. Wave 5 second-law primary anchor.'],
-        'notes': 'SK-EFT second law without NEC. arXiv:1612.07705 verified 2026-04-26; year/journal corrected 2026-05-11 (Bundle I1 Stage-13 fix-pass) — WebFetch on arxiv.org/abs/1612.07705 confirms first-submitted Dec 2016, no JHEP publication info on arXiv metadata (registry key retained as GloriosoLiu2018 for backwards-compat with downstream cites; bibitem cites (2016) correctly).',
+        'provides': ['§III.B, Eq. (3.36): local entropy production is nonnegative '
+                     'order by order in derivatives under the stated local-equilibrium, '
+                     'dynamical KMS, unitarity, and quadratic-form assumptions.'],
+        'notes': 'Local SK-EFT second law from dynamical KMS symmetry and unitarity. arXiv:1612.07705 verified 2026-04-26; year/journal corrected 2026-05-11 (Bundle I1 Stage-13 fix-pass) — WebFetch on arxiv.org/abs/1612.07705 confirms first-submitted Dec 2016, no JHEP publication info on arXiv metadata (registry key retained as GloriosoLiu2018 for backwards-compat with downstream cites; bibitem cites (2016) correctly).',
     },
     'Jana2020': {
         'authors': 'Jana, C., Loganayagam, R., Rangamani, M.',
@@ -4006,6 +4006,31 @@ CITATION_REGISTRY = {
                  'which is absent from Balbinot\'s reference list. TeX source '
                  'preserved at Lit-Search/Phase-6a/primary-sources/'
                  'JacobsonVolovik1998.source/.',
+    },
+    'JacobsonVolovik1998JETP': {
+        'authors': 'Jacobson, T. A. and Volovik, G. E.',
+        'title': 'Effective spacetime and Hawking radiation from a moving domain wall '
+                 'in a thin film of 3He-A',
+        'journal': 'JETP Lett.',
+        'volume': 68,
+        'page': '874–880',
+        'year': 1998,
+        'doi': '10.1134/1.567808',
+        'arxiv': 'gr-qc/9811014',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/'
+                               'JacobsonVolovik1998JETP-arXiv-v1.pdf',
+        'used_in': [],
+        'provides': ['Thin-film ³He-A moving domain-wall model with paired horizons. '
+                     'The authors discuss heating if Hawking emission decelerates the wall '
+                     'and leave whether the emission occurs unresolved.'],
+        'notes': 'Balbinot2005PRD cites this JETP Letters paper together with '
+                 'JacobsonKoike2002 in its thin-film contrast reference. '
+                 'JacobsonVolovik1998 is the separate PRD 58, 064021 bulk-soliton paper. '
+                 'Held edition: authors’ arXiv gr-qc/9811014v1, 4 November 1998, '
+                 'https://arxiv.org/pdf/gr-qc/9811014v1. PDF SHA-256 '
+                 'a2a93fc3032d1882b6bc11931bd35cc85b7f060856aa2d9c3e2c3447e7dd5b42.',
     },
     'JacobsonKoike2002': {
         'authors': 'Jacobson, T. A. and Koike, T.',
