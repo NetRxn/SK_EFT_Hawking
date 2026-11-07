@@ -1,0 +1,35 @@
+{
+  "native": {
+    "integrated_head": "22d5708f1863fc0c7d1614ee3b5648c10f7fc627",
+    "epoch_id": "0691fe47d36535e0280ba85cebbb940498c591f040efa562838aa06a5c676c8c"
+  },
+  "olean_sha256": "01b60baad9eb48283b5900434cbd205f8da269f289e4d9729009b1c8a981d4cf",
+  "remote_source": "12a6148676944bdf9f2bde06dc42ea184c8ed100",
+  "release_warning": "shutdown ancestry unavailable: malformed shutdown family native identity",
+  "post_absorption": {
+    "capacity_complete": true,
+    "capacity_conflicts": [],
+    "reserved_physical_slots": [
+      1
+    ],
+    "wt1": {
+      "head": "22d5708f1863fc0c7d1614ee3b5648c10f7fc627",
+      "dirty": [],
+      "resource_reserved": true,
+      "backend_state": "running",
+      "lease_present": false
+    }
+  },
+  "post_managed_recovery": {
+    "capacity_complete": true,
+    "capacity_conflicts": [],
+    "reserved_physical_slots": [],
+    "wt1": {
+      "head": "22d5708f1863fc0c7d1614ee3b5648c10f7fc627",
+      "dirty": [],
+      "resource_reserved": false,
+      "backend_state": "down",
+      "lease_present": false
+    }
+  }
+}
