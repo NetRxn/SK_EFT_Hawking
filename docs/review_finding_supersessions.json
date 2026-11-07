@@ -10535,6 +10535,36 @@
         "enforced": true,
         "run_at": "2026-11-07"
       }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-recursion-arithmetic:D8:1.1",
+      "status": "fixed",
+      "evidence": "Independent review checked the exact Lean recurrence, depth at epsilon0, both prose occurrences, the stale-copy mutation, and the rendered draft.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_RECURSION_ARITHMETIC_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-07",
+      "commit": "0683662dc36d92a447b6908684cdbc3e52700e56",
+      "verified_by": {
+        "command": "grep -Fq '\\varepsilon_{n+1} = K\\varepsilon_n^{3/2}' papers/D8/paper_draft.tex && grep -Fq 'K^2 \\cdot 2\\varepsilon_0 = 1/4' papers/D8/paper_draft.tex",
+        "declared": "grep -Fq '\\varepsilon_{n+1} = K\\varepsilon_n^{3/2}' papers/D8/paper_draft.tex && grep -Fq 'K^2 \\cdot 2\\varepsilon_0 = 1/4' papers/D8/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-recursion-arithmetic:D8:1.2",
+      "status": "fixed",
+      "evidence": "Independent review checked the exact Lean recurrence, depth at epsilon0, both prose occurrences, the stale-copy mutation, and the rendered draft.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_RECURSION_ARITHMETIC_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-07",
+      "commit": "0683662dc36d92a447b6908684cdbc3e52700e56",
+      "verified_by": {
+        "command": "grep -Fq '\\log_4(1/(K^2\\varepsilon_0)) = 3/2' papers/D8/paper_draft.tex && test \"$(grep -Fc 'recursion depth $1$.' papers/D8/paper_draft.tex)\" -eq 2 && ! grep -Fq 'recursion depth $0$' papers/D8/paper_draft.tex",
+        "declared": "grep -Fq '\\log_4(1/(K^2\\varepsilon_0)) = 3/2' papers/D8/paper_draft.tex && test \"$(grep -Fc 'recursion depth $1$.' papers/D8/paper_draft.tex)\" -eq 2 && ! grep -Fq 'recursion depth $0$' papers/D8/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
     }
   ]
 }
