@@ -13393,6 +13393,170 @@ def original_literal_metric(coframes,x,mu,nu):
     return sum((coframes[x,mu,a]*coframes[x,nu,a] for a in range(4)),zero)
 
 
+def original_polar_edge_coframes(reg, axis):
+    """Restrict the two original periodic anchors to their invariant-test polar form.
+
+    Before taking the polar section, D = U† − V at x and D_y = −D† at y.
+    The xy/yx blocks are (gamma D, −D† gamma)/4 for x and
+    (D gamma, −gamma D†)/4 for y. In the real polar section D = D† =
+    diag(r_L, r_L, r_R, r_R), so left and right placements still differ.
+    Each exterior polynomial is on the induced two-site carrier in x,y order.
+    Source: ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION sections 2, 3, 7.
+    Lean: SKEFTHawking.ADW.FiniteGrassmannCoframe.coframe, SKEFTHawking.ADW.FiniteGrassmannCoframe.hopping_reconstructs_coframe
+    Aristotle: manual
+    These definitions ground the original blocks. The polar reduction and
+    executable top extraction remain separate formal bridges.
+    """
+    from fractions import Fraction
+    from src.vestigial import original_coefficients as o
+
+    if type(axis) is not int or axis not in range(4):
+        raise ValueError('original edge axis must be in 0..3')
+    if reg.extents[axis] != 2 or reg.boundary_signs[axis] != 1:
+        raise ValueError('a periodic length-two original edge is required')
+    edge = o.OriginalRegulator(
+        tuple(2 if j == axis else 1 for j in range(4)),
+        convention=reg.convention, word=reg.word, temporal_axis=reg.temporal_axis,
+    )
+    radial = tuple(o.Polynomial.variable(o.Symbol(o._POLAR_RADIAL_FAMILY, index))
+                   for index in o._POLAR_RADIAL_INDICES)
+    at_x, at_y = [], []
+    for gamma in edge.gamma:
+        x_entries, y_entries = [], []
+        for i, row in enumerate(gamma):
+            for j, value in enumerate(row):
+                if value:
+                    gamma_d = value * radial[j // 2] * Fraction(1, 4)
+                    d_gamma = radial[i // 2] * value * Fraction(1, 4)
+                    x_entries.extend((((i, 4 + j), gamma_d), ((4 + i, j), -d_gamma)))
+                    y_entries.extend((((i, 4 + j), d_gamma), ((4 + i, j), -gamma_d)))
+        at_x.append(o.SparseMatrix(8, tuple(x_entries)).to_exterior(edge))
+        at_y.append(o.SparseMatrix(8, tuple(y_entries)).to_exterior(edge))
+    return tuple(at_x), tuple(at_y)
+
+
+def original_direct_polar_edge(reg, axis, *, budget):
+    """All direct invariant tests of Q_x³, Q_x² Q_y and the oriented top of Q_x⁴.
+
+    Q_z = sum_A (S_z^A)^2 uses its own original coframe. Both independent
+    Haar anchors give d = 2 − 2 q0 for a normalized Haar quaternion. The
+    moment of r^(2k) is E d^k, separately in each chirality. The returned
+    cubic coefficients solve B = G^T E G using the actual literal test B
+    and the six-form pairing G derived in the same exterior orientation.
+    Source: ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION sections 3 and 7,
+    ORIGINAL_COEFFICIENT_IMPLEMENTATION_PLAN_R2 section 4.
+    Lean: SKEFTHawking.ADW.FiniteGrassmannCoframe.hopping_reconstructs_coframe
+    Aristotle: manual
+    This source backing covers the original coframe only. The direct result
+    does not discharge the independent minor route or the N16 action/contact.
+    """
+    from fractions import Fraction
+    from math import comb
+    from src.vestigial import original_coefficients as o
+
+    if not isinstance(budget, o.ExactBudget) or o._ACTIVE_COST.get() is not budget:
+        raise ValueError('direct polar edge requires an active explicit ExactBudget')
+    ceilings = (
+        ('limit', budget.limit, 70_000_000),
+        ('storage_limit', budget.storage_limit, 2 * 1024**3),
+        ('integer_bit_limit', budget.integer_bit_limit, 1024),
+    )
+    for name, value, maximum in ceilings:
+        if type(value) is not int or not 0 < value <= maximum:
+            raise ValueError(f'{name} must be a positive exact integer at most {maximum}')
+
+    quadratic_limit = 256
+    square_limit = comb(8, 4)**2 * 5
+    cubic_limit = comb(8, 6)**2 * 7
+    # Plan R2 §4's dense bound for the four higher-power wedges, plus
+    # eight initial coframe-square visits of at most 8² pairs each. Count
+    # all candidate pairs separately. Overlap rejection is not a scalar
+    # product; each surviving QComplex multiplication already bills one.
+    pair_limit = (2 * 4 * 8**2 + quadratic_limit**2
+                  + 2 * square_limit * quadratic_limit + cubic_limit * quadratic_limit)
+    attempted_pairs = 0
+
+    # Each live table reservation includes all inputs and output capacity.
+    # The small reserve covers coframes, basis, moment and result tuples.
+    extra_records = 4096
+
+    def reserve(output_limit, *live):
+        o._reserve_edge_records(budget, output_limit + extra_records, *live)
+
+    def accumulate(out, left, right, output_limit):
+        nonlocal attempted_pairs
+        attempted_pairs += len(left) * len(right)
+        if attempted_pairs > pair_limit:
+            raise o.BudgetExceeded('direct edge attempted pair limit exceeded')
+        o._edge_wedge_accumulate(out, left, right, max_records=output_limit)
+
+    def wedge(left, right, output_limit, *retained):
+        reserve(output_limit, left, right, *retained)
+        out = {}
+        accumulate(out, left, right, output_limit)
+        reserve(0, out, left, right, *retained)
+        return out
+
+    reserve(0)
+    x, y = original_polar_edge_coframes(reg, axis)
+    packed_x = tuple(o._pack_radial_edge_coframe(v) for v in x)
+    packed_y = tuple(o._pack_radial_edge_coframe(v) for v in y)
+    reserve(quadratic_limit, *packed_x, *packed_y)
+    qx = {}
+    for component in packed_x:
+        accumulate(qx, component, component, quadratic_limit)
+    reserve(quadratic_limit, qx, *packed_x, *packed_y)
+    qy = {}
+    for component in packed_y:
+        accumulate(qy, component, component, quadratic_limit)
+    reserve(0, qx, qy, *packed_x, *packed_y)
+    del x, y, packed_x, packed_y, component
+
+    square = wedge(qx, qx, square_limit, qy)
+    cubic_x = wedge(square, qx, cubic_limit, qy)
+    cubic_mixed = wedge(square, qy, cubic_limit, qx, cubic_x)
+    del square, qy
+    fourth = wedge(cubic_x, qx, 9, cubic_mixed)
+    del qx
+
+    # Binomial expansion of (2 - 2 q0)^k under the same S³ moment routine
+    # used by the original anchored integration. No fitted radial moments.
+    moments = []
+    for k in range(5):
+        total = Fraction()
+        for j in range(k + 1):
+            coefficient = o.checked_integer_product(
+                o.checked_integer_power(2, k - j), o.checked_integer_power(-2, j),
+            )
+            coefficient = o.checked_integer_product(comb(k, j), coefficient)
+            haar = original_quaternion_haar_moment((j, 0, 0, 0))
+            total = o.rational_add(total, o.rational_product(coefficient, haar))
+        moments.append(total)
+    moments = tuple(moments)
+    reserve(0, cubic_x, cubic_mixed, fourth)
+    labels, pairing, tests = o._edge_invariant_basis()
+    literal_x = tuple(tuple(o._radial_edge_top_integral(cubic_x, test, 6, moments)
+                            for test in row) for row in tests)
+    literal_mixed = tuple(tuple(o._radial_edge_top_integral(cubic_mixed, test, 6, moments)
+                                for test in row) for row in tests)
+    fourth_top = o._radial_edge_top_integral(fourth, {0: o.QComplex(1)}, 8, moments)
+    inverse = o.legendre_local(pairing, tuple(range(len(labels))))
+
+    def reconstruct(table):
+        return tuple(tuple(sum((
+            inverse[a][c] * table[a][b] * inverse[b][d]
+            for a in range(len(labels)) for b in range(len(labels))
+            if inverse[a][c] and table[a][b] and inverse[b][d]
+        ), o.QComplex()) for d in range(len(labels))) for c in range(len(labels)))
+
+    result = o.DirectPolarEdge(
+        labels, pairing, moments, literal_x, literal_mixed,
+        reconstruct(literal_x), reconstruct(literal_mixed), fourth_top, attempted_pairs,
+    )
+    budget.check_storage(result, cubic_x, cubic_mixed, fourth)
+    return result
+
+
 def original_one_site_action_coefficients(reg,links,*,route):
     """Complete original one-site S4/S2, raw versus independently antisymmetrized.
 

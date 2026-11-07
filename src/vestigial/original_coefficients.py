@@ -168,6 +168,16 @@ class QComplex:
         return QComplex(self.real, -self.imag)
 
 
+# The direct polar section introduces only these two real commuting
+# coordinates. An arbitrary source in family 'r' remains complex.
+_POLAR_RADIAL_FAMILY = '_original_edge_polar_radius'
+_POLAR_RADIAL_INDICES = (('L',), ('R',))
+
+
+def _is_polar_radial(family, index):
+    return family == _POLAR_RADIAL_FAMILY and index in _POLAR_RADIAL_INDICES
+
+
 @dataclass(frozen=True, slots=True, order=True)
 class Symbol:
     """A commuting coordinate with its complete source/link identity."""
@@ -182,12 +192,14 @@ class Symbol:
         if not isinstance(index, tuple):
             raise TypeError('symbol index must be a sequence')
         object.__setattr__(self, 'index', index)
-        if self.family in ('q', 'h'):
+        if self.family in ('q', 'h') or _is_polar_radial(self.family, index):
             object.__setattr__(self, 'conjugated', False)
 
     def conjugate(self):
         # Only the declared quaternion and auxiliary coordinates are real.
-        return self if self.family in ('q', 'h') else replace(self, conjugated=not self.conjugated)
+        if self.family in ('q', 'h') or _is_polar_radial(self.family, self.index):
+            return self
+        return replace(self, conjugated=not self.conjugated)
 
 
 @dataclass(slots=True)
@@ -1678,6 +1690,127 @@ def reserve_scalar_records(budget,records,*live):
     """Reserve future packed scalar payload BEFORE allocating a bounded map."""
     if type(records)is not int or records<0:raise ValueError('nonnegative scalar record reservation required')
     return budget.check_storage(live,additional_records=records)
+
+
+@dataclass(frozen=True, slots=True)
+class DirectPolarEdge:
+    """Complete six-by-six literal and dual-basis tables of one direct edge."""
+
+    labels: tuple
+    local_pairing: tuple
+    radial_moments: tuple
+    cubic_x_tests: tuple
+    cubic_mixed_tests: tuple
+    cubic_x: tuple
+    cubic_mixed: tuple
+    fourth_top: QComplex
+    attempted_wedge_pairs: int
+
+
+def _pack_radial_edge_coframe(coframe):
+    out = {}
+    for mask, polynomial in coframe.terms:
+        for key, value in polynomial.terms:
+            if len(key) != 1 or not _is_polar_radial(key[0].family, key[0].index):
+                raise ValueError('one real radial symbol per polar coframe term required')
+            chi = key[0].index
+            if mask.bit_count() != 2 or (mask & 255).bit_count() != 1 or mask >= 1 << 16:
+                raise ValueError('polar coframe must use one generator from each endpoint')
+            # Packed 16-bit exterior mask and two 4-bit radial exponents.
+            out[(mask << 8) | (16 if chi == ('L',) else 1)] = value
+    return out
+
+
+def _reserve_edge_records(budget, additional_records, *live_maps):
+    # Count occupied coefficient slots separately from the unique Python
+    # scalar objects counted by ExactBudget.check_storage.
+    unique_maps = {id(table): table for table in live_maps}
+    occupied = sum(len(table) for table in unique_maps.values()) + additional_records
+    if occupied > 55_000:
+        raise BudgetExceeded('direct edge record limit exceeded: incomplete coefficient control')
+    reserve_scalar_records(budget, additional_records, *unique_maps.values())
+    budget.peak_scalar_records = max(budget.peak_scalar_records, occupied)
+
+
+def _edge_wedge_negative(left, right):
+    swaps = 0
+    while left:
+        low_bit = left & -left
+        swaps += (right & (low_bit - 1)).bit_count()
+        left ^= low_bit
+    return swaps % 2
+
+
+def _edge_wedge_accumulate(out, left, right, *, max_records):
+    """Coalesce signed products immediately inside a previously reserved map."""
+    for left_key, av in left.items():
+        a = left_key >> 8
+        for right_key, bv in right.items():
+            b = right_key >> 8
+            if a & b:
+                continue
+            # The callers join homogeneous layers of total radial degree at
+            # most eight. Neither exponent can carry into its neighbor.
+            key = ((a | b) << 8) | ((left_key & 255) + (right_key & 255))
+            term = av * bv
+            if _edge_wedge_negative(a, b):
+                term = -term
+            prior = out.get(key)
+            if prior is not None:
+                term = prior + term
+            if term:
+                if prior is None and len(out) >= max_records:
+                    raise BudgetExceeded('reserved edge map record limit exceeded')
+                out[key] = term
+            elif prior is not None:
+                del out[key]
+
+
+def _edge_invariant_basis():
+    """Literal n, b, p two-forms and their six-form dual roster at each end."""
+    labels = tuple((chi, kind) for chi in ('L', 'R') for kind in ('n', 'b', 'p'))
+
+    def forms(site_offset):
+        g = ExteriorPolynomial.generator
+        out, tops = [], []
+        for start in (site_offset, site_offset + 4):
+            b1, b2, p1, p2 = (g(start + j) for j in range(4))
+            out.extend((b1 * p1 + b2 * p2, b1 * b2, p1 * p2))
+            tops.append(b1 * b2 * p1 * p2)
+        return out, tops
+
+    def scalar_terms(form):
+        return {mask: _scalar_value(poly) for mask, poly in form.terms}
+
+    x, x_tops = forms(0)
+    y, _ = forms(8)
+    beta = tuple(x_tops[1 - i // 3] * form for i, form in enumerate(x))
+    pairing = tuple(tuple(scalar_terms(a * b).get(255, QComplex()) for b in x)
+                    for a in beta)
+    tests = tuple(tuple(scalar_terms(a * b) for b in y) for a in x)
+    return labels, pairing, tests
+
+
+def _radial_edge_top_integral(layer, test, degree, moments):
+    """Contract all oriented complements, then average the even radial powers."""
+    top = (1 << 16) - 1
+    radial = {}
+    for test_mask, test_scalar in test.items():
+        complement = top ^ test_mask
+        negative = _edge_wedge_negative(complement, test_mask)
+        for l in range(degree + 1):
+            key = l, degree - l
+            coefficient = layer.get((complement << 8) | (l << 4) | key[1])
+            if coefficient is not None:
+                term = coefficient * test_scalar
+                radial[key] = radial.get(key, QComplex()) + (-term if negative else term)
+    total = QComplex()
+    for (l, r), value in radial.items():
+        if value:
+            if l % 2 or r % 2:
+                raise ValueError('nonvanishing odd radial power in invariant edge test')
+            total += value * moments[l // 2] * moments[r // 2]
+    return total
 
 
 def _freeze_exact_metadata(value):

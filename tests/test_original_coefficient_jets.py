@@ -596,3 +596,128 @@ def test_r3_scalar_measure_motion_keeps_all_action_contacts():
     result = _r3_contract(reg, _r3_graded_source(reg, action, measure=measure))
     # (1+t+t²)^4 * (3+t): raw value,first,second are 3,13,68.
     assert tuple(dict(result.N)[k] for k in ((), (0,), (0, 0))) == tuple(map(p, (3, 13, 68)))
+
+
+@pytest.mark.parametrize('right_q0,right_q3', ((F(3, 5), F(4, 5)), (F(0), F(1))))
+def test_n16_polar_coframes_match_both_original_anchors(right_q0, right_q3):
+    # Unequal radii detect interchanging gamma and D at y; the second case
+    # is singular in the right chirality and must agree without an inverse.
+    reg = o.OriginalRegulator((2, 1, 1, 1))
+    x, y = reg.sites
+    links = {
+        (x, 0): f.original_spin4_link((1, 0, 0, 0), (right_q0, 0, 0, right_q3)),
+        (y, 0): f.original_spin4_link((-1, 0, 0, 0), (-right_q0, 0, 0, -right_q3)),
+    }
+    assert hasattr(f, 'original_polar_edge_coframes'), 'missing original polar coframes'
+    left, right = f.original_polar_edge_coframes(reg, 0)
+    values = {('L',): 2, ('R',): 2 * right_q0}
+    radii = {symbol: values[symbol.index] for coframe in left + right
+             for _, polynomial in coframe.terms for key, _ in polynomial.terms
+             for symbol in key}
+    for site, coframes in zip((x, y), (left, right), strict=True):
+        for internal, coframe in enumerate(coframes):
+            expected = o.assemble_coframe(
+                reg, f.original_coframe_blocks(reg, (site, 0, internal), links),
+            ).to_exterior(reg)
+            evaluated = o.ExteriorPolynomial(tuple(
+                (mask, p(value.evaluate(radii))) for mask, value in coframe.terms
+            ))
+            assert evaluated == expected
+
+
+def test_n16_direct_edge_full_local_rosters_and_orientation():
+    # The accepted manual coefficient proof supplies regression values only.
+    # This is a bounded local-edge control, without the auxiliary or N16 action.
+    assert hasattr(f, 'original_direct_polar_edge'), 'missing original direct edge kernel'
+    with o.ExactBudget(1_000_000, 512 * 1024**2) as budget:
+        edge = f.original_direct_polar_edge(o.OriginalRegulator(), 0, budget=budget)
+    q = o.QComplex
+    assert edge.labels == tuple((chi, kind) for chi in ('L', 'R') for kind in ('n', 'b', 'p'))
+    assert edge.radial_moments == (F(1), F(2), F(5), F(14), F(42))
+    assert edge.fourth_top == q(F(1125, 4))
+    g = ((-2, 0, 0), (0, 0, 1), (0, 1, 0))
+    expected_pairing = tuple(tuple(q(g[a % 3][b % 3] if a // 3 == b // 3 else 0)
+                                   for b in range(6)) for a in range(6))
+    assert edge.local_pairing == expected_pairing
+    c = ((1, 0, 0), (0, 0, -2), (0, -2, 0))
+    test = ((4, 0, 0), (0, 0, -2), (0, -2, 0))
+    for cubic, literal, scale in (
+        (edge.cubic_x, edge.cubic_x_tests, F(45, 4)),
+        (edge.cubic_mixed, edge.cubic_mixed_tests, F(12)),
+    ):
+        for table, expected in ((cubic, c), (literal, test)):
+            assert len(table) == 6 and all(len(row) == 6 for row in table)
+            assert table == tuple(tuple(q(scale * expected[a % 3][b % 3]
+                                          if a // 3 != b // 3 else 0)
+                                        for b in range(6)) for a in range(6))
+    assert budget.products > 0 and 0 < budget.peak_scalar_records <= 55_000
+
+
+def test_n16_direct_edge_budget_refuses_before_returning_any_result():
+    assert hasattr(f, 'original_direct_polar_edge'), 'missing original direct edge kernel'
+    reg = o.OriginalRegulator()
+    with o.ExactBudget(100, 1) as budget:
+        with pytest.raises(o.BudgetExceeded, match='storage budget'):
+            f.original_direct_polar_edge(reg, 0, budget=budget)
+        assert budget.products == 0
+    with o.ExactBudget(1, 512 * 1024**2) as budget:
+        with pytest.raises(o.BudgetExceeded, match='scalar budget'):
+            f.original_direct_polar_edge(reg, 0, budget=budget)
+
+
+def test_n16_edge_does_not_discard_odd_polar_powers_as_haar_zeros():
+    assert hasattr(o, '_radial_edge_top_integral'), 'missing original radial projector'
+    top = (1 << 16) - 1
+    with pytest.raises(ValueError, match='odd radial'):
+        o._radial_edge_top_integral(
+            {(top << 8) | 0x11: o.QComplex(1)}, {0: o.QComplex(1)}, 2, (F(1), F(2)),
+        )
+
+
+def test_n16_edge_coalesced_map_refuses_an_unreserved_slot():
+    assert hasattr(o, '_edge_wedge_accumulate'), 'missing coalesced wedge'
+    q = o.QComplex
+    result = {}
+    with pytest.raises(o.BudgetExceeded, match='record'):
+        o._edge_wedge_accumulate(
+            result, {0x110: q(1), 0x210: q(1)}, {0x401: q(1)},
+            max_records=1,
+        )
+    assert len(result) == 1
+
+
+@pytest.mark.parametrize('field', ('limit', 'storage_limit', 'integer_bit_limit'))
+@pytest.mark.parametrize('invalid', (float('nan'), float('inf'), 1000.0, 1000.5, True, 0, -1))
+def test_n16_direct_edge_rejects_each_invalid_cap_before_reserving(field, invalid, monkeypatch):
+    def unexpected_reservation(*args, **kwargs):
+        pytest.fail('invalid cap reached the first reservation')
+
+    monkeypatch.setattr(o, '_reserve_edge_records', unexpected_reservation)
+    budget = o.ExactBudget(100, 512 * 1024**2)
+    setattr(budget, field, invalid)
+    with budget, pytest.raises(ValueError, match=f'{field} must be a positive exact integer'):
+        f.original_direct_polar_edge(o.OriginalRegulator(), 0, budget=budget)
+    assert budget.products == budget.peak_payload_bytes == 0
+
+
+def test_n16_polar_real_roster_preserves_legacy_r_conjugation():
+    for index in (('L',), ('R',), ('source', 1)):
+        legacy = o.Symbol('r', index)
+        assert legacy.conjugate() == o.Symbol('r', index, True)
+        assert legacy.conjugate().conjugate() == legacy
+    x, y = f.original_polar_edge_coframes(o.OriginalRegulator(), 0)
+    radial = {symbol for coframe in x + y for _, polynomial in coframe.terms
+              for key, _ in polynomial.terms for symbol in key}
+    assert {symbol.index for symbol in radial} == {('L',), ('R',)}
+    assert len(radial) == 2 and all(symbol.family != 'r' and symbol.conjugate() == symbol
+                                    for symbol in radial)
+    unrelated = o.Symbol(next(iter(radial)).family, ('source', 1))
+    assert unrelated.conjugate().conjugated
+
+
+def test_n16_pair_visits_are_reported_separately_from_exact_products():
+    with o.ExactBudget(1_000_000, 512 * 1024**2) as budget:
+        edge = f.original_direct_polar_edge(o.OriginalRegulator(), 0, budget=budget)
+    assert hasattr(edge, 'attempted_wedge_pairs'), 'missing attempted pair receipt'
+    assert 512 <= edge.attempted_wedge_pairs <= 14_014_976
+    assert edge.attempted_wedge_pairs > budget.products > 0
