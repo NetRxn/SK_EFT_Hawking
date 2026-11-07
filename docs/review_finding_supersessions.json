@@ -10505,6 +10505,36 @@
         "enforced": true,
         "run_at": "2026-11-07"
       }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-compiler-definition:D8:1.1",
+      "status": "fixed",
+      "evidence": "The independent review reproduced both declared commands, the exact definition and proof attribution, 13-page compilation, and the same-source G5 transition.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_COMPILER_DEFINITION_INDEPENDENT_REVIEW_R1.md",
+      "date": "2026-11-07",
+      "commit": "86faaa0e1243ac4c3eb845cce5c6c071edb494e9",
+      "verified_by": {
+        "command": "grep -Fq 'def:compile-recursion' papers/D8/paper_draft.tex && grep -Fq 'GenericSU2.cliffordTCompile' papers/D8/paper_draft.tex && grep -Fq 'cliffordTCompile\\_correct' papers/D8/paper_draft.tex && grep -Fq 'cliffordTCompile_eq_recursion' papers/D8/bundle_metadata.json",
+        "declared": "grep -Fq 'def:compile-recursion' papers/D8/paper_draft.tex && grep -Fq 'GenericSU2.cliffordTCompile' papers/D8/paper_draft.tex && grep -Fq 'cliffordTCompile\\_correct' papers/D8/paper_draft.tex && grep -Fq 'cliffordTCompile_eq_recursion' papers/D8/bundle_metadata.json",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-compiler-definition:D8:1.2",
+      "status": "fixed",
+      "evidence": "The independent review reproduced both declared commands, the exact definition and proof attribution, 13-page compilation, and the same-source G5 transition.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_COMPILER_DEFINITION_INDEPENDENT_REVIEW_R1.md",
+      "date": "2026-11-07",
+      "commit": "86faaa0e1243ac4c3eb845cce5c6c071edb494e9",
+      "verified_by": {
+        "command": "test \"$(grep -Fc 'a tensor-Pauli closure-flow construction' papers/D8/paper_draft.tex)\" -eq 2 && ! grep -Fq 'an entangling-gate criterion' papers/D8/paper_draft.tex",
+        "declared": "test \"$(grep -Fc 'a tensor-Pauli closure-flow construction' papers/D8/paper_draft.tex)\" -eq 2 && ! grep -Fq 'an entangling-gate criterion' papers/D8/paper_draft.tex",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
     }
   ]
 }
