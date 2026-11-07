@@ -6990,15 +6990,13 @@ def fig_graphene_noise_spectrum():
 
 
 def fig_graphene_snr_frequency():
-    """Fig 105: Per-bin SNR vs frequency for the Dean bilayer nozzle.
+    """Fig105: sampled model signal/background ratio for supplied Dean parameters.
 
-    Shows the frequency dependence of the Hawking-to-thermal signal ratio.
-    The SNR is roughly flat at low frequencies (both Hawking and thermal
-    scale similarly) and drops exponentially above ω_H.
-
-    Phase 5w W10c: uses the realistic greybody Γ(ω) ≈ Γ₀ = 0.9994 (Lean
-    `QuasiOneDReduction.greybody_zero_freq_le_one`, Anderson et al.
-    PRD 87), not the `Γ=1` upper bound.
+    The corrected occupation includes the existing floor and roll-off. The
+    displayed Gamma0*T_H/(2*T_ambient) is a separate leading Planck low-frequency
+    reference, not an identity for this curve. The BEC IR scalar and conditional
+    Lean bounds do not certify bilayer sensitivity or a finite-width error.
+    Physical transfer/state/noise/calibration remain BUILD.
     """
     from src.graphene.wkb_spectrum import compute_graphene_spectrum
     from src.core.formulas import greybody_zero_freq
@@ -7015,7 +7013,7 @@ def fig_graphene_snr_frequency():
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=f_GHz, y=spec.snr_per_bin,
-        name='SNR per bin',
+        name='Model SNR per bin',
         line=dict(color=COLORS['steel_blue'], width=2),
         fill='tozeroy',
         fillcolor='rgba(46,134,171,0.15)',
@@ -7023,13 +7021,15 @@ def fig_graphene_snr_frequency():
 
     omega_H_GHz = spec.omega_H / (2 * np.pi * 1e9)
     fig.add_vline(x=omega_H_GHz, line_dash='dot', line_color='grey',
-                  annotation_text=f'ω_H ≈ {omega_H_GHz:.0f} GHz')
+                  annotation_text=f'f_H ≈ {omega_H_GHz:.0f} GHz')
+    # Only annotation coordinates are logarithmic; trace/shape x values stay in GHz.
+    fig.layout.annotations[-1].x = np.log10(omega_H_GHz)
 
     fig.add_annotation(
         x=np.log10(2), y=np.log10(spec.peak_snr * 0.3),
-        text=f'Peak SNR/bin ≈ {spec.peak_snr:.1e}<br>'
-             f'SNR = Γ₀ T_H/(2T_amb) ≈ {gamma_0 * spec.T_H_K/(2*spec.T_ambient_K):.3f}<br>'
-             f'(Γ₀ ≈ {gamma_0:.4f}, quasi-1D corr. ≤ 1.8%)',
+        text=f'Sampled model peak/bin ≈ {spec.peak_snr:.1e}<br>'
+             f'Leading low-frequency reference ≈ {gamma_0 * spec.T_H_K/(2*spec.T_ambient_K):.3f}<br>'
+             f'(adopted Γ₀ ≈ {gamma_0:.4f}; physical width error unqualified)',
         showarrow=False, font=dict(size=10),
         xref='x', yref='y',
     )
@@ -7039,7 +7039,7 @@ def fig_graphene_snr_frequency():
                    range=[np.log10(0.3), np.log10(600)]),
         yaxis=dict(title='S_Hawking / S_thermal (per bin)', type='log',
                    exponentformat='power'),
-        title=dict(text='Detection Signal-to-Noise — Dean Bilayer Nozzle',
+        title=dict(text='Adopted Signal-to-Noise Model — Dean Parameters',
                    font=TITLE_FONT),
         height=450, width=700,
     )

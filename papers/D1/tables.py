@@ -37,7 +37,7 @@ _NON_BEC_ROWS = [
     },
     {
         "platform": 'LKB polariton (steep, $D=0.94$)',
-        "temperature": r"$\sim 134$\,mK",
+        "temperature": r"$\sim 134$\,mK (scale)",
         "dispersion": r"$-46\%$",
         "dissipation": r"$110\%$",
         "dominance": r"\emph{neither}",
@@ -102,7 +102,7 @@ TABLES = {
         "description": "Dispersive and dissipative benchmark corrections",
         "columns": [
             Col("platform", 'Platform', align="l"),
-            Col("temperature", '$T_H$', align="c"),
+            Col("temperature", "temperature scale", align="c"),
             Col("dispersion", r"$\delta_\text{disp}$", align="c"),
             Col("dissipation", r"$\delta_\text{diss}$", align="c"),
             Col("dominance", 'dominance', align="c"),
