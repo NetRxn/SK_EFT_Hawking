@@ -3411,7 +3411,8 @@ APEX_CLAIM_NUMERAL_CEILING = 31
 #: SAME declaration hours earlier; it was the ONE apex the two bundles shared, so the
 #: E1/E2 overlap is now zero — which is what the 2026-08-08 rejected-merge adjudication
 #: wants and had not got. Measured 634 across the 21 bundles before lowering.
-APEX_CLAIMS_SCORED_FLOOR = 634
+#: Exact PR118 measurement after the reviewed apex changes: 640 scored.
+APEX_CLAIMS_SCORED_FLOOR = 640
 
 
 @register_check(
@@ -3637,7 +3638,7 @@ _APEX_VACUITY_DISCLOSURE_RE = re.compile(
 #: re-derived and PRINTED BY NAME on every run, disclosed and undisclosed alike, and no
 #: per-declaration exemption key exists to grant. Lower it by strengthening the theorem or
 #: by withdrawing the apex; never by adding a name anywhere.
-APEX_VACUITY_CEILING = 20
+APEX_VACUITY_CEILING = 19
 
 #: …of which the bundle's own `claims` string does not SAY the declaration is thin.
 #: **A RATCHET — it may only fall.**
@@ -3649,7 +3650,7 @@ APEX_VACUITY_CEILING = 20
 #: ceiling and NOT out of `APEX_VACUITY_CEILING` — so being honest is never room to add
 #: another. Remediation is per bundle and needs the draft read beside the metadata:
 #: `papers/AutomatedReviews/2026-08-15-apex-claims-unbacked/infra.md`.
-APEX_UNDISCLOSED_VACUITY_CEILING = 15
+APEX_UNDISCLOSED_VACUITY_CEILING = 14
 
 
 @register_check(
