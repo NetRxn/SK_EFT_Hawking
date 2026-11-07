@@ -1326,13 +1326,12 @@ the degeneracy-pressure contribution is $v_{\rm FL} = v_F/\sqrt{d}$ in
 $d$ dimensions, and for bilayer graphene with quadratic band touching
 Geurs \emph{et al.} evaluate
 $v_{\rm FL}(n) = \hbar\sqrt{\pi n}/(\sqrt{2}\,m^{*})$, which is
-$440$~km/s at the typical device density
-$n = 10^{12}~\mathrm{cm}^{-2}$. We take
-$c_s = 4.4\times 10^5$~m/s throughout. Two remarks are needed. The $v_F$
-of Eq.~\eqref{eq:cs_conformal} is then the bilayer Fermi-liquid velocity
-$\hbar\sqrt{\pi n}/m^{*} \approx 6.2\times 10^5$~m/s at that density, not
-the monolayer Dirac velocity $10^6$~m/s, and the two must not be paired.
-And the shallow-water contribution from capacitive coupling to a gate is
+evaluated at the typical device density
+$n = 10^{12}~\mathrm{cm}^{-2}$. Table~\ref{tab:dean-nozzle} gives the
+adopted sound speed and its corresponding kinematic velocity
+$\sqrt{2}c_s$. The monolayer Dirac velocity describes a different band
+structure.
+The shallow-water contribution from capacitive coupling to a gate is
 suppressed in their device by a lightly doped silicon backgate operated
 at $10$~K, which is why the measured onset matches $v_s \approx v_{\rm FL}$.
 
@@ -1416,19 +1415,15 @@ hypotheses and carries no numeral: the two physical bounds are inputs to
 Eq.~\eqref{eq:quasi1d}, not outputs of it, and the machine-checked
 content is that the errors add rather than compound.
 
-The number that matters comes from the device parameters, and we compute
-it here. At the Dean geometry we adopt $W = 1~\mu$m and $L = 200$~nm, and
-take $\ell_{ee} = \hbar v_F/(k_B T_e) = 51$~nm at the electron
-temperature $T_e = 150$~K that Ref.~\cite{Geurs2025} estimates for the
-device at high bias. With $\omega_\perp \approx 4.4\,\omega_H$ from
-Sec.~\ref{sec:gr-detect}, at $\omega = \omega_H$ the two terms of
-Eq.~\eqref{eq:quasi1d} are $(51/1000)^2 = 2.6\times10^{-3}$ and
-$(1/4.4)^2 e^{-2\pi(0.2)} = 1.5\times10^{-2}$, for an illustrative total of about $1.8\%$ at $\omega_H$ under the
-adopted envelopes and geometry. Ref.~\cite{Geurs2025} quotes
+Table~\ref{tab:dean-nozzle} evaluates the supplied envelopes at
+$\omega_H$ using the adopted width, throat length and electron mean free
+path. The spectral model evaluates $\ell_{ee}=\hbar v/(k_BT_e)$ using
+the adopted velocity input $v$ listed in the table. The bilayer kinematic
+comparison $\sqrt{2}c_s$ gives a separate estimate. Ref.~\cite{Geurs2025} quotes
 $\ell_{ee} \sim 100$~nm as a scale for the width of the hydraulic jump.
-Doubling the adopted $\ell_{ee}$ gives a total of about $2.5\%$ at the
-same frequency. A physical error bound over the working band still
-requires matching the inputs to the operating device.
+The table also shows the envelope sum when the adopted mean free path
+is doubled. A physical error bound over the working band still requires
+matching the inputs to the operating device.
 
 \subsection{Subluminal dispersion and the absent trans-Planckian problem}
 \label{sec:gr-subluminal}
@@ -1498,10 +1493,8 @@ D \;=\; \frac{\kappa\,\ell_{ee}}{c_s},
 \label{eq:adiabaticity}
 \end{equation}
 the ratio of the cutoff length to the gradient length $c_s/\kappa$ over
-which the flow crosses the horizon. At the Dean values
-($\kappa = 2\times10^{12}~\mathrm{s}^{-1}$, $\ell_{ee} = 51$~nm,
-$c_s = 4.4\times 10^{5}$~m/s) this is $D = 0.23$, verified as the
-numerical inequality $D < 1$ in
+which the flow crosses the horizon. For the adopted inputs in Table~\ref{tab:dean-nozzle}, $D$ is below
+unity. The benchmark inequality $D < 1$ is also verified in
 \texttt{QuasiOneDReduction.dean\_adiabatic}. The horizon scale is roughly four mean free paths. This scale separation
 motivates a hydrodynamic treatment but does not determine the leading
 dispersive correction from the microscopic theory. Our adopted quadratic
@@ -1589,21 +1582,26 @@ measurement and independent transfer and noise calibration.
 \subsection{Detection at the Dean device}
 \label{sec:gr-detect}
 
-We now put numbers to Eqs.~\eqref{eq:noise_psd}
-and~\eqref{eq:snr_bin} at the realised nozzle, adopting
-$c_s = 4.4\times 10^5$~m/s, throat length $L = 200$~nm, channel width
-$W = 1~\mu$m, and electron temperature $T_e = 150$~K. The surface gravity
-following from the gradient length,
-$\kappa \approx c_s/L \approx 2\times10^{12}~\mathrm{s}^{-1}$, gives
+Table~\ref{tab:dean-nozzle} gives the benchmark for
+Eqs.~\eqref{eq:noise_psd} and~\eqref{eq:snr_bin}. We use the estimated
+gradient on the scale $c_s/L$, with
 \begin{equation}
-T_H \;=\; \frac{\hbar\kappa}{2\pi k_B} \;\approx\; 2.4~\mathrm{K},
+T_H = \frac{\hbar\kappa}{2\pi k_B},
 \qquad
-\omega_H \;=\; \frac{k_B T_H}{\hbar} \;\approx\;
-3.14\times10^{11}~\mathrm{s}^{-1},
+\omega_H = \frac{k_BT_H}{\hbar}.
 \end{equation}
-a Hawking frequency near $50$~GHz, squarely inside the band of ordinary
-microwave noise thermometry. The temperature is linear in the velocity
-gradient and inherits the geometry's uncertainty directly:
+The resulting ordinary frequency lies in the microwave band. The
+temperature inherits the uncertainty in the sonic gradient.
+
+\begin{table}[t]
+\centering
+\input{tables/dean_nozzle.tex}
+\caption{Adopted Dean bilayer-nozzle inputs and benchmark calculations.
+The temperature, frequencies and ideal noise use the current spectral
+model. The envelope rows evaluate supplied scalings at $\omega_H$.}
+\label{tab:dean-nozzle}
+\end{table}
+
 Ref.~\cite{Geurs2025} closes with an estimate of
 $T_H \sim 500$~mK for an electronic nozzle, corresponding to a gradient
 length near $1~\mu$m rather than the $200$~nm throat adopted here. The
@@ -1617,20 +1615,18 @@ momenta are quantised as $k_n = (n+1)\pi/W$
 cutoffs $\omega_\perp(n) = c_s k_n$
 (\texttt{channelCutoffEnergy}) increase strictly with $n$
 (\texttt{channelCutoffEnergy\_strictMono}), so it suffices to locate the
-lowest. At the Dean values,
+lowest. The modeled cutoff in Table~\ref{tab:dean-nozzle} satisfies
 \begin{equation}
-\omega_\perp(0) \;=\; \frac{c_s \pi}{W} \;\approx\;
-1.38\times10^{12}~\mathrm{s}^{-1} \;>\; 4\,\omega_H .
+\omega_\perp(0) = \frac{c_s\pi}{W} > 4\,\omega_H .
 \label{eq:band_sep}
 \end{equation}
-Equation~\eqref{eq:band_sep} is checked by the Lean kernel as
-\texttt{DiracFluidWKB.dean\_lowest\_channel\_above\_four\_omega\_H}. It
-should be read for what it is: a numerical inequality between two
-hard-coded literals, $(4.4\times10^5)\pi/10^{-6}$ against
-$4 \times 3.14\times 10^{11}$, which does not reference
-\texttt{channelCutoffEnergy}, \texttt{transverseMomentum} or the
-parameter record, and is therefore not a parametric theorem about the
-geometry. It supplies the transverse threshold comparison at the assumed width.
+The following Lean theorem checks the comparison using literal sound
+speed, width and rounded Hawking frequency.
+\begin{center}
+\resizebox{0.94\columnwidth}{!}{\texttt{DiracFluidWKB.dean\_lowest\_channel\_above\_four\_omega\_H}}
+\end{center}
+Its statement does not take the parameter record, the momentum
+definition or the channel cutoff function as input.
 A physical validity bound for the device also depends on its channel
 structure and on the evanescent and other corrections over the band.
 
@@ -1670,8 +1666,8 @@ noise at the adopted Dean bilayer-nozzle inputs. The occupation is
 $\beta^2/(1-\delta_K)+n_{\rm noise}$, with effective-temperature Planck
 factor $\beta^2$, adopted Keldysh correction $\delta_K$ and added floor
 $n_{\rm noise}$. Transmission includes an adopted frequency roll-off.
-At $T_e=150$~K and $\sigma_Q\approx 4e^2/h$, the ideal reference is
-$S_{\rm JN}\approx 1.3\times10^{-24}$~$\mathrm{A^2/Hz}$. The annotation
+The ideal thermal reference in Table~\ref{tab:dean-nozzle} uses the
+adopted electron temperature and $\sigma_Q\approx 4e^2/h$. The annotation
 gives the separate leading low-frequency limit
 $\Gamma_0 T_H/(2T_e)$. Device sensitivity requires measured
 transmission, detector response and background noise.}
@@ -1719,11 +1715,18 @@ InGaAs quantum wells between GaAs-AlGaAs Bragg mirrors, driven
 quasi-resonantly by a continuous-wave laser whose spatial phase is
 imprinted by a spatial light modulator. That imprint sets the flow
 profile directly, so the horizon geometry is programmed rather than
-grown. Two families of horizon were realised: smooth transitions with
-surface gravity $\kappa = 0.07$ and $0.08~\mathrm{ps}^{-1}$, and a steep
-configuration reaching $\kappa = 0.11~\mathrm{ps}^{-1}$. We take
-$\kappa = 7\times10^{10}~\mathrm{s}^{-1}$ as the baseline and
-$\kappa = 1.1\times10^{11}~\mathrm{s}^{-1}$ as the demonstrated reach.
+grown. Table~\ref{tab:paris-horizon} gives the smooth baseline and the
+steep configuration. Falque \emph{et al.} also report a second smooth
+transition with $\kappa = 0.08~\mathrm{ps}^{-1}$.
+
+\begin{table}[t]
+\centering
+\input{tables/paris_horizon.tex}
+\caption{Paris-LKB horizon inputs from Falque \emph{et al.}~\cite{Falque2025}.
+Sound speed and upstream healing length refer to the smooth profile.
+The steep column reports the separate gradient.}
+\label{tab:paris-horizon}
+\end{table}
 
 The sound speed is the parameter that matters most for the acoustic
 metric and the one most easily overestimated on this platform. Falque
@@ -1737,11 +1740,10 @@ wavevector and frequency, and fitted with the laboratory-frame
 dispersion using the interaction energy $gn$ as the free parameter.
 Because the outgoing intensity is proportional to the intracavity
 density, the local sound speed follows across the whole fluid from the
-measured intensity map anchored at the probed point. The result is
-$c_s \approx 0.40~\mu\mathrm{m/ps}$ with an upstream healing length
-$\xi \approx 3.4~\mu\mathrm{m}$ and $\xi \approx 4.0~\mu\mathrm{m}$
-downstream, at an effective polariton mass
-$m^* = 7.0\times10^{-35}~\mathrm{kg}$.
+measured intensity map anchored at the probed point.
+Table~\ref{tab:paris-horizon} gives the sound speed, effective mass
+and upstream healing length. The downstream healing length is
+$\xi \approx 4.0~\mu\mathrm{m}$.
 
 The reported sound speed already accounts for the reservoir in the
 spectral reconstruction. Falque \emph{et al.}\ take a long-lived dark
@@ -1882,8 +1884,7 @@ decoherence rate
 $\Gamma_{\rm LP} = \gamma_{\rm LP}/\hbar \approx
 2.73\times10^{12}~\mathrm{s}^{-1}$. Pairing that rate with the
 \emph{most generous} surface gravity anywhere in the polariton family,
-the steep-horizon maximum $\kappa = 1.1\times10^{11}~\mathrm{s}^{-1}$
-from Ref.~\cite{Falque2025}, gives the parameter record
+the steep-horizon maximum $\kappa$ in Table~\ref{tab:paris-horizon}, gives the parameter record
 \texttt{PolaritonTier1.pennTmdPolaritonParams} and
 \begin{equation}
 \frac{\Gamma_{\rm LP}}{\kappa_{\max}} \approx 24.86 ,

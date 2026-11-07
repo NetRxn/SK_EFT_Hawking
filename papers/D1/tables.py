@@ -1,8 +1,14 @@
 """Canonical table specifications for D1."""
 
-from scripts.paper_tables import Col
+from math import pi, sqrt
+
+from scripts.paper_tables import Col, Span
+from scripts.paper_tables.sources import polariton_horizon_params
 
 from scripts.gen_d1_hierarchy_table import compute_bec_hierarchy, fmt_sci_latex
+from src.core.constants import GRAPHENE_PLATFORMS
+from src.core.formulas import graphene_channel_cutoff_energy, quasi1d_correction_bound
+from src.graphene.wkb_spectrum import compute_graphene_spectrum
 
 
 _BEC_LABELS = {
@@ -26,6 +32,43 @@ def _hierarchy_rows() -> list[dict[str, str]]:
     # Platform-specific orientation estimates as reported in the caption and text.
     rows.extend(_NON_BEC_ROWS)
     return rows
+
+def _dean_nozzle_rows() -> list[dict[str, str]]:
+    name = "Dean_bilayer_nozzle"
+    platform = GRAPHENE_PLATFORMS[name]
+    spectrum = compute_graphene_spectrum(name)
+    sound_speed = platform["c_s"]
+    width_nm = platform["channel_width_nm"]
+    throat_nm = platform["nozzle_throat_nm"]
+    mean_free_path_nm = platform["l_ee_nm"]
+    width, throat, mean_free_path = (x * 1e-9 for x in (width_nm, throat_nm, mean_free_path_nm))
+    cutoff = graphene_channel_cutoff_energy(0, width, sound_speed)
+    envelope_args = (spectrum.omega_H, cutoff, throat, width)
+    total = quasi1d_correction_bound(*envelope_args, mean_free_path)
+    transverse = quasi1d_correction_bound(*envelope_args, 0)
+    rows = (
+        (r"$c_s$ (adopted sound speed)", fmt_sci_latex(sound_speed) + r" m/s"),
+        (r"$\sqrt{2}\,c_s$ (kinematic comparison)", fmt_sci_latex(sqrt(2) * sound_speed) + r" m/s"),
+        (r"Velocity input for $\ell_{ee}$", fmt_sci_latex(platform["v_F"]) + " m/s"),
+        (r"$L$ (throat length)", f"{throat_nm:g} nm"),
+        (r"$W$ (channel width)", f"{width_nm:g} nm"),
+        (r"$T_e$ (adopted electron temperature)", f"{spectrum.T_ambient_K:g} K"),
+        (r"$\ell_{ee}$ (adopted spectral-model scale)", f"{mean_free_path_nm:.1f} nm"),
+        (r"$\kappa$ (estimated gradient)", fmt_sci_latex(spectrum.kappa) + r" s$^{-1}$"),
+        (r"$D$ (adiabaticity parameter)", f"{spectrum.D:.3f}"),
+        (r"$T_H$ (leading temperature)", f"{spectrum.T_H_K:.2f} K"),
+        (r"$\omega_H$ (angular frequency)", fmt_sci_latex(spectrum.omega_H) + r" s$^{-1}$"),
+        (r"$f_H$ (ordinary frequency)", f"{spectrum.omega_H / (2 * pi * 1e9):.1f} GHz"),
+        (r"$\omega_\perp(0)$ (first angular cutoff)", fmt_sci_latex(cutoff) + r" s$^{-1}$"),
+        (r"Surface-gravity envelope at $\omega_H$", fmt_sci_latex(total - transverse)),
+        (r"Evanescent envelope at $\omega_H$", fmt_sci_latex(transverse)),
+        (r"Sum at $\omega_H$", f"{100 * total:.2f}" + r"\%"),
+        (r"Sum at $\omega_H$ with doubled $\ell_{ee}$",
+         f"{100 * quasi1d_correction_bound(*envelope_args, 2 * mean_free_path):.2f}" + r"\%"),
+        (r"$S_{\rm JN}$ (ideal thermal reference)", fmt_sci_latex(spectrum.S_thermal[0]) + r" A$^2$/Hz"),
+    )
+    return [dict(quantity=label, value=value) for label, value in rows]
+
 
 _NON_BEC_ROWS = [
     {
@@ -97,7 +140,34 @@ _STATUS_ROWS = (
     (r"\texttt{polariton\_tier1\_fails\_tmds}", r"\ref{sec:pol-scope}", 'demarcation'),
 )
 
+def _paris_horizon_rows() -> list[dict]:
+    rows = []
+    for row in polariton_horizon_params():
+        if row["parameter"] not in (r"$m^*$", r"$c_s$", r"$\xi$", r"$\kappa$"):
+            continue
+        smooth = row["smooth"]
+        if isinstance(smooth, Span):
+            rows.append({**row, "smooth": smooth.content, "steep": "--"})
+        else:
+            rows.append(row)
+    return rows
+
+
 TABLES = {
+    "dean_nozzle": {
+        "description": "Adopted Dean nozzle inputs and derived benchmark values",
+        "columns": [Col("quantity", "Quantity", align="l"), Col("value", "Value", align="r")],
+        "rows": _dean_nozzle_rows,
+    },
+    "paris_horizon": {
+        "description": "Paris-LKB benchmark horizon inputs",
+        "columns": [
+            Col("parameter", "Parameter", align="l"),
+            Col("smooth", "Smooth baseline", align="c"),
+            Col("steep", "Steep", align="c"),
+        ],
+        "rows": _paris_horizon_rows,
+    },
     "platform_hierarchy": {
         "description": "Dispersive and dissipative benchmark corrections",
         "columns": [

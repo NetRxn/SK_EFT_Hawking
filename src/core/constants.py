@@ -3066,7 +3066,7 @@ SIMP_PROJECTION_ALLOWLIST = frozenset({
 #: either. Two instruments on one population, which is this project's own rule.
 SIMP_PROJECTION_CEILING = 7
 
-NUMERICAL_LITERAL_CEILING = 117  # inline unit-bearing values outside \input{tables/}
+NUMERICAL_LITERAL_CEILING = 115  # inline unit-bearing values outside \input{tables/}
 
 #: Sentences over 100 words in bundle body prose (TODO-D7, the readability half).
 #:
