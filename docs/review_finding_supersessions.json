@@ -10648,6 +10648,36 @@
         "enforced": true,
         "run_at": "2026-11-07"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:3.1",
+      "status": "fixed",
+      "evidence": "Regenerated the publication figure with the corrected dimensionless clocks and isolated legend, and replaced the right panel with the adopted cutoff crossing and separately shaded branches. The independent R2 review at docs/audits/2026-10-17-publication-substance-construction/L3_REGIME_FIGURE_INDEPENDENT_REVIEW_R2.md matched 343 numeric samples and all three compiled consumers.",
+      "superseded_by": null,
+      "date": "2026-11-07",
+      "commit": "0f9cb7908681bbca322c02840e6e46126d986ca3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'Phase 6a Wave 5' not in s, 'figure title still carries internal taxonomy'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
+    },
+    {
+      "finding_id": "review:2026-08-15-l3-stage10-redraft:L3:3.2",
+      "status": "fixed",
+      "evidence": "Regenerated the publication figure with the corrected dimensionless clocks and isolated legend, and replaced the right panel with the adopted cutoff crossing and separately shaded branches. The independent R2 review at docs/audits/2026-10-17-publication-substance-construction/L3_REGIME_FIGURE_INDEPENDENT_REVIEW_R2.md matched 343 numeric samples and all three compiled consumers.",
+      "superseded_by": null,
+      "date": "2026-11-07",
+      "commit": "0f9cb7908681bbca322c02840e6e46126d986ca3",
+      "verified_by": {
+        "command": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'M_c' in s, 'right panel does not show the critical-mass crossing'\"",
+        "declared": "cd \"$REPO\" && uv run python -c \"import src.core.visualizations as v, inspect; s=inspect.getsource(v.fig_T_H_evolution_regime_partition); assert 'M_c' in s, 'right panel does not show the critical-mass crossing'\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
     }
   ]
 }
