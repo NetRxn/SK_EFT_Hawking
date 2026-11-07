@@ -1,0 +1,136 @@
+{
+  "commit": "7fac4cde09df05cd875608e5716c640dae5355fc",
+  "file": "lean/SKEFTHawking/ADW/QuaternionSU2SymbolicSource.lean",
+  "names": [
+    "QuaternionCoefficients",
+    "QuaternionSource",
+    "evaluateQuaternion",
+    "quaternionPlaquettePrinted",
+    "quaternionPlaquetteClosed",
+    "quaternionPlaquettePrinted_eval",
+    "quaternionPlaquetteClosed_eval",
+    "quaternionPrintedSource",
+    "quaternionClosedSource",
+    "quaternionPrintedSource_eval",
+    "quaternionClosedSource_eval",
+    "quaternionPrintedSource_constantCoeff",
+    "quaternionClosedSource_constantCoeff",
+    "quaternionCompensationCoeff",
+    "quaternionCompensationCoeff_eval",
+    "quaternionPrintedCompensation_eval",
+    "quaternionClosedCompensation_eval",
+    "quaternionPlaquette_wordOrder_control"
+  ],
+  "success": true,
+  "accepted": true,
+  "diagnostics": [
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.QuaternionCoefficients' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 284,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.QuaternionSource' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 285,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.evaluateQuaternion' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 286,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionPlaquettePrinted' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 287,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionPlaquetteClosed' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 288,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionPlaquettePrinted_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 289,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionPlaquetteClosed_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 290,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionPrintedSource' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 291,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionClosedSource' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 292,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionPrintedSource_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 293,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionClosedSource_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 294,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionPrintedSource_constantCoeff' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 295,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionClosedSource_constantCoeff' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 296,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionCompensationCoeff' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 297,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionCompensationCoeff_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 298,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionPrintedCompensation_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 299,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionClosedCompensation_eval' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 300,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.quaternionPlaquette_wordOrder_control' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 301,
+      "column": 1
+    }
+  ]
+}
