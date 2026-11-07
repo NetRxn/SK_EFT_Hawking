@@ -1,0 +1,73 @@
+{
+  "commit": "ca3884c7738b3d6f366d5cd1feb9fa2ee130f008",
+  "success": true,
+  "timed_out": false,
+  "diagnostics": [
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianMoment' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 215,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianIntegrable' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 216,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianMoment_eq_gamma' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 217,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianMoment_pos' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 218,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianMoment_zero' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 219,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.radialGaussianMoment_even_ratio' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 220,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.normalizedSphere_monomial' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 221,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.su2Haar_monomial' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 222,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.su2Haar_monomial_of_odd' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 223,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.su2Haar_monomial_even' depends on axioms: [propext, Classical.choice, Quot.sound]",
+      "line": 224,
+      "column": 1
+    },
+    {
+      "severity": "info",
+      "message": "'SKEFTHawking.ADW.QuaternionSU2Sphere.su2Haar_monomial_even_products' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+      "line": 225,
+      "column": 1
+    }
+  ]
+}
