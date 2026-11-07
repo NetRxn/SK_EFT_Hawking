@@ -1,4 +1,4 @@
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import SKEFTHawking.QuantumNetwork.GaussianSphere
 
 /-!
 # Four-dimensional radial Gaussian moments
@@ -30,37 +30,14 @@ theorem radialGaussianIntegrable (n : ℕ) :
 theorem radialGaussianMoment_eq_gamma (n : ℕ) :
     radialGaussianMoment n =
       (2 : ℝ) ^ (((n : ℝ) + 2) / 2) * Real.Gamma (((n : ℝ) + 4) / 2) := by
-  let a : ℝ := ((n : ℝ) + 4) / 2
-  let g : ℝ → ℝ := fun t ↦ t ^ (a - 1) * Real.exp (-((1 / 2 : ℝ) * t))
-  have ha : 0 < a := by dsimp [a]; positivity
-  have hchange := integral_comp_rpow_Ioi_of_pos (g := g) (p := (2 : ℝ)) (by norm_num)
-  have hpow (r : ℝ) (hr : 0 < r) : (r ^ (2 : ℝ)) ^ (a - 1) = r ^ (n + 2) := by
-    have he : (2 : ℝ) * (a - 1) = ((n + 2 : ℕ) : ℝ) := by
-      simp only [a, Nat.cast_add, Nat.cast_ofNat]
-      ring
-    rw [← Real.rpow_mul hr.le, he, Real.rpow_natCast]
-  have hpoint (r : ℝ) (hr : r ∈ Ioi (0 : ℝ)) :
-      ((2 : ℝ) * r ^ ((2 : ℝ) - 1)) • g (r ^ (2 : ℝ)) =
-        2 * (r ^ (n + 3) * Real.exp (-(r ^ 2 / 2))) := by
-    have he : -((1 / 2 : ℝ) * r ^ 2) = -(r ^ 2 / 2) := by ring
-    simp only [smul_eq_mul, show (2 : ℝ) - 1 = 1 by norm_num, Real.rpow_one, g]
-    rw [hpow r hr, show r ^ (2 : ℝ) = r ^ (2 : ℕ) by exact_mod_cast Real.rpow_natCast r 2,
-      he, show n + 3 = (n + 2) + 1 by rfl, pow_succ']
-    ring
-  have hscaled : 2 * radialGaussianMoment n = (2 : ℝ) ^ a * Real.Gamma a := by
-    calc
-      2 * radialGaussianMoment n =
-          ∫ r : ℝ in Ioi 0, 2 * (r ^ (n + 3) * Real.exp (-(r ^ 2 / 2))) := by
-        rw [radialGaussianMoment, integral_const_mul]
-      _ = ∫ r : ℝ in Ioi 0, ((2 : ℝ) * r ^ ((2 : ℝ) - 1)) • g (r ^ (2 : ℝ)) :=
-        setIntegral_congr_fun measurableSet_Ioi fun r hr ↦ (hpoint r hr).symm
-      _ = ∫ t : ℝ in Ioi 0, g t := hchange
-      _ = (2 : ℝ) ^ a * Real.Gamma a := by
-        simpa only [g, show (1 : ℝ) / (1 / 2) = 2 by norm_num] using
-          Real.integral_rpow_mul_exp_neg_mul_Ioi (a := a) (r := 1 / 2) ha (by norm_num)
-  have hexp : ((n : ℝ) + 2) / 2 = a - 1 := by dsimp [a]; ring
-  rw [hexp, Real.rpow_sub (by norm_num : (0 : ℝ) < 2), Real.rpow_one]
-  linarith only [hscaled]
+  have hg := SKEFTHawking.QuantumNetwork.halfline_moment (n + 3)
+  simp_rw [neg_div] at hg
+  rw [radialGaussianMoment, hg, Nat.cast_add,
+    Nat.cast_ofNat, show (n : ℝ) + 3 + 1 = (n : ℝ) + 4 by ring,
+    Real.rpow_neg_eq_inv_rpow, show (1 / 2 : ℝ)⁻¹ = 2 by norm_num,
+    show ((n : ℝ) + 2) / 2 = ((n : ℝ) + 4) / 2 - 1 by ring,
+    Real.rpow_sub (by norm_num : (0 : ℝ) < 2), Real.rpow_one]
+  ring
 
 /-- The radial factor is strictly positive in every degree. -/
 theorem radialGaussianMoment_pos (n : ℕ) : 0 < radialGaussianMoment n := by
