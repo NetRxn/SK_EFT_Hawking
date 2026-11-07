@@ -1,10 +1,52 @@
 # D8 — First-Claim Ledger
 
 **Bundle:** D8 — Kernel-Verified Universal Quantum Gate Compilation.
-**Gate:** READINESS_GATES Gate 10 (NarrativeGrounding / first-claim).
+**Gate:** READINESS_GATES Gate 10 (FirstClaimVerification).
 **Created:** 2026-05-31, from the Stage-13 adversarial-review prior-art search (finding class 5).
 
-Each "first" claim in the D8 draft, its location, the prior-art search performed, and the verdict. All claims are phrased with "to our knowledge" hedging in the draft.
+The current draft has one hedged priority claim, repeated in three places.
+The numbered May 31 entries are the historical Stage-13 ledger.
+
+## Current priority readback, 2026-11-07
+
+- **Draft pin.** `3bfc51622b6b246ce31662403888cd06a93f6dc8`. The
+  abstract, introduction and general-dimension theorem discussion repeat
+  the quantitative Solovay–Kitaev priority claim. The other three May
+  ledger headings describe earlier draft wording.
+- **Comparator.** A proof assistant checks a quantitative synthesis theorem
+  for every finite dimension \(d\ge 2\), with a density hypothesis and a
+  compatible free-group length. One compilation function supplies a word
+  meeting both the operator-norm error and polylogarithmic reduced-word
+  length bounds. A comparable prior result may use a different norm,
+  exponent or proof assistant. Executable extraction is outside this
+  comparator. The formal anchor is
+  `solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight`
+  in `GenericSUdQuantitative.lean`. The alphabet interface includes
+  decidable equality, a free-group word-carrier equality, density and
+  the word-length predicate.
+- **Mathematical comparators.** Dawson and Nielsen give the algorithm and
+  discuss general dimension. Bouland and Giurgică-Tiron give a quantitative
+  inverse-free construction. Ennes and Maria study variable-dimension
+  online synthesis. These are mathematical algorithm results in the
+  cited preprints. [Dawson–Nielsen](https://arxiv.org/abs/quant-ph/0505030v2),
+  [Bouland–Giurgică-Tiron](https://arxiv.org/abs/2112.02040v1),
+  [Ennes–Maria](https://arxiv.org/abs/2607.19874v1).
+- **Proof-assistant comparators.** VOQC checks circuit optimization against
+  SQIR semantics. Qbricks verifies parametric circuit-building programs.
+  QEDIA's published examples include approximate Hamiltonian simulation,
+  a program-verification obligation distinct from a general dense-alphabet
+  word-approximation theorem. MerLean's evaluation covers formalizations
+  of three other quantum research papers. [VOQC](https://arxiv.org/abs/1912.02250v3),
+  [Qbricks](https://arxiv.org/abs/2003.05841v2),
+  [QEDIA, §6](https://arxiv.org/html/2610.17708v1#S6),
+  [MerLean](https://arxiv.org/abs/2602.16554v1).
+- **Search boundary.** Searched the indexed web and GitHub for
+  Solovay–Kitaev with formalization, machine-checked, mechanized, Lean,
+  Rocq/Coq and Isabelle. Reviewed the primary comparator pages above and
+  QEDIA's example list. No result meeting the comparator surfaced in
+  that bounded search. The current hedged wording remains for independent
+  Stage-13 review. This record supplies no exhaustive priority claim or
+  completed G10 disposition.
 
 ---
 
