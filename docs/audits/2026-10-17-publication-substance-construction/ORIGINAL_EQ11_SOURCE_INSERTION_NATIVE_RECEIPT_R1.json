@@ -1,0 +1,13 @@
+{
+  "integrated_head": "cc9e2a5bef47b7ff76117296ea7bd7418e144595",
+  "epoch": {
+    "build_command": [
+      "lake",
+      "build",
+      "SKEFTHawking.ExtractDeps"
+    ],
+    "epoch_id": "8523c7d80fad6d50478a03ee0bde330f0e893702831d888ea79f2ebe7e822748",
+    "published_at": "2026-11-07T05:48:56Z",
+    "repo_role": "public"
+  }
+}
