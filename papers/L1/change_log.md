@@ -90,3 +90,11 @@ papers/AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md.
   and original scientific construction acceptance remain open.
 - Evidence: ../AutomatedReviews/2026-11-06-l1-main-delivery/SCOPE.md and
   RANGE_FRAMING_R3_EVIDENCE.zip; rejected source/metadata rounds are preserved.
+
+## 2026-11-07 — Inline-absorption-record (bookkeeping)
+
+- Source: `_phase6o_W1b_lean_only`
+- Lift action: Inline-absorption-record
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: Discussion adds the independently reviewed W1b algebraic cross-reference using the three original registrations, which resolve to DoubleCopy.PetrovD, DoubleCopy.SingleCopy and DoubleCopy.PolaritonCrossBridge. This application leaves the physical ringdown and common-reference matching obligations open. Existing freshness and stage disposition is preserved.
