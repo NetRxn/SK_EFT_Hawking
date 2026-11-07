@@ -1,0 +1,17 @@
+{
+  "changed": [
+    "L2"
+  ],
+  "before": {
+    "advisories_open": 39,
+    "blockers_open": 2,
+    "critical_open": 1,
+    "open_findings": 41
+  },
+  "after": {
+    "advisories_open": 45,
+    "blockers_open": 12,
+    "critical_open": 3,
+    "open_findings": 57
+  }
+}
