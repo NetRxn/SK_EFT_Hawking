@@ -10361,6 +10361,21 @@
         "enforced": true,
         "run_at": "2026-11-06"
       }
+    },
+    {
+      "finding_id": "review:2026-08-15-d8-stage10-redraft:D8:1.9",
+      "status": "fixed",
+      "evidence": "Independent current source readback verified the definitional compiler unfolding and both related density and bounded residual claim strings. Original Verify passed, seven existing lane mappings restore review ingestion, and both production apex checks passed at unchanged thresholds.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_CLAIM_ROUTING_INDEPENDENT_REVIEW_R1.md",
+      "date": "2026-11-06",
+      "commit": "8db3cca325548754320571329ce24414a976af8c",
+      "verified_by": {
+        "command": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if t['name'].endswith('cliffordTCompile_eq_recursion')][0]; sys.exit(0 if 'definitional' in e['claims'].lower() else 1)\"",
+        "declared": "python3 -c \"import json,sys; m=json.load(open('papers/D8/bundle_metadata.json')); e=[t for t in m['apex_theorems'] if t['name'].endswith('cliffordTCompile_eq_recursion')][0]; sys.exit(0 if 'definitional' in e['claims'].lower() else 1)\"",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
     }
   ]
 }
