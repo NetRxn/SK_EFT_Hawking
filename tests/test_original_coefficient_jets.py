@@ -19,6 +19,81 @@ def bounded_work(request):
 
 def p(x): return o.Polynomial.scalar(x)
 
+def test_n16_metric_sewing_geometric_action_and_anchor_support():
+    reg = o.OriginalRegulator(convention='metric_M')
+    x0 = (0, 0, 1, 0)
+    y0 = (0, 1, 1, 0)
+    x1, y1 = (1, 0, 1, 0), (1, 1, 1, 0)
+    result = f.original_metric_sewing_support(reg, x0, 1)
+    cases = result['cases']
+    assert result['core'] == (x0, y0, x1, y1)
+    assert len(result['spectator_edges']) == 6
+    assert set(result['spectator_anchors']) == {
+        (site, 1) for site in reg.sites if site not in result['core']
+    }
+    assert tuple(s['multiplicities'] for s in cases['diagonal']['supports']) == (
+        (((2, x0, (0, 1)), 1), ((2, y1, (0, 1)), 1)),
+        (((2, y0, (0, 1)), 1), ((2, x1, (0, 1)), 1)),
+    )
+    forward, = cases['mixed_fg']['supports']
+    reverse, = cases['mixed_gf']['supports']
+    assert forward['multiplicities'] == (((2, x0, (0, 1)), 2), ((2, y0, (0, 1)), 2))
+    assert reverse['multiplicities'] == (((2, x1, (0, 1)), 2), ((2, y1, (0, 1)), 2))
+    assert forward['exponential_weight'] == reverse['exponential_weight'] == F(1, 4)
+    assert len(forward['anchors']) == 28
+    translation = dict(result['anchor_translation'])
+    assert set(translation) == set(translation.values()) == set(reg.link_order)
+    assert {translation[a] for a in forward['anchors']} == set(reverse['anchors'])
+    for s in (*cases['diagonal']['supports'], forward, reverse):
+        channels = s['curvature_channels']
+        assert len(channels) == 2
+        first, second = (set(a for _, anchors in c for a in anchors) for c in channels)
+        assert len(first) == len(second) == 4 and first.isdisjoint(second)
+        assert all(axis in (2, 3) for _, axis in first | second)
+        for channel in channels:
+            assert {order for order, _ in channel} == {
+                (2, 3, 0, 1), (2, 3, 1, 0), (3, 2, 0, 1), (3, 2, 1, 0),
+            }
+
+
+@pytest.mark.parametrize('convention, axis, x0', (
+    ('metric_M', 1, (0, 0, 1, 0)),
+    ('source_C', 1, (1, 0, 0, 0)),
+))
+def test_n16_metric_sewing_literal_temporal_and_spatial_support(convention, axis, x0):
+    reg = o.OriginalRegulator(convention=convention)
+    t = reg.temporal_axis
+    result = f.original_metric_sewing_support(reg, x0, axis)
+    x0, y0, x1, y1 = result['core']
+    cases = result['cases']
+    for key, unfilled in (('temporal_x', (y0, y1)), ('temporal_y', (x0, x1))):
+        assert dict(cases[key]['holes']) == {site: 2 for site in unfilled}
+        assert cases[key]['supports'] == ()
+    temporal, = cases['temporal_mixed']['supports']
+    spatial, = cases['spatial_mixed']['supports']
+    assert temporal['multiplicities'] == spatial['multiplicities'] == ()
+    assert temporal['exponential_weight'] == spatial['exponential_weight'] == 1
+    assert set(spatial['anchors']) == {(site, axis) for site in reg.sites}
+    assert set(temporal['anchors']) - set(spatial['anchors']) == {
+        (site, t) for site in (x0, y0, x1, y1)
+    }
+    assert all(not s['curvature_channels'] for s in (temporal, spatial))
+
+
+def test_n16_metric_sewing_support_rejects_other_geometry():
+    x = (0, 0, 0, 0)
+    for reg, root, axis in (
+        (o.OriginalRegulator((2, 2, 2, 1)), x, 0),
+        (o.OriginalRegulator(boundary_signs=(-1, 1, 1, 1)), x, 0),
+        (o.OriginalRegulator(word='printed'), x, 0),
+        (o.OriginalRegulator(temporal_axis=0), x, 1),
+        (o.OriginalRegulator(), x, 3),
+        (o.OriginalRegulator(), (0, 0, 0, 1), 0),
+    ):
+        with pytest.raises(ValueError):
+            f.original_metric_sewing_support(reg, root, axis)
+
+
 def test_singular_first_mixed_repeated_minors():
     z = o.SparseMatrix(2, ())
     a = o.SparseMatrix(2, (((0,0),1),))
@@ -721,3 +796,149 @@ def test_n16_pair_visits_are_reported_separately_from_exact_products():
     assert hasattr(edge, 'attempted_wedge_pairs'), 'missing attempted pair receipt'
     assert 512 <= edge.attempted_wedge_pairs <= 14_014_976
     assert edge.attempted_wedge_pairs > budget.products > 0
+
+def test_n16_auxiliary_anchor_blocks_at_unequal_and_singular_radii():
+    # Evaluate separate h/k blocks against the actual original four-block
+    # constructor. Opposite gamma placements differ at unequal radii.
+    reg = o.OriginalRegulator((2, 1, 1, 1))
+    x, y = reg.sites
+    rows = o._auxiliary_polar_rows(reg, mixed=True)
+    for q0, q3 in ((F(3, 5), F(4, 5)), (F(0), F(1))):
+        links = {
+            (x, 0): f.original_spin4_link((1, 0, 0, 0), (q0, 0, 0, q3)),
+            (y, 0): f.original_spin4_link((-1, 0, 0, 0), (-q0, 0, 0, -q3)),
+        }
+        weights = (1, 2, 3, 4, -5, 6, -7, 8)
+        values = weights + (2, 2 * q0)
+        matrix = [[o.QComplex() for _ in range(8)] for _ in range(8)]
+        for i, row in enumerate(rows):
+            for j, terms in row:
+                for key, coefficient in terms:
+                    term = coefficient
+                    for power, value in zip(o._auxiliary_polar_powers(key), values, strict=True):
+                        term *= value**power
+                    matrix[i][j] += term
+        expected = o.SparseMatrix(8, tuple(
+            (coord, poly * weights[4 * site_index + internal])
+            for site_index, site in enumerate((x, y))
+            for internal in range(4)
+            for coord, poly in o.assemble_coframe(
+                reg, f.original_coframe_blocks(reg, (site, 0, internal), links),
+            ).entries
+        ))
+        assert all(expected.at(i, j) == o.Polynomial.scalar(matrix[i][j])
+                   for i in range(8) for j in range(8))
+
+
+@pytest.mark.parametrize('mixed', (False, True))
+def test_n16_auxiliary_support_and_actual_signed_roster(mixed):
+    rows = o._auxiliary_polar_rows(o.OriginalRegulator(), mixed=mixed)
+    expected = {
+        (0, 3): (((0, 6), (0, 6), 1), ((0, 7), (0, 7), 1),
+                 ((1, 6), (1, 6), 1), ((1, 7), (1, 7), 1)),
+        (3, 0): (((2, 4), (2, 4), 1), ((2, 5), (2, 5), 1),
+                 ((3, 4), (3, 4), 1), ((3, 5), (3, 5), 1)),
+        (1, 5): (((0, 1), (6, 7), -1),),
+        (2, 4): (((6, 7), (0, 1), -1),),
+        (4, 2): (((2, 3), (4, 5), -1),),
+        (5, 1): (((4, 5), (2, 3), -1),),
+    }
+    actual = {(i, j): o._auxiliary_polar_minor_roster(rows, i, j)
+              for i in range(6) for j in range(6)}
+    assert {pair: value for pair, value in actual.items() if value} == expected
+    assert sum(not value for value in actual.values()) == 30
+
+
+def test_n16_auxiliary_minor_sign_and_both_layers_are_reserved():
+    x, y, z = 1, 16, 256
+    q = o.QComplex
+    rows = (((0, ((x, q(2)),)), (1, ((y, q(3)),))),
+            ((0, ((z, q(5)),)), (1, ((x, q(7)),))))
+    with o.ExactBudget(12, 256 * 1024**2) as budget:
+        actual = o._auxiliary_polar_determinant(rows, 4, budget)
+    assert actual == {x + x: q(14), y + z: q(-15)}
+    assert budget.products == 4
+    # The terminal step needs one layer of size 2 and a 30-record
+    # next-layer reservation, in addition to the fixed 4,096 slots.
+    assert budget.peak_scalar_records >= 2 + 30 + 4096
+    with o.ExactBudget(1, 256 * 1024**2) as budget:
+        with pytest.raises(o.BudgetExceeded, match='scalar budget'):
+            o._auxiliary_polar_determinant(rows, 4, budget)
+    with o.ExactBudget(10, 1) as budget:
+        with pytest.raises(o.BudgetExceeded, match='storage budget'):
+            o._auxiliary_polar_determinant(rows, 4, budget)
+        assert budget.products == 0
+
+
+def test_n16_auxiliary_extracts_exact_gaussian_degree_and_checks_radial_parity():
+    q = o.QComplex
+    def key(*powers):
+        return sum(power << (4 * index) for index, power in enumerate(powers))
+    target = key(4, 0, 0, 0, 2, 0, 0, 0, 4, 2)
+    other = key(2, 0, 0, 0, 4, 0, 0, 0, 4, 2)
+    odd_gaussian = key(3, 1, 0, 0, 2, 0, 0, 0, 4, 2)
+    polynomial = {target: q(2), other: q(99), odd_gaussian: q(77)}
+    radial = {}
+    o._auxiliary_polar_project(polynomial, (4, 2), 1, radial, {})
+    assert radial == {(4, 2): q(6)}
+    assert o._auxiliary_polar_average(radial, (F(1), F(2), F(5)), 16) == q(960)
+    with pytest.raises(ValueError, match='odd radial'):
+        o._auxiliary_polar_average({(3, 3): q(1)}, (F(1), F(2), F(5)), 16)
+
+
+@pytest.mark.parametrize('field', ('limit', 'storage_limit', 'integer_bit_limit'))
+@pytest.mark.parametrize('bad', (float('nan'), 1.0, True, 0))
+def test_n16_auxiliary_refuses_invalid_caps_without_matrix(field, bad, monkeypatch):
+    def unexpected(*args, **kwargs):
+        pytest.fail('invalid cap reached matrix construction')
+    monkeypatch.setattr(o, '_auxiliary_polar_rows', unexpected, raising=False)
+    with o.ExactBudget(100, 256 * 1024**2) as budget:
+        setattr(budget, field, bad)
+        with pytest.raises(ValueError, match='positive exact integer'):
+            f.original_auxiliary_polar_edge(o.OriginalRegulator(), 0, budget=budget)
+        assert budget.products == 0 and budget.peak_payload_bytes == 0
+
+
+def test_n16_auxiliary_dual_basis_and_top_degree_projection():
+    q = o.QComplex
+    labels, pairing = o._auxiliary_polar_basis()
+    assert labels == tuple((chi, kind) for chi in ('L', 'R') for kind in ('n', 'b', 'p'))
+    literal = tuple(tuple(q(12 if (i, j) == (0, 3) else 0)
+                          for j in range(6)) for i in range(6))
+    dual = o._auxiliary_polar_dual(literal, pairing)
+    assert dual == tuple(tuple(q(3 if (i, j) == (0, 3) else 0)
+                               for j in range(6)) for i in range(6))
+    top_key = 8 | (4 << 32) | (4 << 36)
+    radial = {}
+    o._auxiliary_polar_project({top_key: q(1)}, (8, 0), 1, radial, {})
+    assert radial == {(4, 4): q(105)}
+    moments = o._auxiliary_polar_radial_moments()
+    assert moments == (F(1), F(2), F(5), F(14), F(42))
+    assert o._auxiliary_polar_average(radial, moments, 384) == q(105 * 25 * 384)
+
+
+@pytest.mark.parametrize('field', ('fixed_reserve_bytes', 'products'))
+def test_n16_auxiliary_refuses_invalid_accounting_state(field):
+    with o.ExactBudget(100, 256 * 1024**2) as budget:
+        setattr(budget, field, float('nan'))
+        with pytest.raises(ValueError, match='accounting state'):
+            f.original_auxiliary_polar_edge(o.OriginalRegulator(), 0, budget=budget)
+        assert budget.peak_payload_bytes == 0
+
+
+@pytest.mark.parametrize('route', ('direct', 'auxiliary'))
+@pytest.mark.parametrize('field, value', (
+    ('fixed_reserve_bytes', 0), ('fixed_reserve_bytes', float('nan')),
+    ('products', -1), ('products', float('nan')),
+    ('integer_products', -1), ('peak_payload_bytes', float('nan')),
+))
+def test_n16_shared_budget_rejects_corrupt_accounting_before_reserving(route, field, value, monkeypatch):
+    def unexpected(*args, **kwargs):
+        pytest.fail('invalid accounting reached reservation')
+    monkeypatch.setattr(o, '_reserve_edge_records', unexpected)
+    monkeypatch.setattr(o, 'reserve_scalar_records', unexpected)
+    producer = getattr(f, f'original_{route}_polar_edge')
+    with o.ExactBudget(100, 256 * 1024**2) as budget:
+        setattr(budget, field, value)
+        with pytest.raises(ValueError, match='accounting state'):
+            producer(o.OriginalRegulator(), 0, budget=budget)

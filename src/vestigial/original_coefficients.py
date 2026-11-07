@@ -1281,6 +1281,27 @@ class ExactBudget(ScalarCost):
         return modeled
 
 
+def require_original_n16_budget(budget):
+    """Check the shared exact resource contract before any N16 allocation."""
+    if not isinstance(budget, ExactBudget) or _ACTIVE_COST.get() is not budget:
+        raise ValueError('original N16 edge/core requires an active explicit ExactBudget')
+    for name, maximum in (
+        ('limit', 70_000_000), ('storage_limit', 2 * 1024**3), ('integer_bit_limit', 1024),
+    ):
+        value = getattr(budget, name)
+        if type(value) is not int or not 0 < value <= maximum:
+            raise ValueError(f'{name} must be a positive exact integer at most {maximum}')
+    if type(budget.fixed_reserve_bytes) is not int or budget.fixed_reserve_bytes != 128 * 1024**2:
+        raise ValueError('invalid original N16 budget accounting state: fixed_reserve_bytes')
+    for name in ('products', 'integer_products', 'peak_payload_bytes',
+                 'peak_scalar_records', 'peak_integer_bits'):
+        value = getattr(budget, name)
+        if type(value) is not int or value < 0:
+            raise ValueError(f'invalid original N16 budget accounting state: {name}')
+    if budget.products > budget.limit:
+        raise ValueError('invalid original N16 budget accounting state: products')
+
+
 def polynomial_degree_truncate(poly,symbols,bound):
     symbols=frozenset(symbols)
     return Polynomial(tuple((k,v) for k,v in poly.terms if sum(s in symbols for s in k)<=bound))
@@ -1811,6 +1832,244 @@ def _radial_edge_top_integral(layer, test, degree, moments):
                 raise ValueError('nonvanishing odd radial power in invariant edge test')
             total += value * moments[l // 2] * moments[r // 2]
     return total
+
+
+@dataclass(frozen=True, slots=True)
+class AuxiliaryPolarEdge:
+    """Complete local auxiliary edge evidence in literal and dual bases."""
+
+    labels: tuple
+    local_pairing: tuple
+    radial_moments: tuple
+    cubic_x_tests: tuple
+    cubic_mixed_tests: tuple
+    cubic_x: tuple
+    cubic_mixed: tuple
+    fourth_top: QComplex
+    minor_counts: tuple
+    empty_test_counts: tuple
+
+
+_AUXILIARY_POLAR_EXP_BITS = 40
+_AUXILIARY_POLAR_EXP_MASK = (1 << _AUXILIARY_POLAR_EXP_BITS) - 1
+_AUXILIARY_POLAR_FIXED_RECORDS = 4096
+
+
+def _auxiliary_polar_powers(key):
+    return tuple((key >> (4 * index)) & 15 for index in range(10))
+
+
+def _auxiliary_polar_rows(reg, *, mixed):
+    """Sparse h/k coefficient rows for the original two-endpoint blocks."""
+    rows = [dict() for _ in range(8)]
+    for a, gamma in enumerate(reg.gamma):
+        h = 1 << (4 * a)
+        k = 1 << (4 * (4 + a))
+        for i, row in enumerate(gamma):
+            for j, value in enumerate(row):
+                if not value:
+                    continue
+                d_i = 1 << (4 * (8 + i // 2))
+                d_j = 1 << (4 * (8 + j // 2))
+                q = _scalar_value(value) * Fraction(1, 4)
+                xy = ((h + d_j, q),)
+                yx = ((h + d_i, -q),)
+                if mixed:
+                    xy += ((k + d_i, q),)
+                    yx += ((k + d_j, -q),)
+                rows[i].setdefault(4 + j, []).extend(xy)
+                rows[4 + i].setdefault(j, []).extend(yx)
+    if any(sum(map(len, row.values())) > 16 for row in rows):
+        raise ValueError('original auxiliary row exceeded the reviewed monomial bound')
+    return tuple(tuple((col, tuple(terms)) for col, terms in sorted(row.items()))
+                 for row in rows)
+
+
+def _auxiliary_polar_minor_roster(rows, x_label, y_label):
+    """Derive ordered insertion signs and prove missing perfect matchings."""
+    def insertions(label, offset):
+        chirality, kind = divmod(label, 3)
+        first = offset + 2 * chirality
+        pair = first, first + 1
+        if kind == 0:
+            return tuple(((i,), (i,)) for i in pair)
+        return ((pair, ()),) if kind == 1 else (((), pair),)
+
+    def can_match(bars, psis):
+        removed = sum(1 << j for j in psis)
+        reachable = {removed}
+        for i, row in enumerate(rows):
+            if i in bars:
+                continue
+            reachable = {mask | (1 << j) for mask in reachable for j, _ in row
+                         if not mask & (1 << j)}
+            if not reachable:
+                return False
+        return (1 << len(rows)) - 1 in reachable
+
+    roster = []
+    for xb, xp in insertions(x_label, 0):
+        for yb, yp in insertions(y_label, 4):
+            bars, psis = xb + yb, xp + yp
+            if len(bars) != len(psis) or not can_match(bars, psis):
+                continue
+            # Move x psis past y bars, then use the ordinary signed
+            # complementary determinant in the original orientation.
+            swaps = len(xp) * len(yb) + len(bars) * (len(bars) - 1) // 2
+            sign = (-1) ** (swaps + sum(bars) + sum(psis))
+            roster.append((bars, psis, sign))
+    return tuple(roster)
+
+
+def _auxiliary_polar_minor_rows(rows, bars, psis):
+    kept_cols = {j: new for new, j in enumerate(j for j in range(8) if j not in psis)}
+    return tuple(tuple((kept_cols[j], terms) for j, terms in row if j in kept_cols)
+                 for i, row in enumerate(rows) if i not in bars)
+
+
+def _auxiliary_polar_determinant(rows, auxiliary_count, budget):
+    """Row-subset recurrence with both adjacent scalar maps reserved.
+
+    Row entries have one auxiliary and one radial factor per monomial.
+    Four-bit fields therefore add without carry at order at most eight.
+    Returns the terminal packed exponents, with the known column mask.
+    """
+    from math import comb
+
+    n = len(rows)
+    shift = _AUXILIARY_POLAR_EXP_BITS
+
+    def reserve(states, additional):
+        prospective = len(states) + additional + _AUXILIARY_POLAR_FIXED_RECORDS
+        if prospective > 120_000:
+            raise BudgetExceeded('auxiliary edge record limit exceeded: incomplete coefficient control')
+        reserve_scalar_records(budget, additional + _AUXILIARY_POLAR_FIXED_RECORDS,
+                               states, rows)
+        budget.peak_scalar_records = max(budget.peak_scalar_records, prospective)
+
+    reserve({}, 1)
+    states = {0: QComplex(1)}
+    for degree, row in enumerate(rows, 1):
+        next_limit = comb(n, degree) * comb(degree + auxiliary_count - 1,
+                                            auxiliary_count - 1) * (degree + 1)
+        reserve(states, next_limit)
+        nxt = {}
+        for packed, value in states.items():
+            mask = packed >> shift
+            powers = packed & _AUXILIARY_POLAR_EXP_MASK
+            for column, terms in row:
+                bit = 1 << column
+                if mask & bit:
+                    continue
+                negative = (mask >> (column + 1)).bit_count() % 2
+                next_mask = (mask | bit) << shift
+                for exponent, coefficient in terms:
+                    product = value * coefficient
+                    if negative:
+                        product = -product
+                    key = next_mask | (powers + exponent)
+                    prior = nxt.get(key)
+                    if prior is not None:
+                        product = prior + product
+                    if product:
+                        if prior is None and len(nxt) >= next_limit:
+                            raise BudgetExceeded('auxiliary determinant layer exceeded its reservation')
+                        nxt[key] = product
+                    elif prior is not None:
+                        del nxt[key]
+        states = nxt
+        if not states:
+            return {}
+    # The final row-subset mask is fixed. Reserve enough capacity for the
+    # terminal exponent-only copy before making it.
+    reserve(states, len(states))
+    return {key & _AUXILIARY_POLAR_EXP_MASK: value for key, value in states.items()}
+
+
+def _auxiliary_polar_project(terms, degrees, sign, radial, moments):
+    from src.core.formulas import original_gaussian_moment
+
+    for key, value in terms.items():
+        powers = _auxiliary_polar_powers(key)
+        h, k = powers[:4], powers[4:8]
+        if (sum(h), sum(k)) != degrees or any(power % 2 for power in h + k):
+            continue
+        if (h, k) not in moments:
+            moments[h, k] = original_gaussian_moment(h + k, 1)
+        radial_key = powers[8:]
+        term = value * moments[h, k]
+        radial[radial_key] = radial.get(radial_key, QComplex()) + (-term if sign < 0 else term)
+
+
+def _auxiliary_polar_average(radial, moments, factorial_scale):
+    total = QComplex()
+    for (left, right), value in radial.items():
+        if not value:
+            continue
+        if left % 2 or right % 2:
+            raise ValueError('nonvanishing odd radial power in invariant auxiliary edge test')
+        total += value * moments[left // 2] * moments[right // 2]
+    return total * factorial_scale
+
+
+def _auxiliary_polar_radial_moments():
+    from math import comb
+    from src.core.formulas import original_quaternion_haar_moment
+
+    moments = []
+    for k in range(5):
+        total = Fraction()
+        for j in range(k + 1):
+            coefficient = checked_integer_product(comb(k, j), checked_integer_product(
+                checked_integer_power(2, k - j), checked_integer_power(-2, j),
+            ))
+            term = rational_product(coefficient, original_quaternion_haar_moment((j, 0, 0, 0)))
+            total = rational_add(total, term)
+        moments.append(total)
+    return tuple(moments)
+
+
+def _auxiliary_polar_cubic(rows, degrees, moments, budget):
+    results, minor_count, empty_count = [], 0, 0
+    gaussian = {}
+    scale = checked_integer_power(2, 3)
+    for degree in degrees:
+        scale = checked_integer_product(scale, checked_factorial(degree // 2))
+    for x_label in range(6):
+        result_row = []
+        for y_label in range(6):
+            roster = _auxiliary_polar_minor_roster(rows, x_label, y_label)
+            empty_count += int(not roster)
+            radial = {}
+            for bars, psis, sign in roster:
+                minor_count += 1
+                minor = _auxiliary_polar_minor_rows(rows, bars, psis)
+                terms = _auxiliary_polar_determinant(minor, 8 if degrees[1] else 4, budget)
+                _auxiliary_polar_project(terms, degrees, sign, radial, gaussian)
+                del terms
+            result_row.append(_auxiliary_polar_average(radial, moments, scale))
+        results.append(tuple(result_row))
+    if (minor_count, empty_count) != (12, 30):
+        raise ValueError('original auxiliary edge support or ordinary minor roster changed')
+    return tuple(results), minor_count, empty_count
+
+
+def _auxiliary_polar_basis():
+    # In each chirality n∧n = −2 Θ and b∧p = p∧b = Θ in the
+    # local bar-bar-psi-psi orientation. Mixed chirality pairings vanish.
+    labels = tuple((chi, kind) for chi in ('L', 'R') for kind in ('n', 'b', 'p'))
+    local = ((-2, 0, 0), (0, 0, 1), (0, 1, 0))
+    pairing = tuple(tuple(QComplex(local[i % 3][j % 3] if i // 3 == j // 3 else 0)
+                          for j in range(6)) for i in range(6))
+    return labels, pairing
+
+
+def _auxiliary_polar_dual(literal, pairing):
+    inverse = legendre_local(pairing, tuple(range(6)))
+    return tuple(tuple(sum((inverse[a][c] * literal[a][b] * inverse[b][d]
+                            for a in range(6) for b in range(6)
+                            if inverse[a][c] and literal[a][b] and inverse[b][d]),
+                           QComplex()) for d in range(6)) for c in range(6))
 
 
 def _freeze_exact_metadata(value):

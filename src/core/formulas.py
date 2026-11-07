@@ -13071,6 +13071,13 @@ def original_spin4_link(left, right):
                        if a >= 2 and b >= 2 else Polynomial() for b in range(4)) for a in range(4))
 
 
+def _original_coframe_hops(reg, site, axis):
+    """The two original based hops, retaining both length-two anchors."""
+    forward, sf = reg.step(site, axis)
+    backward, sb = reg.step(site, axis, -1)
+    return forward, sf, sb, (backward, axis)
+
+
 def original_coframe_blocks(reg, alpha, links=None):
     """All four original signed quarter increments, including coincident slots.
 
@@ -13091,8 +13098,8 @@ def original_coframe_blocks(reg, alpha, links=None):
     reg.validate_site(x)
     if mu not in range(4) or a not in range(4):
         raise ValueError('coframe axes must be in 0..3')
-    forward, sf = reg.step(x, mu)
-    backward, sb = reg.step(x, mu, -1)
+    forward, sf, sb, backward_anchor = _original_coframe_hops(reg, x, mu)
+    backward = backward_anchor[0]
     def link(anchor):
         if links is not None:
             return exact_matrix(links[anchor], shape=(4, 4))
@@ -13100,13 +13107,25 @@ def original_coframe_blocks(reg, alpha, links=None):
         return original_spin4_link(
             tuple(Polynomial.variable(Symbol('q', (site, axis, 'L', k))) for k in range(4)),
             tuple(Polynomial.variable(Symbol('q', (site, axis, 'R', k))) for k in range(4)))
-    f, b, g = link((x, mu)), link((backward, mu)), original_gamma(a, reg.convention)
+    f, b, g = link((x, mu)), link(backward_anchor), original_gamma(a, reg.convention)
     return (
         BlockIncrement(alpha, x, forward, (x, mu), Fraction(sf, 4), matrix_multiply(g, matrix_dagger(f))),
         BlockIncrement(alpha, forward, x, (x, mu), Fraction(-sf, 4), matrix_multiply(f, g)),
-        BlockIncrement(alpha, x, backward, (backward, mu), Fraction(-sb, 4), matrix_multiply(g, b)),
-        BlockIncrement(alpha, backward, x, (backward, mu), Fraction(sb, 4), matrix_multiply(matrix_dagger(b), g)),
+        BlockIncrement(alpha, x, backward, backward_anchor, Fraction(-sb, 4), matrix_multiply(g, b)),
+        BlockIncrement(alpha, backward, x, backward_anchor, Fraction(sb, 4), matrix_multiply(matrix_dagger(b), g)),
     )
+
+
+def _original_plaquette_anchors(reg, site, k, l):
+    """Original A, B, C, D anchor order before adjoints and word ordering."""
+    return ((site, k), (reg.step(site, k)[0], l),
+            (reg.step(site, l)[0], k), (site, l))
+
+
+def _original_ec_orders():
+    """All ordered curvature and coframe axis choices of the original S2."""
+    from itertools import permutations
+    return permutations(range(4))
 
 
 def original_plaquette(reg, x, k, l, links, word=None):
@@ -13126,7 +13145,7 @@ def original_plaquette(reg, x, k, l, links, word=None):
     word = reg.word if word is None else word
     if word not in ('printed', 'closed'):
         raise ValueError('explicit plaquette word required')
-    anchors = ((x, k), (reg.step(x, k)[0], l), (reg.step(x, l)[0], k), (x, l))
+    anchors = _original_plaquette_anchors(reg, x, k, l)
     a, b, c, d = (exact_matrix(links[anchor], shape=(4, 4)) for anchor in anchors)
     factors = (a, b, matrix_dagger(c), matrix_dagger(d))
     if word == 'closed':
@@ -13162,9 +13181,9 @@ def original_action_factors(reg, x, links):
     gamma, g5 = reg.gamma, reg.gamma5
     products = {(a, b): matrix_multiply(matrix_multiply(gamma[a], gamma[b]), g5)
                 for a in range(4) for b in range(4)}
-    for k, l, mu, nu in permutations(range(4)):
+    for k, l, mu, nu in _original_ec_orders():
         u = original_plaquette(reg, x, k, l, links)
-        anchors = ((x, k), (reg.step(x, k)[0], l), (reg.step(x, l)[0], k), (x, l))
+        anchors = _original_plaquette_anchors(reg, x, k, l)
         for a in range(4):
             for b in range(4):
                 # Trace of ordered matrices, with scalar/diagonal parts retained.
@@ -13172,6 +13191,151 @@ def original_action_factors(reg, x, links):
                 factors.append(ActionFactor(2, ((x, mu, a), (x, nu, b)),
                                             trace * Fraction(epsilon((k, l, mu, nu)), 4), anchors))
     return tuple(factors)
+
+
+def original_metric_sewing_support(reg, root, spatial_axis):
+    """Enumerate site-degree and anchor support of the original F60/G52 family.
+
+    The six spectator edges, both test directions, and literal contact
+    cases use the periodic regulator's original based link incidences.
+    The support is geometric. A fitting multiset can still vanish after
+    Grassmann signs, matrix coefficients, or Haar contraction.
+    Source: ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION sections 2, 5, 6 and 9.
+    """
+    from collections import Counter
+    from fractions import Fraction
+    from math import factorial, prod
+
+    reg.validate_site(root)
+    time_axis = reg.temporal_axis
+    if (reg.extents != (2, 2, 2, 2) or reg.boundary_signs != (1, 1, 1, 1)
+            or reg.word != 'closed'):
+        raise ValueError('metric sewing requires the original periodic closed N16 carrier')
+    if type(spatial_axis) is not int or spatial_axis not in range(4) or spatial_axis == time_axis:
+        raise ValueError('matching axis must be spatial')
+    if time_axis != (3 if reg.convention == 'source_C' else 0):
+        raise ValueError('metric sewing requires the original temporal axis in this convention')
+    if root[time_axis] != 0:
+        raise ValueError('the exceptional edge root must lie in slice zero')
+
+    def translate(site):
+        return reg.step(site, time_axis)[0]
+
+    sites = reg.sites
+    anchor_order = reg.link_order
+    anchor_translation = tuple((anchor, (translate(anchor[0]), anchor[1]))
+                               for anchor in anchor_order)
+    local_top = Counter(g[0] for g in reg.generator_order)
+    hops = {(site, axis): _original_coframe_hops(reg, site, axis)
+            for site in sites for axis in range(4)}
+
+    def edge(site, axis):
+        forward, _, _, backward_anchor = hops[site, axis]
+        return (site, forward), ((site, axis), backward_anchor)
+
+    neighbor = edge(root, spatial_axis)[0][1]
+    core = (root, neighbor, translate(root), translate(neighbor))
+    matching = [edge(site, spatial_axis) for site in sites if site[spatial_axis] == 0]
+    spectators = tuple((ends, anchors) for ends, anchors in matching if ends[0] not in core)
+    spectator_anchors = frozenset(a for _, anchors in spectators for a in anchors)
+
+    def coframe_degrees(site, axes):
+        degree = Counter()
+        for axis in axes:
+            degree.update(edge(site, axis)[0])
+        return degree
+
+    def coframe_anchors(site, axes):
+        return frozenset(anchor for axis in axes for anchor in edge(site, axis)[1])
+
+    # Group ordered Einstein–Cartan world terms by coframe support. Their
+    # coefficients and both curvature orders remain in the same vertex.
+    ec_orders = {}
+    for order in _original_ec_orders():
+        ec_orders.setdefault(tuple(sorted(order[2:])), []).append(order)
+
+    vertex_types = ((4, tuple(range(4))), *((2, axes) for axes in ec_orders))
+    vertices = {}
+    for site in sites:
+        for t_degree, axes in vertex_types:
+            channel = tuple((order, _original_plaquette_anchors(reg, site, *order[:2]))
+                            for order in ec_orders.get(axes, ()))
+            vertices[t_degree, site, axes] = (
+                coframe_degrees(site, axes), coframe_anchors(site, axes), channel,
+            )
+
+    spectators_on_both = tuple((ends[0], spatial_axis, 4) for ends, _ in spectators)
+    f0, f1 = (root, spatial_axis, 3), (translate(root), spatial_axis, 3)
+    g0, g1 = (root, spatial_axis, 1), (translate(root), spatial_axis, 1)
+    tx, ty = (root, time_axis, 1), (neighbor, time_axis, 1)
+
+    def structural_case(metric_words):
+        degree = Counter()
+        word_anchors = set()
+        for site, axis, power in metric_words:
+            ends, anchors = edge(site, axis)
+            for endpoint in ends:
+                degree[endpoint] += 2 * power
+            word_anchors.update(anchors)
+        holes = {site: local_top[site] - degree[site] for site in sites}
+        if any(n < 0 for n in holes.values()):
+            raise ValueError('metric word already exceeds the site top')
+        admissible = tuple(key for key, (profile, _, _) in vertices.items()
+                           if all(n <= holes[site] for site, n in profile.items()))
+
+        def fill(remaining, start=0):
+            if not any(remaining.values()):
+                yield ()
+                return
+            for i in range(start, len(admissible)):
+                key = admissible[i]
+                profile = vertices[key][0]
+                if all(n <= remaining[site] for site, n in profile.items()):
+                    rest = remaining.copy()
+                    for site, n in profile.items():
+                        rest[site] -= n
+                    for suffix in fill(rest, i):
+                        yield (key, *suffix)
+
+        supports = []
+        for multiset in fill(holes):
+            counts = tuple(Counter(multiset).items())
+            channels = tuple(vertices[key][2] for key, _ in counts if vertices[key][2])
+            active = word_anchors.union(*(vertices[key][1] for key, _ in counts))
+            active.update(a for channel in channels for _, anchors in channel for a in anchors)
+            supports.append({
+                'multiplicities': counts,
+                'exponential_weight': Fraction(1, prod(factorial(n) for _, n in counts)),
+                'curvature_channels': channels,
+                'anchors': tuple(a for a in anchor_order if a in active),
+            })
+        return {
+            'holes': tuple((site, holes[site]) for site in sites if holes[site]),
+            'admissible_vertices': admissible,
+            'supports': tuple(supports),
+        }
+
+    # Translate the entire mixed word, including spectator roots. Pairing
+    # commutativity identifies the translated word with the reverse entry.
+    mixed = (*spectators_on_both, f1, g0)
+    mixed_reverse = tuple((translate(site), axis, power) for site, axis, power in mixed)
+    diagonal = (*spectators_on_both, f1, f0)
+    cases = {
+        'diagonal': structural_case(diagonal),
+        'mixed_fg': structural_case(mixed),
+        'mixed_gf': structural_case(mixed_reverse),
+        'temporal_x': structural_case((*diagonal, tx)),
+        'temporal_y': structural_case((*diagonal, ty)),
+        'temporal_mixed': structural_case((*diagonal, tx, ty)),
+        'spatial_mixed': structural_case((*diagonal, g0, g1)),
+    }
+    return {
+        'core': core,
+        'spectator_edges': spectators,
+        'spectator_anchors': tuple(a for a in anchor_order if a in spectator_anchors),
+        'anchor_translation': anchor_translation,
+        'cases': cases,
+    }
 
 
 def original_gaussian_moment(powers, sigma2):
@@ -13454,16 +13618,7 @@ def original_direct_polar_edge(reg, axis, *, budget):
     from math import comb
     from src.vestigial import original_coefficients as o
 
-    if not isinstance(budget, o.ExactBudget) or o._ACTIVE_COST.get() is not budget:
-        raise ValueError('direct polar edge requires an active explicit ExactBudget')
-    ceilings = (
-        ('limit', budget.limit, 70_000_000),
-        ('storage_limit', budget.storage_limit, 2 * 1024**3),
-        ('integer_bit_limit', budget.integer_bit_limit, 1024),
-    )
-    for name, value, maximum in ceilings:
-        if type(value) is not int or not 0 < value <= maximum:
-            raise ValueError(f'{name} must be a positive exact integer at most {maximum}')
+    o.require_original_n16_budget(budget)
 
     quadratic_limit = 256
     square_limit = comb(8, 4)**2 * 5
@@ -13554,6 +13709,59 @@ def original_direct_polar_edge(reg, axis, *, budget):
         reconstruct(literal_x), reconstruct(literal_mixed), fourth_top, attempted_pairs,
     )
     budget.check_storage(result, cubic_x, cubic_mixed, fourth)
+    return result
+
+
+def original_auxiliary_polar_edge(reg, axis, *, budget):
+    """Independent ordinary minors for the original polar edge coefficients.
+
+    The distinct h and k blocks keep the original endpoint gamma order.
+    Degree-six ordinary minors give the complete 36 literal tests of each
+    cubic, with degree (6,0) and (4,2) Gaussian projections. The degree
+    (8,0) top determinant gives the oriented fourth moment. Both routes
+    start from the original four-block coframe and invariant polar reduction.
+
+    Source: ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION sections 3 and 7,
+    ORIGINAL_COEFFICIENT_IMPLEMENTATION_PLAN_R2 section 4.
+    Lean: SKEFTHawking.ADW.FiniteGrassmannCoframe.hopping_reconstructs_coframe
+    Aristotle: manual
+    Formal backing here is for the coframe. The exact determinant and
+    Gaussian polar bridge and N16 scalar and contact tests are separate.
+    """
+    from src.vestigial import original_coefficients as o
+
+    o.require_original_n16_budget(budget)
+
+    if not isinstance(reg, o.OriginalRegulator):
+        raise ValueError('original polar edge requires an OriginalRegulator')
+    if type(axis) is not int or axis not in range(4):
+        raise ValueError('original edge axis must be in 0..3')
+    if reg.extents[axis] != 2 or reg.boundary_signs[axis] != 1:
+        raise ValueError('a periodic length-two original edge is required')
+
+    o.reserve_scalar_records(budget, o._AUXILIARY_POLAR_FIXED_RECORDS)
+    moments = o._auxiliary_polar_radial_moments()
+    rows = o._auxiliary_polar_rows(reg, mixed=False)
+    literal_x, count_x, empty_x = o._auxiliary_polar_cubic(rows, (6, 0), moments, budget)
+    top_terms = o._auxiliary_polar_determinant(rows, 4, budget)
+    radial = {}
+    o._auxiliary_polar_project(top_terms, (8, 0), 1, radial, {})
+    scale = o.checked_integer_product(o.checked_integer_power(2, 4), o.checked_factorial(4))
+    fourth_top = o._auxiliary_polar_average(radial, moments, scale)
+    del top_terms, radial, rows
+
+    rows = o._auxiliary_polar_rows(reg, mixed=True)
+    literal_mixed, count_mixed, empty_mixed = o._auxiliary_polar_cubic(
+        rows, (4, 2), moments, budget,
+    )
+    labels, pairing = o._auxiliary_polar_basis()
+    result = o.AuxiliaryPolarEdge(
+        labels, pairing, moments, literal_x, literal_mixed,
+        o._auxiliary_polar_dual(literal_x, pairing),
+        o._auxiliary_polar_dual(literal_mixed, pairing),
+        fourth_top, (count_x, count_mixed), (empty_x, empty_mixed),
+    )
+    budget.check_storage(result, rows)
     return result
 
 
