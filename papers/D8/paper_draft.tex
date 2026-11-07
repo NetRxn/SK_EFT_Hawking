@@ -98,7 +98,7 @@ dimension in any proof assistant.
 Sec.~\ref{sec:alphabets} is the evidence for the reusability claim rather than
 a survey: four alphabets, whose density witnesses range over an
 algebraic-integer obstruction, a Chebyshev factorization, a triple-angle
-identity and an entangling-gate criterion, all pass through the interface
+identity and a tensor-Pauli closure-flow construction, all pass through the interface
 without modifying it. Sec.~\ref{sec:su8} treats the three-qubit case at length,
 because there the question of which gate carries the universality has a
 complete answer: the doubly controlled-$Z$ gate is necessary, is sufficient
@@ -741,17 +741,19 @@ taking a target and a precision to a word in the free group on the two
 generators $H$ and $T$. Its verification has the shape of a loop-correctness
 proof, and each part is a separate statement.
 
-\begin{lemma}[Termination at finite depth]
-\label{lem:compile-term}
-For every $U$ and $\varepsilon$, $\mathrm{cliffordTCompile}(U,\varepsilon)$
-equals the structural balanced-commutator recursion run to depth
-$n(\varepsilon) = \lceil \log_{3/2}\big(\log_4 (1/(K^2\varepsilon))\big)\rceil$.
-\end{lemma}
-
-Because the recursion is structural in the depth, termination is by
-construction rather than by a measure argument. Lemma~\ref{lem:compile-term} is
-what makes the remaining statements about a function rather than about a
-process.
+\begin{definition}[Compilation by finite recursion]
+\label{def:compile-recursion}
+The function $\mathrm{cliffordTCompile}(U,\varepsilon)$ is the
+balanced-commutator recursion applied to $U$ at the natural-valued depth
+$n(\varepsilon)$, defined for every real tolerance. For
+$0 < \varepsilon \le \varepsilon_0$ this depth is
+\[
+  n(\varepsilon) =
+  \left\lceil \log_{3/2}\!\big(\log_4 (1/(K^2\varepsilon))\big)\right\rceil_{\mathbb N}.
+\]
+The ceiling takes values in the natural numbers. Each recursive call
+decreases the depth, and depth zero uses the base finder.
+\end{definition}
 
 \begin{lemma}[Initialization]
 \label{lem:compile-base}
@@ -1226,7 +1228,7 @@ is alphabet-specific from what is not, and lifting the latter to arbitrary
 dimension, the cost of verifying a new universal gate set reduces to a single
 density witness, and Sec.~\ref{sec:alphabets} shows that witnesses as different
 as an algebraic-integer obstruction, a Chebyshev factorization, a triple-angle
-identity and an entangling-gate criterion all pass through the same interface
+identity and a tensor-Pauli closure-flow construction all pass through the same interface
 unchanged. The $\su 8$ result suggests a further use: formal verification here
 is not only checking known compilation results but settling a structural
 question, namely whether a gate is doing work in a universality proof, that is
@@ -1273,11 +1275,11 @@ Theorem~\ref{thm:literal} is \lean{cliffordCCZLiteral\_dense};
 Theorem~\ref{thm:notdense} is \lean{cliffordOnly\_not\_dense};
 Theorem~\ref{thm:toffoli} is \lean{channelSde2\_le\_toffoliCost}, with entry
 rationality \lean{channelRep\_interp\_isRat}; Theorem~\ref{thm:compile} is
-\lean{cliffordTCompile\_correct}, with Lemmas~\ref{lem:compile-term},
-\ref{lem:compile-base} and~\ref{lem:compile-inv} being
-\lean{cliffordTCompile\_eq\_recursion},
+\lean{cliffordTCompile\_correct}.
+Definition~\ref{def:compile-recursion} gives \lean{GenericSU2.cliffordTCompile}.
+Lemmas~\ref{lem:compile-base} and~\ref{lem:compile-inv} are
 \lean{cliffordTCompile\_recursion\_base} and
-\lean{cliffordTCompile\_loop\_invariant};
+\lean{cliffordTCompile\_loop\_invariant}.
 Theorem~\ref{thm:rslength} is \lean{rossSelinger\_log\_length\_explicit};
 Hypothesis~\ref{hyp:residual} enters through
 \lean{gridFindT\_isSome\_of\_residual} and Theorem~\ref{thm:rssynth} is

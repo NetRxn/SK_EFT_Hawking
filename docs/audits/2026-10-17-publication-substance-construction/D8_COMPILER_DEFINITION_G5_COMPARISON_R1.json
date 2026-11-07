@@ -1,0 +1,34 @@
+{
+  "before": {
+    "gate": "LeanProofSubstance",
+    "paper": "D8",
+    "priority": 1,
+    "state": "blocked",
+    "evidence": [
+      "0 theorems cited via formulas; 35 via \\texttt; 1 overlap with PlaceholderMarkers"
+    ],
+    "blockers": [
+      "placeholder cited: cliffordTCompile_eq_recursion"
+    ],
+    "notes": "1 cited theorems are placeholders (rfl / Equiv.refl / trivial)",
+    "last_evaluated": "",
+    "measured": true,
+    "blocker_refs": [],
+    "accepted_blockers": []
+  },
+  "after": {
+    "gate": "LeanProofSubstance",
+    "paper": "D8",
+    "priority": 1,
+    "state": "passed",
+    "evidence": [
+      "0 theorems cited via formulas; 35 via \\texttt; 0 overlap with PlaceholderMarkers"
+    ],
+    "blockers": [],
+    "notes": "no placeholder theorems cited",
+    "last_evaluated": "",
+    "measured": true,
+    "blocker_refs": [],
+    "accepted_blockers": []
+  }
+}
