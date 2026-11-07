@@ -36,6 +36,12 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — L1 rank12 independently accepted, rank4 attachment assigned, PR118 qualification running.**
+
+L1 remains lead. The [independent rank12 verdict](L1_N16_C14_RANK12_INDEPENDENT_R1.md) accepts both complete 48-row edge tables, the original 24 ordered S4 epsilon coefficients, all 2,016 compact and 12,096 attached signed rows, and all four literal junction controls. The [review archive](L1_N16_C14_RANK12_INDEPENDENT_R1.zip) preserves the comparators, adverse checks, cap readback and terminal evidence. Rank4 is the next active author assignment. Independent source replay already establishes 48 rows on each outgoing edge, 1,472 disjoint pairs and 18 complementary fused-mask labels. The full attachment must close the rank4 exterior generators while keeping the distinct rank6/rank5 ordered component pairs and remote masks open. Whole representative, c14, c0 and original denominator remain owed.
+
+Draft PR118 remains at `a36f923d34cf0c4145f10ab8846595f0bd22dd86`. The wider scoped profile and an isolated same-head replay of the exact 23 failures from the prior full-profile head are running. This replay diagnoses which known failures still reproduce and supplements the full gate. The same-source 231-gate snapshot remains as documented below. No main integration or final human review at this checkpoint.
+
 **Current resume point — L1 rank12 independently under review, D1 and Paper12 scoped repair pushed.**
 
 L1 remains the lead. The [frozen rank12 author archive](L1_N16_C14_RANK12_AUTHOR_R1.zip) gives 48 exact rows on each remaining degree-two edge, 2,016 compact rows and 12,096 attached signed rows. The two original ordered S4 epsilons are contracted and rank14 and rank13 masks remain open. Four local junction checks give 3/512 and single-path sign reversal gives 5/1024. The independent assignment is active. Rank4 is the next planned cut after verification. Whole c14, c0 and original denominator remain owed.
