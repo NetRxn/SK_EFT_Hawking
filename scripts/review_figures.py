@@ -1862,6 +1862,24 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=["steel_blue", "amber"],
     ),
+    FigureSpec(
+        name="d8_fig1_alphabet_dimension_map",
+        function="fig_d8_alphabet_dimension_map",
+        caption="D8 alphabet coverage: four families and six variants, on the groups in Table alphabets.",
+        needs_experiments=False, expected_traces=6,
+        expected_axes={},
+        physics_checks=[], color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
+        name="d8_fig4_length_comparison",
+        function="fig_d8_length_comparison",
+        caption="D8 theorem bounds on separate native axes: recurrence length, grid increment and three-qubit word length.",
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "operator norm", "yaxis": "Recurrence length",
+                       "xaxis2": "Grid parameter", "yaxis2": "above N₃",
+                       "xaxis3": "Synthesis parameter", "yaxis3": "Three-qubit word"},
+        physics_checks=[], color_keys=["steel_blue", "amber"],
+    ),
     # ── D11 / D12 bundle figures (added 2026-07-30) ───────────────────────
     # Stage-9 round 2 identified the ROOT CAUSE of defects surviving a full
     # review round: these figures had no registry entry, no structural check
@@ -2153,6 +2171,7 @@ def generate_figures() -> dict[str, Path]:
         # BOTH call sites or func_map raises NameError at module-eval time —
         # which is exactly how the round-3 'wiring fix' turned a silent skip
         # into an equally-unobserved hard crash.
+        fig_d8_alphabet_dimension_map, fig_d8_length_comparison,
         fig_d11_phononic_band_gap, fig_d11_pt_exceptional_point,
         fig_d11_haldane_chern, fig_d11_effective_medium,
         fig_d12_poisson_floor_vs_folklore, fig_d12_enbw_matched_filter,
@@ -2329,6 +2348,8 @@ def generate_figures() -> dict[str, Path]:
         # D11 / D12 bundle figures (2026-07-30). Registering the FigureSpecs
         # alone was INERT — lookup is a bare func_map.get(), so unmapped specs
         # silently SKIP. Stage-9 round 3 caught that; these are the wiring.
+        "fig_d8_alphabet_dimension_map": fig_d8_alphabet_dimension_map,
+        "fig_d8_length_comparison": fig_d8_length_comparison,
         "fig_d11_phononic_band_gap": fig_d11_phononic_band_gap,
         "fig_d11_pt_exceptional_point": fig_d11_pt_exceptional_point,
         "fig_d11_haldane_chern": fig_d11_haldane_chern,
@@ -2547,6 +2568,7 @@ def run_structural_checks() -> list[CheckIssue]:
         # BOTH call sites or func_map raises NameError at module-eval time —
         # which is exactly how the round-3 'wiring fix' turned a silent skip
         # into an equally-unobserved hard crash.
+        fig_d8_alphabet_dimension_map, fig_d8_length_comparison,
         fig_d11_phononic_band_gap, fig_d11_pt_exceptional_point,
         fig_d11_haldane_chern, fig_d11_effective_medium,
         fig_d12_poisson_floor_vs_folklore, fig_d12_enbw_matched_filter,
@@ -2720,6 +2742,8 @@ def run_structural_checks() -> list[CheckIssue]:
         # D11 / D12 bundle figures (2026-07-30). Registering the FigureSpecs
         # alone was INERT — lookup is a bare func_map.get(), so unmapped specs
         # silently SKIP. Stage-9 round 3 caught that; these are the wiring.
+        "fig_d8_alphabet_dimension_map": fig_d8_alphabet_dimension_map,
+        "fig_d8_length_comparison": fig_d8_length_comparison,
         "fig_d11_phononic_band_gap": fig_d11_phononic_band_gap,
         "fig_d11_pt_exceptional_point": fig_d11_pt_exceptional_point,
         "fig_d11_haldane_chern": fig_d11_haldane_chern,
