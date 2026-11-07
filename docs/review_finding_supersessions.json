@@ -10482,6 +10482,29 @@
         "enforced": true,
         "run_at": "2026-11-07"
       }
+    },
+    {
+      "finding_id": "review:2026-11-07-d8-trapped-ion-proof-attribution:D8:1.1",
+      "status": "fixed",
+      "evidence": "Independent source and rendered review verified author v1 Theorem 1.3, the actual positive-even-grid tensor-Pauli flow proof, every scoped claim and the regenerated figure. The declared Verify passed and the versioned source artifact is anchored.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/D8_TRAPPED_ION_ATTRIBUTION_INDEPENDENT_REVIEW_R2.md",
+      "date": "2026-11-07",
+      "commit": "46ecaa29ce4b71ea89b2ceb80d7143373c1cc978",
+      "artifact_path": "Lit-Search/Phase-1-and-Background/primary-sources/Brylinski2002.pdf",
+      "artifact_sha256": "d646d64aabe5fe70762cfae67cd2c371a753df96e3683ac8bf241293a3b13cd3",
+      "artifact_anchors": [
+        {
+          "path": "Lit-Search/Phase-1-and-Background/primary-sources/Brylinski2002.pdf",
+          "sha256": "d646d64aabe5fe70762cfae67cd2c371a753df96e3683ac8bf241293a3b13cd3"
+        }
+      ],
+      "verified_by": {
+        "command": "grep -Fq 'gate \\emph{imprimitive}' papers/D8/paper_draft.tex && grep -Fq 'Tensor-Pauli closure flows' papers/D8/paper_draft.tex && grep -Fq 'density via the span and closure flows of fifteen tensor-Pauli tangents' papers/D8/bundle_metadata.json && grep -Fq 'Tensor-Pauli closure flows' src/core/visualizations.py",
+        "declared": "grep -Fq 'gate \\emph{imprimitive}' papers/D8/paper_draft.tex && grep -Fq 'Tensor-Pauli closure flows' papers/D8/paper_draft.tex && grep -Fq 'density via the span and closure flows of fifteen tensor-Pauli tangents' papers/D8/bundle_metadata.json && grep -Fq 'Tensor-Pauli closure flows' src/core/visualizations.py",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-07"
+      }
     }
   ]
 }
