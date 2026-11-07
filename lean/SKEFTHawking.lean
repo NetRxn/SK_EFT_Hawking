@@ -21,6 +21,7 @@ import SKEFTHawking.ADW.QuaternionSU2Haar
 import SKEFTHawking.ADW.QuaternionSU2RadialMoments
 import SKEFTHawking.ADW.QuaternionSU2HaarMonomial
 import SKEFTHawking.ADW.QuaternionSU2HaarAnchored
+import SKEFTHawking.ADW.QuaternionSU2HaarPolynomial
 import SKEFTHawking.ADW.GaussianPolynomialAffine
 import SKEFTHawking.ADW.GaussianPolynomialHermite
 import SKEFTHawking.ADW.GaussianPolynomialIBP
