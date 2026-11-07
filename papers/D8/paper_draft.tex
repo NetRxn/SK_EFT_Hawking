@@ -108,9 +108,8 @@ through the channel representation.
 The second question, circuit length, is Sec.~\ref{sec:length}. Three verified
 mechanisms reach it, and none dominates: the commutator recursion is
 unconditional at exponent $\approx 3.97$; the Ross--Selinger grid
-route~\cite{RossSelinger2016} reaches the optimal exponent $1$ but rests on a
-number-theoretic existence that is open, which we isolate as a single stated
-hypothesis rather than an atmosphere of caveats; and the
+route~\cite{RossSelinger2016} gives a word-length exponent of $1$ under a
+stated bounded residual-witness hypothesis; and the
 Kliuchnikov--Maslov--Mosca ancilla route~\cite{KMM2013ancilla} reaches exponent
 $1$ unconditionally, at the price of two ancillas and a weaker form of
 contract. Between the first and second questions sits a third thing a compiler
@@ -694,7 +693,8 @@ $\mathrm{sde}_2(\widehat U) \le T^{\mathrm{of}}(U)$.
 \end{theorem}
 
 The proof telescopes three facts, following the resource theory of
-Mukhopadhyay~\cite{Mukhopadhyay2024}: $\mathrm{sde}_2(\widehat{\mathbf 1}) = 0$;
+Mukhopadhyay~\cite[Theorem~3.8, Fact~3.9 and Lemma~3.16]{Mukhopadhyay2024}.
+Here $\mathrm{sde}_2(\widehat{\mathbf 1}) = 0$;
 $\mathrm{sde}_2$ does not increase under multiplication by a Clifford gate,
 because the channel representation of a Clifford is a signed permutation and
 permuting entries does not change the maximum; and $\mathrm{sde}_2$ increases
@@ -716,17 +716,13 @@ $\mathrm{sde}_2(\widehat U)$ readable as a smallest-denominator exponent in a
 dyadic ring rather than merely as the $2$-part of a rational denominator. The
 lower bound holds either way.
 
-Two scope statements. The bound is stated for unitaries exactly implementable
-in Clifford$+$CCZ, which is the domain on which $T^{\mathrm{of}}$ is meaningful.
-And the matching upper bound, that is minimality, is not addressed: establishing
-it requires the meet-in-the-middle search behind Mukhopadhyay's Conjecture~4.8,
-and the lower bound stands on its own without it.
-% TODO: Mukhopadhyay2024 (arXiv:2401.08950) is held as a project-authored
-% abstract summary, not as source text. The section, lemma and conjecture
-% numbers cited here follow the formalization's internal cross-references and
-% have not been checked against the paper itself. Acquire the primary source
-% before this bundle goes green. The same applies to KMM2013 (arXiv:1206.5236),
-% cited in Sec.~\ref{sec:length-rs} and likewise held only as a summary.
+The bound concerns exactly implementable Clifford$+$CCZ unitaries.
+Mukhopadhyay's Lemma~3.10 gives the dyadic entry statement, and
+Definition~3.13 and Fact~3.14 define the dyadic exponent and bound it under
+sums~\cite{Mukhopadhyay2024}. We prove a lower bound and leave the exact
+minimum open. Mukhopadhyay's Conjecture~4.8 concerns the size of the
+intermediate sets and retention of an optimal decomposition in the
+divide-and-select search~\cite{Mukhopadhyay2024}.
 
 \section{From existence to an algorithm}
 \label{sec:compiler}
@@ -858,12 +854,15 @@ algorithms at a common error or cost.}
 \subsection{The grid route and its one hypothesis}
 \label{sec:length-rs}
 
-For $z$-rotations, Ross and Selinger~\cite{RossSelinger2016} achieve the
-optimal exponent by reducing approximate synthesis to a lattice problem over
-the ring $\mathbb Z[\omega]$, $\omega = e^{i\pi/4}$, and then solving an exact
-synthesis problem over $\mathbb Z[\omega][1/\sqrt 2]$ in the manner of
-Kliuchnikov, Maslov and Mosca~\cite{KMM2013}. We verify the efficiency layer of
-that route.
+For $z$-rotations, Ross and Selinger's Algorithm~7.6
+reduces approximate synthesis to a grid problem over
+$\mathbb Z[\omega]$, $\omega = e^{i\pi/4}$, followed by an exact synthesis
+problem~\cite{RossSelinger2016}. Kliuchnikov, Maslov and Mosca's
+Theorem~1 characterizes exact synthesis over
+$\mathbb Z[\omega][1/\sqrt 2]$, and their Algorithm~1 and Corollary~1
+give the synthesis procedure and its length bound~\cite{KMM2013}.
+Here we verify a word-length bound for the grid route when the finder
+returns a residual witness.
 
 \begin{theorem}[Grid-route length]
 \label{thm:rslength}
@@ -895,17 +894,18 @@ delivers the full conclusion of Theorem~\ref{thm:rslength} with
 $\lvert W\rvert \le N_3 + 8k$.
 \end{theorem}
 
-Theorem~\ref{thm:rssynth} isolates the gap exactly. What is known about
-Hypothesis~\ref{hyp:residual} is this. The source
-literature discharges it as a randomized algorithm under a prime-distribution
-assumption, which appears as Hypothesis~8.3 of Ref.~\cite{RossSelinger2016} and,
-in the same form, as Hypothesis~29 of Ref.~\cite{Selinger2015}. An
-unconditional discharge would require the existence of relative norms of
-prescribed form in growing windows, which is a short-interval statement in
-analytic number theory. Hypothesis~\ref{hyp:residual} is strictly weaker than
-the prime-distribution assumption, since it asks for a relative norm rather
-than a prime. It is open in the formalized-mathematics ecosystem, and in its
-primality form it is open in the literature.
+Theorem~\ref{thm:rssynth} uses the bounded witness in
+Hypothesis~\ref{hyp:residual} as its explicit completeness input.
+Ross and Selinger's Algorithm~7.6 instead enumerates grid candidates and
+tests residual norm equations. Their Hypothesis~8.3 models primality of
+integers produced by that algorithm. Without a factoring oracle,
+Proposition~8.8 gives an expected $T$-count equal to the second-optimal
+$T$-count up to an additive $O(\log\log(1/\varepsilon))$ under that model.
+Proposition~8.11 gives expected runtime polylogarithmic in
+$1/\varepsilon$~\cite{RossSelinger2016}. The theorem here uses a different input,
+a coordinate-bounded residual witness for the candidate in
+Hypothesis~\ref{hyp:residual}. Establishing that witness remains open in
+this development.
 
 Hypothesis~\ref{hyp:residual} appears in the statement of every theorem that
 consumes it. It is never an axiom, so the zero-project-local-axiom property of
@@ -922,11 +922,12 @@ number theory actually lives.
 
 Here $\dagger$ is the ring automorphism of $\mathbb Z[\omega]$ sending
 $\omega \mapsto \omega^{-1}$, an element $\xi$ of the fixed ring
-$\mathbb Z[\sqrt 2]$ is \emph{doubly positive} when it is positive under both
-real embeddings $\sqrt 2 \mapsto \pm\sqrt 2$, and $\xi$ is
-\emph{$\dagger$-decomposable} when it is a relative norm $t^{\dagger}t$ for some
-$t \in \mathbb Z[\omega]$. Solvability is thus decomposability, and the chain
-below reduces decomposability to a congruence condition on prime factors.
+$\mathbb Z[\sqrt 2]$ is \emph{doubly positive} when it is nonnegative under
+both real embeddings $\sqrt 2 \mapsto \pm\sqrt 2$. An element $\xi$ is \emph{$\dagger$-decomposable} when
+$\xi=u t^{\dagger}t$ for some $t\in\mathbb Z[\omega]$ and unit
+$u\in\mathbb Z[\sqrt 2]^\times$. This permits a unit factor in the norm
+equation. The next steps remove that factor when the signs permit it
+and reduce the decomposability question to prime-power cases.
 
 \begin{lemma}[Units]
 \label{lem:c2}
@@ -937,9 +938,8 @@ square.
 Lemma~\ref{lem:c2} is what makes the criterion below independent of the choice
 of associate: the unit group of $\mathbb Z[\sqrt 2]$ is generated by $-1$ and
 the fundamental unit $1+\sqrt 2$, whose norm is $-1$, so a doubly positive unit
-has even exponent on the fundamental unit and is therefore a square. Without
-it, decomposability could fail merely because a representative was multiplied by
-a unit.
+has even exponent on the fundamental unit and is therefore a square. This is
+the unit calculation in Ross and Selinger's Lemma~C.2~\cite{RossSelinger2016}.
 
 \begin{lemma}[Solvability criterion]
 \label{lem:c16}
@@ -947,10 +947,14 @@ $t^{\dagger}t = \xi$ is solvable in $\mathbb Z[\omega]$ if and only if $\xi$ is
 doubly positive and $\dagger$-decomposable.
 \end{lemma}
 
-Double positivity is necessary because a relative norm is a sum of squares under
-each real embedding. That it is, with decomposability, also sufficient is the
-content, and it is a biconditional rather than an implication, which is what
-lets the grid search reject a candidate rather than merely fail to accept it.
+A relative norm is nonnegative under both real embeddings. For a
+nonzero decomposable element with those signs, the unit factor is
+positive under both embeddings, so it is a square by Lemma~\ref{lem:c2}.
+Absorbing its square root into $t$ gives an exact solution; zero has
+the solution $t=0$. This is the integral-ring version of
+Ross and Selinger's Lemma~C.16, with decomposability as in their
+Definition~C.15. Their statements use the dyadic rings.
+Their Lemma~C.17 treats denominator clearing separately~\cite{RossSelinger2016}.
 
 \begin{lemma}[Multiplicativity]
 \label{lem:c19}
@@ -958,33 +962,36 @@ $\dagger$-decomposability is multiplicative across coprime factors: a product of
 coprime factors is $\dagger$-decomposable if and only if each factor is.
 \end{lemma}
 
-Lemma~\ref{lem:c19} is what turns the criterion into a decision procedure: it
-reduces a question about $\xi$ to independent questions about the prime powers
-in its factorization. The two lemmas that follow answer those questions.
+This is the coprime product step in Ross and Selinger's
+Lemma~C.19~\cite{RossSelinger2016}. Given a prime factorization, it reduces the
+question to the corresponding prime-power cases.
 
-\begin{lemma}[The obstruction at $p \equiv 7 \bmod 8$]
+\begin{lemma}[Prime-case construction and obstruction]
 \label{lem:c20}
-An element whose norm is a power of a prime $p \equiv 7 \pmod 8$ is not
-$\dagger$-decomposable when that power is odd, and for a prime dividing the
-norm squared there is a constructive decomposition in the remaining cases.
+Let $\xi$ be prime in $\mathbb Z[\sqrt 2]$. If its image in
+$\mathbb Z[\omega]$ divides $w^{\dagger}w$ but does not divide
+$w-w^{\dagger}$, the gcd of that image with $w$ supplies a
+$\dagger$-decomposition. Separately, if the norm of $\xi$ is
+$\pm p^m$ with $p>0$, $p\equiv 7\pmod 8$ and $m$ odd, then
+$\xi$ is not $\dagger$-decomposable.
 \end{lemma}
 
-The congruence class is not arbitrary: $2$ ramifies in $\mathbb Z[\sqrt 2]$ and
-the splitting of an odd prime $p$ is governed by whether $2$ is a quadratic
-residue modulo $p$, which holds exactly for $p \equiv \pm 1 \pmod 8$. The
-residue class $7 \bmod 8$ is the one where $p$ splits in $\mathbb Z[\sqrt 2]$
-but the resulting primes fail to be relative norms from $\mathbb Z[\omega]$, and
-a mod-$8$ count of the valuation is what detects it.
+The gcd implication formalizes a construction used in Ross and
+Selinger's Lemma~C.20. Their full criterion is stated for a prime
+$\xi$ and the rational prime below it. The formal obstruction instead
+takes the norm explicitly and uses the impossibility of a sum of
+two squares congruent to $7$ modulo $8$~\cite{RossSelinger2016}.
 
 \begin{lemma}[Even-power criterion]
 \label{lem:c21}
-For $\xi$ of norm $\pm p$ with $p \equiv 7 \pmod 8$, the power $\xi^m$ is
-$\dagger$-decomposable if and only if $m$ is even.
+For $\xi$ of norm $\pm p$ with $p>0$ and $p \equiv 7 \pmod 8$, the power
+$\xi^m$ is $\dagger$-decomposable if and only if $m$ is even.
 \end{lemma}
 
-Lemma~\ref{lem:c21} is again a biconditional, and it closes the chain: combined
-with Lemma~\ref{lem:c19} it decides decomposability for any $\xi$ whose
-factorization is known, which is what the grid finder needs at each candidate.
+Lemma~\ref{lem:c21} is the explicit-norm case of Ross and Selinger's
+Lemma~C.21. Their Lemma~C.23 takes a prime factorization as input to the
+general norm-solving procedure~\cite{RossSelinger2016}. The bounded grid
+finder checks a candidate residual directly.
 
 The greatest-common-divisor machinery these lemmas consume requires that
 $\mathbb Z[\omega] = \mathbb Z[\zeta_8]$ be a Euclidean domain, an instance
@@ -1007,12 +1014,9 @@ Lemma~\ref{lem:grid} is what makes the asymmetric case usable, in which a tiny
 $\varepsilon$-region is paired against a large disk and neither interval alone
 meets the naive bound while their product does.
 
-% TODO: RossSelinger2016 (arXiv:1403.2975) is not held by this project in any
-% form; the Appendix-C lemma numbering, the Hypothesis 8.3 reference and the
-% Lemma 4.4 attribution above are taken from the formalization's internal
-% cross-references and from secondary deep-research notes, not from the paper.
-% The mathematical statements are the formalization's own and are kernel-checked;
-% the attributions are not verified. Acquire the primary source before green.
+The product condition is Ross and Selinger's Lemma~4.4
+for the two intervals in the conjugate-embedding grid
+problem~\cite{RossSelinger2016}.
 
 \subsection{The ancilla route, unconditionally}
 \label{sec:length-kmm}
@@ -1189,14 +1193,11 @@ recursion depth $0$.
 
 \subsection{What is outside}
 
-Three sources this paper cites are not held by the project in full text, and
-the affected attributions are marked in the manuscript source. They are the
-grid-synthesis paper of Ross and Selinger, the exact-synthesis paper of
-Kliuchnikov, Maslov and Mosca, and the resource-theory paper of Mukhopadhyay.
-In each case the mathematical statements formalized here are the formalization's
-own and are kernel-checked; what is unverified is the correspondence between
-those statements and the section, lemma and hypothesis numbers under which the
-sources state them.
+The ancilla-free grid theorem depends on the bounded residual witness in
+Hypothesis~\ref{hyp:residual}. Its norm-solvability results concern integral
+rings (Sec.~\ref{sec:length-appc}). The Toffoli lower bound in
+Theorem~\ref{thm:toffoli} applies to exact circuits, and the optimal cost
+and performance of heuristic searches lie beyond that bound.
 
 \section{Scope and outlook}
 \label{sec:scope}

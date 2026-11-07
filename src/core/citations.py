@@ -6626,10 +6626,10 @@ CITATION_REGISTRY = {
         'arxiv': '2401.08950',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Mukhopadhyay2024.pdf',
         'used_in': ['papers/D8/paper_draft.tex'],
         'provides': [],
-        'notes': 'Channel-representation resource theory for Clifford+Toffoli (=Clifford+CCZ); Lemma 3.10 dyadic entries + Toffoli-cost lower bound T^of >= sde_2. Title + sole author verified 2026-05-31.',
+        'notes': 'Clifford+Toffoli channel-representation resource theory. D8 uses the held arXiv:2401.08950v1 for the channel entries, denominator exponent and lower-bound argument in Section 3, and the divide-and-select scope of Conjecture 4.8.',
     },
 
     'KMM2013': {
@@ -6643,10 +6643,10 @@ CITATION_REGISTRY = {
         'arxiv': '1206.5236',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/KMM2013.pdf',
         'used_in': ['papers/D8/paper_draft.tex'],
         'provides': [],
-        'notes': 'Exact synthesis of single-qubit Clifford+T unitaries over Z[1/sqrt2, i]; algorithmic-synthesis route (future work, out of D8 verified-existence scope). arXiv ID verified 2026-05-31.',
+        'notes': 'Exact synthesis of single-qubit Clifford+T unitaries over Z[1/sqrt2, i]. D8 cites Theorem 1, Corollary 1 and Algorithm 1 of the held author version arXiv:1206.5236v4 for the exact-synthesis layer.',
     },
 
     'Hietala2020VOQC': {
@@ -6711,10 +6711,10 @@ CITATION_REGISTRY = {
         'arxiv': '1403.2975',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/RossSelinger2016.pdf',
         'used_in': ['papers/D8/paper_draft.tex'],
         'provides': [],
-        'notes': 'Optimal ancilla-free Clifford+T z-rotation synthesis over Z[omega][1/sqrt2]; length-optimal route (future work, out of D8 verified-existence scope). arXiv ID verified 2026-05-31.',
+        'notes': 'Ancilla-free Clifford+T z-rotation approximation. D8 uses the held author version arXiv:1403.2975v3 for the grid, Algorithm 7.6, the Hypothesis 8.3 analysis and the Appendix C norm results.',
     },
 
     'Lickorish1997': {
