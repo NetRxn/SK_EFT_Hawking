@@ -14,6 +14,7 @@ import SKEFTHawking.ADW.FiniteGrassmannSourceGenerating
 import SKEFTHawking.ADW.FiniteGrassmannComplementaryMinor
 import SKEFTHawking.ADW.FiniteDeterminantSubsetDP
 import SKEFTHawking.ADW.FiniteDeterminantRawJet
+import SKEFTHawking.ADW.FiniteDiracExecutableAssembly
 import SKEFTHawking.ADW.GaussianPolynomialAffine
 import SKEFTHawking.ADW.GaussianPolynomialHermite
 import SKEFTHawking.ADW.GaussianPolynomialIBP
