@@ -6592,10 +6592,10 @@ CITATION_REGISTRY = {
         'arxiv': 'quant-ph/0108062',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Brylinski2002.abstract.txt',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Brylinski2002.pdf',
         'used_in': ['papers/D8/paper_draft.tex'],
         'provides': [],
-        'notes': 'Entangling-gate universality criterion; the SU(4) density witness for the trapped-ion Molmer-Sorensen alphabet. arXiv ID verified 2026-05-31.',
+        'notes': 'Author version arXiv:quant-ph/0108062v1, p. 2, Theorem 1.3 and preceding imprimitive definition. External context for the trapped-ion construction; the formal SU(4) density witness uses tensor-Pauli closure flows.',
     },
 
     'AaronsonGottesman2004': {

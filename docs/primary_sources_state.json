@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-11-07T05:36:03+00:00",
+  "generated_at": "2026-11-07T06:13:21+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -1028,13 +1028,13 @@
     "Brylinski2002": {
       "bibkey": "Brylinski2002",
       "phase": "Phase-1-and-Background",
-      "tier_achieved": "abstract",
-      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Brylinski2002.abstract.txt",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Brylinski2002.pdf",
       "verdict": "success",
-      "fetched_at": "2026-06-18T10:41:16+00:00",
-      "size_bytes": 667,
-      "url_used": null,
-      "note": "pre-existing on disk; recorded without re-fetch"
+      "fetched_at": "2026-11-07T06:13:21+00:00",
+      "size_bytes": 166177,
+      "url_used": "https://arxiv.org/pdf/quant-ph/0108062v1",
+      "note": "Exact arXiv author v1 acquired from the versioned URL. SHA256 d646d64aabe5fe70762cfae67cd2c371a753df96e3683ac8bf241293a3b13cd3."
     },
     "Buballa2005": {
       "bibkey": "Buballa2005",

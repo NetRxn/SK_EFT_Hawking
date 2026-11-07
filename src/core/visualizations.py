@@ -14466,7 +14466,7 @@ def fig_d8_alphabet_dimension_map() -> go.Figure:
         ("Clifford+T", 2, "√2 sin(π/8) fails algebraic integrality"),
         ("Read–Rezayi k=5", 2, "Chebyshev factorization"),
         ("Read–Rezayi k=7", 2, "Triple-angle identity"),
-        ("Trapped-ion (MS)", 4, "Brylinski entangling criterion"),
+        ("Trapped-ion (MS)", 4, "Tensor-Pauli closure flows"),
         ("Clifford+CCZ (with T)", 8, "Density of the H, T, CNOT subalphabet"),
         ("Clifford+CCZ (T-free)", 8, "Trace fails algebraic integrality"),
     )

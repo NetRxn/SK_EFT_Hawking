@@ -502,7 +502,7 @@ Alphabet & Target & Alphabet-specific input \\
 Clifford$+T$ & $\su 2$ & $\sqrt 2 \sin(\pi/8)$ not an algebraic integer \\
 Read--Rezayi $k=5$ & $\su 2$ & Chebyshev factorization of $T_7(x)+1$ \\
 Read--Rezayi $k=7$ & $\su 2$ & triple-angle collapse at $\cos(\pi/9)$ \\
-Trapped-ion M\o lmer--S\o rensen & $\su 4$ & Brylinski entangling criterion \\
+Trapped-ion M\o lmer--S\o rensen & $\su 4$ & Tensor-Pauli closure flows \\
 Clifford$+$CCZ (with $T$) & $\su 8$ & density of the $\{H,T,\mathrm{CNOT}\}$ part \\
 Clifford$+$CCZ ($T$-free) & $\su 8$ & $\mathrm{tr} = 1/\sqrt2$ not an algebraic integer \\
 \end{tabular}
@@ -550,21 +550,20 @@ also bound the length of the reduced output word by the recursion
 evaluated at that alphabet's maximum base word length. The proof index
 lists the declarations for both bounds.
 
-\paragraph{Trapped-ion M\o lmer--S\o rensen at $\su 4$.} The two-qubit gate set
-realized on production trapped-ion hardware consists of single-qubit rotations
-together with the M\o lmer--S\o rensen entangling gate at a discrete grid of
-angles. Here the density witness is supplied not by a trace obstruction but by
-the Brylinski--Brylinski criterion~\cite{Brylinski2002}: a two-qubit gate $V$,
-together with all single-qubit gates, generates a dense subgroup of $\su 4$ if
-and only if $V$ is \emph{primitive}, meaning it maps some product state to an
-entangled one. The M\o lmer--S\o rensen gate at any angle that is not a
-multiple of $\pi$ is entangling by inspection of its action on
-$\lvert 00\rangle$, so the criterion applies directly and the alphabet-specific
-work reduces to exhibiting one such angle in the grid. The resulting
-compilation theorem holds for every even grid resolution $N > 0$ and is
-unconditional. This row is the strongest evidence that the interface is not
-tuned to number theory: the witness here is geometric, and it enters through
-the same predicate as the others.
+\paragraph{Trapped-ion M\o lmer--S\o rensen at $\su 4$.} The alphabet
+combines single-qubit rotations with M\o lmer--S\o rensen gates on the
+angle grid $k\pi/N$. For positive even $N$, it contains $\mathrm{MS}(\pi/2)$,
+which maps $\lvert 00\rangle$ to an entangled state. The
+Brylinski--Brylinski theorem~\cite[Theorem~1.3]{Brylinski2002} calls such a
+gate \emph{imprimitive} and characterizes universality in the presence of
+all single-qubit gates.
+
+The formal density witness constructs the flows of all fifteen tensor-Pauli
+tangents in the closure of the actual alphabet. It obtains the six local
+directions from per-ion containment and the nine entangling directions
+by conjugation using the grid entangler and single-qubit Clifford gates.
+The tangents span $\mathfrak{su}(4)$. This establishes the density input
+to the compilation theorem for every positive even $N$.
 
 \paragraph{Clifford$+$CCZ at $\su 8$.} The three-qubit case admits two density
 mechanisms that are structurally different, and the contrast between them is
