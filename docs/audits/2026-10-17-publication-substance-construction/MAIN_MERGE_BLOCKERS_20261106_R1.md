@@ -9,3 +9,24 @@ The remaining actual blockers include apex claim grounding, missing manuscript u
 The [existing Lean delivery-route audit](LEAN_SOURCE_DELIVERY_ROUTE_R1.md) identifies an exact nine-module accepted import closure from actual remote main ce194cdc4; full C3 replaces its earlier C3-S source once independently accepted. Existing merge requirements remain full pytest, CI substrate validation, the four explicit CI-skip checks, native ExtractDeps, and an unchanged worktree. Same-source producer refresh and independent artifact review remain required. No new gating/routing machinery or general baseline waiver is introduced.
 
 ROOT is reusing the existing delivery worktree on `codex/publication-l1-original-eq7-main-20261106`, based on freshly read-back remote main ce194cdc4. The prior mixed draft branch at420373838 remains pushed. The same exact27-node baseline cohort on untouched main completed with25FAIL/2PASS, no errors/skips and a clean unchanged tree. The two passes were the LaTeX population test and browser non-verdict-cell test. Compared with that base, mixed420 repairs the stage-vocabulary and real dangling-blocked-by tests; its lower actual LaTeX-failure population creates downward-ratchet headroom rather than a new failed paper. These are per-test comparisons, not a full-suite or source-only-candidate verdict. Exact baseline receipts are in [the focused native archive](ORIGINAL_EQ7_MAIN_NATIVE_R1_EVIDENCE.zip). L1 remains lead; all original scientific and publication requirements remain owed.
+
+## Exact notebook input control on the current D8 draft
+
+On draft `74c5ad099b6800ebf41581e1909110d7c3cc94ca`, two isolated
+archives held the same notebook and `src/` bytes. The control reproduced
+the exact historical `FileNotFoundError` for `data/vestigial_mc`. A second
+copy ran all 12 code cells with the two genuine production files copied
+byte-for-byte from local custody. Both runs used the canonical
+`NotebookClient` settings and the delivery environment's Python kernel.
+The [replay script, two exit receipts, and input hashes](MAIN_MC_NOTEBOOK_PRODUCTION_REPLAY_R1.zip)
+contain no production data. The unchanged repository has no tracked
+copies of those files.
+
+The two inputs are the largest applicable production JSON in local
+custody, `vestigial_mc_20260330T164110.json`, and the fixed phase-diagram
+input `vestigial_mc_20260329T192611.json`. The first two figure producers
+select by file size today, while the third uses the fixed filename.
+A portable reproduction needs exact input custody and delivery to the
+expected path. The currently available notebook skip-cache fingerprint
+differs from this draft. The full notebook leg, hosted input delivery,
+other merge failures, and full merge qualification are still open.
