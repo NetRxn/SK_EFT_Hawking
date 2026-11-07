@@ -540,3 +540,608 @@ theorem empty_matrix_control (M : Matrix (Fin 0) (Fin 0) ℂ) :
   simp [emptyBerezin, Module.Basis.coord_apply]
 
 end SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+
+namespace SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+open FiniteGrassmannCoframe
+
+/-- The original compact group has bounded matrix entries, without an operator-norm convention. -/
+theorem su2_entry_norm_le (U : SU2) (i j : Fin 2) : ‖U.val i j‖ ≤ 1 := by
+  have h := congrArg (fun A : Matrix (Fin 2) (Fin 2) ℂ ↦ (A i i).re)
+    ((mem_specialUnitaryGroup_iff.mp U.property).1.2)
+  simp only [mul_apply, star_eq_conjTranspose, conjTranspose_apply,
+    Fin.sum_univ_two, Complex.add_re, Complex.star_def, Complex.mul_conj,
+    Complex.ofReal_re, one_apply_eq, Complex.one_re] at h
+  have hj0 : 0 ≤ Complex.normSq (U.val i 0) := Complex.normSq_nonneg _
+  have hj1 : 0 ≤ Complex.normSq (U.val i 1) := Complex.normSq_nonneg _
+  have hs0 := Complex.sq_norm (U.val i 0)
+  have hs1 := Complex.sq_norm (U.val i 1)
+  fin_cases j
+  · change ‖U.val i 0‖ ≤ 1
+    nlinarith [norm_nonneg (U.val i 0)]
+  · change ‖U.val i 1‖ ≤ 1
+    nlinarith [norm_nonneg (U.val i 1)]
+
+/-- Compactness is proved for the actual determinant-one unitary matrices. -/
+instance su2CompactSpace : CompactSpace SU2 := by
+  apply isCompact_iff_compactSpace.mp
+  have hc : IsCompact {A : Matrix (Fin 2) (Fin 2) ℂ | ∀ i j, ‖A i j‖ ≤ 1} := by
+    simpa only [Set.matrix, Metric.mem_closedBall, dist_zero_right] using
+      (isCompact_closedBall (0 : ℂ) 1).matrix (m := Fin 2) (n := Fin 2)
+  apply hc.of_isClosed_subset
+  · have he : (SU2 : Set (Matrix (Fin 2) (Fin 2) ℂ)) =
+        (unitaryGroup (Fin 2) ℂ : Set _) ∩ {A | A.det = 1} := by
+      ext A
+      exact mem_specialUnitaryGroup_iff
+    rw [he]
+    exact isClosed_unitary.inter (isClosed_eq continuous_id.matrix_det continuous_const)
+  · intro U hU
+    exact su2_entry_norm_le ⟨U,hU⟩
+
+instance su2ContinuousInv : ContinuousInv SU2 where
+  continuous_inv := by
+    apply continuous_induced_rng.mpr
+    change Continuous (fun U : SU2 ↦ star U.val)
+    exact continuous_subtype_val.star
+
+instance su2TopologicalGroup : IsTopologicalGroup SU2 where
+
+instance su2SecondCountable : SecondCountableTopology SU2 := by
+  letI : SecondCountableTopology (Matrix (Fin 2) (Fin 2) ℂ) :=
+    inferInstanceAs (SecondCountableTopology (Fin 2 → Fin 2 → ℂ))
+  exact (Topology.IsInducing.subtypeVal
+    (t := (SU2 : Set (Matrix (Fin 2) (Fin 2) ℂ)))).secondCountableTopology
+
+instance su2MeasurableSpace : MeasurableSpace SU2 := borel SU2
+instance su2BorelSpace : BorelSpace SU2 := ⟨rfl⟩
+
+end SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+
+namespace SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+open FiniteGrassmannCoframe
+
+/-- Original SU(2) Haar measure normalized on the whole compact group. -/
+def su2Haar : Measure SU2 := Measure.haarMeasure (⊤ : TopologicalSpace.PositiveCompacts SU2)
+instance su2HaarProbability : IsProbabilityMeasure su2Haar := by
+  constructor
+  simpa only [su2Haar, TopologicalSpace.PositiveCompacts.coe_top] using
+    (Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts SU2)))
+instance su2HaarInvariant : Measure.IsMulLeftInvariant su2Haar := inferInstanceAs
+  (Measure.IsMulLeftInvariant (Measure.haarMeasure (⊤ : TopologicalSpace.PositiveCompacts SU2)))
+
+/-- Independent left and right chiral Haar factors, with no diagonal identification. -/
+def spin4Haar : Measure Spin4 := su2Haar.prod su2Haar
+instance spin4HaarProbability : IsProbabilityMeasure spin4Haar := by
+  unfold spin4Haar
+  infer_instance
+
+/-- Every original anchor has its own independent Spin(4) Haar variable. -/
+def linkHaar (L : Torus) : Measure (Links L) :=
+  Measure.pi (fun _ : Site L ↦ Measure.pi (fun _ : Fin 4 ↦ spin4Haar))
+instance linkHaarProbability (L : Torus) : IsProbabilityMeasure (linkHaar L) := by
+  unfold linkHaar
+  infer_instance
+
+/-- The source Dirac representation is continuous on the actual compact group. -/
+theorem dirac_continuous : Continuous (dirac : Spin4 → Matrix (Fin 4) (Fin 4) ℂ) := by
+  have hb : Continuous (fun U : Spin4 ↦
+      Matrix.fromBlocks U.1.val (0 : Matrix (Fin 2) (Fin 2) ℂ)
+        (0 : Matrix (Fin 2) (Fin 2) ℂ) U.2.val) := by
+    fun_prop
+  exact hb.matrix_submatrix diracIndex.symm diracIndex.symm
+
+/-- Actual anchor evaluation retains the full original product topology. -/
+theorem link_dirac_continuous (L : Torus) (x : Site L) (μ : Fin 4) :
+    Continuous (fun U : Links L ↦ dirac (U x μ)) :=
+  dirac_continuous.comp ((continuous_apply μ).comp (continuous_apply x))
+
+/-- Both original curvature words are continuous, with their orders unchanged. -/
+theorem printed_plaquette_continuous (L : Torus) (x : Site L) (k l : Fin 4) :
+    Continuous (fun U : Links L ↦ FiniteGrassmannSourceAuxiliary.plaquettePrinted L U x k l) := by
+  unfold FiniteGrassmannSourceAuxiliary.plaquettePrinted
+  exact (((link_dirac_continuous L x k).matrix_mul
+    (link_dirac_continuous L (forward L x k) l)).matrix_mul
+      (link_dirac_continuous L (forward L x l) k).matrix_conjTranspose).matrix_mul
+        (link_dirac_continuous L x l).matrix_conjTranspose
+
+theorem closed_plaquette_continuous (L : Torus) (x : Site L) (k l : Fin 4) :
+    Continuous (fun U : Links L ↦ FiniteGrassmannSourceAuxiliary.plaquetteClosed L U x k l) := by
+  unfold FiniteGrassmannSourceAuxiliary.plaquetteClosed
+  exact (((link_dirac_continuous L x l).matrix_conjTranspose.matrix_mul
+    (link_dirac_continuous L (forward L x l) k).matrix_conjTranspose).matrix_mul
+      (link_dirac_continuous L (forward L x k) l)).matrix_mul
+        (link_dirac_continuous L x k)
+
+end SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+
+namespace SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+open FiniteGrassmannCoframe
+open FiniteGrassmannSourceAuxiliary
+
+/-- Finite coefficient convolution preserves parameter continuity. -/
+theorem coeff_mul_continuous {K ι : Type*} [TopologicalSpace K] [DecidableEq ι]
+    (P Q : K → MvPolynomial ι ℂ)
+    (hP : ∀ α, Continuous (fun u ↦ (P u).coeff α))
+    (hQ : ∀ α, Continuous (fun u ↦ (Q u).coeff α)) (α : ι →₀ ℕ) :
+    Continuous (fun u ↦ (P u * Q u).coeff α) := by
+  simp only [MvPolynomial.coeff_mul]
+  exact continuous_finsetSum _ (fun d _ ↦ (hP d.1).mul (hQ d.2))
+
+/-- Powers use finite convolution, not a topology on the infinite polynomial space. -/
+theorem coeff_pow_continuous {K ι : Type*} [TopologicalSpace K] [DecidableEq ι]
+    (P : K → MvPolynomial ι ℂ)
+    (hP : ∀ α, Continuous (fun u ↦ (P u).coeff α)) (n : ℕ) (α : ι →₀ ℕ) :
+    Continuous (fun u ↦ (P u ^ n).coeff α) := by
+  induction n generalizing α with
+  | zero => simp only [pow_zero]; exact continuous_const
+  | succ n ih =>
+    simp only [pow_succ]
+    exact coeff_mul_continuous (fun u ↦ P u ^ n) P ih hP α
+
+/-- Every retained compensation coefficient is an actual finite continuous expression. -/
+theorem compensation_coeff_continuous {K ι : Type*} [TopologicalSpace K]
+    [Fintype ι] [DecidableEq ι] (M : ℕ) (σ : ℝ) (S : K → MvPolynomial ι ℂ)
+    (hS : ∀ u, (S u).constantCoeff = 0)
+    (hC : ∀ α, Continuous (fun u ↦ (S u).coeff α)) (α : ι →₀ ℕ) :
+    Continuous (fun u ↦ (compensationPolynomial M σ (S u)).coeff α) := by
+  simp only [compensationPolynomial_coeff_finite M σ _ (hS _) α]
+  split_ifs
+  · apply continuous_finsetSum
+    intro k _
+    apply continuous_finsetSum
+    intro l _
+    exact continuous_const.mul
+      (coeff_mul_continuous (fun u ↦ S u ^ k)
+        (fun _ : K ↦ (-auxiliaryQuadraticPolynomial σ) ^ l)
+        (coeff_pow_continuous S hC k) (fun _ ↦ continuous_const) α)
+  · exact continuous_const
+
+/-- Original ordered curvature traces have continuous coefficients. -/
+theorem curvature_coeff_continuous {K : Type*} [TopologicalSpace K]
+    (F : K → Curvature) (hF : ∀ k l, Continuous (fun u ↦ F u k l))
+    (m n C D : Fin 4) :
+    Continuous (fun u ↦ curvatureCoefficient (F u) m n C D) := by
+  unfold curvatureCoefficient
+  apply continuous_finsetSum
+  intro k _
+  apply continuous_finsetSum
+  intro l _
+  apply continuous_const.mul
+  have h1 : Continuous (fun u ↦ F u k l * gamma C) :=
+    (hF k l).matrix_mul continuous_const
+  have h2 : Continuous (fun u ↦ F u k l * gamma C * gamma D) :=
+    h1.matrix_mul continuous_const
+  have h3 : Continuous (fun u ↦ F u k l * gamma C * gamma D * gamma5) :=
+    h2.matrix_mul continuous_const
+  exact h3.matrix_trace
+
+/-- Both physical polynomial families discharge coefficient continuity at their actual matrices. -/
+theorem source_coeff_continuous {K : Type*} [TopologicalSpace K]
+    (F : K → Curvature) (hF : ∀ k l, Continuous (fun u ↦ F u k l))
+    (g1 g2 : ℂ) (α : D →₀ ℕ) :
+    Continuous (fun u ↦ (source (F u) g1 g2).coeff α) := by
+  simp only [source, MvPolynomial.coeff_add]
+  apply continuous_const.add
+  simp only [einsteinCartan, MvPolynomial.coeff_sum, MvPolynomial.coeff_C_mul]
+  apply continuous_finsetSum
+  intro m _
+  apply continuous_finsetSum
+  intro n _
+  apply continuous_finsetSum
+  intro C _
+  apply continuous_finsetSum
+  intro D _
+  exact (continuous_const.mul (curvature_coeff_continuous F hF m n C D)).mul continuous_const
+
+end SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+
+namespace SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+open FiniteGrassmannCoframe
+
+open GaussianGrassmannAuxiliary
+
+/-- Polynomial auxiliary fields with actual continuous original-link coefficients. -/
+abbrev LinkCoefficient (L : Torus) := C(Links L, ℂ)
+abbrev HaarPolynomial (L : Torus) := MvPolynomial (Auxiliary L) (LinkCoefficient L)
+
+def coefficientEvaluation (L : Torus) (U : Links L) : LinkCoefficient L →+* ℂ where
+  toFun f := f U
+  map_zero' := rfl
+  map_one' := rfl
+  map_add' _ _ := rfl
+  map_mul' _ _ := rfl
+
+def haarPolynomialEvaluation (L : Torus) (U : Links L) (h : Auxiliary L → ℝ) :
+    HaarPolynomial L →+* ℂ :=
+  MvPolynomial.eval₂Hom (coefficientEvaluation L U) (fun a ↦ (h a : ℂ))
+
+/-- Every real monomial has an actual absolute Gaussian moment. -/
+theorem gaussian_monomial_integrable (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2) (d : Auxiliary L →₀ ℕ) :
+    Integrable (fun h : Auxiliary L → ℝ ↦ (auxiliaryMonomial d h : ℂ))
+      (gaussianMeasure (Auxiliary L) v) := by
+  have hi := (integrable_auxiliaryHermite_mul_monomial σ hσ v hv
+    (0 : Auxiliary L →₀ ℕ) d).ofReal (𝕜 := ℂ)
+  simpa [auxiliaryHermite] using hi
+
+/-- Compactness controls every continuous coefficient before any product integral is exchanged. -/
+theorem link_coefficient_integrable (L : Torus) (a : LinkCoefficient L) :
+    Integrable a (linkHaar L) :=
+  a.continuous.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace a)
+
+/-- Finite polynomial separation proves genuine joint Haar–Gaussian integrability. -/
+theorem haarPolynomial_integrable (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2) (P : HaarPolynomial L) :
+    Integrable (fun z : Links L × (Auxiliary L → ℝ) ↦
+      haarPolynomialEvaluation L z.1 z.2 P)
+      ((linkHaar L).prod (gaussianMeasure (Auxiliary L) v)) := by
+  classical
+  change Integrable (fun z : Links L × (Auxiliary L → ℝ) ↦
+    MvPolynomial.eval₂ (coefficientEvaluation L z.1) (fun a ↦ (z.2 a : ℂ)) P) _
+  simp only [MvPolynomial.eval₂_eq]
+  apply integrable_finsetSum
+  intro d _
+  have hi : Integrable (fun h : Auxiliary L → ℝ ↦
+      ∏ i ∈ d.support, (h i : ℂ) ^ d i) (gaussianMeasure (Auxiliary L) v) := by
+    convert gaussian_monomial_integrable L σ hσ v hv d using 1
+    funext h
+    rw [auxiliaryMonomial, Complex.ofReal_prod]
+    simp only [Complex.ofReal_pow]
+    exact Finsupp.prod_fintype d (fun i n ↦ (h i : ℂ) ^ n) (by simp)
+  exact (link_coefficient_integrable L (P.coeff d)).mul_prod hi
+
+end SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+
+namespace SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+open FiniteGrassmannCoframe FiniteGrassmannEvaluation GaussianGrassmannAuxiliary
+open FiniteGrassmannSourceAuxiliary
+
+@[simp] theorem haarPolynomialEvaluation_C (L : Torus) (U : Links L)
+    (h : Auxiliary L → ℝ) (a : LinkCoefficient L) :
+    haarPolynomialEvaluation L U h (MvPolynomial.C a) = a U :=
+  MvPolynomial.eval₂_C _ _ _
+
+@[simp] theorem haarPolynomialEvaluation_X (L : Torus) (U : Links L)
+    (h : Auxiliary L → ℝ) (a : Auxiliary L) :
+    haarPolynomialEvaluation L U h (MvPolynomial.X a) = (h a : ℂ) :=
+  MvPolynomial.eval₂_X _ _ _
+
+def constantHaarPolynomial (L : Torus) (c : ℂ) : HaarPolynomial L :=
+  MvPolynomial.C (ContinuousMap.const (Links L) c)
+
+@[simp] theorem haarPolynomialEvaluation_constant (L : Torus) (U : Links L)
+    (h : Auxiliary L → ℝ) (c : ℂ) :
+    haarPolynomialEvaluation L U h (constantHaarPolynomial L c) = c := by
+  rw [constantHaarPolynomial, haarPolynomialEvaluation_C]
+  rfl
+
+/-- A finite Hermite polynomial in the original site's auxiliary coordinates. -/
+def hermiteHaarPolynomial (L : Torus) (σ : ℝ) (x : Site L) (α : D →₀ ℕ) :
+    HaarPolynomial L :=
+  ∏ i : D, Polynomial.eval₂ (Int.castRingHom (HaarPolynomial L))
+    (constantHaarPolynomial L ((σ : ℂ)⁻¹) * MvPolynomial.X (x,i))
+    (Polynomial.hermite (α i))
+
+theorem integer_polynomial_complex_eval (P : Polynomial ℤ) (x : ℝ) :
+    Polynomial.eval₂ (Int.castRingHom ℂ) (x : ℂ) P =
+      ((Polynomial.aeval x P : ℝ) : ℂ) := by
+  rw [Polynomial.aeval_def]
+  change _ = Complex.ofRealHom (Polynomial.eval₂ (algebraMap ℤ ℝ) x P)
+  rw [Polynomial.hom_eval₂]
+  rfl
+
+/-- This is the actual scaled Hermite polynomial, not a chosen integrable replacement. -/
+theorem hermiteHaarPolynomial_eval (L : Torus) (σ : ℝ) (x : Site L)
+    (α : D →₀ ℕ) (U : Links L) (h : Auxiliary L → ℝ) :
+    haarPolynomialEvaluation L U h (hermiteHaarPolynomial L σ x α) =
+      (auxiliaryHermite σ α (fun i ↦ h (x,i)) : ℂ) := by
+  rw [hermiteHaarPolynomial, map_prod, auxiliaryHermite, Complex.ofReal_prod]
+  apply Finset.prod_congr rfl
+  intro i _
+  rw [Polynomial.ringHom_eval₂_intCastRingHom]
+  simp only [map_mul, haarPolynomialEvaluation_constant, haarPolynomialEvaluation_X]
+  rw [show (σ : ℂ)⁻¹ * (h (x,i) : ℂ) = ((h (x,i) / σ : ℝ) : ℂ) by
+    push_cast
+    ring]
+  exact integer_polynomial_complex_eval _ _
+
+/-- A fixed finite roster replaces varying support only by inserting proved zero coefficients. -/
+theorem auxiliaryWeight_bounded {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (M : ℕ) (σ : ℝ) (P : MvPolynomial ι ℂ) (hP : P.totalDegree ≤ M) (h : ι → ℝ) :
+    auxiliaryWeight σ P h =
+      ∑ α ∈ boundedIndices M,
+        P.coeff α * ((σ ^ auxiliaryDegree α)⁻¹ : ℝ) * (auxiliaryHermite σ α h : ℂ) := by
+  classical
+  unfold auxiliaryWeight
+  apply Finset.sum_subset
+  · intro α hα
+    apply (mem_boundedIndices M α).mpr
+    exact (MvPolynomial.le_totalDegree hα).trans hP
+  · intro α _ hα
+    have hz : P.coeff α = 0 := by
+      simpa only [MvPolynomial.mem_support_iff, not_not] using hα
+    rw [hz, zero_mul, zero_mul]
+
+/-- Continuous exact coefficients of the original compensated action. -/
+def compensationLinkCoefficient (L : Torus) (σ : ℝ)
+    (S : Links L → Site L → Polynomial)
+    (hS : ∀ U x, (S U x).constantCoeff = 0)
+    (hC : ∀ x α, Continuous (fun U ↦ (S U x).coeff α))
+    (x : Site L) (α : D →₀ ℕ) : LinkCoefficient L :=
+  ⟨fun U ↦ (compensationPolynomial (4 * volume L) σ (S U x)).coeff α,
+    compensation_coeff_continuous (4 * volume L) σ (fun U ↦ S U x)
+      (fun U ↦ hS U x) (hC x) α⟩
+
+/-- All retained original compensation coefficients, on a uniform common-4V roster. -/
+def siteWeightHaarPolynomial (L : Torus) (σ : ℝ)
+    (S : Links L → Site L → Polynomial)
+    (hS : ∀ U x, (S U x).constantCoeff = 0)
+    (hC : ∀ x α, Continuous (fun U ↦ (S U x).coeff α)) (x : Site L) :
+    HaarPolynomial L :=
+  ∑ α ∈ boundedIndices (4 * volume L),
+    MvPolynomial.C (compensationLinkCoefficient L σ S hS hC x α) *
+      constantHaarPolynomial L (((σ ^ auxiliaryDegree α)⁻¹ : ℝ) : ℂ) *
+      hermiteHaarPolynomial L σ x α
+
+theorem siteWeightHaarPolynomial_eval (L : Torus) (σ : ℝ)
+    (S : Links L → Site L → Polynomial)
+    (hS : ∀ U x, (S U x).constantCoeff = 0)
+    (hC : ∀ x α, Continuous (fun U ↦ (S U x).coeff α))
+    (x : Site L) (U : Links L) (h : Auxiliary L → ℝ) :
+    haarPolynomialEvaluation L U h (siteWeightHaarPolynomial L σ S hS hC x) =
+      auxiliaryWeight σ (compensationPolynomial (4 * volume L) σ (S U x))
+        (fun i ↦ h (x,i)) := by
+  rw [auxiliaryWeight_bounded (4 * volume L) σ _
+    (compensationPolynomial_totalDegree _ _ _) (fun i ↦ h (x,i))]
+  simp only [siteWeightHaarPolynomial, map_sum, map_mul, haarPolynomialEvaluation_C,
+    haarPolynomialEvaluation_constant, hermiteHaarPolynomial_eval, compensationLinkCoefficient,
+    ContinuousMap.coe_mk]
+
+end SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+
+namespace SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+open FiniteGrassmannCoframe FiniteGrassmannEvaluation GaussianGrassmannAuxiliary
+open FiniteGrassmannSourceAuxiliary
+
+/-- Each original hopping block is continuous even when its anchors coincide. -/
+theorem hopping_continuous (L : Torus) (x : Site L) (μ C : Fin 4) (y z : Site L) :
+    Continuous (fun U : Links L ↦ hopping L U x μ C y z) := by
+  have hd := link_dirac_continuous L x μ
+  have hb := link_dirac_continuous L (backward L x μ) μ
+  unfold hopping
+  split_ifs <;> fun_prop
+
+/-- Symbolic original Dirac matrix; each scalar h coordinate is an actual polynomial variable. -/
+def diracHaarPolynomial (L : Torus) :
+    Matrix (Fermion L) (Fermion L) (HaarPolynomial L) :=
+  fun p q ↦ ∑ a : Auxiliary L, MvPolynomial.X a *
+    MvPolynomial.C (⟨fun U ↦ hopping L U a.1 a.2.1 a.2.2 p.1 q.1 p.2 q.2,
+      (hopping_continuous L a.1 a.2.1 a.2.2 p.1 q.1).matrix_elem p.2 q.2⟩ :
+        LinkCoefficient L)
+
+/-- Evaluation recovers the full original global matrix, not just its determinant. -/
+theorem diracHaarPolynomial_eval (L : Torus) (U : Links L) (h : Auxiliary L → ℝ) :
+    (haarPolynomialEvaluation L U h).mapMatrix (diracHaarPolynomial L) =
+      globalMatrix L U (fun a ↦ (h a : ℂ)) := by
+  classical
+  ext p q
+  change haarPolynomialEvaluation L U h (diracHaarPolynomial L p q) = _
+  simp only [diracHaarPolynomial, globalMatrix, map_sum, map_mul,
+    haarPolynomialEvaluation_X, haarPolynomialEvaluation_C, ContinuousMap.coe_mk]
+
+/-- The original determinant and EVERY original site weight, as one finite joint polynomial. -/
+def completeHaarPolynomial (L : Torus) (σ : ℝ)
+    (S : Links L → Site L → Polynomial)
+    (hS : ∀ U x, (S U x).constantCoeff = 0)
+    (hC : ∀ x α, Continuous (fun U ↦ (S U x).coeff α)) : HaarPolynomial L :=
+  (∏ x, siteWeightHaarPolynomial L σ S hS hC x) * (diracHaarPolynomial L).det
+
+theorem completeHaarPolynomial_eval (L : Torus) (σ : ℝ)
+    (S : Links L → Site L → Polynomial)
+    (hS : ∀ U x, (S U x).constantCoeff = 0)
+    (hC : ∀ x α, Continuous (fun U ↦ (S U x).coeff α))
+    (U : Links L) (h : Auxiliary L → ℝ) :
+    haarPolynomialEvaluation L U h (completeHaarPolynomial L σ S hS hC) =
+      fullWeight L σ (S U) h * (globalMatrix L U (fun a ↦ (h a : ℂ))).det := by
+  classical
+  rw [completeHaarPolynomial, map_mul, map_prod,
+    (haarPolynomialEvaluation L U h).map_det, diracHaarPolynomial_eval]
+  simp only [siteWeightHaarPolynomial_eval, fullWeight]
+
+/-- Joint integrability from finite continuous coefficients, without assuming the target integral. -/
+theorem original_joint_integrable (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2)
+    (S : Links L → Site L → Polynomial)
+    (hS : ∀ U x, (S U x).constantCoeff = 0)
+    (hC : ∀ x α, Continuous (fun U ↦ (S U x).coeff α)) :
+    Integrable (fun z : Links L × (Auxiliary L → ℝ) ↦
+      fullWeight L σ (S z.1) z.2 * (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det)
+      ((linkHaar L).prod (gaussianMeasure (Auxiliary L) v)) := by
+  simpa only [completeHaarPolynomial_eval] using
+    haarPolynomial_integrable L σ hσ v hv (completeHaarPolynomial L σ S hS hC)
+
+end SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+
+namespace SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+open FiniteGrassmannCoframe FiniteGrassmannEvaluation GaussianGrassmannAuxiliary
+open FiniteGrassmannSourceAuxiliary
+
+instance spin4HaarInvariant : Measure.IsMulLeftInvariant spin4Haar := by
+  unfold spin4Haar
+  infer_instance
+instance linkHaarInvariant (L : Torus) : Measure.IsMulLeftInvariant (linkHaar L) := by
+  letI : Measure.IsMulLeftInvariant (Measure.pi (fun _ : Fin 4 ↦ spin4Haar)) :=
+    Measure.pi.isMulLeftInvariant _
+  exact Measure.pi.isMulLeftInvariant _
+
+theorem original_link_measure_normalized (L : Torus) : linkHaar L Set.univ = 1 :=
+  measure_univ
+
+/-- The original finite Berezin partition integrand is integrable on all original compact links. -/
+theorem original_partition_integrable (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2)
+    (S : Links L → Site L → Polynomial)
+    (hS : ∀ U x, (S U x).constantCoeff = 0)
+    (hC : ∀ x α, Continuous (fun U ↦ (S U x).coeff α)) :
+    Integrable (fun U : Links L ↦ berezin L (nilExp (4 * volume L)
+      (∑ x, ((MvPolynomial.aeval (localCoframe L U x) (S U x) :
+        bilinearAlgebra L) : Grassmann L)))) (linkHaar L) := by
+  have hi := (original_joint_integrable L σ hσ v hv S hS hC).integral_prod_left
+  apply hi.congr
+  exact Filter.Eventually.of_forall (fun U ↦
+    (original_fixed_link_determinant L U σ hσ v hv (S U) (hS U)).symm)
+
+/-- Full original finite-regulator Eq10, including the actual outer compact-link Haar measure.
+The coefficient hypotheses are discharged below for BOTH actual source words. -/
+theorem original_eq10 (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2)
+    (S : Links L → Site L → Polynomial)
+    (hS : ∀ U x, (S U x).constantCoeff = 0)
+    (hC : ∀ x α, Continuous (fun U ↦ (S U x).coeff α)) :
+    (∫ U : Links L, berezin L (nilExp (4 * volume L)
+      (∑ x, ((MvPolynomial.aeval (localCoframe L U x) (S U x) :
+        bilinearAlgebra L) : Grassmann L))) ∂linkHaar L) =
+      ∫ z : Links L × (Auxiliary L → ℝ),
+        fullWeight L σ (S z.1) z.2 * (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det
+        ∂(linkHaar L).prod (gaussianMeasure (Auxiliary L) v) := by
+  rw [integral_prod _ (original_joint_integrable L σ hσ v hv S hS hC)]
+  exact integral_congr_ae (Filter.Eventually.of_forall (fun U ↦
+    original_fixed_link_determinant L U σ hσ v hv (S U) (hS U)))
+
+/-- Fubini is justified by the full joint polynomial bound, not merely pointwise integrability. -/
+theorem original_eq10_gaussian_outer (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2)
+    (S : Links L → Site L → Polynomial)
+    (hS : ∀ U x, (S U x).constantCoeff = 0)
+    (hC : ∀ x α, Continuous (fun U ↦ (S U x).coeff α)) :
+    (∫ U : Links L, berezin L (nilExp (4 * volume L)
+      (∑ x, ((MvPolynomial.aeval (localCoframe L U x) (S U x) :
+        bilinearAlgebra L) : Grassmann L))) ∂linkHaar L) =
+      ∫ h : Auxiliary L → ℝ, ∫ U : Links L,
+        fullWeight L σ (S U) h * (globalMatrix L U (fun a ↦ (h a : ℂ))).det
+        ∂linkHaar L ∂gaussianMeasure (Auxiliary L) v := by
+  rw [original_eq10 L σ hσ v hv S hS hC,
+    integral_prod _ (original_joint_integrable L σ hσ v hv S hS hC)]
+  exact integral_integral_swap (original_joint_integrable L σ hσ v hv S hS hC)
+
+theorem printed_source_coeff_continuous (L : Torus) (x : Site L) (g1 g2 : ℂ)
+    (α : D →₀ ℕ) : Continuous (fun U : Links L ↦ (printedSource L U x g1 g2).coeff α) :=
+  source_coeff_continuous (fun U ↦ plaquettePrinted L U x)
+    (printed_plaquette_continuous L x) g1 g2 α
+
+theorem closed_source_coeff_continuous (L : Torus) (x : Site L) (g1 g2 : ℂ)
+    (α : D →₀ ℕ) : Continuous (fun U : Links L ↦ (closedSource L U x g1 g2).coeff α) :=
+  source_coeff_continuous (fun U ↦ plaquetteClosed L U x)
+    (closed_plaquette_continuous L x) g1 g2 α
+
+/-- Joint absolute integrability for the actual printed word, with arbitrary complex couplings. -/
+theorem printed_joint_integrable (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2) (g1 g2 : ℂ) :
+    Integrable (fun z : Links L × (Auxiliary L → ℝ) ↦
+      fullWeight L σ (fun x ↦ printedSource L z.1 x g1 g2) z.2 *
+        (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det)
+      ((linkHaar L).prod (gaussianMeasure (Auxiliary L) v)) :=
+  original_joint_integrable L σ hσ v hv (fun U x ↦ printedSource L U x g1 g2)
+    (fun U x ↦ printedSource_constantCoeff L U x g1 g2)
+    (fun x α ↦ printed_source_coeff_continuous L x g1 g2 α)
+
+/-- Joint absolute integrability for the distinct closed word, without identifying the two words. -/
+theorem closed_joint_integrable (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2) (g1 g2 : ℂ) :
+    Integrable (fun z : Links L × (Auxiliary L → ℝ) ↦
+      fullWeight L σ (fun x ↦ closedSource L z.1 x g1 g2) z.2 *
+        (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det)
+      ((linkHaar L).prod (gaussianMeasure (Auxiliary L) v)) :=
+  original_joint_integrable L σ hσ v hv (fun U x ↦ closedSource L U x g1 g2)
+    (fun U x ↦ closedSource_constantCoeff L U x g1 g2)
+    (fun x α ↦ closed_source_coeff_continuous L x g1 g2 α)
+
+/-- Full Eq10 for the literal printed curvature/source polynomial. -/
+theorem printed_full_eq10 (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2) (g1 g2 : ℂ) :
+    (∫ U : Links L, berezin L (nilExp (4 * volume L)
+      (∑ x, ((MvPolynomial.aeval (localCoframe L U x)
+        (printedSource L U x g1 g2) : bilinearAlgebra L) : Grassmann L))) ∂linkHaar L) =
+      ∫ z : Links L × (Auxiliary L → ℝ),
+        fullWeight L σ (fun x ↦ printedSource L z.1 x g1 g2) z.2 *
+          (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det
+        ∂(linkHaar L).prod (gaussianMeasure (Auxiliary L) v) :=
+  original_eq10 L σ hσ v hv (fun U x ↦ printedSource L U x g1 g2)
+    (fun U x ↦ printedSource_constantCoeff L U x g1 g2)
+    (fun x α ↦ printed_source_coeff_continuous L x g1 g2 α)
+
+/-- Full Eq10 for the independently retained closed curvature/source polynomial. -/
+theorem closed_full_eq10 (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2) (g1 g2 : ℂ) :
+    (∫ U : Links L, berezin L (nilExp (4 * volume L)
+      (∑ x, ((MvPolynomial.aeval (localCoframe L U x)
+        (closedSource L U x g1 g2) : bilinearAlgebra L) : Grassmann L))) ∂linkHaar L) =
+      ∫ z : Links L × (Auxiliary L → ℝ),
+        fullWeight L σ (fun x ↦ closedSource L z.1 x g1 g2) z.2 *
+          (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det
+        ∂(linkHaar L).prod (gaussianMeasure (Auxiliary L) v) :=
+  original_eq10 L σ hσ v hv (fun U x ↦ closedSource L U x g1 g2)
+    (fun U x ↦ closedSource_constantCoeff L U x g1 g2)
+    (fun x α ↦ closed_source_coeff_continuous L x g1 g2 α)
+
+end SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+
+namespace SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
+open FiniteGrassmannCoframe FiniteGrassmannEvaluation GaussianGrassmannAuxiliary
+open FiniteGrassmannSourceAuxiliary
+
+/-- Compact-link bounds are genuine sup-norm bounds on each constructed continuous coefficient. -/
+theorem link_coefficient_norm_bound (L : Torus) (a : LinkCoefficient L) (U : Links L) :
+    ‖a U‖ ≤ ‖a‖ := ContinuousMap.norm_coe_le_norm a U
+
+/-- All original link factors and every independent auxiliary Gaussian are probability measures. -/
+theorem original_joint_measure_normalized (L : Torus) (v : ℝ≥0) :
+    ((linkHaar L).prod (gaussianMeasure (Auxiliary L) v)) Set.univ = 1 := measure_univ
+
+theorem original_haar_unit_control : (∫ _ : Links oneSite, (1 : ℂ) ∂linkHaar oneSite) = 1 := by
+  simp
+
+/-- Actual nonunit variances give the same complete original printed-word partition. -/
+theorem printed_full_two_scales (L : Torus) (g1 g2 : ℂ) :
+    (∫ z : Links L × (Auxiliary L → ℝ),
+      fullWeight L 2 (fun x ↦ printedSource L z.1 x g1 g2) z.2 *
+        (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det
+      ∂(linkHaar L).prod (gaussianMeasure (Auxiliary L) 4)) =
+    ∫ z : Links L × (Auxiliary L → ℝ),
+      fullWeight L (1/2) (fun x ↦ printedSource L z.1 x g1 g2) z.2 *
+        (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det
+      ∂(linkHaar L).prod (gaussianMeasure (Auxiliary L) (1/4)) :=
+  (printed_full_eq10 L 2 (by norm_num) 4 (by norm_num) g1 g2).symm.trans
+    (printed_full_eq10 L (1/2) (by norm_num) (1/4) (by norm_num) g1 g2)
+
+/-- The separately retained closed word obeys the same complete variance-independence check. -/
+theorem closed_full_two_scales (L : Torus) (g1 g2 : ℂ) :
+    (∫ z : Links L × (Auxiliary L → ℝ),
+      fullWeight L 2 (fun x ↦ closedSource L z.1 x g1 g2) z.2 *
+        (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det
+      ∂(linkHaar L).prod (gaussianMeasure (Auxiliary L) 4)) =
+    ∫ z : Links L × (Auxiliary L → ℝ),
+      fullWeight L (1/2) (fun x ↦ closedSource L z.1 x g1 g2) z.2 *
+        (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det
+      ∂(linkHaar L).prod (gaussianMeasure (Auxiliary L) (1/4)) :=
+  (closed_full_eq10 L 2 (by norm_num) 4 (by norm_num) g1 g2).symm.trans
+    (closed_full_eq10 L (1/2) (by norm_num) (1/4) (by norm_num) g1 g2)
+
+/-- The original positive-volume carrier does not normalize the empty fermionic action to one. -/
+theorem berezin_one_zero (L : Torus) : berezin L 1 = 0 := by
+  have hp : 0 < volume L := Fintype.card_pos
+  exact berezin_grade_zero L (SetLike.one_mem_graded (grade L)) (by omega)
+
+/-- With zero original action, every source weight is still retained and the full integral vanishes.
+This control makes no nonzero-denominator or positive-state assumption. -/
+theorem original_zero_action_integral (L : Torus) (σ : ℝ) (hσ : 0 < σ)
+    (v : ℝ≥0) (hv : (v : ℝ) = σ ^ 2) :
+    (∫ z : Links L × (Auxiliary L → ℝ),
+      fullWeight L σ (fun _ ↦ 0) z.2 *
+        (globalMatrix L z.1 (fun a ↦ (z.2 a : ℂ))).det
+      ∂(linkHaar L).prod (gaussianMeasure (Auxiliary L) v)) = 0 := by
+  have he := original_eq10 L σ hσ v hv (fun _ _ ↦ 0)
+    (by intro U x; simp) (by intro x α; exact continuous_const)
+  simpa only [map_zero, ZeroMemClass.coe_zero, Finset.sum_const_zero, nilExp_zero, berezin_one_zero,
+    integral_zero] using he.symm
+
+end SKEFTHawking.ADW.FiniteGrassmannDiracBerezin
