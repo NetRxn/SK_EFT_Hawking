@@ -1,0 +1,29 @@
+{
+  "before": {
+    "blockers_open": 2,
+    "open_findings": 17,
+    "critical_open": 0,
+    "blocked_p1_gates": [
+      "FixPropagation",
+      "LeanProofSubstance",
+      "NarrativeGrounding"
+    ]
+  },
+  "after": {
+    "blockers_open": 1,
+    "open_findings": 16,
+    "critical_open": 0,
+    "blocked_p1_gates": [
+      "FixPropagation",
+      "LeanProofSubstance",
+      "NarrativeGrounding"
+    ]
+  },
+  "changed_metadata_keys": [
+    "blockers_open",
+    "open_findings"
+  ],
+  "readiness": "RED",
+  "retained_catalog_sha256": "313258e76de99b9e2eb9fc476611a303c916fbfc265a554e2c96cdcf726a4770",
+  "idempotent": true
+}
