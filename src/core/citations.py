@@ -824,14 +824,17 @@ CITATION_REGISTRY = {
         'page': '064505',
         'year': 2020,
         'doi': '10.1103/PhysRevB.101.064505',
-        'arxiv': None,
-        'doi_verified': None,
+        'arxiv': '1905.05855v2',
+        'doi_verified': '2026-10-15',
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Amelio2020.json',
-        'used_in': ['papers/paper12_polariton/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Amelio2020.pdf',
+        'used_in': ['papers/paper12_polariton/paper_draft.tex', 'papers/E1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Acoustic metric in driven-dissipative polariton systems; '
-                 'weak-loss, long-wavelength limit.',
+        'notes': 'Publisher metadata verifies final DOI/title/venue. Author preprint '
+                 '1905.05855v2 (2019-06-13), linked to that DOI by arXiv, models '
+                 'reservoir/disorder-induced instability and loss of coherence '
+                 '(Sec. IV.C); it does not calibrate the Paris-LKB in-band noise. '
+                 'The preprint predates the final 2020 journal revision.',
     },
     'Jacquet2023QNM': {
         'authors': 'Jacquet, M. J., Giacomelli, L., Valnais, Q., Joly, M., Claude, F., Giacobino, E., Glorieux, Q., Carusotto, I., Bramati, A.',
@@ -5828,20 +5831,27 @@ CITATION_REGISTRY = {
     },
 
     'Coutant2014': {
-        'authors': 'O.~Coutant and R.~Parentani',
-        'title': 'Phys.\\ Rev.\\ D',
-        'journal': None,
+        'authors': 'Coutant, A., and Parentani, R.',
+        'title': 'Hawking radiation with dispersion: The broadened horizon paradigm',
+        'journal': 'Phys. Rev. D',
         'volume': 90,
-        'page': None,
+        'page': '121501',
         'year': 2014,
-        'doi': None,
-        'arxiv': None,
-        'doi_verified': False,
+        'doi': '10.1103/PhysRevD.90.121501',
+        'arxiv': '1402.2514v2',
+        'doi_verified': True,
         'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/paper1_first_order/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Coutant2014.pdf',
+        'used_in': ['papers/paper1_first_order/paper_draft.tex',
+                    'papers/E1/paper_draft.tex', 'papers/D1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
+        'notes': ('Metadata reconciled2026-10-15 against the arXiv v2 record linked '
+                  'to the journal DOI. Author preprint v2 read at equation level: '
+                  'Eq10 thermal mixing ratio uses the locally linear near-horizon, '
+                  'weak-dispersion momentum-space WKB approximation; Eq11 specifies '
+                  'its validity region. Profile perturbations enter through the '
+                  'broadened horizon. This does not derive the adopted quadratic '
+                  'temperature-shift ansatz or pi/6. Final journal body not read.'),
     },
 
     'CoutantParentani2010': {
@@ -12920,6 +12930,45 @@ CITATION_REGISTRY = {
         'used_in': ['papers/D4/paper_draft.tex'],
         'provides': [],
         'notes': 'Publisher bibliographic identity verified 2026-10-15. Full body not held or read in this package. Existing acquisition writer cached Crossref metadata only on 2026-10-15; no abstract or full body was acquired, so this does not back a source-content claim. No citation-class exemption is declared.',
+    },
+    'AndersonBFP2014Graybody': {
+        'authors': 'P. R. Anderson, R. Balbinot, A. Fabbri, R. Parentani',
+        'title': 'Gray-body factor and infrared divergences in 1D BEC acoustic black holes',
+        'journal': 'Phys. Rev. D',
+        'volume': '90',
+        'page': '104044',
+        'year': 2014,
+        'doi': '10.1103/PhysRevD.90.104044',
+        'doi_verified': None,
+        'arxiv': '1404.3224v3',
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/AndersonBFP2014Graybody.pdf',
+        'used_in': ['papers/E2/paper_draft.tex'],
+        'provides': ['Infrared transmission probability for the specified stationary 1D BEC model (Eq. 36)'],
+        'notes': 'Held arXiv:1404.3224v3 (8 January 2015), five actual PDF pages; distinct from PRD 87, 124018 (2013). v3 corrects published Eq. (21); the cited infrared result is Eq. (36), p. 3. Assumes hydrodynamic, transversely frozen elongated BEC with stationary constant flow velocity and density and smooth sound speed with fixed asymptotes (p. 2). c_R is the subsonic asymptotic sound speed. This source does not establish graphene transmission, finite-frequency quadratic roll-off, detector response or readout identifiability.',
+    },
+    'CoutantWeinfurtner2018KdV': {
+        'authors': 'Coutant, A., and Weinfurtner, S.',
+        'title': 'Low-frequency analogue Hawking radiation: The Korteweg–de Vries model',
+        'journal': 'Phys. Rev. D',
+        'volume': 97,
+        'page': '025005',
+        'year': 2018,
+        'doi': '10.1103/PhysRevD.97.025005',
+        'arxiv': '1707.09651v2',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CoutantWeinfurtner2018KdV.pdf',
+        'used_in': ['papers/E1/paper_draft.tex', 'papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': ('Publisher title/authors/DOI/year verified2026-10-15 against APS; '
+                  '2017 is submission year, not journal year. Author preprint v2 '
+                  'read at equation level. Weak-dispersive KdV model neglects '
+                  'co-propagating coupling. For the specified profile, Eqs39–40 '
+                  'give low-frequency T_eff/T_H=tanh(pi*q_r) and exponentially '
+                  'small smooth-limit departures. No nonzero leading local-D^2 '
+                  'temperature term or device-specific pi/6 is established by '
+                  'this result. Final journal body not read.'),
     },
 }
 

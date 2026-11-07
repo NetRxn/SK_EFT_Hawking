@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-07T04:23:37.394451",
+  "generated": "2026-11-07T04:42:22.695693",
   "lean_deps_source": "lean/lean_deps.json",
   "lean": {
     "total_declarations": 41660,
@@ -2088,8 +2088,8 @@
   },
   "python": {
     "python_modules": 138,
-    "test_files": 205,
-    "pytest_cases": 6943,
+    "test_files": 206,
+    "pytest_cases": 6946,
     "notebooks": 91,
     "papers": 42,
     "figures": 171
