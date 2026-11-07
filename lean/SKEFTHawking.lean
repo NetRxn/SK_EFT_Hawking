@@ -7,6 +7,7 @@ import SKEFTHawking.ADW.GaussianAuxiliaryCompensation
 import SKEFTHawking.ADW.GaussianAuxiliaryComplex
 import SKEFTHawking.ADW.GaussianPolynomialStein
 import SKEFTHawking.ADW.GaussianHaarPolynomialStein
+import SKEFTHawking.ADW.PolynomialPerturbationCoeff
 import SKEFTHawking.ADW.GaussianPolynomialAffine
 import SKEFTHawking.ADW.GaussianPolynomialHermite
 import SKEFTHawking.ADW.GaussianPolynomialIBP
