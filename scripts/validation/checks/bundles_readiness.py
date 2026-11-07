@@ -1972,7 +1972,8 @@ def _measure_manuscript(code: str):
         return None, unit, "pdftotext not on PATH (poppler-utils)"
     body = subprocess.run(["pdftotext", str(pdf), "-"], capture_output=True,
                           text=True, timeout=120).stdout
-    n_fig = tex.read_text(errors="replace").count(r"\begin{figure}")
+    draft = _strip_tex_comments(tex.read_text(errors="replace"))
+    n_fig = len(re.findall(r"\\begin\s*\{figure\*?\}", draft))
     return len(body.split()) + 300 * n_fig, unit, f"{n_fig} figure(s) at 300 words each"
 
 
