@@ -1026,7 +1026,7 @@ def main():
 
     counts = {
         "generated": datetime.now().isoformat(),
-        "lean_deps_source": str(LEAN_DEPS),
+        "lean_deps_source": LEAN_DEPS.relative_to(PROJECT_ROOT).as_posix(),
         "lean": lean_counts,
         "python": python_counts,
         "aristotle": aristotle_counts,

@@ -58,8 +58,9 @@ This is the **substrate hypothesis** for Phase 6y headlines: T-A1′.5
 (trapped-ion) and T-A2′.5 (Clifford+CCZ) discharge via providing a
 concrete instance of this structure.
 
-The Dawson-Nielsen 2006 SK polylog exponent is `log 5 / log (3/2) ≈ 3.97`
-(arXiv:quant-ph/0505030 §3.3), written `Real.log 5 / Real.log (3 / 2)`. -/
+The Dawson-Nielsen SK word-length exponent is `log 5 / log (3/2) ≈ 3.97`
+(arXiv:quant-ph/0505030v2, §3 (Analysis), Eq. (8), p. 7 and §5.1, p. 11),
+written `Real.log 5 / Real.log (3 / 2)`. -/
 structure SKCompileWithBounds_FreeGroup
     {d : ℕ} {α : Type} [DecidableEq α]
     (gs : GeneratingSet d) (h_eq : gs.W = FreeGroup α) where

@@ -232,6 +232,19 @@ The following are invariant across every phase, verified by the Phase-0 harness 
    `tests/test_validate_public_surface.py` freezes the list independently so the extraction cannot quietly
    shrink it.
 
+**D1 table-source binding.** The existing hierarchy check selects the complete
+float carrying `tab:hierarchy`. It reads either the inline tabular or the
+standalone tabular from the single direct `tables/platform_hierarchy` input.
+The generated form requires a direct canonical input as the entire post-label
+body. The prefix accepts optional float placement, centering and one balanced
+caption with D1's supported math and reference markup. The reader confines the
+resolved artifact to the canonical path in D1's tables directory before
+opening it. Ambiguous, missing or escaped inputs fail the check. This local
+grammar covers the labelled float. Composed publication qualification also
+compiles the paper and verifies that the numerical rows appear in its PDF.
+The evaluator, tolerance and manuscript crossover comparisons retain their
+existing scope.
+
 ### D3 — Five identified hazards are handled explicitly, not discovered during execution
 
 Each was found by direct reading and would break a mechanical refactor silently.
@@ -1009,3 +1022,17 @@ Six reviewers shared one working tree. R4 observed three check bodies stubbed to
 and `papers/D1/paper_draft.tex` truncated to zero bytes mid-run; R1 caught a leftover stub in
 `prose_lean_refs.py`. **Next pass: one worktree per reviewer**, and seeding reviewers must
 restore in a `finally`.
+
+### D5a. Generated table theorem-reference coverage
+
+The existing theorem-reference check reads canonical bundle drafts and every
+output declared by their table renderer specs. It uses draft aliases and
+source-local diagnostics. Strict renderer ownership rejects unreadable specs,
+duplicate or unsafe output IDs, missing files and paths that escape the bundle.
+The legacy draft population and its ratchet retain their existing scope.
+
+Source coverage includes inactive registered outputs. Forced composed
+qualification uses the existing compiler's private retained TeX recorder
+artifact to reconcile opened table files against that ownership. An open
+establishes an input read. Exact PDF content review provides visibility
+evidence where a numerical row or other content is required.

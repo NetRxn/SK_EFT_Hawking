@@ -4,13 +4,17 @@
     {
       "name": "d8_fig1_alphabet_dimension_map",
       "png": "d8_fig1_alphabet_dimension_map.png",
-      "caption": "Coverage map: 5 alphabets across SU(2)/SU(4)/SU(8); blue=sub-alphabet/per-qubit density route, amber=T-free CCZ-essential. 7 rows, 2-entry legend.",
+      "caption": "Four alphabet families and six variants, with target groups and alphabet-specific density inputs.",
       "expected_properties": [
         "SU(2)",
         "SU(4)",
         "SU(8)",
-        "Clifford+CCZ (literal)",
-        "Fibonacci"
+        "Clifford+T",
+        "Read–Rezayi k=5",
+        "Read–Rezayi k=7",
+        "Trapped-ion (MS)",
+        "Clifford+CCZ (with T)",
+        "Clifford+CCZ (T-free)"
       ]
     },
     {
@@ -34,6 +38,20 @@
         "word length",
         "error",
         "3.97"
+      ]
+    },
+    {
+      "name": "d8_fig4_length_comparison",
+      "png": "d8_fig4_length_comparison.png",
+      "caption": "Three theorem length bounds on separate native axes. No ranking at common error or cost.",
+      "expected_properties": [
+        "Balanced commutator",
+        "Target ε (ℓ∞ operator norm)",
+        "Recurrence length bound",
+        "Ross–Selinger (conditional)",
+        "Increment above N₃",
+        "KMM with two ancillas",
+        "Three-qubit word bound"
       ]
     }
   ]

@@ -16,6 +16,7 @@ widened its scope), and the canonical document wins.
 """
 
 from scripts.paper_tables import Col
+from scripts.paper_tables.sources import pipeline_stages
 
 
 # (class, gate backstopped, evidence the class requires)
@@ -53,7 +54,23 @@ def _finding_class_rows():
     return [{'cls': c, 'gate': g, 'evidence': e} for c, g, e in _FINDING_CLASSES]
 
 
+def _stage_rows():
+    rows = pipeline_stages()
+    for row in rows:
+        row['name'] = row['name'].replace(' — ', ' ').replace('Mcp', 'MCP')
+    return rows
+
+
 TABLES = {
+    'table1_stages': {
+        'description': 'Pipeline stages and gates from WAVE_EXECUTION_PIPELINE.md',
+        'rows': _stage_rows,
+        'columns': [
+            Col('stage', r'\textbf{Stage}', align='c'),
+            Col('name', r'\textbf{Name}', align=r'p{.35\linewidth}'),
+            Col('gate', r'\textbf{Gate}', align=r'p{.46\linewidth}'),
+        ],
+    },
     'table3_finding_classes': {
         'description': 'Adversarial-review finding classes, the gate each backstops, '
                        'and the evidence each requires',

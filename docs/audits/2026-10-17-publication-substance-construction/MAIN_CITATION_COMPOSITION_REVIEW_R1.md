@@ -1,0 +1,53 @@
+# Independent current citation/source-custody composition review R1
+
+**Verdict: REVISE_SOURCE for one narrow factual source locator.** The complete nine-file citation/state/ratchet composition is otherwise coherent and independently passes its affected controls. Do not treat those passes as acceptance of the new inaccurate locator, broader source-content claims, compiled outputs, main qualification or publication readiness.
+
+Candidate is MAIN `e8b6a73cf4e0e94003af49cb5bb866ff8d99c4c4` plus the exact nine tracked changed files and one new canonical finding captured by `publication-main-citation-composition-review-r1.json`. FIRST and FINAL SAME-packet checks both return exit0, fresh=true, changed=[]. No packet refresh occurred. ROOT owns all source, notebook, Git, closure, compile and runtime actions; this reviewer directly wrote only assigned /tmp reports/receipts/scripts. Existing tests performed their documented temporary source-seed mutations and restored exact source bytes.
+
+## Mandatory finding CITATION-LOCATOR-1
+
+- **Severity:** minor
+- **Location:** `src/core/citations.py`, `CITATION_REGISTRY['DawsonNielsen2006']['notes']` (current line6518).
+- **Observed:** The new note attributes the length/runtime distinction to “section 3.3.” Independent extraction of the actual pinned full v2 PDF shows Section3, “The Solovay-Kitaev algorithm for qubits,” followed by an unnumbered “Analysis” discussion, with the explicit exponents in Eqs.(8)–(9) on printed page7. There is no Section3.3 in this held version. Its abstract gives the rounded values but not the logarithmic expressions. The mathematical distinction is genuinely supported; the newly authored locator is inaccurate.
+- **Required repair:** Replace the locator with the actual Section3, Analysis, Eqs.(8)–(9), printed page7 (and retain the accurate statement about the abstract's rounded values if desired). Do not weaken or remove the actual source attribution. Reconcile the corresponding author evidence wording where it also calls this “section3.3.” This is a metadata/source-pointer correction, not a demand for a new physics implementation or new infrastructure.
+- **Verification:** Independently compare the corrected note against the same PDF/version/hash and the actual Analysis/Eqs.(8)–(9); preserve every other reviewed source/state byte or explicitly reconcile any further change. Current passing tests do not detect a bad section pointer. A deliberately new current packet is required after the author changes the frozen candidate.
+
+This is the only mandatory defect identified in this complete review. It may be repaired within the existing narrow citation/source-custody obligation; no second routing ledger or automatic finding closure is created here.
+
+## Complete actual source/conservation audit
+
+I read the complete current diff for all nine tracked files and the entire new canonical finding; current registry additions/changed records; actual surrounding acquisition/check implementations; author composition report and static reuse intake; the five historical source/adoption/final-composition records; ADR014 and applicable pipeline citation, stage, compile, review and invariant contracts; PRIMARY AGENTS/CLAUDE/continuity and the topical original-strength L1 roadmap context. Some combined documentary displays clipped; the actual changed source and relevant governance were reread separately. No conclusion depends on omitted Unicode diff material.
+
+Independent AST/structured comparison against actual HEAD establishes:
+
+- Registry664→677: exactly13 additions, no deletions, exactly two changed prior records, BarceloLRR2005 and DawsonNielsen2006. All662other prior dictionaries remain deep-exact. All13added dictionaries and the oldBarcelo qualification equal the accepted donor4737b36d postimages; no whole donor registry was transplanted. All non-registry top-level AST in citations.py is unchanged.
+- The eight current L1/GW records remain exactly current HEAD, preserving their independent physical/source history. All13new entries retain honest source roles: eight real internal companions are in preparation with null DOI/arXiv/cache/human-verification fields; five external aliases retain version/fidelity distinctions. Their actual D4/D6/D8/D9/I3 target titles/authors were checked. Existing D4's J.G. versus targetD8's John author spelling remains a disclosed inherited same-person formatting difference, not a new external identity.
+- D1/D3/D9/E1 complete bytes before their bibliographies are identical to HEAD. D8 changes only its real external bibliography; its manuscript is exact. L1/F manuscripts and D1/E1 metadata are exact. No numerical/physical body, human flag, stage/staleness/redo status or old compiled page count was changed. D3's actual current body was preserved rather than copying the donor's different composition.
+- Constants.py changes only the measured downward ceiling78→76. The sole test-file edit changes one docstring phrase; the complete test assertions/implementation remain identical. No new skip, xfail, citation-class exemption or gate/predicate override is introduced.
+- Sidecar649→654: exactly five requested existing aliases added, only the old Dawson record changes to the ACTUAL new PDF fetch. All648other old records remain deep-exact. Schema is conserved; generated_at and final LF follow the existing writer. Null url_used plus pre-existing/no-refetch notes identify the five registrations; Dawson alone has its genuine current arXiv URL/time/tier/size. No historical success timestamp was copied.
+
+Exact static evidence and all candidate/source hashes are in the companion static JSON and packet. Existing donor/source reviews are provenance only, not current-source acceptance by proxy.
+
+## Actual custody and source fidelity
+
+The existing writer's pre-existing-file branch, PDF magic assertion, force-fetch path and Sidecar flow were inspected. ROOT's five current registration calls/HTTP-refusal driver and actual Dawson fetch stdout/stderr were read. No writer, fetch or network call was rerun by this reviewer.
+
+All five previously held aliases still match the exact prior SHA256, byte length, mode and nsmtime before AND after independent tests. I independently inspected actual first-page text of Barcelo2011 (gr-qc/0505065v3,12May2011), Finazzi (1103.4841v2,28Feb2012), Kitaev (cond-mat/0506438v3,1Jan2008), Wang (2411.16635v1,25Nov2024, author order Wang/He/Kim/Zhen) and Dawson (quant-ph/0505030v2,23Aug2005). These remain author-preprint versions, not an assertion that every published body or parameter is identical. Wang's separate published metadata/order is qualified; Barcelo2005/2011/2024 are not equated. Verlinde's actual JSON is Crossref metadata without abstract or body, so bibliography identity is its acceptance boundary.
+
+The new Dawson PDF is an actual15-page PDF,222679bytes, SHA256 `4cd7033be2dd4265b228ff0a834d07715558b398b8fa16d8365392638fd4ea7e`, matching the actual writer receipt. I independently read the actual abstract, theorem/length-runtime discussion and full relevant Analysis/Eqs.(1)–(9) against the PDF extraction. Eqs.(8)–(9) distinguish length exponent ln5/ln(3/2)≈3.97 and pointer-compressed runtime exponent ln3/ln(3/2)≈2.71. The preprint's template journal header/date fields are not used as published2006 metadata; that comes from the separately held Crossref record. Its unchanged JSON SHA256 `aaf315b87d1e29a79470d4425667b301eb77c450d5f6241875e606ab6d04a2a5` gives the matching title/authors, volume6,pages81–95,2006 print year and DOI10.26421/QIC6.1-6 (case-insensitive equality). Thus correcting the old no-DOI claim and stale abstract path is supported, subject to the locator fix above.
+
+The PDF stays in the original Lit-Search full-text corpus. No full paper body was copied into this repository or review. The old Crossref JSON and old Barcelo artifact/state remain untouched. The pre-existing Barcelo2005 filename-fallback limitation is disclosed and not claimed repaired. Historical D4:2.2/D8:1.4 scientific-source/attribution findings need their own current adjudication and recorded closure; acquisition plus this focused review does not automatically close them.
+
+## Independent actual verification
+
+Using the existing PRIMARY .venv interpreter with actual MAIN cwd/PYTHONPATH, bytecode disabled, cache provider disabled and numeric thread pools1, I independently ran ALL of `tests/test_d5_citations.py`, `tests/test_phase6i_wave1.py`, and `tests/test_workspace_resolver.py`, with `-m ''` so slow extraction was included.
+
+Actual result: **76PASS/1existingSKIP,0FAIL/0ERROR**,31.526s, exit0. All77selected node IDs/statuses are preserved in the tests JSON/XML. The existing skip is a workspace-location guard, not a newly added waiver. Included controls exercise the actual zero-stub/zero-orphan extractor, missing-registry check, zero-headroom equality, declaration-removal red seed, DOI-on-declared-textbook preservation and other fidelity/refusal paths. Actual registry/constants/check/writer imports all resolve inside MAIN, not PRIMARY's separate source tree.
+
+The actual unchanged canonical citation check was independently invoked after tests. It passes with exactly the SAME full76-key undeclared membership as ROOT's current measurement, ceiling76, zero missing registry identities and zero required caches missing. Summary:516cited/64papers,364cached(255full,45abstract,64metadata),33inprep,43declared-class and76undeclared. Full/abstract/metadata classifications and their warnings remain explicit. This mechanical check does not validate the erroneous section pointer or all paper claim contents.
+
+Before/after source hashes for all10packet paths are exact. All7held source artifacts' bytes/modes/nsmtimes are exact. No repository scratch residue exists. `git diff --check` exits0. The final SAME original packet remains fresh and unchanged after all tests/readback. No broader suite, compile, native/Lean/controller/cache refresh, derivative regeneration, Git/index, source, notebook, registry, ledger or canonical closure mutation was performed directly.
+
+## Remaining acceptance
+
+Repair CITATION-LOCATOR-1 and obtain new-packet current source reassessment. ROOT still owns canonical closure using the reviewed actual source commit and original declared Verify. Actual changed-bibliography compiles/output review remain required; historical donor PDFs/page counts/overfull receipts were not adopted. The existing register fidelity/internal-routing and broader paper/source scientific debt remain open. Full configured gates, same-source portfolio transitions, main integration, complete scientific/physical construction and final human/publication acceptance are not granted by this review.

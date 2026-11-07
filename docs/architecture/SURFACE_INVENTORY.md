@@ -215,7 +215,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `constants.TRACKED_HYPOTHESIS_NON_LOAD_BEARING` | 0 |
 | `provenance.PARAMETER_PROVENANCE` | 211 |
 | `provenance.PAPER_DEPENDENCIES` | 17 |
-| `citations.CITATION_REGISTRY` | 664 |
+| `citations.CITATION_REGISTRY` | 679 |
 
 ## Publication roster — 21 bundles, 21 with declared apexes
 
@@ -229,7 +229,7 @@ check compares against reality. Sizes are recorded so a silent shrink is visible
 | `D5` | 1 | 70 | Dark sector under substrate constraints |
 | `D6` | 1 | 23 | Formally Verified Fault-Tolerant Quantum Computation Substra |
 | `D7` | 1 | 17 | Classical Simulability and Quantum Advantage via Tensor Netw |
-| `D8` | 1 | 35 | Kernel-Verified Universal Quantum Gate Compilation — Alphabe |
+| `D8` | 1 | 39 | Kernel-Verified Universal Quantum Gate Compilation — Alphabe |
 | `D9` | 1 | 27 | Kernel-Verified Quantum-Network and Device-Characterization  |
 | `D10` | 1 | 33 | Kernel-Verified Foundations of Computational Quantum Chemist |
 | `D11` | 1 | 73 | Kernel-Verified Topological Band Theory & Metamaterial Subst |
