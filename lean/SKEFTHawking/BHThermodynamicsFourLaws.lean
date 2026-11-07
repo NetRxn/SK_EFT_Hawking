@@ -135,9 +135,9 @@ dynamics:
    caveat (arXiv:2211.15742) for charged-scalar matter sectors;
    restored under Reall (arXiv:2410.11956) BPS local mass-charge
    inequality.
-4. **Second law**: Glorioso–Liu SK-EFT entropy-current monotonicity
-   (arXiv:1612.07705 §III: dynamical KMS Z₂ + Im S_eff ≥ 0
-   ⇒ ∂_μ s^μ ≥ 0 in the local-equilibrium EFT).
+4. **Second law**: the nonnegative divergence of a supplied entropy current is a
+   hypothesis of the mechanics structure. Glorioso–Liu's local-equilibrium
+   SK-EFT result motivates the sign.
 
 ## Cross-wave connections
 
@@ -200,8 +200,8 @@ dynamics:
   arXiv:2211.15742 — third-law disproof under charged-scalar matter.
 - H.S. Reall, Phys. Rev. D **110**, 124059 (2024), arXiv:2410.11956 —
   BPS restoration of the third law.
-- P. Glorioso, H. Liu, arXiv:1612.07705, Eq. (3.20) — SK-EFT second law
-  from KMS Z₂ + unitarity (no NEC).
+- P. Glorioso, H. Liu, arXiv:1612.07705, §III.B, Eq. (3.36), local
+  entropy production order by order in the derivative expansion.
 -/
 
 namespace SKEFTHawking.BHThermodynamicsFourLaws
@@ -473,39 +473,14 @@ theorem T_H_schwarzschild_strict_decreasing
     nlinarith
   exact one_div_lt_one_div_of_lt hd₁ hdens
 
-/-! ## §5 — SK-EFT second law (Glorioso–Liu, no NEC) -/
+/-! ## §5 — Conditional entropy-production sign -/
 
 /--
-**Wave 5 second-law Prop bundle (post-Stage-13 strengthened).**
-Encodes the Glorioso–Liu theorem (arXiv:1612.07705, §III, Eq. 3.20):
-dynamical KMS Z₂ symmetry + unitarity (Im S_eff ≥ 0) imply local
-entropy-current monotonicity `∂_μ s^μ ≥ 0` in its local-equilibrium
-derivative expansion. This bundle itself only records a scalar sign.
-
-The bundle takes the entropy-current divergence as an
-**externally-supplied real parameter** (`entropy_div`) and constrains
-its sign to be non-negative — the Glorioso–Liu Eq. (3.20) content.
-The bundle also requires a positive-area horizon for cross-bundle
-consistency.
-
-The KMS-Z₂ symmetry and unitarity (Im S_eff ≥ 0) of the SK-EFT
-effective action are the *premises* of the Glorioso–Liu derivation;
-they enter as inputs to the (currently unformalized at the action
-level) derivation and are recorded in the docstring as the
-substrate-side hypothesis. Once the SK-EFT effective action is
-formalized in Lean (deferred to Phase 6e for the nonlinear
-emergent-action), `KMS_Z2_symmetry_holds` and
-`unitarity_ImS_nonneg` would become substantive predicates on a
-formalized action functional. For now, the bundle ships with the
-two substantive constraints below.
-
-**Two substantive fields (post-strengthening):**
-- `entropy_divergence_nonneg`: `0 ≤ entropy_div` — the load-bearing
-  Glorioso–Liu Eq. (3.20) constraint, parameterized over an
-  externally-supplied entropy-current divergence.
-- `horizon_area_link_consistent`: `0 < b.A` — bundle requires a
-  positive-area horizon (independent of `BHData.A_pos` field as a
-  consistency witness for use sites).
+The supplied entropy-current divergence `entropy_div` is nonnegative and
+the horizon area is positive. Glorioso–Liu (arXiv:1612.07705, §III.B,
+Eq. (3.36)) motivates the sign through a local-equilibrium SK-EFT derivation
+order by order in derivatives. The physical identification of that current
+with a horizon current remains a separate obligation.
 -/
 structure ADWSecondLaw (b : BHData) (p : ADWParams) (entropy_div : ℝ) : Prop where
   entropy_divergence_nonneg    : 0 ≤ entropy_div

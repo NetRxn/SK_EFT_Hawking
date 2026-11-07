@@ -376,36 +376,25 @@ negative rate under the mass classification. This is a conditional
 consistency statement. It does not construct the physical laws or
 identify an actual evaporation rate with the local nozzle derivative.
 
-\section{Second law: Glorioso--Liu SK-EFT, no NEC}
+\section{The local entropy-production condition}
 \label{sec:sk-second}
 
-The second law in both regimes is encoded via Glorioso and
-Liu's theorem~\cite{GloriosoLiu2018} on dynamical KMS Z$_2$ symmetry
-and unitarity (Im~$S_{\rm eff} \geq 0$) implying local
-entropy-current monotonicity $\partial_\mu s^\mu \geq 0$,
-\emph{without invoking pointwise NEC}. The
-\texttt{ADWSecondLaw} Prop bundle takes the entropy-current
-divergence as an externally-supplied real parameter
-\texttt{entropy\_div} and records two fields:
-\texttt{entropy\_divergence\_nonneg} ($0 \leq$ \texttt{entropy\_div},
-the load-bearing Glorioso--Liu Eq.~(3.20) sign claim) and
-\texttt{horizon\_area\_link\_consistent} ($0 < b.A$, the bundle's
-horizon-area consistency witness). The KMS-Z$_2$ symmetry and
-unitarity premises (Im~$S_{\rm eff} \geq 0$) of the Glorioso--Liu
-derivation enter as substrate-side inputs that would become
-substantive predicates on a formalized SK-EFT effective action; that
-formalization is deferred to Phase 6e.
-
-The Crossley--Glorioso--Liu constitutive
+Glorioso and Liu derive local entropy production
+$\partial_\mu S^\mu \geq 0$ order by order in derivatives for a system
+in local equilibrium~\cite[Sec.~III.B, Eq.~(3.36)]{GloriosoLiu2018}.
+The derivation uses dynamical KMS symmetry, unitarity, and an invertible
+leading quadratic form. The constitutive
 relations~\cite{CrossleyGloriosoLiu2017,GloriosoCrossleyLiu2017}
-supply the SK-EFT framework. Applied to a BH horizon, this
-replaces the classical Hawking 1971 area-non-decrease theorem (which
-required pointwise NEC) with a local entropy-current monotonicity
-that holds even when QFT operator-violations of pointwise NEC are
-allowed in the bulk. Faulkner--Speranza~\cite{FaulknerSperanza2024}
-derive the GSL algebraically from type-II crossed-product algebras;
-Kirklin~\cite{Kirklin2024GSLAllOrders} extends to all orders in
-perturbative gravity.
+provide the Schwinger--Keldysh effective field theory setting.
+
+The \texttt{ADWSecondLaw} structure assumes that an externally
+supplied divergence \texttt{entropy\_div} is nonnegative and that
+the horizon area $b.A$ is positive. Applying the local
+effective field theory result to the physical horizon requires
+identifying the entropy current and its divergence in the emergent
+action. The classical area theorem and the algebraic generalized
+second-law results~\cite{FaulknerSperanza2024,Kirklin2024GSLAllOrders}
+address distinct quantities.
 
 \section{Third law: BPS-conditional preservation, Kehle--Unger violation}
 \label{sec:third}
@@ -548,8 +537,8 @@ area does not itself prove either Nernst law.
 \item Local nozzle cooling: Balbinot et al.~\cite{Balbinot2005PRD},
   Eq.~(Tsonic). The chosen exponential is a separate illustrative
   profile; physical ADW branch matching remains required.
-\item Second law: Glorioso--Liu~\cite{GloriosoLiu2018}
-  (no NEC needed).
+\item Local entropy production in the derivative expansion:
+  Glorioso--Liu~\cite[Sec.~III.B]{GloriosoLiu2018}.
 \item Third law conditional: Israel 1986 (strong form) /
   Kehle--Unger~\cite{KehleUnger2022ThirdLaw} /
   Reall~\cite{Reall2024ThirdLawBPS}.
