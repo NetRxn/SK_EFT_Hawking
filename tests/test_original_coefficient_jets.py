@@ -942,3 +942,153 @@ def test_n16_shared_budget_rejects_corrupt_accounting_before_reserving(route, fi
         setattr(budget, field, value)
         with pytest.raises(ValueError, match='accounting state'):
             producer(o.OriginalRegulator(), 0, budget=budget)
+def test_n16_scalar_curvature_checks_ordered_covariance_and_area_subtraction():
+    reg = o.OriginalRegulator(convention='metric_M')
+    geometry = f.original_metric_sewing_support(reg, (0, 0, 0, 0), 1)
+    support, = geometry['cases']['mixed_fg']['supports']
+    orders = tuple(order for order, _ in support['curvature_channels'][0])
+    with o.ExactBudget(1_000_000, 512 * 1024**2) as budget:
+        mean, covariance = f._original_sewing_curvature_moments(reg, 1, orders, budget)
+    assert not any(mean.values())
+    assert covariance[0, 1, 0, 1] == o.QComplex(2)
+    assert covariance[0, 1, 1, 0] == o.QComplex(-2)
+    assert covariance[0, 0, 0, 0] == o.QComplex()
+    assert f._original_sewing_spatial_factor(covariance) == o.QComplex(6)
+
+
+def test_n16_scalar_temporal_covariance_and_signed_loop():
+    reg = o.OriginalRegulator()
+    with o.ExactBudget(1_000_000, 512 * 1024**2) as budget:
+        labels, pairing, temporal = f._original_sewing_temporal_covariance(reg, budget)
+        loop = f._original_sewing_square(
+            labels, pairing, temporal, temporal, temporal, temporal,
+        )
+    assert temporal[0][3] == o.QComplex(F(1, 8))
+    assert temporal[1][5] == o.QComplex(F(-1, 4))
+    assert temporal[0][0] == o.QComplex()
+    assert loop == (('L', o.QComplex(F(3, 256))), ('R', o.QComplex(F(3, 256))))
+
+
+def test_n16_scalar_rejects_a_missing_original_curvature_anchor():
+    reg = o.OriginalRegulator()
+    geometry = f.original_metric_sewing_support(reg, (1, 0, 0, 0), 0)
+    support, = geometry['cases']['mixed_fg']['supports']
+    active = {(site, 0) for site in reg.sites} | {
+        (site, reg.temporal_axis) for site in geometry['core']
+    }
+    orders = f._original_sewing_curvature_orders(reg, 0, support, active)
+    assert {site for site, _ in orders} == set(geometry['core'][:2])
+    _, anchors = support['curvature_channels'][0][0]
+    poison = dict(support, anchors=tuple(a for a in support['anchors'] if a != anchors[0]))
+    with pytest.raises(ValueError, match='active anchors'):
+        f._original_sewing_curvature_orders(reg, 0, poison, active)
+
+
+@pytest.mark.slow
+def test_full_original_f60_g52_and_contacts():
+    # ROOT admission required. This is the complete raw N16 coefficient run.
+    reg = o.OriginalRegulator()
+    with o.ExactBudget(70_000_000, 2 * 1024**3) as budget:
+        result = f.original_n16_metric_sewing_complete(reg, (0, 0, 0, 0), 0, budget=budget)
+    mu = F(1125, 4)
+    g2 = o.Symbol('g2', ())
+    assert result['complete'] and result['edge_routes_agree']
+    assert [len(result['geometry']['cases'][key]['supports'][0]['anchors'])
+            for key in ('mixed_fg', 'mixed_gf', 'temporal_mixed')] == [28, 28, 20]
+    direct, auxiliary = result['direct_edge'], result['auxiliary_edge']
+    assert auxiliary.minor_counts == (12, 12) and auxiliary.empty_test_counts == (30, 30)
+    assert direct.radial_moments[1:4] == auxiliary.radial_moments[1:4] == (2, 5, 14)
+    assert direct.fourth_top == auxiliary.fourth_top == o.QComplex(mu)
+    pattern = ((1, 0, 0), (0, 0, -2), (0, -2, 0))
+    for name, multiplier in (('cubic_x', F(45, 4)), ('cubic_mixed', F(12))):
+        expected = tuple(tuple(
+            o.QComplex(multiplier * pattern[i % 3][j % 3] if i // 3 != j // 3 else 0)
+            for j in range(6)
+        ) for i in range(6))
+        assert getattr(direct, name) == getattr(auxiliary, name) == expected
+    assert result['raw']['diagonal'] == o.Polynomial()
+    for key in ('mixed_fg', 'mixed_gf'):
+        assert result['raw'][key] == o.Polynomial((((g2,) * 4, F(3645, 2) * mu**6),))
+        assert tuple(chi for chi, _ in result['chirality_loops'][key]) == ('L', 'R')
+        assert all(value for _, value in result['chirality_loops'][key])
+        assert result['raw_homogeneity'][key] == 16
+        assert result['raw'][key].evaluate({g2: 2**4}) == result['raw'][key].evaluate({g2: 1}) * 2**16
+    for key in ('temporal_x', 'temporal_y'):
+        assert result['raw'][key] == o.Polynomial()
+    assert result['raw']['temporal_mixed'] == p(F(6075, 2) * mu**6)
+    assert result['raw_homogeneity']['temporal_mixed'] == 0
+    assert result['raw']['spatial_mixed'] == p(mu**8)
+    assert isinstance(result['denominator'], o.Unknown)
+    assert isinstance(result['normalized'], o.Unknown)
+    assert budget.products <= 70_000_000
+    assert budget.peak_scalar_records <= 120_000
+    assert budget.peak_payload_bytes <= 2 * 1024**3
+    assert budget.peak_integer_bits <= 1024
+def test_n16_resource_preallocation_refuses_before_geometry(monkeypatch):
+    def forbidden(*args):
+        pytest.fail('original geometry allocated before resource refusal')
+
+    monkeypatch.setattr(f, 'original_metric_sewing_support', forbidden)
+    with o.ExactBudget(100, 1) as budget:
+        with pytest.raises(o.BudgetExceeded, match='storage budget'):
+            f.original_n16_metric_sewing_complete(o.OriginalRegulator(), (0, 0, 0, 0), 0, budget=budget)
+    assert budget.products == 0
+
+
+def test_n16_resource_actual_geometry_and_direct_result_stay_live(monkeypatch):
+    original_geometry = f.original_metric_sewing_support
+    original_direct = f.original_direct_polar_edge
+    live = {}
+    seen = []
+
+    class StopBeforeAuxiliaryRows(Exception):
+        pass
+
+    class RecordingBudget(o.ExactBudget):
+        def check_storage(self, *objects, additional_records=0):
+            def present(values, target):
+                return any(value is target or
+                           (isinstance(value, tuple) and present(value, target))
+                           for value in values)
+            seen.append((additional_records, tuple(key for key, target in live.items()
+                                                  if present(objects, target))))
+            return super().check_storage(*objects, additional_records=additional_records)
+
+    def capture_geometry(*args, **kwargs):
+        live['geometry'] = original_geometry(*args, **kwargs)
+        return live['geometry']
+
+    def capture_direct(*args, **kwargs):
+        live['direct'] = original_direct(*args, **kwargs)
+        return live['direct']
+
+    def stop_before_rows(*args, **kwargs):
+        assert seen[-1] == (o._AUXILIARY_POLAR_FIXED_RECORDS, ('geometry', 'direct'))
+        raise StopBeforeAuxiliaryRows
+
+    monkeypatch.setattr(f, 'original_metric_sewing_support', capture_geometry)
+    monkeypatch.setattr(f, 'original_direct_polar_edge', capture_direct)
+    monkeypatch.setattr(o, '_auxiliary_polar_rows', stop_before_rows)
+    with RecordingBudget(1_000_000, 512 * 1024**2) as budget:
+        with pytest.raises(StopBeforeAuxiliaryRows):
+            f.original_n16_metric_sewing_complete(o.OriginalRegulator(), (0, 0, 0, 0), 0, budget=budget)
+    assert seen[0][0] > 0 and seen[0][1] == ()
+    assert any(records > 4096 and keys == ('geometry',) for records, keys in seen)
+
+
+def test_n16_resource_retained_objects_are_charged_in_each_determinant_layer():
+    retained = bytearray(16 * 1024)
+    rows = (((0, ((1, o.QComplex(2)),)),), ((1, ((1, o.QComplex(3)),)),))
+
+    class RecordingBudget(o.ExactBudget):
+        def check_storage(self, *objects, additional_records=0):
+            assert any(isinstance(value, tuple) and any(entry is retained for entry in value)
+                       for value in objects)
+            return super().check_storage(*objects, additional_records=additional_records)
+
+    with o.ExactBudget(100, 512 * 1024**2) as baseline:
+        expected = o._auxiliary_polar_determinant(rows, 1, baseline)
+    with RecordingBudget(100, 512 * 1024**2) as budget:
+        actual = o._auxiliary_polar_determinant(rows, 1, budget, _retained=(retained,))
+    assert actual == expected == {2: o.QComplex(6)}
+    assert budget.peak_payload_bytes - baseline.peak_payload_bytes >= 2 * len(retained)

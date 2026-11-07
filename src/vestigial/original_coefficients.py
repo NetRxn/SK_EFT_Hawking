@@ -1713,6 +1713,13 @@ def reserve_scalar_records(budget,records,*live):
     return budget.check_storage(live,additional_records=records)
 
 
+def reserve_original_n16_records(budget, records, *live):
+    """Check actual retained state plus the next bounded N16 allocation."""
+    reserve_scalar_records(budget, records, *live)
+    if budget.peak_scalar_records > 120_000:
+        raise BudgetExceeded('original N16 record limit exceeded')
+
+
 @dataclass(frozen=True, slots=True)
 class DirectPolarEdge:
     """Complete six-by-six literal and dual-basis tables of one direct edge."""
@@ -1742,14 +1749,14 @@ def _pack_radial_edge_coframe(coframe):
     return out
 
 
-def _reserve_edge_records(budget, additional_records, *live_maps):
+def _reserve_edge_records(budget, additional_records, *live_maps, retained=()):
     # Count occupied coefficient slots separately from the unique Python
     # scalar objects counted by ExactBudget.check_storage.
     unique_maps = {id(table): table for table in live_maps}
     occupied = sum(len(table) for table in unique_maps.values()) + additional_records
     if occupied > 55_000:
         raise BudgetExceeded('direct edge record limit exceeded: incomplete coefficient control')
-    reserve_scalar_records(budget, additional_records, *unique_maps.values())
+    reserve_original_n16_records(budget, additional_records, *unique_maps.values(), *retained)
     budget.peak_scalar_records = max(budget.peak_scalar_records, occupied)
 
 
@@ -1927,7 +1934,7 @@ def _auxiliary_polar_minor_rows(rows, bars, psis):
                  for i, row in enumerate(rows) if i not in bars)
 
 
-def _auxiliary_polar_determinant(rows, auxiliary_count, budget):
+def _auxiliary_polar_determinant(rows, auxiliary_count, budget, *, _retained=()):
     """Row-subset recurrence with both adjacent scalar maps reserved.
 
     Row entries have one auxiliary and one radial factor per monomial.
@@ -1943,8 +1950,9 @@ def _auxiliary_polar_determinant(rows, auxiliary_count, budget):
         prospective = len(states) + additional + _AUXILIARY_POLAR_FIXED_RECORDS
         if prospective > 120_000:
             raise BudgetExceeded('auxiliary edge record limit exceeded: incomplete coefficient control')
-        reserve_scalar_records(budget, additional + _AUXILIARY_POLAR_FIXED_RECORDS,
-                               states, rows)
+        reserve_original_n16_records(
+            budget, additional + _AUXILIARY_POLAR_FIXED_RECORDS, states, rows, *_retained,
+        )
         budget.peak_scalar_records = max(budget.peak_scalar_records, prospective)
 
     reserve({}, 1)
@@ -2029,7 +2037,7 @@ def _auxiliary_polar_radial_moments():
     return tuple(moments)
 
 
-def _auxiliary_polar_cubic(rows, degrees, moments, budget):
+def _auxiliary_polar_cubic(rows, degrees, moments, budget, *, _retained=()):
     results, minor_count, empty_count = [], 0, 0
     gaussian = {}
     scale = checked_integer_power(2, 3)
@@ -2043,10 +2051,15 @@ def _auxiliary_polar_cubic(rows, degrees, moments, budget):
             radial = {}
             for bars, psis, sign in roster:
                 minor_count += 1
+                live = (*_retained, rows, moments, results, result_row, roster, radial, gaussian)
+                reserve_original_n16_records(budget, _AUXILIARY_POLAR_FIXED_RECORDS, *live)
                 minor = _auxiliary_polar_minor_rows(rows, bars, psis)
-                terms = _auxiliary_polar_determinant(minor, 8 if degrees[1] else 4, budget)
+                terms = _auxiliary_polar_determinant(
+                    minor, 8 if degrees[1] else 4, budget, _retained=live,
+                )
+                reserve_original_n16_records(budget, _AUXILIARY_POLAR_FIXED_RECORDS, terms, *live)
                 _auxiliary_polar_project(terms, degrees, sign, radial, gaussian)
-                del terms
+                del terms, minor, live
             result_row.append(_auxiliary_polar_average(radial, moments, scale))
         results.append(tuple(result_row))
     if (minor_count, empty_count) != (12, 30):

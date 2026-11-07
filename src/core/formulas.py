@@ -13599,7 +13599,7 @@ def original_polar_edge_coframes(reg, axis):
     return tuple(at_x), tuple(at_y)
 
 
-def original_direct_polar_edge(reg, axis, *, budget):
+def original_direct_polar_edge(reg, axis, *, budget, _retained=()):
     """All direct invariant tests of Q_x³, Q_x² Q_y and the oriented top of Q_x⁴.
 
     Q_z = sum_A (S_z^A)^2 uses its own original coframe. Both independent
@@ -13636,7 +13636,7 @@ def original_direct_polar_edge(reg, axis, *, budget):
     extra_records = 4096
 
     def reserve(output_limit, *live):
-        o._reserve_edge_records(budget, output_limit + extra_records, *live)
+        o._reserve_edge_records(budget, output_limit + extra_records, *live, retained=_retained)
 
     def accumulate(out, left, right, output_limit):
         nonlocal attempted_pairs
@@ -13708,11 +13708,11 @@ def original_direct_polar_edge(reg, axis, *, budget):
         labels, pairing, moments, literal_x, literal_mixed,
         reconstruct(literal_x), reconstruct(literal_mixed), fourth_top, attempted_pairs,
     )
-    budget.check_storage(result, cubic_x, cubic_mixed, fourth)
+    o.reserve_original_n16_records(budget, 0, result, cubic_x, cubic_mixed, fourth, *_retained)
     return result
 
 
-def original_auxiliary_polar_edge(reg, axis, *, budget):
+def original_auxiliary_polar_edge(reg, axis, *, budget, _retained=()):
     """Independent ordinary minors for the original polar edge coefficients.
 
     The distinct h and k blocks keep the original endpoint gamma order.
@@ -13739,21 +13739,29 @@ def original_auxiliary_polar_edge(reg, axis, *, budget):
     if reg.extents[axis] != 2 or reg.boundary_signs[axis] != 1:
         raise ValueError('a periodic length-two original edge is required')
 
-    o.reserve_scalar_records(budget, o._AUXILIARY_POLAR_FIXED_RECORDS)
+    fixed = o._AUXILIARY_POLAR_FIXED_RECORDS
+    o.reserve_original_n16_records(budget, fixed, *_retained)
     moments = o._auxiliary_polar_radial_moments()
     rows = o._auxiliary_polar_rows(reg, mixed=False)
-    literal_x, count_x, empty_x = o._auxiliary_polar_cubic(rows, (6, 0), moments, budget)
-    top_terms = o._auxiliary_polar_determinant(rows, 4, budget)
+    literal_x, count_x, empty_x = o._auxiliary_polar_cubic(
+        rows, (6, 0), moments, budget, _retained=_retained,
+    )
+    top_live = (*_retained, moments, literal_x)
+    top_terms = o._auxiliary_polar_determinant(rows, 4, budget, _retained=top_live)
+    o.reserve_original_n16_records(budget, fixed, rows, top_terms, *top_live)
     radial = {}
     o._auxiliary_polar_project(top_terms, (8, 0), 1, radial, {})
     scale = o.checked_integer_product(o.checked_integer_power(2, 4), o.checked_factorial(4))
     fourth_top = o._auxiliary_polar_average(radial, moments, scale)
     del top_terms, radial, rows
 
+    mixed_live = (*top_live, fourth_top)
+    o.reserve_original_n16_records(budget, fixed, *mixed_live)
     rows = o._auxiliary_polar_rows(reg, mixed=True)
     literal_mixed, count_mixed, empty_mixed = o._auxiliary_polar_cubic(
-        rows, (4, 2), moments, budget,
+        rows, (4, 2), moments, budget, _retained=mixed_live,
     )
+    o.reserve_original_n16_records(budget, fixed, rows, literal_mixed, *mixed_live)
     labels, pairing = o._auxiliary_polar_basis()
     result = o.AuxiliaryPolarEdge(
         labels, pairing, moments, literal_x, literal_mixed,
@@ -13761,7 +13769,331 @@ def original_auxiliary_polar_edge(reg, axis, *, budget):
         o._auxiliary_polar_dual(literal_mixed, pairing),
         fourth_top, (count_x, count_mixed), (empty_x, empty_mixed),
     )
-    budget.check_storage(result, rows)
+    o.reserve_original_n16_records(budget, 0, result, rows, *_retained)
+    return result
+
+
+def _original_sewing_curvature_moments(reg, spatial_axis, orders, budget, *, _retained=()):
+    """Haar moments of the full ordered original temporal/spatial vertex."""
+    from fractions import Fraction
+    from itertools import product
+    from src.vestigial import original_coefficients as o
+
+    time = reg.temporal_axis
+    k, l = sorted(set(range(4)) - {time, spatial_axis})
+    if len(orders) != 4 or set(orders) != {
+        (i, j, a, b) for i, j in ((k, l), (l, k))
+        for a, b in ((time, spatial_axis), (spatial_axis, time))
+    }:
+        raise ValueError('the full ordered original curvature channel is required')
+    o.reserve_original_n16_records(budget, 4096, *_retained)
+    holonomy = original_spin4_link(*(
+        tuple(o.Polynomial.variable(o.Symbol('q', (reg.sites[0], k, chi, coordinate)))
+              for coordinate in range(4)) for chi in ('L', 'R')
+    ))
+    words = {(k, l): holonomy, (l, k): o.matrix_dagger(holonomy)}
+    gamma, gamma5 = reg.gamma, reg.gamma5
+    pairs = tuple(product(range(4), repeat=2))
+    gamma_products = {
+        (a, b): o.matrix_multiply(o.matrix_multiply(gamma[a], gamma[b]), gamma5)
+        for a, b in pairs
+    }
+    trace = {}
+    for a, b in pairs:
+        terms = o.Polynomial()
+        for order in orders:
+            i, j, mu, _ = order
+            product_ab = gamma_products[a, b] if mu == time else gamma_products[b, a]
+            terms += sum((
+                words[i, j][row][col] * product_ab[col][row]
+                for row, col in pairs
+            ), o.Polynomial()) * Fraction(o.epsilon(order), 4)
+        trace[a, b] = terms
+
+    def moment(poly):
+        return sum((v * o.quaternion_key_moment(key) for key, v in poly.terms), o.QComplex())
+
+    mean = {pair: moment(term) for pair, term in trace.items()}
+    covariance = {(*ab, *cd): moment(trace[ab] * trace[cd])
+                  for ab, cd in product(pairs, repeat=2)}
+    o.reserve_original_n16_records(budget, 0, trace, mean, covariance, *_retained)
+    return mean, covariance
+
+
+def _original_sewing_spatial_factor(covariance):
+    """Trace the full covariance against the diagonal temporal TT factor."""
+    from itertools import product
+    from src.vestigial import original_coefficients as o
+
+    matrix = {(b, d): sum((covariance[a, b, a, d] for a in range(4)), o.QComplex())
+              for b, d in product(range(4), repeat=2)}
+    factor = matrix[0, 0]
+    if any(value != (factor if b == d else o.QComplex())
+           for (b, d), value in matrix.items()):
+        raise ValueError('curvature contraction did not reduce to the spatial metric')
+    return factor
+
+
+def _original_sewing_temporal_covariance(reg, budget, *, _retained=()):
+    """Compute both-anchor temporal TT and project its actual exterior basis."""
+    from itertools import product
+    from src.vestigial import original_coefficients as o
+
+    o.reserve_original_n16_records(budget, 4096, *_retained)
+    axis = reg.temporal_axis
+    edge = o.OriginalRegulator(tuple(2 if a == axis else 1 for a in range(4)),
+                               convention=reg.convention)
+    labels, pairing, tests = o._edge_invariant_basis()
+    common = None
+    retained = (*_retained, edge, labels, pairing, tests)
+
+    def haar_coefficients(weighted):
+        terms = {}
+        for mask, poly in weighted.terms:
+            value = sum((v * o.quaternion_key_moment(key) for key, v in poly.terms),
+                        o.QComplex())
+            if value:
+                terms[mask] = value
+        return terms
+
+    # A coframe has at most sixteen exterior slots and eight anchor-coordinate
+    # terms per slot. One TT wedge needs at most 16²×8² raw scalar terms.
+    for site in edge.sites:
+        o.reserve_original_n16_records(budget, 4096, common, *retained)
+        frames = []
+        observed_anchors = set()
+        for a in range(4):
+            blocks = original_coframe_blocks(edge, (site, axis, a))
+            observed_anchors.update(block.anchor for block in blocks)
+            frames.append(o.assemble_coframe(edge, blocks).to_exterior(edge))
+            del blocks
+        if observed_anchors != {(endpoint, axis) for endpoint in edge.sites}:
+            raise ValueError('temporal covariance lost an original anchor')
+        for a, b in product(range(4), repeat=2):
+            o.reserve_original_n16_records(budget, 32_768, frames, common, *retained)
+            weighted = frames[a] * frames[b]
+            terms = haar_coefficients(weighted)
+            if a != b:
+                if terms:
+                    raise ValueError('off-diagonal temporal TT covariance survived')
+            elif common is None:
+                common = terms
+            elif terms != common:
+                raise ValueError('temporal TT covariance depends on endpoint or internal axis')
+            o.reserve_original_n16_records(budget, 0, frames, weighted, terms, common, *retained)
+            del weighted, terms
+        del frames
+
+    o.reserve_original_n16_records(budget, 4096, common, *retained)
+    table = []
+    remaining = common.copy()
+    for row in tests:
+        projected = []
+        for basis in row:
+            # The n,b,p product basis has disjoint exterior monomial
+            # support. Use one pivot then verify every other coefficient.
+            mask, pivot = next(iter(basis.items()))
+            coefficient = remaining.get(mask, o.QComplex()) * o.scalar_inverse(pivot)
+            if any(remaining.pop(key, o.QComplex()) != coefficient * value
+                   for key, value in basis.items()):
+                raise ValueError('temporal TT failed invariant basis reconstruction')
+            projected.append(coefficient)
+        table.append(tuple(projected))
+    if remaining or not any(value for row in table for value in row):
+        raise ValueError('temporal TT has incomplete or zero invariant reconstruction')
+    return labels, pairing, tuple(table)
+
+
+def _original_sewing_square(labels, pairing, spatial0, spatial1, temporal_x, temporal_y):
+    """Sum both signed chirality loops on x0—y0—y1—x1—x0."""
+    from itertools import product
+    from src.vestigial import original_coefficients as o
+
+    def entries(matrix):
+        terms = [(a, b, value) for a, row in enumerate(matrix)
+                 for b, value in enumerate(row) if value]
+        if len(terms) > len(labels) or any(labels[a][0] == labels[b][0] for a, b, _ in terms):
+            raise ValueError('a sewing edge exceeded its opposite-chirality support')
+        return terms
+
+    if any(value and labels[a][0] != labels[b][0]
+           for a, row in enumerate(pairing) for b, value in enumerate(row)):
+        raise ValueError('local top pairing mixed chirality')
+    totals = {chi: o.QComplex() for chi, _ in labels}
+    for (a, b, s0), (c, d, ty), (e, g, s1), (h, j, tx) in product(
+        *(entries(edge) for edge in (spatial0, temporal_y, spatial1, temporal_x))
+    ):
+        # spatial1 and temporal_x are stored in their original directions,
+        # opposite to the direction of travel around the square.
+        site_pairings = (pairing[a][h], pairing[b][c], pairing[g][d], pairing[e][j])
+        if all(site_pairings):
+            value = s0 * ty * s1 * tx
+            for local in site_pairings:
+                value *= local
+            totals[labels[a][0]] += value
+    return tuple(totals.items())
+
+
+def _original_sewing_curvature_orders(reg, spatial_axis, support, coframe_anchors):
+    """Validate actual plaquette orders and their disjoint anchored support."""
+    groups = set()
+    result = []
+    for ((degree, site, axes), _), channel in zip(
+        support['multiplicities'], support['curvature_channels'], strict=True,
+    ):
+        if degree != 2 or set(axes) != {reg.temporal_axis, spatial_axis}:
+            raise ValueError('unsupported original curvature vertex')
+        by_order = dict(channel)
+        anchor_set = set(channel[0][1])
+        if len(anchor_set) != 4 or any(
+            anchors != _original_plaquette_anchors(reg, site, *order[:2])
+            or set(anchors) != anchor_set
+            or tuple(reversed(anchors)) != by_order.get((order[1], order[0], *order[2:]))
+            for order, anchors in channel
+        ):
+            raise ValueError('curvature order lost an original plaquette anchor')
+        if anchor_set & (groups | coframe_anchors):
+            raise ValueError('curvature anchors do not form independent groups')
+        groups.update(anchor_set)
+        result.append((site, tuple(by_order)))
+    if set(support['anchors']) != groups | coframe_anchors:
+        raise ValueError('active anchors do not match the original curvature and coframe groups')
+    return tuple(result)
+
+
+def original_n16_metric_sewing_complete(reg, root, spatial_axis, *, budget):
+    """Complete raw original N16 metric pair and literal source contacts.
+
+    The result uses the original full action and exact geometric support at
+    zero physical source. The interacting full Z is unknown. This routine
+    does not supply normalized correlators or physical operator acceptance.
+    Source: ORIGINAL_METRIC_SEWING_DOMAIN_CONSTRUCTION §§2,5,6,8,9,11 and
+    ORIGINAL_COEFFICIENT_IMPLEMENTATION_PLAN_R2 §4.
+    """
+    from math import prod
+    from src.vestigial import original_coefficients as o
+
+    o.require_original_n16_budget(budget)
+    # The fixed N16 geometry holds a 16-site roster, 64 directed anchors,
+    # at most 16 × 7 grouped action vertices and their small exact fill
+    # searches. Reserve its scratch and returned structure before entry.
+    o.reserve_original_n16_records(budget, 4096)
+    geometry = original_metric_sewing_support(reg, root, spatial_axis)
+    o.reserve_original_n16_records(budget, 0, geometry)
+    cases = geometry['cases']
+    x0, y0, x1, y1 = geometry['core']
+    direct = original_direct_polar_edge(reg, spatial_axis, budget=budget, _retained=(geometry,))
+    auxiliary = original_auxiliary_polar_edge(
+        reg, spatial_axis, budget=budget, _retained=(geometry, direct),
+    )
+    compared = ('labels', 'local_pairing', 'radial_moments', 'cubic_x_tests',
+                'cubic_mixed_tests', 'cubic_x', 'cubic_mixed', 'fourth_top')
+    if any(getattr(direct, name) != getattr(auxiliary, name) for name in compared):
+        raise ValueError('the two complete edge routes disagree')
+    edges = (geometry, direct, auxiliary)
+    o.reserve_original_n16_records(budget, 0, *edges)
+
+    labels, pairing, temporal = _original_sewing_temporal_covariance(reg, budget, _retained=edges)
+    if (labels, pairing) != (direct.labels, direct.local_pairing):
+        raise ValueError('temporal and spatial invariant bases differ')
+    o.reserve_original_n16_records(budget, 2048, temporal, *edges)
+    contact = tuple(tuple(sum((value for _ in range(4)), o.QComplex()) for value in row)
+                    for row in temporal)
+    spectator = prod((direct.fourth_top for _ in geometry['spectator_edges']), start=o.QComplex(1))
+    raw = {}
+    loops = {}
+    moment_cache = {}
+    spatial_anchors = {(site, spatial_axis) for site in reg.sites}
+    temporal_anchors = {(site, reg.temporal_axis) for site in geometry['core']}
+    coframe_anchors = spatial_anchors | temporal_anchors
+    retained = (*edges, temporal, contact, spectator, raw, loops, moment_cache,
+                spatial_anchors, temporal_anchors, coframe_anchors)
+
+    def ordered_curvatures(support):
+        for site, orders in _original_sewing_curvature_orders(
+            reg, spatial_axis, support, coframe_anchors,
+        ):
+            if orders not in moment_cache:
+                moment_cache[orders] = _original_sewing_curvature_moments(
+                    reg, spatial_axis, orders, budget, _retained=retained,
+                )
+            yield site, moment_cache[orders]
+
+    # Complete diagonal has both geometric candidates. Each contributes a
+    # product of independent single-curvature means and therefore vanishes.
+    if len(cases['diagonal']['supports']) != 2:
+        raise ValueError('diagonal support roster is incomplete')
+    for support in cases['diagonal']['supports']:
+        moments = tuple(ordered_curvatures(support))
+        if (len(moments) != 2 or tuple(n for _, n in support['multiplicities']) != (1, 1)
+                or any(value for _, (mean, _) in moments for value in mean.values())):
+            raise ValueError('diagonal linear curvature cancellation was not verified')
+    raw['diagonal'] = o.Polynomial()
+
+    for key, centers in (('mixed_fg', (x0, y0)), ('mixed_gf', (x1, y1))):
+        o.reserve_original_n16_records(budget, 2048, *retained)
+        support, = cases[key]['supports']
+        powers = support['multiplicities']
+        if {(site, degree, count) for (degree, site, _), count in powers} != {
+            (center, 2, 2) for center in centers
+        }:
+            raise ValueError('mixed support did not yield the complete squared vertices')
+        factors = {site: _original_sewing_spatial_factor(covariance)
+                   for site, (_, covariance) in ordered_curvatures(support)}
+        if set(factors) != set(centers):
+            raise ValueError('both original mixed curvature factors are required')
+        # The full area, including the negative Q0i squared term, comes
+        # from the contracted covariance. The factorials are applied once
+        # after the two temporal factors have been sewn.
+        temporal_x, temporal_y = (
+            tuple(tuple(value * factor for value in row) for row in temporal)
+            for factor in (factors[center] for center in centers)
+        )
+        spatial0, spatial1 = (
+            (direct.cubic_mixed, direct.cubic_x) if centers[0] == x0
+            else (direct.cubic_x, direct.cubic_mixed)
+        )
+        o.reserve_original_n16_records(budget, 2048, temporal_x, temporal_y, factors, *retained)
+        loops[key] = _original_sewing_square(
+            labels, pairing, spatial0, spatial1, temporal_x, temporal_y,
+        )
+        scalar = sum((value for _, value in loops[key]), o.QComplex())
+        power = sum(count for _, count in powers)
+        g2 = o.Symbol('g2', ())
+        raw[key] = o.Polynomial((((g2,) * power, scalar * spectator * support['exponential_weight']),))
+        del temporal_x, temporal_y, factors
+
+    o.reserve_original_n16_records(budget, 2048, *retained)
+    for key in ('temporal_x', 'temporal_y'):
+        if cases[key]['supports']:
+            raise ValueError('a first temporal contact unexpectedly has structural support')
+        raw[key] = o.Polynomial()
+    for key in ('temporal_mixed', 'spatial_mixed'):
+        support, = cases[key]['supports']
+        anchors = coframe_anchors if key == 'temporal_mixed' else spatial_anchors
+        if (support['multiplicities'] or support['exponential_weight'] != 1
+                or set(support['anchors']) != anchors):
+            raise ValueError('a mixed contact must saturate with the original anchors and unit action')
+    loops['temporal_mixed'] = _original_sewing_square(
+        labels, pairing, direct.cubic_x, direct.cubic_x, contact, contact,
+    )
+    raw['temporal_mixed'] = o.Polynomial.scalar(
+        spectator * sum((value for _, value in loops['temporal_mixed']), o.QComplex())
+    )
+    raw['spatial_mixed'] = o.Polynomial.scalar(spectator * direct.fourth_top * direct.fourth_top)
+    result = {
+        'complete': True,
+        'geometry': geometry,
+        'edge_routes_agree': True,
+        'direct_edge': direct,
+        'auxiliary_edge': auxiliary,
+        'chirality_loops': loops,
+        'raw': raw,
+        'raw_homogeneity': {key: sum(n for _, n in case['holes']) for key, case in cases.items()},
+        'denominator': o.Unknown('original interacting full Z has not been evaluated'),
+        'normalized': o.Unknown('original full Z needs an exact nonzero certificate'),
+    }
+    o.reserve_original_n16_records(budget, 0, result, *retained)
     return result
 
 
