@@ -11,6 +11,7 @@ import SKEFTHawking.ADW.PolynomialPerturbationCoeff
 import SKEFTHawking.ADW.FiniteGrassmannShiftedDiracBerezin
 import SKEFTHawking.ADW.FiniteGrassmannSourceInsertion
 import SKEFTHawking.ADW.FiniteGrassmannSourceGenerating
+import SKEFTHawking.ADW.FiniteGrassmannComplementaryMinor
 import SKEFTHawking.ADW.GaussianPolynomialAffine
 import SKEFTHawking.ADW.GaussianPolynomialHermite
 import SKEFTHawking.ADW.GaussianPolynomialIBP
