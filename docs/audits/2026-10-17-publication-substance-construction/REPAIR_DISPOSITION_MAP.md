@@ -36,6 +36,14 @@ Record agreed priority changes here. If L1 needs a longer research cycle, keep i
 
 Entries are newest first. Only the first resume entry states the current checkpoint; older entries preserve historical evidence and superseded states.
 
+**Current resume point — anchored Haar moments accepted and checkpointed.**
+
+The [independent anchored Haar review](ORIGINAL_EQ11_HAAR_ANCHORED_INDEPENDENT_R1.md) accepts arbitrary-degree real and complex monomial moments under the original nested link measure, including the chiral and anchor grouping. [Exact kernel replay](ORIGINAL_EQ11_HAAR_ANCHORED_KERNEL_R1.json) covers 11 public declarations. The equivalent two-path source change is pushed at [3f48b1fa8](https://github.com/NetRxn/SK_EFT_Hawking/commit/3f48b1fa8c2a247ac82dca37380b727cf8d2587a). The leased branch is ready to absorb at `07d76dc9e`. Primary remains pinned at `a0f8cc7d8` for the mixed-power numerical assignment. Native absorption and build remain pending. Next scientific acceptance is finite polynomial transfer and correspondence to the actual executable coefficient assembly. The active numerical assignment `publication-task4-two-center-mixed-powers-author-r1` covers both ordered quadratic/quartic allocations with bounded witnesses and independent raw-oracle controls. The previously accepted literal −3i/1024 and mixed zeros retain their existing scope.
+
+**Main-delivery tables.** [Independent source and render review](REMAINING_TABLES_INDEPENDENT_REVIEW_R1.md) accepts the migration of eleven tables at the pinned PR118 candidate, checks 340 data cells and confirms that the canonical table check moves from eleven handwritten tables to zero. Merge qualification remains open. The [D1 reader review](D1_HIERARCHY_INPUT_IMPLEMENTATION_REVIEW_R1.md) returns REVISE after rendering inactive-input controls that omit a numerical row while all 13 comparisons stay green. The [generated theorem-reference design](GENERATED_TABLE_REFERENCE_DESIGN_R1.md) and [independent design review](GENERATED_TABLE_REFERENCE_DESIGN_REVIEW_R1.md) address the measured loss of 64 resolved occurrences. The [all-bundle token audit](GENERATED_TABLE_REFERENCE_SCOPE_R1.json) is the implementation comparison baseline. Revised reader, theorem-reference implementation, composed candidate review and inherited layout checks are still required.
+
+**Portfolio status.** L1 remains the lead bundle. No new canonical publication closure, main integration or portfolio gate remeasurement accompanies this checkpoint.
+
 **Current resume point — actual all-order Haar moments and first nonzero complete selected two-center coefficient.**
 
 The [single-factor SU(2) Haar moment](ORIGINAL_EQ11_HAAR_MONOMIAL_ACCEPTANCE_R1.md) is independently accepted, kernel replayed, natively absorbed and pushed on the focused source draft. The next Lean milestone is the actual independent product over anchor, direction and chirality, followed by executable and original Eq11 coefficient transfer.
