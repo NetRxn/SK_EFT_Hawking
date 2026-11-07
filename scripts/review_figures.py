@@ -1382,22 +1382,10 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         name="fig_T_H_evolution_regime_partition",
         function="fig_T_H_evolution_regime_partition",
         caption=(
-            "Phase 6a Wave 5 — BCH four-laws regime-partition profile under "
-            "Hawking-radiation backreaction. Left: T_H(t) under evaporation in "
-            "the Schwarzschild regime (M > M_c, dT_H/dt > 0, heats as "
-            "evaporates, finite t-evap; Hawking 1975) and the acoustic "
-            "regime (M < M_c, dT_H/dt < 0, cools toward asymptotic "
-            "extremality at infinite time; Balbinot, Fagnocchi, Fabbri, "
-            "PRD 71, 064019 (2005), gr-qc/0405098, Eq. Tsonic, a sonic hole "
-            "in a Laval nozzle at constant sound speed). "
-            "The genuine regime partition is the sign-flip of dT_H/dt "
-            "during evaporation; the critical mass M_c = (N_f · Λ_UV) / "
-            "(12π · α_ADW) is project-original ansatz (Wave 5 deep-research "
-            "§3 dimensional analysis). Right: substrate-response coefficient "
-            "ansatz δ_ADW = (α_ADW − 1)·Λ_UV (deep-research §9), vanishing "
-            "at α_ADW = 1 (bare Sakharov-Adler limit) and sign-determined by "
-            "α_ADW ⋛ 1. Lean: BHThermodynamicsFourLaws.regime_partition_criterion; "
-            "BHThermodynamicsFourLaws.delta_ADW_nonzero_iff_alpha_ADW_ne_one."
+            "Illustrative evaporation trajectories with separate time scales "
+            "and initial-temperature normalization. Right: emergent gravitational "
+            "length and cutoff length, both in units of the cutoff length, cross "
+            "at the adopted matching mass M_c."
         ),
         needs_experiments=False, expected_traces=3,
         expected_axes={"xaxis": "Time", "yaxis": "T_H"},

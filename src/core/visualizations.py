@@ -8864,7 +8864,7 @@ def fig_log_correction_signature():
 
 
 def fig_T_H_evolution_regime_partition():
-    """Phase 6a Wave 5: T_H(t) evaporation regime partition.
+    """Illustrative evaporation profiles and the cutoff matching condition.
 
     Plots the time-evolution of Hawking temperature under Hawking-radiation
     backreaction in two regimes:
@@ -8874,18 +8874,18 @@ def fig_T_H_evolution_regime_partition():
       as evaporates), finite t-evap. Plotted as a function of normalized
       time using a representative evaporation trajectory.
     - Acoustic branch (M < M_c): Balbinot et al. PRD 71, 064019 (2005)
-      Eq. (Tsonic) gives strict monotone decay; leading-order exponential
-      `T_H(t) = T_H,0 · exp(-t/τ_cool)` per `wkb/backreaction.py`. T → 0
-      at infinite time (`t ~ 1/T³` extrapolation per Balbinot 2005).
+      Eq. (Tsonic) gives a negative leading-order slope. The illustrated
+      exponential `T_H(t) = T_H,0 · exp(-t/τ_cool)` is the project model
+      from `src.bh_thermodynamics`.
       Scope: Balbinot's computation is a SONIC hole in a Laval nozzle at
       constant sound speed, not a Bose-Einstein condensate (the authors
       defer the condensate case explicitly).
 
     The genuine regime partition is the **sign-flip of dT_H/dt during
     evaporation**: positive in Schwarzschild (heats), negative in
-    acoustic (cools). Right panel overlays the substrate-response
-    coefficient `δ_ADW = (α_ADW − 1) · Λ_UV` showing the bare
-    Sakharov-Adler limit at α_ADW = 1.
+    acoustic (cools). The right panel compares the emergent gravitational
+    length with the cutoff length under the adopted matching condition
+    G_N M_c = 1/Λ_UV. This is a dimensionless illustration of the ansatz.
 
     Lean: BHThermodynamicsFourLaws.regime_partition_criterion +
           T_H_acoustic_evolution + T_H_schwarzschild.
@@ -8898,8 +8898,9 @@ def fig_T_H_evolution_regime_partition():
     from src.bh_thermodynamics import (
         ADWParams,
         T_H_acoustic_evolution,
-        delta_ADW_ansatz,
+        M_c_default,
     )
+    from src.core.formulas import G_N_emergent
 
     # Time grid in units of τ_cool (acoustic side)
     t_grid_acoustic = np.linspace(0.0, 5.0, 121)
@@ -8910,9 +8911,7 @@ def fig_T_H_evolution_regime_partition():
     ])
 
     # Schwarzschild evaporation: M(t) ∝ (M_0³ - K·t)^(1/3) (Hawking 1975).
-    # We plot T_H(t)/T_H(0) using a normalized M_0³ - K·t with K chosen so
-    # t_evap = 5 in the same units (illustrative; relative shape is the
-    # load-bearing content).
+    # The plotting coordinate is 5t/t_evap, so the endpoint is x=5.
     t_grid_schw = np.linspace(0.0, 4.5, 121)  # cap before singularity at t=5
     # M(t) = (M_0³ - K t)^(1/3); choose M_0=1, K=1/5 so M(5)=0
     M_t = (1.0 - 0.2 * t_grid_schw) ** (1.0 / 3.0)
@@ -8923,7 +8922,7 @@ def fig_T_H_evolution_regime_partition():
         rows=1, cols=2,
         subplot_titles=(
             "T_H(t) evaporation regime partition",
-            "δ_ADW(α_ADW) substrate-response ansatz",
+            "Adopted cutoff matching",
         ),
         column_widths=[0.6, 0.4],
         horizontal_spacing=0.12,
@@ -8935,7 +8934,7 @@ def fig_T_H_evolution_regime_partition():
             x=t_grid_acoustic, y=T_H_acoustic,
             mode="lines",
             line=dict(color=COLORS["steel_blue"], width=3),
-            name="Acoustic / sonic (Balbinot 2005)",
+            name="Sonic model (cooling)",
         ),
         row=1, col=1,
     )
@@ -8944,70 +8943,38 @@ def fig_T_H_evolution_regime_partition():
             x=t_grid_schw, y=T_H_schw_normalized,
             mode="lines",
             line=dict(color=COLORS["amber"], width=3, dash="dash"),
-            name="Schwarzschild (Hawking 1975)",
+            name="Schwarzschild (heating)",
         ),
         row=1, col=1,
     )
-    # Heat-capacity-sign annotations
-    fig.add_annotation(
-        x=2.0, y=0.25,
-        text="dT_H/dt < 0<br>(cools toward asymptotic<br>extremality, infinite t-evap)",
-        showarrow=False,
-        font=dict(size=10, color=COLORS["steel_blue"]),
-        row=1, col=1,
-    )
-    fig.add_annotation(
-        x=3.5, y=2.5,
-        text="dT_H/dt > 0<br>(heats as evaporates,<br>finite t-evap)",
-        showarrow=False,
-        font=dict(size=10, color=COLORS["amber"]),
-        row=1, col=1,
-    )
-
-    # Right panel: δ_ADW(α_ADW) over Wave-1 natural range
-    alpha_grid = np.linspace(0.1, 10.0, 100)
-    delta_grid = np.array([
-        delta_ADW_ansatz(ADWParams(
-            alpha_ADW=a, lambda_UV=1.0, N_f=16.0, chi_vest=1.0
-        ))
-        for a in alpha_grid
-    ])
+    params = ADWParams(alpha_ADW=1.0, lambda_UV=1.0, N_f=16.0, chi_vest=1.0)
+    critical_mass = M_c_default(params)
+    newton_coupling = G_N_emergent(params.lambda_UV, params.N_f, params.alpha_ADW)
+    mass = critical_mass * np.linspace(0.0, 2.0, 101)
+    # The two lengths are shown in units of the cutoff length.
     fig.add_trace(
         go.Scatter(
-            x=alpha_grid, y=delta_grid,
+            x=mass / critical_mass,
+            y=newton_coupling * mass * params.lambda_UV,
             mode="lines",
             line=dict(color=COLORS["steel_blue"], width=3),
-            name="δ_ADW = (α_ADW − 1)·Λ_UV",
             showlegend=False,
         ),
         row=1, col=2,
     )
-    # α=1 vanishing point
-    fig.add_shape(
-        type="line",
-        x0=1.0, x1=1.0, y0=-1.5, y1=10.0,
-        line=dict(color="rgba(80,80,80,0.6)", width=1, dash="dot"),
-        row=1, col=2,
-    )
-    fig.add_annotation(
-        x=1.0, y=0.5,
-        text="α_ADW = 1<br>(bare Sakharov-Adler:<br>δ_ADW vanishes)",
-        showarrow=False,
-        font=dict(size=10, color="rgba(60,60,60,0.9)"),
-        row=1, col=2,
-    )
-    # Zero baseline
-    fig.add_shape(
-        type="line",
-        x0=0.1, x1=10.0, y0=0.0, y1=0.0,
-        line=dict(color="rgba(120,120,120,0.4)", width=1),
-        row=1, col=2,
-    )
+    fig.add_vrect(x0=0.0, x1=1.0, fillcolor=COLORS["steel_blue"],
+                  opacity=0.12, line_width=0, layer="below", row=1, col=2)
+    fig.add_vrect(x0=1.0, x1=2.0, fillcolor=COLORS["amber"],
+                  opacity=0.12, line_width=0, layer="below", row=1, col=2)
+    fig.add_hline(y=1.0, line_dash="dot", line_color="#555", row=1, col=2)
+    fig.add_vline(x=1.0, line_dash="dot", line_color="#555", row=1, col=2)
+    fig.add_annotation(x=0.45, y=1.72, text="Sonic", showarrow=False, row=1, col=2)
+    fig.add_annotation(x=1.55, y=0.38, text="Schwarzschild", showarrow=False, row=1, col=2)
 
-    fig.update_xaxes(title_text="Time t / τ_cool (acoustic) or t / t_evap (Schwarzschild)", row=1, col=1)
-    fig.update_yaxes(title_text="T_H / T_H,0", row=1, col=1, range=[0, 4])
-    fig.update_xaxes(title_text="α_ADW", row=1, col=2)
-    fig.update_yaxes(title_text="δ_ADW / Λ_UV", row=1, col=2)
+    fig.update_xaxes(title_text="Time t/τ_cool (sonic) or 5t/t_evap (Schwarzschild)", row=1, col=1)
+    fig.update_yaxes(title_text="T_H / T_H,0", row=1, col=1, range=[0, 2.35])
+    fig.update_xaxes(title_text="Mass M / M_c", row=1, col=2, range=[0, 2])
+    fig.update_yaxes(title_text="Length in cutoff units", row=1, col=2, range=[0, 2])
 
     apply_layout(
         fig,
@@ -9020,8 +8987,12 @@ def fig_T_H_evolution_regime_partition():
         ),
         height=600,
         width=1100,
-        margin=dict(t=110, b=80),
+        margin=dict(t=110, b=100),
+        legend=dict(orientation="h", x=0.0, y=-0.19, font=dict(size=22)),
     )
+    fig.update_xaxes(title_font_size=23, tickfont_size=21)
+    fig.update_yaxes(title_font_size=23, tickfont_size=21)
+    fig.update_annotations(font_size=23)
     return fig
 
 
