@@ -1,7 +1,8 @@
 """Prose → Lean name resolution — ADR-009 Phase 2.
 
 `prose_theorem_reference_coverage` (every verbatim Lean reference in a bundle
-draft resolves to a real declaration) and `theorem_name_embedded_citations`
+draft or its renderer-owned table outputs resolves to a real declaration) and
+`theorem_name_embedded_citations`
 (a declaration name embedding author+year has a matching bibliography entry).
 
 Split from `papers_prose`; see that module's header for the seam. This half owns
@@ -134,6 +135,19 @@ def _prose_verbatim_re(tex_source: str) -> re.Pattern:
 # brace-form regex nor the alias fixpoint reaches it. It needs its own matcher.
 # D6 writes most of its Lean references this way; D2, L1 and L3 use it too.
 _PROSE_VERB_RE = re.compile(r"\\verb\*?(?P<d>[^A-Za-z0-9\s*])(?P<body>.*?)(?P=d)")
+
+# In generated source, skip literal verb spans and escaped control symbols
+# before recognizing comments. Blanking only comments preserves source offsets.
+_GENERATED_COMMENT_RE = re.compile(
+    _PROSE_VERB_RE.pattern + r"|\\[^\n]|(?P<comment>%[^\n]*)"
+)
+
+
+def _generated_reference_source(source: str) -> str:
+    return _GENERATED_COMMENT_RE.sub(
+        lambda match: " " * len(match[0]) if match["comment"] is not None else match[0],
+        source,
+    )
 
 # TeX quotation form `name' — no macro at all, so neither the alias fixpoint nor
 # the `\verb` matcher reaches it. Added 2026-08-09 (TODO-D18).
@@ -280,7 +294,7 @@ def _extract_prose_lean_candidates(tex_source: str) -> list:
             if _prose_token_is_reportable(t)]
 
 
-def _prose_verbatim_tokens(tex_source: str) -> list:
+def _prose_verbatim_tokens(tex_source: str, *, macro_source: str | None = None) -> list:
     """EVERY token in a verbatim span — unescaped and stripped, nothing else.
 
     No judgement here, deliberately. `check_prose_theorem_reference_coverage` RESOLVES
@@ -288,8 +302,9 @@ def _prose_verbatim_tokens(tex_source: str) -> list:
     then passed through `_prose_token_is_reportable`. Filtering before resolving can
     drop a real reference before anyone looks at it.
     """
+    macro_source = tex_source if macro_source is None else macro_source
     spans = [(m.group(1), m.start())
-             for m in _prose_verbatim_re(tex_source).finditer(tex_source)]
+             for m in _prose_verbatim_re(macro_source).finditer(tex_source)]
     spans += [(m.group("body"), m.start())
               for m in _PROSE_VERB_RE.finditer(tex_source)]
     spans += [(m.group(1), m.start())
@@ -573,6 +588,40 @@ def _resolve_prose_ref(token: str, index: dict, deep: bool = True) -> str:
     return "ABSENT"
 
 
+def _bundle_table_sources(tex: Path):
+    """Yield strict renderer-owned table sources and source-local errors."""
+    from render_paper_tables import spec_output_paths
+
+    bundle = tex.parent
+    spec = bundle / "tables.py"
+    if bundle.is_symlink() or bundle.resolve() != _H.PAPERS_DIR.resolve() / bundle.name:
+        yield Path("tables.py"), None, "bundle directory escapes the canonical papers root"
+        return
+    if not spec.exists() and not spec.is_symlink():
+        return
+    try:
+        outputs = spec_output_paths(spec, strict=True)
+    except Exception as exc:
+        yield Path("tables.py"), None, f"cannot establish renderer ownership: {exc}"
+        return
+    for path in sorted(outputs):
+        relative = path.relative_to(bundle)
+        try:
+            yield relative, _generated_reference_source(path.read_text()), None
+        except (OSError, UnicodeError) as exc:
+            yield relative, None, f"cannot read registered output: {exc}"
+
+
+def _prose_ref_locations(bundle: str, occurrences: list) -> str:
+    lines_by_file: dict[Path, list[str]] = {}
+    for file, source, offset in occurrences:
+        lines_by_file.setdefault(file, []).append(str(_line_of(source, offset)))
+    return ", ".join(
+        f"papers/{bundle}/{file.as_posix()}:{','.join(lines)}"
+        for file, lines in lines_by_file.items()
+    )
+
+
 @register_check("prose_theorem_reference_coverage",
                 "Bundle-draft Lean references in any verbatim form (texttt, a "
                 "preamble alias for it, verb, or a TeX `name' quote) resolve in "
@@ -584,8 +633,8 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
     prevention proposed by QI item **qi-leantheoremdrift**
     (`bundle_lean_refs_resolve`, docs/QI_REGISTER.md).
 
-    Scope: the 21 publication-bundle drafts
-    (``papers/{F,D1–D12,E1,E2,I1–I3,L1–L3}/paper_draft.tex``) only.
+    Scope: the 21 publication-bundle drafts and every renderer-owned output
+    under each bundle's ``tables/`` directory.
     D10 joined 2026-07-30 alongside the D11/D12 first-lift — it had been
     shipping since 2026-06-30 outside this gate's scope, which is exactly
     the drift exposure the check exists to close.
@@ -640,6 +689,7 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
 
     details: List[Detail] = []
     n_fail = 0
+    n_input_fail = 0
     n_drift = 0
     n_waived = 0
     n_candidates = 0
@@ -665,9 +715,20 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
         # signature defect.
         by_token: dict = {}
         for tok, off in _prose_verbatim_tokens(source):
-            by_token.setdefault(tok, []).append(off)
+            by_token.setdefault(tok, []).append((Path(tex.name), source, off))
 
-        for tok, offsets in sorted(by_token.items()):
+        for location, table_source, error in _bundle_table_sources(tex):
+            if error is not None:
+                n_input_fail += 1
+                details.append(Detail(
+                    f"table_source:{bundle}:{location}", False,
+                    f"papers/{bundle}/{location} — {error}",
+                ))
+                continue
+            for tok, off in _prose_verbatim_tokens(table_source, macro_source=source):
+                by_token.setdefault(tok, []).append((location, table_source, off))
+
+        for tok, occurrences in sorted(by_token.items()):
             if tok in _PROSE_REF_ALLOWLIST:
                 n_candidates += 1
                 continue
@@ -688,33 +749,33 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
                 n_drift += 1
                 details.append(Detail(
                     f"drifted:{bundle}:{tok}", True,
-                    f"papers/{bundle}/paper_draft.tex:"
-                    f"{_line_of(source, offsets[0])} — qualified name "
+                    f"{_prose_ref_locations(bundle, occurrences[:1])} — qualified name "
                     f"'{tok}' unresolved but short name exists under a "
                     f"different namespace (rename candidate; advisory)",
                     warning=True,
                 ))
                 continue
             # ABSENT — disclaimer / negation exemption (every occurrence)
-            if all(_prose_occurrence_disclaimed(source, off)
-                   for off in offsets):
+            undisclaimed = [
+                occurrence for occurrence in occurrences
+                if not _prose_occurrence_disclaimed(occurrence[1], occurrence[2])
+            ]
+            if not undisclaimed:
                 continue
             waiver = _PROSE_REF_WAIVERS.get((bundle, tok))
             if waiver is not None:
                 n_waived += 1
                 details.append(Detail(
                     f"waived:{bundle}:{tok}", True,
-                    f"papers/{bundle}/paper_draft.tex:"
-                    f"{_line_of(source, offsets[0])} — '{tok}' unresolved "
+                    f"{_prose_ref_locations(bundle, undisclaimed[:1])} — '{tok}' unresolved "
                     f"but WAIVED: {waiver}",
                     warning=True,
                 ))
                 continue
             n_fail += 1
-            lines = ",".join(str(_line_of(source, o)) for o in offsets[:4])
             details.append(Detail(
                 f"unresolved:{bundle}:{tok}", False,
-                f"papers/{bundle}/paper_draft.tex:{lines} — "
+                f"{_prose_ref_locations(bundle, undisclaimed[:4])} — "
                 f"\\texttt{{{tok}}} does not resolve to any declaration in "
                 f"lean/lean_deps.json (no disclaimer context; Class-TN drift)",
             ))
@@ -789,21 +850,23 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
             + (f" (+{len(toks) - 6} more)" if len(toks) > 6 else ""),
             warning=not legacy_over))
 
+    coverage_failure = f" / {n_input_fail} registered table coverage failure(s)" if n_input_fail else ""
     details.insert(0, Detail(
         "summary",
-        n_fail == 0 and not legacy_over,
+        n_fail == 0 and n_input_fail == 0 and not legacy_over,
         f"{n_bundles} bundle drafts scanned / {n_candidates} candidate "
         f"Lean references — {n_fail} unresolved FAIL(s) / {n_drift} "
-        f"drifted advisory / {n_waived} waived (documented); plus "
+        f"drifted advisory / {n_waived} waived (documented){coverage_failure}; plus "
         f"{legacy_drafts} legacy drafts / {legacy_cand} candidates / "
         f"{legacy_fail} unresolved vs ceiling {_CEIL}",
     ))
-    if n_fail == 0 and n_drift == 0 and n_waived == 0:
+    if n_fail == 0 and n_input_fail == 0 and n_drift == 0 and n_waived == 0:
         details.append(Detail(
             "all_resolved", True,
             "Every bundle-draft Lean reference resolves against lean_deps.json",
         ))
-    return CheckResult(passed=(n_fail == 0 and not legacy_over), details=details)
+    return CheckResult(passed=(n_fail == 0 and n_input_fail == 0 and not legacy_over),
+                       details=details)
 
 
 # ═══════════════════════════════════════════════════════════════════════

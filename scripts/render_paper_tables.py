@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import re
 import sys
 from pathlib import Path
 
@@ -65,7 +66,7 @@ def iter_spec_paths(papers_dir: Path | None = None) -> list[Path]:
         if d.is_dir() and not d.name.startswith('paper') and (d / 'tables.py').exists())
 
 
-def spec_output_paths(tables_py: Path) -> list[Path]:
+def spec_output_paths(tables_py: Path, *, strict: bool = False) -> list[Path]:
     """The `.tex` files ``tables_py`` is responsible for producing.
 
     ⚠️ This is deliberately **not** ``(dir/'tables').glob('*.tex')``. A
@@ -81,18 +82,39 @@ def spec_output_paths(tables_py: Path) -> list[Path]:
     owns, so we return the whole output directory rather than nothing. Returning
     nothing would report "a spec with no outputs" and mask a genuinely stale
     set; returning everything can only over-report staleness, which is the safe
-    direction for a freshness guard.
+    direction for a freshness guard. Strict coverage requires valid ownership
+    and every declared file, and raises instead of using this fallback.
     """
     out_dir = tables_py.parent / 'tables'
-    ids = _spec_ids(tables_py)
+    bundle = tables_py.parent
+    if strict and (bundle.is_symlink() or tables_py.is_symlink()
+                   or not tables_py.is_file() or out_dir.is_symlink()):
+        raise ValueError("table spec or output directory is a symlink or missing")
+    ids = _spec_ids(tables_py, strict=strict)
+    if strict:
+        if not ids:
+            raise ValueError("table spec does not declare any valid outputs")
+        if any(not isinstance(i, str) or not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.-]*", i)
+               for i in ids):
+            raise ValueError("table spec contains an unsafe output ID")
+        if len(set(ids)) != len(ids):
+            raise ValueError("table spec contains duplicate output IDs")
+        outputs = [out_dir / f'{i}.tex' for i in ids]
+        for output in outputs:
+            if output.is_symlink() or output.resolve() != bundle.resolve() / 'tables' / output.name:
+                raise ValueError(f"{output.name} is a symlink or escapes its bundle")
+            if not output.is_file():
+                raise ValueError(f"{output.name} is missing")
+        return outputs
+
     if ids is None:
         return sorted(out_dir.glob('*.tex'))
     return [out_dir / f'{i}.tex' for i in ids]
 
 
-def _spec_ids(tables_py: Path) -> list[str] | None:
+def _spec_ids(tables_py: Path, *, strict: bool = False) -> list[str] | None:
     """Declared TABLES + SCALARS ids of one spec, or None if it will not load."""
-    loaded = _load_spec(tables_py, strict=False)
+    loaded = _load_spec(tables_py, strict=strict)
     if loaded is None:
         return None
     return list(loaded['tables']) + list(loaded['scalars'])
@@ -116,14 +138,20 @@ def _load_spec(tables_py: Path, *, strict: bool = True) -> dict | None:
         return None
     module = importlib.util.module_from_spec(spec)
     try:
-        spec.loader.exec_module(module)
+        if strict:
+            source = tables_py.read_bytes()
+            exec(compile(source, str(tables_py), "exec"), module.__dict__)
+        else:
+            spec.loader.exec_module(module)
     except Exception as exc:
         if strict:
             raise
         print(f'Warning: {tables_py} raised on import: {exc!r}', file=sys.stderr)
         return None
-    tables = getattr(module, 'TABLES', None) or {}
-    scalars = getattr(module, 'SCALARS', None) or {}
+    tables = getattr(module, 'TABLES', None)
+    scalars = getattr(module, 'SCALARS', None)
+    tables = {} if tables is None or (not strict and not tables) else tables
+    scalars = {} if scalars is None or (not strict and not scalars) else scalars
     if not isinstance(tables, dict) or not isinstance(scalars, dict):
         print(f'Warning: {tables_py} TABLES/SCALARS not dicts', file=sys.stderr)
         return None

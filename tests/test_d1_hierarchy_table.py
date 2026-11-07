@@ -43,12 +43,13 @@ from scripts.gen_d1_hierarchy_table import (  # noqa: E402
 
 
 TABULAR_HEAD = (
+    r"\begin{table*}" "\n"
     r"\label{tab:hierarchy}" "\n"
     r"\begin{tabular}{lcccc}\toprule" "\n"
     r"Platform & $T_H$ & $\delta_\text{disp}$ & $\delta_\text{diss}$ & dominance \\\midrule"
     "\n"
 )
-TABULAR_TAIL = "\n" r"\bottomrule" "\n" r"\end{tabular}"
+TABULAR_TAIL = "\n" r"\bottomrule" "\n" r"\end{tabular}" "\n" r"\end{table*}"
 
 
 def _write_draft(tmp_path: Path, body: str) -> Path:
@@ -134,6 +135,150 @@ class TestGatePasses:
         result = check_d1_hierarchy_table()
         assert result.passed, [(d.name, d.message)
                                for d in result.details if not d.passed]
+
+
+_HIERARCHY_LABEL = rb"\label{tab:hierarchy}"
+_HIERARCHY_INPUT = rb"\input{tables/platform_hierarchy.tex}"
+_HIERARCHY_PROLOGUE = (
+    r"\begin{table*}[!t]" "\n"
+    r"\centering" "\n"
+    r"\caption{Ratios at $\omega=\kappa$ from Eq.~\eqref{eq:{nested}}.}" "\n"
+)
+
+
+def _direct_hierarchy_draft(draft: str, tabular: str, source: str) -> str:
+    return (draft.replace(r"\begin{table*}" "\n", _HIERARCHY_PROLOGUE, 1)
+            .replace(tabular, source, 1))
+
+
+class TestHierarchySourceBinding:
+    @pytest.mark.parametrize("suffix", ("", ".tex"))
+    def test_direct_generated_input_passes(self, tmp_path, monkeypatch, suffix):
+        draft = _generated_draft_body()
+        tabular = re.search(r"\\begin\{tabular\}.*?\\end\{tabular\}", draft, re.S)
+        assert tabular is not None
+        source = f"\\input{{tables/platform_hierarchy{suffix}}}"
+        root = _write_draft(tmp_path, _direct_hierarchy_draft(draft, tabular[0], source))
+        table = root / "D1/tables/platform_hierarchy.tex"
+        table.parent.mkdir()
+        table.write_text(tabular[0])
+        monkeypatch.setattr(_H, "PAPERS_DIR", root)
+        result = check_d1_hierarchy_table()
+        assert result.passed, result
+
+    @pytest.mark.parametrize("source", (
+        r"\include{tables/platform_hierarchy}",
+        r"\input{tables/status.tex}",
+        r"\input{tables/../tables/platform_hierarchy.tex}",
+        r"\input{tables/platform_hierarchy}" "\n" r"\input{tables/platform_hierarchy.tex}",
+        r"\input{tables/platform_hierarchy}" "\n" r"\begin{tabular}{l}noise\\\end{tabular}",
+        r"% \input{tables/platform_hierarchy}",
+    ))
+    def test_invalid_binding_cannot_read_a_later_table(self, tmp_path, monkeypatch, source):
+        valid = _generated_draft_body()
+        tabular = re.search(r"\\begin\{tabular\}.*?\\end\{tabular\}", valid, re.S)
+        assert tabular is not None
+        tables = tmp_path / "D1/tables"
+        tables.mkdir(parents=True)
+        for name in ("platform_hierarchy.tex", "status.tex"):
+            (tables / name).write_text(tabular[0])
+        later = valid.replace(r"\label{tab:hierarchy}", r"\label{tab:other}")
+        body = (r"\begin{table}" "\n" r"\label{tab:hierarchy}" "\n"
+                + source + "\n" r"\end{table}" "\n" + later)
+        monkeypatch.setattr(_H, "PAPERS_DIR", _write_draft(tmp_path, body))
+        assert not check_d1_hierarchy_table().passed
+
+    @pytest.mark.parametrize("bad_artifact", (None, r"\input{nested}", "before tabular"))
+    def test_missing_or_nonstandalone_generated_table_fails(
+            self, tmp_path, monkeypatch, bad_artifact):
+        draft = _generated_draft_body()
+        tabular = re.search(r"\\begin\{tabular\}.*?\\end\{tabular\}", draft, re.S)
+        assert tabular is not None
+        root = _write_draft(
+            tmp_path, _direct_hierarchy_draft(draft, tabular[0], r"\input{tables/platform_hierarchy}"))
+        if bad_artifact is not None:
+            table = root / "D1/tables/platform_hierarchy.tex"
+            table.parent.mkdir()
+            if bad_artifact.startswith(r"\input"):
+                table.write_text(tabular[0].replace(r"\end{tabular}",
+                                                    bad_artifact + "\n" + r"\end{tabular}"))
+            else:
+                table.write_text(bad_artifact + "\n" + tabular[0])
+        monkeypatch.setattr(_H, "PAPERS_DIR", root)
+        result = check_d1_hierarchy_table()
+        assert not result.passed
+        expected = "cannot read canonical" if bad_artifact is None else "expected one standalone"
+        assert expected in result.error
+
+    def test_generated_table_cannot_escape_d1_through_symlink(self, tmp_path, monkeypatch):
+        draft = _generated_draft_body()
+        tabular = re.search(r"\\begin\{tabular\}.*?\\end\{tabular\}", draft, re.S)
+        assert tabular is not None
+        root = _write_draft(
+            tmp_path, _direct_hierarchy_draft(draft, tabular[0], r"\input{tables/platform_hierarchy}"))
+        external = root / "external"
+        external.mkdir()
+        (external / "platform_hierarchy.tex").write_text(tabular[0])
+        (root / "D1/tables").symlink_to(external, target_is_directory=True)
+        monkeypatch.setattr(_H, "PAPERS_DIR", root)
+        assert not check_d1_hierarchy_table().passed
+
+    @pytest.mark.parametrize(("needle", "replacement"), (
+        (_HIERARCHY_INPUT, rb"\iffalse " + _HIERARCHY_INPUT + rb"\fi"),
+        (_HIERARCHY_INPUT, rb"\newcommand{\unusedHierarchy}{" + _HIERARCHY_INPUT + b"}"),
+        (_HIERARCHY_INPUT, rb"\leavevmode" + b"\\" + _HIERARCHY_INPUT),
+        (_HIERARCHY_LABEL + b"\n" + _HIERARCHY_INPUT,
+         rb"\iffalse " + _HIERARCHY_LABEL + b"\n" + _HIERARCHY_INPUT + rb"\fi"),
+        (_HIERARCHY_LABEL, rb"\expandafter\def\csname input\endcsname#1{}"
+         + _HIERARCHY_LABEL),
+        (b"for the condensate rows.}", b"for the condensate rows. "
+         + rb"\expandafter\def\csname input\endcsname#1{}}"),
+        (b"for the condensate rows.}", b"for the condensate rows. "
+         b"^^5cexpandafter^^5cdef^^5ccsname input^^5cendcsname#1{}}"),
+    ), ids=("post-label-inactive", "post-label-unused-macro", "post-label-escaped",
+            "pre-label-inactive", "pre-label-shadow", "caption-shadow",
+            "caption-encoded-shadow"))
+    def test_live_generated_binding_rejects_inactive_input(self, needle, replacement):
+        from seed_journal import seeded_mutation
+
+        draft = _H.PAPERS_DIR / "D1/paper_draft.tex"
+        original = draft.read_bytes()
+        if _HIERARCHY_INPUT not in original:
+            pytest.skip("generated-input control requires the composed table migration")
+        assert original.count(needle) == 1
+        assert check_d1_hierarchy_table().passed
+        with seeded_mutation(draft, original.replace(needle, replacement, 1),
+                             reason="D1 generated hierarchy must bind directly"):
+            result = check_d1_hierarchy_table()
+            assert not result.passed
+            assert "expected one direct canonical" in result.error
+        assert draft.read_bytes() == original
+        assert check_d1_hierarchy_table().passed
+
+    def test_live_hierarchy_cell_mutation_changes_verdict(self):
+        from seed_journal import seeded_mutation
+
+        # The same regression test covers the deployed form. The composed
+        # candidate consumes the generated file. The inline draft still
+        # exercises the existing legacy path.
+        draft = _H.PAPERS_DIR / "D1/paper_draft.tex"
+        manuscript = draft.read_text()
+        target = (draft.parent / "tables/platform_hierarchy.tex"
+                  if r"\input{tables/platform_hierarchy" in manuscript else draft)
+        original = target.read_bytes()
+        assert check_d1_hierarchy_table().passed
+        rows = [line for line in original.splitlines()
+                if b"Steinhauer/de~Nova" in line and line.count(b"&") == 4]
+        assert len(rows) == 1
+        cells = rows[0].split(b"&")
+        cells[2] = rb" $-9.99\times10^{-3}$ "
+        seeded = original.replace(rows[0], b"&".join(cells), 1)
+        with seeded_mutation(target, seeded, reason="D1 rendered BEC cell must affect the verdict"):
+            result = check_d1_hierarchy_table()
+            assert not result.passed
+            assert {d.name for d in result.details if not d.passed} == {"Steinhauer.delta_disp"}
+        assert target.read_bytes() == original
+        assert check_d1_hierarchy_table().passed
 
 
 class TestGateFailsOnStale:
