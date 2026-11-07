@@ -5,6 +5,7 @@ import SKEFTHawking.ADW.FiniteGrassmannCoframe
 import SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary
 import SKEFTHawking.ADW.GaussianAuxiliaryCompensation
 import SKEFTHawking.ADW.GaussianAuxiliaryComplex
+import SKEFTHawking.ADW.GaussianPolynomialStein
 import SKEFTHawking.ADW.GaussianPolynomialAffine
 import SKEFTHawking.ADW.GaussianPolynomialHermite
 import SKEFTHawking.ADW.GaussianPolynomialIBP
