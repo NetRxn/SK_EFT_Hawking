@@ -11209,6 +11209,56 @@
         "enforced": true,
         "run_at": "2026-10-17"
       }
+    },
+    {
+      "finding_id": "review:2026-11-06-original-coefficient-task1:L1:1.1",
+      "status": "fixed",
+      "evidence": "All four original-coefficient Task1 invariants repaired at frozen R2: inclusive degree retained with actual nonzero4/8 and zero5/9 controls; exact immutable sparse addition; complete rectangle/4x4 validation; real polynomial quaternion involution. Both complete independent science and algebra R2 reviews accept; exact source archive and ROOT full intake retained. Full Tasks2-4, physical, formal and publication remain owed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/ORIGINAL_COEFFICIENT_TASK1_ACCEPTANCE_R2.md",
+      "date": "2026-11-06",
+      "artifact_path": "SK_EFT_Hawking/docs/audits/2026-10-17-publication-substance-construction/ORIGINAL_COEFFICIENT_TASK1_FROZEN_R2_EVIDENCE.zip",
+      "artifact_sha256": "ec4c4047d21f8c197559b7fe40459fe49fa4b8d05ed9f362caff1430dfed2a41",
+      "artifact_anchors": [
+        {
+          "path": "SK_EFT_Hawking/docs/audits/2026-10-17-publication-substance-construction/ORIGINAL_COEFFICIENT_TASK1_FROZEN_R2_EVIDENCE.zip",
+          "sha256": "ec4c4047d21f8c197559b7fe40459fe49fa4b8d05ed9f362caff1430dfed2a41"
+        }
+      ],
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py -q",
+        "declared": "uv run python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-original-coefficient-task2:L1:1.1",
+      "status": "fixed",
+      "evidence": "Both complete independent R3 source reviews ACCEPT exact source hashes in ORIGINAL_COEFFICIENT_TASK2_ACCEPTANCE_R3_EVIDENCE.zip; all action slots enforce positive-even nilpotence and rational/current accumulation checks unreduced height. Both independently pass109bounded tests. Source repairs only; complete scientific run and independent result review remain owed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/ORIGINAL_COEFFICIENT_TASK2_ROOT_ACCEPTANCE_R3.md",
+      "date": "2026-11-07",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py tests/test_original_coefficient_jets.py -k 'not test_original_full_small_carrier_direct_vs_auxiliary' -q",
+        "declared": "uv run python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py tests/test_original_coefficient_jets.py -k 'not test_original_full_small_carrier_direct_vs_auxiliary' -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
+    },
+    {
+      "finding_id": "review:2026-11-07-original-coefficient-task2:L1:1.2",
+      "status": "fixed",
+      "evidence": "Both complete independent R3 source reviews ACCEPT exact source hashes in ORIGINAL_COEFFICIENT_TASK2_ACCEPTANCE_R3_EVIDENCE.zip; all action slots enforce positive-even nilpotence and rational/current accumulation checks unreduced height. Both independently pass109bounded tests. Source repairs only; complete scientific run and independent result review remain owed.",
+      "superseded_by": "docs/audits/2026-10-17-publication-substance-construction/ORIGINAL_COEFFICIENT_TASK2_ROOT_ACCEPTANCE_R3.md",
+      "date": "2026-11-07",
+      "verified_by": {
+        "command": "uv run python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py tests/test_original_coefficient_jets.py -k 'not test_original_full_small_carrier_direct_vs_auxiliary' -q",
+        "declared": "uv run python -m pytest tests/test_original_coefficients.py tests/test_dependency_declaration.py tests/test_original_coefficient_jets.py -k 'not test_original_full_small_carrier_direct_vs_auxiliary' -q",
+        "exit_code": 0,
+        "enforced": true,
+        "run_at": "2026-11-06"
+      }
     }
   ]
 }

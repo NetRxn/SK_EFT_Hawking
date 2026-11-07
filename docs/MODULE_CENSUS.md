@@ -173,6 +173,7 @@ Nothing else belongs here.
 | `src/vestigial/lattice_model.py` | Lattice model for vestigial gravity simulation. |
 | `src/vestigial/mean_field.py` | Mean-field analysis for vestigial gravity. The phase classification is curvature-based, via `adw_curvature_at_origin` from `formulas.py`. |
 | `src/vestigial/monte_carlo.py` | Monte Carlo sampler for the HS-transformed bosonic tetrad model. Metropolis sweeps; measures the tetrad VEV and the metric magnitude. |
+| `src/vestigial/original_coefficients.py` | Exact sparse original-coframe/Dirac foundation on the declared finite torus. |
 | `src/vestigial/phase_diagram.py` | Phase diagram for the vestigial gravity model. |
 | `src/vestigial/phase_scan.py` | Coupling scan for the 4D ADW phase diagram. |
 | `src/vestigial/quaternion.py` | SU(2) quaternion algebra for SO(4) gauge-link Monte Carlo, including Haar-random sampling. |

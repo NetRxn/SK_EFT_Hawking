@@ -13006,3 +13006,600 @@ def finite_gibbs_clock(*, hamiltonian, observable, beta, hbar, modular_time):
     if any(not np.isfinite(value) for key, value in report.items() if key.endswith("residual")):
         raise ValueError("numerical diagnostic residual overflowed")
     return report
+
+
+# Original finite ADW coframes. The sparse coefficient domain is generic; the
+# gamma/link/coframe/action definitions remain canonical in this module.
+def original_gamma(axis, convention='source_C'):
+    """Exact space-first C gamma, or entrywise M gamma_A=gamma_C,pi(A).
+
+    gamma_Cj=[[0,-i sigma_j],[i sigma_j,0]], gamma_C3=[[0,I],[I,0]].
+    Lean: SKEFTHawking.ADW.FiniteGrassmannCoframe.gamma, SKEFTHawking.ADW.FiniteGrassmannCoframe.gamma_order_chirality
+    Aristotle: manual
+    Source: ADW_COMPOSITE_SOURCES section1; accepted coefficient budget R2 section2.
+    """
+    from src.vestigial.original_coefficients import QComplex, Polynomial
+    if axis not in range(4) or convention not in ('source_C', 'metric_M'):
+        raise ValueError('explicit gamma axis/convention required')
+    if convention == 'metric_M':
+        axis = (3, 0, 1, 2)[axis]
+    i = QComplex(0, 1)
+    pauli = (((0, 1), (1, 0)), ((0, -i), (i, 0)), ((1, 0), (0, -1)))
+    q = tuple(tuple(Polynomial.scalar(v) for v in row) for row in
+              (pauli[axis] if axis < 3 else ((1, 0), (0, 1))))
+    if axis < 3:
+        q = tuple(tuple(v * -i for v in row) for row in q)
+    return tuple(tuple(q[r][c - 2] if r < 2 <= c else
+                       q[c][r - 2].conjugate() if c < 2 <= r else Polynomial()
+                       for c in range(4)) for r in range(4))
+
+
+def original_gamma5():
+    """Fixed diag(I2,-I2), unchanged under the M/C label permutation.
+
+    Lean: SKEFTHawking.ADW.FiniteGrassmannCoframe.gamma5
+    Aristotle: manual
+    """
+    from src.vestigial.original_coefficients import Polynomial
+    return tuple(tuple(Polynomial.scalar((1 if i < 2 else -1) if i == j else 0)
+                       for j in range(4)) for i in range(4))
+
+
+def original_spin4_link(left, right):
+    """diag(U_L,U_R), each U=q0 I+i q.sigma in canonical plus-i convention.
+
+    Input coordinates are exact real polynomials or rationals. Symbolic callers
+    retain the sphere constraints as domain data; no coordinate independence
+    beyond the declared independent anchored SU2 factors is asserted.
+    Lean: SKEFTHawking.ADW.FiniteGrassmannCoframe.dirac, SKEFTHawking.ADW.FiniteGrassmannCoframe.dirac_left_block,
+      SKEFTHawking.ADW.FiniteGrassmannCoframe.dirac_right_block
+    Aristotle: manual
+    Source: ADW_COMPOSITE_SOURCES section4, normalized quaternion coordinates.
+    """
+    from src.vestigial.original_coefficients import Polynomial, QComplex
+    if len(left) != 4 or len(right) != 4:
+        raise ValueError('four coordinates per independent SU2 factor required')
+    i = QComplex(0, 1)
+    def su2(q):
+        values = tuple(Polynomial.coerce(v) for v in q)
+        if any(v.conjugate() != v for v in values):
+            raise ValueError('quaternion coordinates must be real under polynomial conjugation')
+        a, b, c, d = values
+        return ((a + d * i, c + b * i), (-c + b * i, a - d * i))
+    l, r = su2(left), su2(right)
+    return tuple(tuple(l[a][b] if a < 2 and b < 2 else r[a - 2][b - 2]
+                       if a >= 2 and b >= 2 else Polynomial() for b in range(4)) for a in range(4))
+
+
+def original_coframe_blocks(reg, alpha, links=None):
+    """All four original signed quarter increments, including coincident slots.
+
+    +(gamma U_f†)/4, -(U_f gamma)/4, -(gamma U_b)/4,
+    +(U_b† gamma)/4, with paired boundary signs on each reversed hopping.
+    Lean: SKEFTHawking.ADW.FiniteGrassmannCoframe.coframe, SKEFTHawking.ADW.FiniteGrassmannCoframe.hopping,
+      SKEFTHawking.ADW.FiniteGrassmannCoframe.hopping_reconstructs_coframe
+    Aristotle: manual
+    Source: Diakonov2011 Eq23; ADW_COMPOSITE_SOURCES Eq1.
+    These declarations ground the coframe definition; the separate Eq9 matrix/
+    bilinear and Eq10 Berezin/determinant bridges remain Stage2/3 obligations.
+    """
+    from fractions import Fraction
+    from src.vestigial.original_coefficients import (
+        Symbol, Polynomial, BlockIncrement, matrix_dagger, matrix_multiply, exact_matrix,
+    )
+    x, mu, a = alpha
+    reg.validate_site(x)
+    if mu not in range(4) or a not in range(4):
+        raise ValueError('coframe axes must be in 0..3')
+    forward, sf = reg.step(x, mu)
+    backward, sb = reg.step(x, mu, -1)
+    def link(anchor):
+        if links is not None:
+            return exact_matrix(links[anchor], shape=(4, 4))
+        site, axis = anchor
+        return original_spin4_link(
+            tuple(Polynomial.variable(Symbol('q', (site, axis, 'L', k))) for k in range(4)),
+            tuple(Polynomial.variable(Symbol('q', (site, axis, 'R', k))) for k in range(4)))
+    f, b, g = link((x, mu)), link((backward, mu)), original_gamma(a, reg.convention)
+    return (
+        BlockIncrement(alpha, x, forward, (x, mu), Fraction(sf, 4), matrix_multiply(g, matrix_dagger(f))),
+        BlockIncrement(alpha, forward, x, (x, mu), Fraction(-sf, 4), matrix_multiply(f, g)),
+        BlockIncrement(alpha, x, backward, (backward, mu), Fraction(-sb, 4), matrix_multiply(g, b)),
+        BlockIncrement(alpha, backward, x, (backward, mu), Fraction(sb, 4), matrix_multiply(matrix_dagger(b), g)),
+    )
+
+
+def original_plaquette(reg, x, k, l, links, word=None):
+    """Ordered printed A B C† D† or closed D† C† B A; no equivalence assumed.
+
+    A=U_xk, B=U_(x+k)l, C=U_(x+l)k, D=U_xl.
+    Lean: SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.plaquettePrinted,
+      SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.plaquetteClosed
+    Aristotle: manual
+    Source: GRASSMANN_VALUED_EQ7_DESIGN_R1; accepted budget R2 section2.
+    These are the two actual C3 definitions; no physical equivalence is asserted.
+    """
+    from src.vestigial.original_coefficients import matrix_dagger, matrix_multiply, identity_matrix, exact_matrix
+    reg.validate_site(x)
+    if k not in range(4) or l not in range(4) or k == l:
+        raise ValueError('distinct plaquette axes required')
+    word = reg.word if word is None else word
+    if word not in ('printed', 'closed'):
+        raise ValueError('explicit plaquette word required')
+    anchors = ((x, k), (reg.step(x, k)[0], l), (reg.step(x, l)[0], k), (x, l))
+    a, b, c, d = (exact_matrix(links[anchor], shape=(4, 4)) for anchor in anchors)
+    factors = (a, b, matrix_dagger(c), matrix_dagger(d))
+    if word == 'closed':
+        factors = tuple(reversed(factors))
+    out = identity_matrix(4)
+    for factor in factors:
+        out = matrix_multiply(out, factor)
+    return out
+
+
+def original_action_factors(reg, x, links):
+    """Complete raw S4 and S2 factor lists, with no g1/g2 or source filtering.
+
+    S4=epsilon_ABCD T_0A T_1B T_2C T_3D;
+    S2=(1/4)sum epsilon_klmunu Tr(U_kl gamma_C gamma_D gamma5) T_muC T_nuD.
+    The coupling powers are identified by t_degree 4/2 respectively.
+    Lean: SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.cosmological,
+      SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.einsteinCartan_ordered,
+      SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.coframe_source_evaluation
+    Aristotle: manual
+    Source: ADW_EXACT_AUXILIARY_IDENTITY Eq2, with R2's separately labeled words.
+    C3 grounds the source polynomial at its stated convention. This does not
+    certify Eq9/10, M/C transport, local8, or physical action equivalence.
+    """
+    from fractions import Fraction
+    from itertools import permutations
+    from src.vestigial.original_coefficients import (
+        ActionFactor, Polynomial, epsilon, matrix_multiply,
+    )
+    reg.validate_site(x)
+    factors = [ActionFactor(4, tuple((x, mu, a) for mu, a in enumerate(order)),
+                            Polynomial.scalar(epsilon(order))) for order in permutations(range(4))]
+    gamma, g5 = reg.gamma, reg.gamma5
+    products = {(a, b): matrix_multiply(matrix_multiply(gamma[a], gamma[b]), g5)
+                for a in range(4) for b in range(4)}
+    for k, l, mu, nu in permutations(range(4)):
+        u = original_plaquette(reg, x, k, l, links)
+        anchors = ((x, k), (reg.step(x, k)[0], l), (reg.step(x, l)[0], k), (x, l))
+        for a in range(4):
+            for b in range(4):
+                # Trace of ordered matrices, with scalar/diagonal parts retained.
+                trace = sum((u[i][j] * products[a, b][j][i] for i in range(4) for j in range(4)), Polynomial())
+                factors.append(ActionFactor(2, ((x, mu, a), (x, nu, b)),
+                                            trace * Fraction(epsilon((k, l, mu, nu)), 4), anchors))
+    return tuple(factors)
+
+
+def original_gaussian_moment(powers, sigma2):
+    """Exact centered product Gaussian moments with checked rational arithmetic.
+
+    Source: ADW_COMPOSITE_SOURCES section4. The all-order formal bridge remains
+    a Stage2/3 obligation; this function does not evaluate a scientific control.
+    """
+    from fractions import Fraction
+    from src.vestigial.original_coefficients import _rational,rational_product,rational_power,checked_integer_product
+    powers=tuple(powers); sigma2=_rational(sigma2)
+    if sigma2<=0: raise ValueError('positive exact variance required')
+    if any(type(k)is not int or k<0 for k in powers): raise ValueError('nonnegative integer moment powers required')
+    if any(k%2 for k in powers): return Fraction()
+    out=Fraction(1)
+    for k in powers:
+        coefficient=1
+        for j in range(1,k,2):coefficient=checked_integer_product(coefficient,j)
+        out=rational_product(out,rational_product(coefficient,rational_power(sigma2,k//2)))
+    return out
+
+
+def original_quaternion_haar_moment(powers):
+    """Normalized S3 moment, preserving exact correlated anchor coordinates.
+
+    Source: ADW_COMPOSITE_SOURCES section4. Formal all-order bridge remains owed.
+    """
+    from fractions import Fraction
+    from src.vestigial.original_coefficients import checked_integer_product,_rational
+    if len(powers)!=4 or any(type(k)is not int or k<0 for k in powers): raise ValueError('four nonnegative quaternion powers required')
+    if any(k%2 for k in powers): return Fraction()
+    numerator=denominator=1
+    for k in powers:
+        for j in range(1,k,2):numerator=checked_integer_product(numerator,j)
+    for j in range(4,4+sum(powers),2):denominator=checked_integer_product(denominator,j)
+    return _rational(Fraction(numerator,denominator))
+
+
+def original_scaled_hermite(degree,sigma2):
+    """Exact finite scaled Hermite coefficients with checked intermediates.
+
+    Source: ADW_COMPOSITE_SOURCES section4; the formal kernel bridge remains owed.
+    """
+    from fractions import Fraction
+    from src.vestigial.original_coefficients import _rational,rational_product,rational_power,checked_integer_product,checked_integer_power
+    if type(degree)is not int or degree<0:raise ValueError('nonnegative degree required')
+    sigma2=_rational(sigma2)
+    if sigma2<=0:raise ValueError('positive exact variance required')
+    factorial=[1]
+    for n in range(1,degree+1):factorial.append(checked_integer_product(factorial[-1],n))
+    terms=[]
+    for k in range(degree//2+1):
+        denominator=checked_integer_product(checked_integer_product(checked_integer_power(2,k),factorial[k]),factorial[degree-2*k])
+        value=rational_product(Fraction(factorial[degree],denominator),rational_power(-sigma2,k))
+        terms.append((degree-2*k,value))
+    return tuple(sorted(terms))
+
+
+def original_auxiliary_insertion_weights(weight,coordinates,sigma2):
+    """Integration by parts literal-T insertions, including ALL W derivatives.
+
+    First: h_a W/v-W_a. Second: (h_a h_b/v²-delta_ab/v)W
+    -(h_a W_b+h_b W_a)/v+W_ab. No division by W or det M.
+    Source: ADW_COMPOSITE_SOURCES source insertion rules; formal C2 bridge pending.
+    """
+    from fractions import Fraction
+    from src.vestigial.original_coefficients import Polynomial, polynomial_derivative, _rational,rational_inverse,rational_product
+    v=_rational(sigma2)
+    if v<=0: raise ValueError('positive variance required')
+    h=tuple(Polynomial.variable(s) for s in coordinates)
+    d=tuple(polynomial_derivative(weight,s) for s in coordinates)
+    inv=rational_inverse(v); inv2=rational_product(inv,inv)
+    first=tuple(h[i]*weight*inv-d[i] for i in range(len(h)))
+    second={(i,j):(h[i]*h[j]*inv2-Polynomial.scalar(inv if i==j else 0))*weight-(h[i]*d[j]+h[j]*d[i])*inv+polynomial_derivative(d[i],coordinates[j]) for i in range(len(h)) for j in range(i,len(h))}
+    return first,second
+
+
+def original_diagonal_frame_jets():
+    """Specified one-site C2 path f=(1+t+ts,1+s+t²/2,1+2t+s²/2,1+t-s+2ts).
+
+    These are RAW derivatives, retaining acceleration. Source: accepted budget
+    R2 section4a. Formal path/contact bridge remains a Stage2/3 obligation.
+    """
+    from src.vestigial.original_coefficients import RawJet,Polynomial
+    return tuple(RawJet.from_slots(tuple(Polynomial.scalar(v) for v in row)) for row in ((1,1,0,0,1,0),(1,0,1,1,0,0),(1,2,0,0,0,1),(1,1,-1,0,2,0)))
+
+
+def original_frame_source_jet(reg,links,*,frame,phase=None,g1=0,g2=0,insertion=None,measure=None,linear_sources=None,metric_sources=None,current_sources=None):
+    """Complete pre-Haar original action/insertion/measure raw C2 pullback.
+
+    frame maps (site,mu,nu) to raw derivatives of A_mu,nu; phase maps sites
+    to raw derivatives of chi. Every original endpoint phase, shared link,
+    ordered S4/S2 contact and A_ab acceleration is retained. The supplied
+    measure is a genuine pullback jet; absent it the declared frozen Haar
+    measure has zero derivatives. Local V_chi action/current is obtained with
+    exterior_phase_derivative on EACH slot; it commutes with frame variation.
+    Source: ADW_COMPOSITE_SOURCES sections5-8; formal C2 bridge pending.
+    """
+    from src.vestigial.original_coefficients import (
+        Polynomial,ExteriorPolynomial,RawJet,SourceJet,SourceFamilyGrading,GradedTerm,
+        GeneratorLinkSupport,assemble_coframe,apply_linear_map_jet,exponential_jet,QComplex,
+    )
+    labels=next(iter(frame.values())).labels
+    zero=ExteriorPolynomial(); one=ExteriorPolynomial(((0,Polynomial.scalar(1)),))
+    base={}
+    positions={v:i for i,v in enumerate(reg.generator_order)}
+    for x in reg.sites:
+        for mu in range(4):
+            for a in range(4):
+                matrix=assemble_coframe(reg,original_coframe_blocks(reg,(x,mu,a),links))
+                jet=RawJet.constant(zero,labels)
+                for (i,j),coefficient in matrix.entries:
+                    xb,xp=reg.sites[i//4],reg.sites[j//4]
+                    bar=ExteriorPolynomial.generator(positions[(xb,'bar',i%4)])
+                    psi=ExteriorPolynomial.generator(positions[(xp,'psi',j%4)])
+                    value=bar*psi*coefficient
+                    if phase is None:piece=RawJet.constant(value,labels)
+                    else:
+                        delta=(phase[xp]-phase[xb])*QComplex(0,1)
+                        # Pullbacks here are at phase value zero. Nonzero exact
+                        # exponentials require explicit coefficient phase data.
+                        if delta.at(())!=Polynomial():raise ValueError('phase base must be zero for exact rational pullback')
+                        piece=RawJet.constant(value,labels)*exponential_jet(delta,Polynomial.scalar(1))
+                    jet+=piece
+                base[x,mu,a]=jet
+    transformed={}
+    for x in reg.sites:
+        for mu in range(4):
+            for a in range(4):
+                transformed[x,mu,a]=sum((base[x,nu,a]*frame[x,mu,nu] for nu in range(4)),RawJet.constant(zero,labels))
+    action=RawJet.constant(zero,labels)
+    pieces=[]
+    def coframe_anchors(alpha):
+        site,mu,_=alpha
+        return tuple(sorted(set(anchor for nu in range(4) if any(frame[site,mu,nu].slots()) for anchor in ((site,nu),(reg.step(site,nu,-1)[0],nu)))))
+    for x in reg.sites:
+        for factor in original_action_factors(reg,x,links):
+            coupling=g1 if factor.t_degree==4 else g2
+            if not factor.coefficient or not coupling:
+                continue
+            value=RawJet.constant(one,labels)
+            for alpha in factor.components:value=value*transformed[alpha]
+            piece=value*(factor.coefficient*coupling)
+            action+=piece
+            anchors=tuple(sorted(set(factor.anchors).union(*(set(coframe_anchors(alpha)) for alpha in factor.components))))
+            pieces.append(('action',piece,(1,0) if factor.t_degree==4 else (0,1),(0,0),anchors))
+    # Literal T and metric H are separate families: H multiplies TWO T's,
+    # never a linear Dirac shift. Current sources multiply their actual S4/S2
+    # generator derivatives, including all frame/current acceleration contacts.
+    for alpha,source in ({} if linear_sources is None else linear_sources).items():
+        source=source if isinstance(source,RawJet) else RawJet.constant(Polynomial.coerce(source),labels)
+        piece=transformed[alpha]*source
+        action+=piece
+        pieces.append(('literal_T',piece,(0,0),(1,0),coframe_anchors(alpha)))
+    for (x,mu,nu),source in ({} if metric_sources is None else metric_sources).items():
+        if mu>nu:raise ValueError('independent metric pair must be unordered once')
+        source=source if isinstance(source,RawJet) else RawJet.constant(Polynomial.coerce(source),labels)
+        piece=original_literal_metric(transformed,x,mu,nu)*source
+        action+=piece
+        anchors=tuple(sorted(set(coframe_anchors((x,mu,0)))|set(coframe_anchors((x,nu,0)))))
+        pieces.append(('literal_metric',piece,(0,0),(0,1),anchors))
+    if current_sources:
+        from src.vestigial.original_coefficients import exterior_phase_derivative
+        bare_pieces=tuple(pieces)
+        for charges,source in current_sources:
+            # Charges are the specified site-local vector field; the source jet
+            # supplies its source/frame mixed variation via ordinary products.
+            source=source if isinstance(source,RawJet) else RawJet.constant(Polynomial.coerce(source),labels)
+            for role,bare,cp,sp,anchors in bare_pieces:
+                current=apply_linear_map_jet(bare,lambda v:exterior_phase_derivative(v,reg,charges))*source
+                action+=current
+                pieces.append(('current_'+role,current,cp,sp,anchors))
+    insertion=RawJet.constant(one,labels) if insertion is None else insertion(transformed)
+    measure=RawJet.constant(Polynomial.scalar(1),labels) if measure is None else measure
+    grading=[]
+    for k in action.indices():
+        terms=[]
+        # Grade RAW typed vertex/source pieces before coefficient collection,
+        # so numeric H can never be mislabeled as a g2 vertex.
+        for role,jet,cp,sp,declared_anchors in pieces+[('insertion',insertion,(0,0),(0,0),reg.link_order)]:
+            for mask,coefficient in jet.at(k).terms:
+                generators=tuple(v for i,v in enumerate(reg.generator_order) if mask>>i&1)
+                # Keep actual coefficient anchors; no independent second Haar.
+                anchors=tuple(sorted(set(declared_anchors)|set((s.index[0],s.index[1]) for key,c in coefficient.terms for s in key if s.family=='q')))
+                if not anchors:
+                    # A supplied numeric link specialization must not erase its
+                    # original incidence. Retain the conservative full carrier
+                    # envelope; this is never a disjoint-Haar certificate.
+                    anchors=reg.link_order
+                support=GeneratorLinkSupport(generators,anchors,tuple(sorted(set(g[0] for g in generators))))
+                for key,c in coefficient.terms:
+                    q=sum(s.family=='g1' for s in key); p=sum(s.family=='g2' for s in key)
+                    coupling_powers=(q,p) if q or p else cp
+                    source_powers=tuple(sum(s.family==f for s in key) for f in ('J','H'))
+                    if not any(source_powers):source_powers=sp
+                    # Integer real multiplicity only; complex coefficient remains
+                    # in the jet and the grading records the exact rational scale.
+                    terms.append(GradedTerm(mask.bit_count()//2,coupling_powers,source_powers,(role,),support,1,c,mask,key))
+        # Every supplied measure derivative declares Grassmann degree zero;
+        # non-scalar moving-domain pullbacks must be supplied in insertion.
+        for key,c in measure.at(k).terms:
+            anchors=tuple(sorted(set((symbol.index[0],symbol.index[1]) for symbol in key if symbol.family=='q')))
+            cp=tuple(sum(symbol.family==family for symbol in key) for family in ('g1','g2'))
+            sp=tuple(sum(symbol.family==family for symbol in key) for family in ('J','H'))
+            terms.append(GradedTerm(0,cp,sp,('measure',),GeneratorLinkSupport((),anchors,()),1,c,None,key))
+        grading.append((k,tuple(terms)))
+    return SourceJet(labels,SourceFamilyGrading(tuple(grading)),action,insertion,measure)
+
+
+def original_literal_metric(coframes,x,mu,nu):
+    """Q_mu,nu=sum_A T_muA T_nuA; an unordered H coordinate occurs once.
+
+    Source: ADW_COMPOSITE_SOURCES literal composite metric definition.
+    Formal composite/current/contact bridge remains Stage2/3.
+    """
+    from src.vestigial.original_coefficients import RawJet,ExteriorPolynomial
+    sample=coframes[x,mu,0]
+    zero=RawJet.constant(ExteriorPolynomial(),sample.labels)
+    return sum((coframes[x,mu,a]*coframes[x,nu,a] for a in range(4)),zero)
+
+
+def original_one_site_action_coefficients(reg,links,*,route):
+    """Complete original one-site S4/S2, raw versus independently antisymmetrized.
+
+    Both actual plaquette words enter through original_plaquette. The trace
+    diagonal is retained before combining ordered world/internal slots.
+    Source: ADW_ONE_SITE_COEFFICIENTS sections1,2,4; accepted review.
+    Lean: SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.einsteinCartan_ordered,
+      SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.cosmological
+    Aristotle: manual
+    C3 grounds the source definitions; the executable factorization bridge is
+    still Stage2/3, and no numerical result is implied by this function.
+    """
+    from itertools import combinations,permutations
+    from fractions import Fraction
+    from src.vestigial.original_coefficients import Polynomial,epsilon,matrix_multiply
+    if reg.extents!=(1,1,1,1) or reg.boundary_signs!=(1,1,1,1):raise ValueError('complete periodic one-site carrier required')
+    x=reg.sites[0]; quadratic={}; quartic=[]
+    index=lambda alpha:4*alpha[1]+alpha[2]
+    if route=='direct':
+        for term in original_action_factors(reg,x,links):
+            key=tuple(sorted(index(alpha) for alpha in term.components))
+            if term.t_degree==4:
+                scalar=dict(term.coefficient.terms).get(())
+                if scalar is None or scalar.imag:raise ValueError('S4 coefficient must be real exact scalar')
+                quartic.append((key,scalar.real))
+            else:quadratic[key]=quadratic.get(key,Polynomial())+term.coefficient
+    elif route=='auxiliary':
+        # Independent trace-and-antisymmetrization implementation: four ordered
+        # world terms are combined before coefficient collection, diagonal kept.
+        g=reg.gamma; g5=reg.gamma5
+        for mu,nu in combinations(range(4),2):
+            k,l=tuple(i for i in range(4) if i not in (mu,nu))
+            u=original_plaquette(reg,x,k,l,links); reverse=original_plaquette(reg,x,l,k,links)
+            for a in range(4):
+                for b in range(4):
+                    ab=matrix_multiply(matrix_multiply(g[a],g[b]),g5)
+                    ba=matrix_multiply(matrix_multiply(g[b],g[a]),g5)
+                    trace=lambda v,w:sum((v[i][j]*w[j][i] for i in range(4) for j in range(4)),Polynomial())
+                    coefficient=(trace(u,ab)-trace(u,ba)-trace(reverse,ab)+trace(reverse,ba))*Fraction(epsilon((k,l,mu,nu)),4)
+                    quadratic[(4*mu+a,4*nu+b)]=coefficient
+        quartic=[(tuple(4*mu+a for mu,a in enumerate(order)),Fraction(epsilon(order))) for order in permutations(range(4))]
+    else:raise ValueError('independent route label required')
+    return {k:v for k,v in quadratic.items() if v},tuple(quartic)
+
+
+def original_one_site_complete_control(*,budget):
+    """COMPLETE original V=1 direct/W4 determinant/Gaussian/Haar control.
+
+    All 3876 quartics, full interacting denominator, 16T/10H source jets,
+    raw C2 diagonal-frame contacts, both actual words and variances2/3.
+    This is an expensive callable, with no import-time scientific execution.
+    Source: complete accepted ADW_ONE_SITE_COEFFICIENTS and its review;
+    accepted numerical R2 plan section4a. Formal exact source/Gaussian premise:
+    Lean: SKEFTHawking.ADW.FiniteGrassmannSourceAuxiliary.one_site_original_weighted_integral
+    Aristotle: manual
+    C3 certifies its source identity only; Dirac/Haar/minor/contact bridges and
+    actual full scientific execution/review remain separate acceptance gates.
+    """
+    from fractions import Fraction
+    from itertools import combinations_with_replacement
+    from src.vestigial import original_coefficients as o
+    if o._ACTIVE_COST.get() is not budget:
+        raise ValueError('complete scientific control requires an active explicit ExactBudget')
+    reg=o.OriginalRegulator((1,1,1,1)); x=reg.sites[0]
+    # Immutable original inputs, no expected scientific coefficients enter.
+    links={(x,mu):original_spin4_link(tuple(o.Polynomial.variable(o.Symbol('q',(x,mu,'L',k))) for k in range(4)),tuple(o.Polynomial.variable(o.Symbol('q',(x,mu,'R',k))) for k in range(4))) for mu in range(4)}
+    matrices=tuple(o.assemble_coframe(reg,original_coframe_blocks(reg,(x,mu,a),links)) for mu in range(4) for a in range(4))
+    coframes=tuple(a.to_exterior(reg) for a in matrices)
+    # All scalar tensors retained; direct pair tables are freed on return before
+    # the independent determinant pair tables are allocated.
+    direct=o.direct_one_site_tensor(coframes,budget)
+    auxiliary=o.determinant_one_site_tensor(matrices,budget)
+    if direct!=auxiliary:raise ArithmeticError('complete direct/determinant quartic disagreement')
+    sources=tuple(o.Symbol('J',(x,mu,a)) for mu in range(4) for a in range(4))
+    metrics=tuple(o.Symbol('H',(mu,nu)) for mu,nu in combinations_with_replacement(range(4),2))
+    g1,g2=o.Symbol('g1',()),o.Symbol('g2',())
+    frames=original_diagonal_frame_jets(); reports={}; query_count=0
+    make_poly=lambda tensor:o.Polynomial(tuple((tuple(sources[i] for i in key),v) for key,v in tensor.items()))
+    free_direct,free_aux=make_poly(direct),make_poly(auxiliary)
+
+    def curvature_data(quadratic):
+        # Six independent antisymmetric entries per coframe plane. The original
+        # twelve coefficients remain in the action; signs reconstruct covariances.
+        canonical={}; aliases={}
+        for key,coefficient in quadratic.items():
+            i,j=key; mu,a=divmod(i,4); nu,b=divmod(j,4)
+            if a==b:raise ArithmeticError('diagonal trace survived full antisymmetrization')
+            representative=(4*mu+min(a,b),4*nu+max(a,b))
+            aliases[key]=(representative,1 if a<b else -1)
+            if a<b:canonical[key]=coefficient
+        means={key:o.haar_polynomial(value) for key,value in canonical.items()}
+        cov={}
+        for plane in combinations_with_replacement(range(4),2):
+            if plane[0]==plane[1]:continue
+            keys=tuple(k for k in canonical if (k[0]//4,k[1]//4)==plane)
+            for a in keys:
+                for b in keys:
+                    cov[a,b]=o.integrated_polynomial_product(canonical[a],canonical[b])
+        return aliases,means,cov
+
+    def expected_pair_independence(curvature_keys,delta,quadratic):
+        coframe_directions=set(i//4 for i in delta)
+        curvature_directions={s.index[1] for key in curvature_keys for monomial,c in quadratic[key].terms for s in monomial}
+        if coframe_directions&curvature_directions:
+            raise ArithmeticError('shared original Haar factor cannot be factored')
+
+    def integrate_term(curvature_keys,delta,tensor,data,quadratic):
+        if not o.direction_center_even(delta):return o.QComplex()
+        base=tensor[delta]
+        if not curvature_keys:return base
+        if len(curvature_keys)==1:
+            expected_pair_independence(curvature_keys,delta,quadratic)
+            alias,sign=data[0][curvature_keys[0]]
+            return o.scalar_product(base,o._scalar_value(data[1][alias]),sign)
+        a,b=curvature_keys
+        # Center selection on the complete coframe multiset proves that two
+        # different direction planes vanish BEFORE any illegal factorization.
+        pa=tuple(i//4 for i in a); pb=tuple(i//4 for i in b)
+        if pa!=pb:raise ArithmeticError('center proof failed for different planes')
+        expected_pair_independence(curvature_keys,delta,quadratic)
+        aa,sa=data[0][a]; bb,sb=data[0][b]
+        return o.scalar_product(base,data[2][aa,bb],sa*sb)
+
+    def direct_partition(quadratic,quartic,tensor,data):
+        out=make_poly(tensor); frame=o.RawJet.constant(out)
+        # Source frame is present even on the free determinant/source part.
+        frame=sum((o.frame_product_jet(tuple(i//4 for i in key),frames)*o.Polynomial(((tuple(sources[i] for i in key),v),)) for key,v in tensor.items() if v),o.RawJet.constant(o.Polynomial()))
+        denominator=o.QComplex()
+        # g1 and g2 J² are retained as actual coefficient queries, then killed
+        # only by the complete center/actual curvature-mean test.
+        for key,scalar in quartic:
+            value=o.scalar_product(integrate_term((),tuple(sorted(key)),tensor,data,quadratic),o.monomial_factorial(key),scalar)
+            out+=o.Polynomial((((g1,),value),))
+            frame+=o.frame_product_jet(tuple(i//4 for i in key),frames)*o.Polynomial((((g1,),value),))
+        for a in quadratic:
+            for source in o.multiindices(16,2):
+                delta=tuple(sorted(a+source))
+                value=o.scalar_product(integrate_term((a,),delta,tensor,data,quadratic),Fraction(o.monomial_factorial(delta),o.monomial_factorial(source)))
+                poly=o.Polynomial((((g2,)+tuple(sources[i] for i in source),value),))
+                out+=poly; frame+=o.frame_product_jet(tuple(i//4 for i in delta),frames)*poly
+        keys=tuple(quadratic)
+        for i,a in enumerate(keys):
+            for j in range(i,len(keys)):
+                b=keys[j]; delta=tuple(sorted(a+b))
+                value=o.scalar_product(integrate_term((a,b),delta,tensor,data,quadratic),o.monomial_factorial(delta),(Fraction(1,2) if i==j else 1))
+                denominator+=value
+                poly=o.Polynomial((((g2,g2),value),))
+                out+=poly; frame+=o.frame_product_jet(tuple(i//4 for i in delta),frames)*poly
+        return out,frame,o.Polynomial.scalar(denominator)
+
+    def auxiliary_partition(quadratic,quartic,tensor,data,variance):
+        nonlocal query_count
+        weight=o.one_site_weight_terms(quadratic,quartic,variance)
+        if len(weight)!=4029:raise ArithmeticError('complete raw W4 population differs from 4029')
+        out=o.Polynomial(); frame=o.RawJet.constant(o.Polynomial())
+        budget.check_storage((weight,tensor,data,quadratic),additional_records=20_000)
+        for term in weight:
+            for beta,source in o.gaussian_compatible_queries(term):
+                query_count+=1
+                delta=tuple(sorted(beta+source))
+                kernel=o.count_hermite_contraction(term.eta,beta,variance)
+                value=o.scalar_product(integrate_term(term.curvature,delta,tensor,data,quadratic),kernel,term.scalar,o.shifted_monomial_binomial(delta,beta))
+                coupling=tuple(g1 if g=='g1' else g2 for g in term.coupling)
+                poly=o.Polynomial(((coupling+tuple(sources[i] for i in source),value),))
+                out+=poly
+                # W varies through S(A X); compensation is fixed. M source J
+                # carries its own frame. Do NOT attach frame to auxiliary h.
+                directions=term.frame_directions+tuple(i//4 for i in source)
+                frame+=o.frame_product_jet(directions,frames)*poly
+        budget.check_storage((weight,out,frame,tensor,data,quadratic),additional_records=20_000)
+        return out,frame
+
+    for word in ('printed','closed'):
+        actual=o.OriginalRegulator((1,1,1,1),word=word)
+        q_direct,s4_direct=original_one_site_action_coefficients(actual,links,route='direct')
+        q_aux,s4_aux=original_one_site_action_coefficients(actual,links,route='auxiliary')
+        if q_direct!=q_aux or dict(s4_direct)!=dict(s4_aux):raise ArithmeticError('independent original action builders disagree')
+        if len(q_direct)!=72 or len(s4_direct)!=24:raise ArithmeticError('full original S2/S4 raw support differs')
+        data_direct=curvature_data(q_direct); data_aux=curvature_data(q_aux)
+        d,fd,den=direct_partition(q_direct,s4_direct,direct,data_direct)
+        aux={}; faux={}
+        for variance in (Fraction(2),Fraction(3)):
+            a,fa=auxiliary_partition(q_aux,s4_aux,auxiliary,data_aux,variance)
+            if a!=d or fa!=fd:raise ArithmeticError('COMPLETE original W4/source/frame control disagrees')
+            aux[variance]=a; faux[variance]=fa
+        joint=o.literal_metric_source_polynomial(d,sources,metrics)
+        t_first,t_second=o.source_polynomial_jets(joint,sources)
+        h_first,h_second=o.source_polynomial_jets(joint,metrics)
+        # Actual arbitrary-source evaluations, including origin and nonzero axis.
+        evaluations=[]
+        for axis in (0,1):
+            values={s:0 for s in sources+metrics}; values[sources[3]]=axis
+            values[g1]=Fraction(2,3);values[g2]=1
+            evaluations.append(tuple(poly.evaluate(values) for poly in (joint,)+t_first+t_second+h_first+h_second))
+        # All denominator/frame and insertion contacts are normalized only at
+        # actual evaluated nonzero Z. Keep the full raw joint source polynomials.
+        joint_frame=o.apply_linear_map_jet(fd,lambda value:o.literal_metric_source_polynomial(value,sources,metrics))
+        normalized_frame=[]
+        for axis in (0,1):
+            point={s:0 for s in sources+metrics};point[sources[3]]=axis;point[g1]=Fraction(2,3);point[g2]=1
+            denominator=o.apply_linear_map_jet(joint_frame,lambda value:value.evaluate(point))
+            certificate=o.NonzeroZCertificate(denominator.at(()))
+            normalized_frame.append(tuple(o.normalize_jet(o.apply_linear_map_jet(joint_frame,lambda value,symbol=symbol:o.polynomial_derivative(value,symbol).evaluate(point)),denominator,certificate) for symbol in sources+metrics))
+        reports[word]={'normalized_frame_T_H':tuple(normalized_frame),'raw_joint_frame':joint_frame,'direct':d,'auxiliary':aux,'joint_metric':joint,'T_first':t_first,'T_second':t_second,'H_first':h_first,'H_second':h_second,'evaluations':tuple(evaluations),'interacting_denominator':den,'frame_direct':fd,'frame_auxiliary':faux,'nonzero_quartics':sum(bool(v) for v in direct.values()),'one_site_current_scope':'global phase only; not N16 Ward acceptance'}
+        budget.check_storage((reports,direct,auxiliary,coframes,matrices,links),additional_records=400_000)
+    # Actual one-site Haar inversion dictionary, not a pointwise word equality.
+    transported=o.polynomial_substitute(reports['printed']['direct'],{g2:-o.Polynomial.variable(g2),**{s:-o.Polynomial.variable(s) for s in sources}})
+    if transported!=reports['closed']['direct']:raise ArithmeticError('one-site inversion/source/g2 word dictionary failed')
+    if query_count!=23504*4:raise ArithmeticError('full raw W Gaussian query population incomplete')
+    return {'complete':True,'quartic_slots':len(direct),'center_allowed':sum(o.direction_center_even(k) for k in direct),'words':('printed','closed'),'variances':(Fraction(2),Fraction(3)),'query_count':query_count,'reports':reports,'cost':{'products':budget.products,'integer_products':budget.integer_products,'peak_integer_bits':budget.peak_integer_bits,'peak_scalar_records':budget.peak_scalar_records,'peak_payload_bytes':budget.peak_payload_bytes},'physical_acceptance':False}
