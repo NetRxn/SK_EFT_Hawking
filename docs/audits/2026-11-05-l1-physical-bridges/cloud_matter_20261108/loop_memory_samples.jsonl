@@ -1,0 +1,2 @@
+{"scope": "declared cloud loop process; kernel high-water RSS so far, not final whole-job peak", "processes": []}
+{"status":"target_not_observed","interpretation":"No target PID was visible to the attempted queries; no RSS measurement was obtained, and no process-absence conclusion follows.","replacement":"Use in-process resource telemetry on the independently verified successful bounded replay."}

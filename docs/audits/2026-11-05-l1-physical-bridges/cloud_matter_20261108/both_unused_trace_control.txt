@@ -1,0 +1,72 @@
+2026-11-08 bounded pilot and changed-factorization local control.
+No complete22-word target was evaluated. A later independent one-word algebra
+control is appended below; the failed Dirac-loop target produced no scalar.
+Read-only temporary-directory and initial sign-API failures are retained in
+both_unused_trace_control_r0_failure.txt.
+
+Dirac-loop command (sandbox escalation allowed temporary archive extraction):
+PYTHONDONTWRITEBYTECODE=1 timeout60s python both_unused_trace.py --pilot
+Exit1, actual original row-cap obstruction. Key exact output:
+Source tensor controls:PASS, including original closed Bdag_Adag_B_A.
+ArchiveSHA256 d0cf575929801f3711ae2298ca283d278461a8d987d53ab372da1846fc942d48
+OriginalassembleSHA256 0b7af9911b206e2035cc76b08881cd71cd170825df1fe9532c6152b3fee2f677
+LoopassembleSHA256 48905af725c9d3a5a66d44cc65bc10ee5ff945716dee03f43c4b198a0238561c
+NewQproducerSHA256 0e4967cb90e1b1b97d34c41f474903323c84a4576cb8227ebbc64c4782602e95
+Unchanged normalization control104978,2688peak rows,38670products:PASS.
+Independent signed Q closures12:PASS.
+Pilot word=((1,0,1,1,1),)*2+((2,2,3,2,2),)*4.
+Built84factors,25912initial rows,12frames,6curvature_vertices,
+0curvature_quarters,2physical_Q_sources,Haar divisor78275778969600,
+multiplicity_factorial48,total divisor63035983264379358412800.
+Failure:120001 live row slots exceed cap120000.
+Leftaxes=(('q',69),('q',68),('i',62),('i',63),('q',67),('q',66))
+Rightaxes=(('i',63),('q',52),('q',39),('q',26))
+Leftrows1536,rightrows8448,degrees{2:1,0:5},closedmask0,
+rankingupper12976128.
+Completed188joins/549346products;92160peak completedrows.
+Failed-join unfinished products and its rejected120001st row are not included
+in the completed counters. Wall5.336288864s,maxRSS191820KiB.
+No mathematical value was obtained and no cap was raised.
+
+Changed-factorization local command, no filesystem escalation needed:
+PYTHONDONTWRITEBYTECODE=1 timeout60s python both_unused_trace_fourth_control.py
+Exit0. Exact stdout:
+PROJECTED_Q_RATIOS {(0, 0, 0, 0): ('36864',), (0, 0, 1, 1): ('12288',), (0, 0, 2, 2): ('12288',), (0, 0, 3, 3): ('12288',), (1, 1, 1, 1): ('36864',), (1, 1, 2, 2): ('12288',), (1, 1, 3, 3): ('12288',), (2, 2, 2, 2): ('36864',), (2, 2, 3, 3): ('12288',), (3, 3, 3, 3): ('36864',)}
+PROJECTED_FOURTH_CONTROL center 2 axis 0 source_endpoint 3 quartets 35 support_histogram [(0, 25), (6, 10)] normalization 96*8^4 per physical frame quartet products 1874560 peak_rows 198 comm_fourth_same 8/75 comm_fourth_distinct 8/225 maxrss_kib 54272 seconds 7.107782603998203
+No action-word top contraction or subfamily sum evaluated.
+
+An earlier successful local preflight before ratio printing measured the same
+1874560products/198rows in7.164024459s,maxRSS54096KiB.
+Independent review is needed for the endpoint block remapping and specialized
+action-word contraction before retrying this pilot with the changed method.
+
+At the parent's subsequent request, the independent prospective one-word
+scalar algebra was evaluated, with all35 local quartets freshly reconstructed
+and asserted against the exact Symdelta*Q identity (including25 exactzeros).
+Command:
+PYTHONDONTWRITEBYTECODE=1 timeout60s python both_unused_trace_scalar_control.py
+Exit0. Final resource-bearing stdout:
+PROJECTED_FOURTH_CONTROL center 2 axis 0 source_endpoint 3 quartets 35 support_histogram [(0, 25), (6, 10)] normalization 96*8^4 per physical frame quartet products 1874560 peak_rows 198 comm_fourth_same 8/75 comm_fourth_distinct 8/225 maxrss_kib 54180 seconds 7.066223626999999
+CHANGED_FACTORIZATION_ONE_WORD_CONTROL quartet_beta 1/32 curvature_scalar_calls 2304 curvature_integer_sum 5944320 curvature_contraction 44032/15 local_square_raw 294912 private_pair_including_2_factorial 18 remote_including_4_factorial 129/10 one_word_raw_g2_6 1161/5 combined_exterior_candidate_products 1877136 kernel_peak_rows 198 local_peak_rows 8 maxrss_kib 54180 seconds 7.111408021002717
+Only the(2,4)pilot word; no22-word sum or complete diagonal result.
+Earlier successful scalar-control executions before assertion/report hardening
+returned the same1161/5; no larger caps, omitted terms or Wick curvature
+substitution were used. Family execution remains pending independent review.
+
+Additional exact mixed-anchor and pointwise identity control:
+PYTHONDONTWRITEBYTECODE=1 timeout60s python both_unused_trace_anchor_control.py
+The initial ratio helper asserted on the exactly empty crossed sample; it
+was corrected to return zero for an empty polynomial, with no discarded terms.
+The final run then checked all100 full polynomials and exited0:
+ANCHOR_QUARTET_CONTROL Q_chiral_invariant_decomposition PASS same_link_identity_vs_cubature_quartets 35 mixed_anchor_2plus2_tensors 100 mixed_A_delta_ab_delta_cd 1/32 mixed_B_cross_deltas 0 mixed_support_histogram [(0, 84), (6, 16)] combined_exterior_products 1951580 peak_rows 198 seconds 7.491901526002039 maxrss_kib 54344
+No action-word scalar or22-word sum evaluated by this control.
+
+Frozen control source hashes:
+anchor69cb735ec1404da5c114385a2744de41ebbdc58d1ce9fefa93c08d3c5c4000c0
+fourthe6a5d928b7f385d583cb6646b950db75e0b31183838f1c83ca3c87d106c65e1d
+scalarfea9e129668e17bdd8f41ddee2e58d7ab20cf18ecb975527c48bb8c7bc39e500
+
+Prospective reduced source both_unused_trace_reduced.py:
+SHA256bc5659d561dc9dd9a181f77499276a3f6c4699ae0b66ab05fb5a2e8598b01f47
+AST parsed successfully. It was NOT EXECUTED: parent reserved the executor for
+the independent representative campaign. SOURCE/math gate remains pending.

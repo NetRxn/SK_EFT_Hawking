@@ -1,0 +1,32 @@
+{
+  "scope": "second h derivative of partial Sigma at lambda0 expansion; not full source response",
+  "source": "fixed bareD,H,T; A=exp(jE),h=2sqrt2*j; full actioncontact and denominator response included",
+  "g2_squared_local_variance_second_h": {
+    "D": "-33115793931313683139185868800/142570791678327415714294730219",
+    "H": "-14128883684038456702776115200/142570791678327415714294730219",
+    "T": "-203160484115670306319840051200/142570791678327415714294730219"
+  },
+  "first_derivative_this_block": 0,
+  "momenta": [
+    {
+      "n0": 0,
+      "n1": 0,
+      "g2_squared_partial_Sigma_second_h": "55786355653261089297306746880/142570791678327415714294730219"
+    },
+    {
+      "n0": 0,
+      "n1": 1,
+      "g2_squared_partial_Sigma_second_h": "26999135269588740034693693440/12960981061666128701299520929"
+    },
+    {
+      "n0": 1,
+      "n1": 0,
+      "g2_squared_partial_Sigma_second_h": "26999135269588740034693693440/12960981061666128701299520929"
+    },
+    {
+      "n0": 1,
+      "n1": 1,
+      "g2_squared_partial_Sigma_second_h": "583341394525617926203696742400/142570791678327415714294730219"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+2026-11-08 historical revision1 local-control/pilot receipt. Independent SOURCE/math
+acceptance remains required before --all. This is only a128-word subfamily
+of310 necessary diagonal words. No full subset sum has been run.
+
+ScriptSHA256 249da5d46539849ff043d507a407847aaa98efecb129fbc3b3a94612dc0afd61
+DesignSHA256 bb8f6154ef69b717e79c7cd1a6cd034f24665443da249e8c09e2045678096055
+
+Command from repo root:
+PYTHONDONTWRITEBYTECODE=1 timeout 55s python docs/audits/2026-11-05-l1-physical-bridges/cloud_matter_20261108/diagonal_trace_simple.py --pilot
+Exit0. Exact stdout:
+CAPS rows 120000 combined_products 3000000 whole_seconds 180
+SOURCE_SHA256 nearest_trace.py b51f77f8f7cdd1ee27285ef59aeb0915cc736d5a88cc938500c43cce8f1b72b8
+SOURCE_SHA256 l1_diagonal_classes.py 90efaaf91e77838dc644ebfae15ec1baec2f9ebcdbf10c76a80990bed5638020
+SOURCE_SHA256 l1_equal_time_private_pairs.py 05f17572df77dd56637eda059886b48a5465b009a3c348d6cbe0867843f24f74
+SOURCE_SHA256 l1_transverse_top.py 6dc673e63a4dca26e39c41b6db6971f061d0cfe8466111d175f60bb2e99d2c23
+SOURCE_CONTROL Q [(60, -6), (85, -3), (102, -3), (153, -3), (170, -3), (195, -6)] Q_squared_top 108 tensor_slot_supports [(0, 30), (6, 6)] diagonal_factor 49/216 independence_poison_ratio 48/49 closed_order Bdag_Adag_B_A forward_order_control PASS
+SUPPORT_CONTROL full_words 310 full_ordered 117120 multiplicity_partitions [((1, 1, 1, 1, 1, 1), 128), ((1, 1, 1, 1, 2), 34), ((2, 2, 2), 140), ((2, 4), 8)] selected_words 128 unselected_words 182 selected_ordered 11520 orbits 20 orbit_sizes [(4, 8), (8, 12)] charges [(-4, 32), (0, 64), (4, 32)] all_selected_private_erasure 128
+SELECTED_REPRESENTATIVE 0 orbit_size 4 word [(0, 2, 3, 0, 0), (0, 2, 3, 0, 0), (1, 0, 2, 1, 1), (1, 0, 2, 1, 1), (2, 1, 2, 2, 2), (2, 1, 2, 2, 2)] square_rows [12, 12, 84] stages [('Q0_Q3', 6, 6, 36, 36), ('remote_square_pair', 12, 12, 144, 84), ('source_remote_pair', 36, 84, 3024, 72)] factory_calls 864 factory_products 40256 final_products_with_lookup 3288 combined_products 43544 peak_rows 84 raw_integer 225434243432448 denominator 35184372088832 raw_g2_6_subcontribution_per_word 11907/256
+ELAPSED_SECONDS 3.993423
+
+The dedicated --controls CLI was also executed under timeout55s and exited0.
+git diff --check exited0.
+The r0 initial ordered-count failure is preserved separately and was corrected
+using the exact310-word factorial census, with no dropped action words.

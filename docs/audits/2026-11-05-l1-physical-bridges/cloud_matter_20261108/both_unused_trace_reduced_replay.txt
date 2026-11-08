@@ -1,0 +1,29 @@
+CAPS 120000 3000000 60 30
+SOURCE_SHA256 both_unused_trace_anchor_control.py 69cb735ec1404da5c114385a2744de41ebbdc58d1ce9fefa93c08d3c5c4000c0
+SOURCE_SHA256 both_unused_trace_fourth_control.py e6a5d928b7f385d583cb6646b950db75e0b31183838f1c83ca3c87d106c65e1d
+{"all_source_charges": 0, "both_touched_disjoint": 128, "event": "both-unused-support", "full": 310, "mixed_unused_disjoint": 32, "orbits": 8, "partitions": [[[1, 1, 1, 1, 2], 2], [[2, 2, 2], 12], [[2, 4], 8]], "selected": 22, "simple_disjoint": 128}
+ALL22_OCCURRENCE_TEMPLATE_CONTROL [(((1, 1), 1), 2), (((1, 1), 4), 4), (((1, 3), 4), 4), (((3, 1), 4), 4), (((3, 3), 24), 8)] private_singleton_erasure 22 actual_central_occurrences 4
+PROJECTED_Q_RATIOS {(0, 0, 0, 0): ('36864',), (0, 0, 1, 1): ('12288',), (0, 0, 2, 2): ('12288',), (0, 0, 3, 3): ('12288',), (1, 1, 1, 1): ('36864',), (1, 1, 2, 2): ('12288',), (1, 1, 3, 3): ('12288',), (2, 2, 2, 2): ('36864',), (2, 2, 3, 3): ('12288',), (3, 3, 3, 3): ('36864',)}
+PROJECTED_FOURTH_CONTROL center 2 axis 0 source_endpoint 3 quartets 35 support_histogram [(0, 25), (6, 10)] normalization 96*8^4 per physical frame quartet products 1874560 peak_rows 198 comm_fourth_same 8/75 comm_fourth_distinct 8/225 maxrss_kib 58344 seconds 7.036231478996342
+No action-word top contraction or subfamily sum evaluated.
+ANCHOR_QUARTET_CONTROL Q_chiral_invariant_decomposition PASS same_link_identity_vs_cubature_quartets 35 mixed_anchor_2plus2_tensors 100 mixed_A_delta_ab_delta_cd 1/32 mixed_B_cross_deltas 0 mixed_support_histogram [(0, 84), (6, 16)] combined_exterior_products 1951580 peak_rows 198 seconds 7.357065556003363 maxrss_kib 58472
+No action-word scalar or22-word sum evaluated by this control.
+PRIVATE_PAIR_CONTROLS {1: '18', 2: '18'}
+REDUCED_WORD central_occurrences ((2, 2, 3, 2, 2), (2, 2, 3, 2, 2), (2, 2, 3, 2, 2), (2, 2, 3, 2, 2)) permitted_pairings ((((0, 1), (2, 3)), ((0, 2), (1, 3)), ((0, 3), (1, 2))), (((0, 1), (2, 3)), ((0, 2), (1, 3)), ((0, 3), (1, 2)))) central_multiplicity_factorial 24 curvature_queries 2304 curvature_integer_sum 5944320 raw_g2_6_one_word 1161/5 seconds 0.008514788001775742
+SELECTED_ORBIT 0 words 2 raw_contribution 2322/5
+REDUCED_WORD central_occurrences ((2, 2, 3, 2, 2), (2, 2, 3, 2, 2), (2, 2, 3, 2, 0), (2, 2, 3, 2, 0)) permitted_pairings ((((0, 1), (2, 3)), ((0, 2), (1, 3)), ((0, 3), (1, 2))), (((0, 1), (2, 3)),)) central_multiplicity_factorial 4 curvature_queries 768 curvature_integer_sum 1981440 raw_g2_6_one_word 2322/5 seconds 0.0012476119954953901
+SELECTED_ORBIT 1 words 4 raw_contribution 9288/5
+REDUCED_WORD central_occurrences ((2, 2, 3, 2, 2), (2, 2, 3, 2, 2), (2, 2, 3, 3, 0), (2, 2, 3, 3, 0)) permitted_pairings ((((0, 1), (2, 3)),), (((0, 1), (2, 3)),)) central_multiplicity_factorial 4 curvature_queries 256 curvature_integer_sum 1013760 raw_g2_6_one_word 1188/5 seconds 0.0003952059996663593
+SELECTED_ORBIT 2 words 2 raw_contribution 2376/5
+REDUCED_WORD central_occurrences ((2, 2, 3, 2, 2), (2, 2, 3, 2, 0), (2, 2, 3, 3, 2), (2, 2, 3, 3, 0)) permitted_pairings ((((0, 1), (2, 3)),), (((0, 2), (1, 3)),)) central_multiplicity_factorial 1 curvature_queries 256 curvature_integer_sum 483840 raw_g2_6_one_word 2268/5 seconds 0.000437921000411734
+SELECTED_ORBIT 3 words 2 raw_contribution 4536/5
+REDUCED_WORD central_occurrences ((2, 2, 3, 2, 0), (2, 2, 3, 2, 0), (2, 2, 3, 2, 0), (2, 2, 3, 2, 0)) permitted_pairings ((((0, 1), (2, 3)), ((0, 2), (1, 3)), ((0, 3), (1, 2))), (((0, 1), (2, 3)), ((0, 2), (1, 3)), ((0, 3), (1, 2)))) central_multiplicity_factorial 24 curvature_queries 2304 curvature_integer_sum 5944320 raw_g2_6_one_word 1161/5 seconds 0.0037432180033647455
+SELECTED_ORBIT 4 words 4 raw_contribution 4644/5
+REDUCED_WORD central_occurrences ((2, 2, 3, 2, 0), (2, 2, 3, 2, 0), (2, 2, 3, 3, 2), (2, 2, 3, 3, 2)) permitted_pairings ((((0, 1), (2, 3)),), (((0, 1), (2, 3)),)) central_multiplicity_factorial 4 curvature_queries 256 curvature_integer_sum 1013760 raw_g2_6_one_word 1188/5 seconds 0.0003976200023316778
+SELECTED_ORBIT 5 words 2 raw_contribution 2376/5
+REDUCED_WORD central_occurrences ((2, 2, 3, 2, 0), (2, 2, 3, 2, 0), (2, 2, 3, 3, 0), (2, 2, 3, 3, 0)) permitted_pairings ((((0, 1), (2, 3)),), (((0, 1), (2, 3)), ((0, 2), (1, 3)), ((0, 3), (1, 2)))) central_multiplicity_factorial 4 curvature_queries 768 curvature_integer_sum 1981440 raw_g2_6_one_word 2322/5 seconds 0.00119826800073497
+SELECTED_ORBIT 6 words 4 raw_contribution 9288/5
+REDUCED_WORD central_occurrences ((2, 2, 3, 3, 0), (2, 2, 3, 3, 0), (2, 2, 3, 3, 0), (2, 2, 3, 3, 0)) permitted_pairings ((((0, 1), (2, 3)), ((0, 2), (1, 3)), ((0, 3), (1, 2))), (((0, 1), (2, 3)), ((0, 2), (1, 3)), ((0, 3), (1, 2)))) central_multiplicity_factorial 24 curvature_queries 2304 curvature_integer_sum 5944320 raw_g2_6_one_word 1161/5 seconds 0.003666120996058453
+SELECTED_ORBIT 7 words 2 raw_contribution 2322/5
+PARTIAL_BOTH_UNUSED_DIAGONAL selected_words 22 full_words 310 raw_g2_6_subcontribution 37152/5 normalized_pair_subcontribution_g2_squared 15777461698560/1252309350145403 raw_selected_numerator_j 0 raw_selected_numerator_jj 0 normalized_pair_subcontribution_jj_g2_squared -15058016163931417347096576000/142570791678327415714294730219 normalized_pair_subcontribution_hh_g2_squared -1882252020491427168387072000/142570791678327415714294730219
+RESOURCE_SUMMARY total_candidate_products_with_scalar_upper_charge 2104188 exterior_products 1956732 scalar_upper_charge 147456 peak_rows 198 maxrss_kib 58472 seconds 7.7599270770006115

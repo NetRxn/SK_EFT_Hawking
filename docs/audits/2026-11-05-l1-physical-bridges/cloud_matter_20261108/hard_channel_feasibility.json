@@ -1,0 +1,1710 @@
+{
+  "scope": "structural inventory only; no runtime/memory extrapolation from easy channels",
+  "admission": "no full harder-channel or larger-lattice traversal before measured runtime, peak memory and representative scaling",
+  "existing_caps": {
+    "row": 120000,
+    "per_join_compatible_products": 3000000
+  },
+  "warning": "coarse source bounds exceed caps in some signatures but do not establish actual row counts or infeasibility",
+  "source_signatures": [
+    {
+      "source": "G02_squared",
+      "anchors": [
+        0,
+        0
+      ],
+      "multisets": 272,
+      "ordered_words": 43560,
+      "action_degrees": [
+        2,
+        6,
+        8,
+        8
+      ],
+      "free_source_occurrences": 2,
+      "coarse_source_rows_upper_bound": 50176,
+      "unfixed_link_profiles": [
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 8
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 13
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 11
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 33
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 5
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "multisets": 29
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 23
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "multisets": 43
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 3
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "multisets": 16
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "multisets": 14
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              9
+            ],
+            [
+              4,
+              3
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              9
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "multisets": 12
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 8
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 6
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 10
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 4
+        }
+      ]
+    },
+    {
+      "source": "G02_squared",
+      "anchors": [
+        0,
+        1
+      ],
+      "multisets": 118,
+      "ordered_words": 37800,
+      "action_degrees": [
+        2,
+        6,
+        8,
+        8
+      ],
+      "free_source_occurrences": 3,
+      "coarse_source_rows_upper_bound": 401408,
+      "unfixed_link_profiles": [
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 8
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 13
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 5
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 22
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "multisets": 31
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 3
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "multisets": 14
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              9
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "multisets": 12
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 2
+        }
+      ]
+    },
+    {
+      "source": "G02_squared",
+      "anchors": [
+        1,
+        0
+      ],
+      "multisets": 118,
+      "ordered_words": 37800,
+      "action_degrees": [
+        2,
+        6,
+        8,
+        8
+      ],
+      "free_source_occurrences": 3,
+      "coarse_source_rows_upper_bound": 401408,
+      "unfixed_link_profiles": [
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 8
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 13
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 5
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 22
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "multisets": 31
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 3
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "multisets": 14
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              9
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "multisets": 12
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 2
+        }
+      ]
+    },
+    {
+      "source": "G02_squared",
+      "anchors": [
+        1,
+        1
+      ],
+      "multisets": 272,
+      "ordered_words": 43560,
+      "action_degrees": [
+        2,
+        6,
+        8,
+        8
+      ],
+      "free_source_occurrences": 4,
+      "coarse_source_rows_upper_bound": 3211264,
+      "unfixed_link_profiles": [
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              9
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          "multisets": 8
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 19
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          "multisets": 5
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 13
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 21
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 45
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "multisets": 3
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "multisets": 31
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              6
+            ]
+          ],
+          "multisets": 13
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "multisets": 22
+        },
+        {
+          "max_degree": 4,
+          "degree_histogram": [
+            [
+              2,
+              9
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "multisets": 12
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              3
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              3
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "multisets": 8
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              6,
+              3
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 6
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              6,
+              3
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "multisets": 8
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 6
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 4
+        }
+      ]
+    },
+    {
+      "source": "G02_G12",
+      "anchors": [
+        0,
+        0
+      ],
+      "multisets": 0,
+      "ordered_words": 0,
+      "action_degrees": [
+        2,
+        7,
+        7,
+        8
+      ],
+      "free_source_occurrences": 2,
+      "coarse_source_rows_upper_bound": 114688,
+      "unfixed_link_profiles": []
+    },
+    {
+      "source": "G02_G12",
+      "anchors": [
+        0,
+        2
+      ],
+      "multisets": 12,
+      "ordered_words": 5760,
+      "action_degrees": [
+        2,
+        7,
+        7,
+        8
+      ],
+      "free_source_occurrences": 3,
+      "coarse_source_rows_upper_bound": 917504,
+      "unfixed_link_profiles": [
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 6
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              10
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 4
+        }
+      ]
+    },
+    {
+      "source": "G02_G12",
+      "anchors": [
+        1,
+        0
+      ],
+      "multisets": 12,
+      "ordered_words": 5760,
+      "action_degrees": [
+        2,
+        7,
+        7,
+        8
+      ],
+      "free_source_occurrences": 3,
+      "coarse_source_rows_upper_bound": 917504,
+      "unfixed_link_profiles": [
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 2
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              9
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 4
+        }
+      ]
+    },
+    {
+      "source": "G02_G12",
+      "anchors": [
+        1,
+        2
+      ],
+      "multisets": 24,
+      "ordered_words": 11520,
+      "action_degrees": [
+        2,
+        7,
+        7,
+        8
+      ],
+      "free_source_occurrences": 4,
+      "coarse_source_rows_upper_bound": 7340032,
+      "unfixed_link_profiles": [
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 1
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              5
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 1
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 1
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              6
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 3
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 5
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              7
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 1
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 3
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              8
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 3
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              9
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 4
+        },
+        {
+          "max_degree": 6,
+          "degree_histogram": [
+            [
+              2,
+              10
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "multisets": 2
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+PASS: determinant-normalized second-order kernel; induced mean; first/second full-source product rules; inverse-kernel source jets; ordered metric density Taylor coefficient.
+Synthetic signed ensemble Sigma(0) = Matrix([[-289/212, 569/212], [569/212, -23/106]])
+Synthetic Sigma_prime(0) = Matrix([[-58443/22472, -43327/22472], [-43327/22472, -275/5618]])
+Synthetic Sigma_second(0) = Matrix([[3968859/1191016, -1025833/1191016], [-1025833/1191016, -133486/148877]])
+NOT a calculation of L1 A_ij, positivity, continuum locality, or a physical propagation cone.
